@@ -41,11 +41,11 @@ if ($g_user->Admin() == 0 && $g_user->is_local_admin() == 0)
          from jrn_def join jrn_type on jrn_def_type=jrn_type_id
          join user_sec_jrn on uj_jrn_id=jrn_def_id
          where
-         uj_login='$g_user->login'
+         uj_login=$1
          and uj_priv in ('R','W')
 		 order by jrn_def_name
          ";
-	$ret = $cn->make_array($sql);
+	$ret = $cn->make_array($sql,0,array($g_user->login));
 }
 else
 {
@@ -60,14 +60,14 @@ $NoPriv = $cn->count_sql("select jrn_def_id,jrn_def_name,jrn_def_class_deb,jrn_d
                        from jrn_def join jrn_type on jrn_def_type=jrn_type_id
                        join  user_sec_jrn on uj_jrn_id=jrn_def_id
                        where
-                       uj_login='$g_user->id'
+                       uj_login=$1
                        and uj_priv ='X'
-                       ");
+                       ",array($g_user->id));
 /*
  * Show all the available ledgers
  */
 $a = count($ret);
-$all = array('value' => 0, 'label' => 'Tous les journaux disponibles');
+$all = array('value' => 0, 'label' => _('Tous les journaux disponibles'));
 $ret[$a] = $all;
 if (count($ret) < 1)
 	NoAccess();
@@ -102,8 +102,8 @@ echo HtmlInput::get_to_hidden(array('exercice'));
 echo '<TABLE  ><TR>';
 $w = new ISelect();
 $w->table = 1;
-$label = "Choisissez le journal";
-$w->selected = (isset($_GET['jrn_id'])) ? $_GET['jrn_id'] : '';
+$label = _("Choisissez le journal");
+$w->selected = HtmlInput::default_value_get('jrn_id','');
 print td($label) . $w->input("jrn_id", $ret);
 print '</TR>';
 print '<TR>';
@@ -128,18 +128,18 @@ $w->selected = (isset($_GET['to_periode'])) ? $_GET['to_periode'] : '';
 print td('Jusque ') . $w->input('to_periode', $periode_end);
 print "</TR><TR>";
 $a = array(
-	array('value' => 0, 'label' => 'Ecriture comptable'),
-	array('value' => 1, 'label' => 'Liste opérations'),
-	array('value' => 2, 'label' => 'Avec Détails opérations ')
+	array('value' => 1, 'label' => _('Liste opérations')),
+	array('value' => 0, 'label' => _('Ecriture comptable')),
+	array('value' => 2, 'label' => _('Avec Détails opérations '))
 );
 $w->selected = 1;
 print '</TR>';
 print '<TR>';
-$w->selected = (isset($_GET['p_simple'])) ? $_GET['p_simple'] : '';
+$w->selected = (isset($_GET['p_simple'])) ? $_GET['p_simple'] : '1';
 echo '<td>Style d\'impression '.HtmlInput::infobulle(32).'</td>' . $w->input('p_simple', $a);
 print "</TR>";
 echo '</TABLE>';
-print HtmlInput::submit('bt_html', 'Visualisation');
+print HtmlInput::submit('bt_html', _('Visualisation'));
 
 echo '</FORM>';
 echo '<hr>';

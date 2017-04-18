@@ -1095,9 +1095,10 @@ class Acc_Ledger extends jrn_def_sql
                 
 		//
 		// Retrieve data from jrnx
+                // Order is important for TVA autoreversed
 		$sql = "select j_id,j_poste,j_montant, j_debit,j_qcode from jrnx where " .
-				" j_grpt=" . $p_array['grpt_id'];
-		$Res2 = $this->db->exec_sql($sql);
+				" j_grpt=$1 order by 1 desc"  ;
+		$Res2 = $this->db->exec_sql($sql,array($p_array['grpt_id']));
 		$data_jrnx = Database::fetch_all($Res2);
 		$c = 0;
 
