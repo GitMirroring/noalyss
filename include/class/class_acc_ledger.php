@@ -4010,6 +4010,7 @@ class Acc_Ledger extends jrn_def_sql
                         "e_quant".$i,
                         "poste".$i,
                         "ld".$i,
+                        "qc_".$i,
                         "amount".$i,
                         "ck".$i
                         
