@@ -25,11 +25,14 @@ include_once("lib/ac_common.php");
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
 require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
 require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
 
-$f_id=HtmlInput::default_value_request("f_id", "-");
-if ( $f_id == "-") {
-     throw new Exception ('Invalid parameter');
-}
+$f_id=$http->request("f_id", "number");
+$from_periode=$http->get("from_periode");
+$to_periode=$http->get("to_periode");
+$ople=$http->get("ople");
+
 require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 $gDossier=dossier::id();
 
@@ -46,9 +49,9 @@ $export->send_header();
 
 $Fiche->getName();
 list($array,$tot_deb,$tot_cred)=$Fiche->get_row_date(
-                                    $_GET['from_periode'],
-                                    $_GET['to_periode'],
-                                    $_GET['ople']
+                                    $from_periode,
+                                    $to_periode,
+                                    $ople
                                 );
 if ( count($Fiche->row ) == 0 )
 {
@@ -100,7 +103,8 @@ if ( ! isset ($_REQUEST['oper_detail']))
                 */
                 $progress=0;
                 $current_exercice=$op['p_exercice'];
-                $tot_deb=0;$tot_cred=0;    
+                $tot_deb=0;$tot_cred=0;   
+                 $export->write();
             }
         $diff=bcsub($op['deb_montant'],$op['cred_montant']);
         $progress=bcadd($progress,$diff);
@@ -160,14 +164,16 @@ else
 $solde_type=($tot_deb>$tot_cred)?"solde débiteur":"solde créditeur";
 $solde_type=($tot_cred == $tot_deb)?" solde = ":$solde_type;
 $diff=abs($tot_deb-$tot_cred);
+$export->add("");
+$export->add("");
+$export->add("");
 $export->add(_("totaux"));
-$export->add("D");
-$export->add($tot_deb,"number");
-
-$export->add("C");
-$export->add($tot_cred,"number");
+$export->add("");
 $export->add($solde_type);
 $export->add($diff,"number");
+$export->add($tot_deb,"number");
+$export->add($tot_cred,"number");
+
 $export->write();
 exit;
 ?>

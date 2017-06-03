@@ -26,10 +26,19 @@ if ( ! defined ('ALLOWED')) die (_('Non autorisé'));
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once  NOALYSS_INCLUDE.'/class/class_dossier.php';
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
 
-$jr_id=HtmlInput::default_value_get('jr_id',"0");
+try
+{
+    $jr_id=$http->get('jr_id',"number");
+}
+catch (Exception $exc)
+{
+    error_log($exc->getTraceAsString());
+    return;
+}
 
-if ( $jr_id==0 || isNumber($jr_id) != 1 ) die (_('Données invalides'));
 
 $r=$cn->exec_sql("select jr_def_id from jrn where jr_id=$1",array($jr_id));
 

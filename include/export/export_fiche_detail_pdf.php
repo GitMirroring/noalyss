@@ -31,19 +31,25 @@ require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
 require_once  NOALYSS_INCLUDE.'/header_print.php';
 require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
+$f_id=$http->request("f_id", "number");
+$from_periode=$http->get("from_periode","date");
+$to_periode=$http->get("to_periode","date");
+$ople=$http->get("ople");
+
 $gDossier=dossier::id();
 
 $cn=Dossier::connect();
 
-extract($_GET, EXTR_SKIP);
-
 $ret="";
 $pdf= new PDF($cn);
-$pdf->setDossierInfo("  Periode : ".$_GET['from_periode']." - ".$_GET['to_periode']);
+$pdf->setDossierInfo("  Periode : ".$from_periode." - ".$to_periode);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAuthor('NOALYSS');
-$pdf->setTitle("Détail fiche",true);
+$pdf->setTitle(_("Détail fiche"),true);
 
 
 $Fiche=new Fiche($cn,$f_id);

@@ -27,7 +27,8 @@ require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
 require_once NOALYSS_INCLUDE.'/class/class_customer.php';
 require_once NOALYSS_INCLUDE.'/lib/class_ibutton.php';
 require_once NOALYSS_INCLUDE.'/class/class_fiche_def.php';
-
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
 
 
 $low_action = (isset($_REQUEST['sb'])) ? $_REQUEST['sb'] : "list";
@@ -54,7 +55,7 @@ if (isset($_POST['action_fiche']))
             return;
         }
 
-        $f_id = $_REQUEST['f_id'];
+        $f_id = $http->request('f_id',"number");
 
         $fiche = new Customer($cn, $f_id);
         $fiche->remove();
@@ -76,7 +77,7 @@ if ($low_action == "list")
             $a=(isset($_GET['query']))?$_GET['query']:"";
             echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
 
-            $choice_cat=HtmlInput::default_value_request("choice_cat", 1);
+            $choice_cat=$http->request("choice_cat", "",1);
 
             if ( $choice_cat == 1 )
             {
@@ -89,7 +90,7 @@ if ($low_action == "list")
                 echo _('Catégorie :').$sel_card->input();
             } else 
             {
-                $cat=HtmlInput::default_value_request('cat', '');
+                $cat=$http->request('cat',"string", '');
                 echo HtmlInput::hidden("cat",$cat);
                 echo HtmlInput::hidden('choice_cat', 0);
             }

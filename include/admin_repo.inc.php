@@ -28,7 +28,9 @@ require_once NOALYSS_INCLUDE."/lib/user_common.php";
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
 require_once NOALYSS_INCLUDE."/lib/user_menu.php";
-$action = HtmlInput::default_value_request("action", "");
+require_once NOALYSS_INCLUDE."/lib/class_http_input.php";
+$http=new HttpInput();
+$action = $http->request("action","string", "");
 
 $rep=new Database();
 $User=new User($rep);

@@ -21,7 +21,7 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.pĥp';
 /**
  * @file
  * @brief Upgrade all the database : the central repository , the templates and
@@ -31,7 +31,8 @@ if (!defined('ALLOWED'))
 ?>
 
 <?php
-$sb= HtmlInput::default_value_get("sb", "none");
+$http=new HttpInput();
+$sb= $http->get("sb", "string","none");
 if ($sb === "upg_all" && (!defined('MULTI')||(defined('MULTI')&&MULTI==1)))
 {
     echo '<div class="content">';

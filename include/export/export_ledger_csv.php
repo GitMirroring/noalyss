@@ -31,6 +31,10 @@ $gDossier=dossier::id();
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
 require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
 require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
+
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
 $export=new Noalyss_Csv(_('journal'));
 
 $export->send_header();
@@ -39,17 +43,20 @@ $export->send_header();
 /*
  * Variable from $_GET
  */
-$get_jrn=HtmlInput::default_value_get('jrn_id', -1);
-$get_option=HtmlInput::default_value_get('p_simple', -1);
-$get_from_periode=  HtmlInput::default_value_get('from_periode', null);
-$get_to_periode=HtmlInput::default_value_get('to_periode', NULL);
-
-//--- Check validity
-if ( $get_jrn ==-1  || $get_option == -1 || $get_from_periode == null || $get_to_periode == null)
+try
 {
-    die (_('Options invalides'));
+    $get_jrn=$http->get('jrn_id',"number");
+    $get_option=$http->get('p_simple',"number");
+    $get_from_periode=  $http->get('from_periode');
+    $get_to_periode=$http->get('to_periode');
+    
 }
-
+catch (Exception $exc)
+{
+    echo $exc->getMessage();
+    error_log($exc->getTraceAsString());
+    throw $exc;
+}
 
 require_once  NOALYSS_INCLUDE.'/class/class_user.php';
 $g_user->Check();

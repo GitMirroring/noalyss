@@ -29,7 +29,7 @@ require_once NOALYSS_INCLUDE.'/class/class_exercice.php';
 require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 load_all_script();
 $gDossier = dossier::id();
-global $g_user;
+global $g_user,$http;
 //-----------------------------------------------------
 // Show the jrn and date
 //-----------------------------------------------------
@@ -103,7 +103,7 @@ echo '<TABLE  ><TR>';
 $w = new ISelect();
 $w->table = 1;
 $label = _("Choisissez le journal");
-$w->selected = HtmlInput::default_value_get('jrn_id','');
+$w->selected = $http->get('jrn_id',"number",0);
 print td($label) . $w->input("jrn_id", $ret);
 print '</TR>';
 print '<TR>';

@@ -36,18 +36,21 @@ require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
 
 $gDossier=dossier::id();
 global $cn;
+global $http;
 $show_menu=1;
 $ledger=new Acc_Ledger($cn,-1);
-$sa=HtmlInput::default_value("sa","",$_REQUEST);
+
+$sa=$http->request("sa","string","");
+
 //////////////////////////////////////////////////////////////////////////
 // Perform request action : update
 //////////////////////////////////////////////////////////////////////////
-$action_frm = HtmlInput::default_value_post('action_frm', '');
+$action_frm = $http->post("action_frm","string","");
 if (  $action_frm == 'update')
 {
 	try
 	{
-		$ledger->id=$_POST['p_jrn'];
+		$ledger->id=$http->post('p_jrn',"number");
 		if ( $ledger->load() == -1) throw new Exception (_('Journal inexistant'));
 		$ledger->verify_ledger($_POST);
 		$ledger->update($_POST);
@@ -64,8 +67,7 @@ if (  $action_frm == 'update')
 //////////////////////////////////////////////////////////////////////////
 if ($action_frm == 'delete' )
 {
-	$ledger->jrn_def_id=$_POST['p_jrn'];
-	$ledger->id=$_POST['p_jrn'];
+	$ledger->id=$http->post('p_jrn',"number");;
 	$ledger->load();
 	$name=$ledger->get_name();
 	try {
@@ -94,7 +96,8 @@ if (isset($_POST['add']))
 		$ledger->verify_ledger($_POST);
 		$ledger->save_new($_POST);
 		$sa="detail";
-		$_REQUEST['p_jrn']=$ledger->jrn_def_id;
+                $a[]=["key"=>'p_jrn',"value"=>$ledger->id];
+		put_global($a);
                 $show_menu=1;
 	}
 	catch (Exception $e)
@@ -117,7 +120,7 @@ switch ($sa)
 	case 'detail': /* detail of a ledger */
 		try
 		{
-			$ledger->id=$_REQUEST['p_jrn'];
+			$ledger->id=$http->request('p_jrn',"number");
 			echo '<div class="content">';
 			echo '<form id="cfg_ledger_frm"  method="POST">';
 			echo $ledger->display_ledger();

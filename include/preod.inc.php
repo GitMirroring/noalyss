@@ -29,14 +29,14 @@ require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/class_pre_operation.php';
-
+global $http;
 /*
  * Value from $_GET or $_REQUEST
  */
-$request_jrn=HtmlInput::default_value_request("jrn", -1);
-$request_ac=HtmlInput::default_value_request("ac", "");
-$request_sa=HtmlInput::default_value_request("sa", "");
-$get_jrn=HtmlInput::default_value_get('jrn',-1);
+$request_jrn=$http->request("jrn","string", -1);
+$request_ac=$http->request("ac","string", "");
+$request_sa=$http->request("sa","string", "");
+$get_jrn=$http->get('jrn',"string",-1);
 
 echo '<div class="content">';
 echo '<form method="GET">';

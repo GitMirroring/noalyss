@@ -31,6 +31,13 @@ require_once NOALYSS_INCLUDE.'/class/class_own.php';
 require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 require_once NOALYSS_INCLUDE.'/class/class_user.php';
 require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+$from_periode = $http->get("from_periode","date");
+$to_periode = $http->get("to_periode","date");
+$from_poste = $http->get("from_poste");
+$to_poste = $http->get("to_poste");
+
 bcscale(2);
 
 $gDossier=dossier::id();
@@ -42,7 +49,6 @@ $g_user->check_dossier($gDossier);
 
 $sql="select pcm_val from tmp_pcmn ";
 
-extract($_GET, EXTR_SKIP);
 $cond_poste="";
 if ($from_poste != '')
   {

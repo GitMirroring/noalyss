@@ -34,7 +34,7 @@ require_once NOALYSS_INCLUDE.'/class/class_acc_operation.php';
 // Show the jrn and date
 //-----------------------------------------------------
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-global $g_user;
+global $g_user,$http;
 //-----------------------------------------------------
 // Form
 //-----------------------------------------------------
@@ -66,11 +66,11 @@ $letter=new ICheckbox('letter');
 $letter->selected=(isset($_REQUEST['letter']))?true:false;
 
 $from_poste=new IPoste('from_poste');
-$from_poste->value=HtmlInput::default_value('from_poste','',$_REQUEST);
+$from_poste->value=$http->request('from_poste',"string",'');
 $from_poste->set_attribute('account','from_poste');
 
 $to_poste=new IPoste('to_poste');
-$to_poste->value=HtmlInput::default_value('to_poste','',$_REQUEST);
+$to_poste->value=$http->request('to_poste',"string",'');
 $to_poste->set_attribute('account','to_poste');
 
 $solded=new ICheckbox('solded');

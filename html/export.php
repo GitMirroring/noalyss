@@ -29,6 +29,7 @@ require_once '../include/constant.php';
 global $g_user,$cn,$g_parameter;
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
 require_once NOALYSS_INCLUDE.'/class/class_user.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
 $gDossier=dossier::id();
 $cn=Dossier::connect();
 mb_internal_encoding("UTF-8");
@@ -36,18 +37,17 @@ $g_user=new User($cn);
 $g_user->Check();
 $action=$g_user->check_dossier($gDossier);
 set_language();
-if ( $action=='X' || ! isset($_GET['act']) || $g_user->check_print($_GET['act'])==0 )
+$hi=new HttpInput();
+$action=$hi->get("act");
+
+if ( $action=='X'  || $g_user->check_print($action)==0 )
   {
     echo alert(_('Accès interdit'));
     redirect("do.php?".dossier::get());
     exit();
   }
 // get file and execute it
-$action=HtmlInput::default_value_get('act', null);
-if ($action == null )
-{
-    die(_('Appel invalide'));
-}
+
  $prfile=$cn->get_value("select me_file from menu_ref where me_code=$1",array($action));
  if ( $prfile == "") {
      die (_('Export impossible'));

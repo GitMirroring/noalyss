@@ -306,3 +306,5 @@ define ("SQL_LIST_UNPAID_INVOICE_DATE_LIMIT" ,"
  */
 // Limit email exceeds parameter
 define ('EMAIL_LIMIT',1002);
+define ('EXC_PARAM_VALUE',1005);
+define ('EXC_PARAM_TYPE',1006);

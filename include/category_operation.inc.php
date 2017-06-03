@@ -30,7 +30,9 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-$f=new Fiche($cn,$_REQUEST['f_id']);
+global $http;
+
+$f=new Fiche($cn,$http->request('f_id',"number"));
 $qcode=$f->get_quick_code();
 $_GET['qcode']=$qcode;
 $_REQUEST['qcode']=$qcode;

@@ -31,12 +31,18 @@ require_once NOALYSS_INCLUDE.'/header_print.php';
 require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 require_once NOALYSS_INCLUDE.'/class/class_user.php';
 require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
+$poste_id=$http->request("poste_id");
+$from_periode=$http->request("from_periode");
+$to_periode=$http->request("to_periode");
+$ople=$http->request("ople");
 
 $gDossier=dossier::id();
 
 /* Security */
 $cn=Dossier::connect();
-extract($_GET, EXTR_SKIP);
 
 if ( isset ( $poste_fille) )
 { //choisit de voir tous les postes
@@ -49,11 +55,11 @@ else
 $ret="";
 
 $pdf=new PDF($cn);
-$pdf->setDossierInfo("  Periode : ".$_GET['from_periode']." - ".$_GET['to_periode']);
+$pdf->setDossierInfo(sprintf(_("  Période : %s %s"),$from_periode,$to_periode));
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAuthor('NOALYSS');
-$pdf->setTitle("Détail poste comptable",true);
+$pdf->setTitle(_("Détail poste comptable"),true);
 
 
 if ( count($a_poste) == 0 )
@@ -80,21 +86,21 @@ foreach ($a_poste as $poste)
 
     $pdf->SetFont('DejaVuCond','',8);
     $l=0;
-    $pdf->write_cell($size[$l],6,'Date',0,0,'L');
+    $pdf->write_cell($size[$l],6,_('Date'),0,0,'L');
     $l++;
-    $pdf->write_cell($size[$l],6,'Ref',0,0,'C');
+    $pdf->write_cell($size[$l],6,_('Ref'),0,0,'C');
     $l++;
-    $pdf->write_cell($size[$l],6,'Journal',0,0,'C');
+    $pdf->write_cell($size[$l],6,_('Journal'),0,0,'C');
     $l++;
-    $pdf->LongLine($size[$l],6,'Libellé',0,'L');
+    $pdf->LongLine($size[$l],6,_('Libellé'),0,'L');
     $l++;
-    $pdf->write_cell($size[$l],6,'Let',0,0,'R');
+    $pdf->write_cell($size[$l],6,_('Let'),0,0,'R');
     $l++;
-    $pdf->write_cell($size[$l],6,'Debit',0,0,'R');
+    $pdf->write_cell($size[$l],6,_('Debit'),0,0,'R');
     $l++;
-    $pdf->write_cell($size[$l],6,'Credit',0,0,'R');
+    $pdf->write_cell($size[$l],6,_('Credit'),0,0,'R');
     $l++;
-    $pdf->write_cell($size[$l],6,'Prog',0,0,'R');
+    $pdf->write_cell($size[$l],6,_('Prog'),0,0,'R');
     $l++;
     $pdf->line_new();
     $tot_deb=0;

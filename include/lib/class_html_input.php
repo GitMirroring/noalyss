@@ -16,7 +16,7 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
@@ -707,6 +707,9 @@ class HtmlInput
     }
 	/**
 	 *  return default if the value if the value doesn't exist in $_GET
+         * use HttpInput instead
+         * @see HttpInput
+         * @deprecated 
 	 * @param  $ind name of the variable
 	 * @param type $default
 	 * @return type
@@ -721,6 +724,9 @@ class HtmlInput
 	}
 	/**
 	 *  return default if the value if the value doesn't exist in $_POST
+         * use HttpInput instead
+         * @see HttpInput
+         * @deprecated 
 	 * @param  $ind name of the variable
 	 * @param type $default
 	 * @return type
@@ -735,6 +741,9 @@ class HtmlInput
 	}
 	/**
 	 *  return default if the value if the value doesn't exist in $_REQUEST
+         * use HttpInput instead
+         * @see HttpInput
+         * @deprecated 
 	 * @param  $ind name of the variable
 	 * @param type $default
 	 * @return type

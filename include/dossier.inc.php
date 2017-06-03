@@ -27,18 +27,19 @@ require_once NOALYSS_INCLUDE.'/lib/class_itext.php';
 require_once NOALYSS_INCLUDE.'/lib/class_icheckbox.php';
 require_once NOALYSS_INCLUDE.'/lib/class_itextarea.php';
 require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
+global $http;
 
-$sa=(isset($_REQUEST['sa']))?$_REQUEST['sa']:'list';
+$sa=$http->request('sa','string','list');
 //---------------------------------------------------------------------------
 // Update
-$dossier_id=HtmlInput::default_value_request('d', -1);
+$dossier_id=$http->request('d', "string",-1);
 
 if ( isset ($_POST['upd']) && isNumber($dossier_id) == 1 && $dossier_id != -1)
 {
     $dos=new dossier($dossier_id);
-    $name=HtmlInput::default_value_post('name', "--vide--");
-    $desc=HtmlInput::default_value_post('desc', "--vide--");
-     $max_email=HtmlInput::default_value_post("max_email", -1);
+    $name=$http->post('name');
+    $desc=$http->post('desc');
+     $max_email=$http->post("max_email");
     $dos->set_parameter('name',$name);
     $dos->set_parameter('desc',$desc);
     $dos->set_parameter("max_email", $max_email);
@@ -51,7 +52,13 @@ echo '<div class="content" style="width:80%;margin-left:10%">';
 if ( isset ($_POST["DATABASE"]) )
 {
     $repo=new Database();
-    $dos=HtmlInput::default_value_post('DATABASE', "");
+    try {
+        $dos=$http->post('DATABASE');
+        $template=$http->post("FMOD_ID","numnber");
+    } catch (Exception $ex) {
+        echo $ex->getMessage();
+        return;
+    }
     $dos=sql_string($dos);
     if (strlen($dos)==0)
     {
@@ -63,9 +70,7 @@ if ( isset ($_POST["DATABASE"]) )
      */
     
     // Get the modeledef.mod_id
-    $template=HtmlInput::default_value_post("FMOD_ID",-1);
-    if ( $template == -1 || isNumber($template ) == 0) 
-        die (_('Parametre invalide'));
+
     /*
      * If template is not empty
      */
@@ -90,8 +95,8 @@ if ( isset ($_POST["DATABASE"]) )
     /*
      * Insert new dossier with description
      */
-    $desc=HtmlInput::default_value_post("DESCRIPTION","");
-    $max_email=HtmlInput::default_value_post("max_email", -1);
+    $desc=$http->post("DESCRIPTION");
+    $max_email=$http->post("max_email","number");
     try
     {
         $repo->start();

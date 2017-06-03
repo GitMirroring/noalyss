@@ -36,7 +36,7 @@ require_once NOALYSS_INCLUDE.'/class/class_periode.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/class_ipopup.php';
 
-global $g_user;
+global $g_user,$http;
 
 $cn = Dossier::connect();
 
@@ -104,7 +104,7 @@ elseif (isset($_POST['save']))
                  // extourne
                 if (isset($_POST['reverse_ck']))
                 {
-                    $p_date=HtmlInput::default_value_post('reverse_date', '');
+                    $p_date=$http->post('reverse_date',"string", '');
                     if (isDate($p_date)==$p_date)
                     {
                         // reverse the operation

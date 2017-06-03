@@ -25,6 +25,7 @@ require_once '../include/constant.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
 require_once NOALYSS_INCLUDE.'/lib/class_itext.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 @html_page_start($_SESSION['g_theme']);
@@ -60,6 +61,7 @@ EOF;
     exit();
 }
 $ac=new Database();
+$hi=new HttpInput();
 
 /* check if repo valid */
 if ( $ac->exist_table('version') == false)
@@ -104,11 +106,11 @@ $priv=($User->admin==1)?_("Administrateur"):_("Utilisateur");
 load_all_script();
 if ( isset ($_POST['set_preference'])) {
     //// Save value
-    $pass_1=HtmlInput::default_value_post("pass_1", "");
-    $pass_2=HtmlInput::default_value_post("pass_2", "");
-    $style_user=HtmlInput::default_value_post("style_user", "");
-    $lang=HtmlInput::default_value_post("lang", "");
-    $p_email=HtmlInput::default_value_post("email", "");
+    $pass_1=$hi->post("pass_1","string", "");
+    $pass_2=$hi->post("pass_2","string", "");
+    $style_user=$hi->post("style_user","string", "");
+    $lang=$hi->post("lang", "string","");
+    $p_email=$hi->post("email","string", "");
     if (strlen(trim($pass_1)) != 0 && strlen(trim($pass_2)) != 0)
     {
 	$User->save_password($pass_1,$pass_2);

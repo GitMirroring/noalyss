@@ -94,10 +94,7 @@ if (isset($_POST['generate']))
 	{
 		$act->Update();
 	}
-        $doc_mod=HtmlInput::default_value_post('doc_mod', "-1");
-        if ( $doc_mod == "-1" ||isNumber($doc_mod) == 0) {
-            throw new Exception(_('Donnée invalide'));
-        }
+        $doc_mod=$hi->post('doc_mod',"number");
 	$act->generate_document($doc_mod, $_POST);
 	$sub_action = 'detail';
 }

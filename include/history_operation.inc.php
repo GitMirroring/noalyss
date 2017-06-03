@@ -32,9 +32,9 @@ require_once NOALYSS_INCLUDE.'/class/class_acc_ledger_purchase.php';
 require_once NOALYSS_INCLUDE.'/class/class_acc_ledger_fin.php';
 require_once NOALYSS_INCLUDE.'/class/class_acc_ledger_sold.php';
 require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-global $g_user,$cn;
+global $g_user,$cn,$http;
 $p_array = $_GET;
-$ledger_type=HtmlInput::default_value_get("ledger_type", 'ALL');
+$ledger_type=$http->get("ledger_type","string", 'ALL');
 switch($ledger_type)
 {
         case 'ACH':
@@ -65,7 +65,7 @@ switch($ledger_type)
 }
 echo '<div class="content">';
 // Check privilege
-$p_jrn=HtmlInput::default_value_request("p_jrn", -1);
+$p_jrn=$http->request("p_jrn", "string",-1);
 if (isset($_REQUEST['p_jrn']) &&
 		$g_user->check_jrn($_REQUEST['p_jrn']) == 'X')
 {

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: NOALYSS 672\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-25 17:13+0100\n"
-"PO-Revision-Date: 2017-03-25 17:13+0100\n"
+"PO-Revision-Date: 2017-06-02 21:54+0200\n"
 "Last-Translator: dany\n"
 "Language-Team: French <noalyss-generale@nongnu.org>\n"
 "Language: en_US\n"
@@ -660,7 +660,7 @@ msgstr "Unauthorized"
 
 #: include/param_sec.inc.php:278
 msgid "Accès à tout"
-msgstr "Forbidden access"
+msgstr "all access"
 
 #: include/database.item.php:2 include/database.item.php:66
 #: include/database.item.php:196 include/database.item.php:5
@@ -2058,7 +2058,7 @@ msgstr "Other info"
 
 #: include/template/action_other_action.php:7
 msgid "Autres actions"
-msgstr "atiAdd Action"
+msgstr "Add Action"
 
 #: include/template/detail-action.php:64 include/template/detail-action.php:67
 #: include/template/detail-action.php:72 include/template/detail-action.php:71
@@ -5826,7 +5826,7 @@ msgstr "Opening writing"
 #: include/ext/tva/class_ext_tva.php:340
 #: include/class/class_pdf_operation.php:240
 msgid "Ecriture comptable"
-msgstr "Booking services"
+msgstr "Accounting records"
 
 #: include/database.item.php:86 include/database.item.php:89
 #: include/database.item.php:94 include/database.item.php:91

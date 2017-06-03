@@ -31,12 +31,13 @@ require_once  NOALYSS_INCLUDE.'/class/class_pre_op_ach.php';
 require_once NOALYSS_INCLUDE.'/lib/class_ipopup.php';
 $gDossier = dossier::id();
 global $g_parameter;
+global $http;
 $cn = Dossier::connect();
 //menu = show a list of ledger
 $str_dossier = dossier::get();
-$ac=HtmlInput::default_value_request("ac", "");
+$ac=$http->request("ac");
 
-$request_jrn=HtmlInput::default_value_request("p_jrn", "");
+$request_jrn=$http->request("p_jrn", "string","");
 // Check privilege
 if ($request_jrn !="" && 
     $g_user->check_jrn($request_jrn) != 'W')
@@ -45,7 +46,7 @@ if ($request_jrn !="" &&
         exit - 1;
 }
 $p_msg="";
-$post_jrn=HtmlInput::default_value_post("p_jrn", "");
+$post_jrn=$http->post("p_jrn", "string","");
 /* if a new invoice is encoded, we display a form for confirmation */
 if (isset($_POST['view_invoice']))
 {
@@ -173,7 +174,7 @@ if (isset($_POST['record']))
                 // extourne
                 if (isset($_POST['reverse_ck']))
                 {
-                    $p_date=HtmlInput::default_value_post('reverse_date', '');
+                    $p_date=$htt->post('reverse_date','string', '');
                     if (isDate($p_date)==$p_date)
                     {
                         // reverse the operation
@@ -256,14 +257,14 @@ echo '<div class="content">';
 echo '<p class="notice">'.$p_msg.'</p>';
 try
 {
-    $payment=HtmlInput::default_value_request("e_mp", 0);
+    $payment=$http->request("e_mp", "string",0);
     echo "<FORM class=\"print\"NAME=\"form_detail\" METHOD=\"POST\" >";
     /* request for a predefined operation */
     if (isset($_REQUEST['pre_def'])&&!isset($_POST['correct']) && ! isset($correct) )
     {
         // used a predefined operation
-        $predef=HtmlInput::default_value_request("pre_def", "0");
-        $p_jrn_predef=HtmlInput::default_value_request("p_jrn_predef", "0");
+        $predef=$http->request("pre_def","string", "0");
+        $p_jrn_predef=$http->request("p_jrn_predef","string", "0");
         $op=new Pre_op_ach($cn);
         $op->set_od_id($predef);
         $p_post=$op->compute_array();

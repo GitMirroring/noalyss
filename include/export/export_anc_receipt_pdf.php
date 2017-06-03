@@ -28,8 +28,9 @@ if (!defined('ALLOWED'))
  * export all the selected documents for Ana Accountancy in PDF
  */
 require_once NOALYSS_INCLUDE.'/class/class_document_export.php';
-
-$ck = HtmlInput::default_value_get('ck', 0);
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+$ck = $http->get('ck',"string", 0);
 if ($ck == 0)
 {
     echo "Aucune sélection";

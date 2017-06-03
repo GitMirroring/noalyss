@@ -22,6 +22,7 @@
 /*!\file
  * \brief Called by impress->category, export in PDF the history of a category
  * of card
+ * @bug NOT USED MUST BE REMOVED
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 // Security we check if user does exist and his privilege

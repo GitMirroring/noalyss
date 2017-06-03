@@ -31,7 +31,7 @@ require_once NOALYSS_INCLUDE.'/class/class_fiche_def.php';
 require_once NOALYSS_INCLUDE.'/lib/class_iaction.php';
 require_once NOALYSS_INCLUDE.'/class/class_fiche_def.php';
 
-global $g_user;
+global $g_user,$http;
 
 $low_action = (isset($_REQUEST['sb'])) ? $_REQUEST['sb'] : "list";
 /*! \file
@@ -81,7 +81,7 @@ if ($low_action == "list")
                 echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
 
                 echo HtmlInput::request_to_hidden(array('ac'));
-                $choice_cat=HtmlInput::default_value_request("choice_cat", 1);
+                $choice_cat=$http->request("choice_cat", "number",1);
                 if ( $choice_cat == 1 )
                 {
                     $sel_card = new ISelect('cat');
@@ -94,7 +94,7 @@ if ($low_action == "list")
                 }
                 else
                 {
-                    $cat=HtmlInput::default_value_request('cat', '');
+                    $cat=$http->request('cat',"string", '');
                     echo HtmlInput::hidden("cat",$cat);
                     echo HtmlInput::hidden('choice_cat', 0);
                 }

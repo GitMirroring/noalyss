@@ -36,6 +36,9 @@ include_once("class/class_acc_balance.php");
 require_once  NOALYSS_INCLUDE.'/header_print.php';
 require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
 $gDossier=dossier::id();
 bcscale(4);
 $cn=Dossier::connect();
@@ -44,15 +47,27 @@ require_once  NOALYSS_INCLUDE.'/class/class_user.php';
 $g_user->Check();
 
 $bal=new Acc_Balance($cn);
+try
+{
+    $from_periode=$http->request("from_periode");
+    $to_periode=$http->request("to_periode");
+    $from_poste=$http->request("from_poste");
+    $to_poste=$http->request("to_poste");
+    $p_filter=$http->request("p_filter","string");
+}
+catch (Exception $exc)
+{
+    error_log($exc->getTraceAsString());
+    return;
+}
 
 // Compute for the summary
 $summary_tab=$bal->summary_init();
 $summary_prev_tab=$bal->summary_init();
-$is_summary=HtmlInput::default_value_get("summary", 0);
+$is_summary=$http->get("summary","string", 0);
   
-extract ($_GET, EXTR_SKIP);
 $bal->jrn=null;
-switch( $_GET['p_filter'])
+switch( $p_filter)
 {
 case 0:
         $bal->jrn=null;
@@ -75,8 +90,8 @@ case 2:
     break;
 }
 
-$bal->from_poste=$_GET['from_poste'];
-$bal->to_poste=$_GET['to_poste'];
+$bal->from_poste=$from_poste;
+$bal->to_poste=$to_poste;
 if (isset($_GET['unsold'])) $bal->unsold=true;
 $previous=(isset($_GET['previous_exc']))?1:0;
   
@@ -105,9 +120,9 @@ $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAuthor('NOALYSS');
 $pdf->SetFont('DejaVuCond','',7);
-$pdf->setTitle("Balance comptable",true);
-$pdf->write_cell(30,6,'poste');
-$pdf->LongLine(60,6,'Libellé');
+$pdf->setTitle(_("Balance comptable"),true);
+$pdf->write_cell(30,6,_('poste'));
+$pdf->LongLine(60,6,_('Libellé'));
 if ($previous == 1 ){ 
     $pdf->write_cell(20,6,'Débit N-1',0,0,'R');
     $pdf->write_cell(20,6,'Crédit N-1',0,0,'R');

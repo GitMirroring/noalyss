@@ -180,9 +180,8 @@ function navigation_bar($p_offset,$p_line,$p_size=0,$p_page=1,$p_javascript="")
 function CleanUrl()
 {
     // Compute the url
-    $url="";
-    $and="";
-    $get=$_GET;
+    $url=http_build_query($_GET);
+   /* $get=$_GET;
     if ( isset ($get) )
     {
         foreach ($get as $name=>$value )
@@ -190,7 +189,11 @@ function CleanUrl()
             // we clean the parameter offset, step, page and size
             if (  ! in_array($name,array('offset','step','page','size','s','o','r_jrn')))
             {
-                $url.=$and.$name."=".$value;
+                if (is_array($name)) {
+                    
+                } else {
+                    $url.=$and.$name."=".$value;
+                }
                 $and="&";
             }// if
         }//foreach
@@ -206,7 +209,7 @@ function CleanUrl()
                 }
             }
         }
-    }// if
+    }// if*/
     return $url;
 }
 function redirect($p_string,$p_time=0)

@@ -25,9 +25,9 @@ require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
 require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
 require_once NOALYSS_INCLUDE.'/class/class_bank.php';
 require_once NOALYSS_INCLUDE.'/lib/class_ibutton.php';
-global $g_user;
+global $g_user  , $http;
 
-$low_action=(isset($_REQUEST['sb']))?$_REQUEST['sb']:'list';
+$low_action=$http->request('sb',"string",'list');
 /*! \file
  * \brief Called from the module 'Gestion' to manage the supplier
  */
@@ -73,7 +73,7 @@ if ( $low_action == "list" )
     $a=(isset($_GET['query']))?$_GET['query']:"";
     echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
 
-     $choice_cat=HtmlInput::default_value_request("choice_cat", 1);
+     $choice_cat=$http->request("choice_cat", "string",1);
 
     if ( $choice_cat == 1 )
     {
@@ -87,7 +87,7 @@ if ( $low_action == "list" )
     }
     else
     {
-        $cat=HtmlInput::default_value_request('cat', '');
+        $cat=$http->request('cat',"string", '');
         echo HtmlInput::hidden("cat", $cat);
         echo HtmlInput::hidden('choice_cat', 0);
     }

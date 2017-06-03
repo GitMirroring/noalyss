@@ -25,7 +25,7 @@ require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
 
-
+global $ĥttp;
 $gDossier=dossier::id();
 
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
@@ -107,7 +107,7 @@ if ( isset ($_GET['viewsearch']) )
     list($sql,$where)=$ledger->build_search_sql($array);
     // Count nb of line
     $max_line=$cn->count_sql($sql);
-    $target=HtmlInput::default_value_get("target", "");
+    $target=$http->get("target");
     list($count,$content)=$ledger->list_operation_to_reconcile($sql,$target);
     $bar=navigation_bar($offset,$max_line,$step,$page);
 

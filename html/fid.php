@@ -36,6 +36,7 @@ require_once '../include/constant.php';
 require_once NOALYSS_INCLUDE.'/class/class_own.php';
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
 require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 $gDossier=dossier::id();
 
@@ -52,13 +53,12 @@ $fTva_id=(isset($_REQUEST['t']))?$_REQUEST['t']:'none';
 $fPrice_sale=(isset($_REQUEST['p']))?$_REQUEST['p']:'none';
 $fPrice_purchase=(isset($_REQUEST['b']))?$_REQUEST['b']:'none';
 
-
+$hi=new HttpInput();
 
 if ( isset($_SESSION['isValid']) && $_SESSION['isValid'] == 1)
 {
-    $jrn=HtmlInput::default_value_get('j', '-1');
-    $jrn=sql_string($_GET['j']);
-    $d=HtmlInput::default_value_get('d', '');
+    $jrn=$hi->get('j', "number",'-1');
+    $d=$hi->get('d',"string", '');
     $d=sql_string($d);
 
     if ( $jrn == -1 )

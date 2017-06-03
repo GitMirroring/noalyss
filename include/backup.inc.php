@@ -20,14 +20,17 @@
  * \brief Make and restore backup
  */
 if ( !defined("ALLOWED")) { die (_("Non autorisé")); }
+ require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
 
+ $http=new HttpInput();
+ 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-$dossier_number=HtmlInput::default_value_request("d", 0);
-if ($dossier_number == 0  
-   || isNumber($dossier_number) ==0 ) {
-    die ('Invalid folder number');
-}
-
+ try {
+    $dossier_number=$http->request("d", "number");
+ } catch (Exception $e){
+    echo span(_("Dossier invalide")," class=\"error\" ");
+     exit();
+ }
 if ( isset ($_REQUEST['sa']) )
 {
     if ( defined ('PG_PATH') )
@@ -40,7 +43,7 @@ if ( isset ($_REQUEST['sa']) )
         exit();
     }
 
-    $sa=$_REQUEST['sa'];
+    $sa=$http->request("sa");
     // backup
     if ( $sa=='b')
     {

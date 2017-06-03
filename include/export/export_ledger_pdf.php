@@ -37,22 +37,35 @@ require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
 require_once NOALYSS_INCLUDE.'/class/class_own.php';
 require_once NOALYSS_INCLUDE.'/class/class_periode.php';
 require_once NOALYSS_INCLUDE.'/class/class_print_ledger.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
 
-
+$http=new HttpInput();
 $cn = Dossier::connect();
 $periode = new Periode($cn);
+try
+{
+    $jrn_id=$http->get('jrn_id',"number");
+    $p_simple=$http->get('p_simple',"number");
 
+    
+}
+catch (Exception $exc)
+{
+    echo $exc->getMessage();
+    error_log($exc->getTraceAsString());
+    throw $exc;
+}
 $l_type = "JRN";
 $own = new Own($cn);
 
-$Jrn = new Acc_Ledger($cn, $_GET['jrn_id']);
+$Jrn = new Acc_Ledger($cn, $jrn_id);
 
 $Jrn->get_name();
 $g_user->Check();
 $g_user->check_dossier($gDossier);
 
 // Security
-if ($_GET['jrn_id'] != 0 && $g_user->check_jrn($_GET['jrn_id']) == 'X') {
+if ($g_user->check_jrn($jrn_id) == 'X') {
     /* Cannot Access */
     NoAccess();
 }
@@ -61,7 +74,7 @@ $ret = "";
 
 $jrn_type = $Jrn->get_type();
 
-$pdf = Print_Ledger::factory($cn, $_REQUEST['p_simple'], "PDF", $Jrn);
+$pdf = Print_Ledger::factory($cn, $p_simple, "PDF", $Jrn);
 
 $pdf->setDossierInfo($Jrn->name);
 $pdf->AliasNbPages();

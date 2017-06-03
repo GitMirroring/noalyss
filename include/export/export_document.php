@@ -28,25 +28,21 @@ if ( ! defined ('ALLOWED')) die (_('Non autorisé'));
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/class_document.php';
 require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
 $action = (isset($_REQUEST['a'])) ? $_REQUEST['a'] : 'sh';
 
-$d_id=HtmlInput::default_value_request('d_id',0);
-$id=HtmlInput::default_value_request('id',0);
-$ag_id=HtmlInput::default_value_request('ag_id',0);
-$value=HtmlInput::default_value_request('value', null);
+$id=$http->request('id','number');
+$ag_id=$http->request('ag_id','number');
+$value=$http->request('value',"string", null);
 
-if (    isNumber($id)    == 0 ||
-        isNumber($ag_id) == 0 ||
-        isNumber($d_id)  == 0 
-        )
-{
-    die (_('Données invalides'));
-}
 /* Show the document */
 if ($action == 'sh')
 {
 	if ($g_user->check_action(VIEWDOC) == 1)
 	{
+            $d_id=$http->request('d_id',"number");
 		// retrieve the document
 		$doc = new Document($cn, $d_id);
 		$doc->Send();
@@ -58,6 +54,8 @@ if ($action == 'rm')
 	$json='{"d_id":"-1"}';
 	if ($g_user->check_action(RMDOC) == 1)
 	{
+            $d_id=$http->request('d_id',"number");
+
 		$doc = new Document($cn, $d_id);
 		$doc->remove();
 		$json = sprintf('{"d_id":"%s"}', $d_id);
@@ -70,6 +68,8 @@ if ( $action == "upd_doc")
 {
     	if ($g_user->check_action(VIEWDOC) == 1)
 	{
+            $d_id=$http->request('d_id',"number");
+
             $doc = new Document($cn, $d_id);
             $doc->get();
             if ( $g_user->can_write_action($doc->ag_id))

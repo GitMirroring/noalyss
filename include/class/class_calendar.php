@@ -270,7 +270,8 @@ class Calendar
         $this->fill_from_todo($cell,"long");
         $wMonth=new ISelect('per_div');
         $cn=Dossier::connect();
-        $wMonth->value=$cn->make_array("select p_id,to_char(p_start,'MM/YYYY') from parm_periode where p_exercice = '$exercice_user' order by p_start");
+        $wMonth->value=$cn->make_array("select p_id,to_char(p_start,'MM/YYYY') from parm_periode where p_exercice = $1 order by p_start"
+                ,0,array($exercice_user));
         $wMonth->selected=$this->default_periode;
         $wMonth->javascript=sprintf("onchange=calendar_zoom({gDossier:%d,invalue:'%s',outvalue:'%s',distype:'%s',notitle:%d})",
             dossier::id(),'per_div','calendar_zoom_div','cal',$notitle);
@@ -278,7 +279,6 @@ class Calendar
         $month_year=$wMonth->input().$wMonth->get_js_attr();
         ob_start();
          $zoom=1;
-         $notitle=HtmlInput::default_value_get('notitle', 0);
         require_once NOALYSS_TEMPLATE.'/calendar.php';
 
         if (count($this->action_div) > 0)

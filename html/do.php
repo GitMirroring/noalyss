@@ -50,9 +50,9 @@ if ( ! isset ($_SESSION['g_theme']))
   }
 $cn = Dossier::connect();
 
-global $g_user, $cn,$g_parameter;
+global $g_user, $cn,$g_parameter,$http;
 $g_user = new User($cn);
-
+$http=new HttpInput();
 /*
  * check that the database is not empty
  */
@@ -70,8 +70,15 @@ if ( ! $cn->exist_table('version')) {
  */
 if ( isset ($_POST['set_preference'])) {
     //// Save value
-    extract($_POST, EXTR_SKIP );
-
+    $style_user=$http->post("style_user","string","Classique");
+    $lang=$http->post("lang","string","fr_FR.utf8");
+    $p_size=$http->post("p_size","number",50);
+    $pass_1=$http->post("pass_1","string","");
+    $pass_2=$http->post("pass_2","string","");
+    $p_email=$http->post("p_email","string","");
+    $minirap=$http->post("minirap","number",0);
+    $period=$http->post("period","number");
+    
     if (strlen(trim($pass_1)) != 0 && strlen(trim($pass_2)) != 0)
     {
 	$g_user->save_password($pass_1,$pass_2);

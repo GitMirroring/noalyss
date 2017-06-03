@@ -21,7 +21,8 @@
 if ( !defined ('ALLOWED')) die('Forbidden');
 require_once NOALYSS_INCLUDE.'/lib/class_iradio.php';
 require_once NOALYSS_INCLUDE.'/lib/class_ifile.php';
-
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
 /*!\file
  * \brief restaure a database
  */
@@ -155,7 +156,7 @@ if ( isset ($_REQUEST['sa'] ))
         else
             $lname=$id." ".$_REQUEST['database'];
         
-        $ldesc=HtmlInput::default_value_post("desc", "");
+        $ldesc=$http->post("desc");
         $sql="insert into modeledef (mod_id,mod_name,mod_desc) values ($1,$2,$3)";
         $cn->start();
         try

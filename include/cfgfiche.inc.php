@@ -31,38 +31,52 @@ require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 require_once NOALYSS_INCLUDE.'/lib/class_sort_table.php';
 require_once NOALYSS_INCLUDE.'/class/class_fiche_def.php';
 require_once NOALYSS_INCLUDE.'/lib/class_single_record.php';
+global $http;
 
 $retour=HtmlInput::button_anchor("Retour à la liste", HtmlInput::get_to_string(array("gDossier","ac")));
-$action=HtmlInput::default_value_post('action', '');
+$action=$http->post('action',"string", '');
 /*******************************************************************************************/
 // Add an attribut
 /*******************************************************************************************/
 if ( $action == 'add_line')
 {
-	 $fiche_def=new Fiche_Def($cn,$_REQUEST['fd_id']);
-     $fiche_def->InsertAttribut($_REQUEST['ad_id']);
-     echo $fiche_def->input_detail();
-	 echo $retour;
-	 return;
+    $fd_id=$http->request("fd_id","number");
+    $ad_id=$http->request("ad_id","number");
+    $fiche_def=new Fiche_Def($cn,$fd_id);
+    $fiche_def->InsertAttribut($ad_id);
+    echo $fiche_def->input_detail();
+    echo $retour;
+    return;
 }
 /*******************************************************************************************/
 // Remove an attribut
 /*******************************************************************************************/
 if ( $action == 'remove_line' )
 {
-	$fiche_def=new Fiche_Def($cn,$_REQUEST['fd_id']);
-	$fiche_def=new Fiche_Def($cn,$_REQUEST['fd_id']);
-	$fiche_def->RemoveAttribut($_REQUEST['chk_remove']);
-    echo $fiche_def->input_detail();
-	echo $retour;
-	return;
+    $fd_id=$http->request("fd_id","number");
+    $fiche_def=new Fiche_Def($cn,$fd_id);
+    try
+    {
+        $ck_remove=$http->request('chk_remove');
+         $fiche_def->RemoveAttribut($ck_remove);
+    }
+    catch (Exception $exc)
+    {
+        throw new Exception(_("Vous devez choisir au moins une ligne"));
+    }    finally
+    {
+      echo $fiche_def->input_detail();
+      echo $retour;
+      return;
+    }
+
 }
 /*******************************************************************************************/
 // Try to remove a category
 /*******************************************************************************************/
 if ( $action == 'remove_cat' ) 
 {
-    $post_id=HtmlInput::default_value_post('fd_id', 0);
+    $post_id=$http->request("fd_id","number");
     if ($post_id == 0 || $post_id >= 500000)
     {
         alert(_('Impossible d\'enlever cette catégorie'));
@@ -106,11 +120,12 @@ if ( isset ($_POST['change_name']))
 /*******************************************************************************************/
 if ( $action == 'save_line' )
 {
-    $fiche_def=new Fiche_Def($cn,$_REQUEST['fd_id']);
+    $fd_id=$http->request("fd_id","number");
+    $fiche_def=new Fiche_Def($cn,$fd_id);
     $fiche_def->save_order($_POST);
-	echo $fiche_def->input_detail();
-	echo $retour;
-	return;
+    echo $fiche_def->input_detail();
+    echo $retour;
+    return;
 }
 /*******************************************************************************************/
 // Save a new category of card

@@ -24,6 +24,7 @@ define('SIZE_REQUEST', 70);
 
 
 require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
 /**
  * @brief generate a random string of char
  * @param $car int length of the string
@@ -39,13 +40,13 @@ function generate_random($car)
     }
     return $string;
 }
-
+$http=new HttpInput();
 /**
  * @file
  * @brief 
  * @param type $name Descriptionara
  */
-$action=HtmlInput::default_value_request("id", "");
+$action=$http->request("id","string", "");
 if ($action=="") :
     /*
      * Display dialog box
@@ -67,8 +68,8 @@ elseif ($action=="send_email") :
     /*
      * Check if user exists, if yes save a recover request
      */
-    $login_input=HtmlInput::default_value_request("login", "");
-    $email_input=HtmlInput::default_value_request("email", "");
+    $login_input=$http->request("login", "string","");
+    $email_input=$http->request("email", "string","");
     $cn=new Database(0);
     $valid=false;
     if (trim($login_input)!=""):

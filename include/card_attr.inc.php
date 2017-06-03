@@ -24,7 +24,7 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/class_fiche_attr.php';
-
+global $http;
 
 
 $fa=new Fiche_Attr($cn);
@@ -34,13 +34,13 @@ $fa=new Fiche_Attr($cn);
 /////////////////////////////////////////////////////////////////////////////
 if ( isset($_POST['save']))
 {
-    $ad_id=$_POST['ad_id'];
-    $ad_text=$_POST['desc'];
-    $ad_type=$_POST['type'];
-    $ad_size=$_POST['size'];
-    $ad_extra=$_POST['extra'];
     try
     {
+        $ad_id=$http->post('ad_id');
+        $ad_text=$http->post('desc');
+        $ad_type=$http->post('type');
+        $ad_size=$http->post('size');
+        $ad_extra=$http->post('extra');
         $cn->start();
         for ($e=0;$e<count($ad_id);$e++)
         {

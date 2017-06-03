@@ -35,7 +35,7 @@ $cn=Dossier::connect();
 //menu = show a list of ledger
 $str_dossier=dossier::get();
 $ac="ac=".$_REQUEST['ac'];
-global $g_parameter;
+global $g_parameter,$http;
 $p_msg="";
 //----------------------------------------------------------------------
 // Encode a new invoice
@@ -190,7 +190,7 @@ show_tab(a_tab,'facturation_div_id');
              // extourne
             if (isset($_POST['reverse_ck']))
             {
-                $p_date=HtmlInput::default_value_post('reverse_date', '');
+                $p_date=$http->post('reverse_date', "string",'');
                 if (isDate($p_date)==$p_date)
                 {
                     // reverse the operation
@@ -268,7 +268,7 @@ echo '<div class="content">';
 echo '<p class="notice">'.$p_msg.'</p>';
 try
 {
-    $payment=HtmlInput::default_value_request("e_mp", 0);
+    $payment=$http->request("e_mp","string", 0);
 
     echo "<FORM class=\"print\" NAME=\"form_detail\" METHOD=\"POST\" >";
     /* request for a predefined operation */

@@ -4,7 +4,7 @@
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 echo '<div style="content">';
-
+global $http;
 require_once NOALYSS_INCLUDE.'/class/class_anc_grandlivre.php';
 
 $grandLivre=new Anc_Grandlivre($cn);
@@ -20,7 +20,7 @@ echo '<p>' . HtmlInput::submit('Recherche', _('Rechercher')) . '</p>';
 echo HtmlInput::request_to_hidden(array('sa','ac','gDossier'));
 echo '</form>';
 
-$result=HtmlInput::default_value_request('result',null);
+$result=$http->request('result',"string",null);
 
 if ($result != null)
 {

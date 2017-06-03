@@ -27,7 +27,7 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-global $g_failed,$g_succeed;
+global $g_failed,$g_succeed,$http;
 require_once NOALYSS_INCLUDE.'/class/class_acc_ledger_fin.php';
 bcscale(2);
 ?>
@@ -107,8 +107,8 @@ if (isset($_GET["p_jrn"]) && $jrn_priv == "X")
 	NoAccess();
 	return;
 }
-$end_extrait=HtmlInput::default_value_post("end_extrait", 0);
-$start_extrait=HtmlInput::default_value_post("start_extrait", 0);
+$end_extrait=$http->post("end_extrait", "string",0);
+$start_extrait=$http->post("start_extrait","string", 0);
 if ( isNumber($end_extrait) == 0 )
 {
     echo '<span class="notice">';

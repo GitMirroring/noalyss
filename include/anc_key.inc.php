@@ -30,8 +30,9 @@ if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 global $cn, $g_user;
 require_once NOALYSS_INCLUDE.'/class/class_anc_key.php';
-$op=HtmlInput::default_value_request("op", "list");
+global $http;
 
+$op=$http->request("op", "string", "list");
 switch ($op)
 {
     case 'list':
@@ -39,15 +40,11 @@ switch ($op)
         Anc_Key::key_add();
         break;
     case 'consult':
-        $id=HtmlInput::default_value_request("key", "0");
-        if (isNumber($id)==0||$id==0)
+        try
         {
-            die(_('Clef invalide'));
-        }
-        $key=new Anc_Key($id);
-        if (isset($_POST['save_key']))
-        {
-            try
+            $id=$http->request("key", "number");
+            $key=new Anc_Key($id);
+            if (isset($_POST['save_key']))
             {
                 $key->save($_POST);
                 Anc_Key::display_list();
@@ -55,18 +52,27 @@ switch ($op)
 
                 break;
             }
-            catch (Exception $e)
-            {
-                record_log($e->getTraceAsString());
-                echo span($e->getMessage(),' class="notice"');
-            }
+            $key->input();
         }
-        $key->input();
+        catch (Exception $e)
+        {
+            record_log($e->getTraceAsString());
+            echo span($e->getMessage(), ' class="notice"');
+            Anc_Key::display_list();
+            Anc_Key::key_add();
+        }
         break;
     case 'delete_key':
-        $id=HtmlInput::default_value_request("key", "0");
-        $key=new Anc_Key($id);
-        $key->delete();
+        try
+        {
+            $id=$http->request("key", "number");
+            $key=new Anc_Key($id);
+            $key->delete();
+        }
+        catch (Exception $e)
+        {
+            echo span($e->getMessage(), ' class="notice"');
+        }
         Anc_Key::display_list();
         Anc_Key::key_add();
 }

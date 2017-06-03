@@ -26,6 +26,7 @@ require_once NOALYSS_INCLUDE.'/class/class_extension.php';
  * @brief Automatic installation of plugins and activation
  */
 global $cn;
+global $http;
 
 /******************************************************************************
  * Scan the plugin folder and file in each subfolder a property file and
@@ -61,7 +62,7 @@ $nb_profile=count($a_profile);
  ******************************************************************************/
 if ( isset ($_POST['save_plugin'])){
     // retrieve array of plugin
-    $plugin=HtmlInput::default_value_post('plugin', array());
+    $plugin=$http->post('plugin', "string",array());
     // for each extension
     for ($i=0;$i<$nb_plugin;$i++) {
         

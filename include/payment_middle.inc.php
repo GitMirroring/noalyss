@@ -29,11 +29,11 @@ $tr='<tr>';
 $etr='</tr>';
 $th='<th>';
 $eth='</th>';
-
+global $http;
 /*!\file
  * \brief payment mode
  */
-$sb=HtmlInput::default_value('sb', "", $_REQUEST);
+$sb=$http->request('sb', "string","");
 echo '<div class="content">';
 
 //----------------------------------------------------------------------

@@ -26,7 +26,7 @@ require_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/constant.php';
 require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-
+global $http;
 $gDossier=dossier::id();
 
 require_once NOALYSS_INCLUDE.'/lib/class_database.php';
@@ -41,7 +41,7 @@ echo '<div id="acc_update" class="inner_box" style="display:none;position:absolu
 
 /* Store the p_start parameter */
 
-$g_start=HtmlInput::default_value_get('p_start',1);
+$g_start=$http->get('p_start',"string",1);
 ?>
 <a  id="top"></a>
 

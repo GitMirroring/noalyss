@@ -1294,14 +1294,13 @@ class Follow_Up
         if ($p_array==null)
             $p_array=$_GET;
 
-        extract($p_array, EXTR_SKIP);
         $query="";
-        if (count($searchtag)==0)
+        if (count($p_array['searchtag'])==0)
             return "";
-        for ($i=0; $i<count($searchtag); $i++)
+        for ($i=0; $i<count($p_array['searchtag']); $i++)
         {
-            if (isNumber($searchtag[$i])==1)
-                $query .= ' and ag_id in (select ag_id from action_tags where t_id= '.sql_string($searchtag[$i]).')';
+            if (isNumber($p_array['searchtag'][$i])==1)
+                $query .= ' and ag_id in (select ag_id from action_tags where t_id= '.sql_string($p_array['searchtag'][$i]).')';
         }
         return $query;
     }
@@ -1314,12 +1313,9 @@ class Follow_Up
      */
     static function create_query($cn, $p_array=null)
     {
-        if ($p_array==null)
-            $p_array=$_GET;
-
-        extract($p_array, EXTR_SKIP);
+        if ($p_array==null)             $p_array=$_GET;
+        
         $action_query="";
-
 
         if (isset($_REQUEST['action_query']))
         {
@@ -1331,10 +1327,10 @@ class Follow_Up
         }
 
         $str="";
-        if (isset($qcode))
+        if (isset($p_array['qcode']))
         {
             // verify that qcode is not empty
-            if (strlen(trim($qcode))!=0)
+            if (strlen(trim($p_array['qcode']))!=0)
             {
 
                 $fiche=new Fiche($cn);
@@ -1346,38 +1342,38 @@ class Follow_Up
                     $str=" and (f_id_dest= ".$fiche->id." or ag_id in (select ag_id from action_person as ap where ap.f_id=".$fiche->id.")  )";
             }
         }
-        if (isset($tdoc)&&$tdoc!=-1)
+        if (isset($p_array['tdoc'])&&$p_array['tdoc'] !=-1)
         {
-            $action_query .= ' and dt_id = '.sql_string($tdoc);
+            $action_query .= ' and dt_id = '.sql_string($p_array['tdoc']);
         }
-        if (isset($state)&&$state!=-1)
+        if (isset($p_array['state'])&&$p_array['state'] !=-1)
         {
-            $action_query .= ' and ag_state= '.sql_string($state);
+            $action_query .= ' and ag_state= '.sql_string($p_array['state']);
         }
-        if (isset($hsstate)&&$hsstate!=-1)
+        if (isset($p_array['hsstate'])&&$p_array['hsstate']!=-1)
         {
-            $action_query .= ' and ag_state <> '.sql_string($hsstate);
+            $action_query .= ' and ag_state <> '.sql_string($p_array['hsstate']);
         }
-        if (isset($sag_ref)&&trim($sag_ref)!="")
+        if (isset($p_array['sag_ref'])&&trim($p_array['sag_ref'])!="")
         {
-            $query .= ' and ag_ref= \''.sql_string($sag_ref)."'";
+            $query .= " and ag_ref= '".sql_string($p_array['sag_ref'])."'";
         }
 
         if (isset($_GET['only_internal']))
             $action_query .= ' and f_id_dest=0 ';
 
-        if (isset($date_start)&&isDate($date_start)!=null)
+        if (isset($p_array['date_start'])&&isDate($p_array['date_start'])!=null)
         {
-            $action_query.=" and ag_timestamp >= to_date('$date_start','DD.MM.YYYY')";
+            $action_query.=" and ag_timestamp >= to_date('".$p_array['date_start']."','DD.MM.YYYY')";
         }
-        if (isset($date_end)&&isDate($date_end)!=null)
+        if (isset($p_array['date_end'])&&isDate($p_array['date_end'])!=null)
         {
-            $action_query.=" and ag_timestamp <= to_date('$date_end','DD.MM.YYYY')";
+            $action_query.=" and ag_timestamp <= to_date('".$p_array['date_end']."','DD.MM.YYYY')";
         }
-        if (isset($ag_dest_query)&&$ag_dest_query!=-2)
+        if (isset($p_array['ag_dest_query'])&&$p_array['ag_dest_query']!=-2)
         {
-            $action_query.= " and ((ag_dest = ".sql_string($ag_dest_query)." and ".self::sql_security_filter($cn, "R").") or ".
-                    "(ag_dest = ".sql_string($ag_dest_query)." and ".self::sql_security_filter($cn, "R")." and ".
+            $action_query.= " and ((ag_dest = ".sql_string($p_array['ag_dest_query'])." and ".self::sql_security_filter($cn, "R").") or ".
+                    "(ag_dest = ".sql_string($p_array['ag_dest_query'])." and ".self::sql_security_filter($cn, "R")." and ".
                     " ag_owner='".$_SESSION['g_user']."'))";
         }
         else
@@ -1386,23 +1382,23 @@ class Follow_Up
         }
 
 
-        if (isNumber($ag_id)==1&&$ag_id!=0)
+        if (isset ($p_array['ag_id']) && isNumber($p_array['ag_id'])==1&&$p_array['ag_id']!=0)
         {
-            $action_query=" and ag_id= ".sql_string($ag_id);
+            $action_query=" and ag_id= ".sql_string($p_array['ag_id']);
         }
-        if (isset($remind_date)&&$remind_date!=""&&isDate($remind_date)==$remind_date)
+        if (isset($p_array['$remind_date'])&&$p_array['remind_date']!=""&&isDate($p_array['remind_date'])==$p_array['remind_date'])
         {
-            $action_query .= " and to_date('".sql_string($remind_date)."','DD.MM.YYYY')<= ag_remind_date";
+            $action_query .= " and to_date('".sql_string($p_array['$remind_date'])."','DD.MM.YYYY')<= ag_remind_date";
         }
-        if (isset($remind_date_end)&&$remind_date_end!=""&&isDate($remind_date_end)==$remind_date_end)
+        if (isset($p_array['remind_date_end'])&&$p_array['remind_date_end']!=""&&isDate($p_array['$remind_date_end'])==$p_array['remind_date_end'])
         {
-            $action_query .= " and to_date('".sql_string($remind_date_end)."','DD.MM.YYYY')>= ag_remind_date";
+            $action_query .= " and to_date('".sql_string($p_array['remind_date_end'])."','DD.MM.YYYY')>= ag_remind_date";
         }
-        if (!isset($closed_action))
+        if (!isset($p_array['closed_action']))
         {
             $action_query.=" and s_status is null ";
         }
-        if (isset($searchtag))
+        if (isset($p_array['searchtag']))
         {
             $action_query .= Follow_Up::filter_by_tag($cn, $p_array);
         }
@@ -1463,9 +1459,8 @@ class Follow_Up
      */
     function export_csv($p_array)
     {
-        extract($p_array, EXTR_SKIP);
 
-
+        
         $p_search=self::create_query($this->db, $p_array);
         $sql="
              select ag_id,

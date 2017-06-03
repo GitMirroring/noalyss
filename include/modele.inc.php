@@ -31,14 +31,15 @@ require_once NOALYSS_INCLUDE.'/lib/class_itext.php';
 require_once NOALYSS_INCLUDE.'/lib/class_icheckbox.php';
 require_once  NOALYSS_INCLUDE.'/class/class_extension.php';
 require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
-
-$sa = (isset($_REQUEST['sa'])) ? $_REQUEST['sa'] : 'list';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+$sa = $http->request("sa", "string", 'list');
 if (isset($_POST['upd']) &&
 		isset($_POST['m']))
 {
-    $name=HtmlInput::default_value_post('name',"");
-    $desc =HtmlInput::default_value_post('desc',"");
-    $mod_id=HtmlInput::default_value_post("m", 0);
+    $name=$http->post('name');
+    $desc =$http->post('desc');
+    $mod_id=$http->post("m", 0);
     
 	if (trim($name) != "" && $mod_id != 0 && isNumber($mod_id)==1)
 	{
@@ -52,7 +53,7 @@ if (isset($_POST['upd']) &&
 
 $cn = new Database();
 
-$fmod_dbid=HtmlInput::default_value_post("FMOD_DBID", 0);
+$fmod_dbid=$http->post("FMOD_DBID");
 
 // IF FMOD_NAME is posted then must add a template
 if (isset($_POST["FMOD_NAME"]))
@@ -72,8 +73,8 @@ if (isset($_POST["FMOD_NAME"]))
 		return;
 	}
 
-	$mod_name = HtmlInput::default_value_post("FMOD_NAME",null);
-	$mod_desc = HtmlInput::default_value_post("FMOD_DESC",null);
+	$mod_name = $http->post("FMOD_NAME");
+	$mod_desc = $http->post("FMOD_DESC");
 	if ($mod_name != null || trim ($mod_name) != "")
 	{
 		$Res = $cn->exec_sql("insert into modeledef(mod_name,mod_desc)
@@ -397,8 +398,11 @@ if ($sa == 'list')
 			echo HtmlInput::button_anchor(_('Retour'), '?action=modele_mgt');
 			return;
 		}
-                $mod_id=HtmlInput::default_value_request('m', 0);
-                if ( $mod_id == 0 || isNumber($mod_id) == 0 )
+                try {
+                    $mod_id=$http->request('m', "number");
+                    
+                }
+                catch (Exception $e)
                 {
                     echo _('Donnée invalide');
                     return;

@@ -33,7 +33,7 @@ require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
 require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
 require_once NOALYSS_INCLUDE.'/class/class_periode.php';
 require_once NOALYSS_INCLUDE.'/class/class_exercice.php';
-global $g_user;
+global $g_user, $http;
 $gDossier=dossier::id();
 $exercice=(isset($_GET['exercice']))?$_GET['exercice']:$g_user->get_exercice();
 bcscale(2);
@@ -64,7 +64,7 @@ echo dossier::hidden();
 
 
 // filter on the current year
-$from=HtmlInput::default_value_get("from_periode", "");
+$from=$http->get("from_periode", "number",0);
 $input_from=new IPeriod("from_periode",$from,$exercice);
 $input_from->show_end_date=false;
 $input_from->type=ALL;
@@ -74,9 +74,10 @@ $input_from->user=$g_user;
 
 echo _('Depuis').' :'.$input_from->input();
 // filter on the current year
-$to=HtmlInput::default_value_get("to_periode", "");
+$to=$http->get("to_periode", "number",0);
 
-if( $to == "") {
+
+if( $to == 0) {
      $t_periode=new Periode($cn);
      list($per_max,$per_min)=$t_periode->get_limit($exercice);
      $to=$per_min->p_id;
@@ -126,11 +127,11 @@ $ck_lev3->value=1;
 
 echo '<ul style="list-style-type:none">';
 
-if (HtmlInput::default_value('lvl1',false,$_GET) !== false)
+if ($http->get('lvl1',"string",false) !== false)
   $ck_lev1->selected=true;
-if (HtmlInput::default_value('lvl2',false,$_GET) !== false)
+if ($http->get('lvl2',"string",false) !== false)
   $ck_lev2->selected=true;
-if (HtmlInput::default_value('lvl3',false,$_GET) !== false)
+if ($http->get('lvl3',"string",false) !== false)
   $ck_lev3->selected=true;
 echo '<li>'.$ck_lev1->input()._('Niveau 1').'</li>';
 echo '<li>'.$ck_lev2->input()._('Niveau 2').'</li>';
@@ -138,12 +139,12 @@ echo '<li>'.$ck_lev3->input()._('Niveau 3').'</li>';
 echo '</ul>';
 
 $unsold=new ICheckBox('unsold');
-if (HtmlInput::default_value('unsold',false,$_GET) !== false)
+if ($http->get('unsold',"string",false) !== false)
   $unsold->selected=true;
 
 // previous exercice if checked
 $previous_exc=new ICheckBox('previous_exc');
-if (HtmlInput::default_value('previous_exc',false,$_GET) !== false)
+if ($http->get('previous_exc',"string",false) !== false)
   $previous_exc->selected=true;
 
 
@@ -153,7 +154,7 @@ $from_poste->set_attribute('ipopup','ipop_account');
 $from_poste->set_attribute('label','from_poste_label');
 $from_poste->set_attribute('account','from_poste');
 
-$from_poste->value=HtmlInput::default_value_get('from_poste',''); 
+$from_poste->value=$http->get('from_poste',"string",''); 
 $from_span=new ISpan("from_poste_label","");
 
 $to_poste=new IPoste();
@@ -162,7 +163,7 @@ $to_poste->set_attribute('ipopup','ipop_account');
 $to_poste->set_attribute('label','to_poste_label');
 $to_poste->set_attribute('account','to_poste');
 
-$to_poste->value=HtmlInput::default_value_get('to_poste',''); 
+$to_poste->value=$http->get('to_poste',"string",''); 
 $to_span=new ISpan("to_poste_label","");
 
 echo "<div>";
@@ -185,7 +186,7 @@ echo '</div>';
     <?php 
         $summary=new ICheckBox("summary");
         $summary->value=1;
-        $is_summary=HtmlInput::default_value_get("summary", 0);
+        $is_summary=$http->get("summary","string", 0);
         $summary->set_check($is_summary);
         echo $summary->input();
     ?>
