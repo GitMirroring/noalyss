@@ -40,6 +40,9 @@ require_once NOALYSS_INCLUDE.'/class/class_anc_operation.php';
 require_once NOALYSS_INCLUDE.'/lib/class_idate.php';
 require_once NOALYSS_INCLUDE.'/class/class_own.php';
 require_once NOALYSS_INCLUDE.'/lib/class_iconcerned.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
 /**
  * Check if we receive the needed data (jr_id...)
  */
@@ -51,11 +54,20 @@ if ( ! isset ($_REQUEST['act'])|| ! isset ($_REQUEST['jr_id'])
  global $g_user,$cn,$g_parameter;
 mb_internal_encoding("UTF-8");
 
+try
+{
+    $action=$http->request('act');
+    $jr_id=$http->request('jr_id');
+    $div=$http->request('div');		/* the div source and target for javascript */
+    $gDossier=dossier::id();
+    
+}
+catch (Exception $exc)
+{
+    error_log($exc->getTraceAsString());
+    return;
+}
 
-$action=$_REQUEST['act'];
-$jr_id=$_REQUEST['jr_id'];
-$div=$_REQUEST['div'];		/* the div source and target for javascript */
-$gDossier=dossier::id();
 /**
  *if $_SESSION['g_user'] is not set : echo a warning
  */
@@ -87,7 +99,7 @@ EOF;
 // check if the user can access the ledger where the operation is (view) and
 // if he can modify it
 $op=new Acc_Operation($cn);
-$op->jr_id=$_REQUEST['jr_id'];
+$op->jr_id=$jr_id;
 $ledger=$op->get_ledger();
 if ($ledger=="")
 {
@@ -146,10 +158,7 @@ case 'rmop':
             {
                 $cn->start();
                 $oLedger=new Acc_Ledger($cn,$ledger);
-                $oLedger->jr_id=HtmlInput::default_value_request('jr_id',0);
-                if ( $oLedger->jr_id == 0 || 
-                     isNumber($oLedger->jr_id) == 0)
-                    throw new Exception (_('Donnée invalide'));
+                $oLedger->jr_id=$jr_id=$http->request('jr_id',"number");
                 $oLedger->delete();
                 $cn->commit();
                 echo _("Opération Effacée");

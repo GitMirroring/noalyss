@@ -21,12 +21,23 @@
 
 // require_once '.php';
 if ( ! defined ('ALLOWED') ) die(_('Non autorisé'));
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
 
 // Security 
 if ($g_user->check_module('CFGPRO')==0)
     die();
-$p_profile_menu_id=HtmlInput::default_value_get('p_profile_menu_id', 0);
-if ( $p_profile_menu_id == 0 ||isNumber($p_profile_menu_id)==0)    throw new Exception(_('Donnée invalide'));
+try
+{
+    
+    $p_profile_menu_id=$http->get('p_profile_menu_id', "number");
+}
+catch (Exception $exc)
+{
+    error_log($exc->getTraceAsString());
+    return;
+}
+
 // Delete menu  + children
 $cn->exec_sql('delete from profile_menu where pm_id = $1 or pm_id_dep=$1',array($p_profile_menu_id));
 

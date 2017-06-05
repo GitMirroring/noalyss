@@ -37,12 +37,20 @@ class HttpInput
         {
             // no check on string
             if ( $p_type=="string") return;
+            // Check if number
             if ( $p_type=="number" 
                  && isNumber($this->array[$p_name]) == 0
                  )                     
-                throw new Exception(_("Valeur invalide")."[ $p_name ] = {$this->array[$p_name]}"
+                throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
                     ,EXC_PARAM_TYPE);
-            if ( $p_type=="date") return;
+            // Check if date dd.mm.yyyy
+            if ( $p_type=="date")  {
+                if (isDate($this->array[$p_name])=!$this->array[$p_name]) {
+                    throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
+                    ,EXC_PARAM_TYPE);
+                    
+                }
+            }
         }
         catch (Exception $ex)
         {
@@ -141,6 +149,18 @@ class HttpInput
             throw $exc;
         }
 
+    }
+    /**
+     * Extract variable name from an exception message. If an exception is thrown
+     * then thanks this function it is possible to know what variable triggers
+     * the exception
+     * @param type $p_string
+     * @return string like "[variable]"
+     */
+    function extract_variable($p_string) {
+        if (  preg_match("/\[.*\]/",$p_string,$found) == 1 ) {
+            return $found[0];
+        }
     }
 }
 

@@ -29,22 +29,25 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 require_once NOALYSS_INCLUDE.'/class/class_anc_key.php';
-ob_start();
-/////
-$key=HtmlInput::default_value_get('key',0);
-$amount=HtmlInput::default_value_get('amount',0);
-$target=HtmlInput::default_value_get('t','');
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
 
-if (        isNumber($key)== 0
-        ||  isNumber($amount) ==0
-        || $target==''
-    ) 
+try
 {
-    die ('Invalid parameter');
+    $key=$http->get('key',"number");
+    $amount=$http->get('amount',"number");
+    $target=$http->get('t');
+}
+catch (Exception $exc)
+{
+    echo $exc->getMessage();
+    error_log($exc->getTraceAsString());
+    return;
 }
 
 $compute_key=new Anc_Key($key);
-$row=str_replace('t', "", $target);
+$pos=strrpos($target,"t");
+$row=substr($target,$pos+1);
 
 $compute_key->fill_table($target,$amount);
 echo <<<EOF

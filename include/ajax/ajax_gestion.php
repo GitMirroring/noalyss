@@ -25,6 +25,10 @@
  */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
+
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
 if ($op=='action_show')
 {
     /**
@@ -51,19 +55,16 @@ if ($op=='action_save')
     /**
      * save info from the get
      */
-    $date_event=HtmlInput::default_value_get("date_event", -1);
-    $dest=HtmlInput::default_value_get("dest", "");
-    $event_group=HtmlInput::default_value_get("event_group", 0);
-    $event_priority=HtmlInput::default_value_get("event_priority", 0);
-    $title=HtmlInput::default_value_get("title_event", NULL);
-    $summary=HtmlInput::default_value_get("summary", "");
-    $type_event=HtmlInput::default_value_get('type_event', -1);
-    $hour_event=HtmlInput::default_value_get('hour_event', null);
-    /*
-     * Check if data are valid
-     */
     try
     {
+         $date_event=$http->get("date_event","string","");
+        $dest=$http->get("dest","string", "");
+        $event_group=$http->get("event_group", "string",0);
+        $event_priority=$http->get("event_priority", "string",0);
+        $title=$http->get("title_event","string", NULL);
+        $summary=$http->get("summary","string", "");
+        $type_event=$http->get('type_event', "string",-1);
+        $hour_event=$http->get('hour_event', "string",null);
         if ($date_event==-1||isDate($date_event)==0)
             throw new Exception(_('Date invalide'));
         if (trim($dest)=="")

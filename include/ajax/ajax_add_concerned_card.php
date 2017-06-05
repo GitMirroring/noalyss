@@ -20,15 +20,27 @@
 
 // Copyright 2014 Author Dany De Bontridder danydb@aevalys.eu
 // require_once '.php';
+
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
+
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
 ob_start();
+try
+{
+    $ag_id=$http->get("ag_id");
+}
+catch (Exception $exc)
+{
+    echo $exc->getMessage();
+    error_log($exc->getTraceAsString());
+    return;
+}
 
-$ag_id=HtmlInput::default_value_get("ag_id", "0");
+require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
 
-if ($ag_id == 0 )    throw new Exception('ag_id is null');
-
-require_once('class/class_acc_ledger.php');
 $r=HtmlInput::title_box(_("Détail fiche"), 'search_card');
 
 $r.='<form id="search_card1_frm" method="GET" onsubmit="action_add_concerned_card(this);return false;">';
@@ -42,7 +54,7 @@ $r.='</span>';
 $r.=dossier::hidden().HtmlInput::hidden('op', 'add_concerned_card');
 $r.=HtmlInput::request_to_hidden(array('ag_id'));
 $r.='</form>';
-$query=HtmlInput::default_value_get("query", "");
+$query=$http->get("query", "string","");
 $sql_array['query']=$query;
 $sql_array['typecard']='all';
 

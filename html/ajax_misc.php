@@ -44,6 +44,7 @@ require_once NOALYSS_INCLUDE.'/lib/class_iradio.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once  NOALYSS_INCLUDE.'/class/class_user.php';
+
 mb_internal_encoding("UTF-8");
 
 $var = array('gDossier', 'op');

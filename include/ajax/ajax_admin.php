@@ -32,22 +32,19 @@ if ($g_user->Admin()==0)
     die();
 }
 set_language();
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
 // From admin, grant  the access to a folder to an
 // user
 if ($op=='folder_add') // operation
 {
 
     $cn=new Database();
-    $user_id=HtmlInput::default_value_get("p_user", 0); // get variable
-    $dossier_id=HtmlInput::default_value_get("p_dossier", 0); // get variable
-    if ($user_id==0||$dossier_id==0||isNumber($user_id)==0||$dossier_id==0)
+    try
     {
-
-        $content=_('Erreur paramètre');
-        $status="NOK";
-    }
-    else
-    {
+        $user_id=$http->get("p_user", "number"); // get variable
+        $dossier_id=$http->get("p_dossier", "number"); // get variable
         $user=new User($cn, $user_id);
         $user->set_folder_access($dossier_id, true);
         $dossier=new Dossier($dossier_id);
@@ -58,6 +55,15 @@ if ($op=='folder_add') // operation
                 "</td>";
         $status='OK';
     }
+    catch (Exception $exc)
+    {
+        error_log($exc->getTraceAsString());
+        $content=_('Erreur paramètre');
+        $status="NOK";
+        return;
+    }
+
+        
     //----------------------------------------------------------------
     // Answer in XML
     header('Content-type: text/xml; charset=UTF-8');
@@ -75,22 +81,23 @@ if ($op=='folder_add') // operation
 // user
 if ($op=='folder_remove') // operation
 {
-
-    $cn=new Database();
-    $user_id=HtmlInput::default_value_get("p_user", 0); // get variable
-    $dossier_id=HtmlInput::default_value_get("p_dossier", 0); // get variable
-    if ($user_id==0||$dossier_id==0||isNumber($user_id)==0||$dossier_id==0)
+    try
     {
-        $content=_('Erreur paramètre');
-        $status="NOK";
-    }
-    else
-    {
+        $cn=new Database();
+        $user_id=$http->get("p_user", "number"); // get variable
+        $dossier_id=$http->get("p_dossier", "number"); // get variable
         $user=new User($cn, $user_id);
         $user->set_folder_access($dossier_id, false);
         $content="";
         $status='OK';
     }
+    catch (Exception $exc)
+    {
+        error_log($exc->getTraceAsString());
+        $content=_('Erreur paramètre');
+        $status="NOK";
+    }
+
     //----------------------------------------------------------------
     // Answer in XML
     header('Content-type: text/xml; charset=UTF-8');
@@ -114,16 +121,10 @@ if ($op=='folder_display') // operation
 {
 
     $cn=new Database();
-    $user_id=HtmlInput::default_value_get("p_user", 0); // get variable
-    $p_filter=HtmlInput::default_value_get('p_filter', '');
-
-    if ($user_id==0||isNumber($user_id)==0)
+    try
     {
-        $content=_('Erreur paramètre');
-        $status="NOK";
-    }
-    else
-    {
+        $user_id=$http->get("p_user", "number"); // get variable
+        $p_filter=$http->get('p_filter', "string",'');
         ob_start();
         $user=new User($cn, $user_id);
         $a_dossier=Dossier::show_dossier('X', $user->id, $p_filter, MAX_FOLDER_TO_SHOW);
@@ -151,7 +152,19 @@ if ($op=='folder_display') // operation
         require NOALYSS_TEMPLATE.'/folder_display.php';
         $content=ob_get_clean();
         $status='OK';
+
+        
     }
+    catch (Exception $exc)
+    {
+        error_log($exc->getTraceAsString());
+        $content=_('Erreur paramètre');
+        $status="NOK";
+    }
+
+
+
+
     //----------------------------------------------------------------
     // Answer in XML
     header('Content-type: text/xml; charset=UTF-8');
@@ -170,13 +183,19 @@ if ($op=='folder_display') // operation
 // the p_dossier parameter is mandatory
 if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder_drop')))
 {
-    $dossier=HtmlInput::default_value_get('p_dossier', 0);
-    $content=_('Erreur paramètre');
-    $status="NOK";
-    // check if we receive a valid parameter 
-    if ($dossier==0||isNumber($dossier)==0)
+    try
     {
-        //----------------------------------------------------------------
+        $dossier=$http->get('p_dossier', "number");
+        $content=_('Erreur paramètre');
+        $status="NOK";
+        
+    }
+    catch (Exception $exc)
+    {
+        error_log($exc->getTraceAsString());
+        $content=_('Erreur paramètre');
+        $status="NOK";
+          //----------------------------------------------------------------
         // Answer in XML
         header('Content-type: text/xml; charset=UTF-8');
         $dom=new DOMDocument('1.0', 'UTF-8');
@@ -189,7 +208,9 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
         $dom->appendChild($root);
         echo $dom->saveXML();
         exit();
+
     }
+
     // Modify the description or the name of folder
     if ($op=='folder_modify')
     {

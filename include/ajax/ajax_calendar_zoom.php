@@ -19,11 +19,14 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/class_calendar.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
 ob_start();
 if ( $notitle== 0 ) echo HtmlInput::title_box(_("Calendrier"), "calendar_zoom_div");
 $cal=new Calendar();
-$in=HtmlInput::default_value_get('in',"");
-$notitle=HtmlInput::default_value_get('notitle',"0");
+$in=$http->get('in',"string","");
+$notitle=$http->get('notitle',"string","0");
 if ( $in == "") {
     $in=$cal->get_preference();
 }

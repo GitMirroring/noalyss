@@ -327,6 +327,14 @@ class Anc_Key
         $array['val']=$val;
                
         $anc_operation=new Anc_Operation($cn);
+        // find the div thanks the target which looks like "det4t0"
+        // det4 is the div id and t0 is the row
+        if (strpos($p_target, "et")){
+            // cut off t[0-9]
+            $pos=strrpos($p_target,"t");
+            $anc_operation->in_div=substr($p_target,0,$pos);
+            
+        }
         echo $anc_operation->display_form_plan($array, 1, 1, $number, $p_amount,'',false);
         
     }

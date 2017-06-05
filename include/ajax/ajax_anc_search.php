@@ -37,6 +37,11 @@ require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
 require_once NOALYSS_INCLUDE.'/class/class_anc_account.php';
 require_once NOALYSS_INCLUDE.'/class/class_anc_plan.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
+$texte=new IText('plabel');
+$texte->value=$http->get('plabel',"string","");
 
 echo HtmlInput::title_box(_("Recherche activité"), $ctl);
 
@@ -44,8 +49,6 @@ echo HtmlInput::title_box(_("Recherche activité"), $ctl);
 echo '<FORM id="anc_search_form" METHOD="GET" onsubmit="search_anc_form(this);return false">';
 echo '<span>'._('Recherche').':';
 
-$texte=new IText('plabel');
-$texte->value=HtmlInput::default_value('plabel',"", $_GET);
 echo $texte->input();
 echo '</span>';
 echo dossier::hidden();
