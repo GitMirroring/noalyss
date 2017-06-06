@@ -39,6 +39,8 @@ require_once  NOALYSS_INCLUDE.'/class/class_todo_list.php';
 require_once  NOALYSS_INCLUDE.'/lib/class_database.php';
 require_once  NOALYSS_INCLUDE.'/class/class_user.php';
 mb_internal_encoding("UTF-8");
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
 
 $cn= Dossier::connect();
 global $g_user;
@@ -83,7 +85,7 @@ if (isset($_REQUEST['del']))
     $todo->delete();
     exit();
 }
-$ac=HtmlInput::default_value_get('act', 'save');
+$ac=$http->get('act', "string",'save');
 
 ////////////////////////////////////////////////////////////////////////////////
 // Save the modification of a note
@@ -93,7 +95,7 @@ if ($ac == 'save')
     
     $cn=Dossier::connect();
     $todo=new Todo_List($cn);
-     $id=HtmlInput::default_value_get("id", 0);
+     $id=$http->get("id","string", 0);
     $todo->set_parameter("id",$id);
     if ($id <> 0 ) { $todo->load(); }
     else
@@ -101,10 +103,10 @@ if ($ac == 'save')
         $todo->set_parameter("owner", $_SESSION['g_user']);
     }
     
-    $todo->set_parameter("date", HtmlInput::default_value_get("p_date_todo", ""));
-    $todo->set_parameter("title", HtmlInput::default_value_get("p_title", ""));
-    $todo->set_parameter("desc", HtmlInput::default_value_get("p_desc", ""));
-    $todo->set_is_public(HtmlInput::default_value_get("p_public", "N"));
+    $todo->set_parameter("date",$http->get("p_date_todo","string", ""));
+    $todo->set_parameter("title", $http->get("p_title","string", ""));
+    $todo->set_parameter("desc", $http->get("p_desc","string", ""));
+    $todo->set_is_public($http->get("p_public", "string","N"));
     
     ob_start();
     if ( $todo->get_parameter('owner') == $_SESSION['g_user'] ) $todo->save();
@@ -148,7 +150,7 @@ if ($ac == 'save')
 ////////////////////////////////////////////////////////////////////////////////
 if ($ac=='shared_note')
 {
-    $id=HtmlInput::default_value_get("todo_id", -1);
+    $id=$http->get("todo_id", "string",-1);
     // If note_id is not correct then give an error
     if ($id==-1||isNumber($id)==0)
     {
@@ -221,8 +223,8 @@ if ($ac=='shared_note')
 ////////////////////////////////////////////////////////////////////////////////
 if ( $ac=="set_share") 
 {
-    $id=HtmlInput::default_value_get("todo_id", 0);
-    $p_login=HtmlInput::default_value_get("login","");
+    $id=$http->get("todo_id", "string",0);
+    $p_login=$http->get("login","string","");
     // If note_id is not correct then give an error
     if ($id==0||isNumber($id)==0  || trim ($p_login)=="")
     {
@@ -279,8 +281,8 @@ if ( $ac=="set_share")
 ////////////////////////////////////////////////////////////////////////////////
 if ( $ac=="remove_share") 
 {
-    $id=HtmlInput::default_value_get("todo_id", 0);
-    $p_login=HtmlInput::default_value_get("login","");
+    $id=$http->get("todo_id","string", 0);
+    $p_login=$http->get("login","string","");
     // If note_id is not correct then give an error
     if ($id==0||isNumber($id)==0  || trim ($p_login)=="")
     {

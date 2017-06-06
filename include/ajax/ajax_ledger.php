@@ -504,7 +504,7 @@ case 'save':
             ///////////////////////////////////////////////////////////////////
             // Save related
             //////////////////////////////////////////////////////////////////
-            $related=HtmlInput::default_value_post("related", "0");
+            $related=$http->post("related","string");
             if ($related == "0" )                
                 throw new Exception('Parameter not send -> related'.__FILE__.__LINE__,10);
             $op->insert_related_action($related);
