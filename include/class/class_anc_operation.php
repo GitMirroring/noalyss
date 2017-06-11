@@ -632,7 +632,8 @@ class Anc_Operation
              * Add a button for distribution key
              * 
              */
-            $ledger=HtmlInput::default_value_post("p_jrn", 0);
+            $http=new HttpInput();
+            $ledger=$http->post("p_jrn", "string",0);
             if ($ledger==0) {
                 $ledger=$this->db->get_value('select j_jrn_def from jrnx where j_id=$1',array($this->j_id));
             }

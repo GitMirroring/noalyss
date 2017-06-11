@@ -37,7 +37,8 @@ class Anc_Acc_Link extends Anc_Print
   function get_request()
   {
     parent::get_request();
-    $this->card_poste=HtmlInput::default_value('card_poste',1,$_GET);
+    $http=new HttpInput();
+    $this->card_poste=$http->get('card_poste',"string",1);
   }
     function set_sql_filter()
     {

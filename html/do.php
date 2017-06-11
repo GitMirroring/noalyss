@@ -31,6 +31,9 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/constant.security.php';
 require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
+
 mb_internal_encoding("UTF-8");
 
 // if gDossier is not set redirect to form to choose a folder
@@ -94,7 +97,7 @@ if ( isset ($_POST['set_preference'])) {
     $_SESSION['g_lang']=$lang;
     $g_user->save_email($p_email);
 }
-$style_user=HtmlInput::default_value_post("style_user",$_SESSION['g_theme']);
+$style_user=$http->post("style_user","string",$_SESSION['g_theme']);
 
 html_page_start($style_user);
 if ( DEBUG ) {

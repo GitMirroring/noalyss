@@ -39,7 +39,6 @@ class Pre_Op_Advanced extends Pre_operation_detail
     {
         parent::get_post();
 
-        extract($_POST, EXTR_SKIP);
 
         for ($i=0;$i<$this->operation->nb_item;$i++)
         {

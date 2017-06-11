@@ -213,16 +213,17 @@ function create_htaccess_deprecated()
 }
 // Retrieve informations from the very screen
 // 
-$db_user=HtmlInput::default_value_request("cuser", "");
-$db_password=HtmlInput::default_value_request("cpasswd", "");
-$db_host=HtmlInput::default_value_request("chost", "");
-$db_port=HtmlInput::default_value_request("cport", "");
-$multi=HtmlInput::default_value_request("multi", "N");
-$locale=HtmlInput::default_value_request("clocale", "1");
-$ctmp=HtmlInput::default_value_request("ctmp", "/tmp");
-$cpath=HtmlInput::default_value_request("cpath", "/usr/bin");
-$db_name=HtmlInput::default_value_request("cdbname", "");
-$cadmin=HtmlInput::default_value_request("cadmin", "admin");
+$http=new HttpInput();
+$db_user=$http->request("cuser","string", "");
+$db_password=$http->request("cpasswd","string", "");
+$db_host=$http->request("chost","string", "");
+$db_port=$http->request("cport","string", "");
+$multi=$http->request("multi","string", "N");
+$locale=$http->request("clocale","string", "1");
+$ctmp=$http->request("ctmp","string", "/tmp");
+$cpath=$http->request("cpath","string", "/usr/bin");
+$db_name=$http->request("cdbname", "string","");
+$cadmin=$http->request("cadmin","string", "admin");
 $cadmin=strtolower($cadmin);
 //-------------------------------------------------------------------------
 // warn only if we can not write in include 

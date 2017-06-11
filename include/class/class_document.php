@@ -1178,7 +1178,8 @@ class Document
                 $ret=$this->db->get_value('select r_phone from public.stock_repository where r_id=$1',array($p_array['repo']));
                 return $ret;
         case 'TITLE':
-            $title=HtmlInput::default_value_request("ag_title", "");
+            $http=new HttpInput();
+            $title=$http->request("ag_title","string", "");
             return $title;
         case 'COMM_PAYMENT':
             if ( isset($p_array["e_comm_paiement"])) {

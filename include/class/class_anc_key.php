@@ -213,7 +213,8 @@ class Anc_Key
         $cn->start();
         // for each row
         $a_row=$p_array['row'];
-        $a_ledger=HtmlInput::default_value("jrn",array(),$p_array);
+        $http=new HttpInput();
+        $a_ledger=$http->extract($p_array,"jrn","string",array());
         $a_percent=$p_array['percent'];
         $a_po_id=$p_array['po_id'];
         $a_plan=$p_array['pa'];

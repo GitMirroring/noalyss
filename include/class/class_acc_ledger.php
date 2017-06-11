@@ -43,6 +43,8 @@ require_once NOALYSS_INCLUDE.'/class/class_lettering.php';
 require_once NOALYSS_INCLUDE.'/lib/class_sort_table.php';
 require_once NOALYSS_INCLUDE.'/database/class_jrn_def_sql.php';
 require_once NOALYSS_INCLUDE.'/class/class_acc_payment.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+
 /** \file
  * @brief Class for jrn,  class acc_ledger for manipulating the ledger
  */
@@ -3664,13 +3666,14 @@ class Acc_Ledger extends jrn_def_sql
 	 */
 	function input_new()
 	{
-            $retry=HtmlInput::default_value_post("sa", "");
+            $http=new HttpInput();
+            $retry=$http->post("sa","string", "");
 //            if ( $retry == "add") {
-                $default_type=HtmlInput::default_value_post("p_jrn_type", -1);
-                $previous_jrn_def_pj_pref=HtmlInput::default_value_post("jrn_def_pj_pref","");
-                $previous_p_description=HtmlInput::default_value_post("p_description","");
-                $previous_p_jrn_name=HtmlInput::default_value_post('p_jrn_name','');
-                $previous_p_jrn_type = HtmlInput::default_value_post("p_jrn_type","");
+                $default_type=$http->post("p_jrn_type","string", -1);
+                $previous_jrn_def_pj_pref=$http->post("jrn_def_pj_pref","string","");
+                $previous_p_description=$http->post("p_description","string","");
+                $previous_p_jrn_name=$http->post('p_jrn_name',"string",'');
+                $previous_p_jrn_type = $http->post("p_jrn_type","string","");
 //            }
                 global $g_user;
                 $f_add_button=new ISmallButton('add_card');
@@ -3996,7 +3999,8 @@ class Acc_Ledger extends jrn_def_sql
             );
             echo HtmlInput::hidden("correct","copy");
             // e_march
-            $nb=HtmlInput::default_value_post("nb_item",0);
+            $http=new HttpInput();
+            $nb=$http->post("nb_item","number",0);
             for ( $i=0;$i<$nb;$i++)
             {
                 echo HtmlInput::post_to_hidden(

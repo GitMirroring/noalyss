@@ -87,8 +87,8 @@ class Pre_operation
     }
     function delete ()
     {
-        $sql="delete from op_predef where od_id=".$this->od_id;
-        $this->db->exec_sql($sql);
+        $sql="delete from op_predef where od_id=$1";
+        $this->db->exec_sql($sql,array($this->od_id));
     }
     /*!\brief save the predef check first is the name is unique
      * \return true op.success otherwise false

@@ -44,6 +44,8 @@ require_once NOALYSS_INCLUDE.'/lib/class_iradio.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once  NOALYSS_INCLUDE.'/class/class_user.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+$http=new HttpInput();
 
 mb_internal_encoding("UTF-8");
 
@@ -240,9 +242,9 @@ EOF;
 		/* others report */
 		$cal = new Calendar();
 		$cal->set_periode($per);
-                $notitle=HtmlInput::default_value_get("notitle", 0);
+                $notitle=$http->get("notitle", "string",0);
 		$html = "";
-		$html = $cal->display($_GET['t'],$notitle);
+		$html = $cal->display($http->get('t'),$notitle);
 		$html = escape_xml($html);
 		header('Content-type: text/xml; charset=UTF-8');
 		echo <<<EOF

@@ -29,6 +29,8 @@ require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
 require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
 require_once NOALYSS_INCLUDE.'/class/class_fiche_def.php';
 require_once NOALYSS_INCLUDE.'/constant.php';
+require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+
 /*!\brief Handle the table mod_payment
  *\note the private data member are accessed via
   - mp_id  ==> id ( Primary key )
@@ -302,6 +304,7 @@ class Acc_Payment
 
         $r.='<ol>';
         $r.='<li ><input type="radio" name="e_mp" value="0" checked>'._('Paiement encodé plus tard');
+        $http=new HttpInput();
         if ( empty($array ) == false )
         {
             foreach ($array as $row)
@@ -321,7 +324,7 @@ class Acc_Payment
                     $a->set_attribute('ipopup','ipopcard');
                     $a->set_attribute('label',$a->name.'_label');
                     if ( $p_select == $row->mp_id ) {
-                        $a->value=HtmlInput::default_value_request("e_mp_qcode_".$p_select, "");
+                        $a->value=$http->request("e_mp_qcode_".$p_select, "string","");
                     }
                     $s=new ISpan();
                     $s->name=$a->name.'_label';
