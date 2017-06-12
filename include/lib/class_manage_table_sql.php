@@ -36,9 +36,10 @@
   $objet->set_callback("ajax.php");
 
   // Build the json object for JS
-  $plugin_code=HtmlInput::default_value_request("plugin_code","");
-  $ac=HtmlInput::default_value_request("ac","");
-  $sa=HtmlInput::default_value_request("sa","");
+  $http=new HttpInput();
+  $plugin_code=$http->request("plugin_code");
+  $ac=$http->request("ac");
+  $sa=$http->request("sa");
   $aJson=array("gDossier"=>Dossier::id(),
   "ac"=>$ac,
   "plugin_code"=>$plugin_code,

@@ -51,6 +51,10 @@ class HttpInput
                     
                 }
             }
+            if( $p_type=="array" && !is_array($this->array[$p_name]) ) {
+                    throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
+                    ,EXC_PARAM_TYPE);
+            }
         }
         catch (Exception $ex)
         {

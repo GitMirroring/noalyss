@@ -163,7 +163,8 @@ class Sendmail
         // Increment email amount
         $repo =new Database();
         $date=date('Ymd');
-        $dossier=HtmlInput::default_value_request("gDossier", -1);
+        $http=new HttpInput();
+        $dossier=$http->request("gDossier","string", -1);
         $this->increment_mail($repo,$dossier,$date);
     }
     /**
@@ -175,7 +176,8 @@ class Sendmail
          * if send from a dossier , then  check limit of this dossier 
          * otherwise send true
          */
-        $dossier=HtmlInput::default_value_request("gDossier", -1);
+        $http=new HttpInput();
+        $dossier=$http->request("gDossier","string", -1);
         if ($dossier == -1 ) return true;
         
         /**

@@ -200,11 +200,12 @@ $order
         /** 
          * Check needed info
          */
-        $p_nom_mod = HtmlInput::default_value('nom_mod', "", $array);
-        $p_fd_description = HtmlInput::default_value('fd_description', "", $array);
-        $p_class_base= HtmlInput::default_value('class_base', "", $array);
-        $p_fiche_def= HtmlInput::default_value('FICHE_REF', "", $array);
-        $p_create= HtmlInput::default_value('create', "off", $array);
+        $http=new HttpInput();
+        $p_nom_mod = $http->extract($array,'nom_mod',"string","");
+        $p_fd_description = $http->extract($array,'fd_description',"string", "");
+        $p_class_base=$http->extract($array,'class_base',"string", "");
+        $p_fiche_def= $http->extract($array,'FICHE_REF',"string", "");
+        $p_create= $http->extract($array,'create',"string", "off");
         
         // If there is no description then add a empty one
         if ( ! isset ($p_fd_description)) {

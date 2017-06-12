@@ -63,7 +63,8 @@ if ( $sb=='change')
 //
 if ( $sb=='save')
 {
-    $delete=HtmlInput::default_value_post("delete_ck", 0);
+    $http=new HttpInput();
+    $delete=$http->post("delete_ck","string", 0);
     if ( $delete == 0 )
     {
         $row=new Acc_Payment($cn,$_POST ['id']);

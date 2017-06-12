@@ -60,7 +60,8 @@ echo '</form>';
 if ( $request_sa == 'del')
 {
     $op=new Pre_operation($cn);
-    $op->od_id=HtmlInput::default_value_request('od_id',-1);
+    $http=new HttpInput();
+    $op->od_id=$http->request('od_id',"string",-1);
     if (isNumber($op->od_id)==1 && $op->od_id != -1 )
     {
         $op->delete();

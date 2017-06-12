@@ -38,12 +38,12 @@ class Pre_Op_Advanced extends Pre_operation_detail
     function get_post()
     {
         parent::get_post();
-
+        $http=new HttpInput();
 
         for ($i=0;$i<$this->operation->nb_item;$i++)
         {
-            $poste=HtmlInput::default_value_post("poste".$i, null);
-            $qcode=HtmlInput::default_value_post("qc_".$i, null);
+            $poste=$http->post("poste".$i,"string", null);
+            $qcode=$http->post("qc_".$i,"string", null);
             
             if ( $poste == null && $qcode == null )                continue;
             

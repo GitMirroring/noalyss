@@ -136,7 +136,8 @@ EOF;
 L\'email a été envoyé avec un lien et le nouveau mot de passe, vérifiez vos spams</p>';
     endif;
 elseif ($action=="req") :
-    $request_id=HtmlInput::default_value_request("req", "");
+    $http=new HttpInput();
+    $request_id=$http->request("req","string", "");
     if (strlen(trim($request_id))==SIZE_REQUEST) :
         require_once NOALYSS_INCLUDE.'/lib/class_database.php';
         $cn=new Database(0);
