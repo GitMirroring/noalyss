@@ -25,35 +25,45 @@
  */
 class HttpInput
 {
+
     private $array;
+
     function _construct()
     {
         $this->array=null;
     }
 
+    /**
+     * 
+     * @param $p_name name of the variable
+     * @param $p_type type of the variable (number,string,date,array)
+     * @throws Exception if the variable doesn't exist or type incorrect
+     */
     function check_type($p_name, $p_type)
     {
         try
         {
             // no check on string
-            if ( $p_type=="string") return;
+            if ($p_type=="string")
+                return;
             // Check if number
-            if ( $p_type=="number" 
-                 && isNumber($this->array[$p_name]) == 0
-                 )                     
+            if ($p_type=="number"&&isNumber($this->array[$p_name])==0
+            )
                 throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
-                    ,EXC_PARAM_TYPE);
+                , EXC_PARAM_TYPE);
             // Check if date dd.mm.yyyy
-            if ( $p_type=="date")  {
-                if (isDate($this->array[$p_name])=!$this->array[$p_name]) {
+            if ($p_type=="date")
+            {
+                if (isDate($this->array[$p_name])=!$this->array[$p_name])
+                {
                     throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
-                    ,EXC_PARAM_TYPE);
-                    
+                    , EXC_PARAM_TYPE);
                 }
             }
-            if( $p_type=="array" && !is_array($this->array[$p_name]) ) {
-                    throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
-                    ,EXC_PARAM_TYPE);
+            if ($p_type=="array"&&!is_array($this->array[$p_name]))
+            {
+                throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
+                , EXC_PARAM_TYPE);
             }
         }
         catch (Exception $ex)
@@ -62,6 +72,13 @@ class HttpInput
         }
     }
 
+    /**
+     * Retrieve from $this->array the variable
+     * @param $p_name name of the variable
+     * @param $p_type type of the variable
+     * @param $p_default default value is variable
+     * @throws Exception if invalid
+     */
     function get_value($p_name, $p_type="string", $p_default="")
     {
         try
@@ -78,8 +95,10 @@ class HttpInput
                     return $p_default;
                 }
             }
-            if ( ! isset ($this->array[$p_name])) {
-                throw new Exception(_('Paramètre invalide')."[$p_name]",EXC_PARAM_VALUE);
+            if (!isset($this->array[$p_name]))
+            {
+                throw new Exception(_('Paramètre invalide')."[$p_name]",
+                EXC_PARAM_VALUE);
             }
             $this->check_type($p_name, $p_type);
             return $this->array[$p_name];
@@ -90,70 +109,105 @@ class HttpInput
         }
     }
 
+    /**
+     * Retrieve from $_GET
+     * @param $p_name name of the variable
+     * @param $p_type type of the variable , opt. default string
+     * @param $p_default default value is variable is not set
+     * @throws Exception if invalid
+     */
     function get($p_name, $p_type="string", $p_default="")
     {
         try
         {
             $this->array=$_GET;
-            if (func_num_args()==1)  return $this->get_value($p_name);
-            if (func_num_args()==2)  return $this->get_value($p_name,$p_type);
-            if (func_num_args()==3)  return $this->get_value($p_name,$p_type,$p_default);
-            
+            if (func_num_args()==1)
+                return $this->get_value($p_name);
+            if (func_num_args()==2)
+                return $this->get_value($p_name, $p_type);
+            if (func_num_args()==3)
+                return $this->get_value($p_name, $p_type, $p_default);
         }
         catch (Exception $exc)
         {
             throw $exc;
         }
-
     }
+
+    /**
+     * Retrieve from $_POST
+     * @param $p_name name of the variable
+     * @param $p_type type of the variable , opt. default string
+     * @param $p_default default value is variable is not set
+     * @throws Exception if invalid
+     */
     function post($p_name, $p_type="string", $p_default="")
     {
         try
         {
             $this->array=$_POST;
-            if (func_num_args()==1)  return $this->get_value($p_name);
-            if (func_num_args()==2)  return $this->get_value($p_name,$p_type);
-            if (func_num_args()==3)  return $this->get_value($p_name,$p_type,$p_default);
-            
+            if (func_num_args()==1)
+                return $this->get_value($p_name);
+            if (func_num_args()==2)
+                return $this->get_value($p_name, $p_type);
+            if (func_num_args()==3)
+                return $this->get_value($p_name, $p_type, $p_default);
         }
         catch (Exception $exc)
         {
             throw $exc;
         }
-
-        
     }
-
+    /**
+     * Retrieve from $_REQUEST
+     * @param $p_name name of the variable
+     * @param $p_type type of the variable , opt. default string
+     * @param $p_default default value is variable is not set
+     * @throws Exception if invalid
+     */
     function request($p_name, $p_type="string", $p_default="")
     {
         try
         {
             $this->array=$_REQUEST;
-            if (func_num_args()==1)  return $this->get_value($p_name);
-            if (func_num_args()==2)  return $this->get_value($p_name,$p_type);
-            if (func_num_args()==3)  return $this->get_value($p_name,$p_type,$p_default);
+            if (func_num_args()==1)
+                return $this->get_value($p_name);
+            if (func_num_args()==2)
+                return $this->get_value($p_name, $p_type);
+            if (func_num_args()==3)
+                return $this->get_value($p_name, $p_type, $p_default);
         }
         catch (Exception $exc)
         {
             throw $exc;
         }
     }
-    function extract($p_array,$p_name, $p_type="string", $p_default="")
+    /**
+     * Retrieve from $p_array
+     * @param $p_array source 
+     * @param $p_name name of the variable
+     * @param $p_type type of the variable , opt. default string
+     * @param $p_default default value is variable is not set
+     * @throws Exception if invalid
+     */
+    function extract($p_array, $p_name, $p_type="string", $p_default="")
     {
         try
         {
             $this->array=$p_array;
-            if (func_num_args()==1)  return $this->get_value($p_name);
-            if (func_num_args()==2)  return $this->get_value($p_name,$p_type);
-            if (func_num_args()==3)  return $this->get_value($p_name,$p_type,$p_default);
-            
+            if (func_num_args()==1)
+                return $this->get_value($p_name);
+            if (func_num_args()==2)
+                return $this->get_value($p_name, $p_type);
+            if (func_num_args()==3)
+                return $this->get_value($p_name, $p_type, $p_default);
         }
         catch (Exception $exc)
         {
             throw $exc;
         }
-
     }
+
     /**
      * Extract variable name from an exception message. If an exception is thrown
      * then thanks this function it is possible to know what variable triggers
@@ -161,11 +215,14 @@ class HttpInput
      * @param type $p_string
      * @return string like "[variable]"
      */
-    function extract_variable($p_string) {
-        if (  preg_match("/\[.*\]/",$p_string,$found) == 1 ) {
+    function extract_variable($p_string)
+    {
+        if (preg_match("/\[.*\]/", $p_string, $found)==1)
+        {
             return $found[0];
         }
     }
+
 }
 
 ?>
