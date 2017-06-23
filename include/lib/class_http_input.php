@@ -54,7 +54,7 @@ class HttpInput
             // Check if date dd.mm.yyyy
             if ($p_type=="date")
             {
-                if (isDate($this->array[$p_name])=!$this->array[$p_name])
+                if (isDate($this->array[$p_name]) <> $this->array[$p_name])
                 {
                     throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
                     , EXC_PARAM_TYPE);
