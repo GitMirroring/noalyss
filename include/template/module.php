@@ -9,7 +9,7 @@
     <div class="name">
 
 <?php
-$http=new HtmlInput();
+$http=new HttpInput();
 if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
 		where user_name=$1 and with_calc=true",array($_SESSION['g_user'])) ==1):
   echo '<div id="calc">';
