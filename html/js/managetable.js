@@ -172,16 +172,19 @@ var ManageTable = function (p_table_name)
                         new_row.innerHTML = answer['html'];
                         $("tb"+answer['ctl']).appendChild(new_row);
                     }
-                    new Effect.Highlight(answer['ctl_row'] ,{ startcolor: '#ABCBF7',endcolor: '#ffffff' });
+                    new Effect.Highlight(answer['ctl_row'] ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
+                    alternate_row_color("tb"+answer['ctl']);
+                    remove_waiting_box();
+                    $("dtr").hide();
                     
                 } else {
+                    remove_waiting_box();
                     smoke.alert("Changement impossible");
-                    throw "error in save";
+                    $("dtr").update(answer['html']);
+                   
                 }
-                alternate_row_color("tb"+answer['ctl']);
-                remove_waiting_box();
-                $("dtr").hide();
-                } catch (e) {
+            }
+            catch (e) {
                     alert(e.message);
                     return false;
                 }

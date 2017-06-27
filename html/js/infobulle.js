@@ -52,3 +52,10 @@ function hideBulle(p_ctl)
     var d=document.getElementById('bulle');
     d.style.visibility="hidden";
 }
+function displayBulle(p_comment)  {
+    var d=document.getElementById('bulle');
+    d.innerHTML=p_comment;
+    d.style.top=posY+offsetY+"px";
+    d.style.left=posX+offsetX+"px";
+    d.style.visibility="visible";
+}
