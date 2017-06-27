@@ -228,6 +228,15 @@ class HtmlInput
         $r='<A HREF="#" tabindex="-1" style="display:inline;color:red;background-color:white;padding-left:4px;padding-right:4px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">&Delta;</A>';
         return $r;
     }
+    static function errorbulle($p_comment)
+    {
+        global $g_failed;
+        $r=sprintf('<A HREF="#" tabindex="-1" style="display:inline;color:red;background-color:transparent;padding-left:4px;padding-right:4px;text-decoration:none;" onmouseover="displayBulle(\'%s\')"  onclick="displayBulle(\'%s\')" onmouseout="hideBulle(0)"> %s </A>',
+                $p_comment,
+                $p_comment,
+                $g_failed);
+        return $r;
+    }
     /**
      * return a string containing the html code for calling the modifyOperation
      */
@@ -476,7 +485,7 @@ class HtmlInput
      */
     static  function image_click($p_image,$p_js,$p_message)
     {
-        $ret=sprintf('<a class="nav" style="display:inline" href="#" title="%s"><img src="image/%s" onclick="%s"></a>',
+        $ret=sprintf('<a class="nav" style="display:inline" href="javascript:void(0)" title="%s"><img src="image/%s" onclick="%s"></a>',
                 $p_message,$p_image,$p_js);
         return $ret;
 

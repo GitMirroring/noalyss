@@ -68,7 +68,7 @@ class Manage_Table_SQL
     private $row_update; //!< Flag to indicate if rows can be updated
     private $row_append; //!< Flag to indicate if rows can be added
     private $json_parameter; //!< Default parameter to add (gDossier...)
-
+    private $aerror; //!< Array containing the error of the input data
     const UPDATABLE=1;
     const VISIBLE=2;
 
@@ -98,8 +98,42 @@ class Manage_Table_SQL
         $this->callback="ajax.php";
         $this->json=json_encode(array("gDossier"=>Dossier::id(),
             "op"=>"managetable"));
+        $this->aerror=[];
     }
-
+    function get_table() {
+        return $this->table;
+    }
+    /**
+     * @brief set the error message for a wrong input
+     * @param $p_col the column name 
+     * @param $p_message the error message
+     * @see check
+     */
+    function set_error($p_col,$p_message) 
+    {
+        $this->aerror[$p_col]=$p_message;
+    }
+    /**
+     * @brief retrieve the error message
+     * @param $p_col column name
+     * @return string with message or empty if no error
+     * @see input
+     */
+    function get_error($p_col)
+    {
+        if ( isset ($this->aerror[$p_col])) return $this->aerror[$p_col];
+        return "";
+    }
+    /**
+     * This function can be overrided to check the data before 
+     * inserting , updating or removing,
+     * @see set_error get_error
+     * @return boolean
+     */
+    function check()
+    {
+        return true;
+    }
     /**
      * @brief set the type of a column , it will change in the input db box , the
      * select must supply an array of possible values [val=> , label=>] with
@@ -454,7 +488,7 @@ class Manage_Table_SQL
     }
 
     /**
-     * @brief set the id value of a data row
+     * @brief set the id value of a data row and load from the db
      */
     function set_pk($p_id)
     {
@@ -463,7 +497,9 @@ class Manage_Table_SQL
     }
 
     /**
-     * @brief get the data from http request
+     * @brief get the data from http request strip the not update or not visible data to their 
+     * initial value. Before saving , it is important to set the pk and load from db
+     * @see set_pk
      */
     function from_request()
     {
@@ -472,7 +508,11 @@ class Manage_Table_SQL
         {
             $v=HtmlInput::default_value_request($this->a_order[$i], "");
             $key=$this->a_order[$i];
-            $this->table->$key=strip_tags($v);
+            if ( $this->get_property_visible($key) == TRUE 
+                    && $this->get_property_updatable($key) == TRUE )
+            {
+                $this->table->$key=strip_tags($v);
+            }
         }
     }
 
@@ -510,7 +550,7 @@ class Manage_Table_SQL
             $js=sprintf("%s.delete('%s','%s');", $this->object_name,
                     $p_row[$this->table->primary_key], $this->object_name
             );
-            echo HtmlInput::image_click("delete.gif", $js,_("effacer"));
+            echo HtmlInput::image_click("delete.gif", $js,_("Effacer"));
         }
         echo "</td>";
         echo '</tr>';
@@ -530,11 +570,12 @@ class Manage_Table_SQL
             $key=$this->a_order[$i];
             $label=$this->a_label_displaid[$key];
             $value=$this->table->get($key);
-
+            $error=$this->get_error($key);
+            $error=($error=="")?"":HtmlInput::errorbulle($error);
             if ($this->get_property_visible($key)===TRUE)
             {
                 // Label
-                echo "<td> {$label} </td>";
+                echo "<td> {$label} {$error}</td>";
 
                 if ($this->get_property_updatable($key)==TRUE)
                 {
@@ -546,16 +587,29 @@ class Manage_Table_SQL
                         $select->selected=$value;
                         echo $select->input();
                     }
-                    else
+                    elseif ($this->a_type[$key]=="text")
                     {
                         $text=new IText($key);
                         $text->value=$value;
                         $min_size=(strlen($value)<30)?30:strlen($value)+5;
                         $text->size=$min_size;
                         echo $text->input();
-                    /*    printf('<input class="input_text" type="text" label="%s" value="%s" name="%s" id="%s">',
-                                $label, $value, $key, $key
-                        );*/
+                    }
+                    elseif ($this->a_type[$key]=="numeric")
+                    {
+                        $text=new INum($key);
+                        $text->value=$value;
+                        $min_size=(strlen($value)<10)?10:strlen($value)+1;
+                        $text->size=$min_size;
+                        echo $text->input();
+                    }
+                    elseif ($this->a_type[$key]=="date")
+                    {
+                        $text=new IDate($key);
+                        $text->value=$value;
+                        $min_size=10;
+                        $text->size=$min_size;
+                        echo $text->input();
                     }
                     echo "</td>";
                 }
@@ -585,30 +639,38 @@ class Manage_Table_SQL
         {
             // fill up object with $_REQUEST
             $this->from_request();
-            // save the object
-            $this->save();
-            // compose the answer
-            $status="OK";
-            $s1=$xml->createElement("status", $status);
-            $ctl=$this->object_name."_".$this->table->get_pk_value();
-            $s2=$xml->createElement("ctl_row", $ctl);
-            $s4=$xml->createElement("ctl", $this->object_name);
-            ob_start();
-            $this->table->load();
-            $array=$this->table->to_array();
-            $this->display_row($array);
-            $html=ob_get_contents();
-            ob_end_clean();
-            $s3=$xml->createElement("html" );
-            $t1=$xml->createTextNode($html);
-            $s3->appendChild($t1);
-
+            // Check if the data are valid , if not then display the
+            // input values with the error message 
+            //
+            if ( $this->check() == false ) {
+                $xml=$this->ajax_input("NOK");
+                return $xml;
+            } else {
+                // Data are valid so we can save them
+                $this->save();
+                // compose the answer
+                $status="OK";
+                $s1=$xml->createElement("status", $status);
+                $ctl=$this->object_name."_".$this->table->get_pk_value();
+                $s2=$xml->createElement("ctl_row", $ctl);
+                $s4=$xml->createElement("ctl", $this->object_name);
+                ob_start();
+                $this->table->load();
+                $array=$this->table->to_array();
+                $this->display_row($array);
+                $html=ob_get_contents();
+                ob_end_clean();
+                $s3=$xml->createElement("html" );
+                $t1=$xml->createTextNode($html);
+                $s3->appendChild($t1);
+            }
 
             $root=$xml->createElement("data");
             $root->appendChild($s1);
             $root->appendChild($s2);
             $root->appendChild($s3);
             $root->appendChild($s4);
+            $xml->appendChild($root);
         }
         catch (Exception $ex)
         {
@@ -622,8 +684,8 @@ class Manage_Table_SQL
             $root->appendChild($s2);
             $root->appendChild($s3);
             $root->appendChild($s4);
+            $xml->appendChild($root);
         }
-        $xml->appendChild($root);
         return $xml;
     }
 
@@ -635,13 +697,13 @@ class Manage_Table_SQL
      *   - content : Html answer
      * @return DomDocument
      */
-    function ajax_input()
+    function ajax_input($p_status="OK")
     {
         $xml=new DOMDocument("1.0", "UTF-8");
-        $xml->createElement("status", "OK");
+        $xml->createElement("status", $p_status);
         try
         {
-            $status="OK";
+            $status=$p_status;
             ob_start();
 		
             echo HtmlInput::title_box("Donnée", "dtr");
@@ -655,6 +717,8 @@ class Manage_Table_SQL
             echo HtmlInput::hidden("p_id", $this->table->get_pk_value());
             // button Submit and cancel
             $close=sprintf("\$('%s').remove()", "dtr");
+            // display error if any
+            $this->display_error();
             echo '<ul class="aligned-block">',
             '<li>',
             HtmlInput::submit('update', _("OK")),
@@ -664,7 +728,8 @@ class Manage_Table_SQL
             '</li>',
             '</ul>';
             echo "</form>";
-
+            
+            
             $html=ob_get_contents();
             ob_end_clean();
 
@@ -757,14 +822,7 @@ class Manage_Table_SQL
      */
     function save()
     {
-        if ($this->table->exist()==0)
-        {
-            $this->table->insert();
-        }
-        else
-        {
-            $this->table->update();
-        }
+       $this->table->save();
     }
 
     /**
@@ -795,6 +853,27 @@ class Manage_Table_SQL
     function set_value($p_key, $p_value)
     {
         $this->table->set($p_key, $p_value);
+    }
+    /**
+     * Display a list of the error collected
+     * @see get_error set_error 
+     * 
+     */
+    function display_error()
+    {
+        $nb_order=count($this->a_order);
+        if ( count($this->aerror) == 0)return;
+        echo "<span class=\"notice\">Liste erreurs :</span>";
+        for ($i=0; $i<$nb_order; $i++)        
+        {
+             $key=$this->a_order[$i];
+             $label=$this->a_label_displaid[$key];
+             $error=$this->get_error($key);
+             $error=($error=="")?"":"<span class=\"notice\" style=\"font-weight:normal;font-style:normal;display:block\">".h($label)." : ".h($this->get_error($key))."</span>";
+             
+             echo $error;
+        }
+        echo "</ul>";
     }
 
 }

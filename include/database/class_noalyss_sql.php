@@ -95,8 +95,7 @@ abstract class Noalyss_SQL
  */
     public function save()
     {
-        $pk=$this->primary_key;
-        $count=$this->cn->get_value('select count(*) from '.$this->table.' where '.$this->primary_key.'=$1',array($this->$pk));
+       $count = $this->exist();
         
         if ($count == 0)
             $this->insert();
