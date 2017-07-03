@@ -101,6 +101,20 @@ if ( DEBUG ) {
     <?php        
     var_dump($_GET);
     ?>
+    <h2>$_REQUEST</h2>
+    <?php        
+    var_dump($_REQUEST);
+    ?>
+    <h2>$_SESSION</h2>
+    <?php        
+    var_dump($_SESSION);
+    ?>
+    
+    <h2>$GLOBALS</h2>
+    <?php        
+    var_dump($GLOBALS);
+    ?>
+    
 </div>
 <script>
     function show_debug_request() {
