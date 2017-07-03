@@ -426,9 +426,10 @@ class Manage_Table_SQL
         $nb=Database::num_row($ret);
         if ($this->can_append_row()==TRUE)
         {
-            echo HtmlInput::button_action(_("Ajout"),
-                    sprintf("%s.input('-1','%s')", $this->object_name,
-                            $this->object_name));
+            echo HtmlInput::button_action(" "._("Ajout"),
+                    sprintf("%s.input('-1','%s')", 
+                            $this->object_name,
+                            $this->object_name),"xx","smallbutton",BUTTONADD);
         }
         $nb_order=count($this->a_order);
         $virg=""; $result="";
@@ -454,9 +455,10 @@ class Manage_Table_SQL
         echo "</table>";
         if ($this->can_append_row()==TRUE)
         {
-            echo HtmlInput::button_action(_("Ajout"),
-                    sprintf("%s.input('-1','%s')", $this->object_name,
-                            $this->object_name));
+              echo HtmlInput::button_action(" "._("Ajout"),
+                    sprintf("%s.input('-1','%s')", 
+                            $this->object_name,
+                            $this->object_name),"xx","smallbutton",BUTTONADD);
         }
         printf ('<script> alternate_row_color("tb%s");</script>', $this->object_name);
     }
@@ -479,10 +481,10 @@ class Manage_Table_SQL
                 echo th($this->a_label_displaid[$key]);
         }
         if ($this->can_update_row()) {
-            echo td(_('Modifier'));
+            echo th("  ",'style="width:40px"');
         }
         if ($this->can_delete_row()) {
-            echo td(_('Effacer'));
+            echo th(" ",'style="width:40px"');
         }
         echo "</tr>";
     }
