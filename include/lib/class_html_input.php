@@ -463,17 +463,20 @@ class HtmlInput
 	return $r;
     }
     /**
-     * button Html
+     * button Html with javascript
      *@param $action action action to perform (message) without onclick
      *@param $javascript javascript to execute
+     *@param $id is the DOM element id 
+     *@param $p_class CSS class of the button
+     *@param $p_symbole raw symbole to add to the action message
      */
-    static function button_action($action,$javascript,$id="xx",$p_class="button")
+    static function button_action($action,$javascript,$id="xx",$p_class="button",$p_symbole="")
     {
         if ($id=="xx"){
             $id=HtmlInput::generate_id("xx");
         }
 		$r="";
-		$r.='<input type="button" id="'.$id.'" class="'.$p_class.'" onclick="'.$javascript.'" value="'.h($action).'">';
+		$r.='<input type="button" id="'.$id.'" class="'.$p_class.'" onclick="'.$javascript.'" value="'.$p_symbole.h($action).'">';
 		return $r;
 
     }
