@@ -103,6 +103,9 @@ class Manage_Table_SQL
     function get_table() {
         return $this->table;
     }
+    function set_table(Noalyss_SQL $p_noalyss_sql) {
+        $this->table=$p_noalyss_sql;
+    }
     /**
      * @brief set the error message for a wrong input
      * @param $p_col the column name 
@@ -785,7 +788,7 @@ class Manage_Table_SQL
         $xml=new DOMDocument('1.0', "UTF-8");
         try
         {
-            $this->table->delete();
+            $this->delete();
             $status="OK";
             $s1=$xml->createElement("status", $status);
             $ctl=$this->object_name."_".$this->table->get_pk_value();
