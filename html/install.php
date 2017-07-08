@@ -121,7 +121,7 @@ if ( ! isset($_GET['lang'])){
 }
 require_once '../include/constant.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-include_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
+include_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 if ( $_GET['lang'] == "en_US.utf8" || $_GET['lang']=='fr_FR.utf8')
 {
     $_SESSION['g_lang']=$_GET['lang'];
@@ -322,7 +322,7 @@ if ( ! file_exists(NOALYSS_INCLUDE.'/config.inc.php')) {
 // magic_quotes_sybase = Off
 // include_path
 require_once NOALYSS_INCLUDE.'/lib/config_file.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 
 // we shouldn't use it 
 // if ( defined ("MULTI") && MULTI==1) { create_htaccess();}
@@ -489,7 +489,7 @@ if ( $Res==0) { ?>
 <?php exit(); }
 
 include_once('lib/ac_common.php');
-require_once('class/class_dossier.php');
+require_once('class/dossier.class.php');
 
 // Memory setting
 //--

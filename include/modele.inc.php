@@ -27,11 +27,11 @@
  *
  */
 if ( !defined ('ALLOWED')) die('Forbidden');
-require_once NOALYSS_INCLUDE.'/lib/class_itext.php';
-require_once NOALYSS_INCLUDE.'/lib/class_icheckbox.php';
-require_once  NOALYSS_INCLUDE.'/class/class_extension.php';
-require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
+require_once  NOALYSS_INCLUDE.'/class/extension.class.php';
+require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 $sa = $http->request("sa", "string", 'list');
 if (isset($_POST['upd']) &&
@@ -239,7 +239,7 @@ if (isset($_POST["FMOD_NAME"]))
 
 }
 // Show all available templates
-require_once NOALYSS_INCLUDE.'/lib/class_sort_table.php';
+require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 $url=$_SERVER['PHP_SELF']."?sa=list&action=".$_REQUEST['action'];
 
 $header=new Sort_Table();

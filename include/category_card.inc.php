@@ -28,7 +28,7 @@
  */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_contact.php';
+require_once NOALYSS_INCLUDE.'/class/contact.class.php';
 
 global $http;
 

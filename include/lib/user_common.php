@@ -23,11 +23,11 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/lib/class_icheckbox.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
-require_once NOALYSS_INCLUDE.'/class/class_document.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_operation.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
+require_once NOALYSS_INCLUDE.'/class/document.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 /*! \file
  * \brief Common functions
  */

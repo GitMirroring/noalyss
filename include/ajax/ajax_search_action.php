@@ -21,9 +21,9 @@
  * \brief Search module
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/class_follow_up.php';
+require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
 
 $_REQUEST['ac']='FOLLOW';
 

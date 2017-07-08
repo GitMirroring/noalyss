@@ -23,12 +23,12 @@
  */
 if ( ! defined ('ALLOWED')) { die (_('Non autorisé'));}
 
-include_once NOALYSS_INCLUDE."/class/class_user.php";
+include_once NOALYSS_INCLUDE."/class/user.class.php";
 require_once NOALYSS_INCLUDE."/lib/user_common.php";
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE."/lib/user_menu.php";
-require_once NOALYSS_INCLUDE."/lib/class_http_input.php";
+require_once NOALYSS_INCLUDE."/lib/http_input.class.php";
 $http=new HttpInput();
 $action = $http->request("action","string", "");
 

@@ -22,9 +22,9 @@
  * \brief printing of category of card  : balance, historic
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
-require_once NOALYSS_INCLUDE.'/class/class_lettering.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
+require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 
 $gDossier = dossier::id();
 $cn = Dossier::connect();
@@ -283,7 +283,7 @@ if (isDate($_REQUEST['start']) == null || isDate($_REQUEST['end']) == null)
 /*************************************************************************************************************************/
 if ( $_GET['histo'] == 8)
 {
-    require_once NOALYSS_INCLUDE.'/class/class_balance_age.php';
+    require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
     $bal=new Balance_Age($cn);
     $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
     $export_csv .=HtmlInput::request_to_hidden(array('gDossier','ac','p_let','p_date_start'));
@@ -319,7 +319,7 @@ if ( $_GET['histo'] == 8)
 /*************************************************************************************************************************/
 if ( $_GET['histo'] == 7)
 {
-    require_once NOALYSS_INCLUDE.'/class/class_balance_age.php';
+    require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
     $bal=new Balance_Age($cn);
        $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
     $export_csv .=HtmlInput::request_to_hidden(array('gDossier','ac','p_let','p_date_start'));

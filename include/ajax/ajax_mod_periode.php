@@ -20,7 +20,7 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_periode.php';
+require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 
 /**\file
  * \brief display or save a periode

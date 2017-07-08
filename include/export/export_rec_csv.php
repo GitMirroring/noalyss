@@ -9,12 +9,12 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/class_acc_reconciliation.php';
+require_once NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 try
 {

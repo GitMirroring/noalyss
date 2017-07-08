@@ -302,7 +302,7 @@ for($i=0;$i<count($last_ledger);$i++):
      echo HtmlInput::title_box(_('Suivi'),"last_operation_management_div",'zoom','onclick="action_show('.dossier::id().')"');
     ?>
     <?php
-    require_once NOALYSS_INCLUDE.'/class/class_follow_up.php';
+    require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
     $gestion=new Follow_Up($cn);
     $array=$gestion->get_last(MAX_ACTION_SHOW);
     $len_array=count($array);

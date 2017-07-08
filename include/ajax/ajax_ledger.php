@@ -30,17 +30,17 @@
 */
 if ( ! defined('ALLOWED')) die(_('Non authorisé'));
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_operation.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_reconciliation.php';
-require_once NOALYSS_INCLUDE.'/class/class_anc_operation.php';
-require_once NOALYSS_INCLUDE.'/lib/class_idate.php';
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iconcerned.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
+require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
+require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
+require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 /**

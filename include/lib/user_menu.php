@@ -23,9 +23,9 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-require_once NOALYSS_INCLUDE.'/lib/class_idate.php';
-require_once NOALYSS_INCLUDE.'/lib/class_icard.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ispan.php';
+require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
 
 
 

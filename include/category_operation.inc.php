@@ -29,7 +29,7 @@
  * - $ss_action
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 global $http;
 
 $f=new Fiche($cn,$http->request('f_id',"number"));

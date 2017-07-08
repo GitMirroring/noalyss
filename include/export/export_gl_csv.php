@@ -39,15 +39,15 @@
  */
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-include_once NOALYSS_INCLUDE.'/class/class_acc_account_ledger.php';
+include_once NOALYSS_INCLUDE.'/class/acc_account_ledger.class.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-include_once NOALYSS_INCLUDE.'/lib/class_impress.php';
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+include_once NOALYSS_INCLUDE.'/lib/impress.class.php';
+require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 $from_periode = $http->get("from_periode","date");
 $to_periode = $http->get("to_periode","date");

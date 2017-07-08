@@ -31,10 +31,10 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 // Security 
 if ( $g_user->check_module('CFGPRO') == 0 ) die();
 
-require_once NOALYSS_INCLUDE.'/database/class_profile_sql.php';
-require_once NOALYSS_INCLUDE.'/class/class_profile_menu.php';
-require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/database/profile_sql.class.php';
+require_once NOALYSS_INCLUDE.'/class/profile_menu.class.php';
+require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 $p_id=$http->request('p_id',"string", -1);

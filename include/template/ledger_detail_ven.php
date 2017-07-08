@@ -11,7 +11,7 @@
  ?>
 <div class="content" style="padding:0;">
     <?php
-    require_once NOALYSS_INCLUDE.'/class/class_own.php';
+    require_once NOALYSS_INCLUDE.'/class/own.class.php';
     $owner = new Own($cn);
     ?>
 

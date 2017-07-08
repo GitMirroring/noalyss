@@ -23,14 +23,14 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 require_once '../include/constant.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/lib/class_itext.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 @html_page_start($_SESSION['g_theme']);
 $rep=new Database();
-include_once NOALYSS_INCLUDE.'/class/class_user.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
 $User=new User($rep);
 
 $User->Check();

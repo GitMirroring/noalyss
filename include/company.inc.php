@@ -26,7 +26,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $g_user;
 global $http;
 echo '<div class="content">';
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
+require_once NOALYSS_INCLUDE.'/class/own.class.php';
 if (isset($_POST['record_company']))
 {
 	$m = new Own($cn);

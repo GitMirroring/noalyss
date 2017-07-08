@@ -25,9 +25,9 @@
  * @brief common utilities for a lot of procedure, classe
  */
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_periode.php';
-require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/periode.class.php';
+require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 /**
@@ -1235,9 +1235,9 @@ function get_array_column($p_array,$key)
  */
 function factory_Ledger(Database &$p_cn, $ledger_id)
 {
-    include_once NOALYSS_INCLUDE.'/class/class_acc_ledger_sold.php';
-    include_once NOALYSS_INCLUDE.'/class/class_acc_ledger_purchase.php';
-    include_once NOALYSS_INCLUDE.'/class/class_acc_ledger_fin.php';
+    include_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
+    include_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
+    include_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
     
     $ledger=new Acc_Ledger($p_cn, $ledger_id);
     $type=$ledger->get_type();

@@ -27,7 +27,7 @@
  *  - $cn = database connection
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_follow_up.php';
+require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
 global $http;
 /**
  *\note problem with ShowActionList, this function is local

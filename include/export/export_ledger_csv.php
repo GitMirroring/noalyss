@@ -22,17 +22,17 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger_sold.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger_purchase.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier=dossier::id();
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 $export=new Noalyss_Csv(_('journal'));
@@ -58,7 +58,7 @@ catch (Exception $exc)
     throw $exc;
 }
 
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 $g_user->Check();
 $g_user->check_dossier($gDossier);
 

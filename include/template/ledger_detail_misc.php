@@ -3,13 +3,13 @@
 //see licence.txt
 ?><?php 
 require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
-require_once NOALYSS_INCLUDE.'/class/class_anc_operation.php';
-require_once NOALYSS_INCLUDE.'/class/class_anc_plan.php';
+require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
+require_once NOALYSS_INCLUDE.'/class/anc_plan.class.php';
  $str_anc="";
 ?>
 <?php 
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
-require_once  NOALYSS_INCLUDE.'/class/class_anc_plan.php';
+require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 ?>
 <div class="content" style="padding:0">
 
@@ -86,7 +86,7 @@ require_once  NOALYSS_INCLUDE.'/class/class_anc_plan.php';
 
 <div class="myfieldset">
 <?php 
-  require_once NOALYSS_INCLUDE.'/class/class_own.php';
+  require_once NOALYSS_INCLUDE.'/class/own.class.php';
   $owner=new Own($cn);
 ?>
 <table class="result">

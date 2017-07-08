@@ -4,7 +4,7 @@
 
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/class_tag.php';
+require_once NOALYSS_INCLUDE.'/class/tag.class.php';
 $tag=new Tag($cn);
 $tag->save($_GET);
 

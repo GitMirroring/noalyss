@@ -20,7 +20,7 @@
  * \brief Make and restore backup
  */
 if ( !defined("ALLOWED")) { die (_("Non autorisé")); }
- require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+ require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
  $http=new HttpInput();
  

@@ -22,11 +22,11 @@
  *        it permits to change the user preferences
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iperiod.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_report.php';
-require_once NOALYSS_INCLUDE.'/class/class_periode.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iperiod.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
+require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 echo HtmlInput::title_box(_('Préférence'), 'preference_div');
 echo '<DIV class="content">';
 echo '<p class="notice">';

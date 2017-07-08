@@ -25,8 +25,8 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_exercice.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 if ( isset($_POST['del']))
 {
 	if (isset($_POST['ok']))

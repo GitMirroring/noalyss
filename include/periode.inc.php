@@ -22,8 +22,8 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 $gDossier=dossier::id();
-require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
-require_once  NOALYSS_INCLUDE.'/class/class_periode.php';
+require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
+require_once  NOALYSS_INCLUDE.'/class/periode.class.php';
 echo '<div class="content">';
 $cn=Dossier::connect();
 //-----------------------------------------------------

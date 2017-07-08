@@ -40,7 +40,7 @@ if (!defined('ALLOWED'))
 if ($g_user->check_module('CFGPRO')==0)
     die();
 
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 try

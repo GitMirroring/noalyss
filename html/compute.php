@@ -31,11 +31,11 @@
  * Must return at least tva, htva and tvac
  */
 require_once '../include/constant.php';
-require_once  NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once  NOALYSS_INCLUDE.'/class/class_acc_compute.php';
-require_once  NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once  NOALYSS_INCLUDE.'/class/class_acc_tva.php';
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
+require_once  NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once  NOALYSS_INCLUDE.'/class/acc_compute.class.php';
+require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once  NOALYSS_INCLUDE.'/class/acc_tva.class.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 
 // Check if the needed field does exist
 extract ($_GET, EXTR_SKIP );

@@ -25,8 +25,8 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
  * @brief 
  * @param type $name Descriptionara
  */
-require_once NOALYSS_INCLUDE.'/class/class_exercice.php';
-require_once NOALYSS_INCLUDE.'/class/class_balance_age.php';
+require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
+require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
 $let=( isset ($_GET['p_let']))?'let':'unlet';
 
 $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';

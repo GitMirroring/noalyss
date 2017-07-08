@@ -23,12 +23,12 @@
  * \brief file included to manage all the operations for the ledger of sales 
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_icheckbox.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger_sold.php';
-require_once  NOALYSS_INCLUDE.'/class/class_pre_op_ven.php';
-require_once  NOALYSS_INCLUDE.'/class/class_document.php';
-require_once  NOALYSS_INCLUDE.'/class/class_acc_ledger_info.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ipopup.php';
+require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
+require_once  NOALYSS_INCLUDE.'/class/pre_op_ven.class.php';
+require_once  NOALYSS_INCLUDE.'/class/document.class.php';
+require_once  NOALYSS_INCLUDE.'/class/acc_ledger_info.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 
 $gDossier=dossier::id();
 $cn=Dossier::connect();

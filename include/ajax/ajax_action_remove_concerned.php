@@ -21,7 +21,7 @@
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 try
 {
@@ -35,7 +35,7 @@ catch (Exception $exc)
     return;
 }
 
-require_once 'class/class_follow_up.php';
+require_once 'class/follow_up.class.php';
 $follow=new Follow_Up($cn,$ag_id);
 
 ob_start();

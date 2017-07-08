@@ -27,9 +27,9 @@
 define ('ALLOWED',1);
 require_once '../include/constant.php';
 global $g_user,$cn,$g_parameter;
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $gDossier=dossier::id();
 $cn=Dossier::connect();
 mb_internal_encoding("UTF-8");

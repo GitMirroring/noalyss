@@ -14,12 +14,12 @@
  */
 if ( ! defined ('ALLOWED') ) define ('ALLOWED',1);
 require_once '../include/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/class/class_extension.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/class/extension.class.php';
 if ( !isset ($_REQUEST['gDossier'])) exit();
 
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
+require_once NOALYSS_INCLUDE.'/class/own.class.php';
 mb_internal_encoding("UTF-8");
 
 global $g_user,$cn,$g_parameter;

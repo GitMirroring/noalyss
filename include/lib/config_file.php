@@ -23,9 +23,9 @@
  * \brief functions concerning the config file config.inc.php. The domain is not set into the form for security issues
  */
 
-require_once NOALYSS_INCLUDE.'/lib/class_itext.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
-require_once NOALYSS_INCLUDE.'/lib/class_icheckbox.php';
+require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
 
 function is_unix()
 {

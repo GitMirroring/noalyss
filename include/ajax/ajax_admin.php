@@ -32,7 +32,7 @@ if ($g_user->Admin()==0)
     die();
 }
 set_language();
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 // From admin, grant  the access to a folder to an

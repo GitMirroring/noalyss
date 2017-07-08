@@ -21,7 +21,7 @@
 // Copyright Author Dany De Bontridder dany@alchimerys.be
 //@description: Developpement for ANC
 
-require_once NOALYSS_INCLUDE . "/class/class_anc_operation.php";
+require_once NOALYSS_INCLUDE . "/class/anc_operation.class.php";
 
 $anc = new Anc_Operation($cn);
 

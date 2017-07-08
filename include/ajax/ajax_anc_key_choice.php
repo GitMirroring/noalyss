@@ -27,7 +27,7 @@
 // Copyright (2014) Author Dany De Bontridder danydb@aevalys.eu
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 try
@@ -44,7 +44,7 @@ catch (Exception $exc)
 }
 
 
-require_once 'class/class_anc_key.php';
+require_once 'class/anc_key.class.php';
 
 ob_start();
 echo HtmlInput::title_box(_("Choix d'une clef"), 'div_anc_key_choice');

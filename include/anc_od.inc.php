@@ -26,12 +26,12 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
-require_once NOALYSS_INCLUDE.'/class/class_anc_account.php';
-require_once  NOALYSS_INCLUDE.'/class/class_anc_operation.php';
-require_once  NOALYSS_INCLUDE.'/class/class_anc_plan.php';
-require_once  NOALYSS_INCLUDE.'/class/class_anc_group_operation.php';
+require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
+require_once NOALYSS_INCLUDE.'/class/anc_account.class.php';
+require_once  NOALYSS_INCLUDE.'/class/anc_operation.class.php';
+require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
+require_once  NOALYSS_INCLUDE.'/class/anc_group_operation.class.php';
 
 global $g_user;
 

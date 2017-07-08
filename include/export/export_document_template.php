@@ -21,9 +21,9 @@
 /*! \file
  * \brief send the document template
  */
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 
 if ( $g_user->check_module("CFGDOC") == 0 ) exit();
 // retrieve the document

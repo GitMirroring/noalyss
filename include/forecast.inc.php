@@ -25,7 +25,7 @@
  */
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_anticipation.php';
+require_once NOALYSS_INCLUDE.'/class/anticipation.class.php';
 global $http;
 $action=$http->get("action","string","");
 

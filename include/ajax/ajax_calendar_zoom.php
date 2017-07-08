@@ -18,8 +18,8 @@
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_calendar.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/class/calendar.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 ob_start();

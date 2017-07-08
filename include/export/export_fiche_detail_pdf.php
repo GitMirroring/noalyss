@@ -23,15 +23,15 @@
  * \brief send the account list in PDF
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-include_once("class/class_acc_account_ledger.php");
+include_once("class/acc_account_ledger.class.php");
 include_once("lib/ac_common.php");
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-include_once("lib/class_impress.php");
-require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+include_once("lib/impress.class.php");
+require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once  NOALYSS_INCLUDE.'/header_print.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 $f_id=$http->request("f_id", "number");

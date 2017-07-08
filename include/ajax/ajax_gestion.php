@@ -26,7 +26,7 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 if ($op=='action_show')
@@ -34,7 +34,7 @@ if ($op=='action_show')
     /**
      * display action
      */
-    require_once NOALYSS_INCLUDE.'/class/class_follow_up.php';
+    require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
     $gestion=new Follow_Up($cn);
     $array=$gestion->get_last(25);
     $len_array=count($array);
@@ -43,14 +43,14 @@ if ($op=='action_show')
 }
 if ($op=='action_add')
 {
-    require_once NOALYSS_INCLUDE.'/class/class_follow_up.php';
+    require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
     $gestion=new Follow_Up($cn);
     $gestion->display_short();
     return;
 }
 if ($op=='action_save')
 {
-    require_once NOALYSS_INCLUDE.'/class/class_follow_up.php';
+    require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
 
     /**
      * save info from the get

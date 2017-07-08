@@ -6,7 +6,7 @@
 # Author D. DE BONTRIDDER danydb@aevalys.eu
 */
 
-include_once NOALYSS_INCLUDE.'/lib/class_impress.php';
+include_once NOALYSS_INCLUDE.'/lib/impress.class.php';
 
 echo '<hr>';
 foreach ( array('1',

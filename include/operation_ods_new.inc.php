@@ -25,8 +25,8 @@
  * \brief to write into the ledgers ODS a new operation
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_pre_op_ods.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iconcerned.php';
+require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
 
 global $g_user,$g_parameter;
 $cn=Dossier::connect();

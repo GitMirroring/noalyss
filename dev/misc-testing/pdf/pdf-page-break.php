@@ -23,9 +23,9 @@
  * \brief create GL comptes as PDF
  */
 include_once '../../include/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
+require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/own.class.php';
 bcscale(2);
 $_REQUEST['gDossier']=37;
 $_GET['gDossier']=37;

@@ -17,8 +17,8 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once  NOALYSS_INCLUDE.'/class/class_acc_bilan.php';
-require_once NOALYSS_INCLUDE.'/class/class_exercice.php';
+require_once  NOALYSS_INCLUDE.'/class/acc_bilan.class.php';
+require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 
 //ini_set("memory_limit","150M");
 /*! \file
@@ -31,7 +31,7 @@ require_once NOALYSS_INCLUDE.'/class/class_exercice.php';
 //-----------------------------------------------------
 // Show the jrn and date
 //-----------------------------------------------------
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 global $g_user;
 //-----------------------------------------------------
 // Form

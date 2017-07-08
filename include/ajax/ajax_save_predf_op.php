@@ -23,7 +23,7 @@
  * \brief save the new predefined operation 
  * included from ajax_misc
  */
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');

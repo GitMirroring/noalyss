@@ -38,13 +38,13 @@
 if ( ! defined('ALLOWED')) define ('ALLOWED',1);
 
 require_once '../include/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once  NOALYSS_INCLUDE.'/class/class_fiche.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iradio.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once  NOALYSS_INCLUDE.'/class/fiche.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 mb_internal_encoding("UTF-8");
@@ -208,7 +208,7 @@ switch ($op)
 	//--------------------------------------------------
 	// get the last date of a ledger
 	case 'lastdate':
-		require_once NOALYSS_INCLUDE.'/class/class_acc_ledger_fin.php';
+		require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 		$ledger = new Acc_Ledger_Fin($cn, $_GET['p_jrn']);
 		$html = $ledger->get_last_date();
 		$html = escape_xml($html);
@@ -223,7 +223,7 @@ EOF;
 
 		break;
 	case 'bkname':
-		require_once NOALYSS_INCLUDE.'/class/class_acc_ledger_fin.php';
+		require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 		$ledger = new Acc_Ledger_Fin($cn, $_GET['p_jrn']);
 		$html = $ledger->get_bank_name();
 		$html = escape_xml($html);
@@ -238,7 +238,7 @@ EOF;
 		break;
 	// display new calendar
 	case 'cal':
-		require_once NOALYSS_INCLUDE.'/class/class_calendar.php';
+		require_once NOALYSS_INCLUDE.'/class/calendar.class.php';
 		/* others report */
 		$cal = new Calendar();
 		$cal->set_periode($per);
@@ -256,7 +256,7 @@ EOF;
 		break;
 	/* rem a cat of document */
 	case 'rem_cat_doc':
-		require_once NOALYSS_INCLUDE.'/class/class_document_type.php';
+		require_once NOALYSS_INCLUDE.'/class/document_type.class.php';
 		// if user can not return error message
                 $message="";
 		if ($g_user->check_action(PARCATDOC) == 0)

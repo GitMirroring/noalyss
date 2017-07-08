@@ -32,7 +32,7 @@
 // Save modification
 //---------------------------------------------------------------------------
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_customer.php';
+require_once NOALYSS_INCLUDE.'/class/customer.class.php';
 global $http;
 
  $f_id=$http->request('f_id','number');

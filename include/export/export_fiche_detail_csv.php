@@ -22,10 +22,10 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 include_once("lib/ac_common.php");
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 $f_id=$http->request("f_id", "number");
@@ -33,7 +33,7 @@ $from_periode=$http->get("from_periode");
 $to_periode=$http->get("to_periode");
 $ople=$http->get("ople");
 
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier=dossier::id();
 
 /* Admin. Dossier */

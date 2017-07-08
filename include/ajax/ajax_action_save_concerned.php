@@ -24,7 +24,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 /**
  * Insert into follow-up the card (f_id) for the action_gestion (ag_id)
  */
-require_once 'class/class_follow_up.php';
+require_once 'class/follow_up.class.php';
 $follow=new Follow_Up($cn,$ag_id);
 $follow->insert_linked_card($f_id);
 /**

@@ -14,8 +14,8 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 if ( ! isset ($r_jrn)) { $r_jrn=null;}
 $ctl='div_jrn'.$div;
 ob_start();

@@ -29,8 +29,8 @@ $_POST=array (
 $_POST['gDossier']=$gDossierLogInput;
 $_GET['gDossier']=$gDossierLogInput;
 $_REQUEST=array_merge($_GET,$_POST);
-require_once NOALYSS_INCLUDE."/database/class_menu_ref_sql.php";
-require_once NOALYSS_INCLUDE."/lib/class_manage_table_sql.php";
+require_once NOALYSS_INCLUDE."/database/menu_ref_sql.class.php";
+require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 
 $jrn=new Menu_Ref_SQL($cn);
 

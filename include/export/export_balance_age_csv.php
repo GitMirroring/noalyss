@@ -21,8 +21,8 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require 'class/class_balance_age.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require 'class/balance_age.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 /**

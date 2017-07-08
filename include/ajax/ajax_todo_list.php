@@ -34,12 +34,12 @@
  * - i id
  */
 if ( ! defined ('ALLOWED') ) die (_('Aucun accès direct'));
-require_once  NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once  NOALYSS_INCLUDE.'/class/class_todo_list.php';
-require_once  NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
+require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once  NOALYSS_INCLUDE.'/class/todo_list.class.php';
+require_once  NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 mb_internal_encoding("UTF-8");
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 $cn= Dossier::connect();

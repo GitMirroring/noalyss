@@ -19,7 +19,7 @@
 // Copyright (2014) Author Dany De Bontridder <dany@alchimerys.be>
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_extension.php';
+require_once NOALYSS_INCLUDE.'/class/extension.class.php';
 
 /**
  * @file

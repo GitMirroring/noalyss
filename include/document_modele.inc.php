@@ -22,7 +22,7 @@
  */
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_document_modele.php';
+require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
 $sub_action=(isset ($_REQUEST['sa']))?$_REQUEST['sa']:"";
 echo js_include('modele_document.js');
 echo '<div class="content">';
@@ -35,7 +35,7 @@ $doc=new Document_modele($cn);
 //-----------------------------------------------------
 if ( $sub_action=='add_document')
 {
-    require_once NOALYSS_INCLUDE.'/class/class_document_modele.php';
+    require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
     $doc=new Document_modele($cn);
     $doc->md_name=$_POST['md_name'];
     $doc->md_id=-1; // because it is a new model
@@ -49,7 +49,7 @@ if ( $sub_action=='add_document')
 //-----------------------------------------------------
 if ( $sub_action=='rm_template')
 {
-    require_once NOALYSS_INCLUDE.'/class/class_document_modele.php';
+    require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
     // Get all the document to remove
 
     foreach ( $_POST as $name=>$value )
@@ -68,7 +68,7 @@ if ( $sub_action=='rm_template')
 //----------------------------------------------------------------------
 if ( $sub_action == 'mod_template')
   {
-    require_once NOALYSS_INCLUDE.'/class/class_document_modele.php';
+    require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
     $doc=new Document_modele($cn,$_POST['id']);
     $doc->update($_POST);
   }

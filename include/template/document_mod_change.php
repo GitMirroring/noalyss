@@ -21,7 +21,7 @@
 /**\file
  * \brief this file respond to an ajax request to modify a type of document
  */
-require_once NOALYSS_INCLUDE.'/class/class_document_type.php';
+require_once NOALYSS_INCLUDE.'/class/document_type.class.php';
 echo HtmlInput::title_box(_('Type de document'),'change_doc_div');
 
 $doc_type=new Document_type($cn,$dt_id);

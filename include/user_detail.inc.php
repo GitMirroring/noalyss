@@ -22,10 +22,10 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_menu.php';
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 $rep = new Database();
 try {
@@ -101,7 +101,7 @@ else if ($sbaction == "delete")
     }
     
     echo "<center><H2 class=\"info\"> Utilisateur " . h($_POST['fname']) . " " . h($_POST['lname']) . " est effacé</H2></CENTER>";
-    require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
+    require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
     require_once NOALYSS_INCLUDE.'/user.inc.php';
     return;
 }

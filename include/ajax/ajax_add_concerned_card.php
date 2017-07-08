@@ -24,7 +24,7 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 ob_start();
@@ -39,7 +39,7 @@ catch (Exception $exc)
     return;
 }
 
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 
 $r=HtmlInput::title_box(_("Détail fiche"), 'search_card');
 

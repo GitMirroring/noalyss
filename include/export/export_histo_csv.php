@@ -23,7 +23,7 @@
  * \brief  history of the accountancy exported in CSV
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
 $ledger=new Acc_Ledger($cn,0);
 list($sql,$where)=$ledger->build_search_sql($_GET);

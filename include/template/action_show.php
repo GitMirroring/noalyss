@@ -25,7 +25,7 @@
  * @brief display the last action
  * inherited parameter  : $cn database connection, $array
  */
-require_once NOALYSS_INCLUDE.'/class/class_default_menu.php';
+require_once NOALYSS_INCLUDE.'/class/default_menu.class.php';
 $a_default=new Default_Menu();
 
 echo HtmlInput::title_box(_('Suivi'), 'action_list_div');

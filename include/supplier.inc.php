@@ -21,15 +21,15 @@
  * the supplier category
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
-require_once NOALYSS_INCLUDE.'/class/class_supplier.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ibutton.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iaction.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche_def.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iaction.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche_def.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ipopup.php';
+require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
+require_once NOALYSS_INCLUDE.'/class/supplier.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iaction.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iaction.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 global $g_user,$http;
 
 $low_action=(isset($_REQUEST['sb']))?$_REQUEST['sb']:"list";

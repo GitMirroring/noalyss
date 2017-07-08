@@ -21,9 +21,9 @@
  * \brief Search module
  */
 require_once '../include/constant.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 
 html_page_start($_SESSION['g_theme']);
 
@@ -32,11 +32,11 @@ load_all_script();
 
 $gDossier=dossier::id();
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 /* Admin. Dossier */
 
 $cn=Dossier::connect();
-include_once NOALYSS_INCLUDE.'/class/class_user.php';
+include_once NOALYSS_INCLUDE.'/class/user.class.php';
 
 global $g_user;
 $g_user=new User($cn);

@@ -22,7 +22,7 @@
  */
 require_once '../include/constant.php';
 require_once ("lib/ac_common.php");
-require_once('lib/class_database.php');
+require_once('lib/database.class.php');
 session_unset();
 
 html_page_start("classic");

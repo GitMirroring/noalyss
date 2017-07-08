@@ -3,7 +3,7 @@
 //see licence.txt
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_anc_table.php';
+require_once NOALYSS_INCLUDE.'/class/anc_table.class.php';
 $tab = new Anc_Table($cn);
 $tab->get_request();
 echo '<form method="get">';

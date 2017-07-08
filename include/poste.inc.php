@@ -22,8 +22,8 @@
  *  action contains the sub action 
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_parm_code.php';
+require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_parm_code.class.php';
 echo '<div class="content">';
 
 $gDossier=dossier::id();

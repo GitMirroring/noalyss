@@ -23,7 +23,7 @@ header('Pragma: public');
 header('Content-type: application/csv');
 header('Content-Disposition: attachment;filename="anc-grand-livre.csv"',FALSE);
 
-require_once NOALYSS_INCLUDE.'/class/class_anc_grandlivre.php';
+require_once NOALYSS_INCLUDE.'/class/anc_grandlivre.class.php';
 
 $cn=Dossier::connect();
 

@@ -35,9 +35,9 @@
  *  - ctl the ctl where to get the quick_code
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
 extract($_GET, EXTR_SKIP);
 /* check the parameters */
 foreach ( array('j','ctl') as $a )

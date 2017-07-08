@@ -29,7 +29,7 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 global $cn, $g_user;
-require_once NOALYSS_INCLUDE.'/class/class_anc_key.php';
+require_once NOALYSS_INCLUDE.'/class/anc_key.class.php';
 global $http;
 
 $op=$http->request("op", "string", "list");

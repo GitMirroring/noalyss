@@ -24,14 +24,14 @@
  * the security. Load several javascript files
  */
 require_once '../include/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-require_once NOALYSS_INCLUDE.'/class/class_extension.php';
-require_once  NOALYSS_INCLUDE.'/lib/class_html_input.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
+require_once NOALYSS_INCLUDE.'/class/extension.class.php';
+require_once  NOALYSS_INCLUDE.'/lib/html_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 
 global $g_user,$cn,$g_parameter;
 
