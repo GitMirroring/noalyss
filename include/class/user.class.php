@@ -48,7 +48,7 @@ class User
         var $password ;
         var $email ;
         
-	function __construct(&$p_cn, $p_id = -1)
+	function __construct($p_cn, $p_id = -1)
 	{
 		// if p_id is not set then check the connected user
 		if ($p_id == -1)
