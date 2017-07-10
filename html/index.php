@@ -143,6 +143,7 @@ echo '<!doctype html><HTML>
 <TITLE> NOALYSS </TITLE>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 <style>
 BODY {
 background-color:white;
@@ -247,7 +248,7 @@ if (file_exists("install.php")&& ! DEBUG ) {
 }
 if ( strlen(domaine) > 0 )
 {
-    $my_domain="Domaine : ".domaine;
+    $my_domain=sprintf(_("Domaine")." : %s",domaine);
 }
 
 if (defined("RECOVER") && isset ($_REQUEST['recover']) )
