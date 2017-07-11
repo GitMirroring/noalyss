@@ -426,7 +426,7 @@ if (isset($_POST['delete_profil']))
     <?php
 
 }
-$dep=$http->post("dep");
+$dep=$http->post("dep","string","");
 ?>
 <script>
     var selected_menu="<?php echo $dep;?>";
