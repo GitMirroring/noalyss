@@ -261,11 +261,11 @@ if (isset($_POST['add_menu'])||isset($_POST['add_impress']))
     try
     {
         // type of menu me or pr
-        $p_type=$http->post("type");
+        $p_type=$http->post("type","string",null);
         // level
-        $p_level=$http->post("p_level");
+        $p_level=$http->post("p_level","string",null);
         // pm_id of menu parent
-        $p_dep=$http->post("dep");
+        $p_dep=$http->post("dep","number",null);
         // profile id
         $p_id=$http->post("p_id", "number");
         // display order 
