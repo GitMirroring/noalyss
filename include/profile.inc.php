@@ -331,7 +331,7 @@ if (isset($_POST['add_menu'])||isset($_POST['add_impress']))
          * Do not insert twice the same menu 
          */
         $duplicate = $cn->get_value(" select count(*) from profile_menu where "
-                . " pm_id_dep = $1 and me_code = $2",array($p_dep,$me_code));
+                . " pm_id_dep = $1 and me_code = $2",array($pm_id_dep,$me_code));
         if ( $duplicate > 0 ) {
             throw new Exception(_('Doublon'));
         }

@@ -62,6 +62,7 @@ class Profile_Menu extends Profile_Menu_sql
                 ?>
                 <li id="sub<?php echo $menu['pm_id'] ?>">
 
+                    <?php echo $me_code ?>
                     <?php echo $me_menu ?>
                     <?php echo $me_desc ?>  <?php echo $me_def ?>
                     <?php $ret2=$this->cn->exec_sql("
