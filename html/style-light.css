@@ -2149,3 +2149,10 @@ td.selectedmenu {
     position:float;
     float:left;
 }
+/*
+ * Name of the tiers in GESTION 
+ */
+#gestion_title {
+    float:right;
+    margin-right: 25px;
+}

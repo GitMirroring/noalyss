@@ -64,7 +64,8 @@ switch ($ss_action)
         $def=1;
         $ss_action='dc';
 }
-$f=new Fiche($cn, $_REQUEST['f_id']);
+$f_id=$http->request('f_id',"number");
+$f=new Fiche($cn, $f_id);
 
 echo '<div class="content">';
 echo $f->get_gestion_title();
@@ -77,7 +78,7 @@ $menu=array(
     array('href'=>$root.'&sc=balag', 'label'=>_('Balance âgée'), 'alt'=>_('Balance âgée du tiers')),
     array('href'=>$root.'&sc=let', 'label'=>_('Lettrage'), 'alt'=>_('Opérations & Lettrages'))
 );
-echo '<ul class="tabs">';
+echo '<ul class="tabs" style="padding-top:0px">';
 for ($i=0; $i<count($menu); $i++)
 {
     $style=($def==($i+1))?"tabs_selected":"tabs";

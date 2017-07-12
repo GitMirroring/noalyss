@@ -1985,7 +1985,7 @@ class Fiche
 
 	function get_gestion_title()
 	{
-		$r = "<h2>" . h($this->getName()) . " " . h($this->getAttribut(ATTR_DEF_FIRST_NAME)) . '[' . $this->get_quick_code() . ']</h2>';
+		$r = "<h2 id=\"gestion_title\">" . h($this->getName()) . " " . h($this->getAttribut(ATTR_DEF_FIRST_NAME)) . '[' . $this->get_quick_code() . ']</h2>';
 		return $r;
 	}
 	function get_all_account()

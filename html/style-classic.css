@@ -2214,7 +2214,19 @@ td.selectedmenu {
  */
 #summary_op1,#summary_op2 
 {
-    position:float;
     float:left;
     padding-left: 150px;
+}
+/*
+ * Name of the tiers in GESTION 
+ */
+#gestion_title {
+    float:right;
+    margin-right: 5%;
+    font-size:150%;
+    color :white;
+    font-variant: small-caps;
+    background-color: #5D90CD;
+    padding: 3px 20px 3px 20px;
+    margin-top:20px;
 }
