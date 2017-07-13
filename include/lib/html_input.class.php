@@ -220,7 +220,7 @@ class HtmlInput
     }
     static function infobulle($p_comment)
     {
-        $r='<A HREF="#" tabindex="-1" style="display:inline;color:black;background-color:yellow;padding-left:4px;width:2em;padding-right:4px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">?</A>';
+        $r='<A HREF="#" tabindex="-1" style="display:inline;color:white;background-color:blue;font-weight:bolder;padding-left:7px;width:2em;border-radius:9px;padding-right:7px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">i</A>';
         return $r;
     }
     static function warnbulle($p_comment)
