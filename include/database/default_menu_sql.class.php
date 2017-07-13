@@ -23,7 +23,7 @@
  *
  * @author dany
  */
-require_once NOALYSS_INCLUDE.'/database/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
 
 class Default_Menu_SQL extends Noalyss_SQL
 {

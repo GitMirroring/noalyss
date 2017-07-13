@@ -25,7 +25,7 @@
  * @brief
  *
  */
-require_once NOALYSS_INCLUDE.'/database/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
 
 class Stock_Sql extends Noalyss_SQL {
 	function __construct($cn,$p_id=-1)

@@ -30,7 +30,7 @@
  */
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/database/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
 
 /**
  * @brief Manage the table public.profile_menu

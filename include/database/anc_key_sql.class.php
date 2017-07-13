@@ -23,7 +23,7 @@
  * @brief Class to manage distribution keys for SQL.  
  *
  */
-require_once NOALYSS_INCLUDE.'/database/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
 
 
 /**
