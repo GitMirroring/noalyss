@@ -225,7 +225,7 @@ class HtmlInput
     }
     static function warnbulle($p_comment)
     {
-        $r='<A HREF="#" tabindex="-1" style="display:inline;color:red;background-color:white;padding-left:4px;padding-right:4px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">&Delta;</A>';
+        $r='<A HREF="#" tabindex="-1" style="font-size:124%;font-weight:bolder;display:inline;color:red;background-color:transparent;border-radius:9px;padding:0px;padding-left:7px;padding-right:7px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">&#9888;</A>';
         return $r;
     }
     static function errorbulle($p_comment)
