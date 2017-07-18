@@ -220,7 +220,14 @@ class HtmlInput
     }
     static function infobulle($p_comment)
     {
-        $r='<A HREF="#" tabindex="-1" style="display:inline;color:white;background-color:blue;font-weight:bolder;padding-left:7px;width:2em;border-radius:9px;padding-right:7px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">i</A>';
+//        $r='<A HREF="#" tabindex="-1" style="display:inline;color:white;background-color:blue;font-size:76%;margin-left:3px;font-weight:bolder;padding-left:7px;width:2em;border-radius:9px;padding-right:7px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">i</A>';
+        $r='<A HREF="#" tabindex="-1" style="display:inline;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">';
+        $r.='<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="16px" width="16px" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<path opacity="0.98999999" stroke-linejoin="round" d="m606.092,510.92a219.203,222.234,0,1,1,-438.406,0,219.203,222.234,0,1,1,438.406,0z" fill-rule="nonzero" transform="matrix(0.03528106,0,0,0.03288119,-5.5449677,-8.7386598)" stroke-dashoffset="0" stroke="#000" stroke-linecap="round" stroke-miterlimit="4" stroke-dasharray="none" stroke-width="1.70000005" fill="#00F"/>
+<text style="letter-spacing:0px;word-spacing:0px;" font-weight="normal" xml:space="preserve" transform="scale(1.1859122,0.84323275)" font-stretch="normal" line-height="125%" font-size="20.54475784px" font-variant="normal" y="16.282976" x="2.8955159" font-family="Consolas" font-style="normal" fill="#ffffff"><tspan font-weight="normal" font-style="normal" font-stretch="normal" font-variant="normal" y="16.282976" x="2.8955159" font-family="cmmi10" fill="#ffffff">i</tspan></text>
+</svg>';
+                $r.='</A>';
+
         return $r;
     }
     static function warnbulle($p_comment)
