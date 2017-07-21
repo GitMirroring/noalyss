@@ -220,11 +220,37 @@ class HtmlInput
     }
     static function infobulle($p_comment)
     {
-//        $r='<A HREF="#" tabindex="-1" style="display:inline;color:white;background-color:blue;font-size:76%;margin-left:3px;font-weight:bolder;padding-left:7px;width:2em;border-radius:9px;padding-right:7px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">i</A>';
-        $r='<A HREF="#" tabindex="-1" style="display:inline;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">';
-        $r.='<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="16px" width="16px" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
-<path opacity="0.98999999" stroke-linejoin="round" d="m606.092,510.92a219.203,222.234,0,1,1,-438.406,0,219.203,222.234,0,1,1,438.406,0z" fill-rule="nonzero" transform="matrix(0.03528106,0,0,0.03288119,-5.5449677,-8.7386598)" stroke-dashoffset="0" stroke="#000" stroke-linecap="round" stroke-miterlimit="4" stroke-dasharray="none" stroke-width="1.70000005" fill="#00F"/>
-<text style="letter-spacing:0px;word-spacing:0px;" font-weight="normal" xml:space="preserve" transform="scale(1.1859122,0.84323275)" font-stretch="normal" line-height="125%" font-size="20.54475784px" font-variant="normal" y="16.282976" x="2.8955159" font-family="Consolas" font-style="normal" fill="#ffffff"><tspan font-weight="normal" font-style="normal" font-stretch="normal" font-variant="normal" y="16.282976" x="2.8955159" font-family="cmmi10" fill="#ffffff">i</tspan></text>
+        $r='<A tabindex="-1" style="display:inline;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">';
+        $r.='<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="16"
+   height="16"
+   id="svg3141">
+  <defs     id="defs3143" />
+  <g
+     id="layer1">
+    <path
+       d="m 606.09154,510.92041 a 219.20311,222.23357 0 1 1 -438.40622,0 219.20311,222.23357 0 1 1 438.40622,0 z"
+       transform="matrix(0.03528106,0,0,0.03288119,-5.5449677,-8.7386598)"
+       id="path2989"
+       style="opacity:0.98999999;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+    <text
+       x="2.8955159"
+       y="16.282976"
+       transform="scale(1.1859122,0.84323275)"
+       id="text2985"
+       xml:space="preserve"
+       style="font-size:20.54475784px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"><tspan
+         x="2.8955159"
+         y="16.282976"
+         id="tspan2987"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;font-family:cmmi10;-inkscape-font-specification:cmmi10">i</tspan></text>
+  </g>
 </svg>';
                 $r.='</A>';
 
@@ -232,7 +258,7 @@ class HtmlInput
     }
     static function warnbulle($p_comment)
     {
-        $r='<A HREF="#" tabindex="-1" style="font-size:124%;font-weight:bolder;display:inline;color:red;background-color:transparent;border-radius:9px;padding:0px;padding-left:7px;padding-right:7px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">&#9888;</A>';
+        $r='<A tabindex="-1" style="font-size:124%;font-weight:bolder;display:inline;color:red;background-color:transparent;border-radius:9px;padding:0px;padding-left:7px;padding-right:7px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">&#9888;</A>';
         return $r;
     }
     static function errorbulle($p_comment)
