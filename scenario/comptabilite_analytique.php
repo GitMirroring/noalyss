@@ -29,7 +29,7 @@ $a_jrnxId = $cn->get_array(
         "select j_id from jrnx join jrn on (jr_grpt_id=j_grpt)
             where
             jr_id=$1
-            ", array(4677));
+            ", array(48));
 $nb = count($a_jrnxId);
 
 for ($i = 0; $i<$nb; $i++) {
