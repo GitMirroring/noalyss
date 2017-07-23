@@ -503,14 +503,14 @@ class HtmlInput
      *@param $p_class CSS class of the button
      *@param $p_symbole raw symbole to add to the action message
      */
-    static function button_action($action,$javascript,$id="xx",$p_class="button",$p_symbole="")
+    static function button_action($action,$javascript,$id=NULL,$p_class="button",$p_symbole="")
     {
-        if ($id=="xx"){
-            $id=HtmlInput::generate_id("xx");
+        if ($id==NULL){
+            $id=uniqid("xx");
         }
-		$r="";
-		$r.='<input type="button" id="'.$id.'" class="'.$p_class.'" onclick="'.$javascript.'" value="'.$p_symbole.h($action).'">';
-		return $r;
+        $r="";
+        $r.='<input type="button" id="'.$id.'" class="'.$p_class.'" onclick="'.$javascript.'" value="'.$p_symbole.h($action).'">';
+        return $r;
 
     }
     /**
@@ -521,7 +521,7 @@ class HtmlInput
      */
     static  function image_click($p_image,$p_js,$p_message)
     {
-        $ret=sprintf('<a class="nav" style="display:inline" href="javascript:void(0)" title="%s"><img src="image/%s" onclick="%s"></a>',
+        $ret=sprintf('<a class="nav" style="display:inline" title="%s"><img src="image/%s" onclick="%s"></a>',
                 $p_message,$p_image,$p_js);
         return $ret;
 
