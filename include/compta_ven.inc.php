@@ -34,8 +34,10 @@ $gDossier=dossier::id();
 $cn=Dossier::connect();
 //menu = show a list of ledger
 $str_dossier=dossier::get();
+global $g_parameter;
+$http=new HttpInput();
+$strac=$http->request('ac');
 $ac="ac=".$_REQUEST['ac'];
-global $g_parameter,$http;
 $p_msg="";
 //----------------------------------------------------------------------
 // Encode a new invoice

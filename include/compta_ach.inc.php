@@ -31,7 +31,8 @@ require_once  NOALYSS_INCLUDE.'/class/pre_op_ach.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 $gDossier = dossier::id();
 global $g_parameter;
-global $http;
+$http=new HttpInput();
+
 $cn = Dossier::connect();
 //menu = show a list of ledger
 $str_dossier = dossier::get();

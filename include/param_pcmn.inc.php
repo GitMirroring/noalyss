@@ -26,7 +26,7 @@ require_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/constant.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-global $http;
+$http=new HttpInput();
 $gDossier=dossier::id();
 
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';

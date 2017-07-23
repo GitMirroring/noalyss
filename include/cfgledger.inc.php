@@ -36,7 +36,11 @@ require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 
 $gDossier=dossier::id();
 global $cn;
-global $http;
+
+global $g_parameter;
+$http=new HttpInput();
+
+
 $show_menu=1;
 $ledger=new Acc_Ledger($cn,-1);
 
