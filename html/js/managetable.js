@@ -74,7 +74,51 @@ var ManageTable = function (p_table_name)
 {
     this.callback = "ajax.php"; //!< File to call
     this.control = "dtr"; //<! Prefix Id of dialog box, table, row
+    
+    this.sort_column=0;
     this.param = {"table": p_table_name, "ctl_id": this.control}; //<! default value to pass
+    /**
+     * Set the sort , 
+     * @param {string} p_column  column number start from 0
+     * @param {string} p_type type of sort (string, numeric)
+     * @returns {ManageTable.set_sort}
+     */
+    var set_sort = function (p_column) {
+      
+      this.sort_column=p_column;
+    };
+    /**
+     * Insert the row a the right location
+     * @param {type} p_element_row DOMElement TR
+     * @returns nothing
+     */
+    this.insertRow=function(p_table,p_element_row,sort_column) {
+        try {
+        // use the table
+        //compute the length of row
+        //if rows == 0 or the sort is not defined then append 
+        if ( sort_column=-1 || p_table.rows.length < 2 || p_table.rows[1].cells[sort_column] == undefined || p_table.rows[1].cells[sort_column].getAttribute('sort_value') == undefined ) {
+            p_table.appendChild(p_element_row);
+            return;
+        }
+        // loop for each row , compare the innerHTML of the column with the
+        // value if less than insert before
+        var i = 0;
+        for (i = 1;i<p_table.rows.length;i++) {
+            if (p_table.rows[i].cells[sort_column].getAttribute('sort_value') > p_element_row.cells[sort_column].getAttribute('sort_value')) {
+                var row=p_table.insertRow(i);
+                row.innerHTML=p_element_row.innerHTML;
+                row.id=p_element_row.id;
+                return;
+            }
+        }
+        p_table.appendChild(p_element_row);
+    } catch(e) {
+        console.log("insertRow failed with "+e.message);
+        throw e;
+    }
+        
+    };
     var answer = {};
     /**
      *@fn ManageTable.set_control 
@@ -170,7 +214,10 @@ var ManageTable = function (p_table_name)
                         var new_row = new Element("tr");
                         new_row.id = answer['ctl_row'];
                         new_row.innerHTML = answer['html'];
-                        $("tb"+answer['ctl']).appendChild(new_row);
+                        /**
+                         *  put the element at the right place
+                         */
+                        here.insertRow($("tb"+answer['ctl']) , new_row,here.sort_column);
                     }
                     new Effect.Highlight(answer['ctl_row'] ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
                     alternate_row_color("tb"+answer['ctl']);
@@ -203,6 +250,7 @@ var ManageTable = function (p_table_name)
         this.param['action'] = 'delete';
         this.param['ctl'] = p_ctl;
         var here=this;
+        $(p_ctl+"_"+p_id).addClassName("highlight");
         smoke.confirm("Confirmez ?",
         function (e)
         {
@@ -222,6 +270,9 @@ var ManageTable = function (p_table_name)
                     }
                 }); 
             }
+            else {
+               $(p_ctl+"_"+p_id).removeClassName("highlight");
+            }
         })   ;
     
     };
@@ -238,6 +289,7 @@ var ManageTable = function (p_table_name)
         this.param['ctl'] = p_ctl;
         var control = this.control;
         var here = this;
+         
         // display the form to enter data
         new Ajax.Request(this.callback, {
             parameters: this.param,
@@ -249,7 +301,7 @@ var ManageTable = function (p_table_name)
                     var obj = {id: control, "cssclass": "inner_box", "html": loading()};
                     add_div(obj);
                     var pos = calcy(250);
-                    $(obj.id).setStyle({position: "absolute", top: pos + 'px', width: "auto", "margin-left": "20%"});
+                    $(obj.id).setStyle({position: "fixed", top:  '250px', width: "auto", "margin-left": "20%"});
                     $(obj.id).update(x['html']);
                 } catch (e) {
                     smoke.alert("ERREUR " + e.message);

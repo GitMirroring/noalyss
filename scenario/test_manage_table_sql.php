@@ -80,24 +80,24 @@ test_visible_update($manage_table, "parent_accounting", TRUE, TRUE);
 echo "<h1>"."Icon MODIFY place"."</h1>";
 echo "<h2>"." Mod left"."</h2>";
 $manage_table->set_icon_mod("left");
-$manage_table->display_table(" order by pcm_val::text limit 10");
+$manage_table->display_table("where pcm_val::text >= '400' order by pcm_val::text limit 10");
 
 echo "<h2>"." Mod right"."</h2>";
 $manage_table->set_icon_mod("right");
-$manage_table->display_table(" order by pcm_val::text limit 10");
+$manage_table->display_table("where pcm_val::text >= '400'  order by pcm_val::text limit 10");
 
 echo "<h2>"." Mod first"."</h2>";
 $manage_table->set_icon_mod("first");
-$manage_table->display_table(" order by pcm_val::text limit 10");
+$manage_table->display_table("where pcm_val::text >= '400'  order by pcm_val::text limit 10");
 
 echo "<h1>"."Icon DELETE place"."</h1>";
 echo "<h2>"." Delete left"."</h2>";
 $manage_table->set_icon_del("left");
-$manage_table->display_table(" order by pcm_val::text limit 10");
+$manage_table->display_table("where pcm_val::text >= '400'  order by pcm_val::text limit 10");
 
 echo "<h2>"." Delete right"."</h2>";
 $manage_table->set_icon_del("right");
-$manage_table->display_table(" order by pcm_val::text limit 10");
+$manage_table->display_table("where pcm_val::text >= '400'  order by pcm_val::text limit 10");
 
 
  ?>

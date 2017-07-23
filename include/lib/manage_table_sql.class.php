@@ -50,34 +50,42 @@
   $objet->param_set($json);
 
   // Display the box
-  $xml=$objet->ajax_input();
+    header('Content-type: text/xml; charset=UTF-8');
+    $xml=$objet->ajax_input();
+    echo $xml->save_XML();
   @endcode
  * @see ManageTable.js
  */
 class Manage_Table_SQL
 {
 
-    private $table; //!< Object Noalyss_SQL
-    private $a_label_displaid; //!< Label of the col. of the datarow
-    private $a_order; //!< order of the col
-    private $a_prop; //!< property for each col.
-    private $a_type; //!< Type of the column : date , select ... Only in input
-    private $a_select; //!< Possible value if a_type is a SELECT
-    private $object_name; //!< Object_name is used for the javascript
-    private $row_delete; //!< Flag to indicate if rows can be deleted
-    private $row_update; //!< Flag to indicate if rows can be updated
-    private $row_append; //!< Flag to indicate if rows can be added
-    private $json_parameter; //!< Default parameter to add (gDossier...)
-    private $aerror; //!< Array containing the error of the input data
+    protected $table; //!< Object Data_SQL
+    protected $a_label_displaid; //!< Label of the col. of the datarow
+    protected $a_order; //!< order of the col
+    protected $a_prop; //!< property for each col.
+    protected $a_type; //!< Type of the column : date , select ... Only in input
+    protected $a_select; //!< Possible value if a_type is a SELECT
+    protected $object_name; //!< Object_name is used for the javascript
+    protected $row_delete; //!< Flag to indicate if rows can be deleted
+    protected $row_update; //!< Flag to indicate if rows can be updated
+    protected $row_append; //!< Flag to indicate if rows can be added
+    protected $json_parameter; //!< Default parameter to add (gDossier...)
+    protected $aerror; //!< Array containing the error of the input data
+    protected $col_sort; //!< when inserting, it is the column to sort,-1 to disable it and append only
+
     const UPDATABLE=1;
     const VISIBLE=2;
+
+    private $icon_mod; //!< place of right or left the icon update or mod, default right, accepted value=left,right,first column for mod
+    private $icon_del; //!< place of right or left the icon update or mod, default right, accepted value=left,right
 
     /**
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the
      * permission for updating or deleting row
      */
-    function __construct(Noalyss_SQL $p_table)
+
+    function __construct(Data_SQL $p_table)
     {
         $this->table=$p_table;
         $order=0;
@@ -96,15 +104,50 @@ class Manage_Table_SQL
         $this->row_update=TRUE;
         $this->row_append=TRUE;
         $this->callback="ajax.php";
-        $this->json=json_encode(array("gDossier"=>Dossier::id(),
+        $this->json_parameter=json_encode(array("gDossier"=>Dossier::id(),
             "op"=>"managetable"));
         $this->aerror=[];
+        $this->icon_mod="right";
+        $this->icon_del="right";
+        $this->col_sort=0;
     }
-    function get_table() {
+    /**
+     * When adding an element , it is column we checked to insert before,
+     * @return none
+     */
+    function get_col_sort() {
+        return $this->col_sort;
+    }
+    /**
+     * When adding an element ,we place it thanks the DOM Attribute sort_value
+     * set it to -1 if you want one to append
+     * @param numeric $pn_num
+     * @note you must be aware that the icon_mod or icon_del is in the first col, 
+     * this column is skipped
+     */
+    function set_col_sort($p_num) {
+        $this->col_sort=$p_num;
+    }
+    function get_icon_mod()
+    {
+        return $this->icon_mod;
+    }
+    function get_icon_del()
+    {
+        return $this->icon_del;
+    }
+    function get_table()
+    {
         return $this->table;
     }
-    function set_table(Noalyss_SQL $p_noalyss_sql) {
+
+    function set_table(Data_SQL $p_noalyss_sql)
+    {
         $this->table=$p_noalyss_sql;
+    }
+    function get_order()
+    {
+        return $this->a_order;
     }
     /**
      * @brief set the error message for a wrong input
@@ -112,10 +155,11 @@ class Manage_Table_SQL
      * @param $p_message the error message
      * @see check
      */
-    function set_error($p_col,$p_message) 
+    function set_error($p_col, $p_message)
     {
         $this->aerror[$p_col]=$p_message;
     }
+
     /**
      * @brief retrieve the error message
      * @param $p_col column name
@@ -124,9 +168,11 @@ class Manage_Table_SQL
      */
     function get_error($p_col)
     {
-        if ( isset ($this->aerror[$p_col])) return $this->aerror[$p_col];
+        if (isset($this->aerror[$p_col]))
+            return $this->aerror[$p_col];
         return "";
     }
+
     /**
      * This function can be overrided to check the data before 
      * inserting , updating or removing,
@@ -137,6 +183,7 @@ class Manage_Table_SQL
     {
         return true;
     }
+
     /**
      * @brief set the type of a column , it will change in the input db box , the
      * select must supply an array of possible values [val=> , label=>] with
@@ -157,6 +204,7 @@ class Manage_Table_SQL
         $this->a_type[$p_key]=$p_value;
         $this->a_select[$p_key]=$p_array;
     }
+
     /**
      * @brief return the type of a column 
      * @param $p_key col name
@@ -180,19 +228,44 @@ class Manage_Table_SQL
     {
         return $this->object_name;
     }
-
+    /**
+     * Add json parameter to the current one
+     */
+    function add_json_param($p_attribute,$p_value) {
+        $x=json_decode($this->json_parameter,TRUE);
+        $x[$p_attribute]=$p_value;
+        $this->json_parameter=json_encode($x);
+    }
+    function get_json()
+    {
+        return $this->json_parameter;
+    }
+    function get_object_name() {
+        return $this->object_name;
+    }
     /**
      * Set the parameter of the object (gDossier, ac, plugin_code...)
      * @detail By default , only gDossier will be set . The default value
      * is given in the constructor
      * @param string with json format $p_json 
-     * 
+     * @deprecated since version 692
+     * @see set_json
      */
     function param_set($p_json)
     {
-        $this->json_parameter=$p_json;
+        $this->set_json($p_json);
     }
-
+    /**
+     * Set the parameter of the object (gDossier, ac, plugin_code...)
+     * @detail By default , only gDossier will be set . The default value
+     * is given in the constructor
+     * @param string with json format $p_json 
+     */
+    function set_json($p_json)
+    {
+        $this->json_parameter=$p_json;
+        
+    }
     /**
      * @brief set the callback function that is passed to javascript
      * @param $p_file  : callback file by default ajax.php
@@ -213,6 +286,7 @@ class Manage_Table_SQL
 		var {$this->object_name}=new ManageTable(\"{$this->table->table}\");
 		{$this->object_name}.set_callback(\"{$this->callback}\");
 		{$this->object_name}.param_add({$this->json_parameter});
+		{$this->object_name}.set_sort({$this->get_col_sort()});
 		</script>
 
 	";
@@ -220,7 +294,8 @@ class Manage_Table_SQL
 
     /**
      * Set the object_name 
-     * @param string $p_object_name name of the JS var, used in ajax response
+     * @param string $p_object_name name of the JS var, used in ajax response,id
+     * of the part of the id DOMElement to modify
      */
     function set_object_name($p_object_name)
     {
@@ -234,8 +309,10 @@ class Manage_Table_SQL
      */
     function set_property_updatable($p_key, $p_value)
     {
-        if (!$this->a_prop[$p_key])
+        if (! isset($this->a_prop[$p_key]))
             throw new Exception(__FILE__.":".__LINE__."$p_key invalid index");
+        // if already done returns 
+        if ( $this->get_property_updatable($p_key) == $p_value)return;
         if ($p_value==False)
             $this->a_prop[$p_key]=$this->a_prop[$p_key]-self::UPDATABLE;
         elseif ($p_value==True)
@@ -252,7 +329,27 @@ class Manage_Table_SQL
 
         return $this->row_update;
     }
-
+    /**
+     * Set the icon to modify at the right ,the first col or left of the row
+     * 
+     * @param type $pString
+     * @throws Exception
+     */
+    function set_icon_mod($pString) {
+        if ($pString != "right" && $pString != "left" && $pString!="first") 
+            throw new Exception('set_icon_mod invalide '.$pString);
+        $this->icon_mod=$pString;
+    }
+    /**
+     * Set the icon to delete at the right or left of the row
+     * @param type $pString
+     * @throws Exception
+     */
+    function set_icon_del($pString) {
+        if ($pString != "right" && $pString != "left" ) 
+            throw new Exception('set_icon_del invalide '.$pString);
+        $this->icon_del=$pString;
+    }
     /**
      * @brief return false if the append of the row is forbidden
      */
@@ -322,8 +419,11 @@ class Manage_Table_SQL
      */
     function set_property_visible($p_key, $p_value)
     {
-        if (!$this->a_prop[$p_key])
+        if (!isset ($this->a_prop[$p_key]) )
             throw new Exception(__FILE__.":".__LINE__."$p_key invalid index");
+        // if already done return
+        if ( $this->get_property_visible($p_key) == $p_value)return;
+        
         if ($p_value==False)
             $this->a_prop[$p_key]=$this->a_prop[$p_key]-self::VISIBLE;
         elseif ($p_value==True)
@@ -422,17 +522,24 @@ class Manage_Table_SQL
 
     /**
      * @brief display the data of the table
+     * @param $p_order is the cond or order of the rows, 
+     * if empty the primary key will be used
+     * @param $p_array array of the bind variables
+     * @note the function create_js_script MUST be called before this function
      */
-    function display_table()
+    function display_table($p_order="", $p_array=NULL)
     {
-        $ret=$this->table->seek("order by ".$this->table->primary_key);
+        if ($p_order=="")
+        {
+            $p_order="order by {$this->table->primary_key}";
+        }
+        $ret=$this->table->seek($p_order, $p_array);
         $nb=Database::num_row($ret);
         if ($this->can_append_row()==TRUE)
         {
             echo HtmlInput::button_action(" "._("Ajout"),
-                    sprintf("%s.input('-1','%s')", 
-                            $this->object_name,
-                            $this->object_name),"xx","smallbutton",BUTTONADD);
+                    sprintf("%s.input('-1','%s')", $this->object_name,
+                            $this->object_name), "xx", "smallbutton", BUTTONADD);
         }
         $nb_order=count($this->a_order);
         $virg=""; $result="";
@@ -458,12 +565,12 @@ class Manage_Table_SQL
         echo "</table>";
         if ($this->can_append_row()==TRUE)
         {
-              echo HtmlInput::button_action(" "._("Ajout"),
-                    sprintf("%s.input('-1','%s')", 
-                            $this->object_name,
-                            $this->object_name),"xx","smallbutton",BUTTONADD);
+            echo HtmlInput::button_action(" "._("Ajout"),
+                    sprintf("%s.input('-1','%s')", $this->object_name,
+                            $this->object_name), "xx", "smallbutton", BUTTONADD);
         }
-        printf ('<script> alternate_row_color("tb%s");</script>', $this->object_name);
+        printf('<script> alternate_row_color("tb%s");</script>',
+                $this->object_name);
     }
 
     /**
@@ -475,19 +582,29 @@ class Manage_Table_SQL
         $nb=count($this->a_order);
         echo "<tr>";
 
+        if ($this->can_update_row() && $this->icon_mod=="left")
+        {
+            echo th("  ", 'style="width:40px"');
+        }
+        if ($this->can_delete_row() && $this->icon_del=="left")
+        {
+            echo th(" ", 'style="width:40px"');
+        }
         for ($i=0; $i<$nb; $i++)
         {
 
             $key=$this->a_order[$i];
 
             if ($this->get_property_visible($key)==true)
-                echo th($this->a_label_displaid[$key]);
+                echo th("","",$this->a_label_displaid[$key]);
         }
-        if ($this->can_update_row()) {
-            echo th("  ",'style="width:40px"');
+        if ($this->can_update_row() && $this->icon_mod=="right")
+        {
+            echo th("  ", 'style="width:40px"');
         }
-        if ($this->can_delete_row()) {
-            echo th(" ",'style="width:40px"');
+        if ($this->can_delete_row() && $this->icon_del=="right")
+        {
+            echo th(" ", 'style="width:40px"');
         }
         echo "</tr>";
     }
@@ -511,13 +628,40 @@ class Manage_Table_SQL
         $nb=count($this->a_order);
         for ($i=0; $i<$nb; $i++)
         {
-            $v=HtmlInput::default_value_request($this->a_order[$i], "");
+            
             $key=$this->a_order[$i];
-            if ( $this->get_property_visible($key) == TRUE 
-                    && $this->get_property_updatable($key) == TRUE )
+            if ($this->get_property_visible($key)==TRUE&&$this->get_property_updatable($key)
+                    ==TRUE)
             {
+                $v=HtmlInput::default_value_request($this->a_order[$i], "");
                 $this->table->$key=strip_tags($v);
             }
+        }
+    }
+
+    function display_icon_mod($p_row)
+    {
+        if ($this->can_update_row())
+        {
+            echo "<td>";
+            $js=sprintf("%s.input('%s','%s');", $this->object_name,
+                    $p_row[$this->table->primary_key], $this->object_name
+            );
+            echo HtmlInput::image_click("edit.png", $js, _("Modifier"));
+            echo "</td>";
+        }
+    }
+
+    function display_icon_del($p_row)
+    {
+        if ($this->can_delete_row())
+        {
+            echo "<td>";
+            $js=sprintf("%s.delete('%s','%s');", $this->object_name,
+                    $p_row[$this->table->primary_key], $this->object_name
+            );
+            echo HtmlInput::image_click("delete.gif", $js, _("Effacer"));
+            echo "</td>";
         }
     }
 
@@ -526,38 +670,48 @@ class Manage_Table_SQL
      * in a_order and depending of the visibility of the column
      * @see display_table
      */
-    private function display_row($p_row)
+    function display_row($p_row)
     {
 
         printf('<tr id="%s_%s">', $this->object_name,
                 $p_row[$this->table->primary_key])
         ;
-
+        
+        if ($this->icon_mod=="left")
+            $this->display_icon_mod($p_row);
+        if ($this->icon_del=="left")
+            $this->display_icon_del($p_row);
+        
         $nb_order=count($this->a_order);
         for ($i=0; $i<$nb_order; $i++)
         {
             $v=$this->a_order[$i];
-            if ($this->get_property_visible($v))
+            if ($i==0&&$this->icon_mod=="first"&&$this->can_update_row())
+            {
+                $js=sprintf("onclick=\"%s.input('%s','%s');\"", $this->object_name,
+                        $p_row[$this->table->primary_key], $this->object_name);
+                $td=($i == $this->col_sort ) ? sprintf('<td sort_value="X%s" >',$p_row[$v]):"<td>";
+                echo $td.HtmlInput::anchor($p_row[$v], "", $js).'</td>';
+            }
+            elseif ( $i == $this->col_sort && $this->get_property_visible($v))
+            {
+                echo td($p_row[$v],sprintf(' sort_value="X%s" ',$p_row[$v]));
+            }
+            elseif ( ! $this->get_property_visible($v)) { 
+                continue;
+            }
+            else
+            {
                 echo td($p_row[$v]);
+            }
         }
-        echo "<td>";
-        if ($this->can_update_row())
-        {
-            $js=sprintf("%s.input('%s','%s');", $this->object_name,
-                    $p_row[$this->table->primary_key], $this->object_name
-            );
-            echo HtmlInput::image_click("edit.png",$js,_("Modifier"));
-        }
-        echo "</td>";
-        echo "<td>";
-        if ($this->can_delete_row())
-        {
-            $js=sprintf("%s.delete('%s','%s');", $this->object_name,
-                    $p_row[$this->table->primary_key], $this->object_name
-            );
-            echo HtmlInput::image_click("delete.gif", $js,_("Effacer"));
-        }
-        echo "</td>";
+        if ($this->icon_mod=="right")
+            $this->display_icon_mod($p_row);
+        if ($this->icon_del=="right")
+            $this->display_icon_del($p_row);
+
+
+
         echo '</tr>';
     }
 
@@ -587,7 +741,7 @@ class Manage_Table_SQL
                     echo "<td>";
                     if ($this->a_type[$key]=="select")
                     {
-                        $select = new ISelect($key);
+                        $select=new ISelect($key);
                         $select->value=$this->a_select[$key];
                         $select->selected=$value;
                         echo $select->input();
@@ -647,10 +801,13 @@ class Manage_Table_SQL
             // Check if the data are valid , if not then display the
             // input values with the error message 
             //
-            if ( $this->check() == false ) {
+            if ($this->check()==false)
+            {
                 $xml=$this->ajax_input("NOK");
                 return $xml;
-            } else {
+            }
+            else
+            {
                 // Data are valid so we can save them
                 $this->save();
                 // compose the answer
@@ -665,7 +822,7 @@ class Manage_Table_SQL
                 $this->display_row($array);
                 $html=ob_get_contents();
                 ob_end_clean();
-                $s3=$xml->createElement("html" );
+                $s3=$xml->createElement("html");
                 $t1=$xml->createTextNode($html);
                 $s3->appendChild($t1);
             }
@@ -681,7 +838,7 @@ class Manage_Table_SQL
         {
             $s1=$xml->createElement("status", "NOK");
             $s2=$xml->createElement("ctl_row",
-            $this->object_name+"_"+$this->table->get_pk_value());
+                    $this->object_name+"_"+$this->table->get_pk_value());
             $s4=$xml->createElement("ctl", $this->object_name);
             $s3=$xml->createElement("html", $ex->getTraceAsString());
             $root=$xml->createElement("data");
@@ -710,7 +867,7 @@ class Manage_Table_SQL
         {
             $status=$p_status;
             ob_start();
-		
+
             echo HtmlInput::title_box("Donnée", "dtr");
             printf('<form id="frm%s_%s" method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
@@ -729,12 +886,12 @@ class Manage_Table_SQL
             HtmlInput::submit('update', _("OK")),
             '</li>',
             '<li>',
-            HtmlInput::button_action(_("Cancel"), $close,"","smallbutton"),
+            HtmlInput::button_action(_("Cancel"), $close, "", "smallbutton"),
             '</li>',
             '</ul>';
             echo "</form>";
-            
-            
+
+
             $html=ob_get_contents();
             ob_end_clean();
 
@@ -742,7 +899,7 @@ class Manage_Table_SQL
             $ctl=$this->object_name."_".$this->table->get_pk_value();
             $s2=$xml->createElement("ctl_row", $ctl);
             $s4=$xml->createElement("ctl", $this->object_name);
-            $s3=$xml->createElement("html" );
+            $s3=$xml->createElement("html");
             $t1=$xml->createTextNode($html);
             $s3->appendChild($t1);
 
@@ -821,13 +978,13 @@ class Manage_Table_SQL
     }
 
     /**
-     * @brief save the Noalyss_SQL Object
+     * @brief save the Data_SQL Object
      * The noalyss_SQL is not empty
      * @see from_request
      */
     function save()
     {
-       $this->table->save();
+        $this->table->save();
     }
 
     /**
@@ -859,6 +1016,7 @@ class Manage_Table_SQL
     {
         $this->table->set($p_key, $p_value);
     }
+
     /**
      * Display a list of the error collected
      * @see get_error set_error 
@@ -867,16 +1025,17 @@ class Manage_Table_SQL
     function display_error()
     {
         $nb_order=count($this->a_order);
-        if ( count($this->aerror) == 0)return;
+        if (count($this->aerror)==0)
+            return;
         echo "<span class=\"notice\">Liste erreurs :</span>";
-        for ($i=0; $i<$nb_order; $i++)        
+        for ($i=0; $i<$nb_order; $i++)
         {
-             $key=$this->a_order[$i];
-             $label=$this->a_label_displaid[$key];
-             $error=$this->get_error($key);
-             $error=($error=="")?"":"<span class=\"notice\" style=\"font-weight:normal;font-style:normal;display:block\">".h($label)." : ".h($this->get_error($key))."</span>";
-             
-             echo $error;
+            $key=$this->a_order[$i];
+            $label=$this->a_label_displaid[$key];
+            $error=$this->get_error($key);
+            $error=($error=="")?"":"<span class=\"notice\" style=\"font-weight:normal;font-style:normal;display:block\">".h($label)." : ".h($this->get_error($key))."</span>";
+
+            echo $error;
         }
         echo "</ul>";
     }

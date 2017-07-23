@@ -22,7 +22,7 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 if ( ! defined ("AJAX_TEST")) {
-     echo "Can not be called directly but via AJAX";
+     echo "Can not be called directly but via ajax_test.php";
      return;
 }
 /**
@@ -40,40 +40,26 @@ $ctl_id=$http->request('ctl');
     echo $e->getMessage();
 }
 require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
-require_once NOALYSS_INCLUDE."/database/acc_plan_sql.class.php";
+require_once NOALYSS_INCLUDE."/class/acc_plan_mtable.class.php";
 
-
-
+$obj=new Acc_Plan_SQL($cn);
+$obj->set_limit_fiche_qcode(5);
+$obj->set_pk_value($p_id);
+$obj->load();
+$manage_table=new Acc_Plan_MTable($obj);
+$manage_table->add_json_param("TestAjaxFile",
+        NOALYSS_HOME."/../scenario/ajax_acc_plan_mtable.php");
+$manage_table->set_object_name($ctl_id);
+$manage_table->set_callback("ajax_test.php");
 if ($action=="input")
 {
-    $obj=new Acc_Plan_SQL($cn);
-    $obj->set_limit_fiche_qcode(5);
-    $obj->set_pk_value($p_id);
-    $obj->load();
-    $manage_table=new Manage_Table_SQL($obj);
-    $manage_table->add_json_param("TestAjaxFile",
-        NOALYSS_HOME."/../scenario/ajax_manage_table_sql.php");
-
-    $manage_table->set_object_name($ctl_id);
-    $manage_table->set_col_label('pcm_val', "Poste");
-    $manage_table->set_col_label('parent_accounting', "Dépend");
-    $manage_table->set_col_label('pcm_lib', "Libellé");
-    $manage_table->set_col_label('pcm_type',
-            "Type de menu".HtmlInput::infobulle(33));
     header('Content-type: text/xml; charset=UTF-8');
     echo $manage_table->ajax_input()->saveXML();
     return;
-} elseif ($action=="save")
+}
+elseif ($action == "save") 
 {
-$obj=new Acc_Plan_SQL($cn);
-    $obj->set_limit_fiche_qcode(5);
-    $obj->set_pk_value($p_id);
-    $obj->load();
-    $manage_table=new Manage_Table_SQL($obj);
-    $manage_table->set_object_name($ctl_id);
-    $manage_table->add_json_param("TestAjaxFile",
-        NOALYSS_HOME."/../scenario/ajax_manage_table_sql.php");
+    $xml=$manage_table->ajax_save();
      header('Content-type: text/xml; charset=UTF-8');
-    echo $manage_table->ajax_save()->saveXML();
-    return;
+     echo $xml->saveXML();
 }

@@ -82,12 +82,10 @@
  * @endcode
  *
  */
-require NOALYSS_INCLUDE."/lib/data_sql.class.php";
-
-abstract class Noalyss_SQL extends Data_SQL
+abstract class Data_SQL
 {
 
-    function __construct(&$p_cn, $p_id=-1)
+   function __construct($p_cn, $p_id=-1)
     {
         $this->cn=$p_cn;
         $pk=$this->primary_key;
@@ -137,7 +135,7 @@ abstract class Noalyss_SQL extends Data_SQL
     public function set($p_string, $p_value)
     {
         if (array_key_exists($p_string, $this->type))    {
-            $this->$p_string=$p_value;
+            $this->$idx=$p_value;
         }        else
             throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
     }
@@ -169,79 +167,13 @@ abstract class Noalyss_SQL extends Data_SQL
             throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
     }
 
-    public function insert()
-    {
-        $this->verify();
-        $sql="insert into ".$this->table." ( ";
-        $sep="";
-        $par="";
-        $idx=1;
-        $array=array();
-        foreach ($this->name as $key=> $value)
-        {
-            if (isset($this->default[$value])&&$this->default[$value]=="auto"&&$this->$value==null)
-                continue;
-            if ($value==$this->primary_key&&$this->$value==-1)
-                continue;
-            $sql.=$sep.$value;
-            switch ($this->type[$value])
-            {
-                case "date":
-                    if ($this->date_format=="")
-                        throw new Exception('Format Date invalide');
-                    $par .=$sep.'to_timestamp($'.$idx.",'".$this->date_format."')";
-                    break;
-                default:
-                    $par .= $sep."$".$idx;
-            }
+    abstract function insert();
 
-            $array[]=$this->$value;
-            $sep=",";
-            $idx++;
-        }
-        $sql.=") values (".$par.") returning ".$this->primary_key;
-        $pk=$this->primary_key;
-        $this->$pk=$this->cn->get_value($sql, $array);
-    }
+    abstract function delete();
 
-    public function delete()
-    {
-        $pk=$this->primary_key;
-        $sql=" delete from ".$this->table." where ".$this->primary_key."= $1";
-        $this->cn->exec_sql($sql,array($this->$pk));
-    }
+    abstract  function update();
 
-    public function update()
-    {
-        $this->verify();
-        $pk=$this->primary_key;
-        $sql="update ".$this->table."  ";
-        $sep="";
-        $idx=1;
-        $array=array();
-        $set=" set ";
-        foreach ($this->name as $key=> $value)        {
-            if (isset($this->default[$value])&&$this->default[$value]=="auto")
-                continue;
-            switch ($this->type[$value])
-            {
-                case "date":
-                    $par=$value.'=to_timestamp($'.$idx.",'".$this->date_format."')";
-                    break;
-                default:
-                    $par=$value."= $".$idx;
-            }
-            $sql.=$sep." $set ".$par;
-            $array[]=$this->$value;
-            $sep=",";
-            $set="";
-            $idx++;
-        }
-        $array[]=$this->$pk;
-        $sql.=" where ".$this->primary_key." = $".$idx;
-        $this->cn->exec_sql($sql, $array);
-    }
-     public function set_pk_value($p_value)
+    public function set_pk_value($p_value)
      {
          $pk=$this->primary_key;
            $this->$pk=$p_value;
@@ -252,38 +184,7 @@ abstract class Noalyss_SQL extends Data_SQL
           return $this->$pk;
     }
 
-    public function load()
-    {
-        $sql=" select ";
-        $sep="";
-        foreach ($this->name as $key)       {
-            switch ($this->type[$key])
-            {
-                case "date":
-                    $sql .= $sep.'to_char('.$key.",'".$this->date_format."') as ".$key;
-                    break;
-                default:
-                    $sql.=$sep.$key;
-            }
-            $sep=",";
-        }
-        $pk=$this->primary_key;
-        $sql.=" from ".$this->table;
-        
-        $sql.=" where ".$this->primary_key." = $1";
-       
-        $result=$this->cn->get_array($sql,array ($this->$pk));
-        if ($this->cn->count()==0)
-        {
-            $this->$pk=-1;
-            return;
-        }
-
-        foreach ($result[0] as $key=> $value)
-        {
-            $this->$key=$value;
-        }
-    }
+    abstract function load();
 
     public function get_info()
     {
@@ -346,12 +247,7 @@ abstract class Noalyss_SQL extends Data_SQL
      * @see Database::exec_sql get_object  Database::num_row
      * @return the return value of exec_sql
      */
-    function seek($cond='', $p_array=null)
-    {
-        $sql="select * from ".$this->table."  $cond";
-        $ret=$this->cn->exec_sql($sql, $p_array);
-        return $ret;
-    }
+    abstract  function seek($cond='', $p_array=null);
 
     /**
      * get_seek return the next object, the return of the query must have all the column
@@ -398,19 +294,13 @@ abstract class Noalyss_SQL extends Data_SQL
         }
         return $a_return;
     }
-    public function count($p_where="",$p_array=null) {
-        $count=$this->cn->get_value("select count(*) from $this->table".$p_where,$p_array);
-        return $count;
-    }
+    abstract function count($p_where="",$p_array=null) ;
+    
     /**
      * Count the number of record with the id ,
      * @return integer  0 doesn't exist , 1 exists
      */
-    public function exist() {
-        $pk=$this->primary_key;
-        $count=$this->cn->get_value("select count(*) from ".$this->table." where ".$this->primary_key."=$1",array($this->$pk));
-        return $count;
-    }
+    abstract function exist() ;
 }
 
 ?>
