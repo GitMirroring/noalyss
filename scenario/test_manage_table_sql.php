@@ -20,7 +20,6 @@
 // Copyright (2016) Author Dany De Bontridder <dany@alchimerys.be>
  ini_set('disable_functions', 'exit,die,header');
  //@description:Test the class manage_table_sql and javascript
-
  $_GET=array (
 );
 $_POST=array (

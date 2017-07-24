@@ -647,7 +647,7 @@ class Manage_Table_SQL
             $js=sprintf("%s.input('%s','%s');", $this->object_name,
                     $p_row[$this->table->primary_key], $this->object_name
             );
-            echo HtmlInput::image_click("edit.png", $js, _("Modifier"));
+            echo HtmlInput::image_click("crayon-mod-b24.png", $js, _("Modifier"));
             echo "</td>";
         }
     }
