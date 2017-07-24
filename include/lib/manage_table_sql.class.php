@@ -717,7 +717,8 @@ class Manage_Table_SQL
 
     /**
      * @brief display into a dialog box the datarow in order 
-     * to be appended or modified
+     * to be appended or modified. Can be override if you need
+     * a more complex form
      */
     function input()
     {
