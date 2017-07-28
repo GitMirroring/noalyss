@@ -536,7 +536,7 @@ class HtmlInput
     static function button_image($javascript,$id="xx",$p_class='class="button"',$p_image="")
     {
         if ($id=="xx"){
-            $id=HtmlInput::generate_id("xx");
+            $id=uniqid("xx");
         }
         $r="";
         $r.='<image id="'.$id.'" '.$p_class.' onclick="'.$javascript.'"  src="'.$p_image.'" />';

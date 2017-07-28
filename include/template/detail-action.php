@@ -1,7 +1,7 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-$uniq=HtmlInput::generate_id("tab");
+$uniq=uniqid("tab",TRUE);
 ?><div>
 <div style="float:left;">
 
