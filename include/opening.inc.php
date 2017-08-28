@@ -31,9 +31,10 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-
+$http=new HttpInput();
 $p_mesg="";
 
+$sa=$http->request("sa","string","");
 $sa = (isset($_REQUEST['sa'])) ? $_REQUEST['sa'] : '';
 $g_user->Check();
 
@@ -42,7 +43,8 @@ require_once NOALYSS_INCLUDE.'/lib/user_menu.php';
 // Correct (last step)
 if (isset($_POST['correct']))
 {
-	$ledger = new Acc_Ledger($cn, $_REQUEST['p_jrn']);
+    $p_jrn=$http->request("p_jrn", "number");
+    $ledger = new Acc_Ledger($cn, $p_jrn);
 	require_once NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
 	return;
 }
@@ -51,7 +53,8 @@ if (isset($_POST['correct']))
 if ( isset($_POST['summary']))
 {
 	try {
-		$ledger = new Acc_Ledger($cn, $_REQUEST['p_jrn']);
+            $p_jrn=$http->request("p_jrn", "number");
+		$ledger = new Acc_Ledger($cn, $p_jrn);
 		$ledger->with_concerned=false;
 			$ledger->verify($_POST);
 			require_once NOALYSS_INCLUDE.'/operation_ods_confirm.inc.php';
@@ -67,15 +70,16 @@ if ( isset($_POST['summary']))
 // record
 if (isset($_POST['save']))
 {
+        $p_jrn=$http->request("p_jrn", "number");
 	$array = $_POST;
-	$ledger = new Acc_Ledger($cn, $_REQUEST['p_jrn']);
+	$ledger = new Acc_Ledger($cn, $p_jrn);
 	$ledger->with_concerned=false;
 	try
 	{
 		$ledger->save($array);
 		$jr_id = $cn->get_value('select jr_id from jrn where jr_internal=$1', array($ledger->internal));
 
-		echo '<h2> Op&eacute;ration enregistr&eacute;e  Piece ' . h($ledger->pj) . '</h2>';
+		echo '<h2>'._("Opération enregistrée")." "._("Piece ") . h($ledger->pj) . '</h2>';
 		if (strcmp($ledger->pj, $_POST['e_pj']) != 0)
 		{
 			echo '<h3 class="notice">' . _('Attention numéro pièce existante, elle a du être adaptée') . '</h3>';
@@ -104,7 +108,7 @@ if ($sa == '')
         
 	echo '<h1 class="legend"> Etape 1 </h1>';
 
-	echo 'Choisissez le dossier où sont les soldes à importer';
+	echo _('Choisissez le dossier où sont les soldes à importer');
 	$avail = $g_user->get_available_folder();
 
 	if (empty($avail))
@@ -139,14 +143,14 @@ if ($sa == '')
 /* --------------------------------------------------
  * Step 2 choose now the exercice of this folder
  */
-$back = 'do.php?ac=' . $_REQUEST['ac'] . '&' . dossier::get();
+$back = 'do.php?ac=' . $http->request("ac"). '&' . dossier::get();
 if ($sa == 'step2')
 {
 	echo '<div class="content">' .
 	'<div><h1 class="legend">Etape 2</h1>' .
 	'<h2 class="info">' . dossier::name($_REQUEST['f']) . '</h2>' .
 	'<form class="print" method="post">' .
-	' Choisissez l\'exercice du dossier ';
+	_("Choisissez l'exercice du dossier à reporter pour les a-nouveaux");
 	echo dossier::hidden();
 	echo HtmlInput::hidden('ac', $_REQUEST['ac']);
 	echo HtmlInput::hidden('sa', 'step3');
@@ -159,7 +163,7 @@ if ($sa == 'step2')
 	$w->readonly = false;
 	$w->value = $periode;
 	$w->name = "p_periode";
-	echo 'P&eacute;riode : ' . $w->input();
+	echo _('Période').' : ' . $w->input();
 	echo HtmlInput::submit('ok', _('Continuer'));
 	echo dossier::hidden();
 	echo "</form>";

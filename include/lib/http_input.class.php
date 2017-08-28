@@ -75,9 +75,10 @@ class HttpInput
     /**
      * Retrieve from $this->array the variable
      * @param $p_name name of the variable
-     * @param $p_type type of the variable
+     * @param $p_type type of the variable (number,string,date('dd.mm.yyyy'),array)
      * @param $p_default default value is variable
      * @throws Exception if invalid
+     * @see check_type
      */
     function get_value($p_name, $p_type="string", $p_default="")
     {
