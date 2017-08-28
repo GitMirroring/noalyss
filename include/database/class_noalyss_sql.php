@@ -122,7 +122,7 @@ abstract class Noalyss_SQL
     public function set($p_string, $p_value)
     {
         if (array_key_exists($p_string, $this->type))    {
-            $this->$idx=$p_value;
+            $this->$p_string=$p_value;
         }        else
             throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
     }
