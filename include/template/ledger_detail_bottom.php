@@ -157,7 +157,9 @@ endif;
 <?php 
 
 if ($aRap  != null ) {
+    $amount_tva_include=(isset($tvac))?$tvac:$detail->det->jr_montant;
   $tableid="tb".$div;
+  $total_rec=0;
   echo '<table id="'.$tableid.'">';
   for ($e=0;$e<count($aRap);$e++)  {
     $opRap=new Acc_Operation($cn);
@@ -165,6 +167,7 @@ if ($aRap  != null ) {
     $internal=$opRap->get_internal();
     $array_jr=$cn->get_array('select jr_date,jr_pj_number,jr_montant,jr_comment from jrn where jr_id=$1',array($aRap[$e]));
     $amount=$array_jr[0]['jr_montant'];
+    $total_rec=bcadd($total_rec,$amount);
     $str="modifyOperation(".$aRap[$e].",".$gDossier.")";
     
     // If write access , allow to drop Reconciles operations
@@ -193,7 +196,8 @@ if ($aRap  != null ) {
             td('<a class="line" href="javascript:void(0)" onclick="'.$str.'" >'.$internal.'</A>').
             td($pj_nb).
             td($comment).
-            td(nbm($amount)).
+            td(_('montant').'='.nbm($amount)).
+            td(_('delta').'='.nbm(bcsub($amount_tva_include,$total_rec))).
             td($remove),' id = "row'.$e.'"');
   }
   echo '</table>';
