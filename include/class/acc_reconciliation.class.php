@@ -386,7 +386,7 @@ j1.j_poste as poste
             for ($e=0;$e<count($array[$i]['depend']);$e++)
             {
                 $retdb=$this->db->execute("detail_quant",array($array[$i]['depend'][$e]['jr_id']));
-                // if exist in quant_
+                // if exist in v_quant_detail
                 if ( Database::num_row($retdb) != 0)
                 {
                     // then second_amount takes in account the vat_sided
