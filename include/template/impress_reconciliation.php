@@ -24,17 +24,8 @@
 </tr>
 <?php 
 for ($i=0;$i<count($array);$i++) {
-        $tot=$array[$i]['first']['jr_montant'];
-        $retdb=$cn->execute("detail_quant",array($array[$i]['first']['jr_id']));
-        if ( Database::num_row($retdb) != 0)
-        {
-            // then second_amount takes in account the vat_sided
-            $row=Database::fetch_array($retdb, 0);
-            $total_price=bcadd($row['price'],$row['vat_amount']);
-            $total_price=bcsub($total_price,$row['vat_sided']);
-            $tot=$total_price;
-
-        }
+        $tot=$acc_reconciliation->get_amount_noautovat($array[$i]['first']['jr_id'],$array[$i]['first']['jr_montant']);
+        
 	$r='';
 	$r.=td($i);
 	$r.=td(format_date($array[$i]['first']['jr_date']));
@@ -60,20 +51,10 @@ for ($i=0;$i<count($array);$i++) {
                     $r.=td($array[$i]['depend'][$e]['jr_pj_number']);
                     $r.=td($array[$i]['depend'][$e]['jr_comment']);
                     $r.=td(nbm($array[$i]['depend'][$e]['jr_montant']),'style="text-align:right"');
-                    $retdb=$cn->execute("detail_quant",array($array[$i]['depend'][$e]['jr_id']));
-                    // if exist in v_quant_detail
-                    if ( Database::num_row($retdb) != 0)
-                    {
-                        // then second_amount takes in account the vat_sided
-                        $row=Database::fetch_array($retdb, 0);
-                        $total_price=bcadd($row['price'],$row['vat_amount']);
-                        $total_price=bcsub($total_price,$row['vat_sided']);
-                        $tot2=bcadd($tot2,$total_price);
+                    
+                    $amount_dep=$acc_reconciliation->get_amount_noautovat($array[$i]['depend'][$e]['jr_id'],$array[$i]['depend'][$e]['jr_montant']);
+                    $tot2=bcadd($tot2,$amount_dep);
 
-                    } else {
-                    // else take the amount from jrn
-                      $tot2=bcadd($tot2,$array[$i]['depend'][$e]['jr_montant']);
-                    }
                     if ( $e==$limit)
                             echo '<tr>'.$r.'</tr>';
                     else
@@ -81,7 +62,7 @@ for ($i=0;$i<count($array);$i++) {
                     $ret=$acc_reconciliation->db->execute('detail_quant',array($array[$i]['depend'][$e]['jr_id']));
                     $acc_reconciliation->show_detail($ret);
                     }
-           echo tr(td(_('Total ')).td(_('operation')).td(nbm($tot)).td(_('operations dépendantes')).td(nbm($tot2)).td(_('Delta')).td(bcsub($tot,$tot2)),' class="highlight"');
+           echo tr(td(_('Total ')).td(_('opération')).td(nbm($tot)).td(_('opérations dépendantes')).td(nbm($tot2)).td(_('Delta')).td(bcsub($tot,$tot2)),' class="highlight"');
            echo tr(td('<hr>',' colspan="6" style="witdh:auto"'));                        
                          
 	}

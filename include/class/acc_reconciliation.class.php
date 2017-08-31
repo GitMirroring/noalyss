@@ -515,6 +515,11 @@ j1.j_poste as poste
                 }
             }
             $export->write_header($title);
+            //-----------------------------------------
+            //Retrieve amount without autoreversed VAT
+            //-----------------------------------------
+            $amount=$this->get_amount_noautovat($first['jr_id'],$first['jr_montant']);
+            
             // --------------------------
             // Print First
             // --------------------------
@@ -525,7 +530,7 @@ j1.j_poste as poste
             $export->add($first['jr_pj_number']);
             $export->add($first['jrn_def_name']);
             $export->add($first['jrn_def_type']);
-            $export->add($first['jr_montant'],"number");
+            $export->add($amount,"number");
             if (count($a_depend) > 0)
             {
                 // --------------------------------------
@@ -533,20 +538,21 @@ j1.j_poste as poste
                 // --------------------------------------
                 $depend = $a_depend[0];
                 $export->add("<->");
-                
+                $amount_dep=$this->get_amount_noautovat($depend['jr_id'],$depend['jr_montant']);
                 $export->add($depend['jr_date']);
                 $export->add($depend['jr_internal']);
                 $export->add($depend['jr_comment']);
                 $export->add($depend['jr_pj_number']);
                 $export->add($depend['jrn_def_name']);
                 $export->add($depend['jrn_def_type']);
-                $export->add($depend['jr_montant'],"number");
+                $export->add($amount_dep,"number");
                 $export->write();
                 // --------------------------------------
                 // print other depending operation if any
                 // --------------------------------------
                 for ($e = 1; $e < count($a_depend); $e++)
                 {
+                    $amount_dep=$this->get_amount_noautovat($depend['jr_id'],$depend['jr_montant']);
                     $depend = $a_depend[$e];
                     $export->add("");
                     $export->add("");
@@ -563,7 +569,7 @@ j1.j_poste as poste
                     $export->add($depend['jr_pj_number']);
                     $export->add($depend['jrn_def_name']);
                     $export->add($depend['jrn_def_type']);
-                    $export->add($depend['jr_montant'],"number");
+                    $export->add($amount_dep,"number");
                     $export->write();
                 }
             }
@@ -605,7 +611,23 @@ j1.j_poste as poste
         }
         return $array;
     }
+    function get_amount_noautovat($p_jrn_id,$p_default_amount) {
+        $retdb=$this->db->execute("detail_quant",array($p_jrn_id));
+        if ( Database::num_row($retdb) != 0)
+        {
+            // then second_amount takes in account the vat_sided
+            $row=Database::fetch_array($retdb, 0);
+            $total_price=bcadd($row['price'],$row['vat_amount']);
+            $total_price=bcsub($total_price,$row['vat_sided']);
+            $first_amount=$total_price;
 
+        } else {
+            // else take the amount from jrn
+            $first_amount=$p_default_amount;
+        }
+        return $first_amount;
+        
+    }
     static function test_me()
     {
         $cn=Dossier::connect();
