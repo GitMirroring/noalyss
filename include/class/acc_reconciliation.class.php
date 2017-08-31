@@ -611,6 +611,16 @@ j1.j_poste as poste
         }
         return $array;
     }
+    /**
+     * Retrieve the amount VAT included and autoreversed VAT excluded thanks
+     * the view v_quant_detail and return it.
+     * If the operation is not a sale or a purchase , it doesn't exist in the
+     * view then the function just returns the default amount
+     * @param type $p_jrn_id  jrn.jr_id
+     * @param type $p_default_amount amount to return if not found in the view
+     * v_quant_detail
+     * @return type
+     */
     function get_amount_noautovat($p_jrn_id,$p_default_amount) {
         $retdb=$this->db->execute("detail_quant",array($p_jrn_id));
         if ( Database::num_row($retdb) != 0)
