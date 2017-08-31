@@ -369,11 +369,36 @@ j1.j_poste as poste
         bcscale(2);
         for ($i=0;$i<count($array);$i++)
         {
-            $first_amount=$array[$i]['first']['jr_montant'];
+             $retdb=$this->db->execute("detail_quant",array($array[$i]['first']['jr_id']));
+            if ( Database::num_row($retdb) != 0)
+            {
+                // then second_amount takes in account the vat_sided
+                $row=Database::fetch_array($retdb, 0);
+                $total_price=bcadd($row['price'],$row['vat_amount']);
+                $total_price=bcsub($total_price,$row['vat_sided']);
+                $first_amount=$total_price;
+
+            } else {
+                // else take the amount from jrn
+                $first_amount=$array[$i]['first']['jr_montant'];
+            }
             $second_amount=0;
             for ($e=0;$e<count($array[$i]['depend']);$e++)
             {
-                $second_amount=bcadd($second_amount,$array[$i]['depend'][$e]['jr_montant']);
+                $retdb=$this->db->execute("detail_quant",array($array[$i]['depend'][$e]['jr_id']));
+                // if exist in quant_
+                if ( Database::num_row($retdb) != 0)
+                {
+                    // then second_amount takes in account the vat_sided
+                    $row=Database::fetch_array($retdb, 0);
+                    $total_price=bcadd($row['price'],$row['vat_amount']);
+                    $total_price=bcsub($total_price,$row['vat_sided']);
+                    $second_amount=bcadd($second_amount,$total_price);
+                    
+                } else {
+                // else take the amount from jrn
+                  $second_amount=bcadd($second_amount,$array[$i]['depend'][$e]['jr_montant']);
+                }
             }
             if ( $p_equal &&  $first_amount==$second_amount)
             {
