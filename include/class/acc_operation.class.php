@@ -25,6 +25,7 @@
  */
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 
 /*!
  * \brief  this file match the tables jrn & jrnx the purpose is to
@@ -67,6 +68,89 @@ class Acc_Operation
         $ret=$this->db->get_value('select jr_grpt_id from jrn where jr_id=$1',
                                   array($this->jr_id));
         return $ret;
+    }
+     /**
+     * \brief prepare the query for getting the qcode of the tiers, when
+     * executing this SQL , an array of (jrn.jr_id , jrnx.j_id) must be 
+     * provided
+     */
+    private function prepare_sql_tiers()
+    {
+         // prepare for getting the tiers
+        $this->db->prepare('prep_tiers',"select fiche_detail.f_id,ad_value from 
+                                        fiche_detail 
+                                         join (select qf_other as f_id 
+                                          from quant_fin
+                                          where 
+                                          quant_fin.jr_id = $1
+                                        union all 
+                                        select qp_supplier as f_id 
+                                        from quant_purchase
+                                        where quant_purchase.j_id=$2
+                                        union all 
+                                        select qs_client as f_id 
+                                        from quant_sold			
+                                        where quant_sold.j_id=$2 ) as v_fiche on (fiche_detail.f_id=v_fiche.f_id) where ad_id=23 ");
+    }
+    /**
+     * \brief prepare the query for getting the qcode of the tiers, when
+     * executing this SQL , an array of (jrn.jr_id , jrnx.j_id) must be 
+     * provided
+     */
+    private function prepare_sql_counterpart()
+    {
+         // prepare for getting the tiers
+        $this->db->prepare('prep_counterpart',"select fiche_detail.f_id,ad_value from 
+                                        fiche_detail 
+                                         join (select qf_bank as f_id 
+                                          from quant_fin
+                                          where 
+                                          quant_fin.jr_id = $1
+                                        union all 
+                                        select qp_fiche as f_id 
+                                        from quant_purchase
+                                        where quant_purchase.j_id=$2
+                                        union all 
+                                        select qs_fiche as f_id 
+                                        from quant_sold			
+                                        where quant_sold.j_id=$2 ) as v_fiche on (fiche_detail.f_id=v_fiche.f_id) where ad_id=23 ");
+    }
+    /**
+     * @brief Find the tiers of an operation , thanks the SQL prepared query
+     * prep_tiers and prep_counterpart. Return a string with the quick_code
+     * @param type $pn_jrn_id pk of the table jrn (jrn.jr_id)
+     * @param type $pn_jrnx_id pk of the table jrnx (jrnx.jr_id)
+     * @param type $p_code quickcode 
+     * @return string
+     */
+    function find_tiers($pn_jrn_id,$pn_jrnx_id,$p_code) 
+    {
+        static $p=0;
+        if ( $p == 0 ){
+            $this->prepare_sql_counterpart();
+            $this->prepare_sql_tiers();
+            $p=1;
+        }
+        $tiers="";
+         $res_tiers=$this->db->execute('prep_tiers',
+                 array($pn_jrn_id,$pn_jrnx_id));
+         if ( Database::num_row($res_tiers) > 0) {
+                $atiers=Database::fetch_array($res_tiers);
+                $tiers=$atiers['ad_value'];
+                // If the found tiers has the same quickcode than the current
+                // card, it means it is a card of supplier or customer,
+                //  so we must look for the countercard
+                if ($tiers == $p_code)  {
+                    $res_counterpart=$this->db->execute('prep_counterpart',
+                            array($pn_jrn_id,$pn_jrnx_id));
+                    $tiers="";
+                    if ( Database::num_row($res_counterpart) > 0) {
+                        $atiers=Database::fetch_array($res_counterpart);
+                        $tiers=$atiers['ad_value'];
+                    }
+                }
+            }
+            return $tiers;
     }
     /**
      *@brief  Insert into the table Jrn

@@ -29,6 +29,7 @@ require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/impress.class.php';
 require_once NOALYSS_INCLUDE.'/header_print.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
@@ -49,8 +50,9 @@ if ( isset ( $poste_fille) )
     $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like $1||'%' order by pcm_val",array($poste_id));
 }
 else
+{
     $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text = $1 ",array($poste_id));
-
+}
 
 $ret="";
 
@@ -69,10 +71,11 @@ if ( count($a_poste) == 0 )
 }
 $size=array(13,25,13,65,12,20,20,20);
 $align=array('L','C','C','L','R','R','R','R');
-
+ $operation=new Acc_Operation($cn);
 foreach ($a_poste as $poste)
 {
     $Poste=new Acc_Account_Ledger($cn,$poste['pcm_val']);
+
     list($array,$tot_deb,$tot_cred)=$Poste->get_row_date($from_periode,$to_periode,$_GET['ople']);
     // don't print empty account
     if ( count($array) == 0 )
@@ -161,7 +164,9 @@ foreach ($a_poste as $poste)
         $l++;
         $pdf->write_cell($size[$l],6,mb_substr($row['jrn_def_code'],0,14),0,0,$align[$l]);
         $l++;
-        $pdf->LongLine($size[$l],6,  $row['description'],0,$align[$l]);
+        $tiers=$operation->find_tiers($row['jr_id'], $row['j_id'], $row['j_qcode']);
+        $description=($tiers=="")?$row["description"]:"[".$tiers."]".$row['description'];
+        $pdf->LongLine($size[$l],6,  $description,0,$align[$l]);
         $l++;
         $pdf->write_cell($size[$l],6,(($row['letter']!=-1)?$row['letter']:''),0,0,$align[$l]);
         $l++;

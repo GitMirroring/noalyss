@@ -26,6 +26,8 @@ require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
+
 $http=new HttpInput();
 
 $f_id=$http->request("f_id", "number");
@@ -63,22 +65,26 @@ if ( count($Fiche->row ) == 0 )
 if ( ! isset ($_REQUEST['oper_detail']))
 {
     $title=array();
-    $title=array("Qcode",
-                "Date",
-                "n° pièce",
-                "Code interne",
-                "Code journal",
-                "Nom journal",
-                "Description",
-                "Débit",
-                "Crédit",
-                "Prog.",
-                "Let."   );
+    $title=array(_("QCODE"),
+                _("Poste"),
+                _("Date"),
+                _("n° pièce"),
+                _("Code interne"),
+                _("Code journal"),
+                _("Nom journal"),
+                _("Tiers"),
+                _("Description"),
+                _("Débit"),
+                _("Crédit"),
+                _("Prog."),
+                _("Let.")
+        );
     $export->write_header($title);
     $progress=0;
     $current_exercice="";
     $tot_deb=0;$tot_cred=0; 
     bcscale(2);
+    $operation=new Acc_Operation($cn);
     foreach ( $Fiche->row as $op )
     {
         /*
@@ -95,6 +101,9 @@ if ( ! isset ($_REQUEST['oper_detail']))
                 $export->add(_('total'));
                 $export->add($current_exercice);
                 $export->add($solde_type);
+                $export->add("");
+                $export->add("");
+                $export->add("");
                 $export->add($tot_deb,"number");
                 $export->add($tot_cred,"number");
                 $export->add($diff,"number");
@@ -106,16 +115,19 @@ if ( ! isset ($_REQUEST['oper_detail']))
                 $tot_deb=0;$tot_cred=0;   
                  $export->write();
             }
+        $tiers=$operation->find_tiers($op['jr_id'], $op['j_id'], $op['j_qcode']);
         $diff=bcsub($op['deb_montant'],$op['cred_montant']);
         $progress=bcadd($progress,$diff);
         $tot_deb=bcadd($tot_deb,$op['deb_montant']);
         $tot_cred=bcadd($tot_cred,$op['cred_montant']);
         $export->add($op['j_qcode']);
+        $export->add($op['j_poste']);
         $export->add($op['j_date_fmt']);
         $export->add($op['jr_pj_number']);
         $export->add($op['jr_internal']);
         $export->add($op['jrn_def_code']);
         $export->add($op['jrn_def_name']);
+        $export->add($tiers);
         $export->add($op['description']);
         $export->add($op['deb_montant'],"number");
         $export->add($op['cred_montant'],"number");

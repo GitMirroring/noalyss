@@ -324,12 +324,9 @@ class FicheTest extends PHPUnit_Framework_TestCase
      */
     public function testGet_row()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+       $this->object->get_row(235,238);
+       
     }
-
     /**
      * @covers Fiche::HtmlTableDetail
      * @todo   Implement testHtmlTableDetail().

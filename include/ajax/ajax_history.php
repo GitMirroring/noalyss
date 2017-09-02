@@ -34,7 +34,7 @@ require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
 require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 $div=$_REQUEST['div'];
 mb_internal_encoding("UTF-8");
-
+$http=new HttpInput();
 /**
  *if $_SESSION['g_user'] is not set : echo a warning
  */
@@ -50,7 +50,8 @@ if ( isset($_GET['f_id']))
   {
     $exercice=new Exercice($cn);
     $old='';
-    $fiche=new Fiche($cn,$_GET['f_id']);
+    $f_id=$http->get('f_id',"number");
+    $fiche=new Fiche($cn,$f_id);
     $year=$g_user->get_exercice();
     if ( $year == 0 )
       {
@@ -64,8 +65,9 @@ if ( isset($_GET['f_id']))
         $array['to_periode']=$limit_periode[1]->last_day();
 	if (isset($_GET['ex']))
 	  {
-	    $limit_periode=$per->get_limit($_GET['ex']);
-	    if ( $_GET['ex'] < $year)
+            $ex=$http->get('ex','number');
+	    $limit_periode=$per->get_limit($ex);
+	    if ( $ex < $year)
 	      $array['from_periode']=$limit_periode[0]->first_day();
 	    else
 	      $array['to_periode']=$limit_periode[1]->last_day();

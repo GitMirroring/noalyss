@@ -18,10 +18,11 @@ class Acc_Account_LedgerTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        global $g_connection, $g_parameter;
+        global $g_connection, $g_parameter,$g_user;
         $_REQUEST['gDossier']=DOSSIER;
         $g_connection=new Database(DOSSIER);
         $g_parameter=new Own($g_connection);
+        $g_user=new User($g_connection);
         $this->object=new Acc_Account_Ledger($g_connection, 400);
     }
 
@@ -40,10 +41,7 @@ class Acc_Account_LedgerTest extends PHPUnit_Framework_TestCase
      */
     public function testGet_row()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+      $this->object->get_row(215,235);
     }
 
     /**
@@ -52,10 +50,7 @@ class Acc_Account_LedgerTest extends PHPUnit_Framework_TestCase
      */
     public function testGet_row_date()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $this->object->get_row_date('01.01.2017', '01.02.2017', 0);
     }
     function dataGet_Name()
     {
@@ -278,13 +273,6 @@ class Acc_Account_LedgerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($p_card, $result[0]['f_id']);
     }
 
-    /**
-     * @covers Acc_Account_Ledger::test_me
-     * @todo   Implement testTest_me().
-     */
-    public function testTest_me()
-    {
-          $this->assertEquals($this->object->test_me(),0);
-    }
+   
 
 }

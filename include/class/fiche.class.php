@@ -27,6 +27,7 @@ require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
 require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iposte.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 
 /*! \file
  * \brief define Class fiche, this class are using
@@ -1097,8 +1098,9 @@ class Fiche
     /**
      *@brief fetch and return and array
      *@see get_row get_row_date
+     * @deprecated since version 6920
      */
-    private function get_row_result($res)
+    private function get_row_result_deprecated($res)
     {
         $array=array();
         $tot_cred=0.0;
@@ -1119,6 +1121,8 @@ class Fiche
             }
         }
         $this->row=$array;
+         $this->tot_deb=$tot_deb;
+        $this->tot_cred=$tot_cred;
         return array($array,$tot_deb,$tot_cred);
     }
     /*!
@@ -1154,10 +1158,10 @@ class Fiche
         }
 
         $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
-        $Res=$this->cn->exec_sql("select distinct substring(jr_pj_number,'[0-9]+$'),j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_qcode,".
+        $this->row=$this->cn->get_array("select distinct substring(jr_pj_number,'[0-9]+$'),j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_qcode,".
                                  "case when j_debit='t' then j_montant else 0 end as deb_montant,".
                                  "case when j_debit='f' then j_montant else 0 end as cred_montant,".
-                                 " jr_comment as description,jrn_def_name as jrn_name,".
+                                 " jr_comment as description,jrn_def_name as jrn_name,j_poste,".
 				 " jr_pj_number,".
                                  "j_debit, jr_internal,jr_id,coalesce(comptaproc.get_letter_jnt(j_id),-1) as letter, ".
 				 " jr_tech_per,p_exercice,jrn_def_name,
@@ -1170,15 +1174,34 @@ class Fiche
                                  "   to_date($3,'DD.MM.YYYY') >= j_date )".
                                  " and $filter_sql $sql_let ".
                                  " order by j_date,substring(jr_pj_number,'[0-9]+$')",array($qcode,$p_from,$p_to));
-
-        return $this->get_row_result($Res);
+        
+        $res_saldo = $this->cn->exec_sql("select  sum(deb_montant),sum(cred_montant) from 
+                    (select case when j_debit='t' then j_montant else 0 end as deb_montant,
+                    case when j_debit='f' then j_montant else 0 end as cred_montant
+                                  from jrnx 
+                                  join jrn_def on (jrn_def_id=j_jrn_def )
+                                   join jrn on (jr_grpt_id=j_grpt)
+                                   join tmp_pcmn on (j_poste=pcm_val)
+				   join parm_periode on (p_id=jr_tech_per) 
+                                  where j_qcode=$1 and 
+                                  ( to_date($2,'DD.MM.YYYY') <= j_date and 
+                                    to_date($3,'DD.MM.YYYY') >= j_date ) 
+                                  and $filter_sql  $sql_let ) as m",array($this->id,$p_from,$p_to));
+        $this->tot_deb=$this->tot_cred=0;
+        
+        if ( Database::num_row($res_saldo) > 0 ) {
+            $this->tot_deb=Database::fetch_result($res_saldo, 0, 0);
+            $this->tot_cred=Database::fetch_result($res_saldo, 0, 1);
+        }
+        
+        return [$this->row,$this->tot_deb,$this->tot_cred];
     }
 
     /*!
      * \brief  Get data for poste
      *
-     * \param  $p_from periode from
-     * \param  $p_to   end periode
+     * \param  $p_from periode periode.p_id
+     * \param  $p_to   end periode periode.p_id
      * \return double array (j_date,deb_montant,cred_montant,description,jrn_name,j_debit,jr_internal)
      *         (tot_deb,tot_credit
      *
@@ -1193,16 +1216,40 @@ class Fiche
         $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
         $periode=sql_filter_per($this->cn,$p_from,$p_to,'p_id','jr_tech_per');
 
-        $Res=$this->cn->exec_sql("select j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_qcode,".
-                                 "case when j_debit='t' then j_montant else 0 end as deb_montant,".
-                                 "case when j_debit='f' then j_montant else 0 end as cred_montant,".
-                                 " jr_comment as description,jrn_def_name as jrn_name,".
-                                 "j_debit, jr_internal,jr_id ".
-                                 " from jrnx left join jrn_def on jrn_def_id=j_jrn_def ".
-                                 " left join jrn on jr_grpt_id=j_grpt".
-                                 " where j_qcode='".$qcode."' and ".$periode.
-                                 " order by j_date::date");
-        return $this->get_row_result($Res);
+        $this->row=$this->cn->get_array("select j_date,
+                            to_char(j_date,'DD.MM.YYYY') as j_date_fmt,
+                            j_qcode,
+                            case when j_debit='t' then j_montant else 0 end as deb_montant,
+                            case when j_debit='f' then j_montant else 0 end as cred_montant,
+                            jr_comment as description,
+                            jrn_def_name as jrn_name,
+                            j_debit, 
+                            jr_internal,
+                            jr_id 
+                            from jrnx 
+                            left join jrn_def on jrn_def_id=j_jrn_def 
+                            left join jrn on jr_grpt_id=j_grpt
+                            where 
+                            j_qcode=$1  and {$periode}
+                            order by j_date::date",array(
+                               $qcode
+                                 ));
+         $res_saldo = $this->cn->exec_sql("select  sum(deb_montant),sum(cred_montant) from 
+                    (select case when j_debit='t' then j_montant else 0 end as deb_montant,
+                    case when j_debit='f' then j_montant else 0 end as cred_montant
+                                  from jrnx 
+                                    left join jrn_def on jrn_def_id=j_jrn_def 
+                                    left join jrn on jr_grpt_id=j_grpt
+                                    where 
+                                    j_qcode=$1  and {$periode} ) as m",
+                 array($this->id));
+        $this->tot_deb=$this->tot_cred=0;
+        
+        if ( Database::num_row($res_saldo) > 0 ) {
+            $this->tot_deb=Database::fetch_result($res_saldo, 0, 0);
+            $this->tot_cred=Database::fetch_result($res_saldo, 0, 1);
+        }
+        return array($this->row,$this->tot_deb,$this->tot_cred);
 
     }
     /*!
@@ -1283,14 +1330,14 @@ class Fiche
         if ( $p_array == null)
             $p_array=$_REQUEST;
         $progress=0;
-		// if from_periode is greater than to periode then swap the values
-		if (cmpDate($p_array['from_periode'],$p_array['to_periode']) > 0)
-		{
-			$tmp=$p_array['from_periode'];
-			$p_array['from_periode']=$p_array['to_periode'];
-			$p_array['to_periode']=$tmp;
+        // if from_periode is greater than to periode then swap the values
+        if (cmpDate($p_array['from_periode'],$p_array['to_periode']) > 0)
+        {
+                $tmp=$p_array['from_periode'];
+                $p_array['from_periode']=$p_array['to_periode'];
+                $p_array['to_periode']=$tmp;
 
-		}
+        }
         list($array, $tot_deb, $tot_cred) = $this->get_row_date($p_array['from_periode'], $p_array['to_periode'], $op_let);
 
         if ( count($this->row ) == 0 )
@@ -1309,7 +1356,9 @@ class Fiche
         echo "<TR>".
         "<TH style=\"text-align:left\">"._('Date')."</TH>".
         "<TH style=\"text-align:left\">"._('n° pièce')." </TH>".
+        "<TH style=\"text-align:left\">"._('Poste')." </TH>".
         "<TH style=\"text-align:left\">"._('Code interne')." </TH>".
+        "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
         "<TH style=\"text-align:left\">"._('Description')." </TH>".
         "<TH style=\"text-align:right\">"._('Débit')."  </TH>".
         "<TH style=\"text-align:right\">"._('Crédit')." </TH>".
@@ -1320,6 +1369,7 @@ class Fiche
 	$old_exercice="";$sum_deb=0;$sum_cred=0;
 	bcscale(2);
 	$idx=0;
+        $operation=new Acc_Operation($this->cn);
         foreach ( $this->row as $op )
         {
             $vw_operation = sprintf('<A class="detail" style="text-decoration:underline;color:red" HREF="javascript:modifyOperation(\'%s\',\'%s\')" >%s</A>', $op['jr_id'], dossier::id(), $op['jr_internal']);
@@ -1346,6 +1396,7 @@ class Fiche
 		      td('').
 		      "<TD></TD>".
 		      "<TD>Totaux</TD>".
+                            td().
 		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 		      "<TD style=\"text-align:right\">".nbm($sum_cred)."</TD>".
 		      td(nbm(abs($progress)).$side,'style="text-align:right"').
@@ -1360,13 +1411,16 @@ class Fiche
 			$side="&nbsp;".$this->get_amount_side($progress);
 	    $sum_cred=bcadd($sum_cred,$op['cred_montant']);
 	    $sum_deb=bcadd($sum_deb,$op['deb_montant']);
-		if ($idx%2 == 0) $class='class="odd"'; else $class=' class="even"';
-		$idx++;
-
+            if ($idx%2 == 0) $class='class="odd"'; else $class=' class="even"';
+            $idx++;
+            
+            $tiers=$operation->find_tiers($op['jr_id'], $op['j_id'], $op['j_qcode']);
 	    echo "<TR $class name=\"tr_" . $let . "_" . $from_div . "\">" .
 			"<TD>".smaller_date(format_date($op['j_date_fmt']))."</TD>".
 	      td(h($op['jr_pj_number'])).
+               td($op['j_poste']).
             "<TD>".$vw_operation."</TD>".
+            td($tiers).
             "<TD>".h($op['description'])."</TD>".
             "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
@@ -1376,18 +1430,20 @@ class Fiche
 	    $old_exercice=$op['p_exercice'];
 
         }
-        $solde_type=($sum_deb>$sum_cred)?"solde débiteur":"solde créditeur";
+        $solde_type=($sum_deb>$sum_cred)?_("solde débiteur"):_("solde créditeur");
+        $solde_side=($sum_deb>$sum_cred)?"D":"C";
         $diff=abs(bcsub($sum_deb,$sum_cred));
         echo '<tfoot>';
        echo "<TR class=\"highlight\">".
-        "<TD>Totaux</TD>".
-        "<TD ></TD>".
-        "<TD ></TD>".
+               td($op['p_exercice']).
+               td().
+               td().
+        td(_('Totaux')).
         "<TD></TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
 	  "<TD style=\"text-align:right\">".nbm($diff)."</TD>".
-
+            td($solde_side).
         "</TR>";
         echo "<TR style=\"font-weight:bold\">".
         "<TD>$solde_type</TD>".
