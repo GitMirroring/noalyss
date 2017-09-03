@@ -147,15 +147,19 @@ div.u_tool #name {
 }
 td.tool a.mtitle {
     text-decoration:none;
-    display:inline;
     color: #0000FF;
+    display:block;
+    height: 100%;
+    width: 100%;
     
 }
 td.tool a.mtitle:hover {
     text-decoration:none;
-    display:inline;
     color: #00008B;
     background-color:#5D90CD;
+    display:block;
+    height: 100%;
+    width: 100%;
 
 }
 #top {
