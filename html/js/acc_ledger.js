@@ -1109,11 +1109,12 @@ function  get_history_account(ctl, dossier) {
     }
 }
 var previous = [];
+var let_previous="";
 function show_reconcile(p_div, p_let)
 {
     try
     {
-        if (previous.length != 0)
+        if (previous.length != 0 || p_let == let_previous )
         {
             var count_elt = previous.length;
             var i = 0;
@@ -1125,14 +1126,21 @@ function show_reconcile(p_div, p_let)
         }
         var name = 'tr_' + p_let + '_' + p_div;
         var elt = document.getElementsByName(name);
-        previous = elt;
-        var count_elt = elt.length;
-        var i = 0;
-        for (i = 0; i < count_elt; i++) {
-            elt[i].style.backgroundColor = '#000066';
-            elt[i].style.color = 'white';
-            elt[i].style.fontWeight = 'bolder';
+        if ( p_let != let_previous )  {
+            
+            previous = elt;
+            var count_elt = elt.length;
+            var i = 0;
+            for (i = 0; i < count_elt; i++) {
+                elt[i].style.backgroundColor = '#000066';
+                elt[i].style.color = 'white';
+                elt[i].style.fontWeight = 'bolder';
 
+            }
+            let_previous=p_let;
+        }
+        else {
+                let_previous="";
         }
 
     } catch (e)

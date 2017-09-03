@@ -36,6 +36,12 @@ require_once ('class/dossier.class.php');
 require_once('lib/html_input.class.php');
 require_once ('lib/function_javascript.php');
 require_once 'class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+
+global $http;
+
+$http=new HttpInput();
+
 load_all_script();
 $gDossier=HtmlInput::default_value_get('gDossier', -1);
 if ($gDossier==-1)
