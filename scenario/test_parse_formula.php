@@ -1,4 +1,4 @@
-<?
+<?php
 //@description:Impress::check_formula test 
 /*
 # check the Impress::check_formula and the parse_formula
