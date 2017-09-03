@@ -18,8 +18,8 @@ BODY {
     padding : 0px;
     margin:0px;
     color:#0000FF; 
-    font-size:0.9em;
-    font-size:0.95rem;
+    /*font-size:0.9em;
+    font-size:0.95rem;*/
 }
 .notice {
     color:#FF0000;
