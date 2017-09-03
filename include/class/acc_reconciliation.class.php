@@ -348,7 +348,7 @@ j1.j_poste as poste
                 $ret[$i]['depend'][$e]=$this->fill_info();
             }
         }
-        $this->db->prepare('detail_quant','select * from v_quant_detail where jr_id=$1');
+        
         return $ret;
     }
     /**
@@ -611,6 +611,10 @@ j1.j_poste as poste
         }
         return $array;
     }
+    function prepare_query_detail_quant()
+    {
+        $this->db->prepare('detail_quant','select * from v_quant_detail where jr_id=$1');
+    }
     /**
      * Retrieve the amount VAT included and autoreversed VAT excluded thanks
      * the view v_quant_detail and return it.
@@ -622,6 +626,12 @@ j1.j_poste as poste
      * @return number
      */
     function get_amount_noautovat($p_jrn_id,$p_default_amount) {
+        static $p=0;
+        if ( $p==0) {
+            $this->prepare_query_detail_quant();
+            $p=1;
+        }
+        
         $retdb=$this->db->execute("detail_quant",array($p_jrn_id));
         if ( Database::num_row($retdb) != 0)
         {
