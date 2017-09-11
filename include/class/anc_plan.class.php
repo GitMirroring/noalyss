@@ -81,7 +81,7 @@ class Anc_Plan
     function delete()
     {
         if ( $this->id == 0 ) return;
-        $this->db->exec_sql("delete from plan_analytique where pa_id=".$this->id);
+        $this->db->exec_sql("delete from plan_analytique where pa_id=$1",array($this->id));
     }
 
     function update()
@@ -104,9 +104,8 @@ class Anc_Plan
         if ( $this->isAppend() == false) return;
         $description=sql_string($this->description);
         $this->db->exec_sql("insert into plan_analytique(pa_name,pa_description)".
-                            " values (".
-                            "'".$name."',".
-                            "'".$description."')");
+                            " values ($1,$2 )"
+                            ,array($name,$description));
         $this->id=$this->db->get_current_seq('plan_analytique_pa_id_seq');
 
     }
@@ -141,8 +140,8 @@ class Anc_Plan
      */
     function get_poste_analytique($p_order="")
     {
-        $sql="select po_id,po_name from poste_analytique where pa_id=".$this->id." $p_order";
-        $r=$this->db->exec_sql($sql);
+        $sql="select po_id,po_name from poste_analytique where pa_id=$1 $p_order";
+        $r=$this->db->exec_sql($sql,array($this->id));
         $ret=array();
         if ( Database::num_row($r) == 0 )
             return $ret;
@@ -177,8 +176,8 @@ class Anc_Plan
     }
     function exist()
     {
-        $a=$this->db->count_sql("select pa_id from plan_analytique where pa_id=".
-                                Database::escape_string($this->pa_id));
+        $a=$this->db->count_sql("select pa_id from plan_analytique where pa_id=$1",
+                                array($this->pa_id));
 
         return ($a==0)?false:true;
 
