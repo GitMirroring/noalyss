@@ -3,9 +3,9 @@
   * Use a font
   */
 @font-face {
-	font-family: 'OpenSansRegular';
-	src: url('image/OpenSansRegular.eot');
-	src: local('OpenSansRegular'), url('image/OpenSansRegular.woff') format('woff'), url('image/OpenSansRegular.ttf') format('truetype');
+	font-family: 'SansationLight';
+	src: url('image/SansationLight/SansationLight.eot');
+	src: local('SansationLight'), url('image/SansationLight/SansationLight.woff') format('woff'), url('image/SansationLight/SansationLight.ttf') format('truetype');
 }
 /* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_38327">Text with this font applied</p> */
 .fontsforweb_fontid_38327 {
@@ -14,12 +14,19 @@
 
 BODY {
     font-family: Arial, Helvetica, "Liberation Sans"  , FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     padding : 0px;
     margin:0px;
     color:#0000FF; 
     /*font-size:0.9em;
     font-size:0.95rem;*/
+}
+input{
+    font-family: 'SansationLight';
+    padding : 3px;
+    margin:3px;
+    color:#0000FF; 
+    font-size:14px;
 }
 .notice {
     color:#FF0000;
@@ -48,7 +55,7 @@ table.resultfooter tfoot {
 table.sortable th,  table.table_large th,table.result th {
     font-weight:bold;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     border-bottom:2px #5d90cd groove;
     border-top:0;
 
@@ -60,7 +67,7 @@ table.sortable th,  table.table_large th,table.result th {
 
 h2 {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     color:#888;
     /*! margin:1px; */
     padding:1px;
@@ -192,7 +199,7 @@ div.lextmenu {
 
     float:left;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
 
 }
 div.searchmenu {
@@ -206,7 +213,7 @@ div.searchmenu {
 div.recherche_form{
     width:700px;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     border-style:outset;
     border-width:1px;
 
@@ -216,7 +223,7 @@ div.redcontent{
     padding-top:7px;
     padding-left:8px;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     width:75%;
 
 }
@@ -225,7 +232,7 @@ div.content{
     margin-top:0.0030%;
     width:100%;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     font-size:12px;
     font-size:0.90rem;
 
@@ -236,13 +243,13 @@ div.content30{
     padding-top:7px;
     width:35%;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
 
 }
 div.no span{
     position:static;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     font-weight:bold;
     color:#FF0000;
 
@@ -258,7 +265,7 @@ table.document {
 table.document th{
     font-weight:bold;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     border-bottom:2px solid #0000FF;
     border-top:0px;
     color:#202267;
@@ -467,7 +474,7 @@ a.one:hover {
 a.detail
 {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     text-decoration: none;
     display: block;
     color: #0000FF;
@@ -476,7 +483,7 @@ a.detail
 a.detail:hover
 {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     color: #FFFFFF;
     background-color:#5D90CD;
     text-decoration: none;
@@ -490,7 +497,7 @@ li.menuv,ol.menuv {
 }
 div.redcontent a {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     text-decoration: none;
     display: block;
     color: #0000FF;
@@ -499,7 +506,7 @@ div.redcontent a {
 
 div.redcontent a:hover {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     color: #FFFFFF;
     background-color:#336699;
     text-decoration: none;
@@ -508,7 +515,7 @@ div.redcontent a:hover {
 }
 div.content a {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     text-decoration: none;
     display: block;
    color: #0000FF;
@@ -519,7 +526,7 @@ div.content a {
 
 div.content a:hover {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     color: #FFFFFF;
     background-color:#336699;
     text-decoration: none;
@@ -571,7 +578,7 @@ div.content a.mtitle:hover {
 }
 div.redcontent input.text {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     font-weight:normal;
     border-color:#336699;
     border-style:solid;
@@ -581,7 +588,7 @@ div.redcontent input.text {
 }
 div.content input.text {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     font-weight:normal;
     border-color:#336699;
     border-style:solid;
@@ -900,6 +907,7 @@ a#anchorbutton, .button, a.button,div.content a.button {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
 
+    font-family: SansationLight;
 }
 a#anchorbutton:hover, .button:hover,a.button:hover,div.content a.button:hover  {
     cursor:pointer;
@@ -919,7 +927,7 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     background-position: left;
     font-size:12px;
     font-size:0.75rem;
-
+    font-family: SansationLight;
     border-style:  outset ;
     border-color:  #0000FF;
     border-width:0;
@@ -941,6 +949,7 @@ a#smallanchorbutton:hover, .smallbutton:hover,a.smallbutton:hover,div.content a.
     color:whitesmoke;
     margin:1px 2px 1px 2px;
     background-image: url("image/bg-submit3.gif");
+    font-family: SansationLight;
 
 }
 td.tool {
@@ -976,7 +985,7 @@ td.toolselected a.mtitle {
 }
 div.topmenu {
 	font-size:13.6px;
-	font-size:0.80rem;
+	font-size:1rem;
        
 }
 @media only screen and (max-width:320px) {
@@ -1038,7 +1047,7 @@ box-shadow: 10px 10px 5px #888;
 div.inner_box  {
     background-color: #DCE1EF;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     /*! padding:2px; */
     margin:0px;
     overflow:hidden;
@@ -1417,7 +1426,7 @@ div.myfieldset
 }
 div.menu2 a.mtitle{
     font-size:13.6px;
-    font-size:0.80rem; 
+    font-size:1.0rem; 
 }
 div.menu3 {
 	font-size:13.6px;
@@ -1469,7 +1478,7 @@ div#modele_op_div{
     display: none;
     background-color:#e4e7ed;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     padding:0px;
     margin:0px;
     overflow:hidden;
@@ -1489,7 +1498,7 @@ div#modele_op_div{
     display: none;
     background-color:#e4e7ed;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     padding:0px;
     margin:0px;
     overflow:hidden;
@@ -1527,7 +1536,7 @@ div#preference_div {
     display: none;
     background-color:#e4e7ed;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     padding:0px;
     margin:0px;
     overflow:hidden;
@@ -1541,7 +1550,7 @@ div#preference_div {
 div#preference_div {
     background-color:#e4e7ed;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     padding:0px;
     margin:0px;
     overflow:hidden;
@@ -1577,7 +1586,7 @@ div.inner_box tr.odd {
 div#bookmark_div {
     background-color:#e4e7ed;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     padding:2px;
     margin:0px;
     overflow:hidden;
@@ -1627,7 +1636,7 @@ input.inum {
 div.box  {
     background-color:#e4e7ed;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+    font-family: 'SansationLight';
     margin-top:10px;
     margin-left:3px;
     margin-right:3px;
@@ -2080,7 +2089,7 @@ td.box {
   text-align: center;
     background-color: #DCE1EF;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-        font-family: 'openSansRegular';
+        font-family: 'SansationLight';
 
     padding:2px;
     margin:0px;

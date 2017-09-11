@@ -10,3 +10,4 @@ COMMENT ON COLUMN tmp_pcmn.id IS 'allow to identify the row, it is unique and no
 
 insert into bilan (b_name,b_file_template,b_file_form,b_type) values ('ASBL','document/fr_be/bnb-asbl.rtf','document/fr_be/bnb-asbl.form','RTF');
 
+alter table jnt_letter drop jl_amount_deb;
