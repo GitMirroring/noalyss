@@ -66,8 +66,8 @@ class Anc_Plan
     {
         if ( $this->id==0) return;
 
-        $sql="select pa_name,pa_description from plan_analytique where pa_id=".$this->id;
-        $ret= $this->db->exec_sql($sql);
+        $sql="select pa_name,pa_description from plan_analytique where pa_id=$1";
+        $ret= $this->db->exec_sql($sql,array($this->id));
         if ( Database::num_row($ret) == 0)
         {
             return;
