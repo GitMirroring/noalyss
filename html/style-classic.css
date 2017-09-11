@@ -1318,6 +1318,12 @@ a.nav:hover,div.content a.nav:hover,div.redcontent a.nav:hover {
     background-color:#00008B;
     color:#FFFFFF;
 }
+img:hover  {
+    cursor:inherit ;
+    background-color:white;
+    color: transparent;
+    
+    }
 #dossier {
     display:inline;
     float:left;

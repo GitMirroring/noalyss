@@ -56,6 +56,8 @@
   @endcode
  * @see ManageTable.js
  */
+///@example test_manage_table_sql.php
+/// For ajax @example ajax_manage_table_sql.php
 class Manage_Table_SQL
 {
 

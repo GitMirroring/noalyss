@@ -1374,13 +1374,13 @@ class Fiche
         {
             $vw_operation = sprintf('<A class="detail" style="text-decoration:underline;color:red" HREF="javascript:modifyOperation(\'%s\',\'%s\')" >%s</A>', $op['jr_id'], dossier::id(), $op['jr_internal']);
             $let = '';
-			$html_let = "";
-			if ($op['letter'] != -1)
-			{
-				$let = strtoupper(base_convert($op['letter'], 10, 36));
-				$html_let = HtmlInput::show_reconcile($from_div, $let);
-			}
-			$tmp_diff=bcsub($op['deb_montant'],$op['cred_montant']);
+            $html_let = "";
+            if ($op['letter'] != -1)
+            {
+                    $let = strtoupper(base_convert($op['letter'], 10, 36));
+                    $html_let = HtmlInput::show_reconcile($from_div, $let);
+            }
+            $tmp_diff=bcsub($op['deb_montant'],$op['cred_montant']);
 
 	    /*
 	     * reset prog. balance to zero if we change of exercice
@@ -1408,7 +1408,7 @@ class Fiche
 		  }
 	      }
             $progress=bcadd($progress,$tmp_diff);
-			$side="&nbsp;".$this->get_amount_side($progress);
+            $side="&nbsp;".$this->get_amount_side($progress);
 	    $sum_cred=bcadd($sum_cred,$op['cred_montant']);
 	    $sum_deb=bcadd($sum_deb,$op['deb_montant']);
             if ($idx%2 == 0) $class='class="odd"'; else $class=' class="even"';
