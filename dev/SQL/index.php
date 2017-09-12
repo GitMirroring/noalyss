@@ -9,13 +9,14 @@ require_once '../../include/constant.php';
 const REPOSITORY_DB=1;
 const ACCOUNT_DB=2;
 
-require NOALYSS_INCLUDE."/lib/database.class.php";
-require NOALYSS_INCLUDE."/lib/iselect.class.php";
-require NOALYSS_INCLUDE."/lib/http_input.class.php";
+require_once NOALYSS_INCLUDE."/lib/database.class.php";
+require_once NOALYSS_INCLUDE."/lib/iselect.class.php";
+require_once NOALYSS_INCLUDE."/lib/http_input.class.php";
 
 require './table_sql.class.php';
 
 // Show a db connection
+$http=new HttpInput();
 
 $gDossier=$http->request('gDossier',"string",-1);
 $select = new ISelect('gDossier');
