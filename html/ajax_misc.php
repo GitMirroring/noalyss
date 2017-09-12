@@ -181,7 +181,9 @@ $path = array(
   // Save a event given in the short form
     "action_save"=>"ajax_gestion",
     /* display the lettering , callebd from acc_ledger : dsp_letter*/
-    "dl"=>"ajax_display_letter"
+    "dl"=>"ajax_display_letter",
+    // Add , delete update anc accounting
+    "anc_accounting"=>"ajax_anc_accounting"
 )    ;
 
 if (array_key_exists($op, $path)) {

@@ -239,7 +239,8 @@ class Anc_Account
         $wName=new IText("po_name",$this->name);
         $wAmount=new INum("po_amount",$this->amount);
         $wDescription=new IText("po_description",$this->description);
-        $aGroup_analytic=$this->db->make_array("select ga_id,ga_id from groupe_analytique where pa_id=".$this->pa_id,1);
+        //@bug
+        $aGroup_analytic=$this->db->make_array("select ga_id,ga_id from groupe_analytique where pa_id=$1",1,array($this->pa_id));
         if ( count($aGroup_analytic) > 1 )
         {
             $wGa_id=new ISelect("ga_id");

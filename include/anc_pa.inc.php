@@ -28,7 +28,9 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/anc_plan.class.php';
-require_once NOALYSS_INCLUDE.'/class/anc_account.class.php';
+require_once NOALYSS_INCLUDE.'/class/anc_account_table.class.php';
+require_once NOALYSS_INCLUDE.'/database/poste_analytique_sql.class.php';
+
 $ret="";
 $str_dossier=Dossier::get();
 
@@ -45,13 +47,14 @@ if ($sa=="add_pa")
     $new=new Anc_Plan($cn);
     if ($new->isAppend()==true)
     {
-        $ret.= '<div style="position:absolute;top:25%" class="inner_box">';
-        $ret.=HtmlInput::title_box(_('Nouveau plan'), '', 'none');
+        $ret.= '<div style="position:absolute;top:25%" id="anc_div_add" class="inner_box">';
+        $ret.=HtmlInput::title_box(_('Nouveau plan'), 'anc_div_add', 'hide');
         $ret.= '<form method="post">';
         $ret.=dossier::hidden();
         $ret.= $new->form();
         $ret.= HtmlInput::hidden("sa", "pa_write");
         $ret.=HtmlInput::submit("submit", _("Enregistre"));
+        $ret.=HtmlInput::button_hide("anc_div_add");
         $ret.= '</form>';
         $ret.= '</div>';
     }
@@ -98,85 +101,21 @@ if ($sa=="pa_update")
     $ret.="</div>";
     $sa="anc_menu";
 }
-// show the form for add a poste
-if ($sa=='po_add')
-{
-    $po=new Anc_Account($cn);
-    $po->pa_id=$_REQUEST['pa_id'];
-    $wSa=HtmlInput::hidden("sa", "po_write");
-    $ret.='<div class="content">';
-    $ret.=h2(_("Ajout d'un poste analytique"));
-    $ret.='<form method="post">';
-    $ret.=dossier::hidden();
-    $ret.=$po->form();
-    $ret.=$wSa;
-    $ret.=HtmlInput::submit("add", _("Ajout"));
-    $ret.="</form>";
-    $ret.="</div>";
-}
-// record the poste
-if ($sa=="po_write")
-{
-    //		var_dump($_POST);
-    $po=new Anc_Account($cn);
-    $po->get_from_array($_POST);
-    $po->add();
-    $sa="pa_detail";
-}
+
 /* delete pa */
 if ($sa=="pa_delete")
 {
-    $delete=new Anc_Plan($cn, $_GET['pa_id']);
+    $delete=new Anc_Plan($cn, $pa_id);
     $delete->delete();
     $sa="anc_menu";
 }
-/* po detail
- * ---> in ajax : montre detail d'un poste analytique
- * 
- */
-if ($sa=="po_detail")
-{
-    $ret.=h2(_('Modification'));
-    $po=new Anc_Account($cn, $_GET['po_id']);
-    $po->get_by_id();
-    $ret.='<div class="content">';
-    $ret.='<form method="post">';
-    $ret.=dossier::hidden();
 
-    $ret.=$po->form();
-    $ret.=HtmlInput::hidden('sa', 'po_update');
-    $ret.=HtmlInput::submit('Correction', 'Correction');
-    $ret.=sprintf('<input type="button" class="smallbutton" value="Efface" onClick="return confirm_box(\'anchor_del\',\' Voulez-vous vraiment effacer cette activité\','
-            .'function () { window.location=\'do.php?ac='.$_REQUEST['ac'].'&sa=po_delete&po_id=%s&pa_id=%s&'.$str_dossier.'\'}) ;"',
-            $po->id, $_REQUEST['pa_id']
-    );
-
-    $ret.='</form>';
-    $ret.='</div>';
-    $sa="";
-}
-/**
- * mise à jour po 
- */
-if ($sa=="po_update")
-{
-    $po=new Anc_Account($cn);
-    $po->get_from_array($_POST);
-    $po->update();
-    $sa="pa_detail";
-}
-/**
- * Efface po
- */
-if ($sa=="po_delete")
-{
-    $po=new Anc_Account($cn, $_REQUEST['po_id']);
-    $po->delete();
-    $sa="pa_detail";
-}
 // show the detail
 if ($sa=="pa_detail")
 {
+    
+    $pa_id=$http->get("pa_id","numeric");
+    
     $new=new Anc_Plan($cn, $_GET['pa_id']);
     $wSa=HtmlInput::hidden("sa", "pa_update");
 
@@ -194,53 +133,26 @@ if ($sa=="pa_detail")
                     'onclick="return confirm_box(\'remove_analytic_plan\',\'Effacer ?\',function () {window.location=\'do.php?ac='.$_REQUEST['ac'].'&pa_id='.$_GET['pa_id'].'&sa=pa_delete&'.$str_dossier.'\';})"',
                     'smallbutton');
     $ret.= '</form>';
-    /**
-     * Detail now
-     */
+
+    //---------------------------------------------------------------------
+    //  Detail now
+    // Use Manage_Table
+    //---------------------------------------------------------------------
     $count=0;
 
-    $new=new Anc_Plan($cn, $_REQUEST['pa_id']);
+    $new=new Anc_Plan($cn, $pa_id);
     $new->get();
-    $array=$new->get_poste_analytique(" order by po_name");
     $ret.='<div class="content">';
-    $ret.='<table class="table_large">';
-    $ret.="<tr>";
-    $ret.="<th>"._("Nom")." </td>";
-    $ret.="<th>"._("Montant")." </td>";
-    $ret.="<th>"._("Description")." </td>";
-    $ret.="<th>"._("Groupe")."</th>";
-    $ret.="<th>"._("Plan A")." </td>";
-    $ret.="</tr>";
-    $class="";
-    foreach ($array as $obj)
-    {
-        $count++;
-        if ($count%2==0)
-            $class="even";
-        else
-            $class="odd";
-
-        $ret.="<TR class=\"$class\">";
-        $ret.="<TD class=\"vert_mtitle\">".
-                '<a style="text-decoration:underline;" href="?ac='.$_REQUEST['ac'].'&sa=po_detail&po_id='.$obj->id.'&pa_id='.$_REQUEST['pa_id'].'&'.
-                $str_dossier.'">'.
-                h($obj->name).
-                '</a>';
-        "</td>"
-        ;
-        $ret.="<TD align=\"right\">".$obj->amount."</td>";
-        $ret.="<TD>".h($obj->description)."</td>";
-        $ret.="<td>".$obj->ga_id."</td>";
-        $ret.="<TD>".h($new->name)."</td>";
-        $ret.="</tr>";
-    }
-    $ret.="</table>";
-    // ---> montre form pour ajouter po
-    $ret.=HtmlInput::button_anchor(_('Ajout'),
-                    "?ac=".$_REQUEST['ac']."&sa=po_add&pa_id=".$_GET['pa_id']."&".$str_dossier,
-                    '', '', 'smallbutton');
-    $href=http_build_query(array('ac'=>$_REQUEST['ac'], 'gDossier'=>$_REQUEST['gDossier']));
-    $ret.= '<a style="display:inline" class="smallbutton" href="do.php?'.$href.'">'._('Retour').'</a>';
+    $anc=new Poste_analytique_SQL($cn);
+    $anc->pa_id=$pa_id;
+    $accounting=new Anc_Account_Table($anc);
+    $accounting->set_callback("ajax_misc.php");
+    $accounting->add_json_param("op", "anc_accounting");
+    $accounting->add_json_param("pa_id", $pa_id);
+    ob_start();
+    $accounting->display_table(" where pa_id = $1 order by po_name ",array($pa_id));
+    $accounting->create_js_script();
+    $ret.=ob_get_clean();
     $ret.= '</div>';
 }
 
@@ -255,14 +167,16 @@ if ($sa=='anc_menu')
     $list=$obj->get_list();
 
 
-
+    $ac=$http->request("ac");
 
     if (empty($list))
     {
+        $url=http_build_query(array("sa"=>"add_pa","ac"=>$ac,
+                "gDossier"=>Dossier::id()));
         echo '<div class="content">';
         echo '<TABLE>';
         echo '<TR><TD class="vert_mtitle">';
-        echo '<a href="?ac='.$_REQUEST['ac'].'&sa=add_pa&'.$str_dossier.'">'._("Ajout d'un plan comptable").'</a>';
+        echo '<a href="?'.$url.'">'._("Ajout d'un plan comptable").'</a>';
         echo '</TD></TR>';
         echo '</TABLE>';
 
@@ -274,23 +188,27 @@ if ($sa=='anc_menu')
     }
     else
     {
+         $url=http_build_query(array("sa"=>"add_pa","ac"=>$ac,
+                "gDossier"=>Dossier::id()));
         echo '<div class="content">';
 
         echo '<table class="vert_mtitle">';
         if ($obj->isAppend()==true)
         {
             echo '<TR><TD class="first">';
-            echo '<a href="?ac='.$_REQUEST['ac'].'&sa=add_pa&'.$str_dossier.'">'._("Ajout d'un plan comptable").'</a>';
+            echo '<a href="?'.$url.'">'._("Ajout d'un plan comptable").'</a>';
             echo '</TD></TR>';
         }
         foreach ($list as $line)
         {
+             $url=http_build_query(array("sa"=>"pa_detail","ac"=>$ac,"pa_id"=>$line['id'],
+                "gDossier"=>Dossier::id()));
             echo '<TR>';
             echo '<TD>'.
-            '<a href="?ac='.$_REQUEST['ac'].'&sa=pa_detail&pa_id='.$line['id'].'&'.$str_dossier.'">'.
+            '<a href="?'.$url.'">'.
             h($line['name']);
 
-            echo $line['description']."</a>";
+            echo h($line['description'])."</a>";
             echo "</td>";
             echo "</TR>\n";
         }
