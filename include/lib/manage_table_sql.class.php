@@ -114,6 +114,13 @@ class Manage_Table_SQL
         $this->col_sort=0;
     }
     /**
+     * send the XML headers for the ajax call 
+     */
+    function send_header()
+    {
+        header('Content-type:text/xml;charset="UTF-8"');
+    }
+    /**
      * When adding an element , it is column we checked to insert before,
      * @return none
      */
@@ -177,9 +184,34 @@ class Manage_Table_SQL
 
     /**
      * This function can be overrided to check the data before 
-     * inserting , updating or removing,
+     * inserting , updating or removing, above an example of an overidden check
      * @see set_error get_error
      * @return boolean
+     * @code 
+function check()
+    {
+        global $cn;
+        $table=$this->get_table();
+        $is_error=0;
+        $insert=false;
+        // sect_codename must be unique 
+        if ( $table->exist() > 0) {
+            $insert=1;
+        }
+        $count=$cn->get_value(" select count(*) from syndicat.treasurer where tr_login=$1 and sect_id=$2 and tr_id<>$3",
+                array(
+                    $table->tr_login,
+                    $table->section_full_name,
+                    $table->tr_id
+                ));
+        if ($count > 0 ) {
+            $this->set_error("section_full_name",_("Ce trésorier a déjà accès à cette section"));
+            $is_error++;
+        }
+        if ( $is_error > 0 ) return false;
+        return true;
+    }    
+     * @endcode
      */
     function check()
     {

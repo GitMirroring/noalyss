@@ -97,8 +97,10 @@ var ManageTable = function (p_table_name)
         // use the table
         //compute the length of row
         //if rows == 0 or the sort is not defined then append 
-        if ( sort_column=-1 || p_table.rows.length < 2 || p_table.rows[1].cells[sort_column] == undefined || p_table.rows[1].cells[sort_column].getAttribute('sort_value') == undefined ) {
-            p_table.appendChild(p_element_row);
+        if ( this.sort_column==-1 || p_table.rows.length < 2 || p_table.rows[1].cells[sort_column] == undefined || p_table.rows[1].cells[sort_column].getAttribute('sort_value') == undefined ) {
+             var row=p_table.insertRow(p_table.rows.length);
+            row.innerHTML=p_element_row.innerHTML;
+            row.id=p_element_row.id;
             return;
         }
         // loop for each row , compare the innerHTML of the column with the
@@ -262,7 +264,7 @@ var ManageTable = function (p_table_name)
                     var answer = here.parseXML(req);
                     if (answer['status'] == 'OK') {
                         var x=answer['ctl_row'];
-                        $(x).hide();
+                        $(x).remove();
                         alternate_row_color("tb"+answer['ctl']);
                         }else {
                              smoke.alert("Effacement impossible");
