@@ -585,7 +585,7 @@ function check()
                 $virg=",";
             }
         }
-        echo HtmlInput::filter_table("tb".$this->object_name, $result, 1);
+        echo _('Cherche')." ".HtmlInput::filter_table("tb".$this->object_name, $result, 1);
         printf('<table class="result" id="tb%s">', $this->object_name);
         for ($i=0; $i<$nb; $i++)
         {

@@ -92,19 +92,20 @@ if ($sa=="pa_write")
 // Update the PA
 if ($sa=="pa_update")
 {
-    $new=new Anc_Plan($cn, $_GET['pa_id']);
+    $pa_id=$http->get("pa_id","numeric");
+
+    $new=new Anc_Plan($cn, $pa_id);
     $new->name=$_POST['pa_name'];
     $new->description=$_POST['pa_description'];
     $new->update();
-    $ret='<div class="content">';
-    $ret.='<h2 class="info">'._('Mis à jour').'</h2>';
-    $ret.="</div>";
     $sa="anc_menu";
 }
 
 /* delete pa */
 if ($sa=="pa_delete")
 {
+    $pa_id=$http->get("pa_id","numeric");
+
     $delete=new Anc_Plan($cn, $pa_id);
     $delete->delete();
     $sa="anc_menu";
@@ -122,7 +123,6 @@ if ($sa=="pa_detail")
     $new->get();
 
     $ret.= '<div class="content">';
-    $ret.= '<h2 class="info">'._("Mise à jour").'</h2>';
     $ret.= '<form method="post">';
     $ret.=dossier::hidden();
 
