@@ -45,7 +45,7 @@ function cal()
 
         sub=eval(p_variable);
         var result=parseFloat(sub);
-        result=Math.round(result*100)/100;
+        result=Math.round(result*10000)/10000;
     }
     catch(exception)
     {
