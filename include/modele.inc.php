@@ -53,7 +53,7 @@ if (isset($_POST['upd']) &&
 
 $cn = new Database();
 
-$fmod_dbid=$http->post("FMOD_DBID");
+$fmod_dbid=$http->post("FMOD_DBID","number",0);
 
 // IF FMOD_NAME is posted then must add a template
 if (isset($_POST["FMOD_NAME"]))

@@ -63,13 +63,21 @@ if ( isset ($_REQUEST['sa']) )
         } else  {
         die ('Aucune connection');
         }
-        
+        $repo=new Database(0);
+        // compute file name with date 
         if ( $_REQUEST['t'] == 'd' )
         {
+            // get folder name
+            $name = $repo->get_value("select dos_name from ac_dossier where dos_id=$1",
+                    array($dossier_number));
+            
             $database=domaine."dossier".$dossier_number;
+            $filename=  str_replace(array('/','\\' ,'<','>','"','[',']',':','*',' ','{','}','&'),'_', $name);
+            $filename=  str_replace("__", "_", $filename);
+            $filename.="-".date('Ymd');
             $args= " -Fc -Z9 --no-owner -h ".getenv("PGHOST")." -p ".getenv("PGPORT")." ".$database;
             header('Content-type: application/octet');
-            header('Content-Disposition:attachment;filename="'.$database.'.bin"',FALSE);
+            header('Content-Disposition:attachment;filename="'.$filename.'.bin"',FALSE);
 
             passthru ($cmd.$args,$a);
 
@@ -77,10 +85,16 @@ if ( isset ($_REQUEST['sa']) )
 
         if ( $_REQUEST['t'] == 'm' )
         {
+            // get template name
+            $name = $repo->get_value("select mod_name from modeledef where mod_id=$1",
+                    array($dossier_number));
             $database=domaine."mod".$dossier_number;
+            $filename=  str_replace(array('/','\\' ,'<','>','"','[',']',':','*',' ','{','}','&'),'_', $name);
+            $filename=  str_replace("__", "_", $filename);
+            $filename.="-".date('Ymd');
             $args= " -Fc -Z9 --no-owner -h ".getenv("PGHOST")." -p ".getenv("PGPORT")." ".$database;
             header('Content-type: bin/x-application');
-            header('Content-Disposition: attachment;filename="'.$database.'.bin"',FALSE);
+            header('Content-Disposition: attachment;filename="'.$filename.'.bin"',FALSE);
             $a=passthru ($cmd.$args);
         }
     }
