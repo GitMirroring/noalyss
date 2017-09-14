@@ -191,10 +191,10 @@ echo $str_add_button;
         
         <tr>
             <th>
-                <?php echo _("Clients (C)");?>
+                <?php echo _("Clients (D)");?>
             </th>
             <th>
-                <?php echo _("Services, fournitures ou biens  vendus (D)");?>
+                <?php echo _("Services, fournitures ou biens  vendus (C)");?>
             </th>
         </tr>
     
