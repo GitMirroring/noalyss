@@ -21,7 +21,7 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_http_input.pĥp';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 /**
  * @file
  * @brief Upgrade all the database : the central repository , the templates and
