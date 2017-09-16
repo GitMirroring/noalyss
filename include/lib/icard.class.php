@@ -132,6 +132,19 @@ class ICard extends HtmlInput
         $this->choice_create=1;
 	$this->autocomplete=1;
         $this->style=' style="vertical-align:50%"';
+        $this->accvis=1; //!< account_visible =1 otherwise 0
+    }
+    /**
+     * @brief in the search box, the accounting will be hidden
+     */
+    function hide_accounting() {
+        $this->accvis=0;
+    }
+    /**
+     * @brief in the search box, the accounting will be shown it is the default
+     */
+    function show_accounting() {
+        $this->accvis=1;
     }
     /*!\brief set the javascript callback function
      * by default it is update_value called BEFORE the querystring is send
@@ -297,7 +310,7 @@ class ICard extends HtmlInput
         if ( $this->readOnly==true) return '';
 		if ( ! isset($this->id )) $this->id=$this->name;
         $a="";
-        foreach (array('typecard','jrn','label','price','tvaid') as $att)
+        foreach (array('typecard','jrn','label','price','tvaid','accvis') as $att)
         {
             if (isset($this->$att) )
                 $a.="this.".$att."='".$this->$att."';";
