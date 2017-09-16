@@ -64,6 +64,7 @@ function boxsearch_card(p_dossier)
  *  - inp input text to update with the quickcode
  *  - label field to update with the name
  *  - ctl the id to fill with the HTML answer (ending with _content)
+ *  - acc 1 if accounting are visible
  */
 function search_card(obj)
 {
@@ -86,10 +87,17 @@ function search_card(obj)
 		jrn=-1;
 	    }
         }
+        var accvis=obj.accvis;
+        if ( accvis == undefined ) {
+            accvis=0;
+        } else {
+            accvis=obj.accvis;
+        }
 	var query=encodeJSON({'gDossier':gDossier,
                       'inp':inp,'label':label,'price':price,'tvaid':tvaid,
                       'ctl':'search_card','op2':'fs','jrn':jrn,
-                      'typecard':typecard,'query':string_to_search,'op':'card'
+                      'typecard':typecard,'query':string_to_search,'op':'card',
+                      'accvis':accvis
                              });
 	if (  $('search_card') ) {
 	    removeDiv('search_card');
@@ -258,6 +266,12 @@ function search_get_card(obj)
     if (obj.ctl )
     {
         queryString+="&ctl="+obj.ctl;
+    }
+    if ( obj.elements['accvis'] ) 
+    {
+        queryString+="&accvis="+$F(accvis);
+    } else {
+        queryString+="&accvis=0";
     }
     $('asearch').innerHTML=loading();
     var action=new Ajax.Request ( 'ajax_misc.php',
