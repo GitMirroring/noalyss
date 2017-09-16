@@ -51,6 +51,7 @@
  * - ctl (to return)
  * - popup
  * - ref if we want to refresh the window
+ * - acc is accounting is visible or not
  *\see fiche fiche::Save constant.php
  */
 if ( ! defined('ALLOWED')) die (_('Accès non autorisé'));
@@ -350,7 +351,7 @@ case 'fs':
 	$r.='</span>';
     $r.=dossier::hidden().HtmlInput::hidden('op','fs');
     $array=array();
-    foreach (array('query','inp','jrn','label','typecard','price','tvaid') as $i)
+    foreach (array('accvis','query','inp','jrn','label','typecard','price','tvaid') as $i)
     {
         if  (isset(${$i}) )
         {
