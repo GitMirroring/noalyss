@@ -30,7 +30,7 @@ require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
 require_once NOALYSS_INCLUDE.'/constant.php';
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/anc_account.class.php';
+require_once NOALYSS_INCLUDE.'/database/poste_analytique_sql.class.php';
 require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
 
 class Anc_Plan
@@ -133,27 +133,6 @@ class Anc_Plan
             return false;
         else
             return true;
-    }
-    /*!\brief get all the poste related to the current
-     *        Analytic plan
-     * \return an array of Poste_analytic object
-     */
-    function get_poste_analytique($p_order="")
-    {
-        $sql="select po_id,po_name from poste_analytique where pa_id=$1 $p_order";
-        $r=$this->db->exec_sql($sql,array($this->id));
-        $ret=array();
-        if ( Database::num_row($r) == 0 )
-            return $ret;
-
-        $all=Database::fetch_all($r);
-        foreach ($all as $line)
-        {
-            $obj=new Anc_Account($this->db,$line['po_id']);
-            $obj->get_by_id();
-            $ret[]=clone $obj;
-        }
-        return $ret;
     }
     /*!\brief show the header for a table for PA
      * \return string like <th>name</th>...

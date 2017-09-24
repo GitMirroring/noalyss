@@ -34,7 +34,6 @@ require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/class/anc_account.class.php';
 require_once NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';

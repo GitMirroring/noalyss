@@ -74,8 +74,8 @@ class Anc_Account_Table extends Manage_Table_SQL
         $table->po_name=str_replace(">", '', $table->po_name);
         
         // po_name must be uniq in the Analytic Plan
-        if ( $cn->get_value("select count(*) from poste_analytique where pa_id=$1 and po_name=$2",
-                array($table->pa_id,$table->po_name)) > 0 && $table->po_id==-1)
+        if ( $cn->get_value("select count(*) from poste_analytique where pa_id=$1 and po_name=$2 and po_id != $3",
+                array($table->pa_id,$table->po_name,$table->po_id)) > 0)
         {
             $is_error++;
             $this->set_error("po_name", _("Le nom doit être unique dans un plan analytique"));

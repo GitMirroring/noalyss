@@ -7,6 +7,11 @@
 	src: url('image/SansationLight/SansationLight.eot');
 	src: local('SansationLight'), url('image/SansationLight/SansationLight.woff') format('woff'), url('image/SansationLight/SansationLight.ttf') format('truetype');
 }
+@font-face {
+	font-family: 'OpenSansRegular';
+	src: url('image/OpenSansRegular.eot');
+	src: local('OpenSansRegular'), url('image/OpenSansRegular.woff') format('woff'), url('image/OpenSansRegular.ttf') format('truetype');
+}
 /* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_38327">Text with this font applied</p> */
 .fontsforweb_fontid_38327 {
 	font-family: 'OpenSansRegular' !important;
@@ -14,7 +19,7 @@
 
 BODY {
     font-family: Arial, Helvetica, "Liberation Sans"  , FreeSans, sans-serif;
-    font-family: 'SansationLight';
+    font-family: 'OpenSansRegular';
     padding : 0px;
     margin:0px;
     color:#0000FF; 
@@ -22,7 +27,7 @@ BODY {
     font-size:0.95rem;*/
 }
 input{
-    font-family: 'SansationLight';
+    font-family: 'OpenSansRegular';
     padding : 3px;
     margin:3px;
     color:#0000FF; 
@@ -55,7 +60,7 @@ table.resultfooter tfoot {
 table.sortable th,  table.table_large th,table.result th {
     font-weight:bold;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
+    font-family: 'OpenSansRegular';
     border-bottom:2px #5d90cd groove;
     border-top:0;
 
@@ -223,7 +228,7 @@ div.redcontent{
     padding-top:7px;
     padding-left:8px;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
+    font-family: 'OpenSansRegular';
     width:75%;
 
 }
@@ -232,7 +237,7 @@ div.content{
     margin-top:0.0030%;
     width:100%;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
+    font-family: 'OpenSansRegular';
     font-size:12px;
     font-size:0.90rem;
 

@@ -28,6 +28,10 @@
  * 
  * @class
  * @brief abstract of the table public.poste_analytique */
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
+
 class Poste_analytique_SQL extends Noalyss_SQL
 {
 
