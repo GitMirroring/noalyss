@@ -229,12 +229,12 @@ show_tab(a_tab,'facturation_div_id');
             return;
         }
     }
-    //  ------------------------------
-    /* Display a blank form or a form with predef operation */
-    //  ------------------------------
+//  ------------------------------
+/* Display a blank form or a form with predef operation */
+//  ------------------------------
 
-    $array=(isset($_POST['correct'])||isset ($correct))?$_POST:null;
-    $Ledger=new Acc_Ledger_Sold($cn,0);
+$array=(isset($_POST['correct'])||isset ($correct))?$_POST:null;
+$Ledger=new Acc_Ledger_Sold($cn,0);
 //
 // pre defined operation
 //

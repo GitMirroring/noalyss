@@ -1067,7 +1067,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $Commentaire->size=60;
         $Commentaire->tabindex=3;
         $label=HtmlInput::infobulle(1) ;
-        $f_desc=$Commentaire->input("e_comm",h($e_comm));
+        $f_desc=$Commentaire->input("e_comm",$e_comm);
 
         // PJ
         //--
