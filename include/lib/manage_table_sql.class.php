@@ -268,7 +268,7 @@ function check()
     function add_json_param($p_attribute,$p_value) {
         $x=json_decode($this->json_parameter,TRUE);
         $x[$p_attribute]=$p_value;
-        $this->json_parameter=json_encode($x);
+        $this->json_parameter=json_encode($x, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
     }
     function get_json()
     {
