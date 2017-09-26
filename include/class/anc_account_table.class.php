@@ -49,7 +49,7 @@ class Anc_Account_Table extends Manage_Table_SQL
         $this->set_col_label("po_description", _("Description"));
         $this->set_col_label("ga_id", _("Groupe"));
         $this->set_col_type("ga_id", "select");
-        $this->set_object_name("Oanc_accounting");
+        $this->set_object_name("anc_accounting");
         $this->set_col_sort(1);
         $this->a_select["ga_id"]=$cn->make_array("select ga_id,ga_description 
             from groupe_analytique

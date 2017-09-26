@@ -83,7 +83,7 @@ var ManageTable = function (p_table_name)
      * @param {string} p_type type of sort (string, numeric)
      * @returns {ManageTable.set_sort}
      */
-    var set_sort = function (p_column) {
+    this.set_sort = function (p_column) {
       
       this.sort_column=p_column;
     };
