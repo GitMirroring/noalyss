@@ -31,7 +31,7 @@ function showBulle(p_ctl){
     var d=document.getElementById('bulle');
     d.innerHTML=content[p_ctl];
     d.style.top=posY+offsetY+"px";
-    d.style.left=posX+offsetX+"px";
+    d.style.left=posX+offsetX-10+"px";
     d.style.visibility="visible";
 }
 function getPosition(e)

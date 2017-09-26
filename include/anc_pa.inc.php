@@ -30,6 +30,7 @@ if (!defined('ALLOWED'))
 require_once NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 require_once NOALYSS_INCLUDE.'/class/anc_account_table.class.php';
 require_once NOALYSS_INCLUDE.'/database/poste_analytique_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/inplace_edit.class.php';
 
 $ret="";
 $str_dossier=Dossier::get();
@@ -117,23 +118,18 @@ if ($sa=="pa_detail")
     
     $pa_id=$http->get("pa_id","numeric");
     
-    $new=new Anc_Plan($cn, $_GET['pa_id']);
+    $new=new Anc_Plan($cn, $pa_id);
     $wSa=HtmlInput::hidden("sa", "pa_update");
 
     $new->get();
 
     $ret.= '<div class="content">';
-    $ret.= '<form method="post">';
-    $ret.=dossier::hidden();
 
     $ret.= $new->form();
     $ret.= $wSa;
-    $ret.=HtmlInput::submit("submit", _("Enregistre"));
-    $ret.=HtmlInput::button_anchor(_('Efface'), '', 'remove_analytic_plan',
+    $ret.=HtmlInput::button_anchor(_('Efface ce plan'), '', 'remove_analytic_plan',
                     'onclick="return confirm_box(\'remove_analytic_plan\',\'Effacer ?\',function () {window.location=\'do.php?ac='.$_REQUEST['ac'].'&pa_id='.$_GET['pa_id'].'&sa=pa_delete&'.$str_dossier.'\';})"',
                     'smallbutton');
-    $ret.= '</form>';
-
     //---------------------------------------------------------------------
     //  Detail now
     // Use Manage_Table
@@ -207,7 +203,7 @@ if ($sa=='anc_menu')
             echo '<TD>'.
             '<a href="?'.$url.'">'.
             h($line['name']);
-
+            echo "&nbsp;";
             echo h($line['description'])."</a>";
             echo "</td>";
             echo "</TR>\n";

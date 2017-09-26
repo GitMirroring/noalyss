@@ -25,6 +25,8 @@ if (!defined('ALLOWED'))
 
 require_once NOALYSS_INCLUDE . "/lib/inplace_edit.class.php";
 
+if ( $g_user->check_module("PLANANC ") ) die("forbidden");
+
 $input = $http->request("input");
 $action = $http->request("ieaction", "string", "display");
 $pa_id=$http->post("id","numeric");

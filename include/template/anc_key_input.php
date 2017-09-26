@@ -62,8 +62,8 @@
                 endfor;
                 ?>
                     <th style="text-align: right">
-                    <?php echo _('Pourcentage'); ?>
                     <?php echo HtmlInput::infobulle(41); ?>
+                    <?php echo _('Pourcentage'); ?>
                 </th>
             </tr>
             <?php

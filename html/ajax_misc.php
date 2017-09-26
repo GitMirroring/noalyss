@@ -183,7 +183,9 @@ $path = array(
     /* display the lettering , callebd from acc_ledger : dsp_letter*/
     "dl"=>"ajax_display_letter",
     // Add , delete update anc accounting
-    "anc_accounting"=>"ajax_anc_accounting"
+    "anc_accounting"=>"ajax_anc_accounting",
+    // Update name and description
+    "anc_updatedescription"=>"ajax_anc_plan"
 )    ;
 
 if (array_key_exists($op, $path)) {

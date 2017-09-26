@@ -111,16 +111,31 @@ class Anc_Plan
     }
     function form()
     {
+        $dossier_id=Dossier::id();
+        $wName=new IText('pa_name',$this->name,"pa_name");
+        $iName=new Inplace_Edit($wName);
+        $iName->set_callback("ajax_misc.php");
+        $iName->add_json_param("gDossier",$dossier_id);
+        $iName->add_json_param("action","anc_updatedescription");
+        $iName->add_json_param("op","anc_updatedescription");
+        $iName->add_json_param("id",$this->id);
 
-        $wName=new IText('pa_name',$this->name);
 
-        $wName->table=1;
-        $wDescription=new IText('pa_description',$this->description);
-        $wDescription->table=1;
+        $wDescription=new IText('pa_description',$this->description,"pa_description");
+        $wDescription->size=50;
+        if ( $this->description == "") $wDescription->value=_("Aucune description");
+        $iDescription=new Inplace_Edit($wDescription);
+        $iDescription->add_json_param("gDossier",$dossier_id);
+        $iDescription->add_json_param("op","anc_updatedescription");
+        $iDescription->add_json_param("action","anc_updatedescription");
+        $iDescription->set_callback("ajax_misc.php");
+        $iDescription->add_json_param("id",$this->id);
+        
+
         $wId=new IHidden("pa_id",$this->id);
         $ret="<TABLE>";
-        $ret.='<tr>'.td(_('Nom')).$wName->input().'</tr>';
-        $ret.="<tr>".td(_('Description')).$wDescription->input()."</tr>";
+        $ret.='<tr>'.td(_('Nom')).'<td>'.$iName->input().'</td>'.'</tr>';
+        $ret.="<tr>".td(_('Description')).'<td>'.$iDescription->input().'</td>'."</tr>";
         $ret.="</table>";
         $ret.=$wId->input();
         return $ret;
