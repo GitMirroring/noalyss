@@ -33,15 +33,14 @@ if (!isset($_REQUEST["TestAjaxFile"])) {
     /***********************************************
      * If TestAjaxFile is not set it is not a ajax call
      *********************************************** */
-    $hello = new IText("hello");
-    $hello->value = "2012";
+    $hello = new IText("hello","Click me");
     $hello->id = "hello_ajax";
    
     $ajax_hello = new Inplace_Edit($hello);
     $ajax_hello->set_callback("ajax_test.php");
     $ajax_hello->add_json_param("TestAjaxFile", __FILE__) ;
     $ajax_hello->add_json_param("gDossier", Dossier::id());
-    echo $ajax_hello->input();
+    echo "#".$ajax_hello->input()."#";
     
     
 } else {
@@ -55,7 +54,7 @@ if (!isset($_REQUEST["TestAjaxFile"])) {
         $ajax_hello->set_callback("ajax_test.php");
         $ajax_hello->add_json_param("TestAjaxFile", __FILE__);
         $ajax_hello->add_json_param("gDossier", Dossier::id());
-        echo $ajax_hello->ajax_input();
+        echo " [  ".$ajax_hello->ajax_input()." ] ";
     }
     if ( $action == "ok") {
         $ajax_hello = Inplace_Edit::build($input);
