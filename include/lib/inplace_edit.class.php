@@ -71,9 +71,10 @@ class Inplace_Edit
      * @brief response in ajax to be edited
      */
      function ajax_input() {
+         ob_start();
         echo $this->input->input();
-        echo '<a class="smallbutton"  id="inplace_edit_ok'.$this->input->id.'">'._('ok').'</a>';
-        echo '<a class="smallbutton" id="inplace_edit_cancel'.$this->input->id.'">'._('cancel').'</a>';
+        echo '<a style="display:inline" class="smallbutton"  id="inplace_edit_ok'.$this->input->id.'">'._('ok').'</a>';
+        echo '<a style="display:inline" class="smallbutton" id="inplace_edit_cancel'.$this->input->id.'">'._('cancel').'</a>';
         echo <<<EOF
         <script>
             {$this->input->id}edit.onclick=null;
@@ -93,12 +94,16 @@ class Inplace_Edit
             
         </script>
 EOF;
+                $ret= ob_get_contents();
+                ob_end_clean();
+                return $ret;
     }
     
     /***
      * @brief display the value with the click event
      */
     function input() {
+        ob_start();
         echo <<<EOF
             <span class="inplace_edit" id="{$this->input->id}edit" >
 EOF;
@@ -111,7 +116,10 @@ EOF;
                 ,'{$this->callback}',
                  {parameters:  {$this->json} ,evalScripts:true});}
             </script>
-              ";      
+              ";   
+         $ret= ob_get_contents();
+         ob_end_clean();
+         return $ret;
     }
     /**
      * @brief the php callback file to call for ajax
