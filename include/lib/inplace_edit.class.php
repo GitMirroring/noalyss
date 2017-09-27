@@ -77,6 +77,7 @@ class Inplace_Edit
         echo '<a style="display:inline" class="smallbutton" id="inplace_edit_cancel'.$this->input->id.'">'._('cancel').'</a>';
         echo <<<EOF
         <script>
+        $('{$this->input->id}edit').addClassName('inplace_edit_input');
             {$this->input->id}edit.onclick=null;
             inplace_edit_ok{$this->input->id}.onclick= function () {
                 var json={$this->json};
@@ -98,7 +99,23 @@ EOF;
                 ob_end_clean();
                 return $ret;
     }
-    
+    /**
+     * @brief display only the value , if the action after saving or cancelling
+     * 
+     */
+    function value()
+    {
+        echo $this->input->value,
+                "
+            <script>
+            $('{$this->input->id}edit').removeClassName('inplace_edit_input');
+        {$this->input->id}edit.onclick=function() {
+                 new Ajax.Updater('{$this->input->id}edit'
+                ,'{$this->callback}',
+                 {parameters:  {$this->json} ,evalScripts:true});}
+            </script>
+              ";   
+    }
     /***
      * @brief display the value with the click event
      */
@@ -114,7 +131,8 @@ EOF;
         {$this->input->id}edit.onclick=function() {
                  new Ajax.Updater('{$this->input->id}edit'
                 ,'{$this->callback}',
-                 {parameters:  {$this->json} ,evalScripts:true});}
+                 {parameters:  {$this->json} ,evalScripts:true});
+             }
             </script>
               ";   
          $ret= ob_get_contents();

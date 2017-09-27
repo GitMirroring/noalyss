@@ -309,3 +309,14 @@ p#breakhere {page-break-before: always}
 .tinybutton {
     display:none;
 }
+/*
+ * Style for the Inplace Edit element
+ */
+span.inplace_edit
+{
+    text-decoration: none;
+}
+span.inplace_edit_input
+{
+    text-decoration: none;
+}

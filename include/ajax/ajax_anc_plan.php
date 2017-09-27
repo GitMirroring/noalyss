@@ -56,9 +56,9 @@ if ($action=="ok") {
             if ( trim($value ) == NULL ) $value=_("Aucune description");
         }
         $answer->set_value($value);
-        echo $answer->input();
+        echo $answer->value();
     }
 }
 if ($action=="cancel") {
-    echo $answer->input();
+    echo $answer->value();
 }

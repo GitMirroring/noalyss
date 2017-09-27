@@ -62,13 +62,13 @@ if (!isset($_REQUEST["TestAjaxFile"])) {
         $ajax_hello->add_json_param("gDossier", Dossier::id());
         $ajax_hello->set_value($http->request("value"));
         $ajax_hello->set_callback("ajax_test.php");
-        echo $ajax_hello->input();
+        echo $ajax_hello->value();
     }
     if ( $action == "cancel") {
         $ajax_hello = Inplace_Edit::build($input);
         $ajax_hello->add_json_param("TestAjaxFile", __FILE__);
         $ajax_hello->add_json_param("gDossier", Dossier::id());
         $ajax_hello->set_callback("ajax_test.php");
-        echo $ajax_hello->input();
+        echo $ajax_hello->value();
     }
 }

@@ -2150,3 +2150,17 @@ td.selectedmenu {
     float:left;
     padding-left: 150px;
 }
+/*
+ * Style for the Inplace Edit element
+ */
+span.inplace_edit
+{
+    text-decoration: underline;
+    cursor: pointer;
+}
+span.inplace_edit_input
+{
+    text-decoration: none;
+    font-size: 110%;
+    cursor: none;
+}
