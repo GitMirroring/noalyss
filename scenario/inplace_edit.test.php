@@ -40,9 +40,30 @@ if (!isset($_REQUEST["TestAjaxFile"])) {
     $ajax_hello->set_callback("ajax_test.php");
     $ajax_hello->add_json_param("TestAjaxFile", __FILE__) ;
     $ajax_hello->add_json_param("gDossier", Dossier::id());
-    echo "#".$ajax_hello->input()."#";
+    echo "TEXT #".$ajax_hello->input()."#";
     
+    $select = new ISelect ("ajax_select");
+    $select->id=uniqid("sel");
+    $select->value=[ 
+        ["value"=>1,"label"=>"ONE"],
+        ["value"=>2,"label"=>"TWO"],
+        ["value"=>3,"label"=>"THREE"],
+        ];
+    $select->selected="2";
+    $ajax_select = new Inplace_Edit($select);
+    $ajax_select->set_callback("ajax_test.php");
+    $ajax_select->add_json_param("TestAjaxFile", __FILE__) ;
+    $ajax_select->add_json_param("gDossier", Dossier::id());
+    echo "SELECT #".$ajax_select->input()."#";
     
+    $date=new IDate("today");
+    $date->value=date("d.m.Y");
+    $date->id=uniqid("date");
+     $ajax_date = new Inplace_Edit($date);
+    $ajax_date->set_callback("ajax_test.php");
+    $ajax_date->add_json_param("TestAjaxFile", __FILE__) ;
+    $ajax_date->add_json_param("gDossier", Dossier::id());
+    echo "DATE #".$ajax_date->input()."#";
 } else {
     /*************************************************
      * Ajax answer

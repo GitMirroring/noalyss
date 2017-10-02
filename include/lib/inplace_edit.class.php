@@ -38,12 +38,14 @@ class Inplace_Edit
 {
   
 
-    ///< HtmlInput object 
+    /// HtmlInput object 
     private $input;
-    ///< Json object to pass to JavaScript
+    /// Json object to pass to JavaScript
     private $json;
-    ///< Php file which answered the ajax
+    /// Php file which answered the ajax
     private $callback;
+    /// Message to display if value is empty
+    private $message;
     /**
      * Create a Inplace_Edit, initialise JSON and fullfill the default json value:
      * input which is the HtmlInput object serialized
@@ -53,6 +55,7 @@ class Inplace_Edit
         $this->input=$p_input;
         $x["input"]=serialize($p_input);
         $this->json=json_encode($x, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
+        $this->message=_("Faites un choix");
     }
     ///@brief build a Inplace_Edit object from
     /// a serialized string (ajax json parameter = input)
@@ -105,7 +108,9 @@ EOF;
      */
     function value()
     {
-        echo $this->input->value,
+        $v=$this->input->get_value();
+        $v=(trim($v)=="")?$this->message:$v;
+        echo $v,
                 "
             <script>
             $('{$this->input->id}edit').removeClassName('inplace_edit_input');
@@ -124,7 +129,9 @@ EOF;
         echo <<<EOF
             <span class="inplace_edit" id="{$this->input->id}edit" >
 EOF;
-        echo $this->input->value;
+        $v=$this->input->get_value();
+        $v=(trim($v)=="")?$this->message:$v;
+        echo $v;
         echo "</span>";
         echo "
             <script>
@@ -186,7 +193,14 @@ EOF;
      */
     function set_value($p_value) {
         $input=$this->get_input();
-        $this->input->value=  strip_tags($p_value);
+        $this->input->set_value(strip_tags($p_value));
         $this->set_input($input);
+    }
+    /**
+     * Message to display if the value is empty 
+     * @param string $p_str
+     */
+    function set_message($p_str) {
+        $this->message=$p_str;
     }
 }

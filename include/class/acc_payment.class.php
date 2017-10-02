@@ -277,6 +277,8 @@ class Acc_Payment
     }
     /*!\brief show several lines with radio button to select the payment
      *method we want to use, the $_POST['e_mp'] will be set
+     * \todo this class is used only for storage of the defined payment method, not the payment itself, 
+     * it must be moved to another class 'Operation_Payment'
      *\param $p_selected if the id choose
      *\return html string
      */
@@ -287,20 +289,24 @@ class Acc_Payment
         $r.=HtmlInput::hidden('gDossier',dossier::id());
 
         if ( empty($array)==false ) {
+            $date_pay=new IDate('mp_date');
+            
+            $r.=sprintf(_("Date %s"),
+                    $date_pay->input());
             $acompte=new INum('acompte');
             $acompte->value=0;
             $r.=_(" Acompte à déduire");
             $r.=$acompte->input();
-			$r.='<p>';
-			$e_comm_paiement=new IText('e_comm_paiement');
-			$e_comm_paiement->table = 0;
-			$e_comm_paiement->setReadOnly(false);
-			$e_comm_paiement->size = 60;
-			$e_comm_paiement->tabindex = 3;
-			$r.=_(" Libellé du paiement");
-			$r.=$e_comm_paiement->input();
-			$r.='</p>';
-		}
+            $r.='<p>';
+            $e_comm_paiement=new IText('e_comm_paiement');
+            $e_comm_paiement->table = 0;
+            $e_comm_paiement->setReadOnly(false);
+            $e_comm_paiement->size = 60;
+            $e_comm_paiement->tabindex = 3;
+            $r.=_(" Libellé du paiement");
+            $r.=$e_comm_paiement->input();
+            $r.='</p>';
+        }
 
         $r.='<ol>';
         $r.='<li ><input type="radio" name="e_mp" value="0" checked>'._('Paiement encodé plus tard');

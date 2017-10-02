@@ -29,6 +29,9 @@ require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
+require_once NOALYSS_INCLUDE.'/lib/inplace_edit.class.php';
+
+$http=new HttpInput();
 
 $gDossier=dossier::id();
 $str_dossier=dossier::get();
@@ -50,9 +53,9 @@ if ( ! isset($_REQUEST['action']))
 
     echo '<DIV class="content" >';
 	$header=new Sort_Table();
-	$header->add('Login',$base_url,"order by use_login asc","order by use_login desc",'la','ld');
-	$header->add('Nom',$base_url,"order by use_name asc,use_first_name asc","order by use_name desc,use_first_name desc",'na','nd');
-	$header->add('Type d\'utilisateur',$base_url,"order by use_admin asc,use_login asc","order by use_admin desc,use_login desc",'ta','td');
+	$header->add(_('Login'),$base_url,"order by use_login asc","order by use_login desc",'la','ld');
+	$header->add(_('Nom'),$base_url,"order by use_name asc,use_first_name asc","order by use_name desc,use_first_name desc",'na','nd');
+	$header->add(_("Type d'utilisateur"),$base_url,"order by use_admin asc,use_login asc","order by use_admin desc,use_login desc",'ta','td');
 
 
 	$order=(isset($_REQUEST['ord']))?$_REQUEST['ord']:'la';
@@ -78,8 +81,8 @@ if ( ! isset($_REQUEST['action']))
 	echo "<tr>";
 	echo '<th>'.$header->get_header(0).'</th>';
 	echo '<th>'.$header->get_header(1).'</th>';
-	echo th('prénom');
-	echo th('profil');
+	echo th(_('prénom'));
+	echo th(_('profil'));
 	echo '<th>'.$header->get_header(2).'</th>';
     for ($i = 0;$i < $MaxUser;$i++)
     {
@@ -113,7 +116,7 @@ $action="";
 
 if ( isset ($_GET["action"] ))
 {
-    $action=$_GET["action"];
+    $action=$http->get("action");
 
 }
 //----------------------------------------------------------------------
@@ -124,36 +127,15 @@ if ( isset($_POST['ok']))
 	try
 	{
 	$cn->start();
-    $sec_User=new User($cn,$_POST['user_id']);
+        $user_id=$http->post('user_id',"numeric");
+        $sec_User=new User($cn,$user_id);
 
-	// save profile
-	$sec_User->save_profile($_POST['profile']);
-
-	/* Save first the ledger */
-    $a=$cn->get_array('select jrn_def_id from jrn_def');
-
-	foreach ($a as $key)
-    {
-        $id=$key['jrn_def_id'];
-        $priv=sprintf("jrn_act%d",$id);
-        $count=$cn->get_value('select count(*) from user_sec_jrn where uj_login=$1 '.
-                                      ' and uj_jrn_id=$2',array($sec_User->login,$id));
-        if ( $count == 0 )
-        {
-            $cn->exec_sql('insert into user_sec_jrn (uj_login,uj_jrn_id,uj_priv)'.
-                                  ' values ($1,$2,$3)',
-                                  array($sec_User->login,$id,$_POST[$priv]));
-
-        }
-        else
-        {
-            $cn->exec_sql('update user_sec_jrn set uj_priv=$1 where uj_login=$2 and uj_jrn_id=$3',
-                                  array($_POST[$priv],$sec_User->login,$id));
-        }
-    }
+	
     /* now save all the actions */
     $a=$cn->get_array('select ac_id from action');
-
+    /*
+     * @todo must be replaced by ajax
+     */
     foreach ($a as $key)
     {
         $id=$key['ac_id'];
@@ -199,10 +181,11 @@ if ( isset($_POST['ok']))
 if ( $action == "view" )
 {
     $l_Db=sprintf("dossier%d",$gDossier);
-    $return= HtmlInput::button_anchor('Retour à la liste','?&ac='.$_REQUEST['ac'].'&'.dossier::get(),'retour');
+    $return= HtmlInput::button_anchor(_('Retour à la liste'),'?&ac='.$_REQUEST['ac'].'&'.dossier::get(),_('retour'),"",'smallbutton');
 
     $repo=new Database();
-    $User=new User($repo,$_GET['user_id']);
+    $user_id=$http->get('user_id',"numeric");
+    $User=new User($repo,$user_id);
     $admin=0;
     $access=$User->get_folder_access($gDossier);
 
@@ -210,19 +193,19 @@ if ( $action == "view" )
 
 	if ($access=='R')
     {
-        $str=_(' Utilisateur normal');
+        $str=_('Utilisateur normal');
     }
 
     if ( $User->admin==1 )
     {
-        $str=' Administrateur';
+        $str=_('Administrateur');
         $admin=1;
     }
-
+    $str=" ".$str;
     echo '<h2>'.h($User->first_name).' '.h($User->name).' '.hi($User->login)."($str)</h2>";
 
 
-    if ( $_GET['user_id'] == 1 )
+    if ( $user_id == 1 )
     {
         echo '<h2 class="notice"> '.
             _("Cet utilisateur est administrateur, il a tous les droits").
@@ -255,58 +238,65 @@ if ( $action == "view" )
 
     $Res=$cn->exec_sql("select jrn_def_id,jrn_def_name  from jrn_def ".
                                " order by jrn_def_name");
-    $sec_User=new User($cn,$_GET['user_id']);
+    $sec_User=new User($cn,$user_id);
+    $n_dossier_id=Dossier::id();
 
     echo '<form method="post">';
     $sHref=sprintf ('export.php?act=PDF:sec&user_id=%s&'.$str_dossier ,
-                    $_GET ['user_id']
+                    $user_id
                    );
 
     echo dossier::hidden();
     echo HtmlInput::hidden('action','sec');
-    echo HtmlInput::hidden('user_id',$_GET['user_id']);
-	$i_profile=new ISelect ('profile');
-	$i_profile->value=$cn->make_array("select p_id,p_name from profile
-			order by p_name");
+    echo HtmlInput::hidden('user_id',$user_id);
+    $i_profile=new ISelect ('profile');
+    $i_profile->id=uniqid("profile");
+    $i_profile->value=$cn->make_array("select p_id,p_name from profile
+                    order by p_name");
 
-	$i_profile->selected=$sec_User->get_profile();
-
-	echo "<p>";
-	echo _("Profil")." ".$i_profile->input();
-	echo "</p>";
-    echo '<Fieldset><legend>Journaux </legend>';
+    $i_profile->selected=$sec_User->get_profile();
+    $ie_profile=new Inplace_Edit($i_profile);
+    
+    $ie_profile->set_callback("ajax_misc.php");
+    $ie_profile->add_json_param("op", "profile");
+    $ie_profile->add_json_param("gDossier", $n_dossier_id);
+    $ie_profile->add_json_param("user_id", $user_id);
+    $ie_profile->add_json_param("profile_id", $i_profile->selected);
+    
+    echo "<p>";
+    echo _("Profil")." ".$ie_profile->input();
+    echo "</p>";
+    echo '<Fieldset><legend>'._('Journaux').'</legend>';
     echo HtmlInput::button("grant_all", _("Accès à tout"), " onclick=\" grant_ledgers ('W') \"");
     echo HtmlInput::button("grant_readonly", _("Uniquement Lecture"), " onclick=\" grant_ledgers ('R') \"");
     echo HtmlInput::button("revoke_all", _("Aucun accès"), " onclick=\" grant_ledgers ('X') \"");
     echo '<table>';
     $MaxJrn=Database::num_row($Res);
-    $jrn_priv=new ISelect();
+    $jrn_priv=new ISelect("iledger");
     $array=array(
                array ('value'=>'R','label'=>_('Uniquement lecture')),
                array ('value'=>'W','label'=>_('Lecture et écriture')),
                array ('value'=>'X','label'=>_('Aucun accès'))
            );
-  
     for ( $i =0 ; $i < $MaxJrn; $i++ )
     {
         /* set the widget */
         $l_line=Database::fetch_array($Res,$i);
-
+        $jrn_priv->value=$array;
+        $jrn_priv->id="ledas".uniqid();
+        $ie_input=new Inplace_Edit($jrn_priv);
+        $ie_input->set_callback("ajax_misc.php");
+        $ie_input->add_json_param("jrn_def_id", $l_line['jrn_def_id']);
+        $ie_input->add_json_param("op", "ledger_access");
+        $ie_input->add_json_param("gDossier", $n_dossier_id);
+        $ie_input->add_json_param("user_id", $user_id);
+        $ie_input->set_value($sec_User->get_ledger_access($l_line['jrn_def_id']));
         echo '<TR> ';
         if ( $i == 0 ) echo '<TD class="num"> <B> Journal </B> </TD>';
         else echo "<TD></TD>";
         echo "<TD class=\"num\"> $l_line[jrn_def_name] </TD>";
-
-        $jrn_priv->name='jrn_act'.$l_line['jrn_def_id'];
-        $jrn_priv->value=$array;
-        if ($admin != 1)
-            $jrn_priv->selected=$sec_User->get_ledger_access($l_line['jrn_def_id']);
-        else
-            $jrn_priv->selected='W';
-
-
         echo '<td>';
-        echo $jrn_priv->input();
+        echo $ie_input->input();
         echo '</td>';
         echo '</tr>';
     }
@@ -329,16 +319,35 @@ if ( $action == "view" )
     ?>
         <script>
     function grant_ledgers(p_access)  {
-         var a_select=document.getElementsByTagName('select');
+        waiting_box();
+         var a_select=document.getElementsByTagName('span');
          var i=0;
         var str_id="";
         for (i = 0;i < a_select.length;i++) {
           str_id = new String( a_select[i].id);
-           if ( str_id.search(/jrn_act/) > -1 ) {
-             a_select[i].value=p_access;
-             }
+           if ( str_id.search(/ledas/) > -1 ) {
+              if ( p_access==="W") {
+                a_select[i].innerHTML="<?php echo _("Lecture et écriture");?>";
+             } else if (p_access === "R") {
+                a_select[i].innerHTML="<?php echo _("Uniquement lecture");?>";
+            }   else if (p_access === "X") {
+                a_select[i].innerHTML="<?php echo _("Aucun accès");?>";
+            }
+            
            }
         }
+        
+        new Ajax.Request("ajax_misc.php",{method:"post",
+                parameters:{
+                            op:"ledger_access_all",
+                            gDossier:<?php echo $n_dossier_id?>,
+                            method:"get",
+                            user_id:<?php echo $user_id;?>,
+                            access:p_access
+                            }
+                });
+        remove_waiting_box();
+    }
      function grant_action(p_value) {
          var a_select=document.getElementsByTagName('select');
          var i=0;

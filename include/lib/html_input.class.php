@@ -101,6 +101,21 @@ class HtmlInput
         $this->$p_name=$p_value;
     }
     /**
+     * Set the value of input (IText, INum,...)
+     * @param type $p_string
+     */
+    function set_value($p_string)
+    {
+        $this->value=$p_string;
+    }
+    /**
+     * Return the value of input (IText, INum,...)
+     */
+    function get_value()
+    {
+        return $this->value;
+    }
+    /**
      *@brief you can add attribute to this in javascript
      * this function is a wrapper and create a script (in js) to modify
      * "this" (in javascript) with the value of obj->attribute from PHP

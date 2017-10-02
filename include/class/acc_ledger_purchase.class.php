@@ -874,7 +874,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
                 /* insert into jrn */
                 $acc_pay->mt=$mt;
-				$acc_pay->desc=(!isset($e_comm_paiement) || strlen(trim($e_comm_paiement)) == 0) ?$e_comm:$e_comm_paiement;
+                $acc_pay->desc=(!isset($e_comm_paiement) || strlen(trim($e_comm_paiement)) == 0) ?$e_comm:$e_comm_paiement;
                 $mp_jr_id=$acc_pay->insert_jrn();
                 $acjrn->grpt_id=$acseq;
                 $acjrn->update_internal_code($acinternal);

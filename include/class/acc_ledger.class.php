@@ -3653,7 +3653,7 @@ class Acc_Ledger extends jrn_def_sql
 	{
 		$r = '';
 		$r.='<div id="payment"> ';
-		$r.='<h2> ' . _('Payé par') . ' </h2>';
+		$r.='<h2> ' . _('Payement') . ' </h2>';
 		$mp = new Acc_Payment($this->db);
 		$mp->set_parameter('ledger_source', $this->id);
 		$r.=$mp->select($p_selected);

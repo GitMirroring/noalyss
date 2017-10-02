@@ -68,7 +68,22 @@ class ISelect extends HtmlInput
 
             }
         }
-		if ( $this->table == 1 )		  $a='<td>'.$r.'</td>';
+        $r='<span class="input_text_ro">'.$r.'</span>';
+	if ( $this->table == 1 )		  $a='<td>'.$r.'</td>';
+        return $r;
+    }
+    /*!\brief print in html the readonly value of the widget*/
+    public function get_value()
+    {
+        $r="";
+        for ( $i=0;$i<sizeof($this->value);$i++)
+        {
+            if ($this->selected==$this->value[$i]['value'] )
+            {
+                $r=h($this->value[$i]['label']);
+
+            }
+        }
         return $r;
     }
    /**
@@ -92,6 +107,9 @@ class ISelect extends HtmlInput
             $a_ret['label']=$value;
             $this->value[]=$a_ret;
         }
+    }
+    function set_value($p_string) {
+        $this->selected=$p_string;
     }
     static public function test_me()
     {

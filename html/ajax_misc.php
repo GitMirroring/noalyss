@@ -109,6 +109,12 @@ $path = array(
     "account"=>"ajax_poste",
     "card"=>"ajax_card",
     "ledger"=>"ajax_ledger",
+    // Manage ledger access
+    "ledger_access"=>"ajax_ledger_security",
+    // Manage user profile
+    "profile"=>"ajax_ledger_security",
+    // Update in once all the ledgers
+    "ledger_access_all"=>"ajax_ledger_security",
     "todo_list"=>"ajax_todo_list",
     "history"=>"ajax_history",
     "pcmn_update"=>"ajax_pcmn_update",
