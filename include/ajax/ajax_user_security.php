@@ -27,13 +27,13 @@ require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE.'/lib/inum.class.php';
 require_once NOALYSS_INCLUDE.'/lib/inplace_edit.class.php';
+require_once NOALYSS_INCLUDE.'/lib/inplace_switch.class.php';
 
 /**
  * @file
  * @brief Manage the security of a ledger , from CFGSEC module
  * 
  */
-
 $n_dossier_id=Dossier::id();
 //-----------------------------------------------------------------------------
 // Manage the user's access to ledgers
@@ -97,12 +97,12 @@ if ($op=="ledger_access")
 //-----------------------------------------------------------------------------
 // Set the user's profile
 //-----------------------------------------------------------------------------
-if ( $op == "profile") 
+if ($op=="profile")
 {
     $input=$http->request("input");
     $action=$http->request("ieaction", "string", "display");
     $user_id=$http->post("user_id", "numeric");
-    $profile_id=$http->post("profile_id","numeric");
+    $profile_id=$http->post("profile_id", "numeric");
     if ($action=="display")
     {
         $ie_input=Inplace_Edit::build($input);
@@ -117,16 +117,16 @@ if ( $op == "profile")
     if ($action=="ok")
     {
         $value=$http->post("value");
-	// save profile
-        $sec_User=new User($cn,$user_id);
-	$sec_User->save_profile($value);
+        // save profile
+        $sec_User=new User($cn, $user_id);
+        $sec_User->save_profile($value);
         $ie_input=Inplace_Edit::build($input);
         $ie_input->set_callback("ajax_misc.php");
         $ie_input->add_json_param("op", "profile");
         $ie_input->add_json_param("gDossier", $n_dossier_id);
         $ie_input->add_json_param("user_id", $user_id);
         $ie_input->set_value($value);
-        
+
         echo $ie_input->value();
         return;
     }
@@ -145,11 +145,13 @@ if ( $op == "profile")
 //------------------------------------------------------------------------------
 // Update in once all the ledger access for an user
 //------------------------------------------------------------------------------
-if ( $op == 'ledger_access_all') {
+if ($op=='ledger_access_all')
+{
     // Find the login
-    $user_id=$http->post("user_id","numeric");
+    $user_id=$http->post("user_id", "numeric");
     $access=$http->post("access");
-    if ( $access != "W" && $access != "X" && $access !="R") die("Invalid access");
+    if ($access!="W"&&$access!="X"&&$access!="R")
+        die("Invalid access");
     $sec_User=new User($cn, $user_id);
     // Insert all the existing ledgers to user_sec_jrn 
     $sql="insert into   user_sec_jrn(
@@ -167,7 +169,52 @@ if ( $op == 'ledger_access_all') {
 					uj_jrn_id = jrn_def_id
 					and uj_login = $1
 			)";
-    $cn->exec_sql($sql,array($sec_User->login));
-    $cn->exec_sql('update user_sec_jrn set uj_priv=$1 where uj_login=$2',array($access,$sec_User->login));
+    $cn->exec_sql($sql, array($sec_User->login));
+    $cn->exec_sql('update user_sec_jrn set uj_priv=$1 where uj_login=$2',
+            array($access, $sec_User->login));
     return;
+}
+//------------------------------------------------------------------------------
+// Set on or off the action
+//------------------------------------------------------------------------------
+if ($op=="action_access")
+{
+    $action_id=$http->get("ac_id", "numeric");
+    $user_id=$http->get("user_id","numeric");
+    $sec_User=new User($cn, $user_id);
+    
+    $right=$sec_User->check_action($action_id);
+    $is_switch=new Inplace_Switch("action".$action_id,0);
+    if ($right==1)
+    {
+        $cn->exec_sql("delete from user_sec_act where ua_act_id=$1 and ua_login=$2",
+                array($action_id, $sec_User->login));
+        echo $is_switch->get_iconoff();
+    } else {
+       $cn->exec_sql('insert into user_sec_act (ua_login,ua_act_id)'.
+                                  ' values ($1,$2)',
+                                  array($sec_User->login,$action_id));
+        echo $is_switch->get_iconon();
+    }
+    
+    
+    
+}
+//----------------------------------------------------------------------------
+// Set all the actions
+//----------------------------------------------------------------------------
+if ($op=="action_access_all")
+{
+    $user_id=$http->get("user_id","numeric");
+    $access=$http->get("access","numeric");
+    $sec_User=new User($cn, $user_id);
+    if ( $access==0) {
+        $cn->exec_sql("delete from user_sec_act where ua_login=$1",array($sec_User->login));
+    }
+    if ( $access==1) {
+        $cn->exec_sql("
+        insert into user_sec_act(ua_login,ua_act_id) select $1,ac_id from action where not exists(select 1 from user_sec_act where ua_login=$1 and ua_act_id=ac_id)",
+                array($sec_User->login));
+    }
+    
 }

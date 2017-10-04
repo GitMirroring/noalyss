@@ -110,11 +110,15 @@ $path = array(
     "card"=>"ajax_card",
     "ledger"=>"ajax_ledger",
     // Manage ledger access
-    "ledger_access"=>"ajax_ledger_security",
+    "ledger_access"=>"ajax_user_security",
     // Manage user profile
-    "profile"=>"ajax_ledger_security",
+    "profile"=>"ajax_user_security",
     // Update in once all the ledgers
-    "ledger_access_all"=>"ajax_ledger_security",
+    "ledger_access_all"=>"ajax_user_security",
+    // From the page CFGSEC,set the actions
+    "action_access"=>"ajax_user_security",
+    // From the page CFGSEC,set all the actions
+    "action_access_all"=>"ajax_user_security",
     "todo_list"=>"ajax_todo_list",
     "history"=>"ajax_history",
     "pcmn_update"=>"ajax_pcmn_update",

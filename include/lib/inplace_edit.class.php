@@ -111,6 +111,7 @@ EOF;
         $v=$this->input->get_value();
         $v=(trim($v)=="")?$this->message:$v;
         echo $v,
+                 "<img src=\"image/button-edit.png\"/>",
                 "
             <script>
             $('{$this->input->id}edit').removeClassName('inplace_edit_input');
@@ -132,8 +133,10 @@ EOF;
         $v=$this->input->get_value();
         $v=(trim($v)=="")?$this->message:$v;
         echo $v;
+        echo "<img src=\"image/button-edit.png\"/>";
         echo "</span>";
         echo "
+            
             <script>
         {$this->input->id}edit.onclick=function() {
                  new Ajax.Updater('{$this->input->id}edit'

@@ -4,9 +4,6 @@
 ?><?php
 
 	function display_security_fieldset($p_legend,$p_array,$sec_User) {
-  $array=array(array('value'=>0,'label'=>_("Pas d'accès")),
-	       array('value'=>1,'label'=>_('Accès')),
-		     );
 
 	$gDossier=dossier::id();
 	?>
@@ -23,19 +20,18 @@
 
 			<?php
 				$right=$sec_User->check_action($l_line['ac_id']);
+                                $is_switch=new Inplace_Switch(sprintf('action%d',$l_line['ac_id']),$right);
+                                $is_switch->set_callback("ajax_misc.php");
+                                $is_switch->add_json_param("op", "action_access");
+                                $is_switch->add_json_param("gDossier",$gDossier);
+                                $is_switch->add_json_param("ac_id",$l_line['ac_id']);
+                                $is_switch->add_json_param("user_id",$sec_User->id);
+                                ?>
+			<td >
+                            
 
-			$a=new ISelect();
-				$a->name=sprintf('action%d',$l_line['ac_id']);
-				$a->value=$array;
-				$a->selected=$right;
-				if ( $right==1) {
-				?>
-			<td style="border:lightgreen 2px solid; ">
-			<?php } else { ?>
-			<td style="border:red 2px solid; " align="right">
-				<?php }?>
-
-			<?php  echo $a->input();  ?>
+			<?php  echo $is_switch->input();  ?>
+                         
 			</td>
 		</tr>
 		<?php

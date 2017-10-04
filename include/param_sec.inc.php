@@ -30,6 +30,7 @@ require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 require_once NOALYSS_INCLUDE.'/lib/inplace_edit.class.php';
+require_once NOALYSS_INCLUDE.'/lib/inplace_switch.class.php';
 
 $http=new HttpInput();
 
@@ -119,57 +120,7 @@ if ( isset ($_GET["action"] ))
     $action=$http->get("action");
 
 }
-//----------------------------------------------------------------------
-// Action = save
-//----------------------------------------------------------------------
-if ( isset($_POST['ok']))
-{
-	try
-	{
-	$cn->start();
-        $user_id=$http->post('user_id',"numeric");
-        $sec_User=new User($cn,$user_id);
 
-	
-    /* now save all the actions */
-    $a=$cn->get_array('select ac_id from action');
-    /*
-     * @todo must be replaced by ajax
-     */
-    foreach ($a as $key)
-    {
-        $id=$key['ac_id'];
-        $priv=sprintf("action%d",$id);
-		if ( ! isset ($_POST[$priv]))
-		{
-			$cn->exec_sql("delete from user_sec_act where ua_act_id=$1",array($id));
-			continue;
-		}
-        $count=$cn->get_value('select count(*) from user_sec_act where ua_login=$1 '.
-                                      ' and ua_act_id=$2',array($sec_User->login,$id));
-        if ( $_POST[$priv] == 1 && $count == 0)
-        {
-            $cn->exec_sql('insert into user_sec_act (ua_login,ua_act_id)'.
-                                  ' values ($1,$2)',
-                                  array($sec_User->login,$id));
-
-        }
-        if ($_POST[$priv] == 0 )
-        {
-            $cn->exec_sql('delete from user_sec_act  where ua_login=$1 and ua_act_id=$2',
-                                  array($sec_User->login,$id));
-        }
-	 }
-	 $cn->commit();
-	} // end try
-	catch (Exception $e)
-	{
-		echo_warning ($e->getMessage());
-		record_log($e->getTraceAsString());
-		$cn->rollback();
-	}
-
-}
 
 
 
@@ -241,7 +192,6 @@ if ( $action == "view" )
     $sec_User=new User($cn,$user_id);
     $n_dossier_id=Dossier::id();
 
-    echo '<form method="post">';
     $sHref=sprintf ('export.php?act=PDF:sec&user_id=%s&'.$str_dossier ,
                     $user_id
                    );
@@ -312,10 +262,8 @@ if ( $action == "view" )
     include(NOALYSS_TEMPLATE.'/security_list_action.php');
     echo '</fieldset>';
     echo HtmlInput::button('Imprime',_('imprime'),"onclick=\"window.open('".$sHref."');\"");
-    echo HtmlInput::submit('ok',_('Sauve'));
-    echo HtmlInput::reset(_('Annule'));
 	echo $return;
-    echo '</form>';
+    
     ?>
         <script>
     function grant_ledgers(p_access)  {
@@ -349,19 +297,28 @@ if ( $action == "view" )
         remove_waiting_box();
     }
      function grant_action(p_value) {
-         var a_select=document.getElementsByTagName('select');
+         var a_select=document.getElementsByTagName('span');
          var i=0;
         var str_id="";
         for (i = 0;i < a_select.length;i++) {
           str_id = new String( a_select[i].id);
            if ( str_id.search(/action/) > -1 ) {
-             a_select[i].value=p_value;
-             if (p_value == 0 )  { a_select[i].parentNode.style.borderColor="red";}
-             else { a_select[i].parentNode.style.borderColor="green";}
-             a_select[i].parentNode.style.borderSize="2px";
-             }
+             if ( p_value == 1 ) {
+                 a_select[i].innerHTML='<img src="image/icon-on.png"/>';
+             } else {
+                 a_select[i].innerHTML='<img src="image/icon-off.png"/>';
+             } 
            }
-         
+         } // loop
+         new Ajax.Request("ajax_misc.php",{method:"get",
+                parameters:{
+                            op:"action_access_all",
+                            gDossier:<?php echo $n_dossier_id?>,
+                            method:"get",
+                            user_id:<?php echo $user_id;?>,
+                            access:p_value
+                            }
+                });
      }
     </script>
 <?php
