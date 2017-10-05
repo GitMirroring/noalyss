@@ -86,7 +86,7 @@ class HttpInput
         {
             if (func_num_args()==3)
             {
-                if (isset($this->array[$p_name]))
+                if (in_array($p_name,$this->array) )
                 {
                     $this->check_type($p_name, $p_type);
                     return $this->array[$p_name];
@@ -96,7 +96,7 @@ class HttpInput
                     return $p_default;
                 }
             }
-            if (!isset($this->array[$p_name]))
+            if (!in_array($p_name,$this->array))
             {
                 throw new Exception(_('Paramètre invalide')."[$p_name]",
                 EXC_PARAM_VALUE);
