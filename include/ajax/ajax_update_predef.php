@@ -54,7 +54,9 @@ $html="";
 
 $html.=HtmlInput::title_box(_("Modèle d'opérations"), 'modele_op_div', 'hide');
 $html.=$op->show_button('do.php?'.$url);
-
+$html.=' <p style="text-align: center">'.
+        HtmlInput::button_hide('modele_op_div').
+        '</p>';
 $html=escape_xml($html);
 header('Content-type: text/xml; charset=UTF-8');
 echo <<<EOF
