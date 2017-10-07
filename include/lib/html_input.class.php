@@ -273,7 +273,8 @@ class HtmlInput
     }
     static function warnbulle($p_comment)
     {
-        $r='<A tabindex="-1" style="font-size:124%;font-weight:bolder;display:inline;color:red;background-color:transparent;border-radius:9px;padding:0px;padding-left:7px;padding-right:7px;text-decoration:none;" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">&#9888;</A>';
+        $r='<A tabindex="-1" onmouseover="showBulle(\''.$p_comment.'\')"  onclick="showBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)"><img style="width:19px"  src="image/warning.png"/></A>';
+        
         return $r;
     }
     static function errorbulle($p_comment)
@@ -830,7 +831,7 @@ class HtmlInput
 	{
 		if ($mod=='close')	{$r=HtmlInput::anchor_close($div,$p_js); }else
 		if ($mod=='hide')	{$r=HtmlInput::anchor_hide("&#10761;","$('$div').hide();$p_js");} else
-		if ($mod=='zoom')	{$r='<span  id="span_'.$div.'" style="float:right;margin-right:5px;padding-top:3px">'.HtmlInput::anchor("&#11036;","",$p_js,' name="small'.$div.'" id="close_div" class="input_text"  ').'</span>'; } else
+		if ($mod=='zoom')	{$r='<span  id="span_'.$div.'" >'.'<img id="close_div"'.$p_js.'  src="image/popout.gif">'.'</span>'; } else
                 if ( $mod == 'custom')  {$r='<span  id="span_'.$div.'" style="float:right;margin-right:5px">'.$p_js."</span>";} else
                 if ( $mod == 'none')    {$r="" ; }
                     else 
