@@ -67,7 +67,7 @@ echo '<div class="content">';
 // Check privilege
 $p_jrn=$http->request("p_jrn", "string",-1);
 if (isset($_REQUEST['p_jrn']) &&
-		$g_user->check_jrn($_REQUEST['p_jrn']) == 'X')
+		$g_user->check_jrn($p_jrn) == 'X')
 {
 
 	NoAccess();
@@ -75,7 +75,7 @@ if (isset($_REQUEST['p_jrn']) &&
 }
 
 $Ledger->id = $p_jrn;
-echo $Ledger->display_search_form();
+
 //------------------------------
 // UPdate the payment
 //------------------------------
@@ -112,11 +112,12 @@ $offset = (isset($_GET['offset'])) ? $_GET['offset'] : 0;
 $bar = navigation_bar($offset, $max_line, $step, $page);
 
 echo $msg;
+echo $Ledger->display_search_form();
+echo $bar;
 echo '<form method="GET" id="fpaida" class="print">';
 echo HtmlInput::hidden("ac", $_REQUEST['ac']);
 echo HtmlInput::hidden('ledger_type',$ledger_type);
 echo dossier::hidden();
-echo $bar;
 
 list($count, $html) = $Ledger->list_operation($sql, $offset, $ask_pay);
 echo $html;
