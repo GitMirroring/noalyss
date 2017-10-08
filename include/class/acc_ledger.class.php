@@ -2934,7 +2934,7 @@ class Acc_Ledger extends jrn_def_sql
 		{
 			$fil_sec = $and . " jr_def_id in ( select uj_jrn_id " .
 					" from user_sec_jrn where " .
-					" uj_login='" . $_SESSION['g_user'] . "'" .
+					" uj_login='" .sql_string($_SESSION['g_user']) . "'" .
 					" and uj_priv in ('R','W'))";
 		}
 		$where = $fil_ledger . $fil_amount . $fil_date . $fil_desc . $fil_sec . $fil_amount . $fil_qcode . $fil_paid . $fil_account.$fil_date_paid;
