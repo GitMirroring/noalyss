@@ -39,7 +39,9 @@ class Inplace_Switch
     private $json;
     /// callback
     private $callback;
-
+    /// Supplemental javascript command, execute after the ajax script
+    private $jscript;
+    
     function __construct($p_name, $p_value)
     {
         $this->name=$p_name;
@@ -48,6 +50,7 @@ class Inplace_Switch
         $this->iconoff='<img src="image/icon-off.png"/>';
         $this->json=json_encode(['name'=>$p_name,"value"=>$p_value], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
         $this->callback="ajax.php";
+        $this->jscript="";
     }
 
     function input()
@@ -68,12 +71,23 @@ class Inplace_Switch
         echo '</span>';
         echo <<<EOF
         <script>
-{$this->name}.onclick=function() {new Ajax.Updater({$this->name},'{$this->callback}',{method:"get",parameters:{$this->json},evalScripts:true} );}
+{$this->name}.onclick=function() {new Ajax.Updater({$this->name},'{$this->callback}',{method:"get",parameters:{$this->json},evalScripts:true} );
+   {$this->jscript} 
+   }
 </script>
 EOF;
     }
+    public function get_jscript()
+    {
+        return $this->jscript;
+    }
 
-    public function get_json()
+    public function set_jscript($jscript)
+    {
+        $this->jscript=$jscript;
+    }
+
+        public function get_json()
     {
         return $this->json;
     }
