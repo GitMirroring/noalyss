@@ -162,10 +162,6 @@ if (isset($_REQUEST['bt_html']))
     $jrn_id=$http->get("jrn_id","numeric");
     
 	require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-        /*
-         * If it is not asked to print separately the ledger 
-         * or if a specific ledger is asked
-         */
             $Jrn = new Acc_Ledger($cn, $jrn_id);
             $Jrn->get_name();
             $ledger_type=$Jrn->get_type() ;
@@ -280,7 +276,6 @@ if (isset($_REQUEST['bt_html']))
 		//---
 		echo '<TABLE class="result">';
 		echo "<TR>" .
-		"<th> operation </td>" .
 		"<th>Date</th>" .
 		"<th> n° de pièce </th>" .
 		"<th>internal</th>" .
@@ -296,7 +291,6 @@ if (isset($_REQUEST['bt_html']))
 			$i++;
 			$class = ($i % 2 == 0) ? ' class="even" ' : ' class="odd" ';
 			echo "<tr $class>";
-			echo "<TD>" . $line['num'] . "</TD>";
 			echo "<TD>" . $line['date'] . "</TD>";
 			echo "<TD>" . h($line['jr_pj_number']) . "</TD>";
 			echo "<TD>" . HtmlInput::detail_op($line['jr_id'], $line['jr_internal']) . "</TD>";
@@ -336,7 +330,7 @@ if (isset($_REQUEST['bt_html']))
 		}
                 echo '<tr class="highlight">';
                 echo '<td>'._('Totaux').'</td>';
-                echo td().td().td().td().td();
+                echo td().td().td().td();
                 echo '<td class="num">'.nbm($tot_amount).'</td>';
                 echo '</tr>';
 		echo "</table>";
