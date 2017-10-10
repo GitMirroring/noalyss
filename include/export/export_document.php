@@ -33,8 +33,8 @@ $http=new HttpInput();
 
 $action = (isset($_REQUEST['a'])) ? $_REQUEST['a'] : 'sh';
 
-$id=$http->request('id','number');
-$ag_id=$http->request('ag_id','number');
+$id=$http->request('id','number','0');
+$ag_id=$http->request('ag_id','number',0);
 $value=$http->request('value',"string", null);
 
 /* Show the document */
