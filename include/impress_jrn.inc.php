@@ -31,7 +31,7 @@ load_all_script();
 $gDossier = dossier::id();
 global $g_user,$http;
 //-----------------------------------------------------
-// Show the jrn and date
+// Show the ledger and date
 //-----------------------------------------------------
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 
@@ -94,7 +94,6 @@ echo '</form>';
 ?>
 <?php
 
-
 echo '<FORM METHOD="GET">' . dossier::hidden();
 echo HtmlInput::get_to_hidden(array('ac', 'type'));
 echo HtmlInput::hidden('type', 'jrn');
@@ -109,22 +108,26 @@ print '</TR>';
 print '<TR>';
 // filter on the current year
 $filter_year = " where p_exercice='" . sql_string($exercice) . "'";
+// Get the from_periode and to_periode
+$from_periode=$http->get("from_periode","numeric","");
+$to_periode=$http->get("to_periode","numeric","");
 
 $periode_start = $cn->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode $filter_year order by p_start,p_end");
-$w->selected = (isset($_GET['from_periode'])) ? $_GET['from_periode'] : '';
+$w->selected =  $from_periode ;
+
 print td('Depuis') . $w->input('from_periode', $periode_start);
 print '</TR>';
 print '<TR>';
 
 $periode_end = $cn->make_array("select p_id,to_char(p_end,'DD-MM-YYYY') from parm_periode $filter_year order by p_start,p_end");
-$w->selected = (isset($_GET['to_periode'])) ? $_GET['to_periode'] : '';
+$w->selected =  $to_periode ;
 
 // By default , show last day of exercice
-     if ($w->selected== '' ){
-             $t_periode=new Periode($cn);
-             list($per_max,$per_min)=$t_periode->get_limit($exercice);
-             $w->selected=$per_min->p_id;
-     }
+if ($w->selected== '' ){
+        $t_periode=new Periode($cn);
+        list($per_max,$per_min)=$t_periode->get_limit($exercice);
+        $w->selected=$per_min->p_id;
+}
 print td('Jusque ') . $w->input('to_periode', $periode_end);
 print "</TR><TR>";
 $a = array(
@@ -135,9 +138,10 @@ $a = array(
 $w->selected = 1;
 print '</TR>';
 print '<TR>';
-$w->selected = (isset($_GET['p_simple'])) ? $_GET['p_simple'] : '1';
+$w->selected = (isset($simple)) ? $simple : '1';
 echo '<td>Style d\'impression '.HtmlInput::infobulle(32).'</td>' . $w->input('p_simple', $a);
 print "</TR>";
+
 echo '</TABLE>';
 print HtmlInput::submit('bt_html', _('Visualisation'));
 
@@ -152,72 +156,83 @@ echo '<hr>';
 //-----------------------------------------------------
 if (isset($_REQUEST['bt_html']))
 {
+    // Type of report : listing=1 , Accounting writing=0, detail =2
+    $simple=$http->get("p_simple","numeric");
+    
+    $jrn_id=$http->get("jrn_id","numeric");
+    
 	require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+        /*
+         * If it is not asked to print separately the ledger 
+         * or if a specific ledger is asked
+         */
+            $Jrn = new Acc_Ledger($cn, $jrn_id);
+            $Jrn->get_name();
+            $ledger_type=$Jrn->get_type() ;
+            switch ($simple)
+            {
+                    case "0":
+                        // List of accounting writing
+                            $Row = $Jrn->get_row($from_periode, $to_periode);
+                            break;
+                    case "1":
+                        // simple list of operations, one row / operation
+                            $Row = $Jrn->get_rowSimple($from_periode, $to_periode);
+                        
+                    case "2":
+                        // Detail for each operation
+                            $Row = $Jrn->get_rowSimple($from_periode, $to_periode);
+                            break;
+                    default:
+                            die(__FILE__ . ":" . __LINE__ . " error unknown style [$simple ] ");
+            }
+            $rep = "";
+            $hid = new IHidden();
+            echo '<div class="content">';
+            echo '<h2 class="info">' . h($Jrn->name) . '</h2>';
+            echo "<table>";
+            echo '<TR>';
+            echo '<TD><form method="GET" ACTION="?">' . dossier::hidden() .
+            $hid->input("type", "jrn") . $hid->input('p_action', 'impress') . "</form></TD>";
 
-	$d = var_export($_GET, true);
-	$Jrn = new Acc_Ledger($cn, $_GET['jrn_id']);
-	$Jrn->get_name();
-	switch ($_GET['p_simple'])
-	{
-		case "0":
-			$Row = $Jrn->get_row($_GET['from_periode'], $_GET['to_periode']);
-			break;
-		case "1":
-			$Row = $Jrn->get_rowSimple($_GET['from_periode'], $_GET['to_periode']);
-			break;
-		case "2":
-			$Row = $Jrn->get_rowSimple($_GET['from_periode'], $_GET['to_periode']);
-			break;
-		default:
-			var_dump($_GET['p_simple']);
-			die(__FILE__ . ":" . __LINE__ . " error unknown style ");
-	}
-	$rep = "";
-	$hid = new IHidden();
-	echo '<div class="content">';
-	echo '<h2 class="info">' . h($Jrn->name) . '</h2>';
-	echo "<table>";
-	echo '<TR>';
-        echo '<TD><form method="GET" ACTION="?">' . dossier::hidden() .
-        $hid->input("type", "jrn") . $hid->input('p_action', 'impress') . "</form></TD>";
+            echo '<TD><form method="GET" ACTION="export.php">' . dossier::hidden() .
+            HtmlInput::submit('bt_pdf', "Export PDF") .
+            HtmlInput::hidden('act', 'PDF:ledger') .
+            $hid->input("type", "jrn") .
+            $hid->input("jrn_id", $Jrn->id) .
+            $hid->input("from_periode", $from_periode) .
+            $hid->input("to_periode", $to_periode);
+            echo $hid->input("p_simple", $simple);
+            echo HtmlInput::get_to_hidden(array('ac', 'type'));
+            echo "</form></TD>";
 
-        echo '<TD><form method="GET" ACTION="export.php">' . dossier::hidden() .
-        HtmlInput::submit('bt_pdf', "Export PDF") .
-        HtmlInput::hidden('act', 'PDF:ledger') .
-        $hid->input("type", "jrn") .
-        $hid->input("jrn_id", $Jrn->id) .
-        $hid->input("from_periode", $_GET['from_periode']) .
-        $hid->input("to_periode", $_GET['to_periode']);
-        echo $hid->input("p_simple", $_GET['p_simple']);
-        echo HtmlInput::get_to_hidden(array('ac', 'type'));
-        echo "</form></TD>";
+            echo '<TD><form method="GET" ACTION="export.php">' . dossier::hidden() .
+            HtmlInput::submit('bt_csv', "Export CSV") .
+            HtmlInput::hidden('act', 'CSV:ledger') .
+            $hid->input("type", "jrn") .
+            $hid->input("jrn_id", $Jrn->id) .
+            $hid->input("from_periode", $from_periode) .
+            $hid->input("to_periode", $to_periode);
+            echo $hid->input("p_simple", $simple);
+            echo HtmlInput::get_to_hidden(array('ac', 'type'));
+            echo "</form></TD>";
 
-        echo '<TD><form method="GET" ACTION="export.php">' . dossier::hidden() .
-        HtmlInput::submit('bt_csv', "Export CSV") .
-        HtmlInput::hidden('act', 'CSV:ledger') .
-        $hid->input("type", "jrn") .
-        $hid->input("jrn_id", $Jrn->id) .
-        $hid->input("from_periode", $_GET['from_periode']) .
-        $hid->input("to_periode", $_GET['to_periode']);
-        echo $hid->input("p_simple", $_GET['p_simple']);
-        echo HtmlInput::get_to_hidden(array('ac', 'type'));
-        echo "</form></TD>";
+            echo '<td style="vertical-align:top">';
+            echo HtmlInput::print_window();
+            echo '</td>';
+            echo "</TR>";
 
-	echo '<td style="vertical-align:top">';
-	echo HtmlInput::print_window();
-	echo '</td>';
-	echo "</TR>";
-
-	echo "</table>";
-	if (count($Jrn->row) == 0
-			&& $Row == null)
-		exit;
+            echo "</table>";
+            if (count($Jrn->row) == 0
+                            && $Row == null)
+                    exit;
+        
 
 
 	/////////////////////////////////////////////////////////////////////////////////////
 	// Ecriture comptable
 	/////////////////////////////////////////////////////////////////////////////////////
-	if ($_GET['p_simple'] == 0)
+	if ($simple== 0)
 	{
 		echo '<TABLE class="result">';
 		// detailled printing
@@ -250,14 +265,14 @@ if (isset($_REQUEST['bt_html']))
 		echo "</table>";
 		// show the saldo
 
-		$solde = $Jrn->get_solde($_GET['from_periode'], $_GET['to_periode']);
+		$solde = $Jrn->get_solde($from_periode, $to_periode);
 		echo "solde d&eacute;biteur:" . $solde[0] . "<br>";
 		echo "solde cr&eacute;diteur:" . $solde[1];
 	} // if
 	/////////////////////////////////////////////////////////////////////////////////////
 	// Liste opérations
 	/////////////////////////////////////////////////////////////////////////////////////
-	elseif ($_GET['p_simple'] == 1)
+	elseif ($simple == 1)
 	{
             if ( $Jrn->get_type() != 'ACH' && $Jrn->get_type() != 'VEN')
             {
@@ -337,7 +352,7 @@ if (isset($_REQUEST['bt_html']))
 	/////////////////////////////////////////////////////////////////////////////////////
 	// Détaillé
 	/////////////////////////////////////////////////////////////////////////////////////
-	elseif ($_GET['p_simple'] == 2)
+	elseif ($simple == 2)
 	{
 		foreach ($Row as $line)
 		{
