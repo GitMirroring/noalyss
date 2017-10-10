@@ -72,7 +72,7 @@ $sql=$sql.$cond_poste.'  order by pcm_val::text';
 $a_poste=$cn->get_array($sql);
 
 $pdf = new PDF($cn);
-$pdf->setDossierInfo("  Periode : ".$from_periode." - ".$to_periode);
+$pdf->setDossierInfo(_("  Periode : ").$from_periode." - ".$to_periode);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->setTitle("Grand Livre",true);
@@ -85,7 +85,7 @@ if ( count($a_poste) == 0 )
 }
 
 // Header
-$header = array( "Date", "Référence", "Libellé", "Pièce","Let", "Débit", "Crédit", "Solde" );
+$header = array( _("Date"), _("Référence"), _("Libellé"), _("Pièce"),_("Let"), _("Débit"), _("Crédit"), _("Solde") );
 // Left or Right aligned
 $lor    = array( "L"   , "L"        , "L"      , "L"    , "R",   "R"    , "R"     , "R"     );
 // Column widths (in mm)
@@ -101,7 +101,7 @@ foreach ($a_poste as $poste)
 
   $array1=$Poste->get_row_date($from_periode,$to_periode,$l,$s);
   // don't print empty account
-  if ( count($array1) == 0 )
+  if ( count($array1[0]) == 0 )
     {
         continue;
     }
