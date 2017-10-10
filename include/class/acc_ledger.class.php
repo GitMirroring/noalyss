@@ -264,9 +264,9 @@ class Acc_Ledger extends jrn_def_sql
 				// reverse in QUANT_SOLD
 				$Res = $this->db->exec_sql("INSERT INTO quant_sold(
                                      qs_internal, qs_fiche, qs_quantite, qs_price, qs_vat,
-                                     qs_vat_code, qs_client, qs_valid, j_id)
+                                     qs_vat_code, qs_client, qs_valid, j_id,qs_vat_sided,qs_unit)
                                      SELECT $1, qs_fiche, qs_quantite*(-1), qs_price*(-1), qs_vat*(-1),
-                                     qs_vat_code, qs_client, qs_valid, $2
+                                     qs_vat_code, qs_client, qs_valid, $2,qs_vat_sided*(-1),qs_unit*(-1)
                                      FROM quant_sold where j_id=$3", array($p_internal, $j_id, $row));
 
 				if ($Res == false)
@@ -274,10 +274,10 @@ class Acc_Ledger extends jrn_def_sql
 				$Res = $this->db->exec_sql("INSERT INTO quant_purchase(
                                      qp_internal, j_id, qp_fiche, qp_quantite, qp_price, qp_vat,
                                      qp_vat_code, qp_nd_amount, qp_nd_tva, qp_nd_tva_recup, qp_supplier,
-                                     qp_valid, qp_dep_priv)
+                                     qp_valid, qp_dep_priv,qp_vat_sided,qp_unit)
                                      SELECT  $1, $2, qp_fiche, qp_quantite*(-1), qp_price*(-1), qp_vat*(-1),
                                      qp_vat_code, qp_nd_amount*(-1), qp_nd_tva*(-1), qp_nd_tva_recup*(-1), qp_supplier,
-                                     qp_valid, qp_dep_priv*(-1)
+                                     qp_valid, qp_dep_priv*(-1),qp_vat_sided*(-1),qp_unit*(-1)
                                      FROM quant_purchase where j_id=$3", array($p_internal, $j_id, $row));
 
 				if ($Res == false)

@@ -46,12 +46,7 @@ $http=new HttpInput();
 /**
  * Check if we receive the needed data (jr_id...)
  */
-if ( ! isset ($_REQUEST['act'])|| ! isset ($_REQUEST['jr_id'])
-     || ! isset ($_REQUEST['div']))
-  {
-    exit();
-  }
- global $g_user,$cn,$g_parameter;
+global $g_user,$cn,$g_parameter;
 mb_internal_encoding("UTF-8");
 
 try
@@ -559,10 +554,11 @@ case 'reverseop':
         ob_start();
         try
         {
+            $ext_date=$http->request("ext_date","date");
             $cn->start();
             $oLedger=new Acc_Ledger($cn,$ledger);
-            $oLedger->jr_id=$_REQUEST['jr_id'];
-            $oLedger->reverse($_REQUEST['ext_date']);
+            $oLedger->jr_id=$jr_id;
+            $oLedger->reverse($ext_date);
             $cn->commit();
             echo _("Opération extournée");
         }
