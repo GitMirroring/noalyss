@@ -1617,5 +1617,5 @@ GENERATE_LEGEND        = YES
 # the various graphs.
 
 DOT_CLEANUP            = YES
-UML_LIMIT_NUM_FIELDS   = 20
+UML_LIMIT_NUM_FIELDS   = 40
 
