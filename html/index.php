@@ -144,94 +144,7 @@ echo '<!doctype html><HTML>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<style>
-BODY {
-background-color:white;
-font-size:12px;
-font-family:sans-serif,arial;
-color:blue;
-}
-.cell , #recover_box p{
-font-size : 18px;
-}
-.remark {
-border: solid black 1px;
-font-family:sans-serif;
-font-size: 9px;
-color:blue;
-width:200px;
-padding:3px;
-}
-.gras {
-font-size:12px;
-font-family:sans-serif,arial;
-color:red;
-
-}
-.input_text {
-border:1px solid blue;
-margin:1px;
-padding: 10px;
-border-radius: 4px;
-font-size:18px;
-}
-.button {
-color:white;
-font-weight: bold;
-border:0px;
-text-decoration:none;
-font-family: helvetica,arial,sans-serif;
-background-image: url("image/bg-submit2.gif");
-background-repeat: repeat-x repeat-y;
-background-position: left;
-text-decoration:none;
-font-family: helvetica,arial,sans-serif;
-border-width:0px;
-padding:2px 4px 2px 4px;
-cursor:pointer;
-margin:31px 2px 1px 2px;
--moz-border-radius:2px 2px;
-border-radius:2px 2px;
-font-size : 20px;
-margin-bottom: 10px;
-}
-.button:hover {
-cursor:pointer;
-background-color:white;
-border-style:  solid;
-border-width:  0px;
-background-image: url("image/bg-submit3.gif");
-background-repeat: repeat-x repeat-y;
-}
-@media only screen and (max-width : 900px) {
-    #alternate_browser {
-        display : none;
-    }
-   #logo_id {
-    width:336px;
-    height:160px;
-    }
-    .input_text {
-        width:8em;
-    }
-}
-@media only screen and (min-width : 901px) {
-    #alternate_browser {
-        position:absolute;
-        bottom: 0px;
-        left:0px;
-        z-index: -1
-    }
-    #logo_id {
-    width:420px;
-    height:200px;
-    }
-    .input_text {
-        width: 24em;
-    }
-
-}
-</style>
+<link rel="stylesheet" type="text/css" href="index.css" media="screen">
 <script src="js/scripts.js" type="text/javascript"></script>
 </head>
 <BODY>';
@@ -262,7 +175,7 @@ if (isset ($_REQUEST['reconnect']) && isset ($_REQUEST['backurl'])) {
 }
 echo '
 <span style="background-color:#879ed4;color:white;padding-left:4px;padding-right:4px;">
-version  NOALYSS_VERSION - '.$my_domain.'
+Noalyss NOALYSS_VERSION - '.$my_domain.'
 </span>
 <BR>
 <BR>
@@ -270,12 +183,12 @@ version  NOALYSS_VERSION - '.$my_domain.'
 
 <BR>
 <center>
-<IMG SRC="image/logo6820.png" id="logo_id" alt="NOALYSS">
+<IMG SRC="image/logo-noalyss-7000-3.svg" id="logo_id" alt="NOALYSS">
 <BR>
 <BR>
 <BR>
 
-<form action="login.php" method="post" name="loginform">'.
+<form id="login_frm" action="login.php" method="post" name="loginform">'.
        $goto .
 '<TABLE><TR><TD>
 <TABLE  BORDER=0 CELLSPACING=0>
@@ -312,7 +225,7 @@ if ( $g_captcha == true )
 echo '
 <TR style="height:50px;vertical-align:bottom">
 <TD style="width:auto;text-align:center" colspan="2">
-<INPUT TYPE="SUBMIT"  style="width:250px;height:48px;-moz-border-radius:10px;border-radius:10px" class="button" NAME="login" value="Se connecter">
+<INPUT TYPE="SUBMIT"  style="width:158px;height:34px;-moz-border-radius:10px;border-radius:10px" class="button" NAME="login" value="Se connecter">
 </TD>
 </TR>
 </table>
