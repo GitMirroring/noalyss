@@ -2262,3 +2262,12 @@ span.inplace_edit_input
     font-size: 110%;
     cursor: none;
 }
+/*
+ * Icon to pop out on the dashboard
+ */
+#span_cal_div,#span_todo_listg_div,#span_last_operation_box_div,#span_last_operation_management_div {
+    float:right;
+    margin-right:5px;
+    padding-top:0px;
+    margin-top:0px;
+}

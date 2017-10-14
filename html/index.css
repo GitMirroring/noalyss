@@ -1,0 +1,103 @@
+
+BODY {
+background-color:white;
+font-size:12px;
+font-family:sans-serif,arial;
+color:blue;
+}
+.cell , #recover_box p{
+font-size : 18px;
+}
+.remark {
+border: solid black 1px;
+font-family:sans-serif;
+font-size: 9px;
+color:blue;
+width:200px;
+padding:3px;
+}
+
+.gras {
+font-size:12px;
+font-family:sans-serif,arial;
+color:red;
+
+}
+.input_text {
+border:1px solid blue;
+margin:1px;
+padding: 10px;
+border-radius: 4px;
+font-size:16px;
+font-size:1rem;
+}
+.button {
+color:white;
+font-weight: bold;
+border:0px;
+text-decoration:none;
+font-family: helvetica,arial,sans-serif;
+background-image: url("image/bg-submit2.gif");
+background-repeat: repeat-x repeat-y;
+background-position: left;
+text-decoration:none;
+font-family: helvetica,arial,sans-serif;
+border-width:0px;
+padding:2px 4px 2px 4px;
+cursor:pointer;
+margin:31px 2px 1px 2px;
+-moz-border-radius:2px 2px;
+border-radius:2px 2px;
+font-size : 1rem;
+margin-bottom: 10px;
+}
+.button:hover {
+cursor:pointer;
+background-color:white;
+border-style:  solid;
+border-width:  0px;
+background-image: url("image/bg-submit3.gif");
+background-repeat: repeat-x repeat-y;
+}
+@media only screen and (max-width : 900px) {
+    #alternate_browser {
+        display : none;
+    }
+   #logo_id {
+    height:160px;
+    }
+    .input_text {
+        width:8em;
+    }
+ 
+}
+@media only screen and (min-width : 1201px) {
+    #alternate_browser {
+        position:absolute;
+        bottom: 0px;
+        left:0px;
+        z-index: -1
+    }
+    #logo_id {
+    width:608px;
+    z-index:-1;
+    position:absolute;
+    top:230px;
+    left:688px;
+    height: 125px;
+    }
+    #login_frm {
+        position:absolute;
+        left:768px;
+        top:333px;
+    }
+    .input_text {
+        width: 24em;
+        width: 24rem;
+    }
+   #recover_link {
+    position:absolute;
+    margin-top:397px;
+    left:539px;
+}
+}
