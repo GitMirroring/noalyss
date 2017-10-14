@@ -248,16 +248,16 @@ case 'st':
                                   sql_string($fil));
             }
     }
-	if ( strpos($where," in ()") != 0)
-	{
-		 $html=HtmlInput::anchor_close('select_card_div');
-		 $html.=h2info(_('Choix de la catégorie'));
-		 $html.='<h3 class="notice">';
-		 $html.=_("Aucune catégorie de fiche ne correspond à".
-                " votre demande, le journal pourrait n'avoir accès à aucune fiche");
-		 $html.='</h3>';
-		 break;
-	}
+    if ( strpos($where," in ()") != 0)
+    {
+             $html=HtmlInput::anchor_close('select_card_div');
+             $html.=h2info(_('Choix de la catégorie'));
+             $html.='<h3 class="notice">';
+             $html.=_("Aucune catégorie de fiche ne correspond à".
+            " votre demande, le journal pourrait n'avoir accès à aucune fiche");
+             $html.='</h3>';
+             break;
+    }
     $sql.=" ".$where." order by fd_label";
 
     $array=$cn->get_array($sql);
@@ -271,15 +271,14 @@ case 'st':
     }
     else
     {
+        $list_fiche="";
         $r='';
+        
+	$r.='<div dd>';
 	$r.='<p  style="padding-left:2em">';
         $r.=_("Choisissez la catégorie de fiche à laquelle vous aimeriez ajouter une fiche").'</p>';
         
-	$r.='<div style="text-align:center">';
-        
         $msg=_('Choisissez une catégorie svp');
-        $r.='<form id="sel_type" method="GET" onsubmit="this.ipopup='.$ctl.";if ($('fd_id').value != 0 ) {dis_blank_card(this);return false;} else "
-                . "{ $('error_cat').innerHTML='".$msg."'; return false;}\">" ;
         $r.='<span id="error_cat" class="notice"></span>';
         $r.=dossier::hidden();
         $r.=(isset($ref))?HtmlInput::hidden('ref',1):'';
@@ -287,28 +286,40 @@ case 'st':
         $r.='<table id="cat_card_table" class="result">';
         for ($i=0;$i<count($array);$i++)
         {
+            $list_fiche.=sprintf("<fiche_cat_item>%d</fiche_cat_item>",$array[$i]['fd_id']);
             $class=($i%2==0)?' class="even" ':' class="odd" ';
             $r.='<tr '.$class.' id="select_cat_row_'.$array[$i]['fd_id'].'">';
             $r.='<td >';
-            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\')">'.h($array[$i]['fd_label']).'</a>';
+            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.')">'.h($array[$i]['fd_label']).'</a>';
             $r.='</td>';
             $r.='<td>';
-            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\')">'.h($array[$i]['fd_description']).'</a>';
+            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.')">'.h($array[$i]['fd_description']).'</a>';
             $r.='</td>';
            
              $r.="</tr>";
         }
+        
         $r.='</table>';
         $r.=HtmlInput::hidden('fd_id',0);
         $r.='<p style="text-align:center">';
-        $r.=HtmlInput::submit('st','choix');
-	$r.=HtmlInput::button('Annuler',_('Annuler')," onclick=\"removeDiv('$ctl')\" ");
+	$r.=HtmlInput::button('Fermer',_('Fermer')," onclick=\"removeDiv('$ctl')\" ");
 	$r.='</p>';
-        $r.='</form>';
         $r.='</div>';
         $html.=$r;
-
+        
     }
+    $xml=escape_xml($html);
+    header('Content-type: text/xml; charset=UTF-8');
+echo <<<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+<ctl>$ctl</ctl>
+<code>$xml</code>
+<fiche_cat>{$list_fiche}</fiche_cat>        
+</data>
+EOF;
+return;
+    
     break;
     /*----------------------------------------------------------------------
      * SC save card

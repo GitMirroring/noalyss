@@ -2758,23 +2758,14 @@ function show_description(p_id)
 
 }
 /**
- * Hightlight the row we select and restore previous one
- * @param {type} x
- * @returns {undefined}
- */
-var old_class = null;
-var old_select = null;
-
-function select_cat(x)
+ * Display an empty card to fill , with the right card category
+ * @param pn_fiche_card_id : fiche_def.fd_id
+ * @param pn_dossier_id
+  */
+function select_cat(pn_fiche_card_id,pn_dossier_id)
 {
-    if (old_select != null)
-    {
-        $(old_select).className = old_class;
-    }
-    old_select = $('select_cat_row_' + x);
-    old_class = old_select.className;
-    $(old_select).className = "highlight";
-    $('fd_id').value = x;
+    dis_blank_card({"ctl":"div_new_card","fd_id":pn_fiche_card_id,"op2":"bc","op":"card",gDossier:pn_dossier_id});
+    removeDiv('select_card_div');
 }
 /**
  * Show the DIV and hide the other, the array of possible DIV are

@@ -607,7 +607,19 @@ function select_card_type(obj)
                                   parameters:queryString,
                                   onFailure:errorFid,
                                   onSuccess:function(req) { 
-                                   
+                                      // Get all the category, 
+                                      var answer=req.responseXML.getElementsByTagName("fiche_cat_item");
+                                      if (answer.length == 0) {
+                                          alert_box(req.responseText);
+                                          return;
+                                      }
+                                      if ( answer.length == 1) {
+                                          // There is only one category of card
+                                          dis_blank_card({"ctl":"div_new_card","fd_id":answer[0].firstChild.nodeValue,"op2":"bc","op":"card",gDossier:dossier});
+                                          removeDiv(content);
+                                          remove_waiting_box();
+                                          return;
+                                      }
                                       fill_box(req);
                                        $('lk_cat_card_table').focus();
                                     }
