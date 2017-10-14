@@ -173,7 +173,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
             $result=$Poste->HtmlTable(null,$_GET['ople']);
             $table=ob_get_clean();
             if ( $result == 0) {
-            echo '<h2 class="title">'.$Poste->id." ".h($Poste->label).'</h2>';
+            echo '<h2 class="info">'.$Poste->id." ".h($Poste->label).'</h2>';
             echo $table;
             }
 	    echo '</div>';
@@ -269,7 +269,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
                 $result=$Poste->HtmlTable(null,$_GET['ople']);
                 $table=ob_get_clean();
                 if ( $result == 0) {
-                echo '<h2 class="title">'.$Poste->id." ".h($Poste->label).'</h2>';
+                echo '<h2 class="info">'.$Poste->id." ".h($Poste->label).'</h2>';
                 echo $table;
                 }
                 
