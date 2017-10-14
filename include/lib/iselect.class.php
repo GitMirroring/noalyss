@@ -68,7 +68,7 @@ class ISelect extends HtmlInput
 
             }
         }
-        $r='<span class="input_text_ro">'.$r.'</span>';
+      // $r='<span class="input_text_ro">'.$r.'</span>';
 	if ( $this->table == 1 )		  $a='<td>'.$r.'</td>';
         return $r;
     }
