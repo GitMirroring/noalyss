@@ -38,6 +38,7 @@ class HttpInput
      * @param $p_name name of the variable
      * @param $p_type type of the variable (number,string,date,array)
      * @throws Exception if the variable doesn't exist or type incorrect
+     * @todo Add regex:pattern
      */
     function check_type($p_name, $p_type)
     {

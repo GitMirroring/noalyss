@@ -18,17 +18,17 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-///@file
-///@brief Definition Manage_Table_SQL
+/*!\file
+ * \brief Definition Manage_Table_SQL
+ *
+ */
 
-/**
- * @brief Purpose is to propose a librairy to display a table content
+/*!\brief Purpose is to propose a librairy to display a table content
  * and allow to update and delete row , handle also the ajax call 
  * thanks the script managetable.js
-
  * 
  * Code for ajax , here we see the ajax_input for creating a dg box 
-  @code
+  \code
   $objet->set_pk($p_id);
   $objet->set_object_name($objet_name);
 
@@ -55,9 +55,9 @@
     echo $xml->save_XML();
   @endcode
  * @see ManageTable.js
+ * 
  */
-///@example test_manage_table_sql.php
-/// For ajax @example ajax_manage_table_sql.php
+
 class Manage_Table_SQL
 {
 
@@ -85,6 +85,8 @@ class Manage_Table_SQL
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the
      * permission for updating or deleting row
+     * @example test_manage_table_sql.php 
+     * @example ajax_manage_table_sql.php
      */
 
     function __construct(Data_SQL $p_table)
@@ -694,7 +696,7 @@ function check()
             $js=sprintf("%s.delete('%s','%s');", $this->object_name,
                     $p_row[$this->table->primary_key], $this->object_name
             );
-            echo HtmlInput::image_click("delete.gif", $js, _("Effacer"));
+            echo HtmlInput::image_click("trash-24.gif", $js, _("Effacer"));
             echo "</td>";
         }
     }
