@@ -1614,6 +1614,17 @@ div.box  {
     height: 380px;
     }
 }
+@media only screen and (max-width: 1155px) {
+    div#jrn_name_div
+    {
+        display: none;
+    }
+    #predef_form {
+    }
+    .visible_gt1155 {
+     display:none;   
+    }
+}
 div.box table{
     border-spacing:0px;
     font-size: 95%;

@@ -944,6 +944,9 @@ span.remain {
     }
     #predef_form {
     }
+    .visible_gt1155 {
+     display:none;   
+    }
 }
 @media only screen and (max-width: 900px) {
     #predef_form {
@@ -1764,6 +1767,18 @@ input[type="button"].tinybutton {
     background-repeat: repeat-x;
     background-position: left;
   
+  padding : 3px;
+  
+}
+.image_search:hover {
+    cursor:pointer;
+    width:16px;
+    height:16px;
+    vertical-align: top;
+    background-color: lightblue;
+    background-repeat: repeat-x;
+    background-position: left;
+   background-image: inherit;
   padding : 3px;
   
 }

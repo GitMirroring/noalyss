@@ -1184,6 +1184,9 @@ span.remain {
     }
     #predef_form {
     }
+     .visible_gt1155 {
+     display:none;   
+    }
 }
 @media only screen and (max-width: 900px) {
     #predef_form {
