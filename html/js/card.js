@@ -540,7 +540,7 @@ function  successFill_ipopcard(req,json)
  * a card
  *@param input field (obj) it must have the attribute ipopup
  *       possible attribute :
- *        - filter is the filter but with a  fd_id list, -1 means there  is no filter
+ *        - filter possible values are deb, cred, fd_id list, -1 means there  is no filter
  *        - ref if we want to refresh the window after adding a card
  *        - type type of card (supplier, customer...)
  *@see ajax_card.php

@@ -966,16 +966,18 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
         $flag_tva=$g_parameter->MY_TVA_USE;
         /* Add button */
-        $f_add_button=new IButton('add_card');
-        $f_add_button->label=_('Créer une nouvelle fiche');
-		$f_add_button->tabindex=-1;
-        $f_add_button->set_attribute('jrn',$this->id);
-        $f_add_button->javascript=" this.jrn=\$('p_jrn').value;select_card_type(this);";
-
-        $str_add_button="";
-        if ($g_user->check_action(FICADD)==1)
-        {
-                $str_add_button=$f_add_button->input();
+        
+        $str_add_button_tiers = "";
+        $str_add_button_item = "";
+        if ($g_user->check_action(FICADD) == 1) {
+            $js_deb="this.filter='deb';this.jrn=\$('p_jrn').value; select_card_type(this);";
+            $js_cred="this.filter='cred';this.jrn=\$('p_jrn').value; select_card_type(this);";
+            
+            // Button for adding customer
+            $str_add_button_tiers = HtmlInput::button_image($js_cred,"xx",'class="smallbutton image_search"',"image/bouton-plus.png");
+            
+            // Button for adding services or items to sale
+            $str_add_button_item = HtmlInput::button_image($js_deb,"xx",'class="smallbutton image_search"',"image/bouton-plus.png");
         }
         // The first day of the periode
         $oPeriode=new Periode($this->db);
@@ -1233,7 +1235,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             if ( $g_parameter->MY_UPDLAB == 'Y')
             {
                 $Span=new IText("e_march".$i."_label");
-                $Span->css_size="100%";
+                $Span->css_size="40";
             } else
             {
                 $Span=new ISpan("e_march".$i."_label");

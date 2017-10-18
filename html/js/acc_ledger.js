@@ -431,7 +431,6 @@ function compute_ledger(p_ctl_nb)
     g('e_quant' + p_ctl_nb).value = trim(g('e_quant' + p_ctl_nb).value);
     var quantity = g('e_quant' + p_ctl_nb).value;
     var querystring = 'gDossier=' + dossier + '&c=' + qcode + '&t=' + tva_id + '&p=' + price + '&q=' + quantity + '&n=' + p_ctl_nb;
-    $('sum').hide();
     var action = new Ajax.Request(
             "compute.php",
             {

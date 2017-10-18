@@ -248,12 +248,12 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 		$min_article=$this->get_min_row();
 
-		$f_add_button = new IButton('add_card');
-		$f_add_button->label = _('Créer une nouvelle fiche');
-		$f_add_button->set_attribute('ipopup', 'ipop_newcard');
-		$f_add_button->set_attribute('jrn', $this->id);
-		$f_add_button->javascript = " this.jrn=\$('p_jrn').value;select_card_type(this);";
-		$str_add_button = ($g_user->check_action(FICADD) == 1) ? $f_add_button->input() : "";
+		$str_add_button = "";
+                if ( $g_user->check_action(FICADD) == 1) {
+                   // Button for adding new tiers
+                    $js_deb="this.filter='deb';this.jrn=\$('p_jrn').value; select_card_type(this);";
+                    $str_add_button = HtmlInput::button_image($js_deb,"xx",'class="smallbutton image_search"',"image/bouton-plus.png");
+                }
 
 		// The first day of the periode
 		$pPeriode = new Periode($this->db);

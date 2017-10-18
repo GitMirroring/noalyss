@@ -1609,13 +1609,9 @@ class Acc_Ledger extends jrn_def_sql
 		$ret = "";
 		if ($g_user->check_action(FICADD) == 1)
 		{
-			/* Add button */
-			$f_add_button = new IButton('add_card');
-			$f_add_button->label = _('Créer une nouvelle fiche');
-			$f_add_button->set_attribute('ipopup', 'ipop_newcard');
-			$f_add_button->set_attribute('jrn', $this->id);
-			$f_add_button->javascript = " this.jrn=\$('p_jrn').value;select_card_type(this);";
-			$f_add_button->input();
+			// Button for adding customer
+                        $js_deb="this.filter='-1';this.jrn=\$('p_jrn').value; select_card_type(this);";
+                        $str_add_button= HtmlInput::button_image($js_deb,"xx",'class="smallbutton image_search"',"image/bouton-plus.png");
 		}
 		$wLedger = $this->select_ledger('ODS', 2);
 		if ($wLedger == null)
@@ -1707,8 +1703,6 @@ class Acc_Ledger extends jrn_def_sql
 		$ret.=HtmlInput::hidden('jrn_type', $this->get_type());
 		$info = HtmlInput::infobulle(0);
 		$info_poste = HtmlInput::infobulle(9);
-		if ($g_user->check_action(FICADD) == 1)
-			$ret.=$f_add_button->input();
 		$ret.='<table id="quick_item" style="position:float;width:100%">';
 		$ret.='<tr>' .
 				'<th style="text-align:left">Quickcode' . $info . '</th>' .
@@ -1794,7 +1788,7 @@ class Acc_Ledger extends jrn_def_sql
 			$deb->javascript = ' onChange="checkTotalDirect()"';
 
 			$ret.='<tr>';
-			$ret.='<td>' . $quick_code->input() . $quick_code->search() . '</td>';
+			$ret.='<td>' . $quick_code->input() . $quick_code->search() .$str_add_button. '</td>';
 			$ret.='<td>' . $poste->input() .
 					'<script> document.getElementById(\'poste' . $i . '\').onblur=function(){ if (trim(this.value) !=\'\') {document.getElementById(\'qc_' . $i . '\').value="";}}</script>' .
 					'</td>';
