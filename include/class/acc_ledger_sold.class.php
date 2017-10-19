@@ -491,6 +491,11 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             // Save the payer
             //----------------------------------------
             if ($e_mp != 0) {
+                /** 
+                 * Date
+                 */
+                $pay_date=($mp_date=="")?$e_date:$mp_date;
+                
                 /* mp */
                 $mp = new Acc_Payment($this->db, $e_mp);
                 $mp->load();
@@ -507,7 +512,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
 
                 /* Insert paid by  */
                 $acc_pay = new Acc_Operation($this->db);
-                $acc_pay->date = $e_date;
+                $acc_pay->date = $pay_date;
                 /* get the account and explode if necessary */
                 $sposte = $acfiche->strAttribut(ATTR_DEF_ACCOUNT);
                 // if 2 accounts, take only the debit one for customer
@@ -531,7 +536,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
 
                 /* Insert supplier  */
                 $acc_pay = new Acc_Operation($this->db);
-                $acc_pay->date = $e_date;
+                $acc_pay->date = $pay_date;
                 $acc_pay->poste = $poste;
                 $acc_pay->qcode = $e_client;
                 $acc_pay->amount = abs(round($famount, 2));
@@ -895,10 +900,12 @@ EOF;
             $r.=HtmlInput::hidden('e_comm_paiement', $e_comm_paiement);
             /* needed for generating a invoice */
             $r.=HtmlInput::hidden('qcode_benef', ${'e_mp_qcode_' . $e_mp});
+            $r.=HtmlInput::hidden('mp_date', ${'mp_date'});
 
             $fname = new Fiche($this->db);
             $fname->get_by_qcode(${'e_mp_qcode_' . $e_mp});
             $r.='<h2>' . "Payé par " . ${'e_mp_qcode_' . $e_mp} .
+                    " le ".${"mp_date"}.
                     " " . $fname->getName() . '</h2> ' . '<p class="decale">' . _('Déduction acompte ') . h($acompte) . '</p>' .
                     _('Libellé :') . h($e_comm_paiement) ;
             $r.='<br>';

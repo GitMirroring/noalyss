@@ -1707,7 +1707,7 @@ class Acc_Ledger extends jrn_def_sql
 		$ret.='<tr>' .
 				'<th style="text-align:left">Quickcode' . $info . '</th>' .
 				'<th style="text-align:left">' . _('Poste') . $info_poste . '</th>' .
-				'<th style="text-align:left">' . _('Libellé') . '</th>' .
+				'<th class="visible_gt800 visible_gt1155" style="text-align:left">' . _('Libellé') . '</th>' .
 				'<th style="text-align:left">' . _('Montant') . '</th>' .
 				'<th style="text-align:left">' . _('Débit') . '</th>' .
 				'</tr>';
@@ -1792,7 +1792,7 @@ class Acc_Ledger extends jrn_def_sql
 			$ret.='<td>' . $poste->input() .
 					'<script> document.getElementById(\'poste' . $i . '\').onblur=function(){ if (trim(this.value) !=\'\') {document.getElementById(\'qc_' . $i . '\').value="";}}</script>' .
 					'</td>';
-			$ret.='<td>' . $line_desc->input() . '</td>';
+			$ret.='<td class="visible_gt800 visible_gt1155">' . $line_desc->input() . '</td>';
 			$ret.='<td>' . $amount->input() . '</td>';
 			$ret.='<td>' . $deb->input() . '</td>';
 			$ret.='</tr>';
