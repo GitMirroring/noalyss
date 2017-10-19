@@ -328,6 +328,7 @@ function ledger_fin_add_row()
         new_tt = new_tt.replace(/e_other0_label/g, "e_other" + nb.value + '_label');
         new_tt = new_tt.replace(/dateop0/g, "dateop" + nb.value);
         newCell.innerHTML = new_tt;
+        newCell.className=rowToCopy.cells[e].className;
         new_tt.evalScripts();
     }
     g("e_other" + nb.value).value = "";
@@ -368,6 +369,7 @@ function ledger_add_row()
             new_tt = new_tt.replace(/compute_ledger\(0\)/g, "compute_ledger(" + nb.value + ")");
             new_tt = new_tt.replace(/clean_tva\(0\)/g, "clean_tva(" + nb.value + ")");
             newCell.innerHTML = new_tt;
+            newCell.className=ofirstRow.cells[e].className;
             new_tt.evalScripts();
         }
 
@@ -612,6 +614,7 @@ function quick_writing_add_row()
         new_tt = new_tt.replace(/ck0/g, "ck" + nb.value);
         new_tt = new_tt.replace(/ld0/g, "ld" + nb.value);
         newCell.innerHTML = new_tt;
+        newCell.className=rowToCopy.cells[e].className;
         new_tt.evalScripts();
     }
     $("qc_" + nb.value).value = "";
