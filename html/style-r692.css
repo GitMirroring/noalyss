@@ -681,8 +681,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 a#anchorbutton:hover, .button:hover,a.button:hover,div.content a.button:hover  {
     cursor:pointer;
     background-color:#FFFFFF;
-    border-style:  inset ;
-    color: #FF0000;
+    border-style:  ridge;
+    /*! color: #FF0000; */
     margin:1px 2px 1px 2px;
 
 }
@@ -731,7 +731,7 @@ background: linear-gradient(to bottom, #f6f6f6 0%,#e1e1e1 50%,#f1f1f1 51%,#fffff
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
     font-family: SansationLight;
      /*border-style:  inset ;*/
-    border-color:  darkblue;
+    /*! border-color:  darkblue; */
 
 }
 td.tool {
@@ -1817,6 +1817,7 @@ background: linear-gradient(to bottom, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
   padding : 3px;
   
+    background: darkgray;
 }
 /****************************************************************************
  * Aligned button
