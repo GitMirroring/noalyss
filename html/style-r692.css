@@ -657,15 +657,22 @@ a#anchorbutton, .button, a.button,div.content a.button {
     background-repeat: repeat-x;
     background-position: left;
     border-color:  #0000FF;
-    border-width:0px;
-    padding:4px;
+    border-width:1px;
+    padding:5px;
     margin:3px;
     cursor:pointer;
     margin:1px 2px 1px 2px;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-
+    border-style:  ridge ; 
+    border-color: grey ;
+background: #ffffff;
+background: -moz-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%);
+background: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+background: linear-gradient(to bottom, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
+    color: #746B6B;
     font-family: SansationLight;
     font-size: 0.80rem;
 }
@@ -682,34 +689,47 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     font-weight: bold;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
-    background-image: url("image/bg-submit2.gif");
-    background-repeat: repeat-x;
-    background-position: left;
+     /*! background-image: url("image/bg-submit2.gif"); */ 
+    /*! background-repeat: repeat-x; */
+    /*! background-position: left; */
     font-size:12px;
-    font-size:0.75rem;
+    font-size:0.85rem;
     font-family: SansationLight;
-    border-style:  outset ;
-    border-color:  #0000FF;
-    border-width:0;
-    padding-bottom: 3px;
-    padding-top: 3px;
-    padding-right: 3px;
-    padding-left:  3px;
+    border-style:  ridge ; 
+    border-color: grey ;
+    border-width:1px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-left:  5px;
     margin-top:3px;
     cursor:pointer;
     margin:1px 2px 1px 2px;
-    border-radius: 2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-
+    /*! border-radius: 1px; */
+    /*! -moz-border-radius: 2px; */
+    -webkit-border-radius: 5px;
+    font-family: SansationLight;
+  background: #ffffff;
+background: -moz-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%);
+background: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+background: linear-gradient(to bottom, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
+     color: #746B6B;
 }
 a#smallanchorbutton:hover, .smallbutton:hover,a.smallbutton:hover,div.content a.smallbutton:hover  {
     cursor:pointer;
     background-color:#FFFFFF;
-    color:whitesmoke;
+    color:darkblue;
     margin:1px 2px 1px 2px;
-    background-image: url("image/bg-submit3.gif");
+   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,f1f1f1+50,e1e1e1+51,f6f6f6+100;White+Gloss+%231 */
+background: #f6f6f6;
+background: -moz-linear-gradient(top, #f6f6f6 0%, #e1e1e1 50%, #f1f1f1 51%, #ffffff 100%);
+background: -webkit-linear-gradient(top, #f6f6f6 0%,#e1e1e1 50%,#f1f1f1 51%,#ffffff 100%);
+background: linear-gradient(to bottom, #f6f6f6 0%,#e1e1e1 50%,#f1f1f1 51%,#ffffff 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
     font-family: SansationLight;
+     /*border-style:  inset ;*/
+    border-color:  darkblue;
 
 }
 td.tool {
@@ -816,8 +836,8 @@ div.inner_box  {
     left:10%;
     border:1px solid #00008B;
 -moz-box-shadow: 10px 10px 5px #888;
--webkit-box-shadow: 10px 10px 5px #888;
-box-shadow: 10px 10px 5px #888;
+/*! -webkit-box-shadow: 10px 10px 5px #888; */
+box-shadow: 15px 15px 15px #888;
 font-size:14.4px;
 font-size:0.90rem;
 }
@@ -1516,7 +1536,8 @@ li.tabs:hover {
    li.tabs {
     display:inline;
     background-color: inherit;
-    color:inherit;margin-left: 2px;
+      
+
     padding: 15px 7px 0px 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -1541,6 +1562,8 @@ ul.tabs a {
     color:inherit;
     display:inline;
     white-space: nowrap;
+    width: 100%;
+    height: 100%;
     
 }
 ul.tabs a:hover {
@@ -1763,10 +1786,13 @@ input[type="button"].tinybutton {
     width:16px;
     height:16px;
     vertical-align: top;
-  background-image: url("image/bg-submit2.gif");
-    background-repeat: repeat-x;
-    background-position: left;
-  
+    border-style: ridge;
+    border:1px;    
+background: #cedce7;
+background: -moz-linear-gradient(top, #cedce7 29%, #596a72 100%);
+background: -webkit-linear-gradient(top, #cedce7 29%,#596a72 100%);
+background: linear-gradient(to bottom, #cedce7 29%,#596a72 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', endColorstr='#596a72',GradientType=0 );
   padding : 3px;
   
 }
@@ -1775,10 +1801,11 @@ input[type="button"].tinybutton {
     width:16px;
     height:16px;
     vertical-align: top;
-    background-color: lightblue;
-    background-repeat: repeat-x;
-    background-position: left;
-   background-image: inherit;
+    background: #ffffff;
+background: -moz-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%);
+background: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+background: linear-gradient(to bottom, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
   padding : 3px;
   
 }
