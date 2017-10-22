@@ -22,10 +22,10 @@ BODY {
     font-family: 'OpenSansRegular';
     padding : 0px;
     margin:0px;
-    color:#0000FF; 
+    color:darkblue; 
     /*font-size:0.9em;
     font-size:0.95rem;*/
-    background-color: #FBF9F4;
+    /*! background-color: #FBF9F4; */
 }
 input{
     font-family: 'OpenSansRegular';
@@ -74,7 +74,7 @@ h2 {
     color:#888;
     /*! margin:1px; */
     padding:1px;
-    font-style: italic;
+    /*! font-style: italic; */
     font-size:15px;
     font-size:1.2rem;
     margin-bottom: 0;
@@ -209,16 +209,18 @@ td.mtitle {
     padding: 0px;
     text-align:center;
     width:250px;
-    height :30px;
+    /*! height :30px; */
      border-radius:5px;
      -moz-border-radius: 5px;
      -webkit-border-radius: 5px;
-     background-color: lightsteelblue;
+     background-color: #5681B7;
     /*! border-style: solid; */
     /*! border-width: 1px; */
     border-color: darkblue;
     border-top-right-radius: 0px;
     border-bottom-left-radius: 0px;
+    /*! padding-top: 5px; */
+    /*! padding-bottom: 5px; */
 }
 @media only screen and (max-width:955px) {
     td.mtitle {
@@ -228,11 +230,13 @@ td.mtitle {
     }
 }
 td.mtitle a.mtitle {
-    color : darkblue;
+    color : white;
     display:block;
     /*! width:100%; */
     /*! height: 100%; */
     font-size:1rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 span.mtitle {
@@ -390,7 +394,7 @@ div.content a {
     padding: 0px;
     text-decoration: underline;
 /*! background: rgb(247, 192, 156) none repeat scroll 0% 0%; */
-color: #B30421;
+color: maroon;
 
 }
 
@@ -403,6 +407,8 @@ div.content a:hover {
     text-decoration: none;
     display: block;
 
+    /*! border-top-color: white; */
+    /*! border-top-style: solid; */
 }
 
 div.content td.mtitle a.mtitle {
@@ -680,7 +686,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 a#anchorbutton:hover, .button:hover,a.button:hover,div.content a.button:hover  {
     cursor:pointer;
-    background-color:#FFFFFF;
+    /*! background-color:gold; */
     border-style:  ridge;
     /*! color: #FF0000; */
     margin:1px 2px 1px 2px;
@@ -1051,6 +1057,7 @@ a.line:hover,div_content a.line
     font-size:1rem;
     cursor: pointer;
     border:0px;
+    height: 18px;
 }
 #close_div:hover
 {
@@ -1180,6 +1187,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8a8d9b', end
     margin-top: 0px;
     padding-bottom: 2px;
     
+    font-size: 1rem;
 }
 h3.title {
     color: #0000FF;
@@ -1220,6 +1228,7 @@ div.menu2 a.mtitle{
     font-size:13.6px;
     font-size:1rem;
     font-weight: normal;
+    color: darkblue;
     }
 div.menu3 {
 	font-size:13.6px;
@@ -1724,6 +1733,8 @@ table.vert_mtitle td {
 table.vert_mtitle td a{
     padding : 20px;
     font-weight: bold;
+    text-decoration: none;
+    color: darkblue;
 }
 table.vert_mtitle td:hover {
     border : 1px solid #99B1DF;
@@ -2027,11 +2038,23 @@ td.selectedmenu {
     box-shadow: none;
     color:blue;
     
+    margin-right: 20px;
 }
 #go_up a ,#go_up a:visited{
     background-image: none;
     text-decoration: none;
     color:blue;
+    font-size:2.7em;
+    font-size: 2.7rem;
+    /*! padding-right: 6px; */
+    padding: 0px;
+    margin: 0px;
+    background-color: whitesmoke;
+}
+#go_up a:hover {
+    background-color: gold;
+    font-size:2.8em;
+    font-size:2.8rem;
 }
 /*
  * Summary of operation , contains miscelleneous informations
