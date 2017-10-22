@@ -37,9 +37,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="279.70181"
-     inkscape:cy="34.819652"
+     inkscape:zoom="3.959798"
+     inkscape:cx="192.67146"
+     inkscape:cy="58.488379"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -56,7 +56,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -67,12 +67,13 @@
      transform="translate(0,-970.36218)">
     <g
        id="g3935"
-       transform="matrix(0.57896041,0,0,0.56949598,-44.979175,377.29868)">
+       transform="matrix(0.57896041,0,0,0.56949598,-44.979175,377.29868)"
+       style="stroke:#003380">
       <path
          inkscape:export-ydpi="599"
          inkscape:export-xdpi="599"
          inkscape:export-filename="/home/dany/developpement/phpcompta/noalyss/html/image/logo6820.png"
-         style="fill:#ffffff;fill-opacity:1;stroke:#5a92f4;stroke-width:0.82599998;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+         style="fill:#ffffff;fill-opacity:1;stroke:#003380;stroke-width:0.82599997999999997;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
          d="m 118.40641,1050.88 37.90114,0 c 6.22618,0 11.2386,5.0124 11.2386,11.2386 l 0,77.0119 c 0,6.2262 -5.01242,11.2386 -11.2386,11.2386 l -37.90114,0 c -6.22618,0 -11.2386,-5.0124 -11.2386,-11.2386 l 0,-77.0119 c 0,-6.2262 5.01242,-11.2386 11.2386,-11.2386 z"
          id="rect2987"
          inkscape:connector-curvature="0"
@@ -85,13 +86,13 @@
          inkscape:connector-curvature="0"
          id="path2990"
          d="m 124.51622,1060.7879 25.68152,0 c 4.21882,0 7.61519,3.3963 7.61519,7.6151 l 0,18.4669 c 0,4.2188 -3.39637,7.6152 -7.61519,7.6152 l -25.68152,0 c -4.21881,0 -7.61519,-3.3964 -7.61519,-7.6152 l 0,-18.4669 c 0,-4.2188 3.39638,-7.6151 7.61519,-7.6151 z"
-         style="fill:none;stroke:#5a92f4;stroke-width:0.72600001;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+         style="fill:none;stroke:#003380;stroke-width:0.72600001000000003;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
       <path
          inkscape:export-ydpi="599"
          inkscape:export-xdpi="599"
          inkscape:export-filename="/home/dany/developpement/phpcompta/noalyss/html/image/logo6820.png"
          sodipodi:type="arc"
-         style="fill:none;stroke:#5a92f4;stroke-width:1.4211731;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+         style="fill:none;stroke:#003380;stroke-width:1.42117310000000008;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
          id="path3770"
          sodipodi:cx="211.12189"
          sodipodi:cy="519.00165"
@@ -110,14 +111,14 @@
          sodipodi:cy="519.00165"
          sodipodi:cx="211.12189"
          id="path3772"
-         style="fill:none;stroke:#5a92f4;stroke-width:1.4211731;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+         style="fill:none;stroke:#003380;stroke-width:1.42117310000000008;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
          sodipodi:type="arc" />
       <path
          inkscape:export-ydpi="599"
          inkscape:export-xdpi="599"
          inkscape:export-filename="/home/dany/developpement/phpcompta/noalyss/html/image/logo6820.png"
          sodipodi:type="arc"
-         style="fill:none;stroke:#5a92f4;stroke-width:1.4211731;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+         style="fill:none;stroke:#003380;stroke-width:1.42117310000000008;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
          id="path3774"
          sodipodi:cx="211.12189"
          sodipodi:cy="519.00165"
@@ -136,14 +137,14 @@
          sodipodi:cy="519.00165"
          sodipodi:cx="211.12189"
          id="path3776"
-         style="fill:none;stroke:#5a92f4;stroke-width:1.4211731;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+         style="fill:none;stroke:#003380;stroke-width:1.42117310000000008;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
          sodipodi:type="arc" />
       <path
          inkscape:export-ydpi="599"
          inkscape:export-xdpi="599"
          inkscape:export-filename="/home/dany/developpement/phpcompta/noalyss/html/image/logo6820.png"
          sodipodi:type="arc"
-         style="fill:none;stroke:#5a92f4;stroke-width:1.4211731;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+         style="fill:none;stroke:#003380;stroke-width:1.42117310000000008;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
          id="path3778"
          sodipodi:cx="211.12189"
          sodipodi:cy="519.00165"
@@ -162,7 +163,7 @@
          sodipodi:cy="519.00165"
          sodipodi:cx="211.12189"
          id="path3780"
-         style="fill:none;stroke:#5a92f4;stroke-width:1.4211731;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+         style="fill:none;stroke:#003380;stroke-width:1.42117310000000008;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
          sodipodi:type="arc" />
       <path
          inkscape:export-ydpi="599"
@@ -173,28 +174,28 @@
          inkscape:path-effect="#path-effect3861"
          id="path3859"
          d="m 174.36084,1138.0706 0,0"
-         style="fill:#f8f9f9;fill-opacity:1;fill-rule:evenodd;stroke:#5992f5;stroke-width:0.72600001;stroke-miterlimit:4;stroke-opacity:0.67058824;stroke-dasharray:none;display:inline" />
+         style="fill:#f8f9f9;fill-opacity:1;fill-rule:evenodd;stroke:#003380;stroke-width:0.72600001000000003;stroke-miterlimit:4;stroke-opacity:0.67058823999999995;stroke-dasharray:none;display:inline" />
       <g
          inkscape:export-ydpi="599"
          inkscape:export-xdpi="599"
          inkscape:export-filename="/home/dany/developpement/phpcompta/noalyss/html/image/logo6820.png"
          transform="matrix(0.36816536,0,0,0.42620989,-270.59974,810.60605)"
          id="g3834"
-         style="display:inline">
+         style="display:inline;stroke:#003380">
         <g
            id="g5287"
            transform="translate(771.12741,-362.11738)"
-           style="stroke:#5a92f4;stroke-opacity:1">
+           style="stroke:#003380;stroke-opacity:1">
           <g
              id="g6916"
              transform="translate(15.732949,1.4983761)"
              inkscape:export-filename="/home/dany/data/professional/phpcompta-noalyss/doc-image-logo/new-logo/noalyss-web5.png"
              inkscape:export-xdpi="599"
              inkscape:export-ydpi="599"
-             style="stroke:#5a92f4;stroke-opacity:1">
+             style="stroke:#003380;stroke-opacity:1">
             <g
                transform="translate(-1.8995956,20.879914)"
-               style="fill:#000000;fill-opacity:0;stroke:#5a92f4;stroke-opacity:1"
+               style="fill:#000000;fill-opacity:0;stroke:#003380;stroke-opacity:1"
                id="g5284">
               <path
                  inkscape:export-filename="/home/dany/data/professional/phpcompta-noalyss/doc-image-logo/new-logo/noalyss-web5.png"
@@ -206,16 +207,16 @@
                  inkscape:path-effect="#path-effect3997"
                  id="path3995"
                  d="m 191.70307,1059.4468 45.84195,-117.49764 83.7126,190.70824 1.1011,-21.5026 20.28968,-175.46943 134.35537,0.46177"
-                 style="fill:#000000;fill-opacity:0;stroke:#5a92f4;stroke-width:22.74668884;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+                 style="fill:#000000;fill-opacity:0;stroke:#003380;stroke-width:22.74668884000000091;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
             </g>
           </g>
         </g>
         <g
-           style="stroke:#ffffff;stroke-width:18.83109665;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="stroke:#003380;stroke-width:18.83109664999999922;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
            transform="translate(771.12741,-362.11738)"
            id="g3826">
           <g
-             style="stroke:#ffffff;stroke-width:18.83109665;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+             style="stroke:#003380;stroke-width:18.83109664999999922;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
              inkscape:export-ydpi="599"
              inkscape:export-xdpi="599"
              inkscape:export-filename="/home/dany/data/professional/phpcompta-noalyss/doc-image-logo/new-logo/noalyss-web5.png"
@@ -223,10 +224,10 @@
              id="g3828">
             <g
                id="g3830"
-               style="fill:#000000;fill-opacity:0;stroke:#ffffff;stroke-width:18.83109665;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+               style="fill:#000000;fill-opacity:0;stroke:#003380;stroke-width:18.83109664999999922;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
                transform="translate(-1.8995956,20.879914)">
               <path
-                 style="fill:#000000;fill-opacity:0;stroke:#ffffff;stroke-width:18.83109665;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+                 style="fill:#000000;fill-opacity:0;stroke:#003380;stroke-width:18.83109664999999922;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
                  d="m 191.13372,1058.9549 46.4113,-116.02212 83.7126,189.72462 1.1011,-21.5026 20.28968,-175.46943 133.78602,-0.03"
                  id="path3832"
                  inkscape:path-effect="#path-effect3997"
@@ -259,7 +260,7 @@
          sodipodi:cx="70.236176"
          sodipodi:sides="8"
          id="path8179"
-         style="fill:#ffffff;fill-opacity:1;stroke:#5a92f4;stroke-width:0.50814277;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+         style="fill:#ffffff;fill-opacity:1;stroke:#003380;stroke-width:0.50814276999999997;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
          sodipodi:type="star" />
       <path
          transform="matrix(1.7188823,0,0,1.3279735,49.555559,1024.4529)"
@@ -269,12 +270,12 @@
          sodipodi:cy="107.43829"
          sodipodi:cx="31.861444"
          id="path3269-3"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#5a92f4;stroke-width:0.66188455;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#003380;stroke-width:0.66188455000000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
          sodipodi:type="arc" />
       <path
          id="path3269-6"
          d="m 124.02946,1138.6144 c -12.33737,0 -22.34375,6.092 -22.34375,13.625 0,5.9836 6.31493,11.0681 15.09375,12.9063 -0.66505,1.2922 -1.0625,2.6674 -1.0625,4.0937 0,7.5331 10.00638,13.625 22.34375,13.625 12.33738,0 22.34375,-6.0919 22.34375,-13.625 0,-1.5076 -0.41648,-2.9566 -1.15625,-4.3125 8.28206,-1.9956 14.15625,-6.9213 14.15625,-12.6875 0,-7.533 -10.00638,-13.625 -22.34375,-13.625 -5.08916,0 -9.77507,1.0316 -13.53125,2.7813 -3.75186,-1.7425 -8.42245,-2.7813 -13.5,-2.7813 z"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#5a92f4;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#003380;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
          inkscape:connector-curvature="0" />
       <path
          transform="matrix(1.7188823,0,0,1.3279735,114.32652,1021.9376)"
@@ -284,12 +285,12 @@
          sodipodi:cy="107.43829"
          sodipodi:cx="31.861444"
          id="path3269-7"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#5a92f4;stroke-width:0.66188455;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#003380;stroke-width:0.66188455000000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
          sodipodi:type="arc" />
     </g>
     <text
        xml:space="preserve"
-       style="font-size:27.68781281px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#a7c5f9;stroke-width:0.79344052;stroke-opacity:1;font-family:Danube;-inkscape-font-specification:Danube"
+       style="font-size:27.68781281000000050px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#003380;stroke-width:0.79344051999999998;stroke-opacity:1;font-family:Danube;-inkscape-font-specification:Danube"
        x="82.762955"
        y="830.32202"
        id="text3959"
@@ -299,6 +300,6 @@
          id="tspan3961"
          x="82.762955"
          y="830.32202"
-         style="stroke-width:0.79344052">Noalyss comptabilite</tspan></text>
+         style="stroke-width:0.79344051999999998;stroke:#003380">Noalyss comptabilite</tspan></text>
   </g>
 </svg>
