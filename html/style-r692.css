@@ -704,7 +704,7 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     font-size:0.85rem;
     font-family: SansationLight;
     border-style:  ridge ; 
-    border-color: grey ;
+    /*! border-color: grey ; */
     border-width:1px;
     padding-bottom: 5px;
     padding-top: 5px;
@@ -739,6 +739,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
      /*border-style:  inset ;*/
     /*! border-color:  darkblue; */
 
+    border-color: grey;
 }
 td.tool {
     border: solid 1px gray;
