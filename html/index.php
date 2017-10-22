@@ -183,7 +183,7 @@ Noalyss NOALYSS_VERSION - '.$my_domain.'
 
 <BR>
 <center>
-<IMG SRC="image/logo-noalyss-7000-3.svg" id="logo_id" alt="NOALYSS">
+<IMG SRC="image/logo-noalyss-7000-6.svg" id="logo_id" alt="NOALYSS">
 <BR>
 <BR>
 <BR>
