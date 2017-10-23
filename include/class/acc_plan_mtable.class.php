@@ -56,6 +56,7 @@ class Acc_Plan_MTable extends Manage_Table_SQL
             ["label"=>_("Contexte"),"value"=>"CON"]
         ]);
         $this->a_order=["pcm_val","pcm_lib","parent_accounting","pcm_type","fiche_qcode"];
+        $this->set_icon_mod("first");
     }
     /**
      * Display a row

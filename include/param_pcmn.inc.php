@@ -74,6 +74,7 @@ echo $mtable->display_table(" where pcm_val::text like '{$g_start}%' order by pc
 /* it will override the classic onscroll (see scripts.js)
  * @see scripts.js
 */
+
     ?>
     <div id="go_up" class="inner_box" style="padding:0px;left:auto;width:250px;height: 100px;display:none;position:fixed;top:5px;right:20px">
         <?php echo HtmlInput::title_box(_('Navigation'), 'go_up', "none");?>
@@ -93,6 +94,9 @@ echo $mtable->display_table(" where pcm_val::text like '{$g_start}%' order by pc
         } else {
             $('go_up').hide();
         }
+     }
+     $('pcmn_update_add_bt3').onclick=function() {
+         <?php printf("%s.input(-1,'%s')",$mtable->get_object_name(),$mtable->get_object_name());?>
      }
 </script>
 <?php
