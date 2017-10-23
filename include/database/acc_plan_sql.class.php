@@ -83,6 +83,14 @@ class Acc_Plan_SQL extends Data_SQL
     public function delete()
     {
         $obj=new Tmp_Pcmn_SQL($this->cn,$this->id);
+        if ( $this->cn->get_value("select count(*) from jrnx where j_poste=$1",[$obj->pcm_val]) > 0)
+        {
+            throw new Exception(_("Impossible d'effacer : ce poste est utilisé"));
+        }
+        if ( $this->cn->get_value("select count(*) from tmp_pcmn where pcm_val_parent=$1",[$obj->pcm_val]) > 0)
+        {
+            throw new Exception(_("Impossible d'effacer : ce poste est utilisé"));
+        }
         return $obj->delete();
         
     }
@@ -103,7 +111,10 @@ class Acc_Plan_SQL extends Data_SQL
         $obj->insert();
         $this->id=$obj->id;
     }
-
+    public function get_pk_value()
+    {
+        return $this->id;
+    }
     public function load()
     {
         $pk=$this->primary_key;

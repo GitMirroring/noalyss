@@ -579,12 +579,15 @@ function check()
         }
         $nb_order=count($this->a_order);
         $virg=""; $result="";
+        // filter only on visible column
+        $visible=0;
         for ($e=0; $e<$nb_order; $e++)
         {
             if ($this->get_property_visible($this->a_order[$e])==TRUE)
             {
-                $result.=$virg."$e";
+                $result.=$virg."$visible";
                 $virg=",";
+                $visible++;
             }
         }
         echo _('Cherche')." ".HtmlInput::filter_table("tb".$this->object_name, $result, 1);
@@ -1001,7 +1004,7 @@ function check()
             $s1=$xml->createElement("status", "NOK");
             $s2=$xml->createElement("ctl",
                     $this->object_name."_".$this->table->get_pk_value());
-            $s3=$xml->createElement("html", $ex->getTraceAsString());
+            $s3=$xml->createElement("html", $ex->getMessage());
             $s4=$xml->createElement("ctl", $this->object_name);
 
             $root=$xml->createElement("data");

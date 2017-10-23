@@ -201,7 +201,8 @@ abstract class Noalyss_SQL extends Data_SQL
         }
         $sql.=") values (".$par.") returning ".$this->primary_key;
         $pk=$this->primary_key;
-        $this->$pk=$this->cn->get_value($sql, $array);
+        $returning=$this->cn->get_value($sql, $array);
+        $this->$pk=$returning;
     }
 
     public function delete()

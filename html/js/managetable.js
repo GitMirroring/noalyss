@@ -267,7 +267,7 @@ var ManageTable = function (p_table_name)
                         $(x).remove();
                         alternate_row_color("tb"+answer['ctl']);
                         }else {
-                             smoke.alert("Effacement impossible");
+                             smoke.alert(answer['html']);
                         }
                     }
                 }); 

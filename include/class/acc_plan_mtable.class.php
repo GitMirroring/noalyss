@@ -55,6 +55,7 @@ class Acc_Plan_MTable extends Manage_Table_SQL
             ["label"=>_("Produit inversé"),"value"=>"PROINV"],
             ["label"=>_("Contexte"),"value"=>"CON"]
         ]);
+        $this->a_order=["pcm_val","pcm_lib","parent_accounting","pcm_type","fiche_qcode"];
     }
     /**
      * Display a row
@@ -112,9 +113,18 @@ class Acc_Plan_MTable extends Manage_Table_SQL
         if ( trim($this->table->parent_accounting) == "") {
             $this->set_error("parent_accounting", _("Poste comptable dépendant ne peut pas être vide"));
         }
+        /**
+         * Check that the parent accounting does exist
+         */
+        $exist_parent=$cn->get_value("select count(*) from tmp_pcmn where pcm_val = $1 ",
+                    array($this->table->parent_accounting));
+        if ($exist_parent == 0) {
+            $this->set_error("parent_accounting", _("Compte parent n'existe pas"));
+        }
         if ( count($this->aerror) > 0 ) return false;
         return true;
     }
+    
    
     
 }
