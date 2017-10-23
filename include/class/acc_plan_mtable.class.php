@@ -74,6 +74,10 @@ class Acc_Plan_MTable extends Manage_Table_SQL
         for ($i=0; $i<$nb_order; $i++)
         {
             $v=$this->a_order[$i];
+            $nb=0;
+            $cn=Dossier::connect();
+            $nb=$cn->get_value("select count(*) from jrnx where j_poste=$1",[$p_row['pcm_val']]);
+            $nb+=$cn->get_value("select count(*) from tmp_pcmn where pcm_val_parent=$1",[$p_row['pcm_val']]);
             if ($v=="pcm_val")
             {
                 $js=sprintf("onclick=\"%s.input('%s','%s');\"", $this->object_name,
@@ -90,8 +94,8 @@ class Acc_Plan_MTable extends Manage_Table_SQL
             }
             elseif ($v=="pcm_lib")
             {
-                $cn=Dossier::connect();
-                if ( $cn->get_value("select count(*) from jrnx where j_poste=$1",[$p_row['pcm_val']])>0){
+                
+                if ( $nb >0){
                     echo "<td>";
                     echo HtmlInput::history_account($p_row['pcm_val'],h($p_row["pcm_lib"]));
                     echo "</td>";
@@ -106,8 +110,8 @@ class Acc_Plan_MTable extends Manage_Table_SQL
                 echo td($p_row[$v]);
             }
         }
-        $this->display_icon_del($p_row);
-
+        if ( $nb == 0 ) $this->display_icon_del($p_row);
+        else echo td("&nbsp;");
 
 
         echo '</tr>';
