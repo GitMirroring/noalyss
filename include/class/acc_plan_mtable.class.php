@@ -78,7 +78,7 @@ class Acc_Plan_MTable extends Manage_Table_SQL
                 $js=sprintf("onclick=\"%s.input('%s','%s');\"", $this->object_name,
                         $p_row[$this->table->primary_key], $this->object_name);
                 echo sprintf('<td sort_type="text" sort_value="X%s">%s',
-                htmlspecialchars($p_row[$v]),
+                        htmlspecialchars($p_row[$v]),
                         HtmlInput::anchor($p_row[$v], "", $js)).'</td>';
             }
             elseif ($v == "fiche_qcode") {
@@ -87,10 +87,22 @@ class Acc_Plan_MTable extends Manage_Table_SQL
                elseif ($count == 1 ) { echo td($p_row[$v]) ; }
                elseif ($count > 1) { echo td($p_row[$v] . " ($count) ");} 
             }
+            elseif ($v=="pcm_lib")
+            {
+                $cn=Dossier::connect();
+                if ( $cn->get_value("select count(*) from jrnx where j_poste=$1",[$p_row['pcm_val']])>0){
+                    echo "<td>";
+                    echo HtmlInput::history_account($p_row['pcm_val'],h($p_row["pcm_lib"]));
+                    echo "</td>";
+                } else {
+                    echo td($p_row[$v]);
+                }
+
+            }
             else
             {
                 if ( ! $this->get_property_visible($v)) continue;
-                    echo td($p_row[$v]);
+                echo td($p_row[$v]);
             }
         }
         $this->display_icon_del($p_row);
