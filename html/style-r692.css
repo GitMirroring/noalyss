@@ -35,6 +35,11 @@ input{
     font-size:14px;
     
 }
+input:focus {
+    border:solid 1px orange;
+    margin:1px;
+    background-color:  lightyellow;
+}
 .notice {
     color:#FF0000;
     font-style: italic;
@@ -260,6 +265,7 @@ tr.odd {
 .highlight {
     font-weight: bolder;
     font-size:14px;
+    font-size:1.05rem;
 }
 tr.highlight {
     font-weight: bold;
@@ -465,10 +471,10 @@ a.document:hover {
     margin:1px;
     border-radius: 2px;
 }
-.input_text:hover {
-    border:solid 1px #0000FF;
+.input_text:focus {
+   border:solid 1px orange;
     margin:1px;
-    background-color:  #F93;
+    background-color:  lightyellow;
 }
 h1.legend, legend {
     font-weight: bold;
@@ -1189,6 +1195,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8a8d9b', end
     padding-bottom: 2px;
     
     font-size: 1rem;
+    height: 25px;
 }
 h3.title {
     color: #0000FF;
@@ -1264,6 +1271,11 @@ textarea.itextarea{
     height:120px;
 }
 
+textarea.itextarea:focus {
+    border:solid 1px orange;
+    margin:1px;
+    background-color:  lightyellow;
+}
 div#notice {
     position:absolute;
     right:5%;

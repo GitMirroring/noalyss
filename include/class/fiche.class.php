@@ -464,7 +464,7 @@ class Fiche
                     }
 
                 }
-                $r.="<TR>".td(_("Poste Comptable"),' class="input_text" ' ).td($w->input().$msg)."</TR>";
+                $r.="<TR>".td(_("Poste Comptable"),' class="highlight input_text" ' ).td($w->input().$msg)."</TR>";
                 continue;
             }
             elseif ( $attr->ad_id == ATTR_DEF_TVA)
@@ -529,7 +529,11 @@ class Fiche
             {
                     $bulle=HtmlInput::infobulle(21);
             }
-            $r.="<TR>" . td(_($w->label)." $bulle", ' class="input_text" ') . td($w->input()." $msg")." </TR>";
+            if ($attr->ad_id == ATTR_DEF_NAME || $attr->ad_id== ATTR_DEF_QUICKCODE) 
+                $class=" input_text highlight info";
+            else
+                $class="input_text";
+            $r.="<TR>" . td(_($w->label)." $bulle", ' class="'.$class.'" ') . td($w->input()." $msg")." </TR>";
         }
         $r.= '</table>';
         return $r;
@@ -708,7 +712,12 @@ class Fiche
             {
                 $bulle=HtmlInput::infobulle(21);
             }
-            $ret.="<TR>".td(_($r->ad_text).$bulle).td($w->input()." ".$msg)." </TR>";
+            if ($r->ad_id == ATTR_DEF_NAME || $r->ad_id== ATTR_DEF_QUICKCODE||$r->ad_id==ATTR_DEF_ACCOUNT) 
+                $class=" input_text highlight info";
+            else
+                $class="input_text";
+
+            $ret.="<TR>".td(_($r->ad_text).$bulle,'class="'.$class.'"').td($w->input()." ".$msg)." </TR>";
         }
 
         $ret.="</table>";
