@@ -1093,7 +1093,7 @@ table.table_large tr.odd ,table.table_large tr.even {
 }
 #calc1
 {
-    position:absolute;
+    position:fixed;
     display:block;
     top:30px;
     left:150px;

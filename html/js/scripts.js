@@ -1059,7 +1059,7 @@ function show_calc()
     }
     var sid = 'calc1';
     var shtml = '';
-    shtml += '<div style="float:right;height:10px;display:block;margin-top:2px;margin-right:2px">	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" id="close_div">Fermer</a></div>';
+    shtml += '<div style="float:right;height:10px;display:block;margin-top:2px;margin-right:2px">	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" id="close_div">X</a></div>';
     shtml += '<div>   <h2 class="info">Calculatrice</h2></div>';
     shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >Calculatrice simplifiée: écrivez simplement les opérations que vous voulez puis la touche retour. exemple : 1+2+3*(1/5) <input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface tout" class="button" onClick="Clean();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
     shtml += '</form><span id="result">  </span><br><span id="sub_total">  Taper une formule (ex 20*5.1) puis enter  </span><br><span id="listing"> </span>';
@@ -2846,10 +2846,10 @@ function create_anchor_up()
 function init_scroll()
 {
     var up=new Element('div',{"class":"inner_box",
-            "style":"padding:10px;left:auto;width:30px;height: auto;display:none;position:fixed;top:25px;right:20px;text-align:center",
+            "style":"padding:10px;left:auto;width:60px;height: auto;display:none;position:fixed;top:25px;right:20px;text-align:center",
             id:"go_up"
         });
-        up.innerHTML=' <a class="button" href="#up_top" >&#8679;</a>';
+        up.innerHTML=' <a class="button" href="#up_top" ><img src="image/arrow-up.svg"/></a><a href="javascript:show_calc()" class="button"><img src="image/compute.svg"/></a>';
         document.body.appendChild(up);
          window.onscroll=function () {
          if ( document.viewport.getScrollOffsets().top> 0) {
