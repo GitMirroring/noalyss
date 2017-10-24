@@ -25,7 +25,7 @@
  */
 var ask_reload = 0;
 var tag_choose = '';
-
+var aDraggableElement=new Array();
 /**
  * callback function when we just need to update a hidden div with an info
  * message
@@ -671,11 +671,13 @@ function create_div(obj)
          else if ( ! obj.effect ){ Effect.Grow(obj.id,{direction:'top-right',duration:0.1}); }*/
         if (obj.drag)
         {
-            new Draggable(obj.id, {starteffect: function ()
+            aDraggableElement[obj.id]=new Draggable(obj.id, {starteffect: function ()
                 {
                     new Effect.Highlight(obj.id, {scroll: window, queue: 'end'});
                 }}
             );
+           
+            
         }
         return elt;
     }
@@ -2958,4 +2960,22 @@ function alternate_row_color(p_table)
         }
     }
 
+}
+/**
+ * Make an DOM element draggable or not
+ * @param object_id DOM id
+ */
+function pin (object_id) {
+    if ( aDraggableElement[object_id]) {
+        aDraggableElement[object_id].destroy();
+        aDraggableElement[object_id]=undefined;
+        $('pin_'+object_id).firstChild.innerHTML="&oplus;";
+    } else {
+        aDraggableElement[object_id]=new Draggable(object_id, {starteffect: function ()
+                {
+                    new Effect.Highlight(object_id, {scroll: window, queue: 'end'});
+                }}
+            ); 
+        $('pin_'+object_id).firstChild.innerHTML="&#10057;";
+    }
 }

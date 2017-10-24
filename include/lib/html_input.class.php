@@ -824,20 +824,43 @@ class HtmlInput
          * @param type $div element id, except for mode none or custom
          * @param type $mod hide , close , zoom , custom or none, with
          * custom , the $name contains all the code
-         * @param type $p_js contains the javascript with "custom" contains button + code 
+         * @param type $p_js contains the javascript if mod = "custom" or "zoom" contains button + code 
          * @return type
          */
-	static function title_box($name,$div,$mod="close",$p_js="")
+	static function title_box($p_name,$p_div,$p_mod="close",$p_js="",$p_draggable="y")
 	{
-		if ($mod=='close')	{$r=HtmlInput::anchor_close($div,$p_js); }else
-		if ($mod=='hide')	{$r=HtmlInput::anchor_hide("&#10761;","$('$div').hide();$p_js");} else
-		if ($mod=='zoom')	{$r='<span  id="span_'.$div.'" >'.'<img id="close_div"'.$p_js.'  src="image/popout.gif">'.'</span>'; } else
-                if ( $mod == 'custom')  {$r='<span  id="span_'.$div.'" style="float:right;margin-right:5px">'.$p_js."</span>";} else
-                if ( $mod == 'none')    {$r="" ; }
-                    else 
-                            die (__FILE__.":".__LINE__._('Paramètre invaide'));
-		$r.=h2($name,' class="title" ');
-		return $r;
+            $r="";
+            if ($p_mod=='close'){
+                $r=HtmlInput::anchor_close($p_div,$p_js); 
+                
+            }
+            elseif ($p_mod=='zoom') {
+            $r='<span  id="span_'.$p_div.'" style="float:right;margin-right:5px;padding-top:3px">'.HtmlInput::anchor("&#11036;","",$p_js,' name="small'.$p_div.'" id="close_div" class="input_text"  ').'</span>'; 
+
+            }
+            elseif ($p_mod=='hide') {
+                $r=HtmlInput::anchor_hide("&#10761;","$('$p_div').hide();$p_js");
+                
+            }
+            elseif ($p_mod=='zoom')	{
+                $r='<span  id="span_'.$div.'" >'.'<img id="close_div"'.$p_js.'  src="image/popout.gif">'.'</span>';
+            } 
+            else
+            if ( $p_mod == 'custom')  
+                {$r='<span  id="span_'.$p_div.'" style="float:right;margin-right:5px">'.$p_js."</span>";} else
+            if ( $p_mod == 'none')    {$r="" ; }
+            else 
+                die (__FILE__.":".__LINE__._('Paramètre invaide'));
+            
+            if ( $p_draggable=="y") {
+                $drag=sprintf('<span id="pin_%s" style="float:right;margin:0px;padding:0px;margin-right:25px;padding-top:2px;font-size:120%%;border-width:0px" ><a class="input_text" onclick="pin(\'%s\')" id="close_div"> &#8631; </a></span>',
+                    $p_div,
+                    $p_div);
+            $r.=$drag;
+                
+            }
+            $r.=h2($p_name,' class="title" ');
+            return $r;
 	}
         /**
          * @brief let you create only a link and set an id on it.
@@ -873,10 +896,12 @@ class HtmlInput
           if ($p_js != "")
           {
               $p_url="javascript:void(0)";
+          } else {
+              $p_url=sprintf('href="%s"',$p_url);
           }
 
 
-          $str=sprintf('<a %s href="%s" %s>%s</a>',
+          $str=sprintf('<a %s %s %s>%s</a>',
                   $p_style,$p_url,$p_js,$p_text);
           return $str;
       }

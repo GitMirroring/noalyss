@@ -3,11 +3,11 @@
 //see licence.txt
 ?><!-- left div -->
 <div id="calendar_box_div" class="box">
-<?php echo HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"onclick=\"calendar_zoom($obj)\"");?>
+<?php echo HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"onclick=\"calendar_zoom($obj)\"",'n');?>
 <?php echo $cal->display('short',0); ?>
 </div>
 
-<div id="todo_listg_div" class="box"> <?php echo HtmlInput::title_box(_('Pense-Bête'),"todo_listg_div",'zoom'," onclick=\"zoom_todo()\"")?>
+<div id="todo_listg_div" class="box"> <?php echo HtmlInput::title_box(_('Pense-Bête'),"todo_listg_div",'zoom'," onclick=\"zoom_todo()\"",'n')?>
 
 <?php
 /*
@@ -36,7 +36,7 @@ if ( ! empty ($array) )  {
 </div>
 
 <div id="situation_div" class="box"> 
-    <?php echo HtmlInput::title_box(_("Situation"),"situation_div",'none')?>
+    <?php echo HtmlInput::title_box(_("Situation"),"situation_div",'none','','n')?>
     <table class='result'>
 		<tr>
 			<th>
@@ -147,7 +147,7 @@ if ( $rapport->exist() == false ) {
 }
 
 if ( $report != 0 ) : ?>
-<div id="report_div" class="box"><?php echo HtmlInput::title_box($rapport->get_name(),'report_div','none');?>
+<div id="report_div" class="box"><?php echo HtmlInput::title_box($rapport->get_name(),'report_div','none','','n');?>
 <?php    
   $exercice=$g_user->get_exercice();
   if ( $exercice == 0 ) {
@@ -180,7 +180,7 @@ if ( $report != 0 ) : ?>
 <?php
   else :
 ?>
-  <div id="report_div" class="box"> <?php echo HtmlInput::title_box(_('Aucun rapport défini'),'report_div','none')?>
+  <div id="report_div" class="box"> <?php echo HtmlInput::title_box(_('Aucun rapport défini'),'report_div','none','','n')?>
 <p>
   <a href="javascript:void(0)" class="cell" onclick="set_preference('<?php echo dossier::id()?>')"><?php echo _('Cliquez ici pour mettre à jour vos préférences')?></a>
 <p>
@@ -228,7 +228,7 @@ endif;
 
 	<div id="action_now_div" class="inner_box" style="display:none;margin-left:25%;width: 50%;top:25%;min-height:50%;overflow: auto;">
 	<?php
-		echo HtmlInput::title_box(_("Action pour aujourd'hui"), "action_now_div","hide")
+		echo HtmlInput::title_box(_("Action pour aujourd'hui"), "action_now_div","hide",'','n')
 	?>
 	<ol>
 	<?php
@@ -267,7 +267,7 @@ endif;
 
 
 <div id="last_operation_box_div" class="box">
-<?php echo HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','onclick="popup_recherche('.dossier::id().')"')?>
+<?php echo HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','onclick="popup_recherche('.dossier::id().')"','n')?>
 
 <table style="width: 100%">
 <?php
@@ -299,7 +299,7 @@ for($i=0;$i<count($last_ledger);$i++):
 </div>
 <div id="last_operation_management_div" class="box">
     <?php 
-     echo HtmlInput::title_box(_('Suivi'),"last_operation_management_div",'zoom','onclick="action_show('.dossier::id().')"');
+     echo HtmlInput::title_box(_('Suivi'),"last_operation_management_div",'zoom','onclick="action_show('.dossier::id().')"','n');
     ?>
     <?php
     require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
@@ -343,7 +343,7 @@ $wTitle=new IText('p_title');
 $wDesc=new ITextArea('p_desc');
 $wDesc->heigh=5;
 $wDesc->width=40;
-echo HtmlInput::title_box("Note","add_todo_list","hide");
+echo HtmlInput::title_box("Note","add_todo_list","hide",'','n');
 echo _("Date")." ".$wDate->input().'<br>';
 echo _("Titre")." ".$wTitle->input().'<br>';
 echo _("Description")."<br>".$wDesc->input().'<br>';

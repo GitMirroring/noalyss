@@ -424,7 +424,7 @@ EOF;
 			from menu_ref where me_code=$1", array($me_code));
 		if (empty($m))
 		{
-			echo HtmlInput::title_box(_("Ce plugin n'existe pas "), $ctl);
+			echo HtmlInput::title_box(_("Ce plugin n'existe pas "), $ctl,"close","","y");
 			echo "<p>"._("Il y a une erreur, ce plugin n'existe pas").
                                 "</p>";
 			exit;
