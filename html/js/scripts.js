@@ -2849,7 +2849,7 @@ function init_scroll()
             "style":"padding:10px;left:auto;width:60px;height: auto;display:none;position:fixed;top:25px;right:20px;text-align:center",
             id:"go_up"
         });
-        up.innerHTML=' <a class="button" href="#up_top" ><img src="image/arrow-up.svg"/></a><a href="javascript:show_calc()" class="button"><img src="image/compute.svg"/></a>';
+        up.innerHTML=' <a class="button" href="#up_top" ><img src="image/arrow-up.png"/></a><a href="javascript:show_calc()" class="button"><img src="image/compute.png"/></a>';
         document.body.appendChild(up);
          window.onscroll=function () {
          if ( document.viewport.getScrollOffsets().top> 0) {
