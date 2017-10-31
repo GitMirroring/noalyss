@@ -93,7 +93,9 @@ $g_user=new User($cn);
 $g_user->check(true);
 $g_user->check_dossier($gDossier,true);
 $html=var_export($_REQUEST,true);
-
+// For storing extra information , example the HTML elt id to update
+// after creating
+$extra="";
 switch($op2)
 {
     /* ------------------------------------------------------------ */
@@ -194,6 +196,9 @@ case 'bc':
         $r.='<p style="text-align:center">';
         $r.=HtmlInput::submit('sc',_('Sauve'));
         $r.='</p>';
+        if ( isset ($eltid)) {
+            $r.=HtmlInput::hidden("eltid", $eltid);
+        }
         $r.='</form>';
         $html=$r;
     }
@@ -265,9 +270,8 @@ case 'st':
 
     if ( empty($array))
     {
-        $html.=_("Aucune catégorie de fiche ne correspond  à".
-                " votre demande");
-		if ( DEBUG )        $html.=$sql;
+        $html.=_("Aucune catégorie de fiche ne correspond  à votre demande");
+        if ( DEBUG )        $html.=$sql;
     }
     else
     {
@@ -277,7 +281,7 @@ case 'st':
 	$r.='<div dd>';
 	$r.='<p  style="padding-left:2em">';
         $r.=_("Choisissez la catégorie de fiche à laquelle vous aimeriez ajouter une fiche").'</p>';
-        
+        if ( ! isset($eltid)) $eltid="";
         $msg=_('Choisissez une catégorie svp');
         $r.='<span id="error_cat" class="notice"></span>';
         $r.=dossier::hidden();
@@ -290,10 +294,10 @@ case 'st':
             $class=($i%2==0)?' class="even" ':' class="odd" ';
             $r.='<tr '.$class.' id="select_cat_row_'.$array[$i]['fd_id'].'">';
             $r.='<td >';
-            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.')">'.h($array[$i]['fd_label']).'</a>';
+            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_label']).'</a>';
             $r.='</td>';
             $r.='<td>';
-            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.')">'.h($array[$i]['fd_description']).'</a>';
+            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_description']).'</a>';
             $r.='</td>';
            
              $r.="</tr>";
@@ -338,6 +342,12 @@ case 'sc':
         $js="";
         if ( isset( $_POST['ref'])) $js=create_script(' window.location.reload()');
         $html.=$js;
+        if ( isset ($eltid)) {
+            // after adding a new card, we update some field
+            $extra="<eltid>$eltid</eltid>".
+                    "<elt_value>{$f->get_quick_code ()}</elt_value>";
+                    
+        }
     }
     else
     {
@@ -575,5 +585,6 @@ echo <<<EOF
 <data>
 <ctl>$ctl</ctl>
 <code>$xml</code>
+$extra
 </data>
 EOF;

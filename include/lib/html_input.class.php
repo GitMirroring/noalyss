@@ -569,8 +569,8 @@ class HtmlInput
     static function anchor_hide($action,$javascript)
     {
 	$r='';
-	$r.='<div style="position:absolute;margin:2px;right:2px">';
-	$r.= '<span id="close_div" class="input_text"  onclick="'.$javascript.'">'.$action.'</span>';
+	$r.='<div>';
+	$r.= '<span id="close_div" class="input_text"  style="float:right;margin:0px;margin-right:10px;padding:0px;margin-top: 3px;" onclick="'.$javascript.'">'.$action.'</span>';
 	$r.='</div>';
 	return $r;
     }
@@ -853,7 +853,7 @@ class HtmlInput
                 die (__FILE__.":".__LINE__._('Paramètre invaide'));
             
             if ( $p_draggable=="y") {
-                $drag=sprintf('<span id="pin_%s" style="float:right;margin:0px;padding:0px;margin-right:25px;padding-top:2px;font-size:120%%;border-width:0px" ><a class="input_text" onclick="pin(\'%s\')" id="close_div"> &#8631; </a></span>',
+                $drag=sprintf('<span id="pin_%s" style="float:right;margin:0px;padding:0px;font-size:120%%;border-width:0px" ><a class="input_text" onclick="pin(\'%s\')" id="close_div"> &#10057; </a></span>',
                     $p_div,
                     $p_div);
             $r.=$drag;

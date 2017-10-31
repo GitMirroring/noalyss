@@ -51,7 +51,7 @@ foreach ($array as $item) {
 echo '<tr>';
 // echo td($item['dateop']);
 echo td($item['dateop'],' style="display:none" id="tdchdate'.$i.'"');
-echo td($item['qcode'].$item['search'].$str_add_button);
+echo td($item['qcode'].$item['search'].$item['card_add']);
 echo td($item['cname']);
 echo td($item['comment'],' class="visible_gt800 visible_gt1155" ');
 echo td($item['amount']);

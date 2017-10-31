@@ -965,19 +965,13 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         if ( $p_array != null ) extract($p_array, EXTR_SKIP);
 
         $flag_tva=$g_parameter->MY_TVA_USE;
+
         /* Add button */
-        
         $str_add_button_tiers = "";
-        $str_add_button_item = "";
+        $add_card=FALSE;
         if ($g_user->check_action(FICADD) == 1) {
-            $js_deb="this.filter='deb';this.jrn=\$('p_jrn').value; select_card_type(this);";
-            $js_cred="this.filter='cred';this.jrn=\$('p_jrn').value; select_card_type(this);";
-            
-            // Button for adding customer
-            $str_add_button_tiers = HtmlInput::button_image($js_cred,"xx",'class="smallbutton image_search"',"image/bouton-plus.png");
-            
-            // Button for adding services or items to sale
-            $str_add_button_item = HtmlInput::button_image($js_deb,"xx",'class="smallbutton image_search"',"image/bouton-plus.png");
+            $add_card=TRUE; 
+             $str_add_button_tiers = $this->add_card("cred", "e_client");
         }
         // The first day of the periode
         $oPeriode=new Periode($this->db);
@@ -1137,6 +1131,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                                 $W1->name);
         $f_client_qcode=$W1->input();
         $client_label=new ISpan();
+        $client_label->style="vertical-align:top";
         $client_label->table=0;
         $f_client=$client_label->input("e_client_label",$e_client_label);
         $f_client_bt=$W1->search();
@@ -1149,7 +1144,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $p_article=($p_article < $this->get_min_row())?$this->get_min_row():$p_article;
 
         $Hid=new IHidden();
-		$r.=$Hid->input("nb_item",$p_article);
+	$r.=$Hid->input("nb_item",$p_article);
 
         // For each article
         //--
@@ -1209,6 +1204,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $W1->readonly=false;
             $array[$i]['quick_code']=$W1->input();
             $array[$i]['bt']=$W1->search();
+            $array[$i]['card_add']=($add_card==TRUE)?$this->add_card("deb", $W1->id):"";
 
             $array[$i]['hidden']='';
             // For computing we need some hidden field for holding the value

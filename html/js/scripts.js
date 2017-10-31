@@ -2764,9 +2764,9 @@ function show_description(p_id)
  * @param pn_fiche_card_id : fiche_def.fd_id
  * @param pn_dossier_id
   */
-function select_cat(pn_fiche_card_id,pn_dossier_id)
+function select_cat(pn_fiche_card_id,pn_dossier_id,ps_element_id)
 {
-    dis_blank_card({"ctl":"div_new_card","fd_id":pn_fiche_card_id,"op2":"bc","op":"card",gDossier:pn_dossier_id});
+    dis_blank_card({"ctl":"div_new_card","fd_id":pn_fiche_card_id,"op2":"bc","op":"card",gDossier:pn_dossier_id,"elementId":ps_element_id});
     removeDiv('select_card_div');
 }
 /**

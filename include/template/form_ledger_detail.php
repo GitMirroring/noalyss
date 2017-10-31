@@ -85,7 +85,7 @@ echo '<tr>';
 // echo "<td>";
 echo $item['quick_code'];
 // echo "</td>";
-echo '<td>'.$item['bt'].$str_add_button_item.'</td>';
+echo '<td>'.$item['bt'].$item['card_add'].'</td>';
 ?>
 <td class="visible_gt800 visible_gt1155"><?php echo $item['denom'] ?></td>
 <?php 

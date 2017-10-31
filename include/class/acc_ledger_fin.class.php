@@ -248,11 +248,10 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 		$min_article=$this->get_min_row();
 
-		$str_add_button = "";
-                if ( $g_user->check_action(FICADD) == 1) {
-                   // Button for adding new tiers
-                    $js_deb="this.filter='deb';this.jrn=\$('p_jrn').value; select_card_type(this);";
-                    $str_add_button = HtmlInput::button_image($js_deb,"xx",'class="smallbutton image_search"',"image/bouton-plus.png");
+		$str_add_button_tiers = "";
+                $add_card=FALSE;
+                if ($g_user->check_action(FICADD) == 1) {
+                    $add_card=TRUE; 
                 }
 
 		// The first day of the periode
@@ -399,7 +398,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			$W1->readonly = $pview_only;
 			$array[$i]['qcode'] = $W1->input();
 			$array[$i]['search'] = $W1->search();
-
+                        $array[$i]['card_add']=($add_card==TRUE)?$this->add_card("deb", $W1->id):"";
 			// Card name
 			//
 			 $card_name = "";

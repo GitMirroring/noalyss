@@ -1610,8 +1610,7 @@ class Acc_Ledger extends jrn_def_sql
 		if ($g_user->check_action(FICADD) == 1)
 		{
 			// Button for adding customer
-                        $js_deb="this.filter='-1';this.jrn=\$('p_jrn').value; select_card_type(this);";
-                        $str_add_button= HtmlInput::button_image($js_deb,"xx",'class="smallbutton image_search"',"image/bouton-plus.png");
+                         $add_card=TRUE; 
 		}
 		$wLedger = $this->select_ledger('ODS', 2);
 		if ($wLedger == null)
@@ -1786,7 +1785,7 @@ class Acc_Ledger extends jrn_def_sql
 			$deb->selected = (isset(${'ck' . $i})) ? true : false;
 			$deb->readonly = $p_readonly;
 			$deb->javascript = ' onChange="checkTotalDirect()"';
-
+                        $str_add_button=($add_card==TRUE)?$this->add_card("-1", $quick_code->id):"";
 			$ret.='<tr>';
 			$ret.='<td>' . $quick_code->input() . $quick_code->search() .$str_add_button. '</td>';
 			$ret.='<td>' . $poste->input() .
@@ -1805,7 +1804,7 @@ class Acc_Ledger extends jrn_def_sql
 			$w = $oRapt->widget();
 			$w->name = 'jrn_concerned';
 			$w->value = (isset($jrn_concerned)) ? $jrn_concerned : "";
-			$ret.="R&eacute;conciliation/rapprochements : " . $w->input();
+			$ret.=sprintf(_("Réconciliation/rapprochements : %s"), $w->input());
 		}
 		$ret.= create_script("$('".$wDate->id."').focus()");
 		return $ret;
@@ -4017,6 +4016,16 @@ class Acc_Ledger extends jrn_def_sql
             echo HtmlInput::submit("copy_operation",_("Opération identique"));
                     
             echo '</FORM>';
+        }
+        /**
+         * Return a button to create new card, depending of the ledger 
+         * @param $p_filter string : filter for adding : deb, cred or -1 for filter depending of the ledger
+         * @param $p_id_update string
+         */
+        function add_card($p_filter,$p_id_update) {
+            $js_script="this.filter='{$p_filter}';this.elementId='{$p_id_update}';this.jrn=\$('p_jrn').value; select_card_type(this);";
+            $str_add_button = HtmlInput::button_image($js_script, uniqid(),'class="smallbutton image_search"',"image/bouton-plus.png");
+            return $str_add_button;
         }
 }
 ?>

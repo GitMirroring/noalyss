@@ -246,7 +246,7 @@ class Pre_operation_detail
     {
         $r=HtmlInput::button_action(_("Modèle d'opérations"), ' $(\'modele_op_div\').style.display=\'block\';$(\'lk_modele_op_tab\').focus();');
         $r.='<div id="modele_op_div" class="noprint">';
-        $r.=HtmlInput::title_box(_("Modèle d'opérations"), 'modele_op_div', 'hide');
+        $r.=HtmlInput::title_box(_("Modèle d'opérations"), 'modele_op_div', 'hide',"","n");
         $hid=new IHidden();
         $r.=$hid->input("action","use_opd");
         $r.=$hid->input("jrn_type",$this->get("ledger_type"));

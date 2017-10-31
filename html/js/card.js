@@ -549,7 +549,7 @@ function select_card_type(obj)
 {
 
     var dossier=$('gDossier').value;
-
+    var elementId="";
     // give a filter, -1 if not
     var filter=$(obj).filter;
     if ( filter==undefined)
@@ -581,6 +581,11 @@ function select_card_type(obj)
     if ( $(obj).win_refresh!=undefined)
     {
         queryString+='&ref';
+    }
+    /* if an element id must be updated after creating a new card */
+    if ( $(obj).elementId) {
+        var elementId=$(obj).elementId;
+        queryString+="&eltid="+elementId;
     }
     queryString+='&fil='+filter;
     // filter on the ledger, -1 if not
@@ -615,7 +620,7 @@ function select_card_type(obj)
                                       }
                                       if ( answer.length == 1) {
                                           // There is only one category of card
-                                          dis_blank_card({"ctl":"div_new_card","fd_id":answer[0].firstChild.nodeValue,"op2":"bc","op":"card",gDossier:dossier});
+                                          dis_blank_card({"ctl":"div_new_card","fd_id":answer[0].firstChild.nodeValue,"op2":"bc","op":"card",gDossier:dossier,"elementId":elementId});
                                           removeDiv(content);
                                           remove_waiting_box();
                                           return;
@@ -654,13 +659,14 @@ function dis_blank_card(obj)
     var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto";
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
-    if ( $(content)) {removeDiv(content);}
+  
     add_div(popup);
 
-	if ( obj.gDossier.value != undefined ) {
-    var dossier=$('gDossier').value;} else {
+    if ( obj.gDossier.value != undefined ) {
+        var dossier=$('gDossier').value;
+    } else {
 	var dossier=obj.gDossier;
-	}
+    }
 
     var queryString='gDossier='+dossier;
     queryString+='&ctl='+content;
@@ -668,15 +674,19 @@ function dis_blank_card(obj)
     queryString+=ref;
     queryString+='&op2=bc'; 	// bc for blank card
     queryString+='&op=card'; 	// bc for blank card
-
+    if ( obj.elementId) queryString+="&eltid="+obj.elementId;
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
                                   method:'get',
                                   parameters:queryString,
                                   onFailure:errorFid,
-                                  onSuccess:successFill_ipopcard
+                                  onSuccess: function (req,json) {
+                                      
+                                      
+                                      successFill_ipopcard(req,json);
                                   }
-                                );
+                              }
+                            );
 }
 function form_blank_card(obj)
 {
@@ -688,7 +698,7 @@ function form_blank_card(obj)
     var str_style="top:"+nTop+"px;left:"+nLeft+"px;width:60em;height:auto";
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
-    if ( $(content)) {removeDiv(content);}
+    if ( $(content)) {removeDiv(content);} 
     add_div(popup);
 
 
@@ -721,8 +731,7 @@ function save_card(obj)
     var content=$(obj).ipopup;
     // Data must be taken here
     data=$('save_card').serialize(false);
-    $(content).innerHTML=loading();
-
+    waiting_box();
     var dossier=$('gDossier').value;
     var queryString='gDossier='+dossier;
     queryString+='&ctl='+content;
@@ -735,9 +744,24 @@ function save_card(obj)
                                   method:'post',
                                   parameters:queryString,
                                   onFailure:errorFid,
-                                  onSuccess:fill_box
+                                  onSuccess:function (req,json) {
+                                      fill_box(req,json);
+                                      var elt=req.responseXML.getElementsByTagName("eltid");
+                                      remove_waiting_box();
+                                      if ( elt.length != 0) {
+                                         var eltid=getNodeText(elt[0]);
+                                         if ( eltid !="") {
+                                            var eltvalue=req.responseXML.getElementsByTagName("elt_value");
+                                            $(eltid).value=getNodeText(eltvalue[0]);
+                                            fill_data_onchange(eltid);
+                                            $(eltid).focus();
+                                        }
+                                         //$(content).fade({duration:2.0});     
+                                     Effect.SlideUp(content, { duration: 1.0 });}    
+                                      
                                   }
-                                );
+                              }
+                        );
 }
 /**
  *@brief add a category of card,
