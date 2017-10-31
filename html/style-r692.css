@@ -144,6 +144,16 @@ td.tool a.mtitle:hover {
     font-size:12.16px;
     font-size:0.76rem;
 }
+#module table,#module table tr,#module table td {
+    border-collapse: collapse;
+    border-width: 0px;
+    background-color: whitesmoke;
+}
+#module table td.toolselected a {
+    background-color: darkgray;
+    
+}
+
 div.lmenu {
     float:left;
     clear:left;
@@ -376,9 +386,9 @@ a.detail
 {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'openSansRegular';
-    text-decoration: none;
+    /*! text-decoration: none; */
     display: block;
-    color: #EBA308;
+    /*! color: #EBA308; */
     font-weight: normal;
     background-color: transparent;
 }
@@ -402,7 +412,6 @@ div.content a {
     padding: 0px;
     text-decoration: underline;
 /*! background: rgb(247, 192, 156) none repeat scroll 0% 0%; */
-color: maroon;
 
 }
 
@@ -749,6 +758,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
     border-color: grey;
 }
+a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton .button {
+    font-family: SansationLight;
+}
 td.tool {
     border: solid 1px gray;
     background-color: #FFFFFF;
@@ -844,7 +856,8 @@ box-shadow: 10px 10px 5px #888;
 div.inner_box  {
     background-color: #DCE1EF;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
+    font-family: OpenSansRegular;
+    /*! font-family: 'SansationLight'; */
     /*! padding:2px; */
     margin:0px;
     overflow:hidden;
@@ -911,6 +924,7 @@ div#search_form
     -moz-box-shadow: 10px 10px 5px #888;
     -webkit-box-shadow: 10px 10px 5px #888;
     box-shadow: 10px 10px 5px #888;
+    padding-bottom: 10px;
 }
 @media only screen and (max-width: 995px) {
       div#search_form {
@@ -1179,12 +1193,13 @@ h2.title {
     text-align:center;
   
     
-    padding-top: 0px;
+    padding-top: 9px;
     margin-top: 0px;
     padding-bottom: 2px;
-    background-color: #5681B7;
+    background-color: #366497;
     font-size: 1rem;
     height: 25px;
+    vertical-align: middle;
 }
 h3.title {
     color: #0000FF;
@@ -1217,9 +1232,13 @@ div.myfieldset
     background-color: #FCFFCC;
     color:#000000;
     z-index: 15;
-    position: absolute;
     top:0px;
     left:45%;
+    position:fixed;
+    padding:5px 45px 5px 45px;
+    border-color: orange;
+    border-width: 1px;
+    border-style: groove;
 }
 div.menu2 a.mtitle{
     font-size:13.6px;
