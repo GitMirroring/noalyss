@@ -229,7 +229,7 @@ if ($sa=='step4')
     $array=$saldo->get_saldo_exercice($p_periode);
     /*  we need to transform the array into a Acc_Ledger array */
     $result=array();
-    $result['desc']=_("Ecriture d'ouverture");
+    $result['desc']=sprintf(_("Ecriture d'ouverture %d"),$g_user->get_exercice());
     $result['nb_item']=sizeof($array);
     $result['p_jrn']=$p_jrn;
     $result["ac"]=$http->request("ac");
