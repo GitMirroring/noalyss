@@ -826,6 +826,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         $tot=nbm($tot);
         $str_tot=_('Totaux');
         $tot_amount=nbm($tot_amount);
+if ( $g_parameter->MY_TVA_USE=="Y")        {
         $r.=<<<EOF
 <tr class="highlight">
     {$decalage}            
@@ -842,7 +843,24 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         {$tot}
     </td>
 EOF;
-
+    } else {
+        $r.=<<<EOF
+<tr class="highlight">
+    {$decalage}            
+     <td>
+                {$str_tot}
+     </td>
+    <td class="num">
+        
+    </td>
+    <td class="num">
+        
+    </td>
+    <td class="num">
+        {$tot}
+    </td>
+EOF;
+    }
         $r.='</table>';
         $r.='</p>';
         if ($g_parameter->MY_ANALYTIC != 'nu' && ! $p_summary) // use of AA
