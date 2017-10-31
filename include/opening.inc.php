@@ -109,7 +109,7 @@ if ($sa=='')
 {
     echo '<div class="content">';
 
-    echo '<h1 class="legend"> Etape 1 </h1>';
+    echo '<h1 class="legend">'._("Etape 1 : choix du dossier").' </h1>';
 
     echo _('Choisissez le dossier où sont les soldes à importer');
     $avail=$g_user->get_available_folder();
@@ -133,9 +133,10 @@ if ($sa=='')
         $array[$i]['label']=$r['dos_name'];
         $i++;
     }
-
+    $wAvail->selected=Dossier::id();
     $wAvail->value=$array;
-    echo 'Choix du dossier :'.$wAvail->input('f');
+    printf (_('Choix du dossier : %s'),
+            $wAvail->input('f'));
     echo HtmlInput::submit('ok', _('Continuer'));
 
     echo '</form>';
@@ -150,7 +151,7 @@ $back='do.php?ac='.$http->request("ac").'&'.dossier::get();
 if ($sa=='step2')
 {
     echo '<div class="content">'.
-    '<div><h1 class="legend">Etape 2</h1>'.
+    '<div><h1 class="legend">'._('Etape 2 : période').'</h1>'.
     '<h2 class="info">'.dossier::name($_REQUEST['f']).'</h2>'.
     '<form class="print" method="post">'.
     _("Choisissez l'exercice du dossier à reporter pour les a-nouveaux");
@@ -166,6 +167,7 @@ if ($sa=='step2')
     $w->readonly=false;
     $w->value=$periode;
     $w->name="p_periode";
+    $w->selected=$g_user->get_exercice()-1;
     echo _('Période').' : '.$w->input();
     echo HtmlInput::submit('ok', _('Continuer'));
     echo dossier::hidden();
@@ -217,15 +219,22 @@ if ($sa=='step3')
 if ($sa=='step4')
 {
     echo '<div class="content">';
-    echo '<div><h1 class="legend"> Dernière étape</h1>';
-    $cn_target=new Database($_REQUEST['f']);
+    echo '<div><h1 class="legend">'._("étape 4").'</h1>';
+    $dossier_id=$http->request("f","number");
+    $p_periode=$http->request("p_periode","number");
+    $p_jrn=$http->request("p_jrn","number");
+    
+    $cn_target=new Database($dossier_id);
     $saldo=new Acc_Ledger($cn_target, 0);
-    $array=$saldo->get_saldo_exercice($_REQUEST['p_periode']);
+    $array=$saldo->get_saldo_exercice($p_periode);
     /*  we need to transform the array into a Acc_Ledger array */
     $result=array();
-    $result['desc']='Ecriture d\'ouverture';
+    $result['desc']=_("Ecriture d'ouverture");
     $result['nb_item']=sizeof($array);
-    $result['p_jrn']=$_REQUEST['p_jrn'];
+    $result['p_jrn']=$p_jrn;
+    $result["ac"]=$http->request("ac");
+    $result['p_periode']=$p_periode;
+    $result['gDossier']=Dossier::id();
     $idx=0;
 
     foreach ($array as $row)
@@ -244,9 +253,12 @@ if ($sa=='step4')
     }
     $cn=Dossier::connect();
 
-    $jrn=new Acc_Ledger($cn, $_REQUEST['p_jrn']);
-
-    echo '<form class="print" method="post">';
+    $jrn=new Acc_Ledger($cn,$p_jrn);
+    $_POST=$result;
+    $ledger=new Acc_Ledger($cn, $p_jrn);
+    require_once NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
+    
+    /*echo '<form class="print" method="post">';
     echo HtmlInput::hidden('ac', $_REQUEST['ac']);
     echo HtmlInput::hidden('sa', 'step5');
     echo HtmlInput::hidden('f', $_REQUEST['f']);
@@ -258,7 +270,7 @@ if ($sa=='step4')
     echo '<h2 class="notice">'._("Ne corrigez pas encore, cliquez continuer pour passer à l'étape suivante").'</h2>';
     echo HtmlInput::submit('correct_it', _('Continuer'));
     echo '</form>';
-    echo HtmlInput::button_anchor(_('Retour'), $back);
+    echo HtmlInput::button_anchor(_('Retour'), $back);*/
 
     echo '</div>';
 }
@@ -266,7 +278,8 @@ if ($sa=='step4')
 //
 if ($_REQUEST['sa']=='step5')
 {
-    $ledger=new Acc_Ledger($cn, $_REQUEST['p_jrn']);
+    $p_jrn=$http->request("p_jrn","number");
+    $ledger=new Acc_Ledger($cn, $p_jrn);
     require_once NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
 }
 
