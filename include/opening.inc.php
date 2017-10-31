@@ -258,28 +258,6 @@ if ($sa=='step4')
     $ledger=new Acc_Ledger($cn, $p_jrn);
     require_once NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
     
-    /*echo '<form class="print" method="post">';
-    echo HtmlInput::hidden('ac', $_REQUEST['ac']);
-    echo HtmlInput::hidden('sa', 'step5');
-    echo HtmlInput::hidden('f', $_REQUEST['f']);
-    echo HtmlInput::hidden('p_periode', $_REQUEST['p_periode']);
-    echo dossier::hidden();
-    echo HtmlInput::hidden('p_jrn', $_REQUEST['p_jrn']);
-    echo $jrn->input($result, 0);
-    echo '<hr>';
-    echo '<h2 class="notice">'._("Ne corrigez pas encore, cliquez continuer pour passer à l'étape suivante").'</h2>';
-    echo HtmlInput::submit('correct_it', _('Continuer'));
-    echo '</form>';
-    echo HtmlInput::button_anchor(_('Retour'), $back);*/
-
-    echo '</div>';
-}
-// if sa=step4 then record it
-//
-if ($_REQUEST['sa']=='step5')
-{
-    $p_jrn=$http->request("p_jrn","number");
-    $ledger=new Acc_Ledger($cn, $p_jrn);
-    require_once NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
+       echo '</div>';
 }
 
