@@ -114,7 +114,7 @@ define ("DBVERSIONREPO",17);
 define ('NOTFOUND','--not found--');
 define ("MAX_COMPTE",4);
 define ('MAX_ARTICLE',5);
-define ('MAX_ARTICLE_STOCK',20);
+define ('MAX_ARTICLE_STOCK',10);
 define ('MAX_CAT',15);
 define ('MAX_CARD_SEARCH',550);
 define ('MAX_FORECAST_ITEM',10);
