@@ -158,7 +158,6 @@ if ( isset($_GET['new']))
 echo <<<EOF
 <script> 
     function validate_anc(p_frm_id) {
-    console.debug($(p_frm_id)['pdate'].value );
     try {
         if ($('pdesc').value.length==0) {
             smoke.alert('$msg_comment');
@@ -171,7 +170,7 @@ echo <<<EOF
         } catch (e) {
             smoke.alert(e.message);
         }
-        return true;
+        return ;
     }
     
 </script>;    
