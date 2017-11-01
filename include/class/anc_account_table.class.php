@@ -51,7 +51,7 @@ class Anc_Account_Table extends Manage_Table_SQL
         $this->set_col_type("ga_id", "select");
         $this->set_object_name("anc_accounting");
         $this->set_col_sort(1);
-        $this->a_select["ga_id"]=$cn->make_array("select ga_id,ga_description 
+        $this->a_select["ga_id"]=$cn->make_array("select '-','-' union all select ga_id,ga_id||' '||ga_description 
             from groupe_analytique
             where
             pa_id=$1
@@ -86,7 +86,7 @@ class Anc_Account_Table extends Manage_Table_SQL
             $is_error++;
             $this->set_error("po_name", _("Le nom ne peut être vide"));
         }
-        $table->ga_id=($table->ga_id=="")?null:$table->ga_id;
+        $table->ga_id=($table->ga_id=="-")?null:$table->ga_id;
         if ($is_error==0)return TRUE;
         return FALSE;
     }
