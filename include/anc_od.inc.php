@@ -139,7 +139,7 @@ if ( isset($_GET['new']))
     $wSubmit=new IHidden("p_action","ca_od");
     $wSubmit->table=0;
     echo '<div class="redcontent"  >';
-    echo '<form method="post">';
+    echo '<form id="anc_od_frm" method="post" onsubmit="return validate_anc(\'anc_od_frm\');return false;">';
     echo dossier::hidden();
     echo $wSubmit->input();
     echo $a->form();
@@ -153,6 +153,31 @@ if ( isset($_GET['new']))
     ';
 
     echo '</div>';
+    $msg_comment=_("Commentaire vide");
+    $msg_date=_("Date invalide");
+echo <<<EOF
+<script> 
+    function validate_anc(p_frm_id) {
+    console.debug($(p_frm_id)['pdate'].value );
+    try {
+        if ($('pdesc').value.length==0) {
+            smoke.alert('$msg_comment');
+            return false;
+        }
+        if ( ! check_date($(p_frm_id)['pdate'].value) ) {
+            smoke.alert('$msg_date');
+            return false;
+        }
+        } catch (e) {
+            smoke.alert(e.message);
+        }
+        return true;
+    }
+    
+</script>;    
+
+EOF;
+    
    return;
 }
 
