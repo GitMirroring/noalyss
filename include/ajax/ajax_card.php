@@ -391,16 +391,16 @@ case 'fs':
     /* Build the SQL and show result */
     $sql=$fiche->build_sql($sql_array);
 
-	if ( strpos($sql," in ()") != 0)
-	{
-		$html=HtmlInput::anchor_close('search_card');
-		 $html.='<div> '.h2info(_('Recherche de fiche')).'</div>';
-		 $html.='<h3 class="notice">';
-		 $html.=_("Aucune catégorie de fiche ne correspond à".
-                " votre demande, le journal pourrait n'avoir accès à aucune fiche");
-		 $html.='</h3>';
-		 break;
-	}
+    if ( strpos($sql," in ()") != 0)
+    {
+            $html=HtmlInput::anchor_close('search_card');
+             $html.='<div> '.h2info(_('Recherche de fiche')).'</div>';
+             $html.='<h3 class="notice">';
+             $html.=_("Aucune catégorie de fiche ne correspond à".
+            " votre demande, le journal pourrait n'avoir accès à aucune fiche");
+             $html.='</h3>';
+             break;
+    }
      /* We limit the search to MAX_SEARCH_CARD records */
     $sql=$sql.' order by vw_name limit '.MAX_SEARCH_CARD;
     $a=$cn->get_array($sql);
