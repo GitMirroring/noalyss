@@ -76,23 +76,19 @@ if ( isset($_REQUEST['go']))
         echo _("Aucun poste trouvé");
         return;
     }
-    $button=new IButton();
-    $button->name=_("Choix");
-    $button->label=_("Choix");
 
     echo '<table>';
     foreach ($array as $line)
     {
-        $button->javascript=sprintf("$('%s').value='%s';removeDiv('%s')",
+        $js=sprintf("onclick=\"$('%s').value='%s';removeDiv('%s')\"",
                                     $_REQUEST['c1'],
                                     $line['po_name'],$ctl);
+        
         echo '<tr>'.
         '<td>'.
-        $button->input().
+        HtmlInput::anchor(h($line['po_name']), "", $js).
         '</td>'.
         '<td>'.
-        h($line['po_name']).
-        '</td><td>'.
         h($line['po_description']).
         '</tr>';
     }
