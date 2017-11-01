@@ -56,7 +56,7 @@ function update_predef(p_type, p_direct, p_ac)
                         // document.getElementsByName(name_ctl)[0].value = code_html;
                         $('modele_op_div').innerHTML = code_html;
                     } catch (e) {
-                        $('info_div').innerHTML = e.getMessage;
+                        $('info_div').innerHTML = e.message;
                     }
                 }
             }
@@ -201,13 +201,13 @@ function update_row(ctl)
                                 }
                             }
                         } catch (e) {
-                            alert_box(e.getMessage);
+                            alert_box(e.message);
                         }
                     }
                 }
         );
     } catch (e) {
-        alert_box(e.getMessage);
+        alert_box(e.message);
     }
 }
 /**

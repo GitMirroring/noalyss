@@ -186,7 +186,7 @@ function search_poste(obj)
     }
     catch (e)
     {
-        alert_box(e.getMessage);
+        alert_box(e.message);
     }
 }
 /**

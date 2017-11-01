@@ -51,7 +51,7 @@ function boxsearch_card(p_dossier)
 				  );
 	}catch( e)
 	{
-		alert_box(e.getMessage);
+		alert_box(e.message);
 	}
 }
 /**
