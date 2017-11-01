@@ -94,6 +94,7 @@ class Stock_Goods extends Stock_Goods_Sql
 			$sg_quantity[$e] = new INum('sg_quantity' . $e);
 			$sg_quantity[$e]->value = (isset(${'sg_quantity' . $e})) ? ${'sg_quantity' . $e} : '';
 			$label[$e] = new ISpan("label$e");
+                        $label[$e]->style="vertical-align:top;";
 			if (trim($sg_code[$e]->value) != '')
 			{
 				$label[$e]->value = $cn->get_value("select vw_name from vw_fiche_attr where quick_code=$1", array($sg_code[$e]->value));
