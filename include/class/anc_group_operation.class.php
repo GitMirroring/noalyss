@@ -108,7 +108,7 @@ class Anc_Group_Operation
 
         $ret.='<table style="result"	>';
 
-        $ret.="<TR>".$wDate->input()."</tr>";
+        $ret.="<TR>".td(_("Date")).td($wDate->input())."</tr>";
         $ret.='<tr><td>Description</td>'.
               '<td colspan="3">'.
               $wDescription->input()."</td></tr>";
@@ -118,27 +118,44 @@ class Anc_Group_Operation
         $ret.='</table><table  id="ago" style="width: 100%;">';
         /* show 10 rows */
         $ret.="<tr>";
+        $ret.=th(_("Fiche"),'style="text-align:left"').th("");
         foreach ($aPlan as $d)
         {
             $idx=$d['id'];
             /* array of possible value for the select */
-            $aPoste[$idx]=$this->db->make_array("select po_id as value,".
+            $aPoste[$idx]=$this->db->make_array("select 0 as value,'-' as label "
+                    . " union select po_id as value,".
                                                 " po_name||':'||coalesce(po_description,'-') as label ".
                                                 " from poste_analytique ".
                                                 " where pa_id = ".$idx.
-                                                " order by po_name ");
+                                                " order by 2 ");
 
-            $ret.="<th> Poste </th>";
+            $ret.="<th style=\"text-align:left\">".$d['name']."</th>";
         }
         $ret.="<th></th>".
-              "<th> Montant</th>".
-              "<th>D&eacute;bit</th>".
+              "<th style=\"text-align:left\">"._('Montant') ."</th>".
+              "<th style=\"text-align:left\">"._("Débit")."</th>".
               "</tr>";
 
         for ($i = 0;$i < $max;$i++)
         {
+            if ( $p_readonly == 1 &&   isset($this->a_operation[$i]) && $this->a_operation[$i]->po_id ==0 ) continue;
             $ret.="<tr>";
-
+            $ret.="<td>";
+            $card=new ICard("qcode$i");
+            $card->set_attribute("typecard", sprintf("[sql] fd_id in (select fd_id from jnt_fic_attr where ad_id=%s)",ATTR_DEF_ACCOUNT));
+            $card->set_attribute('label', "qcode{$i}_label");
+            $card->setReadOnly($p_readonly);
+            $card->value=(isset($this->a_operation[$i]->card))?$this->a_operation[$i]->card:"";
+            $ret.=$card->input();
+            $ret.=$card->search();
+            
+            $ret.='</td>';
+            $ret.='<td>';
+            $label=new ISpan("qcode{$i}_label");
+            $label->style="vertical-align:top";
+            $ret.=$label->input();
+            $ret.='</td>';
             foreach ($aPlan as $d)
             {
                 $idx=$d['id'];
@@ -213,11 +230,12 @@ class Anc_Group_Operation
                 $p->oa_amount=$p_array["pamount$i"];
 
                 $p->oa_description=$p_array["pdesc"];
+                $p->oa_row=$i;
                 $p->oa_date=$p_array['pdate'];
                 $p->j_id=0;
                 $p->oa_debit=(isset ($p_array["pdeb$i"]))?'t':'f';
                 $p->oa_group=0;
-
+                $p->card=(isset($p_array["qcode".$i]))?$p_array["qcode".$i]:"";
                 $p->po_id=$p_array["pop$i"."plan".$idx];
                 $p->pa_id=$idx;
                 $this->a_operation[]=clone $p;
@@ -234,6 +252,7 @@ class Anc_Group_Operation
             $oa_group=$this->db->get_next_seq('s_oa_group');
             for ($i=0;$i<count($this->a_operation);$i++)
             {
+                if ( $this->a_operation[$i]->po_id == 0 ) continue;
                 $this->a_operation[$i]->oa_group=$oa_group;
                 $this->a_operation[$i]->add();
             }

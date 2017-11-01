@@ -49,6 +49,7 @@ class Anc_Operation
     var $oa_group;   /*!< group of operation  */
     var $oa_date;	   /*!< equal to j_date if j_id is not	  null */
     var $pa_id;	/*!< the plan analytique id */
+    var $card;  /*!< Card linked to the operation */
     /**
      * In the case, the amount comes from a ND VAT, the variable
      * contents the jrnx.j_id of the source which was used to compute 
@@ -71,9 +72,10 @@ class Anc_Operation
         $this->oa_positive='Y';
         $this->has_data=0;
         $this->in_div="";
+        $this->card="";
     }
     /*!\brief add a row  to the table operation_analytique
-     * \note if $this->oa_group if 0 then a sequence id will be computed for
+     * \note if $this->oa_group == 0 then a sequence id will be computed for
      * the oa_group, if $this->j_id=0 then it will be null
      *
      */
@@ -114,6 +116,14 @@ class Anc_Operation
             $this->oa_debit=($this->oa_debit=='t')?'f':'t';
         }
         
+        // Retrieve the f_id of the card
+        $n_fid=0;
+        if ( $this->card != "") {
+            $fiche=new Fiche($this->db);
+            $fiche->get_by_qcode($this->card);
+            $n_fid=$fiche->id;
+        }
+        $n_fid=($n_fid!=0)?$n_fid:NULL;
         $oa_row=(isset($this->oa_row))?$this->oa_row:null;
         $sql="insert into operation_analytique (
              po_id, 
@@ -125,8 +135,9 @@ class Anc_Operation
              oa_date,
              oa_row,
              oa_jrnx_id_source,
-             oa_positive
-             ) values ($1,$2,$3,$4,$5,$6,to_date($7,'DD.MM.YYYY'),$8,$9,$10)";
+             oa_positive,
+             f_id
+             ) values ($1,$2,$3,$4,$5,$6,to_date($7,'DD.MM.YYYY'),$8,$9,$10,$11)";
 
         $this->db->exec_sql($sql,array(
                 $this->po_id, // 1
@@ -138,7 +149,8 @@ class Anc_Operation
                 $this->oa_date, //7
                 $oa_row, //8
                 $this->oa_jrnx_id_source, //8
-                $this->oa_positive
+                $this->oa_positive,
+                $n_fid // fiche.f_id , can be null
                 ));
 
     }
@@ -184,10 +196,20 @@ class Anc_Operation
 	j_id ,
 	jr_internal,
 	jr_id,
-	jr_comment,
-	j_poste,
-	jrnx.f_id,
-	( select ad_value from fiche_Detail where f_id=jrnx.f_id and ad_id=23) as qcode,
+	coalesce(jr_comment,b.oa_description) as jr_comment,
+	case when j_poste is null and b.f_id is not null then
+        (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=".ATTR_DEF_ACCOUNT.")
+            when j_poste is not null then
+            j_poste
+            end as j_poste
+        ,
+	coalesce(jrnx.f_id,b.f_id) as f_id,
+        case when jrnx.f_id is not null then 
+		 (select ad_value from fiche_Detail where f_id=jrnx.f_id and ad_id=23) 
+		 when b.f_id is not null then
+		 (select ad_value from fiche_Detail where f_id=b.f_id and ad_id=23)
+	end
+		 as qcode,
         jr_pj_number
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)

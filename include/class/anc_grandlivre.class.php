@@ -71,10 +71,20 @@ class Anc_GrandLivre extends Anc_Print
 	j_id ,
 	jr_internal,
 	jr_id,
-	jr_comment,
-	j_poste,
-	jrnx.f_id,
-	( select ad_value from fiche_Detail where f_id=jrnx.f_id and ad_id=23) as qcode,
+	coalesce(jr_comment,b.oa_description) as jr_comment,
+	case when j_poste is null and b.f_id is not null then
+        (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=".ATTR_DEF_ACCOUNT.")
+            when j_poste is not null then
+            j_poste
+            end as j_poste
+        ,
+	coalesce(jrnx.f_id,b.f_id) as f_id,
+        case when jrnx.f_id is not null then 
+		 (select ad_value from fiche_Detail where f_id=jrnx.f_id and ad_id=23) 
+		 when b.f_id is not null then
+		 (select ad_value from fiche_Detail where f_id=b.f_id and ad_id=23)
+	end
+		 as qcode,
         jr_pj_number
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
@@ -99,14 +109,25 @@ class Anc_GrandLivre extends Anc_Print
         $array=$this->db->get_array("	select
 	po_name,
 	to_char(oa_date,'DD.MM.YYYY') as oa_date,
-	j_poste,
-	( select ad_value from fiche_Detail where f_id=jrnx.f_id and ad_id=23) as qcode,
-	jr_comment,
-        jr_pj_number,
-	jr_internal,
-        oa_row,
-	case when oa_debit='t' then 'D' else 'C' end,
-	oa_amount
+	case when j_poste is null and b.f_id is not null then
+        (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=".ATTR_DEF_ACCOUNT.")
+            when j_poste is not null then
+            j_poste
+            end as j_poste
+        ,
+        case when jrnx.f_id is not null then 
+		 (select ad_value from fiche_Detail where f_id=jrnx.f_id and ad_id=23) 
+		 when b.f_id is not null then
+		 (select ad_value from fiche_Detail where f_id=b.f_id and ad_id=23)
+	end
+		 as qcode,
+        coalesce(jr_comment,b.oa_description) as jr_comment,
+        coalesce (jr_pj_number,'') as jr_pj_number,
+	coalesce(jr_internal,'') as jr_internal,
+        coalesce(oa_group,0) as oa_group,
+	case when oa_debit='t' then oa_amount else  0 end as amount_deb,
+	case when oa_debit='f' then oa_amount else  0 end as amount_cred,
+        case when oa_debit='f' then 'C' else  'D' end as deb_cred
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
 	left join jrn on  (j_grpt=jr_grpt_id)
@@ -303,9 +324,10 @@ class Anc_GrandLivre extends Anc_Print
         $aheader[]=array("title"=>'libelle','type'=>'string');
         $aheader[]=array("title"=>'Pièce','type'=>'string');
         $aheader[]=array("title"=>'Num.interne','type'=>'string');
-        $aheader[]=array("title"=>'row','type'=>'num');
-        $aheader[]=array("title"=>'Debit','type'=>'string');
+        $aheader[]=array("title"=>'row','type'=>'string');
+        $aheader[]=array("title"=>'Debit','type'=>'num');
         $aheader[]=array("title"=>'Credit','type'=>'num');
-        Impress::array_to_csv($array, $aheader);
+        $aheader[]=array("title"=>'D/C','type'=>'string');
+        Impress::array_to_csv($array, $aheader,"export-anc-grandlivre");
     }
 }

@@ -64,24 +64,43 @@ class Anc_Acc_List extends Anc_Acc_Link
     $sql_from_poste=($this->from_poste!='')?" and  po.po_name >= upper('".Database::escape_string($this->from_poste)."')":'';
     $sql_to_poste=($this->to_poste!='')?" and  po.po_name <= upper('".Database::escape_string($this->to_poste)."')":'';
     $this->arow=$this->db->get_array("
- SELECT po.po_id, po.pa_id, po.po_name, po.po_description, sum(
+        with m as (select po_id,
+ 		coalesce(jrnx.f_id,operation_analytique.f_id) as f_id1,
+		case when jrnx.j_qcode is not null then 
+        ( SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id) 
+          when jrnx.f_id is null and operation_analytique.f_id is not null then 
+          ( SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = operation_analytique.f_id)
+         end
+          AS name,
+           case when jrnx.j_poste is not null then
+        jrnx.j_poste
+        when jrnx.j_poste is null then
+        (SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 5 AND fiche_detail.f_id = operation_analytique.f_id) end as j_poste
+   FROM operation_analytique
+   left JOIN jrnx USING (j_id) )      
+   SELECT po.po_id, po.pa_id, po.po_name, po.po_description, sum(
         CASE
             WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
             ELSE operation_analytique.oa_amount
-        END) AS sum_amount, jrnx.j_poste, tmp_pcmn.pcm_lib AS name
+        END) AS sum_amount, m.j_poste, tmp_pcmn.pcm_lib AS name
    FROM operation_analytique
    JOIN poste_analytique po USING (po_id)
-   JOIN jrnx USING (j_id)
-   JOIN tmp_pcmn ON jrnx.j_poste::text = tmp_pcmn.pcm_val::text ".
-"					where
-		pa_id=$1 ".$date.$sql_from_poste.$sql_to_poste."
-
-  GROUP BY po.po_id, po.po_name, po.pa_id, jrnx.j_poste, tmp_pcmn.pcm_lib, po.po_description
+   JOIN m USING (po_id)
+   JOIN tmp_pcmn ON m.j_poste::text = tmp_pcmn.pcm_val::text 
+			      where pa_id=$1 ".$date.$sql_from_poste.$sql_to_poste."
+  GROUP BY po.po_id, po.po_name, po.pa_id, m.j_poste, tmp_pcmn.pcm_lib, po.po_description
  HAVING sum(
 CASE
     WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
     ELSE operation_analytique.oa_amount
-END) <> 0::numeric  order by po_id,j_poste",array($this->pa_id));
+END) <> 0::numeric  order by po_id,j_poste
+",array($this->pa_id));
 
   }
   /**
@@ -94,21 +113,38 @@ END) <> 0::numeric  order by po_id,j_poste",array($this->pa_id));
     $date=($date != '')?"  $date":'';
     $sql_from_poste=($this->from_poste!='')?" and  po.po_name >= upper('".Database::escape_string($this->from_poste)."')":'';
     $sql_to_poste=($this->to_poste!='')?" and  po.po_name <= upper('".Database::escape_string($this->to_poste)."')":'';
-    $this->arow=$this->db->get_array(" SELECT po.po_id, po.pa_id, po.po_name, po.po_description, sum(
+    $this->arow=$this->db->get_array("
+with m as (select po_id,
+ 		coalesce(jrnx.f_id,operation_analytique.f_id) as f_id1,
+		case when jrnx.j_qcode is not null then 
+        ( SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id) 
+          when jrnx.f_id is null and operation_analytique.f_id is not null then 
+          ( SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = operation_analytique.f_id)
+         end
+          AS name,
+           case when jrnx.j_poste is not null then
+        jrnx.j_poste
+        when jrnx.j_poste is null then
+        (SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 23 AND fiche_detail.f_id = operation_analytique.f_id) end as j_qcode
+   FROM operation_analytique
+   left JOIN jrnx USING (j_id) )        
+SELECT po.po_id, po.pa_id, po.po_name, po.po_description, sum(
         CASE
             WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
             ELSE operation_analytique.oa_amount
-        END) AS sum_amount, jrnx.f_id, jrnx.j_qcode, ( SELECT fiche_detail.ad_value
-           FROM fiche_detail
-          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id) AS name
+        END) AS sum_amount, m.f_id1 as f_id, m.j_qcode, m.name
    FROM operation_analytique
    JOIN poste_analytique po USING (po_id)
-   JOIN jrnx USING (j_id) ".
+   JOIN m USING (po_id) ".
 				     " where pa_id=$1 ".$date.$sql_from_poste.$sql_to_poste
 				     ."
-  GROUP BY po.po_id, po.po_name, po.pa_id, jrnx.f_id, jrnx.j_qcode, ( SELECT fiche_detail.ad_value
-   FROM fiche_detail
-  WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id), po.po_description
+  GROUP BY po.po_id, po.po_name, po.pa_id, m.f_id1, m.j_qcode, m.name, po.po_description
  HAVING sum(
 CASE
     WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
@@ -127,24 +163,46 @@ END) <> 0::numeric order by po_name,name",array($this->pa_id));
     $date=($date != '')?"  $date":'';
     $sql_from_poste=($this->from_poste!='')?" and  po.po_name >= upper('".Database::escape_string($this->from_poste)."')":'';
     $sql_to_poste=($this->to_poste!='')?" and  po.po_name <= upper('".Database::escape_string($this->to_poste)."')":'';
-  $this->arow=$this->db->get_array("SELECT po.po_id, po.pa_id, po.po_name, po.po_description, sum(
+  $this->arow=$this->db->get_array("
+       with m as (select po_id,
+ 		coalesce(jrnx.f_id,operation_analytique.f_id) as f_id1,
+		case when jrnx.j_qcode is not null then 
+        ( SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id) 
+          when jrnx.f_id is null and operation_analytique.f_id is not null then 
+          ( SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = operation_analytique.f_id)
+         end
+          AS name,
+           case when jrnx.j_poste is not null then
+        jrnx.j_poste
+        when jrnx.j_poste is null then
+        (SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 5 AND fiche_detail.f_id = operation_analytique.f_id) end as j_poste
+   FROM operation_analytique
+   left JOIN jrnx USING (j_id) )      
+   SELECT po.po_id, po.pa_id, po.po_name, po.po_description, sum(
         CASE
             WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
             ELSE operation_analytique.oa_amount
-        END) AS sum_amount, jrnx.j_poste, tmp_pcmn.pcm_lib AS name
+        END) AS sum_amount, m.j_poste, tmp_pcmn.pcm_lib AS name
    FROM operation_analytique
    JOIN poste_analytique po USING (po_id)
-   JOIN jrnx USING (j_id)
-   JOIN tmp_pcmn ON jrnx.j_poste::text = tmp_pcmn.pcm_val::text ".
-"					where
-		pa_id=$1 ".$date.$sql_from_poste.$sql_to_poste."
-
-  GROUP BY po.po_id, po.po_name, po.pa_id, jrnx.j_poste, tmp_pcmn.pcm_lib, po.po_description
+   JOIN m USING (po_id)
+   JOIN tmp_pcmn ON m.j_poste::text = tmp_pcmn.pcm_val::text 
+   where
+			     pa_id=$1 ".$date.$sql_from_poste.$sql_to_poste."
+  GROUP BY po.po_id, po.po_name, po.pa_id, m.j_poste, tmp_pcmn.pcm_lib, po.po_description
  HAVING sum(
 CASE
     WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
     ELSE operation_analytique.oa_amount
-END) <> 0::numeric  order by j_poste,po_name",array($this->pa_id));
+END) <> 0::numeric  order by po_id,po_name
+
+",array($this->pa_id));
 
   }
 
@@ -159,21 +217,39 @@ END) <> 0::numeric  order by j_poste,po_name",array($this->pa_id));
     $sql_from_poste=($this->from_poste!='')?" and  po.po_name >= upper('".Database::escape_string($this->from_poste)."')":'';
     $sql_to_poste=($this->to_poste!='')?" and  po.po_name <= upper('".Database::escape_string($this->to_poste)."')":'';
 
-   $this->arow=$this->db->get_array(" SELECT po.po_id, po.pa_id, po.po_name, po.po_description, sum(
+   $this->arow=$this->db->get_array(" 
+with m as (select po_id,
+ 		coalesce(jrnx.f_id,operation_analytique.f_id) as f_id1,
+		case when jrnx.j_qcode is not null then 
+        ( SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id) 
+          when jrnx.f_id is null and operation_analytique.f_id is not null then 
+          ( SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = operation_analytique.f_id)
+         end
+          AS name,
+           case when jrnx.j_qcode is not null then
+        jrnx.j_qcode
+        when jrnx.f_id is null then
+        (SELECT fiche_detail.ad_value
+           FROM fiche_detail
+          WHERE fiche_detail.ad_id = 23 AND fiche_detail.f_id = operation_analytique.f_id) end as j_qcode
+   FROM operation_analytique
+   left JOIN jrnx USING (j_id) )       
+SELECT po.po_id, po.pa_id, po.po_name, po.po_description, sum(
         CASE
             WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
             ELSE operation_analytique.oa_amount
-        END) AS sum_amount, jrnx.f_id, jrnx.j_qcode, ( SELECT fiche_detail.ad_value
-           FROM fiche_detail
-          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id) AS name
+        END) AS sum_amount,m.f_id1  as f_id, m.j_qcode, m.name
    FROM operation_analytique
+   join m using(po_id)
    JOIN poste_analytique po USING (po_id)
-   JOIN jrnx USING (j_id) ".
+    ".
 				     " where pa_id=$1 ".$date.$sql_from_poste.$sql_to_poste
 				     ."
-  GROUP BY po.po_id, po.po_name, po.pa_id, jrnx.f_id, jrnx.j_qcode, ( SELECT fiche_detail.ad_value
-   FROM fiche_detail
-  WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id), po.po_description
+  GROUP BY po.po_id, po.po_name, po.pa_id, m.f_id1, m.j_qcode, m.name, po.po_description
  HAVING sum(
 CASE
     WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric

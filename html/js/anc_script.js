@@ -367,6 +367,7 @@ function anc_add_row(tableid)
         var newCell = oRow.insertCell(e);
         var tt = rowToCopy.cells[e].innerHTML;
         var new_tt = tt.replace(/pop0/g, "pop" + nb.value);
+        var new_tt = tt.replace(/qcode0/g, "qcode" + nb.value);
         new_tt = new_tt.replace(/pamount0/g, "pamount" + nb.value);
         new_tt = new_tt.replace(/pdeb0/g, "pdeb" + nb.value);
         newCell.innerHTML = new_tt;

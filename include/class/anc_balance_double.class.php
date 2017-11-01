@@ -482,13 +482,12 @@ class Anc_Balance_Double extends Anc_Print
              ";
 
 
-        $res=$this->db->exec_sql($sql);
-        $this->has_data=Database::num_row($res);
-        if ( Database::num_row($res) == 0 )
+        $array=$this->db->get_array($sql);
+        $this->has_data=count($array);
+        if ( $this->has_data == 0 )
             return null;
         $a=array();
         $count=0;
-        $array=Database::fetch_all($res);
         foreach ($array as $row)
         {
             $a[$count]['a_po_id']=$row['a_po_id'];
