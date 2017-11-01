@@ -114,10 +114,11 @@ h2.error {
 td.tool a.mtitle {
     text-decoration:none;
     display:block;
-    color: #0000FF;
+    /*! color: #0000FF; */
     height: 100%;
     width: 100%;
     
+    /*! color: orange; */
 }
 td.tool a.mtitle:hover {
     text-decoration:none;
@@ -148,6 +149,7 @@ td.tool a.mtitle:hover {
     border-collapse: collapse;
     border-width: 0px;
     background-color: whitesmoke;
+    color: darkblue;
 }
 #module table td.toolselected a {
     background-color: darkgray;
