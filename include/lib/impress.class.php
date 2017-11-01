@@ -22,6 +22,7 @@
  * \brief contains function for the printing
 */
 require_once NOALYSS_INCLUDE.'/class/periode.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
 
 class Impress
@@ -250,23 +251,20 @@ class Impress
      * @param type $aheader  double array, each item of the array contains
      * a key type (num) and a key title
      */
-    static function array_to_csv($array,$aheader)
+    static function array_to_csv($array,$aheader,$p_filename)
     {
-        $seq="";
+        $file_csv=new Noalyss_Csv($p_filename);
         for ($i=0;$i<count($aheader);$i++)
         {
-            echo $seq.'"'.$aheader[$i]['title'].'"';
-            $seq=";";
+                $file_csv->add($aheader[$i]['title']);
         }
-        printf("\r");
+        $file_csv->write();
 
-        $seq="";
         // fetch all the rows
         for ($i=0;$i<count($array);$i++)
         {
             $row=$array[$i];
-            $sep2="";
-			$e=0;
+            $e=0;
             // for each rows, for each value
             foreach ($array[$i] as $key=>$value)
             {
@@ -277,17 +275,17 @@ class Impress
 					switch ($aheader[$e]['type'])
 					{
 						case 'num':
-							echo $sep2.nb($value);
+							$file_csv->add($value, "number");
 							break;
 						default:
-							echo $sep2.'"'.$value.'"';
+							$file_csv->add($value);
 					}
 				} else {
-					echo '"'.$value.'"'.$sep2;
+					$file->add($value);
 				}
-                $sep2=";";$e++;
             }
-            printf("\r");
+            $file_csv->write();
+            $e++;
         }
     }
 }
