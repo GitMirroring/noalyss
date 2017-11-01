@@ -2189,7 +2189,7 @@ function ask_navigator(p_dossier) {
                 }
         );
     } catch (e) {
-        info_message(e.getMessage);
+        info_message(e.message);
     }
 
 }
@@ -2224,7 +2224,7 @@ function set_preference(p_dossier) {
                 }
         );
     } catch (e) {
-        info_message(e.getMessage);
+        info_message(e.message);
     }
 
 }
@@ -2261,7 +2261,7 @@ function show_bookmark(p_dossier) {
                 }
         );
     } catch (e) {
-        info_message(e.getMessage);
+        info_message(e.message);
     }
 
 }
@@ -2295,7 +2295,7 @@ function save_bookmark() {
                 }
         );
     } catch (e) {
-        info_message(e.getMessage);
+        info_message(e.message);
     }
 
 }
@@ -2327,7 +2327,7 @@ function remove_bookmark() {
                 }
         );
     } catch (e) {
-        error_message(e.getMessage);
+        error_message(e.message);
     }
 
 }
@@ -2380,7 +2380,7 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post)
                 }
         );
     } catch (e) {
-        error_message(e.getMessage);
+        error_message(e.message);
     }
 }
 
@@ -2405,7 +2405,7 @@ function save_tag()
                 }
         );
     } catch (e) {
-        error_message(e.getMessage);
+        error_message(e.message);
         return false;
     }
     return false;
@@ -2446,7 +2446,7 @@ function action_tag_select(p_dossier, ag_id)
                 }
         );
     } catch (e) {
-        error_message(e.getMessage);
+        error_message(e.message);
     }
 }
 /**
@@ -2482,7 +2482,7 @@ function action_tag_add(p_dossier, ag_id, t_id)
                 }
         );
     } catch (e) {
-        error_message(e.getMessage);
+        error_message(e.message);
     }
 }
 /**
@@ -2519,7 +2519,7 @@ function action_tag_remove(p_dossier, ag_id, t_id)
                     }
                 );
         } catch (e) {
-            error_message(e.getMessage);
+            error_message(e.message);
         }
     });
 }
@@ -2562,7 +2562,7 @@ function search_display_tag(p_dossier, p_prefix)
                 }
         );
     } catch (e) {
-        error_message(e.getMessage);
+        error_message(e.message);
     }
 }
 /**
@@ -2603,7 +2603,7 @@ function search_add_tag(p_dossier, p_tag_id, p_prefix)
                 }
         );
     } catch (e) {
-        error_message(e.getMessage);
+        error_message(e.message);
     }
 }
 /**
@@ -2639,7 +2639,7 @@ function search_clear_tag(p_dossier, p_prefix)
                 }
         );
     } catch (e) {
-        error_message(e.getMessage);
+        error_message(e.message);
     }
 }
 function action_show_checkbox()
@@ -2707,7 +2707,7 @@ function calendar_zoom(obj)
                 }
         );
     } catch (e) {
-        error_message('calendar_zoom ' + e.getMessage);
+        error_message('calendar_zoom ' + e.message);
     }
 
 
@@ -2905,7 +2905,7 @@ function confirm_box(p_obj, p_message,p_callback_true)
             });
         }
     } catch (e) {
-        alert_box(e.getMessage);
+        alert_box(e.message);
     }
     remove_waiting_box();
     return false;
