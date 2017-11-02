@@ -160,6 +160,12 @@ class Manage_Table_SQL
     {
         return $this->a_order;
     }
+    function set_order($p_order)
+    {
+        if (! is_array($p_order) )            
+                throw new Exception("set_order, parameter is not an array");
+        $this->a_order=$p_order;
+    }
     /**
      * @brief set the error message for a wrong input
      * @param $p_col the column name 
