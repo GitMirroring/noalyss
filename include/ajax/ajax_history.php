@@ -79,7 +79,7 @@ if ( isset($_GET['f_id']))
 	 */
 	if ($exercice->count() > 1 )
 	  {
-	    $default=(isset($_GET['ex']))?$_GET['ex']:$year;
+	    $default=$http->get("ex","number",$year);
 	    $dossier=dossier::id();
 	    if ( $div != 'popup')
 	      {
@@ -150,8 +150,9 @@ if ( isset($_REQUEST['pcm_val']))
         $array['to_periode']=$limit_periode[1]->last_day();
 	if (isset($_GET['ex']))
 	  {
-	    $limit_periode=$per->get_limit($_GET['ex']);
-	    if ( $_GET['ex'] < $year)
+            $ex=$http->get("ex","number");
+	    $limit_periode=$per->get_limit($ex);
+	    if ( $ex < $year)
 	      $array['from_periode']=$limit_periode[0]->first_day();
 	    else
 	      $array['to_periode']=$limit_periode[1]->last_day();
@@ -162,7 +163,7 @@ if ( isset($_REQUEST['pcm_val']))
 	 */
 	if ($exercice->count() > 1 )
 	  {
-	    $default=(isset($_GET['ex']))?$_GET['ex']:$year;
+            $default=$http->get("ex","number",$year);
 	    $dossier=dossier::id();
 	    if ( $div != 'popup')
 	      {

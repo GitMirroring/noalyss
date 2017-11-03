@@ -134,10 +134,10 @@ class Acc_Account_Ledger
         case 0:
                 break;
         case 1:
-            $sql_let=' and j_id in (select j_id from letter_cred union select j_id from letter_deb)';
+            $sql_let=' and j_id in (select j_id from letter_cred union all select j_id from letter_deb)';
             break;
         case '2':
-            $sql_let=' and j_id not in (select j_id from letter_cred union select j_id from letter_deb) ';
+            $sql_let=' and j_id not in (select j_id from letter_cred union all select j_id from letter_deb) ';
             break;
         }
 	if ( $solded == 1)
@@ -160,25 +160,33 @@ class Acc_Account_Ledger
 	    if ( $this->db->count() == 0 ) return array();
 	    if ($r[0]['s_deb']==$r[0]['s_cred']) return array();
 	  }
-        $this->row=$this->db->get_array("select  j_id,jr_id,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_date,
+        $this->row=$this->db->get_array("
+ with sqlletter as (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
+ select  j_id,jr_id,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_date,
                                 j_qcode
                                  ,case when j_debit='t' then j_montant else 0 end as deb_montant,
                                  case when j_debit='f' then j_montant else 0 end as cred_montant,
                                   case when j_text is null or j_text = '' then jr_comment 
                                    else jr_comment||' '||j_text  end
                                  as description,jrn_def_name as jrn_name,
-                                 j_debit, jr_internal,jr_pj_number,
-                                 coalesce(comptaproc.get_letter_jnt(j_id),-1) as letter 
+                                 j_debit, jr_internal,jr_pj_number
+                                 ,(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id ) as letter 
                                  ,pcm_lib
-				 ,jr_tech_per
+				 				 ,jr_tech_per
                                  ,p_exercice
                                  ,jrn_def_name
                                  ,jrn_def_code
-                                  from jrnx 
+                                 ,(with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx using (j_id)  group by jl_id ),
+												deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx using (j_id)   group by jl_id )
+												select amount_deb-amount_cred
+												from 
+												cred 
+												full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter
+                                  from jrnx as j1
                                   join jrn_def on (jrn_def_id=j_jrn_def )
                                    join jrn on (jr_grpt_id=j_grpt)
                                    join tmp_pcmn on (j_poste=pcm_val)
-				   join parm_periode on (p_id=jr_tech_per) 
+				   join parm_periode on (p_id=jr_tech_per)              
                                   where j_poste=$1 and 
                                   ( to_date($2,'DD.MM.YYYY') <= j_date and 
                                     to_date($3,'DD.MM.YYYY') >= j_date )
@@ -361,6 +369,7 @@ class Acc_Account_Ledger
      */
     function HtmlTable($p_array=null,$let=0 , $from_div=0)
     {
+        
         if ( $p_array==null)$p_array=$_REQUEST;
         $this->get_name();
         list($array,$tot_deb,$tot_cred)=$this->get_row_date( $p_array['from_periode'],
@@ -405,10 +414,11 @@ class Acc_Account_Ledger
             $vw_operation = sprintf('<A class="detail" style="text-decoration:underline;color:red" HREF="javascript:modifyOperation(\'%s\',\'%s\')" >%s</A>', $op['jr_id'], dossier::id(), $op['jr_internal']);
             $let = '';
 			$html_let = "";
-			if ($op['letter'] != -1)
+			if ($op['letter'] != 0)
 			{
 				$let = strtoupper(base_convert($op['letter'], 10, 36));
 				$html_let = HtmlInput::show_reconcile($from_div, $let);
+                                if ( $op['delta_letter'] != 0) $html_let='<img src="image/warning.png" style="height:12px"/>'.$html_let;
 			}
 			$tmp_diff=bcsub($op['deb_montant'],$op['cred_montant']);
 

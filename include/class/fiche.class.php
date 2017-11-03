@@ -1167,15 +1167,23 @@ class Fiche
         }
 
         $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
-        $this->row=$this->cn->get_array("select distinct substring(jr_pj_number,'[0-9]+$'),j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_qcode,".
+        $this->row=$this->cn->get_array("
+            with sqlletter as (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
+                select distinct substring(jr_pj_number,'[0-9]+$'),j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_qcode,".
                                  "case when j_debit='t' then j_montant else 0 end as deb_montant,".
                                  "case when j_debit='f' then j_montant else 0 end as cred_montant,".
                                  " jr_comment as description,jrn_def_name as jrn_name,j_poste,".
 				 " jr_pj_number,".
-                                 "j_debit, jr_internal,jr_id,coalesce(comptaproc.get_letter_jnt(j_id),-1) as letter, ".
+                                 "j_debit, jr_internal,jr_id,(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id ) as letter , ".
 				 " jr_tech_per,p_exercice,jrn_def_name,
+                                     (with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx using (j_id)  group by jl_id ),
+												deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx using (j_id)   group by jl_id )
+												select amount_deb-amount_cred
+												from 
+												cred 
+												full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter,
 								  jrn_def_code".
-                                 " from jrnx left join jrn_def on jrn_def_id=j_jrn_def ".
+                                 " from jrnx as j1 left join jrn_def on jrn_def_id=j_jrn_def ".
                                  " left join jrn on jr_grpt_id=j_grpt".
 				 " left join parm_periode on (p_id=jr_tech_per) ".
                                  " where j_qcode=$1 and ".
@@ -1384,10 +1392,11 @@ class Fiche
             $vw_operation = sprintf('<A class="detail" style="text-decoration:underline;color:red" HREF="javascript:modifyOperation(\'%s\',\'%s\')" >%s</A>', $op['jr_id'], dossier::id(), $op['jr_internal']);
             $let = '';
             $html_let = "";
-            if ($op['letter'] != -1)
+            if ($op['letter'] != "")
             {
                     $let = strtoupper(base_convert($op['letter'], 10, 36));
                     $html_let = HtmlInput::show_reconcile($from_div, $let);
+                     if ( $op['delta_letter'] != 0) $html_let='<img src="image/warning.png" style="height:12px"/>'.$html_let;
             }
             $tmp_diff=bcsub($op['deb_montant'],$op['cred_montant']);
 
