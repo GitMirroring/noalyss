@@ -1396,7 +1396,7 @@ class Fiche
             {
                     $let = strtoupper(base_convert($op['letter'], 10, 36));
                     $html_let = HtmlInput::show_reconcile($from_div, $let);
-                     if ( $op['delta_letter'] != 0) $html_let='<img src="image/warning.png" style="height:12px"/>'.$html_let;
+                     if ( $op['delta_letter'] != 0) $html_let='<img src="image/warning.png" onmouseover="displayBulle(\'delta = '.$op['delta_letter'].'\')" onmouseleave="hideBulle()" style="height:12px"/>'.$html_let;
             }
             $tmp_diff=bcsub($op['deb_montant'],$op['cred_montant']);
 
