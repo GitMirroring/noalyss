@@ -286,9 +286,9 @@ function success_get_pj(request, json)
 {
 
     var answer = request.responseText.evalJSON(true);
-    obj = g("e_pj");
+    var obj = g("e_pj");
     obj.value = '';
-    if (answer.count == 0)
+    if (answer.length == 0)
         return;
     obj.value = answer.pj;
     g("e_pj_suggest").value = answer.pj;
