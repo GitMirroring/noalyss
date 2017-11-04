@@ -1259,12 +1259,14 @@ EOF;
             $tvac->value = 0;
             $array[$i]['tvac'] = $tvac->input();
 
-            if ($g_parameter->MY_UPDLAB == 'Y') {
-                $Span = new IText("e_march" . $i . "_label");
-
-                $Span->size= "40";
-            } else {
-                $Span = new ISpan("e_march" . $i . "_label");
+            if ( $g_parameter->MY_UPDLAB == 'Y')
+            {
+                $Span=new IText("e_march".$i."_label");
+                $Span->style='class="input_text label_item"';
+            } else
+            {
+                $Span=new ISpan("e_march".$i."_label");
+                $Span->extra='class="label_item"';
             }
             $Span->value = $march_label;
             $Span->setReadOnly(false);

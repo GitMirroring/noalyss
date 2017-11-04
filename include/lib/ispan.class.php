@@ -28,7 +28,8 @@ class ISpan extends HtmlInput
     public function __construct($p_name="",$p_value="")
     {
         parent::__construct($p_name,$p_value);
-        $this->style="display:inline";
+        $this->style="";
+        $this->extra="";
 
     }
     /*!\brief show the html  input of the widget, the span is always readonly */
@@ -38,9 +39,10 @@ class ISpan extends HtmlInput
         $this->value=($p_value==null)?$this->value:$p_value;
 
 
-        $r=sprintf('<span style="%s" id="%s">%s </span>',
+        $r=sprintf('<span style="%s" id="%s" %s>%s </span>',
                    $this->style,
                    $this->name,
+                   $this->extra,
                    $this->value
                   );
 

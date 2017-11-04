@@ -415,9 +415,9 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			$array[$i]['cname'] = $wcard_name->input();
 
 			// Comment
-			$wComment = new IText("e_other$i" . "_comment", $tiers_comment);
-
-			$wComment->size = 35;
+                        $wComment = new IText("e_other$i" . "_comment", $tiers_comment);
+                        $wComment->style='class="input_text label_item"';
+                       
 			$wComment->setReadOnly($pview_only);
 			$array[$i]['comment'] = $wComment->input();
 			// amount

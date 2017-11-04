@@ -1075,9 +1075,9 @@ a.line:hover,div_content a.line
 {
     color:white;
     text-decoration:none;
-    margin-left: 2px;
+    margin-left: 6px;
     margin-right:6px;
-    margin-top:0px;
+    /*! padding-top:10px; */
     font-size:14px;
     font-size:1rem;
     cursor: pointer;
@@ -1086,7 +1086,8 @@ a.line:hover,div_content a.line
 }
 #close_div:hover
 {
-    background-color: #F93;
+    background-color: white;
+    color: blue;
 }
 #popmeout
 {
@@ -1409,7 +1410,7 @@ div.bxbutton
     float:right;
     height:10px;
     display:block;
-    margin-top:0%;
+    margin-top:3px;
     margin-right:0.48%;
 }
 div.inner_box tr.odd {
@@ -2140,4 +2141,11 @@ span.inplace_edit_input
 div.content a.arrow {
     background-color:white;
     color:black;
+}
+/*
+ * Span or input-text to contain name of a card
+ */
+.label_item {
+    width: 500px;
+    display:block;
 }

@@ -1231,10 +1231,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             if ( $g_parameter->MY_UPDLAB == 'Y')
             {
                 $Span=new IText("e_march".$i."_label");
-                $Span->css_size="40";
+                $Span->style='class="input_text label_item"';
             } else
             {
                 $Span=new ISpan("e_march".$i."_label");
+                $Span->extra='class="label_item"';
             }
             $Span->value=$march_label;
             $Span->setReadOnly(false);
