@@ -466,7 +466,7 @@ class Anc_Balance_Double extends Anc_Print
              case when a.oa_debit='t' then a.oa_amount else 0 end as a_oa_amount_d,
              case when a.oa_debit='f' then a.oa_amount else 0 end as a_oa_amount_c
              from
-             operation_analytique as a join operation_analytique as b on (a.j_id=b.j_id and a.oa_row=b.oa_row)
+             operation_analytique as a join operation_analytique as b on (a.oa_row=b.oa_row and a.oa_group=b.oa_group)
 		join poste_analytique as poa on (a.po_id=poa.po_id)
 		join poste_analytique as pob on (b.po_id=pob.po_id)
              where poa.pa_id=".
