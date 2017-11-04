@@ -456,7 +456,7 @@ function fill_ipopcard(obj)
     if ( nTop > 300 ) {
         nTop=170;
     }
-    str_top=fixed_position(250,nTop)
+    var str_top=fixed_position(250,nTop)
     var str_style=str_top+";width:45em;height:auto;position:absolute";
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
