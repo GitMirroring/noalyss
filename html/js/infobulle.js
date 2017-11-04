@@ -54,7 +54,9 @@ function hideBulle(p_ctl)
 }
 function displayBulle(p_comment)  {
     var d=document.getElementById('bulle');
+    var viewport = document.viewport.getDimensions();
     d.innerHTML=p_comment;
+    if ( posX+offsetX > viewport.width-d.getWidth()) { posX-=d.getWidth()+20;}
     d.style.top=posY+offsetY+"px";
     d.style.left=posX+offsetX+"px";
     d.style.visibility="visible";
