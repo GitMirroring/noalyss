@@ -2830,7 +2830,7 @@ function logout()
  */
 function create_anchor_up()
 {
-    if ( $('up_top')) return;
+    if ( document.getElementById('up_top')) return;
     
     var newElt = new Element('div');
     newElt.setAttribute('id', 'up_top');
