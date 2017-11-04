@@ -29,6 +29,9 @@ document.onmousemove=getPosition;
 
 function showBulle(p_ctl){
     var d=document.getElementById('bulle');
+    var viewport = document.viewport.getDimensions();
+    if ( posX+offsetX > viewport.width-d.getWidth()) { posX-=d.getWidth()+20;}
+    if ( posY+offsetY > viewport.height-d.getHeight()-20) { posY-=d.getHeight()+20}
     d.innerHTML=content[p_ctl];
     d.style.top=posY+offsetY+"px";
     d.style.left=posX+offsetX-10+"px";
@@ -57,6 +60,7 @@ function displayBulle(p_comment)  {
     var viewport = document.viewport.getDimensions();
     d.innerHTML=p_comment;
     if ( posX+offsetX > viewport.width-d.getWidth()) { posX-=d.getWidth()+20;}
+    if ( posY+offsetY > viewport.height-d.getHeight()-20) { posY-=d.getHeight()+20}
     d.style.top=posY+offsetY+"px";
     d.style.left=posX+offsetX+"px";
     d.style.visibility="visible";
