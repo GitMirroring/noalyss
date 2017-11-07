@@ -127,10 +127,10 @@ class Anc_Print
         $plan_id->selected=$this->pa_id;
 
         $javascript="search_ca(".dossier::id().",'from_poste','pa_id')";
-        $choose_from=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
+        $choose_from=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" title="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
         
         $javascript="search_ca(".dossier::id().",'to_poste','pa_id')";
-        $choose_to=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
+        $choose_to=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" title="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
 
         $r.=HtmlInput::request_to_hidden(array('ac'));
         ob_start();
