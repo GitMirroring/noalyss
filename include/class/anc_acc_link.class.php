@@ -44,11 +44,11 @@ class Anc_Acc_Link extends Anc_Print
     {
         $sql="";
         $and=" and ";
-        if ( $this->from != "" )
+        if ( $this->from != "" && $this->from=isDate($this->from) )
         {
             $sql.="$and oa_date >= to_date('".$this->from."','DD.MM.YYYY')";
         }
-        if ( $this->to != "" )
+        if ( $this->to != "" && $this->to=isDate($this->to))
         {
             $sql.=" $and oa_date <= to_date('".$this->to."','DD.MM.YYYY')";
         }
