@@ -535,9 +535,10 @@ class HtmlInput
      * @param string $p_js javascript when the image is clicked
      * @param string $p_message Message 
      */
-    static  function image_click($p_image,$p_js,$p_message)
+    static  function image_click($p_image,$p_js,$p_message,$p_class)
     {
-        $ret=sprintf('<a class="nav" style="display:inline" title="%s"><img src="image/%s" onclick="%s"></a>',
+        $ret=sprintf('<a class="nav %s" style="display:inline" title="%s"><img src="image/%s" onclick="%s"></a>',
+                $p_class,
                 $p_message,$p_image,$p_js);
         return $ret;
 

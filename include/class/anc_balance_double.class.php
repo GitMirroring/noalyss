@@ -342,18 +342,22 @@ class Anc_Balance_Double extends Anc_Print
         $plan_id->selected=$this->pa_id2;
         $r.= "Plan Analytique :".$plan_id->input();
         $r.=HtmlInput::request_to_hidden(array('ac'));
+        
+        
+
+
         $poste=new IText();
         $poste->size=10;
-        $r.="Entre le poste ".$poste->input("from_poste2",$this->from_poste2);
-        $choose=new IButton();
-        $choose->name="Choix Poste";
-        $choose->label=_("Recherche");
-        $choose->javascript="onClick=search_ca(".dossier::id().",'from_poste2','pa_id2')";
-        $r.=$choose->input();
+        $r.=_('Entre le poste ');
+        $r.=$poste->input("from_poste2",$this->from_poste2);
+        $javascript="search_ca(".dossier::id().",'from_poste2','pa_id2')";
+        $r.=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
+        
+        $r.=_(" et le poste ");
+        $r.=$poste->input("to_poste2",$this->to_poste2);
+        $r.=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
+        $javascript="search_ca(".dossier::id().",'to_poste2','pa_id2')";
 
-        $r.=" et le poste ".$poste->input("to_poste2",$this->to_poste2);
-        $choose->javascript="onClick=search_ca(".dossier::id().",'to_poste2','pa_id2')";
-        $r.=$choose->input();
         $r.='<span class="notice" style="display:block">'.
             _('Selectionnez le plan qui vous int&eacute;resse avant de cliquer sur Recherche').
             '</span>';

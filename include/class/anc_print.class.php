@@ -125,19 +125,13 @@ class Anc_Print
         $plan_id=new ISelect("pa_id");
         $plan_id->value=$this->db->make_array("select pa_id, pa_name from plan_analytique order by pa_name");
         $plan_id->selected=$this->pa_id;
-        $choose_from=new IButton();
-        $choose_from->name=_("Choix Poste");
-        $choose_from->label=_("Recherche");
-        $choose_from->javascript="onClick=search_ca(".dossier::id().",'from_poste','pa_id')";
-        
 
-        $choose_to=new IButton();
-        $choose_to->name=_("Choix Poste");
-        $choose_to->label=_("Recherche");
-
+        $javascript="search_ca(".dossier::id().",'from_poste','pa_id')";
+        $choose_from=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
         
-        $choose_to->javascript="onClick=search_ca(".dossier::id().",'to_poste','pa_id')";
-      
+        $javascript="search_ca(".dossier::id().",'to_poste','pa_id')";
+        $choose_to=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
+
         $r.=HtmlInput::request_to_hidden(array('ac'));
         ob_start();
         ?>
@@ -179,9 +173,9 @@ class Anc_Print
 <?php
         $r.=ob_get_clean();
         $r.=_("Entre l'activité ").$from_poste->input();
-        $r.=$choose_from->input();
+        $r.=$choose_from;
         $r.=_(" et l'activité ").$to_poste->input();
-        $r.=$choose_to->input();
+        $r.=$choose_to;
 
         $r.='</span>';
         return $r;
