@@ -19,5 +19,5 @@ ALTER TABLE operation_analytique ADD COLUMN f_id bigint;
 ALTER TABLE operation_analytique  ADD CONSTRAINT operation_analytique_fiche_id_fk FOREIGN KEY (f_id)       REFERENCES fiche (f_id) MATCH SIMPLE       ON UPDATE cascade ON cascade;
 COMMENT ON COLUMN operation_analytique.f_id IS 'FK to fiche.f_id , used only with ODS';
 
-CREATE OR REPLACE FUNCTION comptaproc.table_analytic_account(text,text);
-CREATE OR REPLACE FUNCTION comptaproc.table_analytic_card(text,text);
+drop FUNCTION comptaproc.table_analytic_account(text,text);
+drop FUNCTION comptaproc.table_analytic_card(text,text);
