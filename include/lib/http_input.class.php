@@ -48,21 +48,25 @@ class HttpInput
             if ($p_type=="string")
                 return;
             // Check if number
-            if ($p_type=="number"&&isNumber($this->array[$p_name])==0
-            )
+            if ($p_type=="number"&&isNumber($this->array[$p_name])==0            )
+            {
+                $this->array[$p_name]=h($this->array[$p_name]);
                 throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
                 , EXC_PARAM_TYPE);
+            }
             // Check if date dd.mm.yyyy
             if ($p_type=="date")
             {
                 if (isDate($this->array[$p_name]) <> $this->array[$p_name])
                 {
+                    $this->array[$p_name]=h($this->array[$p_name]);
                     throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
                     , EXC_PARAM_TYPE);
                 }
             }
             if ($p_type=="array"&&!is_array($this->array[$p_name]))
             {
+                $this->array[$p_name]=h($this->array[$p_name]);
                 throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
                 , EXC_PARAM_TYPE);
             }
