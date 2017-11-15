@@ -93,7 +93,7 @@ if ($sa=="pa_write")
 // Update the PA
 if ($sa=="pa_update")
 {
-    $pa_id=$http->get("pa_id","numeric");
+    $pa_id=$http->get("pa_id","number");
 
     $new=new Anc_Plan($cn, $pa_id);
     $new->name=$_POST['pa_name'];
@@ -105,7 +105,7 @@ if ($sa=="pa_update")
 /* delete pa */
 if ($sa=="pa_delete")
 {
-    $pa_id=$http->get("pa_id","numeric");
+    $pa_id=$http->get("pa_id","number");
 
     $delete=new Anc_Plan($cn, $pa_id);
     $delete->delete();
@@ -116,7 +116,7 @@ if ($sa=="pa_delete")
 if ($sa=="pa_detail")
 {
     
-    $pa_id=$http->get("pa_id","numeric");
+    $pa_id=$http->get("pa_id","number");
     
     $new=new Anc_Plan($cn, $pa_id);
     $wSa=HtmlInput::hidden("sa", "pa_update");

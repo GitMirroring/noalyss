@@ -135,7 +135,7 @@ if ( $action == "view" )
     $return= HtmlInput::button_anchor(_('Retour à la liste'),'?&ac='.$_REQUEST['ac'].'&'.dossier::get(),_('retour'),"",'smallbutton');
 
     $repo=new Database();
-    $user_id=$http->get('user_id',"numeric");
+    $user_id=$http->get('user_id',"number");
     $User=new User($repo,$user_id);
     $admin=0;
     $access=$User->get_folder_access($gDossier);

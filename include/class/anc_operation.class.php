@@ -239,7 +239,7 @@ class Anc_Operation
 
         $array=$this->get_list($from,$to);
         if ( empty($array)  )
-            return "Pas d'enregistrement trouv&eacute;";
+            return _("Pas d'enregistrement trouvé");
 
         // navigation_bar
         $step=$_SESSION['g_pagesize'];
@@ -266,13 +266,14 @@ class Anc_Operation
             $group=$row['oa_group'];
             if ( $group !=$oldgroup )
             {
+              
                 if ( $oldgroup!=0 )
                 {
 
                     $efface=new IButton();
                     $efface->javascript="anc_remove_operation(".$gDossier.",".$oldgroup.")";
-                    $efface->name="Efface";
-                    $efface->label="Efface";
+                    $efface->name=_("Efface");
+                    $efface->label=_("Efface");
                     $ret.="<td>".$efface->input()."</td>";
 
                     $this->oa_group=$oldgroup;
@@ -283,24 +284,24 @@ class Anc_Operation
                         // get the old jr_id
                         $detail=new IButton();
                         $detail->javascript="viewOperation($jr_id,$gDossier)";
-                        $detail->name="Detail";
-                        $detail->label="Detail";
+                        $detail->name=_("Detail");
+                        $detail->label=_("Detail");
                         $ret.="<td>".$detail->input()."</td>";
                     }
                     $ret.='</table>';
 
                 }
                 $ret.='<table id="'.$row['oa_group'].'" class="result">';
-
+                $operation_detail= ($row['jr_id'] != 0)?HtmlInput::detail_op($row['jr_id'],  h($row['oa_description']." ".$row['jr_pj_number'])):h($row['oa_description']);
                 $ret.="<tr class=\"highlight\">".
                       td($row['oa_date']).
                       "<td>".
-                      HtmlInput::detail_op($row['jr_id'],  h($row['oa_description']." ".$row['jr_pj_number'])).
+                      $operation_detail.
                       "</td>".
                         td();
 
                 $ret.="<td>".
-                      "Groupe id : ".$row['oa_group'].
+                      _("Groupe id : ").$row['oa_group'].
                       "</td>".
 
                 $oldgroup=$group;
@@ -329,8 +330,8 @@ class Anc_Operation
 
         $efface=new IButton();
         $efface->javascript="anc_remove_operation("."$gDossier,".$oldgroup.")";
-        $efface->name="Efface";
-        $efface->label="Efface";
+        $efface->name=_("Efface");
+        $efface->label=_("Efface");
         $ret.="<td>".$efface->input()."</td>";
         // get the old jr_id
         $this->oa_group=$oldgroup;
@@ -339,8 +340,8 @@ class Anc_Operation
         {
             $detail=new IButton();
             $detail->javascript="modifyOperation($jr_id,'".$gDossier."')";
-            $detail->name="Detail";
-            $detail->label="Detail";
+            $detail->name=_("Detail");
+            $detail->label=_("Detail");
             $ret.="<td>".$detail->input()."</td>";
         }
         $ret.='</table>';

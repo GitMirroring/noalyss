@@ -31,7 +31,7 @@ $http=new HttpInput();
 $cn=Dossier::connect();
 
 $action=$http->request("action");
-$p_id=$http->request("p_id", "numeric");
+$p_id=$http->request("p_id", "number");
 $ctl_id=$http->request("ctl");
 $pa_id=$http->request("pa_id");
 

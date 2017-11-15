@@ -38,7 +38,7 @@ require_once  NOALYSS_INCLUDE."/lib/http_input.class.php";
 require_once  NOALYSS_INCLUDE."/lib/function_javascript.php";
 require_once  NOALYSS_INCLUDE."/class/user.class.php";
 $http=new HttpInput();
-$gDossier=$http->request('gDossier', "numeric",-1);
+$gDossier=$http->request('gDossier', "number",-1);
 if ($gDossier==-1)
 {
     echo " Vous devez donner le dossier avec paramètre gDossier dans l'url, exemple http://localhost/noalyss/html/test.php?gDossier=25";

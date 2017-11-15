@@ -42,8 +42,8 @@ if ($op=="ledger_access")
 {
     $input=$http->request("input");
     $action=$http->request("ieaction", "string", "display");
-    $user_id=$http->post("user_id", "numeric");
-    $jrn_def_id=$http->post("jrn_def_id", "numeric");
+    $user_id=$http->post("user_id", "number");
+    $jrn_def_id=$http->post("jrn_def_id", "number");
     if ($action=="display")
     {
         $ie_input=Inplace_Edit::build($input);
@@ -101,8 +101,8 @@ if ($op=="profile")
 {
     $input=$http->request("input");
     $action=$http->request("ieaction", "string", "display");
-    $user_id=$http->post("user_id", "numeric");
-    $profile_id=$http->post("profile_id", "numeric");
+    $user_id=$http->post("user_id", "number");
+    $profile_id=$http->post("profile_id", "number");
     if ($action=="display")
     {
         $ie_input=Inplace_Edit::build($input);
@@ -148,7 +148,7 @@ if ($op=="profile")
 if ($op=='ledger_access_all')
 {
     // Find the login
-    $user_id=$http->post("user_id", "numeric");
+    $user_id=$http->post("user_id", "number");
     $access=$http->post("access");
     if ($access!="W"&&$access!="X"&&$access!="R")
         die("Invalid access");
@@ -179,8 +179,8 @@ if ($op=='ledger_access_all')
 //------------------------------------------------------------------------------
 if ($op=="action_access")
 {
-    $action_id=$http->get("ac_id", "numeric");
-    $user_id=$http->get("user_id","numeric");
+    $action_id=$http->get("ac_id", "number");
+    $user_id=$http->get("user_id","number");
     $sec_User=new User($cn, $user_id);
     
     $right=$sec_User->check_action($action_id);
@@ -205,8 +205,8 @@ if ($op=="action_access")
 //----------------------------------------------------------------------------
 if ($op=="action_access_all")
 {
-    $user_id=$http->get("user_id","numeric");
-    $access=$http->get("access","numeric");
+    $user_id=$http->get("user_id","number");
+    $access=$http->get("access","number");
     $sec_User=new User($cn, $user_id);
     if ( $access==0) {
         $cn->exec_sql("delete from user_sec_act where ua_login=$1",array($sec_User->login));

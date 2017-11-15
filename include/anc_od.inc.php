@@ -33,6 +33,7 @@ require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_group_operation.class.php';
 
 global $g_user;
+$http=new HttpInput();
 
 $str_dossier=Dossier::get();
 $pa=new Anc_Plan($cn);
@@ -102,7 +103,7 @@ if ( isset($_GET['see']))
 
     $periode_start=$cn->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode $filter_year order by  p_start,p_end",1);
     $g_user=new User($cn);
-    $current=(isset($_GET['p_periode']))?$_GET['p_periode']:$g_user->get_periode();
+    $current=$http->get("p_periode","number",$g_user->get_periode());
     $w->value=$periode_start;
     $w->selected=$current;
     echo _('Filtrer par période').":".$w->input().HtmlInput::submit('gl_submit','Valider').'</form>';

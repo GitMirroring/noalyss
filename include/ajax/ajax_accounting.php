@@ -29,7 +29,7 @@ $http=new HttpInput();
 try {
     $table=$http->request('table');
     $action=$http->request('action');
-    $p_id=$http->request('p_id', "numeric");
+    $p_id=$http->request('p_id', "number");
     $ctl_id=$http->request('ctl');
    
 } catch(Exception $e) {

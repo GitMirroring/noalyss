@@ -109,8 +109,8 @@ print '<TR>';
 // filter on the current year
 $filter_year = " where p_exercice='" . sql_string($exercice) . "'";
 // Get the from_periode and to_periode
-$from_periode=$http->get("from_periode","numeric","");
-$to_periode=$http->get("to_periode","numeric","");
+$from_periode=$http->get("from_periode","number","");
+$to_periode=$http->get("to_periode","number","");
 
 $periode_start = $cn->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode $filter_year order by p_start,p_end");
 $w->selected =  $from_periode ;
@@ -157,9 +157,9 @@ echo '<hr>';
 if (isset($_REQUEST['bt_html']))
 {
     // Type of report : listing=1 , Accounting writing=0, detail =2
-    $simple=$http->get("p_simple","numeric");
+    $simple=$http->get("p_simple","number");
     
-    $jrn_id=$http->get("jrn_id","numeric");
+    $jrn_id=$http->get("jrn_id","number");
     
 	require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
             $Jrn = new Acc_Ledger($cn, $jrn_id);

@@ -41,7 +41,7 @@ echo '<div id="acc_update" class="inner_box" style="display:none;position:absolu
 
 /* Store the p_start parameter */
 
-$g_start=$http->get('p_start',"numeric",1);
+$g_start=$http->get('p_start',"number",1);
 ?>
 <a  id="top"></a>
 

@@ -29,7 +29,7 @@ if ( $g_user->check_module("PLANANC ") ) die("forbidden");
 
 $input = $http->request("input");
 $action = $http->request("ieaction", "string", "display");
-$pa_id=$http->post("id","numeric");
+$pa_id=$http->post("id","number");
 $answer = Inplace_Edit::build($input);
 $answer->add_json_param("gDossier", Dossier::id());
 $answer->set_callback("ajax_misc.php");
