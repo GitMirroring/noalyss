@@ -554,3 +554,17 @@ function anc_key_compute_table()
     $('total_key').innerHTML=Math.round(tot*100)/100;
 
 }
+
+function anc_detail_op(p_oa_group,gDossier) {
+    waiting_box();
+    // create div
+    new Ajax.Request ("ajax_misc.php",{
+                        method:"get",
+                        parameters:{"gDossier":gDossier,"op":"anc_detail_op","oa_group":p_oa_group},
+                        onSuccess:function (req) {
+                            add_div({"id":"anc_detail_op_div","cssclass":"inner_box","style":"position:fixed;top:5%"});
+                            $('anc_detail_op_div').update(req.responseText);
+                            remove_waiting_box();
+                        }
+                    });
+}

@@ -197,7 +197,9 @@ $path = array(
     // Update name and description
     "anc_updatedescription"=>"ajax_anc_plan",
     // Update, insert or delete accounting frmo CFGPCMN
-    "accounting"=>"ajax_accounting"
+    "accounting"=>"ajax_accounting",
+    // Show detail of an ANC operation
+    "anc_detail_op"=>"ajax_anc_detail_operation"
 )    ;
 
 if (array_key_exists($op, $path)) {

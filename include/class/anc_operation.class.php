@@ -163,6 +163,34 @@ class Anc_Operation
 
         $this->db->exec_sql($sql,array($this->oa_id));
     }
+    
+    function get_list_simple($p_from,$p_to)
+    {
+        $cond="";
+        $where=" where ";
+        
+        if ($p_from!="") {
+            $cond="$where (oa_date >= to_date('$p_from','DD.MM.YYYY')  or oa_date >= to_date('$p_from','DD.MM.YYYY') )";
+            $where=" and ";
+        }
+        if ( $p_to!="" )
+            $cond.="$where (oa_date <=to_date('$p_to','DD.MM.YYYY') or  oa_date <=to_date('$p_to','DD.MM.YYYY')) ";
+
+	$sql="
+            select distinct oa_group,
+                to_char(oa_date,'DD.MM.YYYY') as str_date ,
+                oa_date,
+                oa_description,
+                jr_pj_number,
+                jr_id
+            from 
+                operation_analytique as oa 
+                left join (select jr_id,jr_pj_number,j_id from jrn join jrnx on (jr_grpt_id=j_grpt) ) as m on (m.j_id=oa.j_id)
+                $cond
+                    order by oa_date ";
+        return $this->db->get_array($sql);
+                
+    }
 
     /*!\brief get a list of row from a certain periode
      */
@@ -237,7 +265,8 @@ class Anc_Operation
             list($from,$to)=$p->get_date_limit($p_from);
         }
 
-        $array=$this->get_list($from,$to);
+        $array=$this->get_list_simple($from,$to);
+        
         if ( empty($array)  )
             return _("Pas d'enregistrement trouvé");
 
@@ -260,92 +289,37 @@ class Anc_Operation
         $group=0;
         $oldgroup=0;
         $oldjrid=0;
-
+        $ret.=_("Chercher")." ".HtmlInput::filter_table("anc_operation_list_tb", '0,1,2', 1);
+        $ret.= "<table id=\"anc_operation_list_tb\"class=\"result\">";
+        $ret.=th(_("Date"));
+        $ret.=th(_("Libellé"));
+        $ret.=th(_("Num Pièce"));
+        $ret.=th("");
+        $ret.=th("");
+        $i=0;
         foreach ($view as $row)
         {
-            $group=$row['oa_group'];
-            if ( $group !=$oldgroup )
-            {
-              
-                if ( $oldgroup!=0 )
-                {
-
-                    $efface=new IButton();
-                    $efface->javascript="anc_remove_operation(".$gDossier.",".$oldgroup.")";
-                    $efface->name=_("Efface");
-                    $efface->label=_("Efface");
-                    $ret.="<td>".$efface->input()."</td>";
-
-                    $this->oa_group=$oldgroup;
-                    $jr_id=$this->get_jrid();
-
-                    if ( $jr_id != 0)
-                    {
-                        // get the old jr_id
-                        $detail=new IButton();
-                        $detail->javascript="viewOperation($jr_id,$gDossier)";
-                        $detail->name=_("Detail");
-                        $detail->label=_("Detail");
-                        $ret.="<td>".$detail->input()."</td>";
-                    }
-                    $ret.='</table>';
-
-                }
-                $ret.='<table id="'.$row['oa_group'].'" class="result">';
-                $operation_detail= ($row['jr_id'] != 0)?HtmlInput::detail_op($row['jr_id'],  h($row['oa_description']." ".$row['jr_pj_number'])):h($row['oa_description']);
-                $ret.="<tr class=\"highlight\">".
-                      td($row['oa_date']).
-                      "<td>".
-                      $operation_detail.
-                      "</td>".
-                        td();
-
-                $ret.="<td>".
-                      _("Groupe id : ").$row['oa_group'].
-                      "</td>".
-
-                $oldgroup=$group;
-
+            $class=($i%2 == 0)?'class="even"':' class="odd"';
+            $i++;
+            $ret.="<tr $class>";
+            $ret.=td($row['str_date']);
+            $ret.=td(h($row['oa_description']));
+            $ret.=td(h($row['jr_pj_number']));
+            $js="anc_remove_operation(".$gDossier.",".$oldgroup.")";
+             
+            $ret.="<td>".HtmlInput::image_click("trash-24.gif", $js, _("Effacer"))."</td>";
+            if ( $row['jr_id'] != "") {
+                $js="viewOperation({$row['jr_id']},{$gDossier})";
+                
+            } else {
+                $js="anc_detail_op({$row['oa_group']},{$gDossier})";
             }
-
-            $class=($count%2==0)?"odd":"even";
-            $count++;
-            $cred= ( $row['oa_debit'] == 'f')?"CREDIT":"DEBIT";
-            $ret.="<tr class=\"$class\">";
-            $ret.= "<td>".
-                   h($row['po_name']).
-                   "</td>";
-
-	    $ret.=td(h($row['po_description']));
-
-            $ret.='<td class="num">'.	nbm($row['oa_amount']).
-                  "</td>".
-                  "<td>".
-                  $cred.
-                  "</td>".
-
-                  "</tr>";
-        }
-
-
-        $efface=new IButton();
-        $efface->javascript="anc_remove_operation("."$gDossier,".$oldgroup.")";
-        $efface->name=_("Efface");
-        $efface->label=_("Efface");
-        $ret.="<td>".$efface->input()."</td>";
-        // get the old jr_id
-        $this->oa_group=$oldgroup;
-        $jr_id=$this->get_jrid();
-        if ( $jr_id != 0 )
-        {
-            $detail=new IButton();
-            $detail->javascript="modifyOperation($jr_id,'".$gDossier."')";
-            $detail->name=_("Detail");
-            $detail->label=_("Detail");
-            $ret.="<td>".$detail->input()."</td>";
-        }
+            $ret .= "<td>". HtmlInput::image_click("crayon-mod-b24.png", $js, _("Modifier"))."</td>";
+            $ret.="</tr>";
+        }    
         $ret.='</table>';
         $ret.=$bar;
+        
         return $ret;
     }
     /*!\brief retrieve an operation thanks a jrnx.j_id
