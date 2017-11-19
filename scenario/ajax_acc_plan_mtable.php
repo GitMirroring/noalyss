@@ -36,7 +36,6 @@ $action=$http->request('action');
 $p_id=$http->request('p_id', "number");
 $ctl_id=$http->request('ctl');
 } catch(Exception $e) {
-   
     echo $e->getMessage();
 }
 require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";

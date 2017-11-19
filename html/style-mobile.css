@@ -1184,10 +1184,6 @@ div#jrn_name_div {
   margin-right: 150px;
 }
 #predef_form {
-  margin-left: 20%;
-  width: 60%;
-  position: absolute;
-  z-index: 2;
 }
 @media only screen and (min-width: 955px) {
   div#jrn_name_div {
@@ -1195,10 +1191,6 @@ div#jrn_name_div {
     margin-right: 150px;
   }
   #predef_form {
-    margin-left: 20%;
-    width: 60%;
-    position: absolute;
-    z-index: 2;
   }
 }
 @media only screen and (max-width: 955px) {

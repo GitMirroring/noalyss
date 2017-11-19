@@ -242,15 +242,7 @@ if (isset ($_REQUEST['p_jrn_predef'])){
 }
 // pre defined operation
 //
-echo '<div id="predef_form">';
-echo HtmlInput::hidden('p_jrn_predef', $Ledger->id);
-$op = new Pre_op_ach($cn);
-$op->set('ledger', $Ledger->id);
-$op->set('ledger_type', "ACH");
-$op->set('direct', 'f');
-$url=http_build_query(array('p_jrn_predef'=>$Ledger->id,'ac'=>$ac,'gDossier'=>dossier::id()));
-echo $op->form_get('do.php?'.$url);
-echo '</div>';
+
 echo '</div>';
 
 echo '<div class="content">';

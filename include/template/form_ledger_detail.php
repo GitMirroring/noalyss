@@ -12,6 +12,12 @@
         </td>
     </tr>
     <tr>
+        <td> <?php echo _('Modèle opération') ?></td>
+        <td>
+            <?php echo $str_op_template;?>
+        </td>
+    </tr>
+    <tr>
         <td>
             <?php echo _('Date')?> 
         </td>

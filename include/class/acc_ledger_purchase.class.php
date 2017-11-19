@@ -1281,7 +1281,22 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
         }
         $f_type=_('Fournisseur');
-
+        // 
+        // Button for template operation
+        //
+        ob_start();
+        echo '<div id="predef_form">';
+        echo HtmlInput::hidden('p_jrn_predef', $this->id);
+        $op = new Pre_op_ach($this->db);
+        $op->set('ledger', $this->id);
+        $op->set('ledger_type', "ACH");
+        $op->set('direct', 'f');
+        $url=http_build_query(array('p_jrn_predef'=>$this->id,'ac'=>$_REQUEST['ac'],'gDossier'=>dossier::id()));
+        echo $op->form_get('do.php?'.$url);
+        echo '</div>';
+        $str_op_template=ob_get_contents();
+        ob_end_clean();
+        
         ob_start();
         require_once NOALYSS_TEMPLATE.'/form_ledger_detail.php';
         $r.=ob_get_contents();

@@ -1620,8 +1620,27 @@ class Acc_Ledger extends jrn_def_sql
 
         $ret.="<table>";
 		$ret.=tr(td($label ).td( $wLedger->input()));
+                
+                // 
+                // Button for template operation
+                //
+                ob_start();
+                echo '<div id="predef_form">';
+                echo HtmlInput::hidden('p_jrn_predef', $this->id);
+                $op = new Pre_op_ods($this->db);
+                $op->set('ledger', $this->id);
+                $op->set('ledger_type', "ODS");
+                $op->set('direct', 't');
+                $url=http_build_query(array('action'=>'use_opd','p_jrn_predef'=>$this->id,'ac'=>$_REQUEST['ac'],'gDossier'=>dossier::id()));
+                echo $op->form_get('do.php?'.$url);
 
-
+                echo '</div>';
+                $str_op_template=ob_get_contents();
+                ob_end_clean();
+                $ret.="<tr>";
+                $ret.="<td>"._("Modèle d'opération")."</td>";
+                $ret.="<td>".$str_op_template."</td>";
+                $ret.="</tr>";
 		// Load the javascript
 		//
 		//$ret.= '<tr ><td colspan="2" style="width:auto">';

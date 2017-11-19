@@ -1311,7 +1311,22 @@ EOF;
             $array[$i]['quantity'] = $Quantity->input("e_quant" . $i, $quant);
         }// foreach article
         $f_type = _('Client');
-
+        // 
+        // Button for template operation
+        //
+        ob_start();
+        echo '<div id="predef_form">';
+        echo HtmlInput::hidden('p_jrn_predef', $this->id);
+        $op=new Pre_op_ven($this->db);
+        $op->set('ledger', $this->id);
+        $op->set('ledger_type', "VEN");
+        $op->set('direct', 'f');
+        $url=http_build_query(array('p_jrn_predef'=>$this->id, 'ac'=>$_REQUEST['ac'],
+            'gDossier'=>dossier::id()));
+        echo $op->form_get('do.php?'.$url);
+        echo '</div>';
+        $str_op_template=ob_get_contents();
+        ob_end_clean();
 
         ob_start();
         require_once NOALYSS_TEMPLATE.'/form_ledger_detail.php';

@@ -1159,10 +1159,6 @@ span.remain {
 
     }
     #predef_form {
-        margin-left:35%;
-        width:60%;
-        position:absolute;
-        z-index:2
     }
 @media only screen and (min-width: 1155px) {
     div#jrn_name_div
@@ -1171,10 +1167,6 @@ span.remain {
 
     }
     #predef_form {
-        margin-left:35%;
-        width:60%;
-        position:absolute;
-        z-index:2
     }
 }
 @media only screen and (max-width: 1155px) {
