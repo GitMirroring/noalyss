@@ -154,7 +154,7 @@ if ($sa=='step2')
     '<div><h1 class="legend">'._('Etape 2 : période').'</h1>'.
     '<h2 class="info">'.dossier::name($_REQUEST['f']).'</h2>'.
     '<form class="print" method="post">'.
-    _("Choisissez l'exercice du dossier à reporter pour les a-nouveaux");
+    _("Choisissez l'exercice clôturé (exercice N-1) du dossier à reporter pour les a-nouveaux (exercice N)");
     echo dossier::hidden();
     echo HtmlInput::hidden('ac', $_REQUEST['ac']);
     echo HtmlInput::hidden('sa', 'step3');
@@ -168,7 +168,9 @@ if ($sa=='step2')
     $w->value=$periode;
     $w->name="p_periode";
     $w->selected=$g_user->get_exercice()-1;
+    echo "<p>";
     echo _('Période').' : '.$w->input();
+    echo "</p>";
     echo HtmlInput::submit('ok', _('Continuer'));
     echo dossier::hidden();
     echo "</form>";
@@ -223,11 +225,11 @@ if ($sa=='step4')
     $dossier_id=$http->request("f","number");
     $p_periode=$http->request("p_periode","number");
     $p_jrn=$http->request("p_jrn","number");
-    
     $cn_target=new Database($dossier_id);
     $saldo=new Acc_Ledger($cn_target, 0);
     $array=$saldo->get_saldo_exercice($p_periode);
     /*  we need to transform the array into a Acc_Ledger array */
+    
     $result=array();
     $result['desc']=sprintf(_("Ecriture d'ouverture %d"),$g_user->get_exercice());
     $result['nb_item']=sizeof($array);
@@ -235,6 +237,12 @@ if ($sa=='step4')
     $result["ac"]=$http->request("ac");
     $result['p_periode']=$p_periode;
     $result['gDossier']=Dossier::id();
+    
+    // default date = first day of Exercice
+    $periode=new Periode($cn,$g_user->get_periode());
+    list($periode_start,$periode_end)=$periode->get_limit($g_user->get_exercice());
+    $result["e_date"]=$periode_start->first_day();
+    
     $idx=0;
 
     foreach ($array as $row)
@@ -255,6 +263,7 @@ if ($sa=='step4')
 
     $jrn=new Acc_Ledger($cn,$p_jrn);
     $_POST=$result;
+    $_REQUEST=$result;
     $ledger=new Acc_Ledger($cn, $p_jrn);
     require_once NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
     
