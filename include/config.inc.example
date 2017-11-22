@@ -59,5 +59,7 @@ define ("dbname","");
 // define ('OFFICE','/usr/bin/unoconv');
 // define ('GENERATE_PDF','YES');
 
-
+// If you want to use open_basedir or if you are limited by it you can uncomment this
+// after replace NOALYSS_HOME by the path of the local installation of Noalyss
+// ini_alter("open_basedir", "/usr/bin:/tmp/:NOALYSS_HOME");
   
