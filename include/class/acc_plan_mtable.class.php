@@ -41,6 +41,7 @@ class Acc_Plan_MTable extends Manage_Table_SQL
         $this->set_col_label("pcm_lib", _("Libellé"));
         $this->set_col_label("parent_accounting", _("Dépend"));
         $this->set_col_label("fiche_qcode", _("Fiche"));
+        $this->set_col_label("pcm_direct_use", _("Utilisation directe"));
         //--------------------------------------------------------------
         $this->set_property_visible("id", FALSE);
         $this->set_property_updatable("fiche_qcode", FALSE);
@@ -55,7 +56,8 @@ class Acc_Plan_MTable extends Manage_Table_SQL
             ["label"=>_("Produit inversé"),"value"=>"PROINV"],
             ["label"=>_("Contexte"),"value"=>"CON"]
         ]);
-        $this->a_order=["pcm_val","pcm_lib","parent_accounting","pcm_type","fiche_qcode"];
+        $this->set_col_type("pcm_direct_use", "select",array(["label"=>_("Oui"),"value"=>"Y"],["label"=>"Non","value"=>"N"]));
+        $this->a_order=["pcm_val","pcm_lib","parent_accounting","pcm_direct_use","pcm_type","fiche_qcode"];
         $this->set_icon_mod("first");
     }
     /**

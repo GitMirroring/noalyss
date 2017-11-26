@@ -26,18 +26,12 @@
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/database/tmp_pcmn_sql.class.php';
 
 class Acc_Account
 {
     var $db;          /*!< $db database connection */
-    static private $variable = array("value"=>'pcm_val',
-                                     'type'=>'pcm_type',
-                                     'parent'=>'pcm_val_parent',
-                                     'libelle'=>'pcm_lib');
-    private  $pcm_val;
-    private  $pcm_type;
-    private  $pcm_parent;
-    private  $pcm_lib;
+    private $data_sql ;//< Tmp_Pcmn_SQL
     static public $type=array(
                             array('label'=>'Actif','value'=>'ACT'),
                             array('label'=>'Passif','value'=>'PAS'),
@@ -47,35 +41,32 @@ class Acc_Account
                             array('label'=>'Produit Inverse','value'=>'PROINV'),
                             array('label'=>'Charge','value'=>'CHA'),
                             array('label'=>'Charge Inverse','value'=>'CHAINV'),
-                            array('label'=>'Non defini','value'=>'CON')
+                            array('label'=>'Contexte','value'=>'CON')
                         );
-
-    function __construct ($p_cn,$p_id=0)
+    /**
+     * 
+     * @param type $p_cn Database connection
+     * @param type $pcm_val Accounting tmp_pcmn.pcm_val
+     */
+    function __construct (Database $p_cn,$pcm_val="")
     {
         $this->db=$p_cn;
-        $this->pcm_val=$p_id;
+        $id=-1;
+        if ( trim($pcm_val)  != "" ) {
+            $id=$p_cn->get_value("select id from tmp_pcmn where pcm_val=$1",[$pcm_val]);
+        }
+        if ( $id == "") { $id=-1;}
+        $this->data_sql=new Tmp_Pcmn_SQL($p_cn, $id);
+        $this->data_sql->pcm_val=$pcm_val;
     }
     public function get_parameter($p_string)
     {
-        if ( array_key_exists($p_string,self::$variable) )
-        {
-            $idx=self::$variable[$p_string];
-            return $this->$idx;
-        }
-        else
-            throw new Exception (__FILE__.":".__LINE__._('Erreur attribut inexistant'));
+       return $this->data_sql->getp($p_string);
     }
 
     function set_parameter($p_string,$p_value)
     {
-        if ( array_key_exists($p_string,self::$variable) )
-        {
-            $idx=self::$variable[$p_string];
-            if ($this->check($idx,$p_value) == true )      $this->$idx=$p_value;
-        }
-        else
-            throw new Exception (__FILE__.":".__LINE__._('Erreur attribut inexistant'));
-
+       return $this->data_sql->setp($p_string,$p_value);
 
     }
     /*!\brief Return the name of a account
@@ -84,60 +75,19 @@ class Acc_Account
      */
     function get_lib()
     {
-        $ret=$this->db->exec_sql(
-                 "select pcm_lib from tmp_pcmn where
-                 pcm_val=$1",array($this->pcm_val));
-        if ( Database::num_row($ret) != 0)
+        $ret=$this->data_sql->getp('pcm_lib');
+        if ( $ret !="")
         {
-            $r=Database::fetch_array($ret);
-            $this->pcm_lib=$r['pcm_lib'];
+            return $ret;
         }
         else
         {
-            $this->pcm_lib=_("Poste inconnu");
+            return _("Poste inconnu");
         }
-        return $this->pcm_lib;
     }
-    /*!\brief Check that the value are valid
-     *\return true if all value are valid otherwise false
-     */
-    function check ($p_member='',$p_value='')
-    {
-        // if there is no argument we check all the member
-        if ($p_member == '' && $p_value== '' )
-        {
-            foreach (self::$variable as $l=>$k)
-            {
-                $this->check($k,$this->$k);
-            }
-        }
-        else
-        {
-            // otherwise we check only the value
-            if ( strcmp ($p_member,'pcm_val') == 0 )
-            {
-                    return true;
-            }
-            else if ( strcmp ($p_member,'pcm_val_parent') == 0 )
-            {
-                    return true;
-            }
-            else if ( strcmp ($p_member,'pcm_lib') == 0 )
-            {
-                return true;
-            }
-            else if ( strcmp ($p_member,'pcm_type') == 0 )
-            {
-                foreach (self::$type as $l=>$k)
-                {
-                    if ( strcmp ($k['value'],$p_value) == 0 ) return true;
-
-                }
-                throw new Exception(_('type de compte incorrect ').$p_value);
-            }
-            throw new Exception (_('Donnee member inconnue ').$p_member);
-        }
-
+    function searchValue($p_value) {
+        
+        
     }
     /*!\brief Get all the value for this object from the database
      *        the data member are set
@@ -145,88 +95,56 @@ class Acc_Account
      */
     function load()
     {
-        $ret=$this->db->exec_sql("select pcm_lib,pcm_val_parent,pcm_type from
-                                 tmp_pcmn where pcm_val=$1",array($this->pcm_val));
-        $r=Database::fetch_all($ret);
-
-        if ( ! $r ) return false;
-        $this->pcm_lib=$r[0]['pcm_lib'];
-        $this->pcm_val_parent=$r[0]['pcm_val_parent'];
-        $this->pcm_type=$r[0]['pcm_type'];
-        return true;
-
+      $this->data_sql->load();
     }
-    function form($p_table=true)
-    {
-        $wType=new ISelect();
-        $wType->name='p_type';
-        $wType->value=self::$type;
-
-        if ( ! $p_table )
-        {
-            $ret='    <TR>
-                 <TD>
-                 <INPUT TYPE="TEXT" NAME="p_val" SIZE=7>
-                 </TD>
-                 <TD>
-                 <INPUT TYPE="TEXT" NAME="p_lib" size=50>
-                 </TD>
-                 <TD>
-                 <INPUT TYPE="TEXT" NAME="p_parent" size=5>
-                 </TD>
-                 <TD>';
-
-            $ret.=$wType->input().'</TD>';
-            return $ret;
-        }
-        else
-        {
-            $ret='<TABLE><TR>';
-            $ret.=sprintf ('<TD>'._('Numéro de classe').' </TD><TD><INPUT TYPE="TEXT" name="p_val" value="%s"></TD>',$this->pcm_val);
-            $ret.="</TR><TR>";
-            $ret.=sprintf('<TD>'._('Libellé').' </TD><TD><INPUT TYPE="TEXT" size="70" NAME="p_lib" value="%s"></TD>',h($this->pcm_lib));
-            $ret.= "</TR><TR>";
-            $ret.=sprintf ('<TD>'._('Classe Parent').'</TD><TD><INPUT TYPE="TEXT" name="p_parent" value="%s"></TD>',$this->pcm_val_parent);
-            $ret.='</tr><tr>';
-            $wType->selected=$this->pcm_type;
-            $ret.="<td> Type de poste </td>";
-            $ret.= '<td>'.$wType->input().'</td>';
-            $ret.="</TR> </TABLE>";
-            $ret.=dossier::hidden();
-
-            return $ret;
-        }
-    }
+    
     function count($p_value)
     {
         $sql="select count(*) from tmp_pcmn where pcm_val=$1";
         return $this->db->get_value($sql,array($p_value));
     }
-    /*!\brief for developper only during test */
-    static function test_me()
-    {
+    /**
+     * Check before inserting or updating
+     */
+    function verify() {
+        // check for Duplicate key, parent ... see Acc_Plan_MTable
+        $count=$this->data_sql->count(" where pcm_val =$1 and id <> $2",
+                           [$this->data_sql->pcm_val,$this->data_sql->id]);
+        if ( $count > 0)
+            throw new Exception (_("Poste en double"),EXC_DUPLICATE);
+        if (trim($this->data_sql->pcm_lib)=="")
+            throw new Exception (_("Libellé vide"),EXC_PARAM_VALUE);
+        if ( $this->data_sql->count(" where pcm_val = $1 and pcm_val <> $2",
+                [$this->data_sql->pcm_val_parent,$this->data_sql->pcm_val])  == 0)
+            throw new Exception (_("Parent n'existe pas"),EXC_PARAM_VALUE);
+        if ( $this->data_sql->pcm_direct_use != 'N' && $this->data_sql->pcm_direct_use != 'Y') 
+            throw new Exception (_("Paramètre incorrect"),EXC_PARAM_VALUE);
+        if ( trim($this->data_sql->pcm_val)==""||trim($this->data_sql->pcm_val_parent)=="")
+            throw new Exception (_("Paramètre incorrect"),EXC_PARAM_VALUE);
+                
+    }
+    function update() {
+        // check for Duplicate key, parent ... see Acc_Plan_MTable
+        $this->verify();
+        $this->data_sql->update();
+    }
+    function insert() {
+        // check for Duplicate key, parent ... see Acc_Plan_MTable
+        $this->verify();
+        $this->data_sql->insert();
+    }
+    function delete() {
+        // if already use cannot be deleted
+        if ( $this->data_sql->count("where pcm_val in (select j_poste from jrnx where j_poste=$1) or pcm_val_parent=$1", 
+                [$this->data_sql->pcm_val]) > 0)
+        {
+            throw new Exception(_("Poste utilisé : effacement interdit"),EXC_PARAM_VALUE);
+        }
+        $this->data_sql->delete();
 
     }
-    /**
-     *@brief update an accounting, but you can update pcm_val only if
-     * this accounting has never been used before  */
-    function update($p_old)
-    {
-        if (strcmp(trim($p_old), trim($this->pcm_val)) !=0 )
-        {
-            $count=$this->db->get_value('select count(*) from jrnx where j_poste=$1',
-                                        array($p_old)
-                                       );
-            if ($count != 0)
-                throw new Exception(_('Impossible de changer la valeur: poste déjà utilisé'));
-        }
-        $this->pcm_lib=mb_substr($this->pcm_lib,0,150);
-        $this->check();
-        $sql="update tmp_pcmn set pcm_val=$1, pcm_lib=$2,pcm_val_parent=$3,pcm_type=$4 where pcm_val=$5";
-        $Ret=$this->db->exec_sql($sql,array($this->pcm_val,
-                                            $this->pcm_lib,
-                                            $this->pcm_val_parent,
-                                            $this->pcm_type,
-                                            $p_old));
+    function save() {
+        $this->verify();
+        $this->data_sql->save();
     }
-}
+ }

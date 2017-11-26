@@ -31,7 +31,7 @@ class Tmp_Pcmn_SQL extends Noalyss_SQL
     /**
      * @brief manage table key_distribution_detail
      */
-    function __construct(&$p_cn, $p_id=-1)
+    function __construct($p_cn, $p_id=-1)
     {
 
         $this->table="public.tmp_pcmn";
@@ -42,7 +42,8 @@ class Tmp_Pcmn_SQL extends Noalyss_SQL
             "pcm_val"=>"pcm_val",
             "pcm_type"=>"pcm_type",
             "pcm_val_parent"=>"pcm_val_parent",
-            "pcm_lib"=>"pcm_lib"
+            "pcm_lib"=>"pcm_lib",
+            "pcm_direct_use"=>"pcm_direct_use"
         );
 
         $this->type=array(
@@ -50,7 +51,8 @@ class Tmp_Pcmn_SQL extends Noalyss_SQL
             "pcm_val"=>"text",
             "pcm_type"=>"text",
             "pcm_val_parent"=>"text",
-            "pcm_lib"=>"text"
+            "pcm_lib"=>"text",
+            "pcm_direct_use"=>"text"
         );
 
         $this->default=array(

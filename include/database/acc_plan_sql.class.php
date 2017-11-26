@@ -42,7 +42,8 @@ class Acc_Plan_SQL extends Data_SQL
             "parent_accounting"=>"parent_accounting",
             "pcm_lib"=>"pcm_lib",
             "pcm_type"=>"pcm_type",
-            "fiche_qcode"=>"fiche_qcode"
+            "fiche_qcode"=>"fiche_qcode",
+            "pcm_direct_use"=>"pcm_direct_use"
         );
 
         $this->type = array(
@@ -51,7 +52,8 @@ class Acc_Plan_SQL extends Data_SQL
             "parent_accounting" => "text",
             "pcm_lib" => "text",
             "pcm_type" => "text",
-            "fiche_qcode"=>"string"
+            "fiche_qcode"=>"string",
+            "pcm_direct_use"=>"text"
         );
 
         $this->default = array(
@@ -64,6 +66,7 @@ class Acc_Plan_SQL extends Data_SQL
       pcm_val_parent as parent_accounting, 
       pcm_type, 
       id,
+      pcm_direct_use,
         (select string_agg(m.fiche_qcode,' , ') 
         from (select a.ad_value as fiche_qcode 
             from fiche_detail as a 
@@ -108,6 +111,7 @@ class Acc_Plan_SQL extends Data_SQL
         $obj->set("pcm_lib",$this->pcm_lib);
         $obj->set("pcm_type",$this->pcm_type);
         $obj->set("pcm_val_parent",$this->parent_accounting);
+        $obj->set("pcm_direct_use",$this->pcm_direct_use);
         $obj->insert();
         $this->id=$obj->id;
     }
@@ -158,6 +162,8 @@ class Acc_Plan_SQL extends Data_SQL
        $obj->set("pcm_lib",$this->pcm_lib);
        $obj->set("pcm_type",$this->pcm_type);
        $obj->set("pcm_val_parent",$this->parent_accounting);
+       $obj->set("pcm_direct_use",$this->pcm_direct_use);
+
        $obj->update(); 
     }
      public function get_limit_fiche_qcode()
@@ -169,5 +175,6 @@ class Acc_Plan_SQL extends Data_SQL
     {
         $this->limit_fiche_qcode=$limit_fiche_qcode;
     }
+    
 
 }
