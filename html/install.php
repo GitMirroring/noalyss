@@ -294,7 +294,7 @@ if (!defined('PHP_VERSION_ID')) {
    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
 if ( PHP_VERSION_ID < 50500)  {
-    echo $g_failed. " ".phpversion." ". _("Version PHP trop basse ");
+    echo $g_failed. " ".phpversion." ". _("Version PHP trop basse , minimum 5.4");
     
 } else {
     echo $g_succeed. " ".phpversion();
