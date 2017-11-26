@@ -400,7 +400,7 @@ abstract class Noalyss_SQL extends Data_SQL
         return $a_return;
     }
     public function count($p_where="",$p_array=null) {
-        $count=$this->cn->get_value("select count(*) from $this->table".$p_where,$p_array);
+        $count=$this->cn->get_value("select count(*) from $this->table ".$p_where,$p_array);
         return $count;
     }
     /**
