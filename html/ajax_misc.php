@@ -121,7 +121,6 @@ $path = array(
     "action_access_all"=>"ajax_user_security",
     "todo_list"=>"ajax_todo_list",
     "history"=>"ajax_history",
-    "pcmn_update"=>"ajax_pcmn_update",
     "mod_doc"=>"ajax_mod_document",
     "input_per"=>"ajax_mod_periode",
     "save_per"=>"ajax_mod_periode",
@@ -166,8 +165,6 @@ $path = array(
     "anc_key_choice"=>"ajax_anc_key_choice" ,
   // Show the activities computed with the selected distribution key 
     "anc_key_compute"=>"ajax_anc_key_compute" ,
-  //update an accounting (from CFGPCMN)
-    "account_update"=>"ajax_account_update",
   //From admin, revoke the access to a folder from an user
     "folder_remove"=>"ajax_admin",
   //From admin, display a list of folder to which the user has no access
