@@ -161,56 +161,6 @@ if ( strpos($inc_path,";") != 0 ) {
   $new_path=$inc_path.':../../include:addon';
   $os=1;			/* $os is 1 for unix */
 }
-
-/**
- *@brief create correctly the htaccess file
- * @deprecated since version 6.9
- */
-function create_htaccess_deprecated()
-{
-	global $os;
-
-
-	/* If htaccess file doesn't exists we create them here
-	 * if os == 1 then windows, 0 means Unix
-	 */
-	$file='..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'.htaccess';
-	if (! file_exists($file))
-	{
-		$hFile=@fopen($file,'w+');
-		if ( ! $hFile )     exit(_('Impossible d\'&eacute;crire dans le r&eacute;pertoire include'));
-		fwrite($hFile,'order deny,allow'."\n");
-		fwrite($hFile,'deny from all'."\n");
-		fclose($hFile);
-	}
-	$file='..'.DIRECTORY_SEPARATOR.'.htaccess';
-	if (! file_exists($file))
-	{
-
-		$hFile=@fopen($file,'w+');
-		if ( ! $hFile )     exit(_('Impossible d\'&eacute;crire dans le r&eacute;pertoire html'));
-		$array=array("php_flag  magic_quotes_gpc off",
-				 "php_value max_execution_time 240",
-				 "php_value memory_limit 20M",
-				 "AddDefaultCharset utf-8",
-				 "php_flag  register_globals off",
-				 "php_value error_reporting 10239",
-				 "php_value post_max_size 20M",
-				 "php_flag short_open_tag on",
-				 "php_value upload_max_filesize 20M",
-				 "php_value session.use_trans_sid 1",
-				 "php_value session.use_cookies 1",
-				 "php_flag session.use_only_cookies on");
-
-		if ( $os == 0 )
-		  fwrite($hFile,'php_value include_path .;../../include;../include;addon'."\n");
-		else
-		  fwrite($hFile,'php_value include_path .:../../include:../include:addon'."\n");
-		foreach ($array as $value ) fwrite($hFile,$value."\n");
-		fclose($hFile);
-	}
-
-}
 // Retrieve informations from the very screen
 // 
 $http=new HttpInput();
@@ -335,7 +285,20 @@ echo '<h1 class="title">'._('Configuration').'</h1>';
 <?php
 
 $flag_php=0;
+//------------------------------------------------------------------------------
+// PHP Version
+//------------------------------------------------------------------------------
+if (!defined('PHP_VERSION_ID')) {
+   $version = explode('.',PHP_VERSION);
 
+   define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+}
+if ( PHP_VERSION_ID < 50500)  {
+    echo $g_failed. " ".phpversion." ". _("Version PHP trop basse ");
+    
+} else {
+    echo $g_succeed. " ".phpversion();
+}
 //ini_set("memory_limit","200M");
 echo "<ul style=\"list-style-type: square;\">";
 foreach (array('magic_quotes_gpc','magic_quotes_runtime') as $a) {
@@ -460,9 +423,7 @@ $version=$cn->get_value($sql);
 
 echo _("Version base de données :"),$version;
 
-if ( $version[0] < 8 ||
-     ($version[0]=='8' && $version[2]<4)
-     )
+if ( $version[0] < 9 )
   {
 ?>
   <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 8.4 de PostGresql, si votre distribution n'en
