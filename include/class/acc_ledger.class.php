@@ -2018,6 +2018,10 @@ class Acc_Ledger extends jrn_def_sql
                     }
                     $msg[]=$str_msg;
                 }
+                $account=new Acc_Account($this->db,${"poste".$i});
+                if ( $account->get_parameter("pcm_direct_use") == "N") {
+                    throw new Exception(_("Utilisation directe interdite du poste comptable ${"poste".$i}"));
+                }
             }
         }
         $tot_deb=round($tot_deb, 4);

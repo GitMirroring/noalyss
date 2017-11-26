@@ -335,25 +335,36 @@ case 'sc':
     if ( $g_user->check_action(FICADD)==1 )
     {
         $f=new Fiche($cn);
-        $f->insert($fd_id,$_POST);
-		$f->Get();
-        $html.='<h2 class="notice">'._('Fiche sauvée').'</h2>';
-        $html.=$f->Display(true);
-        $js="";
-        if ( isset( $_POST['ref'])) $js=create_script(' window.location.reload()');
-        $html.=$js;
-        if ( isset ($eltid)) {
-            // after adding a new card, we update some field
-            $extra="<eltid>$eltid</eltid>".
-                    "<elt_value>{$f->get_quick_code ()}</elt_value>";
-                    
+        $status="<status>OK</status>";
+        try {
+            $f->insert($fd_id,$_POST);
+            $f->Get();
+            $html.='<h2 class="notice">'._('Fiche sauvée').'</h2>';
+            $html.=$f->Display(true);
+            $js="";
+            if ( isset( $_POST['ref'])) $js=create_script(' window.location.reload()');
+            $html.=$js;
+            if ( isset ($eltid)) {
+                // after adding a new card, we update some field
+                $extra="<eltid>$eltid</eltid>".
+                        "<elt_value>{$f->get_quick_code ()}</elt_value>";
+
+            }
+            $extra.=$status;
+            $html.=HtmlInput::button_close($ctl);
+        } catch (Exception $exc) {
+            $html="<h2 class=\"error\">"._("Erreur sauvegarde")."</h2>";
+            $html.=$exc->getMessage();
+            $status="<status>NOK</status>";
+            $extra=$status;
         }
+	
     }
     else
     {
         $html.=alert(_('Action interdite'),true);
+        $html.=HtmlInput::button_close($ctl);
     }
-    $html.=HtmlInput::button_close($ctl);
     break;
     /*----------------------------------------------------------------------
      * Search a card

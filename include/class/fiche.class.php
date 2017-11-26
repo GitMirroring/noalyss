@@ -28,6 +28,7 @@ require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
 require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iposte.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
 
 /*! \file
  * \brief define Class fiche, this class are using
@@ -770,6 +771,7 @@ class Fiche
 
         try
         {
+            $this->cn->start();
             $sql=sprintf("insert into fiche(f_id,fd_id)".
                     " values (%d,%d)", $fiche_id, $p_fiche_def);
             $Ret=$this->cn->exec_sql($sql);
@@ -805,19 +807,26 @@ class Fiche
                     $v=mb_substr(sql_string($value), 0, 40);
                     try
                     {
-
+                        // Check that the accounting can be used directly
                         if (strlen(trim($v))!=0)
                         {
                             if (strpos($value, ',')==0)
                             {
                                 $v=$this->cn->get_value("select format_account($1)",
                                         array($value));
+                                
+                                // Check that the accounting can be used directly
+                                $acc_account=new Acc_Account($this->cn,$v);
+                                if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
+                                    throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
+                                }
                             }
                             else
                             {
                                 $ac_array=explode(",", $value);
                                 if (count($ac_array)<>2)
-                                    throw new Exception('Désolé, il y a trop de virgule dans le poste comptable '.h($value));
+                                    throw new Exception(_('Désolé, il y a trop de virgule dans le poste comptable ').h($value));
+                                
                                 $part1=$ac_array[0];
                                 $part2=$ac_array[1];
                                 $part1=$this->cn->get_value('select format_account($1)',
@@ -825,6 +834,16 @@ class Fiche
                                 $part2=$this->cn->get_value('select format_account($1)',
                                         array($part2));
                                 $v=$part1.','.$part2;
+                                // Check that the accounting can be used directly
+                                $acc_account1=new Acc_Account($this->cn,$part1);
+                                if ($acc_account1->get_parameter('pcm_direct_use') == 'N') {
+                                    throw new Exception(_("Utilisation directe interdite du poste comptable $part1"));
+                                }
+                                // Check that the accounting can be used directly
+                                $acc_account2=new Acc_Account($this->cn,$part2);
+                                if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
+                                    throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
+                                }
                             }
                             $parameter=array($this->id, $v);
                         }
@@ -837,8 +856,7 @@ class Fiche
                     }
                     catch (Exception $e)
                     {
-                        throw new Exception("Erreur : ce compte [$v] n'a pas de compte parent.".
-                        "L'opération est annulée", 1);
+                        throw ($e);
                     }
                     continue;
                 }
@@ -863,6 +881,7 @@ class Fiche
                         $id, strip_tags(trim($value2)));
                 $this->cn->exec_sql($sql);
             }
+            $this->cn->commit();
         }
         catch (Exception $e)
         {
@@ -949,11 +968,26 @@ class Fiche
                             $part2=$this->cn->get_value('select format_account($1)',
                                     array($part2));
                             $v=$part1.','.$part2;
+                            // Check that the accounting can be used directly
+                            $acc_account1=new Acc_Account($this->cn,$part1);
+                            if ($acc_account1->get_parameter('pcm_direct_use') == 'N') {
+                                throw new Exception(_("Utilisation directe interdite du poste comptable $part1"));
+                            }
+                            // Check that the accounting can be used directly
+                            $acc_account2=new Acc_Account($this->cn,$part2);
+                            if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
+                                throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
+                            }
                         }
                         else
                         {
                             $v=$this->cn->get_value('select format_account($1)',
                                     array($value));
+                            // Check that the accounting can be used directly
+                            $acc_account=new Acc_Account($this->cn,$v);
+                            if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
+                                throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
+                            }
                         }
                         $sql=sprintf("select account_update(%d,'%s')",
                                 $this->id, $v);
@@ -963,8 +997,7 @@ class Fiche
                         }
                         catch (Exception $e)
                         {
-                            throw new Exception(__LINE__."Erreur : ce compte [$v] n'a pas de compte parent.".
-                            "L'op&eacute;ration est annul&eacute;e");
+                            throw new Exception(_("opération annulée")." ".$e->getMessage());
                         }
                         continue;
                     }

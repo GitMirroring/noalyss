@@ -745,8 +745,16 @@ function save_card(obj)
                                   parameters:queryString,
                                   onFailure:errorFid,
                                   onSuccess:function (req,json) {
-                                      fill_box(req,json);
+                                     
                                       var elt=req.responseXML.getElementsByTagName("eltid");
+                                      var status=req.responseXML.getElementsByTagName("status");
+                                      var status_value='OK';
+                                      if ( status.length !=0) {
+                                        status_value=getNodeText(status[0]);
+                                      }
+                                      if ( status_value == 'OK') {
+                                             fill_box(req,json);
+                                      }
                                       remove_waiting_box();
                                       if ( elt.length != 0) {
                                          var eltid=getNodeText(elt[0]);
@@ -756,8 +764,16 @@ function save_card(obj)
                                             fill_data_onchange(eltid);
                                             $(eltid).focus();
                                         }
-                                         //$(content).fade({duration:2.0});     
-                                     Effect.SlideUp(content, { duration: 1.0 });}    
+                                      }
+                                      if (status_value == "OK") {
+                                            Effect.SlideUp(content, { duration: 1.0 });    
+                                        }
+                                      if ( status_value == 'NOK') {
+                                          var xml_message=req.responseXML.getElementsByTagName("code");
+                                          var message=getNodeText(xml_message[0]);
+                                          smoke.alert(message);
+                                      }
+                                    
                                       
                                   }
                               }
