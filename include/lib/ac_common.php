@@ -312,11 +312,12 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
 	$p_script2 = '<script src="' . $p_script2 . '?version='.SVNINFO.'" type="text/javascript"></script>';
     $style=trim($style);
     echo "<HEAD>";
+    echo '<meta charset="utf-8">';
+    echo "<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">";
     if ( $is_msie == 1 )echo '      <meta http-equiv="x-ua-compatible" content="IE=edge"/>';
     echo "
     <TITLE>$title</TITLE>
 	<link rel=\"icon\" type=\"image/ico\" href=\"favicon.ico\" />
-    <META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
     <LINK REL=\"stylesheet\" type=\"text/css\" href=\"".$style."?version=".SVNINFO."\" media=\"screen\"/>
     <link rel=\"stylesheet\" type=\"text/css\" href=\"./style-print.css?version=".SVNINFO."\" media=\"print\"/>" .
