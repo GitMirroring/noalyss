@@ -220,7 +220,6 @@ class ICard extends HtmlInput
     {
         if ($p_name==null&&$this->name=="")
             throw (new Exception(_('Le nom d une icard doit être donne')));
-
         $this->value=($p_value==null)?$this->value:$p_value;
         if ($this->readOnly==true)
             return $this->display();
@@ -244,9 +243,9 @@ class ICard extends HtmlInput
         if ($this->autocomplete==1)
         {
             $this->indicator="ind_".$this->id;
-            $ind=sprintf('<span id="%s" class="autocomplete" style="position:absolute;display:none"><img src="image/ajax-loader.gif" alt="Chargement..."/></span>',
+            $ind=sprintf('<span id="%s" class="autocomplete" style="position:absolute;display:none;margin-left:-20px"><img src="image/ajax-loader.gif" alt="Chargement..."/></span>',
                     $this->indicator);
-            $this->indicator="null";
+           // $this->indicator="null";
             $div=($this->choice_create==1)?sprintf('<div id="%s"  class="autocomplete"></div>',
                             $this->choice):"";
 
