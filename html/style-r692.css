@@ -553,15 +553,17 @@ span.action a.action:hover {
     background-color:#DDE6FF;
     color:#000000;
 }
-
+/*---------------------------------------------------------------------------
+Style for autocomplete
+ ---------------------------------------------------------------------------*/
 div.autocomplete {
     background-color:#FFFFFF;
     border:1px solid #888;
     margin:0px;
     padding:1px;
     text-align:left;
-    position:relative;
-    top : -3px;
+    position:absolute;
+    width:375px;
 }
 div.autocomplete em {
     color:#0000FF;
@@ -571,7 +573,6 @@ div.autocomplete ul {
     list-style-type:none;
     background-color:#FFFFFF;
     border:1px solid #888;
-    width:375px;
     margin:0px;
     padding:0px;
 }
