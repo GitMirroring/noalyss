@@ -1,6 +1,13 @@
-alter table action_gestion drop ag_ref_ag_id;
---- repository insert into theme (the_name,the_filestyle) values ('Classic 692','style-r692.css');
 
+
+alter table action_gestion drop ag_ref_ag_id;
+/* --- repository 
+-- add style
+insert into theme (the_name,the_filestyle) values ('Classic 692','style-r692.css');
+
+-- add constraint
+alter table jnt_use_dos add CONSTRAINT use_id_dos_id_uniq UNIQUE (use_id,dos_id);
+*/
 create sequence tmp_pcmn_id_seq;
 ALTER TABLE tmp_pcmn ADD COLUMN id bigint;
 update tmp_pcmn set id=nextval('tmp_pcmn_id_seq');
