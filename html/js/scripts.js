@@ -1061,7 +1061,7 @@ function show_calc()
     }
     var sid = 'calc1';
     var shtml = '';
-    shtml += '<div style="float:right;height:10px;display:block;margin-top:2px;margin-right:2px"><span id="pin_calc1"><a class="input_text" onclick="pin(\'calc1\')" id="close_div">&#10057;</a></span>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" id="close_div">X</a></div>';
+    shtml += '<div style="float:right;height:10px;display:block;margin-top:2px;margin-right:2px"><span id="pin_calc1"><a class="input_text" onclick="pin(\'calc1\')" id="close_div">&#8778;</a></span>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" id="close_div">X</a></div>';
     shtml += '<div>   <h2 class="title">Calculatrice</h2></div>';
     shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >Calculatrice simplifiée: écrivez simplement les opérations que vous voulez puis la touche retour. exemple : 1+2+3*(1/5) <input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface tout" class="button" onClick="Clean();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
     shtml += '</form><span class="highligth" style="display:block" id="sub_total">  Taper une formule (ex 20*5.1) puis enter  </span><span style="display:block"  id="listing"> </span>';
@@ -1953,7 +1953,7 @@ function profile_show(p_div)
         $(p_div).show();
     } catch (e)
     {
-        alert_box(e.message)
+        alert_box(e.message);
     }
 }
 function detail_category_show(p_div, p_dossier, p_id)
@@ -2969,13 +2969,13 @@ function pin (object_id) {
     if ( aDraggableElement[object_id]) {
         aDraggableElement[object_id].destroy();
         aDraggableElement[object_id]=undefined;
-        $('pin_'+object_id).firstChild.innerHTML="&oplus;";
+        $('pin_'+object_id).firstChild.innerHTML="&#8853;";
     } else {
         aDraggableElement[object_id]=new Draggable(object_id, {starteffect: function ()
                 {
                     new Effect.Highlight(object_id, {scroll: window, queue: 'end'});
                 }}
             ); 
-        $('pin_'+object_id).firstChild.innerHTML="&#10057;";
+        $('pin_'+object_id).firstChild.innerHTML="&#8778;";
     }
 }
