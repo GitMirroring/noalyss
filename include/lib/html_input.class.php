@@ -226,9 +226,11 @@ class HtmlInput
      */
     static function button_anchor($p_label,$p_value,$p_name="",$p_javascript="",$p_class="button")
     {
-        $r=sprintf('<span id="%s" > <A class="'.$p_class.'" style="display:inline;"  href="%s" %s >%s</A></span>',
+        $href="";
+        if ( $p_value != "") $href=sprintf ('  href ="%s"  ',$p_value);
+        $r=sprintf('<span id="%s" > <A class="'.$p_class.'" style="display:inline;"  %s %s >%s</A></span>',
                    $p_name,
-                   $p_value,
+                   $href,
                    $p_javascript,
                    $p_label);
         return $r;
@@ -826,6 +828,7 @@ class HtmlInput
          * @param type $mod hide , close , zoom , custom or none, with
          * custom , the $name contains all the code
          * @param type $p_js contains the javascript if mod = "custom" or "zoom" contains button + code 
+         * @param type $p_draggable , if set to yes the box will be draggable
          * @return type
          */
 	static function title_box($p_name,$p_div,$p_mod="close",$p_js="",$p_draggable="y")
@@ -854,7 +857,7 @@ class HtmlInput
                 die (__FILE__.":".__LINE__._('Paramètre invaide'));
             
             if ( $p_draggable=="y") {
-                $drag=sprintf('<span id="pin_%s" style="float:right;margin:0px;padding:0px;font-size:120%%;border-width:0px" ><a class="input_text" onclick="pin(\'%s\')" id="close_div"> &#10057; </a></span>',
+                $drag=sprintf('<span id="pin_%s" style="float:right;margin:0px;padding:0px;font-size:120%%;border-width:0px" ><a class="input_text" onclick="pin(\'%s\')" id="close_div">&#8778; </a></span>',
                     $p_div,
                     $p_div);
             $r.=$drag;
