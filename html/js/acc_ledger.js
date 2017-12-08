@@ -917,7 +917,7 @@ function filter_card(obj, queryString)
     {
         queryString = queryString + '&j=' + jrn;
     }
-    return encodeURI(queryString);
+    return queryString;
 }
 /**
  *@brief to display the lettering for the operation, call
