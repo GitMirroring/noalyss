@@ -261,7 +261,7 @@ if (isset ($_REQUEST['reconnect']) && isset ($_REQUEST['backurl'])) {
 }
 echo '
 <span style="background-color:#879ed4;color:white;padding-left:4px;padding-right:4px;">
-version  6919+5 - '.$my_domain.'
+version  6919+6 - '.$my_domain.'
 </span>
 <BR>
 <BR>
