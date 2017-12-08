@@ -116,6 +116,7 @@ function ajaxFid(p_ctl)
     }
     queryString=queryString+"&j="+jrn+'&gDossier='+gDossier;
     queryString=queryString+'&ctl='+p_ctl.id;
+    queryString=encodeURI(queryString);
 
     var action=new Ajax.Request (
                    "fid.php",
