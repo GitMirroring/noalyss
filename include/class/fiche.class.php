@@ -804,7 +804,9 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_substr(sql_string($value), 0, 40);
+                    if ( mb_strlen($value)>40) throw new Exception (_("Poste comptable trop long"), 1);
+                    $v=sql_string($value);
+                    
                     try
                     {
                         // Check that the accounting can be used directly
@@ -813,7 +815,7 @@ class Fiche
                             if (strpos($value, ',')==0)
                             {
                                 $v=$this->cn->get_value("select format_account($1)",
-                                        array($value));
+                                        array($v));
                                 
                                 // Check that the accounting can be used directly
                                 $acc_account=new Acc_Account($this->cn,$v);
