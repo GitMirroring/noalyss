@@ -1215,3 +1215,159 @@ function document_remove(p_dossier,p_div,p_jrid)
         }
     });
 }
+/***
+ * @brief receive an object and display a list of filter + form to save one
+ * fill up the span (id : {div}search_filter_span) with the name of the selected filter
+ * Object = '{'div':'','type':'ALL','all_type':1,'dossier':'10104'}' 
+ * @see Acc_Ledger_Search
+ */
+function manage_search_filter(p_obj) {
+    waiting_box();
+    new Ajax.Request("ajax_misc.php", {
+       method:'get',
+       parameters:{"op":"display_search_filter","gDossier":p_obj.dossier,"div":p_obj.div,"ledger_type":p_obj.ledger_type,"all_type":p_obj.all_type},
+       onSuccess:function(req) {
+            remove_waiting_box();
+            var x=posX;
+            var y=posY-20;
+            create_div({'id':'boxfilter'+p_obj.div,'cssclass':'inner_box','html':req.responseText,'style':'top:'+y+'px;left:'+x+'px;position:absolute;width:400px'});
+            $('boxfilter'+p_obj.div).show();
+       }
+    });
+}
+
+/**
+ * Send data from the form and record a new filter , the ajax answer is a json object
+ * with the attribute filter_name,filter_id,status,message
+ * 
+ * @param p_div prefix id of all concerned DOM Element
+ * @param p_dossier 
+ * @see Acc_Ledger_Search
+ */
+function save_filter(p_div,p_dossier) {
+    var elt=['ledger_type','nb_jrn','date_start','date_end','date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting'];
+    var eltValue={};
+    eltValue['gDossier']=p_dossier;
+    eltValue['op']="save_filter";
+    eltValue['div']=p_div;
+    eltValue['filter_name']=$(p_div+"filter_new").value;
+    // Get all elt from the form
+    for ( var i = 0 ; i < elt.length;i++) {
+        var idx=elt[i];
+        eltValue[idx]=$(p_div+elt[i]).value;
+   
+    }
+    //ledger's list r_jrn
+    if (eltValue['nb_jrn'] > 0) {
+        eltValue['r_jrn']=[];
+        for (i=0;i<eltValue['nb_jrn'];i++) {
+            var idx=p_div+'r_jrn['+i+']';
+            eltValue['r_jrn'+i]=$(idx).value
+   
+        }
+    }
+    //unpaid
+    eltValue['unpaid']=$(p_div+"unpaid").checked;
+    new Ajax.Request('ajax_misc.php', {
+        method:"POST",
+        parameters:eltValue,
+        onSuccess:function (req) {
+            try {
+                var answer=req.responseJSON;
+                if ( answer.status == 'OK') {
+                    var new_item=document.createElement('li');
+                    new_item.innerHTML=answer.filter_name;
+                    $(p_div+'button_list').appendChild(new_item);
+                    $(p_div+"filter_new").value="";
+                } else {
+                    throw answer.message;
+                }
+            } catch (e) {
+                smoke.alert(e.message);
+            }
+        }
+    });
+}
+/**
+ * Load a search filter  and fill up the form search
+ * @param p_div prefix id of all concerned DOM Element
+ * @param p_dossier 
+ * @param p_filter_id filter id (SQL user_filter.id)
+ * @see Acc_Ledger_Search
+ */
+function load_filter(p_div,p_dossier,p_filter_id) {
+    new Ajax.Request('ajax_misc.php',{
+       method:"get",
+       parameters:{"gDossier":p_dossier,"div":p_div,"op":"load_filter","filter_id":p_filter_id},
+       onSuccess:function (req) {
+           try {
+                var answer=req.responseJSON;    
+                console.log(answer);
+                var elt=['ledger_type','date_start','date_end','date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting'];
+                for (var i=0;i<elt.length;i++) {
+                    var idx=elt[i];
+                    $(p_div+idx).value=answer[elt[i]]
+                }
+               // fillup the r_jrn array
+               var eltLedgerId=$("ledger_id"+p_div);
+               eltLedgerId.innerHTML="";
+               var eltHidden=document.createElement("input");
+               eltHidden.setAttribute("name",p_div+"nb_jrn");
+               eltHidden.setAttribute("type","hidden");
+               eltHidden.setAttribute("id",p_div+"nb_jrn");
+               eltHidden.setAttribute("value",answer.nb_jrn);
+               eltLedgerId.appendChild(eltHidden);  
+               
+               for ( var i=0;i < answer.nb_jrn;i++) {
+                   // create hidden element and add them into eltLedgerId
+                   var eltHidden=document.createElement("input");
+                   
+                   eltHidden.setAttribute("name",p_div+"r_jrn["+i+"]");
+                   eltHidden.setAttribute("type","hidden");
+                   eltHidden.setAttribute("id",p_div+"r_jrn["+i+"]");
+                   eltHidden.setAttribute("value",answer.r_jrn[i]);
+                   eltLedgerId.appendChild(eltHidden);
+               }
+               if ( answer.unpaid == 'false') {
+                   $(p_div+"unpaid").checked=false;
+               }
+               if ( answer.unpaid == 'true') {
+                   $(p_div+"unpaid").checked=true;
+               }
+
+               
+           } catch (e) {
+              smoke.alert(e.message);
+           }
+           
+       }
+    });
+}
+/**
+ * @brief delete a saved search filter  from the db, it is limited to the current
+ * user
+ * @parameter p_div
+identification des elements LI manageli{div}_{filter_id}
+identification element UL manage{div}
+@parameter p_filter_id SQL user_filter.id
+*/
+
+function delete_filter (p_div,p_dossier,p_filter_id) {
+    new Ajax.Request("ajax_misc",{
+        parameters:{"gDossier":p_dossier,"div":p_div,"filter_id":p_filter_id,'op':"delete_search_operation"},
+        method:"POST",
+        onSuccess:function (req) {
+            try {
+            var answer=req.evalJSON;
+           
+            var child=$("manageli"+p_div+"_"+p_filter_id);
+                console.log(child)
+                if ( child )  {$("manage"+p_div).removeChild(child); }
+            }catch (e) {
+                console.log(e.message)
+            }
+            
+        }
+    })
+    
+}     

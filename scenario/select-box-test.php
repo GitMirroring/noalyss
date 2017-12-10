@@ -8,23 +8,24 @@
       background:white;
       width:455px;
       max-width:250px;
-      position:relative;
-      z-index:3;
       padding:3px;
       margin:0px;
       display:none;
       top:-17px;
+      position:absolute;
       }
      div.select_box ul {
        list-style:none;
        padding:2px;
        margin:1px;
        width:100%;
+       top:10px;
+
      }
 div.select_box ul li {
     padding-top:2px;
     padding-bottom:2px;
-  margin:2px;
+    margin:2px;
 }
 div.select_box a {
     text-decoration:none;
@@ -38,6 +39,12 @@ div.select_box a:hover,div.select_box ul li:hover {
 
 </head>
 <body>
+    <div>
+        <p>
+            Le CSS est important , surtout la position, il faut qu'il soit dans 
+            un élément positionné en absolu.
+        </p>
+        <p style="position: absolute">
   <?php
      require NOALYSS_INCLUDE.'/lib/select_box.class.php';
      $a=new Select_Box("test","click me !");
@@ -50,4 +57,6 @@ div.select_box a:hover,div.select_box ul li:hover {
      echo $a->input();
      
      ?>
+        </p>
+        </div>
 </body>

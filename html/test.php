@@ -63,7 +63,7 @@ if (!file_exists('authorized_debug'))
     exit();
 }
 define('ALLOWED', 1);
-html_page_start();
+html_page_start("Classic 692");
 
 /*
  * Loading of all scenario

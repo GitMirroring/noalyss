@@ -20,10 +20,12 @@
 /*! \file
  * \brief Search module
  */
+define('ALLOWED',TRUE);
 require_once '../include/constant.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 
 html_page_start($_SESSION['g_theme']);
 
@@ -55,9 +57,8 @@ if ( $act=='X')
   }
 // display a search box
 
-$ledger=new Acc_Ledger($cn,0);
-$ledger->type='ALL';
-$search_box=$ledger->search_form('ALL',1);
+$ledger=new Acc_Ledger_Search('ALL');
+$search_box=$ledger->search_form();
 echo '<div class="content">';
 
 echo '<form method="GET">';

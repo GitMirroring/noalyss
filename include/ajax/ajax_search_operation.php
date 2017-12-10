@@ -23,7 +23,7 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 
 global $ĥttp;
 $gDossier=dossier::id();
@@ -38,17 +38,15 @@ require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 
 $base=basename($_SERVER['SCRIPT_NAME']);
 $inside=false;
-$ledger=new Acc_Ledger($cn,0);
-$ledger->type='ALL';
 if (isset($_GET['amount_id']))
 {
 	put_global(array(
-				array("key"=>'amount_min','value'=>$_GET['amount_id']),
-				array("key"=>'amount_max','value'=>$_GET['amount_id'])
-				));
+                        array("key"=>'amount_min','value'=>$_GET['amount_id']),
+                        array("key"=>'amount_max','value'=>$_GET['amount_id'])
+                        ));
 }
 
-$search_box=$ledger->search_form('ALL',1,'search_op');
+$ledger=new Acc_Ledger_Search('ALL',1,'search_op');
 
 if ($base == 'recherche.php' || $base == 'do.php')
 	{
@@ -66,7 +64,7 @@ if ($base == 'recherche.php' || $base == 'do.php')
 		$inside=true;
 	}
 
-echo $search_box;
+echo $ledger->search_form();
 echo HtmlInput::submit("viewsearch",_("Recherche"));
 echo HtmlInput::button_close('search_op');
 echo '</form>';

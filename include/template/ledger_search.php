@@ -1,15 +1,17 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+require_once NOALYSS_INCLUDE.'/lib/select_box.class.php';
 ?>
-<table>
+<table id="<?=$this->div?>table_search">
+    
 <tr>
 <td style="text-align:right;width:30em">
 <?php echo _('Dans le journal')?>
 </td>
 <td>
    <?php echo $f_ledger; ?>
-    <span id="ledger_id<?php echo $div;?>">
+    <span id="ledger_id<?php echo $this->div;?>">
         <?php
         echo $hid_jrn;
         ?>
@@ -80,4 +82,9 @@
 </tr>
 
 </table>
-
+<?php
+$box=new Select_Box("{$this->div}button","Filtre");
+$box->add_input(_('Ajout'), $save_filter);
+$box->add_javascript(_('Gestion Filtre'), $search_filter);
+echo $box->input();
+?>

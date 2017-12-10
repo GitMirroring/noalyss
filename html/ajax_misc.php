@@ -196,7 +196,17 @@ $path = array(
     // Update, insert or delete accounting frmo CFGPCMN
     "accounting"=>"ajax_accounting",
     // Show detail of an ANC operation
-    "anc_detail_op"=>"ajax_anc_detail_operation"
+    "anc_detail_op"=>"ajax_anc_detail_operation",
+    // Display the list of filter saved
+    "display_search_filter"=>"ajax_search_filter",
+    // Save search filter 
+    "save_filter"=>"ajax_search_filter",
+    // Load a search filter
+    "load_filter"=>"ajax_search_filter",
+    // search operation to reconcile
+    	'search_op'=>'ajax_search_operation',
+    // delete operation
+    	'delete_search_operation'=>'ajax_search_filter'
 )    ;
 
 if (array_key_exists($op, $path)) {
@@ -406,9 +416,7 @@ EOF;
 EOF;
 
 		break;
-	case 'search_op':
-		require_once NOALYSS_INCLUDE.'/search.inc.php';
-		break;
+
 	case 'add_plugin':
 		$me_code = new IText('me_code');
 		$me_file = new IText('me_file');
@@ -451,5 +459,5 @@ EOF;
             break;
         
 	default:
-		var_dump($_GET);
+		var_dump($_REQUEST);
 }
