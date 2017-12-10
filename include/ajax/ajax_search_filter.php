@@ -140,8 +140,8 @@ if ($op=="display_search_filter")
                 $result[$i]['id']);
         printf('<a class="tinybutton" style="display:inline" id="" onclick="'.$rmAction.'">'.SMALLX.'</a>'
         );
-        printf("<a style=\"display:inline\" onclick=\"load_filter('%s','%s','%s')\">",
-                $p_div, $dossier_id, $result[$i]["id"]);
+        printf("<a style=\"display:inline\" onclick=\"load_filter('%s','%s','%s');removeDiv('boxfilter%s')\">",
+                $p_div, $dossier_id, $result[$i]["id"],$p_div);
         echo $result[$i]["filter_name"];
         echo '</a>';
 
