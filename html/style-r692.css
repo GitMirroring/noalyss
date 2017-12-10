@@ -2162,7 +2162,7 @@ div.content a.arrow {
     background:white;
     width:455px;
     max-width:250px;
-    position:relative;
+    position:absolute;
     z-index:3;
     padding:3px;
     margin:0px;
