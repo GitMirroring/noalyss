@@ -36,3 +36,24 @@ COMMENT ON COLUMN operation_analytique.f_id IS 'FK to fiche.f_id , used only wit
 
 drop FUNCTION comptaproc.table_analytic_account(text,text);
 drop FUNCTION comptaproc.table_analytic_card(text,text);
+
+CREATE TABLE public.user_filter (
+	id bigserial,
+	login text NULL,
+	nb_jrn int4 NULL,
+	date_start varchar(10) NULL,
+	date_end varchar(10) NULL,
+	description text NULL,
+	amount_min numeric(20,4) NULL,
+	amount_max numeric(20,4) NULL,
+	qcode text NULL,
+	accounting text NULL,
+	r_jrn text NULL,
+	date_paid_start varchar(10) NULL,
+	date_paid_end varchar(10) NULL,
+	ledger_type varchar(5) NULL,
+	all_ledger int4 NULL,
+	filter_name text NOT NULL,
+	unpaid varchar NULL,
+	PRIMARY KEY (id)
+);
