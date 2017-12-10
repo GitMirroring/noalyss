@@ -1275,9 +1275,11 @@ function save_filter(p_div,p_dossier) {
             try {
                 var answer=req.responseJSON;
                 if ( answer.status == 'OK') {
-                    var new_item=document.createElement('li');
+                    /*Add the new list to the selection
+                     * not needed
+                     * var new_item=document.createElement('li');
                     new_item.innerHTML=answer.filter_name;
-                    $(p_div+'button_list').appendChild(new_item);
+                    $(p_div+'button_list').appendChild(new_item);*/
                     $(p_div+"filter_new").value="";
                 } else {
                     throw answer.message;
