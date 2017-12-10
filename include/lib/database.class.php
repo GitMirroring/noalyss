@@ -196,7 +196,6 @@ class Database
                 print_r($p_string);
                 print_r($p_array);
                 echo $a->getMessage();
-                echo $a->getTrace();
                 echo $a->getTraceAsString();
                 echo pg_last_error($this->db);
             }
