@@ -46,17 +46,28 @@ class Select_Box
 
     function input()
     {
+        // Show when click
         $javascript=sprintf('$("%s_bt").onclick=function() {
 	try {
            var newDiv=$("select_box%s");
-	       var pos=$("%s_bt").cumulativeOffset();
-           newDiv.setStyle({display:"block",position:"absolute",top:pos.top+25+"px",left:pos.left+5+"px"});
+	   var pos=$("%s_bt").cumulativeOffset();
+           newDiv.setStyle({display:"block",position:"fixed",top:pos.top+25+"px",left:pos.left+5+"px"});
 
 	} catch(e) {
 	     alert(e.message);
 	}
-}
-', $this->id, $this->id, $this->id, $this->id);
+       }
+        ', $this->id, $this->id, $this->id, $this->id);
+        
+        // Hide when out of the zone
+        $javascript.=sprintf('$("select_box%s").onmouseleave=function() {
+	try {
+           var newDiv=$("select_box%s");
+           newDiv.setStyle({display:"none"});
+	} catch(e) {
+	     alert(e.message);
+	}
+       }',$this->id,$this->id);
 
         // display the button
         printf('<input type="button" id="%s_bt" value="%s &#x25BE;">',
@@ -68,7 +79,7 @@ class Select_Box
 
 
         // Print the list of possible options
-        echo "<ul>";
+        printf('<ul id="%s_list">',$this->id);
         for ($i=0; $i<count($this->item); $i++)
         {
             if ($this->item[$i]['type']=="url")
@@ -86,6 +97,15 @@ class Select_Box
             {
                 printf('<li><a href="javascript:void(0)" onclick="%s">%s</a></li>',
                         $this->item[$i]['javascript'], $this->item[$i]['label']);
+            }
+            else if ($this->item[$i]['type']=="input") {
+                $ok=new IButton("ok");
+                $ok->value=$this->item[$i]['label'];
+                $ok->javascript=$this->item[$i]['input']->javascript;
+                printf('<li> %s %s</li>',
+                        $this->item[$i]['input']->input(),
+                        $ok->input()
+                        );
             }
         }
 
@@ -121,6 +141,17 @@ class Select_Box
         $this->item[$this->cnt]['javascript']=sprintf(" $('%s').value='%s';$('%s_bt').value='%s';$('select_box%s').hide()",
                 $this->id, $value, $this->id, $label, $this->id);
         $this->item[$this->cnt]['type']='value';
+        $this->cnt++;
+    }
+    function add_input($p_label,HtmlInput $p_element) {
+        /* $this->item[$this->cnt]['label']=$p_element->label;
+        $this->item[$this->cnt]['value']=$p_element->value;
+        $this->item[$this->cnt]['javascript']=$p_element->javascript;
+         * 
+         */
+        $this->item[$this->cnt]['label']=$p_label;
+        $this->item[$this->cnt]['input']=clone $p_element;
+        $this->item[$this->cnt]['type']='input';
         $this->cnt++;
     }
 
