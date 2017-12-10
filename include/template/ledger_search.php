@@ -86,5 +86,6 @@ require_once NOALYSS_INCLUDE.'/lib/select_box.class.php';
 $box=new Select_Box("{$this->div}button","Filtre");
 $box->add_input(_('Ajout'), $save_filter);
 $box->add_javascript(_('Gestion Filtre'), $search_filter);
+$box->add_javascript(_('Remise à zéro'), "reset_filter('{$this->div}')");
 echo $box->input();
 ?>

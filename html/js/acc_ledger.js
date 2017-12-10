@@ -1373,3 +1373,29 @@ function delete_filter (p_div,p_dossier,p_filter_id) {
     })
     
 }     
+/**
+ * Reset the search_form and reinitialize all the input but ledger_type
+ * @param p_div prefix for DOM Element
+ */
+function reset_filter(p_div) {
+  // clean all the input fields but ledger_type remains
+  var elt=['date_start','date_end','date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting'];
+                for (var i=0;i<elt.length;i++) {
+                    var idx=elt[i];
+                  console.log("idx = "+p_div+idx);
+                    $(p_div+idx).value="";
+                }
+  
+  // clean all the selected ledger
+   var eltLedgerId=$("ledger_id"+p_div);
+               eltLedgerId.innerHTML="";
+               var eltHidden=document.createElement("input");
+               eltHidden.setAttribute("name",p_div+"nb_jrn");
+               eltHidden.setAttribute("type","hidden");
+               eltHidden.setAttribute("id",p_div+"nb_jrn");
+               eltHidden.setAttribute("value",0);
+               eltLedgerId.appendChild(eltHidden);
+  
+  // By default , unpaid is uncked
+   $(p_div+"unpaid").checked=false;
+}
