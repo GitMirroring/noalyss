@@ -1438,9 +1438,9 @@ function fixed_position(p_sx, p_sy)
 function calcy(p_sy)
 {
     var sy = p_sy;
-    if (window.scrollY)
+    if (window.pageYOffset)
     {
-        sy = window.scrollY + p_sy;
+        sy = window.pageYOffset + p_sy;
     }
     else
     {
