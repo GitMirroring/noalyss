@@ -56,7 +56,20 @@ if ( $act=='X')
      exit();
   }
 // display a search box
-
+?>
+<script>
+/**
+ * All the onload must be here otherwise the other will overwritten
+ * @returns {undefined}
+ */
+window.onload=function ()
+{
+    create_anchor_up();
+    init_scroll();
+    sorttable.init
+}
+</script>
+<?php
 $ledger=new Acc_Ledger_Search('ALL');
 $search_box=$ledger->search_form();
 echo '<div class="content">';

@@ -208,7 +208,20 @@ if ($oPeriode->load() == -1)
 
 $module_selected = -1;
 
-
+?>
+<script>
+/**
+ * All the onload must be here otherwise the other will overwritten
+ * @returns {undefined}
+ */
+window.onload=function ()
+{
+    create_anchor_up();
+    init_scroll();
+    sorttable.init
+}
+</script>
+<?php
 
 /*
  * if an action is requested

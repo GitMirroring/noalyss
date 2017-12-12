@@ -2832,7 +2832,7 @@ function create_anchor_up()
 {
     if ( document.getElementById('up_top')) return;
     
-    var newElt = new Element('div');
+    var newElt = document.createElement('div');
     newElt.setAttribute('id', 'up_top');
     newElt.innerHTML='<a id="up_top"></a>';
     
@@ -2920,16 +2920,7 @@ function alert_box(p_message)
     smoke.alert(p_message,false , {ok:'ok',classname:"inner_box"});
 }
 
-/**
- * All the onload must be here otherwise the other will overwritten
- * @returns {undefined}
- */
-window.onload=function ()
-{
-    create_anchor_up();
-    init_scroll();
-    sorttable.init
-}
+
 /**
  * @brief Colorize the rows of the table 
  * @param string p_table id of the table
