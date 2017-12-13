@@ -1444,7 +1444,7 @@ function calcy(p_sy)
     }
     else
     {
-        sy = document.body.scrollTop + p_sy;
+        sy = document.documentElement.scrollTop + p_sy;
     }
     return sy;
 
