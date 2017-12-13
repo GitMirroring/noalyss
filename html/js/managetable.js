@@ -247,7 +247,7 @@ var ManageTable = function (p_table_name)
      *@brief call the ajax with action delete
      *@param id (pk) of the data row
      */
-    this.delete = function (p_id, p_ctl) {
+    this.remove = function (p_id, p_ctl) {
         this.param['p_id'] = p_id;
         this.param['action'] = 'delete';
         this.param['ctl'] = p_ctl;

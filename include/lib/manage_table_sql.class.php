@@ -702,7 +702,7 @@ function check()
         if ($this->can_delete_row())
         {
             echo "<td>";
-            $js=sprintf("%s.delete('%s','%s');", $this->object_name,
+            $js=sprintf("%s.remove('%s','%s');", $this->object_name,
                     $p_row[$this->table->primary_key], $this->object_name
             );
             echo HtmlInput::image_click("trash-24.gif", $js, _("Effacer"));
