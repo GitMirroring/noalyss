@@ -692,10 +692,12 @@ function form_blank_card(obj)
  */
 function save_card(obj)
 {
-    var accounting= $(obj)['av_text25'];
-    if ( accounting.value.length > 40 ) {
-      smoke.alert('Poste comptable trop grand');
-      return false;
+    if ($(obj)['av_text5']) {
+        var accounting= $(obj)['av_text5'];
+        if ( accounting.value.length > 40 ) {
+          smoke.alert('Poste comptable trop grand');
+          return false;
+        }
     }
     // Data must be taken here
     var data=$('save_card').serialize(false); var content=$(obj).ipopup;
