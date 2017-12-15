@@ -184,7 +184,7 @@ case 'de':
         $op->get();			
         /* return an obj. ACH / FIN or VEN or null if nothing is found*/
         $obj=$op->get_quant();	
-
+        
         $oLedger=new Acc_Ledger($cn,$ledger);
         if ( $obj==null || $obj->signature == 'ODS'  )
         {

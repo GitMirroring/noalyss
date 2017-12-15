@@ -207,6 +207,7 @@ if ($aRap  != null ) {
 if ( $access=='W') {
      $wConcerned=new IConcerned("rapt".$div);
      $wConcerned->amount_id=$obj->det->jr_montant;
+     $wConcerned->div="search_reconcile";
     echo $wConcerned->input();
 
 }

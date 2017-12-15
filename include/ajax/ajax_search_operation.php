@@ -38,6 +38,8 @@ require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 
 $base=basename($_SERVER['SCRIPT_NAME']);
 $inside=false;
+$tiers=$http->get("tiers","string","");
+// With the amount id, we find the amount in a html elt
 if (isset($_GET['amount_id']))
 {
 	put_global(array(
@@ -45,8 +47,8 @@ if (isset($_GET['amount_id']))
                         array("key"=>'amount_max','value'=>$_GET['amount_id'])
                         ));
 }
-
-$ledger=new Acc_Ledger_Search('ALL',1,'search_op');
+$target=$http->get("target","string","");
+$ledger=new Acc_Ledger_Search('ALL',1,$target);
 
 if ($base == 'recherche.php' || $base == 'do.php')
 	{
@@ -55,18 +57,18 @@ if ($base == 'recherche.php' || $base == 'do.php')
 	}
 	else
 	{
-		$div='search_op';
 		$action="";
 		$callback="";
-                echo HtmlInput::title_box(_('Recherche'), $div);
+                echo HtmlInput::title_box(_('Recherche'), $target);
 		echo '<form name="search_form_ajx" id="search_form_ajx" onsubmit="search_operation(this);return false">';
-		echo HtmlInput::get_to_hidden(array('ctlc','ledger','target'));
+		echo HtmlInput::get_to_hidden(array('ctlc','ledger'));
+                echo HtmlInput::hidden("target",$target);
 		$inside=true;
 	}
-
+echo HtmlInput::hidden("tiers",$tiers);
 echo $ledger->search_form();
 echo HtmlInput::submit("viewsearch",_("Recherche"));
-echo HtmlInput::button_close('search_op');
+echo HtmlInput::button_close($target);
 echo '</form>';
 
 if ( isset ($_GET['amount_min'])&& isset($_GET['amount_max'])&& ($_GET['amount_max']!=0 ||$_GET['amount_min']!=0 ))
@@ -96,11 +98,11 @@ if ( isset ($_GET['viewsearch']) )
     else
         $array=$_GET;
     $array['p_action']='ALL';
-	if ( ! isset ($array['date_start']) || ! isset ($array['date_end']))
-	{
-		// get first date of current exercice
-		list($array['date_start'],$array['date_end'])=$g_user->get_limit_current_exercice();
-	}
+    if ( ! isset ($array['date_start']) || ! isset ($array['date_end']))
+    {
+            // get first date of current exercice
+            list($array['date_start'],$array['date_end'])=$g_user->get_limit_current_exercice();
+    }
 
     list($sql,$where)=$ledger->build_search_sql($array);
     // Count nb of line
@@ -117,6 +119,7 @@ if ( isset ($_GET['viewsearch']) )
 	    if ($step<$max_line ) echo '<h2 class="notice">'._('Liste limitée à ').$step._(' enregistrements. Le nombre d\'enregistrements trouvés est de ') .$max_line.'</h2>';
    }
 	echo '<form method="get" onsubmit="set_reconcile(this);return false">';
+        echo HtmlInput::hidden("tiers",$tiers);
 	echo HtmlInput::submit("upd_rec",_("Mettre à jour"));
 	echo HtmlInput::get_to_hidden(array('ctlc','amount_id','ledger'));
 	echo HtmlInput::get_to_hidden(array('l','date_start','date_end','desc','amount_min','amount_max','qcodesearch_op','accounting','unpaid','gDossier','ledger_type'));

@@ -1247,10 +1247,11 @@ function save_predf_op(obj)
  * @param {type} ctl_concern
  * @param {type} amount_id
  * @param {type} ledger
- * @param {type} p_id_target
+ * @param {type} p_id_targetDom Element (div) where to display the search result
+ * @param p_tiers id of the Tiers
  * @returns {undefined}
  */
-function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target)
+function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p_tiers)
 {
     var dossier = g('gDossier').value;
     if (amount_id === undefined)
@@ -1268,24 +1269,31 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target)
             amount_id = $(amount_id).innerHTML;
         }
     }
-
-    var target = "search_op";
-    removeDiv(target);
+    var tiers=""
+    if ( p_tiers ) tiers=p_tiers;
+    var target = "";
+    if ( p_id_target !="") {
+        target=p_id_target;
+    }else {
+        target = "search"+layer;
+        removeDiv(target);
+    }
     var str_style = fixed_position(77, 99);
     str_style += ";width:92%;overflow:auto;";
     waiting_box();
 
 
-    var target = {gDossier: dossier,
+    var param_send = {gDossier: dossier,
         ctlc: ctl_concern,
         op: 'search_op',
-        ctl: target,
         ac: 'JSSEARCH',
         amount_id: amount_id,
         ledger: ledger,
-        target: p_id_target};
+        target: target,
+        tiers:tiers
+    };
 
-    var qs = encodeJSON(target);
+    var qs = encodeJSON(param_send);
 
     var action = new Ajax.Request('ajax_misc.php',
             {
@@ -1294,9 +1302,9 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target)
                 onFailure: null,
                 onSuccess: function (req) {
                     remove_waiting_box();
-                    var div = {id: 'search_op', cssclass: 'inner_box', style: str_style, drag: 1};
+                    var div = {id: target, cssclass: 'inner_box', style: str_style, drag: 1};
                     add_div(div);
-                    $('search_op').innerHTML = req.responseText;
+                    $(target).innerHTML = req.responseText;
                     req.responseText.evalScripts();
                 }
             }
@@ -1310,8 +1318,11 @@ function search_operation(obj)
     try {
         var dossier = g('gDossier').value;
         waiting_box();
-        var target = "search_op";
-        var qs = Form.serialize('search_form_ajx') + "&op=search_op&ctl=search_op";
+        var target = "search"+layer;
+        if ( $(obj)["target"] ) {
+            target=$(obj)["target"].value;
+        }
+        var qs = Form.serialize('search_form_ajx') + "&op=search_op";
         var action = new Ajax.Request('ajax_misc.php',
                 {
                     method: 'get',
@@ -1319,7 +1330,7 @@ function search_operation(obj)
                     onFailure: null,
                     onSuccess: function (req) {
                         remove_waiting_box();
-                        $('search_op').innerHTML = req.responseText;
+                        $(target).innerHTML = req.responseText;
                         req.responseText.evalScripts();
                     }
                 }
@@ -1342,12 +1353,14 @@ function set_reconcile(obj)
 
     try
     {
+      console.log(obj.elements);
         var ctlc = obj.elements['ctlc'];
+        var tiers=obj.elements['tiers'];
         if ( ! obj.elements['target']) return;
         var target = obj.elements['target'].value;
         for (var e = 0; e < obj.elements.length; e++)
         {
-
+            
             var elmt = obj.elements[e];
             if (elmt.type === "checkbox")
             {
@@ -1359,15 +1372,16 @@ function set_reconcile(obj)
                         $(ctlc.value).value += ',';
 
                     } else {
-                        if (target != "" && $(target).value == "") {
-                            $(target).value = elmt.value;
+                        
+                        if (tiers  && tiers.value != "") {
+                            $(tiers.value).value = elmt.value;
                         }
                     }
                     $(ctlc.value).value += nValue;
                 }
             }
         }
-        removeDiv('search_op');
+        removeDiv(obj.elements['target'].value);
     }
     catch (e)
     {
