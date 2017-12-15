@@ -1,7 +1,6 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-require_once NOALYSS_INCLUDE.'/lib/select_box.class.php';
 ?>
 <table id="<?=$this->div?>table_search">
     
@@ -25,6 +24,7 @@ require_once NOALYSS_INCLUDE.'/lib/select_box.class.php';
 </td>
 <td>
 <?php echo $f_date_start->input();  ?> <?php echo _('et')?> <?php echo $f_date_end->input();  ?>
+
 </td>
 </tr>
 <tr>
@@ -33,6 +33,7 @@ require_once NOALYSS_INCLUDE.'/lib/select_box.class.php';
 </td>
 <td>
 <?php echo $f_date_paid_start->input();  ?> <?php echo _('et')?> <?php echo $f_date_paid_end->input();  ?>
+<?php echo $date_start_hidden,$date_end_hidden;?>
 </td>
 </tr>
 
@@ -82,10 +83,3 @@ require_once NOALYSS_INCLUDE.'/lib/select_box.class.php';
 </tr>
 
 </table>
-<?php
-$box=new Select_Box("{$this->div}button","Filtre");
-$box->add_input(_('Ajout'), $save_filter);
-$box->add_javascript(_('Gestion Filtre'), $search_filter);
-$box->add_javascript(_('Remise à zéro'), "reset_filter('{$this->div}')");
-echo $box->input();
-?>

@@ -126,14 +126,16 @@ class Acc_Ledger_Search
         {
             $hid_jrn=HtmlInput::hidden($this->div.'nb_jrn', 0);
         }
-        /* Compute date for exercice */
+        /* Compute default date for exercice */
         $period=$g_user->get_periode();
         $per=new Periode($this->cn, $period);
         $exercice=$per->get_exercice();
         list($per_start, $per_end)=$per->get_limit($exercice);
         $date_end=$per_end->last_day();
         $date_start=$per_start->first_day();
-
+        
+        $date_start_hidden=HtmlInput::hidden("{$this->div}date_start_hidden", $date_start);
+        $date_end_hidden=HtmlInput::hidden("{$this->div}date_end_hidden", $date_end);
         /* widget for date_start */
         $f_date_start=new IDate('date_start', '', $this->div."date_start");
         /* all periode or only the selected one */
@@ -224,7 +226,6 @@ class Acc_Ledger_Search
         $r.=HtmlInput::hidden('ac', $_REQUEST['ac']);
         ob_start();
         $search_filter=$this->build_search_filter();
-        $save_filter=$this->build_name_filter();
         require_once NOALYSS_TEMPLATE.'/ledger_search.php';
         $r.=ob_get_contents();
         ob_end_clean();
@@ -252,12 +253,15 @@ class Acc_Ledger_Search
     /**
      * Build the button for saving the filter for search
      */
-    private function build_name_filter()
+    function build_name_filter()
     {
         $name=new IText($this->div."filter_new");
         $name->placeholder=_("Nom du filtre");
-        $name->javascript=sprintf("save_filter('%s','%s')",$this->div,Dossier::id());
-        return $name;
+        $r=$name->input();
+        $bt=new IButton($this->div."save_ok",_("Ajout"));
+        $bt->javascript=sprintf("save_filter('%s','%s')",$this->div,Dossier::id());
+        $r.=$bt->input();
+        return $r;
     }
 
     /**
@@ -352,8 +356,11 @@ class Acc_Ledger_Search
         if (!empty($p_array))
             extract($p_array, EXTR_SKIP);
 
-        if (isset($op))
-            $r_jrn=(isset(${$op."r_jrn"}))?${$op."r_jrn"}:-1;
+        $op=$this->div;
+        if (isset($p_array[$op."r_jrn"]))
+        {
+            $r_jrn=$p_array[$op."r_jrn"];
+        }
         else
         {
             $r_jrn=(isset($r_jrn))?$r_jrn:-1;
@@ -367,9 +374,7 @@ class Acc_Ledger_Search
             $amount_max=0;
 
             $desc='';
-            $qcode=(isset($qcode))?$qcode:"";
-            if (isset($qcodesearch_op))
-                $qcode=$qcodesearch_op;
+            $qcode=(isset($p_array[$this->div."qcode"]))?$p_array[$this->div."qcode"]:"";
             $accounting=(isset($accounting))?$accounting:"";
             $periode=new Periode($this->cn);
             $g_user=new User($this->cn);
@@ -512,9 +517,8 @@ class Acc_Ledger_Search
             $and=" and ";
         }
         // Quick Code
-        if (isset($qcodesearch_op))
-            $qcode=$qcodesearch_op;
-        if (isset($qcode)&&$qcode!=null)
+         $qcode=(isset($p_array[$this->div."qcode"]))?$p_array[$this->div."qcode"]:"";
+        if ($qcode!="")
         {
             $fil_qcode=$and."  jr_grpt_id in ( select j_grpt from
                        jrnx where trim(j_qcode) = upper(trim('".sql_string($qcode)."')))";
@@ -560,7 +564,15 @@ class Acc_Ledger_Search
         $r.=h2('Recherche', 'class="title"');
         $r.='<FORM METHOD="GET">';
         $r.=$this->search_form();
+        
         $r.=HtmlInput::submit('search', _('Rechercher'));
+        
+        $button_search=new IButton("{$this->div}button", _('Filtre'));
+        $button_search->javascript=$this->build_search_filter();
+        $r.=$button_search->input();
+        
+        
+
         $r.=HtmlInput::hidden('ac', $_REQUEST['ac']);
 
         /*  when called from commercial.php some hidden values are needed */
@@ -577,9 +589,8 @@ class Acc_Ledger_Search
 
         $r.='</div>';
         $button=new IButton('tfs');
-        $button->label=_("Filtrer");
+        $button->label=_("Chercher");
         $button->javascript="toggleHideShow('search_form','tfs');";
-
         $r.=$button->input();
         return $r;
     }

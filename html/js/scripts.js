@@ -164,7 +164,7 @@ function encodeJSON(obj)
     {
         var str = '';
         var e = 0;
-        for (i in obj)
+        for (var i in obj)
         {
             if (e !== 0)
             {

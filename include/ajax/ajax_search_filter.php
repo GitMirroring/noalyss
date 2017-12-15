@@ -23,6 +23,7 @@ if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
 require NOALYSS_INCLUDE.'/database/user_filter_sql.class.php';
+require NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 $cn=Dossier::connect();
 $dossier_id=Dossier::id();
 global $g_user;
@@ -72,7 +73,11 @@ if ($op=='save_filter')
             throw new Exception(_("Nom ne peut être vide"));
         }
         $new->save();
-        $answer['filter_name']=sprintf("<a onclick=\"load_filter('%s','%s','%s')\">%s</a>",
+        $rmAction=sprintf("delete_filter('%s','%s','%s')",  trim($http->post('div')), $dossier_id,
+                $new->getp('id'));
+        $answer['filter_name']=sprintf('<a class="tinybutton" style="display:inline" id="" onclick="'.$rmAction.'">'.SMALLX.'</a>'
+        );
+        $answer['filter_name'].=sprintf("<a style=\"display:inline\" onclick=\"load_filter('%s','%s','%s')\">%s</a>",
                 trim($http->post('div')), $dossier_id, $new->getp('id'),
                 $new->getp("filter_name"));
         $answer['filter_id']=$new->getp("id");
@@ -119,8 +124,11 @@ if ($op=="display_search_filter")
 {
     $p_div=$http->get("div");
     $ledger_type=$http->get("ledger_type");
-
+    
     echo HtmlInput::title_box(_("Filtre"), "boxfilter".$p_div);
+    
+
+
     // Make a list of all search filters with the same ledger_type of the current
     // user
     $result=$cn->get_array("
@@ -133,6 +141,17 @@ if ($op=="display_search_filter")
 ", [$g_user->login, $ledger_type]);
     $nb_result=count($result);
     printf('<ul class="select_table" id="manage%s">', $p_div);
+    $search_filter=new Acc_Ledger_Search($ledger_type,1,$p_div);
+    // Button add filter
+    echo "<li>";
+    echo $search_filter->build_name_filter();
+    echo "</li>";
+    
+    echo "<li>";
+    echo HtmlInput::anchor(_("Remise à zéro"), "", "onclick=\"reset_filter('$p_div');removeDiv('boxfilter{$p_div}')\"");
+    echo "</li>";
+    
+    // Link reset
     for ($i=0; $i<$nb_result; $i++)
     {
         printf(' <li id="manageli%s_%d">', $p_div, $result[$i]["id"]);

@@ -1257,6 +1257,9 @@ function save_filter(p_div,p_dossier) {
         eltValue[idx]=$(p_div+elt[i]).value;
    
     }
+    if (eltValue['amount_min']=="") eltValue["amount_min"]=0;
+    if (eltValue['amount_max']=="") eltValue["amount_max"]=0;
+    
     //ledger's list r_jrn
     if (eltValue['nb_jrn'] > 0) {
         eltValue['r_jrn']=[];
@@ -1275,17 +1278,17 @@ function save_filter(p_div,p_dossier) {
             try {
                 var answer=req.responseJSON;
                 if ( answer.status == 'OK') {
-                    /*Add the new list to the selection
-                     * not needed
-                     * var new_item=document.createElement('li');
+                    /*Add the new list to the selection */
+                    var new_item=document.createElement('li');
                     new_item.innerHTML=answer.filter_name;
-                    $(p_div+'button_list').appendChild(new_item);*/
+                    new_item.setAttribute("id","li"+p_div+"_"+answer.filter_id);
+                    $('manage'+p_div).appendChild(new_item);
                     $(p_div+"filter_new").value="";
                 } else {
                     throw answer.message;
                 }
             } catch (e) {
-                smoke.alert(e.message);
+                smoke.alert(e);
             }
         }
     });
@@ -1363,7 +1366,6 @@ function delete_filter (p_div,p_dossier,p_filter_id) {
             var answer=req.evalJSON;
            
             var child=$("manageli"+p_div+"_"+p_filter_id);
-                console.log(child)
                 if ( child )  {$("manage"+p_div).removeChild(child); }
             }catch (e) {
                 console.log(e.message)
@@ -1382,10 +1384,14 @@ function reset_filter(p_div) {
   var elt=['date_start','date_end','date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting'];
                 for (var i=0;i<elt.length;i++) {
                     var idx=elt[i];
-                  console.log("idx = "+p_div+idx);
                     $(p_div+idx).value="";
                 }
-  
+  if ( $(p_div+"date_start_hidden")) {
+      $(p_div+"date_start").value=$(p_div+"date_start_hidden").value;
+  }
+  if ( $(p_div+"date_end_hidden")) {
+      $(p_div+"date_end").value=$(p_div+"date_end_hidden").value;
+  }
   // clean all the selected ledger
    var eltLedgerId=$("ledger_id"+p_div);
                eltLedgerId.innerHTML="";
