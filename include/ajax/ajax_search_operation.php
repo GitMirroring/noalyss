@@ -25,7 +25,7 @@ require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 
-global $ĥttp;
+global $http;
 $gDossier=dossier::id();
 
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
