@@ -856,6 +856,7 @@ function show_ledger_choice(json_obj)
         for (i = 0; i < $(json_obj.div + 'nb_jrn').value; i++) {
             query = query + "&r_jrn[]=" + $(json_obj.div + 'r_jrn[' + i + ']').value;
         }
+        query=encodeURI(query);
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {method: 'get',
@@ -866,7 +867,7 @@ function show_ledger_choice(json_obj)
                             var obj = {
                                 id: json_obj.div + 'jrn_search',
                                 cssclass: 'inner_box',
-                                style: ';position:absolute;width:60%;z-index:20;margin-left:20%',
+                                style: ';position:absolute;width:auto;z-index:20;margin-left:20%',
                                 drag: 1
                             };
                             //var y=calcy(posY);
