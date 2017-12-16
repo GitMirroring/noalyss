@@ -241,7 +241,7 @@ class Acc_Ledger_Search
      *         - 1 means all the ledger of this type
      *         - 0 No have the "Tous les journaux" availables
      */
-    private function build_search_filter()
+    function build_search_filter()
     {
         $json=json_encode(["div"=>$this->div, "ledger_type"=>$this->type, "all_type"=>$this->all,
             "dossier"=>Dossier::id()]);
@@ -1046,6 +1046,71 @@ class Acc_Ledger_Search
         }
         $r.='</table>';
         return array($count, $r);
+    }
+     /**
+     * return the html code to create an hidden div and a button
+     * to show this DIV. This contains all the available ledgers
+     * for the user in READ or RW
+     *@param $p_selected is an array of checkbox
+     *@param $p_div div suffix for the list of ledgers
+     *@note the choosen ledger are stored in the array r_jrn (_GET)
+     */
+    function select_ledger($p_selected,$p_div)
+    {
+        global $g_user;
+	$r = '';
+	/* security : filter ledger on user */
+	$p_array = $g_user->get_ledger($this->type, 3);
+        
+        ob_start();
+        
+
+        /* create a hidden div for the ledger */
+        echo '<div id="div_jrn'.$p_div.'" >';
+        echo HtmlInput::title_box(_("Journaux"), $p_div."jrn_search");
+        echo '<div style="padding:5px">';
+        echo '<form method="GET" id="'.$p_div.'search_frm" onsubmit="return hide_ledger_choice(\''.$p_div.'search_frm\')">';
+        echo HtmlInput::hidden('nb_jrn', count($p_array));
+        echo _('Filtre ').HtmlInput::filter_table($p_div.'tb_jrn', '0,1,2', 2);
+        echo '<table class="result" id="'.$p_div.'tb_jrn">';
+        echo '<tr>';
+        echo th(_('Nom'));
+        echo th(_('Description'));
+        echo th(_('Type'));
+        echo '</tr>';
+        echo '<tr>';
+        echo '<td>';
+        echo HtmlInput::button('sel_'.$p_div,_('Inverser la sélection'),' onclick = "toggle_checkbox(\''."{$p_div}search_frm".'\')"');
+        echo '</td>';
+        echo '</tr>';
+        for ($e=0;$e<count($p_array);$e++)
+        {
+            $row=$p_array[$e];
+            $r=new ICheckBox($p_div.'r_jrn'.$e,$row['jrn_def_id']);
+            $idx=$row['jrn_def_id'];
+            if ( $p_selected != null &&  in_array($row['jrn_def_id'],$p_selected))
+            {
+                $r->selected=true;
+            }
+            $class=($e%2==0)?' class="even" ':' class="odd" ';
+            echo '<tr '.$class.'>';
+            echo '<td style="white-space: nowrap">'.$r->input().$row['jrn_def_name'].'</td>';
+            echo '<td >'.$row['jrn_def_description'].'</td>';
+            echo '<td >'.$row['jrn_def_type'].'</td>';
+            echo '</tr>';
+
+        }
+        echo '</table>';
+        echo HtmlInput::hidden('div',$p_div);
+        echo HtmlInput::submit('save',_('Valider'));
+        echo HtmlInput::button_close($p_div."jrn_search");
+        echo '</form>';
+        echo '</div>';
+        echo '</div>';
+  
+        $ret=ob_get_contents();
+        ob_end_clean();
+        return $ret;
     }
 
 }
