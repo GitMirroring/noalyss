@@ -871,8 +871,7 @@ function show_ledger_choice(json_obj)
                             };
                             //var y=calcy(posY);
                             var y = posY;
-                            if (json_obj.div != '')
-                                obj.cssclass = "";
+                            
                             obj.style = "top:" + y + 'px;' + obj.style;
                             /* if ( json_obj.class ) 
                              { 
