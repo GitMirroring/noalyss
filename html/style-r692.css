@@ -329,13 +329,13 @@ a.mtitle {
     text-decoration:none;
     display:inline;
     color: #0000FF;
-
+    pointer:cursor;
     background-color: transparent;
 }
 a.mtitle:hover {
     text-decoration:none;
     display:inline;
-
+    pointer:cursor; 
     color: #00008B;
     background-color:#EFEBEB;
 
@@ -444,6 +444,7 @@ div.content a.mtitle {
     text-decoration:none;
     display:inline;
     color:#0000FF;
+       cursor: pointer;
     /*! background-color: white; */
 
 
@@ -454,7 +455,7 @@ div.content a.mtitle:hover {
     display:inline;
     background-color:#00008B;
     color:#FFFFFF;
-
+    cursor: pointer;
 
 }
 
@@ -1068,6 +1069,7 @@ a.line,div.content a.line
     text-decoration:underline;
     display:inline;
     /* color: #0000FF; */
+    cursor:pointer;
 }
 a.line:hover,div_content a.line
 {
@@ -1075,6 +1077,7 @@ a.line:hover,div_content a.line
     display:inline;
     color: #FFFFFF;
     background-color:#336699;
+    cursor:pointer;
 }
 #close_div
 {
