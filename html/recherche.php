@@ -77,6 +77,9 @@ echo '<div class="content">';
 echo '<form method="GET">';
 echo $search_box;
 echo HtmlInput::submit("viewsearch",_("Recherche"));
+ $button_search=new IButton("button", _('Filtre'));
+$button_search->javascript=$ledger->build_search_filter();
+echo $button_search->input();
 ?>
 <input type="button" class="smallbutton" onclick="window.close()" value="<?php echo _('Fermer')?>">
 
