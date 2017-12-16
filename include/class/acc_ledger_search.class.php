@@ -1072,6 +1072,17 @@ class Acc_Ledger_Search
         echo '<form method="GET" id="'.$p_div.'search_frm" onsubmit="return hide_ledger_choice(\''.$p_div.'search_frm\')">';
         echo HtmlInput::hidden('nb_jrn', count($p_array));
         echo _('Filtre ').HtmlInput::filter_table($p_div.'tb_jrn', '0,1,2', 2);
+        echo HtmlInput::anchor_action(_('Inverser sel'),' toggle_checkbox(\''."{$p_div}search_frm".'\')','sel_'.$p_div,"nav");
+        echo "-";
+        echo HtmlInput::anchor_action(_('Effacer sel'),' unselect_checkbox(\''."{$p_div}search_frm".'\')','unsel_'.$p_div,"nav");
+        echo "-";
+        echo HtmlInput::anchor_action(_('Financier'),'  select_checkbox_attribute(\''."{$p_div}search_frm".'\',\'ledger_type\',\'FIN\') ','selfin_'.$p_div,"nav");
+        echo "-";
+        echo HtmlInput::anchor_action(_('Vente'),'  select_checkbox_attribute(\''."{$p_div}search_frm".'\',\'ledger_type\',\'VEN\') ','selfven_'.$p_div,"nav");
+        echo "-";
+        echo HtmlInput::anchor_action(_('Achat'),'  select_checkbox_attribute(\''."{$p_div}search_frm".'\',\'ledger_type\',\'ACH\') ','selfach_'.$p_div,"nav");
+        echo "-";
+        echo HtmlInput::anchor_action(_('Op.Diverses'),'  select_checkbox_attribute(\''."{$p_div}search_frm".'\',\'ledger_type\',\'ODS\') ','selfods_'.$p_div,"nav");
         echo '<table class="result" id="'.$p_div.'tb_jrn">';
         echo '<tr>';
         echo th(_('Nom'));
@@ -1080,13 +1091,14 @@ class Acc_Ledger_Search
         echo '</tr>';
         echo '<tr>';
         echo '<td>';
-        echo HtmlInput::button('sel_'.$p_div,_('Inverser la sélection'),' onclick = "toggle_checkbox(\''."{$p_div}search_frm".'\')"');
+        
         echo '</td>';
         echo '</tr>';
         for ($e=0;$e<count($p_array);$e++)
         {
             $row=$p_array[$e];
             $r=new ICheckBox($p_div.'r_jrn'.$e,$row['jrn_def_id']);
+            $r->set_attribute("ledger_type", $row['jrn_def_type']);
             $idx=$row['jrn_def_id'];
             if ( $p_selected != null &&  in_array($row['jrn_def_id'],$p_selected))
             {
