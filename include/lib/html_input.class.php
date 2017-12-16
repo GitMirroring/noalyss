@@ -450,6 +450,24 @@ class HtmlInput
 	return $r;
     }
     /**
+     * Anchor Html with javascript
+     *@param $action action action to perform (message) without onclick
+     *@param $javascript javascript to execute
+     *@param $id is the DOM element id 
+     *@param $p_class CSS class of the button
+     *@param $p_symbole raw symbole to add to the action message
+     */
+    static function anchor_action($action,$javascript,$id=NULL,$p_class="button",$p_symbole="")
+    {
+        if ($id==NULL){
+            $id=uniqid("xx");
+        }
+        $r="";
+        $r.='<a  id="'.$id.'" class="'.$p_class.'" onclick="'.$javascript.'">'.$p_symbole.h($action).'</a>';
+        return $r;
+
+    }
+    /**
      * button Html with javascript
      *@param $action action action to perform (message) without onclick
      *@param $javascript javascript to execute
@@ -1024,5 +1042,21 @@ EOF;
             $dossier=Dossier::id();
             $js=HtmlInput::button_action(_('Nouvel événement'),'action_add('.$dossier.')','xx','smallbutton');
             return $js;
+        }
+        /**
+         * Insert attribute inside a INPUT TYPE, these attribute can be retrieved
+         * in javascript with element.getAttribute or changed with element.setAttribute
+         * example insert my_attribute into a checkbox <input type="checkbox" "my_attribute"="XX"> 
+         * @return string to insert into the HTML node
+         * 
+         */
+        function get_node_attribute() 
+        {
+            $r="";
+            $nb_attribute=count($this->attribute);
+            for ($i=0;$i < $nb_attribute;$i++) {
+                $r.=sprintf(' %s="%s" ',$this->attribute[$i][0] ,$this->attribute[$i][1]);
+            }
+            return $r;
         }
 }

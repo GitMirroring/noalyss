@@ -1033,6 +1033,25 @@ function select_checkbox(form_id)
     }
 }
 /**
+ * select all the checkbox in a given form if the specific attribute 
+ * has the given value
+ * @param form_id id of the form
+ * @param attribute name
+ * @param attribute value
+ */
+function select_checkbox_attribute(form_id,p_attribute_name,p_attribute_value)
+{
+    var form = $(form_id);
+    for (var i = 0; i < form.length; i++)
+    {
+        var e = form.elements[i];
+        if (e.type === 'checkbox' && e.getAttribute(p_attribute_name)==p_attribute_value)
+        {
+            e.checked = true;
+        }
+    }
+}
+/**
  * unselect all the checkbox in a given form
  * @param form_id id of the form
  */

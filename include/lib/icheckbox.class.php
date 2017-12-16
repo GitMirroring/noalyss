@@ -36,6 +36,7 @@ class ICheckBox extends HtmlInput
         $check=( $this->selected==true )?"checked":"unchecked";
         $r='<input type="CHECKBOX" id="'.$this->id.'" name="'.$this->name.'"'.' value="'.$this->value.'"';
         $r.="  $check";
+        $r.=$this->get_node_attribute();
         $r.=' '.$this->disabled."  ".$this->javascript.'>';
 
         $r=$r." $this->label";
