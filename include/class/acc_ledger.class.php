@@ -2617,7 +2617,7 @@ class Acc_Ledger extends jrn_def_sql
         {
             $l_line=Database::fetch_array($ret, $i);
             $url=$base_url."&sa=detail&p_jrn=".$l_line['jrn_def_id'];
-            $r.=sprintf('<TR><TD><A HREF="%s">%s</A></TD></TR>', $url,
+            $r.=sprintf('<TR ledger_type="%s"><TD><A HREF="%s">%s</A></TD></TR>', $l_line['jrn_def_type'],$url,
                     h($l_line['jrn_def_name']).' ('.$l_line['jrn_def_type'].')');
         }
         $r.="</TABLE>";

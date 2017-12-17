@@ -3003,3 +3003,43 @@ function pin (object_id) {
         $('pin_'+object_id).firstChild.innerHTML="&#8778;";
     }
 }
+/**
+ * Show only the rows into the table (p_table_id) with the attribute (p_attribute_name) and if this attribute
+ * has the value of  (attribut_value)
+ * @param p_table_id table id
+ * @param p_attribute_name the name of the attribute
+ * @param p_attribute_value the value of the attribute we want to show
+ */
+function show_only_row(p_table_id,p_attribute_name,p_attribute_value)
+{
+    if ( ! $(p_table_id)) {
+        throw "Invalide table id"
+    }
+    var mTable=$(p_table_id) ;
+    var ncount=mTable.rows.length
+    for (var i = 0;i < ncount;i++) {
+        var mRow=mTable.rows[i];
+        if (mRow.getAttribute(p_attribute_name) != undefined && mRow.getAttribute(p_attribute_name)!=p_attribute_value){
+            mRow.hide();
+          } else {
+            mRow.show();
+          }
+    }
+}
+/**
+ * Show all the rows into the table (p_table_id) 
+ * @param p_table_id table id
+ */
+function show_all_row(p_table_id)
+{
+    if ( ! $(p_table_id)) {
+        throw "Invalide table id"
+    }
+    var mTable=$(p_table_id) ;
+    var ncount=mTable.rows.length
+    for (var i = 0;i < ncount;i++) {
+        var mRow=mTable.rows[i];
+            mRow.show();
+    }
+    
+}
