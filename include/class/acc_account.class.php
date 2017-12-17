@@ -53,11 +53,14 @@ class Acc_Account
         $this->db=$p_cn;
         $id=-1;
         if ( trim($pcm_val)  != "" ) {
+            $pcm_val=$this->db->get_value("select format_account($1)",
+                                        array($pcm_val));
             $id=$p_cn->get_value("select id from tmp_pcmn where pcm_val=$1",[$pcm_val]);
         }
         if ( $id == "") { $id=-1;}
         $this->data_sql=new Tmp_Pcmn_SQL($p_cn, $id);
         $this->data_sql->pcm_val=$pcm_val;
+
     }
     public function get_parameter($p_string)
     {
@@ -104,6 +107,22 @@ class Acc_Account
         return $this->db->get_value($sql,array($p_value));
     }
     /**
+     * Find the parent of an account
+     * @return string (pcm_val)
+     */
+    function find_parent() {
+        $name=$this->data_sql->pcm_val;
+        $length_name=strlen($name);
+        $parent="";
+        for ($i = 1;$i <$length_name;$i++) {
+            $parent=mb_substr($name, 0, $length_name-$i);
+            $exist=$this->db->get_value("select count(*) from tmp_pcmn where pcm_val=$1",[$parent]);
+            if ( $exist == 1) return $parent;
+        }
+        
+        return $parent;
+    }
+    /**
      * Check before inserting or updating
      */
     function verify() {
@@ -112,15 +131,36 @@ class Acc_Account
                            [$this->data_sql->pcm_val,$this->data_sql->id]);
         if ( $count > 0)
             throw new Exception (_("Poste en double"),EXC_DUPLICATE);
+        
         if (trim($this->data_sql->pcm_lib)=="")
             throw new Exception (_("Libellé vide"),EXC_PARAM_VALUE);
+        
+        // can not depend of itself
+        if ( $this->data_sql->pcm_val_parent == $this->data_sql->pcm_val)
+            throw new Exception (_("Poste parent incorrect"),EXC_PARAM_VALUE);
+        
+        if ( $this->data_sql->pcm_val_parent == "") {
+            $account=$this->find_parent();
+            $this->data_sql->pcm_val_parent=$account;
+            if ($account == "") 
+                throw new Exception (_("Poste Parent n'existe pas"),EXC_PARAM_VALUE);
+        }
+        
+        // purpose not clear
         if ( $this->data_sql->count(" where pcm_val = $1 and pcm_val <> $2",
                 [$this->data_sql->pcm_val_parent,$this->data_sql->pcm_val])  == 0)
-            throw new Exception (_("Parent n'existe pas"),EXC_PARAM_VALUE);
+            throw new Exception (_("Poste Parent n'existe pas"),EXC_PARAM_VALUE);
+        
+     
         if ( $this->data_sql->pcm_direct_use != 'N' && $this->data_sql->pcm_direct_use != 'Y') 
             throw new Exception (_("Paramètre incorrect"),EXC_PARAM_VALUE);
+        
         if ( trim($this->data_sql->pcm_val)==""||trim($this->data_sql->pcm_val_parent)=="")
             throw new Exception (_("Paramètre incorrect"),EXC_PARAM_VALUE);
+        
+        if ( strlen($this->data_sql->pcm_val)>40) {
+            throw new Exception (_("Poste comptable doit être de 40 caractères maximum"),EXC_PARAM_VALUE);
+        }
                 
     }
     function update() {
@@ -143,8 +183,13 @@ class Acc_Account
         $this->data_sql->delete();
 
     }
+    
     function save() {
-        $this->verify();
-        $this->data_sql->save();
+        try {
+            $this->verify();
+            $this->data_sql->save();
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
  }
