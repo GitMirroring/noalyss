@@ -431,8 +431,8 @@ function cat_doc_remove(p_dt_id, p_dossier)
                             alert_box('erreur <br>' + rec );
                             return;
                         }
-                        nodeXML = html[0];
-                        row_id = getNodeText(nodeXML);
+                        var nodeXML = html[0];
+                        var row_id = getNodeText(nodeXML);
                         if (row_id === 'nok')
                         {
                             var message_node = answer.getElementsByTagName('message');
@@ -769,16 +769,7 @@ function show_box(obj)
     add_div(obj);
     if (!obj.fixed)
     {
-        var sx = 0;
-        if (window.scrollY)
-        {
-            sx = window.scrollY + 40;
-        }
-        else
-        {
-            sx = document.body.scrollTop + 40;
-        }
-        g(obj.id).style.top = sx + "px";
+        g(obj.id).style.top = calc(40) + "px";
         show(obj.id);
     }
     else
@@ -1372,7 +1363,6 @@ function set_reconcile(obj)
 
     try
     {
-      console.log(obj.elements);
         var ctlc = obj.elements['ctlc'];
         var tiers=obj.elements['tiers'];
         if ( ! obj.elements['target']) return;
