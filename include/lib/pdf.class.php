@@ -20,7 +20,8 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
 /*!\file
- * \brief
+ * \brief API for creating PDF, unicode, based on tfpdf
+ *@see TFPDF
  */
 
 require_once NOALYSS_INCLUDE.'/tfpdf/tfpdf.php';

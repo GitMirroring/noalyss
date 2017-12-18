@@ -18,6 +18,10 @@
 */
 
 // Copyright 2014 Author Dany De Bontridder danydb@aevalys.eu
+/**
+ *@file
+ *@brief insert concerned operation , call from follow up
+ */
 
 // require_once '.php';
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');

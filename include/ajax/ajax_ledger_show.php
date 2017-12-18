@@ -3,6 +3,7 @@
 //see licence.txt
 
 /**
+ *@file
  * @brief
  * Show a div for selecting ledger
  * return a html code for creating a window

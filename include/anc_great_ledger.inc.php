@@ -1,7 +1,11 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-
+/**
+ *@file
+ *@brief Print the great ledger for Analytic accounting
+ * @see Anc_GrandLivre
+ */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 echo '<div style="content">';
 global $http;

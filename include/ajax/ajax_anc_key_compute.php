@@ -18,14 +18,18 @@
 */
 
 // Copyright 2014 Author Dany De Bontridder danydb@aevalys.eu
-// @brief Compute the amount. This file compute the amount and distribute it
-// following the given distribution key given in parameter.
-// Parameters are :
-//   - gDossier
-//   - t the element HTML to use as target
-//   - amount the amount to distribute
-//   - key the Distribution key to use
-// 
+
+
+/**
+ * @file
+ * @brief Compute the amount. This file compute the amount and distribute it
+ * following the given distribution key given in parameter.
+ * Parameters are :
+   - gDossier
+   - t the element HTML to use as target
+   - amount the amount to distribute
+   - key the Distribution key to use
+*/ 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 require_once NOALYSS_INCLUDE.'/class/anc_key.class.php';

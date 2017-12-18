@@ -19,6 +19,11 @@
 */
 
 // Copyright Author Dany De Bontridder dany@alchimerys.be
+  /**
+   *@file
+   *@brief display the navigator
+   */
+
 if ( ! defined ('ALLOWED')) die('Appel direct ne sont pas permis');
 echo HtmlInput::title_box(_("Navigateur"), "navi_div");
 $sql="

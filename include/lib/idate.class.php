@@ -20,8 +20,10 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-///!\file
-//\brief Html Input
+  /**
+   *\file
+   \brief Html Input
+  */
 
 
 /// Html Input : Input a date format dd.mm.yyyy

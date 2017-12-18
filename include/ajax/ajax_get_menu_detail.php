@@ -22,7 +22,7 @@
 
 /**
  * @file
- * @brief
+ * @brief get detail of a menu
  *
  */
 // retrieve data

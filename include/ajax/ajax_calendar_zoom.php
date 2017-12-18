@@ -17,6 +17,10 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
+  /**
+   *@file
+   *@brief zoom the sheduler
+   */
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/calendar.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';

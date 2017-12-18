@@ -21,8 +21,15 @@
 
 /**
  * @file
- * @brief 
+ * @brief manage the http input (get , post, request)
  */
+
+
+/**
+ * @file
+ * @brief manage the http input (get , post, request)
+ */
+
 class HttpInput
 {
 
@@ -34,7 +41,7 @@ class HttpInput
     }
 
     /**
-     * 
+     * Check the type of the value
      * @param $p_name name of the variable
      * @param $p_type type of the variable (number,string,date,array)
      * @throws Exception if the variable doesn't exist or type incorrect

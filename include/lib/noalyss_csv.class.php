@@ -19,12 +19,17 @@
  */
 
 
-/***
+/**
  * @file 
  * @brief Manage the CSV : manage files and write CSV record
  *
  */
 
+
+/**
+ * @brief Manage the CSV : manage files and write CSV record
+ *
+ */
 class Noalyss_Csv
 {
 

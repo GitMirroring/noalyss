@@ -18,8 +18,12 @@
 */
 
 // Copyright 2015 Author Dany De Bontridder danydb@aevalys.eu
+/**
+*@file
+*@brief remove a submenu
+*/
 
-// require_once '.php';
+
 if ( ! defined ('ALLOWED') ) die(_('Non autorisé'));
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();

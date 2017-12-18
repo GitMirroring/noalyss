@@ -20,9 +20,9 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* !\file
+/*!\file
  *
- * \brief Plan Analytique
+ *\brief Plan Analytique
  *
  */
 if (!defined('ALLOWED'))

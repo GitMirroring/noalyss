@@ -21,11 +21,10 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $http;
 /**
- * @file
- * @brief 
- * @param type $name Descriptionara
+ *@file
+ *@brief Print the aged balance for accountancy see 
+ * @see Balance_Age
  */
-
 $type=$http->get('p_type','string','C');
 $let=$http->get('p_let','string','unlet');
 

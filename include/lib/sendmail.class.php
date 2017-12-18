@@ -18,9 +18,13 @@
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
+/**
+ *@file
+ *@brief API for sending email 
+ */
 
 /**
- * Description of class_sendmail
+ * Description of Sendmail
  *
  * @author dany
  */

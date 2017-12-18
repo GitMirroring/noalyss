@@ -20,12 +20,12 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* !\file
+/**\file
  * \brief Input HTML for the card show buttons
  *
  */
 
-/* !
+/**
  * \brief Input HTML for the card show buttons, in the file, you have to add card.js
  * How to use :
  * - label is the label in the button
@@ -153,7 +153,7 @@ class ICard extends HtmlInput
         $this->accvis=1;
     }
 
-    /* !\brief set the javascript callback function
+    /**\brief set the javascript callback function
      * by default it is update_value called BEFORE the querystring is send
      *
      * \param $p_name callback function name
@@ -164,7 +164,7 @@ class ICard extends HtmlInput
         $this->callback=$p_name;
     }
 
-    /* !\brief set the javascript callback function
+    /**\brief set the javascript callback function
      * by default it is update_value called AFTER an item has been selected
      * \param $p_name callback function name
      */
@@ -174,7 +174,7 @@ class ICard extends HtmlInput
         $this->fct=$p_name;
     }
 
-    /* !\brief return the html string for creating the ipopup, this ipopup
+    /**\brief return the html string for creating the ipopup, this ipopup
      * can be used for adding, modifying or display a card
      * @note ipopup is obsolete, the popin is created by javascript
      * \param $p_name name of the ipopup, must be set after with set_attribute
@@ -203,7 +203,7 @@ class ICard extends HtmlInput
         return $ip_card->input();
     }
 
-    /* !\brief set the extra javascript property for a double click on
+    /**\brief set the extra javascript property for a double click on
      *  INPUT field
      * \param $p_action action when a double click happens
      * \note the $p_action cannot contain a double quote
@@ -214,7 +214,7 @@ class ICard extends HtmlInput
         $this->dblclick=$p_action;
     }
 
-    /* !\brief show the html  input of the widget */
+    /**\brief show the html  input of the widget */
 
     public function input($p_name=null, $p_value=null)
     {
@@ -271,7 +271,8 @@ class ICard extends HtmlInput
         return $r;
     }
 
-    /* !\brief print in html the readonly value of the widget */
+    /**
+       \brief print in html the readonly value of the widget */
 
     public function display()
     {
