@@ -162,7 +162,7 @@ function update_row(ctl)
     {
         var jrn = g('p_jrn').value;
         var dossier = g('gDossier').value;
-        var qs = 'gDossier=' + dossier + '&op=minrow&j=' + jrn + '&ctl=' + ctl;
+        var qs = encodeURI('gDossier=' + dossier + '&op=minrow&j=' + jrn + '&ctl=' + ctl);
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
@@ -1056,7 +1056,7 @@ function op_save(obj)
             var action = new Ajax.Request('ajax_misc.php',
                     {
                         method: 'post',
-                        parameters: queryString,
+                        parameters: encodeURI(queryString),
                         onFailure: null,
                         onSuccess: infodiv
                     }

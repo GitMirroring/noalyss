@@ -706,9 +706,15 @@ function form_blank_card(obj)
  */
 function save_card(obj)
 {
-    var content=$(obj).ipopup;
+    if ($(obj)['av_text5']) {
+        var accounting= $(obj)['av_text5'];
+        if ( accounting.value.length > 40 ) {
+          smoke.alert('Poste comptable trop grand');
+          return false;
+        }
+    }
     // Data must be taken here
-    data=$('save_card').serialize(false);
+    var data=$('save_card').serialize(false); var content=$(obj).ipopup;
     $(content).innerHTML=loading();
 
     var dossier=$('gDossier').value;

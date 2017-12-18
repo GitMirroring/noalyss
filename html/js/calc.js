@@ -38,6 +38,12 @@ function cal()
     try
     {
         Compute();
+        p_variable=p_variable.replace(/[a-z]/,'');
+        p_variable=p_variable.replace(/[A-Z]/,'');
+        p_variable=p_variable.replace(/</,'');
+        p_variable=p_variable.replace(/%/,'');
+        p_variable=p_variable.replace(/;/,'');
+        p_variable=p_variable.replace(/>/,'');
 	p_variable=p_variable.replace(/ /g,"");
 	p_variable=p_variable.replace(/\+/g,"+ ");
 	p_variable=p_variable.replace(/-/g,"- ");
@@ -45,16 +51,15 @@ function cal()
 
         sub=eval(p_variable);
         var result=parseFloat(sub);
-        result=Math.round(result*100)/100;
+        result=Math.round(result*10000)/10000;
     }
     catch(exception)
     {
         alert_box("Mauvaise formule\n"+p_variable);
         return false;
     }
-    p_history=p_history+'<hr>'+p_variable;
-    p_history+="="+result.toString();
-    var str_sub="<hr><p> Total :"+p_variable+" = "+result.toString()+"</p>";
+    p_history=p_variable+"="+result.toString()+'<br>'+p_history;
+    var str_sub="Total :"+p_variable+" = "+result.toString();
     this.document.getElementById("sub_total").innerHTML=str_sub;
     this.document.getElementById("listing").innerHTML=p_history;
     this.document.getElementById('inp').value="";
