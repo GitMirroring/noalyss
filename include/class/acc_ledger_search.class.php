@@ -30,7 +30,7 @@ if (!defined('ALLOWED'))
 class Acc_Ledger_Search
 {
 
-    private $cn; //!< Database Connection
+    protected $cn; //!< Database Connection
     private $type; //!< type of ledger : FIN,ODS,VEN,ACH
     private $all; //!< Flag to indicate if all ledgers must searched (1 for yes)
     private $div; //! prefix for id of DOM id
