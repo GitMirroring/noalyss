@@ -1,3 +1,4 @@
+set search_path=public,comptaproc;
 
 
 alter table action_gestion drop ag_ref_ag_id;
@@ -16,7 +17,7 @@ ALTER TABLE tmp_pcmn ALTER COLUMN id SET NOT NULL;
 ALTER TABLE tmp_pcmn ALTER COLUMN id SET DEFAULT nextval('tmp_pcmn_id_seq'::regclass);
 ALTER TABLE tmp_pcmn   ADD CONSTRAINT id_ux UNIQUE(id);
 COMMENT ON COLUMN tmp_pcmn.id IS 'allow to identify the row, it is unique and not null (pseudo pk)';
-
+update tmp_pcmn set id=nextval('tmp_pcmn_id_seq');
 -- set search_path to public,comptaproc;
 alter table tmp_pcmn add column pcm_direct_use varchar(1);
 COMMENT ON COLUMN tmp_pcmn.pcm_direct_use IS 'Value are N or Y , N cannot be used directly , not even through a card';
