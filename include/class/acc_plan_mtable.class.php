@@ -21,12 +21,18 @@
 
 /***
  * @file 
- * @brief
+ * @brief class Acc_Plan_MTabme
+ * @see Acc_Plan_MTabme
  *
  */
 require_once NOALYSS_INCLUDE.'/database/acc_plan_sql.class.php';
 require_once NOALYSS_INCLUDE.'/lib/manage_table_sql.class.php';
-
+/**
+ * @brief this instance extends Manage_Table_SQL and aims to manage 
+ * the Table tmp_pcmn thanks a web interface (add , delete, display...)
+ * 
+ * @see Acc_Plan_SQL
+ */
 class Acc_Plan_MTable extends Manage_Table_SQL
 {
     function __construct(Acc_Plan_SQL $p_table)
@@ -118,6 +124,12 @@ class Acc_Plan_MTable extends Manage_Table_SQL
 
         echo '</tr>';
     }
+    /**
+     * Check that the entered data are valid before recording them into 
+     * tmp_pcmn, the errors are stored into this->a_error and if someting wrong
+     * is found it returns false, if the data can be saved it returns true
+     * @return return false if an error is found, 
+     */
     function check() 
     {
         $cn=Dossier::connect();
