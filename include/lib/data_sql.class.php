@@ -26,7 +26,7 @@
  */
 
 /**
- * @brief this a abstract class , all the SQL class, like noalyss_sql (table), 
+ * @brief this an abstract class , all the SQL class, like noalyss_sql (table), 
  * Acc_Plan_SQL (based on a SQL not a table).
  * 
  * You must create a class extending this one, in the constructor
