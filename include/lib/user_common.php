@@ -217,7 +217,7 @@ function redirect($p_string,$p_time=0)
     if (strpos( $p_string,'?') == 0 ) {
         $p_string = $p_string.'?v='.microtime(true);
     }
-    echo '<HTML><head><META HTTP-EQUIV="REFRESH" content="'.$p_time.'; url='.$p_string.';"></head><body> Connecting... </body></html>';
+    echo '<HTML><head><META HTTP-EQUIV="REFRESH" content="'.$p_time.'; url='.$p_string.'"></head><body> Connecting... </body></html>';
 }
 /*!\brief remove the useless space, change comma by period and try to return
  * a number
