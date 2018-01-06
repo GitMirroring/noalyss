@@ -965,12 +965,12 @@ class Database
         return pg_fetch_result($ret, $p_row, $p_col);
     }
 
-    /**\brief wrapper for the function pg_fetch_row
+    /**
+     * \brief wrapper for the function pg_fetch_row
      * \param $ret is the result of pg_exec (exec_sql)
      * \param $p_row is the indice of the row
      * \return an array indexed from 0
      */
-
     static function fetch_row($ret, $p_row)
     {
         return pg_fetch_row($ret, $p_row);
