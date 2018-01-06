@@ -762,6 +762,7 @@ function smaller_date($p_date)
  * @brief format the date, when taken from the database the format
  * is MM-DD-YYYY
  * @param $p_date format
+ * @exception 1 if invalid format 
  * DOMEntity@param
  * @return date in the format DD.MM.YYYY
  */
@@ -788,6 +789,9 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
         case 'DD.MM.YYYY':
             $str_date = $date[2] . '.' . $date[1] . '.' . $date[0];
             break;
+        case 'DD-MM-YYYY':
+            $str_date = $date[2] . '-' . $date[1] . '-' . $date[0];
+            break;
         case 'YYYY-MM-DD':
             $str_date = $date[0] . '-' . $date[1] . '-' . $date[2];
             break;
@@ -797,7 +801,15 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
 		 case 'YYYY/MM/DD':
             $str_date = $date[0] . '/' . $date[1] . '/' . $date[2];
             break;
-
+        case "DD.MM.YY":
+            $str_date = $date[2] . '.' . $date[1] . '.' . substr($date[0],2,2);
+            break;
+        case "DD-MM-YY":
+            $str_date = $date[2] . '-' . $date[1] . '-' . substr($date[0],2,2);
+            break;
+        default:
+            throw new Exception(_("Format Invalide"),1);
+            
 		}
     return $str_date;
 }
