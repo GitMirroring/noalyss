@@ -58,3 +58,14 @@ CREATE TABLE public.user_filter (
 	unpaid varchar NULL,
 	PRIMARY KEY (id)
 );
+
+
+
+
+alter table jrn_periode drop constraint jrn_periode_pk;
+create sequence jrn_periode_id_seq;
+alter table jrn_periode add id bigint;
+alter table jrn_periode alter column   id set default  nextval('jrn_periode_id_seq');
+update jrn_periode set id=nextval('jrn_periode_id_seq');
+alter table jrn_periode add  constraint jrn_periode_pk  primary key (id);
+alter table jrn_periode add constraint  jrn_periode_periode_ledger unique (jrn_def_id,p_id); 

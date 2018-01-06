@@ -122,8 +122,8 @@ $path = array(
     "todo_list"=>"ajax_todo_list",
     "history"=>"ajax_history",
     "mod_doc"=>"ajax_mod_document",
-    "input_per"=>"ajax_mod_periode",
-    "save_per"=>"ajax_mod_periode",
+    // Periode menu: PERIODE
+    'periode'=>"ajax_periode",
     "mod_predf"=>"ajax_mod_predf_op",
     "save_predf"=>"ajax_save_predf_op",
     "search_action"=>"ajax_search_action",

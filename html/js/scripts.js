@@ -3033,3 +3033,338 @@ function show_all_row(p_table_id)
     }
     
 }
+/**
+ * @class
+ * Periode handling
+ * Variables :
+ *   - id of the row of the periode row_per_(p_periode_id) , attribute exercice =per_exercice,periode_id=p_id
+ *   - (this.dialog)
+ *   - id of the table with the rows : periode_tbl
+ * 
+ * Members :
+ *   - periode_id the concerned Periode , 0 none
+ *   - p_ledger : the id of ledger (jrn_def.jrn_def_id), 0 for global
+ *   - pcallback : default ajax_misc.php (this.callback) with the parameter { op:'periode',gDossier,[action:display,remove,save],p_id:p_periode_id}
+ *   - dossier 
+ *   - js_obj_name : name of the js object (this.js_obj_name)
+ *   - ajax_test : file to include for debugging 
+ *   - dialog : id of the dialog box (update / add ) periode_box 
+ * 
+ */
+var Periode=function (p_ledger)  {
+    this.periode_id=0;
+    this.p_ledger=p_ledger;
+    this.dialog='periode_box';
+    this.pcallback='ajax_misc.php';
+    this.dossier=0;
+    this.js_obj_name="";
+    this.ajax_test="";
+    this.set_callback=function (p_phpfile) { this.pcallback=p_phpfile;};
+    this.set_dossier=function (p_dosid) { this.dossier=p_dosid;};
+    /**
+     * set_js_obj_name (p_js_obj_name)
+     * We need to know the javascript variable name , to pass it to ajax and
+     * create a HTML containing the right variable
+     * @param  p_js_obj_name name of the variable js we use on caller side
+     */
+    this.set_js_obj_name=function (p_js_obj_name) { this.js_obj_name=p_js_obj_name;};
+    
+    /**
+     * Remove the periode , so call new Ajax and hide the row if successful
+     * otherwise show dialog box.
+     * @parameter p_periode_id is the id of periode
+     */
+    this.remove=function(p_periode_id) {
+        
+        var js_param={"gDossier":this.dossier,
+                        "op":"periode",
+                        "act":"remove",
+                        "p_id":p_periode_id,
+                        "ledger_id":0,
+                        "js_var":this.js_obj_name};
+        if ( this.ajax_test !="") {
+            js_param["TestAjaxFile"]=this.ajax_test;
+        }
+        here=this;
+        smoke.confirm("Confirmer  ?",function(e) {
+            if (e ) {
+                    waiting_box();
+                    new Ajax.Request(here.pcallback,
+                        {
+                            method:"POST",
+                            parameters:js_param,
+                            onSuccess:function(req) {
+                                var answer=req.responseText.evalJSON();
+                                remove_waiting_box();
+                                if ( answer.status=="OK" ) 
+                                { 
+                                    $("row_per_"+p_periode_id).remove();
+                                    alternate_row_color("periode_tbl");
+                                } else {
+                                    smoke.alert(answer.content);
+                                }
+                        }
+                    });
+                }
+            });
+    };
+ 
+    /**
+     * display a dialog box to update a periode, call save either display 
+     * an error box or update the row.
+     * the name of variable is requested
+     * to build the right button , javascript in the html of answer
+     * @parameter p_periode_id is the id of periode
+     */
+    this.box_display=function(p_periode_id) {
+         if ( this.js_obj_name == "") {
+            smoke.alert("ERROR BOX_ADD")
+        }
+        
+         var js_param={"gDossier":this.dossier,
+                            "op":"periode",
+                            "act":"show",
+                            "p_id":p_periode_id,
+                            "ledger_id":this.p_ledger,
+                        "js_var":this.js_obj_name};
+        if ( this.ajax_test !="") {
+            js_param["TestAjaxFile"]=this.ajax_test;
+        }
+        var here=this;
+        new Ajax.Request(here.pcallback,
+                        {
+                            method:"POST",
+                            parameters:js_param,
+                            onSuccess:function(req) {
+                                remove_waiting_box();
+                                var json=req.responseText.evalJSON();
+                                var y=calcy(100);
+                                add_div({"id":"mod_periode","style":"position:fixed;top:"+y+"px;width:50%","cssclass":"inner_box",'html':"wait"});
+                                $('mod_periode').update(json.content);
+                        }
+                    });
+    };
+    /**
+     * close the periode, call ajax and receive a json object with the attribute
+     * status, content
+     * @parameter p_periode_id is the id of periode
+     */
+    this.close_periode=function(p_periode_id) {
+         if ( this.js_obj_name == "") {
+            smoke.alert("ERROR BOX_ADD")
+        }
+        
+        if ( this.ajax_test !="") {
+            js_param["TestAjaxFile"]=this.ajax_test;
+        }
+        var here=this;
+        smoke.confirm("Confirmer  ?",function(e) {
+            if (e ) {
+                    here._close(p_periode_id);
+                }
+          });
+    };
+    /**
+     * Internal function to close without confirming
+     * @param {type} p_periode_id
+     * @returns {undefined}
+     */
+     this._close=function(p_periode_id) {
+         if ( this.js_obj_name == "") {
+            smoke.alert("ERROR BOX_ADD")
+        }
+         var js_param={"gDossier":this.dossier,
+                            "op":"periode",
+                            "act":"close",
+                            "ledger_id":this.p_ledger,
+                            "p_id":p_periode_id,
+                        "js_var":this.js_obj_name
+                    };
+        if ( this.ajax_test !="") {
+            js_param["TestAjaxFile"]=this.ajax_test;
+        }
+        var here=this;
+        waiting_box();
+        new Ajax.Request(here.pcallback,
+            {
+                method:"POST",
+                parameters:js_param,
+                onSuccess:function(req) {
+                    remove_waiting_box();
+                    var json=req.responseText.evalJSON();
+                    if ( json.status == 'OK')
+                    {   
+                        $('row_per_'+p_periode_id).update(json.content);
+                        new Effect.Highlight('row_per_'+p_periode_id ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
+                    } else {
+                        smoke.alert(json.content);
+                    }
+            }
+        });
+    };
+    /**
+     * reopen the periode
+     * @parameter p_periode_id is the SQL id of parm_periode or the id of 
+     * jrn_periode
+     */
+    this.open_periode=function(p_periode_id) {
+         if ( this.js_obj_name == "") {
+            smoke.alert("ERROR BOX_ADD")
+        }
+         var js_param={"gDossier":this.dossier,
+                            "op":"periode",
+                            "act":"reopen",
+                            "ledger_id":this.p_ledger,
+                            "p_id":p_periode_id,
+                        "js_var":this.js_obj_name
+                    };
+        if ( this.ajax_test !="") {
+            js_param["TestAjaxFile"]=this.ajax_test;
+        }
+        var here=this;
+        smoke.confirm("Confirmer  ?",function(e) {
+            if (e ) {
+                    waiting_box();
+                    new Ajax.Request(here.pcallback,
+                        {
+                            method:"POST",
+                            parameters:js_param,
+                            onSuccess:function(req) {
+                              remove_waiting_box();
+                                var json=req.responseText.evalJSON();
+                                if ( json.status == 'OK')
+                                {  
+                                    $('row_per_'+p_periode_id).update(json.content);
+                                    new Effect.Highlight('row_per_'+p_periode_id ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
+                                } else {
+                                    smoke.alert(json.content);
+                                }
+                        }
+                    });
+                }      
+            });
+    };
+    /**
+     * This DOMID of the DIV containing the form is mod_periode
+     * @param {type} p_frm
+     * @returns {Boolean}
+     */
+    this.save=function(p_frm) {
+        var js_param=$(p_frm).serialize(true);
+        waiting_box();
+        js_param["js_var"]=this.js_obj_name;
+        js_param["act"]="save";
+        js_param["op"]="periode";
+        var here=this;
+        new Ajax.Request(this.pcallback,{
+           method:"POST",
+           parameters:js_param,
+           onSuccess:function (req) {
+               
+               var answer=req.responseText.evalJSON();
+               remove_waiting_box();
+               if ( answer.status == "OK") {
+                   $('row_per_'+js_param['periode_id']).update(answer.content);
+                   removeDiv('mod_periode');
+                   new Effect.Highlight('row_per_'+js_param['periode_id'] ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
+               } else {
+                   smoke.alert(answer.content);
+               }
+           }
+        });
+        return false;
+    };
+    /**
+     * Thanks the object DOMID sel_per_closed[] the selected periodes are
+     * closed 
+     * @see Periode._close
+     */
+    this.close_selected = function () {
+        var here = this;
+        var a_selected = document.getElementsByName('sel_per_close[]');
+        var count=0;
+        var i = 0;
+        for (i = 0; i < a_selected.length; i++) {
+            if (a_selected[i].checked == true) {
+                // Close the selected periode
+              count++;
+            }
+        }
+        if ( count==0){
+            smoke.signal("Sélectionner au moins une période",function(){},{duration:1500});
+            return;
+        }
+        smoke.confirm("Confirmer fermeture de "+count+" periode", function (e) {
+            if (e) {
+                var a_selected = document.getElementsByName('sel_per_close[]');
+                var i = 0;
+                for (i = 0; i < a_selected.length; i++) {
+                    if (a_selected[i].checked == true) {
+                        // Close the selected periode
+                        here._close(a_selected[i].value);
+                    }
+                }
+            }
+        }
+        );
+    };
+    /**
+     * @brief Insert a periode into the list, always at the bottom !
+     * DomId : 
+     *   # FORM id :insert_periode_frm
+     *   # DIV id = periode_add
+     *   # table id = periode_tbl
+     */
+    this.insert_periode=function() {    
+        var p_frm='insert_periode_frm';
+        var js_param=$(p_frm).serialize(true);
+        waiting_box();
+        js_param["js_var"]=this.js_obj_name;
+        js_param["act"]="insert_periode";
+        js_param["op"]="periode";
+        js_param["p_id"]="-1";
+        js_param["ledger_id"]="0";
+        var here=this;
+        new Ajax.Request(this.pcallback,{
+           method:"POST",
+           parameters:js_param,
+           onSuccess:function (req) {
+               var answer=req.responseText.evalJSON();
+               remove_waiting_box();
+               if ( answer.status == "OK") {
+                     var new_row=document.createElement("tr");
+                     $('periode_tbl').append(new_row);
+                     new_row.replace(answer.content);
+                     
+                     // hide the form
+                     $('periode_add').hide();
+                   new Effect.Highlight('row_per_'+answer.p_id ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
+                    alternate_row_color('periode_tbl');
+               } else {
+                   smoke.alert(answer.content);
+               }
+           }
+        });
+        return false;   
+}
+    
+}
+/**
+ * Show the periodes from the exercice contained into the id (p_exercice_sel)
+ * @param p_table_id DOM ID of the table
+ */
+Periode.filter_exercice=function (p_table_id) {
+    var rows=$(p_table_id).rows;
+    var selected_value=$('p_exercice_sel').value;
+    for (var i=1;i<rows.length;i++) {
+        var exercice=rows[i].getAttribute("per_exercice");
+        if ( selected_value == -1 ) {
+            rows[i].show();
+        } else if ( selected_value == exercice) {
+            rows[i].show();
+        } else {
+            rows[i].hide();
+        }
+        
+    }
+};

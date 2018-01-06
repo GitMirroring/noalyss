@@ -1137,12 +1137,27 @@ span.invoice
 a.nav,div.content a.nav {
     display:inline;
     text-decoration:none;
+    cursor:pointer;
 }
 a.nav:hover,div.content a.nav:hover{
     display:inline;
     text-decoration:none;
     background-color:#00008B;
     color:#FFFFFF;
+    cursor:pointer;
+}
+/**
+ * For button image
+ */
+
+div.content a.nav img,a.nav img {
+    cursor:pointer;
+    background: transparent;
+    
+}
+div.content a.nav:hover img,a.nav:hover img {
+    cursor:pointer;
+    background: transparent;
 }
 #dossier {
     display:inline;
@@ -2191,4 +2206,17 @@ div.select_box a {
 div.select_box a:hover,div.select_box ul li:hover {
   background-color : lightgoldenrodyellow;
   color:brown;
+}
+/**
+ * Menu second level
+ */
+div.menu2 td.mtitle, div.menu2 td.mtitle a{
+    background-color: white;
+    color:darkblue;
+    border-style: solid;
+    border-width: 0.1px;
+    border-color:lightgrey;
+}
+div.menu2 td.mtitle a{
+    border-width:0px;
 }
