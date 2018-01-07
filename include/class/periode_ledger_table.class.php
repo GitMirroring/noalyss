@@ -140,20 +140,21 @@ class Periode_Ledger_Table
         echo td(format_date($pa_row["p_end"], "YYYY-MM-DD", "DD.MM.YYYY"));
         echo td($pa_row["p_exercice"]);
         $status=($pa_row['p_closed']=='t')?_("Fermée"):_("Ouvert");
-
+        echo "<td>";
+        if ($pa_row["status"] == "OP") { echo _("Ouvert"); }
+        if ($pa_row["status"] == "CL") { echo _("Fermé"); }
+        echo "</td>";
         /// Can close if open
         echo "<td>";
         if ($pa_row['status']=='OP')
         {
             $javascript=sprintf("%s.close_periode('%d')", $p_js, $pa_row['id']);
-            echo HtmlInput::anchor_action(_("Fermeture"), $javascript, NULL,
-                    "line");
+            echo HtmlInput::image_click(ICONON, $javascript, _('Fermé'));
         }
         elseif ($pa_row['status']=='CL')
         {
             $javascript=sprintf("%s.open_periode('%d')", $p_js, $pa_row['id']);
-            echo HtmlInput::anchor_action(_("Réouverture"), $javascript, NULL,
-                    "line");
+            echo HtmlInput::image_click(ICONOFF, $javascript, _('Ouvert'));
         }
         echo "</td>";
         echo "</tr>";

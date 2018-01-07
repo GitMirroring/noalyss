@@ -614,15 +614,13 @@ class Periode
         echo "<td>";
         if ($obj->getp("p_closed")=='f')
         {
-            $javascript=sprintf("%s.close_periode('%d')", $p_js, $obj->p_id);
-            echo HtmlInput::anchor_action(_("Fermeture"), $javascript, NULL,
-                    "line");
+            $javascript=sprintf('%s.close_periode(\'%d\')', $p_js, $obj->p_id);
+            echo HtmlInput::image_click(ICONON, $javascript, _('Fermé'));
         }
         else
         {
             $javascript=sprintf("%s.open_periode('%d')", $p_js, $obj->p_id);
-            echo HtmlInput::anchor_action(_("Réouverture"), $javascript, NULL,
-                    "line");
+            echo HtmlInput::image_click(ICONOFF, $javascript, _('Ouvert'));
         }
         echo "</td>";
         echo "</tr>";

@@ -309,3 +309,5 @@ define ('EMAIL_LIMIT',1002);
 define ('EXC_PARAM_VALUE',1005);
 define ('EXC_PARAM_TYPE',1006);
 define ('EXC_DUPLICATE',1200);
+define ('ICONON','icon-on.png');
+define ('ICONOFF','icon-off.png');
