@@ -106,7 +106,9 @@ if ( LOGINPUT)
         fclose($file_loginput);
     }
 $path = array(
+    // search accounting , detail ...
     "account"=>"ajax_poste",
+    // display card detail :possible to update or add
     "card"=>"ajax_card",
     "ledger"=>"ajax_ledger",
     // Manage ledger access
@@ -120,6 +122,7 @@ $path = array(
     // From the page CFGSEC,set all the actions
     "action_access_all"=>"ajax_user_security",
     "todo_list"=>"ajax_todo_list",
+    // Writing operation History for a card or an accounting
     "history"=>"ajax_history",
     "mod_doc"=>"ajax_mod_document",
     // Periode menu: PERIODE
@@ -336,8 +339,7 @@ EOF;
 		$Res = $cn->exec_sql("select * from tva_rate order by tva_rate desc");
 		$Max = Database::num_row($Res);
 		$r = "";
-		$r = HtmlInput::anchor_close('tva_select');
-		$r.=h2(_('Choisissez la TVA '),'class="title"');
+		$r.=HtmlInput::title_box(_('Choisissez la TVA'),'tva_select',"close","","y");
 		$r.='<div >';
                 $r.=_('Cherche')." ".HtmlInput::filter_table("tva_select_table",'0,1,2,3' , 1);
 		$r.= '<TABLE style="width:100%" id="tva_select_table">';
