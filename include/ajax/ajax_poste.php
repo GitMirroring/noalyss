@@ -61,8 +61,8 @@ case "sf":
     $str_poste=$it->input();
     $str_submit=HtmlInput::submit('sf',_('Recherche'),"","smallbutton");
     $r='';
-	$r=HtmlInput::anchor_close('search_account');
-    $r.='<div> '.h2(_('Poste Comptable'),' class="title"').'</div>';
+    $r.=HtmlInput::title_box(_('Poste Comptable'),'search_account',"close","","y");
+    
 
     $r.='<form id="sp" method="get" onsubmit="'.$attr.'search_get_poste(this);return false;">';
     ob_start();
@@ -145,8 +145,9 @@ case "sf":
     require_once NOALYSS_TEMPLATE.'/account_result.php';
     $r.=ob_get_contents();
     ob_end_clean();
-
+    
     $html=$r;
+    $html.=HtmlInput::button_close("search_account");
     break;
 }
 $xml=escape_xml($html);
