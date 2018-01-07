@@ -130,7 +130,7 @@ case 'rmfa':
 case 'dc':
     $f=new Fiche($cn);
     /* add title + close */
-    $html=HtmlInput::title_box(_("Détail fiche"), $ctl);
+    $html=HtmlInput::title_box(_("Détail fiche"), $ctl,"close","","y");
     if ( $qcode != '')
     {
         $f->get_by_qcode($qcode);
@@ -444,6 +444,7 @@ case 'fs':
     ob_start();
     require_once NOALYSS_TEMPLATE.'/card_result.php';
     $r.=ob_get_contents();
+    $r.=HtmlInput::button_close("search_card");
     ob_end_clean();
     $ctl=$ctl.'_content';
     $html=$r;
