@@ -18,9 +18,9 @@
      
      echo '<A id="close_div" title="'.$msg_pop.'" onclick="var a=window.open(\'popup.php?'.$str.'\',\'\',\'titlebar=no,location=no,statusbar=no,menubar=no,toolbar=no,fullscreen=yes,scrollbars=yes,resizable=yes,status=no\'); a.focus();removeDiv(\''.$div.'\')">&#11036;
 </A>';
-     printf('<span id="pin_%s" style="margin:0px;padding:0px;margin-right:6px;padding-top:2px;font-size:120%%;border-width:0px" ><a class="input_text" onclick="pin(\'%s\')" id="close_div">&#8778;</a></span>',
+     printf('<span id="pin_%s" style="margin:0px;padding:0px;margin-right:6px;padding-top:2px;font-size:120%%;border-width:0px" ><a class="input_text" onclick="pin(\'%s\')" id="close_div">%s</a></span>',
                     $div,
-                    $div);
+                    $div,PINDG);
      echo '<A id="close_div" title="'.$msg_close.'"  onclick="removeDiv(\''.$div.'\');">&#10761;</A>';
    }
 ?>

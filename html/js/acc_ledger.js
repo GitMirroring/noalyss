@@ -659,10 +659,10 @@ function go_next_concerned()
 function view_history_account(p_value, dossier)
 {
     layer++;
-    id = 'det' + layer;
-    var popup = {'id': id, 'cssclass': 'inner_box', 'html': loading(), 'drag': true};
+    var idbox = 'det' + layer;
+    var popup = {'id': idbox, 'cssclass': 'inner_box', 'html': loading(), 'drag': false};
 
-    var querystring={'gDossier':dossier,'act':'de','pcm_val':p_value,'div':id,'l':layer,'op':'history'};
+    var querystring={'gDossier':dossier,'act':'de','pcm_val':p_value,'div':idbox,'l':layer,'op':'history'};
     waiting_box();
 
     var action = new Ajax.Request(
@@ -725,15 +725,15 @@ function update_history_account(obj)
 function view_history_card(p_value, dossier)
 {
     layer++;
-    id = 'det' + layer;
-    var popup = {'id':id,
+    var idbox = 'det' + layer;
+    var popup = {'id':idbox,
                 'cssclass': 'inner_box', 
                 'html':loading(), 
-                'drag':true};
+                'drag':false};
     var querystring = { 'gDossier' : dossier ,
          'act':'de',
          'f_id' : p_value , 
-         'div' : id ,
+         'div' : idbox ,
           "l" : layer,
           "op":"history"};
     waiting_box();
@@ -862,7 +862,7 @@ function modifyOperation(p_value, dossier)
                 onFailure: error_box,
                 onSuccess: function (xml, txt) {
                     var popup = {'id': id_div, 'cssclass': 'inner_box'
-                        , 'html': "", 'drag': true};
+                        , 'html': "", 'drag': false};
                     remove_waiting_box();
                     add_div(popup);
                     success_box(xml, txt);

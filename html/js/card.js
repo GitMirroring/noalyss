@@ -317,8 +317,8 @@ function result_card_search(req)
             sx=document.body.scrollTop+60;
 	}
 
-        var div_style="top:"+sx+"px;height:80%";
-        add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:true,effect:'blinddown'});
+        var div_style="top:"+sx+"px;height:auto";
+        add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:false,effect:'blinddown'});
         
         $('search_card').innerHTML=code_html;
         
@@ -459,7 +459,7 @@ function fill_ipopcard(obj)
     var str_top=fixed_position(250,nTop)
     var str_style=str_top+";width:45em;height:auto;position:absolute";
 
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
 
     add_div(popup);
     var dossier=$('gDossier').value;
@@ -486,7 +486,7 @@ function fill_ipopcard(obj)
     if ( obj.nohistory != undefined) {
      queryString+='&nohistory';
     }
-
+    queryString=encodeURI(queryString);
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
                                   method:'get',
@@ -570,7 +570,7 @@ function select_card_type(obj)
 
     var str_style="top:"+sx+"px;height:auto";
     waiting_box();
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':true};
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
 
     add_div(popup);
 
@@ -658,7 +658,7 @@ function dis_blank_card(obj)
     var nLeft=posX;
     var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto";
 
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
   
     add_div(popup);
 

@@ -311,3 +311,5 @@ define ('EXC_PARAM_TYPE',1006);
 define ('EXC_DUPLICATE',1200);
 define ('ICONON','icon-on.png');
 define ('ICONOFF','icon-off.png');
+define ("PINDG","&#8853;");
+define ("UNPINDG","&#8778;");

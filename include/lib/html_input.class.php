@@ -785,7 +785,7 @@ class HtmlInput
          * @param type $p_draggable , if set to yes the box will be draggable
          * @return type
          */
-	static function title_box($p_name,$p_div,$p_mod="close",$p_js="",$p_draggable="y")
+	static function title_box($p_name,$p_div,$p_mod="close",$p_js="",$p_draggable="n")
 	{
             $r="";
             if ($p_mod=='close'){
@@ -810,11 +810,12 @@ class HtmlInput
             else 
                 die (__FILE__.":".__LINE__._('Paramètre invaide'));
             
+            // If draggable : display a icon to unpin and move the dialog box
             if ( $p_draggable=="y") {
-                $drag=sprintf('<span id="pin_%s" style="float:right;margin:0px;padding:0px;font-size:120%%;border-width:0px" ><a class="input_text" onclick="pin(\'%s\')" id="close_div">&#8778; </a></span>',
+                $drag=sprintf('<span id="pin_%s" style="float:right;margin:0px;padding:0px;font-size:120%%;border-width:0px" ><a class="input_text" onclick="pin(\'%s\')" id="close_div">'.PINDG.' </a></span>',
                     $p_div,
                     $p_div);
-            $r.=$drag;
+                $r.=$drag;
                 
             }
             $r.=h2($p_name,' class="title" ');

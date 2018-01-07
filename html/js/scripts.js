@@ -524,7 +524,7 @@ function popup_select_tva(obj)
                             var nLeft = "15%";
                             var str_style = "top:" + nTop + "px;left:" + nLeft + ";right:" + nLeft + ";width:55em;height:auto";
 
-                            var popup = {'id': 'tva_select', 'cssclass': 'inner_box', 'style': str_style, 'html': code_html, 'drag': true};
+                            var popup = {'id': 'tva_select', 'cssclass': 'inner_box', 'style': str_style, 'html': code_html, 'drag': false};
                             add_div(popup);
                             $('lk_tva_select_table').focus();
                         }
@@ -1071,13 +1071,13 @@ function show_calc()
     }
     var sid = 'calc1';
     var shtml = '';
-    shtml += '<div style="float:right;height:10px;display:block;margin-top:2px;margin-right:2px"><span id="pin_calc1"><a class="input_text" onclick="pin(\'calc1\')" id="close_div">&#8778;</a></span>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" id="close_div">X</a></div>';
+    shtml += '<div style="float:right;height:10px;display:block;margin-top:2px;margin-right:2px"><span id="pin_calc1"><a class="input_text" onclick="pin(\'calc1\')" id="close_div">&#8853;</a></span>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" id="close_div">X</a></div>';
     shtml += '<div>   <h2 class="title">Calculatrice</h2></div>';
     shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >Calculatrice simplifiée: écrivez simplement les opérations que vous voulez puis la touche retour. exemple : 1+2+3*(1/5) <input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface tout" class="button" onClick="Clean();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
     shtml += '</form><span class="highligth" style="display:block" id="sub_total">  Taper une formule (ex 20*5.1) puis enter  </span><span style="display:block"  id="listing"> </span>';
 
     var obj = {id: sid, html: shtml,
-        drag: true, style: ''
+        drag: false, style: ''
     };
     add_div(obj);
     this.document.getElementById('inp').focus();
