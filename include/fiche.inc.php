@@ -36,7 +36,7 @@ global $g_user, $g_failed;
  */
 /* category */
 $categorie = new ISelect('cat');
-$categorie->value = $cn->make_array('select fd_id,fd_label from fiche_def order by fd_label');
+$categorie->value = $cn->make_array("select fd_id,fd_label||'('||(select count(*) from fiche where fiche.fd_id=fiche_def.fd_id)::text||')' from fiche_def order by fd_label");
 $categorie->selected = (isset($_GET['cat'])) ? $_GET['cat'] : 0;
 $str_categorie = $categorie->input();
 
