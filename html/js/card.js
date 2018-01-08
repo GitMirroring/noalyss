@@ -559,14 +559,7 @@ function select_card_type(obj)
     var content="select_card_div";
     if ( $(content)){removeDiv(content);}
     var sx=0;
-    if ( window.scrollY)
-    {
-            sx=window.scrollY+160;
-    }
-    else
-    {
-        sx=document.body.scrollTop+160;
-    }
+    sx=calcy(160);
 
     var str_style="top:"+sx+"px;height:auto";
     waiting_box();
