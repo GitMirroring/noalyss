@@ -1425,7 +1425,7 @@ class Acc_Ledger extends jrn_def_sql
     function is_closed($p_periode)
     {
         $per=new Periode($this->db);
-        $per->set_jrn($this->id);
+        $per->set_ledger($this->id);
         $per->set_periode($p_periode);
         $ret=$per->is_closed();
         return $ret;
