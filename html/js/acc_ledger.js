@@ -832,7 +832,24 @@ function reverseOperation(obj)
                 method: 'get',
                 parameters: qs,
                 onFailure: error_box,
-                onSuccess: infodiv
+                onSuccess: function (req) {
+                    try {
+                        var action = new Ajax.Request(
+                                "ajax_misc.php",
+                                {
+                                    method: 'get',
+                                    parameters:{"gDossier" : obj["gDossier"].value,"op":"ledger","act":"de","div":obj['div'].value,"jr_id":obj['jr_id'].value},
+                                    onFailure: error_box,
+                                    onSuccess: function (xml, txt) {
+                                        
+                                        success_box(xml, txt);
+                                        infodiv(req);
+                                    }
+                                });
+                    } catch (ex) {
+                        smoke.alert(ex.message);
+                    }
+                }
             }
     );
 

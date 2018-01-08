@@ -162,7 +162,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             /* check if amount are numeric and */
             if (isNumber(${'e_march' . $i . '_price'}) == 0)
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('a un montant invalide [') . ${'e_march' . $i} . ']', 6);
-            if (isNumber(${'e_quant' . $i}) == 0)
+            if (isNumber(${'e_quant' . $i}) == 0) 
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('a une quantité invalide [') . ${'e_quant' . $i} . ']', 7);
             /* check if all card has a ATTR_DEF_ACCOUNT */
             $fiche = new Fiche($this->db);

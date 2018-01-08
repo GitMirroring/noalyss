@@ -175,13 +175,14 @@ class Acc_Ledger extends jrn_def_sql
      * reverse the operation by creating the opposite one,
      * the result is to avoid it
      * it must be done in
-     * - jrn
-     * - jrnx
-     * - quant_fin
-     * - quant_sold
-     * - quant_purchase
-     * - stock
-     * - ANC
+     *    - jrn
+     *    - jrnx
+     *    - quant_fin
+     *    - quant_sold
+     *    - quant_purchase
+     *    - stock
+     *    - ANC
+     * Add or update a note into jrn_note
      * @param $p_date is the date of the reversed op
      * @exception if date is invalid or other prob
      * @note automatically create a reconciliation between operation
@@ -189,7 +190,7 @@ class Acc_Ledger extends jrn_def_sql
      * This function should be in operation or call an acc_operation object
      * 
      */
-    function reverse($p_date)
+    function reverse($p_date,$p_label)
     {
         global $g_user;
         try
@@ -229,9 +230,14 @@ class Acc_Ledger extends jrn_def_sql
 
 
             // Mark the operation invalid into the ledger
-            // to avoid to nullify twice the same op.
-            $sql="update jrn set jr_comment='extourne : '||jr_comment where jr_id=$1";
-            $Res=$this->db->exec_sql($sql, array($this->jr_id));
+            // to avoid to nullify twice the same op., add or update a note into jrn_note
+            if ($this->db->get_value("select count(*) from jrn_note where jr_id=$1",[$this->jr_id])>0){
+                $sql="update jrn_note set n_text=$2||n_text where jr_id=$1";
+                $Res=$this->db->exec_sql($sql, array($this->jr_id,$p_label));
+            }else {
+                $sql="insert into jrn_note(n_text,jr_id) values ($1,$2)";
+                $Res=$this->db->exec_sql($sql, array($p_label,$this->jr_id));
+            }
 
             // Check return code
             if ($Res==false)
@@ -302,14 +308,14 @@ class Acc_Ledger extends jrn_def_sql
               jr_internal
               ,jr_tech_per, jr_valid
               )
-              select $1,jr_def_id,jr_montant,jr_comment,
+              select $1,jr_def_id,jr_montant,$7,
               to_date($2,'DD.MM.YYYY'),$3,$4,
               $5, true
               from
               jrn
               where   jr_id=$6";
             $Res=$this->db->exec_sql($sql,
-                    array($seq, $p_date, $grp_new, $p_internal, $per->p_id, $this->jr_id));
+                    array($seq, $p_date, $grp_new, $p_internal, $per->p_id, $this->jr_id,$p_label));
             // Check return code
             if ($Res==false)
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));

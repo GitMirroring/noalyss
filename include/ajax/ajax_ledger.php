@@ -555,17 +555,21 @@ case 'reverseop':
         try
         {
             $ext_date=$http->request("ext_date","date");
+            $ext_label=$http->request("ext_label");
             $cn->start();
             $oLedger=new Acc_Ledger($cn,$ledger);
             $oLedger->jr_id=$jr_id;
-            $oLedger->reverse($ext_date);
+            if ( trim($ext_label) == "" ) {
+                $ext_label=_("Extourne").$cn->get_value("select jr_comment from jrn where jr_id=$1",[$jr_id]);
+            }
+            $oLedger->reverse($ext_date,$ext_label);
             $cn->commit();
             echo _("Opération extournée");
         }
         catch (Exception $e)
         {
             record_log($e->getTraceAsString());
-            $e->getMessage();
+            echo $e->getMessage();
             $cn->rollback();
         }
     }
