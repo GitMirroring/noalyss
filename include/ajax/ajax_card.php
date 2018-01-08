@@ -290,6 +290,7 @@ case 'st':
         $r.='<table id="cat_card_table" class="result">';
         for ($i=0;$i<count($array);$i++)
         {
+            $nb_count=$cn->get_value("select count(*) from fiche where fd_id=$1",[$array[$i]['fd_id']]);
             $list_fiche.=sprintf("<fiche_cat_item>%d</fiche_cat_item>",$array[$i]['fd_id']);
             $class=($i%2==0)?' class="even" ':' class="odd" ';
             $r.='<tr '.$class.' id="select_cat_row_'.$array[$i]['fd_id'].'">';
@@ -297,7 +298,7 @@ case 'st':
             $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_label']).'</a>';
             $r.='</td>';
             $r.='<td>';
-            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_description']).'</a>';
+            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_description'])."($nb_count)".'</a>';
             $r.='</td>';
            
              $r.="</tr>";
