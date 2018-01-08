@@ -875,10 +875,15 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 /* insert into jrn */
                 $acc_pay->mt=$mt;
                 $acc_pay->desc=(!isset($e_comm_paiement) || strlen(trim($e_comm_paiement)) == 0) ?$e_comm:$e_comm_paiement;
+                
                 $mp_jr_id=$acc_pay->insert_jrn();
                 $acjrn->grpt_id=$acseq;
                 $acjrn->update_internal_code($acinternal);
-
+                // add an automatic PJ if ODS
+                if ($acjrn->get_type()=="ODS") {
+                    $acc_pay->pj=$acjrn->guess_pj();
+                    $acc_pay->set_pj();
+                }
                 $r1=$this->get_id($internal);
                 $r2=$this->get_id($acinternal);
 
