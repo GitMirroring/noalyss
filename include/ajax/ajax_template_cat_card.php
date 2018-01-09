@@ -29,8 +29,12 @@ if (!defined('ALLOWED'))
 
 require_once NOALYSS_INCLUDE."/class/template_card_category.class.php";
 /**
- * @todo ajax_template_cat_card add security
+ * ajax_template_cat_card add security , accessible only for CFGCARDCAT
  */
+if ( $g_user->check_module ("CFGCARDCAT")==0)
+{
+    return;
+}
 
 $http=new HttpInput();
 $action=$http->request("action");
@@ -55,6 +59,8 @@ switch ($action)
     case "save":
         header('Content-type: text/xml; charset=UTF-8');
         echo $cat->ajax_save()->saveXML();
+        if ( $p_id == -1 )
+            $cat->add_mandatory_attr();
         return;
         break;
     case "delete":
