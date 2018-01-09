@@ -209,7 +209,9 @@ $path = array(
     // search operation to reconcile
     	'search_op'=>'ajax_search_operation',
     // delete operation
-    	'delete_search_operation'=>'ajax_search_filter'
+    	'delete_search_operation'=>'ajax_search_filter',
+    // template category of card
+    'template_cat_card'=>'ajax_template_cat_card'
 )    ;
 
 if (array_key_exists($op, $path)) {
