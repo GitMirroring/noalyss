@@ -30,6 +30,8 @@
  * Code for ajax , here we see the ajax_input for creating a dg box 
   \code
   $objet->set_pk($p_id);
+ // It is very important to set the name of the javascript variable 
+ // Contained in the http_input variable "ctl"
   $objet->set_object_name($objet_name);
 
   // Set the ajax to call
@@ -55,6 +57,7 @@
     echo $xml->save_XML();
   @endcode
  * @see ManageTable.js
+ * @see ajax_accounting.php
  * 
  */
 
