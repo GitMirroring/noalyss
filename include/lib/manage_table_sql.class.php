@@ -961,15 +961,15 @@ function check()
         catch (Exception $ex)
         {
             $s1=$xml->createElement("status", "NOK");
-            $s2=$xml->createElement("ctl", $this->object_name);
+            $s3=$xml->createElement("ctl", $this->object_name);
             $s2=$xml->createElement("ctl_row",
                     $this->object_name+"_"+$this->table->get_pk_value());
-            $s3=$xml->createElement("html", $ex->getTraceAsString());
+            $s4=$xml->createElement("html", $ex->getTraceAsString());
+            
             $root=$xml->createElement("data");
             $root->appendChild($s1);
             $root->appendChild($s2);
             $root->appendChild($s3);
-            $root->appendChild($s4);
         }
         $xml->appendChild($root);
         return $xml;
