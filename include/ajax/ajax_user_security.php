@@ -102,7 +102,7 @@ if ($op=="profile")
     $input=$http->request("input");
     $action=$http->request("ieaction", "string", "display");
     $user_id=$http->post("user_id", "number");
-    $profile_id=$http->post("profile_id", "number");
+    $profile_id=$http->post("profile_id");
     if ($action=="display")
     {
         $ie_input=Inplace_Edit::build($input);
@@ -123,6 +123,7 @@ if ($op=="profile")
         $ie_input=Inplace_Edit::build($input);
         $ie_input->set_callback("ajax_misc.php");
         $ie_input->add_json_param("op", "profile");
+        $ie_input->add_json_param("profile_id", $profile_id);
         $ie_input->add_json_param("gDossier", $n_dossier_id);
         $ie_input->add_json_param("user_id", $user_id);
         $ie_input->set_value($value);
