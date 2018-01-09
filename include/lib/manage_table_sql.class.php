@@ -985,7 +985,9 @@ function check()
     }
 
     /**
-     * Delete a record and return an XML answer for ajax
+     * Delete a record and return an XML answer for ajax. If a check is needed before
+     * deleting you can override this->delete and throw an exception if the deleting
+     * is not allowed
      * @return \DOMDocument
      */
     function ajax_delete()
