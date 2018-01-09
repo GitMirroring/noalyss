@@ -27,10 +27,10 @@ if (!defined('ALLOWED'))
  * @brief display or save a periode variable received $op, $cn $g_user
  * variable : 
  * act 
- *    # close : close a periode
- *    # reopen  : reopen a periode
- *    # show  : display a form for modifying / adding a period    
- *    # remove : delete a period IF not used 
+ *    - close : close a periode
+ *    - reopen  : reopen a periode
+ *    - show  : display a form for modifying / adding a period    
+ *    - remove : delete a period IF not used 
  * 
  * ledger_id is the SQL id of ledger
  * 
