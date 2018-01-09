@@ -970,6 +970,7 @@ function check()
             $root->appendChild($s1);
             $root->appendChild($s2);
             $root->appendChild($s3);
+            $root->appendChild($s4);
         }
         $xml->appendChild($root);
         return $xml;
