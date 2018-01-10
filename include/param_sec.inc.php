@@ -207,7 +207,7 @@ if ( $action == "view" )
     $i_profile->id=uniqid("profile");
     $i_profile->value=$cn->make_array("select p_id,p_name from profile
                     order by p_name");
-
+    
     $i_profile->selected=$sec_User->get_profile();
     $ie_profile=new Inplace_Edit($i_profile);
     
@@ -230,13 +230,22 @@ if ( $action == "view" )
     echo "<p>";
     echo _("Sécurité sur les journaux")." ";
     $status_sec_ledger=$sec_User->get_status_security_ledger();
-    $sec_ledger=new Inplace_Switch("sec_ledger", $status_sec_ledger);
-    $sec_ledger->set_callback("ajax_misc.php");
-    $sec_ledger->add_json_param("gDossier", $n_dossier_id);
-    $sec_ledger->add_json_param("user_id", $user_id);
-    $sec_ledger->add_json_param("op", "user_sec_ledger");
-    $sec_ledger->set_jscript(" if ( $('security_ledger_tbl').visible() ) { $('security_ledger_tbl').hide();} else { $('security_ledger_tbl').show();}");
-    echo $sec_ledger->input();
+    //--
+    // Administrator can always access all the ledgers
+    if ( $sec_User->admin==1) {
+        echo '<p>';
+        echo _("Les administrateurs NOALYSS ont toujours accès à tout");
+        $status_sec_ledger=0;
+        $sec_User->set_status_security_ledger(0);
+    } else {
+        $sec_ledger=new Inplace_Switch("sec_ledger", $status_sec_ledger);
+        $sec_ledger->set_callback("ajax_misc.php");
+        $sec_ledger->add_json_param("gDossier", $n_dossier_id);
+        $sec_ledger->add_json_param("user_id", $user_id);
+        $sec_ledger->add_json_param("op", "user_sec_ledger");
+        $sec_ledger->set_jscript(" if ( $('security_ledger_tbl').visible() ||  {$sec_User->Admin()}==1) { $('security_ledger_tbl').hide();} else { $('security_ledger_tbl').show();}");
+        echo $sec_ledger->input();
+    }
     echo "</p>";
     //------------------------------------------------------------------------
     // Access by ledgers, needed if the security on ledger is enable
@@ -287,15 +296,26 @@ if ( $action == "view" )
     //-------------------------------------------------------------------------
     echo "<p>";
     echo _("Sécurité sur les actions")." ";
-    $status_sec_action=$sec_User->get_status_security_action();
-    $sec_action=new Inplace_Switch("sec_action", $status_sec_action);
-    $sec_action->set_callback("ajax_misc.php");
-    $sec_action->add_json_param("gDossier", $n_dossier_id);
-    $sec_action->add_json_param("user_id", $user_id);
-    $sec_action->add_json_param("op", "user_sec_action");
-    $sec_action->set_jscript(" if ( $('security_action_tbl').visible() ) { $('security_action_tbl').hide();} else { $('security_action_tbl').show();}");
-    echo $sec_action->input();
+    // Administrator  always have all action
+    if ( $sec_User->admin==1) {
+        echo '<p>';
+        echo _("Les administrateurs NOALYSS ont toujours accès à tout");
+        $status_sec_action=0;
+        $sec_User->set_status_security_action(0);
+    } else {
+
+        $status_sec_action=$sec_User->get_status_security_action();
+        $sec_action=new Inplace_Switch("sec_action", $status_sec_action);
+        $sec_action->set_callback("ajax_misc.php");
+        $sec_action->add_json_param("gDossier", $n_dossier_id);
+        $sec_action->add_json_param("user_id", $user_id);
+        $sec_action->add_json_param("op", "user_sec_action");
+        $sec_action->set_jscript(" if ( $('security_action_tbl').visible() ) { $('security_action_tbl').hide();} else { $('security_action_tbl').show();}");
+        echo $sec_action->input();
+    }
     echo "</p>";
+    
+
     include(NOALYSS_TEMPLATE.'/security_list_action.php');
     echo '</fieldset>';
     echo HtmlInput::button('Imprime',_('imprime'),"onclick=\"window.open('export.php?".$sHref."');\"");

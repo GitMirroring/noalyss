@@ -124,7 +124,7 @@ class User
 		$this->last_name = $row['use_name'];
 		$this->name = $row['use_name'];
 		$this->active = $row['use_active'];
-		$this->login = $row['use_login'];
+		$this->login =strtolower($row['use_login']);
 		$this->admin = $row['use_admin'];
 		$this->password = $row['use_pass'];
                 $this->email=$row['use_email'];
@@ -1359,7 +1359,7 @@ class User
                 [$this->login]);
         $flag=($p_value==1)?"Y":"N";
         if ( $exist == 0) {
-            $this->db->exec_sql("insert into user_active_security (us_login,us_ledger,us_action) values ($1,$2,$3",[$this->login,$flag,'Y']);
+            $this->db->exec_sql("insert into user_active_security (us_login,us_ledger,us_action) values ($1,$2,$3)",[$this->login,$flag,'Y']);
         } else {
             $this->db->exec_sql("update user_active_security set us_ledger=$1 where us_login = $2",[$flag,$this->login]);
         }
@@ -1388,7 +1388,7 @@ class User
                 [$this->login]);
         $flag=($p_value==1)?"Y":"N";
         if ( $exist == 0) {
-            $this->db->exec_sql("insert into user_active_security (us_login,us_action,us_ledger) values ($1,$2,$3",[$this->login,$flag,'Y']);
+            $this->db->exec_sql("insert into user_active_security (us_login,us_action,us_ledger) values ($1,$2,$3)",[$this->login,$flag,'Y']);
         } else {
             $this->db->exec_sql("update user_active_security set us_action=$1 where us_login = $2",[$flag,$this->login]);
         }

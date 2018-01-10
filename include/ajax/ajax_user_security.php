@@ -237,7 +237,7 @@ if ($op=="user_sec_ledger")
     $sec_ledger->add_json_param("gDossier", $n_dossier_id);
     $sec_ledger->add_json_param("user_id", $user_id);
     $sec_ledger->add_json_param("op", "user_sec_ledger");
-    if ($sec_user->get_status_security_ledger()==1)
+    if ($sec_user->get_status_security_ledger()==1||$sec_user->Admin()==1)
     {
         $sec_user->set_status_security_ledger(0);
         echo $sec_ledger->get_iconoff();
@@ -261,7 +261,7 @@ if ($op=="user_sec_action")
     $sec_action->add_json_param("gDossier", $n_dossier_id);
     $sec_action->add_json_param("user_id", $user_id);
     $sec_action->add_json_param("op", "user_sec_action");
-    if ($sec_user->get_status_security_action()==1)
+    if ($sec_user->get_status_security_action()==1||$sec_user->Admin()==1)
     {
         $sec_user->set_status_security_action(0);
         echo $sec_action->get_iconoff();

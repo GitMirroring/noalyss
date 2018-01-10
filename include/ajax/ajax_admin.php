@@ -47,6 +47,13 @@ if ($op=='folder_add') // operation
         $dossier_id=$http->get("p_dossier", "number"); // get variable
         $user=new User($cn, $user_id);
         $user->set_folder_access($dossier_id, true);
+        $dossiercn=new Database($dossier_id);
+        // By default new user has the profile 1 (admin) and ledger's security
+        // + action's security are disabled
+        $user=new User($dossiercn,$user_id);
+        $user->set_status_security_action(0);
+        $user->set_status_security_ledger(0);
+        $user->save_profile(1);
         $dossier=new Dossier($dossier_id);
         $dossier->load();
         $content="<td>".h($dossier->dos_name)."</td><td>".h($dossier->dos_description)."</td>".
