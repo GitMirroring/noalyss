@@ -1,7 +1,10 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-?><?php
+?>
+<div id="security_action_tbl">
+    
+    <?php
 
 	function display_security_fieldset($p_legend,$p_array,$sec_User) {
 
@@ -68,3 +71,4 @@ $array=$cn->get_array("select ac_id, ac_description from action  where ac_id >=$
     array(1200,1300));
     display_security_fieldset(_('Note'),$array,$sec_User); 
 ?>
+</div>

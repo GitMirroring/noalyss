@@ -99,7 +99,6 @@ else
 }
 /*  compute the sql stmt */
 list($sql, $where) = $Ledger->build_search_sql($p_array);
-
 $max_line = $cn->count_sql($sql);
 
 $step = $_SESSION['g_pagesize'];

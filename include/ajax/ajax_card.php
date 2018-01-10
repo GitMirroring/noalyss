@@ -180,7 +180,7 @@ case 'dc':
     /* Blank card */
     /* ------------------------------------------------------------ */
 case 'bc':
-    if ( $g_user->check_action(FICADD)==1 )
+    if ( $g_user->check_action(FICADD)==1 || $g_user->check_action(FIC)==1)
     {
         $r=HtmlInput::title_box(_("Nouvelle fiche"), $ctl);
 	/* get cat. name */

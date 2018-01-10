@@ -478,7 +478,7 @@ class Document
             $doc->d_number=$res[$i]['d_number'];
             $doc->d_filename=$res[$i]['d_filename'];
             $doc->d_mimetype=$res[$i]['d_mimetype'];
-            $doc->d_description=$row['d_description'];
+            $doc->d_description=$res[$i]['d_description'];
             $a[$i]=clone $doc;
         }
         return $a;

@@ -115,6 +115,10 @@ $path = array(
     "ledger_access"=>"ajax_user_security",
     // Manage user profile
     "profile"=>"ajax_user_security",
+    // enable or not the security on ledger
+    "user_sec_ledger"=>"ajax_user_security",
+    // enable or not the security on action
+    "user_sec_action"=>"ajax_user_security",
     // Update in once all the ledgers
     "ledger_access_all"=>"ajax_user_security",
     // From the page CFGSEC,set the actions

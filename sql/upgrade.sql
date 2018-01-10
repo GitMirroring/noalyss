@@ -69,3 +69,20 @@ alter table jrn_periode alter column   id set default  nextval('jrn_periode_id_s
 update jrn_periode set id=nextval('jrn_periode_id_seq');
 alter table jrn_periode add  constraint jrn_periode_pk  primary key (id);
 alter table jrn_periode add constraint  jrn_periode_periode_ledger unique (jrn_def_id,p_id); 
+
+CREATE TABLE public.user_active_security (
+	id serial not NULL,
+	us_login text NOT NULL,
+	us_ledger varchar(1) not NULL,
+	us_action varchar(1) not NULL
+);
+COMMENT ON COLUMN public.user_active_security.us_login IS 'user''s login' ;
+COMMENT ON COLUMN public.user_active_security.us_ledger IS 'Flag Security for ledger' ;
+COMMENT ON COLUMN public.user_active_security.us_action IS 'Security for action' ;
+
+ALTER TABLE public.user_active_security ADD CONSTRAINT user_active_security_pk PRIMARY KEY (id) ;
+ALTER TABLE public.user_active_security ADD CONSTRAINT user_active_security_ledger_check CHECK (us_ledger in ('Y','N')) ;
+ALTER TABLE public.user_active_security ADD CONSTRAINT user_active_security_action_check CHECK (us_action in ('Y','N')) ;
+
+insert into user_active_security (us_login,us_ledger,us_action)  select user_name,'Y','Y' from profile_user;
+

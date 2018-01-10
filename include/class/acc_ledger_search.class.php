@@ -531,13 +531,10 @@ class Acc_Ledger_Search
             $fil_paid=$and.SQL_LIST_UNPAID_INVOICE;
             $and=" and ";
         }
-        $repo=new Database();
-        $g_user=new User($repo);
-        $g_user->Check();
-        $g_user->check_dossier(dossier::id());
-
-        if ($g_user->admin==0&&$g_user->is_local_admin()==0)
+        global $g_user;
+        if ($g_user->admin==0&&$g_user->is_local_admin()==0 && $g_user->get_status_security_ledger()==1 )
         {
+            
             $fil_sec=$and." jr_def_id in ( select uj_jrn_id ".
                     " from user_sec_jrn where ".
                     " uj_login='".sql_string($_SESSION['g_user'])."'".
