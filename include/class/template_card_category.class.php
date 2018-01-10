@@ -56,6 +56,7 @@ class Template_Card_Category extends Manage_Table_SQL
         {
             throw new Exception(_("Effacement impossible : catégorie utilisée"));
         }
+        $cn->exec_sql("delete from attr_min where frd_id=$1",[$this->table->frd_id]);
         $this->table->delete();
     }
 
