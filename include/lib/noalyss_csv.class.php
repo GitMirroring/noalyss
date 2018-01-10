@@ -35,12 +35,22 @@ class Noalyss_Csv
 
     private $filename;
     private $element;
+    private $sep_field;
+    private $sep_dec;
+    private $encoding;
 
     function __construct($p_filename)
     {
         $this->filename=$p_filename;
         $this->element=array();
         $this->size=0;
+     
+        $a_field=[';',','];
+        $this->sep_field=$a_field[$_SESSION['csv_fieldsep']];
+        $a_field=['.',','];
+        $this->sep_dec=$a_field[$_SESSION['csv_decimal']];
+        $this->encoding=$_SESSION['csv_encoding'];
+    
     }
 
     /***
@@ -91,8 +101,9 @@ class Noalyss_Csv
         $sep="";
         for ($i=0; $i<$size_array; $i++)
         {
-                printf($sep.'"%s"', $p_array[$i]);
-            $sep=";";
+            
+            printf($sep.'"%s"', $this->encode($p_array[$i]));
+            $sep=$this->sep_field;
         }
         printf("\r\n");
     }
@@ -127,7 +138,7 @@ class Noalyss_Csv
         {
             if ($this->element[$i]['type'] == 'number' )
             {
-                printf($sep.'%s', nb($this->element[$i]['value']));
+                printf($sep.'%s', $this->nb($this->element[$i]['value']));
             }
             else
             {
@@ -136,9 +147,9 @@ class Noalyss_Csv
                 $export=str_replace("\r"," ", $export);
                 // remove double quote
                 $export=str_replace('"',"", $export);
-                printf($sep.'"%s"', $export);
+                printf($sep.'"%s"', $this->encode($export));
             }
-            $sep=";";
+            $sep=$this->sep_field;
         }
         printf("\r\n");
         $this->clean();
@@ -151,5 +162,23 @@ class Noalyss_Csv
         $this->element=array();
         $this->size=0;
     }
+    /**
+    * format the number for the CSV export
+    * @param $p_number number
+    */
+   private function nb($p_number)
+   {
+       $p_number=trim($p_number);
+       if ($p_number=="") {return $p_number;}
+       $r=number_format($p_number, 4, $this->sep_dec,'');
+       return $r;
+   }
+   private function encode($str)
+   {
+       if ($this->encoding=="utf8") return $str;
+       if ($this->encoding=="latin1") return utf8_decode ($str);
+       throw new Exception(_("Encodage invalide"));
+   }
+            
 
 }

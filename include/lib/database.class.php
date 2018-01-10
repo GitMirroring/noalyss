@@ -1085,32 +1085,31 @@ class Database
      */
     function query_to_csv($ret, $aheader)
     {
-        $seq="";
+        $csv=new Noalyss_Csv("db-query");
+        $a_header=[];
         for ($i=0; $i<count($aheader); $i++)
         {
-            echo $seq.'"'.$aheader[$i]['title'].'"';
-            $seq=";";
+            $a_header[]=$aheader[$i]['title'];
         }
-        printf("\n\r");
+        $csv->write_header($a_header);
+        
         // fetch all the rows
         for ($i=0; $i<Database::num_row($ret); $i++)
         {
             $row=Database::fetch_array($ret, $i);
-            $sep2="";
             // for each rows, for each value
             for ($e=0; $e<count($row)/2; $e++)
             {
                 switch ($aheader[$e]['type'])
                 {
                     case 'num':
-                        echo $sep2.nb($row[$e]);
+                        $csv->add($row[$e],"number");
                         break;
                     default:
-                        echo $sep2.'"'.$row[$e].'"';
+                        $csv->add($row[$e]);
                 }
-                $sep2=";";
             }
-            printf("\n\r");
+            $csv->write();
         }
     }
     /**

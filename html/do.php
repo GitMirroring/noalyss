@@ -81,6 +81,9 @@ if ( isset ($_POST['set_preference'])) {
     $p_email=$http->post("p_email","string","");
     $minirap=$http->post("minirap","number",0);
     $period=$http->post("period","number");
+    $csv_fieldsep=$http->post("csv_fieldsep","number");
+    $csv_decimal=$http->post("csv_decimal","number");
+    $csv_encoding=$http->post("csv_encoding");
     
     if (strlen(trim($pass_1)) != 0 && strlen(trim($pass_2)) != 0)
     {
@@ -91,6 +94,10 @@ if ( isset ($_POST['set_preference'])) {
     $g_user->save_global_preference('THEME', $style_user);
     $g_user->save_global_preference('LANG', $lang);
     $g_user->save_global_preference('PAGESIZE', $p_size);
+    $g_user->save_global_preference('csv_fieldsep', $csv_fieldsep);
+    $g_user->save_global_preference('csv_decimal', $csv_decimal);
+    $g_user->save_global_preference('csv_encoding', $csv_encoding);
+    
     $g_user->set_mini_report($minirap);
     $_SESSION['g_theme']=$style_user;
     $_SESSION['g_pagesize']=$p_size;

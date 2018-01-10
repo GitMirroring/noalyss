@@ -631,7 +631,14 @@ class User
 			;
 		}
 		// save array into g_ variable
-		$array_pref = array('g_theme' => 'THEME', 'g_pagesize' => 'PAGESIZE', 'g_topmenu' => 'TOPMENU', 'g_lang' => 'LANG');
+		$array_pref = array('g_theme' => 'THEME', 
+                    'g_pagesize' => 'PAGESIZE', 
+                    'g_topmenu' => 'TOPMENU', 
+                    'g_lang' => 'LANG',
+                    'csv_fieldsep'=>'csv_fieldsep',
+                    'csv_decimal'=>'csv_decimal' ,
+                    'csv_encoding'=>'csv_encoding');
+                
 		foreach ($array_pref as $name => $parameter)
 		{
 			if (!isset($line[$parameter]))
@@ -659,7 +666,11 @@ class User
 		$default_parameter = array("THEME" => "classic",
 			"PAGESIZE" => "50",
 			'TOPMENU' => 'TEXT',
-			'LANG' => 'fr_FR.utf8');
+			'LANG' => 'fr_FR.utf8',
+                        'csv_fieldsep'=>'0',
+                        'csv_decimal'=>'0',
+                        'csv_encoding'=>'utf8'
+                    );
 		$cn = new Database();
 		$Sql = "insert into user_global_pref(user_id,parameter_type,parameter_value)
              values ('%s','%s','%s')";
@@ -692,7 +703,11 @@ class User
 		$default_parameter = array("THEME" => "classic",
 			"PAGESIZE" => "50",
 			"LANG" => 'fr_FR.utf8',
-			'TOPMENU' => 'SELECT');
+			'TOPMENU' => 'SELECT',
+                        'csv_fieldsep'=>'0',
+                        'csv_decimal'=>'0',
+                        'csv_encoding'=>'utf8'
+                    );
 		$cn = new Database();
 		$Sql = "update user_global_pref set parameter_value=$1
              where parameter_type=$2 and
