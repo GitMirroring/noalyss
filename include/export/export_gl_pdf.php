@@ -27,7 +27,7 @@ include_once('class/acc_account_ledger.class.php');
 include_once('lib/ac_common.php');
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 include_once('lib/impress.class.php');
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';

@@ -62,7 +62,7 @@ class Print_Ledger {
                     //----------------------------------------------------------------------
                     // Simple Printing Purchase Ledger
                     //---------------------------------------------------------------------
-                    $own = new Own($cn);
+                    $own = new Noalyss_Parameter_Folder($cn);
                     $jrn_type = $p_ledger->get_type();
 
 
@@ -98,7 +98,7 @@ class Print_Ledger {
                     /**********************************************************
                      * Print Detail Operation + Item
                      ********************************************************** */
-                    $own = new Own($cn);
+                    $own = new Noalyss_Parameter_Folder($cn);
                     $jrn_type = $p_ledger->get_type();
                     if ($jrn_type == 'FIN') {
                         $pdf = new Print_Ledger_Financial($cn, $p_ledger);

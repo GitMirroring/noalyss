@@ -25,7 +25,7 @@
 include_once '../../include/constant.php';
 require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 bcscale(2);
 $_REQUEST['gDossier']=37;
 $_GET['gDossier']=37;

@@ -48,7 +48,7 @@ $gDossierLogInput=$gDossier;
 global $cn, $g_user, $g_succeed, $g_failed;
 $cn=Dossier::connect();
 
-$g_parameter=new Own($cn);
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 $g_user=new User($cn);
 
 if (!file_exists('authorized_debug'))

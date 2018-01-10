@@ -24,7 +24,7 @@
  * \brief Class to manage the company parameter (address, name...)
  */
 
-class Own
+class Noalyss_Parameter_Folder
 {
     var $db;
     var $MY_NAME;

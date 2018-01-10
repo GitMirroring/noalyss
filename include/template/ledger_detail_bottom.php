@@ -298,7 +298,7 @@ if ( $div != 'popup' ) {
  */
   if ( $access=='W') {
   echo HtmlInput::submit('save',_('Sauver'),'onClick="return verify_ca(\'popup\');"');
-  $owner=new Own($cn);
+  $owner=new Noalyss_Parameter_Folder($cn);
   if ($owner->MY_ANALYTIC != 'nu' /*&& $div=='popup' */){
     echo '<input type="button" class="smallbutton" value="'._('verifie CA').'" onClick="verify_ca(\''.$div.'\');">';
   }

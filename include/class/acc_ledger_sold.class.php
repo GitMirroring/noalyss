@@ -37,7 +37,7 @@ require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/class/acc_payment.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itva_popup.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 require_once NOALYSS_INCLUDE.'/class/stock_goods.class.php';

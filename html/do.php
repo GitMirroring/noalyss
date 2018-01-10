@@ -142,7 +142,7 @@ if ( DEBUG ) {
 
 <?php
 }
-$g_parameter=new Own($cn);
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 
 $g_user->Check();
 $g_user->check_dossier(Dossier::id());

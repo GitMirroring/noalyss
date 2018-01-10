@@ -74,7 +74,7 @@ class PDF extends TFPDF
         date_default_timezone_set ('Europe/Paris');
 
         $this->cn  = $p_cn;
-        $this->own = new own($this->cn);
+        $this->own = new Noalyss_Parameter_Folder($this->cn);
         $this->soc = $this->own->MY_NAME;
         $this->date = date('d.m.Y');
         $this->cells=array();
@@ -344,7 +344,7 @@ class PDFLand extends PDF
         $this->AddFont('DejaVuCond','I','DejaVuSansCondensed-Oblique.ttf',true);
 
         $this->cn  = $p_cn;
-        $this->own = new own($this->cn);
+        $this->own = new Noalyss_Parameter_Folder($this->cn);
         $this->soc = $this->own->MY_NAME;
         $this->date = date('d.m.Y');
     }

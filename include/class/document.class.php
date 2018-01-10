@@ -17,7 +17,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_account_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_tva.class.php';

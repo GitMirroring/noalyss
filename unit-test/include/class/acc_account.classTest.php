@@ -20,7 +20,7 @@ class Acc_AccountTest extends PHPUnit_Framework_TestCase
         global $g_connection, $g_parameter, $g_user;
         $_REQUEST['gDossier']=DOSSIER;
         $g_connection=new Database(DOSSIER);
-        $g_parameter=new Own($g_connection);
+        $g_parameter=new Noalyss_Parameter_Folder($g_connection);
         $g_user=new User($g_connection);
         $cn=Dossier::connect();
         $this->object=new Acc_Account($cn, '400');

@@ -38,7 +38,7 @@ require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
 require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
@@ -68,7 +68,7 @@ catch (Exception $exc)
  */
 
 $cn=Dossier::connect();
-$g_parameter=new Own($cn);
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 
 $g_user->check();
 if ( $g_user->check_dossier(dossier::id(),true)=='X' )
@@ -484,7 +484,7 @@ case 'save':
             ////////////////////////////////////////////////////
             // CA
             //////////////////////////////////////////////////
-            $owner = new Own($cn);
+            $owner = new Noalyss_Parameter_Folder($cn);
             if ( $owner->MY_ANALYTIC != "nu" && isset ($_POST['op']) )
             {
                 // for each item, insert into operation_analytique */

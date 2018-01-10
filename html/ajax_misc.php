@@ -71,7 +71,7 @@ global $g_user, $cn, $g_parameter;
 // 
 if ($gDossier<>0) {
     $cn =Dossier::connect();
-    $g_parameter=new Own($cn);
+    $g_parameter=new Noalyss_Parameter_Folder($cn);
     $g_user = new User($cn);
     $g_user->check(true);
     if ( $g_user->check_dossier($gDossier, true) == 'X' ) {

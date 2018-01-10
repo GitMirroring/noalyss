@@ -26,10 +26,10 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $g_user;
 $http=new HttpInput();
 echo '<div class="content">';
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 if (isset($_POST['record_company']))
 {
-	$m = new Own($cn);
+	$m = new Noalyss_Parameter_Folder($cn);
 	$m->MY_NAME = $http->post("p_name");
 	$m->MY_TVA = $http->post("p_tva");
 	$m->MY_STREET = $http->post("p_street");
@@ -52,7 +52,7 @@ if (isset($_POST['record_company']))
 	$m->Update();
 }
 
-$my = new Own($cn);
+$my = new Noalyss_Parameter_Folder($cn);
 ///// Compta analytic
 $array = array(
 	array("value" => "ob", 'label' => _("obligatoire")),

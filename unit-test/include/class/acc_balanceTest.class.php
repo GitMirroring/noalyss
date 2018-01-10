@@ -20,7 +20,7 @@ class Acc_BalanceTest extends PHPUnit_Framework_TestCase
         global $g_connection, $g_parameter;
         $_REQUEST['gDossier']=DOSSIER;
         $g_connection=new Database(DOSSIER);
-        $g_parameter=new Own($g_connection);
+        $g_parameter=new Noalyss_Parameter_Folder($g_connection);
         $this->object=new Acc_Balance($g_connection);
     }
 

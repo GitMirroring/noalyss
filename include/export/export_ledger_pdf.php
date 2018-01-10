@@ -34,7 +34,7 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/impress.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
@@ -56,7 +56,7 @@ catch (Exception $exc)
     throw $exc;
 }
 $l_type = "JRN";
-$own = new Own($cn);
+$own = new Noalyss_Parameter_Folder($cn);
 
 $Jrn = new Acc_Ledger($cn, $jrn_id);
 

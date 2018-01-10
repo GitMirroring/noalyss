@@ -338,7 +338,7 @@ if (isset($_REQUEST['bt_html']))
                 /*
                  * Ledger ACH or VEN
                  */
-                $own=new Own($cn);
+                $own=new Noalyss_Parameter_Folder($cn);
                 require_once NOALYSS_TEMPLATE.'/print_ledger_simple.php';
                 
             }

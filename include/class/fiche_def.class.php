@@ -160,11 +160,11 @@ class Fiche_Def
     }
     /*!
      **************************************************
-     * \brief  Display category into a table
+     * \brief  Display all card categories into a table
      *
      * \return HTML row
      */
-    function Display()
+    function display()
     {
 		$tab = new Sort_Table();
 
