@@ -1094,6 +1094,7 @@ class Acc_Ledger_Search
         for ($e=0;$e<count($p_array);$e++)
         {
             $row=$p_array[$e];
+            if ( $row['jrn_enable']==0) continue;
             $r=new ICheckBox($p_div.'r_jrn'.$e,$row['jrn_def_id']);
             $r->set_attribute("ledger_type", $row['jrn_def_type']);
             $idx=$row['jrn_def_id'];

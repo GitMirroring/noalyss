@@ -317,10 +317,10 @@ class User
 			switch ($p_access)
 			{
 				case 3:
-					$sql_access = " and uj_priv!= 'X'";
+					$sql_access = " and uj_priv!= 'X' ";
 					break;
 				case 2:
-					$sql_access = " and uj_priv = 'W'";
+					$sql_access = " and uj_priv = 'W' and jrn_enable=1 ";
 					break;
 
 				case 1:
@@ -332,7 +332,7 @@ class User
                  jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_type_id,jrn_desc,uj_priv,
                  jrn_deb_max_line,jrn_cred_max_line,jrn_def_description
                  from jrn_def join jrn_type on jrn_def_type=jrn_type_id
-                 join user_sec_jrn on uj_jrn_id=jrn_def_id
+                 join user_sec_jrn on uj_jrn_id=jrn_def_id,jrn_enable
                  where
                  uj_login='" . $this->login . "'" .
 					$sql_type . $sql_access .
@@ -340,9 +340,9 @@ class User
 		}
 		else
 		{
-			$sql_type = ($p_type == 'ALL') ? '' : "where jrn_def_type=upper('" . sql_string($p_type) . "')";
+			$sql_type = ($p_type == 'ALL') ? '  ' : "where jrn_def_type=upper('" . sql_string($p_type) . "') ";
 			$sql = "select jrn_def_id,jrn_def_type,jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_deb_max_line,jrn_cred_max_line,
-                 jrn_type_id,jrn_desc,'W' as uj_priv,jrn_def_description
+                 jrn_type_id,jrn_desc,'W' as uj_priv,jrn_def_description,jrn_enable
                  from jrn_def join jrn_type on jrn_def_type=jrn_type_id
                  $sql_type
                  order by jrn_Def_name";

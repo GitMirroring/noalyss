@@ -86,3 +86,7 @@ ALTER TABLE public.user_active_security ADD CONSTRAINT user_active_security_acti
 
 insert into user_active_security (us_login,us_ledger,us_action)  select user_name,'Y','Y' from profile_user;
 
+alter table jrn_def add jrn_enable int;
+alter table jrn_def alter  jrn_enable set default 1;
+update jrn_def set jrn_enable=1;
+comment on column jrn_def.jrn_enable is 'Set to 1 if the ledger is enable ';

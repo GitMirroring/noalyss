@@ -73,7 +73,14 @@ echo $str_add_button;
 </tr>
 <tr><td><INPUT TYPE="hidden" id="p_ech_lib" NAME="p_ech_lib" VALUE="echeance"></td>
 </tr>
-
+<tr>
+    <td style="width: 200px">
+    <?php echo _('Description') ?>
+    </TD>
+    <td style="width: 500px">
+     <?php echo $str_description; ?>   
+    </td>
+</tr>    
 <TR>
 <TD><?php echo _('Type de journal')?> </TD>
 <TD>
@@ -113,15 +120,15 @@ echo $str_add_button;
    
 </TD>
 </tr>
-<?php endif; ?>
 <tr>
-    <td style="width: 200px">
-    <?php echo _('Description') ?>
-    </TD>
-    <td style="width: 500px">
-     <?php echo $str_description; ?>   
+    <td>
+        <?=_("Journal actif")?>
     </td>
-</tr>    
+    <td>
+        <?=$actif->input()?>
+    </td>
+<?php endif; ?>
+
 </TABLE>
 <hr>
     <?php

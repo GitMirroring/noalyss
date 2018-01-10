@@ -2705,6 +2705,12 @@ class Acc_Ledger extends jrn_def_sql
         $new=0;
         $cn=$this->db;
         echo $hidden;
+        $actif=new ISelect("jrn_enable");
+        $actif->value=[
+            ["label"=>_("Activé"),"value"=>1],
+            ["label"=>_("Désactivé"),"value"=>0]
+        ];
+        $actif->selected=$this->jrn_enable;
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
@@ -2784,6 +2790,7 @@ class Acc_Ledger extends jrn_def_sql
         $this->jrn_def_pj_pref=$jrn_def_pj_pref;
         $this->jrn_deb_max_line=($min_row<1)?1:$min_row;
         $this->jrn_def_description=$p_description;
+        $this->jrn_enable=$jrn_enable;
         switch ($this->jrn_def_type)
         {
             case 'ACH':
@@ -3238,6 +3245,13 @@ class Acc_Ledger extends jrn_def_sql
                         'class="smallbutton image_search"',
                         "image/bouton-plus.png");
         return $str_add_button;
+    }
+    /**
+     * Check if a ledger is enabled , 1 for yes and 0 if disabled
+     */
+    function is_enable()
+    {
+       return $this->db->get_value("select jrn_enable from jrn_def where jrn_def_id=$1",[$this->id]); 
     }
 
 }
