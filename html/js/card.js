@@ -982,4 +982,41 @@ function action_remove_concerned(p_dossier,p_fiche_id,p_action_id)
             }
     );
     }
-    
+/**
+ * Remove a card after checking it is not used
+ * @param object obj {gDossier,op,op2:rm_card,ctl,f_id}
+ */    
+function delete_card(obj) {
+    console.debug("delete_card");
+    console.debug(obj);
+    smoke.confirm("Confirmez ? ", function (e) {
+        if (e) {
+            waiting_box();
+            new Ajax.Request("ajax_misc.php", {
+                "method": "get",
+                parameters: obj,
+                onSuccess: function (req) {
+                    remove_waiting_box();
+                    var answer = req.responseXML;
+                    var a = answer.getElementsByTagName('ctl');
+                    if (a.length == 0)
+                    {
+                        var rec = req.responseText;
+                        alert_box('erreur :' + rec);
+                    }
+                    var html = answer.getElementsByTagName('code');
+                    var namectl = a[0].firstChild.nodeValue;
+                    var nodeXml = html[0];
+                    var code_html = getNodeText(nodeXml);
+                    code_html = unescape_xml(code_html);
+                    if ( code_html == "OK") {
+                        Effect.Fade(obj['ctl'], { duration: 1.5 });    
+                    } else {
+                        smoke.alert(code_html);
+                    }
+                }
+
+            });
+        }
+    });
+}

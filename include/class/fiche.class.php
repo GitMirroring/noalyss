@@ -1973,19 +1973,28 @@ class Fiche
         $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
         $sql='select count(*) as c from jrnx where j_qcode=$1';
         $count=$this->cn->get_value($sql,array($qcode));
-        if ( $count == 0 ) return false;
-        return true;
+        if ( $count > 0 ) return TRUE;
+        $count=$this->cn->get_value("select count(*) from action_gestion where f_id_dest=$1 or ag_contact=$1 ",
+                [$this->id]);
+        if ( $count > 0 ) return TRUE;
+        $count=$this->cn->get_value("select count(*) from action_person where f_id=$1 ",
+                [$this->id]);
+        if ( $count > 0 ) return TRUE;
+        
+        return FALSE;
     }
     /*\brief remove a card without verification */
     function delete()
     {
+        $this->cn->start();
         // Remove from attr_value
         $Res=$this->cn->exec_sql("delete from fiche_detail
                                  where
-                                   f_id=".$this->id);
+                                   f_id=$1",[$this->id]);
 
         // Remove from fiche
-        $Res=$this->cn->exec_sql("delete from fiche where f_id=".$this->id);
+        $Res=$this->cn->exec_sql("delete from fiche where f_id=$1",[$this->id]);
+        $this->cn->commit();
 
     }
     /*!\brief create the sql statement for retrieving all

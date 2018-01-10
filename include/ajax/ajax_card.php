@@ -164,6 +164,12 @@ case 'dc':
 		$html.=HtmlInput::submit('save',_('Sauver'));
 	      }
 	    if ( ! isset ($nohistory))$html.=HtmlInput::history_card_button($f->id,_('Historique'));
+            // Display a remove button if not used and can modify card
+            if ( $can_modify == 1 && $f->is_used()==FALSE)
+            {
+                $js=str_replace('"',"'",json_encode(["gDossier"=>Dossier::id(),'op'=>'card','op2'=>"rm_card","f_id"=>$f->id,'ctl'=>$ctl]));
+                $html.=HtmlInput::button_action(_("Efface"), "delete_card($js)","x","smallbutton");
+            }
             $html.='</p>';
 	    if ($can_modify==1)
 	      {
@@ -587,6 +593,40 @@ case 'upc':
 	  $html.=$f->Display(true);
 	}
       }
+      break;
+      //------------------------------------------------------------------
+      // Unlink a card
+      //------------------------------------------------------------------
+        case 'rm_card':
+             $html=HtmlInput::title_box("Détail fiche", $ctl);
+
+  if ( $g_user->check_action(FIC)==0 )
+    {
+      $html.=alert(_('Action interdite'),true);
+    }
+  else
+    {
+      if ($cn->get_value('select count(*) from fiche where f_id=$1',array($_GET['f_id'])) == '0' )
+	{
+	  $html.=alert(_('Fiche non valide'),true);
+	  }
+
+      else
+	{
+
+	  $f=new Fiche($cn,$_GET['f_id']);
+          if ( $f->is_used()==0){
+            $f->delete();
+            $html="OK";
+          } else {
+            $html="";
+            $html=_("Fiche non effacée");
+          }
+
+	}
+      }
+      break;
+            
 } // switch
 $xml=escape_xml($html);
 if (DEBUG && headers_sent()) {
