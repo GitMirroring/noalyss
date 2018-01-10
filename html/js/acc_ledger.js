@@ -676,7 +676,7 @@ function view_history_account(p_value, dossier)
                     remove_waiting_box();
                     add_div(popup);
                     success_box(req, xml);
-                    g(id).style.top = calcy(140 + (layer * 3)) + "px";
+                    $(idbox).style.top = calcy(140 + (layer * 3)) + "px";
                 }
             }
     );
@@ -748,7 +748,7 @@ function view_history_card(p_value, dossier)
                     remove_waiting_box();
                     add_div(popup);
                     success_box(req, xml);
-                    g(id).style.top = calcy(140 + (layer * 3)) + "px";
+                    g(idbox).style.top = calcy(140 + (layer * 3)) + "px";
                 }
             }
     );
