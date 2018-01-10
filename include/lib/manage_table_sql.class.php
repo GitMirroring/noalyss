@@ -917,7 +917,7 @@ function check()
             $status=$p_status;
             ob_start();
 
-            echo HtmlInput::title_box("Donnée", "dtr");
+            echo HtmlInput::title_box("Donnée", "dtr","close","","y");
             printf('<form id="frm%s_%s" method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,
