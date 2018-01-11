@@ -58,10 +58,14 @@ echo $ledger->confirm($_POST,false);
     </div>
     <div id="reverse_div_id" style="display:none;height:185px;height:10rem">
     <?php
-        $reverse_date=new IDate('reverse_date');
         $reverse_ck=new ICheckBox('reverse_ck');
         echo _('Extourne opération')." ".$reverse_ck->input()." ";
+        $reverse_date=new IDate('reverse_date');
         echo $reverse_date->input();
+        $msg_reverse=new IText("ext_label");
+        $msg_reverse->size=60;
+        $msg_reverse->placeholder=_("Message extourne");
+        echo _("Message")." ".$msg_reverse->input();
     ?>
     </div>
     <div id="document_div_id" style="display:none;height:185px;height:10rem">
@@ -77,7 +81,6 @@ echo $ledger->confirm($_POST,false);
     <div id="operationtype_div_id" style="display:none;height:185px;height:10rem">
         <?php
             $status=$http->request("jr_optype","string","NOR");
-            echo $_POST['jr_optype'];
             echo Acc_Operation::select_operation_type($status)->input();
         ?>
     </div>

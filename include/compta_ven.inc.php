@@ -112,6 +112,10 @@ $p_msg="";
             $reverse_ck=new ICheckBox('reverse_ck');
             echo _('Extourne opération')." ".$reverse_ck->input()." ";
             echo $reverse_date->input();
+            $msg_reverse=new IText("ext_label");
+            $msg_reverse->placeholder=_("Message extourne");
+            $msg_reverse->size=60;
+            echo _("Message")." ".$msg_reverse->input();
             echo '</div>';
             
 	    echo HtmlInput::hidden('ac',$_REQUEST['ac']);
@@ -193,12 +197,13 @@ show_tab(a_tab,'facturation_div_id');
             if (isset($_POST['reverse_ck']))
             {
                 $p_date=$http->post('reverse_date', "string",'');
+                $p_msg=$http->post("ext_label");
                 if (isDate($p_date)==$p_date)
                 {
                     // reverse the operation
                     try
                     {
-                        $Ledger->reverse($p_date);
+                        $Ledger->reverse($p_date,$p_msg);
                         echo '<p>';
                         echo _('Extourné au ').$p_date;
                         echo '</p>';

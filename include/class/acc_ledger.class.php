@@ -306,11 +306,11 @@ class Acc_Ledger extends jrn_def_sql
               jr_date,
               jr_grpt_id,
               jr_internal
-              ,jr_tech_per, jr_valid
+              ,jr_tech_per, jr_valid,jr_optype
               )
               select $1,jr_def_id,jr_montant,$7,
               to_date($2,'DD.MM.YYYY'),$3,$4,
-              $5, true
+              $5, true,'EXT'
               from
               jrn
               where   jr_id=$6";
