@@ -752,7 +752,7 @@ class Acc_Ledger_Search
             $r.="</TD>";
 
             // Tiers
-            $other=($row['quick_code']!='')?'['.$row['quick_code'].'] '.$row['name'].' '.$row['first_name']:'';
+            $other=($row['quick_code']!='')?HtmlInput::card_detail($row['quick_code'],h($row['name'].' '.$row['first_name'])):'';
             $r.=td($other);
             // comment
             $r.="<TD>";
