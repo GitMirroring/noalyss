@@ -164,6 +164,7 @@ class Acc_Balance
                                         from jrnx join tmp_pcmn on (j_poste=pcm_val) 
                                         left join parm_periode on (j_tech_per = p_id) 
                                         join jrn_def on (j_jrn_def=jrn_def_id) 
+                                        join jrn on (j_grpt=jr_grpt_id)
                                         where 
                                        $jrn $from_poste $to_poste
                                     $and $filter_sql and $per_sql_previous)  as sub_p group by j_poste order by j_poste)
@@ -172,8 +173,8 @@ class Acc_Balance
                                                                 , coalesce(m.scred,0) as sum_cred 
                                                                 ,coalesce(p.sdeb,0) as sum_deb_previous
                                                                 , coalesce(p.scred,0) as sum_cred_previous 
-                                                                ,coalesce(sum_deb_ope)
-                                                                ,coalesce(sum_cred_ope)
+                                                                ,coalesce(sum_deb_ope,0) as sum_deb_ope
+                                                                ,coalesce(sum_cred_ope,0) as sum_cred_ope
                                                         from m full join p on (p.j_poste=m.j_poste)
                                              order by poste";
                        
