@@ -913,7 +913,10 @@ function hide_ledger_choice(p_frm_search)
     try
     {
         var nb = $(p_frm_search).nb_jrn.value;
-        var div = $(p_frm_search).div.value;
+        var div = "";
+        if ( $(p_frm_search).div ) {
+            div = $(p_frm_search).div.value;
+        }
         var i = 0;
         var str = "";
         var name = "";
@@ -922,7 +925,7 @@ function hide_ledger_choice(p_frm_search)
         for (i = 0; i < nb; i++) {
             n_name = div + "r_jrn[" + sel + "]";
             name = div + "r_jrn" + i;
-            if ($(name).checked) {
+            if ( $(name).checked) {
                 str += '<input type="hidden" id="' + n_name + '" name="' + n_name + '" value="' + $(name).value + '">';
                 sel++;
             }

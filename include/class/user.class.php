@@ -296,6 +296,7 @@ class User
 	 * \brief get all the available ledgers for the current user
 	 * \param $p_type = ALL or the type of the ledger (ACH,VEN,FIN,ODS)
 	 * \param $p_access =3 for Read or WRITE, 2  write, 1 for readonly
+         * \param (boolean) $all if true show also inactive
 	 *  \return a double array of available ledgers
 	  @verbatim
 	  [0] => [jrn_def_id]
@@ -309,8 +310,13 @@ class User
 	  @endverbatim
 	 */
 
-	function get_ledger($p_type = 'ALL', $p_access = 3)
+	function get_ledger($p_type = 'ALL', $p_access = 3,$disable=TRUE)
 	{
+            if ($disable==TRUE) {
+                $sql_enable="";
+            } else {
+                $sql_enable="and jrn_enable=1";
+            }
 		if ($this->admin != 1 && $this->is_local_admin() != 1 && $this->get_status_security_ledger() == 1)
 		{
 			$sql_type = ($p_type == 'ALL') ? '' : "and jrn_def_type=upper('" . sql_string($p_type) . "')";
@@ -335,12 +341,12 @@ class User
                  join user_sec_jrn on uj_jrn_id=jrn_def_id,jrn_enable
                  where
                  uj_login='" . $this->login . "'" .
-					$sql_type . $sql_access .
+					$sql_type . $sql_access .$sql_enable.
 					" order by jrn_Def_name";
 		}
 		else
 		{
-			$sql_type = ($p_type == 'ALL') ? '  ' : "where jrn_def_type=upper('" . sql_string($p_type) . "') ";
+			$sql_type = ($p_type == 'ALL') ? '  '.$sql_enable : "where jrn_def_type=upper('" . sql_string($p_type) . "')  ".$sql_enable;
 			$sql = "select jrn_def_id,jrn_def_type,jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_deb_max_line,jrn_cred_max_line,
                  jrn_type_id,jrn_desc,'W' as uj_priv,jrn_def_description,jrn_enable
                  from jrn_def join jrn_type on jrn_def_type=jrn_type_id
