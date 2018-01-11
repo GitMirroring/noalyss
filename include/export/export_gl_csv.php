@@ -93,7 +93,7 @@ if ( count($a_poste) == 0 )
 }
 
 // Header
-$header = array( _("Date"), _("Référence"), _("Libellé"), _("Pièce"),_("Lettrage"), _("Débit"), _("Crédit"), _("Solde") );
+$header = array( _("Date"), _("Référence"), _("Libellé"), _("Pièce"),_("Lettrage"),_("Type"), _("Débit"), _("Crédit"), _("Solde") );
 
 $l=(isset($_GET['letter']))?2:0;
 $s=(isset($_REQUEST['solded']))?1:0;
@@ -195,6 +195,7 @@ foreach ($a_poste as $poste)
         $export->add($detail['jr_pj_number']);
         if ($detail['letter'] == -1) { $export->add(""); } 
         else { $export->add($detail['letter']);}
+        $export->add($detail['jr_optype']);
         if ($detail['deb_montant']  > 0 ) 
             $export->add($detail['deb_montant'],"number");
         else

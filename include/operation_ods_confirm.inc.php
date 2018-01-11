@@ -45,12 +45,13 @@ echo $ledger->confirm($_POST,false);
 ?>
 <div id="tab_id" >
     <script>
-        var a_tab = ['modele_div_id','reverse_div_id','document_div_id'];
+        var a_tab = ['modele_div_id','reverse_div_id','document_div_id','operationtype_div_id'];
     </script>
 <ul class="tabs">
     <li class="tabs_selected" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Modèle à sauver")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'modele_div_id')"> <?php echo _('Modèle')?> </a></li>
     <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Document")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'document_div_id')"> <?php echo _('Document')?> </a></li>
     <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Extourne")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'reverse_div_id')"> <?php echo _('Extourne')?> </a></li>
+    <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Type opération")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'operationtype_div_id')"> <?php echo _('Type opération')?> </a></li>
 </ul>
     <div id="modele_div_id">
         <?php echo Pre_operation::save_propose(); ?>
@@ -71,6 +72,13 @@ echo $ledger->confirm($_POST,false);
         echo _("Ajoutez une pièce justificative ");
         echo $file->input("pj", "");
         echo '</p>';
+        ?>
+    </div>
+    <div id="operationtype_div_id" style="display:none;height:185px;height:10rem">
+        <?php
+            $status=$http->request("jr_optype","string","NOR");
+            echo $_POST['jr_optype'];
+            echo Acc_Operation::select_operation_type($status)->input();
         ?>
     </div>
 </div>

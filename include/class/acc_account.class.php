@@ -183,7 +183,12 @@ class Acc_Account
         $this->data_sql->delete();
 
     }
-    
+    function find_by_value($p_pcm_val)
+    {
+        $id=$this->db->get_value("select id from tmp_pcmn where pcm_val=$1",[$p_pcm_val]);
+        $this->data_sql->setp("id",$id);
+        $this->data_sql->load();
+    }
     function save() {
         try {
             $this->verify();

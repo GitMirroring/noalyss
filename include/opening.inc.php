@@ -163,13 +163,13 @@ if ($sa=='step2')
     $periode=$cn->make_array("select distinct p_exercice,p_exercice from parm_periode order by p_exercice");
     $w=new ISelect();
     $w->table=0;
-    $w->label='Periode';
+    $w->label=_('Periode N-1');
     $w->readonly=false;
     $w->value=$periode;
     $w->name="p_periode";
     $w->selected=$g_user->get_exercice()-1;
     echo "<p>";
-    echo _('Période').' : '.$w->input();
+    echo _('Période N-1').' : '.$w->input();
     echo "</p>";
     echo HtmlInput::submit('ok', _('Continuer'));
     echo dossier::hidden();
@@ -237,7 +237,7 @@ if ($sa=='step4')
     $result["ac"]=$http->request("ac");
     $result['p_periode']=$p_periode;
     $result['gDossier']=Dossier::id();
-    
+    $result['jr_optype']="OPE";
     // default date = first day of Exercice
     $periode=new Periode($cn,$g_user->get_periode());
     list($periode_start,$periode_end)=$periode->get_limit($g_user->get_exercice());
@@ -260,7 +260,6 @@ if ($sa=='step4')
         $idx++;
     }
     $cn=Dossier::connect();
-
     $jrn=new Acc_Ledger($cn,$p_jrn);
     $_POST=$result;
     $_REQUEST=$result;

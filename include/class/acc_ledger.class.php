@@ -995,7 +995,7 @@ class Acc_Ledger extends jrn_def_sql
      * @brief show the result of the array to confirm
      * before inserting
      * @param$p_array array from the form
-     * \return string
+     * @return HTML string
      */
     function confirm($p_array, $p_readonly=false)
     {
@@ -1005,7 +1005,7 @@ class Acc_Ledger extends jrn_def_sql
             $msg=$this->verify($p_array);
         $this->id=$p_array['p_jrn'];
         if (empty($p_array))
-            return 'Aucun r&eacute;sultat';
+            return _("Aucun résultat");
         $anc=null;
         extract($p_array, EXTR_SKIP);
         $lPeriode=new Periode($this->db);
@@ -1126,11 +1126,7 @@ class Acc_Ledger extends jrn_def_sql
                                 ${'amount'.$i})."</td>";
                 $total_cred=bcadd($total_cred, ${"amount".$i});
             }
-            /* $ret.="<td>";
-              $ret.=(isset(${"ck$i"})) ? HtmlInput::hidden('ck' . $i, ${'ck' . $i}) : "";
-              $ret.="</td>"; */
             // CA
-
             if ($g_parameter->MY_ANALYTIC!='nu') // use of AA
             {
                 if (preg_match("/^[6,7]+/", $strPoste)==1)
@@ -1306,9 +1302,6 @@ class Acc_Ledger extends jrn_def_sql
 
         $ret.=HtmlInput::hidden('nb_item', $nb_row);
         $ret.=dossier::hidden();
-
-        $ret.=dossier::hidden();
-
         $ret.=HtmlInput::hidden('jrn_type', $this->get_type());
         $info=HtmlInput::infobulle(0);
         $info_poste=HtmlInput::infobulle(9);
@@ -1370,8 +1363,7 @@ class Acc_Ledger extends jrn_def_sql
 
             if ($poste->value!='')
             {
-                $Poste=new Acc_Account($this->db);
-                $Poste->set_parameter('value', $poste->value);
+                $Poste=new Acc_Account($this->db,$poste->value);
                 $label=$Poste->get_lib();
             }
 
@@ -1731,6 +1723,7 @@ class Acc_Ledger extends jrn_def_sql
             $acc_end->grpt=$seq;
             $acc_end->jrn=$this->id;
             $acc_end->mt=$mt;
+            $acc_end->jr_optype=$jr_optype;
             $jr_id=$acc_end->insert_jrn();
             $this->jr_id=$jr_id;
             if ($jr_id==false)

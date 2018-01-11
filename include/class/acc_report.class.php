@@ -112,7 +112,7 @@ class Acc_Report
         $r.= HtmlInput::hidden('line',$p_line);
         $r.= HtmlInput::hidden('fr_id',$this->id);
         $wForm=new IText();
-        $r.="Nom du rapport : ";
+        $r.=_("Nom du rapport")." : ";
         $r.=$wForm->input('form_nom',$this->name);
 
         $r.= '<TABLE id="rap1" width="100%">';

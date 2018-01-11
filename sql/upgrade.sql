@@ -90,3 +90,9 @@ alter table jrn_def add jrn_enable int;
 alter table jrn_def alter  jrn_enable set default 1;
 update jrn_def set jrn_enable=1;
 comment on column jrn_def.jrn_enable is 'Set to 1 if the ledger is enable ';
+
+
+alter table jrn add jr_optype varchar(3);
+alter table jrn alter jr_optype set default 'NOR';
+comment on column jrn.jr_optype is 'Type of operation , NOR = NORMAL , OPE opening , EXT extourne, CLO closing';
+update jrn set jr_optype='NOR';

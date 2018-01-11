@@ -425,8 +425,8 @@ case 'save':
 		}
 	    }
             
-            $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY') where jr_id=$3",
-                          array($_POST['lib'],$_POST['npj'],$jr_id,$_POST['p_date']));
+            $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY'),jr_optype=$5 where jr_id=$3",
+                          array($_POST['lib'],$_POST['npj'],$jr_id,$_POST['p_date'],$_POST['jr_optype']));
 	    $cn->exec_sql("update jrnx set j_date=to_date($1,'DD.MM.YYYY') where j_grpt in (select jr_grpt_id from jrn where jr_id=$2)",
 			  array($_POST['p_date'],$jr_id));
 	    $cn->exec_sql('update operation_analytique set oa_date=j_date from jrnx
@@ -496,6 +496,7 @@ case 'save':
             //////////////////////////////////////////////////////////////////
             $op->save_info($_POST['OTHER'],'OTHER');
             $op->save_info($_POST['BON_COMMANDE'],'BON_COMMANDE');
+            
             ///////////////////////////////////////////////////////////////////
             // Save related
             //////////////////////////////////////////////////////////////////

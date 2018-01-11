@@ -145,6 +145,18 @@ endif;
         <tr>
             <td> <?php echo _("Autre information")?> : </td><td><?php echo HtmlInput::infobulle(30)." ".$other->input();?></td>
         </tr>
+        <tr>
+            <td>
+                <?=_("Type opération")?>
+            </td>
+            <td>
+                <?php
+                    // Opération type
+                    
+                    echo Acc_Operation::select_operation_type($detail->det->jr_optype)->input();
+                ?>
+            </td>
+        </tr>
     </table>
 </div>
 <div id="linked_operation_div<?php echo $div;?>" style="display:<?php echo $a_tab['linked_operation_div']['display']?>" class="myfieldset">
