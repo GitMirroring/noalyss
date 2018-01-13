@@ -236,7 +236,8 @@ class ICard extends HtmlInput
             $this->dblclick=$e;
         }
         $input=sprintf('
-            <input class="smallbutton" onclick="$(\'%s\').value=\'\'" id="%s" value="X" type="button" style="vertical-align:top"><INPUT TYPE="Text"  class="input_text"  
+            <input class="smallbutton" onclick="$(\'%s\').value=\'\'" id="%s" value="X" type="button" style="vertical-align:top">
+            <INPUT TYPE="Text"  class="input_text"  
                  NAME="%s" ID="%s" VALUE="%s" SIZE="%d" %s %s  %s>',
                 $this->id,
                 uniqid("remove"),
