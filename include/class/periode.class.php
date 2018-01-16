@@ -615,12 +615,12 @@ class Periode
         if ($obj->getp("p_closed")=='f')
         {
             $javascript=sprintf('%s.close_periode(\'%d\')', $p_js, $obj->p_id);
-            echo HtmlInput::image_click(ICONON, $javascript, _('Fermé'));
+            echo Icon_Action::iconon(uniqid(), $javascript);
         }
         else
         {
             $javascript=sprintf("%s.open_periode('%d')", $p_js, $obj->p_id);
-            echo HtmlInput::image_click(ICONOFF, $javascript, _('Ouvert'));
+            echo Icon_Action::iconoff(uniqid(),$javascript );
         }
         echo "</td>";
         echo "</tr>";

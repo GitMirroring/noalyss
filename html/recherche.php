@@ -26,6 +26,7 @@ require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 
 html_page_start($_SESSION['g_theme']);
 

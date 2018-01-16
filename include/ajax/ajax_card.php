@@ -261,7 +261,7 @@ case 'st':
     }
     if ( strpos($where," in ()") != 0)
     {
-             $html=HtmlInput::anchor_close('select_card_div');
+             $html=Icon_Action::close('select_card_div');
              $html.=h2info(_('Choix de la catégorie'));
              $html.='<h3 class="notice">';
              $html.=_("Aucune catégorie de fiche ne correspond à".
@@ -384,7 +384,7 @@ case 'fs':
     $q=new IText('query');
     $q->value=(isset($query))?$query:'';
 	$r.='<span style="margin-left:50px">';
-    $r.=_('Fiche contenant').HtmlInput::infobulle(19);
+    $r.=_('Fiche contenant').Icon_Action::infobulle(19);
     $r.=$q->input();
     $r.=HtmlInput::submit('fs',_('Recherche'),"","smallbutton");
 	$r.='</span>';
@@ -411,7 +411,7 @@ case 'fs':
 
     if ( strpos($sql," in ()") != 0)
     {
-            $html=HtmlInput::anchor_close('search_card');
+            $html=Icon_Action::close('search_card');
              $html.='<div> '.h2info(_('Recherche de fiche')).'</div>';
              $html.='<h3 class="notice">';
              $html.=_("Aucune catégorie de fiche ne correspond à".

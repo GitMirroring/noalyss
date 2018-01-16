@@ -1074,13 +1074,15 @@ function show_calc()
     }
     var sid = 'calc1';
     var shtml = '';
-    shtml += '<div style="float:right;height:10px;display:block;margin-top:2px;margin-right:2px"><span id="pin_calc1"><a class="input_text" onclick="pin(\'calc1\')" id="close_div">&#8853;</a></span>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" id="close_div">X</a></div>';
-    shtml += '<div>   <h2 class="title">Calculatrice</h2></div>';
+    shtml +="<div class=\"bxbutton\">";
+    shtml += '<a class="icon" onclick="pin(\'calc1\')" id="pin_calc1">&#xf192;</a>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" id="close_div">X</a>';
+    shtml +="</div>";
+    shtml += '   <h2 class="title">Calculatrice</h2>';
     shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >Calculatrice simplifiée: écrivez simplement les opérations que vous voulez puis la touche retour. exemple : 1+2+3*(1/5) <input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface tout" class="button" onClick="Clean();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
     shtml += '</form><span class="highligth" style="display:block" id="sub_total">  Taper une formule (ex 20*5.1) puis enter  </span><span style="display:block"  id="listing"> </span>';
 
     var obj = {id: sid, html: shtml,
-        drag: false, style: ''
+        drag: false, style: 'z-index:98'
     };
     add_div(obj);
     this.document.getElementById('inp').focus();
@@ -2077,7 +2079,6 @@ function view_action(ag_id, dossier, modify)
                         var pos = fixed_position(0, 50) + ";width:90%;left:5%;";
                         add_div({
                             id: id,
-                            drag: 1,
                             cssclass: "inner_box",
                             style: pos
                         });
@@ -2874,16 +2875,17 @@ function create_anchor_up()
 function init_scroll()
 {
     var up=new Element('div',{"class":"inner_box",
-            "style":"padding:10px;left:auto;width:60px;height: auto;display:none;position:fixed;top:25px;right:20px;text-align:center",
+            "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;top:25px;right:50px;text-align:center",
             id:"go_up"
         });
-        up.innerHTML=' <a class="button" href="#up_top" ><img src="image/arrow-up.png"/></a><a href="javascript:show_calc()" class="button"><img src="image/compute.png"/></a>';
+        up.innerHTML=' <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>';
         document.body.appendChild(up);
          window.onscroll=function () {
          if ( document.viewport.getScrollOffsets().top> 0) {
              if ($('go_up').visible() == false) {
-                $('go_up').setOpacity(0.85); 
+                $('go_up').setOpacity(0.70); 
                 $('go_up').show();
+                $('go_up').style.zIndex=99;
             }
         } else {
             $('go_up').hide();
@@ -2986,14 +2988,14 @@ function pin (object_id) {
     if ( aDraggableElement[object_id]) {
         aDraggableElement[object_id].destroy();
         aDraggableElement[object_id]=undefined;
-        $('pin_'+object_id).firstChild.innerHTML="&#8853;";
+        $('pin_'+object_id).innerHTML="&#xf192;";
     } else {
         aDraggableElement[object_id]=new Draggable(object_id, {starteffect: function ()
                 {
                     new Effect.Highlight(object_id, {scroll: window, queue: 'end'});
                 }}
             ); 
-        $('pin_'+object_id).firstChild.innerHTML="&#8778;";
+        $('pin_'+object_id).innerHTML="&#xf047;";
     }
 }
 /**

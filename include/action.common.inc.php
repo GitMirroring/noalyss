@@ -95,7 +95,7 @@ if (isset($_POST['generate']))
 	{
 		$act->Update();
 	}
-        $doc_mod=$hi->post('doc_mod',"number");
+        $doc_mod=$http->post('doc_mod',"number");
 	$act->generate_document($doc_mod, $_POST);
 	$sub_action = 'detail';
 }

@@ -215,7 +215,7 @@ class Acc_Ledger_Search
         $f_accounting->set_attribute('ipopup', 'ipop_account');
         $f_accounting->set_attribute('label', 'ld');
         $f_accounting->set_attribute('account', $this->div.'accounting');
-        $info=HtmlInput::infobulle(13);
+        $info=Icon_Action::infobulle(13);
 
         $f_paid=new ICheckbox('unpaid', null, $this->div.'unpaid');
         $f_paid->selected=(isset($_REQUEST['unpaid']))?true:false;
@@ -556,7 +556,7 @@ class Acc_Ledger_Search
     {
         $r='';
         $r.='<div id="search_form" style="display:none">';
-        $r.=HtmlInput::anchor_hide('&#10761;',
+        $r.=Icon_Action::hide('&#10761;',
                         '$(\'search_form\').style.display=\'none\';');
         $r.=h2('Recherche', 'class="title"');
         $r.='<FORM METHOD="GET">';

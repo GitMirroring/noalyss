@@ -32,6 +32,7 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/constant.security.php';
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 $http=new HttpInput();
 
 mb_internal_encoding("UTF-8");

@@ -28,11 +28,11 @@
 ?>
 <?php if (! $inner ) : ?>
 <div id="search_action" class="op_detail_frame" style="position:absolute;display:none;margin-left:120px;width:70%;clear:both;z-index:2;height:auto;border:1px #000080 solid">
-	<?php echo HtmlInput::anchor_hide('&#10761;', "$('search_action').style.display='none';");?>
+	<?php echo Icon_Action::hide('&#10761;', "$('search_action').style.display='none';");?>
 <?php endif; ?>
 <?php if ( $inner ) : ?>
 <div id="search_action" class="">
-	<?php echo HtmlInput::anchor_hide('&#10761;', "removeDiv('search_action_div');");?>
+	<?php echo Icon_Action::hide('&#10761;', "removeDiv('search_action_div');");?>
 
 	<?php endif; ?>
 	<h2 class="title">

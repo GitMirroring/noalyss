@@ -135,7 +135,7 @@ $a_user=$repo->get_user_folder($sql);
 if ( !empty ($a_user) )
 {
 	echo '<span style="display:block">';
-	echo _('Cherche').HtmlInput::infobulle(22);
+	echo _('Cherche').Icon_Action::infobulle(22);
 	echo HtmlInput::filter_table("user", "0,1,2,5","1");
 	echo '</span>';
     echo '<table id="user" class="result">';

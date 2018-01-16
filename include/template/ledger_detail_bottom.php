@@ -140,10 +140,10 @@ endif;
           <?php endif; ?>
     <table>
         <tr>
-            <td><?php echo _(" Bon de commande")?>   :</td><td> <?php echo HtmlInput::infobulle(31)." ".$cmd->input();  ?></td>
+            <td><?php echo _(" Bon de commande")?>   :</td><td> <?php echo Icon_Action::infobulle(31)." ".$cmd->input();  ?></td>
         </tr>
         <tr>
-            <td> <?php echo _("Autre information")?> : </td><td><?php echo HtmlInput::infobulle(30)." ".$other->input();?></td>
+            <td> <?php echo _("Autre information")?> : </td><td><?php echo Icon_Action::infobulle(30)." ".$other->input();?></td>
         </tr>
         <tr>
             <td>

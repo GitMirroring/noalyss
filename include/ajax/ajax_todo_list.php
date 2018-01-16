@@ -189,7 +189,7 @@ if ($ac=='shared_note')
         header('Content-type: text/xml; charset=UTF-8');
         $dom=new DOMDocument('1.0', 'UTF-8');
         $tl_id=$dom->createElement('content', _("Cette note n'est pas à vous").
-                 HtmlInput::anchor_close('shared_'.$id));
+                 Icon_Action::close('shared_'.$id));
         $dom->appendChild($tl_id);
         echo $dom->saveXML();
         return;

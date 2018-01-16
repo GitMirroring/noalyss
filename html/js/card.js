@@ -166,7 +166,8 @@ function action_add_concerned_card(obj)
             'query' : inp,
             'ctl' : 'unused',
             'ag_id' : ag_id,
-            'op':'card'
+            'op':'card',
+            'accvis':0
         });
 
         waiting_box();

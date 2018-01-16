@@ -207,7 +207,7 @@ case 'de':
     catch (Exception $e)
     {
         record_log($e->getTraceAsString());
-        echo HtmlInput::anchor_close($div);
+        echo Icon_Action::close($div);
         echo '<h2 class="error">'._("Désolé il y a une erreur").'</h2>';
     }
     $html=ob_get_contents();

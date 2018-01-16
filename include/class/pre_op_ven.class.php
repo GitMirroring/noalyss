@@ -229,7 +229,7 @@ class Pre_op_ven extends Pre_operation_detail
         }
 
         $W1=new ICard();
-        $W1->label="Client ".HtmlInput::infobulle(0) ;
+        $W1->label="Client ".Icon_Action::infobulle(0) ;
         $W1->name="e_client";
         $W1->tabindex=3;
         $W1->value=$e_client;

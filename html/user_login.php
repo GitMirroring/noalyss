@@ -169,7 +169,7 @@ echo '</div>';
 <div class="foldercontent">
 	<span style="margin:2%" class="visible_gt800">
  <?php
-                        echo _('Cherche').HtmlInput::infobulle(23);
+                        echo _('Cherche').Icon_Action::infobulle(23);
 ?>
 <?php
 	echo HtmlInput::filter_table("folder", '0,1,2',1);

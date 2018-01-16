@@ -47,7 +47,7 @@ function todo_list_show(p_id)
                     {
                         try
                         {
-                            var todo_div=create_div({id:'todo_list_div'+p_id,cssclass:'add_todo_list',drag:1});
+                            var todo_div=create_div({id:'todo_list_div'+p_id,cssclass:'add_todo_list'});
                            
 
 

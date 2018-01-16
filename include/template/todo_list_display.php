@@ -35,7 +35,7 @@ $is_public->value='Y';
 $is_public->set_check($this->is_public);
 $dossier=Dossier::id();
 $close_share=" if ( \$('shared_{$this->tl_id}') ){ \$('shared_{$this->tl_id}').remove();}";
-echo HtmlInput::title_box("Note","todo_list_div".$this->tl_id,'close',$close_share);
+echo HtmlInput::title_box("Note","todo_list_div".$this->tl_id,'close',$close_share,'y');
 ?>
 <form id="todo_form_<?php echo $this->tl_id?>" onsubmit="todo_list_save(<?php echo $this->tl_id?>);return false">
     <table>

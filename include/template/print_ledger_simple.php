@@ -47,7 +47,7 @@ foreach ($Row as $line) {
      * Get date of reconcile operation
      */
     $ret_reconcile=$cn->execute('reconcile_date',array($line['jr_id']));
-   
+   if ($line["jr_pj_number"]=="A17.1392") {  var_dump($line);   echo "1-".$line['HTVA'];}
     $class = ($i % 2 == 0) ? ' class="even" ' : ' class="odd" ';
     echo "<tr $class>";
     echo "<TD>" . h($line['jr_pj_number']) . "</TD>";
@@ -55,12 +55,14 @@ foreach ($Row as $line) {
     echo "<TD>" . smaller_date($line['date_paid']) . "</TD>";
     echo "<TD>" . HtmlInput::detail_op($line['jr_id'], $line['jr_internal']) . "</TD>";
     $tiers = $Jrn->get_tiers($line['jrn_def_type'], $line['jr_id']);
+   if ($line["jr_pj_number"]=="A17.1392") {     echo "2-".$line['HTVA'];}
     echo td($tiers);
     echo "<TD>" . h($line['comment']) . "</TD>";
     $dep_priv=($line['dep_priv']==0)?"":nbm($line['dep_priv']);
     $tot['dep_priv']=bcadd($tot['dep_priv'],  floatval($line['dep_priv']));
     $dna=($line['dna']==0)?"":nbm($line['dna']);
     $tot['dna']=bcadd($tot['dna'],floatval($line['dna']));
+   if ($line["jr_pj_number"]=="A17.1392") {     echo "3-".$line['HTVA'];}
     echo "<TD class=\"num\">" . nbm($line['HTVA']) . "</TD>";
     $tot['htva']=bcadd($tot['htva'],  floatval($line['HTVA']));
     

@@ -53,7 +53,7 @@
 
   //
   $W1=new ICard();
-  $W1->label="Client ".HtmlInput::infobulle(0) ;
+  $W1->label="Client ".Icon_Action::infobulle(0) ;
   $W1->name="e_client";
   $W1->tabindex=3;
   $W1->value=$e_client;
@@ -133,7 +133,7 @@ class ICard extends HtmlInput
         $this->indicator=null;
         $this->choice_create=1;
         $this->autocomplete=1;
-        $this->style=' style="vertical-align:50%"';
+        $this->style='  ';
         $this->accvis=1; //!< account_visible =1 otherwise 0
     }
 
@@ -174,7 +174,8 @@ class ICard extends HtmlInput
         $this->fct=$p_name;
     }
 
-    /**\brief return the html string for creating the ipopup, this ipopup
+    /**
+     * \brief return the html string for creating the ipopup, this ipopup
      * can be used for adding, modifying or display a card
      * @note ipopup is obsolete, the popin is created by javascript
      * \param $p_name name of the ipopup, must be set after with set_attribute
@@ -235,12 +236,10 @@ class ICard extends HtmlInput
             $e=sprintf(' ondblclick="%s" ', $this->dblclick);
             $this->dblclick=$e;
         }
-        $input=sprintf('
-            <input class="smallbutton" onclick="$(\'%s\').value=\'\'" id="%s" value="X" type="button" style="vertical-align:top">
+        $input=Icon_Action::clean_zone(uniqid("remove"),"{$this->id}=''");
+        $input.=sprintf('
             <INPUT TYPE="Text"  class="input_text"  
                  NAME="%s" ID="%s" VALUE="%s" SIZE="%d" %s %s  %s>',
-                $this->id,
-                uniqid("remove"),
                 $this->name, $this->id, $this->value, $this->size,
                 $this->dblclick, $this->javascript, $this->style
         );
@@ -333,10 +332,9 @@ class ICard extends HtmlInput
             $a.="this.inp='".$this->name."';";
         $a.="this.popup='ipop_card';";
         $javascript=$a.' search_card(this);return false;';
-
-        $button=HtmlInput::button_image($javascript, $this->name."_bt",
-                        'alt="'._('Recherche').'" class="image_search"',
-                        "image/magnifier13.png");
+        
+        
+        $button=Icon_Action::icon_magnifier(uniqid(),$javascript);
         return $button;
     }
 

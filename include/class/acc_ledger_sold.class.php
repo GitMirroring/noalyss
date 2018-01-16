@@ -787,7 +787,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                   same */
                 if (bcsub($tva_item, $tva_computed) != 0 && ! ($tva_item == 0 && $both_side == 1)) {
                     $r.='<td style="background-color:red" class="num">';
-                    $r.=HtmlInput::infobulle(28);
+                    $r.=Icon_Action::infobulle(28);
                     $r.='<a href="#" class="error" style="display:inline" title="' . _("Attention Différence entre TVA calculée et donnée") . '">'
                             . nbm($tva_item) . '<a>';
                 } else {
@@ -1064,7 +1064,7 @@ EOF;
         $Echeance->setReadOnly(false);
 
         $Echeance->tabindex = 2;
-        $label = HtmlInput::infobulle(4);
+        $label = Icon_Action::infobulle(4);
         $f_echeance = $Echeance->input('e_ech', $e_ech, _('Echéance') . $label);
         $Date = new IDate();
         $Date->setReadOnly(false);
@@ -1090,7 +1090,7 @@ EOF;
                     throw new Exception( _("Aucune période ouverte") );
                 }
             }
-            $label = HtmlInput::infobulle(3);
+            $label = Icon_Action::infobulle(3);
             $f_periode = '<td>' . _("Période comptable") . "</td> <td> $label " . $l_form_per . '</td>';
         }
         /* if we suggest the next pj, then we need a javascript */
@@ -1110,7 +1110,7 @@ EOF;
             throw new Exception(_('Pas de journal disponible'));
         $wLedger->table = 1;
         $wLedger->javascript = "onChange='update_predef(\"ven\",\"f\",\"".$_REQUEST['ac']."\");$add_js'";
-        $wLedger->label = " Journal " . HtmlInput::infobulle(2);
+        $wLedger->label = " Journal " . Icon_Action::infobulle(2);
 
         $f_jrn = $wLedger->input();
 
@@ -1120,7 +1120,7 @@ EOF;
         $Commentaire->size = 60;
         $Commentaire->tabindex = 3;
 
-        $label = HtmlInput::infobulle(1);
+        $label = Icon_Action::infobulle(1);
 
         $f_desc = $Commentaire->input("e_comm", $e_comm) ;
         // PJ
@@ -1159,7 +1159,7 @@ EOF;
         }
 
         $W1 = new ICard();
-        $W1->label = "Client " . HtmlInput::infobulle(0);
+        $W1->label = "Client " . Icon_Action::infobulle(0);
         $W1->name = "e_client";
         $W1->tabindex = 3;
         $W1->value = $e_client;
@@ -1178,7 +1178,6 @@ EOF;
         $W1->javascript = sprintf(' onchange="fill_data_onchange(\'%s\');" ', $W1->name);
         $f_client_qcode = $W1->input();
         $client_label = new ISpan();
-        $client_label->style="vertical-align:top";
         $client_label->table = 0;
         $f_client = $client_label->input("e_client_label", $e_client_label);
         $f_client_bt = $W1->search();

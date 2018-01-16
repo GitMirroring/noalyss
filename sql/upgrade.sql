@@ -4,8 +4,9 @@ set search_path=public,comptaproc;
 alter table action_gestion drop ag_ref_ag_id;
 /* --- repository 
 -- add style
-insert into theme (the_name,the_filestyle) values ('Classic 692','style-r692.css');
-
+insert into theme (the_name,the_filestyle) values ('Classic7','style-classic7.css');
+delete from theme where the_filestyle in ('style-mandarine.css','style-mobile.css');
+update user_global_pref set parameter_value='style-
 -- add constraint
 alter table jnt_use_dos add CONSTRAINT use_id_dos_id_uniq UNIQUE (use_id,dos_id);
 */

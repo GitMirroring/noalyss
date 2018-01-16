@@ -29,7 +29,7 @@
 </tr>
 <tr>
 <td style="text-align:right;width:30em">
-<?php echo _('Et paiement compris entre les date ').HtmlInput::infobulle(36); ?>
+<?php echo _('Et paiement compris entre les date ').Icon_Action::infobulle(36); ?>
 </td>
 <td>
 <?php echo $f_date_paid_start->input();  ?> <?php echo _('et')?> <?php echo $f_date_paid_end->input();  ?>

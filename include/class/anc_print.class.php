@@ -140,7 +140,7 @@ class Anc_Print
         <td>
             <?php 
                 echo _('Depuis') ;
-                echo HtmlInput::infobulle(37);
+                echo Icon_Action::infobulle(37);
             ?>
         </td>
         <td>
@@ -153,7 +153,7 @@ class Anc_Print
         <td>
             <?php 
                 echo _('Jusque') ;
-                echo HtmlInput::infobulle(37);
+                echo Icon_Action::infobulle(37);
             ?>
         </td>
         <td>
@@ -166,7 +166,7 @@ class Anc_Print
 </table>
 <span style="padding:5px;margin:5px;display:block;">
     <?php echo _( "Plan Analytique :").$plan_id->input(); 
-        echo HtmlInput::infobulle(42);
+        echo Icon_Action::infobulle(42);
     ?>
 </span>
 

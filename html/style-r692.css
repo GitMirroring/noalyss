@@ -16,7 +16,16 @@
 .fontsforweb_fontid_38327 {
 	font-family: 'OpenSansRegular' !important;
 }
-
+@font-face {
+      font-family: 'fontello';
+      src: url('image/fontello/fontello.eot?18582275');
+      src: url('image/fontello/fontello.eot?18582275#iefix') format('embedded-opentype'),
+           url('image/fontello/fontello.woff?18582275') format('woff'),
+           url('image/fontello/fontello.ttf?18582275') format('truetype'),
+           url('image/fontello/fontello.svg?18582275#fontello') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
 BODY {
     font-family: Arial, Helvetica, "Liberation Sans"  , FreeSans, sans-serif;
     font-family: 'OpenSansRegular';
@@ -1079,39 +1088,7 @@ a.line:hover,div_content a.line
     background-color:#336699;
     cursor:pointer;
 }
-#close_div
-{
-    color:white;
-    text-decoration:none;
-    margin-left: 6px;
-    margin-right:6px;
-    /*! padding-top:10px; */
-    font-size:14px;
-    font-size:1rem;
-    cursor: pointer;
-    border:0px;
-    height: 18px;
-}
-#close_div:hover
-{
-    background-color: white;
-    color: blue;
-}
-#popmeout
-{
-    background-color:#FFFFFF;
-    color:#0000FF;
-    text-decoration:none;
-    border:1px solid #0000FF;
-    margin-left: 2px;
-    margin-right:18px;
-    font-size:12px;
-    font-size: 0.75rem;
-}
-#popmeout:hover
-{
-    background-color:  #F93;
-}
+
 table.table_large tr.odd ,table.table_large tr.even {
 
     height:32px;
@@ -2091,25 +2068,21 @@ td.selectedmenu {
 #go_up {
     background-color: transparent;
     border:0px;
-    font-size:300%;
     box-shadow: none;
     color:blue;
-    
     margin-right: 20px;
 }
 #go_up a ,#go_up a:visited{
     background-image: none;
     text-decoration: none;
     color:blue;
-    font-size:2.7em;
-    font-size: 2.7rem;
-    /*! padding-right: 6px; */
+    font-size:1.7em;
+    font-size: 1.7rem;
     padding: 0px;
     margin: 0px;
     background-color: whitesmoke;
 }
 #go_up a:hover {
-    background-color: gold;
     font-size:2.8em;
     font-size:2.8rem;
 }
@@ -2219,4 +2192,36 @@ div.menu2 td.mtitle, div.menu2 td.mtitle a{
 }
 div.menu2 td.mtitle a{
     border-width:0px;
+}
+/**
+ * For the icon (font-famillo fontello)
+ */
+.icon {
+    font-family: "fontello";
+    font-weight:normal;
+    cursor: pointer;
+}
+.icon:hover {
+    font-family: "fontello";
+}
+/**
+ * Icon in the title of Box
+ */
+div.bxbutton .icon
+{
+    color:white;
+    text-decoration:none;
+    margin-left: 6px;
+    margin-right:6px;
+    /*! padding-top:10px; */
+    font-size:14px;
+    font-size:1rem;
+    cursor: pointer;
+    border:0px;
+    height: 18px;
+}
+div.bxbutton .icon:hover
+{
+    background-color: white;
+    color: blue;
 }

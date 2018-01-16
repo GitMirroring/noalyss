@@ -36,8 +36,8 @@
    <fieldset><legend><?php echo _('Opérations')?></legend>
 <table id="fin_item" width="100%" border="0">
 <tr>
-<th id="thdate" style="display:none;text-align: left"><?php echo _('Date')?><?php echo HtmlInput::infobulle(16)?></TH>
-<th style="text-align: left;width: auto">code<?HtmlInput::infobulle(0)?></TH>
+<th id="thdate" style="display:none;text-align: left"><?php echo _('Date')?><?php echo Icon_Action::infobulle(16)?></TH>
+<th style="text-align: left;width: auto">code<?Icon_Action::infobulle(0)?></TH>
    <th style="text-align: left"><?php echo _('Fiche')?></TH>
    <th style="text-align: left" class="visible_gt800 visible_gt1155"><?php echo _('Commentaire')?></TH>
    <th style="text-align: left"><?php echo _('Montant')?></TH>

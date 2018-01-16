@@ -46,21 +46,19 @@ class IConcerned extends HtmlInput
         $this->value=($p_value==null)?$this->value:$p_value;
         if ( $this->readOnly==true) return $this->display();
 
-	    $this->id=($this->id=="")?$this->name:$this->id;
-
-
-        $r=sprintf("
-                    <image onclick=\"search_reconcile(".dossier::id().",'%s','%s','%s','%s','%s')\" class=\"image_search\" src=\"image/magnifier13.png\" />
-                   
+        $this->id=($this->id=="")?$this->name:$this->id;
+        $javascript=sprintf("search_reconcile(".dossier::id().",'%s','%s','%s','%s','%s')",
+                    $this->name,
+                    $this->amount_id,
+                    $this->paid,
+                    $this->div,
+                    $this->tiers  );
+        $r=Icon_Action::icon_magnifier(uniqid(), $javascript);
+        $r.=sprintf("
                    <INPUT TYPE=\"text\"  style=\"color:black;background:lightyellow;border:solid 1px grey;\"  NAME=\"%s\" ID=\"%s\" VALUE=\"%s\" SIZE=\"8\" readonly>
 				   <INPUT class=\"smallbutton\"  TYPE=\"button\" onClick=\"$('%s').value=''\" value=\"X\">
 
                    ",
-                   $this->name,
-                   $this->amount_id,
-                   $this->paid,
-                   $this->div,
-                   $this->tiers,
                    $this->name,
                    $this->id,
                    $this->value,

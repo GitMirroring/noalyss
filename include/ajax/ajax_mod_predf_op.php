@@ -28,7 +28,7 @@ ob_start();
 require_once NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 $op=new Pre_Operation($cn,$_GET['id']);
 $array=$op->load();
-echo HtmlInput::anchor_close('mod_predf_op');
+echo Icon_Action::close('mod_predf_op');
 echo h2(_('Modification du nom'),' class="title"');
 
 echo '

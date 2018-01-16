@@ -831,7 +831,7 @@ function ajax_disconnected($div)
 	$script.='a.style.top=posY-20+offsetY;a.style.left=posX+offsetX;';
 	$script = create_script($script);
 	$html = $script;
-	$html.=HtmlInput::anchor_close($div);
+	$html.=Icon_Action::close($div);
 	$html.='<div>';
 	$html.=h2(_('Données non disponibles'), 'class="title" style="width:auto"');
 	$html.=h2(_('Veuillez vous reconnecter soit dans une autre fenêtre soit '
@@ -1176,7 +1176,7 @@ function display_dashboard_operation($p_array,$p_title,$p_div)
 	?>
 <div id="<?php echo $p_div;?>" class="inner_box" style="display:none;position:fixed;top:250px;left:12%;width: 75%;min-height:50%;overflow:auto;">
 	<?php
-	echo HtmlInput::title_box($p_title, $p_div, "hide");
+	echo HtmlInput::title_box($p_title, $p_div, "hide",'','y');
 	?>
 	<?php if (count($p_array)>0) :?>
 	<table class="result">

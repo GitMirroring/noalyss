@@ -361,9 +361,9 @@ if ( $action == "view" )
           str_id = new String( a_select[i].id);
            if ( str_id.search(/action/) > -1 ) {
              if ( p_value == 1 ) {
-                 a_select[i].innerHTML='<img src="image/icon-on.png"/>';
+                 a_select[i].innerHTML='&#xf204';
              } else {
-                 a_select[i].innerHTML='<img src="image/icon-off.png"/>';
+                 a_select[i].innerHTML='&#xf205';
              } 
            }
          } // loop

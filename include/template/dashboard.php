@@ -3,11 +3,11 @@
 //see licence.txt
 ?><!-- left div -->
 <div id="calendar_box_div" class="box">
-<?php echo HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"onclick=\"calendar_zoom($obj)\"",'n');?>
+<?php echo HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"calendar_zoom($obj)",'n');?>
 <?php echo $cal->display('short',0); ?>
 </div>
 
-<div id="todo_listg_div" class="box"> <?php echo HtmlInput::title_box(_('Pense-Bête'),"todo_listg_div",'zoom'," onclick=\"zoom_todo()\"",'n')?>
+<div id="todo_listg_div" class="box"> <?php echo HtmlInput::title_box(_('Pense-Bête'),"todo_listg_div",'zoom',"zoom_todo()",'n')?>
 
 <?php
 /*
@@ -192,7 +192,7 @@ endif;
     
 <div id="action_late_div"  class="inner_box" style="position:fixed;display:none;margin-left:12%;top:25%;width:75%;min-height:50%;overflow: auto;">
 	<?php
-		echo HtmlInput::title_box(_("Action en retard"), "action_late_div","hide")
+		echo HtmlInput::title_box(_("Action en retard"), "action_late_div","hide","","y")
 	?>
 	<ol>
 	<?php if (count($late_operation)> 0) :
@@ -228,7 +228,7 @@ endif;
 
 	<div id="action_now_div" class="inner_box" style="display:none;margin-left:25%;width: 50%;top:25%;min-height:50%;overflow: auto;">
 	<?php
-		echo HtmlInput::title_box(_("Action pour aujourd'hui"), "action_now_div","hide",'','n')
+		echo HtmlInput::title_box(_("Action pour aujourd'hui"), "action_now_div","hide",'','y')
 	?>
 	<ol>
 	<?php
@@ -267,7 +267,7 @@ endif;
 
 
 <div id="last_operation_box_div" class="box">
-<?php echo HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','onclick="popup_recherche('.dossier::id().')"','n')?>
+<?php echo HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','popup_recherche('.dossier::id().')','n')?>
 
 <table style="width: 100%">
 <?php
@@ -332,9 +332,7 @@ for($i=0;$i<count($last_ledger);$i++):
 </div>
 
 <div id="add_todo_list" class="box" style="display:none">
-	<script charset="utf-8" type="text/javascript" language="javascript">
-		new Draggable($('add_todo_list'),{});
-	</script>
+	
 <form method="post">
 <?php
 $wDate=new IDate('p_date_todo');
@@ -343,7 +341,7 @@ $wTitle=new IText('p_title');
 $wDesc=new ITextArea('p_desc');
 $wDesc->heigh=5;
 $wDesc->width=40;
-echo HtmlInput::title_box("Note","add_todo_list","hide",'','n');
+echo HtmlInput::title_box(_("Note"),"add_todo_list","hide",'',"",'y');
 echo _("Date")." ".$wDate->input().'<br>';
 echo _("Titre")." ".$wTitle->input().'<br>';
 echo _("Description")."<br>".$wDesc->input().'<br>';

@@ -20,7 +20,7 @@ form {
   display:none;
  }
 
-.button, .smallbutton{
+.button, .smallbutton,.icon{
 	display:none;
 	}
 div.recherche_form {

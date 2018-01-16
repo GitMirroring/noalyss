@@ -223,7 +223,7 @@ $select_all->javascript="recompute('rec1')";
 echo $select_all->input();
 echo '</p>';
 echo '<p>';
-echo _('Cherche').HtmlInput::infobulle(25);
+echo _('Cherche').Icon_Action::infobulle(25);
 echo HtmlInput::filter_table("t_rec_bk", "0,1,2,3","1");
 echo '</p>';
 echo HtmlInput::submit('save', 'Mettre à jour le n° de relevé bancaire');
@@ -233,7 +233,7 @@ echo '<span style="display:block">';
 	echo '</span>';
 echo '<table id="t_rec_bk" class="sortable" style="width:90%;margin-left:5%">';
 
-$r ='<th class=" sorttable_sorted">'.'Date '.HtmlInput::infobulle(17).'<span id="sorttable_sortfwdind"><img src="image/up.gif"></span>'.'</th>';
+$r ='<th class=" sorttable_sorted">'.'Date '.Icon_Action::infobulle(17).'<span id="sorttable_sortfwdind"><img src="image/up.gif"></span>'.'</th>';
 $r.=th('Libellé');
 $r.=th('N° interne');
 $r.=th('Montant', ' style="text-align:right"');

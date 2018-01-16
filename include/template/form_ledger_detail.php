@@ -68,17 +68,17 @@
 <h2><?php echo $f_legend_detail?></h2>
 <table id="sold_item" >
 <tr>
-<th style="width:auto"colspan="2">Code <?php echo HtmlInput::infobulle(0)?></th>
+<th style="width:auto"colspan="2">Code <?php echo Icon_Action::infobulle(0)?></th>
       <th class="visible_gt800 visible_gt1155"><?php echo _('Dénomination')?></th>
 <?php if ($flag_tva =='Y') : ?>
-      <th><?php echo _('prix/unité htva')?><?php echo HtmlInput::infobulle(6)?></th>
+      <th><?php echo _('prix/unité htva')?><?php echo Icon_Action::infobulle(6)?></th>
       <th><?php echo _('quantité')?></th>
       <th class="visible_gt800" ><?php echo _('Total HTVA')?></th>
 	  <th><?php echo _('tva')?></th>
       <th class="visible_gt800"><?php echo _('tot.tva')?></th>
       <th><?php echo _('tvac')?></th>
 <?php else: ?>
-	  <th><?php echo _('prix/unité ')?><?php echo HtmlInput::infobulle(6)?></th>
+	  <th><?php echo _('prix/unité ')?><?php echo Icon_Action::infobulle(6)?></th>
       <th><?php echo _('quantité')?></th>
       <th><?php echo _('Total ')?></th>
 <?php endif;?>

@@ -1202,7 +1202,7 @@ class Acc_Ledger extends jrn_def_sql
         if ($wLedger==null)
             throw new Exception(_('Pas de journal disponible'));
         $wLedger->javascript="onChange='update_name();update_predef(\"ods\",\"t\",\"".$_REQUEST['ac']."\");$add_js'";
-        $label=" Journal ".HtmlInput::infobulle(2);
+        $label=" Journal ".Icon_Action::infobulle(2);
 
         $ret.="<table>";
         $ret.=tr(td($label).td($wLedger->input()));
@@ -1263,7 +1263,7 @@ class Acc_Ledger extends jrn_def_sql
                     exit();
                 }
             }
-            $label=HtmlInput::infobulle(3);
+            $label=Icon_Action::infobulle(3);
             $f_periode=td(_("Période comptable")." $label ").td($l_form_per);
             $ret.=tr($f_periode);
         }
@@ -1303,8 +1303,8 @@ class Acc_Ledger extends jrn_def_sql
         $ret.=HtmlInput::hidden('nb_item', $nb_row);
         $ret.=dossier::hidden();
         $ret.=HtmlInput::hidden('jrn_type', $this->get_type());
-        $info=HtmlInput::infobulle(0);
-        $info_poste=HtmlInput::infobulle(9);
+        $info=Icon_Action::infobulle(0);
+        $info_poste=Icon_Action::infobulle(9);
         $ret.='<table id="quick_item" style="position:float;width:100%">';
         $ret.='<tr>'.
                 '<th style="text-align:left">Quickcode'.$info.'</th>'.
@@ -3234,9 +3234,7 @@ class Acc_Ledger extends jrn_def_sql
     function add_card($p_filter, $p_id_update)
     {
         $js_script="this.filter='{$p_filter}';this.elementId='{$p_id_update}';this.jrn=\$('p_jrn').value; select_card_type(this);";
-        $str_add_button=HtmlInput::button_image($js_script, uniqid(),
-                        'class="smallbutton image_search"',
-                        "image/bouton-plus.png");
+        $str_add_button=Icon_Action::icon_add(uniqid(), $js_script);
         return $str_add_button;
     }
     /**

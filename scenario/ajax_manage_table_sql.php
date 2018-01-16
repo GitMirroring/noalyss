@@ -59,7 +59,7 @@ if ($action=="input")
     $manage_table->set_col_label('parent_accounting', "Dépend");
     $manage_table->set_col_label('pcm_lib', "Libellé");
     $manage_table->set_col_label('pcm_type',
-            "Type de menu".HtmlInput::infobulle(33));
+            "Type de menu".Icon_Action::infobulle(33));
     header('Content-type: text/xml; charset=UTF-8');
     echo $manage_table->ajax_input()->saveXML();
     return;

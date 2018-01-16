@@ -69,9 +69,11 @@ class IDate extends HtmlInput
                  %s
                  pattern="[0-9]{1,2}.[0-9]{1,2}.[0-9]{4}"
                 />
-                <img src="image/x-office-calendar.png" id="%s_trigger"
-                 style="cursor: pointer" 
-                onmouseover="this.style.background=\'red\';" onmouseout="this.style.background=\'\'"/>
+                <span  class="smallbutton icon"
+                id="%s_trigger"
+                />
+                &#xe811;
+                </span>
                 ',$this->name,$this->id,$this->value,$this->placeholder,$this->title,$t,$this->id
                 );
         

@@ -89,7 +89,7 @@ $search_card_js=sprintf('onclick="boxsearch_card(\'%d\')"',dossier::id());
 ?>
 <div id="box_search_card">
 
-		<?php echo _('Recherche de fiche')?> <?php echo HtmlInput::infobulle(18)?> :<?php echo $search_card->input()?>
+		<?php echo _('Recherche de fiche')?> <?php echo Icon_Action::infobulle(18)?> :<?php echo $search_card->input()?>
 		<?php echo HtmlInput::button_anchor(_("Chercher"),"javascript:void(0)","",$search_card_js,'smallbutton')?>
 </div>
 <?php
@@ -396,7 +396,7 @@ if ($_GET['histo'] == 4 || $_GET['histo'] == 5)
 		echo tr(
 				th('Quick Code') .
 				th('Libellé') .
-				'<th>Poste'.HtmlInput::infobulle(27).'</th>'.
+				'<th>Poste'.Icon_Action::infobulle(27).'</th>'.
 				th('Débit', 'style="text-align:right"') .
 				th('Crédit', 'style="text-align:right"') .
 				th('Solde', 'style="text-align:right"') .
@@ -509,7 +509,7 @@ for ($e = 0; $e < count($afiche); $e++)
 
 		echo '<h2>' . $detail_card ;
                 echo "poste "
-                        . ":".HtmlInput::history_account($row->strAttribut(ATTR_DEF_ACCOUNT),$row->strAttribut(ATTR_DEF_ACCOUNT),'display:inline').HtmlInput::infobulle(27).'</h2>';
+                        . ":".HtmlInput::history_account($row->strAttribut(ATTR_DEF_ACCOUNT),$row->strAttribut(ATTR_DEF_ACCOUNT),'display:inline').Icon_Action::infobulle(27).'</h2>';
 
 		echo '<table class="result">';
 		echo '<tr>';

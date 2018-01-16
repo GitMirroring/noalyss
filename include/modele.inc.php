@@ -270,7 +270,7 @@ if ($sa == 'list')
 	{
 
 		echo '<span style="display:block;margin-top:10">';
-		echo _('Filtre').HtmlInput::infobulle(23);
+		echo _('Filtre').Icon_Action::infobulle(23);
 		echo HtmlInput::filter_table("t_modele", "0,1,2","1");
 		echo '</span>';
 		echo '<table id="t_modele" class="table_large" style="border-spacing:10;border-collapse:separate" >';
