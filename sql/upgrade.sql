@@ -6,7 +6,7 @@ alter table action_gestion drop ag_ref_ag_id;
 -- add style
 insert into theme (the_name,the_filestyle) values ('Classic7','style-classic7.css');
 delete from theme where the_filestyle in ('style-mandarine.css','style-mobile.css');
-update user_global_pref set parameter_value='style-
+update user_global_pref set parameter_value='style-classic7.css' where parameter_value in  ('style-mandarine.css','style-mobile.css');
 -- add constraint
 alter table jnt_use_dos add CONSTRAINT use_id_dos_id_uniq UNIQUE (use_id,dos_id);
 */
@@ -97,3 +97,6 @@ alter table jrn add jr_optype varchar(3);
 alter table jrn alter jr_optype set default 'NOR';
 comment on column jrn.jr_optype is 'Type of operation , NOR = NORMAL , OPE opening , EXT extourne, CLO closing';
 update jrn set jr_optype='NOR';
+
+-- update quant_sold set qs_vat_sided=round(qs_vat_sided,2);
+-- update quant_purchase set qp_vat_sided=round(qp_vat_sided,2);
