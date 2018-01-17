@@ -59,7 +59,10 @@ class Print_Ledger_Simple extends PDF
         }
 
         $this->rap_htva=$this->previous['price'];
-        $this->rap_tvac=$this->previous['price']+$this->previous['vat'];
+        $this->rap_tvac=bcadd($this->previous['price'],$this->previous['vat']);
+        $this->rap_tvac=bcadd($this->rap_tvac,$this->previous['tva_nd']);
+        $this->rap_tvac=bcsub($this->rap_tvac,$this->previous['tva_np']);
+        $this->rap_tvac=bcsub($this->rap_tvac,$this->previous['reversed']);
         $this->rap_priv=$this->previous['priv'];
         $this->rap_nd=$this->previous['tva_nd'];
         $this->rap_tva_np=$this->previous['tva_np'];
@@ -237,16 +240,7 @@ class Print_Ledger_Simple extends PDF
 
             /* get other amount (without vat, total vat included, private, ND */
             $other=$this->ledger->get_other_amount($a_jrn[$i]['jr_grpt_id']);
-            $this->tp_htva=bcadd($this->tp_htva,$other['price']);
-            $this->tp_tvac=bcadd($this->tp_tvac,$other['price']+$other['vat']);
-            $this->tp_tva_np=bcadd($this->tp_tva_np,$other['tva_np']);
-            $this->tp_priv=bcadd($this->tp_priv,$other['priv']);
-            $this->tp_nd=bcadd($this->tp_nd,$other['tva_nd']);
-            $this->rap_htva=bcadd($this->rap_htva,$other['price']);
-            $this->rap_tvac=bcadd($this->rap_tvac,bcadd($other['price'], bcsub($other['vat'],$other['tva_np'])));
-            $this->rap_priv=bcadd($this->rap_priv,$other['priv']);
-            $this->rap_nd=bcadd($this->rap_nd,$other['tva_nd']);
-            $this->rap_tva_np=bcadd($this->rap_tva_np,$other['tva_np']);
+            
 
 
             $this->write_cell(15,5,nbm($other['price']),0,0,'R');
@@ -267,6 +261,26 @@ class Print_Ledger_Simple extends PDF
 	    $l_tvac=bcadd($l_tvac,$other['tva_nd']);
             $this->write_cell(15,5,nbm($l_tvac),0,0,'R');
             $this->line_new(5);
+            // Total page
+            $this->tp_htva=bcadd($this->tp_htva,$other['price']);
+            $this->tp_tvac=bcadd($this->tp_tvac,$other['price']);
+            $this->tp_tvac=bcadd($this->tp_tvac,$other['vat']);
+            $this->tp_tvac=bcadd($this->tp_tvac,$other['tva_nd']);
+            $this->tp_tvac=bcsub($this->tp_tvac,$other['tva_np']);
+            $this->tp_tva_np=bcadd($this->tp_tva_np,$other['tva_np']);
+            $this->tp_priv=bcadd($this->tp_priv,$other['priv']);
+            $this->tp_nd=bcadd($this->tp_nd,$other['tva_nd']);
+            
+            // Total report
+            $this->rap_htva=bcadd($this->rap_htva,$other['price']);
+            $this->rap_tvac=bcadd($this->rap_tvac,$other['price']);
+            $this->rap_tvac=bcadd($this->rap_tvac,$other['vat']);
+            $this->rap_tvac=bcsub($this->rap_tvac,$other['tva_np']);
+            $this->rap_tvac=bcadd($this->rap_tvac,$other['tva_nd']);
+            $this->rap_priv=bcadd($this->rap_priv,$other['priv']);
+            $this->rap_nd=bcadd($this->rap_nd,$other['tva_nd']);
+            $this->rap_tva_np=bcadd($this->rap_tva_np,$other['tva_np']);
+
         }
     }
 

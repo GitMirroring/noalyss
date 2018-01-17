@@ -646,6 +646,22 @@ class Acc_Ledger extends jrn_def_sql
      *
      * @paramp_array the structure is set in get_rowSimple, this array is
      *        modified,
+     @verbatim
+             jrn.jr_id as jr_id ,
+             jrn.jr_id as num ,
+             jrn.jr_def_id as jr_def_id,
+             jrn.jr_montant as montant,
+             substr(jrn.jr_comment,1,35) as comment,
+             to_char(jrn.jr_date,'DD-MM-YYYY') as date,
+             to_char(jrn.jr_date_paid,'DD-MM-YYYY') as date_paid,
+             jr_pj_number,
+             jr_internal,
+             jrn.jr_grpt_id as grpt_id,
+             jrn.jr_pj_name as pj,
+             jrn_def_type,
+             jrn.jr_tech_per
+     @endverbatim
+     * 
      * @param $trunc if the data must be truncated, usefull for pdf export
      * @paramp_jrn_type is the type of the ledger (ACH or VEN)
      * @param $a_TVA TVA Array (default null)
@@ -671,6 +687,7 @@ class Acc_Ledger extends jrn_def_sql
         // init
         $p_array['client']="";
         $p_array['TVAC']=0;
+        $p_array['HTVA']=0;
         $p_array['TVA']=array();
         $p_array['AMOUNT_TVA']=0.0;
         $p_array['dep_priv']=0;
@@ -678,7 +695,87 @@ class Acc_Ledger extends jrn_def_sql
         $p_array['tva_dna']=0;
         $p_array['tva_np']=0;
         $dep_priv=0.0;
+      
+       
+        // if using the QUANT_* tables then get there the needed info
+        //
+        if (  $this->use_quant_table($p_array['grpt_id'],$p_array['jrn_def_type']) == TRUE)
+        {
+             // Initialize amount for VAT
+            $nb_tva=count($a_TVA);
+            for ($i=0;$i<$nb_tva;$i++) {
+                $p_array['TVA'][$i]=array($i,
+                    array(
+                        $a_TVA[$i]['tva_id'],
+                        $a_TVA[$i]['tva_label'],
+                        0)
+                    );
+            }
+            switch ($p_array['jrn_def_type'])
+            {
+                case "ACH":
+                    $sql="select 
+                            sum(coalesce(qp_price,0)) as htva,
+                            sum(coalesce(qp_vat)) as  vat,
+                            sum(coalesce(qp_nd_tva)) as  nd_tva,
+                            sum(coalesce(qp_nd_tva_recup)) as  nd_tva_recup,
+                            sum(coalesce(qp_dep_priv)) as dep_priv,
+                            qp_vat_code as tva_code,
+                            qp_supplier as fiche_id,
+                            qp_vat_sided as tva_sided
+                        from 
+                            quant_purchase 
+                        where 
+                            qp_internal=$1 
+                            group by qp_supplier,qp_vat_code,qp_vat_sided ";
+                    break;
+                case "VEN":
+                    $sql="select 
+                            sum(coalesce(qs_price,0)) as htva,
+                            sum(coalesce(qs_vat)) as  vat,
+                            sum(0) as  nd_tva,
+                            sum(0) as  nd_tva_recup,
+                            sum(0) as dep_priv,
+                            qs_vat_code as tva_code,
+                            qs_client as fiche_id,
+                            qs_vat_sided as tva_sided
+                        from 
+                            quant_sold
+                        where 
+                            qs_internal=$1 
+                            group by qs_client,qs_vat_code,qs_vat_sided ";
+                    break;
 
+                default:
+                    break;
+            }
+            $a_detail=$this->db->get_array($sql,array($p_array['jr_internal']));
+            $nb_detail=count($a_detail);
+            for ($x=0;$x<$nb_detail;$x++) {
+                $p_array['HTVA']=bcadd($p_array['HTVA'],$a_detail[$x]['htva']);
+                $p_array['tva_dna']=bcadd($p_array['tva_dna'],$a_detail[$x]['nd_tva_recup']);
+                $p_array['tva_dna']=bcadd($p_array['tva_dna'],$a_detail[$x]['nd_tva']);
+                $p_array['TVAC']=bcadd($p_array['TVAC'],$a_detail[$x]['htva']);
+                if ( $a_detail[$x]['tva_sided'] == 0)
+                    $p_array['TVAC']=bcadd($p_array['TVAC'],$a_detail[$x]['vat']);
+                $p_array['TVAC']=bcadd($p_array['TVAC'],$a_detail[$x]['nd_tva']);
+                $p_array['TVAC']=bcadd($p_array['TVAC'],$a_detail[$x]['nd_tva_recup']);
+                $p_array['dep_priv']=bcadd($p_array['dep_priv'],$a_detail[$x]['dep_priv']);
+                $xdx=$a_detail[$x]['tva_code'];
+                // $p_array['TVA'][$xdx]=bcadd($p_array['TVA'][$xdx],$a_detail[$x]['vat']);
+                //--- Put VAT in the right place in the array $a_TVA
+                $nb_tva=count($a_TVA);
+                for ($j=0;$j<$nb_tva;$j++) { 
+                    if ( $xdx == $p_array['TVA'][$j][1][0]) {
+                        $p_array['TVA'][$j][1][2]=bcadd($p_array['TVA'][$j][1][2],$a_detail[$x]['vat']);
+                        
+                    }
+                }
+            }
+            $fiche=new Fiche($this->db,$a_detail[0]['fiche_id']);
+            $p_array['client']=($trunc==0)?$fiche->getName():mb_substr($fiche->getName(),0, 20);
+            return $p_array;
+        }
         //
         // Retrieve data from jrnx
         // Order is important for TVA autoreversed
@@ -3244,7 +3341,38 @@ class Acc_Ledger extends jrn_def_sql
     {
        return $this->db->get_value("select jrn_enable from jrn_def where jrn_def_id=$1",[$this->id]); 
     }
-
+    /**
+     * Check if the operation is used in the table quant*
+     * @param integer $p_grpt_id
+     * @param string $p_jrn_type ledger's type ACH, VEN,ODS or FIN
+     * @return boolean TRUE if existing info in quant*
+     * @Exceptions code 1000  if unknown ledger's type
+     */
+    function use_quant_table($p_grpt_id,$p_jrn_type)
+    {
+        if ( $p_jrn_type == 'ACH')
+        {
+            $sql="select count(*) from jrnx join quant_purchase using (j_id) where j_grpt=$1";
+        }elseif ($p_jrn_type=='VEN')
+        {
+            $sql="select count(*) from jrnx join quant_sold using (j_id) where j_grpt=$1";
+        }elseif ($p_jrn_type=='FIN')
+        {
+            $sql="select count(*) from jrn join quant_fin using (jr_id) where jr_grpt_id=$1";
+            
+        }elseif ($p_jrn_type=='ODS') return 0;
+        else 
+        {
+            throw new Exception(_('Journal incorrect'),1000);
+        }
+        
+        $count=$this->db->get_value($sql,[$p_grpt_id]);
+        
+        if ($count > 0) return TRUE; 
+        
+        return FALSE;
+        
+    }
 }
 
 ?>
