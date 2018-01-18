@@ -287,7 +287,6 @@ j1.j_poste as poste
             $this->jr_id=$array[$i]['jr_id'];
             $ret[$i]['first']=$this->fill_info();
         }
-        $this->db->prepare('detail_quant','select * from v_quant_detail where jr_id=$1');
         return $ret;
     }
     /**
@@ -367,6 +366,7 @@ j1.j_poste as poste
         $array=$this->get_reconciled();
         $ret=array();
         bcscale(2);
+        $this->prepare_query_detail_quant();
         for ($i=0;$i<count($array);$i++)
         {
              $retdb=$this->db->execute("detail_quant",array($array[$i]['first']['jr_id']));
@@ -613,7 +613,10 @@ j1.j_poste as poste
     }
     function prepare_query_detail_quant()
     {
+        static $seen=0;
+        if ( $seen == 1) return;
         $this->db->prepare('detail_quant','select * from v_quant_detail where jr_id=$1');
+        $seen=1;
     }
     /**
      * Retrieve the amount VAT included and autoreversed VAT excluded thanks

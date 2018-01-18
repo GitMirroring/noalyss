@@ -236,7 +236,7 @@ if ( $sa == 'list' )
         $template="";
 	echo '<div class="content">';
 	echo '<span style="display:block">';
-	echo _('Cherche').HtmlInput::infobulle(23);
+	echo _('Cherche').Icon_Action::infobulle(23);
 	echo HtmlInput::filter_table("t_dossier", "0,1,2","1");
 	echo '</span>';
     echo '<TABLE id="t_dossier" class="table_large" >';

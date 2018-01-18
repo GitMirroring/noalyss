@@ -155,7 +155,7 @@ echo '<tr>';
 echo '<th>'.$table->get_header(0).'</th>';
 echo '<th>'.$table->get_header(1).'</th>';
 echo '<th>'.$table->get_header(2).'</th>';
-echo '<th>'.$table->get_header(3).HtmlInput::infobulle(33).'</th>';
+echo '<th>'.$table->get_header(3).Icon_Action::infobulle(33).'</th>';
 echo '<th>'.$table->get_header(4).'</th>';
 echo '<th>'.$table->get_header(5).'</th>';
 echo '<th>'.$table->get_header(6).'</th>';

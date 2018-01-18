@@ -20,7 +20,7 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* !\file
+/*!\file
  * \brief this file will handle all the actions for a specific customer (
  * contact,operation,invoice and financial)
  * include from client.inc.php and concerned only the customer card and

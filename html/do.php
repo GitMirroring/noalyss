@@ -32,6 +32,7 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/constant.security.php';
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 $http=new HttpInput();
 
 mb_internal_encoding("UTF-8");
@@ -81,6 +82,9 @@ if ( isset ($_POST['set_preference'])) {
     $p_email=$http->post("p_email","string","");
     $minirap=$http->post("minirap","number",0);
     $period=$http->post("period","number");
+    $csv_fieldsep=$http->post("csv_fieldsep","number");
+    $csv_decimal=$http->post("csv_decimal","number");
+    $csv_encoding=$http->post("csv_encoding");
     
     if (strlen(trim($pass_1)) != 0 && strlen(trim($pass_2)) != 0)
     {
@@ -91,6 +95,10 @@ if ( isset ($_POST['set_preference'])) {
     $g_user->save_global_preference('THEME', $style_user);
     $g_user->save_global_preference('LANG', $lang);
     $g_user->save_global_preference('PAGESIZE', $p_size);
+    $g_user->save_global_preference('csv_fieldsep', $csv_fieldsep);
+    $g_user->save_global_preference('csv_decimal', $csv_decimal);
+    $g_user->save_global_preference('csv_encoding', $csv_encoding);
+    
     $g_user->set_mini_report($minirap);
     $_SESSION['g_theme']=$style_user;
     $_SESSION['g_pagesize']=$p_size;
@@ -142,7 +150,7 @@ if ( DEBUG ) {
 
 <?php
 }
-$g_parameter=new Own($cn);
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 
 $g_user->Check();
 $g_user->check_dossier(Dossier::id());
@@ -208,7 +216,20 @@ if ($oPeriode->load() == -1)
 
 $module_selected = -1;
 
-
+?>
+<script>
+/**
+ * All the onload must be here otherwise the other will overwritten
+ * @returns {undefined}
+ */
+window.onload=function ()
+{
+    create_anchor_up();
+    init_scroll();
+    sorttable.init
+}
+</script>
+<?php
 
 /*
  * if an action is requested

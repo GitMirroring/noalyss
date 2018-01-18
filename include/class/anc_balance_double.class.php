@@ -19,15 +19,11 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
- * \brief
- *  Print the crossed balance between 2 plan
+/**
+ *@file
+ *@brief Print the crossed balance between 2 plan
  */
 
-/*! \brief
- *  Print the crossed balance between 2 plan
- *
- */
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
@@ -35,6 +31,11 @@ require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_print.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+/**
+ * @class
+ * @brief Print the crossed balance between 2 plan
+ *
+ */
 
 class Anc_Balance_Double extends Anc_Print
 {

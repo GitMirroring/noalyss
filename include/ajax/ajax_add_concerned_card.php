@@ -20,6 +20,10 @@
 
 // Copyright 2014 Author Dany De Bontridder danydb@aevalys.eu
 // require_once '.php';
+/**
+ *@file
+ *@brief insert concerned operation , call from follow up
+ */
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
@@ -47,7 +51,7 @@ $r.='<form id="search_card1_frm" method="GET" onsubmit="action_add_concerned_car
 $q=new IText('query');
 $q->value=(isset($query))?$query:'';
 $r.='<span style="margin-left:50px">';
-$r.=_('Fiche contenant').HtmlInput::infobulle(19);
+$r.=_('Fiche contenant').Icon_Action::infobulle(19);
 $r.=$q->input();
 $r.=HtmlInput::submit('fs', _('Recherche'), "", "smallbutton");
 $r.='</span>';
@@ -78,6 +82,8 @@ for ($i=0; $i<count($a); $i++)
 
 
 echo $r;
+// No accountancy history
+$accvis=0; 
 require_once(NOALYSS_TEMPLATE.'/card_result.php');
 $response=ob_get_contents();
 ob_end_clean();

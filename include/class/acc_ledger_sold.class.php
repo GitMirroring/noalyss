@@ -37,7 +37,7 @@ require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/class/acc_payment.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itva_popup.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 require_once NOALYSS_INCLUDE.'/class/stock_goods.class.php';
@@ -162,7 +162,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             /* check if amount are numeric and */
             if (isNumber(${'e_march' . $i . '_price'}) == 0)
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('a un montant invalide [') . ${'e_march' . $i} . ']', 6);
-            if (isNumber(${'e_quant' . $i}) == 0)
+            if (isNumber(${'e_quant' . $i}) == 0) 
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('a une quantité invalide [') . ${'e_quant' . $i} . ']', 7);
             /* check if all card has a ATTR_DEF_ACCOUNT */
             $fiche = new Fiche($this->db);
@@ -553,7 +553,11 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $acc_pay->desc = (!isset($e_comm_paiement) || strlen(trim($e_comm_paiement)) == 0) ? $e_comm : $e_comm_paiement;
                 $mp_jr_id = $acc_pay->insert_jrn();
                 $acjrn->update_internal_code($acinternal);
-
+                // add an automatic PJ if ODS
+                if ($acjrn->get_type()=="ODS") {
+                    $acc_pay->pj=$acjrn->guess_pj();
+                    $acc_pay->set_pj();
+                }
                 $r1 = $this->get_id($internal);
                 $r2 = $this->get_id($acinternal);
 
@@ -783,7 +787,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                   same */
                 if (bcsub($tva_item, $tva_computed) != 0 && ! ($tva_item == 0 && $both_side == 1)) {
                     $r.='<td style="background-color:red" class="num">';
-                    $r.=HtmlInput::infobulle(28);
+                    $r.=Icon_Action::infobulle(28);
                     $r.='<a href="#" class="error" style="display:inline" title="' . _("Attention Différence entre TVA calculée et donnée") . '">'
                             . nbm($tva_item) . '<a>';
                 } else {
@@ -1060,7 +1064,7 @@ EOF;
         $Echeance->setReadOnly(false);
 
         $Echeance->tabindex = 2;
-        $label = HtmlInput::infobulle(4);
+        $label = Icon_Action::infobulle(4);
         $f_echeance = $Echeance->input('e_ech', $e_ech, _('Echéance') . $label);
         $Date = new IDate();
         $Date->setReadOnly(false);
@@ -1086,7 +1090,7 @@ EOF;
                     throw new Exception( _("Aucune période ouverte") );
                 }
             }
-            $label = HtmlInput::infobulle(3);
+            $label = Icon_Action::infobulle(3);
             $f_periode = '<td>' . _("Période comptable") . "</td> <td> $label " . $l_form_per . '</td>';
         }
         /* if we suggest the next pj, then we need a javascript */
@@ -1106,7 +1110,7 @@ EOF;
             throw new Exception(_('Pas de journal disponible'));
         $wLedger->table = 1;
         $wLedger->javascript = "onChange='update_predef(\"ven\",\"f\",\"".$_REQUEST['ac']."\");$add_js'";
-        $wLedger->label = " Journal " . HtmlInput::infobulle(2);
+        $wLedger->label = " Journal " . Icon_Action::infobulle(2);
 
         $f_jrn = $wLedger->input();
 
@@ -1116,7 +1120,7 @@ EOF;
         $Commentaire->size = 60;
         $Commentaire->tabindex = 3;
 
-        $label = HtmlInput::infobulle(1);
+        $label = Icon_Action::infobulle(1);
 
         $f_desc = $Commentaire->input("e_comm", $e_comm) ;
         // PJ
@@ -1155,7 +1159,7 @@ EOF;
         }
 
         $W1 = new ICard();
-        $W1->label = "Client " . HtmlInput::infobulle(0);
+        $W1->label = "Client " . Icon_Action::infobulle(0);
         $W1->name = "e_client";
         $W1->tabindex = 3;
         $W1->value = $e_client;
@@ -1174,7 +1178,6 @@ EOF;
         $W1->javascript = sprintf(' onchange="fill_data_onchange(\'%s\');" ', $W1->name);
         $f_client_qcode = $W1->input();
         $client_label = new ISpan();
-        $client_label->style="vertical-align:top";
         $client_label->table = 0;
         $f_client = $client_label->input("e_client_label", $e_client_label);
         $f_client_bt = $W1->search();

@@ -1,6 +1,10 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+  /**
+   *@file
+   *@brief Menu modification
+   */
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/menu_ref.class.php';

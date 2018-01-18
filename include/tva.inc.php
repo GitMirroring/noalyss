@@ -21,7 +21,7 @@
  * \brief included file for customizing with the vat (account,rate...)
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itextarea.class.php';
@@ -87,7 +87,7 @@ if (isset($_POST['confirm_mod'])
     }
 }
 // If company not use VAT
-$own = new Own($cn);
+$own = new Noalyss_Parameter_Folder($cn);
 if ($own->MY_TVA_USE == 'N')
 {
     echo '<h2 class="error">'._("Vous n'êtes pas assujetti à la TVA").'</h2>';

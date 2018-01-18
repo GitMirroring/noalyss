@@ -45,6 +45,7 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 $http=new HttpInput();
 
 mb_internal_encoding("UTF-8");
@@ -71,7 +72,7 @@ global $g_user, $cn, $g_parameter;
 // 
 if ($gDossier<>0) {
     $cn =Dossier::connect();
-    $g_parameter=new Own($cn);
+    $g_parameter=new Noalyss_Parameter_Folder($cn);
     $g_user = new User($cn);
     $g_user->check(true);
     if ( $g_user->check_dossier($gDossier, true) == 'X' ) {
@@ -106,13 +107,19 @@ if ( LOGINPUT)
         fclose($file_loginput);
     }
 $path = array(
+    // search accounting , detail ...
     "account"=>"ajax_poste",
+    // display card detail :possible to update or add
     "card"=>"ajax_card",
     "ledger"=>"ajax_ledger",
     // Manage ledger access
     "ledger_access"=>"ajax_user_security",
     // Manage user profile
     "profile"=>"ajax_user_security",
+    // enable or not the security on ledger
+    "user_sec_ledger"=>"ajax_user_security",
+    // enable or not the security on action
+    "user_sec_action"=>"ajax_user_security",
     // Update in once all the ledgers
     "ledger_access_all"=>"ajax_user_security",
     // From the page CFGSEC,set the actions
@@ -120,10 +127,11 @@ $path = array(
     // From the page CFGSEC,set all the actions
     "action_access_all"=>"ajax_user_security",
     "todo_list"=>"ajax_todo_list",
+    // Writing operation History for a card or an accounting
     "history"=>"ajax_history",
     "mod_doc"=>"ajax_mod_document",
-    "input_per"=>"ajax_mod_periode",
-    "save_per"=>"ajax_mod_periode",
+    // Periode menu: PERIODE
+    'periode'=>"ajax_periode",
     "mod_predf"=>"ajax_mod_predf_op",
     "save_predf"=>"ajax_save_predf_op",
     "search_action"=>"ajax_search_action",
@@ -196,7 +204,21 @@ $path = array(
     // Update, insert or delete accounting frmo CFGPCMN
     "accounting"=>"ajax_accounting",
     // Show detail of an ANC operation
-    "anc_detail_op"=>"ajax_anc_detail_operation"
+    "anc_detail_op"=>"ajax_anc_detail_operation",
+    // Display the list of filter saved
+    "display_search_filter"=>"ajax_search_filter",
+    // Save search filter 
+    "save_filter"=>"ajax_search_filter",
+    // Load a search filter
+    "load_filter"=>"ajax_search_filter",
+    // search operation to reconcile
+    	'search_op'=>'ajax_search_operation',
+    // delete operation
+    	'delete_search_operation'=>'ajax_search_filter',
+    // template category of card
+    'template_cat_card'=>'ajax_template_cat_card',
+    // Attribute for category of card
+    'template_cat_category'=>'ajax_template_cat_category'
 )    ;
 
 if (array_key_exists($op, $path)) {
@@ -326,8 +348,7 @@ EOF;
 		$Res = $cn->exec_sql("select * from tva_rate order by tva_rate desc");
 		$Max = Database::num_row($Res);
 		$r = "";
-		$r = HtmlInput::anchor_close('tva_select');
-		$r.=h2(_('Choisissez la TVA '),'class="title"');
+		$r.=HtmlInput::title_box(_('Choisissez la TVA'),'tva_select',"close","","y");
 		$r.='<div >';
                 $r.=_('Cherche')." ".HtmlInput::filter_table("tva_select_table",'0,1,2,3' , 1);
 		$r.= '<TABLE style="width:100%" id="tva_select_table">';
@@ -406,9 +427,7 @@ EOF;
 EOF;
 
 		break;
-	case 'search_op':
-		require_once NOALYSS_INCLUDE.'/search.inc.php';
-		break;
+
 	case 'add_plugin':
 		$me_code = new IText('me_code');
 		$me_file = new IText('me_file');
@@ -451,5 +470,5 @@ EOF;
             break;
         
 	default:
-		var_dump($_GET);
+		var_dump($_REQUEST);
 }

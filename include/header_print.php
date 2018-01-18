@@ -25,7 +25,7 @@
  */
 
 require_once  NOALYSS_INCLUDE.'/lib/database.class.php';
-require_once  NOALYSS_INCLUDE.'/class/own.class.php';
+require_once  NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 
 
@@ -33,7 +33,7 @@ date_default_timezone_set ('Europe/Brussels');
 
 function header_txt($p_cn)
 {
-    $own=new own($p_cn);
+    $own=new Noalyss_Parameter_Folder($p_cn);
     $soc=$own->MY_NAME;
 
     $date=date('d / m / Y H:i ');

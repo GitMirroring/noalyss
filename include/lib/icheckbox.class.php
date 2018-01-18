@@ -26,16 +26,17 @@ require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class ICheckBox extends HtmlInput
 {
     /*!\brief show the html  input of the widget*/
-    public function input($p_name=null,$p_value=null)
+    public function input($p_name=null,$p_value=null,$id="")
     {
         $this->name=($p_name==null)?$this->name:$p_name;
         $this->value=($p_value==null)?$this->value:$p_value;
         if ( $this->readOnly==true) return $this->display();
-		 $this->id=($this->id=="")?$this->name:$this->id;
+        $this->id=($this->id=="")?$this->name:$this->id;
 
         $check=( $this->selected==true )?"checked":"unchecked";
         $r='<input type="CHECKBOX" id="'.$this->id.'" name="'.$this->name.'"'.' value="'.$this->value.'"';
         $r.="  $check";
+        $r.=$this->get_node_attribute();
         $r.=' '.$this->disabled."  ".$this->javascript.'>';
 
         $r=$r." $this->label";

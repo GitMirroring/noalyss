@@ -295,7 +295,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 					
 				}
 			}
-			$label = HtmlInput::infobulle(3);
+			$label = Icon_Action::infobulle(3);
 			$f_period = "Période comptable $label" . $l_form_per;
 		}
 
@@ -315,7 +315,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 		$wLedger->javascript = $add_js;
 
-		$label = " Journal " . HtmlInput::infobulle(2);
+		$label = " Journal " . Icon_Action::infobulle(2);
 		$f_jrn = $label . $wLedger->input();
 
 
@@ -345,7 +345,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		$wPJ->value = (isset($e_pj)) ? $e_pj : $default_pj;
 
 		$f_extrait = $wPJ->input() . HtmlInput::hidden('e_pj_suggest', $default_pj);
-		$label = HtmlInput::infobulle(7);
+		$label = Icon_Action::infobulle(7);
 
 		$first_sold = (isset($first_sold)) ? $first_sold : "";
 		$wFirst = new INum('first_sold', $first_sold);
@@ -383,7 +383,6 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			$W1->value = $tiers;
 			$W1->extra = 'deb';  // credits
 			$W1->typecard = 'deb';
-                        $W1->style=' style = "vertical-align:65%"';
 			$W1->set_dblclick("fill_ipopcard(this);");
 			$W1->set_attribute('ipopup', 'ipopcard');
 

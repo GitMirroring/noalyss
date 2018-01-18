@@ -100,7 +100,7 @@ if (isset($_REQUEST['gDossier']) && $_REQUEST['gDossier']<>0)
 		    if ($l_user_per == "")
 			$l_user_per = $cn->get_value("select min(p_id) from parm_periode where p_closed='f'");
 
-// if periode is closed then warns the users
+                    // if periode is closed then warns the users
 		    $period = new Periode($cn, $l_user_per);
 
 		    $period->p_id = $l_user_per;
@@ -148,6 +148,68 @@ if (isset($_REQUEST['gDossier']) && $_REQUEST['gDossier']<>0)
 		?>
 	    </table>
 	</fieldset>
+        <fieldset>
+            <legend><?=_("Format Export CSV")?></legend>
+            <p>
+                <?php 
+                if ( $_SESSION['csv_fieldsep']==1 && $_SESSION['csv_decimal']==1)
+                {
+                 echo_warning(_("N'utilisez pas le même séparateur pour les champs et les décimales"));
+                }
+                ?>
+            </p>
+            <table>
+                <tr>
+                    <td>
+                        <?=_("Séparateur de champs")?>
+                    </td>
+                    <td>
+                        <?php
+                            $csv_fieldsep=new ISelect('csv_fieldsep');
+                            $csv_fieldsep->value=[
+                                ["label"=>_("Point-virgule"),"value"=>0],
+                                ["label"=>_("virgule"),"value"=>1]
+                            ];
+                            $csv_fieldsep->selected=$_SESSION['csv_fieldsep'];
+                            echo $csv_fieldsep->input();
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <?=_("Séparateur Décimale")?>
+                    </td>
+                    <td>
+                        <?php
+                            $csv_decimal=new ISelect('csv_decimal');
+                            $csv_decimal->value=[
+                                ["label"=>_("point"),"value"=>0],
+                                ["label"=>_("virgule"),"value"=>1]
+                            ];
+                            $csv_decimal->selected=$_SESSION['csv_decimal'];
+                            echo $csv_decimal->input();
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <?=_("Encodage")?>
+                    </td>
+                    <td>
+                        <?php
+                            $csv_encoding=new ISelect('csv_encoding');
+                            $csv_encoding->value=[
+                                ["label"=>_("utf8"),"value"=>'utf8'],
+                                ["label"=>_("latin1"),"value"=>'latin1']
+                            ];
+                            $csv_encoding->selected=$_SESSION['csv_encoding'];
+                            echo $csv_encoding->input();
+                        ?>
+                    </td>
+                </tr>
+            </table>
+                
+        </fieldset>
 	<?php
 	if ($inside_dossier)
 	{

@@ -1,5 +1,6 @@
 <?php
 /**
+ *@file
  * @brief display a window with the content of a tag
  */
 //This file is part of NOALYSS and is under GPL 

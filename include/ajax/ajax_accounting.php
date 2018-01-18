@@ -23,7 +23,8 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 
 /**
  * @file
- * @brief 
+ * @brief Manange Accounting
+ * @see Acc_Plan_SQL
  */
 $http=new HttpInput();
 try {

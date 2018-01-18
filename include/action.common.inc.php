@@ -40,6 +40,7 @@ if (isset($_REQUEST['sb']))
 $supl_hidden.=HtmlInput::hidden('ac', $_REQUEST['ac']);
 $correction = 0;
 $error_id=0;
+$http=new HttpInput();
 /*-----------------------------------------------------------------------------*/
 /* For other action
 /*-----------------------------------------------------------------------------*/
@@ -94,7 +95,7 @@ if (isset($_POST['generate']))
 	{
 		$act->Update();
 	}
-        $doc_mod=$hi->post('doc_mod',"number");
+        $doc_mod=$http->post('doc_mod',"number");
 	$act->generate_document($doc_mod, $_POST);
 	$sub_action = 'detail';
 }
@@ -123,7 +124,7 @@ if ($sub_action == "update")
 	{
 		$act2 = new Follow_Up($cn);
 		$act2->fromArray($_POST);
-		if ($g_user->can_write_action($act2->ag_id) == false )
+		if ($g_user->can_write_action($act2->ag_id) == FALSE )
 		{
 			echo '<div class="redcontent">';
 			echo '<h2 class="error">'._('Cette action ne vous est pas autorisée Contactez votre responsable').'</h2>';
@@ -154,15 +155,22 @@ if ($sub_action == "update")
 	// Add a related action
 	//----------------------------------------------------------------------
 	if (isset($_POST['add_action_here']))
-	{
-		$act = new Follow_Up($cn);
-
+	{   
+                $ag_id=$http->post('ag_id',"number");
+		$act = new Follow_Up($cn,$ag_id);
+                if ($g_user->can_write_action($act->ag_id) == FALSE )
+		{
+			echo '<div class="redcontent">';
+			echo '<h2 class="error">'._('Cette action ne vous est pas autorisée Contactez votre responsable').'</h2>';
+			echo '</div>';
+			return;
+		}
 
 		//----------------------------------------
 		// puis comme ajout normal (copier / coller )
 		$act->ag_id = 0;
 		$act->d_id = 0;
-		$act->action = $_POST['ag_id'];
+		$act->action = $http->post('ag_id',"number");
                 $act->ag_timestamp=date('d.m.Y');
                 $act->ag_hour="";
                 $act->ag_title="";

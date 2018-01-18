@@ -46,6 +46,7 @@ class Acc_Operation
     var $amount;			/*!< amount of the operatoin */
     var $grpt;			/*!< the group id */
     var $date_paid;
+    var $jr_optype; /*!< type of operation :NOR,CLO,EXT,OPE
     /*!
      * \brief constructor set automatically the attributes user and periode
      * \param $p_cn the databse connection
@@ -58,6 +59,7 @@ class Acc_Operation
         $this->user=$_SESSION['g_user'];
         $this->periode=$g_user->get_periode();
         $this->jr_id=0;
+        $this->jr_optype="NOR";
     }
     /**
      *@brief retrieve the grpt_id from jrn for a jr_id
@@ -271,12 +273,12 @@ class Acc_Operation
     function insert_jrn()
     {
         $p_comment=$this->desc;
-
+        
         $diff=$this->db->get_value("select check_balance ($1)",array($this->grpt));
         if ( $diff != 0 )
         {
 
-            echo "Erreur : balance incorrecte :diff = $diff";
+            printf (_("Erreur : balance incorrecte :diff = %d"),$diff);
             return false;
         }
 
@@ -288,11 +290,11 @@ class Acc_Operation
         // if amount == -1then the triggers will throw an error
         //
         $Res=$this->db->exec_sql("insert into jrn (jr_def_id,jr_montant,jr_comment,".
-                                 "jr_date,jr_ech,jr_grpt_id,jr_tech_per,jr_mt)   values (".
+                                 "jr_date,jr_ech,jr_grpt_id,jr_tech_per,jr_mt,jr_optype)   values (".
                                  "$1,$2,$3,".
-                                 "to_date($4,'DD.MM.YYYY'),to_date($5,'DD.MM.YYYY'),$6,$7,$8)",
+                                 "to_date($4,'DD.MM.YYYY'),to_date($5,'DD.MM.YYYY'),$6,$7,$8,$9)",
                                  array ($this->jrn, $this->amount,$p_comment,
-                                        $this->date,$echeance,$this->grpt,$this->periode,$this->mt)
+                                        $this->date,$echeance,$this->grpt,$this->periode,$this->mt,$this->jr_optype)
                                 );
         if ( $Res == false)  return false;
         $this->jr_id=$this->db->get_current_seq('s_jrn');
@@ -708,6 +710,29 @@ class Acc_Operation
         $b=$a->get_quant();
         var_dump($b);
     }
+    /**
+     * Return a select object to choose the type of operation
+     *   - NOR normal
+     *   - EXT reverse operation
+     *   - CLO closing periode
+     *   - OPE opening periode
+     * @param string $p_status
+     * @return \ISelect
+     */
+    static function select_operation_type($p_status)
+    {
+        $type_operation=new ISelect("jr_optype");
+        $type_operation->value=array(
+            array(("label")=>_("Normal"), "value"=>"NOR"),
+            array(("label")=>_("Ouverture"), "value"=>"OPE"),
+            array(("label")=>_("Fermeture"), "value"=>"CLO"),
+            array(("label")=>_("Extourne"), "value"=>"EXT")
+        );
+
+        $type_operation->selected=$p_status;
+        return $type_operation;
+    }
+
 }
 /////////////////////////////////////////////////////////////////////////////
 class Acc_Detail extends Acc_Operation
@@ -727,7 +752,7 @@ class Acc_Detail extends Acc_Operation
         $sql="SELECT jr_id, jr_def_id, jr_montant, jr_comment, jr_date, jr_grpt_id,
              jr_internal, jr_tech_date, jr_tech_per, jrn_ech, jr_ech, jr_rapt,jr_ech,
              jr_valid, jr_opid, jr_c_opid, jr_pj, jr_pj_name, jr_pj_type,
-             jr_pj_number, jr_mt,jr_rapt,jr_date_paid
+             jr_pj_number, jr_mt,jr_rapt,jr_date_paid,jr_optype
              FROM jrn where jr_id=$1";
         $array=$this->db->get_array($sql,array($this->jr_id));
         if ( count($array) == 0 ) throw new Exception('Aucune ligne trouvée');

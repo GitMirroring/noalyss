@@ -20,10 +20,13 @@
 /*! \file
  * \brief Search module
  */
+define('ALLOWED',TRUE);
 require_once '../include/constant.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 
 html_page_start($_SESSION['g_theme']);
 
@@ -54,15 +57,30 @@ if ( $act=='X')
      exit();
   }
 // display a search box
-
-$ledger=new Acc_Ledger($cn,0);
-$ledger->type='ALL';
-$search_box=$ledger->search_form('ALL',1);
+?>
+<script>
+/**
+ * All the onload must be here otherwise the other will overwritten
+ * @returns {undefined}
+ */
+window.onload=function ()
+{
+    create_anchor_up();
+    init_scroll();
+    sorttable.init
+}
+</script>
+<?php
+$ledger=new Acc_Ledger_Search('ALL');
+$search_box=$ledger->search_form();
 echo '<div class="content">';
 
 echo '<form method="GET">';
 echo $search_box;
 echo HtmlInput::submit("viewsearch",_("Recherche"));
+ $button_search=new IButton("button", _('Filtre'));
+$button_search->javascript=$ledger->build_search_filter();
+echo $button_search->input();
 ?>
 <input type="button" class="smallbutton" onclick="window.close()" value="<?php echo _('Fermer')?>">
 

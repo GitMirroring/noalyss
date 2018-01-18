@@ -160,6 +160,6 @@ if ( isset($_POST['add_modele']))
 }
 $fiche_def=new Fiche_def($cn);
 
-$fiche_def->Display();
+$fiche_def->display();
 $dossier=Dossier::id();
 ?>

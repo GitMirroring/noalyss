@@ -19,7 +19,10 @@
  */
 
 // Copyright Author Dany De Bontridder dany@alchimerys.be
-///\file ajax answer to update or change name or description of an analytic plan
+  /**
+   *\file 
+   *\brief ajax answer to update or change name or description of an analytic plan
+   */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 

@@ -312,11 +312,12 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
 	$p_script2 = '<script src="' . $p_script2 . '?version='.SVNINFO.'" type="text/javascript"></script>';
     $style=trim($style);
     echo "<HEAD>";
+    echo '<meta charset="utf-8">';
+    echo "<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">";
     if ( $is_msie == 1 )echo '      <meta http-equiv="x-ua-compatible" content="IE=edge"/>';
     echo "
     <TITLE>$title</TITLE>
 	<link rel=\"icon\" type=\"image/ico\" href=\"favicon.ico\" />
-    <META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
     <LINK REL=\"stylesheet\" type=\"text/css\" href=\"".$style."?version=".SVNINFO."\" media=\"screen\"/>
     <link rel=\"stylesheet\" type=\"text/css\" href=\"./style-print.css?version=".SVNINFO."\" media=\"print\"/>" .
@@ -761,6 +762,7 @@ function smaller_date($p_date)
  * @brief format the date, when taken from the database the format
  * is MM-DD-YYYY
  * @param $p_date format
+ * @exception 1 if invalid format 
  * DOMEntity@param
  * @return date in the format DD.MM.YYYY
  */
@@ -787,6 +789,9 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
         case 'DD.MM.YYYY':
             $str_date = $date[2] . '.' . $date[1] . '.' . $date[0];
             break;
+        case 'DD-MM-YYYY':
+            $str_date = $date[2] . '-' . $date[1] . '-' . $date[0];
+            break;
         case 'YYYY-MM-DD':
             $str_date = $date[0] . '-' . $date[1] . '-' . $date[2];
             break;
@@ -796,7 +801,15 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
 		 case 'YYYY/MM/DD':
             $str_date = $date[0] . '/' . $date[1] . '/' . $date[2];
             break;
-
+        case "DD.MM.YY":
+            $str_date = $date[2] . '.' . $date[1] . '.' . substr($date[0],2,2);
+            break;
+        case "DD-MM-YY":
+            $str_date = $date[2] . '-' . $date[1] . '-' . substr($date[0],2,2);
+            break;
+        default:
+            throw new Exception(_("Format Invalide"),1);
+            
 		}
     return $str_date;
 }
@@ -818,7 +831,7 @@ function ajax_disconnected($div)
 	$script.='a.style.top=posY-20+offsetY;a.style.left=posX+offsetX;';
 	$script = create_script($script);
 	$html = $script;
-	$html.=HtmlInput::anchor_close($div);
+	$html.=Icon_Action::close($div);
 	$html.='<div>';
 	$html.=h2(_('Données non disponibles'), 'class="title" style="width:auto"');
 	$html.=h2(_('Veuillez vous reconnecter soit dans une autre fenêtre soit '
@@ -1163,7 +1176,7 @@ function display_dashboard_operation($p_array,$p_title,$p_div)
 	?>
 <div id="<?php echo $p_div;?>" class="inner_box" style="display:none;position:fixed;top:250px;left:12%;width: 75%;min-height:50%;overflow:auto;">
 	<?php
-	echo HtmlInput::title_box($p_title, $p_div, "hide");
+	echo HtmlInput::title_box($p_title, $p_div, "hide",'','y');
 	?>
 	<?php if (count($p_array)>0) :?>
 	<table class="result">

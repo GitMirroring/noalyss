@@ -30,7 +30,7 @@ ob_start();
 require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
 require_once NOALYSS_INCLUDE.'/class/default_menu.class.php';
 
-echo HtmlInput::title_box(_("Détail action"), $div);
+echo HtmlInput::title_box(_("Détail action"), $div,"close","","y");
 $act = new Follow_Up($cn);
 $act->ag_id = $ag_id;
 $act->get();

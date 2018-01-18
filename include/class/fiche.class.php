@@ -499,7 +499,7 @@ class Fiche
                             $w->set_attribute('ipopup', 'ipop_account');
                             $w->set_attribute('account', "av_text" . $attr->ad_id);
                             $w->table = 1;
-                            $bulle = HtmlInput::infobulle(14);
+                            $bulle = Icon_Action::infobulle(14);
                             break;
                     case 'select':
                             $w = new ISelect("av_text" . $attr->ad_id);
@@ -528,7 +528,7 @@ class Fiche
             $w->name = "av_text" . $attr->ad_id;
             if ($attr->ad_id == 21 || $attr->ad_id==22||$attr->ad_id==20||$attr->ad_id==31)
             {
-                    $bulle=HtmlInput::infobulle(21);
+                    $bulle=Icon_Action::infobulle(21);
             }
             if ($attr->ad_id == ATTR_DEF_NAME || $attr->ad_id== ATTR_DEF_QUICKCODE) 
                 $class=" input_text highlight info";
@@ -597,10 +597,10 @@ class Fiche
                     $sql="select account_auto($this->fiche_def)";
                     $ret_sql=$this->cn->exec_sql($sql);
                     $a=Database::fetch_array($ret_sql, 0);
-                    $bulle=HtmlInput::infobulle(10);
+                    $bulle=Icon_Action::infobulle(10);
 
                     if ($a['account_auto']=='t')
-                        $bulle.=HtmlInput::warnbulle(11);
+                        $bulle.=" ".Icon_Action::warnbulle(11);
                 }
                 elseif ($r->ad_id==ATTR_DEF_TVA)
                 {
@@ -639,7 +639,7 @@ class Fiche
                             $w->dbl_click_history();
                             $w->width=$r->ad_size;
                             $w->table=0;
-                            $bulle=HtmlInput::infobulle(14);
+                            $bulle=Icon_Action::infobulle(14);
                             $w->value=$r->av_text;
                             break;
                         case 'card':
@@ -711,7 +711,7 @@ class Fiche
 
             if ($r->ad_id==21||$r->ad_id==22||$r->ad_id==20||$r->ad_id==31)
             {
-                $bulle=HtmlInput::infobulle(21);
+                $bulle=Icon_Action::infobulle(21);
             }
             if ($r->ad_id == ATTR_DEF_NAME || $r->ad_id== ATTR_DEF_QUICKCODE||$r->ad_id==ATTR_DEF_ACCOUNT) 
                 $class=" input_text highlight info";
@@ -764,11 +764,11 @@ class Fiche
         if ($transaction)
             $this->cn->start();
         /*
-         * Sort the array for having the name AFTER the quickcode and the 
+         * Sort the array for having the name BEFORE the quickcode and the 
          * Accounting
          */
         ksort($p_array);
-
+        $name="";
         try
         {
             $this->cn->start();
@@ -800,11 +800,13 @@ class Fiche
                 {
                     if (strlen(trim($value))==0)
                         $value="pas de nom";
+                    $account_name=$value;
                 }
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_substr(sql_string($value), 0, 40);
+                    $v=sql_string($value);
+                    
                     try
                     {
                         // Check that the accounting can be used directly
@@ -812,12 +814,20 @@ class Fiche
                         {
                             if (strpos($value, ',')==0)
                             {
-                                $v=$this->cn->get_value("select format_account($1)",
-                                        array($value));
-                                
-                                // Check that the accounting can be used directly
+                                if ( mb_strlen($value)>40) throw new Exception (_("Poste comptable trop long"), 1);
                                 $acc_account=new Acc_Account($this->cn,$v);
-                                if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
+                                
+                                if ($acc_account->get_parameter("id")== -1 ) {
+                                    $acc_account->set_parameter("pcm_lib", $account_name);
+                                   // By Default can be used directly
+                                    $acc_account->set_parameter('pcm_direct_use',"Y") ;
+                                    $parent=$acc_account->find_parent();
+                                    $acc_account->set_parameter("pcm_val_parent",$parent);
+                                    $acc_account->save();
+                                } else 
+                                // Check that the accounting can be used directly
+                                if ( $acc_account->get_parameter('pcm_direct_use') == 'N') {
+                                    
                                     throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
                                 }
                             }
@@ -829,21 +839,31 @@ class Fiche
                                 
                                 $part1=$ac_array[0];
                                 $part2=$ac_array[1];
-                                $part1=$this->cn->get_value('select format_account($1)',
-                                        array($part1));
-                                $part2=$this->cn->get_value('select format_account($1)',
-                                        array($part2));
-                                $v=$part1.','.$part2;
+                                if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
+                                if ( mb_strlen($part2)>40) throw new Exception (_("Poste comptable trop long"), 1);
                                 // Check that the accounting can be used directly
                                 $acc_account1=new Acc_Account($this->cn,$part1);
-                                if ($acc_account1->get_parameter('pcm_direct_use') == 'N') {
+                                if ($acc_account1->get_parameter("id")== -1 ) {
+                                    $acc_account1->set_parameter("pcm_lib", $account_name);
+                                    $acc_account1->set_parameter('pcm_direct_use',"Y") ;
+                                    $parent=$acc_account1->find_parent();
+                                    $acc_account1->set_parameter("pcm_val_parent",$parent);
+                                    $acc_account1->save();
+                                } else if ($acc_account1->get_parameter('pcm_direct_use') == 'N') {
                                     throw new Exception(_("Utilisation directe interdite du poste comptable $part1"));
                                 }
                                 // Check that the accounting can be used directly
                                 $acc_account2=new Acc_Account($this->cn,$part2);
-                                if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
+                                if ($acc_account2->get_parameter("id")== -1 ) {
+                                    $acc_account2->set_parameter("pcm_lib", $account_name);
+                                    $acc_account2->set_parameter('pcm_direct_use',"Y") ;
+                                    $parent=$acc_account2->find_parent();
+                                    $acc_account2->set_parameter("pcm_val_parent",$parent);
+                                    $acc_account2->save();
+                                } else if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
                                     throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
                                 }
+
                             }
                             $parameter=array($this->id, $v);
                         }
@@ -851,8 +871,8 @@ class Fiche
                         {
                             $parameter=array($this->id, null);
                         }
-                        $v=$this->cn->get_value("select account_insert($1,$2)",
-                                $parameter);
+                       $v=$this->cn->get_value("select account_insert($1,$2)",
+                                $parameter); 
                     }
                     catch (Exception $e)
                     {
@@ -918,8 +938,8 @@ class Fiche
                     continue;
 
                 // retrieve jft_id to update table attr_value
-                $sql=" select jft_id from fiche_detail where ad_id=$id and f_id=$this->id";
-                $Ret=$this->cn->exec_sql($sql);
+                $sql=" select jft_id from fiche_detail where ad_id=$1 and f_id=$2";
+                $Ret=$this->cn->exec_sql($sql,[$id,$this->id]);
                 if (Database::num_row($Ret)==0)
                 {
                     // we need to insert this new attribut
@@ -963,8 +983,17 @@ class Fiche
                                 throw new Exception('Désolé, il y a trop de virgule dans le poste comptable '.h($v));
                             $part1=$ac_array[0];
                             $part2=$ac_array[1];
-                            $part1=$this->cn->get_value('select format_account($1)',
-                                    array($part1));
+                            if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
+                            if ( mb_strlen($part2)>40) throw new Exception (_("Poste comptable trop long"), 1);
+                            $acc_account1=new Acc_Account($this->cn,$part1);
+                            if ($acc_account1->get_parameter("id")== -1 ) {
+                                $account_name=$this->strAttribut(ATTR_DEF_NAME);
+                                $acc_account1->set_parameter("pcm_lib", $account_name);
+                                $acc_account1->set_parameter('pcm_direct_use',"Y") ;
+                                $parent=$acc_account1->find_parent();
+                                $acc_account1->set_parameter("pcm_val_parent",$parent);
+                                $acc_account1->save();
+                            }
                             $part2=$this->cn->get_value('select format_account($1)',
                                     array($part2));
                             $v=$part1.','.$part2;
@@ -975,16 +1004,34 @@ class Fiche
                             }
                             // Check that the accounting can be used directly
                             $acc_account2=new Acc_Account($this->cn,$part2);
+                            if ($acc_account2->get_parameter("id")== -1 ) {
+                                    $account_name=$this->strAttribut(ATTR_DEF_NAME);
+                                    $acc_account2->set_parameter("pcm_lib", $account_name);
+                                    $acc_account2->set_parameter('pcm_direct_use',"Y") ;
+                                    $parent=$acc_account2->find_parent();
+                                    $acc_account2->set_parameter("pcm_val_parent",$parent);
+                                    $acc_account2->save();
+                                }
                             if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
                                 throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
                             }
                         }
                         else
                         {
-                            $v=$this->cn->get_value('select format_account($1)',
-                                    array($value));
-                            // Check that the accounting can be used directly
+                            if ( mb_strlen($v)>40) throw new Exception (_("Poste comptable trop long"), 1);
                             $acc_account=new Acc_Account($this->cn,$v);
+                            // Set default for new accounting
+                             if ($acc_account->get_parameter("id")== -1 ) {
+                                    $account_name=$this->strAttribut(ATTR_DEF_NAME);
+                                    $acc_account->set_parameter("pcm_lib", $account_name);
+                                   // By Default can be used directly
+                                    $acc_account->set_parameter('pcm_direct_use',"Y") ;
+                                    $parent=$acc_account->find_parent();
+                                    $acc_account->set_parameter("pcm_val_parent",$parent);
+                                    $acc_account->save();
+                                }
+                            
+                            // Check that the accounting can be used directly
                             if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
                                 throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
                             }
@@ -1207,6 +1254,7 @@ class Fiche
                                  "case when j_debit='f' then j_montant else 0 end as cred_montant,".
                                  " jr_comment as description,jrn_def_name as jrn_name,j_poste,".
 				 " jr_pj_number,".
+				 " jr_optype,".
                                  "j_debit, jr_internal,jr_id,(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id ) as letter , ".
 				 " jr_tech_per,p_exercice,jrn_def_name,
                                      (with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx using (j_id)  group by jl_id ),
@@ -1410,6 +1458,7 @@ class Fiche
         "<TH style=\"text-align:left\">"._('Code interne')." </TH>".
         "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
         "<TH style=\"text-align:left\">"._('Description')." </TH>".
+        "<TH style=\"text-align:left\">"._('Type')." </TH>".
         "<TH style=\"text-align:right\">"._('Débit')."  </TH>".
         "<TH style=\"text-align:right\">"._('Crédit')." </TH>".
         th('Prog.','style="text-align:right"').
@@ -1445,7 +1494,7 @@ class Fiche
 		    echo "<TR class=\"highlight\">".
 		       "<TD>$old_exercice</TD>".
 		      td('').
-		      "<TD></TD>".
+		      "<TD></TD>".td("").td("").
 		      "<TD>Totaux</TD>".
                             td().
 		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
@@ -1473,6 +1522,7 @@ class Fiche
             "<TD>".$vw_operation."</TD>".
             td($tiers).
             "<TD>".h($op['description'])."</TD>".
+                    td($op['jr_optype']).
             "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
@@ -1490,7 +1540,7 @@ class Fiche
                td().
                td().
         td(_('Totaux')).
-        "<TD></TD>".
+        "<TD></TD>".td("").td("").
 	 "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
 	  "<TD style=\"text-align:right\">".nbm($diff)."</TD>".
@@ -1705,7 +1755,7 @@ class Fiche
         
         $r.='<table  id="tiers_tb" class="sortable"  style="width:90%;margin-left:5%">
             <TR >
-            <TH>'._('Quick Code').HtmlInput::infobulle(17).'</TH>'.
+            <TH>'._('Quick Code').Icon_Action::infobulle(17).'</TH>'.
             '<th>'._('Poste comptable').'</th>'.
             '<th  class="sorttable_sorted">'._('Nom').'<span id="sorttable_sortfwdind"><img src="image/up.gif"></span>'.'</th>
             <th>'._('Adresse').'</th>
@@ -1926,19 +1976,28 @@ class Fiche
         $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
         $sql='select count(*) as c from jrnx where j_qcode=$1';
         $count=$this->cn->get_value($sql,array($qcode));
-        if ( $count == 0 ) return false;
-        return true;
+        if ( $count > 0 ) return TRUE;
+        $count=$this->cn->get_value("select count(*) from action_gestion where f_id_dest=$1 or ag_contact=$1 ",
+                [$this->id]);
+        if ( $count > 0 ) return TRUE;
+        $count=$this->cn->get_value("select count(*) from action_person where f_id=$1 ",
+                [$this->id]);
+        if ( $count > 0 ) return TRUE;
+        
+        return FALSE;
     }
     /*\brief remove a card without verification */
     function delete()
     {
+        $this->cn->start();
         // Remove from attr_value
         $Res=$this->cn->exec_sql("delete from fiche_detail
                                  where
-                                   f_id=".$this->id);
+                                   f_id=$1",[$this->id]);
 
         // Remove from fiche
-        $Res=$this->cn->exec_sql("delete from fiche where f_id=".$this->id);
+        $Res=$this->cn->exec_sql("delete from fiche where f_id=$1",[$this->id]);
+        $this->cn->commit();
 
     }
     /*!\brief create the sql statement for retrieving all

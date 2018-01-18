@@ -172,6 +172,7 @@ class Acc_Account_Ledger
                                  j_debit, jr_internal,jr_pj_number
                                  ,(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id ) as letter 
                                  ,pcm_lib
+                                 ,jr_optype
 				 				 ,jr_tech_per
                                  ,p_exercice
                                  ,jrn_def_name
@@ -394,6 +395,7 @@ class Acc_Account_Ledger
         "<TH style=\"text-align:left\">"._('Code interne')." </TH>".
         "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
         "<TH style=\"text-align:left\">"._('Description')."</TH>".
+        "<TH style=\"text-align:left\">"._('Type')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."</TH>".
         "<TH style=\"text-align:right\">"._("Crédit")."</TH>".
         th('Prog.','style="text-align:right"').
@@ -434,7 +436,7 @@ class Acc_Account_Ledger
 		    echo "<TR class=\"highlight\">".
 		      "<TD>$old_exercice</TD>".
 		      "<TD></TD>".td().td().td().
-		      "<TD>"._("Totaux")."</TD>".
+		      "<TD>"._("Totaux")."</TD>".td("").
 		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 		      "<TD style=\"text-align:right\">".nbm($sum_cred)."</TD>".
 		      td(nbm(abs($progress)).$side,'style="text-align:right"').
@@ -460,6 +462,7 @@ class Acc_Account_Ledger
 	      "<TD>".$vw_operation."</TD>".
                 "<TD>".$tiers."</TD>".
 	      "<TD>".h($op['description'])."</TD>".
+                    td($op['jr_optype']).
 	      "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
@@ -475,7 +478,7 @@ class Acc_Account_Ledger
         echo "<TR class=\"highlight\">".
                 td($op['p_exercice']).
                 td().td().td().td().
-        "<TD >Totaux</TD>".
+        "<TD >Totaux</TD>".td("").
 	  "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	  "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
 	  "<TD style=\"text-align:right\">".nbm(abs($diff)).$side."</TD>".

@@ -21,12 +21,15 @@
 
 /**
  * @file
- * @brief 
- * @param type $name Descriptionara
+ * @brief  Layer above Tmp_Pcmn_Sql
  */
 require_once NOALYSS_INCLUDE."/lib/data_sql.class.php";
 require_once NOALYSS_INCLUDE."/database/tmp_pcmn_sql.class.php";
-
+/**
+ * @brief this class is above tmp_pcmn_sql and is a view of tmp_pcmn
+ * @see Tmp_Pcmn_SQL
+ * @see Acc_Plan_MTable
+ */
 class Acc_Plan_SQL extends Data_SQL
 {   
 

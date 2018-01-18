@@ -19,7 +19,12 @@
  */
 
 // Copyright 2015 Author Dany De Bontridder danydb@aevalys.eu
-// require_once '.php';
+
+  /**
+   *@file
+   *@brief show the lettered operation
+   */
+
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 

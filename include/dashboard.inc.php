@@ -1,5 +1,9 @@
 <?php
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
+/**
+ *@file
+ *@brief Dashboard
+ */
 require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 require_once  NOALYSS_INCLUDE.'/constant.php';

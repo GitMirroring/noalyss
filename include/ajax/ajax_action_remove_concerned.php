@@ -20,7 +20,10 @@
 // Copyright 2014 Author Dany De Bontridder danydb@aevalys.eu
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-
+/**
+ *@file
+ *@brief remove concerned operation , call from follow up
+ */
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 try

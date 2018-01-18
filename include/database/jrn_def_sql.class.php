@@ -266,7 +266,8 @@ class Jrn_Def_sql
 ,jrn_def_bank
 ,jrn_def_num_op
 ,jrn_def_id
-,jrn_def_description) values ($1
+,jrn_def_description,
+jrn_enable) values ($1
 ,$2
 ,$3
 ,$4
@@ -282,6 +283,7 @@ class Jrn_Def_sql
 ,$14
 ,$15
 ,$16
+,1
 ) returning jrn_def_id";
 
 			$this->jrn_def_id = $this->db->get_value(
@@ -325,6 +327,7 @@ class Jrn_Def_sql
 ,jrn_def_bank = $13
 ,jrn_def_num_op = $14
 ,jrn_def_description = $15
+,jrn_enable=$17
  where jrn_def_id= $16";
 		$res = $this->db->exec_sql(
 				$sql, array($this->jrn_def_name
@@ -342,7 +345,9 @@ class Jrn_Def_sql
 			, $this->jrn_def_bank
 			, $this->jrn_def_num_op
 			, strip_tags($this->jrn_def_description)
-			, $this->jrn_def_id)
+			, $this->jrn_def_id
+                        , $this->jrn_enable
+                        )
 		);
 	}
 
@@ -368,6 +373,7 @@ class Jrn_Def_sql
 ,jrn_def_bank
 ,jrn_def_num_op
 ,jrn_def_description
+,jrn_enable
  from public.jrn_def where jrn_def_id=$1";
 		/* please adapt */
 		$res = $this->db->get_array(

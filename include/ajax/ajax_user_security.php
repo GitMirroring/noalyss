@@ -34,6 +34,10 @@ require_once NOALYSS_INCLUDE.'/lib/inplace_switch.class.php';
  * @brief Manage the security of a ledger , from CFGSEC module
  * 
  */
+ global $g_user;
+if ( $g_user->check_module("CFGSEC") == 0)        
+        throw new Exception(_("Non autorisé"));
+    
 $n_dossier_id=Dossier::id();
 //-----------------------------------------------------------------------------
 // Manage the user's access to ledgers
@@ -102,7 +106,7 @@ if ($op=="profile")
     $input=$http->request("input");
     $action=$http->request("ieaction", "string", "display");
     $user_id=$http->post("user_id", "number");
-    $profile_id=$http->post("profile_id", "number");
+    $profile_id=$http->post("profile_id");
     if ($action=="display")
     {
         $ie_input=Inplace_Edit::build($input);
@@ -123,6 +127,7 @@ if ($op=="profile")
         $ie_input=Inplace_Edit::build($input);
         $ie_input->set_callback("ajax_misc.php");
         $ie_input->add_json_param("op", "profile");
+        $ie_input->add_json_param("profile_id", $profile_id);
         $ie_input->add_json_param("gDossier", $n_dossier_id);
         $ie_input->add_json_param("user_id", $user_id);
         $ie_input->set_value($value);
@@ -217,4 +222,52 @@ if ($op=="action_access_all")
                 array($sec_User->login));
     }
     
+}
+//----------------------------------------------------------------------------
+// Enable or disable security on ledger
+//----------------------------------------------------------------------------
+if ($op=="user_sec_ledger")
+{
+    $user_id=$http->get("user_id", "number");
+    $value=$http->get("value", "number");
+    $sec_user=new User($cn, $user_id);
+    $status_sec_ledger=$sec_user->get_status_security_ledger();
+    $sec_ledger=new Inplace_Switch("sec_ledger", $status_sec_ledger);
+    $sec_ledger->set_callback("ajax_misc.php");
+    $sec_ledger->add_json_param("gDossier", $n_dossier_id);
+    $sec_ledger->add_json_param("user_id", $user_id);
+    $sec_ledger->add_json_param("op", "user_sec_ledger");
+    if ($sec_user->get_status_security_ledger()==1||$sec_user->Admin()==1)
+    {
+        $sec_user->set_status_security_ledger(0);
+        echo $sec_ledger->get_iconoff();
+    }else {
+        $sec_user->set_status_security_ledger(1);
+        echo $sec_ledger->get_iconon();
+        
+    }
+}
+//----------------------------------------------------------------------------
+// Enable or disable security on action
+//----------------------------------------------------------------------------
+if ($op=="user_sec_action")
+{
+    $user_id=$http->get("user_id", "number");
+    $value=$http->get("value", "number");
+    $sec_user=new User($cn, $user_id);
+    $status_sec_action=$sec_user->get_status_security_action();
+    $sec_action=new Inplace_Switch("sec_action", $status_sec_action);
+    $sec_action->set_callback("ajax_misc.php");
+    $sec_action->add_json_param("gDossier", $n_dossier_id);
+    $sec_action->add_json_param("user_id", $user_id);
+    $sec_action->add_json_param("op", "user_sec_action");
+    if ($sec_user->get_status_security_action()==1||$sec_user->Admin()==1)
+    {
+        $sec_user->set_status_security_action(0);
+        echo $sec_action->get_iconoff();
+    }else {
+        $sec_user->set_status_security_action(1);
+        echo $sec_action->get_iconon();
+        
+    }
 }

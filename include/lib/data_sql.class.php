@@ -22,7 +22,13 @@
 
 /**
  * @file
- * @brief this wrapper is used to created easily a wrapper to a table
+ * @brief this a abstract class , all the SQL class, like noalyss_sql (table), Acc_Plan_SQL (based on a SQL not a table)
+ */
+
+/**
+ * @brief this an abstract class , all the SQL class, like noalyss_sql (table), 
+ * Acc_Plan_SQL (based on a SQL not a table).
+ * 
  * You must create a class extending this one, in the constructor
  * these variables have to be defined
  * 
@@ -36,50 +42,6 @@
  * After you call the parent constructor
  * @note the view or the table must include an unique key, otherwise the load 
  * doesn't work.
- *
- * @class Noalyss_SQL
- * Match a table or a view into an object, you need to add the code for each table
- * @note : the primary key must be an integer
- *
- * @code
-  class table_name_sql extends Noalyss_SQL
-  {
-
-  function __construct($p_id=-1)
-  {
-  $this->table = "schema.table";
-  $this->primary_key = "o_id";
-
-  $this->name=array(
-  "id"=>"o_id",
-  "program"=>"o_prog",
-  "date"=>"o_date",
-  "qcode"=>"o_qcode",
-  "fiche"=>"f_id",
-
-
-  );
-
-  $this->type = array(
-  "o_id"=>"numeric",
-  "o_prog"=>"numeric",
-  "o_date"=>"date",
-  "o_qcode"=>"text",
-  "f_id"=>"numeric",
-
-  );
-
-  $this->default = array(
-  "o_id" => "auto",
-  );
-  $this->date_format = "DD.MM.YYYY";
-  global $cn;
-
-  parent::__construct($cn,$p_id);
-  }
-
-  }
- * @endcode
  *
  */
 abstract class Data_SQL

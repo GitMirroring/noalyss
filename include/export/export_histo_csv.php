@@ -24,8 +24,9 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 
-$ledger=new Acc_Ledger($cn,0);
+$ledger=new Acc_Ledger_Search($cn,0);
 list($sql,$where)=$ledger->build_search_sql($_GET);
 
 $order=" order by jr_date_order asc,substring(jr_pj_number,'[0-9]+$')::numeric asc ";

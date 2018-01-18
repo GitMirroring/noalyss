@@ -18,11 +18,20 @@
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 /**
+ *@file
  * @brief  file to add to a message
  *
  * @see Sendmail
  * @author dany
  */
+
+/**
+ * @brief  file to add to a message
+ *
+ * @see Sendmail
+ * @author dany
+ */
+
 class FileToSend
 {
     /** 

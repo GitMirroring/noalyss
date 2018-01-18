@@ -59,10 +59,10 @@ class Fiche_Def
         $class_base->set_attribute('account','class_base');
         $class_base->set_attribute('label','acc_label');
         $f_class_base=$class_base->input();
-		$fd_description=new ITextarea('fd_description');
-		$fd_description->width=80;
-		$fd_description->heigh=4;
-		$fd_description->style='class="itextarea" style="margin-left:0px;vertical-align:text-top"';
+        $fd_description=new ITextarea('fd_description');
+        $fd_description->width=80;
+        $fd_description->heigh=4;
+        $fd_description->style='class="itextarea" style="margin-left:0px;vertical-align:text-top"';
         require_once  NOALYSS_TEMPLATE.'/fiche_def_input.php';
         return;
     }
@@ -160,11 +160,11 @@ class Fiche_Def
     }
     /*!
      **************************************************
-     * \brief  Display category into a table
+     * \brief  Display all card categories into a table
      *
      * \return HTML row
      */
-    function Display()
+    function display()
     {
 		$tab = new Sort_Table();
 

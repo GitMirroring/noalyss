@@ -105,12 +105,13 @@ elseif (isset($_POST['save']))
                 if (isset($_POST['reverse_ck']))
                 {
                     $p_date=$http->post('reverse_date',"string", '');
+                    $p_msg=$http->post("ext_label");
                     if (isDate($p_date)==$p_date)
                     {
                         // reverse the operation
                         try
                         {
-                            $ledger->reverse($p_date);
+                            $ledger->reverse($p_date,$p_msg);
                             echo '<p>';
                             echo _('Extourné au ').$p_date;
                             echo '</p>';

@@ -196,7 +196,6 @@ class Database
                 print_r($p_string);
                 print_r($p_array);
                 echo $a->getMessage();
-                echo $a->getTrace();
                 echo $a->getTraceAsString();
                 echo pg_last_error($this->db);
             }
@@ -561,18 +560,23 @@ class Database
 
     function get_value($p_sql, $p_array=null)
     {
-        $this->ret=$this->exec_sql($p_sql, $p_array);
-        $r=pg_NumRows($this->ret);
-        if ($r==0)
-            return "";
-        if ($r>1)
-        {
-            $array=pg_fetch_all($this->ret);
-            throw new Exception("Attention $p_sql retourne ".pg_NumRows($this->ret)."  valeurs ".
-            var_export($p_array, true)." values=".var_export($array, true));
-        }
-        $r=pg_fetch_row($this->ret, 0);
-        return $r[0];
+        try {
+            $this->ret=$this->exec_sql($p_sql, $p_array);
+            $r=pg_NumRows($this->ret);
+            if ($r==0)
+                return "";
+            if ($r>1)
+            {
+                $array=pg_fetch_all($this->ret);
+                throw new Exception("Attention $p_sql retourne ".pg_NumRows($this->ret)."  valeurs ".
+                var_export($p_array, true)." values=".var_export($array, true));
+            }
+            $r=pg_fetch_row($this->ret, 0);
+            return $r[0];
+            
+        } catch (Exception $ex) {
+            throw($ex);
+         }
     }
     /**
      * @brief return the number of rows affected by the previous query
@@ -961,12 +965,12 @@ class Database
         return pg_fetch_result($ret, $p_row, $p_col);
     }
 
-    /**\brief wrapper for the function pg_fetch_row
+    /**
+     * \brief wrapper for the function pg_fetch_row
      * \param $ret is the result of pg_exec (exec_sql)
      * \param $p_row is the indice of the row
      * \return an array indexed from 0
      */
-
     static function fetch_row($ret, $p_row)
     {
         return pg_fetch_row($ret, $p_row);
@@ -1081,32 +1085,31 @@ class Database
      */
     function query_to_csv($ret, $aheader)
     {
-        $seq="";
+        $csv=new Noalyss_Csv("db-query");
+        $a_header=[];
         for ($i=0; $i<count($aheader); $i++)
         {
-            echo $seq.'"'.$aheader[$i]['title'].'"';
-            $seq=";";
+            $a_header[]=$aheader[$i]['title'];
         }
-        printf("\n\r");
+        $csv->write_header($a_header);
+        
         // fetch all the rows
         for ($i=0; $i<Database::num_row($ret); $i++)
         {
             $row=Database::fetch_array($ret, $i);
-            $sep2="";
             // for each rows, for each value
             for ($e=0; $e<count($row)/2; $e++)
             {
                 switch ($aheader[$e]['type'])
                 {
                     case 'num':
-                        echo $sep2.nb($row[$e]);
+                        $csv->add($row[$e],"number");
                         break;
                     default:
-                        echo $sep2.'"'.$row[$e].'"';
+                        $csv->add($row[$e]);
                 }
-                $sep2=";";
             }
-            printf("\n\r");
+            $csv->write();
         }
     }
     /**

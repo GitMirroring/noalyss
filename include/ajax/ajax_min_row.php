@@ -22,7 +22,7 @@
 
 /**
  * @file
- * @brief
+ * @brief return the number of rows for a ledger
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');

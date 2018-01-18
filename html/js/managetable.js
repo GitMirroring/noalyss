@@ -247,7 +247,7 @@ var ManageTable = function (p_table_name)
      *@brief call the ajax with action delete
      *@param id (pk) of the data row
      */
-    this.delete = function (p_id, p_ctl) {
+    this.remove = function (p_id, p_ctl) {
         this.param['p_id'] = p_id;
         this.param['action'] = 'delete';
         this.param['ctl'] = p_ctl;
@@ -303,7 +303,7 @@ var ManageTable = function (p_table_name)
                     var obj = {id: control, "cssclass": "inner_box", "html": loading()};
                     add_div(obj);
                     var pos = calcy(250);
-                    $(obj.id).setStyle({position: "fixed", top:  '250px', width: "auto", "margin-left": "20%"});
+                    $(obj.id).setStyle({position: "absolute", top:  '15%', width: "auto", "margin-left": "20%"});
                     $(obj.id).update(x['html']);
                 } catch (e) {
                     smoke.alert("ERREUR " + e.message);

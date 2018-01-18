@@ -22,8 +22,8 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 /**
  * @file
- * @brief 
- * @param type $name Descriptionara
+ * @brief Aged Balance for card
+ *@see Balance_Age
  */
 require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';

@@ -39,9 +39,9 @@ require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
  */
 class INum extends IText
 {
-    function __construct($name='',$value='')
+    function __construct($name='',$value='',$id="")
     {
-        parent::__construct($name,$value);
+        parent::__construct($name,$value,$id);
 
         $this->size=9;
         $this->style='class="inum"';

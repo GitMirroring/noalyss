@@ -30,6 +30,8 @@
  * Code for ajax , here we see the ajax_input for creating a dg box 
   \code
   $objet->set_pk($p_id);
+ // It is very important to set the name of the javascript variable 
+ // Contained in the http_input variable "ctl"
   $objet->set_object_name($objet_name);
 
   // Set the ajax to call
@@ -55,6 +57,7 @@
     echo $xml->save_XML();
   @endcode
  * @see ManageTable.js
+ * @see ajax_accounting.php
  * 
  */
 
@@ -702,7 +705,7 @@ function check()
         if ($this->can_delete_row())
         {
             echo "<td>";
-            $js=sprintf("%s.delete('%s','%s');", $this->object_name,
+            $js=sprintf("%s.remove('%s','%s');", $this->object_name,
                     $p_row[$this->table->primary_key], $this->object_name
             );
             echo HtmlInput::image_click("trash-24.gif", $js, _("Effacer"));
@@ -914,7 +917,7 @@ function check()
             $status=$p_status;
             ob_start();
 
-            echo HtmlInput::title_box("Donnée", "dtr");
+            echo HtmlInput::title_box("Donnée", "dtr","close","","y");
             printf('<form id="frm%s_%s" method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,
@@ -958,10 +961,11 @@ function check()
         catch (Exception $ex)
         {
             $s1=$xml->createElement("status", "NOK");
-            $s2=$xml->createElement("ctl", $this->object_name);
+            $s3=$xml->createElement("ctl", $this->object_name);
             $s2=$xml->createElement("ctl_row",
                     $this->object_name+"_"+$this->table->get_pk_value());
-            $s3=$xml->createElement("html", $ex->getTraceAsString());
+            $s4=$xml->createElement("html", $ex->getTraceAsString());
+            
             $root=$xml->createElement("data");
             $root->appendChild($s1);
             $root->appendChild($s2);
@@ -982,7 +986,9 @@ function check()
     }
 
     /**
-     * Delete a record and return an XML answer for ajax
+     * Delete a record and return an XML answer for ajax. If a check is needed before
+     * deleting you can override this->delete and throw an exception if the deleting
+     * is not allowed
      * @return \DOMDocument
      */
     function ajax_delete()

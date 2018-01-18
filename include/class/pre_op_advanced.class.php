@@ -186,8 +186,8 @@ class Pre_Op_Advanced extends Pre_operation_detail
         $ret.=dossier::hidden();
 
         $ret.=HtmlInput::hidden('jrn_type', $legder->get_type());
-        $info = HtmlInput::infobulle(0);
-        $info_poste = HtmlInput::infobulle(9);
+        $info = Icon_Action::infobulle(0);
+        $info_poste = Icon_Action::infobulle(9);
         if ($g_user->check_action(FICADD) == 1)
                 $ret.=$f_add_button->input();
         $ret.='<table id="quick_item" style="width:100%">';

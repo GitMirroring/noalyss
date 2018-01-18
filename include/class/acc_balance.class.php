@@ -105,13 +105,21 @@ class Acc_Balance
         {
             case 0:
                 // build query
-                $sql="select j_poste as poste,sum(deb) as sum_deb, sum(cred) as sum_cred from
+                $sql="select j_poste as poste,
+                        sum(deb) as sum_deb, 
+                        sum(cred) as sum_cred,
+                        sum(deb_op)  as sum_deb_ope , 
+                        sum(cred_op) as sum_cred_ope
+                    from               
                      ( select j_poste,
                      case when j_debit='t' then j_montant else 0 end as deb,
-                     case when j_debit='f' then j_montant else 0 end as cred
+                     case when j_debit='f' then j_montant else 0 end as cred,
+                     case when j_debit='t' and jr_optype='OPE'  then j_montant else 0 end as deb_op,
+                     case when j_debit='f' and jr_optype='OPE' then j_montant else 0 end as cred_op
                      from jrnx join tmp_pcmn on (j_poste=pcm_val)
                      left join parm_periode on (j_tech_per = p_id)
                      join jrn_def on (j_jrn_def=jrn_def_id)
+                     join jrn on (j_grpt=jr_grpt_id)
                      where
                      $jrn $from_poste $to_poste
                      $and $filter_sql
@@ -143,14 +151,20 @@ class Acc_Balance
                                                              $jrn $from_poste $to_poste
                                     $and $filter_sql and $per_sql
                                     ) as sub_m group by j_poste order by j_poste ) , 
-                            p as ( select j_poste,sum(deb) as sdeb,sum(cred) as scred 
+                            p as ( select j_poste,sum(deb) as sdeb,
+                                            sum(cred) as scred ,
+                                            sum(deb_op)  as sum_deb_ope , 
+                                            sum(cred_op) as sum_cred_ope
                                 from 
                                     (select j_poste, 
                                         case when j_debit='t' then j_montant else 0 end as deb, 
-                                        case when j_debit='f' then j_montant else 0 end as cred 
+                                        case when j_debit='f' then j_montant else 0 end as cred ,
+                                        case when j_debit='t' and jr_optype='OPE'  then j_montant else 0 end as deb_op,
+                                        case when j_debit='f' and jr_optype='OPE' then j_montant else 0 end as cred_op
                                         from jrnx join tmp_pcmn on (j_poste=pcm_val) 
                                         left join parm_periode on (j_tech_per = p_id) 
                                         join jrn_def on (j_jrn_def=jrn_def_id) 
+                                        join jrn on (j_grpt=jr_grpt_id)
                                         where 
                                        $jrn $from_poste $to_poste
                                     $and $filter_sql and $per_sql_previous)  as sub_p group by j_poste order by j_poste)
@@ -158,7 +172,10 @@ class Acc_Balance
                                                                 ,coalesce(m.sdeb,0) as sum_deb
                                                                 , coalesce(m.scred,0) as sum_cred 
                                                                 ,coalesce(p.sdeb,0) as sum_deb_previous
-                                                                , coalesce(p.scred,0) as sum_cred_previous from m full join p on (p.j_poste=m.j_poste)
+                                                                , coalesce(p.scred,0) as sum_cred_previous 
+                                                                ,coalesce(sum_deb_ope,0) as sum_deb_ope
+                                                                ,coalesce(sum_cred_ope,0) as sum_cred_ope
+                                                        from m full join p on (p.j_poste=m.j_poste)
                                              order by poste";
                        
                  } catch (Exception $exc) {
@@ -166,13 +183,21 @@ class Acc_Balance
                     /*
                      * no previous exercice
                      */
-                     $sql="select upper(j_poste::text) as poste,sum(deb) as sum_deb, sum(cred) as sum_cred from
-                     ( select j_poste,
-                     case when j_debit='t' then j_montant else 0 end as deb,
-                     case when j_debit='f' then j_montant else 0 end as cred
-                     from jrnx join tmp_pcmn on (j_poste=pcm_val)
-                     left join parm_periode on (j_tech_per = p_id)
-                     join jrn_def on (j_jrn_def=jrn_def_id)
+                     $sql="select j_poste as poste,
+                        sum(deb) as sum_deb, 
+                        sum(cred) as sum_cred,
+                        sum(deb_op)  as sum_deb_ope , 
+                        sum(cred_op) as sum_cred_ope
+                        from               
+                         ( select j_poste,
+                         case when j_debit='t' then j_montant else 0 end as deb,
+                         case when j_debit='f' then j_montant else 0 end as cred,
+                         case when j_debit='t' and jr_optype='OPE'  then j_montant else 0 end as deb_op,
+                         case when j_debit='f' and jr_optype='OPE' then j_montant else 0 end as cred_op
+                         from jrnx join tmp_pcmn on (j_poste=pcm_val)
+                         left join parm_periode on (j_tech_per = p_id)
+                         join jrn_def on (j_jrn_def=jrn_def_id)
+                         join jrn on (j_grpt=jr_grpt_id)
                      where
                      $jrn $from_poste $to_poste
                      $and $filter_sql
@@ -188,6 +213,10 @@ class Acc_Balance
         $tot_deb=  0.0;
         $tot_deb_saldo=0.0;
         $tot_cred_saldo=0.0;
+        $tot_cred_ope=  0.0;
+        $tot_deb_ope=  0.0;
+        $tot_deb_saldo_ope=0.0;
+        $tot_cred_saldo_ope=0.0;
         $tot_cred_previous=  0.0;
         $tot_deb_previous=  0.0;
         $tot_deb_saldo_previous=0.0;
@@ -206,7 +235,11 @@ class Acc_Balance
             $a['sum_cred']=round($r['sum_cred'],2);
             $a['solde_deb']=round(( $a['sum_deb']  >=  $a['sum_cred'] )? $a['sum_deb']- $a['sum_cred']:0,2);
             $a['solde_cred']=round(( $a['sum_deb'] <=  $a['sum_cred'] )?$a['sum_cred']-$a['sum_deb']:0,2);
-            
+            // opening
+            $a['sum_deb_ope']=round($r['sum_deb_ope'],2);
+            $a['sum_cred_ope']=round($r['sum_cred_ope'],2);
+            $a['solde_deb_ope']=round(( $a['sum_deb_ope']  >=  $a['sum_cred_ope'] )? $a['sum_deb_ope']- $a['sum_cred_ope']:0,2);
+            $a['solde_cred_ope']=round(( $a['sum_deb_ope'] <=  $a['sum_cred_ope'] )?$a['sum_cred_ope']-$a['sum_deb_ope']:0,2);
             
             
             if ($p_previous_exc==1)
@@ -223,10 +256,16 @@ class Acc_Balance
 	    if ($p_previous_exc==0 && $this->unsold==true && $a['solde_cred']==0 && $a['solde_deb']==0) continue;
 	    if ($p_previous_exc==1 && $this->unsold==true && $a['solde_cred']==0 && $a['solde_deb']==0 && $a['solde_cred_previous']==0 && $a['solde_deb_previous']==0) continue;
             $array[$i]=$a;
+            // Normal op
             $tot_cred=  bcadd ($tot_cred,$a['sum_cred']);
             $tot_deb= bcadd($tot_deb, $a['sum_deb']);
             $tot_deb_saldo= bcadd($tot_deb_saldo, $a['solde_deb']);
             $tot_cred_saldo= bcadd($tot_cred_saldo,$a['solde_cred']);
+            // Opening op.
+            $tot_cred_ope=  bcadd ($tot_cred_ope,$a['sum_cred_ope']);
+            $tot_deb_ope= bcadd($tot_deb_ope, $a['sum_deb_ope']);
+            $tot_deb_saldo_ope= bcadd($tot_deb_saldo_ope, $a['solde_deb_ope']);
+            $tot_cred_saldo_ope= bcadd($tot_cred_saldo_ope,$a['solde_cred_ope']);
             
             
         }//for i
@@ -242,6 +281,10 @@ class Acc_Balance
         $a['sum_cred']=$tot_cred;
         $a['solde_deb']=$tot_deb_saldo;
         $a['solde_cred']=$tot_cred_saldo;
+        $a['sum_deb_ope']=$tot_deb_ope;
+        $a['sum_cred_ope']=$tot_cred_ope;
+        $a['solde_deb_ope']=$tot_deb_saldo_ope;
+        $a['solde_cred_ope']=$tot_cred_saldo_ope;
         if ($p_previous_exc==1) {
             $a['sum_deb_previous']=$tot_deb_previous;
             $a['sum_cred_previous']=$tot_cred_previous;

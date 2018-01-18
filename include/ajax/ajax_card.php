@@ -130,7 +130,7 @@ case 'rmfa':
 case 'dc':
     $f=new Fiche($cn);
     /* add title + close */
-    $html=HtmlInput::title_box(_("Détail fiche"), $ctl);
+    $html=HtmlInput::title_box(_("Détail fiche"), $ctl,"close","","y");
     if ( $qcode != '')
     {
         $f->get_by_qcode($qcode);
@@ -164,6 +164,12 @@ case 'dc':
 		$html.=HtmlInput::submit('save',_('Sauver'));
 	      }
 	    if ( ! isset ($nohistory))$html.=HtmlInput::history_card_button($f->id,_('Historique'));
+            // Display a remove button if not used and can modify card
+            if ( $can_modify == 1 && $f->is_used()==FALSE)
+            {
+                $js=str_replace('"',"'",json_encode(["gDossier"=>Dossier::id(),'op'=>'card','op2'=>"rm_card","f_id"=>$f->id,'ctl'=>$ctl]));
+                $html.=HtmlInput::button_action(_("Efface"), "delete_card($js)","x","smallbutton");
+            }
             $html.='</p>';
 	    if ($can_modify==1)
 	      {
@@ -180,7 +186,7 @@ case 'dc':
     /* Blank card */
     /* ------------------------------------------------------------ */
 case 'bc':
-    if ( $g_user->check_action(FICADD)==1 )
+    if ( $g_user->check_action(FICADD)==1 || $g_user->check_action(FIC)==1)
     {
         $r=HtmlInput::title_box(_("Nouvelle fiche"), $ctl);
 	/* get cat. name */
@@ -255,7 +261,7 @@ case 'st':
     }
     if ( strpos($where," in ()") != 0)
     {
-             $html=HtmlInput::anchor_close('select_card_div');
+             $html=Icon_Action::close('select_card_div');
              $html.=h2info(_('Choix de la catégorie'));
              $html.='<h3 class="notice">';
              $html.=_("Aucune catégorie de fiche ne correspond à".
@@ -290,6 +296,7 @@ case 'st':
         $r.='<table id="cat_card_table" class="result">';
         for ($i=0;$i<count($array);$i++)
         {
+            $nb_count=$cn->get_value("select count(*) from fiche where fd_id=$1",[$array[$i]['fd_id']]);
             $list_fiche.=sprintf("<fiche_cat_item>%d</fiche_cat_item>",$array[$i]['fd_id']);
             $class=($i%2==0)?' class="even" ':' class="odd" ';
             $r.='<tr '.$class.' id="select_cat_row_'.$array[$i]['fd_id'].'">';
@@ -297,7 +304,7 @@ case 'st':
             $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_label']).'</a>';
             $r.='</td>';
             $r.='<td>';
-            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_description']).'</a>';
+            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_description'])."($nb_count)".'</a>';
             $r.='</td>';
            
              $r.="</tr>";
@@ -377,7 +384,7 @@ case 'fs':
     $q=new IText('query');
     $q->value=(isset($query))?$query:'';
 	$r.='<span style="margin-left:50px">';
-    $r.=_('Fiche contenant').HtmlInput::infobulle(19);
+    $r.=_('Fiche contenant').Icon_Action::infobulle(19);
     $r.=$q->input();
     $r.=HtmlInput::submit('fs',_('Recherche'),"","smallbutton");
 	$r.='</span>';
@@ -404,7 +411,7 @@ case 'fs':
 
     if ( strpos($sql," in ()") != 0)
     {
-            $html=HtmlInput::anchor_close('search_card');
+            $html=Icon_Action::close('search_card');
              $html.='<div> '.h2info(_('Recherche de fiche')).'</div>';
              $html.='<h3 class="notice">';
              $html.=_("Aucune catégorie de fiche ne correspond à".
@@ -444,6 +451,7 @@ case 'fs':
     ob_start();
     require_once NOALYSS_TEMPLATE.'/card_result.php';
     $r.=ob_get_contents();
+    $r.=HtmlInput::button_close("search_card");
     ob_end_clean();
     $ctl=$ctl.'_content';
     $html=$r;
@@ -585,6 +593,40 @@ case 'upc':
 	  $html.=$f->Display(true);
 	}
       }
+      break;
+      //------------------------------------------------------------------
+      // Unlink a card
+      //------------------------------------------------------------------
+        case 'rm_card':
+             $html=HtmlInput::title_box("Détail fiche", $ctl);
+
+  if ( $g_user->check_action(FIC)==0 )
+    {
+      $html.=alert(_('Action interdite'),true);
+    }
+  else
+    {
+      if ($cn->get_value('select count(*) from fiche where f_id=$1',array($_GET['f_id'])) == '0' )
+	{
+	  $html.=alert(_('Fiche non valide'),true);
+	  }
+
+      else
+	{
+
+	  $f=new Fiche($cn,$_GET['f_id']);
+          if ( $f->is_used()==0){
+            $f->delete();
+            $html="OK";
+          } else {
+            $html="";
+            $html=_("Fiche non effacée");
+          }
+
+	}
+      }
+      break;
+            
 } // switch
 $xml=escape_xml($html);
 if (DEBUG && headers_sent()) {

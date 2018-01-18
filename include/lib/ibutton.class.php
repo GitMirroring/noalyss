@@ -80,10 +80,8 @@ class IButton extends HtmlInput
     }
     static function show_calc()
     {
-        $calc=new IButton('shcalc');
-        $calc->label=_('Calculatrice');
-        $calc->javascript="show_calc()";
-        return $calc->input();
+        $calc='<span class="button icon" onclick="show_calc();">&#xf1ec;</span>';
+        return $calc;
 
     }
     static public function test_me()

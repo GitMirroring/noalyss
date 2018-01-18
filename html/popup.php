@@ -21,6 +21,7 @@ require_once '../include/constant.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
@@ -42,7 +43,20 @@ if (  ! isset ($_SESSION['g_user'] ) )
 
 html_page_start($_SESSION['g_theme']);
 echo '<div style="float:left;">';
-
+?>
+<script>
+/**
+ * All the onload must be here otherwise the other will overwritten
+ * @returns {undefined}
+ */
+window.onload=function ()
+{
+    create_anchor_up();
+    init_scroll();
+    sorttable.init
+}
+</script>
+<?php
 global $g_user;
 $cn=Dossier::connect();
 $g_user=new User($cn);

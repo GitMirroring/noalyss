@@ -166,7 +166,8 @@ function action_add_concerned_card(obj)
             'query' : inp,
             'ctl' : 'unused',
             'ag_id' : ag_id,
-            'op':'card'
+            'op':'card',
+            'accvis':0
         });
 
         waiting_box();
@@ -317,8 +318,8 @@ function result_card_search(req)
             sx=document.body.scrollTop+60;
 	}
 
-        var div_style="top:"+sx+"px;height:80%";
-        add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:true,effect:'blinddown'});
+        var div_style="top:"+sx+"px;height:auto";
+        add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:false,effect:'blinddown'});
         
         $('search_card').innerHTML=code_html;
         
@@ -459,7 +460,7 @@ function fill_ipopcard(obj)
     var str_top=fixed_position(250,nTop)
     var str_style=str_top+";width:45em;height:auto;position:absolute";
 
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
 
     add_div(popup);
     var dossier=$('gDossier').value;
@@ -486,7 +487,7 @@ function fill_ipopcard(obj)
     if ( obj.nohistory != undefined) {
      queryString+='&nohistory';
     }
-
+    queryString=encodeURI(queryString);
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
                                   method:'get',
@@ -559,18 +560,11 @@ function select_card_type(obj)
     var content="select_card_div";
     if ( $(content)){removeDiv(content);}
     var sx=0;
-    if ( window.scrollY)
-    {
-            sx=window.scrollY+160;
-    }
-    else
-    {
-        sx=document.body.scrollTop+160;
-    }
+    sx=calcy(160);
 
     var str_style="top:"+sx+"px;height:auto";
     waiting_box();
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':true};
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
 
     add_div(popup);
 
@@ -658,7 +652,7 @@ function dis_blank_card(obj)
     var nLeft=posX;
     var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto";
 
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
   
     add_div(popup);
 
@@ -729,6 +723,12 @@ function form_blank_card(obj)
 function save_card(obj)
 {
     var content=$(obj).ipopup;
+    var accounting= $(obj)['av_text25'];
+        var accounting= $(obj)['av_text5'];
+    if ( accounting.value.length > 40 ) {
+      smoke.alert('Poste comptable trop grand');
+      return false;
+        }
     // Data must be taken here
     data=$('save_card').serialize(false);
     waiting_box();
@@ -983,4 +983,41 @@ function action_remove_concerned(p_dossier,p_fiche_id,p_action_id)
             }
     );
     }
-    
+/**
+ * Remove a card after checking it is not used
+ * @param object obj {gDossier,op,op2:rm_card,ctl,f_id}
+ */    
+function delete_card(obj) {
+    console.debug("delete_card");
+    console.debug(obj);
+    smoke.confirm("Confirmez ? ", function (e) {
+        if (e) {
+            waiting_box();
+            new Ajax.Request("ajax_misc.php", {
+                "method": "get",
+                parameters: obj,
+                onSuccess: function (req) {
+                    remove_waiting_box();
+                    var answer = req.responseXML;
+                    var a = answer.getElementsByTagName('ctl');
+                    if (a.length == 0)
+                    {
+                        var rec = req.responseText;
+                        alert_box('erreur :' + rec);
+                    }
+                    var html = answer.getElementsByTagName('code');
+                    var namectl = a[0].firstChild.nodeValue;
+                    var nodeXml = html[0];
+                    var code_html = getNodeText(nodeXml);
+                    code_html = unescape_xml(code_html);
+                    if ( code_html == "OK") {
+                        Effect.Fade(obj['ctl'], { duration: 1.5 });    
+                    } else {
+                        smoke.alert(code_html);
+                    }
+                }
+
+            });
+        }
+    });
+}

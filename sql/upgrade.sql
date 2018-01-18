@@ -1,6 +1,15 @@
-alter table action_gestion drop ag_ref_ag_id;
---- repository insert into theme (the_name,the_filestyle) values ('Classic 692','style-r692.css');
+set search_path=public,comptaproc;
 
+
+alter table action_gestion drop ag_ref_ag_id;
+/* --- repository 
+-- add style
+insert into theme (the_name,the_filestyle) values ('Classic7','style-classic7.css');
+delete from theme where the_filestyle in ('style-mandarine.css','style-mobile.css');
+update user_global_pref set parameter_value='style-classic7.css' where parameter_value in  ('style-mandarine.css','style-mobile.css');
+-- add constraint
+alter table jnt_use_dos add CONSTRAINT use_id_dos_id_uniq UNIQUE (use_id,dos_id);
+*/
 create sequence tmp_pcmn_id_seq;
 ALTER TABLE tmp_pcmn ADD COLUMN id bigint;
 update tmp_pcmn set id=nextval('tmp_pcmn_id_seq');
@@ -9,7 +18,7 @@ ALTER TABLE tmp_pcmn ALTER COLUMN id SET NOT NULL;
 ALTER TABLE tmp_pcmn ALTER COLUMN id SET DEFAULT nextval('tmp_pcmn_id_seq'::regclass);
 ALTER TABLE tmp_pcmn   ADD CONSTRAINT id_ux UNIQUE(id);
 COMMENT ON COLUMN tmp_pcmn.id IS 'allow to identify the row, it is unique and not null (pseudo pk)';
-
+update tmp_pcmn set id=nextval('tmp_pcmn_id_seq');
 -- set search_path to public,comptaproc;
 alter table tmp_pcmn add column pcm_direct_use varchar(1);
 COMMENT ON COLUMN tmp_pcmn.pcm_direct_use IS 'Value are N or Y , N cannot be used directly , not even through a card';
@@ -29,3 +38,65 @@ COMMENT ON COLUMN operation_analytique.f_id IS 'FK to fiche.f_id , used only wit
 
 drop FUNCTION comptaproc.table_analytic_account(text,text);
 drop FUNCTION comptaproc.table_analytic_card(text,text);
+
+CREATE TABLE public.user_filter (
+	id bigserial,
+	login text NULL,
+	nb_jrn int4 NULL,
+	date_start varchar(10) NULL,
+	date_end varchar(10) NULL,
+	description text NULL,
+	amount_min numeric(20,4) NULL,
+	amount_max numeric(20,4) NULL,
+	qcode text NULL,
+	accounting text NULL,
+	r_jrn text NULL,
+	date_paid_start varchar(10) NULL,
+	date_paid_end varchar(10) NULL,
+	ledger_type varchar(5) NULL,
+	all_ledger int4 NULL,
+	filter_name text NOT NULL,
+	unpaid varchar NULL,
+	PRIMARY KEY (id)
+);
+
+
+
+
+alter table jrn_periode drop constraint jrn_periode_pk;
+create sequence jrn_periode_id_seq;
+alter table jrn_periode add id bigint;
+alter table jrn_periode alter column   id set default  nextval('jrn_periode_id_seq');
+update jrn_periode set id=nextval('jrn_periode_id_seq');
+alter table jrn_periode add  constraint jrn_periode_pk  primary key (id);
+alter table jrn_periode add constraint  jrn_periode_periode_ledger unique (jrn_def_id,p_id); 
+
+CREATE TABLE public.user_active_security (
+	id serial not NULL,
+	us_login text NOT NULL,
+	us_ledger varchar(1) not NULL,
+	us_action varchar(1) not NULL
+);
+COMMENT ON COLUMN public.user_active_security.us_login IS 'user''s login' ;
+COMMENT ON COLUMN public.user_active_security.us_ledger IS 'Flag Security for ledger' ;
+COMMENT ON COLUMN public.user_active_security.us_action IS 'Security for action' ;
+
+ALTER TABLE public.user_active_security ADD CONSTRAINT user_active_security_pk PRIMARY KEY (id) ;
+ALTER TABLE public.user_active_security ADD CONSTRAINT user_active_security_ledger_check CHECK (us_ledger in ('Y','N')) ;
+ALTER TABLE public.user_active_security ADD CONSTRAINT user_active_security_action_check CHECK (us_action in ('Y','N')) ;
+
+insert into user_active_security (us_login,us_ledger,us_action)  select user_name,'Y','Y' from profile_user;
+
+alter table jrn_def add jrn_enable int;
+alter table jrn_def alter  jrn_enable set default 1;
+update jrn_def set jrn_enable=1;
+comment on column jrn_def.jrn_enable is 'Set to 1 if the ledger is enable ';
+
+
+alter table jrn add jr_optype varchar(3);
+alter table jrn alter jr_optype set default 'NOR';
+comment on column jrn.jr_optype is 'Type of operation , NOR = NORMAL , OPE opening , EXT extourne, CLO closing';
+update jrn set jr_optype='NOR';
+
+-- update quant_sold set qs_vat_sided=round(qs_vat_sided,2);
+-- update quant_purchase set qp_vat_sided=round(qp_vat_sided,2);

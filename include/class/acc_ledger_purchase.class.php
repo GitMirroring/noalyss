@@ -875,10 +875,15 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 /* insert into jrn */
                 $acc_pay->mt=$mt;
                 $acc_pay->desc=(!isset($e_comm_paiement) || strlen(trim($e_comm_paiement)) == 0) ?$e_comm:$e_comm_paiement;
+                
                 $mp_jr_id=$acc_pay->insert_jrn();
                 $acjrn->grpt_id=$acseq;
                 $acjrn->update_internal_code($acinternal);
-
+                // add an automatic PJ if ODS
+                if ($acjrn->get_type()=="ODS") {
+                    $acc_pay->pj=$acjrn->guess_pj();
+                    $acc_pay->set_pj();
+                }
                 $r1=$this->get_id($internal);
                 $r2=$this->get_id($acinternal);
 
@@ -1000,7 +1005,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $Echeance=new IDate();
         $Echeance->setReadOnly(false);
         $Echeance->tabindex=2;
-        $label=HtmlInput::infobulle(4);
+        $label=Icon_Action::infobulle(4);
         $f_echeance=$Echeance->input('e_ech',$e_ech,'Echéance'.$label);
         $f_periode="";
         if ($this->check_periode() == true)
@@ -1029,7 +1034,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             }
 
             $r.="<td>";
-            $label=HtmlInput::infobulle(3);
+            $label=Icon_Action::infobulle(3);
             $f_periode=td(_("Période comptable")." $label ").td($l_form_per);
         }
         // Ledger (p_jrn)
@@ -1062,7 +1067,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $Commentaire->setReadOnly(false);
         $Commentaire->size=60;
         $Commentaire->tabindex=3;
-        $label=HtmlInput::infobulle(1) ;
+        $label=Icon_Action::infobulle(1) ;
         $f_desc=$Commentaire->input("e_comm",$e_comm);
 
         // PJ
@@ -1111,7 +1116,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         }
 
         $W1=new ICard();
-        $W1->label=_("Fournisseur ").HtmlInput::infobulle(0) ;
+        $W1->label=_("Fournisseur ").Icon_Action::infobulle(0) ;
         $W1->name="e_client";
         $W1->tabindex=3;
         $W1->value=$e_client;
@@ -1525,7 +1530,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 {
 
 					 $r.='<td style="background-color:red" class="num" '.$css_void_tva.'>';
-					 $r.=HtmlInput::infobulle(28);
+					 $r.=Icon_Action::infobulle(28);
                                          $r.='<a href="#" class="error" style="display:inline" title="'. _("Attention Différence entre TVA calculée et donnée").'">'
 							.nbm($tva_item).'<a>';
                 }

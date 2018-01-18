@@ -70,7 +70,7 @@ $doc_type->get();
   <tr>
   <td><?php echo _('Prochain numéro')?>
 	  <?php echo 
-		HtmlInput::infobulle(15);
+		Icon_Action::infobulle(15);
 	?>
   </td>
    <td>

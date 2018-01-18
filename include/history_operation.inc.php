@@ -32,33 +32,29 @@ require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 global $g_user,$cn,$http;
 $p_array = $_GET;
 $ledger_type=$http->get("ledger_type","string", 'ALL');
+
+$Ledger=new Acc_Ledger_Search($ledger_type,0,'search_op');
 switch($ledger_type)
 {
         case 'ACH':
-                $Ledger = new Acc_Ledger_Purchase($cn, 0);
                 $ask_pay=1;
                 break;
         case 'ODS':
-                $Ledger=new Acc_Ledger($cn,0);
                 $ask_pay=0;
                 $p_array['ledger_type']='ODS';
-                $Ledger->type='ODS';
                 break;
         case 'ALL':
-                $Ledger=new Acc_Ledger($cn,0);
                 $ask_pay=0;
                 $p_array['ledger_type']='ALL';
-                $Ledger->type='ALL';
                 break;
         case 'VEN':
-                $Ledger=new Acc_Ledger_Sold($cn,0);
                 $ask_pay=1;
                 break;
         case 'FIN':
-                $Ledger=new Acc_Ledger_Fin($cn,0);
                 $ask_pay=0;
                 break;
 
@@ -103,7 +99,6 @@ else
 }
 /*  compute the sql stmt */
 list($sql, $where) = $Ledger->build_search_sql($p_array);
-
 $max_line = $cn->count_sql($sql);
 
 $step = $_SESSION['g_pagesize'];

@@ -84,6 +84,8 @@ if ( ! isset($_REQUEST['action']))
 	echo '<th>'.$header->get_header(1).'</th>';
 	echo th(_('prénom'));
 	echo th(_('profil'));
+	echo th(_('Séc. Journaux actif'));
+	echo th(_('Séc. Action actif'));
 	echo '<th>'.$header->get_header(2).'</th>';
     for ($i = 0;$i < $MaxUser;$i++)
     {
@@ -107,8 +109,12 @@ if ( ! isset($_REQUEST['action']))
 		echo td($l_line['use_name']);
 		echo td($l_line['use_first_name']);
 		echo td($profile);
+                // status of security on ledger and action 
+                $a_sec=$cn->get_row("select us_ledger,us_action from user_active_security where us_login =$1",
+                        [$l_line['use_login']]);
+                echo td($a_sec['us_ledger']);
+                echo td($a_sec['us_action']);
 		echo td($str);
-
 		echo "</TR>";
     }
     echo '</TABLE>';
@@ -182,7 +188,8 @@ if ( $action == "view" )
         $action="";
         return;
     }
-
+    
+    
     //--------------------------------------------------------------------------------
     // Show access for journal
     //--------------------------------------------------------------------------------
@@ -191,10 +198,7 @@ if ( $action == "view" )
                                " order by jrn_def_name");
     $sec_User=new User($cn,$user_id);
     $n_dossier_id=Dossier::id();
-
-    $sHref=sprintf ('export.php?act=PDF:sec&user_id=%s&'.$str_dossier ,
-                    $user_id
-                   );
+    $sHref=http_build_query(["act"=>"PDF:sec","user_id"=>$user_id,"gDossier"=>$n_dossier_id]);
 
     echo dossier::hidden();
     echo HtmlInput::hidden('action','sec');
@@ -203,7 +207,7 @@ if ( $action == "view" )
     $i_profile->id=uniqid("profile");
     $i_profile->value=$cn->make_array("select p_id,p_name from profile
                     order by p_name");
-
+    
     $i_profile->selected=$sec_User->get_profile();
     $ie_profile=new Inplace_Edit($i_profile);
     
@@ -220,6 +224,33 @@ if ( $action == "view" )
     echo HtmlInput::button("grant_all", _("Accès à tout"), " onclick=\" grant_ledgers ('W') \"");
     echo HtmlInput::button("grant_readonly", _("Uniquement Lecture"), " onclick=\" grant_ledgers ('R') \"");
     echo HtmlInput::button("revoke_all", _("Aucun accès"), " onclick=\" grant_ledgers ('X') \"");
+    //-------------------------------------------------------------------------
+    // Enable or not the security on ledger
+    //-------------------------------------------------------------------------
+    echo "<p>";
+    echo _("Sécurité sur les journaux")." ";
+    $status_sec_ledger=$sec_User->get_status_security_ledger();
+    //--
+    // Administrator can always access all the ledgers
+    if ( $sec_User->admin==1) {
+        echo '<p>';
+        echo _("Les administrateurs NOALYSS ont toujours accès à tout");
+        $status_sec_ledger=0;
+        $sec_User->set_status_security_ledger(0);
+    } else {
+        $sec_ledger=new Inplace_Switch("sec_ledger", $status_sec_ledger);
+        $sec_ledger->set_callback("ajax_misc.php");
+        $sec_ledger->add_json_param("gDossier", $n_dossier_id);
+        $sec_ledger->add_json_param("user_id", $user_id);
+        $sec_ledger->add_json_param("op", "user_sec_ledger");
+        $sec_ledger->set_jscript(" if ( $('security_ledger_tbl').visible() ||  {$sec_User->Admin()}==1) { $('security_ledger_tbl').hide();} else { $('security_ledger_tbl').show();}");
+        echo $sec_ledger->input();
+    }
+    echo "</p>";
+    //------------------------------------------------------------------------
+    // Access by ledgers, needed if the security on ledger is enable
+    //------------------------------------------------------------------------
+    echo '<div id="security_ledger_tbl">';
     echo '<table>';
     $MaxJrn=Database::num_row($Res);
     $jrn_priv=new ISelect("iledger");
@@ -251,6 +282,7 @@ if ( $action == "view" )
         echo '</tr>';
     }
     echo '</table>';
+    echo '</div>';
     echo '</fieldset>';
 
     //**********************************************************************
@@ -259,9 +291,34 @@ if ( $action == "view" )
     echo '<fieldset> <legend>'._('Actions').'</legend>';
     echo HtmlInput::button("grant_all_action", _("Toutes les actions"), " onclick=\" grant_action(1) \"");
     echo HtmlInput::button("revoke_all_action", _("Aucune action"), " onclick=\" grant_action (0) \"");
+    //-------------------------------------------------------------------------
+    // Enable or not the security on ledger
+    //-------------------------------------------------------------------------
+    echo "<p>";
+    echo _("Sécurité sur les actions")." ";
+    // Administrator  always have all action
+    if ( $sec_User->admin==1) {
+        echo '<p>';
+        echo _("Les administrateurs NOALYSS ont toujours accès à tout");
+        $status_sec_action=0;
+        $sec_User->set_status_security_action(0);
+    } else {
+
+        $status_sec_action=$sec_User->get_status_security_action();
+        $sec_action=new Inplace_Switch("sec_action", $status_sec_action);
+        $sec_action->set_callback("ajax_misc.php");
+        $sec_action->add_json_param("gDossier", $n_dossier_id);
+        $sec_action->add_json_param("user_id", $user_id);
+        $sec_action->add_json_param("op", "user_sec_action");
+        $sec_action->set_jscript(" if ( $('security_action_tbl').visible() ) { $('security_action_tbl').hide();} else { $('security_action_tbl').show();}");
+        echo $sec_action->input();
+    }
+    echo "</p>";
+    
+
     include(NOALYSS_TEMPLATE.'/security_list_action.php');
     echo '</fieldset>';
-    echo HtmlInput::button('Imprime',_('imprime'),"onclick=\"window.open('".$sHref."');\"");
+    echo HtmlInput::button('Imprime',_('imprime'),"onclick=\"window.open('export.php?".$sHref."');\"");
 	echo $return;
     
     ?>
@@ -304,9 +361,9 @@ if ( $action == "view" )
           str_id = new String( a_select[i].id);
            if ( str_id.search(/action/) > -1 ) {
              if ( p_value == 1 ) {
-                 a_select[i].innerHTML='<img src="image/icon-on.png"/>';
+                 a_select[i].innerHTML='&#xf204';
              } else {
-                 a_select[i].innerHTML='<img src="image/icon-off.png"/>';
+                 a_select[i].innerHTML='&#xf205';
              } 
            }
          } // loop
@@ -320,6 +377,20 @@ if ( $action == "view" )
                             }
                 });
      }
+     function display_security_ledger(p_value) {
+        if ( p_value == 1) {
+                $('security_ledger_tbl').show();}
+            else {
+                $('security_ledger_tbl').hide();}
+     }
+    display_security_ledger(<?=$status_sec_ledger?>);
+     function display_security_action(p_value) {
+        if ( p_value == 1) {
+                $('security_action_tbl').show();}
+            else {
+                $('security_action_tbl').hide();}
+     }
+    display_security_action(<?=$status_sec_action?>);
     </script>
 <?php
 } // end of the form

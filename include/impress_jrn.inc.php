@@ -35,7 +35,7 @@ global $g_user,$http;
 //-----------------------------------------------------
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 
-if ($g_user->Admin() == 0 && $g_user->is_local_admin() == 0)
+if ($g_user->Admin() == 0 && $g_user->is_local_admin() == 0  && $g_user->get_status_security_ledger()==1)
 {
 	$sql = "select jrn_def_id,jrn_def_name
          from jrn_def join jrn_type on jrn_def_type=jrn_type_id
@@ -53,16 +53,16 @@ else
                          from jrn_def join jrn_type on jrn_def_type=jrn_type_id
 						 order by jrn_def_name
 						 ");
+    // Count the forbidden journaux
+//    $NoPriv = $cn->count_sql("select jrn_def_id,jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_type_id,jrn_desc,uj_priv,
+//                           jrn_deb_max_line,jrn_cred_max_line
+//                           from jrn_def join jrn_type on jrn_def_type=jrn_type_id
+//                           join  user_sec_jrn on uj_jrn_id=jrn_def_id
+//                           where
+//                           uj_login=$1
+//                           and uj_priv ='X'
+//                           ",array($g_user->id));
 }
-// Count the forbidden journaux
-$NoPriv = $cn->count_sql("select jrn_def_id,jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_type_id,jrn_desc,uj_priv,
-                       jrn_deb_max_line,jrn_cred_max_line
-                       from jrn_def join jrn_type on jrn_def_type=jrn_type_id
-                       join  user_sec_jrn on uj_jrn_id=jrn_def_id
-                       where
-                       uj_login=$1
-                       and uj_priv ='X'
-                       ",array($g_user->id));
 /*
  * Show all the available ledgers
  */
@@ -139,7 +139,7 @@ $w->selected = 1;
 print '</TR>';
 print '<TR>';
 $w->selected = (isset($simple)) ? $simple : '1';
-echo '<td>Style d\'impression '.HtmlInput::infobulle(32).'</td>' . $w->input('p_simple', $a);
+echo '<td>Style d\'impression '.Icon_Action::infobulle(32).'</td>' . $w->input('p_simple', $a);
 print "</TR>";
 
 echo '</TABLE>';
@@ -338,7 +338,7 @@ if (isset($_REQUEST['bt_html']))
                 /*
                  * Ledger ACH or VEN
                  */
-                $own=new Own($cn);
+                $own=new Noalyss_Parameter_Folder($cn);
                 require_once NOALYSS_TEMPLATE.'/print_ledger_simple.php';
                 
             }

@@ -209,7 +209,7 @@ else
     echo HtmlInput::hidden('action','restore');
     echo HtmlInput::hidden('sa','r');
     echo '<table>';
-    echo '<tr><td>'._("Nom de la base de donnée").HtmlInput::infobulle(29)
+    echo '<tr><td>'._("Nom de la base de donnée").Icon_Action::infobulle(29)
 			.'</td>';
     $wNom=new IText();
     $wNom->name="database";

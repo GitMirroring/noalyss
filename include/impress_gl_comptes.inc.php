@@ -146,7 +146,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
     }
     if ( isDate($_REQUEST['from_periode'])==null || isDate($_REQUEST['to_periode'])==null)
     {
-        echo alert('Date malformée, désolée');
+        echo alert(_('Date malformée, désolée'));
         return;
     }
     echo '<div class="content">';
@@ -181,6 +181,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
         <td>R&eacute;f&eacute;rence</td>
         <td>Libell&eacute;</td>
         <td>Pi&egrave;ce</td>
+        <td>Type</td>
         <td align="right">D&eacute;bit</td>
         <td align="right">Cr&eacute;dit</td>
         <td align="right">Solde</td>
@@ -205,15 +206,15 @@ if ( isset( $_REQUEST['bt_html'] ) )
                 echo '<tr class="highlight">
                <td>'.$current_exercice.'</td>
                <td>'.''.'</td>
-               <td>'.'Total du compte '.$poste_id['pcm_val'].'</td>
-               <td>'.''.'</td>
-               <td align="right">'.($solde_d  > 0 ? nbm( $solde_d)  : '').'</td>
+               <td>'._("Total du compte").$poste_id['pcm_val'].'</td>
+               <td>'.''.'</td>'.td("").
+               '<td align="right">'.($solde_d  > 0 ? nbm( $solde_d)  : '').'</td>
                <td align="right">'.($solde_c  > 0 ? nbm( $solde_c)  : '').'</td>
                <td align="right">'.nbm( abs($solde_c-$solde_d)).'</td>
                <td>';
                if ($solde_c > $solde_d ) echo _("Crédit");
                if ($solde_c < $solde_d )  echo _("Débit");
-               if ($solde_c == $solde_d )  echo "=";
+               if ($solde_c == $solde_d )  echo  " ";
 
              echo '</td>'.
                '</tr>';
@@ -241,7 +242,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
 			$side="&nbsp;".$Poste->get_amount_side($solde);
 	    $letter="";
 		$html_let="";
-		if ($detail['letter']!=-1) {
+		if ($detail['letter'] > 0) {
 			$letter=strtoupper(base_convert($detail['letter'],10,36));
 			$html_let = HtmlInput::show_reconcile("", $letter);
 		}
@@ -252,6 +253,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
             <td>'.HtmlInput::detail_op($detail['jr_id'],$detail['jr_internal']).'</td>
             <td>'.$detail['description'].'</td>
             <td>'.$detail['jr_pj_number'].'</td>
+            <td>'.$detail['jr_optype'].'</td>
             <td align="right">'.($detail['deb_montant']  > 0 ? nbm($detail['deb_montant'])  : '').'</td>
             <td align="right">'.($detail['cred_montant'] > 0 ? nbm($detail['cred_montant']) : '').'</td>
             <td align="right">'.nbm(abs($solde)).$side.'</td>
@@ -262,8 +264,8 @@ if ( isset( $_REQUEST['bt_html'] ) )
         <td>'.$current_exercice.'</td>
         <td>'.''.'</td>
         <td>'.'<b>'.'Total du compte '.$poste_id['pcm_val'].'</b>'.'</td>
-        <td>'.''.'</td>
-        <td align="right">'.'<b>'.($solde_d  > 0 ? nbm( $solde_d)  : '').'</b>'.'</td>
+        <td>'.''.'</td>'.td("").
+        '<td align="right">'.'<b>'.($solde_d  > 0 ? nbm( $solde_d)  : '').'</b>'.'</td>
         <td align="right">'.'<b>'.($solde_c  > 0 ? nbm( $solde_c)  : '').'</b>'.'</td>
         <td align="right">'.'<b>'.nbm( abs($solde_c-$solde_d)).'</b>'.'</td>
         <td>';

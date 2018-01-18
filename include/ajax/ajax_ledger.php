@@ -38,7 +38,7 @@ require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
 require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
@@ -68,7 +68,7 @@ catch (Exception $exc)
  */
 
 $cn=Dossier::connect();
-$g_parameter=new Own($cn);
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 
 $g_user->check();
 if ( $g_user->check_dossier(dossier::id(),true)=='X' )
@@ -184,7 +184,7 @@ case 'de':
         $op->get();			
         /* return an obj. ACH / FIN or VEN or null if nothing is found*/
         $obj=$op->get_quant();	
-
+        
         $oLedger=new Acc_Ledger($cn,$ledger);
         if ( $obj==null || $obj->signature == 'ODS'  )
         {
@@ -207,7 +207,7 @@ case 'de':
     catch (Exception $e)
     {
         record_log($e->getTraceAsString());
-        echo HtmlInput::anchor_close($div);
+        echo Icon_Action::close($div);
         echo '<h2 class="error">'._("Désolé il y a une erreur").'</h2>';
     }
     $html=ob_get_contents();
@@ -425,8 +425,8 @@ case 'save':
 		}
 	    }
             
-            $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY') where jr_id=$3",
-                          array($_POST['lib'],$_POST['npj'],$jr_id,$_POST['p_date']));
+            $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY'),jr_optype=$5 where jr_id=$3",
+                          array($_POST['lib'],$_POST['npj'],$jr_id,$_POST['p_date'],$_POST['jr_optype']));
 	    $cn->exec_sql("update jrnx set j_date=to_date($1,'DD.MM.YYYY') where j_grpt in (select jr_grpt_id from jrn where jr_id=$2)",
 			  array($_POST['p_date'],$jr_id));
 	    $cn->exec_sql('update operation_analytique set oa_date=j_date from jrnx
@@ -484,7 +484,7 @@ case 'save':
             ////////////////////////////////////////////////////
             // CA
             //////////////////////////////////////////////////
-            $owner = new Own($cn);
+            $owner = new Noalyss_Parameter_Folder($cn);
             if ( $owner->MY_ANALYTIC != "nu" && isset ($_POST['op']) )
             {
                 // for each item, insert into operation_analytique */
@@ -496,6 +496,7 @@ case 'save':
             //////////////////////////////////////////////////////////////////
             $op->save_info($_POST['OTHER'],'OTHER');
             $op->save_info($_POST['BON_COMMANDE'],'BON_COMMANDE');
+            
             ///////////////////////////////////////////////////////////////////
             // Save related
             //////////////////////////////////////////////////////////////////
@@ -555,17 +556,21 @@ case 'reverseop':
         try
         {
             $ext_date=$http->request("ext_date","date");
+            $ext_label=$http->request("ext_label");
             $cn->start();
             $oLedger=new Acc_Ledger($cn,$ledger);
             $oLedger->jr_id=$jr_id;
-            $oLedger->reverse($ext_date);
+            if ( trim($ext_label) == "" ) {
+                $ext_label=_("Extourne").$cn->get_value("select jr_comment from jrn where jr_id=$1",[$jr_id]);
+            }
+            $oLedger->reverse($ext_date,$ext_label);
             $cn->commit();
             echo _("Opération extournée");
         }
         catch (Exception $e)
         {
             record_log($e->getTraceAsString());
-            $e->getMessage();
+            echo $e->getMessage();
             $cn->rollback();
         }
     }

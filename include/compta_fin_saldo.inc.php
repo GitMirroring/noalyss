@@ -44,7 +44,7 @@ echo h1(_("Exercice")." ".$exercice);
 echo _('Cherche').' : '.HtmlInput::filter_table("fin_saldo_tb", '0,1,2,3', '1');
 echo '<table class="sortable"  style="margin-left:2%;width:96%" class="result" id="fin_saldo_tb">';
 echo tr(th('Quick Code', ' class=" sorttable_sorted"',
-                HtmlInput::infobulle(17).'<span id="sorttable_sortfwdind"><img src="image/up.gif"></span>')
+                Icon_Action::infobulle(17).'<span id="sorttable_sortfwdind"><img src="image/up.gif"></span>')
         .th(_('Compte en banque'), ' style="text-align:left"')
         .th(_('Journal'), ' style="text-align:center"')
         .th(_('Description'), ' style="text-align:center"')

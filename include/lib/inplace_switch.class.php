@@ -46,8 +46,8 @@ class Inplace_Switch
     {
         $this->name=$p_name;
         $this->value=$p_value;
-        $this->iconon='<img src="image/icon-on.png"/>';
-        $this->iconoff='<img src="image/icon-off.png"/>';
+        $this->iconon=Icon_Action::iconon(uniqid(), "");
+        $this->iconoff=Icon_Action::iconoff(uniqid(), "");
         $this->json=json_encode(['name'=>$p_name,"value"=>$p_value], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
         $this->callback="ajax.php";
         $this->jscript="";
@@ -55,7 +55,7 @@ class Inplace_Switch
 
     function input()
     {
-        printf('<span class="inplace_edit" id="%s">', $this->name);
+        printf('<span style="text-decoration: none" class="inplace_edit icon" id="%s">', $this->name);
         if ($this->value==1)
         {
             echo $this->iconon;

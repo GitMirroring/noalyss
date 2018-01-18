@@ -140,10 +140,22 @@ endif;
           <?php endif; ?>
     <table>
         <tr>
-            <td><?php echo _(" Bon de commande")?>   :</td><td> <?php echo HtmlInput::infobulle(31)." ".$cmd->input();  ?></td>
+            <td><?php echo _(" Bon de commande")?>   :</td><td> <?php echo Icon_Action::infobulle(31)." ".$cmd->input();  ?></td>
         </tr>
         <tr>
-            <td> <?php echo _("Autre information")?> : </td><td><?php echo HtmlInput::infobulle(30)." ".$other->input();?></td>
+            <td> <?php echo _("Autre information")?> : </td><td><?php echo Icon_Action::infobulle(30)." ".$other->input();?></td>
+        </tr>
+        <tr>
+            <td>
+                <?=_("Type opération")?>
+            </td>
+            <td>
+                <?php
+                    // Opération type
+                    
+                    echo Acc_Operation::select_operation_type($detail->det->jr_optype)->input();
+                ?>
+            </td>
         </tr>
     </table>
 </div>
@@ -207,6 +219,7 @@ if ($aRap  != null ) {
 if ( $access=='W') {
      $wConcerned=new IConcerned("rapt".$div);
      $wConcerned->amount_id=$obj->det->jr_montant;
+     $wConcerned->div="search_reconcile";
     echo $wConcerned->input();
 
 }
@@ -297,7 +310,7 @@ if ( $div != 'popup' ) {
  */
   if ( $access=='W') {
   echo HtmlInput::submit('save',_('Sauver'),'onClick="return verify_ca(\'popup\');"');
-  $owner=new Own($cn);
+  $owner=new Noalyss_Parameter_Folder($cn);
   if ($owner->MY_ANALYTIC != 'nu' /*&& $div=='popup' */){
     echo '<input type="button" class="smallbutton" value="'._('verifie CA').'" onClick="verify_ca(\''.$div.'\');">';
   }
@@ -310,7 +323,9 @@ if ( $div != 'popup' ) {
     $remove->javascript="return confirm_box(null,'Vous confirmez effacement ?',function () {removeOperation('".$obj->det->jr_id."',".dossier::id().",'".$div."')})";
     echo $remove->input();
   }
-
+ //----------------------------------------------------
+ // Extourne
+ //----------------------------------------------------
   $reverse=new IButton('bext'.$div);
   $reverse->label=_('Extourner');
   $reverse->javascript="g('ext".$div."').style.display='block'";
@@ -318,8 +333,10 @@ if ( $div != 'popup' ) {
     echo '</p>';
 echo '</form>';
 
-  echo '<div id="ext'.$div.'" class="inner_box" style="position:relative;top:-150px;display:none">';
+  echo '<div id="ext'.$div.'" class="inner_box" style="position:absolute;top:40px;display:none">';
   $date=new IDate('ext_date');
+  $extourne_label=new IText("ext_label");
+  $extourne_label->size=40;
   $r="<form id=\"form_".$div."\" onsubmit=\"return false;\">";
   $r.=HtmlInput::hidden('jr_id',$_REQUEST['jr_id'])
       . HtmlInput::hidden('div',$div).dossier::hidden().HtmlInput::hidden('act','reverseop');
@@ -328,8 +345,16 @@ echo '</form>';
   $r.= _("Extourner une opération vous permet de l'annuler par son écriture inverse");
   $r.="</p>";
 
+  $r.="<p>";
   $r.=_("entrez une date")." :".$date->input();
-    $r.='<p  style="text-align:center">';
+  $r.="</p>";
+
+  $r.="<p>";
+  $r.=_("Libellé")." :".$extourne_label->input();
+  $r.="</p>";
+
+  
+  $r.='<p  style="text-align:center">';
   $r.=HtmlInput::submit('x','accepter',
           'onclick="confirm_box($(\'form_'.$div.'\'),\'Vous confirmez  ? \',function () {$(\'form_'.$div.'\').divname=\''.$div.'\';reverseOperation($(\'form_'.$div.'\'))}); return false"');
     $r.="</p>";

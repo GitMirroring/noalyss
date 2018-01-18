@@ -73,7 +73,14 @@ echo $str_add_button;
 </tr>
 <tr><td><INPUT TYPE="hidden" id="p_ech_lib" NAME="p_ech_lib" VALUE="echeance"></td>
 </tr>
-
+<tr>
+    <td style="width: 200px">
+    <?php echo _('Description') ?>
+    </TD>
+    <td style="width: 500px">
+     <?php echo $str_description; ?>   
+    </td>
+</tr>    
 <TR>
 <TD><?php echo _('Type de journal')?> </TD>
 <TD>
@@ -86,7 +93,7 @@ echo $str_add_button;
 </TR>
 <TR>
 <TD><?php echo _('Préfixe pièce justificative')?>
-    <?php echo HtmlInput::infobulle(39);?>
+    <?php echo Icon_Action::infobulle(39);?>
 </TD>
 <TD>
 <?php echo $pj_pref; ?>
@@ -97,7 +104,7 @@ echo $str_add_button;
 <TR>
 <TD>
   <?php echo _('Dernière pièce numérotée')?>
-  <?php echo HtmlInput::infobulle(40);?>
+  <?php echo Icon_Action::infobulle(40);?>
 </TD>
 <TD>
 <?php echo $last_seq?>
@@ -106,22 +113,22 @@ echo $str_add_button;
 
 <tr>
 <TD><?php echo _('N° pièce justificative')?>
-    <?php echo HtmlInput::infobulle(38);?>
+    <?php echo Icon_Action::infobulle(38);?>
 </TD>
 <TD>
     <?php echo $pj_seq; ?>
    
 </TD>
 </tr>
-<?php endif; ?>
 <tr>
-    <td style="width: 200px">
-    <?php echo _('Description') ?>
-    </TD>
-    <td style="width: 500px">
-     <?php echo $str_description; ?>   
+    <td>
+        <?=_("Journal actif")?>
     </td>
-</tr>    
+    <td>
+        <?=$actif->input()?>
+    </td>
+<?php endif; ?>
+
 </TABLE>
 <hr>
     <?php

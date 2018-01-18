@@ -124,7 +124,7 @@ class User
 		$this->last_name = $row['use_name'];
 		$this->name = $row['use_name'];
 		$this->active = $row['use_active'];
-		$this->login = $row['use_login'];
+		$this->login =strtolower($row['use_login']);
 		$this->admin = $row['use_admin'];
 		$this->password = $row['use_pass'];
                 $this->email=$row['use_email'];
@@ -280,7 +280,8 @@ class User
 	function get_ledger_access($p_ledger)
 	{
 		if ($this->admin == 1 ||
-				$this->is_local_admin(dossier::id()) == 1)
+				$this->is_local_admin(dossier::id()) == 1
+                        || $this->get_status_security_ledger()==0)
 			return 'W';
 
 		$sql = "select uj_priv from user_sec_jrn where uj_login=$1 and uj_jrn_id=$2";
@@ -295,6 +296,7 @@ class User
 	 * \brief get all the available ledgers for the current user
 	 * \param $p_type = ALL or the type of the ledger (ACH,VEN,FIN,ODS)
 	 * \param $p_access =3 for Read or WRITE, 2  write, 1 for readonly
+         * \param (boolean) $all if true show also inactive
 	 *  \return a double array of available ledgers
 	  @verbatim
 	  [0] => [jrn_def_id]
@@ -308,18 +310,23 @@ class User
 	  @endverbatim
 	 */
 
-	function get_ledger($p_type = 'ALL', $p_access = 3)
+	function get_ledger($p_type = 'ALL', $p_access = 3,$disable=TRUE)
 	{
-		if ($this->admin != 1 && $this->is_local_admin() != 1)
+            if ($disable==TRUE) {
+                $sql_enable="";
+            } else {
+                $sql_enable="and jrn_enable=1";
+            }
+		if ($this->admin != 1 && $this->is_local_admin() != 1 && $this->get_status_security_ledger() == 1)
 		{
 			$sql_type = ($p_type == 'ALL') ? '' : "and jrn_def_type=upper('" . sql_string($p_type) . "')";
 			switch ($p_access)
 			{
 				case 3:
-					$sql_access = " and uj_priv!= 'X'";
+					$sql_access = " and uj_priv!= 'X' ";
 					break;
 				case 2:
-					$sql_access = " and uj_priv = 'W'";
+					$sql_access = " and uj_priv = 'W' and jrn_enable=1 ";
 					break;
 
 				case 1:
@@ -331,17 +338,17 @@ class User
                  jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_type_id,jrn_desc,uj_priv,
                  jrn_deb_max_line,jrn_cred_max_line,jrn_def_description
                  from jrn_def join jrn_type on jrn_def_type=jrn_type_id
-                 join user_sec_jrn on uj_jrn_id=jrn_def_id
+                 join user_sec_jrn on uj_jrn_id=jrn_def_id,jrn_enable
                  where
                  uj_login='" . $this->login . "'" .
-					$sql_type . $sql_access .
+					$sql_type . $sql_access .$sql_enable.
 					" order by jrn_Def_name";
 		}
 		else
 		{
-			$sql_type = ($p_type == 'ALL') ? '' : "where jrn_def_type=upper('" . sql_string($p_type) . "')";
+			$sql_type = ($p_type == 'ALL') ? '  '.$sql_enable : "where jrn_def_type=upper('" . sql_string($p_type) . "')  ".$sql_enable;
 			$sql = "select jrn_def_id,jrn_def_type,jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_deb_max_line,jrn_cred_max_line,
-                 jrn_type_id,jrn_desc,'W' as uj_priv,jrn_def_description
+                 jrn_type_id,jrn_desc,'W' as uj_priv,jrn_def_description,jrn_enable
                  from jrn_def join jrn_type on jrn_def_type=jrn_type_id
                  $sql_type
                  order by jrn_Def_name";
@@ -578,7 +585,8 @@ class User
 			return 1;
 		if ($this->is_local_admin(dossier::id()) == 1)
 			return 1;
-
+                if ( $this->get_status_security_action() == 0)
+                    return 1;
 		$Res = $this->db->exec_sql(
 				"select * from user_sec_act where ua_login=$1 and ua_act_id=$2", array($this->login, $p_action_id));
 		$Count = Database::num_row($Res);
@@ -629,7 +637,14 @@ class User
 			;
 		}
 		// save array into g_ variable
-		$array_pref = array('g_theme' => 'THEME', 'g_pagesize' => 'PAGESIZE', 'g_topmenu' => 'TOPMENU', 'g_lang' => 'LANG');
+		$array_pref = array('g_theme' => 'THEME', 
+                    'g_pagesize' => 'PAGESIZE', 
+                    'g_topmenu' => 'TOPMENU', 
+                    'g_lang' => 'LANG',
+                    'csv_fieldsep'=>'csv_fieldsep',
+                    'csv_decimal'=>'csv_decimal' ,
+                    'csv_encoding'=>'csv_encoding');
+                
 		foreach ($array_pref as $name => $parameter)
 		{
 			if (!isset($line[$parameter]))
@@ -657,7 +672,11 @@ class User
 		$default_parameter = array("THEME" => "classic",
 			"PAGESIZE" => "50",
 			'TOPMENU' => 'TEXT',
-			'LANG' => 'fr_FR.utf8');
+			'LANG' => 'fr_FR.utf8',
+                        'csv_fieldsep'=>'0',
+                        'csv_decimal'=>'0',
+                        'csv_encoding'=>'utf8'
+                    );
 		$cn = new Database();
 		$Sql = "insert into user_global_pref(user_id,parameter_type,parameter_value)
              values ('%s','%s','%s')";
@@ -690,7 +709,11 @@ class User
 		$default_parameter = array("THEME" => "classic",
 			"PAGESIZE" => "50",
 			"LANG" => 'fr_FR.utf8',
-			'TOPMENU' => 'SELECT');
+			'TOPMENU' => 'SELECT',
+                        'csv_fieldsep'=>'0',
+                        'csv_decimal'=>'0',
+                        'csv_encoding'=>'utf8'
+                    );
 		$cn = new Database();
 		$Sql = "update user_global_pref set parameter_value=$1
              where parameter_type=$2 and
@@ -1164,12 +1187,13 @@ class User
          */
 	function can_write_action($dtoc)
 	{
-            if ( $this->Admin() == 1 ) return true;
-		$profile = $this->get_profile();
+            if ( $this->Admin() == 1 ) return TRUE;
+            if ( $this->get_status_security_action()==0)                return TRUE;
+            $profile = $this->get_profile();
                     $r = $this->db->get_value(" select count(*) from action_gestion where ag_id=$1 and ag_dest in
 				(select p_granted from user_sec_action_profile where ua_right='W' and p_id=$2) ", array($dtoc, $profile));
 		if ($r == 0)
-			return false;
+			return FALSE;
 		return true;
 	}
 
@@ -1328,7 +1352,66 @@ class User
                 $cnx_dossier->exec_sql("delete from profile_user where user_name=$1",array($a_user[$i]['user_name']));
                 $cnx_dossier->exec_sql("delete from user_sec_act where ua_login=$1",array($a_user[$i]['user_name']));
                 $cnx_dossier->exec_sql("delete from user_sec_jrn where uj_login=$1",array($a_user[$i]['user_name']));
+                $cnx_dossier->exec_sql("delete from user_active_security where us_login=$1",array($a_user[$i]['user_name']));
             }
+        }
+    }
+    /**
+     * Check the security on ledger for the user , it returns 1 if the security 
+     * on ledgers is enabled, otherwise 0 
+     */
+    function get_status_security_ledger()
+    {
+        $security=$this->db->get_value("select us_ledger from user_active_security 
+                where 
+                us_login=$1",[$this->login]);
+        $n_security =($security=="Y")?1:0;
+        return $n_security;
+    }
+    /**
+     * Set the flag in the table user_active_security
+     * @param int $p_value 1==enable  , 0 = disable
+     * @exceptions invalid value
+     */
+    function set_status_security_ledger($p_value)
+    {
+        if ($p_value != 0 && $p_value != 1) throw new Exception (_("Valeur invalide"));
+        $exist=$this->db->get_value("select count(*) from user_active_security where us_login=$1",
+                [$this->login]);
+        $flag=($p_value==1)?"Y":"N";
+        if ( $exist == 0) {
+            $this->db->exec_sql("insert into user_active_security (us_login,us_ledger,us_action) values ($1,$2,$3)",[$this->login,$flag,'Y']);
+        } else {
+            $this->db->exec_sql("update user_active_security set us_ledger=$1 where us_login = $2",[$flag,$this->login]);
+        }
+    }
+    /**
+     * Check the security on ledger for the user , it returns 1 if the security 
+     * on ledgers is enabled, otherwise 0 
+     */
+    function get_status_security_action()
+    {
+        $security=$this->db->get_value("select us_action from user_active_security 
+                where 
+                us_login=$1",[$this->login]);
+        $n_security =($security=="Y")?1:0;
+        return $n_security;
+    }
+    /**
+     * Set the flag in the table user_active_security
+     * @param int $p_value 1==enable  , 0 = disable
+     * @exceptions invalid value
+     */
+    function set_status_security_action($p_value)
+    {
+        if ($p_value != 0 && $p_value != 1) throw new Exception (_("Valeur invalide"));
+        $exist=$this->db->get_value("select count(*) from user_active_security where us_login=$1",
+                [$this->login]);
+        $flag=($p_value==1)?"Y":"N";
+        if ( $exist == 0) {
+            $this->db->exec_sql("insert into user_active_security (us_login,us_action,us_ledger) values ($1,$2,$3)",[$this->login,$flag,'Y']);
+        } else {
+            $this->db->exec_sql("update user_active_security set us_action=$1 where us_login = $2",[$flag,$this->login]);
         }
     }
 }

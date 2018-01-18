@@ -22,7 +22,7 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
-require_once NOALYSS_INCLUDE.'/class/own.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
@@ -246,7 +246,7 @@ if  ($get_option == 1)
                 . "where "
                 . "jr_id in (select jra_concerned from jrn_rapt where jr_id = $1 union all select jr_id from jrn_rapt where jra_concerned=$1)");
 
-        $own=new Own($cn);
+        $own=new Noalyss_Parameter_Folder($cn);
         $title=array();
         $title[]=_('Date');
         $title[]=_("Paiement");

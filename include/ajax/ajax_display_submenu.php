@@ -19,6 +19,7 @@
 
 // Copyright 2015 Author Dany De Bontridder danydb@aevalys.eu
 /** 
+ * @file
  * @brief call from ajax : display submenu
  * Security : only user with the menu CFGPRO
  * display the submenu of a menu or a module

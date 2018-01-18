@@ -20,7 +20,7 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* !\file
+/*!\file
  * \brief this file is included to perform modification on category of document
  * table document_type
  */
