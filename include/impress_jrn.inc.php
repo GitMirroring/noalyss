@@ -162,7 +162,7 @@ print HtmlInput::submit('bt_html', _('Visualisation'));
 echo '</FORM>';
 echo '<hr>';
 
-
+ 
 //-----------------------------------------------------
 // If print is asked
 // First time in html
@@ -171,9 +171,41 @@ echo '<hr>';
 if (isset($_REQUEST['bt_html']))
 {
     // Type of report : listing=1 , Accounting writing=0, detail =2
-   
+    $hid=new IHidden();
     $jrn_id=$http->get("jrn_id","number");
+    echo '<table>';
+    echo '<td>';
+    echo '<form method="GET" ACTION="export.php">' . dossier::hidden() .
+        HtmlInput::submit('bt_pdf', "Export PDF") .
+        HtmlInput::hidden('act', 'PDF:ledger') .
+        $hid->input("type", "jrn") .
+        $hid->input("jrn_id", $jrn_id) .
+        $hid->input("from_periode", $from_periode) .
+        $hid->input("to_periode", $to_periode);
+        echo $hid->input("p_simple", $simple);
+        echo HtmlInput::get_to_hidden(array('ac', 'type'));
+        echo "</form>";
+    echo '</td>';
+
+    echo '<TD><form method="GET" ACTION="export.php">' . dossier::hidden() .
+        HtmlInput::submit('bt_csv', "Export CSV") .
+        HtmlInput::hidden('act', 'CSV:ledger') .
+        $hid->input("type", "jrn") .
+        $hid->input("jrn_id", $jrn_id) .
+        $hid->input("from_periode", $from_periode) .
+        $hid->input("to_periode", $to_periode);
+        echo $hid->input("p_simple", $simple);
+        echo HtmlInput::get_to_hidden(array('ac', 'type'));
+        echo "</form></TD>";
+
+    echo '<td style="vertical-align:top">';
+        echo HtmlInput::print_window();
+    echo '</td>';
     
+    echo "</TR>";
+
+    echo "</table>";
+
     /*
      * Compute an array with all the usable ledger
      */

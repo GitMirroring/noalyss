@@ -44,6 +44,7 @@ require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 require_once NOALYSS_INCLUDE.'/database/jrn_def_sql.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_payment.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_history.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
 /** \file
@@ -1919,6 +1920,7 @@ class Acc_Ledger extends jrn_def_sql
                     " ,coalesce(sum(qs_vat),0) as vat ".
                     ',0 as priv'.
                     ',0 as tva_nd'.
+                    ',coalesce(sum(qs_vat_sided),0) as reversed'.
                     ',coalesce(sum(qs_vat_sided),0) as tva_np'.
                     '  from quant_sold join jrnx using(j_id) '.
                     " where j_date >= to_date($1,'DD.MM.YYYY') and j_date < to_date($2,'DD.MM.YYYY') ".
@@ -2617,7 +2619,23 @@ class Acc_Ledger extends jrn_def_sql
         $array=$this->db->get_array($sql, array($p_date));
         return $array;
     }
-
+    /** @brief  Get simplified row from ledger
+     * Call Acc_Ledger_History_Generic:get_rowSimple
+     * @param p_from periode
+     * @param p_to periode
+     * @param p_limit starting line
+     * @param p_offset number of lines
+     * @param trunc if data must be truncated (pdf export)
+     *
+     * \return an Array with the asked data
+     */
+    function get_rowSimple($p_from, $p_to, $trunc=0, $p_limit=-1, $p_offset=-1)
+    {
+        $alh_generic=new Acc_Ledger_History_Generic($this->db, [$this->id], $p_from, $p_to, "A");
+        $alh_generic->get_rowSimple($trunc,$p_limit,$p_offset);
+        $data=$alh_generic->get_data();
+        return $data;
+    }
     /**
      * @brief get info from supplier to pay today
      */

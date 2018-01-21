@@ -46,7 +46,7 @@ $export->send_header();
 try
 {
     $get_jrn=$http->get('jrn_id',"number");
-    $get_option=$http->get('p_simple',"number");
+    $get_option=$http->get('p_simple',"string");
     $get_from_periode=  $http->get('from_periode');
     $get_to_periode=$http->get('to_periode');
     
@@ -80,7 +80,7 @@ $jrn_type=$Jrn->get_type();
 //
 // With Detail per item which is possible only for VEN or ACH
 // 
-if ($get_option == 2)
+if ($get_option == 'D')
 {
     if ($jrn_type != 'ACH' && $jrn_type != 'VEN' || $Jrn->id == 0)
     {
@@ -132,7 +132,7 @@ if ($get_option == 2)
 // Detailled printing
 // For miscellaneous legder or all ledgers
 //-----------------------------------------------------------------------------
-if  ( $get_option == 0 )
+if  ( $get_option == 'A' )
 {
     $Jrn->get_row( $get_from_periode, $get_to_periode );
     $title=array();
@@ -180,7 +180,7 @@ if  ( $get_option == 0 )
 // for Misc the amount 
 // For Financial only the tiers and the sign of the amount
 //-----------------------------------------------------------------------------
-if  ($get_option == 1)
+if  ($get_option == "L")
 {
    
 //-----------------------------------------------------

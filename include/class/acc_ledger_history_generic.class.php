@@ -733,5 +733,12 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
         echo '</tr>';
         echo "</table>";
     }
-
+    /**
+     * To get data
+     * @return array of rows
+     */
+    function get_data()
+    {
+        return $this->data;
+    }
 }

@@ -67,6 +67,7 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
        $this->get_row();
        $this->add_vat_info();
        $this->prepare_detail();
+       $this->prepare_reconcile_date();
        include NOALYSS_TEMPLATE."/acc_ledger_history_sale_extended.php";
     }
     /**
@@ -214,6 +215,14 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
         $this->prepare_reconcile_date();
         require_once NOALYSS_TEMPLATE.'/acc_ledger_history_sale_oneline.php';
         
+    }
+    /**
+     * To get data
+     * @return array of rows
+     */
+    function get_data()
+    {
+        return $this->data;
     }
 
 }

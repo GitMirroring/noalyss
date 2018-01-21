@@ -51,14 +51,34 @@ class Print_Ledger {
          */
         if ($p_format_output == 'PDF') {
             switch ($p_type_export) {
-                case 0:
+                case 'D':
+                     $own = new Noalyss_Parameter_Folder($cn);
+                    $jrn_type = $p_ledger->get_type();
                     //---------------------------------------------
                     // Detailled Printing (accounting )
                     //---------------------------------------------
-                    return new Print_Ledger_Detail($cn, $p_ledger);
+                     if ($jrn_type == 'ACH' || $jrn_type == 'VEN') {
+                        if (
+                                ($jrn_type == 'ACH' && $cn->get_value('select count(qp_id) from quant_purchase') == 0) ||
+                                ($jrn_type == 'VEN' && $cn->get_value('select count(qs_id) from quant_sold') == 0)
+                        ) {
+                            $pdf = new Print_Ledger_Simple_without_vat($cn, $p_ledger);
+                            $pdf->set_error(_('Ce journal ne peut être imprimé en mode simple'));
+                            return $pdf;
+                        }
+                        if ($own->MY_TVA_USE == 'Y') {
+                            $pdf = new Print_Ledger_Simple($cn, $p_ledger);
+                            return $pdf;
+                        }
+                        if ($own->MY_TVA_USE == 'N') {
+                            $pdf = new Print_Ledger_Simple_without_vat($cn, $p_ledger);
+                            return $pdf;
+                        }
+                    }else 
+                        return new Print_Ledger_Detail($cn, $p_ledger);
                     break;
 
-                case 1:
+                case 'L':
                     //----------------------------------------------------------------------
                     // Simple Printing Purchase Ledger
                     //---------------------------------------------------------------------
@@ -94,7 +114,7 @@ class Print_Ledger {
                         return $pdf;
                     }
                     break;
-                case 2:
+                case 'E':
                     /**********************************************************
                      * Print Detail Operation + Item
                      ********************************************************** */
@@ -106,7 +126,7 @@ class Print_Ledger {
                         ;
                     }
                     if ($jrn_type == 'ODS' || $p_ledger->id == 0) {
-                        $pdf = new Print_Ledger_Misc($cn, $p_ledger);
+                        $pdf = new Print_Ledger_Detail($cn, $p_ledger);
                         return $pdf;
                     }
                     if (
@@ -119,6 +139,13 @@ class Print_Ledger {
                     }
                     $pdf = new Print_Ledger_Detail_Item($cn,$p_ledger);
                     return $pdf;
+                case 'A':
+                    /***********************************************************
+                     * Accounting
+                     */
+                    $pdf = new Print_Ledger_Detail($cn, $p_ledger);
+                    return $pdf;
+                    break;
                     
             } // end switch
         } // end $p_format == PDF

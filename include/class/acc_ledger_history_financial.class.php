@@ -136,5 +136,13 @@ class Acc_Ledger_History_Financial extends Acc_Ledger_History
                 {$cond_limite}";
         $this->data=$this->db->get_array($sql);
     }
+    /**
+     * To get data
+     * @return array of rows
+     */
+    function get_data()
+    {
+        return $this->data;
+    }
 
 }
