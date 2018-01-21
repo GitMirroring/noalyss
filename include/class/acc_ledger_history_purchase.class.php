@@ -116,7 +116,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
 
         $ledger_list=join(",", $this->ma_ledger);
         $sql="
-            with row_sale as 
+            with row_purchase as 
                 (select qp_internal,
                     qp_supplier,sum(qp_price) as novat,
                     sum(qp_vat) as vat ,
@@ -154,7 +154,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                     novat+vat-tva_sided as tvac
             from
                 jrn
-                join row_sale on (qp_internal=jr_internal)
+                join row_purchase on (qp_internal=jr_internal)
                 join supplier_detail on (qp_supplier=f_id)
             where
                 jr_def_id in ({$ledger_list})

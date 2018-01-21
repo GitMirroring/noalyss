@@ -78,3 +78,17 @@ $ledger_history->export_html();
 echo h2("Ach Extended");
 $ledger_history->set_m_mode("E");
 $ledger_history->export_html();
+
+echo h1("FIN from Acc_Ledger_History_Financial");
+echo h2("Detailled accouting");
+$ledger_history=new Acc_Ledger_History_Financial($cn,[11,16],216,217,"A");
+$ledger_history->export_html();
+echo h2("FIN one line");
+$ledger_history->set_m_mode("L");
+$ledger_history->export_html();
+echo h2(">FIN Detail");
+$ledger_history->set_m_mode("D");
+$ledger_history->export_html();
+echo h2("FIN Extended");
+$ledger_history->set_m_mode("E");
+$ledger_history->export_html();

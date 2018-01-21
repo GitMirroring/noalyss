@@ -27,6 +27,7 @@
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history_generic.class.php";
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history_sale.class.php";
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history_purchase.class.php";
+require_once NOALYSS_INCLUDE."/class/acc_ledger_history_financial.class.php";
 /**
  * @brief Display history of operation
  */
