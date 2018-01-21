@@ -26,6 +26,7 @@
  */
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history_generic.class.php";
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history_sale.class.php";
+require_once NOALYSS_INCLUDE."/class/acc_ledger_history_purchase.class.php";
 /**
  * @brief Display history of operation
  */
@@ -125,7 +126,7 @@ abstract class Acc_Ledger_History
     static function factory(Database $cn, $pa_ledger, $p_from, $p_to, $p_mode)
     {
         // For Accounting writing , we use Acc_Ledger_History
-        if ($p_mode=="E")
+        if ($p_mode=="A")
         {
             $ret=new Acc_Ledger_History_Generic($cn, $pa_ledger, $p_from, $p_to,
                     $p_mode);
@@ -236,8 +237,8 @@ abstract class Acc_Ledger_History
      */
     protected function prepare_reconcile_date()
     {
-        static $prepare=0;
-        if ($prepare==0)
+        $prepare=$this->db->is_prepare("reconcile_date");
+        if ($prepare==FALSE)
         {
             $this->db->prepare('reconcile_date',
                     'select  * 
@@ -256,7 +257,6 @@ abstract class Acc_Ledger_History
                                 from jrn_rapt 
                                 where jra_concerned=$1)');
         }
-        $prepare=1;
     }
     /**
      * display accounting of operations m_mode=A

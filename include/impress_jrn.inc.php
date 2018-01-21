@@ -144,13 +144,15 @@ print td('Jusque ') . $w->input('to_periode', $periode_end);
 print "</TR><TR>";
 $a = array(
 	array('value' => 'L', 'label' => _('Liste opérations')),
-	array('value' => 'E', 'label' => _('Ecriture comptable')),
-	array('value' => 'D', 'label' => _('Avec Détails opérations '))
+	array('value' => 'E', 'label' => _('Liste détaillées opérations ')),
+	array('value' => 'A', 'label' => _('Ecriture comptable')),
+	array('value' => 'D', 'label' => _('Détails TVA'))
 );
 $w->selected = 1;
 print '</TR>';
 print '<TR>';
-$w->selected = (isset($simple)) ? $simple : '1';
+$simple=$http->get("p_simple","string","L");
+$w->selected = $simple;
 echo '<td>Style d\'impression '.Icon_Action::infobulle(32).'</td>' . $w->input('p_simple', $a);
 print "</TR>";
 
@@ -169,7 +171,7 @@ echo '<hr>';
 if (isset($_REQUEST['bt_html']))
 {
     // Type of report : listing=1 , Accounting writing=0, detail =2
-    $simple=$http->get("p_simple","string");
+   
     $jrn_id=$http->get("jrn_id","number");
     
     /*

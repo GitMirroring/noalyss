@@ -24,8 +24,7 @@ if (!defined('ALLOWED'))
 
 /**
  * @file
- * @brief from Acc_Ledger_History_Sale::export_html_oneline
- * @todo prévoir aussi pour les non assujetti : faire disparaître les montants TVA
+ * @brief Display one purchase operation on one line , with the sum of VAT, ND...
  */
 ?>
 <TABLE class="result">
@@ -34,9 +33,11 @@ if (!defined('ALLOWED'))
         <th><?php echo _("Date")?></th>
         <th><?php echo _("Paiement")?></th>
         <th><?php echo _("Ref")?></th>
-        <th><?php echo _("Client")?></th>
+        <th><?php echo _("Fournisseur")?></th>
         <th><?php echo _("Description")?></th>
         <th style="text-align:right">HTVA</th>
+        <th style="text-align:right">Privé</th>
+        <th style="text-align:right">DNA</th>
         
         
 <?php
@@ -44,6 +45,7 @@ $col_tva="";
 
  if ( $own->MY_TVA_USE=='Y')
         {
+            echo '<th style="text-align:right">TVA ND</th>';
             $a_Tva=$this->db->get_array("select tva_id,tva_label from tva_rate where tva_rate != 0.0000 order by tva_id");
             foreach($a_Tva as $line_tva)
             {
@@ -58,8 +60,8 @@ echo $col_tva;
 <?php
 $i = 0;
 $tot['htva']=0;
-$tot['dep_priv']=0;
-$tot['dna']=0;
+$tot['private_amount']=0;
+$tot['noded_amount']=0;
 $tot['tva_nd']=0;
 $tot['tvac']=0;
 $tot['tva']=array();
@@ -83,24 +85,35 @@ foreach ($this->data as $line) {
     // Internal with detail
     echo "<TD>" . HtmlInput::detail_op($line['jr_id'], $line['jr_internal']) . "</TD>";
     
-    // find the tiers (normally in $this->data ! 
-    $tiers =HtmlInput::history_card($line['qs_client'],h($line['name'].' '.$line['first_name'])."[{$line['qcode']}]");
-
+    // find the tiers (normally in $Row ! 
+    $tiers =HtmlInput::history_card($line['qp_supplier'],h($line['name'].' '.$line['first_name'])."[{$line['qcode']}]");
     echo td($tiers);
-    
     // Label
     echo "<TD>" . h($line['jr_comment']) . "</TD>";
     
+    // Private expense
+    $private_amount=($line['private_amount']==0)?"":nbm(round($line['private_amount'],2),2);
+    $tot['private_amount']=bcadd($tot['private_amount'],  floatval($line['private_amount']));
+    
+    // No deductible
+    $noded_amount=($line['noded_amount']==0)?"":nbm(round($line['noded_amount'],2),2);
+    $tot['noded_amount']=bcadd($tot['noded_amount'],round(floatval($line['noded_amount'])),2);
 
     // HTVA amount 
     echo "<TD class=\"num\">" . nbm(round($line['novat'],2),2) . "</TD>";
     $tot['htva']=bcadd($tot['htva'],  round(floatval($line['novat']),2));
+    
+    echo "<TD class=\"num\">" .$private_amount . "</TD>";
+    echo "<TD class=\"num\">" . $noded_amount . "</TD>";
     
     //--------------------------------------------------------------------------
     // If VAT then display it
     //--------------------------------------------------------------------------
     if ($own->MY_TVA_USE == 'Y' )
     {
+        $tva_dna=($line['noded_vat']==0)?"":nbm(round($line['noded_vat']),2);
+        $tot['tva_nd']=bcadd($tot['tva_nd'],  round(floatval($line['noded_vat']),2));
+        echo "<TD class=\"num\">" . $tva_dna. "</TD>";
         $a_tva_amount=array();
         
         foreach ($line['detail_vat'] as $lineTVA)
@@ -108,10 +121,10 @@ foreach ($this->data as $line) {
                 foreach ($a_Tva as $idx=>$line_tva)
                 {
 
-                    if ($line_tva['tva_id'] == $lineTVA['qs_vat_code'])
+                    if ($line_tva['tva_id'] == $lineTVA['qp_vat_code'])
                     {
                         $a=$line_tva['tva_id'];
-                        $a_tva_amount[$a]=$lineTVA["vat_amount"];
+                        $a_tva_amount[$a]=$lineTVA['vat_amount'];
                     }
                 }
             }
@@ -128,7 +141,7 @@ foreach ($this->data as $line) {
     }
     
     echo '<td class="num">'.nbm($line['tvac'],2).'</td>';
-    $tot['tvac']=bcadd($tot['tvac'], round(floatval($line['tvac']),2));
+    $tot['tvac']=bcadd($tot['tvac'], round($line['tvac'],2));
     /*
      * If reconcile print them
      */
@@ -159,7 +172,10 @@ foreach ($this->data as $line) {
         <td></td>
         <td></td>
         <td class="num"><?php echo nbm($tot['htva']); ?></td>
+        <td class="num"><?php echo nbm($tot['private_amount']) ?></td>
+        <td class="num"><?php echo nbm($tot['noded_amount'])?></td>
         <?php if ($own->MY_TVA_USE == 'Y' ): ?>
+            <td><?php echo nbm($tot['tva_nd']) ?></td>
             <?php  foreach ($a_Tva as $line_tva) :
                         $a=$line_tva['tva_id'];
                         if ( isset($tot['tva'][$a])) :

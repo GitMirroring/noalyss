@@ -71,12 +71,11 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
     }
     /**
      * Prepare the query for fetching detail of an operation
-     * @staticvar int $prepare
      */
     private function prepare_detail()
     {
-        static $prepare=0;
-        if ( $prepare == 0) 
+        
+        if ( $this->db->is_prepare("detail_sale")== FALSE) 
         {
             $this->db->prepare("detail_sale","
                 with card_name as 
@@ -98,7 +97,6 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                 
             ");
         }
-        $prepare=1;        
     }
     /**
      * Get the rows from jrnx and quant* tables
@@ -161,8 +159,8 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
      */
     private function add_vat_info()
     {
-        static $prepare=0;
-        if ( $prepare==0) {
+         $prepare=$this->db->is_prepare("vat_info");
+        if ( $prepare==FALSE) {
             $this->db->prepare("vat_info","
                 select 
                     sum(qs_vat) vat_amount , 
@@ -175,7 +173,6 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
              
         }
         
-        $prepare=1;
         $nb_row=count($this->data);
         for ($i=0;$i<$nb_row;$i++)
         {
@@ -215,7 +212,7 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
     {
         $this->get_row();
         $this->prepare_reconcile_date();
-        require_once NOALYSS_TEMPLATE.'/acc_history_ledger_sale_oneline.php';
+        require_once NOALYSS_TEMPLATE.'/acc_ledger_history_sale_oneline.php';
         
     }
 

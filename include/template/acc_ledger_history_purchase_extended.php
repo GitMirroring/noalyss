@@ -81,7 +81,7 @@ for ($i=0;$i<$nb_data;$i++):
             <?=HtmlInput::detail_op($this->data[$i]['jr_id'], $this->data[$i]['jr_internal'])?>
         </td>
         <td>
-            <?=HtmlInput::history_card($this->data[$i]['qs_client'],h($this->data[$i]['name'].' '.$this->data[$i]['first_name']))?>
+            <?=HtmlInput::history_card($this->data[$i]['qp_supplier'],h($this->data[$i]['name'].' '.$this->data[$i]['first_name']))?>
         </td>
         <td>
             <?=h($this->data[$i]['jr_comment'])?>
@@ -116,13 +116,13 @@ for ($i=0;$i<$nb_data;$i++):
         <td class="width:auto" colspan="8" style="border-style: solid;border-width:1px;border-color: blue">
 <?php
     /// Detail opération
-$det=$this->db->execute("detail_sale",array($this->data[$i]['jr_internal']));
+$det=$this->db->execute("detail_purchase",array($this->data[$i]['jr_internal']));
 $a_detail=Database::fetch_all($det);
 ?>
             <table style="width: 100%">
                 <tr>
                     <th><?=_("Item")?></th>
-                    <th class="num"><?=_("Prix Uni")?></th>
+                    <th class="num"><?=_("Prix Unit")?></th>
                     <th class="num"><?=_("Quantité")?></th>
                     <th class="num"><?=_("HTVA")?></th>
                     <th class="num"><?=_("TVA")?></th>
@@ -133,13 +133,13 @@ $a_detail=Database::fetch_all($det);
 $nb_detail=count($a_detail);
 for ($j=0;$j<$nb_detail;$j++):
 ?>  
-                <tr>
+                <tr >
                     <td><?=$a_detail[$j]['qcode']?>  
                         <?=$a_detail[$j]['name']?>  </td>
-                    <td class="num" style="width:10%"><?=$a_detail[$j]['qs_quantite']?>  </td>
-                    <td class="num" style="width:10%"><?=$a_detail[$j]['qs_unit']?>  </td>
-                    <td class="num" style="width:10%"><?=nbm($a_detail[$j]['qs_price'])?>  </td>
-                    <td class="num" style="width:10%"><?=nbm($a_detail[$j]['qs_vat'])?>  </td>
+                    <td class="num" style="width:10%"><?=$a_detail[$j]['qp_quantite']?>  </td>
+                    <td class="num" style="width:10%"><?=$a_detail[$j]['qp_unit']?>  </td>
+                    <td class="num" style="width:10%"><?=nbm($a_detail[$j]['qp_price'])?>  </td>
+                    <td class="num" style="width:10%"><?=nbm($a_detail[$j]['qp_vat'])?>  </td>
                     <td class="num" style="width:10%"><?=$a_detail[$j]['tva_label']?>  </td>
                     <td class="num" style="width:10%"><?=nbm($a_detail[$j]['tvac'])?>  </td>
                 </tr>
