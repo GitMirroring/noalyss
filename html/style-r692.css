@@ -540,7 +540,7 @@ span.action {
     height:3rem;
 
 }
-td.num {
+th.num , td.num,table.result th.num  {
     text-align:right;
 }
 tr.priority1 {
