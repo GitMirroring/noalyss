@@ -308,10 +308,14 @@ class HtmlInput
     /**
      * display a div with the history of the card
      */
-    static function history_card($f_id, $p_mesg, $p_style="")
+    static function history_card($f_id, $p_mesg, $p_style="",$p_exercice="")
     {
-        $view_history=sprintf('<A class="detail"  style="text-decoration:underline;%s" HREF="javascript:view_history_card(\'%s\',\'%s\')" >%s</A>',
-                $p_style, $f_id, dossier::id(), $p_mesg);
+        global $g_user;
+        if ( $p_exercice=="") {
+            $p_exercice=$g_user->get_exercice();
+        }
+        $view_history=sprintf('<A class="detail"  style="text-decoration:underline;%s" HREF="javascript:view_history_card(\'%s\',\'%s\',\'%s\')" >%s</A>',
+                $p_style, $f_id, dossier::id(),$p_exercice, $p_mesg);
         return $view_history;
     }
 
@@ -331,10 +335,14 @@ class HtmlInput
     /**
      * display a div with the history of the account
      */
-    static function history_account($p_account, $p_mesg, $p_style="")
+    static function history_account($p_account, $p_mesg, $p_style="",$p_exercice="")
     {
-        $view_history=sprintf('<A class="detail" style="text-decoration:underline;%s" HREF="javascript:view_history_account(\'%s\',\'%s\')" >%s</A>',
-                $p_style, $p_account, dossier::id(), $p_mesg);
+        global $g_user;
+        if ( $p_exercice=="") {
+            $p_exercice=$g_user->get_exercice();
+        }
+        $view_history=sprintf('<A class="detail" style="text-decoration:underline;%s" HREF="javascript:view_history_account(\'%s\',\'%s\',\'%s\')" >%s</A>',
+                $p_style, $p_account, dossier::id(),$p_exercice, $p_mesg);
         return $view_history;
     }
 

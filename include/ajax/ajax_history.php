@@ -52,7 +52,8 @@ if ( isset($_GET['f_id']))
     $old='';
     $f_id=$http->get('f_id',"number");
     $fiche=new Fiche($cn,$f_id);
-    $year=$g_user->get_exercice();
+    
+    $year=$http->get("exercice","string",$g_user->get_exercice());
     if ( $year == 0 )
       {
         $html=_("erreur aucune période par défaut, allez dans préférence pour en choisir une");
@@ -83,7 +84,7 @@ if ( isset($_GET['f_id']))
 	    $dossier=dossier::id();
 	    if ( $div != 'popup')
 	      {
-		$obj="{op:'history',div:'$div',f_id:'".$_GET['f_id']."',gDossier:'$dossier',select:this}";
+		$obj="{op:'history',div:'$div',f_id:'".$_GET['f_id']."',gDossier:'$dossier',select:this,exercice:{$year}}";
 		$is=$exercice->select('p_exercice',$default,' onchange="update_history_card('.$obj.');"');
 		$old=_("Autre exercice")." ".$is->input();
 	      }
@@ -96,6 +97,7 @@ if ( isset($_GET['f_id']))
 		$old.=HtmlInput::hidden('act',$_GET['act']);
 		$old.=HtmlInput::hidden('f_id',$_GET['f_id']);
 		$old.=HtmlInput::hidden('ajax',$_GET['ajax']);
+		$old.=HtmlInput::hidden('exercice',$year);
 		$old.=dossier::hidden();
                 $old.=HtmlInput::hidden('op','history');
 		$old.='</form>';
@@ -135,7 +137,7 @@ if ( isset($_REQUEST['pcm_val']))
   {
     $poste=new Acc_Account_Ledger($cn,$_REQUEST['pcm_val']);
     $poste->load();
-    $year=$g_user->get_exercice();
+    $year=$http->get("exercice","string",$g_user->get_exercice());
     if ( $year == 0 )
       {
         $html=_("erreur aucune période par défaut, allez dans préférence pour en choisir une");
@@ -167,7 +169,7 @@ if ( isset($_REQUEST['pcm_val']))
 	    $dossier=dossier::id();
 	    if ( $div != 'popup')
 	      {
-		$obj="{op:'history',div:'$div',pcm_val:'".$_GET['pcm_val']."',gDossier:'$dossier',select:this}";
+		$obj="{op:'history',div:'$div',pcm_val:'".$_GET['pcm_val']."',gDossier:'$dossier',select:this,exercice:{$year}}";
 		$is=$exercice->select('p_exercice',$default,' onchange="update_history_account('.$obj.');"');
 		$old=_("Autre exercice")." ".$is->input();
 	      }

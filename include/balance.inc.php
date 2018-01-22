@@ -347,8 +347,7 @@ if ( isset($_GET['view'] ) )
             $tr="even";
         else
             $tr="odd";
-        $view_history= sprintf('<A class="detail" style="text-decoration:underline" HREF="javascript:view_history_account(\'%s\',\'%s\')" >%s</A>',
-                               $r['poste'], $gDossier, $r['poste']);
+        $view_history=HtmlInput::history_account($r['poste'], $r['poste'], "",$exercice);
 
 	/*
 	 * level x

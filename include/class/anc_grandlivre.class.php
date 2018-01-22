@@ -85,7 +85,8 @@ class Anc_GrandLivre extends Anc_Print
 		 (select ad_value from fiche_Detail where f_id=b.f_id and ad_id=23)
 	end
 		 as qcode,
-        jr_pj_number
+        jr_pj_number,
+        jr_tech_per
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
 	left join jrn on  (j_grpt=jr_grpt_id)
@@ -227,10 +228,17 @@ class Anc_GrandLivre extends Anc_Print
             }
             $class = ($idx % 2 == 0) ? 'even' : 'odd';
             $idx++;
+            // find out exercice
+            $exercice="";
+            if ( $row['jr_tech_per'] != null )
+            {
+                $periode=new Periode($this->db,$row['jr_tech_per']);
+                $exercice=$periode->get_exercice();
+            }
             $r.='<tr class="' . $class . '">';
             $detail = ($row['jr_id'] != null) ? HtmlInput::detail_op($row['jr_id'], $row['jr_internal']) : '';
-            $post_detail = ($row['j_poste'] != null) ? HtmlInput::history_account($row['j_poste'], $row['j_poste']) : '';
-            $card_detail = ($row['f_id'] != null) ? HtmlInput::history_card($row['f_id'], $row['qcode']) : '';
+            $post_detail = ($row['j_poste'] != null) ? HtmlInput::history_account($row['j_poste'], $row['j_poste'],"",$exercice) : '';
+            $card_detail = ($row['f_id'] != null) ? HtmlInput::history_card($row['f_id'], $row['qcode'],"",$exercice) : '';
             $amount_deb = ($row['oa_debit'] == 't') ? $row['oa_amount'] : 0;
             $amount_cred = ($row['oa_debit'] == 'f') ? $row['oa_amount'] : 0;
             $tot_deb = bcadd($tot_deb, $amount_deb);

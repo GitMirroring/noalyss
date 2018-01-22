@@ -121,6 +121,9 @@ class Acc_Bilan
         $ret="";
         $obj=new Acc_Account_Ledger($this->db,0);
         $sql=sql_filter_per($this->db,$this->from,$this->to,'p_id','j_tech_per');
+        // Find exercice
+        $periode=new Periode($this->db,$this->from);
+        $exercice=$periode->get_exercice();
         for ($i=0;$i<$nRow;$i++)
         {
 
@@ -134,9 +137,9 @@ class Acc_Bilan
                 ($solde_signed > 0 && $p_deb == 'C' )
             )
             {
-                $ret.= '<li> '.HtmlInput::history_account($line['pcm_val'],'Anomalie pour le compte '.$line['pcm_val'].' '.h($line['pcm_lib']).
+                $ret.= '<li> '.HtmlInput::history_account($line['pcm_val'],_('Anomalie pour le compte ').$line['pcm_val'].' '.h($line['pcm_lib']).
                        "  D: ".$line['amount_debit'].
-                       "  C: ".$line['amount_credit']." diff ".(abs($solde_signed)));
+                       "  C: ".$line['amount_credit']." diff ".(abs($solde_signed)),"",$exercice);
                 $count++;
             }
 

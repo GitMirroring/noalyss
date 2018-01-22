@@ -656,13 +656,13 @@ function go_next_concerned()
  * @param {type} dossier
  * @returns {undefined}
  */
-function view_history_account(p_value, dossier)
+function view_history_account(p_value, dossier,p_exercice)
 {
     layer++;
     var idbox = 'det' + layer;
     var popup = {'id': idbox, 'cssclass': 'inner_box', 'html': loading(), 'drag': false};
 
-    var querystring={'gDossier':dossier,'act':'de','pcm_val':p_value,'div':idbox,'l':layer,'op':'history'};
+    var querystring={'gDossier':dossier,'act':'de','pcm_val':p_value,'div':idbox,'l':layer,'op':'history','exercice':p_exercice};
     waiting_box();
 
     var action = new Ajax.Request(
@@ -696,7 +696,8 @@ function update_history_account(obj)
             "gDossier" : obj.gDossier,
             "pcm_val" : obj.pcm_val ,
             "ex" : obj.select.options[obj.select.selectedIndex].text,
-            "op":"history"
+            "op":"history",
+            "exercice":obj.exercice
         };
         waiting_box();
         var action = new Ajax.Request(
@@ -722,7 +723,7 @@ function update_history_account(obj)
 /*!\brief Change the view of card history
  * \param p_value f_id of the card
  */
-function view_history_card(p_value, dossier)
+function view_history_card(p_value, dossier,p_exercice)
 {
     layer++;
     var idbox = 'det' + layer;
@@ -735,7 +736,8 @@ function view_history_card(p_value, dossier)
          'f_id' : p_value , 
          'div' : idbox ,
           "l" : layer,
-          "op":"history"};
+          "op":"history",
+      "exercice":p_exercice};
     waiting_box();
     var action = new Ajax.Request(
             "ajax_misc.php",
@@ -767,7 +769,8 @@ function update_history_card(obj)
             "gDossier" : obj.gDossier,
             "f_id" : obj.f_id ,
             "ex" : obj.select.options[obj.select.selectedIndex].text,
-            "op":"history"
+            "op":"history",
+            "exercice":obj.exercice
         };
         waiting_box();
         var action = new Ajax.Request(

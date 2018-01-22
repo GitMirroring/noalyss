@@ -10,7 +10,7 @@
  * Variables : $div = popup or box (det[0-9]
  * 
  */
-
+$cn=Dossier::connect();
 // Contains all the linked actions
 $a_followup = Follow_Up::get_all_operation($jr_id);
 //
@@ -22,6 +22,11 @@ $aRap=$oRap->get();
 // Detail of operation
  $detail = new Acc_Misc($cn, $obj->jr_id);
  $detail->get();
+ 
+ // find out exercice
+ $periode_id=new Periode($cn,$detail->det->jr_tech_per);
+ $exercice=$periode_id->get_exercice();
+ 
  
  $nb_document=($detail->det->jr_pj_name != "")?1:0;
 
@@ -90,14 +95,14 @@ endif;
                     {
                         $row = '';
                         $q = $detail->det->array;
-                        $view_history = sprintf('<A class="detail" style="text-decoration:underline" HREF="javascript:view_history_account(\'%s\',\'%s\')" >%s</A>', $q[$e]['j_poste'], $gDossier, $q[$e]['j_poste']);
-
+                        $view_history = HtmlInput::history_account($q[$e]['j_poste'], $q[$e]['j_poste'], "", $exercice);
+                                
                         $row.=td($view_history);
                         if ($q[$e]['j_qcode'] != '')
                         {
                             $fiche = new Fiche($cn);
                             $fiche->get_by_qcode($q[$e]['j_qcode']);
-                            $view_history = sprintf('<A class="detail" style="text-decoration:underline" HREF="javascript:view_history_card(\'%s\',\'%s\')" >%s</A>', $fiche->id, $gDossier, $q[$e]['j_qcode']);
+                            $view_history = HtmlInput::history_card($fiche->id,  $q[$e]['j_qcode'],"",$exercice);
                         } else
                             $view_history = '';
                         $row.=td($view_history);
