@@ -42,6 +42,9 @@ abstract class Acc_Ledger_History
 
     function __construct(Database $cn, $pa_ledger, $p_from, $p_to, $p_mode)
     {
+        if (is_array($pa_ledger) == FALSE) {
+            throw new Exception (_('pa_ledger doit être un tableau'),EXC_PARAM_VALUE);
+        }
         $this->db=$cn;
         $this->ma_ledger=$pa_ledger;
         $this->m_from=$p_from;

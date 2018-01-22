@@ -116,7 +116,7 @@ foreach ($this->data as $line) {
         echo "<TD class=\"num\">" . $tva_dna. "</TD>";
         $a_tva_amount=array();
         
-        foreach ($line['detail_vat'] as $lineTVA)
+        foreach ($line['m'] as $lineTVA)
         {
                 foreach ($a_Tva as $idx=>$line_tva)
                 {

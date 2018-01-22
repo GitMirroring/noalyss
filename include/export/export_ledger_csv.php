@@ -84,7 +84,7 @@ if ($get_option == 'D')
 {
     if ($jrn_type != 'ACH' && $jrn_type != 'VEN' || $Jrn->id == 0)
     {
-        $get_option = 0;
+        $get_option = 'A';
     }
     else
     {
@@ -236,92 +236,13 @@ if  ($get_option == "L")
 // One line summary with tiers, amount VAT, DNA, tva code ....
 // 
 //------------------------------------------------------------------------------
-    if ( $jrn_type=='ACH' || $jrn_type=='VEN')
-    {
-        $Row=$Jrn->get_rowSimple($get_from_periode,
-                             $get_to_periode,
-                             0);
-        $cn->prepare('reconcile_date',"select to_char(jr_date,'DD.MM.YY') as str_date,* "
-                . "from jrn "
-                . "where "
-                . "jr_id in (select jra_concerned from jrn_rapt where jr_id = $1 union all select jr_id from jrn_rapt where jra_concerned=$1)");
-
-        $own=new Noalyss_Parameter_Folder($cn);
-        $title=array();
-        $title[]=_('Date');
-        $title[]=_("Paiement");
-        $title[]=_("operation");
-        $title[]=_("Pièce");
-        $title[]=_("Client/Fourn.");
-        $title[]=_("Note");
-        $title[]=_("interne");
-        $title[]=_("HTVA");
-        $title[]=_("privé");
-        $title[]=_("DNA");
-        $title[]=_("tva non ded.");
-        $title[]=_("TVA NP");
-
-        if ( $own->MY_TVA_USE=='Y')
-        {
-            $a_Tva=$cn->get_array("select tva_id,tva_label from tva_rate order by tva_rate,tva_label,tva_id");
-            foreach($a_Tva as $line_tva)
-            {
-                $title[]="Tva ".$line_tva['tva_label'];
-            }
+        if ( $jrn_type == "ACH") {
+            $acc_ledger_history=new Acc_Ledger_History_Purchase($cn,[$Jrn->id],$get_from_periode,$get_to_periode,'D');
+            $acc_ledger_history->export_csv();
         }
-        $title[]=_("TVAC");
-        $title[]=_("opérations liées");
-        $export->write_header($title);
-        
-        foreach ($Row as $line)
-        {
-            $export->add($line['date']);
-            $export->add($line['date_paid']);
-            $export->add($line['num']);
-            $export->add($line['jr_pj_number']);
-            $export->add($Jrn->get_tiers($line['jrn_def_type'],$line['jr_id']));
-            $export->add($line['comment']);
-            $export->add($line['jr_internal']);
-            $export->add($line['HTVA'],"number");
-            $export->add($line['dep_priv'],"number");
-            $export->add($line['dna'],"number");
-            $export->add($line['tva_dna'],"number");
-            $export->add($line['tva_np'],"number");
-            $a_tva_amount=array();
-            //- set all TVA to 0
-            foreach ($a_Tva as $l) {
-                $t_id=$l["tva_id"];
-                $a_tva_amount[$t_id]=0;
-            }
-            foreach ($line['TVA'] as $lineTVA)
-            {
-                $idx_tva=$lineTVA[1][0];
-                $a_tva_amount[$idx_tva]=$lineTVA[1][2];
-             }
-            if ($own->MY_TVA_USE == 'Y' )
-            {
-                foreach ($a_Tva as $line_tva)
-                {
-                    $a=$line_tva['tva_id'];
-                    $export->add($a_tva_amount[$a],"number");
-                }
-            }
-            $export->add($line['TVAC'],"number");
-            /**
-             * Retrieve payment if any
-             */
-             $ret_reconcile=$cn->execute('reconcile_date',array($line['jr_id']));
-             $max=Database::num_row($ret_reconcile);
-            if ($max > 0) {
-                for ($e=0;$e<$max;$e++) {
-                    $row=Database::fetch_array($ret_reconcile, $e);
-                    $export->add($row['str_date']);
-                    $export->add($row['jr_internal']);
-                }
-            }
-	    $export->write();
-
+        if ( $jrn_type == "VEN") {
+            $acc_ledger_history=new Acc_Ledger_History_Sale($cn,[$Jrn->id],$get_from_periode,$get_to_periode,'D');
+           //@todo to implement  $acc_ledger_history->export_csv();
         }
-    }
 }
 ?>
