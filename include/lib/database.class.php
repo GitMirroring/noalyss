@@ -1156,6 +1156,17 @@ class Database
                 $this->lo_unlink($a_lob[$i]['oid']);
         }
     }
+    /**
+     * Check if a prepared statement already exists or not
+     * @param string $query_name name of the prepared query
+     * @return boolean false is not yet prepared
+     */
+    function is_prepare($query_name)
+    {
+        $nb_prepared=$this->get_value("select count(*) from pg_prepared_statements where name=$1",[$query_name]);
+        if ( $nb_prepared==0)return FALSE;
+        return TRUE;
+    }
 
 }
 

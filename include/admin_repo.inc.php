@@ -29,6 +29,7 @@ include_once NOALYSS_INCLUDE."/lib/ac_common.php";
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE."/lib/user_menu.php";
 require_once NOALYSS_INCLUDE."/lib/http_input.class.php";
+require_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
 $http=new HttpInput();
 $action = $http->request("action","string", "");
 

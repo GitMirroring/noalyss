@@ -27,14 +27,21 @@ require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
 require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-load_all_script();
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_history.class.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 $gDossier = dossier::id();
 global $g_user,$http;
+
+/**
+ * Get exercice
+ */
+$user_exercice=$g_user->get_exercice();
+$exercice =$http->get("exercice","string",$user_exercice);
+
+
 //-----------------------------------------------------
 // Show the ledger and date
 //-----------------------------------------------------
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
-
 if ($g_user->Admin() == 0 && $g_user->is_local_admin() == 0  && $g_user->get_status_security_ledger()==1)
 {
 	$sql = "select jrn_def_id,jrn_def_name
@@ -44,34 +51,45 @@ if ($g_user->Admin() == 0 && $g_user->is_local_admin() == 0  && $g_user->get_sta
          uj_login=$1
          and uj_priv in ('R','W')
 		 order by jrn_def_name
+         and ( jrn_enable=1 
+                or 
+                exists (select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$2))
          ";
-	$ret = $cn->make_array($sql,0,array($g_user->login));
+	$ret = $cn->make_array($sql,0,array($g_user->login,$exercice));
 }
 else
 {
 	$ret = $cn->make_array("select jrn_def_id,jrn_def_name
                          from jrn_def join jrn_type on jrn_def_type=jrn_type_id
+                         where
+                         jrn_enable=1 or exists(select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$1))
 						 order by jrn_def_name
-						 ");
-    // Count the forbidden journaux
-//    $NoPriv = $cn->count_sql("select jrn_def_id,jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_type_id,jrn_desc,uj_priv,
-//                           jrn_deb_max_line,jrn_cred_max_line
-//                           from jrn_def join jrn_type on jrn_def_type=jrn_type_id
-//                           join  user_sec_jrn on uj_jrn_id=jrn_def_id
-//                           where
-//                           uj_login=$1
-//                           and uj_priv ='X'
-//                           ",array($g_user->id));
+						 ",0,[$exercice]);
 }
+
 /*
  * Show all the available ledgers
  */
 $a = count($ret);
+if (count($ret) < 1) 	NoAccess();
+
 $all = array('value' => 0, 'label' => _('Tous les journaux disponibles'));
 $ret[$a] = $all;
-if (count($ret) < 1)
-	NoAccess();
-$exercice = (isset($_GET['exercice'])) ? $_GET['exercice'] : $g_user->get_exercice();
+
+// Get the from_periode and to_periode
+$from_periode=$http->get("from_periode","number","");
+$to_periode=$http->get("to_periode","number","");
+
+// if from_periode empty, then set to first and last 
+// periode of the exercice (from preference)
+
+if ($from_periode=="" || $to_periode=="")
+{
+    $t_periode=new Periode($cn);
+    list($per_min,$per_max)=$t_periode->get_limit($exercice);
+    $from_periode=$per_min->p_id;
+    $to_periode=$per_max->p_id;
+}
 
 //-----------------------------------------------------
 // Form
@@ -108,10 +126,6 @@ print '</TR>';
 print '<TR>';
 // filter on the current year
 $filter_year = " where p_exercice='" . sql_string($exercice) . "'";
-// Get the from_periode and to_periode
-$from_periode=$http->get("from_periode","number","");
-$to_periode=$http->get("to_periode","number","");
-
 $periode_start = $cn->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode $filter_year order by p_start,p_end");
 $w->selected =  $from_periode ;
 
@@ -124,21 +138,21 @@ $w->selected =  $to_periode ;
 
 // By default , show last day of exercice
 if ($w->selected== '' ){
-        $t_periode=new Periode($cn);
-        list($per_max,$per_min)=$t_periode->get_limit($exercice);
-        $w->selected=$per_min->p_id;
+        $w->selected=$per_max->p_id;
 }
 print td('Jusque ') . $w->input('to_periode', $periode_end);
 print "</TR><TR>";
 $a = array(
-	array('value' => 1, 'label' => _('Liste opérations')),
-	array('value' => 0, 'label' => _('Ecriture comptable')),
-	array('value' => 2, 'label' => _('Avec Détails opérations '))
+	array('value' => 'L', 'label' => _('Liste opérations')),
+	array('value' => 'E', 'label' => _('Liste détaillées opérations ')),
+	array('value' => 'A', 'label' => _('Ecriture comptable')),
+	array('value' => 'D', 'label' => _('Détails TVA'))
 );
 $w->selected = 1;
 print '</TR>';
 print '<TR>';
-$w->selected = (isset($simple)) ? $simple : '1';
+$simple=$http->get("p_simple","string","L");
+$w->selected = $simple;
 echo '<td>Style d\'impression '.Icon_Action::infobulle(32).'</td>' . $w->input('p_simple', $a);
 print "</TR>";
 
@@ -148,7 +162,7 @@ print HtmlInput::submit('bt_html', _('Visualisation'));
 echo '</FORM>';
 echo '<hr>';
 
-
+ 
 //-----------------------------------------------------
 // If print is asked
 // First time in html
@@ -157,266 +171,60 @@ echo '<hr>';
 if (isset($_REQUEST['bt_html']))
 {
     // Type of report : listing=1 , Accounting writing=0, detail =2
-    $simple=$http->get("p_simple","number");
-    
+    $hid=new IHidden();
     $jrn_id=$http->get("jrn_id","number");
+    echo '<table>';
+    echo '<td>';
+    echo '<form method="GET" ACTION="export.php">' . dossier::hidden() .
+        HtmlInput::submit('bt_pdf', "Export PDF") .
+        HtmlInput::hidden('act', 'PDF:ledger') .
+        $hid->input("type", "jrn") .
+        $hid->input("jrn_id", $jrn_id) .
+        $hid->input("from_periode", $from_periode) .
+        $hid->input("to_periode", $to_periode);
+        echo $hid->input("p_simple", $simple);
+        echo HtmlInput::get_to_hidden(array('ac', 'type'));
+        echo "</form>";
+    echo '</td>';
+
+    echo '<TD><form method="GET" ACTION="export.php">' . dossier::hidden() .
+        HtmlInput::submit('bt_csv', "Export CSV") .
+        HtmlInput::hidden('act', 'CSV:ledger') .
+        $hid->input("type", "jrn") .
+        $hid->input("jrn_id", $jrn_id) .
+        $hid->input("from_periode", $from_periode) .
+        $hid->input("to_periode", $to_periode);
+        echo $hid->input("p_simple", $simple);
+        echo HtmlInput::get_to_hidden(array('ac', 'type'));
+        echo "</form></TD>";
+
+    echo '<td style="vertical-align:top">';
+        echo HtmlInput::print_window();
+    echo '</td>';
     
-	require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-            $Jrn = new Acc_Ledger($cn, $jrn_id);
-            $Jrn->get_name();
-            $ledger_type=$Jrn->get_type() ;
-            switch ($simple)
-            {
-                    case "0":
-                        // List of accounting writing
-                            $Row = $Jrn->get_row($from_periode, $to_periode);
-                            break;
-                    case "1":
-                        // simple list of operations, one row / operation
-                            $Row = $Jrn->get_rowSimple($from_periode, $to_periode);
-                        
-                    case "2":
-                        // Detail for each operation
-                            $Row = $Jrn->get_rowSimple($from_periode, $to_periode);
-                            break;
-                    default:
-                            die(__FILE__ . ":" . __LINE__ . " error unknown style [$simple ] ");
-            }
-            $rep = "";
-            $hid = new IHidden();
-            echo '<div class="content">';
-            echo '<h2 class="info">' . h($Jrn->name) . '</h2>';
-            echo "<table>";
-            echo '<TR>';
-            echo '<TD><form method="GET" ACTION="?">' . dossier::hidden() .
-            $hid->input("type", "jrn") . $hid->input('p_action', 'impress') . "</form></TD>";
+    echo "</TR>";
 
-            echo '<TD><form method="GET" ACTION="export.php">' . dossier::hidden() .
-            HtmlInput::submit('bt_pdf', "Export PDF") .
-            HtmlInput::hidden('act', 'PDF:ledger') .
-            $hid->input("type", "jrn") .
-            $hid->input("jrn_id", $Jrn->id) .
-            $hid->input("from_periode", $from_periode) .
-            $hid->input("to_periode", $to_periode);
-            echo $hid->input("p_simple", $simple);
-            echo HtmlInput::get_to_hidden(array('ac', 'type'));
-            echo "</form></TD>";
+    echo "</table>";
 
-            echo '<TD><form method="GET" ACTION="export.php">' . dossier::hidden() .
-            HtmlInput::submit('bt_csv', "Export CSV") .
-            HtmlInput::hidden('act', 'CSV:ledger') .
-            $hid->input("type", "jrn") .
-            $hid->input("jrn_id", $Jrn->id) .
-            $hid->input("from_periode", $from_periode) .
-            $hid->input("to_periode", $to_periode);
-            echo $hid->input("p_simple", $simple);
-            echo HtmlInput::get_to_hidden(array('ac', 'type'));
-            echo "</form></TD>";
+    /*
+     * Compute an array with all the usable ledger
+     */
+    $a_ledger=[];
+    if ( $jrn_id == 0) {
+        $nb_ret=count($ret);
+        for ($i=0;$i<$nb_ret;$i++) {
+            if ($ret[$i]['value']!=0) 
+                $a_ledger[$i]=$ret[$i]['value'];
+        }
+    } else {
+        $a_ledger=[$jrn_id];
+    }
+    
+    $ledger_history=Acc_Ledger_History::factory($cn,$a_ledger,$from_periode,$to_periode,$simple);
+    
+    $ledger_history->export_html();
+    
 
-            echo '<td style="vertical-align:top">';
-            echo HtmlInput::print_window();
-            echo '</td>';
-            echo "</TR>";
-
-            echo "</table>";
-            if (count($Jrn->row) == 0
-                            && $Row == null)
-                    exit;
-        
-
-
-	/////////////////////////////////////////////////////////////////////////////////////
-	// Ecriture comptable
-	/////////////////////////////////////////////////////////////////////////////////////
-	if ($simple== 0)
-	{
-		echo '<TABLE class="result">';
-		// detailled printing
-		//---
-		foreach ($Jrn->row as $op)
-		{
-			$class = "";
-			if ($op['j_date'] != '')
-			{
-				$class = "odd";
-			}
-
-			echo "<TR  class=\"$class\">";
-
-			echo "<TD>" . $op['j_date'] . "</TD>";
-			echo "<TD >" . $op['jr_pj_number'] . "</TD>";
-
-
-			if ($op['internal'] != '')
-				echo "<TD>" . HtmlInput::detail_op($op['jr_id'], $op['internal']) . "</TD>";
-			else
-				echo td();
-
-			echo "<TD >" . $op['poste'] . "</TD>" .
-			"<TD  >" . $op['description'] . "</TD>" .
-			"<TD   style=\"text-align:right\">" . nbm($op['deb_montant']) . "</TD>" .
-			"<TD style=\"text-align:right\">" . nbm($op['cred_montant']) . "</TD>" .
-			"</TR>";
-		}// end loop
-		echo "</table>";
-		// show the saldo
-
-		$solde = $Jrn->get_solde($from_periode, $to_periode);
-		echo "solde d&eacute;biteur:" . $solde[0] . "<br>";
-		echo "solde cr&eacute;diteur:" . $solde[1];
-	} // if
-	/////////////////////////////////////////////////////////////////////////////////////
-	// Liste opérations
-	/////////////////////////////////////////////////////////////////////////////////////
-	elseif ($simple == 1)
-	{
-            if ( $Jrn->get_type() != 'ACH' && $Jrn->get_type() != 'VEN')
-            {
-		// Simple printing
-		//---
-		echo '<TABLE class="result">';
-		echo "<TR>" .
-		"<th>Date</th>" .
-		"<th> n° de pièce </th>" .
-		"<th>internal</th>" .
-		th('Tiers') .
-		"<th>Commentaire</th>" .
-		"<th>Total opération</th>" .
-		"</TR>";
-		// set a filter for the FIN
-		$i = 0;$tot_amount=0;
-                bcscale(2);
-		foreach ($Row as $line)
-		{
-			$i++;
-			$class = ($i % 2 == 0) ? ' class="even" ' : ' class="odd" ';
-			echo "<tr $class>";
-			echo "<TD>" . $line['date'] . "</TD>";
-			echo "<TD>" . h($line['jr_pj_number']) . "</TD>";
-			echo "<TD>" . HtmlInput::detail_op($line['jr_id'], $line['jr_internal']) . "</TD>";
-			$tiers = $Jrn->get_tiers($line['jrn_def_type'], $line['jr_id']);
-			echo td($tiers);
-			echo "<TD>" . h($line['comment']) . "</TD>";
-
-
-			//	  echo "<TD>".$line['pj']."</TD>";
-			// If the ledger is financial :
-			// the credit must be negative and written in red
-			// Get the jrn type
-			if ($line['jrn_def_type'] == 'FIN')
-			{
-				$positive = $cn->get_value("select qf_amount from quant_fin where jr_id=$1", array($line['jr_id']));
-				if ($cn->count() == 0)
-					$positive = 1;
-				else
-					$positive = ($positive > 0) ? 1 : 0;
-
-				echo "<TD align=\"right\">";
-				echo ( $positive == 0 ) ? "<font color=\"red\">  - " . nbm($line['montant']) . "</font>" : nbm($line['montant']);
-				echo "</TD>";
-                                if ( $positive == 1 ) {
-                                    $tot_amount=bcadd($tot_amount,$line['montant']);
-                                } else {
-                                    $tot_amount=bcsub($tot_amount,$line['montant']);
-                                }
-			}
-			else
-			{
-				echo "<TD align=\"right\">" . nbm($line['montant']) . "</TD>";
-                                $tot_amount=bcadd($tot_amount,$line['montant']);
-			}
-
-			echo "</tr>";
-		}
-                echo '<tr class="highlight">';
-                echo '<td>'._('Totaux').'</td>';
-                echo td().td().td().td();
-                echo '<td class="num">'.nbm($tot_amount).'</td>';
-                echo '</tr>';
-		echo "</table>";
-            } else {
-                /*
-                 * Ledger ACH or VEN
-                 */
-                $own=new Noalyss_Parameter_Folder($cn);
-                require_once NOALYSS_TEMPLATE.'/print_ledger_simple.php';
-                
-            }
-	}
-	/////////////////////////////////////////////////////////////////////////////////////
-	// Détaillé
-	/////////////////////////////////////////////////////////////////////////////////////
-	elseif ($simple == 2)
-	{
-		foreach ($Row as $line)
-		{
-			echo '<div style="margin-top:2px;margin-bottom:10px;border:solid 1px black">';
-			$class = ' class="odd" style="font-stretch: expanded;font-size:1em;"';
-			echo '<table class="result" style="font-weight: bolder;font-variant: small-caps;width:100%;">';
-			echo "<tr $class>";
-			echo '<TD style="width:5%">' . $line['date'] . "</TD>";
-			echo '<TD style="width:10%">' . h($line['jr_pj_number']) . "</TD>";
-			echo '<TD style="width:5%">' . HtmlInput::detail_op($line['jr_id'], $line['jr_internal']) . "</TD>";
-			$tiers = $Jrn->get_tiers($line['jrn_def_type'], $line['jr_id']);
-			$ledger_name = $cn->get_value("select jrn_def_name from jrn_def where jrn_def_id=$1", array($line['jr_def_id']));
-			echo '<TD style="width:20%">' . h($ledger_name) . ' </td>';
-			echo '<TD style="width:20%">' . h($tiers) . ' </td>';
-			echo '<TD style="width:30%">' . h($line['comment']) . "</TD>";
-			echo '<TD style="text-align:right">';
-			if ($line['jrn_def_type'] == 'FIN')
-			{
-				$positive = $cn->get_value("select qf_amount from quant_fin where jr_id=$1", array($line['jr_id']));
-				if ($cn->count() == 0)
-					$positive = 1;
-				else
-					$positive = ($positive > 0) ? 1 : 0;
-
-				echo ( $positive == 0 ) ? "<font color=\"red\">  - " . nbm($line['montant']) . "</font>" : nbm($line['montant']);
-			}
-			else
-			{
-				if ( isset ($line['TVAC'])) {
-                                    echo  ( nbm($line['TVAC'])  < 0 ) ? "<font color=\"red\">  - " . nbm($line['TVAC']) . "</font>" : nbm($line['TVAC']);
-                                } else
-                                {
-                                    echo  nbm($line['montant']) ;
-                                }
-			}
-			echo  "</TD>";
-			echo "</tr>";
-			echo '</table>';
-			//////////////////////////////////////////////////////////////////////////////////////////////////////
-			// Add detail for each operation
-			//////////////////////////////////////////////////////////////////////////////////////////////////////
-			$op = new Acc_Operation($cn);
-			$op->jr_id = $line['jr_id'];
-			$op->get();
-			$obj = $op->get_quant();
-			switch ($obj->signature)
-			{
-				case 'FIN':
-					require NOALYSS_TEMPLATE.'/operation_detail_fin.php';
-					break;
-				case 'ACH':
-					require NOALYSS_TEMPLATE.'/operation_detail_ach.php';
-					break;
-				case 'VEN':
-					require NOALYSS_TEMPLATE.'/operation_detail_ven.php';
-					break;
-				case 'ODS':
-					require NOALYSS_TEMPLATE.'/operation_detail_misc.php';
-					break;
-				default:
-					die("unknown type of ledger");
-					break;
-			}
-			echo '</div>';
-			//echo '<div style="display:block;height:15px"></div>';
-		} // end loop
-	}
-
-	echo "</div>";
-	exit;
 }
 
 echo '</div>';
