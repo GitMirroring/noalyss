@@ -236,7 +236,7 @@ class ICard extends HtmlInput
             $e=sprintf(' ondblclick="%s" ', $this->dblclick);
             $this->dblclick=$e;
         }
-        $input=Icon_Action::clean_zone(uniqid("remove"),"{$this->id}=''");
+        $input=Icon_Action::clean_zone(uniqid("remove"),"$('{$this->id}').value=''");
         $input.=sprintf('
             <INPUT TYPE="Text"  class="input_text"  
                  NAME="%s" ID="%s" VALUE="%s" SIZE="%d" %s %s  %s>',
