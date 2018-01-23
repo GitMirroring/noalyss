@@ -224,5 +224,93 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
     {
         return $this->data;
     }
+    /**
+     * export in csv with detail  VAT
+     */
+    function export_csv()
+    {
+        $export=new Noalyss_Csv(_('journal'));
+        $export->send_header();
+        
+        $this->get_row();
+        $this->prepare_reconcile_date();
+        $this->add_vat_info();
+                
+        $own=new Noalyss_Parameter_Folder($this->db);
+        $title=array();
+        $title[]=_('Date');
+        $title[]=_("Paiement");
+        $title[]=_("operation");
+        $title[]=_("Pièce");
+        $title[]=_("Fournisseur");
+        $title[]=_("Note");
+        $title[]=_("interne");
+        $title[]=_("HTVA");
+        $title[]=_("TVA");
+        $title[]=_("TVA annulée");
+       
 
+        if ( $own->MY_TVA_USE=='Y')
+        {
+            $a_Tva=$this->db->get_array("select tva_id,tva_label from tva_rate order by tva_rate,tva_label,tva_id");
+            foreach($a_Tva as $line_tva)
+            {
+                $title[]="Tva ".$line_tva['tva_label'];
+            }
+        }
+        $title[]=_("TVAC/TTC");
+        $title[]=_("opérations liées");
+        $export->write_header($title);
+        
+        foreach ($this->data as $line)
+        {
+            $export->add($line['jr_date']);
+            $export->add($line['jr_date_paid']);
+            $export->add($line['jr_id']);
+            $export->add($line['jr_pj_number']);
+            $export->add($line['name']." ".
+                         $line["first_name"]." ".
+                         $line["qcode"]); // qp_supplier
+            $export->add($line['jr_comment']);
+            $export->add($line['jr_internal']);
+            $export->add($line['novat'],"number");
+            $export->add($line['vat'],"number");
+            $export->add($line['tva_sided'],"number");
+            
+            $a_tva_amount=array();
+            //- set all TVA to 0
+            foreach ($a_Tva as $l) {
+                $t_id=$l["tva_id"];
+                $a_tva_amount[$t_id]=0;
+            }
+            foreach ($line['detail_vat'] as $lineTVA)
+            {
+                $idx_tva=$lineTVA['qs_vat_code'];
+                $a_tva_amount[$idx_tva]=$lineTVA['vat_amount'];
+             }
+            if ($own->MY_TVA_USE == 'Y' )
+            {
+                foreach ($a_Tva as $line_tva)
+                {
+                    $a=$line_tva['tva_id'];
+                    $export->add($a_tva_amount[$a],"number");
+                }
+            }
+            $export->add($line['tvac'],"number");
+            /**
+             * Retrieve payment if any
+             */
+             $ret_reconcile=$this->db->execute('reconcile_date',array($line['jr_id']));
+             $max=Database::num_row($ret_reconcile);
+            if ($max > 0) {
+                for ($e=0;$e<$max;$e++) {
+                    $row=Database::fetch_array($ret_reconcile, $e);
+                    $export->add($row['jr_date']);
+                    $export->add($row['jr_internal']);
+                }
+            }
+	    $export->write();
+
+        }
+    }
 }

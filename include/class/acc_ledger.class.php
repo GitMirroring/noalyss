@@ -2629,9 +2629,12 @@ class Acc_Ledger extends jrn_def_sql
      *
      * \return an Array with the asked data
      */
-    function get_rowSimple($p_from, $p_to, $trunc=0, $p_limit=-1, $p_offset=-1)
+    function get_rowSimple($p_from, $p_to, $pa_ledger=[],$trunc=0,$p_limit=-1,$p_offset=-1)
     {
-        $alh_generic=new Acc_Ledger_History_Generic($this->db, [$this->id], $p_from, $p_to, "A");
+        if ( empty($pa_ledger) ) {
+            $pa_ledger=[$this->id];
+        }
+        $alh_generic=new Acc_Ledger_History_Generic($this->db, $pa_ledger, $p_from, $p_to, "A");
         $alh_generic->get_rowSimple($trunc,$p_limit,$p_offset);
         $data=$alh_generic->get_data();
         return $data;

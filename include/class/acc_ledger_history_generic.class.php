@@ -34,6 +34,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
 {
 
     private $data; //!< array of rows
+
     /**
      * Constructor
      * @param Database $cn
@@ -43,6 +44,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
      * @param type $p_mode
      * @example acc_ledger_historyTest.php
      */
+
     function __construct(Database $cn, $pa_ledger, $p_from, $p_to, $p_mode)
     {
         parent::__construct($cn, $pa_ledger, $p_from, $p_to, $p_mode);
@@ -411,7 +413,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
     function get_rowSimple($trunc=0, $p_limit=-1, $p_offset=-1)
     {
         global $g_user;
-        $jrn=" jrn_def_id in (".join($this->ma_ledger, ",").")" ;
+        $jrn=" jrn_def_id in (".join($this->ma_ledger, ",").")";
 
         $periode=sql_filter_per($this->db, $this->m_from, $this->m_to, 'p_id',
                 'jr_tech_per');
@@ -500,7 +502,8 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
 				     jr_pj_number,
                                      j_qcode,
                                      jrn_def_type,
-                                     jr_rapt as oc, j_tech_per as periode
+                                     jr_rapt as oc, j_tech_per as periode,
+                                     j_id
                                      from jrnx left join jrn on 
                    jr_grpt_id=j_grpt 
                    left join tmp_pcmn on pcm_val=j_poste 
@@ -605,6 +608,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
         $this->data=array($array, $tot_deb, $tot_cred);
         return $Max;
     }
+
     /**
      * display in  html the detail the list of operation
      */
@@ -612,6 +616,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
     {
         $this->export_accounting_html();
     }
+
     /**
      * display in  html with extended detail the list of operation
      */
@@ -619,12 +624,13 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
     {
         $this->export_accounting_html();
     }
+
     /**
      * display in  html the accounting of the list of operations
      */
     public function export_accounting_html()
     {
-    
+
         $this->get_row();
         echo '<TABLE class="result">';
 // detailled printing
@@ -661,6 +667,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
         echo _("solde débiteur:").$this->data[1]."<br>";
         echo _("solde créditeur:").$this->data[2];
     }
+
     /**
      * @brief list operation on one line per operation
      */
@@ -733,6 +740,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
         echo '</tr>';
         echo "</table>";
     }
+
     /**
      * To get data
      * @return array of rows
@@ -741,4 +749,55 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
     {
         return $this->data;
     }
+    
+    /**
+     * export CSV
+     */
+    function export_csv()
+    {
+        $export=new Noalyss_Csv(_('journal'));
+        $export->send_header();
+        
+        $this->get_row();
+        $title=array();
+        $title[]=_("operation");
+        $title[]=_("N° Pièce");
+        $title[]=_("Interne");
+        $title[]=_("Date");
+        $title[]=_("Poste");
+        $title[]=_("QuickCode");
+        $title[]=_("Libellé");
+        $title[]=_("Débit");
+        $title[]=_("Crédit");
+        $export->write_header($title);
+        if (count($this->data)==0)
+            exit;
+        $old_id="";
+        /**
+         * @todo add table headers
+         */
+        foreach ($this->data[0] as $idx=>$op)
+        {
+            // should clean description : remove <b><i> tag and '; char
+            $desc=$op['description'];
+            $desc=str_replace("<b>", "", $desc);
+            $desc=str_replace("</b>", "", $desc);
+            $desc=str_replace("<i>", "", $desc);
+            $desc=str_replace("</i>", "", $desc);
+            if ($op['j_id']!="")
+                $old_id=$op['j_id'];
+
+            $export->add($old_id, "text");
+            $export->add($op['jr_pj_number']);
+            $export->add($op['internal']);
+            $export->add($op['j_date']);
+            $export->add($op['poste']);
+            $export->add($op['j_qcode']);
+            $export->add($desc);
+            $export->add($op['deb_montant'], "number");
+            $export->add($op['cred_montant'], "number");
+            $export->write();
+        }
+    }
 }
+    
