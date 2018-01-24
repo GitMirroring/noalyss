@@ -322,12 +322,16 @@ class HtmlInput
     /**
      * display a div with the history of the card
      */
-    static function history_card_button($f_id, $p_mesg)
+    static function history_card_button($f_id, $p_mesg,$p_exercice="")
     {
         static $e=0;
         $e++;
-        $js=sprintf('onclick="view_history_card(\'%s\',\'%s\')"', $f_id,
-                dossier::id());
+         global $g_user;
+        if ( $p_exercice=="") {
+            $p_exercice=$g_user->get_exercice();
+        }
+        $js=sprintf('onclick="view_history_card(\'%s\',\'%s\',\'%s\')"', $f_id,
+                dossier::id(),$p_exercice);
         $view_history=HtmlInput::button("hcb"+$e, $p_mesg, $js);
         return $view_history;
     }
