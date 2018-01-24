@@ -1984,6 +1984,16 @@ class Fiche
                 [$this->id]);
         if ( $count > 0 ) return TRUE;
         
+        $count=$this->cn->get_value("select count(*) 
+                                select count(*) 
+                from attr_def
+                join fiche_detail using (ad_id)
+                where ad_type='card'
+                and ad_value=$1"
+                ,[$qcode]);
+        
+        if ( $count > 0 ) return TRUE;
+        
         return FALSE;
     }
     /*\brief remove a card without verification */
