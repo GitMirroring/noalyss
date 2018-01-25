@@ -184,5 +184,15 @@ class Icon_Action
         $r.='<span id="hide" class="icon"   onclick="'.$javascript.'">'.$action.'</span>';
         return $r;
     }
-
+    /**
+     * Display the icon of a trashbin
+     * @param string $p_id DOMid 
+     * @param string $p_javascript
+     * @return htmlString
+     */
+    static function trash($p_id,$p_javascript) 
+    {
+        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="icon">&#xe80f;;</span>';
+        return $r;
+    }
 }
