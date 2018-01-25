@@ -107,21 +107,7 @@
 				<td style="text-align:right"> <?php echo _("Affiche aussi les actions fermées");?></td>
 				<td><?php echo $closed_action->input();?></td>
 			</tr>
-                        <tr>
-			<td style="text-align:right"><?php echo _('Etiquette'); ?></td>
-				<td id="searchtag_choose_td">
-                                    <?php echo Tag::button_search('search'); ?>
-                                    <?php
-                                        if ( isset($_GET['searchtag'])) {
-                                            echo Tag::add_clear_button('search');
-                                            for ($i=0;$i<count($_GET['searchtag']);$i++) {
-                                                $t=new Tag($cn, $_GET['searchtag'][$i]);
-                                                echo $t->update_search_cell('search');
-                                            }
-                                        }
-                                    ?>
-				</td>
-			</tr>
+                       
                         </table>
 
                         <table style="display:inline;width:30%">
@@ -139,7 +125,21 @@
 			</tr>
                         
                         </table>
-                            
+            <p>
+                <?php echo _('Etiquette'); ?>
+               <span id="searchtag_choose_td">
+                   <?php echo Tag::button_search('search'); ?>
+                   <?php
+                       if ( isset($_GET['searchtag'])) {
+                           echo Tag::add_clear_button('search');
+                           for ($i=0;$i<count($_GET['searchtag']);$i++) {
+                               $t=new Tag($cn, $_GET['searchtag'][$i]);
+                               echo $t->update_search_cell('search');
+                           }
+                       }
+                   ?>
+               </span>
+            </p>
                         
 		<input type="hidden" name="sa" value="list">
 		<?php echo  $supl_hidden?>
