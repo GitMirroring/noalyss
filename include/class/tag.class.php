@@ -41,7 +41,7 @@ class Tag
      */
     function select()
     {
-        $ret=$this->data->seek(' order by t_tag');
+        $ret=$this->data->seek("where t_actif='Y' order by t_tag");
         require_once NOALYSS_TEMPLATE.'/tag_select.php';
     }
     /**
@@ -57,7 +57,7 @@ class Tag
      */
     function show_form_add()
     {
-        echo '<h2>'.' Ajout d\'un dossier (ou  tag)'.'</h2>';
+        echo h2(_("Ajout d'un dossier (ou tag)"));
        
         $this->form_add();
     }
@@ -67,6 +67,7 @@ class Tag
         $this->data->t_id=$p_array['t_id'];
         $this->data->t_tag=  strip_tags($p_array['t_tag']);
         $this->data->t_description=strip_tags($p_array['t_description']);
+        $this->data->t_actif=$p_array['t_actif'];
         $this->data->save();
     }
     function remove($p_array)
@@ -81,7 +82,7 @@ class Tag
     static  function button_search($p_prefix)
     {
         $r="";
-        $r.=HtmlInput::button("choose_tag", "Etiquette", 'onclick="search_display_tag('.Dossier::id().',\''.$p_prefix.'\')"', "smallbutton");
+        $r.=HtmlInput::button("choose_tag", _("Etiquette"), 'onclick="search_display_tag('.Dossier::id().',\''.$p_prefix.'\')"', "smallbutton");
         return $r;
     }
     /**

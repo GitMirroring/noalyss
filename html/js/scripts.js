@@ -2392,7 +2392,8 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post)
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
-                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 1});
+                        var posy=calcy(250);
+                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0,style:"position:fixed;top:"+posy+"px"});
                         $('tag_div').innerHTML = code_html;
                         try
                         {
@@ -2551,7 +2552,27 @@ function action_tag_remove(p_dossier, ag_id, t_id)
     });
 }
 
-
+/**
+ * Activate a tag
+ * @param int p_dossier
+ * @param int  p_tag_id
+ */
+function activate_tag(p_dossier, p_tag_id) {
+    waiting_box();
+    new Ajax.Request("ajax_misc.php",
+    {
+        method:"get",
+        parameters:{gDossier:p_dossier,op:'tag_activate',t_id:p_tag_id},
+        onSuccess:function(req) {
+            remove_waiting_box();
+            var answer=req.responseText.evalJSON();
+            var tagId="tag_onoff"+p_tag_id;
+            $(tagId).update(answer.code);
+            $(tagId).setStyle(answer.style);
+            remove_waiting_box();
+        }
+    })
+}
 /**
  * Display a div with available tags, this div can update the cell
  * tag_choose_td

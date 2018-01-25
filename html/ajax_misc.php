@@ -158,12 +158,15 @@ $path = array(
     "navigator"=>"ajax_navigator",
     "preference"=>"ajax_preference",
     "bookmark"=>"ajax_bookmark",
+    // Tag 
     "tag_detail"=>"ajax_tag_detail",
     "tag_save"=>"ajax_tag_save",
     "tag_list"=>"ajax_tag_list",
     "tag_add"=>"ajax_tag_add_action",
     "tag_remove"=>"ajax_tag_remove_action",
     "tag_choose"=>"ajax_tag_choose",
+    "tag_activate"=>"ajax_tag_save",
+    // search
     "search_display_tag"=>"ajax_search_display_tag",
     "search_add_tag"=>"ajax_search_add_tag",
     "search_clear_tag"=>"ajax_search_clear_tag",
