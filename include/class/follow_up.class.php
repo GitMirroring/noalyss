@@ -1164,21 +1164,19 @@ class Follow_Up
     static function display_search($cn, $inner=false)
     {
         global $g_user;
-        $a=(isset($_GET['action_query']))?$_GET['action_query']:"";
-        $qcode=(isset($_GET['qcode']))?$_GET['qcode']:"";
-
-        $supl_hidden='';
-        if (isset($_REQUEST['sc']))
-            $supl_hidden.=HtmlInput::hidden('sc', $_REQUEST['sc']);
+        $http=new HttpInput();
+        $a=$http->get("action_query","string","");
+        $qcode=$http->get("qcode","string","");
+        
+        $supl_hidden=HtmlInput::array_to_hidden(['sc','sb','ac'], $_REQUEST);
+        
         if (isset($_REQUEST['f_id']))
         {
-            $supl_hidden.=HtmlInput::hidden('f_id', $_REQUEST['f_id']);
-            $f=new Fiche($cn, $_REQUEST['f_id']);
+            $f_id=$http->request('f_id','number');
+            $supl_hidden.=HtmlInput::hidden('f_id', $f_id);
+            $f=new Fiche($cn, $f_id);
             $supl_hidden.=HtmlInput::hidden('qcode_dest', $f->get_quick_code());
         }
-        if (isset($_REQUEST['sb']))
-            $supl_hidden.=HtmlInput::hidden('sb', $_REQUEST['sb']);
-        $supl_hidden.=HtmlInput::hidden('ac', $_REQUEST['ac']);
 
         /**
          * Show the default button (add action, show search...)
