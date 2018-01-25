@@ -221,7 +221,9 @@ $path = array(
     // template category of card
     'template_cat_card'=>'ajax_template_cat_card',
     // Attribute for category of card
-    'template_cat_category'=>'ajax_template_cat_category'
+    'template_cat_category'=>'ajax_template_cat_category',
+    // From FollowUp , update a comment on a file
+    'update_comment_followUp'=>'ajax_follow_up'
 )    ;
 
 if (array_key_exists($op, $path)) {

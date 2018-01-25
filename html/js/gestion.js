@@ -51,36 +51,7 @@ function remove_document(p_dossier,p_id)
 		);
 
 }
-/**
- *@brief update the description of an attached document of an action
- *@param dossier
- *@param dt_id id of the document (pk document:d_id)
-*/
-function update_document(p_dossier,p_id)
-{
-        var queryString={
-            "gDossier":p_dossier,
-            "a":"upd_doc",
-            "d_id":p_id,
-            'act':'RAW:document',
-            'value':$('input_desc_txt'+p_id).value
-        };
-	var action=new Ajax.Request (
-		"export.php",
-		{
-			method:'get',
-			parameters:queryString,
-			onFailure:errorRemoveDoc,
-			onSuccess:function(req){
-                                $('input_desc'+p_id).hide();
-                                $('print_desc'+p_id).innerHTML=$('input_desc_txt'+p_id).value+'<a class="line" id="desc'+p_id+'" onclick="javascript:show_description('+p_id+')">Modifier</a>';
-                                $('print_desc'+p_id).show();
-                        }
-		}
 
-		);
-    return false;
-}
 
 /**
  *@brief remove the concerned operation of an action

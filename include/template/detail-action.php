@@ -419,26 +419,22 @@ for ($i=0;$i<sizeof($aAttachedFile);$i++) :
           </td>
           <td>
         <label> : </label>
-        <span id="print_desc<?php echo $aAttachedFile[$i]['d_id'];?>"> <?php echo h($aAttachedFile[$i]['d_description'])?>
-       <?php if ($p_view != 'READ') : ?> 
-        <?php 
-            $js=sprintf("javascript:show_description('%s')",$aAttachedFile[$i]['d_id']);
+        <?php
+        // Description of the file
+        if ($p_view != 'READ') :
+            $description=new IText("value");
+            $description->id="input_desc_txt".$aAttachedFile[$i]['d_id'];
+            $description->value=h($aAttachedFile[$i]['d_description']);
+            $inplace_description=new Inplace_Edit($description);
+            $inplace_description->set_callback("ajax_misc.php");
+            $inplace_description->add_json_param("d_id", $aAttachedFile[$i]['d_id']);
+            $inplace_description->add_json_param("gDossier", Dossier::id());
+            $inplace_description->add_json_param("op", "update_comment_followUp");
+            echo $inplace_description->input();
+        else:
+                echo h($aAttachedFile[$i]['d_description']);
+        endif;
         ?>
-        <a class="line"  id="<?php echo 'desc'.$aAttachedFile[$i]['d_id'];?>" onclick="<?php echo $js?>"><?php echo _("Modifier")?></a>    
-        
-        </span>
-        </td>
-        <td>
-        <span class="noprint" id="input_desc<?php echo $aAttachedFile[$i]['d_id'];?>" style="display:none" >
-              <input type="input" class="input_text" id="input_desc_txt<?php echo $aAttachedFile[$i]['d_id'];?>" value="<?php echo h($aAttachedFile[$i]['d_description'])?>">
-              <?php 
-              $js=sprintf("update_document('%s','%s')",dossier::id(),$aAttachedFile[$i]['d_id']);
-              echo HtmlInput::button('save_desc'.$aAttachedFile[$i]['d_id'], _('Sauve'), 'onclick="'.$js.'"','smallbutton');
-              ?>
-        </span>
-        <?php else: ?>
-        </span>
-        <?php endif;?>
 <?php $rmDoc=sprintf("return confirm_box(null,'"._('Voulez-vous effacer le document')." %s' , function(){remove_document('%s','%s');});",
 	$aAttachedFile[$i]['d_filename'],
 	dossier::id(),
@@ -446,7 +442,7 @@ for ($i=0;$i<sizeof($aAttachedFile);$i++) :
     ?>
         </td>
         <td>
-  <?php if ($p_view != 'READ') : ?>  <a class="line"  id="<?php echo "ac".$aAttachedFile[$i]['d_id'];?>" href="javascript:void(0)" onclick="<?php echo $rmDoc;?>"><?php echo _("Effacer")?></a><?php endif;?>
+  <?php if ($p_view != 'READ') : ?>  <span class="icon"  id="<?php echo "ac".$aAttachedFile[$i]['d_id'];?>" href="javascript:void(0)" onclick="<?php echo $rmDoc;?>">&#xe80f;</span><?php endif;?>
         </td>
   </tr>
   <?php
