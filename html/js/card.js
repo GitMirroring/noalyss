@@ -722,13 +722,11 @@ function form_blank_card(obj)
  */
 function save_card(obj)
 {
-    if ($(obj)['av_text5']) {
+    var content=$(obj).ipopup;
     var accounting= $(obj)['av_text5'];
     if ( accounting && accounting.value.length > 40 ) {
       smoke.alert('Poste comptable trop grand');
       return false;
-        }
-        }
     }
     // Data must be taken here
 
