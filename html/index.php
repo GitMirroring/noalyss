@@ -175,7 +175,7 @@ if (isset ($_REQUEST['reconnect']) && isset ($_REQUEST['backurl'])) {
 }
 echo '
 <span style="background-color:#879ed4;color:white;padding-left:4px;padding-right:4px;">
-Noalyss NOALYSS_VERSION - '.$my_domain.'
+version  NOALYSS_VERSION - '.$my_domain.'
 </span>
 <BR>
 <BR>

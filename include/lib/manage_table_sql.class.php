@@ -583,8 +583,9 @@ function check()
         if ($this->can_append_row()==TRUE)
         {
             echo HtmlInput::button_action(" "._("Ajout"),
-                    sprintf("%s.input('-1','%s')", $this->object_name,
+                    sprintf("%s.input('-1','%s')", 
                             $this->object_name), "xx", "smallbutton", BUTTONADD);
+                            $this->object_name),"xx","smallbutton",BUTTONADD);
         }
         $nb_order=count($this->a_order);
         $virg=""; $result="";
@@ -614,8 +615,9 @@ function check()
         if ($this->can_append_row()==TRUE)
         {
             echo HtmlInput::button_action(" "._("Ajout"),
-                    sprintf("%s.input('-1','%s')", $this->object_name,
+                    sprintf("%s.input('-1','%s')", 
                             $this->object_name), "xx", "smallbutton", BUTTONADD);
+                            $this->object_name),"xx","smallbutton",BUTTONADD);
         }
         printf('<script> alternate_row_color("tb%s");</script>',
                 $this->object_name);
@@ -939,7 +941,7 @@ function check()
             '</li>',
             '</ul>';
             echo "</form>";
-
+            
 
             $html=ob_get_contents();
             ob_end_clean();
@@ -1036,7 +1038,14 @@ function check()
      */
     function save()
     {
-        $this->table->save();
+        if ($this->table->exist()==0)
+        {
+            $this->table->insert();
+        }
+        else
+        {
+            $this->table->update();
+        }
     }
 
     /**
