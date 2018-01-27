@@ -834,6 +834,7 @@ class HtmlInput
 
         $r.='</div>';
         $r.=h2($p_name, ' class="title" ');
+   
         return $r;
     }
 
@@ -873,6 +874,8 @@ class HtmlInput
         if ($p_js!="")
         {
             $p_url="javascript:void(0)";
+          } else {
+              $p_url=sprintf('href="%s"',$p_url);
         }
         else
         {

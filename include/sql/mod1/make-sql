@@ -1,5 +1,5 @@
-pg_dump -O -U phpcompta -s ${DOMAIN}mod1|grep -v "COMMENT ON SCHEMA public IS 'Standard public schema';" |sed "/^--/d" > schema.sql
-awk '/SEQUENCE/,/;/ { print $0;}' < schema.sql > sequence.sql
+pg_dump -O -U dany -s ${DOMAIN}mod1|grep -v "COMMENT ON SCHEMA public IS 'Standard public schema';" |sed "/^--/d" > schema.sql
+awk '/SEQUENCE/,/;/  { print $0;}' < schema.sql > sequence.sql
 awk '/CREATE DOMAIN/,/;/ { print $0;}' < schema.sql > table.sql
 awk '/CREATE TABLE/,/;/ { print $0;}' < schema.sql >> table.sql
 awk '/CREATE VIEW/,/;/ { print $0;}' < schema.sql > view.sql
@@ -13,11 +13,14 @@ echo "SET search_path = public, pg_catalog;"
 
 
 awk '/ALTER TABLE/,/;/ { print $0;}' < schema.sql >> constraint.sql
-awk '/CREATE FUNCTION/,/LANGUAGE/ { print $0;}' < schema.sql > function.sql
+
+# function in XML
+## awk 'BEGIN{print "<PROCEDURES>";} /CREATE FUNCTION/,/\$\$;/ { if (/CREATE FUNCTION/) {print "<procedure>";} if (/\$\$;/) {print "</procedure>";} print $0;} END { print "</PROCEDURES>";}' < schema.sql 
+awk '/CREATE FUNCTION/,/\$\$;/ { print $0;}' < schema.sql > function.sql
 awk '/COMMENT/,/;/ {print $0;}' < schema.sql > comment.sql
 
 sed -i -e "/ALTER TABLE.*/d" -e "/ADD CONSTRAINT/d" -e "/CREATE PROCEDURAL/d" schema.sql
 
 grep setval schema.sql >> sequence.sql
-pg_dump -O -U phpcompta -D -a -O ${DOMAIN}mod1 |sed "/^--/d" > data.sql
+pg_dump -O -U dany --data-only --column-inserts  -O ${DOMAIN}mod1 |sed "/^--/d" > data.sql
 
