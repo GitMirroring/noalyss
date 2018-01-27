@@ -3009,24 +3009,6 @@ function pin (object_id) {
     if ( aDraggableElement[object_id]) {
         aDraggableElement[object_id].destroy();
         aDraggableElement[object_id]=undefined;
-        $('pin_'+object_id).firstChild.innerHTML="&oplus;";
-    } else {
-        aDraggableElement[object_id]=new Draggable(object_id, {starteffect: function ()
-                {
-                    new Effect.Highlight(object_id, {scroll: window, queue: 'end'});
-                }}
-            ); 
-        $('pin_'+object_id).firstChild.innerHTML="&#10057;";
-    }
-}
-/**
- * Make an DOM element draggable or not
- * @param object_id DOM id
- */
-function pin (object_id) {
-    if ( aDraggableElement[object_id]) {
-        aDraggableElement[object_id].destroy();
-        aDraggableElement[object_id]=undefined;
         $('pin_'+object_id).innerHTML="&#xf192;";
     } else {
         aDraggableElement[object_id]=new Draggable(object_id, {starteffect: function ()
