@@ -877,11 +877,6 @@ class HtmlInput
           } else {
               $p_url=sprintf('href="%s"',$p_url);
         }
-        else
-        {
-            $p_url=sprintf('href="%s"', $p_url);
-        }
-
 
         $str=sprintf('<a %s %s %s>%s</a>', $p_style, $p_url, $p_js, $p_text);
         return $str;
