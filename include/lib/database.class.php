@@ -291,7 +291,11 @@ class Database
     {
 
         if (!DEBUG)
+        {
             ob_start();
+        } else {
+            $debug=fopen("/tmp/debug.log","w+");
+        }
         $hf=fopen($script, 'r');
         if ($hf==false)
         {
@@ -338,8 +342,9 @@ class Database
             }
             if ($flag_function)
             {
-                if (strpos(strtolower($buffer), "language plpgsql")===false&&
-                        strpos(strtolower($buffer), "language 'plpgsql'")===false)
+                if (strpos(strtolower($buffer), "$$;")===false &&
+                        strpos(strtolower($buffer), '$_$;')===false 
+                    )
                 {
                     $sql.=$buffer;
                     continue;
@@ -348,11 +353,13 @@ class Database
             else
             {
                 // cut the semi colon
-                $buffer=str_replace(';', '', $buffer);
+//                $buffer=str_replace(';', '', $buffer);
             }
             $sql.=$buffer;
+            if ( DEBUG ) fwrite($debug, $sql);
             if ($this->exec_sql($sql)==false)
             {
+                
                 $this->rollback();
                 if (!DEBUG)
                     ob_end_clean();

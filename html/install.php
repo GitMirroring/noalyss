@@ -426,9 +426,9 @@ echo _("Version base de données :"),$version;
 if ( $version[0] < 9 )
   {
 ?>
-  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 8.4 de PostGresql, si votre distribution n'en
+  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 9 de PostGresql, si votre distribution n'en
 offre pas, installez-en une en la compilant. Lisez attentivement la notice sur postgresql.org pour migrer
-vos bases de donn&eacute;es")?>
+vos bases de données")?>
 </p>
 <?php exit(); //'
 } else {
