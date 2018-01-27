@@ -1,5 +1,4 @@
-pg_dump -O -U dany -s rel671dossier10104|grep -v "COMMENT ON SCHEMA public IS 'Standard public schema';" |sed "/^--/d" > schema.sql
-# pg_dump -O -U dany -s ${DOMAIN}mod1|grep -v "COMMENT ON SCHEMA public IS 'Standard public schema';" |sed "/^--/d" > schema.sql
+pg_dump -O -U dany -s ${DOMAIN}mod1|grep -v "COMMENT ON SCHEMA public IS 'Standard public schema';" |sed "/^--/d" > schema.sql
 awk '/SEQUENCE/,/;/  { print $0;}' < schema.sql > sequence.sql
 awk '/CREATE DOMAIN/,/;/ { print $0;}' < schema.sql > table.sql
 awk '/CREATE TABLE/,/;/ { print $0;}' < schema.sql >> table.sql
