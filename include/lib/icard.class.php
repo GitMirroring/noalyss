@@ -136,12 +136,7 @@ class ICard extends HtmlInput
         $this->style='  ';
         $this->accvis=1; //!< account_visible =1 otherwise 0
     }
-    /**
-     * @brief in the search box, the accounting will be hidden
-     */
-    function hide_accounting() {
-        $this->accvis=0;
-    }
+   
     /**
      * @brief in the search box, the accounting will be shown it is the default
      */
@@ -157,14 +152,7 @@ class ICard extends HtmlInput
         $this->accvis=0;
     }
 
-    /**
-     * @brief in the search box, the accounting will be shown it is the default
-     */
-    function show_accounting()
-    {
-        $this->accvis=1;
-    }
-
+  
     /**\brief set the javascript callback function
      * by default it is update_value called BEFORE the querystring is send
      *
