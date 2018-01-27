@@ -584,8 +584,8 @@ function check()
         {
             echo HtmlInput::button_action(" "._("Ajout"),
                     sprintf("%s.input('-1','%s')", 
+                            $this->object_name,
                             $this->object_name), "xx", "smallbutton", BUTTONADD);
-                            $this->object_name),"xx","smallbutton",BUTTONADD);
         }
         $nb_order=count($this->a_order);
         $virg=""; $result="";
@@ -616,8 +616,8 @@ function check()
         {
             echo HtmlInput::button_action(" "._("Ajout"),
                     sprintf("%s.input('-1','%s')", 
+                            $this->object_name,
                             $this->object_name), "xx", "smallbutton", BUTTONADD);
-                            $this->object_name),"xx","smallbutton",BUTTONADD);
         }
         printf('<script> alternate_row_color("tb%s");</script>',
                 $this->object_name);
