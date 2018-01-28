@@ -1,4 +1,12 @@
-pg_dump -O -U dany -s ${DOMAIN}mod1|grep -v "COMMENT ON SCHEMA public IS 'Standard public schema';" |sed "/^--/d" > schema.sql
+#!/bin/bash
+# Create script for exporting a new template
+# DDB 2018-01-28
+# under GPL license
+#
+
+export TEMPLATE=${DOMAIN}mod1
+
+pg_dump -O -U dany -s $TEMPLATE|grep -v "COMMENT ON SCHEMA public IS 'Standard public schema';" |sed "/^--/d" > schema.sql
 awk '/SEQUENCE/,/;/  { print $0;}' < schema.sql > sequence.sql
 awk '/CREATE DOMAIN/,/;/ { print $0;}' < schema.sql > table.sql
 awk '/CREATE TABLE/,/;/ { print $0;}' < schema.sql >> table.sql
@@ -27,6 +35,6 @@ sed -i -e "/ALTER TABLE.*/d" -e "/ADD CONSTRAINT/d" -e "/CREATE PROCEDURAL/d" -e
 
 grep setval schema.sql >> sequence.sql
 echo "set search_path = public, comptaproc,pg_catalog ;" > data.sql
-pg_dump -O -U dany --data-only --column-inserts  -O ${DOMAIN}mod1 |sed "/^--/d" | sed -e "/SET search_path/d" >> data.sql
+pg_dump -O -U dany --data-only --column-inserts  -O ${TEMPLATE}|sed "/^--/d" | sed -e "/SET search_path/d" >> data.sql
 
 
