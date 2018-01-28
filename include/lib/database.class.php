@@ -353,7 +353,7 @@ class Database
             else
             {
                 // cut the semi colon
-//                $buffer=str_replace(';', '', $buffer);
+                $buffer=str_replace(';', '', $buffer);
             }
             $sql.=$buffer;
             if ( DEBUG ) fwrite($debug, $sql);
