@@ -30,7 +30,7 @@ awk '/COMMENT ON TRIGGER/,/;/ { print $0;}' < schema.sql >> constraint.sql
 awk '/CREATE FUNCTION/,/\$\$;/ { print $0;}' < schema.sql > function.sql
 awk '/COMMENT/,/;/ {print $0;}' < schema.sql > comment.sql
 
-sed -i -e "/ALTER TABLE.*/d" -e "/ADD CONSTRAINT/d" -e "/CREATE PROCEDURAL/d" -e "/CREATE TRIGGER/d" -e "/COMMENT ON CONSTRAINT/d" -e "/COMMENT ON TRIGGER/d" schema.sql
+sed -i -e "/REVOKE /d" -e "/GRANT /d" -e "/ALTER TABLE.*/d" -e "/ADD CONSTRAINT/d" -e "/CREATE PROCEDURAL/d" -e "/CREATE TRIGGER/d" -e "/COMMENT ON CONSTRAINT/d" -e "/COMMENT ON TRIGGER/d" schema.sql
 
 
 grep setval schema.sql >> sequence.sql
