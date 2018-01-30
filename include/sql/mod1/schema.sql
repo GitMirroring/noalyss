@@ -6338,10 +6338,6 @@ CREATE INDEX x_poste ON jrnx USING btree (j_poste);
 
 
 
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 

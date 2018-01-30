@@ -39,7 +39,7 @@ if ( isset ($_POST['upd']) && isNumber($dossier_id) == 1 && $dossier_id != -1)
     $dos=new dossier($dossier_id);
     $name=$http->post('name');
     $desc=$http->post('desc');
-     $max_email=$http->post("max_email");
+    $max_email=$http->post("max_email");
     $dos->set_parameter('name',$name);
     $dos->set_parameter('desc',$desc);
     $dos->set_parameter("max_email", $max_email);

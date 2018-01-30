@@ -2,7 +2,7 @@ CREATE TABLE ac_dossier (
     dos_id integer DEFAULT nextval(('dossier_id'::text)::regclass) NOT NULL,
     dos_name text NOT NULL,
     dos_description text,
-    dos_jnt_user integer DEFAULT 0
+    dos_email integer DEFAULT (-1)
 );
 CREATE TABLE ac_users (
     use_id integer DEFAULT nextval(('users_id'::text)::regclass) NOT NULL,
@@ -12,7 +12,24 @@ CREATE TABLE ac_users (
     use_active integer DEFAULT 0,
     use_pass text,
     use_admin integer DEFAULT 0,
+    use_email text,
     CONSTRAINT ac_users_use_active_check CHECK (((use_active = 0) OR (use_active = 1)))
+);
+CREATE TABLE audit_connect (
+    ac_id integer NOT NULL,
+    ac_user text,
+    ac_date timestamp without time zone DEFAULT now(),
+    ac_ip text,
+    ac_state text,
+    ac_module text,
+    ac_url text,
+    CONSTRAINT valid_state CHECK ((((ac_state = 'FAIL'::text) OR (ac_state = 'SUCCESS'::text)) OR (ac_state = 'AUDIT'::text)))
+);
+CREATE TABLE dossier_sent_email (
+    id integer NOT NULL,
+    de_date character varying(8) NOT NULL,
+    de_sent_email integer NOT NULL,
+    dos_id integer NOT NULL
 );
 CREATE TABLE jnt_use_dos (
     jnt_id integer DEFAULT nextval(('seq_jnt_use_dos'::text)::regclass) NOT NULL,
@@ -24,10 +41,14 @@ CREATE TABLE modeledef (
     mod_name text NOT NULL,
     mod_desc text
 );
-CREATE TABLE priv_user (
-    priv_id integer DEFAULT nextval(('seq_priv_user'::text)::regclass) NOT NULL,
-    priv_jnt integer NOT NULL,
-    priv_priv text
+CREATE TABLE recover_pass (
+    use_id bigint NOT NULL,
+    request text NOT NULL,
+    password text NOT NULL,
+    created_on timestamp with time zone,
+    created_host text,
+    recover_on timestamp with time zone,
+    recover_by text
 );
 CREATE TABLE theme (
     the_name text NOT NULL,
@@ -40,5 +61,5 @@ CREATE TABLE user_global_pref (
     parameter_value text
 );
 CREATE TABLE version (
-    val integer
+    val integer NOT NULL
 );
