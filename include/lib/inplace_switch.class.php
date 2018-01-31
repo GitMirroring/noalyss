@@ -55,19 +55,23 @@ class Inplace_Switch
 
     function input()
     {
-        printf('<span style="text-decoration: none" class="inplace_edit icon" id="%s">', $this->name);
         if ($this->value==1)
         {
-            echo $this->iconon;
+            $icon=$this->iconon;
+            $color="green";
         }
         elseif ($this->value==0)
         {
-            echo $this->iconoff;
+            $icon=$this->iconoff;
+            $color="red";
         }
         else
         {
             throw new Exception(_("Invalide value"));
         }
+        
+        printf('<span style="text-decoration: none;color:%s" class="inplace_edit icon" id="%s">', $color,$this->name);
+        echo $icon;
         echo '</span>';
         echo <<<EOF
         <script>
