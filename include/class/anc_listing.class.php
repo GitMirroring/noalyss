@@ -97,7 +97,7 @@ class Anc_Listing extends Anc_Print
                 '<td>'.$row['oa_date'].'</td>'.
 	      td($post_detail).
 	      td($card_detail).
-	      '<td>'.h($row['po_name']).'</td>'.
+	      '<td>'.HtmlInput::history_anc_account($row['po_id'],h($row['po_name'])).'</td>'.
 	      '<td>'.h($row['oa_description']).'</td>'.
 	      td($row['jr_comment']).
 	      '<td>'.$detail.'</td>'.

@@ -179,7 +179,7 @@ class Anc_GrandLivre extends Anc_Print
      * \return string
      */
 
-    function display_html()
+    function display_html($p_with_ck=1)
    {
         $r = "";
         //---Html
@@ -250,7 +250,7 @@ class Anc_GrandLivre extends Anc_Print
              */
             $str_ck = "";
             $str_document = "";
-            if ($row['jr_id'] != null)
+            if ($row['jr_id'] != null && $p_with_ck==1)
             {
                 /*
                  * Get receipt info  

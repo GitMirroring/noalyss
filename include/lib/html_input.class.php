@@ -321,6 +321,9 @@ class HtmlInput
 
     /**
      * display a div with the history of the card
+     * @param int $f_id fiche.f_id
+     * @param string $p_mesg string to display
+     * @param int $p_exercice exercice of the history
      */
     static function history_card_button($f_id, $p_mesg,$p_exercice="")
     {
@@ -338,6 +341,10 @@ class HtmlInput
 
     /**
      * display a div with the history of the account
+     * @param string $p_account accounting
+     * @param string $p_mesg string to display
+     * @param string $p_style extra code for HTML
+     * @param int $p_exercice exercice of the history
      */
     static function history_account($p_account, $p_mesg, $p_style="",$p_exercice="")
     {
@@ -346,6 +353,23 @@ class HtmlInput
             $p_exercice=$g_user->get_exercice();
         }
         $view_history=sprintf('<A class="detail" style="text-decoration:underline;%s" HREF="javascript:view_history_account(\'%s\',\'%s\',\'%s\')" >%s</A>',
+                $p_style, $p_account, dossier::id(),$p_exercice, $p_mesg);
+        return $view_history;
+    }
+    /**
+     * display a div with the history of the analytic account
+     * @param int $p_account  po_id 
+     * @param string $p_mesg string to display
+     * @param string $p_style extra code for HTML
+     * @param int $p_exercice exercice of the history
+     */
+    static function history_anc_account($p_account, $p_mesg, $p_style="",$p_exercice="")
+    {
+        global $g_user;
+        if ( $p_exercice=="") {
+            $p_exercice=$g_user->get_exercice();
+        }
+        $view_history=sprintf('<A class="detail" style="text-decoration:underline;%s" HREF="javascript:view_history_anc_account(\'%s\',\'%s\',\'%s\')" >%s</A>',
                 $p_style, $p_account, dossier::id(),$p_exercice, $p_mesg);
         return $view_history;
     }

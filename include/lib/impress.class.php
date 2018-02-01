@@ -251,41 +251,45 @@ class Impress
      * @param type $aheader  double array, each item of the array contains
      * a key type (num) and a key title
      */
-    static function array_to_csv($array,$aheader,$p_filename)
+    static function array_to_csv($array, $aheader, $p_filename)
     {
         $file_csv=new Noalyss_Csv($p_filename);
-        for ($i=0;$i<count($aheader);$i++)
+        for ($i=0; $i<count($aheader); $i++)
         {
-                $file_csv->add($aheader[$i]['title']);
+            $file_csv->add($aheader[$i]['title']);
         }
         $file_csv->write();
 
         // fetch all the rows
-        for ($i=0;$i<count($array);$i++)
+        for ($i=0; $i<count($array); $i++)
         {
             $row=$array[$i];
             $e=0;
             // for each rows, for each value
-            foreach ($array[$i] as $key=>$value)
+            foreach ($array[$i] as $key=> $value)
             {
-				if ($e > count($aheader)) $e=0;
+                if ($e>count($aheader))
+                    continue;
 
-				if ( isset ($aheader[$e]['type']))
-				{
-					switch ($aheader[$e]['type'])
-					{
-						case 'num':
-							$file_csv->add($value, "number");
-							break;
-						default:
-							$file_csv->add($value);
-					}
-				} else {
-					$file->add($value);
-				}
+                if (isset($aheader[$e]['type']))
+                {
+                    switch ($aheader[$e]['type'])
+                    {
+                        case 'num':
+                            $file_csv->add($value, "number");
+                            break;
+                        default:
+                            $file_csv->add($value);
+                    }
+                }
+                else
+                {
+                    $file_csv->add($value);
+                }
+                $e++;
             }
             $file_csv->write();
-            $e++;
         }
     }
+
 }

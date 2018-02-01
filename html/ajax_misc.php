@@ -208,6 +208,8 @@ $path = array(
     "accounting"=>"ajax_accounting",
     // Show detail of an ANC operation
     "anc_detail_op"=>"ajax_anc_detail_operation",
+    // show history of an analytic account
+    "history_anc_account"=>"ajax_history_anc_account",
     // Display the list of filter saved
     "display_search_filter"=>"ajax_search_filter",
     // Save search filter 
