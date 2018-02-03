@@ -19,6 +19,7 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 require_once NOALYSS_INCLUDE.'/class/pdf_operation.class.php';
+require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
 /**
  * @brief Export DOCUMENT from Analytic accountancy, can transform into PDF
  * and add a stamp on each pages
@@ -118,16 +119,20 @@ class Document_Export
      * a stamp. If an error occurs then $this->feedback won't be empty
      * @param $p_array contents all the jr_id
      */
-    function export_all($p_array)
+    function export_all($p_array, Progress_Bar $progress)
     {
         $this->check_file();
+        if ( count($p_array)==0) return;
         ob_start();
         $cnt_feedback=0;
         global $cn;
-
+        // follow progress
+        $step=round(20/count($p_array));
+        
         $cn->start();
         foreach ($p_array as $value)
         {
+            $progress->increment($step);
             // For each file save it into the temp folder,
             $file = $cn->get_array('select jr_pj,jr_pj_name,jr_pj_number,jr_pj_type from jrn '
                     . ' where jr_id=$1', array($value));
@@ -173,7 +178,7 @@ class Document_Export
                 continue;
             }
       
-
+             $progress->increment($step);
             // 
             // remove extension
             $ext = strrpos($filename, ".");
@@ -210,6 +215,7 @@ class Document_Export
                 }
                 rename ($this->store_convert . '/' . $file_pdf.'.2',$this->store_convert . '/' . $file_pdf);
             }
+            $progress->increment($step);
             // output
             $output = $this->store_convert . '/stamp_' . $file_pdf;
             
@@ -238,7 +244,7 @@ class Document_Export
             // concatenate detail operation with the output
             $stmt = PDFTK . " " . $detail_operation->get_pdf_filename()." ".$output. 
                     ' output ' . $output2;
-
+            $progress->increment($step);
             passthru($stmt, $status);
             if ($status <> 0)
             {
@@ -258,9 +264,11 @@ class Document_Export
             // Move the PDF into another temp directory 
             $this->move_file($output, 'stamp_' . $file_pdf);
         }
-        
+        $progress->set_value(93);
         // concatenate all pdf into one
         $this->concatenate_pdf();
+        
+        $progress->set_value(100);
         
         ob_clean();
         $this->send_pdf();
