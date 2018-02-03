@@ -67,6 +67,7 @@ class Progress_Bar
             $this->value=0;
             $this->db->exec_sql("insert into progress(p_id,p_value) values ($1,0)",
                     [$p_task_id]);
+            $this->db->exec_sql("delete from progress where p_created < now() - interval '3 hours' ");
         }
     }
     /**

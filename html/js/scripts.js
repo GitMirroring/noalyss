@@ -3438,6 +3438,7 @@ function progress_bar_check(p_idx, p_taskid)
 
         new Ajax.Request("ajax_misc.php", {
             parameters: {gDossier: 0, task_id: p_taskid,op:"progressBar"},
+            method:"get",
             onSuccess: function (req) {
                 try 
                 {

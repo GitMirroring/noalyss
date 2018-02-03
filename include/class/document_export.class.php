@@ -127,7 +127,7 @@ class Document_Export
         $cnt_feedback=0;
         global $cn;
         // follow progress
-        $step=round(20/count($p_array));
+        $step=round(16/count($p_array),2);
         
         $cn->start();
         foreach ($p_array as $value)
@@ -244,6 +244,7 @@ class Document_Export
             // concatenate detail operation with the output
             $stmt = PDFTK . " " . $detail_operation->get_pdf_filename()." ".$output. 
                     ' output ' . $output2;
+            
             $progress->increment($step);
             passthru($stmt, $status);
             if ($status <> 0)
@@ -264,15 +265,16 @@ class Document_Export
             // Move the PDF into another temp directory 
             $this->move_file($output, 'stamp_' . $file_pdf);
         }
+        
         $progress->set_value(93);
         // concatenate all pdf into one
         $this->concatenate_pdf();
         
-        $progress->set_value(100);
         
         ob_clean();
         $this->send_pdf();
 
+        $progress->set_value(100);
         // remove files from "conversion folder"
         $this->clean_folder();
         

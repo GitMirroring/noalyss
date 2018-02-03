@@ -13,7 +13,7 @@ alter table jnt_use_dos add CONSTRAINT use_id_dos_id_uniq UNIQUE (use_id,dos_id)
 create table progress 
 (
     p_id varchar(16) primary key,
-    p_value integer not null ,
+    p_value numeric (5,2) not null ,
     p_created timestamp default now()
 );
 
