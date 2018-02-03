@@ -33,7 +33,7 @@ $http=new HttpInput();
 $ck = $http->get('ck',"string", 0);
 if ($ck == 0)
 {
-    echo "Aucune sélection";
+    echo _("Aucune sélection");
     exit();
 }
 $anc=new Document_Export();
