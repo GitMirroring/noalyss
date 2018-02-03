@@ -3405,10 +3405,19 @@ var progressIdx = 0;
  * @param {string} p_taskid id to monitor
  * @param {int} p_dossier
  */
-function progress_bar_start(p_taskid)
+function progress_bar_start(p_taskid,p_message)
 {
     try {
         progressIdx++;
+        // block the window
+        var message="Un instant svp";
+        if ( p_message) {
+            message=p_message;
+        }
+        add_div({id:"blocking"+progressIdx,cssclass:"smoke-base smoke-visible "});
+        
+        add_div({id:"message"+progressIdx,cssclass:"inner_box",style:"z-index:1000;position:fixed;top:30%;width:40%;left:30%"});
+        $("message"+progressIdx).update(message);
         // Create a div
         add_div({id: "progressDiv" + progressIdx, cssclass: "progressbar", html: '<span id="progressValue">0</span>'});
         // Check status every sec.
@@ -3433,8 +3442,14 @@ function progress_bar_check(p_idx, p_taskid)
                 try 
                 {
                     var answer=req.responseText.evalJSON();
-                    
-                    var progressValue = $('progressValue');
+                    var progress_div=$("progressDiv"+progressIdx);
+                    var a_child=progress_div.childNodes;
+                    var i=0;
+                    for (  i=0;i< a_child.length;i++) {
+                        if ( a_child[i].id="progressValue") {
+                            var progressValue = a_child[i];
+                        }
+                    }
                     var progress = parseFloat(progressValue.innerHTML);
                     if ( answer.value <= progress ) {
                         return;
@@ -3445,7 +3460,10 @@ function progress_bar_check(p_idx, p_taskid)
                     if (answer.value== 100) {
                         clearInterval(progressBar[p_idx]);
                         progressValue.innerHTML="Success";
-                        Effect.BlindUp("progressDiv"+progressIdx,{duration:1.0,scaleContent:false})
+                        Effect.BlindUp("progressDiv"+p_idx,{duration:1.0,scaleContent:false})
+                        $("message"+p_idx).remove();
+                        $("blocking"+p_idx).remove();
+                        setTimeout(function() { $("progressDiv"+progressIdx).remove } , 1100);
                     }
                 } catch (e) {
                     clearInterval(progressBar[p_idx]);

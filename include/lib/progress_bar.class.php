@@ -108,8 +108,20 @@ class Progress_Bar
         header('Content-Type: application/json');
         echo json_encode(["value"=>$this->value]);
         if ($this->value>=100) {
-            $this->db->exec_sql("delete from progress where p_id=$1",[$this->task_id])
+            $this->db->exec_sql("delete from progress where p_id=$1",[$this->task_id]);
         }
         return;
+    }
+    /**
+     * increment value with $p_step
+     * @param int $p_step
+     */
+    function increment($p_step)
+    {
+        if ($this->value+$p_step > 100 ) {
+            $this->set_value(100);
+            return;
+        }
+        $this->set_value($this->value+$p_step);
     }
 }
