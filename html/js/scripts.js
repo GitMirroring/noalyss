@@ -3394,3 +3394,70 @@ Periode.filter_exercice=function (p_table_id) {
         
     }
 };
+
+// keep track of progress bar
+var progressBar = [];
+// idx of progress bar        
+var progressIdx = 0;
+
+/**
+ * Start the progress bar 
+ * @param {string} p_taskid id to monitor
+ * @param {int} p_dossier
+ */
+function progress_bar_start(p_taskid)
+{
+    try {
+        progressIdx++;
+        // Create a div
+        add_div({id: "progressDiv" + progressIdx, cssclass: "progressbar", html: '<span id="progressValue">0</span>'});
+        // Check status every sec.
+        progressBar[progressIdx] = setInterval(progress_bar_check.bind(null, progressIdx, p_taskid), 1000);
+    } catch (e) {
+        console.error(e.message);
+    }
+}
+
+/**
+ * Check every second the status 
+ * @param {integer} p_idx idx of progressbar
+ * @param {string} p_taskid  id to monitor
+ */
+function progress_bar_check(p_idx, p_taskid)
+{
+    try {
+
+        new Ajax.Request("ajax_misc.php", {
+            parameters: {gDossier: 0, task_id: p_taskid,op:"progressBar"},
+            onSuccess: function (req) {
+                try 
+                {
+                    var answer=req.responseText.evalJSON();
+                    
+                    var progressValue = $('progressValue');
+                    var progress = parseFloat(progressValue.innerHTML);
+                    if ( answer.value <= progress ) {
+                        return;
+                    }
+
+                    progressValue.innerHTML = answer.value;
+                    progressValue.setStyle("width:" + answer.value + "%");
+                    if (answer.value== 100) {
+                        clearInterval(progressBar[p_idx]);
+                        progressValue.innerHTML="Success";
+                        Effect.BlindUp("progressDiv"+progressIdx,{duration:1.0,scaleContent:false})
+                    }
+                } catch (e) {
+                    clearInterval(progressBar[p_idx]);
+                    document.getElementById("progressValue").innerHTML=req.responseText;
+                    console.error(e.message);
+                }
+            }
+        });
+    } catch (e) {
+        clearInterval(progressBar[p_idx]);
+        console.error(e.message);
+    }
+}
+                                                
+

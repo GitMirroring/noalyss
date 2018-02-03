@@ -46,6 +46,7 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
+require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
 $http=new HttpInput();
 
 mb_internal_encoding("UTF-8");
@@ -86,6 +87,16 @@ else
     $g_user = new User($cn);
     $g_user->check(true);
 }
+
+// For progress bar, for saving time , we check and answer directly
+if ($op == "progressBar") {
+    $task_id=$http->request("task_id");
+    $task=new Progress_Bar($task_id);
+    $task->answer();
+    return;
+}
+
+
 $html = var_export($_REQUEST, true);
 set_language();
 if ( LOGINPUT)

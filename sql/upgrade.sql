@@ -9,6 +9,14 @@ delete from theme where the_filestyle in ('style-mandarine.css','style-mobile.cs
 update user_global_pref set parameter_value='style-classic7.css' where parameter_value in  ('style-mandarine.css','style-mobile.css');
 -- add constraint
 alter table jnt_use_dos add CONSTRAINT use_id_dos_id_uniq UNIQUE (use_id,dos_id);
+-- create table to check progress
+create table progress 
+(
+    p_id varchar(16) primary key,
+    p_value integer not null ,
+    p_created timestamp default now()
+);
+
 */
 create sequence tmp_pcmn_id_seq;
 ALTER TABLE tmp_pcmn ADD COLUMN id bigint;
@@ -107,3 +115,5 @@ ALTER TABLE tags ADD CONSTRAINT tags_check CHECK (t_actif in ('N','Y')) ;
 alter table tags alter t_actif set default 'Y';
 COMMENT ON COLUMN tags.t_actif is 'Y if the tag is activate and can be used ';
 
+
+-- in repo

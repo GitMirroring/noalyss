@@ -2228,3 +2228,29 @@ div.bxbutton .icon:hover
     background-color: white;
     color: blue;
 }
+/**
+ * progressBar
+ */
+div.progressbar {
+    width:300px;
+    height:30px;
+    position:fixed;
+    top:5px;
+    left:40%;
+    background-color: white;
+    color:blue;
+    z-index:800;
+    border-color: #596a72;
+    border-width: 1px;
+    border-style: solid;
+}
+#progressValue {
+    display:block;
+    width: 0px;
+    height: 100%;
+    margin:0px;
+    padding: 0px;
+    background-color:darkblue;
+    color:antiquewhite;
+    font-weight: bolder;
+}

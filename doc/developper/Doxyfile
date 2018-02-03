@@ -673,7 +673,6 @@ EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = a?.php \
                          b?.php \
                          ?.php \
-                         test*.php \
                          calendar-*.js \
                          richtext.js \
                          builder.js \
