@@ -84,10 +84,9 @@ background-repeat: repeat-x repeat-y;
         position:absolute;
         bottom: 0px;
         left:0px;
-        z-index: -1
+        z-index: -1;
     }
     #logo_id {
-    
     z-index:-1;
     position:absolute;
     width:19%;
