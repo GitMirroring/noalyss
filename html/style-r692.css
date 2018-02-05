@@ -1245,10 +1245,8 @@ div.menu2 a.mtitle{
     font-size:1rem;
     font-weight: normal;
     color: darkblue;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding:0px;
+    margin:0px;
     color: whitesmoke;
     border-radius: 5px;
     }
@@ -2182,13 +2180,12 @@ div.select_box a:hover,div.select_box ul li:hover {
  * Menu second level
  */
 div.menu2 td.mtitle, div.menu2 td.mtitle a{
-    background-color: white;
-    color:darkblue;
+   
     border-style: solid;
     border-width: 0.1px;
-    border-color:darkblue;
+    border-color:white;
     
-    border-radius: 7px 0px 0px 7px;
+    border-radius: 0px 0px 0px 10px;
 }
 div.menu2 td.mtitle a{
     border-width:0px;

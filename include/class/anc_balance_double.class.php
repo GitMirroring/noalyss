@@ -352,12 +352,15 @@ class Anc_Balance_Double extends Anc_Print
         $r.=_('Entre le poste ');
         $r.=$poste->input("from_poste2",$this->from_poste2);
         $javascript="search_ca(".dossier::id().",'from_poste2','pa_id2')";
-        $r.=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" title="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
-        
+        // $r.=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" title="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
+        $r.=Icon_Action::icon_magnifier(uniqid(), $javascript);
+
         $r.=_(" et le poste ");
+        $poste->id="to_poste2";
         $r.=$poste->input("to_poste2",$this->to_poste2);
-        $r.=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" title="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
+        // $r.=HtmlInput::button_image($javascript, uniqid(), 'alt="'._('Recherche').'" title="'._('Recherche').'" class="image_search"',"image/magnifier13.png");
         $javascript="search_ca(".dossier::id().",'to_poste2','pa_id2')";
+        $r.=Icon_Action::icon_magnifier(uniqid(), $javascript);
 
         $r.='<span class="notice" style="display:block">'.
             _('Selectionnez le plan qui vous int&eacute;resse avant de cliquer sur Recherche').
