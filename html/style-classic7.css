@@ -233,8 +233,8 @@ td.mshort {
 td.mtitle {
     margin: 0px;
     padding: 0px;
-    padding-top:5px;
-    padding-bottom: 5px;
+/*    padding-top:5px;
+    padding-bottom: 5px;*/
     text-align:center;
     width:250px;
    
@@ -1245,7 +1245,7 @@ div.menu2 a.mtitle{
     font-size:1rem;
     font-weight: normal;
     color: darkblue;
-    padding:0px;
+    padding:5px;
     margin:0px;
     color: whitesmoke;
     border-radius: 5px;
@@ -2189,6 +2189,7 @@ div.menu2 td.mtitle, div.menu2 td.mtitle a{
 }
 div.menu2 td.mtitle a{
     border-width:0px;
+    padding:5px;
 }
 /**
  * For the icon (font-famillo fontello)

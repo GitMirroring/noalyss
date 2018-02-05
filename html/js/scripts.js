@@ -2896,7 +2896,7 @@ function create_anchor_up()
 function init_scroll()
 {
     var up=new Element('div',{"class":"inner_box",
-            "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:25px;right:50px;text-align:center",
+            "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:25px;right:50px;text-align:center;font-size:20px",
             id:"go_up"
         });
         up.innerHTML=' <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>';
