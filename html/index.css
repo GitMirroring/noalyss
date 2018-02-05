@@ -59,12 +59,20 @@ border-width:  0px;
 background-image: url("image/bg-submit3.gif");
 background-repeat: repeat-x repeat-y;
 }
+#logo_id {
+    width:19%;
+}
 @media only screen and (max-width : 900px) {
     #alternate_browser {
         display : none;
     }
    #logo_id {
-    height:160px;
+      position:absolute;
+      z-index:-1;
+      height:60%;
+      width:auto;
+      left:0px;
+    
     }
     .input_text {
         width:8em;
@@ -79,12 +87,12 @@ background-repeat: repeat-x repeat-y;
         z-index: -1
     }
     #logo_id {
-    width:608px;
+    
     z-index:-1;
     position:absolute;
-    top:230px;
-    left:688px;
-    height: 125px;
+    width:19%;
+    left:27%;
+    top:24.5%;
     }
     #login_frm {
         position:absolute;
