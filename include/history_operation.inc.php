@@ -77,7 +77,8 @@ $Ledger->id = $p_jrn;
 //------------------------------
 if (isset($_GET ['paid']))
 {
-	$Ledger->update_paid($_GET);
+    $ledger_paid=new Acc_Ledger($cn,$p_jrn);
+    $ledger_paid->update_paid($_GET);
 }
 
 
