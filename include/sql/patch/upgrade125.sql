@@ -31,7 +31,7 @@ insert into bilan (b_name,b_file_template,b_file_form,b_type) values ('ASBL','do
 alter table jnt_letter drop jl_amount_deb;
 
 ALTER TABLE operation_analytique ADD COLUMN f_id bigint;
-ALTER TABLE operation_analytique  ADD CONSTRAINT operation_analytique_fiche_id_fk FOREIGN KEY (f_id)       REFERENCES fiche (f_id) MATCH SIMPLE       ON UPDATE cascade ON cascade;
+ALTER TABLE operation_analytique  ADD CONSTRAINT operation_analytique_fiche_id_fk FOREIGN KEY (f_id)       REFERENCES fiche (f_id) MATCH SIMPLE       ON UPDATE cascade ON delete cascade;
 COMMENT ON COLUMN operation_analytique.f_id IS 'FK to fiche.f_id , used only with ODS';
 
 drop FUNCTION comptaproc.table_analytic_account(text,text);
