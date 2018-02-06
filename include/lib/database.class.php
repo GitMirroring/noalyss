@@ -378,7 +378,7 @@ class Database
 
     function get_version()
     {
-        $Res=$this->get_value("select val from version");
+        $Res=$this->get_value("select max(val) from version");
         return $Res;
     }
 
