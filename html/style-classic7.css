@@ -233,10 +233,9 @@ td.mshort {
 td.mtitle {
     margin: 0px;
     padding: 0px;
-/*    padding-top:5px;
-    padding-bottom: 5px;*/
     text-align:center;
     width:250px;
+    height:60px;
    
      background-color: #5681B7;
     border-color: darkblue;
@@ -1253,7 +1252,11 @@ div.menu2 a.mtitle{
 div.menu2 a.mtitle:hover,div.menu a.mtitle:hover,td.mtitle a.mtitle:hover {
     color:#5681B7;
     background-color: #EFEBEB;
+    padding:20px;
     
+}
+div.menu2 a.mtitle:hover {
+	padding:4px;
 }
 div.menu3 {
 	font-size:13.6px;
@@ -2184,7 +2187,7 @@ div.menu2 td.mtitle, div.menu2 td.mtitle a{
     border-style: solid;
     border-width: 0.1px;
     border-color:white;
-    
+    height:25px;
     border-radius: 0px 0px 0px 10px;
 }
 div.menu2 td.mtitle a{
