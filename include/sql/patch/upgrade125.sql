@@ -13,7 +13,8 @@ ALTER TABLE tmp_pcmn ALTER COLUMN id SET DEFAULT nextval('tmp_pcmn_id_seq'::regc
 ALTER TABLE tmp_pcmn   ADD CONSTRAINT id_ux UNIQUE(id);
 COMMENT ON COLUMN tmp_pcmn.id IS 'allow to identify the row, it is unique and not null (pseudo pk)';
 update tmp_pcmn set id=nextval('tmp_pcmn_id_seq');
-
+drop trigger t_tmp_pcm_alphanum_ins_upd on tmp_pcmn ;
+drop     trigger t_tmp_pcmn_ins on tmp_pcmn ;
 alter table tmp_pcmn add column pcm_direct_use varchar(1);
 COMMENT ON COLUMN tmp_pcmn.pcm_direct_use IS 'Value are N or Y , N cannot be used directly , not even through a card';
 ALTER TABLE tmp_pcmn ALTER COLUMN pcm_direct_use  SET DEFAULT 'Y';
@@ -21,6 +22,9 @@ update tmp_pcmn set pcm_direct_use='Y';
 update tmp_pcmn set pcm_direct_use='N' where length(pcm_val) < 3 and not exists (select j_poste from jrnx where j_poste=pcm_val);
 ALTER TABLE tmp_pcmn ALTER COLUMN pcm_direct_use SET NOT NULL;
 alter table tmp_pcmn add constraint pcm_direct_use_ck check (pcm_direct_use in ('Y','N'));
+
+create     trigger t_tmp_pcm_alphanum_ins_upd before insert or update on tmp_pcmn for each row execute procedure comptaproc.tmp_pcmn_alphanum_ins_upd();
+create     trigger t_tmp_pcmn_ins before insert on tmp_pcmn for each row execute procedure comptaproc.tmp_pcmn_ins();
 
 insert into bilan (b_name,b_file_template,b_file_form,b_type) values ('ASBL','document/fr_be/bnb-asbl.rtf','document/fr_be/bnb-asbl.form','RTF');
 
