@@ -88,7 +88,7 @@ define ('SMALLX','&#x2D5D;');
 define ('BUTTONADD',"&#10010;");
 
 
-define ('SVNINFO',6919+8);
+define ('SVNINFO',7000);
 if ( ! defined  ('DEBUG')) {
     define ("DEBUG",false);
 }
@@ -110,7 +110,7 @@ if ( ! defined ("SYSINFO_DISPLAY")) {
 }
 define ("DBVERSION",126);
 define ("MONO_DATABASE",25);
-define ("DBVERSIONREPO",17);
+define ("DBVERSIONREPO",18);
 define ('NOTFOUND','--not found--');
 define ("MAX_COMPTE",4);
 define ('MAX_ARTICLE',5);
