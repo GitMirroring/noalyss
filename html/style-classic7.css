@@ -253,11 +253,14 @@ td.mtitle {
 td.mtitle a.mtitle {
     color : white;
     display:block;
-    /*! width:100%; */
-    /*! height: 100%; */
     font-size:1rem;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    font-family:SansationLight;
+    width:100%;
+    padding:0px;
+    margin:0px;
+    height:100%;
+    padding:4px 0px 0px 0px;
+    
 }
 
 span.mtitle {
@@ -1252,7 +1255,7 @@ div.menu2 a.mtitle{
 div.menu2 a.mtitle:hover,div.menu a.mtitle:hover,td.mtitle a.mtitle:hover {
     color:#5681B7;
     background-color: #EFEBEB;
-    padding:20px;
+    /* padding:18px 0px 18px 0px; */
     
 }
 div.menu2 a.mtitle:hover {
