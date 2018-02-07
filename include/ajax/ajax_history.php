@@ -53,8 +53,10 @@ if ( isset($_GET['f_id']))
     $f_id=$http->get('f_id',"number");
     $fiche=new Fiche($cn,$f_id);
     
-    $year=$http->get("exercice","string",$g_user->get_exercice());
-    if ( $year == 0 )
+    $year=$http->get("exercice","string","");
+    if ( $year == "") $year=$g_user->get_exercice();
+
+    if ( $year == "" )
       {
         $html=_("erreur aucune période par défaut, allez dans préférence pour en choisir une");
       }
@@ -137,7 +139,8 @@ if ( isset($_REQUEST['pcm_val']))
   {
     $poste=new Acc_Account_Ledger($cn,$_REQUEST['pcm_val']);
     $poste->load();
-    $year=$http->get("exercice","string",$g_user->get_exercice());
+    $year=$http->get("exercice","string","");
+    if ( $year == "") $year=$g_user->get_exercice();
     if ( $year == 0 )
       {
         $html=_("erreur aucune période par défaut, allez dans préférence pour en choisir une");
