@@ -27,6 +27,11 @@ alter table tmp_pcmn add constraint pcm_direct_use_ck check (pcm_direct_use in (
 create     trigger t_tmp_pcm_alphanum_ins_upd before insert or update on tmp_pcmn for each row execute procedure comptaproc.tmp_pcmn_alphanum_ins_upd();
 create     trigger t_tmp_pcmn_ins before insert on tmp_pcmn for each row execute procedure comptaproc.tmp_pcmn_ins();
 
+select nextval('bilan_b_id_seq');
+select nextval('bilan_b_id_seq');
+select nextval('bilan_b_id_seq');
+select nextval('bilan_b_id_seq');
+
 insert into bilan (b_name,b_file_template,b_file_form,b_type) values ('ASBL','document/fr_be/bnb-asbl.rtf','document/fr_be/bnb-asbl.form','RTF');
 
 alter table jnt_letter drop jl_amount_deb;
