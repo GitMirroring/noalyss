@@ -121,7 +121,7 @@ if ($get_jrn==0)
 }
 else
 {
-    $a_jrn=$Jrn->id;
+    $a_jrn=$get_jrn;
 }
 $Jrn=new Acc_Ledger($cn, $get_jrn);
 
