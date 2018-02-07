@@ -4,6 +4,9 @@ set search_path to public,comptaproc;
 
 alter table action_gestion drop ag_ref_ag_id;
 
+drop trigger t_tmp_pcm_alphanum_ins_upd on tmp_pcmn ;
+drop     trigger t_tmp_pcmn_ins on tmp_pcmn ;
+
 create sequence tmp_pcmn_id_seq;
 ALTER TABLE tmp_pcmn ADD COLUMN id bigint;
 update tmp_pcmn set id=nextval('tmp_pcmn_id_seq');
@@ -13,8 +16,6 @@ ALTER TABLE tmp_pcmn ALTER COLUMN id SET DEFAULT nextval('tmp_pcmn_id_seq'::regc
 ALTER TABLE tmp_pcmn   ADD CONSTRAINT id_ux UNIQUE(id);
 COMMENT ON COLUMN tmp_pcmn.id IS 'allow to identify the row, it is unique and not null (pseudo pk)';
 update tmp_pcmn set id=nextval('tmp_pcmn_id_seq');
-drop trigger t_tmp_pcm_alphanum_ins_upd on tmp_pcmn ;
-drop     trigger t_tmp_pcmn_ins on tmp_pcmn ;
 alter table tmp_pcmn add column pcm_direct_use varchar(1);
 COMMENT ON COLUMN tmp_pcmn.pcm_direct_use IS 'Value are N or Y , N cannot be used directly , not even through a card';
 ALTER TABLE tmp_pcmn ALTER COLUMN pcm_direct_use  SET DEFAULT 'Y';
