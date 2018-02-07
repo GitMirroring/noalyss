@@ -55,7 +55,8 @@ class IPeriod extends HtmlInput
         $this->extra2="all";
         $this->show_start_date=true;
         $this->show_end_date=true;
-		$this->exercice=$p_exercice;
+        $this->exercice=$p_exercice;
+        $this->id=$p_name;
     }
     /*!
      * \brief show the input html for a periode
@@ -121,7 +122,11 @@ class IPeriod extends HtmlInput
         $Res=$this->cn->exec_sql($sql);
         $Max=$this->cn->size($Res);
         if ( $Max == 0 )  throw new Exception(_('Aucune periode trouvée'),1);
-        $ret='<SELECT NAME="'.$this->name.'" '.$this->javascript.'>';
+        $ret=sprintf('<SELECT NAME="%s" id="%s" %s>',
+                $this->name,
+                $this->id,
+                $this->javascript)
+                ;
         for ( $i = 0; $i < $Max;$i++)
         {
             $l_line=$this->cn->fetch($i);

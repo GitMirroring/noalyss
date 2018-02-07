@@ -26,7 +26,7 @@ require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 class Exercice
 {
-  function __construct(&$cn)
+  function __construct($cn)
   {
     $this->cn=$cn;
   }

@@ -3480,3 +3480,8 @@ function progress_bar_check(p_idx, p_taskid)
 }
                                                 
 
+function updatePeriodePreference(p_dossier)
+{
+    var exercice=$('exercice').value;
+    new Ajax.Updater('setting_period',"ajax_misc.php",{method:"get",parameters:{ "op":"pref_exercice","gDossier":p_dossier,"exercice":exercice}});  
+}

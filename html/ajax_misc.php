@@ -245,6 +245,19 @@ if (array_key_exists($op, $path)) {
 }
 switch ($op)
 {
+    case "pref_exercice":
+        $iperiod = new IPeriod("period");
+        $iperiod->id="setting_period";
+        $iperiod->user = $g_user;
+        $iperiod->cn = $cn;
+        $iperiod->filter_year = true;
+        $iperiod->exercice=$http->get("exercice");
+        
+        $iperiod->type = ALL;
+        echo $iperiod->input();
+        
+        return;
+    break;
 	case "remove_anc":
 		if ($g_user->check_module('ANCODS') == 0)
 			exit();
