@@ -131,7 +131,7 @@ if (isset($_REQUEST['gDossier']) && $_REQUEST['gDossier']<>0)
                         <?=_("Exercice")?>
                     </td>
                     <td>
-                        <?=$exercice->select("exercice",$selected_exercice,$js)->input();?>
+                        <?=$exercice->select("exercice_setting",$selected_exercice,$js)->input();?>
                     </td>
                 </tr>
     		<tr>

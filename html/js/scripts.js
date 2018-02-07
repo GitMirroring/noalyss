@@ -3479,9 +3479,12 @@ function progress_bar_check(p_idx, p_taskid)
     }
 }
                                                 
-
+/**
+ * In the user's setting  box, update the period list with the choosen exercice
+ * @param {int} p_dossier
+ */
 function updatePeriodePreference(p_dossier)
 {
-    var exercice=$('exercice').value;
+    var exercice=$('exercice_setting').value;
     new Ajax.Updater('setting_period',"ajax_misc.php",{method:"get",parameters:{ "op":"pref_exercice","gDossier":p_dossier,"exercice":exercice}});  
 }
