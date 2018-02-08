@@ -50,7 +50,7 @@ class Exercice
    function select($name,$selected='',$js='')
    {
      $iselect=new ISelect($name);
-     $iselect->value=$this->cn->make_array('select distinct p_exercice,p_exercice from parm_periode order by 1');
+     $iselect->value=$this->cn->make_array('select distinct p_exercice,p_exercice from parm_periode order by 1 desc');
      $iselect->selected=$selected;
      $iselect->javascript=$js;
      return $iselect;
