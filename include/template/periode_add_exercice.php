@@ -28,6 +28,14 @@ de fin d'exercice: amortissements, régulations de compte... Avec une 13ième p�
 <?php echo $exercice->input() ?>
             </td>
         </tr>
+          <tr>
+            <td>
+<?= _("A partir du mois de") ?>
+            </td>
+            <td>
+<?php echo $from->input() ?>
+            </td>
+        </tr>
         <tr>
             <td>
 <?= _('Année') ?>
@@ -44,14 +52,7 @@ de fin d'exercice: amortissements, régulations de compte... Avec une 13ième p�
 <?php echo $nb_month->input() ?>
             </td>
         </tr>
-        <tr>
-            <td>
-<?= _("A partir du mois de") ?>
-            </td>
-            <td>
-<?php echo $from->input() ?>
-            </td>
-        </tr>
+      
         <tr>
             <td>
                 <?=_("Réservé un jour pour l'ouverture (RAN)")?>
