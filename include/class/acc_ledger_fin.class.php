@@ -24,6 +24,7 @@
  * \brief the class Acc_Ledger_Fin inherits from Acc_Ledger, this
  * object permit to manage the financial ledger
  */
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
@@ -32,7 +33,6 @@ require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ifile.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
 
