@@ -134,7 +134,7 @@ $jrn_type=$Jrn->get_type();
 //  ODS or all ledgers becomes A
 //  Extended but no FIN becomes L
 // 
-if ($get_option=='D'||($jrn_type=='ODS'||$Jrn->id==0)&&$get_option=="E")
+if ( $get_option=="E")
 {
     if ($jrn_type=='FIN')
     {
@@ -198,9 +198,15 @@ if ($get_option=='D'||($jrn_type=='ODS'||$Jrn->id==0)&&$get_option=="E")
 //-----------------------------------------------------------------------------
 if ($get_option=='A')
 {
-
-    $acc_ledger_history=new Acc_Ledger_History_Generic($cn, $a_jrn,
+    if ($get_jrn == 0 )
+    {
+        $acc_ledger_history=new Acc_Ledger_History_Generic($cn, $a_jrn,
             $get_from_periode, $get_to_periode, 'A');
+    } else {
+        $acc_ledger_history=new Acc_Ledger_History_Generic($cn, array($a_jrn),
+            $get_from_periode, $get_to_periode, 'A');
+        
+    }
     $acc_ledger_history->export_csv();
     exit;
 }
@@ -209,7 +215,7 @@ if ($get_option=='A')
 // for Misc the amount 
 // For Financial only the tiers and the sign of the amount
 //-----------------------------------------------------------------------------
-if ($get_option=="L")
+if ($get_option=="L" || $get_option == 'D')
 {
 
 //-----------------------------------------------------
