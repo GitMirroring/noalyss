@@ -309,21 +309,21 @@ if ( isset($_GET['view'] ) )
 	echo HtmlInput::filter_table("t_balance", "0,1","1");
 	echo '</span>';
     echo '<table id="t_balance" width="100%">';
-    echo '<th>Poste Comptable</th>';
-    echo '<th>Libell&eacute;</th>';
+    echo '<th>'._("Poste Comptable").'</th>';
+    echo '<th>'._("Libellé").'</th>';
     if ( $previous == 1 ){
-        echo '<th>D&eacute;bit N-1</th>';
-        echo '<th>Cr&eacute;dit N-1</th>';
-        echo '<th>Solde D&eacute;biteur N-1</th>';
-        echo '<th>Solde Cr&eacute;diteur N-1</th>';
+        echo '<th>'._("Débit N-1").'</th>';
+        echo '<th>'._('Crédit N-1').'</th>';
+        echo '<th>'._('Solde Débiteur N-1').'</th>';
+        echo '<th>'._('Solde Créditeur N-1').'</th>';
         if ( isset($_GET['lvl1']) || isset($_GET['lvl2']) || isset($_GET['lvl3'])) 
             echo '<th>Solde  N-1</th>';
             
     }
     echo '<th>'._('Ouverture').'</th>';
-    echo '<th>D&eacute;bit</th>';
-    echo '<th>Cr&eacute;dit</th>';
-    echo '<th>Solde</th>';
+    echo '<th>'._('Débit').'</th>';
+    echo '<th>'._('Crédit').'</th>';
+    echo '<th>'._('Solde').'</th>';
 //    if ( isset($_GET['lvl1']) || isset($_GET['lvl2']) || isset($_GET['lvl3'])) 
 //        echo '<th>Solde</th>';
     $i=0;
