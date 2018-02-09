@@ -3009,14 +3009,14 @@ function pin (object_id) {
     if ( aDraggableElement[object_id]) {
         aDraggableElement[object_id].destroy();
         aDraggableElement[object_id]=undefined;
-        $('pin_'+object_id).innerHTML="&#xf192;";
+        $('pin_'+object_id).innerHTML="&#xf047;";
     } else {
         aDraggableElement[object_id]=new Draggable(object_id, {starteffect: function ()
                 {
                     new Effect.Highlight(object_id, {scroll: window, queue: 'end'});
                 }}
             ); 
-        $('pin_'+object_id).innerHTML="&#xf047;";
+        $('pin_'+object_id).innerHTML="&#xe809;";
     }
 }
 /**

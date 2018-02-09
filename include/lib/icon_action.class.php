@@ -153,7 +153,7 @@ class Icon_Action
     static function zoom($p_div, $p_javascript)
     {
         $r=sprintf('<span  id="span_%s" class="icon" onclick="%s">
-                &#11036;</span>', $p_div, $p_javascript);
+                &#xf08e;</span>', $p_div, $p_javascript);
         return $r;
     }
 

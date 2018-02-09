@@ -309,5 +309,5 @@ define ('EMAIL_LIMIT',1002);
 define ('EXC_PARAM_VALUE',1005);
 define ('EXC_PARAM_TYPE',1006);
 define ('EXC_DUPLICATE',1200);
-define ("PINDG","&#xf047;");
-define ("UNPINDG","&#xf192;");
+define ("UNPINDG","&#xf047;");
+define ("PINDG","&#xe809;");
