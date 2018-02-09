@@ -85,7 +85,7 @@ class Inplace_Edit
             inplace_edit_ok{$this->input->id}.onclick= function () {
                 var json={$this->json};
                 json['ieaction']='ok';
-                json['value']=$({$this->input->id}).value;
+                json['value']=$('{$this->input->id}').value;
                 new Ajax.Updater('{$this->input->id}edit'
                 ,'{$this->callback}',
                  {parameters:  json ,evalScripts:true});}
