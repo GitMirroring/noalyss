@@ -297,7 +297,7 @@ if ( isset($_GET['view'] ) )
     $previous=(isset($_GET['previous_exc']))?1:0;
     $from_periode=$http->get("from_periode","number");
     $to_periode=$http->get("to_periode","number");
-    $row=$bal->get_row($from_periode,$to_periode);
+    $row=$bal->get_row($from_periode,$to_periode,$previous);
     $previous= (isset ($row[0]['sum_cred_previous']))?1:0;
 
     $periode=new Periode($cn);
@@ -314,21 +314,17 @@ if ( isset($_GET['view'] ) )
     if ( $previous == 1 ){
         echo '<th>'._("Débit N-1").'</th>';
         echo '<th>'._('Crédit N-1').'</th>';
-        echo '<th>'._('Solde Débiteur N-1').'</th>';
-        echo '<th>'._('Solde Créditeur N-1').'</th>';
-        if ( isset($_GET['lvl1']) || isset($_GET['lvl2']) || isset($_GET['lvl3'])) 
-            echo '<th>Solde  N-1</th>';
+        echo '<th>'._('Solde N-1').'</th>';
             
     }
     echo '<th>'._('Ouverture').'</th>';
     echo '<th>'._('Débit').'</th>';
     echo '<th>'._('Crédit').'</th>';
     echo '<th>'._('Solde').'</th>';
-//    if ( isset($_GET['lvl1']) || isset($_GET['lvl2']) || isset($_GET['lvl3'])) 
-//        echo '<th>Solde</th>';
+
     $i=0;
     if ( $previous == 1) {
-        $a_sum=array('sum_cred','sum_deb','solde_deb','solde_cred','sum_cred_previous','sum_deb_previous','solde_deb_previous','solde_cred_previous');
+        $a_sum=array('sum_cred','sum_deb','solde_deb','solde_cred','sum_deb_ope','sum_cred_ope','sum_cred_previous','sum_deb_previous','solde_previous');
     }
     else {
               $a_sum=array('sum_cred','sum_deb','solde_deb','solde_cred','sum_deb_ope','sum_cred_ope') ;
@@ -357,7 +353,9 @@ if ( isset($_GET['view'] ) )
         else
             $tr="odd";
         $view_history=HtmlInput::history_account($r['poste'], $r['poste'], "",$exercice);
-
+        if ($previous == 1 ) {
+            $r['solde_previous']=bcsub($r['solde_deb_previous'],$r['solde_cred_previous']);
+        }
 	/*
 	 * level x
 	 */
@@ -371,23 +369,22 @@ if ( isset($_GET['view'] ) )
 		echo '<tr class="highlight">';
 		echo td(${'lvl'.$ind.'_old'},'style="font-weight:bold;"');
 		echo td(${'lvl'.$ind.'_old'}." "._("Total niveau")." ".$ind,'style="font-weight:bold;"');
+                
+                // compare with previous exercice
                 if ($previous==1) {
                     echo td(nbm(${'lvl'.$ind}['sum_deb_previous']),'class="previous_year" style="font-weight:bold;"');
                     echo td(nbm(${'lvl'.$ind}['sum_cred_previous']),' class="previous_year" style="font-weight:bold;" ');
-                    echo td(nbm(${'lvl'.$ind}['solde_deb_previous']),'class="previous_year" style="font-weight:bold;"');
-                    echo td(nbm(${'lvl'.$ind}['solde_cred_previous']),'class="previous_year" style="font-weight:bold;"');
-                    $delta_previous=bcsub(${'lvl'.$ind}['solde_cred_previous'],${'lvl'.$ind}['solde_deb_previous']);
-                    $side_previous=($delta_previous > 0 ) ? "C":"D";
+                    $delta_previous=${'lvl'.$ind}['solde_previous'];
+                    $side_previous=($delta_previous > 0 ) ? "D":"C";
                     echo td(nbm(abs($delta_previous))." $side_previous",'class="previous_year"  style="text-align:right;font-weight:bold;"  ');
                     
                 }
-		/*echo td(nbm(${'lvl'.$ind}['sum_deb']),'style="text-align:right;font-weight:bold;"  ');
-		echo td(nbm(${'lvl'.$ind}['sum_cred']),'style="text-align:right;font-weight:bold;"');*/
+                
                 // Ouverture
                 $solde3=bcsub(${'lvl'.$ind}['sum_deb_ope'],${'lvl'.$ind}['sum_cred_ope']);
                 $side3=($solde3<0)?" C":" D";
                 $side3=($solde3==0)?" ":$side3;
-                echo td(nbm(abs($solde3)).$side3);
+                echo td(nbm(abs($solde3)).$side3,'style="text-align:right;font-weight:bold;"');
                 
                 // Saldo debit
                 $solde_deb=bcsub(${'lvl'.$ind}['sum_deb'],${'lvl'.$ind}['sum_deb_ope']);
@@ -409,12 +406,12 @@ if ( isset($_GET['view'] ) )
 	      }
 	  }
           
-	  foreach($a_sum as $a)
-	    {
-	      $lvl1[$a]=bcadd($lvl1[$a],$r[$a]);
-	      $lvl2[$a]=bcadd($lvl2[$a],$r[$a]);
-	      $lvl3[$a]=bcadd($lvl3[$a],$r[$a]);
-	    }
+        foreach($a_sum as $a)
+          {
+            $lvl1[$a]=bcadd($lvl1[$a],$r[$a]);
+            $lvl2[$a]=bcadd($lvl2[$a],$r[$a]);
+            $lvl3[$a]=bcadd($lvl3[$a],$r[$a]);
+          }
        // For the Total row , there is no accounting
         if ( $r['poste'] == "") {
             $tr="highlight";
@@ -429,12 +426,11 @@ if ( isset($_GET['view'] ) )
         if ($previous == 1 ) {
             echo td(nbm($r['sum_deb_previous']),' class="previous_year"');
             echo td(nbm($r['sum_cred_previous']),' class="previous_year" ');
-            echo td(nbm($r['solde_deb_previous']),' class="previous_year"');
-            echo td(nbm($r['solde_cred_previous']),'class="previous_year" ');
-            if (    isset($_GET['lvl1']) || 
-                    isset($_GET['lvl2']) ||
-                    isset($_GET['lvl3']))            
-                echo '<td></td>';
+            $solde_previous=bcsub($r['solde_deb_previous'],$r['solde_cred_previous']);
+            $side=($solde_previous<0)?"D":"C";
+            $side=($solde_previous==0)?"":$side;
+            $r['solde_previous']=$solde_previous;
+            echo td(nbm(abs($solde_previous))." ".$side,' class="previous_year"');
             
              $summary_prev_tab=$bal->summary_add($summary_prev_tab,
                                                 $r['poste'],

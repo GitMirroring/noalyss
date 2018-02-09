@@ -110,11 +110,15 @@ $pPeriode=new Periode($cn);
 $a=$pPeriode->get_date_limit($from_periode);
 $b=$pPeriode->get_date_limit($to_periode);
 $per_text="  du ".$a['p_start']." au ".$b['p_end'];
+
+// If compare with previous exercice ,
+// we use the landscape mode
 if ($previous == 1 ) {
     $pdf=new PDFLand($cn);
 } else {
     $pdf= new PDF($cn);
 }
+
 $pdf->setDossierInfo(" Balance  ".$per_text);
 $pdf->AliasNbPages();
 $pdf->AddPage();
@@ -129,9 +133,9 @@ if ($previous == 1 ){
     $pdf->write_cell(20,6,'Solde N-1',0,0,'R');
 }
 $pdf->write_cell(25,6,_('Ouverture'),0,0,'R');
-$pdf->write_cell(25,6,'Total Débit',0,0,'R');
-$pdf->write_cell(25,6,'Total Crédit',0,0,'R');
-$pdf->write_cell(25,6,'Solde Débiteur',0,0,'R');
+$pdf->write_cell(25,6,_('Total Débit'),0,0,'R');
+$pdf->write_cell(25,6,_('Total Crédit'),0,0,'R');
+$pdf->write_cell(25,6,_('Solde Débiteur'),0,0,'R');
 $pdf->line_new();
 
 $pdf->SetFont('DejaVuCond','',8);
@@ -185,20 +189,19 @@ if (! empty($array))
                 if ($previous == 1 ) {
                     $delta_previous=bcsub(${'nlvl'.$ind}['solde_cred_previous'],${'nlvl'.$ind}['solde_deb_previous']);
                     $side_previous=($delta_previous < 0) ? "D":"C";
-                    $pdf->write_cell(30,6,"n-1 : " .nbm($delta_previous)." $side_previous",0,0,'R');
-                     $pdf->write_cell(30,6," n : ".nbm($delta)." $side",0,0,'R');
+                    $pdf->write_cell(60,6," ",0,0,'R');
                     $pdf->write_cell(22,6,nbm(${'nlvl'.$ind}['sum_deb_previous']),0,0,'R');
                     $pdf->write_cell(22,6,nbm(${'nlvl'.$ind}['sum_cred_previous']),0,0,'R');
-                    $pdf->write_cell(22,6,nbm(${'nlvl'.$ind}['solde_deb_previous']),0,0,'R');
-                    $pdf->write_cell(22,6,nbm(${'nlvl'.$ind}['solde_cred_previous']),0,0,'R');
+                    $pdf->write_cell(22,6,nbm(abs($delta_previous))." $side_previous",0,0,'R');
+                    
                 } else {
                      $pdf->write_cell(60,6," ",0,0,'R');
-                     $solde_lv=bcsub(${'nlvl'.$ind}['sum_deb_ope'],${'nlvl'.$ind}['sum_cred_ope']);
-                     $side_lv=($solde_lv<0)?" D":" C";
-                     $side_lv=($solde_lv==0)?" ":$side_lv;
-                     $pdf->write_cell(25,6,nbm(abs($solde_lv)).$side_lv,0,0,'R');
                      
                 }
+                $solde_lv=bcsub(${'nlvl'.$ind}['sum_deb_ope'],${'nlvl'.$ind}['sum_cred_ope']);
+                $side_lv=($solde_lv<0)?" C":" D";
+                $side_lv=($solde_lv==0)?" ":$side_lv;
+                $pdf->write_cell(25,6,nbm(abs($solde_lv)).$side_lv,0,0,'R');
 		$pdf->write_cell(25,6,nbm(bcsub(${'nlvl'.$ind}['sum_deb'],${'nlvl'.$ind}['sum_deb_ope'])),0,0,'R');
 		$pdf->write_cell(25,6,nbm(bcsub(${'nlvl'.$ind}['sum_cred'],${'nlvl'.$ind}['sum_cred_ope'])),0,0,'R');
 		$solde_lv=bcsub(${'nlvl'.$ind}['solde_deb'],${'nlvl'.$ind}['solde_cred']);
@@ -240,8 +243,15 @@ if (! empty($array))
         if ($previous == 1 ) {
             $pdf->write_cell(22,6,nbm($value['sum_deb_previous']),0,0,'R',$fill);
             $pdf->write_cell(22,6,nbm($value['sum_cred_previous']),0,0,'R',$fill);
-            $pdf->write_cell(22,6,nbm($value['solde_deb_previous']),0,0,'R',$fill);
-            $pdf->write_cell(22,6,nbm($value['solde_cred_previous']),0,0,'R',$fill);
+            
+//            $pdf->write_cell(22,6,nbm($value['solde_deb_previous']),0,0,'R',$fill);
+//            $pdf->write_cell(22,6,nbm($value['solde_cred_previous']),0,0,'R',$fill);
+            $solde_previous=bcsub($value['solde_cred_previous'],$value['solde_deb_previous']);
+            $side_previous=($solde_previous<0)?" D":" C";
+            $side_previous=($solde_previous==0)?"":$side_previous;
+            
+            $pdf->write_cell(22,6,nbm(abs($solde_previous)).$side_previous,0,0,'R',$fill);
+            
             $tp_deb_previous=bcadd($tp_deb_previous,$value['sum_deb_previous']);
             $tp_cred_previous=bcadd($tp_cred_previous,$value['sum_cred_previous']);
             $tp_sold_previous=bcadd($tp_sold_previous,$value['solde_deb_previous']);

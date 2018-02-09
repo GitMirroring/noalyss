@@ -138,12 +138,17 @@ class Acc_Balance
                         $per_sql_previous=sql_filter_per($this->db,$previous_start->p_id,$previous_end->p_id,'p_id','j_tech_per');
                         $sql="
                             with m as 
-                                ( select j_poste,sum(deb) as sdeb,sum(cred) as scred
+                                ( select j_poste,sum(deb) as sdeb,sum(cred) as scred,
+                                            sum(deb_op)  as sum_deb_ope , 
+                                            sum(cred_op) as sum_cred_ope
                                 from 
                                 (select j_poste, 
                                     case when j_debit='t' then j_montant else 0 end as deb, 
-                                    case when j_debit='f' then j_montant else 0 end as cred 
+                                    case when j_debit='f' then j_montant else 0 end as cred ,
+                                    case when j_debit='t' and jr_optype='OPE'  then j_montant else 0 end as deb_op,
+                                    case when j_debit='f' and jr_optype='OPE' then j_montant else 0 end as cred_op
                                     from jrnx 
+                                    join jrn on (j_grpt=jr_grpt_id)
                                     join tmp_pcmn on (j_poste=pcm_val) 
                                     left join parm_periode on (j_tech_per = p_id) 
                                     join jrn_def on (j_jrn_def=jrn_def_id) 
@@ -152,15 +157,11 @@ class Acc_Balance
                                     $and $filter_sql and $per_sql
                                     ) as sub_m group by j_poste order by j_poste ) , 
                             p as ( select j_poste,sum(deb) as sdeb,
-                                            sum(cred) as scred ,
-                                            sum(deb_op)  as sum_deb_ope , 
-                                            sum(cred_op) as sum_cred_ope
+                                            sum(cred) as scred 
                                 from 
                                     (select j_poste, 
                                         case when j_debit='t' then j_montant else 0 end as deb, 
-                                        case when j_debit='f' then j_montant else 0 end as cred ,
-                                        case when j_debit='t' and jr_optype='OPE'  then j_montant else 0 end as deb_op,
-                                        case when j_debit='f' and jr_optype='OPE' then j_montant else 0 end as cred_op
+                                        case when j_debit='f' then j_montant else 0 end as cred 
                                         from jrnx join tmp_pcmn on (j_poste=pcm_val) 
                                         left join parm_periode on (j_tech_per = p_id) 
                                         join jrn_def on (j_jrn_def=jrn_def_id) 
