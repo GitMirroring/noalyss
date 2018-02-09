@@ -126,8 +126,8 @@ class Icon_Action
     static function close($p_div)
     {
         $r='';
-        $r.=sprintf('<A class="icon" onclick="removeDiv(\'%s\');%s">&#10761;</A>',
-                $p_div, $p_div);
+        $r.=sprintf('<A class="icon" onclick="removeDiv(\'%s\')">&#10761;</A>',
+                $p_div);
         return $r;
     }
 
