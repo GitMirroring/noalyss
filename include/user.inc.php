@@ -47,7 +47,7 @@ if ( isset ($_POST["ADD"]) )
     $login=strtolower($login);
     $new_user->login=$login;
     $new_user->pass=$pass5;
-    $new_user->email=$http->post('EMAIL','');
+    $new_user->email=$http->post('EMAIL',"string",'');
     if ( trim($login)=="")
     {
             alert(_("Le login ne peut pas être vide"));
