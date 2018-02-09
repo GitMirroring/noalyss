@@ -35,7 +35,13 @@ require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 global $g_user, $http;
 $gDossier=dossier::id();
-$exercice=(isset($_GET['exercice']))?$_GET['exercice']:$g_user->get_exercice();
+
+// Get the exercice
+$exercice=$http->get("exercice","number",0);
+if ($exercice == 0 ){
+    $exercice=$g_user->get_exercice();
+}
+
 bcscale(2);
 
 echo '<div class="content">';
@@ -46,7 +52,8 @@ echo '<fieldset  class="noprint"><legend>'._('Exercice').'</legend>';;
 echo '<form method="GET">';
 echo _('Choisissez un autre exercice')." : ";
 $ex=new Exercice($cn);
-$wex=$ex->select('exercice',$exercice,' onchange="submit(this)"');
+$js=sprintf("updatePeriode(%d,'%s','%s','%s',1)",Dossier::id(),'exercice','from_periode','to_periode');
+$wex=$ex->select('exercice',$exercice,' onchange="'.$js.'"');
 echo $wex->input();
 echo dossier::hidden();
 echo HtmlInput::get_to_hidden(array('ac','type'));
@@ -66,6 +73,7 @@ echo dossier::hidden();
 // filter on the current year
 $from=$http->get("from_periode", "number",0);
 $input_from=new IPeriod("from_periode",$from,$exercice);
+$input_from->id="from_periode";
 $input_from->show_end_date=false;
 $input_from->type=ALL;
 $input_from->cn=$cn;
@@ -83,6 +91,7 @@ if( $to == 0) {
      $to=$per_min->p_id;
 }
 $input_to=new IPeriod("to_periode",$to,$exercice);
+$input_to->id="to_periode";
 $input_to->show_start_date=false;
 $input_to->filter_year=true;
 $input_to->type=ALL;

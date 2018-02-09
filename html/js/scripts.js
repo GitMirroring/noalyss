@@ -3485,6 +3485,24 @@ function progress_bar_check(p_idx, p_taskid)
  */
 function updatePeriodePreference(p_dossier)
 {
+    waiting_box();
     var exercice=$('exercice_setting').value;
     new Ajax.Updater('setting_period',"ajax_misc.php",{method:"get",parameters:{ "op":"pref_exercice","gDossier":p_dossier,"exercice":exercice}});  
+    remove_waiting_box();
+}
+/**
+ * Update the from and to periode list when changing the exercice
+ * @param {int} p_dossier
+ * @param {string} p_exercice id of the exercice
+ * @param {type} p_periode_from id of the starting periode
+ * @param {type} p_periode_to id of the ending periode
+ * @param {type} p_last possible value = 1 to show last periode or 0 the first
+ */
+function updatePeriode(p_dossier,p_exercice,p_periode_from,p_periode_to,p_last)
+{
+    waiting_box();
+    var exercice=$(p_exercice).value;
+    new Ajax.Updater(p_periode_from,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_from,"type":"from","last":p_last}});
+    new Ajax.Updater(p_periode_to,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_to,"type":"to","last":p_last}});
+    remove_waiting_box();
 }

@@ -245,6 +245,47 @@ if (array_key_exists($op, $path)) {
 }
 switch ($op)
 {
+    case "periode_change":
+        $field=$http->get("field");
+        $type=$http->get("type");
+        $exercice=$http->get("exercice","number");
+        $last=$http->get("last","number");
+        
+        // if last == 1 then show first and last periode of the 
+        // exercice
+        $periode_start=0;
+        $periode_end=0;
+        if ( $last==1) {
+            $t_periode=new Periode($cn);
+            list($per_max,$per_min)=$t_periode->get_limit($exercice);
+            $periode_start=$per_max->p_id;
+            $periode_end=$per_min->p_id;
+        }
+        
+        $iperiod = new IPeriod($field);
+        $iperiod->id=$field;
+        $iperiod->user = $g_user;
+        $iperiod->cn = $cn;
+        $iperiod->filter_year = true;
+        $iperiod->exercice=$exercice;
+        if ( $type=="from")
+        {
+            $iperiod->show_end_date=FALSE;
+            $iperiod->value=$periode_start;
+        } elseif ($type=="to"){
+            $iperiod->show_start_date=FALSE;
+            $iperiod->value=$periode_end;
+            
+        } else {
+            throw new Exception(_("Invalide type"));
+        }
+        
+        $iperiod->type = ALL;
+        echo $iperiod->input();
+        
+        return;
+        
+        break;
     case "pref_exercice":
         $iperiod = new IPeriod("period");
         $iperiod->id="setting_period";
