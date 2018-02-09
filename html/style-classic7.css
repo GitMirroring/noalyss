@@ -1254,7 +1254,7 @@ div.menu2 a.mtitle:hover,div.menu a.mtitle:hover,td.mtitle a.mtitle:hover {
     
 }
 div.menu2 a.mtitle:hover {
-	padding:4px;
+    border-radius: 0px 0px;
 }
 div.menu3 {
 	font-size:13.6px;
