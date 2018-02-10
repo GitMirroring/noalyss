@@ -526,7 +526,7 @@ if ($account == 0 ) {
   $cn->execute_script(NOALYSS_INCLUDE."/sql/account_repository/constraint.sql");
   /* update name administrator */
   $cadmin=NOALYSS_ADMINISTRATOR;
-  $cn->exec_sql("update ac_users set use_login=$1 where use_id=1",
+  $cn->exec_sql("update ac_users set use_login=$1,use_active=1 where use_id=1",
               array(strtolower($cadmin)));
 
   $cn->commit($cn);

@@ -11,7 +11,7 @@ SET client_min_messages = warning;
 
 
 INSERT INTO ac_users (use_id, use_first_name, use_name, use_login, use_active, use_pass, use_admin, use_email) VALUES (4, 'demo', 'demo', 'demo', 0, 'fe01ce2a7fbac8fafaed7c982a04e229', 0, NULL);
-INSERT INTO ac_users (use_id, use_first_name, use_name, use_login, use_active, use_pass, use_admin, use_email) VALUES (1, NULL, NULL, 'admin', 0, 'b1cc88e1907cde80cb2595fa793b3da9', 1, NULL);
+INSERT INTO ac_users (use_id, use_first_name, use_name, use_login, use_active, use_pass, use_admin, use_email) VALUES (1, NULL, NULL, 'admin', 1, 'b1cc88e1907cde80cb2595fa793b3da9', 1, NULL);
 
 
 
