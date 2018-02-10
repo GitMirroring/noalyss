@@ -34,7 +34,6 @@ sed -i -e "/REVOKE /d" -e "/GRANT /d" -e "/ALTER TABLE.*/d" -e "/ADD CONSTRAINT/
 
 
 grep setval schema.sql >> sequence.sql
-echo "set search_path = public, comptaproc,pg_catalog ;" > data.sql
-pg_dump -O -U dany --data-only --column-inserts  -O ${TEMPLATE}|sed "/^--/d" | sed -e "/SET search_path/d" >> data.sql
+pg_dump -O -U dany --data-only --column-inserts  -O ${TEMPLATE}|sed "/^--/d" | sed -e "/SET search_path/d" > data.sql
 
 
