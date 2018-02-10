@@ -39,6 +39,8 @@ ALTER TABLE ONLY tags ALTER COLUMN t_id SET DEFAULT nextval('tags_t_id_seq'::reg
 ALTER TABLE ONLY tmp_stockgood ALTER COLUMN s_id SET DEFAULT nextval('tmp_stockgood_s_id_seq'::regclass);
 ALTER TABLE ONLY tmp_stockgood_detail ALTER COLUMN d_id SET DEFAULT nextval('tmp_stockgood_detail_d_id_seq'::regclass);
 ALTER TABLE ONLY todo_list_shared ALTER COLUMN id SET DEFAULT nextval('todo_list_shared_id_seq'::regclass);
+ALTER TABLE ONLY user_active_security ALTER COLUMN id SET DEFAULT nextval('user_active_security_id_seq'::regclass);
+ALTER TABLE ONLY user_filter ALTER COLUMN id SET DEFAULT nextval('user_filter_id_seq'::regclass);
 ALTER TABLE ONLY user_sec_action_profile ALTER COLUMN ua_id SET DEFAULT nextval('user_sec_action_profile_ua_id_seq'::regclass);
 ALTER TABLE ONLY action_gestion_operation
     ADD CONSTRAINT action_comment_operation_pkey PRIMARY KEY (ago_id);
@@ -100,6 +102,8 @@ ALTER TABLE ONLY attr_min
     ADD CONSTRAINT frd_ad_attr_min_pk PRIMARY KEY (frd_id, ad_id);
 ALTER TABLE ONLY operation_analytique
     ADD CONSTRAINT historique_analytique_pkey PRIMARY KEY (oa_id);
+ALTER TABLE ONLY tmp_pcmn
+    ADD CONSTRAINT id_ux UNIQUE (id);
 ALTER TABLE ONLY extension
     ADD CONSTRAINT idx_ex_code UNIQUE (ex_code);
 ALTER TABLE ONLY info_def
@@ -115,7 +119,9 @@ ALTER TABLE ONLY jrn_def
 ALTER TABLE ONLY jrn_info
     ADD CONSTRAINT jrn_info_pkey PRIMARY KEY (ji_id);
 ALTER TABLE ONLY jrn_periode
-    ADD CONSTRAINT jrn_periode_pk PRIMARY KEY (jrn_def_id, p_id);
+    ADD CONSTRAINT jrn_periode_periode_ledger UNIQUE (jrn_def_id, p_id);
+ALTER TABLE ONLY jrn_periode
+    ADD CONSTRAINT jrn_periode_pk PRIMARY KEY (id);
 ALTER TABLE ONLY jrn
     ADD CONSTRAINT jrn_pkey PRIMARY KEY (jr_id, jr_def_id);
 ALTER TABLE ONLY jrn_rapt
@@ -228,6 +234,10 @@ ALTER TABLE ONLY user_sec_jrn
     ADD CONSTRAINT uniq_user_ledger UNIQUE (uj_login, uj_jrn_id);
 ALTER TABLE ONLY todo_list_shared
     ADD CONSTRAINT unique_todo_list_id_login UNIQUE (todo_list_id, use_login);
+ALTER TABLE ONLY user_active_security
+    ADD CONSTRAINT user_active_security_pk PRIMARY KEY (id);
+ALTER TABLE ONLY user_filter
+    ADD CONSTRAINT user_filter_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY user_sec_act
     ADD CONSTRAINT user_sec_act_pkey PRIMARY KEY (ua_id);
 ALTER TABLE ONLY user_sec_action_profile
@@ -240,6 +250,8 @@ ALTER TABLE ONLY action_gestion_related
     ADD CONSTRAINT ux_aga_least_aga_greatest UNIQUE (aga_least, aga_greatest);
 ALTER TABLE ONLY jrn
     ADD CONSTRAINT ux_internal UNIQUE (jr_internal);
+ALTER TABLE ONLY version
+    ADD CONSTRAINT version_pkey PRIMARY KEY (val);
 ALTER TABLE ONLY centralized
     ADD CONSTRAINT "$1" FOREIGN KEY (c_jrn_def) REFERENCES jrn_def(jrn_def_id);
 ALTER TABLE ONLY user_sec_act
@@ -370,6 +382,8 @@ ALTER TABLE ONLY mod_payment
     ADD CONSTRAINT mod_payment_mp_fd_id_fkey FOREIGN KEY (mp_fd_id) REFERENCES fiche_def(fd_id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY mod_payment
     ADD CONSTRAINT mod_payment_mp_jrn_def_id_fkey FOREIGN KEY (mp_jrn_def_id) REFERENCES jrn_def(jrn_def_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY operation_analytique
+    ADD CONSTRAINT operation_analytique_fiche_id_fk FOREIGN KEY (f_id) REFERENCES fiche(f_id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY operation_analytique
     ADD CONSTRAINT operation_analytique_j_id_fkey FOREIGN KEY (j_id) REFERENCES jrnx(j_id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY operation_analytique

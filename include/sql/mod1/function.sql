@@ -286,6 +286,34 @@ return NEW;
 
 end;
 $$;
+CREATE FUNCTION anc_correct_tvand() RETURNS void
+    LANGUAGE plpgsql
+    AS $$ 
+declare
+        n_count numeric;
+        i record;
+        newrow_tva record;
+begin
+         for i in select * from operation_analytique where oa_jrnx_id_source is not null loop
+         -- Get all the anc accounting from the base operation and insert the missing record for VAT 
+                for newrow_tva in select *  from operation_analytique where j_id=i.oa_jrnx_id_source and po_id <> i.po_id loop
+                    
+                        -- check if the record is yet present
+                        select count(*) into n_count from operation_analytique where  po_id=newrow_tva.po_id and oa_jrnx_id_source=i.oa_jrnx_id_source;
+
+                        if n_count = 0 then
+                          raise info 'insert operation analytique po_id = % oa_group = % ',i.po_id, i.oa_group;
+                          insert into operation_analytique 
+                          (po_id,oa_amount,oa_description,oa_debit,j_id,oa_group,oa_date,oa_jrnx_id_source,oa_positive)
+                          values (newrow_tva.po_id,i.oa_amount,i.oa_description,i.oa_debit,i.j_id,i.oa_group,i.oa_date,i.oa_jrnx_id_source,i.oa_positive);
+                        end if;
+         
+                end loop;
+
+         
+         end loop;
+end;
+ $$;
 CREATE FUNCTION attribut_insert(p_f_id integer, p_ad_id integer, p_value character varying) RETURNS void
     LANGUAGE plpgsql
     AS $$
@@ -1625,108 +1653,6 @@ nCounter integer;
 
         RETURN NEW;
     END;
-$$;
-CREATE FUNCTION table_analytic_account(p_from text, p_to text) RETURNS SETOF public.anc_table_account_type
-    LANGUAGE plpgsql
-    AS $$
-declare
-	ret ANC_table_account_type%ROWTYPE;
-	sql_from text:='';
-	sql_to text:='';
-	sWhere text:='';
-	sAnd text:='';
-	sResult text:='';
-begin
-if p_from <> '' and p_from is not null then
-	sql_from:='oa_date >= to_date('''||p_from::text||''',''DD.MM.YYYY'')';
-	sWhere:=' where ';
-end if;
-
-if p_to <> '' and p_to is not null then
-	sql_to=' oa_date <= to_date('''||p_to::text||''',''DD.MM.YYYY'')';
-	sWhere := ' where ';
-end if;
-
-if sql_to <> '' and sql_from <> '' then
-	sAnd:=' and ';
-end if;
-
-sResult := sWhere || sql_from || sAnd || sql_to;
-
-for ret in EXECUTE 'SELECT po.po_id,
-			    po.pa_id, po.po_name, 
-			    po.po_description,sum(
-        CASE
-            WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
-            ELSE operation_analytique.oa_amount
-        END) AS sum_amount, jrnx.j_poste, tmp_pcmn.pcm_lib AS name
-   FROM operation_analytique
-   JOIN poste_analytique po USING (po_id)
-   JOIN jrnx USING (j_id)
-   JOIN tmp_pcmn ON jrnx.j_poste::text = tmp_pcmn.pcm_val::text
-'|| sResult ||'
-  GROUP BY po.po_id, po.po_name, po.pa_id, jrnx.j_poste, tmp_pcmn.pcm_lib, po.po_description
- HAVING sum(
-CASE
-    WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
-    ELSE operation_analytique.oa_amount
-END) <> 0::numeric '
-	loop
-	return next ret;
-end loop;
-end;
-$$;
-CREATE FUNCTION table_analytic_card(p_from text, p_to text) RETURNS SETOF public.anc_table_card_type
-    LANGUAGE plpgsql
-    AS $$
-declare
-	ret ANC_table_card_type%ROWTYPE;
-	sql_from text:='';
-	sql_to text:='';
-	sWhere text:='';
-	sAnd text:='';
-	sResult text:='';
-begin
-if p_from <> '' and p_from is not null then
-	sql_from:='oa_date >= to_date('''||p_from::text||''',''DD.MM.YYYY'')';
-	sWhere:=' where ';
-end if;
-
-if p_to <> '' and p_to is not null then
-	sql_to=' oa_date <= to_date('''||p_to::text||''',''DD.MM.YYYY'')';
-	sWhere := ' where ';
-end if;
-
-if sql_to <> '' and sql_from <> '' then
-	sAnd :=' and ';
-end if;
-
-sResult := sWhere || sql_from || sAnd || sql_to;
-
-for ret in EXECUTE ' SELECT po.po_id, po.pa_id, po.po_name, po.po_description,  sum(
-        CASE
-            WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
-            ELSE operation_analytique.oa_amount
-        END) AS sum_amount, jrnx.f_id, jrnx.j_qcode, ( SELECT fiche_detail.ad_value
-           FROM fiche_detail
-          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id) AS name
-   FROM operation_analytique
-   JOIN poste_analytique po USING (po_id)
-   JOIN jrnx USING (j_id)'|| sResult ||'
-  GROUP BY po.po_id, po.po_name, po.pa_id, jrnx.f_id, jrnx.j_qcode, ( SELECT fiche_detail.ad_value
-   FROM fiche_detail
-  WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id), po.po_description
- HAVING sum(
-CASE
-    WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
-    ELSE operation_analytique.oa_amount
-END) <> 0::numeric;'
-
-
-	loop
-	return next ret;
-end loop;
-end;
 $$;
 CREATE FUNCTION tmp_pcmn_alphanum_ins_upd() RETURNS trigger
     LANGUAGE plpgsql

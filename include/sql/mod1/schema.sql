@@ -373,6 +373,37 @@ $$;
 
 
 
+CREATE FUNCTION anc_correct_tvand() RETURNS void
+    LANGUAGE plpgsql
+    AS $$ 
+declare
+        n_count numeric;
+        i record;
+        newrow_tva record;
+begin
+         for i in select * from operation_analytique where oa_jrnx_id_source is not null loop
+         -- Get all the anc accounting from the base operation and insert the missing record for VAT 
+                for newrow_tva in select *  from operation_analytique where j_id=i.oa_jrnx_id_source and po_id <> i.po_id loop
+                    
+                        -- check if the record is yet present
+                        select count(*) into n_count from operation_analytique where  po_id=newrow_tva.po_id and oa_jrnx_id_source=i.oa_jrnx_id_source;
+
+                        if n_count = 0 then
+                          raise info 'insert operation analytique po_id = % oa_group = % ',i.po_id, i.oa_group;
+                          insert into operation_analytique 
+                          (po_id,oa_amount,oa_description,oa_debit,j_id,oa_group,oa_date,oa_jrnx_id_source,oa_positive)
+                          values (newrow_tva.po_id,i.oa_amount,i.oa_description,i.oa_debit,i.j_id,i.oa_group,i.oa_date,i.oa_jrnx_id_source,i.oa_positive);
+                        end if;
+         
+                end loop;
+
+         
+         end loop;
+end;
+ $$;
+
+
+
 CREATE FUNCTION attribut_insert(p_f_id integer, p_ad_id integer, p_value character varying) RETURNS void
     LANGUAGE plpgsql
     AS $$
@@ -1883,114 +1914,6 @@ $$;
 
 
 
-CREATE FUNCTION table_analytic_account(p_from text, p_to text) RETURNS SETOF public.anc_table_account_type
-    LANGUAGE plpgsql
-    AS $$
-declare
-	ret ANC_table_account_type%ROWTYPE;
-	sql_from text:='';
-	sql_to text:='';
-	sWhere text:='';
-	sAnd text:='';
-	sResult text:='';
-begin
-if p_from <> '' and p_from is not null then
-	sql_from:='oa_date >= to_date('''||p_from::text||''',''DD.MM.YYYY'')';
-	sWhere:=' where ';
-end if;
-
-if p_to <> '' and p_to is not null then
-	sql_to=' oa_date <= to_date('''||p_to::text||''',''DD.MM.YYYY'')';
-	sWhere := ' where ';
-end if;
-
-if sql_to <> '' and sql_from <> '' then
-	sAnd:=' and ';
-end if;
-
-sResult := sWhere || sql_from || sAnd || sql_to;
-
-for ret in EXECUTE 'SELECT po.po_id,
-			    po.pa_id, po.po_name, 
-			    po.po_description,sum(
-        CASE
-            WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
-            ELSE operation_analytique.oa_amount
-        END) AS sum_amount, jrnx.j_poste, tmp_pcmn.pcm_lib AS name
-   FROM operation_analytique
-   JOIN poste_analytique po USING (po_id)
-   JOIN jrnx USING (j_id)
-   JOIN tmp_pcmn ON jrnx.j_poste::text = tmp_pcmn.pcm_val::text
-'|| sResult ||'
-  GROUP BY po.po_id, po.po_name, po.pa_id, jrnx.j_poste, tmp_pcmn.pcm_lib, po.po_description
- HAVING sum(
-CASE
-    WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
-    ELSE operation_analytique.oa_amount
-END) <> 0::numeric '
-	loop
-	return next ret;
-end loop;
-end;
-$$;
-
-
-
-CREATE FUNCTION table_analytic_card(p_from text, p_to text) RETURNS SETOF public.anc_table_card_type
-    LANGUAGE plpgsql
-    AS $$
-declare
-	ret ANC_table_card_type%ROWTYPE;
-	sql_from text:='';
-	sql_to text:='';
-	sWhere text:='';
-	sAnd text:='';
-	sResult text:='';
-begin
-if p_from <> '' and p_from is not null then
-	sql_from:='oa_date >= to_date('''||p_from::text||''',''DD.MM.YYYY'')';
-	sWhere:=' where ';
-end if;
-
-if p_to <> '' and p_to is not null then
-	sql_to=' oa_date <= to_date('''||p_to::text||''',''DD.MM.YYYY'')';
-	sWhere := ' where ';
-end if;
-
-if sql_to <> '' and sql_from <> '' then
-	sAnd :=' and ';
-end if;
-
-sResult := sWhere || sql_from || sAnd || sql_to;
-
-for ret in EXECUTE ' SELECT po.po_id, po.pa_id, po.po_name, po.po_description,  sum(
-        CASE
-            WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
-            ELSE operation_analytique.oa_amount
-        END) AS sum_amount, jrnx.f_id, jrnx.j_qcode, ( SELECT fiche_detail.ad_value
-           FROM fiche_detail
-          WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id) AS name
-   FROM operation_analytique
-   JOIN poste_analytique po USING (po_id)
-   JOIN jrnx USING (j_id)'|| sResult ||'
-  GROUP BY po.po_id, po.po_name, po.pa_id, jrnx.f_id, jrnx.j_qcode, ( SELECT fiche_detail.ad_value
-   FROM fiche_detail
-  WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = jrnx.f_id), po.po_description
- HAVING sum(
-CASE
-    WHEN operation_analytique.oa_debit = true THEN operation_analytique.oa_amount * (-1)::numeric
-    ELSE operation_analytique.oa_amount
-END) <> 0::numeric;'
-
-
-	loop
-	return next ret;
-end loop;
-end;
-$$;
-
-
-
 CREATE FUNCTION tmp_pcmn_alphanum_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -2618,7 +2541,6 @@ CREATE TABLE action_gestion (
     f_id_dest integer,
     ag_title text,
     ag_timestamp timestamp without time zone DEFAULT now(),
-    ag_ref_ag_id integer,
     ag_ref text,
     ag_hour text,
     ag_priority integer DEFAULT 2,
@@ -2648,10 +2570,6 @@ COMMENT ON COLUMN action_gestion.ag_title IS ' title ';
 
 
 COMMENT ON COLUMN action_gestion.ag_timestamp IS ' ';
-
-
-
-COMMENT ON COLUMN action_gestion.ag_ref_ag_id IS ' concerning the action ';
 
 
 
@@ -3515,8 +3433,7 @@ SET default_with_oids = false;
 
 
 CREATE TABLE jnt_letter (
-    jl_id integer NOT NULL,
-    jl_amount_deb numeric(20,4)
+    jl_id integer NOT NULL
 );
 
 
@@ -3557,12 +3474,17 @@ CREATE TABLE jrn (
     jr_pj_type text,
     jr_pj_number text,
     jr_mt text,
-    jr_date_paid date
+    jr_date_paid date,
+    jr_optype character varying(3) DEFAULT 'NOR'::character varying
 );
 
 
 
 COMMENT ON TABLE jrn IS 'Journal: content one line for a group of accountancy writing';
+
+
+
+COMMENT ON COLUMN jrn.jr_optype IS 'Type of operation , NOR = NORMAL , OPE opening , EXT extourne, CLO closing';
 
 
 
@@ -3582,12 +3504,17 @@ CREATE TABLE jrn_def (
     jrn_def_pj_pref text,
     jrn_def_bank bigint,
     jrn_def_num_op integer,
-    jrn_def_description text
+    jrn_def_description text,
+    jrn_enable integer DEFAULT 1
 );
 
 
 
 COMMENT ON TABLE jrn_def IS 'Definition of a journal, his properties';
+
+
+
+COMMENT ON COLUMN jrn_def.jrn_enable IS 'Set to 1 if the ledger is enable ';
 
 
 SET default_with_oids = false;
@@ -3640,10 +3567,20 @@ ALTER SEQUENCE jrn_note_n_id_seq OWNED BY jrn_note.n_id;
 
 
 
+CREATE SEQUENCE jrn_periode_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
 CREATE TABLE jrn_periode (
     jrn_def_id integer NOT NULL,
     p_id integer NOT NULL,
-    status text
+    status text,
+    id bigint DEFAULT nextval('jrn_periode_id_seq'::regclass) NOT NULL
 );
 
 
@@ -4088,6 +4025,7 @@ CREATE TABLE operation_analytique (
     oa_row integer,
     oa_jrnx_id_source bigint,
     oa_positive character(1) DEFAULT 'Y'::bpchar NOT NULL,
+    f_id bigint,
     CONSTRAINT operation_analytique_oa_amount_check CHECK ((oa_amount >= (0)::numeric))
 );
 
@@ -4102,6 +4040,10 @@ COMMENT ON COLUMN operation_analytique.oa_jrnx_id_source IS 'jrnx.j_id source of
 
 
 COMMENT ON COLUMN operation_analytique.oa_positive IS 'Sign of the amount';
+
+
+
+COMMENT ON COLUMN operation_analytique.f_id IS 'FK to fiche.f_id , used only with ODS';
 
 
 SET default_with_oids = true;
@@ -5036,8 +4978,14 @@ ALTER SEQUENCE stock_repository_r_id_seq OWNED BY stock_repository.r_id;
 CREATE TABLE tags (
     t_id integer NOT NULL,
     t_tag text NOT NULL,
-    t_description text
+    t_description text,
+    t_actif character(1) DEFAULT 'Y'::bpchar,
+    CONSTRAINT tags_check CHECK ((t_actif = ANY (ARRAY['N'::bpchar, 'Y'::bpchar])))
 );
+
+
+
+COMMENT ON COLUMN tags.t_actif IS 'Y if the tag is activate and can be used ';
 
 
 
@@ -5053,6 +5001,15 @@ CREATE SEQUENCE tags_t_id_seq
 ALTER SEQUENCE tags_t_id_seq OWNED BY tags.t_id;
 
 
+
+CREATE SEQUENCE tmp_pcmn_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
 SET default_with_oids = true;
 
 
@@ -5060,12 +5017,23 @@ CREATE TABLE tmp_pcmn (
     pcm_val account_type NOT NULL,
     pcm_lib text,
     pcm_val_parent account_type DEFAULT 0,
-    pcm_type text
+    pcm_type text,
+    id bigint DEFAULT nextval('tmp_pcmn_id_seq'::regclass) NOT NULL,
+    pcm_direct_use character varying(1) DEFAULT 'Y'::character varying NOT NULL,
+    CONSTRAINT pcm_direct_use_ck CHECK (((pcm_direct_use)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
 );
 
 
 
 COMMENT ON TABLE tmp_pcmn IS 'Plan comptable minimum normalisé';
+
+
+
+COMMENT ON COLUMN tmp_pcmn.id IS 'allow to identify the row, it is unique and not null (pseudo pk)';
+
+
+
+COMMENT ON COLUMN tmp_pcmn.pcm_direct_use IS 'Value are N or Y , N cannot be used directly , not even through a card';
 
 
 SET default_with_oids = false;
@@ -5208,6 +5176,81 @@ CREATE TABLE tva_rate (
 
 COMMENT ON TABLE tva_rate IS 'Rate of vat';
 
+
+SET default_with_oids = false;
+
+
+CREATE TABLE user_active_security (
+    id integer NOT NULL,
+    us_login text NOT NULL,
+    us_ledger character varying(1) NOT NULL,
+    us_action character varying(1) NOT NULL,
+    CONSTRAINT user_active_security_action_check CHECK (((us_action)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))),
+    CONSTRAINT user_active_security_ledger_check CHECK (((us_ledger)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+);
+
+
+
+COMMENT ON COLUMN user_active_security.us_login IS 'user''s login';
+
+
+
+COMMENT ON COLUMN user_active_security.us_ledger IS 'Flag Security for ledger';
+
+
+
+COMMENT ON COLUMN user_active_security.us_action IS 'Security for action';
+
+
+
+CREATE SEQUENCE user_active_security_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE user_active_security_id_seq OWNED BY user_active_security.id;
+
+
+
+CREATE TABLE user_filter (
+    id bigint NOT NULL,
+    login text,
+    nb_jrn integer,
+    date_start character varying(10),
+    date_end character varying(10),
+    description text,
+    amount_min numeric(20,4),
+    amount_max numeric(20,4),
+    qcode text,
+    accounting text,
+    r_jrn text,
+    date_paid_start character varying(10),
+    date_paid_end character varying(10),
+    ledger_type character varying(5),
+    all_ledger integer,
+    filter_name text NOT NULL,
+    unpaid character varying
+);
+
+
+
+CREATE SEQUENCE user_filter_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE user_filter_id_seq OWNED BY user_filter.id;
+
+
+SET default_with_oids = true;
 
 
 CREATE TABLE user_local_pref (
@@ -5352,8 +5395,31 @@ CREATE VIEW v_quant_detail AS
 
 
 
+CREATE VIEW v_tva_rate AS
+    SELECT tva_rate.tva_id, tva_rate.tva_rate, tva_rate.tva_label, tva_rate.tva_comment, split_part(tva_rate.tva_poste, ','::text, 1) AS tva_purchase, split_part(tva_rate.tva_poste, ','::text, 2) AS tva_sale, tva_rate.tva_both_side FROM tva_rate;
+
+
+
+COMMENT ON VIEW v_tva_rate IS 'Show this table to be easily used by  Tva_Rate_MTable';
+
+
+
+COMMENT ON COLUMN v_tva_rate.tva_purchase IS ' VAT used for purchase';
+
+
+
+COMMENT ON COLUMN v_tva_rate.tva_sale IS ' VAT used for sale';
+
+
+
+COMMENT ON COLUMN v_tva_rate.tva_both_side IS 'if 1 ,  VAT avoided ';
+
+
+
 CREATE TABLE version (
-    val integer
+    val integer NOT NULL,
+    v_description text,
+    v_date timestamp without time zone DEFAULT now()
 );
 
 
@@ -5384,6 +5450,27 @@ CREATE VIEW vw_poste_qcode AS
 
 CREATE VIEW vw_supplier AS
     SELECT fiche.f_id, a1.ad_value AS name, a.ad_value AS quick_code, b.ad_value AS tva_num, c.ad_value AS poste_comptable, d.ad_value AS rue, e.ad_value AS code_postal, f.ad_value AS pays, g.ad_value AS telephone, h.ad_value AS email FROM (((((((((((fiche JOIN fiche_def USING (fd_id)) JOIN fiche_def_ref USING (frd_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 1)) a1 USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 13)) b USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 23)) a USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 5)) c USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 14)) d USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 15)) e USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 16)) f USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 17)) g USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 18)) h USING (f_id)) WHERE (fiche_def_ref.frd_id = 8);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5933,6 +6020,9 @@ CREATE UNIQUE INDEX x_periode ON parm_periode USING btree (p_start, p_end);
 
 
 CREATE INDEX x_poste ON jrnx USING btree (j_poste);
+
+
+
 
 
 

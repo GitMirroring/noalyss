@@ -22,7 +22,6 @@ CREATE TABLE action_gestion (
     f_id_dest integer,
     ag_title text,
     ag_timestamp timestamp without time zone DEFAULT now(),
-    ag_ref_ag_id integer,
     ag_ref text,
     ag_hour text,
     ag_priority integer DEFAULT 2,
@@ -256,8 +255,7 @@ CREATE TABLE jnt_fic_attr (
     jnt_order integer NOT NULL
 );
 CREATE TABLE jnt_letter (
-    jl_id integer NOT NULL,
-    jl_amount_deb numeric(20,4)
+    jl_id integer NOT NULL
 );
 CREATE TABLE jrn (
     jr_id integer DEFAULT nextval(('s_jrn'::text)::regclass) NOT NULL,
@@ -280,7 +278,8 @@ CREATE TABLE jrn (
     jr_pj_type text,
     jr_pj_number text,
     jr_mt text,
-    jr_date_paid date
+    jr_date_paid date,
+    jr_optype character varying(3) DEFAULT 'NOR'::character varying
 );
 CREATE TABLE jrn_def (
     jrn_def_id integer DEFAULT nextval(('s_jrn_def'::text)::regclass) NOT NULL,
@@ -298,7 +297,8 @@ CREATE TABLE jrn_def (
     jrn_def_pj_pref text,
     jrn_def_bank bigint,
     jrn_def_num_op integer,
-    jrn_def_description text
+    jrn_def_description text,
+    jrn_enable integer DEFAULT 1
 );
 CREATE TABLE jrn_info (
     ji_id integer NOT NULL,
@@ -314,7 +314,8 @@ CREATE TABLE jrn_note (
 CREATE TABLE jrn_periode (
     jrn_def_id integer NOT NULL,
     p_id integer NOT NULL,
-    status text
+    status text,
+    id bigint DEFAULT nextval('jrn_periode_id_seq'::regclass) NOT NULL
 );
 CREATE TABLE jrn_rapt (
     jra_id integer DEFAULT nextval(('s_jrn_rapt'::text)::regclass) NOT NULL,
@@ -436,6 +437,7 @@ CREATE TABLE operation_analytique (
     oa_row integer,
     oa_jrnx_id_source bigint,
     oa_positive character(1) DEFAULT 'Y'::bpchar NOT NULL,
+    f_id bigint,
     CONSTRAINT operation_analytique_oa_amount_check CHECK ((oa_amount >= (0)::numeric))
 );
 CREATE TABLE parameter (
@@ -585,13 +587,18 @@ CREATE TABLE stock_repository (
 CREATE TABLE tags (
     t_id integer NOT NULL,
     t_tag text NOT NULL,
-    t_description text
+    t_description text,
+    t_actif character(1) DEFAULT 'Y'::bpchar,
+    CONSTRAINT tags_check CHECK ((t_actif = ANY (ARRAY['N'::bpchar, 'Y'::bpchar])))
 );
 CREATE TABLE tmp_pcmn (
     pcm_val account_type NOT NULL,
     pcm_lib text,
     pcm_val_parent account_type DEFAULT 0,
-    pcm_type text
+    pcm_type text,
+    id bigint DEFAULT nextval('tmp_pcmn_id_seq'::regclass) NOT NULL,
+    pcm_direct_use character varying(1) DEFAULT 'Y'::character varying NOT NULL,
+    CONSTRAINT pcm_direct_use_ck CHECK (((pcm_direct_use)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
 );
 CREATE TABLE tmp_stockgood (
     s_id bigint NOT NULL,
@@ -631,6 +638,33 @@ CREATE TABLE tva_rate (
     tva_poste text,
     tva_both_side integer DEFAULT 0
 );
+CREATE TABLE user_active_security (
+    id integer NOT NULL,
+    us_login text NOT NULL,
+    us_ledger character varying(1) NOT NULL,
+    us_action character varying(1) NOT NULL,
+    CONSTRAINT user_active_security_action_check CHECK (((us_action)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))),
+    CONSTRAINT user_active_security_ledger_check CHECK (((us_ledger)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+);
+CREATE TABLE user_filter (
+    id bigint NOT NULL,
+    login text,
+    nb_jrn integer,
+    date_start character varying(10),
+    date_end character varying(10),
+    description text,
+    amount_min numeric(20,4),
+    amount_max numeric(20,4),
+    qcode text,
+    accounting text,
+    r_jrn text,
+    date_paid_start character varying(10),
+    date_paid_end character varying(10),
+    ledger_type character varying(5),
+    all_ledger integer,
+    filter_name text NOT NULL,
+    unpaid character varying
+);
 CREATE TABLE user_local_pref (
     user_id text NOT NULL,
     parameter_type text NOT NULL,
@@ -655,5 +689,7 @@ CREATE TABLE user_sec_jrn (
     uj_priv text
 );
 CREATE TABLE version (
-    val integer
+    val integer NOT NULL,
+    v_description text,
+    v_date timestamp without time zone DEFAULT now()
 );

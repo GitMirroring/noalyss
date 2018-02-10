@@ -190,6 +190,12 @@ CREATE SEQUENCE jrn_note_n_id_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE jrn_note_n_id_seq OWNED BY jrn_note.n_id;
+CREATE SEQUENCE jrn_periode_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 CREATE SEQUENCE key_distribution_activity_ka_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -645,6 +651,12 @@ CREATE SEQUENCE tags_t_id_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE tags_t_id_seq OWNED BY tags.t_id;
+CREATE SEQUENCE tmp_pcmn_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 CREATE SEQUENCE tmp_stockgood_detail_d_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -678,6 +690,20 @@ CREATE SEQUENCE uos_pk_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
+CREATE SEQUENCE user_active_security_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE user_active_security_id_seq OWNED BY user_active_security.id;
+CREATE SEQUENCE user_filter_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE user_filter_id_seq OWNED BY user_filter.id;
 CREATE SEQUENCE user_sec_action_profile_ua_id_seq
     START WITH 1
     INCREMENT BY 1
