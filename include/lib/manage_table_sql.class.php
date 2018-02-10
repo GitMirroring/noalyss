@@ -77,6 +77,7 @@ class Manage_Table_SQL
     protected $json_parameter; //!< Default parameter to add (gDossier...)
     protected $aerror; //!< Array containing the error of the input data
     protected $col_sort; //!< when inserting, it is the column to sort,-1 to disable it and append only
+    protected $a_info; //!< Array with the infotip
 
     const UPDATABLE=1;
     const VISIBLE=2;
@@ -131,6 +132,18 @@ class Manage_Table_SQL
      */
     function get_col_sort() {
         return $this->col_sort;
+    }
+    /**
+     * Set the info for a column, use Icon_Action::infobulle
+     * the message are in message_javascript.php
+     * @param string $p_key Column name
+     * @param integer $p_comment comment idx
+     * 
+     * @see message_javascript.php
+     * @see Icon_Action::infobulle()
+     */
+    function set_col_tips($p_key,$p_comment) {
+        $this->a_info[$p_key]=$p_comment;
     }
     /**
      * When adding an element ,we place it thanks the DOM Attribute sort_value
@@ -804,7 +817,12 @@ function check()
             if ($this->get_property_visible($key)===TRUE)
             {
                 // Label
-                echo "<td> {$label} {$error}</td>";
+                $info="";
+                if ( isset($this->a_info[$key])) {
+                    $info=Icon_Action::infobulle($this->a_info[$key]);
+                }
+                // Label
+                echo "<td> {$label} {$info} {$error}</td>";
 
                 if ($this->get_property_updatable($key)==TRUE)
                 {
