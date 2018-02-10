@@ -419,7 +419,29 @@ EOF;
 		break;
 	case 'dsp_tva':
 		$cn = Dossier::connect();
-		$Res = $cn->exec_sql("select * from tva_rate order by tva_rate desc");
+            // Filter the VAT 
+                $filter=$http->get("filter","string","none");
+                if ( $filter == 'sale')  {
+                    $Res = $cn->exec_sql("select * 
+                        from v_tva_rate 
+                        where 
+                        tva_sale <> '#'
+                            order by tva_rate desc");
+                    
+                } elseif ($filter == "purchase") {
+                    
+                    $Res = $cn->exec_sql("select * 
+                        from 
+                        v_tva_rate 
+                        where 
+                        tva_purchase <> '#'
+                            order by tva_rate desc");
+                }else {
+                    
+                    $Res = $cn->exec_sql("select * from v_tva_rate 
+                        where 
+                            order by tva_rate desc");
+                }
 		$Max = Database::num_row($Res);
 		$r = "";
 		$r.=HtmlInput::title_box(_('Choisissez la TVA'),'tva_select',"close","","y");

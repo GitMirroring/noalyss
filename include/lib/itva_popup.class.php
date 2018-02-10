@@ -54,13 +54,15 @@ class ITva_Popup extends HtmlInput
      * to have its own javascript for the button you can use this->but_javascript)
      * by default it is 'popup_select_tva(this)';
      */
+    private $filter; //!< filter the VAT by ledger PURCHASE or SALE or NO FILTER, default=NO
     public function __construct($p_name=null,$p_value="",$p_id="")
     {
         $this->name=$p_name;
         $this->button=true;
         $this->in_table=false;
-		$this->value=$p_value;
-		$this->id=$p_id;
+        $this->value=$p_value;
+        $this->id=$p_id;
+        $this->filter='none';
     }
     function with_button($p)
     {
@@ -114,6 +116,18 @@ class ITva_Popup extends HtmlInput
 
     }
     /**
+     * Set a filter to limit the choice of VAT ; 
+     * possible values are : 
+     *         - sale  if there is an accounting for sale
+     *         - purchase  if there is an accounting for purchase
+     *         - none  : show VAT 
+     * 
+     */
+    function set_filter($p_filter)
+    {
+        $this->filter=$p_filter;
+    }
+    /**
      *@brief show a button, if it is pushed show a popup to select the need vat
      *@note
      * - a ipopup must be created before with the name popup_tva
@@ -136,6 +150,7 @@ class ITva_Popup extends HtmlInput
             $bt->set_attribute('jcode',$this->code->name);
         if ( isset($this->compute))
             $bt->set_attribute('compute',$this->compute);
+        $bt->set_attribute("filter", $this->filter);
         $bt->javascript=(isset($this->but_javascript))?$this->but_javascript:'popup_select_tva(this)';
         $r=$bt->input();
         return $r;

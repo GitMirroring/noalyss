@@ -496,6 +496,8 @@ function popup_select_tva(obj)
             queryString += '&code=' + obj.jcode;
         if (obj.compute)
             queryString += '&compute=' + obj.compute;
+        if (obj.filter)
+            queryString += '&filter=' + obj.filter;
 
         var action = new Ajax.Request(
                 "ajax_misc.php",
