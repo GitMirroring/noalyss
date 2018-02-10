@@ -1723,8 +1723,8 @@ SELECT pg_catalog.setval('user_sec_action_profile_ua_id_seq', 6, true);
 
 
 INSERT INTO version (val, v_description, v_date) VALUES (126, NULL, NULL);
-INSERT INTO version (val, v_description, v_date) VALUES (127, 'Add filter for search, inactive tag or ledger, type of operation, security', '2018-02-10 22:35:58.431394');
-INSERT INTO version (val, v_description, v_date) VALUES (128, 'Add a view to manage VAT', '2018-02-10 22:35:59.308007');
+INSERT INTO version (val, v_description, v_date) VALUES (127, 'Add filter for search, inactive tag or ledger, type of operation, security', '2018-02-10 22:46:49.270348');
+INSERT INTO version (val, v_description, v_date) VALUES (128, 'Add a view to manage VAT', '2018-02-10 22:46:49.93138');
 
 
 

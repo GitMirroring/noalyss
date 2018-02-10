@@ -6,6 +6,9 @@
 
 export TEMPLATE=${DOMAIN}mod1
 
+psql -X $TEMPLATE -c "delete from user_local_pref"
+psql -X $TEMPLATE -c "delete from user_local_pref"
+
 pg_dump -O -U dany -s $TEMPLATE|grep -v "COMMENT ON SCHEMA public IS 'Standard public schema';" |sed "/^--/d" > schema.sql
 sed -i -e "/COMMENT ON EXTENSION/d" schema.sql
 sed -i -e "/CREATE EXTENSION/d" schema.sql
