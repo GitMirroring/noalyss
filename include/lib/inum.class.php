@@ -41,7 +41,7 @@ require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 
 class INum extends IText
 {
-
+    var $prec; //!< decimal
     function __construct($name='', $value='', $id="")
     {
         parent::__construct($name, $value, $id);
