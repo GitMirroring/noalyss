@@ -24,8 +24,12 @@ ALTER TABLE ONLY modeledef
     ADD CONSTRAINT modeledef_pkey PRIMARY KEY (mod_id);
 ALTER TABLE ONLY user_global_pref
     ADD CONSTRAINT pk_user_global_pref PRIMARY KEY (user_id, parameter_type);
+ALTER TABLE ONLY progress
+    ADD CONSTRAINT progress_pkey PRIMARY KEY (p_id);
 ALTER TABLE ONLY recover_pass
     ADD CONSTRAINT recover_pass_pkey PRIMARY KEY (request);
+ALTER TABLE ONLY jnt_use_dos
+    ADD CONSTRAINT use_id_dos_id_uniq UNIQUE (use_id, dos_id);
 ALTER TABLE ONLY version
     ADD CONSTRAINT version_pkey PRIMARY KEY (val);
 ALTER TABLE ONLY recover_pass

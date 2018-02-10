@@ -41,6 +41,11 @@ CREATE TABLE modeledef (
     mod_name text NOT NULL,
     mod_desc text
 );
+CREATE TABLE progress (
+    p_id character varying(16) NOT NULL,
+    p_value numeric(5,2) NOT NULL,
+    p_created timestamp without time zone DEFAULT now()
+);
 CREATE TABLE recover_pass (
     use_id bigint NOT NULL,
     request text NOT NULL,
