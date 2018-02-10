@@ -1,4 +1,3 @@
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 COMMENT ON COLUMN ac_dossier.dos_email IS 'Max emails per day : 0 none , -1 unlimited or  max value';
 COMMENT ON COLUMN ac_users.use_email IS 'Email of the user';
 COMMENT ON TABLE dossier_sent_email IS 'Count the sent email by folder';
