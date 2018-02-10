@@ -195,7 +195,13 @@ class Manage_Table_SQL
 
     /**
      * This function can be overrided to check the data before 
-     * inserting , updating or removing, above an example of an overidden check
+     * inserting , updating or removing, above an example of an overidden check.
+     * 
+     * Usually , you get the row of the table (get_table) , you check the conditions
+     * if an condition is not met then you set the error with $this->set_error 
+     * 
+     * if there are error returns false otherwise true
+     * 
      * @see set_error get_error
      * @return boolean
      * @code 
@@ -752,7 +758,14 @@ function check()
             }
             else
             {
-                echo td($p_row[$v]);
+                if ( $this->get_col_type($v)=="select")
+                {
+                    $idx=$p_row[$v];
+                   echo td($this->a_select[$v][$idx]["label"]);
+                    
+                }else {
+                    echo td($p_row[$v]);
+                }
             }
         }
         if ($this->icon_mod=="right")
