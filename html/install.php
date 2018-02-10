@@ -211,8 +211,8 @@ if (isset($_POST['save_config'])) {
   // -----
   if ( $cnx !== false ) {
        echo '<h1>'._('Important').'</h1>';
-       echo '<p>'._('Utilisateur administrateur'),' ',$cadmin,'</p>';
-       echo '<p>',_('Mot de passe'),' phpcompta','</p>';
+       echo '<p style="font-size:120%">'._('Utilisateur administrateur'),' ','<span style="color:red"> ',$cadmin,'</span>','</p>';
+       echo '<p style="font-size:120%">',_('Mot de passe'),'<span style="color:red"> phpcompta </span>','</p>';
       // Create the db
       if (is_writable(NOALYSS_INCLUDE)) { 
         $url=config_file_create($_POST,1,$os); 
