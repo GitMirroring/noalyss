@@ -75,6 +75,7 @@ if ( ! isset ($_REQUEST['oper_detail']))
             continue;
         $title=array();
         
+        $title[]=_("Date");
         $title[]=_("Poste");
         $title[]=_("n° pièce");
         $title[]=_("Code journal");
@@ -82,7 +83,6 @@ if ( ! isset ($_REQUEST['oper_detail']))
         $title[]=_("QuickCode");
         $title[]=_("Lib.");
         $title[]=_("Interne");
-        $title[]=_("Date");
         $title[]=_("Tiers");
         $title[]=_("Description");
         $title[]=_("Débit");
@@ -134,6 +134,7 @@ if ( ! isset ($_REQUEST['oper_detail']))
             $tot_cred=bcadd($tot_cred,$op['cred_montant']);
             $diff=bcsub($op['deb_montant'],$op['cred_montant']);
             $prog=bcadd($prog,$diff);
+            $export->add($op['j_date_fmt']);
             $export->add($pos['pcm_val']);
 	    $export->add($op['jr_pj_number']);
 	    $export->add($op['jrn_def_code']);
@@ -141,7 +142,6 @@ if ( ! isset ($_REQUEST['oper_detail']))
 	    $export->add($op['j_qcode']);
             $export->add($name);
             $export->add($op['jr_internal']);
-            $export->add($op['j_date_fmt']);
             $export->add($tiers);
             $export->add($op['description']);
             $export->add($op['deb_montant'],"number");
