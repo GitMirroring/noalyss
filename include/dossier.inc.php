@@ -54,7 +54,7 @@ if ( isset ($_POST["DATABASE"]) )
     $repo=new Database();
     try {
         $dos=$http->post('DATABASE');
-        $template=$http->post("FMOD_ID","numnber");
+        $template=$http->post("FMOD_ID","number");
     } catch (Exception $ex) {
         echo $ex->getMessage();
         return;

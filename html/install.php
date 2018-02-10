@@ -67,12 +67,18 @@ session_start();
     .warning,.error {
         color:red;
     }
+    img:hover {
+    cursor: inherit;
+    background-color: inherit;
+    color: inherit;
+}
  </style>
 </head>
 <body>
 <p align="center">
-  <IMG SRC="image/logo6820.png" style="width: 365px;height: 150px" alt="NOALYSS">
+  <IMG SRC="image/logo7000.png" style="width: 400px;z-index:-1;position:fixed;top:30px;rigth:50px;opacity: 0.2" alt="NOALYSS">
 </p>
+<h1>NOALYSS : comptabilité - accountancy </h1>
 
 <?php
 /*
@@ -100,6 +106,7 @@ session_start();
  *        This file is included in each release  for a new upgrade
  *
  */
+
 if ( ! isset($_GET['lang'])){
 ?>
 <p>
@@ -277,7 +284,7 @@ require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 // we shouldn't use it 
 // if ( defined ("MULTI") && MULTI==1) { create_htaccess();}
 
-echo '<h1 class="title">'._('Configuration').'</h1>';
+echo '<h1>'._('Configuration').'</h1>';
 ?>
 <h2>Info</h2>
 <?php echo _('Vous utilisez le domaine'),domaine; ?>
@@ -422,11 +429,11 @@ $sql="select setting from pg_settings where name='server_version'";
 $version=$cn->get_value($sql);
 
 echo _("Version base de données :"),$version;
-
-if ( $version[0] < 9 )
+$majeur=explode(".",$version);
+if ( $majeur[0] < 9 )
   {
 ?>
-  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 9 de PostGresql, si votre distribution n'en
+  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 9.0 de PostGresql, si votre distribution n'en
 offre pas, installez-en une en la compilant. Lisez attentivement la notice sur postgresql.org pour migrer
 vos bases de données")?>
 </p>

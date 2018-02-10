@@ -683,6 +683,38 @@ function view_history_account(p_value, dossier,p_exercice)
 
 }
 /**
+ * @brief View the history of an account
+ * @param {type} p_value
+ * @param {type} dossier
+ * @returns {undefined}
+ */
+function view_history_anc_account(p_value, dossier,p_exercice)
+{
+    layer++;
+    var idbox = 'det' + layer;
+    var popup = {'id': idbox, 'cssclass': 'inner_box', 'html': loading(), 'drag': false};
+
+    var querystring={'gDossier':dossier,'op':'history_anc_account','po_id':p_value,'div':idbox,'l':layer,'act':'history','exercice':p_exercice};
+    waiting_box();
+
+    var action = new Ajax.Request(
+            "ajax_misc.php",
+            {
+                method: 'get',
+                parameters: querystring,
+                onFailure: error_box,
+                onSuccess: function (req, xml)
+                {
+                    remove_waiting_box();
+                    add_div(popup);
+                    $(idbox).innerHTML=req.responseText;
+                    $(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                }
+            }
+    );
+
+}
+/**
  * @brief Change the view of account history
  * @param {type} obj
  * @returns {Boolean}

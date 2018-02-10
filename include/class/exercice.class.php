@@ -26,7 +26,7 @@ require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 class Exercice
 {
-  function __construct(&$cn)
+  function __construct($cn)
   {
     $this->cn=$cn;
   }
@@ -50,7 +50,7 @@ class Exercice
    function select($name,$selected='',$js='')
    {
      $iselect=new ISelect($name);
-     $iselect->value=$this->cn->make_array('select distinct p_exercice,p_exercice from parm_periode order by 1');
+     $iselect->value=$this->cn->make_array('select distinct p_exercice,p_exercice from parm_periode order by 1 desc');
      $iselect->selected=$selected;
      $iselect->javascript=$js;
      return $iselect;

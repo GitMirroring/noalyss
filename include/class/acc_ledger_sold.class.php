@@ -1291,6 +1291,7 @@ EOF;
                 $Tva = new ITva_Popup($this->db);
                 $Tva->in_table = true;
                 $Tva->set_attribute('compute', $i);
+                $Tva->set_filter("sale");
 
                 $Tva->js = 'onblur="format_number(this);clean_tva(' . $i . ');compute_ledger(' . $i . ')"';
                 $Tva->value = $march_tva_id;

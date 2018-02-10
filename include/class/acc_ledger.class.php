@@ -45,6 +45,7 @@ require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 require_once NOALYSS_INCLUDE.'/database/jrn_def_sql.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_payment.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_history.class.php';
+//require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
 /** \file
@@ -2634,6 +2635,11 @@ class Acc_Ledger extends jrn_def_sql
         if ( empty($pa_ledger) ) {
             $pa_ledger=[$this->id];
         }
+        // if $pa_ledger == 0, it means we need to show all ledgers
+        if ( $pa_ledger == [0] ) {
+            $pa_ledger=Print_Ledger::available_ledger($p_from);
+        }
+        
         $alh_generic=new Acc_Ledger_History_Generic($this->db, $pa_ledger, $p_from, $p_to, "A");
         $alh_generic->get_rowSimple($trunc,$p_limit,$p_offset);
         $data=$alh_generic->get_data();

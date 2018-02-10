@@ -496,6 +496,8 @@ function popup_select_tva(obj)
             queryString += '&code=' + obj.jcode;
         if (obj.compute)
             queryString += '&compute=' + obj.compute;
+        if (obj.filter)
+            queryString += '&filter=' + obj.filter;
 
         var action = new Ajax.Request(
                 "ajax_misc.php",
@@ -2896,7 +2898,7 @@ function create_anchor_up()
 function init_scroll()
 {
     var up=new Element('div',{"class":"inner_box",
-            "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:25px;right:50px;text-align:center",
+            "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:95px;right:50px;text-align:center;font-size:20px",
             id:"go_up"
         });
         up.innerHTML=' <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>';
@@ -2904,7 +2906,7 @@ function init_scroll()
          window.onscroll=function () {
          if ( document.viewport.getScrollOffsets().top> 0) {
              if ($('go_up').visible() == false) {
-                $('go_up').setOpacity(0.80); 
+                $('go_up').setOpacity(0.45); 
                 $('go_up').show();
                 $('go_up').style.zIndex=99;
             }
@@ -3009,14 +3011,14 @@ function pin (object_id) {
     if ( aDraggableElement[object_id]) {
         aDraggableElement[object_id].destroy();
         aDraggableElement[object_id]=undefined;
-        $('pin_'+object_id).innerHTML="&#xf192;";
+        $('pin_'+object_id).innerHTML="&#xf047;";
     } else {
         aDraggableElement[object_id]=new Draggable(object_id, {starteffect: function ()
                 {
                     new Effect.Highlight(object_id, {scroll: window, queue: 'end'});
                 }}
             ); 
-        $('pin_'+object_id).innerHTML="&#xf047;";
+        $('pin_'+object_id).innerHTML="&#xe809;";
     }
 }
 /**
@@ -3394,3 +3396,115 @@ Periode.filter_exercice=function (p_table_id) {
         
     }
 };
+
+// keep track of progress bar
+var progressBar = [];
+// idx of progress bar        
+var progressIdx = 0;
+
+/**
+ * Start the progress bar 
+ * @param {string} p_taskid id to monitor
+ * @param {int} p_dossier
+ */
+function progress_bar_start(p_taskid,p_message)
+{
+    try {
+        progressIdx++;
+        // block the window
+        var message="Un instant svp";
+        if ( p_message) {
+            message=p_message;
+        }
+        add_div({id:"blocking"+progressIdx,cssclass:"smoke-base smoke-visible "});
+        
+        add_div({id:"message"+progressIdx,cssclass:"inner_box",style:"z-index:1000;position:fixed;top:30%;width:40%;left:30%"});
+        $("message"+progressIdx).update(message);
+        // Create a div
+        add_div({id: "progressDiv" + progressIdx, cssclass: "progressbar", html: '<span id="progressValue">0</span>'});
+        // Check status every sec.
+        progressBar[progressIdx] = setInterval(progress_bar_check.bind(null, progressIdx, p_taskid), 1000);
+    } catch (e) {
+        console.error(e.message);
+    }
+}
+
+/**
+ * Check every second the status 
+ * @param {integer} p_idx idx of progressbar
+ * @param {string} p_taskid  id to monitor
+ */
+function progress_bar_check(p_idx, p_taskid)
+{
+    try {
+
+        new Ajax.Request("ajax_misc.php", {
+            parameters: {gDossier: 0, task_id: p_taskid,op:"progressBar"},
+            method:"get",
+            onSuccess: function (req) {
+                try 
+                {
+                    var answer=req.responseText.evalJSON();
+                    var progress_div=$("progressDiv"+progressIdx);
+                    var a_child=progress_div.childNodes;
+                    var i=0;
+                    for (  i=0;i< a_child.length;i++) {
+                        if ( a_child[i].id="progressValue") {
+                            var progressValue = a_child[i];
+                        }
+                    }
+                    var progress = parseFloat(progressValue.innerHTML);
+                    if ( answer.value <= progress ) {
+                        return;
+                    }
+
+                    progressValue.innerHTML = answer.value;
+                    progressValue.setStyle("width:" + answer.value + "%");
+                    if (answer.value== 100) {
+                        clearInterval(progressBar[p_idx]);
+                        progressValue.innerHTML="Success";
+                        Effect.BlindUp("progressDiv"+p_idx,{duration:1.0,scaleContent:false})
+                        $("message"+p_idx).remove();
+                        $("blocking"+p_idx).remove();
+                        setTimeout(function() { $("progressDiv"+progressIdx).remove } , 1100);
+                    }
+                } catch (e) {
+                    clearInterval(progressBar[p_idx]);
+                    document.getElementById("progressValue").innerHTML=req.responseText;
+                    console.error(e.message);
+                }
+            }
+        });
+    } catch (e) {
+        clearInterval(progressBar[p_idx]);
+        console.error(e.message);
+    }
+}
+                                                
+/**
+ * In the user's setting  box, update the period list with the choosen exercice
+ * @param {int} p_dossier
+ */
+function updatePeriodePreference(p_dossier)
+{
+    waiting_box();
+    var exercice=$('exercice_setting').value;
+    new Ajax.Updater('setting_period',"ajax_misc.php",{method:"get",parameters:{ "op":"pref_exercice","gDossier":p_dossier,"exercice":exercice}});  
+    remove_waiting_box();
+}
+/**
+ * Update the from and to periode list when changing the exercice
+ * @param {int} p_dossier
+ * @param {string} p_exercice id of the exercice
+ * @param {type} p_periode_from id of the starting periode
+ * @param {type} p_periode_to id of the ending periode
+ * @param {type} p_last possible value = 1 to show last periode or 0 the first
+ */
+function updatePeriode(p_dossier,p_exercice,p_periode_from,p_periode_to,p_last)
+{
+    waiting_box();
+    var exercice=$(p_exercice).value;
+    new Ajax.Updater(p_periode_from,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_from,"type":"from","last":p_last}});
+    new Ajax.Updater(p_periode_to,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_to,"type":"to","last":p_last}});
+    remove_waiting_box();
+}

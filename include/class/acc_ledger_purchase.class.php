@@ -1262,6 +1262,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $Tva->js="onblur=\"format_number(this);onChange=clean_tva($i);compute_ledger($i)\"";
                 $Tva->in_table=true;
                 $Tva->set_attribute('compute',$i);
+                $Tva->set_filter("purchase");
                 $Tva->value=$march_tva_id;
                 $array[$i]['tva']=$Tva->input("e_march$i"."_tva_id");
 

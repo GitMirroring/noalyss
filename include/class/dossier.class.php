@@ -281,7 +281,7 @@ class Dossier
 
     static function get_version($p_cn)
     {
-        return $p_cn->get_value('select val from version');
+        return $p_cn->get_value('select max(val) from version');
     }
 
     static function connect()

@@ -77,6 +77,7 @@ class Manage_Table_SQL
     protected $json_parameter; //!< Default parameter to add (gDossier...)
     protected $aerror; //!< Array containing the error of the input data
     protected $col_sort; //!< when inserting, it is the column to sort,-1 to disable it and append only
+    protected $a_info; //!< Array with the infotip
 
     const UPDATABLE=1;
     const VISIBLE=2;
@@ -133,6 +134,18 @@ class Manage_Table_SQL
         return $this->col_sort;
     }
     /**
+     * Set the info for a column, use Icon_Action::infobulle
+     * the message are in message_javascript.php
+     * @param string $p_key Column name
+     * @param integer $p_comment comment idx
+     * 
+     * @see message_javascript.php
+     * @see Icon_Action::infobulle()
+     */
+    function set_col_tips($p_key,$p_comment) {
+        $this->a_info[$p_key]=$p_comment;
+    }
+    /**
      * When adding an element ,we place it thanks the DOM Attribute sort_value
      * set it to -1 if you want one to append
      * @param numeric $pn_num
@@ -179,7 +192,13 @@ class Manage_Table_SQL
     {
         $this->aerror[$p_col]=$p_message;
     }
-
+    /**
+     * returns the nb of errors found
+     */
+    function count_error()
+    {
+        return count($this->aerror);
+    }
     /**
      * @brief retrieve the error message
      * @param $p_col column name
@@ -195,8 +214,14 @@ class Manage_Table_SQL
 
     /**
      * This function can be overrided to check the data before 
-     * inserting , updating or removing, above an example of an overidden check
-     * @see set_error get_error
+     * inserting , updating or removing, above an example of an overidden check.
+     * 
+     * Usually , you get the row of the table (get_table) , you check the conditions
+     * if an condition is not met then you set the error with $this->set_error 
+     * 
+     * if there are error (returns false otherwise true
+     * 
+     * @see set_error get_error count_error
      * @return boolean
      * @code 
 function check()
@@ -752,7 +777,14 @@ function check()
             }
             else
             {
-                echo td($p_row[$v]);
+                if ( $this->get_col_type($v)=="select")
+                {
+                    $idx=$p_row[$v];
+                   echo td($this->a_select[$v][$idx]["label"]);
+                    
+                }else {
+                    echo td($p_row[$v]);
+                }
             }
         }
         if ($this->icon_mod=="right")
@@ -785,7 +817,12 @@ function check()
             if ($this->get_property_visible($key)===TRUE)
             {
                 // Label
-                echo "<td> {$label} {$error}</td>";
+                $info="";
+                if ( isset($this->a_info[$key])) {
+                    $info=Icon_Action::infobulle($this->a_info[$key]);
+                }
+                // Label
+                echo "<td> {$label} {$info} {$error}</td>";
 
                 if ($this->get_property_updatable($key)==TRUE)
                 {

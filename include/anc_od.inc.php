@@ -51,9 +51,8 @@ if ( ! $m )
 // show the left menu
 //----------------------------------------------------------------------
 echo '
-<div class="content" >
 <div class="menu2">
-<table>
+<table clsas="mtitle">
 <tr>
 <td  class="mtitle" >
 <A class="mtitle" HREF="?ac='.$_REQUEST['ac'].'&new&'.$str_dossier.'"> '._('Nouveau').' </A>
@@ -63,7 +62,6 @@ echo '
 </td>
 </tr>
 </table>
-</div>
 </div>
 ';
 

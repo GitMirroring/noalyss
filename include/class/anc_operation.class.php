@@ -213,32 +213,33 @@ class Anc_Operation
             $pa_id_cond= "pa_id=".$this->pa_id." and";
 	$sql="
         
-	select oa_id,
-	po_name,
-	oa_description,
-	po_description,
-	oa_debit,
-	(case when jr_date is not null then to_char(jr_date,'DD.MM.YYYY') else to_char(oa_date,'DD.MM.YYYY') end )  as oa_date,
-	oa_amount,
-	oa_group,
-	j_id ,
-	jr_internal,
-	jr_id,
-	coalesce(jr_comment,b.oa_description) as jr_comment,
-	case when j_poste is null and b.f_id is not null then
-        (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=".ATTR_DEF_ACCOUNT.")
-            when j_poste is not null then
-            j_poste
-            end as j_poste
-        ,
-	coalesce(jrnx.f_id,b.f_id) as f_id,
-        case when jrnx.f_id is not null then 
-		 (select ad_value from fiche_Detail where f_id=jrnx.f_id and ad_id=23) 
-		 when b.f_id is not null then
-		 (select ad_value from fiche_Detail where f_id=b.f_id and ad_id=23)
-	end
-		 as qcode,
-        jr_pj_number
+	select B.po_id as po_id,
+            oa_id,
+            po_name,
+            oa_description,
+            po_description,
+            oa_debit,
+            (case when jr_date is not null then to_char(jr_date,'DD.MM.YYYY') else to_char(oa_date,'DD.MM.YYYY') end )  as oa_date,
+            oa_amount,
+            oa_group,
+            j_id ,
+            jr_internal,
+            jr_id,
+            coalesce(jr_comment,b.oa_description) as jr_comment,
+            case when j_poste is null and b.f_id is not null then
+            (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=".ATTR_DEF_ACCOUNT.")
+                when j_poste is not null then
+                j_poste
+                end as j_poste
+            ,
+            coalesce(jrnx.f_id,b.f_id) as f_id,
+            case when jrnx.f_id is not null then 
+                     (select ad_value from fiche_Detail where f_id=jrnx.f_id and ad_id=23) 
+                     when b.f_id is not null then
+                     (select ad_value from fiche_Detail where f_id=b.f_id and ad_id=23)
+            end
+                     as qcode,
+            jr_pj_number
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
 	left join jrn on  (j_grpt=jr_grpt_id)
@@ -711,11 +712,12 @@ class Anc_Operation
         {
             $tot=bcadd($tot,$a_Anc_Operation[$i]->oa_amount);
         }
-        if ( $tot != $p_nd && count($a_Anc_Operation) > 0 )
-        {
-            $diff=  bcsub($tot, $p_nd);
-            $a_Anc_Operation[0]->oa_amount=bcsub($a_Anc_Operation[0]->oa_amount,$diff);
-        }
+// utilité ???
+//        if ( $tot != $p_nd && count($a_Anc_Operation) > 0 )
+//        {
+//            $diff=  bcsub($tot, $p_nd);
+//            $a_Anc_Operation[0]->oa_amount=bcsub($a_Anc_Operation[0]->oa_amount,$diff);
+//        }
         for ($i=0;$i<$nb_op;$i++)
         {
             $a_Anc_Operation[$i]->add();

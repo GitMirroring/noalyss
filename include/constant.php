@@ -88,7 +88,7 @@ define ('SMALLX','&#x2D5D;');
 define ('BUTTONADD',"&#10010;");
 
 
-define ('SVNINFO',6919+8);
+define ('SVNINFO',7000);
 if ( ! defined  ('DEBUG')) {
     define ("DEBUG",false);
 }
@@ -108,9 +108,9 @@ if ( !defined("SITE_UPDATE_PLUGIN"))
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
 }
-define ("DBVERSION",125);
+define ("DBVERSION",128);
 define ("MONO_DATABASE",25);
-define ("DBVERSIONREPO",17);
+define ("DBVERSIONREPO",18);
 define ('NOTFOUND','--not found--');
 define ("MAX_COMPTE",4);
 define ('MAX_ARTICLE',5);
@@ -309,5 +309,5 @@ define ('EMAIL_LIMIT',1002);
 define ('EXC_PARAM_VALUE',1005);
 define ('EXC_PARAM_TYPE',1006);
 define ('EXC_DUPLICATE',1200);
-define ("PINDG","&#xf047;");
-define ("UNPINDG","&#xf192;");
+define ("UNPINDG","&#xf047;");
+define ("PINDG","&#xe809;");

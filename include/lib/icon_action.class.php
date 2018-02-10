@@ -126,8 +126,8 @@ class Icon_Action
     static function close($p_div)
     {
         $r='';
-        $r.=sprintf('<A class="icon" onclick="removeDiv(\'%s\');%s">&#10761;</A>',
-                $p_div, $p_div);
+        $r.=sprintf('<A class="icon" onclick="removeDiv(\'%s\')">&#10761;</A>',
+                $p_div);
         return $r;
     }
 
@@ -153,7 +153,7 @@ class Icon_Action
     static function zoom($p_div, $p_javascript)
     {
         $r=sprintf('<span  id="span_%s" class="icon" onclick="%s">
-                &#11036;</span>', $p_div, $p_javascript);
+                &#xf08e;</span>', $p_div, $p_javascript);
         return $r;
     }
 

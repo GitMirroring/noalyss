@@ -24,10 +24,11 @@ require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 
-
+$http=new HttpInput();
 /*
  * Check if the user is still connected
  */
@@ -66,8 +67,13 @@ $g_user->check_dossier(Dossier::id());
 if ( basename($_GET['op']) == 'history' )
   {
     $href=dossier::get();
+    
+    $exercice=$http->get("exercice","number",0);
+    
     /* current year  */
-    $exercice=$g_user->get_exercice();
+    if ($exercice == 0 ) {
+        $exercice=$g_user->get_exercice();
+    }
 
     /* get date limit */
     $periode=new Periode($cn);

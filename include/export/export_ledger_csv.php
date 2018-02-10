@@ -32,6 +32,7 @@ include_once NOALYSS_INCLUDE."/lib/ac_common.php";
 require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
+require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier=dossier::id();
 
@@ -83,45 +84,12 @@ global $g_user;
  */
 if ($get_jrn==0)
 {
-    // Find periode 
-    $periode=new Periode($cn, $get_from_periode);
-    $exercice=$periode->get_exercice($get_from_periode);
-
-    if ($g_user->Admin()==0&&$g_user->is_local_admin()==0&&$g_user->get_status_security_ledger()
-            ==1)
-    {
-        $sql="select jrn_def_id 
-                 from jrn_def join jrn_type on jrn_def_type=jrn_type_id
-                 join user_sec_jrn on uj_jrn_id=jrn_def_id
-                 where
-                 uj_login=$1
-                 and uj_priv in ('R','W')
-                         order by jrn_def_name
-                 and ( jrn_enable=1 
-                        or 
-                        exists (select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$2))
-                 ";
-        $a_jrn=$cn->get_array($sql, array($g_user->login, $exercice));
-    }
-    else
-    {
-        $a_jrn=$cn->get_array("select jrn_def_id
-                                 from jrn_def join jrn_type on jrn_def_type=jrn_type_id
-                                 where
-                                 jrn_enable=1 or exists(select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$1))
-                                                         order by jrn_def_name
-                                                         ", [$exercice]);
-    }
-    $a=[];
-    $nb_jrn=count($a_jrn);
-    for ($i=0;$i< $nb_jrn;$i++){
-        $a[]=$a_jrn[$i]['jrn_def_id'];
-    }
-    $a_jrn=$a;
+    // find out all the available ledgers for the current user
+    $a_jrn=Print_Ledger::available_ledger($get_from_periode);
 }
 else
 {
-    $a_jrn=$Jrn->id;
+    $a_jrn=$get_jrn;
 }
 $Jrn=new Acc_Ledger($cn, $get_jrn);
 
@@ -134,7 +102,7 @@ $jrn_type=$Jrn->get_type();
 //  ODS or all ledgers becomes A
 //  Extended but no FIN becomes L
 // 
-if ($get_option=='D'||($jrn_type=='ODS'||$Jrn->id==0)&&$get_option=="E")
+if ( $get_option=="E")
 {
     if ($jrn_type=='FIN')
     {
@@ -198,9 +166,15 @@ if ($get_option=='D'||($jrn_type=='ODS'||$Jrn->id==0)&&$get_option=="E")
 //-----------------------------------------------------------------------------
 if ($get_option=='A')
 {
-
-    $acc_ledger_history=new Acc_Ledger_History_Generic($cn, $a_jrn,
+    if ($get_jrn == 0 )
+    {
+        $acc_ledger_history=new Acc_Ledger_History_Generic($cn, $a_jrn,
             $get_from_periode, $get_to_periode, 'A');
+    } else {
+        $acc_ledger_history=new Acc_Ledger_History_Generic($cn, array($a_jrn),
+            $get_from_periode, $get_to_periode, 'A');
+        
+    }
     $acc_ledger_history->export_csv();
     exit;
 }
@@ -209,7 +183,7 @@ if ($get_option=='A')
 // for Misc the amount 
 // For Financial only the tiers and the sign of the amount
 //-----------------------------------------------------------------------------
-if ($get_option=="L")
+if ($get_option=="L" || $get_option == 'D')
 {
 
 //-----------------------------------------------------
