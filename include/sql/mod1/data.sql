@@ -1,4 +1,4 @@
-set search_path = public, comptaproc,pg_catalog ;
+set search_path = public,comptaproc,pg_catalog ;
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -2059,8 +2059,6 @@ SELECT pg_catalog.setval('user_filter_id_seq', 1, false);
 
 
 
-INSERT INTO user_local_pref (user_id, parameter_type, parameter_value) VALUES ('1', 'MINIREPORT', '0');
-INSERT INTO user_local_pref (user_id, parameter_type, parameter_value) VALUES ('1', 'PERIODE', '79');
 
 
 
@@ -2084,8 +2082,8 @@ SELECT pg_catalog.setval('user_sec_action_profile_ua_id_seq', 6, true);
 
 
 INSERT INTO version (val, v_description, v_date) VALUES (126, NULL, NULL);
-INSERT INTO version (val, v_description, v_date) VALUES (127, 'Add filter for search, inactive tag or ledger, type of operation, security', '2018-02-10 22:03:11.229137');
-INSERT INTO version (val, v_description, v_date) VALUES (128, 'Add a view to manage VAT', '2018-02-10 22:03:11.584111');
+INSERT INTO version (val, v_description, v_date) VALUES (127, 'Add filter for search, inactive tag or ledger, type of operation, security', '2018-02-10 22:35:44.080193');
+INSERT INTO version (val, v_description, v_date) VALUES (128, 'Add a view to manage VAT', '2018-02-10 22:35:45.034297');
 
 
 

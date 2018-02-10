@@ -1,4 +1,4 @@
-set search_path = public, comptaproc,pg_catalog ;
+set search_path = public,comptaproc,pg_catalog ;
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -38,32 +38,34 @@ INSERT INTO document_type (dt_id, dt_value, dt_prefix) VALUES (22, 'Réception m
 
 
 
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (1, 'Vente Service', '700');
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (2, 'Achat Marchandises', '604');
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (3, 'Achat Service et biens divers', '61');
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (5, 'Prêt > a un an', '17');
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (6, 'Prêt < a un an', '430');
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (8, 'Fournisseurs', '440');
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (9, 'Clients', '400');
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (10, 'Salaire Administrateur', '6200');
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (11, 'Salaire Ouvrier', '6203');
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (12, 'Salaire Employé', '6202');
 INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (13, 'Dépenses non admises', '674');
 INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (14, 'Administration des Finances', NULL);
 INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (15, 'Autres fiches', NULL);
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (7, 'Matériel à amortir', '2400');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (5, 'Prêt > a un an', '27');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (8, 'Fournisseurs', '400');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (6, 'Prêt < a un an', NULL);
 INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (16, 'Contact', NULL);
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (1, 'Vente Service', '706');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (2, 'Achat Marchandises', '603');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (9, 'Clients', '410');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (10, 'Salaire Administrateur', '644');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (11, 'Salaire Ouvrier', '641');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (12, 'Salaire Employé', '641');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (7, 'Matériel à amortir, immobilisation corporelle', '21');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (3, 'Achat Service et biens divers', '61');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (17, 'Escomptes accordées', '66');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (18, 'Produits Financiers', '76');
 INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (25, 'Compte Salarié / Administrateur', NULL);
-INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (4, 'Trésorerie', '5500');
+INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (4, 'Trésorerie', '51');
 INSERT INTO fiche_def_ref (frd_id, frd_text, frd_class_base) VALUES (26, 'Projet', NULL);
 
 
 
 INSERT INTO fiche_def (fd_id, fd_class_base, fd_label, fd_create_account, frd_id, fd_description) VALUES (500000, NULL, 'Stock', false, 15, NULL);
 INSERT INTO fiche_def (fd_id, fd_class_base, fd_label, fd_create_account, frd_id, fd_description) VALUES (1, '604', 'Marchandises', true, 2, 'Achats de marchandises');
-INSERT INTO fiche_def (fd_id, fd_class_base, fd_label, fd_create_account, frd_id, fd_description) VALUES (2, '400', 'Client', true, 9, 'Catégorie qui contient la liste des clients');
-INSERT INTO fiche_def (fd_id, fd_class_base, fd_label, fd_create_account, frd_id, fd_description) VALUES (3, '5500', 'Banque', true, 4, 'Catégorie qui contient la liste des comptes financiers: banque, caisse,...');
-INSERT INTO fiche_def (fd_id, fd_class_base, fd_label, fd_create_account, frd_id, fd_description) VALUES (4, '440', 'Fournisseur', true, 8, 'Catégorie qui contient la liste des fournisseurs');
+INSERT INTO fiche_def (fd_id, fd_class_base, fd_label, fd_create_account, frd_id, fd_description) VALUES (2, '410', 'Client', true, 9, 'Catégorie qui contient la liste des clients');
+INSERT INTO fiche_def (fd_id, fd_class_base, fd_label, fd_create_account, frd_id, fd_description) VALUES (3, '51', 'Banque', true, 4, 'Catégorie qui contient la liste des comptes financiers: banque, caisse,...');
+INSERT INTO fiche_def (fd_id, fd_class_base, fd_label, fd_create_account, frd_id, fd_description) VALUES (4, '400', 'Fournisseur', true, 8, 'Catégorie qui contient la liste des fournisseurs');
 INSERT INTO fiche_def (fd_id, fd_class_base, fd_label, fd_create_account, frd_id, fd_description) VALUES (5, '61', 'Services & Biens Divers', true, 3, 'Catégorie qui contient la liste des charges diverses');
 INSERT INTO fiche_def (fd_id, fd_class_base, fd_label, fd_create_account, frd_id, fd_description) VALUES (6, '700', 'Vente', true, 1, 'Catégorie qui contient la liste des prestations, marchandises... que l''on vend ');
 
@@ -99,17 +101,17 @@ SELECT pg_catalog.setval('action_gestion_comment_agc_id_seq', 1, false);
 
 
 
-INSERT INTO jrn_type (jrn_type_id, jrn_desc) VALUES ('FIN', 'Financier');
 INSERT INTO jrn_type (jrn_type_id, jrn_desc) VALUES ('VEN', 'Vente');
 INSERT INTO jrn_type (jrn_type_id, jrn_desc) VALUES ('ACH', 'Achat');
 INSERT INTO jrn_type (jrn_type_id, jrn_desc) VALUES ('ODS', 'Opérations Diverses');
+INSERT INTO jrn_type (jrn_type_id, jrn_desc) VALUES ('FIN', 'Banque');
 
 
 
-INSERT INTO jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable) VALUES (3, 'Achat', '6*', '4*', '5', '4', 1, 3, true, 'échéance', 'ACH', 'A01', 'ACH', NULL, NULL, 'Concerne tous les achats, factures reçues, notes de crédit reçues et notes de frais', 1);
-INSERT INTO jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable) VALUES (1, 'Financier', '5* ', '5*', '3,2,4', '3,2,4', 5, 5, false, NULL, 'FIN', 'F01', 'FIN', NULL, NULL, 'Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)', 1);
+INSERT INTO jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable) VALUES (3, 'Achat', '', '', '5', '4', 10, 10, true, '''echeance''', 'ACH', 'A01', 'ACH', NULL, NULL, 'Concerne tous les achats, factures reçues, notes de crédit reçues et notes de frais', 1);
+INSERT INTO jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable) VALUES (1, 'Financier', '', '', '3,2,4,5', '3,2,4,5', 10, 10, true, '''echeance''', 'FIN', 'F01', 'FIN', NULL, NULL, 'Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)', 1);
 INSERT INTO jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable) VALUES (4, 'Opération Diverses', NULL, NULL, NULL, NULL, 5, 5, false, NULL, 'ODS', 'O01', 'ODS', NULL, NULL, 'Concerne toutes les opérations comme les amortissements, les comptes TVA, ...', 1);
-INSERT INTO jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable) VALUES (2, 'Vente', '4*', '7*', '2', '6', 2, 1, true, 'échéance', 'VEN', 'V01', 'VEN', NULL, NULL, 'Concerne toutes les ventes, notes de crédit envoyées', 1);
+INSERT INTO jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable) VALUES (2, 'Vente', '', '', '2', '6', 10, 10, true, '''echeance''', 'VEN', 'V01', 'VEN', NULL, NULL, 'Concerne toutes les ventes, notes de crédit envoyées', 1);
 
 
 
@@ -150,6 +152,7 @@ SELECT pg_catalog.setval('action_tags_at_id_seq', 1, false);
 
 
 
+INSERT INTO attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra) VALUES (25, 'Société', 'card', '22', '[sql] frd_id in (4,8,9,14)');
 INSERT INTO attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra) VALUES (8, 'Durée Amortissement', 'numeric', '6', '2');
 INSERT INTO attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra) VALUES (11, 'Montant initial', 'numeric', '6', '2');
 INSERT INTO attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra) VALUES (21, 'TVA non déductible', 'numeric', '6', '2');
@@ -184,7 +187,6 @@ INSERT INTO attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra) VALUES (53, 'C
 INSERT INTO attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra) VALUES (5, 'Poste Comptable', 'poste', '17', NULL);
 INSERT INTO attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra) VALUES (33, 'Date Fin', 'date', '8', NULL);
 INSERT INTO attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra) VALUES (19, 'Gestion stock', 'card', '22', '[sql] fd_id = 500000 ');
-INSERT INTO attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra) VALUES (25, 'Société', 'card', '22', '[sql] frd_id in (4,8,9,14)');
 
 
 
@@ -278,6 +280,10 @@ INSERT INTO attr_min (frd_id, ad_id) VALUES (16, 25);
 INSERT INTO attr_min (frd_id, ad_id) VALUES (16, 26);
 INSERT INTO attr_min (frd_id, ad_id) VALUES (16, 27);
 INSERT INTO attr_min (frd_id, ad_id) VALUES (16, 23);
+INSERT INTO attr_min (frd_id, ad_id) VALUES (17, 1);
+INSERT INTO attr_min (frd_id, ad_id) VALUES (17, 9);
+INSERT INTO attr_min (frd_id, ad_id) VALUES (18, 1);
+INSERT INTO attr_min (frd_id, ad_id) VALUES (18, 9);
 INSERT INTO attr_min (frd_id, ad_id) VALUES (25, 1);
 INSERT INTO attr_min (frd_id, ad_id) VALUES (25, 4);
 INSERT INTO attr_min (frd_id, ad_id) VALUES (25, 3);
@@ -292,7 +298,8 @@ INSERT INTO attr_min (frd_id, ad_id) VALUES (26, 9);
 
 
 
-INSERT INTO bilan (b_id, b_name, b_file_template, b_file_form, b_type) VALUES (1, 'Bilan Belge complet', 'document/fr_be/bnb.rtf', 'document/fr_be/bnb.form', 'RTF');
+INSERT INTO bilan (b_id, b_name, b_file_template, b_file_form, b_type) VALUES (5, 'Comptes de résultat', 'document/fr_fr/fr_plan_abrege_perso_cr1000.rtf', 'document/fr_fr/fr_plan_abrege_perso_cr1000.form', 'rtf');
+INSERT INTO bilan (b_id, b_name, b_file_template, b_file_form, b_type) VALUES (1, 'Bilan français', 'document/fr_fr/fr_plan_abrege_perso_bil10000.ods', 'document/fr_fr/fr_plan_abrege_perso_bil10000.form', 'ods');
 INSERT INTO bilan (b_id, b_name, b_file_template, b_file_form, b_type) VALUES (9, 'ASBL', 'document/fr_be/bnb-asbl.rtf', 'document/fr_be/bnb-asbl.form', 'RTF');
 
 
@@ -320,523 +327,163 @@ SELECT pg_catalog.setval('bud_detail_periode_bdp_id_seq', 1, false);
 
 
 
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('550', 'Banque 1', '55', 'ACT', 715, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('440', 'Fournisseurs', '44', 'PAS', 813, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('539', 'Réductions de valeur actées', '53', 'ACT', 518, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('794', 'Intervention d''associés (ou du propriétaire) dans la perte', '79', 'PRO', 519, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4000001', 'Client 1', '400', 'ACT', 527, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4000002', 'Client 2', '400', 'ACT', 528, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4000003', 'Client 3', '400', 'ACT', 529, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6040001', 'Electricité', '604', 'CHA', 530, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6040002', 'Loyer', '604', 'CHA', 531, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('55000002', 'Banque 1', '5500', 'ACT', 532, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('55000003', 'Banque 2', '5500', 'ACT', 533, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4400001', 'Fournisseur 1', '440', 'PAS', 534, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4400002', 'Fournisseur 2', '440', 'PAS', 535, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4400003', 'Fournisseur 4', '440', 'PAS', 536, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('610001', 'Electricité', '61', 'CHA', 537, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('610002', 'Loyer', '61', 'CHA', 538, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('610003', 'Assurance', '61', 'CHA', 539, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('610004', 'Matériel bureau', '61', 'CHA', 540, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7000002', 'Marchandise A', '700', 'PRO', 541, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7000001', 'Prestation', '700', 'PRO', 542, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7000003', 'Déplacement', '700', 'PRO', 543, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('101', 'Capital non appelé', '10', 'PASINV', 544, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6190', 'TVA récupérable par l''impôt', '61', 'CHA', 545, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6740', 'Dépense non admise', '67', 'CHA', 546, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('100', 'Capital souscrit', '10', 'PAS', 548, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1311', 'Autres réserves indisponibles', '131', 'PAS', 549, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('132', ' Réserves immunisées', '13', 'PAS', 550, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6711', 'Suppléments d''impôts estimés', '671', 'CHA', 551, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6712', 'Provisions fiscales constituées', '671', 'CHA', 552, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('672', 'Impôts étrangers sur le résultat de l''exercice', '67', 'CHA', 553, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('673', 'Impôts étrangers sur le résultat d''exercice antérieures', '67', 'CHA', 554, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('690', 'Perte reportée de l''exercice précédent', '69', 'CHA', 557, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('691', 'Dotation à la réserve légale', '69', 'CHA', 558, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('692', 'Dotation aux autres réserves', '69', 'CHA', 559, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('693', 'Bénéfice à reporter', '69', 'CHA', 560, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('694', 'Rémunération du capital', '69', 'CHA', 561, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('695', 'Administrateurs ou gérants', '69', 'CHA', 562, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('696', 'Autres allocataires', '69', 'CHA', 563, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('700', 'Ventes et prestations de services', '70', 'PRO', 565, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('701', 'Ventes et prestations de services', '70', 'PRO', 566, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('702', 'Ventes et prestations de services', '70', 'PRO', 567, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('703', 'Ventes et prestations de services', '70', 'PRO', 568, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('704', 'Ventes et prestations de services', '70', 'PRO', 569, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('706', 'Ventes et prestations de services', '70', 'PRO', 570, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('707', 'Ventes et prestations de services', '70', 'PRO', 571, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('709', 'Remises, ristournes et rabais accordés(-)', '70', 'PROINV', 572, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('712', 'des en-cours de fabrication', '71', 'PRO', 574, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('713', 'des produits finis', '71', 'PRO', 575, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('715', 'des immeubles construits destinés à la vente', '71', 'PRO', 576, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('717', ' des commandes  en cours d''éxécution', '71', 'PRO', 577, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7170', 'Valeur d''acquisition', '717', 'PRO', 578, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7171', 'Bénéfice pris en compte', '717', 'PRO', 579, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('740', 'Subsides d'' exploitation  et montants compensatoires', '74', 'PRO', 582, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('741', 'Plus-values sur réalisation courantes d'' immobilisations corporelles', '74', 'PRO', 583, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('742', 'Plus-values sur réalisations de créances commerciales', '74', 'PRO', 584, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('743', 'Produits d''exploitations divers', '74', 'PRO', 585, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('744', 'Produits d''exploitations divers', '74', 'PRO', 586, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('745', 'Produits d''exploitations divers', '74', 'PRO', 587, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('746', 'Produits d''exploitations divers', '74', 'PRO', 588, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('747', 'Produits d''exploitations divers', '74', 'PRO', 589, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('748', 'Produits d''exploitations divers', '74', 'PRO', 590, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('750', 'Produits sur immobilisations financières', '75', 'PRO', 592, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('751', 'Produits des actifs circulants', '75', 'PRO', 593, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('752', 'Plus-value sur réalisations d''actis circulants', '75', 'PRO', 594, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('753', 'Subsides en capital et intérêts', '75', 'PRO', 595, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('754', 'Différences de change', '75', 'PRO', 596, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('755', 'Ecarts de conversion des devises', '75', 'PRO', 597, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('221', 'Construction', '22', 'ACT', 598, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('756', 'Produits financiers divers', '75', 'PRO', 599, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('757', 'Produits financiers divers', '75', 'PRO', 600, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('758', 'Produits financiers divers', '75', 'PRO', 601, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('759', 'Produits financiers divers', '75', 'PRO', 602, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('760', 'Reprise d''amortissements et de réductions de valeur', '76', 'PRO', 604, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7601', 'sur immobilisations corporelles', '760', 'PRO', 605, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7602', 'sur immobilisations incorporelles', '760', 'PRO', 606, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('761', 'Reprises de réductions de valeur sur immobilisations financières', '76', 'PRO', 607, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('762', 'Reprises de provisions pour risques et charges exceptionnels', '76', 'PRO', 608, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('763', 'Plus-value sur réalisation d''actifs immobilisé', '76', 'PRO', 609, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('764', 'Autres produits exceptionnels', '76', 'PRO', 610, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('765', 'Autres produits exceptionnels', '76', 'PRO', 611, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('766', 'Autres produits exceptionnels', '76', 'PRO', 612, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('767', 'Autres produits exceptionnels', '76', 'PRO', 613, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('768', 'Autres produits exceptionnels', '76', 'PRO', 614, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('769', 'Autres produits exceptionnels', '76', 'PRO', 615, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('771', 'impôts belges sur le résultat', '77', 'PRO', 617, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7710', 'Régularisations d''impôts dus ou versé', '771', 'PRO', 618, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7711', 'Régularisations d''impôts estimés', '771', 'PRO', 619, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7712', 'Reprises de provisions fiscales', '771', 'PRO', 620, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('773', 'Impôts étrangers sur le résultats', '77', 'PRO', 621, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('790', 'Bénéfice reporté de l''exercice précédent', '79', 'PRO', 623, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('791', 'Prélévement sur le capital et les primes d''émission', '79', 'PRO', 624, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('792', 'Prélévement sur les réserves', '79', 'PRO', 625, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('793', 'Perte à reporter', '79', 'PRO', 626, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6301', 'Dotations aux amortissements sur immobilisations incorporelles', '630', 'CHA', 627, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6302', 'Dotations aux amortissements sur immobilisations corporelles', '630', 'CHA', 628, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6308', 'Dotations aux réductions de valeur sur immobilisations incorporelles', '630', 'CHA', 629, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6309', 'Dotations aux réductions de valeur sur immobilisations corporelles', '630', 'CHA', 630, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('631', 'Réductions de valeur sur stocks', '63', 'CHA', 631, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6310', 'Dotations', '631', 'CHA', 632, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6311', 'Reprises(-)', '631', 'CHAINV', 633, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('632', 'Réductions de valeur sur commande en cours d''éxécution', '63', 'CHA', 634, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6320', 'Dotations', '632', 'CHA', 635, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6321', 'Reprises(-)', '632', 'CHAINV', 636, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('633', 'Réductions de valeurs sur créances commerciales à plus d''un an', '63', 'CHA', 637, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6330', 'Dotations', '633', 'CHA', 638, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6331', 'Reprises(-)', '633', 'CHAINV', 639, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('634', 'Réductions de valeur sur créances commerciales à un an au plus', '63', 'CHA', 640, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6340', 'Dotations', '634', 'CHA', 641, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6341', 'Reprise', '634', 'CHAINV', 642, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('635', 'Provisions pour pensions et obligations similaires', '63', 'CHA', 643, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6350', 'Dotations', '635', 'CHA', 644, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6351', 'Utilisation et reprises', '635', 'CHAINV', 645, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('636', 'Provisions pour grosses réparations et gros entretien', '63', 'CHA', 646, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6360', 'Dotations', '636', 'CHA', 647, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6361', 'Reprises(-)', '636', 'CHAINV', 648, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('637', 'Provisions pour autres risques et charges', '63', 'CHA', 649, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6370', 'Dotations', '637', 'CHA', 650, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6371', 'Reprises(-)', '637', 'CHAINV', 651, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('640', 'Charges fiscales d''exploitation', '64', 'CHA', 653, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('641', 'Moins-values sur réalisations courantes d''immobilisations corporelles', '64', 'CHA', 654, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('642', 'Moins-value sur réalisation de créances commerciales', '64', 'CHA', 655, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('643', 'Charges d''exploitations', '64', 'CHA', 656, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('644', 'Charges d''exploitations', '64', 'CHA', 657, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('645', 'Charges d''exploitations', '64', 'CHA', 658, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('646', 'Charges d''exploitations', '64', 'CHA', 659, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('647', 'Charges d''exploitations', '64', 'CHA', 660, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('648', 'Charges d''exploitations', '64', 'CHA', 661, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('649', 'Charges d''exploitation portées à l''actif au titre de frais de restructuration(-)', '64', 'CHAINV', 662, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('650', 'Charges des dettes', '65', 'CHA', 664, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6500', 'Intérêts, commmissions et frais afférents aux dettes', '650', 'CHA', 665, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6501', 'Amortissements des frais d''émissions d''emrunts et des primes de remboursement', '650', 'CHA', 666, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6502', 'Autres charges des dettes', '650', 'CHA', 667, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6503', 'Intérêts intercalaires portés à l''actif(-)', '650', 'CHA', 668, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('651', 'Réductions de valeur sur actifs circulants', '65', 'CHA', 669, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6510', 'Dotations', '651', 'CHA', 670, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6511', 'Reprises(-)', '651', 'CHAINV', 671, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('652', 'Moins-value sur réalisation d''actifs circulants', '65', 'CHA', 672, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('653', 'Charges d''escompte de créances', '65', 'CHA', 673, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('654', 'Différences de changes', '65', 'CHA', 674, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('655', 'Ecarts de conversion des devises', '65', 'CHA', 675, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('656', 'Charges financières diverses', '65', 'CHA', 676, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('657', 'Charges financières diverses', '65', 'CHA', 677, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('658', 'Charges financières diverses', '65', 'CHA', 678, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('659', 'Charges financières diverses', '65', 'CHA', 679, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('660', 'Amortissements et réductions de valeur exceptionnels (dotations)', '66', 'CHA', 681, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6600', 'sur frais d''établissement', '660', 'CHA', 682, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6601', 'sur immobilisations incorporelles', '660', 'CHA', 683, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6602', 'sur immobilisations corporelles', '660', 'CHA', 684, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('661', 'Réductions de valeur sur immobilisations financières (dotations)', '66', 'CHA', 685, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('662', 'Provisions pour risques et charges exceptionnels', '66', 'CHA', 686, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('663', 'Moins-values sur réalisations d''actifs immobilisés', '66', 'CHA', 687, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('664', 'Autres charges exceptionnelles', '66', 'CHA', 688, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('665', 'Autres charges exceptionnelles', '66', 'CHA', 689, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('666', 'Autres charges exceptionnelles', '66', 'CHA', 690, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('667', 'Autres charges exceptionnelles', '66', 'CHA', 691, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('668', 'Autres charges exceptionnelles', '66', 'CHA', 692, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('669', ' Charges exceptionnelles portées à l''actif au titre de frais de restructuration', '66', 'CHA', 693, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('670', 'Impôts belge sur le résultat de l''exercice', '67', 'CHA', 695, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6700', 'Impôts et précomptes dus ou versés', '670', 'CHA', 696, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6701', 'Excédents de versement d''impôts et de précomptes portés à l''actifs (-)', '670', 'CHAINV', 697, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6702', 'Charges fiscales estimées', '670', 'CHA', 698, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('671', 'Impôts belges sur le résultats d''exercices antérieures', '67', 'CHA', 699, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6710', 'Suppléments d''impôt dus ou versés', '671', 'CHA', 700, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('510', 'Valeur d''acquisition', '51', 'ACT', 703, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('511', 'Montant non appelés', '51', 'ACT', 704, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('519', 'Réductions de valeur actées', '51', 'ACT', 705, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('520', 'Valeur d''acquisition', '52', 'ACT', 707, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('529', 'Réductions de valeur actées', '52', 'ACT', 708, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('530', 'de plus d''un an', '53', 'ACT', 710, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('531', 'de plus d''un mois et d''un an au plus', '53', 'ACT', 711, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('532', 'd''un mois au plus', '53', 'ACT', 712, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5500', 'Comptes courants', '550', 'ACT', 716, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5501', 'Chèques émis (-)', '550', 'ACTINV', 717, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5509', 'Réduction de valeur actée', '550', 'ACT', 718, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5510', 'Comptes courants', '551', 'ACT', 719, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5511', 'Chèques émis (-)', '551', 'ACTINV', 720, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5519', 'Réduction de valeur actée', '551', 'ACT', 721, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5520', 'Comptes courants', '552', 'ACT', 722, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5521', 'Chèques émis (-)', '552', 'ACTINV', 723, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5529', 'Réduction de valeur actée', '552', 'ACT', 724, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5530', 'Comptes courants', '553', 'ACT', 725, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5531', 'Chèques émis (-)', '553', 'ACTINV', 726, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5539', 'Réduction de valeur actée', '553', 'ACT', 727, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5540', 'Comptes courants', '554', 'ACT', 728, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5541', 'Chèques émis (-)', '554', 'ACTINV', 729, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5549', 'Réduction de valeur actée', '554', 'ACT', 730, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5550', 'Comptes courants', '555', 'ACT', 731, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5551', 'Chèques émis (-)', '555', 'ACTINV', 732, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5559', 'Réduction de valeur actée', '555', 'ACT', 733, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5560', 'Comptes courants', '556', 'ACT', 734, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5561', 'Chèques émis (-)', '556', 'ACTINV', 735, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5569', 'Réduction de valeur actée', '556', 'ACT', 736, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5570', 'Comptes courants', '557', 'ACT', 737, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5571', 'Chèques émis (-)', '557', 'ACTINV', 738, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5579', 'Réduction de valeur actée', '557', 'ACT', 739, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5580', 'Comptes courants', '558', 'ACT', 740, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5581', 'Chèques émis (-)', '558', 'ACTINV', 741, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5589', 'Réduction de valeur actée', '558', 'ACT', 742, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5590', 'Comptes courants', '559', 'ACT', 743, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5591', 'Chèques émis (-)', '559', 'ACTINV', 744, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5599', 'Réduction de valeur actée', '559', 'ACT', 745, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('560', 'Compte courant', '56', 'ACT', 747, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('561', 'Chèques émis', '56', 'ACT', 748, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('578', 'Caisse timbre', '57', 'ACT', 749, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('600', 'Achats de matières premières', '60', 'CHA', 752, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('601', 'Achats de fournitures', '60', 'CHA', 753, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('602', 'Achats de services, travaux et études', '60', 'CHA', 754, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('603', 'Sous-traitances générales', '60', 'CHA', 755, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('604', 'Achats de marchandises', '60', 'CHA', 756, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('605', 'Achats d''immeubles destinés à la vente', '60', 'CHA', 757, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('608', 'Remises, ristournes et rabais obtenus(-)', '60', 'CHAINV', 758, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('609', 'Variation de stock', '60', 'CHA', 759, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6090', 'de matières premières', '609', 'CHA', 760, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6091', 'de fournitures', '609', 'CHA', 761, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6094', 'de marchandises', '609', 'CHA', 762, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6095', 'immeubles achetés destinés à la vente', '609', 'CHA', 763, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('620', 'Rémunérations et avantages sociaux directs', '62', 'CHA', 766, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6200', 'Administrateurs ou gérants', '620', 'CHA', 767, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6201', 'Personnel de directions', '620', 'CHA', 768, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6203', 'Ouvriers', '620', 'CHA', 769, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6204', 'Autres membres du personnel', '620', 'CHA', 770, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('621', 'Cotisations patronales d''assurances sociales', '62', 'CHA', 771, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('622', 'Primes partonales pour assurances extra-légales', '62', 'CHA', 772, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('623', 'Autres frais de personnel', '62', 'CHA', 773, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('624', 'Pensions de retraite et de survie', '62', 'CHA', 774, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6240', 'Administrateurs ou gérants', '624', 'CHA', 775, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6241', 'Personnel', '624', 'CHA', 776, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('630', 'Dotations aux amortissements et réduction de valeurs sur immobilisations', '63', 'CHA', 778, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6300', ' Dotations aux amortissements sur frais d''établissement', '630', 'CHA', 779, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('705', 'Ventes et prestations de services', '70', 'PRO', 780, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('414', 'Produits à recevoir', '41', 'ACT', 781, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('416', 'Créances diverses', '41', 'ACT', 782, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4160', 'Comptes de l''exploitant', '416', 'ACT', 783, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('417', 'Créances douteuses', '41', 'ACT', 784, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('418', 'Cautionnements versés en numéraires', '41', 'ACT', 785, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('419', 'Réductions de valeur actées', '41', 'ACT', 786, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('420', 'Emprunts subordonnés', '42', 'PAS', 788, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4200', 'convertibles', '420', 'PAS', 789, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4201', 'non convertibles', '420', 'PAS', 790, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('421', 'Emprunts subordonnés', '42', 'PAS', 791, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4210', 'convertibles', '420', 'PAS', 792, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4211', 'non convertibles', '420', 'PAS', 793, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('422', ' Dettes de locations financement', '42', 'PAS', 794, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('423', ' Etablissement de crédit', '42', 'PAS', 795, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4230', 'Dettes en comptes', '423', 'PAS', 796, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4231', 'Promesses', '423', 'PAS', 797, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4232', 'Crédits d''acceptation', '423', 'PAS', 798, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('424', 'Autres emprunts', '42', 'PAS', 799, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('425', 'Dettes commerciales', '42', 'PAS', 800, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4250', 'Fournisseurs', '425', 'PAS', 801, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4251', 'Effets à payer', '425', 'PAS', 802, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('426', 'Acomptes reçus sur commandes', '42', 'PAS', 803, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('428', 'Cautionnement reçus en numéraires', '42', 'PAS', 804, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('429', 'Dettes diverses', '42', 'PAS', 805, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('430', 'Etablissements de crédit - Emprunts à compte à terme fixe', '43', 'PAS', 807, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('431', 'Etablissements de crédit - Promesses', '43', 'PAS', 808, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('432', ' Etablissements de crédit - Crédits d''acceptation', '43', 'PAS', 809, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('433', 'Etablissements de crédit -Dettes en comptes courant', '43', 'PAS', 810, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('439', 'Autres emprunts', '43', 'PAS', 811, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('441', 'Effets à payer', '44', 'PAS', 814, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('444', 'Factures à recevoir', '44', 'PAS', 815, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('450', 'Dettes fiscales estimées', '45', 'PAS', 817, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4500', 'Impôts belges sur le résultat', '450', 'PAS', 818, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4501', 'Impôts belges sur le résultat', '450', 'PAS', 819, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4502', 'Impôts belges sur le résultat', '450', 'PAS', 820, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4503', 'Impôts belges sur le résultat', '450', 'PAS', 821, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4504', 'Impôts belges sur le résultat', '450', 'PAS', 822, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4505', 'Autres impôts et taxes belges', '450', 'PAS', 823, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4506', 'Autres impôts et taxes belges', '450', 'PAS', 824, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4507', 'Autres impôts et taxes belges', '450', 'PAS', 825, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4508', 'Impôts et taxes étrangers', '450', 'PAS', 826, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('451', 'TVA à payer', '45', 'PAS', 827, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4511', 'TVA à payer 21%', '451', 'PAS', 828, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4512', 'TVA à payer 12%', '451', 'PAS', 829, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4513', 'TVA à payer 6%', '451', 'PAS', 830, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4514', 'TVA à payer 0%', '451', 'PAS', 831, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('452', 'Impôts et taxes à payer', '45', 'PAS', 832, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4520', 'Impôts belges sur le résultat', '452', 'PAS', 833, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4521', 'Impôts belges sur le résultat', '452', 'PAS', 834, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4522', 'Impôts belges sur le résultat', '452', 'PAS', 835, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4523', 'Impôts belges sur le résultat', '452', 'PAS', 836, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4524', 'Impôts belges sur le résultat', '452', 'PAS', 837, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4525', 'Autres impôts et taxes belges', '452', 'PAS', 838, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4526', 'Autres impôts et taxes belges', '452', 'PAS', 839, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4527', 'Autres impôts et taxes belges', '452', 'PAS', 840, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4528', 'Impôts et taxes étrangers', '452', 'PAS', 841, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('453', 'Précomptes retenus', '45', 'PAS', 842, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('454', 'Office National de la Sécurité Sociales', '45', 'PAS', 843, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('455', 'Rémunérations', '45', 'PAS', 844, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('456', 'Pécules de vacances', '45', 'PAS', 845, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('459', 'Autres dettes sociales', '45', 'PAS', 846, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('470', 'Dividendes et tantièmes d''exercices antérieurs', '47', 'PAS', 849, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('471', 'Dividendes de l''exercice', '47', 'PAS', 850, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('472', 'Tantièmes de l''exercice', '47', 'PAS', 851, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('473', 'Autres allocataires', '47', 'PAS', 852, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('480', 'Obligations et coupons échus', '48', 'PAS', 854, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('488', 'Cautionnements reçus en numéraires', '48', 'PAS', 855, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('489', 'Autres dettes diverses', '48', 'PAS', 856, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4890', 'Compte de l''exploitant', '489', 'PAS', 857, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('490', 'Charges à reporter', '49', 'ACT', 859, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('491', 'Produits acquis', '49', 'ACT', 860, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('492', 'Charges à imputer', '49', 'PAS', 861, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('493', 'Produits à reporter', '49', 'PAS', 862, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('499', 'Comptes d''attentes', '49', 'ACT', 863, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2821', 'Montants non-appelés(-)', '282', 'ACT', 864, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2828', 'Plus-values actées', '282', 'ACT', 865, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2829', 'Réductions de valeurs actées', '282', 'ACT', 866, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('283', 'Créances sur des entreprises avec lesquelles existe un lien de participation', '28', 'ACT', 867, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2830', 'Créance en compte', '283', 'ACT', 868, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2831', 'Effets à recevoir', '283', 'ACT', 869, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2832', 'Titre à revenu fixe', '283', 'ACT', 871, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2837', 'Créances douteuses', '283', 'ACT', 872, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2839', 'Réduction de valeurs actées', '283', 'ACT', 873, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('284', 'Autres actions et parts', '28', 'ACT', 874, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2840', 'Valeur d''acquisition', '284', 'ACT', 875, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2841', 'Montants non-appelés(-)', '284', 'ACT', 876, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2848', 'Plus-values actées', '284', 'ACT', 877, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2849', 'Réductions de valeurs actées', '284', 'ACT', 878, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('285', 'Autres créances', '28', 'ACT', 879, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2850', 'Créance en compte', '285', 'ACT', 880, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2851', 'Effets à recevoir', '285', 'ACT', 881, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2852', 'Titre à revenu fixe', '285', 'ACT', 882, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2857', 'Créances douteuses', '285', 'ACT', 883, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2859', 'Réductions de valeurs actées', '285', 'ACT', 884, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('288', 'Cautionnements versés en numéraires', '28', 'ACT', 885, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('290', 'Créances commerciales', '29', 'ACT', 887, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2900', 'Clients', '290', 'ACT', 888, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2901', 'Effets à recevoir', '290', 'ACT', 889, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2906', 'Acomptes versés', '290', 'ACT', 890, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2907', 'Créances douteuses', '290', 'ACT', 891, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2909', 'Réductions de valeurs actées', '290', 'ACT', 892, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('291', 'Autres créances', '29', 'ACT', 893, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2910', 'Créances en comptes', '291', 'ACT', 894, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2911', 'Effets à recevoir', '291', 'ACT', 895, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2917', 'Créances douteuses', '291', 'ACT', 896, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2919', 'Réductions de valeurs actées(-)', '291', 'ACT', 897, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('300', 'Valeur d''acquisition', '30', 'ACT', 899, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('309', 'Réductions de valeur actées', '30', 'ACT', 900, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('310', 'Valeur d''acquisition', '31', 'ACT', 902, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('319', 'Réductions de valeurs actées(-)', '31', 'ACT', 903, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('320', 'Valeurs d''acquisition', '32', 'ACT', 905, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('329', 'Réductions de valeur actées', '32', 'ACT', 906, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('330', 'Valeur d''acquisition', '33', 'ACT', 908, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('339', 'Réductions de valeur actées', '33', 'ACT', 909, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('340', 'Valeur d''acquisition', '34', 'ACT', 911, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('349', 'Réductions de valeur actées', '34', 'ACT', 912, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('350', 'Valeur d''acquisition', '35', 'ACT', 914, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('359', 'Réductions de valeur actées', '35', 'ACT', 915, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('360', 'Valeur d''acquisition', '36', 'ACT', 917, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('369', 'Réductions de valeur actées', '36', 'ACT', 918, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('370', 'Valeur d''acquisition', '37', 'ACT', 920, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('371', 'Bénéfice pris en compte ', '37', 'ACT', 921, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('379', 'Réductions de valeur actées', '37', 'ACT', 922, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('400', 'Clients', '40', 'ACT', 924, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('401', 'Effets à recevoir', '40', 'ACT', 925, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('404', 'Produits à recevoir', '40', 'ACT', 926, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('406', 'Acomptes versés', '40', 'ACT', 927, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('407', 'Créances douteuses', '40', 'ACT', 928, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('409', 'Réductions de valeur actées', '40', 'ACT', 929, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('410', 'Capital appelé non versé', '41', 'ACT', 931, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('411', 'TVA à récupérer', '41', 'ACT', 932, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4111', 'TVA à récupérer 21%', '411', 'ACT', 933, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4112', 'TVA à récupérer 12%', '411', 'ACT', 934, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4113', 'TVA à récupérer 6% ', '411', 'ACT', 935, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4114', 'TVA à récupérer 0%', '411', 'ACT', 936, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('412', 'Impôts et précomptes à récupérer', '41', 'ACT', 937, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4120', 'Impôt belge sur le résultat', '412', 'ACT', 938, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4121', 'Impôt belge sur le résultat', '412', 'ACT', 939, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4122', 'Impôt belge sur le résultat', '412', 'ACT', 940, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4123', 'Impôt belge sur le résultat', '412', 'ACT', 941, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4124', 'Impôt belge sur le résultat', '412', 'ACT', 942, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4125', 'Autres impôts et taxes belges', '412', 'ACT', 943, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4126', 'Autres impôts et taxes belges', '412', 'ACT', 944, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4127', 'Autres impôts et taxes belges', '412', 'ACT', 945, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4128', 'Impôts et taxes étrangers', '412', 'ACT', 946, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6040003', 'Petit matériel', '604', 'CHA', 948, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('130', 'Réserve légale', '13', 'PAS', 952, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('131', 'Réserve indisponible', '13', 'PAS', 953, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1310', 'Réserve pour actions propres', '131', 'PAS', 954, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6040004', 'Assurance', '604', 'CHA', 955, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('55000001', 'Caisse', '5500', 'ACT', 956, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('133', 'Réserves disponibles', '13', 'PAS', 957, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('140', 'Bénéfice reporté', '14', 'PAS', 959, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('141', 'Perte reportée', '14', 'PASINV', 960, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('160', 'Provisions pour pensions et obligations similaires', '16', 'PAS', 963, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('161', 'Provisions pour charges fiscales', '16', 'PAS', 964, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('749', 'Produits d''exploitations divers', '74', 'PRO', 965, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('162', 'Provisions pour grosses réparation et gros entretien', '16', 'PAS', 966, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('170', 'Emprunts subordonnés', '17', 'PAS', 968, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1700', 'convertibles', '170', 'PAS', 969, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1701', 'non convertibles', '170', 'PAS', 970, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('171', 'Emprunts subordonnés', '17', 'PAS', 971, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1710', 'convertibles', '170', 'PAS', 972, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1711', 'non convertibles', '170', 'PAS', 973, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('172', ' Dettes de locations financement', '17', 'PAS', 974, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('173', ' Etablissement de crédit', '17', 'PAS', 975, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1730', 'Dettes en comptes', '173', 'PAS', 976, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1731', 'Promesses', '173', 'PAS', 977, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1732', 'Crédits d''acceptation', '173', 'PAS', 978, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('174', 'Autres emprunts', '17', 'PAS', 979, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('175', 'Dettes commerciales', '17', 'PAS', 980, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1750', 'Fournisseurs', '175', 'PAS', 981, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1751', 'Effets à payer', '175', 'PAS', 982, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('176', 'Acomptes reçus sur commandes', '17', 'PAS', 983, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('178', 'Cautionnement reçus en numéraires', '17', 'PAS', 984, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('179', 'Dettes diverses', '17', 'PAS', 985, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('200', 'Frais de constitution et d''augmentation de capital', '20', 'ACT', 987, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('201', ' Frais d''émission d''emprunts et primes de remboursement', '20', 'ACT', 988, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('202', 'Autres frais d''établissement', '20', 'ACT', 989, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('204', 'Frais de restructuration', '20', 'ACT', 990, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('210', 'Frais de recherche et de développement', '21', 'ACT', 992, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('211', 'Concessions, brevet, licence savoir faire, marque et droit similaires', '21', 'ACT', 993, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('212', 'Goodwill', '21', 'ACT', 994, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('213', 'Acomptes versés', '21', 'ACT', 995, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('220', 'Terrains', '22', 'ACT', 997, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('222', 'Terrains bâtis', '22', 'ACT', 998, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('223', 'Autres droits réels sur des immeubles', '22', 'ACT', 999, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('250', 'Terrains', '25', 'ACT', 1003, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('251', 'Construction', '25', 'ACT', 1004, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('252', 'Terrains bâtis', '25', 'ACT', 1005, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('253', 'Mobilier et matériels roulants', '25', 'ACT', 1006, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('280', 'Participation dans des entreprises liées', '28', 'ACT', 1010, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2800', 'Valeur d''acquisition', '280', 'ACT', 1011, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2801', 'Montants non-appelés(-)', '280', 'ACT', 1012, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2808', 'Plus-values actées', '280', 'ACT', 1013, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2809', 'Réductions de valeurs actées', '280', 'ACT', 1014, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('281', 'Créance sur  des entreprises liées', '28', 'ACT', 1015, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2810', 'Créance en compte', '281', 'ACT', 1016, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2811', 'Effets à recevoir', '281', 'ACT', 1017, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2812', 'Titre à reveny fixe', '281', 'ACT', 1018, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2817', 'Créances douteuses', '281', 'ACT', 1019, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2819', 'Réduction de valeurs actées', '281', 'ACT', 1020, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('282', 'Participations dans des entreprises avec lesquelles il existe un lien de participation', '28', 'ACT', 1021, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2820', 'Valeur d''acquisition', '282', 'ACT', 1022, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4516', 'Tva Export 0%', '451', 'PAS', 1023, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4115', 'Tva Intracomm 0%', '411', 'ACT', 1024, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4116', 'Tva Export 0%', '411', 'ACT', 1025, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('41141', 'TVA pour l\''export', '4114', 'ACT', 1026, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('41142', 'TVA sur les opérations intracommunautaires', '4114', 'ACT', 1027, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('45141', 'TVA pour l\''export', '451', 'PAS', 1028, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('45142', 'TVA sur les opérations intracommunautaires', '4514', 'PAS', 1029, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('41143', 'TVA sur les opérations avec des assujettis art 44 Code TVA', '4114', 'ACT', 1030, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('45143', 'TVA sur les opérations avec des assujettis art 44 Code TVA', '4514', 'PAS', 1031, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('41144', 'TVA sur les opérations avec des cocontractants', '4114', 'ACT', 1032, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('45144', 'TVA sur les opérations avec des cocontractants', '4514', 'PAS', 1033, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6202', 'Employés,620', '62', 'CHA', 1034, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('57', 'Caisse', '5', 'ACT', 870, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1', 'Fonds propres, provisions pour risques et charges à plus d''un an', '0', 'PAS', 520, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2', 'Frais d''établissement, actifs immobilisés et créances à plus d''un an', '0', 'ACT', 521, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('3', 'Stocks et commandes en cours d''éxécution', '0', 'ACT', 522, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4', 'Créances et dettes à un an au plus', '0', 'ACT', 523, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5', 'Placements de trésorerie et valeurs disponibles', '0', 'ACT', 524, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6', 'Charges', '0', 'CHA', 525, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7', 'Produits', '0', 'PRO', 526, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('34', 'Marchandises', '3', 'ACT', 910, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('9', 'Comptes hors Compta', '0', 'CON', 547, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('68', 'Transferts aux réserves immunisées', '6', 'CHA', 555, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('69', 'Affectations et prélévements', '6', 'CHA', 556, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('70', 'Chiffre d''affaire', '7', 'PRO', 564, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('71', 'Variations des stocks et commandes en cours d''éxécution', '7', 'PRO', 573, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('72', 'Production immobilisée', '7', 'PRO', 580, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('74', 'Autres produits d''exploitation', '7', 'PRO', 581, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('75', 'Produits financiers', '7', 'PRO', 591, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('76', 'Produits exceptionnels', '7', 'PRO', 603, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('77', 'Régularisations d''impôts et reprises de provisions fiscales', '7', 'PRO', 616, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('79', 'Affectations et prélévements', '7', 'PRO', 622, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('64', 'Autres charges d''exploitation', '6', 'CHA', 652, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('65', 'Charges financières', '6', 'CHA', 663, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('66', 'Charges exceptionnelles', '6', 'CHA', 680, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('67', 'impôts sur le résultat', '6', 'CHA', 694, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('50', 'Actions propres', '5', 'ACT', 701, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('51', 'Actions et parts', '5', 'ACT', 702, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('52', 'Titres à revenu fixe', '5', 'ACT', 706, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('53', 'Dépôts à terme', '5', 'ACT', 709, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('54', 'Valeurs échues à l''encaissement', '5', 'ACT', 713, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('55', 'Etablissement de crédit', '5', 'ACT', 714, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('56', 'Office des chèques postaux', '5', 'ACT', 746, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('58', 'Virement interne', '5', 'ACT', 750, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('60', 'Approvisionnement et marchandises', '6', 'CHA', 751, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('61', 'Services et biens divers', '6', 'CHA', 764, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('62', 'Rémunérations, charges sociales et pensions', '6', 'CHA', 765, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('63', 'Amortissements, réductions de valeurs et provisions pour risques et charges', '6', 'CHA', 777, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('42', 'Dettes à plus dun an échéant dans l''année', '4', 'PAS', 787, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('43', 'Dettes financières', '4', 'PAS', 806, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44', 'Dettes commerciales', '4', 'PAS', 812, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('45', 'Dettes fiscales, salariales et sociales', '4', 'PAS', 816, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('46', 'Acomptes reçus sur commandes', '4', 'PAS', 847, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('47', 'Dettes découlant de l''affectation du résultat', '4', 'PAS', 848, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('48', 'Dettes diverses', '4', 'PAS', 853, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('49', 'Comptes de régularisation', '4', 'ACT', 858, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('29', 'Créances à plus d''un an', '2', 'ACT', 886, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('30', 'Approvisionements - Matières premières', '3', 'ACT', 898, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('31', 'Approvisionnements - fournitures', '3', 'ACT', 901, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('32', 'En-cours de fabrication', '3', 'ACT', 904, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('33', 'Produits finis', '3', 'ACT', 907, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('35', 'Immeubles destinés à la vente', '3', 'ACT', 913, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('36', 'Acomptes versés sur achats pour stocks', '3', 'ACT', 916, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('37', 'Commandes en cours éxécution', '3', 'ACT', 919, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('40', 'Créances commerciales', '4', 'ACT', 923, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('41', 'Autres créances', '4', 'ACT', 930, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('10', 'Capital ', '1', 'PAS', 947, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('11', 'Prime d''émission ', '1', 'PAS', 949, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('12', 'Plus Value de réévaluation ', '1', 'PAS', 950, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('13', 'Réserve ', '1', 'PAS', 951, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('14', 'Bénéfice ou perte reportée', '1', 'PAS', 958, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('15', 'Subside en capital', '1', 'PAS', 961, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('16', 'Provisions pour risques et charges', '1', 'PAS', 962, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('17', ' Dettes à plus d''un an', '1', 'PAS', 967, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('20', 'Frais d''établissement', '2', 'ACT', 986, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('21', 'Immobilisations incorporelles', '2', 'ACT', 991, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('22', 'Terrains et construction', '2', 'ACT', 996, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('23', ' Installations, machines et outillages', '2', 'ACT', 1000, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('24', 'Mobilier et Matériel roulant', '2', 'ACT', 1001, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('25', 'Immobilisations détenus en location-financement et droits similaires', '2', 'ACT', 1002, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('26', 'Autres immobilisations corporelles', '2', 'ACT', 1007, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('27', 'Immobilisations corporelles en cours et acomptes versés', '2', 'ACT', 1008, 'N');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('28', 'Immobilisations financières', '2', 'ACT', 1009, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('101', 'Capital', '1', 'PAS', 159, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('105', 'Ecarts de réévaluation', '1', 'PAS', 160, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1061', 'Réserve légale', '1', 'PAS', 161, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1063', 'Réserves statutaires ou contractuelles', '1', 'PAS', 162, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1064', 'Réserves réglementées', '1', 'PAS', 163, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1068', 'Autres réserves', '1', 'PAS', 164, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('108', 'Compte de l''exploitant', '1', 'PAS', 165, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('145', 'Amortissements dérogatoires', '1', 'PAS', 167, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('146', 'Provision spéciale de réévaluation', '1', 'PAS', 168, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('147', 'Plus-values réinvesties', '1', 'PAS', 169, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('148', 'Autres provisions réglementées', '1', 'PAS', 170, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('201', 'Frais d''établissement', '20', 'ACT', 175, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('206', 'Droit au bail', '20', 'ACT', 176, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('207', 'Fonds commercial', '20', 'ACT', 177, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('208', 'Autres immobilisations incorporelles', '20', 'ACT', 178, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('280', 'Amortissements des immobilisations incorporelles', '2', 'ACT', 182, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('281', 'Amortissements des immobilisations corporelles', '2', 'ACT', 183, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('290', 'Provisions pour dépréciation des immobilisations incorporelles', '2', 'ACT', 184, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('291', 'Provisions pour dépréciation des immobilisations corporelles (même ventilation que celle du compte 21)', '2', 'ACT', 185, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('297', 'Provisions pour dépréciation des autres immobilisations financières', '2', 'ACT', 186, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('391', 'Provisions pour dépréciation des matières premières (et fournitures)', '3', 'ACT', 194, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('392', 'Provisions pour dépréciation des autres approvisionnements', '3', 'ACT', 195, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('393', 'Provisions pour dépréciation des en-cours de production de biens', '3', 'ACT', 196, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('394', 'Provisions pour dépréciation des en-cours de production de services', '3', 'ACT', 197, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('395', 'Provisions pour dépréciation des stocks de produits', '3', 'ACT', 198, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('397', 'Provisions pour dépréciation des stocks de marchandises', '3', 'ACT', 199, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('400', 'Fournisseurs et Comptes rattachés', '4', 'ACT', 201, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('409', 'Fournisseurs débiteurs', '4', 'ACT', 202, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('410', 'Clients et Comptes rattachés', '4', 'ACT', 203, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('419', 'Clients créditeurs', '4', 'ACT', 204, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('421', 'Personnel - Rémunérations dues', '4', 'PAS', 205, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('428', 'Personnel - Charges à payer et produits à recevoir', '4', 'PAS', 206, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('444', 'Etat - Impôts sur les bénéfices', '4', 'PAS', 208, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445', 'Etat - Taxes sur le chiffre d''affaires', '4', 'PAS', 209, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('447', 'Autres impôts, taxes et versements assimilés', '4', 'PAS', 210, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('455', 'Associés - Comptes courants', '45', 'PAS', 212, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('481', 'Charges à répartir sur plusieurs exercices', '4', 'PAS', 215, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('486', 'Charges constatées d''avance', '4', 'PAS', 216, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('487', 'Produits constatés d''avance', '4', 'ACT', 217, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('491', 'Provisions pour dépréciation des comptes de clients', '4', 'PAS', 218, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('496', 'Provisions pour dépréciation des comptes de débiteurs divers', '4', 'PAS', 219, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('590', 'Provisions pour dépréciation des valeurs mobilières de placement', '5', 'ACT', 226, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('603', 'variations des stocks (approvisionnements et marchandises)', '6', 'CHA', 229, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('641', 'Rémunérations du personnel', '6', 'CHA', 233, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('644', 'Rémunération du travail de l''exploitant', '6', 'CHA', 234, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('645', 'Charges de sécurité sociale et de prévoyance', '6', 'CHA', 235, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('646', 'Cotisations sociales personnelles de l''exploitant', '6', 'CHA', 236, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('681', 'Dotations aux amortissements et aux provisions - Charges d''exploitation', '6', 'CHA', 240, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('686', 'Dotations aux amortissements et aux provisions - Charges financières', '6', 'CHA', 241, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('687', 'Dotations aux amortissements et aux provisions - Charges exceptionnelles', '6', 'CHA', 242, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('691', 'Participation des salariés aux résultats', '6', 'CHA', 243, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('695', 'Impôts sur les bénéfices', '6', 'CHA', 244, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('697', 'Imposition forfaitaire annuelle des sociétés', '6', 'CHA', 245, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('699', 'Produits - Reports en arrière des déficits', '6', 'CHA', 246, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('701', 'Ventes de produits finis', '7', 'PAS', 248, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('706', 'Prestations de services', '7', 'PAS', 249, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('707', 'Ventes de marchandises', '7', 'PAS', 250, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('708', 'Produits des activités annexes', '7', 'PAS', 251, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('709', 'Rabais, remises et ristournes accordés par l''entreprise', '7', 'PAS', 252, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('713', 'Variation des stocks (en-cours de production, produits)', '7', 'PAS', 253, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('753', 'Jetons de présence et rémunérations d''administrateurs, gérants,...', '75', 'PAS', 258, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('754', 'Ristournes perçues des coopératives (provenant des excédents)', '75', 'PAS', 259, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('755', 'Quotes-parts de résultat sur opérations faites en commun', '75', 'PAS', 260, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('781', 'Reprises sur amortissements et provisions (à inscrire dans les produits d''exploitation)', '7', 'PAS', 263, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('786', 'Reprises sur provisions pour risques (à inscrire dans les produits financiers)', '7', 'PAS', 264, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('787', 'Reprises sur provisions (à inscrire dans les produits exceptionnels)', '7', 'PAS', 265, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456601', 'TVA 19,6% - France métropolitaine - Taux immobilisations Déductible', '4456', 'ACT', 269, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445701', 'TVA 19,6% - France métropolitaine - Taux immobilisations Collectée ', '4457', 'PAS', 270, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456602', 'TVA x% - France métropolitaine - Taux anciens Déductible', '4456', 'ACT', 271, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445702', 'TVA x% - France métropolitaine - Taux anciens Collectée ', '4457', 'PAS', 272, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456603', 'TVA 8,5%  - DOM - Taux normal Déductible', '4456', 'ACT', 273, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445703', 'TVA 8,5%  - DOM - Taux normal Collectée ', '4457', 'PAS', 274, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456604', 'TVA 8,5% - DOM - Taux normal NPR Déductible', '4456', 'ACT', 275, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445704', 'TVA 8,5% - DOM - Taux normal NPR Collectée ', '4457', 'PAS', 276, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456605', 'TVA 2,1% - DOM - Taux réduit Déductible', '4456', 'ACT', 277, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445705', 'TVA 2,1% - DOM - Taux réduit Collectée ', '4457', 'PAS', 278, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456606', 'TVA 1,75% - DOM - Taux I Déductible', '4456', 'ACT', 279, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445706', 'TVA 1,75% - DOM - Taux I Collectée ', '4457', 'PAS', 280, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456607', 'TVA 1,05% - DOM - Taux publications de presse Déductible', '4456', 'ACT', 281, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445707', 'TVA 1,05% - DOM - Taux publications de presse Collectée ', '4457', 'PAS', 282, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456608', 'TVA x% - DOM - Taux octroi de mer Déductible', '4456', 'ACT', 283, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445708', 'TVA x% - DOM - Taux octroi de mer Collectée ', '4457', 'PAS', 284, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456609', 'TVA x% - DOM - Taux immobilisations Déductible', '4456', 'ACT', 285, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445709', 'TVA x% - DOM - Taux immobilisations Collectée ', '4457', 'PAS', 286, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566010', 'TVA 13% - Corse - Taux I Déductible', '4456', 'ACT', 287, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457010', 'TVA 13% - Corse - Taux I Collectée ', '4457', 'PAS', 288, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566011', 'TVA 8% - Corse - Taux II Déductible', '4456', 'ACT', 289, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457011', 'TVA 8% - Corse - Taux II Collectée ', '4457', 'PAS', 290, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566012', 'TVA 2,1% - Corse - Taux III Déductible', '4456', 'ACT', 291, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457012', 'TVA 2,1% - Corse - Taux III Collectée ', '4457', 'PAS', 292, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566013', 'TVA 0,9% - Corse - Taux IV Déductible', '4456', 'ACT', 293, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457013', 'TVA 0,9% - Corse - Taux IV Collectée ', '4457', 'PAS', 294, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566014', 'TVA x% - Corse - Taux immobilisations Déductible', '4456', 'ACT', 295, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457014', 'TVA x% - Corse - Taux immobilisations Collectée ', '4457', 'PAS', 296, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566015', 'TVA x% - Acquisitions intracommunautaires/Pays Déductible', '4456', 'ACT', 297, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457015', 'TVA x% - Acquisitions intracommunautaires/Pays Collectée ', '4457', 'PAS', 298, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566016', 'TVA x% - Acquisitions intracommunautaires immobilisations/Pays Déductible', '4456', 'ACT', 299, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457016', 'TVA x% - Acquisitions intracommunautaires immobilisations/Pays Collectée ', '4457', 'PAS', 300, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566017', 'TVA x% - Non imposable : Achats en franchise Déductible', '4456', 'ACT', 301, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457017', 'TVA x% - Non imposable : Achats en franchise Collectée ', '4457', 'PAS', 302, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566018', 'TVA x% - Non imposable : Exports hors CE/Pays Déductible', '4456', 'ACT', 303, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457018', 'TVA x% - Non imposable : Exports hors CE/Pays Collectée ', '4457', 'PAS', 304, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566019', 'TVA x% - Non imposable : Autres opérations Déductible', '4456', 'ACT', 305, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457019', 'TVA x% - Non imposable : Autres opérations Collectée ', '4457', 'PAS', 306, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566020', 'TVA x% - Non imposable : Livraisons intracommunautaires/Pays Déductible', '4456', 'ACT', 307, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457020', 'TVA x% - Non imposable : Livraisons intracommunautaires/Pays Collectée ', '4457', 'PAS', 308, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445661', 'TVA 19,6% - France métropolitaine - Taux normal', '445', 'PAS', 309, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445662', 'TVA 5,5% - France métropolitaine - Taux réduit', '445', 'PAS', 310, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445663', 'TVA 2,1% - France métropolitaine - Taux super réduit', '445', 'PAS', 311, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44571', 'TVA 19,6% - France métropolitaine - Taux normal', '445', 'ACT', 312, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44572', 'TVA 5,5% - France métropolitaine - Taux réduit', '445', 'ACT', 313, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44573', 'TVA 2,1% - France métropolitaine - Taux super réduit', '445', 'ACT', 314, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('53', 'Caisse', '5', 'ACT', 223, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('1', 'comptes de capitaux', '0', 'PAS', 158, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('12', 'résultat de l''exercice (bénéfice ou perte)', '1', 'CON', 166, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('15', 'Provisions pour risques et charges', '1', 'PAS', 171, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('16', 'emprunts et dettes assimilees', '1', 'PAS', 172, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('2', 'comptes d''immobilisations', '0', 'ACT', 173, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('20', 'immobilisations incorporelles', '2', 'ACT', 174, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('21', 'immobilisations corporelles', '2', 'ACT', 179, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('23', 'immobilisations en cours', '2', 'ACT', 180, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('27', 'autres immobilisations financieres', '2', 'ACT', 181, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('3', 'comptes de stocks et en cours', '0', 'ACT', 187, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('31', 'matieres premières (et fournitures)', '3', 'ACT', 188, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('32', 'autres approvisionnements', '3', 'ACT', 189, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('33', 'en-cours de production de biens', '3', 'ACT', 190, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('34', 'en-cours de production de services', '3', 'ACT', 191, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('35', 'stocks de produits', '3', 'ACT', 192, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('37', 'stocks de marchandises', '3', 'ACT', 193, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4', 'comptes de tiers', '0', 'CON', 200, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('43', 'Sécurité sociale et autres organismes sociaux', '4', 'PAS', 207, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('45', 'Groupe et associes', '4', 'PAS', 211, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('46', 'Débiteurs divers et créditeurs divers', '4', 'CON', 213, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('47', 'comptes transitoires ou d''attente', '4', 'CON', 214, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('5', 'comptes financiers', '0', 'ACT', 220, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('50', 'valeurs mobilières de placement', '5', 'ACT', 221, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('51', 'banques, établissements financiers et assimilés', '5', 'ACT', 222, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('54', 'régies d''avance et accréditifs', '5', 'ACT', 224, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('58', 'virements internes', '5', 'ACT', 225, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('6', 'comptes de charges', '0', 'CHA', 227, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('60', 'Achats (sauf 603)', '6', 'CHA', 228, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('61', 'autres charges externes - Services extérieurs', '6', 'CHA', 230, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('62', 'autres charges externes - Autres services extérieurs', '6', 'CHA', 231, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('63', 'Impôts, taxes et versements assimiles', '6', 'CHA', 232, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('65', 'Autres charges de gestion courante', '6', 'CHA', 237, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('66', 'Charges financières', '6', 'CHA', 238, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('67', 'Charges exceptionnelles', '6', 'CHA', 239, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('7', 'comptes de produits', '0', 'PAS', 247, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('72', 'Production immobilisée', '7', 'PAS', 254, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('73', 'Produits nets partiels sur opérations à long terme', '7', 'PAS', 255, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('74', 'Subventions d''exploitation', '7', 'PAS', 256, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('75', 'Autres produits de gestion courante', '7', 'PAS', 257, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('76', 'Produits financiers', '7', 'PAS', 261, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('77', 'Produits exceptionnels', '7', 'PAS', 262, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('79', 'Transferts de charges', '7', 'PAS', 266, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('8', 'Comptes spéciaux', '0', 'CON', 267, 'N');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('9', 'Comptes analytiques', '0', 'CON', 268, 'N');
 
 
 
@@ -846,7 +493,7 @@ INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct
 
 
 
-SELECT pg_catalog.setval('del_action_del_id_seq', 1, false);
+SELECT pg_catalog.setval('del_action_del_id_seq', 1, true);
 
 
 
@@ -900,26 +547,26 @@ SELECT pg_catalog.setval('document_type_dt_id_seq', 25, false);
 
 
 
-SELECT pg_catalog.setval('extension_ex_id_seq', 1, true);
+SELECT pg_catalog.setval('extension_ex_id_seq', 1, false);
 
 
 
 
 
 
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (79, '2010-01-01', '2010-01-31', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (80, '2010-02-01', '2010-02-28', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (81, '2010-03-01', '2010-03-31', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (82, '2010-04-01', '2010-04-30', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (83, '2010-05-01', '2010-05-31', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (84, '2010-06-01', '2010-06-30', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (85, '2010-07-01', '2010-07-31', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (86, '2010-08-01', '2010-08-31', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (87, '2010-09-01', '2010-09-30', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (88, '2010-10-01', '2010-10-31', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (89, '2010-11-01', '2010-11-30', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (90, '2010-12-01', '2010-12-30', '2010', false, false);
-INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (91, '2010-12-31', '2010-12-31', '2010', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (105, '2009-01-01', '2009-01-31', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (106, '2009-02-01', '2009-02-28', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (107, '2009-03-01', '2009-03-31', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (108, '2009-04-01', '2009-04-30', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (109, '2009-05-01', '2009-05-31', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (110, '2009-06-01', '2009-06-30', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (111, '2009-07-01', '2009-07-31', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (112, '2009-08-01', '2009-08-31', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (113, '2009-09-01', '2009-09-30', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (114, '2009-10-01', '2009-10-31', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (115, '2009-11-01', '2009-11-30', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (116, '2009-12-01', '2009-12-30', '2009', false, false);
+INSERT INTO parm_periode (p_id, p_start, p_end, p_exercice, p_closed, p_central) VALUES (117, '2009-12-31', '2009-12-31', '2009', false, false);
 
 
 
@@ -975,16 +622,6 @@ INSERT INTO info_def (id_type, id_description) VALUES ('OTHER', 'Info diverses')
 
 
 
-INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (3, 1, 16, 0);
-INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (4, 1, 27, 0);
-INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (5, 1, 36, 0);
-INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (6, 1, 40, 0);
-INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (3, 4, 18, 2);
-INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (3, 12, 19, 3);
-INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (6, 19, 44, 2);
-INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (2, 13, 9, 31);
-INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (3, 13, 20, 31);
-INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (4, 13, 29, 31);
 INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (1, 2, 3, 1);
 INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (2, 12, 8, 1);
 INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (3, 3, 17, 1);
@@ -1027,6 +664,16 @@ INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (5, 5, 35, 30)
 INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (6, 5, 39, 30);
 INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (1, 1, 2, 0);
 INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (2, 1, 7, 0);
+INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (3, 1, 16, 0);
+INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (4, 1, 27, 0);
+INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (5, 1, 36, 0);
+INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (6, 1, 40, 0);
+INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (3, 4, 18, 2);
+INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (3, 12, 19, 3);
+INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (6, 19, 44, 2);
+INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (2, 13, 9, 31);
+INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (3, 13, 20, 31);
+INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (4, 13, 29, 31);
 INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (500000, 1, 54, 10);
 INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (500000, 9, 55, 20);
 INSERT INTO jnt_fic_attr (fd_id, ad_id, jnt_id, jnt_order) VALUES (500000, 23, 56, 30);
@@ -1054,58 +701,58 @@ SELECT pg_catalog.setval('jrn_note_n_id_seq', 1, false);
 
 
 
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 79, 'OP', 1);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 79, 'OP', 2);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 79, 'OP', 3);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 79, 'OP', 4);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 80, 'OP', 5);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 80, 'OP', 6);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 80, 'OP', 7);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 80, 'OP', 8);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 81, 'OP', 9);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 81, 'OP', 10);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 81, 'OP', 11);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 81, 'OP', 12);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 82, 'OP', 13);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 82, 'OP', 14);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 82, 'OP', 15);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 82, 'OP', 16);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 83, 'OP', 17);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 83, 'OP', 18);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 83, 'OP', 19);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 83, 'OP', 20);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 84, 'OP', 21);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 84, 'OP', 22);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 84, 'OP', 23);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 84, 'OP', 24);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 85, 'OP', 25);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 85, 'OP', 26);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 85, 'OP', 27);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 85, 'OP', 28);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 86, 'OP', 29);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 86, 'OP', 30);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 86, 'OP', 31);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 86, 'OP', 32);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 87, 'OP', 33);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 87, 'OP', 34);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 87, 'OP', 35);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 87, 'OP', 36);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 88, 'OP', 37);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 88, 'OP', 38);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 88, 'OP', 39);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 88, 'OP', 40);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 89, 'OP', 41);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 89, 'OP', 42);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 89, 'OP', 43);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 89, 'OP', 44);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 90, 'OP', 45);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 90, 'OP', 46);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 90, 'OP', 47);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 90, 'OP', 48);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 91, 'OP', 49);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 91, 'OP', 50);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 91, 'OP', 51);
-INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 91, 'OP', 52);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 105, 'OP', 1);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 105, 'OP', 2);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 105, 'OP', 3);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 105, 'OP', 4);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 106, 'OP', 5);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 106, 'OP', 6);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 106, 'OP', 7);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 106, 'OP', 8);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 107, 'OP', 9);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 107, 'OP', 10);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 107, 'OP', 11);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 107, 'OP', 12);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 108, 'OP', 13);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 108, 'OP', 14);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 108, 'OP', 15);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 108, 'OP', 16);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 109, 'OP', 17);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 109, 'OP', 18);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 109, 'OP', 19);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 109, 'OP', 20);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 110, 'OP', 21);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 110, 'OP', 22);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 110, 'OP', 23);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 110, 'OP', 24);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 111, 'OP', 25);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 111, 'OP', 26);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 111, 'OP', 27);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 111, 'OP', 28);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 112, 'OP', 29);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 112, 'OP', 30);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 112, 'OP', 31);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 112, 'OP', 32);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 113, 'OP', 33);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 113, 'OP', 34);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 113, 'OP', 35);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 113, 'OP', 36);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 114, 'OP', 37);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 114, 'OP', 38);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 114, 'OP', 39);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 114, 'OP', 40);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 115, 'OP', 41);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 115, 'OP', 42);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 115, 'OP', 43);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 115, 'OP', 44);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 116, 'OP', 45);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 116, 'OP', 46);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 116, 'OP', 47);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 116, 'OP', 48);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (4, 117, 'OP', 49);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (2, 117, 'OP', 50);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (3, 117, 'OP', 51);
+INSERT INTO jrn_periode (jrn_def_id, p_id, status, id) VALUES (1, 117, 'OP', 52);
 
 
 
@@ -1343,17 +990,17 @@ SELECT pg_catalog.setval('op_predef_detail_opd_id_seq', 1, false);
 
 
 
-INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_NAME', NULL);
-INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_CP', NULL);
-INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_COMMUNE', NULL);
-INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_TVA', NULL);
-INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_STREET', NULL);
-INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_NUMBER', NULL);
-INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_TEL', NULL);
-INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_PAYS', NULL);
-INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_FAX', NULL);
+INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_NAME', 'LaMule');
+INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_TVA', 'FR33 123 456 789');
+INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_STREET', '');
+INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_NUMBER', '');
+INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_CP', '');
+INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_TEL', '');
+INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_PAYS', '');
+INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_COMMUNE', '');
+INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_FAX', '');
 INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_ANALYTIC', 'nu');
-INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_COUNTRY', 'BE');
+INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_COUNTRY', 'FR');
 INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_STRICT', 'Y');
 INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_TVA_USE', 'Y');
 INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_PJ_SUGGEST', 'Y');
@@ -1365,18 +1012,18 @@ INSERT INTO parameter (pr_id, pr_value) VALUES ('MY_STOCK', 'N');
 
 
 
-INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('CUSTOMER', '400', 'Poste comptable de base pour les clients');
-INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('COMPTE_TVA', '451', 'TVA à payer');
-INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('BANQUE', '550', 'Poste comptable de base pour les banques');
-INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('VIREMENT_INTERNE', '58', 'Poste Comptable pour les virements internes');
-INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('COMPTE_COURANT', '56', 'Poste comptable pour le compte courant');
-INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('CAISSE', '57', 'Poste comptable pour la caisse');
-INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('TVA_DNA', '6740', 'Tva non déductible s');
-INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('TVA_DED_IMPOT', '619000', 'Tva déductible par l''impôt');
-INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('VENTE', '70', 'Poste comptable de base pour les ventes');
+INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('BANQUE', '51', 'Poste comptable par défaut pour les banques');
+INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('CAISSE', '53', 'Poste comptable par défaut pour les caisses');
+INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('CUSTOMER', '410', 'Poste comptable par défaut pour les clients');
+INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('VENTE', '707', 'Poste comptable par défaut pour les ventes');
+INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('VIREMENT_INTERNE', '58', 'Poste comptable par défaut pour les virements internes');
 INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('DEP_PRIV', '4890', 'Depense a charge du gerant');
-INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('SUPPLIER', '440', 'Poste par défaut pour les fournisseurs');
+INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('SUPPLIER', '400', 'Poste par défaut pour les fournisseurs');
 INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('DNA', '67', 'Dépense non déductible');
+INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('TVA_DNA', '', 'TVA non déductible');
+INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('TVA_DED_IMPOT', '', 'TVA déductible à l''impôt');
+INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('COMPTE_COURANT', '', 'Poste comptable pour le compte courant');
+INSERT INTO parm_code (p_code, p_value, p_comment) VALUES ('COMPTE_TVA', '', 'TVA à payer ou à recevoir');
 
 
 
@@ -1385,49 +1032,28 @@ INSERT INTO parm_money (pm_id, pm_code, pm_rate) VALUES (1, 'EUR', 1.0000);
 
 
 INSERT INTO parm_poste (p_value, p_type) VALUES ('1', 'PAS');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('101', 'PASINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('141', 'PASINV');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('12', 'CON');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('2', 'ACT');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('3', 'ACT');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('41', 'ACT');
 INSERT INTO parm_poste (p_value, p_type) VALUES ('42', 'PAS');
 INSERT INTO parm_poste (p_value, p_type) VALUES ('43', 'PAS');
 INSERT INTO parm_poste (p_value, p_type) VALUES ('44', 'PAS');
 INSERT INTO parm_poste (p_value, p_type) VALUES ('45', 'PAS');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('46', 'PAS');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('47', 'PAS');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('48', 'PAS');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('492', 'PAS');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('493', 'PAS');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('2', 'ACT');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('2409', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('3', 'ACT');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('46', 'CON');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('47', 'CON');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('481', 'PAS');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('482', 'PAS');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('483', 'PAS');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('484', 'PAS');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('485', 'PAS');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('486', 'PAS');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('487', 'ACT');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('49', 'PAS');
 INSERT INTO parm_poste (p_value, p_type) VALUES ('5', 'ACT');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('491', 'ACT');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('490', 'ACT');
 INSERT INTO parm_poste (p_value, p_type) VALUES ('6', 'CHA');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('7', 'PRO');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('4', 'ACT');
+INSERT INTO parm_poste (p_value, p_type) VALUES ('7', 'PAS');
 INSERT INTO parm_poste (p_value, p_type) VALUES ('40', 'ACT');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('5501', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('5511', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('5521', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('5531', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('5541', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('5551', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('5561', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('5571', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('5581', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('5591', 'ACTINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('6311', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('6321', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('6331', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('6341', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('6351', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('6361', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('6371', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('649', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('6511', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('6701', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('608', 'CHAINV');
-INSERT INTO parm_poste (p_value, p_type) VALUES ('709', 'PROINV');
 
 
 
@@ -1758,14 +1384,29 @@ SELECT pg_catalog.setval('quant_fin_qf_id_seq', 1, false);
 
 
 
-INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (1, '21%', 0.2100, 'Tva applicable à tout ce qui bien et service divers', '4111,4511', 0);
-INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (2, '12%', 0.1200, 'Tva ', '4112,4512', 0);
-INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (3, '6%', 0.0600, 'Tva applicable aux journaux et livres', '4113,4513', 0);
-INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (4, '0%', 0.0000, 'Aucune tva n''est applicable', '4114,4514', 0);
-INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (6, 'EXPORT', 0.0000, 'Tva pour les exportations', '41141,45144', 0);
-INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (5, 'INTRA', 0.0000, 'Tva pour les livraisons / acquisition intra communautaires', '41142,45142', 0);
-INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (7, 'COC', 0.0000, 'Opérations avec des cocontractants', '41144,45144', 0);
-INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (8, 'ART44', 0.0000, 'Opérations pour les opérations avec des assujettis à l\''art 44 Code TVA', '41143,45143', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (101, 'FR_NOR', 0.1960, 'TVA 19,6% - France métropolitaine - Taux normal', '445661,44571', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (102, 'FR_RED', 0.0550, 'TVA 5,5% - France métropolitaine - Taux réduit', '445662,44572', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (103, 'FR_SRED', 0.0210, 'TVA 2,1% - France métropolitaine - Taux super réduit', '445663,44573', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (104, 'FR_IMMO', 0.1960, 'TVA 19,6% - France métropolitaine - Taux immobilisations', '4456601,445701', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (105, 'FR_ANC', 0.0000, 'TVA x% - France métropolitaine - Taux anciens', '4456602,445702', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (201, 'DOM', 0.0850, 'TVA 8,5%  - DOM - Taux normal', '4456603,445703', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (202, 'DOM_NPR', 0.0850, 'TVA 8,5% - DOM - Taux normal NPR', '4456604,445704', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (203, 'DOM_REDUIT', 0.0210, 'TVA 2,1% - DOM - Taux réduit', '4456605,445705', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (204, 'DOM_I', 0.0175, 'TVA 1,75% - DOM - Taux I', '4456606,445706', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (205, 'DOM_PRESSE', 0.0105, 'TVA 1,05% - DOM - Taux publications de presse', '4456607,445707', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (206, 'DOM_OCTROI', 0.0000, 'TVA x% - DOM - Taux octroi de mer', '4456608,445708', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (207, 'DOM_IMMO', 0.0000, 'TVA x% - DOM - Taux immobilisations', '4456609,445709', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (301, 'COR_I', 0.1300, 'TVA 13% - Corse - Taux I', '44566010,4457010', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (302, 'COR_II', 0.0800, 'TVA 8% - Corse - Taux II', '44566011,4457011', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (303, 'COR_III', 0.0210, 'TVA 2,1% - Corse - Taux III', '44566012,4457012', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (304, 'COR_IV', 0.0090, 'TVA 0,9% - Corse - Taux IV', '44566013,4457013', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (305, 'COR_IMMO', 0.0000, 'TVA x% - Corse - Taux immobilisations', '44566014,4457014', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (401, 'INTRA', 0.0000, 'TVA x% - Acquisitions intracommunautaires/Pays', '44566015,4457015', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (402, 'INTRA_IMMMO', 0.0000, 'TVA x% - Acquisitions intracommunautaires immobilisations/Pays', '44566016,4457016', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (501, 'FRANCH', 0.0000, 'TVA x% - Non imposable : Achats en franchise', '44566017,4457017', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (502, 'EXPORT', 0.0000, 'TVA x% - Non imposable : Exports hors CE/Pays', '44566018,4457018', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (503, 'AUTRE', 0.0000, 'TVA x% - Non imposable : Autres opérations', '44566019,4457019', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (504, 'INTRA_LIV', 0.0000, 'TVA x% - Non imposable : Livraisons intracommunautaires/Pays', '44566020,4457020', 0);
 
 
 
@@ -1803,11 +1444,11 @@ SELECT pg_catalog.setval('s_fdef', 6, true);
 
 
 
-SELECT pg_catalog.setval('s_fiche', 20, true);
+SELECT pg_catalog.setval('s_fiche', 79, true);
 
 
 
-SELECT pg_catalog.setval('s_fiche_def_ref', 16, true);
+SELECT pg_catalog.setval('s_fiche_def_ref', 18, true);
 
 
 
@@ -1819,7 +1460,7 @@ SELECT pg_catalog.setval('s_formdef', 1, false);
 
 
 
-SELECT pg_catalog.setval('s_grpt', 2, true);
+SELECT pg_catalog.setval('s_grpt', 102, true);
 
 
 
@@ -1839,7 +1480,7 @@ SELECT pg_catalog.setval('s_isup', 1, false);
 
 
 
-SELECT pg_catalog.setval('s_jnt_fic_att_value', 371, true);
+SELECT pg_catalog.setval('s_jnt_fic_att_value', 875, true);
 
 
 
@@ -1891,7 +1532,7 @@ SELECT pg_catalog.setval('s_jrn_pj4', 1, false);
 
 
 
-SELECT pg_catalog.setval('s_jrn_rapt', 1, false);
+SELECT pg_catalog.setval('s_jrn_rapt', 20, true);
 
 
 
@@ -1903,15 +1544,15 @@ SELECT pg_catalog.setval('s_jrnx', 1, false);
 
 
 
-SELECT pg_catalog.setval('s_oa_group', 1, true);
+SELECT pg_catalog.setval('s_oa_group', 7, true);
 
 
 
-SELECT pg_catalog.setval('s_periode', 91, true);
+SELECT pg_catalog.setval('s_periode', 117, true);
 
 
 
-SELECT pg_catalog.setval('s_quantity', 7, true);
+SELECT pg_catalog.setval('s_quantity', 13, true);
 
 
 
@@ -1919,7 +1560,7 @@ SELECT pg_catalog.setval('s_stock_goods', 1, false);
 
 
 
-SELECT pg_catalog.setval('s_tva', 1001, true);
+SELECT pg_catalog.setval('s_tva', 1000, false);
 
 
 
@@ -1927,7 +1568,7 @@ SELECT pg_catalog.setval('s_user_act', 1, false);
 
 
 
-SELECT pg_catalog.setval('s_user_jrn', 1, false);
+SELECT pg_catalog.setval('s_user_jrn', 8, true);
 
 
 
@@ -2005,7 +1646,7 @@ SELECT pg_catalog.setval('tags_t_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval('tmp_pcmn_id_seq', 1034, true);
+SELECT pg_catalog.setval('tmp_pcmn_id_seq', 314, true);
 
 
 
@@ -2059,8 +1700,6 @@ SELECT pg_catalog.setval('user_filter_id_seq', 1, false);
 
 
 
-INSERT INTO user_local_pref (user_id, parameter_type, parameter_value) VALUES ('1', 'MINIREPORT', '0');
-INSERT INTO user_local_pref (user_id, parameter_type, parameter_value) VALUES ('1', 'PERIODE', '79');
 
 
 
@@ -2084,8 +1723,8 @@ SELECT pg_catalog.setval('user_sec_action_profile_ua_id_seq', 6, true);
 
 
 INSERT INTO version (val, v_description, v_date) VALUES (126, NULL, NULL);
-INSERT INTO version (val, v_description, v_date) VALUES (127, 'Add filter for search, inactive tag or ledger, type of operation, security', '2018-02-10 22:03:11.229137');
-INSERT INTO version (val, v_description, v_date) VALUES (128, 'Add a view to manage VAT', '2018-02-10 22:03:11.584111');
+INSERT INTO version (val, v_description, v_date) VALUES (127, 'Add filter for search, inactive tag or ledger, type of operation, security', '2018-02-10 22:35:58.431394');
+INSERT INTO version (val, v_description, v_date) VALUES (128, 'Add a view to manage VAT', '2018-02-10 22:35:59.308007');
 
 
 

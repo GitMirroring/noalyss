@@ -7,6 +7,8 @@
 export TEMPLATE=${DOMAIN}mod1
 
 pg_dump -O -U dany -s $TEMPLATE|grep -v "COMMENT ON SCHEMA public IS 'Standard public schema';" |sed "/^--/d" > schema.sql
+sed -i -e "/COMMENT ON EXTENSION/d" schema.sql
+sed -i -e "/CREATE EXTENSION/d" schema.sql
 awk '/SEQUENCE/,/;/  { print $0;}' < schema.sql > sequence.sql
 awk '/CREATE DOMAIN/,/;/ { print $0;}' < schema.sql > table.sql
 awk '/CREATE TABLE/,/;/ { print $0;}' < schema.sql >> table.sql
