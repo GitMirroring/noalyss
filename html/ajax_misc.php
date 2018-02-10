@@ -236,7 +236,9 @@ $path = array(
     // Attribute for category of card
     'template_cat_category'=>'ajax_template_cat_category',
     // From FollowUp , update a comment on a file
-    'update_comment_followUp'=>'ajax_follow_up'
+    'update_comment_followUp'=>'ajax_follow_up',
+    // TVA param
+    "tva_parameter"=>"ajax_tva_parameter"
 )    ;
 
 if (array_key_exists($op, $path)) {

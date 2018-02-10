@@ -108,7 +108,7 @@ if ( !defined("SITE_UPDATE_PLUGIN"))
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
 }
-define ("DBVERSION",127);
+define ("DBVERSION",128);
 define ("MONO_DATABASE",25);
 define ("DBVERSIONREPO",18);
 define ('NOTFOUND','--not found--');
