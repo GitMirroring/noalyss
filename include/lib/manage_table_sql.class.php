@@ -179,7 +179,13 @@ class Manage_Table_SQL
     {
         $this->aerror[$p_col]=$p_message;
     }
-
+    /**
+     * returns the nb of errors found
+     */
+    function count_error()
+    {
+        return count($this->aerror);
+    }
     /**
      * @brief retrieve the error message
      * @param $p_col column name
@@ -200,9 +206,9 @@ class Manage_Table_SQL
      * Usually , you get the row of the table (get_table) , you check the conditions
      * if an condition is not met then you set the error with $this->set_error 
      * 
-     * if there are error returns false otherwise true
+     * if there are error (returns false otherwise true
      * 
-     * @see set_error get_error
+     * @see set_error get_error count_error
      * @return boolean
      * @code 
 function check()
