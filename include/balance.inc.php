@@ -35,9 +35,8 @@ require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 global $g_user, $http;
 $gDossier=dossier::id();
-
 // Get the exercice
-$exercice=$http->get("exercice","number",0);
+$exercice=$http->request("exercice","number",0);
 if ($exercice == 0 ){
     $exercice=$g_user->get_exercice();
 }
@@ -48,7 +47,6 @@ echo '<div class="content">';
 /*
  * Let you change the exercice
  */
-echo '<fieldset  class="noprint"><legend>'._('Exercice').'</legend>';;
 echo '<form method="GET">';
 echo _('Choisissez un autre exercice')." : ";
 $ex=new Exercice($cn);
@@ -57,15 +55,11 @@ $wex=$ex->select('exercice',$exercice,' onchange="'.$js.'"');
 echo $wex->input();
 echo dossier::hidden();
 echo HtmlInput::get_to_hidden(array('ac','type'));
-echo '</form>';
-echo '</fieldset>';
 
 
 // Show the form for period
-echo '<FORM  method="get">';
 echo HtmlInput::get_to_hidden(array('ac'));
 echo HtmlInput::hidden('type','bal');
-echo HtmlInput::get_to_hidden(array('exercice'));
 echo dossier::hidden();
 
 
