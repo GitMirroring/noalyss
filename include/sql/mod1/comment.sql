@@ -1,4 +1,3 @@
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 COMMENT ON FUNCTION correct_sequence(p_sequence text, p_col text, p_table text) IS ' Often the primary key is a sequence number and sometimes the value of the sequence is not synchronized with the primary key ( p_sequence : sequence name, p_col : col of the pk,p_table : concerned table';
 COMMENT ON FUNCTION format_account(p_account public.account_type) IS 'format the accounting :
 - upper case
