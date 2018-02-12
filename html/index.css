@@ -62,6 +62,33 @@ background-repeat: repeat-x repeat-y;
 #logo_id {
     width:19%;
 }
+@media only screen and (max-width : 360px) {
+    #alternate_browser {
+        display : none;
+    }
+   #logo_id {
+      position:absolute;
+      z-index:-1;
+      height:30%;
+      width:auto;
+      left:0px;
+    
+    }
+    #login_frm {
+        position:absolute;
+        left:15%;
+        top:50%;
+    }
+    .input_text {
+        width:8em;
+    }
+    #recover_link {
+    position:absolute;
+    margin-bottom:30px;
+    width: 100%;
+    }
+ 
+}
 @media only screen and (max-width : 900px) {
     #alternate_browser {
         display : none;
@@ -69,7 +96,7 @@ background-repeat: repeat-x repeat-y;
    #logo_id {
       position:absolute;
       z-index:-1;
-      height:60%;
+      height:45%;
       width:auto;
       left:0px;
     
@@ -90,13 +117,43 @@ background-repeat: repeat-x repeat-y;
     z-index:-1;
     position:absolute;
     width:19%;
-    left:27%;
-    top:24.5%;
+    left:7%;
+    top:9%;
     }
     #login_frm {
         position:absolute;
-        left:768px;
-        top:333px;
+        left:15%;
+        top:15%;
+    }
+    .input_text {
+        width: 24em;
+        width: 24rem;
+    }
+   #recover_link {
+    position:absolute;
+    margin-top:397px;
+    left:539px;
+    background-color: white;
+}
+}
+@media only screen and (min-width : 1100px) {
+    #alternate_browser {
+        position:absolute;
+        bottom: 0px;
+        left:0px;
+        z-index: -1;
+    }
+    #logo_id {
+    z-index:-1;
+    position:absolute;
+    width:19%;
+    left:8%;
+    top:19.5%;
+    }
+    #login_frm {
+        position:absolute;
+        left:25%;
+        top:30%;
     }
     .input_text {
         width: 24em;
