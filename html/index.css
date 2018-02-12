@@ -62,6 +62,20 @@ background-repeat: repeat-x repeat-y;
 #logo_id {
     width:19%;
 }
+
+
+#recover_box {
+
+    display: block;
+    position: absolute;
+    top: 40%;
+    z-index: 1;
+    border: 2px solid blue;
+    width: 30%;
+    margin-left: 25%;
+    background-color: whitesmoke;
+
+}
 @media only screen and (max-width : 360px) {
     #alternate_browser {
         display : none;
@@ -87,6 +101,18 @@ background-repeat: repeat-x repeat-y;
     margin-bottom:30px;
     width: 100%;
     }
+    #recover_box {
+
+    display: block;
+    position: absolute;
+    top: 15%;
+    z-index: 1;
+    border: 2px solid blue;
+    width: 96%;
+    margin-left: 1%;
+    background-color: whitesmoke;
+
+}
  
 }
 @media only screen and (max-width : 900px) {
@@ -104,7 +130,18 @@ background-repeat: repeat-x repeat-y;
     .input_text {
         width:8em;
     }
- 
+     #recover_box {
+
+    display: block;
+    position: absolute;
+    top: 15%;
+    z-index: 1;
+    border: 2px solid blue;
+    width: 96%;
+    margin-left: 1%;
+    background-color: whitesmoke;
+
+}
 }
 @media only screen and (min-width : 901px) {
     #alternate_browser {
@@ -134,6 +171,18 @@ background-repeat: repeat-x repeat-y;
     margin-top:397px;
     left:539px;
     background-color: white;
+}
+    #recover_box {
+
+    display: block;
+    position: absolute;
+    top: 15%;
+    z-index: 1;
+    border: 2px solid blue;
+    width: 96%;
+    margin-left: 1%;
+    background-color: whitesmoke;
+
 }
 }
 @media only screen and (min-width : 1100px) {
@@ -165,4 +214,17 @@ background-repeat: repeat-x repeat-y;
     left:539px;
     background-color: white;
 }
+#recover_box {
+
+    display: block;
+    position: absolute;
+    top: 40%;
+    z-index: 1;
+    border: 2px solid blue;
+    width: 30%;
+    margin-left: 25%;
+    background-color: whitesmoke;
+
+}
+
 }

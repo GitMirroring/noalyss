@@ -233,12 +233,12 @@ echo '
 
 ?>
 </table>
-
+</center>
 </form>
 <?php if (defined("RECOVER")) : ?>
     <a id="recover_link" href="#">Mot de passe oublié ? </a>
     
-<div id="recover_box" style="display:none;position:absolute;top:40%;z-index:1;border:solid blue 2px;width:30%;margin-left: 25%;background-color: whitesmoke">
+<div id="recover_box">
     <span style="display:block;font-size:120%;padding:10px">Indiquez votre login ou votre email <span style="cursor: pointer;background-color: white;color:block;top:-5px;float: right;position:relative;right:-5px" id="close"><a ref="#" id="close_link"><?php echo SMALLX?></a></span></span>
             <form method="POST">
                 <input type="hidden" value="send_email" name="id">
