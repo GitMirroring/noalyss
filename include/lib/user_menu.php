@@ -145,7 +145,7 @@ function MenuAdmin()
                 );
 
 	}
-    $menu=ShowItem($item,'H',"mtitle","mtitle",$def,' style="width:80%;margin-left:10%" ');
+    $menu=ShowItem($item,'H',"mtitle","mtitle",$def);
     return $menu;
 }
 

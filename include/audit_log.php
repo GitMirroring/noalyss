@@ -24,7 +24,7 @@
  */
 if ( !defined ('ALLOWED')) die('Forbidden');
 ?>
-<DIV class="content" style="width:80%;margin-left:10%">
+<DIV class="content">
 <span class="notice">Liste limitée aux 100 dernières connexions</span>
 <?php
 

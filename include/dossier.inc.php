@@ -45,7 +45,7 @@ if ( isset ($_POST['upd']) && isNumber($dossier_id) == 1 && $dossier_id != -1)
     $dos->set_parameter("max_email", $max_email);
     $dos->save();
 }
-echo '<div class="content" style="width:80%;margin-left:10%">';
+echo '<div class="content">';
 /*
  *  check and add an new folder
  */

@@ -29,7 +29,7 @@ if ( !defined ('ALLOWED')) die('Forbidden');
 require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
-echo '<div class="content" style="width:80%;margin-left:10%">';
+echo '<div class="content" >';
 /******************************************************/
 // Add user
 /******************************************************/

@@ -72,7 +72,7 @@ if ( isset ($_REQUEST['sa'] ))
     // Restore a folder (dossier)
     if ( $_REQUEST['t']=='d')
     {
-        echo '<div class="content" style="width:80%;margin-left:10%">';
+        echo '<div class="content">';
 
         $cn=new Database();
         $id=$cn->get_next_seq('dossier_id');
