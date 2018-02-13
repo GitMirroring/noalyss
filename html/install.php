@@ -319,73 +319,33 @@ echo "<li>";
 
 echo "</li>";
 }
+//---------------------------------------------------------------------------------------
+// Check php modules
+//---------------------------------------------------------------------------------------
 $module=get_loaded_extensions();
 
-echo "<li>";
 $str_error_message=_('Vous devez installer ou activer l\'extension').'<span style="font-weight:bold"> %s </span>';
-if (  in_array('mbstring',$module) == false ){
-  echo 'module mbstring '.$failed;
-  echo '<span class="warning">',
-        sprintf($str_error_message, "mbstring"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module mbstring '.$succeed;
-echo "</li>";
 
-echo "<li>";
-if (  in_array('pgsql',$module) == false )
-{
-  echo 'module PGSQL '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "psql"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module PGSQL '.$succeed;
-echo "</li>";
+$a_need_module=array("mbstring","pgsql","bcmath","gettext","zip","gd","dom","xml","SimpleXML","xmlwriter","xmlreader");
 
-echo "<li>";
-if ( in_array('bcmath',$module) == false )
-{
-  echo 'module BCMATH ok '.$failed;
-  echo '<span class="warning">',
-        sprintf($str_error_message, "bcmath"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module BCMATH '.$succeed;
-echo "</li>";
+$nb_need_module=count($a_need_module);
 
-echo "<li>";
-if (in_array('gettext',$module) == false )
+for ($m=0;$m<$nb_need_module;$m++)
 {
-  echo 'module GETTEXT '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "gettext"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module GETTEXT '.$succeed;
-echo "</li>";
-
-echo "<li>";
-if ( in_array('zip',$module) == false )
-{
-  echo 'module ZIP '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "zip"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module ZIP '.$succeed;
-echo "</li>";
-echo "<li>";
-if ( in_array('gd',$module) == false )
-{
-  echo 'module GD '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "gd"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module GD '.$succeed;
-echo "</li>";
-
+    
+    echo "<li>";
+    if (  in_array($a_need_module[$m],$module) == false ){
+      echo 'module '.$a_need_module[$m].$failed;
+      echo '<span class="warning">',
+            sprintf($str_error_message, $a_need_module[$m]),
+            ' </span>';
+      $flag_php++;
+    } else echo 'module '.$a_need_module[$m].$succeed;
+    echo "</li>";
+}
+//---------------------------------------------------------------------------------------
+// Max_execution_time , can be overriden
+//---------------------------------------------------------------------------------------
 if ( ini_get("max_execution_time") < 60 )  {
         echo "<li>";
         echo _('Avertissement').' : '.$failed;
