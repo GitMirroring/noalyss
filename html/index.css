@@ -98,7 +98,7 @@ background-repeat: repeat-x repeat-y;
     }
     #recover_link {
     position:absolute;
-    margin-bottom:30px;
+    bottom:30px;
     width: 100%;
     }
     #recover_box {
@@ -124,7 +124,8 @@ background-repeat: repeat-x repeat-y;
       z-index:-1;
       height:45%;
       width:auto;
-      left:0px;
+      left:15%;
+      top:15%;
     
     }
     .input_text {
@@ -138,7 +139,7 @@ background-repeat: repeat-x repeat-y;
     z-index: 1;
     border: 2px solid blue;
     width: 96%;
-    margin-left: 1%;
+    left: 1%;
     background-color: whitesmoke;
 
 }
@@ -154,12 +155,12 @@ background-repeat: repeat-x repeat-y;
     z-index:-1;
     position:absolute;
     width:19%;
-    left:7%;
-    top:9%;
+    left:15%;
+    top:10%;
     }
     #login_frm {
         position:absolute;
-        left:15%;
+        left:29%;
         top:15%;
     }
     .input_text {
@@ -168,7 +169,7 @@ background-repeat: repeat-x repeat-y;
     }
    #recover_link {
     position:absolute;
-    margin-top:397px;
+    top:397px;
     left:539px;
     background-color: white;
 }
@@ -196,13 +197,13 @@ background-repeat: repeat-x repeat-y;
     z-index:-1;
     position:absolute;
     width:19%;
-    left:8%;
+    left:32%;
     top:19.5%;
     }
     #login_frm {
         position:absolute;
-        left:25%;
-        top:30%;
+        left:47%;
+        top:28%;
     }
     .input_text {
         width: 24em;
@@ -210,8 +211,8 @@ background-repeat: repeat-x repeat-y;
     }
    #recover_link {
     position:absolute;
-    margin-top:397px;
-    left:539px;
+    top:55%;
+    left:50%;
     background-color: white;
 }
 #recover_box {
