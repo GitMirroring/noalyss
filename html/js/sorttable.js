@@ -100,7 +100,7 @@ var sorttable = {
         }
 
         // work through each column and calculate its type
-        headrow = table.tHead.rows[0].cells;
+        var headrow = table.tHead.rows[0].cells;
         for (var i = 0; i < headrow.length; i++) {
             // manually override the type with a sorttable_type attribute
             if (!headrow[i].className.match(/\bsorttable_nosort\b/)) { // skip this col
@@ -112,6 +112,20 @@ var sorttable = {
                     headrow[i].sorttable_sortfunction = sorttable["sort_" + override];
                 } else {
                     headrow[i].sorttable_sortfunction = sorttable.guessType(table, i);
+                }
+                //--------- if already sorted , add a icon ----------------
+                if (headrow[i].className.search(/\bsorttable_sorted_reverse\b/) != -1) {
+                    // if we're already sorted by this column, 
+                    sortrevind = document.createElement('span');
+                    sortrevind.id = "sorttable_sortrevind";
+                    sortrevind.innerHTML = '<img src="image/down.gif">';
+                    headrow[i].appendChild(sortrevind);
+                }
+                if (headrow[i].className.search(/\bsorttable_sorted\b/) != -1) {
+                    sortfwdind = document.createElement('span');
+                    sortfwdind.id = "sorttable_sortfwdind";
+                    sortfwdind.innerHTML = '<img src="image/up.gif">';
+                    headrow[i].appendChild(sortfwdind);
                 }
                 // make it clickable to sort
                 headrow[i].sorttable_columnindex = i;
