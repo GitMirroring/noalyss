@@ -192,13 +192,16 @@ var sorttable = {
                     }
                     delete row_array;
                     // Highlight odd and even rows properly
-                    sorttable.highlight_body(this);
+                    sorttable.highlight_body(table);
                 });
             }
         }
     },
-    highlight_body:function(p_heading) {
-         var p_table=p_heading.parentNode.parentNode.parentNode;
+    /**
+     * alternate properly the rows of the table, 
+     * @param {DOMNode} p_table sorted table 
+     */ 
+    highlight_body:function(p_table) {
          var nb_row=p_table.rows;
          var e=0;
          for (e=1;e<nb_row.length;e++) {
