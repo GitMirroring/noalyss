@@ -264,7 +264,6 @@ class Periode
             $Res=$this->cn->exec_sql("insert into jrn_periode (jrn_def_id,p_id,status) ".
                     "select jrn_def_id,$p_id,'OP' from jrn_def");
             $this->cn->commit();
-            return $p_id;
         }
         catch (Exception $e)
         {

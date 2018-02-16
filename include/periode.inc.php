@@ -44,6 +44,30 @@ $p_ledger_id=$http->request("jrn_def_id", "number", 0);
 
 </script>
 <?php
+//--------------------------------------------------------------------
+// Add an exercice 
+// receive nb_exercice
+//--------------------------------------------------------------------
+if (isset($_POST['add_exercice']))
+{
+    $obj=new Periode($cn);
+    try
+    {
+        $p_exercice=$http->post("p_exercice", "number");
+        $p_year=$http->post("p_year", "number");
+        $nb_month=$http->post("nb_month", "number");
+        $from_month=$http->post("from_month", "number");
+        $day_opening=$http->post("day_opening", "string", 0);
+        $day_closing=$http->post("day_closing", "string", 0);
+        $exercice=new Periode($cn);
+        $exercice->insert_exercice($p_exercice, $p_year, $from_month, $nb_month,
+                $day_opening, $day_closing);
+    }
+    catch (Exception $ex)
+    {
+        echo_warning($ex->getMessage());
+    }
+}
 //-------------------------------------------------------------------
 // Select a ledger or global
 //-------------------------------------------------------------------
@@ -69,30 +93,7 @@ Periode::filter_exercice($p_exercice);
 $js_close_selected="jsper.close_selected()";
 echo HtmlInput::button_action(_("Fermer les périodes sélectionnées"),
         $js_close_selected);
-//--------------------------------------------------------------------
-// Add an exercice 
-// receive nb_exercice
-//--------------------------------------------------------------------
-if (isset($_POST['add_exercice']))
-{
-    $obj=new Periode($cn);
-    try
-    {
-        $p_exercice=$http->post("p_exercice", "number");
-        $p_year=$http->post("p_year", "number");
-        $nb_month=$http->post("nb_month", "number");
-        $from_month=$http->post("from_month", "number");
-        $day_opening=$http->post("day_opening", "string", 0);
-        $day_closing=$http->post("day_closing", "string", 0);
-        $exercice=new Periode($cn);
-        $exercice->insert_exercice($p_exercice, $p_year, $from_month, $nb_month,
-                $day_opening, $day_closing);
-    }
-    catch (Exception $ex)
-    {
-        echo_warning($ex->getMessage());
-    }
-}
+
 /*
  * Display all the periode for all ledgers
  */
