@@ -444,7 +444,7 @@ class Manage_Table_SQL
             }
         }
         echo HtmlInput::filter_table("tb".$this->object_name, $result, 1);
-        printf('<table class="result" id="tb%s">', $this->object_name);
+        printf('<table class="result sortable" id="tb%s">', $this->object_name);
         for ($i=0; $i<$nb; $i++)
         {
             if ($i==0)
@@ -473,20 +473,21 @@ class Manage_Table_SQL
     {
         $nb=count($this->a_order);
         echo "<tr>";
-
         for ($i=0; $i<$nb; $i++)
         {
-
+            $sorted="";
             $key=$this->a_order[$i];
-
+            if ( $key==$this->table->primary_key) {
+                $sorted = 'class="sorttable_sorted"';
+            }
             if ($this->get_property_visible($key)==true)
-                echo th($this->a_label_displaid[$key]);
+                echo th($this->a_label_displaid[$key],$sorted);
         }
         if ($this->can_update_row()) {
-            echo th("  ",'style="width:40px"');
+            echo th("  ",'style="width:40px" class="sorttable_nosort"');
         }
         if ($this->can_delete_row()) {
-            echo th(" ",'style="width:40px"');
+            echo th(" ",'style="width:40px" class="sorttable_nosort"');
         }
         echo "</tr>";
     }
