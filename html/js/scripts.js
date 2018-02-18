@@ -2898,7 +2898,7 @@ function create_anchor_up()
 function init_scroll()
 {
     var up=new Element('div',{"class":"inner_box",
-            "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:95px;right:50px;text-align:center;font-size:20px",
+            "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:105px;right:50px;text-align:center;font-size:20px",
             id:"go_up"
         });
         up.innerHTML=' <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>';
@@ -2906,7 +2906,7 @@ function init_scroll()
          window.onscroll=function () {
          if ( document.viewport.getScrollOffsets().top> 0) {
              if ($('go_up').visible() == false) {
-                $('go_up').setOpacity(0.45); 
+                $('go_up').setOpacity(0.65); 
                 $('go_up').show();
                 $('go_up').style.zIndex=99;
             }
