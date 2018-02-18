@@ -319,73 +319,33 @@ echo "<li>";
 
 echo "</li>";
 }
+//---------------------------------------------------------------------------------------
+// Check php modules
+//---------------------------------------------------------------------------------------
 $module=get_loaded_extensions();
 
-echo "<li>";
 $str_error_message=_('Vous devez installer ou activer l\'extension').'<span style="font-weight:bold"> %s </span>';
-if (  in_array('mbstring',$module) == false ){
-  echo 'module mbstring '.$failed;
-  echo '<span class="warning">',
-        sprintf($str_error_message, "mbstring"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module mbstring '.$succeed;
-echo "</li>";
 
-echo "<li>";
-if (  in_array('pgsql',$module) == false )
-{
-  echo 'module PGSQL '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "psql"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module PGSQL '.$succeed;
-echo "</li>";
+$a_need_module=array("mbstring","pgsql","bcmath","gettext","zip","gd","dom","xml","SimpleXML","xmlwriter","xmlreader");
 
-echo "<li>";
-if ( in_array('bcmath',$module) == false )
-{
-  echo 'module BCMATH ok '.$failed;
-  echo '<span class="warning">',
-        sprintf($str_error_message, "bcmath"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module BCMATH '.$succeed;
-echo "</li>";
+$nb_need_module=count($a_need_module);
 
-echo "<li>";
-if (in_array('gettext',$module) == false )
+for ($m=0;$m<$nb_need_module;$m++)
 {
-  echo 'module GETTEXT '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "gettext"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module GETTEXT '.$succeed;
-echo "</li>";
-
-echo "<li>";
-if ( in_array('zip',$module) == false )
-{
-  echo 'module ZIP '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "zip"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module ZIP '.$succeed;
-echo "</li>";
-echo "<li>";
-if ( in_array('gd',$module) == false )
-{
-  echo 'module GD '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "gd"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module GD '.$succeed;
-echo "</li>";
-
+    
+    echo "<li>";
+    if (  in_array($a_need_module[$m],$module) == false ){
+      echo 'module '.$a_need_module[$m].$failed;
+      echo '<span class="warning">',
+            sprintf($str_error_message, $a_need_module[$m]),
+            ' </span>';
+      $flag_php++;
+    } else echo 'module '.$a_need_module[$m].$succeed;
+    echo "</li>";
+}
+//---------------------------------------------------------------------------------------
+// Max_execution_time , can be overriden
+//---------------------------------------------------------------------------------------
 if ( ini_get("max_execution_time") < 60 )  {
         echo "<li>";
         echo _('Avertissement').' : '.$failed;
@@ -505,13 +465,19 @@ if ( ! isset($_POST['go']) ) {
 </span>
 <?php
 }
-if ( ! isset($_POST['go']) )
-	exit();
+if (!isset($_POST['go']))
+{
+    exit();
+}
 // Check if account_repository exists
-if (!defined("MULTI") || (defined("MULTI") && MULTI == 1))
-        $account = $cn->count_sql("select * from pg_database where datname=lower('" . domaine . "account_repository')");
+if (!defined("MULTI")||(defined("MULTI")&&MULTI==1))
+{
+    $account=$cn->count_sql("select * from pg_database where datname=lower('".domaine."account_repository')");
+}
 else
-        $account=1;
+{
+    $account=1;
+}
 
 // Create the account_repository
 if ($account == 0 ) {
@@ -531,11 +497,17 @@ if ($account == 0 ) {
 
   $cn->commit($cn);
 
- if ( ! DEBUG) ob_end_clean();
+  if (!DEBUG)
+    {
+        ob_end_clean();
+    }
 
-  echo _("Creation of Modele 1");
-  if ( ! DEBUG) ob_start();
-  $cn->exec_sql("create database ".domaine."mod1 encoding='utf8'");
+    echo _("Creation of Modele 1");
+  if (!DEBUG)
+    {
+        ob_start();
+    }
+    $cn->exec_sql("create database ".domaine."mod1 encoding='utf8'");
 
   $cn=new Database(1,'mod');
   $cn->start();
@@ -544,9 +516,12 @@ if ($account == 0 ) {
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
   $cn->commit();
 
-  if ( ! DEBUG) ob_end_clean();
+  if (!DEBUG)
+    {
+        ob_end_clean();
+    }
 
-  echo _("Creation of Modele 2");
+    echo _("Creation of Modele 2");
   $cn->exec_sql("create database ".domaine."mod2 encoding='utf8'");
   $cn=new Database(2,'mod');
   $cn->start();
@@ -575,8 +550,8 @@ if  (defined("MULTI") && MULTI == 0)
 	$db = new Database();
 	if ($db->exist_table("repo_version") == false) 
 	{
-            if ( ! DEBUG) { ob_start();  }
-            $db->execute_script(NOALYSS_INCLUDE.'/sql/mono/mono.sql');
+                        if ( ! DEBUG) { ob_start();  }
+                        $db->execute_script(NOALYSS_INCLUDE.'/sql/mono/mono.sql');
                      
             if ( ! DEBUG) ob_end_clean();
 	}
@@ -631,12 +606,15 @@ if  (defined("MULTI") && MULTI == 0)
  * If multi folders
  */
 define ('ALLOWED',1);
+define ('ALLOWED_ADMIN',1);
+
 $_GET['sb']="upg_all";
 $rep=new Database();
-if (defined (NOALYSS_ADMINISTRATOR) )
-        $rep->exec_sql("update ac_users set use_login=$1 where use_id=1",
-              array(strtolower(NOALYSS_ADMINISTRATOR)));
-require NOALYSS_INCLUDE."/upgrade.inc.php";
+if (defined(NOALYSS_ADMINISTRATOR))
+{
+    $rep->exec_sql("update ac_users set use_login=$1 where use_id=1", array(strtolower(NOALYSS_ADMINISTRATOR)));
+}
+ Dossier::upgrade();
 echo '<h1>'._('Important').'</h1>';
 echo '<p>'._('Utilisateur administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';
         
@@ -644,9 +622,9 @@ echo "<h2 class=\"warning\">";
 printf (" VOUS DEVEZ EFFACER CE FICHIER %s",__FILE__);
 echo "</h2>";
 
- echo "<p class=\"info\">"._("Tout est install&eacute;")." ". $succeed;
+ echo "<p class=\"info\">"._("Tout est installé")." ". $succeed;
 ?>
 </p>
 <p style="text-align: center">
-<A style="display:inline;margin:10px;padding:10px;" class="button" HREF="index.php"><?php echo _('Connectez-vous à NOALYSS')?></A>
+<A style="display:inline;margin:10px;padding:10px;" class="button" HREF="index.php?remove_install"><?php echo _("Essai effacement install.php et se connecter à NOALYSS")?></A>
 </p>

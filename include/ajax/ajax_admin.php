@@ -31,10 +31,11 @@ if ($g_user->Admin()==0)
 {
     die();
 }
+session_write_close();
 set_language();
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
-
+$op=$http->request("op");
 // From admin, grant  the access to a folder to an
 // user
 if ($op=='folder_add') // operation
@@ -50,7 +51,7 @@ if ($op=='folder_add') // operation
         $dossiercn=new Database($dossier_id);
         // By default new user has the profile 1 (admin) and ledger's security
         // + action's security are disabled
-        $user=new User($dossiercn,$user_id);
+        $user=new User($dossiercn, $user_id);
         $user->set_status_security_action(0);
         $user->set_status_security_ledger(0);
         $user->save_profile(1);
@@ -70,7 +71,7 @@ if ($op=='folder_add') // operation
         return;
     }
 
-        
+
     //----------------------------------------------------------------
     // Answer in XML
     header('Content-type: text/xml; charset=UTF-8');
@@ -131,20 +132,20 @@ if ($op=='folder_display') // operation
     try
     {
         $user_id=$http->get("p_user", "number"); // get variable
-        $p_filter=$http->get('p_filter', "string",'');
+        $p_filter=$http->get('p_filter', "string", '');
         ob_start();
         $user=new User($cn, $user_id);
         $a_dossier=Dossier::show_dossier('X', $user->id, $p_filter, MAX_FOLDER_TO_SHOW);
         echo HtmlInput::title_box(_("Liste dossier"), 'folder_list_div');
         ?>
         <form method="get" onsubmit="folder_display('<?php echo $user_id ?>');
-                        return false">
+                return false">
             <p style="text-align: center">
                 <?php echo _('Recherche'); ?>
-                
+
                 <input type="text" id="database_filter_input" class="input_text" autofocus="true" autocomplete="off" nohistory autocomplete="false" value="<?php echo $p_filter ?>" 
-                       onkeyup="filter_table(this, 'folder_display_tb','1,2,3',0)"  >
-                <input type="button" class="smallbutton" onclick="$('database_filter_input').value='';filter_table($('database_filter_input'), 'folder_display_tb','1,2,3',0);" value="X">
+                       onkeyup="filter_table(this, 'folder_display_tb', '1,2,3', 0)"  >
+                <input type="button" class="smallbutton" onclick="$('database_filter_input').value = '';filter_table($('database_filter_input'), 'folder_display_tb', '1,2,3', 0);" value="X">
                 <input type="submit" class="smallbutton" value="<?php echo _('Rechercher') ?>">
             </p>
         </form>    
@@ -159,8 +160,6 @@ if ($op=='folder_display') // operation
         require NOALYSS_TEMPLATE.'/folder_display.php';
         $content=ob_get_clean();
         $status='OK';
-
-        
     }
     catch (Exception $exc)
     {
@@ -195,14 +194,13 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
         $dossier=$http->get('p_dossier', "number");
         $content=_('Erreur paramètre');
         $status="NOK";
-        
     }
     catch (Exception $exc)
     {
         error_log($exc->getTraceAsString());
         $content=_('Erreur paramètre');
         $status="NOK";
-          //----------------------------------------------------------------
+        //----------------------------------------------------------------
         // Answer in XML
         header('Content-type: text/xml; charset=UTF-8');
         $dom=new DOMDocument('1.0', 'UTF-8');
@@ -215,7 +213,6 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
         $dom->appendChild($root);
         echo $dom->saveXML();
         exit();
-
     }
 
     // Modify the description or the name of folder
@@ -237,8 +234,8 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
         echo _('Description').' : <br>';
         echo $wDesc->input('desc', $dos->get_parameter('desc'));
         echo '<br>';
-        
-        echo _('Max. email / jour (-1 = illimité)')    ;
+
+        echo _('Max. email / jour (-1 = illimité)');
         $max_email_input=new INum('max_email');
         $max_email_input->value=$dos->get_parameter('max_email');
         $max_email_input->prec=0;
@@ -340,5 +337,73 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
     $dom->appendChild($root);
     echo $dom->saveXML();
     exit();
+}
+//------------------------------------------------------------------
+// Upgrade Core
+//------------------------------------------------------------------
+if ($op=='upgradeCore')
+{
+    require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
+    require_once NOALYSS_INCLUDE.'/class/package_repository.class.php';
+    $task_id=$http->request("task_id");
+    $progress=new Progress_Bar($task_id);
+    $progress->set_value(2);
+    $repo=new Package_Repository();
+    $core=$repo->make_object("core", " ");
+    $progress->set_value(5);
+    $core->download();
+    $progress->set_value(55);
+    if (!DEBUG)
+    {
+        $core->install();
+    }
+    $progress->set_value(100);
+
+    $url=sprintf('<a href="%s"> install.php</a>', NOALYSS_URL."/install.php");
+    printf(_("Afin de terminer l'installation aller sur %s , à la fin de la procédure , demandez à effacer le fichier install.php"),
+            $url);
+}
+//---------------------------------------------------------------------------------------------------------
+// Upgrade or install plugin
+//---------------------------------------------------------------------------------------------------------
+if ($op=='upgradePlugin')
+{
+    require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
+    require_once NOALYSS_INCLUDE.'/class/package_repository.class.php';
+    $task_id=$http->request("task_id");
+    $code=$http->post("code_plugin");
+    $progress=new Progress_Bar($task_id);
+    $progress->set_value(2);
+    $repo=new Package_Repository();
+    $plugin=$repo->make_object("plugin", $code);
+    $progress->set_value(5);
+    $plugin->download();
+    $progress->set_value(55);
+    if (!DEBUG)
+    {
+        $plugin->install();
+    }
+    $progress->set_value(100);
+}
+//------------------------------------------------------------------------------------------------------------------
+// Install template
+//------------------------------------------------------------------------------------------------------------------
+if ($op=="installTemplate")
+{
+    require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
+    require_once NOALYSS_INCLUDE.'/class/package_repository.class.php';
+    $task_id=$http->request("task_id");
+    $name=$http->post("code");
+    $progress=new Progress_Bar($task_id);
+    $progress->set_value(2);
+    $package_repository=new Package_Repository();
+    $progress->set_value(4);
+    $template=$package_repository->make_object("template", $name);
+    $progress->set_value(30);
+    $template->download();
+    $progress->set_value(70);
+    $template->install();
+    $progress->set_value(100);
+    echo _("Modèle installé ");
 }
 ?>        

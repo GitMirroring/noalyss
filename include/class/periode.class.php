@@ -218,7 +218,7 @@ class Periode
      * @param date $p_date_end
      * @param int $p_exercice
      * @return int p_id of the new periode
-     * @exception Exception 10 Invalide date or exercice
+     * @exception Exception 10 Invalide date or exercice, 20 overlapping periode
      */
     function insert($p_date_start, $p_date_end, $p_exercice)
     {
@@ -248,7 +248,7 @@ class Periode
                 ",[$p_date_end]);
             if ( $overlap_start > 0 || $overlap_end > 0)
             {
-                throw new Exception (_("Période chevauchant une autre"));
+                throw new Exception (_("Période chevauchant une autre"),20);
             }
             $p_id=$this->cn->get_next_seq('s_periode');
             $sql=" insert into parm_periode(p_id,p_start,p_end,p_closed,p_exercice)
@@ -264,15 +264,14 @@ class Periode
             $Res=$this->cn->exec_sql("insert into jrn_periode (jrn_def_id,p_id,status) ".
                     "select jrn_def_id,$p_id,'OP' from jrn_def");
             $this->cn->commit();
+            return $p_id;
         }
         catch (Exception $e)
         {
             record_log($e->getTraceAsString());
             $this->cn->rollback();
             throw $e;
-            return 1;
         }
-        return 0;
     }
 
     /* !\brief load data from database
@@ -478,10 +477,7 @@ class Periode
                     $date_start=sprintf('01.%02d.%d', $month, $year);
                     $date_end=$this->cn->get_value("select to_char(to_date($1,'DD.MM.YYYY')+interval '1 month'-interval '1 day','DD.MM.YYYY')",
                             array($date_start));
-                    if ($this->insert($date_start, $date_end, $p_exercice)!=0)
-                    {
-                        throw new Exception('Erreur insertion période');
-                    }
+                    $this->insert($date_start, $date_end, $p_exercice);
                 }
                 $month++;
                 if ($month == 13 )

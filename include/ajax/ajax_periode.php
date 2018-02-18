@@ -279,9 +279,11 @@ switch ($act)
             $a_answer['content']=ob_get_clean();
             $a_answer['status']="OK";
             $a_answer['p_id']=$p_id;
+            $a_answer['status']="OK";
         }
         catch (Exception $e)
         {
+            $a_answer['status']="NOK";
             $a_answer['content']=$e->getMessage();
         }
         break;

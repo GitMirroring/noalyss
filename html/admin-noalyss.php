@@ -29,6 +29,7 @@ if (file_exists("../include/config.inc.php") ) {
      * installed
      */
     define ('ALLOWED',1);
+    define ('ALLOWED_ADMIN',1);
     require_once '../include/constant.php';
     require_once NOALYSS_INCLUDE.'/admin_repo.inc.php';
 } else {

@@ -68,7 +68,7 @@ $hi=new HttpInput();
 if ( $ac->exist_table('version') == false)
 {
     echo '<h2 class="error" style="font-size:12px">'._("Base de donnée invalide").'</h2>';
-    $base=dirname($_SERVER['REQUEST_URI']);
+    echo '<a hreF="'.NOALYSS_URL.'/user_login.php">'._("Retour").'</a></h2>';
     exit();
 }
 
@@ -78,27 +78,30 @@ if ( $version < DBVERSIONREPO )
 {
     echo '<h2 class="error" style="font-size:12px">'._("Votre base de données n'est pas à jour").'   ';
     $a=_("cliquez ici pour appliquer le patch");
-    $base = dirname($_SERVER['REQUEST_URI']);
-    if ($base == '/') { $base = ''; }
-    $base .= '/admin-noalyss.php';
+    $base =NOALYSS_URL.'/admin-noalyss.php';
     echo '<a hreF="'.$base.'">'.$a.'</a></h2>';
 
 }
 if ( $User->Admin()  == 1)
 {
-	if (SITE_UPDATE !="") {
-	 $update=@file_get_contents(SITE_UPDATE);
+    if (SITE_UPDATE !="") {
+     $update=@file_get_contents(SITE_UPDATE);
 	 if ($update > $version_noalyss ) {
-		 echo '<div id="version_div" class="inner_box" style="width:25%;margin-left:10%;margin-top:3px;">';
-		 echo '<p class="notice">';
-		 printf ( "Mise à jour disponible de NOALYSS version actuelle : %s  votre version %s ",$update,$version_noalyss);
-		 echo '</p>';
-                 echo '<p style="text-align:center"> <a class="button" onclick="document.body.removeChild(document.getElementById(\'version_div\'))">'.
-                         _('Fermer').
-                         "</a></p>";
-		 echo '</div>';
-	 }
-	}
+            echo '<div id="version_div" class="inner_box" style="width:25%;margin-left:10%;margin-top:3px;">';
+            echo '<p class="notice">';
+            printf ( "Mise à jour disponible de NOALYSS version actuelle : %s  votre version %s ",$update,$version_noalyss);
+
+            // Link to admin_repo : upgrade application
+            $base =NOALYSS_URL."/admin-noalyss.php?action=upgrade&sb=application";
+
+           echo '<a hreF="' . $base . '">' . _("Cliquez ici pour mettre à jour") . '</a>';
+           echo '</p>';
+           echo '<p style="text-align:center"> <a class="button" onclick="document.body.removeChild(document.getElementById(\'version_div\'))">'.
+                   _('Fermer').
+                   "</a></p>";
+           echo '</div>';
+        }
+    }
 }
 
 include_once NOALYSS_INCLUDE."/lib/user_menu.php";
@@ -144,12 +147,11 @@ if ( $User->admin == 0 || (defined("MULTI")&& MULTI == 0 ) )
     if ( $folder != null  && count($folder) == 1 )
     {
 
-            redirect('do.php?gDossier='.$folder[0]['dos_id']);
+            redirect(NOALYSS_URL.'/do.php?gDossier='.$folder[0]['dos_id']);
             exit();
     }
 
 }
-
 $result="";
 $result.="<table border=\"0\">";
 $result.='<TR>';

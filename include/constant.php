@@ -103,7 +103,9 @@ if ( !defined("SITE_UPDATE"))
     define ("SITE_UPDATE",'http://www.noalyss.eu/last_version.txt');
 if ( !defined("SITE_UPDATE_PLUGIN"))
     define ("SITE_UPDATE_PLUGIN",'http://www.noalyss.eu/plugin_last_version.txt');
-
+if ( !defined ("NOALYSS_PACKAGE_REPOSITORY")) {
+    define ("NOALYSS_PACKAGE_REPOSITORY","https://package.noalyss.eu/");
+}
 // If you don't want that the system information  is accessible
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
@@ -311,3 +313,13 @@ define ('EXC_PARAM_TYPE',1006);
 define ('EXC_DUPLICATE',1200);
 define ("UNPINDG","&#xf047;");
 define ("PINDG","&#xe809;");
+
+// Url of NOALYSS (http://...) 
+// 
+if ( ! defined ("NOALYSS_URL")) {
+    $base=$_SERVER['REQUEST_SCHEME'].'://'.
+            $_SERVER['HTTP_HOST'].
+            ":".$_SERVER['SERVER_PORT'].
+            dirname($_SERVER['PHP_SELF']);
+    define ("NOALYSS_URL",$base);
+}

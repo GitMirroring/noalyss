@@ -254,7 +254,7 @@ $Res = $cn->exec_sql("select mod_id,mod_name,mod_desc from
                    modeledef $sql_order");
 
 $count = Database::num_row($Res);
-echo '<div class="content" style="width:80%;margin-left:10%">';
+echo '<div class="content">';
 echo "<H2>"._('Modèles')."</H2>";
 if ($sa == 'list')
 {
