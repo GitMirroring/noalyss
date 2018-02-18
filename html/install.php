@@ -465,13 +465,19 @@ if ( ! isset($_POST['go']) ) {
 </span>
 <?php
 }
-if ( ! isset($_POST['go']) )
-	exit();
+if (!isset($_POST['go']))
+{
+    exit();
+}
 // Check if account_repository exists
-if (!defined("MULTI") || (defined("MULTI") && MULTI == 1))
-        $account = $cn->count_sql("select * from pg_database where datname=lower('" . domaine . "account_repository')");
+if (!defined("MULTI")||(defined("MULTI")&&MULTI==1))
+{
+    $account=$cn->count_sql("select * from pg_database where datname=lower('".domaine."account_repository')");
+}
 else
-        $account=1;
+{
+    $account=1;
+}
 
 // Create the account_repository
 if ($account == 0 ) {
@@ -491,11 +497,17 @@ if ($account == 0 ) {
 
   $cn->commit($cn);
 
- if ( ! DEBUG) ob_end_clean();
+  if (!DEBUG)
+    {
+        ob_end_clean();
+    }
 
-  echo _("Creation of Modele 1");
-  if ( ! DEBUG) ob_start();
-  $cn->exec_sql("create database ".domaine."mod1 encoding='utf8'");
+    echo _("Creation of Modele 1");
+  if (!DEBUG)
+    {
+        ob_start();
+    }
+    $cn->exec_sql("create database ".domaine."mod1 encoding='utf8'");
 
   $cn=new Database(1,'mod');
   $cn->start();
@@ -504,9 +516,12 @@ if ($account == 0 ) {
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
   $cn->commit();
 
-  if ( ! DEBUG) ob_end_clean();
+  if (!DEBUG)
+    {
+        ob_end_clean();
+    }
 
-  echo _("Creation of Modele 2");
+    echo _("Creation of Modele 2");
   $cn->exec_sql("create database ".domaine."mod2 encoding='utf8'");
   $cn=new Database(2,'mod');
   $cn->start();
@@ -535,8 +550,8 @@ if  (defined("MULTI") && MULTI == 0)
 	$db = new Database();
 	if ($db->exist_table("repo_version") == false) 
 	{
-            if ( ! DEBUG) { ob_start();  }
-            $db->execute_script(NOALYSS_INCLUDE.'/sql/mono/mono.sql');
+                        if ( ! DEBUG) { ob_start();  }
+                        $db->execute_script(NOALYSS_INCLUDE.'/sql/mono/mono.sql');
                      
             if ( ! DEBUG) ob_end_clean();
 	}
@@ -591,12 +606,15 @@ if  (defined("MULTI") && MULTI == 0)
  * If multi folders
  */
 define ('ALLOWED',1);
+define ('ALLOWED_ADMIN',1);
+
 $_GET['sb']="upg_all";
 $rep=new Database();
-if (defined (NOALYSS_ADMINISTRATOR) )
-        $rep->exec_sql("update ac_users set use_login=$1 where use_id=1",
-              array(strtolower(NOALYSS_ADMINISTRATOR)));
-require NOALYSS_INCLUDE."/upgrade.inc.php";
+if (defined(NOALYSS_ADMINISTRATOR))
+{
+    $rep->exec_sql("update ac_users set use_login=$1 where use_id=1", array(strtolower(NOALYSS_ADMINISTRATOR)));
+}
+ Dossier::upgrade();
 echo '<h1>'._('Important').'</h1>';
 echo '<p>'._('Utilisateur administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';
         
@@ -604,9 +622,9 @@ echo "<h2 class=\"warning\">";
 printf (" VOUS DEVEZ EFFACER CE FICHIER %s",__FILE__);
 echo "</h2>";
 
- echo "<p class=\"info\">"._("Tout est install&eacute;")." ". $succeed;
+ echo "<p class=\"info\">"._("Tout est installé")." ". $succeed;
 ?>
 </p>
 <p style="text-align: center">
-<A style="display:inline;margin:10px;padding:10px;" class="button" HREF="index.php"><?php echo _('Connectez-vous à NOALYSS')?></A>
+<A style="display:inline;margin:10px;padding:10px;" class="button" HREF="index.php?remove_install"><?php echo _("Essai effacement install.php et se connecter à NOALYSS")?></A>
 </p>

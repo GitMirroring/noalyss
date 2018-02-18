@@ -203,6 +203,10 @@ $path = array(
     "modele_drop"=>"ajax_admin",
   // From admin, display the information of a template you can modify
     "modele_modify"=>"ajax_admin",
+    // From admin , upgrade Noalyss
+    "upgradeCore"=>"ajax_admin",
+    // From admin , upgrade or install plugin
+    "upgradePlugin"=>"ajax_admin",
   // From dashboard, display detail about last operation     
     "action_show"=>"ajax_gestion",
   // From dashboard, display form for a new event    

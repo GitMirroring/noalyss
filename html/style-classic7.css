@@ -305,9 +305,9 @@ td.cell{
 }
 td.selectedcell{
     
-  border-radius:15px;
-   -moz-border-radius: 15px;
-   -webkit-border-radius: 15px;
+  border-radius:19px;
+   -moz-border-radius: 19px;
+   -webkit-border-radius: 19px;
     font-weight: bold;
     color:#FFFFFF;
     width:250px;
@@ -315,6 +315,7 @@ td.selectedcell{
     background: #b8c6df; /* Old browsers */
     border-top-right-radius: 0px;
     border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
 }
 .menu2 td.mtitle ,.menu2 td.selectedcell{
     border-radius: 0px;

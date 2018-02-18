@@ -132,11 +132,13 @@
  * </ul>
  */
 
+
 if ( ! file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php'))
 {
     header("Location: install.php",true, 307);
     exit(0);
 }
+
 
 echo '<!doctype html><HTML>
 <head>
@@ -153,11 +155,21 @@ require_once '../include/constant.php';
 require_once '../include/config.inc.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 if (file_exists("install.php")&& ! DEBUG ) {
-    /*
-     * This file shouldn't exist
-     */
-    echo _("Le fichier ".__DIR__."/install.php est encore présent, vous devez l'effacer avant d'utiliser NOALYSS");
-    return;
+    // At the end of the installation procedure , the install file must be removed
+    if (isset($_GET['remove_install'])) {
+        if (is_writable(__DIR__."/install.php") ) {
+            unlink(__DIR__."/install.php");
+        }
+    }
+    // if removed failed then
+    if (file_exists("install.php") )
+    {
+        /*
+        * This file shouldn't exist
+        */
+       echo _("Le fichier ".__DIR__."/install.php est encore présent, vous devez l'effacer avant d'utiliser NOALYSS");
+       return;
+    }
 }
 if ( strlen(domaine) > 0 )
 {

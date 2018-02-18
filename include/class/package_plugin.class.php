@@ -21,26 +21,46 @@
 
 /**
  * @file
- * @brief contains the class Package_Repository
+ * @brief 
  */
-class Package_Repository
+require_once NOALYSS_INCLUDE."/class/package_noalyss.class.php";
+
+/**
+ * @class
+ * @brief
+ */
+class Package_Plugin extends Package_Noalyss
 {
-    private $content;
-    function __construct()
+
+    public function install()
     {
-        $this->content=@file_get_content(NOALYSS_PACKAGE."/web.xml");
+        $zip=new ZipArchive ();
+        // open the file
+        if ($zip->open(NOALYSS_HOME."/tmp/".$this->get_file()))
+        {
+            // try to unzip and overwrite current 
+            if (!$zip->extractTo(NOALYSS_PLUGIN))
+            {
+                throw new Exception(_("Echec installation plugin "), 1);
+            }
+        }
+        else
+        {
+            throw new Exception(_("Ce n'est pas un fichier valide"), 2);
+        }
     }
-    function get_noalyss_info()
+
+    /**
+     * Check the NOALYSS_PLUGIN is writeable
+     */
+    public function can_install()
     {
-        
-    }
-    function get_plugin_info()
-    {
-        
-    }
-    function get_template_info()
-    {
-        
+        if (is_writable(NOALYSS_PLUGIN))
+        {
+            return TRUE; ;
+        }
+        return FALSE;
     }
     
+
 }
