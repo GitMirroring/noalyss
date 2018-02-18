@@ -62,20 +62,23 @@ function cal()
     var str_sub="Total :"+p_variable+" = "+result.toString();
     this.document.getElementById("sub_total").innerHTML=str_sub;
     this.document.getElementById("listing").innerHTML=p_history;
-    this.document.getElementById('inp').value="";
+    this.document.getElementById('inp').value=result;
 }
 // Clean
 //
-function Clean()
+function CleanHistory()
 {
     this.document.getElementById('listing').innerHTML="";
-    this.document.getElementById('result').innerHTML="";
     this.document.getElementById('sub_total').innerHTML="";
     this.document.getElementById('inp').value="";
     this.document.getElementById('inp').focus();
 
 }
-
+function Clean() 
+{
+    this.document.getElementById('inp').value="";
+    this.document.getElementById('inp').focus();
+}
 function Compute()
 {
     var tot=0;
