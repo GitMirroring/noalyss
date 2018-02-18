@@ -76,11 +76,11 @@ class Extension extends Menu_Ref_sql
     function can_request($p_login)
     {
         $cnt=$this->cn->get_value("select count(*) from menu_ref
-										join profile_menu using (me_code)
-										join profile_user using (p_id)
-										where
-										me_code=$1
-										and user_name=$2", array($this->me_code, $p_login));
+                                                                join profile_menu using (me_code)
+                                                                join profile_user using (p_id)
+                                                                where
+                                                                me_code=$1
+                                                                and user_name=$2", array($this->me_code, $p_login));
         if ($cnt>0)
             return 1;
         return 0;
