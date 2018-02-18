@@ -319,8 +319,8 @@ class Extension extends Menu_Ref_sql
     /**
      * Parse a XML file to complete an array of extension objects
      * @brief Create extension from XML.
-     * @param type $p_file filename
-     * @return array of Extension
+     * @param string $p_file filename
+     * @return array  array of Extension
      */
     static function read_definition($p_file)
     {
