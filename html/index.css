@@ -126,7 +126,6 @@ background-repeat: repeat-x repeat-y;
 
 }
  
-}
 @media only screen and (max-width : 900px) {
     #alternate_browser {
         display : none;
@@ -134,14 +133,14 @@ background-repeat: repeat-x repeat-y;
    #logo_id {
       position:absolute;
       z-index:-1;
-      height:45%;
-      width:auto;
-      left:15%;
-      top:15%;
+      height:auto;
+      width:34%;
+      left:33%;
+      top:5%;
     
     }
     .input_text {
-        width:8em;
+        width:12rem;
     }
      #recover_box {
 
@@ -154,7 +153,13 @@ background-repeat: repeat-x repeat-y;
     left: 1%;
     background-color: whitesmoke;
 
-}
+    }
+     #login_frm {
+        position:absolute;
+        left:35%;
+        right:35%;
+        top:50%;
+    }
 }
 @media only screen and (min-width : 901px) {
     #alternate_browser {
@@ -172,8 +177,8 @@ background-repeat: repeat-x repeat-y;
     }
     #login_frm {
         position:absolute;
-        left:15%;
-        top:15%;
+        left:30%;
+        top:25%;
     }
     .input_text {
         width: 24em;
