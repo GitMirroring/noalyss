@@ -348,7 +348,8 @@ function action_save_short()
         var str_hour=new String($('action_add_frm')['hour_event'].value);
         str_hour=str_hour.trim();
         
-        if ( str_hour.search(/^[0-9]{2}:[0-9]{2}$/) == -1 &&
+        if ( str_hour.trim() != "" 
+             && str_hour.search(/^[0-9]{2}:[0-9]{2}$/) == -1 &&
              str_hour.search(/^[0-9]{2}.[0-9]{2}$/) == -1)
         {
             $('action_add_frm')['hour_event'].parentNode.className="notice";
