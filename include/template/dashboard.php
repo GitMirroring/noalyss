@@ -341,7 +341,7 @@ $wTitle=new IText('p_title');
 $wDesc=new ITextArea('p_desc');
 $wDesc->heigh=5;
 $wDesc->width=40;
-echo HtmlInput::title_box(_("Note"),"add_todo_list","hide",'',"",'y');
+echo HtmlInput::title_box(_("Note"),"add_todo_list","hide",'',"n");
 echo _("Date")." ".$wDate->input().'<br>';
 echo _("Titre")." ".$wTitle->input().'<br>';
 echo _("Description")."<br>".$wDesc->input().'<br>';
@@ -359,11 +359,4 @@ function display_detail(div) {
        // $(div).style.top=calcy('150')+'px';
 	//Effect.Grow(div,{});
 }
-try {
-var array=Array('customer_now_div','customer_late_div','supplier_now_div','supplier_late_div','action_now_div','action_late_div');
-var i=0;
-for  (i=0;i < array.length;i++) {
-	new Draggable(array[i],{});
-	}
-} catch (e) { alert(e.getMessage);}
 </script>
