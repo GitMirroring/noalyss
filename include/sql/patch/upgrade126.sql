@@ -102,9 +102,6 @@ alter table jrn alter jr_optype set default 'NOR';
 comment on column jrn.jr_optype is 'Type of operation , NOR = NORMAL , OPE opening , EXT extourne, CLO closing';
 update jrn set jr_optype='NOR';
 
--- update quant_sold set qs_vat_sided=round(qs_vat_sided,2);
--- update quant_purchase set qp_vat_sided=round(qp_vat_sided,2);
-
 alter table tags add column t_actif char(1);
 update tags set t_actif='Y';
 ALTER TABLE tags ADD CONSTRAINT tags_check CHECK (t_actif in ('N','Y')) ;
