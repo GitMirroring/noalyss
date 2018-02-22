@@ -94,9 +94,9 @@ class IDate extends HtmlInput
 
     public function display()
     {
-        $r="<span>  : ".$this->value;
+        $r="<span>  ".$this->value;
         $r.='<input type="hidden" name="'.$this->name.'"'.
-                'id="'.$this->name.'"'.
+                'id="'.$this->id.'"'.
                 ' value = "'.$this->value.'"></span>';
         return $r;
     }
