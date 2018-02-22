@@ -336,7 +336,7 @@ class HtmlInput
         }
         $js=sprintf('onclick="view_history_card(\'%s\',\'%s\',\'%s\')"', $f_id,
                 dossier::id(),$p_exercice);
-        $view_history=HtmlInput::button("hcb"+$e, $p_mesg, $js);
+        $view_history=HtmlInput::button("hcb".$e, $p_mesg, $js);
         return $view_history;
     }
 
