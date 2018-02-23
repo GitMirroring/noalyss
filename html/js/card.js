@@ -629,7 +629,7 @@ function select_card_type(obj)
 }
 /**
  *@brief Show a blank card
- *@param Form object (obj)
+ *@param obj Form object (obj)
  *       possible attribute :
  *        - filter is the filter but with a  fd_id list, -1 means there  is no filter
  *        - ref : reload the window after adding card
