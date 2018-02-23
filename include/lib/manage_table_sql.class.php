@@ -58,6 +58,7 @@
   @endcode
  * @see ManageTable.js
  * @see ajax_accounting.php
+ * @see sorttable.js
  * 
  */
 
@@ -78,7 +79,7 @@ class Manage_Table_SQL
     protected $aerror; //!< Array containing the error of the input data
     protected $col_sort; //!< when inserting, it is the column to sort,-1 to disable it and append only
     protected $a_info; //!< Array with the infotip
-
+    protected $sort_column; //!< javascript sort , if empty there is no js sort
     const UPDATABLE=1;
     const VISIBLE=2;
 
@@ -118,6 +119,8 @@ class Manage_Table_SQL
         $this->icon_mod="right";
         $this->icon_del="right";
         $this->col_sort=0;
+        // By default no js sort
+        $this->sort_column="";
     }
     /**
      * send the XML headers for the ajax call 
@@ -626,7 +629,14 @@ function check()
             }
         }
         echo _('Cherche')." ".HtmlInput::filter_table("tb".$this->object_name, $result, 1);
-        printf('<table class="result" id="tb%s">', $this->object_name);
+        
+        // Set a sort on a column if sort_column is not empty
+        if ( $this->sort_column =="")
+        {
+            printf('<table class="result" id="tb%s">', $this->object_name); 
+        } else {
+           printf('<table class="result sortable" id="tb%s">', $this->object_name);
+        }
         for ($i=0; $i<$nb; $i++)
         {
             if ($i==0)
@@ -659,31 +669,48 @@ function check()
 
         if ($this->can_update_row() && $this->icon_mod=="left")
         {
-            echo th("  ", 'style="width:40px"');
+            echo th("  ", 'style="width:40px"  class="sorttable_nosort"');
         }
         if ($this->can_delete_row() && $this->icon_del=="left")
         {
-            echo th(" ", 'style="width:40px"');
+            echo th(" ", 'style="width:40px"  class="sorttable_nosort"');
         }
         for ($i=0; $i<$nb; $i++)
         {
 
             $key=$this->a_order[$i];
-
+            $sorted="";
+            if ( $key == $this->sort_column) {
+                $sorted=' class="sorttable_sorted"';
+            }
             if ($this->get_property_visible($key)==true)
-                echo th("","",$this->a_label_displaid[$key]);
+                echo th("",$sorted,$this->a_label_displaid[$key]);
         }
         if ($this->can_update_row() && $this->icon_mod=="right")
         {
-            echo th("  ", 'style="width:40px"');
+            echo th("  ", 'style="width:40px"  class="sorttable_nosort"');
         }
         if ($this->can_delete_row() && $this->icon_del=="right")
         {
-            echo th(" ", 'style="width:40px"');
+            echo th(" ", 'style="width:40px"  class="sorttable_nosort" ');
         }
         echo "</tr>";
     }
-
+    /**
+     * set the column to sort by default
+     */
+    function set_sort_column($p_col)
+    {
+        $this->sort_column=$p_col;
+    }
+    /**
+     * return the column to sort
+     */
+    function get_sort_column()
+    {
+        return $this->sort_column;
+    }
+    
     /**
      * @brief set the id value of a data row and load from the db
      */

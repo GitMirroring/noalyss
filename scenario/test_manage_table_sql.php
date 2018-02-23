@@ -51,7 +51,7 @@ $manage_table->set_col_label('pcm_val', "Poste");
 $manage_table->set_col_label('parent_accounting', "Dépend");
 $manage_table->set_col_label('pcm_lib', "Libellé");
 $manage_table->set_col_label('pcm_type', "Type de menu".Icon_Action::infobulle(33));
-
+$manage_table->set_sort_column("pcm_lib");
 // Change visible property
 function test_visible_update(Manage_Table_SQL $p_manage_table,$p_property,$p_visible,$p_update) {
     global $g_failed,$g_succeed;
@@ -75,11 +75,11 @@ test_visible_update($manage_table, "parent_accounting", FALSE, FALSE);
 test_visible_update($manage_table, "parent_accounting", FALSE, TRUE);
 test_visible_update($manage_table, "parent_accounting", TRUE, FALSE);
 test_visible_update($manage_table, "parent_accounting", TRUE, TRUE);
-
 echo "<h1>"."Icon MODIFY place"."</h1>";
 echo "<h2>"." Mod left"."</h2>";
 $manage_table->set_icon_mod("left");
 $manage_table->display_table("where pcm_val::text >= '400' order by pcm_val::text limit 10");
+return;
 
 echo "<h2>"." Mod right"."</h2>";
 $manage_table->set_icon_mod("right");
