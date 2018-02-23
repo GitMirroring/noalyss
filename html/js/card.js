@@ -609,7 +609,9 @@ function select_card_type(obj)
                                       // Get all the category, 
                                       var answer=req.responseXML.getElementsByTagName("fiche_cat_item");
                                       if (answer.length == 0) {
-                                          alert_box(req.responseText);
+                                          removeDiv(content);
+                                          remove_waiting_box();
+                                          alert_box(getNodeText(req.responseXML.getElementsByTagName("code")[0]));
                                           return;
                                       }
                                       if ( answer.length == 1) {
