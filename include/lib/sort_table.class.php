@@ -72,11 +72,11 @@ class Sort_Table
 
 	$base = $this->array[$p_ind]['url'];
 	$str = '';
-	$str .= '<A style="display:inline" HREF="' . $base . '&ord=' . $this->array[$p_ind]['parm_asc'] . '">' .
+	$str .= '<A style="display:inline;text-decoration:none" HREF="' . $base . '&ord=' . $this->array[$p_ind]['parm_asc'] . '">' .
 		$this->array[$p_ind]['car_asc'] .
 		'</A>' .
 		$this->array[$p_ind]['head'] .
-		'<A style="display:inline" HREF="' . $base . '&ord=' . $this->array[$p_ind]['parm_desc'] . '">' .
+		'<A style="display:inline;text-decoration:none" HREF="' . $base . '&ord=' . $this->array[$p_ind]['parm_desc'] . '">' .
 		 $this->array[$p_ind]['car_desc'] .
 		'</A>';
 	return $str;
