@@ -344,6 +344,7 @@ class Database
             {
                 if (    strpos(strtolower($buffer), "$$;")===false      &&
                         strpos(strtolower($buffer), '$_$;')===false   &&
+                        strpos(strtolower($buffer), '$function$;')===false   &&
                         strpos(strtolower($buffer), 'language plpgsql;')===false 
                     )
                 {
