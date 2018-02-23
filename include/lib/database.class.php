@@ -342,8 +342,9 @@ class Database
             }
             if ($flag_function)
             {
-                if (strpos(strtolower($buffer), "$$;")===false &&
-                        strpos(strtolower($buffer), '$_$;')===false 
+                if (    strpos(strtolower($buffer), "$$;")===false      &&
+                        strpos(strtolower($buffer), '$_$;')===false   &&
+                        strpos(strtolower($buffer), 'language plpgsql;')===false 
                     )
                 {
                     $sql.=$buffer;
