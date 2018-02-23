@@ -51,7 +51,6 @@ $a_menu=$cn->get_array($sql,array($_SESSION['g_user']));
             <th class='sorttable_sorted'>
                 Code AD 
                 <?php echo Icon_Action::infobulle(34); ?>
-                <span id="sorttable_sortfwdind">&nbsp<img src="image/up.gif"></span>
             </th>
             <th>
                 <?php echo _("Chemin");?>
