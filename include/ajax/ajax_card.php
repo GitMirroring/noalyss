@@ -261,27 +261,23 @@ case 'st':
     }
     if ( strpos($where," in ()") != 0)
     {
-             $html=Icon_Action::close('select_card_div');
-             $html.=h2info(_('Choix de la catégorie'));
-             $html.='<h3 class="notice">';
-             $html.=_("Aucune catégorie de fiche ne correspond à".
+             $html=_("Aucune catégorie de fiche ne correspond à".
             " votre demande, le journal pourrait n'avoir accès à aucune fiche");
-             $html.='</h3>';
              break;
     }
     $sql.=" ".$where." order by fd_label";
 
     $array=$cn->get_array($sql);
-    $html=HtmlInput::title_box(_("Choix de la catégorie"), $ctl);
-
+    
+    $list_fiche="";
     if ( empty($array))
     {
-        $html.=_("Aucune catégorie de fiche ne correspond  à votre demande");
+        $html=_("Aucune catégorie de fiche ne correspond  à votre demande");
         if ( DEBUG )        $html.=$sql;
     }
     else
     {
-        $list_fiche="";
+        $html=HtmlInput::title_box(_("Choix de la catégorie"), $ctl);
         $r='';
         
 	$r.='<div dd>';
