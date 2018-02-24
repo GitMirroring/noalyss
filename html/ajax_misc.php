@@ -445,7 +445,6 @@ EOF;
                 }else {
                     
                     $Res = $cn->exec_sql("select * from v_tva_rate 
-                        where 
                             order by tva_rate desc");
                 }
 		$Max = Database::num_row($Res);
