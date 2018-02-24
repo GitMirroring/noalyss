@@ -1327,7 +1327,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p
                 onFailure: null,
                 onSuccess: function (req) {
                     remove_waiting_box();
-                    var div = {id: target, cssclass: 'inner_box', style: str_style, drag: 1};
+                    var div = {id: target, cssclass: 'inner_box', style: str_style, drag: 0};
                     add_div(div);
                     $(target).innerHTML = req.responseText;
                     req.responseText.evalScripts();
