@@ -35,6 +35,8 @@ else :
     $data=$tag->data;
     require_once NOALYSS_TEMPLATE.'/tag_detail.php';
     echo HtmlInput::submit("save_tag_sb", "Valider");
+    echo HtmlInput::button_close("tag_div");
+
     ?>
 </form>
 <?php
