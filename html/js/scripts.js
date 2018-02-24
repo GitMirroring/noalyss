@@ -2475,8 +2475,8 @@ function action_tag_select(p_dossier, ag_id)
                         }
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
-                        pos = fixed_position(35, 229);
-                        add_div({id: 'tag_div', style: pos, cssclass: 'inner_box tag', drag: 1});
+                        var pos = fixed_position(35, 229);
+                        add_div({id: 'tag_div', style: pos, cssclass: 'inner_box tag', drag: 0});
 
                         remove_waiting_box();
                         $('tag_div').innerHTML = code_html;
