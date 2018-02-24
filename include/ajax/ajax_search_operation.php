@@ -118,7 +118,9 @@ if (isset($_GET['viewsearch']))
     else
     {
         if ($step<$max_line)
+        {
             echo '<h2 class="notice">'._('Liste limitée à ').$step._(' enregistrements. Le nombre d\'enregistrements trouvés est de ').$max_line.'</h2>';
+        }
     }
     echo '<form method="get" onsubmit="set_reconcile(this);return false">';
     echo HtmlInput::hidden("tiers", $tiers);
@@ -129,7 +131,9 @@ if (isset($_GET['viewsearch']))
     echo $content;
     echo HtmlInput::submit("upd_rec", _("Mettre à jour"));
     if (!$inside)
+    {
         echo $bar;
+    }
 
     if (isset($_GET[$op.'r_jrn']))
     {
