@@ -302,7 +302,13 @@ class Anc_Operation
         {
             $class=($i%2 == 0)?'class="even"':' class="odd"';
             $i++;
-            $ret.="<tr $class>";
+            
+            if ( $oldgroup <> $row['oa_group']) {
+                $oldgroup=$row['oa_group'];
+            }
+            $row_id=sprintf('id="tr%s"',$oldgroup);
+            
+            $ret.="<tr $row_id $class>";
             $ret.=td($row['str_date']);
             $ret.=td(h($row['oa_description']));
             $ret.=td(h($row['jr_pj_number']));
