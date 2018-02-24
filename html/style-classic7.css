@@ -1760,6 +1760,7 @@ table.vert_mtitle td {
     border : 1px solid #99B1DF;
      background-color:#EDEDED;
      border-top-radius:20px;
+     font-family: SansationLight;
 }
 table.vert_mtitle td a{
     padding : 20px;
