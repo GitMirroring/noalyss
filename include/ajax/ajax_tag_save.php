@@ -21,7 +21,7 @@ if ( $g_user->check_module('CFGTAG')==0)
 require_once NOALYSS_INCLUDE.'/class/tag.class.php';
 
 //Save a tag
-if ($op=='ajax_tag_save')
+if ($op=='tag_save')
 {
     $tag=new Tag($cn);
     $tag->save($_GET);
