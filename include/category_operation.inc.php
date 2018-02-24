@@ -34,8 +34,8 @@ global $http;
 
 $f=new Fiche($cn,$http->request('f_id',"number"));
 $qcode=$f->get_quick_code();
-$_GET['qcode']=$qcode;
-$_REQUEST['qcode']=$qcode;
+$_GET['search_opqcode']=$qcode;
+$_REQUEST['search_opqcode']=$qcode;
 $var_array=compute_variable('ledger_type=ALL');
 put_global($var_array);
 
