@@ -140,6 +140,23 @@ class Anc_Plan
         $ret.=$wId->input();
         return $ret;
     }
+    /**
+     * @brief add a new plan
+     */
+    function form_new()
+    {
+        $wName=new IText("pa_name");
+        $wDescription=new IText("pa_description");
+        $wDescription->size=80;
+        
+        $ret="<TABLE>";
+        $ret.='<tr>'.td(_('Nom')).'<td>'.$wName->input().'</td>'.'</tr>';
+        $ret.="<tr>".td(_('Description')).'<td>'.$wDescription->input().'</td>'."</tr>";
+        $ret.="</table>";
+        return $ret;
+
+        
+    }
     function isAppend()
     {
         $count=$this->db->get_value("select count(pa_id) from plan_analytique");
