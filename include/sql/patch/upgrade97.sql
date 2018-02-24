@@ -748,7 +748,8 @@ loop
 	end loop;
 return;
 end;
-$BODY$ language plpgsql;
+$BODY$ 
+language plpgsql;
 
 
 
