@@ -807,7 +807,11 @@ function check()
                 if ( $this->get_col_type($v)=="select")
                 {
                     $idx=$p_row[$v];
-                   echo td($this->a_select[$v][$idx]["label"]);
+                    if ( ! isset($this->a_select[$v][$idx])) {
+                        echo td("--");
+                    } else {
+                        echo td($this->a_select[$v][$idx]["label"]);
+                    }
                     
                 }else {
                     echo td($p_row[$v]);
