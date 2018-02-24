@@ -111,7 +111,7 @@ EOF;
         $v=$this->input->get_value();
         $v=(trim($v)=="")?$this->message:$v;
         echo $v,
-                 '<span class="smallicon icon">&#xe80d;</span> ',
+                 '<span class="smallicon icon" style="margin-left:5px">&#xe80d;</span> ',
                 "
             <script>
             $('{$this->input->id}edit').removeClassName('inplace_edit_input');
@@ -133,7 +133,7 @@ EOF;
         $v=$this->input->get_value();
         $v=(trim($v)=="")?$this->message:$v;
         echo $v;
-        echo'<span class="smallicon icon">&#xe80d;</span> ';
+        echo'<span class="smallicon icon" style="margin-left:5px">&#xe80d;</span> ';
         echo "</span>";
         echo "
             
