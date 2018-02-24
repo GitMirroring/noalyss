@@ -1200,11 +1200,19 @@ function fill_box(req)
     }
     catch (e) {
         alert_box(e.message);
+         if (console) {
+            console.error(e);
+            console.error("log answer = "+q.responseText);
+        }
     }
     try {
         code_html.evalScripts();
     }
     catch (e) {
+        if (console) {
+            console.error(e);
+            console.error("log answer = "+q.responseText);
+        }
         alert_box("Impossible executer script de la reponse\n" + e.message);
     }
 
