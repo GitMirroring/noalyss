@@ -287,7 +287,7 @@ require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 echo '<h1>'._('Configuration').'</h1>';
 ?>
 <h2>Info</h2>
-<?php echo _('Vous utilisez le domaine'),domaine; ?>
+<?php echo _('Vous utilisez le domaine')," ",domaine; ?>
 <h2>PHP</h2>
 <?php
 
@@ -608,7 +608,6 @@ if  (defined("MULTI") && MULTI == 0)
 define ('ALLOWED',1);
 define ('ALLOWED_ADMIN',1);
 
-$_GET['sb']="upg_all";
 $rep=new Database();
 if (defined(NOALYSS_ADMINISTRATOR))
 {
@@ -619,7 +618,7 @@ echo '<h1>'._('Important').'</h1>';
 echo '<p>'._('Utilisateur administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';
         
 echo "<h2 class=\"warning\">";
-printf (" VOUS DEVEZ EFFACER CE FICHIER %s",__FILE__);
+printf (_("VOUS DEVEZ EFFACER CE FICHIER %s"),__FILE__);
 echo "</h2>";
 
  echo "<p class=\"info\">"._("Tout est installé")." ". $succeed;
