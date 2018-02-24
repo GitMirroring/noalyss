@@ -54,7 +54,6 @@ class Icon_Action
      */
     static function icon_add($id, $p_javascript, $p_style="")
     {
-        $r="";
         $r=sprintf('<input  class="smallbutton icon" onclick="%s" id="%s" type="button" %s value="&#xe828;">',
                 $p_javascript, $id, $p_style);
         return $r;
@@ -69,7 +68,6 @@ class Icon_Action
      */
     static function clean_zone($id, $p_javascript, $p_style="")
     {
-        $r="";
         $r=sprintf('<input class="smallbutton" onclick="%s" id="%s" value="X" %s type="button" style="">',
                 $p_javascript, $id, $p_style
         );
