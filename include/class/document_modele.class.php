@@ -100,8 +100,11 @@ class Document_modele
 	  $a->name="sa";
 	  $a->value="rm_template";
 	  $r.=$a->input();
-	  $r.=HtmlInput::submit("rm_template","Effacer la sélection");
-	}
+	  $r.=HtmlInput::submit("rm_template",_("Effacer la sélection"));
+	} else {
+            echo h2(_("Aucun document"));
+            echo _("Il n'y a aucun document, cliquez sur Ajouter pour en ajouter un");
+        }
 	$b=new IButton('show');
 	$b->label="Ajout d'un document";
 	$b->javascript="$('add_modele').style.display='block';new Draggable('add_modele',{starteffect:function(){
