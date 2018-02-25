@@ -455,7 +455,6 @@ class Periode
                     $date_end=$this->cn->get_value("select to_char(to_date($1,'DD.MM.YYYY')+interval '1 month'-interval '1 day','DD.MM.YYYY')",
                             array($fdate_start));
 
-                    $date_end=sprintf('02.%02d.%d', $month, $year);
                     $this->insert($date_start, $date_end, $p_exercice);
                 }
                 // The last month, we create a one-day periode for closing
