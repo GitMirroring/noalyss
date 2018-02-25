@@ -139,7 +139,7 @@ if ( $_GET['lang'] == "en_US.utf8" || $_GET['lang']=='fr_FR.utf8')
 </script>
 <script>
 var content=new Array();    
-content[200]="<?php echo _("Indiquez ici le récuterpertoire où les documents temporaires peuvent être sauvés exemple c:/temp, /tmp")?>";
+content[200]="<?php echo _("Indiquez ici le répertoire où les documents temporaires peuvent être sauvés exemple c:/temp, /tmp")?>";
 content[201]="<?php echo _("Désactiver le changement de langue (requis pour MacOSX)")?>";
 content[202]="<?php echo _("Le chemin vers le repertoire contenant psql, pg_dump...")?>";
 content[203]="<?php echo _("Utilisateur de la base de donnée postgresql")?>";
