@@ -363,7 +363,15 @@ if ( ini_get("register_globals") == true)  {
 	$flag_php++;
 }
 echo "</li>";
-
+// Check for open_basedir
+if ( ini_get("open_basedir") != "") {
+        echo "<li>";
+        echo _('Avertissement').' : '.$failed;
+	print '<span class="warning"> '._('open_basedir empêche certaines fonctions de Noalyss,mettez-le à vide ').'</span>';
+        echo "</li>";
+	$flag_php++;
+    
+}
  echo "</ul>";
 if ( $flag_php==0 ) {
 	echo '<p class="info"> '._('php.ini est bien configuré ').$succeed.'</p>';
