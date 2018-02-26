@@ -60,7 +60,7 @@ table.sortable, table.table_large, table.result  ,table.resultfooter {
     width:99%;
     border-spacing:  1px;
    /*border-collapse:collapse; */
-    margin  :0.5%;
+    
     border:1px #5D90CD solid;
     border-radius: 10px;
     -moz-border-radius: 10px;
