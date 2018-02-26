@@ -1053,7 +1053,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $add_js.='update_pay_method();';
         $add_js.='update_row("sold_item");';
 
-        $wLedger=$this->select_ledger('ACH',2);
+        $wLedger=$this->select_ledger('ACH',2,FALSE);
         
         if ($wLedger == null) throw  new Exception(_('Pas de journal disponible'));
         $wLedger->javascript="onChange='update_predef(\"ach\",\"f\",\"".$_REQUEST['ac']."\");$add_js'";

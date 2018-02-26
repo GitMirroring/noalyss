@@ -1105,7 +1105,7 @@ EOF;
         $add_js.='update_pay_method();';
         $add_js.='update_row("sold_item");';
 
-        $wLedger = $this->select_ledger('VEN', 2);
+        $wLedger = $this->select_ledger('VEN', 2,FALSE);
         if ($wLedger == null)
             throw new Exception(_('Pas de journal disponible'));
         $wLedger->table = 1;

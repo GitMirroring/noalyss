@@ -309,7 +309,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			$onchange .= 'update_pj();';
 
 		$add_js = 'onchange="'.$onchange.'"';
-		$wLedger = $this->select_ledger('FIN', 2);
+		$wLedger = $this->select_ledger('FIN', 2,FALSE);
 		if ($wLedger == null)
 			throw  new Exception(_('Pas de journal disponible'));
 

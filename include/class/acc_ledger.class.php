@@ -483,14 +483,16 @@ class Acc_Ledger extends jrn_def_sql
     /**
      * @brief Show a select list   of the ledgers you can access in
      * writing, reading or simply accessing.
-     * @param$p_type = ALL or the type of the ledger (ACH,VEN,FIN,ODS)
-     * @param$p_access =3 for READ and WRITE, 2 for write and 1 for readonly
+     * @param $p_type = ALL or the type of the ledger (ACH,VEN,FIN,ODS)
+     * @param $p_access =3 for READ and WRITE, 2 for write and 1 for readonly
+     * @param Boolean TRUE all ledger are selected, or FALSE only enable
      * \return     object HtmlInput select
+     * 
      */
-    function select_ledger($p_type="ALL", $p_access=3)
+    function select_ledger($p_type="ALL", $p_access=3,$enable=TRUE)
     {
         global $g_user;
-        $array=$g_user->get_ledger($p_type, $p_access);
+        $array=$g_user->get_ledger($p_type, $p_access,$enable);
 
         if ($array==null)
             return null;
@@ -765,7 +767,7 @@ class Acc_Ledger extends jrn_def_sql
             // Button for adding customer
             $add_card=TRUE;
         }
-        $wLedger=$this->select_ledger('ODS', 2);
+        $wLedger=$this->select_ledger('ODS', 2,FALSE);
         if ($wLedger==null)
             throw new Exception(_('Pas de journal disponible'));
         $wLedger->javascript="onChange='update_name();update_predef(\"ods\",\"t\",\"".$_REQUEST['ac']."\");$add_js'";
