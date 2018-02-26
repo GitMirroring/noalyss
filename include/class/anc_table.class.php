@@ -301,7 +301,7 @@ class Anc_Table extends Anc_Acc_Link
 	  }
         $side=($tot_global>0)?"C":"D";
         $side=($tot_global==0)?"=":$side;
-	echo td(nbm($tot_global)." ".$side,' class="num input_text notice" ');
+	echo td(nbm($tot_global)." ".$side,' class="num  " ');
 	echo '</tr>';
 	echo '</table>';
       }
