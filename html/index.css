@@ -245,12 +245,12 @@ BODY {
         z-index:-1;
         position:absolute;
         width:19%;
-        left:32%;
+        left:25%;
         top:19.5%;
     }
     #login_frm {
         position:absolute;
-        left:47%;
+        left:39%;
         top:28%;
     }
     .input_text {
