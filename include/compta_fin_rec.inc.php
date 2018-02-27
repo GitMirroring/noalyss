@@ -178,7 +178,7 @@ if (isset($_POST['save']))
 echo '<div class="content">';
 echo '<form method="get">';
 echo HtmlInput::get_to_hidden(array('gDossier', 'ledger_type', 'ac', 'sa'));
-$wLedger = $Ledger->select_ledger('FIN', 3);
+$wLedger = $Ledger->select_ledger('FIN', 3,FALSE);
 if ($wLedger == null)
 	exit('Pas de journal disponible');
 echo '<div id="jrn_name_div">';
