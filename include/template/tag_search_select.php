@@ -51,3 +51,7 @@ $gDossier=Dossier::id();
  endfor;
  ?>
 </table>
+<script>
+    show_only_row('<?=$p_prefix?>tag_tb_id','tag_status','Y');
+</script>    
+<?=HtmlInput::button_close($p_prefix.'tag_div')?>

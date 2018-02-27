@@ -2610,12 +2610,12 @@ function search_display_tag(p_dossier, p_prefix)
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
-                        add_div({id: p_prefix + 'tag_div', style: '', cssclass: 'inner_box', drag: 1});
+                        add_div({id: p_prefix + 'tag_div', style: 'left:10%;width:70%', cssclass: 'inner_box', drag: 1});
                         $(p_prefix + 'tag_div').style.top = posY - 80 + "px";
                         $(p_prefix + 'tag_div').style.left = posX - 200 + "px";
                         remove_waiting_box();
                         $(p_prefix + 'tag_div').innerHTML = code_html;
-
+                        code_html.evalScripts();
                     }
                 }
         );
