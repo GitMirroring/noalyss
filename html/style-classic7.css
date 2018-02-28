@@ -1398,6 +1398,18 @@ div#box_search_card {
     right:15.625%;
     top:115px;
 }
+@media only screen and (max-width:994px)
+{
+    div#box_search_card {
+    top:29%;
+    }
+}
+@media only screen and (max-width:804px)
+{
+    div#box_search_card {
+     display:none;
+    }
+}
 div.bxbutton
 {
     float:right;
