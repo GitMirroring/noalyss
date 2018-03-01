@@ -376,7 +376,7 @@ class Acc_Balance
         echo "<tr>";
         echo td(_("Class 1-5"));
         $diff=bcsub($p_array["1_5"]["deb"],$p_array["1_5"]["cred"]);
-        echo td(nbm(abs($diff),2));
+        echo td(nbm(abs($diff),2),' class="num"');
         $side=($diff < 0)?"C":"D";
         $side=($diff == 0)?"=":$side;
         echo td($side);
