@@ -107,6 +107,7 @@ $nb_plugin=count($a_plugin);
                 else
                 {
                     // It is not installed , propose to install it
+                     $js=sprintf("onclick=\"upgradePlugin('%s')\"", trim($a_plugin[$i]->code));
                     echo _("Non installée");
                     echo HtmlInput::button("upgrade", _("Installation"), $js);
                 }
