@@ -379,11 +379,10 @@ if ($op=='upgradePlugin')
     $progress->set_value(5);
     $plugin->download();
     $progress->set_value(55);
-    if (!DEBUG)
-    {
-        $plugin->install();
-    }
+    $plugin->install();
     $progress->set_value(100);
+    echo _("Le plugin doit être activée dans le dossier avec CFGPLUGIN");
+    return;
 }
 //------------------------------------------------------------------------------------------------------------------
 // Install template
@@ -405,5 +404,6 @@ if ($op=="installTemplate")
     $template->install();
     $progress->set_value(100);
     echo _("Modèle installé ");
+    return;
 }
 ?>        
