@@ -121,7 +121,7 @@ $nb_plugin=count($a_plugin);
 <script>
     function upgradePlugin(p_code) {
         var task_id="<?=uniqid()?>";
-       progress_bar_start(task_id);
+        progress_bar_start(task_id);
         new Ajax.Updater(
             "result"+p_code,
             "ajax_misc.php" ,
