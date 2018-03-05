@@ -2167,11 +2167,7 @@ function filter_table(phrase, _id, colnr, start_row) {
  */
 function display_task(p_id)
 {
-    new Draggable(p_id, {starteffect: function ()
-        {
-            new Effect.Highlight(obj.id, {scroll: window, queue: 'end'});
-        }}
-    );
+
     $(p_id).style.top = posY + 'px';
     $(p_id).style.left = "10%";
     $(p_id).style.width = "80%";
@@ -2755,8 +2751,8 @@ function calendar_zoom(obj)
                             obj.outdiv = 'calendar_zoom_div';
                         }
                         if ($(obj.outdiv) == undefined) {
-                            var str_style = fixed_position(0, 20);
-                            add_div({id: obj.outdiv, style: 'margin-left:3%;width:94%;' + str_style, cssclass: "inner_box", drag: 1});
+                            var str_style = fixed_position(0, 220);
+                            add_div({id: obj.outdiv, style: 'margin-left:3%;width:94%;' + str_style, cssclass: "inner_box", drag: 0});
                         }
                         remove_waiting_box();
                         $(obj.outdiv).innerHTML = code_html;
