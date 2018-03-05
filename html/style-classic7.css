@@ -52,10 +52,13 @@ input:focus {
 .notice {
     color:orangered;
     font-style: italic;
-    text-decoration: underline;
+    
 }
 span.notice {
     font-weight: bold;
+}
+a.mtitle span.notice {
+    text-decoration: underline;
 }
 table.sortable, table.table_large, table.result  ,table.resultfooter {
     width:99%;
