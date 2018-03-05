@@ -21,13 +21,13 @@
 
 /**
  * @file
- * @brief 
+ * @brief Manage the installation of plug
  */
 require_once NOALYSS_INCLUDE."/class/package_noalyss.class.php";
 
 /**
  * @class
- * @brief
+ * @brief Manage the installation of plug
  */
 class Package_Plugin extends Package_Noalyss
 {
@@ -57,7 +57,7 @@ class Package_Plugin extends Package_Noalyss
     {
         if (is_writable(NOALYSS_PLUGIN))
         {
-            return TRUE; ;
+            return TRUE; 
         }
         return FALSE;
     }
