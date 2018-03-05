@@ -276,7 +276,10 @@ echo '<p class="notice">'.$p_msg.'</p>';
 try
 {
     $payment=$http->request("e_mp","string", 0);
-
+    $date_payment=$http->request("mp_date", "string","");
+    $comm_payment=$http->request("e_comm_paiement", "string","");
+    $acompte=$http->request("acompte", "string",0);
+    
     echo "<FORM class=\"print\" NAME=\"form_detail\" METHOD=\"POST\" >";
     /* request for a predefined operation */
     if (isset($_REQUEST['pre_def'])&&!isset($_POST['correct']) && ! isset($correct))
@@ -304,7 +307,7 @@ try
         echo HtmlInput::hidden("sa", "p");
         echo $Ledger->input($array);
         echo '<div class="content">';
-        echo $Ledger->input_paid($payment);
+        echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);
         echo '</div>';
         echo '<script>';
         echo 'compute_all_ledger();';
@@ -318,7 +321,7 @@ try
 
         echo $Ledger->input($array);
         echo '<div class="content">';
-        echo $Ledger->input_paid($payment);
+        echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);
         echo '</div>';
         echo '<script>';
         echo 'compute_all_ledger();';

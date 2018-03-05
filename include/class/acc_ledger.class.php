@@ -2396,15 +2396,22 @@ class Acc_Ledger extends jrn_def_sql
             $Res=$this->db->alter_seq("s_jrn_pj".$p_jrn, $jrn_def_pj_seq);
         }
     }
-
-    function input_paid($p_selected)
+    /**
+     * Create the section payment
+     * @param int $p_selected
+     * @param number $p_amount
+     * @param date $p_date or empty string
+     * @param string $p_comm or empty comm
+     * @return string
+     */
+    function input_paid($p_selected,$p_amount=0,$p_date="",$p_comm="")
     {
         $r='';
         $r.='<div id="payment"> ';
-        $r.='<h2> '._('Payement').' </h2>';
+        $r.='<h2> '._('Paiement').' </h2>';
         $mp=new Acc_Payment($this->db);
         $mp->set_parameter('ledger_source', $this->id);
-        $r.=$mp->select($p_selected);
+        $r.=$mp->select($p_selected,$p_amount,$p_date,$p_comm);
         $r.='</div>';
         return $r;
     }
