@@ -38,6 +38,7 @@ $xml=$package_repository->getContent();
 
 $a_plugin=$xml->xpath('//plugins/plugin');
 $nb_plugin=count($a_plugin);
+echo _("Les extensions doivent être activées dans le dossier après installation");
 ?>
 
 <table>
