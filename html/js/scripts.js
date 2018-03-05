@@ -2751,7 +2751,8 @@ function calendar_zoom(obj)
                             obj.outdiv = 'calendar_zoom_div';
                         }
                         if ($(obj.outdiv) == undefined) {
-                            var str_style = fixed_position(0, 220);
+                            var str_style = 'top:10%;margin-left:2%;';
+//                            var str_style = fixed_position(0, 120);
                             add_div({id: obj.outdiv, style: 'margin-left:3%;width:94%;' + str_style, cssclass: "inner_box", drag: 0});
                         }
                         remove_waiting_box();

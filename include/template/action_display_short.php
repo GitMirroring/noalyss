@@ -78,7 +78,7 @@ $dest->style=' style="vertical-align:0%"';
 $hour=new IText('hour_event');
 $hour->size=5;
 
-echo HtmlInput::title_box(_('Nouvel événement'), 'action_add_div');
+echo HtmlInput::title_box(_('Nouvel événement'), 'action_add_div',"close","","y");
 ?>
 <span class="notice" style="float:right" id="action_add_frm_info"></span>
 <form method="get" style="margin-left:5%;margin-right: 10%"  id="action_add_frm" onsubmit="action_save_short(<?php echo Dossier::id()?>);return false">

@@ -27,7 +27,10 @@ require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 ob_start();
-if ( $notitle== 0 ) echo HtmlInput::title_box(_("Calendrier"), "calendar_zoom_div");
+if ($notitle==0)
+{
+    echo HtmlInput::title_box(_("Calendrier"), "calendar_zoom_div", "close", "", "y");
+}
 $cal=new Calendar();
 $in=$http->get('in',"string","");
 $notitle=$http->get('notitle',"string","0");
