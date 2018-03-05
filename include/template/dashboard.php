@@ -55,7 +55,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td>
 				<?php if (count($last_operation)>0): ?>
-				<A class="mtitle" style="color:red;text-decoration:underline;font-weight: bolder;"onclick="display_detail('action_now_div')">
+				<A class="mtitle" style="font-weight: bolder;"onclick="display_detail('action_now_div')">
 					<span class="notice">
 					<?php echo count($last_operation) ?>
 					&nbsp;<?php echo _("détail"); ?>
@@ -68,7 +68,7 @@ if ( ! empty ($array) )  {
 
 			<td >
 			<?php if (count($late_operation)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;;font-weight: bolder" onclick="display_detail('action_late_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('action_late_div')">
 				<span class="notice"><?php echo count($late_operation) ?>
 					&nbsp;<?php echo _("détail"); ?>
                                 </span>
@@ -85,7 +85,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td >
 			<?php if (count($supplier_now)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('supplier_now_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('supplier_now_div')">
 				<span class="notice"><?php echo count($supplier_now) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -95,7 +95,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td >
 			<?php if (count($supplier_late)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('supplier_late_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('supplier_late_div')">
 				<span class="notice"><?php echo count($supplier_late) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -110,7 +110,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td>
 				<?php if (count($customer_now)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('customer_now_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('customer_now_div')">
 				<span class="notice"><?php echo count($customer_now) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -120,7 +120,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td>
 				<?php if (count($customer_late)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('customer_late_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('customer_late_div')">
 				<span class="notice"><?php echo count($customer_late) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>

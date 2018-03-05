@@ -50,8 +50,9 @@ input:focus {
     background-color:  lightyellow;
 }
 .notice {
-    color:#FF0000;
+    color:orangered;
     font-style: italic;
+    text-decoration: underline;
 }
 span.notice {
     font-weight: bold;
@@ -155,14 +156,15 @@ td.tool a.mtitle:hover {
     font-size:0.76rem;
 }
 #module table,#module table tr,#module table td {
-    border-collapse: collapse;
-    border-width: 0px;
+    border-collapse: separate;
+    border-width: 1px;
     background-color: whitesmoke;
     color: darkblue;
+    border-spacing: 3px;
 }
 #module table td.toolselected a {
     background-color: darkgray;
-    
+    display:block;
 }
 
 div.lmenu {
@@ -454,8 +456,8 @@ div.content a.mtitle {
 div.content a.mtitle:hover {
     text-decoration:none;
     display:inline;
-    background-color:#00008B;
-    color:#FFFFFF;
+    background-color:#9FB7FF;
+    color:orangered;
     cursor: pointer;
 
 }
@@ -2110,11 +2112,11 @@ td.selectedmenu {
     float:right;
     margin-right: 5%;
     font-size:150%;
-    color :white;
     font-variant: small-caps;
-    background-color: #5D90CD;
-    padding: 3px 20px 3px 20px;
+    padding: 13px 20px 13px 20px;
     margin-top:20px;
+    background-color:#484954;
+    color:#FE8300;
 }
 /*
  * Style for the Inplace Edit element
