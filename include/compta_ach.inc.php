@@ -274,7 +274,7 @@ try
         $p_post['p_jrn']=$Ledger->id;
         echo $Ledger->input($p_post);
         echo '<div class="content">';
-        echo $Ledger->input_paid($payment);
+        echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);
         echo '</div>';
         echo '<script>';
         echo 'compute_all_ledger();';

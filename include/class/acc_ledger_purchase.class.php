@@ -1678,7 +1678,8 @@ EOF;
         {
             $r.=HtmlInput::hidden('e_mp_qcode_'.$e_mp,${'e_mp_qcode_'.$e_mp});
             $r.=HtmlInput::hidden('acompte',$acompte);
-			$r.=HtmlInput::hidden('e_comm_paiement',$e_comm_paiement);
+	    $r.=HtmlInput::hidden('e_comm_paiement',$e_comm_paiement);
+	    $r.=HtmlInput::hidden('mp_date',$mp_date);
             /* needed for generating a invoice */
            $r.=HtmlInput::hidden('qcode_benef', ${'e_mp_qcode_' . $e_mp});
 			$fname = new Fiche($this->db);
