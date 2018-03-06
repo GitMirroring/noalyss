@@ -219,6 +219,12 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         if ($e_mp != 0) {
             $this->check_payment($e_mp, ${"e_mp_qcode_" . $e_mp});
         }
+        
+        // Check payment date
+        if ( isset ($mp_date) && trim ($mp_date) != "" && isDate($mp_date) == null)  {
+            throw new Exception(_('Date de paiement invalide'),13);
+            
+        }
     }
 
     /*!\brief insert into the database, it calls first the verify function,
