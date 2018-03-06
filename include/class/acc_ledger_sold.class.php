@@ -225,6 +225,13 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             throw new Exception(_('Date de paiement invalide'),13);
             
         }
+        
+        // check limit date
+        if ( isset ($e_ech) && trim ($e_ech)!="" && isDate($e_ech) == null )
+        {
+            throw new Exception(_('Date échéance invalide'),14);
+            
+        }
     }
 
     /*!\brief insert into the database, it calls first the verify function,

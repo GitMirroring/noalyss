@@ -264,11 +264,18 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
         if ( $nb == 0 )
             throw new Exception(_('Il n\'y a aucune marchandise'),12);
+        
+        // check  payment date
         if ( isset ($mp_date) && trim ($mp_date) != "" && isDate($mp_date) == null)  {
             throw new Exception(_('Date de paiement invalide'),13);
             
         }
-
+        // check limit date
+        if ( isset ($e_ech) && trim ($e_ech)!="" && isDate($e_ech) == null )
+        {
+            throw new Exception(_('Date échéance invalide'),14);
+            
+        }
     }
     /**
      * Compute the ND amount thanks the attribute of the concerned card. The object 
