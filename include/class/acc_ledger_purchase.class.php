@@ -264,6 +264,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
         if ( $nb == 0 )
             throw new Exception(_('Il n\'y a aucune marchandise'),12);
+        if ( isset ($mp_date) && trim ($mp_date) != "" && isDate($mp_date) == null)  {
+            throw new Exception(_('Date de paiement invalide'),13);
+            
+        }
 
     }
     /**
