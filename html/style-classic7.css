@@ -109,6 +109,7 @@ content h2.info,h2.info,h2.info2 {
 
     padding-top: 10px;
     padding-bottom: 10px;
+    margin-top:0px;
 }
 
 
@@ -719,7 +720,7 @@ a#anchorbutton:hover, .button:hover,a.button:hover,div.content a.button:hover  {
     border-style:  ridge;
     /*! color: #FF0000; */
     margin:1px 2px 1px 2px;
-
+    border-color:orange;
 }
 a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     color:#FFFFFF;
@@ -733,7 +734,7 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     font-size:0.85rem;
     font-family: SansationLight;
     border-style:  ridge ; 
-    /*! border-color: grey ; */
+    border-color: grey ;
     border-width:1px;
     padding-bottom: 5px;
     padding-top: 5px;
@@ -768,7 +769,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
      /*border-style:  inset ;*/
     /*! border-color:  darkblue; */
 
-    border-color: grey;
+    border-color: orange;
 }
 a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton .button {
     font-family: SansationLight;
