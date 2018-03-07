@@ -317,6 +317,7 @@ class Calendar
               where 
                ag_dest in (select p_granted from user_sec_action_profile where p_id =$1)
               and ag_state IN (2, 3)
+              and ag_remind_date is not null
               order by ag_remind_date,ag_hour
         ";
         $a_event=$cn->get_array($sql,array($profile));
