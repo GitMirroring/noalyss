@@ -246,15 +246,15 @@ for( $c=0;$c<count($acomment);$c++){
          $comment="";
          if ( $p_view != 'READ' && $c > 0)
 	{
-		$rmComment=sprintf("return confirm_box(null,'"._('Voulez-vous effacer ce commentaire')." ?',function() {remove_comment('%s','%s');});",
-						dossier::id(),
-						$acomment[$c]['agc_id']);
-				$js= '<a class="tinybutton" id="accom'.$acomment[$c]['agc_id'].'" href="javascript:void(0)" onclick="'.$rmComment.'">'.SMALLX.'</a>';
-		$comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".$acomment[$c]['str_agc_date'].')').$js.
-				'<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
-				" ".h($acomment[$c]['agc_comment']).'</pre>'
-				;
-                
+            $rmComment=sprintf("return confirm_box(null,'"._('Voulez-vous effacer ce commentaire')." ?',function() {remove_comment('%s','%s');});",
+                                            dossier::id(),
+                                            $acomment[$c]['agc_id']);
+            $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
+            $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".$acomment[$c]['str_agc_date'].')').$js.
+                            '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
+                            " ".h($acomment[$c]['agc_comment']).'</pre>'
+                            ;
+
 	}
 	else
 	{
