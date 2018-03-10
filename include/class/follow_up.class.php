@@ -1354,7 +1354,7 @@ class Follow_Up
         }
         if (isset($p_array['sag_ref'])&&trim($p_array['sag_ref'])!="")
         {
-            $query .= " and ag_ref= '".sql_string($p_array['sag_ref'])."'";
+            $action_query .= " and ag_ref= '".sql_string($p_array['sag_ref'])."'";
         }
 
         if (isset($_GET['only_internal']))
