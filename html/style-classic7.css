@@ -460,7 +460,7 @@ div.content a.mtitle {
 div.content a.mtitle:hover {
     text-decoration:none;
     display:inline;
-    background-color:#9FB7FF;
+    background-color:#888;
     color:orangered;
     cursor: pointer;
 
@@ -1726,13 +1726,13 @@ li.highlight,tr.highlight{
     font-weight: bolder;
     font-size:14px;
     background-color: #8A8787;
-    color:white !important;
+    color:whitesmoke !important;
     border-width:  2px;
     border-style: solid;
     /*! border-color: blue; */
 }
 li.highlight a,tr.highlight a{
-    color:white !important;
+   color:whitesmoke !important;
     
 }
 *|*:link {
