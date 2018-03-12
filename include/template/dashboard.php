@@ -299,7 +299,7 @@ for($i=0;$i<count($last_ledger);$i++):
 </div>
 <div id="last_operation_management_div" class="box">
     <?php 
-     echo HtmlInput::title_box(_('Suivi'),"last_operation_management_div",'zoom','onclick="action_show('.dossier::id().')"','n');
+     echo HtmlInput::title_box(_('Suivi'),"last_operation_management_div",'zoom','action_show('.dossier::id().')','n');
     ?>
     <?php
     require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
