@@ -317,7 +317,11 @@ define ("PINDG","&#xe809;");
 // Url of NOALYSS (http://...) 
 // 
 if ( ! defined ("NOALYSS_URL")) {
-    $base=$_SERVER['REQUEST_SCHEME'].'://'.
+    $protocol="http";
+    if ( isset ($_SERVER['REQUEST_SCHEME'] ))  {
+        $protocol=$_SERVER['REQUEST_SCHEME'];
+    }
+    $base=$protocol.'://'.
             $_SERVER['HTTP_HOST'].
             ":".$_SERVER['SERVER_PORT'].
             dirname($_SERVER['PHP_SELF']);
