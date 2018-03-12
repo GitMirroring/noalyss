@@ -763,7 +763,7 @@ class Acc_Account_Ledger
      * @return html string
      */
     function filter_history($p_table_id) {
-        return _('Filtre rapide').' '.HtmlInput::filter_table($p_table_id, '0,1,2,3,4,5,6,7', 1);
+        return _('Filtre rapide').' '.HtmlInput::filter_table($p_table_id, '0,1,2,3,4,5,6,7,8,9,10', 1);
     }
  
 }
