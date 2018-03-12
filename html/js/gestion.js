@@ -283,6 +283,8 @@ function action_show(p_dossier)
                         remove_waiting_box();
                         add_div({id: 'action_list_div', style:"top:1%;width:90%;left:5%" , cssclass: 'inner_box'});
                         $('action_list_div').innerHTML=p_xml.responseText;
+                        var table_followup=document.getElementById('event_followup');
+                        if ( table_followup) {                         sorttable.makeSortable(table_followup); }
             }
         });
     } catch (e)
