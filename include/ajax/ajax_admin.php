@@ -354,7 +354,7 @@ if ($op=='upgradeCore')
         $progress->set_value(5);
         $core->download();
         $progress->set_value(55);
-        if (!DEBUG)
+        if (!DEBUG )
         {
             $core->install();
         }
@@ -364,7 +364,10 @@ if ($op=='upgradeCore')
         printf(_("Afin de terminer l'installation aller sur %s , à la fin de la procédure , demandez à effacer le fichier install.php"),
                 $url);
     } catch (Exception $ex ) {
+        echo '<p class="notice">';
         echo $ex->getMessage();
+        echo '</p>';
+        $progress->set_value(100);
     }
     return;
 }

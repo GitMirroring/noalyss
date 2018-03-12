@@ -39,6 +39,7 @@ class Package_Core extends Package_Noalyss
         if ( !is_writable(NOALYSS_INCLUDE)) {
             return 0;
         }
+        return 1;
     }
 
     /**
