@@ -319,6 +319,7 @@ td.selectedcell{
     border-style: solid;
     border-width: 1px;
     border-color:white;
+    vertical-align:top;
 }
 .menu2 td.mtitle ,.menu2 td.selectedcell{
     border-radius: 0px;
