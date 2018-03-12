@@ -350,18 +350,23 @@ if ($op=='upgradeCore')
     $progress->set_value(2);
     $repo=new Package_Repository();
     $core=$repo->make_object("core", " ");
-    $progress->set_value(5);
-    $core->download();
-    $progress->set_value(55);
-    if (!DEBUG)
-    {
-        $core->install();
-    }
-    $progress->set_value(100);
+    try {
+        $progress->set_value(5);
+        $core->download();
+        $progress->set_value(55);
+        if (!DEBUG)
+        {
+            $core->install();
+        }
+        $progress->set_value(100);
 
-    $url=sprintf('<a href="%s"> install.php</a>', NOALYSS_URL."/install.php");
-    printf(_("Afin de terminer l'installation aller sur %s , à la fin de la procédure , demandez à effacer le fichier install.php"),
-            $url);
+        $url=sprintf('<a href="%s"> install.php</a>', NOALYSS_URL."/install.php");
+        printf(_("Afin de terminer l'installation aller sur %s , à la fin de la procédure , demandez à effacer le fichier install.php"),
+                $url);
+    } catch (Exception $ex ) {
+        echo $ex->getMessage();
+    }
+    return;
 }
 //---------------------------------------------------------------------------------------------------------
 // Upgrade or install plugin
