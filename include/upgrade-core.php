@@ -22,13 +22,13 @@
 if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 if ( ! defined ('ALLOWED_ADMIN')) { die (_('Non autorisé'));}
 
-
+global $version_noalyss;
 require_once NOALYSS_INCLUDE.'/class/package_repository.class.php';
 /**
  * @file
  * @brief 
  */
-printf (_(" La version de votre installaiton est %s "),NOALYSS_VERSION);
+printf (_(" La version de votre installation est %s "),$version_noalyss);
 
 $core=new Package_Repository();
 $xml=$core->getContent();

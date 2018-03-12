@@ -33,7 +33,12 @@ class Package_Core extends Package_Noalyss
      */
     public function can_install()
     {
-        
+        if (! is_writable(NOALYSS_HOME)) {
+            return 0;
+        }
+        if ( !is_writable(NOALYSS_INCLUDE)) {
+            return 0;
+        }
     }
 
     /**
@@ -44,6 +49,10 @@ class Package_Core extends Package_Noalyss
      */
     public function install()
     {
+        if ( $this->can_install() == 0 )
+        {
+            throw new Exception(sprintf(_("Permission incorrecte : ne peut écrire dans %s ou %s"),NOALYSS_HOME,NOALYSS_INCLUDE),3);
+        }
         $zip=new ZipArchive ();
         // open the file
         if ($zip->open(NOALYSS_HOME."/tmp/".$this->get_file()))
@@ -51,7 +60,7 @@ class Package_Core extends Package_Noalyss
             // try to unzip and overwrite current 
             if (!$zip->extractTo(NOALYSS_HOME."/../"))
             {
-                throw new Exception(_("Echec mis à jour"), 1);
+                throw new Exception(_("Echec mise à jour"), 1);
             }
         }
         else
