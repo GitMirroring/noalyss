@@ -303,7 +303,7 @@ var ManageTable = function (p_table_name)
                     var obj = {id: control, "cssclass": "inner_box", "html": loading()};
                     add_div(obj);
                     var pos = calcy(250);
-                    $(obj.id).setStyle({position: "absolute", top:  '15%', width: "auto", "margin-left": "20%"});
+                    $(obj.id).setStyle({position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"});
                     $(obj.id).update(x['html']);
                 } catch (e) {
                     smoke.alert("ERREUR " + e.message);

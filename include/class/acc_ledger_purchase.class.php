@@ -264,7 +264,18 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
         if ( $nb == 0 )
             throw new Exception(_('Il n\'y a aucune marchandise'),12);
-
+        
+        // check  payment date
+        if ( isset ($mp_date) && trim ($mp_date) != "" && isDate($mp_date) == null)  {
+            throw new Exception(_('Date de paiement invalide'),13);
+            
+        }
+        // check limit date
+        if ( isset ($e_ech) && trim ($e_ech)!="" && isDate($e_ech) == null )
+        {
+            throw new Exception(_('Date échéance invalide'),14);
+            
+        }
     }
     /**
      * Compute the ND amount thanks the attribute of the concerned card. The object 
@@ -1053,7 +1064,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $add_js.='update_pay_method();';
         $add_js.='update_row("sold_item");';
 
-        $wLedger=$this->select_ledger('ACH',2);
+        $wLedger=$this->select_ledger('ACH',2,FALSE);
         
         if ($wLedger == null) throw  new Exception(_('Pas de journal disponible'));
         $wLedger->javascript="onChange='update_predef(\"ach\",\"f\",\"".$_REQUEST['ac']."\");$add_js'";
@@ -1262,6 +1273,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $Tva->js="onblur=\"format_number(this);onChange=clean_tva($i);compute_ledger($i)\"";
                 $Tva->in_table=true;
                 $Tva->set_attribute('compute',$i);
+                $Tva->set_filter("purchase");
                 $Tva->value=$march_tva_id;
                 $array[$i]['tva']=$Tva->input("e_march$i"."_tva_id");
 
@@ -1677,7 +1689,8 @@ EOF;
         {
             $r.=HtmlInput::hidden('e_mp_qcode_'.$e_mp,${'e_mp_qcode_'.$e_mp});
             $r.=HtmlInput::hidden('acompte',$acompte);
-			$r.=HtmlInput::hidden('e_comm_paiement',$e_comm_paiement);
+	    $r.=HtmlInput::hidden('e_comm_paiement',$e_comm_paiement);
+	    $r.=HtmlInput::hidden('mp_date',$mp_date);
             /* needed for generating a invoice */
            $r.=HtmlInput::hidden('qcode_benef', ${'e_mp_qcode_' . $e_mp});
 			$fname = new Fiche($this->db);

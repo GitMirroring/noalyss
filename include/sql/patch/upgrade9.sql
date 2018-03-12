@@ -133,7 +133,7 @@ CREATE OR REPLACE FUNCTION update_quick_code(njft_id int4,tav_text text)
 	return ns;
 	end;
 $BODY$
-  LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql;
 
 
 
@@ -186,7 +186,7 @@ begin
 	return;
 end;	
 $body$
-  LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql;
 
 
 
@@ -228,7 +228,7 @@ CREATE OR REPLACE FUNCTION insert_quick_code(nf_id int4, tav_text text)
 	return ns;
 	end;
 $BODY$
-  LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql;
 
 
 

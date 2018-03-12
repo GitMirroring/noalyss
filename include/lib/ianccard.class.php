@@ -76,7 +76,7 @@ class IAncCard extends HtmlInput
     public function input($p_name=null,$p_value=null)
     {
         if ( $p_name == null && $this->name == "")
-            throw (new Exception('Le nom d une icard doit être donne'));
+            throw (new Exception(_('Le nom d une icard doit être donné')));
 
         $this->value=($p_value==null)?$this->value:$p_value;
         if ( $this->readOnly==true) return $this->display();

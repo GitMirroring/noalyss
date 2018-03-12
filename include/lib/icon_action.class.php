@@ -54,7 +54,6 @@ class Icon_Action
      */
     static function icon_add($id, $p_javascript, $p_style="")
     {
-        $r="";
         $r=sprintf('<input  class="smallbutton icon" onclick="%s" id="%s" type="button" %s value="&#xe828;">',
                 $p_javascript, $id, $p_style);
         return $r;
@@ -69,7 +68,6 @@ class Icon_Action
      */
     static function clean_zone($id, $p_javascript, $p_style="")
     {
-        $r="";
         $r=sprintf('<input class="smallbutton" onclick="%s" id="%s" value="X" %s type="button" style="">',
                 $p_javascript, $id, $p_style
         );
@@ -126,8 +124,8 @@ class Icon_Action
     static function close($p_div)
     {
         $r='';
-        $r.=sprintf('<A class="icon" onclick="removeDiv(\'%s\');%s">&#10761;</A>',
-                $p_div, $p_div);
+        $r.=sprintf('<A class="icon" onclick="removeDiv(\'%s\')">&#10761;</A>',
+                $p_div);
         return $r;
     }
 
@@ -153,7 +151,7 @@ class Icon_Action
     static function zoom($p_div, $p_javascript)
     {
         $r=sprintf('<span  id="span_%s" class="icon" onclick="%s">
-                &#11036;</span>', $p_div, $p_javascript);
+                &#xf08e;</span>', $p_div, $p_javascript);
         return $r;
     }
 
@@ -165,7 +163,7 @@ class Icon_Action
      */
     static function warnbulle($p_comment)
     {
-        $r=sprintf('<A tabindex="-1" onmouseover="showBulle(\'%s\')"  onclick="showBulle(\'%s\')" onmouseout="hideBulle(0)" style="color:red" class="icon">&#xe818;</A>',
+        $r=sprintf('<span tabindex="-1" onmouseover="showBulle(\'%s\')"  onclick="showBulle(\'%s\')" onmouseout="hideBulle(0)" style="color:red" class="icon">&#xe818;</span>',
                 $p_comment, $p_comment);
 
         return $r;
@@ -184,5 +182,15 @@ class Icon_Action
         $r.='<span id="hide" class="icon"   onclick="'.$javascript.'">'.$action.'</span>';
         return $r;
     }
-
+    /**
+     * Display the icon of a trashbin
+     * @param string $p_id DOMid 
+     * @param string $p_javascript
+     * @return htmlString
+     */
+    static function trash($p_id,$p_javascript) 
+    {
+        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="icon">&#xe80f;</span>';
+        return $r;
+    }
 }

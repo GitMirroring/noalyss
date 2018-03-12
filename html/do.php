@@ -190,15 +190,19 @@ if ($cn->exist_table('version') == false)
 }
 if (DBVERSION < dossier::get_version($cn))
 {
-    echo '<h2 class="error" style="font-size:12px">' . _("Attention: la version de base de donnée est supérieure à la version du programme, vous devriez mettre à jour") . '</h2>';
+    $a = _("cliquez ici pour mettre à jour ");
+    $base =NOALYSS_URL."/admin-noalyss.php?action=upgrade&sb=application";
+
+    echo '<h2 class="error" style="font-size:12px">' .
+            _("Attention: la version de base de donnée est supérieure à la version du programme, vous devriez mettre à jour") ,
+        '<a hreF="' . $base . '">' . $a . '</a></h2>',
+            '</h2>';
 }
 if (DBVERSION > dossier::get_version($cn))
 {
     echo '<h2 class="error" style="font-size:12px">' . _("Votre base de données n'est pas à jour") . '   ';
     $a = _("cliquez ici pour appliquer le patch");
-    $base = dirname($_SERVER['SCRIPT_NAME']);
-    if ($base == '/') { $base = ''; }
-    $base .= '/admin-noalyss.php';
+    $base =NOALYSS_URL.'/admin-noalyss.php?action=upgrade&sb=database';
     echo '<a hreF="' . $base . '">' . $a . '</a></h2>';
 }
 

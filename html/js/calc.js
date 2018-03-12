@@ -27,6 +27,11 @@
  */
 var p_history="";
 var p_variable="";
+/**
+ * Compute and update the box 
+ * @see show_calc()
+ * @returns nothing
+ */
 // add input
 function cal()
 {
@@ -59,23 +64,26 @@ function cal()
         return false;
     }
     p_history=p_variable+"="+result.toString()+'<br>'+p_history;
-    var str_sub="Total :"+p_variable+" = "+result.toString();
+    var str_sub="Total :"+p_variable+" = "+'<b>'+result.toString()+'</b>';
     this.document.getElementById("sub_total").innerHTML=str_sub;
     this.document.getElementById("listing").innerHTML=p_history;
-    this.document.getElementById('inp').value="";
+    this.document.getElementById('inp').value=result;
 }
 // Clean
 //
-function Clean()
+function CleanHistory()
 {
     this.document.getElementById('listing').innerHTML="";
-    this.document.getElementById('result').innerHTML="";
     this.document.getElementById('sub_total').innerHTML="";
     this.document.getElementById('inp').value="";
     this.document.getElementById('inp').focus();
 
 }
-
+function Clean() 
+{
+    this.document.getElementById('inp').value="";
+    this.document.getElementById('inp').focus();
+}
 function Compute()
 {
     var tot=0;

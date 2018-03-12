@@ -18,6 +18,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
@@ -308,33 +309,69 @@ class HtmlInput
     /**
      * display a div with the history of the card
      */
-    static function history_card($f_id, $p_mesg, $p_style="")
+    static function history_card($f_id, $p_mesg, $p_style="",$p_exercice="")
     {
-        $view_history=sprintf('<A class="detail"  style="text-decoration:underline;%s" HREF="javascript:view_history_card(\'%s\',\'%s\')" >%s</A>',
-                $p_style, $f_id, dossier::id(), $p_mesg);
+        global $g_user;
+        if ( $p_exercice=="") {
+            $p_exercice=$g_user->get_exercice();
+        }
+        $view_history=sprintf('<A class="detail"  style="text-decoration:underline;%s" HREF="javascript:view_history_card(\'%s\',\'%s\',\'%s\')" >%s</A>',
+                $p_style, $f_id, dossier::id(),$p_exercice, $p_mesg);
         return $view_history;
     }
 
     /**
      * display a div with the history of the card
+     * @param int $f_id fiche.f_id
+     * @param string $p_mesg string to display
+     * @param int $p_exercice exercice of the history
      */
-    static function history_card_button($f_id, $p_mesg)
+    static function history_card_button($f_id, $p_mesg,$p_exercice="")
     {
         static $e=0;
         $e++;
-        $js=sprintf('onclick="view_history_card(\'%s\',\'%s\')"', $f_id,
-                dossier::id());
-        $view_history=HtmlInput::button("hcb"+$e, $p_mesg, $js);
+         global $g_user;
+        if ( $p_exercice=="") {
+            $p_exercice=$g_user->get_exercice();
+        }
+        $js=sprintf('onclick="view_history_card(\'%s\',\'%s\',\'%s\')"', $f_id,
+                dossier::id(),$p_exercice);
+        $view_history=HtmlInput::button("hcb".$e, $p_mesg, $js);
         return $view_history;
     }
 
     /**
      * display a div with the history of the account
+     * @param string $p_account accounting
+     * @param string $p_mesg string to display
+     * @param string $p_style extra code for HTML
+     * @param int $p_exercice exercice of the history
      */
-    static function history_account($p_account, $p_mesg, $p_style="")
+    static function history_account($p_account, $p_mesg, $p_style="",$p_exercice="")
     {
-        $view_history=sprintf('<A class="detail" style="text-decoration:underline;%s" HREF="javascript:view_history_account(\'%s\',\'%s\')" >%s</A>',
-                $p_style, $p_account, dossier::id(), $p_mesg);
+        global $g_user;
+        if ( $p_exercice=="") {
+            $p_exercice=$g_user->get_exercice();
+        }
+        $view_history=sprintf('<A class="detail" style="text-decoration:underline;%s" HREF="javascript:view_history_account(\'%s\',\'%s\',\'%s\')" >%s</A>',
+                $p_style, $p_account, dossier::id(),$p_exercice, $p_mesg);
+        return $view_history;
+    }
+    /**
+     * display a div with the history of the analytic account
+     * @param int $p_account  po_id 
+     * @param string $p_mesg string to display
+     * @param string $p_style extra code for HTML
+     * @param int $p_exercice exercice of the history
+     */
+    static function history_anc_account($p_account, $p_mesg, $p_style="",$p_exercice="")
+    {
+        global $g_user;
+        if ( $p_exercice=="") {
+            $p_exercice=$g_user->get_exercice();
+        }
+        $view_history=sprintf('<A class="detail" style="text-decoration:underline;%s" HREF="javascript:view_history_anc_account(\'%s\',\'%s\',\'%s\')" >%s</A>',
+                $p_style, $p_account, dossier::id(),$p_exercice, $p_mesg);
         return $view_history;
     }
 
@@ -822,6 +859,7 @@ class HtmlInput
 
         $r.='</div>';
         $r.=h2($p_name, ' class="title" ');
+   
         return $r;
     }
 
@@ -861,12 +899,9 @@ class HtmlInput
         if ($p_js!="")
         {
             $p_url="javascript:void(0)";
+          } else {
+              $p_url=sprintf('href="%s"',$p_url);
         }
-        else
-        {
-            $p_url=sprintf('href="%s"', $p_url);
-        }
-
 
         $str=sprintf('<a %s %s %s>%s</a>', $p_style, $p_url, $p_js, $p_text);
         return $str;

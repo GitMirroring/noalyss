@@ -51,7 +51,6 @@ $max=(count($array)>MAX_CARD_SEARCH)?MAX_CARD_SEARCH:count($array);
 		</th>
 		<th class=" sorttable_sorted">
 			Nom
-		<span id="sorttable_sortfwdind">&nbsp;&#x25BE;</span>
 		</th>
 		<th>
 			<?php echo _("Categorie");?>

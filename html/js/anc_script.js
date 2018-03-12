@@ -338,9 +338,12 @@ function anc_remove_operation(p_dossier, p_oa_group)
                         p_oa_group, "gDossier":
                         p_dossier, "op": "remove_anc"};
             var queryString = encodeJSON(obj);
-            g(p_oa_group).style.display = 'none';
             var e = new Ajax.Request("ajax_misc.php",
-                    {method: 'get', parameters: queryString});
+                    {method: 'get', parameters: queryString,onSuccess:function req() {
+                            $("tr"+p_oa_group).remove();
+                    }
+                    
+             });
              
          } else
          {

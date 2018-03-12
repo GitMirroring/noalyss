@@ -175,7 +175,7 @@ raise debug 'nNew %', nNew;
 return 0;
 end;
 $BODY$
-  LANGUAGE 'plpgsql' VOLATILE;
+  LANGUAGE plpgsql;
 
 create or replace function account_parent(p_account tmp_pcmn.pcm_val%type)
 returns 

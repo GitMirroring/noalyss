@@ -556,9 +556,7 @@ class Acc_Ledger_Search
     {
         $r='';
         $r.='<div id="search_form" style="display:none">';
-        $r.=Icon_Action::hide('&#10761;',
-                        '$(\'search_form\').style.display=\'none\';');
-        $r.=h2('Recherche', 'class="title"');
+        $r.=HtmlInput::title_box(_('Recherche'), "search_form", "hide", "", "n");
         $r.='<FORM METHOD="GET">';
         $r.=$this->search_form();
         

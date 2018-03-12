@@ -237,7 +237,7 @@ loop
 return;
 end;
 $BODY$
-  LANGUAGE plpgsql ;
+LANGUAGE plpgsql;
 
 DROP FUNCTION comptaproc.get_menu_tree(text, text);
 

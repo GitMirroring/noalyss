@@ -34,10 +34,13 @@ if ($result != null)
         echo '<span style="display:block">';
           echo _('Tout sélectionner')." ".ICheckBox::toggle_checkbox('export_pdf_bt1','export_anc_receipt_pdf');
         echo '</span>';
+        $task_id=uniqid();
         echo $grandLivre->show_button();
-        printf ('<form method="GET" id="export_anc_receipt_pdf" action="export.php" style="display:inline" onsubmit="smoke.signal(\'%s\', function(e){}, {duration: 3000,classname: \'custom-class\'});return true;">',
-                _("Le traitement est en cours ,  merci de patienter sans recharger la page"));
-
+        printf ('<form method="GET" id="export_anc_receipt_pdf" action="export.php" style="display:inline" onsubmit="progress_bar_start(\'%s\',\'%s\');return true;">',
+                $task_id,
+                _("Le traitement est en cours ,  merci de patienter sans recharger la page")
+               );
+        echo HtmlInput::hidden("task_id",$task_id);
         echo $grandLivre->button_export_pdf();
         echo $grandLivre->display_html();
         echo $grandLivre->button_export_pdf();

@@ -23,7 +23,7 @@
  * It is only a quick and dirty testing. You should use a tool as PHPUNIT for the unit testing
  * 
  *  - first do not forget to create the authorized_debug file in the html folder
- *  - secund the test must adapted to this page : if you do a post (or get) from a test, you won't get any result
+ *  - secund the test must be adapted to this page : if you do a post (or get) from a test, you won't get any result
  * if the $_REQUEST[test_select] is not set, so set it . 
  */
 
@@ -34,6 +34,7 @@ include_once("lib/ac_common.php");
 require_once('lib/database.class.php');
 require_once ('class/dossier.class.php');
 require_once('lib/html_input.class.php');
+require_once('lib/icon_action.class.php');
 require_once ('lib/function_javascript.php');
 require_once 'class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';

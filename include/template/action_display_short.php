@@ -30,6 +30,7 @@ global $g_user;
 $date=new IDate("date_event");
 $date->id="date_event_action_short";
 $title=new IText('title_event');
+$title->size="60";
 $title->css_isze="60%";
 // Description
 $summary=new ITextarea('summary');
@@ -77,10 +78,10 @@ $dest->style=' style="vertical-align:0%"';
 $hour=new IText('hour_event');
 $hour->size=5;
 
-echo HtmlInput::title_box(_('Nouvel événement'), 'action_add_div');
+echo HtmlInput::title_box(_('Nouvel événement'), 'action_add_div',"close","","y");
 ?>
 <span class="notice" style="float:right" id="action_add_frm_info"></span>
-<form method="get" id="action_add_frm" onsubmit="action_save_short(<?php echo Dossier::id()?>);return false">
+<form method="get" style="margin-left:5%;margin-right: 10%"  id="action_add_frm" onsubmit="action_save_short(<?php echo Dossier::id()?>);return false">
     <span>
     <?php echo _('Date')." ". $date->input()?>
     </span>
@@ -110,7 +111,8 @@ echo HtmlInput::title_box(_('Nouvel événement'), 'action_add_div');
         <?php echo $title->input()?>
     </span>
 </p>
-    <?php echo _("Description")?>
+<span > <?php echo _("Description")?>
+</span>
 <p>
     <?php echo $summary->input()?>
 </p>

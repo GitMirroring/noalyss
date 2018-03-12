@@ -52,7 +52,7 @@ if ($sa=="add_pa")
         $ret.=HtmlInput::title_box(_('Nouveau plan'), 'anc_div_add', 'hide');
         $ret.= '<form method="post">';
         $ret.=dossier::hidden();
-        $ret.= $new->form();
+        $ret.= $new->form_new();
         $ret.= HtmlInput::hidden("sa", "pa_write");
         $ret.=HtmlInput::submit("submit", _("Enregistre"));
         $ret.=HtmlInput::button_hide("anc_div_add");
@@ -111,11 +111,12 @@ if ($sa=="pa_delete")
     $delete->delete();
     $sa="anc_menu";
 }
-
-// show the detail
+//--------------------------------------------------------------------------------------------------
+// show the detail of an analytic axis (=plan)
+// 
+//--------------------------------------------------------------------------------------------------
 if ($sa=="pa_detail")
 {
-    
     $pa_id=$http->get("pa_id","number");
     
     $new=new Anc_Plan($cn, $pa_id);
@@ -127,9 +128,11 @@ if ($sa=="pa_detail")
 
     $ret.= $new->form();
     $ret.= $wSa;
+    $ret.="<p>";
     $ret.=HtmlInput::button_anchor(_('Efface ce plan'), '', 'remove_analytic_plan',
                     'onclick="return confirm_box(\'remove_analytic_plan\',\'Effacer ?\',function () {window.location=\'do.php?ac='.$_REQUEST['ac'].'&pa_id='.$_GET['pa_id'].'&sa=pa_delete&'.$str_dossier.'\';})"',
                     'smallbutton');
+    $ret.="</p>";
     //---------------------------------------------------------------------
     //  Detail now
     // Use Manage_Table
@@ -145,6 +148,7 @@ if ($sa=="pa_detail")
     $accounting->set_callback("ajax_misc.php");
     $accounting->add_json_param("op", "anc_accounting");
     $accounting->add_json_param("pa_id", $pa_id);
+    $accounting->set_sort_column("po_name");
     ob_start();
     $accounting->display_table(" where pa_id = $1 order by po_name ",array($pa_id));
     $accounting->create_js_script();
@@ -170,8 +174,8 @@ if ($sa=='anc_menu')
         $url=http_build_query(array("sa"=>"add_pa","ac"=>$ac,
                 "gDossier"=>Dossier::id()));
         echo '<div class="content">';
-        echo '<TABLE>';
-        echo '<TR><TD class="vert_mtitle">';
+        echo '<TABLE class="vert_mtitle">';
+        echo '<TR><TD class="first">';
         echo '<a href="?'.$url.'">'._("Ajout d'un plan comptable").'</a>';
         echo '</TD></TR>';
         echo '</TABLE>';

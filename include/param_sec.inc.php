@@ -360,9 +360,11 @@ if ( $action == "view" )
         for (i = 0;i < a_select.length;i++) {
           str_id = new String( a_select[i].id);
            if ( str_id.search(/action/) > -1 ) {
-             if ( p_value == 1 ) {
+             if ( p_value == 0 ) {
+                 a_select[i].setStyle("color:red");
                  a_select[i].innerHTML='&#xf204';
              } else {
+                 a_select[i].setStyle("color:green");
                  a_select[i].innerHTML='&#xf205';
              } 
            }

@@ -55,7 +55,7 @@ class Inplace_Edit
         $this->input=$p_input;
         $x["input"]=serialize($p_input);
         $this->json=json_encode($x, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
-        $this->message=_("Faites un choix");
+        $this->message=_("Cliquez pour éditer");
     }
     ///@brief build a Inplace_Edit object from
     /// a serialized string (ajax json parameter = input)
@@ -85,7 +85,7 @@ class Inplace_Edit
             inplace_edit_ok{$this->input->id}.onclick= function () {
                 var json={$this->json};
                 json['ieaction']='ok';
-                json['value']=$({$this->input->id}).value;
+                json['value']=$('{$this->input->id}').value;
                 new Ajax.Updater('{$this->input->id}edit'
                 ,'{$this->callback}',
                  {parameters:  json ,evalScripts:true});}
@@ -111,7 +111,7 @@ EOF;
         $v=$this->input->get_value();
         $v=(trim($v)=="")?$this->message:$v;
         echo $v,
-                 "<img src=\"image/button-edit.png\"/>",
+                 '<span class="smallicon icon" style="margin-left:5px">&#xe80d;</span> ',
                 "
             <script>
             $('{$this->input->id}edit').removeClassName('inplace_edit_input');
@@ -133,7 +133,7 @@ EOF;
         $v=$this->input->get_value();
         $v=(trim($v)=="")?$this->message:$v;
         echo $v;
-        echo "<img src=\"image/button-edit.png\"/>";
+        echo'<span class="smallicon icon" style="margin-left:5px">&#xe80d;</span> ';
         echo "</span>";
         echo "
             

@@ -10,7 +10,7 @@
 </p>
 <p>
       <?php echo _("Réserver un jour de fermeture : le dernier jour de l'exercice sera vue comme une période d'un seul jour pour y placer les opérations 
-de fin d'exercice: amortissements, régulations de compte... Avec une 13ième période, cela simplifie les prévisions, les rapports..."); ?>/p>
+de fin d'exercice: amortissements, régulations de compte... Avec une 13ième période, cela simplifie les prévisions, les rapports..."); ?></p>
 
 <form method="post" style="padding-left: 20%" id="exercice_frm" onsubmit="return (validate() && confirm_box($('exercice_frm'), '<?php echo _("Confirmez vous l\'ajout d\'un exercice comptable ?") ?>'))">
     <?php
@@ -26,6 +26,14 @@ de fin d'exercice: amortissements, régulations de compte... Avec une 13ième p�
             </td>
             <td>
 <?php echo $exercice->input() ?>
+            </td>
+        </tr>
+          <tr>
+            <td>
+<?= _("A partir du mois de") ?>
+            </td>
+            <td>
+<?php echo $from->input() ?>
             </td>
         </tr>
         <tr>
@@ -44,14 +52,7 @@ de fin d'exercice: amortissements, régulations de compte... Avec une 13ième p�
 <?php echo $nb_month->input() ?>
             </td>
         </tr>
-        <tr>
-            <td>
-<?= _("A partir du mois de") ?>
-            </td>
-            <td>
-<?php echo $from->input() ?>
-            </td>
-        </tr>
+      
         <tr>
             <td>
                 <?=_("Réservé un jour pour l'ouverture (RAN)")?>

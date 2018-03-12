@@ -20,7 +20,7 @@ $a_todo=Todo_List::to_object($cn,$array);
 
 echo HtmlInput::button('add',_('Ajout'),'onClick="add_todo()"','smallbutton');
   echo '<table id="table_todo" class="sortable" width="100%">';
-  echo '<tr><th class=" sorttable_sorted_reverse" id="todo_list_date">Date <span id="sorttable_sortrevind"><img src="image/down.gif"></span></th><th>Titre</th><th></th>';
+  echo '<tr><th class=" sorttable_sorted_reverse" id="todo_list_date">Date</th><th>Titre</th><th></th>';
 if ( ! empty ($array) )  {
   $nb=0;
   $today=date('d.m.Y');
@@ -55,7 +55,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td>
 				<?php if (count($last_operation)>0): ?>
-				<A class="mtitle" style="color:red;text-decoration:underline;font-weight: bolder;"onclick="display_detail('action_now_div')">
+				<A class="mtitle" style="font-weight: bolder;"onclick="display_detail('action_now_div')">
 					<span class="notice">
 					<?php echo count($last_operation) ?>
 					&nbsp;<?php echo _("détail"); ?>
@@ -68,7 +68,7 @@ if ( ! empty ($array) )  {
 
 			<td >
 			<?php if (count($late_operation)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;;font-weight: bolder" onclick="display_detail('action_late_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('action_late_div')">
 				<span class="notice"><?php echo count($late_operation) ?>
 					&nbsp;<?php echo _("détail"); ?>
                                 </span>
@@ -85,7 +85,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td >
 			<?php if (count($supplier_now)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('supplier_now_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('supplier_now_div')">
 				<span class="notice"><?php echo count($supplier_now) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -95,7 +95,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td >
 			<?php if (count($supplier_late)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('supplier_late_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('supplier_late_div')">
 				<span class="notice"><?php echo count($supplier_late) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -110,7 +110,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td>
 				<?php if (count($customer_now)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('customer_now_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('customer_now_div')">
 				<span class="notice"><?php echo count($customer_now) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -120,7 +120,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td>
 				<?php if (count($customer_late)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('customer_late_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('customer_late_div')">
 				<span class="notice"><?php echo count($customer_late) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -341,7 +341,7 @@ $wTitle=new IText('p_title');
 $wDesc=new ITextArea('p_desc');
 $wDesc->heigh=5;
 $wDesc->width=40;
-echo HtmlInput::title_box(_("Note"),"add_todo_list","hide",'',"",'y');
+echo HtmlInput::title_box(_("Note"),"add_todo_list","hide",'',"n");
 echo _("Date")." ".$wDate->input().'<br>';
 echo _("Titre")." ".$wTitle->input().'<br>';
 echo _("Description")."<br>".$wDesc->input().'<br>';
@@ -356,14 +356,5 @@ echo HtmlInput::button('hide',_('Annuler'),'onClick="Effect.Fold(\'add_todo_list
 <script type="text/javascript" language="javascript" charset="utf-8">
 function display_detail(div) {
 	$(div).style.display="block";
-       // $(div).style.top=calcy('150')+'px';
-	//Effect.Grow(div,{});
 }
-try {
-var array=Array('customer_now_div','customer_late_div','supplier_now_div','supplier_late_div','action_now_div','action_late_div');
-var i=0;
-for  (i=0;i < array.length;i++) {
-	new Draggable(array[i],{});
-	}
-} catch (e) { alert(e.getMessage);}
 </script>

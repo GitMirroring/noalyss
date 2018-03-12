@@ -100,7 +100,7 @@ var sorttable = {
         }
 
         // work through each column and calculate its type
-        headrow = table.tHead.rows[0].cells;
+        var headrow = table.tHead.rows[0].cells;
         for (var i = 0; i < headrow.length; i++) {
             // manually override the type with a sorttable_type attribute
             if (!headrow[i].className.match(/\bsorttable_nosort\b/)) { // skip this col
@@ -112,6 +112,23 @@ var sorttable = {
                     headrow[i].sorttable_sortfunction = sorttable["sort_" + override];
                 } else {
                     headrow[i].sorttable_sortfunction = sorttable.guessType(table, i);
+                }
+                //--------- if already sorted , add a icon but only if the icon is not yet there ----------------
+                if (headrow[i].className.search(/\bsorttable_sorted_reverse\b/) != -1 && headrow[i].innerHTML.search(/\bsorttable_sortrevind\b/)==-1) {
+                    
+                    sortrevind = document.createElement('span');
+                    sortrevind.id = "sorttable_sortrevind";
+                    sortrevind.innerHTML = '<img src="image/down.gif">';
+                    headrow[i].appendChild(sortrevind);
+            
+                }
+                if (headrow[i].className.search(/\bsorttable_sorted\b/) != -1  && headrow[i].innerHTML.search(/\bsorttable_sortfwdind\b/)==-1) {
+            
+                    sortfwdind = document.createElement('span');
+                    sortfwdind.id = "sorttable_sortfwdind";
+                    sortfwdind.innerHTML = '<img src="image/up.gif">';
+                    headrow[i].appendChild(sortfwdind);
+        
                 }
                 // make it clickable to sort
                 headrow[i].sorttable_columnindex = i;
@@ -192,13 +209,16 @@ var sorttable = {
                     }
                     delete row_array;
                     // Highlight odd and even rows properly
-                    sorttable.highlight_body(this);
+                    sorttable.highlight_body(table);
                 });
             }
         }
     },
-    highlight_body:function(p_heading) {
-         var p_table=p_heading.parentNode.parentNode.parentNode;
+    /**
+     * alternate properly the rows of the table, 
+     * @param {DOMNode} p_table sorted table 
+     */ 
+    highlight_body:function(p_table) {
          var nb_row=p_table.rows;
          var e=0;
          for (e=1;e<nb_row.length;e++) {

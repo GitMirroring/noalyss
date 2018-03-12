@@ -18,7 +18,7 @@ begin
 	end if;
 end;
 $BODY$
-  LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql;
 
 
 -- Function: check_balance(p_grpt text)

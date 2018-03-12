@@ -1117,7 +1117,7 @@ class Follow_Up
         $sql="select ag_ref,ag_hour,coalesce(vw_name,'Interne') as vw_name,ag_id,ag_title,ag_ref, dt_value,to_char(ag_remind_date,'DD.MM.YYYY') as ag_timestamp_fmt,ag_timestamp ".
                 " from action_gestion join document_type ".
                 " on (ag_type=dt_id) left join vw_fiche_attr on (f_id=f_id_dest) where ag_state not in  (1,4)
-				and ag_remind_date < now()  and ".self::sql_security_filter($this->db,'R');
+				and to_char(ag_remind_date,'YYMMDD') < to_char(now(),'YYMMDD') and ".self::sql_security_filter($this->db,'R');
         $array=$this->db->get_array($sql);
         return $array;
     }
@@ -1164,21 +1164,19 @@ class Follow_Up
     static function display_search($cn, $inner=false)
     {
         global $g_user;
-        $a=(isset($_GET['action_query']))?$_GET['action_query']:"";
-        $qcode=(isset($_GET['qcode']))?$_GET['qcode']:"";
-
-        $supl_hidden='';
-        if (isset($_REQUEST['sc']))
-            $supl_hidden.=HtmlInput::hidden('sc', $_REQUEST['sc']);
+        $http=new HttpInput();
+        $a=$http->get("action_query","string","");
+        $qcode=$http->get("qcode","string","");
+        
+        $supl_hidden=HtmlInput::array_to_hidden(['sc','sb','ac'], $_REQUEST);
+        
         if (isset($_REQUEST['f_id']))
         {
-            $supl_hidden.=HtmlInput::hidden('f_id', $_REQUEST['f_id']);
-            $f=new Fiche($cn, $_REQUEST['f_id']);
+            $f_id=$http->request('f_id','number');
+            $supl_hidden.=HtmlInput::hidden('f_id', $f_id);
+            $f=new Fiche($cn, $f_id);
             $supl_hidden.=HtmlInput::hidden('qcode_dest', $f->get_quick_code());
         }
-        if (isset($_REQUEST['sb']))
-            $supl_hidden.=HtmlInput::hidden('sb', $_REQUEST['sb']);
-        $supl_hidden.=HtmlInput::hidden('ac', $_REQUEST['ac']);
 
         /**
          * Show the default button (add action, show search...)
@@ -1356,7 +1354,7 @@ class Follow_Up
         }
         if (isset($p_array['sag_ref'])&&trim($p_array['sag_ref'])!="")
         {
-            $query .= " and ag_ref= '".sql_string($p_array['sag_ref'])."'";
+            $action_query .= " and ag_ref= '".sql_string($p_array['sag_ref'])."'";
         }
 
         if (isset($_GET['only_internal']))

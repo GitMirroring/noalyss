@@ -136,6 +136,13 @@ class ICard extends HtmlInput
         $this->style='  ';
         $this->accvis=1; //!< account_visible =1 otherwise 0
     }
+   
+    /**
+     * @brief in the search box, the accounting will be shown it is the default
+     */
+    function show_accounting() {
+        $this->accvis=1;
+    }
 
     /**
      * @brief in the search box, the accounting will be hidden
@@ -145,14 +152,7 @@ class ICard extends HtmlInput
         $this->accvis=0;
     }
 
-    /**
-     * @brief in the search box, the accounting will be shown it is the default
-     */
-    function show_accounting()
-    {
-        $this->accvis=1;
-    }
-
+  
     /**\brief set the javascript callback function
      * by default it is update_value called BEFORE the querystring is send
      *
@@ -236,7 +236,7 @@ class ICard extends HtmlInput
             $e=sprintf(' ondblclick="%s" ', $this->dblclick);
             $this->dblclick=$e;
         }
-        $input=Icon_Action::clean_zone(uniqid("remove"),"{$this->id}=''");
+        $input=Icon_Action::clean_zone(uniqid("remove"),"$('{$this->id}').value=''");
         $input.=sprintf('
             <INPUT TYPE="Text"  class="input_text"  
                  NAME="%s" ID="%s" VALUE="%s" SIZE="%d" %s %s  %s>',

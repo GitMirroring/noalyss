@@ -36,11 +36,13 @@ class Tag_SQL extends Noalyss_SQL
 			"t_id" => "t_id"
 			, "t_tag" => "t_tag"
 			, "t_description" => "t_description"
+                        ,'t_actif'=>'t_actif'
                     );
 		$this->type = array(
 			"t_id" => "numeric"
 			, "t_tag" => "text"
 			, "t_description" => "text"
+                       ,'t_actif'=>"text"
 		);
 		$this->default = array(
 			"t_id" => "auto",

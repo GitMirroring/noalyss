@@ -27,6 +27,7 @@ require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iperiod.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
 require_once NOALYSS_INCLUDE.'/class/periode.class.php';
+require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 echo HtmlInput::title_box(_('Préférence'), 'preference_div');
 echo '<DIV class="content">';
 echo '<p class="notice">';
@@ -105,21 +106,37 @@ if (isset($_REQUEST['gDossier']) && $_REQUEST['gDossier']<>0)
 
 		    $period->p_id = $l_user_per;
 		    $period->jrn_def_id = 0;
+                    $selected_exercice=$period->get_exercice();
+                    $js=sprintf('onchange="updatePeriodePreference(%d);"',Dossier::id());
+                    $exercice=new Exercice($cn);
+                    
 		    if ($period->is_closed($l_user_per) == 1)
 		    {
 			$msg = _('Attention cette période est fermée, vous ne pourrez rien modifier dans le module comptable');
 			$msg = '<h2 class="notice">' . $msg . '</h2>';
 		    }
-
-		    $period = new IPeriod("period");
-		    $period->user = $g_user;
-		    $period->cn = $cn;
-		    $period->filter_year = false;
-		    $period->value = $l_user_per;
-		    $period->type = ALL;
-		    $l_form_per = $period->input();
+                    
+		    $iperiod = new IPeriod("period");
+                    $iperiod->id="setting_period";
+		    $iperiod->user = $g_user;
+		    $iperiod->cn = $cn;
+		    $iperiod->filter_year = true;
+                    $iperiod->exercice=$selected_exercice;
+		    $iperiod->value = $l_user_per;
+		    $iperiod->type = ALL;
+		    $l_form_per = $iperiod->input();
 		    ?>
-    		<tr><td><?php echo _('Période');?></td>
+                <tr>
+                    <td>
+                        <?=_("Exercice")?>
+                    </td>
+                    <td>
+                        <?=$exercice->select("exercice_setting",$selected_exercice,$js)->input();?>
+                    </td>
+                </tr>
+    		<tr>
+                    
+                    <td><?php echo _('Période');?></td>
     		    <td>
 			    <?php printf(' %s ', $l_form_per);?>
     		    </td>

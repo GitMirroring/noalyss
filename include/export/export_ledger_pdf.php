@@ -45,7 +45,7 @@ $periode = new Periode($cn);
 try
 {
     $jrn_id=$http->get('jrn_id',"number");
-    $p_simple=$http->get('p_simple',"number");
+    $p_simple=$http->get('p_simple',"string");
 
     
 }

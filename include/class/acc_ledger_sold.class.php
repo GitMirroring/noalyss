@@ -219,6 +219,19 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         if ($e_mp != 0) {
             $this->check_payment($e_mp, ${"e_mp_qcode_" . $e_mp});
         }
+        
+        // Check payment date
+        if ( isset ($mp_date) && trim ($mp_date) != "" && isDate($mp_date) == null)  {
+            throw new Exception(_('Date de paiement invalide'),13);
+            
+        }
+        
+        // check limit date
+        if ( isset ($e_ech) && trim ($e_ech)!="" && isDate($e_ech) == null )
+        {
+            throw new Exception(_('Date échéance invalide'),14);
+            
+        }
     }
 
     /*!\brief insert into the database, it calls first the verify function,
@@ -1105,7 +1118,7 @@ EOF;
         $add_js.='update_pay_method();';
         $add_js.='update_row("sold_item");';
 
-        $wLedger = $this->select_ledger('VEN', 2);
+        $wLedger = $this->select_ledger('VEN', 2,FALSE);
         if ($wLedger == null)
             throw new Exception(_('Pas de journal disponible'));
         $wLedger->table = 1;
@@ -1291,6 +1304,7 @@ EOF;
                 $Tva = new ITva_Popup($this->db);
                 $Tva->in_table = true;
                 $Tva->set_attribute('compute', $i);
+                $Tva->set_filter("sale");
 
                 $Tva->js = 'onblur="format_number(this);clean_tva(' . $i . ');compute_ledger(' . $i . ')"';
                 $Tva->value = $march_tva_id;

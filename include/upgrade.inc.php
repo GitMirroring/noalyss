@@ -1,5 +1,4 @@
 <?php
-
 /*
  *   This file is part of NOALYSS.
  *
@@ -18,93 +17,84 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright (2014) Author Dany De Bontridder <dany@alchimerys.be>
-
-if (!defined('ALLOWED'))
-    die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 /**
  * @file
  * @brief Upgrade all the database : the central repository , the templates and
  * the folder
  * @param $rep db connection to central repository
  */
-?>
+if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
+if ( ! defined ('ALLOWED_ADMIN')) { die (_('Non autorisé'));}
 
-<?php
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
-$sb= $http->get("sb", "string","none");
-if ($sb === "upg_all" && (!defined('MULTI')||(defined('MULTI')&&MULTI==1)))
+
+$menu=array(
+    ["?action=upgrade&sb=database", _("Base de données"), _("Met à jour toutes les dossiers et modèles"), 'database'],
+    ["?action=upgrade&sb=application", _("Application"), _("Installe la dernière version de Noalyss"), 'application'],
+    ["?action=upgrade&sb=plugin", _("Extension"), _("Installe ou met à jour les extensions"), "plugin"],
+    ["?action=upgrade&sb=template", _("Modèle"), _("Installe des modèles"), "template"]
+);
+$sb=$http->request("sb", "string", "application");
+echo '<div class="menu2">';
+echo ShowItem($menu, "H", "mtitle", "mtitle", $sb);
+echo '</div>';
+
+$sc=$http->get("sc", "string", "none");
+
+//-----------------------------------------------------------------------------
+// Upgrade Databases (Folder, Template , Account )
+//-----------------------------------------------------------------------------
+if ($sb=="database")
 {
-    echo '<div class="content">';
-    /* If multi folders */
-    $Resdossier=$rep->exec_sql("select dos_id, dos_name from ac_dossier");
-    $MaxDossier=$rep->size($Resdossier);
+    ?>
+<p>
     
-    //----------------------------------------------------------------------
-    // Upgrade the account_repository
-    //----------------------------------------------------------------------
-    echo "<h2>"._("Mise à jour de la base de données principale")."</h2>";
-    $cn=new Database();
-    if (DEBUG==false)
-        ob_start();
-    $MaxVersion=DBVERSIONREPO-1;
-    for ($i=4; $i<=$MaxVersion; $i++)
+<?php
+echo _("Mettez vos bases de données à jour pour qu'elles correspondent à cette version de Noalyss");
+?>
+</p>
+    <form method="get" id="frm_upg_all" onsubmit="return confirm_box('frm_upg_all', '<?php echo _('Confirmez') ?>')">
+        <input type="hidden" name="sb" value="database">
+        <input type="hidden" name="sc" value="upg_all">
+        <input type="hidden" name="action" value="upgrade">
+        <input type="submit" class="button" name="submit_upg_all" id="submit_upg_all" value="<?php echo _('Tout mettre à jour') ?>">
+    </form>
+
+    <?php
+    if ($sc==="upg_all"&&(!defined('MULTI')||(defined('MULTI')&&MULTI==1)))
     {
-        if ($cn->get_version()<=$i)
-        {
-            $cn->execute_script(NOALYSS_INCLUDE.'/sql/patch/ac-upgrade'.$i.'.sql');
-        }
+        echo '<div class="content">';
+
+        Dossier::upgrade();
+
+        echo '</div>';
+        return;
     }
-    //----------------------------------------------------------------------
-    // Upgrade the folders
-    //----------------------------------------------------------------------
-    echo "<h2>"._("Mise à jour dossiers")."</h2>";
-
-    for ($e=0; $e<$MaxDossier; $e++)
-    {
-        $db_row=Database::fetch_array($Resdossier, $e);
-        $name=$rep->format_name($db_row['dos_id'], 'dos');
-        echo "<h3>Patching ".$db_row['dos_name'].'</h3>';
-        echo _('Base de données')." ".$name;
-
-        if ($rep->exist_database($name)>0)
-        {
-            $db=new Database($db_row['dos_id'], 'dos');
-            $db->apply_patch($db_row['dos_name']);
-            Dossier::synchro_admin($db_row['dos_id']);
-            User::remove_inexistant_user($db_row['dos_id']);
-            $db->clean_orphan_lob();
-        }
-        else
-        {
-            echo_warning(_("Dossier inexistant")." $name");
-        }
-    }
-
-    //----------------------------------------------------------------------
-    // Upgrade the template
-    //----------------------------------------------------------------------
-    $Resdossier=$rep->exec_sql("select mod_id, mod_name from modeledef");
-    $MaxDossier=$rep->size();
-    echo "<h2>"._("Mise à jour modèles")."</h2>";
-
-    for ($e=0; $e<$MaxDossier; $e++)
-    {
-        $db_row=Database::fetch_array($Resdossier, $e);
-        $name=$rep->format_name($db_row['mod_id'], 'mod');
-        echo "<h3>Patching ".$db_row['mod_name']."</h3>";
-        echo _('Base de données')." ".$name;
-        if ($rep->exist_database($name)>0)
-        {
-            $db=new Database($db_row['mod_id'], 'mod');
-            $db->apply_patch($db_row['mod_name']);
-            $db->clean_orphan_lob();
-        }
-        else
-        {
-            echo_warning(_("Modèle inexistant")." $name");
-        }
-    }
-
 }
+// Import the file with the package
+//------------------------------------------------------------------------------
+// Upgrade Main application, show all the info from the NOALYSS_PACKAGE site
+//------------------------------------------------------------------------------
+if ($sb=="application")
+{
+    require NOALYSS_INCLUDE."/upgrade-core.php";
+}
+//------------------------------------------------------------------------------
+// Install or Upgrade Extension, show all the info from the NOALYSS_PACKAGE site
+//------------------------------------------------------------------------------
+if ($sb=="plugin")
+{
+    require NOALYSS_INCLUDE."/upgrade-plugin.php";
+    
+}
+//-------------------------------------------------------------------------------------------------------------------------------
+// Install template
+//-------------------------------------------------------------------------------------------------------------------------------
+if ( $sb == 'template')
+{
+    require NOALYSS_INCLUDE."/upgrade-template.php";
+    
+}
+
 ?>

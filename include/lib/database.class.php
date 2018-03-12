@@ -291,7 +291,11 @@ class Database
     {
 
         if (!DEBUG)
+        {
             ob_start();
+        } else {
+            $debug=fopen("/tmp/debug.log","w+");
+        }
         $hf=fopen($script, 'r');
         if ($hf==false)
         {
@@ -338,8 +342,11 @@ class Database
             }
             if ($flag_function)
             {
-                if (strpos(strtolower($buffer), "language plpgsql")===false&&
-                        strpos(strtolower($buffer), "language 'plpgsql'")===false)
+                if (    strpos(strtolower($buffer), "$$;")===false      &&
+                        strpos(strtolower($buffer), '$_$;')===false   &&
+                        strpos(strtolower($buffer), '$function$;')===false   &&
+                        strpos(strtolower($buffer), 'language plpgsql;')===false 
+                    )
                 {
                     $sql.=$buffer;
                     continue;
@@ -351,8 +358,10 @@ class Database
                 $buffer=str_replace(';', '', $buffer);
             }
             $sql.=$buffer;
+            if ( DEBUG ) fwrite($debug, $sql);
             if ($this->exec_sql($sql)==false)
             {
+                
                 $this->rollback();
                 if (!DEBUG)
                     ob_end_clean();
@@ -378,7 +387,7 @@ class Database
 
     function get_version()
     {
-        $Res=$this->get_value("select val from version");
+        $Res=$this->get_value("select max(val) from version");
         return $Res;
     }
 
@@ -1155,6 +1164,17 @@ class Database
             if ( $a_lob[$i]['used']=='Y')                    continue;
                 $this->lo_unlink($a_lob[$i]['oid']);
         }
+    }
+    /**
+     * Check if a prepared statement already exists or not
+     * @param string $query_name name of the prepared query
+     * @return boolean false is not yet prepared
+     */
+    function is_prepare($query_name)
+    {
+        $nb_prepared=$this->get_value("select count(*) from pg_prepared_statements where name=$1",[$query_name]);
+        if ( $nb_prepared==0)return FALSE;
+        return TRUE;
     }
 
 }

@@ -280,9 +280,12 @@ class Acc_Payment
      * \todo this class is used only for storage of the defined payment method, not the payment itself, 
      * it must be moved to another class 'Operation_Payment'
      *\param $p_selected if the id choose
+     *\param $p_date date of payment
+     *\param $p_amount amount already paid
+     *\param $p_comm label of payment
      *\return html string
      */
-    public function select($p_select)
+    public function select($p_select,$p_amount,$p_date,$p_comm)
     {
         $r='';
         $array=$this->get_valide();
@@ -290,15 +293,16 @@ class Acc_Payment
 
         if ( empty($array)==false ) {
             $date_pay=new IDate('mp_date');
-            
+            $date_pay->value=$p_date;
             $r.=sprintf(_("Date %s"),
                     $date_pay->input());
             $acompte=new INum('acompte');
-            $acompte->value=0;
+            $acompte->value=$p_amount;
             $r.=_(" Acompte à déduire");
             $r.=$acompte->input();
             $r.='<p>';
             $e_comm_paiement=new IText('e_comm_paiement');
+            $e_comm_paiement->value=$p_comm;
             $e_comm_paiement->table = 0;
             $e_comm_paiement->setReadOnly(false);
             $e_comm_paiement->size = 60;

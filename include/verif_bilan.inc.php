@@ -158,6 +158,9 @@ having count(*) > 1
         $poste=$cn->execute('get_poste',array($a_fiche_id[$i]['f_id']));
         $tmp_qcode=$cn->execute('get_qcode',array($a_fiche_id[$i]['f_id']));
         $qcode=Database::fetch_all($tmp_qcode);
+        if ( $qcode[0]['qcode']=="") {
+            continue;
+        }
     ?>
         <li><?php 
                 echo HtmlInput::card_detail($qcode[0]['qcode'],$qcode[0]['qcode'],' style="display:inline"') ;

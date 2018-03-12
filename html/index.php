@@ -132,11 +132,13 @@
  * </ul>
  */
 
+
 if ( ! file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php'))
 {
     header("Location: install.php",true, 307);
     exit(0);
 }
+
 
 echo '<!doctype html><HTML>
 <head>
@@ -153,11 +155,21 @@ require_once '../include/constant.php';
 require_once '../include/config.inc.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 if (file_exists("install.php")&& ! DEBUG ) {
-    /*
-     * This file shouldn't exist
-     */
-    echo _("Le fichier ".__DIR__."/install.php est encore présent, vous devez l'effacer avant d'utiliser NOALYSS");
-    return;
+    // At the end of the installation procedure , the install file must be removed
+    if (isset($_GET['remove_install'])) {
+        if (is_writable(__DIR__."/install.php") ) {
+            unlink(__DIR__."/install.php");
+        }
+    }
+    // if removed failed then
+    if (file_exists("install.php") )
+    {
+        /*
+        * This file shouldn't exist
+        */
+       echo _("Le fichier ".__DIR__."/install.php est encore présent, vous devez l'effacer avant d'utiliser NOALYSS");
+       return;
+    }
 }
 if ( strlen(domaine) > 0 )
 {
@@ -175,7 +187,7 @@ if (isset ($_REQUEST['reconnect']) && isset ($_REQUEST['backurl'])) {
 }
 echo '
 <span style="background-color:#879ed4;color:white;padding-left:4px;padding-right:4px;">
-Noalyss NOALYSS_VERSION - '.$my_domain.'
+version  NOALYSS_VERSION - '.$my_domain.'
 </span>
 <BR>
 <BR>
@@ -183,7 +195,7 @@ Noalyss NOALYSS_VERSION - '.$my_domain.'
 
 <BR>
 <center>
-<IMG SRC="image/logo-noalyss-7000-6.svg" id="logo_id" alt="NOALYSS">
+<IMG SRC="image/logo7000.png" style="opacity:0.4" id="logo_id" alt="NOALYSS">
 <BR>
 <BR>
 <BR>
@@ -233,12 +245,12 @@ echo '
 
 ?>
 </table>
-
+</center>
 </form>
 <?php if (defined("RECOVER")) : ?>
     <a id="recover_link" href="#">Mot de passe oublié ? </a>
     
-<div id="recover_box" style="display:none;position:absolute;top:40%;z-index:1;border:solid blue 2px;width:30%;margin-left: 25%;background-color: whitesmoke">
+<div id="recover_box">
     <span style="display:block;font-size:120%;padding:10px">Indiquez votre login ou votre email <span style="cursor: pointer;background-color: white;color:block;top:-5px;float: right;position:relative;right:-5px" id="close"><a ref="#" id="close_link"><?php echo SMALLX?></a></span></span>
             <form method="POST">
                 <input type="hidden" value="send_email" name="id">

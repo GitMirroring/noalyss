@@ -554,6 +554,7 @@ class User
 	 * record in audit log
          * This function works only if user is connected to a Folder
 	 * @param string $p_module menu_ref.me_code
+         * @returns 0 for FORBIDDEN,  1 for GRANTED
 	 */
 	function check_module($p_module)
 	{

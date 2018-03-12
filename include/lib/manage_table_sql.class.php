@@ -58,6 +58,7 @@
   @endcode
  * @see ManageTable.js
  * @see ajax_accounting.php
+ * @see sorttable.js
  * 
  */
 
@@ -77,7 +78,8 @@ class Manage_Table_SQL
     protected $json_parameter; //!< Default parameter to add (gDossier...)
     protected $aerror; //!< Array containing the error of the input data
     protected $col_sort; //!< when inserting, it is the column to sort,-1 to disable it and append only
-
+    protected $a_info; //!< Array with the infotip
+    protected $sort_column; //!< javascript sort , if empty there is no js sort
     const UPDATABLE=1;
     const VISIBLE=2;
 
@@ -117,6 +119,8 @@ class Manage_Table_SQL
         $this->icon_mod="right";
         $this->icon_del="right";
         $this->col_sort=0;
+        // By default no js sort
+        $this->sort_column="";
     }
     /**
      * send the XML headers for the ajax call 
@@ -131,6 +135,18 @@ class Manage_Table_SQL
      */
     function get_col_sort() {
         return $this->col_sort;
+    }
+    /**
+     * Set the info for a column, use Icon_Action::infobulle
+     * the message are in message_javascript.php
+     * @param string $p_key Column name
+     * @param integer $p_comment comment idx
+     * 
+     * @see message_javascript.php
+     * @see Icon_Action::infobulle()
+     */
+    function set_col_tips($p_key,$p_comment) {
+        $this->a_info[$p_key]=$p_comment;
     }
     /**
      * When adding an element ,we place it thanks the DOM Attribute sort_value
@@ -179,7 +195,13 @@ class Manage_Table_SQL
     {
         $this->aerror[$p_col]=$p_message;
     }
-
+    /**
+     * returns the nb of errors found
+     */
+    function count_error()
+    {
+        return count($this->aerror);
+    }
     /**
      * @brief retrieve the error message
      * @param $p_col column name
@@ -195,8 +217,14 @@ class Manage_Table_SQL
 
     /**
      * This function can be overrided to check the data before 
-     * inserting , updating or removing, above an example of an overidden check
-     * @see set_error get_error
+     * inserting , updating or removing, above an example of an overidden check.
+     * 
+     * Usually , you get the row of the table (get_table) , you check the conditions
+     * if an condition is not met then you set the error with $this->set_error 
+     * 
+     * if there are error (returns false otherwise true
+     * 
+     * @see set_error get_error count_error
      * @return boolean
      * @code 
 function check()
@@ -583,7 +611,8 @@ function check()
         if ($this->can_append_row()==TRUE)
         {
             echo HtmlInput::button_action(" "._("Ajout"),
-                    sprintf("%s.input('-1','%s')", $this->object_name,
+                    sprintf("%s.input('-1','%s')", 
+                            $this->object_name,
                             $this->object_name), "xx", "smallbutton", BUTTONADD);
         }
         $nb_order=count($this->a_order);
@@ -600,7 +629,14 @@ function check()
             }
         }
         echo _('Cherche')." ".HtmlInput::filter_table("tb".$this->object_name, $result, 1);
-        printf('<table class="result" id="tb%s">', $this->object_name);
+        
+        // Set a sort on a column if sort_column is not empty
+        if ( $this->sort_column =="")
+        {
+            printf('<table class="result" id="tb%s">', $this->object_name); 
+        } else {
+           printf('<table class="result sortable" id="tb%s">', $this->object_name);
+        }
         for ($i=0; $i<$nb; $i++)
         {
             if ($i==0)
@@ -614,7 +650,8 @@ function check()
         if ($this->can_append_row()==TRUE)
         {
             echo HtmlInput::button_action(" "._("Ajout"),
-                    sprintf("%s.input('-1','%s')", $this->object_name,
+                    sprintf("%s.input('-1','%s')", 
+                            $this->object_name,
                             $this->object_name), "xx", "smallbutton", BUTTONADD);
         }
         printf('<script> alternate_row_color("tb%s");</script>',
@@ -632,31 +669,48 @@ function check()
 
         if ($this->can_update_row() && $this->icon_mod=="left")
         {
-            echo th("  ", 'style="width:40px"');
+            echo th("  ", 'style="width:40px"  class="sorttable_nosort"');
         }
         if ($this->can_delete_row() && $this->icon_del=="left")
         {
-            echo th(" ", 'style="width:40px"');
+            echo th(" ", 'style="width:40px"  class="sorttable_nosort"');
         }
         for ($i=0; $i<$nb; $i++)
         {
 
             $key=$this->a_order[$i];
-
+            $sorted="";
+            if ( $key == $this->sort_column) {
+                $sorted=' class="sorttable_sorted"';
+            }
             if ($this->get_property_visible($key)==true)
-                echo th("","",$this->a_label_displaid[$key]);
+                echo th("",$sorted,$this->a_label_displaid[$key]);
         }
         if ($this->can_update_row() && $this->icon_mod=="right")
         {
-            echo th("  ", 'style="width:40px"');
+            echo th("  ", 'style="width:40px"  class="sorttable_nosort"');
         }
         if ($this->can_delete_row() && $this->icon_del=="right")
         {
-            echo th(" ", 'style="width:40px"');
+            echo th(" ", 'style="width:40px"  class="sorttable_nosort" ');
         }
         echo "</tr>";
     }
-
+    /**
+     * set the column to sort by default
+     */
+    function set_sort_column($p_col)
+    {
+        $this->sort_column=$p_col;
+    }
+    /**
+     * return the column to sort
+     */
+    function get_sort_column()
+    {
+        return $this->sort_column;
+    }
+    
     /**
      * @brief set the id value of a data row and load from the db
      */
@@ -750,7 +804,18 @@ function check()
             }
             else
             {
-                echo td($p_row[$v]);
+                if ( $this->get_col_type($v)=="select")
+                {
+                    $idx=$p_row[$v];
+                    if ( ! isset($this->a_select[$v][$idx])) {
+                        echo td("--");
+                    } else {
+                        echo td($this->a_select[$v][$idx]["label"]);
+                    }
+                    
+                }else {
+                    echo td($p_row[$v]);
+                }
             }
         }
         if ($this->icon_mod=="right")
@@ -783,7 +848,12 @@ function check()
             if ($this->get_property_visible($key)===TRUE)
             {
                 // Label
-                echo "<td> {$label} {$error}</td>";
+                $info="";
+                if ( isset($this->a_info[$key])) {
+                    $info=Icon_Action::infobulle($this->a_info[$key]);
+                }
+                // Label
+                echo "<td> {$label} {$info} {$error}</td>";
 
                 if ($this->get_property_updatable($key)==TRUE)
                 {
@@ -939,7 +1009,7 @@ function check()
             '</li>',
             '</ul>';
             echo "</form>";
-
+            
 
             $html=ob_get_contents();
             ob_end_clean();
@@ -1036,7 +1106,14 @@ function check()
      */
     function save()
     {
-        $this->table->save();
+        if ($this->table->exist()==0)
+        {
+            $this->table->insert();
+        }
+        else
+        {
+            $this->table->update();
+        }
     }
 
     /**

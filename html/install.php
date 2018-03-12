@@ -67,12 +67,18 @@ session_start();
     .warning,.error {
         color:red;
     }
+    img:hover {
+    cursor: inherit;
+    background-color: inherit;
+    color: inherit;
+}
  </style>
 </head>
 <body>
 <p align="center">
-  <IMG SRC="image/logo6820.png" style="width: 365px;height: 150px" alt="NOALYSS">
+  <IMG SRC="image/logo7000.png" style="width: 400px;z-index:-1;position:fixed;top:30px;rigth:50px;opacity: 0.2" alt="NOALYSS">
 </p>
+<h1>NOALYSS : comptabilité - accountancy </h1>
 
 <?php
 /*
@@ -100,6 +106,7 @@ session_start();
  *        This file is included in each release  for a new upgrade
  *
  */
+
 if ( ! isset($_GET['lang'])){
 ?>
 <p>
@@ -132,7 +139,7 @@ if ( $_GET['lang'] == "en_US.utf8" || $_GET['lang']=='fr_FR.utf8')
 </script>
 <script>
 var content=new Array();    
-content[200]="<?php echo _("Indiquez ici le récuterpertoire où les documents temporaires peuvent être sauvés exemple c:/temp, /tmp")?>";
+content[200]="<?php echo _("Indiquez ici le répertoire où les documents temporaires peuvent être sauvés exemple c:/temp, /tmp")?>";
 content[201]="<?php echo _("Désactiver le changement de langue (requis pour MacOSX)")?>";
 content[202]="<?php echo _("Le chemin vers le repertoire contenant psql, pg_dump...")?>";
 content[203]="<?php echo _("Utilisateur de la base de donnée postgresql")?>";
@@ -204,8 +211,8 @@ if (isset($_POST['save_config'])) {
   // -----
   if ( $cnx !== false ) {
        echo '<h1>'._('Important').'</h1>';
-       echo '<p>'._('Utilisateur administrateur'),' ',$cadmin,'</p>';
-       echo '<p>',_('Mot de passe'),' phpcompta','</p>';
+       echo '<p style="font-size:120%">'._('Utilisateur administrateur'),' ','<span style="color:red"> ',$cadmin,'</span>','</p>';
+       echo '<p style="font-size:120%">',_('Mot de passe'),'<span style="color:red"> phpcompta </span>','</p>';
       // Create the db
       if (is_writable(NOALYSS_INCLUDE)) { 
         $url=config_file_create($_POST,1,$os); 
@@ -277,10 +284,10 @@ require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 // we shouldn't use it 
 // if ( defined ("MULTI") && MULTI==1) { create_htaccess();}
 
-echo '<h1 class="title">'._('Configuration').'</h1>';
+echo '<h1>'._('Configuration').'</h1>';
 ?>
 <h2>Info</h2>
-<?php echo _('Vous utilisez le domaine'),domaine; ?>
+<?php echo _('Vous utilisez le domaine')," ",domaine; ?>
 <h2>PHP</h2>
 <?php
 
@@ -312,73 +319,33 @@ echo "<li>";
 
 echo "</li>";
 }
+//---------------------------------------------------------------------------------------
+// Check php modules
+//---------------------------------------------------------------------------------------
 $module=get_loaded_extensions();
 
-echo "<li>";
 $str_error_message=_('Vous devez installer ou activer l\'extension').'<span style="font-weight:bold"> %s </span>';
-if (  in_array('mbstring',$module) == false ){
-  echo 'module mbstring '.$failed;
-  echo '<span class="warning">',
-        sprintf($str_error_message, "mbstring"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module mbstring '.$succeed;
-echo "</li>";
 
-echo "<li>";
-if (  in_array('pgsql',$module) == false )
-{
-  echo 'module PGSQL '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "psql"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module PGSQL '.$succeed;
-echo "</li>";
+$a_need_module=array("mbstring","pgsql","bcmath","gettext","zip","gd","dom","xml","SimpleXML","xmlwriter","xmlreader");
 
-echo "<li>";
-if ( in_array('bcmath',$module) == false )
-{
-  echo 'module BCMATH ok '.$failed;
-  echo '<span class="warning">',
-        sprintf($str_error_message, "bcmath"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module BCMATH '.$succeed;
-echo "</li>";
+$nb_need_module=count($a_need_module);
 
-echo "<li>";
-if (in_array('gettext',$module) == false )
+for ($m=0;$m<$nb_need_module;$m++)
 {
-  echo 'module GETTEXT '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "gettext"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module GETTEXT '.$succeed;
-echo "</li>";
-
-echo "<li>";
-if ( in_array('zip',$module) == false )
-{
-  echo 'module ZIP '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "zip"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module ZIP '.$succeed;
-echo "</li>";
-echo "<li>";
-if ( in_array('gd',$module) == false )
-{
-  echo 'module GD '.$failed;
-   echo '<span class="warning">',
-        sprintf($str_error_message, "gd"),
-        ' </span>';
-  $flag_php++;
-} else echo 'module GD '.$succeed;
-echo "</li>";
-
+    
+    echo "<li>";
+    if (  in_array($a_need_module[$m],$module) == false ){
+      echo 'module '.$a_need_module[$m].$failed;
+      echo '<span class="warning">',
+            sprintf($str_error_message, $a_need_module[$m]),
+            ' </span>';
+      $flag_php++;
+    } else echo 'module '.$a_need_module[$m].$succeed;
+    echo "</li>";
+}
+//---------------------------------------------------------------------------------------
+// Max_execution_time , can be overriden
+//---------------------------------------------------------------------------------------
 if ( ini_get("max_execution_time") < 60 )  {
         echo "<li>";
         echo _('Avertissement').' : '.$failed;
@@ -396,7 +363,15 @@ if ( ini_get("register_globals") == true)  {
 	$flag_php++;
 }
 echo "</li>";
-
+// Check for open_basedir
+if ( ini_get("open_basedir") != "") {
+        echo "<li>";
+        echo _('Avertissement').' : '.$failed;
+	print '<span class="warning"> '._('open_basedir empêche certaines fonctions de Noalyss,mettez-le à vide ').'</span>';
+        echo "</li>";
+	$flag_php++;
+    
+}
  echo "</ul>";
 if ( $flag_php==0 ) {
 	echo '<p class="info"> '._('php.ini est bien configuré ').$succeed.'</p>';
@@ -422,13 +397,13 @@ $sql="select setting from pg_settings where name='server_version'";
 $version=$cn->get_value($sql);
 
 echo _("Version base de données :"),$version;
-
-if ( $version[0] < 9 )
+$majeur=explode(".",$version);
+if ( $majeur[0] < 9 )
   {
 ?>
-  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 8.4 de PostGresql, si votre distribution n'en
+  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 9.0 de PostGresql, si votre distribution n'en
 offre pas, installez-en une en la compilant. Lisez attentivement la notice sur postgresql.org pour migrer
-vos bases de donn&eacute;es")?>
+vos bases de données")?>
 </p>
 <?php exit(); //'
 } else {
@@ -498,13 +473,19 @@ if ( ! isset($_POST['go']) ) {
 </span>
 <?php
 }
-if ( ! isset($_POST['go']) )
-	exit();
+if (!isset($_POST['go']))
+{
+    exit();
+}
 // Check if account_repository exists
-if (!defined("MULTI") || (defined("MULTI") && MULTI == 1))
-        $account = $cn->count_sql("select * from pg_database where datname=lower('" . domaine . "account_repository')");
+if (!defined("MULTI")||(defined("MULTI")&&MULTI==1))
+{
+    $account=$cn->count_sql("select * from pg_database where datname=lower('".domaine."account_repository')");
+}
 else
-        $account=1;
+{
+    $account=1;
+}
 
 // Create the account_repository
 if ($account == 0 ) {
@@ -519,16 +500,22 @@ if ($account == 0 ) {
   $cn->execute_script(NOALYSS_INCLUDE."/sql/account_repository/constraint.sql");
   /* update name administrator */
   $cadmin=NOALYSS_ADMINISTRATOR;
-  $cn->exec_sql("update ac_users set use_login=$1 where use_id=1",
+  $cn->exec_sql("update ac_users set use_login=$1,use_active=1 where use_id=1",
               array(strtolower($cadmin)));
 
   $cn->commit($cn);
 
- if ( ! DEBUG) ob_end_clean();
+  if (!DEBUG)
+    {
+        ob_end_clean();
+    }
 
-  echo _("Creation of Modele 1");
-  if ( ! DEBUG) ob_start();
-  $cn->exec_sql("create database ".domaine."mod1 encoding='utf8'");
+    echo _("Creation of Modele 1");
+  if (!DEBUG)
+    {
+        ob_start();
+    }
+    $cn->exec_sql("create database ".domaine."mod1 encoding='utf8'");
 
   $cn=new Database(1,'mod');
   $cn->start();
@@ -537,9 +524,12 @@ if ($account == 0 ) {
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
   $cn->commit();
 
-  if ( ! DEBUG) ob_end_clean();
+  if (!DEBUG)
+    {
+        ob_end_clean();
+    }
 
-  echo _("Creation of Modele 2");
+    echo _("Creation of Modele 2");
   $cn->exec_sql("create database ".domaine."mod2 encoding='utf8'");
   $cn=new Database(2,'mod');
   $cn->start();
@@ -568,8 +558,8 @@ if  (defined("MULTI") && MULTI == 0)
 	$db = new Database();
 	if ($db->exist_table("repo_version") == false) 
 	{
-            if ( ! DEBUG) { ob_start();  }
-            $db->execute_script(NOALYSS_INCLUDE.'/sql/mono/mono.sql');
+                        if ( ! DEBUG) { ob_start();  }
+                        $db->execute_script(NOALYSS_INCLUDE.'/sql/mono/mono.sql');
                      
             if ( ! DEBUG) ob_end_clean();
 	}
@@ -624,22 +614,24 @@ if  (defined("MULTI") && MULTI == 0)
  * If multi folders
  */
 define ('ALLOWED',1);
-$_GET['sb']="upg_all";
+define ('ALLOWED_ADMIN',1);
+
 $rep=new Database();
-if (defined (NOALYSS_ADMINISTRATOR) )
-        $rep->exec_sql("update ac_users set use_login=$1 where use_id=1",
-              array(strtolower(NOALYSS_ADMINISTRATOR)));
-require NOALYSS_INCLUDE."/upgrade.inc.php";
+if (defined(NOALYSS_ADMINISTRATOR))
+{
+    $rep->exec_sql("update ac_users set use_login=$1 where use_id=1", array(strtolower(NOALYSS_ADMINISTRATOR)));
+}
+ Dossier::upgrade();
 echo '<h1>'._('Important').'</h1>';
 echo '<p>'._('Utilisateur administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';
         
 echo "<h2 class=\"warning\">";
-printf (" VOUS DEVEZ EFFACER CE FICHIER %s",__FILE__);
+printf (_("VOUS DEVEZ EFFACER CE FICHIER %s"),__FILE__);
 echo "</h2>";
 
- echo "<p class=\"info\">"._("Tout est install&eacute;")." ". $succeed;
+ echo "<p class=\"info\">"._("Tout est installé")." ". $succeed;
 ?>
 </p>
 <p style="text-align: center">
-<A style="display:inline;margin:10px;padding:10px;" class="button" HREF="index.php"><?php echo _('Connectez-vous à NOALYSS')?></A>
+<A style="display:inline;margin:10px;padding:10px;" class="button" HREF="index.php?remove_install"><?php echo _("Essai effacement install.php et se connecter à NOALYSS")?></A>
 </p>

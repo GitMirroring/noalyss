@@ -259,7 +259,7 @@ $BODY$
 	end;
 $BODY$
 
-LANGUAGE plpgsql VOLATILE;
+LANGUAGE plpgsql;
 
 alter table op_predef add od_description text;
 create or replace function comptaproc.opd_limit_description() 

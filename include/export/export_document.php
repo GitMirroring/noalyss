@@ -63,21 +63,6 @@ if ($action == 'rm')
 	header("Content-type: text/html; charset: utf8", true);
 	print $json;
 }
-/* update the description of the document */
-if ( $action == "upd_doc") 
-{
-    	if ($g_user->check_action(VIEWDOC) == 1)
-	{
-            $d_id=$http->request('d_id',"number");
-
-            $doc = new Document($cn, $d_id);
-            $doc->get();
-            if ( $g_user->can_write_action($doc->ag_id))
-		// retrieve the document
-		$doc->update_description(strip_tags ($value));
-	}
-
-}
 /* remove the operation from action_gestion_operation */
 if ($action == 'rmop')
 {

@@ -215,11 +215,11 @@ class HttpInput
         try
         {
             $this->array=$p_array;
-            if (func_num_args()==1)
-                return $this->get_value($p_name);
             if (func_num_args()==2)
-                return $this->get_value($p_name, $p_type);
+                return $this->get_value($p_name);
             if (func_num_args()==3)
+                return $this->get_value($p_name, $p_type);
+            if (func_num_args()==4)
                 return $this->get_value($p_name, $p_type, $p_default);
         }
         catch (Exception $exc)

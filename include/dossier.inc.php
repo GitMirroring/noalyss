@@ -39,13 +39,13 @@ if ( isset ($_POST['upd']) && isNumber($dossier_id) == 1 && $dossier_id != -1)
     $dos=new dossier($dossier_id);
     $name=$http->post('name');
     $desc=$http->post('desc');
-     $max_email=$http->post("max_email");
+    $max_email=$http->post("max_email");
     $dos->set_parameter('name',$name);
     $dos->set_parameter('desc',$desc);
     $dos->set_parameter("max_email", $max_email);
     $dos->save();
 }
-echo '<div class="content" style="width:80%;margin-left:10%">';
+echo '<div class="content">';
 /*
  *  check and add an new folder
  */
@@ -54,7 +54,7 @@ if ( isset ($_POST["DATABASE"]) )
     $repo=new Database();
     try {
         $dos=$http->post('DATABASE');
-        $template=$http->post("FMOD_ID","numnber");
+        $template=$http->post("FMOD_ID","number");
     } catch (Exception $ex) {
         echo $ex->getMessage();
         return;

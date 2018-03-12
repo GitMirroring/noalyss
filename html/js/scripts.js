@@ -496,6 +496,8 @@ function popup_select_tva(obj)
             queryString += '&code=' + obj.jcode;
         if (obj.compute)
             queryString += '&compute=' + obj.compute;
+        if (obj.filter)
+            queryString += '&filter=' + obj.filter;
 
         var action = new Ajax.Request(
                 "ajax_misc.php",
@@ -1075,10 +1077,10 @@ function show_calc()
     var sid = 'calc1';
     var shtml = '';
     shtml +="<div class=\"bxbutton\">";
-    shtml += '<a class="icon" onclick="pin(\'calc1\')" id="pin_calc1">&#xf192;</a>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" id="close_div">X</a>';
+    shtml += '<a class="icon" onclick="pin(\'calc1\')" id="pin_calc1">&#xf047;</a>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" title="" class="icon">&#10761;</a>';
     shtml +="</div>";
     shtml += '   <h2 class="title">Calculatrice</h2>';
-    shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >Calculatrice simplifiée: écrivez simplement les opérations que vous voulez puis la touche retour. exemple : 1+2+3*(1/5) <input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface tout" class="button" onClick="Clean();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
+    shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >Calculatrice simplifiée: écrivez simplement les opérations que vous voulez puis la touche retour. exemple : 1+2+3*(1/5) <input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface" class="button" onClick="Clean();return false;" > <input type="button" value="Efface historique" class="button" onClick="CleanHistory();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
     shtml += '</form><span class="highligth" style="display:block" id="sub_total">  Taper une formule (ex 20*5.1) puis enter  </span><span style="display:block"  id="listing"> </span>';
 
     var obj = {id: sid, html: shtml,
@@ -1198,11 +1200,19 @@ function fill_box(req)
     }
     catch (e) {
         alert_box(e.message);
+         if (console) {
+            console.error(e);
+            console.error("log answer = "+e.responseText);
+        }
     }
     try {
         code_html.evalScripts();
     }
     catch (e) {
+        if (console) {
+            console.error(e);
+            console.error("log answer = "+e.responseText);
+        }
         alert_box("Impossible executer script de la reponse\n" + e.message);
     }
 
@@ -1317,7 +1327,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p
                 onFailure: null,
                 onSuccess: function (req) {
                     remove_waiting_box();
-                    var div = {id: target, cssclass: 'inner_box', style: str_style, drag: 1};
+                    var div = {id: target, cssclass: 'inner_box', style: str_style, drag: 0};
                     add_div(div);
                     $(target).innerHTML = req.responseText;
                     req.responseText.evalScripts();
@@ -2157,11 +2167,7 @@ function filter_table(phrase, _id, colnr, start_row) {
  */
 function display_task(p_id)
 {
-    new Draggable(p_id, {starteffect: function ()
-        {
-            new Effect.Highlight(obj.id, {scroll: window, queue: 'end'});
-        }}
-    );
+
     $(p_id).style.top = posY + 'px';
     $(p_id).style.left = "10%";
     $(p_id).style.width = "80%";
@@ -2392,7 +2398,8 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post)
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
-                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 1});
+                        var posy=calcy(250);
+                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0,style:"position:fixed;top:"+posy+"px"});
                         $('tag_div').innerHTML = code_html;
                         try
                         {
@@ -2464,8 +2471,8 @@ function action_tag_select(p_dossier, ag_id)
                         }
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
-                        pos = fixed_position(35, 229);
-                        add_div({id: 'tag_div', style: pos, cssclass: 'inner_box tag', drag: 1});
+                        var pos = fixed_position(35, 229);
+                        add_div({id: 'tag_div', style: pos, cssclass: 'inner_box tag', drag: 0});
 
                         remove_waiting_box();
                         $('tag_div').innerHTML = code_html;
@@ -2551,7 +2558,27 @@ function action_tag_remove(p_dossier, ag_id, t_id)
     });
 }
 
-
+/**
+ * Activate a tag
+ * @param int p_dossier
+ * @param int  p_tag_id
+ */
+function activate_tag(p_dossier, p_tag_id) {
+    waiting_box();
+    new Ajax.Request("ajax_misc.php",
+    {
+        method:"get",
+        parameters:{gDossier:p_dossier,op:'tag_activate',t_id:p_tag_id},
+        onSuccess:function(req) {
+            remove_waiting_box();
+            var answer=req.responseText.evalJSON();
+            var tagId="tag_onoff"+p_tag_id;
+            $(tagId).update(answer.code);
+            $(tagId).setStyle(answer.style);
+            remove_waiting_box();
+        }
+    })
+}
 /**
  * Display a div with available tags, this div can update the cell
  * tag_choose_td
@@ -2579,12 +2606,12 @@ function search_display_tag(p_dossier, p_prefix)
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
-                        add_div({id: p_prefix + 'tag_div', style: '', cssclass: 'inner_box', drag: 1});
+                        add_div({id: p_prefix + 'tag_div', style: 'left:10%;width:70%', cssclass: 'inner_box', drag: 1});
                         $(p_prefix + 'tag_div').style.top = posY - 80 + "px";
                         $(p_prefix + 'tag_div').style.left = posX - 200 + "px";
                         remove_waiting_box();
                         $(p_prefix + 'tag_div').innerHTML = code_html;
-
+                        code_html.evalScripts();
                     }
                 }
         );
@@ -2724,8 +2751,9 @@ function calendar_zoom(obj)
                             obj.outdiv = 'calendar_zoom_div';
                         }
                         if ($(obj.outdiv) == undefined) {
-                            var str_style = fixed_position(0, 20);
-                            add_div({id: obj.outdiv, style: 'margin-left:3%;width:94%;' + str_style, cssclass: "inner_box", drag: 1});
+                            var str_style = 'top:10%;margin-left:2%;';
+//                            var str_style = fixed_position(0, 120);
+                            add_div({id: obj.outdiv, style: 'margin-left:3%;width:94%;' + str_style, cssclass: "inner_box", drag: 0});
                         }
                         remove_waiting_box();
                         $(obj.outdiv).innerHTML = code_html;
@@ -2875,7 +2903,7 @@ function create_anchor_up()
 function init_scroll()
 {
     var up=new Element('div',{"class":"inner_box",
-            "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;top:25px;right:50px;text-align:center",
+            "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:105px;right:50px;text-align:center;font-size:20px",
             id:"go_up"
         });
         up.innerHTML=' <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>';
@@ -2883,7 +2911,7 @@ function init_scroll()
          window.onscroll=function () {
          if ( document.viewport.getScrollOffsets().top> 0) {
              if ($('go_up').visible() == false) {
-                $('go_up').setOpacity(0.70); 
+                $('go_up').setOpacity(0.65); 
                 $('go_up').show();
                 $('go_up').style.zIndex=99;
             }
@@ -2988,14 +3016,14 @@ function pin (object_id) {
     if ( aDraggableElement[object_id]) {
         aDraggableElement[object_id].destroy();
         aDraggableElement[object_id]=undefined;
-        $('pin_'+object_id).innerHTML="&#xf192;";
+        $('pin_'+object_id).innerHTML="&#xf047;";
     } else {
         aDraggableElement[object_id]=new Draggable(object_id, {starteffect: function ()
                 {
                     new Effect.Highlight(object_id, {scroll: window, queue: 'end'});
                 }}
             ); 
-        $('pin_'+object_id).innerHTML="&#xf047;";
+        $('pin_'+object_id).innerHTML="&#xe809;";
     }
 }
 /**
@@ -3373,3 +3401,115 @@ Periode.filter_exercice=function (p_table_id) {
         
     }
 };
+
+// keep track of progress bar
+var progressBar = [];
+// idx of progress bar        
+var progressIdx = 0;
+
+/**
+ * Start the progress bar 
+ * @param {string} p_taskid id to monitor
+ * @param {int} p_dossier
+ */
+function progress_bar_start(p_taskid,p_message)
+{
+    try {
+        progressIdx++;
+        // block the window
+        var message="Un instant svp";
+        if ( p_message) {
+            message=p_message;
+        }
+        add_div({id:"blocking"+progressIdx,cssclass:"smoke-base smoke-visible "});
+        
+        add_div({id:"message"+progressIdx,cssclass:"inner_box",style:"z-index:1000;position:fixed;top:30%;width:40%;left:30%"});
+        $("message"+progressIdx).update(message);
+        // Create a div
+        add_div({id: "progressDiv" + progressIdx, cssclass: "progressbar", html: '<span id="progressValue">0</span>'});
+        // Check status every sec.
+        progressBar[progressIdx] = setInterval(progress_bar_check.bind(null, progressIdx, p_taskid), 1000);
+    } catch (e) {
+        console.error(e.message);
+    }
+}
+
+/**
+ * Check every second the status 
+ * @param {integer} p_idx idx of progressbar
+ * @param {string} p_taskid  id to monitor
+ */
+function progress_bar_check(p_idx, p_taskid)
+{
+    try {
+
+        new Ajax.Request("ajax_misc.php", {
+            parameters: {gDossier: 0, task_id: p_taskid,op:"progressBar"},
+            method:"get",
+            onSuccess: function (req) {
+                try 
+                {
+                    var answer=req.responseText.evalJSON();
+                    var progress_div=$("progressDiv"+progressIdx);
+                    var a_child=progress_div.childNodes;
+                    var i=0;
+                    for (  i=0;i< a_child.length;i++) {
+                        if ( a_child[i].id="progressValue") {
+                            var progressValue = a_child[i];
+                        }
+                    }
+                    var progress = parseFloat(progressValue.innerHTML);
+                    if ( answer.value <= progress ) {
+                        return;
+                    }
+
+                    progressValue.innerHTML = answer.value;
+                    progressValue.setStyle("width:" + answer.value + "%");
+                    if (answer.value== 100) {
+                        clearInterval(progressBar[p_idx]);
+                        progressValue.innerHTML="Success";
+                        Effect.BlindUp("progressDiv"+p_idx,{duration:1.0,scaleContent:false})
+                        $("message"+p_idx).remove();
+                        $("blocking"+p_idx).remove();
+                        setTimeout(function() { $("progressDiv"+progressIdx).remove } , 1100);
+                    }
+                } catch (e) {
+                    clearInterval(progressBar[p_idx]);
+                    document.getElementById("progressValue").innerHTML=req.responseText;
+                    console.error(e.message);
+                }
+            }
+        });
+    } catch (e) {
+        clearInterval(progressBar[p_idx]);
+        console.error(e.message);
+    }
+}
+                                                
+/**
+ * In the user's setting  box, update the period list with the choosen exercice
+ * @param {int} p_dossier
+ */
+function updatePeriodePreference(p_dossier)
+{
+    waiting_box();
+    var exercice=$('exercice_setting').value;
+    new Ajax.Updater('setting_period',"ajax_misc.php",{method:"get",parameters:{ "op":"pref_exercice","gDossier":p_dossier,"exercice":exercice}});  
+    remove_waiting_box();
+}
+/**
+ * Update the from and to periode list when changing the exercice
+ * @param {int} p_dossier
+ * @param {string} p_exercice id of the exercice
+ * @param {type} p_periode_from id of the starting periode
+ * @param {type} p_periode_to id of the ending periode
+ * @param {type} p_last possible value = 1 to show last periode or 0 the first
+ */
+function updatePeriode(p_dossier,p_exercice,p_periode_from,p_periode_to,p_last)
+{
+    waiting_box();
+    var exercice=$(p_exercice).value;
+    new Ajax.Updater(p_periode_from,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_from,"type":"from","last":p_last}});
+    new Ajax.Updater(p_periode_to,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_to,"type":"to","last":p_last}});
+    remove_waiting_box();
+}

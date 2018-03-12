@@ -38,6 +38,7 @@ if (isset($_REQUEST['f_id']))
 if (isset($_REQUEST['sb']))
 	$supl_hidden.=HtmlInput::hidden('sb', $_REQUEST['sb']);
 $supl_hidden.=HtmlInput::hidden('ac', $_REQUEST['ac']);
+
 $correction = 0;
 $error_id=0;
 $http=new HttpInput();
@@ -268,7 +269,7 @@ if ($sub_action == "list")
 }
 //--------------------------------------------------------------------------------
 // Save Follow_Up
-// Stage 2 : Save a NEW action + Files and generate eventually a document
+// Stage 2 : Save a NEW action + Files and generate a document
 //--------------------------------------------------------------------------------
 if ($sub_action == "save_action_st2")
 {

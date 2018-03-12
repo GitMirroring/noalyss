@@ -1757,7 +1757,7 @@ class Fiche
             <TR >
             <TH>'._('Quick Code').Icon_Action::infobulle(17).'</TH>'.
             '<th>'._('Poste comptable').'</th>'.
-            '<th  class="sorttable_sorted">'._('Nom').'<span id="sorttable_sortfwdind"><img src="image/up.gif"></span>'.'</th>
+            '<th  class="sorttable_sorted">'._('Nom').'</th>
             <th>'._('Adresse').'</th>
             <th style="text-align:right">'._('Total débit').'</th>
             <th style="text-align:right">'._('Total crédit').'</th>
@@ -1982,6 +1982,15 @@ class Fiche
         if ( $count > 0 ) return TRUE;
         $count=$this->cn->get_value("select count(*) from action_person where f_id=$1 ",
                 [$this->id]);
+        if ( $count > 0 ) return TRUE;
+        
+        $count=$this->cn->get_value("select count(*) 
+                from attr_def
+                join fiche_detail using (ad_id)
+                where ad_type='card'
+                and ad_value=$1"
+                ,[$qcode]);
+        
         if ( $count > 0 ) return TRUE;
         
         return FALSE;

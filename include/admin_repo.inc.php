@@ -22,6 +22,7 @@
  *        templates... Accessible only by the administrator
  */
 if ( ! defined ('ALLOWED')) { die (_('Non autorisé'));}
+if ( ! defined ('ALLOWED_ADMIN')) { die (_('Non autorisé'));}
 
 include_once NOALYSS_INCLUDE."/class/user.class.php";
 require_once NOALYSS_INCLUDE."/lib/user_common.php";
@@ -29,6 +30,7 @@ include_once NOALYSS_INCLUDE."/lib/ac_common.php";
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE."/lib/user_menu.php";
 require_once NOALYSS_INCLUDE."/lib/http_input.class.php";
+require_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
 $http=new HttpInput();
 $action = $http->request("action","string", "");
 
@@ -45,7 +47,7 @@ if ($User->admin != 1)
     echo _("Vous n'êtes pas administateur");
     echo "</h2>";
     $reconnect=http_build_query(array("reconnect"=>1,"backurl"=>"admin-noalyss.php?action=upgrade"));
-    echo '<a href="index.php?'.$reconnect.'">';
+    echo '<a href="'.NOALYSS_URL.'/index.php?'.$reconnect.'">';
     echo _("Connectez-vous comme administrateur");
     echo '</a>';
     html_page_stop();
@@ -58,7 +60,7 @@ if ( $action== 'backup') {
         require_once NOALYSS_INCLUDE."/backup.inc.php";
         exit();
 }
-html_page_start();
+html_page_start($_SESSION['g_theme']);
 load_all_script();
 echo '<H2 class="info"> '._('Administration').'</H2>';
 echo '<div class="topmenu">';
@@ -190,19 +192,16 @@ hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #0
     echo $html->saveHTML();
     
 }
+//------------------------------------------------------------------------------
+// Upgrade
+//------------------------------------------------------------------------------
 if ( $action == "upgrade" ) {
-?>    
-    <form method="get" id="frm_upg_all" onsubmit="return confirm_box('frm_upg_all','<?php echo _('Confirmez')?>')">
-    <input type="hidden" name="sb" value="upg_all">
-    <input type="hidden" name="action" value="upgrade">
-    <input type="submit" class="button" name="submit_upg_all" id="submit_upg_all" value="<?php echo _('Tout mettre à jour')?>">
-</form>
-<?php
+   
+    
     require_once NOALYSS_INCLUDE."/upgrade.inc.php";
 }
 ?>
 </DIV>
 <?php
-
 html_page_stop();
 ?>

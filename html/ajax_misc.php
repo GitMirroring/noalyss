@@ -46,6 +46,7 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
+require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
 $http=new HttpInput();
 
 mb_internal_encoding("UTF-8");
@@ -86,6 +87,16 @@ else
     $g_user = new User($cn);
     $g_user->check(true);
 }
+
+// For progress bar, for saving time , we check and answer directly
+if ($op == "progressBar") {
+    $task_id=$http->request("task_id");
+    $task=new Progress_Bar($task_id);
+    $task->answer();
+    return;
+}
+
+
 $html = var_export($_REQUEST, true);
 set_language();
 if ( LOGINPUT)
@@ -158,12 +169,15 @@ $path = array(
     "navigator"=>"ajax_navigator",
     "preference"=>"ajax_preference",
     "bookmark"=>"ajax_bookmark",
+    // Tag 
     "tag_detail"=>"ajax_tag_detail",
     "tag_save"=>"ajax_tag_save",
     "tag_list"=>"ajax_tag_list",
     "tag_add"=>"ajax_tag_add_action",
     "tag_remove"=>"ajax_tag_remove_action",
     "tag_choose"=>"ajax_tag_choose",
+    "tag_activate"=>"ajax_tag_save",
+    // search
     "search_display_tag"=>"ajax_search_display_tag",
     "search_add_tag"=>"ajax_search_add_tag",
     "search_clear_tag"=>"ajax_search_clear_tag",
@@ -189,6 +203,12 @@ $path = array(
     "modele_drop"=>"ajax_admin",
   // From admin, display the information of a template you can modify
     "modele_modify"=>"ajax_admin",
+    // From admin , upgrade Noalyss
+    "upgradeCore"=>"ajax_admin",
+    // From admin , upgrade or install plugin
+    "upgradePlugin"=>"ajax_admin",
+    // From admin , install a template
+    "installTemplate"=>"ajax_admin",
   // From dashboard, display detail about last operation     
     "action_show"=>"ajax_gestion",
   // From dashboard, display form for a new event    
@@ -205,6 +225,8 @@ $path = array(
     "accounting"=>"ajax_accounting",
     // Show detail of an ANC operation
     "anc_detail_op"=>"ajax_anc_detail_operation",
+    // show history of an analytic account
+    "history_anc_account"=>"ajax_history_anc_account",
     // Display the list of filter saved
     "display_search_filter"=>"ajax_search_filter",
     // Save search filter 
@@ -218,7 +240,11 @@ $path = array(
     // template category of card
     'template_cat_card'=>'ajax_template_cat_card',
     // Attribute for category of card
-    'template_cat_category'=>'ajax_template_cat_category'
+    'template_cat_category'=>'ajax_template_cat_category',
+    // From FollowUp , update a comment on a file
+    'update_comment_followUp'=>'ajax_follow_up',
+    // TVA param
+    "tva_parameter"=>"ajax_tva_parameter"
 )    ;
 
 if (array_key_exists($op, $path)) {
@@ -227,6 +253,60 @@ if (array_key_exists($op, $path)) {
 }
 switch ($op)
 {
+    case "periode_change":
+        $field=$http->get("field");
+        $type=$http->get("type");
+        $exercice=$http->get("exercice","number");
+        $last=$http->get("last","number");
+        
+        // if last == 1 then show first and last periode of the 
+        // exercice
+        $periode_start=0;
+        $periode_end=0;
+        if ( $last==1) {
+            $t_periode=new Periode($cn);
+            list($per_max,$per_min)=$t_periode->get_limit($exercice);
+            $periode_start=$per_max->p_id;
+            $periode_end=$per_min->p_id;
+        }
+        
+        $iperiod = new IPeriod($field);
+        $iperiod->id=$field;
+        $iperiod->user = $g_user;
+        $iperiod->cn = $cn;
+        $iperiod->filter_year = true;
+        $iperiod->exercice=$exercice;
+        if ( $type=="from")
+        {
+            $iperiod->show_end_date=FALSE;
+            $iperiod->value=$periode_start;
+        } elseif ($type=="to"){
+            $iperiod->show_start_date=FALSE;
+            $iperiod->value=$periode_end;
+            
+        } else {
+            throw new Exception(_("Invalide type"));
+        }
+        
+        $iperiod->type = ALL;
+        echo $iperiod->input();
+        
+        return;
+        
+        break;
+    case "pref_exercice":
+        $iperiod = new IPeriod("period");
+        $iperiod->id="setting_period";
+        $iperiod->user = $g_user;
+        $iperiod->cn = $cn;
+        $iperiod->filter_year = true;
+        $iperiod->exercice=$http->get("exercice");
+        
+        $iperiod->type = ALL;
+        echo $iperiod->input();
+        
+        return;
+    break;
 	case "remove_anc":
 		if ($g_user->check_module('ANCODS') == 0)
 			exit();
@@ -345,7 +425,28 @@ EOF;
 		break;
 	case 'dsp_tva':
 		$cn = Dossier::connect();
-		$Res = $cn->exec_sql("select * from tva_rate order by tva_rate desc");
+            // Filter the VAT 
+                $filter=$http->get("filter","string","none");
+                if ( $filter == 'sale')  {
+                    $Res = $cn->exec_sql("select * 
+                        from v_tva_rate 
+                        where 
+                        tva_sale <> '#'
+                            order by tva_rate desc");
+                    
+                } elseif ($filter == "purchase") {
+                    
+                    $Res = $cn->exec_sql("select * 
+                        from 
+                        v_tva_rate 
+                        where 
+                        tva_purchase <> '#'
+                            order by tva_rate desc");
+                }else {
+                    
+                    $Res = $cn->exec_sql("select * from v_tva_rate 
+                            order by tva_rate desc");
+                }
 		$Max = Database::num_row($Res);
 		$r = "";
 		$r.=HtmlInput::title_box(_('Choisissez la TVA'),'tva_select',"close","","y");

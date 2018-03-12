@@ -609,7 +609,9 @@ function select_card_type(obj)
                                       // Get all the category, 
                                       var answer=req.responseXML.getElementsByTagName("fiche_cat_item");
                                       if (answer.length == 0) {
-                                          alert_box(req.responseText);
+                                          removeDiv(content);
+                                          remove_waiting_box();
+                                          alert_box(getNodeText(req.responseXML.getElementsByTagName("code")[0]));
                                           return;
                                       }
                                       if ( answer.length == 1) {
@@ -627,7 +629,7 @@ function select_card_type(obj)
 }
 /**
  *@brief Show a blank card
- *@param Form object (obj)
+ *@param obj Form object (obj)
  *       possible attribute :
  *        - filter is the filter but with a  fd_id list, -1 means there  is no filter
  *        - ref : reload the window after adding card
@@ -723,14 +725,14 @@ function form_blank_card(obj)
 function save_card(obj)
 {
     var content=$(obj).ipopup;
-    var accounting= $(obj)['av_text25'];
-        var accounting= $(obj)['av_text5'];
-    if ( accounting.value.length > 40 ) {
+    var accounting= $(obj)['av_text5'];
+    if ( accounting && accounting.value.length > 40 ) {
       smoke.alert('Poste comptable trop grand');
       return false;
-        }
+    }
     // Data must be taken here
-    data=$('save_card').serialize(false);
+
+    var    data=$('save_card').serialize(false);
     waiting_box();
     var dossier=$('gDossier').value;
     var queryString='gDossier='+dossier;
