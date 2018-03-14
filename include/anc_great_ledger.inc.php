@@ -36,7 +36,7 @@ if ($result != null)
         echo '</span>';
         $task_id=uniqid();
         echo $grandLivre->show_button();
-        printf ('<form method="GET" id="export_anc_receipt_pdf" action="export.php" style="display:inline" onsubmit="progress_bar_start(\'%s\',\'%s\');return true;">',
+        printf ('<form method="GET" id="export_anc_receipt_pdf" action="export.php" style="display:inline" onsubmit="return start_export_anc_receipt_pdf(\'%s\',\'%s\');">',
                 $task_id,
                 _("Le traitement est en cours ,  merci de patienter sans recharger la page")
                );
@@ -47,6 +47,30 @@ if ($result != null)
         echo HtmlInput::get_to_hidden(array('ac','gDossier','sa'));
         echo '</form>';
         echo $grandLivre->show_button();
+        ?>
+<script>
+    function start_export_anc_receipt_pdf(p_task_id,p_message)
+    {
+        var a=document.getElementsByName("ck[]");
+        var i=0;
+        var valid=false;
+        for ( i =0;i < a.length;i++) {
+            if ( a[i].checked == true) {
+                valid=true;
+                break;
+            }
+        }
+        if ( valid  ) {
+            progress_bar_start(p_task_id,p_message);
+            return true;
+        } else {
+            smoke.alert("<?=_('Choisissez au moins une opération')?>");
+            return false;
+        }
+        
+    }
+</script>
+<?php
     }
     else
     {
