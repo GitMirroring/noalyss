@@ -582,13 +582,14 @@ if  (defined("MULTI") && MULTI == 0)
                 echo '<li>'._("soit noalyss/contrib/mono-dossier/mono-france.sql pour la comptabilité française").'</li>';
                 echo '<li>'._("soit noalyss/contrib/mono-dossier/mono-belge.sql pour la comptabilité belge").'</li>';
                 echo '<li>'._("soit y restaurer un backup ou un modèle")."</li>
-                    </ul>
-				</p>";
+                    </ul>";
+                echo _("Puis refaites la procédure d'installation pour mettre la base de données à jour"),    
+				"</p>";
 		exit();
 	}
 	echo "<h3>Patching " . dbname . '</h3>';
 	$db->apply_patch(dbname);
-	echo "<p class=\"info\">"._("Tout est install&eacute;"). $succeed;
+	echo "<p class=\"info\">"._("Tout est installé"). $succeed;
         
          echo "<h2>"._("Mise à jour Repository")."</h2>";
          if ( DEBUG == false ) ob_start();

@@ -12,7 +12,7 @@ SET client_min_messages = warning;
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
-SET search_path = public, pg_catalog,comptaproc;
+SET search_path = public, pg_catalog;
 
 --
 -- Name: limit_user(); Type: FUNCTION; Schema: public; Owner: -
