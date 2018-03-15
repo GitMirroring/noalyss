@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-14 23:14+0100\n"
+"POT-Creation-Date: 2018-03-15 17:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -706,14 +706,14 @@ msgstr ""
 #: html/do.php:108 html/user_login.php:75 html/do.php:107 html/do.php:102
 #: html/do.php:104 html/user_login.php:76 html/do.php:132 html/do.php:145
 #: html/do.php:147 html/do.php:165 html/do.php:189 html/user_login.php:78
-#: html/do.php:203 html/user_login.php:79
+#: html/do.php:203 html/user_login.php:79 html/user_login.php:85
 msgid "Votre base de données n'est pas à jour"
 msgstr ""
 
 #: html/do.php:109 html/user_login.php:76 html/do.php:108 html/do.php:103
 #: html/do.php:105 html/user_login.php:77 html/do.php:133 html/do.php:146
 #: html/do.php:148 html/do.php:166 html/do.php:190 html/user_login.php:79
-#: html/do.php:204 html/user_login.php:80
+#: html/do.php:204 html/user_login.php:80 html/user_login.php:86
 msgid "cliquez ici pour appliquer le patch"
 msgstr ""
 
@@ -750,12 +750,13 @@ msgstr ""
 #: html/user_login.php:158 html/user_login.php:159 html/user_login.php:160
 #: include/database.item.php:87 html/user_login.php:163
 #: include/database.item.php:81 include/ajax/ajax_preference.php:31
+#: html/user_login.php:169
 msgid "Préférence"
 msgstr ""
 
 #: html/user_login.php:151 html/user_login.php:153 html/user_login.php:155
 #: html/user_login.php:159 html/user_login.php:160 html/user_login.php:161
-#: html/user_login.php:162 html/user_login.php:165
+#: html/user_login.php:162 html/user_login.php:165 html/user_login.php:171
 msgid "Deconnexion"
 msgstr ""
 
@@ -5358,6 +5359,7 @@ msgstr ""
 #: include/ext/amortis/include/template/material_detail.php:202
 #: include/lib/html_input.class.php:434 include/lib/html_input.class.php:449
 #: include/ajax/ajax_card.php:312 include/class/extension.class.php:270
+#: html/user_login.php:106
 #, php-format
 msgid "Fermer"
 msgstr ""
@@ -6902,7 +6904,7 @@ msgstr ""
 #: html/user_login.php:148 html/user_login.php:157
 #: include/admin_repo.inc.php:63 include/database.item.php:130
 #: html/user_login.php:160 include/admin_repo.inc.php:65
-#: include/database.item.php:124
+#: include/database.item.php:124 html/user_login.php:166
 msgid "Administration"
 msgstr ""
 
@@ -6946,6 +6948,7 @@ msgstr ""
 #: include/user.inc.php:173 include/export/export_security_pdf.php:112
 #: html/user_login.php:109 include/database.item.php:127
 #: include/param_sec.inc.php:99 include/param_sec.inc.php:158
+#: html/user_login.php:115
 msgid "Administrateur"
 msgstr ""
 
@@ -11254,7 +11257,7 @@ msgstr ""
 #: include/admin_repo.inc.php:144 html/user_login.php:105
 #: include/admin_repo.inc.php:146 include/stock_inv_histo.inc.php:84
 #: include/user.inc.php:173 html/user_login.php:109
-#: include/admin_repo.inc.php:148
+#: include/admin_repo.inc.php:148 html/user_login.php:115
 msgid "Utilisateur"
 msgstr ""
 
@@ -15110,6 +15113,7 @@ msgstr ""
 #: html/install.php:595 html/install.php:587 html/install.php:257
 #: html/install.php:593 html/install.php:208 html/install.php:555
 #: include/user.inc.php:83 html/install.php:215 html/install.php:545
+#: html/install.php:551
 msgid "Mot de passe"
 msgstr ""
 
@@ -16088,6 +16092,7 @@ msgstr ""
 #: include/lib/class_database.php:421 include/lib/class_database.php:422
 #: include/lib/class_database.php:429 include/lib/class_database.php:434
 #: include/lib/database.class.php:433 include/lib/database.class.php:442
+#: include/lib/database.class.php:443
 msgid "Base de donnée vide"
 msgstr ""
 
@@ -16391,7 +16396,7 @@ msgstr ""
 #: html/admin/setup.php:445 html/admin/setup.php:463 html/admin/setup.php:469
 #: html/install.php:533 html/install.php:532 html/install.php:530
 #: html/install.php:536 html/install.php:528 html/install.php:534
-#: html/install.php:496 html/install.php:471
+#: html/install.php:496 html/install.php:471 html/install.php:477
 msgid "Commencer la mise à jour ou l'installation"
 msgstr ""
 
@@ -16489,6 +16494,7 @@ msgstr ""
 #: html/admin/setup.php:395 html/install.php:459 html/install.php:458
 #: html/install.php:456 html/install.php:462 html/install.php:454
 #: html/install.php:460 html/install.php:424 html/install.php:399
+#: html/install.php:405
 msgid "Version base de données :"
 msgstr ""
 
@@ -16507,13 +16513,14 @@ msgstr ""
 #: include/admin_repo.inc.php:121 html/install.php:475 html/install.php:473
 #: html/install.php:479 html/install.php:471 include/admin_repo.inc.php:125
 #: html/install.php:477 html/install.php:439 include/admin_repo.inc.php:127
-#: html/install.php:414 include/admin_repo.inc.php:129
+#: html/install.php:414 include/admin_repo.inc.php:129 html/install.php:420
 msgid "Paramètre base de données"
 msgstr ""
 
 #: html/admin/setup.php:419 html/install.php:483 html/install.php:482
 #: html/install.php:480 html/install.php:486 html/install.php:478
 #: html/install.php:484 html/install.php:446 html/install.php:421
+#: html/install.php:427
 msgid ""
 "Vous devez installer le langage plpgsql pour permettre aux fonctions SQL de "
 "fonctionner."
@@ -16522,6 +16529,7 @@ msgstr ""
 #: html/admin/setup.php:420 html/install.php:484 html/install.php:483
 #: html/install.php:481 html/install.php:487 html/install.php:479
 #: html/install.php:485 html/install.php:447 html/install.php:422
+#: html/install.php:428
 msgid ""
 "Pour cela, sur la ligne de commande en tant qu\\'utilisateur postgres, "
 "faites createlang plpgsql template1"
@@ -16540,19 +16548,20 @@ msgstr ""
 #: html/admin/setup.php:462 html/install.php:526 html/install.php:525
 #: html/install.php:523 html/install.php:529 html/install.php:521
 #: html/install.php:527 html/install.php:489 html/install.php:464
+#: html/install.php:470
 #, php-format
 msgid "Il y a %s param&egrave;tre qui sont trop bas"
 msgstr ""
 
 #: html/admin/setup.php:497 html/install.php:561 html/install.php:560
 #: html/install.php:558 html/install.php:569 html/install.php:567
-#: html/install.php:529 html/install.php:513
+#: html/install.php:529 html/install.php:513 html/install.php:519
 msgid "Creation of Modele 1"
 msgstr ""
 
 #: html/admin/setup.php:510 html/install.php:574 html/install.php:573
 #: html/install.php:571 html/install.php:582 html/install.php:580
-#: html/install.php:542 html/install.php:532
+#: html/install.php:542 html/install.php:532 html/install.php:538
 msgid "Creation of Modele 2"
 msgstr ""
 
@@ -16575,6 +16584,7 @@ msgstr ""
 #: html/admin/setup.php:538 html/install.php:602 html/install.php:603
 #: html/install.php:610 html/install.php:626 html/install.php:618
 #: html/install.php:624 html/install.php:586 html/install.php:576
+#: html/install.php:582
 msgid ""
 "soit noalyss/contrib/mono-dossier/mono-france.sql pour la comptabilité "
 "française"
@@ -16583,6 +16593,7 @@ msgstr ""
 #: html/admin/setup.php:539 html/install.php:603 html/install.php:604
 #: html/install.php:611 html/install.php:627 html/install.php:619
 #: html/install.php:625 html/install.php:587 html/install.php:577
+#: html/install.php:583
 msgid ""
 "soit noalyss/contrib/mono-dossier/mono-belge.sql pour la comptabilité belge"
 msgstr ""
@@ -16590,6 +16601,7 @@ msgstr ""
 #: html/admin/setup.php:540 html/install.php:604 html/install.php:605
 #: html/install.php:612 html/install.php:628 html/install.php:620
 #: html/install.php:626 html/install.php:588 html/install.php:578
+#: html/install.php:584
 msgid "soit y restaurer un backup ou un modèle"
 msgstr ""
 
@@ -16611,7 +16623,7 @@ msgstr ""
 #: html/install.php:635 html/install.php:656 html/install.php:657
 #: html/install.php:683 html/install.php:676 html/install.php:655
 #: html/install.php:682 html/install.php:617 html/install.php:644
-#: html/install.php:607
+#: html/install.php:607 html/install.php:614
 msgid "Connectez-vous à NOALYSS"
 msgstr ""
 
@@ -16625,25 +16637,28 @@ msgstr ""
 #: include/upgrade.inc.php:95 html/install.php:453 html/install.php:417
 #: include/upgrade.inc.php:68 include/upgrade.inc.php:96 html/install.php:392
 #: include/upgrade.inc.php:33 include/class/dossier.class.php:367
-#: include/class/dossier.class.php:395
+#: include/class/dossier.class.php:395 html/install.php:398
 msgid "Base de données"
 msgstr ""
 
 #: html/admin/setup.php:527 html/install.php:591 html/install.php:590
 #: html/install.php:588 html/install.php:601 html/install.php:593
 #: html/install.php:599 html/install.php:561 html/install.php:551
+#: html/install.php:557
 msgid "Mise à jour du systeme"
 msgstr ""
 
 #: html/admin/setup.php:528 html/install.php:592 html/install.php:591
 #: html/install.php:589 html/install.php:602 html/install.php:594
 #: html/install.php:600 html/install.php:562 html/install.php:552
+#: html/install.php:558
 msgid "Mise  à jour dossier"
 msgstr ""
 
 #: html/admin/setup.php:549 html/install.php:613 html/install.php:614
 #: html/install.php:621 html/install.php:637 html/install.php:629
 #: html/install.php:635 html/install.php:597 html/install.php:587
+#: html/install.php:594
 msgid "Mise à jour Repository"
 msgstr ""
 
@@ -16662,6 +16677,7 @@ msgstr ""
 #: html/admin/setup.php:442 html/install.php:506 html/install.php:505
 #: html/install.php:503 html/install.php:509 html/install.php:501
 #: html/install.php:507 html/install.php:469 html/install.php:444
+#: html/install.php:450
 #, php-format
 msgid "Attention le paramètre effective_cache_size est de %s au lieu de 1000"
 msgstr ""
@@ -16669,6 +16685,7 @@ msgstr ""
 #: html/admin/setup.php:459 html/install.php:523 html/install.php:522
 #: html/install.php:520 html/install.php:526 html/install.php:518
 #: html/install.php:524 html/install.php:486 html/install.php:461
+#: html/install.php:467
 msgid "La base de données est bien configurée "
 msgstr ""
 
@@ -17452,7 +17469,7 @@ msgstr ""
 #: include/template/tag_select.php:16
 #: include/lib/manage_table_sql.class.php:631 include/ajax/ajax_card.php:291
 #: include/ajax/ajax_navigator.php:46 include/class/acc_ledger.class.php:2175
-#: include/class/fiche.class.php:2221
+#: include/class/fiche.class.php:2221 html/user_login.php:181
 #, php-format
 msgid "Cherche"
 msgstr ""
@@ -18061,6 +18078,7 @@ msgstr ""
 
 #: html/install.php:605 html/install.php:621 html/install.php:613
 #: html/install.php:619 html/install.php:581 html/install.php:571
+#: html/install.php:577
 #, php-format
 msgid ""
 "La base de donnée %s est vide, \n"
@@ -18358,7 +18376,8 @@ msgstr ""
 #: html/install.php:647 html/install.php:671 html/install.php:206
 #: html/install.php:553 html/install.php:609 html/install.php:633
 #: html/install.php:213 html/install.php:543 html/install.php:599
-#: html/install.php:625
+#: html/install.php:625 html/install.php:549 html/install.php:606
+#: html/install.php:632
 msgid "Important"
 msgstr ""
 
@@ -18366,17 +18385,18 @@ msgstr ""
 #: html/install.php:642 html/install.php:666 html/install.php:256
 #: html/install.php:648 html/install.php:672 html/install.php:207
 #: html/install.php:610 html/install.php:634 html/install.php:214
-#: html/install.php:600 html/install.php:626
+#: html/install.php:600 html/install.php:626 html/install.php:607
+#: html/install.php:633
 msgid "Utilisateur administrateur"
 msgstr ""
 
 #: html/install.php:594 html/install.php:586 html/install.php:592
-#: html/install.php:554 html/install.php:544
+#: html/install.php:554 html/install.php:544 html/install.php:550
 msgid "Utilisateur  administrateur"
 msgstr ""
 
 #: html/install.php:651 html/install.php:643 html/install.php:649
-#: html/install.php:611 html/install.php:601
+#: html/install.php:611 html/install.php:601 html/install.php:608
 msgid "Mot de passe par défaut à l'installation"
 msgstr ""
 
@@ -19648,7 +19668,7 @@ msgstr ""
 msgid "open_basedir empêche certaines fonctions de Noalyss,mettez-le à vide "
 msgstr ""
 
-#: html/install.php:404
+#: html/install.php:404 html/install.php:410
 msgid ""
 " Vous devez absolument utiliser au minimum une version 9.0 de PostGresql, si "
 "votre distribution n'en\n"
@@ -19657,20 +19677,20 @@ msgid ""
 "vos bases de données"
 msgstr ""
 
-#: html/install.php:629
+#: html/install.php:629 html/install.php:636
 #, php-format
 msgid "VOUS DEVEZ EFFACER CE FICHIER %s"
 msgstr ""
 
-#: html/install.php:632
+#: html/install.php:632 html/install.php:592 html/install.php:639
 msgid "Tout est installé"
 msgstr ""
 
-#: html/install.php:636
+#: html/install.php:636 html/install.php:643
 msgid "Essai effacement install.php et se connecter à NOALYSS"
 msgstr ""
 
-#: html/user_login.php:97
+#: html/user_login.php:97 html/user_login.php:103
 msgid "Cliquez ici pour mettre à jour"
 msgstr ""
 
@@ -20420,4 +20440,34 @@ msgstr ""
 
 #: include/class/user.class.php:1379 include/class/user.class.php:1408
 msgid "Valeur invalide"
+msgstr ""
+
+#: html/install.php:384
+msgid "Module php-pgsql n'est pas installé"
+msgstr ""
+
+#: html/install.php:586
+msgid ""
+"Puis refaites la procédure d'installation pour mettre la base de données à "
+"jour"
+msgstr ""
+
+#: include/template/tag_detail.php:27
+msgid "Etiquette(tag) actif"
+msgstr ""
+
+#: include/template/tag_detail.php:33
+msgid "Cochez pour cette case pour effacer cette étiquette (tag)"
+msgstr ""
+
+#: include/ajax/ajax_admin.php:392
+msgid "L'extension doit être activée dans le dossier avec CFGPLUGIN"
+msgstr ""
+
+#: include/ajax/ajax_admin.php:414
+msgid "Modèle installé"
+msgstr ""
+
+#: include/ajax/ajax_tag_detail.php:16
+msgid "Détail du dossier ou étiquette"
 msgstr ""
