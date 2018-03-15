@@ -24,13 +24,13 @@ $t_actif->selected=$data->t_actif;
 <?php echo _("Description")?> : <?php echo $t_description->input(); ?>
 </p>
 <p>
-    <?=_("Tag actif") ?><?=$t_actif->input()?>
+    <?=_("Etiquette(tag) actif") ?><?=$t_actif->input()?>
 </p>
 <?php
 // If exist you can remove it
 if ( $data->t_id != '-1') : 
 ?>
-<p><?php echo _("Cochez pour cette case pour effacer ce tag")?><input type="checkbox" name="remove">
+<p><?php echo _("Cochez pour cette case pour effacer cette étiquette (tag)")?><input type="checkbox" name="remove">
 </p>
 
 <?php

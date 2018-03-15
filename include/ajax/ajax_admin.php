@@ -389,7 +389,7 @@ if ($op=='upgradePlugin')
     $progress->set_value(55);
     $plugin->install();
     $progress->set_value(100);
-    echo _("Le plugin doit être activée dans le dossier avec CFGPLUGIN");
+    echo _("L'extension doit être activée dans le dossier avec CFGPLUGIN");
     return;
 }
 //------------------------------------------------------------------------------------------------------------------
@@ -411,7 +411,7 @@ if ($op=="installTemplate")
     $progress->set_value(70);
     $template->install();
     $progress->set_value(100);
-    echo _("Modèle installé ");
+    echo _("Modèle installé");
     return;
 }
 ?>        
