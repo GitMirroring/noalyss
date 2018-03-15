@@ -306,7 +306,7 @@ class Database
         while (!feof($hf))
         {
             $buffer=fgets($hf);
-            $buffer=str_replace("$", "\$", $buffer);
+            $buffer=str_replace('$BODY$', '$_$', $buffer);
             print $buffer."<br>";
             // comment are not execute
             if (substr($buffer, 0, 2)=="--")
@@ -345,7 +345,8 @@ class Database
                 if (    strpos(strtolower($buffer), "$$;")===false      &&
                         strpos(strtolower($buffer), '$_$;')===false   &&
                         strpos(strtolower($buffer), '$function$;')===false   &&
-                        strpos(strtolower($buffer), 'language plpgsql;')===false 
+                        strpos(strtolower($buffer), 'language plpgsql;')===false &&
+                        strpos(strtolower($buffer), 'language plpgsql ;')===false 
                     )
                 {
                     $sql.=$buffer;
