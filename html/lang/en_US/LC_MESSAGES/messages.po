@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: NOALYSS 672\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-14 23:14+0100\n"
-"PO-Revision-Date: 2018-03-15 09:19+0100\n"
+"PO-Revision-Date: 2018-03-15 12:18+0100\n"
 "Last-Translator: dany\n"
 "Language-Team: French <noalyss-generale@nongnu.org>\n"
 "Language: en_US\n"
@@ -10868,7 +10868,7 @@ msgstr "The number of columns is"
 
 #: include/ajax/ajax_admin.php:392
 msgid "Le plugin doit être activée dans le dossier avec CFGPLUGIN"
-msgstr ""
+msgstr "The plugin must be activated in CFGPLUGIN in each folder"
 
 #: include/class_acc_ledger.php:1910 include/class_acc_ledger.php:1907
 #: include/class_acc_ledger.php:1922 include/class_acc_ledger.php:1934
@@ -10895,7 +10895,7 @@ msgstr "Prefix of receipt can be different for each ledgers"
 #: include/ext/bilan_interne/class_row_descriptor.php:81
 #: include/ext/bilan_interne/row_descriptor.class.php:81
 msgid "Le style de ligne doit être un nombre"
-msgstr ""
+msgstr "Style of row must be a number"
 
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:42
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:65
@@ -10945,12 +10945,12 @@ msgstr "The name can not be empty"
 
 #: include/param_sec.inc.php:237 include/param_sec.inc.php:302
 msgid "Les administrateurs NOALYSS ont toujours accès à tout"
-msgstr ""
+msgstr "NOALYSS administrator are granted with all privileges"
 
 #: include/ext/bilan_interne/class_row_descriptor.php:78
 #: include/ext/bilan_interne/row_descriptor.class.php:78
 msgid "Les champs \"code\" et \"variable\" doivent être vides simultanément"
-msgstr ""
+msgstr "The field \"code\" and \"variable\" cannot be empty both empty"
 
 #: include/impress_rapport.inc.php:259 include/impress_rapport.inc.php:284
 msgid "Les clauses FROM sont ignorés avec les dates calendriers"
@@ -10971,7 +10971,7 @@ msgstr ""
 
 #: include/upgrade-plugin.php:41
 msgid "Les extensions doivent être activées dans le dossier après installation"
-msgstr ""
+msgstr "Plugin must be activated after installed"
 
 #: include/class_anc_grandlivre.php:145 include/class_anc_grandlivre.php:146
 #: include/class/class_anc_grandlivre.php:146
@@ -11608,7 +11608,7 @@ msgstr "Mark for deleting"
 
 #: include/class/periode.class.php:647
 msgid "Mars"
-msgstr ""
+msgstr "March"
 
 #: include/ext/amortis/include/class_am_card.php:244
 #: include/ext/amortis/include/class_am_card.php:248
@@ -11802,7 +11802,7 @@ msgstr "Put the percentage to 0 to remove the row"
 msgid ""
 "Mettez vos bases de données à jour pour qu'elles correspondent à cette "
 "version de Noalyss"
-msgstr ""
+msgstr "Upgrade your database "
 
 #: include/template/action_search_result.php:32
 #: include/template/action_search_result.php:88 include/search.inc.php:121
@@ -12208,7 +12208,7 @@ msgstr "Template"
 
 #: include/modele.inc.php:326
 msgid "Modèles disponibles dans le dépôt"
-msgstr ""
+msgstr "Available template in the repository"
 
 #: include/modele.inc.php:269
 #, fuzzy
@@ -12682,7 +12682,7 @@ msgstr "Module ERP"
 
 #: include/ajax/ajax_preference.php:174
 msgid "N'utilisez pas le même séparateur pour les champs et les décimales"
-msgstr ""
+msgstr "Do not use the same separator for decimal and field"
 
 #: include/database.item.php:94 include/database.item.php:97
 #: include/database.item.php:102 include/ajax_navigator.php:23
@@ -12736,11 +12736,11 @@ msgstr "Continue without changing anything"
 #: include/lib/message_javascript.php:76
 msgid ""
 "Ne donner pas ce poste comptable si ce code n'est pas utilisé  à la vente"
-msgstr ""
+msgstr "Do not give this accounting is not used for sales"
 
 #: include/lib/message_javascript.php:75
 msgid "Ne donner pas ce poste comptable si ce code n'est pas utilisé à l'achat"
-msgstr ""
+msgstr "Do not give this accounting is not used for purchase"
 
 #: include/restore.inc.php:196 include/restore.inc.php:135
 #: include/restore.inc.php:197 include/restore.inc.php:198
@@ -13203,7 +13203,7 @@ msgstr "Number of recorded  lines"
 
 #: include/class/periode.class.php:436
 msgid "Nombre de mois doit être compris entre 1 & 60 "
-msgstr ""
+msgstr "Number of months must be between 1 and 60"
 
 #: include/template/periode_add_exercice.php:87
 #, fuzzy
@@ -13217,11 +13217,11 @@ msgstr "rate is not a number"
 
 #: include/template/periode_add_exercice.php:99
 msgid "Nombre de mois possible entre 1 et 60"
-msgstr ""
+msgstr "Number of months must be between 1 and 60"
 
 #: include/ext/amortis/index.php:42
 msgid "Nombre de mois sur la première année"
-msgstr ""
+msgstr "Number of month for the first year"
 
 #: include/cfgplugin.inc.php:94 include/cfgplugin.inc.php:106
 #: include/cfgplugin.inc.php:107 include/cfgplugin.inc.php:108
@@ -13356,7 +13356,7 @@ msgstr "not used"
 #: include/class/acc_operation.class.php:726
 #: include/class/tva_rate_mtable.class.php:56
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #: include/template/ledger_detail_ven.php:95
 #: include/template/ledger_detail_ven.php:101
@@ -13521,7 +13521,7 @@ msgstr "New sale"
 #: include/upgrade-plugin.php:98
 #, php-format
 msgid "Nouvelle version disponible %s , votre version %s"
-msgstr ""
+msgstr "Available version %s , your version %s"
 
 #: include/class/periode.class.php:649
 #, fuzzy
@@ -13883,11 +13883,11 @@ msgstr "Mandatory for FIN ledger: give here the card of the bank"
 
 #: include/class/periode.class.php:649
 msgid "Octobre"
-msgstr ""
+msgstr "October"
 
 #: include/class/periode.class.php:688
 msgid "On ne peut ajouter une période que sur un exercice qui existe déjà"
-msgstr ""
+msgstr "It is possible to add a period on an existing exercice"
 
 #: include/ext/modop/modop_display.php:53
 #: include/ext/modop/modop_display.php:52
@@ -14645,12 +14645,12 @@ msgstr "No menu"
 #: include/class/acc_plan_mtable.class.php:51
 #: include/class/acc_plan_mtable.class.php:57
 msgid "Passif"
-msgstr ""
+msgstr "Liabilities"
 
 #: include/class/acc_plan_mtable.class.php:52
 #: include/class/acc_plan_mtable.class.php:58
 msgid "Passif Inversé"
-msgstr ""
+msgstr "Inversed Liabilities"
 
 #: include/class_acc_bilan.php:148 include/class_acc_bilan.php:149
 #: include/class/class_acc_bilan.php:149 include/class/class_acc_bilan.php:164
@@ -14803,7 +14803,7 @@ msgstr ""
 #: include/class/package_core.class.php:55
 #, php-format
 msgid "Permission incorrecte : ne peut écrire dans %s ou %s"
-msgstr ""
+msgstr "Wrong permission, %s or %s is not writable"
 
 #: include/database.item.php:144 include/database.item.php:147
 #: include/database.item.php:153 include/database.item.php:157
@@ -15002,7 +15002,7 @@ msgstr "Several tax code match that rate"
 
 #: include/ajax/ajax_preference.php:187
 msgid "Point-virgule"
-msgstr ""
+msgstr "semi-colon"
 
 #: include/admin_repo.inc.php:130 include/admin_repo.inc.php:137
 #: include/admin_repo.inc.php:141 include/admin_repo.inc.php:143
@@ -15238,7 +15238,7 @@ msgstr "Accounting used with the financial ledger is incorrect"
 
 #: include/class/acc_account.class.php:162
 msgid "Poste comptable doit être de 40 caractères maximum"
-msgstr ""
+msgstr "Maximum accounting length is 40 char"
 
 #: include/class/acc_plan_mtable.class.php:137
 #: include/class/acc_plan_mtable.class.php:149
@@ -15358,7 +15358,7 @@ msgstr "Post incorrect load"
 
 #: include/class/acc_account.class.php:181
 msgid "Poste utilisé : effacement interdit"
-msgstr ""
+msgstr "Accounting in use : remove forbidden"
 
 #: include/ext/amortis/include/class_am_card.php:182
 msgid "Poste à créditer incorrect"
@@ -15660,7 +15660,7 @@ msgstr "is an invalid year"
 
 #: include/ext/amortis/include/template/material_detail.php:55
 msgid "Prorata : Nombre de mois 1er exercice"
-msgstr ""
+msgstr "Prorata : Number of month for the first year"
 
 #: include/template/document_mod_change.php:45
 msgid "Préfixe"
@@ -15818,7 +15818,7 @@ msgstr "Period"
 
 #: include/class/periode.class.php:251
 msgid "Période chevauchant une autre"
-msgstr ""
+msgstr "Period overlaping another one"
 
 #: include/class_acc_ledger.php:1638
 #: include/class_acc_ledger_purchase.php:1016
@@ -15881,7 +15881,7 @@ msgstr "Period not found"
 
 #: include/export/export_fiche_detail_csv.php:68
 msgid "QCODE"
-msgstr ""
+msgstr "QCODE"
 
 #: include/ext/amortis/include/class_amortissement_material_pdf.php:33
 #: include/ext/amortis/include/amortissement_material_pdf.class.php:33
@@ -16276,7 +16276,7 @@ msgstr "Rejected"
 
 #: include/ajax/ajax_search_filter.php:151
 msgid "Remise à zéro"
-msgstr ""
+msgstr "reset"
 
 #: include/template/stock_inv.php:106 include/template/stock_inv.php:111
 #: include/template/stock_inv.php:131 include/template/stock_inv.php:132
