@@ -73,7 +73,13 @@ if ( $ac->exist_table('version') == false)
 }
 
 /* check repo version */
-$version = $ac->get_value('select val from version');
+if (!defined("MULTI")||(defined("MULTI")&&MULTI==1))
+{
+    $version = $ac->get_value('select max(val) from version');
+} else {
+    $version = $ac->get_value('select max(val) from repo_version');
+    
+}
 if ( $version < DBVERSIONREPO )
 {
     echo '<h2 class="error" style="font-size:12px">'._("Votre base de données n'est pas à jour").'   ';
