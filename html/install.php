@@ -378,6 +378,12 @@ if ( $flag_php==0 ) {
 } else {
 	echo '<p class="warning"> '._('php mal configuré ').$failed.' </p>';
 }
+
+// Check that the module for postgres is installed before testing the version
+if (! function_exists("pg_connect")) {
+    echo _("Module php-pgsql n'est pas installé");
+    return;
+}
 /* check user */
 if ( (defined("MULTI") && MULTI==1)|| !defined("MULTI"))
 {
