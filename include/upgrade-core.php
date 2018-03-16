@@ -37,7 +37,7 @@ echo '<p>';
 echo $xml->core->description;
 echo '</p>';
 
-if ( $xml->core->version < NOALYSS_VERSION) {
+if ( $xml->core->version <= $version_noalyss) {
     echo '<p>';
     echo _("Votre version est à jour");
     echo '</p>';
