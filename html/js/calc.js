@@ -53,6 +53,7 @@ function cal()
 	p_variable=p_variable.replace(/\+/g,"+ ");
 	p_variable=p_variable.replace(/-/g,"- ");
 	p_variable=p_variable.replace(/\//g,"/ ");
+	p_variable=p_variable.replace(/,/g,".");
 
         sub=eval(p_variable);
         var result=parseFloat(sub);
@@ -64,7 +65,7 @@ function cal()
         return false;
     }
     p_history=p_variable+"="+result.toString()+'<br>'+p_history;
-    var str_sub="Total :"+p_variable+" = "+'<b>'+result.toString()+'</b>';
+    var str_sub='<p class="highlight"> '+p_variable+" = "+result.toString()+'</p>';
     this.document.getElementById("sub_total").innerHTML=str_sub;
     this.document.getElementById("listing").innerHTML=p_history;
     this.document.getElementById('inp').value=result;

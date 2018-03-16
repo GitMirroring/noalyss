@@ -3626,7 +3626,7 @@ msgstr "Report choice"
 #: include/opening.inc.php:138
 #, php-format
 msgid "Choix du dossier : %s"
-msgstr "Select your folder"
+msgstr "Selected folder %s"
 
 #: include/compta_ach.inc.php:83 include/compta_ach.inc.php:86
 #: include/compta_ven.inc.php:95 include/compta_ach.inc.php:88
@@ -6079,7 +6079,7 @@ msgstr "Difference"
 msgid ""
 "Différence entre le montant à amortir %s et le montant amorti %s = %s</h2>"
 msgstr ""
-"Difference between the amount to be amortized and depreciated amount %s= %s"
+"Difference between the amount to be amortized %s and depreciated amount %s= %s"
 
 #: include/ext/amortis/include/template/material_detail.php:128
 #: include/ext/amortis/include/template/material_display.php:102
