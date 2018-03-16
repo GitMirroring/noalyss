@@ -88,7 +88,7 @@ define ('SMALLX','&#x2D5D;');
 define ('BUTTONADD',"&#10010;");
 
 
-define ('SVNINFO',7002);
+define ('SVNINFO',NOALYSS_VERSION);
 if ( ! defined  ('DEBUG')) {
     define ("DEBUG",false);
 }
