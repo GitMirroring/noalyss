@@ -134,11 +134,8 @@ $menu[]=_('Export Balance agée');  $desc[]=_('Balance agée');$desc_long[]=_('B
 $menu[]=_('Exporte la pièce');  
 $menu[]=_('Export le document');  
 $menu[]=_('Exporte le modèle de document');  
-Time: 97,472 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $attr_def[]=_('Durée Amortissement');
 $attr_def[]=_('Montant initial');
 $attr_def[]=_('TVA non déductible');
@@ -174,11 +171,8 @@ $attr_def[]=_('Poste Comptable');
 $attr_def[]=_('Date Fin');
 $attr_def[]=_('Gestion stock');
 $attr_def[]=_('Société');
-Time: 22,417 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $document_type[]=_('Document Interne');
 $document_type[]=_('Bons de commande client');
 $document_type[]=_('Bon de commande Fournisseur');
@@ -192,11 +186,8 @@ $document_type[]=_('Note de frais');
 $document_type[]=_('Réception commande Fournisseur');
 $document_type[]=_('Réception commande Client');
 $document_type[]=_('Réception magazine');
-Time: 8,368 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $action[]=_('Ajout de fiche');
 $action[]=_('Création, modification et effacement de fiche');
 $action[]=_('création, modification et effacement de catégorie de fiche');
@@ -208,41 +199,26 @@ $action[]=_('Effacer une opération ');
 $action[]=_('Partager une note');
 $action[]=_('Créer une note publique');
 $action[]=_('Effacer une note publique');
-Time: 5,921 ms
-?>
-<?php 
-Timing is on.
-Autocommit is  OFF
 $mdp[]=_('Caisse');
 $mdp[]=_('Paiement électronique');
 $mdp[]=_('Caisse');
 $mdp[]=_('Par gérant ou administrateur');
-Time: 11,598 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $jrn_def_name[]=_('Achat');
 $jrn_def_name[]=_('Financier');
 $jrn_def_name[]=_('Opération Diverses');
 $jrn_def_name[]=_('Vente');
-Time: 2,097 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $jrn_def_description[]=_('Concerne tous les achats, factures reçues, notes de crédit reçues et notes de frais');
 $jrn_def_description[]=_('Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)');
 $jrn_def_description[]=_('Concerne toutes les opérations comme les amortissements, les comptes TVA, ...');
 $jrn_def_description[]=_('Concerne toutes les ventes, notes de crédit envoyées');
-Time: 1,272 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $jrn_type[]=_('Financier');
 $jrn_type[]=_('Vente');
 $jrn_type[]=_('Achat');
 $jrn_type[]=_('Opérations Diverses');
-Time: 1,404 ms
 ?>
