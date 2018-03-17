@@ -1,6 +1,4 @@
 <?php 
-Timing is on.
-Autocommit is  OFF
 $menu[]=_('Achat');  $desc[]=_('Nouvel achat ou dépense');$desc_long[]=_('Vous permet d\'encoder des achats, dépenses, des notes de frais ou des notes de crédits, vous pouvez spécifier un bénéficiaire ou un autre moyen de paiement');
 $menu[]=_('Historique');  $desc[]=_('Historique des imputations analytiques');$desc_long[]=_('Historique des imputations analytiques');
 $menu[]=_('Balance simple');  $desc[]=_('Balance simple des imputations analytiques');$desc_long[]=_('Balance simple des imputations analytiques');
