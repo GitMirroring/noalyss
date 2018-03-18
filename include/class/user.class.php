@@ -336,9 +336,9 @@ class User
 
 			$sql = "select jrn_def_id,jrn_def_type,
                  jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_type_id,jrn_desc,uj_priv,
-                 jrn_deb_max_line,jrn_cred_max_line,jrn_def_description
+                 jrn_deb_max_line,jrn_cred_max_line,jrn_def_description,jrn_enable
                  from jrn_def join jrn_type on jrn_def_type=jrn_type_id
-                 join user_sec_jrn on uj_jrn_id=jrn_def_id,jrn_enable
+                 join user_sec_jrn on uj_jrn_id=jrn_def_id
                  where
                  uj_login='" . $this->login . "'" .
 					$sql_type . $sql_access .$sql_enable.
