@@ -65,7 +65,7 @@ $g_user->Check();
 $g_user->check_dossier($gDossier);
 
 // Security
-if ($g_user->check_jrn($jrn_id) == 'X') {
+if ($jrn_id != 0 && $g_user->check_jrn($jrn_id) == 'X') {
     /* Cannot Access */
     NoAccess();
 }
