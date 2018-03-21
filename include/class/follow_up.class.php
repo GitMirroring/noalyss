@@ -38,6 +38,7 @@ require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 require_once NOALYSS_INCLUDE.'/lib/irelated_action.class.php';
 require_once NOALYSS_INCLUDE.'/class/tag.class.php';
 require_once NOALYSS_INCLUDE.'/class/default_menu.class.php';
+require_once NOALYSS_INCLUDE.'/lib/inplace_edit.class.php';
 /**
  * \file
  * \brief class_action for manipulating actions
