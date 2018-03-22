@@ -33,7 +33,7 @@ function boxsearch_card(p_dossier)
 	{
 	waiting_box();
 	removeDiv('boxsearch_card_div');
-	var queryString="gDossier="+p_dossier+"&op=cardsearch"+"&card="+$(card_search).value;
+	var queryString="gDossier="+p_dossier+"&op=cardsearch"+"&card="+encoreURI($(card_search).value);
 	var action = new Ajax.Request(
 				  "ajax_misc.php" ,
 				  {
