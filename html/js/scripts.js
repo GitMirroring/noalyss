@@ -771,7 +771,7 @@ function show_box(obj)
     add_div(obj);
     if (!obj.fixed)
     {
-        g(obj.id).style.top = calc(40) + "px";
+        g(obj.id).style.top = calcy(40) + "px";
         show(obj.id);
     }
     else
