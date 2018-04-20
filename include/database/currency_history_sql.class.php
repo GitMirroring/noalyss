@@ -58,7 +58,7 @@ class Currency_history_SQL extends Noalyss_SQL
             "id"=>"auto"
         );
 
-        $this->date_format="DD.MM.YYYY";
+        $this->date_format="YYYYMMDD";
         parent::__construct($p_cn, $p_id);
     }
 

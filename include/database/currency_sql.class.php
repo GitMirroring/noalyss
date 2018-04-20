@@ -40,6 +40,7 @@ class Currency_SQL extends Noalyss_SQL
         $this->name=array(
             "id"=>"id"
             , "cr_code_iso"=>"cr_code_iso"
+            ,"cr_name"=>"cr_name"
         );
         /*
          * Type of columns
@@ -47,6 +48,7 @@ class Currency_SQL extends Noalyss_SQL
         $this->type=array(
             "id"=>"numeric"
             , "cr_code_iso"=>"text"
+            , "cr_name"=>"text"
         );
 
 

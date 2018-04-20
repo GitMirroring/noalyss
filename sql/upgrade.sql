@@ -24,3 +24,26 @@ CREATE TABLE public.currency_history (
 ;
 
 -- Ajouter commentaire sur colonne
+
+ALTER TABLE public.currency ADD cr_name varchar(80) NULL;
+
+-- Create view to manage the table
+create view v_currency_last_value as 
+with recent_rate as 
+( select 
+	currency_id,max(ch_from) as rc_from
+	from 
+	 currency_history 
+	 group by currency_id
+	 )
+select 
+	cr1.id as currency_id,
+	cr1.cr_name,
+	cr1.cr_code_iso,
+	ch1.id as currency_history_id,
+	ch1.ch_value as ch_value,
+	rc_from 
+from
+currency as cr1
+join recent_rate on (currency_id=cr1.id)
+join currency_history as ch1 on (recent_rate.currency_id=ch1.currency_id and rc_from=ch1.ch_from);
