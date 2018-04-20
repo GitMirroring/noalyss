@@ -170,7 +170,11 @@ class Noalyss_Csv
    {
        $p_number=trim($p_number);
        if ($p_number=="") {return $p_number;}
-       $r=number_format($p_number, 4, $this->sep_dec,'');
+       if ( isNumber($p_number) == 1 ) {
+            $r=number_format($p_number, 4, $this->sep_dec,'');
+       } else {
+           $r=$p_number;
+       }
        return $r;
    }
    private function encode($str)
