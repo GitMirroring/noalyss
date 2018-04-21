@@ -49,7 +49,7 @@ class Currency_history_SQL extends Noalyss_SQL
         $this->type=array(
             "id"=>"numeric"
             , "ch_value"=>"numeric"
-            , "ch_from"=>"timestamp without time zone"
+            , "ch_from"=>"date"
             , "currency_id"=>"numeric"
         );
 
@@ -58,7 +58,7 @@ class Currency_history_SQL extends Noalyss_SQL
             "id"=>"auto"
         );
 
-        $this->date_format="YYYYMMDD";
+        $this->date_format="DD.MM.YYYY";
         parent::__construct($p_cn, $p_id);
     }
 

@@ -15,11 +15,12 @@ CREATE TABLE public.currency (
 
 CREATE TABLE public.currency_history (
 	id serial NOT NULL,
-	ch_value numeric(6) NOT NULL,
-	ch_from timestamp NOT NULL,
+	ch_value numeric(20,6) NOT NULL,
+	ch_from date NOT NULL,
 	currency_id int4 NOT NULL,
 	CONSTRAINT currency_history_pk PRIMARY KEY (id),
-	CONSTRAINT currency_history_currency_fk FOREIGN KEY (id) REFERENCES currency(id)
+	CONSTRAINT currency_history_currency_fk FOREIGN KEY (currency_id) REFERENCES currency(id) 
+        ON DELETE RESTRICT ON UPDATE CASCADE
 )
 ;
 
@@ -42,7 +43,7 @@ select
 	cr1.cr_code_iso,
 	ch1.id as currency_history_id,
 	ch1.ch_value as ch_value,
-	rc_from 
+	to_char(rc_from,'DD.MM.YYYY') as str_from 
 from
 currency as cr1
 join recent_rate on (currency_id=cr1.id)
