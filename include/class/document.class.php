@@ -272,8 +272,13 @@ class Document
                          */
 			if ( is_numeric($value) && $p_type=='OOo')
 			  {
-			    $searched='/office:value-type="string"><text:p>'.$pattern.'/';
+                            // For libreOffice <=4
+			    $searched='/office:value-type="string"><text:p>'.$pattern.'/i';
 			    $replaced='office:value-type="float" office:value="'.$value.'"><text:p>'.$pattern;
+			    $buffer=preg_replace($searched, $replaced, $buffer,1);
+                            // For libreOffice >=4
+			    $searched='/office:value-type="string" calcext:value-type="string"><text:p>'.$pattern.'/i';
+			    $replaced='office:value-type="float" office:value="'.$value.'" calcext:value-type="float"><text:p>'.$pattern;
 			    $buffer=preg_replace($searched, $replaced, $buffer,1);
 			  }
 			// replace into the $buffer
