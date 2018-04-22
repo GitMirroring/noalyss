@@ -1,6 +1,6 @@
 INSERT INTO public.menu_ref
 (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue)
-VALUES('CFGCURRENCY', 'Conf. Devises', 'acc_currency_cfg.inc.php', NULL, 'Devises', NULL,NULL,'ME','Permet de configurer les devises');
+VALUES('CFGCURRENCY', 'Devises', 'acc_currency_cfg.inc.php', NULL, 'Configuration des devises', NULL,NULL,'ME','Permet de configurer les devises');
 
 INSERT INTO public.profile_menu
 (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep)
