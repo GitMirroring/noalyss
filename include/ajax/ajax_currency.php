@@ -47,11 +47,11 @@ catch (Exception $ex)
 
 /* security check */
 /**
- * @todo add module CFGCURRENCY
+ * check if module CFGCURRENCY
  */
 if ($g_user->check_module('CFGCURRENCY')==0)
 {
-    // return;
+    return;
 }
 
 /*
