@@ -244,7 +244,9 @@ $path = array(
     // From FollowUp , update a comment on a file
     'update_comment_followUp'=>'ajax_follow_up',
     // TVA param
-    "tva_parameter"=>"ajax_tva_parameter"
+    "tva_parameter"=>"ajax_tva_parameter",
+    // Currency  , delete a rate
+    "CurrencyRateDelete"=>"ajax_currency"
 )    ;
 
 if (array_key_exists($op, $path)) {

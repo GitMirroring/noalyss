@@ -45,8 +45,12 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
         </td>
     </tr>
 </table>    
-
-<table class="result">
+<?php
+    // Variable
+    $dossier_id=Dossier::id();
+    
+?>
+<table class="result" id="currency_rate_table">
     <tr>
     <th>
         <?php echo _("Date");?>
@@ -54,17 +58,28 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
     <th>
         <?php echo _("Valeur")?>
     </th>
+    <th>
+        
+    </th>
     </tr>
     <?php
         $nb_histo=count($a_histo);
         for ($i=0;$i<$nb_histo;$i++):
+            $class=($i%2==0)?"even":"odd";
     ?>
-    <tr>
+    <tr class="<?=$class?>" id="<?php printf('currency_rate_%d',$a_histo[$i]['id'])?>">
         <td>
             <?php echo $a_histo[$i]['str_from']?>
         </td>
         <td>
             <?php echo $a_histo[$i]['ch_value']?>
+        </td>
+        <td>
+            <?php
+            // Delete the histo
+            $js=sprintf("CurrencyRateDelete('%s','%s')",$dossier_id,$a_histo[$i]['id']);
+            echo Icon_Action::trash($a_histo[$i]['id'], $js);
+            ?>
         </td>
     </tr>
     <?php    endfor; ?>

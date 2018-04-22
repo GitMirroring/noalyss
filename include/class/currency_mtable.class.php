@@ -27,6 +27,10 @@ require_once NOALYSS_INCLUDE.'/lib/manage_table_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/currency_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/currency_history_sql.class.php';
 
+/**
+ * Manage the configuration of currency , add currency, rate, remove  and update
+ * Concerned tables are v_currency_last_value _SQL , Currency_SQL , Currency_History_SQL
+ */
 class Currency_MTable extends Manage_Table_SQL
 {
 
@@ -64,12 +68,15 @@ class Currency_MTable extends Manage_Table_SQL
      * returns TRUE the currency is used otherwise FALSE. We cannot delete a currency which is used in a
      * operation
      * @returns boolean true if currency is used
+     * @todo Currency_MTable.is_currency_used to implement
      */
     function is_currency_used()
     {
         return FALSE;
     }
-
+    /**
+     * Box to enter either a new currency or update a existing one
+     */
     function input()
     {
         $record=$this->get_table();
@@ -77,7 +84,7 @@ class Currency_MTable extends Manage_Table_SQL
         $cr_code_iso->size=10;
         $cr_name=new IText("cr_name", $record->cr_name);
         $cr_name->size=50;
-        $a_histo=$record->cn->get_array("select to_char(ch_from,'DD.MM.YYYY') as str_from,ch_value 
+        $a_histo=$record->cn->get_array("select id,to_char(ch_from,'DD.MM.YYYY') as str_from,ch_value 
                from 
                 currency_history 
                where 
@@ -96,7 +103,12 @@ class Currency_MTable extends Manage_Table_SQL
     }
 
     /**
-     * 
+     * Check that the value are correct : 
+     *      - Code iso must be unique
+     *      - Name cannot be empty
+     *      - At least one rate 
+     *      - Date of the rate 
+     *      
      */
     function check()
     {
@@ -183,7 +195,7 @@ class Currency_MTable extends Manage_Table_SQL
     }
 
     /**
-     * 
+     * Either insert a new currency + one rate or add a rate to an existing currency
      */
     function save()
     {
@@ -235,7 +247,16 @@ class Currency_MTable extends Manage_Table_SQL
             throw ($ex);
         }
     }
-
+    /**
+     * Fill the object from request 
+     * parameters : 
+     *          - cr_code_iso
+     *          - cr_name
+     *          - p_id
+     *          - new_rate_date
+     *          - new_rate_value
+     * 
+     */
     function from_request()
     {
         $http=new HttpInput();
