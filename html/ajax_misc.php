@@ -246,7 +246,9 @@ $path = array(
     // TVA param
     "tva_parameter"=>"ajax_tva_parameter",
     // Currency  , delete a rate
-    "CurrencyRateDelete"=>"ajax_currency"
+    "CurrencyRateDelete"=>"ajax_currency",
+    // Currency , add / remove / update currency 
+    "CurrencyManage"=>"ajax_currency"
 )    ;
 
 if (array_key_exists($op, $path)) {

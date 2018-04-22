@@ -1,3 +1,11 @@
+INSERT INTO public.menu_ref
+(me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue)
+VALUES('CFGCURRENCY', 'Conf. Devises', 'acc_currency_cfg.inc.php', NULL, 'Devises', NULL,NULL,'ME','Permet de configurer les devises');
+
+INSERT INTO public.profile_menu
+(pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep)
+VALUES(nextval('profile_menu_pm_id_seq'), 'CFGCURRENCY', 'PARAM', 1, 50, 'E', 0, 45);
+
 -- Drop table
 
 -- DROP TABLE public.currency

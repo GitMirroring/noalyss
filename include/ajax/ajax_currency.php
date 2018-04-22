@@ -21,7 +21,9 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-
+require_once NOALYSS_INCLUDE."/class/currency_mtable.class.php";
+require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
+require_once NOALYSS_INCLUDE.'/database/v_currency_last_value_sql.class.php';
 /**
  * @file
  * @brief Ajax response for currency related calls
@@ -49,7 +51,7 @@ catch (Exception $ex)
  */
 if ($g_user->check_module('CFGCURRENCY')==0)
 {
-   // return;
+    // return;
 }
 
 /*
@@ -58,32 +60,71 @@ if ($g_user->check_module('CFGCURRENCY')==0)
 switch ($act)
 {
     case 'CurrencyRateDelete':
-        try {
-            $currency_rate_id=$http->get("currency_rate_id","number");
+        try
+        {
+            $currency_rate_id=$http->get("currency_rate_id", "number");
             // check that a least one rate is remaining for this currency
-            
             // 1. get the currency
-            $currency_id=$cn->get_value("select currency_id from currency_history where id=$1",[$currency_rate_id]);
-            
+            $currency_id=$cn->get_value("select currency_id from currency_history where id=$1", [$currency_rate_id]);
+
             // 2. get the number of rate
-            if ( $currency_id == "") {
+            if ($currency_id=="")
+            {
                 throw new Exception(_("Taux inexistant"));
             }
-            $cnt=$cn->get_value("select count(*) from currency_history where currency_id=$1",[$currency_id]);
-            
+            $cnt=$cn->get_value("select count(*) from currency_history where currency_id=$1", [$currency_id]);
+
             // 3. if number of rate > 1 , then delete
-            if ( $cnt > 1)
+            if ($cnt>1)
             {
-                $cn->exec_sql("delete from currency_history where id=$1",[$currency_rate_id]);
+                $cn->exec_sql("delete from currency_history where id=$1", [$currency_rate_id]);
                 $a_answer['status']=_("OK");
                 $a_answer['content']=_("Taux effacé");
-            } else {
+            }
+            else
+            {
                 $a_answer['content']=_("Non effacé : Il faut au moins un taux");
             }
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex)
+        {
             $a_answer['content']=$ex->getMessage();
         }
         break;
+    case 'CurrencyManage':
+        $table=$http->request('table');
+        $action=$http->request('action');
+        $p_id=$http->request('p_id', "number");
+        $ctl_id=$http->request('ctl');
+        $currency=new V_Currency_Last_Value_SQL($cn,$p_id);
+        $currency_table=new Currency_MTable($currency);
+
+        $currency_table->set_callback("ajax_misc.php");
+        $currency_table->add_json_param("op", "CurrencyManage");
+        /*
+         * we're in ajax part
+         */
+        if ($action=="input")
+        {
+            $currency_table->set_object_name($ctl_id);
+            header('Content-type: text/xml; charset=UTF-8');
+            echo $currency_table->ajax_input()->saveXML();
+            return;
+        }
+        elseif ($action=="save")
+        {
+            $currency_table->set_object_name($ctl_id);
+            header('Content-type: text/xml; charset=UTF-8');
+            echo $currency_table->ajax_save()->saveXML();
+            return;
+        }
+        elseif ($action=="delete")
+        {
+            $currency_table->set_object_name($ctl_id);
+            header('Content-type: text/xml; charset=UTF-8');
+            echo $currency_table->ajax_delete()->saveXML();
+            return;
+        }
 }
 
 $jsson=json_encode($a_answer, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
