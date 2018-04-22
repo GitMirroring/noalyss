@@ -108,6 +108,8 @@ class Currency_MTable extends Manage_Table_SQL
      *      - Name cannot be empty
      *      - At least one rate 
      *      - Date of the rate 
+     *      - code iso is max 10 char
+     *      - name is max 80
      *      
      */
     function check()
@@ -184,8 +186,22 @@ class Currency_MTable extends Manage_Table_SQL
             $is_error++;
             $this->set_error("cr_code_iso", _("Code ISO existe déjà"));
         }
-
-
+        // - check size
+        if ( trim(mb_strlen($table->cr_code_iso))>10)
+        {
+            $is_error++;
+            $this->set_error("cr_code_iso", _("Code ISO trop long max = 10"));
+        }
+        // - check size
+        if ( trim(mb_strlen($table->cr_name))>80)
+        {
+            $is_error++;
+            $this->set_error("cr_name", _("Nom trop long max=80"));
+        }
+        if ( $table->ch_value < 0 || $table->ch_value == 0) {
+            $is_error++;
+            $this->set_error("ch_value", _("Valeur incorrecte"));
+        }
         if ($is_error==0)
         {
             return TRUE;

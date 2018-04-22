@@ -31,6 +31,9 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
     <tr>
         <td>
             ISO
+              <?php   $error=$this->get_error("cr_code_iso");
+                echo HtmlInput::errorbulle($error);
+            ?>
         </td>
         <td>
             <?php echo $cr_code_iso->input(); ?>
@@ -38,7 +41,11 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
     </tr>
     <tr>
         <td>
-            <?php echo _("Nom")?>
+            <?php echo _("Nom");
+             $error=$this->get_error("cr_name");
+            echo HtmlInput::errorbulle($error);
+            ?>
+            
         </td>
         <td>
             <?php echo $cr_name->input(); ?>
@@ -46,7 +53,10 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
     </tr>
     <tr>
         <td>
-            <?php echo _("Date"); ?>
+            <?php echo _("Date"); 
+              $error=$this->get_error("str_from");
+            echo HtmlInput::errorbulle($error);
+            ?>
         </td>
         <td>
             <?php echo $new_rate_date->input();?>
@@ -54,7 +64,10 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
     </tr>
     <tr>
       <td>
-            <?php echo _("Valeur"); ?>
+            <?php echo _("Valeur"); 
+             $error=$this->get_error("ch_value");
+            echo HtmlInput::errorbulle($error);
+            ?>
         </td>
         <td>
             <?php echo $new_rate_value->input();?>

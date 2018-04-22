@@ -36,6 +36,8 @@ CREATE TABLE public.currency_history (
 
 ALTER TABLE public.currency ADD cr_name varchar(80) NULL;
 
+ALTER TABLE public.currency_history ADD CONSTRAINT currency_history_check CHECK (ch_value > 0) ;
+
 -- Create view to manage the table
 create view v_currency_last_value as 
 with recent_rate as 
@@ -56,6 +58,13 @@ from
 currency as cr1
 join recent_rate on (currency_id=cr1.id)
 join currency_history as ch1 on (recent_rate.currency_id=ch1.currency_id and rc_from=ch1.ch_from);
+
+COMMENT ON COLUMN public.currency_history.id IS 'pk' ;
+COMMENT ON COLUMN public.currency_history.ch_value IS 'rate of currency depending of currency of the folder' ;
+COMMENT ON COLUMN public.currency_history.ch_from IS 'Date when the rate is available' ;
+COMMENT ON COLUMN public.currency_history.currency_id IS 'FK to currency' ;
+COMMENT ON COLUMN public.currency.cr_code_iso IS 'Code ISO' ;
+COMMENT ON COLUMN public.currency.cr_name IS 'Name of the currency' ;
 
 
 insert into "parameter" values ('MY_CURRENCY','N');

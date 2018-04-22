@@ -261,6 +261,7 @@ class HtmlInput
     static function errorbulle($p_comment)
     {
         global $g_failed;
+        if ( $p_comment == "") return "";
         $r=sprintf('<A HREF="#" tabindex="-1" style="display:inline;color:red;background-color:transparent;padding-left:4px;padding-right:4px;text-decoration:none;" onmouseover="displayBulle(\'%s\')"  onclick="displayBulle(\'%s\')" onmouseout="hideBulle(0)"> %s </A>',
                 $p_comment, $p_comment, $g_failed);
         return $r;
