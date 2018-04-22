@@ -124,6 +124,7 @@ class Noalyss_Parameter_Folder
         $this->save('MY_ALPHANUM');
         $this->save('MY_UPDLAB');
         $this->save('MY_STOCK');
+        $this->save('MY_CURRENCY');
 
 
     }

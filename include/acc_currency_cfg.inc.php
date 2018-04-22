@@ -27,6 +27,12 @@ if (!defined('ALLOWED')) {    die('Appel direct ne sont pas permis'); }
  * @example test_currency_mtable.php
  */
 
+echo '<div class="content">';
+global $g_parameter;
+if ( $g_parameter->MY_CURRENCY=='N'){
+    echo h2info(_("Vous n'utilisez pas les devises , vous devez le configurer dans COMPANY"));
+    return;
+}
 require_once NOALYSS_INCLUDE."/class/currency_mtable.class.php";
 require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 require_once NOALYSS_INCLUDE.'/database/v_currency_last_value_sql.class.php';
@@ -39,7 +45,6 @@ $currency_table=new Currency_MTable($currency);
 
 $currency_table->set_callback("ajax_misc.php");
 $currency_table->add_json_param("op", "CurrencyManage");
-echo '<div class="content">';
 $currency_table->create_js_script();
 $currency_table->display_table();
 echo '</div>';

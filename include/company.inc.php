@@ -48,6 +48,7 @@ if (isset($_POST['record_company']))
 	$m->MY_ALPHANUM = $http->post("p_alphanum");
 	$m->MY_UPDLAB = $http->post("p_updlab");
 	$m->MY_STOCK =$http->post("p_stock");
+	$m->MY_CURRENCY =$http->post("p_currency");
 
 	$m->Update();
 }
@@ -111,6 +112,11 @@ $stock->value = array(
 $stock->selected = $my->MY_STOCK;
 $stock->table = 1;
 
+$use_currency= new ISelect();
+$use_currency->table = 1;
+$use_currency->value = $updlab_array;
+$use_currency->selected = $my->MY_CURRENCY;
+
 // other parameters
 $all = new IText();
 $all->table = 1;
@@ -137,6 +143,7 @@ echo "<tr>" . td(_("Numéro de Tva"), 'style="text-align:right"') . $all->input(
 echo "<tr>" . td(_("Utilisation de la compta. analytique"), 'style="text-align:right"') . $compta->input("p_compta", $array) . "</tr>";
 echo "<tr>" . td(_("Utilisation des stocks"), 'style="text-align:right"') . $stock->input() . "</tr>";
 
+echo "<tr>" . td(_("Utilisation de devises étrangères"), 'style="text-align:right"') . $use_currency->input("p_currency", $strict_array) . "</tr>";
 echo "<tr>" . td(_("Utilisation du mode strict "), 'style="text-align:right"') . $strict->input("p_strict", $strict_array) . "</tr>";
 echo "<tr>" . td(_("Assujetti à la tva"), 'style="text-align:right"') . $tva_use->input("p_tva_use", $strict_array) . "</tr>";
 echo "<tr>" . td(_("Suggérer le numéro de pièce justificative"), 'style="text-align:right"') . $pj_suggest->input("p_pj", $strict_array) . "</tr>";

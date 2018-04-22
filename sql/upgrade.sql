@@ -56,3 +56,6 @@ from
 currency as cr1
 join recent_rate on (currency_id=cr1.id)
 join currency_history as ch1 on (recent_rate.currency_id=ch1.currency_id and rc_from=ch1.ch_from);
+
+
+insert into "parameter" values ('MY_CURRENCY','N');
