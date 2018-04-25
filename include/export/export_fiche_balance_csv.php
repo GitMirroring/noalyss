@@ -186,14 +186,14 @@ else
 					$prog = bcsub($prog, $row['j_montant']);
 				}
 				$export->add(abs($prog),"number");
-                                $export->add($fic->get_amount_side($prog),"number");
+                                $export->add($fic->get_amount_side($prog));
 				if ($row['letter'] != -1)
 				{
 					$export->add(strtoupper(base_convert($row['letter'],10,36)));
 					$export->add($row['letter_diff'],"number");
 				}
 				else
-					$export->add("");
+                                $export->add("");
 				$export->write();
 			}
 			if ($prog < 0 )

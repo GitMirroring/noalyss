@@ -42,7 +42,7 @@ $User->Check();
 if ($User->admin != 1)
 {
     $theme=(isset($User->theme))?$User->theme:"";
-    html_page_start($User->theme);
+    html_page_start($theme);
     echo "<h2 class=\"warning\">";
     echo _("Vous n'êtes pas administateur");
     echo "</h2>";

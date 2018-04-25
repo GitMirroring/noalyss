@@ -454,8 +454,13 @@ class Acc_Bilan
 			/*  allow numeric cel in ODT for the formatting and formula */
 			if ( is_numeric($a) )
 			  {
+                            /* -- for libreOffice < 5 or openoffice -- */
 			    $searched='office:value-type="string"><text:p>'.$f2_str;
 			    $replaced='office:value-type="float" office:value="'.$a.'"><text:p>'.$f2_str;
+			    $line_rtf=str_replace($searched, $replaced, $line_rtf);
+                            /* -- for libreOffice > 5 -- */
+			    $searched='office:value-type="string" calcext:value-type="string"><text:p>'.$f2_str;
+			    $replaced='office:value-type="float" office:value="'.$a.'" calcext:value-type="float"><text:p>'.$f2_str;
 			    $line_rtf=str_replace($searched, $replaced, $line_rtf);
 			  }
 
