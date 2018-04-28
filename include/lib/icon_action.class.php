@@ -193,4 +193,40 @@ class Icon_Action
         $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="icon">&#xe80f;</span>';
         return $r;
     }
+    /**
+     * Display the icon to modify a idem
+     * @param type $p_id
+     * @param type $p_javascript
+     * @return string
+     */
+    static function modify($p_id,$p_javascript)
+    {
+        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="smallicon icon" style="margin-left:5px">&#xe80d;</span>';
+        
+        return $r;
+    }
+    /**
+     * Display the icon to modify a idem
+     * @param type $p_id
+     * @param type $p_javascript
+     * @return string
+     */
+    static function validate($p_id,$p_javascript)
+    {
+        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="smallicon icon" style="margin-left:5px">&#x2713;</span>';
+        
+        return $r;
+    }
+    /**
+     * Display the icon to modify a idem
+     * @param type $p_id
+     * @param type $p_javascript
+     * @return string
+     */
+    static function cancel($p_id,$p_javascript)
+    {
+        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="smallicon icon" style="margin-left:5px">&#xe802;</span>';
+        
+        return $r;
+    }
 }
