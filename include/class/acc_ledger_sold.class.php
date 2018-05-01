@@ -1423,14 +1423,15 @@ EOF;
         $array['tot_vat'] = _('TVA Opération');
         return $array;
     }
+    
     /*!\brief test function
      */
-
+    
     static function test_me($p_string = '') {
         $cn = Dossier::connect();
         $a = new Acc_Ledger_Sold($cn, 2);
         echo $a->input();
     }
     
-        }
+}
 
