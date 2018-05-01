@@ -180,6 +180,9 @@ class Acc_Operation
         {
             $this->type=($this->type=='d')?'c':'d';
         }
+        if ( DEBUG ) {
+            echo "insert_jrn = {$this->amount} <br>";
+        }
         $this->amount=abs($this->amount);
         $debit=($this->type=='c')?'false':'true';
         $this->desc=(isset($this->desc))?$this->desc:'';
