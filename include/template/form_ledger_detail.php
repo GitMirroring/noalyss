@@ -1,6 +1,7 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+
 ?>
 	<div id="jrn_name_div">
 	<h2 id="jrn_name"> <?php echo $this->get_name()?></h2>
@@ -60,7 +61,16 @@
             <?php echo $f_desc?>
         </td>
     </tr>
+    <tr>
+        <td>
+            <?=_("Devise")?>
+        </td>
+        <td>
+            <?=$currency_select->input()?>
+           <?=$currency_input->change()?>EUR
 
+        </td>
+    </tr>
 </table>
      
       
@@ -110,23 +120,50 @@ echo '</tr>';
 ?>
 <tfoot id="sum">
     <tr  class="highlight">
-    <td> <?php echo _("Total")?>  </td>
+    <td> <?php echo _("Total")?>  
+    <span id="currency_code"></span>
+    </td>
     <td>   </td>
-    <td class="visible_gt800 visible_gt1155">   </td>
-    <td>   </td>
-    <td>   </td>
+    <td class="visible_gt800 visible_gt1155"> </td>
+    <td> </td>
+    <td> </td>
     <td class="num visible_gt800">  <span id="htva">0.0</span></td>
-    <td>   </td>
+    <td> </td>
  <?php if ( $flag_tva=='Y' )  : ?>    
     <td class="num visible_gt800">  <span id="tva">0.0</span> </td>
     <td class="num">  <span id="tvac" >0.0</span> </td>
   <?php    endif;     ?>  
+    </tr>
+    
+    <tr id="row_currency" class="highlight" style="display:none">
+    <td> <?php echo _("Total")?>  
+        EUR
+    </td>
+        <td class="num visible_gt800"></td>
+<?php if ($flag_tva=='Y')  {?>
+        <td class="num visible_gt800 visible_gt1155"></td>
+        <td></td>
+<?php }         ?>
+        <td class="num visible_gt800"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="num">
+            <span id="p_currency_euro"></span>
+        </td>
     </tr>
 </tfoot>
 </table>
 
 <?php echo HtmlInput::button('act',_('Actualiser'),'onClick="compute_all_ledger();"'); ?>
 
- 
+
+<script>
+    if ($('p_currency_code').value != -1) {
+        $('row_currency').show();
+    }
+    compute_all_ledger();
+</script>  
+
 
 

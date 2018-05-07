@@ -17,6 +17,7 @@ CREATE TABLE public.currency (
 	CONSTRAINT currency_un UNIQUE (cr_code_iso)
 );
 
+
 -- Drop table
 
 -- DROP TABLE public.currency_history
@@ -35,6 +36,8 @@ CREATE TABLE public.currency_history (
 -- Ajouter commentaire sur colonne
 
 ALTER TABLE public.currency ADD cr_name varchar(80) NULL;
+insert into currency (id,cr_code_iso,cr_name) values (-1,'EUR','EUR');
+insert into currency_history (ch_value,ch_from,currency_id) values (1,to_date('01.01.2000','DD.MM.YYYY'),-1);
 
 ALTER TABLE public.currency_history ADD CONSTRAINT currency_history_check CHECK (ch_value > 0) ;
 
@@ -68,3 +71,30 @@ COMMENT ON COLUMN public.currency.cr_name IS 'Name of the currency' ;
 
 
 insert into "parameter" values ('MY_CURRENCY','N');
+
+-- Drop table
+
+-- DROP TABLE public.operation_currency
+
+CREATE TABLE public.operation_currency (
+	id bigserial NOT NULL,
+	oc_amount numeric(6) NOT NULL, -- amount in currency
+	oc_vat_amount numeric(6) NULL DEFAULT 0, -- vat amount in currency
+	oc_price_unit numeric(6) NULL, -- unit price in currency
+	j_id int8 NOT NULL, -- fk to jrnx
+	CONSTRAINT operation_currency_pk PRIMARY KEY (id)
+);
+
+ALTER TABLE public.operation_currency ADD CONSTRAINT operation_currency_jrnx_fk FOREIGN KEY (j_id) REFERENCES public.jrnx(j_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Column comments
+
+COMMENT ON COLUMN public.operation_currency.oc_amount IS 'amount in currency' ;
+COMMENT ON COLUMN public.operation_currency.oc_vat_amount IS 'vat amount in currency' ;
+COMMENT ON COLUMN public.operation_currency.oc_price_unit IS 'unit price in currency' ;
+COMMENT ON COLUMN public.operation_currency.j_id IS 'fk to jrnx' ;
+
+alter table jrn add currency_id bigint default -1;
+alter table jrn add currency_rate numeric (20,6) default 1;
+alter table jrn add currency_rate_ref numeric(20,6) default 1;
+ALTER TABLE public.jrn ADD CONSTRAINT jrn_currency_fk FOREIGN KEY (currency_id) REFERENCES public.currency(id) ON DELETE RESTRICT ON UPDATE RESTRICT;

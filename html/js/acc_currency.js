@@ -54,3 +54,92 @@ function CurrencyRateDelete(p_dossier, p_id)
     });
 
 }
+/**
+ * Update the field p_update with the rate from the currency
+ * @param DOMID p_code where the cr_code_iso will be selected
+ * @param DOMID p_update element to update
+ */
+function CurrencyUpdateValue(p_dossier,p_code,p_update)
+{
+    new Ajax.Request("ajax_misc.php",{
+        method:"get",
+        asynchronous:false,
+        parameters:{p_code:$(p_code).value,gDossier:p_dossier,op:'CurrencyRate'},
+        onSuccess:function (req) {
+            var answer=req.responseText.evalJSON();
+            if ( answer.status == "OK") {
+                $(p_update).value=answer.content;
+            } else {
+                smoke.alert(answer.content);
+            }
+        }
+    });
+}
+/**
+ * Update the field p_update with the code ISO from the currency
+ * @param DOMID p_code where the cr_code_iso will be selected
+ * @param DOMID p_update element to update
+ */
+function CurrencyUpdateCode(p_dossier,p_code,p_update)
+{
+       new Ajax.Request("ajax_misc.php",{
+        method:"get",
+        parameters:{p_code:$(p_code).value,gDossier:p_dossier,op:'CurrencyCode'},
+        onSuccess:function (req) {
+            var answer=req.responseText.evalJSON();
+            if ( answer.status == "OK") {
+                $(p_update).innerHTML=answer.content;
+            } else {
+                smoke.alert(answer.content);
+            }
+        }
+    });
+}
+/**
+ * Update the field Update with the amount in EUR
+ * @param DOMID p_rate where the rate is stored
+ * @param DOMID p_update element to update with the rate
+ */
+function CurrencyCompute(p_rate,p_update)
+{
+   var tvac=$('tvac').innerHTML;
+   
+   console.log("tvac= "+tvac);
+   if (  isNaN(tvac)) {
+       console.log("tva is nan" + tvac);
+       tvac=1;
+   }
+   var rate=$(p_rate).value;
+   console.log("rate = "+rate);
+   if (  isNaN(rate)) {
+       console.log("rate is nan" + rate);
+       rate=1;
+   }
+   var tot=tvac*rate;
+   tot=Math.round(tot*100)/100;
+   $(p_update).innerHTML=tot;
+    
+}
+/**
+ * 
+ * @param {type} p_dossier
+ * @param {type} p_code
+ * @param {type} p_update
+ * @param {type} p_rate
+ * @param {type} p_eur_amount
+ * @returns {undefined}
+ */
+function LedgerCurrencyUpdate(p_dossier,p_code,p_update,p_rate,p_eur_amount)
+{
+    // Hide or show the row of the table with the amount in EUR
+    if ($(p_code).value != -1) {
+        $('row_currency').show();
+    }else {
+        $('row_currency').hide();
+    }
+    CurrencyUpdateValue(p_dossier,p_code,p_rate);
+    CurrencyUpdateCode(p_dossier,p_code,p_update);
+    // Compute all the fields
+    compute_all_ledger 	();
+
+}

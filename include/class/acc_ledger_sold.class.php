@@ -282,6 +282,8 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             $tot_debit = 0;
             $this->db->start();
             $tva = array();
+             // find the currency from v_currency_last_value
+            $currency_rate_ref=new Acc_Currency($this->db, $p_currency_code);
             /* Save all the items without vat */
             for ($i = 0; $i < $nb_item; $i++) {
                 $n_both = 0;
@@ -291,8 +293,12 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 /* First we save all the items without vat */
                 $fiche = new Fiche($this->db);
                 $fiche->get_by_qcode(${"e_march" . $i});
-                $amount = bcmul(${'e_march' . $i . '_price'}, ${'e_quant' . $i});
-                $tot_amount = round(bcadd($tot_amount, $amount),2);
+                $amount_currency = bcmul(${'e_march' . $i . '_price'}, ${'e_quant' . $i});
+                
+                // convert amount to currency
+                $amount=bcmul($amount_currency,$p_currency_rate);
+                
+                $tot_amount = bcadd($tot_amount, $amount);
                 $acc_operation = new Acc_Operation($this->db);
                 $acc_operation->date = $e_date;
                 $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
@@ -311,14 +317,20 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $acc_operation->jrn = $p_jrn;
                 $acc_operation->type = 'c';
                 $acc_operation->periode = $tperiode;
-                if ($g_parameter->MY_UPDLAB == 'Y')
-                    $acc_operation->desc = strip_tags(${"e_march" . $i . "_label"});
+                if ($g_parameter->MY_UPDLAB=='Y')
+                {
+                    $acc_operation->desc=strip_tags(${"e_march".$i."_label"});
+                }
                 else
-                    $acc_operation->desc = null;
+                {
+                    $acc_operation->desc=null;
+                }
 
                 $acc_operation->qcode = ${"e_march" . $i};
-                if ($amount < 0)
-                    $tot_debit = bcadd($tot_debit, abs($amount));
+                if ($amount<0)
+                {
+                    $tot_debit=bcadd($tot_debit, abs($amount));
+                }
 
                 $j_id = $acc_operation->insert_jrnx();
 
@@ -326,26 +338,34 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                     /* Compute sum vat */
                     $oTva = new Acc_Tva($this->db);
                     $idx_tva = ${'e_march' . $i . '_tva_id'};
-                    $tva_item = ${'e_march' . $i . '_tva_amount'};
+                    $tva_item_currency = ${'e_march' . $i . '_tva_amount'};
                     $oTva->set_parameter("id", $idx_tva);
                     $oTva->load();
                     /* if empty then we need to compute it */
-                    if (trim($tva_item) == '' || ${'e_march'.$i.'_tva_amount'} == 0) {
+                    if (trim($tva_item_currency) == '' || ${'e_march'.$i.'_tva_amount'} == 0) {
                         /* retrieve tva */
                         $l = new Acc_Tva($this->db, $idx_tva);
                         $l->load();
-                        $tva_item = bcmul($amount, $l->get_parameter('rate'));
+                        $tva_item_currency = bcmul($amount, $l->get_parameter('rate'));
                     }
+                    $tva_item=bcmul($tva_item_currency,$p_currency_rate);
+                    
                     if (isset($tva[$idx_tva]))
-                        $tva[$idx_tva]+=$tva_item;
+                    {
+                        $tva[$idx_tva]=bcadd($tva_item,$tva[$idx_tva]);
+                    }
                     else
-                        $tva[$idx_tva] = $tva_item;
+                    {
+                        $tva[$idx_tva]=$tva_item;
+                    }
                     if ($oTva->get_parameter("both_side") == 0) {
                         $tot_tva = round(bcadd($tva_item, $tot_tva), 2);
                     } else {
                         $n_both = $tva_item;
-                        if ($n_both < 0)
-                            $tot_debit = bcadd($tot_debit, abs($n_both));
+                        if ($n_both<0)
+                        {
+                            $tot_debit=bcadd($tot_debit, abs($n_both));
+                        }
                     }
                 }
 
@@ -367,6 +387,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 if ($g_parameter->MY_ANALYTIC != "nu") {
                     // for each item, insert into operation_analytique */
                     $op = new Anc_Operation($this->db);
+                    $op->set_currency_rate($p_currency_rate);
                     $op->oa_group = $group;
                     $op->j_id = $j_id;
                     $op->oa_date = $e_date;
@@ -374,6 +395,8 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                     $op->oa_description = sql_string($e_comm);
                     $op->save_form_plan($_POST, $i, $j_id);
                 }
+                
+                $price_euro=bcmul(${'e_march'.$i.'_price'}, $p_currency_rate);
                 if ($g_parameter->MY_TVA_USE == 'Y') {
                     /* save into quant_sold */
                     $r = $this->db->exec_sql("select insert_quant_sold ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)", array(null, /* 1 */
@@ -385,7 +408,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         $idx_tva, /* 7 */
                         $e_client, /* 8 */
                         $n_both, /* 9 */
-                        ${'e_march' . $i . '_price'} /* Price /unit */ 
+                        $price_euro/* Price /unit */ 
                         ));
                 } else {
                     $r = $this->db->exec_sql("select insert_quant_sold ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ", array(null, /* 1 */
@@ -397,9 +420,18 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         null,
                         $e_client,
                         0, /* 9 */
-                        ${'e_march' . $i . '_price'} /* Price /unit */ 
+                        $price_euro         /* Price /unit */ 
                         ));
                 }  // if ( $g_parameter->MY_TVA_USE=='Y') {
+                 /*
+                 * Insert also in operation_currency
+                 */
+                $operation_currency=new Operation_currency_SQL($this->db);
+                $operation_currency->oc_amount=$amount_currency;
+                $operation_currency->oc_vat_amount=$tva_item_currency;
+                $operation_currency->oc_price_unit=${'e_march'.$i.'_price'};
+                $operation_currency->j_id=$j_id;
+                $operation_currency->insert();
             }// end loop : save all items
 
             /*  save total customer */
@@ -413,8 +445,10 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             $acc_operation->type = 'd';
             $acc_operation->periode = $tperiode;
             $acc_operation->qcode = ${"e_client"};
-            if ($cust_amount > 0)
-                $tot_debit = bcadd($tot_debit, $cust_amount);
+            if ($cust_amount>0)
+            {
+                $tot_debit=bcadd($tot_debit, $cust_amount);
+            }
             $let_tiers = $acc_operation->insert_jrnx();
 
 
@@ -439,8 +473,10 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                     $acc_operation->jrn = $p_jrn;
                     $acc_operation->type = 'c';
                     $acc_operation->periode = $tperiode;
-                    if ($value < 0)
-                        $tot_debit = bcadd($tot_debit, abs($value));
+                    if ($value<0)
+                    {
+                        $tot_debit=bcadd($tot_debit, abs($value));
+                    }
                     $acc_operation->insert_jrnx();
 
                     // if TVA is on both side, we deduce it immediately
@@ -472,8 +508,13 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             $acc_operation->periode = $tperiode;
             $acc_operation->pj = $e_pj;
             $acc_operation->mt = $mt;
-
-            $this->jr_id = $acc_operation->insert_jrn();
+            $acc_operation->currency_id=$p_currency_code;
+            $acc_operation->currency_rate=$p_currency_rate;
+            $acc_operation->currency_rate_ref=$currency_rate_ref->get_rate();
+            
+            if ( ! $this->jr_id=$acc_operation->insert_jrn() ) {
+                throw new Exception (_("Erreur de balance"));
+            }
 
             $this->pj = $acc_operation->set_pj();
 
@@ -609,7 +650,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             'Erreur dans l\'enregistrement ' .
             __FILE__ . ':' . __LINE__ . ' ' .
             $e->getMessage();
-            echo $e->getTrace();
+            echo $e->getTraceAsString();
 
             $this->db->rollback();
             throw new Exception ($e);
@@ -634,7 +675,9 @@ class Acc_Ledger_Sold extends Acc_Ledger {
 
         // don't need to verify for a summary
         if (!$p_summary)
+        {
             $this->verify($p_array);
+        }
         $anc = null;
         // to show a select list for the analytic & VAT USE
         // if analytic is op (optionnel) there is a blank line
@@ -839,16 +882,29 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         // Add the sum
         $decalage=($g_parameter->MY_TVA_USE == 'Y')?'<td></td><td></td><td></td><td></td>':'<td></td>';
          $tot = round(bcadd($tot_amount, $tot_tva), 2);
+        $tot_eur=round(bcmul($tot, $p_currency_rate),2);
         $tot_tva=nbm($tot_tva);
         $tot=nbm($tot);
         $str_tot=_('Totaux');
+        
+        // Get currency code
+        $str_code='EUR';
+        if ( $p_currency_code != -1 ) {
+            $acc_currency=new Acc_Currency($this->db);
+            $acc_currency->set_id($p_currency_code);
+            $str_code=$acc_currency->get_code();
+        }
+        // Format amount
         $tot_amount=nbm($tot_amount);
+        $tot_tva=nbm($tot_tva);
+        $tot=nbm($tot);
+        
 if ( $g_parameter->MY_TVA_USE=="Y")        {
         $r.=<<<EOF
 <tr class="highlight">
     {$decalage}            
      <td>
-                {$str_tot}
+                {$str_tot} {$str_code}
      </td>
     <td class="num">
         {$tot_tva}
@@ -857,15 +913,31 @@ if ( $g_parameter->MY_TVA_USE=="Y")        {
         {$tot_amount}
     </td>
     <td class="num">
-        {$tot}
+        {$tot} {$str_code}
     </td>
+   </tr>
+    <tr class="highlight">
+    {$decalage}            
+     <td>
+                
+     </td>
+    <td class="num">
+        
+    </td>
+    <td class="num">
+        
+    </td>
+    <td class="num">
+        {$tot_eur}  EUR
+    </td>
+</tr>
 EOF;
     } else {
         $r.=<<<EOF
 <tr class="highlight">
     {$decalage}            
      <td>
-                {$str_tot}
+                {$str_tot} {$str_code}
      </td>
     <td class="num">
         
@@ -876,6 +948,19 @@ EOF;
     <td class="num">
         {$tot}
     </td>
+        </tr>
+<tr class="highlight">
+    {$decalage}            
+     <td>
+     </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td class="num">
+        {$tot} {$str_code}
+    </td>
+</tr>
 EOF;
     }
         $r.='</table>';
@@ -910,9 +995,12 @@ EOF;
         $r.=HtmlInput::hidden('p_jrn', $p_jrn);
         $mt = microtime(true);
         $r.=HtmlInput::hidden('mt', $mt);
-
+        $r.=HtmlInput::post_to_hidden(['p_currency_rate','p_currency_code']);
+        
         if (isset($period))
+        {
             $r.=HtmlInput::hidden('period', $period);
+        }
         /* \todo comment les types hidden gérent ils des contenus avec des quotes, double quote ou < > ??? */
         $r.=HtmlInput::hidden('e_comm', $e_comm);
         $r.=HtmlInput::hidden('e_date', $e_date);
@@ -1047,6 +1135,7 @@ EOF;
         global $g_parameter, $g_user;
         if ($p_array != null)
             extract($p_array, EXTR_SKIP);
+        $http=new HttpInput();
 
         $flag_tva = $g_parameter->MY_TVA_USE;
         /* Add button */
@@ -1328,6 +1417,18 @@ EOF;
             $array[$i]['quantity'] = $Quantity->input("e_quant" . $i, $quant);
         }// foreach article
         $f_type = _('Client');
+         
+        // Currency
+        $currency_select = $this->CurrencyInput("currency_code", "p_currency_rate" , "p_currency_euro");
+        $currency_select->selected=$http->request('p_currency_code','string',-1);
+        
+        $currency_input=new INum("p_currency_rate");
+        $currency_input->id="p_currency_rate";
+        $currency_input->value=$http->request('p_currency_rate','string',1);
+        $currency_input->javascript='onchange="format_number(this,4);CurrencyCompute(\'p_currency_rate\',\'p_currency_euro\');"';
+        
+        
+        
         // 
         // Button for template operation
         //
