@@ -53,6 +53,7 @@ class Acc_Account
         $this->db=$p_cn;
         $id=-1;
         if ( trim($pcm_val)  != "" ) {
+            $pcm_val=mb_strtoupper($pcm_val);
             $pcm_val=$this->db->get_value("select format_account($1)",
                                         array($pcm_val));
             $id=$p_cn->get_value("select id from tmp_pcmn where pcm_val=$1",[$pcm_val]);
@@ -128,7 +129,7 @@ class Acc_Account
     function verify() {
         // check for Duplicate key, parent ... see Acc_Plan_MTable
         $count=$this->data_sql->count(" where pcm_val =$1 and id <> $2",
-                           [$this->data_sql->pcm_val,$this->data_sql->id]);
+                           [mb_strtoupper($this->data_sql->pcm_val),$this->data_sql->id]);
         if ( $count > 0)
             throw new Exception (_("Poste en double"),EXC_DUPLICATE);
         
