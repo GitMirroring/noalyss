@@ -1738,7 +1738,7 @@ class Acc_Ledger extends jrn_def_sql
      * @brief retrieve operation from  jrn
      * @param $p_from periode (id)
      * @param $p_to periode (id)
-     * @return an array
+     * @return Anc_Plan array
      */
     function get_operation($p_from, $p_to)
     {
@@ -1759,7 +1759,7 @@ class Acc_Ledger extends jrn_def_sql
 
     /**
      * @brief return the used VAT code with a rate > 0
-     * @return an array of tva_id,tva_label,tva_poste
+     * @return Anc_Plan array of tva_id,tva_label,tva_poste
      */
     public function existing_vat()
     {
@@ -2806,6 +2806,7 @@ class Acc_Ledger extends jrn_def_sql
         // e_march
         $http=new HttpInput();
         $nb=$http->post("nb_item", "number", 0);
+        echo HtmlInput::post_to_hidden(['p_currency_rate','p_currency_code']);
         for ($i=0; $i<$nb; $i++)
         {
             echo HtmlInput::post_to_hidden(
