@@ -232,6 +232,10 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             throw new Exception(_('Date échéance invalide'),14);
             
         }
+        // Check currency_rate if valid
+        if ( isNumber($p_currency_rate) == 0 || $p_currency_rate <=0 ) {
+            throw new Exception(_('Taux devise invalide'),15);
+        }
     }
 
     /*!\brief insert into the database, it calls first the verify function,
@@ -579,7 +583,10 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 } else {
                     $poste_val = $sposte;
                 }
-                $famount = bcsub($cust_amount, $acompte);
+                 // Convert paid amount in EUR
+                $acompte=bcmul($acompte, $p_currency_rate);   
+
+                $famount=bcsub($cust_amount,$acompte);
                 $acc_pay->poste = $poste_val;
                 $acc_pay->qcode = $fqcode;
                 $acc_pay->amount = abs(round($famount, 2));
