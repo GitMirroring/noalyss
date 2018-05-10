@@ -117,7 +117,7 @@ echo $ipaid->input();
 
             </tr>
         </table>
-            <table class="result">
+            <table class="result" style="margin-left:4px">
                 <?php
                 bcscale(2);
                 $total_htva = 0;
