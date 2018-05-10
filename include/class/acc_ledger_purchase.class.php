@@ -276,6 +276,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             throw new Exception(_('Date échéance invalide'),14);
             
         }
+        // Check currency_rate if valid
+        if ( isNumber($p_currency_rate) == 0 || $p_currency_rate <=0 ) {
+            throw new Exception(_('Taux devise invalide'),15);
+        }
     }
     /**
      * Compute the ND amount thanks the attribute of the concerned card. The object 
@@ -905,7 +909,12 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 }
                 // remove the VAT autoliquidation
                 $cust_amount=bcsub($cust_amount, $tot_tva_reversed);
+
+                // Convert paid amount in EUR
+                $acompte=bcmul($acompte, $p_currency_rate);   
+
                 $famount=bcsub($cust_amount,$acompte);
+                
                 $acc_pay->poste=$poste_val;
                 $acc_pay->qcode=$fqcode;
                 $acc_pay->amount=abs(round($famount,2));
