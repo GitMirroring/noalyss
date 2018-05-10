@@ -287,7 +287,7 @@ class Acc_Operation
         if ( $diff != 0 )
         {
 
-            printf (_("Erreur : balance incorrecte :diff = %d"),$diff);
+            printf (_("Erreur : balance incorrecte :diff = %s"),$diff);
             return false;
         }
 
