@@ -205,16 +205,17 @@ echo $ipaid->input();
                     $htva = $q['qs_price'];
 
                     $row.=td(nbm($htva), 'class="num"');
-                    $tvac = bcadd($htva, $q['qs_vat']);
+                    $tva_rounded=round($q['qs_vat'],2);
+                    $tvac = bcadd($htva, $tva_rounded);
                     if ($owner->MY_TVA_USE == 'Y')
                     {
                         $class = "";
                         if ($q['qs_vat_sided'] != 0)
                         {
                             $class = ' style="text-decoration:line-through"';
-                            $tvac = bcsub($tvac, $q['qs_vat']);
+                            $tvac = bcsub($tvac, $tva_rounded);
                         }
-                        $row.=td(nbm($q['qs_vat']), 'class="num"' . $class);
+                        $row.=td(nbm($tva_rounded), 'class="num"' . $class);
                         $row.=td(nbm($tvac), 'class="num"');
                     }
                     $total_tvac = bcadd($total_tvac, $tvac);

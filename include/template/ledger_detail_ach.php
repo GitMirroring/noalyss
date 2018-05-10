@@ -202,11 +202,11 @@ $str_anc="";
 
 
                     $row.=td(nbm($htva), 'class="num"');
-                    $tvac = bcadd($htva, $q['qp_vat']);
+                    $tva_rounded=round($q['qp_vat'],2);
+                    $tvac = bcadd($htva, $tva_rounded);
                     $tvac = bcadd($tvac, $q['qp_nd_tva']);
                     $tvac = bcadd($tvac, $q['qp_nd_tva_recup']);
                     $tvac = bcsub ($tvac,$q['qp_vat_sided']);
-
                     if ($owner->MY_TVA_USE == 'Y')
                     {
                         $tva_amount_nd = bcadd($q['qp_nd_tva_recup'], $q['qp_nd_tva']);
@@ -216,7 +216,7 @@ $str_anc="";
                             $class = ' style="text-decoration:line-through"';
                         }
                         $row.=td(nbm($tva_amount_nd), 'class="num" ' . $class);
-                        $row.=td(nbm($q['qp_vat']), 'class="num" ' . $class);
+                        $row.=td(nbm($tva_rounded), 'class="num" ' . $class);
                         $row.=td(nbm($tvac), 'class="num"');
                     }
                     $total_tvac=bcadd($total_tvac,$tvac);
