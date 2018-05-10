@@ -765,7 +765,7 @@ class Acc_Detail extends Acc_Operation
         $sql="SELECT jr_id, jr_def_id, jr_montant, jr_comment, jr_date, jr_grpt_id,
              jr_internal, jr_tech_date, jr_tech_per, jrn_ech, jr_ech, jr_rapt,jr_ech,
              jr_valid, jr_opid, jr_c_opid, jr_pj, jr_pj_name, jr_pj_type,
-             jr_pj_number, jr_mt,jr_rapt,jr_date_paid,jr_optype
+             jr_pj_number, jr_mt,jr_rapt,jr_date_paid,jr_optype,currency_id,currency_rate,currency_rate_ref
              FROM jrn where jr_id=$1";
         $array=$this->db->get_array($sql,array($this->jr_id));
         if ( count($array) == 0 ) throw new Exception('Aucune ligne trouvée');

@@ -256,9 +256,25 @@ $str_anc="";
                 if ($owner->MY_TVA_USE == 'Y')
                     $row.=td("") . td("").td(nbm($total_tvac), 'class="num" style="font-style:italic;font-weight: bolder;"');
                 echo tr($row);
+                
                 ?>
             </table>
-
+<?php
+/*
+ * Info about currency if not in euro
+ */
+    // Add a row with currency and amount
+    if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
+    {
+        $currency=new Acc_Currency($obj->db, $obj->det->currency_id);
+        $four_space="&nbsp;"."&nbsp;"."&nbsp;"."&nbsp;";
+        
+        echo  $currency->get_code(),$four_space;
+        echo _("Taux utilisé"),"&nbsp;", $obj->det->currency_rate,$four_space;
+        echo _("Taux Réf"), "&nbsp;",$obj->det->currency_rate_ref.$four_space;
+        echo _("Montant en devise"), "&nbsp;",$currency->sum_amount($obj->jr_id).$four_space;
+    }
+?>
 
         </div>
 

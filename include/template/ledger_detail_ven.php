@@ -117,7 +117,6 @@ echo $ipaid->input();
 
             </tr>
         </table>
-        <div class="myfieldset">
             <table class="result">
                 <?php
                 bcscale(2);
@@ -263,8 +262,22 @@ echo $ipaid->input();
             </td>
             </tr>
             </table>
-        </div>
-            
+<?php
+/*
+ * Info about currency if not in euro
+ */
+    // Add a row with currency and amount
+    if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
+    {
+        $currency=new Acc_Currency($obj->db, $obj->det->currency_id);
+        $four_space="&nbsp;"."&nbsp;"."&nbsp;"."&nbsp;";
+        
+        echo  $currency->get_code(),$four_space;
+        echo _("Taux utilisé"),"&nbsp;", $obj->det->currency_rate,$four_space;
+        echo _("Taux Réf"), "&nbsp;",$obj->det->currency_rate_ref.$four_space;
+        echo _("Montant en devise"), "&nbsp;",$currency->sum_amount($obj->jr_id).$four_space;
+    }
+?>            
 <?php
 require_once NOALYSS_TEMPLATE.'/ledger_detail_bottom.php';
 ?>

@@ -115,6 +115,25 @@ class Acc_Currency
         
         return $select;
     }
+    /**
+     * Return sum of the w/o VAT and VAT or an operation
+     */
+    function sum_amount($p_jr_id)
+    {
+        $sql = " 
+            select sum(round(oc_amount,2)) +
+		sum(round(oc_vat_amount,2)) 
+	from operation_currency 
+	where 
+            j_id in (
+                    select j_id 
+                    from jrnx 
+                    where 
+                    j_grpt in ( select jr_grpt_id from jrn where jr_id=$1))";
+        $sum=$this->cn->get_value($sql, [$p_jr_id]);
+        return $sum;
+
+    }
     
 
 }
