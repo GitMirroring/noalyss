@@ -146,8 +146,13 @@ class Currency_MTable extends Manage_Table_SQL
         }
         else
         {
+             if (trim($table->str_from) =="" && trim($table->ch_value)=="")
+            {
+                // we don't add any new date
+                
+            }
             // -- for update, the date and value must be valid
-            if (trim($table->str_from)!=""&&trim($table->ch_value)!="")
+            elseif (trim($table->str_from)!=""&&trim($table->ch_value)!="")
             {
                 if (isDate($table->str_from)==0)
                 {
@@ -198,7 +203,7 @@ class Currency_MTable extends Manage_Table_SQL
             $is_error++;
             $this->set_error("cr_name", _("Nom trop long max=80"));
         }
-        if ( $table->ch_value < 0 || $table->ch_value == 0) {
+        if ( $table->ch_value  != "" && ($table->ch_value < 0 || $table->ch_value == 0)) {
             $is_error++;
             $this->set_error("ch_value", _("Valeur incorrecte"));
         }
@@ -281,6 +286,18 @@ class Currency_MTable extends Manage_Table_SQL
         $this->table->currency_id=$http->request("p_id", "number");
         $this->table->ch_value=$http->request("new_rate_value");
         $this->table->str_from=$http->request("new_rate_date");
+    }
+    /**
+     * We don't display the default currency (id := -1)
+     */
+    function display_row($p_row)
+    {
+        if ($p_row['currency_id']==-1)
+        {
+            return;
+        }
+
+        parent::display_row($p_row);
     }
 
 }

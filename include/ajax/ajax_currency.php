@@ -101,6 +101,7 @@ switch ($act)
 
         $currency_table->set_callback("ajax_misc.php");
         $currency_table->add_json_param("op", "CurrencyManage");
+        
         /*
          * we're in ajax part
          */
