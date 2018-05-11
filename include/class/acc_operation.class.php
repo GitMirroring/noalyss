@@ -187,7 +187,7 @@ class Acc_Operation
             $this->type=($this->type=='d')?'c':'d';
         }
         if ( DEBUG ) {
-            echo "insert_jrnx = {$this->amount}  type {$this->type}<br>";
+            echo "insert_jrnx = [{ $this->poste}]  {$this->amount}  rounded ".round($this->amount,2)." type {$this->type}<br>";
         }
         $this->amount=abs($this->amount);
         $debit=($this->type=='c')?'false':'true';
@@ -282,7 +282,9 @@ class Acc_Operation
     function insert_jrn()
     {
         $p_comment=$this->desc;
-        
+        if  (DEBUG ) {
+             echo "insert_jrn = {$this->amount}  <br>";
+        }
         $diff=$this->db->get_value("select check_balance ($1)",array($this->grpt));
         if ( $diff != 0 )
         {

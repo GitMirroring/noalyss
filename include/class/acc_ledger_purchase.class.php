@@ -609,6 +609,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     }
                    // convert amount in eur 
                    $tot_tva=bcadd($tot_tva,$acc_amount->amount_vat);
+                   $tot_tva=round($tot_tva,2);
                 }
 
                
@@ -754,6 +755,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 
             }       // end loop : save all items
             /*  save total customer */
+            if ( DEBUG ) { 
+                echo __LINE__." tot_amount $tot_amount<br>"; 
+                echo __LINE__." tot_tva $tot_tva<br>"; 
+            
+            }
             $cust_amount=round(bcadd($tot_amount,$tot_tva),2);
             $acc_operation=new Acc_Operation($this->db);
             $acc_operation->date=$e_date;
@@ -784,7 +790,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
                     $poste_vat=$oTva->get_side('d');
 
-                    $cust_amount=bcadd($tot_amount,$tot_tva);
+                    $cust_amount=round(bcadd($tot_amount,$tot_tva),2);
                     $acc_operation=new Acc_Operation($this->db);
                     $acc_operation->date=$e_date;
                     $acc_operation->poste=$poste_vat;
@@ -825,6 +831,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             // Total DEB
             $acc_operation->amount=$this->db->get_value("select sum(j_montant) from jrnx where j_grpt = $1 and j_debit='t'",
                     array($seq));
+            if ( DEBUG ) { 
+                echo __LINE__." amount ".$acc_operation->amount."<br>"; 
+            
+            }
             $acc_operation->desc=$e_comm;
             $acc_operation->grpt=$seq;
             $acc_operation->jrn=$p_jrn;

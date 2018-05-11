@@ -302,8 +302,9 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 // convert amount to currency
                 $amount=bcmul($amount_currency,$p_currency_rate);
                 
-                $tot_amount = bcadd($tot_amount, $amount,2);
-                echo "tot_amount $tot_amount<br>";
+                $tot_amount = bcadd($tot_amount, $amount);
+                $tot_amount = round($tot_amount, 2);
+                if ( DEBUG ) { echo __LINE__." tot_amount $tot_amount<br>";}
                 $acc_operation = new Acc_Operation($this->db);
                 $acc_operation->date = $e_date;
                 $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
@@ -353,18 +354,20 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         $l->load();
                         $tva_item_currency = bcmul($amount, $l->get_parameter('rate'));
                     }
-                    $tva_item=bcmul($tva_item_currency,$p_currency_rate,2);
-                    
+                    $tva_item=bcmul($tva_item_currency,$p_currency_rate);
+                    $tva_item=round($tva_item,2);
                     if (isset($tva[$idx_tva]))
                     {
-                        $tva[$idx_tva]=bcadd($tva_item,$tva[$idx_tva],2);
+                        $tva[$idx_tva]=bcadd($tva_item,$tva[$idx_tva]);
+                        $tva[$idx_tva]=round($tva[$idx_tva],2);
                     }
                     else
                     {
                         $tva[$idx_tva]=$tva_item;
                     }
                     if ($oTva->get_parameter("both_side") == 0) {
-                        $tot_tva = bcadd($tva_item, $tot_tva, 2);
+                        $tot_tva = bcadd($tva_item, $tot_tva);
+                        $tot_tva = round($tot_tva, 2);
                     } else {
                         $n_both = $tva_item;
                         if ($n_both<0)
@@ -440,8 +443,14 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             }// end loop : save all items
 
             /*  save total customer */
-            $cust_amount = bcadd($tot_amount, $tot_tva,2);
-            echo "cust_amount $cust_amount<br>";
+            $cust_amount = bcadd($tot_amount, $tot_tva);
+            $cust_amount = round($cust_amount,2);
+            if ( DEBUG ) { 
+                echo __LINE__." cust_amount $cust_amount<br>"; 
+                echo __LINE__." tot_amount $tot_amount<br>"; 
+                echo __LINE__." tot_tva $tot_tva<br>"; 
+            
+            }
 
             $acc_operation = new Acc_Operation($this->db);
             $acc_operation->date = $e_date;
@@ -454,7 +463,8 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             $acc_operation->qcode = ${"e_client"};
             if ($cust_amount>0)
             {
-                $tot_debit=bcadd($tot_debit, $cust_amount,2);
+                $tot_debit=bcadd($tot_debit, $cust_amount);
+                $tot_debit=round($tot_debit, 2);
             }
             $let_tiers = $acc_operation->insert_jrnx();
 
@@ -464,6 +474,9 @@ class Acc_Ledger_Sold extends Acc_Ledger {
              * if if ($g_parameter->MY_TVA_USE == 'Y' )
              */
             if ($g_parameter->MY_TVA_USE == 'Y') {
+                if (DEBUG ) {
+                    var_dump($tva);
+                }
                 foreach ($tva as $i => $value) {
                     $oTva = new Acc_Tva($this->db);
                     $oTva->set_parameter('id', $i);
@@ -482,10 +495,14 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                     $acc_operation->periode = $tperiode;
                     if ($value<0)
                     {
-                        $tot_debit=bcadd($tot_debit, abs($value),2);
+                        $tot_debit=bcadd($tot_debit, abs($value));
+                        $tot_debit=round($tot_debit, 2);
                     }
                     $acc_operation->insert_jrnx();
+                    if ( DEBUG ) { 
+                                    echo __LINE__." tot_tva $tot_tva<br>"; 
 
+                    }
                     // if TVA is on both side, we deduce it immediately
                     if ($oTva->get_parameter("both_side") == 1) {
                         $poste_vat = $oTva->get_side('d');
@@ -499,12 +516,19 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         $acc_operation->type = 'd';
                         $acc_operation->periode = $tperiode;
                         $acc_operation->insert_jrnx();
-                        $tot_debit = bcadd($tot_debit, $value,2);
+                        $tot_debit = bcadd($tot_debit, $value);
+                        $tot_debit = round($tot_debit, 2);
                         $n_both = $value;
                     }
                 }
             } // if ($g_parameter->MY_TVA_USE=='Y')
+            /*
+             * Balance the amount on D and C , the difference must be inserted as "difference due to a rounded value"
+             * Value are retrieve thanks $seq
+             */
+            
             /* insert into jrn */
+            if ( DEBUG ) { echo __LINE__." tot_debit ".round($tot_debit,2)."<br>"; }
             $acc_operation = new Acc_Operation($this->db);
             $acc_operation->date = $e_date;
             $acc_operation->echeance = $e_ech;
@@ -655,6 +679,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 }
             }
         } catch (Exception $e) {
+            record_log($e->getMessage());
             record_log($e->getTraceAsString());
             echo '<span class="error">' .
             'Erreur dans l\'enregistrement ' .
@@ -823,7 +848,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $tva_computed = $op->get_parameter('amount_vat');
                 $tva_item = ${"e_march" . $i . "_tva_amount"};
                 if (isset($tva[$idx_tva]))
-                    $tva[$idx_tva]+=$tva_item;
+                    $tva[$idx_tva]=bcadd($tva[$idx_tva],$tva_item,2);
                 else
                     $tva[$idx_tva] = $tva_item;
                 $tot_tva = round(bcadd($tva_item, $tot_tva), 2);
@@ -891,9 +916,8 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         //
         // Add the sum
         $decalage=($g_parameter->MY_TVA_USE == 'Y')?'<td></td><td></td><td></td><td></td>':'<td></td>';
-         $tot = round(bcadd($tot_amount, $tot_tva), 2);
+         $tot = bcadd($tot_amount, $tot_tva, 2);
         $tot_eur=round(bcmul($tot, $p_currency_rate),2);
-        $tot_tva=nbm($tot_tva);
         $tot=nbm($tot);
         $str_tot=_('Totaux');
         
@@ -907,7 +931,6 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         // Format amount
         $tot_amount=nbm($tot_amount);
         $tot_tva=nbm($tot_tva);
-        $tot=nbm($tot);
         
 if ( $g_parameter->MY_TVA_USE=="Y")        {
         $r.=<<<EOF
