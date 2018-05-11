@@ -94,7 +94,7 @@ COMMENT ON COLUMN public.operation_currency.oc_vat_amount IS 'vat amount in curr
 COMMENT ON COLUMN public.operation_currency.oc_price_unit IS 'unit price in currency' ;
 COMMENT ON COLUMN public.operation_currency.j_id IS 'fk to jrnx' ;
 
-alter table jrn add currency_id bigint default -1;
+alter table jrn add currency_id bigint default 0;
 alter table jrn add currency_rate numeric (20,6) default 1;
 alter table jrn add currency_rate_ref numeric(20,6) default 1;
 ALTER TABLE public.jrn ADD CONSTRAINT jrn_currency_fk FOREIGN KEY (currency_id) REFERENCES public.currency(id) ON DELETE RESTRICT ON UPDATE RESTRICT;

@@ -108,8 +108,7 @@ class Acc_Currency
     function select_currency()
     {
         $select=new ISelect('p_currency_code');
-        $a_currency[0]=["value"=>-1,"label"=>"EUR"];
-        $a_currency+=$this->cn->make_array("select currency_id,cr_code_iso from v_currency_last_value order by cr_code_iso");
+        $a_currency=$this->cn->make_array("select currency_id,cr_code_iso from v_currency_last_value order by cr_code_iso");
         $select->value=$a_currency;
         $select->selected=$this->currency->cr_code_iso;
         

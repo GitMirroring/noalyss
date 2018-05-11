@@ -30,6 +30,7 @@ require_once NOALYSS_INCLUDE.'/database/currency_history_sql.class.php';
 /**
  * Manage the configuration of currency , add currency, rate, remove  and update
  * Concerned tables are v_currency_last_value _SQL , Currency_SQL , Currency_History_SQL
+ * currency_id = 0 for the default currency , -1 for a new one
  */
 class Currency_MTable extends Manage_Table_SQL
 {
@@ -110,13 +111,17 @@ class Currency_MTable extends Manage_Table_SQL
      *      - Date of the rate 
      *      - code iso is max 10 char
      *      - name is max 80
-     *      
+     * Default currency (id=0) cannot be changed
      */
     function check()
     {
         global $cn;
         $table=$this->get_table();
         $is_error=0;
+        if ( $table->currency_id == 0) {
+            $is_error++;
+            $this->set_error("cr_code_iso", _("Devise par défaut ne peut être changée"));
+        }
         // ------ cr_code_iso can not be empty
         if (trim($table->cr_code_iso)=="")
         {
@@ -292,7 +297,7 @@ class Currency_MTable extends Manage_Table_SQL
      */
     function display_row($p_row)
     {
-        if ($p_row['currency_id']==-1)
+        if ($p_row['currency_id']==0)
         {
             return;
         }

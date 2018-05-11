@@ -923,7 +923,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         
         // Get currency code
         $str_code='EUR';
-        if ( $p_currency_code != -1 ) {
+        if ( $p_currency_code != 0 ) {
             $acc_currency=new Acc_Currency($this->db);
             $acc_currency->set_id($p_currency_code);
             $str_code=$acc_currency->get_code();
@@ -949,7 +949,11 @@ if ( $g_parameter->MY_TVA_USE=="Y")        {
         {$tot} {$str_code}
     </td>
    </tr>
-    <tr class="highlight">
+EOF;
+    if ($p_currency_code !=0) {
+        $rate=_("Taux ");
+$r.=<<<EOF
+<tr class="highlight">
     {$decalage}            
      <td>
                 
@@ -958,13 +962,15 @@ if ( $g_parameter->MY_TVA_USE=="Y")        {
         
     </td>
     <td class="num">
-        
+        {$rate} {$p_currency_rate}
     </td>
     <td class="num">
         {$tot_eur}  EUR
     </td>
 </tr>
 EOF;
+        } 
+   
     } else {
         $r.=<<<EOF
 <tr class="highlight">
@@ -987,8 +993,10 @@ EOF;
      <td>
      </td>
     <td>
+    
     </td>
     <td>
+     {$rate} {$p_currency_rate}
     </td>
     <td class="num">
         {$tot} {$str_code}
@@ -1453,7 +1461,7 @@ EOF;
          
         // Currency
         $currency_select = $this->CurrencyInput("currency_code", "p_currency_rate" , "p_currency_euro");
-        $currency_select->selected=$http->request('p_currency_code','string',-1);
+        $currency_select->selected=$http->request('p_currency_code','string',0);
         
         $currency_input=new INum("p_currency_rate");
         $currency_input->id="p_currency_rate";
