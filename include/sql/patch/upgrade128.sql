@@ -78,9 +78,9 @@ COMMENT ON COLUMN public.currency.cr_name IS 'Name of the currency' ;
 
 CREATE TABLE public.operation_currency (
 	id bigserial NOT NULL,
-	oc_amount numeric(6) NOT NULL, -- amount in currency
-	oc_vat_amount numeric(6) NULL DEFAULT 0, -- vat amount in currency
-	oc_price_unit numeric(6) NULL, -- unit price in currency
+	oc_amount numeric(20,6) NOT NULL, -- amount in currency
+	oc_vat_amount numeric(20,6) NULL DEFAULT 0, -- vat amount in currency
+	oc_price_unit numeric(20,6) NULL, -- unit price in currency
 	j_id int8 NOT NULL, -- fk to jrnx
 	CONSTRAINT operation_currency_pk PRIMARY KEY (id)
 );

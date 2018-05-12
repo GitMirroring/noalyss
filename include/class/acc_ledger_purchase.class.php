@@ -589,6 +589,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 // Set the currency rate
                 $acc_amount->set_parameter("currency_rate", $p_currency_rate);
                 $acc_amount->convert_euro();
+                $amount_euro=$acc_amount->amount;
                 
                 // Compute VAT or take the given one
                 if ( $g_parameter->MY_TVA_USE=='Y')
@@ -624,6 +625,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
               
                 $tot_amount=round(bcadd($tot_amount,$acc_amount->amount),2);
+                $tot_amount=round(bcadd($tot_amount,$acc_amount->amount_nd),2);
+                $tot_amount=round(bcadd($tot_amount,$acc_amount->amount_perso),2);
 
                 /* get the account and explode if necessary */
                 $sposte=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
@@ -708,7 +711,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                                 ,$j_id		 /* 2 */
                                 ,${"e_march".$i} /* 3 */
                                 ,${"e_quant".$i}  /* 4 */
-                                ,round($acc_amount->amount,2)	       /* 5 */
+                                ,round($amount_euro,2)	       /* 5 */
                                 ,$acc_amount->amount_vat  /* 6 */
                                 ,$oTva->get_parameter('id') /* 7 */
                                 ,$acc_amount->amount_nd     /* 8 */
