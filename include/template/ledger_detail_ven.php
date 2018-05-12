@@ -137,7 +137,14 @@ echo $ipaid->input();
                     echo th(_('TVAC'), 'style="text-align:right"');
                 } else
                     echo th(_('Total'), 'style="text-align:right"');
-
+                /*
+                 * If not in EUR
+                 */
+                 if ( $obj->det->currency_id != 0 ) {
+                    $currency=$obj->db->get_value("select cr_code_iso from currency where id=$1",
+                            [$obj->det->currency_id]);
+                    echo th($currency, 'style="text-align:right"');
+                }
                 if ($owner->MY_ANALYTIC != 'nu' /*&& $div == 'popup'*/)
                 {
                     $anc = new Anc_Plan($cn);
@@ -244,7 +251,15 @@ echo $ipaid->input();
                         }
                     }
                      $class=($e%2==0)?' class="even"':'class="odd"';
-                     echo tr($row,$class);
+                    /*
+                     * Display Currency in a column, if invoice not recorded in EUR
+                     */
+                    if ( $obj->det->currency_id != 0 ) {
+                         $value=$obj->db->get_value("select  oc_amount+oc_vat_amount from operation_currency where j_id=$1",[$q['j_id']]);
+                         $row.=td(nbm($value,4),' class="num"');
+                         
+                    }
+                    echo tr($row,$class);
                 }
                 if ($owner->MY_TVA_USE == 'Y')
                     $row = td(_('Total'), ' style="font-style:italic;text-align:right;font-weight: bolder;" colspan="5"');
@@ -253,6 +268,14 @@ echo $ipaid->input();
                 $row.=td(nbm($total_htva), 'class="num" style="font-style:italic;font-weight: bolder;"');
                 if ($owner->MY_TVA_USE == 'Y')
                     $row.=td("") . td(nbm($total_tvac), 'class="num" style="font-style:italic;font-weight: bolder;"');
+                
+                
+                 //Display total in currency
+                if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
+                {
+                    $currency=new Acc_Currency($obj->db, $obj->det->currency_id);
+                    $row.= td(nbm($currency->sum_amount($obj->jr_id),4),' class="num" style="font-style:italic;font-weight: bolder;"');
+                }
                 echo tr($row);
                 ?>
             </table>

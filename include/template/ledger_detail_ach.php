@@ -7,6 +7,7 @@ $str_anc="";
     <?php
     require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
     $owner = new Noalyss_Parameter_Folder($cn);
+    var_dump($obj);
     ?>
 
     <?php if ($access == 'W') : ?>
@@ -135,7 +136,11 @@ $str_anc="";
                     echo th(_('TVAC'), 'style="text-align:right"');
                 } else
                     echo th(_('Total'), 'style="text-align:right"');
-
+                if ( $obj->det->currency_id != 0 ) {
+                    $currency=$obj->db->get_value("select cr_code_iso from currency where id=$1",
+                            [$obj->det->currency_id]);
+                    echo th($currency, 'style="text-align:right"');
+                }
                 if ($owner->MY_ANALYTIC != 'nu' )
                 {
                     $anc = new Anc_Plan($cn);
@@ -239,12 +244,17 @@ $str_anc="";
                             $str_anc.=td($poste);
                             $str_anc.=td(nbm($htva)." {$side}");
                             $str_anc.=$anc_op->display_table(1, $htva, $div);
-                        } else
-                        {
-                            $row.=td('');
-                        }
+                        } 
                     }
                      $class=($e%2==0)?' class="even"':'class="odd"';
+                     /*
+                      * Display Currency in a column, if invoice not recorded in EUR
+                      */
+                     if ( $obj->det->currency_id != 0 ) {
+                         $value=$obj->db->get_value("select  oc_amount+oc_vat_amount from operation_currency where j_id=$1",[$q['j_id']]);
+                         $row.=td(nbm($value,4),' class="num"');
+                         
+                     }
                      echo tr($row,$class);
                 }
                 if ($owner->MY_TVA_USE == 'Y')
@@ -254,6 +264,13 @@ $str_anc="";
                 $row.=td(nbm($total_htva), 'class="num" style="font-style:italic;font-weight: bolder;"');
                 if ($owner->MY_TVA_USE == 'Y')
                     $row.=td("") . td("").td(nbm($total_tvac), 'class="num" style="font-style:italic;font-weight: bolder;"');
+                
+                //Display total in currency
+                if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
+                {
+                    $currency=new Acc_Currency($obj->db, $obj->det->currency_id);
+                    $row.= td(nbm($currency->sum_amount($obj->jr_id),4),' class="num" style="font-style:italic;font-weight: bolder;"');
+                }
                 echo tr($row);
                 
                 ?>
