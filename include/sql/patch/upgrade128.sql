@@ -103,7 +103,7 @@ alter table jrn add currency_rate_ref numeric(20,6) default 1;
 update jrn set currency_rate_ref=1;
 ALTER TABLE public.jrn ADD CONSTRAINT jrn_currency_fk FOREIGN KEY (currency_id) REFERENCES public.currency(id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-
+            
 
 insert into version (val,v_description) values (129,'Currency : create view , create tables ');
 commit;
