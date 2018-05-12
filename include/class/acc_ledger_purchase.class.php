@@ -596,7 +596,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     $acc_amount->set_parameter('amount_vat_rate',$oTva->get_parameter('rate'));
                     if ( strlen(trim(${'e_march'.$i.'_tva_amount'})) ==0 || ${'e_march'.$i.'_tva_amount'} == 0)
                     {
-                        // vat is in euro 
+                        // vat must computed and the amount is already converted to EUR
                         $acc_amount->compute_vat();
 
                     }
@@ -752,7 +752,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $operation_currency->oc_price_unit=${'e_march'.$i.'_price'};
                 $operation_currency->j_id=$j_id;
                 $operation_currency->insert();
-                
+                if (DEBUG ) {
+                    echo __LINE__." insert into operation currency oc_amount:{$acc_amount->amount_currency} oc_vat_amount {$acc_amount->amount_vat_currency} <br>";
+                }
             }       // end loop : save all items
             /*  save total customer */
             if ( DEBUG ) { 
