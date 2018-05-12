@@ -129,7 +129,7 @@ class Acc_Compute
         if ( $this->check && $this->order != 0 ) throw new Exception ('ORDER NOT RESPECTED');
         $this->amount_vat=bcmul($this->amount,$this->amount_vat_rate);
         $this->amount_vat=round($this->amount_vat,2);
-        $this->amount_currency=bcmul($this->amount_vat,$this->currency_rate);
+        $this->amount_vat_currency=bcmul($this->amount_vat,$this->currency_rate);
         $this->order=1;
     }
     /*!\brief Compute the no deductible part of the amount, it reduce
