@@ -7,7 +7,6 @@ $str_anc="";
     <?php
     require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
     $owner = new Noalyss_Parameter_Folder($cn);
-    var_dump($obj);
     ?>
 
     <?php if ($access == 'W') : ?>
