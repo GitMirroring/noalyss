@@ -1263,8 +1263,12 @@ class Fiche
 												from 
 												cred 
 												full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter,
-								  jrn_def_code".
-                                 " from jrnx as j1 left join jrn_def on jrn_def_id=j_jrn_def ".
+								  jrn_def_code,
+                                  jrn.currency_rate,
+                                    jrn.currency_id,
+                                    (select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso,
+                                    j_montant
+                                  from jrnx as j1 left join jrn_def on jrn_def_id=j_jrn_def ".
                                  " left join jrn on jr_grpt_id=j_grpt".
 				 " left join parm_periode on (p_id=jr_tech_per) ".
                                  " where j_qcode=$1 and ".
@@ -1453,12 +1457,14 @@ class Fiche
         echo '<tbody>';
         echo "<TR>".
         "<TH style=\"text-align:left\">"._('Date')."</TH>".
-        "<TH style=\"text-align:left\">"._('n° pièce')." </TH>".
+        "<TH style=\"text-align:left\">"._('Pièce')." </TH>".
         "<TH style=\"text-align:left\">"._('Poste')." </TH>".
-        "<TH style=\"text-align:left\">"._('Code interne')." </TH>".
+        "<TH style=\"text-align:left\">"._('Interne')." </TH>".
         "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
         "<TH style=\"text-align:left\">"._('Description')." </TH>".
         "<TH style=\"text-align:left\">"._('Type')." </TH>".
+        "<TH style=\"text-align:left\">"._('ISO')."</TH>".
+        "<TH style=\"text-align:left\">"._('Dev.')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."  </TH>".
         "<TH style=\"text-align:right\">"._('Crédit')." </TH>".
         th('Prog.','style="text-align:right"').
@@ -1494,7 +1500,7 @@ class Fiche
 		    echo "<TR class=\"highlight\">".
 		       "<TD>$old_exercice</TD>".
 		      td('').
-		      "<TD></TD>".td("").td("").
+		      "<TD></TD>".td("").td("").td().td().
 		      "<TD>Totaux</TD>".
                             td().
 		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
@@ -1522,8 +1528,16 @@ class Fiche
             "<TD>".$vw_operation."</TD>".
             td($tiers).
             "<TD>".h($op['description'])."</TD>".
-                    td($op['jr_optype']).
-            "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
+                    td($op['jr_optype']);
+            
+            if ( $op['cr_code_iso'] != 'EUR' && $op['cr_code_iso'] != "")
+            {
+             echo   td($op['cr_code_iso']).
+                    td(nbm(bcdiv($op['j_montant'],$op['currency_rate'])),'style="text-align:right;padding-left:10px;"');
+            } else{
+                echo td().td();
+            }
+            echo "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
             td($html_let, ' style="text-align:right"') .
@@ -1537,6 +1551,8 @@ class Fiche
         echo '<tfoot>';
        echo "<TR class=\"highlight\">".
                td($op['p_exercice']).
+               td().
+               td().
                td().
                td().
         td(_('Totaux')).

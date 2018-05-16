@@ -183,7 +183,11 @@ class Acc_Account_Ledger
 												from 
 												cred 
 												full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter
-                                  from jrnx as j1
+                                    ,jrn.currency_rate
+                                    ,jrn.currency_id
+                                    ,(select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso
+                                    ,j_montant
+                          from jrnx as j1
                                   join jrn_def on (jrn_def_id=j_jrn_def )
                                    join jrn on (jr_grpt_id=j_grpt)
                                    join tmp_pcmn on (j_poste=pcm_val)
@@ -390,12 +394,14 @@ class Acc_Account_Ledger
         echo '<tbody>';
         echo "<TR>".
         "<TH style=\"text-align:left\">"._('Date')." </TH>".
-        "<TH style=\"text-align:left\">"._('n° de pièce')." </TH>".
-        "<TH style=\"text-align:left\">"._('QuickCode')."</TH>".
-        "<TH style=\"text-align:left\">"._('Code interne')." </TH>".
+        "<TH style=\"text-align:left\">"._('Pièce')." </TH>".
+        "<TH style=\"text-align:left\">"._('Code')."</TH>".
+        "<TH style=\"text-align:left\">"._('Interne')." </TH>".
         "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
         "<TH style=\"text-align:left\">"._('Description')."</TH>".
         "<TH style=\"text-align:left\">"._('Type')."</TH>".
+        "<TH style=\"text-align:left\">"._('ISO')."</TH>".
+        "<TH style=\"text-align:left\">"._('Dev.')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."</TH>".
         "<TH style=\"text-align:right\">"._("Crédit")."</TH>".
         th('Prog.','style="text-align:right"').
@@ -435,11 +441,11 @@ class Acc_Account_Ledger
 			$side="&nbsp;".$this->get_amount_side($progress);
 		    echo "<TR class=\"highlight\">".
 		      "<TD>$old_exercice</TD>".
-		      "<TD></TD>".td().td().td().
+		      "<TD></TD>".td().td().td().td().td().
 		      "<TD>"._("Totaux")."</TD>".td("").
-		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
-		      "<TD style=\"text-align:right\">".nbm($sum_cred)."</TD>".
-		      td(nbm(abs($progress)).$side,'style="text-align:right"').
+		      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($sum_deb)."</TD>".
+		      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($sum_cred)."</TD>".
+		      td(nbm(abs($progress)).$side,'style="text-align:right;padding-left:10px;"').
 		      td('').
 		      "</TR>";
 		    $sum_cred=0;
@@ -462,9 +468,17 @@ class Acc_Account_Ledger
 	      "<TD>".$vw_operation."</TD>".
                 "<TD>".$tiers."</TD>".
 	      "<TD>".h($op['description'])."</TD>".
-                    td($op['jr_optype']).
-	      "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
-	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
+                    td($op['jr_optype']);
+            if ( $op['cr_code_iso'] != 'EUR' && $op['cr_code_iso'] != "")
+            {
+             echo        td($op['cr_code_iso']).
+                    td(nbm(bcdiv($op['j_montant'],$op['currency_rate'])),'style="text-align:right;padding-left:10px;"');
+            } else{
+                echo td().td();
+            }
+            echo 
+	      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($op['deb_montant'])."</TD>".
+	      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
 
 	      td($html_let, ' style="color:red;text-align:right"') .
@@ -477,7 +491,7 @@ class Acc_Account_Ledger
 		$side="&nbsp;".$this->get_amount_side($diff);
         echo "<TR class=\"highlight\">".
                 td($op['p_exercice']).
-                td().td().td().td().
+                td().td().td().td().td().td().
         "<TD >Totaux</TD>".td("").
 	  "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	  "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
