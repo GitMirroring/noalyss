@@ -257,6 +257,60 @@ if (array_key_exists($op, $path)) {
 }
 switch ($op)
 {
+    /*
+     * Get the currency rate
+     */
+    case "CurrencyRate":
+        $a_answer=array();
+        $a_answer['status']="NOK";
+        $http=new HttpInput();
+        try
+        {
+             $code=$http->get("p_code");
+             if ( $code==-1) {
+                 $a_answer['content']=1;
+             }else {
+             $a_answer['content']=$cn->get_value("select ch_value from v_currency_last_value where currency_id=$1",
+                     [$code]);
+             }
+             $a_answer['status']="OK";
+        }
+        catch (Exception $ex)
+        {
+            $a_answer['content']=$ex->getMessage();
+        }
+        $jsson=json_encode($a_answer, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
+        header('Content-Type: application/json;charset=utf-8');
+        echo $jsson;
+        return;
+
+       
+        break;
+    /*
+     * Get the currency code
+     */
+    case "CurrencyCode":
+        $a_answer=array();
+        $a_answer['status']="NOK";
+        $http=new HttpInput();
+        try
+        {
+             $code=$http->get("p_code");
+             $a_answer['content']=$cn->get_value("select cr_code_iso||' ('||cr_name||')' from v_currency_last_value where currency_id=$1",
+                     [$code]);
+             $a_answer['status']="OK";
+        }
+        catch (Exception $ex)
+        {
+            $a_answer['content']=$ex->getMessage();
+        }
+        $jsson=json_encode($a_answer, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
+        header('Content-Type: application/json;charset=utf-8');
+        echo $jsson;
+        return;
+
+       
+        break;
     case "periode_change":
         $field=$http->get("field");
         $type=$http->get("type");

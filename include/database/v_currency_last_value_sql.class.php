@@ -82,6 +82,18 @@ class V_Currency_Last_Value_SQL extends Data_SQL
 
     public function delete()
     {
+        /* check if currency is used */
+        $is_used = $this->cn->get_value("select count(*) from jrn where currency_id=$1",[$this->currency_id]);
+        
+        /* if not used , we can delete it */
+        if ( $is_used <> 0 ) {     throw new Exception (_("Devise utilisée"));  }
+        
+        // We cannot delete EUR
+        if ( $this->currency_id == -1 ) {
+            throw new Exception(_("EUR ne peut pas être effacé"));
+        }
+        $this->cn->exec_sql("delete from currency_history where currency_id=$1",[$this->currency_id]);
+        $this->cn->exec_sql("delete from currency where id=$1",[$this->currency_id]);
         
     }
 

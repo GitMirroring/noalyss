@@ -47,6 +47,8 @@ require_once NOALYSS_INCLUDE.'/class/acc_payment.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_history.class.php';
 //require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_currency.class.php';
+require_once NOALYSS_INCLUDE.'/database/operation_currency_sql.class.php';
 
 /** \file
  * @brief Class for jrn,  class acc_ledger for manipulating the ledger
@@ -1736,7 +1738,7 @@ class Acc_Ledger extends jrn_def_sql
      * @brief retrieve operation from  jrn
      * @param $p_from periode (id)
      * @param $p_to periode (id)
-     * @return an array
+     * @return Anc_Plan array
      */
     function get_operation($p_from, $p_to)
     {
@@ -1757,7 +1759,7 @@ class Acc_Ledger extends jrn_def_sql
 
     /**
      * @brief return the used VAT code with a rate > 0
-     * @return an array of tva_id,tva_label,tva_poste
+     * @return Anc_Plan array of tva_id,tva_label,tva_poste
      */
     public function existing_vat()
     {
@@ -2804,6 +2806,7 @@ class Acc_Ledger extends jrn_def_sql
         // e_march
         $http=new HttpInput();
         $nb=$http->post("nb_item", "number", 0);
+        echo HtmlInput::post_to_hidden(['p_currency_rate','p_currency_code']);
         for ($i=0; $i<$nb; $i++)
         {
             echo HtmlInput::post_to_hidden(
@@ -2877,6 +2880,22 @@ class Acc_Ledger extends jrn_def_sql
         return FALSE;
         
     }
+    /**
+     * Create a select from value for currency and add javascript to update $p_currency_rate and
+     * $p_eur_amount
+     * @param string DOMID $p_currency_code
+     * @param string DOMID $p_currency_rate
+     * @param string DOMID $p_eur_amount
+     */
+    function         CurrencyInput($p_currency_code,$p_currency_rate,$p_eur_amount)
+    {
+       $currency = new Acc_Currency($this->db);
+       $select=$currency->select_currency();
+       $select->javascript=sprintf('onchange="LedgerCurrencyUpdate(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');$(\'update_p_currency_rate\').innerHTML=$(\'p_currency_rate\').value;"',
+                Dossier::id(),$select->name,$p_currency_code,$p_currency_rate,$p_eur_amount);
+        return $select;
+    }
+
 }
 
 ?>

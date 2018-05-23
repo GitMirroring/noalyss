@@ -65,7 +65,10 @@ class Acc_Compute
                                     'amount_nd_rate'=>'amount_nd_rate',
                                     'nd_vat_rate'=>'nd_vat_rate',
                                     'amount_perso'=>'amount_perso',
-                                    'amount_perso_rate'=>'amount_perso_rate'
+                                    'amount_perso_rate'=>'amount_perso_rate',
+                                    'amount_currency'=>'amount_currency',
+                                    'amount_vat_currency'=>'amount_vat_currency',
+                                    'currency_rate'=>'currency_rate'
                                   );
 
     private  $order;			// check that the compute
@@ -82,7 +85,19 @@ class Acc_Compute
         $this->order=0;
         $this->check=true;
     }
-
+    
+    function convert_euro()
+    {
+        $local_amount=$this->amount;
+        $this->amount=bcmul($this->amount,$this->currency_rate);
+        $this->amount_currency=$local_amount;
+    }
+    function convert_euro_vat()
+    {
+        $local_amount=$this->amount_vat;
+        $this->amount_vat=bcmul($this->amount_vat,$this->currency_rate);
+        $this->amount_vat_currency=$local_amount;
+    }
     public function get_parameter($p_string)
     {
         if ( array_key_exists($p_string,self::$variable) )
@@ -109,12 +124,12 @@ class Acc_Compute
     {
         return var_export(self::$variable,true);
     }
-
     function compute_vat()
     {
         if ( $this->check && $this->order != 0 ) throw new Exception ('ORDER NOT RESPECTED');
         $this->amount_vat=bcmul($this->amount,$this->amount_vat_rate);
         $this->amount_vat=round($this->amount_vat,2);
+        $this->amount_vat_currency=bcmul($this->amount_vat,$this->currency_rate);
         $this->order=1;
     }
     /*!\brief Compute the no deductible part of the amount, it reduce
@@ -143,7 +158,7 @@ class Acc_Compute
         $this->nd_vat=bcdiv($this->nd_vat,100);
         $this->nd_vat=round($this->nd_vat,2);
     }
-
+    
     function compute_ndded_vat()
     {
         if ( $this->check && $this->order > 4 ) throw new Exception ('ORDER NOT RESPECTED');

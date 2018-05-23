@@ -46,7 +46,10 @@ class Acc_Operation
     var $amount;			/*!< amount of the operatoin */
     var $grpt;			/*!< the group id */
     var $date_paid;
-    var $jr_optype; /*!< type of operation :NOR,CLO,EXT,OPE
+    var $jr_optype; /*!< type of operation :NOR,CLO,EXT,OPE */
+    var $currency_rate;             /*< currency rate used */
+    var $currency_id;               /*< currency id */
+    var $currency_rate_ref;         /*< currency rate in the table currency*/
     /*!
      * \brief constructor set automatically the attributes user and periode
      * \param $p_cn the databse connection
@@ -60,6 +63,9 @@ class Acc_Operation
         $this->periode=$g_user->get_periode();
         $this->jr_id=0;
         $this->jr_optype="NOR";
+        $this->currency_rate=1;
+        $this->currency_rate_ref=1;
+        $this->currency_id=NULL;
     }
     /**
      *@brief retrieve the grpt_id from jrn for a jr_id
@@ -180,6 +186,9 @@ class Acc_Operation
         {
             $this->type=($this->type=='d')?'c':'d';
         }
+        if ( DEBUG ) {
+            echo "insert_jrnx = [{ $this->poste}]  {$this->amount}  rounded ".round($this->amount,2)." type {$this->type}<br>";
+        }
         $this->amount=abs($this->amount);
         $debit=($this->type=='c')?'false':'true';
         $this->desc=(isset($this->desc))?$this->desc:'';
@@ -196,7 +205,7 @@ class Acc_Operation
                                      $this->periode, //$8
                                      $this->qcode, // $9
                                      $this->desc)); //$10
-        if ( $Res===false) return $Res;
+        if ( $Res===FALSE) return FALSE;
         $this->jrnx_id=$this->db->get_current_seq('s_jrn_op');
         return $this->jrnx_id;
 
@@ -273,12 +282,14 @@ class Acc_Operation
     function insert_jrn()
     {
         $p_comment=$this->desc;
-        
+        if  (DEBUG ) {
+             echo "insert_jrn = {$this->amount}  <br>";
+        }
         $diff=$this->db->get_value("select check_balance ($1)",array($this->grpt));
         if ( $diff != 0 )
         {
 
-            printf (_("Erreur : balance incorrecte :diff = %d"),$diff);
+            printf (_("Erreur : balance incorrecte :diff = %s"),$diff);
             return false;
         }
 
@@ -290,13 +301,17 @@ class Acc_Operation
         // if amount == -1then the triggers will throw an error
         //
         $Res=$this->db->exec_sql("insert into jrn (jr_def_id,jr_montant,jr_comment,".
-                                 "jr_date,jr_ech,jr_grpt_id,jr_tech_per,jr_mt,jr_optype)   values (".
+                                 "jr_date,jr_ech,jr_grpt_id,jr_tech_per,jr_mt,jr_optype,currency_id,currency_rate,currency_rate_ref)   values (".
                                  "$1,$2,$3,".
-                                 "to_date($4,'DD.MM.YYYY'),to_date($5,'DD.MM.YYYY'),$6,$7,$8,$9)",
+                                 "to_date($4,'DD.MM.YYYY'),to_date($5,'DD.MM.YYYY'),$6,$7,$8,$9,$10,$11,$12)",
                                  array ($this->jrn, $this->amount,$p_comment,
-                                        $this->date,$echeance,$this->grpt,$this->periode,$this->mt,$this->jr_optype)
+                                        $this->date,$echeance,$this->grpt,$this->periode,$this->mt,$this->jr_optype,
+                                        $this->currency_id,$this->currency_rate,$this->currency_rate_ref)
                                 );
-        if ( $Res == false)  return false;
+        if ($Res==FALSE)
+        {
+            return FALSE;
+        }
         $this->jr_id=$this->db->get_current_seq('s_jrn');
         return $this->jr_id;
     }
@@ -752,7 +767,7 @@ class Acc_Detail extends Acc_Operation
         $sql="SELECT jr_id, jr_def_id, jr_montant, jr_comment, jr_date, jr_grpt_id,
              jr_internal, jr_tech_date, jr_tech_per, jrn_ech, jr_ech, jr_rapt,jr_ech,
              jr_valid, jr_opid, jr_c_opid, jr_pj, jr_pj_name, jr_pj_type,
-             jr_pj_number, jr_mt,jr_rapt,jr_date_paid,jr_optype
+             jr_pj_number, jr_mt,jr_rapt,jr_date_paid,jr_optype,currency_id,currency_rate,currency_rate_ref
              FROM jrn where jr_id=$1";
         $array=$this->db->get_array($sql,array($this->jr_id));
         if ( count($array) == 0 ) throw new Exception('Aucune ligne trouvée');

@@ -30,6 +30,7 @@ require_once NOALYSS_INCLUDE.'/database/currency_history_sql.class.php';
 /**
  * Manage the configuration of currency , add currency, rate, remove  and update
  * Concerned tables are v_currency_last_value _SQL , Currency_SQL , Currency_History_SQL
+ * currency_id = 0 for the default currency , -1 for a new one
  */
 class Currency_MTable extends Manage_Table_SQL
 {
@@ -110,13 +111,17 @@ class Currency_MTable extends Manage_Table_SQL
      *      - Date of the rate 
      *      - code iso is max 10 char
      *      - name is max 80
-     *      
+     * Default currency (id=0) cannot be changed
      */
     function check()
     {
         global $cn;
         $table=$this->get_table();
         $is_error=0;
+        if ( $table->currency_id == 0) {
+            $is_error++;
+            $this->set_error("cr_code_iso", _("Devise par défaut ne peut être changée"));
+        }
         // ------ cr_code_iso can not be empty
         if (trim($table->cr_code_iso)=="")
         {
@@ -146,8 +151,13 @@ class Currency_MTable extends Manage_Table_SQL
         }
         else
         {
+             if (trim($table->str_from) =="" && trim($table->ch_value)=="")
+            {
+                // we don't add any new date
+                
+            }
             // -- for update, the date and value must be valid
-            if (trim($table->str_from)!=""&&trim($table->ch_value)!="")
+            elseif (trim($table->str_from)!=""&&trim($table->ch_value)!="")
             {
                 if (isDate($table->str_from)==0)
                 {
@@ -198,7 +208,7 @@ class Currency_MTable extends Manage_Table_SQL
             $is_error++;
             $this->set_error("cr_name", _("Nom trop long max=80"));
         }
-        if ( $table->ch_value < 0 || $table->ch_value == 0) {
+        if ( $table->ch_value  != "" && ($table->ch_value < 0 || $table->ch_value == 0)) {
             $is_error++;
             $this->set_error("ch_value", _("Valeur incorrecte"));
         }
@@ -281,6 +291,18 @@ class Currency_MTable extends Manage_Table_SQL
         $this->table->currency_id=$http->request("p_id", "number");
         $this->table->ch_value=$http->request("new_rate_value");
         $this->table->str_from=$http->request("new_rate_date");
+    }
+    /**
+     * We don't display the default currency (id := -1)
+     */
+    function display_row($p_row)
+    {
+        if ($p_row['currency_id']==0)
+        {
+            return;
+        }
+
+        parent::display_row($p_row);
     }
 
 }

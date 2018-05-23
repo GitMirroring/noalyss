@@ -174,7 +174,7 @@ endif;
 <?php 
 
 if ($aRap  != null ) {
-    $amount_tva_include=(isset($tvac))?$tvac:$detail->det->jr_montant;
+    $amount_tva_include=(isset($total_tvac))?$total_tvac:$detail->det->jr_montant;
   $tableid="tb".$div;
   $total_rec=0;
   echo '<table id="'.$tableid.'">';

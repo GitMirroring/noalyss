@@ -48,7 +48,7 @@ catch (Exception $exc)
     error_log($exc->getTraceAsString());
     return;
 }
-
+ob_start();
 $compute_key=new Anc_Key($key);
 $pos=strrpos($target,"t");
 $row=substr($target,$pos+1);
@@ -70,4 +70,3 @@ echo <<<EOF
 <code>$html</code>
 </data>
 EOF;
-?>        
