@@ -805,7 +805,7 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=sql_string($value);
+                    $v=mb_strtoupper(sql_string($value));
                     
                     try
                     {
@@ -973,7 +973,7 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=sql_string($value);
+                    $v=mb_strtoupper(sql_string($value));
                     if (trim($v)!='')
                     {
                         if (strpos($v, ',')!=0)
