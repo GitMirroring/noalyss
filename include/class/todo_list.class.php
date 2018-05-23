@@ -353,8 +353,10 @@ class Todo_List
     }
     static  function to_object ($p_cn,$p_array) 
     {
-        $end=count($p_array);
+	
         $ret=array();
+	if ( $p_array == FALSE ) return $ret;
+        $end=count($p_array);
         for ($i=0;$i < $end;$i++)
         {
             $t=new Todo_List($p_cn);
