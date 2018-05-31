@@ -263,7 +263,7 @@ if (isset($_REQUEST['ac']))
     }
 
     $_REQUEST['ac']=  trim(strtoupper($_REQUEST['ac']));
-    $AC=$_REQUEST['ac'];
+    $AC=$http->request('ac');
     $user_profile=$g_user->get_profile();
     
     

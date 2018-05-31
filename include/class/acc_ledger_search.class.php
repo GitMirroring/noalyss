@@ -98,6 +98,7 @@ class Acc_Ledger_Search
     function search_form()
     {
         global $g_user;
+        $http=new HttpInput();
         $r="";
         $bledger_param=json_encode(array(
             'dossier'=>Dossier::id(),
@@ -138,49 +139,35 @@ class Acc_Ledger_Search
         $date_end_hidden=HtmlInput::hidden("{$this->div}date_end_hidden", $date_end);
         /* widget for date_start */
         $f_date_start=new IDate('date_start', '', $this->div."date_start");
-        /* all periode or only the selected one */
-        if (isset($_REQUEST['date_start']))
-        {
-            $f_date_start->value=$_REQUEST['date_start'];
-        }
-        else
-        {
-            $f_date_start->value=$date_start;
-        }
 
+        /* all periode or only the selected one */
+        $f_date_start->value=$http->request("date_start","string",$date_start);
+        
         /* widget for date_end */
         $f_date_end=new IDate('date_end', '', $this->div."date_end");
+
         /* all date or only the selected one */
-        if (isset($_REQUEST['date_end']))
-        {
-            $f_date_end->value=$_REQUEST['date_end'];
-        }
-        else
-        {
-            $f_date_end->value=$date_end;
-        }
+        $f_date_end->value=$http->request("date_end","string",$date_end);
+
         /* widget for date term */
         $f_date_paid_start=new IDate('date_paid_start', '',
                 $this->div."date_paid_start");
         $f_date_paid_end=new IDate('date_paid_end', '',
                 $this->div."date_paid_end");
 
-        $f_date_paid_start->value=(isset($_REQUEST['date_paid_start']))?$_REQUEST['date_paid_start']:'';
-        $f_date_paid_end->value=(isset($_REQUEST['date_paid_end']))?$_REQUEST['date_paid_end']:'';
+        $f_date_paid_start->value=$http->request("date_paid_start","string","");
+        $f_date_paid_end->value=$http->request("date_paid_end","string","");
 
         /* widget for desc */
         $f_descript=new IText('desc', "", $this->div."desc");
         $f_descript->size=40;
-        if (isset($_REQUEST['desc']))
-        {
-            $f_descript->value=$_REQUEST['desc'];
-        }
+        $f_descript->value=$http->request('desc',"string","");
 
         /* widget for amount */
         $f_amount_min=new INum('amount_min', '0', $this->div."amount_min");
-        $f_amount_min->value=(isset($_REQUEST['amount_min']))?abs($_REQUEST['amount_min']):0;
+        $f_amount_min->value=$http->request("amount_min","string",0);
         $f_amount_max=new INum('amount_max', '0', $this->div."amount_max");
-        $f_amount_max->value=(isset($_REQUEST['amount_max']))?abs($_REQUEST['amount_max']):0;
+        $f_amount_max->value=$http->request("amount_max","string",0);
 
         /* input quick code */
         $f_qcode=new ICard($this->div.'qcode');
@@ -196,7 +183,7 @@ class Acc_Ledger_Search
         $f_qcode->set_function('fill_data');
         $f_qcode->javascript=sprintf(' onchange="fill_data_onchange(%s);" ',
                 $f_qcode->name);
-        $f_qcode->value=(isset($_REQUEST[$this->div.'qcode']))?$_REQUEST[$this->div.'qcode']:'';
+        $f_qcode->value=$http->request($this->div.'qcode',"string","");
 
         /*        $f_txt_qcode=new IText('qcode');
           $f_txt_qcode->value=(isset($_REQUEST['qcode']))?$_REQUEST['qcode']:'';
@@ -204,7 +191,7 @@ class Acc_Ledger_Search
 
         /* input poste comptable */
         $f_accounting=new IPoste('accounting', "", $this->div."accounting");
-        $f_accounting->value=(isset($_REQUEST['accounting']))?$_REQUEST['accounting']:'';
+        $f_accounting->value=$http->request('accounting',"string","");
         /*
          * utile ??? Filtre les postes comptables en fonction du journal 
          * if ($this->id==-1)

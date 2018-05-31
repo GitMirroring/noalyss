@@ -83,14 +83,15 @@ if ( basename($_GET['op']) == 'history' )
     $to_periode='to_periode='.format_date($limit[1]->p_end);
     if (isset($_GET['ex']))
       {
-	if ( $exercice > $_GET['ex'])
+        $ex=$http->get("ex","number");
+	if ( $exercice > $ex)
 	  {
-	    $limit_periode=$periode->get_limit($_GET['ex']);
+	    $limit_periode=$periode->get_limit($ex);
 	    $from_periode='from_periode='.format_date($limit_periode[0]->p_start);
 	  }
 	else
 	  {
-	    $limit_periode=$periode->get_limit($_GET['ex']);
+	    $limit_periode=$periode->get_limit($ex);
 	    $to_periode='to_periode='.format_date($limit_periode[1]->p_end);
 
 	  }
@@ -98,13 +99,15 @@ if ( basename($_GET['op']) == 'history' )
 
     if (isset($_GET['pcm_val']) )
       {
-	$href_csv="export.php?".$href.'&poste_id='.$_GET['pcm_val'].'&ople=0&type=poste&'.$from_periode.'&'.$to_periode."&act=CSV:postedetail";
-	$href_pdf="export.php?".$href.'&poste_id='.$_GET['pcm_val'].'&ople=0&type=poste&'.$from_periode.'&'.$to_periode."&act=PDF:postedetail";;
+        $pcm_val=$http->get("pcm_val");
+	$href_csv="export.php?".$href.'&poste_id='.$pcm_val.'&ople=0&type=poste&'.$from_periode.'&'.$to_periode."&act=CSV:postedetail";
+	$href_pdf="export.php?".$href.'&poste_id='.$pcm_val.'&ople=0&type=poste&'.$from_periode.'&'.$to_periode."&act=PDF:postedetail";;
       }
     else
       {
-	$href_csv="export.php?".$href.'&f_id='.$_GET['f_id'].'&ople=0&type=poste&'.$from_periode.'&'.$to_periode."&act=CSV:fichedetail";
-	$href_pdf="export.php?".$href.'&f_id='.$_GET['f_id'].'&ople=0&type=poste&'.$from_periode.'&'.$to_periode."&act=PDF:fichedetail";
+        $f_id=$http->get("f_id","number");
+	$href_csv="export.php?".$href.'&f_id='.$f_id.'&ople=0&type=poste&'.$from_periode.'&'.$to_periode."&act=CSV:fichedetail";
+	$href_pdf="export.php?".$href.'&f_id='.$f_id.'&ople=0&type=poste&'.$from_periode.'&'.$to_periode."&act=PDF:fichedetail";
       }
     echo HtmlInput::print_window();
     echo '<a class="smallbutton"  href="'.$href_csv.'">'._("Export CSV").'</a>';
@@ -118,8 +121,9 @@ echo HtmlInput::hidden('inpopup',1);
 load_all_script();
 
 $str=$_SERVER['QUERY_STRING']."&div=popup";
+$ajax=$http->get("ajax");
 $script="
-        var obj={id:'popup',fixed:1,cssclass:'content',style:'width:auto',html:loading(),qs:'$str',js_success:'success_box',js_error:null,callback:'".$_GET['ajax']."'};
+        var obj={id:'popup',fixed:1,cssclass:'content',style:'width:auto',html:loading(),qs:'$str',js_success:'success_box',js_error:null,callback:'".$ajax."'};
         show_box(obj);
         ";
 echo create_script($script);
