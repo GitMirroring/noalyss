@@ -27,11 +27,13 @@ include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
 html_page_start($_SESSION['g_theme']);
 
 load_all_script();
 
+$http=new HttpInput();
 
 $gDossier=dossier::id();
 
@@ -95,8 +97,9 @@ if ( isset ($_GET['viewsearch']))
 
     // Navigation bar
     $step=$_SESSION['g_pagesize'];
-    $page=(isset($_GET['offset']))?$_GET['page']:1;
-    $offset=(isset($_GET['offset']))?$_GET['offset']:0;
+    $page=$http->get("page","number",1);
+    $offset=$http->get("offset","number",0);
+    
     if (count ($_GET) == 0)
         $array=null;
     else

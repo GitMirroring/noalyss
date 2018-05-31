@@ -221,7 +221,7 @@ class HtmlInput
     {
         if ($p_id=="")
             $p_id=$p_name;
-        return '<INPUT TYPE="hidden" id="'.$p_id.'" NAME="'.$p_name.'" VALUE="'.$p_value.'">';
+        return '<INPUT TYPE="hidden" id="'.strip_tags($p_id).'" NAME="'.$p_name.'" VALUE="'.strip_tags($p_value).'">';
     }
 
     static function extension()
