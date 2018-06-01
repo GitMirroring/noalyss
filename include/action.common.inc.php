@@ -186,7 +186,7 @@ if ($sub_action == "update")
 			$act->qcode_dest = $_REQUEST['qcode_dest'];
 		echo $act->Display('NEW', false, $base, $retour);
 
-		echo '<input type="hidden" name="ac" value="' . $_REQUEST['ac'] . '">';
+		echo '<input type="hidden" name="ac" value="' . $http->request('ac') . '">';
 		echo '<input type="hidden" name="sa" value="save_action_st2">';
 		echo '<input type="submit" class="button" name="save_action_st2" value="' . _('Enregistrer') . '">';
 		echo '<input type="submit" class="button" name="generate" value="' . _('Génère le document') . '"></p>';
@@ -243,9 +243,9 @@ if ($sub_action == 'delete')
 	// confirmed
 	$cn->start();
 	$act = new Follow_Up($cn);
-	$act->ag_id = $_REQUEST['ag_id'];
+	$act->ag_id =$http->request("ag_id","number") ;
 	$act->get();
-	if ($g_user->can_write_action($_REQUEST['ag_id'])==true)	$act->remove();
+	if ($g_user->can_write_action($act->ag_id)==true)	$act->remove();
 	$sub_action = "list";
 	$cn->commit();
 	Follow_Up::show_action_list($cn, $base);
@@ -314,12 +314,12 @@ if ($sub_action == "add_action")
 	echo dossier::hidden();
 
 
-	$act->ag_comment = (isset($_POST['ag_comment'])) ? Decode($_POST['ag_comment']) : "";
+	$act->ag_comment =Decode($http->post("ag_comment","string",""));
 	if (isset($_REQUEST['qcode']))
 		$act->qcode_dest = $_REQUEST['qcode'];
 	echo $act->Display('NEW', false, $base, $retour);
 
-	echo '<input type="hidden" name="ac" value="' . $_REQUEST["ac"] . '">';
+	echo '<input type="hidden" name="ac" value="' . $http->request("ac") . '">';
 	echo '<input type="hidden" name="sa" value="save_action_st2">';
 	echo '<input type="hidden" name="save_action_st2" value="save_action_st2">';
 	echo '<input type="submit" class="button" name="save_action_st2" value="' . _('Enregistrer') . '">';
