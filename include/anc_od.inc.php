@@ -55,10 +55,10 @@ echo '
 <table clsas="mtitle">
 <tr>
 <td  class="mtitle" >
-<A class="mtitle" HREF="?ac='.$_REQUEST['ac'].'&new&'.$str_dossier.'"> '._('Nouveau').' </A>
+<A class="mtitle" HREF="?ac='.$http->request("ac").'&new&'.$str_dossier.'"> '._('Nouveau').' </A>
 </td>
 <td  class="mtitle" >
-<A class="mtitle" HREF="?ac='.$_REQUEST['ac'].'&see&'.$str_dossier.'">'._('Liste opérations').' </A
+<A class="mtitle" HREF="?ac='.$http->request("ac").'&see&'.$str_dossier.'">'._('Liste opérations').' </A
 </td>
 </tr>
 </table>
@@ -87,7 +87,7 @@ if ( isset($_GET['see']))
     $hid=new IHidden();
 
     $hid->name="ac";
-    $hid->value=$_REQUEST['ac'];
+    $hid->value=$http->request("ac");
     echo $hid->input();
 
     $hid->name="see";

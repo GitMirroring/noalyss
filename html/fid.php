@@ -48,12 +48,13 @@ $g_user=new User($cn);
 $g_user->check();
 $g_user->check_dossier(dossier::id());
 set_language();
-$fLabel=(isset($_REQUEST['l']))?$_REQUEST['l']:'none';
-$fTva_id=(isset($_REQUEST['t']))?$_REQUEST['t']:'none';
-$fPrice_sale=(isset($_REQUEST['p']))?$_REQUEST['p']:'none';
-$fPrice_purchase=(isset($_REQUEST['b']))?$_REQUEST['b']:'none';
 
 $hi=new HttpInput();
+
+$fLabel=$hi->request("l","string","none");
+$fTva_id=$hi->request("t","string","none");
+$fPrice_sale=$hi->request("p","string","none");
+$fPrice_purchase=$hi->request("b","string","none");
 
 if ( isset($_SESSION['isValid']) && $_SESSION['isValid'] == 1)
 {
