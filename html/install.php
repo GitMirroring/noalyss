@@ -212,7 +212,7 @@ if (isset($_POST['save_config'])) {
   if ( $cnx !== false ) {
        echo '<h1>'._('Important').'</h1>';
        echo '<h2 class="warning">',_("Voici l'utilisateur et mot de passe de l'utilisateur administrateur de Noalyss , il a tous les droits et a accès à tout."
-               . " Connectez-vous avec ses identifiants et changer le mot de passe dans préférence (en haut à droit)"),
+               . " Connectez-vous avec ses identifiants et changer le mot de passe dans préférence (en haut à droite)"),
                "</h2>";
        echo '<p style="font-size:120%">'._('Utilisateur administrateur'),' ','<span style="color:red"> ',$cadmin,'</span>','</p>';
        echo '<p style="font-size:120%">',_('Mot de passe'),'<span style="color:red"> phpcompta </span>','</p>';
