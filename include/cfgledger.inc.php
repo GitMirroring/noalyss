@@ -61,8 +61,9 @@ if (  $action_frm == 'update')
                 $show_menu=1;
 	} catch (Exception $e)
 	{
+            record_log($e->getMessage());
             record_log($e->getTraceAsString());
-		alert($e->getMessage());
+            alert($e->getMessage());
 	}
 }
 
@@ -71,7 +72,7 @@ if (  $action_frm == 'update')
 //////////////////////////////////////////////////////////////////////////
 if ($action_frm == 'delete' )
 {
-	$ledger->id=$http->post('p_jrn',"number");;
+	$ledger->id=$http->post('p_jrn',"number");
 	$ledger->load();
 	$name=$ledger->get_name();
 	try {
@@ -86,8 +87,9 @@ if ($action_frm == 'delete' )
 	}
 	catch (Exception $e)
 	{
+            record_log($e->getMessage());
             record_log($e->getTraceAsString());
-		alert ($e->getMessage());
+            alert ($e->getMessage());
 	}
 
 }
@@ -108,8 +110,9 @@ if (isset($_POST['add']))
 	}
 	catch (Exception $e)
 	{
+            record_log($e->getMessage());
             record_log($e->getTraceAsString());
-		alert($e->getMessage());
+            alert($e->getMessage());
 	}
 }
 
@@ -134,7 +137,7 @@ switch ($sa)
 			echo '<INPUT TYPE="SUBMIT" class="smallbutton" VALUE="'._("Sauve").'" name="update" onClick="$(\'action_frm\').value=\'update\';return confirm_box(\'cfg_ledger_frm\',\'Valider ?\')">
 			<INPUT TYPE="RESET" class="smallbutton" VALUE="Reset">
 			<INPUT TYPE="submit" class="smallbutton"  name="efface" value="'._("Efface").'" onClick="$(\'action_frm\').value=\'delete\';return confirm_box(\'cfg_ledger_frm\',\'Vous effacez ce journal ?\')">';
-                        $href=http_build_query(array('ac'=>$_REQUEST['ac'],'gDossier'=>$_REQUEST['gDossier']));
+                        $href=http_build_query(array('ac'=>$http->request('ac'),'gDossier'=>$http->request('gDossier',"number")));
                         echo '<a style="display:inline" class="smallbutton" href="do.php?'.$href.'">'._('Retour').'</a>';
 			echo '</FORM>';
 			echo "</div>";
@@ -142,8 +145,9 @@ switch ($sa)
 		}
 		catch (Exception $e)
 		{
+                    record_log($e->getMessage());
                     record_log($e->getTraceAsString());
-			alert($e->getMessage());
+                    alert($e->getMessage());
 		}
 		break;
 	case 'add': /* Add a new ledger */
