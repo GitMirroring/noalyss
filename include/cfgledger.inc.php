@@ -165,11 +165,13 @@ switch ($sa)
 // Display list of ledgers
 //////////////////////////////////////////////////////////////////////////
 if ( $show_menu == 1 ) {
+    echo '<span style="float:right;margin-top:10px">';
     echo HtmlInput::anchor_action(_("Tout"), 'show_all_row(\'cfgledger_table_id\')','ledger_all_bt','smallbutton ');
     echo HtmlInput::anchor_action(_("Financier"), 'show_only_row(\'cfgledger_table_id\',\'ledger_type\',\'FIN\')','ledger_fin_bt','smallbutton ');
     echo HtmlInput::anchor_action(_("Achat"), 'show_only_row(\'cfgledger_table_id\',\'ledger_type\',\'ACH\')','ledger_ach_bt','smallbutton ');
     echo HtmlInput::anchor_action(_("Opérations Diverses"), 'show_only_row(\'cfgledger_table_id\',\'ledger_type\',\'ODS\')','ledger_ods_bt','smallbutton ');
     echo HtmlInput::anchor_action(_("Vente"), 'show_only_row(\'cfgledger_table_id\',\'ledger_type\',\'VEN\')','ledger_ven_bt','smallbutton ');
+    echo  '</span>';
     echo '<div class="content">';
     echo $ledger->listing();
     echo '</div>';
