@@ -65,7 +65,7 @@ echo $str_add_button;
 ?>
 </TR>
 <tr>
-	<td>Minimum de lignes à afficher</td>
+	<td><?php echo _("Minimum de lignes à afficher")?></td>
 <td><?php echo $min_row->input()?></td>
 </tr>
 <tr>
