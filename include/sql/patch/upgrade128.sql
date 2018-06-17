@@ -38,7 +38,9 @@ CREATE TABLE public.currency_history (
 
 ALTER TABLE public.currency ADD cr_name varchar(80) NULL;
 insert into currency (id,cr_code_iso,cr_name) values (0,'EUR','EUR');
+insert into currency (cr_code_iso,cr_name) values ('XCFA','XCFA');
 insert into currency_history (ch_value,ch_from,currency_id) values (1,to_date('01.01.2000','DD.MM.YYYY'),0);
+insert into currency_history (ch_value,ch_from,currency_id) values (655.95700,to_date('01.01.2000','DD.MM.YYYY'),1);
 
 ALTER TABLE public.currency_history ADD CONSTRAINT currency_history_check CHECK (ch_value > 0) ;
 

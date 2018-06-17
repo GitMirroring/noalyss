@@ -160,6 +160,11 @@ else
 			$export->add(_('D/C'));
 			$export->add(_('Let.'));
 			$export->add(_("Diff Let."));
+			$export->add(_("Code Devise"));
+			$export->add(_("Montant Devise"));
+			$export->add(_("Taux"));
+			$export->add(_("Taux de référence"));
+                        
 			$export->write();
                         
 			$amount_deb = 0;
@@ -176,24 +181,33 @@ else
 				if ($row['j_debit'] == 't')
 				{
 					$export->add($row['j_montant'],"number");
+					$export->add("");
 					$amount_deb=bcadd($amount_deb,$row['j_montant']);
 					$prog = bcadd($prog, $row['j_montant']);
 				}
 				else
 				{
+					$export->add("");
 					$export->add($row['j_montant'],"number");
 					$amount_cred=bcadd($amount_cred,$row['j_montant']);
 					$prog = bcsub($prog, $row['j_montant']);
 				}
 				$export->add(abs($prog),"number");
-                                $export->add($fic->get_amount_side($prog),"number");
+                                $export->add($fic->get_amount_side($prog));
 				if ($row['letter'] != -1)
 				{
 					$export->add(strtoupper(base_convert($row['letter'],10,36)));
 					$export->add($row['letter_diff'],"number");
 				}
 				else
-					$export->add("");
+                                {
+                                    $export->add("");
+                                    $export->add("");
+                                }
+                                $export->add($row['cr_code_iso']);
+                                $export->add($row['currency_amount'],"number");
+                                $export->add($row['currency_rate'],"number");
+                                $export->add($row['currency_rate_ref'],"number");
 				$export->write();
 			}
 			if ($prog < 0 )
@@ -210,7 +224,8 @@ else
                         $export->add($amount_deb,"number");
                         $export->add($amount_cred,"number");
                         $export->add(abs($prog),"number");
-                        $export->add($fic->get_amount_side($prog),"number");
+                        $export->add($fic->get_amount_side($prog));
+                   
 			$export->write();
 		}
 	}
