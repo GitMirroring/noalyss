@@ -20,6 +20,10 @@
 /**
  * @file 
  * @brief display a kind of select 
+ */
+
+/**
+ * Display a kind of select
  * @include select-box-test.php
  */
 
@@ -37,8 +41,6 @@ class Select_Box
      * @param type $p_id javascript DOMid
      * @param type $value Label to display
      * @example select-box-test.php
-     * 
-     * 
      */
     function __construct($p_id, $value)
     {
