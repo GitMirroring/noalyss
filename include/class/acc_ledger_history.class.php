@@ -125,7 +125,7 @@ abstract class Acc_Ledger_History
 
     /**
      * Build the right object 
-     * @return \Acc_Ledger_History_Generic|\Acc_Ledger_History_Sale|\Acc_Ledger_History_Financial|\Acc_Ledger_History_Purchase
+     * @return Acc_Ledger_History_Generic Acc_Ledger_History_Sale Acc_Ledger_History_Financial Acc_Ledger_History_Purchase
      */
     static function factory(Database $cn, $pa_ledger, $p_from, $p_to, $p_mode)
     {

@@ -17,6 +17,11 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+/**
+ * @file 
+ * @brief display a kind of select 
+ * @include select-box-test.php
+ */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 class Select_Box
@@ -31,8 +36,9 @@ class Select_Box
      * Default constructor
      * @param type $p_id javascript DOMid
      * @param type $value Label to display
+     * @example select-box-test.php
      * 
-     * @example test-iselect-button.php
+     * 
      */
     function __construct($p_id, $value)
     {
