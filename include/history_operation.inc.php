@@ -118,7 +118,22 @@ echo dossier::hidden();
 list($count, $html) = $Ledger->list_operation($sql, $offset, $ask_pay);
 echo $html;
 echo $bar;
-$r = HtmlInput::get_to_hidden(array('l', 'date_start', 'date_end', 'desc', 'amount_min', 'amount_max', 'qcode', 'accounting', 'unpaid', 'gDossier', 'ledger_type', 'p_action'));
+$r = HtmlInput::get_to_hidden(array('search_opnb_jrn', 
+    'search_opqcode',
+    'l', 
+    'date_start', 
+    'date_end', 
+    'date_paid_start',
+    'date_paid_end',
+    'desc', 
+    'amount_min', 
+    'amount_max', 
+    'qcode', 
+    'accounting', 
+    'unpaid', 
+    'gDossier', 
+    'ledger_type', 
+    'p_action'));
 if (isset($_GET['r_jrn']))
 {
 	foreach ($_GET['r_jrn'] as $k => $v)
@@ -145,7 +160,8 @@ echo '<form action="export.php" method="get">';
 echo $r;
 echo HtmlInput::hidden('act', 'CSV:histo');
 echo HtmlInput::submit('viewsearch', _('Export vers CSV'));
-
+$qcode=$http->get("search_opqcode","string","");
+echo HtmlInput::hidden('qcode',trim($qcode));
 echo '</form>';
 
 echo '</div>';
