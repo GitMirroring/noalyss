@@ -28,7 +28,9 @@ if (!defined('ALLOWED'))
 ?>
 <table class="result">
     <tr>
+        <th><?= _('Date') ?></th>
         <th><?= _('Banque') ?></th>
+        <th><?=_('Pièce')?></th>
         <th><?= _("Tiers") ?></th>
         <th><?= _("Libellé") ?></th>
         <th><?= _("Montant") ?></th>
@@ -42,7 +44,13 @@ if (!defined('ALLOWED'))
         ?>
         <tr <?= $class ?> >
             <td>
+                <?=$this->data[$i]['str_date']?>
+            </td>
+            <td>
                 <?= $this->data[$i]['bk_qcode']; ?>
+            </td>
+            <td>
+                <?= $this->data[$i]['jr_pj_number']; ?>
             </td>
             <td>
                 <?php

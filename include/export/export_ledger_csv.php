@@ -106,7 +106,7 @@ if ( $get_option=="E")
 {
     if ($jrn_type=='FIN')
     {
-        $get_option='L';
+        $get_option='A';
     }
     elseif ($jrn_type=='ODS'||$Jrn->id==0)
     {
