@@ -32,6 +32,18 @@ printf (_(" La version de votre installation est %s "),$version_noalyss);
 
 $core=new Package_Repository();
 $xml=$core->getContent();
+/*
+ * If xml is null , it means it was not possible to get the file , could be
+ * a network problem or a misconfiguration
+ */
+if ( $xml == NULL) {
+    echo '<h2 class="error">';
+    printf (_("Désolé , impossible de se connecter au serveur %s"),
+            NOALYSS_PACKAGE_REPOSITORY);
+    echo '</h2>';
+    return;
+    
+}
 printf(h1(_("Version %s du %s")),$xml->core->version,$xml->core->date);
 echo '<p>';
 echo $xml->core->description;

@@ -133,8 +133,8 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                     qcode,
                     jr_id,
                     jr_pj_number,
-                    jr_date,
-                    jr_date_paid,
+                    to_char(jr_date,'DD.MM.YYYY') as str_date,
+                    to_char(jr_date_paid,'DD.MM.YYYY') as str_date_paid,
                     jr_internal,
                     qs_client,
                     jrn.jr_comment,
@@ -150,7 +150,8 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
             where
                 jr_def_id in ({$ledger_list})
                 and {$periode}
-                {$cond_limite}";
+                {$cond_limite}
+                     order by jr_date, substring(jr_pj_number,'[0-9]+$')::numeric ";
         $this->data=$this->db->get_array($sql);
         
     }
@@ -264,8 +265,8 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
         
         foreach ($this->data as $line)
         {
-            $export->add($line['jr_date']);
-            $export->add($line['jr_date_paid']);
+            $export->add($line['str_date']);
+            $export->add($line['str_date_paid']);
             $export->add($line['jr_id']);
             $export->add($line['jr_pj_number']);
             $export->add($line['name']." ".

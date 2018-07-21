@@ -83,8 +83,14 @@ class Print_Ledger {
                             return $pdf;
                         }
                     }
-                    else
+                    elseif ($jrn_type=='FIN')
+                    {
+                        $pdf=new Print_Ledger_Financial($cn, $p_ledger);
+                        return $pdf;
+                    } else 
+                    {
                         return new Print_Ledger_Detail($cn, $p_ledger);
+                    }
                     break;
 
                 case 'L':
@@ -141,7 +147,7 @@ class Print_Ledger {
                     $jrn_type=$p_ledger->get_type();
                     if ($jrn_type=='FIN')
                     {
-                        $pdf=new Print_Ledger_Financial($cn, $p_ledger);
+                        $pdf=new Print_Ledger_Detail($cn, $p_ledger);
                         return $pdf;
                         ;
                     }
