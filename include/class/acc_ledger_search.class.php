@@ -493,6 +493,7 @@ class Acc_Ledger_Search
                     " or upper(jr_internal)  like upper('%".$desc."%')
                           or jr_grpt_id in (select j_grpt from jrnx where j_text ~* '".$desc."')
                           or jr_id in (select jr_id from jrn_info where ji_value is not null and ji_value ~* '$desc')
+                          or jr_id in (select jr_id from jrn_note where upper(n_text) ~* '$desc' )
                           )";
             $and=" and ";
         }
