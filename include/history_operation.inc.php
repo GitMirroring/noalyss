@@ -42,6 +42,7 @@ switch($ledger_type)
 {
         case 'ACH':
                 $ask_pay=1;
+                $p_array['ledger_type']='ACH';
                 break;
         case 'ODS':
                 $ask_pay=0;
@@ -53,9 +54,11 @@ switch($ledger_type)
                 break;
         case 'VEN':
                 $ask_pay=1;
+                $p_array['ledger_type']='VEN';
                 break;
         case 'FIN':
                 $ask_pay=0;
+                $p_array['ledger_type']='FIN';
                 break;
 
 }
@@ -95,7 +98,9 @@ if (!isset($p_array['date_start']))
 }
 else
 {
-	$msg='<h2 class="info2">'._("Période ").$_GET['date_start']._(" au ").$_GET['date_end'].'</h2>';
+    $date_start=$http->get("date_start","string","");
+    $date_end=$http->get("date_end","string","");
+    $msg='<h2 class="info2">'.sprintf(_("Période %s au %s "),$date_start,$date_end) .'</h2>';
 
 }
 /*  compute the sql stmt */

@@ -660,24 +660,30 @@ class Acc_Ledger_Search
         $Max=Database::num_row($Res);
 
         if ($Max==0)
+        {
             return array(0, _("Aucun enregistrement trouvé"));
+        }
 
         $r.='<table class="result">';
 
 
         $r.="<tr >";
-        $r.="<th>"._("n° interne")."</th>";
-        if ($this->type=='ALL')
-        {
-            $r.=th('Journal');
-        }
         $r.='<th>'.$table->get_header(0).'</th>';
         if ($p_paid!=0)
+        {
             $r.='<th>'.$table->get_header(1).'</td>';
+        }
         if ($p_paid!=0)
+        {
             $r.='<th>'.$table->get_header(2).'</th>';
+        }
         $r.='<th>'.$table->get_header(3).'</th>';
-        $r.='<th>'.$table->get_header(4).'</th>';
+        $r.=th('Journal');
+        if ( $this->type != "ODS") 
+        {
+            $r.='<th>'.$table->get_header(4).'</th>';
+        }
+        $r.="<th>"._("n° interne")."</th>";
         $r.='<th>'.$table->get_header(6).'</th>';
         $r.=th('Notes', ' style="width:15%"');
         $r.='<th>'.$table->get_header(5).'</th>';
@@ -699,24 +705,18 @@ class Acc_Ledger_Search
             $row=Database::fetch_array($Res, $i);
 
             if ($i%2==0)
+            {
                 $tr='<TR class="odd">';
+            }
             else
+            {
                 $tr='<TR class="even">';
+            }
             $r.=$tr;
             //internal code
             // button  modify
-            $r.="<TD>";
-            // If url contains
-            //
-
-            $href=basename($_SERVER['PHP_SELF']);
-
-
-            $r.=sprintf('<A class="detail" style="text-decoration:underline" HREF="javascript:modifyOperation(\'%s\',\'%s\')" >%s </A>',
-                    $row['jr_id'], $gDossier, $row['jr_internal']);
-            $r.="</TD>";
-            if ($this->type=='ALL')
-                $r.=td($row['jrn_def_name']);
+           
+          
             // date
             $r.="<TD>";
             $r.=$row['str_jr_date'];
@@ -736,10 +736,24 @@ class Acc_Ledger_Search
             $r.="<TD>";
             $r.=$row['jr_pj_number'];
             $r.="</TD>";
+            
+            // Ledger
+            $r.=td($row['jrn_def_name']);
 
-            // Tiers
-            $other=($row['quick_code']!='')?HtmlInput::card_detail($row['quick_code'],h($row['name'].' '.$row['first_name'])):'';
-            $r.=td($other);
+            
+            if ($this->type != 'ODS')
+            {
+                // Tiers
+                $other=($row['quick_code']!='')?HtmlInput::card_detail($row['quick_code'],h($row['name'].' '.$row['first_name'])):'';
+                $r.=td($other);
+            }
+            
+            // Internal number
+            $r.="<TD>";
+            $r.=sprintf('<A class="detail" style="text-decoration:underline" HREF="javascript:modifyOperation(\'%s\',\'%s\')" >%s </A>',
+                    $row['jr_id'], $gDossier, $row['jr_internal']);
+            $r.="</TD>";
+            
             // comment
             $r.="<TD>";
             $tmp_jr_comment=h($row['jr_comment']);
@@ -757,7 +771,9 @@ class Acc_Ledger_Search
                 $positive=$this->cn->get_value("select qf_amount from quant_fin where jr_id=$1",
                         array($row['jr_id']));
                 if ($this->cn->count()!=0)
+                {
                     $positive=($positive<0)?1:0;
+                }
             }
             $r.="<TD align=\"right\">";
             $t_amount=$row['jr_montant'];
@@ -788,9 +804,13 @@ class Acc_Ledger_Search
                 $h->name="set_jr_id".$row['jr_id'];
                 $r.='<TD>'.$w->input().$h->input().'</TD>';
                 if ($row['jr_rapt']=='paid')
+                {
                     $amount_paid=bcadd($amount_paid, $t_amount);
+                }
                 else
+                {
                     $amount_unpaid=bcadd($amount_unpaid, $t_amount);
+                }
             }
 
             // Rapprochement
