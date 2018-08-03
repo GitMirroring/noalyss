@@ -270,9 +270,11 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     if ($p_theme != "")
     {
 	$Res = $cn->exec_sql("select the_filestyle from theme
-                           where the_name='" . $p_theme . "'");
+                           where the_name=$1" ,[$p_theme]);
 	if (Database::num_row($Res) == 0)
-	    $style = "style-classic.css";
+        {
+	    $style = "style-classic7.css";
+        }
 	else
 	{
 	    $s = Database::fetch_array($Res, 0);
@@ -281,7 +283,7 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     }
     else
     {
-	$style = "style-classic.css";
+	$style = "style-classic7.css";
     } // end if
 	$title="NOALYSS";
 

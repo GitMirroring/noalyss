@@ -47,6 +47,7 @@ require_once NOALYSS_INCLUDE.'/class/acc_payment.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_history.class.php';
 //require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
 
 /** \file
  * @brief Class for jrn,  class acc_ledger for manipulating the ledger

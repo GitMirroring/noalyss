@@ -42,9 +42,17 @@ class Package_Repository
      */
     function __construct()
     {
-        $content=file_get_contents(NOALYSS_PACKAGE_REPOSITORY."/web.xml");
+        // Check we can resolve the name
+        $host=parse_url(NOALYSS_PACKAGE_REPOSITORY,PHP_URL_HOST);
+        
+        if (gethostbyname($host) != $host)
+        {
+            $content=file_get_contents(NOALYSS_PACKAGE_REPOSITORY."/web.xml");
+            $this->content=simplexml_load_string($content);
+        } else {
+            $this->content=NULL;
+        }
 
-        $this->content=simplexml_load_string($content);
     }
 
     public function getContent()
@@ -72,6 +80,9 @@ class Package_Repository
     function display_noalyss_info()
     {
         global $g_user;
+        if ( $this->content == NULL ) {
+            throw new Exception(_("Problème réseau"),10);
+        }
         switch ($g_user->lang)
         {
             case 'fr_FR.utf8':
@@ -94,6 +105,9 @@ class Package_Repository
      */
     function find_plugin($p_code)
     {
+         if ( $this->content == NULL ) {
+            throw new Exception(_("Problème réseau"),10);
+        }
         $a_plugin=$this->content->xpath('//plugins/plugin');
         $nb_plugin=count($a_plugin);
         for ($i=0; $i<$nb_plugin; $i++)
@@ -114,6 +128,9 @@ class Package_Repository
      */
     function find_template($p_code)
     {
+        if ( $this->content == NULL ) {
+            throw new Exception(_("Problème réseau"),10);
+        }
         $a_template=$this->content->xpath('//database_template/dbtemplate');
         $nb_template=count($a_template);
         for ($i=0; $i<$nb_template; $i++)
@@ -128,6 +145,9 @@ class Package_Repository
     
     function make_object($p_type, $p_id)
     {
+        if ( $this->content == NULL ) {
+            throw new Exception(_("Problème réseau"),10);
+        }
         switch ($p_type)
         {
             case "core":

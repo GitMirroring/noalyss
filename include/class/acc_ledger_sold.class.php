@@ -185,7 +185,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $a_poste = explode(',', $tva_rate->tva_poste);
 
                 if (
-                        $this->db->get_value('select count(*) from tmp_pcmn where pcm_val=$1', array($a_poste[0])) == 0 ||
+                       
                         $this->db->get_value('select count(*) from tmp_pcmn where pcm_val=$1', array($a_poste[1])) == 0)
                     throw new Exception(_(" La TVA " . $tva_rate->tva_label . " utilise des postes comptables inexistants"));
             }

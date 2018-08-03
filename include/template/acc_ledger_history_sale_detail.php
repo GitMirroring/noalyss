@@ -77,8 +77,8 @@ foreach ($this->data as $line) {
     echo "<TD>" . h($line['jr_pj_number']) . "</TD>";
     
     // Date
-    echo "<TD>" . smaller_date($line['jr_date']) . "</TD>";
-    echo "<TD>" . smaller_date($line['jr_date_paid']) . "</TD>";
+    echo "<TD>" . smaller_date($line['str_date']) . "</TD>";
+    echo "<TD>" . smaller_date($line['str_date_paid']) . "</TD>";
     
     // Internal with detail
     echo "<TD>" . HtmlInput::detail_op($line['jr_id'], $line['jr_internal']) . "</TD>";

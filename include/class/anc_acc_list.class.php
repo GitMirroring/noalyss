@@ -319,6 +319,13 @@ order by
     $r.= '</form>';
     return $r;
   }
+  /**
+   * Display the result of accountancy and analytic , 
+   * Axis / Card 
+   * Card / Axis
+   * Accounting / Axis
+   * Axis / Accounting
+   */
   function display_html()
   {
     bcscale(2);
@@ -377,7 +384,7 @@ order by
 	echo '</tr>';
 
 	echo '</table>';
-	echo '<h2>'._("Résultat global").nbm($tot_glob).'</h2>';
+	echo '<h2>'._("Résultat global")." ".nbm($tot_glob).'</h2>';
       }
     //---------------------------------------------------------------------------
     // Accountancy - Analytic
@@ -430,7 +437,7 @@ order by
 	echo '</tr>';
 
 	echo '</table>';
-	echo td(nbm($tot_card),' class="num"');
+        echo '<h2>'._("Résultat global")." ".nbm($tot_glob).'</h2>';
       }
     //---------------------------------------------------------------------------
     // Acc after card
@@ -482,7 +489,7 @@ order by
 	echo '</tr>';
 
 	echo '</table>';
-	echo td(nbm($tot_card),' class="num"');
+	echo '<h2>'._("Résultat global")." ".nbm($tot_glob).'</h2>';
       }
     //---------------------------------------------------------------------------
     // Analytic - Accountancy
@@ -536,7 +543,7 @@ order by
 	echo '</tr>';
 
 	echo '</table>';
-	echo '<h2> Résultat global '.nbm($tot_glob).'</h2>';
+        echo '<h2>'._("Résultat global")." ".nbm($tot_glob).'</h2>';
       }
 
   }

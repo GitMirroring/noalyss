@@ -33,7 +33,9 @@ require_once NOALYSS_INCLUDE.'/class/contact.class.php';
 global $http;
 
 $str_dossier=Dossier::get();
-$root='?ac='.$_REQUEST['ac']."&sb=detail&f_id=".$_REQUEST["f_id"].'&'.$str_dossier;
+
+$root="?".http_build_query(["ac"=>$http->request("ac"),"sb"=>"detail","f_id"=>$http->request("f_id","number")]);
+$root.="&".$str_dossier;
 
 $ss_action=$http->request("sc", "string", "dc");
 

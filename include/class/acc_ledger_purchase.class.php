@@ -189,8 +189,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 		$a_poste=explode(',',$tva_rate->tva_poste);
 
 		if (
-		    $this->db->get_value('select count(*) from tmp_pcmn where pcm_val=$1',array($a_poste[0])) == 0 ||
-		    $this->db->get_value('select count(*) from tmp_pcmn where pcm_val=$1',array($a_poste[1])) == 0 )
+		    $this->db->get_value('select count(*) from tmp_pcmn where pcm_val=$1',array($a_poste[0])) == 0 )
 		  throw new Exception(_(" La TVA ".$tva_rate->tva_label." utilise des postes comptables inexistants"));
 
             }
@@ -756,10 +755,14 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     if ( $value > 0 ) $tot_debit=bcadd($tot_debit,abs($value));
                     $acc_operation->insert_jrnx();
                     // if TVA is on both side, we deduce it immediately
-                    if ( $oTva->get_parameter("both_side")==1)
+                    
+                    if ( $oTva->get_parameter("both_side")==1 )
                     {
                         $poste_vat=$oTva->get_side('c');
-                        
+                        if ( $poste_vat == '#')
+                        {
+                            $poste_vat=$oTva->get_side('d');
+                        }
                         $acc_operation=new Acc_Operation($this->db);
                         $acc_operation->date=$e_date;
                         $acc_operation->poste=$poste_vat;
@@ -769,7 +772,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                         $acc_operation->type='c';
                         $acc_operation->periode=$tperiode;
                         $acc_operation->insert_jrnx();
-			if ( $value < 0 ) $tot_debit=bcadd($tot_debit,abs($value));
+                        if ( $value < 0 ) $tot_debit=bcadd($tot_debit,abs($value));
                     }
 
                 }

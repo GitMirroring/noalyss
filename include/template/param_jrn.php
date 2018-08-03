@@ -58,14 +58,14 @@ echo $str_add_button;
 ?>
 </td>
 <td class="notice">
-<?php echo _("Obligatoire pour les journaux FIN : donner ici la fiche de la banque utilisée")?>
+<?php echo _("Obligatoire pour les journaux FIN : donner ici la fiche du compte en banque utilisée")?>
 </td>
 <?php
 }
 ?>
 </TR>
 <tr>
-	<td>Minimum de lignes à afficher</td>
+	<td><?php echo _("Minimum de lignes à afficher")?></td>
 <td><?php echo $min_row->input()?></td>
 </tr>
 <tr>

@@ -32,7 +32,7 @@ require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
 require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
-$div=$_REQUEST['div'];
+$div=$http->request('div');
 mb_internal_encoding("UTF-8");
 $http=new HttpInput();
 /**
@@ -86,7 +86,7 @@ if ( isset($_GET['f_id']))
 	    $dossier=dossier::id();
 	    if ( $div != 'popup')
 	      {
-		$obj="{op:'history',div:'$div',f_id:'".$_GET['f_id']."',gDossier:'$dossier',select:this,exercice:{$year}}";
+		$obj="{op:'history',div:'$div',f_id:'".$f_id."',gDossier:'$dossier',select:this,exercice:{$year}}";
 		$is=$exercice->select('p_exercice',$default,' onchange="update_history_card('.$obj.');"');
 		$old=_("Autre exercice")." ".$is->input();
 	      }
@@ -137,7 +137,8 @@ if ( isset($_GET['f_id']))
 ///////////////////////////////////////////////////////////////////////////
 if ( isset($_REQUEST['pcm_val']))
   {
-    $poste=new Acc_Account_Ledger($cn,$_REQUEST['pcm_val']);
+    $pcm_val=$http->request("pcm_val");
+    $poste=new Acc_Account_Ledger($cn,$pcm_val);
     $poste->load();
     $year=$http->get("exercice","string","");
     if ( $year == "") $year=$g_user->get_exercice();
@@ -172,7 +173,7 @@ if ( isset($_REQUEST['pcm_val']))
 	    $dossier=dossier::id();
 	    if ( $div != 'popup')
 	      {
-		$obj="{op:'history',div:'$div',pcm_val:'".$_GET['pcm_val']."',gDossier:'$dossier',select:this,exercice:{$year}}";
+		$obj="{op:'history',div:'$div',pcm_val:'".$pcm_val."',gDossier:'$dossier',select:this,exercice:{$year}}";
 		$is=$exercice->select('p_exercice',$default,' onchange="update_history_account('.$obj.');"');
 		$old=_("Autre exercice")." ".$is->input();
 	      }

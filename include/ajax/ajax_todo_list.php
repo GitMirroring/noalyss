@@ -56,7 +56,8 @@ if (isset($_REQUEST['show']))
 {
     $cn=Dossier::connect();
     $todo=new Todo_list($cn);
-    $todo->set_parameter('id',$_REQUEST['id']);
+    $id=$http->request("id");
+    $todo->set_parameter('id',$id);
     $todo->load();
     $content=$todo->display();
     header('Content-type: text/xml; charset=UTF-8');
@@ -79,9 +80,10 @@ if (isset($_REQUEST['show']))
 ////////////////////////////////////////////////////////////////////////////////
 if (isset($_REQUEST['del']))
 {
+     $id=$http->request("id");
     $cn=Dossier::connect();
     $todo=new Todo_list($cn);
-    $todo->set_parameter('id',$_REQUEST['id']);
+    $todo->set_parameter('id',$id);
     $todo->delete();
     exit();
 }

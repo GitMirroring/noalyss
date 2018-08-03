@@ -50,10 +50,10 @@ if ($g_user->Admin() == 0 && $g_user->is_local_admin() == 0  && $g_user->get_sta
          where
          uj_login=$1
          and uj_priv in ('R','W')
-		 order by jrn_def_name
          and ( jrn_enable=1 
                 or 
-                exists (select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$2))
+                exists (select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$2)))
+		 order by jrn_def_name
          ";
 	$ret = $cn->make_array($sql,0,array($g_user->login,$exercice));
 }

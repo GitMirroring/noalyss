@@ -83,8 +83,14 @@ class Print_Ledger {
                             return $pdf;
                         }
                     }
-                    else
+                    elseif ($jrn_type=='FIN')
+                    {
+                        $pdf=new Print_Ledger_Financial($cn, $p_ledger);
+                        return $pdf;
+                    } else 
+                    {
                         return new Print_Ledger_Detail($cn, $p_ledger);
+                    }
                     break;
 
                 case 'L':
@@ -141,7 +147,7 @@ class Print_Ledger {
                     $jrn_type=$p_ledger->get_type();
                     if ($jrn_type=='FIN')
                     {
-                        $pdf=new Print_Ledger_Financial($cn, $p_ledger);
+                        $pdf=new Print_Ledger_Detail($cn, $p_ledger);
                         return $pdf;
                         ;
                     }
@@ -199,10 +205,10 @@ class Print_Ledger {
                  where
                  uj_login=$1
                  and uj_priv in ('R','W')
-                         order by jrn_def_name
                  and ( jrn_enable=1 
                         or 
-                        exists (select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$2))
+                        exists (select 1 from jrn where  jr_def_id=jrn_def_id and jr_tech_per in (select p_id from parm_periode where p_exercice=$2)))
+                         order by jrn_def_name
                  ";
             $a_jrn=$cn->get_array($sql, array($g_user->login, $exercice));
         }
@@ -211,7 +217,7 @@ class Print_Ledger {
             $a_jrn=$cn->get_array("select jrn_def_id
                                  from jrn_def join jrn_type on jrn_def_type=jrn_type_id
                                  where
-                                 jrn_enable=1 or exists(select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$1))
+                                 jrn_enable=1 or exists(select 1 from jrn where  jr_def_id=jrn_def_id and  jr_tech_per in (select p_id from parm_periode where p_exercice=$1))
                                                          order by jrn_def_name
                                                          ", [$exercice]);
         }

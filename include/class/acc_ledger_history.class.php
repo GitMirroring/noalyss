@@ -125,7 +125,12 @@ abstract class Acc_Ledger_History
 
     /**
      * Build the right object 
-     * @return \Acc_Ledger_History_Generic|\Acc_Ledger_History_Sale|\Acc_Ledger_History_Financial|\Acc_Ledger_History_Purchase
+     * @param Database $cn database conx
+     * @param array $pa_ledger ledger of array
+     * @param integer $p_from periode id
+     * @param integer $p_to periode id
+     * @param char $p_mode L (list operation) E (extended detail) A (accouting writing) D (Detailled VAT)
+     * @return Acc_Ledger_History_Generic Acc_Ledger_History_Sale Acc_Ledger_History_Financial Acc_Ledger_History_Purchase
      */
     static function factory(Database $cn, $pa_ledger, $p_from, $p_to, $p_mode)
     {

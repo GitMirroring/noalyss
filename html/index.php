@@ -167,7 +167,11 @@ if (file_exists("install.php")&& ! DEBUG ) {
         /*
         * This file shouldn't exist
         */
-       echo _("Le fichier ".__DIR__."/install.php est encore présent, vous devez l'effacer avant d'utiliser NOALYSS");
+        echo "<h1>";
+       printf ( _("Le fichier %s/install.php est encore présent, après l'avoir exécuté pour vous mettre à jour, vous devez l'effacer."),__DIR__);
+       echo "<br>";
+       echo       _("Tant que ce n'est pas vous fait vous ne pouvez pas utiliser NOALYSS");
+       echo "</h1>";
        return;
     }
 }
@@ -183,7 +187,7 @@ if (defined("RECOVER") && isset ($_REQUEST['recover']) )
 // reconnect , create a variable to reconnect properly in login.php
 $goto="";
 if (isset ($_REQUEST['reconnect']) && isset ($_REQUEST['backurl'])) {
-    $goto='<input type="hidden" value="'.$_REQUEST['backurl'].'" name="backurl">';
+    $goto='<input type="hidden" value="'.strip_tags($_REQUEST['backurl']).'" name="backurl">';
 }
 echo '
 <span style="background-color:#879ed4;color:white;padding-left:4px;padding-right:4px;">
