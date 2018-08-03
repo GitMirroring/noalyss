@@ -19,6 +19,11 @@
 */
 
 // Copyright Author Dany De Bontridder dany@alchimerys.be
+  /**
+   *@file
+   *@brief display the navigator
+   */
+
 if ( ! defined ('ALLOWED')) die('Appel direct ne sont pas permis');
 echo HtmlInput::title_box(_("Navigateur"), "navi_div");
 $sql="
@@ -45,12 +50,11 @@ $a_menu=$cn->get_array($sql,array($_SESSION['g_user']));
         <tr>
             <th class='sorttable_sorted'>
                 Code AD 
-                <?php echo HtmlInput::infobulle(34); ?>
-                <span id="sorttable_sortfwdind">&nbsp;&blacktriangledown;</span>
+                <?php echo Icon_Action::infobulle(34); ?>
             </th>
             <th>
                 <?php echo _("Chemin");?>
-                <?php echo HtmlInput::infobulle(35); ?>
+                <?php echo Icon_Action::infobulle(35); ?>
             </th>
             <th>
                 <?php echo _("Description complète");?>

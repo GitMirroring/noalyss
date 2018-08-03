@@ -26,13 +26,25 @@
  */
 // Copyright (2014) Author Dany De Bontridder danydb@aevalys.eu
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-$amount=HtmlInput::default_value_get("amount", 0);
-$table_id=HtmlInput::default_value_get("t", "");
-$ledger=HtmlInput::default_value_get('led',0);
 
-if ($table_id == "" || isNumber($amount) == 0 || isNumber($ledger) == 0) die ('Invalid Parameter');
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
 
-require_once 'class/class_anc_key.php';
+try
+{
+    $amount=$http->get("amount", "number");
+    $table_id=$http->get("t");
+    $ledger=$http->get('led',"number");
+
+}
+catch (Exception $exc)
+{
+    error_log($exc->getTraceAsString());
+    return;
+}
+
+
+require_once 'class/anc_key.class.php';
 
 ob_start();
 echo HtmlInput::title_box(_("Choix d'une clef"), 'div_anc_key_choice');

@@ -23,7 +23,7 @@
  * It is only a quick and dirty testing. You should use a tool as PHPUNIT for the unit testing
  * 
  *  - first do not forget to create the authorized_debug file in the html folder
- *  - secund the test must adapted to this page : if you do a post (or get) from a test, you won't get any result
+ *  - secund the test must be adapted to this page : if you do a post (or get) from a test, you won't get any result
  * if the $_REQUEST[test_select] is not set, so set it . 
  */
 
@@ -31,11 +31,18 @@
 
 include_once("../include/constant.php");
 include_once("lib/ac_common.php");
-require_once('lib/class_database.php');
-require_once ('class/class_dossier.php');
-require_once('lib/class_html_input.php');
+require_once('lib/database.class.php');
+require_once ('class/dossier.class.php');
+require_once('lib/html_input.class.php');
+require_once('lib/icon_action.class.php');
 require_once ('lib/function_javascript.php');
-require_once 'class/class_user.php';
+require_once 'class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+
+global $http;
+
+$http=new HttpInput();
+
 load_all_script();
 $gDossier=HtmlInput::default_value_get('gDossier', -1);
 if ($gDossier==-1)
@@ -47,7 +54,7 @@ $gDossierLogInput=$gDossier;
 global $cn, $g_user, $g_succeed, $g_failed;
 $cn=Dossier::connect();
 
-$g_parameter=new Own($cn);
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 $g_user=new User($cn);
 
 if (!file_exists('authorized_debug'))
@@ -57,7 +64,7 @@ if (!file_exists('authorized_debug'))
     exit();
 }
 define('ALLOWED', 1);
-html_page_start();
+html_page_start("Classic 692");
 
 /*
  * Loading of all scenario

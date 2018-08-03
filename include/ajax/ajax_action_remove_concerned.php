@@ -20,10 +20,25 @@
 // Copyright 2014 Author Dany De Bontridder danydb@aevalys.eu
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-$ag_id=HtmlInput::default_value_get("ag_id", "0");
-$f_id=HtmlInput::default_value_get("f_id", "0");
-if ( $ag_id == 0 || $f_id == 0 ) throw new Exception ("Invalid values", 0);
-require_once 'class/class_follow_up.php';
+/**
+ *@file
+ *@brief remove concerned operation , call from follow up
+ */
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+try
+{
+    $ag_id=$http->get("ag_id", "number");
+    $f_id=$http->get("f_id", "number");
+}
+catch (Exception $exc)
+{
+    echo $exc->getMessage();
+    error_log($exc->getTraceAsString());
+    return;
+}
+
+require_once 'class/follow_up.class.php';
 $follow=new Follow_Up($cn,$ag_id);
 
 ob_start();

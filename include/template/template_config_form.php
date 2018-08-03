@@ -31,25 +31,25 @@
 <table>
 	<tr>
 		<TD> <?php echo _('Répertoire temporaire');?> </TD>
-		<TD> <?php echo $ictmp->input(); echo HtmlInput::infobulle(200);?></TD>
+		<TD> <?php echo $ictmp->input(); echo Icon_Action::infobulle(200);?></TD>
 
 	</tr>
 	<TR>
 
 		<TD><?php echo _('Changement de langue');?></TD>
-		<TD> <?php echo $iclocale->input();echo HtmlInput::infobulle(201)?></TD>
+		<TD> <?php echo $iclocale->input();echo Icon_Action::infobulle(201)?></TD>
 	</TR>
 	<TR>
 		<TD><?php echo _('Chemin complet vers les executable de Postgresql');?> </TD>
-		<TD><?php echo $icpath->input();echo HtmlInput::infobulle(202)?></TD>
+		<TD><?php echo $icpath->input();echo Icon_Action::infobulle(202)?></TD>
 	</TR>
 	<TR>
 		<TD><?php echo _('Utilisateur Postgresql');?> </TD>
-		<TD><?php echo $icuser->input();echo HtmlInput::infobulle(203)?></TD>
+		<TD><?php echo $icuser->input();echo Icon_Action::infobulle(203)?></TD>
 	</TR>
 	<TR>
 		<TD><?php echo _('Mot de passe de l\'utilisateur Postgresql');?> </TD>
-		<TD><?php echo $icpasswd->input();echo HtmlInput::infobulle(204)?></TD>
+		<TD><?php echo $icpasswd->input();echo Icon_Action::infobulle(204)?></TD>
 </TR>
 <tr>
     <td>
@@ -61,14 +61,14 @@
 </tr>
 <TR>
 	<TD><?php echo _('Adresse Serveur Postgresql');?> </TD>
-	<TD><?php echo $ichost->input();echo HtmlInput::infobulle(208)?></TD>
+	<TD><?php echo $ichost->input();echo Icon_Action::infobulle(208)?></TD>
 </TR>
 <TR>
 	<TD><?php echo _('Port de Postgresql');?> </TD>
-	<TD><?php echo $icport->input();echo HtmlInput::infobulle(205)?></TD>
+	<TD><?php echo $icport->input();echo Icon_Action::infobulle(205)?></TD>
 </TR>
 <tr>
-	<td><?php echo _('Mode Serveur mutualisé'). HtmlInput::infobulle(207) ?></td>
+	<td><?php echo _('Mode Serveur mutualisé'). Icon_Action::infobulle(207) ?></td>
 	<td><?php echo $smulti->input() ?></td>
 </tr>
 <tr id="div_db" style="visibility:hidden">
@@ -76,7 +76,7 @@
 		<?php echo _('Nom base de donnée');?>
 	</td>
 	<td>
-		<?php echo $icdbname->input();echo HtmlInput::infobulle(206) ?>
+		<?php echo $icdbname->input();echo Icon_Action::infobulle(206) ?>
 	</td>
 </tr>
 </table>

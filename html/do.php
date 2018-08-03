@@ -24,13 +24,17 @@ define('ALLOWED',1);
  * \brief Main file
  */
 require_once '../include/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/constant.security.php';
-require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
+require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
+$http=new HttpInput();
+
 mb_internal_encoding("UTF-8");
 
 // if gDossier is not set redirect to form to choose a folder
@@ -50,9 +54,9 @@ if ( ! isset ($_SESSION['g_theme']))
   }
 $cn = Dossier::connect();
 
-global $g_user, $cn,$g_parameter;
+global $g_user, $cn,$g_parameter,$http;
 $g_user = new User($cn);
-
+$http=new HttpInput();
 /*
  * check that the database is not empty
  */
@@ -70,8 +74,18 @@ if ( ! $cn->exist_table('version')) {
  */
 if ( isset ($_POST['set_preference'])) {
     //// Save value
-    extract($_POST);
-
+    $style_user=$http->post("style_user","string","Classique");
+    $lang=$http->post("lang","string","fr_FR.utf8");
+    $p_size=$http->post("p_size","number",50);
+    $pass_1=$http->post("pass_1","string","");
+    $pass_2=$http->post("pass_2","string","");
+    $p_email=$http->post("p_email","string","");
+    $minirap=$http->post("minirap","number",0);
+    $period=$http->post("period","number");
+    $csv_fieldsep=$http->post("csv_fieldsep","number");
+    $csv_decimal=$http->post("csv_decimal","number");
+    $csv_encoding=$http->post("csv_encoding");
+    
     if (strlen(trim($pass_1)) != 0 && strlen(trim($pass_2)) != 0)
     {
 	$g_user->save_password($pass_1,$pass_2);
@@ -81,13 +95,17 @@ if ( isset ($_POST['set_preference'])) {
     $g_user->save_global_preference('THEME', $style_user);
     $g_user->save_global_preference('LANG', $lang);
     $g_user->save_global_preference('PAGESIZE', $p_size);
+    $g_user->save_global_preference('csv_fieldsep', $csv_fieldsep);
+    $g_user->save_global_preference('csv_decimal', $csv_decimal);
+    $g_user->save_global_preference('csv_encoding', $csv_encoding);
+    
     $g_user->set_mini_report($minirap);
     $_SESSION['g_theme']=$style_user;
     $_SESSION['g_pagesize']=$p_size;
     $_SESSION['g_lang']=$lang;
     $g_user->save_email($p_email);
 }
-$style_user=HtmlInput::default_value_post("style_user",$_SESSION['g_theme']);
+$style_user=$http->post("style_user","string",$_SESSION['g_theme']);
 
 html_page_start($style_user);
 if ( DEBUG ) {
@@ -101,6 +119,20 @@ if ( DEBUG ) {
     <?php        
     var_dump($_GET);
     ?>
+    <h2>$_REQUEST</h2>
+    <?php        
+    var_dump($_REQUEST);
+    ?>
+    <h2>$_SESSION</h2>
+    <?php        
+    var_dump($_SESSION);
+    ?>
+    
+    <h2>$GLOBALS</h2>
+    <?php        
+    var_dump($GLOBALS);
+    ?>
+    
 </div>
 <script>
     function show_debug_request() {
@@ -118,7 +150,7 @@ if ( DEBUG ) {
 
 <?php
 }
-$g_parameter=new Own($cn);
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 
 $g_user->Check();
 $g_user->check_dossier(Dossier::id());
@@ -158,15 +190,19 @@ if ($cn->exist_table('version') == false)
 }
 if (DBVERSION < dossier::get_version($cn))
 {
-    echo '<h2 class="error" style="font-size:12px">' . _("Attention: la version de base de donnée est supérieure à la version du programme, vous devriez mettre à jour") . '</h2>';
+    $a = _("cliquez ici pour mettre à jour ");
+    $base =NOALYSS_URL."/admin-noalyss.php?action=upgrade&sb=application";
+
+    echo '<h2 class="error" style="font-size:12px">' .
+            _("Attention: la version de base de donnée est supérieure à la version du programme, vous devriez mettre à jour") ,
+        '<a hreF="' . $base . '">' . $a . '</a></h2>',
+            '</h2>';
 }
 if (DBVERSION > dossier::get_version($cn))
 {
     echo '<h2 class="error" style="font-size:12px">' . _("Votre base de données n'est pas à jour") . '   ';
     $a = _("cliquez ici pour appliquer le patch");
-    $base = dirname($_SERVER['SCRIPT_NAME']);
-    if ($base == '/') { $base = ''; }
-    $base .= '/admin-noalyss.php';
+    $base =NOALYSS_URL.'/admin-noalyss.php?action=upgrade&sb=database';
     echo '<a hreF="' . $base . '">' . $a . '</a></h2>';
 }
 
@@ -184,7 +220,20 @@ if ($oPeriode->load() == -1)
 
 $module_selected = -1;
 
-
+?>
+<script>
+/**
+ * All the onload must be here otherwise the other will overwritten
+ * @returns {undefined}
+ */
+window.onload=function ()
+{
+    create_anchor_up();
+    init_scroll();
+    sorttable.init
+}
+</script>
+<?php
 
 /*
  * if an action is requested
@@ -255,7 +304,7 @@ if (isset($_REQUEST['ac']))
         }
         else {
             alert($e->getMessage());
-            error_log($e->getTraceAsString());
+            record_log($e->getTraceAsString());
         }
     }
 }
@@ -285,7 +334,7 @@ else
     catch (Exception $exc)
     {
         echo $exc->getMessage();
-        error_log($exc->getTraceAsString());
+        record_log($exc->getTraceAsString());
     }
     
 }

@@ -25,16 +25,16 @@
    */
 if ( ! defined('ALLOWED')) die (_('Accès interdit'));
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_periode.php';
-require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_account.php';
-require_once NOALYSS_INCLUDE.'/class/class_exercice.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/periode.class.php';
+require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
+require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 $div=$_REQUEST['div'];
 mb_internal_encoding("UTF-8");
-
+$http=new HttpInput();
 /**
  *if $_SESSION['g_user'] is not set : echo a warning
  */
@@ -50,9 +50,13 @@ if ( isset($_GET['f_id']))
   {
     $exercice=new Exercice($cn);
     $old='';
-    $fiche=new Fiche($cn,$_GET['f_id']);
-    $year=$g_user->get_exercice();
-    if ( $year == 0 )
+    $f_id=$http->get('f_id',"number");
+    $fiche=new Fiche($cn,$f_id);
+    
+    $year=$http->get("exercice","string","");
+    if ( $year == "") $year=$g_user->get_exercice();
+
+    if ( $year == "" )
       {
         $html=_("erreur aucune période par défaut, allez dans préférence pour en choisir une");
       }
@@ -64,8 +68,9 @@ if ( isset($_GET['f_id']))
         $array['to_periode']=$limit_periode[1]->last_day();
 	if (isset($_GET['ex']))
 	  {
-	    $limit_periode=$per->get_limit($_GET['ex']);
-	    if ( $_GET['ex'] < $year)
+            $ex=$http->get('ex','number');
+	    $limit_periode=$per->get_limit($ex);
+	    if ( $ex < $year)
 	      $array['from_periode']=$limit_periode[0]->first_day();
 	    else
 	      $array['to_periode']=$limit_periode[1]->last_day();
@@ -77,11 +82,11 @@ if ( isset($_GET['f_id']))
 	 */
 	if ($exercice->count() > 1 )
 	  {
-	    $default=(isset($_GET['ex']))?$_GET['ex']:$year;
+	    $default=$http->get("ex","number",$year);
 	    $dossier=dossier::id();
 	    if ( $div != 'popup')
 	      {
-		$obj="{op:'history',div:'$div',f_id:'".$_GET['f_id']."',gDossier:'$dossier',select:this}";
+		$obj="{op:'history',div:'$div',f_id:'".$_GET['f_id']."',gDossier:'$dossier',select:this,exercice:{$year}}";
 		$is=$exercice->select('p_exercice',$default,' onchange="update_history_card('.$obj.');"');
 		$old=_("Autre exercice")." ".$is->input();
 	      }
@@ -94,6 +99,7 @@ if ( isset($_GET['f_id']))
 		$old.=HtmlInput::hidden('act',$_GET['act']);
 		$old.=HtmlInput::hidden('f_id',$_GET['f_id']);
 		$old.=HtmlInput::hidden('ajax',$_GET['ajax']);
+		$old.=HtmlInput::hidden('exercice',$year);
 		$old.=dossier::hidden();
                 $old.=HtmlInput::hidden('op','history');
 		$old.='</form>';
@@ -133,7 +139,8 @@ if ( isset($_REQUEST['pcm_val']))
   {
     $poste=new Acc_Account_Ledger($cn,$_REQUEST['pcm_val']);
     $poste->load();
-    $year=$g_user->get_exercice();
+    $year=$http->get("exercice","string","");
+    if ( $year == "") $year=$g_user->get_exercice();
     if ( $year == 0 )
       {
         $html=_("erreur aucune période par défaut, allez dans préférence pour en choisir une");
@@ -148,8 +155,9 @@ if ( isset($_REQUEST['pcm_val']))
         $array['to_periode']=$limit_periode[1]->last_day();
 	if (isset($_GET['ex']))
 	  {
-	    $limit_periode=$per->get_limit($_GET['ex']);
-	    if ( $_GET['ex'] < $year)
+            $ex=$http->get("ex","number");
+	    $limit_periode=$per->get_limit($ex);
+	    if ( $ex < $year)
 	      $array['from_periode']=$limit_periode[0]->first_day();
 	    else
 	      $array['to_periode']=$limit_periode[1]->last_day();
@@ -160,11 +168,11 @@ if ( isset($_REQUEST['pcm_val']))
 	 */
 	if ($exercice->count() > 1 )
 	  {
-	    $default=(isset($_GET['ex']))?$_GET['ex']:$year;
+            $default=$http->get("ex","number",$year);
 	    $dossier=dossier::id();
 	    if ( $div != 'popup')
 	      {
-		$obj="{op:'history',div:'$div',pcm_val:'".$_GET['pcm_val']."',gDossier:'$dossier',select:this}";
+		$obj="{op:'history',div:'$div',pcm_val:'".$_GET['pcm_val']."',gDossier:'$dossier',select:this,exercice:{$year}}";
 		$is=$exercice->select('p_exercice',$default,' onchange="update_history_account('.$obj.');"');
 		$old=_("Autre exercice")." ".$is->input();
 	      }

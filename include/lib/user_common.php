@@ -23,11 +23,11 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/lib/class_icheckbox.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
-require_once NOALYSS_INCLUDE.'/class/class_document.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_operation.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
+require_once NOALYSS_INCLUDE.'/class/document.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 /*! \file
  * \brief Common functions
  */
@@ -180,9 +180,8 @@ function navigation_bar($p_offset,$p_line,$p_size=0,$p_page=1,$p_javascript="")
 function CleanUrl()
 {
     // Compute the url
-    $url="";
-    $and="";
-    $get=$_GET;
+    $url=http_build_query($_GET);
+   /* $get=$_GET;
     if ( isset ($get) )
     {
         foreach ($get as $name=>$value )
@@ -190,7 +189,11 @@ function CleanUrl()
             // we clean the parameter offset, step, page and size
             if (  ! in_array($name,array('offset','step','page','size','s','o','r_jrn')))
             {
-                $url.=$and.$name."=".$value;
+                if (is_array($name)) {
+                    
+                } else {
+                    $url.=$and.$name."=".$value;
+                }
                 $and="&";
             }// if
         }//foreach
@@ -206,7 +209,7 @@ function CleanUrl()
                 }
             }
         }
-    }// if
+    }// if*/
     return $url;
 }
 function redirect($p_string,$p_time=0)
@@ -214,7 +217,7 @@ function redirect($p_string,$p_time=0)
     if (strpos( $p_string,'?') == 0 ) {
         $p_string = $p_string.'?v='.microtime(true);
     }
-    echo '<HTML><head><META HTTP-EQUIV="REFRESH" content="'.$p_time.';url='.$p_string.'"></head><body> Connecting... </body></html>';
+    echo '<HTML><head><META HTTP-EQUIV="REFRESH" content="'.$p_time.'; url='.$p_string.'"></head><body> Connecting... </body></html>';
 }
 /*!\brief remove the useless space, change comma by period and try to return
  * a number
@@ -244,5 +247,19 @@ function check_parameter($p_array,$p_needed)
                 throw new Exception (_('Paramètre manquant')." ".$needed[$e]);
             }
         }
+}
+/**
+ * sanitize the filename remove character which could be a problem, 
+ * @param string $p_filename the filename to clean
+ * @return  string Filename without bad char.
+ */
+function clean_filename($p_filename)
+{
+    $filename=$p_filename;
+    foreach (array('/','*','<','>',';',',','\\',':','(',')',' ','[',']') as $i) {
+            $filename= str_replace($i, "-",$filename);
+    }
+    return $filename;
+
 }
 ?>

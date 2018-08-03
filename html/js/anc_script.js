@@ -338,9 +338,12 @@ function anc_remove_operation(p_dossier, p_oa_group)
                         p_oa_group, "gDossier":
                         p_dossier, "op": "remove_anc"};
             var queryString = encodeJSON(obj);
-            g(p_oa_group).style.display = 'none';
             var e = new Ajax.Request("ajax_misc.php",
-                    {method: 'get', parameters: queryString});
+                    {method: 'get', parameters: queryString,onSuccess:function req() {
+                            $("tr"+p_oa_group).remove();
+                    }
+                    
+             });
              
          } else
          {
@@ -367,6 +370,7 @@ function anc_add_row(tableid)
         var newCell = oRow.insertCell(e);
         var tt = rowToCopy.cells[e].innerHTML;
         var new_tt = tt.replace(/pop0/g, "pop" + nb.value);
+        var new_tt = tt.replace(/qcode0/g, "qcode" + nb.value);
         new_tt = new_tt.replace(/pamount0/g, "pamount" + nb.value);
         new_tt = new_tt.replace(/pdeb0/g, "pdeb" + nb.value);
         newCell.innerHTML = new_tt;
@@ -552,4 +556,18 @@ function anc_key_compute_table()
     }
     $('total_key').innerHTML=Math.round(tot*100)/100;
 
+}
+
+function anc_detail_op(p_oa_group,gDossier) {
+    waiting_box();
+    // create div
+    new Ajax.Request ("ajax_misc.php",{
+                        method:"get",
+                        parameters:{"gDossier":gDossier,"op":"anc_detail_op","oa_group":p_oa_group},
+                        onSuccess:function (req) {
+                            add_div({"id":"anc_detail_op_div","cssclass":"inner_box","style":"position:fixed;top:5%"});
+                            $('anc_detail_op_div').update(req.responseText);
+                            remove_waiting_box();
+                        }
+                    });
 }

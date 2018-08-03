@@ -22,16 +22,16 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
-include_once NOALYSS_INCLUDE.'/class/class_fiche.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
+include_once NOALYSS_INCLUDE.'/class/fiche.class.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
 $gDossier=dossier::id();
 
 $cn=Dossier::connect();
 
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 
 $export=new Noalyss_Csv(_('fiche'));
 $export->send_header();

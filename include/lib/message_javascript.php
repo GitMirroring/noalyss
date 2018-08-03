@@ -69,7 +69,9 @@ content[37]="<?php echo _("Les dates sont en format DD.MM.YYYY")?>";
 content[38]="<?php echo _("La numérotation est propre à chaque journal. Laissez à 0 pour ne pas changer le numéro")?>";
 content[39]="<?php echo _("Le préfixe des pièces doit être différent pour chaque journal, on peut aussi utiliser l'année")?>";
 content[40]="<?php echo _("Laissez à 0 pour ne pas changer le numéro")?>";
-content[41]="<?php echo _("Mettez le pourcentage à zéro pour effacer la ligne")?>";
+content[41]="<?php echo _("Mettez le pourcentage <br> à zéro pour effacer la ligne")?>";
 content[42]="<?php echo _("Selectionnez le plan qui vous intéresse avant de cliquer sur Recherche")?>";
-
+content[43]="<?php echo _("Autoliquidation : Utilisé en même temps au crédit et au débit")?>";
+content[44]="<?php echo _("Ne donner pas ce poste comptable si ce code n'est pas utilisé à l'achat")?>";
+content[45]="<?php echo _("Ne donner pas ce poste comptable si ce code n'est pas utilisé  à la vente")?>";
 </script>

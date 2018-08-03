@@ -25,7 +25,7 @@ include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
  * \brief Login page
  */
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 // Verif if User and Pass match DB
     // if no, then redirect to the login page
 $rep=new Database();
@@ -54,7 +54,7 @@ if (  isset ($_POST["p_user"] ) )
 		echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url=admin-noalyss.php\">";
 		exit();
 	}
-    include_once NOALYSS_INCLUDE."/class/class_user.php";
+    require_once NOALYSS_INCLUDE."/class/user.class.php";
     $User=new User($rep);
     $User->Check(false,'LOGIN');
     if ($g_captcha == true)
@@ -93,7 +93,7 @@ else
 
       }
 
-    include_once ("class/class_user.php");
+    include_once ("class/user.class.php");
 
     $User=new User($rep);
     $User->Check();

@@ -25,9 +25,9 @@
  * @brief common utilities for a lot of procedure, classe
  */
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_periode.php';
-require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/periode.class.php';
+require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 /**
@@ -312,11 +312,12 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
 	$p_script2 = '<script src="' . $p_script2 . '?version='.SVNINFO.'" type="text/javascript"></script>';
     $style=trim($style);
     echo "<HEAD>";
+    echo '<meta charset="utf-8">';
+    echo "<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">";
     if ( $is_msie == 1 )echo '      <meta http-equiv="x-ua-compatible" content="IE=edge"/>';
     echo "
     <TITLE>$title</TITLE>
 	<link rel=\"icon\" type=\"image/ico\" href=\"favicon.ico\" />
-    <META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
     <LINK REL=\"stylesheet\" type=\"text/css\" href=\"".$style."?version=".SVNINFO."\" media=\"screen\"/>
     <link rel=\"stylesheet\" type=\"text/css\" href=\"./style-print.css?version=".SVNINFO."\" media=\"print\"/>" .
@@ -325,7 +326,7 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     echo '<script language="javascript" src="js/calendar.js"></script>
     <script type="text/javascript" src="js/lang/calendar-en.js"></script>
     <script language="javascript" src="js/calendar-setup.js"></script>
-    <LINK REL="stylesheet" type="text/css" href="./calendar-blue.css" media="screen">
+    <LINK REL="stylesheet" type="text/css" href="calendar-blue.css" media="screen">
     ';
     // language
     if (isset($_SESSION['g_lang']))
@@ -561,10 +562,18 @@ function echo_warning($p_string)
 
 function getPeriodeName($p_cn, $p_id, $pos='p_start')
 {
-    if ($pos != 'p_start' and
-	    $pos != 'p_end')
-	echo_error('lib/ac_common.php' . "-" . __LINE__ . '  UNDEFINED PERIODE');
-    $ret = $p_cn->get_value("select to_char($pos,'Mon YYYY') as t from parm_periode where p_id=$p_id");
+    if ($pos != 'p_start' &&  $pos != 'p_end')
+    {
+        echo_error('lib/ac_common.php' . "-" . __LINE__ . '  UNDEFINED PERIODE');
+        throw new Exception(_("paramètre invalide"));
+    }
+    if ( isNumber($p_id) == 0 )
+	{
+	throw new Exception("Paramètre invalide");
+	return;
+	}
+    $ret = $p_cn->get_value("select to_char($pos,'Mon YYYY') as t from parm_periode where p_id=$1", 
+           array( $p_id));
     return $ret;
 }
 
@@ -582,7 +591,7 @@ function getPeriodeName($p_cn, $p_id, $pos='p_start')
 function getPeriodeFromMonth($p_cn, $p_date)
 {
     $R = $p_cn->get_value("select p_id from parm_periode where
-                        to_char(p_start,'DD.MM.YYYY') = '01.$p_date'");
+                        to_char(p_start,'DD.MM.YYYY') = $1", array('01.'.$p_date));
     if ($R == "")
 	return -1;
     return $R;
@@ -620,6 +629,9 @@ function sql_filter_per($p_cn, $p_from, $p_to, $p_form='p_id', $p_field='jr_tech
 	echo_error(__FILE__, __LINE__, 'Mauvais parametres ');
 	exit(-1);
     }
+    $p_from=  sql_string($p_from);
+    $p_to=  sql_string($p_to);
+    $p_field=  sql_string($p_field);
     if ($p_form == 'p_id')
     {
 	// retrieve the date
@@ -750,7 +762,8 @@ function smaller_date($p_date)
  * @brief format the date, when taken from the database the format
  * is MM-DD-YYYY
  * @param $p_date format
- * @param
+ * @exception 1 if invalid format 
+ * DOMEntity@param
  * @return date in the format DD.MM.YYYY
  */
 function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.YYYY')
@@ -776,6 +789,9 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
         case 'DD.MM.YYYY':
             $str_date = $date[2] . '.' . $date[1] . '.' . $date[0];
             break;
+        case 'DD-MM-YYYY':
+            $str_date = $date[2] . '-' . $date[1] . '-' . $date[0];
+            break;
         case 'YYYY-MM-DD':
             $str_date = $date[0] . '-' . $date[1] . '-' . $date[2];
             break;
@@ -785,7 +801,15 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
 		 case 'YYYY/MM/DD':
             $str_date = $date[0] . '/' . $date[1] . '/' . $date[2];
             break;
-
+        case "DD.MM.YY":
+            $str_date = $date[2] . '.' . $date[1] . '.' . substr($date[0],2,2);
+            break;
+        case "DD-MM-YY":
+            $str_date = $date[2] . '-' . $date[1] . '-' . substr($date[0],2,2);
+            break;
+        default:
+            throw new Exception(_("Format Invalide"),1);
+            
 		}
     return $str_date;
 }
@@ -807,7 +831,7 @@ function ajax_disconnected($div)
 	$script.='a.style.top=posY-20+offsetY;a.style.left=posX+offsetX;';
 	$script = create_script($script);
 	$html = $script;
-	$html.=HtmlInput::anchor_close($div);
+	$html.=Icon_Action::close($div);
 	$html.='<div>';
 	$html.=h2(_('Données non disponibles'), 'class="title" style="width:auto"');
 	$html.=h2(_('Veuillez vous reconnecter soit dans une autre fenêtre soit '
@@ -823,6 +847,7 @@ function ajax_disconnected($div)
                 _('Cliquez ici pour vous reconnecter dans une autre page').
                 '</a>';
         $html.=$reload->input();
+        $html.=HtmlInput::button_close($div);
         $html.='</p>';
 	$html = escape_xml($html);
 	header('Content-type: text/xml; charset=UTF-8');
@@ -1151,7 +1176,7 @@ function display_dashboard_operation($p_array,$p_title,$p_div)
 	?>
 <div id="<?php echo $p_div;?>" class="inner_box" style="display:none;position:fixed;top:250px;left:12%;width: 75%;min-height:50%;overflow:auto;">
 	<?php
-	echo HtmlInput::title_box($p_title, $p_div, "hide");
+	echo HtmlInput::title_box($p_title, $p_div, "hide",'','y');
 	?>
 	<?php if (count($p_array)>0) :?>
 	<table class="result">
@@ -1223,9 +1248,9 @@ function get_array_column($p_array,$key)
  */
 function factory_Ledger(Database &$p_cn, $ledger_id)
 {
-    include_once 'class/class_acc_ledger_sold.php';
-    include_once 'class/class_acc_ledger_purchase.php';
-    include_once 'class/class_acc_ledger_fin.php';
+    include_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
+    include_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
+    include_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
     
     $ledger=new Acc_Ledger($p_cn, $ledger_id);
     $type=$ledger->get_type();
@@ -1262,5 +1287,16 @@ function is_msie()
     else
         $is_msie=0;
     return $is_msie;
+}
+/**
+ * Record an error message into the log file of the server.
+ * Record also the GET and POST data
+ * @param string $p_message
+ */
+function record_log($p_message)
+{
+    error_log("noalyss".$p_message,0);
+    error_log("noalyss GET [".var_export($_GET, true)."]",0);
+    error_log( "noalyss POST [".var_export($_POST, true)."]",0);
 }
 ?>

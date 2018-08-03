@@ -29,12 +29,12 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 require_once NOALYSS_INCLUDE.'/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_pre_operation.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 
 // Check if the needed field does exist
-extract ($_GET);
+extract ($_GET, EXTR_SKIP);
 foreach (array('l','t','d','gDossier') as $a)
 {
     if ( ! isset (${$a}) )
@@ -52,9 +52,11 @@ $op->set('direct',$d);
 $url=http_build_query(array('action'=>'use_opd','p_jrn_predef'=>$l,'ac'=>$_GET['ac'],'gDossier'=>dossier::id()));
 $html="";
 
-$html.=HtmlInput::title_box(_("Modèle d'opérations"), 'modele_op_div', 'hide');
+$html.=HtmlInput::title_box(_("Modèle d'opérations"), 'modele_op_div', 'hide',"","n");
 $html.=$op->show_button('do.php?'.$url);
-
+$html.=' <p style="text-align: center">'.
+        HtmlInput::button_hide('modele_op_div').
+        '</p>';
 $html=escape_xml($html);
 header('Content-type: text/xml; charset=UTF-8');
 echo <<<EOF

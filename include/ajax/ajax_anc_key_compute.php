@@ -18,33 +18,40 @@
 */
 
 // Copyright 2014 Author Dany De Bontridder danydb@aevalys.eu
-// @brief Compute the amount. This file compute the amount and distribute it
-// following the given distribution key given in parameter.
-// Parameters are :
-//   - gDossier
-//   - t the element HTML to use as target
-//   - amount the amount to distribute
-//   - key the Distribution key to use
-// 
+
+
+/**
+ * @file
+ * @brief Compute the amount. This file compute the amount and distribute it
+ * following the given distribution key given in parameter.
+ * Parameters are :
+   - gDossier
+   - t the element HTML to use as target
+   - amount the amount to distribute
+   - key the Distribution key to use
+*/ 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/class_anc_key.php';
-ob_start();
-/////
-$key=HtmlInput::default_value_get('key',0);
-$amount=HtmlInput::default_value_get('amount',0);
-$target=HtmlInput::default_value_get('t','');
+require_once NOALYSS_INCLUDE.'/class/anc_key.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
 
-if (        isNumber($key)== 0
-        ||  isNumber($amount) ==0
-        || $target==''
-    ) 
+try
 {
-    die ('Invalid parameter');
+    $key=$http->get('key',"number");
+    $amount=$http->get('amount',"number");
+    $target=$http->get('t');
+}
+catch (Exception $exc)
+{
+    echo $exc->getMessage();
+    error_log($exc->getTraceAsString());
+    return;
 }
 
 $compute_key=new Anc_Key($key);
-$row=str_replace('t', "", $target);
+$pos=strrpos($target,"t");
+$row=substr($target,$pos+1);
 
 $compute_key->fill_table($target,$amount);
 echo <<<EOF

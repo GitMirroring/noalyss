@@ -22,32 +22,47 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_report.php';
-require_once NOALYSS_INCLUDE.'/lib/class_impress.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
+require_once NOALYSS_INCLUDE.'/lib/impress.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
 
 $gDossier=dossier::id();
 
 /* Admin. Dossier */
 $cn=Dossier::connect();
 
-$Form=new Acc_Report($cn,$_GET['form_id']);
+$form_id=$http->get('form_id','number');
+$type_periode=$http->get('type_periode',"number");
+
+
+
+$Form=new Acc_Report($cn,$form_id);
 $Form->get_name();
 
 $export=new Noalyss_Csv('report');
 $export->send_header();
 // Step ?
 //--
-$step=HtmlInput::default_value_get("p_step", 0);
+$p_step=$http->get('p_step',"string",0);
 if (  $step == 0 )
 {
-    if ( $_GET ['type_periode'] == 0 )
-        $array=$Form->get_row( $_GET['from_periode'],$_GET['to_periode'], $_GET['type_periode']);
-    else
-        $array=$Form->get_row( $_GET['from_date'],$_GET['to_date'], $_GET['type_periode']);
+    if ( $type_periode == 0 )
+    {
+        $from_periode=$http->get('from_periode',"number");
+        $to_periode=$http->get('to_periode',"number");
+        $array=$Form->get_row( $from_periode,$to_periode, $type_periode);
+    }
+    else 
+    {
+        $from_date=$http->get('from_date',"date");
+        $to_date=$http->get('to_date',"date");
+        $array=$Form->get_row( $from_date,$to_date, $type_periode);
+    }
 
 
     if ( count($Form->row ) == 0 )
@@ -69,11 +84,15 @@ elseif ($step == 1)
 {
     // Gather all the data
     //---
-    for ($e=$_GET['from_periode'];$e<=$_GET['to_periode'];$e+=$_GET['p_step'])
+    $from_periode=$http->get('from_periode',"number");
+    $to_periode=$http->get('to_periode',"number");
+    $p_step=$http->get('p_step',"number");
+    
+    for ($e=$from_periode;$e<=$to_periode;$e+=$p_step)
     {
         $periode=getPeriodeName($cn,$e);
         if ( $periode == null ) continue;
-        $array[]=$Form->get_row($e,$e,$_GET['type_periode']);
+        $array[]=$Form->get_row($e,$e,$type_periode);
         $periode_name[]=$periode;
     }
     // Display column heading

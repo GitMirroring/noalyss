@@ -26,7 +26,7 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/database/class_stock_sql.php';
+require_once NOALYSS_INCLUDE.'/database/stock_sql.class.php';
 $cn=Dossier::connect();
 $st=new Stock_Sql($cn,$_GET['r_id']);
 ?>

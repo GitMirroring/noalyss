@@ -23,18 +23,22 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-
+// unlock session
+session_write_close();
 /**
  * export all the selected documents for Ana Accountancy in PDF
  */
-require_once NOALYSS_INCLUDE.'/class/class_document_export.php';
-
-$ck = HtmlInput::default_value_get('ck', 0);
+require_once NOALYSS_INCLUDE.'/class/document_export.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
+$http=new HttpInput();
+$ck = $http->get('ck',"string", 0);
 if ($ck == 0)
 {
-    echo "Aucune sélection";
+    echo _("Aucune sélection");
     exit();
 }
 $anc=new Document_Export();
-
-$anc->export_all($ck);
+$task_id=$http->request("task_id");
+$progress=new Progress_Bar($task_id);
+$anc->export_all($ck,$progress);

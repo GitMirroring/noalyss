@@ -22,13 +22,13 @@
 
 /**
  * @file
- * @brief
+ * @brief return the number of rows for a ledger
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-extract($_GET);
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+extract($_GET, EXTR_SKIP);
 /* check the parameters */
 foreach ( array('j','ctl') as $a )
 {

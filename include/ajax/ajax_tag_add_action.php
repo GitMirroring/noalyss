@@ -18,6 +18,12 @@
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
+/**
+ *@file
+ *@brief remove tag , call from follow up
+ *@see Follow_Up
+ *@see Tag
+ */
 
 $fl=new Follow_Up($cn);
 $fl->ag_id=$_REQUEST['ag_id'];

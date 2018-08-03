@@ -20,39 +20,47 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
 /*! \file
- * \brief create GL comptes as PDF
+ * \brief create GL comptes as CSV.
+ * Argument $_GET
+ * @code
+ * Array
+(
+    [gDossier] => 10104
+    [bt_csv] => Export CSV
+    [act] => CSV:glcompte
+    [type] => poste
+    [p_action] => impress
+    [from_periode] => 01.01.2016
+    [to_periode] => 31.12.2016
+    [from_poste] => 
+    [to_poste] => 
+)
+ * @encode
  */
-if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-include_once NOALYSS_INCLUDE.'/class/class_acc_account_ledger.php';
-include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-include_once NOALYSS_INCLUDE.'/lib/class_impress.php';
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
-$gDossier=dossier::id();
 
+if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
+include_once NOALYSS_INCLUDE.'/class/acc_account_ledger.class.php';
+include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+include_once NOALYSS_INCLUDE.'/lib/impress.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+$from_periode = $http->get("from_periode","date");
+$to_periode = $http->get("to_periode","date");
+$from_poste = $http->get("from_poste");
+$to_poste = $http->get("to_poste");
+
+$gDossier=dossier::id();
 /* Security */
 $cn=Dossier::connect();
 
 $export=new Noalyss_Csv(_('grandlivre'));
-extract($_GET);
+$poste_id=$http->get('poste_id',"string","");
 $export->send_header();
-if ( isset($poste_id) && strlen(trim($poste_id)) != 0 && isNumber($poste_id) )
-{
-    if ( isset ($poste_fille) )
-    {
-        $parent=$poste_id;
-        $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like '$parent%' order by pcm_val::text");
-    }
-    elseif ( $cn->count_sql('select * from tmp_pcmn where pcm_val='.sql_string($poste_id)) != 0 )
-    {
-        $a_poste=array('pcm_val' => $poste_id);
-    }
-}
-else
-{
   $cond_poste='';
   $sql="select pcm_val from tmp_pcmn ";
     if ($from_poste != '')
@@ -77,8 +85,6 @@ else
 
     $a_poste=$cn->get_array($sql);
 
-}
-
 if ( count($a_poste) == 0 )
 {
     echo _('Aucun résultat');
@@ -87,7 +93,7 @@ if ( count($a_poste) == 0 )
 }
 
 // Header
-$header = array( _("Date"), _("Référence"), _("Libellé"), _("Pièce"),_("Lettrage"), _("Débit"), _("Crédit"), _("Solde") );
+$header = array( _("Date"), _("Référence"), _("Libellé"), _("Pièce"),_("Lettrage"),_("Type"), _("Débit"), _("Crédit"), _("Solde") );
 
 $l=(isset($_GET['letter']))?2:0;
 $s=(isset($_REQUEST['solded']))?1:0;
@@ -189,6 +195,7 @@ foreach ($a_poste as $poste)
         $export->add($detail['jr_pj_number']);
         if ($detail['letter'] == -1) { $export->add(""); } 
         else { $export->add($detail['letter']);}
+        $export->add($detail['jr_optype']);
         if ($detail['deb_montant']  > 0 ) 
             $export->add($detail['deb_montant'],"number");
         else

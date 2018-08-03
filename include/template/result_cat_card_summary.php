@@ -16,10 +16,9 @@ for ($i=0;$i<count($aHeading);$i++) :
     $span="";$sort="";
    if ($i==0)
    {
-       $span='<span id="sorttable_sortfwdind">&nbsp;&nbsp;&#x25BE;</span>';
        $sort= 'class="sorttable_sorted"';
    }
-   echo '<th '.$sort.'>'.$aHeading[$i]->ad_text.$span.'</th>';
+   echo '<th '.$sort.'>'.$aHeading[$i]->ad_text.'</th>';
    endfor;
 ?>
 </tr>

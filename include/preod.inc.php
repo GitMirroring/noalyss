@@ -23,20 +23,20 @@
  * \brief included file for managing the predefined operation
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
-require_once NOALYSS_INCLUDE.'/lib/class_icheckbox.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/class_pre_operation.php';
-
+require_once NOALYSS_INCLUDE.'/class/pre_operation.class.php';
+global $http;
 /*
  * Value from $_GET or $_REQUEST
  */
-$request_jrn=HtmlInput::default_value_request("jrn", -1);
-$request_ac=HtmlInput::default_value_request("ac", "");
-$request_sa=HtmlInput::default_value_request("sa", "");
-$get_jrn=HtmlInput::default_value_get('jrn',-1);
+$request_jrn=$http->request("jrn","string", -1);
+$request_ac=$http->request("ac","string", "");
+$request_sa=$http->request("sa","string", "");
+$get_jrn=$http->get('jrn',"string",-1);
 
 echo '<div class="content">';
 echo '<form method="GET">';
@@ -60,7 +60,8 @@ echo '</form>';
 if ( $request_sa == 'del')
 {
     $op=new Pre_operation($cn);
-    $op->od_id=HtmlInput::default_value_request('od_id',-1);
+    $http=new HttpInput();
+    $op->od_id=$http->request('od_id',"string",-1);
     if (isNumber($op->od_id)==1 && $op->od_id != -1 )
     {
         $op->delete();

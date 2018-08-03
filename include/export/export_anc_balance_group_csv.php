@@ -23,8 +23,8 @@
  * \brief export balance by group
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_anc_group.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
+require_once NOALYSS_INCLUDE.'/class/anc_group.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
 $a=new Anc_Group($cn);
 $a->get_request();

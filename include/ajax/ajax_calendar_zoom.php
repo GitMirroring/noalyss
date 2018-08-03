@@ -17,13 +17,23 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
+  /**
+   *@file
+   *@brief zoom the sheduler
+   */
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_calendar.php';
+require_once NOALYSS_INCLUDE.'/class/calendar.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
 ob_start();
-if ( $notitle== 0 ) echo HtmlInput::title_box(_("Calendrier"), "calendar_zoom_div");
+if ($notitle==0)
+{
+    echo HtmlInput::title_box(_("Calendrier"), "calendar_zoom_div", "close", "", "y");
+}
 $cal=new Calendar();
-$in=HtmlInput::default_value_get('in',"");
-$notitle=HtmlInput::default_value_get('notitle',"0");
+$in=$http->get('in',"string","");
+$notitle=$http->get('notitle',"string","0");
 if ( $in == "") {
     $in=$cal->get_preference();
 }

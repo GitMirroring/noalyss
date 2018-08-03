@@ -22,8 +22,7 @@
  example:
  <th class=" sorttable_sorted_reverse">
  ....<span id="sorttable_sortrevind">&nbsp;&blacktriangle;</span>
- <th class=" sorttable_sorted">
- ....<span id="sorttable_sortfwdind">&nbsp;&nbsp;&#x25BE;</span>
+<th class=" sorttable_sorted">
  
  Sort on date
  <td sorttable_customkey="<?=$row_bank['b_date']?>"> // format YYYYMMDD
@@ -39,7 +38,7 @@
 
 var stIsIE = /*@cc_on!@*/false;
 
-sorttable = {
+var sorttable = {
     init: function () {
         // quit if this function has already been called
         if (arguments.callee.done)
@@ -100,7 +99,7 @@ sorttable = {
         }
 
         // work through each column and calculate its type
-        headrow = table.tHead.rows[0].cells;
+        var headrow = table.tHead.rows[0].cells;
         for (var i = 0; i < headrow.length; i++) {
             // manually override the type with a sorttable_type attribute
             if (!headrow[i].className.match(/\bsorttable_nosort\b/)) { // skip this col
@@ -112,6 +111,23 @@ sorttable = {
                     headrow[i].sorttable_sortfunction = sorttable["sort_" + override];
                 } else {
                     headrow[i].sorttable_sortfunction = sorttable.guessType(table, i);
+                }
+                //--------- if already sorted , add a icon but only if the icon is not yet there ----------------
+                if (headrow[i].className.search(/\bsorttable_sorted_reverse\b/) != -1 && headrow[i].innerHTML.search(/\bsorttable_sortrevind\b/)==-1) {
+                    
+                    sortrevind = document.createElement('span');
+                    sortrevind.id = "sorttable_sortrevind";
+                    sortrevind.innerHTML = '<img src="image/down.gif">';
+                    headrow[i].appendChild(sortrevind);
+            
+                }
+                if (headrow[i].className.search(/\bsorttable_sorted\b/) != -1  && headrow[i].innerHTML.search(/\bsorttable_sortfwdind\b/)==-1) {
+            
+                    sortfwdind = document.createElement('span');
+                    sortfwdind.id = "sorttable_sortfwdind";
+                    sortfwdind.innerHTML = '<img src="image/up.gif">';
+                    headrow[i].appendChild(sortfwdind);
+        
                 }
                 // make it clickable to sort
                 headrow[i].sorttable_columnindex = i;
@@ -190,11 +206,27 @@ sorttable = {
                     for (var j = 0; j < row_array.length; j++) {
                         tb.appendChild(row_array[j][1]);
                     }
-
                     delete row_array;
+                    // Highlight odd and even rows properly
+                    sorttable.highlight_body(table);
                 });
             }
         }
+    },
+    /**
+     * alternate properly the rows of the table, 
+     * @param {DOMNode} p_table sorted table 
+     */ 
+    highlight_body:function(p_table) {
+         var nb_row=p_table.rows;
+         var e=0;
+         for (e=1;e<nb_row.length;e++) {
+             if (e % 2 == 0 ) {
+                 if ( nb_row[e].className=="odd"  ) nb_row[e].className="even";
+             } else {
+                 if ( nb_row[e].className=="even" ) nb_row[e].className="odd";
+             }
+         }
     },
     guessType: function (table, column) {
         // guess the type of a column based on its first non-blank row
@@ -273,7 +305,7 @@ sorttable = {
     },
     reverse: function (tbody) {
         // reverse the rows in a tbody
-        newrows = [];
+        var newrows = [];
         for (var i = 0; i < tbody.rows.length; i++) {
             newrows[newrows.length] = tbody.rows[i];
         }

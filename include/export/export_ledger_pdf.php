@@ -26,33 +26,46 @@
  */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier = dossier::id();
-require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
+require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/lib/class_impress.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
-require_once NOALYSS_INCLUDE.'/class/class_periode.php';
-require_once NOALYSS_INCLUDE.'/class/class_print_ledger.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/impress.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
+require_once NOALYSS_INCLUDE.'/class/periode.class.php';
+require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
-
+$http=new HttpInput();
 $cn = Dossier::connect();
 $periode = new Periode($cn);
+try
+{
+    $jrn_id=$http->get('jrn_id',"number");
+    $p_simple=$http->get('p_simple',"string");
 
+    
+}
+catch (Exception $exc)
+{
+    echo $exc->getMessage();
+    error_log($exc->getTraceAsString());
+    throw $exc;
+}
 $l_type = "JRN";
-$own = new Own($cn);
+$own = new Noalyss_Parameter_Folder($cn);
 
-$Jrn = new Acc_Ledger($cn, $_GET['jrn_id']);
+$Jrn = new Acc_Ledger($cn, $jrn_id);
 
 $Jrn->get_name();
 $g_user->Check();
 $g_user->check_dossier($gDossier);
 
 // Security
-if ($_GET['jrn_id'] != 0 && $g_user->check_jrn($_GET['jrn_id']) == 'X') {
+if ($g_user->check_jrn($jrn_id) == 'X') {
     /* Cannot Access */
     NoAccess();
 }
@@ -61,7 +74,7 @@ $ret = "";
 
 $jrn_type = $Jrn->get_type();
 
-$pdf = Print_Ledger::factory($cn, $_REQUEST['p_simple'], "PDF", $Jrn);
+$pdf = Print_Ledger::factory($cn, $p_simple, "PDF", $Jrn);
 
 $pdf->setDossierInfo($Jrn->name);
 $pdf->AliasNbPages();

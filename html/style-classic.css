@@ -7,6 +7,18 @@
 	src: url('image/OpenSansRegular.eot');
 	src: local('OpenSansRegular'), url('image/OpenSansRegular.woff') format('woff'), url('image/OpenSansRegular.ttf') format('truetype');
 }
+
+@font-face {
+      font-family: 'fontello';
+      src: url('image/fontello/fontello.eot?18582275');
+      src: url('image/fontello/fontello.eot?18582275#iefix') format('embedded-opentype'),
+           url('image/fontello/fontello.woff?18582275') format('woff'),
+           url('image/fontello/fontello.ttf?18582275') format('truetype'),
+           url('image/fontello/fontello.svg?18582275#fontello') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+    
 /* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_38327">Text with this font applied</p> */
 .fontsforweb_fontid_38327 {
 	font-family: 'OpenSansRegular' !important;
@@ -146,15 +158,18 @@ div.u_tool #name {
 }
 td.tool a.mtitle {
     text-decoration:none;
-    display:inline;
     color: #0000FF;
-    
+    display:block;
+    height: 100%;
+    width: 100%;
 }
 td.tool a.mtitle:hover {
     text-decoration:none;
-    display:inline;
     color: #00008B;
     background-color:#5D90CD;
+    display:block;
+    height: 100%;
+    width: 100%;
 
 }
 #top {
@@ -291,7 +306,8 @@ td.mtitle {
      border-radius:5px;
        -moz-border-radius: 5px;
        -webkit-border-radius: 5px;
-
+margin: 0px;
+padding: 0px;
   background: -moz-linear-gradient(top, rgba(53,106,160,0.79) 0%, rgba(53,106,160,1) 19%, rgba(53,106,160,1) 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(53,106,160,0.79)), color-stop(19%,rgba(53,106,160,1)), color-stop(100%,rgba(53,106,160,1))); /* Chrome,Safari4+ */
 background: -webkit-linear-gradient(top, rgba(53,106,160,0.79) 0%,rgba(53,106,160,0.79) 19%,rgba(53,106,160,1) 100%); /* Chrome10+,Safari5.1+ */
@@ -309,6 +325,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9356aa0', e
 }
 td.mtitle a.mtitle {
     color : white;
+    display:block;
+    height: 100%;
+    width: 100%;
 }
 
 td.msubtitle {
@@ -401,6 +420,8 @@ td.selectedcell a.mtitle,div.content td.selectedcell a.mtitle {
     text-decoration:none;
     display:block;
     color:#FFFFFF;
+    height: 100%;
+    width: 100%;
 }
 a.dossier {
     text-decoration:none;
@@ -1150,10 +1171,6 @@ span.remain {
 
     }
     #predef_form {
-        margin-left:35%;
-        width:60%;
-        position:absolute;
-        z-index:2
     }
 @media only screen and (min-width: 1155px) {
     div#jrn_name_div
@@ -1162,10 +1179,6 @@ span.remain {
 
     }
     #predef_form {
-        margin-left:35%;
-        width:60%;
-        position:absolute;
-        z-index:2
     }
 }
 @media only screen and (max-width: 1155px) {
@@ -1174,6 +1187,9 @@ span.remain {
         display: none;
     }
     #predef_form {
+    }
+     .visible_gt1155 {
+     display:none;   
     }
 }
 @media only screen and (max-width: 900px) {
@@ -1246,44 +1262,13 @@ a.line:hover,div_content a.line
     color: #FFFFFF;
     background-color:#336699;
 }
-#close_div
-{
-    color:white;
-    text-decoration:none;
-    margin-left: 2px;
-    margin-right:6px;
-    margin-top:0px;
-    font-size:14px;
-    font-size:1rem;
-    cursor: pointer;
-    border:0px;
-}
-#close_div:hover
-{
-    background-color: #F93;
-}
-#popmeout
-{
-    background-color:#FFFFFF;
-    color:#0000FF;
-    text-decoration:none;
-    border:1px solid #0000FF;
-    margin-left: 2px;
-    margin-right:18px;
-    font-size:12px;
-    font-size: 0.75rem;
-}
-#popmeout:hover
-{
-    background-color:  #F93;
-}
 table.table_large tr.odd ,table.table_large tr.even {
 
     height:32px;
 }
 #calc1
 {
-    position:absolute;
+    position:fixed;
     display:block;
     top:30px;
     left:150px;
@@ -1309,6 +1294,12 @@ a.nav:hover,div.content a.nav:hover,div.redcontent a.nav:hover {
     background-color:#00008B;
     color:#FFFFFF;
 }
+img:hover  {
+    cursor:inherit ;
+    background-color:white;
+    color: transparent;
+    
+    }
 #dossier {
     display:inline;
     float:left;
@@ -1416,6 +1407,9 @@ div.myfieldset
 div.menu2 a.mtitle{
     font-size:13.6px;
     font-size:0.80rem; 
+      display:block;
+    height: 100%;
+    width: 100%;
 }
 div.menu3 {
 	font-size:13.6px;
@@ -1685,7 +1679,6 @@ fieldset {
 ul.tabs {
     padding-top: 15px;
     display:block;
-    border-bottom: 1px solid #879ed4;
     padding-left: 2px;
     list-style: none;
     margin-left:2px;
@@ -1709,23 +1702,28 @@ li.tabs_selected {
     border-top-right-radius: 10px;
     border:1px #879ed4 solid;
     font-weight: bold;
+     float:left;
+    padding:5px;
     
 }
 li.tabs {
     display:inline;
     background-color: inherit;
     color:inherit;margin-left: 0px;
-    padding: 0px;
+    padding: 5px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     border:1px #879ed4 solid;
+    float:left;
+    background: whitesmoke;
+    margin-top:2px;
 
 }
 li.tabs:hover {
     display:inline;
     background-color: lightblue;
     color:wheat;margin-left: 2px;
-    padding: 0px;
+    padding: 5px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     border:1px #879ed4 solid;
@@ -2210,7 +2208,100 @@ td.selectedmenu {
  */
 #summary_op1,#summary_op2 
 {
-    position:float;
     float:left;
     padding-left: 150px;
+}
+/*
+ * Name of the tiers in GESTION 
+ */
+#gestion_title {
+    float:right;
+    margin-right: 5%;
+    font-size:150%;
+    color :white;
+    font-variant: small-caps;
+    background-color: #5D90CD;
+    padding: 3px 20px 3px 20px;
+    margin-top:20px;
+}
+/*
+ * Style for the Inplace Edit element
+ */
+span.inplace_edit
+{
+    text-decoration: underline;
+    cursor: pointer;
+}
+span.inplace_edit_input
+{
+    text-decoration: none;
+    font-size: 110%;
+    cursor: none;
+}
+/*
+ * Icon to pop out on the dashboard
+ */
+#span_cal_div,#span_todo_listg_div,#span_last_operation_box_div,#span_last_operation_management_div {
+    float:right;
+    margin-right:5px;
+    padding-top:0px;
+    margin-top:0px;
+}
+/**
+ * For the icon (font-famillo fontello)
+ */
+.icon {
+    font-family: "fontello";
+    font-weight:normal;
+    cursor: pointer;
+}
+.icon:hover {
+    font-family: "fontello";
+}
+/**
+ * Icon in the title of Box
+ */
+div.bxbutton .icon
+{
+    color:white;
+    text-decoration:none;
+    margin-left: 6px;
+    margin-right:6px;
+    /*! padding-top:10px; */
+    font-size:14px;
+    font-size:1rem;
+    cursor: pointer;
+    border:0px;
+    height: 18px;
+}
+div.bxbutton .icon:hover
+{
+    background-color: white;
+    color: blue;
+}
+/**
+ * progressBar
+ */
+div.progressbar {
+    width:300px;
+    height:30px;
+    position:fixed;
+    top:5px;
+    left:40%;
+    background-color: white;
+    color:blue;
+    z-index:800;
+    border-color: #596a72;
+    border-width: 1px;
+    border-style: solid;
+}
+#progressValue {
+    display:block;
+    width: 0px;
+    height: 100%;
+    margin:0px;
+    padding: 0px;
+    background-color:darkblue;
+    color:antiquewhite;
+    font-weight: bolder;
 }

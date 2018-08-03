@@ -19,9 +19,10 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( !defined ('ALLOWED')) die('Forbidden');
-require_once NOALYSS_INCLUDE.'/lib/class_iradio.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ifile.php';
-
+require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ifile.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
 /*!\file
  * \brief restaure a database
  */
@@ -71,7 +72,7 @@ if ( isset ($_REQUEST['sa'] ))
     // Restore a folder (dossier)
     if ( $_REQUEST['t']=='d')
     {
-        echo '<div class="content" style="width:80%;margin-left:10%">';
+        echo '<div class="content">';
 
         $cn=new Database();
         $id=$cn->get_next_seq('dossier_id');
@@ -155,7 +156,7 @@ if ( isset ($_REQUEST['sa'] ))
         else
             $lname=$id." ".$_REQUEST['database'];
         
-        $ldesc=HtmlInput::default_value_post("desc", "");
+        $ldesc=$http->post("desc");
         $sql="insert into modeledef (mod_id,mod_name,mod_desc) values ($1,$2,$3)";
         $cn->start();
         try
@@ -208,7 +209,7 @@ else
     echo HtmlInput::hidden('action','restore');
     echo HtmlInput::hidden('sa','r');
     echo '<table>';
-    echo '<tr><td>'._("Nom de la base de donnée").HtmlInput::infobulle(29)
+    echo '<tr><td>'._("Nom de la base de donnée").Icon_Action::infobulle(29)
 			.'</td>';
     $wNom=new IText();
     $wNom->name="database";

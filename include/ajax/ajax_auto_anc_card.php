@@ -1,16 +1,19 @@
 <?php 
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-
+  /**
+   *@file
+   *@brief no used ?? 
+   */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
 $cn=Dossier::connect();
 
 
 if ( isset($_REQUEST['pa_id']) )
 {   
-    $res=$cn->exec_sql("select po_name,po_description from  poste_analytique where pa_id=$1 ~* and (po_description ~* $2 or po_name ~* $3 order by po_id limit 12",
+    $res=$cn->exec_sql("select po_name,po_description from  poste_analytique where pa_id=$1  and (po_description ~* $2 or po_name ~* $3) order by po_id limit 12",
         array($_REQUEST['pa_id'],$_POST['anccard'],$_POST['anccard']));
 }
 else

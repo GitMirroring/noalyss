@@ -25,14 +25,14 @@ if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 require_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once  NOALYSS_INCLUDE.'/lib/user_menu.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ifile.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ibutton.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_report.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ipopup.php';
-
+require_once NOALYSS_INCLUDE.'/lib/ifile.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
+global $http;
 
 $gDossier=dossier::id();
 $str_dossier=dossier::get();
@@ -47,7 +47,7 @@ $rap=new Acc_Report($cn);
 $menu=0;
 if (isset($_POST["del_form"]))
 {
-    $rap->id=$_POST['fr_id'];
+    $rap->id=$http->post("fr_id","number");
     $rap->delete();
     $menu=1;
 }
@@ -108,7 +108,7 @@ if (isset($_REQUEST["action"]) && $menu == 0)
     if ($action=="view" || $action == "record")
     {
         echo '<DIV class="content">';
-        $rap->id=$_REQUEST ['fr_id'];
+        $rap->id=$http->request("fr_id","number");
         echo '<form method="post" style="display:inline">';
         $rap->load();
         echo h1($rap->name);

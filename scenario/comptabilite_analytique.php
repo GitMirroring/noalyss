@@ -21,7 +21,7 @@
 // Copyright Author Dany De Bontridder dany@alchimerys.be
 //@description: Developpement for ANC
 
-require_once NOALYSS_INCLUDE . "/class/class_anc_operation.php";
+require_once NOALYSS_INCLUDE . "/class/anc_operation.class.php";
 
 $anc = new Anc_Operation($cn);
 
@@ -29,7 +29,7 @@ $a_jrnxId = $cn->get_array(
         "select j_id from jrnx join jrn on (jr_grpt_id=j_grpt)
             where
             jr_id=$1
-            ", array(4677));
+            ", array(48));
 $nb = count($a_jrnxId);
 
 for ($i = 0; $i<$nb; $i++) {

@@ -23,21 +23,26 @@
  * \brief Send a report in PDF
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-include_once("class/class_acc_report.php");
+include_once("class/acc_report.class.php");
 include_once("lib/ac_common.php");
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-include_once("lib/class_impress.php");
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+include_once("lib/impress.class.php");
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once  NOALYSS_INCLUDE.'/header_print.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_report.php';
-require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
+require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
+$form_id=$http->get('form_id','number');
+$type_periode=$http->get('type_periode',"number");
+
 
 $gDossier=dossier::id();
 
 $cn=Dossier::connect();
 
-extract($_GET);
 $ret="";
 $Form=new Acc_Report($cn,$form_id);
 $Libelle=sprintf("%s ",$Form->get_name());
@@ -50,23 +55,34 @@ $pdf->setTitle("Rapport ".$Libelle,true);
 
 // Step ??
 //--
-$step=HtmlInput::default_value_get("p_step", 0);
-
+$p_step=$http->get('p_step',"string",0);
 if ( $step == 0 )
 {
     // No step asked
     //--
-    if ( $_GET ['type_periode'] == 0 )
-        $array=$Form->get_row( $_GET['from_periode'],$_GET['to_periode'], $_GET['type_periode']);
+    if ( $_GET ['type_periode'] == 0 ) 
+    {
+        $from_periode=$http->get('from_periode',"number");
+        $to_periode=$http->get('to_periode',"number");
+        $array=$Form->get_row( $from_periode,$to_periode, $type_periode);
+    }
     else
-        $array=$Form->get_row( $_GET['from_date'],$_GET['to_date'], $_GET['type_periode']);
+    {
+        $from_date=$http->get('from_date',"date");
+        $to_date=$http->get('to_date',"date");
+        $array=$Form->get_row( $from_date,$to_date, $type_periode);
+    }
 
 }
 else
 {
     // yes with step
     //--
-    for ($e=$_GET['from_periode'];$e<=$_GET['to_periode'];$e+=$_GET['p_step'])
+    $from_periode=$http->get('from_periode',"number");
+    $to_periode=$http->get('to_periode',"number");
+    $p_step=$http->get('p_step',"number");
+    
+    for ($e=$from_periode;$e<=$to_periode;$e+=$p_step)
     {
         $periode=getPeriodeName($cn,$e);
         if ( $periode == null ) continue;
@@ -82,21 +98,21 @@ $pdf->SetFont('DejaVuCond','',8);
 // without step
 if ( $step == 0 )
 {
-    if ( $_GET['type_periode'] == 0 )
+    if ( $type_periode == 0 )
     {
         $q=getPeriodeName($cn,$from_periode);
         if ( $from_periode != $to_periode)
         {
-            $periode=sprintf("Période %s à %s",$q,getPeriodeName($cn,$to_periode));
+            $periode=sprintf(_("Période de %s à %s"),$q,getPeriodeName($cn,$to_periode));
         }
         else
         {
-            $periode=sprintf("Période %s",$q);
+            $periode=sprintf(_("Période %s"),$q);
         }
     }
     else
     {
-        $periode=sprintf("Date %s jusque %s",$_GET['from_date'],$_GET['to_date']);
+        $periode=sprintf(_("Date %s jusque %s"),$from_date,$to_date);
     }
     $pdf->write_cell(0,7,$periode,'B');
     $pdf->line_new();

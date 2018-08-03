@@ -26,8 +26,8 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_stock.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
+require_once NOALYSS_INCLUDE.'/class/stock.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 $export=new Noalyss_Csv(_('historique-stock'));
 $stock=new Stock($cn);
 $sql = $stock->create_query_histo($_GET);

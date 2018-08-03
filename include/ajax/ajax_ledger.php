@@ -30,38 +30,45 @@
 */
 if ( ! defined('ALLOWED')) die(_('Non authorisé'));
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_operation.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_reconciliation.php';
-require_once NOALYSS_INCLUDE.'/class/class_anc_operation.php';
-require_once NOALYSS_INCLUDE.'/lib/class_idate.php';
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iconcerned.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
+require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
+require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
 /**
  * Check if we receive the needed data (jr_id...)
  */
-if ( ! isset ($_REQUEST['act'])|| ! isset ($_REQUEST['jr_id'])
-     || ! isset ($_REQUEST['div']))
-  {
-    exit();
-  }
- global $g_user,$cn,$g_parameter;
+global $g_user,$cn,$g_parameter;
 mb_internal_encoding("UTF-8");
 
+try
+{
+    $action=$http->request('act');
+    $jr_id=$http->request('jr_id');
+    $div=$http->request('div');		/* the div source and target for javascript */
+    $gDossier=dossier::id();
+    
+}
+catch (Exception $exc)
+{
+    error_log($exc->getTraceAsString());
+    return;
+}
 
-$action=$_REQUEST['act'];
-$jr_id=$_REQUEST['jr_id'];
-$div=$_REQUEST['div'];		/* the div source and target for javascript */
-$gDossier=dossier::id();
 /**
  *if $_SESSION['g_user'] is not set : echo a warning
  */
 
 $cn=Dossier::connect();
-$g_parameter=new Own($cn);
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 
 $g_user->check();
 if ( $g_user->check_dossier(dossier::id(),true)=='X' )
@@ -87,7 +94,7 @@ EOF;
 // check if the user can access the ledger where the operation is (view) and
 // if he can modify it
 $op=new Acc_Operation($cn);
-$op->jr_id=$_REQUEST['jr_id'];
+$op->jr_id=$jr_id;
 $ledger=$op->get_ledger();
 if ($ledger=="")
 {
@@ -146,16 +153,14 @@ case 'rmop':
             {
                 $cn->start();
                 $oLedger=new Acc_Ledger($cn,$ledger);
-                $oLedger->jr_id=HtmlInput::default_value_request('jr_id',0);
-                if ( $oLedger->jr_id == 0 || 
-                     isNumber($oLedger->jr_id) == 0)
-                    throw new Exception (_('Donnée invalide'));
+                $oLedger->jr_id=$jr_id=$http->request('jr_id',"number");
                 $oLedger->delete();
                 $cn->commit();
                 echo _("Opération Effacée");
             }
             catch (Exception $e)
             {
+                record_log($e->getTraceAsString());
                 $e->getMessage();
                 $cn->rollback();
             }
@@ -179,7 +184,7 @@ case 'de':
         $op->get();			
         /* return an obj. ACH / FIN or VEN or null if nothing is found*/
         $obj=$op->get_quant();	
-
+        
         $oLedger=new Acc_Ledger($cn,$ledger);
         if ( $obj==null || $obj->signature == 'ODS'  )
         {
@@ -201,7 +206,8 @@ case 'de':
     }
     catch (Exception $e)
     {
-        echo HtmlInput::anchor_close($div);
+        record_log($e->getTraceAsString());
+        echo Icon_Action::close($div);
         echo '<h2 class="error">'._("Désolé il y a une erreur").'</h2>';
     }
     $html=ob_get_contents();
@@ -419,8 +425,8 @@ case 'save':
 		}
 	    }
             
-            $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY') where jr_id=$3",
-                          array($_POST['lib'],$_POST['npj'],$jr_id,$_POST['p_date']));
+            $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY'),jr_optype=$5 where jr_id=$3",
+                          array($_POST['lib'],$_POST['npj'],$jr_id,$_POST['p_date'],$_POST['jr_optype']));
 	    $cn->exec_sql("update jrnx set j_date=to_date($1,'DD.MM.YYYY') where j_grpt in (select jr_grpt_id from jrn where jr_id=$2)",
 			  array($_POST['p_date'],$jr_id));
 	    $cn->exec_sql('update operation_analytique set oa_date=j_date from jrnx
@@ -478,7 +484,7 @@ case 'save':
             ////////////////////////////////////////////////////
             // CA
             //////////////////////////////////////////////////
-            $owner = new Own($cn);
+            $owner = new Noalyss_Parameter_Folder($cn);
             if ( $owner->MY_ANALYTIC != "nu" && isset ($_POST['op']) )
             {
                 // for each item, insert into operation_analytique */
@@ -490,10 +496,11 @@ case 'save':
             //////////////////////////////////////////////////////////////////
             $op->save_info($_POST['OTHER'],'OTHER');
             $op->save_info($_POST['BON_COMMANDE'],'BON_COMMANDE');
+            
             ///////////////////////////////////////////////////////////////////
             // Save related
             //////////////////////////////////////////////////////////////////
-            $related=HtmlInput::default_value_post("related", "0");
+            $related=$http->post("related","string");
             if ($related == "0" )                
                 throw new Exception('Parameter not send -> related'.__FILE__.__LINE__,10);
             $op->insert_related_action($related);
@@ -504,6 +511,7 @@ case 'save':
     }
     catch (Exception $e)
     {
+        record_log($e->getTraceAsString());
       if ( DEBUG )   echo $e->getMessage();
       alert(_( "Changement impossible: on ne peut pas changer la date dans une période fermée"));
     }
@@ -547,16 +555,22 @@ case 'reverseop':
         ob_start();
         try
         {
+            $ext_date=$http->request("ext_date","date");
+            $ext_label=$http->request("ext_label");
             $cn->start();
             $oLedger=new Acc_Ledger($cn,$ledger);
-            $oLedger->jr_id=$_REQUEST['jr_id'];
-            $oLedger->reverse($_REQUEST['ext_date']);
+            $oLedger->jr_id=$jr_id;
+            if ( trim($ext_label) == "" ) {
+                $ext_label=_("Extourne").$cn->get_value("select jr_comment from jrn where jr_id=$1",[$jr_id]);
+            }
+            $oLedger->reverse($ext_date,$ext_label);
             $cn->commit();
             echo _("Opération extournée");
         }
         catch (Exception $e)
         {
-            $e->getMessage();
+            record_log($e->getTraceAsString());
+            echo $e->getMessage();
             $cn->rollback();
         }
     }

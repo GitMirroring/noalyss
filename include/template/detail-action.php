@@ -1,7 +1,7 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-$uniq=HtmlInput::generate_id("tab");
+$uniq=uniqid("tab",TRUE);
 ?><div>
 <div style="float:left;">
 
@@ -167,6 +167,8 @@ $uniq=HtmlInput::generate_id("tab");
         <li id="related_operation_tab<?php echo $uniq?>" class="tabs"><?php echo _('Opérations concernées')?></li>
         <li id="dependant_action_tab<?php echo $uniq?>" class="tabs"><?php echo _('Dépendant')?></li>
     </ul>
+    
+    <div style="clear:both"></div>
 	<div id="related_operation_div<?php echo $uniq?>" style="display:none" class="print">
 
 		<ol>
@@ -244,15 +246,15 @@ for( $c=0;$c<count($acomment);$c++){
          $comment="";
          if ( $p_view != 'READ' && $c > 0)
 	{
-		$rmComment=sprintf("return confirm_box(null,'"._('Voulez-vous effacer ce commentaire')." ?',function() {remove_comment('%s','%s');});",
-						dossier::id(),
-						$acomment[$c]['agc_id']);
-				$js= '<a class="tinybutton" id="accom'.$acomment[$c]['agc_id'].'" href="javascript:void(0)" onclick="'.$rmComment.'">'.SMALLX.'</a>';
-		$comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".$acomment[$c]['str_agc_date'].')').$js.
-				'<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
-				" ".h($acomment[$c]['agc_comment']).'</pre>'
-				;
-                
+            $rmComment=sprintf("return confirm_box(null,'"._('Voulez-vous effacer ce commentaire')." ?',function() {remove_comment('%s','%s');});",
+                                            dossier::id(),
+                                            $acomment[$c]['agc_id']);
+            $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
+            $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".$acomment[$c]['str_agc_date'].')').$js.
+                            '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
+                            " ".h($acomment[$c]['agc_comment']).'</pre>'
+                            ;
+
 	}
 	else
 	{
@@ -417,26 +419,22 @@ for ($i=0;$i<sizeof($aAttachedFile);$i++) :
           </td>
           <td>
         <label> : </label>
-        <span id="print_desc<?php echo $aAttachedFile[$i]['d_id'];?>"> <?php echo h($aAttachedFile[$i]['d_description'])?>
-       <?php if ($p_view != 'READ') : ?> 
-        <?php 
-            $js=sprintf("javascript:show_description('%s')",$aAttachedFile[$i]['d_id']);
+        <?php
+        // Description of the file
+        if ($p_view != 'READ') :
+            $description=new IText("value");
+            $description->id="input_desc_txt".$aAttachedFile[$i]['d_id'];
+            $description->value=h($aAttachedFile[$i]['d_description']);
+            $inplace_description=new Inplace_Edit($description);
+            $inplace_description->set_callback("ajax_misc.php");
+            $inplace_description->add_json_param("d_id", $aAttachedFile[$i]['d_id']);
+            $inplace_description->add_json_param("gDossier", Dossier::id());
+            $inplace_description->add_json_param("op", "update_comment_followUp");
+            echo $inplace_description->input();
+        else:
+                echo h($aAttachedFile[$i]['d_description']);
+        endif;
         ?>
-        <a class="line"  id="<?php echo 'desc'.$aAttachedFile[$i]['d_id'];?>" onclick="<?php echo $js?>"><?php echo _("Modifier")?></a>    
-        
-        </span>
-        </td>
-        <td>
-        <span class="noprint" id="input_desc<?php echo $aAttachedFile[$i]['d_id'];?>" style="display:none" >
-              <input type="input" class="input_text" id="input_desc_txt<?php echo $aAttachedFile[$i]['d_id'];?>" value="<?php echo h($aAttachedFile[$i]['d_description'])?>">
-              <?php 
-              $js=sprintf("update_document('%s','%s')",dossier::id(),$aAttachedFile[$i]['d_id']);
-              echo HtmlInput::button('save_desc'.$aAttachedFile[$i]['d_id'], _('Sauve'), 'onclick="'.$js.'"','smallbutton');
-              ?>
-        </span>
-        <?php else: ?>
-        </span>
-        <?php endif;?>
 <?php $rmDoc=sprintf("return confirm_box(null,'"._('Voulez-vous effacer le document')." %s' , function(){remove_document('%s','%s');});",
 	$aAttachedFile[$i]['d_filename'],
 	dossier::id(),
@@ -444,7 +442,7 @@ for ($i=0;$i<sizeof($aAttachedFile);$i++) :
     ?>
         </td>
         <td>
-  <?php if ($p_view != 'READ') : ?>  <a class="line"  id="<?php echo "ac".$aAttachedFile[$i]['d_id'];?>" href="javascript:void(0)" onclick="<?php echo $rmDoc;?>"><?php echo _("Effacer")?></a><?php endif;?>
+  <?php if ($p_view != 'READ') : ?>  <span class="icon"  id="<?php echo "ac".$aAttachedFile[$i]['d_id'];?>" href="javascript:void(0)" onclick="<?php echo $rmDoc;?>">&#xe80f;</span><?php endif;?>
         </td>
   </tr>
   <?php

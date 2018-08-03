@@ -25,3 +25,5 @@ Génération pour tous les fichiers
 =================================
 Permet de voir les lignes de code qui ont été testées
 php <chemin>/phpunit.phar --coverage-html html --bootstrap bootstrap.php include
+
+exemple depuis NETBEANS "/usr/bin/php" "/home/dany/Program/phpunit-skelgen.phar" "--ansi" "generate-test" "--bootstrap=/home/dany/developpement/phpcompta/noalyss/unit-test/bootstrap.php" "View_SQL" "/home/dany/developpement/phpcompta/noalyss/include/lib/view_sql.class.php" "View_SQLTest" "/home/dany/developpement/phpcompta/noalyss/unit-test/include/lib/view_sql.classTest.php"

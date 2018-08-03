@@ -34,7 +34,7 @@ begin
 	return;
 end;
 $BODY$ 
-LANGUAGE plpgsql VOLATILE;
+LANGUAGE plpgsql;
 
 -- Function: tva_insert(int4, text, numeric, text, text)
 
@@ -79,7 +79,7 @@ insert into tva_rate(tva_id,tva_label,tva_rate,tva_comment,tva_poste)
 return 0;
 end;
 $BODY$
-LANGUAGE plpgsql VOLATILE;
+LANGUAGE plpgsql;
 
 -- Function: tva_insert(p_tva_id text, p_tva_label text, p_tva_rate text, p_tva_comment text, p_tva_poste text)
 
@@ -119,7 +119,7 @@ update tva_rate set tva_label=p_tva_label,tva_rate=p_tva_rate,tva_comment=p_tva_
 return 0;
 end;
 $BODY$
-LANGUAGE plpgsql VOLATILE;
+LANGUAGE plpgsql;
 
 
 update version set val=12;

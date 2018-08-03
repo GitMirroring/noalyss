@@ -26,8 +26,8 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_stock_goods.php';
-require_once NOALYSS_INCLUDE.'/class/class_stock.php';
+require_once NOALYSS_INCLUDE.'/class/stock_goods.class.php';
+require_once NOALYSS_INCLUDE.'/class/stock.class.php';
 global $cn;
 
 $inv=new Stock_Goods($cn);

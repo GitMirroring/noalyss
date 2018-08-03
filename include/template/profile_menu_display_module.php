@@ -23,12 +23,13 @@
  * @brief display the module, used to setup the module and menu, included from
  * Profile_Menu
  */
+$http=new HttpInput();
 ?>
  <div id="module_setting" class="content">
 	<table class="result">
 	    <tr>
 		<?php
-                $dep=HtmlInput::default_value_post("dep", 0);
+                $dep=$http->post("dep","string", 0);
 		foreach ($ap_module as $row):
 			$js="";
 		    $style="";

@@ -9,22 +9,27 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/class_acc_reconciliation.php';
+require_once NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
-
-// --------------------------
-// Check if all mandatory arg are passed
-foreach (array('choice','p_end','p_start') as $arg)
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+try
 {
-    if ( ! isset ($_GET[$arg])) {
-        die ("argument [".$arg."] is missing");
-    }
+    $choice=$http->get("choice");
+    $p_start=$http->get("p_start");
+    $p_end=$http->get("p_end");
+    $r_jrn=$http->get("r_jrn","string","");
+   
 }
-extract($_GET);
-$r_jrn=(isset($r_jrn))?$r_jrn:'';
+catch (Exception $exc)
+{
+    error_log($exc->getTraceAsString());
+    return;
+}
+
 // -------------------------
 // Create object and export
 $acc_reconciliation=new Acc_Reconciliation($cn);

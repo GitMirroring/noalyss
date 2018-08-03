@@ -19,6 +19,7 @@
 
 // Copyright 2015 Author Dany De Bontridder danydb@aevalys.eu
 /** 
+ * @file
  * @brief call from ajax : display submenu
  * Security : only user with the menu CFGPRO
  * display the submenu of a menu or a module
@@ -30,22 +31,24 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 // Security 
 if ( $g_user->check_module('CFGPRO') == 0 ) die();
 
-// Check parameter
-$module=HtmlInput::default_value_get("dep", "");
-$p_level=HtmlInput::default_value_get("p_level", 0);
-$p_id=HtmlInput::default_value_get('p_profile',-1);
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
 
-if ($module == ""
-        || $p_id == -1 
-        || isNumber($p_id) == 0
-        || isNumber($p_level) == 0
-        )
+ob_start();
+try
 {
-    echo _('Paramètre invalide');
+    $module=$http->get("dep");
+    $p_level=$http->get("p_level", "number",0);
+    $p_id=$http->get('p_profile',"number");
+
+}
+catch (Exception $exc)
+{
+    error_log($exc->getTraceAsString());
     return;
 }
 
-require_once NOALYSS_INCLUDE.'/class/class_profile_menu.php';
+require_once NOALYSS_INCLUDE.'/class/profile_menu.class.php';
 $p_level++;
 $profile=new Profile_Menu($cn);
 $profile->p_id=$p_id;

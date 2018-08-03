@@ -2,8 +2,8 @@
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 ?><?php
-require_once  NOALYSS_INCLUDE.'/class/class_acc_operation.php';
-require_once  NOALYSS_INCLUDE.'/class/class_acc_reconciliation.php';
+require_once  NOALYSS_INCLUDE.'/class/acc_operation.class.php';
+require_once  NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
 
 $gDossier=dossier::id();
 if ( count($this->content) == 0 ) :

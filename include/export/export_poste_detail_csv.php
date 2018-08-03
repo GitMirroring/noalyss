@@ -22,16 +22,23 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_account_ledger.php';
-require_once  NOALYSS_INCLUDE.'/class/class_acc_operation.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_account_ledger.class.php';
+require_once  NOALYSS_INCLUDE.'/class/acc_operation.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 
-$r_poste=HtmlInput::default_value_request("poste_id", "error");
+$http=new HttpInput();
+
+$r_poste=$http->request("poste_id");
+$from_periode=$http->request("from_periode");
+$to_periode=$http->request("to_periode");
+$ople=$http->request("ople");
 
 $export=new Noalyss_Csv(_('poste').'_'.$r_poste);
 
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier=dossier::id();
 
 /* Admin. Dossier */
@@ -39,38 +46,44 @@ $cn=Dossier::connect();
 
 if ( isset ( $_REQUEST['poste_fille']) )
 { //choisit de voir tous les postes
-  $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like $1||'%'",array($_REQUEST["poste_id"]));
+  $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like $1||'%'",array($r_poste));
 }
 else
 {
-  $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val = $1",array($_REQUEST['poste_id']));
+  $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val = $1",array($r_poste));
 }
 bcscale(2);
 $export->send_header();
 if ( ! isset ($_REQUEST['oper_detail']))
 {
+    /*
+     * Without detail for accounting
+     */
     if ( count($a_poste) == 0 )
         exit;
 
     foreach ($a_poste as $pos)
     {
         $Poste=new Acc_Account_Ledger($cn,$pos['pcm_val']);
+        $operation=new Acc_Operation($cn);
         $name=$Poste->get_name();
-        list($array,$tot_deb,$tot_cred)=$Poste->get_row_date( $_REQUEST['from_periode'],
-							      $_REQUEST['to_periode'],
-							      $_GET['ople']
+        list($array,$tot_deb,$tot_cred)=$Poste->get_row_date( $from_periode,
+							      $to_periode,
+							      $ople
 							      );
         if ( count($Poste->row ) == 0 )
             continue;
         $title=array();
         
+        $title[]=_("Date");
         $title[]=_("Poste");
         $title[]=_("n° pièce");
         $title[]=_("Code journal");
         $title[]=_("Nom journal");
+        $title[]=_("QuickCode");
         $title[]=_("Lib.");
         $title[]=_("Interne");
-        $title[]=_("Date");
+        $title[]=_("Tiers");
         $title[]=_("Description");
         $title[]=_("Débit");
         $title[]=_("Crédit");
@@ -101,6 +114,8 @@ if ( ! isset ($_REQUEST['oper_detail']))
                 $export->add($solde_type);
                 $export->add("");
                 $export->add("");
+                $export->add("");
+                $export->add("");
                 
                 $export->add($tot_deb,"number");
                 $export->add($tot_cred,"number");
@@ -113,17 +128,21 @@ if ( ! isset ($_REQUEST['oper_detail']))
                 $current_exercice=$op['p_exercice'];
                 $tot_deb=0;$tot_cred=0;    
             }
+            $tiers=$operation->find_tiers($op['jr_id'],$op['j_id'],$op['j_qcode']);
+           
             $tot_deb=bcadd($tot_deb,$op['deb_montant']);
             $tot_cred=bcadd($tot_cred,$op['cred_montant']);
             $diff=bcsub($op['deb_montant'],$op['cred_montant']);
             $prog=bcadd($prog,$diff);
+            $export->add($op['j_date_fmt']);
             $export->add($pos['pcm_val']);
 	    $export->add($op['jr_pj_number']);
 	    $export->add($op['jrn_def_code']);
 	    $export->add($op['jrn_def_name']);
+	    $export->add($op['j_qcode']);
             $export->add($name);
             $export->add($op['jr_internal']);
-            $export->add($op['j_date_fmt']);
+            $export->add($tiers);
             $export->add($op['description']);
             $export->add($op['deb_montant'],"number");
             $export->add($op['cred_montant'],"number");
@@ -144,6 +163,8 @@ if ( ! isset ($_REQUEST['oper_detail']))
         $export->add($solde_type);
         $export->add("");
         $export->add("");
+        $export->add("");
+        $export->add("");
 
         $export->add($tot_deb,"number");
         $export->add($tot_cred,"number");
@@ -153,7 +174,9 @@ if ( ! isset ($_REQUEST['oper_detail']))
 }
 else
 {
-    /* detail of all operation */
+    /* 
+     * detail of all operation 
+     */
     if ( count($a_poste) == 0 )
         exit;
 
@@ -161,9 +184,9 @@ else
     {
         $Poste=new Acc_Account_Ledger($cn,$pos['pcm_val']);
         $Poste->get_name();
-        list($array,$tot_deb,$tot_cred)=$Poste->get_row_date( $_REQUEST['from_periode'],
-                                        $_REQUEST['to_periode'],
-									      $_GET['ople']
+        list($array,$tot_deb,$tot_cred)=$Poste->get_row_date($from_periode,
+							      $to_periode,
+							      $ople
                                                             );
         if ( count($Poste->row ) == 0 )
             continue;
@@ -173,11 +196,12 @@ else
         $title[]=_("QuickCode");
         $title[]=_("Interne");
         $title[]=_("Date");
+        $title[]=_("Tiers");
         $title[]=_("Description");
         $title[]=_("Montant");
         $title[]=_("D/C");
         $export->write_header($title);
-
+        $operation=new Acc_Operation($cn);
 
 
         foreach ( $Poste->row as $a )
@@ -187,11 +211,13 @@ else
             $result=$op->get_jrnx_detail();
             foreach ( $result as $r)
             {
+                $tiers=$operation->find_tiers($r['jr_id'], $r['j_id'], $r['j_qcode']);
                 $export->add($r['j_poste']);
                 $export->add($r['pcm_lib']);
                 $export->add($r['j_qcode']);
                 $export->add($r['jr_internal']);
                 $export->add($r['jr_date']);
+                $export->add($tiers);
                 $export->add($a['description']);
                 $export->add($a['jr_pj_number']);
                 $export->add($r['j_montant'],"number");

@@ -31,14 +31,17 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 // Security 
 if ( $g_user->check_module('CFGPRO') == 0 ) die();
 
-require_once NOALYSS_INCLUDE.'/database/class_profile_sql.php';
-require_once NOALYSS_INCLUDE.'/class/class_profile_menu.php';
-require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
-$p_id=HtmlInput::default_value_request('p_id', -1);
+require_once NOALYSS_INCLUDE.'/database/profile_sql.class.php';
+require_once NOALYSS_INCLUDE.'/class/profile_menu.class.php';
+require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
+$p_id=$http->request('p_id',"string", -1);
 $profile=new Profile_sql($cn,$p_id);
 $gDossier=Dossier::id();
 $add_impression=HtmlInput::button("add", _("Ajout Menu"),"onclick=\"add_menu({dossier:$gDossier,p_id:$p_id,type:'pr'})\"");
-$call_tab=HtmlInput::default_value_post('tab', 'profile_gen_div');
+$call_tab=$http->post('tab', "string",'profile_gen_div');
 $a_tab=array('profile_gen_div'=>'tabs','profile_menu_div'=>'tabs','profile_print_div'=>'tabs','profile_gestion_div'=>'tabs','profile_repo_div'=>'tabs');
 $a_tab[$call_tab]='tabs_selected';
 ?>
@@ -55,6 +58,9 @@ $a_tab[$call_tab]='tabs_selected';
     <li class="<?php echo $a_tab['profile_gestion_div']?>"><a href="javascript:void(0)" style="" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_gestion_div')"><?php echo _('Action Gestion')?> </a></li>
     <li class="<?php echo $a_tab['profile_repo_div']?>"><a href="javascript:void(0)"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_repo_div')"><?php echo _('Dépôts')?></a>&nbsp;
 </ul>
+
+<div style="clear: both"></div>
+
 <?php endif; ?>
 
 <?php 

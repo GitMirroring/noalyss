@@ -22,18 +22,18 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_menu.php';
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
-
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
 $rep = new Database();
-
-if (!isset($_REQUEST['use_id']))
-{
-    html_page_stop();
-    return;
+try {
+$uid = $http->request('use_id');
+} catch (Exception $ex) {
+     echo_error($ex->getMessage());
+     throw $ex;
 }
-$uid = $_REQUEST['use_id'];
 $UserChange = new User($rep, $uid);
 
 if ($UserChange->id == false)
@@ -45,7 +45,7 @@ if ($UserChange->id == false)
 /*  
  * Update user changes 
  */
-$sbaction=HtmlInput::default_value_post('sbaction', "");
+$sbaction=$http->post('sbaction',"string", "");
 if ($sbaction == "save")
 {
     $uid = $_POST['UID'];
@@ -60,11 +60,11 @@ if ($sbaction == "save")
     }
     else
     {
-        $UserChange->first_name =HtmlInput::default_value_post('fname',null);
-        $UserChange->last_name = HtmlInput::default_value_post('lname',null);
-        $UserChange->active = HtmlInput::default_value_post('Actif',-1);
-        $UserChange->admin = HtmlInput::default_value_post('Admin',-1);
-        $UserChange->email = HtmlInput::default_value_post('email',null);
+        $UserChange->first_name =$http->post('fname');
+        $UserChange->last_name = $http->post('lname');
+        $UserChange->active = $http->post('Actif');
+        $UserChange->admin = $http->post('Admin');
+        $UserChange->email = $http->post('email');
         if ($UserChange->active ==-1 || $UserChange->admin ==-1)
         {
             die ('Missing data');
@@ -101,7 +101,7 @@ else if ($sbaction == "delete")
     }
     
     echo "<center><H2 class=\"info\"> Utilisateur " . h($_POST['fname']) . " " . h($_POST['lname']) . " est effacé</H2></CENTER>";
-    require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
+    require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
     require_once NOALYSS_INCLUDE.'/user.inc.php';
     return;
 }

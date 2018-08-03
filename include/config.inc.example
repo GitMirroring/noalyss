@@ -19,8 +19,14 @@ define ("MULTI",1);
 define ("dbname","");
  // Uncomment to DEBUG
 // define ("DEBUG",TRUE);
- // Uncomment to log your input
+// Uncomment to log your input
 // define ("LOGINPUT",TRUE);
+// Uncomment if you want to activate the possibility to reinitialize
+// password by email
+// defined("RECOVER","1");
+// Uncomment and define if you want to Name of the sender of the email 
+// if you activate the possibility to reinitialize password by email
+// define('ADMIN_WEB', 'www-data@localhost');
 
 
  // Do not change below !!!
@@ -30,7 +36,8 @@ define ("dbname","");
 // define ("NOALYSS_PLUGIN","");
 // define ("NOALYSS_INCLUDE","");
 // define ("NOALYSS_TEMPLATE","");
-// Fix an issue with PDF when exporting receipt in PDF in ANCGL
+// Fix an issue with PDF when exporting receipt in PDF in ANCGL ,only for very
+// old package of tkpdf ( before 2012)
 // define ("FIX_BROKEN_PDF","NO");
 
 // Uncomment if you don't want 
@@ -52,4 +59,8 @@ define ("dbname","");
 // define ('OFFICE','/usr/bin/unoconv');
 // define ('GENERATE_PDF','YES');
 
+// If you want to use open_basedir or if you are limited by the server's config
+// you can uncomment this
+// after replace NOALYSS_HOME by the path of the local installation of Noalyss
+// ini_alter("open_basedir", "/usr/bin:/tmp/:NOALYSS_HOME");
   

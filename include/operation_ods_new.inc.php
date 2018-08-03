@@ -25,8 +25,8 @@
  * \brief to write into the ledgers ODS a new operation
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_pre_op_ods.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iconcerned.php';
+require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
 
 global $g_user,$g_parameter;
 $cn=Dossier::connect();
@@ -40,20 +40,12 @@ $ledger->id = ($ledger->id == -1) ? $first_ledger['jrn_def_id'] : $id_ledger;
 // check if we can write in the ledger
 if ( $g_user->check_jrn($ledger->id)=='X')
 {
-	alert(_("Vous ne pouvez pas écrire dans ce journal, contacter votre administrateur"));
+	alert(_("Vous ne pouvez pas écrire dans ce journal, contactez votre administrateur"));
 	return;
-}
+}              
 echo '<div class="content">';
-echo '<div id="predef_form">';
-echo HtmlInput::hidden('p_jrn_predef', $ledger->id);
-$op = new Pre_op_ods($cn);
-$op->set('ledger', $ledger->id);
-$op->set('ledger_type', "ODS");
-$op->set('direct', 't');
-$url=http_build_query(array('action'=>'use_opd','p_jrn_predef'=>$ledger->id,'ac'=>$_REQUEST['ac'],'gDossier'=>dossier::id()));
-echo $op->form_get('do.php?'.$url);
 
-echo '</div>';
+
 echo '<div id="jrn_name_div">';
 echo '<h2 id="jrn_name" style="display:inline">' . $ledger->get_name() . '</h2>';
 echo '</div>';
@@ -79,7 +71,7 @@ $p_msg=(isset($p_msg))?$p_msg:"";
 print '<p class="notice">'.$p_msg.'</p>';
 echo '<form method="post"  class="print" onsubmit="return controleBalance();" >';
 echo dossier::hidden();
-echo HtmlInput::request_to_hidden(array('ac'));
+echo HtmlInput::request_to_hidden(array('ac','jr_optype'));
 
 echo $ledger->input($p_post);
 

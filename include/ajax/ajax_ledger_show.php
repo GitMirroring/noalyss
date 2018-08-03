@@ -3,6 +3,7 @@
 //see licence.txt
 
 /**
+ *@file
  * @brief
  * Show a div for selecting ledger
  * return a html code for creating a window
@@ -14,12 +15,13 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
+require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 if ( ! isset ($r_jrn)) { $r_jrn=null;}
 $ctl='div_jrn'.$div;
 ob_start();
-echo HtmlInput::select_ledger($type,$r_jrn, $div);
+$ledger=new Acc_Ledger_Search($type,1,$ctl);
+echo $ledger->select_ledger($r_jrn,$div);
 
 $response = ob_get_clean();
 $html = escape_xml($response);

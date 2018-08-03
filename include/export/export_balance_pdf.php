@@ -31,23 +31,43 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 include_once("lib/ac_common.php");
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-include_once("class/class_acc_balance.php");
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+include_once("class/acc_balance.class.php");
 require_once  NOALYSS_INCLUDE.'/header_print.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
 $gDossier=dossier::id();
 bcscale(4);
 $cn=Dossier::connect();
 $rep=new Database();
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 $g_user->Check();
 
 $bal=new Acc_Balance($cn);
+try
+{
+    $from_periode=$http->request("from_periode");
+    $to_periode=$http->request("to_periode");
+    $from_poste=$http->request("from_poste");
+    $to_poste=$http->request("to_poste");
+    $p_filter=$http->request("p_filter","string");
+}
+catch (Exception $exc)
+{
+    error_log($exc->getTraceAsString());
+    return;
+}
 
-extract ($_GET);
+// Compute for the summary
+$summary_tab=$bal->summary_init();
+$summary_prev_tab=$bal->summary_init();
+$is_summary=$http->get("summary","string", 0);
+  
 $bal->jrn=null;
-switch( $_GET['p_filter'])
+switch( $p_filter)
 {
 case 0:
         $bal->jrn=null;
@@ -70,8 +90,8 @@ case 2:
     break;
 }
 
-$bal->from_poste=$_GET['from_poste'];
-$bal->to_poste=$_GET['to_poste'];
+$bal->from_poste=$from_poste;
+$bal->to_poste=$to_poste;
 if (isset($_GET['unsold'])) $bal->unsold=true;
 $previous=(isset($_GET['previous_exc']))?1:0;
   
@@ -90,29 +110,32 @@ $pPeriode=new Periode($cn);
 $a=$pPeriode->get_date_limit($from_periode);
 $b=$pPeriode->get_date_limit($to_periode);
 $per_text="  du ".$a['p_start']." au ".$b['p_end'];
+
+// If compare with previous exercice ,
+// we use the landscape mode
 if ($previous == 1 ) {
     $pdf=new PDFLand($cn);
 } else {
     $pdf= new PDF($cn);
 }
+
 $pdf->setDossierInfo(" Balance  ".$per_text);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAuthor('NOALYSS');
 $pdf->SetFont('DejaVuCond','',7);
-$pdf->setTitle("Balance comptable",true);
-$pdf->write_cell(30,6,'poste');
-$pdf->LongLine(60,6,'Libellé');
+$pdf->setTitle(_("Balance comptable"),true);
+$pdf->write_cell(30,6,_('poste'));
+$pdf->LongLine(60,6,_('Libellé'));
 if ($previous == 1 ){ 
     $pdf->write_cell(20,6,'Débit N-1',0,0,'R');
     $pdf->write_cell(20,6,'Crédit N-1',0,0,'R');
-    $pdf->write_cell(20,6,'Débiteur N-1',0,0,'R');
-    $pdf->write_cell(20,6,'Créditeur N-1',0,0,'R');
+    $pdf->write_cell(20,6,'Solde N-1',0,0,'R');
 }
-$pdf->write_cell(25,6,'Total Débit',0,0,'R');
-$pdf->write_cell(25,6,'Total Crédit',0,0,'R');
-$pdf->write_cell(25,6,'Solde Débiteur',0,0,'R');
-$pdf->write_cell(25,6,'Solde Créditeur',0,0,'R');
+$pdf->write_cell(25,6,_('Ouverture'),0,0,'R');
+$pdf->write_cell(25,6,_('Total Débit'),0,0,'R');
+$pdf->write_cell(25,6,_('Total Crédit'),0,0,'R');
+$pdf->write_cell(25,6,_('Solde Débiteur'),0,0,'R');
 $pdf->line_new();
 
 $pdf->SetFont('DejaVuCond','',8);
@@ -125,10 +148,10 @@ $tp_cred_previous=0;
 $tp_sold_previous=0;
 $tp_solc_previous=0;
 if ( $previous == 1) {
-    $a_sum=array('sum_cred','sum_deb','solde_deb','solde_cred','sum_cred_previous','sum_deb_previous','solde_deb_previous','solde_cred_previous');
+    $a_sum=array('sum_cred','sum_deb','solde_deb','solde_cred','sum_cred_previous','sum_deb_previous','solde_deb_previous','solde_cred_previous','sum_cred_ope','sum_deb_ope');
 }
 else {
-    $a_sum=array('sum_cred','sum_deb','solde_deb','solde_cred') ;
+    $a_sum=array('sum_cred','sum_deb','solde_deb','solde_cred','sum_cred_ope','sum_deb_ope') ;
 }
 foreach($a_sum as $a)
   {
@@ -166,19 +189,25 @@ if (! empty($array))
                 if ($previous == 1 ) {
                     $delta_previous=bcsub(${'nlvl'.$ind}['solde_cred_previous'],${'nlvl'.$ind}['solde_deb_previous']);
                     $side_previous=($delta_previous < 0) ? "D":"C";
-                    $pdf->write_cell(30,6,"n-1 : " .nbm($delta_previous)." $side_previous",0,0,'R');
-                     $pdf->write_cell(30,6," n : ".nbm($delta)." $side",0,0,'R');
+                    $pdf->write_cell(60,6," ",0,0,'R');
                     $pdf->write_cell(22,6,nbm(${'nlvl'.$ind}['sum_deb_previous']),0,0,'R');
                     $pdf->write_cell(22,6,nbm(${'nlvl'.$ind}['sum_cred_previous']),0,0,'R');
-                    $pdf->write_cell(22,6,nbm(${'nlvl'.$ind}['solde_deb_previous']),0,0,'R');
-                    $pdf->write_cell(22,6,nbm(${'nlvl'.$ind}['solde_cred_previous']),0,0,'R');
+                    $pdf->write_cell(22,6,nbm(abs($delta_previous))." $side_previous",0,0,'R');
+                    
                 } else {
-                     $pdf->write_cell(60,6,nbm($delta)." $side",0,0,'R');
+                     $pdf->write_cell(60,6," ",0,0,'R');
+                     
                 }
-		$pdf->write_cell(25,6,nbm(${'nlvl'.$ind}['sum_deb']),0,0,'R');
-		$pdf->write_cell(25,6,nbm(${'nlvl'.$ind}['sum_cred']),0,0,'R');
-		$pdf->write_cell(25,6,nbm(${'nlvl'.$ind}['solde_deb']),0,0,'R');
-		$pdf->write_cell(25,6,nbm(${'nlvl'.$ind}['solde_cred']),0,0,'R');
+                $solde_lv=bcsub(${'nlvl'.$ind}['sum_deb_ope'],${'nlvl'.$ind}['sum_cred_ope']);
+                $side_lv=($solde_lv<0)?" C":" D";
+                $side_lv=($solde_lv==0)?" ":$side_lv;
+                $pdf->write_cell(25,6,nbm(abs($solde_lv)).$side_lv,0,0,'R');
+		$pdf->write_cell(25,6,nbm(bcsub(${'nlvl'.$ind}['sum_deb'],${'nlvl'.$ind}['sum_deb_ope'])),0,0,'R');
+		$pdf->write_cell(25,6,nbm(bcsub(${'nlvl'.$ind}['sum_cred'],${'nlvl'.$ind}['sum_cred_ope'])),0,0,'R');
+		$solde_lv=bcsub(${'nlvl'.$ind}['solde_deb'],${'nlvl'.$ind}['solde_cred']);
+                $side_lv=($solde_lv>0)?"D":"C";
+                $side_lv=($solde_lv==0)?"":$side_lv;
+                $pdf->write_cell(25,6,nbm(abs($solde_lv))." $side_lv",0,0,'R');
 		$pdf->line_new();
 		$pdf->SetFont('DejaVuCond','',7);
 		${'lvl'.$ind.'_old'}=substr($r['poste'],0,$ind);
@@ -208,20 +237,41 @@ if (! empty($array))
 
 	$pdf->LongLine(30,6,$value['poste'],0,'L',$fill);
 	$pdf->LongLine(60,6,$value['label'],0,'L',$fill);
+        $summary_tab=$bal->summary_add($summary_tab,$value['poste'],
+                 $value['sum_deb'],
+                 $value['sum_cred']);
         if ($previous == 1 ) {
             $pdf->write_cell(22,6,nbm($value['sum_deb_previous']),0,0,'R',$fill);
             $pdf->write_cell(22,6,nbm($value['sum_cred_previous']),0,0,'R',$fill);
-            $pdf->write_cell(22,6,nbm($value['solde_deb_previous']),0,0,'R',$fill);
-            $pdf->write_cell(22,6,nbm($value['solde_cred_previous']),0,0,'R',$fill);
+            
+//            $pdf->write_cell(22,6,nbm($value['solde_deb_previous']),0,0,'R',$fill);
+//            $pdf->write_cell(22,6,nbm($value['solde_cred_previous']),0,0,'R',$fill);
+            $solde_previous=bcsub($value['solde_cred_previous'],$value['solde_deb_previous']);
+            $side_previous=($solde_previous<0)?" D":" C";
+            $side_previous=($solde_previous==0)?"":$side_previous;
+            
+            $pdf->write_cell(22,6,nbm(abs($solde_previous)).$side_previous,0,0,'R',$fill);
+            
             $tp_deb_previous=bcadd($tp_deb_previous,$value['sum_deb_previous']);
             $tp_cred_previous=bcadd($tp_cred_previous,$value['sum_cred_previous']);
             $tp_sold_previous=bcadd($tp_sold_previous,$value['solde_deb_previous']);
             $tp_solc_previous=bcadd($tp_solc_previous,$value['solde_cred_previous']);
+            $summary_prev_tab=$bal->summary_add($summary_prev_tab,
+                                                $value['poste'],
+                                                $value['sum_deb_previous'],
+                                                $value['sum_cred_previous']);
         }
-	$pdf->write_cell(25,6,nbm($value['sum_deb']),0,0,'R',$fill);
-	$pdf->write_cell(25,6,nbm($value['sum_cred']),0,0,'R',$fill);
-	$pdf->write_cell(25,6,nbm($value['solde_deb']),0,0,'R',$fill);
-	$pdf->write_cell(25,6,nbm($value['solde_cred']),0,0,'R',$fill);
+        $solde_ope=bcsub($value['sum_deb_ope'],$value['sum_cred_ope']);
+        $side_ope=($solde_ope>0)?" D":"C";
+        $side_ope=($solde_ope==0)?" ":$side_ope;
+        
+	$pdf->write_cell(25,6,nbm(abs($solde_ope)).$side_ope,0,0,'R',$fill);
+	$pdf->write_cell(25,6,nbm(bcsub($value['sum_deb'],$value['sum_deb_ope'])),0,0,'R',$fill);
+	$pdf->write_cell(25,6,nbm(bcsub($value['sum_cred'],$value['sum_cred_ope'])),0,0,'R',$fill);
+        $solde=bcsub($value['sum_deb'],$value['sum_cred']);
+        $side=($solde>0)?"D":"C";
+        $side=($solde==0)?"":$side;
+	$pdf->write_cell(25,6,nbm(abs($solde)).$side,0,0,'R',$fill);
 	$pdf->line_new();
 	$tp_deb=bcadd($tp_deb,$value['sum_deb']);
 	$tp_cred=bcadd($tp_cred,$value['sum_cred']);
@@ -248,8 +298,10 @@ if (! empty($array))
              }
 	    $pdf->write_cell(25,6,nbm(${'nlvl'.$ind}['sum_deb']),0,0,'R');
 	    $pdf->write_cell(25,6,nbm(${'nlvl'.$ind}['sum_cred']),0,0,'R');
-	    $pdf->write_cell(25,6,nbm(${'nlvl'.$ind}['solde_deb']),0,0,'R');
-	    $pdf->write_cell(25,6,nbm(${'nlvl'.$ind}['solde_cred']),0,0,'R');
+            $solde_lv=bcsub(${'nlvl'.$ind}['solde_deb'],${'nlvl'.$ind}['solde_cred']);
+            $side_lv=($solde_lv>0)?"D":"C";
+            $side_lv=($solde_lv==0)?"":$side_lv;
+	    $pdf->write_cell(25,6,nbm(abs($solde_lv))." $side_lv",0,0,'R');
 	    $pdf->line_new();
 	    $pdf->SetFont('DejaVuCond','',7);
 	    ${'lvl'.$ind.'_old'}=substr($r['poste'],0,$ind);
@@ -275,6 +327,22 @@ if (! empty($array))
     $pdf->write_cell(25,6,nbm($tp_solc),'T',0,'R',0);
     $pdf->line_new();
   } /** empty */
+ // display the summary
+ if ($is_summary==1) {
+    if ($previous==1) {
+        $pdf->SetFont('DejaVuCond', 'B', 8);
+        $pdf->write_cell(50, 8, _("Résumé Exercice précédent"));
+        $pdf->line_new();
+        $pdf->SetFont('DejaVuCond', '', 7);
+        $bal->summary_display_pdf($summary_prev_tab, $pdf);
+        $pdf->line_new();
+    }
+    $pdf->SetFont('DejaVuCond', 'B', 8);
+    $pdf->write_cell(50, 8, _("Résumé Exercice courant"));
+    $pdf->line_new();
+    $pdf->SetFont('DejaVuCond', '', 7);
+    $bal->summary_display_pdf($summary_tab, $pdf);
+}
 
 $fDate=date('dmy-Hi');
 $pdf->Output('balance-'.$fDate.'.pdf','D');

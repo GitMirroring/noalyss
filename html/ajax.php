@@ -14,17 +14,18 @@
  */
 if ( ! defined ('ALLOWED') ) define ('ALLOWED',1);
 require_once '../include/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/class/class_extension.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/class/extension.class.php';
 if ( !isset ($_REQUEST['gDossier'])) exit();
 
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 mb_internal_encoding("UTF-8");
 
 global $g_user,$cn,$g_parameter;
 $cn=Dossier::connect();
-$g_parameter=new Own($cn);
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 $g_user=new User($cn);
 $g_user->check(true);
 set_language();

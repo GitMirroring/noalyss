@@ -28,8 +28,8 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once  NOALYSS_INCLUDE.'/class/class_anc_balance_double.php';
-require_once NOALYSS_INCLUDE.'/lib/class_noalyss_csv.php';
+require_once  NOALYSS_INCLUDE.'/class/anc_balance_double.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
 $cn=Dossier::connect();
 

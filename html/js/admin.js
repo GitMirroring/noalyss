@@ -126,9 +126,9 @@ function folder_add(p_user, p_dossier)
             var nb = $('database_list').rows.length + 1;
             var row = new Element('tr', {'id': 'row' + p_dossier});
             if (nb % 2 == 0) {
-                row.addClassName('odd');
-            } else {
                 row.addClassName('even');
+            } else {
+                row.addClassName('odd');
             }
             row.innerHTML = unescape_xml(content);
             $('database_list').appendChild(row);

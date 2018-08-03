@@ -9,13 +9,16 @@ require_once '../../include/constant.php';
 const REPOSITORY_DB=1;
 const ACCOUNT_DB=2;
 
-require NOALYSS_INCLUDE."/lib/class_database.php";
-require NOALYSS_INCLUDE."/lib/class_iselect.php";
+require_once NOALYSS_INCLUDE."/lib/database.class.php";
+require_once NOALYSS_INCLUDE."/lib/iselect.class.php";
+require_once NOALYSS_INCLUDE."/lib/http_input.class.php";
 
 require './table_sql.class.php';
 
 // Show a db connection
-$gDossier=HtmlInput::default_value_request('gDossier',-1);
+$http=new HttpInput();
+
+$gDossier=$http->request('gDossier',"string",-1);
 $select = new ISelect('gDossier');
 $select->row=20;
 $acc=new Database();
@@ -57,7 +60,7 @@ $table_sql = "select schemaname ||','||tablename,tablename||','||schemaname from
 $select_table = new ISelect('table');
 $select_table->row=20;
 $select_table->value=$cn->make_array($table_sql);
-$select_table->selected = HtmlInput::default_value_request("table", "");
+$select_table->selected = $http->request("table","string", "");
 ?>
   <form method="get">
     Choisissez une table
@@ -70,7 +73,7 @@ $select_table->selected = HtmlInput::default_value_request("table", "");
 ///////////////////////////////////////////////////////////////////////////////
 // if a table is select , generate file
 //////////////////////////////////////////////////////////////////////////////
-$table=HtmlInput::default_value_request("table", "");
+$table=$http->request("table","string", "");
 if ( $table != "") {
     $table_sql=new Table_SQL($cn,$table);
     $table_sql->create_class();

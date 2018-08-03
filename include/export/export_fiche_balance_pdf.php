@@ -25,11 +25,11 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 // Security we check if user does exist and his privilege
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
-require_once NOALYSS_INCLUDE.'/class/class_lettering.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 /* Security */

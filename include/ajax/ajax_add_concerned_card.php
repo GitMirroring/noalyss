@@ -20,29 +20,45 @@
 
 // Copyright 2014 Author Dany De Bontridder danydb@aevalys.eu
 // require_once '.php';
+/**
+ *@file
+ *@brief insert concerned operation , call from follow up
+ */
+
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
+
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
 ob_start();
+try
+{
+    $ag_id=$http->get("ag_id");
+}
+catch (Exception $exc)
+{
+    echo $exc->getMessage();
+    error_log($exc->getTraceAsString());
+    return;
+}
 
-$ag_id=HtmlInput::default_value_get("ag_id", "0");
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 
-if ($ag_id == 0 )    throw new Exception('ag_id is null');
-
-require_once('class/class_acc_ledger.php');
 $r=HtmlInput::title_box(_("Détail fiche"), 'search_card');
 
 $r.='<form id="search_card1_frm" method="GET" onsubmit="action_add_concerned_card(this);return false;">';
 $q=new IText('query');
 $q->value=(isset($query))?$query:'';
 $r.='<span style="margin-left:50px">';
-$r.=_('Fiche contenant').HtmlInput::infobulle(19);
+$r.=_('Fiche contenant').Icon_Action::infobulle(19);
 $r.=$q->input();
 $r.=HtmlInput::submit('fs', _('Recherche'), "", "smallbutton");
 $r.='</span>';
 $r.=dossier::hidden().HtmlInput::hidden('op', 'add_concerned_card');
 $r.=HtmlInput::request_to_hidden(array('ag_id'));
 $r.='</form>';
-$query=HtmlInput::default_value_get("query", "");
+$query=$http->get("query", "string","");
 $sql_array['query']=$query;
 $sql_array['typecard']='all';
 
@@ -66,6 +82,8 @@ for ($i=0; $i<count($a); $i++)
 
 
 echo $r;
+// No accountancy history
+$accvis=0; 
 require_once(NOALYSS_TEMPLATE.'/card_result.php');
 $response=ob_get_contents();
 ob_end_clean();

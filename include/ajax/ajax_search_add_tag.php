@@ -18,8 +18,13 @@
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
+/**
+ *@file
+ *@brief add tag , used for follow up
+ *@see Tag
+ */
 
-require_once NOALYSS_INCLUDE.'/class/class_tag.php';
+require_once NOALYSS_INCLUDE.'/class/tag.class.php';
 ob_start();
 if ($_GET['clear']==1) {
     /* Add a clear button */

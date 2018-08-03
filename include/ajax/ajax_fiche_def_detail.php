@@ -26,14 +26,15 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_fiche_def.php';
-require_once NOALYSS_INCLUDE.'/lib/class_single_record.php';
+require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
+require_once NOALYSS_INCLUDE.'/lib/single_record.class.php';
 global $g_user;
 
 $g_user->can_request(FICCAT,0);
-
-$fd=new Fiche_Def($cn,$_GET['id']);
-if ( $_GET['id'] > 0 )
+$http=new HttpInput();
+$id=$http->get("id","number");
+$fd=new Fiche_Def($cn,$id);
+if ( $id > 0 )
 {
 
 	echo $fd->input_detail();

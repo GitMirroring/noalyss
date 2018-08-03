@@ -1,18 +1,19 @@
 <?php
 /**
+ *@file
  * @brief display a window with the content of a tag
  */
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_single_record.php';
-require_once NOALYSS_INCLUDE.'/class/class_tag.php';
+require_once NOALYSS_INCLUDE.'/lib/single_record.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag.class.php';
 ob_start();
 $tag=new Tag($cn);
 $tag->data->t_id=$_GET['tag'];
 $tag->data->load();
-echo HtmlInput::title_box(_("Détail du dossier ou tag"), "tag_div");
+echo HtmlInput::title_box(_("Détail du dossier ou étiquette"), "tag_div");
 
 ?>
 <?php
@@ -34,6 +35,8 @@ else :
     $data=$tag->data;
     require_once NOALYSS_TEMPLATE.'/tag_detail.php';
     echo HtmlInput::submit("save_tag_sb", "Valider");
+    echo HtmlInput::button_close("tag_div");
+
     ?>
 </form>
 <?php

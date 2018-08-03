@@ -3,11 +3,11 @@
 //see licence.txt
 ?><!-- left div -->
 <div id="calendar_box_div" class="box">
-<?php echo HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"onclick=\"calendar_zoom($obj)\"");?>
+<?php echo HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"calendar_zoom($obj)",'n');?>
 <?php echo $cal->display('short',0); ?>
 </div>
 
-<div id="todo_listg_div" class="box"> <?php echo HtmlInput::title_box(_('Pense-Bête'),"todo_listg_div",'zoom'," onclick=\"zoom_todo()\"")?>
+<div id="todo_listg_div" class="box"> <?php echo HtmlInput::title_box(_('Pense-Bête'),"todo_listg_div",'zoom',"zoom_todo()",'n')?>
 
 <?php
 /*
@@ -20,7 +20,7 @@ $a_todo=Todo_List::to_object($cn,$array);
 
 echo HtmlInput::button('add',_('Ajout'),'onClick="add_todo()"','smallbutton');
   echo '<table id="table_todo" class="sortable" width="100%">';
-  echo '<tr><th class=" sorttable_sorted_reverse" id="todo_list_date">Date <span id="sorttable_sortrevind">&nbsp;&blacktriangle;</span></th><th>Titre</th><th></th>';
+  echo '<tr><th class=" sorttable_sorted_reverse" id="todo_list_date">Date</th><th>Titre</th><th></th>';
 if ( ! empty ($array) )  {
   $nb=0;
   $today=date('d.m.Y');
@@ -36,7 +36,7 @@ if ( ! empty ($array) )  {
 </div>
 
 <div id="situation_div" class="box"> 
-    <?php echo HtmlInput::title_box(_("Situation"),"situation_div",'none')?>
+    <?php echo HtmlInput::title_box(_("Situation"),"situation_div",'none','','n')?>
     <table class='result'>
 		<tr>
 			<th>
@@ -55,7 +55,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td>
 				<?php if (count($last_operation)>0): ?>
-				<A class="mtitle" style="color:red;text-decoration:underline;font-weight: bolder;"onclick="display_detail('action_now_div')">
+				<A class="mtitle" style="font-weight: bolder;"onclick="display_detail('action_now_div')">
 					<span class="notice">
 					<?php echo count($last_operation) ?>
 					&nbsp;<?php echo _("détail"); ?>
@@ -68,7 +68,7 @@ if ( ! empty ($array) )  {
 
 			<td >
 			<?php if (count($late_operation)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;;font-weight: bolder" onclick="display_detail('action_late_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('action_late_div')">
 				<span class="notice"><?php echo count($late_operation) ?>
 					&nbsp;<?php echo _("détail"); ?>
                                 </span>
@@ -85,7 +85,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td >
 			<?php if (count($supplier_now)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('supplier_now_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('supplier_now_div')">
 				<span class="notice"><?php echo count($supplier_now) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -95,7 +95,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td >
 			<?php if (count($supplier_late)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('supplier_late_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('supplier_late_div')">
 				<span class="notice"><?php echo count($supplier_late) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -110,7 +110,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td>
 				<?php if (count($customer_now)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('customer_now_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('customer_now_div')">
 				<span class="notice"><?php echo count($customer_now) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -120,7 +120,7 @@ if ( ! empty ($array) )  {
 			</td>
 			<td>
 				<?php if (count($customer_late)>0): ?>
-				<A class="mtitle"  style="color:red;text-decoration:underline;font-weight: bolder" onclick="display_detail('customer_late_div')">
+				<A class="mtitle"  style="font-weight: bolder" onclick="display_detail('customer_late_div')">
 				<span class="notice"><?php echo count($customer_late) ?>&nbsp;<?php echo _("détail"); ?></span>
 					
 				</A>
@@ -147,7 +147,7 @@ if ( $rapport->exist() == false ) {
 }
 
 if ( $report != 0 ) : ?>
-<div id="report_div" class="box"><?php echo HtmlInput::title_box($rapport->get_name(),'report_div','none');?>
+<div id="report_div" class="box"><?php echo HtmlInput::title_box($rapport->get_name(),'report_div','none','','n');?>
 <?php    
   $exercice=$g_user->get_exercice();
   if ( $exercice == 0 ) {
@@ -180,7 +180,7 @@ if ( $report != 0 ) : ?>
 <?php
   else :
 ?>
-  <div id="report_div" class="box"> <?php echo HtmlInput::title_box(_('Aucun rapport défini'),'report_div','none')?>
+  <div id="report_div" class="box"> <?php echo HtmlInput::title_box(_('Aucun rapport défini'),'report_div','none','','n')?>
 <p>
   <a href="javascript:void(0)" class="cell" onclick="set_preference('<?php echo dossier::id()?>')"><?php echo _('Cliquez ici pour mettre à jour vos préférences')?></a>
 <p>
@@ -192,7 +192,7 @@ endif;
     
 <div id="action_late_div"  class="inner_box" style="position:fixed;display:none;margin-left:12%;top:25%;width:75%;min-height:50%;overflow: auto;">
 	<?php
-		echo HtmlInput::title_box(_("Action en retard"), "action_late_div","hide")
+		echo HtmlInput::title_box(_("Action en retard"), "action_late_div","hide","","y")
 	?>
 	<ol>
 	<?php if (count($late_operation)> 0) :
@@ -228,7 +228,7 @@ endif;
 
 	<div id="action_now_div" class="inner_box" style="display:none;margin-left:25%;width: 50%;top:25%;min-height:50%;overflow: auto;">
 	<?php
-		echo HtmlInput::title_box(_("Action pour aujourd'hui"), "action_now_div","hide")
+		echo HtmlInput::title_box(_("Action pour aujourd'hui"), "action_now_div","hide",'','y')
 	?>
 	<ol>
 	<?php
@@ -267,7 +267,7 @@ endif;
 
 
 <div id="last_operation_box_div" class="box">
-<?php echo HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','onclick="popup_recherche('.dossier::id().')"')?>
+<?php echo HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','popup_recherche('.dossier::id().')','n')?>
 
 <table style="width: 100%">
 <?php
@@ -299,10 +299,10 @@ for($i=0;$i<count($last_ledger);$i++):
 </div>
 <div id="last_operation_management_div" class="box">
     <?php 
-     echo HtmlInput::title_box(_('Suivi'),"last_operation_management_div",'zoom','onclick="action_show('.dossier::id().')"');
+     echo HtmlInput::title_box(_('Suivi'),"last_operation_management_div",'zoom','action_show('.dossier::id().')','n');
     ?>
     <?php
-    require_once NOALYSS_INCLUDE.'/class/class_follow_up.php';
+    require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
     $gestion=new Follow_Up($cn);
     $array=$gestion->get_last(MAX_ACTION_SHOW);
     $len_array=count($array);
@@ -332,9 +332,7 @@ for($i=0;$i<count($last_ledger);$i++):
 </div>
 
 <div id="add_todo_list" class="box" style="display:none">
-	<script charset="utf-8" type="text/javascript" language="javascript">
-		new Draggable($('add_todo_list'),{});
-	</script>
+	
 <form method="post">
 <?php
 $wDate=new IDate('p_date_todo');
@@ -343,7 +341,7 @@ $wTitle=new IText('p_title');
 $wDesc=new ITextArea('p_desc');
 $wDesc->heigh=5;
 $wDesc->width=40;
-echo HtmlInput::title_box("Note","add_todo_list","hide");
+echo HtmlInput::title_box(_("Note"),"add_todo_list","hide",'',"n");
 echo _("Date")." ".$wDate->input().'<br>';
 echo _("Titre")." ".$wTitle->input().'<br>';
 echo _("Description")."<br>".$wDesc->input().'<br>';
@@ -358,14 +356,5 @@ echo HtmlInput::button('hide',_('Annuler'),'onClick="Effect.Fold(\'add_todo_list
 <script type="text/javascript" language="javascript" charset="utf-8">
 function display_detail(div) {
 	$(div).style.display="block";
-       // $(div).style.top=calcy('150')+'px';
-	//Effect.Grow(div,{});
 }
-try {
-var array=Array('customer_now_div','customer_late_div','supplier_now_div','supplier_late_div','action_now_div','action_late_div');
-var i=0;
-for  (i=0;i < array.length;i++) {
-	new Draggable(array[i],{});
-	}
-} catch (e) { alert(e.getMessage);}
 </script>

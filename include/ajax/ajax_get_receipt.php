@@ -30,13 +30,13 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 require_once NOALYSS_INCLUDE.'/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
 
 // Check if the needed field does exist
-extract ($_GET);
+extract ($_GET, EXTR_SKIP);
 foreach (array('l','gDossier') as $a)
 {
     if ( ! isset (${$a}) )

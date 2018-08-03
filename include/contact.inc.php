@@ -21,11 +21,11 @@
  * the contact category
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_iselect.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
-require_once NOALYSS_INCLUDE.'/class/class_contact.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ibutton.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche_def.php';
+require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
+require_once NOALYSS_INCLUDE.'/class/contact.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 
 
 

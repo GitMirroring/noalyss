@@ -27,18 +27,19 @@
  *
  */
 if ( !defined ('ALLOWED')) die('Forbidden');
-require_once NOALYSS_INCLUDE.'/lib/class_itext.php';
-require_once NOALYSS_INCLUDE.'/lib/class_icheckbox.php';
-require_once  NOALYSS_INCLUDE.'/class/class_extension.php';
-require_once NOALYSS_INCLUDE.'/lib/class_html_input.php';
-
-$sa = (isset($_REQUEST['sa'])) ? $_REQUEST['sa'] : 'list';
+require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
+require_once  NOALYSS_INCLUDE.'/class/extension.class.php';
+require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+$sa = $http->request("sa", "string", 'list');
 if (isset($_POST['upd']) &&
 		isset($_POST['m']))
 {
-    $name=HtmlInput::default_value_post('name',"");
-    $desc =HtmlInput::default_value_post('desc',"");
-    $mod_id=HtmlInput::default_value_post("m", 0);
+    $name=$http->post('name');
+    $desc =$http->post('desc');
+    $mod_id=$http->post("m", 0);
     
 	if (trim($name) != "" && $mod_id != 0 && isNumber($mod_id)==1)
 	{
@@ -52,7 +53,7 @@ if (isset($_POST['upd']) &&
 
 $cn = new Database();
 
-$fmod_dbid=HtmlInput::default_value_post("FMOD_DBID", 0);
+$fmod_dbid=$http->post("FMOD_DBID","number",0);
 
 // IF FMOD_NAME is posted then must add a template
 if (isset($_POST["FMOD_NAME"]))
@@ -72,8 +73,8 @@ if (isset($_POST["FMOD_NAME"]))
 		return;
 	}
 
-	$mod_name = HtmlInput::default_value_post("FMOD_NAME",null);
-	$mod_desc = HtmlInput::default_value_post("FMOD_DESC",null);
+	$mod_name = $http->post("FMOD_NAME");
+	$mod_desc = $http->post("FMOD_DESC");
 	if ($mod_name != null || trim ($mod_name) != "")
 	{
 		$Res = $cn->exec_sql("insert into modeledef(mod_name,mod_desc)
@@ -238,7 +239,7 @@ if (isset($_POST["FMOD_NAME"]))
 
 }
 // Show all available templates
-require_once NOALYSS_INCLUDE.'/lib/class_sort_table.php';
+require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 $url=$_SERVER['PHP_SELF']."?sa=list&action=".$_REQUEST['action'];
 
 $header=new Sort_Table();
@@ -253,7 +254,7 @@ $Res = $cn->exec_sql("select mod_id,mod_name,mod_desc from
                    modeledef $sql_order");
 
 $count = Database::num_row($Res);
-echo '<div class="content" style="width:80%;margin-left:10%">';
+echo '<div class="content">';
 echo "<H2>"._('Modèles')."</H2>";
 if ($sa == 'list')
 {
@@ -261,6 +262,11 @@ if ($sa == 'list')
         echo HtmlInput::button(_('Ajouter'),_('Ajouter un modèle')," onclick=\$('folder_add_id').show()");
 
         echo '</p>';
+        echo "<p class=\"notice\">" . _("Si vous voulez r&eacute;cup&eacute;rer toutes les adaptations d'un dossier " .
+            " dans un autre dossier, vous pouvez en faire un modèle." .
+            " Seules les fiches, la structure des journaux, les p&eacute;riodes,... seront reprises " .
+            "et aucune donn&eacute;e du dossier sur lequel le dossier est bas&eacute;. Les données contenues dans les extensions ne sont pas effacées") . "</p>";
+        echo h2(_("Modèles locaux"));
 	if ($count == 0)
 	{
 		echo _("Aucun modèle disponible");
@@ -269,7 +275,7 @@ if ($sa == 'list')
 	{
 
 		echo '<span style="display:block;margin-top:10">';
-		echo _('Filtre').HtmlInput::infobulle(23);
+		echo _('Filtre').Icon_Action::infobulle(23);
 		echo HtmlInput::filter_table("t_modele", "0,1,2","1");
 		echo '</span>';
 		echo '<table id="t_modele" class="table_large" style="border-spacing:10;border-collapse:separate" >';
@@ -317,10 +323,10 @@ if ($sa == 'list')
 		}// for
 		echo "</table>";
 	}// if count = 0
-	echo "<p class=\"notice\">"._("Si vous voulez r&eacute;cup&eacute;rer toutes les adaptations d'un dossier " .
-	" dans un autre dossier, vous pouvez en faire un modèle." .
-	" Seules les fiches, la structure des journaux, les p&eacute;riodes,... seront reprises " .
-	"et aucune donn&eacute;e du dossier sur lequel le dossier est bas&eacute;. Les données contenues dans les extensions ne sont pas effacées")."</p>";
+        echo h2(_("Modèles disponibles dans le dépôt"));
+        
+        require NOALYSS_INCLUDE . "/upgrade-template.php";
+    
 }
 ?>
 <div id="folder_add_id" class="inner_box" style="display:none;top:50px">
@@ -397,8 +403,11 @@ if ($sa == 'list')
 			echo HtmlInput::button_anchor(_('Retour'), '?action=modele_mgt');
 			return;
 		}
-                $mod_id=HtmlInput::default_value_request('m', 0);
-                if ( $mod_id == 0 || isNumber($mod_id) == 0 )
+                try {
+                    $mod_id=$http->request('m', "number");
+                    
+                }
+                catch (Exception $e)
                 {
                     echo _('Donnée invalide');
                     return;

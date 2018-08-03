@@ -1,7 +1,7 @@
 begin;
 CREATE OR REPLACE FUNCTION comptaproc.check_balance(p_grpt integer)
   RETURNS numeric AS
-$BODY$
+$_$
 declare
 	amount_jrnx_debit numeric;
 	amount_jrnx_credit numeric;
@@ -34,8 +34,8 @@ begin
 		end if;
 	return 0;
 end;
-$BODY$
-  LANGUAGE plpgsql;
+$_$
+LANGUAGE plpgsql;
 
 update op_predef set od_direct='t' where od_jrn_type='ODS';
 
@@ -150,7 +150,7 @@ CREATE INDEX link_action_type_fki
 -- Trigger: trg_action_gestion_related on action_gestion_related
 CREATE OR REPLACE FUNCTION comptaproc.action_gestion_related_ins_up()
   RETURNS trigger AS
-$BODY$
+$_$
 declare
 	nTmp bigint;
 begin
@@ -168,8 +168,8 @@ end if;
 return NEW;
 
 end;
-$BODY$
-  LANGUAGE plpgsql ;
+$_$
+  LANGUAGE plpgsql;
 -- DROP TRIGGER trg_action_gestion_related ON action_gestion_related;
 
 CREATE TRIGGER trg_action_gestion_related
@@ -372,7 +372,7 @@ begin
 return NEW;
 end;
 $BODY$
-  LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql;
 
 
 CREATE TRIGGER fiche_detail_upd_trg   BEFORE UPDATE   ON fiche_detail   FOR EACH ROW   EXECUTE PROCEDURE comptaproc.fiche_detail_qcode_upd();

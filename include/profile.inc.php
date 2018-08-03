@@ -20,15 +20,15 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/database/class_profile_sql.php';
-global $cn;
+require_once NOALYSS_INCLUDE.'/database/profile_sql.class.php';
+global $cn,$http;
 
 //**********************************************
 // Save avail. profiles
 //**********************************************
 if (isset($_POST['change_profile']))
 {
-    extract($_POST);
+    extract($_POST, EXTR_SKIP);
     try
     {
         for ($e=0; $e<count($right); $e++)
@@ -58,7 +58,7 @@ if (isset($_POST['change_profile']))
     catch (Exception $exc)
     {
         echo $exc->getMessage();
-        error_log( $exc->getTraceAsString());
+        record_log( $exc->getTraceAsString());
         throw $exc;
     }
 }
@@ -67,7 +67,7 @@ if (isset($_POST['change_profile']))
 //**********************************************
 if (isset($_POST['change_stock']))
 {
-    extract($_POST);
+    extract($_POST, EXTR_SKIP);
     try
     {
         for ($e=0; $e<count($right); $e++)
@@ -97,7 +97,7 @@ if (isset($_POST['change_stock']))
     catch (Exception $exc)
     {
         echo $exc->getMessage();
-        error_log($exc->getTraceAsString());
+        record_log($exc->getTraceAsString());
         throw $exc;
     }
 }
@@ -108,7 +108,7 @@ if (isset($_POST['change_stock']))
 if (isset($_POST['save_name']))
 {
 
-    extract($_POST);
+    extract($_POST, EXTR_SKIP);
     try
     {
         if (strlen(trim($p_name))==0)
@@ -145,12 +145,9 @@ if (isset($_POST['save_name']))
 //************************************
 if (isset($_POST['clone']))
 {
-    $p_id = HtmlInput::default_value_post("p_id", 0);
-    if ( $p_id == 0 || isNumber($p_id) == 0) {
-     throw new Exception (_('Argument'));
-    }
     try
     {
+        $p_id = $http->post("p_id","number", 0);
         $cn->start();
         $new_id=$cn->get_value("insert into profile(p_name,p_desc,with_calc,
 			with_direct_form)
@@ -187,7 +184,7 @@ if (isset($_POST['clone']))
 //************************************
 if (isset($_POST['delete_profil']))
 {
-    extract($_POST);
+    extract($_POST, EXTR_SKIP);
     try
     {
         $cn->start();
@@ -210,26 +207,20 @@ if (isset($_POST['delete_profil']))
 //************************************
 if (isset($_POST['mod']))
 {
-    // pm_id of the menu to modify
-    $pm_id=HtmlInput::default_value_post("pm_id", 0);
-    // profile id
-    $p_id=HtmlInput::default_value_post("p_id", "");
-    // display order 
-    $p_order=HtmlInput::default_value_post("p_order", 0);
-    // code to add
-    $me_code=HtmlInput::default_value_post("me_code", "");
-    // tab
-    $tab=HtmlInput::default_value_post("tab", "");
-    // set Default
-    $pm_default=HtmlInput::default_value_post('pm_default', 0);
     try
     {
-        if ($pm_id==""||
-                $p_id==""||
-                $p_order==""||
-                $me_code==""
-        )
-            throw new Exception('Argument');
+        // pm_id of the menu to modify
+        $pm_id=$http->post("pm_id", "number");
+        // profile id
+        $p_id=$http->post("p_id", "number");
+        // display order 
+        $p_order=$http->post("p_order", "number");
+        // code to add
+        $me_code=$http->post("me_code");
+        // tab
+        $tab=$http->post("tab");
+        // set Default
+        $pm_default=$http->post('pm_default', "string", 0);
         /**
          * Printing cannot be a menu and do not depend of anything
          */
@@ -267,22 +258,22 @@ if (isset($_POST['mod']))
 //****************************************************
 if (isset($_POST['add_menu'])||isset($_POST['add_impress']))
 {
-    // type of menu me or pr
-    $p_type=HtmlInput::default_value_post("type", "");
-    // level
-    $p_level=HtmlInput::default_value_post("p_level", "");
-    // pm_id of menu parent
-    $p_dep=HtmlInput::default_value_post("dep", "");
-    // profile id
-    $p_id=HtmlInput::default_value_post("p_id", "");
-    // display order 
-    $p_order=HtmlInput::default_value_post("p_order", 0);
-    // code to add
-    $me_code=HtmlInput::default_value_post("me_code", "");
-    // tab
-    $tab=HtmlInput::default_value_post("tab", "");
     try
     {
+        // type of menu me or pr
+        $p_type=$http->post("type","string",null);
+        // level
+        $p_level=$http->post("p_level","string",null);
+        // pm_id of menu parent
+        $p_dep=$http->post("dep","number",null);
+        // profile id
+        $p_id=$http->post("p_id", "number");
+        // display order 
+        $p_order=$http->post("p_order");
+        // code to add
+        $me_code=$http->post("me_code");
+        // tab
+        $tab=$http->post("tab");
         $cn->start();
 
 
@@ -302,16 +293,6 @@ if (isset($_POST['add_menu'])||isset($_POST['add_impress']))
         // Module never depends of anything
         if ($p_type=='me')
         {
-            /*
-             * Check variable
-             */
-            if ($p_type==""||
-                    $p_level==""||
-                    $p_dep==""||
-                    $p_id==""||
-                    $me_code==""
-            )
-                throw new Exception('Argument');
             if ($p_level==0)
             {
                 $me_code_dep=null;
@@ -333,12 +314,12 @@ if (isset($_POST['add_menu'])||isset($_POST['add_impress']))
                 where p_id=$1 and me_code_dep=$2 and me_code=$3",
                 array($p_id, $me_code, $me_code_dep));
         if ($inf>0)
-            throw new Exception("Boucle infinie");
+            throw new Exception(_("Boucle infinie"));
         /**
          * Check if we don't add a menu depending on itself
          */
         if ($me_code==$me_code_dep)
-            throw new Exception("Un menu ne peut pas dépendre de lui-même");
+            throw new Exception(_("Un menu ne peut pas dépendre de lui-même"));
 
 
         /**
@@ -350,7 +331,7 @@ if (isset($_POST['add_menu'])||isset($_POST['add_impress']))
          * Do not insert twice the same menu 
          */
         $duplicate = $cn->get_value(" select count(*) from profile_menu where "
-                . " pm_id_dep = $1 and me_code = $2",array($p_dep,$me_code));
+                . " pm_id_dep = $1 and me_code = $2",array($pm_id_dep,$me_code));
         if ( $duplicate > 0 ) {
             throw new Exception(_('Doublon'));
         }
@@ -367,6 +348,7 @@ if (isset($_POST['add_menu'])||isset($_POST['add_impress']))
     catch (Exception $exc)
     {
         alert($exc->getMessage());
+        $cn->rollback;
     }
 }
 
@@ -444,7 +426,7 @@ if (isset($_POST['delete_profil']))
     <?php
 
 }
-$dep=HtmlInput::default_value_post("dep", 0);
+$dep=$http->post("dep","string","");
 ?>
 <script>
     var selected_menu="<?php echo $dep;?>";
@@ -457,4 +439,5 @@ $dep=HtmlInput::default_value_post("dep", 0);
         }
         selected_menu=rowid;
     }
+    
 </script>  

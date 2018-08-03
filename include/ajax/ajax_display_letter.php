@@ -19,11 +19,16 @@
  */
 
 // Copyright 2015 Author Dany De Bontridder danydb@aevalys.eu
-// require_once '.php';
+
+  /**
+   *@file
+   *@brief show the lettered operation
+   */
+
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/class_lettering.php';
+require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 $exercice=$g_user->get_exercice();
 if ($g_user->check_module("LETCARD")==0 &&  $g_user->check_module("LETACC")==0)
     exit();

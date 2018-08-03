@@ -25,11 +25,10 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 ob_start();
-require_once NOALYSS_INCLUDE.'/class/class_pre_operation.php';
+require_once NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 $op=new Pre_Operation($cn,$_GET['id']);
 $array=$op->load();
-echo HtmlInput::anchor_close('mod_predf_op');
-echo h2(_('Modification du nom'),' class="title"');
+echo HtmlInput::title_box(_('Modification du nom'),'mod_predf_op','close','','n');
 
 echo '
     <form method="POST" onsubmit="save_predf_op(this);return false;">';

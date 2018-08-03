@@ -23,31 +23,38 @@
  * \brief send the account list in PDF
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-include_once("class/class_acc_account_ledger.php");
+include_once("class/acc_account_ledger.class.php");
 include_once("lib/ac_common.php");
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-include_once("lib/class_impress.php");
-require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+include_once("lib/impress.class.php");
+require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once  NOALYSS_INCLUDE.'/header_print.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
+require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
+$f_id=$http->request("f_id", "number");
+$from_periode=$http->get("from_periode","date");
+$to_periode=$http->get("to_periode","date");
+$ople=$http->get("ople");
+
 $gDossier=dossier::id();
 
 $cn=Dossier::connect();
 
-extract($_GET);
-
 $ret="";
 $pdf= new PDF($cn);
-$pdf->setDossierInfo("  Periode : ".$_GET['from_periode']." - ".$_GET['to_periode']);
+$pdf->setDossierInfo("  Periode : ".$from_periode." - ".$to_periode);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAuthor('NOALYSS');
-$pdf->setTitle("Détail fiche",true);
+$pdf->setTitle(_("Détail fiche"),true);
 
 
 $Fiche=new Fiche($cn,$f_id);
-
+$operation=new Acc_Operation($cn);
 
 list($array,$tot_deb,$tot_cred)=$Fiche->get_row_date($from_periode,$to_periode,$_GET['ople']);
 // don't print empty account
@@ -142,7 +149,10 @@ for ($e=0;$e<count($array);$e++)
     $l++;
     $pdf->write_cell($size[$l],6,mb_substr($row['jrn_def_code'],0,14),0,0,$align[$l]);
     $l++;
-    $pdf->LongLine($size[$l],6,($row['description'].'('.$row['jr_internal'].")"),0,$align[$l]);
+    $tiers=$operation->find_tiers($row['jr_id'], $row['j_id'], $row['j_qcode']);
+    $description=($tiers=="")?$row["description"]:"[".$tiers."]".$row['description'];
+
+    $pdf->LongLine($size[$l],6,($description.'('.$row['jr_internal'].")"),0,$align[$l]);
 
     $l++;
     $pdf->LongLine($size[$l],6,(($row['letter']!=-1)?strtoupper(base_convert($row['letter'],10,36)):''),0,$align[$l]);

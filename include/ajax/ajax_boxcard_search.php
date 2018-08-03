@@ -43,15 +43,14 @@ $max=(count($array)>MAX_CARD_SEARCH)?MAX_CARD_SEARCH:count($array);
 <h2 class="notice"><?php printf (_("Résultat limité à %d , %d nombre de fiches trouvées"), MAX_CARD_SEARCH,count($array))?> </h2>
 
 <?php endif?>
-<?php echo _('Cherche')?> <?php echo HtmlInput::infobulle(26);echo HtmlInput::filter_table("tb_fiche", "0,1,2,3,4,5", 1); ?> :
+<?php echo _('Cherche')?> <?php echo Icon_Action::infobulle(26);echo HtmlInput::filter_table("tb_fiche", "0,1,2,3,4,5", 1); ?> :
 <table id="tb_fiche" class="sorttable" style="width:100%">
 	<tr>
 		<th>
-			<?php echo _("Quick Code");?> <?php echo HtmlInput::infobulle(17); ?>
+			<?php echo _("Quick Code");?> <?php echo Icon_Action::infobulle(17); ?>
 		</th>
 		<th class=" sorttable_sorted">
 			Nom
-		<span id="sorttable_sortfwdind">&nbsp;&#x25BE;</span>
 		</th>
 		<th>
 			<?php echo _("Categorie");?>

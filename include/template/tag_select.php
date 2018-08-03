@@ -1,6 +1,10 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+/**
+ * @file
+ * @brief list of tags
+ */
 ?><?php
 echo HtmlInput::title_box('Tag', 'tag_div');
 $max=$this->cn->count($ret);

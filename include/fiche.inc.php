@@ -22,9 +22,9 @@
  * \brief printing of category of card  : balance, historic
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
-require_once NOALYSS_INCLUDE.'/class/class_lettering.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
+require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 
 $gDossier = dossier::id();
 $cn = Dossier::connect();
@@ -36,7 +36,7 @@ global $g_user, $g_failed;
  */
 /* category */
 $categorie = new ISelect('cat');
-$categorie->value = $cn->make_array('select fd_id,fd_label from fiche_def order by fd_label');
+$categorie->value = $cn->make_array("select fd_id,fd_label||'('||(select count(*) from fiche where fiche.fd_id=fiche_def.fd_id)::text||')' from fiche_def order by fd_label");
 $categorie->selected = (isset($_GET['cat'])) ? $_GET['cat'] : 0;
 $str_categorie = $categorie->input();
 
@@ -89,7 +89,7 @@ $search_card_js=sprintf('onclick="boxsearch_card(\'%d\')"',dossier::id());
 ?>
 <div id="box_search_card">
 
-		<?php echo _('Recherche de fiche')?> <?php echo HtmlInput::infobulle(18)?> :<?php echo $search_card->input()?>
+		<?php echo _('Recherche de fiche')?> <?php echo Icon_Action::infobulle(18)?> :<?php echo $search_card->input()?>
 		<?php echo HtmlInput::button_anchor(_("Chercher"),"javascript:void(0)","",$search_card_js,'smallbutton')?>
 </div>
 <?php
@@ -283,7 +283,7 @@ if (isDate($_REQUEST['start']) == null || isDate($_REQUEST['end']) == null)
 /*************************************************************************************************************************/
 if ( $_GET['histo'] == 8)
 {
-    require_once NOALYSS_INCLUDE.'/class/class_balance_age.php';
+    require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
     $bal=new Balance_Age($cn);
     $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
     $export_csv .=HtmlInput::request_to_hidden(array('gDossier','ac','p_let','p_date_start'));
@@ -319,7 +319,7 @@ if ( $_GET['histo'] == 8)
 /*************************************************************************************************************************/
 if ( $_GET['histo'] == 7)
 {
-    require_once NOALYSS_INCLUDE.'/class/class_balance_age.php';
+    require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
     $bal=new Balance_Age($cn);
        $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
     $export_csv .=HtmlInput::request_to_hidden(array('gDossier','ac','p_let','p_date_start'));
@@ -396,7 +396,7 @@ if ($_GET['histo'] == 4 || $_GET['histo'] == 5)
 		echo tr(
 				th('Quick Code') .
 				th('Libellé') .
-				'<th>Poste'.HtmlInput::infobulle(27).'</th>'.
+				'<th>Poste'.Icon_Action::infobulle(27).'</th>'.
 				th('Débit', 'style="text-align:right"') .
 				th('Crédit', 'style="text-align:right"') .
 				th('Solde', 'style="text-align:right"') .
@@ -509,7 +509,7 @@ for ($e = 0; $e < count($afiche); $e++)
 
 		echo '<h2>' . $detail_card ;
                 echo "poste "
-                        . ":".HtmlInput::history_account($row->strAttribut(ATTR_DEF_ACCOUNT),$row->strAttribut(ATTR_DEF_ACCOUNT),'display:inline').HtmlInput::infobulle(27).'</h2>';
+                        . ":".HtmlInput::history_account($row->strAttribut(ATTR_DEF_ACCOUNT),$row->strAttribut(ATTR_DEF_ACCOUNT),'display:inline').Icon_Action::infobulle(27).'</h2>';
 
 		echo '<table class="result">';
 		echo '<tr>';

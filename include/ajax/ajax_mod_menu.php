@@ -1,9 +1,13 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+  /**
+   *@file
+   *@brief Menu modification
+   */
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_menu_ref.php';
+require_once NOALYSS_INCLUDE.'/class/menu_ref.class.php';
 $m=new Menu_Ref($cn,$me_code);
 $msg="Modification ".$m->me_code.' '.h($m->me_menu);
 echo '<form method="POST" id="ajax_mod_menu_frm" onsubmit="return confirm_box(this,\'Vous confirmez ?\')">';

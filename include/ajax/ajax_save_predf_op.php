@@ -23,36 +23,46 @@
  * \brief save the new predefined operation 
  * included from ajax_misc
  */
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 if ($g_user->check_module('PREDOP') == 0) exit();
-$name=HtmlInput::default_value_post("opd_name", "");
+$name=$http->post("opd_name","string", "");
 if ( trim($name) != '')
   {
-    $od_id=HtmlInput::default_value_post("od_id", -1);
-    
-    if ( $od_id == -1 ||isNumber($od_id) == 0) return;
-    
-    $cn->exec_sql('delete from op_predef where od_id=$1',
-		  array($od_id));
-    
-    $cn->exec_sql("delete from op_predef_detail where od_id=$1",array($od_id));
-    
-    $jrn_type=HtmlInput::default_value_post("jrn_type", null);
-    switch ($jrn_type) {
-        case 'ACH':
-        $operation=new Pre_op_ach($cn);
-        break;
-        case 'VEN':
-        $operation=new Pre_op_ven($cn);
-        break;
-        case 'ODS':
-        $operation=new Pre_Op_Advanced($cn);
-        break;
-    default :
-        throw new Exception(_('Type de journal invalide'));
-    }
-    $operation->get_post();
-    $operation->save();
-    $cn->commit();
+      try
+      {
+        $od_id=$http->post("od_id", "number");
+        $cn->exec_sql('delete from op_predef where od_id=$1',
+                      array($od_id));
+
+        $cn->exec_sql("delete from op_predef_detail where od_id=$1",array($od_id));
+
+        $jrn_type=$http->post("jrn_type");
+        switch ($jrn_type) {
+            case 'ACH':
+            $operation=new Pre_op_ach($cn);
+            break;
+            case 'VEN':
+            $operation=new Pre_op_ven($cn);
+            break;
+            case 'ODS':
+            $operation=new Pre_Op_Advanced($cn);
+            break;
+        default :
+            throw new Exception(_('Type de journal invalide'));
+        }
+        $operation->get_post();
+        $operation->save();
+        $cn->commit();
+          
+      }
+      catch (Exception $exc)
+      {
+          error_log($exc->getTraceAsString());
+          throw $exc;
+      }
+
   }
 ?>

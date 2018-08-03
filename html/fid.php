@@ -33,13 +33,14 @@
    *\note if the j is -1 then all the card are shown
  */
 require_once '../include/constant.php';
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier=dossier::id();
 
-require_once('class/class_user.php');
+require_once('class/user.class.php');
 
 $cn=Dossier::connect();
 global $g_user;
@@ -52,13 +53,12 @@ $fTva_id=(isset($_REQUEST['t']))?$_REQUEST['t']:'none';
 $fPrice_sale=(isset($_REQUEST['p']))?$_REQUEST['p']:'none';
 $fPrice_purchase=(isset($_REQUEST['b']))?$_REQUEST['b']:'none';
 
-
+$hi=new HttpInput();
 
 if ( isset($_SESSION['isValid']) && $_SESSION['isValid'] == 1)
 {
-    $jrn=HtmlInput::default_value_get('j', '-1');
-    $jrn=sql_string($_GET['j']);
-    $d=HtmlInput::default_value_get('d', '');
+    $jrn=$hi->get('j', "number",'-1');
+    $d=$hi->get('d',"string", '');
     $d=sql_string($d);
 
     if ( $jrn == -1 )

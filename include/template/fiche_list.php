@@ -32,7 +32,7 @@
 		<tr>
 			<th >
 				<?php echo _("Quick Code")?>
-                            <?php echo HtmlInput::infobulle(17)?>
+                            <?php echo Icon_Action::infobulle(17)?>
 			</th>
 			<th >
 				<?php echo _("Nom")?>

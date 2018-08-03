@@ -28,15 +28,15 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_icheckbox.php';
-require_once  NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-require_once  NOALYSS_INCLUDE.'/class/class_acc_reconciliation.php';
+require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
+require_once  NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once  NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/class_periode.php';
+require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ipopup.php';
+require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 
-global $g_user;
+global $g_user,$http;
 
 $cn = Dossier::connect();
 
@@ -104,13 +104,14 @@ elseif (isset($_POST['save']))
                  // extourne
                 if (isset($_POST['reverse_ck']))
                 {
-                    $p_date=HtmlInput::default_value_post('reverse_date', '');
+                    $p_date=$http->post('reverse_date',"string", '');
+                    $p_msg=$http->post("ext_label");
                     if (isDate($p_date)==$p_date)
                     {
                         // reverse the operation
                         try
                         {
-                            $ledger->reverse($p_date);
+                            $ledger->reverse($p_date,$p_msg);
                             echo '<p>';
                             echo _('Extourné au ').$p_date;
                             echo '</p>';

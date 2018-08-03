@@ -51,17 +51,18 @@
  * - ctl (to return)
  * - popup
  * - ref if we want to refresh the window
+ * - acc is accounting is visible or not
  *\see fiche fiche::Save constant.php
  */
 if ( ! defined('ALLOWED')) die (_('Accès non autorisé'));
 
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche.php';
-require_once NOALYSS_INCLUDE.'/lib/class_iradio.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
+require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/class/class_fiche_attr.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/class/fiche_attr.class.php';
 
 mb_internal_encoding("UTF-8");
 
@@ -76,7 +77,7 @@ foreach ($var as $v)
         $cont=1;
     }
 }
-extract($_REQUEST );
+extract($_REQUEST, EXTR_SKIP );
 
 if ( $cont != 0 ) exit();
 
@@ -92,7 +93,9 @@ $g_user=new User($cn);
 $g_user->check(true);
 $g_user->check_dossier($gDossier,true);
 $html=var_export($_REQUEST,true);
-
+// For storing extra information , example the HTML elt id to update
+// after creating
+$extra="";
 switch($op2)
 {
     /* ------------------------------------------------------------ */
@@ -114,6 +117,7 @@ case 'rmfa':
     catch (Exception $e)
     {
         $cn->rollback();
+        record_log($e->getTraceAsString());
         echo $e->getMessage();
     }
     $html=ob_get_contents();
@@ -126,7 +130,7 @@ case 'rmfa':
 case 'dc':
     $f=new Fiche($cn);
     /* add title + close */
-    $html=HtmlInput::title_box(_("Détail fiche"), $ctl);
+    $html=HtmlInput::title_box(_("Détail fiche"), $ctl,"close","","y");
     if ( $qcode != '')
     {
         $f->get_by_qcode($qcode);
@@ -136,7 +140,7 @@ case 'dc':
 	    $can_modify=0;
 	  }
 	if ( $can_modify==1)
-	  $card=$f->Display(false);
+	  $card=$f->Display(false,$ctl);
 	else
 	  $card=$f->Display(true);
 	if ( $card == 'FNT' )
@@ -148,7 +152,7 @@ case 'dc':
 
 	    if ($can_modify==1)
 	      {
-		$html.='<form id="form_'.$ctl.'"method="get" onsubmit="update_card(this);return false;">';
+		$html.='<form id="form_'.$ctl.'" method="get" onsubmit="update_card(this);return false;">';
 		$html.=dossier::hidden();
 		$html.=HtmlInput::hidden('f_id',$f->id);
 		$html.=HtmlInput::hidden('ctl',$ctl);
@@ -160,6 +164,12 @@ case 'dc':
 		$html.=HtmlInput::submit('save',_('Sauver'));
 	      }
 	    if ( ! isset ($nohistory))$html.=HtmlInput::history_card_button($f->id,_('Historique'));
+            // Display a remove button if not used and can modify card
+            if ( $can_modify == 1 && $f->is_used()==FALSE)
+            {
+                $js=str_replace('"',"'",json_encode(["gDossier"=>Dossier::id(),'op'=>'card','op2'=>"rm_card","f_id"=>$f->id,'ctl'=>$ctl]));
+                $html.=HtmlInput::button_action(_("Efface"), "delete_card($js)","x","smallbutton");
+            }
             $html.='</p>';
 	    if ($can_modify==1)
 	      {
@@ -176,7 +186,7 @@ case 'dc':
     /* Blank card */
     /* ------------------------------------------------------------ */
 case 'bc':
-    if ( $g_user->check_action(FICADD)==1 )
+    if ( $g_user->check_action(FICADD)==1 || $g_user->check_action(FIC)==1)
     {
         $r=HtmlInput::title_box(_("Nouvelle fiche"), $ctl);
 	/* get cat. name */
@@ -192,6 +202,9 @@ case 'bc':
         $r.='<p style="text-align:center">';
         $r.=HtmlInput::submit('sc',_('Sauve'));
         $r.='</p>';
+        if ( isset ($eltid)) {
+            $r.=HtmlInput::hidden("eltid", $eltid);
+        }
         $r.='</form>';
         $html=$r;
     }
@@ -246,38 +259,32 @@ case 'st':
                                   sql_string($fil));
             }
     }
-	if ( strpos($where," in ()") != 0)
-	{
-		 $html=HtmlInput::anchor_close('select_card_div');
-		 $html.=h2info(_('Choix de la catégorie'));
-		 $html.='<h3 class="notice">';
-		 $html.=_("Aucune catégorie de fiche ne correspond à".
-                " votre demande, le journal pourrait n'avoir accès à aucune fiche");
-		 $html.='</h3>';
-		 break;
-	}
+    if ( strpos($where," in ()") != 0)
+    {
+             $html=_("Aucune catégorie de fiche ne correspond à".
+            " votre demande, le journal pourrait n'avoir accès à aucune fiche");
+             break;
+    }
     $sql.=" ".$where." order by fd_label";
 
     $array=$cn->get_array($sql);
-    $html=HtmlInput::title_box(_("Choix de la catégorie"), $ctl);
-
+    
+    $list_fiche="";
     if ( empty($array))
     {
-        $html.=_("Aucune catégorie de fiche ne correspond  à".
-                " votre demande");
-		if ( DEBUG )        $html.=$sql;
+        $html=_("Aucune catégorie de fiche ne correspond  à votre demande");
+        if ( DEBUG )        $html.=$sql;
     }
     else
     {
+        $html=HtmlInput::title_box(_("Choix de la catégorie"), $ctl);
         $r='';
+        
+	$r.='<div dd>';
 	$r.='<p  style="padding-left:2em">';
         $r.=_("Choisissez la catégorie de fiche à laquelle vous aimeriez ajouter une fiche").'</p>';
-        
-	$r.='<div style="text-align:center">';
-        
+        if ( ! isset($eltid)) $eltid="";
         $msg=_('Choisissez une catégorie svp');
-        $r.='<form id="sel_type" method="GET" onsubmit="this.ipopup='.$ctl.";if ($('fd_id').value != 0 ) {dis_blank_card(this);return false;} else "
-                . "{ $('error_cat').innerHTML='".$msg."'; return false;}\">" ;
         $r.='<span id="error_cat" class="notice"></span>';
         $r.=dossier::hidden();
         $r.=(isset($ref))?HtmlInput::hidden('ref',1):'';
@@ -285,28 +292,41 @@ case 'st':
         $r.='<table id="cat_card_table" class="result">';
         for ($i=0;$i<count($array);$i++)
         {
+            $nb_count=$cn->get_value("select count(*) from fiche where fd_id=$1",[$array[$i]['fd_id']]);
+            $list_fiche.=sprintf("<fiche_cat_item>%d</fiche_cat_item>",$array[$i]['fd_id']);
             $class=($i%2==0)?' class="even" ':' class="odd" ';
             $r.='<tr '.$class.' id="select_cat_row_'.$array[$i]['fd_id'].'">';
             $r.='<td >';
-            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\')">'.h($array[$i]['fd_label']).'</a>';
+            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_label']).'</a>';
             $r.='</td>';
             $r.='<td>';
-            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\')">'.h($array[$i]['fd_description']).'</a>';
+            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_description'])."($nb_count)".'</a>';
             $r.='</td>';
            
              $r.="</tr>";
         }
+        
         $r.='</table>';
         $r.=HtmlInput::hidden('fd_id',0);
         $r.='<p style="text-align:center">';
-        $r.=HtmlInput::submit('st','choix');
-	$r.=HtmlInput::button('Annuler',_('Annuler')," onclick=\"removeDiv('$ctl')\" ");
+	$r.=HtmlInput::button('Fermer',_('Fermer')," onclick=\"removeDiv('$ctl')\" ");
 	$r.='</p>';
-        $r.='</form>';
         $r.='</div>';
         $html.=$r;
-
+        
     }
+    $xml=escape_xml($html);
+    header('Content-type: text/xml; charset=UTF-8');
+echo <<<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+<ctl>$ctl</ctl>
+<code>$xml</code>
+<fiche_cat>{$list_fiche}</fiche_cat>        
+</data>
+EOF;
+return;
+    
     break;
     /*----------------------------------------------------------------------
      * SC save card
@@ -318,38 +338,55 @@ case 'sc':
     if ( $g_user->check_action(FICADD)==1 )
     {
         $f=new Fiche($cn);
-        $f->insert($fd_id,$_POST);
-		$f->Get();
-        $html.='<h2 class="notice">'._('Fiche sauvée').'</h2>';
-        $html.=$f->Display(true);
-        $js="";
-        if ( isset( $_POST['ref'])) $js=create_script(' window.location.reload()');
-        $html.=$js;
+        $status="<status>OK</status>";
+        try {
+            $f->insert($fd_id,$_POST);
+            $f->Get();
+            $html.='<h2 class="notice">'._('Fiche sauvée').'</h2>';
+            $html.=$f->Display(true);
+            $js="";
+            if ( isset( $_POST['ref'])) $js=create_script(' window.location.reload()');
+            $html.=$js;
+            if ( isset ($eltid)) {
+                // after adding a new card, we update some field
+                $extra="<eltid>$eltid</eltid>".
+                        "<elt_value>{$f->get_quick_code ()}</elt_value>";
+
+            }
+            $extra.=$status;
+            $html.=HtmlInput::button_close($ctl);
+        } catch (Exception $exc) {
+            $html="<h2 class=\"error\">"._("Erreur sauvegarde")."</h2>";
+            $html.=$exc->getMessage();
+            $status="<status>NOK</status>";
+            $extra=$status;
+        }
+	
     }
     else
     {
         $html.=alert(_('Action interdite'),true);
+        $html.=HtmlInput::button_close($ctl);
     }
-    $html.=HtmlInput::button_close($ctl);
     break;
     /*----------------------------------------------------------------------
      * Search a card
      *
      *----------------------------------------------------------------------*/
 case 'fs':
-    require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
+    require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
     $r=HtmlInput::title_box(_("Détail fiche"), 'search_card');
     $r.='<form method="GET" onsubmit="this.ctl=\'ipop_card\';search_get_card(this);return false;">';
     $q=new IText('query');
     $q->value=(isset($query))?$query:'';
 	$r.='<span style="margin-left:50px">';
-    $r.=_('Fiche contenant').HtmlInput::infobulle(19);
+    $r.=_('Fiche contenant').Icon_Action::infobulle(19);
     $r.=$q->input();
     $r.=HtmlInput::submit('fs',_('Recherche'),"","smallbutton");
 	$r.='</span>';
     $r.=dossier::hidden().HtmlInput::hidden('op','fs');
     $array=array();
-    foreach (array('query','inp','jrn','label','typecard','price','tvaid') as $i)
+    foreach (array('accvis','query','inp','jrn','label','typecard','price','tvaid') as $i)
     {
         if  (isset(${$i}) )
         {
@@ -368,16 +405,16 @@ case 'fs':
     /* Build the SQL and show result */
     $sql=$fiche->build_sql($sql_array);
 
-	if ( strpos($sql," in ()") != 0)
-	{
-		$html=HtmlInput::anchor_close('search_card');
-		 $html.='<div> '.h2info(_('Recherche de fiche')).'</div>';
-		 $html.='<h3 class="notice">';
-		 $html.=_("Aucune catégorie de fiche ne correspond à".
-                " votre demande, le journal pourrait n'avoir accès à aucune fiche");
-		 $html.='</h3>';
-		 break;
-	}
+    if ( strpos($sql," in ()") != 0)
+    {
+            $html=Icon_Action::close('search_card');
+             $html.='<div> '.h2info(_('Recherche de fiche')).'</div>';
+             $html.='<h3 class="notice">';
+             $html.=_("Aucune catégorie de fiche ne correspond à".
+            " votre demande, le journal pourrait n'avoir accès à aucune fiche");
+             $html.='</h3>';
+             break;
+    }
      /* We limit the search to MAX_SEARCH_CARD records */
     $sql=$sql.' order by vw_name limit '.MAX_SEARCH_CARD;
     $a=$cn->get_array($sql);
@@ -410,6 +447,7 @@ case 'fs':
     ob_start();
     require_once NOALYSS_TEMPLATE.'/card_result.php';
     $r.=ob_get_contents();
+    $r.=HtmlInput::button_close("search_card");
     ob_end_clean();
     $ctl=$ctl.'_content';
     $html=$r;
@@ -551,6 +589,40 @@ case 'upc':
 	  $html.=$f->Display(true);
 	}
       }
+      break;
+      //------------------------------------------------------------------
+      // Unlink a card
+      //------------------------------------------------------------------
+        case 'rm_card':
+             $html=HtmlInput::title_box("Détail fiche", $ctl);
+
+  if ( $g_user->check_action(FIC)==0 )
+    {
+      $html.=alert(_('Action interdite'),true);
+    }
+  else
+    {
+      if ($cn->get_value('select count(*) from fiche where f_id=$1',array($_GET['f_id'])) == '0' )
+	{
+	  $html.=alert(_('Fiche non valide'),true);
+	  }
+
+      else
+	{
+
+	  $f=new Fiche($cn,$_GET['f_id']);
+          if ( $f->is_used()==0){
+            $f->delete();
+            $html="OK";
+          } else {
+            $html="";
+            $html=_("Fiche non effacée");
+          }
+
+	}
+      }
+      break;
+            
 } // switch
 $xml=escape_xml($html);
 if (DEBUG && headers_sent()) {
@@ -562,5 +634,6 @@ echo <<<EOF
 <data>
 <ctl>$ctl</ctl>
 <code>$xml</code>
+$extra
 </data>
 EOF;

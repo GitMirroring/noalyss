@@ -20,7 +20,7 @@ form {
   display:none;
  }
 
-.button, .smallbutton{
+.button, .smallbutton,.icon{
 	display:none;
 	}
 div.recherche_form {
@@ -308,4 +308,15 @@ p#breakhere {page-break-before: always}
 }
 .tinybutton {
     display:none;
+}
+/*
+ * Style for the Inplace Edit element
+ */
+span.inplace_edit
+{
+    text-decoration: none;
+}
+span.inplace_edit_input
+{
+    text-decoration: none;
 }

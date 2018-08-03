@@ -103,18 +103,20 @@ if ( !defined("SITE_UPDATE"))
     define ("SITE_UPDATE",'http://www.noalyss.eu/last_version.txt');
 if ( !defined("SITE_UPDATE_PLUGIN"))
     define ("SITE_UPDATE_PLUGIN",'http://www.noalyss.eu/plugin_last_version.txt');
-
+if ( !defined ("NOALYSS_PACKAGE_REPOSITORY")) {
+    define ("NOALYSS_PACKAGE_REPOSITORY","https://package.noalyss.eu/");
+}
 // If you don't want that the system information  is accessible
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
 }
-define ("DBVERSION",125);
+define ("DBVERSION",128);
 define ("MONO_DATABASE",25);
-define ("DBVERSIONREPO",17);
+define ("DBVERSIONREPO",18);
 define ('NOTFOUND','--not found--');
 define ("MAX_COMPTE",4);
 define ('MAX_ARTICLE',5);
-define ('MAX_ARTICLE_STOCK',20);
+define ('MAX_ARTICLE_STOCK',10);
 define ('MAX_CAT',15);
 define ('MAX_CARD_SEARCH',550);
 define ('MAX_FORECAST_ITEM',10);
@@ -306,3 +308,22 @@ define ("SQL_LIST_UNPAID_INVOICE_DATE_LIMIT" ,"
  */
 // Limit email exceeds parameter
 define ('EMAIL_LIMIT',1002);
+define ('EXC_PARAM_VALUE',1005);
+define ('EXC_PARAM_TYPE',1006);
+define ('EXC_DUPLICATE',1200);
+define ("UNPINDG","&#xf047;");
+define ("PINDG","&#xe809;");
+
+// Url of NOALYSS (http://...) 
+// 
+if ( ! defined ("NOALYSS_URL")) {
+    $protocol="http";
+    if ( isset ($_SERVER['REQUEST_SCHEME'] ))  {
+        $protocol=$_SERVER['REQUEST_SCHEME'];
+    }
+    $base=$protocol.'://'.
+            $_SERVER['HTTP_HOST'].
+            ":".$_SERVER['SERVER_PORT'].
+            dirname($_SERVER['PHP_SELF']);
+    define ("NOALYSS_URL",$base);
+}

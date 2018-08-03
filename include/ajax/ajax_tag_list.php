@@ -17,9 +17,13 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
+  /**
+   *@file
+   *@brief Display the list of tags
+   */
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/class_tag.php';
+require_once NOALYSS_INCLUDE.'/class/tag.class.php';
 ob_start();
 $tag=new Tag($cn);
 $tag->select();
@@ -28,6 +32,7 @@ $tag->select();
 
 $js=sprintf("onclick=\"show_tag('%s','%s','%s','j')\"",Dossier::id(),'','-1');
 echo HtmlInput::button("tag_add", _("Ajout d'un tag"), $js);
+echo HtmlInput::button_close("tag_div");
 
 $response=  ob_get_clean();
 $html=escape_xml($response);

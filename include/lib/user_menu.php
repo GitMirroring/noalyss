@@ -23,9 +23,9 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-require_once NOALYSS_INCLUDE.'/lib/class_idate.php';
-require_once NOALYSS_INCLUDE.'/lib/class_icard.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ispan.php';
+require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
+require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
 
 
 
@@ -118,7 +118,7 @@ function MenuAdmin()
                  array("admin-noalyss.php?action=dossier_mgt",_("Dossiers"),_('Gestion des dossiers'),1),
                  array("admin-noalyss.php?action=modele_mgt",_("Modèles"),_('Gestion des modèles'),2),
                  array("admin-noalyss.php?action=restore",_("Restaure"),_("Restaure une base de données"),3),
-                 array("admin-noalyss.php?action=upgrade",_("Mise à jour"),_("Mise à jour du système et des bases de données"),5),
+                 array("admin-noalyss.php?action=upgrade",_("Installation"),_("Installation Mise à jour du système et des bases de données"),5),
                  array("admin-noalyss.php?action=audit_log",_("Audit"),_("Utilisateurs qui se sont connectés"),4),
                  array("admin-noalyss.php?action=info",_("Information système"),('Information à propos de votre installation'),6),
                  array("login.php",_("Accueil"),"",7),
@@ -145,7 +145,7 @@ function MenuAdmin()
                 );
 
 	}
-    $menu=ShowItem($item,'H',"mtitle","mtitle",$def,' style="width:80%;margin-left:10%" ');
+    $menu=ShowItem($item,'H',"mtitle","mtitle",$def);
     return $menu;
 }
 
@@ -181,6 +181,7 @@ function menu_acc_plan($p_start=1)
     <li class="<?php echo $class[$idx];$idx++; ?>"><A HREF="<?php echo $base.'&p_start=8'.$str_dossier; ?>">8 <?php echo _('Hors Comptabilité')?></A></li>
     <li class="<?php echo $class[$idx];$idx++; ?>"><A HREF="<?php echo $base.'&p_start=9'.$str_dossier; ?>">9 <?php echo _('Hors Comptabilité')?></A></li>
     </ul>
+<div style="clear: both"></div>
 <?php
 }
 ?>

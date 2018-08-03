@@ -51,7 +51,7 @@ function boxsearch_card(p_dossier)
 				  );
 	}catch( e)
 	{
-		alert_box(e.getMessage);
+		alert_box(e.message);
 	}
 }
 /**
@@ -64,6 +64,7 @@ function boxsearch_card(p_dossier)
  *  - inp input text to update with the quickcode
  *  - label field to update with the name
  *  - ctl the id to fill with the HTML answer (ending with _content)
+ *  - acc 1 if accounting are visible
  */
 function search_card(obj)
 {
@@ -86,10 +87,17 @@ function search_card(obj)
 		jrn=-1;
 	    }
         }
+        var accvis=obj.accvis;
+        if ( accvis == undefined ) {
+            accvis=0;
+        } else {
+            accvis=obj.accvis;
+        }
 	var query=encodeJSON({'gDossier':gDossier,
                       'inp':inp,'label':label,'price':price,'tvaid':tvaid,
                       'ctl':'search_card','op2':'fs','jrn':jrn,
-                      'typecard':typecard,'query':string_to_search,'op':'card'
+                      'typecard':typecard,'query':string_to_search,'op':'card',
+                      'accvis':accvis
                              });
 	if (  $('search_card') ) {
 	    removeDiv('search_card');
@@ -158,7 +166,8 @@ function action_add_concerned_card(obj)
             'query' : inp,
             'ctl' : 'unused',
             'ag_id' : ag_id,
-            'op':'card'
+            'op':'card',
+            'accvis':0
         });
 
         waiting_box();
@@ -259,6 +268,12 @@ function search_get_card(obj)
     {
         queryString+="&ctl="+obj.ctl;
     }
+    if ( obj.elements['accvis'] ) 
+    {
+        queryString+="&accvis="+$F(accvis);
+    } else {
+        queryString+="&accvis=0";
+    }
     $('asearch').innerHTML=loading();
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
@@ -303,8 +318,8 @@ function result_card_search(req)
             sx=document.body.scrollTop+60;
 	}
 
-        var div_style="top:"+sx+"px;height:80%";
-        add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:true,effect:'blinddown'});
+        var div_style="top:"+sx+"px;height:auto";
+        add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:false,effect:'blinddown'});
         
         $('search_card').innerHTML=code_html;
         
@@ -442,10 +457,10 @@ function fill_ipopcard(obj)
     if ( nTop > 300 ) {
         nTop=170;
     }
-    str_top=fixed_position(250,nTop)
+    var str_top=fixed_position(250,nTop)
     var str_style=str_top+";width:45em;height:auto;position:absolute";
 
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
 
     add_div(popup);
     var dossier=$('gDossier').value;
@@ -472,7 +487,7 @@ function fill_ipopcard(obj)
     if ( obj.nohistory != undefined) {
      queryString+='&nohistory';
     }
-
+    queryString=encodeURI(queryString);
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
                                   method:'get',
@@ -526,7 +541,7 @@ function  successFill_ipopcard(req,json)
  * a card
  *@param input field (obj) it must have the attribute ipopup
  *       possible attribute :
- *        - filter is the filter but with a  fd_id list, -1 means there  is no filter
+ *        - filter possible values are deb, cred, fd_id list, -1 means there  is no filter
  *        - ref if we want to refresh the window after adding a card
  *        - type type of card (supplier, customer...)
  *@see ajax_card.php
@@ -535,7 +550,7 @@ function select_card_type(obj)
 {
 
     var dossier=$('gDossier').value;
-
+    var elementId="";
     // give a filter, -1 if not
     var filter=$(obj).filter;
     if ( filter==undefined)
@@ -545,18 +560,11 @@ function select_card_type(obj)
     var content="select_card_div";
     if ( $(content)){removeDiv(content);}
     var sx=0;
-    if ( window.scrollY)
-    {
-            sx=window.scrollY+160;
-    }
-    else
-    {
-        sx=document.body.scrollTop+160;
-    }
+    sx=calcy(160);
 
     var str_style="top:"+sx+"px;height:auto";
     waiting_box();
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':true};
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
 
     add_div(popup);
 
@@ -567,6 +575,11 @@ function select_card_type(obj)
     if ( $(obj).win_refresh!=undefined)
     {
         queryString+='&ref';
+    }
+    /* if an element id must be updated after creating a new card */
+    if ( $(obj).elementId) {
+        var elementId=$(obj).elementId;
+        queryString+="&eltid="+elementId;
     }
     queryString+='&fil='+filter;
     // filter on the ledger, -1 if not
@@ -593,7 +606,21 @@ function select_card_type(obj)
                                   parameters:queryString,
                                   onFailure:errorFid,
                                   onSuccess:function(req) { 
-                                   
+                                      // Get all the category, 
+                                      var answer=req.responseXML.getElementsByTagName("fiche_cat_item");
+                                      if (answer.length == 0) {
+                                          removeDiv(content);
+                                          remove_waiting_box();
+                                          alert_box(getNodeText(req.responseXML.getElementsByTagName("code")[0]));
+                                          return;
+                                      }
+                                      if ( answer.length == 1) {
+                                          // There is only one category of card
+                                          dis_blank_card({"ctl":"div_new_card","fd_id":answer[0].firstChild.nodeValue,"op2":"bc","op":"card",gDossier:dossier,"elementId":elementId});
+                                          removeDiv(content);
+                                          remove_waiting_box();
+                                          return;
+                                      }
                                       fill_box(req);
                                        $('lk_cat_card_table').focus();
                                     }
@@ -602,7 +629,7 @@ function select_card_type(obj)
 }
 /**
  *@brief Show a blank card
- *@param Form object (obj)
+ *@param obj Form object (obj)
  *       possible attribute :
  *        - filter is the filter but with a  fd_id list, -1 means there  is no filter
  *        - ref : reload the window after adding card
@@ -627,14 +654,15 @@ function dis_blank_card(obj)
     var nLeft=posX;
     var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto";
 
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
-    if ( $(content)) {removeDiv(content);}
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
+  
     add_div(popup);
 
-	if ( obj.gDossier.value != undefined ) {
-    var dossier=$('gDossier').value;} else {
+    if ( obj.gDossier.value != undefined ) {
+        var dossier=$('gDossier').value;
+    } else {
 	var dossier=obj.gDossier;
-	}
+    }
 
     var queryString='gDossier='+dossier;
     queryString+='&ctl='+content;
@@ -642,15 +670,19 @@ function dis_blank_card(obj)
     queryString+=ref;
     queryString+='&op2=bc'; 	// bc for blank card
     queryString+='&op=card'; 	// bc for blank card
-
+    if ( obj.elementId) queryString+="&eltid="+obj.elementId;
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
                                   method:'get',
                                   parameters:queryString,
                                   onFailure:errorFid,
-                                  onSuccess:successFill_ipopcard
+                                  onSuccess: function (req,json) {
+                                      
+                                      
+                                      successFill_ipopcard(req,json);
                                   }
-                                );
+                              }
+                            );
 }
 function form_blank_card(obj)
 {
@@ -662,7 +694,7 @@ function form_blank_card(obj)
     var str_style="top:"+nTop+"px;left:"+nLeft+"px;width:60em;height:auto";
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
-    if ( $(content)) {removeDiv(content);}
+    if ( $(content)) {removeDiv(content);} 
     add_div(popup);
 
 
@@ -693,10 +725,15 @@ function form_blank_card(obj)
 function save_card(obj)
 {
     var content=$(obj).ipopup;
+    var accounting= $(obj)['av_text5'];
+    if ( accounting && accounting.value.length > 40 ) {
+      smoke.alert('Poste comptable trop grand');
+      return false;
+    }
     // Data must be taken here
-    data=$('save_card').serialize(false);
-    $(content).innerHTML=loading();
 
+    var    data=$('save_card').serialize(false);
+    waiting_box();
     var dossier=$('gDossier').value;
     var queryString='gDossier='+dossier;
     queryString+='&ctl='+content;
@@ -709,9 +746,40 @@ function save_card(obj)
                                   method:'post',
                                   parameters:queryString,
                                   onFailure:errorFid,
-                                  onSuccess:fill_box
+                                  onSuccess:function (req,json) {
+                                     
+                                      var elt=req.responseXML.getElementsByTagName("eltid");
+                                      var status=req.responseXML.getElementsByTagName("status");
+                                      var status_value='OK';
+                                      if ( status.length !=0) {
+                                        status_value=getNodeText(status[0]);
+                                      }
+                                      if ( status_value == 'OK') {
+                                             fill_box(req,json);
+                                      }
+                                      remove_waiting_box();
+                                      if ( elt.length != 0) {
+                                         var eltid=getNodeText(elt[0]);
+                                         if ( eltid !="") {
+                                            var eltvalue=req.responseXML.getElementsByTagName("elt_value");
+                                            $(eltid).value=getNodeText(eltvalue[0]);
+                                            fill_data_onchange(eltid);
+                                            $(eltid).focus();
+                                        }
+                                      }
+                                      if (status_value == "OK") {
+                                            Effect.SlideUp(content, { duration: 1.0 });    
+                                        }
+                                      if ( status_value == 'NOK') {
+                                          var xml_message=req.responseXML.getElementsByTagName("code");
+                                          var message=getNodeText(xml_message[0]);
+                                          smoke.alert(message);
+                                      }
+                                    
+                                      
                                   }
-                                );
+                              }
+                        );
 }
 /**
  *@brief add a category of card,
@@ -917,4 +985,41 @@ function action_remove_concerned(p_dossier,p_fiche_id,p_action_id)
             }
     );
     }
-    
+/**
+ * Remove a card after checking it is not used
+ * @param object obj {gDossier,op,op2:rm_card,ctl,f_id}
+ */    
+function delete_card(obj) {
+    console.debug("delete_card");
+    console.debug(obj);
+    smoke.confirm("Confirmez ? ", function (e) {
+        if (e) {
+            waiting_box();
+            new Ajax.Request("ajax_misc.php", {
+                "method": "get",
+                parameters: obj,
+                onSuccess: function (req) {
+                    remove_waiting_box();
+                    var answer = req.responseXML;
+                    var a = answer.getElementsByTagName('ctl');
+                    if (a.length == 0)
+                    {
+                        var rec = req.responseText;
+                        alert_box('erreur :' + rec);
+                    }
+                    var html = answer.getElementsByTagName('code');
+                    var namectl = a[0].firstChild.nodeValue;
+                    var nodeXml = html[0];
+                    var code_html = getNodeText(nodeXml);
+                    code_html = unescape_xml(code_html);
+                    if ( code_html == "OK") {
+                        Effect.Fade(obj['ctl'], { duration: 1.5 });    
+                    } else {
+                        smoke.alert(code_html);
+                    }
+                }
+
+            });
+        }
+    });
+}

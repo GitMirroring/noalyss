@@ -132,105 +132,21 @@
  * </ul>
  */
 
+
 if ( ! file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php'))
 {
     header("Location: install.php",true, 307);
     exit(0);
 }
 
+
 echo '<!doctype html><HTML>
 <head>
 <TITLE> NOALYSS </TITLE>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-BODY {
-background-color:white;
-font-size:12px;
-font-family:sans-serif,arial;
-color:blue;
-}
-.cell , #recover_box p{
-font-size : 18px;
-}
-.remark {
-border: solid black 1px;
-font-family:sans-serif;
-font-size: 9px;
-color:blue;
-width:200px;
-padding:3px;
-}
-.gras {
-font-size:12px;
-font-family:sans-serif,arial;
-color:red;
-
-}
-.input_text {
-border:1px solid blue;
-margin:1px;
-padding: 10px;
-border-radius: 4px;
-font-size:18px;
-}
-.button {
-color:white;
-font-weight: bold;
-border:0px;
-text-decoration:none;
-font-family: helvetica,arial,sans-serif;
-background-image: url("image/bg-submit2.gif");
-background-repeat: repeat-x repeat-y;
-background-position: left;
-text-decoration:none;
-font-family: helvetica,arial,sans-serif;
-border-width:0px;
-padding:2px 4px 2px 4px;
-cursor:pointer;
-margin:31px 2px 1px 2px;
--moz-border-radius:2px 2px;
-border-radius:2px 2px;
-font-size : 20px;
-margin-bottom: 10px;
-}
-.button:hover {
-cursor:pointer;
-background-color:white;
-border-style:  solid;
-border-width:  0px;
-background-image: url("image/bg-submit3.gif");
-background-repeat: repeat-x repeat-y;
-}
-@media only screen and (max-width : 900px) {
-    #alternate_browser {
-        display : none;
-    }
-   #logo_id {
-    width:336px;
-    height:160px;
-    }
-    .input_text {
-        width:8em;
-    }
-}
-@media only screen and (min-width : 901px) {
-    #alternate_browser {
-        position:absolute;
-        bottom: 0px;
-        left:0px;
-        z-index: -1
-    }
-    #logo_id {
-    width:420px;
-    height:200px;
-    }
-    .input_text {
-        width: 24em;
-    }
-
-}
-</style>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="index.css" media="screen">
 <script src="js/scripts.js" type="text/javascript"></script>
 </head>
 <BODY>';
@@ -239,15 +155,25 @@ require_once '../include/constant.php';
 require_once '../include/config.inc.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 if (file_exists("install.php")&& ! DEBUG ) {
-    /*
-     * This file shouldn't exist
-     */
-    echo _("Le fichier ".__DIR__."/install.php est encore présent, vous devez l'effacer avant d'utiliser NOALYSS");
-    return;
+    // At the end of the installation procedure , the install file must be removed
+    if (isset($_GET['remove_install'])) {
+        if (is_writable(__DIR__."/install.php") ) {
+            unlink(__DIR__."/install.php");
+        }
+    }
+    // if removed failed then
+    if (file_exists("install.php") )
+    {
+        /*
+        * This file shouldn't exist
+        */
+       echo _("Le fichier ".__DIR__."/install.php est encore présent, vous devez l'effacer avant d'utiliser NOALYSS");
+       return;
+    }
 }
 if ( strlen(domaine) > 0 )
 {
-    $my_domain="Domaine : ".domaine;
+    $my_domain=sprintf(_("Domaine")." : %s",domaine);
 }
 
 if (defined("RECOVER") && isset ($_REQUEST['recover']) )
@@ -269,12 +195,12 @@ version  NOALYSS_VERSION - '.$my_domain.'
 
 <BR>
 <center>
-<IMG SRC="image/logo6820.png" id="logo_id" alt="NOALYSS">
+<IMG SRC="image/logo7000.png" style="opacity:0.4" id="logo_id" alt="NOALYSS">
 <BR>
 <BR>
 <BR>
 
-<form action="login.php" method="post" name="loginform">'.
+<form id="login_frm" action="login.php" method="post" name="loginform">'.
        $goto .
 '<TABLE><TR><TD>
 <TABLE  BORDER=0 CELLSPACING=0>
@@ -311,7 +237,7 @@ if ( $g_captcha == true )
 echo '
 <TR style="height:50px;vertical-align:bottom">
 <TD style="width:auto;text-align:center" colspan="2">
-<INPUT TYPE="SUBMIT"  style="width:250px;height:48px;-moz-border-radius:10px;border-radius:10px" class="button" NAME="login" value="Se connecter">
+<INPUT TYPE="SUBMIT"  style="width:158px;height:34px;-moz-border-radius:10px;border-radius:10px" class="button" NAME="login" value="Se connecter">
 </TD>
 </TR>
 </table>
@@ -319,12 +245,12 @@ echo '
 
 ?>
 </table>
-
+</center>
 </form>
 <?php if (defined("RECOVER")) : ?>
     <a id="recover_link" href="#">Mot de passe oublié ? </a>
     
-<div id="recover_box" style="display:none;position:absolute;top:40%;z-index:1;border:solid blue 2px;width:30%;margin-left: 25%;background-color: whitesmoke">
+<div id="recover_box">
     <span style="display:block;font-size:120%;padding:10px">Indiquez votre login ou votre email <span style="cursor: pointer;background-color: white;color:block;top:-5px;float: right;position:relative;right:-5px" id="close"><a ref="#" id="close_link"><?php echo SMALLX?></a></span></span>
             <form method="POST">
                 <input type="hidden" value="send_email" name="id">

@@ -22,47 +22,58 @@
  * \brief Print the user security in pdf
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier=dossier::id();
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
 $cn=Dossier::connect();
+try
+{
+    $user_id=$http->get("user_id");
+}
+catch (Exception $exc)
+{
+    error_log($exc->getTraceAsString());
+    return;
+}
+
 //-----------------------------------------------------
 // Security
 
 // Check User
 $rep=new Database();
-require_once  NOALYSS_INCLUDE.'/class/class_user.php';
+require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 $User=new User($rep);
 
 //-----------------------------------------------------
 // Get User's info
-if ( ! isset($_GET['user_id']) )
-    return;
 
-$SecUser=new User($rep,$_GET['user_id']);
+$SecUser=new User($rep,$user_id);
 $admin=0;
 $access=$SecUser->get_folder_access($gDossier);
 
 if ( $access == 'L')
 {
-    $str='Local Admin';
+    $str=_('Local Admin');
     $admin=1;
 }
 elseif ($access=='R')
 {
-    $str=' Utilisateur normal';
+    $str=_('Utilisateur normal');
 }
 elseif ($access=='P')
 {
-    $str=' Extension uniquement';
+    $str=_('Extension uniquement');
 }
 
 
 if ( $SecUser->admin==1 )
 {
-    $str=' Super Admin';
+    $str=_(' Super Admin');
     $admin=1;
 }
 
@@ -71,11 +82,11 @@ if ( $SecUser->admin==1 )
 // Print result
 
 $pdf=new PDF($cn);
-$pdf->setDossierInfo(dossier::name().' Sécurité');
+$pdf->setDossierInfo(dossier::name()._(' Sécurité'));
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAuthor('NOALYSS');
-$pdf->setTitle("Sécurité",true);
+$pdf->setTitle(_("Sécurité"),true);
 
 $str_user=sprintf("( %d ) %s %s [ %s ] - %s",
                   $SecUser->id,
@@ -90,7 +101,7 @@ $pdf->line_new();
 if ( $SecUser->active==0)
 {
     $pdf->SetTextColor(255,0,34);
-    $pdf->write_cell(0,7,'Bloqué',0,0,'R');
+    $pdf->write_cell(0,7,_('Bloqué'),0,0,'R');
     $pdf->line_new();
 }
 
@@ -98,14 +109,14 @@ if ( $SecUser->admin==1)
 {
     $pdf->SetTextColor(0,0,0);
     $pdf->setFillColor(239,251,255);
-    $pdf->write_cell(40,7,'Administrateur',1,1,'R');
+    $pdf->write_cell(40,7,_('Administrateur'),1,1,'R');
     $pdf->line_new();
 }
 $pdf->SetTextColor(0,0,0);
 
 //-----------------------------------------------------
 // Journal
-$pdf->write_cell(0,7,'Accès journaux',1,0,'C');
+$pdf->write_cell(0,7,_('Accès journaux'),1,0,'C');
 $pdf->line_new();
 $pdf->SetFont('DejaVu','',6);
 $Res=$cn->exec_sql("select jrn_def_id,jrn_def_name  from jrn_def ");
@@ -119,21 +130,21 @@ for ($e=0;$e < Database::num_row($Res);$e++)
     {
     case 'X':
             $pdf->SetTextColor(255,0,34);
-        $pdf->write_cell(30,6,"Pas d'accès");
+        $pdf->write_cell(30,6,_("Pas d'accès"));
         break;
     case 'R':
         $pdf->SetTextColor(54,233,0);
-        $pdf->write_cell(30,6,"Lecture");
+        $pdf->write_cell(30,6,_("Lecture"));
         break;
     case 'O':
         /**
-         *non implemente
+         *non implemented
          */
-        $pdf->write_cell(30,6,"Opérations prédéfinies uniquement");
+        $pdf->write_cell(30,6,_("Opérations prédéfinies uniquement"));
         break;
     case 'W':
         $pdf->SetTextColor(54,233,0);
-        $pdf->write_cell(30,6,'Ecriture');
+        $pdf->write_cell(30,6,_('Ecriture'));
         break;
     }
     $pdf->SetTextColor(0);
@@ -143,7 +154,7 @@ for ($e=0;$e < Database::num_row($Res);$e++)
 //-----------------------------------------------------
 // Follow_Up
 $pdf->SetFont('DejaVu','B',9);
-$pdf->write_cell(0,7,'Accès action',1,0,'C');
+$pdf->write_cell(0,7,_('Accès action'),1,0,'C');
 $pdf->line_new();
 $pdf->SetFont('DejaVu','',6);
 $Res=$cn->exec_sql(
@@ -161,12 +172,12 @@ for ( $i =0 ; $i < $Max; $i++ )
     case 0:
         $pdf->SetTextColor(255,0,34);
 
-        $pdf->write_cell(30,6,"Pas d'accès");
+        $pdf->write_cell(30,6,_("Pas d'accès"));
         break;
     case 1:
     case 2:
         $pdf->SetTextColor(54,233,0);
-        $pdf->write_cell(30,6,"Accès");
+        $pdf->write_cell(30,6,_("Accès"));
         break;
     }
     $pdf->SetTextColor(0);
@@ -174,5 +185,5 @@ for ( $i =0 ; $i < $Max; $i++ )
     $pdf->line_new();
 }
 $fDate=date('dmy-HI');
-$pdf->Output('security-'.$fDate.'pdf','D');
+$pdf->Output('security-'.$fDate.'.pdf','D');
 ?>

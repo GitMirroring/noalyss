@@ -19,13 +19,14 @@
 // Copyright (2014) Author Dany De Bontridder <dany@alchimerys.be>
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_extension.php';
+require_once NOALYSS_INCLUDE.'/class/extension.class.php';
 
 /**
  * @file
  * @brief Automatic installation of plugins and activation
  */
 global $cn;
+global $http;
 
 /******************************************************************************
  * Scan the plugin folder and file in each subfolder a property file and
@@ -61,7 +62,7 @@ $nb_profile=count($a_profile);
  ******************************************************************************/
 if ( isset ($_POST['save_plugin'])){
     // retrieve array of plugin
-    $plugin=HtmlInput::default_value_post('plugin', array());
+    $plugin=$http->post('plugin', "string",array());
     // for each extension
     for ($i=0;$i<$nb_plugin;$i++) {
         
@@ -78,10 +79,11 @@ if ( isset ($_POST['save_plugin'])){
                 }
                 try
                 {
-                    $a_plugin[$i]->insert_profile_menu($profile,'EXT');
+                    $a_plugin[$i]->insert_profile_menu($profile);
                 }
                 catch (Exception $exc)
                 {
+                    record_log($exc->getTraceAsString());
                     $profile_name=$cn->get_value('select profile.p_name from profile where p_id=$1'
                             ,array($profile));
                     echo '<p class="notice">';
@@ -134,7 +136,12 @@ if ( isset ($_POST['save_plugin'])){
                 <?php echo h($a_plugin[$e]->me_menu); ?>
             </td>
             <td>
-                <?php echo h($a_plugin[$e]->me_description); ?>
+                <?php echo h($a_plugin[$e]->me_description);?>
+                <span style="display:block">
+                <?php 
+                    printf(_("Installé par défaut dans %s"),$a_plugin[$e]->depend);
+                ?>
+                </span>
             </td>
             <td>
                 <?php echo h($a_plugin[$e]->me_file); ?>

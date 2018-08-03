@@ -21,7 +21,9 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require 'class/class_balance_age.php';
+require 'class/balance_age.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
 
 /**
  * @file
@@ -41,12 +43,12 @@ require 'class/class_balance_age.php';
  * Retrieve card
  */
 $bal=new Balance_Age($cn);
-$p_type = HtmlInput::default_value_get('p_type', "-");
-$p_date= HtmlInput::default_value_get('p_date_start', "-");
-$p_let= HtmlInput::default_value_get('p_let', "let");
-$cat= HtmlInput::default_value_get('cat', "");
-$fiche= HtmlInput::default_value_get('fiche', "0");
-$all= HtmlInput::default_value_get('all', "0");
+$p_type = $http->get('p_type',"string", "-");
+$p_date= $http->get('p_date_start',"string", "-");
+$p_let= $http->get('p_let',"string", "let");
+$cat= $http->get('cat',"string", "");
+$fiche= $http->get('fiche',"string", "0");
+$all= $http->get('all',"string", "0");
 switch ($p_type)
 {
     case 'C':
@@ -62,10 +64,10 @@ switch ($p_type)
         $bal->export_csv($p_date, $p_let);
         break;
     case 'X':
-        $all=HtmlInput::default_value_get('all', 0);
+        $all=$http->get('all', "string",0);
         if ($all==0)
         {
-            $bal->get_array_card('X', $_GET['cat']);
+            $bal->get_array_card('X', $http->get('cat'));
             $bal->export_csv($p_date, $p_let);
         }
         else

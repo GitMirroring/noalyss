@@ -23,37 +23,45 @@
  * \brief send the account list in PDF
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/class_acc_account_ledger.php';
+require_once NOALYSS_INCLUDE.'/class/acc_account_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-require_once NOALYSS_INCLUDE.'/lib/class_impress.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/impress.class.php';
 require_once NOALYSS_INCLUDE.'/header_print.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
+$poste_id=$http->request("poste_id");
+$from_periode=$http->request("from_periode");
+$to_periode=$http->request("to_periode");
+$ople=$http->request("ople");
 
 $gDossier=dossier::id();
 
 /* Security */
 $cn=Dossier::connect();
-extract($_GET);
 
 if ( isset ( $poste_fille) )
 { //choisit de voir tous les postes
     $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like $1||'%' order by pcm_val",array($poste_id));
 }
 else
+{
     $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text = $1 ",array($poste_id));
-
+}
 
 $ret="";
 
 $pdf=new PDF($cn);
-$pdf->setDossierInfo("  Periode : ".$_GET['from_periode']." - ".$_GET['to_periode']);
+$pdf->setDossierInfo(sprintf(_("  Période : %s %s"),$from_periode,$to_periode));
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAuthor('NOALYSS');
-$pdf->setTitle("Détail poste comptable",true);
+$pdf->setTitle(_("Détail poste comptable"),true);
 
 
 if ( count($a_poste) == 0 )
@@ -63,10 +71,11 @@ if ( count($a_poste) == 0 )
 }
 $size=array(13,25,13,65,12,20,20,20);
 $align=array('L','C','C','L','R','R','R','R');
-
+ $operation=new Acc_Operation($cn);
 foreach ($a_poste as $poste)
 {
     $Poste=new Acc_Account_Ledger($cn,$poste['pcm_val']);
+
     list($array,$tot_deb,$tot_cred)=$Poste->get_row_date($from_periode,$to_periode,$_GET['ople']);
     // don't print empty account
     if ( count($array) == 0 )
@@ -80,21 +89,21 @@ foreach ($a_poste as $poste)
 
     $pdf->SetFont('DejaVuCond','',8);
     $l=0;
-    $pdf->write_cell($size[$l],6,'Date',0,0,'L');
+    $pdf->write_cell($size[$l],6,_('Date'),0,0,'L');
     $l++;
-    $pdf->write_cell($size[$l],6,'Ref',0,0,'C');
+    $pdf->write_cell($size[$l],6,_('Ref'),0,0,'C');
     $l++;
-    $pdf->write_cell($size[$l],6,'Journal',0,0,'C');
+    $pdf->write_cell($size[$l],6,_('Journal'),0,0,'C');
     $l++;
-    $pdf->LongLine($size[$l],6,'Libellé',0,'L');
+    $pdf->LongLine($size[$l],6,_('Libellé'),0,'L');
     $l++;
-    $pdf->write_cell($size[$l],6,'Let',0,0,'R');
+    $pdf->write_cell($size[$l],6,_('Let'),0,0,'R');
     $l++;
-    $pdf->write_cell($size[$l],6,'Debit',0,0,'R');
+    $pdf->write_cell($size[$l],6,_('Debit'),0,0,'R');
     $l++;
-    $pdf->write_cell($size[$l],6,'Credit',0,0,'R');
+    $pdf->write_cell($size[$l],6,_('Credit'),0,0,'R');
     $l++;
-    $pdf->write_cell($size[$l],6,'Prog',0,0,'R');
+    $pdf->write_cell($size[$l],6,_('Prog'),0,0,'R');
     $l++;
     $pdf->line_new();
     $tot_deb=0;
@@ -155,7 +164,9 @@ foreach ($a_poste as $poste)
         $l++;
         $pdf->write_cell($size[$l],6,mb_substr($row['jrn_def_code'],0,14),0,0,$align[$l]);
         $l++;
-        $pdf->LongLine($size[$l],6,  $row['description'],0,$align[$l]);
+        $tiers=$operation->find_tiers($row['jr_id'], $row['j_id'], $row['j_qcode']);
+        $description=($tiers=="")?$row["description"]:"[".$tiers."]".$row['description'];
+        $pdf->LongLine($size[$l],6,  $description,0,$align[$l]);
         $l++;
         $pdf->write_cell($size[$l],6,(($row['letter']!=-1)?$row['letter']:''),0,0,$align[$l]);
         $l++;

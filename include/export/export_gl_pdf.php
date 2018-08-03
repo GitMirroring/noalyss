@@ -23,14 +23,21 @@
  * \brief create GL comptes as PDF
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-include_once('class/class_acc_account_ledger.php');
+include_once('class/acc_account_ledger.class.php');
 include_once('lib/ac_common.php');
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
-include_once('lib/class_impress.php');
-require_once NOALYSS_INCLUDE.'/class/class_own.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_user.php';
-require_once NOALYSS_INCLUDE.'/lib/class_pdf.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+include_once('lib/impress.class.php');
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+$from_periode = $http->get("from_periode","date");
+$to_periode = $http->get("to_periode","date");
+$from_poste = $http->get("from_poste");
+$to_poste = $http->get("to_poste");
+
 bcscale(2);
 
 $gDossier=dossier::id();
@@ -42,7 +49,6 @@ $g_user->check_dossier($gDossier);
 
 $sql="select pcm_val from tmp_pcmn ";
 
-extract($_GET);
 $cond_poste="";
 if ($from_poste != '')
   {
@@ -66,7 +72,7 @@ $sql=$sql.$cond_poste.'  order by pcm_val::text';
 $a_poste=$cn->get_array($sql);
 
 $pdf = new PDF($cn);
-$pdf->setDossierInfo("  Periode : ".$from_periode." - ".$to_periode);
+$pdf->setDossierInfo(_("  Periode : ").$from_periode." - ".$to_periode);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->setTitle("Grand Livre",true);
@@ -79,7 +85,7 @@ if ( count($a_poste) == 0 )
 }
 
 // Header
-$header = array( "Date", "Référence", "Libellé", "Pièce","Let", "Débit", "Crédit", "Solde" );
+$header = array( _("Date"), _("Référence"), _("Libellé"), _("Pièce"),_("Let"), _("Débit"), _("Crédit"), _("Solde") );
 // Left or Right aligned
 $lor    = array( "L"   , "L"        , "L"      , "L"    , "R",   "R"    , "R"     , "R"     );
 // Column widths (in mm)
@@ -95,7 +101,7 @@ foreach ($a_poste as $poste)
 
   $array1=$Poste->get_row_date($from_periode,$to_periode,$l,$s);
   // don't print empty account
-  if ( count($array1) == 0 )
+  if ( count($array1[0]) == 0 )
     {
         continue;
     }
@@ -192,7 +198,7 @@ foreach ($a_poste as $poste)
         /* limit set to 40 for the substring */
         $triple_point = (mb_strlen($detail['description']) > 40 ) ? '...':'';
         // $pdf->LongLine($width[$i], 6, mb_substr($detail['description'],0,40).$triple_point, 0,$lor[$i]);
-        $pdf->LongLine($width[$i], 6,$detail['description'], 0,$lor[$i]);
+        $pdf->LongLine($width[$i], 6,$detail['description'].'['.$detail['jr_optype'].']', 0,$lor[$i]);
         $i++;
         $pdf->write_cell($width[$i], 6, $detail['jr_pj_number'], 0, 0, $lor[$i]);
         $i++;

@@ -28,15 +28,19 @@
 // parameter are gDossier , c1 : the control id to update,
 // c2 the control id which contains the pa_id
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/class_itext.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ihidden.php';
-require_once NOALYSS_INCLUDE.'/lib/class_ibutton.php';
-require_once NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
+require_once NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/class_dossier.php';
-require_once NOALYSS_INCLUDE.'/class/class_anc_account.php';
-require_once NOALYSS_INCLUDE.'/class/class_anc_plan.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
+$texte=new IText('plabel');
+$texte->value=$http->get('plabel',"string","");
 
 echo HtmlInput::title_box(_("Recherche activité"), $ctl);
 
@@ -44,8 +48,6 @@ echo HtmlInput::title_box(_("Recherche activité"), $ctl);
 echo '<FORM id="anc_search_form" METHOD="GET" onsubmit="search_anc_form(this);return false">';
 echo '<span>'._('Recherche').':';
 
-$texte=new IText('plabel');
-$texte->value=HtmlInput::default_value('plabel',"", $_GET);
 echo $texte->input();
 echo '</span>';
 echo dossier::hidden();
@@ -74,23 +76,19 @@ if ( isset($_REQUEST['go']))
         echo _("Aucun poste trouvé");
         return;
     }
-    $button=new IButton();
-    $button->name=_("Choix");
-    $button->label=_("Choix");
 
     echo '<table>';
     foreach ($array as $line)
     {
-        $button->javascript=sprintf("$('%s').value='%s';removeDiv('%s')",
+        $js=sprintf("onclick=\"$('%s').value='%s';removeDiv('%s')\"",
                                     $_REQUEST['c1'],
                                     $line['po_name'],$ctl);
+        
         echo '<tr>'.
         '<td>'.
-        $button->input().
+        HtmlInput::anchor(h($line['po_name']), "", $js).
         '</td>'.
         '<td>'.
-        h($line['po_name']).
-        '</td><td>'.
         h($line['po_description']).
         '</tr>';
     }

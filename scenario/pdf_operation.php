@@ -18,11 +18,11 @@
  */
 //@description: Test the class PDF_OPERATION
 
-require_once NOALYSS_INCLUDE."/class/class_pdf_operation.php";
+require_once NOALYSS_INCLUDE."/class/pdf_operation.class.php";
 
 
 
-$pdf=new PDF_Operation ($cn,4677);
+$pdf=new PDF_Operation ($cn,61);
 //$pdf=new PDF_Operation ($cn,47);
 //$pdf=new PDF_Operation ($cn,4638);
 

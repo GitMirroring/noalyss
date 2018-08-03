@@ -27,8 +27,8 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-global $g_failed,$g_succeed;
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger_fin.php';
+global $g_failed,$g_succeed,$http;
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 bcscale(2);
 ?>
 <script>
@@ -107,8 +107,8 @@ if (isset($_GET["p_jrn"]) && $jrn_priv == "X")
 	NoAccess();
 	return;
 }
-$end_extrait=HtmlInput::default_value_post("end_extrait", 0);
-$start_extrait=HtmlInput::default_value_post("start_extrait", 0);
+$end_extrait=$http->post("end_extrait", "string",0);
+$start_extrait=$http->post("start_extrait","string", 0);
 if ( isNumber($end_extrait) == 0 )
 {
     echo '<span class="notice">';
@@ -178,7 +178,7 @@ if (isset($_POST['save']))
 echo '<div class="content">';
 echo '<form method="get">';
 echo HtmlInput::get_to_hidden(array('gDossier', 'ledger_type', 'ac', 'sa'));
-$wLedger = $Ledger->select_ledger('FIN', 3);
+$wLedger = $Ledger->select_ledger('FIN', 3,FALSE);
 if ($wLedger == null)
 	exit('Pas de journal disponible');
 echo '<div id="jrn_name_div">';
@@ -223,7 +223,7 @@ $select_all->javascript="recompute('rec1')";
 echo $select_all->input();
 echo '</p>';
 echo '<p>';
-echo _('Cherche').HtmlInput::infobulle(25);
+echo _('Cherche').Icon_Action::infobulle(25);
 echo HtmlInput::filter_table("t_rec_bk", "0,1,2,3","1");
 echo '</p>';
 echo HtmlInput::submit('save', 'Mettre à jour le n° de relevé bancaire');
@@ -232,7 +232,8 @@ echo '<span style="display:block">';
 
 	echo '</span>';
 echo '<table id="t_rec_bk" class="sortable" style="width:90%;margin-left:5%">';
-$r ='<th class=" sorttable_sorted_reverse">'.'Date '.HtmlInput::infobulle(17).'<span id="sorttable_sortrevind">&nbsp;&blacktriangle;</span>'.'</th>';
+
+$r ='<th class=" sorttable_sorted">'.'Date '.Icon_Action::infobulle(17).'</th>';
 $r.=th('Libellé');
 $r.=th('N° interne');
 $r.=th('Montant', ' style="text-align:right"');
@@ -335,7 +336,8 @@ echo '</tr>';
 echo '</table>';
 
 $receipt=new IFile('file_receipt');
-echo $receipt->input();
+echo _("Pièce justificative"),"&nbsp;" ,
+    $receipt->input();
 echo '<p class="text-align:center">';
 echo HtmlInput::submit('save', 'Mettre à jour le n° de relevé bancaire');
 echo '</p>';

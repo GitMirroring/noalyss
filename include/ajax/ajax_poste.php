@@ -35,13 +35,13 @@
 if ( ! defined('ALLOWED')) die (_('Non authorisé'));
 
 require_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_ledger.php';
-require_once  NOALYSS_INCLUDE.'/lib/class_database.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
+require_once  NOALYSS_INCLUDE.'/lib/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-require_once NOALYSS_INCLUDE.'/class/class_acc_account_ledger.php';
+require_once NOALYSS_INCLUDE.'/class/acc_account_ledger.class.php';
 mb_internal_encoding("UTF-8");
 
-extract($_REQUEST);
+extract($_REQUEST, EXTR_SKIP);
 
 if  ($g_user->check_dossier(dossier::id()) == 'X') exit();
 
@@ -61,8 +61,8 @@ case "sf":
     $str_poste=$it->input();
     $str_submit=HtmlInput::submit('sf',_('Recherche'),"","smallbutton");
     $r='';
-	$r=HtmlInput::anchor_close('search_account');
-    $r.='<div> '.h2(_('Poste Comptable'),' class="title"').'</div>';
+    $r.=HtmlInput::title_box(_('Poste Comptable'),'search_account',"close","","y");
+    
 
     $r.='<form id="sp" method="get" onsubmit="'.$attr.'search_get_poste(this);return false;">';
     ob_start();
@@ -145,8 +145,9 @@ case "sf":
     require_once NOALYSS_TEMPLATE.'/account_result.php';
     $r.=ob_get_contents();
     ob_end_clean();
-
+    
     $html=$r;
+    $html.=HtmlInput::button_close("search_account");
     break;
 }
 $xml=escape_xml($html);

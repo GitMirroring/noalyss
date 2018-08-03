@@ -1,9 +1,4 @@
 <?php 
-$menu[]=_('Export pièce PDF');  
-$menu[]=_('Clef de répartition');  
-$menu[]=_('Configuration extension');  
-$menu[]=_('Balance agée');  $desc[]=_('Balance agée');$desc_long[]=_('Balance agée pour les clients et fournisseurs');
-$menu[]=_('Export Balance agée');  $desc[]=_('Balance agée');$desc_long[]=_('Balance agée pour les clients et fournisseurs');
 $menu[]=_('Achat');  $desc[]=_('Nouvel achat ou dépense');$desc_long[]=_('Vous permet d\'encoder des achats, dépenses, des notes de frais ou des notes de crédits, vous pouvez spécifier un bénéficiaire ou un autre moyen de paiement');
 $menu[]=_('Historique');  $desc[]=_('Historique des imputations analytiques');$desc_long[]=_('Historique des imputations analytiques');
 $menu[]=_('Balance simple');  $desc[]=_('Balance simple des imputations analytiques');$desc_long[]=_('Balance simple des imputations analytiques');
@@ -16,7 +11,6 @@ $menu[]=_('Config. Menu');  $desc[]=_('Configuration des menus et plugins');$des
 $menu[]=_('Fournisseur');  $desc[]=_('Suivi fournisseur');$desc_long[]=_('Suivi des fournisseurs : devis, lettres, email....');
 $menu[]=_('Opérations diverses');  $desc[]=_('OD analytique');$desc_long[]=_('Opérations diverses en Analytique');
 $menu[]=_('Création de rapport');  $desc[]=_('Création de rapport');$desc_long[]=_('Création de rapport sur mesure, comme les ratios, vous permet de créer des graphiques de vos données (vente, achat...)');
-$menu[]=_('Extension');  $desc[]=_('Extensions (plugins)');$desc_long[]=_('Menu regroupant les plugins');
 $menu[]=_('saut de ligne');  
 $menu[]=_('Client');  $desc[]=_('Suivi client');$desc_long[]=_('Suivi client : devis, réunion, courrier, commande...');
 $menu[]=_('Historique stock');  
@@ -52,6 +46,7 @@ $menu[]=_('Export définition d\'un raport');
 $menu[]=_('Export Action Gestion');  
 $menu[]=_('Export Historique mouvement stock');  
 $menu[]=_('Export Résumé list stock');  
+$menu[]=_('Extension');  $desc[]=_('Extensions (plugins)');$desc_long[]=_('Menu regroupant les plugins');
 $menu[]=_('Plan Compt. analytique');  $desc[]=_('Plan analytique');$desc_long[]=_('Axe analytique');
 $menu[]=_('Groupe');  $desc[]=_('Groupe analytique');$desc_long[]=_('Regroupement de compte analytique');
 $menu[]=_('Contact');  $desc[]=_('Liste des contacts');$desc_long[]=_('Liste de tous vos contacts');
@@ -89,7 +84,7 @@ $menu[]=_('Sociétés');  $desc[]=_('Parametre societe');$desc_long[]=_('Informa
 $menu[]=_('Période');  $desc[]=_('Gestion des périodes');$desc_long[]=_('Gestion des périodes : clôture, ajout de période, afin de créer des périodes vous pouvez aussi utiliser le plugin outil comptable');
 $menu[]=_('Vérification ');  $desc[]=_('Vérification de la comptabilité');$desc_long[]=_('Vérifie que votre comptabilité ne contient pas d\'erreur de base, tels que l\'équilibre entre le passif et l\'actif, l\'utilisation des postes comptables...');
 $menu[]=_('Ecriture Ouverture');  $desc[]=_('Ecriture d\'ouverture');$desc_long[]=_('Ecriture d\'ouverture ou écriture à nouveau, reporte les soldes des comptes de l\'année passé du poste comptable 0xxx à 5xxxx sur l\'année courante');
-$menu[]=_('Document');  $desc[]=_('Config. modèle de document');$desc_long[]=_('Chargement de modèles de documents qui seront générés par PhpCompta, les formats utilisables sont libreoffice, html, text et rtf');
+$menu[]=_('Document');  $desc[]=_('Config. modèle de document');$desc_long[]=_('Chargement de modèles de documents qui seront générés par NOALYSS, les formats utilisables sont libreoffice, html, text et rtf');
 $menu[]=_('journaux');  $desc[]=_('Configuration des journaux');$desc_long[]=_('Création et modification des journaux, préfixe des pièces justificatives, numérotation, catégories de fiches accessibles à ce journal');
 $menu[]=_('Sécurité');  $desc[]=_('configuration de la sécurité');$desc_long[]=_('Configuration de la sécurité, vous permet de donner un profil à vos utilisateurs, cela leur permettra d\'utiliser ce que vous souhaitez qu\'ils puissent utiliser');
 $menu[]=_('Attribut de fiche');  $desc[]=_('Gestion des attributs de fiches ');$desc_long[]=_('Permet d\'ajouter de nouveaux attributs que vous pourrez par la suite ajouter à des catégories de fiches');
@@ -126,15 +121,21 @@ $menu[]=_('Liste Suivi');  $desc[]=_('Document de suivi sous forme de liste');$d
 $menu[]=_('Moyen de paiement');  $desc[]=_('Config. des méthodes de paiement');$desc_long[]=_('Configuration des moyens de paiements que vous voulez utiliser dans les journaux de type VEN ou ACH, les moyens de paiement permettent de générer l\'opération de trésorerie en même temps que l\'achat, la note de frais ou la vente');
 $menu[]=_('Administration');  $desc[]=_('Suivi administration, banque');$desc_long[]=_('Suivi des administrations : courrrier, déclarations.');
 $menu[]=_('Prévision');  $desc[]=_('Prévision');$desc_long[]=_('Prévision de vos achats, revenus, permet de suivre l\'évolution de votre société. Vos prévisions sont des formules sur les postes comptables et vous permettent aussi vos marges brutes.');
-$menu[]=_('Export opérations rapprochées');  $desc[]=_('Export opérations rapprochées en CSV');
+$menu[]=_('Export opérations rapprochées');  $desc[]=_('Export opérations rapprochées en CSV');$desc_long[]=_('');
 $menu[]=_('Administrateur');  $desc[]=_('Suivi des gérants, administrateurs et salariés');$desc_long[]=_('Suivi de vos salariés, managers ainsi que des administrateurs, pour les documents et les opérations comptables');
 $menu[]=_('Menu par défaut');  $desc[]=_('Configuration des menus par défaut');$desc_long[]=_('Configuration des menus par défaut, ces menus sont appelés par des actions dans d\'autres menus');
 $menu[]=_('Agenda');  $desc[]=_('Agenda');$desc_long[]=_('Agenda, présentation du suivi sous forme d\'agenda ');
+$menu[]=_('Export pièce PDF');  
+$menu[]=_('Clef de répartition');  
+$menu[]=_('Configuration extension');  
 $menu[]=_('Favori &#9733 ');  $desc[]=_('Raccourci vers vos menus préférés');$desc_long[]=_('Ce menu vous présente  un menu rapide de vos menus préférés');
+$menu[]=_('Balance agée');  $desc[]=_('Balance agée');$desc_long[]=_('Balance agée pour les clients et fournisseurs');
+$menu[]=_('Export Balance agée');  $desc[]=_('Balance agée');$desc_long[]=_('Balance agée pour les clients et fournisseurs');
+$menu[]=_('Exporte la pièce');  
+$menu[]=_('Export le document');  
+$menu[]=_('Exporte le modèle de document');  
 ?>
 <?php 
-$attr_def[]=_('Prix vente');
-$attr_def[]=_('Prix achat');
 $attr_def[]=_('Durée Amortissement');
 $attr_def[]=_('Montant initial');
 $attr_def[]=_('TVA non déductible');
@@ -142,6 +143,8 @@ $attr_def[]=_('TVA non déductible récupérable par l\'impôt');
 $attr_def[]=_('Partie fiscalement non déductible');
 $attr_def[]=_('Dépense  charge du grant (partie privé) ');
 $attr_def[]=_('Compte bancaire');
+$attr_def[]=_('Prix vente');
+$attr_def[]=_('Prix achat');
 $attr_def[]=_('Date début');
 $attr_def[]=_('Nom');
 $attr_def[]=_('Taux TVA');
@@ -196,8 +199,6 @@ $action[]=_('Effacer une opération ');
 $action[]=_('Partager une note');
 $action[]=_('Créer une note publique');
 $action[]=_('Effacer une note publique');
-?>
-<?php 
 $mdp[]=_('Caisse');
 $mdp[]=_('Paiement électronique');
 $mdp[]=_('Caisse');
@@ -214,4 +215,10 @@ $jrn_def_description[]=_('Concerne tous les achats, factures reçues, notes de c
 $jrn_def_description[]=_('Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)');
 $jrn_def_description[]=_('Concerne toutes les opérations comme les amortissements, les comptes TVA, ...');
 $jrn_def_description[]=_('Concerne toutes les ventes, notes de crédit envoyées');
+?>
+<?php 
+$jrn_type[]=_('Financier');
+$jrn_type[]=_('Vente');
+$jrn_type[]=_('Achat');
+$jrn_type[]=_('Opérations Diverses');
 ?>

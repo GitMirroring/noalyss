@@ -40,14 +40,22 @@ if (!defined('ALLOWED'))
 if ($g_user->check_module('CFGPRO')==0)
     die();
 
-$type=HtmlInput::default_value_get('type', 'XX');
-$p_level=HtmlInput::default_value_get('p_level', 0);
-$dep=HtmlInput::default_value_get('dep', 0);
-if ($type=='XX')
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+$http=new HttpInput();
+
+try
 {
-    throw new Exception('invalid call');
+    $type=$http->get('type');
+    $p_level=$http->get('p_level', "string",0);
+    $dep=$http->get('dep', "string",0);
+}
+catch (Exception $exc)
+{
+    echo $exc->getMessage();
+    error_log($exc->getTraceAsString());
     return;
 }
+
 // if type == menu the 
 if ($type=='me')
 {
