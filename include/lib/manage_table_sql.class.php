@@ -806,9 +806,29 @@ function check()
             {
                 if ( $this->get_col_type($v)=="select")
                 {
+                    /**
+                     * we translate the code from the database into a hardcoded label
+                     */
                     $idx=$p_row[$v];
                     if ( ! isset($this->a_select[$v][$idx])) {
-                        echo td("--");
+                        /*
+                        * Check if index exists
+                        */
+                        $array_to_search=$this->a_select[$v];
+                        $value=$p_row[$v];
+                        $nb_search=count($array_to_search);
+                        $found=FALSE;
+                        for ( $e=0;$e< $nb_search;$e++) {
+                            if (isset ($array_to_search[$e]['value']) && $array_to_search[$e]['value']==$value ) {
+                                $found=TRUE;
+                                echo td($array_to_search[$e]['label']);
+                            }
+                        }
+
+                        if ( ! $found) {
+                            echo td("--");
+
+                        }
                     } else {
                         echo td($this->a_select[$v][$idx]["label"]);
                     }
