@@ -272,7 +272,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         if ( $count < 2) {
             throw new Exception(_("Vous ne pouvez pas effacer tous les taux. Si votre société n'utilise pas la TVA, changer dans le menu société"));
         }
-        
+
     }
 
 }
