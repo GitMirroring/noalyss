@@ -255,7 +255,7 @@ echo '
     <a id="recover_link" href="#">Mot de passe oublié ? </a>
     
 <div id="recover_box">
-    <span style="display:block;font-size:120%;padding:10px">Indiquez votre login ou votre email <span style="cursor: pointer;background-color: white;color:block;top:-5px;float: right;position:relative;right:-5px" id="close"><a ref="#" id="close_link"><?php echo SMALLX?></a></span></span>
+    <span style="display:block;font-size:120%;padding:10px">Indiquez votre login ou votre email <span style="cursor: pointer;background-color: white;top:-5px;float: right;position:relative;right:-5px" id="close"><a ref="#" id="close_link"><?php echo SMALLX?></a></span></span>
             <form method="POST">
                 <input type="hidden" value="send_email" name="id">
                 <input type="hidden" value="recover" name="recover" >
