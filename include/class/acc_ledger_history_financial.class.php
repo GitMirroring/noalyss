@@ -119,8 +119,8 @@ class Acc_Ledger_History_Financial extends Acc_Ledger_History
                     tiers.qcode as tiers_qcode,
                     jr_id,
                     jr_pj_number,
-                    jr_date,
-                    jr_date_paid,
+                    to_char(jr_date,'DD.MM.YYYY') as str_date,
+                    to_char(jr_date_paid,'DD.MM.YYYY') as str_date_paid,
                     jr_internal,
                     jrn.jr_comment,
                     jr_pj_name,
@@ -133,7 +133,8 @@ class Acc_Ledger_History_Financial extends Acc_Ledger_History
             where
                 jr_def_id in ({$ledger_list})
                 and {$periode}
-                {$cond_limite}";
+                {$cond_limite}
+                order by jr_date, substring(jr_pj_number,'[0-9]+$')::numeric ";
         $this->data=$this->db->get_array($sql);
     }
     /**

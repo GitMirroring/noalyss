@@ -30,6 +30,18 @@ require_once NOALYSS_INCLUDE.'/class/extension.class.php';
 
 $package_repository=new Package_Repository();
 $xml=$package_repository->getContent();
+/*
+ * If xml is null , it means it was not possible to get the file , could be
+ * a network problem or a misconfiguration
+ */
+if ( $xml == NULL) {
+    echo '<h2 class="error">';
+    printf (_("Désolé , impossible de se connecter au serveur %s"),
+            NOALYSS_PACKAGE_REPOSITORY);
+    echo '</h2>';
+    return;
+    
+}
 
 
 $a_template=$xml->xpath('//database_template/dbtemplate');

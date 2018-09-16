@@ -40,12 +40,12 @@ class Print_Ledger_Misc extends PDF
         //Line break
         $this->Ln(20);
         $this->SetFont('DejaVu', 'B', 7);
-        $this->Cell(30,6,'Piece');
-        $this->Cell(10,6,'Date');
-        $this->Cell(20,6,'Interne');
-        $this->Cell(25,6,'Tiers');
-        $this->Cell(80,6,'Commentaire');
-        $this->Cell(15,6,'Montant');
+        $this->Cell(10,6,_('Date'));
+        $this->Cell(30,6,_('Piece'));
+        $this->Cell(20,6,_('Interne'));
+        $this->Cell(25,6,_('Tiers'));
+        $this->Cell(80,6,_('Commentaire'));
+        $this->Cell(15,6,_('Montant'));
         $this->Ln(6);
 
     }
@@ -78,8 +78,8 @@ class Print_Ledger_Misc extends PDF
         {
             $row=$a_jrn[$i];
             
-            $this->LongLine(30,5,$row['jr_pj_number']);
             $this->write_cell(10,5,  smaller_date($row['date']));
+            $this->LongLine(30,5,$row['jr_pj_number']);
             $this->write_cell(20,5,$row['jr_internal']);
 	    $type=$this->cn->get_value("select jrn_def_type from jrn_def where jrn_def_id=$1",array($a_jrn[$i]['jr_def_id']));
 	    $other=mb_substr($this->ledger->get_tiers($type,$a_jrn[$i]['jr_id']),0,25);

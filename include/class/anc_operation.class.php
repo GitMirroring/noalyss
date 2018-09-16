@@ -187,19 +187,20 @@ class Anc_Operation
             $cond="$where (oa_date >= to_date('$p_from','DD.MM.YYYY')  or oa_date >= to_date('$p_from','DD.MM.YYYY') )";
             $where=" and ";
         }
-        if ( $p_to!="" )
+        if ( $p_to!="" ) {
             $cond.="$where (oa_date <=to_date('$p_to','DD.MM.YYYY') or  oa_date <=to_date('$p_to','DD.MM.YYYY')) ";
-
+            $where=" and ";
+        }
+        
+        $cond .= $where." j_id is null ";
+        
 	$sql="
             select distinct oa_group,
                 to_char(oa_date,'DD.MM.YYYY') as str_date ,
                 oa_date,
-                oa_description,
-                jr_pj_number,
-                jr_id
+                oa_description
             from 
                 operation_analytique as oa 
-                left join (select jr_id,jr_pj_number,j_id from jrn join jrnx on (jr_grpt_id=j_grpt) ) as m on (m.j_id=oa.j_id)
                 $cond
                     order by oa_date ";
         return $this->db->get_array($sql);
@@ -308,7 +309,6 @@ class Anc_Operation
         $ret.= "<table id=\"anc_operation_list_tb\"class=\"result\">";
         $ret.=th(_("Date"));
         $ret.=th(_("Libellé"));
-        $ret.=th(_("Num Pièce"));
         $ret.=th("");
         $ret.=th("");
         $i=0;
@@ -325,16 +325,10 @@ class Anc_Operation
             $ret.="<tr $row_id $class>";
             $ret.=td($row['str_date']);
             $ret.=td(h($row['oa_description']));
-            $ret.=td(h($row['jr_pj_number']));
             $js="anc_remove_operation(".$gDossier.",".$oldgroup.")";
              
             $ret.="<td>".HtmlInput::image_click("trash-24.gif", $js, _("Effacer"))."</td>";
-            if ( $row['jr_id'] != "") {
-                $js="viewOperation({$row['jr_id']},{$gDossier})";
-                
-            } else {
-                $js="anc_detail_op({$row['oa_group']},{$gDossier})";
-            }
+            $js="anc_detail_op({$row['oa_group']},{$gDossier})";
             $ret .= "<td>". HtmlInput::image_click("crayon-mod-b24.png", $js, _("Modifier"))."</td>";
             $ret.="</tr>";
         }    

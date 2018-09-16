@@ -780,7 +780,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $tot_debit=bcadd($tot_debit, abs($cust_amount));
             }
             $let_client=$acc_operation->insert_jrnx();
-            
+
 
             if ( $g_parameter->MY_TVA_USE=='Y')
             {

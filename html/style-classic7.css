@@ -1627,7 +1627,7 @@ ul.tabs a {
     white-space: nowrap;
     width: 100%;
     height: 100%;
-    
+    cursor :pointer;    
 }
 ul.tabs a:hover {
     text-decoration: none;

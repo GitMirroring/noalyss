@@ -517,8 +517,10 @@ for ($e = 0; $e < count($afiche); $e++)
 		echo th(_('ref'));
 		echo th(_('Interne'));
 		echo th(_('Comm'));
-		echo th(_('Montant'), 'style="width:auto" colspan="2"');
-		echo th(_('Prog.'));
+		echo th(_('Code Devise'));
+		echo th(_('Devise'));
+		echo th(_('Montant'), 'style="width:auto;text-align:center" colspan="2"');
+		echo th(_('Prog.'),'style="text-align:right"');
 		echo th(_('Let.'));
 		echo '</tr>';
 		$amount_deb = 0;
@@ -541,7 +543,9 @@ for ($e = 0; $e < count($afiche); $e++)
 			echo td(h($row['jr_pj_number']));
 			echo td(HtmlInput::detail_op($row['jr_id'], $row['jr_internal']));
 			echo td(h($row['jr_comment']));
-			if ($row['j_debit'] == 't')
+                        echo td($row['cr_code_iso']);
+                        echo td(nbm(h($row['currency_amount']),2),'class="num"');
+                        if ($row['j_debit'] == 't')
 			{
 				echo td(nbm($row['j_montant']), ' style="text-align:right"');
 				$amount_deb=bcadd($amount_deb,$row['j_montant']);

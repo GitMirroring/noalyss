@@ -106,7 +106,7 @@ if ( $get_option=="E")
 {
     if ($jrn_type=='FIN')
     {
-        $get_option='L';
+        $get_option='A';
     }
     elseif ($jrn_type=='ODS'||$Jrn->id==0)
     {
@@ -178,6 +178,91 @@ if ($get_option=='A')
     $acc_ledger_history->export_csv();
     exit;
 }
+/**
+ * Mode list for ODS , FIN and GL
+ */
+if ($get_option=="L" && ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL') )
+{
+    if ( $get_jrn==0) {
+        $Row=$Jrn->get_rowSimple($get_from_periode, $get_to_periode, $a_jrn);
+    }else {
+        $Row=$Jrn->get_rowSimple($get_from_periode, $get_to_periode);
+    }
+    $cn->prepare('reconcile_date_csv',
+            'select  * 
+                     from 
+                       jrn 
+                     where 
+                       jr_id in 
+                           (select 
+                               jra_concerned 
+                               from 
+                               jrn_rapt 
+                               where jr_id = $1 
+                            union all 
+                            select 
+                            jr_id 
+                            from jrn_rapt 
+                            where jra_concerned=$1)');
+    $title=array();
+    $title[]=_("operation");
+    $title[]=_("Date");
+    $title[]=_("N° Pièce");
+    $title[]=_("QuickCode");
+    $title[]=_("Tiers");
+    $title[]=_("commentaire");
+    $title[]=_("internal");
+    $title[]=_("montant");
+    $export->write_header($title);
+    foreach ($Row as $line)
+    {
+        $tiers_id=$Jrn->get_tiers_id($line['jrn_def_type'], $line['jr_id']);
+        $fiche_tiers=new Fiche($cn, $tiers_id);
+        $tiers=$fiche_tiers->strAttribut(ATTR_DEF_NAME, 0)." ".$fiche_tiers->strAttribut(ATTR_DEF_FIRST_NAME,
+                        0);
+
+        $export->add($line['num']);
+        $export->add($line['date']);
+        $export->add($line['jr_pj_number']);
+        $export->add($fiche_tiers->get_quick_code());
+        $export->add($tiers);
+        $export->add($line['comment']);
+        $export->add($line['jr_internal']);
+        //	  echo "<TD>".$line['pj'].";";
+        // If the ledger is financial :
+        // the credit must be negative and written in red
+        // Get the jrn type
+        if ($line['jrn_def_type']=='FIN')
+        {
+            $positive=$cn->get_value("select qf_amount from quant_fin  ".
+                    " where jr_id=$1", array($line['jr_id']));
+
+            $export->add($positive, "number");
+            $export->add("");
+        }
+        else
+        {
+            $export->add($line['montant'], "number");
+        }
+        //------ Add reconcilied operation ---------------
+        $ret_reconcile=$cn->execute('reconcile_date_csv',
+                array($line['jr_id']));
+        $max=Database::num_row($ret_reconcile);
+        if ($max>0)
+        {
+            for ($e=0; $e<$max; $e++)
+            {
+                $row=Database::fetch_array($ret_reconcile, $e);
+                $export->add($row['jr_date']);
+                $export->add($row['jr_internal']);
+                $export->add($row['jr_pj_number']);
+            }
+        }
+        $export->write();
+    }
+    return;
+}
+
 //-----------------------------------------------------------------------------
 // Detail printing for ACH or VEN : 1 row resume the situation with VAT, DNA
 // for Misc the amount 
@@ -187,87 +272,20 @@ if ($get_option=="L" || $get_option == 'D')
 {
 
 //-----------------------------------------------------
-    if ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL')
+    if ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL') 
     {
-        if ( $get_jrn==0) {
-            $Row=$Jrn->get_rowSimple($get_from_periode, $get_to_periode, $a_jrn);
-        }else {
-            $Row=$Jrn->get_rowSimple($get_from_periode, $get_to_periode);
-        }
-        $cn->prepare('reconcile_date_csv',
-                'select  * 
-                         from 
-                           jrn 
-                         where 
-                           jr_id in 
-                               (select 
-                                   jra_concerned 
-                                   from 
-                                   jrn_rapt 
-                                   where jr_id = $1 
-                                union all 
-                                select 
-                                jr_id 
-                                from jrn_rapt 
-                                where jra_concerned=$1)');
-        $title=array();
-        $title[]=_("operation");
-        $title[]=_("Date");
-        $title[]=_("N° Pièce");
-        $title[]=_("QuickCode");
-        $title[]=_("Tiers");
-        $title[]=_("commentaire");
-        $title[]=_("internal");
-        $title[]=_("montant");
-        $export->write_header($title);
-        foreach ($Row as $line)
+         if ($get_jrn == 0 )
         {
-            $tiers_id=$Jrn->get_tiers_id($line['jrn_def_type'], $line['jr_id']);
-            $fiche_tiers=new Fiche($cn, $tiers_id);
-            $tiers=$fiche_tiers->strAttribut(ATTR_DEF_NAME, 0)." ".$fiche_tiers->strAttribut(ATTR_DEF_FIRST_NAME,
-                            0);
+            $acc_ledger_history=new Acc_Ledger_History_Generic($cn, $a_jrn,
+                $get_from_periode, $get_to_periode, 'D');
+        } else {
+            $acc_ledger_history=new Acc_Ledger_History_Generic($cn, array($a_jrn),
+                $get_from_periode, $get_to_periode, 'D');
 
-            $export->add($line['num']);
-            $export->add($line['date']);
-            $export->add($line['jr_pj_number']);
-            $export->add($fiche_tiers->get_quick_code());
-            $export->add($tiers);
-            $export->add($line['comment']);
-            $export->add($line['jr_internal']);
-            //	  echo "<TD>".$line['pj'].";";
-            // If the ledger is financial :
-            // the credit must be negative and written in red
-            // Get the jrn type
-            if ($line['jrn_def_type']=='FIN')
-            {
-                $positive=$cn->get_value("select qf_amount from quant_fin  ".
-                        " where jr_id=$1", array($line['jr_id']));
-
-                $export->add($positive, "number");
-                $export->add("");
-            }
-            else
-            {
-                $export->add($line['montant'], "number");
-            }
-            //------ Add reconcilied operation ---------------
-            $ret_reconcile=$cn->execute('reconcile_date_csv',
-                    array($line['jr_id']));
-            $max=Database::num_row($ret_reconcile);
-            if ($max>0)
-            {
-                for ($e=0; $e<$max; $e++)
-                {
-                    $row=Database::fetch_array($ret_reconcile, $e);
-                    $export->add($row['jr_date']);
-                    $export->add($row['jr_internal']);
-                    $export->add($row['jr_pj_number']);
-                }
-            }
-            $export->write();
         }
+        $acc_ledger_history->export_csv();
+        return;
     }
-
 //------------------------------------------------------------------------------
 // One line summary with tiers, amount VAT, DNA, tva code ....
 // 

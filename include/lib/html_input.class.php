@@ -221,7 +221,7 @@ class HtmlInput
     {
         if ($p_id=="")
             $p_id=$p_name;
-        return '<INPUT TYPE="hidden" id="'.$p_id.'" NAME="'.$p_name.'" VALUE="'.$p_value.'">';
+        return '<INPUT TYPE="hidden" id="'.strip_tags($p_id).'" NAME="'.$p_name.'" VALUE="'.strip_tags($p_value).'">';
     }
 
     static function extension()
@@ -827,6 +827,7 @@ class HtmlInput
     static function title_box($p_name, $p_div, $p_mod="close", $p_js="",
             $p_draggable="n")
     {
+        $p_div=strip_tags($p_div);
         $r='<div class="bxbutton">';
 
         // If draggable : display a icon to unpin and move the dialog box

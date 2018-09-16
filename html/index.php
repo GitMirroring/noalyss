@@ -187,7 +187,7 @@ if (defined("RECOVER") && isset ($_REQUEST['recover']) )
 // reconnect , create a variable to reconnect properly in login.php
 $goto="";
 if (isset ($_REQUEST['reconnect']) && isset ($_REQUEST['backurl'])) {
-    $goto='<input type="hidden" value="'.$_REQUEST['backurl'].'" name="backurl">';
+    $goto='<input type="hidden" value="'.strip_tags($_REQUEST['backurl']).'" name="backurl">';
 }
 echo '
 <span style="background-color:#879ed4;color:white;padding-left:4px;padding-right:4px;">

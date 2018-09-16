@@ -69,10 +69,10 @@ for ($i=0;$i<$nb_data;$i++):
 ?>
     <tr <?=$odd?> >
         <td>
-            <?=$this->data[$i]['jr_date']?>
+            <?=$this->data[$i]['str_date']?>
         </td>
         <td>
-            <?=$this->data[$i]['jr_date_paid']?>
+            <?=$this->data[$i]['str_date_paid']?>
         </td>
         <td>
             <?=$this->data[$i]['jr_pj_number']?>

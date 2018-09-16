@@ -79,7 +79,7 @@ for ($i=0;$i< $nb_row;$i++) {
         echo td($detail_row['po_name']);
     }
     $amount=$detail_row['oa_amount'];
-    if ( $detail_row['oa_positive']=="N") {$amount=bcmult($amount,-1);}
+    if ( $detail_row['oa_positive']=="N") {$amount=bcmul($amount,-1);}
     echo td($amount,'style="text-align:right"');
     $debit=($detail_row['oa_debit'] == 'f')?"C":"D";
     echo td($debit);
