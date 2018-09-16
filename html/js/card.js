@@ -318,7 +318,7 @@ function result_card_search(req)
             sx=document.body.scrollTop+60;
 	}
 
-        var div_style="top:"+sx+"px;height:auto";
+        var div_style="top:"+sx+"px;min-height:80%;height:auto";
         add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:false,effect:'blinddown'});
         
         $('search_card').innerHTML=code_html;

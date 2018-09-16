@@ -21,7 +21,8 @@
  Show the default order
  example:
  <th class=" sorttable_sorted_reverse">
-  <th class=" sorttable_sorted">
+ ....<span id="sorttable_sortrevind">&nbsp;&blacktriangle;</span>
+<th class=" sorttable_sorted">
  
  Sort on date
  <td sorttable_customkey="<?=$row_bank['b_date']?>"> // format YYYYMMDD
