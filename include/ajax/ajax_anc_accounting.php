@@ -37,6 +37,8 @@ $pa_id=$http->request("pa_id");
 
 $anc=new Poste_analytique_SQL($cn, $p_id);
 $anc->pa_id=$pa_id;
+$anc->ga_id=$http->request("ga_id","string",null);
+
 $accounting=new Anc_Account_Table($anc);
 $accounting->set_object_name($ctl_id);
 $accounting->set_callback("ajax_misc.php");
