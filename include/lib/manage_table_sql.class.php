@@ -804,36 +804,35 @@ function check()
             }
             else
             {
-                if ( $this->get_col_type($v)=="select")
+                if ($this->get_col_type($v)=="select")
                 {
                     /**
-                     * we translate the code from the database into a hardcoded label
+                     * From database
                      */
                     $idx=$p_row[$v];
-                    if ( ! isset($this->a_select[$v][$idx])) {
-                        /*
-                        * Check if index exists
-                        */
-                        $array_to_search=$this->a_select[$v];
-                        $value=$p_row[$v];
-                        $nb_search=count($array_to_search);
-                        $found=FALSE;
-                        for ( $e=0;$e< $nb_search;$e++) {
-                            if (isset ($array_to_search[$e]['value']) && $array_to_search[$e]['value']==$value ) {
-                                $found=TRUE;
-                                echo td($array_to_search[$e]['label']);
-                            }
+                    /*
+                     * Check if index exists
+                     */
+                    $array_to_search=$this->a_select[$v];
+                    $value=$p_row[$v];
+                    $nb_search=count($array_to_search);
+                    $found=FALSE;
+                    for ($e=0; $e<$nb_search; $e++)
+                    {
+                        if (isset($array_to_search[$e]['value'])&&$array_to_search[$e]['value']==$value)
+                        {
+                            $found=TRUE;
+                            echo td($array_to_search[$e]['label']);
                         }
-
-                        if ( ! $found) {
-                            echo td("--");
-
-                        }
-                    } else {
-                        echo td($this->a_select[$v][$idx]["label"]);
                     }
-                    
-                }else {
+
+                    if (!$found)
+                    {
+                        echo td("--");
+                    }
+                }
+                else
+                {
                     echo td($p_row[$v]);
                 }
             }
