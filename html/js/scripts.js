@@ -1420,7 +1420,8 @@ function remove_waiting_node()
 }
 function remove_waiting_box()
 {
-    Effect.Fade('wait_box', { duration: 0.6 });
+    if ( $('wait_box') ) { Effect.Fade('wait_box', { duration: 0.6 }); }
+    
     remove_waiting_node();
 }
 /**
