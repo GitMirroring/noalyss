@@ -175,19 +175,21 @@ function update_row(ctl)
                             var answer = request.responseText.evalJSON(true);
                             var row = parseFloat(answer.row);
                             var current_row = parseFloat($('nb_item').value);
+                            var table_to_update=$(ctl);
                             if (current_row > row) {
-                                // Too many row
-                                var delta = $('nb_item').value - row;
+                                // Too many row, we always must keep 2 rows for the sum
+                                var delta = $('nb_item').value - row ;
                                 var idx = $('nb_item').value;
                                 for (var i = 0; i < delta; i++) {
-                                    $(ctl).deleteRow(-1);
+                                    var pos_row=table_to_update.rows.length;
+                                    table_to_update.deleteRow(pos_row-3);
                                     idx--;
                                 }
                                 $('nb_item').value = row;
                             }
                             if (current_row < row) {
                                 // We need to add rows
-                                var delta = row - current_row;
+                                var delta = row - current_row ;
                                 for (var i = 0; i < delta; i++) {
                                     if (ctl == 'fin_item') {
                                         ledger_fin_add_row();
