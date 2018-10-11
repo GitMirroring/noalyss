@@ -29,6 +29,17 @@
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class ISelect extends HtmlInput
 {
+    function __construct($p_name="", $p_value="", $p_id="")
+    {
+        parent::__construct($p_name,$p_value,$p_id);
+        $this->name=$p_name;
+        if ( $p_value == "" || ! is_array($p_value))  {
+            $this->value=array();
+        } else {
+            $this->value=$p_value;
+        }
+        $this->id=$p_id;
+    }
     /*!\brief show the html  input of the widget*/
     public function input($p_name=null,$p_value=null)
     {
@@ -69,7 +80,7 @@ class ISelect extends HtmlInput
             }
         }
       // $r='<span class="input_text_ro">'.$r.'</span>';
-	if ( $this->table == 1 )		  $a='<td>'.$r.'</td>';
+	if ( $this->table == 1 )		  $r='<td>'.$r.'</td>';
         return $r;
     }
     /*!\brief print in html the readonly value of the widget*/
@@ -96,11 +107,10 @@ class ISelect extends HtmlInput
     * // will be turned into 
     * array( array("value"=>'M,"label"=>"Mister")...)
     * @endcode
-    * @param type $p_array
-    * @return type
+    * @param array $p_array
     */
    public function transform($p_array) {
-        if (count($p_array)==0) return array();
+        if (! is_array($p_array) || count($p_array)==0) return ;
         $a_ret=array();
         foreach ($p_array as $key=>$value) {
             $a_ret['value']=$key;
