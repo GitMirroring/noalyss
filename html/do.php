@@ -1,5 +1,4 @@
 <?php
-
 /*
  *   This file is part of NOALYSS.
  *
@@ -112,26 +111,37 @@ if ( DEBUG ) {
     ?>
 <div id="debug_div" style="border:slategray solid 1px;margin-left: 0px;position:absolute;background:white;display:fixed;top:2px;left:25px;z-index:1000;display:none">
     <h2>$_POST</h2>
+    <pre>
     <?php        
-    var_dump($_POST);
+    print_r($_POST);
     ?>
+        
+    </pre>
     <h2>$_GET</h2>
+    <pre>
     <?php        
-    var_dump($_GET);
+    print_r($_GET);
     ?>
+    </pre>
     <h2>$_REQUEST</h2>
+    <pre>
     <?php        
-    var_dump($_REQUEST);
+    print_r($_REQUEST);
     ?>
+    </pre>
     <h2>$_SESSION</h2>
+    <pre>
     <?php        
-    var_dump($_SESSION);
+    print_r($_SESSION);
     ?>
+    </pre>
     
     <h2>$GLOBALS</h2>
+    <pre>
     <?php        
-    var_dump($GLOBALS);
+    print_r($GLOBALS);
     ?>
+    </pre>
     
 </div>
 <script>
