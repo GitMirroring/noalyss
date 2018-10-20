@@ -2271,3 +2271,6 @@ div.progressbar {
     color:antiquewhite;
     font-weight: bolder;
 }
+.nowrap td {
+    white-space: nowrap;
+}
