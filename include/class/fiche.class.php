@@ -57,6 +57,8 @@ class Fiche
         $this->cn=$p_cn;
         $this->id=$p_id;
         $this->quick_code='';
+        $this->attribut=[];
+        
     }
     /**
      *@brief used with a usort function, to sort an array of Fiche on the name
@@ -344,8 +346,8 @@ class Fiche
      */
     function strAttribut($p_ad_id,$p_return=1)
     {
-		$return=($p_return==1)?NOTFOUND:"";
-        if ( sizeof ($this->attribut) == 0 )
+	$return=($p_return==1)?NOTFOUND:"";
+        if (is_array($this->attribut) && sizeof ($this->attribut) == 0 )
         {
 
             if ($this->id==0) {
