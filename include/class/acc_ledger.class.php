@@ -82,6 +82,7 @@ class Acc_Ledger extends jrn_def_sql
         $this->db=$p_cn;
         $this->row=null;
         $this->nb=MAX_ARTICLE;
+        $this->currency_id=0;
     }
 
     function get_last_pj()
@@ -2277,9 +2278,27 @@ class Acc_Ledger extends jrn_def_sql
             ["label"=>_("Désactivé"),"value"=>0]
         ];
         $actif->selected=$this->jrn_enable;
+        // -- default currency used : only for financial ledgers
+        $default_currency=$this->select_default_currency();
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
+    /**
+     * @brief create a select button to set the default currency for a ledger
+     * used only for empty financial ledger
+     * @return ISelect object
+     */
+    function select_default_currency()
+    {
+        $default_currency=new ISelect("defaultCurrency");
+        $default_currency->value=$this->db->make_array("select id,cr_code_iso from public.currency order by 1 ");
+        $default_currency->selected=$this->currency_id;
+        $nb_operation=$this->db->get_value("select count(*) from jrn where jr_def_id=$1",[$this->id]);
+        if (  $nb_operation > 0) {
+                $default_currency->setReadOnly(TRUE);
+        }
+        return $default_currency;
+    }
     /**
      * Verify before update
      *
@@ -2357,6 +2376,7 @@ class Acc_Ledger extends jrn_def_sql
         $this->jrn_deb_max_line=($min_row<1)?1:$min_row;
         $this->jrn_def_description=$p_description;
         $this->jrn_enable=$jrn_enable;
+        $this->currency_id=0;
         switch ($this->jrn_def_type)
         {
             case 'ACH':
@@ -2389,6 +2409,18 @@ class Acc_Ledger extends jrn_def_sql
                 if ($result==-1)
                     throw new Exception(_("Aucun compte en banque n'est donné"));
                 $this->jrn_def_num_op=(isset($numb_operation))?1:0;
+                // if nb operation == 0 then update currency_id
+                $nb_operation = $this->db->get_value("select count(*) from jrn where jr_def_id=$1",
+                        [$this->jrn_def_id]);
+                /*
+                 * Set the default currency except if there are already operation
+                 */
+                if ( $nb_operation == 0 ){
+                    $this->currency_id=$defaultCurrency;
+                } else {
+                    $this->currency_id=$this->db->get_value("select currency_id from jrn_def where jrn_def_id=$1",
+                            [$this->jrn_def_id]);
+                }
                 break;
         }
 
@@ -2513,6 +2545,8 @@ class Acc_Ledger extends jrn_def_sql
         $cn=$this->db;
         $min_row=new INum("min_row", MAX_ARTICLE);
         $min_row->prec=0;
+        // -- default currency used : only for financial ledgers
+        $default_currency=$this->select_default_currency();
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
@@ -2536,6 +2570,8 @@ class Acc_Ledger extends jrn_def_sql
                 trim(substr($this->jrn_def_type, 0, 1)),
                 Acc_Ledger::next_number($this->db, $this->jrn_def_type));
         $this->jrn_def_description=$p_description;
+        $this->currency_id=0;
+
         switch ($this->jrn_def_type)
         {
             case 'ACH':
@@ -2567,6 +2603,7 @@ class Acc_Ledger extends jrn_def_sql
                 if ($result==-1)
                     throw new Exception(_("Aucun compte en banque n'est donné"));
                 $this->jrn_def_num_op=(isset($numb_operation))?1:0;
+                $this->currency_id=$defaultCurrency;
                 break;
         }
 
