@@ -3514,3 +3514,18 @@ function updatePeriode(p_dossier,p_exercice,p_periode_from,p_periode_to,p_last)
     new Ajax.Updater(p_periode_to,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_to,"type":"to","last":p_last}});
     remove_waiting_box();
 }
+/**
+ * 
+ * @returns {undefined}
+ */
+function show_ledger_fin_currency()
+{
+    var ledger=$('p_jrn').value;
+    var dossier=$('gDossier').value;
+    // $('ledger_currency').
+    var a=new Ajax.Updater("ledger_currency",
+                    "ajax_misc.php",
+                    { 
+                        parameters: {"op":"currencyCode","gDossier":dossier,"ledger":ledger}
+                    });
+}

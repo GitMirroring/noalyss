@@ -301,7 +301,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 		// Ledger (p_jrn)
 		//--
-		$onchange="update_bank();ajax_saldo('first_sold');update_name();update_row('fin_item');";
+		$onchange="update_bank();ajax_saldo('first_sold');update_name();update_row('fin_item');show_ledger_fin_currency();";
 
 		if ($g_parameter->MY_DATE_SUGGEST == 'Y')
 			$onchange .= 'get_last_date();';

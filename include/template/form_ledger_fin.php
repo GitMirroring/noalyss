@@ -13,7 +13,7 @@
 			array('value'=>2,'label'=>_("Avec date opérations"))
 	);
 	$wchdate->selected=(isset($chdate))?$chdate:1;
-	$wchdate->javascript='onchange="show_fin_chdate(\'chdate\')"';
+	$wchdate->javascript='onchange="show_fin_chdate(\'chdate\');"';
 ?>
 <?php echo $wchdate->input();?>
 <span id="chdate_ext">
@@ -22,8 +22,11 @@
 
 <?php echo $f_period?><br>
 <?php echo $f_jrn?><br>
-<?php echo _('Banque')?><?php echo $f_bank ?>
-
+    <?php echo _('Banque')?><?php echo $f_bank ?>&nbsp;
+        <?php echo _("Devise")?>&nbsp;
+    <span id="ledger_currency">
+            <?php echo $this->get_currency();?>
+    </span>
 </fieldset>
 
 <fieldset>

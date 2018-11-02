@@ -2933,7 +2933,14 @@ class Acc_Ledger extends jrn_def_sql
                 Dossier::id(),$select->name,$p_currency_code,$p_currency_rate,$p_eur_amount);
         return $select;
     }
-
+    /**
+     * @brief returns the code iso of the default currency for this ledger
+     */
+    function get_currency()
+    {
+        $cr_iso_code=$this->db->get_value("select cr_code_iso from public.currency where id=$1",[$this->currency_id]);
+        return $cr_iso_code;
+    }
 }
 
 ?>
