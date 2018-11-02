@@ -476,7 +476,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		list ($l_date_start, $l_date_end) = $pPeriode->get_date_limit();
 		$exercice = $pPeriode->get_exercice();
 		$r.='';
-		$r.='<fieldset><legend>Banque, caisse </legend>';
+		$r.='<fieldset><legend>'._("Banque, caisse").' </legend>';
 		$r.= '<div id="jrn_name_div">';
 		$r.='<h2 id="jrn_name" style="display:inline">' . $this->get_name() . '</h2>';
 		$r.= '</div>';
