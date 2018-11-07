@@ -252,7 +252,7 @@ j1.j_poste as poste
         // If nothing is found return null
         $n=Database::num_row($Res);
 
-        if ($n ==0 ) return null;
+        if ($n ==0 ) return [];
 
         // put everything in an array
         for ($i=0;$i<$n;$i++)
