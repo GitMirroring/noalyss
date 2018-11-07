@@ -57,6 +57,7 @@ class Fiche
         $this->cn=$p_cn;
         $this->id=$p_id;
         $this->quick_code='';
+        $this->attribut=[];
     }
     /**
      *@brief used with a usort function, to sort an array of Fiche on the name
