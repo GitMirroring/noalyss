@@ -6,6 +6,8 @@
 	<h2  id="jrn_name"> <?php echo $this->get_name()?></h2>
 </div>
 <legend><?php echo $f_legend ?> </legend>
+<p>
+    
 <?php 
 	$wchdate=new ISelect('chdate');
 	$wchdate->value=array(
@@ -20,7 +22,14 @@
    <?php echo _('Date').' '.$f_date ?>
 </span>
 
+</p>
+<?php if ( $f_period <> "") :?>
+<p>
+    
 <?php echo $f_period?><br>
+</p>
+<?php endif;?>
+
 <?php echo $f_jrn?><br>
     <?php echo _('Banque')?><?php echo $f_bank ?>&nbsp;
         <?php echo _("Devise")?>&nbsp;
@@ -64,6 +73,28 @@ $i++;
 
 }
 ?>
+<tr>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+</tr>
+<tr>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+</tr>
 </table>
 </fieldset>
 </fieldset>
