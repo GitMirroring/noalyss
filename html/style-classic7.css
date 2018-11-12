@@ -461,10 +461,9 @@ div.content a.mtitle {
 div.content a.mtitle:hover {
     text-decoration:none;
     display:inline;
-    background-color:#888;
-    color:orangered;
+    background-color:transparent;
+    color:lightsalmon;
     cursor: pointer;
-
 }
 
 
