@@ -7,8 +7,11 @@
 # Author D. DE BONTRIDDER danydb@aevalys.eu
 echo "Extract"
 cd ..
+FILE=/tmp/file-list.$$
+
+find . -type f -name  \*.php > $FILE
 # CATALOG
-xgettext -L PHP -j --from-code=UTF-8 -p html/lang/ html/*.php include/*.php include/template/*.php include/ext/*/*.php include/ext/*/include/*.php  include/ext/*/include/template/*.php include/lib/*.php include/ajax/*.php include/export/*.php include/class/*.php
+xgettext -L PHP -j --from-code=UTF-8 -p html/lang -f $FILE
 
 # For dutch
 echo "Dutch"
