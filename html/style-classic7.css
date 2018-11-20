@@ -454,15 +454,14 @@ div.content a.mtitle {
     color:#0000FF;
        cursor: pointer;
     /*! background-color: white; */
-
-
+    background-color: transparent;
 }
 
 div.content a.mtitle:hover {
     text-decoration:none;
     display:inline;
     background-color:transparent;
-    color:lightsalmon;
+    color:lightskyblue;
     cursor: pointer;
 }
 
