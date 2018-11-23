@@ -237,7 +237,6 @@ class Document
             $lt="<";
             $gt=">";
         }
-
         //read the file
         while(! feof($h))
 	  {
@@ -270,33 +269,8 @@ class Document
                          * Change type of cell to numeric
                          *  allow numeric cel in ODT for the formatting and formula
                          */
-			if ( is_numeric($value) && $p_type=='OOo')
-			  {
-                            // For libreOffice <=4
-			    $searched='/office:value-type="string"><text:p>'.$pattern.'/i';
-			    $replaced='office:value-type="float" office:value="'.$value.'"><text:p>'.$pattern;
-			    $buffer=preg_replace($searched, $replaced, $buffer,1);
-                            // For libreOffice >=4
-			    $searched='/office:value-type="string" calcext:value-type="string"><text:p>'.$pattern.'/i';
-			    $replaced='office:value-type="float" office:value="'.$value.'" calcext:value-type="float"><text:p>'.$pattern;
-			    $buffer=preg_replace($searched, $replaced, $buffer,1);
-			  }
-			// replace into the $buffer
-			// take the position in the buffer
-			$pos=strpos($buffer,$to_remove);
-			// get the length of the string to remove
-			$len=strlen($to_remove);
-			if ( $p_type=='OOo' )
-			  {
-			    $value=str_replace('&','&amp;',$value);
-			    $value=str_replace('<','&lt;',$value);
-			    $value=str_replace('>','&gt;',$value);
-			    $value=str_replace('"','&quot;',$value);
-			    $value=str_replace("'",'&apos;',$value);
-			  }
-			$buffer=substr_replace($buffer,$value,$pos,$len);
-
-			// if the pattern if found we replace it
+                        
+                        $buffer=\Document::replace_value($buffer,$pattern, $value, 1,$p_type);
 		      }
 		  }
 	      }
@@ -1111,9 +1085,9 @@ class Document
                 }
                 $sell=${'e_march'.$i.'_price'};
                 $qt=${'e_quant'.$i};
-				$tot=bcmul($sell,$qt);
-				$tot=bcadd($tot,$tva_amount);
-				$sum=bcadd($sum,$tot);
+                $tot=bcmul($sell,$qt);
+                $tot=bcadd($tot,$tva_amount);
+                $sum=bcadd($sum,$tot);
             }
             $r=round($sum,2);
 
@@ -1125,10 +1099,10 @@ class Document
             {
                 $tva='e_march'.$i.'_tva_amount';
                 if (! isset(${$tva})) $tva_amount=0.0;
-                else $tva_amount=$
-                                     {
-                                         $tva
-                                     };
+                else {
+                    $tva_amount=${$tva};
+                    $tva_amount=($tva_amount=="")?0:$tva_amount;
+                }
                 $sum+=$tva_amount;
                 $sum=round($sum,2);
             }
@@ -1302,6 +1276,49 @@ class Document
     {
         $this->db->exec_sql('update document set d_description = $1 where d_id=$2',
                 array($p_desc,$this->d_id));
+    }
+    /**
+     * Replace a pattern with a value in the buffer , handle the change for OOo type file and amount
+     * 
+     * @param string $p_buffer
+     * @param string $_pattern
+     * @param mixed $p_value
+     */
+    static function replace_value($p_buffer, $p_pattern, $p_value,$p_limit=-1,$p_type='OOo')
+    {
+        $check=$p_pattern;
+        $check=str_replace(['&lt;','&gt;','<','>','='], "", $check);
+        if ( preg_replace('/[^[:alnum:]^_]/', '', $check) != $check)
+        {
+            throw new Exception(sprintf(_("chaine à remplacer [%s] contient un caractère interdit"), $p_pattern));
+        }
+        $count=0;
+        if (is_numeric($p_value) && $p_type == 'OOo')
+        {
+            /* -- works only with OOo Calc -- */
+            $searched='/office:value-type="string"><text:p>'.$p_pattern.'/i';
+            $replaced='office:value-type="float" office:value="'.$p_value.'"><text:p>'.$p_value;
+            $p_buffer=preg_replace($searched, $replaced, $p_buffer,$p_limit,$count);
+            if ( $count == 0) {
+            /* -- work with libreOffice > 5 -- */
+                $searched='/office:value-type="string" calcext:value-type="string"><text:p>'.$p_pattern.'/i';
+                $replaced='office:value-type="float" office:value="'.$p_value.'"  calcext:value-type="float"><text:p>'.$p_value;
+                $p_buffer=preg_replace($searched, $replaced, $p_buffer,$p_limit,$count);
+            }
+        }
+        if ($count == 0)
+        {
+            if ( $p_type=='OOo' )
+            {
+              $p_value=str_replace('&','&amp;',$p_value);
+              $p_value=str_replace('<','&lt;',$p_value);
+              $p_value=str_replace('>','&gt;',$p_value);
+              $p_value=str_replace('"','&quot;',$p_value);
+              $p_value=str_replace("'",'&apos;',$p_value);
+            }
+            $p_buffer=preg_replace('/'.$p_pattern.'/i', $p_value, $p_buffer,$p_limit);
+        }
+        return $p_buffer;
     }
 
 }
