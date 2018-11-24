@@ -1072,16 +1072,16 @@ ul {
 a.line,div.content a.line
 {
     text-decoration:underline;
-    display:inline;
+    display:inline !important;
     /* color: #0000FF; */
     cursor:pointer;
 }
 a.line:hover,div_content a.line
 {
     text-decoration:underline;
-    display:inline;
-    color: #FFFFFF;
-    background-color:#336699;
+    display:inline !important;
+    color: #FFFFFF !important;
+    background-color:#336699 !important;
     cursor:pointer;
 }
 
