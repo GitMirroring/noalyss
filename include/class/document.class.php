@@ -1301,7 +1301,7 @@ class Document
             $p_buffer=preg_replace($searched, $replaced, $p_buffer,$p_limit,$count);
             if ( $count == 0) {
             /* -- work with libreOffice > 5 -- */
-                $searched='/office:value-type="string" calcext:value-type="string"><text:p>'.$p_pattern.'/i';
+                $searched='/office:value-type="string" calcext:value-type="string"><text:p>(<text:s\/>)*'.$p_pattern.'/i';
                 $replaced='office:value-type="float" office:value="'.$p_value.'"  calcext:value-type="float"><text:p>'.$p_value;
                 $p_buffer=preg_replace($searched, $replaced, $p_buffer,$p_limit,$count);
             }
