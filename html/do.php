@@ -309,10 +309,12 @@ if (isset($_REQUEST['ac']))
             echo '<a class="button" href="do.php?'.Dossier::get().'">';
             echo _('Retour');
             echo '</a>';
+            return;
         }
         else {
             alert($e->getMessage());
             record_log($e->getTraceAsString());
+            throw $e;
         }
     }
 }
@@ -343,6 +345,7 @@ else
     {
         echo $exc->getMessage();
         record_log($exc->getTraceAsString());
+        throw $e;
     }
     
 }

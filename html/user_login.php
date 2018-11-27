@@ -29,7 +29,7 @@ require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 
-html_page_start($_SESSION['g_theme']);
+@html_page_start($_SESSION['g_theme']);
 $rep=new Database();
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 $User=new User($rep);

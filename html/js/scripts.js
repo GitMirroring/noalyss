@@ -705,6 +705,7 @@ function add_div(obj)
         /* elt.setStyle({visibility:'visible'}); */
         elt.style.visibility = 'visible';
         elt.show();
+        return elt;
     }
     catch (e)
     {
@@ -2974,7 +2975,7 @@ function confirm_box(p_obj, p_message,p_callback_true)
  */
 function alert_box(p_message)
 {
-    smoke.alert(p_message,false , {ok:'ok',classname:"inner_box"});
+    smoke.alert(p_message, undefined,{ok:'ok',classname:"inner_box"});
 }
 
 

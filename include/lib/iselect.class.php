@@ -29,6 +29,11 @@
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class ISelect extends HtmlInput
 {
+    function __construct($p_name="", $p_value="", $p_id="")
+    {
+        parent::__construct($p_name, $p_value, $p_id);
+        $this->value=[];
+    }
     /*!\brief show the html  input of the widget*/
     public function input($p_name=null,$p_value=null)
     {

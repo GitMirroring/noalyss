@@ -315,7 +315,7 @@ td.selectedcell{
     /*color:#FFFFFF;*/
     width:250px;
     text-align:center;
-    background-color: lightsteelblue;
+    background-color: #002ba3;
     border-style: solid;
     border-width: 1px;
     border-color:white;
@@ -356,7 +356,6 @@ td.selectedcell a.mtitle,div.content td.selectedcell a.mtitle {
     /*! height: 100%; */
     width: 100%;
     font-size: 1rem;
-/*    background-color:lightsteelblue;*/
     font-weight: normal;
 }
 a.dossier {
@@ -454,17 +453,15 @@ div.content a.mtitle {
     color:#0000FF;
        cursor: pointer;
     /*! background-color: white; */
-
-
+    background-color: transparent;
 }
 
 div.content a.mtitle:hover {
     text-decoration:none;
     display:inline;
-    background-color:#888;
-    color:orangered;
+    background-color:transparent;
+    color:lightskyblue;
     cursor: pointer;
-
 }
 
 
@@ -1075,16 +1072,16 @@ ul {
 a.line,div.content a.line
 {
     text-decoration:underline;
-    display:inline;
+    display:inline !important;
     /* color: #0000FF; */
     cursor:pointer;
 }
 a.line:hover,div_content a.line
 {
     text-decoration:underline;
-    display:inline;
-    color: #FFFFFF;
-    background-color:#336699;
+    display:inline !important;
+    color: #FFFFFF !important;
+    background-color:#336699 !important;
     cursor:pointer;
 }
 
