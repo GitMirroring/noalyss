@@ -38,12 +38,12 @@ require_once NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
 
 class Acc_Ledger_Fin extends Acc_Ledger
 {
-
+    
 	function __construct($p_cn, $p_init)
 	{
 		parent::__construct($p_cn, $p_init);
 		$this->type = 'FIN';
-	}
+    	}
 
 	/**
          * Verify that the data are correct before inserting or confirming
@@ -315,8 +315,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 		$wLedger->javascript = $add_js;
 
-		$label = " Journal " . Icon_Action::infobulle(2);
-		$f_jrn = $label . $wLedger->input();
+		$label_ledger = _("Journal") ." ". Icon_Action::infobulle(2);
 
 
 		// retrieve bank name, code and account from the jrn_def.jrn_def_bank
@@ -629,12 +628,25 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			$r.='</TR>';
 		}
 		$r.="</TABLE>";
-
+                $acc_currency=$this->get_currency();
+                $cur=$acc_currency->get_code();
+                $cur_rate=$acc_currency->get_rate();
+                $default_currency=new Acc_Currency($this->db , 0);
 		// saldo
-		$r.='<br>'.sprintf(_("Ancien solde = %d"), $solde);
-		$new_solde+=$tot_amount;
-		$r.='<br>'.sprintf(_("Nouveau solde = %d"),$new_solde);
-		$r.='<br>'.sprintf(_("Difference = %d"), $tot_amount);
+		$r.='<br>'.sprintf(_("Ancien solde  = %d %s"),$solde, $cur);
+		$new_solde=bcadd($new_solde,$tot_amount);
+		$r.='<br>'.sprintf(_("Nouveau solde  = %d %s"),$new_solde, $cur);
+                if ( $acc_currency->get_id() != 0)
+                {
+                    
+                    $r.='<br>'.sprintf(_("Nouveau solde  = %d %s"),bcmul($new_solde,$cur_rate),$default_currency->get_code());
+                }
+		$r.='<br>'.sprintf(_("Difference  = %d %s"), $tot_amount, $cur);
+                                  
+                 if ( $acc_currency->get_id() != 0)
+                {
+                    $r.='<br>'.sprintf(_("Difference  = %d %s"), bcmul($tot_amount,$cur_rate), $default_currency->get_code());
+                }
 		// check for upload piece
 		$file = new IFile();
 
@@ -742,6 +754,11 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			$ret.=tr(th('Date').th('n° interne') . th('Quick Code') . th('Nom') . th('Libellé') . th('Montant', ' style="text-align:right"'));
 			// Credit = goods
 			$get_solde=true;
+                        
+                        $acc_currency=new Acc_Currency($this->db,$this->currency_id);
+                        $currency_rate=$acc_currency->get_rate();
+                        
+                        // for each item
 			for ($i = 0; $i < $nb_item; $i++)
 			{
 				// insert it into the database
@@ -770,13 +787,15 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				}
 				$fPoste = new Fiche($this->db);
 				$fPoste->get_by_qcode(${"e_other$i"});
+                                
+				// convert to EUR if needed and round it
+                                $amount_input=${"e_other$i" . "_amount"} = round(${"e_other$i" . "_amount"}, 2);
+                                $amount_eur=bcmul($amount_input,$currency_rate);
 
-				// round it
-				${"e_other$i" . "_amount"} = round(${"e_other$i" . "_amount"}, 2);
 
 
-
-				$amount+=${"e_other$i" . "_amount"};
+				$amount=bcadd($amount,$amount_input);
+                                
 				// Record a line for the bank
 				// Compute the j_grpt
 				$seq = $this->db->get_next_seq('s_grpt');
@@ -800,7 +819,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 
 				$acc_operation->poste = $poste_val;
-				$acc_operation->amount = ${"e_other$i" . "_amount"} * (-1);
+				$acc_operation->amount = bcmul($amount_eur,-1);
 				$acc_operation->grpt = $seq;
 				$acc_operation->jrn = $p_jrn;
 				$acc_operation->type = 'd';
@@ -816,6 +835,13 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				$acc_operation->qcode = ${"e_other" . $i};
 				$j_id = $acc_operation->insert_jrnx();
 
+                                // -- Insert into Operation Currency 
+                                $operation_currency = new Operation_currency_SQL($this->db);
+                                $operation_currency->oc_amount=$amount_input;
+                                $operation_currency->oc_price_unit=$amount_input;
+                                $operation_currency->j_id=$j_id;
+                                $operation_currency->insert();
+                                
 				$acc_operation = new Acc_Operation($this->db);
 				$acc_operation->date = $e_date;
 				$sposte = $fBank->strAttribut(ATTR_DEF_ACCOUNT);
@@ -835,7 +861,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				}
 
 				$acc_operation->poste = $poste_val;
-				$acc_operation->amount = ${"e_other$i" . "_amount"};
+				$acc_operation->amount = $amount_eur;
 				$acc_operation->grpt = $seq;
 				$acc_operation->jrn = $p_jrn;
 				$acc_operation->type = 'd';
@@ -858,7 +884,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 				$acc_operation = new Acc_Operation($this->db);
 				$acc_operation->jrn = $p_jrn;
-				$acc_operation->amount = abs(${"e_other$i" . "_amount"});
+				$acc_operation->amount = abs($amount_eur);
 				$acc_operation->date = $e_date;
 				$acc_operation->desc = $comment;
 				$acc_operation->grpt = $seq;
@@ -878,7 +904,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				$this->db->exec_sql('update jrn set jr_pj_number=$1 where jr_id=$2', array($acc_operation->pj, $jr_id));
 				$internal = $this->compute_internal_code($seq);
 
-
+                             
 				if (trim(${"e_concerned" . $i}) != "")
 				{
 					if (strpos(${"e_concerned" . $i}, ',') != 0)
@@ -931,12 +957,13 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				/**
 				 * save also into quant_fin
 				 */
-				$this->insert_quant_fin($fBank->id, $jr_id, $fPoste->id, ${"e_other$i" . "_amount"});
+				$this->insert_quant_fin($fBank->id, $jr_id, $fPoste->id, $amount_eur);
 
 				if ($g_parameter->MY_ANALYTIC != "nu")
 				{
 					// for each item, insert into operation_analytique */
 					$op = new Anc_Operation($this->db);
+                                        $op->set_currency_rate($currency_rate);
 					$op->oa_group = $this->db->get_next_seq("s_oa_group"); /* for analytic */
 					$op->j_id = $j_id;
 					$op->oa_date = $e_date;
@@ -991,9 +1018,9 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		}
 		$this->db->commit();
 		$r = "";
-		$r.="<br>Ancien solde " . nbm($solde);
+		$r.=sprintf("<br>"._("Ancien solde %s %s"), nbm($solde),$acc_currency->get_code());
 		$new_solde = bcadd($new_solde, $amount);
-		$r.="<br>Nouveau solde " . nbm($new_solde);
+		$r.=sprintf("<br>"._("Nouveau solde %s %s"), nbm($new_solde),$acc_currency->get_code());
 		$ret.=$r;
 		return $ret;
 	}

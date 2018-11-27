@@ -6,11 +6,6 @@
 	<h2  id="jrn_name"> <?php echo $this->get_name()?></h2>
 </div>
 <legend><?php echo $f_legend ?> </legend>
-<p>
-
-<?php echo $f_jrn?>
-    <?php echo _('Banque')?><?php echo $f_bank ?>&nbsp;
-    
 <?php 
 	$wchdate=new ISelect('chdate');
 	$wchdate->value=array(
@@ -20,12 +15,51 @@
 	$wchdate->selected=(isset($chdate))?$chdate:1;
 	$wchdate->javascript='onchange="show_fin_chdate(\'chdate\');"';
 ?>
-    <br>    
-<?php echo _("Style de date")." ".$wchdate->input();?>
-    <br>
-<span id="chdate_ext">
-   <?php echo _('Date').' '.$f_date ?>
-</span>
+<table>
+    <tr>
+        <td>
+            <?php echo $label_ledger; ?>
+        </td>
+        <td>
+            <?php echo $wLedger->input()?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+             <?php echo _('Banque')?>
+        </td>
+        <td>
+            <?php echo $f_bank ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo _("Style de date"); ?>
+
+        </td>
+        <td>
+            <?php echo $wchdate->input();?>
+
+        </td>
+    </tr>
+    <tr  id="chdate_ext">
+        <td>
+               <?php echo _('Date'); ?>
+
+        </td>
+        <td>
+               <?php echo $f_date ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo _("Devise")?>
+        </td>
+        <td id="ledger_currency">
+            <?php echo $this->get_currency()->get_code();?>
+        </td>
+    </tr>    
+</table>
 
 </p>
 <?php if ( $f_period <> "") :?>
@@ -35,10 +69,6 @@
 </p>
 <?php endif;?>
 
-        <?php echo _("Devise")?>&nbsp;
-    <span id="ledger_currency">
-            <?php echo $this->get_currency();?>
-    </span>
 </fieldset>
 
 <fieldset>

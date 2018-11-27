@@ -61,15 +61,13 @@ require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
 class Acc_Ledger extends jrn_def_sql
 {
 
-    var $id;   /*     * < jrn_def.jrn_def_id */
-    var $name;   /*     * < jrn_def.jrn_def_name */
-    var $db;   /*     * < database connextion */
-    var $row;   /*     * < row of the ledger */
-    var $type;   /*     * < type of the ledger ACH ODS FIN
-      VEN or GL */
-    var $nb;   /*     * < default number of rows by
-      default 10 */
-
+    var $id;     /**< jrn_def.jrn_def_id */
+    var $name;   /**< jrn_def.jrn_def_name */
+    var $db;     /**< database connextion */
+    var $row;    /**< row of the ledger */
+    var $type;   /**< type of the ledger ACH ODS FIN   VEN or GL */
+    var $nb;     /**< default number of rows by  default 10 */
+    var $currency_id;
     /**
      * @param $p_cn database connexion
      * @param $p_id jrn.jrn_def_id
@@ -82,9 +80,19 @@ class Acc_Ledger extends jrn_def_sql
         $this->db=$p_cn;
         $this->row=null;
         $this->nb=MAX_ARTICLE;
-        $this->currency_id=0;
+        $this->currency_id=$this->set_currency_id();
     }
-
+    /**
+     * retrieve currency_id from database
+     */
+    function set_currency_id()
+    {
+       $this->db->get_value("select currency_id from jrn_def where jrn_def_id=$1",
+            [$this->id]);
+        if ( $this->currency_id == "") {
+            $this->currency_id=0;
+        }
+    }
     function get_last_pj()
     {
         if (isNumber($this->id)==0)
@@ -2938,8 +2946,8 @@ class Acc_Ledger extends jrn_def_sql
      */
     function get_currency()
     {
-        $cr_iso_code=$this->db->get_value("select cr_code_iso from public.currency where id=$1",[$this->currency_id]);
-        return $cr_iso_code;
+        $cr=new Acc_Currency($this->db,$this->currency_id);
+        return $cr;
     }
 }
 

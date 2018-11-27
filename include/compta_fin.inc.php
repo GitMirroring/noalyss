@@ -33,26 +33,30 @@ $gDossier=dossier::id();
 $cn=Dossier::connect();
 $menu_action="?ledger_type=fin&ac=".$_REQUEST['ac']."&".dossier::get();
 
-$Ledger=new Acc_Ledger_Fin($cn,0);
 
+$http=new HttpInput();
+$ledger_id=$http->request("p_jrn","number",0);
 //--------------------------------------------------------------------------------
 // Encode a new financial operation
 //--------------------------------------------------------------------------------
 
-if ( isset($_REQUEST['p_jrn']))
-	$Ledger->id=$_REQUEST['p_jrn'];
-else
+if ( $ledger_id == 0)
 {
-	$def_ledger=$Ledger->get_first('fin');
-	if ( empty ($def_ledger))
-	{
-		exit('Pas de journal disponible');
-	}
-	$Ledger->id=$def_ledger['jrn_def_id'];
+    $Ledger=new Acc_Ledger_Fin($cn,0);
+    $def_ledger=$Ledger->get_first('fin');
+    if ( empty ($def_ledger))
+    {
+            exit('Pas de journal disponible');
+    }
+    $ledger_id=$def_ledger['jrn_def_id'];
 }
+
+$Ledger=new Acc_Ledger_Fin($cn,$ledger_id);
+$Ledger->load();
+
 $jrn_priv=$g_user->get_ledger_access($Ledger->id);
 // Check privilege
-if ( isset($_REQUEST['p_jrn']) && ( $jrn_priv == 'X'))
+if ( $jrn_priv == 'X')
 {
 	NoAccess();
 	exit -1;
