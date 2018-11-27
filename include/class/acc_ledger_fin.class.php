@@ -833,14 +833,14 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				}
 				$acc_operation->periode = $tperiode;
 				$acc_operation->qcode = ${"e_other" . $i};
-				$j_id = $acc_operation->insert_jrnx();
+				$j_id_currency = $acc_operation->insert_jrnx();
 
                                 // -- Insert into Operation Currency 
                                 $operation_currency = new Operation_currency_SQL($this->db);
                                 $operation_currency->oc_amount=$amount_input;
                                 $operation_currency->oc_vat_amount=0;
                                 $operation_currency->oc_price_unit=$amount_input;
-                                $operation_currency->j_id=$j_id;
+                                $operation_currency->j_id=$j_id_currency;
                                 $operation_currency->insert();
                                 
 				$acc_operation = new Acc_Operation($this->db);
@@ -962,7 +962,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				/**
 				 * save also into quant_fin
 				 */
-				$this->insert_quant_fin($fBank->id, $jr_id, $fPoste->id, $amount_eur);
+				$this->insert_quant_fin($fBank->id, $jr_id, $fPoste->id, $amount_eur,$j_id_currency);
 
 				if ($g_parameter->MY_ANALYTIC != "nu")
 				{
@@ -970,11 +970,11 @@ class Acc_Ledger_Fin extends Acc_Ledger
 					$op = new Anc_Operation($this->db);
                                         $op->set_currency_rate($currency_rate);
 					$op->oa_group = $this->db->get_next_seq("s_oa_group"); /* for analytic */
-					$op->j_id = $j_id;
+					$op->j_id = $j_id_currency;
 					$op->oa_date = $e_date;
 					$op->oa_debit = 'f';
 					$op->oa_description = sql_string($comment);
-					$op->save_form_plan($_POST, $i, $j_id);
+					$op->save_form_plan($_POST, $i, $j_id_currency);
 				}
 
 
@@ -1184,12 +1184,12 @@ class Acc_Ledger_Fin extends Acc_Ledger
 	 * @param $other is the f_id of the benefit
 	 * @param $amount is the amount
 	 */
-	function insert_quant_fin($p_bankid, $p_jrid, $p_otherid, $p_amount)
+	function insert_quant_fin($p_bankid, $p_jrid, $p_otherid, $p_amount,$p_j_id_currency)
 	{
-		$sql = "INSERT INTO quant_fin(qf_bank, jr_id, qf_other, qf_amount)
-                   VALUES ($1, $2, $3, $4);";
+		$sql = "INSERT INTO quant_fin(qf_bank, jr_id, qf_other, qf_amount,j_id)
+                   VALUES ($1, $2, $3, $4,$5);";
 
-		$this->db->exec_sql($sql, array($p_bankid, $p_jrid, $p_otherid, round($p_amount, 2)));
+		$this->db->exec_sql($sql, array($p_bankid, $p_jrid, $p_otherid, round($p_amount, 2),$p_j_id_currency));
 	}
 
 }

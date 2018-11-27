@@ -872,7 +872,7 @@ class Acc_Fin extends Acc_Detail
     function get()
     {
         parent::get();
-        $sql="SELECT qf_id, qf_bank, jr_id, qf_other, qf_amount
+        $sql="SELECT qf_id, qf_bank, jr_id, qf_other, qf_amount,j_id
              FROM quant_fin where jr_id = $1";
         $this->det->array=$this->db->get_array($sql,array($this->jr_id));
     }
