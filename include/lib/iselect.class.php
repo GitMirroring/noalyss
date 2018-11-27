@@ -29,10 +29,21 @@
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class ISelect extends HtmlInput
 {
+    /**
+     * Constructor , $p_value is supposed to be an array
+     * @param string $p_name name of the element
+     * @param array $p_value
+     * @param DOMID $p_id
+     */
     function __construct($p_name="", $p_value="", $p_id="")
     {
         parent::__construct($p_name, $p_value, $p_id);
-        $this->value=[];
+        if ( $p_value =="" ) 
+            { 
+                $this->value=[]; 
+            } else {
+                $this->value=$p_value;
+            }
     }
     /*!\brief show the html  input of the widget*/
     public function input($p_name=null,$p_value=null)
