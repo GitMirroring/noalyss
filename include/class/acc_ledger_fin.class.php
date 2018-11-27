@@ -838,6 +838,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                                 // -- Insert into Operation Currency 
                                 $operation_currency = new Operation_currency_SQL($this->db);
                                 $operation_currency->oc_amount=$amount_input;
+                                $operation_currency->oc_vat_amount=0;
                                 $operation_currency->oc_price_unit=$amount_input;
                                 $operation_currency->j_id=$j_id;
                                 $operation_currency->insert();
@@ -892,6 +893,10 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				$acc_operation->mt = $mt;
 				$idx_operation++;
 				$acc_operation->pj = '';
+                                $acc_operation->currency_id=$this->currency_id;
+                                $acc_operation->currency_rate=$currency_rate;
+                                $acc_operation->currency_rate_ref=$currency_rate;
+                                
 
 				if (trim($e_pj) != '' && $this->numb_operation() == true)
 					$acc_operation->pj = $e_pj . str_pad($idx_operation, 3, 0, STR_PAD_LEFT);
