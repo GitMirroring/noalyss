@@ -7,6 +7,9 @@
 </div>
 <legend><?php echo $f_legend ?> </legend>
 <p>
+
+<?php echo $f_jrn?>
+    <?php echo _('Banque')?><?php echo $f_bank ?>&nbsp;
     
 <?php 
 	$wchdate=new ISelect('chdate');
@@ -17,7 +20,9 @@
 	$wchdate->selected=(isset($chdate))?$chdate:1;
 	$wchdate->javascript='onchange="show_fin_chdate(\'chdate\');"';
 ?>
-<?php echo $wchdate->input();?>
+    <br>    
+<?php echo _("Style de date")." ".$wchdate->input();?>
+    <br>
 <span id="chdate_ext">
    <?php echo _('Date').' '.$f_date ?>
 </span>
@@ -30,8 +35,6 @@
 </p>
 <?php endif;?>
 
-<?php echo $f_jrn?><br>
-    <?php echo _('Banque')?><?php echo $f_bank ?>&nbsp;
         <?php echo _("Devise")?>&nbsp;
     <span id="ledger_currency">
             <?php echo $this->get_currency();?>
