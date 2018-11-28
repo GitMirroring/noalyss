@@ -320,11 +320,16 @@ class Acc_Ledger extends jrn_def_sql
               jr_date,
               jr_grpt_id,
               jr_internal
-              ,jr_tech_per, jr_valid,jr_optype
+              ,jr_tech_per, 
+              jr_valid,
+              jr_optype,
+              currency_id,
+              currency_rate,
+              currency_rate_ref
               )
               select $1,jr_def_id,jr_montant,$7,
               to_date($2,'DD.MM.YYYY'),$3,$4,
-              $5, true,'EXT'
+              $5, true,'EXT',currency_id,currency_rate,currency_rate_ref
               from
               jrn
               where   jr_id=$6";
