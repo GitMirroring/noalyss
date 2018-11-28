@@ -814,7 +814,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				}
 				$acc_operation->periode = $tperiode;
 				$acc_operation->qcode = ${"e_other" . $i};
-				$j_id = $acc_operation->insert_jrnx();
+				$j_id_other = $acc_operation->insert_jrnx();
 
 				$acc_operation = new Acc_Operation($this->db);
 				$acc_operation->date = $e_date;
@@ -931,7 +931,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				/**
 				 * save also into quant_fin
 				 */
-				$this->insert_quant_fin($fBank->id, $jr_id, $fPoste->id, ${"e_other$i" . "_amount"});
+				$this->insert_quant_fin($fBank->id, $jr_id, $fPoste->id, ${"e_other$i" . "_amount"},$j_id_other);
 
 				if ($g_parameter->MY_ANALYTIC != "nu")
 				{
@@ -1147,17 +1147,18 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 	/**
 	 * insert into the quant_fin table
-	 * @param $bank_id is the f_id of the bank
-	 * @param $jr_id is the jrn.jr_id of the operation
-	 * @param $other is the f_id of the benefit
-	 * @param $amount is the amount
+	 * @param integer $bank_id is the f_id of the bank
+	 * @param integer $jr_id is the jrn.jr_id of the operation
+	 * @param integer $other is the f_id of the benefit
+	 * @param integer $amount is the amount
+         * @param integer $p_j_id is the j_id of the operation
 	 */
-	function insert_quant_fin($p_bankid, $p_jrid, $p_otherid, $p_amount)
+	function insert_quant_fin($p_bankid, $p_jrid, $p_otherid, $p_amount,$p_j_id)
 	{
-		$sql = "INSERT INTO quant_fin(qf_bank, jr_id, qf_other, qf_amount)
-                   VALUES ($1, $2, $3, $4);";
+		$sql = "INSERT INTO quant_fin(qf_bank, jr_id, qf_other, qf_amount,j_id)
+                   VALUES ($1, $2, $3, $4,$5);";
 
-		$this->db->exec_sql($sql, array($p_bankid, $p_jrid, $p_otherid, round($p_amount, 2)));
+		$this->db->exec_sql($sql, array($p_bankid, $p_jrid, $p_otherid, round($p_amount, 2),$p_j_id));
 	}
 
 }
