@@ -630,7 +630,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		$r.="</TABLE>";
                 $acc_currency=$this->get_currency();
                 $cur=$acc_currency->get_code();
-                $cur_rate=$acc_currency->get_rate();
+                $cur_rate=$acc_currency->get_rate_date($e_date);
                 $default_currency=new Acc_Currency($this->db , 0);
 		// saldo
 		$r.='<br>'.sprintf(_("Ancien solde  = %d %s"),$solde, $cur);
@@ -639,6 +639,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                 if ( $acc_currency->get_id() != 0)
                 {
                     
+                    $r.='<br>'.sprintf(_("Taux = %s"),$cur_rate);
                     $r.='<br>'.sprintf(_("Nouveau solde  = %d %s"),bcmul($new_solde,$cur_rate),$default_currency->get_code());
                 }
 		$r.='<br>'.sprintf(_("Difference  = %d %s"), $tot_amount, $cur);
@@ -756,7 +757,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			$get_solde=true;
                         
                         $acc_currency=new Acc_Currency($this->db,$this->currency_id);
-                        $currency_rate=$acc_currency->get_rate();
+                        $currency_rate=$acc_currency->get_rate_date($e_date);
                         
                         // for each item
 			for ($i = 0; $i < $nb_item; $i++)
