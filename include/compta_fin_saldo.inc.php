@@ -48,6 +48,8 @@ echo tr(th('Quick Code', ' class=" sorttable_sorted"',
         .th(_('Compte en banque'), ' style="text-align:left"')
         .th(_('Journal'), ' style="text-align:center"')
         .th(_('Description'), ' style="text-align:center"')
+        .th(_("Devise"))
+        .th(_("Montant Devise"))
         .th(_('solde opération'),
                 ' style="text-align:right" class="sorttable_numeric"')
         .th(_('solde extrait/relevé'),
@@ -74,16 +76,35 @@ for ($i=0; $i<count($array); $i++)
         echo '</tr>';
         continue;
     }
+    
+    
     // get the saldo
     $m=$array[$i]->get_solde_detail($filter_year);
 
-    $solde=$m['debit']-$m['credit'];
+    $solde=bcsub($m['debit'],$m['credit']);
 
     // print the result if the saldo is not equal to 0
     if ($m['debit']!=0.0||$m['credit']!=0.0)
     {
+        // Get it in currency
+        $ledger=$array[$i]->get_bank_ledger();
+        $currency_code=$ledger->get_currency()->get_code();
+        
+        /**
+         * if we don't use the defaut currency
+         */
+        if ( $ledger->get_currency()->get_id() == 0)
+        {
+            $currency_amount=$solde;    
+        }
+        else
+        {
+            $currency_amount=$array[$i]->get_bk_balance_currency();
+            
+        }
         /*  get saldo for not reconcilied operations  */
         $saldo_not_reconcilied=$array[$i]->get_bk_balance($filter_year." and (trim(jr_pj_number) ='' or jr_pj_number is null)");
+
 
         /*  get saldo for reconcilied operation  */
 
@@ -110,6 +131,10 @@ for ($i=0; $i<count($array); $i++)
         "</TD>".
         td(h($array[$i]->ledger_name)).
         td(h($array[$i]->ledger_description)).
+        td($currency_code).
+        '<TD class="sorttable_numeric" sorttable_customkey="'.$currency_amount.'"  style="text-align:right">'.
+                nbm($currency_amount).
+                '</td>'.
         '<TD class="sorttable_numeric" sorttable_customkey="'.$solde.'"  style="text-align:right">'.
         nbm($solde).
         "</TD>".

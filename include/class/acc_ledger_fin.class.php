@@ -848,7 +848,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				$acc_operation->date = $e_date;
 				$sposte = $fBank->strAttribut(ATTR_DEF_ACCOUNT);
 
-				// if 2 accounts
+				// if 2 accounts, use the first one if DEB otherwise the second one
 				if (strpos($sposte, ',') != 0)
 				{
 					$array = explode(',', $sposte);
@@ -869,7 +869,14 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				$acc_operation->type = 'd';
 				$acc_operation->periode = $tperiode;
 				$acc_operation->qcode = $e_bank_account;
-				$acc_operation->insert_jrnx();
+				$j_id=$acc_operation->insert_jrnx();
+                                
+                                $operation_currency = new Operation_currency_SQL($this->db);
+                                $operation_currency->oc_amount=$amount_input;
+                                $operation_currency->oc_vat_amount=0;
+                                $operation_currency->oc_price_unit=$amount_input;
+                                $operation_currency->j_id=$j_id;
+                                $operation_currency->insert();
 
 
 				if (sql_string(${"e_other$i" . "_comment"}) == null)

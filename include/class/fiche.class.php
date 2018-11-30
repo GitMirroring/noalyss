@@ -29,6 +29,7 @@ require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iposte.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 
 /*! \file
  * \brief define Class fiche, this class are using
@@ -77,7 +78,7 @@ class Fiche
         global $g_user;
       $sql_ledger=$g_user->get_ledger_sql('FIN',3);
       $avail=$this->cn->get_array("select jrn_def_id,jrn_def_name,"
-              . "jrn_def_bank,jrn_def_description from jrn_def where jrn_def_type='FIN' and $sql_ledger
+              . "jrn_def_bank,jrn_def_description,currency_id from jrn_def where jrn_def_type='FIN' and $sql_ledger
                             order by jrn_def_name");
 
       if ( count($avail) == 0 )
@@ -1664,7 +1665,32 @@ class Fiche
                      'solde'=>abs($r['sum_deb']-$r['sum_cred']));
     }
     /**
-     *get the bank balance with receipt or not
+     * Get the sum in Currency
+     * @param string $p_cond
+     * @return type
+     * @throws Exception
+     */
+    function get_bk_balance_currency($p_cond="")
+    {
+        if ( $this->id == 0 ) throw  new Exception('fiche->id est nul');
+
+        if ( $p_cond != "") $p_cond=" and ".$p_cond;
+        
+        $sql = "
+              select sum(oc_amount) 
+              from 
+              Operation_currency
+              join jrnx using (j_id) 
+              join jrn on (jr_grpt_id=j_grpt)  
+              where f_id=$1
+                $p_cond";
+        $val=$this->cn->get_value($sql,[$this->id]);
+        
+        return $val;
+                
+    }
+    /**
+     *get the bank balance with receipt or not in Euro
      *
      */
     function get_bk_balance($p_cond="")
@@ -2237,6 +2263,24 @@ class Fiche
 
     function filter_history($p_table_id) {
         return _('Cherche').' '.HtmlInput::filter_table($p_table_id, '0,1,2,3,4,5,6,7,8,9,10', 1);
+    }
+    /**
+     * Returns the Acc_Ledger_Fin ledger for which the card is the default bank account or null if no ledger is found.
+     */
+    function get_bank_ledger()
+    {
+        try {
+            $id=$this->cn->get_value("select jrn_def_id from jrn_def where jrn_def_bank = $1 ",[$this->id]);
+            if ($id == "") { return NULL;}
+            $ledger=new Acc_Ledger_Fin($this->cn,$id);
+            $ledger->load();
+            return $ledger;
+        }        
+        catch (Exception $e) {
+            record_log(__FILE__.":".__LINE__);
+            record_log($e->getMessage());
+            throw $e;
+        }
     }
 }
 
