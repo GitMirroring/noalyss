@@ -739,7 +739,8 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			$amount = 0.0;
 			$idx_operation = 0;
 			$ret = '<table class="result" >';
-			$ret.=tr(th('Date').th('n° interne') . th('Quick Code') . th('Nom') . th('Libellé') . th('Montant', ' style="text-align:right"'));
+			$ret.=tr(th(_('Date')).th(_('n° interne')) . th(_('Quick Code'))
+                                . th(_('Nom')) . th(_('Libellé')) . th(_('Montant'), ' style="text-align:right"'));
 			// Credit = goods
 			$get_solde=true;
 			for ($i = 0; $i < $nb_item; $i++)
