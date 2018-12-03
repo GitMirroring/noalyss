@@ -1753,7 +1753,6 @@ class Acc_Ledger extends jrn_def_sql
      * @brief retrieve operation from  jrn
      * @param $p_from periode (id)
      * @param $p_to periode (id)
-     * @return Anc_Plan array
      */
     function get_operation($p_from, $p_to)
     {

@@ -213,6 +213,8 @@ if ($get_option=="L" && ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL') )
     $title[]=_("commentaire");
     $title[]=_("internal");
     $title[]=_("montant");
+    $title[]=_("montant devise");
+    $title[]=_("devise");
     $export->write_header($title);
     foreach ($Row as $line)
     {
@@ -238,12 +240,15 @@ if ($get_option=="L" && ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL') )
                     " where jr_id=$1", array($line['jr_id']));
 
             $export->add($positive, "number");
-            $export->add("");
+            //$export->add("");
         }
         else
         {
             $export->add($line['montant'], "number");
         }
+        //-- add currency
+       $export->add(bcadd($line['sum_ocamount'],$line['sum_ocvat_amount']),"number");
+       $export->add($line['cr_code_iso']);
         //------ Add reconcilied operation ---------------
         $ret_reconcile=$cn->execute('reconcile_date_csv',
                 array($line['jr_id']));

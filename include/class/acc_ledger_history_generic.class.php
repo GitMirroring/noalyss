@@ -433,8 +433,25 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
              jrn.jr_grpt_id as grpt_id,
              jrn.jr_pj_name as pj,
              jrn_def_type,
-             jrn.jr_tech_per
+             jrn.jr_tech_per,
+             jrn.currency_id,
+             jrn.currency_rate,
+             jrn.currency_rate_ref,
+             currency.cr_code_iso,
+             coalesce(sum_ocamount,0) as sum_ocamount,
+             coalesce(sum_ocvat_amount,0) as sum_ocvat_amount
              FROM jrn join jrn_def on (jrn_def_id=jr_def_id)
+             join currency on (currency.id=jrn.currency_id)
+             left join (
+             	select jrn2.jr_id , sum(coalesce(oc_amount,0)) as sum_ocamount,sum(coalesce(oc_vat_amount,0)) as sum_ocvat_amount
+             		from operation_currency
+	             		join jrnx using (j_id)
+    	         		join jrn as jrn2 on (j_grpt=jrn2.jr_grpt_Id) 
+             		where 
+             			j_id in (select j_id from jrnx where j_grpt=jrn2.jr_grpt_id)
+                                and j_debit='t'
+             			group by jr_id
+             	) as OC1 using (jr_id)
              WHERE $periode and $jrn order by jr_date,substring(jrn.jr_pj_number,'[0-9]+$')::numeric asc  $cond_limite";
         $Res=$this->db->exec_sql($sql);
         $Max=Database::num_row($Res);
@@ -503,9 +520,13 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
                                      j_qcode,
                                      jrn_def_type,
                                      jr_rapt as oc, j_tech_per as periode,
-                                     j_id
-                                     from jrnx left join jrn on 
-                   jr_grpt_id=j_grpt 
+                                     j_id,
+                                     currency_id,
+                                     currency_rate,
+                                     currency_rate_ref
+                                     from jrnx 
+                                     join jrn on  (jr_grpt_id=j_grpt )
+                                     left join operation_currency using (j_id)
                    left join tmp_pcmn on pcm_val=j_poste 
                    join jrn_def on (jrn_def_id=jr_def_id)
                     where j_jrn_def in (".$ledger_list.") 
