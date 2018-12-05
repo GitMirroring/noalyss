@@ -126,7 +126,14 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                 (select ad_value from fiche_detail where ad_id=32 and f_id=x.f_id) as first_name,
                 (select ad_value from fiche_detail where ad_id=23 and f_id=x.f_id) as qcode
               from 
-              fiche as x)
+              fiche as x),
+              row_currency as (
+                select sum(oc_amount) as sum_oc_amount,sum(oc_vat_amount) as sum_oc_vat_amount,jrnx.j_grpt
+                from 
+                    operation_currency
+                    join jrnx using (j_id)
+                group by j_grpt
+              )
             select   
                     name,
                     first_name,
@@ -142,11 +149,19 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                     vat,
                     tva_sided,
                     novat,
-                    novat+vat-tva_sided as tvac
+                    novat+vat-tva_sided as tvac,
+                    jrn.currency_id,
+                    jrn.currency_rate,
+                    jrn.currency_rate_ref,
+                    sum_oc_amount,
+                    sum_oc_vat_amount,
+                    cr_code_iso
             from
                 jrn
                 join row_sale on (qs_internal=jr_internal)
                 join client_detail on (qs_client=f_id)
+                left join row_currency as rc on (rc.j_grpt = jrn.jr_grpt_id)
+                left join currency as c on (c.id=jrn.currency_id)
             where
                 jr_def_id in ({$ledger_list})
                 and {$periode}
@@ -249,7 +264,6 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
         $title[]=_("HTVA");
         $title[]=_("TVA");
         $title[]=_("TVA annulée");
-       
 
         if ( $own->MY_TVA_USE=='Y')
         {
@@ -260,6 +274,11 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
             }
         }
         $title[]=_("TVAC/TTC");
+        $title[]=_("Devise");
+        $title[]=_("Devise HTVA");
+        $title[]=_("Devise TVA");
+        $title[]=_("Taux ref");
+        $title[]=_("Taux utilisé");
         $title[]=_("opérations liées");
         $export->write_header($title);
         
@@ -298,6 +317,15 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                 }
             }
             $export->add($line['tvac'],"number");
+            /**
+             * Add currency info
+             */
+            $export->add($line['cr_code_iso']);
+            $export->add($line['sum_oc_amount'],'number');
+            $export->add($line['sum_oc_vat_amount'],'number');
+            $export->add($line['currency_rate'],'number');
+            $export->add($line['currency_rate_ref'],'number');
+            
             /**
              * Retrieve payment if any
              */
