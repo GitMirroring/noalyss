@@ -991,7 +991,12 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 				$js_detail = HtmlInput::detail_op($jr_id, $internal);
 				// Compute display
-				$row = td($e_date).td($js_detail) . td(${"e_other$i"}) . td($fPoste->strAttribut(ATTR_DEF_NAME)) . td(${"e_other" . $i . "_comment"}) . td(nbm(${"e_other$i" . "_amount"}), 'class="num"');
+				$row = td($e_date)
+                                        . td($js_detail) 
+                                        . td(${"e_other$i"}) 
+                                        . td($fPoste->strAttribut(ATTR_DEF_NAME)) 
+                                        . td(${"e_other" . $i . "_comment"}) 
+                                        . td(nbm(${"e_other$i" . "_amount"}), 'class="num"');
                                 $class=($i%2==0)?' class="even" ':' class="odd" ';
 				$ret.=tr($row,$class);
 
