@@ -449,7 +449,6 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
     	         		join jrn as jrn2 on (j_grpt=jrn2.jr_grpt_Id) 
              		where 
              			j_id in (select j_id from jrnx where j_grpt=jrn2.jr_grpt_id)
-                                and j_debit='t'
              			group by jr_id
              	) as OC1 using (jr_id)
              WHERE $periode and $jrn order by jr_date,substring(jrn.jr_pj_number,'[0-9]+$')::numeric asc  $cond_limite";
@@ -521,9 +520,11 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
                                      jrn_def_type,
                                      jr_rapt as oc, j_tech_per as periode,
                                      j_id,
-                                     currency_id,
-                                     currency_rate,
-                                     currency_rate_ref
+                                     jrn.currency_id,
+                                     jrn.currency_rate,
+                                     jrn.currency_rate_ref,
+                                     operation_currency.oc_amount,
+                                     operation_currency.oc_vat_amount
                                      from jrnx 
                                      join jrn on  (jr_grpt_id=j_grpt )
                                      left join operation_currency using (j_id)
@@ -702,6 +703,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
         th(_("internal")).
         th(_("Tiers")).
         th(_("Commentaire")).
+        th(_("Devise")).
         th(_("Total opération")).
         "</TR>";
         // set a filter for the FIN
@@ -719,6 +721,12 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
             $tiers=$this->get_tiers($line['jrn_def_type'], $line['jr_id']);
             echo td($tiers);
             echo "<TD>".h($line['comment'])."</TD>";
+            if ( $line['currency_id'] != 0) {
+                echo td(bcadd($line['sum_ocamount'],$line['sum_ocvat_amount'])." ".$line['cr_code_iso'],'class="num"');
+            } else  {
+                echo td("");
+            }
+                
 
 
             //	  echo "<TD>".$line['pj']."</TD>";
@@ -756,7 +764,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
         }
         echo '<tr class="highlight">';
         echo '<td>'._('Totaux').'</td>';
-        echo td().td().td().td();
+        echo td().td().td().td().td();
         echo '<td class="num">'.nbm($tot_amount).'</td>';
         echo '</tr>';
         echo "</table>";
