@@ -45,13 +45,16 @@
         <th>
             <?=_('Description')?>
         </th>
-        <th>
+        <th class="num">
+            <?=_('Devise TVAC')?>
+        </th>
+        <th class="num">
             <?=_('HTVA')?>
         </th>
-        <th>
+        <th class="num">
             <?=_('TVA')?>
         </th>
-        <th>
+        <th class="num">
             <?=_('TVAC')?>
         </th>
     </tr>
@@ -85,6 +88,10 @@ for ($i=0;$i<$nb_data;$i++):
         </td>
         <td>
             <?=h($this->data[$i]['jr_comment'])?>
+        </td>
+        <td class="num">
+            <?=nbm(bcadd($this->data[$i]['sum_oc_amount'],$this->data[$i]['sum_oc_vat_amount'],4),4)?>
+            <?=$this->data[$i]['cr_code_iso']?>
         </td>
         <td class="num">
             <?=nbm($this->data[$i]['novat'])?>

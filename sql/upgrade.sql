@@ -1,41 +1,52 @@
-CREATE OR REPLACE FUNCTION isnumeric(text) RETURNS BOOLEAN AS $$
-DECLARE x NUMERIC;
-BEGIN
-    x = $1::NUMERIC;
-    RETURN TRUE;
-EXCEPTION WHEN others THEN
-    RETURN FALSE;
-END;
-$$
-STRICT
-LANGUAGE plpgsql IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION isdate(text,text) RETURNS BOOLEAN AS $$
-DECLARE x timestamp;
-BEGIN
-    x := to_date($1,$2);
-    RETURN TRUE;
-EXCEPTION WHEN others THEN
-    RETURN FALSE;
-END;
-$$
-LANGUAGE plpgsql;
-
-ALTER TABLE public.jrn_def ADD currency_id int NULL;
-ALTER TABLE public.jrn_def ALTER COLUMN currency_id SET DEFAULT 0;
-update  public.jrn_def  set currency_id = 0 ; 
-ALTER TABLE public.jrn_def ALTER COLUMN currency_id SET NOT NULL;
-ALTER TABLE public.jrn_def ADD CONSTRAINT jrn_def_currency_fk FOREIGN KEY (currency_id) REFERENCES public.currency(id);
-
-COMMENT ON COLUMN public.jrn_def.currency_id IS 'Default currency for financial ledger';
-
-
-alter table quant_fin add j_id bigint;
-
-with j_fin as (
-select jrnx.j_id,quant_fin.qf_id from quant_fin join jrn using (jr_id) join jrnx on (j_grpt=jr_grpt_id and f_id=qf_other)
-)
-update quant_fin set j_id =j_fin.j_id from j_fin where j_fin.qf_id=quant_fin.qf_id;
-
-alter table quant_fin add constraint jrnx_j_id_fk foreign key (j_id ) references jrnx(j_id) on delete cascade on update cascade;
-
+CREATE OR REPLACE VIEW public.v_detail_sale as
+WITH m AS (
+         SELECT sum(quant_sold_1.qs_price) AS htva,
+            sum(quant_sold_1.qs_vat) AS tot_vat,
+            sum(quant_sold_1.qs_vat_sided) AS tot_tva_np,
+            jrn_1.jr_id
+           FROM quant_sold quant_sold_1
+             JOIN jrnx jrnx_1 USING (j_id)
+             JOIN jrn jrn_1 ON jrnx_1.j_grpt = jrn_1.jr_grpt_id
+          GROUP BY jrn_1.jr_id
+        )
+ SELECT jrn.jr_id,
+    jrn.jr_date,
+    jrn.jr_date_paid,
+    jrn.jr_ech,
+    jrn.jr_tech_per,
+    jrn.jr_comment,
+    jrn.jr_pj_number,
+    jrn.jr_internal,
+    jrn.jr_def_id,
+    jrnx.j_poste,
+    jrnx.j_text,
+    jrnx.j_qcode,
+    quant_sold.qs_fiche AS item_card,
+    a.name AS item_name,
+    quant_sold.qs_client,
+    b.vw_name AS tiers_name,
+    b.quick_code,
+    tva_rate.tva_label,
+    tva_rate.tva_comment,
+    tva_rate.tva_both_side,
+    quant_sold.qs_vat_sided AS vat_sided,
+    quant_sold.qs_vat_code AS vat_code,
+    quant_sold.qs_vat AS vat,
+    quant_sold.qs_price AS price,
+    quant_sold.qs_quantite AS quantity,
+    quant_sold.qs_price / quant_sold.qs_quantite AS price_per_unit,
+    m.htva,
+    m.tot_vat,
+    m.tot_tva_np,
+    oc.oc_amount,
+    oc.oc_vat_amount,
+    (select cr_code_iso from currency where jrn.currency_id=currency.id) as cr_code_iso
+   FROM jrn
+     JOIN jrnx ON jrn.jr_grpt_id = jrnx.j_grpt
+     JOIN quant_sold USING (j_id)
+     JOIN vw_fiche_name a ON quant_sold.qs_fiche = a.f_id
+     JOIN vw_fiche_attr b ON quant_sold.qs_client = b.f_id
+     JOIN tva_rate ON quant_sold.qs_vat_code = tva_rate.tva_id
+     JOIN m ON m.jr_id = jrn.jr_id
+     left join operation_currency as oc on (oc.j_id=jrnx.j_id)
+;

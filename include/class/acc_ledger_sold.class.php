@@ -1563,6 +1563,11 @@ EOF;
         $array['price_per_unit'] = _('PU');
         $array['htva'] = _('HTVA Opération');
         $array['tot_vat'] = _('TVA Opération');
+        $array['tot_vat_np'] = _('TVA ND');
+        $array['oc_amount'] = _('Mont. Devise');
+        $array['oc_vat_amount'] = _('Mont. TVA Devise');
+        $array['cr_code_iso'] = _('Devise');
+        
         return $array;
     }
     

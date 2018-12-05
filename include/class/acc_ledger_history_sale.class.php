@@ -86,13 +86,16 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                 (select f_id,ad_value as qcode 
                 from fiche_detail where ad_id=23)
                 select 	qs_price,qs_quantite,qs_vat,qs_vat_code,qs_unit,qs_vat_sided,name,qcode,tva_label,
-                qs_price+qs_vat-qs_vat_sided as tvac
+                qs_price+qs_vat-qs_vat_sided as tvac,
+                oc_amount,
+                oc_vat_amount
                 from 
                     quant_sold
                     join jrnx using (j_id)              
                     join card_name on (card_name.f_id=qs_fiche)
                     join card_qcode on (card_qcode.f_id=qs_fiche)
                     join tva_rate on ( qs_vat_code=tva_id)
+                    left join operation_currency using (j_id)
                 where
                     qs_internal=$1
                 
