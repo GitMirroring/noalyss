@@ -49,18 +49,21 @@ if (!defined('ALLOWED'))
         <th>
             <?=_('Description')?>
         </th>
-        <th>
+        <th class="num">
             <?=_('HTVA')?>
         </th>
-        <th>
+        <th class="num">
             <?=_('Non ded')?>
         </th>
-        <th>
+        <th class="num">
             <?=_('TVA')?>
         </th>
               
-        <th>
+        <th class="num">
             <?=_('TVAC')?>
+        </th>
+        <th class="num">
+            <?=_('Devise')?>
         </th>
     </tr>
 <?php 
@@ -112,6 +115,10 @@ for ($i=0;$i<$nb_data;$i++):
         </td>
         <td class="num">
             <?=nbm($this->data[$i]['tvac'])?>
+        </td>
+        <td class="num">
+            <?=nbm ( bcadd($this->data[$i]['sum_oc_amount'],$this->data[$i]['sum_oc_vat_amount']),4)?>
+            <?=$this->data[$i]['cr_code_iso']?>
         </td>
         <td>
             

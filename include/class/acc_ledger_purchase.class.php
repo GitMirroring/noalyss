@@ -1977,6 +1977,10 @@ EOF;
         $array['htva'] = _('HTVA Opération');
         $array['tot_vat'] = _('TVA Opération');
         $array['tot_tva_np'] = _('TVA NP opération');
+        $array['oc_amount'] = _('Mont. Devise');
+        $array['oc_vat_amount'] = _('Mont. TVA Devise');
+        $array['cr_code_iso'] = _('Devise');
+        
         return $array;
     }
 
