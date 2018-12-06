@@ -110,7 +110,7 @@ class Print_Ledger_Financial extends PDF
                     join jrnx using (j_id)
                     join jrn as jrn2 on (j_grpt=jrn2.jr_grpt_Id) 
              	where 
-                    j_id in (select j_id from jrnx where j_grpt=jrn2.jr_grpt_id and j_debit='t')
+                    j_id in (select j_id from jrnx where j_grpt=jrn2.jr_grpt_id )
                     and  jr_id=$1
                     group by jr_id"
                 );

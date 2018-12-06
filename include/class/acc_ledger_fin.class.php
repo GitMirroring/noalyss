@@ -872,12 +872,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				$acc_operation->qcode = $e_bank_account;
 				$j_id=$acc_operation->insert_jrnx();
                                 
-                                $operation_currency = new Operation_currency_SQL($this->db);
-                                $operation_currency->oc_amount=$amount_input;
-                                $operation_currency->oc_vat_amount=0;
-                                $operation_currency->oc_price_unit=$amount_input;
-                                $operation_currency->j_id=$j_id;
-                                $operation_currency->insert();
+          
 
 
 				if (sql_string(${"e_other$i" . "_comment"}) == null)

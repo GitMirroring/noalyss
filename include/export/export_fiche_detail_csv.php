@@ -123,7 +123,6 @@ if ( ! isset ($_REQUEST['oper_detail']))
         $progress=bcadd($progress,$diff);
         $tot_deb=bcadd($tot_deb,$op['deb_montant']);
         $tot_cred=bcadd($tot_cred,$op['cred_montant']);
-        $currency_amount=bcdiv($op['j_montant'],$op['currency_rate']);
         $export->add($op['j_qcode']);
         $export->add($op['j_poste']);
         $export->add($op['j_date_fmt']);
@@ -135,7 +134,7 @@ if ( ! isset ($_REQUEST['oper_detail']))
         $export->add($op['description']);
         $export->add($op['jr_optype']);
         $export->add($op['cr_code_iso']);
-        $export->add($currency_amount,"number");
+        $export->add(bcadd($op['oc_amount'],$op['oc_vat_amount']),"number");
         $export->add($op['deb_montant'],"number");
         $export->add($op['cred_montant'],"number");
         $export->add(abs($progress),"number");

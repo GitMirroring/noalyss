@@ -90,7 +90,9 @@ class Acc_Account_Ledger
                                  "case when j_debit='f' then j_montant else 0 end as cred_montant,".
                                  " jr_comment as description,jrn_def_name as jrn_name,".
                                  "j_debit, jr_internal,jr_pj_number ".
+                                  ",oc_amount,oc_vat_amount".
                                  " from jrnx left join jrn_def on jrn_def_id=j_jrn_def ".
+                                 "  left join operation_currency using (j_id) ".
                                  " left join jrn on jr_grpt_id=j_grpt".
                                  " where j_poste=$1 and $periode ".
                                  " order by j_date",array($this->id));
@@ -162,7 +164,7 @@ class Acc_Account_Ledger
 	  }
         $this->row=$this->db->get_array("
  with sqlletter as (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
- select  j_id,jr_id,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_date,
+         select j1.j_id,jr_id,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_date,
                                 j_qcode
                                  ,case when j_debit='t' then j_montant else 0 end as deb_montant,
                                  case when j_debit='f' then j_montant else 0 end as cred_montant,
@@ -177,24 +179,27 @@ class Acc_Account_Ledger
                                  ,p_exercice
                                  ,jrn_def_name
                                  ,jrn_def_code
-                                 ,(with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx using (j_id)  group by jl_id ),
-												deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx using (j_id)   group by jl_id )
-												select amount_deb-amount_cred
-												from 
-												cred 
-												full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter
-                                    ,jrn.currency_rate
-                                    ,jrn.currency_id
-                                    ,(select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso
-                                    ,j_montant
-                          from jrnx as j1
-                                  join jrn_def on (jrn_def_id=j_jrn_def )
-                                   join jrn on (jr_grpt_id=j_grpt)
-                                   join tmp_pcmn on (j_poste=pcm_val)
-				   join parm_periode on (p_id=jr_tech_per)              
-                                  where j_poste=$1 and 
-                                  ( to_date($2,'DD.MM.YYYY') <= j_date and 
-                                    to_date($3,'DD.MM.YYYY') >= j_date )
+                                 ,(with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx using (j_id)  group by jl_id )
+                                , deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx using (j_id)   group by jl_id )
+        select amount_deb-amount_cred
+        from 
+        cred 
+        full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter
+            ,jrn.currency_rate
+            ,jrn.currency_id
+            ,(select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso
+            ,j_montant
+            ,sum_oc_amount as oc_amount
+            ,sum_oc_vat_amount as oc_vat_amount
+  from jrnx as j1
+    left join v_all_account_currency as va on (j1.j_id = va.j_id and j1.j_poste=va.j_poste) 
+          join jrn_def on (jrn_def_id=j_jrn_def )
+           join jrn on (jr_grpt_id=j_grpt)
+           join tmp_pcmn on (j1.j_poste=pcm_val)
+           join parm_periode on (p_id=jr_tech_per)              
+          where j1.j_poste=$1 and 
+          ( to_date($2,'DD.MM.YYYY') <= j_date and 
+            to_date($3,'DD.MM.YYYY') >= j_date )
                                   and $filter_sql  $sql_let 
                                   order by j_date,substring(jr_pj_number,'[0-9]+$') asc",array($this->id,$p_from,$p_to));
         $res_saldo = $this->db->exec_sql("select  sum(deb_montant),sum(cred_montant) from 
@@ -469,13 +474,9 @@ class Acc_Account_Ledger
                 "<TD>".$tiers."</TD>".
 	      "<TD>".h($op['description'])."</TD>".
                     td($op['jr_optype']);
-            if ( $op['cr_code_iso'] != 'EUR' && $op['cr_code_iso'] != "")
-            {
-             echo        td($op['cr_code_iso']).
-                    td(nbm(bcdiv($op['j_montant'],$op['currency_rate'])),'style="text-align:right;padding-left:10px;"');
-            } else{
-                echo td().td();
-            }
+             echo   td($op['cr_code_iso']).
+                    td(nbm(bcadd($op['oc_amount'],$op['oc_vat_amount'],4)),'style="text-align:right;padding-left:10px;"');
+            
             echo 
 	      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($op['cred_montant'])."</TD>".
