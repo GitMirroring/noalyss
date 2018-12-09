@@ -474,8 +474,14 @@ class Acc_Account_Ledger
                 "<TD>".$tiers."</TD>".
 	      "<TD>".h($op['description'])."</TD>".
                     td($op['jr_optype']);
+                     /// If the currency is not the default one , then show the amount
+            if ( $op['currency_id'] > 0 && $op['oc_amount'] != 0)
+            {
              echo   td($op['cr_code_iso']).
-                    td(nbm(bcadd($op['oc_amount'],$op['oc_vat_amount'],4)),'style="text-align:right;padding-left:10px;"');
+                    td(nbm(bcadd($op['oc_amount'],4)),'style="text-align:right;padding-left:10px;"');
+            } else {
+                echo td().td();
+            }
             
             echo 
 	      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($op['deb_montant'])."</TD>".

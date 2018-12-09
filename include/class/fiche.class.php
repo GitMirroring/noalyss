@@ -1471,7 +1471,7 @@ class Fiche
         "<TH style=\"text-align:left\">"._('Description')." </TH>".
         "<TH style=\"text-align:left\">"._('Type')." </TH>".
         "<TH style=\"text-align:left\">"._('ISO')."</TH>".
-        "<TH style=\"text-align:left\">"._('Dev.')."</TH>".
+        "<TH style=\"text-align:right\">"._('Dev.')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."  </TH>".
         "<TH style=\"text-align:right\">"._('Crédit')." </TH>".
         th('Prog.','style="text-align:right"').
@@ -1537,8 +1537,15 @@ class Fiche
             "<TD>".h($op['description'])."</TD>".
                     td($op['jr_optype']);
             
+            /// If the currency is not the default one , then show the amount
+            if ( $op['currency_id'] > 0 && $op['oc_amount'] != 0)
+            {
              echo   td($op['cr_code_iso']).
-                    td(nbm(bcadd($op['oc_amount'],$op['oc_vat_amount'],4)),'style="text-align:right;padding-left:10px;"');
+                    td(nbm(bcadd($op['oc_amount'],4)),'style="text-align:right;padding-left:10px;"');
+            } else {
+                echo td().td();
+            }
+            
             echo "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
@@ -1592,7 +1599,7 @@ class Fiche
         echo '<TR>';
 
         echo '<TD><form method="GET" ACTION="">'.
-            HtmlInput::submit('bt_other',"Autre poste").
+            HtmlInput::submit('bt_other',_("Autre poste")).
             HtmlInput::array_to_hidden(array('gDossier','ac'), $_REQUEST).
             dossier::hidden().
             $hid->input("type","poste").$hid->input('p_action','impress')."</form></TD>";
