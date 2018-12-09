@@ -1607,7 +1607,33 @@ class Acc_Ledger extends jrn_def_sql
             return false;
         throw new Exception("Valeur invalid ".__FILE__.':'.__LINE__);
     }
-
+    
+    /**
+     * When we write a record for the payment at the same time as a sale or a purchase, to have a 
+     * bank saldo reliable , all the bank operation must be in the same currency
+     * Operation = Currency 1 and Bank = Currency 2 then it must failed , except if currency 2 (of the bank is the 
+     * default currency
+     * @param string $p_qcode_payment Qcode of the payment card
+     * @param int  $p_currency_id currency id of the sale/purchase operation
+     * @throws Exception
+     */
+    function check_currency($p_qcode_payment, $p_currency_id)
+    {
+        $card=new Fiche($this->db);
+        $card->get_by_qcode($p_qcode_payment);
+        if ( $card->id == 0) throw new Exception (_("Fiche invalide"));
+        
+        $ledger = $card->get_bank_ledger();
+        if ( $ledger != NULL )
+        {
+            $ledger_currency_id=$ledger->get_currency()->get_id();
+            // if sale and payment are not the same currency and the 
+            if ($ledger_currency_id != 0 && $p_currency_id != $ledger_currency_id )
+            {
+                throw new Exception (_("Devise de la banque doit être identique à l'opération"));
+            }
+        }
+    }
     /**
      * @brief get the date of the last operation
      */

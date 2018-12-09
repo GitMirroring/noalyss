@@ -218,8 +218,15 @@ class Acc_Ledger_Sold extends Acc_Ledger {
 
         if ($e_mp != 0) {
             $this->check_payment($e_mp, ${"e_mp_qcode_" . $e_mp});
+            // check for the currency , if we use a financial ledger and a card which is a bank account (with his own
+            // ledger , then the currency of the operation must be the same
+            $this->check_currency(${"e_mp_qcode_" . $e_mp},$p_currency_code);
         }
         
+        
+        
+        
+        // 
         // Check payment date
         if ( isset ($mp_date) && trim ($mp_date) != "" && isDate($mp_date) == null)  {
             throw new Exception(_('Date de paiement invalide'),13);
