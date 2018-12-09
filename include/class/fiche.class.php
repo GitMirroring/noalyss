@@ -1542,7 +1542,7 @@ class Fiche
             if ( $op['currency_id'] > 0 && $op['oc_amount'] != 0)
             {
              echo   td($op['cr_code_iso']).
-                    td(nbm(bcadd($op['oc_amount'],4)),'style="text-align:right;padding-left:10px;"');
+                    td(nbm($op['oc_amount'],4),'style="text-align:right;padding-left:10px;"');
             } else {
                 echo td().td();
             }
