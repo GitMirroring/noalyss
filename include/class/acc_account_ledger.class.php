@@ -186,6 +186,7 @@ class Acc_Account_Ledger
         cred 
         full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter
             ,jrn.currency_rate
+            ,jrn.currency_rate_ref
             ,jrn.currency_id
             ,(select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso
             ,j_montant

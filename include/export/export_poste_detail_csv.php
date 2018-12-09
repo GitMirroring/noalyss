@@ -88,6 +88,8 @@ if ( ! isset ($_REQUEST['oper_detail']))
         $title[]=_("Type");
         $title[]=_("Code devise");
         $title[]=_("Devise");
+        $title[]=_("Taux utilisé");
+        $title[]=_("Taux référence");
         $title[]=_("Débit");
         $title[]=_("Crédit");
         $title[]=_("Prog.");
@@ -115,6 +117,10 @@ if ( ! isset ($_REQUEST['oper_detail']))
                 $export->add(_("total"));
                 $export->add($current_exercice);
                 $export->add($solde_type);
+                $export->add("");
+                $export->add("");
+                $export->add("");
+                $export->add("");
                 $export->add("");
                 $export->add("");
                 $export->add("");
@@ -150,7 +156,9 @@ if ( ! isset ($_REQUEST['oper_detail']))
             $export->add($op['description']);
             $export->add($op['jr_optype']);
             $export->add($op['cr_code_iso']);
-            $export->add(bcadd($op['oc_amount'],$op['oc_vat_amount']),"number");
+            $export->add($op['oc_amount'],"number");
+            $export->add($op['currency_rate'],"number");
+            $export->add($op['currency_rate_ref'],"number");
             
             $export->add($op['deb_montant'],"number");
             $export->add($op['cred_montant'],"number");
