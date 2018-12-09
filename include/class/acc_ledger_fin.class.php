@@ -629,24 +629,35 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		}
 		$r.="</TABLE>";
                 $acc_currency=$this->get_currency();
-                $cur=$acc_currency->get_code();
-                $cur_rate=$acc_currency->get_rate_date($e_date);
-                $default_currency=new Acc_Currency($this->db , 0);
-		// saldo
-		$r.='<br>'.sprintf(_("Ancien solde  = %d %s"),$solde, $cur);
-		$new_solde=bcadd($new_solde,$tot_amount);
-		$r.='<br>'.sprintf(_("Nouveau solde  = %d %s"),$new_solde, $cur);
+                
+                // If currency is not the default one
                 if ( $acc_currency->get_id() != 0)
                 {
                     
+                    $solde=$fBank->get_bk_balance_currency();
+                    $cur=$acc_currency->get_code();
+                    $cur_rate=$acc_currency->get_rate_date($e_date);
+                    $default_currency=new Acc_Currency($this->db , 0);
+                    // saldo
+                    
+                    $r.='<br>'.sprintf(_("Ancien solde  = %f %s"),$solde, $cur);
+                    $new_solde=bcadd($solde,$tot_amount);
+                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),$new_solde, $cur);
+                    $r.='<br>'.sprintf(_("Difference  = %f %s"), $tot_amount, $cur);
+
+                    
                     $r.='<br>'.sprintf(_("Taux = %s"),$cur_rate);
-                    $r.='<br>'.sprintf(_("Nouveau solde  = %d %s"),bcmul($new_solde,$cur_rate),$default_currency->get_code());
-                }
-		$r.='<br>'.sprintf(_("Difference  = %d %s"), $tot_amount, $cur);
-                                  
-                 if ( $acc_currency->get_id() != 0)
-                {
-                    $r.='<br>'.sprintf(_("Difference  = %d %s"), bcmul($tot_amount,$cur_rate), $default_currency->get_code());
+                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),bcmul($new_solde,$cur_rate),$default_currency->get_code());
+                } else {
+                    
+                    $cur=$acc_currency->get_code();
+                    // saldo
+                    
+                    $r.='<br>'.sprintf(_("Ancien solde  = %f %s"),$solde, $cur);
+                    $new_solde=bcadd($new_solde,$tot_amount);
+                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),$new_solde, $cur);
+                    $r.='<br>'.sprintf(_("Difference  = %f %s"), $tot_amount, $cur);
+                    
                 }
 		// check for upload piece
 		$file = new IFile();
@@ -1031,11 +1042,21 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			throw new Exception($r);
 		}
 		$this->db->commit();
-		$r = "";
-		$r.=sprintf("<br>"._("Ancien solde %s %s"), nbm($solde),$acc_currency->get_code());
-		$new_solde = bcadd($new_solde, $amount);
-		$r.=sprintf("<br>"._("Nouveau solde %s %s"), nbm($new_solde),$acc_currency->get_code());
-		$ret.=$r;
+                if ( $acc_currency->get_id() == 0)
+                {
+                    $r = "";
+                    $r.=sprintf("<br>"._("Ancien solde %s %s"), nbm($solde),$acc_currency->get_code());
+                    $new_solde = bcadd($new_solde, $amount);
+                    $r.=sprintf("<br>"._("Nouveau solde %s %s"), nbm($new_solde),$acc_currency->get_code());
+                    $ret.=$r;
+                } else {
+                    $solde_cur=$fBank->get_bk_balance_currency();
+                    $r = "";
+                    $r.=sprintf("<br>"._("Ancien solde %s %s"), nbm($solde_cur),$acc_currency->get_code());
+                    $new_solde = bcadd($solde_cur, $amount);
+                    $r.=sprintf("<br>"._("Nouveau solde %s %s"), nbm($new_solde),$acc_currency->get_code());
+                    $ret.=$r;
+                }
 		return $ret;
 	}
 
