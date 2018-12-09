@@ -284,6 +284,8 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             $tot_amount = 0;
             $tot_tva = 0;
             $tot_debit = 0;
+            $tot_amount_cur=0;
+
             $this->db->start();
             $tva = array();
              // find the currency from v_currency_last_value
@@ -440,6 +442,8 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $operation_currency->oc_price_unit=${'e_march'.$i.'_price'};
                 $operation_currency->j_id=$j_id;
                 $operation_currency->insert();
+                $tot_amount_cur=round(bcadd($tot_amount_cur,$amount_currency),2);
+                $tot_amount_cur=round(bcadd($tot_amount_cur,$tva_item_currency),2);
             }// end loop : save all items
 
             /*  save total customer */
@@ -608,9 +612,9 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                     $poste_val = $sposte;
                 }
                  // Convert paid amount in EUR
-                $acompte=bcmul($acompte, $p_currency_rate);   
+                $acompte_eur=bcmul($acompte, $p_currency_rate);   
 
-                $famount=bcsub($cust_amount,$acompte);
+                $famount=bcsub($cust_amount,$acompte_eur);
                 $acc_pay->poste = $poste_val;
                 $acc_pay->qcode = $fqcode;
                 $acc_pay->amount = abs(round($famount, 2));
@@ -635,6 +639,20 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $acc_pay->type = ($famount >= 0) ? 'c' : 'd';
                 $let_other = $acc_pay->insert_jrnx();
 
+                // insert into operation_currency
+                $operation_currency=new Operation_currency_SQL($this->db);
+                $operation_currency->oc_amount=bcsub($tot_amount_cur,$acompte);
+                $operation_currency->oc_vat_amount=0;
+                $operation_currency->oc_price_unit=0;
+                $operation_currency->j_id=$let_other;
+                $operation_currency->insert();                
+                
+                // Add info for currency
+                $acc_pay->currency_id=$p_currency_code;
+                $acc_pay->currency_rate=$p_currency_rate;
+                $acc_pay->currency_rate_ref=$currency_rate_ref->get_rate();
+                
+                
                 /* insert into jrn */
                 $acc_pay->mt = $mt;
                 $acjrn->grpt_id = $acseq;
