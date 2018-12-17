@@ -1209,10 +1209,11 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 	/**
 	 * insert into the quant_fin table
-	 * @param $bank_id is the f_id of the bank
-	 * @param $jr_id is the jrn.jr_id of the operation
-	 * @param $other is the f_id of the benefit
-	 * @param $amount is the amount
+	 * @param integer $bank_id is the f_id of the bank
+	 * @param integer $jr_id is the jrn.jr_id of the operation
+	 * @param integer $other is the f_id of the benefit
+	 * @param integer $amount is the amount
+         * @param integer $p_j_id is the j_id of the operation
 	 */
 	function insert_quant_fin($p_bankid, $p_jrid, $p_otherid, $p_amount,$p_j_id_currency)
 	{
