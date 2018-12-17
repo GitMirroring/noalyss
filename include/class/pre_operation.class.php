@@ -39,6 +39,7 @@ class Pre_operation
     var $p_jrn;					/*!< $p_jrn jrn_def_id */
     var $jrn_type;					/*!< $jrn_type */
     var $name;						/*!< $name name of the predef. operation */
+    var $detail;                /*!< Pre_operation_detail */
 
     function __construct($cn,$p_id=0)
     {
