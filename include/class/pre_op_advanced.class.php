@@ -248,7 +248,7 @@ class Pre_Op_Advanced extends Pre_operation_detail
                 if ($poste->value != '')
                 {
                         $Poste = new Acc_Account($legder->db);
-                        $Poste->set_parameter('pcm_val', $poste->value);
+                        $Poste->find_by_value($poste->value);
                         $label = $Poste->get_lib();
                 }
 
