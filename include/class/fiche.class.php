@@ -345,7 +345,7 @@ class Fiche
     function strAttribut($p_ad_id,$p_return=1)
     {
 		$return=($p_return==1)?NOTFOUND:"";
-        if ( sizeof ($this->attribut) == 0 )
+        if ( $this->attribut == NULL )
         {
 
             if ($this->id==0) {
