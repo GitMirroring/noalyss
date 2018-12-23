@@ -30,12 +30,12 @@ $aRap=$oRap->get();
  
  $nb_document=($detail->det->jr_pj_name != "")?1:0;
 
-
+$nb_aRap=(is_array($aRap))?count($aRap):0;
 // Array of tab
 // 
 $a_tab['writing_div']=array('id'=>'writing_div'.$div,'label'=>_('Ecriture Comptable'),'display'=>'none');
 $a_tab['info_operation_div']=array('id'=>'info_operation_div'.$div,'label'=>_('Information'),'display'=>'none');
-$a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>_('Opérations liées').'('.count($aRap).')','display'=>'none');
+$a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>_('Opérations liées').'('.$nb_aRap.')','display'=>'none');
 $a_tab['document_operation_div']=array('id'=>'document_operation_div'.$div,'label'=>_('Document').'('.$nb_document.')','display'=>'block');
 $a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Actions Gestion').'('.count($a_followup).')','display'=>'none');
 $a_tab['analytic_div']=array('id'=>'analytic_div'.$div,'label'=>_('Comptabilité Analytique'),'display'=>'none');

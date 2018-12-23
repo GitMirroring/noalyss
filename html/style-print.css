@@ -320,3 +320,6 @@ span.inplace_edit_input
 {
     text-decoration: none;
 }
+.inum {
+    text-align: right;
+}

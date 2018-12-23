@@ -80,7 +80,9 @@ class HttpInput
                     throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
                 , EXC_PARAM_TYPE);
                 }
-                $this->array[$p_name]=h($this->array[$p_name]);
+                if (is_string($this->array )) {
+                    $this->array[$p_name]=h($this->array[$p_name]);
+                }
             }else {
                 throw new Exception(_("Unknown type"));
             }
