@@ -815,7 +815,8 @@ function check()
                      */
                     $array_to_search=$this->a_select[$v];
                     $value=$p_row[$v];
-                    $nb_search=count($array_to_search);
+                    
+                    $nb_search=(is_array($array_to_search))?count($array_to_search):0;
                     $found=FALSE;
                     for ($e=0; $e<$nb_search; $e++)
                     {
@@ -830,7 +831,6 @@ function check()
                     {
                         echo td("--");
                     }
-                }
                 else
                 {
                     echo td($p_row[$v]);
