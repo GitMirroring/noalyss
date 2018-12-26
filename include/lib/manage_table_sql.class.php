@@ -831,6 +831,7 @@ function check()
                     {
                         echo td("--");
                     }
+		}
                 else
                 {
                     echo td($p_row[$v]);
