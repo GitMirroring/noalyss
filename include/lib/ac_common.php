@@ -1103,10 +1103,18 @@ function show_menu($module)
                         }
 			// if file is not a plugin, include the file, otherwise
 			// include the plugin launcher
-			if ( $file[0]['me_type'] != 'PL')
+			if ( $file[0]['me_type'] != 'PL') {
+                            if (file_exists ($file[0]['me_file']) )
+                            {
 				require_once $file[0]['me_file'];
-			else
+                            } elseif ( file_exists(NOALYSS_INCLUDE.'/'.$file[0]['me_file'])) {
+				require_once NOALYSS_INCLUDE.'/'.$file[0]['me_file'];
+                            }else {                            
+                                echo echo_warning(_("Fichier non trouvé"));
+                            }
+                        } else {
 				require 'extension_get.inc.php';
+                        }
 
 			exit();
 		}

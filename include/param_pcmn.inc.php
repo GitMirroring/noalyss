@@ -79,7 +79,7 @@ echo $mtable->display_table(" where pcm_val::text like '{$g_start}%' order by pc
     <div id="go_up" class="inner_box" style="padding:0px;left:auto;width:250px;height: 100px;display:none;position:fixed;bottom:5px;right:20px">
         <div style="margin:3%;padding:3%">
             <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>
-            <input type="button" id="pcmn_update_add_bt3"  value="<?php echo _('Ajout poste comptable'); ?>">
+            <input type="button" class="smallbutton" id="pcmn_update_add_bt3"  value="<?php echo _('Ajout poste comptable'); ?>">
         </div>
     </div>
  </div>

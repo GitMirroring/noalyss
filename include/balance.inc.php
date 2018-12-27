@@ -102,8 +102,8 @@ echo _('Filtre')." ";
 $rad=new IRadio();
 $array_ledger=$g_user->get_ledger('ALL',3);
 $array=get_array_column($array_ledger,'jrn_def_id');
-$selected=(isset($_GET['r_jrn']))?$_GET['r_jrn']:null;
-$select_cat=(isset($_GET['r_cat']))?$_GET['r_cat']:null;
+$selected=(isset($_GET['r_jrn']))?$_GET['r_jrn']:array();
+$select_cat=(isset($_GET['r_cat']))?$_GET['r_cat']:array();
 $array_cat=Acc_Ledger::array_cat();
 
 echo '<ul style="list-style-type:none">';

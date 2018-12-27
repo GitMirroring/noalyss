@@ -244,15 +244,15 @@ j1.j_poste as poste
      */
     function get ( )
     {
-        $sql=" select jr_id as cn from jrn_rapt where jra_concerned=".$this->jr_id.
-             " union ".
-             " select jra_concerned as cn from jrn_rapt where jr_id=".$this->jr_id;
-        $Res=$this->db->exec_sql($sql);
+        $sql=" select jr_id as cn from jrn_rapt where jra_concerned=$1
+              union 
+              select jra_concerned as cn from jrn_rapt where jr_id=$2";
+        $Res=$this->db->exec_sql($sql,array($this->jr_id,$this->jr_id));
 
         // If nothing is found return null
         $n=Database::num_row($Res);
 
-        if ($n ==0 ) return null;
+        if ($n ==0 ) return [];
 
         // put everything in an array
         for ($i=0;$i<$n;$i++)

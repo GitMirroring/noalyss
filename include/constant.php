@@ -62,11 +62,9 @@ if ( strpos($inc_path,";") != 0 ) {
   $os=1;			/* $os is 1 for unix */
 }
 set_include_path($new_path);
-ini_set ('default_charset',"UTF-8");
-ini_set ('session.use_cookies',1);
-ini_set ('magic_quotes_gpc','off');
-ini_set ('session.use_only_cookies','on');
-ini_set ('session.use_cookies',1);
+@ini_set ('default_charset',"UTF-8");
+@ini_set ('session.use_cookies',1);
+@ini_set ('magic_quotes_gpc','off');
 
 if ( ! defined('OVERRIDE_PARAM')) {
     ini_set ('max_execution_time',240);
@@ -110,7 +108,7 @@ if ( !defined ("NOALYSS_PACKAGE_REPOSITORY")) {
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
 }
-define ("DBVERSION",129);
+define ("DBVERSION",132);
 define ("MONO_DATABASE",25);
 define ("DBVERSIONREPO",18);
 define ('NOTFOUND','--not found--');

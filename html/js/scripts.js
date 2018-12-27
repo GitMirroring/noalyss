@@ -705,6 +705,7 @@ function add_div(obj)
         /* elt.setStyle({visibility:'visible'}); */
         elt.style.visibility = 'visible';
         elt.show();
+        return elt;
     }
     catch (e)
     {
@@ -1270,15 +1271,14 @@ function save_predf_op(obj)
  *amount_id is either a html obj. or an amount and the field tiers if given
  * @param {type} dossier
  * @param {type} ctl_concern
- * @param {type} amount_id
- * @param {type} ledger
+ * @param {float or string} amount_id Amount or DOM Id of the element containing the amount
+ * @param {float} ledger 
  * @param {type} p_id_targetDom Element (div) where to display the search result
  * @param p_tiers id of the Tiers
  * @returns {undefined}
  */
 function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p_tiers)
 {
-    var dossier = g('gDossier').value;
     if (amount_id === undefined)
     {
         amount_id = 0;
@@ -1294,7 +1294,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p
             amount_id = $(amount_id).innerHTML;
         }
     }
-    var tiers=""
+    var tiers="";
     if ( p_tiers ) tiers=p_tiers;
     var target = "";
     if ( p_id_target !="") {
@@ -1420,7 +1420,8 @@ function remove_waiting_node()
 }
 function remove_waiting_box()
 {
-    removeDiv('wait_box');
+    if ( $('wait_box') ) { Effect.Fade('wait_box', { duration: 0.6 }); }
+    
     remove_waiting_node();
 }
 /**
@@ -2973,7 +2974,7 @@ function confirm_box(p_obj, p_message,p_callback_true)
  */
 function alert_box(p_message)
 {
-    smoke.alert(p_message,false , {ok:'ok',classname:"inner_box"});
+    smoke.alert(p_message, undefined,{ok:'ok',classname:"inner_box"});
 }
 
 
@@ -3410,7 +3411,7 @@ var progressIdx = 0;
 /**
  * Start the progress bar 
  * @param {string} p_taskid id to monitor
- * @param {int} p_dossier
+ * @param {int} p_message
  */
 function progress_bar_start(p_taskid,p_message)
 {

@@ -159,11 +159,11 @@ if (isset($_POST['clone']))
                         where p_id=$2
 			", array($new_id, $p_id));
         $cn->exec_sql("select menu_complete_dependency($1)",array($new_id));
-        $cn->exec_sql("update profile_menu 
-            set pm_id_dep=(select distinct higher_dep 
-                            from v_menu_dependency as a 
+        $cn->exec_sql("update profile_menu
+            set pm_id_dep=(select distinct higher_dep
+                            from v_menu_dependency as a
                             where
-                            a.pm_id= profile_menu.pm_id) 
+                            a.pm_id= profile_menu.pm_id)
                         where pm_id_dep is null and p_id=$1",array($new_id));
         $cn->commit();
         $p_id=$new_id;
@@ -203,7 +203,7 @@ if (isset($_POST['delete_profil']))
     }
 }
 //************************************
-// Modify the menu 
+// Modify the menu
 //************************************
 if (isset($_POST['mod']))
 {
@@ -213,7 +213,7 @@ if (isset($_POST['mod']))
         $pm_id=$http->post("pm_id", "number");
         // profile id
         $p_id=$http->post("p_id", "number");
-        // display order 
+        // display order
         $p_order=$http->post("p_order", "number");
         // code to add
         $me_code=$http->post("me_code");
@@ -268,7 +268,7 @@ if (isset($_POST['add_menu'])||isset($_POST['add_impress']))
         $p_dep=$http->post("dep","number",null);
         // profile id
         $p_id=$http->post("p_id", "number");
-        // display order 
+        // display order
         $p_order=$http->post("p_order");
         // code to add
         $me_code=$http->post("me_code");
@@ -326,9 +326,9 @@ if (isset($_POST['add_menu'])||isset($_POST['add_impress']))
          * if me_code_dep == -1, it means it is null
          */
         $me_code_dep=($me_code_dep==-1)?null:$me_code_dep;
-        
+
         /*
-         * Do not insert twice the same menu 
+         * Do not insert twice the same menu
          */
         $duplicate = $cn->get_value(" select count(*) from profile_menu where "
                 . " pm_id_dep = $1 and me_code = $2",array($pm_id_dep,$me_code));
@@ -348,7 +348,7 @@ if (isset($_POST['add_menu'])||isset($_POST['add_impress']))
     catch (Exception $exc)
     {
         alert($exc->getMessage());
-        $cn->rollback;
+        $cn->rollback();
     }
 }
 
@@ -439,5 +439,5 @@ $dep=$http->post("dep","string","");
         }
         selected_menu=rowid;
     }
-    
-</script>  
+
+</script>

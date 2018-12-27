@@ -524,7 +524,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 		$r.='</fieldset>';
 
-		$r.='<div class="myfieldset"><h1 class="legend">Extrait de compte</h1>';
+		$r.='<div class="myfieldset"><h1 class="legend">'._("Extrait de compte").'</h1>';
 		//--------------------------------------------------
 		// Saldo begin end
 		//-------------------------------------------------
@@ -532,10 +532,10 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		$r.='<tr>';
 		// Extrait
 		//--
-		$r.=tr('<td> Numéro d\'extrait</td>' . td(h($e_pj)));
-		$r.='<tr><td >Solde début extrait </td>';
+		$r.=tr('<td>'._("Numéro d'extrait").' </td>' . td(h($e_pj)));
+		$r.='<tr><td >'._("Solde début extrait").' </td>';
 		$r.='<td style="num">' . nbm($first_sold) . '</td></tr>';
-		$r.='<tr><td>Solde fin extrait </td>';
+		$r.='<tr><td>'._("Solde fin extrait").' </td>';
 		$r.='<td style="num">' . nbm($last_sold) . '</td></tr>';
 		$r.='</table>';
 
@@ -545,11 +545,11 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		//-------------------------------------------------
 		$r.='<TABLE style="width:100%" id="fin_item">';
 		$r.="<TR>";
-		if ($chdate==2) $r.='<th>Date</th>';
-		$r.="<th style=\"width:auto;text-align:left\" colspan=\"2\">Nom</TH>";
-		$r.="<th style=\"text-align:left\" >Commentaire</TH>";
-		$r.="<th style=\"text-align:right\">Montant</TH>";
-		$r.='<th colspan="2"> Op. Concern&eacute;e(s)</th>';
+		if ($chdate==2) $r.='<th>'._("Date").'</th>';
+		$r.="<th style=\"width:auto;text-align:left\" colspan=\"2\">"._("Nom")."</th>";
+		$r.="<th style=\"text-align:left\" >"._("Commentaire")."</th>";
+		$r.="<th style=\"text-align:right\">"._("Montant")."</th>";
+		$r.='<th colspan="2">'._("Op. Concernée(s)").'</th>';
 
 		/* if we use the AC */
 		if ($g_parameter->MY_ANALYTIC != 'nu')
@@ -631,14 +631,14 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		$r.="</TABLE>";
 
 		// saldo
-		$r.='<br>Ancien solde = ' . $solde;
+		$r.='<br>'.sprintf(_("Ancien solde = %d"), $solde);
 		$new_solde+=$tot_amount;
-		$r.='<br>Nouveau solde = ' . $new_solde;
-		$r.='<br>Difference =' . $tot_amount;
+		$r.='<br>'.sprintf(_("Nouveau solde = %d"),$new_solde);
+		$r.='<br>'.sprintf(_("Difference = %d"), $tot_amount);
 		// check for upload piece
 		$file = new IFile();
 
-		$r.="<br>Ajoutez une pi&egrave;ce justificative ";
+		$r.="<br>"._("Ajoutez une pièce justificative")." ";
 		$r.=$file->input("pj", "");
 
 		$r.='</div>';
@@ -739,7 +739,8 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			$amount = 0.0;
 			$idx_operation = 0;
 			$ret = '<table class="result" >';
-			$ret.=tr(th('Date').th('n° interne') . th('Quick Code') . th('Nom') . th('Libellé') . th('Montant', ' style="text-align:right"'));
+			$ret.=tr(th(_('Date')).th(_('n° interne')) . th(_('Quick Code'))
+                                . th(_('Nom')) . th(_('Libellé')) . th(_('Montant'), ' style="text-align:right"'));
 			// Credit = goods
 			$get_solde=true;
 			for ($i = 0; $i < $nb_item; $i++)
@@ -814,7 +815,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				}
 				$acc_operation->periode = $tperiode;
 				$acc_operation->qcode = ${"e_other" . $i};
-				$j_id = $acc_operation->insert_jrnx();
+				$j_id_other = $acc_operation->insert_jrnx();
 
 				$acc_operation = new Acc_Operation($this->db);
 				$acc_operation->date = $e_date;
@@ -931,7 +932,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				/**
 				 * save also into quant_fin
 				 */
-				$this->insert_quant_fin($fBank->id, $jr_id, $fPoste->id, ${"e_other$i" . "_amount"});
+				$this->insert_quant_fin($fBank->id, $jr_id, $fPoste->id, ${"e_other$i" . "_amount"},$j_id_other);
 
 				if ($g_parameter->MY_ANALYTIC != "nu")
 				{
@@ -950,7 +951,12 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 				$js_detail = HtmlInput::detail_op($jr_id, $internal);
 				// Compute display
-				$row = td($e_date).td($js_detail) . td(${"e_other$i"}) . td($fPoste->strAttribut(ATTR_DEF_NAME)) . td(${"e_other" . $i . "_comment"}) . td(nbm(${"e_other$i" . "_amount"}), 'class="num"');
+				$row = td($e_date)
+                                        . td($js_detail) 
+                                        . td(${"e_other$i"}) 
+                                        . td($fPoste->strAttribut(ATTR_DEF_NAME)) 
+                                        . td(${"e_other" . $i . "_comment"}) 
+                                        . td(nbm(${"e_other$i" . "_amount"}), 'class="num"');
                                 $class=($i%2==0)?' class="even" ':' class="odd" ';
 				$ret.=tr($row,$class);
 
@@ -1147,17 +1153,18 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 	/**
 	 * insert into the quant_fin table
-	 * @param $bank_id is the f_id of the bank
-	 * @param $jr_id is the jrn.jr_id of the operation
-	 * @param $other is the f_id of the benefit
-	 * @param $amount is the amount
+	 * @param integer $bank_id is the f_id of the bank
+	 * @param integer $jr_id is the jrn.jr_id of the operation
+	 * @param integer $other is the f_id of the benefit
+	 * @param integer $amount is the amount
+         * @param integer $p_j_id is the j_id of the operation
 	 */
-	function insert_quant_fin($p_bankid, $p_jrid, $p_otherid, $p_amount)
+	function insert_quant_fin($p_bankid, $p_jrid, $p_otherid, $p_amount,$p_j_id)
 	{
-		$sql = "INSERT INTO quant_fin(qf_bank, jr_id, qf_other, qf_amount)
-                   VALUES ($1, $2, $3, $4);";
+		$sql = "INSERT INTO quant_fin(qf_bank, jr_id, qf_other, qf_amount,j_id)
+                   VALUES ($1, $2, $3, $4,$5);";
 
-		$this->db->exec_sql($sql, array($p_bankid, $p_jrid, $p_otherid, round($p_amount, 2)));
+		$this->db->exec_sql($sql, array($p_bankid, $p_jrid, $p_otherid, round($p_amount, 2),$p_j_id));
 	}
 
 }

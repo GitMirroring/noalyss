@@ -324,10 +324,10 @@ class Acc_Ledger extends jrn_def_sql
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));
             // reverse in QUANT_FIN table
             $Res=$this->db->exec_sql("  INSERT INTO quant_fin(
-                                 qf_bank,  qf_other, qf_amount,jr_id)
-                                 SELECT  qf_bank,  qf_other, qf_amount*(-1),$1
+                                 qf_bank,  qf_other, qf_amount,jr_id,j_id)
+                                 SELECT  qf_bank,  qf_other, qf_amount*(-1),$1,$3
                                  FROM quant_fin where jr_id=$2",
-                    array($seq, $this->jr_id));
+                    array($seq, $this->jr_id,$j_id));
             if ($Res==false)
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR[ $sql ]"));
 
