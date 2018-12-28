@@ -762,6 +762,7 @@ class Acc_Ledger extends jrn_def_sql
     function input($p_array=null, $p_readonly=0)
     {
         global $g_parameter, $g_user;
+        $http=new HttpInput();
         $this->nb=$this->get_min_row();
         if ($p_readonly==1)
             return $this->confirm($p_array);
@@ -787,7 +788,8 @@ class Acc_Ledger extends jrn_def_sql
         $wLedger=$this->select_ledger('ODS', 2,FALSE);
         if ($wLedger==null)
             throw new Exception(_('Pas de journal disponible'));
-        $wLedger->javascript="onChange='update_name();update_predef(\"ods\",\"t\",\"".$_REQUEST['ac']."\");$add_js'";
+        $ac=$http->request("ac");
+        $wLedger->javascript="onChange='update_name();update_predef(\"ods\",\"t\",\"".$ac."\");$add_js'";
         $label=" Journal ".Icon_Action::infobulle(2);
 
         $ret.="<table>";
@@ -803,8 +805,11 @@ class Acc_Ledger extends jrn_def_sql
         $op->set('ledger', $this->id);
         $op->set('ledger_type', "ODS");
         $op->set('direct', 't');
-        $url=http_build_query(array('action'=>'use_opd', 'p_jrn_predef'=>$this->id,
-            'ac'=>$_REQUEST['ac'], 'gDossier'=>dossier::id()));
+        $url=http_build_query(
+                array('action'=>'use_opd', 
+                    'p_jrn_predef'=>$this->id,
+                    'ac'=>$ac,
+                    'gDossier'=>dossier::id()));
         echo $op->form_get('do.php?'.$url);
 
         echo '</div>';
@@ -1047,12 +1052,12 @@ class Acc_Ledger extends jrn_def_sql
         /* check for a double reload */
         if (isset($mt)&&$this->db->count_sql('select jr_mt from jrn where jr_mt=$1',
                         array($mt))!=0)
-            throw new Exception('Double Encodage', 5);
+            throw new Exception(_('Double Encodage'), 5);
 
         // Check the periode and the date
         if (isDate($e_date)==null)
         {
-            throw new Exception('Date invalide', 2);
+            throw new Exception(_('Date invalide'), 2);
         }
         $periode=new Periode($this->db);
         /* find the periode  if we have enabled the check_periode 
@@ -1076,7 +1081,7 @@ class Acc_Ledger extends jrn_def_sql
         // Periode ferme
         if ($this->is_closed($periode->p_id)==1)
         {
-            throw new Exception('Periode fermee', 6);
+            throw new Exception(_('Periode fermee'), 6);
         }
         /* check if we are using the strict mode */
         if ($this->check_strict()==true)
