@@ -1149,7 +1149,7 @@ class Acc_Ledger extends jrn_def_sql
                 $card_id=$p->find_card();
                 if (!empty($card_id))
                 {
-                    $str_msg=sprintf(_(" Le poste %s appartient à  fiche(s) dont :"),$str_msg,count($card_id));
+                    $str_msg=sprintf(_(" Le poste %s appartient à  fiche(s) dont : %s"),$str_msg,count($card_id));
                     $max=(count($card_id)>MAX_COMPTE_CARD)?MAX_COMPTE_CARD:count($card_id);
                     for ($x=0; $x<$max; $x++)
                     {
