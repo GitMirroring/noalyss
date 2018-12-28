@@ -1074,8 +1074,10 @@ class Acc_Ledger extends jrn_def_sql
               operation */
             $last_date=$this->get_last_date();
             if ($last_date!=null&&cmpDate($e_date, $last_date)<0)
-                throw new Exception(_('Vous utilisez le mode strict la dernière operation est la date du ')
-                .$last_date.' '._('vous ne pouvez pas encoder à une date antérieure'),
+                throw new Exception(
+                        sprintf ( 
+                                _('Vous utilisez le mode strict la dernière operation est la date du %s
+                vous ne pouvez pas encoder à une date antérieure',$last_date)),
                 15);
         }
 
