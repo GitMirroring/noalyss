@@ -88,7 +88,7 @@ echo '</div>';
 
 $iconcerned=new IConcerned('jrn_concerned');
 $iconcerned->amount_id="totalDeb";
-echo "Opération rapprochée : ".$iconcerned->input();
+printf (_("Opération rapprochée : %s"),$iconcerned->input());
 
 echo '<p>';
 echo HtmlInput::button('add', _('Ajout d\'une ligne'), 'onClick="quick_writing_add_row()"');
