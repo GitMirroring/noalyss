@@ -48,7 +48,7 @@ $ledger = new Acc_Ledger($cn, $id_ledger);
 $first_ledger = $ledger->get_first('ODS');
 if ( empty ($first_ledger))
 {
-	exit('Pas de journal disponible');
+	exit(_('Pas de journal disponible'));
 }
 $ledger->id = ($ledger->id == -1) ? $first_ledger['jrn_def_id'] : $id_ledger;
 
