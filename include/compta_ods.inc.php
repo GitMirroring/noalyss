@@ -40,8 +40,10 @@ global $g_user,$http;
 
 $cn = Dossier::connect();
 
-$id_predef = (isset($_REQUEST['p_jrn_predef'])) ? $_REQUEST['p_jrn_predef'] : -1;
-$id_ledger = (isset($_REQUEST['p_jrn'])) ? $_REQUEST['p_jrn'] : $id_predef;
+
+$id_predef = $http->request('p_jrn_predef','number',-1);
+$id_ledger = $http->request('p_jrn','number',$id_predef);
+
 $ledger = new Acc_Ledger($cn, $id_ledger);
 $first_ledger = $ledger->get_first('ODS');
 if ( empty ($first_ledger))
@@ -91,7 +93,7 @@ elseif (isset($_POST['save']))
 		$ledger->save($array);
 		$jr_id = $cn->get_value('select jr_id from jrn where jr_internal=$1', array($ledger->internal));
 
-		echo '<h2> Op&eacute;ration enregistr&eacute;e  Piece ' . h($ledger->pj) . '</h2>';
+		echo '<h2>'._("Opération enregistrée")._("Piece") . h($ledger->pj) . '</h2>';
 		if (strcmp($ledger->pj, $_POST['e_pj']) != 0)
 		{
 			echo '<h3 class="notice">' . _('Attention numéro pièce existante, elle a du être adaptée') . '</h3>';
