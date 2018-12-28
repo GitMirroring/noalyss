@@ -1118,7 +1118,7 @@ class Acc_Ledger extends jrn_def_sql
                     throw new Exception("La fiche quick_code = ".
                     $f->quick_code." n'est pas dans ce journal", 4);
                 if (strlen(trim(${'qc_'.$i}))!=0&&isNumber(${'amount'.$i})==0)
-                    throw new Exception('Montant invalide', 3);
+                    throw new Exception(_('Montant invalide'), 3);
 
                 $strPoste=$f->strAttribut(ATTR_DEF_ACCOUNT);
                 if ($strPoste=='')
@@ -1135,9 +1135,11 @@ class Acc_Ledger extends jrn_def_sql
             if (isset(${'poste'.$i})&&strlen(trim(${'poste'.$i}))!=0)
             {
                 $p=new Acc_Account_Ledger($this->db, ${'poste'.$i});
-                if ($p->belong_ledger($p_jrn)<0)
-                    throw new Exception(_("Le poste")." ".$p->id." "._("n'est pas dans ce journal"),
+                if ($p->belong_ledger($p_jrn)<0) {
+                    throw new Exception(sprintf ( 
+                            _("Le poste %s n'est pas dans ce journal",$p->id)),
                     5);
+                }
                 if (strlen(trim(${'poste'.$i}))!=0&&isNumber(${'amount'.$i})==0)
                     throw new Exception(_('Poste invalide ['.${'poste'.$i}.']'),
                     3);
@@ -1147,7 +1149,7 @@ class Acc_Ledger extends jrn_def_sql
                 $card_id=$p->find_card();
                 if (!empty($card_id))
                 {
-                    $str_msg=" Le poste ".$p->id." appartient à ".count($card_id)." fiche(s) dont :";
+                    $str_msg=sprintf(_(" Le poste %s appartient à  fiche(s) dont :"),$str_msg,count($card_id));
                     $max=(count($card_id)>MAX_COMPTE_CARD)?MAX_COMPTE_CARD:count($card_id);
                     for ($x=0; $x<$max; $x++)
                     {
