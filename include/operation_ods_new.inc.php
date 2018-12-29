@@ -83,7 +83,9 @@ echo '<div style="position:absolute;width:40%;right:20px">';
 echo '<table class="info_op">'.
  '<tr>'.td(_('Débit')) . '<td id="totalDeb"></td>' .
  td(_('Crédit')) . ' <td id="totalCred"></td>' .
- td(_('Difference')) . ' <td id="totalDiff"></td>';
+ td(_('Difference')) . ' <td id="totalDiff"></td>'.
+        '</tr>';
+
 echo '</table>';
 echo '</div>';
 
