@@ -38,7 +38,7 @@ echo h2(_("Attention, cette opération n'est pas encore sauvée : vous devez enc
 echo '</div>';
 
 echo '<FORM METHOD="POST" enctype="multipart/form-data" class="print">';
-echo HtmlInput::request_to_hidden(array('ac'));
+echo HtmlInput::request_to_hidden(array('ac','p_currency_code','p_currency_rate'));
 echo $ledger->confirm($_POST,false);
 
 

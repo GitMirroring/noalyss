@@ -1400,8 +1400,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $currency_input->id="p_currency_rate";
         $currency_input->value=$http->request('p_currency_rate','string',1);
         $currency_input->javascript='onchange="format_number(this,4);CurrencyCompute(\'p_currency_rate\',\'p_currency_euro\');"';
-        
-        
+       
+        $currency=new Acc_Currency($this->db,0);
         
         // 
         // Button for template operation

@@ -67,7 +67,8 @@
         </td>
         <td>
             <?=$currency_select->input()?>
-           <?=$currency_input->change()?>EUR
+           <?=$currency_input->change()?>
+            <?=$currency->get_code();?>
 
         </td>
     </tr>
