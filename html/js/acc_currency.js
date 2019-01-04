@@ -115,7 +115,7 @@ function CurrencyCompute(p_rate,p_update)
        console.log("rate is nan" + rate);
        rate=1;
    }
-   var tot=tvac*rate;
+   var tot=tvac/rate;
    tot=Math.round(tot*100)/100;
    $(p_update).innerHTML=tot;
     
@@ -148,11 +148,11 @@ function CurrencyComputeMisc(p_rate,p_update)
        console.log("rate is nan" + rate);
        rate=1;
    }
-   var totDeb=debAmount*rate;
+   var totDeb=debAmount/rate;
    totDeb=Math.round(totDeb*100)/100;
    $('default_currency_deb').innerHTML=totDeb;
    
-   var totCred=credAmount*rate;
+   var totCred=credAmount/rate;
    totCred=Math.round(totCred*100)/100;
    $('default_currency_cred').innerHTML=totCred;
     

@@ -309,7 +309,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $amount_currency = bcmul(${'e_march' . $i . '_price'}, ${'e_quant' . $i});
                 
                 // convert amount to currency
-                $amount=bcmul($amount_currency,$p_currency_rate);
+                $amount=bcdiv($amount_currency,$p_currency_rate);
                 
                 $tot_amount = bcadd($tot_amount, $amount);
                 $tot_amount = round($tot_amount, 2);
@@ -363,7 +363,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         $l->load();
                         $tva_item_currency = bcmul($amount, $l->get_parameter('rate'));
                     }
-                    $tva_item=bcmul($tva_item_currency,$p_currency_rate);
+                    $tva_item=bcdiv($tva_item_currency,$p_currency_rate);
                     $tva_item=round($tva_item,2);
                     if (isset($tva[$idx_tva]))
                     {
@@ -413,7 +413,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                     $op->save_form_plan($_POST, $i, $j_id);
                 }
                 
-                $price_euro=bcmul(${'e_march'.$i.'_price'}, $p_currency_rate);
+                $price_euro=bcdiv(${'e_march'.$i.'_price'}, $p_currency_rate);
                 if ($g_parameter->MY_TVA_USE == 'Y') {
                     /* save into quant_sold */
                     $r = $this->db->exec_sql("select insert_quant_sold ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)", array(null, /* 1 */
@@ -942,12 +942,13 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         // Add the sum
         $decalage=($g_parameter->MY_TVA_USE == 'Y')?'<td></td><td></td><td></td><td></td>':'<td></td>';
          $tot = bcadd($tot_amount, $tot_tva, 2);
-        $tot_eur=round(bcmul($tot, $p_currency_rate),2);
+        $tot_eur=round(bcdiv($tot, $p_currency_rate),2);
         $tot=nbm($tot);
         $str_tot=_('Totaux');
         
         // Get currency code
-        $str_code='EUR';
+        $default_currency=new Acc_Currency($this->db,0);
+        $str_code=$default_currency->get_code();
         if ( $p_currency_code != 0 ) {
             $acc_currency=new Acc_Currency($this->db);
             $acc_currency->set_id($p_currency_code);
