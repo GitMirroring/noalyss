@@ -29,7 +29,7 @@ require_once NOALYSS_INCLUDE.'/database/currency_history_sql.class.php';
 
 /**
  * Manage the configuration of currency , add currency, rate, remove  and update
- * Concerned tables are v_currency_last_value _SQL , Currency_SQL , Currency_History_SQL
+ * Concerned tables are v_currency_last_value_SQL , Currency_SQL , Currency_History_SQL
  * currency_id = 0 for the default currency , -1 for a new one
  */
 class Currency_MTable extends Manage_Table_SQL
@@ -40,12 +40,12 @@ class Currency_MTable extends Manage_Table_SQL
      * @param Data $p_table
      * @example test_currency_mtable.php
      */
-    function __construct(Data_SQL $p_table)
+    function __construct(V_Currency_Last_Value_SQL $p_table)
     {
         parent::__construct($p_table);
 
         // If currency , cannot be deleted
-        if ($this->is_currency_used()==TRUE)
+        if ($this->is_currency_used($p_table->currency_id)==TRUE)
         {
             $this->set_delete_row(FALSE);
         }
@@ -68,11 +68,17 @@ class Currency_MTable extends Manage_Table_SQL
     /**
      * returns TRUE the currency is used otherwise FALSE. We cannot delete a currency which is used in a
      * operation
+     * @param integer $p_id currency_id
      * @returns boolean true if currency is used
-     * @todo Currency_MTable.is_currency_used to implement
      */
-    function is_currency_used()
+    function is_currency_used($p_id)
     {
+        global $cn;
+        $cnt_used=$cn->get_value(" select count(*) from jrn where currency_id=$1",[$p_id]);
+        if ($cnt_used > 0)
+        {
+            return TRUE;
+        }
         return FALSE;
     }
     /**
@@ -92,7 +98,7 @@ class Currency_MTable extends Manage_Table_SQL
                 currency_id=$1", array($record->currency_id));
         $new_rate_date=new IDate("new_rate_date");
         $new_rate_value=new INum("new_rate_value");
-        $new_rate_value->prec=4;
+        $new_rate_value->prec=6;
         if ($record->currency_id!=-1)
         {
             require NOALYSS_TEMPLATE."/currency_mtable_input.php";
@@ -286,23 +292,42 @@ class Currency_MTable extends Manage_Table_SQL
     function from_request()
     {
         $http=new HttpInput();
-        $this->table->cr_code_iso=mb_strtoupper(strip_tags($http->request("cr_code_iso")));
-        $this->table->cr_name=strip_tags($http->request("cr_name"));
+        $this->table->cr_code_iso=mb_strtoupper($http->request("cr_code_iso"));
+        $this->table->cr_name=$http->request("cr_name");
         $this->table->currency_id=$http->request("p_id", "number");
         $this->table->ch_value=$http->request("new_rate_value");
         $this->table->str_from=$http->request("new_rate_date");
     }
     /**
-     * We don't display the default currency (id := -1)
+     * 
+     * We cannot modify the default currency (id := 0)
      */
     function display_row($p_row)
     {
         if ($p_row['currency_id']==0)
         {
+            $this->set_update_row(FALSE);
+            $this->set_delete_row(FALSE);
+            parent::display_row($p_row);
             return;
         }
+        if ($this->is_currency_used($p_row['currency_id'])==TRUE)
+        {
+            $this->set_delete_row(FALSE);
+        } else {
+            $this->set_delete_row(TRUE);
+            
+        }
 
+        $this->set_update_row(TRUE);
         parent::display_row($p_row);
     }
-
+    /**
+     * Delete after checking the currency is not used
+     */
+    function delete()
+    {
+        $id=$this->get_table()->currency_id;
+        if ( $this->is_currency_used($id) == FALSE)         $this->table->delete();
+    }
 }
