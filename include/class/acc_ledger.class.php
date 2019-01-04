@@ -913,12 +913,12 @@ class Acc_Ledger extends jrn_def_sql
          $currency_select = $this->CurrencyInput("currency_code", "p_currency_rate" , "p_currency_euro");
          $currency_select->selected=$http->request('p_currency_code','string',0);
          
-         $currency_input=new INum("p_currency_rate",6);
+         $currency_input=new INum("p_currency_rate");
+         $currency_input->prec=6;
          $currency_input->id="p_currency_rate";
          $currency_input->value=$http->request('p_currency_rate','string',1);
-         $currency_input->javascript='onchange="format_number(this,6);CurrencyCompute(\'p_currency_rate\',\'p_currency_euro\');"';
          $ret.=_("Devise")." ".$currency_select->input();
-         $ret.=$currency_input->change();
+         $ret.=$currency_input->change('CurrencyComputeMisc(\'p_currency_rate\',\'p_currency_euro\');');
          $currency=new Acc_Currency($this->db,0);
          $ret.=$currency->get_code();
          

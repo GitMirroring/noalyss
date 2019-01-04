@@ -67,7 +67,7 @@
         </td>
         <td>
             <?=$currency_select->input()?>
-           <?=$currency_input->change()?>
+           <?=$currency_input->change('CurrencyCompute(\'p_currency_rate\',\'p_currency_euro\');')?>
             <?=$currency->get_code();?>
 
         </td>

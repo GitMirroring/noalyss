@@ -893,9 +893,27 @@ function check()
                         $text->size=$min_size;
                         echo $text->input();
                     }
-                    elseif ($this->a_type[$key]=="numeric")
+                    elseif ($this->a_type[$key]=="numeric") // number 2 decimale
                     {
                         $text=new INum($key);
+                        $text->value=$value;
+                        $min_size=(strlen($value)<10)?10:strlen($value)+1;
+                        $text->size=$min_size;
+                        echo $text->input();
+                    }
+                    elseif ($this->a_type[$key]=="numeric4") // number 4 decimale
+                    {
+                        $text=new INum($key);
+                        $text->prec=4;
+                        $text->value=$value;
+                        $min_size=(strlen($value)<10)?10:strlen($value)+1;
+                        $text->size=$min_size;
+                        echo $text->input();
+                    }
+                    elseif ($this->a_type[$key]=="numeric6") // number 6 decimale
+                    {
+                        $text=new INum($key);
+                        $text->prec=6;
                         $text->value=$value;
                         $min_size=(strlen($value)<10)?10:strlen($value)+1;
                         $text->size=$min_size;
