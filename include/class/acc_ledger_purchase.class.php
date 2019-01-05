@@ -706,7 +706,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 }
                 // insert into quant_purchase
                 //-----
-                $price_euro=bcmul(${'e_march'.$i.'_price'}, $p_currency_rate);
+                $price_euro=bcdiv(${'e_march'.$i.'_price'}, $p_currency_rate);
                 if ( $g_parameter->MY_TVA_USE=='Y')
                 {
 
@@ -933,7 +933,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $cust_amount=bcsub($cust_amount, $tot_tva_reversed);
 
                 // Convert paid amount in EUR
-                $acompte=bcmul($acompte, $p_currency_rate);   
+                $acompte=bcdiv($acompte, $p_currency_rate);   
 
                 $famount=bcsub($cust_amount,$acompte);
                 
@@ -1686,10 +1686,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $decalage=($g_parameter->MY_TVA_USE == 'Y')?'<td></td><td></td><td></td><td></td>':'<td></td>';
          $tot = round(bcadd($tot_amount, $tot_tva), 2);
         $str_tot=_('Totaux');
-        $tot_eur=round(bcmul($tot, $p_currency_rate),2);
+        $tot_eur=round(bcdiv($tot, $p_currency_rate),2);
         
-        // Get currency code
-        $str_code='EUR';
+       // Get currency code
+        $default_currency=new Acc_Currency($this->db,0);
+        $str_code=$default_currency->get_code();
         if ( $p_currency_code != 0 ) {
             $acc_currency=new Acc_Currency($this->db);
             $acc_currency->set_id($p_currency_code);

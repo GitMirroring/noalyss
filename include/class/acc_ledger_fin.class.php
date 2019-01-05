@@ -647,7 +647,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
                     
                     $r.='<br>'.sprintf(_("Taux = %s"),$cur_rate);
-                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),bcmul($new_solde,$cur_rate),$default_currency->get_code());
+                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),bcdiv($new_solde,$cur_rate),$default_currency->get_code());
                 } else {
                     
                     $cur=$acc_currency->get_code();
@@ -803,7 +803,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                                 
 				// convert to EUR if needed and round it
                                 $amount_input=${"e_other$i" . "_amount"} = round(${"e_other$i" . "_amount"}, 2);
-                                $amount_eur=bcmul($amount_input,$currency_rate);
+                                $amount_eur=bcdiv($amount_input,$currency_rate);
 
 
 

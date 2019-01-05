@@ -920,7 +920,6 @@ class Acc_Ledger extends jrn_def_sql
          $ret.=_("Devise")." ".$currency_select->input();
          $ret.=$currency_input->change('CurrencyComputeMisc(\'p_currency_rate\',\'p_currency_euro\');');
          $currency=new Acc_Currency($this->db,0);
-         $ret.=$currency->get_code();
          
          
         $nb_row=(isset($nb_item) )?$nb_item:$this->nb;
@@ -1389,6 +1388,7 @@ class Acc_Ledger extends jrn_def_sql
 
                         // for each item, insert into operation_analytique */
                         $op=new Anc_Operation($this->db);
+                        $op->set_currency_rate($currency_rate);
                         $op->oa_group=$group;
                         $op->j_id=$j_id;
                         $op->oa_date=$e_date;

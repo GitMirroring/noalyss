@@ -619,7 +619,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                     $poste_val = $sposte;
                 }
                  // Convert paid amount in EUR
-                $acompte_eur=bcmul($acompte, $p_currency_rate);   
+                $acompte_eur=bcdiv($acompte, $p_currency_rate);   
 
                 $famount=bcsub($cust_amount,$acompte_eur);
                 $acc_pay->poste = $poste_val;
@@ -1449,7 +1449,7 @@ EOF;
             $Price = new INum();
             $Price->setReadOnly(false);
             $Price->size = 9;
-            $Price->javascript = "onBlur='format_number(this,4);clean_tva($i);compute_ledger($i)'";
+            $Price->javascript = "onBlur=\"format_number(this,4);clean_tva($i);compute_ledger($i);\"";
             $array[$i]['pu'] = $Price->input("e_march" . $i . "_price", $march_price);
             $array[$i]['tva'] = '';
             $array[$i]['amount_tva'] = '';
@@ -1462,7 +1462,7 @@ EOF;
                 $Tva->set_attribute('compute', $i);
                 $Tva->set_filter("sale");
 
-                $Tva->js = 'onblur="format_number(this);clean_tva(' . $i . ');compute_ledger(' . $i . ')"';
+                $Tva->js = 'onblur="format_number(this);clean_tva(' . $i . ');compute_ledger(' . $i . ');"';
                 $Tva->value = $march_tva_id;
                 $array[$i]['tva'] = $Tva->input("e_march$i" . "_tva_id");
                 // vat amount
@@ -1480,7 +1480,7 @@ EOF;
             $Quantity = new INum();
             $Quantity->setReadOnly(false);
             $Quantity->size = 8;
-            $Quantity->javascript = "onChange='format_number(this);clean_tva($i);compute_ledger($i)'";
+            $Quantity->javascript = "onChange=\"format_number(this);clean_tva($i);compute_ledger($i);\"";
             $array[$i]['quantity'] = $Quantity->input("e_quant" . $i, $quant);
         }// foreach article
         $f_type = _('Client');

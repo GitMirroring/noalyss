@@ -490,8 +490,8 @@ function success_compute_ledger(request, json)
         g('htva_march' + ctl).value = rhtva;
         g('tvac_march' + ctl).value = rtvac;
         g('sum').show();
-        CurrencyCompute('p_currency_rate','p_currency_euro');
         refresh_ledger();
+        CurrencyCompute('p_currency_rate','p_currency_euro');
 
         return;
     }
@@ -500,7 +500,6 @@ function success_compute_ledger(request, json)
 
 
     g('sum').show();
-    CurrencyCompute('p_currency_rate','p_currency_euro');
     if (g('e_march' + ctl + '_tva_amount').value == "" || g('e_march' + ctl + '_tva_amount').value == 0)
     {
         g('tva_march' + ctl).value = rtva;
@@ -514,8 +513,9 @@ function success_compute_ledger(request, json)
     var tmp1 = Math.round(parseFloat(g('htva_march' + ctl).value) * 100) / 100;
     var tmp2 = Math.round(parseFloat(g('tva_march' + ctl).value) * 100) / 100;
     g('tvac_march' + ctl).value = Math.round((tmp1 + tmp2) * 100) / 100;
-
     refresh_ledger();
+    CurrencyCompute('p_currency_rate','p_currency_euro');
+    
 }
 
 /**
