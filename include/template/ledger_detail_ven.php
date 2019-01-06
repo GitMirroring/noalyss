@@ -122,6 +122,7 @@ echo $ipaid->input();
                 bcscale(2);
                 $total_htva = 0;
                 $total_tvac = 0;
+                $sum_prod_currency=0;
                 echo th(_('Quick Code'));
                 echo th(_('Description'));
                 echo th(_('Prix/Un'), 'style="text-align:right"');
@@ -256,7 +257,8 @@ echo $ipaid->input();
                      */
                     if ( $obj->det->currency_id != 0 ) {
                          $value=$obj->db->get_value("select  oc_amount+oc_vat_amount from operation_currency where j_id=$1",[$q['j_id']]);
-                         $row.=td(nbm($value,4),' class="num"');
+                         $sum_prod_currency=bcadd($sum_prod_currency,$value,2);
+                         $row.=td(nbm($value,2),' class="num"');
                          
                     }
                     echo tr($row,$class);
@@ -273,8 +275,7 @@ echo $ipaid->input();
                  //Display total in currency
                 if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
                 {
-                    $currency=new Acc_Currency($obj->db, $obj->det->currency_id);
-                    $row.= td(nbm($currency->sum_amount($obj->jr_id),4),' class="num" style="font-style:italic;font-weight: bolder;"');
+                    $row.= td(nbm($sum_prod_currency,2),' class="num" style="font-style:italic;font-weight: bolder;"');
                 }
                 echo tr($row);
                 ?>
@@ -298,7 +299,7 @@ echo $ipaid->input();
         echo  $currency->get_code(),$four_space;
         echo _("Taux utilisé"),"&nbsp;", $obj->det->currency_rate,$four_space;
         echo _("Taux Réf"), "&nbsp;",$obj->det->currency_rate_ref.$four_space;
-        echo _("Montant en devise"), "&nbsp;",$currency->sum_amount($obj->jr_id).$four_space;
+        echo _("Montant en devise"), "&nbsp;",$sum_prod_currency,$four_space;
     }
 ?>            
 <?php
