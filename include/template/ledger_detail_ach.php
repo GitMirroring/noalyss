@@ -164,6 +164,7 @@ $str_anc="";
 
                 }
                 echo '</tr>';
+                $sum_charge_euro=0;
                 for ($e = 0; $e < count($obj->det->array); $e++)
                 {
                     $row = '';
@@ -251,7 +252,8 @@ $str_anc="";
                       */
                      if ( $obj->det->currency_id != 0 ) {
                          $value=$obj->db->get_value("select  oc_amount+oc_vat_amount from operation_currency where j_id=$1",[$q['j_id']]);
-                         $row.=td(nbm($value,4),' class="num"');
+                         $row.=td(nbm($value,2),' class="num"');
+                         $sum_charge_euro=bcadd($sum_charge_euro,$value,2);
                          
                      }
                      echo tr($row,$class);
@@ -268,7 +270,7 @@ $str_anc="";
                 if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
                 {
                     $currency=new Acc_Currency($obj->db, $obj->det->currency_id);
-                    $row.= td(nbm($currency->sum_amount($obj->jr_id),4),' class="num" style="font-style:italic;font-weight: bolder;"');
+                    $row.= td(nbm($sum_charge_euro),' class="num" style="font-style:italic;font-weight: bolder;"');
                 }
                 echo tr($row);
                 
@@ -287,7 +289,7 @@ $str_anc="";
         echo  $currency->get_code(),$four_space;
         echo _("Taux utilisé"),"&nbsp;", $obj->det->currency_rate,$four_space;
         echo _("Taux Réf"), "&nbsp;",$obj->det->currency_rate_ref.$four_space;
-        echo _("Montant en devise"), "&nbsp;",$currency->sum_amount($obj->jr_id).$four_space;
+        echo _("Montant en devise"), "&nbsp;",nbm($sum_charge_euro).$four_space;
     }
 ?>
 
