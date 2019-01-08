@@ -28,6 +28,7 @@
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class IConcerned extends HtmlInput
 {
+    private $hideOperation; //!< string of j_id to hide, separated by comma to avoid to reconcile an operation with itself
 
 	public function __construct($p_name='',$p_value='',$p_id="")
 	{
@@ -36,8 +37,9 @@ class IConcerned extends HtmlInput
 		$this->amount_id=null;
 		$this->paid='';
 		$this->id=$p_id;
-                $this->tiers=""; // id of the field for the tiers to be updated
-                $this->div=""; // Dom Element to show the search result
+        $this->tiers=""; // id of the field for the tiers to be updated
+        $this->div=""; // Dom Element to show the search result
+        $this->hideOperation=""; // string of j_id to hide, separated by comma to avoid to reconcile an operation with itself
 	}
     /*!\brief show the html  input of the widget*/
     public function input($p_name=null,$p_value=null)
@@ -55,16 +57,26 @@ class IConcerned extends HtmlInput
                     $this->tiers  );
         $r=Icon_Action::icon_magnifier(uniqid(), $javascript);
         $r.=sprintf("
-                   <INPUT TYPE=\"text\"  style=\"color:black;background:lightyellow;border:solid 1px grey;\"  NAME=\"%s\" ID=\"%s\" VALUE=\"%s\" SIZE=\"8\" readonly>
+                   <INPUT TYPE=\"text\"  style=\"color:black;background:lightyellow;border:solid 1px grey;\"  NAME=\"%s\" ID=\"%s\" VALUE=\"%s\" SIZE=\"8\" hide_operation=\"%s\" readonly>
 				   <INPUT class=\"smallbutton\"  TYPE=\"button\" onClick=\"$('%s').value=''\" value=\"X\">
 
                    ",
                    $this->name,
                    $this->id,
                    $this->value,
+                   $this->hideOperation,
                    $this->id
                   );
         return $r;
+    }
+
+    /**
+     * setter
+     * @param $p_string
+     */
+    function set_hideOperation($p_string)
+    {
+        $this->hideOperation=strip_tags($p_string);
     }
     /*!\brief print in html the readonly value of the widget*/
     public function display()
