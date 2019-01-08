@@ -36,10 +36,10 @@ class Acc_Balance
     function __construct($p_cn)
     {
         $this->db=$p_cn;
-        $this->jrn=null;
+        $this->jrn=array();
         $from_poste="";
         $to_poste="";
-	$unsold=false;
+	    $unsold=false;
     }
 
 
