@@ -56,12 +56,13 @@ class Print_Ledger_Financial extends PDF
         $this->Cell(40,6,nbm($this->rap_amount),0,0,'R');
         $this->Ln(6);
         $this->SetFont('DejaVu', 'B', 7);
-        $this->Cell(15,6,'Piece');
-        $this->Cell(10,6,'Date');
-        $this->Cell(15,6,'Interne');
-        $this->Cell(40,6,'Dest/Orig');
-        $this->Cell(80,6,'Commentaire');
-        $this->Cell(20,6,'Montant');
+        $this->Cell(15,6,_('Piece'));
+        $this->Cell(10,6,_('Date'));
+        $this->Cell(10,6,_('Interne'));
+        $this->Cell(40,6,_('Dest/Orig'));
+        $this->Cell(60,6,_('Commentaire'));
+        $this->Cell(20,6,_('Device'),0,0,'R');
+        $this->Cell(20,6,_('Montant'),0,0,'R');
         $this->Ln(6);
         
     }
@@ -92,24 +93,47 @@ class Print_Ledger_Financial extends PDF
      */
     function export()
     {
-        $a_jrn=$this->ledger->get_operation($_GET['from_periode'],
-                                            $_GET['to_periode']);
+        $http=new HttpInput();
+        $a_jrn=$this->ledger->get_operation($http->get('from_periode',"number"),
+                                            $http->get('to_periode','number'));
         $this->SetFont('DejaVu', '', 6);
         if ( $a_jrn == null ) return;
         bcscale(2);
+        $this->ledger->load();
+        $currency=$this->ledger->get_currency()->get_code();
+        $currency_id=$this->ledger->get_currency()->get_id();
+        $this->cn->prepare("amount_cur",
+                "select jrn2.jr_id , 
+                    sum(coalesce(oc_amount,0)) as sum_ocamount,
+                    sum(coalesce(oc_vat_amount,0)) as sum_ocvat_amount
+             	from operation_currency
+                    join jrnx using (j_id)
+                    join jrn as jrn2 on (j_grpt=jrn2.jr_grpt_Id) 
+             	where 
+                    j_id in (select j_id from jrnx where j_grpt=jrn2.jr_grpt_id )
+                    and  jr_id=$1
+                    group by jr_id"
+                );
         for ( $i=0;$i<count($a_jrn);$i++)
         {
             $row=$a_jrn[$i];
             $this->write_cell(15,5,$row['pj']); 
             $this->write_cell(10,5,$row['date_fmt']);
-            $this->write_cell(15,5,$row['internal']);
+            $this->write_cell(10,5,$row['internal']);
 
             $name=$this->ledger->get_tiers($this->jrn_type,$row['id']);
-            $this->write_cell(40,5,$name,0,'L');
+            $this->write_cell(40,5,$name,0,0,'L');
 
-
-            $this->LongLine(80,5,$row['comment'],0,'L');
+            $this->LongLine(60,5,$row['comment'],0,'L');
             $amount=$this->cn->get_value('select qf_amount from quant_fin where jr_id=$1',array( $row['id']));
+            if ( $currency_id != 0) {
+                $ret_amount_cur=$this->cn->execute("amount_cur",array($row['id']));
+                
+                if ( $this->cn->count($ret_amount_cur) == 1) {
+                    $amount_cur=Database::fetch_result($ret_amount_cur, 0,1);
+                    $this->write_cell(20,5,sprintf('%s %s',nbm($amount_cur),$currency),0,0,'R');
+                }
+            }
             $this->write_cell(20,5,sprintf('%s',nbm($amount)),0,0,'R');
             $this->line_new(5);
             $this->tp_amount=bcadd($this->tp_amount,$amount);

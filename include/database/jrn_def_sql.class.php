@@ -55,6 +55,7 @@ class Jrn_Def_sql
 		, "jrn_def_bank" => "jrn_def_bank"
 		, "jrn_def_num_op" => "jrn_def_num_op"
 		, "jrn_def_description" => "jrn_def_description"
+                , "currency_id"=>"currency_id"
 	);
 
 	function __construct(& $p_cn, $p_id=-1)
@@ -213,6 +214,7 @@ class Jrn_Def_sql
 ,jrn_def_bank
 ,jrn_def_num_op
 ,jrn_def_description
+,currency_id
 ) values ($1
 ,$2
 ,$3
@@ -228,6 +230,7 @@ class Jrn_Def_sql
 ,$13
 ,$14
 ,$15
+,$16
 ) returning jrn_def_id";
 
 			$this->jrn_def_id = $this->db->get_value(
@@ -246,6 +249,7 @@ class Jrn_Def_sql
 				, $this->jrn_def_bank
 				, $this->jrn_def_num_op
 				, strip_tags($this->jrn_def_description)
+                                , $this->currency_id
 					)
 			);
 		}
@@ -284,25 +288,29 @@ jrn_enable) values ($1
 ,$15
 ,$16
 ,1
+,$17
 ) returning jrn_def_id";
 
 			$this->jrn_def_id = $this->db->get_value(
-					$sql, array($this->jrn_def_name
-				, $this->jrn_def_class_deb
-				, $this->jrn_def_class_cred
-				, $this->jrn_def_fiche_deb
-				, $this->jrn_def_fiche_cred
-				, $this->jrn_deb_max_line
-				, $this->jrn_cred_max_line
-				, $this->jrn_def_ech
-				, $this->jrn_def_ech_lib
-				, $this->jrn_def_type
-				, $this->jrn_def_code
-				, $this->jrn_def_pj_pref
-				, $this->jrn_def_bank
-				, $this->jrn_def_num_op
-				, $this->jrn_def_id
-                                , strip_tags($this->jrn_def_description))
+					$sql, array(
+                                  $this->jrn_def_name           // 1
+				, $this->jrn_def_class_deb      // 2
+				, $this->jrn_def_class_cred     // 3
+				, $this->jrn_def_fiche_deb      // 4
+				, $this->jrn_def_fiche_cred     // 5
+				, $this->jrn_deb_max_line       // 6 
+				, $this->jrn_cred_max_line      // 7
+				, $this->jrn_def_ech            // 8
+				, $this->jrn_def_ech_lib        // 9 
+				, $this->jrn_def_type           // 10
+				, $this->jrn_def_code           // 11
+				, $this->jrn_def_pj_pref        // 12
+				, $this->jrn_def_bank           // 13
+				, $this->jrn_def_num_op         // 14 
+				, $this->jrn_def_id             // 15
+                                , strip_tags($this->jrn_def_description)) // 16
+                                , $this->currency_id            // 17
+                                
 			);
 		}
 	}
@@ -328,6 +336,7 @@ jrn_enable) values ($1
 ,jrn_def_num_op = $14
 ,jrn_def_description = $15
 ,jrn_enable=$17
+, currency_id = $18
  where jrn_def_id= $16";
 		$res = $this->db->exec_sql(
 				$sql, array($this->jrn_def_name
@@ -347,6 +356,7 @@ jrn_enable) values ($1
 			, strip_tags($this->jrn_def_description)
 			, $this->jrn_def_id
                         , $this->jrn_enable
+                        , $this->currency_id
                         )
 		);
 	}
@@ -374,6 +384,7 @@ jrn_enable) values ($1
 ,jrn_def_num_op
 ,jrn_def_description
 ,jrn_enable
+,currency_id
  from public.jrn_def where jrn_def_id=$1";
 		/* please adapt */
 		$res = $this->db->get_array(

@@ -124,12 +124,20 @@ class Acc_Ledger_History_Financial extends Acc_Ledger_History
                     jr_internal,
                     jrn.jr_comment,
                     jr_pj_name,
-                    qf_amount
+                    qf_amount,
+                    currency_id,
+                    currency_rate,
+                    currency_rate_ref,
+                    oc_amount,
+                    oc_vat_amount,
+                    currency.cr_code_iso
             from
                 jrn
                 join quant_fin using (jr_id)
                 join detail as tiers on (tiers.f_id=qf_other) 
                 join detail as bk on (bk.f_id=qf_bank) 
+                left join operation_currency using(j_id)
+                join currency on (currency.id=jrn.currency_id)
             where
                 jr_def_id in ({$ledger_list})
                 and {$periode}

@@ -27,6 +27,8 @@
  *
  */
 ?>
+<?php if ($p_readonly == false) echo HtmlInput::button("reprise_show",_('Reprise inventaire'),  " onclick=\"$('reprise_inventaire_div').show();\"")?>
+
 <div style="<?php if ( ! $p_readonly) echo "position:absolute";?>" class="content">
 	<form method="POST" id="stock_reprise" class="print" onsubmit="return confirm_box(this,'<?php echo _("Vous confirmez ?")?>')">
             <input type="hidden" name="save" value="1">
@@ -104,7 +106,6 @@
 <?php if ($p_readonly == false) echo HtmlInput::button_action(_('Ajouter une ligne'),'stock_add_row();',"xx",'smallbutton')?>
 <?php if ($p_readonly == false) echo HtmlInput::submit('save',_('Sauver'))?>
 <?php if ($p_readonly == false) echo HtmlInput::hidden('row',$nb)?>
-<?php if ($p_readonly == false) echo HtmlInput::button("reprise_show",_('Reprise inventaire'),  " onclick=\"$('reprise_inventaire_div').show();\"")?>
 	</form>
 </div>
 <div class="inner_box" id="reprise_inventaire_div" style="display:none">

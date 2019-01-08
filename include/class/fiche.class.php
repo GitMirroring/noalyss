@@ -29,6 +29,7 @@ require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iposte.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 
 /*! \file
  * \brief define Class fiche, this class are using
@@ -57,6 +58,8 @@ class Fiche
         $this->cn=$p_cn;
         $this->id=$p_id;
         $this->quick_code='';
+        $this->attribut=[];
+        
     }
     /**
      *@brief used with a usort function, to sort an array of Fiche on the name
@@ -75,7 +78,7 @@ class Fiche
         global $g_user;
       $sql_ledger=$g_user->get_ledger_sql('FIN',3);
       $avail=$this->cn->get_array("select jrn_def_id,jrn_def_name,"
-              . "jrn_def_bank,jrn_def_description from jrn_def where jrn_def_type='FIN' and $sql_ledger
+              . "jrn_def_bank,jrn_def_description,currency_id from jrn_def where jrn_def_type='FIN' and $sql_ledger
                             order by jrn_def_name");
 
       if ( count($avail) == 0 )
@@ -344,8 +347,8 @@ class Fiche
      */
     function strAttribut($p_ad_id,$p_return=1)
     {
-		$return=($p_return==1)?NOTFOUND:"";
-        if ( sizeof ($this->attribut) == 0 )
+	$return=($p_return==1)?NOTFOUND:"";
+        if (is_array($this->attribut) && sizeof ($this->attribut) == 0 )
         {
 
             if ($this->id==0) {
@@ -1248,8 +1251,9 @@ class Fiche
 
         $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
         $this->row=$this->cn->get_array("
-            with sqlletter as (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
-                select distinct substring(jr_pj_number,'[0-9]+$'),j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_qcode,".
+            with sqlletter as 
+            (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
+            select distinct substring(jr_pj_number,'[0-9]+$'),j1.j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_qcode,".
                                  "case when j_debit='t' then j_montant else 0 end as deb_montant,".
                                  "case when j_debit='f' then j_montant else 0 end as cred_montant,".
                                  " jr_comment as description,jrn_def_name as jrn_name,j_poste,".
@@ -1257,19 +1261,23 @@ class Fiche
 				 " jr_optype,".
                                  "j_debit, jr_internal,jr_id,(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id ) as letter , ".
 				 " jr_tech_per,p_exercice,jrn_def_name,
-                                     (with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx using (j_id)  group by jl_id ),
-												deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx using (j_id)   group by jl_id )
-												select amount_deb-amount_cred
-												from 
-												cred 
-												full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter,
+                                     (with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx as j3 on (j3.j_id=j1.j_id)  group by jl_id ),
+                                    deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx as j2 on (j2.j_id = j1.j_id)   group by jl_id )
+                                    select amount_deb-amount_cred
+                                    from 
+                                    cred 
+                                    full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter,
 								  jrn_def_code,
                                   jrn.currency_rate,
+                                 jrn.currency_rate_ref,
                                     jrn.currency_id,
                                     (select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso,
-                                    j_montant
-                                  from jrnx as j1 left join jrn_def on jrn_def_id=j_jrn_def ".
-                                 " left join jrn on jr_grpt_id=j_grpt".
+                                    j_montant,
+                                    sum_oc_amount as oc_amount,
+                                    sum_oc_vat_amount as oc_vat_amount
+                                  from jrnx as j1 left join jrn_def on jrn_def_id=j_jrn_def 
+                                  left join v_all_card_currency  as v1 on (v1.j_id=j1.j_id ) 
+                                  left join jrn on jr_grpt_id=j_grpt".
 				 " left join parm_periode on (p_id=jr_tech_per) ".
                                  " where j_qcode=$1 and ".
                                  " ( to_date($2,'DD.MM.YYYY') <= j_date and ".
@@ -1464,7 +1472,7 @@ class Fiche
         "<TH style=\"text-align:left\">"._('Description')." </TH>".
         "<TH style=\"text-align:left\">"._('Type')." </TH>".
         "<TH style=\"text-align:left\">"._('ISO')."</TH>".
-        "<TH style=\"text-align:left\">"._('Dev.')."</TH>".
+        "<TH style=\"text-align:right\">"._('Dev.')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."  </TH>".
         "<TH style=\"text-align:right\">"._('Crédit')." </TH>".
         th('Prog.','style="text-align:right"').
@@ -1530,13 +1538,15 @@ class Fiche
             "<TD>".h($op['description'])."</TD>".
                     td($op['jr_optype']);
             
-            if ( $op['cr_code_iso'] != 'EUR' && $op['cr_code_iso'] != "")
+            /// If the currency is not the default one , then show the amount
+            if ( $op['currency_id'] > 0 && $op['oc_amount'] != 0)
             {
              echo   td($op['cr_code_iso']).
-                    td(nbm(bcdiv($op['j_montant'],$op['currency_rate'])),'style="text-align:right;padding-left:10px;"');
-            } else{
+                    td(nbm($op['oc_amount'],4),'style="text-align:right;padding-left:10px;"');
+            } else {
                 echo td().td();
             }
+            
             echo "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
@@ -1590,7 +1600,7 @@ class Fiche
         echo '<TR>';
 
         echo '<TD><form method="GET" ACTION="">'.
-            HtmlInput::submit('bt_other',"Autre poste").
+            HtmlInput::submit('bt_other',_("Autre poste")).
             HtmlInput::array_to_hidden(array('gDossier','ac'), $_REQUEST).
             dossier::hidden().
             $hid->input("type","poste").$hid->input('p_action','impress')."</form></TD>";
@@ -1662,7 +1672,31 @@ class Fiche
                      'solde'=>abs($r['sum_deb']-$r['sum_cred']));
     }
     /**
-     *get the bank balance with receipt or not
+     * Get the sum in Currency
+     * @param string $p_cond
+     * @return type
+     * @throws Exception
+     */
+    function get_bk_balance_currency($p_cond="")
+    {
+        if ( $this->id == 0 ) throw  new Exception('fiche->id est nul');
+
+        if ( $p_cond != "") $p_cond=" and ".$p_cond;
+        
+        $sql = "
+              select sum(sum_oc_amount)
+              from 
+              v_all_card_currency
+              where 
+              f_id=$1
+                $p_cond";
+        $val=$this->cn->get_value($sql,[$this->id]);
+        
+        return $val;
+                
+    }
+    /**
+     *get the bank balance with receipt or not in Euro
      *
      */
     function get_bk_balance($p_cond="")
@@ -2235,6 +2269,24 @@ class Fiche
 
     function filter_history($p_table_id) {
         return _('Cherche').' '.HtmlInput::filter_table($p_table_id, '0,1,2,3,4,5,6,7,8,9,10', 1);
+    }
+    /**
+     * Returns the Acc_Ledger_Fin ledger for which the card is the default bank account or null if no ledger is found.
+     */
+    function get_bank_ledger()
+    {
+        try {
+            $id=$this->cn->get_value("select jrn_def_id from jrn_def where jrn_def_bank = $1 ",[$this->id]);
+            if ($id == "") { return NULL;}
+            $ledger=new Acc_Ledger_Fin($this->cn,$id);
+            $ledger->load();
+            return $ledger;
+        }        
+        catch (Exception $e) {
+            record_log(__FILE__.":".__LINE__);
+            record_log($e->getMessage());
+            throw $e;
+        }
     }
 }
 

@@ -705,6 +705,7 @@ function add_div(obj)
         /* elt.setStyle({visibility:'visible'}); */
         elt.style.visibility = 'visible';
         elt.show();
+        return elt;
     }
     catch (e)
     {
@@ -1270,15 +1271,14 @@ function save_predf_op(obj)
  *amount_id is either a html obj. or an amount and the field tiers if given
  * @param {type} dossier
  * @param {type} ctl_concern
- * @param {type} amount_id
- * @param {type} ledger
+ * @param {float or string} amount_id Amount or DOM Id of the element containing the amount
+ * @param {float} ledger 
  * @param {type} p_id_targetDom Element (div) where to display the search result
  * @param p_tiers id of the Tiers
  * @returns {undefined}
  */
 function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p_tiers)
 {
-    var dossier = g('gDossier').value;
     if (amount_id === undefined)
     {
         amount_id = 0;
@@ -1294,7 +1294,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p
             amount_id = $(amount_id).innerHTML;
         }
     }
-    var tiers=""
+    var tiers="";
     if ( p_tiers ) tiers=p_tiers;
     var target = "";
     if ( p_id_target !="") {
@@ -1306,7 +1306,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p
     var str_style = fixed_position(77, 99);
     str_style += ";width:92%;overflow:auto;";
     waiting_box();
-
+    var hide_operation=$(ctl_concern).getAttribute("hide_operation");
 
     var param_send = {gDossier: dossier,
         ctlc: ctl_concern,
@@ -1315,7 +1315,8 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p
         amount_id: amount_id,
         ledger: ledger,
         target: target,
-        tiers:tiers
+        tiers:tiers,
+        hide_operation:hide_operation
     };
 
     var qs = encodeJSON(param_send);
@@ -1420,7 +1421,8 @@ function remove_waiting_node()
 }
 function remove_waiting_box()
 {
-    removeDiv('wait_box');
+    if ( $('wait_box') ) { Effect.Fade('wait_box', { duration: 0.6 }); }
+    
     remove_waiting_node();
 }
 /**
@@ -2973,7 +2975,7 @@ function confirm_box(p_obj, p_message,p_callback_true)
  */
 function alert_box(p_message)
 {
-    smoke.alert(p_message,false , {ok:'ok',classname:"inner_box"});
+    smoke.alert(p_message, undefined,{ok:'ok',classname:"inner_box"});
 }
 
 
@@ -3512,4 +3514,19 @@ function updatePeriode(p_dossier,p_exercice,p_periode_from,p_periode_to,p_last)
     new Ajax.Updater(p_periode_from,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_from,"type":"from","last":p_last}});
     new Ajax.Updater(p_periode_to,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_to,"type":"to","last":p_last}});
     remove_waiting_box();
+}
+/**
+ * 
+ * @returns {undefined}
+ */
+function show_ledger_fin_currency()
+{
+    var ledger=$('p_jrn').value;
+    var dossier=$('gDossier').value;
+    // $('ledger_currency').
+    var a=new Ajax.Updater("ledger_currency",
+                    "ajax_misc.php",
+                    { 
+                        parameters: {"op":"currencyCode","gDossier":dossier,"ledger":ledger}
+                    });
 }

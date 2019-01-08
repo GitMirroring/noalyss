@@ -1,7 +1,7 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-?><TABLE style="width: auto">
+?><TABLE style="width: auto" class="nowrap">
 <TR>
 
 		<TD><?php echo _('Nom journal')?> </TD>
@@ -128,7 +128,22 @@ echo $str_add_button;
         <?=$actif->input()?>
     </td>
 <?php endif; ?>
+<?php
 
+    // if the ledger is financial and has no operation let choose the currency
+ if ( $new == 1 || $type == 'FIN'):
+?>
+<tr id="type_fin3">
+    <td>
+        <?php echo _("Devise")?>
+    </td>
+    <td>
+        <?php echo $default_currency->input();?>
+    </td>
+</tr>
+<?php
+endif;
+?>
 </TABLE>
 <hr>
     <?php
@@ -363,6 +378,7 @@ echo $str_add_button;
         $('type_ods').style.display='none';
         $('type_fin').style.display='none';
         $('type_fin2').style.display='none';
+        $('type_fin3').style.display='none';
     }
    function show_ledger_div()
    {
@@ -374,6 +390,7 @@ echo $str_add_button;
              hide_row();
              $('type_fin').style.display='table-row';
              $('type_fin2').style.display='table-row';         
+             $('type_fin3').style.display='table-row';         
              break;
            case 'ODS':
                hide_row();

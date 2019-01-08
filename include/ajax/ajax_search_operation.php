@@ -50,6 +50,8 @@ if (isset($_GET['amount_id']))
     ));
 }
 $target=$http->get("target", "string", "");
+$hide_operation=$http->get("hide_operation","string","");
+
 $ledger=new Acc_Ledger_Search('ALL', 1, $target);
 
 if ($base=='recherche.php'||$base=='do.php')
@@ -103,7 +105,7 @@ if (isset($_GET['viewsearch']))
         // get first date of current exercice
         list($array['date_start'], $array['date_end'])=$g_user->get_limit_current_exercice();
     }
-
+    $array['hide_operation']=$hide_operation;
     list($sql, $where)=$ledger->build_search_sql($array);
     // Count nb of line
     $max_line=$cn->count_sql($sql);

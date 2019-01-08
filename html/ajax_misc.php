@@ -627,7 +627,12 @@ EOF;
             }
             exit();
             break;
-        
+        case 'currencyCode':
+            $ledger_id=$http->request('ledger',"number");
+            $code=$cn->get_value("select cr_code_iso from public.currency join jrn_def on (currency.id=jrn_def.currency_id) where jrn_def.jrn_def_id=$1",
+                    [$ledger_id]);
+            echo $code;
+            break;
 	default:
 		var_dump($_REQUEST);
 }

@@ -114,6 +114,22 @@ function nb($p_number)
 }
 
 /**
+ * return D if the number is smaller than 0 , C if bigger and an empty string if
+ * equal to 0. Used for displaying saldo D / C (debit / credit )
+ * @param float $p_number
+ */
+function findSide($p_number)
+{
+    $return ='';
+    if ( $p_number > 0 ) {
+        $return ='D';
+    }else {
+        $return =($p_number== 0)?"":"C";
+    }
+    return $return;
+}
+
+/**
  * format the number with a sep. for the thousand
  * @param $p_number number
  * @param $p_dec number of decimal to display
@@ -1103,10 +1119,18 @@ function show_menu($module)
                         }
 			// if file is not a plugin, include the file, otherwise
 			// include the plugin launcher
-			if ( $file[0]['me_type'] != 'PL')
+			if ( $file[0]['me_type'] != 'PL') {
+                            if (file_exists ($file[0]['me_file']) )
+                            {
 				require_once $file[0]['me_file'];
-			else
+                            } elseif ( file_exists(NOALYSS_INCLUDE.'/'.$file[0]['me_file'])) {
+				require_once NOALYSS_INCLUDE.'/'.$file[0]['me_file'];
+                            }else {                            
+                                echo echo_warning(_("Fichier non trouvé"));
+                            }
+                        } else {
 				require 'extension_get.inc.php';
+                        }
 
 			exit();
 		}

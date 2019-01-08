@@ -61,15 +61,13 @@ require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
 class Acc_Ledger extends jrn_def_sql
 {
 
-    var $id;   /*     * < jrn_def.jrn_def_id */
-    var $name;   /*     * < jrn_def.jrn_def_name */
-    var $db;   /*     * < database connextion */
-    var $row;   /*     * < row of the ledger */
-    var $type;   /*     * < type of the ledger ACH ODS FIN
-      VEN or GL */
-    var $nb;   /*     * < default number of rows by
-      default 10 */
-
+    var $id;     /**< jrn_def.jrn_def_id */
+    var $name;   /**< jrn_def.jrn_def_name */
+    var $db;     /**< database connextion */
+    var $row;    /**< row of the ledger */
+    var $type;   /**< type of the ledger ACH ODS FIN   VEN or GL */
+    var $nb;     /**< default number of rows by  default 10 */
+    var $currency_id;
     /**
      * @param $p_cn database connexion
      * @param $p_id jrn.jrn_def_id
@@ -82,8 +80,19 @@ class Acc_Ledger extends jrn_def_sql
         $this->db=$p_cn;
         $this->row=null;
         $this->nb=MAX_ARTICLE;
+        $this->currency_id=$this->set_currency_id();
     }
-
+    /**
+     * retrieve currency_id from database
+     */
+    function set_currency_id()
+    {
+       $this->db->get_value("select currency_id from jrn_def where jrn_def_id=$1",
+            [$this->id]);
+        if ( $this->currency_id == "") {
+            $this->currency_id=0;
+        }
+    }
     function get_last_pj()
     {
         if (isNumber($this->id)==0)
@@ -311,11 +320,16 @@ class Acc_Ledger extends jrn_def_sql
               jr_date,
               jr_grpt_id,
               jr_internal
-              ,jr_tech_per, jr_valid,jr_optype
+              ,jr_tech_per, 
+              jr_valid,
+              jr_optype,
+              currency_id,
+              currency_rate,
+              currency_rate_ref
               )
               select $1,jr_def_id,jr_montant,$7,
               to_date($2,'DD.MM.YYYY'),$3,$4,
-              $5, true,'EXT'
+              $5, true,'EXT',currency_id,currency_rate,currency_rate_ref
               from
               jrn
               where   jr_id=$6";
@@ -326,10 +340,10 @@ class Acc_Ledger extends jrn_def_sql
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));
             // reverse in QUANT_FIN table
             $Res=$this->db->exec_sql("  INSERT INTO quant_fin(
-                                 qf_bank,  qf_other, qf_amount,jr_id)
-                                 SELECT  qf_bank,  qf_other, qf_amount*(-1),$1
+                                 qf_bank,  qf_other, qf_amount,jr_id,j_id)
+                                 SELECT  qf_bank,  qf_other, qf_amount*(-1),$1,$3
                                  FROM quant_fin where jr_id=$2",
-                    array($seq, $this->jr_id));
+                    array($seq, $this->jr_id,$j_id));
             if ($Res==false)
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR[ $sql ]"));
 
@@ -1593,7 +1607,33 @@ class Acc_Ledger extends jrn_def_sql
             return false;
         throw new Exception("Valeur invalid ".__FILE__.':'.__LINE__);
     }
-
+    
+    /**
+     * When we write a record for the payment at the same time as a sale or a purchase, to have a 
+     * bank saldo reliable , all the bank operation must be in the same currency
+     * Operation = Currency 1 and Bank = Currency 2 then it must failed , except if currency 2 (of the bank is the 
+     * default currency
+     * @param string $p_qcode_payment Qcode of the payment card
+     * @param int  $p_currency_id currency id of the sale/purchase operation
+     * @throws Exception
+     */
+    function check_currency($p_qcode_payment, $p_currency_id)
+    {
+        $card=new Fiche($this->db);
+        $card->get_by_qcode($p_qcode_payment);
+        if ( $card->id == 0) throw new Exception (_("Fiche invalide"));
+        
+        $ledger = $card->get_bank_ledger();
+        if ( $ledger != NULL )
+        {
+            $ledger_currency_id=$ledger->get_currency()->get_id();
+            // if sale and payment are not the same currency and the 
+            if ($ledger_currency_id != 0 && $p_currency_id != $ledger_currency_id )
+            {
+                throw new Exception (_("Devise de la banque doit être identique à l'opération"));
+            }
+        }
+    }
     /**
      * @brief get the date of the last operation
      */
@@ -1739,7 +1779,6 @@ class Acc_Ledger extends jrn_def_sql
      * @brief retrieve operation from  jrn
      * @param $p_from periode (id)
      * @param $p_to periode (id)
-     * @return Anc_Plan array
      */
     function get_operation($p_from, $p_to)
     {
@@ -2277,9 +2316,27 @@ class Acc_Ledger extends jrn_def_sql
             ["label"=>_("Désactivé"),"value"=>0]
         ];
         $actif->selected=$this->jrn_enable;
+        // -- default currency used : only for financial ledgers
+        $default_currency=$this->select_default_currency();
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
+    /**
+     * @brief create a select button to set the default currency for a ledger
+     * used only for empty financial ledger
+     * @return ISelect object
+     */
+    function select_default_currency()
+    {
+        $default_currency=new ISelect("defaultCurrency");
+        $default_currency->value=$this->db->make_array("select id,cr_code_iso from public.currency order by 1 ");
+        $default_currency->selected=$this->currency_id;
+        $nb_operation=$this->db->get_value("select count(*) from jrn where jr_def_id=$1",[$this->id]);
+        if (  $nb_operation > 0) {
+                $default_currency->setReadOnly(TRUE);
+        }
+        return $default_currency;
+    }
     /**
      * Verify before update
      *
@@ -2357,6 +2414,7 @@ class Acc_Ledger extends jrn_def_sql
         $this->jrn_deb_max_line=($min_row<1)?1:$min_row;
         $this->jrn_def_description=$p_description;
         $this->jrn_enable=$jrn_enable;
+        $this->currency_id=0;
         switch ($this->jrn_def_type)
         {
             case 'ACH':
@@ -2389,6 +2447,18 @@ class Acc_Ledger extends jrn_def_sql
                 if ($result==-1)
                     throw new Exception(_("Aucun compte en banque n'est donné"));
                 $this->jrn_def_num_op=(isset($numb_operation))?1:0;
+                // if nb operation == 0 then update currency_id
+                $nb_operation = $this->db->get_value("select count(*) from jrn where jr_def_id=$1",
+                        [$this->jrn_def_id]);
+                /*
+                 * Set the default currency except if there are already operation
+                 */
+                if ( $nb_operation == 0 ){
+                    $this->currency_id=$defaultCurrency;
+                } else {
+                    $this->currency_id=$this->db->get_value("select currency_id from jrn_def where jrn_def_id=$1",
+                            [$this->jrn_def_id]);
+                }
                 break;
         }
 
@@ -2513,6 +2583,8 @@ class Acc_Ledger extends jrn_def_sql
         $cn=$this->db;
         $min_row=new INum("min_row", MAX_ARTICLE);
         $min_row->prec=0;
+        // -- default currency used : only for financial ledgers
+        $default_currency=$this->select_default_currency();
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
@@ -2536,6 +2608,8 @@ class Acc_Ledger extends jrn_def_sql
                 trim(substr($this->jrn_def_type, 0, 1)),
                 Acc_Ledger::next_number($this->db, $this->jrn_def_type));
         $this->jrn_def_description=$p_description;
+        $this->currency_id=0;
+
         switch ($this->jrn_def_type)
         {
             case 'ACH':
@@ -2567,6 +2641,7 @@ class Acc_Ledger extends jrn_def_sql
                 if ($result==-1)
                     throw new Exception(_("Aucun compte en banque n'est donné"));
                 $this->jrn_def_num_op=(isset($numb_operation))?1:0;
+                $this->currency_id=$defaultCurrency;
                 break;
         }
 
@@ -2896,7 +2971,14 @@ class Acc_Ledger extends jrn_def_sql
                 Dossier::id(),$select->name,$p_currency_code,$p_currency_rate,$p_eur_amount);
         return $select;
     }
-
+    /**
+     * @brief returns the code iso of the default currency for this ledger
+     */
+    function get_currency()
+    {
+        $cr=new Acc_Currency($this->db,$this->currency_id);
+        return $cr;
+    }
 }
 
 ?>

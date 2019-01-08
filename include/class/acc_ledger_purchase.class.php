@@ -159,7 +159,12 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         //------------------------------------------------------
         // The "Paid By"  check
         //------------------------------------------------------
-        if ($e_mp != 0 ) $this->check_payment($e_mp,${"e_mp_qcode_".$e_mp});
+        if ($e_mp != 0 ) {
+            $this->check_payment($e_mp,${"e_mp_qcode_".$e_mp});
+             // check for the currency , if we use a financial ledger and a card which is a bank account (with his own
+            // ledger , then the currency of the operation must be the same
+            $this->check_currency(${"e_mp_qcode_" . $e_mp},$p_currency_code);
+        }
 
 
         //----------------------------------------
@@ -547,7 +552,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $tot_tva_ndded=0;
             $tot_tva_reversed=0;
             $tva=array();
-            
+            $tot_amount_cur=0;
             // find the currency from v_currency_last_value
             $currency_rate_ref=new Acc_Currency($this->db, $p_currency_code);
             
@@ -755,6 +760,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $operation_currency->oc_price_unit=${'e_march'.$i.'_price'};
                 $operation_currency->j_id=$j_id;
                 $operation_currency->insert();
+                $tot_amount_cur=round(bcadd($tot_amount_cur,$acc_amount->amount_currency),2);
+                $tot_amount_cur=round(bcadd($tot_amount_cur,$acc_amount->amount_vat_currency),2);
                 if (DEBUG ) {
                     echo __LINE__." insert into operation currency oc_amount:{$acc_amount->amount_currency} oc_vat_amount {$acc_amount->amount_vat_currency} <br>";
                 }
@@ -950,13 +957,28 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $acc_pay->grpt=$acseq;
                 $acc_pay->jrn=$mp->get_parameter('ledger_target');
                 $acc_pay->periode=$tperiode;
-				$acc_pay->type=($famount>=0)?'d':'c';
+		$acc_pay->type=($famount>=0)?'d':'c';
                 $let_other=$acc_pay->insert_jrnx();
-
+                
+                // insert into operation_currency
+                $operation_currency=new Operation_currency_SQL($this->db);
+                $operation_currency->oc_amount=bcsub($tot_amount_cur,$acompte);
+                $operation_currency->oc_vat_amount=0;
+                $operation_currency->oc_price_unit=0;
+                $operation_currency->j_id=$let_other;
+                $operation_currency->insert();                
+                
                 /* insert into jrn */
                 $acc_pay->mt=$mt;
                 $acc_pay->desc=(!isset($e_comm_paiement) || strlen(trim($e_comm_paiement)) == 0) ?$e_comm:$e_comm_paiement;
                 
+                // Add info for currency
+                $acc_pay->currency_id=$p_currency_code;
+                $acc_pay->currency_rate=$p_currency_rate;
+                $acc_pay->currency_rate_ref=$currency_rate_ref->get_rate();
+                
+                
+                // insert into the table JRN
                 $mp_jr_id=$acc_pay->insert_jrn();
                 $acjrn->grpt_id=$acseq;
                 $acjrn->update_internal_code($acinternal);
@@ -992,7 +1014,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 		/* if ledger is FIN then insert into quant_fin */
 		if ( $prop['jrn_def_type'] == 'FIN' )
 		  {
-		    $ledger->insert_quant_fin($acfiche->id,$mp_jr_id,$cust->id,bcmul($famount,-1));
+		    $ledger->insert_quant_fin($acfiche->id,$mp_jr_id,$cust->id,bcmul($famount,-1),$let_other);
 		  }
 
 
@@ -1977,6 +1999,10 @@ EOF;
         $array['htva'] = _('HTVA Opération');
         $array['tot_vat'] = _('TVA Opération');
         $array['tot_tva_np'] = _('TVA NP opération');
+        $array['oc_amount'] = _('Mont. Devise');
+        $array['oc_vat_amount'] = _('Mont. TVA Devise');
+        $array['cr_code_iso'] = _('Devise');
+        
         return $array;
     }
 

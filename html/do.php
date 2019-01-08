@@ -1,5 +1,4 @@
 <?php
-
 /*
  *   This file is part of NOALYSS.
  *
@@ -34,9 +33,7 @@ require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 $http=new HttpInput();
-
 mb_internal_encoding("UTF-8");
-
 // if gDossier is not set redirect to form to choose a folder
 if ( ! isset($_REQUEST['gDossier']))
 {
@@ -112,26 +109,37 @@ if ( DEBUG ) {
     ?>
 <div id="debug_div" style="border:slategray solid 1px;margin-left: 0px;position:absolute;background:white;display:fixed;top:2px;left:25px;z-index:1000;display:none">
     <h2>$_POST</h2>
+    <pre>
     <?php        
-    var_dump($_POST);
+    print_r($_POST);
     ?>
+        
+    </pre>
     <h2>$_GET</h2>
+    <pre>
     <?php        
-    var_dump($_GET);
+    print_r($_GET);
     ?>
+    </pre>
     <h2>$_REQUEST</h2>
+    <pre>
     <?php        
-    var_dump($_REQUEST);
+    print_r($_REQUEST);
     ?>
+    </pre>
     <h2>$_SESSION</h2>
+    <pre>
     <?php        
-    var_dump($_SESSION);
+    print_r($_SESSION);
     ?>
+    </pre>
     
     <h2>$GLOBALS</h2>
+    <pre>
     <?php        
-    var_dump($GLOBALS);
+    print_r($GLOBALS);
     ?>
+    </pre>
     
 </div>
 <script>
@@ -301,10 +309,12 @@ if (isset($_REQUEST['ac']))
             echo '<a class="button" href="do.php?'.Dossier::get().'">';
             echo _('Retour');
             echo '</a>';
+            return;
         }
         else {
             alert($e->getMessage());
             record_log($e->getTraceAsString());
+            throw $e;
         }
     }
 }
@@ -335,6 +345,7 @@ else
     {
         echo $exc->getMessage();
         record_log($exc->getTraceAsString());
+        throw $e;
     }
     
 }

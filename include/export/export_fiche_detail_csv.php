@@ -77,6 +77,8 @@ if ( ! isset ($_REQUEST['oper_detail']))
                 _("Type"),
                 _("Code devise"),
                 _("Devise"),
+                _("Taux utilisé") ,
+                _("Taux référence"),
                 _("Débit"),
                 _("Crédit"),
                 _("Prog."),
@@ -107,6 +109,11 @@ if ( ! isset ($_REQUEST['oper_detail']))
                 $export->add("");
                 $export->add("");
                 $export->add("");
+                $export->add("");
+                $export->add("");
+                $export->add("");
+                $export->add("");
+                
                 $export->add($tot_deb,"number");
                 $export->add($tot_cred,"number");
                 $export->add($diff,"number");
@@ -123,7 +130,6 @@ if ( ! isset ($_REQUEST['oper_detail']))
         $progress=bcadd($progress,$diff);
         $tot_deb=bcadd($tot_deb,$op['deb_montant']);
         $tot_cred=bcadd($tot_cred,$op['cred_montant']);
-        $currency_amount=bcdiv($op['j_montant'],$op['currency_rate']);
         $export->add($op['j_qcode']);
         $export->add($op['j_poste']);
         $export->add($op['j_date_fmt']);
@@ -135,7 +141,9 @@ if ( ! isset ($_REQUEST['oper_detail']))
         $export->add($op['description']);
         $export->add($op['jr_optype']);
         $export->add($op['cr_code_iso']);
-        $export->add($currency_amount,"number");
+        $export->add($op['oc_amount'],"number");
+        $export->add($op['currency_rate'],"number");
+        $export->add($op['currency_rate_ref'],"number");
         $export->add($op['deb_montant'],"number");
         $export->add($op['cred_montant'],"number");
         $export->add(abs($progress),"number");
