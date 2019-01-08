@@ -311,7 +311,7 @@ class Acc_Balance
         /* get the list of jrn of the cat. */
 
         $array=Acc_Ledger::array_cat();
-        $jrn=array();
+        $this->jrn=array();
         for ($e=0;$e<count($array);$e++)
         {
             if ( isset($p_array[$e]))
