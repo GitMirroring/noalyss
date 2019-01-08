@@ -1306,7 +1306,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p
     var str_style = fixed_position(77, 99);
     str_style += ";width:92%;overflow:auto;";
     waiting_box();
-
+    var hide_operation=$(ctl_concern).getAttribute("hide_operation");
 
     var param_send = {gDossier: dossier,
         ctlc: ctl_concern,
@@ -1315,7 +1315,8 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p
         amount_id: amount_id,
         ledger: ledger,
         target: target,
-        tiers:tiers
+        tiers:tiers,
+        hide_operation:hide_operation
     };
 
     var qs = encodeJSON(param_send);

@@ -36,10 +36,10 @@ class Acc_Balance
     function __construct($p_cn)
     {
         $this->db=$p_cn;
-        $this->jrn=null;
+        $this->jrn=array();
         $from_poste="";
         $to_poste="";
-	$unsold=false;
+	    $unsold=false;
     }
 
 
@@ -311,7 +311,7 @@ class Acc_Balance
         /* get the list of jrn of the cat. */
 
         $array=Acc_Ledger::array_cat();
-        $jrn=array();
+        $this->jrn=array();
         for ($e=0;$e<count($array);$e++)
         {
             if ( isset($p_array[$e]))

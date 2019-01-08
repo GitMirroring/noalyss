@@ -211,6 +211,8 @@ class Acc_Ledger_Search
         $r.=HtmlInput::hidden('ledger_type', $this->type,
                         $this->div."ledger_type");
         $r.=HtmlInput::hidden('ac', $_REQUEST['ac']);
+        if (isset($_REQUEST['hide_operation']))
+            $r.=HtmlInput::hidden("hide_operation", $_REQUEST['hide_operation']);
         ob_start();
         $search_filter=$this->build_search_filter();
         require_once NOALYSS_TEMPLATE.'/ledger_search.php';
@@ -383,6 +385,7 @@ class Acc_Ledger_Search
         $fil_account='';
         $fil_paid='';
         $fil_date_paid='';
+        $fil_hide_operation='';
 
         $and='';
         $g_user=new User($this->cn);
@@ -519,6 +522,11 @@ class Acc_Ledger_Search
             $fil_paid=$and.SQL_LIST_UNPAID_INVOICE;
             $and=" and ";
         }
+        if ( isset ($hide_operation) && trim($hide_operation) !="")
+        {
+            $fil_hide_operation=$and.sprintf( ' jr_id not in (%s)',sql_string($hide_operation));
+            $and=" and ";
+        }
         global $g_user;
         if ($g_user->admin==0&&$g_user->is_local_admin()==0 && $g_user->get_status_security_ledger()==1 )
         {
@@ -528,7 +536,8 @@ class Acc_Ledger_Search
                     " uj_login='".sql_string($_SESSION['g_user'])."'".
                     " and uj_priv in ('R','W'))";
         }
-        $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.$fil_amount.$fil_qcode.$fil_paid.$fil_account.$fil_date_paid;
+        $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.$fil_amount.
+            $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation;
         $sql.=" where ".$where;
         return array($sql, $where);
     }
@@ -558,6 +567,7 @@ class Acc_Ledger_Search
 
         $r.=HtmlInput::hidden('ac', $_REQUEST['ac']);
 
+
         /*  when called from commercial.php some hidden values are needed */
         if (isset($_REQUEST['sa']))
             $r.=HtmlInput::hidden("sa", $_REQUEST['sa']);
@@ -567,6 +577,9 @@ class Acc_Ledger_Search
             $r.=HtmlInput::hidden("sc", $_REQUEST['sc']);
         if (isset($_REQUEST['f_id']))
             $r.=HtmlInput::hidden("f_id", $_REQUEST['f_id']);
+
+
+
 
         $r.='</FORM>';
 
