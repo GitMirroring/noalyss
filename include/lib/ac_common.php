@@ -114,6 +114,22 @@ function nb($p_number)
 }
 
 /**
+ * return D if the number is smaller than 0 , C if bigger and an empty string if
+ * equal to 0. Used for displaying saldo D / C (debit / credit )
+ * @param float $p_number
+ */
+function findSide($p_number)
+{
+    $return ='';
+    if ( $p_number > 0 ) {
+        $return ='D';
+    }else {
+        $return =($p_number== 0)?"":"C";
+    }
+    return $return;
+}
+
+/**
  * format the number with a sep. for the thousand
  * @param $p_number number
  * @param $p_dec number of decimal to display
