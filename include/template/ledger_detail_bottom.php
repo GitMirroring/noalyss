@@ -26,9 +26,9 @@ $aRap=$oRap->get();
  // find out exercice
  $periode_id=new Periode($cn,$detail->det->jr_tech_per);
  $exercice=$periode_id->get_exercice();
- 
- 
- $nb_document=($detail->det->jr_pj_name != "")?1:0;
+
+
+$nb_document=($detail->det->jr_pj_name != "")?1:0;
 
 $nb_aRap=(is_array($aRap))?count($aRap):0;
 // Array of tab
@@ -225,6 +225,7 @@ if ( $access=='W') {
      $wConcerned=new IConcerned("rapt".$div);
      $wConcerned->amount_id=$obj->det->jr_montant;
      $wConcerned->div="search_reconcile";
+     $wConcerned->set_hideOperation( $obj->jr_id);
     echo $wConcerned->input();
 
 }
