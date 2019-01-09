@@ -1927,8 +1927,10 @@ class Acc_Ledger extends jrn_def_sql
                 "jr_pj_number as pj,jr_grpt_id,".
                 " to_char(jr_date,'DDMMYY') as date_fmt, ".
                 " jr_comment as comment, jr_montant as montant ,".
-                " jr_grpt_id,jr_def_id".
-                " from jrn join jrn_def on (jr_def_id=jrn_def_id) where  ".
+                " jr_grpt_id,jr_def_id,jrn.currency_id,currency_rate,currency_rate_ref,cr_code_iso ".
+                " from jrn join jrn_def on (jr_def_id=jrn_def_id) ".
+                " left join currency on (currency.id=jrn.currency_id) ".
+                " where  ".
                 " jr_date >= (select p_start from parm_periode where p_id = $1)
 				 and  jr_date <= (select p_end from parm_periode where p_id  = $2)".
                 '  '.$jrn.' order by jr_date,substring(jr_pj_number,\'[0-9]+$\')::numeric asc';

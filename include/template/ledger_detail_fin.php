@@ -103,7 +103,7 @@ if ($obj->det->currency_id!=0)
             [$obj->det->array[0]['j_id']]);
     $currency_rate=$obj->db->get_value("select currency_rate from jrn where jr_id=$1",[$obj->jr_id]);
     $currency_code=$obj->db->get_value("select cr_code_iso from currency where id=$1",[$obj->det->currency_id]);
-    printf ("%s Taux utilisé %s Montant en devise %s",$currency_code,$currency_rate,$currency_amount);
+    printf (_("%s Taux utilisé %s Montant en devise %s"),$currency_code,$currency_rate,$currency_amount);
 }
 ?>                    
 <div class="myfieldset">

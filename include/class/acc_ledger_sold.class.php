@@ -478,8 +478,16 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $tot_debit=round($tot_debit, 2);
             }
             $let_tiers = $acc_operation->insert_jrnx();
-
-
+            
+            // --- insert also the currency amount for the customer 
+            $operation_currency=new Operation_currency_SQL($this->db);
+            $operation_currency->oc_amount=$tot_amount_cur;
+            $operation_currency->oc_vat_amount=0;
+            $operation_currency->oc_price_unit=0;
+            $operation_currency->j_id=$let_tiers ;
+            $operation_currency->insert();
+                
+            
             /** save all vat
              * $i contains the tva_id and value contains the vat amount
              * if if ($g_parameter->MY_TVA_USE == 'Y' )
