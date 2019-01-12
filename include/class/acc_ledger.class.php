@@ -1147,7 +1147,7 @@ class Acc_Ledger extends jrn_def_sql
                 }
                 $account=new Acc_Account($this->db,${"poste".$i});
                 if ( $account->get_parameter("pcm_direct_use") == "N") {
-                    throw new Exception(sprinff (_("Utilisation directe interdite du poste comptable %s"), ${"poste".$i}));
+                    throw new Exception(sprintf (_("Utilisation directe interdite du poste comptable %s"), ${"poste".$i}));
                 }
             }
         }
