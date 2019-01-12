@@ -112,7 +112,7 @@ echo th(_('Crédit'), 'style="text-align:right"');
       $str_anc.= Anc_Plan::hidden($a_anc);
     }
 echo '</tr>';
-$amount_idx=0;
+$amount_idx=0; $sum_prod_currency=0;
   for ($e=0;$e<count($obj->det->array);$e++) {
     $row=''; $q=$obj->det->array;
     $view_history = HtmlInput::history_account($q[$e]['j_poste'], $q[$e]['j_poste'], "", $exercice);
@@ -159,6 +159,14 @@ $amount_idx=0;
     $montant=td(nbm($q[$e]['j_montant']),'class="num"');
     $row.=($q[$e]['j_debit']=='t')?$montant:td('');
     $row.=($q[$e]['j_debit']=='f')?$montant:td('');
+    /*
+     * Compute total in currency if not default one
+     */
+    if ( $obj->det->currency_id != 0  && $q[$e]['j_debit']=='f' ) {
+         $value=$obj->db->get_value("select  oc_amount+oc_vat_amount from operation_currency where j_id=$1",[$q[$e]['j_id']]);
+         $sum_prod_currency=bcadd($sum_prod_currency,$value,2);
+
+    }
     /* Analytic accountancy */
     if ( $owner->MY_ANALYTIC != "nu" /*&& $div=='popup'*/){
       if ( preg_match('/^(6|7)/',$q[$e]['j_poste'])) {
@@ -188,6 +196,22 @@ $amount_idx=0;
   }
 ?>
 </table>
+<?php
+/*
+ * Info about currency if not in euro
+ */
+    // Add a row with currency and amount
+    if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
+    {
+        $currency=new Acc_Currency($obj->db, $obj->det->currency_id);
+        $four_space="&nbsp;"."&nbsp;"."&nbsp;"."&nbsp;";
+        
+        echo  $currency->get_code(),$four_space;
+        echo _("Taux utilisé"),"&nbsp;", $obj->det->currency_rate,$four_space;
+        echo _("Taux Réf"), "&nbsp;",$obj->det->currency_rate_ref.$four_space;
+        echo _("Montant en devise"), "&nbsp;",$sum_prod_currency,$four_space;
+    }
+?>      
 </div>
 <?php 
 require_once NOALYSS_TEMPLATE.'/ledger_detail_bottom.php';
