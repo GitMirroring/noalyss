@@ -27,6 +27,7 @@
 
 require_once '../include/constant.php';
 require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 /*!\brief
  *  Received parameters are
@@ -41,11 +42,12 @@ require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
  *   - list of fd_id
  *
  */
+$http=new HttpInput();
 
-$jrn= ( ! isset($_REQUEST['j']))?-1:$_REQUEST['j'];
+$jrn= $http->request("j","number",-1); 
 $filter_card="";
 $cn=Dossier::connect();
-$d=$_REQUEST['e'];
+$d=$http->request('e');
 $filter_card='';
 
 require_once('class/user.class.php');
@@ -107,8 +109,8 @@ else
         {
             $get_cred='jrn_def_fiche_cred';
             $get_deb='jrn_def_fiche_deb';
-
-            $filter_jrn=$cn->make_list("select $get_cred||','||$get_deb as fiche from jrn_def where jrn_def_type=$1",array($_REQUEST['type']));
+            $type=$http->request("type");
+            $filter_jrn=$cn->make_list("select $get_cred||','||$get_deb as fiche from jrn_def where jrn_def_type=$1",array($type));
             $filter_card=($filter_jrn != "")?" and fd_id in ($filter_jrn)":' and false ';
 
         }
@@ -125,9 +127,12 @@ else
 
 $sql_str="select distinct f_id from fiche join fiche_detail using (f_id) where ad_id in (9,1,23) and ad_value ilike '%'||$1||'%' ".$filter_card.' limit 12';
 
-$sql=$cn->get_array($sql_str		    ,array($_REQUEST['FID']));
 
-if (sizeof($sql) != 0 )
+$fid=$http->request("FID");
+
+$sql=$cn->get_array($sql_str		    ,array($fid));
+
+if ($sql != false && sizeof($sql) != 0 )
 {
     echo "<ul>";
     $sql_get=$cn->prepare('get_name',"select ad_value from fiche_detail where f_id = $1 and ad_id=$2");
@@ -146,12 +151,12 @@ if (sizeof($sql) != 0 )
 
         $sql_name=$cn->execute('get_name',array($sql[$i]['f_id'],23));
         if (Database::num_row($sql_name) == 1) $quick_code=Database::fetch_result($sql_name,0,0);
-	$fid=htmlentities($_REQUEST['FID']);
+	$fid=htmlentities($fid);
 
         /* Highlight the found pattern with bold format */
-        $name=str_ireplace($_REQUEST['FID'],'<em>'.$fid.'</em>',h($name));
-        $qcode=str_ireplace($_REQUEST['FID'],'<em>'.$fid.'</em>',h($quick_code));
-        $desc=str_ireplace($_REQUEST['FID'],'<em>'.$fid.'</em>',h($desc));
+        $name=str_ireplace($fid,'<em>'.$fid.'</em>',h($name));
+        $qcode=str_ireplace($fid,'<em>'.$fid.'</em>',h($quick_code));
+        $desc=str_ireplace($fid,'<em>'.$fid.'</em>',h($desc));
         printf('<li id="%s">%s <span class="informal">%s %s</span></li>',
                $quick_code,
                $quick_code,
