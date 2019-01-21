@@ -346,8 +346,9 @@ else
     catch (Exception $exc)
     {
         echo $exc->getMessage();
+        record_log("No user profile ");
         record_log($exc->getTraceAsString());
-        throw $e;
+        throw $exc;
     }
     
 }
