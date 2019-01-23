@@ -46,7 +46,7 @@ if ( $ledger_id == 0)
     $def_ledger=$Ledger->get_first('fin');
     if ( empty ($def_ledger))
     {
-            exit('Pas de journal disponible');
+            exit(_('Pas de journal disponible'));
     }
     $ledger_id=$def_ledger['jrn_def_id'];
 }
