@@ -631,10 +631,21 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		$r.="</TABLE>";
 
 		// saldo
-		$r.='<br>'.sprintf(_("Ancien solde = %d"), $solde);
+        $r.="<table>";
+        $r.=tr(
+            td(_("Ancien solde")).
+            td(nbm($solde),'class="num"')
+        );
 		$new_solde+=$tot_amount;
-		$r.='<br>'.sprintf(_("Nouveau solde = %d"),$new_solde);
-		$r.='<br>'.sprintf(_("Difference = %d"), $tot_amount);
+		$r.=tr(
+		    td(_("Nouveau solde")).
+            td(nbm($new_solde),' class="num"')
+        );
+        $r.=tr(
+            td(_("Difference")).
+            td(nbm($tot_amount),' class="num"')
+        );
+        $r.='</table>';
 		// check for upload piece
 		$file = new IFile();
 
@@ -939,11 +950,11 @@ class Acc_Ledger_Fin extends Acc_Ledger
 					// for each item, insert into operation_analytique */
 					$op = new Anc_Operation($this->db);
 					$op->oa_group = $this->db->get_next_seq("s_oa_group"); /* for analytic */
-					$op->j_id = $j_id;
+					$op->j_id = $j_id_other;
 					$op->oa_date = $e_date;
 					$op->oa_debit = 'f';
 					$op->oa_description = sql_string($comment);
-					$op->save_form_plan($_POST, $i, $j_id);
+					$op->save_form_plan($_POST, $i, $j_id_other);
 				}
 
 
