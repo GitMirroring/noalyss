@@ -639,24 +639,54 @@ class Acc_Ledger_Fin extends Acc_Ledger
                     $cur_rate=$acc_currency->get_rate_date($e_date);
                     $default_currency=new Acc_Currency($this->db , 0);
                     // saldo
-                    
-                    $r.='<br>'.sprintf(_("Ancien solde  = %f %s"),$solde, $cur);
+                    $r .= "<table>";
+                    $r .= tr(
+                        td(_("Ancien solde")) .
+                        td(nbm($solde).$cur, 'class="num"')
+                    );
                     $new_solde=bcadd($solde,$tot_amount);
-                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),$new_solde, $cur);
-                    $r.='<br>'.sprintf(_("Difference  = %f %s"), $tot_amount, $cur);
+                    $r .= tr(
+                        td(_("Nouveau solde")) .
+                        td(nbm($new_solde).$cur, ' class="num"')
+                    );
+                    $r .= tr(
+                        td(_("Difference")) .
+                        td(nbm($tot_amount).$cur, ' class="num"')
+                    );
+                    $r.=tr(
+                        td(_("Taux")).
+                        td($cur_rate)
+                    );
+                    $r.=tr(
+                        td(_("Nouveau solde")).
+                        td(bcdiv($new_solde,$cur_rate).$default_currency->get_code(), ' class="num"')
+                        );
+                    $r.='</table>';
+
 
                     
-                    $r.='<br>'.sprintf(_("Taux = %s"),$cur_rate);
-                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),bcdiv($new_solde,$cur_rate),$default_currency->get_code());
+
                 } else {
                     
                     $cur=$acc_currency->get_code();
                     // saldo
-                    
-                    $r.='<br>'.sprintf(_("Ancien solde  = %f %s"),$solde, $cur);
-                    $new_solde=bcadd($new_solde,$tot_amount);
-                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),$new_solde, $cur);
-                    $r.='<br>'.sprintf(_("Difference  = %f %s"), $tot_amount, $cur);
+                    $r .= "<table>";
+                    $r .= tr(
+                        td(_("Ancien solde")) .
+                        td(nbm($solde).$cur, 'class="num"')
+                    );
+                    $new_solde=bcadd($solde,$tot_amount);
+                    $r .= tr(
+                        td(_("Nouveau solde")) .
+                        td(nbm($new_solde).$cur, ' class="num"')
+                    );
+                    $r .= tr(
+                        td(_("Difference")) .
+                        td(nbm($tot_amount).$cur, ' class="num"')
+                    );
+
+                    $r.='</table>';
+
                     
                 }
 		// check for upload piece
