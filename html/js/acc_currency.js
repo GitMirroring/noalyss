@@ -96,7 +96,7 @@ function CurrencyUpdateCode(p_dossier,p_code,p_update)
     });
 }
 /**
- * Update the field Update with the amount in EUR
+ * Update the field Update with the amount in EUR (= default currency), ledger sale or purchase
  * @param DOMID p_rate where the rate is stored
  * @param DOMID p_update element to update with the rate
  */
@@ -115,18 +115,56 @@ function CurrencyCompute(p_rate,p_update)
        console.log("rate is nan" + rate);
        rate=1;
    }
-   var tot=tvac*rate;
+   var tot=tvac/rate;
    tot=Math.round(tot*100)/100;
    $(p_update).innerHTML=tot;
     
 }
 /**
- * 
- * @param {type} p_dossier
- * @param {type} p_code
- * @param {type} p_update
- * @param {type} p_rate
- * @param {type} p_eur_amount
+ * Update the field Update with the amount in EUR (= default currency) for Miscealleneous Operation
+ *  amount for DEB (domid : default_currency_deb , totalDeb)
+ *  amount for CRED ( domid = default_currency_cred , totalCred), 
+ * @param DOMID p_rate where the rate is stored
+ * @param DOMID p_update element to update with the rate
+ */
+function CurrencyComputeMisc(p_rate,p_update)
+{
+   var debAmount=$('totalDeb').innerHTML;
+   var credAmount=$('totalCred').innerHTML;
+   
+   console.log("debAmount= "+debAmount);
+   console.log("credAmount= "+credAmount);
+   if (  isNaN(debAmount)) {
+       console.log("debAmount is nan" + debAmount);
+       debAmount=0;
+   }
+   if (  isNaN(credAmount)) {
+       console.log("credAmount is nan" + credAmount);
+       credAmount=0;
+   }
+   var rate=$(p_rate).value;
+   console.log("rate = "+rate);
+   if (  isNaN(rate) || parseFloat(rate) == 0) {
+       console.log("rate is nan" + rate);
+       rate=1;
+   }
+   var totDeb=debAmount/rate;
+   totDeb=Math.round(totDeb*100)/100;
+   $('default_currency_deb').innerHTML=totDeb;
+   
+   var totCred=credAmount/rate;
+   totCred=Math.round(totCred*100)/100;
+   $('default_currency_cred').innerHTML=totCred;
+    
+}
+
+/**
+ * Update the screen of input for Purchase and Sale
+ * @param {type} p_dossier 
+ * @param {type} p_code name of the SELECT containing the currency code
+ * @param {type} p_update Domid of the element to update
+ * @param {type} p_rate  domid of the element containing the currency rate
+ * @param {type} p_eur_amount domid of the amount in default currency to update
  * @returns {undefined}
  */
 function LedgerCurrencyUpdate(p_dossier,p_code,p_update,p_rate,p_eur_amount)
@@ -141,5 +179,28 @@ function LedgerCurrencyUpdate(p_dossier,p_code,p_update,p_rate,p_eur_amount)
     CurrencyUpdateCode(p_dossier,p_code,p_update);
     // Compute all the fields
     compute_all_ledger 	();
+
+}
+/**
+ * Update the screen of input for Misc. Operation
+ * @param {type} p_dossier 
+ * @param {type} p_code name of the SELECT containing the currency code
+ * @param {type} p_update Domid of the element to update
+ * @param {type} p_rate  domid of the element containing the currency rate
+ * @param {type} p_eur_amount domid of the amount in default currency to update
+ * @returns {undefined}
+ */
+function LedgerCurrencyUpdateMisc(p_dossier,p_code,p_update,p_rate,p_eur_amount)
+{
+    // Hide or show the row of the table with the amount in EUR (= default currency)
+    if ($(p_code).value != -1) {
+        $('row_currency').show();
+    }else {
+        $('row_currency').hide();
+    }
+    CurrencyUpdateValue(p_dossier,p_code,p_rate);
+    CurrencyUpdateCode(p_dossier,p_code,p_update);
+    // Compute all the fields
+    checkTotalDirect();
 
 }

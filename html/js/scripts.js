@@ -3412,7 +3412,7 @@ var progressIdx = 0;
 /**
  * Start the progress bar 
  * @param {string} p_taskid id to monitor
- * @param {int} p_dossier
+ * @param {int} p_message
  */
 function progress_bar_start(p_taskid,p_message)
 {

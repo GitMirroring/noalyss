@@ -586,6 +586,7 @@ class Acc_Ledger extends jrn_def_sql
     function confirm($p_array, $p_readonly=false)
     {
         global $g_parameter;
+        $http=new HttpInput();
         $msg=array();
         if (!$p_readonly)
             $msg=$this->verify($p_array);
@@ -737,8 +738,26 @@ class Acc_Ledger extends jrn_def_sql
 
             $ret.="</tr>";
         }
-        $ret.=tr(td('').td(_('Totaux')).td($total_deb, 'class="num"').td($total_cred,
+        $currency_code=$http->extract($p_array,"p_currency_code","number");
+        $currency_rate=$http->extract($p_array,"p_currency_rate","number");
+        $currency=new Acc_Currency($this->db,$currency_code);
+        $msg_currency= ($currency_code != 0 )?sprintf(_("Totaux %s (%s)"),$currency->get_code(),$currency_rate):_("Totaux");
+        
+        $ret.=tr(td('').td($msg_currency).td($total_deb, 'class="num"').td($total_cred,
                         'class="num"'), 'class="highlight"');
+        // Currency
+        if ( $currency_code != 0)
+        {
+            $currency_rate=$http->extract($p_array,"p_currency_rate","number");
+            $default_currency=new Acc_Currency($this->db,0);
+
+            $ret.=tr(td('').
+                    td(_('Totaux')." ".$default_currency->get_code()).
+                    td(bcdiv($total_deb,$currency_rate), 'class="num"').
+                    td(bcdiv($total_cred,$currency_rate), 'class="num"'),
+                    'class="highlight"');
+        }
+        
         $ret.="</table>";
         if ($g_parameter->MY_ANALYTIC!='nu'&&$p_readonly==false)
             $ret.='<input type="button" class="button" value="'._('verifie Imputation Analytique').'" onClick="verify_ca(\'\');">';
@@ -762,6 +781,7 @@ class Acc_Ledger extends jrn_def_sql
     function input($p_array=null, $p_readonly=0)
     {
         global $g_parameter, $g_user;
+        $http=new HttpInput();
         $this->nb=$this->get_min_row();
         if ($p_readonly==1)
             return $this->confirm($p_array);
@@ -787,7 +807,8 @@ class Acc_Ledger extends jrn_def_sql
         $wLedger=$this->select_ledger('ODS', 2,FALSE);
         if ($wLedger==null)
             throw new Exception(_('Pas de journal disponible'));
-        $wLedger->javascript="onChange='update_name();update_predef(\"ods\",\"t\",\"".$_REQUEST['ac']."\");$add_js'";
+        $ac=$http->request("ac");
+        $wLedger->javascript="onChange='update_name();update_predef(\"ods\",\"t\",\"".$ac."\");$add_js'";
         $label=" Journal ".Icon_Action::infobulle(2);
 
         $ret.="<table>";
@@ -803,8 +824,11 @@ class Acc_Ledger extends jrn_def_sql
         $op->set('ledger', $this->id);
         $op->set('ledger_type', "ODS");
         $op->set('direct', 't');
-        $url=http_build_query(array('action'=>'use_opd', 'p_jrn_predef'=>$this->id,
-            'ac'=>$_REQUEST['ac'], 'gDossier'=>dossier::id()));
+        $url=http_build_query(
+                array('action'=>'use_opd', 
+                    'p_jrn_predef'=>$this->id,
+                    'ac'=>$ac,
+                    'gDossier'=>dossier::id()));
         echo $op->form_get('do.php?'.$url);
 
         echo '</div>';
@@ -884,6 +908,20 @@ class Acc_Ledger extends jrn_def_sql
         $ret.='</tr>';
 
         $ret.='</table>';
+
+        // Currency
+         $currency_select = $this->CurrencyInput("currency_code", "p_currency_rate" , "p_currency_euro");
+         $currency_select->selected=$http->request('p_currency_code','string',0);
+         
+         $currency_input=new INum("p_currency_rate");
+         $currency_input->prec=6;
+         $currency_input->id="p_currency_rate";
+         $currency_input->value=$http->request('p_currency_rate','string',1);
+         $ret.=_("Devise")." ".$currency_select->input();
+         $ret.=$currency_input->change('CurrencyComputeMisc(\'p_currency_rate\',\'p_currency_euro\');');
+         $currency=new Acc_Currency($this->db,0);
+         
+         
         $nb_row=(isset($nb_item) )?$nb_item:$this->nb;
 
         $ret.=HtmlInput::hidden('nb_item', $nb_row);
@@ -1027,6 +1065,8 @@ class Acc_Ledger extends jrn_def_sql
      */
     function verify($p_array)
     {
+        global $g_parameter;
+        $http=new HttpInput();
         if (is_array($p_array)==false||empty($p_array))
             throw new Exception("Array empty");
         /*
@@ -1039,7 +1079,40 @@ class Acc_Ledger extends jrn_def_sql
         $tot_cred=0;
         $tot_deb=0;
         $msg=array();
+        /* Check currency : rate cannot be equal to 0 */
+        $currency_rate=$http->extract($p_array,"p_currency_rate","number");
+        if ( $currency_rate <=0 ) {
+            throw new Exception(_("Taux de conversion doit être supérieur à 0"),3);
+        }
+        /* Check currency : Does the currency parameter exist */
+        $currency_code=$http->extract($p_array,"p_currency_code","number");
+        $currency=new Acc_Currency($this->db,$currency_code);
 
+        if ( $currency->get_code() == -1 )
+        {
+            throw new Exception(_('Devise inconnue'), 3);
+        }
+        
+        /* -- check the accounting for error of exchange -*/
+        if ( $currency->get_code() == 0 )
+        {
+            $poste=new Acc_Account($this->db,$g_parameter->MY_DEFAULT_ROUND_ERROR_DEB);
+            if ($poste->get_parameter("id") == -1 )
+            {
+                throw new Exception(
+                        sprintf(_("Dans COMPANY, vous n'avez pas paramétré correctement ".
+                                " le compte de débit %s pour les erreurs de conversion"),$g_parameter->MY_DEFAULT_ROUND_ERROR_DEB), 3);
+            }
+            $poste=new Acc_Account($this->db,$g_parameter->MY_DEFAULT_ROUND_ERROR_CRED);
+            if ($poste->get_parameter("id") == -1 )
+            {
+                throw new Exception(
+                        sprintf(_("Dans COMPANY, vous n'avez pas paramétré correctement ".
+                                " le compte de crédit %s pour les erreurs de conversion"),$g_parameter->MY_DEFAULT_ROUND_ERROR_CRED), 3);
+            }
+
+        }        
+        
         /* check if we can write into this ledger */
         if ($g_user->check_jrn($p_jrn)!='W')
             throw new Exception(_('Accès interdit'), 20);
@@ -1047,12 +1120,12 @@ class Acc_Ledger extends jrn_def_sql
         /* check for a double reload */
         if (isset($mt)&&$this->db->count_sql('select jr_mt from jrn where jr_mt=$1',
                         array($mt))!=0)
-            throw new Exception('Double Encodage', 5);
+            throw new Exception(_('Double Encodage'), 5);
 
         // Check the periode and the date
         if (isDate($e_date)==null)
         {
-            throw new Exception('Date invalide', 2);
+            throw new Exception(_('Date invalide'), 2);
         }
         $periode=new Periode($this->db);
         /* find the periode  if we have enabled the check_periode 
@@ -1076,7 +1149,7 @@ class Acc_Ledger extends jrn_def_sql
         // Periode ferme
         if ($this->is_closed($periode->p_id)==1)
         {
-            throw new Exception('Periode fermee', 6);
+            throw new Exception(_('Periode fermee'), 6);
         }
         /* check if we are using the strict mode */
         if ($this->check_strict()==true)
@@ -1085,8 +1158,10 @@ class Acc_Ledger extends jrn_def_sql
               operation */
             $last_date=$this->get_last_date();
             if ($last_date!=null&&cmpDate($e_date, $last_date)<0)
-                throw new Exception(_('Vous utilisez le mode strict la dernière operation est la date du ')
-                .$last_date.' '._('vous ne pouvez pas encoder à une date antérieure'),
+                throw new Exception(
+                        sprintf ( 
+                                _('Vous utilisez le mode strict la dernière operation est la date du %s
+                vous ne pouvez pas encoder à une date antérieure',$last_date)),
                 15);
         }
 
@@ -1111,7 +1186,7 @@ class Acc_Ledger extends jrn_def_sql
                     throw new Exception("La fiche quick_code = ".
                     $f->quick_code." n'est pas dans ce journal", 4);
                 if (strlen(trim(${'qc_'.$i}))!=0&&isNumber(${'amount'.$i})==0)
-                    throw new Exception('Montant invalide', 3);
+                    throw new Exception(_('Montant invalide'), 3);
 
                 $strPoste=$f->strAttribut(ATTR_DEF_ACCOUNT);
                 if ($strPoste=='')
@@ -1128,9 +1203,11 @@ class Acc_Ledger extends jrn_def_sql
             if (isset(${'poste'.$i})&&strlen(trim(${'poste'.$i}))!=0)
             {
                 $p=new Acc_Account_Ledger($this->db, ${'poste'.$i});
-                if ($p->belong_ledger($p_jrn)<0)
-                    throw new Exception(_("Le poste")." ".$p->id." "._("n'est pas dans ce journal"),
+                if ($p->belong_ledger($p_jrn)<0) {
+                    throw new Exception(sprintf ( 
+                            _("Le poste %s n'est pas dans ce journal",$p->id)),
                     5);
+                }
                 if (strlen(trim(${'poste'.$i}))!=0&&isNumber(${'amount'.$i})==0)
                     throw new Exception(_('Poste invalide ['.${'poste'.$i}.']'),
                     3);
@@ -1140,7 +1217,7 @@ class Acc_Ledger extends jrn_def_sql
                 $card_id=$p->find_card();
                 if (!empty($card_id))
                 {
-                    $str_msg=" Le poste ".$p->id." appartient à ".count($card_id)." fiche(s) dont :";
+                    $str_msg=sprintf(_(" Le poste %s appartient à  fiche(s) dont : %s"),$p->id,count($card_id));
                     $max=(count($card_id)>MAX_COMPTE_CARD)?MAX_COMPTE_CARD:count($card_id);
                     for ($x=0; $x<$max; $x++)
                     {
@@ -1154,7 +1231,7 @@ class Acc_Ledger extends jrn_def_sql
                 }
                 $account=new Acc_Account($this->db,${"poste".$i});
                 if ( $account->get_parameter("pcm_direct_use") == "N") {
-                    throw new Exception(_("Utilisation directe interdite du poste comptable ${"poste".$i}"));
+                    throw new Exception(sprintf (_("Utilisation directe interdite du poste comptable %s"), ${"poste".$i}));
                 }
             }
         }
@@ -1202,8 +1279,12 @@ class Acc_Ledger extends jrn_def_sql
     function save($p_array=null)
     {
         if ($p_array==null)
+        {
             throw new Exception('save cannot use a empty array');
+        }
         global $g_parameter;
+        bcscale(4);
+        $http=new HttpInput();
         extract($p_array, EXTR_SKIP);
         try
         {
@@ -1234,6 +1315,12 @@ class Acc_Ledger extends jrn_def_sql
             }
 
             $count=0;
+            
+            // currency
+            $currency_code=$http->extract($p_array, "p_currency_code","number");
+            $currency_rate=$http->extract($p_array, "p_currency_rate","number");
+            $currency_rate_ref=new Acc_Currency($this->db, $currency_code);
+            
             for ($i=0; $i<$nb_item; $i++)
             {
                 if (!isset(${'qc_'.$i})&&!isset(${'poste'.$i}))
@@ -1273,14 +1360,25 @@ class Acc_Ledger extends jrn_def_sql
                 $acc_op->desc=null;
                 if (strlen(trim(${'ld'.$i}))!=0)
                     $acc_op->desc=${'ld'.$i};
-                $acc_op->amount=round(${'amount'.$i}, 2);
+                    
+                // Amount in default currency , usually EUR
+                $acc_op->amount=round(bcdiv(${'amount'.$i},$p_currency_rate),2);
                 $acc_op->grpt=$seq;
                 $acc_op->poste=$poste;
                 $acc_op->jrn=$this->id;
                 $acc_op->type=(isset(${'ck'.$i}))?'d':'c';
                 $acc_op->qcode=$quick_code;
                 $j_id=$acc_op->insert_jrnx();
-                $tot_amount+=round($acc_op->amount, 2);
+                
+                // Save in currency
+                $operation_currency=new Operation_currency_SQL($this->db);
+                $operation_currency->oc_amount=round(${'amount'.$i}, 2);
+                $operation_currency->oc_vat_amount=0;
+                $operation_currency->oc_price_unit=0;
+                $operation_currency->j_id=$j_id;
+                $operation_currency->insert();
+                
+                $tot_amount=bcadd($tot_amount,round($acc_op->amount, 2));
                 $tot_deb+=($acc_op->type=='d')?$acc_op->amount:0;
                 $tot_cred+=($acc_op->type=='c')?$acc_op->amount:0;
                 if ($g_parameter->MY_ANALYTIC!="nu")
@@ -1290,27 +1388,68 @@ class Acc_Ledger extends jrn_def_sql
 
                         // for each item, insert into operation_analytique */
                         $op=new Anc_Operation($this->db);
+                        $op->set_currency_rate($currency_rate);
                         $op->oa_group=$group;
                         $op->j_id=$j_id;
                         $op->oa_date=$e_date;
                         $op->oa_debit=($acc_op->type=='d' )?'t':'f';
                         $op->oa_description=$desc;
-                        $op->save_form_plan($p_array, $count, $j_id);
+                        
+                        // send the amount in default currency to analytic
+                        $an_array=$p_array;
+                        $an_array['amount'.$i]=$acc_op->amount;
+                        $op->save_form_plan($an_array, $count, $j_id);
                         $count++;
                     }
                 }
             }// loop for each item
             $acc_end=new Acc_Operation($this->db);
+            // Check the balance 
+            if ( $tot_deb != $tot_cred ) {
+                
+                $diff=bcsub($tot_cred, $tot_deb);
+                // store the difference in currency_rounded_delta
+                $poste_cred = $g_parameter->MY_DEFAULT_ROUND_ERROR_CRED;
+                $side="c";
+                if ( $diff > 0 )
+                {
+                    $poste=$g_parameter->MY_DEFAULT_ROUND_ERROR_DEB;
+                    $side="d";
+                    
+                }
+                
+                // insert difference of change
+                $acc_change=new Acc_Operation($this->db);
+                $acc_change->amount=abs($diff);
+                $acc_change->grpt=$seq;
+                $acc_change->poste=$poste;
+                $acc_change->jrn=$this->id;
+                $acc_change->type=$side;
+                $acc_change->date=$e_date;
+                $acc_change->desc=_("Différence de change");
+                
+                $change_j_id=$acc_change->insert_jrnx();
+                
+                $tot_deb=bcadd($tot_deb,$diff);
+                
+            }
             $acc_end->amount=$tot_deb;
             if ($check_periode==false)
+            {
                 $acc_end->periode=$oPeriode->p_id;
+            }
             $acc_end->date=$e_date;
             $acc_end->desc=$desc;
             $acc_end->grpt=$seq;
             $acc_end->jrn=$this->id;
             $acc_end->mt=$mt;
             $acc_end->jr_optype=$jr_optype;
+            $acc_end->currency_id=$currency_code;
+            $acc_end->currency_rate=$currency_rate;
+            $acc_end->currency_rate_ref=$currency_rate_ref->get_rate();
+            
             $jr_id=$acc_end->insert_jrn();
+            
             $this->jr_id=$jr_id;
             if ($jr_id==false)
                 throw new Exception(_('Balance incorrecte'));
@@ -1788,8 +1927,10 @@ class Acc_Ledger extends jrn_def_sql
                 "jr_pj_number as pj,jr_grpt_id,".
                 " to_char(jr_date,'DDMMYY') as date_fmt, ".
                 " jr_comment as comment, jr_montant as montant ,".
-                " jr_grpt_id,jr_def_id".
-                " from jrn join jrn_def on (jr_def_id=jrn_def_id) where  ".
+                " jr_grpt_id,jr_def_id,jrn.currency_id,currency_rate,currency_rate_ref,cr_code_iso ".
+                " from jrn join jrn_def on (jr_def_id=jrn_def_id) ".
+                " left join currency on (currency.id=jrn.currency_id) ".
+                " where  ".
                 " jr_date >= (select p_start from parm_periode where p_id = $1)
 				 and  jr_date <= (select p_end from parm_periode where p_id  = $2)".
                 '  '.$jrn.' order by jr_date,substring(jr_pj_number,\'[0-9]+$\')::numeric asc';
@@ -2958,19 +3099,37 @@ class Acc_Ledger extends jrn_def_sql
     }
     /**
      * Create a select from value for currency and add javascript to update $p_currency_rate and
-     * $p_eur_amount
+     * $p_eur_amount 
      * @param string DOMID $p_currency_code
      * @param string DOMID $p_currency_rate
      * @param string DOMID $p_eur_amount
      */
-    function         CurrencyInput($p_currency_code,$p_currency_rate,$p_eur_amount)
+    function CurrencyInput($p_currency_code, $p_currency_rate, $p_eur_amount)
     {
-       $currency = new Acc_Currency($this->db);
-       $select=$currency->select_currency();
-       $select->javascript=sprintf('onchange="LedgerCurrencyUpdate(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');$(\'update_p_currency_rate\').innerHTML=$(\'p_currency_rate\').value;"',
-                Dossier::id(),$select->name,$p_currency_code,$p_currency_rate,$p_eur_amount);
+        $type=$this->get_type();
+        $currency=new Acc_Currency($this->db);
+        $select=$currency->select_currency();
+        if ($type =='ODS')
+        {
+            
+            $select->javascript=sprintf('onchange="LedgerCurrencyUpdateMisc(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');'.
+                    '$(\'update_p_currency_rate\').innerHTML=$(\'p_currency_rate\').value;"',
+                    Dossier::id(), $select->name, $p_currency_code, $p_currency_rate, $p_eur_amount);
+        }
+        elseif ($type == 'ACH' || $type == 'VEN')
+        {
+            
+            $select->javascript=sprintf('onchange="LedgerCurrencyUpdate(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');'.
+                    '$(\'update_p_currency_rate\').innerHTML=$(\'p_currency_rate\').value;"',
+                    Dossier::id(), $select->name, $p_currency_code, $p_currency_rate, $p_eur_amount);
+        }
+        else
+        {
+            throw new Exception(_("Journal type non déterminé"));
+        }
         return $select;
     }
+
     /**
      * @brief returns the code iso of the default currency for this ledger
      */

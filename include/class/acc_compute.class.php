@@ -89,13 +89,13 @@ class Acc_Compute
     function convert_euro()
     {
         $local_amount=$this->amount;
-        $this->amount=bcmul($this->amount,$this->currency_rate);
+        $this->amount=bcdiv($this->amount,$this->currency_rate,6);
         $this->amount_currency=$local_amount;
     }
     function convert_euro_vat()
     {
         $local_amount=$this->amount_vat;
-        $this->amount_vat=bcmul($this->amount_vat,$this->currency_rate);
+        $this->amount_vat=bcdiv($this->amount_vat,$this->currency_rate,6);
         $this->amount_vat_currency=$local_amount;
     }
     public function get_parameter($p_string)

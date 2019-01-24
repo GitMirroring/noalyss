@@ -55,6 +55,7 @@ class Jrn_Def_sql
 		, "jrn_def_bank" => "jrn_def_bank"
 		, "jrn_def_num_op" => "jrn_def_num_op"
 		, "jrn_def_description" => "jrn_def_description"
+                ,  "jrn_enable"=>"jrn_enable"
                 , "currency_id"=>"currency_id"
 	);
 

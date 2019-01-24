@@ -57,11 +57,8 @@ class Impress
         else
             $cond="( j_date >= to_date('$p_start','DD.MM.YYYY') and j_date <= to_date('$p_end','DD.MM.YYYY'))";
 
-        include_once("class/acc_account_ledger.class.php");
-
         while (preg_match_all("(\[[0-9]*[A-Z]*%*c*d*s*\])",$p_formula,$e) == true)
           {
-
             // remove the [ ]
             $x=$e[0];
             foreach ($x as $line)

@@ -100,12 +100,10 @@ class Print_Ledger_Financial extends PDF
         if ( $a_jrn == null ) return;
         bcscale(2);
         $this->ledger->load();
-        $currency=$this->ledger->get_currency()->get_code();
-        $currency_id=$this->ledger->get_currency()->get_id();
+        
         $this->cn->prepare("amount_cur",
                 "select jrn2.jr_id , 
-                    sum(coalesce(oc_amount,0)) as sum_ocamount,
-                    sum(coalesce(oc_vat_amount,0)) as sum_ocvat_amount
+                    sum(coalesce(oc_amount,0)) as sum_ocamount
              	from operation_currency
                     join jrnx using (j_id)
                     join jrn as jrn2 on (j_grpt=jrn2.jr_grpt_Id) 
@@ -126,13 +124,15 @@ class Print_Ledger_Financial extends PDF
 
             $this->LongLine(60,5,$row['comment'],0,'L');
             $amount=$this->cn->get_value('select qf_amount from quant_fin where jr_id=$1',array( $row['id']));
-            if ( $currency_id != 0) {
-                $ret_amount_cur=$this->cn->execute("amount_cur",array($row['id']));
+            $ret_amount_cur=$this->cn->execute("amount_cur",array($row['id']));
+
+            if ( $this->cn->count($ret_amount_cur) == 1) {
                 
-                if ( $this->cn->count($ret_amount_cur) == 1) {
-                    $amount_cur=Database::fetch_result($ret_amount_cur, 0,1);
-                    $this->write_cell(20,5,sprintf('%s %s',nbm($amount_cur),$currency),0,0,'R');
-                }
+                $amount_cur=Database::fetch_result($ret_amount_cur, 0,1);
+                $this->write_cell(20,5,sprintf('%s %s',nbm($amount_cur),$row['cr_code_iso']),0,0,'R');
+            } else {
+
+                $this->write_cell(20,5,"",0,0,'R');
             }
             $this->write_cell(20,5,sprintf('%s',nbm($amount)),0,0,'R');
             $this->line_new(5);

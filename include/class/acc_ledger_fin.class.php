@@ -639,24 +639,54 @@ class Acc_Ledger_Fin extends Acc_Ledger
                     $cur_rate=$acc_currency->get_rate_date($e_date);
                     $default_currency=new Acc_Currency($this->db , 0);
                     // saldo
-                    
-                    $r.='<br>'.sprintf(_("Ancien solde  = %f %s"),$solde, $cur);
+                    $r .= "<table>";
+                    $r .= tr(
+                        td(_("Ancien solde")) .
+                        td(nbm($solde).$cur, 'class="num"')
+                    );
                     $new_solde=bcadd($solde,$tot_amount);
-                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),$new_solde, $cur);
-                    $r.='<br>'.sprintf(_("Difference  = %f %s"), $tot_amount, $cur);
+                    $r .= tr(
+                        td(_("Nouveau solde")) .
+                        td(nbm($new_solde).$cur, ' class="num"')
+                    );
+                    $r .= tr(
+                        td(_("Difference")) .
+                        td(nbm($tot_amount).$cur, ' class="num"')
+                    );
+                    $r.=tr(
+                        td(_("Taux")).
+                        td($cur_rate)
+                    );
+                    $r.=tr(
+                        td(_("Nouveau solde")).
+                        td(bcdiv($new_solde,$cur_rate).$default_currency->get_code(), ' class="num"')
+                        );
+                    $r.='</table>';
+
 
                     
-                    $r.='<br>'.sprintf(_("Taux = %s"),$cur_rate);
-                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),bcmul($new_solde,$cur_rate),$default_currency->get_code());
+
                 } else {
                     
                     $cur=$acc_currency->get_code();
                     // saldo
-                    
-                    $r.='<br>'.sprintf(_("Ancien solde  = %f %s"),$solde, $cur);
-                    $new_solde=bcadd($new_solde,$tot_amount);
-                    $r.='<br>'.sprintf(_("Nouveau solde  = %f %s"),$new_solde, $cur);
-                    $r.='<br>'.sprintf(_("Difference  = %f %s"), $tot_amount, $cur);
+                    $r .= "<table>";
+                    $r .= tr(
+                        td(_("Ancien solde")) .
+                        td(nbm($solde).$cur, 'class="num"')
+                    );
+                    $new_solde=bcadd($solde,$tot_amount);
+                    $r .= tr(
+                        td(_("Nouveau solde")) .
+                        td(nbm($new_solde).$cur, ' class="num"')
+                    );
+                    $r .= tr(
+                        td(_("Difference")) .
+                        td(nbm($tot_amount).$cur, ' class="num"')
+                    );
+
+                    $r.='</table>';
+
                     
                 }
 		// check for upload piece
@@ -803,7 +833,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                                 
 				// convert to EUR if needed and round it
                                 $amount_input=${"e_other$i" . "_amount"} = round(${"e_other$i" . "_amount"}, 2);
-                                $amount_eur=bcmul($amount_input,$currency_rate);
+                                $amount_eur=bcdiv($amount_input,$currency_rate);
 
 
 
@@ -852,7 +882,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                                 $operation_currency = new Operation_currency_SQL($this->db);
                                 $operation_currency->oc_amount=$amount_input;
                                 $operation_currency->oc_vat_amount=0;
-                                $operation_currency->oc_price_unit=$amount_input;
+                                $operation_currency->oc_price_unit=0;
                                 $operation_currency->j_id=$j_id_currency;
                                 $operation_currency->insert();
                                 
@@ -883,18 +913,26 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				$acc_operation->qcode = $e_bank_account;
 				$j_id=$acc_operation->insert_jrnx();
                                 
-          
+                                // -- Insert into Operation Currency 
+                                $operation_currency = new Operation_currency_SQL($this->db);
+                                $operation_currency->oc_amount=$amount_input;
+                                $operation_currency->oc_vat_amount=0;
+                                $operation_currency->oc_price_unit=0;
+                                $operation_currency->j_id=$j_id;
+                                $operation_currency->insert();
 
 
 				if (sql_string(${"e_other$i" . "_comment"}) == null)
 				{
 					// if comment is blank set a default one
-					$comment = "  compte : " . $fBank->strAttribut(ATTR_DEF_NAME) . ' a ' .
-							$fPoste->strAttribut(ATTR_DEF_NAME);
+					$comment = sprintf(_("  compte : %s a %s "), 
+                                                        $fBank->strAttribut(ATTR_DEF_NAME),
+							$fPoste->strAttribut(ATTR_DEF_NAME)
+                                                );
 				}
 				else
 				{
-					$comment = ${'e_other' . $i . '_comment'};
+					$comment =strip_tags(${'e_other' . $i . '_comment'});
 				}
 
 

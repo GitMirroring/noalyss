@@ -706,7 +706,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 }
                 // insert into quant_purchase
                 //-----
-                $price_euro=bcmul(${'e_march'.$i.'_price'}, $p_currency_rate);
+                $price_euro=bcdiv(${'e_march'.$i.'_price'}, $p_currency_rate);
                 if ( $g_parameter->MY_TVA_USE=='Y')
                 {
 
@@ -788,7 +788,14 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             }
             $let_client=$acc_operation->insert_jrnx();
 
-
+             // --- insert also the currency amount for the customer 
+            $operation_currency=new Operation_currency_SQL($this->db);
+            $operation_currency->oc_amount=$tot_amount_cur;
+            $operation_currency->oc_vat_amount=0;
+            $operation_currency->oc_price_unit=0;
+            $operation_currency->j_id=$let_client ;
+            $operation_currency->insert();
+                
             if ( $g_parameter->MY_TVA_USE=='Y')
             {
                 /* save all vat
@@ -933,9 +940,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $cust_amount=bcsub($cust_amount, $tot_tva_reversed);
 
                 // Convert paid amount in EUR
-                $acompte=bcmul($acompte, $p_currency_rate);   
+                $acompte_defcur=bcdiv($acompte, $p_currency_rate);   
 
-                $famount=bcsub($cust_amount,$acompte);
+                $famount=bcsub($cust_amount,$acompte_defcur);
                 
                 $acc_pay->poste=$poste_val;
                 $acc_pay->qcode=$fqcode;
@@ -1397,11 +1404,12 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $currency_select->selected=$http->request('p_currency_code','string',0);
         
         $currency_input=new INum("p_currency_rate");
+        $currency_input->prec=6;
         $currency_input->id="p_currency_rate";
         $currency_input->value=$http->request('p_currency_rate','string',1);
-        $currency_input->javascript='onchange="format_number(this,4);CurrencyCompute(\'p_currency_rate\',\'p_currency_euro\');"';
-        
-        
+        $currency_input->javascript='onchange="format_number(this,6);CurrencyCompute(\'p_currency_rate\',\'p_currency_euro\');"';
+       
+        $currency=new Acc_Currency($this->db,0);
         
         // 
         // Button for template operation
@@ -1685,10 +1693,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $decalage=($g_parameter->MY_TVA_USE == 'Y')?'<td></td><td></td><td></td><td></td>':'<td></td>';
          $tot = round(bcadd($tot_amount, $tot_tva), 2);
         $str_tot=_('Totaux');
-        $tot_eur=round(bcmul($tot, $p_currency_rate),2);
+        $tot_eur=round(bcdiv($tot, $p_currency_rate),2);
         
-        // Get currency code
-        $str_code='EUR';
+       // Get currency code
+        $default_currency=new Acc_Currency($this->db,0);
+        $str_code=$default_currency->get_code();
         if ( $p_currency_code != 0 ) {
             $acc_currency=new Acc_Currency($this->db);
             $acc_currency->set_id($p_currency_code);

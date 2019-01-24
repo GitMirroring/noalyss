@@ -31,8 +31,9 @@ require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
 global $g_user,$g_parameter;
 $cn=Dossier::connect();
 
-$id_predef = (isset($_REQUEST['p_jrn_predef'])) ? $_REQUEST['p_jrn_predef'] : -1;
-$id_ledger = (isset($_REQUEST['p_jrn'])) ? $_REQUEST['p_jrn'] : $id_predef;
+$id_predef = $http->request('p_jrn_predef','number',-1);
+$id_ledger = $http->request('p_jrn','number',$id_predef);
+
 $ledger = new Acc_Ledger($cn, $id_ledger);
 $first_ledger=$ledger->get_first('ODS');
 $ledger->id = ($ledger->id == -1) ? $first_ledger['jrn_def_id'] : $id_ledger;
@@ -73,6 +74,8 @@ echo '<form method="post"  class="print" onsubmit="return controleBalance();" >'
 echo dossier::hidden();
 echo HtmlInput::request_to_hidden(array('ac','jr_optype'));
 
+$default_currency=new Acc_Currency($cn,0);
+
 echo $ledger->input($p_post);
 
 
@@ -80,15 +83,29 @@ echo $ledger->input($p_post);
 
 echo '<div style="position:absolute;width:40%;right:20px">';
 echo '<table class="info_op">'.
- '<tr>'.td(_('Débit')) . '<td id="totalDeb"></td>' .
- td(_('Crédit')) . ' <td id="totalCred"></td>' .
- td(_('Difference')) . ' <td id="totalDiff"></td>';
+ '<tr>'.td('').
+        td(_('Débit')) .
+        '<td id="totalDeb" class="num"></td>' .
+        td(_('Crédit')) .
+        ' <td id="totalCred" class="num"></td>' .
+        td(_('Difference')) . 
+        ' <td id="totalDiff"></td>'.
+        '</tr>';
+// For currency
+echo  '<tr id="row_currency">'.td($default_currency->get_code()).
+        td(_('Débit')) .
+        '<td id="default_currency_deb" class="num"></td>' .
+        td(_('Crédit')) .
+        ' <td id="default_currency_cred" class="num"></td>' .
+        td().
+        '</tr>';
 echo '</table>';
+
 echo '</div>';
 
 $iconcerned=new IConcerned('jrn_concerned');
 $iconcerned->amount_id="totalDeb";
-echo "Opération rapprochée : ".$iconcerned->input();
+printf (_("Opération rapprochée : %s"),$iconcerned->input());
 
 echo '<p>';
 echo HtmlInput::button('add', _('Ajout d\'une ligne'), 'onClick="quick_writing_add_row()"');

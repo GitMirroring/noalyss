@@ -309,7 +309,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $amount_currency = bcmul(${'e_march' . $i . '_price'}, ${'e_quant' . $i});
                 
                 // convert amount to currency
-                $amount=bcmul($amount_currency,$p_currency_rate);
+                $amount=bcdiv($amount_currency,$p_currency_rate);
                 
                 $tot_amount = bcadd($tot_amount, $amount);
                 $tot_amount = round($tot_amount, 2);
@@ -363,7 +363,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         $l->load();
                         $tva_item_currency = bcmul($amount, $l->get_parameter('rate'));
                     }
-                    $tva_item=bcmul($tva_item_currency,$p_currency_rate);
+                    $tva_item=bcdiv($tva_item_currency,$p_currency_rate);
                     $tva_item=round($tva_item,2);
                     if (isset($tva[$idx_tva]))
                     {
@@ -413,7 +413,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                     $op->save_form_plan($_POST, $i, $j_id);
                 }
                 
-                $price_euro=bcmul(${'e_march'.$i.'_price'}, $p_currency_rate);
+                $price_euro=bcdiv(${'e_march'.$i.'_price'}, $p_currency_rate);
                 if ($g_parameter->MY_TVA_USE == 'Y') {
                     /* save into quant_sold */
                     $r = $this->db->exec_sql("select insert_quant_sold ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)", array(null, /* 1 */
@@ -478,8 +478,16 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $tot_debit=round($tot_debit, 2);
             }
             $let_tiers = $acc_operation->insert_jrnx();
-
-
+            
+            // --- insert also the currency amount for the customer 
+            $operation_currency=new Operation_currency_SQL($this->db);
+            $operation_currency->oc_amount=$tot_amount_cur;
+            $operation_currency->oc_vat_amount=0;
+            $operation_currency->oc_price_unit=0;
+            $operation_currency->j_id=$let_tiers ;
+            $operation_currency->insert();
+                
+            
             /** save all vat
              * $i contains the tva_id and value contains the vat amount
              * if if ($g_parameter->MY_TVA_USE == 'Y' )
@@ -619,7 +627,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                     $poste_val = $sposte;
                 }
                  // Convert paid amount in EUR
-                $acompte_eur=bcmul($acompte, $p_currency_rate);   
+                $acompte_eur=bcdiv($acompte, $p_currency_rate);   
 
                 $famount=bcsub($cust_amount,$acompte_eur);
                 $acc_pay->poste = $poste_val;
@@ -942,12 +950,13 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         // Add the sum
         $decalage=($g_parameter->MY_TVA_USE == 'Y')?'<td></td><td></td><td></td><td></td>':'<td></td>';
          $tot = bcadd($tot_amount, $tot_tva, 2);
-        $tot_eur=round(bcmul($tot, $p_currency_rate),2);
+        $tot_eur=round(bcdiv($tot, $p_currency_rate),2);
         $tot=nbm($tot);
         $str_tot=_('Totaux');
         
         // Get currency code
-        $str_code='EUR';
+        $default_currency=new Acc_Currency($this->db,0);
+        $str_code=$default_currency->get_code();
         if ( $p_currency_code != 0 ) {
             $acc_currency=new Acc_Currency($this->db);
             $acc_currency->set_id($p_currency_code);
@@ -1448,7 +1457,7 @@ EOF;
             $Price = new INum();
             $Price->setReadOnly(false);
             $Price->size = 9;
-            $Price->javascript = "onBlur='format_number(this,4);clean_tva($i);compute_ledger($i)'";
+            $Price->javascript = "onBlur=\"format_number(this,4);clean_tva($i);compute_ledger($i);\"";
             $array[$i]['pu'] = $Price->input("e_march" . $i . "_price", $march_price);
             $array[$i]['tva'] = '';
             $array[$i]['amount_tva'] = '';
@@ -1461,7 +1470,7 @@ EOF;
                 $Tva->set_attribute('compute', $i);
                 $Tva->set_filter("sale");
 
-                $Tva->js = 'onblur="format_number(this);clean_tva(' . $i . ');compute_ledger(' . $i . ')"';
+                $Tva->js = 'onblur="format_number(this);clean_tva(' . $i . ');compute_ledger(' . $i . ');"';
                 $Tva->value = $march_tva_id;
                 $array[$i]['tva'] = $Tva->input("e_march$i" . "_tva_id");
                 // vat amount
@@ -1479,7 +1488,7 @@ EOF;
             $Quantity = new INum();
             $Quantity->setReadOnly(false);
             $Quantity->size = 8;
-            $Quantity->javascript = "onChange='format_number(this);clean_tva($i);compute_ledger($i)'";
+            $Quantity->javascript = "onChange=\"format_number(this);clean_tva($i);compute_ledger($i);\"";
             $array[$i]['quantity'] = $Quantity->input("e_quant" . $i, $quant);
         }// foreach article
         $f_type = _('Client');
@@ -1490,10 +1499,11 @@ EOF;
         
         $currency_input=new INum("p_currency_rate");
         $currency_input->id="p_currency_rate";
+        $currency_input->prec=6;
         $currency_input->value=$http->request('p_currency_rate','string',1);
         $currency_input->javascript='onchange="format_number(this,4);CurrencyCompute(\'p_currency_rate\',\'p_currency_euro\');"';
         
-        
+        $currency=new Acc_Currency($this->db,0);
         
         // 
         // Button for template operation

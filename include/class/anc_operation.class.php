@@ -799,7 +799,7 @@ class Anc_Operation
                 $op->oa_group=$this->oa_group;
                 $op->j_id=$p_j_id;
                 // convert oa_amount to EUR
-                $op->oa_amount=bcmul($val[$p_item][$row],$this->currency_rate);
+                $op->oa_amount=bcdiv($val[$p_item][$row],$this->currency_rate);
                 $op->oa_debit=$this->oa_debit;
                 $op->oa_date=$this->oa_date;
 

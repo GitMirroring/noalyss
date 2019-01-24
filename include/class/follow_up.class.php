@@ -769,7 +769,7 @@ class Follow_Up
 
 
         // if there are no records return a message
-        if (sizeof($a_row)==0 or $a_row==false)
+        if ($a_row==false || sizeof($a_row)==0 )
         {
             $r='<div style="clear:both">';
             $r.='<hr>Aucun enregistrement trouvé';

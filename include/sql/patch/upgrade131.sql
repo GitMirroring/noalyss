@@ -1,6 +1,6 @@
 begin;
 
-drop VIEW public.v_detail_sale;
+drop VIEW if exists public.v_detail_sale;
 
 CREATE OR REPLACE VIEW public.v_detail_sale as
 WITH m AS (
@@ -144,6 +144,8 @@ join (select j_id ,jr_id,f_id,j_poste,jr_internal
 join operation_currency as oc on (oc.j_id=q1.j_id)
 group by x.j_poste,x.j_id
 ;
+
+drop view if exists v_all_card_currency;
 
 create or replace view v_all_card_currency as 
 select sum(oc_amount) as sum_oc_amount,sum(oc_vat_amount) as sum_oc_vat_amount,x.f_id,x.j_id

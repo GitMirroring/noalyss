@@ -190,10 +190,10 @@ class Acc_Account_Ledger
             ,jrn.currency_id
             ,(select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso
             ,j_montant
-            ,sum_oc_amount as oc_amount
-            ,sum_oc_vat_amount as oc_vat_amount
+            ,oc_amount
+            ,oc_vat_amount
   from jrnx as j1
-    left join v_all_account_currency as va on (j1.j_id = va.j_id and j1.j_poste=va.j_poste) 
+    left join operation_currency as va on (j1.j_id = va.j_id )
           join jrn_def on (jrn_def_id=j_jrn_def )
            join jrn on (jr_grpt_id=j_grpt)
            join tmp_pcmn on (j1.j_poste=pcm_val)
@@ -407,7 +407,7 @@ class Acc_Account_Ledger
         "<TH style=\"text-align:left\">"._('Description')."</TH>".
         "<TH style=\"text-align:left\">"._('Type')."</TH>".
         "<TH style=\"text-align:left\">"._('ISO')."</TH>".
-        "<TH style=\"text-align:left\">"._('Dev.')."</TH>".
+        "<TH style=\"text-align:right\">"._('Dev.')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."</TH>".
         "<TH style=\"text-align:right\">"._("Crédit")."</TH>".
         th('Prog.','style="text-align:right"').
@@ -464,8 +464,8 @@ class Acc_Account_Ledger
 		$side="&nbsp;".$this->get_amount_side($progress);
 	    $sum_cred=bcadd($sum_cred,$op['cred_montant']);
 	    $sum_deb=bcadd($sum_deb,$op['deb_montant']);
-		if ($idx%2 == 0) $class='class="odd"'; else $class=' class="even"';
-		$idx++;
+            $class=($idx%2 == 0)?'class="odd"':$class=' class="even"';
+            $idx++;
 
 	    echo "<TR $class name=\"tr_" . $let . "_" . $from_div . "\">" .
 			"<TD>".smaller_date(format_date($op['j_date']))."</TD>".
@@ -476,10 +476,13 @@ class Acc_Account_Ledger
 	      "<TD>".h($op['description'])."</TD>".
                     td($op['jr_optype']);
                      /// If the currency is not the default one , then show the amount
-            if ( $op['currency_id'] > 0 && $op['oc_amount'] != 0)
+            if ( $op['currency_id'] > 0  )
             {
-             echo   td($op['cr_code_iso']).
-                    td(nbm($op['oc_amount'],4),'style="text-align:right;padding-left:10px;"');
+                // some amount are not directly recorded into operation_currency, like VAT
+                $currency_val=($op['oc_amount'] == 0)?round(bcmul ($op['j_montant'],$op['currency_rate']),2):$op['oc_amount'] ;
+               
+               echo   td($op['cr_code_iso']).
+                    td(nbm($currency_val,2),'style="text-align:right;padding-left:10px;"');
             } else {
                 echo td().td();
             }
