@@ -83,24 +83,13 @@ if ($sa=="pa_write")
     else
     {
         $new=new Anc_Plan($cn);
-        $new->name=$_POST['pa_name'];
-        $new->description=$_POST['pa_description'];
+        $new->name=$http->post("pa_name");
+        $new->description=$http->post("pa_description");
         $new->add();
     }
     $sa="anc_menu";
 }
 
-// Update the PA
-if ($sa=="pa_update")
-{
-    $pa_id=$http->get("pa_id","number");
-
-    $new=new Anc_Plan($cn, $pa_id);
-    $new->name=$_POST['pa_name'];
-    $new->description=$_POST['pa_description'];
-    $new->update();
-    $sa="anc_menu";
-}
 
 /* delete pa */
 if ($sa=="pa_delete")
@@ -120,19 +109,25 @@ if ($sa=="pa_detail")
     $pa_id=$http->get("pa_id","number");
     
     $new=new Anc_Plan($cn, $pa_id);
-    $wSa=HtmlInput::hidden("sa", "pa_update");
 
     $new->get();
 
     $ret.= '<div class="content">';
 
     $ret.= $new->form();
-    $ret.= $wSa;
-    $ret.="<p>";
+    // Export in CSV
+    $ret.='<form method="GET" action="export.php" style="display:inline">';
+    $ret.=Dossier::hidden();
+    $ret.=HtmlInput::hidden("act",'CSV:Analytic_Axis');
+    $ret.=HtmlInput::hidden("pa_id",$pa_id);
+    $ret.=HtmlInput::submit('export_analytic_axis',_("Export CSV"));
+    $ret.='</form>';
     $ret.=HtmlInput::button_anchor(_('Efface ce plan'), '', 'remove_analytic_plan',
                     'onclick="return confirm_box(\'remove_analytic_plan\',\'Effacer ?\',function () {window.location=\'do.php?ac='.$_REQUEST['ac'].'&pa_id='.$_GET['pa_id'].'&sa=pa_delete&'.$str_dossier.'\';})"',
                     'smallbutton');
-    $ret.="</p>";
+
+    $ret.='</div>';
+
     //---------------------------------------------------------------------
     //  Detail now
     // Use Manage_Table
@@ -141,7 +136,7 @@ if ($sa=="pa_detail")
 
     $new=new Anc_Plan($cn, $pa_id);
     $new->get();
-    $ret.='<div class="content">';
+    $ret.='<div class="content" style="margin-top:1rem">';
     $anc=new Poste_analytique_SQL($cn);
     $anc->pa_id=$pa_id;
     $accounting=new Anc_Account_Table($anc);
