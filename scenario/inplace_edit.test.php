@@ -29,6 +29,7 @@ require_once NOALYSS_INCLUDE . '/lib/itext.class.php';
 require_once NOALYSS_INCLUDE . '/lib/inum.class.php';
 require_once NOALYSS_INCLUDE . '/lib/inplace_edit.class.php';
 if (!isset($_REQUEST["TestAjaxFile"])) {
+    html_page_start();
     echo h1(_("Test Inplace_Edit"));
     /***********************************************
      * If TestAjaxFile is not set it is not a ajax call
