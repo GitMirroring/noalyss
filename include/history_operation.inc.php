@@ -94,7 +94,7 @@ if (!isset($p_array['date_start']))
 	list($date_start, $date_end) = $per->get_date_limit();
 	$p_array['date_start'] = $date_start;
 	$p_array['date_end'] = $date_end;
-	$msg='<h2 class="info2">'._("Période ").$date_start._(" au ").$date_end.'</h2>';
+	$msg='<h2 class="info2">'.sprintf(_("Période %s au %s "),$date_start,$date_end).'</h2>';
 }
 else
 {
@@ -138,11 +138,17 @@ $r = HtmlInput::get_to_hidden(array('search_opnb_jrn',
     'unpaid', 
     'gDossier', 
     'ledger_type', 
-    'p_action'));
+    'p_action',
+    'search_opr_jrn'));
 if (isset($_GET['r_jrn']))
 {
-	foreach ($_GET['r_jrn'] as $k => $v)
-		$r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
+    foreach ($_GET['r_jrn'] as $k => $v)
+        $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
+}
+if (isset($_GET['search_opr_jrn']))
+{
+    foreach ($_GET['search_opr_jrn'] as $k => $v)
+        $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
 }
 echo $r;
 
@@ -156,6 +162,11 @@ echo '</form>';
 $r = HtmlInput::get_to_hidden(array('l', 'date_paid_start','date_paid_end',
     'date_start', 'date_end', 'desc', 'amount_min', 'amount_max', 'qcode', 
     'accounting', 'unpaid', 'gDossier', 'ledger_type', 'p_action'));
+if (isset($_GET['search_opr_jrn']))
+{
+    foreach ($_GET['search_opr_jrn'] as $k => $v)
+        $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
+}
 if (isset($_GET['r_jrn']))
 {
 	foreach ($_GET['r_jrn'] as $k => $v)
