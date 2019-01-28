@@ -148,8 +148,6 @@ class Anc_Print
                 echo $from->input(); 
             ?>
         </td>
-    </tr>
-    <tr>
         <td>
             <?php 
                 echo _('Jusque') ;
@@ -161,13 +159,21 @@ class Anc_Print
                 echo $to->input(); 
             ?>
         </td>
+        <td>
+        <?php echo _( "Plan Analytique ")?>
+        </td>
+        <td>
+        <?php
+        echo $plan_id->input();
+        echo Icon_Action::infobulle(42);
+        ?>
+        </td>
+
     </tr>
     
 </table>
 <span style="padding:5px;margin:5px;display:block;">
-    <?php echo _( "Plan Analytique :").$plan_id->input(); 
-        echo Icon_Action::infobulle(42);
-    ?>
+
 </span>
 
 <?php

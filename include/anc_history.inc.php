@@ -27,6 +27,9 @@ if (isset($_GET['result']))
     {
         echo $list->show_button();
         echo $result;
+        echo '<div></div>';
+        echo $list->show_button();
+
     }
     else
     {
