@@ -53,16 +53,15 @@ class Inplace_Edit
      */
     function __construct(HtmlInput $p_input) {
         $this->input=$p_input;
-        $x["input"]=serialize($p_input);
-        $this->json=json_encode($x, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
+        $x["input"]=base64_encode(serialize($p_input));
+        $this->json=json_encode($x, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP |JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
         $this->message=_("Cliquez pour éditer");
     }
     ///@brief build a Inplace_Edit object from
     /// a serialized string (ajax json parameter = input)
     static function build($p_serialize)
     {
-        
-        $input=  unserialize($p_serialize);
+        $input=  unserialize(base64_decode($p_serialize));
         $obj=new Inplace_Edit($input);
         return $obj;
     }
@@ -170,7 +169,7 @@ EOF;
     function add_json_param($p_attribute,$p_value) {
         $x=json_decode($this->json,TRUE);
         $x[$p_attribute]=$p_value;
-        $this->json=json_encode($x, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
+        $this->json=json_encode($x, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP |JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
     }
     /**
      * \brief return the HtmlObject , var input
@@ -187,8 +186,8 @@ EOF;
     function set_input(HtmlInput $p_input) {
         $this->input = $p_input;
         $x=json_decode($this->json,TRUE);
-        $x["input"]=serialize($p_input);
-        $this->json=json_encode($x, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
+        $x["input"]=base64_encode(serialize($p_input));
+        $this->json=json_encode($x, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP |JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
     }
     /**
      * Set the value of the HtmlInput object $input
@@ -196,7 +195,7 @@ EOF;
      */
     function set_value($p_value) {
         $input=$this->get_input();
-        $this->input->set_value(strip_tags($p_value));
+        $this->input->set_value($p_value);
         $this->set_input($input);
     }
     /**

@@ -72,9 +72,11 @@ class Anc_Listing extends Anc_Print
         }
         $cred=0;$deb=0;
         bcscale(2);
-        $r.= '<table class="result" style="width=100%">';
+        $r.='<div></div>';
+        $r.=_('Cherche').HtmlInput::filter_table("tb_anchop",'0,1,2,3,4,5,6,7',1);
+        $r.= '<table id="tb_anchop" class="sortable" >';
         $r.= '<tr>'.
-             '<th>'._('Date').'</th>'.
+             '<th class=" sorttable_sorted">'._('Date').'</th>'.
              '<th>'._('Poste').'</th>'.
              '<th>'._('Quick_code').'</th>'.
              '<th>'._('Analytique').'</th>'.
@@ -94,14 +96,14 @@ class Anc_Listing extends Anc_Print
 	    $card_detail=($row['f_id'] != null)?HtmlInput::history_card($row['f_id'],$row['qcode']):'';
 
             $r.=
-                '<td>'.$row['oa_date'].'</td>'.
-	      td($post_detail).
+                '<td sorttable_customkey="'.$row['str_order_date'].'">'.$row['oa_date'].'</td>'.
+	      td($post_detail,'  sorttable_customkey="X'.$row['j_poste'].'"').
 	      td($card_detail).
 	      '<td>'.HtmlInput::history_anc_account($row['po_id'],h($row['po_name'])).'</td>'.
 	      '<td>'.h($row['oa_description']).'</td>'.
 	      td($row['jr_comment']).
 	      '<td>'.$detail.'</td>'.
-	      '<td class="num">'.nbm($row['oa_amount']).'</td>'.
+	      '<td class="num" sorttable_customkey="'.$row['oa_amount'].'">'.nbm($row['oa_amount']).'</td>'.
                 '<td>'.(($row['oa_debit']=='f')?'C':'D').'</td>';
             $r.= '</tr>';
             if ( $row['oa_debit'] == 'f') {$cred=bcadd($cred,$row['oa_amount']);}
@@ -112,15 +114,15 @@ class Anc_Listing extends Anc_Print
         ob_start();
         echo _("Total");
         echo '<ol style="list-style:none">';
-        echo '<li>'.nbm($deb).' D '.'</li>';
-        echo '<li>'.nbm($cred).' C '.'</li>';
+        echo '<li>'._('Total')." ".nbm($deb).' D '.'</li>';
+        echo '<li>'._('Total')." ".nbm($cred).' C '.'</li>';
         echo '<li>';
         echo _('Solde');
         $solde=abs(bcsub($deb,$cred));
-        echo $solde;
-        if ( $cred == $deb ) echo " = ";
-        else if ( $cred > $deb ) echo " C ";
-        else echo ' D ';
+        echo $solde." ";
+        echo findSide($deb-$cred);
+        echo '<li>';
+        echo '</ol>';
 
         $r_solde=ob_get_clean();
         

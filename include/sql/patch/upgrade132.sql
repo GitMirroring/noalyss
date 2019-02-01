@@ -10,6 +10,6 @@ operation_currency
 join jrnx using (j_id)
 group by f_id,j_id;
 
-commit ;
+
 insert into version (val,v_description) values (133,'Currency : default accounting for currency difference  ');
 commit ;

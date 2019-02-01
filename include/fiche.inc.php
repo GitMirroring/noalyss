@@ -28,8 +28,9 @@ require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 
 $gDossier = dossier::id();
 $cn = Dossier::connect();
+$http=new HttpInput();
 global $g_user, $g_failed;
-;
+
 
 /**
  * Show first the form
@@ -37,9 +38,9 @@ global $g_user, $g_failed;
 /* category */
 $categorie = new ISelect('cat');
 $categorie->value = $cn->make_array("select fd_id,fd_label||'('||(select count(*) from fiche where fiche.fd_id=fiche_def.fd_id)::text||')' from fiche_def order by fd_label");
-$categorie->selected = (isset($_GET['cat'])) ? $_GET['cat'] : 0;
+$categorie->selected = $http->get('cat','number',0);
 $str_categorie = $categorie->input();
-
+$ac = $http->request('ac');
 $icall = new ICheckBox("allcard", 1);
 $icall->selected = (isset($_GET['allcard'])) ? 1 : 0;
 $str_icall = $icall->input();
@@ -51,8 +52,8 @@ list ($first, $last) = $iperiode->get_limit($exercice);
 $periode_start = new IDate('start');
 $periode_end = new IDate('end');
 
-$periode_start->value = (isset($_GET['start'])) ? $_GET['start'] : $first->first_day();
-$periode_end->value = (isset($_GET['end'])) ? $_GET['end'] : $last->last_day();
+$periode_start->value =  $http->get('start',"date",$first->first_day());
+$periode_end->value =  $http->get('end','date', $last->last_day());
 
 $str_start = $periode_start->input();
 $str_end = $periode_end->input();
@@ -75,12 +76,12 @@ $histo->javascript = 'onchange="if (this.value==3 || this.value==-1) {
                    g(&quot;trstart&quot;).style.display=&quot;none&quot;;g(&quot;trend&quot;).style.display=&quot;none&quot;;g(&quot;allcard&quot;).style.display=&quot;none&quot;;}
                    else  {g(&quot;trstart&quot;).style.display=&quot;&quot;;g(&quot;trend&quot;).style.display=&quot;&quot;;g(&quot;allcard&quot;).style.display=&quot;&quot;;}"';
 
-$histo->selected = (isset($_GET['histo'])) ? $_GET['histo'] : -1;
+$histo->selected =  $http->get('histo',"number", -1);
 $str_histo = $histo->input();
 echo '<div class="content">';
 echo '<FORM method="GET">';
 echo dossier::hidden();
-echo HtmlInput::hidden('ac', $_GET['ac']);
+echo HtmlInput::hidden('ac', $ac);
 require_once NOALYSS_TEMPLATE.'/impress_cat_card.php';
 echo HtmlInput::submit('cat_display', _('Recherche'));
 echo '</FORM>';
@@ -107,9 +108,9 @@ echo '<hr>';
 if (!isset($_GET['cat_display']))
 	return;
 
-$fd_id = $_GET['cat'];
+$fd_id =$categorie->selected ;
 
-$array = Fiche::get_fiche_def($cn, $_GET['cat'], 'name_asc');
+$array = Fiche::get_fiche_def($cn,$categorie->selected , 'name_asc');
 
 $h_add_card_b = new IButton('add_card');
 $h_add_card_b->label = _('Créer une nouvelle fiche');
@@ -122,7 +123,7 @@ $str_add_card = ($g_user->check_action(FICADD) == 1) ? $h_add_card_b->input() : 
 
 $allcard = (isset($_GET['allcard'])) ? 1 : 0;
 if ( $allcard == 0 ){
-	$fiche_def=new Fiche_Def($cn,$_GET['cat']);
+	$fiche_def=new Fiche_Def($cn,$categorie->selected );
 	$fiche_def->get();
 	echo h1($fiche_def->label,"");
 	echo h2($fiche_def->fd_description,"");
@@ -141,7 +142,7 @@ echo '<div class="content">';
  * Liste
  *
  * ******************************************************************************************************************************** */
-if ($_GET['histo'] == -1)
+if ($histo->selected   == -1)
 {
 	$write = $g_user->check_action(FICADD);
 	/**
@@ -227,7 +228,7 @@ if ($_GET['histo'] == -1)
  * Summary
  *
  * ******************************************************************************************************************************** */
-if ($_GET['histo'] == 3)
+if ($histo->selected  == 3)
 {
 	$cat_card = new Fiche_Def($cn);
 	$cat_card->id = $_GET['cat'];
@@ -281,7 +282,7 @@ if (isDate($_REQUEST['start']) == null || isDate($_REQUEST['end']) == null)
 /*************************************************************************************************************************/
  // Balance agée tous
 /*************************************************************************************************************************/
-if ( $_GET['histo'] == 8)
+if ( $histo->selected  == 8)
 {
     require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
     $bal=new Balance_Age($cn);
@@ -317,7 +318,7 @@ if ( $_GET['histo'] == 8)
 /*************************************************************************************************************************/
  // Balance en-cours
 /*************************************************************************************************************************/
-if ( $_GET['histo'] == 7)
+if ( $histo->selected  == 7)
 {
     require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
     $bal=new Balance_Age($cn);
@@ -354,14 +355,14 @@ if ( $_GET['histo'] == 7)
  * Balance
  *
  **********************************************************************************************************************************/
-if ($_GET['histo'] == 4 || $_GET['histo'] == 5)
+if ($histo->selected  == 4 || $histo->selected  == 5)
 {
 	if ( $allcard == 0 ) echo $str_add_card;
 	echo $export_pdf;
 	echo $export_csv;
 	echo $export_print;
 
-	$fd = new Fiche_Def($cn, $_REQUEST['cat']);
+	$fd = new Fiche_Def($cn, $categorie->selected );
 	if ($allcard == 0 && $fd->hasAttribute(ATTR_DEF_ACCOUNT) == false)
 	{
 		echo alert(_("Cette catégorie n'ayant pas de poste comptable n'a pas de balance"));
@@ -374,7 +375,7 @@ if ($_GET['histo'] == 4 || $_GET['histo'] == 5)
 	}
 	else
 	{
-		$afiche[0] = array('fd_id' => $_REQUEST['cat']);
+		$afiche[0] = array('fd_id' => $categorie->selected );
 	}
 
 	for ($e = 0; $e < count($afiche); $e++)
@@ -427,7 +428,7 @@ if ($_GET['histo'] == 4 || $_GET['histo'] == 5)
 					td(nbm($solde['debit']), 'class="sorttable_numeric" sorttable_customkey="'.$solde['debit'].'" style="text-align:right"') .
 					td(nbm($solde['credit']), 'class="sorttable_numeric" sorttable_customkey="'.$solde['debit'].'" style="text-align:right"') .
 					td(nbm(abs($solde['solde'])), 'class="sorttable_numeric" sorttable_customkey="'.$solde['solde'].'" style="text-align:right"') .
-					td((($solde['debit'] < $solde['credit']) ? 'C' : 'D'), 'style="text-align:right"'), $class
+					td(findSide($solde['debit'] - $solde['credit']), 'style="text-align:right"'), $class
 			);
 
 
@@ -441,7 +442,8 @@ if ($_GET['histo'] == 4 || $_GET['histo'] == 5)
                                 td(nbm($sum_deb), 'style="text-align:right"').
                                 td(nbm($sum_cred), 'style="text-align:right"').
                                 td(nbm(abs($sum_solde)), 'style="text-align:right"').
-                                td((($sum_deb < $sum_cred) ? 'C' : 'D'), 'style="text-align:right"'),' class="highlight"');
+                                td(findSide($sum_deb - $sum_cred) , 'style="text-align:right"'),
+                                ' class="highlight"');
                 echo '</tfoot>';
 		echo '</table>';
 	}
@@ -582,12 +584,12 @@ for ($e = 0; $e < count($afiche); $e++)
                 $solde=abs(round($amount_cred - $amount_deb, 2));
                 if ( $solde == 0)
                 {
-                    $s='solde';
+                    $s=_('solde');
                 }
                 else if ($amount_deb > $amount_cred)
-			$s = 'solde débiteur';
+			$s = _('solde débiteur');
 		else
-			$s = 'solde crediteur';
+			$s = _('solde crediteur');
 		echo td($s);
 		echo td(nbm($solde), ' style="font-weight:bold;text-align:right"');
 		echo '</tr>';

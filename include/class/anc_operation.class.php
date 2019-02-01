@@ -221,6 +221,7 @@ class Anc_Operation
             po_description,
             oa_debit,
             (case when jr_date is not null then to_char(jr_date,'DD.MM.YYYY') else to_char(oa_date,'DD.MM.YYYY') end )  as oa_date,
+            (case when jr_date is not null then to_char(jr_date,'YYYYMMDD') else to_char(oa_date,'YYYYMMDD') end )  as str_order_date,
             oa_amount,
             oa_group,
             j_id ,
