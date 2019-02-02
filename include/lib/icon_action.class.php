@@ -229,4 +229,18 @@ class Icon_Action
         
         return $r;
     }
+    static function detail($p_id,$p_javascript)
+    {
+        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">&#xe803;</span>',
+                $p_id,
+                $p_javascript);
+        return $r;
+    }
+    static function more($p_id,$p_javascript)
+    {
+        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">...</span>',
+                $p_id,
+                $p_javascript);
+        return $r;
+    }
 }

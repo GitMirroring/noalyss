@@ -247,6 +247,8 @@ $path = array(
     "tva_parameter"=>"ajax_tva_parameter",
     // Currency  , delete a rate
     "CurrencyRateDelete"=>"ajax_currency",
+    // Display all cards using an accounting
+    "display_all_card"=>"ajax_display_all_card"
     // Currency , add / remove / update currency 
     "CurrencyManage"=>"ajax_currency"
 )    ;

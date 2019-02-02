@@ -195,7 +195,9 @@ class Acc_Bilan
         
         /* debit Actif */
          $res=$this->db->execute("sqlAccount",array('ACT','ACTINV'));
-        $result=Database::fetch_array($res, 0);
+         $result=Database::fetch_array($res, 0);
+        
+         /* Show detail */
         
         $debit_actif=($result === false)?0:$result['amount_debit'];
         /* Credit Actif */

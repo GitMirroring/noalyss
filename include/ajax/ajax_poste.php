@@ -43,8 +43,9 @@ mb_internal_encoding("UTF-8");
 
 extract($_REQUEST, EXTR_SKIP);
 
-if  ($g_user->check_dossier(dossier::id()) == 'X') exit();
+$dossier_id=Dossier::id();
 
+if  ($g_user->check_dossier($dossier_id) == 'X') exit();
 switch ($op2)
 {
     /*----------------------------------------------------------------------
@@ -141,7 +142,7 @@ case "sf":
         $array[$i]['javascript']=$str;
     }
     ob_start();
-
+    
     require_once NOALYSS_TEMPLATE.'/account_result.php';
     $r.=ob_get_contents();
     ob_end_clean();
