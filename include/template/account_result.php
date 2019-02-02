@@ -42,7 +42,7 @@
 				$sep=" , ";
 			}
 			if ($max < count($det_qcode)) {
-				echo "...";
+                            echo Icon_Action::detail(uniqid(), sprintf("display_all_card('%s','%s')",$dossier_id,$array[$i]['pcm_val']));
 			}
 		} else {
 			echo HtmlInput::card_detail($array[$i]['acode']);

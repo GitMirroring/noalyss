@@ -77,7 +77,7 @@ class Acc_Plan_MTable extends Manage_Table_SQL
                 $p_row[$this->table->primary_key])
         ;
         
-        
+        $dossier_id=Dossier::id();
         $nb_order=count($this->a_order);
         for ($i=0; $i<$nb_order; $i++)
         {
@@ -97,8 +97,25 @@ class Acc_Plan_MTable extends Manage_Table_SQL
             elseif ($v == "fiche_qcode") {
                 $count=$this->table->cn->get_value("select count(*) from fiche_detail where ad_id=5 and ad_value=$1",array($p_row['pcm_val']));
                if ($count ==  0) echo td("");
-               elseif ($count == 1 ) { echo td($p_row[$v]) ; }
-               elseif ($count > 1) { echo td($p_row[$v] . " ($count) ");} 
+               elseif ($count == 1 ) { 
+                   echo '<td>';
+                   echo HtmlInput::card_detail($p_row[$v]) ; 
+                   echo '</td>';
+               
+               }
+               elseif ($count > 1) { 
+                   echo '<td>';
+                   $a_code=explode(",",$p_row[$v]);
+                   $nb_code=count($a_code);
+                   for ($xx = 0;$xx < $nb_code;$xx++)
+                   {
+                       echo HtmlInput::card_detail($a_code[$xx]) ; 
+                   }
+                   echo  " ($count) ";
+                   echo Icon_Action::detail(uniqid(), sprintf("display_all_card('%s','%s')",$dossier_id,$p_row["pcm_val"]));
+                   echo '</td>';
+                   
+               } 
             }
             elseif ($v=="pcm_lib")
             {
@@ -160,6 +177,16 @@ class Acc_Plan_MTable extends Manage_Table_SQL
         return true;
     }
     
-   
+    /**
+     * @brief display into a dialog box the datarow in order 
+     * to be appended or modified. Can be override if you need
+     * a more complex form
+     */
+    function input()
+    {
+        parent::input();
+        $dossier_id=Dossier::id();
+        echo HtmlInput::button_action(_("Toutes les fiches") , sprintf("display_all_card('%s','%s')",$dossier_id,$this->table->pcm_val));
+    }
     
 }

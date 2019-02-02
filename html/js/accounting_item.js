@@ -244,3 +244,28 @@ function pausecomp(millis)
   do { curDate = new Date(); }
   while(curDate-date < millis);
 }
+/**
+ * Display the list of card using a given accounting
+ * @param dossier
+ * @param accounting
+ * 
+ */
+function display_all_card(p_dossier,p_accounting)
+{
+    waiting_box();
+    var div_dest=add_div({id:'info_card_accounting',cssclass:"inner_box",style:fixed_position(100,250)+";width:auto"});
+    var action=new Ajax.Request ( 'ajax_misc.php',
+                                      {
+                                        method:'get',
+                                        parameters:{op:"display_all_card",
+                                                    gDossier:p_dossier,
+                                                    p_accounting:p_accounting
+                                                },
+                                        onSuccess:function (req)
+                                        {
+                                            div_dest.innerHTML=req.responseText;
+                                            remove_waiting_box();
+                                        }
+                                      }
+                                    );
+}
