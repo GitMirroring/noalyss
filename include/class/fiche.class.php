@@ -802,6 +802,7 @@ class Fiche
                 {
                     if (strlen(trim($value))==0)
                         $value="pas de nom";
+		    $account_name=$value;
                 }
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
