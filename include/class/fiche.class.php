@@ -806,7 +806,7 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_strtoupper(mb_substr(sql_string($value), 0, 40));
+                    $v=mb_strtoupper(mb_substr($value, 0, 40));
                     try
                     {
                         // Check that the accounting can be used directly
@@ -955,7 +955,7 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_strtoupper(sql_string($value));
+                    $v=mb_strtoupper(mb_substr($value,0,40));                    
                     if (trim($v)!='')
                     {
                         if (strpos($v, ',')!=0)
@@ -1993,10 +1993,10 @@ class Fiche
         // Remove from attr_value
         $Res=$this->cn->exec_sql("delete from fiche_detail
                                  where
-                                   f_id=".$this->id);
+                                   f_id=$1",[$this->id]);
 
         // Remove from fiche
-        $Res=$this->cn->exec_sql("delete from fiche where f_id=".$this->id);
+        $Res=$this->cn->exec_sql("delete from fiche where f_id=$1",[$this->id]);
 
     }
     /*!\brief create the sql statement for retrieving all
