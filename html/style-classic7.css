@@ -808,6 +808,12 @@ div.topmenu {
 	font-size:1rem;
        
 }
+.topmenu table {
+    border-collapse:separate;
+    border-spacing:1px;
+    
+}
+
 @media only screen and (max-width:320px) {
   div.topmenu {
     margin-top: 44px;      
@@ -1256,6 +1262,10 @@ div.menu2 a.mtitle:hover,div.menu a.mtitle:hover,td.mtitle a.mtitle:hover {
 }
 div.menu2 a.mtitle:hover {
     border-radius: 0px 0px;
+}
+div.menu2 table {
+    border-collapse: collapse;
+    border-spacing:1px;
 }
 div.menu3 {
 	font-size:13.6px;
