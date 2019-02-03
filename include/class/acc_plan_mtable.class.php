@@ -84,15 +84,17 @@ class Acc_Plan_MTable extends Manage_Table_SQL
             $v=$this->a_order[$i];
             $nb=0;
             $cn=Dossier::connect();
-            $nb=$cn->get_value("select count(*) from jrnx where j_poste=$1",[$p_row['pcm_val']]);
-            $nb+=$cn->get_value("select count(*) from tmp_pcmn where pcm_val_parent=$1",[$p_row['pcm_val']]);
+            $nb_used=$cn->get_value("select count(*) from jrnx where j_poste=$1",[$p_row['pcm_val']]);
+            $nb_plan=$cn->get_value("select count(*) from tmp_pcmn where pcm_val_parent=$1",[$p_row['pcm_val']]);
+            $nb=$nb_used+$nb_plan;
             if ($v=="pcm_val")
             {
                 $js=sprintf("onclick=\"%s.input('%s','%s');\"", $this->object_name,
                         $p_row[$this->table->primary_key], $this->object_name);
                 echo sprintf('<td sort_type="text" sort_value="X%s">%s',
                         htmlspecialchars($p_row[$v]),
-                        HtmlInput::anchor($p_row[$v], "", $js)).'</td>';
+                        HtmlInput::anchor($p_row[$v], "", $js)).
+                        '</td>';
             }
             elseif ($v == "fiche_qcode") {
                 $count=$this->table->cn->get_value("select count(*) from fiche_detail where ad_id=5 and ad_value=$1",array($p_row['pcm_val']));
@@ -122,7 +124,12 @@ class Acc_Plan_MTable extends Manage_Table_SQL
                 
                 if ( $nb >0){
                     echo "<td>";
-                    echo HtmlInput::history_account($p_row['pcm_val'],h($p_row["pcm_lib"]));
+                    if ($nb_used > 0) {
+                        $used=sprintf (' (%s)',$nb_used);
+                        echo HtmlInput::history_account($p_row['pcm_val'],h($p_row["pcm_lib"].$used));
+                    } else {
+                        echo h($p_row["pcm_lib"]);
+                    }
                     echo "</td>";
                 } else {
                     echo td($p_row[$v]);
