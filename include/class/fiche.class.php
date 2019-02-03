@@ -57,6 +57,7 @@ class Fiche
         $this->cn=$p_cn;
         $this->id=$p_id;
         $this->quick_code='';
+        $this->attribut=array();
     }
     /**
      *@brief used with a usort function, to sort an array of Fiche on the name
@@ -499,7 +500,7 @@ class Fiche
                             $w->set_attribute('ipopup', 'ipop_account');
                             $w->set_attribute('account', "av_text" . $attr->ad_id);
                             $w->table = 1;
-                            $bulle = HtmlInput::infobulle(14);
+                            $bulle = Icon_Action::infobulle(14);
                             break;
                     case 'select':
                             $w = new ISelect("av_text" . $attr->ad_id);
@@ -528,7 +529,7 @@ class Fiche
             $w->name = "av_text" . $attr->ad_id;
             if ($attr->ad_id == 21 || $attr->ad_id==22||$attr->ad_id==20||$attr->ad_id==31)
             {
-                    $bulle=HtmlInput::infobulle(21);
+                    $bulle=Icon_Action::infobulle(21);
             }
             if ($attr->ad_id == ATTR_DEF_NAME || $attr->ad_id== ATTR_DEF_QUICKCODE) 
                 $class=" input_text highlight info";
@@ -597,7 +598,7 @@ class Fiche
                     $sql="select account_auto($this->fiche_def)";
                     $ret_sql=$this->cn->exec_sql($sql);
                     $a=Database::fetch_array($ret_sql, 0);
-                    $bulle=HtmlInput::infobulle(10);
+                    $bulle=Icon_Action::infobulle(10);
 
                     if ($a['account_auto']=='t')
                         $bulle.=HtmlInput::warnbulle(11);
@@ -639,7 +640,7 @@ class Fiche
                             $w->dbl_click_history();
                             $w->width=$r->ad_size;
                             $w->table=0;
-                            $bulle=HtmlInput::infobulle(14);
+                            $bulle=Icon_Action::infobulle(14);
                             $w->value=$r->av_text;
                             break;
                         case 'card':
@@ -711,7 +712,7 @@ class Fiche
 
             if ($r->ad_id==21||$r->ad_id==22||$r->ad_id==20||$r->ad_id==31)
             {
-                $bulle=HtmlInput::infobulle(21);
+                $bulle=Icon_Action::infobulle(21);
             }
             if ($r->ad_id == ATTR_DEF_NAME || $r->ad_id== ATTR_DEF_QUICKCODE||$r->ad_id==ATTR_DEF_ACCOUNT) 
                 $class=" input_text highlight info";
@@ -804,7 +805,7 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_substr(sql_string($value), 0, 40);
+                    $v=mb_strtoupper(mb_substr(sql_string($value), 0, 40));
                     try
                     {
                         // Check that the accounting can be used directly
@@ -953,7 +954,8 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=sql_string($value);
+                    $v=mb_strtoupper(sql_string($value));                    
+                    
                     if (trim($v)!='')
                     {
                         if (strpos($v, ',')!=0)
@@ -1705,7 +1707,7 @@ class Fiche
         
         $r.='<table  id="tiers_tb" class="sortable"  style="width:90%;margin-left:5%">
             <TR >
-            <TH>'._('Quick Code').HtmlInput::infobulle(17).'</TH>'.
+            <TH>'._('Quick Code').Icon_Action::infobulle(17).'</TH>'.
             '<th>'._('Poste comptable').'</th>'.
             '<th  class="sorttable_sorted">'._('Nom').'<span id="sorttable_sortfwdind"><img src="image/up.gif"></span>'.'</th>
             <th>'._('Adresse').'</th>
