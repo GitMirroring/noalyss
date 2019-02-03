@@ -601,7 +601,7 @@ class Fiche
                     $bulle=Icon_Action::infobulle(10);
 
                     if ($a['account_auto']=='t')
-                        $bulle.=HtmlInput::warnbulle(11);
+                        $bulle.=" ".Icon_Action::warnbulle(11);
                 }
                 elseif ($r->ad_id==ATTR_DEF_TVA)
                 {
@@ -765,11 +765,11 @@ class Fiche
         if ($transaction)
             $this->cn->start();
         /*
-         * Sort the array for having the name AFTER the quickcode and the 
+         * Sort the array for having the name BEFORE the quickcode and the 
          * Accounting
          */
         ksort($p_array);
-
+        $name="";
         try
         {
             $this->cn->start();
@@ -801,11 +801,13 @@ class Fiche
                 {
                     if (strlen(trim($value))==0)
                         $value="pas de nom";
+                    $account_name=$value;
+
                 }
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_strtoupper(mb_substr($value, 0, 40));
+                    $v=mb_strtoupper($value);
                     try
                     {
                         // Check that the accounting can be used directly
@@ -813,38 +815,62 @@ class Fiche
                         {
                             if (strpos($value, ',')==0)
                             {
-                                $v=$this->cn->get_value("select format_account($1)",
-                                        array($value));
-                                
-                                // Check that the accounting can be used directly
+                                if ( mb_strlen($value)>40) throw new Exception (_("Poste comptable trop long"), 1);
                                 $acc_account=new Acc_Account($this->cn,$v);
-                                if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
-                                    throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
+                                
+                                if ($acc_account->get_parameter("id")== -1 ) {
+                                    $acc_account->set_parameter("pcm_lib", $account_name);
+                                   // By Default can be used directly
+                                    $acc_account->set_parameter('pcm_direct_use',"Y") ;
+                                    $parent=$acc_account->find_parent();
+                                    $acc_account->set_parameter("pcm_val_parent",$parent);
+                                    $acc_account->save();
+                                } 
+                                else
+                                {
+                                    // Check that the accounting can be used directly
+                                    
+                                    if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
+                                        throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
+                                    }
                                 }
                             }
                             else
                             {
+                                                              
                                 $ac_array=explode(",", $value);
                                 if (count($ac_array)<>2)
                                     throw new Exception(_('Désolé, il y a trop de virgule dans le poste comptable ').h($value));
                                 
                                 $part1=$ac_array[0];
                                 $part2=$ac_array[1];
-                                $part1=$this->cn->get_value('select format_account($1)',
-                                        array($part1));
-                                $part2=$this->cn->get_value('select format_account($1)',
-                                        array($part2));
-                                $v=$part1.','.$part2;
+
+                                if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
+                                if ( mb_strlen($part2)>40) throw new Exception (_("Poste comptable trop long"), 1);
                                 // Check that the accounting can be used directly
                                 $acc_account1=new Acc_Account($this->cn,$part1);
-                                if ($acc_account1->get_parameter('pcm_direct_use') == 'N') {
+                                if ($acc_account1->get_parameter("id")== -1 ) {
+                                    $acc_account1->set_parameter("pcm_lib", $account_name);
+                                    $acc_account1->set_parameter('pcm_direct_use',"Y") ;
+                                    $parent=$acc_account1->find_parent();
+                                    $acc_account1->set_parameter("pcm_val_parent",$parent);
+                                    $acc_account1->save();
+                                } else if ($acc_account1->get_parameter('pcm_direct_use') == 'N') {
                                     throw new Exception(_("Utilisation directe interdite du poste comptable $part1"));
                                 }
                                 // Check that the accounting can be used directly
                                 $acc_account2=new Acc_Account($this->cn,$part2);
-                                if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
+                                if ($acc_account2->get_parameter("id")== -1 ) {
+                                    $acc_account2->set_parameter("pcm_lib", $account_name);
+                                    $acc_account2->set_parameter('pcm_direct_use',"Y") ;
+                                    $parent=$acc_account2->find_parent();
+                                    $acc_account2->set_parameter("pcm_val_parent",$parent);
+                                    $acc_account2->save();
+                                } else if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
                                     throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
                                 }
+
+
                             }
                             $parameter=array($this->id, $v);
                         }
@@ -919,8 +945,9 @@ class Fiche
                     continue;
 
                 // retrieve jft_id to update table attr_value
-                $sql=" select jft_id from fiche_detail where ad_id=$id and f_id=$this->id";
-                $Ret=$this->cn->exec_sql($sql);
+                $sql=" select jft_id from fiche_detail where ad_id=$1 and f_id=$2";
+                $Ret=$this->cn->exec_sql($sql,[$id,$this->id]);
+
                 if (Database::num_row($Ret)==0)
                 {
                     // we need to insert this new attribut
@@ -954,7 +981,7 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_strtoupper(mb_substr($value,0,40));                    
+                    $v=mb_strtoupper($value);                    
                     
                     if (trim($v)!='')
                     {
@@ -965,26 +992,60 @@ class Fiche
                                 throw new Exception('Désolé, il y a trop de virgule dans le poste comptable '.h($v));
                             $part1=$ac_array[0];
                             $part2=$ac_array[1];
-                            $part1=$this->cn->get_value('select format_account($1)',
-                                    array($part1));
-                            $part2=$this->cn->get_value('select format_account($1)',
-                                    array($part2));
-                            $v=$part1.','.$part2;
-                            // Check that the accounting can be used directly
+                            if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
+                            if ( mb_strlen($part2)>40) throw new Exception (_("Poste comptable trop long"), 1);
+                            
+                            $part1=$this->cn->get_value('select format_account($1)',    array($part1));
                             $acc_account1=new Acc_Account($this->cn,$part1);
+                            
+                            if ($acc_account1->get_parameter("id")== -1 ) {
+                                $account_name=$this->strAttribut(ATTR_DEF_NAME);
+                                $acc_account1->set_parameter("pcm_lib", $account_name);
+                                $acc_account1->set_parameter('pcm_direct_use',"Y") ;
+                                $parent=$acc_account1->find_parent();
+                                $acc_account1->set_parameter("pcm_val_parent",$parent);
+                                $acc_account1->save();
+                            }
+                            // Check that the accounting can be used directly
                             if ($acc_account1->get_parameter('pcm_direct_use') == 'N') {
                                 throw new Exception(_("Utilisation directe interdite du poste comptable $part1"));
                             }
-                            // Check that the accounting can be used directly
+                            // Part 2
+                            $part2=$this->cn->get_value('select format_account($1)',
+                                    array($part2));
                             $acc_account2=new Acc_Account($this->cn,$part2);
+                            
+                                                                                    
+                            if ($acc_account2->get_parameter("id")== -1 ) {
+                                    $account_name=$this->strAttribut(ATTR_DEF_NAME);
+                                    $acc_account2->set_parameter("pcm_lib", $account_name);
+                                    $acc_account2->set_parameter('pcm_direct_use',"Y") ;
+                                    $parent=$acc_account2->find_parent();
+                                    $acc_account2->set_parameter("pcm_val_parent",$parent);
+                                    $acc_account2->save();
+                            }
+
+                            // Check that the accounting can be used directly
                             if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
                                 throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
                             }
+                            $v=$part1.','.$part2;
                         }
                         else
                         {
-                            $v=$this->cn->get_value('select format_account($1)',
-                                    array($value));
+                            if ( mb_strlen($v)>40) throw new Exception (_("Poste comptable trop long"), 1);
+                            $acc_account=new Acc_Account($this->cn,$v);
+                            // Set default for new accounting
+                             if ($acc_account->get_parameter("id")== -1 ) {
+                                    $account_name=$this->strAttribut(ATTR_DEF_NAME);
+                                    $acc_account->set_parameter("pcm_lib", $account_name);
+                                   // By Default can be used directly
+                                    $acc_account->set_parameter('pcm_direct_use',"Y") ;
+                                    $parent=$acc_account->find_parent();
+                                    $acc_account->set_parameter("pcm_val_parent",$parent);
+                                    $acc_account->save();
+                                }
+                            
                             // Check that the accounting can be used directly
                             $acc_account=new Acc_Account($this->cn,$v);
                             if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
@@ -1928,19 +1989,42 @@ class Fiche
         $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
         $sql='select count(*) as c from jrnx where j_qcode=$1';
         $count=$this->cn->get_value($sql,array($qcode));
-        if ( $count == 0 ) return false;
-        return true;
+        if ( $count > 0 ) return TRUE;
+        $count=$this->cn->get_value("select count(*) from action_gestion where f_id_dest=$1 or ag_contact=$1 ",
+                [$this->id]);
+        if ( $count > 0 ) return TRUE;
+        $count=$this->cn->get_value("select count(*) from action_person where f_id=$1 ",
+                [$this->id]);
+        if ( $count > 0 ) return TRUE;
+        
+        $count=$this->cn->get_value("select count(*) 
+                                select count(*) 
+                from attr_def
+                join fiche_detail using (ad_id)
+                where ad_type='card'
+                and ad_value=$1"
+                ,[$qcode]);
+        
+        if ( $count > 0 ) return TRUE;
+        
+        return FALSE;
+
     }
     /*\brief remove a card without verification */
     function delete()
     {
+        $this->cn->start();
+
         // Remove from attr_value
         $Res=$this->cn->exec_sql("delete from fiche_detail
                                  where
-                                   f_id=".$this->id);
+                                   f_id= $1",[ $this->id] );
 
         // Remove from fiche
-        $Res=$this->cn->exec_sql("delete from fiche where f_id=".$this->id);
+        $Res=$this->cn->exec_sql("delete from fiche where f_id=$1",[$this->id]);
+        
+        $this->cn->commit();
+
 
     }
     /*!\brief create the sql statement for retrieving all
