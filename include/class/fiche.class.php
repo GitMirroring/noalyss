@@ -2057,7 +2057,6 @@ class Fiche
         if ( $count > 0 ) return TRUE;
         
         $count=$this->cn->get_value("select count(*) 
-                                select count(*) 
                 from attr_def
                 join fiche_detail using (ad_id)
                 where ad_type='card'
@@ -2292,7 +2291,7 @@ class Fiche
      */
 
     function filter_history($p_table_id) {
-        return _('Cherche').' '.HtmlInput::filter_table($p_table_id, '0,1,2,3,4,5,6,7', 1);
+        return _('Cherche').' '.HtmlInput::filter_table($p_table_id, '0,1,2,3,4,5,6,7,8,9,10', 1);
     }
     /**
      * Returns the Acc_Ledger_Fin ledger for which the card is the default bank account or null if no ledger is found.
