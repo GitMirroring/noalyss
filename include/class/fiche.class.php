@@ -805,7 +805,7 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_strtoupper(mb_substr(sql_string($value), 0, 40));
+                    $v=mb_strtoupper(mb_substr($value, 0, 40));
                     try
                     {
                         // Check that the accounting can be used directly
@@ -954,7 +954,7 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_strtoupper(sql_string($value));                    
+                    $v=mb_strtoupper(mb_substr($value,0,40));                    
                     
                     if (trim($v)!='')
                     {
