@@ -20,7 +20,7 @@
  * \code
  // Example
   echo JS_INFOBULLE;
-  echo HtmlInput::infobulle(x);
+  echo HtmlInput::Icon_Action(x);
  \endcode
  */
 
