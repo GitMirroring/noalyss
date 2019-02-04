@@ -519,7 +519,7 @@ for ($e = 0; $e < count($afiche); $e++)
 		echo th(_('ref'));
 		echo th(_('Interne'));
 		echo th(_('Comm'));
-		echo th(_('Montant'), 'style="width:auto" colspan="2"');
+		echo th(_('Montant'), 'style="width:auto; text-align:center" colspan="2"');
 		echo th(_('Prog.'),'class="num"');
 		echo th(_('Let.'));
 		echo '</tr>';
