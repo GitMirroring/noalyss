@@ -1270,6 +1270,7 @@ class Fiche
                                  "case when j_debit='f' then j_montant else 0 end as cred_montant,".
                                  " jr_comment as description,jrn_def_name as jrn_name,j_poste,".
 				 " jr_pj_number,".
+				 " jr_optype,".
                                  "j_debit, jr_internal,jr_id,(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id ) as letter , ".
 				 " jr_tech_per,p_exercice,jrn_def_name,
                                      (with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx using (j_id)  group by jl_id ),
@@ -1470,9 +1471,10 @@ class Fiche
         "<TH style=\"text-align:left\">"._('Date')."</TH>".
         "<TH style=\"text-align:left\">"._('n° pièce')." </TH>".
         "<TH style=\"text-align:left\">"._('Poste')." </TH>".
-        "<TH style=\"text-align:left\">"._('Code interne')." </TH>".
+        "<TH style=\"text-align:left\">"._('Interne')." </TH>".
         "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
         "<TH style=\"text-align:left\">"._('Description')." </TH>".
+	 "<TH style=\"text-align:left\">"._('Type')." </TH>".
         "<TH style=\"text-align:right\">"._('Débit')."  </TH>".
         "<TH style=\"text-align:right\">"._('Crédit')." </TH>".
         th('Prog.','style="text-align:right"').
@@ -1508,7 +1510,9 @@ class Fiche
 		    echo "<TR class=\"highlight\">".
 		       "<TD>$old_exercice</TD>".
 		      td('').
-		      "<TD></TD>".
+		      td('').
+		      td('').
+		      "<TD></TD>".td().
 		      "<TD>Totaux</TD>".
                             td().
 		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
@@ -1536,6 +1540,7 @@ class Fiche
             "<TD>".$vw_operation."</TD>".
             td($tiers).
             "<TD>".h($op['description'])."</TD>".
+	        td($op['jr_optype']).
             "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
@@ -1552,8 +1557,10 @@ class Fiche
                td($op['p_exercice']).
                td().
                td().
+               td().
+               td().
+               td().
         td(_('Totaux')).
-        "<TD></TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
 	  "<TD style=\"text-align:right\">".nbm($diff)."</TD>".
