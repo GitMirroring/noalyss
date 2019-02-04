@@ -520,7 +520,7 @@ for ($e = 0; $e < count($afiche); $e++)
 		echo th(_('Interne'));
 		echo th(_('Comm'));
 		echo th(_('Montant'), 'style="width:auto" colspan="2"');
-		echo th(_('Prog.'));
+		echo th(_('Prog.'),'class="num"');
 		echo th(_('Let.'));
 		echo '</tr>';
 		$amount_deb = 0;
