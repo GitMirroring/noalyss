@@ -1255,8 +1255,11 @@ div.menu2 a.mtitle{
     border-radius: 5px;
     }
 div.menu2 a.mtitle:hover,div.menu a.mtitle:hover,td.mtitle a.mtitle:hover {
-    color:#5681B7;
-    background-color: #EFEBEB;
+    /* color:#5681B7;
+    background-color: #EFEBEB; 
+    */
+    color: darkblue; 
+    background-color: lightsteelblue;
     /* padding:18px 0px 18px 0px; */
     
 }
