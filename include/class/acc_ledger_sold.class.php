@@ -600,7 +600,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
 
                 /* if ledger is FIN then insert into quant_fin */
                 if ($prop['jrn_def_type'] == 'FIN') {
-                    $ledger->insert_quant_fin($acfiche->id, $mp_jr_id, $cust->id, bcmul($famount, 1));
+		  $ledger->insert_quant_fin($acfiche->id, $mp_jr_id, $cust->id, bcmul($famount, 1),$let_other);
                 }
             }
         } catch (Exception $e) {
