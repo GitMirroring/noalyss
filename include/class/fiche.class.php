@@ -2004,7 +2004,7 @@ class Fiche
                 [$this->id]);
         if ( $count > 0 ) return TRUE;
         
-        $count=$this->cn->get_value("select count(*) 
+        $count=$this->cn->get_value("
                                 select count(*) 
                 from attr_def
                 join fiche_detail using (ad_id)

@@ -2,6 +2,13 @@
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 ?><TABLE style="width: auto">
+    <TR>
+<TD><?php echo _('Type de journal')?> </TD>
+<TD>
+<?php echo $type;?>
+</TD>
+</TR>
+
 <TR>
 
 		<TD><?php echo _('Nom journal')?> </TD>
@@ -81,12 +88,7 @@ echo $str_add_button;
      <?php echo $str_description; ?>   
     </td>
 </tr>    
-<TR>
-<TD><?php echo _('Type de journal')?> </TD>
-<TD>
-<?php echo $type;?>
-</TD>
-</TR>
+
 <TR>
 <TD><?php echo _('Préfixe code interne')?> </TD><TD>
 <?php echo $code?> </TD>
