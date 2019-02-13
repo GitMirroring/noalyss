@@ -80,7 +80,7 @@ class Anc_Balance_Double extends Anc_Print
                 if ( $tot_deb != 0 || $tot_cred !=0 )
                 {
 		  $r.="<tr>".td('');
-		  $r.="<td>Total </td>".td(nbm($tot_deb),' class="num"').td(nbm($tot_cred),' class="num"');
+		  $r.="<td>"._("Total")." </td>".td(nbm($tot_deb),' class="num"').td(nbm($tot_cred),' class="num"');
                     $s=abs(bcsub($tot_deb,$tot_cred));
                     
                     $d=($tot_deb>$tot_cred)?'debit':'credit';
@@ -94,11 +94,11 @@ class Anc_Balance_Double extends Anc_Print
                 $r.="</table>";
                 $r.="<table class=\"result\" style=\"margin-bottom:3px\">";
                 $r.="<tr>";
-                $r.="<th style=\"width:30%\" >Poste comptable Analytique</th>";
-                $r.="<th style=\"width:30%\">Poste comptable Analytique</th>";
-                $r.="<th style=\"text-align:right\">D&eacute;bit</th>";
-                $r.="<th style=\"text-align:right\">Cr&eacute;dit</th>";
-                $r.="<th style=\"text-align:right\">Solde</th>";
+                $r.="<th style=\"width:30%\" >"._("Poste Analytique")."</th>";
+                $r.="<th style=\"width:30%\">"._("Poste Analytique")."</th>";
+                $r.="<th style=\"text-align:right\">"._("Débit")."</th>";
+                $r.="<th style=\"text-align:right\">"._("Crédit")."</th>";
+                $r.="<th style=\"text-align:right\">"._("Solde")."</th>";
                 $r.="<th>D/C</th>";
                 $r.="</tr>";
 		$r.='<tr>';
