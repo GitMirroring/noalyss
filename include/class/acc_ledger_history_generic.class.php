@@ -516,7 +516,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
         $array=array();
         $Max=Database::num_row($Res);
         if ($Max==0)
-            return 0;
+            return array();
         $case="";
         $tot_deb=0;
         $tot_cred=0;
@@ -633,8 +633,9 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
 
         $this->get_row();
         echo '<TABLE class="result">';
-// detailled printing
-//---
+        // detailled printing
+        //---
+        if ( empty ($this->data)) return;
         foreach ($this->data[0] as $op)
         {
             $class="";
