@@ -110,7 +110,7 @@ class HttpInput
                 if (array_key_exists($p_name,$this->array) )
                 {
                     $this->check_type($p_name, $p_type);
- 		    if ( is_string($this->array[$p_name]) ) return strip_tags($this->array[$p_name]);
+ 		    if ( is_string($this->array[$p_name]) ) return preg_replace("/</","< ", $this->array[$p_name]);
 		    return $this->array[$p_name];
                 }
                 else
@@ -124,7 +124,7 @@ class HttpInput
                 EXC_PARAM_VALUE);
             }
             $this->check_type($p_name, $p_type);
-	    if ( is_string($this->array[$p_name]) ) return strip_tags($this->array[$p_name]);
+	    if ( is_string($this->array[$p_name]) ) return  preg_replace("/</","< ", $this->array[$p_name]);
 	    return $this->array[$p_name];
         }
         catch (Exception $e)
