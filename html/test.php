@@ -44,7 +44,7 @@ global $http;
 $http=new HttpInput();
 
 load_all_script();
-$gDossier=HtmlInput::default_value_get('gDossier', -1);
+$gDossier=$http->request('gDossier',"number", -1);
 if ($gDossier==-1)
 {
     echo " Vous devez donner le dossier avec paramètre gDossier dans l'url, exemple http://localhost/noalyss/html/test.php?gDossier=25";
@@ -64,7 +64,7 @@ if (!file_exists('authorized_debug'))
     exit();
 }
 define('ALLOWED', 1);
-html_page_start("Classic 692");
+html_page_start("Classic");
 
 /*
  * Loading of all scenario
@@ -95,7 +95,7 @@ for ($e_scan=0; $e_scan<$maxscan; $e_scan++)
             
         }
     }
-$script=HtmlInput::default_value_get('script', '');
+$script=$http->request('script', "string",'');
 if ($script=="")
 {
     echo "<h1>Test NOALYSS</h1>";
@@ -137,7 +137,7 @@ if ($script=="")
 }
 else if ($script=='all')
 {
-    $nb=HtmlInput::default_value_get('nb_script', 0);
+    $nb=$http->get('nb_script', "number",0);
     
             $start_mem=memory_get_usage();
             $start_time=microtime(true);
@@ -174,7 +174,7 @@ else
     $start_mem=memory_get_usage();
     $start_time=microtime(true);
     $script=str_replace('../', '', $script);
-    $description=HtmlInput::default_value_get("description", "aucune description");
+    $description=$http->get("description","string", "aucune description");
     echo '<h1>'.$script."</h1>";
     echo '<p> description = '.$description.'<p>';
     include '../scenario/'.$script;

@@ -31,7 +31,11 @@ require_once NOALYSS_INCLUDE.'/lib/output_html_tab.class.php';
 
 $tab = new Html_Tab('tab1',_("Titre 1"));
 $tab->set_mode('link');
-$tab->set_link(http_build_query([ "a"=>1,"b"=>2]));
+$tab->set_link("test.php?".
+    http_build_query([ "gDossier"=>Dossier::id(),
+        "script"=>"html_tab.test.php",
+        "a"=>1,
+        "b"=>2]));
 $tab2 = new Html_Tab('tab2',_("Titre 2"));
 $tab2->set_content(""
         . "<br> Très longue chaine HTML pour 2"

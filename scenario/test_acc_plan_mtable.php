@@ -40,7 +40,7 @@ $obj=new Acc_Plan_SQL($cn);
 /**
  * Test $obj
  */
-
+echo Dossier::hidden();
 $mtable=new Acc_Plan_MTable($obj);
 $obj->set_limit_fiche_qcode(5);
 $mtable->set_callback("ajax_test.php");
