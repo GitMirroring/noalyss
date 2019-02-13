@@ -48,6 +48,8 @@ class Anc_Balance_Double extends Anc_Print
 
     function display_html ()
     {
+        if ($this->pa_id == $this->pa_id2) throw new Exception(_("Pas de croisement avec un seul plan"),1000);
+
         bcscale(2);
         $r="";
 
@@ -475,9 +477,8 @@ class Anc_Balance_Double extends Anc_Print
              operation_analytique as a join operation_analytique as b on (a.oa_row=b.oa_row and a.oa_group=b.oa_group)
 		join poste_analytique as poa on (a.po_id=poa.po_id)
 		join poste_analytique as pob on (b.po_id=pob.po_id)
-             where poa.pa_id=".
-             $this->pa_id."
-             and pob.pa_id=".$this->pa_id2."  ".$this->set_sql_filter()."
+             where poa.pa_id= $1
+             and pob.pa_id= $2 ".$this->set_sql_filter()."
              ) as m join poste_analytique as pa on ( a_po_id=pa.po_id)
              join poste_analytique as pb on (b_po_id=pb.po_id)
 
@@ -488,7 +489,7 @@ class Anc_Balance_Double extends Anc_Print
              ";
 
 
-        $array=$this->db->get_array($sql);
+        $array=$this->db->get_array($sql,[$this->pa_id,$this->pa_id2]);
         $this->has_data=count($array);
         if ( $this->has_data == 0 )
             return null;
