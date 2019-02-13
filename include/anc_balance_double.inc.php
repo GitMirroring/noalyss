@@ -15,18 +15,21 @@ echo $bc->display_form();
 echo '</form>';
 if (isset($_GET['result']))
 {
-    $result=$bc->display_html();
-    if ($bc->has_data > 0)
-    {
-        echo $bc->show_button();
-        echo $result;
+    try {
+        $result = $bc->display_html();
+        if ($bc->has_data > 0) {
+            echo $bc->show_button();
+            echo $result;
+        }else
+        {
+            echo '<p class="notice">';
+            echo _('Aucune donnée trouvée');
+            echo '</p>';
+        }
+
+    } catch (Exception $e){
+        alert($e->getMessage());
     }
-    else
-    {
-        echo '<p class="notice">';
-        echo _('Aucune donnée trouvée');
-        echo '</p>';
-    }
-        
 }
+
 ?>
