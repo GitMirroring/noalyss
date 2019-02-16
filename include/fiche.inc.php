@@ -248,16 +248,14 @@ if ($histo->selected  == 3)
 
 	return;
 }
-$start=$http->get("start","date");
-$end=$http->get("end","date");
 $cat=$http->get("cat","number");
 $phisto=$http->get("histo","number");
 
 $export_pdf = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
 $export_pdf.=HtmlInput::hidden('cat', $cat);
 $export_pdf.=HtmlInput::hidden('act', "PDF:fiche_balance") .
-$export_pdf.=HtmlInput::hidden('start', $start);
-$export_pdf.=HtmlInput::hidden('end', $end);
+$export_pdf.=HtmlInput::hidden('start', $periode_start->value );
+$export_pdf.=HtmlInput::hidden('end', $periode_end->value );
 $export_pdf.=HtmlInput::hidden('histo', $phisto);
 $export_pdf.=HtmlInput::request_to_hidden(array('allcard'));
 $export_pdf.=dossier::hidden();
@@ -269,8 +267,8 @@ $export_print = HtmlInput::print_window();
 $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
 $export_csv.=HtmlInput::hidden('cat', $cat);
 $export_csv.=HtmlInput::hidden('act', 'CSV:fiche_balance');
-$export_csv.=HtmlInput::hidden('start', $start);
-$export_csv.=HtmlInput::hidden('end', $end);
+$export_csv.=HtmlInput::hidden('start', $periode_start->value );
+$export_csv.=HtmlInput::hidden('end', $periode_end->value );
 $export_csv.=HtmlInput::hidden('histo', $phisto);
 $export_csv.=HtmlInput::request_to_hidden(array('allcard'));
 $export_csv.=dossier::hidden();
@@ -291,12 +289,11 @@ if (isDate($_REQUEST['start']) == null || isDate($_REQUEST['end']) == null)
 if ( $histo->selected  == 8)
 {
     require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
-    $start=$http->get("start","date");
     $cat=$http->get("cat","number");
     $bal=new Balance_Age($cn);
     $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
     $export_csv .=HtmlInput::request_to_hidden(array('gDossier','ac','p_let','p_date_start'));
-    $export_csv.=HtmlInput::hidden('p_date_start',$start);
+    $export_csv.=HtmlInput::hidden('p_date_start',$periode_start->value );
     $export_csv .= HtmlInput::hidden('act','CSV:balance_age');
     $export_csv .= HtmlInput::hidden('p_let','let');
     $export_csv .= HtmlInput::hidden('p_type','X');
@@ -307,7 +304,7 @@ if ( $histo->selected  == 8)
     if ( $allcard == 0 )
     {
         echo $export_csv;
-        $bal->display_category($start,$cat,'let');
+        $bal->display_category($periode_start->value ,$cat,'let');
         echo $export_csv;
     }    
     else
@@ -317,7 +314,7 @@ if ( $histo->selected  == 8)
         $nb_cat=count($a_cat);
         for ($i=0;$i < $nb_cat;$i++)
         {
-             $bal->display_category($start,$a_cat[$i]['fd_id'],'let');
+             $bal->display_category($periode_start->value ,$a_cat[$i]['fd_id'],'let');
         }
         echo $export_csv;
     }
@@ -330,11 +327,11 @@ if ( $histo->selected  == 7)
 {
     require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
     $bal=new Balance_Age($cn);
-    $start=$http->get("start","date");
+    
     $cat=$http->get("cat","number");
        $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
     $export_csv .=HtmlInput::request_to_hidden(array('gDossier','ac','p_let','p_date_start'));
-    $export_csv.=HtmlInput::hidden('p_date_start', $start);
+    $export_csv.=HtmlInput::hidden('p_date_start', $periode_start->value );
     $export_csv .= HtmlInput::hidden('act','CSV:balance_age');
     $export_csv .= HtmlInput::hidden('p_let','unlet');
     $export_csv .= HtmlInput::hidden('p_type','X');
@@ -345,7 +342,7 @@ if ( $histo->selected  == 7)
     if ( $allcard == 0 )
     {
         echo $export_csv;
-        $bal->display_category($start,$cat,'unlet');
+        $bal->display_category($periode_start->value ,$cat,'unlet');
         echo $export_csv;
     }
       else
@@ -355,7 +352,7 @@ if ( $histo->selected  == 7)
         $nb_cat=count($a_cat);
         for ($i=0;$i < $nb_cat;$i++)
         {
-             $bal->display_category($start,$a_cat[$i]['fd_id'],'unlet');
+             $bal->display_category($periode_start->value ,$a_cat[$i]['fd_id'],'unlet');
         }
         echo $export_csv;
     }
@@ -484,8 +481,6 @@ if ( $allcard == 0) echo $str_add_card;
 echo $export_csv;
 echo $export_pdf;
 echo $export_print;
-$p_start=$http->get("start","date");
-$p_end=$http->get("end","date");
 $fiche = new Fiche($cn);
 for ($e = 0; $e < count($afiche); $e++)
 {
@@ -496,8 +491,8 @@ for ($e = 0; $e < count($afiche); $e++)
 		$row = new Fiche($cn, $card['f_id']);
 		$letter = new Lettering_Card($cn);
 		$letter->set_parameter('quick_code', $row->strAttribut(ATTR_DEF_QUICKCODE));
-		$letter->set_parameter('start', $p_start);
-		$letter->set_parameter('end', $p_end);
+		$letter->set_parameter('start', $periode_start->value );
+		$letter->set_parameter('end', $periode_end->value );
 		// all
 		if ($_GET['histo'] == 0)
 		{
