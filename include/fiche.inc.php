@@ -199,7 +199,8 @@ if ($histo->selected   == -1)
 	}
 	else
 	{
-		$cond = " where f.fd_id = " . sql_string($_GET['cat']);
+            $p_cat=$http->get("cat","number");
+            $cond = " where f.fd_id = " . sql_string($p_cat);
 	}
 	// Create nav bar
 	$max = $cn->get_value("select count(*) from fiche as f " . $cond);
@@ -231,28 +232,33 @@ if ($histo->selected   == -1)
 if ($histo->selected  == 3)
 {
 	$cat_card = new Fiche_Def($cn);
-	$cat_card->id = $_GET['cat'];
+	$cat_card->id =$http->get('cat','number');
 	$aHeading = $cat_card->getAttribut();
 	if ( $allcard == 0) echo $str_add_card;
 	require_once NOALYSS_TEMPLATE.'/result_cat_card_summary.php';
 
 	$hid = new IHidden();
 	echo '<form method="GET" ACTION="export.php">' . dossier::hidden() .
-	HtmlInput::submit('bt_csv', "Export CSV") .
+	HtmlInput::submit('bt_csv', _("Export CSV")) .
 	HtmlInput::hidden('act', "CSV:fiche") .
 	$hid->input("type", "fiche") .
-	$hid->input("ac", $_REQUEST['ac']) .
-	$hid->input("fd_id", $_REQUEST['cat']);
+	$hid->input("ac", $http->request('ac')) .
+	$hid->input("fd_id", $http->request('cat',"number"));
 	echo "</form>";
 
 	return;
 }
+$start=$http->get("start","date");
+$end=$http->get("end","date");
+$cat=$http->get("cat","number");
+$phisto=$http->get("histo","number");
+
 $export_pdf = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
-$export_pdf.=HtmlInput::hidden('cat', $_GET['cat']);
+$export_pdf.=HtmlInput::hidden('cat', $cat);
 $export_pdf.=HtmlInput::hidden('act', "PDF:fiche_balance") .
-$export_pdf.=HtmlInput::hidden('start', $_GET['start']);
-$export_pdf.=HtmlInput::hidden('end', $_GET['end']);
-$export_pdf.=HtmlInput::hidden('histo', $_GET['histo']);
+$export_pdf.=HtmlInput::hidden('start', $start);
+$export_pdf.=HtmlInput::hidden('end', $end);
+$export_pdf.=HtmlInput::hidden('histo', $phisto);
 $export_pdf.=HtmlInput::request_to_hidden(array('allcard'));
 $export_pdf.=dossier::hidden();
 $export_pdf.=HtmlInput::submit('pdf', 'Export en PDF');
@@ -261,11 +267,11 @@ $export_pdf.='</FORM>';
 $export_print = HtmlInput::print_window();
 
 $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
-$export_csv.=HtmlInput::hidden('cat', $_GET['cat']);
+$export_csv.=HtmlInput::hidden('cat', $cat);
 $export_csv.=HtmlInput::hidden('act', 'CSV:fiche_balance');
-$export_csv.=HtmlInput::hidden('start', $_GET['start']);
-$export_csv.=HtmlInput::hidden('end', $_GET['end']);
-$export_csv.=HtmlInput::hidden('histo', $_GET['histo']);
+$export_csv.=HtmlInput::hidden('start', $start);
+$export_csv.=HtmlInput::hidden('end', $end);
+$export_csv.=HtmlInput::hidden('histo', $phisto);
 $export_csv.=HtmlInput::request_to_hidden(array('allcard'));
 $export_csv.=dossier::hidden();
 $export_csv.=HtmlInput::submit('CSV', 'Export en CSV');
@@ -328,7 +334,7 @@ if ( $histo->selected  == 7)
     $cat=$http->get("cat","number");
        $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
     $export_csv .=HtmlInput::request_to_hidden(array('gDossier','ac','p_let','p_date_start'));
-    $export_csv.=HtmlInput::hidden('p_date_start', $_GET['start']);
+    $export_csv.=HtmlInput::hidden('p_date_start', $start);
     $export_csv .= HtmlInput::hidden('act','CSV:balance_age');
     $export_csv .= HtmlInput::hidden('p_let','unlet');
     $export_csv .= HtmlInput::hidden('p_type','X');
@@ -470,12 +476,16 @@ if ($allcard == 1)
 }
 else
 {
-	$afiche[0] = array('fd_id' => $_REQUEST['cat']);
+    
+    $p_cat=$http->request("cat","number");
+    $afiche[0] = array('fd_id' => $p_cat);
 }
 if ( $allcard == 0) echo $str_add_card;
 echo $export_csv;
 echo $export_pdf;
 echo $export_print;
+$p_start=$http->get("start","date");
+$p_end=$http->get("end","date");
 $fiche = new Fiche($cn);
 for ($e = 0; $e < count($afiche); $e++)
 {
@@ -486,8 +496,8 @@ for ($e = 0; $e < count($afiche); $e++)
 		$row = new Fiche($cn, $card['f_id']);
 		$letter = new Lettering_Card($cn);
 		$letter->set_parameter('quick_code', $row->strAttribut(ATTR_DEF_QUICKCODE));
-		$letter->set_parameter('start', $_GET['start']);
-		$letter->set_parameter('end', $_GET['end']);
+		$letter->set_parameter('start', $p_start);
+		$letter->set_parameter('end', $p_end);
 		// all
 		if ($_GET['histo'] == 0)
 		{
