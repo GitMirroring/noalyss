@@ -285,21 +285,23 @@ if (isDate($_REQUEST['start']) == null || isDate($_REQUEST['end']) == null)
 if ( $histo->selected  == 8)
 {
     require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
+    $start=$http->get("start","date");
+    $cat=$http->get("cat","number");
     $bal=new Balance_Age($cn);
     $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
     $export_csv .=HtmlInput::request_to_hidden(array('gDossier','ac','p_let','p_date_start'));
-    $export_csv.=HtmlInput::hidden('p_date_start', $_GET['start']);
+    $export_csv.=HtmlInput::hidden('p_date_start',$start);
     $export_csv .= HtmlInput::hidden('act','CSV:balance_age');
     $export_csv .= HtmlInput::hidden('p_let','let');
     $export_csv .= HtmlInput::hidden('p_type','X');
-    $export_csv .= HtmlInput::hidden('cat',$_GET['cat']);
+    $export_csv .= HtmlInput::hidden('cat',$cat);
     $export_csv .= HtmlInput::hidden('all',$allcard);
     $export_csv .= HtmlInput::submit('csv',_('Export CSV'));
     $export_csv.='</FORM><p></p>';
     if ( $allcard == 0 )
     {
         echo $export_csv;
-        $bal->display_category($_GET['start'],$_GET['cat'],'let');
+        $bal->display_category($start,$cat,'let');
         echo $export_csv;
     }    
     else
@@ -309,7 +311,7 @@ if ( $histo->selected  == 8)
         $nb_cat=count($a_cat);
         for ($i=0;$i < $nb_cat;$i++)
         {
-             $bal->display_category($_GET['start'],$a_cat[$i]['fd_id'],'let');
+             $bal->display_category($start,$a_cat[$i]['fd_id'],'let');
         }
         echo $export_csv;
     }
@@ -322,20 +324,22 @@ if ( $histo->selected  == 7)
 {
     require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
     $bal=new Balance_Age($cn);
+    $start=$http->get("start","date");
+    $cat=$http->get("cat","number");
        $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
     $export_csv .=HtmlInput::request_to_hidden(array('gDossier','ac','p_let','p_date_start'));
     $export_csv.=HtmlInput::hidden('p_date_start', $_GET['start']);
     $export_csv .= HtmlInput::hidden('act','CSV:balance_age');
     $export_csv .= HtmlInput::hidden('p_let','unlet');
     $export_csv .= HtmlInput::hidden('p_type','X');
-    $export_csv .= HtmlInput::hidden('cat',$_GET['cat']);
+    $export_csv .= HtmlInput::hidden('cat',$cat);
     $export_csv .= HtmlInput::hidden('all',$allcard);
     $export_csv .= HtmlInput::submit('csv',_('Export CSV'));
     $export_csv.='</FORM><p></p>';
     if ( $allcard == 0 )
     {
         echo $export_csv;
-        $bal->display_category($_GET['start'],$_GET['cat'],'unlet');
+        $bal->display_category($start,$cat,'unlet');
         echo $export_csv;
     }
       else
@@ -345,7 +349,7 @@ if ( $histo->selected  == 7)
         $nb_cat=count($a_cat);
         for ($i=0;$i < $nb_cat;$i++)
         {
-             $bal->display_category($_GET['start'],$a_cat[$i]['fd_id'],'unlet');
+             $bal->display_category($start,$a_cat[$i]['fd_id'],'unlet');
         }
         echo $export_csv;
     }
