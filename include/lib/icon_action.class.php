@@ -238,7 +238,7 @@ class Icon_Action
     }
     static function more($p_id,$p_javascript)
     {
-        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">...</span>',
+        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">&#8608;</span>',
                 $p_id,
                 $p_javascript);
         return $r;

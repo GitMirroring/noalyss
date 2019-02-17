@@ -111,10 +111,10 @@ class Acc_Plan_MTable extends Manage_Table_SQL
                    $nb_code=count($a_code);
                    for ($xx = 0;$xx < $nb_code;$xx++)
                    {
-                       echo HtmlInput::card_detail($a_code[$xx]) ; 
+                       echo HtmlInput::card_detail($a_code[$xx])."," ; 
                    }
                    echo  " ($count) ";
-                   echo Icon_Action::detail(uniqid(), sprintf("display_all_card('%s','%s')",$dossier_id,$p_row["pcm_val"]));
+                   echo Icon_Action::more(uniqid(), sprintf("display_all_card('%s','%s')",$dossier_id,$p_row["pcm_val"]));
                    echo '</td>';
                    
                } 
