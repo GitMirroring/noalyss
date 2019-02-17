@@ -32,6 +32,9 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
    iconon <?php echo Icon_Action::iconon(uniqid(), "alert('test')");?>
 </p>
 <p>
+   iconoff <?php echo Icon_Action::iconoff(uniqid(), "alert('test')");?>
+</p>
+<p>
    close <?php echo Icon_Action::close("close_span");?>
    <span id="close_span" class="inner_box">Close me !</span>
 </p>
@@ -67,4 +70,10 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
 </p>
 <p>
    menu <?php echo Icon_Action::menu(uniqid(), "alert('test')");?>
+</p>
+<p>
+   Lock <?php echo Icon_Action::lock(uniqid(), "alert('test')");?>
+</p>
+<p>
+   Unlock <?php echo Icon_Action::unlock(uniqid(), "alert('test')");?>
 </p>

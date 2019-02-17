@@ -251,5 +251,31 @@ class Icon_Action
                 $p_javascript);
         return $r;
     }
-    
+    /**
+     * Display the icon of a padlock to lock or unlock element
+     * @param string $p_id DOMid 
+     * @param string $p_javascript
+     * @return htmlString
+     */
+    static function lock($p_id,$p_javascript) 
+    {
+        $lock_cur="&#xe831;";
+        $lock_next="&#xe832;";
+        
+        $r=sprintf( '<span id="%s" is_locked="1" onclick="toggle_lock(\'%s\');%s" class="icon smallicon">%s</span>',
+                $p_id,
+                $p_id,
+                $p_javascript, 
+                $lock_cur);
+        return $r;
+    }
+    /**
+     * Display the icon of a trashbin
+     * @param string $p_id DOMid 
+     * @param string $p_javascript
+     * @return htmlString
+     */
+    static function unlock($p_id,$p_javascript) 
+    {
+    }    
 }

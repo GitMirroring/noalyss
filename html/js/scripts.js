@@ -3522,3 +3522,27 @@ function updatePeriode(p_dossier,p_exercice,p_periode_from,p_periode_to,p_last)
     new Ajax.Updater(p_periode_to,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_to,"type":"to","last":p_last}});
     remove_waiting_box();
 }
+/**
+ * 
+ * @param {string} p_domid DOM id of the span containing the padlock icon
+ * @returns none
+ */
+function toggle_lock(p_domid)
+{
+    var padlock=document.getElementById(p_domid);
+    if ( padlock == null) {
+        console.error("domid invalid");
+    }
+    var status = padlock.getAttribute("is_locked");
+    if ( status == 1 ) {
+        padlock.innerHTML="&#xe832;";
+        padlock.setAttribute("is_locked",0);
+    } else if (status == 0) {
+        padlock.innerHTML="&#xe831;";
+        padlock.setAttribute("is_locked",1);
+    } else {
+        throw "toggle_lock failed";
+    }
+        
+    
+}
