@@ -246,7 +246,7 @@ class Icon_Action
     
     static function menu($p_id,$p_javascript)
     {
-        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">&#9776;</span>',
+        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="font-size:150%%;margin-left:5px">&#9776;</span>',
                 $p_id,
                 $p_javascript);
         return $r;
