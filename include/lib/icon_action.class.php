@@ -243,4 +243,13 @@ class Icon_Action
                 $p_javascript);
         return $r;
     }
+    
+    static function menu($p_id,$p_javascript)
+    {
+        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">&#9776;</span>',
+                $p_id,
+                $p_javascript);
+        return $r;
+    }
+    
 }
