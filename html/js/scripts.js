@@ -26,9 +26,6 @@
 var ask_reload = 0;
 var tag_choose = '';
 var aDraggableElement=new Array();
-var viewport = document.viewport.getDimensions(); // Gets the viewport as an object literal
-var width = viewport.width; // Usable window width
-var height = viewport.height;
 
 /**
  * callback function when we just need to update a hidden div with an info
