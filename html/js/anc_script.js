@@ -162,9 +162,8 @@ function verify_ca(div)
                 } else {
                     amount = Math.round(amount*100)/100;
                 }
-                var diff = amount - total_amount;
-
-                if (Math.round(diff, 2) != 0.0)
+                var diff = amount*100 - total_amount*100;
+                if (Math.round(diff/100) != 0.0)
                 {
                     g(table).style.backgroundColor = 'red';
                     amount_error++;
