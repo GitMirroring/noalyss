@@ -83,11 +83,11 @@ function compute_total_table(p_table, seq)
         for (i = 0; i < col.length; i++)
         {
             if ( $(p_table).contains(col[i])) {
-                rounded_value = parseFloat(col[i].value);
-                tot += Math.round(rounded_value*100)/100;
+                rounded_value = Math.round(parseFloat(col[i].value) *100);
+                tot += rounded_value
             }
         }
-        return tot;
+        return tot/100;
     }
     catch (e)
     {
@@ -106,6 +106,7 @@ function anc_refresh_remain(p_table, p_seq)
     {
         var tot_line =Math.abs( parseFloat(g('amount_t' + p_seq).value));
         var tot_table = compute_total_table(p_table, p_seq);
+
         var remain = tot_line - tot_table;
         remain = Math.round(remain * 100) / 100;
         $('remain' + p_table).innerHTML = remain;
