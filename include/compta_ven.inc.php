@@ -128,7 +128,7 @@ $p_msg="";
 <script>
      $('repo_div_id').hide();
     $('modele_div_id').hide();
-show_tab(a_tab,'facturation_div_id');
+show_tabs(a_tab,'facturation_div_id');
 </script>
 <?php
             echo '</div>';
