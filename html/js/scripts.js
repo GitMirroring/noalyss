@@ -1204,7 +1204,7 @@ function fill_box(req)
         alert_box(e.message);
          if (console) {
             console.error(e);
-            console.error("log answer = "+e.responseText);
+            console.error("log answer = "+req.responseText);
         }
     }
     try {
@@ -1213,7 +1213,7 @@ function fill_box(req)
     catch (e) {
         if (console) {
             console.error(e);
-            console.error("log answer = "+e.responseText);
+            console.error("log answer = "+req.responseText);
         }
         alert_box("Impossible executer script de la reponse\n" + e.message);
     }
