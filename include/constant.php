@@ -271,7 +271,7 @@ if ( ! file_exists($ps2pdf) )
 /**
  * Outil pour manipuler les PDF 
  */
-$pdftk='/snap/bin/pdftk';
+if ( ! isset ($pdftk)) { $pdftk ='/usr/bin/pdftk'; }
 if (file_exists($pdftk))
 {
     define ('PDFTK',$pdftk);  

@@ -227,7 +227,10 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
     print ("// define ('OVERRIDE_PARAM',1);\r\n");
     print ("// ini_set ('max_execution_time',240);\r\n");
     print ("// ini_set ('memory_limit','256M');\r\n");
-// 
+    print ("// In recent distribution linux, pdftk is a snap, you should set the path\r\n");
+    print ("// for exporting document in PDF\r\n");
+    print ("// \$pdftk = /usr/bin/pdftk \r\n");
+    print ("// \$pdftk = /snap/bin/pdftk \r\n");
 
 }
 /*!\brief create the config file
