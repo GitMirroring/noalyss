@@ -1325,4 +1325,26 @@ function record_log($p_message)
     error_log("noalyss GET [".var_export($_GET, true)."]",0);
     error_log( "noalyss POST [".var_export($_POST, true)."]",0);
 }
+if(!function_exists('tracedebug')) {
+  function tracedebug($file,$var, $label = NULL) {
+
+    $tmp_file = sys_get_temp_dir().DIRECTORY_SEPARATOR.$file;
+
+    $output = '';
+    $output .= date('d-m-y H:i');
+    if(!is_null($label)) {
+      $output .= $label . ': ';
+    }
+    if ( gettype ($var) == 'object' && get_class($var)=='DOMDocument')
+    {
+      $var->formatOutput=true;
+      $output.=$var->saveXML() .PHP_EOL;
+    } else
+    {
+      $output .= print_r($var, 1) . PHP_EOL;
+    }
+
+    file_put_contents($tmp_file, $output, FILE_APPEND);
+  }
+}
 ?>
