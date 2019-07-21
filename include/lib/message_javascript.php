@@ -74,4 +74,6 @@ content[42]="<?php echo _("Selectionnez le plan qui vous intéresse avant de cli
 content[43]="<?php echo _("Autoliquidation : Utilisé en même temps au crédit et au débit")?>";
 content[44]="<?php echo _("Ne donner pas ce poste comptable si ce code n'est pas utilisé à l'achat")?>";
 content[45]="<?php echo _("Ne donner pas ce poste comptable si ce code n'est pas utilisé  à la vente")?>";
+content[46]="<?php echo _("Un instant svp")?>";
+content[47]="<?php echo _("Vous confirmez ?")?>";
 </script>
