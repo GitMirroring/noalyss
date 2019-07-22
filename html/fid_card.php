@@ -117,15 +117,12 @@ else
     }
 }
 
-
-/* create a filter based on j */
-/*$sql_str="select f_id, vw_name,quick_code,vw_description ".
-  " from vw_fiche_attr where  ".
-  " ( vw_name ilike '%'||$1||'%' or quick_code ilike $2||'%' or vw_description ilike '%'||$3||'%')    ".
-  $filter_card;
-*/
-
-$sql_str="select distinct f_id from fiche join fiche_detail using (f_id) where ad_id in (9,1,23) and ad_value ilike '%'||$1||'%' ".$filter_card.' limit 12';
+$sql_str="select distinct f_id 
+         from fiche 
+         join fiche_detail using (f_id) 
+         where 
+         ad_id in (9,1,23) 
+         and ad_value ilike '%'||$1||'%' ".$filter_card.' limit 12';
 
 
 $fid=$http->request("FID");
