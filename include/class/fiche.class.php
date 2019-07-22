@@ -654,7 +654,7 @@ class Fiche
                             $w->extra=$filter;
                             $w->extra2=0;
                             $label=new ISpan();
-                            $label->name="av_text".$uniq.$r->ad_id."_label";
+                            $label->name="av_text".$r->ad_id.$uniq."_label";
                             $fiche=new Fiche($this->cn);
                             $fiche->get_by_qcode($r->av_text);
                             if ($fiche->id==0)
@@ -670,7 +670,7 @@ class Fiche
                             }
                             $w->set_attribute('ipopup', 'ipopcard');
                             $w->set_attribute('typecard', $filter);
-                            $w->set_attribute('inp', "av_text".$r->ad_id);
+                            $w->set_attribute('inp', $w->id);
                             $w->set_attribute('label', $label->name);
                             $w->autocomplete=0;
                             $w->dblclick="fill_ipopcard(this);";
