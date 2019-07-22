@@ -45,6 +45,8 @@ require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $http=new HttpInput();
 
 $jrn= $http->request("j","number",-1); 
+$limit=$http->request("limit","number",12);
+
 $filter_card="";
 $cn=Dossier::connect();
 $d=$http->request('e');
@@ -122,7 +124,7 @@ $sql_str="select distinct f_id
          join fiche_detail using (f_id) 
          where 
          ad_id in (9,1,23) 
-         and ad_value ilike '%'||$1||'%' ".$filter_card.' limit 12';
+         and ad_value ilike '%'||$1||'%' ".$filter_card.' limit '.$limit;
 
 
 $fid=$http->request("FID");

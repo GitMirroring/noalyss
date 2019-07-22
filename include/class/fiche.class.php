@@ -653,6 +653,7 @@ class Fiche
                             $w->width=$r->ad_size;
                             $w->extra=$filter;
                             $w->extra2=0;
+                            $w->limit=6;
                             $label=new ISpan();
                             $label->name="av_text".$r->ad_id.$uniq."_label";
                             $fiche=new Fiche($this->cn);
@@ -672,7 +673,7 @@ class Fiche
                             $w->set_attribute('typecard', $filter);
                             $w->set_attribute('inp', $w->id);
                             $w->set_attribute('label', $label->name);
-                            $w->autocomplete=0;
+                            $w->autocomplete=1;
                             $w->dblclick="fill_ipopcard(this);";
                             $msg=$w->search();
                             $msg.=$label->input();
