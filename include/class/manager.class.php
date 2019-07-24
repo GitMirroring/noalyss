@@ -19,7 +19,7 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 require_once NOALYSS_INCLUDE.'/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_parm_code.class.php';
 require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 require_once NOALYSS_INCLUDE.'/class/fiche.class.php';

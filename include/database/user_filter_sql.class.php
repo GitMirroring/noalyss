@@ -20,7 +20,7 @@
  * author : Dec 2017 , Dany De Bontridder (danydb@noalyss.eu)
  */
 require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 /**
  * class_user_filter_sql.php

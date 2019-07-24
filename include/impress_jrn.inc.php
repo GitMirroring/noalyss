@@ -28,7 +28,7 @@ require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
 require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_history.class.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 $gDossier = dossier::id();
 global $g_user,$http;
 

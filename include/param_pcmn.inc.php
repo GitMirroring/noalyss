@@ -29,7 +29,7 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 $http=new HttpInput();
 $gDossier=dossier::id();
 
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 /* Admin. Dossier */
 $cn=Dossier::connect();

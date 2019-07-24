@@ -23,7 +23,7 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
 include_once NOALYSS_INCLUDE.'/class/fiche.class.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 

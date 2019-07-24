@@ -30,7 +30,7 @@ require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 global $http;
 $gDossier=dossier::id();
 
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 /* Admin. Dossier */
 
 $cn=Dossier::connect();

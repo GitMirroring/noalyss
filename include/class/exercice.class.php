@@ -22,7 +22,7 @@
 /*!\file
  * \brief about the accountant exercice
  */
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 class Exercice
 {

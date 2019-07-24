@@ -64,7 +64,7 @@ if ($action=="") :
     <?php
 elseif ($action=="send_email") :
     require_once NOALYSS_INCLUDE.'/lib/sendmail.class.php';
-    require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+    require_once NOALYSS_INCLUDE.'/class/database.class.php';
     /*
      * Check if user exists, if yes save a recover request
      */
@@ -139,7 +139,7 @@ elseif ($action=="req") :
     $http=new HttpInput();
     $request_id=$http->request("req","string", "");
     if (strlen(trim($request_id))==SIZE_REQUEST) :
-        require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+        require_once NOALYSS_INCLUDE.'/class/database.class.php';
         $cn=new Database(0);
 
         $value=$cn->get_value("select password from recover_pass where request=$1 and created_on > now() - interval '12 hours' and recover_on is null", array($request_id));

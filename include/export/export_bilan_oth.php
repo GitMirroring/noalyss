@@ -23,7 +23,7 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 include_once("lib/ac_common.php");
 include_once("lib/impress.class.php");
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once  NOALYSS_INCLUDE.'/header_print.php';
 require_once  NOALYSS_INCLUDE.'/class/acc_bilan.class.php';
 
