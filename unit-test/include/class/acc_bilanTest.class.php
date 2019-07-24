@@ -44,6 +44,8 @@ class Acc_BilanTest extends TestCase
     public function testDisplay_form()
     {
         $r=$this->object->display_form();
+	$this->assertStringStartsWith('<input type="hidden" id="gDossier" name="gDossier" value=',$r);
+	$this->assertStringEndsWith('</TABLE>',$r);
         
     }
 
@@ -53,7 +55,12 @@ class Acc_BilanTest extends TestCase
      */
     public function testVerify()
     {
+	    ob_start();
         $this->object->verify();
+	    $r=ob_get_contents();
+	    ob_end_clean();
+
+	$this->assertStringStartsWith('<h3>',$r);
     }
 
     /**
