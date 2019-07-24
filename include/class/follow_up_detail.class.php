@@ -17,7 +17,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 require_once  NOALYSS_INCLUDE.'/class/fiche.class.php';
-require_once  NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once  NOALYSS_INCLUDE.'/class/database.class.php';
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
 /*!\file
@@ -152,7 +152,7 @@ class Follow_Up_Detail
                  $sql,
                  array($this->ag_id)
              );
-        if ( $this->db->count() == 0 ) return;
+        if ( $this->db->count() == 0 ) return array();
         $aRet=array();
         for($i=0;$i<count($res);$i++)
         {
