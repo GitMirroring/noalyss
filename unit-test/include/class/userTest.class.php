@@ -38,7 +38,7 @@ class UserTest extends TestCase
                 array(USE_ID, USE_FIRST_NAME, USE_NAME, USE_LOGIN, USE_ACTIVE, USE_PASS,
             USE_ADMIN, USE_EMAIL));
 
-        $this->object=new User($cn, USE_ID);
+        $this->object=new User($this->cn, USE_ID);
     }
 
     /**

@@ -24,6 +24,8 @@ class Acc_BilanTest extends TestCase
         $g_connection=new Database(DOSSIER);
         $g_parameter=new Noalyss_Parameter_Folder($g_connection);
         $this->object=new Acc_Bilan($g_connection);
+	$this->object->from = $g_connection->get_value('select min(p_id) from parm_periode');
+	$this->object->to = $g_connection->get_value('select max(p_id) from parm_periode');
     }
 
     /**
