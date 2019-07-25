@@ -57,17 +57,16 @@ class DatabaseCore
         if ($this->db == false) {
             if (DEBUG) {
 
-                echo '<h2 class="error">Impossible de se connecter &agrave; postgreSql !</h2>';
+                echo '<h2 class="error">'._('Impossible de se connecter à postgreSql').'</h2>';
                 echo '<p>';
-                echo "Vos param&egrave;tres sont incorrectes : <br>";
+                echo _("Vos paramètres sont incorrectes").": <br>";
                 echo "<br>";
-                echo "base de donn&eacute;e : $p_dbname<br>";
-                echo "Port $p_port <br>";
-                echo "Utilisateur : $p_user <br>";
+                printf (_("base de donnée  = %s"), $p_dbname)."<br>";
+                printf (_("Port %s"),$p_port )."<br>";
+                printf (  _("Utilisateur : %s"),$p_user )."<br>";
                 echo '</p>';
 
-                die("Connection impossible : v&eacute;rifiez vos param&egrave;tres de base
-                  de donn&eacute;es");
+                die();
             } else {
                 echo '<h2 class="error">' . _('Erreur de connexion !') . '</h2>';
                 $this->is_open = false;
@@ -462,7 +461,7 @@ class DatabaseCore
         $array = $this->get_array($p_sql, $p_array);
         if (empty($array)) return null;
         if (count($array) == 1) return $array[0];
-        throw new Exception("Database:get_row retourne trop de lignes", 100);
+        throw new Exception(_("Database:get_row retourne trop de lignes"), 100);
     }
 
     /**
@@ -521,27 +520,6 @@ class DatabaseCore
         return false;
     }
 
-    /**
-     * return the name of the database with the domain name
-     * @param $p_id of the folder WITHOUT the domain name
-     * @param $p_type dos for folder mod for template
-     * @return formatted name
-     */
-    function format_name($p_id, $p_type)
-    {
-        switch ($p_type) {
-            case 'dos':
-                $sys_name = sprintf("%sdossier%d", strtolower(domaine), $p_id);
-                break;
-            case 'mod':
-                $sys_name = sprintf("%smod%d", strtolower(domaine), $p_id);
-                break;
-            default:
-                echo_error(__FILE__ . " format_name invalid type " . $p_type, __LINE__);
-                throw new Exception(__FILE__ . " format_name invalid type " . $p_type . __LINE__);
-        }
-        return $sys_name;
-    }
 
     /**
      * Count the database name in a system view

@@ -222,4 +222,25 @@ class Database extends DatabaseCore
         echo '</ul>';
     }
 
+    /**
+     * return the name of the database with the domain name
+     * @param $p_id of the folder WITHOUT the domain name
+     * @param $p_type dos for folder mod for template
+     * @return formatted name
+     */
+    function format_name($p_id, $p_type)
+    {
+        switch ($p_type) {
+            case 'dos':
+                $sys_name = sprintf("%sdossier%d", strtolower(domaine), $p_id);
+                break;
+            case 'mod':
+                $sys_name = sprintf("%smod%d", strtolower(domaine), $p_id);
+                break;
+            default:
+                echo_error(__FILE__ . " format_name invalid type " . $p_type, __LINE__);
+                throw new Exception(__FILE__ . " format_name invalid type " . $p_type . __LINE__);
+        }
+        return $sys_name;
+    }
 }
