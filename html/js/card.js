@@ -25,7 +25,7 @@
 
 var card_layer=1;
 /**
- *@brief search a card an display the result into a inner box
+ * search a card an display the result into a inner box
  */
 function boxsearch_card(p_dossier)
 {
@@ -55,7 +55,7 @@ function boxsearch_card(p_dossier)
 	}
 }
 /**
- *@brief show the ipopup with the form to search a card
+ * show the ipopup with the form to search a card
  * the properties
  *  - jrn for the ledger
  *  - fs for the action
@@ -122,7 +122,7 @@ function search_card(obj)
     }
 }
 /**
- *@brief Display form for select card to add to action : other_concerned
+ * Display form for select card to add to action : other_concerned
  *action_add_concerned_card
  */
 function action_add_concerned_card(obj)
@@ -224,7 +224,7 @@ function action_add_concerned_card(obj)
 }
 
 /**
- *@brief when you submit the form for searching a card
+ * when you submit the form for searching a card
  *@param obj form
  *@note the same as search_card, except it answer to a FORM and not
  * to a click event
@@ -285,7 +285,7 @@ function search_get_card(obj)
                                 );
 }
 /**
- *@brief show the answer of ajax request
+ * show the answer of ajax request
  *@param  answer in XML
  */
 function result_card_search(req)
@@ -399,7 +399,7 @@ function update_value(text,li)
 	   ajaxFid(text);
 }
 /**
- *@brief is called when something change in ICard
+ * is called when something change in ICard
  *@param the input field
  *@see ICard
  */
@@ -409,7 +409,7 @@ function fill_data_onchange(ctl)
 
 }
 /**
- *@brief is called when something change in ICard
+ * is called when something change in ICard
  *@param the input field
  *@see ICard
  */
@@ -419,7 +419,7 @@ function fill_data(text,li)
 
 }
 /**
- *@brief is called when something change in ICard
+ * is called when something change in ICard
  *@param the input field
  *@see ICard
  */
@@ -429,7 +429,7 @@ function fill_fin_data_onchange(ctl)
     ajax_saldo(ctl.id);
 }
 /**
- *@brief is called when something change in ICard
+ * is called when something change in ICard
  *@param the input field
  *@see ICard
  */
@@ -439,7 +439,7 @@ function fill_fin_data(text,li)
     ajax_saldo($(text.id));
 }
 /**
- *@brief show the ipopup window and display the details of a card,
+ * show the ipopup window and display the details of a card,
  * to work some attribute must be set
  *@param obj.qcode is the qcode, obj.nohistory if you don't want to  display
  * the history button, obj.ro is the popin is readonly
@@ -498,7 +498,7 @@ function fill_ipopcard(obj)
                                 );
 }
 /**
- *@brief
+ *
  * \param request : object request
  * \param json : json answer
 \code
@@ -537,7 +537,7 @@ function  successFill_ipopcard(req,json)
     }
 }
 /**
- *@brief show the ipopup for selecting a card type, it is a needed step before adding
+ * show the ipopup for selecting a card type, it is a needed step before adding
  * a card
  *@param input field (obj) it must have the attribute ipopup
  *       possible attribute :
@@ -628,7 +628,7 @@ function select_card_type(obj)
                                 );
 }
 /**
- *@brief Show a blank card
+ * Show a blank card
  *@param obj Form object (obj)
  *       possible attribute :
  *        - filter is the filter but with a  fd_id list, -1 means there  is no filter
@@ -717,7 +717,7 @@ function form_blank_card(obj)
 }
 
 /**
- *@brief save the data contained into the form 'save_card'
+ * save the data contained into the form 'save_card'
  *@param input field (obj) it must have the attribute ipopup
  *       possible attribute :
  *@see ajax_card.php
@@ -782,7 +782,7 @@ function save_card(obj)
                         );
 }
 /**
- *@brief add a category of card,
+ * add a category of card,
  *@param obj with the attribute
  * - ipopup the ipopup to show
  * - type_cat the category of card we want to add
@@ -828,7 +828,7 @@ function add_category(obj)
 
 }
 /**
- * @brief save the form and add a new category of card
+ *  save the form and add a new category of card
  * @param obj if the form object
  */
 function save_card_category(obj)
@@ -864,7 +864,7 @@ function save_card_category(obj)
 	return false;
 }
 /**
- *@brief Remove a definition of an  attribut
+ * Remove a definition of an  attribut
  *@param attr_def.ad_id
  *@param gDossier
  *@param table_id to rm the row

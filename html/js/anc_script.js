@@ -21,7 +21,7 @@
 
 /**
  * @file
- * @brief javascript for the analytic accountancy
+ *  javascript for the analytic accountancy
  */
 
 /*!\brief add a row for the CA
@@ -322,7 +322,7 @@ function caod_checkTotal()
 }
 
 /**
- *@brief remove an operation
+ * remove an operation
  *@param p_dossier is the folder
  *@param p_oa_group is the group of the analytic operation
  */
@@ -378,7 +378,7 @@ function anc_add_row(tableid)
     nb.value++;
 }
 /**
- *@brief this function is called before the querystring is send to the
+ * this function is called before the querystring is send to the
  * fid2.php, add a filter based on the ledger 'p_jrn'
  *@param obj is the input field
  *@param queryString is the queryString to modify
@@ -391,7 +391,7 @@ function filter_anc(obj, queryString)
     return queryString;
 }
 /**
- * @brief compute and display Analytic activity, related to the choosen distribution key
+ *  compute and display Analytic activity, related to the choosen distribution key
  * @param p_dossier is the dossier id
  * @param p_table is table id to replace
  * @param p_amount is the amount to distribute
@@ -440,7 +440,7 @@ function anc_key_compute(p_dossier, p_table, p_amount, p_key_id)
     }
 }
 /**
- * @brief choose the distribution key
+ *  choose the distribution key
  * in ajax, a window let you choose what key you want to use
  * 
  * @param p_dossier is the dossier
