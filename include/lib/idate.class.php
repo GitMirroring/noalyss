@@ -47,7 +47,7 @@ class IDate extends HtmlInput
         $this->autofocus=false;
     }
 
-    /* !\brief show the html  input of the widget */
+    /*!\brief show the html  input of the widget */
 
     public function input($p_name=null, $p_value=null)
     {
@@ -90,7 +90,7 @@ class IDate extends HtmlInput
         return $r;
     }
 
-    /* !\brief print in html the readonly value of the widget */
+    /*!\brief print in html the readonly value of the widget */
 
     public function display()
     {

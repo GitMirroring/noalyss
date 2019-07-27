@@ -549,7 +549,7 @@ class DatabaseCore
     }
 
     /*
-     * !\brief test if a view exist
+     *!\brief test if a view exist
      * \return true if the view. exist otherwise false
      */
 
@@ -562,7 +562,7 @@ class DatabaseCore
     }
 
     /*
-     * !\brief test if a schema exists
+     *!\brief test if a schema exists
      * \return true if the schemas exists otherwise false
      */
 
