@@ -32,7 +32,7 @@ class PDFBalance_simple extends PDF
      */
     function set_info($p_from_poste,$to_poste,$p_from,$p_to)
     {
-        $this->dossier='Balance simple '.dossier::name();
+        $this->dossier=sprintf(_('Balance simple %s'),dossier::name());
         $this->from_poste=$p_from_poste;
         $this->to_poste=$to_poste;
         $this->from=$p_from;
@@ -42,7 +42,7 @@ class PDFBalance_simple extends PDF
     {
         parent::Header();
         $this->SetFont('DejaVu','B',8);
-        $titre=sprintf("Balance simple poste %s %s date %s %s",
+        $titre=sprintf(_("Balance simple poste %s %s date %s %s"),
             $this->from_poste,
             $this->to_poste,
             $this->from,
@@ -52,11 +52,11 @@ class PDFBalance_simple extends PDF
         $this->Ln();
         $this->SetFont('DejaVu','',6);
 
-        $this->Cell(110,7,'Poste Comptable','B');
-        $this->Cell(20,7,'Débit','B',0,'L');
-        $this->Cell(20,7,'Crédit','B',0,'L');
-        $this->Cell(20,7,'Solde','B',0,'L');
-        $this->Cell(20,7,'D/C','B',0,'L');
+        $this->Cell(110,7,_('Poste Comptable'),'B');
+        $this->Cell(20,7,_('Débit'),'B',0,'L');
+        $this->Cell(20,7,_('Crédit'),'B',0,'L');
+        $this->Cell(20,7,_('Solde'),'B',0,'L');
+        $this->Cell(20,7,_('D/C'),'B',0,'L');
         $this->Ln();
 
     }
