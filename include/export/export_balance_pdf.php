@@ -35,7 +35,8 @@ require_once NOALYSS_INCLUDE . '/class/database.class.php';
 include_once("class/acc_balance.class.php");
 require_once NOALYSS_INCLUDE . '/header_print.php';
 require_once NOALYSS_INCLUDE . '/class/dossier.class.php';
-require_once NOALYSS_INCLUDE . '/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE . '/class/pdf.class.php';
+require_once NOALYSS_INCLUDE . '/class/pdf_land.class.php';
 require_once NOALYSS_INCLUDE . '/lib/http_input.class.php';
 $http = new HttpInput();
 
