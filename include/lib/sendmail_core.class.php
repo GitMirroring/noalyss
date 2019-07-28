@@ -29,9 +29,8 @@
  * @author dany
  */
 require_once NOALYSS_INCLUDE.'/lib/filetosend.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 
-class Sendmail
+class Sendmail_Core
 {
 
     private $mailto;
@@ -41,6 +40,10 @@ class Sendmail
     private $from;
     private $content;
     private $header;
+
+    function __construct()
+    {
+    }
 
     /**
      * set the from
@@ -109,8 +112,8 @@ class Sendmail
     function compose()
     {
         $this->verify();
-	$this->header="";
-	$this->content="";
+	    $this->header="";
+	    $this->content="";
 
         // a random hash will be necessary to send mixed content
         $separator = md5(time());
@@ -152,104 +155,23 @@ class Sendmail
 
         $this->content .= "--" . $separator . "--";
     }
+
     /**
-     * Send the message 
+     * Send email
      * @throws Exception
      */
     function send()
     {
-        if ( $this->can_send() == false )            throw new Exception(_('Email non envoyé'),EMAIL_LIMIT);
+        try {
+            $this->verify();
 
-	if (!mail($this->mailto, $this->subject, $this->content,$this->header))
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        if (!mail($this->mailto, $this->subject, $this->content,$this->header))
         {
             throw new Exception('send failed');
         }
-        // Increment email amount
-        $repo =new Database();
-        $date=date('Ymd');
-        $http=new HttpInput();
-        $dossier=$http->request("gDossier","string", -1);
-        $this->increment_mail($repo,$dossier,$date);
     }
-    /**
-     * Check if email can be sent from a folder
-     * @return boolean
-     */
-    function can_send() {
-        /**
-         * if send from a dossier , then  check limit of this dossier 
-         * otherwise send true
-         */
-        $http=new HttpInput();
-        $dossier=$http->request("gDossier","string", -1);
-        if ($dossier == -1 ) return true;
-        
-        /**
-         * Compare max value in repo 
-         */
-        $repo =new Database();
-        $date=date('Ymd');
-        // get max email 
-        $max_email = $this->get_max_email($repo,$dossier);
-        // 
-        // This folder cannot send email
-        if ($max_email == 0 ) return false;
-        // 
-        // This folder has unlimited email 
-        if ($max_email == -1 ) return true;
-
-        // get email sent today from account_repository
-        $email_sent = $this->get_email_sent($repo,$dossier , $date);
-        // 
-        if (   $email_sent >= $max_email) return false;
-               
-        return true;
-    }
-    /**
-     * return max email the folder can send
-     * @param $p_repo Database 
-     * @param $p_dossier_id int
-     */
-    function get_max_email(Database $p_repo,$p_dossier_id)
-    {
-        $max_email = $p_repo->get_value("select dos_email from ac_dossier where dos_id=$1",
-            array($p_dossier_id));
-        return $max_email;
-    }
-    /**
-     * Return the amount of send emails for the date (YYYYMMDD)
-     * @param Database $p_repo
-     * @param $p_dossier_id int 
-     * @param $p_date string YYYYMMDD
-     */
-    function get_email_sent(Database $p_repo,$p_dossier_id,$p_date)
-    {
-        
-        $email_sent = $p_repo->get_value ('select de_sent_email from dossier_sent_email where dos_id = $1 and de_date=$2',
-                array($p_dossier_id,$p_date));
-        return $email_sent;
-                
-                
-    }
-    /**
-     * Add $p_amount_email to email sent
-     * @param $p_repo Database 
-     * @param $p_dossier int id of the folder (dossier.dos_id)
-     * @param $p_date string (YYYYMMDD)
-     */
-    function increment_mail(Database $p_repo,$p_dossier,$p_date)
-    {
-        if ( $p_dossier == -1) return ; 
-        $email_sent = $this->get_email_sent($p_repo,$p_dossier,$p_date);
-        if (  $email_sent == 0 ){
-                $p_repo->exec_sql("insert into public.dossier_sent_email(de_sent_email,dos_id,de_date) values($1,$2,$3)",
-                        array(1,$p_dossier,$p_date));
-                return;
-        } else {
-            // update + sp_emaoun_email
-            $p_repo->exec_sql("update dossier_sent_email set de_sent_email=de_sent_email+1 where dos_id=$1 and de_date=$2",
-                    array($p_dossier,$p_date));
-        }
-    }
-
 }
