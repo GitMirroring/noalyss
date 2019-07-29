@@ -243,10 +243,16 @@ class Icon_Action
                 $p_javascript);
         return $r;
     }
-    
-    static function menu($p_id,$p_javascript)
+    /**
+     * When a mouse is over this or if you click on it , it will trigger the javascript
+     * @param domid $p_id
+     * @param string $p_javascript 
+     * @return html string
+     */
+    static function menu_click($p_id,$p_javascript)
     {
-        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="font-size:150%%;margin-left:5px">&#9776;</span>',
+        
+        $r=sprintf('<input type="button"  id="%s" onclick="%s" class="smallbutton icon" value="&#xf142;" style="font-weigth:bolder">',
                 $p_id,
                 $p_javascript);
         return $r;

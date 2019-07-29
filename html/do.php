@@ -356,7 +356,7 @@ else
         record_log($exc->getTraceAsString());
         throw $exc;
     }
-    
+
 }
 
 

@@ -44,19 +44,19 @@ div.select_box a:hover,div.select_box ul li:hover {
             Le CSS est important , surtout la position, il faut qu'il soit dans 
             un élément positionné en absolu.
         </p>
-        <p style="position: absolute">
+        <p style="float : static">
   <?php
      require NOALYSS_INCLUDE.'/lib/select_box.class.php';
      $a=new Select_Box("test","click me !");
-     $a->add_url("List","?id=5");
-     $a->add_javascript("Hello","alert('hello')");
-     $a->add_value("Value = 10",10);
-     $a->add_value("Value = 1",1);
-     $a->add_value("Value = 15",15);
+     $a->add_url("List (link)","?id=5&".Dossier::get());
+     $a->add_javascript("Hello (Javascript)","alert('hello')");
+     $a->add_value("Value = 10 (set value)",10);
+     $a->add_value("Value = 1 (set value)",1);
+     $a->add_value("Value = 15 (set value)",15);
 
      echo $a->input();
      
-     ?>
+     ?>   
         </p>
         </div>
 </body>
