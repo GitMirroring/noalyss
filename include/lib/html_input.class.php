@@ -139,7 +139,7 @@ class HtmlInput
         for ($i=0; $i<count($this->attribute); $i++)
         {
             list($name, $value)=$this->attribute[$i];
-            $tmp1=sprintf("$('%s').%s='%s';", $this->name, $name, $value);
+            $tmp1=sprintf("$('%s').%s='%s';", $this->id, $name, $value);
             $attr.=$tmp1;
         }
         $attr=create_script($attr);

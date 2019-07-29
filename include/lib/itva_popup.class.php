@@ -77,7 +77,7 @@ class ITva_Popup extends HtmlInput
         $this->name=($p_name==null)?$this->name:$p_name;
         $this->value=($p_value==null)?$this->value:$p_value;
         $this->js=(isset($this->js))?$this->js:'onchange="format_number(this);"';
-		$this->id=($this->id=="")?$this->name:$this->id;
+	$this->id=($this->id=="")?$this->name:$this->id;
 
         if ( $this->readOnly==true) return $this->display();
 

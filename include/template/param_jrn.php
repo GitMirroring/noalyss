@@ -9,6 +9,13 @@
 </TD>
 </TR>
 
+    <TR>
+<TD><?php echo _('Type de journal')?> </TD>
+<TD>
+<?php echo $type;?>
+</TD>
+</TR>
+
 <TR>
 
 		<TD><?php echo _('Nom journal')?> </TD>

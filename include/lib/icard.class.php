@@ -135,6 +135,7 @@ class ICard extends HtmlInput
         $this->autocomplete=1;
         $this->style='  ';
         $this->accvis=1; //!< account_visible =1 otherwise 0
+        $this->limit=12; //!< Max of row show
     }
    
     /**
@@ -252,14 +253,15 @@ class ICard extends HtmlInput
             $div=($this->choice_create==1)?sprintf('<div id="%s"  class="autocomplete"></div>',
                             $this->choice):"";
 
-            $query=dossier::get().'&e='.urlencode($this->typecard);
-
+            $query=http_build_query([ 'gDossier'=>Dossier::id(),'e'=>$this->typecard,'limit'=>$this->limit]);
+            
             $javascript=sprintf('try { new Ajax.Autocompleter("%s","%s","fid_card.php?%s",'.
                     '{paramName:"FID",minChars:1,indicator:%s, '.
                     'callback:%s, '.
+                    'limit:%s,'.
                     ' afterUpdateElement:%s});} catch (e){alert(e.message);};',
                     $this->id, $this->choice, $query, $this->indicator,
-                    $this->callback, $this->fct);
+                    $this->callback, $this->limit, $this->fct);
 
             $javascript=create_script($javascript.$this->dblclick);
 

@@ -654,8 +654,9 @@ class Fiche
                             $w->width=$r->ad_size;
                             $w->extra=$filter;
                             $w->extra2=0;
+                            $w->limit=6;
                             $label=new ISpan();
-                            $label->name="av_text".$uniq.$r->ad_id."_label";
+                            $label->name="av_text".$r->ad_id.$uniq."_label";
                             $fiche=new Fiche($this->cn);
                             $fiche->get_by_qcode($r->av_text);
                             if ($fiche->id==0)
@@ -671,9 +672,9 @@ class Fiche
                             }
                             $w->set_attribute('ipopup', 'ipopcard');
                             $w->set_attribute('typecard', $filter);
-                            $w->set_attribute('inp', "av_text".$r->ad_id);
+                            $w->set_attribute('inp', $w->id);
                             $w->set_attribute('label', $label->name);
-                            $w->autocomplete=0;
+                            $w->autocomplete=1;
                             $w->dblclick="fill_ipopcard(this);";
                             $msg=$w->search();
                             $msg.=$label->input();
@@ -803,6 +804,7 @@ class Fiche
                     if (strlen(trim($value))==0)
                         $value="pas de nom";
 		    $account_name=$value;
+
                 }
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
@@ -828,18 +830,21 @@ class Fiche
                                     $parent=$acc_account->find_parent();
                                     $acc_account->set_parameter("pcm_val_parent",$parent);
                                     $acc_account->save();
-			      } else {
-                                // Check that the accounting can be used directly
-                                if ( $acc_account->get_parameter('pcm_direct_use') == 'N') {
+                                } 
+                                else
+                                {
+                                    // Check that the accounting can be used directly
                                     
-                                    throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
-                                }
+                                    if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
+                                        throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
+                                    }
 
 			      }
 			      
-                            }
+                                }
                             else
                             {
+                                                              
                                 $ac_array=explode(",", $value);
                                 if (count($ac_array)<>2)
                                     throw new Exception(_('Désolé, il y a trop de virgule dans le poste comptable ').h($value));
@@ -878,6 +883,7 @@ class Fiche
                                     throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
                                 }
                                 $v=$part1.','.$part2;
+
                             }
                             $parameter=array($this->id, $v);
                         }
@@ -1006,7 +1012,10 @@ class Fiche
 
 			    if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
                             if ( mb_strlen($part2)>40) throw new Exception (_("Poste comptable trop long"), 1);
+                            
+                            $part1=$this->cn->get_value('select format_account($1)',    array($part1));
                             $acc_account1=new Acc_Account($this->cn,$part1);
+                            
                             if ($acc_account1->get_parameter("id")== -1 ) {
                                 $account_name=$this->strAttribut(ATTR_DEF_NAME);
                                 $acc_account1->set_parameter("pcm_lib", $account_name);
@@ -1015,15 +1024,16 @@ class Fiche
                                 $acc_account1->set_parameter("pcm_val_parent",$parent);
                                 $acc_account1->save();
                             }
-                            
-                            $v=$part1.','.$part2;
                             // Check that the accounting can be used directly
-                            $acc_account1=new Acc_Account($this->cn,$part1);
                             if ($acc_account1->get_parameter('pcm_direct_use') == 'N') {
                                 throw new Exception(_("Utilisation directe interdite du poste comptable $part1"));
                             }
-                            // Check that the accounting can be used directly
+                            // Part 2
+                            $part2=$this->cn->get_value('select format_account($1)',
+                                    array($part2));
                             $acc_account2=new Acc_Account($this->cn,$part2);
+                            
+                                                                                    
                             if ($acc_account2->get_parameter("id")== -1 ) {
                                     $account_name=$this->strAttribut(ATTR_DEF_NAME);
                                     $acc_account2->set_parameter("pcm_lib", $account_name);
@@ -1031,10 +1041,13 @@ class Fiche
                                     $parent=$acc_account2->find_parent();
                                     $acc_account2->set_parameter("pcm_val_parent",$parent);
                                     $acc_account2->save();
-                                }
+                            }
+
+                            // Check that the accounting can be used directly
                             if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
                                 throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
                             }
+                            $v=$part1.','.$part2;
                         }
                         else
                         {
@@ -1051,6 +1064,7 @@ class Fiche
                                     $acc_account->save();
                                 }
 			     
+                            $acc_account=new Acc_Account($this->cn,$v);
 			     if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
                                 throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
                             }
@@ -1527,8 +1541,10 @@ class Fiche
 			$side="&nbsp;".$this->get_amount_side($progress);
 		    echo "<TR class=\"highlight\">".
 		       "<TD>$old_exercice</TD>".
+		     td('').
 		      td('').
-		      "<TD></TD>".td("").td("").td().td().
+		      td('').
+		      "<TD></TD>".td().
 		      "<TD>Totaux</TD>".
                             td().
 		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
@@ -1581,6 +1597,7 @@ class Fiche
         echo '<tfoot>';
        echo "<TR class=\"highlight\">".
                td($op['p_exercice']).
+               td().
                td().
                td().
                td().
@@ -2056,7 +2073,8 @@ class Fiche
                 [$this->id]);
         if ( $count > 0 ) return TRUE;
         
-        $count=$this->cn->get_value("select count(*) 
+        $count=$this->cn->get_value("
+                                select count(*) 
                 from attr_def
                 join fiche_detail using (ad_id)
                 where ad_type='card'
@@ -2066,6 +2084,7 @@ class Fiche
         if ( $count > 0 ) return TRUE;
         
         return FALSE;
+
     }
     /*\brief remove a card without verification */
     function delete()
@@ -2075,11 +2094,13 @@ class Fiche
         // Remove from attr_value
         $Res=$this->cn->exec_sql("delete from fiche_detail
                                  where
-                                   f_id=$1",[$this->id]);
+                                   f_id= $1",[ $this->id] );
 
         // Remove from fiche
         $Res=$this->cn->exec_sql("delete from fiche where f_id=$1",[$this->id]);
+        
         $this->cn->commit();
+
 
     }
     /*!\brief create the sql statement for retrieving all

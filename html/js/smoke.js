@@ -192,7 +192,7 @@
                     "click",
                     function () {
                         smoke.destroy(f.type, f.newid);
-                        if (typeof f.callback !== 'undefined') {
+                        if (typeof f.callback !== 'undefined' && f.callback) {
                             f.callback();
                         }
                     }

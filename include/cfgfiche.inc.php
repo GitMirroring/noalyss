@@ -63,7 +63,8 @@ if ( $action == 'remove_line' )
     catch (Exception $exc)
     {
         throw new Exception(_("Vous devez choisir au moins une ligne"));
-    }    finally
+    }    
+    finally
     {
       echo $fiche_def->input_detail();
       echo $retour;

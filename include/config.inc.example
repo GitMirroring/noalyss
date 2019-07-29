@@ -63,4 +63,8 @@ define ("dbname","");
 // you can uncomment this
 // after replace NOALYSS_HOME by the path of the local installation of Noalyss
 // ini_alter("open_basedir", "/usr/bin:/tmp/:NOALYSS_HOME");
-  
+
+// In recent distribution linux, pdftk is a snap, you should set the path
+// for exporting document in PDF
+// $pdftk = /usr/bin/pdftk 
+// $pdftk = /snap/bin/pdftk 

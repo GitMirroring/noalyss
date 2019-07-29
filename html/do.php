@@ -108,6 +108,10 @@ html_page_start($style_user);
 if ( DEBUG ) {
     ?>
 <div id="debug_div" style="border:slategray solid 1px;margin-left: 0px;position:absolute;background:white;display:fixed;top:2px;left:25px;z-index:1000;display:none">
+	<h2 style="margin-top:100px"> Memory Usage </h2>
+	<?php  echo memory_get_usage()/1024.0 . " kb \n"; ?>
+
+
     <h2>$_POST</h2>
     <pre>
     <?php        
@@ -137,6 +141,7 @@ if ( DEBUG ) {
     <h2>$GLOBALS</h2>
     <pre>
     <?php        
+    // Use much of memory
     print_r($GLOBALS);
     ?>
     </pre>
@@ -344,10 +349,12 @@ else
     catch (Exception $exc)
     {
         echo $exc->getMessage();
+        record_log("No user profile ");
+        record_log($exc->getMessage());
         record_log($exc->getTraceAsString());
-        throw $e;
+        throw $exc;
     }
-    
+
 }
 
 

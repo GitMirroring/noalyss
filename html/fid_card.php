@@ -45,6 +45,9 @@ require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $http=new HttpInput();
 
 $jrn= $http->request("j","number",-1); 
+$limit=$http->request("limit","number",12);
+
+$jrn= $http->request("j","number",-1); 
 $filter_card="";
 $cn=Dossier::connect();
 $d=$http->request('e');
@@ -117,18 +120,16 @@ else
     }
 }
 
-
-/* create a filter based on j */
-/*$sql_str="select f_id, vw_name,quick_code,vw_description ".
-  " from vw_fiche_attr where  ".
-  " ( vw_name ilike '%'||$1||'%' or quick_code ilike $2||'%' or vw_description ilike '%'||$3||'%')    ".
-  $filter_card;
-*/
-
-$sql_str="select distinct f_id from fiche join fiche_detail using (f_id) where ad_id in (9,1,23) and ad_value ilike '%'||$1||'%' ".$filter_card.' limit 12';
+$sql_str="select distinct f_id 
+         from fiche 
+         join fiche_detail using (f_id) 
+         where 
+         ad_id in (9,1,23) 
+         and ad_value ilike '%'||$1||'%' ".$filter_card.' limit '.$limit;
 
 
 $fid=$http->request("FID");
+
 
 $sql=$cn->get_array($sql_str		    ,array($fid));
 
