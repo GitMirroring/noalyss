@@ -282,7 +282,7 @@ if ( ! file_exists(NOALYSS_INCLUDE.'/config.inc.php')) {
 // magic_quotes_sybase = Off
 // include_path
 require_once NOALYSS_INCLUDE.'/lib/config_file.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 // we shouldn't use it 
 // if ( defined ("MULTI") && MULTI==1) { create_htaccess();}

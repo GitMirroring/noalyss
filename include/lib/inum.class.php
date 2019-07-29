@@ -20,11 +20,11 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* !\file
+/*!\file
  * \brief for the numeric input text field
  */
 require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-/* !\brief
+/*!\brief
  * This class handles only the numeric input, the input will
  * call a javascript
  * to change comma to period  and will round it (2 decimal), the precision is given by
@@ -51,7 +51,7 @@ class INum extends IText
         $this->javascript='onchange="format_number(this,2);"';
     }
 
-    /* !\brief print in html the readonly value of the widget */
+    /*!\brief print in html the readonly value of the widget */
 
     public function display()
     {
@@ -73,7 +73,7 @@ class INum extends IText
         return $r;
     }
 
-    /* !\brief show the html  input of the widget */
+    /*!\brief show the html  input of the widget */
 
     public function input($p_name=null, $p_value=null)
     {

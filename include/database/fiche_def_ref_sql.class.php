@@ -24,7 +24,7 @@
  * category of card
  */
 require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 /**
  * @class

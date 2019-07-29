@@ -17,7 +17,7 @@
  */
 /**
  * @file 
- * @brief contains the javascript for the administration page
+ *  contains the javascript for the administration page
  */
 /**
  * Display the forbidden folders if the request comes from a form

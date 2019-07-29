@@ -26,7 +26,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 global $http;

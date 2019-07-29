@@ -25,7 +25,7 @@ include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
  * \brief Login page
  */
 
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 // Verif if User and Pass match DB
     // if no, then redirect to the login page
 $rep=new Database();

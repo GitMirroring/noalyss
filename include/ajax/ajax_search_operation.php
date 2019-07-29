@@ -18,7 +18,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-/* ! \file
+/*! \file
  * \brief Search module
  */
 if (!defined('ALLOWED'))
@@ -30,7 +30,7 @@ require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 global $http;
 $gDossier=dossier::id();
 
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 /* Admin. Dossier */
 
 $cn=Dossier::connect();

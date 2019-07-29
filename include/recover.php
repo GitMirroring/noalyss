@@ -63,8 +63,8 @@ if ($action=="") :
     </form>
     <?php
 elseif ($action=="send_email") :
-    require_once NOALYSS_INCLUDE.'/lib/sendmail.class.php';
-    require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+    require_once NOALYSS_INCLUDE.'/lib/sendmail_core.class.php';
+    require_once NOALYSS_INCLUDE.'/class/database.class.php';
     /*
      * Check if user exists, if yes save a recover request
      */
@@ -108,6 +108,7 @@ elseif ($action=="send_email") :
         $mail->set_from(ADMIN_WEB);
         $mail->mailto($user_email);
         $mail->set_subject("NOALYSS : Réinitialisation de mot de passe");
+        $noalyss_url=NOALYSS_URL;
         $message=<<<EOF
      Bonjour,
       
@@ -120,7 +121,7 @@ Suivez ce lien pour activer le changement ou ignorer ce message si vous n'êtes 
 Ce lien ne sera actif que 12 heures.
    
    
-   https://{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}?recover&id=req&req={$request_id}
+   {$noalyss_url}/index.php?recover&id=req&req={$request_id}
    
    Merci d'utiliser NOALYSS
    
@@ -139,7 +140,7 @@ elseif ($action=="req") :
     $http=new HttpInput();
     $request_id=$http->request("req","string", "");
     if (strlen(trim($request_id))==SIZE_REQUEST) :
-        require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+        require_once NOALYSS_INCLUDE.'/class/database.class.php';
         $cn=new Database(0);
 
         $value=$cn->get_value("select password from recover_pass where request=$1 and created_on > now() - interval '12 hours' and recover_on is null", array($request_id));

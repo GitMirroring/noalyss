@@ -25,13 +25,13 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 include_once("class/acc_report.class.php");
 include_once("lib/ac_common.php");
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 include_once("lib/impress.class.php");
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once  NOALYSS_INCLUDE.'/header_print.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
-require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
@@ -55,7 +55,7 @@ $pdf->setTitle("Rapport ".$Libelle,true);
 
 // Step ??
 //--
-$p_step=$http->get('p_step',"string",0);
+$step=$http->get('p_step',"string",0);
 if ( $step == 0 )
 {
     // No step asked

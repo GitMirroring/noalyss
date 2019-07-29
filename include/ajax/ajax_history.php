@@ -25,7 +25,7 @@
    */
 if ( ! defined('ALLOWED')) die (_('Accès interdit'));
 
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/class/periode.class.php';

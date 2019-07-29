@@ -23,7 +23,7 @@
  *
  * @author danydb
  */
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/print_ledger_detail.class.php';
 require_once NOALYSS_INCLUDE.'/class/print_ledger_simple.class.php';
 require_once NOALYSS_INCLUDE.'/class/print_ledger_simple_without_vat.class.php';

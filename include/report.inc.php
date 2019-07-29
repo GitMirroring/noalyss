@@ -29,7 +29,7 @@ require_once NOALYSS_INCLUDE.'/lib/ifile.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 global $http;

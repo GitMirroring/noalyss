@@ -24,7 +24,7 @@
  * \brief Manage the account from the table jrn, jrnx or tmp_pcmn
  */
 require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 
 class Acc_Account_Ledger

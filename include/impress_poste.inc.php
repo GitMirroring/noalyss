@@ -33,7 +33,7 @@ require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 //-----------------------------------------------------
 // Show the jrn and date
 //-----------------------------------------------------
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 global $g_user;
 

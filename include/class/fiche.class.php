@@ -185,7 +185,7 @@ class Fiche
         {
 
             /*
-			 * !! Missing attribute
+			 *!! Missing attribute
 			 */
             foreach ($e->attribut as $f )
             {

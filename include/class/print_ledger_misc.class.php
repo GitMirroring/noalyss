@@ -22,7 +22,7 @@
 /*!\file
  * \brief print a listing of financial
  */
-require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
 class Print_Ledger_Misc extends PDF
 {
     function __construct($p_cn,$p_jrn)

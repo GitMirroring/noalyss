@@ -31,7 +31,7 @@
  * Must return at least tva, htva and tvac
  */
 require_once '../include/constant.php';
-require_once  NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once  NOALYSS_INCLUDE.'/class/database.class.php';
 require_once  NOALYSS_INCLUDE.'/class/acc_compute.class.php';
 require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once  NOALYSS_INCLUDE.'/class/acc_tva.class.php';

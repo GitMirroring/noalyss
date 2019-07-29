@@ -27,7 +27,7 @@
 define ('ALLOWED',1);
 require_once '../include/constant.php';
 global $g_user,$cn,$g_parameter;
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $gDossier=dossier::id();

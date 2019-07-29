@@ -31,7 +31,7 @@
 
 include_once("../include/constant.php");
 include_once("lib/ac_common.php");
-require_once('lib/database.class.php');
+require_once('class/database.class.php');
 require_once ('class/dossier.class.php');
 require_once('lib/html_input.class.php');
 require_once('lib/icon_action.class.php');

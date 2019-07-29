@@ -22,11 +22,11 @@ require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* ! \file
+/*! \file
  * \brief This class is used to create all the HTML INPUT TYPE
  */
 
-/* !
+/*!
  * \brief class widget This class is used to create all the HTML INPUT TYPE
  *        and some specials which works with javascript like
  *        js_search.
@@ -55,20 +55,20 @@ require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 class HtmlInput
 {
 
-    var $type;                      /* !<  $type type of the widget */
-    var $name;                      /* !<  $name field NAME of the INPUT */
-    var $value;                     /* !<  $value what the INPUT contains */
-    var $readOnly;                  /* !<  $readonly true : we cannot change value */
-    var $size;                      /* !<  $size size of the input */
-    var $selected;                  /* !<  $selected for SELECT RADIO and CHECKBOX the selected value */
-    var $table;                     /* !<  $table =1 add the table tag */
-    var $label;                     /* !<  $label the question before the input */
-    var $disabled;                  /* !<  $disabled poss. value == true or nothing, to disable INPUT */
-    var $extra;                     /* !<  $extra different usage, it depends of the $type */
-    var $extra2;                    /* !<  $extra2 different usage,
+    var $type;                      /*!<  $type type of the widget */
+    var $name;                      /*!<  $name field NAME of the INPUT */
+    var $value;                     /*!<  $value what the INPUT contains */
+    var $readOnly;                  /*!<  $readonly true : we cannot change value */
+    var $size;                      /*!<  $size size of the input */
+    var $selected;                  /*!<  $selected for SELECT RADIO and CHECKBOX the selected value */
+    var $table;                     /*!<  $table =1 add the table tag */
+    var $label;                     /*!<  $label the question before the input */
+    var $disabled;                  /*!<  $disabled poss. value == true or nothing, to disable INPUT */
+    var $extra;                     /*!<  $extra different usage, it depends of the $type */
+    var $extra2;                    /*!<  $extra2 different usage,
       it depends of the $type */
-    var $javascript;                /* !< $javascript  is the javascript to add to the widget */
-    var $ctrl;   /* !<$ctrl is the control to update (see js_search_card_control) */
+    var $javascript;                /*!< $javascript  is the javascript to add to the widget */
+    var $ctrl;   /*!<$ctrl is the control to update (see js_search_card_control) */
     var $tabindex;
 
     function __construct($p_name="", $p_value="", $p_id="")
@@ -94,7 +94,7 @@ class HtmlInput
         $this->readOnly=$p_read;
     }
 
-    /* !\brief set the extra javascript property for the INPUT field
+    /*!\brief set the extra javascript property for the INPUT field
      * \param $p_name name of the parameter
      * \param $p_value default value of this parameter
      */
@@ -229,7 +229,7 @@ class HtmlInput
         return self::hidden('plugin_code', $_REQUEST['plugin_code']);
     }
 
-    /* !\brief create a button with a ref
+    /*!\brief create a button with a ref
      * \param $p_label the text
      * \param $p_value the location of the window,
      * \param $p_name the id of the span
