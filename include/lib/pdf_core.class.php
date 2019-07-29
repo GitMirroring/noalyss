@@ -211,6 +211,11 @@ class PDF_Core extends TFPDF
         $this->add_cell(new Cellule($w,$h,$txt,$border,0,$align,$fill,'','M'));
 
     }
+    /**
+     * Print all the cell stored and call Ln (new line)
+     * @param int $p_step
+     */
+
     function line_new($p_step=null){
             $this->print_row();
            if ( $this->bigger==0) 
@@ -219,6 +224,27 @@ class PDF_Core extends TFPDF
                 parent::Ln($this->bigger);
             $this->bigger=0;
     }
+       /**
+     * If the step is even then return 1 and set the backgroup color to blue , otherwise
+     * returns 0, and set the background color to white
+     * It is use to compute alternated  colored row , it the parameter fill in write_cell and 
+     * cell
+     * @see PDF:write_cell
+     * @see TPDF:cell
+     * 
+     */
+    function is_fill($p_step)
+    {
+        if ($p_step % 2 == 0) {
+            $pdf->SetFillColor(220, 221, 255);
+            $fill = 1;
+        } else {
+            $pdf->SetFillColor(0, 0, 0);
+            $fill = 0;
+        }
+        return $p_step;
+    }
+
 
 
 }
