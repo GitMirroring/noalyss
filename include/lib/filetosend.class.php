@@ -16,19 +16,19 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-// Copyright Author Dany De Bontridder danydb@aevalys.eu
+// Copyright Author Dany De Bontridder danydb@noalyss.eu
 /**
  *@file
  * @brief  file to add to a message
  *
- * @see Sendmail
+ * @see Sendmail_Core
  * @author dany
  */
 
 /**
  * @brief  file to add to a message
  *
- * @see Sendmail
+ * @see Sendmail_Core
  * @author dany
  */
 

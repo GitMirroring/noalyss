@@ -57,17 +57,16 @@ class DatabaseCore
         if ($this->db == false) {
             if (DEBUG) {
 
-                echo '<h2 class="error">Impossible de se connecter &agrave; postgreSql !</h2>';
+                echo '<h2 class="error">'._('Impossible de se connecter à postgreSql').'</h2>';
                 echo '<p>';
-                echo "Vos param&egrave;tres sont incorrectes : <br>";
+                echo _("Vos paramètres sont incorrectes").": <br>";
                 echo "<br>";
-                echo "base de donn&eacute;e : $p_dbname<br>";
-                echo "Port $p_port <br>";
-                echo "Utilisateur : $p_user <br>";
+                printf (_("base de donnée  = %s"), $p_dbname)."<br>";
+                printf (_("Port %s"),$p_port )."<br>";
+                printf (  _("Utilisateur : %s"),$p_user )."<br>";
                 echo '</p>';
 
-                die("Connection impossible : v&eacute;rifiez vos param&egrave;tres de base
-                  de donn&eacute;es");
+                die();
             } else {
                 echo '<h2 class="error">' . _('Erreur de connexion !') . '</h2>';
                 $this->is_open = false;
@@ -390,115 +389,6 @@ class DatabaseCore
         return $this->size($p_ret);
     }
 
-    /**
-     * \brief loop to apply all the path to a folder or
-     *         a template
-     * \param $p_name database name
-     *
-     */
-
-    function apply_patch($p_name)
-    {
-        if (!$this->exist_table('version')) {
-            echo _('Base de donnée vide');
-            return;
-        }
-        $MaxVersion = DBVERSION - 1;
-        $succeed = "<span style=\"font-size:18px;color:green\">&#x2713;</span>";
-        echo '<ul style="list-type-style:square">';
-        for ($i = 4; $i <= $MaxVersion; $i++) {
-            $to = $i + 1;
-
-            if ($this->get_version() <= $i) {
-                if ($this->get_version() == 97) {
-                    if ($this->exist_schema("amortissement")) {
-                        $this->exec_sql('ALTER TABLE amortissement.amortissement_histo
-							ADD CONSTRAINT internal_fk FOREIGN KEY (jr_internal) REFERENCES jrn (jr_internal)
-							ON UPDATE CASCADE ON DELETE SET NULL');
-                    }
-                }
-                echo "<li>Patching " . $p_name .
-                    " from the version " . $this->get_version() . " to $to ";
-
-                $this->execute_script(NOALYSS_INCLUDE . '/sql/patch/upgrade' . $i . '.sql');
-                echo $succeed;
-
-                if (!DEBUG)
-                    ob_start();
-                // specific for version 4
-                if ($i == 4) {
-                    $sql = "select jrn_def_id from jrn_def ";
-                    $Res = $this->exec_sql($sql);
-                    $Max = $this->size();
-                    for ($seq = 0; $seq < $Max; $seq++) {
-                        $row = pg_fetch_array($Res, $seq);
-                        $sql = sprintf("create sequence s_jrn_%d", $row['jrn_def_id']);
-                        $this->exec_sql($sql);
-                    }
-                }
-                // specific to version 7
-                if ($i == 7) {
-                    // now we use sequence instead of computing a max
-                    //
-                    $Res2 = $this->exec_sql('select coalesce(max(jr_grpt_id),1) as l from jrn');
-                    $Max2 = pg_NumRows($Res2);
-                    if ($Max2 == 1) {
-                        $Row = pg_fetch_array($Res2, 0);
-                        var_dump($Row);
-                        $M = $Row['l'];
-                        $this->exec_sql("select setval('s_grpt',$M,true)");
-                    }
-                }
-                // specific to version 17
-                if ($i == 17) {
-                    $this->execute_script(NOALYSS_INCLUDE . '/sql/patch/upgrade17.sql');
-                    $max = $this->get_value('select last_value from s_jnt_fic_att_value');
-                    $this->alter_seq($p_cn, 's_jnt_fic_att_value', $max + 1);
-                } // version
-                // reset sequence in the modele
-                //--
-                if ($i == 30 && $p_name == "mod") {
-                    $a_seq = array('s_jrn', 's_jrn_op', 's_centralized',
-                        's_stock_goods', 'c_order', 's_central');
-                    foreach ($a_seq as $seq) {
-                        $sql = sprintf("select setval('%s',1,false)", $seq);
-                        $Res = $this->exec_sql($sql);
-                    }
-                    $sql = "select jrn_def_id from jrn_def ";
-                    $Res = $this->exec_sql($sql);
-                    $Max = pg_NumRows($Res);
-                    for ($seq = 0; $seq < $Max; $seq++) {
-                        $row = pg_fetch_array($Res, $seq);
-                        $sql = sprintf("select setval('s_jrn_%d',1,false)", $row['jrn_def_id']);
-                        $this->exec_sql($sql);
-                    }
-                }
-                if ($i == 36) {
-                    /* check the country and apply the path */
-                    $res = $this->exec_sql("select pr_value from parameter where pr_id='MY_COUNTRY'");
-                    $country = pg_fetch_result($res, 0, 0);
-                    $this->execute_script(NOALYSS_INCLUDE . "/sql/patch/upgrade36." . $country . ".sql");
-                    $this->exec_sql('update tmp_pcmn set pcm_type=find_pcm_type(pcm_val)');
-                }
-                if ($i == 59) {
-                    $res = $this->exec_sql("select pr_value from parameter where pr_id='MY_COUNTRY'");
-                    $country = pg_fetch_result($res, 0, 0);
-                    if ($country == 'BE')
-                        $this->exec_sql("insert into parm_code values ('SUPPLIER',440,'Poste par défaut pour les fournisseurs')");
-                    if ($country == 'FR')
-                        $this->exec_sql("insert into parm_code values ('SUPPLIER',400,'Poste par défaut pour les fournisseurs')");
-                }
-                if ($i == 61) {
-                    $country = $this->get_value("select pr_value from parameter where pr_id='MY_COUNTRY'");
-                    $this->execute_script(NOALYSS_INCLUDE . "/sql/patch/upgrade61." . $country . ".sql");
-                }
-
-                if (!DEBUG)
-                    ob_end_clean();
-            }
-        }
-        echo '</ul>';
-    }
 
     /**
      *
@@ -571,7 +461,7 @@ class DatabaseCore
         $array = $this->get_array($p_sql, $p_array);
         if (empty($array)) return null;
         if (count($array) == 1) return $array[0];
-        throw new Exception("Database:get_row retourne trop de lignes", 100);
+        throw new Exception(_("Database:get_row retourne trop de lignes"), 100);
     }
 
     /**
@@ -630,27 +520,6 @@ class DatabaseCore
         return false;
     }
 
-    /**
-     * return the name of the database with the domain name
-     * @param $p_id of the folder WITHOUT the domain name
-     * @param $p_type dos for folder mod for template
-     * @return formatted name
-     */
-    function format_name($p_id, $p_type)
-    {
-        switch ($p_type) {
-            case 'dos':
-                $sys_name = sprintf("%sdossier%d", strtolower(domaine), $p_id);
-                break;
-            case 'mod':
-                $sys_name = sprintf("%smod%d", strtolower(domaine), $p_id);
-                break;
-            default:
-                echo_error(__FILE__ . " format_name invalid type " . $p_type, __LINE__);
-                throw new Exception(__FILE__ . " format_name invalid type " . $p_type . __LINE__);
-        }
-        return $sys_name;
-    }
 
     /**
      * Count the database name in a system view
@@ -680,7 +549,7 @@ class DatabaseCore
     }
 
     /*
-     * !\brief test if a view exist
+     *!\brief test if a view exist
      * \return true if the view. exist otherwise false
      */
 
@@ -693,7 +562,7 @@ class DatabaseCore
     }
 
     /*
-     * !\brief test if a schema exists
+     *!\brief test if a schema exists
      * \return true if the schemas exists otherwise false
      */
 

@@ -20,11 +20,11 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* !\file
+/*!\file
  * \brief the extension class manages the plugins for the security, the access
  * the inclusion...
  */
-/* !\brief manage the extension, it involves the table extension
+/*!\brief manage the extension, it involves the table extension
  *
  * Data member
  * - $cn database connection
@@ -57,7 +57,7 @@ class Extension extends Menu_Ref_sql
             throw new Exception('Extension non trouvée, le chemin est-il correct?');
     }
 
-    /* !@brief search a extension, the what is the column (extends_code */
+    /*!@brief search a extension, the what is the column (extends_code */
 
     function search($p_what)
     {
@@ -67,7 +67,7 @@ class Extension extends Menu_Ref_sql
         return 1;
     }
 
-    /* !\brief return 1 if the user given in parameter can access this extension
+    /*!\brief return 1 if the user given in parameter can access this extension
      * otherwise returns 0
      * \param $p_login the user login
      * \return 1 has access, 0 has no access
@@ -86,7 +86,7 @@ class Extension extends Menu_Ref_sql
         return 0;
     }
 
-    /* !@brief make an array of the available plugin for the current user
+    /*!@brief make an array of the available plugin for the current user
      * @return  an array
      * @see ISelect
      */
