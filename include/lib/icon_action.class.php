@@ -238,9 +238,50 @@ class Icon_Action
     }
     static function more($p_id,$p_javascript)
     {
-        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">...</span>',
+        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">&#8608;</span>',
                 $p_id,
                 $p_javascript);
         return $r;
     }
+    /**
+     * When a mouse is over this or if you click on it , it will trigger the javascript
+     * @param domid $p_id
+     * @param string $p_javascript 
+     * @return html string
+     */
+    static function menu_click($p_id,$p_javascript)
+    {
+        
+        $r=sprintf('<input type="button"  id="%s" onclick="%s" class="smallbutton icon" value="&#xf142;" style="font-weigth:bolder">',
+                $p_id,
+                $p_javascript);
+        return $r;
+    }
+    /**
+     * Display the icon of a padlock to lock or unlock element
+     * @param string $p_id DOMid 
+     * @param string $p_javascript
+     * @return htmlString
+     */
+    static function lock($p_id,$p_javascript) 
+    {
+        $lock_cur="&#xe831;";
+        $lock_next="&#xe832;";
+        
+        $r=sprintf( '<span id="%s" is_locked="1" onclick="toggle_lock(\'%s\');%s" class="icon smallicon">%s</span>',
+                $p_id,
+                $p_id,
+                $p_javascript, 
+                $lock_cur);
+        return $r;
+    }
+    /**
+     * Display the icon of a trashbin
+     * @param string $p_id DOMid 
+     * @param string $p_javascript
+     * @return htmlString
+     */
+    static function unlock($p_id,$p_javascript) 
+    {
+    }    
 }

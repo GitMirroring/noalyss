@@ -212,7 +212,7 @@ version  NOALYSS_VERSION - '.$my_domain.'
 <TD><input type="text" class="input_text" value="" id="p_user" name="p_user" autofocus tabindex="1" placeholder="User"></TD>
 </TR>
 <TR>
-<TD><INPUT TYPE="PASSWORD"  class="input_text" value=""  NAME="p_pass"  tabindex="2"i placeholder="*******"></TD>
+<TD><INPUT TYPE="PASSWORD"  class="input_text" value=""  NAME="p_pass"  tabindex="2" placeholder="*******"></TD>
 </TR>';
 
 

@@ -1250,7 +1250,7 @@ div.menu2 a.mtitle{
     font-size:1rem;
     font-weight: normal;
     /*color: darkblue;*/
-    padding:5px;
+    padding:5px 0px;
     margin:0px;
     border-radius: 5px;
     }

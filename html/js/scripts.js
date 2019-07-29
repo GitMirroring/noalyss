@@ -26,9 +26,6 @@
 var ask_reload = 0;
 var tag_choose = '';
 var aDraggableElement=new Array();
-var viewport = document.viewport.getDimensions(); // Gets the viewport as an object literal
-var width = viewport.width; // Usable window width
-var height = viewport.height;
 
 /**
  * callback function when we just need to update a hidden div with an info
@@ -1207,7 +1204,7 @@ function fill_box(req)
         alert_box(e.message);
          if (console) {
             console.error(e);
-            console.error("log answer = "+e.responseText);
+            console.error("log answer = "+req.responseText);
         }
     }
     try {
@@ -1216,7 +1213,7 @@ function fill_box(req)
     catch (e) {
         if (console) {
             console.error(e);
-            console.error("log answer = "+e.responseText);
+            console.error("log answer = "+req.responseText);
         }
         alert_box("Impossible executer script de la reponse\n" + e.message);
     }
@@ -1490,7 +1487,7 @@ function calcy(p_sy)
     {
         sy = document.documentElement.scrollTop + p_sy;
     }
-    if ( width < 801 ) {
+    if ( document.viewport.getDimensions().width < 801 ) {
         sy=sy/2;
     }
     return sy;
@@ -3521,4 +3518,28 @@ function updatePeriode(p_dossier,p_exercice,p_periode_from,p_periode_to,p_last)
     new Ajax.Updater(p_periode_from,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_from,"type":"from","last":p_last}});
     new Ajax.Updater(p_periode_to,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_to,"type":"to","last":p_last}});
     remove_waiting_box();
+}
+/**
+ * 
+ * @param {string} p_domid DOM id of the span containing the padlock icon
+ * @returns none
+ */
+function toggle_lock(p_domid)
+{
+    var padlock=document.getElementById(p_domid);
+    if ( padlock == null) {
+        console.error("domid invalid");
+    }
+    var status = padlock.getAttribute("is_locked");
+    if ( status == 1 ) {
+        padlock.innerHTML="&#xe832;";
+        padlock.setAttribute("is_locked",0);
+    } else if (status == 0) {
+        padlock.innerHTML="&#xe831;";
+        padlock.setAttribute("is_locked",1);
+    } else {
+        throw "toggle_lock failed";
+    }
+        
+    
 }

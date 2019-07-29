@@ -27,9 +27,10 @@ $e=0;
 foreach ($array as $row ) :
  $e++;
    if ($e%2==0)
-   echo '<tr class="odd">';
-   else
-   echo '<tr class="even">';
+   printf('<tr id="card%s" class="odd">',$row['f_id']);
+   else 
+   printf('<tr id="card%s" class="even">',$row['f_id']);
+   
    $fiche=new Fiche($cn);
    $fiche->id=$row['f_id'];
  $fiche->getAttribut();
@@ -37,7 +38,7 @@ $detail=HtmlInput::card_detail($fiche->strAttribut(ATTR_DEF_QUICKCODE));
 echo td($detail);
  foreach($fiche->attribut as $attr) :
          $sort="";
-         
+
 	 if ( $attr->ad_type != 'select'):
                 if ($attr->ad_type=="date") :
                     // format YYYYMMDD

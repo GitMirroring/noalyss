@@ -38,13 +38,13 @@ class Document_Export
         // Create 2 temporary folders   1. convert to PDF + stamp
         //                              2. store result
         $this->feedback = array();
-        $this->store_convert = tempnam($_ENV['TMP'], 'convert_');
-        $this->store_pdf = tempnam($_ENV['TMP'], 'pdf_');
+        $this->store_convert = tempnam(sys_get_temp_dir(), 'convert_');
+        $this->store_pdf = tempnam(sys_get_temp_dir(), 'pdf_');
         unlink($this->store_convert);
         unlink($this->store_pdf);
         umask(0);
-        mkdir($this->store_convert);
-        mkdir($this->store_pdf);
+        if ( mkdir($this->store_convert) == FALSE )            throw new Exception(sprintf("Create %s failed",$this->store_onvert));
+        if ( mkdir($this->store_pdf)== FALSE )            throw new Exception(sprintf("Create %s failed",$this->store_pdf));
     }
     /**
      * @brief concatenate all PDF into a single one and save it into the
@@ -177,6 +177,7 @@ class Document_Export
                 $cnt_feedback++;
                 continue;
             }
+
       
              $progress->increment($step);
             // 
