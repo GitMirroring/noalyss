@@ -76,4 +76,6 @@ content[44]="<?php echo _("Ne donner pas ce poste comptable si ce code n'est pas
 content[45]="<?php echo _("Ne donner pas ce poste comptable si ce code n'est pas utilisé  à la vente")?>";
 content[46]="<?php echo _("Un instant svp")?>";
 content[47]="<?php echo _("Vous confirmez ?")?>";
+content[48]="<?php echo _("Echec ")?>";
+
 </script>
