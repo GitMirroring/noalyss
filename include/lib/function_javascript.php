@@ -2784,4 +2784,16 @@ function load_all_script()
 
 
 }
+/**
+ * Send header and json object
+ * @param array $p_answer this array will be converted to json object
+ * @see json_encode
+ */
+function json_response($p_answer)
+{
+    header("Content-type: text/json; charset: utf8", true);
+    echo json_encode($p_answer,
+            JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
+}
+
 ?>
