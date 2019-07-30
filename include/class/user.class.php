@@ -483,9 +483,9 @@ class User
 		return $fr_id;
 	}
 
-	/**\brief set the mini rapport to display on the welcome page
+	/**
+         * \brief set the mini rapport to display on the welcome page
 	 */
-
 	function set_mini_report($p_id)
 	{
 		$count = $this->db->get_value("select count(*) from user_local_pref where user_id=$1 and parameter_type=$2", array($this->id, 'MINIREPORT'));
