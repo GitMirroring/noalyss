@@ -69,6 +69,7 @@ function todo_list_show(p_id)
                             remove_waiting_node();
                             content.evalScripts();
                             Effect.SlideDown(todo_div, {duration: 0.1, direction: 'top-left'})
+                            document.getElementById('todo_form_'+p_id)['p_desc'].scrollTop=0;
                         }
                         catch (e)
                         {
@@ -110,15 +111,21 @@ function todo_list_remove(p_ctl)
         return false;
     });
 }
+/**
+ * Save the content of a todo note
+ * @param {type} p_form the form containing date, test , ...
+ *
+ */
 function todo_list_save(p_form)
 {
     try {
     var form=$('todo_form_'+p_form);
     var json=form.serialize(true);
+    document.getElementById('todo_form_'+p_form)['p_desc'].scrollTop=0;
     json['op']="todo_list";
     new Ajax.Request('ajax_misc.php',
                     {
-                        method:'get',
+                        method:'post',
                        parameters:json,
                        onSuccess:function (req) {
                            // On success : reload the correct row and close 
@@ -131,7 +138,7 @@ function todo_list_save(p_form)
                             if (tl_id.length == 0)
                             {
                                 var rec = req.responseText;
-                                alert_box('erreur :' + rec);
+                                alert_box(content[48] + rec);
                             }
                             if ( getNodeText(tl_id[0]) == '0') {
                                 smoke.alert('Note est vide');

@@ -88,7 +88,7 @@ class Todo_List
         }
         if ( strcmp ($p_idx, 'tl_desc') == 0 )
         {
-            $p_value=mb_substr($p_value,0,400) ;
+            $p_value=mb_substr($p_value,0,1000) ;
             return true;
         }
         return true;

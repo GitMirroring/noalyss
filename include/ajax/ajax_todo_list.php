@@ -97,7 +97,7 @@ if ($ac == 'save')
     
     $cn=Dossier::connect();
     $todo=new Todo_List($cn);
-     $id=$http->get("id","string", 0);
+     $id=$http->post("id","string", 0);
     $todo->set_parameter("id",$id);
     if ($id <> 0 ) { $todo->load(); }
     else
@@ -105,10 +105,10 @@ if ($ac == 'save')
         $todo->set_parameter("owner", $_SESSION['g_user']);
     }
     
-    $todo->set_parameter("date",$http->get("p_date_todo","string", ""));
-    $todo->set_parameter("title", $http->get("p_title","string", ""));
-    $todo->set_parameter("desc", $http->get("p_desc","string", ""));
-    $todo->set_is_public($http->get("p_public", "string","N"));
+    $todo->set_parameter("date",$http->post("p_date_todo","string", ""));
+    $todo->set_parameter("title", $http->post("p_title","string", ""));
+    $todo->set_parameter("desc", $http->post("p_desc","string", ""));
+    $todo->set_is_public($http->post("p_public", "string","N"));
     
     ob_start();
     if ( $todo->get_parameter('owner') == $_SESSION['g_user'] ) $todo->save();
