@@ -3543,3 +3543,29 @@ function toggle_lock(p_domid)
         
     
 }
+
+/*** 
+ * Update Preference, applied the new CSS 
+ */
+function updatePreference()
+{
+    try {
+        waiting_box();
+        var param=$('preference_frm').serialize()+"&op=preference&action=save";
+        
+        new Ajax.Request("ajax_misc.php",{
+            method:"post",
+            parameters:param,
+            onSuccess:function (req) {
+                var style=req.responseText.evalJSON();
+                $('pagestyle').setAttribute('href',style.style);
+                removeDiv('preference_div');
+            }
+        });
+    } catch (e)
+    {
+        smoke.alert(content[48] + e.message);
+    }
+    remove_waiting_box();
+    
+}

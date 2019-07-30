@@ -51,7 +51,7 @@ $http=new HttpInput();
 
 mb_internal_encoding("UTF-8");
 
-$var = array('gDossier', 'op');
+$var = array( 'op');
 $cont = 0;
 /*  check if mandatory parameters are given */
 foreach ($var as $v)
@@ -62,8 +62,14 @@ foreach ($var as $v)
 		$cont = 1;
 	}
 }
-if ($cont != 0)
-	exit();
+
+// If not connected to a folder
+if ( ! isset($_REQUEST['gDossier'])) {
+    $gDossier=0;
+}
+
+if ($cont != 0) 	exit();
+
 extract($_REQUEST, EXTR_SKIP );
 if ( isset($div)) ajax_disconnected($div);
 global $g_user, $cn, $g_parameter;
