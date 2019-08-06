@@ -20,7 +20,7 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
 /*!\file
- * \brief Handle the table mod_payment
+ * \brief Handle the table payment_method
  */
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
@@ -31,7 +31,7 @@ require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 require_once NOALYSS_INCLUDE.'/constant.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
-/*!\brief Handle the table mod_payment
+/*!\brief Handle the table payment_method
  *\note the private data member are accessed via
   - mp_id  ==> id ( Primary key )
   - mp_lib ==> lib (label)
@@ -106,7 +106,7 @@ class Acc_Payment
     public function insert()
     {
         if ( $this->verify() != 0 ) return;
-        $sql='INSERT INTO mod_payment(
+        $sql='INSERT INTO payment_method(
              mp_lib, mp_jrn_def_id, mp_fd_id, mp_qcode,jrn_def_id)
              VALUES ($1, $2, $3, upper($4),$5) returning mp_id';
         $this->mp_id=$this->cn->exec_sql($sql,array(
@@ -121,7 +121,7 @@ class Acc_Payment
     {
         if ( $this->verify() != 0 ) return;
 
-        $sql="update mod_payment set mp_lib=$1,mp_qcode=$2,mp_jrn_def_id=$3,mp_fd_id=$4,jrn_def_id=$5 ".
+        $sql="update payment_method set mp_lib=$1,mp_qcode=$2,mp_jrn_def_id=$3,mp_fd_id=$4,jrn_def_id=$5 ".
              " where mp_id = $6";
         $res=$this->cn->exec_sql(
                  $sql,
@@ -134,22 +134,22 @@ class Acc_Payment
              );
         if ( strlen (trim($this->mp_jrn_def_id))==0)
             $this->cn->exec_sql(
-                'update mod_payment '.
+                'update payment_method '.
                 'set mp_jrn_def_id = null where mp_id=$1',
                 array($this->mp_id));
         if ( strlen (trim($this->jrn_def_id))==0)
             $this->cn->exec_sql(
-                'update mod_payment '.
+                'update payment_method '.
                 'set mp_jrn_def_id = null where mp_id=$1',
                 array($this->mp_id));
         if ( strlen (trim($this->mp_qcode))==0)
             $this->cn->exec_sql(
-                'update mod_payment '.
+                'update payment_method '.
                 'set mp_qcode = null where mp_id=$1',
                 array($this->mp_id));
         if ( strlen (trim($this->mp_fd_id))==0)
             $this->cn->exec_sql(
-                'update mod_payment '.
+                'update payment_method '.
                 'set mp_fd_id = null where mp_id=$1',
                 array($this->mp_id));
 
@@ -157,7 +157,7 @@ class Acc_Payment
 
     public function load()
     {
-        $sql='select mp_id,mp_lib,mp_fd_id,mp_jrn_def_id,mp_qcode,jrn_def_id from mod_payment '.
+        $sql='select mp_id,mp_lib,mp_fd_id,mp_jrn_def_id,mp_qcode,jrn_def_id from payment_method '.
              ' where mp_id = $1';
         $res=$this->cn->exec_sql(
                  $sql,
@@ -177,7 +177,7 @@ class Acc_Payment
      */
     public function delete()
     {
-        $sql="delete from mod_payment where mp_id=$1";
+        $sql="delete from payment_method where mp_id=$1";
         $this->cn->exec_sql($sql,array($this->mp_id));
     }
     /*!\brief retrieve all the data for all ledgers
@@ -187,7 +187,7 @@ class Acc_Payment
     public function get_all()
     {
         $sql='select mp_id,mp_lib '.
-             ' from mod_payment order by mp_lib';
+             ' from payment_method order by mp_lib';
         $array=$this->cn->get_array($sql);
         $ret=array();
         if ( !empty($array) )
@@ -209,7 +209,7 @@ class Acc_Payment
     public function get_valide()
     {
         $sql='select mp_id '.
-             ' from mod_payment '.
+             ' from payment_method '.
              ' where jrn_def_id=$1 and mp_jrn_def_id is not null and '.
              ' (mp_fd_id is not null or mp_qcode is not null)';
         $array=$this->cn->get_array($sql,array($this->jrn_def_id));
