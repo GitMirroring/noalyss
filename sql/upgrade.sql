@@ -14,3 +14,8 @@ insert into type_payment_ref (id,tp_description) values ('CACRD','Carte de créd
                                                         ('CASH','Liquide'),
                                                         ('ELECT','Electronique'),
                                                         ('VIRT','Virement');
+update payment_method set type_payment_id = 'VIRT';
+
+alter table payment_method add constraint type_payment_ref_fk foreign key (type_payment_id) references type_payment_ref(id);
+
+alter table payment_method alter type_payment_id set not null;
