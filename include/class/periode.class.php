@@ -20,26 +20,26 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* !\file
+/*!\file
  * \brief definition of the class periode
  */
-/* !
+/*!
  * \brief For the periode tables parm_periode and jrn_periode
  */
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE."/database/parm_periode_sql.class.php";
 
 class Periode
 {
 
-    var $cn;   /* !< database connection */
-    var $jrn_def_id;  /* !< the jr, 0 means all the ledger */
-    var $p_id;   /* !< pk of parm_periode */
-    var $status;   /* !< status is CL for closed, OP for
+    var $cn;   /*!< database connection */
+    var $jrn_def_id;  /*!< the jr, 0 means all the ledger */
+    var $p_id;   /*!< pk of parm_periode */
+    var $status;   /*!< status is CL for closed, OP for
       open and CE for centralized */
-    var $p_start;   /* !< start of the periode */
-    var $p_end;   /* !< end of the periode */
+    var $p_start;   /*!< start of the periode */
+    var $p_end;   /*!< end of the periode */
 
     function __construct($p_cn, $p_id=0)
     {
@@ -58,7 +58,8 @@ class Periode
         $this->p_id=$pp_id;
     }
 
-    /* !\brief return the p_id of the start and the end of the exercice
+    /**
+     * \brief return the p_id of the start and the end of the exercice
      * into an array
      * \param $p_exercice
      * \return array [start]=>,[end]=>
@@ -73,7 +74,8 @@ class Periode
         return array("start"=>$start, "end"=>$end);
     }
 
-    /* !\brief check if a periode is closed. If jrn_def_id is set to a no zero value then check only for this ledger
+    /*!
+    * \brief check if a periode is closed. If jrn_def_id is set to a no zero value then check only for this ledger
      * @see Periode::set_ledger
      * \return 1 is the periode is closed otherwise return 0
      */
@@ -274,7 +276,7 @@ class Periode
         }
     }
 
-    /* !\brief load data from database
+    /*!\brief load data from database
      * \return 0 on success and -1 on error
      */
 
@@ -295,7 +297,7 @@ class Periode
         return 0;
     }
 
-    /* !\brief return the max and the min periode of the exercice given
+    /*!\brief return the max and the min periode of the exercice given
      * in parameter
      * \param $p_exercice is the exercice
      * \return an array of Periode object
@@ -319,7 +321,7 @@ class Periode
         return array($rMax, $rMin);
     }
 
-    /* !
+    /*!
      * \brief Give the start & end date of a periode
      * \param $p_periode is the periode id, if omitted the value is the current object
      * \return array containing the start date & the end date, index are p_start and p_end or NULL if
@@ -344,7 +346,7 @@ class Periode
         return Database::fetch_array($Res, 0);
     }
 
-    /* !\brief return the first day of periode
+    /*!\brief return the first day of periode
      * the this->p_id must be set
      * \return a string with the date (DD.MM.YYYY)
      */
@@ -357,7 +359,7 @@ class Periode
         return $p_start;
     }
 
-    /* !\brief return the last day of periode
+    /*!\brief return the last day of periode
      * the this->p_id must be set
      * \return a string with the date (DD.MM.YYYY)
      */
@@ -381,7 +383,7 @@ class Periode
         return Database::fetch_result($Res, 0, 0);
     }
 
-    /* !\brief retrieve the periode thanks the date_end
+    /*!\brief retrieve the periode thanks the date_end
      * \param $p_date format DD.MM.YYYY
      * \return the periode id
      * \exception if not periode is found or if more than one periode is found

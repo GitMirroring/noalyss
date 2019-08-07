@@ -31,7 +31,7 @@ require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_operation.class.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
 

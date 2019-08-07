@@ -26,7 +26,7 @@
  */
 var layer = 1;
 /**
- * @brief update the list of available predefined operation when we change the ledger.
+ *  update the list of available predefined operation when we change the ledger.
  */
 function update_predef(p_type, p_direct, p_ac)
 {
@@ -64,7 +64,7 @@ function update_predef(p_type, p_direct, p_ac)
 }
 
 /**
- * @brief update the list of payment method when we change the ledger.
+ *  update the list of payment method when we change the ledger.
  */
 function update_pay_method()
 {
@@ -88,7 +88,7 @@ function update_pay_method()
 }
 
 /**
- *@brief update ctl id =jrn_name with the value of p_jrn
+ * update ctl id =jrn_name with the value of p_jrn
  */
 function update_name()
 {
@@ -109,7 +109,7 @@ function update_name()
 
 }
 /**
- * @brief update the field predef
+ *  update the field predef
  */
 function error_get_predef(request, json)
 {
@@ -117,7 +117,7 @@ function error_get_predef(request, json)
 
 }
 /**
- * @brief update the list of available predefined operation when we change the ledger.
+ *  update the list of available predefined operation when we change the ledger.
  */
 function update_pj()
 {
@@ -135,7 +135,7 @@ function update_pj()
     );
 }
 /**
- *@brief ask the name, quick_code of the bank for the ledger
+ * ask the name, quick_code of the bank for the ledger
  */
 function update_bank()
 {
@@ -154,7 +154,7 @@ function update_bank()
 
 }
 /**
- * @brief Update the number of rows when changing of ledger
+ *  Update the number of rows when changing of ledger
  */
 function update_row(ctl)
 {
@@ -211,7 +211,7 @@ function update_row(ctl)
     }
 }
 /**
- * @brief Put into the span, the name of the bank, the bank account
+ *  Put into the span, the name of the bank, the bank account
  * and the quick_code
  */
 function success_update_bank(req)
@@ -237,7 +237,7 @@ function success_update_bank(req)
     }
 }
 /**
- * @brief call ajax, ask what is the last date for the current ledger
+ *  call ajax, ask what is the last date for the current ledger
  */
 function get_last_date()
 {
@@ -255,7 +255,7 @@ function get_last_date()
     );
 }
 /**
- * @brief callback ajax, set the ctl with the last date from the ledger
+ *  callback ajax, set the ctl with the last date from the ledger
  */
 function success_get_last_date(req)
 {
@@ -280,7 +280,7 @@ function success_get_last_date(req)
     }
 }
 /**
- * @brief update the field predef
+ *  update the field predef
  */
 function success_get_pj(request, json)
 {
@@ -294,7 +294,7 @@ function success_get_pj(request, json)
     g("e_pj_suggest").value = answer.pj;
 }
 /**
- * @brief update the field predef
+ *  update the field predef
  */
 function error_get_pj(request, json)
 {
@@ -302,7 +302,7 @@ function error_get_pj(request, json)
 }
 
 /**
- * @brief add a line in the form for the ledger fin
+ *  add a line in the form for the ledger fin
  */
 function ledger_fin_add_row()
 {
@@ -345,7 +345,7 @@ function ledger_fin_add_row()
 }
 
 /**
- * @brief add a line in the form for the purchase ledger
+ *  add a line in the form for the purchase ledger
  * @param p_dossier folder id
  * @param p_table_name
  */
@@ -389,7 +389,7 @@ function ledger_add_row()
     }
 }
 /**
- * @brief compute the sum of a purchase, update the span tvac, htva and tva
+ *  compute the sum of a purchase, update the span tvac, htva and tva
  * all the needed data are taken from the document (hidden field :  gdossier)
  * @param the number of the changed ctrl
  */
@@ -444,7 +444,7 @@ function compute_ledger(p_ctl_nb)
     );
 }
 /**
- *@brief refresh the purchase screen, recompute vat, total...
+ * refresh the purchase screen, recompute vat, total...
  */
 function refresh_ledger()
 {
@@ -470,7 +470,7 @@ function refresh_ledger()
         g('tvac').innerHTML = Math.round(tvac * 100) / 100;
 }
 /**
- *@brief update the field htva, tva_id and tvac, callback function for  compute_sold
+ * update the field htva, tva_id and tvac, callback function for  compute_sold
  * it the field TVA in the answer contains NA it means that VAT is appliable and then do not
  * update the VAT field except htva_martc
  */
@@ -515,7 +515,7 @@ function success_compute_ledger(request, json)
 }
 
 /**
- * @brief callback error function for  compute_sold
+ *  callback error function for  compute_sold
  */
 function error_compute_ledger(request, json)
 {
@@ -591,7 +591,7 @@ function clean_ledger(p_ctl_nb)
 
 }
 /**
- * @brief add a line in the form for the quick_writing
+ *  add a line in the form for the quick_writing
  */
 function quick_writing_add_row()
 {
@@ -651,7 +651,7 @@ function go_next_concerned()
     return true;
 }
 /**
- * @brief View the history of an account
+ *  View the history of an account
  * @param {type} p_value
  * @param {type} dossier
  * @returns {undefined}
@@ -683,7 +683,7 @@ function view_history_account(p_value, dossier,p_exercice)
 
 }
 /**
- * @brief View the history of an account
+ *  View the history of an account
  * @param {type} p_value
  * @param {type} dossier
  * @returns {undefined}
@@ -715,7 +715,7 @@ function view_history_anc_account(p_value, dossier,p_exercice)
 
 }
 /**
- * @brief Change the view of account history
+ *  Change the view of account history
  * @param {type} obj
  * @returns {Boolean}
  */
@@ -788,7 +788,7 @@ function view_history_card(p_value, dossier,p_exercice)
     );
 }
 /**
- * @brief update history view after changing the exercice
+ *  update history view after changing the exercice
  * @param {type} obj
  * @returns {Boolean}
  */
@@ -951,7 +951,7 @@ function dropLink(p_dossier, p_div, p_jr_id, p_jr_id2)
     );
 }
 /**
- *@brief this function is called before the querystring is send to the
+ * this function is called before the querystring is send to the
  * fid2.php, add a filter based on the ledger 'p_jrn'
  *@param obj is the input field
  *@param queryString is the queryString to modify
@@ -972,7 +972,7 @@ function filter_card(obj, queryString)
     return queryString;
 }
 /**
- *@brief to display the lettering for the operation, call
+ * to display the lettering for the operation, call
  * ajax function
  *@param obj object attribut :  gDossier,j_id,obj_type
  */
@@ -1082,7 +1082,7 @@ function search_letter(obj)
     }
 }
 /**
- *@brief save an operation in ajax, it concerns only the
+ * save an operation in ajax, it concerns only the
  * comment, the pj and the rapt
  * the form elements are access by their name
  *@param obj form
@@ -1205,7 +1205,7 @@ function show_reconcile(p_div, p_let)
 
 }
 /**
- * @brief add a line in the form for the purchase ledger
+ *  add a line in the form for the purchase ledger
  */
 function gestion_add_row()
 {
@@ -1268,7 +1268,7 @@ function document_remove(p_dossier,p_div,p_jrid)
     });
 }
 /***
- * @brief receive an object and display a list of filter + form to save one
+ *  receive an object and display a list of filter + form to save one
  * fill up the span (id : {div}search_filter_span) with the name of the selected filter
  * Object = '{'div':'','type':'ALL','all_type':1,'dossier':'10104'}' 
  * @see Acc_Ledger_Search
@@ -1401,7 +1401,7 @@ function load_filter(p_div,p_dossier,p_filter_id) {
     });
 }
 /**
- * @brief delete a saved search filter  from the db, it is limited to the current
+ *  delete a saved search filter  from the db, it is limited to the current
  * user
  * @parameter p_div
 identification des elements LI manageli{div}_{filter_id}

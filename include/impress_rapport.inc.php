@@ -186,7 +186,7 @@ if ( isset( $_GET['bt_html'] ) )
 //-----------------------------------------------------
 // Show the jrn and date
 //-----------------------------------------------------
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 $ret=$cn->make_array("select fr_id,fr_label
                      from formdef
                      order by fr_label");

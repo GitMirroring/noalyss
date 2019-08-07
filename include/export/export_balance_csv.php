@@ -25,7 +25,7 @@ require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
 include_once ("lib/ac_common.php");
 include_once("class/acc_balance.class.php");
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier=dossier::id();
 

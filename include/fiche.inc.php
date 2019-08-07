@@ -22,7 +22,7 @@
  * \brief printing of category of card  : balance, historic
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 

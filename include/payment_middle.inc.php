@@ -134,7 +134,7 @@ $array=$cn->get_array("
 			j2.jrn_def_name as jrn_target,
 			fd_label,
 			coalesce(mp_qcode,'A choisir à l''encodage') as vw_name
-			from mod_payment as mp
+			from payment_method as mp
 			left join jrn_def as j on (j.jrn_def_id=mp.jrn_def_id)
 			left join jrn_def as j2 on (j2.jrn_def_id=mp.mp_jrn_def_id)
 			left join fiche_def as fd on (mp.mp_fd_id=fd.fd_id)

@@ -40,7 +40,7 @@ function set_jrn_parent(p_ctl,p_value)
     }
 }
 /**
- *@brief show the popup for search an accounting item
+ * show the popup for search an accounting item
  *@param object this, it must contains some attribute as
  * - jrn if set and different to 0, will filter the accounting item for a
  *   ledger
@@ -136,7 +136,7 @@ function search_poste(obj)
     }
 }
 /**
- *@brief when you submit the form for searching a accounting item
+ * when you submit the form for searching a accounting item
  *@param obj form
  *@note the same as search_poste, except it answer to a FORM and not
  * to a click event
@@ -194,7 +194,7 @@ function search_get_poste(obj)
 }
 
 /**
- *@brief show the answer of ajax request
+ * show the answer of ajax request
  *@param  answer in XML
  */
 function result_poste_search(req)
@@ -231,7 +231,7 @@ function result_poste_search(req)
 
 }
 /**
-*@brief error for ajax
+* error for ajax
 */
 function errorPoste()
 {

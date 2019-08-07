@@ -30,7 +30,7 @@ require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_print.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
-require_once NOALYSS_INCLUDE.'/lib/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
 /**
  * @class
  * @brief Print the crossed balance between 2 plan

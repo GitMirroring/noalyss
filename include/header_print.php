@@ -24,7 +24,7 @@
  *
  */
 
-require_once  NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once  NOALYSS_INCLUDE.'/class/database.class.php';
 require_once  NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 

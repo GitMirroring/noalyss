@@ -18,7 +18,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-/* ! 
+/*! 
  * \file
  * \brief Send a ledger in CSV format , receives 
  *    - jrn_id id of the ledger
@@ -36,7 +36,7 @@ require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier=dossier::id();
 
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 

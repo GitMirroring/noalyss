@@ -27,7 +27,7 @@
 
 
 /**
- *@brief remove an attached document of an action
+ * remove an attached document of an action
  *@param dossier
  *@param dt_id id of the document (pk document:d_id)
 */
@@ -54,7 +54,7 @@ function remove_document(p_dossier,p_id)
 
 
 /**
- *@brief remove the concerned operation of an action
+ * remove the concerned operation of an action
  *@param dossier
  *@param p_id id pk action_comment_operation
 */
@@ -95,7 +95,7 @@ function successRemoveOp(request,json)
 	}
 }
 /**
- *@brief remove the concerned operation of an action
+ * remove the concerned operation of an action
  *@param dossier
  *@param p_id id pk action_comment_operation
 */
@@ -132,7 +132,7 @@ function remove_action(p_dossier,p_id,ag_id)
 
 }
 /**
- *@brief remove comment of an action
+ * remove comment of an action
  *@param dossier
  *@param p_id pk action_gestion_comment
 */
@@ -169,14 +169,14 @@ function successRemoveComment(request,json)
 
 }
 /**
- *@brief error if a document if removed
+ * error if a document if removed
  */
 function errorRemoveDoc()
 {
 	alert_box('Impossible d\'effacer ce document');
 }
 /**
- *@brief success when removing a document
+ * success when removing a document
  */
 function successRemoveDoc(request,json)
 {
@@ -192,7 +192,7 @@ function successRemoveDoc(request,json)
 
 }
 /**
-* @brief check the format of the hour
+*  check the format of the hour
 * @param p_ctl is the control where the hour is encoded
 */
 function check_hour(p_ctl)
@@ -211,7 +211,7 @@ function check_hour(p_ctl)
 
 }
 /**
- *@brief remove an attached document of an action
+ * remove an attached document of an action
  *@param dossier
  *@param dt_id id of the document (pk document:d_id)
 */
@@ -240,14 +240,14 @@ function removeStock(s_id,p_dossier)
         });
 }
 /**
- *@brief error if a document if removed
+ * error if a document if removed
  */
 function errorRemoveStock()
 {
 	alert_box(content[60]);
 }
 /**
- *@brief success when removing a document
+ * success when removing a document
  */
 function successRemoveStock(request,json)
 {
@@ -267,7 +267,7 @@ function successRemoveStock(request,json)
 	}
 }
 /**
- * @brief display details of the last actions in management
+ *  display details of the last actions in management
  * called from dashboard
  * @param p_dossier : dossier id
  */
@@ -293,7 +293,7 @@ function action_show(p_dossier)
     }
 }
 /**
- * @brief Display a box for adding a new event 
+ *  Display a box for adding a new event 
  * @param {type} p_dossier
  * @returns {undefined}
  */
@@ -323,7 +323,7 @@ function action_add(p_dossier) {
     }
 }
 /**
- * @brief The new event is entered into the div action_add_div, we try
+ *  The new event is entered into the div action_add_div, we try
  * to save and receive as answer a XML file with a code of success and possibly
  * a message
  * If the message is OK then the div is fading out, otherwise the reason of 

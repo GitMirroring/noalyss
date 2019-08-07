@@ -1065,7 +1065,7 @@ class User
 			$Res = $cn->exec_sql("select distinct dos_id,dos_name,dos_description from ac_dossier
              where   dos_name ~* $1 or dos_description ~* $1 order by dos_name", array($p_filter));
 		}
-		require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+		require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 		$max = Database::num_row($Res);
 		if ($max == 0)

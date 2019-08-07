@@ -9,7 +9,7 @@ require_once '../../include/constant.php';
 const REPOSITORY_DB=1;
 const ACCOUNT_DB=2;
 
-require_once NOALYSS_INCLUDE."/lib/database.class.php";
+require_once NOALYSS_INCLUDE."/class/database.class.php";
 require_once NOALYSS_INCLUDE."/lib/iselect.class.php";
 require_once NOALYSS_INCLUDE."/lib/http_input.class.php";
 

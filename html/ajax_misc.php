@@ -38,7 +38,7 @@
 if ( ! defined('ALLOWED')) define ('ALLOWED',1);
 
 require_once '../include/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once  NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';

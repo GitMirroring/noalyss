@@ -23,7 +23,7 @@
  * \brief class for the group of the analytic account
  *
  */
-require_once  NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once  NOALYSS_INCLUDE.'/class/database.class.php';
 require_once  NOALYSS_INCLUDE.'/constant.php';
 require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/class/anc_print.class.php';

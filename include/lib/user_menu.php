@@ -27,52 +27,6 @@ require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
 
-
-
-
-/*!
- * \brief  Show the menu for the card management
- *
- * \param $p_dossier dossier 1
- *
- *
- *
- * \return nothing
- */
-function ShowMenuFiche($p_dossier)
-{
-    $cn=new Database($p_dossier);
-    $mod="&ac=".$_REQUEST['ac'];
-    $str_dossier=dossier::get().$mod;
-    echo '<div class="lmenu">';
-    echo '<TABLE>';
-
-    echo '<TR><TD colspan="1" class="mtitle"  style="width:auto" >
-    <A class="mtitle" HREF="?p_action=fiche&action=add_modele&fiche=modele&'.$str_dossier.'">'._('Création').'</A></TD>
-    <TD><A class="mtitle" HREF="?p_action=fiche&'.$str_dossier.'">'._('Recherche').'</A></TD>
-    </TR>';
-    $Res=$cn->exec_sql("select fd_id,fd_label from fiche_def order by fd_label");
-    $Max=Database::num_row($Res);
-    for ( $i=0; $i < $Max;$i++)
-    {
-        $l_line=Database::fetch_array($Res,$i);
-        printf('<TR><TD class="cell">
-               <A class="mtitle" HREF="?p_action=fiche&action=modifier&fiche=%d&%s">%s</A></TD>
-               <TD class="mshort">
-               <A class="mtitle" HREF="?p_action=fiche&action=vue&fiche=%d&%s">Liste</A>
-               </TD>
-               </TR>',
-               $l_line['fd_id'],
-               $str_dossier,
-               $l_line['fd_label'],
-               $l_line['fd_id'],
-               $str_dossier
-
-              );
-    }
-    echo "</TABLE>";
-    echo '</div>';
-}
 /*!   MenuAdmin */
 /* \brief show the menu for user/database management
 /*
@@ -82,11 +36,14 @@ function ShowMenuFiche($p_dossier)
 function MenuAdmin()
 {
     $def=-1;
+    $http=new HttpInput();
+
     if (isset($_REQUEST['UID']))
         $def=0;
     if ( isset ($_REQUEST['action']))
     {
-        switch ($_REQUEST['action'])
+        $action=$http->request('action');
+        switch ($action)
         {
         case 'user_mgt':
             $def=0;
@@ -163,7 +120,8 @@ function MenuAdmin()
 
 function menu_acc_plan($p_start=1)
 {
-    $base="?ac=".$_REQUEST['ac'];
+    $http=new HttpInput();
+    $base="?ac=".$http->request('ac');
     $str_dossier="&".dossier::get();
     for ($i=0;$i<10;$i++) { $class[$i]="tabs";}
     $class[$p_start]="tabs_selected";
