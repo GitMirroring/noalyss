@@ -100,6 +100,7 @@ content[66]="<?php echo escape_xml(_("Calculatrice"))?>";
 content[67]="<?php echo escape_xml(_('Taper une formule (ex 20*5.1) puis enter'))?>";
 content[68]="<?php echo escape_xml(_("Calculatrice simplifiée: écrivez simplement les opérations que vous voulez puis la touche retour. exemple : 1+2+3*(1/5)"));?>";
 content[69]="<?php echo escape_xml(_("Aucune donnée"))?>";
+content[70]="<?php echo escape_xml(_("Votre demande est en cours de traitement"))?>";
 
 
 </script>

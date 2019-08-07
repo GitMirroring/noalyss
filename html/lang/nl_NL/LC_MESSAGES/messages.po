@@ -4,11 +4,12 @@
 #
 # dany <dany@alchimerys.be>, 2014.
 # Dany De Bontridder <danydb@noalyss.eu>, 2015, 2018, 2019.
+#: include/database.item.php:124
 msgid ""
 msgstr ""
 "Project-Id-Version: NOALYSS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-31 00:04+0200\n"
+"POT-Creation-Date: 2019-08-07 15:00+0200\n"
 "PO-Revision-Date: 2019-07-31 13:23+0100\n"
 "Last-Translator: dany <danydb@noalyss.eu>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -136,6 +137,7 @@ msgstr "D"
 
 #: include/ajax_mod_periode.php:55 include/ajax/ajax_mod_periode.php:55
 #: include/ajax/ajax_periode.php:171 include/class/periode.class.php:702
+#: include/class/periode.class.php:704
 msgid " Début période : "
 msgstr "Begin"
 
@@ -159,21 +161,25 @@ msgstr "Fout in de formula"
 
 #: include/ajax_mod_periode.php:57 include/ajax/ajax_mod_periode.php:57
 #: include/ajax/ajax_periode.php:173 include/class/periode.class.php:704
+#: include/class/periode.class.php:706
 msgid " Exercice : "
 msgstr "Jaar"
 
 #: include/ajax_mod_periode.php:56 include/ajax/ajax_mod_periode.php:56
 #: include/ajax/ajax_periode.php:172 include/class/periode.class.php:703
+#: include/class/periode.class.php:705
 msgid " Fin période : "
 msgstr "End "
 
 #: include/user_menu.php:147 include/user_menu.php:151
 #: include/lib/user_menu.php:160 include/lib/user_menu.php:173
+#: include/lib/user_menu.php:131
 msgid " Hors Bilan"
 msgstr "Buiten de balansstelling"
 
 #: include/user_menu.php:148 include/user_menu.php:152
 #: include/lib/user_menu.php:161 include/lib/user_menu.php:174
+#: include/lib/user_menu.php:132
 msgid " Immobilisé"
 msgstr "Vastleggen"
 
@@ -488,7 +494,7 @@ msgstr "Je hebt% s% d maanden sinds% d /% d% d bij de oefening toegevoegd"
 
 #: include/lib/class_sendmail.php:96 include/lib/class_sendmail.php:97
 #: include/lib/class_sendmail.php:98 include/lib/sendmail.class.php:98
-#: include/lib/sendmail.class.php:102
+#: include/lib/sendmail.class.php:102 include/lib/sendmail_core.class.php:105
 #, fuzzy, php-format
 msgid "%s est vide"
 msgstr "is leeg"
@@ -640,6 +646,18 @@ msgid ""
 "ND, ...</li>    </ul>"
 msgstr ""
 
+#: include/lib/message_javascript.php:65
+msgid ""
+"<h3>        Remarque  : choix possibles    </h3>    <ul>        <li> Détail "
+"opérations ne donne pas le même résultat si on regarde tous les journaux ou "
+"un journal de type ACH ou VEN</li>        <li> Liste opérations ne donne pas "
+"le même résultat si on regarde tous les journaux ou un journal de type ACH "
+"ou VEN</li>        <li> Journaux VEN ou ACH en mode détail opérations donne "
+"les détails des factures, y compris les montants, TVA et quantité par "
+"article</li>        <li> Journaux VEN ou ACH en mode liste opérations donne "
+"pour chaque opération, le total de la TVA, ND, ...</li>    </ul>"
+msgstr ""
+
 # les comptes dit inversés => niet gevonden in het NL dus de rekeningen genomen die tegengesteld zijn aan degene die er in de zin staan
 #: include/impress_bilan.inc.php:89
 msgid ""
@@ -725,6 +743,7 @@ msgstr "Aanvaarden"
 #: include/database.item.php:78 include/lib/user_menu.php:123
 #: include/lib/user_menu.php:131 include/lib/user_menu.php:124
 #: include/lib/user_menu.php:143 include/database.item.php:75
+#: include/lib/user_menu.php:81 include/lib/user_menu.php:100
 msgid "Accueil"
 msgstr "Home"
 
@@ -856,6 +875,7 @@ msgstr "Actie"
 
 #: include/user_menu.php:149 include/user_menu.php:153
 #: include/lib/user_menu.php:162 include/lib/user_menu.php:175
+#: include/lib/user_menu.php:133
 msgid "Actif a un an au plus"
 msgstr "Activa van een jaar tot meer"
 
@@ -947,6 +967,7 @@ msgstr "Actie is ontoegankelijk"
 #: html/ajax_misc.php:179 html/ajax_misc.php:257 html/ajax_misc.php:262
 #: html/ajax_misc.php:290 html/ajax_misc.php:382 html/ajax_misc.php:384
 #: html/ajax_misc.php:390 include/lib/message_javascript.php:90
+#: include/lib/message_javascript.php:92
 #, fuzzy
 msgid "Action non autorisée"
 msgstr "Bewerking Opgeslagen"
@@ -1123,7 +1144,7 @@ msgstr "Toon ook de gesloten acties"
 #: include/ext/tva/class_ext_tvagen.php:114
 #: include/ext/tva/ext_list_assujetti.class.php:54
 #: include/ext/tva/ext_tvagen.class.php:114
-#: include/lib/message_javascript.php:94
+#: include/lib/message_javascript.php:94 include/lib/message_javascript.php:96
 msgid "Afficher"
 msgstr "Weergeven"
 
@@ -1256,7 +1277,7 @@ msgstr "Artikel toevoegen"
 #: include/lib/class_html_input.php:946 include/lib/class_html_input.php:957
 #: include/lib/class_html_input.php:958 include/lib/class_html_input.php:984
 #: include/lib/html_input.class.php:1037 include/lib/html_input.class.php:1095
-#: include/lib/html_input.class.php:1096
+#: include/lib/html_input.class.php:1096 include/lib/html_input.class.php:1111
 #, fuzzy
 msgid "Ajout autres"
 msgstr "Factuur toevoegen"
@@ -1479,6 +1500,7 @@ msgid "Ajout prévision"
 msgstr "Raming toevoegen"
 
 #: include/periode.inc.php:113 include/class/periode.class.php:687
+#: include/class/periode.class.php:689
 #, fuzzy
 msgid "Ajout période"
 msgstr "Artikel toevoegen"
@@ -1759,7 +1781,7 @@ msgstr "Boekhoudkundig aankoopjaar"
 msgid "Année d'achat"
 msgstr "Jaar van de aankoop"
 
-#: include/class/periode.class.php:430
+#: include/class/periode.class.php:430 include/class/periode.class.php:432
 #, fuzzy, php-format
 msgid "Année doit être entre %s et %s "
 msgstr "Tussen de  data %s en %s"
@@ -1779,7 +1801,7 @@ msgstr "Ongeldig jaar"
 msgid "Année invalide ["
 msgstr "Ongeldig jaar ["
 
-#: include/class/periode.class.php:427
+#: include/class/periode.class.php:427 include/class/periode.class.php:429
 #, fuzzy
 msgid "Année n'est pas un nombre"
 msgstr "tarief is geen getal"
@@ -1789,7 +1811,7 @@ msgstr "tarief is geen getal"
 msgid "Anomalie pour le compte "
 msgstr "Belettering voor de boekhoudkundige positie"
 
-#: include/class/periode.class.php:648
+#: include/class/periode.class.php:648 include/class/periode.class.php:650
 msgid "Août"
 msgstr ""
 
@@ -2469,7 +2491,7 @@ msgstr "Beschrijving"
 #: include/lib/ac_common.php:1209 include/export/export_fiche_detail_csv.php:60
 #: include/template/ledger_detail_bottom.php:286 include/lib/ac_common.php:1221
 #: include/lib/ac_common.php:1223 include/template/ledger_detail_bottom.php:287
-#: include/lib/ac_common.php:1247
+#: include/lib/ac_common.php:1247 include/lib/message_javascript.php:102
 msgid "Aucune donnée"
 msgstr "Geen enkel gegeven"
 
@@ -2612,6 +2634,7 @@ msgstr "Geen label beschikbaar"
 #: include/user_menu.php:114 include/user_menu.php:121
 #: include/lib/user_menu.php:121 include/lib/user_menu.php:130
 #: include/lib/user_menu.php:122 include/lib/user_menu.php:141
+#: include/lib/user_menu.php:79 include/lib/user_menu.php:98
 msgid "Audit"
 msgstr "Audit"
 
@@ -2625,7 +2648,7 @@ msgstr ""
 msgid "Autoliquidation"
 msgstr ""
 
-#: include/lib/message_javascript.php:74
+#: include/lib/message_javascript.php:74 include/lib/message_javascript.php:76
 msgid "Autoliquidation : Utilisé en même temps au crédit et au débit"
 msgstr ""
 
@@ -2767,7 +2790,7 @@ msgstr "Met het bestand"
 msgid "Avertissement"
 msgstr "Aflossing"
 
-#: include/class/periode.class.php:647
+#: include/class/periode.class.php:647 include/class/periode.class.php:649
 msgid "Avril"
 msgstr ""
 
@@ -2842,6 +2865,7 @@ msgstr "Balans van de  leverancier"
 #: include/export/export_balance_pdf.php:123
 #: include/export/export_balance_pdf.php:127
 #: include/export/export_balance_pdf.php:124
+#: include/export/export_balance_pdf.php:125
 #, fuzzy
 msgid "Balance comptable"
 msgstr "Export Accounting Balance"
@@ -2894,7 +2918,7 @@ msgstr "Foute balans"
 msgid "Balance incorrecte "
 msgstr "Foute balans"
 
-#: include/lib/message_javascript.php:89
+#: include/lib/message_javascript.php:89 include/lib/message_javascript.php:91
 #, fuzzy
 msgid "Balance incorrecte D/C"
 msgstr "Foute balans"
@@ -2928,10 +2952,20 @@ msgstr "Balans per groep"
 msgid "Balance simple"
 msgstr "Eenvoudige balans"
 
+#: include/class/pdfbalance_simple.class.php:35
+#, fuzzy, php-format
+msgid "Balance simple %s"
+msgstr "Eenvoudige balans"
+
 #: include/database.item.php:4 include/database.item.php:7
 #: include/database.item.php:9 include/database.item.php:12
 #: include/database.item.php:6
 msgid "Balance simple des imputations analytiques"
+msgstr "Eenvoudige balans van de analytische verrekeningen"
+
+#: include/class/pdfbalance_simple.class.php:45
+#, fuzzy, php-format
+msgid "Balance simple poste %s %s date %s %s"
 msgstr "Eenvoudige balans van de analytische verrekeningen"
 
 #: include/category_card.inc.php:73 include/fiche.inc.php:70
@@ -3003,7 +3037,7 @@ msgstr "Ongeldige database"
 #: include/lib/class_database.php:421 include/lib/class_database.php:422
 #: include/lib/class_database.php:429 include/lib/class_database.php:434
 #: include/lib/database.class.php:433 include/lib/database.class.php:442
-#: include/lib/database.class.php:443
+#: include/lib/database.class.php:443 include/class/database.class.php:125
 #, fuzzy
 msgid "Base de donnée vide"
 msgstr "Ongeldige database"
@@ -3127,7 +3161,7 @@ msgstr "D / C"
 msgid "CONVERT_GIF_PDF n'est pas installé"
 msgstr "CONVERT_GIF_PDF is niet geïnstalleerd"
 
-#: include/lib/message_javascript.php:93
+#: include/lib/message_javascript.php:93 include/lib/message_javascript.php:95
 #, fuzzy
 msgid "Cacher"
 msgstr "Vinden"
@@ -3163,11 +3197,11 @@ msgstr "Automatisch aanmaken van de boekhoudkundige post"
 
 #: include/class_ibutton.php:82 include/class_ibutton.php:84
 #: include/lib/class_ibutton.php:84 include/lib/ibutton.class.php:84
-#: include/lib/message_javascript.php:97
+#: include/lib/message_javascript.php:97 include/lib/message_javascript.php:99
 msgid "Calculatrice"
 msgstr "Rekenmachine"
 
-#: include/lib/message_javascript.php:99
+#: include/lib/message_javascript.php:99 include/lib/message_javascript.php:101
 msgid ""
 "Calculatrice simplifiée: écrivez simplement les opérations que vous voulez "
 "puis la touche retour. exemple : 1+2+3*(1/5)"
@@ -3191,6 +3225,7 @@ msgstr "Rekenmachine"
 #: include/template/calendar-list.php:34 include/lib/html_input.class.php:943
 #: include/ajax/ajax_calendar_zoom.php:26 include/lib/html_input.class.php:991
 #: include/ajax/ajax_calendar_zoom.php:32 include/lib/html_input.class.php:992
+#: include/lib/html_input.class.php:1007
 msgid "Calendrier"
 msgstr "Kalender"
 
@@ -3627,6 +3662,7 @@ msgstr ""
 
 #: include/user_menu.php:153 include/user_menu.php:157
 #: include/lib/user_menu.php:166 include/lib/user_menu.php:179
+#: include/lib/user_menu.php:137
 msgid "Charges"
 msgstr "Kosten"
 
@@ -4135,11 +4171,11 @@ msgstr ""
 msgid "Cliquez pour éditer"
 msgstr "Creditsaldo"
 
-#: include/lib/message_javascript.php:66
+#: include/lib/message_javascript.php:66 include/lib/message_javascript.php:68
 msgid "Cliquez sur le chemin pour ouvrir le menu"
 msgstr ""
 
-#: include/lib/message_javascript.php:65
+#: include/lib/message_javascript.php:65 include/lib/message_javascript.php:67
 msgid "Cliquez sur le code AD pour ouvrir le menu dans un nouvel onglet"
 msgstr ""
 
@@ -4748,6 +4784,7 @@ msgstr "Dit plan bestaat niet"
 
 #: include/user_menu.php:151 include/user_menu.php:155
 #: include/lib/user_menu.php:164 include/lib/user_menu.php:177
+#: include/lib/user_menu.php:135
 msgid "Compte tiers"
 msgstr "Derde rekening"
 
@@ -5401,6 +5438,7 @@ msgstr "Crébit"
 #: include/class/anc_balance_double.class.php:100
 #: include/class/acc_ledger_history_generic.class.php:772
 #: include/class/fiche.class.php:1480
+#: include/class/pdfbalance_simple.class.php:57
 msgid "Crédit"
 msgstr "Creditzijde"
 
@@ -5547,6 +5585,7 @@ msgstr "D / C"
 #: include/class/anc_listing.class.php:85
 #: include/class/pdf_operation.class.php:250
 #: include/class/anc_listing.class.php:87
+#: include/class/pdfbalance_simple.class.php:59
 msgid "D/C"
 msgstr "D / C"
 
@@ -5590,6 +5629,10 @@ msgstr "Deposito"
 #: include/template/ledger_search.php:8 include/template/ledger_search.php:9
 msgid "Dans le journal"
 msgstr "In het dagboek"
+
+#: include/lib/database_core.class.php:464
+msgid "Database:get_row retourne trop de lignes"
+msgstr ""
 
 #: include/class_acc_ledger.php:1424 include/class_acc_ledger.php:1610
 #: include/class_acc_ledger_purchase.php:1350
@@ -5831,6 +5874,7 @@ msgstr "Datum DMY"
 #: include/ajax/ajax_display_letter.php:98
 #: include/ajax/ajax_display_letter.php:103 include/class/periode.class.php:517
 #: include/class/periode_ledger_table.class.php:98
+#: include/class/periode.class.php:519
 #, fuzzy
 msgid "Date Début"
 msgstr "Begindatum"
@@ -5844,6 +5888,7 @@ msgstr "Begindatum"
 #: include/database.item.php:171 include/database.item.php:176
 #: include/ajax/ajax_display_letter.php:116 include/class/periode.class.php:518
 #: include/class/periode_ledger_table.class.php:99
+#: include/class/periode.class.php:520
 msgid "Date Fin"
 msgstr "Einddatum"
 
@@ -6776,7 +6821,7 @@ msgstr ""
 msgid "Donnée invalide"
 msgstr "Ongeldig jaar"
 
-#: include/lib/message_javascript.php:91
+#: include/lib/message_javascript.php:91 include/lib/message_javascript.php:93
 msgid "Donnée manquante ou déjà supprimée"
 msgstr ""
 
@@ -6844,7 +6889,7 @@ msgid "Dossier non accessible"
 msgstr "Folder niet Bereikbaar"
 
 #: include/user_menu.php:111 include/lib/user_menu.php:117
-#: include/lib/user_menu.php:118
+#: include/lib/user_menu.php:118 include/lib/user_menu.php:75
 msgid "Dossiers"
 msgstr "Archief"
 
@@ -6899,6 +6944,7 @@ msgid "Download core"
 msgstr ""
 
 #: include/export/export_balance_pdf.php:109
+#: include/export/export_balance_pdf.php:110
 #, fuzzy, php-format
 msgid "Du %s au %s"
 msgstr "tot"
@@ -7005,6 +7051,7 @@ msgstr "Afschrijvingstermijn"
 #: include/class/anc_balance_double.class.php:99
 #: include/class/acc_ledger_history_generic.class.php:771
 #: include/class/fiche.class.php:1479
+#: include/class/pdfbalance_simple.class.php:56
 msgid "Débit"
 msgstr "debiet"
 
@@ -7031,7 +7078,7 @@ msgstr "Debet of Credit"
 msgid "Débiteur"
 msgstr "schuldenaar"
 
-#: include/class/periode.class.php:649
+#: include/class/periode.class.php:649 include/class/periode.class.php:651
 msgid "Décembre"
 msgstr ""
 
@@ -7284,7 +7331,7 @@ msgstr ""
 msgid "Désolé, il y a trop de virgule dans le poste comptable "
 msgstr ""
 
-#: include/lib/message_javascript.php:85
+#: include/lib/message_javascript.php:85 include/lib/message_javascript.php:87
 #, fuzzy
 msgid "Désolé, les montants pour la comptabilité analytique sont incorrects"
 msgstr "Cost Accounting Module"
@@ -7299,7 +7346,7 @@ msgstr "Cost Accounting Module"
 msgid "Désolé, vous n'avez pas coché la case"
 msgstr "Sorry hebt u Het niet VAK aangekruisd"
 
-#: include/lib/message_javascript.php:92
+#: include/lib/message_javascript.php:92 include/lib/message_javascript.php:94
 msgid "Désolé, événement en cours de création à sauver"
 msgstr ""
 
@@ -7581,7 +7628,7 @@ msgstr "termijn wordt overschreden"
 msgid "Echec"
 msgstr "Termijn"
 
-#: include/lib/message_javascript.php:79
+#: include/lib/message_javascript.php:79 include/lib/message_javascript.php:81
 #, fuzzy
 msgid "Echec "
 msgstr "Termijn"
@@ -7591,6 +7638,11 @@ msgstr "Termijn"
 #: include/class/document_export.class.php:254
 #: include/class/document_export.class.php:255
 msgid "Echec Ajout detail "
+msgstr ""
+
+#: include/class/pre_operation.class.php:149
+#, php-format
+msgid "Echec PreOperatoin chargement %s"
 msgstr ""
 
 #: include/dossier.inc.php:195 include/dossier.inc.php:196
@@ -7620,7 +7672,7 @@ msgstr ""
 msgid "Echec de la restauration "
 msgstr ""
 
-#: include/lib/message_javascript.php:80
+#: include/lib/message_javascript.php:80 include/lib/message_javascript.php:82
 msgid "Echec donnée manquante ou incorrecte"
 msgstr ""
 
@@ -7657,7 +7709,7 @@ msgstr "Bijwerken"
 msgid "Echec ouverture fichier "
 msgstr "fout bij het openen van het bestand"
 
-#: include/lib/message_javascript.php:84
+#: include/lib/message_javascript.php:84 include/lib/message_javascript.php:86
 #, fuzzy
 msgid "Echec réponse"
 msgstr "Aanmaken"
@@ -7802,7 +7854,7 @@ msgstr ""
 msgid "Effacement déclaration"
 msgstr "Deze verklaring verwijderen"
 
-#: include/class/periode.class.php:673
+#: include/class/periode.class.php:673 include/class/periode.class.php:675
 #, fuzzy
 msgid "Effacement impossible"
 msgstr "Export is onmogelijk"
@@ -7897,6 +7949,7 @@ msgstr "Erasure"
 #: include/class/periode.class.php:594 include/class/periode.class.php:599
 #: include/class/anc_operation.class.php:316
 #: include/template/ledger_detail_bottom.php:328
+#: include/class/periode.class.php:596 include/class/periode.class.php:601
 msgid "Effacer"
 msgstr "Wissen"
 
@@ -8020,7 +8073,7 @@ msgstr "Foute e-mail"
 
 #: include/lib/class_sendmail.php:152 include/lib/class_sendmail.php:153
 #: include/lib/class_sendmail.php:155 include/lib/sendmail.class.php:157
-#: include/lib/sendmail.class.php:161
+#: include/lib/sendmail.class.php:161 include/class/sendmail.class.php:38
 #, fuzzy
 msgid "Email non envoyé"
 msgstr "E-mail verzonden door"
@@ -8054,7 +8107,7 @@ msgstr "Is te laat"
 msgid "En une opération"
 msgstr "Alle activiteiten"
 
-#: include/lib/message_javascript.php:67
+#: include/lib/message_javascript.php:67 include/lib/message_javascript.php:69
 msgid ""
 "En utilisant les dates d échéance ou de paiement, seuls les journaux de type "
 "ACH et VEN seront utilisés ,vous excluez d office les autres journaux"
@@ -8378,6 +8431,11 @@ msgstr "Parameter is ongeldig"
 msgid "Erreur : paramètre manquant "
 msgstr "Parameter is ongeldig"
 
+#: include/lib/database_core.class.php:73
+#, fuzzy
+msgid "Erreur Connexion"
+msgstr "Afmelden"
+
 #: include/ext/import_account/include/class_impacc_csv.php:55
 #: include/ext/import_account/include/impacc_csv.class.php:55
 #, fuzzy
@@ -8405,6 +8463,11 @@ msgstr "Foutenlogboek dit type wordt nog niet ondersteund"
 #, fuzzy
 msgid "Erreur date invalide"
 msgstr "Ongeldig datum"
+
+#: include/lib/database_core.class.php:71
+#, fuzzy
+msgid "Erreur de connexion !"
+msgstr "Afmelden"
 
 #: include/ajax/ajax_periode.php:195
 #, fuzzy
@@ -8627,6 +8690,7 @@ msgstr "Uitsluiten State"
 #: include/ajax/ajax_preference.php:131 include/class/periode.class.php:519
 #: include/class/periode_ledger_table.class.php:100
 #: include/template/stock_inv.php:126 include/ajax/ajax_preference.php:142
+#: include/class/periode.class.php:521
 msgid "Exercice"
 msgstr "Oefening"
 
@@ -8635,7 +8699,7 @@ msgstr "Oefening"
 msgid "Exercice comptable d'achat"
 msgstr "Boekhoudkundig aankoopjaar"
 
-#: include/class/periode.class.php:424
+#: include/class/periode.class.php:424 include/class/periode.class.php:426
 #, php-format
 msgid "Exercice doit être entre %s et %s "
 msgstr ""
@@ -8645,7 +8709,7 @@ msgstr ""
 msgid "Exercice invalide"
 msgstr "Ongeldig datum"
 
-#: include/class/periode.class.php:421
+#: include/class/periode.class.php:421 include/class/periode.class.php:423
 #, fuzzy
 msgid "Exercice n'est pas un nombre"
 msgstr "tarief is geen getal"
@@ -9226,6 +9290,7 @@ msgstr "Dicht"
 
 #: include/class/periode.class.php:585
 #: include/class/periode_ledger_table.class.php:142
+#: include/class/periode.class.php:587
 #, fuzzy
 msgid "Fermée"
 msgstr "Dicht"
@@ -9603,7 +9668,7 @@ msgstr ""
 #: include/class/acc_ledger_search.class.php:1074 include/database.item.php:209
 #: include/database.item.php:220 include/cfgledger.inc.php:170
 #: include/class/acc_ledger_search.class.php:1082
-#: include/class/acc_ledger_search.class.php:1095
+#: include/class/acc_ledger_search.class.php:1095 include/lib/user_menu.php:136
 msgid "Financier"
 msgstr "Financieel"
 
@@ -9747,7 +9812,7 @@ msgstr "Leverancier vandaag betalen"
 msgid "Français"
 msgstr "Frans"
 
-#: include/class/periode.class.php:647
+#: include/class/periode.class.php:647 include/class/periode.class.php:649
 msgid "Février"
 msgstr ""
 
@@ -9779,12 +9844,12 @@ msgid "Gestion des attributs de fiches "
 msgstr "Beheer attributen vellen"
 
 #: include/user_menu.php:111 include/lib/user_menu.php:117
-#: include/lib/user_menu.php:118
+#: include/lib/user_menu.php:118 include/lib/user_menu.php:75
 msgid "Gestion des dossiers"
 msgstr "Records Management"
 
 #: include/user_menu.php:112 include/lib/user_menu.php:118
-#: include/lib/user_menu.php:119
+#: include/lib/user_menu.php:119 include/lib/user_menu.php:76
 msgid "Gestion des modèles"
 msgstr "Managementmodellen"
 
@@ -9811,6 +9876,7 @@ msgstr ""
 #: include/user_menu.php:110 include/user_menu.php:120
 #: include/lib/user_menu.php:116 include/lib/user_menu.php:129
 #: include/lib/user_menu.php:117 include/lib/user_menu.php:140
+#: include/lib/user_menu.php:74 include/lib/user_menu.php:97
 msgid "Gestion des utilisateurs"
 msgstr "Users Beheer"
 
@@ -10356,6 +10422,7 @@ msgstr "Historische omzet"
 #: include/user_menu.php:159 include/user_menu.php:160
 #: include/lib/user_menu.php:168 include/lib/user_menu.php:169
 #: include/lib/user_menu.php:181 include/lib/user_menu.php:182
+#: include/lib/user_menu.php:139 include/lib/user_menu.php:140
 msgid "Hors Comptabilité"
 msgstr "Exclusief Accounting"
 
@@ -10670,6 +10737,11 @@ msgid ""
 "connection"
 msgstr ""
 
+#: include/lib/database_core.class.php:60
+#, fuzzy
+msgid "Impossible de se connecter à postgreSql"
+msgstr "Kan dit bestand op te slaan"
+
 #: include/database.item.php:68 include/database.item.php:114
 #: include/ajax_get_profile.php:98 include/template/action_other_action.php:22
 #: include/template/menu_detail.php:18 include/menu.inc.php:131
@@ -10876,7 +10948,8 @@ msgid ""
 msgstr ""
 
 #: include/lib/user_menu.php:122 include/lib/user_menu.php:123
-#: include/lib/user_menu.php:142
+#: include/lib/user_menu.php:142 include/lib/user_menu.php:80
+#: include/lib/user_menu.php:99
 #, fuzzy
 msgid "Information système"
 msgstr "Opgeslagen Informatie"
@@ -10893,12 +10966,12 @@ msgstr "Algemene informatie"
 #: html/install.php:271 html/install.php:277 html/install.php:228
 #: html/install.php:235 include/upgrade-plugin.php:113
 #: include/lib/user_menu.php:121 html/install.php:238
-#: include/upgrade-plugin.php:125
+#: include/upgrade-plugin.php:125 include/lib/user_menu.php:78
 #, fuzzy
 msgid "Installation"
 msgstr "Herstelt"
 
-#: include/lib/user_menu.php:121
+#: include/lib/user_menu.php:121 include/lib/user_menu.php:78
 #, fuzzy
 msgid "Installation Mise à jour du système et des bases de données"
 msgstr "Update"
@@ -11057,7 +11130,7 @@ msgstr "Omgekeerde selectie"
 msgid "Item"
 msgstr "Item code"
 
-#: include/class/periode.class.php:647
+#: include/class/periode.class.php:647 include/class/periode.class.php:649
 msgid "Janvier"
 msgstr ""
 
@@ -11253,12 +11326,12 @@ msgstr "Inkoopdagboeken"
 msgid "Journaux de vente"
 msgstr "Geschiedenis verkopen "
 
-#: include/class/periode.class.php:648
+#: include/class/periode.class.php:648 include/class/periode.class.php:650
 #, fuzzy
 msgid "Juillet"
 msgstr "City"
 
-#: include/class/periode.class.php:648
+#: include/class/periode.class.php:648 include/class/periode.class.php:650
 msgid "Juin"
 msgstr ""
 
@@ -11448,7 +11521,7 @@ msgstr "De% s-plug heeft geen financieel administratieve post"
 msgid "La numérotation est propre à chaque journal"
 msgstr "Dagboek van nummering hängt"
 
-#: include/lib/message_javascript.php:69
+#: include/lib/message_javascript.php:69 include/lib/message_javascript.php:71
 #, fuzzy
 msgid ""
 "La numérotation est propre à chaque journal. Laissez à 0 pour ne pas changer "
@@ -11465,6 +11538,7 @@ msgid "Label"
 msgstr "Etiket"
 
 #: include/template/param_jrn.php:118 include/lib/message_javascript.php:71
+#: include/lib/message_javascript.php:73
 msgid "Laissez à 0 pour ne pas changer le numéro"
 msgstr "Laat 0 het nummer niet wijzigen"
 
@@ -11629,6 +11703,7 @@ msgid "Le poste %s n'est pas dans ce journal"
 msgstr "wordt niet in this journaal"
 
 #: include/template/param_jrn.php:94 include/lib/message_javascript.php:70
+#: include/lib/message_javascript.php:72
 msgid ""
 "Le préfixe des pièces doit être différent pour chaque journal, on peut aussi "
 "utiliser l'année"
@@ -11711,6 +11786,7 @@ msgid "Les clauses FROM sont ignorés avec les dates calendriers"
 msgstr ""
 
 #: include/class_anc_print.php:120 include/lib/message_javascript.php:68
+#: include/lib/message_javascript.php:70
 msgid "Les dates sont en format DD.MM.YYYY"
 msgstr "referentiepunt in formaat TT.MM.JJJJ"
 
@@ -12064,6 +12140,7 @@ msgstr "smaad"
 #: include/class/acc_ledger_fin.class.php:754
 #: include/class/anc_operation.class.php:298
 #: include/class/acc_ledger_history_generic.class.php:770
+#: include/export/export_balance_pdf.php:127
 #, php-format
 msgid "Libellé"
 msgstr "Opstellen"
@@ -12303,7 +12380,7 @@ msgstr ""
 msgid "Lundi"
 msgstr "Maandag"
 
-#: include/class/periode.class.php:648
+#: include/class/periode.class.php:648 include/class/periode.class.php:650
 #, fuzzy
 msgid "Mai"
 msgstr "Dinsdag"
@@ -12382,7 +12459,7 @@ msgstr "Dinsdag"
 msgid "Marquer pour suppression"
 msgstr "Print menu"
 
-#: include/class/periode.class.php:647
+#: include/class/periode.class.php:647 include/class/periode.class.php:649
 msgid "Mars"
 msgstr ""
 
@@ -12420,11 +12497,11 @@ msgstr "Verkeerd type object"
 msgid "Max. email / jour (-1 = illimité)"
 msgstr ""
 
-#: include/lib/message_javascript.php:87
+#: include/lib/message_javascript.php:87 include/lib/message_javascript.php:89
 msgid "Maximum"
 msgstr ""
 
-#: include/lib/message_javascript.php:86
+#: include/lib/message_javascript.php:86 include/lib/message_javascript.php:88
 #, fuzzy
 msgid "Maximum 15 lignes"
 msgstr "Nieuwe lijn"
@@ -12577,7 +12654,7 @@ msgstr "Bericht"
 msgid "Met à jour toutes les dossiers et modèles"
 msgstr "Update"
 
-#: include/lib/message_javascript.php:72
+#: include/lib/message_javascript.php:72 include/lib/message_javascript.php:74
 msgid "Mettez le pourcentage <br> à zéro pour effacer la ligne"
 msgstr ""
 
@@ -13045,6 +13122,7 @@ msgstr "Modellen"
 #: include/modele.inc.php:250 include/lib/user_menu.php:118
 #: include/modele.inc.php:274 include/lib/user_menu.php:119
 #: include/modele.inc.php:257 include/modele.inc.php:258
+#: include/lib/user_menu.php:76
 msgid "Modèles"
 msgstr "Modellen"
 
@@ -13063,6 +13141,7 @@ msgid "Mois"
 msgstr "Maand"
 
 #: include/class/periode.class.php:438 include/class/periode.class.php:440
+#: include/class/periode.class.php:442
 #, fuzzy
 msgid "Mois de début n'existe pas "
 msgstr "Dit plan bestaat niet"
@@ -13608,12 +13687,12 @@ msgid ""
 "Ne corrigez pas encore, cliquez continuer pour passer à l'étape suivante"
 msgstr "Uitvoeren in CSV of naar de volgende stap gaan "
 
-#: include/lib/message_javascript.php:76
+#: include/lib/message_javascript.php:76 include/lib/message_javascript.php:78
 msgid ""
 "Ne donner pas ce poste comptable si ce code n'est pas utilisé  à la vente"
 msgstr ""
 
-#: include/lib/message_javascript.php:75
+#: include/lib/message_javascript.php:75 include/lib/message_javascript.php:77
 msgid "Ne donner pas ce poste comptable si ce code n'est pas utilisé à l'achat"
 msgstr ""
 
@@ -14107,7 +14186,7 @@ msgstr "Aantal geregistreerde lijnen"
 msgid "Nombre de mois"
 msgstr "Aantal geregistreerde lijnen"
 
-#: include/class/periode.class.php:436
+#: include/class/periode.class.php:436 include/class/periode.class.php:438
 msgid "Nombre de mois doit être compris entre 1 & 60 "
 msgstr ""
 
@@ -14116,7 +14195,7 @@ msgstr ""
 msgid "Nombre de mois invalide"
 msgstr "Aantal ongeldige annuïteiten"
 
-#: include/class/periode.class.php:434
+#: include/class/periode.class.php:434 include/class/periode.class.php:436
 #, fuzzy
 msgid "Nombre de mois n'est pas un nombre"
 msgstr "tarief is geen getal"
@@ -14386,6 +14465,7 @@ msgstr "Nieuwe bankafschrift"
 #: include/lib/html_input.class.php:1043
 #: include/template/action_display_short.php:81
 #: include/lib/html_input.class.php:1103 include/lib/html_input.class.php:1104
+#: include/lib/html_input.class.php:1119
 #, fuzzy
 msgid "Nouvel événement"
 msgstr "Voeg dit element toe"
@@ -14456,7 +14536,7 @@ msgstr "Nieuwe omzet of inkomsten"
 msgid "Nouvelle version disponible %s , votre version %s"
 msgstr ""
 
-#: include/class/periode.class.php:649
+#: include/class/periode.class.php:649 include/class/periode.class.php:651
 #, fuzzy
 msgid "Novembre"
 msgstr "Aantal"
@@ -14847,11 +14927,11 @@ msgid ""
 "utilisée"
 msgstr "Verplicht voor FIN kranten geven hier de Data Bank gebruikt"
 
-#: include/class/periode.class.php:649
+#: include/class/periode.class.php:649 include/class/periode.class.php:651
 msgid "Octobre"
 msgstr ""
 
-#: include/class/periode.class.php:688
+#: include/class/periode.class.php:688 include/class/periode.class.php:690
 msgid "On ne peut ajouter une période que sur un exercice qui existe déjà"
 msgstr ""
 
@@ -15247,6 +15327,7 @@ msgstr "de begrotingspost"
 #: include/class/periode.class.php:585
 #: include/class/periode_ledger_table.class.php:142
 #: include/class/periode_ledger_table.class.php:144
+#: include/class/periode.class.php:587
 #, fuzzy
 msgid "Ouvert"
 msgstr "OPSLAAN"
@@ -15254,6 +15335,7 @@ msgstr "OPSLAAN"
 #: include/balance.inc.php:314 include/export/export_balance_pdf.php:135
 #: include/class/acc_operation.class.php:727
 #: include/export/export_balance_pdf.php:132
+#: include/export/export_balance_pdf.php:133
 #, fuzzy
 msgid "Ouverture"
 msgstr "Opening Schrift"
@@ -15558,7 +15640,7 @@ msgstr "Parameter is ongeldig"
 #: include/class/acc_ledger.class.php:86 include/lib/http_input.class.php:120
 #: include/class/acc_ledger.class.php:88 include/class/periode.class.php:235
 #: include/lib/http_input.class.php:121 include/class/acc_ledger.class.php:89
-#: include/lib/http_input.class.php:123
+#: include/lib/http_input.class.php:123 include/class/periode.class.php:237
 msgid "Paramètre invalide"
 msgstr "Parameter is ongeldig"
 
@@ -16107,6 +16189,11 @@ msgstr ""
 msgid "Port"
 msgstr ""
 
+#: include/lib/database_core.class.php:65
+#, php-format
+msgid "Port %s"
+msgstr ""
+
 # Plage heeft verschillende vertalingen: periode, marge/verschil, programmablok
 #: include/template/template_config_form.php:59
 #: include/template/template_config_form.php:67
@@ -16254,6 +16341,7 @@ msgstr "Kostenpost "
 #: include/template/ledger_detail_misc.php:99 include/ajax/ajax_poste.php:64
 #: include/class/acc_plan_mtable.class.php:45 include/class/fiche.class.php:470
 #: include/class/fiche.class.php:469
+#: include/class/pdfbalance_simple.class.php:55
 msgid "Poste Comptable"
 msgstr "rekening"
 
@@ -16768,6 +16856,7 @@ msgstr "Producten"
 
 #: include/user_menu.php:154 include/user_menu.php:158
 #: include/lib/user_menu.php:167 include/lib/user_menu.php:180
+#: include/lib/user_menu.php:138
 msgid "Produits"
 msgstr "Producten"
 
@@ -17009,7 +17098,7 @@ msgstr "Boekhoudingsperiode"
 msgid "Période N-1"
 msgstr "Periode"
 
-#: include/class/periode.class.php:251
+#: include/class/periode.class.php:251 include/class/periode.class.php:253
 msgid "Période chevauchant une autre"
 msgstr ""
 
@@ -17525,12 +17614,12 @@ msgid "Restauration réussie du dossier "
 msgstr "Records Management"
 
 #: include/user_menu.php:113 include/lib/user_menu.php:119
-#: include/lib/user_menu.php:120
+#: include/lib/user_menu.php:120 include/lib/user_menu.php:77
 msgid "Restaure"
 msgstr "Herstelt"
 
 #: include/user_menu.php:113 include/lib/user_menu.php:119
-#: include/lib/user_menu.php:120
+#: include/lib/user_menu.php:120 include/lib/user_menu.php:77
 msgid "Restaure une base de données"
 msgstr "Restore Database"
 
@@ -17796,6 +17885,7 @@ msgstr "Overzicht"
 #: include/balance.inc.php:447 include/export/export_balance_pdf.php:316
 #: include/balance.inc.php:465 include/export/export_balance_pdf.php:341
 #: include/export/export_balance_pdf.php:336
+#: include/export/export_balance_pdf.php:337
 msgid "Résumé Exercice courant"
 msgstr ""
 
@@ -17803,6 +17893,7 @@ msgstr ""
 #: include/balance.inc.php:440 include/export/export_balance_pdf.php:309
 #: include/balance.inc.php:458 include/export/export_balance_pdf.php:334
 #: include/export/export_balance_pdf.php:329
+#: include/export/export_balance_pdf.php:330
 msgid "Résumé Exercice précédent"
 msgstr ""
 
@@ -18085,7 +18176,7 @@ msgid ""
 msgstr "Selectionneer plannen DAT u interesseert je op VOOR Zoeken Klikken"
 
 #: include/class_anc_print.php:140 include/class_anc_print.php:181
-#: include/lib/message_javascript.php:73
+#: include/lib/message_javascript.php:73 include/lib/message_javascript.php:75
 msgid "Selectionnez le plan qui vous intéresse avant de cliquer sur Recherche"
 msgstr "Selectionneer plannen DAT u interesseert je op VOOR Zoeken Klikken"
 
@@ -18095,7 +18186,7 @@ msgstr "Selectionneer plannen DAT u interesseert je op VOOR Zoeken Klikken"
 msgid "Selectionnez votre langue"
 msgstr "Selecteer uw taal"
 
-#: include/class/periode.class.php:648
+#: include/class/periode.class.php:648 include/class/periode.class.php:650
 msgid "Septembre"
 msgstr ""
 
@@ -18139,7 +18230,7 @@ msgid ""
 "Acc_Ledger_History_Generic"
 msgstr ""
 
-#: include/lib/message_javascript.php:83
+#: include/lib/message_javascript.php:83 include/lib/message_javascript.php:85
 msgid "Si vous changez de page vous perdez les reconciliations, continuez ?"
 msgstr ""
 
@@ -18234,7 +18325,8 @@ msgstr "Bedrijven"
 #: include/export/export_balance_pdf.php:135
 #: include/class/anc_listing.class.php:120 include/class/fiche.class.php:1784
 #: include/class/anc_balance_double.class.php:101
-#: include/class/fiche.class.php:1785
+#: include/class/fiche.class.php:1785 include/export/export_balance_pdf.php:136
+#: include/class/pdfbalance_simple.class.php:58
 msgid "Solde"
 msgstr "evenwicht"
 
@@ -18317,7 +18409,8 @@ msgstr "Sales"
 #: include/database.item.php:104 include/lib/user_menu.php:124
 #: include/lib/user_menu.php:125 include/lib/user_menu.php:144
 #: include/database.item.php:107 include/database.item.php:101
-#: include/database.item.php:99
+#: include/database.item.php:99 include/lib/user_menu.php:82
+#: include/lib/user_menu.php:101
 msgid "Sortie"
 msgstr "Uitgang"
 
@@ -18329,7 +18422,7 @@ msgstr "Uitgang"
 msgid "Sortie &#9094"
 msgstr "Uitgang"
 
-#: include/class/periode.class.php:521
+#: include/class/periode.class.php:521 include/class/periode.class.php:523
 msgid "Status"
 msgstr ""
 
@@ -18341,6 +18434,7 @@ msgstr "Voorraad"
 
 #: include/user_menu.php:150 include/user_menu.php:154
 #: include/lib/user_menu.php:163 include/lib/user_menu.php:176
+#: include/lib/user_menu.php:134
 msgid "Stock et commande"
 msgstr "Voorraad in Bestelling"
 
@@ -18880,7 +18974,7 @@ msgstr "Paginaformaat"
 msgid "Tant que ce n'est pas vous fait vous ne pouvez pas utiliser NOALYSS"
 msgstr ""
 
-#: include/lib/message_javascript.php:98
+#: include/lib/message_javascript.php:98 include/lib/message_javascript.php:100
 msgid "Taper une formule (ex 20*5.1) puis enter"
 msgstr ""
 
@@ -19132,6 +19226,7 @@ msgstr "Total Credit"
 
 #: include/export/export_balance_pdf.php:137
 #: include/export/export_balance_pdf.php:134
+#: include/export/export_balance_pdf.php:135
 #, fuzzy
 msgid "Total Crédit"
 msgstr "Credit Totaal"
@@ -19142,6 +19237,7 @@ msgstr "Totaal Debet"
 
 #: include/export/export_balance_pdf.php:136
 #: include/export/export_balance_pdf.php:133
+#: include/export/export_balance_pdf.php:134
 #, fuzzy
 msgid "Total Débit"
 msgstr "Debet Totaal"
@@ -19521,7 +19617,7 @@ msgstr "Alle Operaties"
 msgid "Toutes opérations"
 msgstr "Alle activiteiten"
 
-#: include/lib/message_javascript.php:95
+#: include/lib/message_javascript.php:95 include/lib/message_javascript.php:97
 #, fuzzy
 msgid "Traitement en cours"
 msgstr "Later in te brengen"
@@ -19743,12 +19839,12 @@ msgstr "Telefoon"
 msgid "URL"
 msgstr "URL"
 
-#: include/lib/message_javascript.php:96
+#: include/lib/message_javascript.php:96 include/lib/message_javascript.php:98
 #, fuzzy
 msgid "Un instant"
 msgstr "onbestaand"
 
-#: include/lib/message_javascript.php:77
+#: include/lib/message_javascript.php:77 include/lib/message_javascript.php:79
 msgid "Un instant svp"
 msgstr ""
 
@@ -19893,6 +19989,11 @@ msgstr "Gebruiker"
 msgid "Utilisateur  administrateur"
 msgstr "Gebruiker"
 
+#: include/lib/database_core.class.php:66
+#, fuzzy, php-format
+msgid "Utilisateur : %s"
+msgstr "Users"
+
 #: include/param_sec.inc.php:91 include/param_sec.inc.php:95
 #: include/param_sec.inc.php:97
 #, fuzzy
@@ -19969,12 +20070,14 @@ msgstr "Verkeerd login van wachword"
 #: include/user_menu.php:110 include/user_menu.php:120
 #: include/lib/user_menu.php:116 include/lib/user_menu.php:129
 #: include/lib/user_menu.php:117 include/lib/user_menu.php:140
+#: include/lib/user_menu.php:74 include/lib/user_menu.php:97
 msgid "Utilisateurs"
 msgstr "Users"
 
 #: include/user_menu.php:114 include/user_menu.php:121
 #: include/lib/user_menu.php:121 include/lib/user_menu.php:130
 #: include/lib/user_menu.php:122 include/lib/user_menu.php:141
+#: include/lib/user_menu.php:79 include/lib/user_menu.php:98
 msgid "Utilisateurs qui se sont connectés"
 msgstr "Gebruikers die zijn aangesloten"
 
@@ -20287,6 +20390,11 @@ msgstr ""
 msgid "Voir les documents du suivi"
 msgstr "Zie documenten controle"
 
+#: include/lib/database_core.class.php:62
+#, fuzzy
+msgid "Vos paramètres sont incorrectes"
+msgstr "Foute e-mail"
+
 #: html/do.php:108 html/user_login.php:75 html/do.php:107 html/do.php:102
 #: html/do.php:104 html/user_login.php:76 html/do.php:132 html/do.php:145
 #: html/do.php:147 html/do.php:165 html/do.php:189 html/user_login.php:78
@@ -20294,6 +20402,10 @@ msgstr "Zie documenten controle"
 #: html/do.php:213 html/do.php:182
 msgid "Votre base de données n'est pas à jour"
 msgstr "UW datagegevens is niet van de laatste versie"
+
+#: include/lib/message_javascript.php:103
+msgid "Votre demande est en cours de traitement"
+msgstr ""
 
 #: include/upgrade-core.php:42 include/upgrade-core.php:54
 #, fuzzy
@@ -20357,7 +20469,7 @@ msgstr "Wilt u deze transactie verwijderen"
 #: include/lib/class_html_input.php:934 include/lib/class_html_input.php:945
 #: include/lib/class_html_input.php:946 include/lib/class_html_input.php:972
 #: include/lib/html_input.class.php:1025 include/lib/html_input.class.php:1083
-#: include/lib/html_input.class.php:1084
+#: include/lib/html_input.class.php:1084 include/lib/html_input.class.php:1099
 #, fuzzy, php-format
 msgid "Voulez-vous effacer cette relation "
 msgstr "Wilt u deze actie wilt verwijderen"
@@ -20430,11 +20542,11 @@ msgstr "U bevestigt"
 #: include/ajax/ajax_add_menu.php:192 include/ajax/ajax_add_menu.php:200
 #: include/class/fiche_def.class.php:791 include/class/fiche_def.class.php:796
 #: include/ajax/ajax_create_menu.php:13 include/template/stock_inv.php:33
-#: include/lib/message_javascript.php:78
+#: include/lib/message_javascript.php:78 include/lib/message_javascript.php:80
 msgid "Vous confirmez ?"
 msgstr "U bevestigt"
 
-#: include/lib/message_javascript.php:81
+#: include/lib/message_javascript.php:81 include/lib/message_javascript.php:83
 #, fuzzy
 msgid "Vous confirmez effacement ?"
 msgstr "U bevestigt het wissen"
@@ -20458,7 +20570,7 @@ msgstr "U bevestigt het wissen"
 msgid "Vous confirmez le clonage "
 msgstr "U bevestigt het klonen"
 
-#: include/lib/message_javascript.php:82
+#: include/lib/message_javascript.php:82 include/lib/message_javascript.php:84
 #, fuzzy
 msgid "Vous confirmez mise à jour ?"
 msgstr "U bevestigt"
@@ -20886,11 +20998,16 @@ msgstr "Foute e-mail"
 msgid "aucune donnée"
 msgstr "Geen Gegevens"
 
+#: include/lib/database_core.class.php:64
+#, fuzzy, php-format
+msgid "base de donnée  = %s"
+msgstr "Database"
+
 #: include/ext/coprop/index.php:46
 msgid "budgets"
 msgstr "budgetten"
 
-#: include/lib/message_javascript.php:88
+#: include/lib/message_javascript.php:88 include/lib/message_javascript.php:90
 #, fuzzy
 msgid "calculé"
 msgstr "Door berekening"
@@ -20930,6 +21047,7 @@ msgstr "kiezen"
 #: include/class/acc_ledger_search.class.php:111
 #: include/lib/html_input.class.php:1017 include/lib/html_input.class.php:1018
 #: include/class/acc_ledger_search.class.php:112
+#: include/lib/html_input.class.php:1033
 msgid "choix des journaux"
 msgstr "keuze van de dagboeken"
 
@@ -21244,6 +21362,7 @@ msgstr ""
 #: include/ajax_mod_periode.php:60 include/ajax_mod_periode.php:78
 #: include/ajax/ajax_mod_periode.php:60 include/ajax/ajax_mod_periode.php:78
 #: include/ajax/ajax_periode.php:176 include/class/periode.class.php:707
+#: include/class/periode.class.php:709
 #, fuzzy
 msgid "fermer"
 msgstr "Dicht"
@@ -21472,7 +21591,7 @@ msgstr "het tarief is ongeldig"
 msgid "le taux n'est pas un nombre"
 msgstr "tarief is geen getal"
 
-#: include/lib/message_javascript.php:64
+#: include/lib/message_javascript.php:64 include/lib/message_javascript.php:66
 msgid ""
 "le type vaut :<ul>\t<li> ME pour Menu</li>\t<li> PR pour les impressions </"
 "li>\t<li> PL pour les plugins</li>\t<li> SP pour des valeurs spéciales</li>"
@@ -21627,7 +21746,7 @@ msgstr "wordt niet in this journaal"
 msgid "n'existe pas"
 msgstr "doorsturingslijst is leeg niet"
 
-#: include/class/periode.class.php:520
+#: include/class/periode.class.php:520 include/class/periode.class.php:522
 #, fuzzy
 msgid "nb opérations"
 msgstr "Operatie"
@@ -21935,6 +22054,7 @@ msgstr ""
 #: include/export/export_poste_detail_csv.php:39
 #: include/export/export_balance_pdf.php:128
 #: include/export/export_balance_pdf.php:125
+#: include/export/export_balance_pdf.php:126
 msgid "poste"
 msgstr "post"
 
@@ -22106,7 +22226,7 @@ msgstr "Verzoening"
 #: include/manager.inc.php:104 include/supplier.inc.php:104
 #: include/contact.inc.php:98 include/manager.inc.php:105
 #: include/template/action_search.php:152 include/customer.inc.php:103
-#: include/template/action_search.php:148
+#: include/template/action_search.php:148 scenario/select-box-test.php:62
 msgid "recherche"
 msgstr "Zoeken"
 
@@ -22151,6 +22271,7 @@ msgstr "nieuwe regel"
 
 #: include/ajax_mod_periode.php:59 include/ajax/ajax_mod_periode.php:59
 #: include/ajax/ajax_periode.php:175 include/class/periode.class.php:706
+#: include/class/periode.class.php:708
 #, fuzzy
 msgid "sauver"
 msgstr "OPSLAAN"

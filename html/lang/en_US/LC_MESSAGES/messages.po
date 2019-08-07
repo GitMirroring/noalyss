@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the NOALYSS package.
 # Dany De Bontridder <dany@alchimerys.be>
 #
+#: include/database.item.php:124
 # dany, 2014.
 # Dany De Bontridder <danydb@noalyss.eu>, 2014, 2015, 2016, 2017, 2018, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: NOALYSS 672\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-31 00:04+0200\n"
-"PO-Revision-Date: 2019-08-07 11:50+0100\n"
+"POT-Creation-Date: 2019-08-07 15:00+0200\n"
+"PO-Revision-Date: 2019-08-07 15:04+0100\n"
 "Last-Translator: dany <danydb@noalyss.eu>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: en_US\n"
@@ -22,7 +23,7 @@ msgstr ""
 
 #: include/database.item.php:124
 msgid "  "
-msgstr ""
+msgstr "."
 
 #: include/export/export_gl_pdf.php:75
 msgid "  Periode : "
@@ -133,6 +134,7 @@ msgstr "D"
 
 #: include/ajax_mod_periode.php:55 include/ajax/ajax_mod_periode.php:55
 #: include/ajax/ajax_periode.php:171 include/class/periode.class.php:702
+#: include/class/periode.class.php:704
 msgid " Début période : "
 msgstr "Start periode"
 
@@ -156,21 +158,25 @@ msgstr "Error in formula"
 
 #: include/ajax_mod_periode.php:57 include/ajax/ajax_mod_periode.php:57
 #: include/ajax/ajax_periode.php:173 include/class/periode.class.php:704
+#: include/class/periode.class.php:706
 msgid " Exercice : "
 msgstr "Exercise"
 
 #: include/ajax_mod_periode.php:56 include/ajax/ajax_mod_periode.php:56
 #: include/ajax/ajax_periode.php:172 include/class/periode.class.php:703
+#: include/class/periode.class.php:705
 msgid " Fin période : "
 msgstr "End Periode :"
 
 #: include/user_menu.php:147 include/user_menu.php:151
 #: include/lib/user_menu.php:160 include/lib/user_menu.php:173
+#: include/lib/user_menu.php:131
 msgid " Hors Bilan"
 msgstr "Out Balance Sheet"
 
 #: include/user_menu.php:148 include/user_menu.php:152
 #: include/lib/user_menu.php:161 include/lib/user_menu.php:174
+#: include/lib/user_menu.php:132
 msgid " Immobilisé"
 msgstr "Fixed Asset"
 
@@ -485,7 +491,7 @@ msgstr "You have added% s% d months since% d /% d% d for the year"
 
 #: include/lib/class_sendmail.php:96 include/lib/class_sendmail.php:97
 #: include/lib/class_sendmail.php:98 include/lib/sendmail.class.php:98
-#: include/lib/sendmail.class.php:102
+#: include/lib/sendmail.class.php:102 include/lib/sendmail_core.class.php:105
 #, php-format
 msgid "%s est vide"
 msgstr "%s is empty"
@@ -651,6 +657,26 @@ msgstr ""
 "<li> For ACH or VEN ledger type in \"list operation\" Journaux give total "
 "for each operation (amount ,VAT amount...)</li>    </ul>"
 
+#: include/lib/message_javascript.php:65
+msgid ""
+"<h3>        Remarque  : choix possibles    </h3>    <ul>        <li> Détail "
+"opérations ne donne pas le même résultat si on regarde tous les journaux ou "
+"un journal de type ACH ou VEN</li>        <li> Liste opérations ne donne pas "
+"le même résultat si on regarde tous les journaux ou un journal de type ACH "
+"ou VEN</li>        <li> Journaux VEN ou ACH en mode détail opérations donne "
+"les détails des factures, y compris les montants, TVA et quantité par "
+"article</li>        <li> Journaux VEN ou ACH en mode liste opérations donne "
+"pour chaque opération, le total de la TVA, ND, ...</li>    </ul>"
+msgstr ""
+"<h3>        Notice  : possible choices </h3>    <ul style=\"padding-left:15px"
+"\">        <li> The detail of operations does not display the same "
+"information , it depends of the ledger type</li>        <li> List of "
+"operations does not display the same information , it depends of the ledger "
+"type</li>        <li> For ACH or VEN ledger type in \"detail operation\" "
+"give all the details including the VAT amount , VAT Code ...</li>        "
+"<li> For ACH or VEN ledger type in \"list operation\" Journaux give total "
+"for each operation (amount ,VAT amount...)</li>    </ul>"
+
 #: include/impress_bilan.inc.php:89
 msgid ""
 "<span class=\"notice\"> Attention : si le bilan n'est pas équilibré.<br> "
@@ -732,6 +758,7 @@ msgstr "Accept"
 #: include/database.item.php:78 include/lib/user_menu.php:123
 #: include/lib/user_menu.php:131 include/lib/user_menu.php:124
 #: include/lib/user_menu.php:143 include/database.item.php:75
+#: include/lib/user_menu.php:81 include/lib/user_menu.php:100
 msgid "Accueil"
 msgstr "Home"
 
@@ -853,6 +880,7 @@ msgstr "Active"
 
 #: include/user_menu.php:149 include/user_menu.php:153
 #: include/lib/user_menu.php:162 include/lib/user_menu.php:175
+#: include/lib/user_menu.php:133
 msgid "Actif a un an au plus"
 msgstr "Asset of one year max"
 
@@ -941,6 +969,7 @@ msgstr "Folder not available"
 #: html/ajax_misc.php:179 html/ajax_misc.php:257 html/ajax_misc.php:262
 #: html/ajax_misc.php:290 html/ajax_misc.php:382 html/ajax_misc.php:384
 #: html/ajax_misc.php:390 include/lib/message_javascript.php:90
+#: include/lib/message_javascript.php:92
 msgid "Action non autorisée"
 msgstr "Unauthorized"
 
@@ -1109,7 +1138,7 @@ msgstr "Display also the closed actions"
 #: include/ext/tva/class_ext_tvagen.php:114
 #: include/ext/tva/ext_list_assujetti.class.php:54
 #: include/ext/tva/ext_tvagen.class.php:114
-#: include/lib/message_javascript.php:94
+#: include/lib/message_javascript.php:94 include/lib/message_javascript.php:96
 msgid "Afficher"
 msgstr "Display"
 
@@ -1241,7 +1270,7 @@ msgstr "Add item"
 #: include/lib/class_html_input.php:946 include/lib/class_html_input.php:957
 #: include/lib/class_html_input.php:958 include/lib/class_html_input.php:984
 #: include/lib/html_input.class.php:1037 include/lib/html_input.class.php:1095
-#: include/lib/html_input.class.php:1096
+#: include/lib/html_input.class.php:1096 include/lib/html_input.class.php:1111
 msgid "Ajout autres"
 msgstr "Adding others"
 
@@ -1445,6 +1474,7 @@ msgid "Ajout prévision"
 msgstr "Add forecast"
 
 #: include/periode.inc.php:113 include/class/periode.class.php:687
+#: include/class/periode.class.php:689
 msgid "Ajout période"
 msgstr "Add periode"
 
@@ -1712,7 +1742,7 @@ msgstr "Purchase accounting year"
 msgid "Année d'achat"
 msgstr "Year of purchase"
 
-#: include/class/periode.class.php:430
+#: include/class/periode.class.php:430 include/class/periode.class.php:432
 #, php-format
 msgid "Année doit être entre %s et %s "
 msgstr "Year must be between %s and%s"
@@ -1732,7 +1762,7 @@ msgstr "Invalid year"
 msgid "Année invalide ["
 msgstr "Invalid year ["
 
-#: include/class/periode.class.php:427
+#: include/class/periode.class.php:427 include/class/periode.class.php:429
 msgid "Année n'est pas un nombre"
 msgstr "year is not a number"
 
@@ -1740,7 +1770,7 @@ msgstr "year is not a number"
 msgid "Anomalie pour le compte "
 msgstr "Anomaly for the accounting"
 
-#: include/class/periode.class.php:648
+#: include/class/periode.class.php:648 include/class/periode.class.php:650
 msgid "Août"
 msgstr "August"
 
@@ -2376,7 +2406,7 @@ msgstr "No description"
 #: include/lib/ac_common.php:1209 include/export/export_fiche_detail_csv.php:60
 #: include/template/ledger_detail_bottom.php:286 include/lib/ac_common.php:1221
 #: include/lib/ac_common.php:1223 include/template/ledger_detail_bottom.php:287
-#: include/lib/ac_common.php:1247
+#: include/lib/ac_common.php:1247 include/lib/message_javascript.php:102
 msgid "Aucune donnée"
 msgstr "no data"
 
@@ -2516,6 +2546,7 @@ msgstr "No tag available"
 #: include/user_menu.php:114 include/user_menu.php:121
 #: include/lib/user_menu.php:121 include/lib/user_menu.php:130
 #: include/lib/user_menu.php:122 include/lib/user_menu.php:141
+#: include/lib/user_menu.php:79 include/lib/user_menu.php:98
 msgid "Audit"
 msgstr "Audit"
 
@@ -2529,7 +2560,7 @@ msgstr "Author"
 msgid "Autoliquidation"
 msgstr "Autoreverse"
 
-#: include/lib/message_javascript.php:74
+#: include/lib/message_javascript.php:74 include/lib/message_javascript.php:76
 msgid "Autoliquidation : Utilisé en même temps au crédit et au débit"
 msgstr "Autoreverse : use in the same time on credit and debit"
 
@@ -2664,7 +2695,7 @@ msgstr "With the card"
 msgid "Avertissement"
 msgstr "Warning"
 
-#: include/class/periode.class.php:647
+#: include/class/periode.class.php:647 include/class/periode.class.php:649
 msgid "Avril"
 msgstr "April"
 
@@ -2734,6 +2765,7 @@ msgstr "Aged  balance for customers and suppliers"
 #: include/export/export_balance_pdf.php:123
 #: include/export/export_balance_pdf.php:127
 #: include/export/export_balance_pdf.php:124
+#: include/export/export_balance_pdf.php:125
 msgid "Balance comptable"
 msgstr "Balance"
 
@@ -2784,7 +2816,7 @@ msgstr "wrong balance"
 msgid "Balance incorrecte "
 msgstr "wrong balance"
 
-#: include/lib/message_javascript.php:89
+#: include/lib/message_javascript.php:89 include/lib/message_javascript.php:91
 msgid "Balance incorrecte D/C"
 msgstr "Unbalanced D/C"
 
@@ -2817,11 +2849,21 @@ msgstr "Balance group"
 msgid "Balance simple"
 msgstr "Simple balance"
 
+#: include/class/pdfbalance_simple.class.php:35
+#, php-format
+msgid "Balance simple %s"
+msgstr "Simple balance %s"
+
 #: include/database.item.php:4 include/database.item.php:7
 #: include/database.item.php:9 include/database.item.php:12
 #: include/database.item.php:6
 msgid "Balance simple des imputations analytiques"
 msgstr "Simple analytic balance for record"
+
+#: include/class/pdfbalance_simple.class.php:45
+#, php-format
+msgid "Balance simple poste %s %s date %s %s"
+msgstr "Simple balance accounting %s %s date %s %s"
 
 #: include/category_card.inc.php:73 include/fiche.inc.php:70
 #: include/category_card.inc.php:78 include/category_card.inc.php:80
@@ -2889,7 +2931,7 @@ msgstr "Invalid Database"
 #: include/lib/class_database.php:421 include/lib/class_database.php:422
 #: include/lib/class_database.php:429 include/lib/class_database.php:434
 #: include/lib/database.class.php:433 include/lib/database.class.php:442
-#: include/lib/database.class.php:443
+#: include/lib/database.class.php:443 include/class/database.class.php:125
 msgid "Base de donnée vide"
 msgstr "Empty  Database"
 
@@ -3007,7 +3049,7 @@ msgstr "D / C "
 msgid "CONVERT_GIF_PDF n'est pas installé"
 msgstr "CONVERT_GIF_PDF is not installed"
 
-#: include/lib/message_javascript.php:93
+#: include/lib/message_javascript.php:93 include/lib/message_javascript.php:95
 msgid "Cacher"
 msgstr "Hide"
 
@@ -3041,17 +3083,17 @@ msgstr "Automatic creation of the accounting"
 
 #: include/class_ibutton.php:82 include/class_ibutton.php:84
 #: include/lib/class_ibutton.php:84 include/lib/ibutton.class.php:84
-#: include/lib/message_javascript.php:97
+#: include/lib/message_javascript.php:97 include/lib/message_javascript.php:99
 msgid "Calculatrice"
 msgstr "calculator"
 
-#: include/lib/message_javascript.php:99
+#: include/lib/message_javascript.php:99 include/lib/message_javascript.php:101
 msgid ""
 "Calculatrice simplifiée: écrivez simplement les opérations que vous voulez "
 "puis la touche retour. exemple : 1+2+3*(1/5)"
 msgstr ""
-"Simple calculator , simply write the operation you want , press \"enter\" ,"
-" example : 1+2+3*(1/5)"
+"Simple calculator , simply write the operation you want , press \"enter\" , "
+"example : 1+2+3*(1/5)"
 
 #: include/profile.inc.php:356 include/profile.inc.php:358
 #: include/profile.inc.php:381 include/profile.inc.php:363
@@ -3070,6 +3112,7 @@ msgstr "calculator is visible"
 #: include/template/calendar-list.php:34 include/lib/html_input.class.php:943
 #: include/ajax/ajax_calendar_zoom.php:26 include/lib/html_input.class.php:991
 #: include/ajax/ajax_calendar_zoom.php:32 include/lib/html_input.class.php:992
+#: include/lib/html_input.class.php:1007
 msgid "Calendrier"
 msgstr "Calendar"
 
@@ -3488,6 +3531,7 @@ msgstr ""
 
 #: include/user_menu.php:153 include/user_menu.php:157
 #: include/lib/user_menu.php:166 include/lib/user_menu.php:179
+#: include/lib/user_menu.php:137
 msgid "Charges"
 msgstr "Expenses"
 
@@ -3963,11 +4007,11 @@ msgstr "Click here to reconnect in another tab"
 msgid "Cliquez pour éditer"
 msgstr "Click to edit"
 
-#: include/lib/message_javascript.php:66
+#: include/lib/message_javascript.php:66 include/lib/message_javascript.php:68
 msgid "Cliquez sur le chemin pour ouvrir le menu"
 msgstr "Click on the path to open the menu"
 
-#: include/lib/message_javascript.php:65
+#: include/lib/message_javascript.php:65 include/lib/message_javascript.php:67
 msgid "Cliquez sur le code AD pour ouvrir le menu dans un nouvel onglet"
 msgstr "Click on AD Code to open the page in a new tab"
 
@@ -4557,6 +4601,7 @@ msgstr "Parent accounting doesn't exist"
 
 #: include/user_menu.php:151 include/user_menu.php:155
 #: include/lib/user_menu.php:164 include/lib/user_menu.php:177
+#: include/lib/user_menu.php:135
 msgid "Compte tiers"
 msgstr "Other account"
 
@@ -5190,6 +5235,7 @@ msgstr "Credit"
 #: include/class/anc_balance_double.class.php:100
 #: include/class/acc_ledger_history_generic.class.php:772
 #: include/class/fiche.class.php:1480
+#: include/class/pdfbalance_simple.class.php:57
 msgid "Crédit"
 msgstr "Credit"
 
@@ -5330,6 +5376,7 @@ msgstr "D"
 #: include/class/anc_listing.class.php:85
 #: include/class/pdf_operation.class.php:250
 #: include/class/anc_listing.class.php:87
+#: include/class/pdfbalance_simple.class.php:59
 msgid "D/C"
 msgstr "D / C"
 
@@ -5368,6 +5415,10 @@ msgstr "In the warehouse"
 #: include/template/ledger_search.php:8 include/template/ledger_search.php:9
 msgid "Dans le journal"
 msgstr "In the ledger"
+
+#: include/lib/database_core.class.php:464
+msgid "Database:get_row retourne trop de lignes"
+msgstr "Database::get_row returns too many rows"
 
 #: include/class_acc_ledger.php:1424 include/class_acc_ledger.php:1610
 #: include/class_acc_ledger_purchase.php:1350
@@ -5609,6 +5660,7 @@ msgstr "Date DMY"
 #: include/ajax/ajax_display_letter.php:98
 #: include/ajax/ajax_display_letter.php:103 include/class/periode.class.php:517
 #: include/class/periode_ledger_table.class.php:98
+#: include/class/periode.class.php:519
 msgid "Date Début"
 msgstr "Start date"
 
@@ -5621,6 +5673,7 @@ msgstr "Start date"
 #: include/database.item.php:171 include/database.item.php:176
 #: include/ajax/ajax_display_letter.php:116 include/class/periode.class.php:518
 #: include/class/periode_ledger_table.class.php:99
+#: include/class/periode.class.php:520
 msgid "Date Fin"
 msgstr "End Date"
 
@@ -6530,7 +6583,7 @@ msgstr ""
 msgid "Donnée invalide"
 msgstr "Invalid data"
 
-#: include/lib/message_javascript.php:91
+#: include/lib/message_javascript.php:91 include/lib/message_javascript.php:93
 msgid "Donnée manquante ou déjà supprimée"
 msgstr "Missing data or already suppressed"
 
@@ -6593,7 +6646,7 @@ msgid "Dossier non accessible"
 msgstr "Folder not available"
 
 #: include/user_menu.php:111 include/lib/user_menu.php:117
-#: include/lib/user_menu.php:118
+#: include/lib/user_menu.php:118 include/lib/user_menu.php:75
 msgid "Dossiers"
 msgstr "Folders"
 
@@ -6645,6 +6698,7 @@ msgid "Download core"
 msgstr "Download core"
 
 #: include/export/export_balance_pdf.php:109
+#: include/export/export_balance_pdf.php:110
 #, php-format
 msgid "Du %s au %s"
 msgstr "From %s to %s"
@@ -6750,6 +6804,7 @@ msgstr "Amortization term"
 #: include/class/anc_balance_double.class.php:99
 #: include/class/acc_ledger_history_generic.class.php:771
 #: include/class/fiche.class.php:1479
+#: include/class/pdfbalance_simple.class.php:56
 msgid "Débit"
 msgstr "Debit"
 
@@ -6774,7 +6829,7 @@ msgstr "Debit or credit"
 msgid "Débiteur"
 msgstr "Debit"
 
-#: include/class/periode.class.php:649
+#: include/class/periode.class.php:649 include/class/periode.class.php:651
 msgid "Décembre"
 msgstr "December"
 
@@ -7016,7 +7071,7 @@ msgstr "Sorry , you are in strict mode , you cannot use this plugin"
 msgid "Désolé, il y a trop de virgule dans le poste comptable "
 msgstr "Sorry too many coma in the accounting"
 
-#: include/lib/message_javascript.php:85
+#: include/lib/message_javascript.php:85 include/lib/message_javascript.php:87
 msgid "Désolé, les montants pour la comptabilité analytique sont incorrects"
 msgstr "Sorry amount for analytic account are incorrect"
 
@@ -7030,7 +7085,7 @@ msgstr "Sorry amount for analytic account are incorrect"
 msgid "Désolé, vous n'avez pas coché la case"
 msgstr "Sorry the box is not checked"
 
-#: include/lib/message_javascript.php:92
+#: include/lib/message_javascript.php:92 include/lib/message_javascript.php:94
 msgid "Désolé, événement en cours de création à sauver"
 msgstr "Sorry another event  must be saved first"
 
@@ -7305,7 +7360,7 @@ msgstr "Missed deadline"
 msgid "Echec"
 msgstr "Failed"
 
-#: include/lib/message_javascript.php:79
+#: include/lib/message_javascript.php:79 include/lib/message_javascript.php:81
 msgid "Echec "
 msgstr "Fail"
 
@@ -7315,6 +7370,11 @@ msgstr "Fail"
 #: include/class/document_export.class.php:255
 msgid "Echec Ajout detail "
 msgstr "Add details failed"
+
+#: include/class/pre_operation.class.php:149
+#, php-format
+msgid "Echec PreOperatoin chargement %s"
+msgstr "Fail loading operation template"
 
 #: include/dossier.inc.php:195 include/dossier.inc.php:196
 #: include/dossier.inc.php:199 include/dossier.inc.php:204
@@ -7342,7 +7402,7 @@ msgstr "Transfer failure"
 msgid "Echec de la restauration "
 msgstr "Issue when restoring"
 
-#: include/lib/message_javascript.php:80
+#: include/lib/message_javascript.php:80 include/lib/message_javascript.php:82
 msgid "Echec donnée manquante ou incorrecte"
 msgstr "Fail : missing or incorrect data"
 
@@ -7376,7 +7436,7 @@ msgstr "Failure update"
 msgid "Echec ouverture fichier "
 msgstr "Error opening file"
 
-#: include/lib/message_javascript.php:84
+#: include/lib/message_javascript.php:84 include/lib/message_javascript.php:86
 msgid "Echec réponse"
 msgstr "Response Failed"
 
@@ -7517,7 +7577,7 @@ msgstr "Clean all the plugins data"
 msgid "Effacement déclaration"
 msgstr "Erase statement"
 
-#: include/class/periode.class.php:673
+#: include/class/periode.class.php:673 include/class/periode.class.php:675
 msgid "Effacement impossible"
 msgstr "Impossible removal"
 
@@ -7609,6 +7669,7 @@ msgstr "Removal forbidden"
 #: include/class/periode.class.php:594 include/class/periode.class.php:599
 #: include/class/anc_operation.class.php:316
 #: include/template/ledger_detail_bottom.php:328
+#: include/class/periode.class.php:596 include/class/periode.class.php:601
 msgid "Effacer"
 msgstr "Remove"
 
@@ -7729,7 +7790,7 @@ msgstr "Incorrect Email"
 
 #: include/lib/class_sendmail.php:152 include/lib/class_sendmail.php:153
 #: include/lib/class_sendmail.php:155 include/lib/sendmail.class.php:157
-#: include/lib/sendmail.class.php:161
+#: include/lib/sendmail.class.php:161 include/class/sendmail.class.php:38
 msgid "Email non envoyé"
 msgstr "Email not sent"
 
@@ -7760,7 +7821,7 @@ msgstr "Late"
 msgid "En une opération"
 msgstr "In one operation"
 
-#: include/lib/message_javascript.php:67
+#: include/lib/message_javascript.php:67 include/lib/message_javascript.php:69
 msgid ""
 "En utilisant les dates d échéance ou de paiement, seuls les journaux de type "
 "ACH et VEN seront utilisés ,vous excluez d office les autres journaux"
@@ -8076,6 +8137,10 @@ msgstr "Error : invalid parameter"
 msgid "Erreur : paramètre manquant "
 msgstr "Error : invalid parameter"
 
+#: include/lib/database_core.class.php:73
+msgid "Erreur Connexion"
+msgstr "Disconnect"
+
 #: include/ext/import_account/include/class_impacc_csv.php:55
 #: include/ext/import_account/include/impacc_csv.class.php:55
 msgid "Erreur D/C"
@@ -8101,6 +8166,10 @@ msgstr "Error log this type is not yet supported"
 #: include/ajax_mod_periode.php:76 include/ajax/ajax_mod_periode.php:76
 msgid "Erreur date invalide"
 msgstr "Invalid Date"
+
+#: include/lib/database_core.class.php:71
+msgid "Erreur de connexion !"
+msgstr "Disconnect"
 
 #: include/ajax/ajax_periode.php:195
 msgid "Erreur exercice invalide"
@@ -8314,6 +8383,7 @@ msgstr "Exclude State"
 #: include/ajax/ajax_preference.php:131 include/class/periode.class.php:519
 #: include/class/periode_ledger_table.class.php:100
 #: include/template/stock_inv.php:126 include/ajax/ajax_preference.php:142
+#: include/class/periode.class.php:521
 msgid "Exercice"
 msgstr "Exercise"
 
@@ -8321,7 +8391,7 @@ msgstr "Exercise"
 msgid "Exercice comptable d'achat"
 msgstr "Purchase accounting year"
 
-#: include/class/periode.class.php:424
+#: include/class/periode.class.php:424 include/class/periode.class.php:426
 #, php-format
 msgid "Exercice doit être entre %s et %s "
 msgstr "Exercice is between %s and %s"
@@ -8330,7 +8400,7 @@ msgstr "Exercice is between %s and %s"
 msgid "Exercice invalide"
 msgstr "Invalid exercice"
 
-#: include/class/periode.class.php:421
+#: include/class/periode.class.php:421 include/class/periode.class.php:423
 msgid "Exercice n'est pas un nombre"
 msgstr "exercice is not a number"
 
@@ -8889,6 +8959,7 @@ msgstr "close"
 
 #: include/class/periode.class.php:585
 #: include/class/periode_ledger_table.class.php:142
+#: include/class/periode.class.php:587
 msgid "Fermée"
 msgstr "Closed"
 
@@ -9246,7 +9317,7 @@ msgstr "Fin /MO"
 #: include/class/acc_ledger_search.class.php:1074 include/database.item.php:209
 #: include/database.item.php:220 include/cfgledger.inc.php:170
 #: include/class/acc_ledger_search.class.php:1082
-#: include/class/acc_ledger_search.class.php:1095
+#: include/class/acc_ledger_search.class.php:1095 include/lib/user_menu.php:136
 msgid "Financier"
 msgstr "Financial"
 
@@ -9382,7 +9453,7 @@ msgstr "Supplier to pay today"
 msgid "Français"
 msgstr "French"
 
-#: include/class/periode.class.php:647
+#: include/class/periode.class.php:647 include/class/periode.class.php:649
 msgid "Février"
 msgstr "February"
 
@@ -9414,12 +9485,12 @@ msgid "Gestion des attributs de fiches "
 msgstr "Management attributes sheets"
 
 #: include/user_menu.php:111 include/lib/user_menu.php:117
-#: include/lib/user_menu.php:118
+#: include/lib/user_menu.php:118 include/lib/user_menu.php:75
 msgid "Gestion des dossiers"
 msgstr "Folders managements"
 
 #: include/user_menu.php:112 include/lib/user_menu.php:118
-#: include/lib/user_menu.php:119
+#: include/lib/user_menu.php:119 include/lib/user_menu.php:76
 msgid "Gestion des modèles"
 msgstr "Template management"
 
@@ -9448,6 +9519,7 @@ msgstr ""
 #: include/user_menu.php:110 include/user_menu.php:120
 #: include/lib/user_menu.php:116 include/lib/user_menu.php:129
 #: include/lib/user_menu.php:117 include/lib/user_menu.php:140
+#: include/lib/user_menu.php:74 include/lib/user_menu.php:97
 msgid "Gestion des utilisateurs"
 msgstr "Users managements"
 
@@ -9983,6 +10055,7 @@ msgstr "Sales history"
 #: include/user_menu.php:159 include/user_menu.php:160
 #: include/lib/user_menu.php:168 include/lib/user_menu.php:169
 #: include/lib/user_menu.php:181 include/lib/user_menu.php:182
+#: include/lib/user_menu.php:139 include/lib/user_menu.php:140
 msgid "Hors Comptabilité"
 msgstr "Out of accountancy system"
 
@@ -10284,6 +10357,10 @@ msgid ""
 "connection"
 msgstr "Cannot connect to postgresql , please check the setting"
 
+#: include/lib/database_core.class.php:60
+msgid "Impossible de se connecter à postgreSql"
+msgstr "Impossible to connect to Postgresql"
+
 #: include/database.item.php:68 include/database.item.php:114
 #: include/ajax_get_profile.php:98 include/template/action_other_action.php:22
 #: include/template/menu_detail.php:18 include/menu.inc.php:131
@@ -10497,7 +10574,8 @@ msgstr ""
 "document (invoice , fee note, ...)"
 
 #: include/lib/user_menu.php:122 include/lib/user_menu.php:123
-#: include/lib/user_menu.php:142
+#: include/lib/user_menu.php:142 include/lib/user_menu.php:80
+#: include/lib/user_menu.php:99
 msgid "Information système"
 msgstr "System information"
 
@@ -10513,11 +10591,11 @@ msgstr "General Information"
 #: html/install.php:271 html/install.php:277 html/install.php:228
 #: html/install.php:235 include/upgrade-plugin.php:113
 #: include/lib/user_menu.php:121 html/install.php:238
-#: include/upgrade-plugin.php:125
+#: include/upgrade-plugin.php:125 include/lib/user_menu.php:78
 msgid "Installation"
 msgstr "Installation"
 
-#: include/lib/user_menu.php:121
+#: include/lib/user_menu.php:121 include/lib/user_menu.php:78
 msgid "Installation Mise à jour du système et des bases de données"
 msgstr "Update system and databases"
 
@@ -10666,7 +10744,7 @@ msgstr "Invert sel"
 msgid "Item"
 msgstr "Item"
 
-#: include/class/periode.class.php:647
+#: include/class/periode.class.php:647 include/class/periode.class.php:649
 msgid "Janvier"
 msgstr "January"
 
@@ -10852,11 +10930,11 @@ msgstr "Purchase ledger"
 msgid "Journaux de vente"
 msgstr "Ledger of sales"
 
-#: include/class/periode.class.php:648
+#: include/class/periode.class.php:648 include/class/periode.class.php:650
 msgid "Juillet"
 msgstr "July"
 
-#: include/class/periode.class.php:648
+#: include/class/periode.class.php:648 include/class/periode.class.php:650
 msgid "Juin"
 msgstr "June"
 
@@ -11060,7 +11138,7 @@ msgstr "The card% s Has No accountancy"
 msgid "La numérotation est propre à chaque journal"
 msgstr "The numbering is only the for each ledger"
 
-#: include/lib/message_javascript.php:69
+#: include/lib/message_javascript.php:69 include/lib/message_javascript.php:71
 msgid ""
 "La numérotation est propre à chaque journal. Laissez à 0 pour ne pas changer "
 "le numéro"
@@ -11078,6 +11156,7 @@ msgid "Label"
 msgstr "Label"
 
 #: include/template/param_jrn.php:118 include/lib/message_javascript.php:71
+#: include/lib/message_javascript.php:73
 msgid "Laissez à 0 pour ne pas changer le numéro"
 msgstr "0 for no change"
 
@@ -11237,6 +11316,7 @@ msgid "Le poste %s n'est pas dans ce journal"
 msgstr "Account %s doesn't belong to this ledger"
 
 #: include/template/param_jrn.php:94 include/lib/message_javascript.php:70
+#: include/lib/message_javascript.php:72
 msgid ""
 "Le préfixe des pièces doit être différent pour chaque journal, on peut aussi "
 "utiliser l'année"
@@ -11312,6 +11392,7 @@ msgid "Les clauses FROM sont ignorés avec les dates calendriers"
 msgstr "statement FROM are ignored if you use calendar"
 
 #: include/class_anc_print.php:120 include/lib/message_javascript.php:68
+#: include/lib/message_javascript.php:70
 msgid "Les dates sont en format DD.MM.YYYY"
 msgstr "The date formats are DD.MM.YYYY"
 
@@ -11672,6 +11753,7 @@ msgstr "label"
 #: include/class/acc_ledger_fin.class.php:754
 #: include/class/anc_operation.class.php:298
 #: include/class/acc_ledger_history_generic.class.php:770
+#: include/export/export_balance_pdf.php:127
 #, php-format
 msgid "Libellé"
 msgstr "Label"
@@ -11904,7 +11986,7 @@ msgstr "login"
 msgid "Lundi"
 msgstr "Monday"
 
-#: include/class/periode.class.php:648
+#: include/class/periode.class.php:648 include/class/periode.class.php:650
 msgid "Mai"
 msgstr "May"
 
@@ -11976,7 +12058,7 @@ msgstr "Tuesday"
 msgid "Marquer pour suppression"
 msgstr "Mark for deleting"
 
-#: include/class/periode.class.php:647
+#: include/class/periode.class.php:647 include/class/periode.class.php:649
 msgid "Mars"
 msgstr "March"
 
@@ -12012,11 +12094,11 @@ msgstr "Bad type of object"
 msgid "Max. email / jour (-1 = illimité)"
 msgstr "Max of email / day (-1 for unlimited)"
 
-#: include/lib/message_javascript.php:87
+#: include/lib/message_javascript.php:87 include/lib/message_javascript.php:89
 msgid "Maximum"
 msgstr "Maximum"
 
-#: include/lib/message_javascript.php:86
+#: include/lib/message_javascript.php:86 include/lib/message_javascript.php:88
 msgid "Maximum 15 lignes"
 msgstr "Maximum 15 rows"
 
@@ -12164,7 +12246,7 @@ msgstr "Message reverse"
 msgid "Met à jour toutes les dossiers et modèles"
 msgstr "Update system and databases"
 
-#: include/lib/message_javascript.php:72
+#: include/lib/message_javascript.php:72 include/lib/message_javascript.php:74
 msgid "Mettez le pourcentage <br> à zéro pour effacer la ligne"
 msgstr "Put the percentage to 0 to remove the row"
 
@@ -12605,6 +12687,7 @@ msgstr "Template"
 #: include/modele.inc.php:250 include/lib/user_menu.php:118
 #: include/modele.inc.php:274 include/lib/user_menu.php:119
 #: include/modele.inc.php:257 include/modele.inc.php:258
+#: include/lib/user_menu.php:76
 msgid "Modèles"
 msgstr "Template"
 
@@ -12622,6 +12705,7 @@ msgid "Mois"
 msgstr "Month"
 
 #: include/class/periode.class.php:438 include/class/periode.class.php:440
+#: include/class/periode.class.php:442
 msgid "Mois de début n'existe pas "
 msgstr "Starting month does not exist"
 
@@ -13148,12 +13232,12 @@ msgid ""
 "Ne corrigez pas encore, cliquez continuer pour passer à l'étape suivante"
 msgstr "Continue without changing anything"
 
-#: include/lib/message_javascript.php:76
+#: include/lib/message_javascript.php:76 include/lib/message_javascript.php:78
 msgid ""
 "Ne donner pas ce poste comptable si ce code n'est pas utilisé  à la vente"
 msgstr "Do not give this accounting is not used for sales"
 
-#: include/lib/message_javascript.php:75
+#: include/lib/message_javascript.php:75 include/lib/message_javascript.php:77
 msgid "Ne donner pas ce poste comptable si ce code n'est pas utilisé à l'achat"
 msgstr "Do not give this accounting is not used for purchase"
 
@@ -13631,7 +13715,7 @@ msgstr "Number of recorded lines"
 msgid "Nombre de mois"
 msgstr "Number of month"
 
-#: include/class/periode.class.php:436
+#: include/class/periode.class.php:436 include/class/periode.class.php:438
 msgid "Nombre de mois doit être compris entre 1 & 60 "
 msgstr "Number of months must be between 1 and 60"
 
@@ -13639,7 +13723,7 @@ msgstr "Number of months must be between 1 and 60"
 msgid "Nombre de mois invalide"
 msgstr "Number of month invalid"
 
-#: include/class/periode.class.php:434
+#: include/class/periode.class.php:434 include/class/periode.class.php:436
 msgid "Nombre de mois n'est pas un nombre"
 msgstr "Number of month is not a number"
 
@@ -13896,6 +13980,7 @@ msgstr "New bank statement"
 #: include/lib/html_input.class.php:1043
 #: include/template/action_display_short.php:81
 #: include/lib/html_input.class.php:1103 include/lib/html_input.class.php:1104
+#: include/lib/html_input.class.php:1119
 msgid "Nouvel événement"
 msgstr "New event"
 
@@ -13964,7 +14049,7 @@ msgstr "New sale"
 msgid "Nouvelle version disponible %s , votre version %s"
 msgstr "Available version %s , your version %s"
 
-#: include/class/periode.class.php:649
+#: include/class/periode.class.php:649 include/class/periode.class.php:651
 msgid "Novembre"
 msgstr "November"
 
@@ -14343,11 +14428,11 @@ msgid ""
 "utilisée"
 msgstr "Mandatory for FIN ledger: give here the card of the bank"
 
-#: include/class/periode.class.php:649
+#: include/class/periode.class.php:649 include/class/periode.class.php:651
 msgid "Octobre"
 msgstr "October"
 
-#: include/class/periode.class.php:688
+#: include/class/periode.class.php:688 include/class/periode.class.php:690
 msgid "On ne peut ajouter une période que sur un exercice qui existe déjà"
 msgstr "It is possible to add a period on an existing exercice"
 
@@ -14719,12 +14804,14 @@ msgstr "Tools for co-ownership"
 #: include/class/periode.class.php:585
 #: include/class/periode_ledger_table.class.php:142
 #: include/class/periode_ledger_table.class.php:144
+#: include/class/periode.class.php:587
 msgid "Ouvert"
 msgstr "Open"
 
 #: include/balance.inc.php:314 include/export/export_balance_pdf.php:135
 #: include/class/acc_operation.class.php:727
 #: include/export/export_balance_pdf.php:132
+#: include/export/export_balance_pdf.php:133
 msgid "Ouverture"
 msgstr "Opening entry"
 
@@ -15010,7 +15097,7 @@ msgstr "Invalid parameter"
 #: include/class/acc_ledger.class.php:86 include/lib/http_input.class.php:120
 #: include/class/acc_ledger.class.php:88 include/class/periode.class.php:235
 #: include/lib/http_input.class.php:121 include/class/acc_ledger.class.php:89
-#: include/lib/http_input.class.php:123
+#: include/lib/http_input.class.php:123 include/class/periode.class.php:237
 msgid "Paramètre invalide"
 msgstr "Invalid parameter"
 
@@ -15551,6 +15638,11 @@ msgstr "semi-colon"
 msgid "Port"
 msgstr "Port"
 
+#: include/lib/database_core.class.php:65
+#, php-format
+msgid "Port %s"
+msgstr "Port %s"
+
 #: include/template/template_config_form.php:59
 #: include/template/template_config_form.php:67
 msgid "Port de Postgresql"
@@ -15691,6 +15783,7 @@ msgstr "Post Charge"
 #: include/template/ledger_detail_misc.php:99 include/ajax/ajax_poste.php:64
 #: include/class/acc_plan_mtable.class.php:45 include/class/fiche.class.php:470
 #: include/class/fiche.class.php:469
+#: include/class/pdfbalance_simple.class.php:55
 msgid "Poste Comptable"
 msgstr "Accounting item"
 
@@ -16174,6 +16267,7 @@ msgstr "Reverse Income"
 
 #: include/user_menu.php:154 include/user_menu.php:158
 #: include/lib/user_menu.php:167 include/lib/user_menu.php:180
+#: include/lib/user_menu.php:138
 msgid "Produits"
 msgstr "Products"
 
@@ -16412,7 +16506,7 @@ msgstr "Accounting Period"
 msgid "Période N-1"
 msgstr "Period N-1"
 
-#: include/class/periode.class.php:251
+#: include/class/periode.class.php:251 include/class/periode.class.php:253
 msgid "Période chevauchant une autre"
 msgstr "Period overlaping another one"
 
@@ -16917,12 +17011,12 @@ msgid "Restauration réussie du dossier "
 msgstr "Successfull restore"
 
 #: include/user_menu.php:113 include/lib/user_menu.php:119
-#: include/lib/user_menu.php:120
+#: include/lib/user_menu.php:120 include/lib/user_menu.php:77
 msgid "Restaure"
 msgstr "Restore"
 
 #: include/user_menu.php:113 include/lib/user_menu.php:119
-#: include/lib/user_menu.php:120
+#: include/lib/user_menu.php:120 include/lib/user_menu.php:77
 msgid "Restaure une base de données"
 msgstr "Restore a folder"
 
@@ -17185,6 +17279,7 @@ msgstr "Summary"
 #: include/balance.inc.php:447 include/export/export_balance_pdf.php:316
 #: include/balance.inc.php:465 include/export/export_balance_pdf.php:341
 #: include/export/export_balance_pdf.php:336
+#: include/export/export_balance_pdf.php:337
 msgid "Résumé Exercice courant"
 msgstr "Summary previous "
 
@@ -17192,6 +17287,7 @@ msgstr "Summary previous "
 #: include/balance.inc.php:440 include/export/export_balance_pdf.php:309
 #: include/balance.inc.php:458 include/export/export_balance_pdf.php:334
 #: include/export/export_balance_pdf.php:329
+#: include/export/export_balance_pdf.php:330
 msgid "Résumé Exercice précédent"
 msgstr "Summary current"
 
@@ -17465,7 +17561,7 @@ msgid ""
 msgstr "Select the Analytic plan you are interested before clicking  on Search"
 
 #: include/class_anc_print.php:140 include/class_anc_print.php:181
-#: include/lib/message_javascript.php:73
+#: include/lib/message_javascript.php:73 include/lib/message_javascript.php:75
 msgid "Selectionnez le plan qui vous intéresse avant de cliquer sur Recherche"
 msgstr "Select the Analytic plan before clicking on search"
 
@@ -17475,7 +17571,7 @@ msgstr "Select the Analytic plan before clicking on search"
 msgid "Selectionnez votre langue"
 msgstr "Select your language"
 
-#: include/class/periode.class.php:648
+#: include/class/periode.class.php:648 include/class/periode.class.php:650
 msgid "Septembre"
 msgstr "September"
 
@@ -17519,7 +17615,7 @@ msgstr ""
 "Set mode to D etailled all_ledgers result = Detailled Accounting from "
 "Acc_Ledger_History_Generic"
 
-#: include/lib/message_javascript.php:83
+#: include/lib/message_javascript.php:83 include/lib/message_javascript.php:85
 msgid "Si vous changez de page vous perdez les reconciliations, continuez ?"
 msgstr "If you change , you'll lost your selection"
 
@@ -17613,7 +17709,8 @@ msgstr "Company"
 #: include/export/export_balance_pdf.php:135
 #: include/class/anc_listing.class.php:120 include/class/fiche.class.php:1784
 #: include/class/anc_balance_double.class.php:101
-#: include/class/fiche.class.php:1785
+#: include/class/fiche.class.php:1785 include/export/export_balance_pdf.php:136
+#: include/class/pdfbalance_simple.class.php:58
 msgid "Solde"
 msgstr "Balance"
 
@@ -17693,7 +17790,8 @@ msgstr "Sales"
 #: include/database.item.php:104 include/lib/user_menu.php:124
 #: include/lib/user_menu.php:125 include/lib/user_menu.php:144
 #: include/database.item.php:107 include/database.item.php:101
-#: include/database.item.php:99
+#: include/database.item.php:99 include/lib/user_menu.php:82
+#: include/lib/user_menu.php:101
 msgid "Sortie"
 msgstr "Logout"
 
@@ -17704,7 +17802,7 @@ msgstr "Logout"
 msgid "Sortie &#9094"
 msgstr "Logout &#9094"
 
-#: include/class/periode.class.php:521
+#: include/class/periode.class.php:521 include/class/periode.class.php:523
 msgid "Status"
 msgstr "Status"
 
@@ -17716,6 +17814,7 @@ msgstr "Stock"
 
 #: include/user_menu.php:150 include/user_menu.php:154
 #: include/lib/user_menu.php:163 include/lib/user_menu.php:176
+#: include/lib/user_menu.php:134
 msgid "Stock et commande"
 msgstr "Stock and Order"
 
@@ -18241,7 +18340,7 @@ msgstr "Page size"
 msgid "Tant que ce n'est pas vous fait vous ne pouvez pas utiliser NOALYSS"
 msgstr "You cannot use Noalyss if this file is present"
 
-#: include/lib/message_javascript.php:98
+#: include/lib/message_javascript.php:98 include/lib/message_javascript.php:100
 msgid "Taper une formule (ex 20*5.1) puis enter"
 msgstr "Type a formula and press enter"
 
@@ -18488,6 +18587,7 @@ msgstr "Only Credit"
 
 #: include/export/export_balance_pdf.php:137
 #: include/export/export_balance_pdf.php:134
+#: include/export/export_balance_pdf.php:135
 msgid "Total Crédit"
 msgstr "Sum  credit"
 
@@ -18497,6 +18597,7 @@ msgstr "Total Debit"
 
 #: include/export/export_balance_pdf.php:136
 #: include/export/export_balance_pdf.php:133
+#: include/export/export_balance_pdf.php:134
 msgid "Total Débit"
 msgstr "Sum Debit"
 
@@ -18864,7 +18965,7 @@ msgstr "All entries"
 msgid "Toutes opérations"
 msgstr "All operations"
 
-#: include/lib/message_javascript.php:95
+#: include/lib/message_javascript.php:95 include/lib/message_javascript.php:97
 msgid "Traitement en cours"
 msgstr "Working in progress"
 
@@ -19072,11 +19173,11 @@ msgstr "Phone"
 msgid "URL"
 msgstr "URL"
 
-#: include/lib/message_javascript.php:96
+#: include/lib/message_javascript.php:96 include/lib/message_javascript.php:98
 msgid "Un instant"
 msgstr "A moment"
 
-#: include/lib/message_javascript.php:77
+#: include/lib/message_javascript.php:77 include/lib/message_javascript.php:79
 msgid "Un instant svp"
 msgstr "A moment please"
 
@@ -19211,6 +19312,11 @@ msgstr "Users"
 msgid "Utilisateur  administrateur"
 msgstr "Administrator user"
 
+#: include/lib/database_core.class.php:66
+#, php-format
+msgid "Utilisateur : %s"
+msgstr "User %s"
+
 #: include/param_sec.inc.php:91 include/param_sec.inc.php:95
 #: include/param_sec.inc.php:97
 msgid "Utilisateur Normal"
@@ -19277,12 +19383,14 @@ msgstr "User or password incorrect"
 #: include/user_menu.php:110 include/user_menu.php:120
 #: include/lib/user_menu.php:116 include/lib/user_menu.php:129
 #: include/lib/user_menu.php:117 include/lib/user_menu.php:140
+#: include/lib/user_menu.php:74 include/lib/user_menu.php:97
 msgid "Utilisateurs"
 msgstr "Users"
 
 #: include/user_menu.php:114 include/user_menu.php:121
 #: include/lib/user_menu.php:121 include/lib/user_menu.php:130
 #: include/lib/user_menu.php:122 include/lib/user_menu.php:141
+#: include/lib/user_menu.php:79 include/lib/user_menu.php:98
 msgid "Utilisateurs qui se sont connectés"
 msgstr "Connected users"
 
@@ -19586,6 +19694,10 @@ msgstr ""
 msgid "Voir les documents du suivi"
 msgstr "See documents monitoring"
 
+#: include/lib/database_core.class.php:62
+msgid "Vos paramètres sont incorrectes"
+msgstr "Incorrect parameters"
+
 #: html/do.php:108 html/user_login.php:75 html/do.php:107 html/do.php:102
 #: html/do.php:104 html/user_login.php:76 html/do.php:132 html/do.php:145
 #: html/do.php:147 html/do.php:165 html/do.php:189 html/user_login.php:78
@@ -19593,6 +19705,10 @@ msgstr "See documents monitoring"
 #: html/do.php:213 html/do.php:182
 msgid "Votre base de données n'est pas à jour"
 msgstr "Your database is not updated"
+
+#: include/lib/message_javascript.php:103
+msgid "Votre demande est en cours de traitement"
+msgstr "Your request is being processed"
 
 #: include/upgrade-core.php:42 include/upgrade-core.php:54
 msgid "Votre version est à jour"
@@ -19655,7 +19771,7 @@ msgstr "Do you want to delete this transaction"
 #: include/lib/class_html_input.php:934 include/lib/class_html_input.php:945
 #: include/lib/class_html_input.php:946 include/lib/class_html_input.php:972
 #: include/lib/html_input.class.php:1025 include/lib/html_input.class.php:1083
-#: include/lib/html_input.class.php:1084
+#: include/lib/html_input.class.php:1084 include/lib/html_input.class.php:1099
 #, php-format
 msgid "Voulez-vous effacer cette relation "
 msgstr "Do you want to delete this relation"
@@ -19728,11 +19844,11 @@ msgstr "Do you confirm"
 #: include/ajax/ajax_add_menu.php:192 include/ajax/ajax_add_menu.php:200
 #: include/class/fiche_def.class.php:791 include/class/fiche_def.class.php:796
 #: include/ajax/ajax_create_menu.php:13 include/template/stock_inv.php:33
-#: include/lib/message_javascript.php:78
+#: include/lib/message_javascript.php:78 include/lib/message_javascript.php:80
 msgid "Vous confirmez ?"
 msgstr "Do you confirm?"
 
-#: include/lib/message_javascript.php:81
+#: include/lib/message_javascript.php:81 include/lib/message_javascript.php:83
 msgid "Vous confirmez effacement ?"
 msgstr "Do you confirm the removal ?"
 
@@ -19755,7 +19871,7 @@ msgstr "Removing the Confirm?"
 msgid "Vous confirmez le clonage "
 msgstr "Confirm cloning"
 
-#: include/lib/message_javascript.php:82
+#: include/lib/message_javascript.php:82 include/lib/message_javascript.php:84
 msgid "Vous confirmez mise à jour ?"
 msgstr "Do you confirm the update?"
 
@@ -19990,8 +20106,8 @@ msgid ""
 "Vous utilisez le mode strict la dernière operation est la date du %s\n"
 "                vous ne pouvez pas encoder à une date antérieure"
 msgstr ""
-"You are using the strict mode, the last entry is on the %s , you cannot"
-" record after that date"
+"You are using the strict mode, the last entry is on the %s , you cannot "
+"record after that date"
 
 #: include/class_acc_ledger_fin.php:116 include/class_acc_ledger_fin.php:200
 #: include/class_acc_ledger_purchase.php:111
@@ -20176,11 +20292,16 @@ msgstr "Incorrect call"
 msgid "aucune donnée"
 msgstr "no data"
 
+#: include/lib/database_core.class.php:64
+#, php-format
+msgid "base de donnée  = %s"
+msgstr "Database %s"
+
 #: include/ext/coprop/index.php:46
 msgid "budgets"
 msgstr "budgets"
 
-#: include/lib/message_javascript.php:88
+#: include/lib/message_javascript.php:88 include/lib/message_javascript.php:90
 msgid "calculé"
 msgstr "Computed"
 
@@ -20217,6 +20338,7 @@ msgstr "Choose"
 #: include/class/acc_ledger_search.class.php:111
 #: include/lib/html_input.class.php:1017 include/lib/html_input.class.php:1018
 #: include/class/acc_ledger_search.class.php:112
+#: include/lib/html_input.class.php:1033
 msgid "choix des journaux"
 msgstr "Ledgers"
 
@@ -20516,6 +20638,7 @@ msgstr ""
 #: include/ajax_mod_periode.php:60 include/ajax_mod_periode.php:78
 #: include/ajax/ajax_mod_periode.php:60 include/ajax/ajax_mod_periode.php:78
 #: include/ajax/ajax_periode.php:176 include/class/periode.class.php:707
+#: include/class/periode.class.php:709
 msgid "fermer"
 msgstr "close"
 
@@ -20724,7 +20847,7 @@ msgstr "rate is invalid"
 msgid "le taux n'est pas un nombre"
 msgstr "rate is not a number"
 
-#: include/lib/message_javascript.php:64
+#: include/lib/message_javascript.php:64 include/lib/message_javascript.php:66
 msgid ""
 "le type vaut :<ul>\t<li> ME pour Menu</li>\t<li> PR pour les impressions </"
 "li>\t<li> PL pour les plugins</li>\t<li> SP pour des valeurs spéciales</li>"
@@ -20878,7 +21001,7 @@ msgstr "Does not belong to this ledger"
 msgid "n'existe pas"
 msgstr "does not exist"
 
-#: include/class/periode.class.php:520
+#: include/class/periode.class.php:520 include/class/periode.class.php:522
 msgid "nb opérations"
 msgstr "Number of entries"
 
@@ -21170,6 +21293,7 @@ msgstr "point"
 #: include/export/export_poste_detail_csv.php:39
 #: include/export/export_balance_pdf.php:128
 #: include/export/export_balance_pdf.php:125
+#: include/export/export_balance_pdf.php:126
 msgid "poste"
 msgstr "Accounting"
 
@@ -21336,7 +21460,7 @@ msgstr "Reconciliation"
 #: include/manager.inc.php:104 include/supplier.inc.php:104
 #: include/contact.inc.php:98 include/manager.inc.php:105
 #: include/template/action_search.php:152 include/customer.inc.php:103
-#: include/template/action_search.php:148
+#: include/template/action_search.php:148 scenario/select-box-test.php:62
 msgid "recherche"
 msgstr "Search"
 
@@ -21378,6 +21502,7 @@ msgstr "new line"
 
 #: include/ajax_mod_periode.php:59 include/ajax/ajax_mod_periode.php:59
 #: include/ajax/ajax_periode.php:175 include/class/periode.class.php:706
+#: include/class/periode.class.php:708
 msgid "sauver"
 msgstr "Save"
 

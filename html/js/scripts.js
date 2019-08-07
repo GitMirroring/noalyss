@@ -3456,14 +3456,16 @@ function progress_bar_start(p_taskid,p_message)
     try {
         progressIdx++;
         // block the window
-        var message=content[65];
+        
+        var message='<p>'+content[70]+'</p>';
         if ( p_message) {
             message=p_message;
         }
+        
         add_div({id:"blocking"+progressIdx,cssclass:"smoke-base smoke-visible "});
         
         add_div({id:"message"+progressIdx,cssclass:"inner_box",style:"z-index:1000;position:fixed;top:30%;width:40%;left:30%"});
-        $("message"+progressIdx).update(message);
+        $("message"+progressIdx).update('<h3>'+content[65]+'</h3>'+message);
         // Create a div
         add_div({id: "progressDiv" + progressIdx, cssclass: "progressbar", html: '<span id="progressValue">0</span>'});
         // Check status every sec.
