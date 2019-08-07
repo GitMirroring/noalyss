@@ -93,8 +93,8 @@ class Select_Box
 
 	// Show the filter if there is one, 
 	if ( $this->filter != "" ) {
-            echo $this->filter;
-	  echo HtmlInput::filter_list($list_id);
+            
+            echo HtmlInput::filter_list($list_id);
 	}
         
         // Print the list of possible options

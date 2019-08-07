@@ -983,10 +983,11 @@ class HtmlInput
     static function filter_list($p_list_id)
     {
         $r="<span>";
+        $r.='<span  class=" icon">&#xf50d;</span>';
         $r.=sprintf('<input id="search_%s" type="TEXT" class="input_text" name="filter_list%s" onkeyup="filter_list(this,\'%s\')">',
                 $p_list_id,$p_list_id,$p_list_id);
         
-        $r.=sprintf('<input type="button" class="smallbutton" onclick="$(\'search_%s\').value=\'\';filter_list(this,\'%s\')">',$p_list_id,$p_list_id);
+        $r.=sprintf('<input type="button" class="smallbutton" onclick="$(\'search_%s\').value=\'\';filter_list(\'search_%s\',\'%s\')" value="x">',$p_list_id,$p_list_id,$p_list_id);
         $r.='</span>';
         return $r;
     }
