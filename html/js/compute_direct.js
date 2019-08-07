@@ -99,7 +99,7 @@ function controleBalance()
 {
     if ( checkTotalDirect() == true ) { return true;}
     else {
-        smoke.alert('Balance incorrecte D/C');
+        smoke.alert(content[58]);
         return false;
     }
 }

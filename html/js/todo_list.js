@@ -61,7 +61,7 @@ function todo_list_show(p_id)
                             if (tl_id.length == 0)
                             {
                                 var rec = req.responseText;
-                                alert_box('erreur :' + rec);
+                                alert_box(content[48] + rec);
                             }
                             var content = unescape_xml(getNodeText(tl_content[0]));
                             todo_div.innerHTML=content;
@@ -81,13 +81,13 @@ function todo_list_show(p_id)
     }
     catch (e)
     {
-        alert_box(" Envoi ajax non possible" + e.message);
+        alert_box(content[48] + e.message);
     }
     return false;
 }
 function todo_list_show_error(request_json)
 {
-    alert_box('failure');
+    alert_box(content[48]);
 }
 function add_todo()
 {
@@ -95,7 +95,7 @@ function add_todo()
 }
 function todo_list_remove(p_ctl)
 {
-    smoke.confirm('Effacer ?',
+    smoke.confirm(content[50],
     function (e) {
         if ( !e ) {return;}
         $("tr" + p_ctl).hide();
@@ -141,7 +141,7 @@ function todo_list_save(p_form)
                                 alert_box(content[48] + rec);
                             }
                             if ( getNodeText(tl_id[0]) == '0') {
-                                smoke.alert('Note est vide');
+                                smoke.alert(content[49]);
                                 return;
                             }
                             var tr = $('tr'+p_form);

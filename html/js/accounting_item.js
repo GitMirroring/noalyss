@@ -226,7 +226,7 @@ function result_poste_search(req)
     }
     catch(e)
     {
-        alert_box("Impossible executer script de la reponse\n"+e.message);
+        alert_box("RESPOSEAR"+content[48]+e.message);
     }
 
 }
@@ -235,7 +235,7 @@ function result_poste_search(req)
 */
 function errorPoste()
 {
-    alert_box('Ajax failed');
+    alert_box(content[53]);
 }
 function pausecomp(millis)
  {

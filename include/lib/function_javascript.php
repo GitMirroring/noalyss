@@ -2755,6 +2755,7 @@ function load_all_script()
     static  $already_call=0;
     if ( $already_call==1)return;
     $already_call=1;
+    
     include_once NOALYSS_INCLUDE."/lib/message_javascript.php";
     echo JS_INFOBULLE;
     echo js_include('smoke.js');

@@ -41,13 +41,13 @@ function add_row(p_table, p_seq)
 
     if (mytable.rows.length > 15)
     {
-        alert_box("Maximum 15 lignes ");
+        alert_box(content[55]);
         return;
     }
     var amount = compute_total_table(p_table, p_seq);
     if (max < amount)
     {
-        alert_box('Montant incorrect : max = ' + max + " calculé=" + amount);
+        alert_box(content[48]+' '+content[56]+ ' '+max + content[57]+' '+ amount);
         return;
     }
     // For the detail view (modify_op) there is several form and then several time the
@@ -180,7 +180,7 @@ function verify_ca(div)
         }
         if (amount_error != 0)
         {
-            alert_box('Désolé, les montants pour la comptabilité analytique sont incorrects');
+            alert_box(content[54]);
             return false;
         }
         return true;
@@ -328,7 +328,7 @@ function caod_checkTotal()
  */
 function anc_remove_operation(p_dossier, p_oa_group)
 {
-     smoke.confirm("Etes-vous sur de vouloir effacer cette operation ?\n",
+     smoke.confirm(content[50]+"\n",
      function (a)
      {
          if ( a) {

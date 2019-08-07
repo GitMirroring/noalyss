@@ -82,13 +82,13 @@ function successRemoveOp(request,json)
 {
 	try{
 		var answer=request.responseText.evalJSON(true);
-		if ( answer.ago_id == -1 ) { alert_box ('Effacement non autorisé');return;}
+		if ( answer.ago_id == -1 ) { alert_box (content[59]);return;}
 
 		var action="acop"+answer.ago_id;
 		$(action).innerHTML="";
 		var doc="op"+answer.ago_id;
 		$(doc).style.color="red";
-		$(doc).href="javascript:alert_box('Commentaire Effacé')";
+		$(doc).href="javascript:alert_box(content[60])";
 		$(doc).style.textDecoration="line-through";
 	}catch(e){
 		alert_box(e.message);
@@ -117,12 +117,12 @@ function remove_action(p_dossier,p_id,ag_id)
 			onSuccess:function(request,json) {
 				try{
 				var answer=request.responseText.evalJSON(true);
-				if ( answer.act_id == -1 ) { alert_box ('Effacement non autorisé');return;}
+				if ( answer.act_id == -1 ) { alert_box (content[59]);return;}
 				var action="acact"+answer.act_id;
 				$(action).innerHTML="";
 				var doc="act"+answer.act_id;
 				$(doc).style.color="red";
-				$(doc).href="javascript:alert_box('Action Effacée')";
+				$(doc).href="javascript:alert_box(content[60])";
 				$(doc).style.textDecoration="line-through";
 				} catch (e){ alert_box(e.message);}
 			}
@@ -159,12 +159,12 @@ function remove_comment(p_dossier,p_id)
 function successRemoveComment(request,json)
 {
 	var answer=request.responseText.evalJSON(true);
-	if ( answer.agc_id == -1 ) { alert_box ('Effacement non autorisé');return;}
+	if ( answer.agc_id == -1 ) { alert_box (content[59]);return;}
 	var action="accom"+answer.agc_id;
 	$(action).innerHTML="";
 	var doc="com"+answer.agc_id;
 	$(doc).style.color="red";
-	$(doc).href="javascript:alert_box('Commentaire Effacé')";
+	$(doc).href="javascript:alert_box(content[60])";
 	$(doc).style.textDecoration="line-through";
 
 }
@@ -186,7 +186,7 @@ function successRemoveDoc(request,json)
 	$(action).innerHTML="";
 	var doc="doc"+answer.d_id;
 	$(doc).style.color="red";
-	$(doc).href="javascript:alert_box('Document Effacé')";
+	$(doc).href="javascript:alert_box(content[60])";
 	$(doc).style.textDecoration="line-through";
         $('desc'+answer.d_id).innerHTML="";
 
@@ -202,7 +202,7 @@ function check_hour(p_ctl)
 		var h=document.getElementById(p_ctl);
 		var re = /^\d{1,2}:\d{2}$/;
 		if ( trim(h.value) !='' && ! h.value.match(re))
-			alert_box("Format de l'heure est HH:MM ")
+			alert_box("HH:MM ")
 	}
 	catch (erreur)
 	{
@@ -218,7 +218,7 @@ function check_hour(p_ctl)
 
 function removeStock(s_id,p_dossier)
 {
-	smoke.confirm("Confirmez-vous l'effacement de cette entrée dans le stock?",
+	smoke.confirm(content[50],
         function (a) {
             if (a)
             {
@@ -244,7 +244,7 @@ function removeStock(s_id,p_dossier)
  */
 function errorRemoveStock()
 {
-	alert_box('Impossible d\'effacer ');
+	alert_box(content[60]);
 }
 /**
  *@brief success when removing a document
@@ -300,7 +300,7 @@ function action_show(p_dossier)
 function action_add(p_dossier) {
      try {
         if ( $('action_add_div')) {
-            alert_box('Désolé, événement en cours de création à sauver');
+            alert_box(content[61]);
             return;
         }
         waiting_box();

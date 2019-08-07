@@ -168,7 +168,7 @@ var ManageTable = function (p_table_name)
             var ctl_row = xml.getElementsByTagName("ctl_row");
             if (status.length == 0 || ctl.length == 0 || html.length == 0)
             {
-                throw "Invalid answer " + req.responseText;
+                throw content[53] + req.responseText;
 
             }
             var answer=[];
@@ -228,7 +228,7 @@ var ManageTable = function (p_table_name)
                     
                 } else {
                     remove_waiting_box();
-                    smoke.alert("Changement impossible");
+                    smoke.alert(content[48]);
                     $("dtr").update(answer['html']);
                    
                 }
@@ -306,7 +306,7 @@ var ManageTable = function (p_table_name)
                     $(obj.id).setStyle({position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"});
                     $(obj.id).update(x['html']);
                 } catch (e) {
-                    smoke.alert("ERREUR " + e.message);
+                    smoke.alert(content[48] + e.message);
                 }
 
             }
