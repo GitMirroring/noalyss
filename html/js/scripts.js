@@ -2157,7 +2157,49 @@ function filter_table(phrase, _id, colnr, start_row) {
         }
     }
 }
+/**
+ * @brief filter quickly a list
+ * @param  phrase : DOM id of the input text where we find the word to seach
+ * @param  _id : id of the list
+ * @returns nothing
+ * @see HtmlInput::filter_list
+ */
+function filter_list(phrase, _id) {
+    $('info_div').innerHTML = content[65];
+    $('info_div').style.display = "block";
+    var words = $(phrase).value.toLowerCase();
+    var l_list = document.getElementById(_id);
 
+    var ele;
+    var tot_found = 0;
+
+    for (var r = 0; r < l_list.childNodes.length; r++) {
+        var found = 0;
+        if ( l_list.childNodes[r].childElementCount == 0 )
+        {
+            ele = l_list.childNodes[r].innerHTML;
+        } else {
+               ele = l_list.childNodes[r].childNodes[0].innerHTML;
+        }
+        if ( ele.toLowerCase().indexOf(words) >= 0) {
+            tot_found++;
+            l_list.childNodes[r].style.display='block';
+        } else {
+            l_list.childNodes[r].style.display='none';
+        }
+        $('info_div').style.display = "none";
+        $('info_div').innerHTML = "";
+    }
+    if (tot_found == 0) {
+        if ($('info_' + _id)) {
+            $('info_' + _id).innerHTML = content[69]
+        }
+    } else {
+        if ($('info_' + _id)) {
+            $('info_' + _id).innerHTML = "  ";
+        }
+    }
+}
 /**
  * @brief
  * Display the task late or for today in dashboard

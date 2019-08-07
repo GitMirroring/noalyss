@@ -46,13 +46,31 @@ div.select_box a:hover,div.select_box ul li:hover {
         </p>
         <p style="float : static">
   <?php
-     require NOALYSS_INCLUDE.'/lib/select_box.class.php';
+     require_once NOALYSS_INCLUDE.'/lib/select_box.class.php';
      $a=new Select_Box("test","click me !");
      $a->add_url("List (link)","?id=5&".Dossier::get());
      $a->add_javascript("Hello (Javascript)","alert('hello')");
      $a->add_value("Value = 10 (set value)",10);
      $a->add_value("Value = 1 (set value)",1);
      $a->add_value("Value = 15 (set value)",15);
+
+     echo $a->input();
+     
+     ?>   
+     <?php
+     $a=new Select_Box("test2","click me !");
+     $a->set_filter(_("recherche"));
+     $a->add_value("Value = 10 (set value)",10);
+     $a->add_value("Value = 1 (set value)",1);
+     $a->add_value("Value = 17 (set value)",15);
+     $a->add_value("Value = 18 (set value)",15);
+     $a->add_value("Value = 19 (set value)",15);
+     $a->add_value("Value = 20 (set value)",15);
+     $a->add_value("Value = 25 (set value)",15);
+     $a->add_value("Value = 30 (set value)",15);
+     $a->add_value("Value = 40 (set value)",15);
+     $a->add_value("Value = 50 (set value)",15);
+     $a->add_value("Value = 51 (set value)",15);
 
      echo $a->input();
      

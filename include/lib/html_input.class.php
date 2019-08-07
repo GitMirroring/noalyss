@@ -975,6 +975,21 @@ class HtmlInput
         $r.=' <span class="notice" id="info_'.$p_table_id.'"></span>';
         return $r;
     }
+    /**
+     * Display a field for searching an element in a list 
+     * @param string $p_list_id DOM ID of the list (ul or ol)
+     * @return string
+     */
+    static function filter_list($p_list_id)
+    {
+        $r="<span>";
+        $r.=sprintf('<input id="search_%s" type="TEXT" class="input_text" name="filter_list%s" onkeyup="filter_list(this,\'%s\')">',
+                $p_list_id,$p_list_id,$p_list_id);
+        
+        $r.=sprintf('<input type="button" class="smallbutton" onclick="$(\'search_%s\').value=\'\';filter_list(this,\'%s\')">',$p_list_id,$p_list_id);
+        $r.='</span>';
+        return $r;
+    }
 
     static function show_reconcile($p_div, $let, $span="")
     {
