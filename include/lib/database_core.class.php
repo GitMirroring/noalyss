@@ -165,12 +165,12 @@ class DatabaseCore
             } else {
                 $a = is_array($p_array);
                 if (!is_array($p_array)) {
-                    throw new Exception("Erreur : exec_sql attend un array");
+                    throw new Exception(_("Erreur : exec_sql attend un array"));
                 }
                 if (!DEBUG)
-                    $this->ret = pg_query_params($this->db, $p_string, $p_array);
+                    $this->ret =@pg_query_params($this->db, $p_string, $p_array);
                 else
-                    $this->ret = @pg_query_params($this->db, $p_string, $p_array);
+                    $this->ret = pg_query_params($this->db, $p_string, $p_array);
             }
             if (!$this->ret) {
                 $str_error = pg_last_error($this->db) . pg_result_error($this->ret);
