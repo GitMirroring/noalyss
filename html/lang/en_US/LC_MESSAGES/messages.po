@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NOALYSS 672\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-07 15:00+0200\n"
-"PO-Revision-Date: 2019-08-07 15:04+0100\n"
+"POT-Creation-Date: 2019-08-08 01:27+0200\n"
+"PO-Revision-Date: 2019-08-08 01:28+0100\n"
 "Last-Translator: dany <danydb@noalyss.eu>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: en_US\n"
@@ -969,7 +969,7 @@ msgstr "Folder not available"
 #: html/ajax_misc.php:179 html/ajax_misc.php:257 html/ajax_misc.php:262
 #: html/ajax_misc.php:290 html/ajax_misc.php:382 html/ajax_misc.php:384
 #: html/ajax_misc.php:390 include/lib/message_javascript.php:90
-#: include/lib/message_javascript.php:92
+#: include/lib/message_javascript.php:92 html/ajax_misc.php:392
 msgid "Action non autorisée"
 msgstr "Unauthorized"
 
@@ -1202,6 +1202,8 @@ msgstr "Help "
 #: include/lib/manage_table_sql.class.php:652
 #: include/class/acc_ledger_search.class.php:248
 #: include/class/acc_ledger_search.class.php:250
+#: include/lib/manage_table_sql.class.php:616
+#: include/lib/manage_table_sql.class.php:655
 msgid "Ajout"
 msgstr "Add"
 
@@ -1271,6 +1273,7 @@ msgstr "Add item"
 #: include/lib/class_html_input.php:958 include/lib/class_html_input.php:984
 #: include/lib/html_input.class.php:1037 include/lib/html_input.class.php:1095
 #: include/lib/html_input.class.php:1096 include/lib/html_input.class.php:1111
+#: include/lib/html_input.class.php:1112
 msgid "Ajout autres"
 msgstr "Adding others"
 
@@ -3112,7 +3115,7 @@ msgstr "calculator is visible"
 #: include/template/calendar-list.php:34 include/lib/html_input.class.php:943
 #: include/ajax/ajax_calendar_zoom.php:26 include/lib/html_input.class.php:991
 #: include/ajax/ajax_calendar_zoom.php:32 include/lib/html_input.class.php:992
-#: include/lib/html_input.class.php:1007
+#: include/lib/html_input.class.php:1007 include/lib/html_input.class.php:1008
 msgid "Calendrier"
 msgstr "Calendar"
 
@@ -3125,6 +3128,7 @@ msgstr "from"
 #: include/lib/manage_table_sql.class.php:1008
 #: include/lib/manage_table_sql.class.php:1028
 #: include/lib/manage_table_sql.class.php:1025
+#: include/lib/manage_table_sql.class.php:1069
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -3304,7 +3308,7 @@ msgstr "This plan does not exist"
 
 #: html/ajax_misc.php:571 html/ajax_misc.php:613 html/ajax_misc.php:408
 #: html/ajax_misc.php:434 html/ajax_misc.php:546 html/ajax_misc.php:548
-#: html/ajax_misc.php:554
+#: html/ajax_misc.php:554 html/ajax_misc.php:556
 msgid "Ce plugin n'existe pas "
 msgstr "No plugin"
 
@@ -3594,7 +3598,8 @@ msgstr "full path to postgresql"
 #: include/class/acc_ledger.class.php:2185
 #: include/class/anc_listing.class.php:76 include/class/fiche.class.php:2246
 #: html/user_login.php:158 html/ajax_misc.php:462
-#: include/class/fiche.class.php:2247
+#: include/class/fiche.class.php:2247 html/ajax_misc.php:464
+#: include/lib/manage_table_sql.class.php:634
 #, php-format
 msgid "Cherche"
 msgstr "Search"
@@ -3641,6 +3646,7 @@ msgid ""
 msgstr "Select the exercice ( N-1 )  to report  for the Report As New"
 
 #: html/ajax_misc.php:452 html/ajax_misc.php:454 html/ajax_misc.php:460
+#: html/ajax_misc.php:462
 msgid "Choisissez la TVA"
 msgstr "Select the VAT"
 
@@ -3690,6 +3696,11 @@ msgstr "Select another year"
 msgid "Choisissez un dossier"
 msgstr "Select your folder"
 
+#: include/class/payment_method_mtable.class.php:77
+#: include/class/payment_method_mtable.class.php:87
+msgid "Choisissez un journal"
+msgstr "Select a ledger"
+
 #: include/class_pre_operation.php:281
 #: include/class/class_pre_operation.php:281
 #: include/class/class_pre_operation.php:284
@@ -3699,6 +3710,10 @@ msgstr "Select a template"
 #: include/impress_poste.inc.php:59
 msgid "Choisissez un poste"
 msgstr "Select an accouting"
+
+#: include/class/payment_method_mtable.class.php:115
+msgid "Choisissez un type de fiche"
+msgstr "Select a type of card"
 
 #: html/ajax_card.php:295 html/ajax_card.php:297 html/ajax_card.php:298
 #: include/ajax/ajax_card.php:278 include/ajax/ajax_card.php:279
@@ -6056,7 +6071,7 @@ msgstr "Last entries"
 
 #: html/ajax_misc.php:196 html/ajax_misc.php:274 html/ajax_misc.php:279
 #: html/ajax_misc.php:307 html/ajax_misc.php:399 html/ajax_misc.php:401
-#: html/ajax_misc.php:407
+#: html/ajax_misc.php:407 html/ajax_misc.php:409
 msgid "Des actions dépendent de cette catégorie"
 msgstr "Event depends on this category"
 
@@ -7670,6 +7685,7 @@ msgstr "Removal forbidden"
 #: include/class/anc_operation.class.php:316
 #: include/template/ledger_detail_bottom.php:328
 #: include/class/periode.class.php:596 include/class/periode.class.php:601
+#: include/lib/manage_table_sql.class.php:768
 msgid "Effacer"
 msgstr "Remove"
 
@@ -7753,6 +7769,7 @@ msgstr "Remove an operation"
 #: include/lib/manage_table_sql.class.php:1075
 #: include/lib/manage_table_sql.class.php:1095
 #: include/lib/manage_table_sql.class.php:1092
+#: include/lib/manage_table_sql.class.php:1136
 msgid "Effacé"
 msgstr "Erased"
 
@@ -7958,6 +7975,10 @@ msgstr "Record"
 #: include/ext/tva/ajax.php:111
 msgid "Enregistrement"
 msgstr "Record"
+
+#: include/class/payment_method_mtable.class.php:39
+msgid "Enregistrement dans"
+msgstr "Recorded in"
 
 #: include/action.common.inc.php:160 include/action.common.inc.php:258
 #: include/compta_ach.inc.php:222 include/compta_ven.inc.php:238
@@ -8174,6 +8195,11 @@ msgstr "Disconnect"
 #: include/ajax/ajax_periode.php:195
 msgid "Erreur exercice invalide"
 msgstr "Invalid exercice"
+
+#: include/class/payment_method_mtable.class.php:140
+#, php-format
+msgid "Erreur key %s value %s"
+msgstr "Error key %s value %s"
 
 #: html/do.php:196 html/do.php:224 html/do.php:237 html/do.php:239
 #: html/do.php:236 html/do.php:273 html/do.php:285 html/do.php:295
@@ -8407,7 +8433,7 @@ msgstr "exercice is not a number"
 #: html/ajax_misc.php:197 html/ajax_misc.php:216 html/ajax_misc.php:230
 #: html/ajax_misc.php:236 html/ajax_misc.php:314 html/ajax_misc.php:319
 #: html/ajax_misc.php:347 html/ajax_misc.php:459 html/ajax_misc.php:461
-#: html/ajax_misc.php:467
+#: html/ajax_misc.php:467 html/ajax_misc.php:469
 msgid "Explication"
 msgstr "Explanation"
 
@@ -8998,6 +9024,7 @@ msgstr "Closed"
 #: include/class/acc_plan_mtable.class.php:49 include/database.item.php:78
 #: include/database.item.php:110 include/category_card.inc.php:75
 #: include/template/stock_inv.php:67
+#: include/class/payment_method_mtable.class.php:41
 msgid "Fiche"
 msgstr "Card"
 
@@ -9038,6 +9065,10 @@ msgstr "VAT record"
 #: include/ajax/ajax_card.php:383
 msgid "Fiche contenant"
 msgstr "Card"
+
+#: include/class/payment_method_mtable.class.php:98
+msgid "Fiche inexistante"
+msgstr "Inexistent card"
 
 #: include/ext/import_account/include/class_impacc_csv.php:53
 #: include/ext/import_account/include/impacc_csv.class.php:53
@@ -10124,7 +10155,7 @@ msgstr "There are %s invalid parameters"
 
 #: html/ajax_misc.php:572 html/ajax_misc.php:614 html/ajax_misc.php:409
 #: html/ajax_misc.php:435 html/ajax_misc.php:547 html/ajax_misc.php:549
-#: html/ajax_misc.php:555
+#: html/ajax_misc.php:555 html/ajax_misc.php:557
 msgid "Il y a une erreur, ce plugin n'existe pas"
 msgstr "This plugin doesn't exist"
 
@@ -10706,6 +10737,7 @@ msgid "Invalide"
 msgstr "Invalide"
 
 #: html/ajax_misc.php:288 html/ajax_misc.php:290 html/ajax_misc.php:296
+#: html/ajax_misc.php:298
 msgid "Invalide type"
 msgstr "Invalide type"
 
@@ -11754,6 +11786,7 @@ msgstr "label"
 #: include/class/anc_operation.class.php:298
 #: include/class/acc_ledger_history_generic.class.php:770
 #: include/export/export_balance_pdf.php:127
+#: include/class/payment_method_mtable.class.php:38
 #, php-format
 msgid "Libellé"
 msgstr "Label"
@@ -11827,6 +11860,12 @@ msgstr "Skipped rows"
 #: include/ajax/ajax_admin.php:156
 msgid "Limite dossiers"
 msgstr "Folders limit"
+
+#: include/lib/message_javascript.php:104
+msgid ""
+"Limite le type fiche si vous choisissez la fiche à la saisie, uniquement "
+"avec journaux OD"
+msgstr ""
 
 #: include/fiche.inc.php:63 include/ext/rapport_avance/index.php:58
 #: include/template/calendar.php:10 include/ext/rapport_avance/index.php:60
@@ -12530,6 +12569,7 @@ msgstr "Missing description"
 #: include/class/anc_operation.class.php:324
 #: include/class/anc_operation.class.php:318
 #: include/class/anc_operation.class.php:319
+#: include/lib/manage_table_sql.class.php:755
 msgid "Modifier"
 msgstr "Modify"
 
@@ -13980,7 +14020,7 @@ msgstr "New bank statement"
 #: include/lib/html_input.class.php:1043
 #: include/template/action_display_short.php:81
 #: include/lib/html_input.class.php:1103 include/lib/html_input.class.php:1104
-#: include/lib/html_input.class.php:1119
+#: include/lib/html_input.class.php:1119 include/lib/html_input.class.php:1120
 msgid "Nouvel événement"
 msgstr "New event"
 
@@ -14373,6 +14413,7 @@ msgstr "MW analytic"
 #: include/lib/manage_table_sql.class.php:1005
 #: include/lib/manage_table_sql.class.php:1025
 #: include/lib/manage_table_sql.class.php:1022
+#: include/lib/manage_table_sql.class.php:1066
 msgid "OK"
 msgstr "OK"
 
@@ -16146,6 +16187,10 @@ msgstr "For the ledger"
 msgid ""
 "Pour le passer en unicode, faites-en un backup puis restaurez le fichier reçu"
 msgstr "To convert it in unicode, do first year in backup restore it"
+
+#: include/lib/message_javascript.php:105
+msgid "Pour les journaux FIN, ce sera la fiche du journal"
+msgstr "For the FIN Ledger, it will be the card of the ledger"
 
 #: include/template/impress_cat_card.php:21
 msgid "Pour toutes les catégories"
@@ -17958,7 +18003,7 @@ msgstr "Deleted"
 #: html/ajax_misc.php:196 html/ajax_misc.php:215 html/ajax_misc.php:229
 #: html/ajax_misc.php:235 html/ajax_misc.php:313 html/ajax_misc.php:318
 #: html/ajax_misc.php:346 html/ajax_misc.php:458 html/ajax_misc.php:460
-#: html/ajax_misc.php:466
+#: html/ajax_misc.php:466 html/ajax_misc.php:468
 msgid "Symbole"
 msgstr "Symbol"
 
@@ -18356,7 +18401,7 @@ msgstr ""
 #: html/ajax_misc.php:195 html/ajax_misc.php:214 html/ajax_misc.php:228
 #: html/ajax_misc.php:234 html/ajax_misc.php:312 html/ajax_misc.php:317
 #: html/ajax_misc.php:345 html/ajax_misc.php:457 html/ajax_misc.php:459
-#: html/ajax_misc.php:465
+#: html/ajax_misc.php:465 html/ajax_misc.php:467
 msgid "Taux"
 msgstr "Spleen"
 
@@ -19100,6 +19145,7 @@ msgstr "Type of document"
 
 #: include/template/new_mod_payment.php:28 include/payment_middle.inc.php:121
 #: include/payment_middle.inc.php:122
+#: include/class/payment_method_mtable.class.php:40
 msgid "Type de fiche"
 msgstr "Type of card"
 
@@ -19195,6 +19241,11 @@ msgstr "A moment please"
 #: include/class/acc_ledger.class.php:2327
 msgid "Un journal avec ce nom existe déjà"
 msgstr "This name is already used"
+
+#: include/class/payment_method_mtable.class.php:68
+#: include/class/payment_method_mtable.class.php:92
+msgid "Un libellé est obligatoire"
+msgstr "mandatory label"
 
 #: include/profile.inc.php:322
 msgid "Un menu ne peut pas dépendre de lui-même"
@@ -19393,6 +19444,10 @@ msgstr "Users"
 #: include/lib/user_menu.php:79 include/lib/user_menu.php:98
 msgid "Utilisateurs qui se sont connectés"
 msgstr "Connected users"
+
+#: include/class/payment_method_mtable.class.php:42
+msgid "Utilisation dans"
+msgstr "Used in "
 
 #: include/company.inc.php:114 include/company.inc.php:133
 #: include/company.inc.php:137
@@ -19772,6 +19827,7 @@ msgstr "Do you want to delete this transaction"
 #: include/lib/class_html_input.php:946 include/lib/class_html_input.php:972
 #: include/lib/html_input.class.php:1025 include/lib/html_input.class.php:1083
 #: include/lib/html_input.class.php:1084 include/lib/html_input.class.php:1099
+#: include/lib/html_input.class.php:1100
 #, php-format
 msgid "Voulez-vous effacer cette relation "
 msgstr "Do you want to delete this relation"
@@ -20338,7 +20394,7 @@ msgstr "Choose"
 #: include/class/acc_ledger_search.class.php:111
 #: include/lib/html_input.class.php:1017 include/lib/html_input.class.php:1018
 #: include/class/acc_ledger_search.class.php:112
-#: include/lib/html_input.class.php:1033
+#: include/lib/html_input.class.php:1033 include/lib/html_input.class.php:1034
 msgid "choix des journaux"
 msgstr "Ledgers"
 
@@ -20378,7 +20434,7 @@ msgstr "Click here to update "
 #: include/class/pdf_operation.class.php:149
 #: include/class/pdf_operation.class.php:194
 #: include/class/pdf_operation.class.php:247 html/ajax_misc.php:456
-#: html/ajax_misc.php:458 html/ajax_misc.php:464
+#: html/ajax_misc.php:458 html/ajax_misc.php:464 html/ajax_misc.php:466
 msgid "code"
 msgstr "code"
 
@@ -21013,6 +21069,10 @@ msgstr "Name of the ledger"
 #: include/template/tag_search_select.php:45
 msgid "non actif"
 msgstr "Not asset"
+
+#: include/lib/manage_table_sql.class.php:965
+msgid "non implémenté"
+msgstr "Not implemented"
 
 #: include/balance_age.inc.php:40 include/balance_age.inc.php:44
 #: include/balance_age.inc.php:43
@@ -21705,7 +21765,7 @@ msgstr "vat"
 #: html/ajax_misc.php:372 html/ajax_misc.php:377 html/ajax_misc.php:400
 #: html/ajax_misc.php:405 html/ajax_misc.php:512 html/ajax_misc.php:517
 #: html/ajax_misc.php:514 html/ajax_misc.php:519 html/ajax_misc.php:520
-#: html/ajax_misc.php:525
+#: html/ajax_misc.php:525 html/ajax_misc.php:522 html/ajax_misc.php:527
 msgid "tva inconnue"
 msgstr "VAT unknown"
 

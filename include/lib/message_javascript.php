@@ -101,6 +101,7 @@ content[67]="<?php echo escape_xml(_('Taper une formule (ex 20*5.1) puis enter')
 content[68]="<?php echo escape_xml(_("Calculatrice simplifiée: écrivez simplement les opérations que vous voulez puis la touche retour. exemple : 1+2+3*(1/5)"));?>";
 content[69]="<?php echo escape_xml(_("Aucune donnée"))?>";
 content[70]="<?php echo escape_xml(_("Votre demande est en cours de traitement"))?>";
-
+content[71]="<?php echo _('Limite le type fiche si vous choisissez la fiche à la saisie, uniquement avec journaux OD');?>";
+content[72]="<?php echo _("Pour les journaux FIN, ce sera la fiche du journal");?>";
 
 </script>

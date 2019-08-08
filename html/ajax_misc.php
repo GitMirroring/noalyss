@@ -252,7 +252,9 @@ $path = array(
     // TVA param
     "tva_parameter"=>"ajax_tva_parameter",
     // Display all cards using an accounting
-    "display_all_card"=>"ajax_display_all_card"
+    "display_all_card"=>"ajax_display_all_card",
+    // payment_method
+    "payment_method"=>"ajax_payment_method"
 )    ;
 
 if (array_key_exists($op, $path)) {

@@ -90,71 +90,7 @@ class Acc_Payment
     {
         return var_export(self::$variable,true);
     }
-    public function verify()
-    {
-        // Verify that the elt we want to add is correct
-    }
-    public function save()
-    {
-        /* please adapt */
-        if (  $this->get_parameter("id") == 0 )
-            $this->insert();
-        else
-            $this->update();
-    }
-
-    public function insert()
-    {
-        if ( $this->verify() != 0 ) return;
-        $sql='INSERT INTO payment_method(
-             mp_lib, mp_jrn_def_id, mp_fd_id, mp_qcode,jrn_def_id)
-             VALUES ($1, $2, $3, upper($4),$5) returning mp_id';
-        $this->mp_id=$this->cn->exec_sql($sql,array(
-                                             $this->mp_lib,
-                                             $this->mp_jrn_def_id,
-                                             $this->mp_fd_id,
-                                             $this->mp_qcode,
-                                             $this->jrn_def_id));
-    }
-
-    public function update()
-    {
-        if ( $this->verify() != 0 ) return;
-
-        $sql="update payment_method set mp_lib=$1,mp_qcode=$2,mp_jrn_def_id=$3,mp_fd_id=$4,jrn_def_id=$5 ".
-             " where mp_id = $6";
-        $res=$this->cn->exec_sql(
-                 $sql,
-                 array($this->mp_lib,
-                       $this->mp_qcode,
-                       $this->mp_jrn_def_id,
-                       $this->mp_fd_id,
-                       $this->jrn_def_id,
-                       $this->mp_id)
-             );
-        if ( strlen (trim($this->mp_jrn_def_id))==0)
-            $this->cn->exec_sql(
-                'update payment_method '.
-                'set mp_jrn_def_id = null where mp_id=$1',
-                array($this->mp_id));
-        if ( strlen (trim($this->jrn_def_id))==0)
-            $this->cn->exec_sql(
-                'update payment_method '.
-                'set mp_jrn_def_id = null where mp_id=$1',
-                array($this->mp_id));
-        if ( strlen (trim($this->mp_qcode))==0)
-            $this->cn->exec_sql(
-                'update payment_method '.
-                'set mp_qcode = null where mp_id=$1',
-                array($this->mp_id));
-        if ( strlen (trim($this->mp_fd_id))==0)
-            $this->cn->exec_sql(
-                'update payment_method '.
-                'set mp_fd_id = null where mp_id=$1',
-                array($this->mp_id));
-
-    }
-
+  
     public function load()
     {
         $sql='select mp_id,mp_lib,mp_fd_id,mp_jrn_def_id,mp_qcode,jrn_def_id from payment_method '.
@@ -172,14 +108,7 @@ class Acc_Payment
         }
 
     }
-    /**
-     *@brief remove a middle of payment
-     */
-    public function delete()
-    {
-        $sql="delete from payment_method where mp_id=$1";
-        $this->cn->exec_sql($sql,array($this->mp_id));
-    }
+   
     /*!\brief retrieve all the data for all ledgers
      *\param non
      *\return an array of row
