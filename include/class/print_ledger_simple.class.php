@@ -24,12 +24,14 @@
  *  of any ledgers
  */
 require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
 class Print_Ledger_Simple extends PDF
 {
     public function __construct ($p_cn,  Acc_Ledger $p_jrn)
     {
 
+        $http=new HttpInput();
         if($p_cn == null) die("No database connection. Abort.");
 
         parent::__construct($p_cn,'L', 'mm', 'A4');
@@ -48,7 +50,8 @@ class Print_Ledger_Simple extends PDF
          * get rappel to initialize amount rap_xx
          *the easiest way is to compute sum from quant_
          */
-        $this->previous=$this->ledger->previous_amount($_GET['from_periode']);
+        $from_periode=$http->get('from_periode',"number");
+        $this->previous=$this->ledger->previous_amount($from_periode);
 
         /* initialize the amount to report */
         foreach($this->previous['tva'] as $line_tva)
@@ -203,8 +206,10 @@ class Print_Ledger_Simple extends PDF
     function export()
     {
       bcscale(2);
-        $a_jrn=$this->ledger->get_operation($_GET['from_periode'],
-                                            $_GET['to_periode']);
+        $http=new HttpInput();
+
+        $a_jrn=$this->ledger->get_operation($http->get('from_periode',"number"),
+                                            $http->get('to_periode',"number"));
 
         if ( $a_jrn == null ) return;
         for ( $i=0;$i<count($a_jrn);$i++)
