@@ -344,7 +344,7 @@ class Todo_List
         { 
             // this is a note shared by someone else
             $r.=  '<td>'.
-                HtmlInput::button('del','X','onClick="todo_list_remove_share('.$this->tl_id.',\''.$this->use_login.'\','.Dossier::id().')"','smallbutton').
+                Icon_Action::trash(uniqid(),sprintf("todo_list_remove_share('%s','%s','%s')",$this->tl_id,$this->use_login,Dossier::id())).
          '</td>';
         }
         
