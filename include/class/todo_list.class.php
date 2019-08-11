@@ -337,7 +337,7 @@ class Todo_List
         {
             // This a note the user owns
             $r.=  '<td>'.
-         HtmlInput::button('del','X','onClick="todo_list_remove('.$this->tl_id.')"','smallbutton').
+                Icon_Action::trash(uniqid(),sprintf("todo_list_remove('%s')",$this->tl_id)).
          '</td>';
         }
         else
