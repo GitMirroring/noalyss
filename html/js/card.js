@@ -838,9 +838,8 @@ function save_card_category(obj)
         alert_box('Erreur pas d\' attribut ipopup '+obj.id);
         return;
     };
-	try {
+try {
 		// Data must be taken here
-
     data=$('newcat').serialize(false);
     var dossier=$('gDossier').value;
     var queryString='ctl='+obj.ipopup+'&';

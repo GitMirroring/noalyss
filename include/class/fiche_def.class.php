@@ -233,7 +233,7 @@ $order
         $count=$this->cn->get_value($sql,array(trim($p_nom_mod)));
 
         if ($count != 0 ) {
-			 echo alert (_('Catégorie existante'));
+			 alert (_('Catégorie existante'));
 			return 1;
 		}
         // Set the value of fiche_def.fd_create_account

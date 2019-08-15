@@ -86,7 +86,7 @@ set_language();
  *echo a warning if disconnected
  */
 ajax_disconnected($_REQUEST['ctl']);
-
+$http=new HttpInput();
 $cn=Dossier::connect();
 global $g_user;
 $g_user=new User($cn);
@@ -532,22 +532,40 @@ case 'scc':
      *
      *----------------------------------------------------------------------*/
     $html='';
+    $invalid=0;
     if ( $g_user->check_action(FICCAT) == 1 )
     {
-		$script=create_script("removeDiv('$ctl')");
-		$html.=$script;
-        if ( strlen(trim($_GET['nom_mod'])) != 0 )
+        
+        $html="";
+        $nom_mod=$http->get("nom_mod");
+        $class_base=$http->get("class_base");
+        $fd_description=$http->get("nom_mod");
+        if ( strlen(trim($nom_mod)) != 0 )
         {
             $array=array("FICHE_REF"=>$cat,
-                         "nom_mod"=>$_GET['nom_mod'],
-                         "class_base"=>$_GET['class_base'],
-                          "fd_description"=>$_GET['fd_description']);
+                         "nom_mod"=>$nom_mod,
+                         "class_base"=>$class_base,
+                          "fd_description"=>$fd_description);
+            
             if ( isset ($_POST['create'])) $array['create']=1;
+            
             $catcard=new Fiche_Def($cn);
-            if ( $catcard->Add($array) == -1)
+            
+            ob_start();
+            $result=$catcard->Add($array);
+            
+            $html.=ob_get_contents();
+            ob_end_clean();
+            
+            if (  $result == 1)
+            {
                 $script="alert_box('"._('Catégorie existe déjà')."')";
-            else
-                $script="alert_box('"._('Catégorie sauvée')."')";
+                $invalid=1;
+            }
+            else{
+                $script="alert_box('"._('Catégorie sauvée')."');removeDiv('$ctl')";
+            }
+                
             $html.=create_script($script);
         }
         else
@@ -561,6 +579,10 @@ case 'scc':
     else
     {
         $html=alert(_('Action interdite'),true);
+        $invalid=1;
+    }
+    if  ($invalid == 1) {
+        $ctl="info_div";
     }
     break;
 case 'upc':
