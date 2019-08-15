@@ -556,7 +556,7 @@ class HtmlInput
     static function print_window()
     {
         $r='';
-        $r.=HtmlInput::button('print', 'Imprimer', 'onclick="window.print();"');
+        $r.=HtmlInput::button('print', _('Imprimer'), 'onclick="window.print();"');
         return $r;
     }
 
