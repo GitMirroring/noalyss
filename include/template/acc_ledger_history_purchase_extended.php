@@ -104,7 +104,8 @@ for ($i=0;$i<$nb_data;$i++):
             $sep="";
             for ($e=0;$e<$max;$e++) {
                 $row=Database::fetch_array($ret_reconcile, $e);
-                echo $sep.HtmlInput::detail_op($row['jr_id'],$row['jr_date'].' '. $row['jr_internal']);
+                 $msg=( $row['qcode_bank'] != "")?"[".$row['qcode_bank']."]":$row['jr_internal'];
+                echo $sep.HtmlInput::detail_op($row['jr_id'],$row['jr_date'].' '. $msg);
                 $sep=' ,';
         }
     } ?>

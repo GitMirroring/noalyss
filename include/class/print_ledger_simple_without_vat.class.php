@@ -141,11 +141,15 @@ class Print_Ledger_Simple_Without_Vat extends PDF
      */
     function export()
     {
-
-        $a_jrn=$this->ledger->get_operation($_GET['from_periode'],
-                                            $_GET['to_periode']);
+        $http=new HttpInput;
+        $a_jrn=$this->ledger->get_operation($http->get('from_periode','number'),$http->get('to_periode','number'));
 
         if ( $a_jrn == null ) return;
+        
+         // Prepare the query for reconcile date
+        $prepared_query=new Prepared_Query($this->cn);
+        $prepared_query->prepare_reconcile_date();
+        
         for ( $i=0;$i<count($a_jrn);$i++)
         {
 
@@ -169,10 +173,23 @@ class Print_Ledger_Simple_Without_Vat extends PDF
 
             if ( $this->jrn_type !='VEN')
             {
-                $this->write_cell(15,6,sprintf("%.2f",$other['priv']),0,0,'R');
+                $this->write_cell(15,5,sprintf("%.2f",$other['priv']),0,0,'R');
             }
 
-            $this->write_cell(15,6,sprintf("%.2f",$other['price']),0,0,'R');
+            $this->write_cell(15,5,sprintf("%.2f",$other['price']),0,0,'R');
+            $ret_reconcile=$this->cn->execute('reconcile_date',array($row['id']));
+            $max=Database::num_row($ret_reconcile);
+            $str_payment="";
+            if ($max > 0) {
+                $sep="";
+                for ($e=0;$e<$max;$e++) {
+                    $row=Database::fetch_array($ret_reconcile, $e);
+                    $msg=( $row['qcode_bank'] != "")?"[".$row['qcode_bank']."]":$row['jr_internal'];
+                    $str_payment=$row['jr_date'].$msg.$sep;
+                    $sep=' , ';
+                }
+                $this->write_cell (50,5,$str_payment);
+            }
             $this->line_new(5);
         }
     }

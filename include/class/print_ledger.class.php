@@ -149,7 +149,6 @@ class Print_Ledger {
                     {
                         $pdf=new Print_Ledger_Detail($cn, $p_ledger);
                         return $pdf;
-                        ;
                     }
                     if ($jrn_type=='ODS'||$p_ledger->id==0)
                     {

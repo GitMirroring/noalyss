@@ -82,6 +82,7 @@ class Acc_Ledger_History_Financial extends Acc_Ledger_History
     public function export_oneline_html()
     {
         $this->get_row();
+        
         $this->prepare_reconcile_date();
         require_once NOALYSS_TEMPLATE.'/acc_ledger_history_financial_oneline.php';
         

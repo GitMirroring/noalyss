@@ -267,7 +267,7 @@ class Acc_Payment
                     }
                     $s=new ISpan();
                     $s->name=$a->name.'_label';
-                    $f=_(" paiement par ").$a->input().$s->input();
+                    $f=_(" paiement par ").$a->input().$s->input().$a->search();
                     
                 }
                 else

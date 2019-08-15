@@ -96,24 +96,24 @@ class Print_Ledger_Simple extends PDF
             $tmp1=$line_tva['tva_id'];
             $this->rap_tva[$tmp1]=(isset($this->rap_tva[$tmp1]))?$this->rap_tva[$tmp1]:0;
         }
-        $this->Cell(15,6,'Pièce');
-        $this->Cell(10,6,'Date');
-        $this->Cell(13,6,'ref');
+        $this->Cell(15,6,_('Pièce'));
+        $this->Cell(10,6,_('Date'));
+        $this->Cell(13,6,_('ref'));
         if ( $this->jrn_type=='ACH')
-            $this->Cell(40,6,'Client');
+            $this->Cell(40,6,_('Client'));
         else
-            $this->Cell(40,6,'Fournisseur');
+            $this->Cell(40,6,_('Fournisseur'));
 
         $flag_tva=(count($this->a_Tva) > 4)?true:false;
-        if ( !$flag_tva )      $this->Cell(65,6,'Description');
+        if ( !$flag_tva )      $this->Cell(65,6,_('Description'));
 
-        $this->Cell(15,6,'HTVA',0,0,'R');
+        $this->Cell(15,6,_('HTVA'),0,0,'R');
         if ( $this->jrn_type=='ACH')
         {
-            $this->Cell(15,6,'Priv/DNA',0,0,'R');
-            $this->Cell(15,6,'TVA ND',0,0,'R');
+            $this->Cell(15,6,_('Priv/DNA'),0,0,'R');
+            $this->Cell(15,6,_('TVA ND'),0,0,'R');
         }
-        $this->Cell(15,6,'TVA NP',0,0,'R'); // Unpaid TVA --> autoliquidation, NPR
+        $this->Cell(15,6,_('TVA NP'),0,0,'R'); // Unpaid TVA --> autoliquidation, NPR
         foreach($this->a_Tva as $line_tva)
         {
             $this->Cell(15,6,$line_tva['tva_label'],0,0,'R');
@@ -210,8 +210,13 @@ class Print_Ledger_Simple extends PDF
 
         $a_jrn=$this->ledger->get_operation($http->get('from_periode',"number"),
                                             $http->get('to_periode',"number"));
-
+        
         if ( $a_jrn == null ) return;
+        
+        // Prepare the query for reconcile date
+        $prepared_query=new Prepared_Query($this->ledger->db);
+        $prepared_query->prepare_reconcile_date();
+        
         for ( $i=0;$i<count($a_jrn);$i++)
         {
             /* initialize tva */
@@ -233,8 +238,8 @@ class Print_Ledger_Simple extends PDF
                 $this->rap_tva[$l]=bcadd($this->rap_tva[$l],$aAmountVat[$f]['sum_vat']);
                 
             }
-
             $row=$a_jrn[$i];
+            $ret_reconcile=$this->ledger->db->execute('reconcile_date',array($row['id']));
             $this->LongLine(15,5,($row['pj']),0);
             $this->write_cell(10,5,$row['date_fmt'],0,0);
             $this->write_cell(13,5,$row['internal'],0,0);
@@ -265,7 +270,24 @@ class Print_Ledger_Simple extends PDF
 	    $l_tvac=bcadd($other['price'], bcsub($other['vat'],$other['tva_np']));
 	    $l_tvac=bcadd($l_tvac,$other['tva_nd']);
             $this->write_cell(15,5,nbm($l_tvac),0,0,'R');
-            $this->line_new(5);
+            $this->line_new(2);
+            $this->write_cell(15,5, _("Payé par"));
+            // Add the payment information on another row
+            $max=Database::num_row($ret_reconcile);
+            $str_payment="";
+            if ($max > 0) {
+                $sep="";
+                for ($e=0;$e<$max;$e++) {
+                    $row=Database::fetch_array($ret_reconcile, $e);
+                    $msg=( $row['qcode_bank'] != "")?"[".$row['qcode_bank']."]":$row['jr_internal'];
+                    $str_payment=$row['jr_date'].$msg.$sep;
+                    $sep=' , ';
+                }
+                $this->write_cell (120,5,$str_payment);
+            }
+            
+            
+            $this->line_new(3);
             // Total page
             $this->tp_htva=bcadd($this->tp_htva,$other['price']);
             $this->tp_tvac=bcadd($this->tp_tvac,$other['price']);

@@ -28,8 +28,10 @@ require_once NOALYSS_INCLUDE."/class/acc_ledger_history_generic.class.php";
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history_sale.class.php";
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history_purchase.class.php";
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history_financial.class.php";
+require_once NOALYSS_INCLUDE."/class/prepared_query.class.php";
 /**
  * @brief Display history of operation
+ * @see acc_ledger_historyTest.php
  */
 abstract class Acc_Ledger_History
 {
@@ -240,32 +242,19 @@ abstract class Acc_Ledger_History
         return $tiers;
     }
 
+    
     /**
      * Prepare the query for fetching the linked operation
      * @staticvar int $prepare
      */
     protected function prepare_reconcile_date()
     {
-        $prepare=$this->db->is_prepare("reconcile_date");
-        if ($prepare==FALSE)
-        {
-            $this->db->prepare('reconcile_date',
-                    'select  * 
-                         from 
-                           jrn 
-                         where 
-                           jr_id in 
-                               (select 
-                                   jra_concerned 
-                                   from 
-                                   jrn_rapt 
-                                   where jr_id = $1 
-                                union all 
-                                select 
-                                jr_id 
-                                from jrn_rapt 
-                                where jra_concerned=$1)');
+        static $not_done=TRUE;
+        if ($not_done )  {
+            $prepare_query = new Prepared_Query($this->db);
+            $prepare_query->prepare_reconcile_date();
         }
+        $not_done=FALSE;
     }
     /**
      * display accounting of operations m_mode=A

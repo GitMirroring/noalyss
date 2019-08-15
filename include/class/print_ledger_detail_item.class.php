@@ -90,21 +90,25 @@ class Print_Ledger_Detail_Item extends PDFLand
     {
       bcscale(2);
       $jrn_type=$this->ledger->get_type();
+      $http=new HttpInput();
       switch ($jrn_type)
       {
           case 'VEN':
               $ledger=new Acc_Ledger_Sold($this->cn, $this->ledger->jrn_def_id);
-              $ret_detail=$ledger->get_detail_sale($_GET['from_periode'],$_GET['to_periode']);
+              $ret_detail=$ledger->get_detail_sale($http->get('from_periode','number'),$http->get('to_periode','number'));
               break;
           case 'ACH':
                 $ledger=new Acc_Ledger_Purchase($this->cn, $this->ledger->jrn_def_id);
-                $ret_detail=$ledger->get_detail_purchase($_GET['from_periode'],$_GET['to_periode']);
+                $ret_detail=$ledger->get_detail_purchase($http->get('from_periode','number'),$http->get('to_periode','number'));
               break;
           default:
               die (__FILE__.":".__LINE__.'Journal invalide');
               break;
       }
         if ( $ret_detail == null ) return;
+        $prepared_query=new Prepared_Query($this->ledger->db);
+        $prepared_query->prepare_reconcile_date();
+
         $nb=Database::num_row($ret_detail);
         $this->SetFont('DejaVu', '', 6);
         $internal="";
@@ -130,20 +134,35 @@ class Print_Ledger_Detail_Item extends PDFLand
                 $this->write_cell(20, $high, nbm($sum), 1, 0, 'R', true);
                 $internal=$row['jr_internal'];
                 $this->line_new(6);
-               // on the first line, the code for each column is displaid
+                // Payment info
+                // Prepare the query for reconcile date
+                $ret_reconcile=$this->ledger->db->execute('reconcile_date', array($row['jr_id']));
+                $max=Database::num_row($ret_reconcile);
+                for ($e=0; $e<$max; $e++)
+                {
+                    $ret_row=Database::fetch_array($ret_reconcile, $e);
+                    $msg=( $ret_row['qcode_bank']!="")?"[".$ret_row['qcode_bank']."]":$ret_row['jr_internal'];
+                    $this->write_cell(200, $high,
+                            sprintf(_("Paiement montant %s date %s methoded %s "), $ret_row['jr_montant'],
+                                    $ret_row['jr_date'], $msg
+                    ));
+                    $this->line_new(6);
+                }
+                // on the first line, the code for each column is displaid
                 if ( $this->show_col == true ) {
-                    //
+
+                    
                     // Header detail
-                    $this->LongLine(30,$high,'QuickCode');
-                    $this->write_cell(30,$high,'Poste');
-                    $this->LongLine(70,$high,'Libellé');
-                    $this->write_cell(20,$high,'Prix/Unit',0,0,'R');
-                    $this->write_cell(20,$high,'Quant.',0,0,'R');
-                    $this->write_cell(20,$high,'HTVA',0,0,'R');
-                    $this->write_cell(20,$high,'TVA NP',0,0,'R');
-                    $this->write_cell(20,$high,'Code TVA');
-                    $this->write_cell(20,$high,'TVA',0,0,'R');
-                    $this->write_cell(20,$high,'TVAC',0,0,'R');
+                    $this->LongLine(30,$high,_('QuickCode'));
+                    $this->write_cell(30,$high,_('Poste'));
+                    $this->LongLine(70,$high,_('Libellé'));
+                    $this->write_cell(20,$high,_('Prix/Unit'),0,0,'R');
+                    $this->write_cell(20,$high,_('Quant.'),0,0,'R');
+                    $this->write_cell(20,$high,_('HTVA'),0,0,'R');
+                    $this->write_cell(20,$high,_('TVA NP'),0,0,'R');
+                    $this->write_cell(20,$high,_('Code TVA'));
+                    $this->write_cell(20,$high,_('TVA'),0,0,'R');
+                    $this->write_cell(20,$high,_('TVAC'),0,0,'R');
                     $this->line_new(6);
                     $this->show_col=false;
                  } 
