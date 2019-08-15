@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NOALYSS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-08 01:27+0200\n"
+"POT-Creation-Date: 2019-08-15 11:12+0200\n"
 "PO-Revision-Date: 2019-07-31 13:23+0100\n"
 "Last-Translator: dany <danydb@noalyss.eu>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -61,6 +61,7 @@ msgstr ""
 #: include/class/class_acc_payment.php:290
 #: include/class/acc_payment.class.php:298
 #: include/class/acc_payment.class.php:301
+#: include/class/acc_payment.class.php:230
 msgid " Acompte à déduire"
 msgstr "Af te trekken voorschot"
 
@@ -214,6 +215,7 @@ msgstr ""
 #: include/class/class_acc_payment.php:298
 #: include/class/acc_payment.class.php:306
 #: include/class/acc_payment.class.php:310
+#: include/class/acc_payment.class.php:239
 msgid " Libellé du paiement"
 msgstr "Omschrijving van de betaling"
 
@@ -432,6 +434,7 @@ msgstr "Kan niet worden omgezet in PDF"
 #: include/class/class_acc_payment.php:328
 #: include/class/acc_payment.class.php:337
 #: include/class/acc_payment.class.php:341
+#: include/class/acc_payment.class.php:270
 msgid " paiement par "
 msgstr "betaling in"
 
@@ -4127,6 +4130,7 @@ msgstr "Ongeldige sleutel"
 #: include/class/acc_ledger_sold.class.php:707
 #: include/class/acc_ledger_sold.class.php:1074
 #: include/class/acc_ledger_sold.class.php:1330
+#: include/class/print_ledger_simple.class.php:103
 msgid "Client"
 msgstr "Klant"
 
@@ -4420,6 +4424,8 @@ msgstr "Stock code"
 #: include/class/acc_ledger_purchase.class.php:1843
 #: include/class/acc_ledger_sold.class.php:1417
 #: include/class/acc_ledger_purchase.class.php:1846
+#: include/template/acc_ledger_history_purchase_extended.php:130
+#: include/template/acc_ledger_history_sale_extended.php:131
 msgid "Code TVA"
 msgstr "BTW-code"
 
@@ -5623,6 +5629,8 @@ msgstr "Diff"
 #: include/export/export_ledger_csv.php:260
 #: include/class/acc_ledger_history_purchase.class.php:256
 #: include/class/acc_ledger_history_purchase.class.php:257
+#: include/class/acc_ledger_history_purchase.class.php:258
+#: include/class/acc_ledger_history_purchase.class.php:262
 msgid "DNA"
 msgstr ""
 
@@ -5861,6 +5869,11 @@ msgstr ""
 #: include/class/acc_ledger_history_generic.class.php:680
 #: include/class/acc_ledger_history_generic.class.php:767
 #: include/class/fiche.class.php:1397 include/class/fiche.class.php:1472
+#: include/export/export_ledger_csv.php:211
+#: include/class/print_ledger_simple.class.php:100
+#: include/class/acc_ledger_history_purchase.class.php:249
+#: include/export/export_ledger_csv.php:219
+#: include/class/acc_ledger_history_purchase.class.php:253
 msgid "Date"
 msgstr "Datum"
 
@@ -5870,6 +5883,7 @@ msgstr "Datum"
 
 #: include/class/acc_payment.class.php:294
 #: include/class/acc_payment.class.php:297
+#: include/class/acc_payment.class.php:226
 #, fuzzy, php-format
 msgid "Date %s"
 msgstr "Datum"
@@ -6162,6 +6176,9 @@ msgstr "Datum van de verrichting"
 #: include/class/acc_ledger_purchase.class.php:1824
 #: include/class/acc_ledger_sold.class.php:1398
 #: include/class/acc_ledger_purchase.class.php:1827
+#: include/export/export_ledger_csv.php:141
+#: include/class/acc_ledger_history_purchase.class.php:277
+#: include/class/acc_ledger_history_sale.class.php:263
 msgid "Date paiement"
 msgstr "Datum van de betaling"
 
@@ -6270,7 +6287,7 @@ msgstr ""
 #: include/ext/bilan_interne/class_acc_bilaninterne.php:274
 #: include/ext/bilan_interne/acc_bilaninterne.class.php:274
 #: include/class/acc_bilan.class.php:70 include/class/anc_print.class.php:142
-#: include/balance.inc.php:77
+#: include/balance.inc.php:77 include/impress_jrn.inc.php:132
 msgid "Depuis"
 msgstr "Vanaf"
 
@@ -6480,6 +6497,7 @@ msgstr "Kan dit bestand op te slaan"
 #: include/class/fiche.class.php:1476 include/lib/ac_common.php:1213
 #: include/template/param_jrn.php:85 include/class/fiche.class.php:1398
 #: include/class/fiche.class.php:1477
+#: include/class/print_ledger_simple.class.php:108
 msgid "Description"
 msgstr "Beschrijving"
 
@@ -9801,6 +9819,9 @@ msgstr "Formules"
 #: include/class/acc_ledger_purchase.class.php:1430
 #: include/class/acc_ledger_history_purchase.class.php:252
 #: include/class/acc_ledger_history_sale.class.php:246
+#: include/class/print_ledger_simple.class.php:105
+#: include/class/acc_ledger_history_purchase.class.php:253
+#: include/class/acc_ledger_history_purchase.class.php:257
 msgid "Fournisseur"
 msgstr "Leverancier"
 
@@ -10225,6 +10246,11 @@ msgstr ""
 #: include/class/acc_ledger_history_sale.class.php:248
 #: include/class/acc_ledger_history_purchase.class.php:255
 #: include/class/acc_ledger_history_sale.class.php:249
+#: include/template/acc_ledger_history_purchase_extended.php:128
+#: include/template/acc_ledger_history_sale_extended.php:129
+#: include/class/print_ledger_simple.class.php:110
+#: include/class/acc_ledger_history_purchase.class.php:256
+#: include/class/acc_ledger_history_purchase.class.php:260
 msgid "HTVA"
 msgstr "Zonder BTW"
 
@@ -10886,7 +10912,7 @@ msgstr "Detail van een afdruktaak boekhoudkundige"
 msgid "Impression du grand livre"
 msgstr "Het grootboek afdrukken"
 
-#: include/ext/bilan_interne/index.php:110
+#: include/ext/bilan_interne/index.php:110 include/lib/html_input.class.php:559
 msgid "Imprimer"
 msgstr ""
 
@@ -11162,6 +11188,8 @@ msgstr "Omgekeerde selectie"
 
 #: include/template/acc_ledger_history_purchase_extended.php:124
 #: include/template/acc_ledger_history_sale_extended.php:124
+#: include/template/acc_ledger_history_purchase_extended.php:125
+#: include/template/acc_ledger_history_sale_extended.php:126
 #, fuzzy
 msgid "Item"
 msgstr "Item code"
@@ -11379,6 +11407,7 @@ msgstr "Om de positie"
 #: include/template/stock_histo_search.php:47 include/class_anc_print.php:159
 #: include/class/class_anc_print.php:159 include/class/class_anc_print.php:161
 #: include/class/anc_print.class.php:155 include/class/anc_print.class.php:153
+#: include/impress_jrn.inc.php:143
 msgid "Jusque"
 msgstr "Peuter"
 
@@ -12217,6 +12246,10 @@ msgstr "Omschrijving van het menu"
 msgid "Libellé vide"
 msgstr "Volgt:"
 
+#: include/template/acc_ledger_history_purchase_oneline.php:66
+msgid "Lien"
+msgstr ""
+
 #: include/database.item.php:6 include/database.item.php:9
 #: include/database.item.php:11 include/database.item.php:14
 #: include/database.item.php:8
@@ -12255,6 +12288,12 @@ msgstr "Regel niet geïmporteerd"
 #, fuzzy
 msgid "Limite dossiers"
 msgstr "Records Management"
+
+#: include/lib/message_javascript.php:104
+msgid ""
+"Limite le type de fiche si vous choisissez la fiche à la saisie, uniquement "
+"avec journaux OD"
+msgstr ""
 
 #: include/lib/message_javascript.php:104
 msgid ""
@@ -12696,6 +12735,11 @@ msgstr "Bericht"
 #, fuzzy
 msgid "Met à jour toutes les dossiers et modèles"
 msgstr "Update"
+
+#: include/export/export_ledger_csv.php:143
+#, fuzzy
+msgid "Methode paiement"
+msgstr "Betaling"
 
 #: include/lib/message_javascript.php:72 include/lib/message_javascript.php:74
 msgid "Mettez le pourcentage <br> à zéro pour effacer la ligne"
@@ -13546,6 +13590,13 @@ msgstr "Bedragen min."
 msgid "Montant opération"
 msgstr "Datum van de verrichting"
 
+#: include/export/export_ledger_csv.php:142
+#: include/class/acc_ledger_history_purchase.class.php:279
+#: include/class/acc_ledger_history_sale.class.php:265
+#, fuzzy
+msgid "Montant paiement"
+msgstr "Datum van de betaling"
+
 #: include/template/stock_histo_search.php:55
 msgid "Montant supérieur ou égal à"
 msgstr "Bedrag groter dan of gelijk aan"
@@ -13673,6 +13724,12 @@ msgstr ""
 #, fuzzy
 msgid "MultiModule"
 msgstr "Module"
+
+#: include/class/acc_ledger_history_purchase.class.php:278
+#: include/class/acc_ledger_history_sale.class.php:264
+#, fuzzy
+msgid "Méthode paiement"
+msgstr "Betaling"
 
 #: include/ajax/ajax_preference.php:174 include/ajax/ajax_preference.php:185
 msgid "N'utilisez pas le même séparateur pour les champs et les décimales"
@@ -14413,6 +14470,8 @@ msgstr ""
 #: include/class/acc_ledger_history_sale.class.php:246
 #: include/class/acc_ledger_history_purchase.class.php:253
 #: include/class/acc_ledger_history_sale.class.php:247
+#: include/class/acc_ledger_history_purchase.class.php:254
+#: include/class/acc_ledger_history_purchase.class.php:258
 msgid "Note"
 msgstr "Nota"
 
@@ -14804,6 +14863,8 @@ msgstr "Nr."
 #: include/class/acc_ledger_history_generic.class.php:764
 #: include/export/export_ledger_csv.php:210
 #: include/class/acc_ledger_history_generic.class.php:765
+#: include/export/export_ledger_csv.php:212
+#: include/export/export_ledger_csv.php:220
 #, fuzzy
 msgid "N° Pièce"
 msgstr "Stuk nr."
@@ -15172,6 +15233,11 @@ msgstr "Werking omgekeerd"
 msgid "Opération non trouvée"
 msgstr "Handeling is niet gevonden"
 
+#: include/export/export_ledger_csv.php:144
+#, fuzzy
+msgid "Opération paiement"
+msgstr "Operatie van verkopen"
+
 #: include/operation_ods_new.inc.php:94
 #, fuzzy, php-format
 msgid "Opération rapprochée : %s"
@@ -15499,6 +15565,8 @@ msgstr "Eenheidsprijs"
 #: include/class/acc_ledger_search.class.php:631
 #: include/class/acc_ledger.class.php:2421
 #: include/class/acc_ledger_search.class.php:644
+#: include/class/acc_ledger_history_purchase.class.php:250
+#: include/class/acc_ledger_history_purchase.class.php:254
 msgid "Paiement"
 msgstr "Betaling"
 
@@ -15511,6 +15579,7 @@ msgstr "Betaling klant"
 #: include/class/class_acc_payment.php:304
 #: include/class/acc_payment.class.php:312
 #: include/class/acc_payment.class.php:316
+#: include/class/acc_payment.class.php:245
 msgid "Paiement encodé plus tard"
 msgstr "Later in te brengen"
 
@@ -15522,6 +15591,11 @@ msgstr "Betaling geregistreerd in"
 #: include/template/dashboard.php:105 include/template/dashboard.php:84
 msgid "Paiement fournisseur"
 msgstr "Betaling van de leverancier"
+
+#: include/class/print_ledger_detail_item.class.php:145
+#, php-format
+msgid "Paiement montant %s date %s methoded %s "
+msgstr ""
 
 #: include/database.item.php:226
 #, fuzzy
@@ -15922,6 +15996,7 @@ msgstr "Betaald"
 #: include/class/acc_ledger_purchase.class.php:1680
 #: include/class/acc_ledger_purchase.class.php:1698
 #: include/class/acc_ledger_purchase.class.php:1701
+#: include/class/print_ledger_simple.class.php:274
 msgid "Payé par"
 msgstr "Betaald deur"
 
@@ -16133,6 +16208,9 @@ msgstr "stuk"
 #: include/class/acc_ledger.class.php:858
 #: include/class/acc_ledger_search.class.php:646
 #: include/class/acc_ledger_search.class.php:958 include/lib/ac_common.php:1212
+#: include/class/print_ledger_simple.class.php:99
+#: include/class/acc_ledger_history_purchase.class.php:252
+#: include/class/acc_ledger_history_purchase.class.php:256
 msgid "Pièce"
 msgstr "Bewijs"
 
@@ -16831,16 +16909,22 @@ msgstr ""
 msgid "Priorité"
 msgstr "Prioriteit"
 
+#: include/class/print_ledger_simple.class.php:113
+msgid "Priv/DNA"
+msgstr ""
+
 #: include/template/impress_reconciliation_detail.php:10
 msgid "Prix HTVA"
 msgstr "Priijs exclusief BTW"
 
 #: include/template/acc_ledger_history_sale_extended.php:125
+#: include/template/acc_ledger_history_sale_extended.php:127
 #, fuzzy
 msgid "Prix Uni"
 msgstr "Prijs / A"
 
 #: include/template/acc_ledger_history_purchase_extended.php:125
+#: include/template/acc_ledger_history_purchase_extended.php:126
 #, fuzzy
 msgid "Prix Unit"
 msgstr "Prijs / A"
@@ -17239,6 +17323,8 @@ msgstr "Code"
 #: include/template/acc_ledger_history_purchase_extended.php:126
 #: include/template/acc_ledger_history_sale_extended.php:126
 #: include/template/stock_inv.php:71
+#: include/template/acc_ledger_history_purchase_extended.php:127
+#: include/template/acc_ledger_history_sale_extended.php:128
 msgid "Quantité"
 msgstr "Hoeveelheid"
 
@@ -17308,6 +17394,8 @@ msgstr "Quick Code of"
 #: include/class/acc_ledger_history_generic.class.php:768
 #: include/export/export_ledger_csv.php:211
 #: include/class/acc_ledger_history_generic.class.php:769
+#: include/export/export_ledger_csv.php:213
+#: include/export/export_ledger_csv.php:221
 msgid "QuickCode"
 msgstr "QuickCode"
 
@@ -18488,6 +18576,11 @@ msgstr "Voorraad"
 msgid "Stock et commande"
 msgstr "Voorraad in Bestelling"
 
+#: include/impress_jrn.inc.php:156
+#, fuzzy
+msgid "Style d'impression"
+msgstr "Print menu"
+
 #: include/ext/importbank/ajax.php:82 include/ext/importbank/ajax.php:83
 #, fuzzy
 msgid "Suggestion"
@@ -18761,6 +18854,8 @@ msgstr ""
 #: include/template/acc_ledger_history_sale_oneline.php:53
 #: include/class/acc_ledger_history_sale.class.php:249
 #: include/class/acc_ledger_history_sale.class.php:250
+#: include/template/acc_ledger_history_purchase_extended.php:129
+#: include/template/acc_ledger_history_sale_extended.php:130
 msgid "TVA"
 msgstr "BTW"
 
@@ -18779,6 +18874,7 @@ msgstr "Fiscaal aftrekbaar"
 
 #: include/template/ledger_detail_ach.php:134
 #: include/template/ledger_detail_ach.php:135
+#: include/class/print_ledger_simple.class.php:114
 msgid "TVA ND"
 msgstr "BTW ND"
 
@@ -18789,6 +18885,9 @@ msgstr "BTW ND"
 #: include/export/export_ledger_csv.php:262
 #: include/class/acc_ledger_history_purchase.class.php:258
 #: include/class/acc_ledger_history_purchase.class.php:259
+#: include/class/print_ledger_simple.class.php:116
+#: include/class/acc_ledger_history_purchase.class.php:260
+#: include/class/acc_ledger_history_purchase.class.php:264
 #, fuzzy
 msgid "TVA NP"
 msgstr "BTW ND"
@@ -18947,6 +19046,8 @@ msgstr "BTW ingevorderd"
 #: include/template/acc_ledger_history_sale_extended.php:55
 #: include/template/acc_ledger_history_sale_extended.php:130
 #: include/template/acc_ledger_history_sale_oneline.php:56
+#: include/template/acc_ledger_history_purchase_extended.php:131
+#: include/template/acc_ledger_history_sale_extended.php:132
 msgid "TVAC"
 msgstr "BTW Met"
 
@@ -18954,6 +19055,8 @@ msgstr "BTW Met"
 #: include/class/acc_ledger_history_sale.class.php:261
 #: include/class/acc_ledger_history_purchase.class.php:270
 #: include/class/acc_ledger_history_sale.class.php:262
+#: include/class/acc_ledger_history_purchase.class.php:271
+#: include/class/acc_ledger_history_purchase.class.php:276
 #, fuzzy
 msgid "TVAC/TTC"
 msgstr "BTW Met"
@@ -19128,7 +19231,8 @@ msgstr "Thema"
 #: include/class/acc_ledger_search.class.php:650
 #: include/class/fiche.class.php:1475
 #: include/class/acc_ledger_history_generic.class.php:683
-#: include/class/fiche.class.php:1476
+#: include/class/fiche.class.php:1476 include/export/export_ledger_csv.php:214
+#: include/export/export_ledger_csv.php:222
 msgid "Tiers"
 msgstr "Derde"
 
@@ -19518,6 +19622,12 @@ msgstr "Total Credit"
 #: include/fiche.inc.php:447
 #: include/class/acc_ledger_history_generic.class.php:738
 #: include/class/fiche.class.php:1564
+#: include/template/acc_ledger_history_sale_detail.php:155
+#: include/template/acc_ledger_history_purchase_detail.php:168
+#: include/template/acc_ledger_history_purchase_oneline.php:141
+#: include/template/acc_ledger_history_sale_oneline.php:121
+#: include/template/acc_ledger_history_purchase_extended.php:160
+#: include/template/acc_ledger_history_sale_extended.php:161
 msgid "Totaux"
 msgstr "Totalen"
 
@@ -21171,6 +21281,8 @@ msgstr "BTW-code"
 #: include/export/export_ledger_csv.php:198
 #: include/export/export_ledger_csv.php:219
 #: include/export/export_ledger_csv.php:213
+#: include/export/export_ledger_csv.php:215
+#: include/export/export_ledger_csv.php:223
 #, fuzzy
 msgid "commentaire"
 msgstr "Commentaar"
@@ -21541,6 +21653,8 @@ msgstr "onbestaand"
 #: include/class/acc_ledger_history_generic.class.php:681
 #: include/export/export_ledger_csv.php:214
 #: include/class/acc_ledger_history_generic.class.php:682
+#: include/export/export_ledger_csv.php:216
+#: include/export/export_ledger_csv.php:224
 #, fuzzy
 msgid "internal"
 msgstr "Intern"
@@ -21554,12 +21668,18 @@ msgstr "Intern"
 #: include/class/acc_ledger_history_sale.class.php:247
 #: include/class/acc_ledger_history_purchase.class.php:254
 #: include/class/acc_ledger_history_sale.class.php:248
+#: include/class/acc_ledger_history_purchase.class.php:255
+#: include/class/acc_ledger_history_purchase.class.php:259
 #, fuzzy
 msgid "interne"
 msgstr "Intern"
 
 #: include/class/acc_ledger_history.class.php:108
 #: include/class/acc_ledger_history.class.php:121
+#: include/class/acc_ledger_history.class.php:109
+#: include/class/acc_ledger_history.class.php:122
+#: include/class/acc_ledger_history.class.php:110
+#: include/class/acc_ledger_history.class.php:123
 msgid "invalid parameter"
 msgstr "ongeldig parameter "
 
@@ -21576,6 +21696,8 @@ msgstr "ongeldig parameter "
 #: include/class/acc_ledger_history_purchase.class.php:239
 #: include/class/acc_ledger_history_sale.class.php:233
 #: include/class/acc_ledger_history_generic.class.php:759
+#: include/class/acc_ledger_history_purchase.class.php:240
+#: include/class/acc_ledger_history_purchase.class.php:244
 #, fuzzy
 msgid "journal"
 msgstr "Journaal"
@@ -21738,6 +21860,8 @@ msgstr ""
 #: include/ajax/ajax_display_letter.php:55
 #: include/export/export_ledger_csv.php:221
 #: include/export/export_ledger_csv.php:215
+#: include/export/export_ledger_csv.php:217
+#: include/export/export_ledger_csv.php:225
 msgid "montant"
 msgstr "bedrag"
 
@@ -21911,6 +22035,12 @@ msgstr "Intern nr."
 msgid "n° ligne"
 msgstr "lijn nr"
 
+#: include/class/acc_ledger_history_purchase.class.php:280
+#: include/class/acc_ledger_history_sale.class.php:266
+#, fuzzy
+msgid "n° opération"
+msgstr "Operatienr."
+
 #: include/class_fiche.php:1282 include/template/impress_reconciliation.php:16
 #: include/class_fiche.php:1288 include/class_fiche.php:1305
 #: include/class/class_fiche.php:1305 include/class/class_fiche.php:1308
@@ -21963,6 +22093,10 @@ msgstr ""
 #: include/class/acc_ledger_history_purchase.class.php:250
 #: include/class/acc_ledger_history_sale.class.php:244
 #: include/class/acc_ledger_history_generic.class.php:764
+#: include/export/export_ledger_csv.php:210
+#: include/class/acc_ledger_history_purchase.class.php:251
+#: include/export/export_ledger_csv.php:218
+#: include/class/acc_ledger_history_purchase.class.php:255
 #, fuzzy
 msgid "operation"
 msgstr "Operatie"
@@ -22004,6 +22138,7 @@ msgstr "Gelinkte operaties"
 #: include/class/acc_ledger_history_sale.class.php:262
 #: include/class/acc_ledger_history_purchase.class.php:271
 #: include/class/acc_ledger_history_sale.class.php:263
+#: include/class/acc_ledger_history_purchase.class.php:272
 #, fuzzy
 msgid "opérations liées"
 msgstr "Gelinkte operaties"
@@ -22049,6 +22184,8 @@ msgid "ou générer une facture"
 msgstr "Creeren een faktuur"
 
 #: include/class/acc_ledger_history.class.php:46
+#: include/class/acc_ledger_history.class.php:47
+#: include/class/acc_ledger_history.class.php:48
 msgid "pa_ledger doit être un tableau"
 msgstr ""
 
@@ -22141,6 +22278,8 @@ msgstr "Accountant Vacature"
 #: include/export/export_ledger_csv.php:259
 #: include/class/acc_ledger_history_purchase.class.php:255
 #: include/class/acc_ledger_history_purchase.class.php:256
+#: include/class/acc_ledger_history_purchase.class.php:257
+#: include/class/acc_ledger_history_purchase.class.php:261
 msgid "privé"
 msgstr ""
 
@@ -22305,6 +22444,7 @@ msgstr "Zoeken"
 #: include/export/export_fiche_balance_csv.php:153
 #: include/export/export_fiche_balance_csv.php:154 include/fiche.inc.php:517
 #: include/fiche.inc.php:519 include/fiche.inc.php:528
+#: include/class/print_ledger_simple.class.php:101
 msgid "ref"
 msgstr "ref"
 
@@ -22562,6 +22702,8 @@ msgstr "onbekend btw"
 #: include/export/export_ledger_csv.php:261
 #: include/class/acc_ledger_history_purchase.class.php:257
 #: include/class/acc_ledger_history_purchase.class.php:258
+#: include/class/acc_ledger_history_purchase.class.php:259
+#: include/class/acc_ledger_history_purchase.class.php:263
 #, fuzzy
 msgid "tva non ded."
 msgstr "onbekend btw"
