@@ -27,6 +27,7 @@ require_once NOALYSS_INCLUDE."/class/acc_ledger_history.class.php";
 
 /**
  * @brief Display the operations for Purchase
+ * @see acc_ledger_historyTest.php
  */
 class Acc_Ledger_History_Purchase extends Acc_Ledger_History
 {
@@ -251,6 +252,10 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
     }
     function export_csv()
     {
+        // Prepare the query for reconcile date
+        $prepared_query=new Prepared_Query($this->db);
+        $prepared_query->prepare_reconcile_date();
+        
         $export=new Noalyss_Csv(_('journal'));
         $export->send_header();
         
@@ -273,6 +278,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
         $title[]=_("tva non ded.");
         $title[]=_("TVA NP");
        
+       
 
         if ( $own->MY_TVA_USE=='Y')
         {
@@ -288,7 +294,10 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
         $title[]=_("Devise TVA");
         $title[]=_("Taux ref");
         $title[]=_("Taux utilisé");
-        $title[]=_("opérations liées");
+ 	$title[]=_("Date paiement");
+        $title[]=_("Méthode paiement");
+        $title[]=_("Montant paiement");
+        $title[]=_("n° opération");
         $export->write_header($title);
         
         foreach ($this->data as $line)
@@ -309,22 +318,24 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
             $export->add($line['tva_sided'],"number");
             
             $a_tva_amount=array();
-            //- set all TVA to 0
-            foreach ($a_Tva as $l) {
-                $t_id=$l["tva_id"];
-                $a_tva_amount[$t_id]=0;
-            }
-            foreach ($line['detail_vat'] as $lineTVA)
+            if ($own->MY_TVA_USE=='Y')
             {
-                $idx_tva=$lineTVA['qp_vat_code'];
-                $a_tva_amount[$idx_tva]=$lineTVA['vat_amount'];
-             }
-            if ($own->MY_TVA_USE == 'Y' )
-            {
+                //- set all TVA to 0
+                foreach ($a_Tva as $l)
+                {
+                    $t_id=$l["tva_id"];
+                    $a_tva_amount[$t_id]=0;
+                }
+                foreach ($line['detail_vat'] as $lineTVA)
+                {
+                    $idx_tva=$lineTVA['qp_vat_code'];
+                    $a_tva_amount[$idx_tva]=$lineTVA['vat_amount'];
+                }
+
                 foreach ($a_Tva as $line_tva)
                 {
                     $a=$line_tva['tva_id'];
-                    $export->add($a_tva_amount[$a],"number");
+                    $export->add($a_tva_amount[$a], "number");
                 }
             }
             $export->add($line['tvac'],"number");
@@ -346,6 +357,8 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                 for ($e=0;$e<$max;$e++) {
                     $row=Database::fetch_array($ret_reconcile, $e);
                     $export->add($row['jr_date']);
+                    $export->add($row['qcode_bank']);
+                    $export->add($row['jr_montant'],"number");
                     $export->add($row['jr_internal']);
                 }
             }

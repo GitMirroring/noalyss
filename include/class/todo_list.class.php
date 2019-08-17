@@ -88,7 +88,7 @@ class Todo_List
         }
         if ( strcmp ($p_idx, 'tl_desc') == 0 )
         {
-            $p_value=mb_substr($p_value,0,400) ;
+            $p_value=mb_substr($p_value,0,1000) ;
             return true;
         }
         return true;
@@ -337,14 +337,14 @@ class Todo_List
         {
             // This a note the user owns
             $r.=  '<td>'.
-         HtmlInput::button('del','X','onClick="todo_list_remove('.$this->tl_id.')"','smallbutton').
+                Icon_Action::trash(uniqid(),sprintf("todo_list_remove('%s')",$this->tl_id)).
          '</td>';
         }
         else
         { 
             // this is a note shared by someone else
             $r.=  '<td>'.
-                HtmlInput::button('del','X','onClick="todo_list_remove_share('.$this->tl_id.',\''.$this->use_login.'\','.Dossier::id().')"','smallbutton').
+                Icon_Action::trash(uniqid(),sprintf("todo_list_remove_share('%s','%s','%s')",$this->tl_id,$this->use_login,Dossier::id())).
          '</td>';
         }
         

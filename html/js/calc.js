@@ -61,7 +61,7 @@ function cal()
     }
     catch(exception)
     {
-        alert_box("Mauvaise formule\n"+p_variable);
+        alert_box(content[48]+p_variable);
         return false;
     }
     p_history=p_variable+"="+result.toString()+'<br>'+p_history;

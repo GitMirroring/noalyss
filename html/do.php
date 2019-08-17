@@ -66,42 +66,6 @@ if ( ! $cn->exist_table('version')) {
     return;
 }
 
-/*
- * Set the user preference
- */
-if ( isset ($_POST['set_preference'])) {
-    //// Save value
-    $style_user=$http->post("style_user","string","Classique");
-    $lang=$http->post("lang","string","fr_FR.utf8");
-    $p_size=$http->post("p_size","number",50);
-    $pass_1=$http->post("pass_1","string","");
-    $pass_2=$http->post("pass_2","string","");
-    $p_email=$http->post("p_email","string","");
-    $minirap=$http->post("minirap","number",0);
-    $period=$http->post("period","number");
-    $csv_fieldsep=$http->post("csv_fieldsep","number");
-    $csv_decimal=$http->post("csv_decimal","number");
-    $csv_encoding=$http->post("csv_encoding");
-    
-    if (strlen(trim($pass_1)) != 0 && strlen(trim($pass_2)) != 0)
-    {
-	$g_user->save_password($pass_1,$pass_2);
-        
-    }
-    $g_user->set_periode($period);
-    $g_user->save_global_preference('THEME', $style_user);
-    $g_user->save_global_preference('LANG', $lang);
-    $g_user->save_global_preference('PAGESIZE', $p_size);
-    $g_user->save_global_preference('csv_fieldsep', $csv_fieldsep);
-    $g_user->save_global_preference('csv_decimal', $csv_decimal);
-    $g_user->save_global_preference('csv_encoding', $csv_encoding);
-    
-    $g_user->set_mini_report($minirap);
-    $_SESSION['g_theme']=$style_user;
-    $_SESSION['g_pagesize']=$p_size;
-    $_SESSION['g_lang']=$lang;
-    $g_user->save_email($p_email);
-}
 $style_user=$http->post("style_user","string",$_SESSION['g_theme']);
 
 html_page_start($style_user);

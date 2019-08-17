@@ -28,26 +28,24 @@ require_once NOALYSS_INCLUDE.'/lib/iperiod.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
 require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
-echo HtmlInput::title_box(_('Préférence'), 'preference_div');
-echo '<DIV class="content">';
-echo '<p class="notice">';
-echo _("Si vous validez, la page sera rechargée et vous pourriez perdre ce que vous faisiez");
-echo '</p>';
-//----------------------------------------------------------------------
-//
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+
+
 global $g_user;
 
 $g_user=new User($cn);
 $inside_dossier = false;
+$http=new HttpInput();
+$action=$http->post("action","string","display_form");
 
-if (isset($_REQUEST['gDossier']) && $_REQUEST['gDossier']<>0)
+if (isset($_REQUEST['gDossier']) && $http->request("gDossier","number",0) != 0 )
 {
-    $g_user->load_global_pref();
-    $msg = "";
-    $cn =Dossier::connect();
-    $g_user->cn = $cn;
-    $inside_dossier = true;
-    $local_pref=$g_user->get_preference();
+        $g_user->load_global_pref();
+        $msg = "";
+        $cn =Dossier::connect();
+        $g_user->cn = $cn;
+        $inside_dossier = true;
+        $local_pref=$g_user->get_preference();
 }
 //////////////////////////////////////////////////////////////////////////
 // Theme
@@ -62,11 +60,24 @@ if (isset($_REQUEST['gDossier']) && $_REQUEST['gDossier']<>0)
 	from theme
 	order by the_name");
     $style->selected =$_SESSION['g_theme'];
+    
+//----------------------------------------------------------------------------------------------
+// Display the form    
+//----------------------------------------------------------------------------------------------    
+if ( $action == 'display_form' )    
+{
+    echo HtmlInput::title_box(_('Préférence'), 'preference_div');
+    echo '<DIV class="content">';
+    echo '<p class="notice">';
+    echo _("Après validation, recharger si vous changez la langue");
+    echo '</p>';
+    //----------------------------------------------------------------------
+    //
 ?>
 
 <div class="content" >
 
-    <FORM  METHOD="POST">
+    <FORM  METHOD="POST" onsubmit="updatePreference();return false;" id="preference_frm">
 	<fieldset style="margin: 1%"><legend><?php echo _('Options Générales')?></legend>
 	    <table>
                 <tr>
@@ -272,3 +283,55 @@ if (isset($_REQUEST['gDossier']) && $_REQUEST['gDossier']<>0)
 
 	echo "</DIV>";
 	?>
+<?php
+}
+//---------------------------------------------------------------------------------------------------------------------
+// Save the form
+//---------------------------------------------------------------------------------------------------------------------
+if ($action == 'save')
+{
+       //// Save value
+    $style_user=$http->post("style_user","string","Classique");
+    $lang=$http->post("lang","string","fr_FR.utf8");
+    $p_size=$http->post("p_size","number",50);
+    $pass_1=$http->post("pass_1","string","");
+    $pass_2=$http->post("pass_2","string","");
+    $p_email=$http->post("p_email","string","");
+    $csv_fieldsep=$http->post("csv_fieldsep","number");
+    $csv_decimal=$http->post("csv_decimal","number");
+    $csv_encoding=$http->post("csv_encoding");
+    
+    if (strlen(trim($pass_1)) != 0 && strlen(trim($pass_2)) != 0)
+    {
+	$g_user->save_password($pass_1,$pass_2);
+        
+    }
+    if ( $inside_dossier)
+    {
+        $minirap=$http->post("minirap","number","0");
+        $period=$http->post("period","number");
+        $g_user->set_periode($period);
+        $g_user->set_mini_report($minirap);
+    }
+    $g_user->save_global_preference('THEME', $style_user);
+    $g_user->save_global_preference('LANG', $lang);
+    $g_user->save_global_preference('PAGESIZE', $p_size);
+    $g_user->save_global_preference('csv_fieldsep', $csv_fieldsep);
+    $g_user->save_global_preference('csv_decimal', $csv_decimal);
+    $g_user->save_global_preference('csv_encoding', $csv_encoding);
+    $g_user->save_email($p_email);
+    
+    $_SESSION['g_theme']=$style_user;
+    $_SESSION['g_pagesize']=$p_size;
+    $_SESSION['g_lang']=$lang;
+    
+    // find the right CSS theme
+    $style= $repo->get_value("select the_filestyle from theme
+                           where the_name=$1" ,[$style_user]);
+    if ($style == "")
+    {
+        $style = "style-classic7.css";
+    }
+    json_response(["style"=>$style]);
+    
+}

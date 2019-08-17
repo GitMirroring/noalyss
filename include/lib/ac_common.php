@@ -337,7 +337,7 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     <TITLE>$title</TITLE>
 	<link rel=\"icon\" type=\"image/ico\" href=\"favicon.ico\" />
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <LINK REL=\"stylesheet\" type=\"text/css\" href=\"".$style."?version=".SVNINFO."\" media=\"screen\"/>
+    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"".$style."?version=".SVNINFO."\" media=\"screen\"/>
     <link rel=\"stylesheet\" type=\"text/css\" href=\"./style-print.css?version=".SVNINFO."\" media=\"print\"/>" .
     $p_script2 . "
     ";

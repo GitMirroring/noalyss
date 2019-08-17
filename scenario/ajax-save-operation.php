@@ -28,7 +28,8 @@ $_POST=array (
   'rapt' => '',
   'div' => 'det2',
   'act' => 'save',
-  'op'=>'ledger'
+  'op'=>'ledger',
+  'jr_optype'=>'NOR'
 );
 $_POST['gDossier']=$gDossierLogInput;
 $_GET['gDossier']=$gDossierLogInput;

@@ -335,7 +335,7 @@ function result_card_search(req)
     }
     catch(e)
     {
-        alert_box("Impossible executer script de la reponse\n"+e.message);
+        alert_box(content[53]+"\n"+e.message);
     }
 
 }
@@ -392,7 +392,7 @@ function clean_Fid(p_ctl)
 }
 function errorFid(request,json)
 {
-    alert_box('erreur : ajax fiche');
+    alert_box(content[53]);
 }
 function update_value(text,li)
 {
@@ -533,7 +533,7 @@ function  successFill_ipopcard(req,json)
     }
     catch(e)
     {
-        alert_box("Impossible executer script de la reponse\n"+e.message);
+        alert_box(content[53]+"\n"+e.message);
     }
 }
 /**
@@ -838,9 +838,8 @@ function save_card_category(obj)
         alert_box('Erreur pas d\' attribut ipopup '+obj.id);
         return;
     };
-	try {
+try {
 		// Data must be taken here
-
     data=$('newcat').serialize(false);
     var dossier=$('gDossier').value;
     var queryString='ctl='+obj.ipopup+'&';

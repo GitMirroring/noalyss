@@ -78,7 +78,7 @@ function folder_display(p_user)
  */
 function folder_remove(p_user,p_dossier )
 {
-    smoke.confirm ('Confirmer',
+    smoke.confirm (content[50] ,
     function (e) {
         if (e ) {
             waiting_box();
@@ -119,7 +119,7 @@ function folder_add(p_user, p_dossier)
             var html = answer.getElementsByTagName('content');
             if (a.length == 0) {
                 var rec = req.responseText;
-                alert_box('erreur :' + rec);
+                alert_box('FOLDERADD-'+content[48] + rec);
             }
 
             var content = getNodeText(html[0]);

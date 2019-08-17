@@ -63,7 +63,7 @@ function infodiv(req, json)
     }
     catch (e)
     {
-        alert_box("answer_box Impossible executer script de la reponse\n" + e.message);
+        alert_box(content[53]+"\n" + e.message);
     }
 
 }
@@ -73,7 +73,7 @@ function infodiv(req, json)
  */
 function deleteRow(tb, obj)
 {
-    smoke.confirm('Confirmez effacement',function (e)
+    smoke.confirm(content[50],function (e)
     {
         if (e) {
             var td = obj.parentNode;
@@ -294,13 +294,13 @@ function toggleHideShow(p_obj, p_button)
     if (stat === 'none')
     {
         show(p_obj);
-        str = str.replace(/Afficher/, 'Cacher');
+        str = str.replace(/Afficher/, content[62]);
         g(p_button).value = str;
     }
     else
     {
         hide(p_obj);
-        str = str.replace(/Cacher/, 'Afficher');
+        str = str.replace(/Cacher/, content[63]);
         g(p_button).value = str;
     }
 }
@@ -397,21 +397,21 @@ function success_misc(req)
     }
     catch (e)
     {
-        alert_box("Impossible executer script de la reponse\n" + e.message);
+        alert_box(content[53]+"\n" + e.message);
     }
 
 
 }
 function loading()
 {
-    var str = '<h2> Un instant ...</h2>';
+    var str = '<h2>'+content[64]+'</h2>';
     str = str + '<image src="image/loading.gif" alt="chargement"></image>';
     return str;
 }
 
 function ajax_misc_failure()
 {
-    alert_box('Ajax Misc failed');
+    alert_box(content[53]);
 }
 /**
  *@brief remove a document_modele
@@ -609,17 +609,7 @@ function success_set_tva_label(req)
     }
 
 }
-/**
- *@brief set loading for waiting
- *@param name of ipopup
- *@see showIPopup
- *@deprecated
- */
-function set_wait_obsolete(name)
-{
-    var content = name + "_content";
-    $(content).innerHTML = 'Un instant...<image src="image/loading.gif" border="0" alt="Chargement...">';
-}
+
 /**
  * Create a div without showing it
  * @param {type} obj
@@ -747,7 +737,7 @@ function waiting_node()
 function waiting_box()
 {
     var obj = {
-        id: 'wait_box', html: '<h2 class="title">Chargement</h2>' + loading()
+        id: 'wait_box', html: '<h2 class="title">'+content[65]+'</h2>' + loading()
     };
     var y = fixed_position(10, 250)
     obj.style = y + ";width:20%;margin-left:40%;";
@@ -809,7 +799,7 @@ function success_box(req, json)
         if (a.length === 0)
         {
             var rec = req.responseText;
-            alert_box('erreur :' + rec);
+            alert_box(content[48] + rec);
         }
         var name_ctl = a[0].firstChild.nodeValue;
         var code_html = getNodeText(html[0]);
@@ -831,13 +821,13 @@ function success_box(req, json)
     }
     catch (e)
     {
-        alert_box("answer_box Impossible executer script de la reponse\n" + e.message);
+        alert_box(content[53]+"\n" + e.message);
     }
 }
 
 function error_box()
 {
-    alert_box('[error_box] ajax not implemented');
+    alert_box(content[53]);
 }
 /**
  * show the ledger choice
@@ -901,7 +891,7 @@ function show_ledger_choice(json_obj)
                             code_html.evalScripts();
                         }
                         catch (e) {
-                            alert_box("answer_box Impossible executer script de la reponse\n" + e.message);
+                            alert_box(content[53]+"\n" + e.message);
                         }
 
                     }
@@ -1084,9 +1074,9 @@ function show_calc()
     shtml +="<div class=\"bxbutton\">";
     shtml += '<a class="icon" onclick="pin(\'calc1\')" id="pin_calc1">&#xf047;</a>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" title="" class="icon">&#10761;</a>';
     shtml +="</div>";
-    shtml += '   <h2 class="title">Calculatrice</h2>';
-    shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >Calculatrice simplifiée: écrivez simplement les opérations que vous voulez puis la touche retour. exemple : 1+2+3*(1/5) <input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface" class="button" onClick="Clean();return false;" > <input type="button" value="Efface historique" class="button" onClick="CleanHistory();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
-    shtml += '</form><span class="highligth" style="display:block" id="sub_total">  Taper une formule (ex 20*5.1) puis enter  </span><span style="display:block"  id="listing"> </span>';
+    shtml += '   <h2 class="title">'+content[66]+'</h2>';
+    shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >'+content[68]+'<input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface" class="button" onClick="Clean();return false;" > <input type="button" value="Efface historique" class="button" onClick="CleanHistory();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
+    shtml += '</form><span class="highligth" style="display:block" id="sub_total">  '+ content[67]+'  </span><span style="display:block"  id="listing"> </span>';
 
     var obj = {id: sid, html: shtml,
         drag: false, style: 'z-index:98'
@@ -1150,7 +1140,7 @@ function success_display_periode(req)
     }
     catch (e)
     {
-        alert_box("success_display_periode Impossible executer script de la reponse\n" + e.message);
+        alert_box(content[53]+"\n" + e.message);
     }
 
 }
@@ -1218,7 +1208,7 @@ function fill_box(req)
             console.error(e);
             console.error("log answer = "+req.responseText);
         }
-        alert_box("Impossible executer script de la reponse\n" + e.message);
+        alert_box(content[53]+"\n" + e.message);
     }
 
 
@@ -1569,7 +1559,7 @@ function display_sub_menu(p_dossier,p_profile,p_dep,p_level)
  */
 function remove_sub_menu(p_dossier,profile_menu_id)
 {
-    confirm_box(null,'Confirme ?', 
+    confirm_box(null,content[47], 
     function () {
         waiting_box();
         new Ajax.Request('ajax_misc.php',
@@ -2121,7 +2111,7 @@ function view_action(ag_id, dossier, modify)
  * @see HtmlInput::filter_table
  */
 function filter_table(phrase, _id, colnr, start_row) {
-    $('info_div').innerHTML = "Un instant";
+    $('info_div').innerHTML = content[65];
     $('info_div').style.display = "block";
     var words = $(phrase).value.toLowerCase();
     var table = document.getElementById(_id);
@@ -2162,7 +2152,50 @@ function filter_table(phrase, _id, colnr, start_row) {
     }
     if (tot_found == 0) {
         if ($('info_' + _id)) {
-            $('info_' + _id).innerHTML = " Aucun résultat ";
+            $('info_' + _id).innerHTML = content[69]
+        }
+    } else {
+        if ($('info_' + _id)) {
+            $('info_' + _id).innerHTML = "  ";
+        }
+    }
+}
+/**
+ * @brief filter quickly a list
+ * @param  phrase : DOM id of the input text where we find the word to seach
+ * @param  _id : id of the list
+ * @returns nothing
+ * @see HtmlInput::filter_list
+ */
+function filter_list(phrase, _id) {
+    $('info_div').innerHTML = content[65];
+    $('info_div').style.display = "block";
+    var words = $(phrase).value.toLowerCase();
+    var l_list = document.getElementById(_id);
+
+    var ele;
+    var tot_found = 0;
+
+    for (var r = 0; r < l_list.childNodes.length; r++) {
+        var found = 0;
+        if ( l_list.childNodes[r].childElementCount == 0 )
+        {
+            ele = l_list.childNodes[r].innerHTML;
+        } else {
+               ele = l_list.childNodes[r].childNodes[0].innerHTML;
+        }
+        if ( ele.toLowerCase().indexOf(words) >= 0) {
+            tot_found++;
+            l_list.childNodes[r].style.display='block';
+        } else {
+            l_list.childNodes[r].style.display='none';
+        }
+        $('info_div').style.display = "none";
+        $('info_div').innerHTML = "";
+    }
+    if (tot_found == 0) {
+        if ($('info_' + _id)) {
+            $('info_' + _id).innerHTML = content[69]
         }
     } else {
         if ($('info_' + _id)) {
@@ -2296,7 +2329,7 @@ function show_bookmark(p_dossier) {
                         }
                         catch (e)
                         {
-                            alert_box("answer_box Impossible executer script de la reponse\n" + e.message);
+                            alert_box(content[53]+"\n" + e.message);
                         }
 
                     }
@@ -2330,7 +2363,7 @@ function save_bookmark() {
                         }
                         catch (e)
                         {
-                            alert_box("answer_box Impossible executer script de la reponse\n" + e.message);
+                            alert_box(content[53]+"\n" + e.message);
                         }
 
                     }
@@ -2362,7 +2395,7 @@ function remove_bookmark() {
                         }
                         catch (e)
                         {
-                            alert_box("answer_box Impossible executer script de la reponse\n" + e.message);
+                            alert_box(content[53]+"\n" + e.message);
                         }
 
                     }
@@ -2416,7 +2449,7 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post)
                         }
                         catch (e)
                         {
-                            alert_box("answer_box Impossible executer script de la reponse\n" + e.message);
+                            alert_box(content[53]+"\n" + e.message);
                         }
 
                     }
@@ -2536,7 +2569,7 @@ function action_tag_add(p_dossier, ag_id, t_id)
  */
 function action_tag_remove(p_dossier, ag_id, t_id)
 {
-    confirm_box(null,'Enlevez ce tags ?',function () {
+    confirm_box(null,content[50],function () {
         try {
             waiting_box();
             var queryString = "t_id=" + t_id + "&ag_id=" + ag_id + "&op=tag_remove&gDossier=" + p_dossier;
@@ -3426,14 +3459,16 @@ function progress_bar_start(p_taskid,p_message)
     try {
         progressIdx++;
         // block the window
-        var message="Un instant svp";
+        
+        var message='<p>'+content[70]+'</p>';
         if ( p_message) {
             message=p_message;
         }
+        
         add_div({id:"blocking"+progressIdx,cssclass:"smoke-base smoke-visible "});
         
         add_div({id:"message"+progressIdx,cssclass:"inner_box",style:"z-index:1000;position:fixed;top:30%;width:40%;left:30%"});
-        $("message"+progressIdx).update(message);
+        $("message"+progressIdx).update('<h3>'+content[65]+'</h3>'+message);
         // Create a div
         add_div({id: "progressDiv" + progressIdx, cssclass: "progressbar", html: '<span id="progressValue">0</span>'});
         // Check status every sec.
@@ -3560,4 +3595,30 @@ function show_ledger_fin_currency()
                     { 
                         parameters: {"op":"currencyCode","gDossier":dossier,"ledger":ledger}
                     });
+}
+
+/*** 
+ * Update Preference, applied the new CSS 
+ */
+function updatePreference()
+{
+    try {
+        waiting_box();
+        var param=$('preference_frm').serialize()+"&op=preference&action=save";
+        
+        new Ajax.Request("ajax_misc.php",{
+            method:"post",
+            parameters:param,
+            onSuccess:function (req) {
+                var style=req.responseText.evalJSON();
+                $('pagestyle').setAttribute('href',style.style);
+                removeDiv('preference_div');
+            }
+        });
+    } catch (e)
+    {
+        smoke.alert(content[48] + e.message);
+    }
+    remove_waiting_box();
+    
 }

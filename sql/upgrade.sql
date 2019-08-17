@@ -1,5 +1,4 @@
 begin;
-update attr_def set ad_extra = '[sql] fd_id in (select fd_id from fiche_def where frd_id in (4,8,9,14))' where ad_id=25;
 insert into "parameter" (pr_id ) values ('MY_DEFAULT_ROUND_ERROR_DEB');
 insert into "parameter" (pr_id ) values ('MY_DEFAULT_ROUND_ERROR_CRED');
 drop view if exists v_all_card_currency;

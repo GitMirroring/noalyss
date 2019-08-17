@@ -2755,6 +2755,7 @@ function load_all_script()
     static  $already_call=0;
     if ( $already_call==1)return;
     $already_call=1;
+    
     include_once NOALYSS_INCLUDE."/lib/message_javascript.php";
     echo JS_INFOBULLE;
     echo js_include('smoke.js');
@@ -2784,4 +2785,16 @@ function load_all_script()
     echo js_include('acc_currency.js');
 
 }
+/**
+ * Send header and json object
+ * @param array $p_answer this array will be converted to json object
+ * @see json_encode
+ */
+function json_response($p_answer)
+{
+    header("Content-type: text/json; charset: utf8", true);
+    echo json_encode($p_answer,
+            JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
+}
+
 ?>

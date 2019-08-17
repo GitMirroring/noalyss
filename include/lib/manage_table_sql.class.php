@@ -262,8 +262,11 @@ function check()
      * select must supply an array of possible values [val=> , label=>] with
      * the variable $this->key_name->a_value
      * @param $p_key col name
-     * @param $p_type is SELECT NUMERIC TEXT or DATE 
+     * @param $p_type is SELECT NUMERIC TEXT , DATE  or custom 
      * @param $p_array if type is  SELECT an array is expected
+     * @note if $p_type is custom  then a function named input_custom($p_key,$p_value) must be implemented 
+     * in the class
+     * @see Manage_Table_SQL:input_custom
      */
     function set_col_type($p_key, $p_value, $p_array=NULL)
     {
@@ -271,7 +274,7 @@ function check()
             throw new Exception("invalid key $p_key");
 
         if (!in_array($p_value,
-                        array("text", "numeric", "date", "select", "timestamp")))
+                        array("text", "numeric", "date", "select", "timestamp","custom")))
             throw new Exception("invalid type $p_value");
 
         $this->a_type[$p_key]=$p_value;
@@ -770,7 +773,11 @@ function check()
     /**
      * @brief display a data row in the table, with the order defined
      * in a_order and depending of the visibility of the column
+     * @param array $p_row contains a row from the database
+     * @see set_col_type
+     * @see input_custom
      * @see display_table
+     * @see display_row_custom
      */
     function display_row($p_row)
     {
@@ -832,8 +839,11 @@ function check()
                         echo td("--");
                     }
 		}
-                else
-                {
+                } elseif ($this->get_col_type($v)=="custom") {
+                    // For custom col
+                    echo td($this->display_row_custom($v,$p_row[$v]));
+                }
+                else {
                     echo td($p_row[$v]);
                 }
             }
@@ -847,7 +857,18 @@ function check()
 
         echo '</tr>';
     }
-
+    /**
+     * For the type custom , we can call a function to display properly the value
+     * @param $p_key string key name
+     * @param $p_value string value
+     * @see input_custom
+     * @see set_type
+     * @note must return a string which will be in surrounded by td in the function display_row
+     * @return string
+     */
+    function display_row_custom($p_key,$p_value) {
+        return $p_value;
+    }
     /**
      * @brief display into a dialog box the datarow in order 
      * to be appended or modified. Can be override if you need
@@ -926,6 +947,9 @@ function check()
                         $min_size=10;
                         $text->size=$min_size;
                         echo $text->input();
+                    } elseif ($this->a_type[$key]=="custom")
+                    {
+                        $this->input_custom($key,$value);
                     }
                     echo "</td>";
                 }
@@ -940,7 +964,26 @@ function check()
         }
         echo "</table>";
     }
-
+    /**
+     * @brief this function let you create your own input , for example for a ITEXT , a IRADIO , ...
+     * it must be override , there is not default
+     * @code 
+     * function input_custom($p_key,$p_value) {
+     *   switch ($p_key) {
+     *      case 'name':
+     *          $w=new ICard($p_key,$p_value);
+     *          $w->input();
+     *          break;
+     *   }
+     * }
+     * @endcode
+     * @parameter string $p_key name of the column
+     * @parameter string $p_value current value 
+     * @return nothing
+     */
+    function input_custom($p_key,$p_value) {
+     throw new Exception(__FILE__.":".__LINE__."-"._("non implémenté"));
+    }
     /**
      * @brief Save the record from Request into the DB and returns an XML
      * to update the Html Element

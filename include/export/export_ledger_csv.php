@@ -135,6 +135,18 @@ if ( $get_option=="E")
         }
         if ($ret_detail==null)
             return;
+        $a_heading[]="";
+        $a_heading[]="";
+        $a_heading[]="";
+        $a_heading[]=_("Date paiement");
+        $a_heading[]=_("Montant paiement");
+        $a_heading[]=_("Methode paiement");
+        $a_heading[]=_("Opération paiement");
+        
+        // Prepare the query for reconcile date
+        $prepared_query=new Prepared_Query($cn);
+        $prepared_query->prepare_reconcile_date();
+        
         $nb=Database::num_row($ret_detail);
         $title=array();
         foreach ($a_heading as $key=> $value)
@@ -155,6 +167,16 @@ if ( $get_option=="E")
                 if ($j>18)
                     $type="number";
                 $export->add($row[$j], $type);
+            }
+            //info payment
+            $ret_reconcile=$cn->execute('reconcile_date',array($row['jr_id']));
+            $max=Database::num_row($ret_reconcile);
+            for ($e=0;$e<$max;$e++) {
+                $row=Database::fetch_array($ret_reconcile, $e);
+                $export->add($row['jr_date']);
+                $export->add($row['jr_montant'],"number");
+                $export->add($row['qcode_bank']);
+                $export->add($row['jr_internal']);
             }
             $export->write();
         }
@@ -188,22 +210,10 @@ if ($get_option=="L" && ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL') )
     }else {
         $Row=$Jrn->get_rowSimple($get_from_periode, $get_to_periode);
     }
-    $cn->prepare('reconcile_date_csv',
-            'select  * 
-                     from 
-                       jrn 
-                     where 
-                       jr_id in 
-                           (select 
-                               jra_concerned 
-                               from 
-                               jrn_rapt 
-                               where jr_id = $1 
-                            union all 
-                            select 
-                            jr_id 
-                            from jrn_rapt 
-                            where jra_concerned=$1)');
+     // Prepare the query for reconcile date
+    $prepared_query=new Prepared_Query($cn);
+    $prepared_query->prepare_reconcile_date();
+    
     $title=array();
     $title[]=_("operation");
     $title[]=_("Date");
@@ -255,7 +265,7 @@ if ($get_option=="L" && ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL') )
        $export->add($line['currency_rate_ref']);
        
         //------ Add reconcilied operation ---------------
-        $ret_reconcile=$cn->execute('reconcile_date_csv',
+        $ret_reconcile=$cn->execute('reconcile_date',
                 array($line['jr_id']));
         $max=Database::num_row($ret_reconcile);
         if ($max>0)
@@ -263,9 +273,11 @@ if ($get_option=="L" && ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL') )
             for ($e=0; $e<$max; $e++)
             {
                 $row=Database::fetch_array($ret_reconcile, $e);
+                $export->add($row['qcode_bank']);
                 $export->add($row['jr_date']);
                 $export->add($row['jr_internal']);
                 $export->add($row['jr_pj_number']);
+                 $export->add($row['jr_montant'],"number");
             }
         }
         $export->write();

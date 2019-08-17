@@ -114,29 +114,6 @@ include_once NOALYSS_INCLUDE."/lib/user_menu.php";
 
 $priv=($User->admin==1)?_("Administrateur"):_("Utilisateur");
 load_all_script();
-if ( isset ($_POST['set_preference'])) {
-    //// Save value
-    $pass_1=$hi->post("pass_1","string", "");
-    $pass_2=$hi->post("pass_2","string", "");
-    $style_user=$hi->post("style_user","string", "");
-    $lang=$hi->post("lang", "string","");
-    $p_email=$hi->post("email","string", "");
-    if (strlen(trim($pass_1)) != 0 && strlen(trim($pass_2)) != 0)
-    {
-	$User->save_password($pass_1,$pass_2);
-        
-    }
-    if (trim($style_user) != "") {
-        $User->save_global_preference('THEME',$style_user);
-        $_SESSION['g_theme']=$style_user;   
-    }
-    if (trim($lang) != "") {
-        $User->save_global_preference('LANG', $lang);
-        $_SESSION['g_lang']=$lang;
-    }
-    $User->load();
-    $User->save_email($p_email);
-}
 echo '<div class="welcome"> ';
 /**
  *

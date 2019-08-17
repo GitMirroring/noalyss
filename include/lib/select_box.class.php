@@ -34,6 +34,7 @@ class Select_Box
     var $id;
     var $item;
     private $cnt;
+    private $filter; //!< allow a dynamic not case sensitive search
     var $default_value;
 
     /**
@@ -50,22 +51,27 @@ class Select_Box
         $this->cnt=0;
         $this->default_value=-1;
         $this->style_box="";
+	$this->filter="";
     }
 
     function input()
     {
+        $list_id=sprintf('%s_list',$this->id);
+        
         // Show when click
         $javascript=sprintf('$("%s_bt").onclick=function() {
 	try {
            var newDiv=$("select_box%s");
 	   var pos=$("%s_bt").cumulativeOffset();
            newDiv.setStyle({display:"block",position:"fixed",top:pos.top+25+"px",left:pos.left+5+"px"});
+         
+           if ( $("search_%s") ) { $("search_%s").focus();}
 
 	} catch(e) {
 	     alert(e.message);
 	}
        }
-        ', $this->id, $this->id, $this->id, $this->id);
+        ', $this->id, $this->id, $this->id, $list_id,$list_id);
         
         // Hide when out of the zone
         $javascript.=sprintf('$("select_box%s").onmouseleave=function() {
@@ -85,9 +91,14 @@ class Select_Box
         printf('<div class="select_box" id="select_box%s" style="%s">',
                 $this->id, $this->style_box);
 
-
+	// Show the filter if there is one, 
+	if ( $this->filter != "" ) {
+            
+            echo HtmlInput::filter_list($list_id);
+	}
+        
         // Print the list of possible options
-        printf('<ul id="%s_list">',$this->id);
+        printf('<ul id="%s">',$list_id);
         for ($i=0; $i<count($this->item); $i++)
         {
             if ($this->item[$i]['type']=="url")
@@ -161,6 +172,13 @@ class Select_Box
         $this->item[$this->cnt]['input']=clone $p_element;
         $this->item[$this->cnt]['type']='input';
         $this->cnt++;
+    }
+    function set_filter($p_filter)
+    {
+      $this->filter=$p_filter;
+    }
+    function get_filter() {
+      return $this->filter;
     }
 
 }

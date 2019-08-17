@@ -84,6 +84,6 @@ function modify_document_success_box(req,json)
     }
     catch(e)
     {
-        alert_box("answer_box Impossible executer script de la reponse\n"+e.message);
+        alert_box(content[53]+"\n"+e.message);
     }
 }

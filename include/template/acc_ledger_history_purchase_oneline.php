@@ -65,6 +65,9 @@ if (!defined('ALLOWED'))
         <th class="num">
             <?=_('Devise')?>
         </th>
+         <th>
+            <?=_('Lien')?>
+        </th>
     </tr>
 <?php 
 $nb_data=count($this->data);
@@ -129,7 +132,8 @@ for ($i=0;$i<$nb_data;$i++):
             $sep="";
             for ($e=0;$e<$max;$e++) {
                 $row=Database::fetch_array($ret_reconcile, $e);
-                echo $sep.HtmlInput::detail_op($row['jr_id'],$row['jr_date'].' '. $row['jr_internal']);
+                $msg=( $row['qcode_bank'] != "")?"[".$row['qcode_bank']."]":$row['jr_internal'];
+                echo $sep.HtmlInput::detail_op($row['jr_id'],$row['jr_date'].' '. $msg);
                 $sep=' ,';
         }
     } ?>

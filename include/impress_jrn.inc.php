@@ -129,7 +129,7 @@ $filter_year = " where p_exercice='" . sql_string($exercice) . "'";
 $periode_start = $cn->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode $filter_year order by p_start,p_end");
 $w->selected =  $from_periode ;
 
-print td('Depuis') . $w->input('from_periode', $periode_start);
+print td(_('Depuis')) . $w->input('from_periode', $periode_start);
 print '</TR>';
 print '<TR>';
 
@@ -140,7 +140,7 @@ $w->selected =  $to_periode ;
 if ($w->selected== '' ){
         $w->selected=$per_max->p_id;
 }
-print td('Jusque ') . $w->input('to_periode', $periode_end);
+print td(_('Jusque')). $w->input('to_periode', $periode_end);
 print "</TR><TR>";
 $a = array(
 	array('value' => 'L', 'label' => _('Liste opérations')),
@@ -153,7 +153,7 @@ print '</TR>';
 print '<TR>';
 $simple=$http->get("p_simple","string","L");
 $w->selected = $simple;
-echo '<td>Style d\'impression '.Icon_Action::infobulle(32).'</td>' . $w->input('p_simple', $a);
+echo '<td>'._("Style d'impression")." ".Icon_Action::infobulle(32).'</td>' . $w->input('p_simple', $a);
 print "</TR>";
 
 echo '</TABLE>';

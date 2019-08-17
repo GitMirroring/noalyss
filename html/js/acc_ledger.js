@@ -49,7 +49,7 @@ function update_predef(p_type, p_direct, p_ac)
                         if (a.length == 0)
                         {
                             var rec = req.responseText;
-                            alert_box('erreur :' + rec);
+                            alert_box(content[48] + rec);
                         }
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
@@ -113,7 +113,7 @@ function update_name()
  */
 function error_get_predef(request, json)
 {
-    alert_box("Erreur mise à jour champs non possible");
+    alert_box(content[49]);
 
 }
 /**
@@ -226,7 +226,7 @@ function success_update_bank(req)
         if (a.length == 0)
         {
             var rec = req.responseText;
-            alert_box('erreur :' + rec);
+            alert_box('UPDBK-'+content[48]+ rec);
         }
         var name_ctl = a[0].firstChild.nodeValue;
         var code_html = getNodeText(html[0]);
@@ -269,7 +269,7 @@ function success_get_last_date(req)
         if (a.length == 0)
         {
             var rec = req.responseText;
-            alert_box('erreur :' + rec);
+            alert_box('GETLASTDA:'+content[48] + rec);
         }
         var name_ctl = a[0].firstChild.nodeValue;
         var code_html = getNodeText(html[0]);
@@ -300,7 +300,7 @@ function success_get_pj(request, json)
  */
 function error_get_pj(request, json)
 {
-    alert_box("Ajax a echoue");
+    alert_box("GETPJ:"+content[48]);
 }
 
 /**
@@ -648,7 +648,7 @@ function go_next_concerned()
         {
             if (elmt.checked == true)
             {
-                return confirm("Si vous changez de page vous perdez les reconciliations, continuez ?");
+                return confirm(content[52]);
             }
         }
     }
@@ -1032,13 +1032,13 @@ function success_dsp_letter(req)
     }
     catch (e)
     {
-        alert_box("Impossible executer script de la reponse\n" + e.message);
+        alert_box("DSPLETTER:"+content[48] + e.message);
     }
 
 }
 function error_dsp_letter(req)
 {
-    alert_box('Erreur AJAX DSP_LETTER');
+    alert_box("DSPLETTER:"+content[48]);
 }
 
 function search_letter(obj)
@@ -1258,7 +1258,7 @@ function gestion_add_row()
 }
 function document_remove(p_dossier,p_div,p_jrid)
 {
-    smoke.confirm('Effacer ?', function (e) 
+    smoke.confirm(content[50], function (e) 
     {
         if (e) {
             new Ajax.Request('ajax_misc.php',

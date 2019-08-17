@@ -282,7 +282,11 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
         $title[]=_("Devise TVA");
         $title[]=_("Taux ref");
         $title[]=_("Taux utilisé");
-        $title[]=_("opérations liées");
+       $title[]=_("Date paiement");
+        $title[]=_("Méthode paiement");
+        $title[]=_("Montant paiement");
+        $title[]=_("n° opération");
+
         $export->write_header($title);
         
         foreach ($this->data as $line)
@@ -301,18 +305,19 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
             $export->add($line['tva_sided'],"number");
             
             $a_tva_amount=array();
-            //- set all TVA to 0
-            foreach ($a_Tva as $l) {
-                $t_id=$l["tva_id"];
-                $a_tva_amount[$t_id]=0;
-            }
-            foreach ($line['detail_vat'] as $lineTVA)
-            {
-                $idx_tva=$lineTVA['qs_vat_code'];
-                $a_tva_amount[$idx_tva]=$lineTVA['vat_amount'];
-             }
+           
             if ($own->MY_TVA_USE == 'Y' )
             {
+                 //- set all TVA to 0
+                foreach ($a_Tva as $l) {
+                    $t_id=$l["tva_id"];
+                    $a_tva_amount[$t_id]=0;
+                }
+                foreach ($line['detail_vat'] as $lineTVA)
+                {
+                    $idx_tva=$lineTVA['qs_vat_code'];
+                    $a_tva_amount[$idx_tva]=$lineTVA['vat_amount'];
+                 }
                 foreach ($a_Tva as $line_tva)
                 {
                     $a=$line_tva['tva_id'];
@@ -338,7 +343,10 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                 for ($e=0;$e<$max;$e++) {
                     $row=Database::fetch_array($ret_reconcile, $e);
                     $export->add($row['jr_date']);
+                    $export->add($row['qcode_bank']);
+                    $export->add($row['jr_montant'],"number");
                     $export->add($row['jr_internal']);
+
                 }
             }
 	    $export->write();

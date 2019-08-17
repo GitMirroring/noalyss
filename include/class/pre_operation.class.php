@@ -146,7 +146,7 @@ class Pre_operation
                 $this->detail=new Pre_op_advanced($this->db);
                 break;
             default:
-                throw new Exception('Load PreOperatoin failed'.$this->od_jrn_type);
+                throw new Exception(sprintf(_('Echec PreOperatoin chargement %s'),$this->od_jrn_type));
           }
         $this->detail->set_od_id($this->od_id);
         $this->detail->jrn_def_id=$this->jrn_def_id;

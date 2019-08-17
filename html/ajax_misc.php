@@ -51,7 +51,7 @@ $http=new HttpInput();
 
 mb_internal_encoding("UTF-8");
 
-$var = array('gDossier', 'op');
+$var = array( 'op');
 $cont = 0;
 /*  check if mandatory parameters are given */
 foreach ($var as $v)
@@ -62,8 +62,14 @@ foreach ($var as $v)
 		$cont = 1;
 	}
 }
-if ($cont != 0)
-	exit();
+
+// If not connected to a folder
+if ( ! isset($_REQUEST['gDossier'])) {
+    $gDossier=0;
+}
+
+if ($cont != 0) 	exit();
+
 extract($_REQUEST, EXTR_SKIP );
 if ( isset($div)) ajax_disconnected($div);
 global $g_user, $cn, $g_parameter;
@@ -247,6 +253,10 @@ $path = array(
     "tva_parameter"=>"ajax_tva_parameter",
     // Currency  , delete a rate
     "CurrencyRateDelete"=>"ajax_currency",
+    // payment_method
+    "payment_method"=>"ajax_payment_method",
+    // Display all cards using an accounting
+    "display_all_card"=>"ajax_display_all_card"
 )    ;
 
 if (array_key_exists($op, $path)) {
