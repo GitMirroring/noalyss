@@ -159,6 +159,7 @@ case 'dc':
 	      }
 	    $html.=$card;
             $html.='<p style="text-align:center">';
+            $html.=HtmlInput::button_close($ctl);
 	    if ( $can_modify==1)
 	      {
 		$html.=HtmlInput::submit('save',_('Sauver'));
