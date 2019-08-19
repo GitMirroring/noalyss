@@ -27,6 +27,7 @@
     - load a receipt document
     - for reconcialiation
     - update of analytic content
+* 
 */
 if ( ! defined('ALLOWED')) die(_('Non authorisé'));
 
@@ -283,7 +284,7 @@ case 'file':
         {
             // Not possible to remove the file thanks a modal dialog box,
             // because of the frameset
-            $x=sprintf('<a class="smallbutton" style="margin-left:12;margin-right:12" href="ajax_misc.php?op=ledger&gDossier=%d&div=%s&jr_id=%s&act=rmf" onclick="return confirm(\'Effacer le document ?\')">'.SMALLX.'</a>',
+            $x=sprintf('<a class="smallbutton icon" style="margin-left:12;margin-right:12" href="ajax_misc.php?op=ledger&gDossier=%d&div=%s&jr_id=%s&act=rmf" onclick="return confirm(\'Effacer le document ?\')">'."x".'</a>',
                        $gDossier,$div,$jr_id);
             
         }  

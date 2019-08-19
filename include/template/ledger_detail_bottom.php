@@ -189,11 +189,8 @@ if ($aRap  != null ) {
     
     // If write access , allow to drop Reconciles operations
     if ( $access=='W') {
-            $rmReconciliation=new IButton('rmr');
-            $rmReconciliation->label=SMALLX;
-            $rmReconciliation->class="tinybutton";
-            $rmReconciliation->javascript="return confirm_box(null,'"._("vous confirmez?")."',";
-            $rmReconciliation->javascript.=sprintf('function () { dropLink(\'%s\',\'%s\',\'%s\',\'%s\');deleteRowRec(\'%s\',$(\'row%d\'));})',
+            $js="return confirm_box(null,'"._("vous confirmez?")."',";
+            $js.=sprintf('function () { dropLink(\'%s\',\'%s\',\'%s\',\'%s\');deleteRowRec(\'%s\',$(\'row%d\'));})',
 					  $gDossier,
 					  $div,
 					  $jr_id,
@@ -201,8 +198,8 @@ if ($aRap  != null ) {
 					   $tableid,
                                           $e
 					  );
-
-      $remove=$rmReconciliation->input();
+            $remove=Icon_Action::trash(uniqid(), $js);
+//      $remove=$rmReconciliation->input();
     }
     else
       $remove='';
