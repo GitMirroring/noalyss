@@ -317,30 +317,32 @@ switch ($op)
         
         return;
     break;
-	case "remove_anc":
-		if ($g_user->check_module('ANCODS') == 0)
-			exit();
-		$cn->exec_sql("delete from operation_analytique where oa_group=$1", array($_GET['oa']));
-		break;
-	case "rm_stock":
-		if ($g_user->check_module('STOCK') == 0)
-			exit();
-		require_once NOALYSS_INCLUDE.'/constant.security.php';
-		$cn->exec_sql('delete from stock_goods where sg_id=$1', array($s_id));
-		$html = escape_xml($s_id);
-		header('Content-type: text/xml; charset=UTF-8');
-		printf('{"d_id":"%s"}', $s_id);
-		exit();
-		break;
-	//--------------------------------------------------
-	// get the last date of a ledger
-	case 'lastdate':
-		require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
-		$ledger = new Acc_Ledger_Fin($cn, $_GET['p_jrn']);
-		$html = $ledger->get_last_date();
-		$html = escape_xml($html);
-		header('Content-type: text/xml; charset=UTF-8');
-		echo <<<EOF
+    case "remove_anc":
+        if ($g_user->check_module('ANCODS') == 0)
+                exit();
+        $oa_group=$http->get("oa","number");
+        $cn->exec_sql("delete from operation_analytique where oa_group=$1", array($oa_group));
+        break;
+    case "rm_stock":
+        if ($g_user->check_module('STOCK') == 0)
+                exit();
+        require_once NOALYSS_INCLUDE.'/constant.security.php';
+        $cn->exec_sql('delete from stock_goods where sg_id=$1', array($s_id));
+        $html = escape_xml($s_id);
+        header('Content-type: text/xml; charset=UTF-8');
+        printf('{"d_id":"%s"}', $s_id);
+        exit();
+        break;
+    //--------------------------------------------------
+    // get the last date of a ledger
+    case 'lastdate':
+        require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
+        $p_jrn=$http->get('p_jrn','number');
+        $ledger = new Acc_Ledger_Fin($cn, $p_jrn);
+        $html = $ledger->get_last_date();
+        $html = escape_xml($html);
+        header('Content-type: text/xml; charset=UTF-8');
+	echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
 <code>e_date</code>
@@ -348,12 +350,13 @@ switch ($op)
 </data>
 EOF;
 
-		break;
-	case 'bkname':
-		require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
-		$ledger = new Acc_Ledger_Fin($cn, $_GET['p_jrn']);
-		$html = $ledger->get_bank_name();
-		$html = escape_xml($html);
+        break;
+    case 'bkname':
+        require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
+        $p_jrn=$http->get('p_jrn','number');
+        $ledger = new Acc_Ledger_Fin($cn, $p_jrn);
+        $html = $ledger->get_bank_name();
+        $html = escape_xml($html);
 		header('Content-type: text/xml; charset=UTF-8');
 		echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -364,16 +367,17 @@ EOF;
 EOF;
 		break;
 	// display new calendar
-	case 'cal':
-		require_once NOALYSS_INCLUDE.'/class/calendar.class.php';
-		/* others report */
-		$cal = new Calendar();
-		$cal->set_periode($per);
-                $notitle=$http->get("notitle", "string",0);
-		$html = "";
-		$html = $cal->display($http->get('t'),$notitle);
-		$html = escape_xml($html);
-		header('Content-type: text/xml; charset=UTF-8');
+    case 'cal':
+        require_once NOALYSS_INCLUDE.'/class/calendar.class.php';
+        /* others report */
+        $cal = new Calendar();
+        $per=$http->get("per","number");
+        $cal->set_periode($per);
+        $notitle=$http->get("notitle", "string",0);
+        $html = "";
+        $html = $cal->display($http->get('t'),$notitle);
+        $html = escape_xml($html);
+            header('Content-type: text/xml; charset=UTF-8');
 		echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
