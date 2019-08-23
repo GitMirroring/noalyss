@@ -581,6 +581,7 @@ function set_tva_label(obj)
 }
 /**
  *@brief display the popup with vat and explanations
+ *@param string req answer from ajax
  */
 function success_set_tva_label(req)
 {
