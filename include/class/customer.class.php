@@ -144,9 +144,10 @@ class Customer extends Fiche
 
                 // select the operation
                 //----
-                $Res2=$this->cn->exec_sql("select j_poste,j_montant,j_debit from jrnx where j_grpt=".$row1['j_grpt']);
+                $Res2=$this->cn->exec_sql("select j_poste,j_montant,j_debit from jrnx where j_grpt=$1",[$row1['j_grpt']]);
                 $a_row=Database::fetch_all($Res2);
-
+                if ($a_row==FALSE) $a_row=[];
+                
                 // Store the amount in the array
                 //---
                 foreach ($a_row as $e)

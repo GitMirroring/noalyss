@@ -69,18 +69,18 @@ class Anc_Balance_Simple extends Anc_Print
         $a=array();
         $count=0;
         $array=Database::fetch_all($res);
-        foreach ($array as $row)
-        {
-            $a[$count]['po_id']=$row['po_id'];
-            $a[$count]['sum_deb']=$row['sum_deb'];
-            $a[$count]['sum_cred']=$row['sum_cred'];
-            $a[$count]['po_name']=$row['po_name'];
-            $a[$count]['ga_description']=$row['ga_description'];
-            $a[$count]['solde']=abs($row['sum_deb']-$row['sum_cred']);
-            $a[$count]['debit']=($row['sum_deb']>$row['sum_cred'])?"debit":"credit";
-            $count++;
-        }
-        $this->has_data=$count;
+            foreach ($array as $row)
+            {
+                $a[$count]['po_id']=$row['po_id'];
+                $a[$count]['sum_deb']=$row['sum_deb'];
+                $a[$count]['sum_cred']=$row['sum_cred'];
+                $a[$count]['po_name']=$row['po_name'];
+                $a[$count]['ga_description']=$row['ga_description'];
+                $a[$count]['solde']=abs($row['sum_deb']-$row['sum_cred']);
+                $a[$count]['debit']=($row['sum_deb']>$row['sum_cred'])?"debit":"credit";
+                $count++;
+            }
+            $this->has_data=$count;
         return $a;
 
 

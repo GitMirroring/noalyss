@@ -225,6 +225,9 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
         $c=0;
 
         // Parse data from jrnx and fill diff. field
+        if ( $data_jrnx == FALSE ){
+            $data_jrnx=[];
+        }
         foreach ($data_jrnx as $code)
         {
             $idx_tva=0;

@@ -111,7 +111,8 @@ if (isset($_POST["FMOD_NAME"]))
 	if (Database::num_row($Res) != 0)
 	{
 		$a_lob = Database::fetch_all($Res);
-		for ($i = 0; $i < count($a_lob); $i++)
+                $nb_log=($a_lob == FALSE)?0:count($a_lob);
+		for ($i = 0; $i < $nb_lob; $i++)
 			$cn_mod->lo_unlink($a_lob[$i]['jr_pj']);
 	}
 	$Res = $cn_mod->exec_sql("truncate table centralized");

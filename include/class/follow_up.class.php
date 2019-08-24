@@ -772,7 +772,7 @@ class Follow_Up
         if ($a_row==false || sizeof($a_row)==0 )
         {
             $r='<div style="clear:both">';
-            $r.='<hr>Aucun enregistrement trouvé';
+            $r.='<hr>'._("Aucun enregistrement trouvé");
             $r.="</div>";
             return $r;
         }

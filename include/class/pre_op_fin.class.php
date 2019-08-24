@@ -118,14 +118,14 @@ class Pre_op_fin extends Pre_operation_detail
         return $array;
     }
     /*!\brief load the data from the database and return an array
-     * \return an array 
+     * \return an array  or FALSE is nothing found
      */
     function load()
     {
         $sql="select opd_id,opd_poste,opd_amount,opd_comment,opd_debit".
-             " from op_predef_detail where od_id=".$this->operation->od_id.
+             " from op_predef_detail where od_id=$1 ".
              " order by opd_id";
-        $res=$this->db->exec_sql($sql);
+        $res=$this->db->exec_sql($sql,[$this->operation->od_id]);
         $array=Database::fetch_all($res);
         return $array;
     }

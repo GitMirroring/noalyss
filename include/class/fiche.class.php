@@ -1163,7 +1163,7 @@ class Fiche
         $sql="select ad_value from fiche_detail where ad_id=23 and f_id=$1";
         $Res=$this->cn->exec_sql($sql,array($this->id));
         $r=Database::fetch_all($Res);
-        if ( sizeof($r) == 0 )
+        if ( $r == FALSE || sizeof($r) == 0 )
             return null;
         return $r[0]['ad_value'];
     }

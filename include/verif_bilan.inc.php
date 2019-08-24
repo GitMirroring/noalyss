@@ -66,7 +66,7 @@ order by jrn_def_name
 $res=$cn->exec_sql($sql);
 $jrn=Database::fetch_all($res);
 
-$nb_jrn= count($jrn);
+$nb_jrn= ($jrn == FALSE) ?0 :count($jrn);
 if ( $jrn ===false  ) {
     echo $g_succeed." "._("Aucune anomalie dans les montants des journaux");
 }
@@ -158,7 +158,8 @@ having count(*) > 1
         $poste=$cn->execute('get_poste',array($a_fiche_id[$i]['f_id']));
         $tmp_qcode=$cn->execute('get_qcode',array($a_fiche_id[$i]['f_id']));
         $qcode=Database::fetch_all($tmp_qcode);
-        if ( $qcode[0]['qcode']=="") {
+        
+        if ( $qcode == FALSE || $qcode[0]['qcode']=="") {
             continue;
         }
     ?>
@@ -171,7 +172,8 @@ having count(*) > 1
         </li>
         <ul>
         <?php $all_dep=Database::fetch_all($poste); 
-        for ($e=0;$e<count($all_dep);$e++):
+        $nb_dep = ($all_dep == FALSE ) ? 0 :count($all_dep);
+        for ($e=0;$e<count($nb_dep);$e++):
         ?>
             <li>
                 <?php echo HtmlInput::history_account($all_dep[$e]['j_poste'],$all_dep[$e]['j_poste'],' display:inline ')?>
@@ -229,7 +231,7 @@ $nb_account_used=count ($a_account_used);
         <?php
             $ret_operation=$cn->execute('get_operation',array($a_account_used[$i]['f_id']));
                  $a_operation=Database::fetch_all($ret_operation); 
-                 $nb_operation=count($a_operation);
+                 $nb_operation=($a_operation == FALSE) ? 0 : count($a_operation);
         ?>
         <table class="result">
             <?php for ($x=0;$x<$nb_operation;$x++):?>

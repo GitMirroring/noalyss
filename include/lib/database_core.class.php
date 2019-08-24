@@ -728,7 +728,7 @@ class DatabaseCore
 
     /**\brief wrapper for the function pg_fetch_all
      * \param $ret is the result of pg_exec (exec_sql)
-     * \return double array (row x col )
+     * \return double array (row x col ) or false
      */
 
     static function fetch_all($ret)

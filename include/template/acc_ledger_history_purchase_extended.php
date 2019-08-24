@@ -131,7 +131,7 @@ $a_detail=Database::fetch_all($det);
                     <th class="num"><?=_("TVAC")?></th>
                 </tr>
 <?php
-$nb_detail=count($a_detail);
+$nb_detail=($a_detail == FALSE)?0 : count($a_detail);
 for ($j=0;$j<$nb_detail;$j++):
 ?>  
                 <tr >

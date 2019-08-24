@@ -443,7 +443,7 @@ class Acc_Ledger extends jrn_def_sql
         $sql="select jrn_deb_max_line as value from jrn_def where jrn_def_id=$1";
         $r=$this->db->exec_sql($sql, array($this->id));
         $Res=Database::fetch_all($r);
-        if (sizeof($Res)==0)
+        if ($Res == FALSE || sizeof($Res)==0)
             return 1;
         return $Res[0]['value'];
     }
@@ -469,6 +469,7 @@ class Acc_Ledger extends jrn_def_sql
         $array=Database::fetch_all($ret);
         $deb=0.0;
         $cred=0.0;
+        if ( $array==FALSE) $array=[];
         foreach ($array as $line)
         {
 
@@ -533,7 +534,7 @@ class Acc_Ledger extends jrn_def_sql
         $r=$this->db->exec_sql($sql, array($this->id));
 
         $res=Database::fetch_all($r);
-        if (empty($res))
+        if ($res==FALSE || empty($res))
             return null;
 
         return $res[0];
