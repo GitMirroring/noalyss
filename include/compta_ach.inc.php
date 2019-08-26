@@ -199,7 +199,7 @@ if (isset($_POST['record']))
                     else
                     {
                         // warning because date is invalid
-                        echo '<p class="notice">'._('Date invalide, opération non extournée').'</p>';
+                        echo '<span class="warning">'._('Date invalide, opération non extournée').'</span>';
                     }
                 }
                 echo '<ul class="aligned-block">';
@@ -249,7 +249,8 @@ echo '</div>';
 
 echo '<div class="content">';
 
-echo '<span class="warning">'.$p_msg.'</span>';
+if ( $p_msg !="" ) echo '<span class="warning">'.$p_msg.'</span>';
+
 try
 {
     $payment=$http->request("e_mp", "string",0);

@@ -209,15 +209,15 @@ show_tabs(a_tab,'facturation_div_id');
                     }
                     catch (Exception $e)
                     {
-                        echo '<p class="notice">'._('Opération non extournée').
+                        echo '<span class="warning">'._('Opération non extournée').
                             $e->getMessage().
-                            '</p>';
+                            '</span>';
                     }
                 }
                 else
                 {
                     // warning because date is invalid
-                    echo '<p class="notice">'._('Date invalide, opération non extournée').'</p>';
+                    echo '<span class="warning">'._('Date invalide, opération non extournée').'</span>';
                 }
             }
             echo '<ul class="aligned-block">';
@@ -270,7 +270,7 @@ echo $op->form_get('do.php?'.$url);
 echo '</div>';
 */
 echo '<div class="content">';
-echo '<span class="warning">'.$p_msg.'</span>';
+if ( $p_msg !="" ) echo '<span class="warning">'.$p_msg.'</span>';
 try
 {
     $payment=$http->request("e_mp","string", 0);
