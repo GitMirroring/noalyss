@@ -63,7 +63,6 @@ class Acc_Ledger extends jrn_def_sql
 {
 
     var $id;     /**< jrn_def.jrn_def_id */
-    var $name;   /**< jrn_def.jrn_def_name */
     var $db;     /**< database connextion */
     var $row;    /**< row of the ledger */
     var $type;   /**< type of the ledger ACH ODS FIN   VEN or GL */

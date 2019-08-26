@@ -76,7 +76,7 @@ $jrn_type = $Jrn->get_type();
 
 $pdf = Print_Ledger::factory($cn, $p_simple, "PDF", $Jrn);
 
-$pdf->setDossierInfo($Jrn->name);
+$pdf->setDossierInfo($Jrn->jrn_def_name);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAuthor('NOALYSS');
