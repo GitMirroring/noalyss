@@ -68,7 +68,6 @@ if (isset($_POST['view_invoice']))
 		echo '<div class="content">';
 		echo '<div id="confirm_div_id" style="width: 47%; float: left;">';
                 echo h1(_("Confirmation"));
-                echo h1(_("Confirmation"));
                 echo span(_("Vous devez encore confirmer"),' class="notice"');
                 echo '</div>';
 
