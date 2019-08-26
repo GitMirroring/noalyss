@@ -54,9 +54,7 @@ input:focus {
     font-style: italic;
     
 }
-span.notice {
-    font-weight: bold;
-}
+
 a.mtitle span.notice {
     text-decoration: underline;
 }
@@ -2280,4 +2278,14 @@ div.progressbar {
     background-color:darkblue;
     color:antiquewhite;
     font-weight: bolder;
+}
+/**
+ * Warning
+ */
+span.warning {
+    color:red;
+    font-style: normal;
+    font-weight: bold;
+    background-color: #eddadd;
+    padding:10px;
 }

@@ -2226,3 +2226,13 @@ div.progressbar {
     color:antiquewhite;
     font-weight: bolder;
 }
+/**
+ * Warning
+ */
+span.warning {
+    color:red;
+    font-style: normal;
+    font-weight: bold;
+    background-color: #eddadd;
+    padding:10px;
+}
