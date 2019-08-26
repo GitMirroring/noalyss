@@ -137,7 +137,7 @@ if ( isset($_POST['correct']))
 //----------------------------------------
 // Blank form
 //----------------------------------------
-echo '<span class="warning">'.$p_msg.'</span>';
+if ( $p_msg !="" ) echo '<span class="warning">'.$p_msg.'</span>'; 
 
 echo '<form class="print" name="form_detail" enctype="multipart/form-data" class="print" METHOD="POST">';
 echo HtmlInput::hidden('ledger_type','fin');
