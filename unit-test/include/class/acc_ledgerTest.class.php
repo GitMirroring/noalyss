@@ -847,8 +847,8 @@ class Acc_LedgerTest extends TestCase
                 'jrn_def_pj_pref'=>'TT/',
                 'min_row'=>5,
                 'p_description'=>'LEDGER UNIT TEST',
-                'jrn_def_negative_amount'=>0,
-                'jrn_def_negative_warning'=>'Warning'];
+                'negative_amount'=>0,
+                'negative_warning'=>'Warning'];
         
 
         $this->object->save_new($array);
@@ -874,7 +874,9 @@ class Acc_LedgerTest extends TestCase
                 'p_jrn_type'=>'ODS',
                 'jrn_def_pj_pref'=>'TT/',
                 'min_row'=>5,
-                'p_description'=>'LEDGER UNIT TEST'];
+                'p_description'=>'LEDGER UNIT TEST',
+                'negative_amount'=>0,
+                'negative_warning'=>'Warning'];
 
         $this->object->save_new($array);
         $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);
