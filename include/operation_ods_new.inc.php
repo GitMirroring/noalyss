@@ -63,7 +63,7 @@ if ( isset ($_GET['action']) && ! isset($_POST['correct']) && ! isset($correct) 
             $p_post=null;
             if ( isset($_REQUEST['pre_def']) && $_REQUEST['pre_def'] != '')
             {
-                $op->set_od_id($_REQUEST['pre_def']);
+                $op->set_od_id($http->request('pre_def','number'));
                 $p_post=$op->compute_array();
             }
 	}

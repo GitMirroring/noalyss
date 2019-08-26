@@ -104,18 +104,20 @@ class Periode
     {
         /* if jrn_Def_id == 0 then we check the global otherwise we check
           a ledger */
-        if ($this->jrn_def_id!=0)
+        if ($this->jrn_def_id!=0){
             $sql="select status from jrn_periode ".
-                    " where jrn_def_id=".$this->jrn_def_id.
-                    " and p_id =".$this->p_id;
-        else
+                    " where jrn_def_id=$1 ".
+                    " and p_id = $2";
+            $status=$this->cn->get_value($sql,[$this->jrn_def_id,$this->p_id]);
+        }
+        else {
             $sql="select p_closed as status from parm_periode ".
                     " where ".
-                    " p_id =".$this->p_id;
-        $res=$this->cn->exec_sql($sql);
-        $status=Database::fetch_result($res, 0, 0);
-        if ($status=='OP'||$status=='f')
-            return 1;
+                    " p_id = $1 ";
+            $status=$this->cn->get_value($sql,[$this->p_id]);
+        }
+            
+        if ($status=='OP'||$status=='f')            return 1;
         return 0;
     }
 

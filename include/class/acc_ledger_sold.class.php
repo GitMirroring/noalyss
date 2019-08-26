@@ -62,7 +62,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
      * \throw Exception if an error occurs
      */
 
-    public function verify($p_array) {
+    public function verify_operation($p_array) {
         global $g_parameter, $g_user;
         
         if (is_array($p_array ) == false || empty($p_array))
@@ -904,6 +904,8 @@ EOF;
             $r.='<br>Total '.hb($tot);
         }
         $r.='</div>';
+  
+            
         /*  Add hidden */
         $r.=HtmlInput::hidden('e_client', $e_client);
         $r.=HtmlInput::hidden('nb_item', $nb_item);
@@ -957,6 +959,13 @@ EOF;
                 $r.=HtmlInput::hidden("e_march" . $i . "_tva_amount", ${"e_march" . $i . "_tva_amount"});
             }
             $r.=HtmlInput::hidden("e_quant" . $i, ${"e_quant" . $i});
+        }
+        /* 
+         * warning if the amount is positive and expecting a negative one
+         */
+        $negative=$this->display_negative_warning($tot);
+        if ( $negative != "") {
+         $r.=span($negative,'class="warning" ');   
         }
         return $r;
     }

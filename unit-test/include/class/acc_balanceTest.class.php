@@ -18,11 +18,13 @@ class Acc_BalanceTest extends TestCase
      */
     protected function setUp()
     {
-        global $g_connection, $g_parameter;
+        global $g_connection, $g_parameter,$g_user;
         $_REQUEST['gDossier']=DOSSIER;
         $g_connection=new Database(DOSSIER);
         $g_parameter=new Noalyss_Parameter_Folder($g_connection);
         $this->object=new Acc_Balance($g_connection);
+       
+        
     }
 
     /**
@@ -40,11 +42,12 @@ class Acc_BalanceTest extends TestCase
      */
     public function testGet_row()
     {
-        $this->object->get_row(1,200);
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'DATA : cannot be tested'
-        );
+        global $g_connection,$g_user;
+        $g_user=new User($g_connection,1);
+        
+        $max=$g_connection->get_value("select max(p_id) from parm_periode");
+        $min=$g_connection->get_value("select min(p_id) from parm_periode");
+        $this->object->get_row($min,$max);
     }
 
     /**

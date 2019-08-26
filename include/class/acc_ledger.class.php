@@ -22,6 +22,7 @@ require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
+require_once NOALYSS_INCLUDE.'/lib/input_switch.class.php';
 require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
@@ -75,11 +76,12 @@ class Acc_Ledger extends jrn_def_sql
     function __construct($p_cn, $p_id)
     {
         $this->id=$p_id;
-        $this->name=&$this->jrn_def_name;
+        $this->ledger_name=&$this->jrn_def_name;
         $this->jrn_def_id=&$this->id;
         $this->db=$p_cn;
         $this->row=null;
         $this->nb=MAX_ARTICLE;
+        parent::__construct($p_cn, $p_id);
     }
 
     function get_last_pj()
@@ -104,7 +106,23 @@ class Acc_Ledger extends jrn_def_sql
             $this->db->create_sequence("s_jrn_pj".$this->id);
         return 0;
     }
-
+    /**
+     * Set the jrn_def.jrn_def_id
+     * @param integer $p_id
+     */
+    function set_ledger_id($p_id)
+    {
+        $this->id=$p_id;
+        $this->jrn_def_id=&$this->id;
+    }
+    /**
+     * Set the jrn_def.jrn_def_id
+     * @return integer
+     */
+    function get_ledger_id()
+    {
+        return $this->id;
+    }
     /**
      * @brief Return the type of a ledger (ACH,VEN,ODS or FIN) or GL
      *
@@ -113,7 +131,7 @@ class Acc_Ledger extends jrn_def_sql
     {
         if ($this->id==0)
         {
-            $this->name=_(" Tous les journaux");
+            $this->ledger_name=_(" Tous les journaux");
             $this->type="GL";
             return "GL";
         }
@@ -370,8 +388,8 @@ class Acc_Ledger extends jrn_def_sql
     {
         if ($this->id==0)
         {
-            $this->name=_("Grand Livre");
-            return $this->name;
+            $this->ledger_name=_("Grand Livre");
+            return $this->ledger_name;
         }
 
         $Res=$this->db->exec_sql("select jrn_def_name from ".
@@ -380,7 +398,7 @@ class Acc_Ledger extends jrn_def_sql
         if ($Max==0)
             return null;
         $ret=Database::fetch_array($Res, 0);
-        $this->name=$ret['jrn_def_name'];
+        $this->ledger_name=$ret['jrn_def_name'];
         return $ret['jrn_def_name'];
     }
 
@@ -417,18 +435,15 @@ class Acc_Ledger extends jrn_def_sql
         if ($this->id==0)
             return;
 
-        $Res=$this->db->exec_sql("select jrn_Def_id,jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_def_type,
-                                 jrn_deb_max_line,jrn_cred_max_line,jrn_def_ech,jrn_def_ech_lib,jrn_def_code,
-                                 jrn_def_fiche_deb,jrn_def_fiche_cred,jrn_def_pj_pref
+        $Res=$this->db->get_row("select *
                                  from jrn_Def
                                  where jrn_def_id=$1", array($this->id));
-        $Count=Database::num_row($Res);
-        if ($Count==0)
+        if ($Res == NULL)
         {
             echo '<DIV="redcontent"><H2 class="error">'._('Parametres journaux non trouves').'</H2> </DIV>';
             return null;
         }
-        return Database::fetch_array($Res, 0);
+        return $Res;
     }
 
     /**
@@ -1015,7 +1030,7 @@ class Acc_Ledger extends jrn_def_sql
      * permitted card, 5 not in the user's period, 6 closed period
      *
      */
-    function verify($p_array)
+    function verify_operation($p_array)
     {
         if (is_array($p_array)==false||empty($p_array))
             throw new Exception("Array empty");
@@ -2285,6 +2300,12 @@ class Acc_Ledger extends jrn_def_sql
             ["label"=>_("Désactivé"),"value"=>0]
         ];
         $actif->selected=$this->jrn_enable;
+        
+        $negative=new InputSwitch('negative_amount',$this->jrn_def_negative_amount);
+
+        $negative_warning=new IText("negative_warning",_($this->jrn_def_negative_warning));
+        $negative_warning->size=80;
+        
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
@@ -2337,6 +2358,12 @@ class Acc_Ledger extends jrn_def_sql
             {
                 throw new Exception(_('Choix du type de journal est obligatoire'));
             }
+            if ($negative_amount == 1 && trim($negative_warning)=="") {
+                throw new Exception(_("Avertissement ne peut être vide"));
+            }
+            if ( $negative_amount <> 0 && $negative_amount <> 1 ){
+                  throw new Exception(_("Valeur invalide"));
+            }
         }
         catch (Exception $e)
         {
@@ -2365,6 +2392,9 @@ class Acc_Ledger extends jrn_def_sql
         $this->jrn_deb_max_line=($min_row<1)?1:$min_row;
         $this->jrn_def_description=$p_description;
         $this->jrn_enable=$jrn_enable;
+        $this->jrn_def_negative_amount=$negative_amount;
+        $this->jrn_def_negative_warning=$negative_warning;
+        
         switch ($this->jrn_def_type)
         {
             case 'ACH':
@@ -2521,6 +2551,9 @@ class Acc_Ledger extends jrn_def_sql
         $cn=$this->db;
         $min_row=new INum("min_row", MAX_ARTICLE);
         $min_row->prec=0;
+        $negative=new InputSwitch('negative_amount',0);
+        $negative_warning=new IText('negative_warning',_("Attention, ce journal doit utiliser des montants négatifs"));
+        $negative_warning->size=80;
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
@@ -2544,6 +2577,11 @@ class Acc_Ledger extends jrn_def_sql
                 trim(substr($this->jrn_def_type, 0, 1)),
                 Acc_Ledger::next_number($this->db, $this->jrn_def_type));
         $this->jrn_def_description=$p_description;
+        $this->currency_id=0;
+        $this->jrn_def_negative_amount=$negative_amount;
+        $this->jrn_def_negative_warning=$negative_warning;
+        $this->jrn_enable=1;
+        
         switch ($this->jrn_def_type)
         {
             case 'ACH':
@@ -2577,7 +2615,7 @@ class Acc_Ledger extends jrn_def_sql
                 $this->jrn_def_num_op=(isset($numb_operation))?1:0;
                 break;
         }
-
+        
         parent::insert();
     }
 
@@ -2887,6 +2925,23 @@ class Acc_Ledger extends jrn_def_sql
         
         return FALSE;
         
+    }
+    /**
+     * If the amount is positive and the ledger expects a negative amount, il will return the saved warning
+     * 
+     * @param int $p_amount amount to check
+     * @throws Exception 1 if invalid ledger
+     */
+    function display_negative_warning($p_amount)
+    {
+        if ($this->id == 0) {
+            throw new Exception(_("Journal invalide"), 1);
+        }
+        $ledger=new Jrn_def_SQL($this->db,$this->id);
+        if ( $p_amount > 0 && $ledger->getp("jrn_def_negative_amount")==1){
+            return _($ledger->getp("jrn_def_negative_warning"));
+        }
+        return "";
     }
 }
 

@@ -16,10 +16,13 @@
                 <td></td>
 </TR>
 <?php
+//---------------------------------------------------------------------------------------------------------------
+//ODS
+//---------------------------------------------------------------------------------------------------------------
 if ( $new || $type=='ODS' ):
 ?>
 <TR id="type_ods">
-<td><?php echo _('Postes utilisables journal (débit/crédit) ')?>
+<td style="white-space: nowrap"><?php echo _('Postes utilisables journal (débit/crédit) ')?>
 </TD>
 <td>
 <?php echo $search;?>
@@ -33,46 +36,87 @@ if ( $new || $type=='ODS' ):
 endif;
 ?>
 <?php
-if ( $new|| $type=='FIN') {
+//---------------------------------------------------------------------------------------------------------------
+//FIN
+//---------------------------------------------------------------------------------------------------------------
+if ( $new|| $type=='FIN') :
 ?>
-<tr id="type_fin">
-<td>
-    <?php echo _('Numérotation de chaque opération')?>
-</td>
-<td>
-    <?php echo $num_op->input();?>
-</td>
-</tr>
-<tr id="type_fin2">
-<TD>
-<?php echo _('Compte en banque')?>
-</td>
-<TD>
-<?php
-$card=new ICard();
-$card->name='bank';
-$card->extra=$cn->make_list('select fd_id from fiche_def where frd_id=4');
-$card->set_dblclick("fill_ipopcard(this);");
-$card->set_function('fill_data');
-$card->set_attribute('ipopup','ipop_card');
-$list=$cn->make_list('select fd_id from fiche_def where frd_id=4');
-$card->set_attribute('typecard',$list);
+    <tr id="type_fin">
+    <td style="white-space: nowrap">
+        <?php echo _('Numérotation de chaque opération')?>
+    </td>
+    <td>
+        <?php echo $num_op->input();?>
+    </td>
+    </tr>
+    <tr id="type_fin2">
+    <TD style="white-space: nowrap">
+    <?php echo _('Compte en banque')?>
+    </td>
+    <TD>
+    <?php
+    $card=new ICard();
+    $card->name='bank';
+    $card->extra=$cn->make_list('select fd_id from fiche_def where frd_id=4');
+    $card->set_dblclick("fill_ipopcard(this);");
+    $card->set_function('fill_data');
+    $card->set_attribute('ipopup','ipop_card');
+    $list=$cn->make_list('select fd_id from fiche_def where frd_id=4');
+    $card->set_attribute('typecard',$list);
 
-$card->value=$qcode_bank;
-echo $card->search();
-echo $card->input();
-echo $str_add_button;
+    $card->value=$qcode_bank;
+    echo $card->search();
+    echo $card->input();
+    echo $str_add_button;
+    ?>
+    </td>
+    <td class="notice" style="white-space: nowrap">
+    <?php echo _("Obligatoire pour les journaux FIN : donner ici la fiche du compte en banque utilisée")?>
+    </td>
+    </tr>
+    <?php
+endif;
 ?>
-</td>
-<td class="notice">
-<?php echo _("Obligatoire pour les journaux FIN : donner ici la fiche du compte en banque utilisée")?>
-</td>
+        
 <?php
-}
+//---------------------------------------------------------------------------------------------------------------
+//ACH / VEN
+//---------------------------------------------------------------------------------------------------------------
+if ( $type == 'ACH' || $type == 'VEN'||$new):
+    // Display the warning : always used negative amounts
+    ?>
+    
+    <tr id="neg_amount">
+        <td style="white-space: nowrap">
+            
+            <?php 
+            echo _("Uniquement note de débit ou crédit");
+            echo Icon_Action::warnbulle(73);
+            ?>
+        </td>
+        <td>
+           <?php
+                $negative->javascript="toggle_row_warning_enable('negative_amount','row_warning')";
+                $negative->input();
+            ?>
+        </td>
+    </tr>
+    <tr id="row_warning">
+        <td style="white-space: nowrap">
+            <?php echo _("Avertissement montant positif"); ?>
+        </td>
+        <td>
+            <?php echo $negative_warning->input();?>
+        </td>
+    </tr>
+<?php
+endif;
 ?>
-</TR>
+    
+    
+    
 <tr>
-	<td><?php echo _("Minimum de lignes à afficher")?></td>
+	<td style="white-space: nowrap"><?php echo _("Minimum de lignes à afficher")?></td>
 <td><?php echo $min_row->input()?></td>
 </tr>
 <tr>
@@ -103,32 +147,33 @@ echo $str_add_button;
 
 </TR>
 <?php if ( $new == 0 ) : ?>
-<TR>
-<TD>
-  <?php echo _('Dernière pièce numérotée')?>
-  <?php echo Icon_Action::infobulle(40);?>
-</TD>
-<TD>
-<?php echo $last_seq?>
-</TD>
-</TR>
+    <TR>
+    <TD>
+      <?php echo _('Dernière pièce numérotée')?>
+      <?php echo Icon_Action::infobulle(40);?>
+    </TD>
+    <TD>
+    <?php echo $last_seq?>
+    </TD>
+    </TR>
 
-<tr>
-<TD><?php echo _('N° pièce justificative')?>
-    <?php echo Icon_Action::infobulle(38);?>
-</TD>
-<TD>
-    <?php echo $pj_seq; ?>
-   
-</TD>
-</tr>
-<tr>
-    <td>
-        <?=_("Journal actif")?>
-    </td>
-    <td>
-        <?=$actif->input()?>
-    </td>
+    <tr>
+    <TD><?php echo _('N° pièce justificative')?>
+        <?php echo Icon_Action::infobulle(38);?>
+    </TD>
+    <TD>
+        <?php echo $pj_seq; ?>
+
+    </TD>
+    </tr>
+    <tr>
+        <td>
+            <?=_("Journal actif")?>
+        </td>
+        <td>
+            <?=$actif->input()?>
+        </td>
+    </TR>
 <?php endif; ?>
 
 </TABLE>
@@ -365,6 +410,8 @@ echo $str_add_button;
         $('type_ods').style.display='none';
         $('type_fin').style.display='none';
         $('type_fin2').style.display='none';
+        $('neg_amount').style.display='none';
+        $('row_warning').style.display='none';
     }
    function show_ledger_div()
    {
@@ -381,6 +428,19 @@ echo $str_add_button;
                hide_row();
                $('type_ods').style.display='table-row';
                break;
+           case 'ACH':
+            hide_row();
+               $('neg_amount').style.display='table-row';
+               toggle_row_warning_enable('negative_amount','row_warning');
+
+               break;
+           case 'VEN':
+               hide_row();
+               $('neg_amount').style.display='table-row';
+               toggle_row_warning_enable('negative_amount','row_warning');
+
+               break;
+
            default:
                hide_row();
        }
@@ -396,3 +456,10 @@ echo $str_add_button;
     ?>
 </script>
 <?php endif; ?>
+<?php if ( $type=="ACH" || $type=="VEN") :?>
+<script>
+toggle_row_warning_enable('negative_amount','row_warning');
+</script>
+<?php
+endif;
+?>

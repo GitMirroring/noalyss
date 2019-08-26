@@ -72,17 +72,17 @@ if (!isset($_POST['summary']) && !isset($_POST['save']))
 }
 elseif (isset($_POST['summary']))
 {
-	try {
-			$ledger->verify($_POST);
-			require_once NOALYSS_INCLUDE.'/operation_ods_confirm.inc.php';
-	} catch (Exception $e)
-	{
-		echo alert($e->getMessage());
-                $p_msg=$e->getMessage();
-		require_once NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
+    try {
+        $ledger->verify_operation($_POST);
+        require_once NOALYSS_INCLUDE.'/operation_ods_confirm.inc.php';
+    } catch (Exception $e)
+    {
+        echo alert($e->getMessage());
+        $p_msg=$e->getMessage();
+        require_once NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
 
-	}
-	return;
+    }
+    return;
 }
 elseif (isset($_POST['save']))
 {
@@ -120,16 +120,16 @@ elseif (isset($_POST['save']))
                         }
                         catch (Exception $e)
                         {
-                            echo '<p class="notice">'._('Opération non extournée').
+                            echo '<span  class="warning">'._('Opération non extournée').
                                 $e->getMessage().
-                                '</p>';
+                                '</span>';
                                 
                             }
                     }
                     else
                     {
                         // warning because date is invalid
-                        echo '<p class="notice">'._('Date invalide, opération non extournée').'</p>';
+                        echo '<span class="warning">'._('Date invalide, opération non extournée').'</span>';
                     }
                 }
                 echo '<ul class="aligned-block">';

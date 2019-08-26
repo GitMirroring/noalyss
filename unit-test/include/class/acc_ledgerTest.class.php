@@ -18,6 +18,32 @@ class Acc_LedgerTest extends TestCase
         return $dataSet;
     }
     /**
+     * Get an operation
+     * @global type $g_connection
+     * @return type
+     */
+    private function get_jrn_id($p_ledger='ODS')
+    {
+        global $g_connection;
+        $jr_id=$g_connection->get_value("select max(jr_id) from jrn join jrn_def "
+                . "on (jrn_def_id=jr_def_id) "
+                . " where "
+                . " jrn_def_type=$1",[$p_ledger]);
+        return $jr_id;
+    }
+    /**
+     * Return 1 if operation does exist otherwise zero
+     * @global type $g_connection
+     * @param type $p_jr_id
+     * @return type
+     */
+    private function exist_operation($p_jr_id)
+    {
+        global $g_connection;
+        $jr_id=$g_connection->get_value("select count(*) from jrn where jr_id=$1",[$p_jr_id]);
+        return $jr_id;
+    }
+    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
@@ -43,9 +69,10 @@ class Acc_LedgerTest extends TestCase
     public function testGet_last_pj()
     {   
  
-        $this->object->id=1;
-        $array=$this->object->get_last(2);
-        $this->assertEquals(2,count($array));
+        $this->object->id=2;
+        $sPj=$this->object->get_last_pj(2);
+        print_r("get_last_pj $sPj");
+        $this->assertEquals(5,$sPj);
         
     }
 
@@ -78,16 +105,51 @@ class Acc_LedgerTest extends TestCase
      */
     public function testDelete()
     {
+        global $g_connection;
+        $jr_id=$g_connection->get_value("select max(jr_id) from jrn");
+        $this->object->jr_id=$jr_id;
         $this->object->delete();
+        $count=$g_connection->get_value("select count(*) from jrn where jr_id=$1",[$jr_id]);
+        $this->assertEquals($count,0);
     }
-
+    public function delete_ledger()
+    {
+        global $g_connection;
+        // a . create a ledger and delete it
+        $array=["p_jrn_def_name"=>"UNITTEST","p_ech_lib"=>"","p_jrn_deb_max_line"=>7,'p_jrn_type'=>'ODS','jrn_def_pj_pref'=>'TT/','min_row'=>5,'p_description'=>'LEDGER UNIT TEST','jrn_def_negative_amount'=>0,'jrn_def_negative_warning'=>'Warning'];
+        $this->object->save_new($array);
+        
+        // Get it 
+        $last_ledger_inserted=$g_connection->get_value("select max(jrn_def_id) from jrn_def");
+        $name=$g_connection->get_value("select jrn_def_name from jrn_def where jrn_def_id=$1",[$last_ledger_inserted]);
+        $this->assertEquals($name,'UNITTEST');
+        
+        // drop it
+        $this->object->delete_ledger();
+        $cnt=$g_connection->get_value("select count(*) from jrn_def where jrn_def_id=$1",[$last_ledger_inserted]);
+        $this->assertEquals($cnt,0);
+        $ok=0;
+        // Try to delete a ledger which is used
+        try {
+            $jr_id=$g_connection->get_value("select max(jr_id) from jrn");
+            $ledger_id=$g_connection->get_value("select jr_def_id from jrn where jr_id=$1",[$jr_id]);
+            $ledger=new Acc_Legder($g_connection,$ledger_id);
+            $ledger->delete_ledger();
+        } catch (Exception $ex) {
+            $ok=1;
+        }
+        $this->assertEquals($ok,1);
+        $cnt=$g_connection->get_value("select count(*) from jrn_def where jrn_def_id=$1",[$ledger_id]);
+        $this->assertEquals($cnt,1);
+    }
     /**
      * @covers Acc_Ledger::display_warning
      * @todo   Implement testDisplay_warning().
      */
     public function testDisplay_warning()
     {
-        $this->object->display_warning("Alert", "warning");
+        $str=$this->object->display_warning(["First Line","Second Line"], "warning");
+        $this->assertEquals('<p class="notice"> warning<ol class="notice"><li>First Line</li><li>Second Line</li></ol></p>',$str);
     }
 
     /**
@@ -96,7 +158,22 @@ class Acc_LedgerTest extends TestCase
      */
     public function testReverse()
     {
-        $this->object->reverse('01.01.2014');
+        global $g_connection;
+        $this->object->jr_id=$g_connection->get_value("select max(jr_id) from jrn ");
+        $this->assertLessThan($this->object->jr_id,"0","found jr_id ".$this->object->jr_id);
+        $this->assertFalse(empty($this->object->jr_id),"not found jr_id ");
+        
+        $this->object->id=$g_connection->get_value("select jr_def_id from jrn where jr_id=$1",[$this->object->jr_id]);
+        $this->assertGreaterThan($this->object->id,"0","found id ".$this->object->id);
+        $this->assertFalse(empty($this->object->id),"not found id ");
+        print_r("jr_id = ".$this->object->jr_id);
+        print_r("id = ".$this->object->id);
+        $date=$g_connection->get_value ("select to_char(max(p_start),'DD.MM.YYYY') from parm_periode where p_closed='f'");
+        $this->object->reverse($date,'unit test'.$date);
+        $check=$g_connection->get_value("select jr_id from jrn where jr_comment=$1",["unit test".$date]);
+        $this->assertFalse(empty($check),"NOT REVERSED" );
+        $this->object->jr_id=$check;
+        $this->object->delete();
     }
 
     /**
@@ -111,27 +188,21 @@ class Acc_LedgerTest extends TestCase
     }
 
     /**
-     * @covers Acc_Ledger::get_row
-     * @todo   Implement testGet_row().
-     */
-    public function testGet_row()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers Acc_Ledger::get_rowSimple
      * @todo   Implement testGet_rowSimple().
      */
     public function testGet_rowSimple()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        global $g_connection;
+        $last=$g_connection->get_value("select max(p_id) from parm_periode");
+        $first=$g_connection->get_value("select min(p_id) from parm_periode");
+        $id=$this->object->id;
+        $this->object->id=2;
+        $array=$this->object->get_rowSimple($first,$last);
+        $this->assertTrue(is_array($array),"get_rowSimple does not return an array");
+        $this->assertGreaterThan(0,count($array));
+        $this->object->id=$id;
+        
     }
 
     /**
@@ -140,46 +211,9 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGuess_pj()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Acc_Ledger::list_operation_to_reconcile
-     * @todo   Implement testList_operation_to_reconcile().
-     */
-    public function testList_operation_to_reconcile()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Acc_Ledger::list_operation
-     * @todo   Implement testList_operation().
-     */
-    public function testList_operation()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Acc_Ledger::get_detail
-     * @todo   Implement testGet_detail().
-     */
-    public function testGet_detail()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $this->object->id=2;
+        $r=$this->object->guess_pj();
+        $this->assertEquals("VEN6",$r);
     }
 
     /**
@@ -188,10 +222,11 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGet_propertie()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        global $g_connection;
+        $this->object->id=2;
+        $array=$this->object->get_propertie();
+        // there are 16 columns in jrn_def
+        $this->assertEquals(count($array),20);
     }
 
     /**
@@ -205,7 +240,38 @@ class Acc_LedgerTest extends TestCase
                 'This test has not been implemented yet.'
         );
     }
-
+    /**
+     * @covers Acc_Ledger::display_negative_warning
+     */
+    public function testDisplay_negative_warning()
+    {
+        global $g_connection;
+        $msg="WARNING ! WARNING !";
+        $acc_ledger=new Jrn_def_SQL($g_connection,2);
+        $acc_ledger_old=clone $acc_ledger;
+        $acc_ledger->setp("jrn_def_negative_amount",1);
+        $acc_ledger->setp("jrn_def_negative_warning",$msg);
+        $acc_ledger->save();
+        $this->object->set_ledger_id(2);
+        $result=$this->object->display_negative_warning(-1);
+        $this->assertEquals($result,"");
+        $result=$this->object->display_negative_warning(1);
+        $this->assertEquals($result,$msg);
+        
+        $acc_ledger_old->save();
+        $id=$this->object->get_ledger_id();
+        $ok=0;
+        try {
+            $this->object->set_ledger_id(0);
+            $result=$this->object->display_negative_warning(1);
+        }        catch (Exception $e) {
+            $this->assertEquals($e->getCode(),1);
+            $ok=1;
+        }
+        $this->assertEquals($ok,1);
+        $this->object->set_ledger_id($id);
+        
+    }
     /**
      * @covers Acc_Ledger::get_solde
      * @todo   Implement testGet_solde().
@@ -666,9 +732,36 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGet_tiers()
     {
-        $this->object->get_tiers($p_jrn_type, $jr_id);
-    }
+        global $g_connection;
+        $jr_id=$this->get_jrn_id();
+        $this->assertEquals($this->object->get_tiers("ODS", $jr_id)," ");
 
+        $jr_id=$this->get_jrn_id("ACH");
+        $this->assertTrue($this->object->get_tiers("ACH",$jr_id)!=' '); 
+
+        $jr_id=$this->get_jrn_id("FIN");
+        $this->assertTrue($this->object->get_tiers('FIN',$jr_id)!=' ');
+
+        $jr_id=$this->get_jrn_id("VEN");
+        $this->assertTrue($this->object->get_tiers("VEN",$jr_id)!=' ');
+        
+    }
+    public function testGet_tiers_id()
+    {
+        global $g_connection;
+        $jr_id=$this->get_jrn_id();
+        $this->assertEquals($this->object->get_tiers_id("ODS", $jr_id),0);
+
+        $jr_id=$this->get_jrn_id("ACH");
+        $this->assertGreaterThan(0,$this->object->get_tiers_id("ACH",$jr_id));
+
+        $jr_id=$this->get_jrn_id("FIN");
+        $this->assertGreaterThan(0,$this->object->get_tiers_id("FIN",$jr_id));
+
+        $jr_id=$this->get_jrn_id("VEN");
+        $this->assertGreaterThan(0,$this->object->get_tiers_id("VEN",$jr_id));
+        
+    }
     /**
      * @covers Acc_Ledger::listing
      * @todo   Implement testListing().
@@ -719,14 +812,12 @@ class Acc_LedgerTest extends TestCase
 
     /**
      * @covers Acc_Ledger::input_paid
-     * @todo   Implement testInput_paid().
      */
     public function testInput_paid()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $r=$this->object->input_paid(0);
+        $this->assertStringStartsWith('<div id="payment">',$r);
+        $this->assertStringEndsWith('</div>',$r);
     }
 
     /**
@@ -743,14 +834,30 @@ class Acc_LedgerTest extends TestCase
 
     /**
      * @covers Acc_Ledger::save_new
-     * @todo   Implement testSave_new().
      */
     public function testSave_new()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        global $g_connection;
+        
+        $array=["p_jrn_name"=>"UNITTEST",
+                "p_ech_lib"=>"",
+                "p_jrn_deb_max_line"=>7,
+                'p_jrn_class_deb'=>'4*',
+                'p_jrn_type'=>'ODS',
+                'jrn_def_pj_pref'=>'TT/',
+                'min_row'=>5,
+                'p_description'=>'LEDGER UNIT TEST',
+                'jrn_def_negative_amount'=>0,
+                'jrn_def_negative_warning'=>'Warning'];
+        
+
+        $this->object->save_new($array);
+        $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);
+        $this->assertGreaterThan($jrn_def_id,0);
+        $ledger=new Acc_Ledger($g_connection,$jrn_def_id);
+        $ledger->delete_ledger();
+        $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);
+        $this->assertEquals($jrn_def_id,"");
     }
 
     /**
@@ -759,10 +866,23 @@ class Acc_LedgerTest extends TestCase
      */
     public function testDelete_ledger()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        global $g_connection;
+        $array=["p_jrn_name"=>"UNITTEST",
+                "p_ech_lib"=>"",
+                "p_jrn_deb_max_line"=>7,
+                'p_jrn_class_deb'=>'4*',
+                'p_jrn_type'=>'ODS',
+                'jrn_def_pj_pref'=>'TT/',
+                'min_row'=>5,
+                'p_description'=>'LEDGER UNIT TEST'];
+
+        $this->object->save_new($array);
+        $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);
+        $this->assertGreaterThan($jrn_def_id,0);
+        $ledger=new Acc_Ledger($g_connection,$jrn_def_id);
+        $ledger->delete_ledger();
+        $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);
+        $this->assertEquals($jrn_def_id,"");
     }
 
     /**
@@ -771,10 +891,15 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGet_operation_date()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $res=$this->object->get_operation_date('01.01.2010','VEN','>');
+        $this->assertGreaterThan(0,count($res),'Failed VEN');
+        $res=$this->object->get_operation_date('01.01.2010','ACH','>');
+        $this->assertGreaterThan(0,count($res),'Failed ACH ');
+        $res=$this->object->get_operation_date('01.01.2000','VEN','<');
+        $this->assertEquals(count($res),0,'Failed VEN before ');
+        $res=$this->object->get_operation_date('01.01.2000','ACH','<');
+        $this->assertEquals(count($res),0,'Failed ACH before');
+
     }
 
     /**
@@ -783,10 +908,7 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGet_supplier_now()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+       $this->assertTrue(is_array($this->object->get_supplier_now()));
     }
 
     /**
@@ -795,10 +917,7 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGet_supplier_late()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+       $this->assertTrue(is_array($this->object->get_supplier_late()));
     }
 
     /**
@@ -807,10 +926,7 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGet_customer_now()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+         $this->assertTrue(is_array($this->object->get_customer_now()));
     }
 
     /**
@@ -819,10 +935,7 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGet_customer_late()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $this->assertTrue(is_array($this->object->get_customer_late()));
     }
 
     /**

@@ -54,7 +54,7 @@ if (  $action_frm == 'update')
 {
 	try
 	{
-		$ledger->id=$http->post('p_jrn',"number");
+		$ledger->set_ledger_id($http->post('p_jrn',"number"));
 		if ( $ledger->load() == -1) throw new Exception (_('Journal inexistant'));
 		$ledger->verify_ledger($_POST);
 		$ledger->update($_POST);
@@ -72,7 +72,7 @@ if (  $action_frm == 'update')
 //////////////////////////////////////////////////////////////////////////
 if ($action_frm == 'delete' )
 {
-	$ledger->id=$http->post('p_jrn',"number");
+	$ledger->set_ledger_id($http->post('p_jrn',"number"));
 	$ledger->load();
 	$name=$ledger->get_name();
 	try {
@@ -104,7 +104,7 @@ if (isset($_POST['add']))
 		$ledger->verify_ledger($_POST);
 		$ledger->save_new($_POST);
 		$sa="detail";
-                $a[]=["key"=>'p_jrn',"value"=>$ledger->id];
+                $a[]=["key"=>'p_jrn',"value"=>$ledger->get_ledger_id()];
 		put_global($a);
                 $show_menu=1;
 	}
@@ -129,7 +129,7 @@ switch ($sa)
 	case 'detail': /* detail of a ledger */
 		try
 		{
-			$ledger->id=$http->request('p_jrn',"number");
+			$ledger->set_ledger_id($http->request('p_jrn',"number"));
 			echo '<div class="content">';
 			echo '<form id="cfg_ledger_frm"  method="POST">';
 			echo $ledger->display_ledger();

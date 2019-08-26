@@ -103,5 +103,5 @@ content[69]="<?php echo escape_xml(_("Aucune donnée"))?>";
 content[70]="<?php echo escape_xml(_("Votre demande est en cours de traitement"))?>";
 content[71]="<?php echo _('Limite le type de fiche si vous choisissez la fiche à la saisie, uniquement avec journaux OD');?>";
 content[72]="<?php echo _("Pour les journaux FIN, ce sera la fiche du journal");?>";
-
+content[73]="<?php echo _("Mettre à oui pour un journal dédié uniquement aux notes de crédit ou de débit, il affichera un avertissement si le montant n'est pas en négatif");?>";
 </script>
