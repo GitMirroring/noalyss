@@ -1,4 +1,6 @@
 <?php 
+Timing is on.
+Autocommit is  OFF
 $menu[]=_('Achat');  $desc[]=_('Nouvel achat ou dépense');$desc_long[]=_('Vous permet d\'encoder des achats, dépenses, des notes de frais ou des notes de crédits, vous pouvez spécifier un bénéficiaire ou un autre moyen de paiement');
 $menu[]=_('Historique');  $desc[]=_('Historique des imputations analytiques');$desc_long[]=_('Historique des imputations analytiques');
 $menu[]=_('Balance simple');  $desc[]=_('Balance simple des imputations analytiques');$desc_long[]=_('Balance simple des imputations analytiques');
@@ -46,7 +48,6 @@ $menu[]=_('Export définition d\'un raport');
 $menu[]=_('Export Action Gestion');  
 $menu[]=_('Export Historique mouvement stock');  
 $menu[]=_('Export Résumé list stock');  
-$menu[]=_('Extension');  $desc[]=_('Extensions (plugins)');$desc_long[]=_('Menu regroupant les plugins');
 $menu[]=_('Plan Compt. analytique');  $desc[]=_('Plan analytique');$desc_long[]=_('Axe analytique');
 $menu[]=_('Groupe');  $desc[]=_('Groupe analytique');$desc_long[]=_('Regroupement de compte analytique');
 $menu[]=_('Contact');  $desc[]=_('Liste des contacts');$desc_long[]=_('Liste de tous vos contacts');
@@ -58,6 +59,7 @@ $menu[]=_('Paramètre');  $desc[]=_('Module paramètre');$desc_long[]=_('Module 
 $menu[]=_('Catégorie de documents');  $desc[]=_('Config. catégorie de documents');$desc_long[]=_('Vous permet d\'ajouter de nouveaux type de documents (bordereau de livraison, devis..)');
 $menu[]=_('Lettrage par Fiche');  $desc[]=_('Lettrage par fiche');$desc_long[]=_('Lettrage par fiche');
 $menu[]=_('Historique achat');  $desc[]=_('Historique achat');$desc_long[]=_('Historique de toutes vos opérations dans les journaux d\'achats un menu de recherche, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
+$menu[]=_('Extension');  $desc[]=_('Extensions (plugins)');$desc_long[]=_('Menu regroupant les plugins');
 $menu[]=_('Historique opérations diverses');  $desc[]=_('Historique opérations diverses');$desc_long[]=_('Historique de toutes vos opérations dans les journaux d\'opérations diverses un menu de recherche, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
 $menu[]=_('Poste');  $desc[]=_('Impression du détail d\'un poste comptable');$desc_long[]=_('Impression du détail d\'un poste comptable');
 $menu[]=_('Rapport');  $desc[]=_('Impression de rapport');$desc_long[]=_('Impression de rapport personnalisé, il est aussi possible d\'exporter en CSV afin de faire des graphiques');
@@ -96,10 +98,10 @@ $menu[]=_('Recherche');  $desc[]=_('Recherche');$desc_long[]=_('Historique de to
 $menu[]=_('Historique');  $desc[]=_('Historique');$desc_long[]=_('Historique de toutes vos opérations un menu de recherche, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
 $menu[]=_('Rapprochement');  $desc[]=_('Rapprochement bancaire');$desc_long[]=_('Permet de faire correspondre vos extraits bancaires avec les opérations de vente ou d\'achat, le lettrage se fait automatiquement');
 $menu[]=_('Soldes');  $desc[]=_('Solde des comptes en banques, caisse...');$desc_long[]=_('Solde des journaux de trésorerie cela concerne les comptes en banques, caisse , les chèques... ');
-$menu[]=_('Sortie &#9094');  $desc[]=_('Sortie');$desc_long[]=_('Déconnexion ');
 $menu[]=_('Lettrage par Poste');  $desc[]=_('lettrage par poste comptable');$desc_long[]=_('lettrage par poste comptable');
 $menu[]=_('Balance');  $desc[]=_('Balance par catégorie de fiche');$desc_long[]=_('Balance par catégorie de fiche ou pour toutes les fiches ayant un poste comptable');
 $menu[]=_('Plan Comptable');  $desc[]=_('Config. du plan comptable');$desc_long[]=_('Modification de votre plan comptable, parfois il est plus rapide d\'utiliser le plugin "Poste Comptable"');
+$menu[]=_('Sortie &#9094');  $desc[]=_('Sortie');$desc_long[]=_('Déconnexion ');
 $menu[]=_('Historique vente');  $desc[]=_('Historique des ventes');$desc_long[]=_('Historique de toutes vos opérations dans les journaux de vente un menu de recherche, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
 $menu[]=_('Historique financier');  $desc[]=_('Historique financier');$desc_long[]=_('Historique de toutes vos opérations dans les journaux de trésorerie un menu de recherche, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
 $menu[]=_('Rapprochement');  $desc[]=_('Impression des rapprochements');$desc_long[]=_('Impression des rapprochements : opérations non rapprochées ou avec des montants différents');
@@ -134,8 +136,16 @@ $menu[]=_('Export Balance agée');  $desc[]=_('Balance agée');$desc_long[]=_('B
 $menu[]=_('Exporte la pièce');  
 $menu[]=_('Export le document');  
 $menu[]=_('Exporte le modèle de document');  
+$menu[]=_('Devises');  $desc[]=_('Configuration des devises');$desc_long[]=_('Permet de configurer les devises');
+$menu[]=_('Export ANC');  
+$menu[]=_('Résumé TVA');  $desc[]=_('totaux  par TVA et par journal');$desc_long[]=_('Calcul des totaux  par TVA et par journal');
+$menu[]=_('Export Résumé TVA');  
+$menu[]=_('Export Résumé TVA');  
+Time: 1,027 ms
 ?>
 <?php 
+Timing is on.
+Autocommit is  OFF
 $attr_def[]=_('Durée Amortissement');
 $attr_def[]=_('Montant initial');
 $attr_def[]=_('TVA non déductible');
@@ -143,8 +153,6 @@ $attr_def[]=_('TVA non déductible récupérable par l\'impôt');
 $attr_def[]=_('Partie fiscalement non déductible');
 $attr_def[]=_('Dépense  charge du grant (partie privé) ');
 $attr_def[]=_('Compte bancaire');
-$attr_def[]=_('Prix vente');
-$attr_def[]=_('Prix achat');
 $attr_def[]=_('Date début');
 $attr_def[]=_('Nom');
 $attr_def[]=_('Taux TVA');
@@ -170,9 +178,14 @@ $attr_def[]=_('Contrepartie pour dépense fiscal. non déd.');
 $attr_def[]=_('Poste Comptable');
 $attr_def[]=_('Date Fin');
 $attr_def[]=_('Gestion stock');
+$attr_def[]=_('Prix vente');
+$attr_def[]=_('Prix achat');
 $attr_def[]=_('Société');
+Time: 1,164 ms
 ?>
 <?php 
+Timing is on.
+Autocommit is  OFF
 $document_type[]=_('Document Interne');
 $document_type[]=_('Bons de commande client');
 $document_type[]=_('Bon de commande Fournisseur');
@@ -186,8 +199,11 @@ $document_type[]=_('Note de frais');
 $document_type[]=_('Réception commande Fournisseur');
 $document_type[]=_('Réception commande Client');
 $document_type[]=_('Réception magazine');
+Time: 1,120 ms
 ?>
 <?php 
+Timing is on.
+Autocommit is  OFF
 $action[]=_('Ajout de fiche');
 $action[]=_('Création, modification et effacement de fiche');
 $action[]=_('création, modification et effacement de catégorie de fiche');
@@ -199,26 +215,52 @@ $action[]=_('Effacer une opération ');
 $action[]=_('Partager une note');
 $action[]=_('Créer une note publique');
 $action[]=_('Effacer une note publique');
+Time: 0,661 ms
+?>
+<?php 
+Timing is on.
+Autocommit is  OFF
 $mdp[]=_('Caisse');
 $mdp[]=_('Paiement électronique');
 $mdp[]=_('Caisse');
 $mdp[]=_('Par gérant ou administrateur');
+Time: 1,068 ms
 ?>
 <?php 
-$jrn_def_name[]=_('Achat');
-$jrn_def_name[]=_('Financier');
+Timing is on.
+Autocommit is  OFF
 $jrn_def_name[]=_('Opération Diverses');
+$jrn_def_name[]=_('Financier');
 $jrn_def_name[]=_('Vente');
+$jrn_def_name[]=_('Achat');
+$jrn_def_name[]=_('Note de crédit');
+Time: 1,213 ms
 ?>
 <?php 
-$jrn_def_description[]=_('Concerne tous les achats, factures reçues, notes de crédit reçues et notes de frais');
-$jrn_def_description[]=_('Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)');
+Timing is on.
+Autocommit is  OFF
 $jrn_def_description[]=_('Concerne toutes les opérations comme les amortissements, les comptes TVA, ...');
+$jrn_def_description[]=_('Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)');
 $jrn_def_description[]=_('Concerne toutes les ventes, notes de crédit envoyées');
+$jrn_def_description[]=_('Concerne tous les achats, factures reçues, notes de crédit reçues et notes de frais');
+
+Time: 0,806 ms
 ?>
 <?php 
+Timing is on.
+Autocommit is  OFF
 $jrn_type[]=_('Financier');
 $jrn_type[]=_('Vente');
 $jrn_type[]=_('Achat');
 $jrn_type[]=_('Opérations Diverses');
+Time: 0,523 ms
+?>
+Timing is on.
+Autocommit is  OFF
+\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
+\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
+\jrn_def_negative_warning[]=_('WARNING ! WARNING !');
+\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
+\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
+Time: 1,223 ms
 ?>
