@@ -128,9 +128,9 @@ class Pre_operation
     function load()
     {
         $sql="select od_id,jrn_def_id,od_name,od_item,od_jrn_type,od_description".
-             " from op_predef where od_id=".$this->od_id.
+             " from op_predef where od_id=$1 ".
              " order by od_name";
-        $res=$this->db->exec_sql($sql);
+        $res=$this->db->exec_sql($sql,[$this->od_id]);
         $array=Database::fetch_all($res);
         foreach (array('jrn_def_id','od_name','od_item','od_jrn_type','od_description') as $field) {
             $this->$field=$array[0][$field];

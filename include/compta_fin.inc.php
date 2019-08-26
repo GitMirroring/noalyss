@@ -69,7 +69,7 @@ if ( isset($_POST['save']))
 {
 	try
 	{
-		$Ledger->verify($_POST);
+		$Ledger->verify_operation($_POST);
 	}
 	catch (Exception $e)
 	{
@@ -101,7 +101,7 @@ if ( isset($_POST['confirm']))
 {
 	try
 	{
-		$Ledger->verify($_POST);
+		$Ledger->verify_operation($_POST);
 	}
 	catch (Exception $e)
 	{
@@ -137,7 +137,7 @@ if ( isset($_POST['correct']))
 //----------------------------------------
 // Blank form
 //----------------------------------------
-echo '<p class="notice">'.$p_msg.'</p>';
+echo '<span class="warning">'.$p_msg.'</span>';
 
 echo '<form class="print" name="form_detail" enctype="multipart/form-data" class="print" METHOD="POST">';
 echo HtmlInput::hidden('ledger_type','fin');

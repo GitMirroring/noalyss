@@ -54,7 +54,7 @@ if (isset($_POST['view_invoice']))
 	$Ledger = new Acc_Ledger_Purchase($cn, $post_jrn);
 	try
 	{
-		$Ledger->verify($_POST);
+		$Ledger->verify_operation($_POST);
 	}
 	catch (Exception $e)
 	{
@@ -68,10 +68,8 @@ if (isset($_POST['view_invoice']))
 		echo '<div class="content">';
 		echo '<div id="confirm_div_id" style="width: 47%; float: left;">';
                 echo h1(_("Confirmation"));
-                echo '</div>';
-
-                echo '<div id="warning_ven_id" class="notice" style="width: 50%; margin-left: 0px; float: right;">';
-                echo h2(_("Attention, cette opération n'est pas encore sauvée : vous devez encore confirmer"),' class="notice"');
+                echo h1(_("Confirmation"));
+                echo span(_("Vous devez encore confirmer"),' class="notice"');
                 echo '</div>';
 
 		echo '<div id="confirm_div_id" style="width: 100%; float: left;">';
@@ -136,7 +134,7 @@ if (isset($_POST['record']))
 	$Ledger = new Acc_Ledger_Purchase($cn, $post_jrn);
 	try
 	{
-		$Ledger->verify($_POST);
+		$Ledger->verify_operation($_POST);
 	}
 	catch (Exception $e)
 	{
@@ -252,7 +250,7 @@ echo '</div>';
 
 echo '<div class="content">';
 
-echo '<p class="notice">'.$p_msg.'</p>';
+echo '<span class="warning">'.$p_msg.'</span>';
 try
 {
     $payment=$http->request("e_mp", "string",0);

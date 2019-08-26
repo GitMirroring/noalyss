@@ -838,7 +838,6 @@ function check()
                     {
                         echo td("--");
                     }
-		}
                 } elseif ($this->get_col_type($v)=="custom") {
                     // For custom col
                     echo td($this->display_row_custom($v,$p_row[$v]));

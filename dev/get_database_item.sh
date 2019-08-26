@@ -3,7 +3,7 @@
 export PGUSER=dany
 export PGPASSWORD=dany
 export PGHOST=localhost
-export PGDATABASE=rel671mod1
+export PGDATABASE=rel70dossier48
 export PGPORT=5432
 (
 echo "<?php "
@@ -26,7 +26,7 @@ psql -A -F"  " -t -c "select '\$action[]=_('''||replace(ac_description,'''',E'\\
 echo "?>"  ) >> ../include/database.item.php
 (
 echo "<?php "
-psql -A -F"  " -t -c "select '\$mdp[]=_('''||replace(mp_lib,'''',E'\\\\''')||''');' from mod_payment ;"
+psql -A -F"  " -t -c "select '\$mdp[]=_('''||replace(mp_lib,'''',E'\\\\''')||''');' from payment_method ;"
 echo "?>"  ) >> ../include/database.item.php
 (
 echo "<?php "
@@ -40,5 +40,10 @@ echo "?>"  ) >> ../include/database.item.php
 echo "<?php "
 psql -A -F"  " -t -c "select '\$jrn_type[]=_('''||replace(jrn_desc,'''',E'\\\\''')||''');' from jrn_type ;"
 echo "?>"  ) >> ../include/database.item.php
+
+(
+psql -A -F"  " -t -c "select '\jrn_def_negative_warning[]=_('''||replace(jrn_def_negative_warning,'''',E'\\\\''')||''');' from jrn_def where coalesce(trim(jrn_def_negative_warning),'')!='';"
+echo "?>"  ) >> ../include/database.item.php
+
 
 echo "File ../include/database.item.php is created"

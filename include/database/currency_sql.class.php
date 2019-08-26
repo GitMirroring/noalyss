@@ -20,7 +20,7 @@
 // Copyright (2018) Author Dany De Bontridder <dany@alchimerys.be>
 
 require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
-require_once NOALYSS_INCLUDE.'/lib/database.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 /**
  * class_currency_sql.php

@@ -68,12 +68,13 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
 <p>
    more <?php echo Icon_Action::more(uniqid(), "alert('test')");?>
 </p>
-<p>
-   menu <?php echo Icon_Action::menu(uniqid(), "alert('test')");?>
-</p>
+
 <p>
    Lock <?php echo Icon_Action::lock(uniqid(), "alert('test')");?>
 </p>
 <p>
    Unlock <?php echo Icon_Action::unlock(uniqid(), "alert('test')");?>
+</p>
+<p>
+    Tips <?php echo Icon_Action::tips("Allo ?")?>
 </p>

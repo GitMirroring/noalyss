@@ -584,6 +584,7 @@ function set_tva_label(obj)
 }
 /**
  *@brief display the popup with vat and explanations
+ *@param string req answer from ajax
  */
 function success_set_tva_label(req)
 {
@@ -3621,4 +3622,38 @@ function updatePreference()
     }
     remove_waiting_box();
     
+}
+
+/**
+ * turn on or off ,  set an domElement to 1 or 0 and change the icon
+ * @param string icon_domid : id of the domElement which must be changed
+ * @param string p_value_domid : id of domElement containing 1 or 0
+ * @see param_jrn.php
+ */
+function toggle_onoff(icon_domid,p_value_domid)
+{
+    if ( $(p_value_domid).value==0) {
+        $(p_value_domid).value=1;
+        $(icon_domid).innerHTML='&#xf205;';
+        $(icon_domid).style='color:green';
+    } else {
+        $(p_value_domid).value=0;
+        $(icon_domid).innerHTML='&#xf204;';
+        $(icon_domid).style='color:red';
+    }
+}
+/**
+ * in CFGLED show or hide the row depending if the warning is enable or not
+ * 
+ * @param {type} p_enable
+ * @param {type} p_row
+ * @returns {undefined}
+ */
+function toggle_row_warning_enable(p_enable,p_row)
+{
+    if ($(p_enable).value==1) {
+        $(p_row).show();
+    } else {
+        $(p_row).hide();
+    }
 }

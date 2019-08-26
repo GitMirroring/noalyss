@@ -88,7 +88,21 @@ class Icon_Action
 
         return $r;
     }
+    /**
+     * Display a info in a bubble, text is given as parameter
+     * @param string $p_comment
+     * 
+     * @return html string
+     */
+    static function tips($p_comment)
+    {
+        $p_comment=htmlentities($p_comment);
+        $r='<span tabindex="-1" class="icon" style="cursor:pointer;display:inline;text-decoration:none;" onmouseover="displayBulle(\''.$p_comment.'\')"  onclick="displayBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">';
+        $r.="&#xf086;";
+        $r.='</span>';
 
+        return $r;
+    }
     /**
      * Display a icon ON
      * @param string $p_div id of  element
@@ -283,5 +297,14 @@ class Icon_Action
      */
     static function unlock($p_id,$p_javascript) 
     {
+        
+        $lock_cur="&#xe832;";
+        
+        $r=sprintf( '<span id="%s" is_locked="0" onclick="toggle_lock(\'%s\');%s" class="icon smallicon">%s</span>',
+                $p_id,
+                $p_id,
+                $p_javascript, 
+                $lock_cur);
+        return $r;
     }    
 }

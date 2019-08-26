@@ -253,7 +253,7 @@ var ManageTable = function (p_table_name)
         this.param['ctl'] = p_ctl;
         var here=this;
         $(p_ctl+"_"+p_id).addClassName("highlight");
-        smoke.confirm("Confirmez ?",
+        smoke.confirm(content[47],
         function (e)
         {
             if (e ) {

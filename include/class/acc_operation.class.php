@@ -345,7 +345,7 @@ class Acc_Operation
     }
     /*!\brief retrieve data from jrnx
       *\note the data are filtered by the access of the current user
-     * \return an array
+     * \return an array or FALSE if nothing found
      */
     function get_jrnx_detail()
     {

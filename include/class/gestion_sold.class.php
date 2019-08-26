@@ -68,7 +68,7 @@ class gestion_sold extends gestion_table
         // $res contains all the line
         $res=Database::fetch_all($ret);
 
-        if ( sizeof($res)==0) return null;
+        if ( $res == FALSE || sizeof($res)==0) return null;
         $count=0;
 
         foreach ($res as $row)
@@ -108,7 +108,7 @@ class gestion_sold extends gestion_table
         // $res contains all the line
         $res=Database::fetch_all($ret);
 
-        if ( empty($res) ) return null;
+        if ( $res==FALSE || empty($res) ) return null;
         foreach ($res[0] as $idx=>$value)
         $this->$idx=$value;
     }

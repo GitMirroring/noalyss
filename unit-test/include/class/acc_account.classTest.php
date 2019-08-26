@@ -51,6 +51,7 @@ class Acc_AccountTest extends TestCase
     public function testSet_parameter()
     {
         $this->object->set_parameter("pcm_direct_use", "N");
+        $this->assertEquals($this->object->get_parameter("pcm_direct_use"),"N");
     }
 
     /**
@@ -66,7 +67,8 @@ class Acc_AccountTest extends TestCase
      */
     public function testLoad()
     {
-        $this->object->load();
+        $r=$this->object->load();
+        $this->assertNotEquals($r,-1);
     }
 
     /**
@@ -83,7 +85,61 @@ class Acc_AccountTest extends TestCase
      */
     public function testVerify()
     {
-        $this->object->verify();
+        global $g_connection;
+        // duplicate
+        $duplicate=new Acc_Account($g_connection);
+        $duplicate->set_parameter('pcm_val', "400");
+        $duplicate->set_parameter("pcm_lib", "duplicate");
+        $duplicate->set_parameter("pcm_val_parent", "40");
+        $duplicate->set_parameter("pcm_direct_use", "N");
+
+       try {
+            $duplicate->insert();
+       } catch (Exception $ex) {
+           $this->assertEquals($ex->getCode(),EXC_DUPLICATE);
+       }
+       $duplicate->set_parameter('pcm_val','999TEST');
+       try {
+           $duplicate->set_parameter("pcm_lib", "");
+           $duplicate->insert();
+       } catch (Exception $ex) {
+            $this->assertEquals($ex->getCode(),EXC_PARAM_VALUE);
+       }
+       $duplicate->set_parameter("pcm_lib", "duplicate");
+       try {
+           $duplicate->set_parameter("pcm_val_parent", "999TEST");
+            $duplicate->insert();
+
+       } catch (Exception $ex) {
+           $this->assertEquals($ex->getCode(),EXC_PARAM_VALUE);
+       }
+       
+       try {
+           $duplicate->set_parameter("pcm_val_parent", "xxx");
+            $duplicate->insert();
+
+       } catch (Exception $ex) {
+           $this->assertEquals($ex->getCode(),EXC_PARAM_VALUE);
+       }
+       $duplicate->set_parameter("pcm_val_parent", "9");
+       try {
+           $duplicate->set_parameter("pcm_direct_use", "?");
+            $duplicate->insert();
+
+       } catch (Exception $ex) {
+           $this->assertEquals($ex->getCode(),EXC_PARAM_VALUE);
+       }
+       $duplicate->set_parameter("pcm_direct_use", "Y");
+       try {
+           $duplicate->set_parameter('pcm_val','');
+           $duplicate->insert();
+       } catch (Exception $ex) {
+            $this->assertEquals($ex->getCode(),EXC_PARAM_VALUE);
+       }
+       $duplicate->set_parameter('pcm_val','999TEST');
+       $duplicate->insert();
+       $duplicate->delete();
+       
     }
 
     /**
@@ -91,7 +147,17 @@ class Acc_AccountTest extends TestCase
      */
     public function testUpdate()
     {
+        global $g_connection;
+        $new_string="000001112222";
+        $old_label=$this->object->get_lib();
+        $this->object->set_parameter("pcm_lib", $new_string);
         $this->object->update();
+        $check=new Acc_Account($g_connection,$this->object->get_parameter("pcm_val"));
+        $this->assertEquals($check->get_parameter("pcm_lib"),$new_string);
+        $check->set_parameter("pcm_lib", $old_label);
+        $check->update();
+        $this->object->load();
+        $this->assertEquals($this->object->get_lib(),$old_label);
     }
 
     /**
@@ -133,7 +199,6 @@ class Acc_AccountTest extends TestCase
         }
         catch (Exception $e)
         {
-            echo $e->getTraceAsString();
             $this->assertEquals($e->getCode(), EXC_PARAM_VALUE);
         }
     }
@@ -143,7 +208,21 @@ class Acc_AccountTest extends TestCase
      */
     public function testSave()
     {
-        $this->object->save();
+        global $g_connection;
+        $check=new Acc_Account($g_connection,'999TEST');
+        $check->set_parameter("pcm_lib", "TESTING");
+        $check->set_parameter('pcm_val_parent','9');
+        $check->set_parameter('pcm_direct_use','N');
+        // insert
+        $check->save();
+        $check_new=new Acc_Account($g_connection,'999TEST');
+        $this->assertEquals($check_new->get_lib(),$check->get_lib());
+        $check->set_parameter("pcm_lib","NEW VALUE");
+        // update
+        $check->save();
+        $check_new->load();
+        $this->assertNotEquals($check_new->get_lib(),"TESTING");
+        $check->delete();
     }
 
 }

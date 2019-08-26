@@ -53,7 +53,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 	 * @throw Exception on error occurs
 	 */
 
-	public function verify($p_array)
+	public function verify_operation($p_array)
 	{
 		global $g_user;
                 if (is_array($p_array ) == false || empty($p_array))

@@ -59,7 +59,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
      *\return String
      *\throw Exception if an error occurs
      */
-    public function verify($p_array)
+    public function verify_operation($p_array)
     {
         global $g_parameter,$g_user;
         
@@ -1859,7 +1859,13 @@ EOF;
             $r.='<br>';
         }
         // check for upload piece
-
+        /* 
+         * warning if the amount is positive and expecting a negative one
+         */
+        $negative=$this->display_negative_warning($tot);
+        if ( $negative != "") {
+         $r.=span($negative,'class="warning" ');   
+        }
         return $r;
     }
 

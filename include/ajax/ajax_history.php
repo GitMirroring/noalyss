@@ -122,6 +122,7 @@ if ( isset($_GET['f_id']))
 	} else {
             echo $fiche->filter_history("tb".$div);
             echo $table;
+            echo HtmlInput::button_close($div);
             echo $fiche->button_csv($array['from_periode'],$array['to_periode']);
             echo $fiche->button_pdf($array['from_periode'],$array['to_periode']);
           }
@@ -209,6 +210,7 @@ if ( isset($_REQUEST['pcm_val']))
 	  } else {
                 echo $poste->filter_history('tb'.$div);
                 echo $table;
+                echo HtmlInput::button_close($div);
                 echo $poste->button_csv($array['from_periode'],$array['to_periode']);
                 echo $poste->button_pdf($array['from_periode'],$array['to_periode']);
           }

@@ -37,7 +37,7 @@ $str_dossier=dossier::get();
 global $g_parameter;
 $http=new HttpInput();
 $strac=$http->request('ac');
-$ac="ac=".$_REQUEST['ac'];
+$ac="ac=".$strac;
 $p_msg="";
 //----------------------------------------------------------------------
 // Encode a new invoice
@@ -48,7 +48,7 @@ $p_msg="";
 
     // Check privilege
     if ( isset($_REQUEST['p_jrn']) &&
-            $g_user->check_jrn($_REQUEST['p_jrn']) != 'W' )
+            $g_user->check_jrn($http->post("p_jrn","number")) != 'W' )
     {
 
         NoAccess();
@@ -58,10 +58,11 @@ $p_msg="";
     /* if a new invoice is encoded, we display a form for confirmation */
     if ( isset ($_POST['view_invoice'] ) )
     {
-        $Ledger=new Acc_Ledger_Sold($cn,$_POST['p_jrn']);
+        $p_jrn=$http->post("p_jrn","number");
+        $Ledger=new Acc_Ledger_Sold($cn,$p_jrn);
         try
         {
-            $Ledger->verify($_POST);
+            $Ledger->verify_operation($_POST);
         }
         catch (Exception $e)
         {
@@ -76,10 +77,7 @@ $p_msg="";
 
             echo '<div id="confirm_div_id" style="width: 47%; float: left;">';
             echo h1(_("Confirmation"));
-            echo '</div>';
-
-            echo '<div id="warning_ven_id" class="notice" style="width: 50%; margin-left: 0px; float: right;">';
-            echo h2(_("Attention, cette opération n'est pas encore sauvée : vous devez encore confirmer"),' class="notice"');
+            echo span(_("Vous devez encore confirmer"),' class="notice"');
             echo '</div>';
             
             echo '<div id="confirm_div_id" style="width: 100%; float: left;">';
@@ -152,7 +150,7 @@ show_tabs(a_tab,'facturation_div_id');
         $Ledger=new Acc_Ledger_Sold($cn,$_POST['p_jrn']);
         try
         {
-            $Ledger->verify($_POST);
+            $Ledger->verify_operation($_POST);
         }
         catch (Exception $e)
         {
@@ -272,7 +270,7 @@ echo $op->form_get('do.php?'.$url);
 echo '</div>';
 */
 echo '<div class="content">';
-echo '<p class="notice">'.$p_msg.'</p>';
+echo '<span class="warning">'.$p_msg.'</span>';
 try
 {
     $payment=$http->request("e_mp","string", 0);
@@ -316,7 +314,7 @@ try
     else
     {
         echo HtmlInput::hidden("ledger_type", "VEN");
-        echo HtmlInput::hidden("ac", $_REQUEST['ac']);
+        echo HtmlInput::hidden("ac", $strac);
         echo HtmlInput::hidden("sa", "p");
 
         echo $Ledger->input($array);
