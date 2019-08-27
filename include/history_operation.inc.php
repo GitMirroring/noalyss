@@ -142,13 +142,16 @@ $r = HtmlInput::get_to_hidden(array('search_opnb_jrn',
     'search_opr_jrn'));
 if (isset($_GET['r_jrn']))
 {
-    foreach ($_GET['r_jrn'] as $k => $v)
-        $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
+    $a_rjn=$http->get('r_jrn','array');
+    foreach ($a_rjn as $k => $v) {
+      if (isNumber($v))  $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
+    }
 }
 if (isset($_GET['search_opr_jrn']))
 {
-    foreach ($_GET['search_opr_jrn'] as $k => $v)
-        $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
+     $a_search_opr_jrn=$http->get('search_opr_jrn','array');
+    foreach ($a_search_opr_jrn as $k => $v)
+          if (isNumber($v)) $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
 }
 echo $r;
 
@@ -164,13 +167,13 @@ $r = HtmlInput::get_to_hidden(array('l', 'date_paid_start','date_paid_end',
     'accounting', 'unpaid', 'gDossier', 'ledger_type', 'p_action'));
 if (isset($_GET['search_opr_jrn']))
 {
-    foreach ($_GET['search_opr_jrn'] as $k => $v)
-        $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
+    foreach ($a_search_opr_jrn as $k => $v)
+       if (isNumber($v))  $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
 }
 if (isset($_GET['r_jrn']))
 {
-	foreach ($_GET['r_jrn'] as $k => $v)
-		$r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
+	foreach ($a_rjn as $k => $v)
+	if (isNumber($v)) 	$r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
 }
 echo '<form action="export.php" method="get">';
 echo $r;
