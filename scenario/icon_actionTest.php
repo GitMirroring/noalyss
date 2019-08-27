@@ -78,3 +78,9 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
 <p>
     Tips <?php echo Icon_Action::tips("Allo ?")?>
 </p>
+<p>
+    Slider <?php echo Icon_Action::slider(uniqid(), "alert('test')")?>
+</p>
+<p>
+    Comment<?php echo Icon_Action::comment("Allo ? l'heure d'été ?")?>
+</p>
