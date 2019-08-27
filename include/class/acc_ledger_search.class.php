@@ -282,7 +282,13 @@ class Acc_Ledger_Search
      */
     public function build_search_sql($p_array, $p_order="", $p_where="")
     {
-        $sql="select jr_id	,
+        $sql="with cas as (
+                        select distinct jr_id 
+                        from jrn 
+                            join jrnx on (jr_grpt_id=j_grpt) 
+                        where 
+                            exists(select 1 from operation_analytique where j_id=jrnx.j_id) )
+            select jr_id	,
              jr_montant,
              substr(jr_comment,1,60) as jr_comment,
              to_char(jr_ech,'DD.MM.YY') as str_jr_ech,
@@ -336,11 +342,15 @@ class Acc_Ledger_Search
 		else null
 		end as total_invoice,
             jr_date_paid,
-            to_char(jr_date_paid,'DD.MM.YY') as str_jr_date_paid
+            to_char(jr_date_paid,'DD.MM.YY') as str_jr_date_paid,
+            cas.jr_id as analytic_op
              from
-             jrn as X left join jrn_note using(jr_id)
+             jrn as X 
+             left join jrn_note using(jr_id)
+             left join cas using( jr_id)
              join jrn_def on jrn_def_id=jr_def_id
-             join parm_periode on p_id=jr_tech_per";
+             join parm_periode on p_id=jr_tech_per
+                ";
 
         if (!empty($p_array))
             extract($p_array, EXTR_SKIP);
@@ -771,6 +781,8 @@ class Acc_Ledger_Search
             $r.="<TD>";
             $tmp_jr_comment=h($row['jr_comment']);
             $r.=$tmp_jr_comment;
+            if ( $row['analytic_op'] != "")
+                $r.=sprintf('<span style="float:right;background:black;color:white;">&ni;</span>');
             $r.="</TD>";
             $r.=td(h($row['n_text']), ' style="font-size:0.87em%"');
             // Amount
