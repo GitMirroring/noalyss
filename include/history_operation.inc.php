@@ -110,6 +110,11 @@ $max_line = $cn->count_sql($sql);
 $step = $_SESSION['g_pagesize'];
 $page = (isset($_GET['offset'])) ? $_GET['page'] : 1;
 $offset = (isset($_GET['offset'])) ? $_GET['offset'] : 0;
+
+// check if number
+$page=(isNumber($page)==0)?1:$page;
+$offset=(isNumber($offset)==0)?0:$offset;
+
 $bar = navigation_bar($offset, $max_line, $step, $page);
 
 echo $msg;
