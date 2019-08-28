@@ -2357,10 +2357,12 @@ class Acc_Ledger extends jrn_def_sql
             {
                 throw new Exception(_('Choix du type de journal est obligatoire'));
             }
-            if ($negative_amount == 1 && trim($negative_warning)=="") {
+             if (isset( $negative_warning) && $negative_amount == 1 && trim($negative_warning)=="") {
+
                 throw new Exception(_("Avertissement ne peut être vide"));
             }
-            if ( $negative_amount <> 0 && $negative_amount <> 1 ){
+           if ( isset( $negative_amount)  && $negative_amount <> 0 && $negative_amount <> 1 ){
+
                   throw new Exception(_("Valeur invalide"));
             }
         }
@@ -2391,8 +2393,8 @@ class Acc_Ledger extends jrn_def_sql
         $this->jrn_deb_max_line=($min_row<1)?1:$min_row;
         $this->jrn_def_description=$p_description;
         $this->jrn_enable=$jrn_enable;
-        $this->jrn_def_negative_amount=$negative_amount;
-        $this->jrn_def_negative_warning=$negative_warning;
+        $this->jrn_def_negative_amount=(isset($negative_amount))?$negative_amount:'0';
+        $this->jrn_def_negative_warning=(isset ($negative_warning))?$negative_warning:_("Attention, ce journal doit utiliser des montants négatifs");
         
         switch ($this->jrn_def_type)
         {
