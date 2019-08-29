@@ -195,7 +195,7 @@ class Icon_Action
      */
     static function warnbulle($p_comment)
     {
-        $r=sprintf('<span tabindex="-1" onmouseover="showBulle(\'%s\')"  onclick="showBulle(\'%s\')" onmouseout="hideBulle(0)" style="color:red" class="icon">&#xe818;</span>',
+        $r=sprintf('<span tabindex="-1" onmouseover="showBulle(\'%s\')"  onclick="showBulle(\'%s\')" onmouseout="hideBulle(0)" style="color:red" class="icon">&#xe80e;</span>',
                 $p_comment, $p_comment);
 
         return $r;
