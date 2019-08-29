@@ -656,7 +656,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     Stock_Goods::insert_goods($this->db,array('j_id'=>$j_id,'goods'=>${'e_march'.$i},'quant'=>$nNeg*${'e_quant'.$i},'dir'=>$dir,'repo'=>$repo)) ;
                 }
 
-                if ( $g_parameter->MY_ANALYTIC != "nu" )
+                if ( $g_parameter->MY_ANALYTIC != "nu" && $g_parameter->match_analytic($poste_val))
                 {
                     // for each item, insert into operation_analytique */
                     $op=new Anc_Operation($this->db);
