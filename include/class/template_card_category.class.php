@@ -158,9 +158,7 @@ class Template_Card_Category extends Manage_Table_SQL
                 echo $sel_attribut->input();
                 $js_script=sprintf("category_card.add_attribut('%s','%s','%s')",
                         $dossier_id, $this->table->frd_id, $objname);
-                echo HtmlInput::button_image($js_script, uniqid(),
-                        'class="smallbutton image_search"',
-                        "image/bouton-plus.png");
+                echo Icon_Action::icon_add(uniqid(), $js_script);
             }
         }
     }
