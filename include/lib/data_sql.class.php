@@ -46,8 +46,9 @@
  */
 abstract class Data_SQL
 {
-
-   function __construct($p_cn, $p_id=-1)
+   private $cn; //! Database connection
+   
+   function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
         $this->cn=$p_cn;
         $pk=$this->primary_key;
