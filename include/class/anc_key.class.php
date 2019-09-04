@@ -324,6 +324,7 @@ class Anc_Key
         {
             $val[$number][$i]=bcmul($p_amount,$a_amount[$i]['ke_percent']);
             $val[$number][$i]=bcdiv($val[$number][$i],100);
+            $val[$number][$i]=abs($val[$number][$i]);
         }
         $array['val']=$val;
                

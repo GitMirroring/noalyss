@@ -59,6 +59,7 @@ class Anc_Plan
              "pa_description as description from plan_analytique $p_order";
         $ret=$this->db->exec_sql($sql);
         $array=Database::fetch_all($ret);
+        if ($array == FALSE )            return array();
         return $array;
     }
 

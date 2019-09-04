@@ -225,7 +225,7 @@ $str_anc="";
                     if ($owner->MY_ANALYTIC != "nu" /*&& $div == 'popup'*/ )
                     {
                         $poste = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
-                        if (preg_match('/^(6|7)/', $poste))
+                        if ( $g_parameter->match_analytic($poste))
                         {
                             $anc_op = new Anc_Operation($cn);
                             $anc_op->j_id = $q['j_id'];

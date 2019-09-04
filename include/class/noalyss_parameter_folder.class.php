@@ -45,6 +45,7 @@ class Noalyss_Parameter_Folder
     var $MY_ALPHANUM;
     var $MY_UPDLAB;
     var $MY_STOCK;
+    var $MY_ANC_FILTER;
     
     // constructor
     function __construct($p_cn)
@@ -61,14 +62,51 @@ class Noalyss_Parameter_Folder
         }
 
     }
-    function check(&$p_value)
+    function check_anc_filter($p_value)
     {
-        if ($p_value == 'MY_STRICT'
-                && $this->MY_STRICT != 'Y'
-                && $this->MY_STRICT != 'N')
-            $p_value='N';
-        $p_value=htmlspecialchars($p_value);
+        $tmp_value=$p_value;
+        $tmp_value=preg_replace("/[0-9]|,/", '', $p_value);
+        if ( $tmp_value != "") {
+            throw new Exception (sprintf(_("Valeur invalide %s"),$tmp_value),1000);
+        }
+        if (trim($p_value) == "") {
+            throw new Exception (sprintf(_("Erreur Filtre analytique %s"),$tmp_value),1001);
+            
+        }
+        
     }
+    function check($p_attr, $p_value)
+    {
+        $ret_value=$p_value;
+        switch ($p_attr)
+        {
+            case 'MY_STRICT':
+                
+                if (empty(trim($p_value)) ||($p_value!='Y'&&$p_value!='N'))
+                {
+                    $ret_value='N';
+                }
+                
+                break;
+            case 'MY_ANC_FILTER':
+                try
+                {
+                    $p_value=str_replace(" ", "", $p_value);
+                    $this->check_anc_filter($p_value);
+                    $ret_value=$p_value;
+                }
+                catch (Exception $exc)
+                {
+                    throw $exc;
+                }
+
+                break;
+            default :
+                $ret_value=htmlspecialchars($p_value);
+        }
+        return $ret_value;
+    }
+
     /*!
      **************************************************
      * \brief  save the parameter into the database by inserting or updating
@@ -79,20 +117,24 @@ class Noalyss_Parameter_Folder
      */
     function save($p_attr)
     {
-        $this->check($p_attr);
-        $value=$this->$p_attr;
-        // check if the parameter does exist
-        if ( $this->db->get_value('select count(*) from parameter where pr_id=$1',array($p_attr)) != 0 )
-        {
-            $Res=$this->db->exec_sql("update parameter set pr_value=$1 where pr_id=$2",
-                                     array($value,$p_attr));
-        }
-        else
-        {
+        try {
+            $value=$this->check($p_attr,$this->$p_attr);
 
-            $Res=$this->db->exec_sql("insert into parameter (pr_id,pr_value) values( $1,$2)",
-                                     array($p_attr,$value));
+            // check if the parameter does exist
+            if ( $this->db->get_value('select count(*) from parameter where pr_id=$1',array($p_attr)) != 0 )
+            {
+                $Res=$this->db->exec_sql("update parameter set pr_value=$1 where pr_id=$2",
+                                         array($value,$p_attr));
+            }
+            else
+            {
 
+                $Res=$this->db->exec_sql("insert into parameter (pr_id,pr_value) values( $1,$2)",
+                                         array($p_attr,$value));
+
+            }
+        } catch (Exception $e) {
+             throw $e;
         }
 
     }
@@ -124,8 +166,19 @@ class Noalyss_Parameter_Folder
         $this->save('MY_ALPHANUM');
         $this->save('MY_UPDLAB');
         $this->save('MY_STOCK');
+        $this->save("MY_ANC_FILTER");
 
-
+    }
+    /**
+     * Check if an accounting match the anc_filter
+     * @param string $p_accounting 
+     * @return boolean FALSE does not match , TRUE matches
+     */
+    function match_analytic($p_accounting)
+    {
+        $string="/^[".$this->MY_ANC_FILTER."]+/";
+        if ( preg_match($string,$p_accounting) == 0 ) return FALSE;
+        return TRUE;
     }
 
 }

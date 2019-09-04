@@ -118,7 +118,7 @@ echo td(_('Pièce')).td($itext->input());
     if ( $owner->MY_ANALYTIC != "nu" /*&& $div == 'popup'*/)
       {
 	$poste=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
-	if ( preg_match('/^(6|7)/',$q[$e]['j_poste']))
+	if (  $g_parameter->match_analytic($q[$e]['j_poste']))
 	  {
             $qcode=$fiche->strAttribut(ATTR_DEF_QUICKCODE);
 	    $anc_op=new Anc_Operation($cn);

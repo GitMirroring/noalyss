@@ -161,7 +161,7 @@ $amount_idx=0;
     $row.=($q[$e]['j_debit']=='f')?$montant:td('');
     /* Analytic accountancy */
     if ( $owner->MY_ANALYTIC != "nu" /*&& $div=='popup'*/){
-      if ( preg_match('/^(6|7)/',$q[$e]['j_poste'])) {
+      if (  $g_parameter->match_analytic($q[$e]['j_poste'])) {
 
 	echo HtmlInput::hidden("amount_t".$amount_idx,$q[$e]['j_montant']);
 	$anc_op=new Anc_Operation($cn);

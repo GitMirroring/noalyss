@@ -26,6 +26,7 @@
  * @see ajax_payment_method.php
  */
 require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
+require_once NOALYSS_INCLUDE."/database/jrn_def_sql.class.php";
 
 class Payment_Method_MTable extends Manage_Table_SQL
 {
@@ -92,11 +93,15 @@ class Payment_Method_MTable extends Manage_Table_SQL
             $this->set_error("mp_lib", _("Un libellé est obligatoire"));
             $has_error++;
         }
-        if (trim ($table->mp_qcode) != "" &&  $a_row['jrn_def_type'] != 'FIN') {
-            $fiche=new Fiche($cn);
-            if ( $fiche->get_by_qcode($table->mp_qcode,FALSE) == 1) {
-                $this->set_error("mp_qcode",_("Fiche inexistante"));
-                $has_error++;
+        
+        if (trim ($table->mp_qcode) != "") {
+            $ledger=new Jrn_def_SQL($cn , $table->jrn_def_id);
+            if ( $ledger->get('jrn_def_type') == 'FIN'){
+                $fiche=new Fiche($cn);
+                if ( $fiche->get_by_qcode($table->mp_qcode,FALSE) == 1) {
+                    $this->set_error("mp_qcode",_("Fiche inexistante"));
+                    $has_error++;
+                }
             }
         }
         // get the type of the ledger

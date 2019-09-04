@@ -2946,7 +2946,7 @@ function init_scroll()
             "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:30%;right:50px;text-align:center;font-size:20px",
             id:"go_up"
         });
-        up.innerHTML=' <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>';
+        up.innerHTML='<a class="icon" onclick="document.getElementById(\'go_up\').hide()" style="float:right;font-size:70%">&#xe816;</a> <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>';
         document.body.appendChild(up);
          window.onscroll=function () {
          if ( document.viewport.getScrollOffsets().top> 0) {

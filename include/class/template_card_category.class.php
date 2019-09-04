@@ -134,10 +134,9 @@ class Template_Card_Category extends Manage_Table_SQL
                 if (!in_array($a_attribut[$i]['ad_id'], [ATTR_DEF_NAME, ATTR_DEF_QUICKCODE])&&$used==0)
                 {
                     // allow to remove attribute
-                    $js=sprintf("onclick=\"category_card.remove_attribut('%s','%s','%s',%d)\"",
+                    $js=sprintf("category_card.remove_attribut('%s','%s','%s',%d)",
                             Dossier::id(), $this->table->frd_id, $objname, $a_attribut[$i]['ad_id']);
-                    echo HtmlInput::anchor(SMALLX, "", $js,
-                            ' class="smallbutton" style="padding:0px;display:inline" ');
+                    echo Icon_Action::trash(uniqid(), $js);
                 }
                 echo '</li>';
             }
@@ -159,9 +158,7 @@ class Template_Card_Category extends Manage_Table_SQL
                 echo $sel_attribut->input();
                 $js_script=sprintf("category_card.add_attribut('%s','%s','%s')",
                         $dossier_id, $this->table->frd_id, $objname);
-                echo HtmlInput::button_image($js_script, uniqid(),
-                        'class="smallbutton image_search"',
-                        "image/bouton-plus.png");
+                echo Icon_Action::icon_add(uniqid(), $js_script);
             }
         }
     }

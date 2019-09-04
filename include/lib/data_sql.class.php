@@ -42,12 +42,41 @@
  * After you call the parent constructor
  * @note the view or the table must include an unique key, otherwise the load 
  * doesn't work.
+ * 
+ * @pnote
+ * Name is an array the key is the logical name and the value is the name of the column
+ @code
+  $this->name=array(
+                "id"=>"o_id",
+                "program"=>"o_prog",
+                "date"=>"o_date",
+                "qcode"=>"o_qcode",
+                "fiche"=>"f_id",
+  );
+@endcode
  *
+  the type is an array , key = column name , value = type
+
+ * @code
+  $this->type = array(
+                "o_id"=>"numeric",
+                "o_prog"=>"numeric",
+                "o_date"=>"date",
+                "o_qcode"=>"text",
+                "f_id"=>"numeric",
+                 );
+@endcode
+ * 
  */
 abstract class Data_SQL
 {
-
-   function __construct($p_cn, $p_id=-1)
+   private $cn;         //! Database connection
+   var $name;           //! Array of logical and real name
+   var $primary_key;    //! Column name of the primary key 
+   var $type;           //! Type of the data
+   var $date_format;    //! defaullt date format
+   
+   function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
         $this->cn=$p_cn;
         $pk=$this->primary_key;
@@ -64,6 +93,7 @@ abstract class Data_SQL
         $this->$pk=$p_id;
         /* load it */
         if ($p_id != -1 )$this->load();
+        if ( empty($this->date_format) )         $this->date_format="DD.MM.YYYY";
     }
 /**
  * Insert or update : if the row already exists, update otherwise insert
@@ -263,6 +293,63 @@ abstract class Data_SQL
      * @return integer  0 doesn't exist , 1 exists
      */
     abstract function exist() ;
+    public function get_cn()
+    {
+        return $this->cn;
+    }
+
+    public function get_name()
+    {
+        return $this->name;
+    }
+
+    public function get_primary_key()
+    {
+        return $this->primary_key;
+    }
+
+    public function get_type()
+    {
+        return $this->type;
+    }
+
+    public function set_cn($cn)
+    {
+        $this->cn=$cn;
+        return $this;
+    }
+    /**
+     * 
+     * @param string $name
+     * @return $this
+     */
+    public function set_name($name)
+    {
+        $this->name=$name;
+        return $this;
+    }
+    /**
+     * 
+     * @param string $primary_key
+     * @return $this
+     */
+    public function set_primary_key($primary_key)
+    {
+        $this->primary_key=$primary_key;
+        return $this;
+    }
+    /**
+     * 
+     * @param array $type
+     * @return $this
+     */
+    public function set_type($type)
+    {
+        $this->type=$type;
+        return $this;
+    }
+
+
 }
 
 ?>
