@@ -2463,6 +2463,7 @@ class Acc_Ledger extends jrn_def_sql
      */
     function input_new()
     {
+      	global $g_user;
         $http=new HttpInput();
         $retry=$http->post("sa", "string", "");
 //            if ( $retry == "add") {
@@ -2480,6 +2481,7 @@ class Acc_Ledger extends jrn_def_sql
         $f_add_button->javascript=" this.jrn=-1;select_card_type({type_cat:4});";
 
         $str_add_button="";
+
         if ($g_user->check_action(FICADD)==1)
         {
             $str_add_button=$f_add_button->input();
