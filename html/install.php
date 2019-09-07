@@ -73,6 +73,9 @@ session_start();
     color: inherit;
 }
  </style>
+<?php
+?>
+
 </head>
 <body>
 <p align="center">
@@ -129,6 +132,13 @@ if ( ! isset($_GET['lang'])){
 require_once '../include/constant.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 include_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
+include_once '../lib/function_javascript.php';
+load_all_script();
+
+
+
+
+echo '<div id="info_div"></div>';
 if ( $_GET['lang'] == "en_US.utf8" || $_GET['lang']=='fr_FR.utf8')
 {
     $_SESSION['g_lang']=$_GET['lang'];
@@ -137,8 +147,11 @@ if ( $_GET['lang'] == "en_US.utf8" || $_GET['lang']=='fr_FR.utf8')
 ?>
  <script type="text/javascript" charset="utf-8" language="javascript" src="js/infobulle.js">
 </script>
+  <?php
+  include_once NOALYSS_INCLUDE.'/lib/message_script.php';
+  ?>
 <script>
-var content=new Array();    
+
 content[200]="<?php echo _("Indiquez ici le répertoire où les documents temporaires peuvent être sauvés exemple c:/temp, /tmp")?>";
 content[201]="<?php echo _("Désactiver le changement de langue (requis pour MacOSX)")?>";
 content[202]="<?php echo _("Le chemin vers le repertoire contenant psql, pg_dump...")?>";
@@ -213,11 +226,9 @@ if (isset($_POST['save_config'])) {
        echo '<h1>'._('Important').'</h1>';
        echo '<h2 class="warning">',_("Voici l'utilisateur et mot de passe de l'utilisateur administrateur de Noalyss , il a tous les droits et a accès à tout."
                . " Connectez-vous avec ses identifiants et changer le mot de passe dans préférence (en haut à droit)"),
-               "</h2>";
-       echo '<div style="background-color:lightgrey">';
+	 "</h2>";
        echo '<p style="font-size:120%">'._('Utilisateur administrateur'),' ','<span style="color:red"> ',$cadmin,'</span>','</p>';
        echo '<p style="font-size:120%">',_('Mot de passe'),'<span style="color:red"> phpcompta </span>','</p>';
-       echo '</div>';
       // Create the db
       if (is_writable(NOALYSS_INCLUDE)) { 
         $url=config_file_create($_POST,1,$os); 
@@ -478,7 +489,7 @@ if ( $flag == 0 ) {
 if ( ! isset($_POST['go']) ) {
 ?>
 <span style="text-align: center">
-    <FORM METHOD="post" action="install.php?lang=<?php echo $_GET['lang']?>">
+    <FORM METHOD="post" action="install.php?lang=<?php echo $_GET['lang']?>" onsubmit="waiting_box();return true;">
 <input type="submit" class="button" name="go" value="<?php echo _("Commencer la mise à jour ou l'installation");?>">
 </form>
 </span>
