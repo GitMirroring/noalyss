@@ -202,9 +202,9 @@ if (isset($_POST['save_config'])) {
   require_once NOALYSS_INCLUDE.'/lib/config_file.php';
   // Try to connect , if it doesn't work that do not create the config file 
   if ($multi=="N") {
-    $cnx = Database::connect($db_user, $db_password,'template1', $db_host, $db_port); 
+    $cnx = new DatabaseCore($db_user, $db_password,'template1', $db_host, $db_port); 
   }else {
-    $cnx = Database::connect($db_user, $db_password,$db_name, $db_host, $db_port); 
+    $cnx = new DatabaseCore($db_user, $db_password,$db_name, $db_host, $db_port); 
   }
   // ----- 
   // If conx successfull save the file or display it
