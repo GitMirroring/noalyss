@@ -1363,7 +1363,7 @@ function load_filter(p_div,p_dossier,p_filter_id) {
                 var elt=['ledger_type','date_start','date_end','date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting'];
                 for (var i=0;i<elt.length;i++) {
                     var idx=elt[i];
-                    $(p_div+idx).value=answer[elt[i]]
+                    $(p_div+idx).value=answer[elt[i]];
                 }
                // fillup the r_jrn array
                var eltLedgerId=$("ledger_id"+p_div);

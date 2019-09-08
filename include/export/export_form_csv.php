@@ -49,7 +49,7 @@ $export->send_header();
 // Step ?
 //--
 $p_step=$http->get('p_step',"string",0);
-if (  $step == 0 )
+if (  $p_step == 0 )
 {
     if ( $type_periode == 0 )
     {
@@ -80,7 +80,7 @@ if (  $step == 0 )
         $export->write();
     }
 }
-elseif ($step == 1)
+elseif ($p_step == 1)
 {
     // Gather all the data
     //---
