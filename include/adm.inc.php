@@ -74,7 +74,7 @@ if ( $low_action == "list" )
 	<?php
 	echo '<h2>' . "Exercice " . $g_user->get_exercice() . '</h2>';
 	echo dossier::hidden();
-        $a=(isset($_GET['query']))?$_GET['query']:"";
+        $a=$http->get("query","string",""); 
         echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
 
         echo HtmlInput::request_to_hidden(array('ac'));
@@ -85,7 +85,7 @@ if ( $low_action == "list" )
             $sel_card->value=$cn->make_array('select fd_id, fd_label from fiche_def '.
                                              ' where  frd_id=$1 '.
                                              ' order by fd_label ',1,array(FICHE_TYPE_ADM_TAX));
-            $sel_card->selected=(isset($_GET['cat']))?$_GET['cat']:-1;
+            $sel_card->selected=$http->get("cat","number",-1);
             $sel_card->javascript=' onchange="submit(this);"';
             echo _('Catégorie :').$sel_card->input();
         } else
@@ -108,7 +108,7 @@ if ( $low_action == "list" )
     $cat=$http->request("cat","number",-1);
     if ( $cat != -1)
      {
-             $sql=sprintf(" and fd_id = %d",$_GET['cat']);
+             $sql=sprintf(" and fd_id = %d",$cat);
      }
 
     echo '<div class="content">';

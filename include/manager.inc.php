@@ -57,7 +57,7 @@ if (isset($_POST['action_fiche']))
             return;
         }
 
-        $f_id = $_REQUEST['f_id'];
+        $f_id = $http->request('f_id','number');
 
         $fiche = new Manager($cn, $f_id);
         $fiche->remove();
@@ -77,7 +77,7 @@ if ($low_action == "list")
                 <?php
                 echo '<h2>' . "Exercice " . $g_user->get_exercice() . '</h2>';
                 echo dossier::hidden();
-                $a = (isset($_GET['query'])) ? $_GET['query'] : "";
+                $a=$http->get("query","string","");
                 echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
 
                 echo HtmlInput::request_to_hidden(array('ac'));
@@ -88,7 +88,7 @@ if ($low_action == "list")
                     $sel_card->value = $cn->make_array('select fd_id, fd_label from fiche_def ' .
                             ' where  frd_id=' . FICHE_TYPE_EMPL .
                             ' order by fd_label ', 1);
-                    $sel_card->selected = (isset($_GET['cat'])) ? $_GET['cat'] : -1;
+                    $sel_card->selected=$http->get("cat","number",-1);
                     $sel_card->javascript = ' onchange="submit(this);"';
                     echo _('Catégorie :') . $sel_card->input();
                 }
@@ -103,17 +103,17 @@ if ($low_action == "list")
                 echo _('Inclure les employés sans opération :') . $nooperation->input();
                 ?>
                 <input type="submit" class="button" name="submit_query" value="<?php echo _('recherche') ?>">
-                <input type="hidden" name="ac" value="<?php echo $_REQUEST['ac'] ?>">
+                <input type="hidden" name="ac" value="<?php echo$http->request('ac') ?>">
             </form>
         </div>
     <?php
     $supplier = new Manager($cn);
-    $search = (isset($_GET['query'])) ? $_GET['query'] : "";
+    $search=$http->get("query","string","");
     $sql = "";
     if (isset($_GET['cat']))
     {
-        if ($_GET['cat'] != -1)
-            $sql = sprintf(" and fd_id = %d", $_GET['cat']);
+        $cat=$http->get("cat","number");
+        if ($cat!= -1 )     $sql = sprintf(" and fd_id = %s", $cat);
     }
     $noop = (isset($_GET['noop'])) ? false : true;
 
