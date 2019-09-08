@@ -73,8 +73,6 @@ if ( $jrn ===false  ) {
 echo '<table class="result">';
 echo tr(th(_('Journal')).th(_('Débit'),' style="display:right"').th(_("Crédit"),' style="display:right"').th(_("Différence"),' style="display:right"').th(''));
 
-$nb_jrn=count($jrn);
-if ( $jrn === false) $nb_jrn=0;
 $ix=0;
 for ($i=0;$i<$nb_jrn;$i++)
 {
