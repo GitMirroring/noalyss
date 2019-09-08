@@ -61,6 +61,7 @@ class Prepared_Query {
             $this->db->prepare('reconcile_date',
                     'select  * 
                         , (select ad_value from fiche_detail where ad_id=23 and f_id=jrn_def.jrn_def_bank ) as qcode_bank
+                        , (select ad_value from fiche_detail where ad_id=1 and f_id=jrn_def.jrn_def_bank ) as qcode_name
                          from 
                            jrn 
                            join jrn_def on (jrn.jr_def_id=jrn_def.jrn_def_id)
