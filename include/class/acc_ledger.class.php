@@ -2478,7 +2478,7 @@ class Acc_Ledger extends jrn_def_sql
         $f_add_button->label=_('Créer une nouvelle fiche');
         $f_add_button->tabindex=-1;
         $f_add_button->set_attribute('jrn', -1);
-        $f_add_button->javascript=" this.jrn=-1;select_card_type({type_cat:4});";
+        $f_add_button->javascript=" select_card_type({type_cat:4,elementId:'bank',p_jrn:-1});";
 
         $str_add_button="";
 
