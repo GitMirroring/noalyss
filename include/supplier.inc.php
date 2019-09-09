@@ -56,7 +56,7 @@ if ( isset($_POST['action_fiche'] ) )
             return;
         }
 
-        $f_id=$_REQUEST['f_id'];
+        $f_id = $http->request('f_id','number');
 
         $fiche=new Supplier($cn,$f_id);
         $fiche->remove();
@@ -107,7 +107,7 @@ if ( $low_action == "list" )
                                                                      </div>
                                                                      <?php
                                                                      $supplier=new Supplier($cn);
-    $search=(isset($_GET['query']))?$_GET['query']:"";
+    $search=$http->get("query","string","");
     $sql="";
     if (isset($_GET['cat']))
     {
