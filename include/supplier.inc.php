@@ -69,6 +69,7 @@ if ( isset($_POST['action_fiche'] ) )
 //-----------------------------------------------------
 if ( $low_action == "list" )
 {
+    $search=$http->get("query","string","");
 
     ?>
     <div class="content">
@@ -77,8 +78,7 @@ if ( $low_action == "list" )
 	<?php
 	echo '<h2>' . "Exercice " . $g_user->get_exercice() . '</h2>';
 	echo dossier::hidden();
-    $a=(isset($_GET['query']))?$_GET['query']:"";
-    echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
+    echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$search);
 
     $choice_cat=$http->request("choice_cat", "string",1);
     if ( $choice_cat == 1 )
@@ -107,7 +107,6 @@ if ( $low_action == "list" )
                                                                      </div>
                                                                      <?php
                                                                      $supplier=new Supplier($cn);
-    $search=$http->get("query","string","");
     $sql="";
     if (isset($_GET['cat']))
     {
