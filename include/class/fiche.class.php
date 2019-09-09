@@ -1774,7 +1774,7 @@ class Fiche
         $r="";
         $r.=$bar;
         
-        $r.='<table  id="tiers_tb" class="sortable"  style="width:90%;margin-left:5%">
+        $r.='<table  id="tiers_tb" class="sortable"  style="">
             <TR >
             <TH>'._('Quick Code').Icon_Action::infobulle(17).'</TH>'.
             '<th>'._('Poste comptable').'</th>'.
