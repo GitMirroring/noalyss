@@ -313,7 +313,7 @@ class Fiche
 
         $Ret=$this->cn->exec_sql($sql);
         if ( ($Max=Database::num_row($Ret)) == 0 )
-            return ;
+            return [];
         $all[0]=new Fiche($this->cn);
 
         for ($i=0;$i<$Max;$i++)
