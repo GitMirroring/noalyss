@@ -73,7 +73,7 @@ class Periode_Ledger_Table
     }
     function get_resource_periode_ledger($p_ledger_id) 
     {
-        $ret=$this->cn->exec_sql($this->sql." where jrn_def_id = $1 order by p_start desc",[$p_ledger_id]);
+        $ret=$this->cn->exec_sql($this->sql." where jrn_def_id = $1 order by p_start asc",[$p_ledger_id]);
         return  $ret;
     }
     /**
