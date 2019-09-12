@@ -191,6 +191,8 @@ $path = array(
     "ledger_show"=>"ajax_ledger_show",
   //Show the available distribution keys for analytic 
     "anc_key_choice"=>"ajax_anc_key_choice" ,
+  //Clean the detail for analytic 
+    "anc_key_clean"=>"ajax_anc_key_clean" ,
   // Show the activities computed with the selected distribution key 
     "anc_key_compute"=>"ajax_anc_key_compute" ,
   //From admin, revoke the access to a folder from an user
