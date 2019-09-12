@@ -234,37 +234,7 @@ switch ($act)
             $a_answer["content"]=$ex->getMessage();
         }
         break;
-//    case "add_per":
-//        $per=new Periode($cn, $periode_id);
-//        $per->load();
-//
-//        $p_exercice=new ISelect('p_exercice');
-//        $p_exercice->value=$cn->make_array("select distinct p_exercice,p_exercice from parm_periode order by 1 desc");
-//        $title=_('Ajout période');
-//        $title_par="<p>"._('On ne peut ajouter une période que sur un exercice qui existe').
-//                "</p>";
-//
-//        $p_start=new IDate('p_start');
-//        $p_end=new IDate('p_end');
-//
-//        $html='';
-//        $html.=HtmlInput::title_box($title, 'mod_periode');
-//        $html.=$title_par;
-//        $html.='<form method="post">' ;
-//        $html.=HtmlInput::hidden("ac", $http->post("ac"));
-//        $html.=Dossier::hidden();
-//        $html.='<table>';
-//
-//        $html.=tr(td(_(' Début période : ')).td($p_start->input()));
-//        $html.=tr(td(_(' Fin période : ')).td($p_end->input()));
-//        $html.=tr(td(_(' Exercice : ')).td($p_exercice->input()));
-//        $html.='</table>';
-//        $html.=HtmlInput::submit('add_per', _('sauver'));
-//        $html.=HtmlInput::button('close', _('fermer'),
-//                        'onclick="removeDiv(\'mod_periode\')"');
-//        $html.='</form>';
-//        $a_answer['content']=$html;
-//        break;
+
     case 'insert_periode':
         try
         {

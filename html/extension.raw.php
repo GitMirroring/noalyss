@@ -34,7 +34,7 @@ require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 
 global $g_user,$cn,$g_parameter;
-
+$http=new HttpInput();
 $cn=Dossier::connect();
 $g_user=new User($cn);
 $g_user->check();
@@ -42,7 +42,7 @@ $only_plugin=$g_user->check_dossier(dossier::id());
 set_language();
 $ext=new Extension($cn);
 
-if ( $ext->search($_REQUEST['plugin_code']) != -1 )
+if ( $ext->search($http->request("plugin_code")) != -1 )
   {
     /* security */
     if ( !isset ($_SESSION['g_user']) || $ext->can_request($_SESSION['g_user']) == 0 )

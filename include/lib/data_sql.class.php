@@ -70,7 +70,7 @@
  */
 abstract class Data_SQL
 {
-   private $cn;         //! Database connection
+   var $cn;         //! Database connection
    var $name;           //! Array of logical and real name
    var $primary_key;    //! Column name of the primary key 
    var $type;           //! Type of the data

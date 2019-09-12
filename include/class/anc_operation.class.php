@@ -642,6 +642,22 @@ class Anc_Operation
             $button_key->name="js".$p_id.$p_seq;
             $button_key->label=_("Clef");
             $result .= $button_key->input();
+            /**
+             * Add a button to clean the detail
+             */
+            $button_clean=new IButton();
+            $button_clean->javascript=sprintf("anc_key_clean('%s','%s','%s','%s','%s','%s');",
+                    $gDossier,
+                    $p_id,
+                    $p_amount,
+                    $ledger,
+                    $this->j_id,
+                    $p_seq
+                    );
+            $button_clean->name=uniqid();
+            $button_clean->label=_("Efface détail");
+            $result.=$button_clean->input();
+                    
 
         }
 

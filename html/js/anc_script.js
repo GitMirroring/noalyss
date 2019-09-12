@@ -491,6 +491,55 @@ function anc_key_choice(p_dossier, p_table, p_amount,p_ledger)
         error_message(e.message);
     }
 }
+
+/**
+ *  reset all the details of a row
+ * @param p_dossier is the dossier
+ * @param p_table the table id of the target
+ * @param p_amount amount to distribute
+ * @param p_ledger ledger id
+ * @param p_jrnx_id jrnx.id
+ */
+function anc_key_clean(p_dossier, p_table, p_amount,p_ledger,p_jrnx_id,p_sequence)
+{
+    waiting_box();
+    var op = 'op=anc_key_clean';
+    var queryString = op + "&gDossier=" + p_dossier + "&t=" + p_table + "&amount=" + p_amount+"&jrnx_id="+p_jrnx_id+'&p_seq='+p_sequence;
+    try {
+        queryString+='&led='+p_ledger;
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'get',
+                    parameters: queryString,
+                    onFailure: error_box,
+                    onSuccess: function(req, json) {
+                        try
+                        {
+                            var answer = req.responseXML;
+                            remove_waiting_box();
+                            var html = answer.getElementsByTagName('code');
+                            if (html.length == 0) {
+                                var rec = req.responseText;
+                                alert_box('erreur :' + rec);
+                            }
+
+                            var code_html = getNodeText(html[0]); // Firefox ne prend que les 4096 car.
+                            code_html = unescape_xml(code_html);
+                            $(p_table+"t"+p_sequence).innerHTML=code_html;
+                        } catch (e)
+                        {
+                            error_message(e.message);
+                        }
+                    }
+                }
+
+        );
+
+    } catch (e) {
+        error_message(e.message);
+    }
+}
 /**
  * Add a row for distribution key.
  * This function add a row in the table key distribution
