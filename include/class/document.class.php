@@ -949,6 +949,7 @@ class Document
             /* if we do not use vat this var. is not set */
             if ( !isset(${$tva}) ) return '';
             if ( !isset (${'e_march'.$this->counter}) ) return "";
+             if ( !isset (${$tva}) ) return "";
             // check that something is sold
             if ( ${$price} == 0 || ${$qt} == 0
                     || strlen(trim( $price )) ==0
@@ -964,6 +965,7 @@ class Document
             $price='e_march'.$this->counter.'_price' ;
             $tva='e_march'.$this->counter.'_tva_id';
             if ( !isset (${'e_march'.$this->counter}) ) return "";
+            if ( !isset (${$tva}) ) return "";
             // check that something is sold
             if ( ${$price} == 0 || ${$qt} == 0
                     || strlen(trim( $price )) ==0
@@ -981,6 +983,7 @@ class Document
             $price='e_march'.$this->counter.'_price' ;
             $tva='e_march'.$this->counter.'_tva_id';
             if ( !isset (${'e_march'.$this->counter}) ) return "";
+             if ( !isset (${$tva}) ) return "";
             // check that something is sold
             if ( ${$price} == 0 || ${$qt} == 0
                     || strlen(trim( $price )) ==0
