@@ -323,7 +323,7 @@ if ( $div != 'popup' ) {
   {
     $remove=new IButton('Effacer');
     $remove->label=_('Effacer');
-    $remove->javascript="return confirm_box(null,'Vous confirmez effacement ?',function () {removeOperation('".$obj->det->jr_id."',".dossier::id().",'".$div."')})";
+    $remove->javascript="return confirm_box(null,content[50],function () {removeOperation('".$obj->det->jr_id."',".dossier::id().",'".$div."')})";
     echo $remove->input();
   }
  //----------------------------------------------------
@@ -359,7 +359,7 @@ echo '</form>';
   
   $r.='<p  style="text-align:center">';
   $r.=HtmlInput::submit('x','accepter',
-          'onclick="confirm_box($(\'form_'.$div.'\'),\'Vous confirmez  ? \',function () {$(\'form_'.$div.'\').divname=\''.$div.'\';reverseOperation($(\'form_'.$div.'\'))}); return false"');
+          'onclick="confirm_box($(\'form_'.$div.'\'),content[50],function () {$(\'form_'.$div.'\').divname=\''.$div.'\';reverseOperation($(\'form_'.$div.'\'))}); return false"');
     $r.="</p>";
   $r.='</form>';
   echo $r;

@@ -51,7 +51,12 @@ if (isset($_POST['record_company']))
 	$m->MY_CURRENCY =$http->post("p_currency");
         $m->MY_DEFAULT_ROUND_ERROR_DEB=$http->post("p_round_error_deb");
         $m->MY_DEFAULT_ROUND_ERROR_CRED=$http->post("p_round_error_cred");
-	$m->Update();
+        $m->MY_ANC_FILTER=$http->post("p_anc_filter");
+        try{
+            $m->Update();
+        } catch (Exception $e) {
+            alert($e->getMessage());
+        }
 }
 
 $my = new Noalyss_Parameter_Folder($cn);
@@ -113,6 +118,10 @@ $stock->value = array(
 $stock->selected = $my->MY_STOCK;
 $stock->table = 1;
 
+$anc_filter=new IText("p_anc_filter", $my->MY_ANC_FILTER);
+$anc_filter->placeholder='6,7';
+$anc_filter->title=_("Uniquement des chiffres séparés par des virgules");
+
 $use_currency= new ISelect();
 $use_currency->table = 1;
 $use_currency->value = $updlab_array;
@@ -154,6 +163,12 @@ echo "<tr>" . td(_("Pays"), 'style="text-align:right"') . $all->input("p_pays", 
 $all->value = '';
 echo "<tr>" . td(_("Numéro de Tva"), 'style="text-align:right"') . $all->input("p_tva", $my->MY_TVA) . "</tr>";
 echo "<tr>" . td(_("Utilisation de la compta. analytique"), 'style="text-align:right"') . $compta->input("p_compta", $array) . "</tr>";
+echo '<tr>'. td(_("Opération analytique uniquement pour les postes comptables commençant par")).
+        '<td>'.
+        $anc_filter->input().
+        Icon_Action::tips($anc_filter->title);
+        '</td>'.
+        '</tr>';
 echo "<tr>" . td(_("Utilisation des stocks"), 'style="text-align:right"') . $stock->input() . "</tr>";
 
 echo "<tr>" . td(_("Utilisation de devises étrangères"), 'style="text-align:right"') . $use_currency->input("p_currency", $strict_array) . "</tr>";

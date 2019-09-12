@@ -58,7 +58,7 @@ class PDF_Core extends TFPDF
 
     public function __construct ( $orientation = 'P', $unit = 'mm', $format = 'A4')
     {
-		$this->bigger=0;
+	$this->bigger=0;
 
         parent::__construct($orientation, $unit, $format);
         $this->AddFont('DejaVu','','DejaVuSans.ttf',true);
@@ -68,12 +68,39 @@ class PDF_Core extends TFPDF
         $this->AddFont('DejaVuCond','B','DejaVuSansCondensed-Bold.ttf',true);
         $this->AddFont('DejaVuCond','I','DejaVuSansCondensed-Oblique.ttf',true);
 
-
+        
 
         $this->cells=array();
     }
-
-
+    function get_margin_left()
+    {
+        return $this->lMargin;
+    }
+    function get_margin_bottom()
+    {
+        return $this->bMargin;
+        
+    }
+    function get_margin_top()
+    {
+        return $this->tMargin;
+    }
+    function get_margin_right()
+    {
+        return $this->rMargin;
+    }
+    function get_orientation()
+    {
+        return $this->DefOrientation;
+    }
+    function get_unit()
+    {
+        return $this->k;
+    }
+    function get_page_size()
+    {
+        return $this->DefPageSize;
+    }
     /**
      * Count the number of rows a p_text will take for a multicell
      * @param $p_text String

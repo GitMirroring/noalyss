@@ -96,9 +96,27 @@ class Icon_Action
      */
     static function tips($p_comment)
     {
-        $p_comment=htmlentities($p_comment);
+        $p_comment=str_replace("'",' ',$p_comment);
         $r='<span tabindex="-1" class="icon" style="cursor:pointer;display:inline;text-decoration:none;" onmouseover="displayBulle(\''.$p_comment.'\')"  onclick="displayBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">';
         $r.="&#xf086;";
+        $r.='</span>';
+
+        return $r;
+    }
+    /**
+     * Display a info in a bubble, text is given as parameter
+     * @param string $p_comment
+     * 
+     * @return html string
+     */
+    static function comment($p_comment)
+    {
+        $p_comment=str_replace("'",' ',$p_comment);
+        $js=sprintf("displayBulle('%s')",$p_comment);
+        
+        $r=sprintf('<span tabindex="-1" class="icon" style="cursor:pointer;display:inline;text-decoration:none;" onmouseover="%s"  onclick="%s" onmouseout="hideBulle(0)">',
+                $js,$js);
+        $r.="&#xf0e5;";
         $r.='</span>';
 
         return $r;
@@ -177,7 +195,7 @@ class Icon_Action
      */
     static function warnbulle($p_comment)
     {
-        $r=sprintf('<span tabindex="-1" onmouseover="showBulle(\'%s\')"  onclick="showBulle(\'%s\')" onmouseout="hideBulle(0)" style="color:red" class="icon">&#xe818;</span>',
+        $r=sprintf('<span tabindex="-1" onmouseover="showBulle(\'%s\')"  onclick="showBulle(\'%s\')" onmouseout="hideBulle(0)" style="color:red" class="icon">&#xe80e;</span>',
                 $p_comment, $p_comment);
 
         return $r;
@@ -302,6 +320,23 @@ class Icon_Action
         
         $r=sprintf( '<span id="%s" is_locked="0" onclick="toggle_lock(\'%s\');%s" class="icon smallicon">%s</span>',
                 $p_id,
+                $p_id,
+                $p_javascript, 
+                $lock_cur);
+        return $r;
+    }    
+    /**
+     * Display the icon of a slider
+     * @param string $p_id DOMid 
+     * @param string $p_javascript
+     * @return htmlString
+     */
+    static function slider($p_id,$p_javascript) 
+    {
+        
+        $lock_cur="&#xf1de;";
+        
+        $r=sprintf( '<span id="%s" onclick="%s" class="icon smallicon">%s</span>',
                 $p_id,
                 $p_javascript, 
                 $lock_cur);

@@ -52,8 +52,11 @@ echo $texte->input();
 echo '</span>';
 echo dossier::hidden();
 $hid=new IHidden();
-echo $hid->input("c1",$_REQUEST['c1']);
-echo $hid->input("c2",$_REQUEST['c2']);
+$c1=$http->request('c1');
+$c2=$http->request('c2');
+
+echo $hid->input("c1",$c1);
+echo $hid->input("c2",$c2);
 echo $hid->input("go");
 echo HtmlInput::submit("go",_("Recherche"));
 echo '</form>';
@@ -61,15 +64,15 @@ echo '</form>';
 if ( isset($_REQUEST['go']))
 {
     $cn=Dossier::connect();
-    $plan=new Anc_Plan($cn,$_REQUEST['c2']);
-    $plan->pa_id=$_REQUEST['c2'];
+    $plan=new Anc_Plan($cn,$c2);
+    $plan->pa_id=$c2;
     if ( $plan->exist()==false)
         exit(_("Ce plan n'existe pas"));
-
+    $plabel=$http->request("plabel");
     $sql="select po_name , po_description from poste_analytique ".
          "where pa_id=$1 and ".
          " (po_name ~* $2 or po_description ~* $3) order by po_name";
-    $array=$cn->get_array($sql,array($_REQUEST['c2'],$_REQUEST['plabel'],$_REQUEST['plabel']));
+    $array=$cn->get_array($sql,array($_c2,$plabel,$plabel));
 
     if (empty($array) == true)
     {
@@ -81,7 +84,7 @@ if ( isset($_REQUEST['go']))
     foreach ($array as $line)
     {
         $js=sprintf("onclick=\"$('%s').value='%s';removeDiv('%s')\"",
-                                    $_REQUEST['c1'],
+                                    $c1,
                                     $line['po_name'],$ctl);
         
         echo '<tr>'.

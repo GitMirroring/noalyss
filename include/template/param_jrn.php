@@ -68,6 +68,7 @@ if ( $new|| $type=='FIN') :
     echo $card->search();
     echo $card->input();
     echo $str_add_button;
+
     ?>
     </td>
     <td class="notice" style="white-space: nowrap">

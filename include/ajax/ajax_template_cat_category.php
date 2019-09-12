@@ -70,8 +70,7 @@ switch ($action)
                     Dossier::id(), $frd_id, $objname, $ad_id);
             $answer['content']=$cn->get_value("select ad_text from attr_def where ad_id=$1",
                             [$ad_id]).
-                    HtmlInput::anchor(SMALLX, "javascript:void(0)", $js,
-                            ' class="smallbutton" style="padding:0px;display:inline" ');
+                            Icon_Action::trash(uniqid(), $js);
         }
         catch (Exception $exc)
         {

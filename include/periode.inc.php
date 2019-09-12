@@ -81,16 +81,17 @@ $wSel->value=$sel_jrn;
 $wSel->name='jrn_def_id';
 $wSel->selected=$p_ledger_id;
 echo _("Choisissez global ou uniquement le journal à fermer").$wSel->input();
-echo HtmlInput::submit('choose', 'Valider');
-echo HtmlInput::hidden('ac', $_REQUEST['ac']);
-echo "</form>";
+echo HtmlInput::hidden('ac', $http->request('ac'));
 // display a filter by exercice
 echo _("Montrer l'exercice");
 $max_exercice=$cn->get_value("select max(p_exercice) from parm_periode");
-$p_exercice=$http->request("p_exercice","string",$max_exercice);
+$p_exercice=$http->request("p_exercice_sel","string",$max_exercice);
 Periode::filter_exercice($p_exercice);
-
 $js_close_selected="jsper.close_selected()";
+
+echo HtmlInput::submit('choose', 'Valider');
+echo "</form>";
+
 echo HtmlInput::button_action(_("Fermer les périodes sélectionnées"),
         $js_close_selected);
 

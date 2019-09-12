@@ -25,6 +25,8 @@
  */
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
+require_once NOALYSS_INCLUDE.'/class/pdf_land.class.php';
+
 class Print_Ledger_Detail_Item extends PDFLand
 {
     public function __construct (Database $p_cn,Acc_Ledger $p_jrn)

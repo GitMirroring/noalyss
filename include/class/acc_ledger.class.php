@@ -731,7 +731,7 @@ class Acc_Ledger extends jrn_def_sql
             // CA
             if ($g_parameter->MY_ANALYTIC!='nu') // use of AA
             {
-                if (preg_match("/^[6,7]+/", $strPoste)==1)
+                if ($g_parameter->match_analytic( $strPoste)==TRUE)
                 {
                     // show form
                     $op=new Anc_Operation($this->db);
@@ -1398,7 +1398,7 @@ class Acc_Ledger extends jrn_def_sql
                 $tot_cred+=($acc_op->type=='c')?$acc_op->amount:0;
                 if ($g_parameter->MY_ANALYTIC!="nu")
                 {
-                    if (preg_match("/^[6,7]+/", $poste)==1)
+                    if ($g_parameter->match_analytic( $poste)==TRUE)
                     {
 
                         // for each item, insert into operation_analytique */
@@ -2548,10 +2548,12 @@ class Acc_Ledger extends jrn_def_sql
             {
                 throw new Exception(_('Choix du type de journal est obligatoire'));
             }
-            if ($negative_amount == 1 && trim($negative_warning)=="") {
+
+           if (isset( $negative_warning) && $negative_amount == 1 && trim($negative_warning)=="") {
+
                 throw new Exception(_("Avertissement ne peut être vide"));
             }
-            if ( $negative_amount <> 0 && $negative_amount <> 1 ){
+            if ( isset( $negative_amount)  && $negative_amount <> 0 && $negative_amount <> 1 ){
                   throw new Exception(_("Valeur invalide"));
             }
         }
@@ -2583,8 +2585,8 @@ class Acc_Ledger extends jrn_def_sql
         $this->jrn_def_description=$p_description;
         $this->jrn_enable=$jrn_enable;
         $this->currency_id=0;
-        $this->jrn_def_negative_amount=$negative_amount;
-        $this->jrn_def_negative_warning=$negative_warning;
+        $this->jrn_def_negative_amount=(isset($negative_amount))?$negative_amount:'0';
+        $this->jrn_def_negative_warning=(isset ($negative_warning))?$negative_warning:_("Attention, ce journal doit utiliser des montants négatifs");
         
         switch ($this->jrn_def_type)
         {
@@ -2665,6 +2667,7 @@ class Acc_Ledger extends jrn_def_sql
      */
     function input_new()
     {
+      	global $g_user;
         $http=new HttpInput();
         $retry=$http->post("sa", "string", "");
 //            if ( $retry == "add") {
@@ -2679,9 +2682,10 @@ class Acc_Ledger extends jrn_def_sql
         $f_add_button->label=_('Créer une nouvelle fiche');
         $f_add_button->tabindex=-1;
         $f_add_button->set_attribute('jrn', -1);
-        $f_add_button->javascript=" this.jrn=-1;select_card_type({type_cat:4});";
+        $f_add_button->javascript=" select_card_type({type_cat:4,elementId:'bank',p_jrn:-1});";
 
         $str_add_button="";
+
         if ($g_user->check_action(FICADD)==1)
         {
             $str_add_button=$f_add_button->input();

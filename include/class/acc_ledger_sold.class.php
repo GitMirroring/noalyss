@@ -401,7 +401,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 }
 
 
-                if ($g_parameter->MY_ANALYTIC != "nu") {
+                if ($g_parameter->MY_ANALYTIC != "nu" && $g_parameter->match_analytic($poste_val)) {
                     // for each item, insert into operation_analytique */
                     $op = new Anc_Operation($this->db);
                     $op->set_currency_rate($p_currency_rate);
@@ -930,7 +930,8 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $r.='</td>';
             }
             // encode the pa
-            if ($g_parameter->MY_ANALYTIC != 'nu') { // use of AA
+            if ($g_parameter->MY_ANALYTIC != 'nu' 
+                    && $g_parameter->match_analytic($fiche->strAttribut(ATTR_DEF_ACCOUNT))==TRUE) { // use of AA
                 // show form
                 $anc_op = new Anc_Operation($this->db);
                 $null = ($g_parameter->MY_ANALYTIC == 'op') ? 1 : 0;

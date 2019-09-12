@@ -49,7 +49,7 @@ if ( isset($_POST['delete_card'] ) )
         return;
     }
 
-    $f_id=$_REQUEST['f_id'];
+    $f_id = $http->request('f_id','number');
 
     $fiche=new Bank($cn,$f_id);
     $fiche->remove();
@@ -70,7 +70,7 @@ if ( $low_action == "list" )
 	<?php
 	echo dossier::hidden();
 	echo '<h2>' ._( "Exercice")." " . $g_user->get_exercice() . '</h2>';
-    $a=(isset($_GET['query']))?$_GET['query']:"";
+    $a=$http->get("query","string","");
     echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
 
      $choice_cat=$http->request("choice_cat", "string",1);
@@ -81,7 +81,7 @@ if ( $low_action == "list" )
         $sel_card->value=$cn->make_array('select fd_id, fd_label from fiche_def '.
                                          ' where  frd_id=$1'.
                                          ' order by fd_label ',1,array(FICHE_TYPE_FIN));
-        $sel_card->selected=(isset($_GET['cat']))?$_GET['cat']:-1;
+        $sel_card->selected=$http->get("cat","number",-1);
         $sel_card->javascript=' onchange="submit(this);"';
         echo _('Catégorie :').$sel_card->input();
     }
@@ -102,11 +102,12 @@ if ( $low_action == "list" )
                                                                      </div>
                                                                      <?php
                                                                      $supplier=new Bank($cn);
-    $search=(isset($_GET['query']))?$_GET['query']:"";
+    $search=$http->get("query","string","");
     $sql="";
     if ( isset($_GET['cat']))
-{
-        if ( $_GET['cat'] != -1) $sql=sprintf(" and fd_id = %d",$_GET['cat']);
+    {
+         $cat=$http->get("cat","number");
+        if ($cat!= -1 )     $sql = sprintf(" and fd_id = %s", $cat);
     }
     $noop=(isset($_GET['noop']))?false:true;
 

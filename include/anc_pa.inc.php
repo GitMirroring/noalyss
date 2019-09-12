@@ -171,7 +171,7 @@ if ($sa=='anc_menu')
         echo '<div class="content">';
         echo '<TABLE class="vert_mtitle">';
         echo '<TR><TD class="first">';
-        echo '<a href="?'.$url.'">'._("Ajout d'un plan comptable").'</a>';
+        echo '<a href="?'.$url.'">'._("Ajout d'un plan analytique").'</a>';
         echo '</TD></TR>';
         echo '</TABLE>';
 
@@ -191,7 +191,7 @@ if ($sa=='anc_menu')
         if ($obj->isAppend()==true)
         {
             echo '<TR><TD class="first">';
-            echo '<a href="?'.$url.'">'._("Ajout d'un plan comptable").'</a>';
+            echo '<a href="?'.$url.'">'._("Ajout d'un plan analytique").'</a>';
             echo '</TD></TR>';
         }
         foreach ($list as $line)

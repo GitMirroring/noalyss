@@ -87,6 +87,7 @@ require NOALYSS_INCLUDE."/lib/data_sql.class.php";
 abstract class Noalyss_SQL extends Data_SQL
 {
 
+    var $default;
     function __construct(&$p_cn, $p_id=-1)
     {
         $this->cn=$p_cn;
@@ -104,6 +105,7 @@ abstract class Noalyss_SQL extends Data_SQL
         $this->$pk=$p_id;
         /* load it */
         if ($p_id != -1 )$this->load();
+        
     }
 /**
  * Insert or update : if the row already exists, update otherwise insert
@@ -255,23 +257,8 @@ abstract class Noalyss_SQL extends Data_SQL
 
     public function load()
     {
-        $sql=" select ";
-        $sep="";
-        foreach ($this->name as $key)       {
-            switch ($this->type[$key])
-            {
-                case "date":
-                    $sql .= $sep.'to_char('.$key.",'".$this->date_format."') as ".$key;
-                    break;
-                default:
-                    $sql.=$sep.$key;
-            }
-            $sep=",";
-        }
+        $sql=$this->build_query();
         $pk=$this->primary_key;
-        $sql.=" from ".$this->table;
-        
-        $sql.=" where ".$this->primary_key." = $1";
        
         $result=$this->cn->get_array($sql,array ($this->$pk));
         if ($this->cn->count()==0)
@@ -411,6 +398,33 @@ abstract class Noalyss_SQL extends Data_SQL
         $pk=$this->primary_key;
         $count=$this->cn->get_value("select count(*) from ".$this->table." where ".$this->primary_key."=$1",array($this->$pk));
         return $count;
+    }
+    
+    /**
+     * Build the SQL select statement for querying the object and returns it
+     * @return string Query of the object 
+     */
+    public function build_query()
+    {
+        $sql=" select ";
+        $sep="";
+        foreach ($this->name as $key)       {
+            switch ($this->type[$key])
+            {
+                case "date":
+                    $sql .= $sep.'to_char('.$key.",'".$this->date_format."') as ".$key;
+                    break;
+                default:
+                    $sql.=$sep.$key;
+            }
+            $sep=",";
+        }
+        $pk=$this->primary_key;
+        $sql.=" from ".$this->table;
+        
+        $sql.=" where ".$this->primary_key." = $1";
+        
+        return $sql;
     }
 }
 

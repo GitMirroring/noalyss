@@ -50,7 +50,7 @@ $class= ( ($i % 2) == 0 ) ? "odd":"even";
   <tr <?php echo "class=\"$class\""; ?> >
 <td>
 <?php
-$letter=($this->content[$i]['letter']==-1)?" aucun lettrage ":strtoupper(base_convert($this->content[$i]['letter'],10,36));
+$letter=($this->content[$i]['letter']==-1)?_("aucun lettrage"):strtoupper(base_convert($this->content[$i]['letter'],10,36));
 $js="this.gDossier=".dossier::id().
   ";this.j_id=".$this->content[$i]['j_id'].
   ";this.obj_type='".$this->object_type."'".

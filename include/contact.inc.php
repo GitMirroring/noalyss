@@ -27,7 +27,7 @@ require_once NOALYSS_INCLUDE.'/class/contact.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
 require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 
-
+$http=new HttpInput();
 
 $low_action = (isset($_REQUEST['sb'])) ? $_REQUEST['sb'] : "list";
 /** \file
@@ -54,7 +54,7 @@ if (isset($_POST['action_fiche']))
             return;
         }
 
-        $f_id = $_REQUEST['f_id'];
+        $f_id = $http->request('f_id','number');
 
         $fiche = new Contact($cn, $f_id);
         $fiche->remove();
@@ -91,30 +91,31 @@ if ($low_action == "list")
 				where
 				ad_id='.ATTR_DEF_COMPANY. " and frd_id= ".FICHE_TYPE_CONTACT.
 			' order by 1', 1);
-		$sl_company->selected = (isset($_GET['sel_company'])) ? $_GET['sel_company'] : '';
+		$sl_company->selected = $http->get("sel_company","string","");
 		echo _('Société :') . $sl_company->input();
 
 		?>
     	    <input type="submit" class="button" name="submit_query" value="<?php echo  _('recherche')?>">
-    	    <input type="hidden" name="ac" value="<?php echo  $_REQUEST['ac']?>">
+    	    <input type="hidden" name="ac" value="<?php echo $http->request('ac')?>">
     	</form>
         </div>
 	<?php
 	$client = new contact($cn);
-	$search = (isset($_GET['query'])) ? $_GET['query'] : "";
+	$search =$http->get("query","string","");
 	$sql = "";
 	if (isset($_GET['cat']))
 	{
-	    if ($_GET['cat'] != -1)
-		$sql = sprintf(" and fd_id = %d", $_GET['cat']);
+	    $cat=$http->get("cat","number");
+            if ($cat!= -1 )     $sql = sprintf(" and fd_id = %s", $cat);
 	}
 	if (isset($_GET['sel_company']))
 	{
-	    if ($_GET['sel_company'] != '' && $_GET['sel_company'] != -1)
-		{
+            $sel_company=$http->get("sel_company");
+	    if ($sel_company != '' && $sel_company != "-1")
+            {
 
-			$client->company=$_GET['sel_company'];
-		}
+                $client->company=$sel_company;
+            }
 	}
 
 	echo '<div class="content">';

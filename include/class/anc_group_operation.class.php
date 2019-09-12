@@ -114,6 +114,7 @@ class Anc_Group_Operation
               $wDescription->input()."</td></tr>";
         $Plan=new Anc_Plan($this->db);
         $aPlan=$Plan->get_list();
+        $this->a_operation=(empty($this->a_operation))?[]:$this->a_operation;
         $max=(count($this->a_operation)<$this->nMaxRow)?$this->nMaxRow:count($this->a_operation);
         $ret.='</table><table  id="ago" style="width: 100%;">';
         /* show 10 rows */

@@ -275,6 +275,9 @@ if ( $action == 'display_form' )
 	echo '</select>';
 	echo '</fieldset>';
         
+        if  ($inside_dossier){
+            echo Dossier::hidden();
+        }
         echo '<p style="text-align:center">';
 	echo HtmlInput::button_close('preference_div');
 	echo HtmlInput::submit("set_preference", _("Valider"));

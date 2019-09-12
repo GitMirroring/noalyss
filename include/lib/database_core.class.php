@@ -946,6 +946,14 @@ class DatabaseCore
             $csv->write();
         }
     }
+    /**
+     * Returns the number of columns in a ret
+     * @param handler $p_ret handler to a query
+     */
+    static  function nb_column($p_ret) {
+        return pg_num_fields($p_ret);
+    }
+    
 }
 
 /* test::test_me(); */

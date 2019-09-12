@@ -314,7 +314,7 @@ class Fiche
 
         $Ret=$this->cn->exec_sql($sql);
         if ( ($Max=Database::num_row($Ret)) == 0 )
-            return ;
+            return [];
         $all[0]=new Fiche($this->cn);
 
         for ($i=0;$i<$Max;$i++)
@@ -1842,7 +1842,7 @@ class Fiche
         $r="";
         $r.=$bar;
         
-        $r.='<table  id="tiers_tb" class="sortable"  style="width:90%;margin-left:5%">
+        $r.='<table  id="tiers_tb" class="sortable"  style="">
             <TR >
             <TH>'._('Quick Code').Icon_Action::infobulle(17).'</TH>'.
             '<th>'._('Poste comptable').'</th>'.

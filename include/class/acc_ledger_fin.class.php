@@ -611,7 +611,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			}
 			$r.='</td>';
 			// encode the pa
-			if ($g_parameter->MY_ANALYTIC != 'nu' && preg_match("/^[6,7]/", $fTiers->strAttribut(ATTR_DEF_ACCOUNT)) == 1) // use of AA
+			if ($g_parameter->MY_ANALYTIC != 'nu' && $g_parameter->match_analytic($fTiers->strAttribut(ATTR_DEF_ACCOUNT)) == 1) // use of AA
 			{
 				// show form
 				$anc_op = new Anc_Operation($this->db);
