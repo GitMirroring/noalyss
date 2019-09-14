@@ -43,6 +43,7 @@ class PDF extends  PDF_Core
         $this->date = date('d.m.Y');
         parent::__construct($orientation,$unit,$format);
         date_default_timezone_set ('Europe/Paris');
+        $this->SetCreator("Noalyss");
     }
     function setDossierInfo($dossier = "n/a")
     {

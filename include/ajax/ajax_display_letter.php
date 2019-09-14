@@ -28,6 +28,20 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
+$http=new HttpInput();
+
+try {
+    $obj_type=$http->get("obj_type");
+    $j_id=$http->get("j_id","number");
+    $op=$http->get("op");
+    
+}catch (Exception $e )
+{
+    record_log($e->getMessage());
+    record_log($e->getTraceAsString());
+    return;
+}
+
 require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 $exercice=$g_user->get_exercice();
 if ($g_user->check_module("LETCARD")==0 &&  $g_user->check_module("LETACC")==0)
@@ -60,14 +74,15 @@ $r.='<div style="float:left;">';
 // needed hidden var
 $r.=dossier::hidden();
 if (isset($_REQUEST['ac']))
-    $r.=HtmlInput::hidden('ac', $_REQUEST['ac']);
+    $r.=HtmlInput::hidden('ac', $http->request('ac'));
 if (isset($_REQUEST['sa']))
-    $r.=HtmlInput::hidden('sa', $_REQUEST['sa']);
+    $r.=HtmlInput::hidden('sa', $http->request('sa'));
 if (isset($_REQUEST['acc']))
-    $r.=HtmlInput::hidden('acc', $_REQUEST['acc']);
+    $r.=HtmlInput::hidden('acc', $http->request('acc'));
+
 $r.=HtmlInput::hidden('j_id', $j_id);
 $r.=HtmlInput::hidden('op', $op);
-$r.=HtmlInput::hidden('ot', $ot);
+$r.=HtmlInput::hidden('obj_type', $obj_type);
 
 $r.='<table>';
 //min amount
@@ -88,6 +103,7 @@ $r.=tr($line);
 $date_error="";
 // start date
 $start=new IDate('search_start');
+$search_start=$http->get("search_start");
 
 /*  check if date are valid */
 if (isset($search_start)&&isDate($search_start)==null)
@@ -104,6 +120,8 @@ $line=td(_('Date Début')).td($start->input());
 // end date
 $end=new IDate('search_end');
 /*  check if date are valid */
+$search_end=$http->get("search_end","date");
+
 if (isset($search_end)&&isDate($search_end)==null)
 {
     ob_start();
@@ -165,22 +183,11 @@ $form='<div id="result" style="float:top;clear:both">';
 
 $form.='<FORM id="letter_form" METHOD="post">';
 $form.=dossier::hidden();
-if (isset($_REQUEST['p_action']))
-    $form.=HtmlInput::hidden('p_action', $_REQUEST['p_action']);
-if (isset($_REQUEST['sa']))
-    $form.=HtmlInput::hidden('sa', $_REQUEST['sa']);
-if (isset($_REQUEST['acc']))
-    $form.=HtmlInput::hidden('acc', $_REQUEST['acc']);
-if (isset($_REQUEST['sc']))
-    $form.=HtmlInput::hidden('sc', $_REQUEST['sc']);
-if (isset($_REQUEST['sb']))
-    $form.=HtmlInput::hidden('sb', $_REQUEST['sb']);
-if (isset($_REQUEST['f_id']))
-    $form.=HtmlInput::hidden('f_id', $_REQUEST['f_id']);
 
+$form.=HtmlInput::array_to_hidden(['p_action','sa','acc','sc','sb','f_id'],$_REQUEST);
 
 // display a list of operation from the other side + box button
-if ($ot=='account')
+if ($obj_type=='account')
 {
     $obj=new Lettering_Account($cn, $row['j_poste']);
     if (isset($search_start))
@@ -196,7 +203,7 @@ if ($ot=='account')
 
     $form.=$obj->show_letter($j_id);
 }
-else if ($ot=='card')
+else if ($obj_type=='card')
 {
     $obj=new Lettering_Card($cn, $row['j_qcode']);
     if (isset($search_start))

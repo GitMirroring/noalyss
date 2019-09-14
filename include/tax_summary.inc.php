@@ -67,6 +67,8 @@ if ( $http->get("do","string","no") == "display")
         echo '</ul>';
 
     } catch (Exception $e) {
+        echo '<span class="warning">';
         echo $e->getMessage();
+        echo '</span>';
     }
 }

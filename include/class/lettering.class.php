@@ -43,6 +43,7 @@ class Lettering
                               "sql_ledger"=>"sql_ledger"	/*   the sql clause to filter on the available ledgers */
                              )
                         ;
+    
     /**
      * constructor
      *@param $p_init resource to database
