@@ -421,7 +421,7 @@ if ( isset($_GET['view'] ) )
             echo td(nbm($r['sum_deb_previous']),' class="previous_year"');
             echo td(nbm($r['sum_cred_previous']),' class="previous_year" ');
             $solde_previous=bcsub($r['solde_deb_previous'],$r['solde_cred_previous']);
-            $side=($solde_previous<0)?"D":"C";
+            $side=($solde_previous<0)?"C":"D";
             $side=($solde_previous==0)?"":$side;
             $r['solde_previous']=$solde_previous;
             echo td(nbm(abs($solde_previous))." ".$side,' class="previous_year"');
