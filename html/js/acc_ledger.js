@@ -980,12 +980,13 @@ function dsp_letter(obj)
 {
     try
     {
-        var queryString = 'gDossier=' + obj.gDossier + '&j_id=' + obj.j_id + '&op=dl' + '&ot=' + obj.obj_type;
+        //var queryString = 'gDossier=' + obj.gDossier + '&j_id=' + obj.j_id + '&op=dl' + '&ot=' + obj.obj_type+'&start='+obj.start;
+        
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
                     method: 'get',
-                    parameters: queryString,
+                    parameters: obj,
                     onFailure: error_dsp_letter,
                     onSuccess: success_dsp_letter
                 }
@@ -1046,8 +1047,8 @@ function search_letter(obj)
             str_query = 'gDossier=' + obj.elements['gDossier'].value;
         if (obj.elements['j_id'])
             str_query += '&j_id=' + obj.elements['j_id'].value;
-        if (obj.elements['ot'])
-            str_query += '&ot=' + obj.elements['ot'].value;
+        if (obj.elements['obj_type'])
+            str_query += '&obj_type=' + obj.elements['obj_type'].value;
         if (obj.elements['op'])
             str_query += '&op=' + obj.elements['op'].value;
         if (obj.elements['min_amount'])
