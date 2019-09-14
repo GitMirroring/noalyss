@@ -26,11 +26,13 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 
+$http=new HttpInput();
 echo '<div class="content">';
 echo '<div id="search">';
 echo '<FORM METHOD="GET">';
 echo dossier::hidden();
-echo HtmlInput::hidden('ac',$_REQUEST['ac']);
+echo HtmlInput::hidden('ac',$http->request('ac'));
+
 echo HtmlInput::hidden('sa','poste');
 
 $poste=new IPoste();
@@ -60,28 +62,27 @@ echo tr($r);
 $exercice=$g_user->get_exercice();
 $periode=new Periode($cn);
 list($first_per,$last_per)=$periode->get_limit($exercice);
-
+// date limit
 $start=new IDate('start');
-if ( isset ($_GET['start']) && isDate($_GET['start']) == null )
-{
-    echo alert(_('Date malformée, désolé'));
-	$_GET['start']=$first_per->first_day();
-
+$end=new IDate('end');
+try {
+    $start_value=$http->get("start","date",$first_per->first_day());
+    $end_value=$http->get("end","date",$last_per->last_day());
+    $start->value=$start_value;
+    $end->value=$end_value;
+}catch (Exception $e) {
+    $start_value=$first_per->first_day();
+    $end_value=$last_per->last_day();
+    echo '<span class="warning">'._('Date malformée, désolé').'</span>';
 }
-$start->value=(isset($_GET['start']))?$_GET['start']:$first_per->first_day();
+
+$start->value=$start_value;
+$end->value=$end_value;
 
 $r=td(_('Date début'));
 $r.=td($start->input());
 echo tr($r);
 
-$end=new IDate('end');
-if ( isset($_GET['end']) && isDate($_GET['end']) == null )
-{
-    echo alert(_('Date malformée, désolé'));
-	$_GET['end']=$last_per->last_day();
-
-}
-$end->value=(isset($_GET['end']))?$_GET['end']:$last_per->last_day();
 $r=td(_('Date fin'));
 $r.=td($end->input());
 echo tr($r);
@@ -94,7 +95,8 @@ $sel->value=array(
 				array('value'=>3,'label'=>_('Opérations lettrées montants différents')),
                 array('value'=>2,'label'=>_('Opérations NON lettrées'))
             );
-if (isset($_GET['type_let'])) $sel->selected=$_GET['type_let'];
+
+$sel->selected=$http->get('type_let','number',0);
 
 $r= td("Filtre ").
     td($sel->input());
@@ -119,15 +121,10 @@ if ( isset($_POST['record']))
 // Show the result
 //--------------------------------------------------------------------------------
 echo '<div id="list">';
-if ( isDate($_GET['start']) == null || isDate($_GET['end']) == null )
-{
-    echo alert(_('Date malformée, désolé'));
-    return;
-}
 $letter=new Lettering_Account($cn);
-$letter->set_parameter('account',$_GET['acc']);
-$letter->set_parameter('start',$_GET['start']);
-$letter->set_parameter('end',$_GET['end']);
+$letter->set_parameter('account',$http->get('acc'));
+$letter->set_parameter('start',$start->value);
+$letter->set_parameter('end',$end->value);
 
 if ( $sel->selected == 0 )
     echo $letter->show_list('all');
@@ -139,6 +136,6 @@ if ( $sel->selected == 3 )
     echo $letter->show_list('letter_diff');
 echo '</div>';
 echo '<div id="detail" style="display:none">';
-echo 'Un instant...';
+echo _('Un instant...');
 echo '<IMG SRC=image/loading.gif>';
 echo '</div>';

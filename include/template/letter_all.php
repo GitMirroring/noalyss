@@ -51,13 +51,19 @@ $class= ( ($i % 2) == 0 ) ? "odd":"even";
 <td>
 <?php
 $letter=($this->content[$i]['letter']==-1)?_("aucun lettrage"):strtoupper(base_convert($this->content[$i]['letter'],10,36));
-$js="this.gDossier=".dossier::id().
-  ";this.j_id=".$this->content[$i]['j_id'].
-  ";this.obj_type='".$this->object_type."'".
-  ";dsp_letter(this)";
+
+$object=sprintf('{ gDossier : %s , j_id : %s , obj_type:\'%s\',search_start:\'%s\',search_end:\'%s\',op:\'dl\'} ',
+        $gDossier, 
+        $this->content[$i]['j_id'], 
+        $this->object_type,
+        $this->get_parameter('start'),
+        $this->get_parameter('end')
+        );
+
+$js=sprintf("dsp_letter(%s)",$object);
 
 ?>
-<A class="detail" style="text-decoration: underline" href="javascript:void(0)" onclick="<?php echo $js?>"><?php echo $letter?>
+<A class="detail" style="text-decoration: underline" onclick="<?php echo $js?>"><?php echo $letter?>
 <?php if ( $this->content[$i]['letter_diff'] != 0) echo $g_failed;	?>
 	</A>
 </td>

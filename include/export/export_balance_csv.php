@@ -34,6 +34,7 @@ $cn=Dossier::connect();
 bcscale(2);
 
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
+$http=new HttpInput();
 $export=new Noalyss_Csv('balance');
 $bal=new Acc_Balance($cn);
 $bal->jrn=null;
@@ -45,7 +46,7 @@ case 0:
 case 1:
     if (  isset($_GET['r_jrn']))
     {
-        $selected=$_GET['r_jrn'];
+        $selected=$http->get('r_jrn','number');
         $array_ledger=$g_user->get_ledger('ALL',3);
         $array=get_array_column($array_ledger,'jrn_def_id');
         for ($e=0;$e<count($selected);$e++)
@@ -56,25 +57,32 @@ case 1:
     }
     break;
 case 2:
-    if ( isset($_GET['r_cat']))   $bal->filter_cat($_GET['r_cat']);
+    if ( isset($_GET['r_cat']))   $bal->filter_cat($http->get('r_cat'));
     break;
 }
 
-$bal->from_poste=$_GET['from_poste'];
-$bal->to_poste=$_GET['to_poste'];
+$bal->from_poste=$http->get('from_poste');
+$bal->to_poste=$http->get('to_poste');
+
 if (isset($_GET['unsold'])) $bal->unsold=true;
 $prev = (isset($_GET['previous_exc'])) ? 1: 0;
 
-$row=$bal->get_row($_GET['from_periode'],
-                   $_GET['to_periode'],
+$row=$bal->get_row($http->get('from_periode','number'),
+                   $http->get('to_periode','number'),
         $prev);
 $prev =  ( isset ($row[0]['sum_cred_previous'])) ?1:0;
 $title=array('poste','libelle');
 if ($prev  == 1 ) $title=array_merge($title,array('deb n-1','cred n-1','solde n-1','d/c;'));
-$title=array_merge($title,array('deb','cred','solde','d/c'));
+$title=array_merge($title,array(_('deb'),_('cred'),_('solde'),_('d/c')));
 
 $export->send_header();
+$pstart = new Periode($cn,$http->get("from_periode"));
+$pend= new Periode($cn,$http->get("to_periode"));
+
+$export->add(sprintf (_("balance du %s au %s"),$pstart->first_day(),$pend->last_day()));
+$export->write();
 $export->write_header($title);
+
 foreach ($row as $r)
 {
     $export->add($r['poste']);

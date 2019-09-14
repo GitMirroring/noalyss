@@ -62,11 +62,13 @@ class PDF_Core extends TFPDF
 
         parent::__construct($orientation, $unit, $format);
         $this->AddFont('DejaVu','','DejaVuSans.ttf',true);
+        $this->AddFont('DejaVu','I','DejaVuSans-Oblique.ttf',true);
         $this->AddFont('DejaVu','B','DejaVuSans-Bold.ttf',true);
         $this->AddFont('DejaVu','BI','DejaVuSans-BoldOblique.ttf',true);
         $this->AddFont('DejaVuCond','','DejaVuSansCondensed.ttf',true);
         $this->AddFont('DejaVuCond','B','DejaVuSansCondensed-Bold.ttf',true);
         $this->AddFont('DejaVuCond','I','DejaVuSansCondensed-Oblique.ttf',true);
+        $this->AddFont('DejaVuCond','BI','DejaVuSansCondensed-BoldOblique.ttf',true);
 
         
 
@@ -263,10 +265,10 @@ class PDF_Core extends TFPDF
     function is_fill($p_step)
     {
         if ($p_step % 2 == 0) {
-            $pdf->SetFillColor(220, 221, 255);
+            $this->SetFillColor(220, 221, 255);
             $fill = 1;
         } else {
-            $pdf->SetFillColor(0, 0, 0);
+            $this->SetFillColor(255, 255, 255);
             $fill = 0;
         }
         return $p_step;
