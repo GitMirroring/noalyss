@@ -109,7 +109,7 @@ BODY {
 #recover_link {
     position:absolute;
     bottom:30px;
-    width: 100%;
+    /*! width: 100%; */
 }
 #recover_box {
 
@@ -122,7 +122,16 @@ BODY {
     margin-left: 1%;
     background-color: whitesmoke;
 }
-
+#login_frm h1 {
+  display: block;
+  font-size: 2.5em;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 0.8;
+  padding: 0px;
+  margin: 0px;
+}
 @media only screen and (max-width : 900px) {
     #alternate_browser {
         display : none;
@@ -132,12 +141,12 @@ BODY {
         z-index:-1;
         height:auto;
         width:10%;
-        left:90%;
-        top:0%;
+        left:1%;
+        top:30px;
 
     }
     .input_text {
-        width:12rem;
+         width:20rem;
     }
     #recover_box {
 
@@ -161,7 +170,7 @@ BODY {
 @media only screen and (min-width : 901px) {
     #alternate_browser {
         position:absolute;
-        bottom: 0px;
+        bottom: 30px;
         left:0px;
         z-index: -1;
         display : block;
@@ -169,10 +178,10 @@ BODY {
     #logo_id {
         z-index:-1;
         position:absolute;
-        width:19%;
-        left:81%;
-        top:0px;
-        height: 28%;
+        width:15%;
+        left:0px;
+        top:20px;
+        height: 15%;
     }
     #login_frm {
         position:absolute;
@@ -186,14 +195,15 @@ BODY {
     #recover_link {
         position:absolute;
         margin-top:397px;
-        left:539px;
+        left:1px;
         background-color: white;
+        bottom: initial;
     }
 }
 @media only screen and (min-width : 1100px) {
     #alternate_browser {
         position:absolute;
-        bottom: 0px;
+        bottom: 30px;
         left:0px;
         z-index: -1;
         display : block;
@@ -220,6 +230,7 @@ BODY {
         left:539px;
         background-color: white;
         width:auto;
+        
     }
     #recover_box {
 
@@ -237,7 +248,7 @@ BODY {
 @media only screen and (min-width : 1100px) {
     #alternate_browser {
         position:absolute;
-        bottom: 0px;
+        bottom: 52px;
         left:0px;
         z-index: -1;
         display : block;
@@ -246,8 +257,8 @@ BODY {
         z-index:-1;
         position:absolute;
         /*! width:19%; */
-        left:90%;
-        top:0%;
+        left:0%;
+        top:22px;
         max-width: 125px;
         max-height: 125px;
     }
@@ -279,5 +290,6 @@ BODY {
         background-color: whitesmoke;
 
     }
+
 
 }
