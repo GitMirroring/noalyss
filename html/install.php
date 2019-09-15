@@ -79,7 +79,7 @@ session_start();
 </head>
 <body>
 <p align="center">
-  <IMG SRC="image/logo7000.png" style="width: 400px;z-index:-1;position:fixed;top:30px;rigth:50px;opacity: 0.2" alt="NOALYSS">
+  <IMG SRC="image/logo7100.png" style="width: 400px;z-index:-1;position:fixed;top:30px;rigth:50px;opacity: 0.2" alt="NOALYSS">
 </p>
 <h1>NOALYSS : comptabilité - accountancy </h1>
 

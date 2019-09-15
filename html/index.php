@@ -193,17 +193,7 @@ echo '
 <span style="background-color:#879ed4;color:white;padding-left:4px;padding-right:4px;">
 version  NOALYSS_VERSION - '.$my_domain.'
 </span>
-<BR>
-<BR>
-<BR>
-
-<BR>
-<center>
-<IMG SRC="image/logo7000.png" style="opacity:0.4" id="logo_id" alt="NOALYSS">
-<BR>
-<BR>
-<BR>
-
+<IMG SRC="image/logo7100.png" style="opacity:0.4" id="logo_id" alt="NOALYSS">
 <form id="login_frm" action="login.php" method="post" name="loginform">'.
        $goto .
 '<TABLE><TR><TD>
@@ -249,7 +239,6 @@ echo '
 
 ?>
 </table>
-</center>
 </form>
 <?php if (defined("RECOVER")) : ?>
     <a id="recover_link" href="#">Mot de passe oublié ? </a>
