@@ -128,10 +128,12 @@ BODY {
   font-weight: bold;
   text-align: center;
   text-transform: uppercase;
-  opacity: 0.8;
+  opacity: 1;
   padding: 0px;
   margin: 0px;
+  color: darkblue;
 }
+
 @media only screen and (max-width : 900px) {
     #alternate_browser {
         display : none;
