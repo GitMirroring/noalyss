@@ -40,8 +40,9 @@ input{
     font-family: 'OpenSansRegular';
     padding : 2px;
      margin:2px;
-    color:#0000FF; 
+    border:solid 1px #4b4b91; 
     font-size:14px;
+    color:#4b4b91;
     
 }
 input:focus {
@@ -506,7 +507,7 @@ a.document:hover {
     margin:1px;
 }
 .input_text {
-    border:solid 1px #0000FF;
+    border:solid text #4b4b91;
     margin:1px;
     border-radius: 2px;
 }
@@ -1308,7 +1309,7 @@ div.menu3 {
     margin-left:30px;
 }
 #folder {
-    border: 1px solid #0000ff;
+    border: 1px solid #4b4b91;
     border-collapse: separate;
     border-radius: 10px;
     border-spacing: 0px;
