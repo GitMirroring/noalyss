@@ -1523,6 +1523,12 @@ div#preference_div {
     left:20%;
     width:50%;
 }
+@media only screen and (max-width:1280px) {
+    div#preference_div {
+        left:5%;
+        width:90%;
+    }
+}
 #error_div{
     position:absolute;
     border:1px solid #000000;
