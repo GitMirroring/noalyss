@@ -268,8 +268,8 @@ echo '
     </script>
 <?php endif; ?>
     
-      <span style="display:block;position:fixed;bottom:31px;width:100%;background-color:darkblue;color:white;padding-left:4px;padding-right:4px;">
-version  NOALYSS_VERSION - '.$my_domain.'
+      <span style="display:block;position:fixed;bottom:2px;width:99%;margin-right: 1%;background-color:darkblue;color:white;padding-left:4px;padding-right:4px;font-size:1.1rem">
+version  NOALYSS_VERSION - <?php echo $my_domain; ?>
 </span>  
 <div  id="alternate_browser">
     <p>Nous conseillons d'utiliser Firefox ou chrome.</p>
