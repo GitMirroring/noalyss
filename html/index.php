@@ -190,11 +190,10 @@ if (isset ($_REQUEST['reconnect']) && isset ($_REQUEST['backurl'])) {
     $goto='<input type="hidden" value="'.strip_tags($_REQUEST['backurl']).'" name="backurl">';
 }
 echo '
-<span style="background-color:#879ed4;color:white;padding-left:4px;padding-right:4px;">
-version  NOALYSS_VERSION - '.$my_domain.'
-</span>
-<IMG SRC="image/logo7100.png" style="opacity:0.4" id="logo_id" alt="NOALYSS">
+
+<IMG SRC="image/logo7100.png" id="logo_id" alt="NOALYSS">
 <form id="login_frm" action="login.php" method="post" name="loginform">'.
+        '<h1>Noalyss</h1>'.
        $goto .
 '<TABLE><TR><TD>
 <TABLE  BORDER=0 CELLSPACING=0>
@@ -268,7 +267,10 @@ echo '
         }
     </script>
 <?php endif; ?>
-        
+    
+      <span style="display:block;position:fixed;bottom:31px;width:100%;background-color:darkblue;color:white;padding-left:4px;padding-right:4px;">
+version  NOALYSS_VERSION - '.$my_domain.'
+</span>  
 <div  id="alternate_browser">
     <p>Nous conseillons d'utiliser Firefox ou chrome.</p>
     <p>We recommend to use Firefox or Chrome.</p>
