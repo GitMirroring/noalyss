@@ -268,10 +268,10 @@ echo '
     </script>
 <?php endif; ?>
     
-      <span style="display:block;position:fixed;bottom:2px;width:99%;margin-right: 1%;background-color:darkblue;color:white;padding-left:4px;padding-right:4px;font-size:1.1rem">
+      <span id="info_noalyss">
 version  NOALYSS_VERSION - <?php echo $my_domain; ?>
 </span>  
-<div  id="alternate_browser">
+<!-- <div  id="alternate_browser">
     <p>Nous conseillons d'utiliser Firefox ou chrome.</p>
     <p>We recommend to use Firefox or Chrome.</p>
 <ul style="list-style:none;display:block">
@@ -279,6 +279,7 @@ version  NOALYSS_VERSION - <?php echo $my_domain; ?>
 <li style="display:inline"><a href="https://www.google.fr/chrome/browser/desktop/"> <img border="0" width="128px" src="image/chrome_logo_2x.png"></a></li>
 </ul>
 </div>
+-->
  <script> SetFocus('p_user'); </script>
 
 </body>
