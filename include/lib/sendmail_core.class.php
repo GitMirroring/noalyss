@@ -33,13 +33,13 @@ require_once NOALYSS_INCLUDE.'/lib/filetosend.class.php';
 class Sendmail_Core
 {
 
-    public $mailto;
-    public $afile;
-    public $subject;
-    public $message;
-    public $from;
-    public $content;
-    public $header;
+    protected $mailto;
+    protected $afile;
+    protected $subject;
+    protected $message;
+    protected $from;
+    protected $content;
+    protected $header;
 
     function __construct()
     {
