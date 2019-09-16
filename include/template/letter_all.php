@@ -77,11 +77,11 @@ $r=sprintf('<A class="detail" style="text-decoration:underline"  href="javascrip
   <td> <?php echo $r?> </td>
   <td> <?php echo h($this->content[$i]['jr_comment'])?> </td>
   <?php if ($this->content[$i]['j_debit']=='t') : ?>
-  <td style="text-align:right"> <?php echo nb($this->content[$i]['j_montant'])?> </td>
+  <td style="text-align:right"> <?php echo nbm($this->content[$i]['j_montant'])?> </td>
   <td></td>
   <?php else : ?>
   <td></td>
-  <td style="text-align:right"> <?php echo nb($this->content[$i]['j_montant'])?> </td>
+  <td style="text-align:right"> <?php echo nbm($this->content[$i]['j_montant'])?> </td>
   <?php endif ?>
 <td style="text-align:center">
 <?php
@@ -110,15 +110,25 @@ $amount_cred+=($this->content[$i]['j_debit']=='f')?$this->content[$i]['j_montant
 <?php
     endfor;
 ?>
+<tr class="highlight">
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td class="num"> <?php echo nbm($amount_deb,2);?> </td>
+    <td class="num"> <?php echo nbm($amount_cred,2);?> </td>
+    <td class="num">
+        <?php 
+        bcscale(2);
+        $solde=bcsub($amount_deb,$amount_cred);
+        if ( $solde > 0 )  
+            printf (_("Solde débiteur : %s"),nbm($solde));
+        elseif ($solde < 0)  
+            printf (_("Solde créditeur : %s"),nbm(abs($solde)));
+
+                
+        ?>
+
+    </td>
 </table>
-<h2 class="info2" style="margin:0 0"> <?php echo _("Solde débit")?>  : <?php echo nb($amount_deb);?></h2>
-<h2 class="info2"  style="margin:0 0"> <?php echo _("Solde crédit")?> : <?php echo nb($amount_cred);?></h2>
-  <?php 
-bcscale(2);
-  $solde=bcsub($amount_deb,$amount_cred);
-if ( $solde > 0 ) :
-?>
-  <h2 class="info2"  style="margin:0 0"> <?php echo _("Solde débiteur")?>       : <?php echo nb($solde)?></h2>
-<?php else : ?>
-     <h2 class="info2"  style="margin:0 0"> <?php echo _("Solde créditeur")?>       : <?php echo nb(abs($solde))?></h2>
-<?php endif; ?>
