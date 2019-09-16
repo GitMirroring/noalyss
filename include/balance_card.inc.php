@@ -24,12 +24,13 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
+$http=new HttpInput();
 
 global $g_user;
-echo '<div class="content" style="width:90%;margin-left:5%">';
+echo '<div class="content">';
 $exercice=new Exercice($cn);
 $old='';
-$fiche=new Fiche($cn,$_GET['f_id']);
+$fiche=new Fiche($cn,$http->get('f_id',"number"));
 $year=$g_user->get_exercice();
 if ( $year == 0 )
   {
@@ -43,7 +44,7 @@ else
     $array['to_periode']=$limit_periode[1]->last_day();
     if (isset($_GET['ex']))
       {
-	$limit_periode=$per->get_limit($_GET['ex']);
+	$limit_periode=$per->get_limit($http->get('ex','number'));
 	$array['from_periode']=$limit_periode[0]->first_day();
       }
 
@@ -52,16 +53,16 @@ else
      */
     if ($exercice->count() > 1 )
       {
-	$default=(isset($_GET['ex']))?$_GET['ex']:$year;
+	$default=$http->get("ex","number",$year);
 	$dossier=dossier::id();
 
 	    $old='<form method="get" action="do.php">';
 	    $is=$exercice->select('ex',$default,'onchange = "submit(this)"');
-	    $old.="Autre exercice ".$is->input();
-	    $old.=HtmlInput::hidden('f_id',$_GET['f_id']);
-	    $old.=HtmlInput::hidden('ac',$_GET['ac']);
-	    $old.=HtmlInput::hidden('sb',$_GET['sb']);
-	    $old.=HtmlInput::hidden('sc',$_GET['sc']);
+	    $old.=sprintf(_("Autre exercice %s"),$is->input());
+	    $old.=HtmlInput::hidden('f_id',$http->get('f_id'));
+	    $old.=HtmlInput::hidden('ac',$http->get('ac'));
+	    $old.=HtmlInput::hidden('sb',$http->get('sb'));
+	    $old.=HtmlInput::hidden('sc',$http->get('sc'));
 	    $old.=dossier::hidden();
 	    $old.='</form>';
       }
