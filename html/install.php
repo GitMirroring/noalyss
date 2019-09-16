@@ -148,7 +148,7 @@ if ( $_GET['lang'] == "en_US.utf8" || $_GET['lang']=='fr_FR.utf8')
  <script type="text/javascript" charset="utf-8" language="javascript" src="js/infobulle.js">
 </script>
   <?php
-  include_once NOALYSS_INCLUDE.'/lib/message_script.php';
+  include_once NOALYSS_INCLUDE.'/lib/message_javascript.php';
   ?>
 <script>
 
