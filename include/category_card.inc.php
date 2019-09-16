@@ -140,7 +140,7 @@ if ($ss_action=='cn')
     echo '<div class="content">';
 
     echo dossier::hidden();
-    $f=new Fiche($cn, $_REQUEST['f_id']);
+    $f=new Fiche($cn, $http->request('f_id','number'));
     $contact=new Contact($cn);
     $contact->company=$f->get_quick_code();
     echo $contact->summary("");

@@ -6,14 +6,14 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 global $g_user;
 echo '<div class="content">';
-
+$http=new HttpInput();
 echo '<div id="search">';
 echo '<FORM METHOD="GET">';
 echo dossier::hidden();
-echo HtmlInput::hidden('ac',$_REQUEST['ac']);
-echo HtmlInput::hidden('sb',$_REQUEST['sb']);
-echo HtmlInput::hidden('sc',$_REQUEST['sc']);
-echo HtmlInput::hidden('f_id',$_REQUEST['f_id']);
+echo HtmlInput::hidden('ac',$http->request('ac'));
+echo HtmlInput::hidden('sb',$http->request('sb'));
+echo HtmlInput::hidden('sc',$http->request('sc'));
+echo HtmlInput::hidden('f_id',$http->request('f_id'));
 
 echo '<table width="50%">';
 
@@ -23,7 +23,7 @@ $periode=new Periode($cn);
 list($first_per,$last_per)=$periode->get_limit($exercice);
 
 $start=new IDate('start');
-$start->value=(isset($_GET['start']))?$_GET['start']:$first_per->first_day();
+$start->value=(isset($_GET['start']))?$http->get('start'):$first_per->first_day();
 $r=td(_('Date début'));
 $r.=td($start->input());
 echo tr($r);
@@ -41,7 +41,7 @@ $sel->value=array(
                 array('value'=>1,'label'=>_('Opérations lettrées')),
                 array('value'=>2,'label'=>_('Opérations NON lettrées'))
             );
-if (isset($_GET['type_let'])) $sel->selected=$_GET['type_let'];
+if (isset($_GET['type_let'])) $sel->selected=$http->get('type_let');
 else $sel->selected=1;
 
 $r= td("Filtre ").
@@ -68,7 +68,7 @@ if ( isset($_POST['record']))
 //--------------------------------------------------------------------------------
 if ( isset($_GET['start']) && isset($_GET['end']))
   {
-    if ( isDate($_GET['start']) == null || isDate($_GET['end']) == null )
+    if ( isDate($http->get('start') ) == null || isDate($http->get ('end') ) == null )
       {
 	echo alert(_('Date malformée, désolé'));
 	return;
