@@ -256,13 +256,12 @@ BODY {
         display : block;
     }
     #logo_id {
-        z-index:-1;
-        position:absolute;
-        /*! width:19%; */
-        left:0%;
-        top:22px;
-        max-width: 125px;
-        max-height: 125px;
+     z-index: -1;
+      position: absolute;
+      width: 148px;
+      left: 5px;
+      top: 22px;
+      height: 115px;
     }
     #login_frm {
         position:absolute;
