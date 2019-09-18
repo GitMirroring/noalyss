@@ -1,4 +1,4 @@
-<?php
+ <?php
 session_start();
 ?>
 <!doctype html>
@@ -132,7 +132,7 @@ if ( ! isset($_GET['lang'])){
 require_once '../include/constant.php';
 include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 include_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
-include_once '../lib/function_javascript.php';
+include_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 load_all_script();
 
 

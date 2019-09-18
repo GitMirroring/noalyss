@@ -837,7 +837,7 @@ div.topmenu {
 .topmenu table {
     border-collapse:collapse;
     border-spacing:1px;
-    
+    width:100%;
 }
 
 @media only screen and (max-width:320px) {

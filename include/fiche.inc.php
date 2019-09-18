@@ -402,19 +402,21 @@ if ($histo->selected  == 4 || $histo->selected  == 5)
                 echo _('Filtre rapide:').HtmlInput::filter_table($id, '0,1,2', '1'); 
 		echo '<table class="sortable" id="'.$id.'" class="result" >';
 		echo tr(
-				th('Quick Code') .
-				th('Libellé') .
-				'<th>Poste'.Icon_Action::infobulle(27).'</th>'.
-				th('Débit', 'style="text-align:right"') .
-				th('Crédit', 'style="text-align:right"') .
-				th('Solde', 'style="text-align:right"') .
-				th('D/C', 'style="text-align:right"')
+				th(_('Quick Code')) .
+				th(_('Libellé')) .
+				'<th>'._('Poste').Icon_Action::infobulle(27).'</th>'.
+				th(_('Débit'), 'style="text-align:right"') .
+				th(_('Crédit'), 'style="text-align:right"') .
+				th(_('Solde'), 'style="text-align:right"') .
+				th(_('D/C'), 'style="text-align:right"')
 		);
 		$idx = 0;$sum_deb=0;$sum_cred=0;$sum_solde=0;bcscale(4);
 		for ($i = 0; $i < Database::num_row($ret); $i++)
 		{
-			$filter = " (j_date >= to_date('" . $_REQUEST['start'] . "','DD.MM.YYYY') " .
-					" and  j_date <= to_date('" . $_REQUEST['end'] . "','DD.MM.YYYY')) ";
+                    $start=$http->request("start",'date');
+                    $end=$http->request("end",'date');
+			$filter = " (j_date >= to_date('" . $start. "','DD.MM.YYYY') " .
+					" and  j_date <= to_date('" . $end . "','DD.MM.YYYY')) ";
 			$aCard = Database::fetch_array($ret, $i);
 			$oCard = new Fiche($cn, $aCard['f_id']);
 			$solde = $oCard->get_solde_detail($filter);
@@ -482,6 +484,7 @@ echo $export_csv;
 echo $export_pdf;
 echo $export_print;
 $fiche = new Fiche($cn);
+$histo=$http->get("histo","number");
 for ($e = 0; $e < count($afiche); $e++)
 {
 	$array = Fiche::get_fiche_def($cn, $afiche[$e]['fd_id'], 'name_asc');
@@ -494,22 +497,22 @@ for ($e = 0; $e < count($afiche); $e++)
 		$letter->set_parameter('start', $periode_start->value );
 		$letter->set_parameter('end', $periode_end->value );
 		// all
-		if ($_GET['histo'] == 0)
+		if ($histo== 0)
 		{
 			$letter->get_all();
 		}
 
 		// lettered
-		if ($_GET['histo'] == 1)
+		if ($histo == 1)
 		{
 			$letter->get_letter();
 		}
 		// unlettered
-		if ($_GET['histo'] == 2)
+		if ($histo == 2)
 		{
 			$letter->get_unletter();
 		}
-		if ($_GET['histo'] == 6)
+		if ($histo== 6)
 		{
 			$letter->get_letter_diff();
 		}
@@ -571,7 +574,7 @@ for ($e = 0; $e < count($afiche); $e++)
 				$prog = bcsub($prog, $row['j_montant']);
 			}
 			$side = "&nbsp;" . $fiche->get_amount_side($prog);
-			echo td(nbm($prog) . $side, 'style="text-align:right"');
+			echo td(nbm(abs($prog)) . $side, 'style="text-align:right"');
                         $html_let="";
                         if ($row['letter']!=-1) {
                             $span_error = "";
