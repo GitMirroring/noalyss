@@ -24,8 +24,7 @@ if (!defined('ALLOWED'))
 
 /**
  * @file
- * @brief 
- * @param type $name Descriptionara
+ * @brief search in ledger
  */
 class Acc_Ledger_Search
 {
@@ -168,6 +167,7 @@ class Acc_Ledger_Search
         $f_amount_min->value=$http->request("amount_min","string",0);
         $f_amount_max=new INum('amount_max', '0', $this->div."amount_max");
         $f_amount_max->value=$http->request("amount_max","string",0);
+	
 
         /* input quick code */
         $f_qcode=new ICard($this->div.'qcode');
