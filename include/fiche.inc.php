@@ -259,7 +259,7 @@ $export_pdf.=HtmlInput::hidden('end', $periode_end->value );
 $export_pdf.=HtmlInput::hidden('histo', $phisto);
 $export_pdf.=HtmlInput::request_to_hidden(array('allcard'));
 $export_pdf.=dossier::hidden();
-$export_pdf.=HtmlInput::submit('pdf', 'Export en PDF');
+$export_pdf.=HtmlInput::submit('pdf', _('Export en PDF'));
 $export_pdf.='</FORM>';
 
 $export_print = HtmlInput::print_window();
@@ -272,7 +272,7 @@ $export_csv.=HtmlInput::hidden('end', $periode_end->value );
 $export_csv.=HtmlInput::hidden('histo', $phisto);
 $export_csv.=HtmlInput::request_to_hidden(array('allcard'));
 $export_csv.=dossier::hidden();
-$export_csv.=HtmlInput::submit('CSV', 'Export en CSV');
+$export_csv.=HtmlInput::submit('CSV', _('Export en CSV'));
 $export_csv.='</FORM>';
 /*
  * Date is important is requested balance
@@ -280,7 +280,7 @@ $export_csv.='</FORM>';
 if (isDate($_REQUEST['start']) == null || isDate($_REQUEST['end']) == null)
 {
 	echo h2('Date invalide !', 'class="error"');
-	alert('Date invalide !');
+	alert(_('Date invalide !'));
 	return;
 }
 /*************************************************************************************************************************/
