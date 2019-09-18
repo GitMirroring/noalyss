@@ -51,7 +51,11 @@
 <?php echo _('Et compris entre les montants')?>
 </td>
 <td >
-<?php echo $f_amount_min->input();  ?> <?php echo _('et')?> <?php echo $f_amount_max->input(); ; ?>
+    <?php echo Icon_Action::clean_zone(uniqid(),sprintf("$('%s').value=0",$f_amount_min->id));
+          echo $f_amount_min->input();  ?>
+     <?php echo _('et')?> <?php
+       echo Icon_Action::clean_zone(uniqid(),sprintf("$('%s').value=0",$f_amount_max->id));
+       echo $f_amount_max->input(); ; ?>
 </td>
 </tr>
 <tr>
@@ -68,7 +72,9 @@
 </td>
 
 <td>
-<?php echo $f_accounting->input();  ?>
+<?php
+ echo Icon_Action::clean_zone(uniqid(),sprintf("$('%s').value=''",$f_accounting->id));
+echo $f_accounting->input();  ?>
 </td>
 </tr>
 
