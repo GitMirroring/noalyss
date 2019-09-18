@@ -2225,7 +2225,7 @@ class Fiche
     function get_amount_side($p_amount)
     {
             if ($p_amount == 0)
-                    return "=";
+                    return "";
             if ($p_amount < 0)
                     return "C";
             if ($p_amount > 0)
