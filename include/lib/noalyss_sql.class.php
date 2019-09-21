@@ -426,6 +426,54 @@ abstract class Noalyss_SQL extends Data_SQL
         
         return $sql;
     }
+    /**
+     * @brief Get all the row and use the p_key_code are the key value of array. 
+     * The key column is usually the primary key or any unique key. 
+     * the returns looks like
+     * @code
+       [ID1]=>array( ["PRIMARYKEY"=>"ID1" 
+                       , "VALUE" => 2]);
+       [ID2]=>array( ["PRIMARYKEY"=>"ID2" 
+                      , "VALUE" => 2]);
+      @endcode
+     * @note It should be used only for small tables: the array is build row by row
+     * @param string $p_key_col existing and unique key 
+     * @param string $p_cond sql cond 
+     * @param array $p_array array of value for the SQL condition
+     */
+    public function get_all_to_array($p_key_col,$p_cond="",$p_array=NULL)
+    {
+        $ret=$this->seek($p_cond, $p_array);
+        if ($ret==FALSE)
+            return array();
+        $a_array=Database::fetch_all($ret);
+        $nb_array=count($a_array);
+        $a_result=array();
+        try
+        {
+            for ($i=0; $i<$nb_array; $i++)
+            {
+                if (!isset($a_array[$i][$p_key_col]))
+                {
+                    throw new Exception("col not found ".$p_key_col);
+                }
+                $key=$a_array[$i][$p_key_col];
+                if ( isset ($a_result[$key]) ){
+                    throw new Exception ("duplicate found col : $key");
+                }
+                $a_result[$key]=$a_array[$i];
+            }
+        }
+        catch (Exception $exc)
+        {
+            echo $exc->getMessage();
+            record_log($exc->getMessage());
+            record_log($exc->getTraceAsString());
+            throw $exc;
+        }
+        return $a_result;
+    }
+
 }
 
 ?>
