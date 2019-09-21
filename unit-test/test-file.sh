@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PHPUNIT=~/Program/phpunit-7.5.16.phar
+PHPUNIT=./phpunit
 if [ ! -f "$1" ] ; then
 	echo "File $1 not found"
 	exit 1
