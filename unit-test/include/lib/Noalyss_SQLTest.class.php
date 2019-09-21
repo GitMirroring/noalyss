@@ -303,7 +303,7 @@ VALUES(1, 'ACTIVITE', 'Activité commerciale Alchimerys sprl');
 
         for ($i=0;$i<count($array);$i++)
         {
-            $this->assertTrue(isset($array[$po_name[$i]]));
+            $this->assertEquals($array[$po_name[$i]]['po_name'],$po_name[$i]);
         }
 
     }
