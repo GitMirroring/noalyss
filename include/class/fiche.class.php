@@ -1543,7 +1543,6 @@ class Fiche
 		       "<TD>$old_exercice</TD>".
 		     td('').
 		      td('').
-		      td('').
 		      "<TD></TD>".td().
 		      "<TD>Totaux</TD>".
                             td().
@@ -1597,7 +1596,6 @@ class Fiche
         echo '<tfoot>';
        echo "<TR class=\"highlight\">".
                td($op['p_exercice']).
-               td().
                td().
                td().
                td().
