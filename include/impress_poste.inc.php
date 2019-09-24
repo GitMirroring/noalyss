@@ -36,14 +36,14 @@ require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 global $g_user;
-
+$http=new HttpInput();
 //-----------------------------------------------------
 // Form
 //-----------------------------------------------------
 echo '<div class="content">';
 
 echo '<FORM action="?" METHOD="GET">';
-echo HtmlInput::hidden('ac',$_REQUEST['ac']);
+echo HtmlInput::hidden('ac',$http->request("ac"));
 echo HtmlInput::hidden('type','poste');
 echo dossier::hidden();
 echo '<TABLE><TR>';
@@ -54,7 +54,7 @@ $w->set_attribute('ipopup','ipop_account');
 $w->set_attribute('label','poste_id_label');
 $w->set_attribute('account','poste_id');
 $w->table=0;
-$w->value=(isset($_REQUEST['poste_id']))?$_REQUEST['poste_id']:"";
+$w->value=$http->request("poste_id","string","");
 $w->label=_("Choisissez le poste");
 print td(_('Choisissez un poste')).td($w->input());
 echo td($span->input('poste_id_label'));
@@ -72,7 +72,7 @@ $w_poste->set_function('fill_data');
 $w_poste->set_dblclick("fill_ipopcard(this);");
 
 
-$w_poste->value=(isset($_REQUEST['f_id']))?$_REQUEST['f_id']:"";
+$w_poste->value=$http->request("f_id","string","");
 print td($w_poste->input().$w_poste->search());
 echo td($span->input('f_id_label'));
 print '</TR>';
@@ -81,8 +81,8 @@ print '<TR>';
 $date_from=new IDate('from_periode');
 $date_to=new IDate('to_periode');
 $year=$g_user->get_exercice();
-$date_from->value=(isset($_REQUEST['from_periode']))?$_REQUEST['from_periode']:"01.01.".$year;
-$date_to->value=(isset($_REQUEST['to_periode']))?$_REQUEST['to_periode']:"31.12.".$year;
+$date_from->value=$http->request("from_periode","string","01.01.".$year);
+$date_to->value=$http->request("to_periode","string","31.12.".$year);
 echo td(_('Depuis').$date_from->input());
 echo td(_('Jusque ').$date_to->input());
 //
@@ -107,7 +107,7 @@ $a_let=array(
 echo '</TABLE>';
 $salet=new ISelect('ople');
 $salet->value=$a_let;
-$salet->selected=(isset ($_GET['ople']))?$_GET['ople']:0;
+$salet->selected=$http->get("ople","number",0);
 
 echo $salet->input();
 
@@ -143,7 +143,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
         // Check if the post is numeric and exists
         elseif (  $cn->count_sql('select * from tmp_pcmn where pcm_val=$1',array($_GET['poste_id'])) != 0 )
         {
-            $Poste=new Acc_Account_Ledger($cn,$_GET['poste_id']);
+            $Poste=new Acc_Account_Ledger($cn,$http->get("poste_id","number"));
             $go=1;
         }
     }
@@ -152,7 +152,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
         require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
         // thanks the qcode we found the poste account
         $fiche=new Fiche($cn);
-        $qcode=$fiche->get_by_qcode($_GET['f_id']);
+        $qcode=$fiche->get_by_qcode($http->get('f_id'));
         $p=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
         if ( $p != NOTFOUND)
         {

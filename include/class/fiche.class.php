@@ -1512,7 +1512,6 @@ class Fiche
 		       "<TD>$old_exercice</TD>".
 		      td('').
 		      td('').
-		      td('').
 		      "<TD></TD>".td().
 		      "<TD>Totaux</TD>".
                             td().
@@ -1560,8 +1559,8 @@ class Fiche
                td().
                td().
                td().
-               td().
         td(_('Totaux')).
+               td().
 	 "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
 	  "<TD style=\"text-align:right\">".nbm($diff)."</TD>".
