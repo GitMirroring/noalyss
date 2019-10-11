@@ -48,7 +48,7 @@ $p_msg="";
 
     // Check privilege
     if ( isset($_REQUEST['p_jrn']) &&
-            $g_user->check_jrn($http->post("p_jrn","number")) != 'W' )
+            $g_user->check_jrn($http->request("p_jrn","number")) != 'W' )
     {
 
         NoAccess();
