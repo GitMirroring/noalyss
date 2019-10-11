@@ -27,6 +27,8 @@ include_once ("lib/ac_common.php");
 include_once("class/acc_balance.class.php");
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+
+$http=new HttpInput();
 $gDossier=dossier::id();
 
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
@@ -38,7 +40,8 @@ $http=new HttpInput();
 $export=new Noalyss_Csv('balance');
 $bal=new Acc_Balance($cn);
 $bal->jrn=null;
-switch( $_GET['p_filter'])
+$p_filter=$http->get("p_filter");
+switch( $p_filter)
 {
 case 0:
         $bal->jrn=null;
@@ -46,7 +49,7 @@ case 0:
 case 1:
     if (  isset($_GET['r_jrn']))
     {
-        $selected=$http->get('r_jrn','number');
+        $selected=$http->get('r_jrn');
         $array_ledger=$g_user->get_ledger('ALL',3);
         $array=get_array_column($array_ledger,'jrn_def_id');
         for ($e=0;$e<count($selected);$e++)
@@ -73,7 +76,7 @@ $row=$bal->get_row($http->get('from_periode','number'),
 $prev =  ( isset ($row[0]['sum_cred_previous'])) ?1:0;
 $title=array('poste','libelle');
 if ($prev  == 1 ) $title=array_merge($title,array('deb n-1','cred n-1','solde n-1','d/c;'));
-$title=array_merge($title,array(_('deb'),_('cred'),_('solde'),_('d/c')));
+$title=array_merge($title,array(_('Débit'),_('Crédit'),_("Solde débiteur"),_("Solde créditeur")));
 
 $export->send_header();
 $pstart = new Periode($cn,$http->get("from_periode"));
@@ -100,12 +103,16 @@ foreach ($row as $r)
        
     }
     $delta=bcsub($r['solde_deb'],$r['solde_cred']);
-    $sign=($delta<0)?'C':'D';
-    $sign=($delta == 0)?'=':$sign;
     $export->add($r['sum_deb'],"number");
     $export->add($r['sum_cred'],"number");
-    $export->add(abs($delta),"number");
-    $export->add($sign);
+
+    if ( $delta < 0 ){
+        $export->add("0","number");
+        $export->add(abs($delta),"number");
+    }else {
+        $export->add(abs($delta),"number");
+        $export->add("0","number");
+    }
     $export->write();
 }
 
