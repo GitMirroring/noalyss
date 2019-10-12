@@ -155,7 +155,14 @@ class Acc_ComputeTest extends TestCase
      */
     public function testCorrect()
     {
+        $this->object->amount=100.0;
+        $this->object->amount_perso=15.3333;
+        $this->object->amount_vat=20.6666;
+        $this->object->amount_nd_vat=1.5;
         $this->object->correct();
+        $this->assertEquals($this->object->amount,84.6667);
+        $this->assertEquals($this->object->amount_perso,15.3333);
+        $this->assertEquals($this->object->amount_vat,20.67);
     }
 
     /**
@@ -167,6 +174,7 @@ class Acc_ComputeTest extends TestCase
         $this->object->verify();
         $new=new Acc_Compute();
         $this->object->verify($new);
+        $this->assertTrue(TRUE);
     }
 
     /**
@@ -176,7 +184,11 @@ class Acc_ComputeTest extends TestCase
      */
     public function testDisplay()
     {
+        ob_start();
        $this->object->display();
+       $result=  ob_get_flush();
+       $this->assertStringStartsWith("key amount Description amount value is 0<br>key amount_vat Description amount_vat value is 0<br>",$result);
+       $this->assertStringEndsWith("<br>key amount_perso_rate Description amount_perso_rate value is 0<br>",$result);
     }
 
     /**
