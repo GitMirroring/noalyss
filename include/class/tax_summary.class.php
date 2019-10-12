@@ -104,31 +104,34 @@ class Tax_Summary
        /*-------------SALE ---------------------------------*/
         $sql="select count(*) 
              from 
-                jrnx 
-                join quant_sold on (quant_sold.j_id = jrnx.j_id)
+                quant_sold
              where  
-                   jrnx.j_jrn_def in (select jrn_def_id from jrn_def where jrn_def_type = 'VEN')
-                    and j_date >= to_date($1,'DD.MM.YYYY') 
-                    and j_date <= to_date($2,'DD.MM.YYYY') 
+		    j_id  in (select j_id from jrnx 
+			where 
+	                   jrnx.j_jrn_def in (select jrn_def_id from jrn_def where jrn_def_type = 'VEN')
+        	            and j_date >= to_date($1,'DD.MM.YYYY') 
+                	    and j_date <= to_date($2,'DD.MM.YYYY') 
+			)
                   ";
         $cnt=$this->db->get_value($sql,[$this->date_start,$this->date_end]);
         if ($cnt == 0) {
-            throw new Exception(_("Aucune Donnée"));
+            throw new Exception(_("Données manquantes"));
         }
         /*-------------Purchase ---------------------------------*/
         $sql="select count(*) 
              from 
-                jrnx 
-                join quant_purchase as qp on (jrnx.j_id = qp.j_id)
+                quant_purchase
              where  
-                   jrnx.j_jrn_def in (select jrn_def_id from jrn_def where jrn_def_type = 'ACH')
-                    and j_date >= to_date($1,'DD.MM.YYYY') 
-                    and j_date <= to_date($2,'DD.MM.YYYY') 
+		    j_id  in (select j_id from jrnx 
+			where 
+	                   jrnx.j_jrn_def in (select jrn_def_id from jrn_def where jrn_def_type = 'VEN')
+        	            and j_date >= to_date($1,'DD.MM.YYYY') 
+                	    and j_date <= to_date($2,'DD.MM.YYYY') 
+			)
                              ";
         $cnt=$this->db->get_value($sql,[$this->date_start,$this->date_end]);
-        if ($cnt == 0) {
-            throw new Exception(_("Aucune Donnée"));
-
+        if ($cnt > 0) {
+            throw new Exception(_("Données manquantes"));
         }
     }
 
