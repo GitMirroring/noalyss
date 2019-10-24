@@ -1332,8 +1332,8 @@ class Acc_Ledger extends jrn_def_sql
             $count=0;
             
             // currency
-            $currency_code=$http->extract($p_array, "p_currency_code","number");
-            $currency_rate=$http->extract($p_array, "p_currency_rate","number");
+            $currency_code=$http->extract($p_array, "p_currency_code","number",0);
+            $currency_rate=$http->extract($p_array, "p_currency_rate","number",1);
             $currency_rate_ref=new Acc_Currency($this->db, $currency_code);
             
             for ($i=0; $i<$nb_item; $i++)
