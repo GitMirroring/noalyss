@@ -24,6 +24,7 @@
  * Global variables
  */
 global $g_connection,$g_parameter,$g_user;
+define ("DOSSIER",48);
 $_REQUEST['gDossier'] = DOSSIER;
 $g_connection=new Database(DOSSIER);
 $g_parameter = new Noalyss_Parameter_Folder($g_connection);

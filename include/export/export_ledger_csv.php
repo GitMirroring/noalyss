@@ -141,6 +141,7 @@ if ( $get_option=="E")
         $a_heading[]=_("Date paiement");
         $a_heading[]=_("Montant paiement");
         $a_heading[]=_("Methode paiement");
+        $a_heading[]=_("Libellé");
         $a_heading[]=_("Opération paiement");
         
         // Prepare the query for reconcile date
@@ -176,6 +177,7 @@ if ( $get_option=="E")
                 $export->add($row['jr_date']);
                 $export->add($row['jr_montant'],"number");
                 $export->add($row['qcode_bank']);
+                $export->add($row['qcode_name']);
                 $export->add($row['jr_internal']);
             }
             $export->write();
@@ -274,6 +276,7 @@ if ($get_option=="L" && ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL') )
             {
                 $row=Database::fetch_array($ret_reconcile, $e);
                 $export->add($row['qcode_bank']);
+                $export->add($row['qcode_name']);
                 $export->add($row['jr_date']);
                 $export->add($row['jr_internal']);
                 $export->add($row['jr_pj_number']);

@@ -279,7 +279,7 @@ class Print_Ledger_Simple extends PDF
                 $sep="";
                 for ($e=0;$e<$max;$e++) {
                     $row=Database::fetch_array($ret_reconcile, $e);
-                    $msg=( $row['qcode_bank'] != "")?"[".$row['qcode_bank']."]":$row['jr_internal'];
+                    $msg=( $row['qcode_bank'] != "")?"[".$row['qcode_bank']."]".$row['qcode_name']:$row['jr_internal'];
                     $str_payment=$row['jr_date'].$msg.$sep;
                     $sep=' , ';
                 }
