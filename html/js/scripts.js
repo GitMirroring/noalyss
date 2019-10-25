@@ -25,7 +25,7 @@
  */
 var ask_reload = 0;
 var tag_choose = '';
-var aDraggableElement=new Array();
+var aDraggableElement = new Array();
 
 /**
  * callback function when we just need to update a hidden div with an info
@@ -49,18 +49,16 @@ function infodiv(req, json)
 
         code_html = unescape_xml(code_html);
         g(name_ctl + "info").innerHTML = code_html;
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box("success_box" + e.message);
     }
     try
     {
         code_html.evalScripts();
-    }
-    catch (e)
+    } catch (e)
     {
-        alert_box(content[53]+"\n" + e.message);
+        alert_box(content[53] + "\n" + e.message);
     }
 
 }
@@ -70,16 +68,16 @@ function infodiv(req, json)
  */
 function deleteRow(tb, obj)
 {
-    smoke.confirm(content[50],function (e)
+    smoke.confirm(content[50], function (e)
     {
         if (e) {
             var td = obj.parentNode;
             var tr = td.parentNode;
             var lidx = tr.rowIndex;
             g(tb).deleteRow(lidx);
-            
+
         } else {
-            return ;
+            return;
         }
     });
 }
@@ -108,12 +106,10 @@ function g(ID)
     if (document.getElementById)
     {
         return this.document.getElementById(ID);
-    }
-    else if (document.all)
+    } else if (document.all)
     {
         return document.all[ID];
-    }
-    else
+    } else
     {
         return undefined;
     }
@@ -130,8 +126,7 @@ function enable_type_periode()
         $('from_date').disable();
         $('to_date').disable();
         $('p_step').enable();
-    }
-    else
+    } else
     {
         $('from_periode').disable();
         $('to_periode').disable();
@@ -170,8 +165,7 @@ function encodeJSON(obj)
             if (e !== 0)
             {
                 str += '&';
-            }
-            else
+            } else
             {
                 e = 1;
             }
@@ -179,8 +173,7 @@ function encodeJSON(obj)
             str += '=' + encodeURI(obj[i]);
         }
         return str;
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box('encodeParameter ' + e.message);
         return "";
@@ -254,6 +247,41 @@ function set_value(p_ctl, p_value, p_add)
     }
 }
 /**
+ * @brief compute small math in numeric cells
+ * @param string value
+ * @returns float 
+ */
+function compute_number(value)
+{
+    var retval = 0;
+    var exp = new RegExp("^[0-9/*+-.]+$", "g");
+    /*pour éviter un eval() mal intentionné*/
+    var res = exp.test(value);
+    if (res)
+    {
+        /*pour gérer un nombre non valide comme 5..36 ou 5.3.6
+         parce qu'il est possible d'entrer plusieurs
+         points dans le nombre et eval() lève une exception*/
+        try
+        {
+            retval = eval(value);
+        } catch (e)
+        {
+            return 0;
+        }
+        /*pour gérer les divisions par 0*/
+        if (retval == Infinity)
+        {
+            return 0;
+        } else
+        {
+            return retval;
+        }
+    } else {
+        return 0;
+    }
+}
+/**
  *@brief format the number change comma to point
  *@param HTML obj
  */
@@ -268,6 +296,9 @@ function format_number(obj, p_prec)
     }
     var value = obj.value;
     value = value.replace(/,/, '.');
+    
+    value=compute_number(value);    
+    
     value = parseFloat(value);
     if (isNaN(value))
     {
@@ -293,8 +324,7 @@ function toggleHideShow(p_obj, p_button)
         show(p_obj);
         str = str.replace(/Afficher/, content[62]);
         g(p_button).value = str;
-    }
-    else
+    } else
     {
         hide(p_obj);
         str = str.replace(/Cacher/, content[63]);
@@ -349,11 +379,11 @@ function getNodeText(xmlNode)
 function change_month(obj)
 {
     var action = new Ajax.Request(
-            "ajax_misc.php", 
+            "ajax_misc.php",
             {
-                method: 'get', 
-                parameters: { gDossier : obj.gDossier , op:'cal' ,"per"  : obj.value , t: obj.type_display, notitle:obj.notitle},
-                onFailure: ajax_misc_failure, 
+                method: 'get',
+                parameters: {gDossier: obj.gDossier, op: 'cal', "per": obj.value, t: obj.type_display, notitle: obj.notitle},
+                onFailure: ajax_misc_failure,
                 onSuccess: success_misc
             }
     );
@@ -383,25 +413,23 @@ function success_misc(req)
         var code_html = getNodeText(nodeXml);
         code_html = unescape_xml(code_html);
         $("user_cal").innerHTML = code_html;
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box(e.message);
     }
     try
     {
         code_html.evalScripts();
-    }
-    catch (e)
+    } catch (e)
     {
-        alert_box(content[53]+"\n" + e.message);
+        alert_box(content[53] + "\n" + e.message);
     }
 
 
 }
 function loading()
 {
-    var str = '<h2>'+content[64]+'</h2>';
+    var str = '<h2>' + content[64] + '</h2>';
     str = str + '<image src="image/loading.gif" alt="chargement"></image>';
     return str;
 }
@@ -429,7 +457,7 @@ function cat_doc_remove(p_dt_id, p_dossier)
                         if (html.length === 0)
                         {
                             var rec = req.responseText;
-                            alert_box('erreur <br>' + rec );
+                            alert_box('erreur <br>' + rec);
                             return;
                         }
                         var nodeXML = html[0];
@@ -442,10 +470,9 @@ function cat_doc_remove(p_dt_id, p_dossier)
                             return;
                         }
                         $('row' + row_id).style.textDecoration = "line-through";
-                        $('X' + row_id).style.display='none';
-                        $('M' + row_id).style.display='none';
-                    }
-                    catch (e)
+                        $('X' + row_id).style.display = 'none';
+                        $('M' + row_id).style.display = 'none';
+                    } catch (e)
                     {
                         alert_box(e.message);
                     }
@@ -530,16 +557,14 @@ function popup_select_tva(obj)
                             var popup = {'id': 'tva_select', 'cssclass': 'inner_box', 'style': str_style, 'html': code_html, 'drag': false};
                             add_div(popup);
                             $('lk_tva_select_table').focus();
-                        }
-                        catch (e)
+                        } catch (e)
                         {
                             alert_box("success_popup_select_tva " + e.message);
                         }
                     }
                 }
         );
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box("popup_select_tva " + e.message);
     }
@@ -573,8 +598,7 @@ function set_tva_label(obj)
                     onSuccess: success_set_tva_label
                 }
         );
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box("set_tva_label " + e.message);
     }
@@ -600,8 +624,7 @@ function success_set_tva_label(req)
         var label_code = code[0].firstChild.nodeValue;
         var label_value = value[0].firstChild.nodeValue;
         set_value(label_code, label_value);
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box("success_set_tva_label " + e.message);
     }
@@ -627,9 +650,8 @@ function create_div(obj)
         var top = document;
         var elt = null;
         if (!$(obj.id)) {
-             elt = top.createElement('div');
-        }
-        else {
+            elt = top.createElement('div');
+        } else {
             elt = $(obj.id);
         }
         if (obj.id)
@@ -641,8 +663,7 @@ function create_div(obj)
             if (elt.style.setAttribute)
             { /* IE7 bug */
                 elt.style.setAttribute('cssText', obj.style);
-            }
-            else
+            } else
             { /* good Browser */
                 elt.setAttribute('style', obj.style);
             }
@@ -660,24 +681,23 @@ function create_div(obj)
         var bottom_div = document.body;
         elt.hide();
         bottom_div.appendChild(elt);
-        
+
         /* if ( obj.effect && obj.effect != 'none' ) { Effect.Grow(obj.id,{direction:'top-right',duration:0.1}); }
          else if ( ! obj.effect ){ Effect.Grow(obj.id,{direction:'top-right',duration:0.1}); }*/
         if (obj.drag)
         {
-            aDraggableElement[obj.id]=new Draggable(obj.id, {starteffect: function ()
+            aDraggableElement[obj.id] = new Draggable(obj.id, {starteffect: function ()
                 {
                     new Effect.Highlight(obj.id, {scroll: window, queue: 'end'});
                 }}
             );
-           
-            
+
+
         }
         return elt;
-    }
-    catch (e)
+    } catch (e)
     {
-         error_message("create_div " + e.message);
+        error_message("create_div " + e.message);
     }
 }
 /**
@@ -693,13 +713,12 @@ function create_div(obj)
 function add_div(obj)
 {
     try {
-        var elt=create_div(obj);
+        var elt = create_div(obj);
         /* elt.setStyle({visibility:'visible'}); */
         elt.style.visibility = 'visible';
         elt.show();
         return elt;
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box("add_div " + e.message);
     }
@@ -735,7 +754,7 @@ function waiting_node()
 function waiting_box()
 {
     var obj = {
-        id: 'wait_box', html: '<h2 class="title">'+content[65]+'</h2>' + loading()
+        id: 'wait_box', html: '<h2 class="title">' + content[65] + '</h2>' + loading()
     };
     var y = fixed_position(10, 250)
     obj.style = y + ";width:20%;margin-left:40%;";
@@ -744,7 +763,7 @@ function waiting_box()
     }
     waiting_node();
     add_div(obj);
-    
+
 
 }
 /**
@@ -766,8 +785,7 @@ function show_box(obj)
     {
         g(obj.id).style.top = calcy(40) + "px";
         show(obj.id);
-    }
-    else
+    } else
     {
         show(obj.id);
     }
@@ -808,18 +826,16 @@ function success_box(req, json)
 
         if (name_ctl == 'popup')
             g(name_ctl).style.width = 'auto';
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box("success_box" + e.message);
     }
     try
     {
         code_html.evalScripts();
-    }
-    catch (e)
+    } catch (e)
     {
-        alert_box(content[53]+"\n" + e.message);
+        alert_box(content[53] + "\n" + e.message);
     }
 }
 
@@ -842,7 +858,7 @@ function show_ledger_choice(json_obj)
         for (i = 0; i < $(json_obj.div + 'nb_jrn').value; i++) {
             query = query + "&r_jrn[]=" + $(json_obj.div + 'r_jrn[' + i + ']').value;
         }
-        query=encodeURI(query);
+        query = encodeURI(query);
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {method: 'get',
@@ -858,7 +874,7 @@ function show_ledger_choice(json_obj)
                             };
                             //var y=calcy(posY);
                             var y = posY;
-                            
+
                             obj.style = "top:" + y + 'px;' + obj.style;
                             /* if ( json_obj.class ) 
                              { 
@@ -881,15 +897,13 @@ function show_ledger_choice(json_obj)
                             remove_waiting_box();
                             g(obj.id).innerHTML = code_html;
 
-                        }
-                        catch (e) {
+                        } catch (e) {
                             alert_box("show_ledger_callback" + e.message);
                         }
                         try {
                             code_html.evalScripts();
-                        }
-                        catch (e) {
-                            alert_box(content[53]+"\n" + e.message);
+                        } catch (e) {
+                            alert_box(content[53] + "\n" + e.message);
                         }
 
                     }
@@ -909,7 +923,7 @@ function hide_ledger_choice(p_frm_search)
     {
         var nb = $(p_frm_search).nb_jrn.value;
         var div = "";
-        if ( $(p_frm_search).div ) {
+        if ($(p_frm_search).div) {
             div = $(p_frm_search).div.value;
         }
         var i = 0;
@@ -920,7 +934,7 @@ function hide_ledger_choice(p_frm_search)
         for (i = 0; i < nb; i++) {
             n_name = div + "r_jrn[" + sel + "]";
             name = div + "r_jrn" + i;
-            if ( $(name).checked) {
+            if ($(name).checked) {
                 str += '<input type="hidden" id="' + n_name + '" name="' + n_name + '" value="' + $(name).value + '">';
                 sel++;
             }
@@ -997,8 +1011,7 @@ function toggle_checkbox(form_id)
             if (e.checked === true)
             {
                 e.checked = false;
-            }
-            else
+            } else
             {
                 e.checked = true;
             }
@@ -1028,13 +1041,13 @@ function select_checkbox(form_id)
  * @param attribute name
  * @param attribute value
  */
-function select_checkbox_attribute(form_id,p_attribute_name,p_attribute_value)
+function select_checkbox_attribute(form_id, p_attribute_name, p_attribute_value)
 {
     var form = $(form_id);
     for (var i = 0; i < form.length; i++)
     {
         var e = form.elements[i];
-        if (e.type === 'checkbox' && e.getAttribute(p_attribute_name)==p_attribute_value)
+        if (e.type === 'checkbox' && e.getAttribute(p_attribute_name) == p_attribute_value)
         {
             e.checked = true;
         }
@@ -1069,12 +1082,12 @@ function show_calc()
     }
     var sid = 'calc1';
     var shtml = '';
-    shtml +="<div class=\"bxbutton\">";
+    shtml += "<div class=\"bxbutton\">";
     shtml += '<a class="icon" onclick="pin(\'calc1\')" id="pin_calc1">&#xf047;</a>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" title="" class="icon">&#10761;</a>';
-    shtml +="</div>";
-    shtml += '   <h2 class="title">'+content[66]+'</h2>';
-    shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >'+content[68]+'<input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface" class="button" onClick="Clean();return false;" > <input type="button" value="Efface historique" class="button" onClick="CleanHistory();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
-    shtml += '</form><span class="highligth" style="display:block" id="sub_total">  '+ content[67]+'  </span><span style="display:block"  id="listing"> </span>';
+    shtml += "</div>";
+    shtml += '   <h2 class="title">' + content[66] + '</h2>';
+    shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >' + content[68] + '<input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface" class="button" onClick="Clean();return false;" > <input type="button" value="Efface historique" class="button" onClick="CleanHistory();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
+    shtml += '</form><span class="highligth" style="display:block" id="sub_total">  ' + content[67] + '  </span><span style="display:block"  id="listing"> </span>';
 
     var obj = {id: sid, html: shtml,
         drag: false, style: 'z-index:98'
@@ -1102,8 +1115,7 @@ function display_periode(p_dossier, p_id)
         );
         $('mod_periode').style.top = (posY - 70) + "px";
         $('mod_periode').style.left = (posX - 70) + "px";
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box("display_periode " + e.message);
     }
@@ -1127,18 +1139,16 @@ function success_display_periode(req)
         code_html = unescape_xml(code_html);
 
         $('mod_periode').innerHTML = code_html;
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box("success_display_periode".e.message);
     }
     try
     {
         code_html.evalScripts();
-    }
-    catch (e)
+    } catch (e)
     {
-        alert_box(content[53]+"\n" + e.message);
+        alert_box(content[53] + "\n" + e.message);
     }
 
 }
@@ -1157,8 +1167,7 @@ function save_periode(obj)
                 }
         );
 
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box("display_periode " + e.message);
     }
@@ -1190,23 +1199,21 @@ function fill_box(req)
         var code_html = getNodeText(html[0]); // Firefox ne prend que les 4096 car.
         code_html = unescape_xml(code_html);
         $(name_ctl).innerHTML = code_html;
-    }
-    catch (e) {
+    } catch (e) {
         alert_box(e.message);
-         if (console) {
+        if (console) {
             console.error(e);
-            console.error("log answer = "+req.responseText);
+            console.error("log answer = " + req.responseText);
         }
     }
     try {
         code_html.evalScripts();
-    }
-    catch (e) {
+    } catch (e) {
         if (console) {
             console.error(e);
-            console.error("log answer = "+req.responseText);
+            console.error("log answer = " + req.responseText);
         }
-        alert_box(content[53]+"\n" + e.message);
+        alert_box(content[53] + "\n" + e.message);
     }
 
 
@@ -1269,36 +1276,35 @@ function save_predf_op(obj)
  * @param p_tiers id of the Tiers
  * @returns {undefined}
  */
-function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p_tiers)
+function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, p_tiers)
 {
     if (amount_id === undefined)
     {
         amount_id = 0;
-    }
-    else if ($(amount_id))
+    } else if ($(amount_id))
     {
         if ($(amount_id).value)
         {
             amount_id = $(amount_id).value;
-        }
-        else if
+        } else if
                 ($(amount_id).innerHTML) {
             amount_id = $(amount_id).innerHTML;
         }
     }
-    var tiers="";
-    if ( p_tiers ) tiers=p_tiers;
+    var tiers = "";
+    if (p_tiers)
+        tiers = p_tiers;
     var target = "";
-    if ( p_id_target !="") {
-        target=p_id_target;
-    }else {
-        target = "search"+layer;
+    if (p_id_target != "") {
+        target = p_id_target;
+    } else {
+        target = "search" + layer;
         removeDiv(target);
     }
     var str_style = fixed_position(77, 99);
     str_style += ";width:92%;overflow:auto;";
     waiting_box();
-    var hide_operation=$(ctl_concern).getAttribute("hide_operation");
+    var hide_operation = $(ctl_concern).getAttribute("hide_operation");
 
     var param_send = {gDossier: dossier,
         ctlc: ctl_concern,
@@ -1307,8 +1313,8 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target,p
         amount_id: amount_id,
         ledger: ledger,
         target: target,
-        tiers:tiers,
-        hide_operation:hide_operation
+        tiers: tiers,
+        hide_operation: hide_operation
     };
 
     var qs = encodeJSON(param_send);
@@ -1336,9 +1342,9 @@ function search_operation(obj)
     try {
         var dossier = g('gDossier').value;
         waiting_box();
-        var target = "search"+layer;
-        if ( $(obj)["target"] ) {
-            target=$(obj)["target"].value;
+        var target = "search" + layer;
+        if ($(obj)["target"]) {
+            target = $(obj)["target"].value;
         }
         var qs = Form.serialize('search_form_ajx') + "&op=search_op";
         var action = new Ajax.Request('ajax_misc.php',
@@ -1372,12 +1378,13 @@ function set_reconcile(obj)
     try
     {
         var ctlc = obj.elements['ctlc'];
-        var tiers=obj.elements['tiers'];
-        if ( ! obj.elements['target']) return;
+        var tiers = obj.elements['tiers'];
+        if (!obj.elements['target'])
+            return;
         var target = obj.elements['target'].value;
         for (var e = 0; e < obj.elements.length; e++)
         {
-            
+
             var elmt = obj.elements[e];
             if (elmt.type === "checkbox")
             {
@@ -1389,8 +1396,8 @@ function set_reconcile(obj)
                         $(ctlc.value).value += ',';
 
                     } else {
-                        
-                        if (tiers  && tiers.value != "") {
+
+                        if (tiers && tiers.value != "") {
                             $(tiers.value).value = elmt.value;
                         }
                     }
@@ -1399,8 +1406,7 @@ function set_reconcile(obj)
             }
         }
         removeDiv(obj.elements['target'].value);
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box(e.message)
     }
@@ -1409,12 +1415,14 @@ function remove_waiting_node()
 {
     $('info_div').innerHTML = "";
     $('info_div').style.display = "none";
-    
+
 }
 function remove_waiting_box()
 {
-    if ( $('wait_box') ) { Effect.Fade('wait_box', { duration: 0.6 }); }
-    
+    if ($('wait_box')) {
+        Effect.Fade('wait_box', {duration: 0.6});
+    }
+
     remove_waiting_node();
 }
 /**
@@ -1473,13 +1481,12 @@ function calcy(p_sy)
     if (window.pageYOffset)
     {
         sy = window.pageYOffset + p_sy;
-    }
-    else
+    } else
     {
         sy = document.documentElement.scrollTop + p_sy;
     }
-    if ( document.viewport.getDimensions().width < 801 ) {
-        sy=sy/2;
+    if (document.viewport.getDimensions().width < 801) {
+        sy = sy / 2;
     }
     return sy;
 
@@ -1521,33 +1528,33 @@ function mod_menu(gdossier, pm_id)
  * @param {type} p_dep
  * @returns {undefined}
  */
-function display_sub_menu(p_dossier,p_profile,p_dep,p_level)
+function display_sub_menu(p_dossier, p_profile, p_dep, p_level)
 {
     waiting_box();
     new Ajax.Request('ajax_misc.php',
-    {
-        method:'get',
-        parameters : { op:'display_submenu',
-                gDossier:p_dossier,
-                dep:p_dep,
-                p_profile:p_profile ,
-                p_level : p_level
-            },
-        onSuccess : function (req) {
-            try {
-                remove_waiting_box();
-                if ( $('menu_table').rows.length > p_level ) {
-                    $('menu_table').rows[1].remove();
+            {
+                method: 'get',
+                parameters: {op: 'display_submenu',
+                    gDossier: p_dossier,
+                    dep: p_dep,
+                    p_profile: p_profile,
+                    p_level: p_level
+                },
+                onSuccess: function (req) {
+                    try {
+                        remove_waiting_box();
+                        if ($('menu_table').rows.length > p_level) {
+                            $('menu_table').rows[1].remove();
+                        }
+                        $('sub' + p_dep).addClassName("selectedmenu");
+                        var new_row = document.createElement('TR');
+                        new_row.innerHTML = req.responseText;
+                        $('menu_table').appendChild(new_row);
+                    } catch (e) {
+                        alert_box(e.message);
+                    }
                 }
-                $('sub'+p_dep).addClassName("selectedmenu");
-                var new_row = document.createElement('TR');
-                new_row.innerHTML = req.responseText;
-                $('menu_table').appendChild(new_row);
-            } catch (e) {
-                alert_box(e.message);
-            }
-        }
-    })
+            })
 }
 /**
  * in CFGPRO, ask to confirm before removing a submenu and its children
@@ -1555,33 +1562,33 @@ function display_sub_menu(p_dossier,p_profile,p_dep,p_level)
  * @param {type} profile_menu_id
  * @returns {undefined}
  */
-function remove_sub_menu(p_dossier,profile_menu_id)
+function remove_sub_menu(p_dossier, profile_menu_id)
 {
-    confirm_box(null,content[47], 
-    function () {
-        waiting_box();
-        new Ajax.Request('ajax_misc.php',
-        {                   
-            method:'get',
-            parameters: { op:'remove_submenu',gDossier:p_dossier,
-            p_profile_menu_id:profile_menu_id},
-            onSuccess:function (req) {
-                try {
-                    remove_waiting_box();
-                    $('sub'+profile_menu_id).remove();
-                     if ( $('menu_table').rows.length > 1 ) {
-                          $('menu_table').rows[1].remove();
-                     }
-                    
-                } catch(e)
-                {
-                    alert_box(e.message);
-                }
-            }
-        }
-       )
-    });
-       
+    confirm_box(null, content[47],
+            function () {
+                waiting_box();
+                new Ajax.Request('ajax_misc.php',
+                        {
+                            method: 'get',
+                            parameters: {op: 'remove_submenu', gDossier: p_dossier,
+                                p_profile_menu_id: profile_menu_id},
+                            onSuccess: function (req) {
+                                try {
+                                    remove_waiting_box();
+                                    $('sub' + profile_menu_id).remove();
+                                    if ($('menu_table').rows.length > 1) {
+                                        $('menu_table').rows[1].remove();
+                                    }
+
+                                } catch (e)
+                                {
+                                    alert_box(e.message);
+                                }
+                            }
+                        }
+                )
+            });
+
 }
 /**
  * @brief add a menu to a profile, propose only the available menu
@@ -1598,20 +1605,20 @@ function add_menu(obj)
     var pdossier = obj.dossier;
     var p_id = obj.p_id;
     var p_type = obj.type;
-    
+
     waiting_box();
     removeDiv('divdm' + p_id);
-    var pos = fixed_position(250, 150)+";width:50%;";
+    var pos = fixed_position(250, 150) + ";width:50%;";
     var action = new Ajax.Request('ajax_misc.php',
             {
                 method: 'get',
-                parameters:  { op:'add_menu',
-                            'gDossier':pdossier , 
-                            'p_id' :p_id ,
-                            'ctl' : 'divdm' + p_id ,
-                            'type' : p_type,
-                            'dep':obj.dep,
-                            'p_level':obj.p_level},
+                parameters: {op: 'add_menu',
+                    'gDossier': pdossier,
+                    'p_id': p_id,
+                    'ctl': 'divdm' + p_id,
+                    'type': p_type,
+                    'dep': obj.dep,
+                    'p_level': obj.p_level},
                 onFailure: null,
                 onSuccess: function (req) {
                     try {
@@ -1799,7 +1806,7 @@ function search_action(dossier, ctl_concern)
 
         var div = {id: target, cssclass: 'inner_box', style: str_style, html: loading(), drag: 1};
 
-       
+
         var target = {gDossier: dossier,
             ctlc: ctl_concern,
             op: 'search_action',
@@ -1816,7 +1823,7 @@ function search_action(dossier, ctl_concern)
                     onSuccess: function (req) {
                         try {
                             remove_waiting_box();
-                             add_div(div);
+                            add_div(div);
                             $('search_action_div').innerHTML = req.responseText;
                             req.responseText.evalScripts();
                         } catch (e) {
@@ -1852,8 +1859,7 @@ function result_search_action(obj)
                 }
         )
 
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box("display_periode " + e.message);
     }
@@ -1888,8 +1894,7 @@ function set_action_related(p_obj)
         }
         removeDiv('search_action_div');
         return false;
-    }
-    catch (e)
+    } catch (e)
     {
         alert_box(e.message);
         return false;
@@ -2022,15 +2027,13 @@ function check_date(p_str_date)
     var format = /^\d{2}\.\d{2}\.\d{4}$/;
     if (!format.test(p_str_date)) {
         return false;
-    }
-    else {
+    } else {
         var date_temp = p_str_date.split('.');
         var nMonth = parseFloat(date_temp[1]) - 1;
         var ma_date = new Date(date_temp[2], nMonth, date_temp[0]);
         if (ma_date.getFullYear() == date_temp[2] && ma_date.getMonth() == nMonth && ma_date.getDate() == date_temp[0]) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -2071,10 +2074,10 @@ function view_action(ag_id, dossier, modify)
                         remove_waiting_box();
                         var answer = req.responseXML;
                         var ctl = answer.getElementsByTagName('ctl');
-                        if ( ctl.length == 0) {
+                        if (ctl.length == 0) {
                             throw 'ajax failed ctl view_action';
                         }
-                        var ctl_txt=getNodeText(ctl[0]);
+                        var ctl_txt = getNodeText(ctl[0]);
                         var html = answer.getElementsByTagName('code');
                         if (html.length === 0)
                         {
@@ -2090,7 +2093,9 @@ function view_action(ag_id, dossier, modify)
                             style: pos
                         });
                         $(id).innerHTML = code_html;
-                        if ( ctl_txt == 'ok') { compute_all_ledger();}
+                        if (ctl_txt == 'ok') {
+                            compute_all_ledger();
+                        }
                         code_html.evalScripts();
                     } catch (e) {
                         alert_box('view_action' + e.message);
@@ -2176,17 +2181,17 @@ function filter_list(phrase, _id) {
 
     for (var r = 0; r < l_list.childNodes.length; r++) {
         var found = 0;
-        if ( l_list.childNodes[r].childElementCount == 0 )
+        if (l_list.childNodes[r].childElementCount == 0)
         {
             ele = l_list.childNodes[r].innerHTML;
         } else {
-               ele = l_list.childNodes[r].childNodes[0].innerHTML;
+            ele = l_list.childNodes[r].childNodes[0].innerHTML;
         }
-        if ( ele.toLowerCase().indexOf(words) >= 0) {
+        if (ele.toLowerCase().indexOf(words) >= 0) {
             tot_found++;
-            l_list.childNodes[r].style.display='block';
+            l_list.childNodes[r].style.display = 'block';
         } else {
-            l_list.childNodes[r].style.display='none';
+            l_list.childNodes[r].style.display = 'none';
         }
         $('info_div').style.display = "none";
         $('info_div').innerHTML = "";
@@ -2252,8 +2257,7 @@ function ask_navigator(p_dossier) {
                         {
                             req.responseText.evalScripts();
                             sorttable.makeSortable($("navi_tb"));
-                        }
-                        catch (e)
+                        } catch (e)
                         {
                             alert_box("answer_box Impossible executer script de la reponse\n" + e.message);
                         }
@@ -2287,8 +2291,7 @@ function set_preference(p_dossier) {
                         try
                         {
                             req.responseText.evalScripts();
-                        }
-                        catch (e)
+                        } catch (e)
                         {
                             alert_box("answer_box Impossible executer script de la reponse\n" + e.message);
                         }
@@ -2324,10 +2327,9 @@ function show_bookmark(p_dossier) {
                         try
                         {
                             req.responseText.evalScripts();
-                        }
-                        catch (e)
+                        } catch (e)
                         {
-                            alert_box(content[53]+"\n" + e.message);
+                            alert_box(content[53] + "\n" + e.message);
                         }
 
                     }
@@ -2358,10 +2360,9 @@ function save_bookmark() {
                         try
                         {
                             req.responseText.evalScripts();
-                        }
-                        catch (e)
+                        } catch (e)
                         {
-                            alert_box(content[53]+"\n" + e.message);
+                            alert_box(content[53] + "\n" + e.message);
                         }
 
                     }
@@ -2390,10 +2391,9 @@ function remove_bookmark() {
                         try
                         {
                             req.responseText.evalScripts();
-                        }
-                        catch (e)
+                        } catch (e)
                         {
-                            alert_box(content[53]+"\n" + e.message);
+                            alert_box(content[53] + "\n" + e.message);
                         }
 
                     }
@@ -2438,16 +2438,15 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post)
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
-                        var posy=calcy(250);
-                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0,style:"position:fixed;top:"+posy+"px"});
+                        var posy = calcy(250);
+                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0, style: "position:fixed;top:" + posy + "px"});
                         $('tag_div').innerHTML = code_html;
                         try
                         {
                             code_html.evalScripts();
-                        }
-                        catch (e)
+                        } catch (e)
                         {
-                            alert_box(content[53]+"\n" + e.message);
+                            alert_box(content[53] + "\n" + e.message);
                         }
 
                     }
@@ -2567,7 +2566,7 @@ function action_tag_add(p_dossier, ag_id, t_id)
  */
 function action_tag_remove(p_dossier, ag_id, t_id)
 {
-    confirm_box(null,content[50],function () {
+    confirm_box(null, content[50], function () {
         try {
             waiting_box();
             var queryString = "t_id=" + t_id + "&ag_id=" + ag_id + "&op=tag_remove&gDossier=" + p_dossier;
@@ -2591,7 +2590,7 @@ function action_tag_remove(p_dossier, ag_id, t_id)
 
                         }
                     }
-                );
+            );
         } catch (e) {
             error_message(e.message);
         }
@@ -2606,18 +2605,18 @@ function action_tag_remove(p_dossier, ag_id, t_id)
 function activate_tag(p_dossier, p_tag_id) {
     waiting_box();
     new Ajax.Request("ajax_misc.php",
-    {
-        method:"get",
-        parameters:{gDossier:p_dossier,op:'tag_activate',t_id:p_tag_id},
-        onSuccess:function(req) {
-            remove_waiting_box();
-            var answer=req.responseText.evalJSON();
-            var tagId="tag_onoff"+p_tag_id;
-            $(tagId).update(answer.code);
-            $(tagId).setStyle(answer.style);
-            remove_waiting_box();
-        }
-    })
+            {
+                method: "get",
+                parameters: {gDossier: p_dossier, op: 'tag_activate', t_id: p_tag_id},
+                onSuccess: function (req) {
+                    remove_waiting_box();
+                    var answer = req.responseText.evalJSON();
+                    var tagId = "tag_onoff" + p_tag_id;
+                    $(tagId).update(answer.code);
+                    $(tagId).setStyle(answer.style);
+                    remove_waiting_box();
+                }
+            })
 }
 /**
  * Display a div with available tags, this div can update the cell
@@ -2763,16 +2762,20 @@ function calendar_zoom(obj)
 {
     try {
         waiting_box();
-        var per_periode=null;
-        var notitle=0;
-        var from=0;
-        if ( $(obj.invalue) ) { per_periode=$(obj.invalue).value;}
-        if ( obj.notitle && obj.notitle==1 ) { notitle=1;}
+        var per_periode = null;
+        var notitle = 0;
+        var from = 0;
+        if ($(obj.invalue)) {
+            per_periode = $(obj.invalue).value;
+        }
+        if (obj.notitle && obj.notitle == 1) {
+            notitle = 1;
+        }
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
-                    method: 'get', 
-                    parameters: { "notitle":notitle,"op":'calendar_zoom','from':from,'gDossier':obj.gDossier,'in':per_periode ,'out' : obj.outdiv,'distype':obj.distype},
+                    method: 'get',
+                    parameters: {"notitle": notitle, "op": 'calendar_zoom', 'from': from, 'gDossier': obj.gDossier, 'in': per_periode, 'out': obj.outdiv, 'distype': obj.distype},
                     onFailure: ajax_misc_failure,
                     onSuccess: function (req, j) {
                         var answer = req.responseXML;
@@ -2858,10 +2861,10 @@ function show_description(p_id)
  * Display an empty card to fill , with the right card category
  * @param pn_fiche_card_id : fiche_def.fd_id
  * @param pn_dossier_id
-  */
-function select_cat(pn_fiche_card_id,pn_dossier_id,ps_element_id)
+ */
+function select_cat(pn_fiche_card_id, pn_dossier_id, ps_element_id)
 {
-    dis_blank_card({"ctl":"div_new_card","fd_id":pn_fiche_card_id,"op2":"bc","op":"card",gDossier:pn_dossier_id,"elementId":ps_element_id});
+    dis_blank_card({"ctl": "div_new_card", "fd_id": pn_fiche_card_id, "op2": "bc", "op": "card", gDossier: pn_dossier_id, "elementId": ps_element_id});
     removeDiv('select_card_div');
 }
 /**
@@ -2903,7 +2906,7 @@ function unselect_other_tab(p_tab)
     } catch (e) {
         if (console)
             console.log(e.message);
-        alert_box('unselect_other_tab '+e.message);
+        alert_box('unselect_other_tab ' + e.message);
     }
 }
 /**
@@ -2925,15 +2928,16 @@ function logout()
  */
 function create_anchor_up()
 {
-    if ( document.getElementById('up_top')) return;
-    
+    if (document.getElementById('up_top'))
+        return;
+
     var newElt = document.createElement('div');
     newElt.setAttribute('id', 'up_top');
-    newElt.innerHTML='<a id="up_top"></a>';
-    
+    newElt.innerHTML = '<a id="up_top"></a>';
+
     var parent = $('info_div').parentNode;
     parent.insertBefore(newElt, $('info_div'));
-    
+
 }
 /**
  * Initialize the window to show the button "UP" if the window is scrolled
@@ -2942,62 +2946,64 @@ function create_anchor_up()
  */
 function init_scroll()
 {
-    var up=new Element('div',{"class":"inner_box",
-            "style":"padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:30%;right:50px;text-align:center;font-size:20px",
-            id:"go_up"
-        });
-        up.innerHTML='<a class="icon" onclick="document.getElementById(\'go_up\').hide()" style="float:right;font-size:70%">&#xe816;</a> <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>';
-        document.body.appendChild(up);
-         window.onscroll=function () {
-         if ( document.viewport.getScrollOffsets().top> 0) {
-             if ($('go_up').visible() == false) {
-                $('go_up').setOpacity(0.65); 
+    var up = new Element('div', {"class": "inner_box",
+        "style": "padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:30%;right:50px;text-align:center;font-size:20px",
+        id: "go_up"
+    });
+    up.innerHTML = '<a class="icon" onclick="document.getElementById(\'go_up\').hide()" style="float:right;font-size:70%">&#xe816;</a> <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>';
+    document.body.appendChild(up);
+    window.onscroll = function () {
+        if (document.viewport.getScrollOffsets().top > 0) {
+            if ($('go_up').visible() == false) {
+                $('go_up').setOpacity(0.65);
                 $('go_up').show();
-                $('go_up').style.zIndex=99;
+                $('go_up').style.zIndex = 99;
             }
         } else {
             $('go_up').hide();
         }
-     }
+    }
 }
 /**
  * Confirm a form thanks a modal dialog Box, it returns true if we agree otherwise
  * false
  * @code
-<form onsubmit="return confirm_box(this,'message')">
-</form>
+ <form onsubmit="return confirm_box(this,'message')">
+ </form>
  * @endcode
  * @param p_obj form element (object) or element id (string)
  * @param p_message message to display
  * @returns true or false
  */
-function confirm_box(p_obj, p_message,p_callback_true)
+function confirm_box(p_obj, p_message, p_callback_true)
 {
     waiting_box();
     try {
         // Find id of the end
-        var name="";
-        if ( p_obj != null )
+        var name = "";
+        if (p_obj != null)
         {
-            if ( typeof (p_obj) === "object") {
-                name=p_obj.id;
+            if (typeof (p_obj) === "object") {
+                name = p_obj.id;
             } else {
-                name=p_obj;
+                name = p_obj;
             }
         }
-       
-       // execute the callback function or submit the form
-       if ( p_callback_true == undefined || p_callback_true==null)
+
+        // execute the callback function or submit the form
+        if (p_callback_true == undefined || p_callback_true == null)
         {
-            smoke.confirm(p_message,function (e) {
-                if ( e ) {
+            smoke.confirm(p_message, function (e) {
+                if (e) {
                     $(name).submit();
                 }
             });
         } else {
-            smoke.confirm(p_message,function (e) 
+            smoke.confirm(p_message, function (e)
             {
-                if ( e ) { p_callback_true.apply();}
+                if (e) {
+                    p_callback_true.apply();
+                }
             });
         }
     } catch (e) {
@@ -3013,7 +3019,7 @@ function confirm_box(p_obj, p_message,p_callback_true)
  */
 function alert_box(p_message)
 {
-    smoke.alert(p_message, undefined,{ok:'ok',classname:"inner_box"});
+    smoke.alert(p_message, undefined, {ok: 'ok', classname: "inner_box"});
 }
 
 
@@ -3028,7 +3034,7 @@ function alternate_row_color(p_table)
     var localClass = "";
     for (i = 1; i < len; i++) {
         localClass = (i % 2 == 0) ? "even" : "odd";
-        if (localClass == "even" && $(p_table).tBodies[0].rows[i].hasClassName("odd")) 
+        if (localClass == "even" && $(p_table).tBodies[0].rows[i].hasClassName("odd"))
         {
             $(p_table).tBodies[0].rows[i].removeClassName("odd");
         }
@@ -3037,7 +3043,7 @@ function alternate_row_color(p_table)
             $(p_table).tBodies[0].rows[i].addClassName("even");
         }
 
-        if (localClass == "odd" && $(p_table).tBodies[0].rows[i].hasClassName("even")) 
+        if (localClass == "odd" && $(p_table).tBodies[0].rows[i].hasClassName("even"))
         {
             $(p_table).tBodies[0].rows[i].removeClassName("even");
         }
@@ -3052,18 +3058,18 @@ function alternate_row_color(p_table)
  * Make an DOM element draggable or not
  * @param object_id DOM id
  */
-function pin (object_id) {
-    if ( aDraggableElement[object_id]) {
+function pin(object_id) {
+    if (aDraggableElement[object_id]) {
         aDraggableElement[object_id].destroy();
-        aDraggableElement[object_id]=undefined;
-        $('pin_'+object_id).innerHTML="&#xf047;";
+        aDraggableElement[object_id] = undefined;
+        $('pin_' + object_id).innerHTML = "&#xf047;";
     } else {
-        aDraggableElement[object_id]=new Draggable(object_id, {starteffect: function ()
-                {
-                    new Effect.Highlight(object_id, {scroll: window, queue: 'end'});
-                }}
-            ); 
-        $('pin_'+object_id).innerHTML="&#xe809;";
+        aDraggableElement[object_id] = new Draggable(object_id, {starteffect: function ()
+            {
+                new Effect.Highlight(object_id, {scroll: window, queue: 'end'});
+            }}
+        );
+        $('pin_' + object_id).innerHTML = "&#xe809;";
     }
 }
 /**
@@ -3073,20 +3079,20 @@ function pin (object_id) {
  * @param p_attribute_name the name of the attribute
  * @param p_attribute_value the value of the attribute we want to show
  */
-function show_only_row(p_table_id,p_attribute_name,p_attribute_value)
+function show_only_row(p_table_id, p_attribute_name, p_attribute_value)
 {
-    if ( ! $(p_table_id)) {
+    if (!$(p_table_id)) {
         throw "Invalide table id"
     }
-    var mTable=$(p_table_id) ;
-    var ncount=mTable.rows.length
-    for (var i = 0;i < ncount;i++) {
-        var mRow=mTable.rows[i];
-        if (mRow.getAttribute(p_attribute_name) != undefined && mRow.getAttribute(p_attribute_name)!=p_attribute_value){
+    var mTable = $(p_table_id);
+    var ncount = mTable.rows.length
+    for (var i = 0; i < ncount; i++) {
+        var mRow = mTable.rows[i];
+        if (mRow.getAttribute(p_attribute_name) != undefined && mRow.getAttribute(p_attribute_name) != p_attribute_value) {
             mRow.hide();
-          } else {
+        } else {
             mRow.show();
-          }
+        }
     }
 }
 /**
@@ -3095,16 +3101,16 @@ function show_only_row(p_table_id,p_attribute_name,p_attribute_value)
  */
 function show_all_row(p_table_id)
 {
-    if ( ! $(p_table_id)) {
+    if (!$(p_table_id)) {
         throw "Invalide table id"
     }
-    var mTable=$(p_table_id) ;
-    var ncount=mTable.rows.length
-    for (var i = 0;i < ncount;i++) {
-        var mRow=mTable.rows[i];
-            mRow.show();
+    var mTable = $(p_table_id);
+    var ncount = mTable.rows.length
+    for (var i = 0; i < ncount; i++) {
+        var mRow = mTable.rows[i];
+        mRow.show();
     }
-    
+
 }
 /**
  * @class
@@ -3124,64 +3130,70 @@ function show_all_row(p_table_id)
  *   - dialog : id of the dialog box (update / add ) periode_box 
  * 
  */
-var Periode=function (p_ledger)  {
-    this.periode_id=0;
-    this.p_ledger=p_ledger;
-    this.dialog='periode_box';
-    this.pcallback='ajax_misc.php';
-    this.dossier=0;
-    this.js_obj_name="";
-    this.ajax_test="";
-    this.set_callback=function (p_phpfile) { this.pcallback=p_phpfile;};
-    this.set_dossier=function (p_dosid) { this.dossier=p_dosid;};
+var Periode = function (p_ledger) {
+    this.periode_id = 0;
+    this.p_ledger = p_ledger;
+    this.dialog = 'periode_box';
+    this.pcallback = 'ajax_misc.php';
+    this.dossier = 0;
+    this.js_obj_name = "";
+    this.ajax_test = "";
+    this.set_callback = function (p_phpfile) {
+        this.pcallback = p_phpfile;
+    };
+    this.set_dossier = function (p_dosid) {
+        this.dossier = p_dosid;
+    };
     /**
      * set_js_obj_name (p_js_obj_name)
      * We need to know the javascript variable name , to pass it to ajax and
      * create a HTML containing the right variable
      * @param  p_js_obj_name name of the variable js we use on caller side
      */
-    this.set_js_obj_name=function (p_js_obj_name) { this.js_obj_name=p_js_obj_name;};
-    
+    this.set_js_obj_name = function (p_js_obj_name) {
+        this.js_obj_name = p_js_obj_name;
+    };
+
     /**
      * Remove the periode , so call new Ajax and hide the row if successful
      * otherwise show dialog box.
      * @parameter p_periode_id is the id of periode
      */
-    this.remove=function(p_periode_id) {
-        
-        var js_param={"gDossier":this.dossier,
-                        "op":"periode",
-                        "act":"remove",
-                        "p_id":p_periode_id,
-                        "ledger_id":0,
-                        "js_var":this.js_obj_name};
-        if ( this.ajax_test !="") {
-            js_param["TestAjaxFile"]=this.ajax_test;
+    this.remove = function (p_periode_id) {
+
+        var js_param = {"gDossier": this.dossier,
+            "op": "periode",
+            "act": "remove",
+            "p_id": p_periode_id,
+            "ledger_id": 0,
+            "js_var": this.js_obj_name};
+        if (this.ajax_test != "") {
+            js_param["TestAjaxFile"] = this.ajax_test;
         }
-        here=this;
-        smoke.confirm("Confirmer  ?",function(e) {
-            if (e ) {
-                    waiting_box();
-                    new Ajax.Request(here.pcallback,
+        here = this;
+        smoke.confirm("Confirmer  ?", function (e) {
+            if (e) {
+                waiting_box();
+                new Ajax.Request(here.pcallback,
                         {
-                            method:"POST",
-                            parameters:js_param,
-                            onSuccess:function(req) {
-                                var answer=req.responseText.evalJSON();
+                            method: "POST",
+                            parameters: js_param,
+                            onSuccess: function (req) {
+                                var answer = req.responseText.evalJSON();
                                 remove_waiting_box();
-                                if ( answer.status=="OK" ) 
-                                { 
-                                    $("row_per_"+p_periode_id).remove();
+                                if (answer.status == "OK")
+                                {
+                                    $("row_per_" + p_periode_id).remove();
                                     alternate_row_color("periode_tbl");
                                 } else {
                                     smoke.alert(answer.content);
                                 }
-                        }
-                    });
-                }
-            });
+                            }
+                        });
+            }
+        });
     };
- 
+
     /**
      * display a dialog box to update a periode, call save either display 
      * an error box or update the row.
@@ -3189,161 +3201,161 @@ var Periode=function (p_ledger)  {
      * to build the right button , javascript in the html of answer
      * @parameter p_periode_id is the id of periode
      */
-    this.box_display=function(p_periode_id) {
-         if ( this.js_obj_name == "") {
+    this.box_display = function (p_periode_id) {
+        if (this.js_obj_name == "") {
             smoke.alert("ERROR BOX_ADD")
         }
-        
-         var js_param={"gDossier":this.dossier,
-                            "op":"periode",
-                            "act":"show",
-                            "p_id":p_periode_id,
-                            "ledger_id":this.p_ledger,
-                        "js_var":this.js_obj_name};
-        if ( this.ajax_test !="") {
-            js_param["TestAjaxFile"]=this.ajax_test;
+
+        var js_param = {"gDossier": this.dossier,
+            "op": "periode",
+            "act": "show",
+            "p_id": p_periode_id,
+            "ledger_id": this.p_ledger,
+            "js_var": this.js_obj_name};
+        if (this.ajax_test != "") {
+            js_param["TestAjaxFile"] = this.ajax_test;
         }
-        var here=this;
+        var here = this;
         new Ajax.Request(here.pcallback,
-                        {
-                            method:"POST",
-                            parameters:js_param,
-                            onSuccess:function(req) {
-                                remove_waiting_box();
-                                var json=req.responseText.evalJSON();
-                                var y=calcy(100);
-                                add_div({"id":"mod_periode","style":"position:fixed;top:"+y+"px;width:50%","cssclass":"inner_box",'html':"wait"});
-                                $('mod_periode').update(json.content);
-                        }
-                    });
+                {
+                    method: "POST",
+                    parameters: js_param,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        var json = req.responseText.evalJSON();
+                        var y = calcy(100);
+                        add_div({"id": "mod_periode", "style": "position:fixed;top:" + y + "px;width:50%", "cssclass": "inner_box", 'html': "wait"});
+                        $('mod_periode').update(json.content);
+                    }
+                });
     };
     /**
      * close the periode, call ajax and receive a json object with the attribute
      * status, content
      * @parameter p_periode_id is the id of periode
      */
-    this.close_periode=function(p_periode_id) {
-         if ( this.js_obj_name == "") {
+    this.close_periode = function (p_periode_id) {
+        if (this.js_obj_name == "") {
             smoke.alert("ERROR BOX_ADD")
         }
-        
-        if ( this.ajax_test !="") {
-            js_param["TestAjaxFile"]=this.ajax_test;
+
+        if (this.ajax_test != "") {
+            js_param["TestAjaxFile"] = this.ajax_test;
         }
-        var here=this;
-        smoke.confirm("Confirmer  ?",function(e) {
-            if (e ) {
-                    here._close(p_periode_id);
-                }
-          });
+        var here = this;
+        smoke.confirm("Confirmer  ?", function (e) {
+            if (e) {
+                here._close(p_periode_id);
+            }
+        });
     };
     /**
      * Internal function to close without confirming
      * @param {type} p_periode_id
      * @returns {undefined}
      */
-     this._close=function(p_periode_id) {
-         if ( this.js_obj_name == "") {
+    this._close = function (p_periode_id) {
+        if (this.js_obj_name == "") {
             smoke.alert("ERROR BOX_ADD")
         }
-         var js_param={"gDossier":this.dossier,
-                            "op":"periode",
-                            "act":"close",
-                            "ledger_id":this.p_ledger,
-                            "p_id":p_periode_id,
-                        "js_var":this.js_obj_name
-                    };
-        if ( this.ajax_test !="") {
-            js_param["TestAjaxFile"]=this.ajax_test;
+        var js_param = {"gDossier": this.dossier,
+            "op": "periode",
+            "act": "close",
+            "ledger_id": this.p_ledger,
+            "p_id": p_periode_id,
+            "js_var": this.js_obj_name
+        };
+        if (this.ajax_test != "") {
+            js_param["TestAjaxFile"] = this.ajax_test;
         }
-        var here=this;
+        var here = this;
         waiting_box();
         new Ajax.Request(here.pcallback,
-            {
-                method:"POST",
-                parameters:js_param,
-                onSuccess:function(req) {
-                    remove_waiting_box();
-                    var json=req.responseText.evalJSON();
-                    if ( json.status == 'OK')
-                    {   
-                        $('row_per_'+p_periode_id).update(json.content);
-                        new Effect.Highlight('row_per_'+p_periode_id ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
-                    } else {
-                        smoke.alert(json.content);
+                {
+                    method: "POST",
+                    parameters: js_param,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        var json = req.responseText.evalJSON();
+                        if (json.status == 'OK')
+                        {
+                            $('row_per_' + p_periode_id).update(json.content);
+                            new Effect.Highlight('row_per_' + p_periode_id, {startcolor: '#FAD4D4', endcolor: '#F78082'});
+                        } else {
+                            smoke.alert(json.content);
+                        }
                     }
-            }
-        });
+                });
     };
     /**
      * reopen the periode
      * @parameter p_periode_id is the SQL id of parm_periode or the id of 
      * jrn_periode
      */
-    this.open_periode=function(p_periode_id) {
-         if ( this.js_obj_name == "") {
+    this.open_periode = function (p_periode_id) {
+        if (this.js_obj_name == "") {
             smoke.alert("ERROR BOX_ADD")
         }
-         var js_param={"gDossier":this.dossier,
-                            "op":"periode",
-                            "act":"reopen",
-                            "ledger_id":this.p_ledger,
-                            "p_id":p_periode_id,
-                        "js_var":this.js_obj_name
-                    };
-        if ( this.ajax_test !="") {
-            js_param["TestAjaxFile"]=this.ajax_test;
+        var js_param = {"gDossier": this.dossier,
+            "op": "periode",
+            "act": "reopen",
+            "ledger_id": this.p_ledger,
+            "p_id": p_periode_id,
+            "js_var": this.js_obj_name
+        };
+        if (this.ajax_test != "") {
+            js_param["TestAjaxFile"] = this.ajax_test;
         }
-        var here=this;
-        smoke.confirm("Confirmer  ?",function(e) {
-            if (e ) {
-                    waiting_box();
-                    new Ajax.Request(here.pcallback,
+        var here = this;
+        smoke.confirm("Confirmer  ?", function (e) {
+            if (e) {
+                waiting_box();
+                new Ajax.Request(here.pcallback,
                         {
-                            method:"POST",
-                            parameters:js_param,
-                            onSuccess:function(req) {
-                              remove_waiting_box();
-                                var json=req.responseText.evalJSON();
-                                if ( json.status == 'OK')
-                                {  
-                                    $('row_per_'+p_periode_id).update(json.content);
-                                    new Effect.Highlight('row_per_'+p_periode_id ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
+                            method: "POST",
+                            parameters: js_param,
+                            onSuccess: function (req) {
+                                remove_waiting_box();
+                                var json = req.responseText.evalJSON();
+                                if (json.status == 'OK')
+                                {
+                                    $('row_per_' + p_periode_id).update(json.content);
+                                    new Effect.Highlight('row_per_' + p_periode_id, {startcolor: '#FAD4D4', endcolor: '#F78082'});
                                 } else {
                                     smoke.alert(json.content);
                                 }
-                        }
-                    });
-                }      
-            });
+                            }
+                        });
+            }
+        });
     };
     /**
      * This DOMID of the DIV containing the form is mod_periode
      * @param {type} p_frm
      * @returns {Boolean}
      */
-    this.save=function(p_frm) {
-        var js_param=$(p_frm).serialize(true);
+    this.save = function (p_frm) {
+        var js_param = $(p_frm).serialize(true);
         waiting_box();
-        js_param["js_var"]=this.js_obj_name;
-        js_param["act"]="save";
-        js_param["op"]="periode";
-        var here=this;
-        new Ajax.Request(this.pcallback,{
-           method:"POST",
-           parameters:js_param,
-           onSuccess:function (req) {
-               
-               var answer=req.responseText.evalJSON();
-               remove_waiting_box();
-               if ( answer.status == "OK") {
-                   $('row_per_'+js_param['periode_id']).update(answer.content);
-                   removeDiv('mod_periode');
-                   new Effect.Highlight('row_per_'+js_param['periode_id'] ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
-               } else {
-                   smoke.alert(answer.content);
-               }
-           }
+        js_param["js_var"] = this.js_obj_name;
+        js_param["act"] = "save";
+        js_param["op"] = "periode";
+        var here = this;
+        new Ajax.Request(this.pcallback, {
+            method: "POST",
+            parameters: js_param,
+            onSuccess: function (req) {
+
+                var answer = req.responseText.evalJSON();
+                remove_waiting_box();
+                if (answer.status == "OK") {
+                    $('row_per_' + js_param['periode_id']).update(answer.content);
+                    removeDiv('mod_periode');
+                    new Effect.Highlight('row_per_' + js_param['periode_id'], {startcolor: '#FAD4D4', endcolor: '#F78082'});
+                } else {
+                    smoke.alert(answer.content);
+                }
+            }
         });
         return false;
     };
@@ -3355,19 +3367,19 @@ var Periode=function (p_ledger)  {
     this.close_selected = function () {
         var here = this;
         var a_selected = document.getElementsByName('sel_per_close[]');
-        var count=0;
+        var count = 0;
         var i = 0;
         for (i = 0; i < a_selected.length; i++) {
             if (a_selected[i].checked == true) {
                 // Close the selected periode
-              count++;
+                count++;
             }
         }
-        if ( count==0){
-            smoke.signal("Sélectionner au moins une période",function(){},{duration:1500});
+        if (count == 0) {
+            smoke.signal("Sélectionner au moins une période", function () {}, {duration: 1500});
             return;
         }
-        smoke.confirm("Confirmer fermeture de "+count+" periode", function (e) {
+        smoke.confirm("Confirmer fermeture de " + count + " periode", function (e) {
             if (e) {
                 var a_selected = document.getElementsByName('sel_per_close[]');
                 var i = 0;
@@ -3388,57 +3400,57 @@ var Periode=function (p_ledger)  {
      *   # DIV id = periode_add
      *   # table id = periode_tbl
      */
-    this.insert_periode=function() {    
-        var p_frm='insert_periode_frm';
-        var js_param=$(p_frm).serialize(true);
+    this.insert_periode = function () {
+        var p_frm = 'insert_periode_frm';
+        var js_param = $(p_frm).serialize(true);
         waiting_box();
-        js_param["js_var"]=this.js_obj_name;
-        js_param["act"]="insert_periode";
-        js_param["op"]="periode";
-        js_param["p_id"]="-1";
-        js_param["ledger_id"]="0";
-        var here=this;
-        new Ajax.Request(this.pcallback,{
-           method:"POST",
-           parameters:js_param,
-           onSuccess:function (req) {
-               var answer=req.responseText.evalJSON();
-               remove_waiting_box();
-               if ( answer.status == "OK") {
-                     var new_row=document.createElement("tr");
-                     $('periode_tbl').append(new_row);
-                     new_row.replace(answer.content);
-                     
-                     // hide the form
-                     $('periode_add').hide();
-                   new Effect.Highlight('row_per_'+answer.p_id ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
+        js_param["js_var"] = this.js_obj_name;
+        js_param["act"] = "insert_periode";
+        js_param["op"] = "periode";
+        js_param["p_id"] = "-1";
+        js_param["ledger_id"] = "0";
+        var here = this;
+        new Ajax.Request(this.pcallback, {
+            method: "POST",
+            parameters: js_param,
+            onSuccess: function (req) {
+                var answer = req.responseText.evalJSON();
+                remove_waiting_box();
+                if (answer.status == "OK") {
+                    var new_row = document.createElement("tr");
+                    $('periode_tbl').append(new_row);
+                    new_row.replace(answer.content);
+
+                    // hide the form
+                    $('periode_add').hide();
+                    new Effect.Highlight('row_per_' + answer.p_id, {startcolor: '#FAD4D4', endcolor: '#F78082'});
                     alternate_row_color('periode_tbl');
-               } else {
-                   smoke.alert(answer.content);
-               }
-           }
+                } else {
+                    smoke.alert(answer.content);
+                }
+            }
         });
-        return false;   
-}
-    
+        return false;
+    }
+
 }
 /**
  * Show the periodes from the exercice contained into the id (p_exercice_sel)
  * @param p_table_id DOM ID of the table
  */
-Periode.filter_exercice=function (p_table_id) {
-    var rows=$(p_table_id).rows;
-    var selected_value=$('p_exercice_sel').value;
-    for (var i=1;i<rows.length;i++) {
-        var exercice=rows[i].getAttribute("per_exercice");
-        if ( selected_value == -1 ) {
+Periode.filter_exercice = function (p_table_id) {
+    var rows = $(p_table_id).rows;
+    var selected_value = $('p_exercice_sel').value;
+    for (var i = 1; i < rows.length; i++) {
+        var exercice = rows[i].getAttribute("per_exercice");
+        if (selected_value == -1) {
             rows[i].show();
-        } else if ( selected_value == exercice) {
+        } else if (selected_value == exercice) {
             rows[i].show();
         } else {
             rows[i].hide();
         }
-        
+
     }
 };
 
@@ -3452,21 +3464,21 @@ var progressIdx = 0;
  * @param {string} p_taskid id to monitor
  * @param {int} p_message
  */
-function progress_bar_start(p_taskid,p_message)
+function progress_bar_start(p_taskid, p_message)
 {
     try {
         progressIdx++;
         // block the window
-        
-        var message='<p>'+content[70]+'</p>';
-        if ( p_message) {
-            message=p_message;
+
+        var message = '<p>' + content[70] + '</p>';
+        if (p_message) {
+            message = p_message;
         }
-        
-        add_div({id:"blocking"+progressIdx,cssclass:"smoke-base smoke-visible "});
-        
-        add_div({id:"message"+progressIdx,cssclass:"inner_box",style:"z-index:1000;position:fixed;top:30%;width:40%;left:30%"});
-        $("message"+progressIdx).update('<h3>'+content[65]+'</h3>'+message);
+
+        add_div({id: "blocking" + progressIdx, cssclass: "smoke-base smoke-visible "});
+
+        add_div({id: "message" + progressIdx, cssclass: "inner_box", style: "z-index:1000;position:fixed;top:30%;width:40%;left:30%"});
+        $("message" + progressIdx).update('<h3>' + content[65] + '</h3>' + message);
         // Create a div
         add_div({id: "progressDiv" + progressIdx, cssclass: "progressbar", html: '<span id="progressValue">0</span>'});
         // Check status every sec.
@@ -3486,38 +3498,40 @@ function progress_bar_check(p_idx, p_taskid)
     try {
 
         new Ajax.Request("ajax_misc.php", {
-            parameters: {gDossier: 0, task_id: p_taskid,op:"progressBar"},
-            method:"get",
+            parameters: {gDossier: 0, task_id: p_taskid, op: "progressBar"},
+            method: "get",
             onSuccess: function (req) {
-                try 
+                try
                 {
-                    var answer=req.responseText.evalJSON();
-                    var progress_div=$("progressDiv"+progressIdx);
-                    var a_child=progress_div.childNodes;
-                    var i=0;
-                    for (  i=0;i< a_child.length;i++) {
-                        if ( a_child[i].id="progressValue") {
+                    var answer = req.responseText.evalJSON();
+                    var progress_div = $("progressDiv" + progressIdx);
+                    var a_child = progress_div.childNodes;
+                    var i = 0;
+                    for (i = 0; i < a_child.length; i++) {
+                        if (a_child[i].id = "progressValue") {
                             var progressValue = a_child[i];
                         }
                     }
                     var progress = parseFloat(progressValue.innerHTML);
-                    if ( answer.value <= progress ) {
+                    if (answer.value <= progress) {
                         return;
                     }
 
                     progressValue.innerHTML = answer.value;
                     progressValue.setStyle("width:" + answer.value + "%");
-                    if (answer.value== 100) {
+                    if (answer.value == 100) {
                         clearInterval(progressBar[p_idx]);
-                        progressValue.innerHTML="Success";
-                        Effect.BlindUp("progressDiv"+p_idx,{duration:1.0,scaleContent:false})
-                        $("message"+p_idx).remove();
-                        $("blocking"+p_idx).remove();
-                        setTimeout(function() { $("progressDiv"+progressIdx).remove } , 1100);
+                        progressValue.innerHTML = "Success";
+                        Effect.BlindUp("progressDiv" + p_idx, {duration: 1.0, scaleContent: false})
+                        $("message" + p_idx).remove();
+                        $("blocking" + p_idx).remove();
+                        setTimeout(function () {
+                            $("progressDiv" + progressIdx).remove
+                        }, 1100);
                     }
                 } catch (e) {
                     clearInterval(progressBar[p_idx]);
-                    document.getElementById("progressValue").innerHTML=req.responseText;
+                    document.getElementById("progressValue").innerHTML = req.responseText;
                     console.error(e.message);
                 }
             }
@@ -3527,7 +3541,7 @@ function progress_bar_check(p_idx, p_taskid)
         console.error(e.message);
     }
 }
-                                                
+
 /**
  * In the user's setting  box, update the period list with the choosen exercice
  * @param {int} p_dossier
@@ -3535,8 +3549,8 @@ function progress_bar_check(p_idx, p_taskid)
 function updatePeriodePreference(p_dossier)
 {
     waiting_box();
-    var exercice=$('exercice_setting').value;
-    new Ajax.Updater('setting_period',"ajax_misc.php",{method:"get",parameters:{ "op":"pref_exercice","gDossier":p_dossier,"exercice":exercice}});  
+    var exercice = $('exercice_setting').value;
+    new Ajax.Updater('setting_period', "ajax_misc.php", {method: "get", parameters: {"op": "pref_exercice", "gDossier": p_dossier, "exercice": exercice}});
     remove_waiting_box();
 }
 /**
@@ -3547,12 +3561,12 @@ function updatePeriodePreference(p_dossier)
  * @param {type} p_periode_to id of the ending periode
  * @param {type} p_last possible value = 1 to show last periode or 0 the first
  */
-function updatePeriode(p_dossier,p_exercice,p_periode_from,p_periode_to,p_last)
+function updatePeriode(p_dossier, p_exercice, p_periode_from, p_periode_to, p_last)
 {
     waiting_box();
-    var exercice=$(p_exercice).value;
-    new Ajax.Updater(p_periode_from,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_from,"type":"from","last":p_last}});
-    new Ajax.Updater(p_periode_to,"ajax_misc.php",{method:"get",parameters:{op:"periode_change","gDossier":p_dossier,"exercice":exercice,field:p_periode_to,"type":"to","last":p_last}});
+    var exercice = $(p_exercice).value;
+    new Ajax.Updater(p_periode_from, "ajax_misc.php", {method: "get", parameters: {op: "periode_change", "gDossier": p_dossier, "exercice": exercice, field: p_periode_from, "type": "from", "last": p_last}});
+    new Ajax.Updater(p_periode_to, "ajax_misc.php", {method: "get", parameters: {op: "periode_change", "gDossier": p_dossier, "exercice": exercice, field: p_periode_to, "type": "to", "last": p_last}});
     remove_waiting_box();
 }
 /**
@@ -3562,22 +3576,22 @@ function updatePeriode(p_dossier,p_exercice,p_periode_from,p_periode_to,p_last)
  */
 function toggle_lock(p_domid)
 {
-    var padlock=document.getElementById(p_domid);
-    if ( padlock == null) {
+    var padlock = document.getElementById(p_domid);
+    if (padlock == null) {
         console.error("domid invalid");
     }
     var status = padlock.getAttribute("is_locked");
-    if ( status == 1 ) {
-        padlock.innerHTML="&#xe832;";
-        padlock.setAttribute("is_locked",0);
+    if (status == 1) {
+        padlock.innerHTML = "&#xe832;";
+        padlock.setAttribute("is_locked", 0);
     } else if (status == 0) {
-        padlock.innerHTML="&#xe831;";
-        padlock.setAttribute("is_locked",1);
+        padlock.innerHTML = "&#xe831;";
+        padlock.setAttribute("is_locked", 1);
     } else {
         throw "toggle_lock failed";
     }
-        
-    
+
+
 }
 
 /*** 
@@ -3587,14 +3601,14 @@ function updatePreference()
 {
     try {
         waiting_box();
-        var param=$('preference_frm').serialize()+"&op=preference&action=save";
-        
-        new Ajax.Request("ajax_misc.php",{
-            method:"post",
-            parameters:param,
-            onSuccess:function (req) {
-                var style=req.responseText.evalJSON();
-                $('pagestyle').setAttribute('href',style.style);
+        var param = $('preference_frm').serialize() + "&op=preference&action=save";
+
+        new Ajax.Request("ajax_misc.php", {
+            method: "post",
+            parameters: param,
+            onSuccess: function (req) {
+                var style = req.responseText.evalJSON();
+                $('pagestyle').setAttribute('href', style.style);
                 removeDiv('preference_div');
             }
         });
@@ -3603,7 +3617,7 @@ function updatePreference()
         smoke.alert(content[48] + e.message);
     }
     remove_waiting_box();
-    
+
 }
 
 /**
@@ -3612,16 +3626,16 @@ function updatePreference()
  * @param string p_value_domid : id of domElement containing 1 or 0
  * @see param_jrn.php
  */
-function toggle_onoff(icon_domid,p_value_domid)
+function toggle_onoff(icon_domid, p_value_domid)
 {
-    if ( $(p_value_domid).value==0) {
-        $(p_value_domid).value=1;
-        $(icon_domid).innerHTML='&#xf205;';
-        $(icon_domid).style='color:green';
+    if ($(p_value_domid).value == 0) {
+        $(p_value_domid).value = 1;
+        $(icon_domid).innerHTML = '&#xf205;';
+        $(icon_domid).style = 'color:green';
     } else {
-        $(p_value_domid).value=0;
-        $(icon_domid).innerHTML='&#xf204;';
-        $(icon_domid).style='color:red';
+        $(p_value_domid).value = 0;
+        $(icon_domid).innerHTML = '&#xf204;';
+        $(icon_domid).style = 'color:red';
     }
 }
 /**
@@ -3631,9 +3645,9 @@ function toggle_onoff(icon_domid,p_value_domid)
  * @param {type} p_row
  * @returns {undefined}
  */
-function toggle_row_warning_enable(p_enable,p_row)
+function toggle_row_warning_enable(p_enable, p_row)
 {
-    if ($(p_enable).value==1) {
+    if ($(p_enable).value == 1) {
         $(p_row).show();
     } else {
         $(p_row).hide();

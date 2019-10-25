@@ -108,8 +108,8 @@ list($sql, $where) = $Ledger->build_search_sql($p_array);
 $max_line = $cn->count_sql($sql);
 
 $step = $_SESSION['g_pagesize'];
-$page = (isset($_GET['offset'])) ? $_GET['page'] : 1;
-$offset = (isset($_GET['offset'])) ? $_GET['offset'] : 0;
+$page = (isset($_GET['offset'])) ? $http->get('page') : 1;
+$offset = (isset($_GET['offset'])) ? $http->get('offset') : 0;
 
 // check if number
 $page=(isNumber($page)==0)?1:$page;
@@ -121,7 +121,7 @@ echo $msg;
 echo $Ledger->display_search_form();
 echo $bar;
 echo '<form method="GET" id="fpaida" class="print">';
-echo HtmlInput::hidden("ac", $_REQUEST['ac']);
+echo HtmlInput::hidden("ac", $http->request('ac'));
 echo HtmlInput::hidden('ledger_type',$ledger_type);
 echo dossier::hidden();
 

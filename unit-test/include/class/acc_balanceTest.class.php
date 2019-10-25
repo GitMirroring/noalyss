@@ -38,7 +38,6 @@ class Acc_BalanceTest extends TestCase
 
     /**
      * @covers Acc_Balance::get_row
-     * @todo   Implement testGet_row().
      */
     public function testGet_row()
     {
@@ -47,12 +46,17 @@ class Acc_BalanceTest extends TestCase
         
         $max=$g_connection->get_value("select max(p_id) from parm_periode");
         $min=$g_connection->get_value("select min(p_id) from parm_periode");
-        $this->object->get_row($min,$max);
+	$this->object->jrn=NULL;
+        $array=$this->object->get_row($min,$max);
+	$this->assertEquals(14,count($array));
+	$this->object->jrn=[2,4];
+        $array=$this->object->get_row($min,$max);
+	$this->assertEquals(8,count($array));
+
     }
 
     /**
      * @covers Acc_Balance::filter_cat
-     * @todo   Implement testFilter_cat().
      */
     public function testFilter_cat()
     {
@@ -62,17 +66,61 @@ class Acc_BalanceTest extends TestCase
         $this->object->filter_cat(array('FIN'));
         $this->assertEquals($this->object->jrn[0],2);
     }
-
     /**
-     * @covers Acc_Balance::test_me
-     * @todo   Implement testTest_me().
+     *@covers Acc_Balance::summary_add
+     *@depend Acc_Balance::summary_init
      */
-    public function testTest_me()
+    public function testSummary_add()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+      $array=$this->object->summary_init();
+      $result=$this->object->summary_add($array,'600',100,0);
+      $this->assertEquals(100,$result['6']['deb']);
+
+      $result=$this->object->summary_add($result,'6500',50,0);
+      $this->assertEquals(150,$result['6']['deb']);
+      
+      $result=$this->object->summary_add($result,'2600',0,100);
+      $this->assertEquals(100,$result['1_5']['cred']);
+      $this->assertEquals(0,$result['1_5']['deb']);
+      
+      $result=$this->object->summary_add($result,'2400',100,0);
+      $this->assertEquals(100,$result['1_5']['deb']);
+
+      
     }
+    /**
+     *@covers Acc_Balance::summary_add
+     *@depend Acc_Balance::summary_init
+     */
+    public function testSummary_display()
+    {
+      $array=$this->object->summary_init();
+
+      $output='<table><tr><td  >Class 1-5</td><td   class="num">0,00</td><td  >=</td></tr><tr><td  >Class 6</td><td   class="num">0,00</td><td  >=</td></tr><tr><td  >Class 7</td><td   class="num">0,00</td><td  >=</td></tr><tr><td  >Solde 6/7</td><td   class="num">0,00</td><td  >=</td></tr></table>';
+      $this->expectOutputString($output);
+      $this->object->summary_display($array);
+
+      
+    }
+    /**
+     *@covers Acc_Balance::summary_add
+     */
+    public function testSummary_display_pdf()
+    {
+      // No test since a PDF is modified and cannot be tested
+      // by PHPUNIT
+      $this->markTestSkipped("Summary_display_pdf cannot be tested since it modify a PDF");
+    }
+    /**
+     *@covers Acc_Balance::summary_init
+     */
+    public function testsummary_init()
+    {
+      $array=$this->object->summary_init();
+      $this->assertTrue(isset($array['1_5']));
+      $this->assertTrue(isset($array['6']));
+      $this->assertTrue(isset($array['7']));
+    }
+
 
 }

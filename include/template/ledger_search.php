@@ -54,7 +54,7 @@
     <?php echo Icon_Action::clean_zone(uniqid(),sprintf("$('%s').value=0",$f_amount_min->id));
           echo $f_amount_min->input();  ?>
      <?php echo _('et')?> <?php
-       echo Icon_Action::clean_zone(uniqid(),sprintf("$('%s').value=0",$f_amount_max->id));
+       echo HtmlInput::button_action("=",sprintf("$('%s').value=%s.value",$f_amount_max->id,$f_amount_min->id) ,uniqid(), "smallbutton");
        echo $f_amount_max->input(); ; ?>
 </td>
 </tr>
