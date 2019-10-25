@@ -210,16 +210,20 @@ $array = $tax_summary->get_row_purchase();
 $a_colp=['tva_label','tva_rate','amount_wovat','amount_private','amount_vat','amount_sided',
     'amount_noded_amount','amount_noded_tax','amount_noded_return'];
 $a_purchase_header = [_("Code TVA"), _("Taux"), _("Montant HT"), _("Privée"), _("Montant TVA"),
-    _("Montant Autoliquidation"), _("Montant Non Déd"), _("TVA Non Déd"), _("TVA Non Déd & récup")];
+    _("Montant Autoliquidation"), _("Montant Non Déd"), _("TVA ND"), _("TVA ND récup")];
 $nb_purchase = count($a_purchase_header);
 
+$a_size=['tva_label'=>40,'tva_rate'=>10,'amount_wovat'=>32,'amount_private'=>32,'amount_vat'=>32,'amount_sided'=>32,
+    'amount_noded_amount'=>32,'amount_noded_tax'=>32,'amount_noded_return'=>32];
+$nb_col=count($a_colp);
+
 for ($e=2;$e<$nb_col;$e++){
-    $a_tot[$a_col[$e]]=0;
+    $a_tot[$a_colp[$e]]=0;
 }
 
 for ($i = 0; $i < $nb_array; $i++) {
     for ($e=2;$e<$nb_col;$e++){
-        $colname=$a_col[$e];
+        $colname=$a_colp[$e];
         $a_tot[$colname]=bcadd($a_tot[$colname],$array[$i][$colname]);
     }
 
@@ -234,10 +238,12 @@ for ($i = 0; $i < $nb_array; $i++) {
         // Display Header
         $pdf->SetFont('DejaVuCond', 'B', 7);
         for ($e=0;$e<$nb_col;$e++){
+            $t_idx=$a_colp[$e];
+            
             if ( $e == 0 ) {
-                $pdf->write_cell(40, 5,$a_purchase_header[$e], 1, 0, 'L');
+                $pdf->write_cell($a_size[$t_idx], 5,$a_purchase_header[$e], 1, 0, 'L');
             } else {
-                $pdf->write_cell(40, 5,$a_purchase_header[$e], 1, 0, 'R');
+                $pdf->write_cell($a_size[$t_idx], 5,$a_purchase_header[$e], 1, 0, 'R');
             }
             $a_tot[$colname]=0;
         }
@@ -250,8 +256,9 @@ for ($i = 0; $i < $nb_array; $i++) {
         $pdf->line_new();
         $pdf->write_cell(70, 5, "");
         for ($e=2;$e<$nb_col;$e++){
+            $t_idx=$a_colp[$e];
             $colname=$a_col[$e];
-            $pdf->write_cell(40, 5, nbm($a_tot[$colname]), 0, 0, 'R');
+            $pdf->write_cell($a_size[$t_idx], 5, nbm($a_tot[$colname]), 0, 0, 'R');
             $a_tot[$colname]=0;
         }
         $pdf->line_new();
@@ -265,37 +272,38 @@ for ($i = 0; $i < $nb_array; $i++) {
 
         // Display Header
         for ($e=0;$e<$nb_col;$e++){
+              $t_idx=$a_colp[$e];
             if ( $e == 0 ) {
-                $pdf->write_cell(40, 5,$a_purchase_header[$e], 1, 0, 'L');
+                $pdf->write_cell($a_size[$t_idx], 5,$a_purchase_header[$e], 1, 0, 'L');
             } else {
-                $pdf->write_cell(40, 5,$a_purchase_header[$e], 1, 0, 'R');
+                $pdf->write_cell($a_size[$t_idx], 5,$a_purchase_header[$e], 1, 0, 'R');
             }
             $a_tot[$colname]=0;
         }
     }
     for ($e=0;$e<$nb_col;$e++){
-        $colname=$a_col[$e];
+        $colname=$a_colp[$e];
+        
         if ( $e ==0 ) {
-            $pdf->write_cell(40, 5, $array[$i][$colname], 1, 0, 'L');
+            $pdf->write_cell($a_size[$colname], 5, $array[$i][$colname], 1, 0, 'L');
         } elseif ($e == 1 ){
-            $pdf->write_cell(40, 5, nbm($array[$i][$colname]*100), 1, 0, 'R');
+            $pdf->write_cell($a_size[$colname], 5, nbm($array[$i][$colname]*100), 1, 0, 'R');
         }else {
-            $pdf->write_cell(40, 5, nbm($array[$i][$colname]), 1, 0, 'R');
+            $pdf->write_cell($a_size[$colname], 5, nbm($array[$i][$colname]), 1, 0, 'R');
         }
     }
     $pdf->line_new();
 }
 $pdf->SetFont('DejaVuCond', 'B', 7);
-$pdf->write_cell(80, 5, "");
+$pdf->write_cell($a_size['tva_label']+$a_size['tva_rate'], 5, "");
 for ($e=2;$e<$nb_col;$e++){
-    $colname=$a_col[$e];
-    $pdf->write_cell(40, 5, nbm($a_tot[$colname]), 1, 0, 'R');
+    $colname=$a_colp[$e];
+    $pdf->write_cell($a_size[$colname], 5, nbm($a_tot[$colname]), 1, 0, 'R');
 }
 
 //-------------------------------------------------------------------------
-// Summary sales
+// Summary Purchase
 //-------------------------------------------------------------------------
-$a_sum = $tax_summary->get_summary_sale();
 $pdf->line_new();
 $pdf->SetFont('DejaVuCond', 'B', 10);
 $pdf->write_cell(50, 8, _("Résumé TVA Achat"));
@@ -303,10 +311,12 @@ $pdf->line_new();
 
 $pdf->SetFont('DejaVuCond', 'B', 7);
 for ($e=0;$e<$nb_col;$e++){
+     $t_idx=$a_colp[$e];
+            
     if ( $e == 0 ) {
-        $pdf->write_cell(40, 5,$a_purchase_header[$e], 1, 0, 'L');
+        $pdf->write_cell($a_size[$t_idx], 5,$a_purchase_header[$e], 1, 0, 'L');
     } else {
-        $pdf->write_cell(40, 5,$a_purchase_header[$e], 1, 0, 'R');
+        $pdf->write_cell($a_size[$t_idx], 5,$a_purchase_header[$e], 1, 0, 'R');
     }
     $a_tot[$colname]=0;
 }
@@ -315,33 +325,33 @@ $pdf->line_new();
 $nb_array = count($array);
 // initialize totals
 for ($e=2;$e<$nb_col;$e++){
-    $a_tot[$a_col[$e]]=0;
+    $a_tot[$a_colp[$e]]=0;
 }
 $pdf->SetFont('DejaVuCond', '', 7);
 
 for ($i = 0; $i < $nb_array; $i++) {
     // display each row
     for ($e=0;$e<$nb_col;$e++){
-        $colname=$a_col[$e];
+        $colname=$a_colp[$e];
         if ( $e ==0 ) {
             // first column TVA_LABEL
-            $pdf->write_cell(40, 5, $array[$i][$colname], 1, 0, 'L');
+            $pdf->write_cell($a_size[$colname], 5, $array[$i][$colname], 1, 0, 'L');
         } elseif ($e == 1 ){
             // Secund col. tva rate
-            $pdf->write_cell(40, 5, nbm($array[$i][$colname]*100), 1, 0, 'R');
+            $pdf->write_cell($a_size[$colname], 5, nbm($array[$i][$colname]*100), 1, 0, 'R');
         }else {
             // Other cols,display amount and compute total
             $a_tot[$colname] = bcadd($a_tot[$colname], $array[$i][$colname]);
-            $pdf->write_cell(40, 5, nbm($array[$i][$colname]), 1, 0, 'R');
+            $pdf->write_cell($a_size[$colname], 5, nbm($array[$i][$colname]), 1, 0, 'R');
         }
     }
     $pdf->line_new();
 }
 $pdf->SetFont('DejaVuCond', 'B', 7);
-$pdf->write_cell(80, 5, "");
+$pdf->write_cell($a_size['tva_label']+$a_size['tva_rate'], 5, "");
 for ($e=2;$e<$nb_col;$e++){
-    $colname=$a_col[$e];
-    $pdf->write_cell(40, 5, nbm($a_tot[$colname]), 1, 0, 'R');
+    $colname=$a_colp[$e];
+    $pdf->write_cell($a_size[$colname], 5, nbm($a_tot[$colname]), 1, 0, 'R');
 }
 $pdf->line_new();
 
