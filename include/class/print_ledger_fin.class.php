@@ -99,7 +99,6 @@ class Print_Ledger_Financial extends PDF
         $this->SetFont('DejaVu', '', 6);
         if ( $a_jrn == null ) return;
         bcscale(2);
-        $this->ledger->load();
         
         $this->cn->prepare("amount_cur",
                 "select jrn2.jr_id , 
