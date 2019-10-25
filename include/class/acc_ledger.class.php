@@ -81,7 +81,6 @@ class Acc_Ledger extends jrn_def_sql
         $this->row=null;
         $this->nb=MAX_ARTICLE;
          parent::__construct($p_cn, $p_id);
-        parent::__construct($p_cn, $p_id);
     }
     /**
      * retrieve currency_id from database
