@@ -30,7 +30,16 @@ require_once  NOALYSS_INCLUDE."/class/tax_summary.class.php";
 require_once  NOALYSS_INCLUDE."/lib/noalyss_csv.class.php";
 $http=new HttpInput();
 $tax_summary = new Tax_Summary($cn,$http->get("date_start"),$http->get("date_end"));
-$tax_summary->check();
+try {
+    $tax_summary->check();
+}catch (Exception $e)
+{
+    if ($e->getCode() <> 100)  {
+        echo $e->getMessage();
+        return;
+    }
+}
+
 
 $csv=new Noalyss_Csv("summary_tva");
 $csv->send_header();

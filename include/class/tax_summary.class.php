@@ -115,7 +115,7 @@ class Tax_Summary
                   ";
         $cnt=$this->db->get_value($sql,[$this->date_start,$this->date_end]);
         if ($cnt == 0) {
-            throw new Exception(_("Données manquantes"));
+		throw new Exception(_("Données manquantes"),100);
         }
         /*-------------Purchase ---------------------------------*/
         $sql="select count(*) 
@@ -131,7 +131,7 @@ class Tax_Summary
                              ";
         $cnt=$this->db->get_value($sql,[$this->date_start,$this->date_end]);
         if ($cnt > 0) {
-            throw new Exception(_("Données manquantes"));
+		throw new Exception(_("Données manquantes"),100);
         }
     }
 

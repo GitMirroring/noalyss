@@ -47,7 +47,14 @@ if ( $http->get("do","string","no") == "display")
 {
     $tax_summary=new Tax_Summary($cn,$start_periode->value,$end_periode->value);
     try {
-        $tax_summary->check();
+	try {
+            $tax_summary->check();
+        }catch (Exception $e)
+        {
+           echo '<span class="warning">';
+           echo $e->getMessage();
+           echo '</span>';
+        }
         echo '<ul class="aligned-block">';
         echo '<li>';
         echo $tax_summary->form_export_csv();
