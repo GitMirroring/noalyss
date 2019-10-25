@@ -1562,7 +1562,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $r.=nbm(round($tot_row,2));
             $r.='</td>';
             // encode the pa
-            if ( $g_parameter->MY_ANALYTIC!='nu') // use of AA
+            if ( $g_parameter->MY_ANALYTIC!='nu' 
+                     && $g_parameter->match_analytic($fiche->strAttribut(ATTR_DEF_ACCOUNT))==TRUE
+                    ) // use of AA
             {
                 // show form
                 $anc_op=new Anc_Operation($this->db);
