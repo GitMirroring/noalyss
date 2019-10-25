@@ -261,7 +261,7 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
         }
         $title[]=_("TVAC/TTC");
         $title[]=_("Date paiement");
-        $title[]=_("Méthode paiement");
+        $title[]=_("Code paiement");
         $title[]=_("Montant paiement");
         $title[]=_("n° opération");
 
@@ -313,6 +313,7 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                     $row=Database::fetch_array($ret_reconcile, $e);
                     $export->add($row['jr_date']);
                     $export->add($row['qcode_bank']);
+                    $export->add($row['qcode_name']);
                     $export->add($row['jr_montant'],"number");
                     $export->add($row['jr_internal']);
 
