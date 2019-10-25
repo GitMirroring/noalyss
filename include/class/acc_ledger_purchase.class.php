@@ -665,7 +665,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     $op->oa_date=$e_date;
                     $op->oa_debit='t';
                     $op->oa_description=sql_string($e_comm);
-                    $op->save_form_plan($_POST,$i,$j_id);
+                    $op->save_form_plan($p_array,$i,$j_id);
                 }
                 // insert into quant_purchase
                 //-----
