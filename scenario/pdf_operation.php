@@ -20,15 +20,17 @@
 
 require_once NOALYSS_INCLUDE."/class/pdf_operation.class.php";
 
+$a_operation_id=$cn->get_array("select jr_id from jrn limit 10");
 
-
-$pdf=new PDF_Operation ($cn,61);
+$pdf=new PDF_Operation ($cn,$a_operation_id[0]['jr_id']);
 //$pdf=new PDF_Operation ($cn,47);
 //$pdf=new PDF_Operation ($cn,4638);
 
 $pdf->export_pdf(array("anc","acc"));
 
 $a=$pdf->get_pdf();
-$a->Output("/tmp/t.pdf","F");
+$a->Output("/tmp/t.pdf","S");
+
 
 echo $pdf->get_pdf_filename();
+echo "File download to /tmp";

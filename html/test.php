@@ -65,6 +65,23 @@ if (!file_exists('authorized_debug'))
 }
 define('ALLOWED', 1);
 html_page_start("Classic");
+/******************************************************************************************************************/
+/*  Utilities 
+/******************************************************************************************************************/
+
+/** 
+ * Return the card this most activities
+ * @return integer (fiche.f_id)
+ */
+function get_card_with_activity() {
+    global $cn;
+    $card_count=$cn->get_array("select count(*),f_id ". 
+        " from jrnx ".
+        " where ". 
+        " f_id is not null ".
+        "group by f_id order by count(*) desc");
+    return $card_count[0]['f_id'];
+}
 
 /*
  * Loading of all scenario

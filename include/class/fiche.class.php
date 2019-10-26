@@ -1150,8 +1150,8 @@ class Fiche
              where ad_id=1 and f_id=$1";
         $Res=$this->cn->exec_sql($sql,array($this->id));
         $r=Database::fetch_all($Res);
-        if ( sizeof($r) == 0 )
-            return 1;
+        if ( empty($r) )
+            throw new Exception (_("Fiche n'existe pas"), 1000);
         return $r[0]['ad_value'];
     }
 
