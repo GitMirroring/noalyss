@@ -33,12 +33,15 @@ $_POST=array (
 $_POST['gDossier']=$gDossierLogInput;
 $_GET['gDossier']=$gDossierLogInput;
 $_REQUEST=array_merge($_GET,$_POST);
+$acc_count=$cn->get_array("select count(*),j_poste". 
+        " from jrnx ".
+        "group by j_poste order by count(*) desc");
 
-$a=new Acc_Account_Ledger($cn,7000017);
+$a=new Acc_Account_Ledger($cn,$acc_count[0]['j_poste']);
 echo h1("Acc_Account_Ledger->get_row");
-$result=$a->get_row(227,215);
+$result=$a->get_row($min,$max);
 var_dump($result);
 echo h1("Acc_Account_Ledger->get_row_date");
-$result=$a->get_row_date('01.01.2015','01.01.2017');
+$result=$a->get_row_date('01.01.200','01.01.2099');
 var_dump($result);
 
