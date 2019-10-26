@@ -96,6 +96,10 @@ for ($e_scan=0; $e_scan<$maxscan; $e_scan++)
         }
     }
 $script=$http->request('script', "string",'');
+$min=$cn->get_value("select p_id from parm_periode order by p_start asc limit 1");
+$max=$cn->get_value("select p_id from parm_periode order by p_start desc limit 1");
+printf ("Max période %s Min période %s",$max,$min);
+
 if ($script=="")
 {
     echo "<h1>Test NOALYSS</h1>";
