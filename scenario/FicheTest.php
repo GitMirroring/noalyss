@@ -42,12 +42,26 @@ $_POST=array (
 $_POST['gDossier']=$gDossierLogInput;
 $_GET['gDossier']=$gDossierLogInput;
 $_REQUEST=array_merge($_GET,$_POST);
+$card_count=$cn->get_array("select count(*),f_id ". 
+        " from jrnx ".
+        " where ". 
+        " f_id is not null ".
+        "group by f_id order by count(*) desc");
+$a=new Fiche($cn,$card_count[0]['f_id']);
+$min=$cn->get_value("select p_id from parm_periode order by p_start asc limit 1");
+$max=$cn->get_value("select p_id from parm_periode order by p_start desc limit 1");
+printf ("Max période %s Min période %s",$max,$min);
+$result=$a->get_row($min,$max);
+$result_date=$a->get_row_date('01.01.2010','01.01.2090');
 
-$a=new Fiche($cn,230);
+if ( count($result_date) != count($result)) {
+    echo "Erreur";
+}
+
 echo h1("Fiche->get_row");
-$result=$a->get_row(227,230);
 var_dump($result);
+
 echo h1("Fiche->get_row_date");
-$result=$a->get_row_date('01.01.2015','01.01.2017');
-var_dump($result);
+
+var_dump($result_date);
 
