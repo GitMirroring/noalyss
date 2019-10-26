@@ -48,9 +48,7 @@ $card_count=$cn->get_array("select count(*),f_id ".
         " f_id is not null ".
         "group by f_id order by count(*) desc");
 $a=new Fiche($cn,$card_count[0]['f_id']);
-$min=$cn->get_value("select p_id from parm_periode order by p_start asc limit 1");
-$max=$cn->get_value("select p_id from parm_periode order by p_start desc limit 1");
-printf ("Max période %s Min période %s",$max,$min);
+
 $result=$a->get_row($min,$max);
 $result_date=$a->get_row_date('01.01.2010','01.01.2090');
 

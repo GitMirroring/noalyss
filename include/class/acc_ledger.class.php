@@ -59,7 +59,7 @@ require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
 /** @brief Class for jrn,  class acc_ledger for manipulating the ledger
  *
  */
-class Acc_Ledger extends jrn_def_sql
+class Acc_Ledger  extends jrn_def_sql
 {
 
     var $id;     /**< jrn_def.jrn_def_id */
@@ -105,7 +105,8 @@ class Acc_Ledger extends jrn_def_sql
             $ret=$this->db->get_array("select last_value,is_called from s_jrn_pj".$this->id);
             $last=$ret[0]['last_value'];
             /**
-             * \note  With PSQL sequence , the last_value column is 1 when before   AND after the first call, to make the difference between them
+             * \note  With PSQL sequence , the last_value column is 1 when before   AND after the first call, 
+             * to make the difference between them
              * I have to check whether the sequence has been already called or not */
             if ($ret[0]['is_called']=='f')
                 $last--;
@@ -773,8 +774,11 @@ class Acc_Ledger extends jrn_def_sql
         }
         
         $ret.="</table>";
-        if ($g_parameter->MY_ANALYTIC!='nu'&&$p_readonly==false)
-            $ret.='<input type="button" class="button" value="'._('verifie Imputation Analytique').'" onClick="verify_ca(\'\');">';
+        if ($g_parameter->MY_ANALYTIC!='nu'&&$p_readonly==false) {
+            $ret.='<input type="button" class="button" value="'._('verifie Imputation Analytique').
+        '" onClick="verify_ca(\'\');">';
+            
+        }
         return $ret;
     }
 
@@ -1031,7 +1035,11 @@ class Acc_Ledger extends jrn_def_sql
             $ret.='<tr>';
             $ret.='<td>'.$quick_code->input().$quick_code->search().$str_add_button.'</td>';
             $ret.='<td>'.$poste->input().
-                    '<script> document.getElementById(\'poste'.$i.'\').onblur=function(){ if (trim(this.value) !=\'\') {document.getElementById(\'qc_'.$i.'\').value="";}}</script>'.
+                    '<script> '.
+                    'document.getElementById(\'poste'.$i.'\').onblur=function(){'.
+                    'if (trim(this.value) !=\'\') '.
+                    '{document.getElementById(\'qc_'.$i.'\').value="";}}'.
+                    '</script>'.
                     '</td>';
             $ret.='<td class="visible_gt800 visible_gt1155">'.$line_desc->input().'</td>';
             $ret.='<td>'.$amount->input().'</td>';

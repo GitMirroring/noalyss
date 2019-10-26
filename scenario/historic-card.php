@@ -13,4 +13,7 @@ $_POST=array (
 $_POST['gDossier']=$gDossierLogInput;
 $_GET['gDossier']=$gDossierLogInput;
  $_REQUEST=array_merge($_GET,$_POST);
+
+
+ put_global([["key"=>'f_id',"value"=>get_card_with_activity()]]);
 include 'ajax_misc.php';
