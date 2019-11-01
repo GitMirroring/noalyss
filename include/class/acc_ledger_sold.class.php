@@ -1303,7 +1303,7 @@ EOF;
             $Price = new INum();
             $Price->setReadOnly(false);
             $Price->size = 9;
-            $Price->javascript = "onBlur='format_number(this,4);clean_tva($i);compute_ledger($i)'";
+            $Price->javascript = "onblur=\"format_number(this,4);clean_tva($i);compute_ledger($i)\"";
             $array[$i]['pu'] = $Price->input("e_march" . $i . "_price", $march_price);
             $array[$i]['tva'] = '';
             $array[$i]['amount_tva'] = '';
@@ -1324,7 +1324,7 @@ EOF;
                 $wTva_amount = new INum();
                 $wTva_amount->readOnly = false;
                 $wTva_amount->size = 6;
-                $wTva_amount->javascript = "onBlur='format_number(this);compute_ledger($i)'";
+                $wTva_amount->javascript = "onblur='format_number(this);compute_ledger($i)'";
                 $array[$i]['amount_tva'] = $wTva_amount->input("e_march" . $i . "_tva_amount", $march_tva_amount);
             }
             // quantity
@@ -1334,7 +1334,7 @@ EOF;
             $Quantity = new INum();
             $Quantity->setReadOnly(false);
             $Quantity->size = 8;
-            $Quantity->javascript = "onChange='format_number(this);clean_tva($i);compute_ledger($i)'";
+            $Quantity->javascript = "onchange='format_number(this);clean_tva($i);compute_ledger($i)'";
             $array[$i]['quantity'] = $Quantity->input("e_quant" . $i, $quant);
         }// foreach article
         $f_type = _('Client');
