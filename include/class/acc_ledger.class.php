@@ -444,22 +444,6 @@ class Acc_Ledger extends jrn_def_sql
         return $Res;
     }
 
-    /**
-     * @brief Get the number of lines of a journal
-     * @param$p_cred deb or cred
-     *
-     * \return an integer
-     */
-    function GetDefLine()
-    {
-        $sql_cred='jrn_deb_max_line';
-        $sql="select jrn_deb_max_line as value from jrn_def where jrn_def_id=$1";
-        $r=$this->db->exec_sql($sql, array($this->id));
-        $Res=Database::fetch_all($r);
-        if ($Res == FALSE || sizeof($Res)==0)
-            return 1;
-        return $Res[0]['value'];
-    }
 
     /**
      * @brief get the saldo of a ledger for a specific period
