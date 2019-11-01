@@ -433,12 +433,17 @@ case 'fs':
 
         /* if it is a ledger of sales we use vw_buy
            if it is a ledger of purchase we use vw_sell*/
-        if ( $type=="ACH" )
+        
+        if ( $type=="ACH" ){
+            $amount=(isNumber($a[$i]['vw_buy']) == 1 )?$a[$i]['vw_buy']:0;
             $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
-                                              $price,$a[$i]['vw_buy']);
-        if ( $type=="VEN" )
+                                              $price,$amount);
+        }
+        if ( $type=="VEN" ){
+            $amount=(isNumber($a[$i]['vw_buy']) == 1 )?$a[$i]['vw_sell']:0;
             $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
-                                              $price,$a[$i]['vw_sell']);
+                                              $price,$amount);
+        }
         $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
                                           $tvaid,$a[$i]['tva_id']);
         $array[$i]['javascript'].="removeDiv('search_card');";
