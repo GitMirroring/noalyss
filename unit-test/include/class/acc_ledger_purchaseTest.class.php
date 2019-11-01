@@ -39,7 +39,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
      */
     public function testVerify()
     {
-        $this->object->verify(array());
+        $this->object->verify_operation(array());
     }
 
     /**
@@ -90,16 +90,6 @@ class Acc_Ledger_PurchaseTest extends TestCase
         );
     }
 
-    /**
-     * @covers Acc_Ledger_Purchase::show_unpaid
-     * @todo   Implement testShow_unpaid().
-     */
-    public function testShow_unpaid()
-    {
-       // OBSOLETE : function must be removed in the next code cleaning
-       //  $str_html=$this->object->show_unpaid();
-        
-    }
 
     /**
      * @covers Acc_Ledger_Purchase::get_detail_purchase

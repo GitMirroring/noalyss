@@ -32,16 +32,7 @@ class Acc_Ledger_FinTest extends TestCase
         
     }
 
-    /**
-     * @covers Acc_Ledger_Fin::verify
-     * @todo   Implement testVerify().
-     * @expectedException Exception
-     */
-    public function testVerify()
-    {
 
-        $this->object->verify(null);
-    }
 
     /**
      * @covers Acc_Ledger_Fin::input
@@ -49,10 +40,8 @@ class Acc_Ledger_FinTest extends TestCase
      */
     public function testInput()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+       // we must compare the output to a file we save previously
+        
     }
 
     /**
@@ -61,10 +50,8 @@ class Acc_Ledger_FinTest extends TestCase
      */
     public function testConfirm()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+       // we must compare the output to a file we save previously
+        
     }
 
     /**
@@ -73,10 +60,7 @@ class Acc_Ledger_FinTest extends TestCase
      */
     public function testInsert()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        
     }
 
     /**
@@ -85,10 +69,6 @@ class Acc_Ledger_FinTest extends TestCase
      */
     public function testShow_ledger()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
     }
 
     /**
@@ -99,8 +79,8 @@ class Acc_Ledger_FinTest extends TestCase
     {
         $name=$this->object->get_bank_name();
         var_export($name);
-        if (strpos($name, NOTFOUND)!=0)
-            $this->assertTrue(FALSE);
+        if (strpos($name, NOTFOUND)!=0)             $this->assertTrue(FALSE);
+        $this->assertTrue(TRUE);
     }
 
     /**
@@ -109,7 +89,7 @@ class Acc_Ledger_FinTest extends TestCase
      */
     public function testGet_bank()
     {
-        $this->assertEquals(9, $this->object->get_bank());
+        $this->assertEquals(30, $this->object->get_bank());
     }
 
     /**
@@ -118,10 +98,6 @@ class Acc_Ledger_FinTest extends TestCase
      */
     public function testNumb_operation()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
     }
 
     /**
@@ -130,10 +106,11 @@ class Acc_Ledger_FinTest extends TestCase
      */
     public function testInsert_quant_fin()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        
+    }
+    public function testVerify_operation()
+    {
+        
     }
 
 }

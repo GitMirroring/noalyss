@@ -24,8 +24,8 @@ require_once '../include/constant.php';
 
 define ("ALLOWED",1);
 
-define ("DOSSIER",26);
 
+ini_set("xdebug.overload_var_dump",0);
 
 /**
  * Class to include, 
