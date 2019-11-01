@@ -125,14 +125,15 @@ if ( isset($_SESSION['isValid']) && $_SESSION['isValid'] == 1)
 
 
     $name=$array[0]['vw_name'];
-    $sell=$array[0]['vw_sell'] ;
-    $buy=$array[0]['vw_buy'];
+    $sell=(isNumber($array[0]['vw_sell']) == 1) ? $array[0]['vw_sell'] : 0 ;
+    $buy=(isNumber($array[0]['vw_buy']) == 1) ?$array[0]['vw_buy']:0;
+    
     $tva_id=$array[0]['tva_id'];
 
     // Check null
     $name=($name==null)?" ":str_replace('"','',$name);
-    $sell=($sell==null)?" ":str_replace('"','',$sell);
-    $buy=($buy==null)?" ":str_replace('"','',$buy);
+    $sell=($sell==null)?"0":str_replace('"','',$sell);
+    $buy=($buy==null)?"0":str_replace('"','',$buy);
     $tva_id=($tva_id==null)?" ":str_replace('"','',$tva_id);
     /* store the answer in an array and transform it later into a JSON object */
     $tmp=array();

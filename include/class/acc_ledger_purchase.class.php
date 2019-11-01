@@ -1362,7 +1362,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $Price=new INum();
             $Price->setReadOnly(false);
             $Price->size=9;
-            $Price->javascript="onBlur='format_number(this,4);clean_tva($i);compute_ledger($i)'";
+            $Price->javascript="onblur=\"format_number(this,4);clean_tva($i);compute_ledger($i)\"";
             $array[$i]['pu']=$Price->input("e_march".$i."_price",$march_price);
             if ( $g_parameter->MY_TVA_USE=='Y')
             {
@@ -1370,7 +1370,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 // vat label
                 //--
                 $Tva=new ITva_Popup($this->db);
-                $Tva->js="onblur=\"format_number(this);onChange=clean_tva($i);compute_ledger($i)\"";
+                $Tva->js="onblur=\"format_number(this);clean_tva($i);compute_ledger($i)\"";
                 $Tva->in_table=true;
                 $Tva->set_attribute('compute',$i);
                 $Tva->set_filter("purchase");
@@ -1383,7 +1383,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $Tva_amount=new INum();
                 $Tva_amount->setReadOnly(false);
                 $Tva_amount->size=9;
-                $Tva_amount->javascript="onBlur='format_number(this);compute_ledger($i)'";
+                $Tva_amount->javascript="onblur=\"format_number(this);compute_ledger($i)\"";
                 $array[$i]['amount_tva']=$Tva_amount->input("e_march".$i."_tva_amount",$march_tva_amount);
             }
             // quantity
@@ -1393,7 +1393,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $Quantity=new INum();
             $Quantity->setReadOnly(false);
             $Quantity->size=9;
-            $Quantity->javascript="onChange=format_number(this);clean_tva($i);compute_ledger($i)";
+            $Quantity->javascript="onchange=\"format_number(this);clean_tva($i);compute_ledger($i)\"";
             $array[$i]['quantity']=$Quantity->input("e_quant".$i,$quant);
 
         }
