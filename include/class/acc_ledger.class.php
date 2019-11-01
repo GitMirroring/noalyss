@@ -60,12 +60,11 @@ require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
 class Acc_Ledger  extends jrn_def_sql
 {
 
-    var $id;   /*     * < jrn_def.jrn_def_id */
-    var $db;   /*     * < database connextion */
-    var $row;   /*     * < row of the ledger */
-    var $type;   /*     * < type of the ledger ACH ODS FIN
-      VEN or GL */
-    var $nb;   /*     * < default number of rows by
+    var $id;   /**< jrn_def.jrn_def_id */
+    var $db;   /**< database connextion */
+    var $row;   /**< row of the ledger */
+    var $type;   /**< type of the ledger ACH ODS FIN VEN or GL */
+    var $nb;   /**< default number of rows by
       default 10 */
 
     /**
