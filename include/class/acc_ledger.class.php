@@ -1047,7 +1047,11 @@ class Acc_Ledger extends jrn_def_sql
          */
         if ($this->check_periode()==false||!isset($p_array['period']))
         {
-            $periode->find_periode($e_date);
+            try {
+                $periode->find_periode($e_date);
+            } catch (Exception $e) {
+                throw new Exception(_("Période inexistante"), 6, $e);
+            }
         }
         else
         {
@@ -2531,7 +2535,7 @@ class Acc_Ledger extends jrn_def_sql
         /* Numbering (only FIN) */
         $num_op=new ICheckBox('numb_operation');
         echo dossier::hidden();
-        echo HtmlInput::hidden('ac', $_REQUEST['ac']);
+        echo HtmlInput::hidden('ac', $http->request('ac'));
         echo $hidden;
 
         $cn=$this->db;

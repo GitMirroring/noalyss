@@ -253,7 +253,7 @@ class PDF_Core extends TFPDF
                 parent::Ln($this->bigger);
             $this->bigger=0;
     }
-       /**
+    /**
      * If the step is even then return 1 and set the backgroup color to blue , otherwise
      * returns 0, and set the background color to white
      * It is use to compute alternated  colored row , it the parameter fill in write_cell and 
