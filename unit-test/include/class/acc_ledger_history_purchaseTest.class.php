@@ -62,7 +62,7 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
     function testGet_Row()
     {
         $this->object->get_row();
-        $this->assertSame(count($this->object->get_data()),2);
+        $this->assertSame(count($this->object->get_data()),65);
 
     }
     //@covers Acc_Ledger_History_Financial::export_oneline_html

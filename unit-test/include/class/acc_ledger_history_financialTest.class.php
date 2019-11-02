@@ -63,7 +63,7 @@ class Acc_Ledger_History_FinancialTest extends TestCase
     function testGet__row()
     {
         $this->object->get_row();
-        $this->assertEquals(1, count($this->object->get_data()));
+        $this->assertEquals(5, count($this->object->get_data()));
     }
 
     //@covers Acc_Ledger_History_Financial::export_html

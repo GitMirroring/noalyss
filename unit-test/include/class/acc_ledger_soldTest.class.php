@@ -39,7 +39,7 @@ class Acc_Ledger_SoldTest extends TestCase
             "action"=>"use_opd",
             "jrn_type"=>"VEN",
             "filter"=>"",
-            "e_date"=>"24.04.2018",
+            "e_date"=>"24.08.2019",
             "e_ech"=>"",
             "e_client"=>"CLIENT",
             "e_pj"=>"VEN10",
