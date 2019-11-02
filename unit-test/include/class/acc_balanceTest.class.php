@@ -63,8 +63,10 @@ class Acc_BalanceTest extends TestCase
         $this->object->jrn=1;
         $this->object->filter_cat(array());
         $this->assertEquals($this->object->jrn,null);
-        $this->object->filter_cat(array('FIN'));
-        $this->assertEquals($this->object->jrn[0],2);
+        $this->object->filter_cat(array('2'=>'FIN'));
+        $this->assertEquals($this->object->jrn,[1]);
+        $this->object->filter_cat(array('1'=>'ACH','2'=>'FIN'));
+        $this->assertEquals($this->object->jrn,[3,35,1]);
     }
     /**
      *@covers Acc_Balance::summary_add
@@ -102,15 +104,7 @@ class Acc_BalanceTest extends TestCase
 
       
     }
-    /**
-     *@covers Acc_Balance::summary_add
-     */
-    public function testSummary_display_pdf()
-    {
-      // No test since a PDF is modified and cannot be tested
-      // by PHPUNIT
-      $this->markTestSkipped("Summary_display_pdf cannot be tested since it modify a PDF");
-    }
+
     /**
      *@covers Acc_Balance::summary_init
      */
