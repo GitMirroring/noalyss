@@ -12,7 +12,10 @@ class Acc_Ledger_FinTest extends TestCase
      * @var Acc_Ledger_Fin
      */
     protected $object;
-
+    /**
+     * @var contains array for new record
+     */
+    private $array; 
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -21,6 +24,51 @@ class Acc_Ledger_FinTest extends TestCase
     {
         include 'global.php';
         $this->object=new Acc_Ledger_Fin($g_connection, 1);
+        $this->array=  array
+                    (
+                        "ledger_type" => "fin",
+                        "ac" => "COMPTA/MENUFIN/FIN",
+                        "gDossier" => DOSSIER,
+                        "nb_item" => 5,
+                        "chdate" => 1,
+                        "e_date" => "24.02.2018",
+                        "p_jrn" => 1,
+                        "e_pj" => "FIN3",
+                        "e_pj_suggest" => "FIN3",
+                        "first_sold" => -658.25,
+                        "last_sold" => "",
+                        "dateop0" => "",
+                        "e_other0" => "CLIENT1",
+                        "e_other_name0" => "Client 2",
+                        "e_other0_comment" => "",
+                        "e_other0_amount" => 123.1,
+                        "e_concerned0" => "",
+                        "dateop1" => "",
+                        "e_other1" => "FOURNI",
+                        "e_other_name1" => "Fournisseur 1",
+                        "e_other1_comment" => "",
+                        "e_other1_amount" => -400.76,
+                        "e_concerned1" => "",
+                        "dateop2" => "",
+                        "e_other2" => "",
+                        "e_other_name2" => "",
+                        "e_other2_comment" =>"" ,
+                        "e_other2_amount" => 0,
+                        "e_concerned2" => "",
+                        "dateop3" => "",
+                        "e_other3" => "",
+                        "e_other_name3" => "",
+                        "e_other3_comment" => "",
+                        "e_other3_amount" => 0,
+                        "e_concerned3" => "",
+                        "dateop4" => "",
+                        "e_other4" => "",
+                        "e_other_name4" => "",
+                        "e_other4_comment" => "",
+                        "e_other4_amount" => 0,
+                        "e_concerned4" => "",
+                        "save" => "Sauve"
+                    );
     }
 
     /**
@@ -32,108 +80,103 @@ class Acc_Ledger_FinTest extends TestCase
         
     }
 
-    /**
-     * @covers Acc_Ledger_Fin::verify
-     * @todo   Implement testVerify().
-     * @expectedException Exception
-     */
-    public function testVerify()
-    {
 
-        $this->object->verify(null);
-    }
 
     /**
      * @covers Acc_Ledger_Fin::input
-     * @todo   Implement testInput().
      */
     public function testInput()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $result=$this->object->input($this->array);
+        $this->assertContains("show_fin_chdate('chdate');",$result);
     }
 
     /**
      * @covers Acc_Ledger_Fin::confirm
-     * @todo   Implement testConfirm().
      */
     public function testConfirm()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $array=$this->array;
+        unset($array["save"]);
+        $array["confirm"]="confirm";
+        $array["pa_id"]=array(2);
+        $array["first_sold"]=-658.25;
+        $array["last_sold"]="";
+        $array["mt"]="1572695340.6768";
+        $result=$this->object->confirm($array);
+        $this->assertContains('<fieldset><legend>Banque, caisse </legend><div id="jrn_name_div">',$result);
+        $this->assertContains('<INPUT TYPE="hidden" id="dateop1" NAME="dateop1" VALUE="">',$result);
+        $this->assertContains('<INPUT TYPE="hidden" id="chdate" NAME="chdate" VALUE="1">',$result);
+        
     }
-
+    private function clean_operation()
+    {
+        global $g_connection;
+        $g_connection->exec_sql("delete from quant_fin 
+                where j_id in (select j_id from jrnx join jrn 
+                on (j_grpt=jr_grpt_id) 
+                where 
+                jr_mt=$1)",
+                [ '1572695340.6768']
+                );
+        $g_connection->exec_sql("delete from jrn 
+                where 
+                jr_mt=$1",
+                [ '1572695340.6768']
+                );
+        $g_connection->exec_sql(' delete from jrnx where j_grpt not in (select jr_grpt_id from jrn)');
+        $g_connection->commit();
+        
+    }
     /**
      * @covers Acc_Ledger_Fin::insert
-     * @todo   Implement testInsert().
+     * @covers Acc_Ledger_Fin::insert_quant_fin
      */
     public function testInsert()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
+        $array=$this->array;
+        $array["pa_id"]=array(2);
+        $array["first_sold"]=-658.25;
+        $array["last_sold"]="";
+        $array["mt"]="1572695340.6768";
+        $_FILES=array
+            (
+            'pj'=>array
+                (
+                "name"=>"",
+                "type"=>"",
+                "tmp_name"=>"",
+                "error"=>4,
+                "size"=>0
+            )
         );
+        $this->clean_operation();
+        $ret=$this->object->insert($array);
+        $this->assertContains('<table class="result" ><tr  ><th  >Date</th>',$ret);
+        $this->assertContains(' HREF="javascript:modifyOperation',$ret);
+        $this->assertContains('-935,91',$ret);
+        
+        $this->clean_operation();
     }
 
-    /**
-     * @covers Acc_Ledger_Fin::show_ledger
-     * @todo   Implement testShow_ledger().
-     */
-    public function testShow_ledger()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
 
     /**
      * @covers Acc_Ledger_Fin::get_bank_name
-     * @todo   Implement testGet_bank_name().
      */
     public function testGet_bank_name()
     {
         $name=$this->object->get_bank_name();
-        var_export($name);
-        if (strpos($name, NOTFOUND)!=0)
-            $this->assertTrue(FALSE);
+        if (strpos($name, NOTFOUND)!=0)             $this->assertTrue(FALSE);
+        $this->assertTrue(TRUE);
     }
 
     /**
      * @covers Acc_Ledger_Fin::get_bank
-     * @todo   Implement testGet_bank().
      */
     public function testGet_bank()
     {
-        $this->assertEquals(9, $this->object->get_bank());
+        $this->assertEquals(30, $this->object->get_bank());
     }
 
-    /**
-     * @covers Acc_Ledger_Fin::numb_operation
-     * @todo   Implement testNumb_operation().
-     */
-    public function testNumb_operation()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Acc_Ledger_Fin::insert_quant_fin
-     * @todo   Implement testInsert_quant_fin().
-     */
-    public function testInsert_quant_fin()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
 
 }

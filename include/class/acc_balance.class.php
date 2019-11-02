@@ -448,14 +448,5 @@ class Acc_Balance
         $p_pdf->write_cell(10,6,$side);
         $p_pdf->line_new();
     }
-    static function test_me ()
-    {
-        require 'class/user.class.php';
-        global $g_user;
-        $cn=Dossier::connect();
-        $g_user=new User($cn);
-        $a=new Acc_Balance($cn);
-        $a->get_row(163, 175, 1);
-        var_dump($a);
-    }
+   
 }

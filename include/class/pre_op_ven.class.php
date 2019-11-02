@@ -142,7 +142,7 @@ class Pre_op_ven extends Pre_operation_detail
         // Find the ledger
         $ledger=new Acc_Ledger($this->db,$this->operation->jrn_def_id);
         // Find the max line of the ledger
-        $max_row=$ledger->GetDefLine();
+        $max_row=$ledger->get_min_row();
         
         // compute nb_item
         $array['nb_item']=($max_row > $count)?$max_row:$count;

@@ -186,19 +186,149 @@ class Acc_ComputeTest extends TestCase
     {
         ob_start();
        $this->object->display();
-       $result=  ob_get_flush();
+       $result=ob_get_contents();
        $this->assertStringStartsWith("key amount Description amount value is 0<br>key amount_vat Description amount_vat value is 0<br>",$result);
        $this->assertStringEndsWith("<br>key amount_perso_rate Description amount_perso_rate value is 0<br>",$result);
     }
 
-    /**
-     * @covers Acc_Compute::test_me
-     * @todo   Implement testTest_me().
-     */
-    public function testTest_me()
+    public function testCompute()
     {
-        $this->object->test_me();
-        $this->assertTrue(true,true);
-    }
+        $a=new Acc_Compute();
+        // Compute some operation to see if the computed amount are
+        // correct
 
+        //Test VAT
+        $a->set_parameter('amount',1.23);
+        $a->set_parameter('amount_vat_rate',0.21);
+
+
+        $a->compute_vat();
+        $this->assertEquals($a->amount_vat,0.26);
+        try
+        {
+            $a->verify();
+            $this->assertTrue(TRUE);
+        }
+        catch (Exception $exc)
+        {
+            echo $exc->getMessage();
+            error_log($exc->getTraceAsString());
+            $this->assertTrue(FALSE);
+        }
+
+        
+        
+        // Test VAT + perso
+        $a=new Acc_Compute();
+        $a->set_parameter('amount',1.23);
+        $a->set_parameter('amount_vat_rate',0.21);
+        $a->set_parameter('amount_perso_rate',0.5);
+        $b=clone $a;
+        $a->compute_vat();
+        $this->assertEquals($a->amount_vat,0.26);
+        $a->compute_perso();
+        $this->assertEquals($a->amount_perso,0.01);
+        $a->correct();
+        $this->assertEquals($a->amount_vat,0.26);
+        $this->assertEquals($a->amount_perso,0.01);
+         
+        $a->verify($b);
+        
+        // TEST VAT + ND
+        // Test VAT + perso
+        $a=new Acc_Compute();
+        $a->set_parameter('amount',1.23);
+        $a->set_parameter('amount_vat_rate',0.21);
+        $a->set_parameter('nd_vat_rate',0.5);
+        $b=clone $a;
+        echo '<h1> Test VAT + ND VAT</h1>';
+        echo '<h2> Data </h2>';
+        $a->display();
+        $a->compute_vat();
+        $a->compute_nd_vat();
+        $a->correct();
+        echo '<h2> Result </h2>';
+        $a->display();
+        $a->verify($b);
+        // TEST VAT + ND
+        // Test VAT + perso
+        $a=new Acc_Compute();
+        $a->set_parameter('amount',1.23);
+        $a->set_parameter('amount_vat_rate',0.21);
+        $a->set_parameter('nd_vat_rate',0.5);
+        $a->set_parameter('amount_perso_rate',0.5);
+
+        $b=clone $a;
+        echo '<h1> Test VAT + ND VAT + perso</h1>';
+        echo '<h2> Data </h2>';
+        $a->display();
+        $a->compute_vat();
+        $a->compute_perso();
+        $a->compute_nd_vat();
+        $a->correct();
+        echo '<h2> Result </h2>';
+        $a->display();
+        $a->verify($b);
+        // TEST VAT + ND
+        $a=new Acc_Compute();
+        $a->set_parameter('amount',1.23);
+        $a->set_parameter('amount_vat_rate',0.21);
+        $a->set_parameter('amount_nd_rate',0.5);
+
+        $b=clone $a;
+        echo '<h1> Test VAT + ND </h1>';
+        echo '<h2> Data </h2>';
+        $a->display();
+        $a->compute_vat();
+        $a->compute_nd();
+
+        $a->compute_perso();
+        $a->compute_nd_vat();
+        $a->correct();
+        echo '<h2> Result </h2>';
+        $a->display();
+        $a->verify($b);
+        // TEST VAT + ND
+        // + Perso
+        $a=new Acc_Compute();
+        $a->set_parameter('amount',1.23);
+        $a->set_parameter('amount_vat_rate',0.21);
+        $a->set_parameter('amount_nd_rate',0.5);
+        $a->set_parameter('amount_perso_rate',0.2857);
+        $b=clone $a;
+        echo '<h1> Test VAT + ND  + Perso</h1>';
+        echo '<h2> Data </h2>';
+        $a->display();
+        $a->compute_vat();
+        $a->compute_nd();
+
+        $a->compute_perso();
+        $a->compute_nd_vat();
+        $a->correct();
+        echo '<h2> Result </h2>';
+        $a->display();
+        $a->verify($b);
+// TEST VAT + ND
+        // + Perso
+        $a=new Acc_Compute();
+        $a->set_parameter('amount',1.23);
+        $a->set_parameter('amount_vat_rate',0.21);
+        $a->set_parameter('nd_ded_vat_rate',0.5);
+
+        $b=clone $a;
+        echo '<h1> Test VAT   +  TVA ND DED</h1>';
+        echo '<h2> Data </h2>';
+        $a->display();
+        $a->compute_vat();
+        $a->compute_nd();
+
+        $a->compute_perso();
+        $a->compute_nd_vat();
+        $a->compute_ndded_vat();
+        $a->correct();
+        echo '<h2> Result </h2>';
+        $a->display();
+        $a->verify($b);
+    }
+ 
 }

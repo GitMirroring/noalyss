@@ -65,6 +65,7 @@ class Noalyss_Parameter_FolderTest extends TestCase
                                     "MY_DATE_SUGGEST,".            
                                     "MY_ALPHANUM,".                
                                     "MY_UPDLAB,".                  
+                                    "MY_ANC_FILTER,".                  
                                     "MY_STOCK");
                 
     }

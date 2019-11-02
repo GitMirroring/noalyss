@@ -114,7 +114,6 @@ for ($i = 0; $i < $nb_array; $i++) {
             $a_tot[$colname]=0;
         }
         $pdf->line_new();
-        $pdf->SetFont('DejaVuCond', 'B', 7);
 
         // Display ledger name
         $ledger_name = $array[$i]['jrn_def_name'];
@@ -123,6 +122,7 @@ for ($i = 0; $i < $nb_array; $i++) {
         $pdf->line_new();
 
         // Display Header
+        $pdf->SetFont('DejaVuCond', 'B', 7);
         for ($e=0;$e<$nb_col;$e++){
             if ( $e == 0 ) {
                 $pdf->write_cell(40, 5,$a_sale_header[$e], 1, 0, 'L');
@@ -131,6 +131,8 @@ for ($i = 0; $i < $nb_array; $i++) {
             }
             $a_tot[$colname]=0;
         }
+        $pdf->line_new();
+        $pdf->SetFont('DejaVuCond', '', 7);
     }
     for ($e=0;$e<$nb_col;$e++){
         $colname=$a_col[$e];
@@ -220,7 +222,7 @@ $nb_col=count($a_colp);
 for ($e=2;$e<$nb_col;$e++){
     $a_tot[$a_colp[$e]]=0;
 }
-
+$nb_array=count($array);
 for ($i = 0; $i < $nb_array; $i++) {
     for ($e=2;$e<$nb_col;$e++){
         $colname=$a_colp[$e];
@@ -257,19 +259,20 @@ for ($i = 0; $i < $nb_array; $i++) {
         $pdf->write_cell(70, 5, "");
         for ($e=2;$e<$nb_col;$e++){
             $t_idx=$a_colp[$e];
-            $colname=$a_col[$e];
+            $colname=$a_colp[$e];
             $pdf->write_cell($a_size[$t_idx], 5, nbm($a_tot[$colname]), 0, 0, 'R');
             $a_tot[$colname]=0;
         }
         $pdf->line_new();
-        $pdf->SetFont('DejaVuCond', 'B', 7);
+       
 
         // Display ledger name
         $ledger_name = $array[$i]['jrn_def_name'];
         $pdf->SetFont('DejaVuCond', 'B', 10);
         $pdf->write_cell(50, 8, $ledger_name);
         $pdf->line_new();
-
+        $pdf->SetFont('DejaVuCond', 'B', 7);
+        
         // Display Header
         for ($e=0;$e<$nb_col;$e++){
               $t_idx=$a_colp[$e];
@@ -281,6 +284,7 @@ for ($i = 0; $i < $nb_array; $i++) {
             $a_tot[$colname]=0;
         }
     }
+    $pdf->SetFont('DejaVuCond', '', 7);
     for ($e=0;$e<$nb_col;$e++){
         $colname=$a_colp[$e];
         

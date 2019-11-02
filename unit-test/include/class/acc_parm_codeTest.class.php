@@ -41,13 +41,20 @@ class Acc_Parm_CodeTest extends TestCase
     {
 
         $a_result=$this->object->load_all();
+        $err=0;
         for ($i=0;$i<count($a_result);$i++)
         {
             $code=$a_result[$i]->p_code;
             if (! in_array($code, array('BANQUE','CAISSE','COMPTE_COURANT','COMPTE_TVA',
                 'CUSTOMER','DEP_PRIV','DNA','SUPPLIER','TVA_DED_IMPOT','TVA_DNA','VENTE','VIREMENT_INTERNE')))
-                    $this->assertNull('code inconnu'.$code);
+            {
+             $err++;
+             $this->assertNull('code inconnu'.$code);
+            }
+            
+                
         }
+        $this->assertEquals(0,$err);
         
         
     }
