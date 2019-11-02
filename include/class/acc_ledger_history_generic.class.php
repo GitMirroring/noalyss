@@ -777,9 +777,6 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
         if (count($this->data)==0)
             exit;
         $old_id="";
-        /**
-         * @todo add table headers
-         */
         foreach ($this->data[0] as $idx=>$op)
         {
             // should clean description : remove <b><i> tag and '; char

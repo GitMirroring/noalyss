@@ -34,7 +34,7 @@ class Facility
     static function page_start()
     {
         $noalyss_home=NOALYSS_HOME;
-        echo <<<EOF
+        $ret=<<<EOF
     <!doctype html>
 <HTML><HEAD><meta charset="utf-8"><META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <TITLE>PRINTJRN  NOALYSS</TITLE>
@@ -50,16 +50,18 @@ class Facility
     <body>
     <div class="content">
 EOF;
+        return $ret;
     }
+
     /**
      * Create a file with the content
-     * @param type $p_dir
-     * @param type $p_file
-     * @param type $p_content
+     * @param string $p_dir usually __DIR__
+     * @param string $p_file name of the file
+     * @param string $p_content content
      */
-    static function save_file($p_dir,$p_file,$p_content)
+    static function save_file($p_dir, $p_file, $p_content)
     {
-        $hFile=fopen($p_dir."/".$p_name,"w+");
+        $hFile=fopen($p_dir."/".$p_name, "w+");
         fwrite($hFile, $content);
         fclose($hFile);
     }
