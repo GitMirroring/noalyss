@@ -140,14 +140,14 @@ class Acc_Currency
      */
     function get_rate_date($p_date)
     {
-        global $cn;
+        
         if (isDate($p_date) == null ) return -1;
         
         $sql="select ch_value from currency_history 
             where
             ch_from=(select max(ch_from) from currency_history where ch_from <= to_date($1,'DD.MM.YYYY') and currency_id=$2)
             and currency_id=$2";
-        $value=$cn->get_value($sql,[$p_date,$this->get_id()]);
+        $value=$this->cn->get_value($sql,[$p_date,$this->get_id()]);
         if ($value == "") return -2;
         return $value;
     }
