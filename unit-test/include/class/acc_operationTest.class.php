@@ -46,9 +46,9 @@ class Acc_OperationTest extends TestCase
      */
     public function testSeek_group()
     {
-        $this->object->jr_id=39;
+        $this->object->jr_id=6;
         $r=$this->object->seek_group();
-        $this->assertEquals(2922,$r);
+        $this->assertEquals(8,$r);
     }
     /**
      * @covers Acc_Operation::set_id
@@ -74,6 +74,7 @@ class Acc_OperationTest extends TestCase
         $row=$this->object->db->get_array('select * from jrn where jr_rapt <> $1 limit 1',array('paid'));
         if ( ! $row ) {
             echo "Aucune ligne trouvée";
+            $this->assertTrue(TRUE);    
         } else {
             $this->object->jr_id=$row[0]['jr_id'];  
             $this->object->set_paid();
