@@ -54,6 +54,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
             "sa"=>"p",
             "e_mp"=>0,
             "view_invoice"=>"Enregistrer",
+            "ac"=>"ACH"
         );
     }
 
@@ -131,7 +132,16 @@ class Acc_Ledger_PurchaseTest extends TestCase
      */
     public function testInput()
     {
+        put_global([["key"=>"ac","value"=>"ACH"]]);
         $res=$this->object->input();
+        \Noalyss\Facility::save_file(__DIR__."/file", 
+                "acc_ledger_purchase_input.html",
+                \Noalyss\Facility::page_start().$res);
+        $this->assertContains(
+                '<OPTION VALUE="3" SELECTED>Achat</SELECT>',
+                $res);
+        $this->assertContains('<INPUT TYPE="hidden" id="jrn_type" NAME="jrn_type" VALUE="ACH"',$res);
+        $this->assertContains('<td class="num">  <span id="tvac" >0.0</span> </td>',$res);
         
     }
 
@@ -142,7 +152,14 @@ class Acc_Ledger_PurchaseTest extends TestCase
     public function testConfirm()
     {
         $array=$this->array;
-        $this->object->confirm($array);
+        $array["p_name"]=
+        $ret=$this->object->confirm($array);
+        \Noalyss\Facility::save_file(__DIR__."/file", 
+                "acc_ledger_purchase_confirm.html",
+                \Noalyss\Facility::page_start().$ret);
+        $this->assertContains('name="amount_t0" value="658.25"',$ret);
+        $this->assertContains("value=\"Efface détail\" onClick=\"anc_key_clean('25','','658.25','','','0');",$ret);
+        $this->assertContains('NAME="e_quant0" VALUE="1">',$ret);
     }
 
     private function clean_operation()
@@ -152,40 +169,6 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $g_connection->exec_sql("delete from jrnx where j_grpt not in (select jr_grpt_id from jrn)");
     }
 
-    /**
-     * @covers Acc_Ledger_Purchase::extra_info
-     * @todo   Implement testExtra_info().
-     */
-    public function testExtra_info()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
 
-    /**
-     * @covers Acc_Ledger_Purchase::get_detail_purchase
-     * @todo   Implement testGet_detail_purchase().
-     */
-    public function testGet_detail_purchase()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Acc_Ledger_Purchase::heading_detail_purchase
-     * @todo   Implement testHeading_detail_purchase().
-     */
-    public function testHeading_detail_purchase()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
 
 }

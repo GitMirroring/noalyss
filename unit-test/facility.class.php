@@ -61,8 +61,8 @@ EOF;
      */
     static function save_file($p_dir, $p_file, $p_content)
     {
-        $hFile=fopen($p_dir."/".$p_name, "w+");
-        fwrite($hFile, $content);
+        $hFile=fopen($p_dir."/".$p_file, "w+");
+        fwrite($hFile, $p_content);
         fclose($hFile);
     }
 
