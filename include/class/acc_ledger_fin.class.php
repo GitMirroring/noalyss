@@ -214,7 +214,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			}
 			$nb++;
 		}
-		if ($nb == 0)
+		if ($nb == 0) 
 			throw new Exception('Il n\'y a aucune opération', 12);
 
 		/* Check if the last_saldo and first_saldo are correct */
@@ -1015,119 +1015,6 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		return $ret;
 	}
 
-	/**\brief display operation of a FIN ledger
-	 * \return html code into a string
-	 */
-
-	function show_ledger()
-	{
-		global $g_user;
-		echo dossier::hidden();
-		$hid = new IHidden();
-
-		$hid->name = "p_action";
-		$hid->value = "bank";
-		echo $hid->input();
-
-
-		$hid->name = "sa";
-		$hid->value = "l";
-		echo $hid->input();
-
-
-		$w = new ISelect();
-		// filter on the current year
-		$filter_year = " where p_exercice='" . $g_user->get_exercice() . "'";
-
-		$periode_start = $this->db->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode $filter_year order by p_start,p_end", 1);
-		// User is already set User=new User($this->db);
-		$current = (isset($_GET['p_periode'])) ? $_GET['p_periode'] : -1;
-		$w->selected = $current;
-
-		echo '<form>';
-		echo 'Période  ' . $w->input("p_periode", $periode_start);
-		$wLedger = $this->select_ledger('fin', 3);
-
-		if ($wLedger == null)
-			throw  new Exception(_('Pas de journal disponible'));
-
-		if (count($wLedger->value) > 1)
-		{
-			$aValue = $wLedger->value;
-			$wLedger->value[0] = array('value' => -1, 'label' => _('Tous les journaux financiers'));
-			$idx = 1;
-			foreach ($aValue as $a)
-			{
-				$wLedger->value[$idx] = $a;
-				$idx++;
-			}
-		}
-
-
-
-		echo 'Journal ' . $wLedger->input();
-		$w = new ICard();
-		$w->noadd = 'no';
-		$w->jrn = $this->id;
-		$qcode = (isset($_GET['qcode'])) ? $_GET['qcode'] : "";
-		echo dossier::hidden();
-		echo HtmlInput::hidden('p_action', 'bank');
-		echo HtmlInput::hidden('sa', 'l');
-		$w->name = 'qcode';
-		$w->value = $qcode;
-		$w->label = '';
-		$this->type = 'FIN';
-		$all = $this->get_all_fiche_def();
-		$w->extra = $all;
-		$w->extra2 = 'QuickCode';
-		$sp = new ISpan();
-		echo $sp->input("qcode_label", "", $qcode);
-		echo $w->input();
-
-		echo HtmlInput::submit('gl_submit', _('Rechercher'));
-		echo '</form>';
-
-		// Show list of sell
-		// Date - date of payment - Customer - amount
-		if ($current != -1)
-		{
-			$filter_per = " and jr_tech_per=" . $current;
-		}
-		else
-		{
-			$filter_per = " and jr_tech_per in (select p_id from parm_periode where p_exercice::integer=" .
-					$g_user->get_exercice() . ")";
-		}
-		/* security  */
-		if ($this->id != -1)
-			$available_ledger = " and jr_def_id= " . $this->id . " and " . $g_user->get_ledger_sql();
-		else
-			$available_ledger = " and " . $g_user->get_ledger_sql();
-		// Show list of sell
-		// Date - date of payment - Customer - amount
-		$sql = SQL_LIST_ALL_INVOICE . $filter_per . " and jr_def_type='FIN'" .
-				" $available_ledger";
-		$step = $_SESSION['g_pagesize'];
-		$page = (isset($_GET['offset'])) ? $_GET['page'] : 1;
-		$offset = (isset($_GET['offset'])) ? $_GET['offset'] : 0;
-
-		$l = "";
-
-		// check if qcode contains something
-		if ($qcode != "")
-		{
-			// add a condition to filter on the quick code
-			$l = " and jr_grpt_id in (select j_grpt from jrnx where j_qcode=upper('$qcode')) ";
-		}
-
-		list($max_line, $list) = ListJrn($this->db, "where jrn_def_type='FIN' $filter_per $l $available_ledger "
-				, null, $offset, 0);
-		$bar = navigation_bar($offset, $max_line, $step, $page);
-
-		echo "<hr> $bar";
-		echo $list;
-		echo "$bar <hr>";
-	}
 
 	/**
 	 * return a string with the bank account, name and quick_code
