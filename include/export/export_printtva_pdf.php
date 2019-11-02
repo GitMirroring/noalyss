@@ -257,19 +257,20 @@ for ($i = 0; $i < $nb_array; $i++) {
         $pdf->write_cell(70, 5, "");
         for ($e=2;$e<$nb_col;$e++){
             $t_idx=$a_colp[$e];
-            $colname=$a_col[$e];
+            $colname=$a_colp[$e];
             $pdf->write_cell($a_size[$t_idx], 5, nbm($a_tot[$colname]), 0, 0, 'R');
             $a_tot[$colname]=0;
         }
         $pdf->line_new();
-        $pdf->SetFont('DejaVuCond', 'B', 7);
+       
 
         // Display ledger name
         $ledger_name = $array[$i]['jrn_def_name'];
         $pdf->SetFont('DejaVuCond', 'B', 10);
         $pdf->write_cell(50, 8, $ledger_name);
         $pdf->line_new();
-
+        $pdf->SetFont('DejaVuCond', 'B', 7);
+        
         // Display Header
         for ($e=0;$e<$nb_col;$e++){
               $t_idx=$a_colp[$e];
