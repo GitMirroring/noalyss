@@ -21,7 +21,7 @@
 
 /***
  * @file 
- * @brief Display history of operation
+ * @brief display or export operations in HTML , PDF or CSV 
  *
  */
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history_generic.class.php";
