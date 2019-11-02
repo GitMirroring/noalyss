@@ -24,10 +24,14 @@
  * Global variables
  */
 global $g_connection,$g_parameter,$g_user;
+if (!defined("DOSSIER"))define ("DOSSIER",25);
+
 $_REQUEST['gDossier'] = DOSSIER;
 $g_connection=new Database(DOSSIER);
 $g_parameter = new Noalyss_Parameter_Folder($g_connection);
-$_SESSION['g_user']='phpcompta';
-$_SESSION['g_pass']='dany';
+$_SESSION['g_user']='admin';
+$_SESSION['g_pass']='phpcompta';
 $_SESSION['g_pagesize']='50';
 $g_user=new User($g_connection);
+
+require_once __DIR__.'/facility.class.php';

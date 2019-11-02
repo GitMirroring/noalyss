@@ -199,20 +199,4 @@ class Acc_Ledger_Info
             $this->insert();
         }
     }
-    static function test_me()
-    {
-        echo "Dossier = ".Dossier::id();
-        $cn=Dossier::connect();
-        $a=new Acc_Ledger_Info($cn);
-        $a->jr_id=3;
-        $a->id_type='BON_COMMANDE';
-        $a->ji_value='BON';
-        var_dump($a);
-        $a->insert();
-
-        $a->set_jrn_id(7);
-        $a->set_type('OTHER');
-        $a->set_value('Autre test');
-        $a->insert();
-    }
 }

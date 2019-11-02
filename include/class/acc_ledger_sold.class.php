@@ -1171,44 +1171,7 @@ EOF;
         return $r;
     }
 
-    /**
-     * @brief update the payment
-     * @deprecated
-     * 
-     */
-
-    function show_unpaid() {
-        // Show list of unpaid sell
-        // Date - date of payment - Customer - amount
-        // Nav. bar
-        $step = $_SESSION['g_pagesize'];
-        $page = (isset($_GET['offset'])) ? $_GET['page'] : 1;
-        $offset = (isset($_GET['offset'])) ? $_GET['offset'] : 0;
-
-
-        $sql = SQL_LIST_UNPAID_INVOICE_DATE_LIMIT . " and jr_def_id=" . $this->id;
-        list($max_line, $list) = ListJrn($this->db, $sql, null, $offset, 1);
-        $sql = SQL_LIST_UNPAID_INVOICE . " and jr_def_id=" . $this->id;
-        list($max_line2, $list2) = ListJrn($this->db, $sql, null, $offset, 1);
-
-        // Get the max line
-        $m = ($max_line2 > $max_line) ? $max_line2 : $max_line;
-        $bar2 = navigation_bar($offset, $m, $step, $page);
-
-        echo $bar2;
-        echo '<h2 class="info"> ' . _('Echeance dépassée') . ' </h2>';
-        echo $list;
-        echo '<h2 class="info"> ' . _('Non Payée') . ' </h2>';
-        echo $list2;
-        echo $bar2;
-        // Add hidden parameter
-        $hid = new IHidden();
-
-        echo '<hr>';
-
-        if ($m != 0)
-            echo HtmlInput::submit('paid', _('Mise à jour paiement'));
-    }
+   
 
     /*!\brief display the form for entering data for invoice,
      * \param $p_array is null or you can put the predef operation or the $_POST
@@ -1616,14 +1579,7 @@ EOF;
         return $array;
     }
     
-    /*!\brief test function
-     */
     
-    static function test_me($p_string = '') {
-        $cn = Dossier::connect();
-        $a = new Acc_Ledger_Sold($cn, 2);
-        echo $a->input();
-    }
     
 }
 

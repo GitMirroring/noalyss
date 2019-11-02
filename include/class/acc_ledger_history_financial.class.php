@@ -22,7 +22,7 @@
 
 /**
  * @file
- * @brief displya financial operations
+ * @brief display financial operations in HTML , PDF or CSV 
  * 
  */
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history.class.php";

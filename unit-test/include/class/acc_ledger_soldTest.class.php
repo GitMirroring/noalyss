@@ -1,4 +1,5 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,6 +15,12 @@ class Acc_Ledger_SoldTest extends TestCase
     protected $object;
 
     /**
+     * Data to include 
+     * @var type 
+     */
+    private $array;
+
+    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
@@ -21,6 +28,46 @@ class Acc_Ledger_SoldTest extends TestCase
     {
         include 'global.php';
         $this->object=new Acc_Ledger_Sold($g_connection, 2);
+        $this->array=array(
+            "ledger_type"=>"VEN",
+            "ac"=>"COMPTA/VENMENU/VEN",
+            "sa"=>"p",
+            "gDossier"=>25,
+            "nb_item"=>2,
+            "p_jrn"=>2,
+            "p_jrn_predef"=>2,
+            "action"=>"use_opd",
+            "jrn_type"=>"VEN",
+            "filter"=>"",
+            "e_date"=>"24.08.2019",
+            "e_ech"=>"",
+            "e_client"=>"CLIENT",
+            "e_pj"=>"VEN10",
+            "e_pj_suggest"=>"VEN10",
+            "e_comm"=>"Vente Service",
+            "e_march0"=>"DEPLAC",
+            "e_march0_price"=>20,
+            "e_quant0"=>1.21,
+            "htva_march0"=>24.2,
+            "e_march0_tva_id"=>1,
+            "e_march0_tva_amount"=>5.08,
+            "tva_march0"=>5.08,
+            "tvac_march0"=>29.28,
+            "e_march1"=>"MARCHA",
+            "e_march1_price"=>48.5,
+            "e_quant1"=>25,
+            "htva_march1"=>1212.5,
+            "e_march1_tva_id"=>1,
+            "e_march1_tva_amount"=>254.63,
+            "tva_march1"=>254.63,
+            "tvac_march1"=>1467.13,
+            "mp_date"=>"",
+            "acompte"=>0,
+            "e_comm_paiement"=>"",
+            "e_mp"=>"0",
+            "e_mp_qcode_1"=>"COMPTE",
+            "e_mp_qcode_2"=>"",
+            "view_invoice"=>"Enregistrer");
     }
 
     /**
@@ -31,62 +78,61 @@ class Acc_Ledger_SoldTest extends TestCase
     {
         
     }
-
+    private function clean_operation()
+    {
+        global $g_connection;
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1", ["1572714478.3155"]);
+        $g_connection->exec_sql("delete from jrnx where j_grpt not in (select jr_grpt_id from jrn)");
+    }
     /**
      * @covers Acc_Ledger_Sold::verify
-     * @todo   Implement testVerify().
-     * @expectedException Exception
      */
     public function testVerify()
     {
-        $this->object->verify(array());
+        $this->object->verify_operation($this->array);
     }
 
     /**
      * @covers Acc_Ledger_Sold::insert
-     * @todo   Implement testInsert().
-     * @expectedException Exception
      */
     public function testInsert()
     {
-        $this->object->insert(array());
+        global $g_connection;
+        $array=$this->array;
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0, 1);
+        $array["amount_t0"]=24.2;
+        $array["hplan"]=array(array(-1), array(-1));
+        $array["val"]=array(array(24, 2), array(1212.5));
+        $array["mt"]="1572714478.3155";
+        $this->clean_operation();
+        $cnt=$g_connection->get_value("select count(*) from jrn where jr_mt=$1",["1572714478.3155"]);
+        $this->assertEquals(0,$cnt);
+        $this->object->insert($array);
+        
+        $cnt=$g_connection->get_value("select count(*) from jrn where jr_mt=$1",["1572714478.3155"]);
+        $this->assertEquals(1,$cnt);
+        $this->clean_operation();
     }
 
     /**
      * @covers Acc_Ledger_Sold::confirm
-     * @todo   Implement testConfirm().
-     * @expectedException Exception
      */
     public function testConfirm()
     {
-        $_POST['p_jrn']=$this->object->id;
-        $this->object->confirm(array());
+        $array=$this->array;
+        $res=$this->object->confirm($array);
+        \Noalyss\Facility::save_file(__DIR__."/file"
+                , "acc_ledger_sold_confirm.html"
+                , \Noalyss\Facility::page_start().$res);
+        $this->assertContains(
+                '<input type="button" class="button" value="Vérifiez Imputation Analytique" onClick="verify_ca(\'\');">',
+                $res);
+        $this->assertContains('id="e_march1_tva_id" NAME="e_march1_tva_id" VALUE="1"', $res);
+        $this->assertContains("anc_key_choice(25,'t1',1212.5,'');", $res);
     }
 
-    /**
-     * @covers Acc_Ledger_Sold::extra_info
-     * @todo   Implement testExtra_info().
-     */
-    public function testExtra_info()
-    {
-        $info=$this->object->extra_info();
-        if (!is_string($info))
-        {
-            $this->assertTrue(FALSE);
-        }
-    }
 
-    /**
-     * @covers Acc_Ledger_Sold::show_unpaid
-     * @todo   Implement testShow_unpaid().
-     */
-    public function testShow_unpaid()
-    {
-        // OBSOLETE : must be removed
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
 
     /**
      * @covers Acc_Ledger_Sold::input
@@ -95,11 +141,20 @@ class Acc_Ledger_SoldTest extends TestCase
     public function testInput()
     {
         $_REQUEST['ac']='VEN';
-        $info=$this->object->input();
+        $info=$this->object->input($this->array);
         if (!is_string($info))
         {
             $this->assertTrue(FALSE);
         }
+        \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger_sold_input.html",
+                \Noalyss\Facility::page_start().
+                $info);
+        $this->assertContains(
+                'NAME="e_client" ID="e_client" VALUE="CLIENT" SIZE="20"  ondblclick="fill_ipopcard(this);" ', $info);
+        $this->assertContains(
+                '<INPUT TYPE="TEXT"  class="input_text"  id="e_pj" name="e_pj" value="VEN10" placeholder="" title=""',
+                $info);
+        $this->assertContains('ID="add_item" VALUE="Ajout article"  onClick="ledger_add_row()">', $info);
     }
 
     /**

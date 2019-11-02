@@ -21,7 +21,7 @@
 
 /***
  * @file 
- * @brief Display history of operation
+ * @brief display or export operations in HTML , PDF or CSV 
  *
  */
 require_once NOALYSS_INCLUDE."/class/acc_ledger_history_generic.class.php";
@@ -42,6 +42,15 @@ abstract class Acc_Ledger_History
     protected $m_mode; //!< mode of export L : one line, E accounting writing , D : Detail
     public $db; //!< database connx
 
+    /**
+     * 
+     * @param Database $cn
+     * @param array $pa_ledger array of jrn_def.jrn_def_id
+     * @param integer $p_from periode 
+     * @param integer $p_to
+     * @param char $p_mode E D L or A , for Extended ,Detail , Listing , Accounting
+     * @throws Exception if $pa_ledger is not an array
+     */
     function __construct(Database $cn, $pa_ledger, $p_from, $p_to, $p_mode)
     {
         if (is_array($pa_ledger) == FALSE) {

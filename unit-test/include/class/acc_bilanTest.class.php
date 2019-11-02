@@ -55,12 +55,12 @@ class Acc_BilanTest extends TestCase
      */
     public function testVerify()
     {
-	    ob_start();
-        $this->object->verify();
-	    $r=ob_get_contents();
-	    ob_end_clean();
-
-	$this->assertStringStartsWith('<h3>',$r);
+      ob_start();
+      $this->object->verify();
+      $r=ob_get_contents();
+      ob_end_clean();
+      
+      $this->assertStringStartsWith('<h3>',$r);
     }
 
     /**
@@ -69,10 +69,13 @@ class Acc_BilanTest extends TestCase
      */
     public function testGet_request_get()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+      $_GET['b_id']=111;
+      $_GET['from_periode']=95;
+      $_GET['to_periode']=100;
+      $this->object->get_request_get();
+      $this->assertEquals($this->object->b_id,111);
+      $this->assertEquals($this->object->from,95);
+      $this->assertEquals($this->object->to,100);
     }
 
     /**
@@ -81,46 +84,65 @@ class Acc_BilanTest extends TestCase
      */
     public function testLoad()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+      
+      $this->object->b_id=1;
+      $this->object->load();
+      $this->assertEquals($this->object->b_type,'rtf');
+      $this->assertEquals($this->object->b_file_form,'document/fr_be/bnb.form');
     }
 
     /**
      * @covers Acc_Bilan::file_open_form
-     * @todo   Implement testFile_open_form().
+     * 
      */
     public function testFile_open_form()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+      $this->object->b_id=1;
+      $this->object->load();
+      try {
+	$file=$this->object->file_open_form();
+	$this->assertTrue(TRUE);
+      }  catch(Exception $e) {
+	echo $e->getTraceAsString();
+	$this->assertTrue(FALSE);
+      }
     }
 
     /**
      * @covers Acc_Bilan::file_open_template
-     * @todo   Implement testFile_open_template().
+     * 
      */
     public function testFile_open_template()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+      $this->object->b_id=1;
+      $this->object->load();
+      try {
+	$file=$this->object->file_open_template();
+	$this->assertTrue(TRUE);
+      }  catch(Exception $e) {
+	echo $e->getTraceAsString();
+	$this->assertTrue(FALSE);
+      }
     }
 
     /**
      * @covers Acc_Bilan::compute_formula
-     * @todo   Implement testCompute_formula().
      */
     public function testCompute_formula()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+      $this->object->b_id=1;
+      $hFile=fopen("document/fr_be/bnb.form",'r');
+
+      $this->object->from=92;
+      $this->object->to=103;
+
+      $this->object->compute_formula($hFile);
+
+      $this->assertTrue(isset($this->object->C70));
+      $this->assertTrue(isset($this->object->C60));
+      $this->assertEquals($this->object->C70,445.6);
+      $this->assertEquals($this->object->C60,0);
+      
     }
 
     /**
@@ -171,16 +193,6 @@ class Acc_BilanTest extends TestCase
         );
     }
 
-    /**
-     * @covers Acc_Bilan::test_me
-     * @todo   Implement testTest_me().
-     */
-    public function testTest_me()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
+  
 
 }

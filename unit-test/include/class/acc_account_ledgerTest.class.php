@@ -42,7 +42,8 @@ class Acc_Account_LedgerTest extends TestCase
      */
     public function testGet_row()
     {
-      $this->object->get_row(215,235);
+      $array=$this->object->get_row(92,103);
+      $this->assertEquals(count($array),3);
     }
 
     /**
@@ -256,8 +257,8 @@ class Acc_Account_LedgerTest extends TestCase
     function dataFind_Card()
     {
         return array(
-            array('6191', '22'),
-            array('6192', '23'),
+            array('6191', '27'),
+            array('6192', '28'),
             array('4400004', '25')
         );
     }

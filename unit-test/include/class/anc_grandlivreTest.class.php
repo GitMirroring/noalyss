@@ -18,7 +18,8 @@ class Anc_GrandLivreTest extends TestCase
      */
     protected function setUp()
     {
-        $this->object=new Anc_GrandLivre;
+        global $g_connection;
+        $this->object=new Anc_GrandLivre($g_connection);
     }
 
     /**
@@ -32,14 +33,10 @@ class Anc_GrandLivreTest extends TestCase
 
     /**
      * @covers Anc_GrandLivre::set_sql_filter
-     * @todo   Implement testSet_sql_filter().
      */
     public function testSet_sql_filter()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        
     }
 
     /**
