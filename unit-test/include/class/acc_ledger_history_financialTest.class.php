@@ -23,9 +23,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @file
- * @brief concerne acc_ledger_history_purchaseTest.class
+ * @brief concerne acc_ledger_history_financialTest.class
  */
-class Acc_Ledger_History_PurchaseTest extends TestCase
+class Acc_Ledger_History_FinancialTest extends TestCase
 {
 
     /**
@@ -41,7 +41,7 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
     {
         include 'global.php';
         global $g_connection;
-        $this->object=new Acc_Ledger_History_Purchase($g_connection, [3], 92, 131, 'L');
+        $this->object=new Acc_Ledger_History_Financial($g_connection, [1], 92, 131, 'E');
     }
 
     /**
@@ -52,28 +52,45 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
     {
         
     }
-    private function  save_file($p_name,$content)
+
+    private function save_file($p_name, $content)
     {
         $hFile=fopen(__DIR__."/file/".$p_name,"w+");
         fwrite($hFile, $content);
         fclose($hFile);
     }
-    //@covers Acc_Ledger_History_Financial::get_row ,  Acc_Ledger_History_Financial::get_data
-    function testGet_Row()
+
+    function testGet__row()
     {
         $this->object->get_row();
-        $this->assertSame(count($this->object->get_data()),2);
-
+        $this->assertEquals(1, count($this->object->get_data()));
     }
-    //@covers Acc_Ledger_History_Financial::export_oneline_html
-    function testExport_Oneline_Html()
+
+    //@covers Acc_Ledger_History_Financial::export_html
+    //@covers Acc_Ledger_History_Financial::export_accounting_html
+    function testExport_Html()
     {
+        //- Listing
+        $name="acc_ledger_history_export_listing.html";
+        $this->object->set_m_mode("L");
         ob_start();
-        $this->object->export_accounting_html();
-        $content=ob_get_flush();
-        $this->save_file("acc_ledger_history_purchase_oneline.html",$content);
-        $this->assertFileExists(__DIR__."/file/"."acc_ledger_history_purchase_oneline.html");
+        phpunit_page_start();
+        $this->object->export_html();
+        $content=ob_get_contents();
+        
+        $this->save_file($name, $content);
+        $this->assertFileExists(__DIR__."/file/".$name);
+        
+        //- Listing
+        $name="acc_ledger_history_export_accounting.html";
+        $this->object->set_m_mode("E");
+        ob_start();
+        phpunit_page_start();
+        $this->object->export_html();
+        $content=ob_get_contents();
+        
+        $this->save_file($name, $content);
+        $this->assertFileExists(__DIR__."/file/".$name);
         
     }
-    
 }
