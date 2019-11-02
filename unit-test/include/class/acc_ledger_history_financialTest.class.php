@@ -74,7 +74,7 @@ class Acc_Ledger_History_FinancialTest extends TestCase
         $name="acc_ledger_history_export_listing.html";
         $this->object->set_m_mode("L");
         ob_start();
-        phpunit_page_start();
+        \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
         
@@ -85,7 +85,7 @@ class Acc_Ledger_History_FinancialTest extends TestCase
         $name="acc_ledger_history_export_accounting.html";
         $this->object->set_m_mode("E");
         ob_start();
-        phpunit_page_start();
+        \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
         

@@ -34,26 +34,4 @@ $_SESSION['g_pass']='phpcompta';
 $_SESSION['g_pagesize']='50';
 $g_user=new User($g_connection);
 
-if ( !function_exists("phpunit_page_start"))
-{
-function phpunit_page_start()
-{
-    $noalyss_home=NOALYSS_HOME;
-    echo <<<EOF
-    <!doctype html>
-<HTML><HEAD><meta charset="utf-8"><META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <TITLE>PRINTJRN  NOALYSS</TITLE>
-	<link rel="icon" type="image/ico" href="favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <LINK id="pagestyle" REL="stylesheet" type="text/css" href="{$noalyss_home}/style-classic7.css?version=7105" media="screen"/>
-    <link rel="stylesheet" type="text/css" href="./style-print.css?version=7105" media="print"/>
-    <script language="javascript" src="js/calendar.js"></script>
-    <script type="text/javascript" src="js/lang/calendar-en.js"></script>
-    <script language="javascript" src="js/calendar-setup.js"></script>
-    <LINK REL="stylesheet" type="text/css" href="calendar-blue.css" media="screen">
-    </HEAD>
-    <body>
-    <div class="content">
-EOF;
-}
-}
+require_once __DIR__.'/facility.class.php';
