@@ -298,8 +298,9 @@ class Acc_Balance
 
     }
     /**
-     * set the $this->jrn to the cat
-     * @todo Cette function semble ne pas fonctionner correctement
+     * set the $this->jrn to the cat, filter the ledger thanks the type (key in the array)
+     * @param array of integer 0->Sale,1->Purchase,2->Financial,3->ODS
+     * @see Acc_Ledgger::array_cat
      */
     function filter_cat($p_array)
     {
