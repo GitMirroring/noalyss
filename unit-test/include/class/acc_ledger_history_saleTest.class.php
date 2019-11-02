@@ -57,4 +57,57 @@ class Acc_Ledger_History_SaleTest extends TestCase
         $this->object->get_row();
         $this->assertSame(count($this->object->get_data()),4);
     }
+     private function  save_file($p_name,$content)
+    {
+        $hFile=fopen(__DIR__."/file/".$p_name,"w+");
+        fwrite($hFile, $content);
+        fclose($hFile);
+    }
+    //@covers Acc_Ledger_History_Sale::export_oneline_html
+    function testExport_Oneline_Html()
+    {
+        //- Listing
+        $name="acc_ledger_history_sale_export_listing.html";
+        $this->object->set_m_mode("L");
+        ob_start();
+        phpunit_page_start();
+        $this->object->export_html();
+        $content=ob_get_contents();
+        
+        $this->save_file($name, $content);
+        $this->assertFileExists(__DIR__."/file/".$name);
+        
+        //- Extended
+        $name="acc_ledger_history_sale_export_extended.html";
+        $this->object->set_m_mode("E");
+        ob_start();
+        phpunit_page_start();
+        $this->object->export_html();
+        $content=ob_get_contents();
+        
+        $this->save_file($name, $content);
+        $this->assertFileExists(__DIR__."/file/".$name);
+        
+        //- Detail
+        $name="acc_ledger_history_sale_export_detail.html";
+        $this->object->set_m_mode("D");
+        ob_start();
+        phpunit_page_start();
+        $this->object->export_html();
+        $content=ob_get_contents();
+        
+        $this->save_file($name, $content);
+        $this->assertFileExists(__DIR__."/file/".$name);
+
+        //- Accounting
+        $name="acc_ledger_history_sale_export_accounting.html";
+        $this->object->set_m_mode("D");
+        ob_start();
+        phpunit_page_start();
+        $this->object->export_html();
+        $content=ob_get_contents();
+        
+        $this->save_file($name, $content);
+        $this->assertFileExists(__DIR__."/file/".$name);
+    }
 }

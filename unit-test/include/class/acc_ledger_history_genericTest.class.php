@@ -23,9 +23,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @file
- * @brief concerne acc_ledger_history_purchaseTest.class
+ * @brief concerne acc_ledger_history_generic.class
  */
-class Acc_Ledger_History_PurchaseTest extends TestCase
+class Acc_Ledger_History_GenericTest extends TestCase
 {
 
     /**
@@ -41,7 +41,7 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
     {
         include 'global.php';
         global $g_connection;
-        $this->object=new Acc_Ledger_History_Purchase($g_connection, [3], 92, 131, 'L');
+        $this->object=new acc_ledger_history_generic($g_connection, [2], 92, 131, 'L');
     }
 
     /**
@@ -52,65 +52,66 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
     {
         
     }
-    private function  save_file($p_name,$content)
+
+    function testGet_row()
     {
-        $hFile=fopen(__DIR__."/file/".$p_name,"w+");
+        $this->object->get_row();
+        $this->assertSame(count($this->object->get_data()), 3);
+    }
+
+    private function save_file($p_name, $content)
+    {
+        $hFile=fopen(__DIR__."/file/".$p_name, "w+");
         fwrite($hFile, $content);
         fclose($hFile);
     }
-    //@covers Acc_Ledger_History_Financial::get_row ,  Acc_Ledger_History_Financial::get_data
-    function testGet_Row()
-    {
-        $this->object->get_row();
-        $this->assertSame(count($this->object->get_data()),2);
 
-    }
-    //@covers Acc_Ledger_History_Financial::export_oneline_html
+    //@covers Acc_Ledger_History_Generic::export_oneline_html
     function testExport_Oneline_Html()
     {
         //- Listing
-        $name="acc_ledger_history_purchase_export_listing.html";
+        $name="acc_ledger_history_Generic_export_listing.html";
         $this->object->set_m_mode("L");
         ob_start();
         phpunit_page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
-        
+
         //- Extended
-        $name="acc_ledger_history_purchase_export_extended.html";
+        $name="acc_ledger_history_Generic_export_extended.html";
         $this->object->set_m_mode("E");
         ob_start();
         phpunit_page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
-        
+
         //- Detail
-        $name="acc_ledger_history_purchase_export_detail.html";
+        $name="acc_ledger_history_Generic_export_detail.html";
         $this->object->set_m_mode("D");
         ob_start();
         phpunit_page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
 
         //- Accounting
-        $name="acc_ledger_history_purchase_export_accounting.html";
+        $name="acc_ledger_history_Generic_export_accounting.html";
         $this->object->set_m_mode("D");
         ob_start();
         phpunit_page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
     }
-    
+
 }
