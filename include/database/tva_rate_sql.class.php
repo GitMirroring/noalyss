@@ -45,6 +45,8 @@ class Tva_rate_SQL extends Noalyss_SQL
             , "tva_comment"=>"tva_comment"
             , "tva_poste"=>"tva_poste"
             , "tva_both_side"=>"tva_both_side"
+            ,"tva_payment_purchase"=>"tva_payment_purchase"
+            ,"tva_payment_sale"=>"tva_payment_sale"
         );
         /*
          * Type of columns
@@ -56,6 +58,9 @@ class Tva_rate_SQL extends Noalyss_SQL
             , "tva_comment"=>"text"
             , "tva_poste"=>"text"
             , "tva_both_side"=>"numeric"
+            ,"tva_payment_purchase"=>"text"
+            ,"tva_payment_sale"=>"text"
+
         );
 
 

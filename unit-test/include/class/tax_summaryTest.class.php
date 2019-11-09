@@ -85,571 +85,183 @@ class Tax_SummaryTest extends TestCase
         $this->expectOutputRegex("/\<form method=\"GET\".*/");
         $this->object->form_export_pdf();
     }
-
-    function testGet_row_purchase()
+    private function check_result ($p_scenario , $p_array,$p_array_expected,$jrn_type)
     {
-        $array=$this->object->get_row_purchase();
-        //-- For creating the array
-        Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_purchase.txt", print_r($array, TRUE));
-        $a_result=array
-            (
-            "0"=>array
-                (
-                "jrn_def_name"=>"Achat",
-                "tva_label"=>"0%",
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>4,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>658.2500,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "1"=>array
-                (
-                "jrn_def_name"=>"Achat",
-                "tva_label"=>"12%",
-                "tva_rate"=>0.1200,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>2,
-                "amount_vat"=>109.8000,
-                "amount_wovat"=>915.0000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "2"=>array
-                (
-                "jrn_def_name"=>"Achat",
-                "tva_label"=>"21%",
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>1,
-                "amount_vat"=>6.1000,
-                "amount_wovat"=>29.0000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "3"=>array
-                (
-                "jrn_def_name"=>"Achat",
-                "tva_label"=>"6%",
-                "tva_rate"=>0.0600,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>3,
-                "amount_vat"=>5.2800,
-                "amount_wovat"=>88.3200,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "4"=>array
-                (
-                "jrn_def_name"=>"Achat",
-                "tva_label"=>"ART44",
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>8,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>315.2000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "5"=>array
-                (
-                "jrn_def_name"=>"Achat",
-                "tva_label"=>"EXPORT",
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>6,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>286.9500,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "6"=>array
-                (
-                "jrn_def_name"=>"Achat",
-                "tva_label"=>"IMMO",
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>1002,
-                "amount_vat"=>319.2400,
-                "amount_wovat"=>1520.2000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "7"=>array
-                (
-                "jrn_def_name"=>"Achat",
-                "tva_label"=>"VOIT",
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>1003,
-                "amount_vat"=>21.0000,
-                "amount_wovat"=>100.0000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "8"=>array
-                (
-                "jrn_def_name"=>"Frais Divers",
-                "tva_label"=>"21%",
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>1,
-                "amount_vat"=>244.5500,
-                "amount_wovat"=>1164.5400,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "9"=>array
-                (
-                "jrn_def_name"=>"Frais Divers",
-                "tva_label"=>"EXPORT",
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>6,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>259.8000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "10"=>array
-                (
-                "jrn_def_name"=>"Frais Divers",
-                "tva_label"=>"IMMO",
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>1002,
-                "amount_vat"=>319.2400,
-                "amount_wovat"=>1520.2000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "11"=>array
-                (
-                "jrn_def_name"=>"Frais Divers",
-                "tva_label"=>"INTRA",
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>5,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>1250.0000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "12"=>array
-                (
-                "jrn_def_name"=>"Frais Divers",
-                "tva_label"=>"VOIT",
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>1003,
-                "amount_vat"=>42.0000,
-                "amount_wovat"=>200.0000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000,
-            )
-        );
-        $nb_result=count($a_result);
-        $nb_array=count($array);
+        $nb_result=count($p_array_expected);
+        $nb_array=count($p_array);
         $this->assertEquals($nb_result, $nb_array);
         $ix=0;
+        switch ($jrn_type)
+        {
+            case "ACH":
+                $vat_code="qp_vat_code";
+                break;
+            case "SMRACH":
+                $vat_code="qp_vat_code";
+                break;
+            case "VEN":
+                $vat_code="qs_vat_code";
+                break;
+            case "SMRVEN":
+                $vat_code="qs_vat_code";
+                break;
+
+            default:
+                throw new Exception(_("unknow jrn_type"));
+                break;
+        }
         for ($i=0; $i<$nb_result; $i++)
         {
-            $row=$a_result[$i];
+            $row=$p_array_expected[$i];
             for ($e=0; $e<$nb_array; $e++)
             {
+                $test_jrn_expected="";
+                $test_jrn_result="";
+                if ( in_array($jrn_type, ['ACH','VEN'])) 
+                {
+                    $test_jrn_expected=$row['jrn_def_name'] ;
+                    $test_jrn_result=$p_array[$e]["jrn_def_name"];
+                }
                 if (
-                        $row['qp_vat_code']==$array[$e]['qp_vat_code']
-                        && $row['jrn_def_name'] == $array[$e]["jrn_def_name"]
+                        $row[$vat_code]==$p_array[$e][$vat_code]
+                        && $test_jrn_expected == $test_jrn_result
                     )
                 {
-                    $this->assertEquals($row['amount_vat'], $array[$e]['amount_vat']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_wovat'], $array[$e]['amount_wovat']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_sided'], $array[$e]['amount_sided']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_noded_amount'], $array[$e]['amount_noded_amount']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_noded_tax'], $array[$e]['amount_noded_tax']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_noded_return'], $array[$e]['amount_noded_return']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_private'], $array[$e]['amount_private']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
+                    $this->assertEquals($row['amount_vat'], $p_array[$e]['amount_vat']
+                            ,sprintf("%s Code %s ",$p_scenario,$row[$vat_code]));
+                    
+                    $this->assertEquals($row['amount_sided'], $p_array[$e]['amount_sided']
+                            ,sprintf("%s Code %s ",$p_scenario,$row[$vat_code]));
+                    
+                    $this->assertEquals($row['amount_wovat'], $p_array[$e]['amount_wovat']
+                        ,sprintf("%s Code %s ",$p_scenario,$row[$vat_code]));
+                    
+                    if ( $jrn_type=="ACH") {
+
+                        $this->assertEquals($row['amount_noded_amount'], $p_array[$e]['amount_noded_amount']
+                                ,sprintf("%s Code %s ",$p_scenario,$row[$vat_code]));
+                        $this->assertEquals($row['amount_noded_tax'], $p_array[$e]['amount_noded_tax']
+                                ,sprintf("%s Code %s ",$p_scenario,$row[$vat_code]));
+                        $this->assertEquals($row['amount_noded_return'], $p_array[$e]['amount_noded_return']
+                                ,sprintf("%s Code %s ",$p_scenario,$row[$vat_code]));
+                        $this->assertEquals($row['amount_private'], $p_array[$e]['amount_private']
+                                ,sprintf("%s Code %s ",$p_scenario,$row[$vat_code]));
+                    }
                     $ix++;
                 }
             }
         }
         $this->assertEquals($nb_array, $ix, 'Not all VAT CODE found');
+    }
+    function testGet_row_purchase()
+    {
+        // Operation date
+        $this->object->set_tva_type("O");
+        $array=$this->object->get_row_purchase();
+        //-- For creating the array
+        // Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_purchase.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getrow_purchase_o.php";
+        $this->check_result("tva_type = O , get_row_purchase",$array,$a_result,'ACH');
+
+        // Operation date
+        $this->object->set_tva_type("P");
+        $array=$this->object->get_row_purchase();
+        //-- For creating the array
+        // Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_purchase.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getrow_purchase_p.php";
+        $this->check_result("tva_type = P , get_row_purchase",$array,$a_result,'ACH');
+        
+        $this->object->set_tva_type("T");
+        $array=$this->object->get_row_purchase();
+        //-- For creating the array
+        // Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_purchase.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getrow_purchase_t.php";
+        $this->check_result("tva_type = T , get_row_purchase",$array,$a_result,'ACH');
+        
+        
+        
+        
     }
 
     function testGet_row_sale()
     {
+         $this->object->set_tva_type("O");
         $array=$this->object->get_row_sale();
         //-- For creating the array
-       //Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale.txt", print_r($array, TRUE));
-        $a_result=array
-            (
-            "0"=>array
-                (
-                "jrn_def_name"=>"Vente",
-                "tva_label"=>"21%",
-                "qs_vat_code"=>1,
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "amount_vat"=>219.5700,
-                "amount_wovat"=>1045.6000,
-                "amount_sided"=>0.0000
-            ),
-            "1"=>array
-                (
-                "jrn_def_name"=>"Vente",
-                "tva_label"=>"EXPORT",
-                "qs_vat_code"=>6,
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>1047.9000,
-                "amount_sided"=>0.0000
-            ),
-            "2"=>array
-                (
-                "jrn_def_name"=>"Vente",
-                "tva_label"=>"INTRA",
-                "qs_vat_code"=>5,
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>1800.0000,
-                "amount_sided"=>0.0000
-            ),
-            "3"=>array
-                (
-                "jrn_def_name"=>"Vente",
-                "tva_label"=>"VOIT",
-                "qs_vat_code"=>1003,
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "amount_vat"=>8.4000,
-                "amount_wovat"=>40.0000,
-                "amount_sided"=>0.0000
-            ),
-            "4"=>Array
-                (
-                "jrn_def_name"=>"Vente différée",
-                "tva_label"=>"EXPORT",
-                "qs_vat_code"=>6,
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>150.5600,
-                "amount_sided"=>0.0000
-            )
-        );
-        $nb_result=count($a_result);
-        $nb_array=count($array);
-        $this->assertEquals($nb_result, $nb_array);
-        $ix=0;
-        for ($i=0; $i<$nb_result; $i++)
-        {
-            $row=$a_result[$i];
-            for ($e=0; $e<$nb_array; $e++)
-            {
-                if (
-                        $row['qs_vat_code']==$array[$e]['qs_vat_code']&&$row['jrn_def_name']==$array[$e]["jrn_def_name"]
-                )
-                {
-                    $this->assertEquals($row['amount_vat'], $array[$e]['amount_vat']
-                            , sprintf("Code %s ", $row['qs_vat_code']));
-                    $this->assertEquals($row['amount_wovat'], $array[$e]['amount_wovat']
-                            , sprintf("Code %s ", $row['qs_vat_code']));
-                    $this->assertEquals($row['amount_sided'], $array[$e]['amount_sided']
-                            , sprintf("Code %s ", $row['qs_vat_code']));
-                    $ix++;
-                }
-            }
-        }
-        $this->assertEquals($nb_array, $ix, 'Not all VAT CODE found');
+        //  Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale_o.txt", var_export($array, TRUE));
+       require __DIR__."/data/tax_summary_getrow_sale_o.php";
+        $this->check_result("tva_type = O , get_row_sale",$array,$a_result,'VEN');
+         
+         
+         $this->object->set_tva_type("P");
+        $array=$this->object->get_row_sale();
+        //-- For creating the array
+       //Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale_p.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getrow_sale_p.php";
+        $this->check_result("tva_type = P , get_row_sale",$array,$a_result,'VEN');
+
+         
+         $this->object->set_tva_type("T");
+         $array=$this->object->get_row_sale();
+        //-- For creating the array
+        // Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale_t.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getrow_sale_t.php";
+        $this->check_result("tva_type = T , get_row_sale",$array,$a_result,'VEN');
+        
     }
 
     function testget_summary_purchase()
     {
+         $this->object->set_tva_type("T");
         $array=$this->object->get_summary_purchase();
         //-- For creating the array
-        // \Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_summary_purchase.txt", print_r($array, TRUE));
-        $a_result=array
-            (
-            "0"=>array
-                (
-                "tva_label"=>"0%",
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>4,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>658.2500,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "1"=>array
-                (
-                "tva_label"=>"12%",
-                "tva_rate"=>0.1200,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>2,
-                "amount_vat"=>109.8000,
-                "amount_wovat"=>915.0000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "2"=>array
-                (
-                "tva_label"=>"21%",
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>1,
-                "amount_vat"=>250.6500,
-                "amount_wovat"=>1193.5400,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "3"=>array
-                (
-                "tva_label"=>"6%",
-                "tva_rate"=>0.0600,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>3,
-                "amount_vat"=>5.2800,
-                "amount_wovat"=>88.3200,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "4"=>array
-                (
-                "tva_label"=>"ART44",
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>8,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>315.2000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "5"=>array
-                (
-                "tva_label"=>"EXPORT",
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>6,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>546.7500,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "6"=>array
-                (
-                "tva_label"=>"IMMO",
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>1002,
-                "amount_vat"=>638.4800,
-                "amount_wovat"=>3040.4000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "7"=>array
-                (
-                "tva_label"=>"INTRA",
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>5,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>1250.0000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            ),
-            "8"=>array
-                (
-                "tva_label"=>"VOIT",
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "qp_vat_code"=>1003,
-                "amount_vat"=>63.0000,
-                "amount_wovat"=>300.0000,
-                "amount_sided"=>0.0000,
-                "amount_noded_amount"=>0.0000,
-                "amount_noded_tax"=>0.0000,
-                "amount_noded_return"=>0.0000,
-                "amount_private"=>0.0000
-            )
-        );
-        $nb_result=count($a_result);
-        $nb_array=count($array);
-        $this->assertEquals($nb_result, $nb_array);
-        $ix=0;
-        for ($i=0; $i<$nb_result; $i++)
-        {
-            $row=$a_result[$i];
-            for ($e=0; $e<$nb_array; $e++)
-            {
-                if ($row['qp_vat_code']==$array[$e]['qp_vat_code'])
-                {
-                    $this->assertEquals($row['amount_vat'], $array[$e]['amount_vat']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_wovat'], $array[$e]['amount_wovat']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_sided'], $array[$e]['amount_sided']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_noded_amount'], $array[$e]['amount_noded_amount']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_noded_tax'], $array[$e]['amount_noded_tax']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_noded_return'], $array[$e]['amount_noded_return']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $this->assertEquals($row['amount_private'], $array[$e]['amount_private']
-                            ,sprintf("Code %s ",$row['qp_vat_code']));
-                    $ix++;
-                }
-            }
-        }
-        $this->assertEquals($nb_array, $ix, 'Not all VAT CODE found');
+        // Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_purchase_t.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getsummary_purchase_t.php";
+        $this->check_result("tva_type = T , get_summary_purchase",$array,$a_result,'SMRACH');
+       
+         $this->object->set_tva_type("O");
+        $array=$this->object->get_summary_purchase();
+        //-- For creating the array
+        //  Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_purchase_o.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getsummary_purchase_o.php";
+        $this->check_result("tva_type = O , get_summary_purchase",$array,$a_result,'SMRACH');
+       
+        $this->object->set_tva_type("P");
+        $array=$this->object->get_summary_purchase();
+        //-- For creating the array
+        // Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_purchase_p.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getsummary_purchase_p.php";
+        $this->check_result("tva_type = P , get_summary_purchase",$array,$a_result,'SMRACH');
+       
+       
     }
 
     function testget_summary_sale()
     {
+        $this->object->set_tva_type("O");
         $array=$this->object->get_summary_sale();
         //-- For creating the array
-        // Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_summary_sale.txt", print_r($array, TRUE));
+        //  Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_sale_o.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getsummary_sale_o.php";
+        $this->check_result("tva_type = O , get_summary_sale",$array,$a_result,'SMRVEN');
+        
+        $this->object->set_tva_type("P");
+        $array=$this->object->get_summary_sale();
+        //-- For creating the array
+        // Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_sale_p.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getsummary_sale_p.php";
+        $this->check_result("tva_type = P , get_summary_sale",$array,$a_result,'SMRVEN');
+        
+        
+        $this->object->set_tva_type("T");
+        $array=$this->object->get_summary_sale();
+        //-- For creating the array
+        //Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_sale_t.txt", var_export($array, TRUE));
+        require __DIR__."/data/tax_summary_getsummary_sale_t.php";
+        $this->check_result("tva_type = T , get_summary_sale",$array,$a_result,'SMRVEN');
 
-        $a_result=array
-            (
-            array
-                (
-                "tva_label"=>"21%",
-                "qs_vat_code"=>1,
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "amount_vat"=>219.5700,
-                "amount_wovat"=>1045.6000,
-                "amount_sided"=>0.0000
-            ),
-            array
-                (
-                "tva_label"=>"EXPORT",
-                "qs_vat_code"=>6,
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>1198.4600,
-                "amount_sided"=>0.0000
-            ),
-            array
-                (
-                "tva_label"=>"INTRA",
-                "qs_vat_code"=>5,
-                "tva_rate"=>0.0000,
-                "tva_both_side"=>0,
-                "amount_vat"=>0.0000,
-                "amount_wovat"=>1800.0000,
-                "amount_sided"=>0.0000
-            ),
-            array
-                (
-                "tva_label"=>"VOIT",
-                "qs_vat_code"=>1003,
-                "tva_rate"=>0.2100,
-                "tva_both_side"=>0,
-                "amount_vat"=>8.4000,
-                "amount_wovat"=>40.0000,
-                "amount_sided"=>0.0000
-            )
-        );
-        $nb_result=count($a_result);
-        $nb_array=count($array);
-        $this->assertEquals($nb_result, $nb_array);
-        $ix=0;
-        for ($i=0; $i<$nb_result; $i++)
-        {
-            $row=$a_result[$i];
-            for ($e=0; $e<$nb_array; $e++)
-            {
-                if ($row['qs_vat_code']==$array[$e]['qs_vat_code'])
-                {
-                    $this->assertEquals($row['amount_vat'], $array[$e]['amount_vat']
-                            ,sprintf("Code %s ",$row['qs_vat_code']));
-                    $this->assertEquals($row['amount_wovat'], $array[$e]['amount_wovat']
-                            ,sprintf("Code %s ",$row['qs_vat_code']));
-                    $this->assertEquals($row['amount_sided'], $array[$e]['amount_sided']
-                            ,sprintf("Code %s ",$row['qs_vat_code']));
-                    $ix++;
-                }
-            }
-        }
-        $this->assertEquals($nb_array, $ix, 'Not all VAT CODE found');
+
+        
     }
 
 }

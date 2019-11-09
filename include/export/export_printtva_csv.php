@@ -30,6 +30,9 @@ require_once  NOALYSS_INCLUDE."/class/tax_summary.class.php";
 require_once  NOALYSS_INCLUDE."/lib/noalyss_csv.class.php";
 $http=new HttpInput();
 $tax_summary = new Tax_Summary($cn,$http->get("date_start"),$http->get("date_end"));
+$tva_type = $http->request("tva_type");
+$tax_summary->set_tva_type($tva_type);
+
 try {
     $tax_summary->check();
 }catch (Exception $e)

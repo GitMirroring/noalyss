@@ -34,6 +34,7 @@ $http = new HttpInput();
 
 $from_periode = $http->request("date_start");
 $to_periode = $http->request("date_end");
+$tva_type = $http->request("tva_type");
 
 
 $gDossier = dossier::id();
@@ -41,6 +42,7 @@ $gDossier = dossier::id();
 /* Security */
 $cn = Dossier::connect();
 $tax_summary = new Tax_Summary($cn, $from_periode, $to_periode);
+$tax_summary->set_tva_type($tva_type);
 $pdf = new PDFLand($cn);
 $pdf->setDossierInfo(sprintf(_("Date") . " : %s %s", $from_periode, $to_periode));
 $pdf->AliasNbPages();
