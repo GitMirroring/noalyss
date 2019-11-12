@@ -1,13 +1,13 @@
 begin;
 ALTER TABLE public.tva_rate ADD tva_payment_sale char(1) NULL DEFAULT 'O';
 update public.tva_rate set tva_payment_sale='O';
-ALTER TABLE public.tva_rate ADD CONSTRAINT tva_rate_sale_check CHECK (tva_payment in ('O','P'));
+ALTER TABLE public.tva_rate ADD CONSTRAINT tva_rate_sale_check CHECK (tva_payment_sale in ('O','P'));
 comment on column public.tva_rate.tva_payment_sale is 'Check if the VAT on Sale  must be declared when at the date of payment (P) or the date of operation (O)';
 
 
 ALTER TABLE public.tva_rate ADD tva_payment_purchase char(1) NULL DEFAULT 'O';
 update public.tva_rate set tva_payment_purchase='O';
-ALTER TABLE public.tva_rate ADD CONSTRAINT tva_rate_purchase_check CHECK (tva_payment in ('O','P'));
+ALTER TABLE public.tva_rate ADD CONSTRAINT tva_rate_purchase_check CHECK (tva_payment_purchase in ('O','P'));
 comment on column public.tva_rate.tva_payment_purchase is 'Check if the VAT on Purchase must be declared when at the date of payment (P) or the date of operation (O)';
 
 
