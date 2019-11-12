@@ -49,6 +49,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
     {
         parent::__construct($cn, $pa_ledger, $p_from, $p_to, $p_mode);
         $this->data=[];
+        $this->ledger_type='ODS';
     }
 
     /**

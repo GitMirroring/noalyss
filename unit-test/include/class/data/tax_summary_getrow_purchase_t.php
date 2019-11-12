@@ -1,5 +1,5 @@
 <?php
-$a_result = array (
+$a_result= array (
   0 => 
   array (
     'jrn_def_name' => 'Achat',
@@ -37,8 +37,8 @@ $a_result = array (
     'tva_rate' => '0.2100',
     'tva_both_side' => '0',
     'qp_vat_code' => '1',
-    'amount_vat' => '38.4300',
-    'amount_wovat' => '183.0000',
+    'amount_vat' => '44.5300',
+    'amount_wovat' => '212.0000',
     'amount_sided' => '0.0000',
     'amount_noded_amount' => '0.0000',
     'amount_noded_tax' => '0.0000',
@@ -46,6 +46,21 @@ $a_result = array (
     'amount_private' => '0.0000',
   ),
   3 => 
+  array (
+    'jrn_def_name' => 'Achat',
+    'tva_label' => '6%',
+    'tva_rate' => '0.0600',
+    'tva_both_side' => '0',
+    'qp_vat_code' => '3',
+    'amount_vat' => '5.2800',
+    'amount_wovat' => '88.3200',
+    'amount_sided' => '0.0000',
+    'amount_noded_amount' => '0.0000',
+    'amount_noded_tax' => '0.0000',
+    'amount_noded_return' => '0.0000',
+    'amount_private' => '0.0000',
+  ),
+  4 => 
   array (
     'jrn_def_name' => 'Achat',
     'tva_label' => 'ART44',
@@ -60,7 +75,7 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  4 => 
+  5 => 
   array (
     'jrn_def_name' => 'Achat',
     'tva_label' => 'EXPORT',
@@ -75,7 +90,7 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  5 => 
+  6 => 
   array (
     'jrn_def_name' => 'Achat',
     'tva_label' => 'IMMO',
@@ -90,7 +105,7 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  6 => 
+  7 => 
   array (
     'jrn_def_name' => 'Achat',
     'tva_label' => 'VOIT',
@@ -105,22 +120,22 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  7 => 
+  8 => 
   array (
     'jrn_def_name' => 'Frais Divers',
     'tva_label' => '21%',
     'tva_rate' => '0.2100',
     'tva_both_side' => '0',
     'qp_vat_code' => '1',
-    'amount_vat' => '140.0400',
-    'amount_wovat' => '666.8600',
+    'amount_vat' => '244.5500',
+    'amount_wovat' => '1164.5400',
     'amount_sided' => '0.0000',
     'amount_noded_amount' => '0.0000',
     'amount_noded_tax' => '0.0000',
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  8 => 
+  9 => 
   array (
     'jrn_def_name' => 'Frais Divers',
     'tva_label' => 'EXPORT',
@@ -135,7 +150,7 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  9 => 
+  10 => 
   array (
     'jrn_def_name' => 'Frais Divers',
     'tva_label' => 'IMMO',
@@ -150,7 +165,7 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  10 => 
+  11 => 
   array (
     'jrn_def_name' => 'Frais Divers',
     'tva_label' => 'INTRA',
@@ -165,7 +180,7 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  11 => 
+  12 => 
   array (
     'jrn_def_name' => 'Frais Divers',
     'tva_label' => 'VOIT',

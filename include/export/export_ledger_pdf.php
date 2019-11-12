@@ -46,7 +46,7 @@ try
 {
     $jrn_id=$http->get('jrn_id',"number");
     $p_simple=$http->get('p_simple',"string");
-
+    $filter_operation=$http->get("operation_type");
     
 }
 catch (Exception $exc)
@@ -74,8 +74,8 @@ $ret = "";
 
 $jrn_type = $Jrn->get_type();
 
-$pdf = Print_Ledger::factory($cn, $p_simple, "PDF", $Jrn);
-
+$pdf = Print_Ledger::factory($cn, $p_simple, "PDF", $Jrn,$filter_operation);
+$pdf->set_filter_operation($filter_operation);
 $pdf->setDossierInfo($Jrn->jrn_def_name);
 $pdf->AliasNbPages();
 $pdf->AddPage();

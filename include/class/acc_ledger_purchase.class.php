@@ -1803,14 +1803,26 @@ EOF;
      * @param $p_end jrn.jr_tech_per to
      * @return handle to database result
      */
-    function get_detail_purchase($p_from,$p_end)
+    function get_detail_purchase($p_from,$p_end,$p_filter_operation='all')
     {
         global $g_user;
         // Journal valide
         if ( $this->id == 0 ) die (__FILE__.":".__LINE__." Journal invalide");
-        
-        // Securite
-        if ( $g_user->get_ledger_access($this->id) == 'X' ) return null;
+        switch ( $p_filter_operation)
+        {
+            case 'all':
+                $sql_filter="";
+                break;
+            case 'paid':
+                $sql_filter=" and (jr_date_paid is not null or  jr_rapt ='paid' ) ";
+                break;
+            case 'unpaid':
+                $sql_filter=" and (jr_date_paid  is null and coalesce(jr_rapt,'x') <> 'paid' ) ";
+                break;
+            default:
+                throw new Exception(_("Filtre invalide",5));
+                
+        }
         
         // get the data from the view
         $sql = "select * 
@@ -1818,6 +1830,7 @@ EOF;
                  where 
                 jr_def_id = $1 
                 and  jr_date >= (select p_start from parm_periode where p_id = $2) 
+                {$sql_filter}
 		and  jr_date <= (select p_end from parm_periode where p_id  = $3) "
                 .' order by jr_date,substring(jr_pj_number,\'[0-9]+$\')::numeric asc ';
         $ret = $this->db->exec_sql($sql, array($this->id,$p_from, $p_end));

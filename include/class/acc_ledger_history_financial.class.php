@@ -29,7 +29,11 @@ require_once NOALYSS_INCLUDE."/class/acc_ledger_history.class.php";
 
 class Acc_Ledger_History_Financial extends Acc_Ledger_History
 {
-
+    function __construct(Database $cn, $pa_ledger, $p_from, $p_to, $p_mode)
+    {
+        parent::__construct($cn, $pa_ledger, $p_from, $p_to, $p_mode);
+        $this->ledger_type='FIN';
+    }
     /**
      * @brief display the accounting 
      */

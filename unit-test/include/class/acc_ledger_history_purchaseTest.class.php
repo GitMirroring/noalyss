@@ -62,7 +62,7 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
     function testGet_Row()
     {
         $this->object->get_row();
-        $this->assertSame(count($this->object->get_data()),65);
+        $this->assertSame(count($this->object->get_data()),14);
 
     }
     //@covers Acc_Ledger_History_Financial::export_oneline_html
@@ -112,5 +112,12 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
     }
+    /**
+     * @covers Acc_Ledger_History::get_ledger_type
+     */
     
+    function testGet_Ledger_type()
+    {
+        $this->assertEquals($this->object->get_ledger_type(),'ACH');
+    }    
 }

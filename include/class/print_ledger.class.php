@@ -36,7 +36,17 @@ require_once NOALYSS_INCLUDE.'/class/print_ledger_detail_item.class.php';
  * 
  */
 class Print_Ledger {
-
+    protected  $filter_operation; // See Acc_Ledger_History::filter_operation
+    
+    public function set_filter_operation($filter_operation)
+    {
+        if (in_array($filter_operation,['all','paid','unpaid']))
+        {
+            $this->filter_operation=$filter_operation;
+            return $this;
+        }
+        throw new Exception(_("Filter invalide ".$filter_operation),5);
+    }
     /**
      * Create an object Print_Ledger* depending on $p_type_export ( 0 => accounting
      * 1-> one row per operation 2-> detail of item)
@@ -45,7 +55,8 @@ class Print_Ledger {
      * @param type $p_format_output CSV or PDF
      * @param Acc_Ledger $ledger
      */
-    static function factory(Database $cn, $p_type_export, $p_format_output, Acc_Ledger $p_ledger) {
+    static function  factory(Database $cn, $p_type_export, $p_format_output, Acc_Ledger $p_ledger,$p_filter_operation) 
+    {
         /**
          * For PDF output
          */
@@ -67,19 +78,19 @@ class Print_Ledger {
                         )
                         {
                             $pdf=new Print_Ledger_Simple_without_vat($cn,
-                                    $p_ledger);
+                                    $p_ledger,$p_filter_operation);
                             $pdf->set_error(_('Ce journal ne peut être imprimé en mode simple'));
                             return $pdf;
                         }
                         if ($own->MY_TVA_USE=='Y')
                         {
-                            $pdf=new Print_Ledger_Simple($cn, $p_ledger);
+                            $pdf=new Print_Ledger_Simple($cn, $p_ledger,$p_filter_operation);
                             return $pdf;
                         }
                         if ($own->MY_TVA_USE=='N')
                         {
                             $pdf=new Print_Ledger_Simple_without_vat($cn,
-                                    $p_ledger);
+                                    $p_ledger,$p_filter_operation);
                             return $pdf;
                         }
                     }
@@ -111,25 +122,25 @@ class Print_Ledger {
                         )
                         {
                             $pdf=new Print_Ledger_Simple_without_vat($cn,
-                                    $p_ledger);
+                                    $p_ledger,$p_filter_operation);
                             $pdf->set_error(_('Ce journal ne peut être imprimé en mode simple'));
                             return $pdf;
                         }
                         if ($own->MY_TVA_USE=='Y')
                         {
-                            $pdf=new Print_Ledger_Simple($cn, $p_ledger);
+                            $pdf=new Print_Ledger_Simple($cn, $p_ledger,$p_filter_operation);
                             return $pdf;
                         }
                         if ($own->MY_TVA_USE=='N')
                         {
                             $pdf=new Print_Ledger_Simple_without_vat($cn,
-                                    $p_ledger);
+                                    $p_ledger,$p_filter_operation);
                             return $pdf;
                         }
                     }
 
                     if ($jrn_type=='FIN')
-                    {
+                    {  
                         $pdf=new Print_Ledger_Financial($cn, $p_ledger);
                         return $pdf;
                     }
@@ -162,11 +173,11 @@ class Print_Ledger {
                             ==0)
                     )
                     {
-                        $pdf=new Print_Ledger_Simple_without_vat($cn, $p_ledger);
+                        $pdf=new Print_Ledger_Simple_without_vat($cn, $p_ledger,$p_filter_operation);
                         $pdf->set_error('Ce journal ne peut être imprimé en mode simple');
                         return $pdf;
                     }
-                    $pdf=new Print_Ledger_Detail_Item($cn, $p_ledger);
+                    $pdf=new Print_Ledger_Detail_Item($cn, $p_ledger,$p_filter_operation);
                     return $pdf;
                 case 'A':
                     /***********************************************************
@@ -206,7 +217,10 @@ class Print_Ledger {
                  and uj_priv in ('R','W')
                  and ( jrn_enable=1 
                         or 
-                        exists (select 1 from jrn where  jr_def_id=jrn_def_id and jr_tech_per in (select p_id from parm_periode where p_exercice=$2)))
+                        exists (select 1 from jrn
+                        where  
+                            jr_def_id=jrn_def_id
+                        and jr_tech_per in (select p_id from parm_periode where p_exercice=$2)))
                          order by jrn_def_name
                  ";
             $a_jrn=$cn->get_array($sql, array($g_user->login, $exercice));
@@ -216,8 +230,12 @@ class Print_Ledger {
             $a_jrn=$cn->get_array("select jrn_def_id
                                  from jrn_def join jrn_type on jrn_def_type=jrn_type_id
                                  where
-                                 jrn_enable=1 or exists(select 1 from jrn where  jr_def_id=jrn_def_id and  jr_tech_per in (select p_id from parm_periode where p_exercice=$1))
-                                                         order by jrn_def_name
+                                 jrn_enable=1 
+                                 or exists(select 1 from jrn 
+                                    where  
+                                            jr_def_id=jrn_def_id 
+                                        and jr_tech_per in (select p_id from parm_periode where p_exercice=$1))
+                                        order by jrn_def_name
                                                          ", [$exercice]);
         }
         $a=[];

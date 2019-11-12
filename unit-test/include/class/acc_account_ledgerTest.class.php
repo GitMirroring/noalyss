@@ -201,10 +201,10 @@ class Acc_Account_LedgerTest extends TestCase
     function DataBelong_ledger()
     {
         return array(
-            array(0, -1),
+            array(-1, 0),
             array(1, -1),
-            array(3, -1),
-            array(2, 0),
+            array(3, 0),
+            array(2, -1),
             array(4, 0)
         );
     }

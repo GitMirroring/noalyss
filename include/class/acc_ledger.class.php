@@ -63,7 +63,7 @@ class Acc_Ledger extends jrn_def_sql
     var $id;   /**< jrn_def.jrn_def_id */
     var $db;   /**< database connextion */
     var $row;   /**< row of the ledger */
-    var $type;   /**< type of the ledger ACH ODS FIN VEN or GL */
+    var $ledger_type;   /**< type of the ledger ACH ODS FIN VEN or GL */
     var $nb;   /**< default number of rows by
       default 10 */
 
@@ -130,7 +130,7 @@ class Acc_Ledger extends jrn_def_sql
         if ($this->id==0)
         {
             $this->ledger_name=_(" Tous les journaux");
-            $this->type="GL";
+            $this->ledger_type="GL";
             return "GL";
         }
 
@@ -141,7 +141,7 @@ class Acc_Ledger extends jrn_def_sql
         if ($Max==0)
             return null;
         $ret=Database::fetch_array($Res, 0);
-        $this->type=$ret['jrn_def_type'];
+        $this->ledger_type=$ret['jrn_def_type'];
         return $ret['jrn_def_type'];
     }
 
@@ -452,6 +452,7 @@ class Acc_Ledger extends jrn_def_sql
      */
     function get_solde($p_from, $p_to)
     {
+        bcscale(4);
         $ledger="";
         if ($this->id!=0)
         {
@@ -471,9 +472,9 @@ class Acc_Ledger extends jrn_def_sql
         {
 
             if ($line['deb']=='t')
-                $deb+=$line['montant'];
+                $deb=bcadd($deb,$line['montant']);
             else
-                $cred+=$line['montant'];
+                $cred=bcadd($cred,$line['montant']);
         }
         $response=array($deb, $cred);
         return $response;
@@ -1360,14 +1361,6 @@ class Acc_Ledger extends jrn_def_sql
     }
 
     /**
-     * @brief get all the data from request and build the object
-     */
-    function get_request()
-    {
-        $this->id=$_REQUEST['p_jrn'];
-    }
-
-    /**
      * @brief retrieve the next number for this type of ledger
      * @param  p_cn connx
      * @param  p_type ledger type
@@ -1773,18 +1766,30 @@ class Acc_Ledger extends jrn_def_sql
      */
     public function existing_vat()
     {
-        if ($this->type=='ACH')
+        $array=[];
+        if ($this->get_type()=='ACH')
         {
-            $array=$this->db->get_array("select tva_id,tva_label,tva_poste from tva_rate where tva_rate != 0.0000 ".
-                    " and  exists (select qp_vat_code from quant_purchase
-                                        where  qp_vat_code=tva_id and  exists (select j_id from jrnx where j_jrn_def = $1)) order by tva_id",
+            $array=$this->db->get_array("select tva_id,tva_label,tva_poste 
+                    from tva_rate 
+                    where tva_rate != 0.0000 
+                         and  exists (select qp_vat_code from quant_purchase
+                                        where  
+                                        qp_vat_code=tva_id 
+                                        and  exists (select j_id 
+                                            from jrnx where j_jrn_def = $1)) 
+                    order by tva_id",
                     array($this->id));
         }
-        if ($this->type=='VEN')
+        if ($this->get_type()=='VEN')
         {
-            $array=$this->db->get_array("select tva_id,tva_label,tva_poste from tva_rate where tva_rate != 0.0000 ".
-                    " and  exists (select qs_vat_code from quant_sold
-                                        where  qs_vat_code=tva_id and  exists (select j_id from jrnx where j_jrn_def = $1)) order by tva_id",
+            $array=$this->db->get_array("select tva_id,tva_label,tva_poste 
+                    from tva_rate 
+                    where tva_rate != 0.0000 
+                          and  exists (select qs_vat_code from quant_sold
+                                        where  qs_vat_code=tva_id 
+                                            and  
+                                                exists (select j_id from jrnx where j_jrn_def = $1)) 
+                    order by tva_id",
                     array($this->id));
         }
         return $array;
@@ -1808,7 +1813,7 @@ class Acc_Ledger extends jrn_def_sql
      */
     function get_other_amount($p_jr_id)
     {
-        if ($this->type=='ACH')
+        if ($this->get_type()=='ACH')
         {
             $array=$this->db->get_array('select sum(qp_price) as price,sum(qp_vat) as vat '.
                     ',sum(coalesce(qp_nd_amount,0)+coalesce(qp_dep_priv,0)) as priv'.
@@ -1818,7 +1823,7 @@ class Acc_Ledger extends jrn_def_sql
                                         where  j_grpt=$1 ', array($p_jr_id));
             $ret=$array[0];
         }
-        if ($this->type=='VEN')
+        if ($this->get_type()=='VEN')
         {
             $array=$this->db->get_array('select sum(qs_price) as price,sum(qs_vat) as vat '.
                     ',0 as priv'.
@@ -1844,14 +1849,14 @@ class Acc_Ledger extends jrn_def_sql
      */
     function vat_operation($p_jr_id)
     {
-        if ($this->type=='ACH')
+        if ($this->get_type()=='ACH')
         {
             $array=$this->db->get_array('select coalesce(sum(qp_vat),0) as sum_vat,tva_id
                                         from quant_purchase as p right join tva_rate on (qp_vat_code=tva_id)  join jrnx using(j_id)
                                         where tva_rate !=0.0 and j_grpt=$1 group by tva_id',
                     array($p_jr_id));
         }
-        if ($this->type=='VEN')
+        if ($this->get_type()=='VEN')
         {
             $array=$this->db->get_array('select coalesce(sum(qs_vat),0) as sum_vat,tva_id
                                         from quant_sold as p right join tva_rate on (qs_vat_code=tva_id)  join jrnx using(j_id)
@@ -1903,7 +1908,7 @@ class Acc_Ledger extends jrn_def_sql
         $max_date=$periode_max->first_day();
         bcscale(2);
         // min periode
-        if ($this->type=='ACH')
+        if ($this->get_type()=='ACH')
         {
             /*  get all amount exclude vat */
             $sql="select coalesce(sum(qp_price),0) as price".
@@ -1928,7 +1933,7 @@ class Acc_Ledger extends jrn_def_sql
                     array($min_date, $max_date, $this->id));
             $ret['tva']=$array;
         }
-        if ($this->type=='VEN')
+        if ($this->get_type()=='VEN')
         {
             /*  get all amount exclude vat */
             $sql="select coalesce(sum(qs_price),0) as price".
@@ -1953,7 +1958,7 @@ class Acc_Ledger extends jrn_def_sql
                     array($min_date, $max_date, $this->id));
             $ret['tva']=$array;
         }
-        if ($this->type=="FIN")
+        if ($this->get_type()=="FIN")
         {
 
             /* find the quick code of this ledger */

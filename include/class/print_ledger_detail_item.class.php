@@ -29,7 +29,7 @@ require_once NOALYSS_INCLUDE.'/class/pdf_land.class.php';
 
 class Print_Ledger_Detail_Item extends PDFLand
 {
-    public function __construct (Database $p_cn,Acc_Ledger $p_jrn)
+    public function __construct (Database $p_cn,Acc_Ledger $p_jrn,$p_filter_operation)
     {
 
         if($p_cn == null) die("No database connection. Abort.");
@@ -37,6 +37,7 @@ class Print_Ledger_Detail_Item extends PDFLand
         parent::__construct($p_cn,'L', 'mm', 'A4');
         $this->ledger=$p_jrn;
         $this->show_col=true;
+        $this->filter_operation=$p_filter_operation;
     }
 
     function setDossierInfo($dossier = "n/a")
@@ -93,21 +94,23 @@ class Print_Ledger_Detail_Item extends PDFLand
       bcscale(2);
       $jrn_type=$this->ledger->get_type();
       $http=new HttpInput();
+
       switch ($jrn_type)
       {
           case 'VEN':
               $ledger=new Acc_Ledger_Sold($this->cn, $this->ledger->jrn_def_id);
-              $ret_detail=$ledger->get_detail_sale($http->get('from_periode','number'),$http->get('to_periode','number'));
+              $ret_detail=$ledger->get_detail_sale($http->get('from_periode','number'),$http->get('to_periode','number'), $this->filter_operation);
               break;
           case 'ACH':
                 $ledger=new Acc_Ledger_Purchase($this->cn, $this->ledger->jrn_def_id);
-                $ret_detail=$ledger->get_detail_purchase($http->get('from_periode','number'),$http->get('to_periode','number'));
+                $ret_detail=$ledger->get_detail_purchase($http->get('from_periode','number'),$http->get('to_periode','number'),$this->filter_operation);
               break;
           default:
               die (__FILE__.":".__LINE__.'Journal invalide');
               break;
       }
         if ( $ret_detail == null ) return;
+        
         $prepared_query=new Prepared_Query($this->ledger->db);
         $prepared_query->prepare_reconcile_date();
 

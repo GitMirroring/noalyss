@@ -28,10 +28,11 @@ require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
 class Print_Ledger_Simple extends PDF
 {
-    public function __construct ($p_cn,  Acc_Ledger $p_jrn)
+    public function __construct ($p_cn,  Acc_Ledger $p_jrn,$p_filter_operation)
     {
 
         $http=new HttpInput();
+        $this->filter_operation=$p_filter_operation;
         if($p_cn == null) die("No database connection. Abort.");
 
         parent::__construct($p_cn,'L', 'mm', 'A4');
@@ -123,7 +124,10 @@ class Print_Ledger_Simple extends PDF
 
         $this->SetFont('DejaVu','',6);
         // page Header
-        $this->Cell(143,6,'report',0,0,'R');
+        if ( ! $flag_tva)
+            $this->Cell(143,6,'report',0,0,'R');
+        else 
+            $this->Cell(78,6,'report',0,0,'R');
         $this->Cell(15,6,nbm($this->rap_htva),0,0,'R'); /* HTVA */
         if ( $this->jrn_type != 'VEN')
         {
@@ -157,7 +161,12 @@ class Print_Ledger_Simple extends PDF
         //Position at 3 cm from bottom
         $this->SetY(-20);
         /* write reporting  */
-        $this->Cell(143,6,'Total page ','T',0,'R'); /* HTVA */
+        $flag_tva=(count($this->a_Tva) > 4)?true:false;
+        if ( ! $flag_tva)
+            $this->Cell(143,6,'Total page ','T',0,'R'); /* HTVA */
+        else
+            $this->Cell(78,6,'Total page ','T',0,'R'); /* HTVA */
+        
         $this->Cell(15,6,nbm($this->tp_htva),'T',0,'R'); /* HTVA */
         if ( $this->jrn_type !='VEN')
         {
@@ -173,8 +182,13 @@ class Print_Ledger_Simple extends PDF
         
         $this->Cell(15,6,nbm($this->tp_tvac),'T',0,'R'); /* Tvac */
         $this->Ln(2);
-
-        $this->Cell(143,6,'report',0,0,'R'); /* HTVA */
+        $flag_tva=(count($this->a_Tva) > 4)?true:false;
+        
+        if ( ! $flag_tva)
+            $this->Cell(143,6,'report',0,0,'R');
+        else 
+            $this->Cell(78,6,'report',0,0,'R');
+        
         $this->Cell(15,6,nbm($this->rap_htva),0,0,'R'); /* HTVA */
         if ( $this->jrn_type !='VEN')
         {
@@ -208,10 +222,19 @@ class Print_Ledger_Simple extends PDF
       bcscale(2);
         $http=new HttpInput();
 
-        $a_jrn=$this->ledger->get_operation($http->get('from_periode',"number"),
-                                            $http->get('to_periode',"number"));
-        
+        $ledger_history=Acc_Ledger_History::factory($this->cn, 
+                                        array($this->ledger->id), 
+                                        $http->get('from_periode','number'), 
+                                        $http->get('to_periode','number'), 
+                                        'D', 
+                                        $this->filter_operation);
+        $ledger_history->get_row();
+        $a_jrn=$ledger_history->get_data();
+
         if ( $a_jrn == null ) return;
+        
+        // Count the number of VAT cols
+        $flag_tva=(count($this->a_Tva) > 4)?true:false;
         
         // Prepare the query for reconcile date
         $prepared_query=new Prepared_Query($this->ledger->db);
@@ -239,22 +262,23 @@ class Print_Ledger_Simple extends PDF
                 
             }
             $row=$a_jrn[$i];
-            $ret_reconcile=$this->ledger->db->execute('reconcile_date',array($row['id']));
-            $this->LongLine(15,5,($row['pj']),0);
-            $this->write_cell(10,5,$row['date_fmt'],0,0);
-            $this->write_cell(13,5,$row['internal'],0,0);
-            list($qc,$name)=$this->get_tiers($row['id'],$this->jrn_type);
+            $ret_reconcile=$this->ledger->db->execute('reconcile_date',array($row['jr_id']));
+            $this->LongLine(15,5,($row['jr_pj_number']),0);
+            $this->write_cell(10,5,$row['str_date_short'],0,0);
+            $this->write_cell(13,5,$row['jr_internal'],0,0);
+            list($qc,$name)=$this->get_tiers($row['jr_id'],$this->jrn_type);
             $this->LongLine(40,5,"[".$qc."]".$name,0,'L');
 
-            $this->LongLine(65,5,mb_substr($row['comment'],0,150),0,'L');
+            if ( !$flag_tva )    {        
+            $this->LongLine(65,5,mb_substr($row['jr_comment'],0,150),0,'L');
+            }
 
             /* get other amount (without vat, total vat included, private, ND */
             $other=$this->ledger->get_other_amount($a_jrn[$i]['jr_grpt_id']);
             
-
-
             $this->write_cell(15,5,nbm($other['price']),0,0,'R');
-            if ( $this->jrn_type !='VEN')
+            
+            if ( $ledger_history->get_ledger_type() !='VEN')
             {
 	      $this->write_cell(15,5,nbm($other['priv']),0,0,'R');
 	      $this->write_cell(15,5,nbm($other['tva_nd']),0,0,'R');
@@ -271,11 +295,11 @@ class Print_Ledger_Simple extends PDF
 	    $l_tvac=bcadd($l_tvac,$other['tva_nd']);
             $this->write_cell(15,5,nbm($l_tvac),0,0,'R');
             $this->line_new(2);
-            $this->write_cell(15,5, _("Payé par"));
             // Add the payment information on another row
             $max=Database::num_row($ret_reconcile);
             $str_payment="";
             if ($max > 0) {
+                $this->write_cell(15,5, _("Payé par"));
                 $sep="";
                 for ($e=0;$e<$max;$e++) {
                     $row=Database::fetch_array($ret_reconcile, $e);

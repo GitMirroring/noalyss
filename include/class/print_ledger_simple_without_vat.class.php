@@ -27,7 +27,8 @@ require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
 
 class Print_Ledger_Simple_Without_Vat extends PDF
 {
-    public function __construct ($p_cn,$p_jrn)
+    private $filter_operation;
+    public function __construct ($p_cn,$p_jrn,$p_filter_operation)
     {
 
         if($p_cn == null) die("No database connection. Abort.");
@@ -47,7 +48,7 @@ class Print_Ledger_Simple_Without_Vat extends PDF
         $this->rap_htva=$this->previous['price'];
         $this->rap_tvac=$this->previous['price'];
         $this->rap_priv=$this->previous['priv'];
-
+        $this->filter_operation=$p_filter_operation;
 
     }
 
@@ -142,8 +143,14 @@ class Print_Ledger_Simple_Without_Vat extends PDF
     function export()
     {
         $http=new HttpInput;
-        $a_jrn=$this->ledger->get_operation($http->get('from_periode','number'),$http->get('to_periode','number'));
-
+        $ledger_history=Acc_Ledger_History::factory($this->cn, 
+                                                array($this->ledger->id), 
+                                                $http->get('from_periode','number'), 
+                                                $http->get('to_periode','number'), 
+                                                'D', 
+                                                $this->filter_operation);
+        $a_jrn=$ledger_history->get_row();
+        
         if ( $a_jrn == null ) return;
         
          // Prepare the query for reconcile date
@@ -154,14 +161,14 @@ class Print_Ledger_Simple_Without_Vat extends PDF
         {
 
             $row=$a_jrn[$i];
-            $this->LongLine(15,5,($row['pj']),0);
-            $this->write_cell(15,5,$row['date_fmt'],0,0);
-            $this->write_cell(20,5,$row['internal'],0,0);
-            list($qc,$name)=$this->get_tiers($row['id'],$this->jrn_type);
+            $this->LongLine(15,5,($row['jr_pj_number']),0);
+            $this->write_cell(15,5,$row['str_date_short'],0,0);
+            $this->write_cell(20,5,$row['jr_internal'],0,0);
+            list($qc,$name)=$this->get_tiers($row['jr_id'],$this->jrn_type);
             $this->write_cell(20,5,$qc,0,0);
             $this->LongLine(40,5,$name,0,'L');
 
-            $this->LongLine(105,5,$row['comment'],0,'L');
+            $this->LongLine(105,5,$row['jr_comment'],0,'L');
 
             /* get other amount (without vat, total vat included, private, ND */
             $other=$this->ledger->get_other_amount($a_jrn[$i]['jr_grpt_id']);
@@ -171,7 +178,7 @@ class Print_Ledger_Simple_Without_Vat extends PDF
             $this->rap_priv+=$other['priv'];
 
 
-            if ( $this->jrn_type !='VEN')
+            if ( $ledger_history->get_ledger_type() !='VEN')
             {
                 $this->write_cell(15,5,sprintf("%.2f",$other['priv']),0,0,'R');
             }

@@ -24,6 +24,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @file
  * @brief concerne acc_ledger_history_financialTest.class
+ * @coversDefaultClass Acc_History_Financial
  */
 class Acc_Ledger_History_FinancialTest extends TestCase
 {
@@ -63,7 +64,7 @@ class Acc_Ledger_History_FinancialTest extends TestCase
     function testGet__row()
     {
         $this->object->get_row();
-        $this->assertEquals(5, count($this->object->get_data()));
+        $this->assertEquals(7, count($this->object->get_data()));
     }
 
     //@covers Acc_Ledger_History_Financial::export_html
@@ -92,5 +93,13 @@ class Acc_Ledger_History_FinancialTest extends TestCase
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
         
+    }
+    /**
+     * @covers Acc_Ledger_History::get_ledger_type
+     */
+    
+    function testGet_Ledger_type()
+    {
+        $this->assertEquals($this->object->get_ledger_type(),'FIN');
     }
 }

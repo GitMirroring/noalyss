@@ -1,5 +1,4 @@
 <?php
-
 $a_result = array (
   0 => 
   array (
@@ -35,8 +34,8 @@ $a_result = array (
     'tva_rate' => '0.2100',
     'tva_both_side' => '0',
     'qp_vat_code' => '1',
-    'amount_vat' => '178.4700',
-    'amount_wovat' => '849.8600',
+    'amount_vat' => '289.0800',
+    'amount_wovat' => '1376.5400',
     'amount_sided' => '0.0000',
     'amount_noded_amount' => '0.0000',
     'amount_noded_tax' => '0.0000',
@@ -44,6 +43,20 @@ $a_result = array (
     'amount_private' => '0.0000',
   ),
   3 => 
+  array (
+    'tva_label' => '6%',
+    'tva_rate' => '0.0600',
+    'tva_both_side' => '0',
+    'qp_vat_code' => '3',
+    'amount_vat' => '5.2800',
+    'amount_wovat' => '88.3200',
+    'amount_sided' => '0.0000',
+    'amount_noded_amount' => '0.0000',
+    'amount_noded_tax' => '0.0000',
+    'amount_noded_return' => '0.0000',
+    'amount_private' => '0.0000',
+  ),
+  4 => 
   array (
     'tva_label' => 'ART44',
     'tva_rate' => '0.0000',
@@ -57,7 +70,7 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  4 => 
+  5 => 
   array (
     'tva_label' => 'EXPORT',
     'tva_rate' => '0.0000',
@@ -71,7 +84,7 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  5 => 
+  6 => 
   array (
     'tva_label' => 'IMMO',
     'tva_rate' => '0.2100',
@@ -85,7 +98,7 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  6 => 
+  7 => 
   array (
     'tva_label' => 'INTRA',
     'tva_rate' => '0.0000',
@@ -99,7 +112,7 @@ $a_result = array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-  7 => 
+  8 => 
   array (
     'tva_label' => 'VOIT',
     'tva_rate' => '0.2100',

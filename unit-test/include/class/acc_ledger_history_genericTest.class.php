@@ -113,5 +113,12 @@ class Acc_Ledger_History_GenericTest extends TestCase
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
     }
-
+    /**
+     * @covers Acc_Ledger_History::get_ledger_type
+     */
+    
+    function testGet_Ledger_type()
+    {
+        $this->assertEquals($this->object->get_ledger_type(),'ODS');
+    }
 }
