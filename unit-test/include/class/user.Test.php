@@ -56,7 +56,6 @@ class UserTest extends TestCase
 
     /**
      * @covers User::load
-     * @todo   Implement testLoad().
      */
     public function testLoad()
     {
@@ -74,14 +73,9 @@ class UserTest extends TestCase
 
     /**
      * @covers User::save
-     * @todo   Implement testSave().
      */
     public function testSave()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
     }
 
     /**
