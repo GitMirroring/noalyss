@@ -46,7 +46,6 @@ require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 require_once NOALYSS_INCLUDE.'/database/jrn_def_sql.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_payment.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_history.class.php';
-//require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
 
@@ -571,7 +570,7 @@ class Acc_Ledger extends jrn_def_sql
         global $g_parameter;
         $msg=array();
         if (!$p_readonly)
-            $msg=$this->verify($p_array);
+            $msg=$this->verify_operation($p_array);
         $this->id=$p_array['p_jrn'];
         if (empty($p_array))
             return _("Aucun résultat");
@@ -1926,8 +1925,12 @@ class Acc_Ledger extends jrn_def_sql
             $ret=$array[0];
             /* retrieve all vat code */
             $array=$this->db->get_array("select coalesce(sum(qp_vat),0) as sum_vat,tva_id
-                                        from quant_purchase as p right join tva_rate on (qp_vat_code=tva_id)  join jrnx using(j_id)
-                                        where tva_rate !=0 and  j_date >= to_date($1,'DD.MM.YYYY') and j_date < to_date($2,'DD.MM.YYYY') 
+                                        from quant_purchase as p 
+                                            right join tva_rate on (qp_vat_code=tva_id)  join jrnx using(j_id)
+                                        where 
+                                            tva_rate !=0 
+                                            and  j_date >= to_date($1,'DD.MM.YYYY') 
+                                            and j_date < to_date($2,'DD.MM.YYYY') 
                                         and j_jrn_def = $3
                                         group by tva_id",
                     array($min_date, $max_date, $this->id));
@@ -1941,7 +1944,7 @@ class Acc_Ledger extends jrn_def_sql
                     ',0 as priv'.
                     ',0 as tva_nd'.
                     ',coalesce(sum(qs_vat_sided),0) as reversed'.
-                    ',coalesce(sum(qs_vat_sided),0) as tva_np'.
+                    ',0 as tva_np'.
                     '  from quant_sold join jrnx using(j_id) '.
                     " where j_date >= to_date($1,'DD.MM.YYYY') and j_date < to_date($2,'DD.MM.YYYY') ".
                     ' and j_jrn_def = $3';
@@ -1950,10 +1953,14 @@ class Acc_Ledger extends jrn_def_sql
             $ret=$array[0];
             /* retrieve all vat code */
             $array=$this->db->get_array("select coalesce(sum(qs_vat),0) as sum_vat,tva_id
-                                        from quant_sold as p right join tva_rate on (qs_vat_code=tva_id)  join jrnx using(j_id)
-                                        where tva_rate !=0 and
-                                        j_date >= to_date($1,'DD.MM.YYYY') and j_date < to_date($2,'DD.MM.YYYY') 
-                                        and j_jrn_def = $3
+                                        from quant_sold as p 
+                                            right join tva_rate on (qs_vat_code=tva_id)  
+                                            join jrnx using(j_id)
+                                        where 
+                                             tva_rate !=0 and
+                                             j_date >= to_date($1,'DD.MM.YYYY') 
+                                        and  j_date < to_date($2,'DD.MM.YYYY') 
+                                        and  j_jrn_def = $3
                                         group by tva_id",
                     array($min_date, $max_date, $this->id));
             $ret['tva']=$array;
@@ -1965,10 +1972,19 @@ class Acc_Ledger extends jrn_def_sql
             $ledger=new Acc_Ledger_Fin($this->db, $this->id);
             $qcode=$ledger->get_bank();
             $bank_card=new Fiche($this->db, $qcode);
-
+            $periode=new Periode($this->db);
+            //$periode->find_periode($min_date);
+            //$a_date=$periode->get_limit($periode->get_exercice());
+            
             /* add the amount from Opening Writing                  */
-            $cond=sprintf(" j_jrn_def <> %d  and j_date >= to_date('%s','DD.MM.YYYY') and j_date < to_date('%s','DD.MM.YYYY') ",
-                    $this->id, $min_date, $max_date);
+            if ( $min_date <> $max_date)
+            {
+                $cond=sprintf("j_date >=  to_date('%s','DD.MM.YYYY') and j_date < to_date('%s','DD.MM.YYYY')  ",
+                     $min_date,$max_date);
+            }else{
+                $cond=sprintf("j_date =  to_date('%s','DD.MM.YYYY')   ",
+                     $min_date);
+            }
             $saldo=$bank_card->get_bk_balance($cond);
             $ret['amount']=bcsub($saldo['debit'], $saldo['credit']);
         }

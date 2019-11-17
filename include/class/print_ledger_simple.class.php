@@ -215,7 +215,7 @@ class Print_Ledger_Simple extends  \Print_Ledger
      */
     function export()
     {
-        bcscale(2);
+        bcscale(4);
         $ledger=$this->get_ledger();
         $ledger_history=Acc_Ledger_History::factory($this->cn, 
                                         array($ledger->id), 
