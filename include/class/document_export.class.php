@@ -38,8 +38,8 @@ class Document_Export
         // Create 2 temporary folders   1. convert to PDF + stamp
         //                              2. store result
         $this->feedback = array();
-        $this->store_convert = tempnam(sys_get_temp_dir(), 'convert_');
-        $this->store_pdf = tempnam(sys_get_temp_dir(), 'pdf_');
+        $this->store_convert = tempnam($_ENV['TMP'], 'convert_');
+        $this->store_pdf = tempnam($_ENV['TMP'], 'pdf_');
         unlink($this->store_convert);
         unlink($this->store_pdf);
         umask(0);
@@ -277,7 +277,7 @@ class Document_Export
 
         $progress->set_value(100);
         // remove files from "conversion folder"
-        $this->clean_folder();
+      //  $this->clean_folder();
         
     }
    /**
