@@ -142,8 +142,11 @@ class Acc_Ledger_SoldTest extends TestCase
      */
     public function testInput()
     {
+        global $g_connection;
         $_REQUEST['ac']='VEN';
-        $info=$this->object->input($this->array);
+        $object=new Acc_Ledger_Sold($g_connection, 2);
+        
+        $info=$object->input($this->array);
         if (!is_string($info))
         {
             $this->assertTrue(FALSE);

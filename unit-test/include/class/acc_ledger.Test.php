@@ -85,7 +85,7 @@ class Acc_LedgerTest extends TestCase
  
         $this->object->id=2;
         $sPj=$this->object->get_last_pj(2);
-        $this->assertEquals(40,$sPj);
+        $this->assertEquals(39,$sPj);
         $this->object->id=0;
         
         try {
@@ -564,7 +564,7 @@ class Acc_LedgerTest extends TestCase
     {
          global $g_connection;
         $ledger=new Acc_Ledger($g_connection,4);
-        $this->assertEquals("3,2,4",$ledger->get_all_fiche_def());
+        $this->assertEquals("3,2,4,5",$ledger->get_all_fiche_def());
     }
 
     /**
@@ -574,9 +574,9 @@ class Acc_LedgerTest extends TestCase
     {
         $result=[
             ["solde"=>  658.25 , "j_poste"=> "4400004", "j_qcode"=> "FOURNI"],
-            ["solde"=> 490.7700 , "j_poste"=> "4000005", "j_qcode"=> "CLIENT1"],
+            ["solde"=> 660.17 , "j_poste"=> "4000005", "j_qcode"=> "CLIENT1"],
             ["solde"=>  87.8400, "j_poste"=> "4112", "j_qcode"=> ""],
-            ["solde"=>-85.1700  , "j_poste"=> "4511", "j_qcode"=> ""],
+            ["solde"=>-114.57  , "j_poste"=> "4511", "j_qcode"=> ""],
             ["solde"=> -1496.3400 , "j_poste"=>"4400005", "j_qcode"=> "FOURNI1"]
         ];
         $get=$this->object->get_saldo_exercice("2018");
@@ -794,7 +794,7 @@ class Acc_LedgerTest extends TestCase
     public function testSave_new()
     {
         global $g_connection;
-        
+        $ledger=new Acc_Ledger($g_connection,-1);
         $array=["p_jrn_name"=>"UNITTEST",
                 "p_ech_lib"=>"",
                 "p_jrn_deb_max_line"=>7,
@@ -809,12 +809,14 @@ class Acc_LedgerTest extends TestCase
          // clean ledger if exists
         $g_connection->exec_sql("delete from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);
         
-        $this->object->save_new($array);
-        $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);
+        $ledger->save_new($array);
+        $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",
+                [$array['p_jrn_name']]);
         $this->assertLessThan($jrn_def_id,0);
         $ledger=new Acc_Ledger($g_connection,$jrn_def_id);
         $ledger->delete_ledger();
-        $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);
+        $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",
+                [$array['p_jrn_name']]);
         $this->assertEquals($jrn_def_id,"");
     }
 
@@ -838,7 +840,8 @@ class Acc_LedgerTest extends TestCase
         $g_connection->exec_sql("delete from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);
         
         // Recreate it
-        $this->object->save_new($array);
+         $ledger=new Acc_Ledger($g_connection,-1);
+        $ledger->save_new($array);
         $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);
         $this->assertLessThan($jrn_def_id,0);
         $ledger=new Acc_Ledger($g_connection,$jrn_def_id);

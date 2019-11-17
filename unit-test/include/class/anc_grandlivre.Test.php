@@ -19,7 +19,6 @@ class Anc_GrandLivreTest extends TestCase
     protected function setUp()
     {
         global $g_connection;
-        $this->object=new Anc_GrandLivre($g_connection);
     }
 
     /**

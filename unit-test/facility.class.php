@@ -61,6 +61,7 @@ EOF;
      */
     static function save_file($p_dir, $p_file, $p_content)
     {
+        printf (" saving %s/%s please check this file \n ",$p_dir,$p_file);
         $hFile=fopen($p_dir."/".$p_file, "w+");
         fwrite($hFile, $p_content);
         fclose($hFile);
