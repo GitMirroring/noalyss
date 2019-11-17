@@ -50,7 +50,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 {
     function __construct ($p_cn,$p_init)
     {
-        $this->type='ACH';
+        $this->ledger_type='ACH';
         parent::__construct($p_cn,$p_init);
     }
     /*!\brief verify that the data are correct before inserting or confirming

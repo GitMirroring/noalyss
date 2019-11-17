@@ -53,7 +53,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
 
     function __construct($p_cn, $p_init) {
         parent::__construct($p_cn, $p_init);
-        $this->type = 'VEN';
+        $this->ledger_type = 'VEN';
     }
 
     /*!\brief verify that the data are correct before inserting or confirming
