@@ -79,7 +79,7 @@ class Acc_Ledger extends jrn_def_sql
         $this->db=$p_cn;
         $this->row=null;
         $this->nb=MAX_ARTICLE;
-         parent::__construct($p_cn, $p_id);
+        if ($p_id <> 0 ) parent::__construct($p_cn, $p_id);
     }
 
     function get_last_pj()
