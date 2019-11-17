@@ -1,0 +1,161 @@
+<?php
+
+use PHPUnit\Framework\TestCase;
+
+/*
+ *   This file is part of NOALYSS.
+ *
+ *   PhpCompta is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   PhpCompta is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with PhpCompta; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+// Copyright (2002-2019) Author Dany De Bontridder <danydb@noalyss.eu>
+
+/**
+ * @file
+ * @brief concern print_ledger_simple_without_vat
+ * @coversDefaultClass  print_ledger_simple_without_vat
+ */
+class Print_Ledger_Simple_Without_VatTest extends TestCase
+{
+
+    /**
+     * @var 
+     */
+    protected $object;
+
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     */
+    protected function setUp()
+    {
+        include 'global.php';
+        // Exercice 2018
+        $this->from=92;
+        $this->to=103;
+    }
+
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown()
+    {
+        
+    }
+
+    /**
+     * @covers ::export
+     */
+    function test_export()
+    {
+        global $g_connection;
+        $p_from=$this->from;
+        $p_to=$this->to;
+        //-------------------------------------------------------------------------------------------------------------
+        // Purchase
+        //-------------------------------------------------------------------------------------------------------------
+
+        $ledger_purchase=new Acc_Ledger_Purchase($g_connection, 3);
+
+        // Paid 
+        //------------
+
+        $ledger=new Print_Ledger_Simple_Without_Vat($g_connection, 
+                $ledger_purchase, $p_from, $p_to, "paid");
+
+        $ledger->setDossierInfo($ledger_purchase->jrn_def_name);
+        $ledger->AliasNbPages();
+        $ledger->AddPage();
+        $ledger->SetAuthor('NOALYSS');
+        $ledger->setTitle(_("Journal Achat Payé"), true);
+        $ledger->export();
+        $ledger->Output(__DIR__."/file/print_Ledger_simple_without_vat_purchase_paid.pdf", "F");
+
+        // Unpaid   
+        //------------
+        $ledger=new Print_Ledger_Simple_Without_Vat($g_connection,
+                $ledger_purchase, $p_from, $p_to, "unpaid");
+
+        $ledger->setDossierInfo($ledger_purchase->jrn_def_name);
+        $ledger->AliasNbPages();
+        $ledger->AddPage();
+        $ledger->SetAuthor('NOALYSS');
+        $ledger->setTitle(_("Journal Non Payé"), true);
+        $ledger->export();
+        $ledger->Output(__DIR__."/file/print_Ledger_simple_without_vat_purchase_unpaid.pdf", "F");
+        $this->assertFileExists(__DIR__."/file/print_Ledger_simple_without_vat_purchase_unpaid.pdf");
+
+        // All
+        //------------
+        $ledger=new Print_Ledger_Simple_Without_Vat($g_connection, 
+                $ledger_purchase, $p_from, $p_to, "all");
+
+        $ledger->setDossierInfo($ledger_purchase->jrn_def_name);
+        $ledger->AliasNbPages();
+        $ledger->AddPage();
+        $ledger->SetAuthor('NOALYSS');
+        $ledger->setTitle(_("Journal Achat tous"), true);
+        $ledger->export();
+        $ledger->Output(__DIR__."/file/print_Ledger_simple_without_vat_purchase_all.pdf", "F");
+        $this->assertFileExists(__DIR__."/file/print_Ledger_simple_without_vat_purchase_all.pdf");
+
+        //-------------------------------------------------------------------------------------------------------------
+        // Sale
+        //-------------------------------------------------------------------------------------------------------------
+        $ledger_sale=new Acc_Ledger_Sold($g_connection, 2);
+
+        // Paid
+        //-----------------
+        $ledger=new Print_Ledger_Simple_Without_Vat($g_connection, 
+                $ledger_sale, $p_from, $p_to, "paid");
+
+        $ledger->setDossierInfo($ledger_sale->jrn_def_name);
+        $ledger->AliasNbPages();
+        $ledger->AddPage();
+        $ledger->SetAuthor('NOALYSS');
+        $ledger->setTitle(_("Journal Vente Payé"), true);
+        $ledger->export();
+        $ledger->Output(__DIR__."/file/print_Ledger_simple_without_vat_sale_paid.pdf", "F");
+
+        // Unpaid
+        //-----------------
+        $ledger=new Print_Ledger_Simple_Without_Vat($g_connection, 
+                $ledger_sale, $p_from, $p_to, "unpaid");
+
+        $ledger->setDossierInfo($ledger_sale->jrn_def_name);
+        $ledger->AliasNbPages();
+        $ledger->AddPage();
+        $ledger->SetAuthor('NOALYSS');
+        $ledger->setTitle(_("Journal Non Payé"), true);
+        $ledger->export();
+        $ledger->Output(__DIR__."/file/print_Ledger_simple_without_vat_sale_unpaid.pdf", "F");
+        $this->assertFileExists(__DIR__."/file/print_Ledger_simple_without_vat_sale_unpaid.pdf");
+
+        // All
+        //-----------------
+        $ledger=new Print_Ledger_Simple_Without_Vat($g_connection, 
+                    $ledger_sale, $p_from, $p_to, "all");
+
+        $ledger->setDossierInfo($ledger_sale->jrn_def_name);
+        $ledger->AliasNbPages();
+        $ledger->AddPage();
+        $ledger->SetAuthor('NOALYSS');
+        $ledger->setTitle(_("Journal Vente tous"), true);
+        $ledger->export();
+        $ledger->Output(__DIR__."/file/print_Ledger_simple_without_vat_sale_all.pdf", "F");
+        $this->assertFileExists(__DIR__."/file/print_Ledger_simple_without_vat_sale_all.pdf");
+    }
+
+}

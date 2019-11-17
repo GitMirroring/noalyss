@@ -23,21 +23,17 @@
  * \brief this class extends PDF and let you export the detailled printing
  *  of any ledgers
  */
-require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
-class Print_Ledger_Simple extends PDF
+class Print_Ledger_Simple extends  \Print_Ledger
 {
-    public function __construct ($p_cn,  Acc_Ledger $p_jrn,$p_filter_operation)
+    public function __construct ($p_cn,  Acc_Ledger $p_jrn,$p_from,$p_to,$p_filter_operation)
     {
 
-        $http=new HttpInput();
-        $this->filter_operation=$p_filter_operation;
-        if($p_cn == null) die("No database connection. Abort.");
-
-        parent::__construct($p_cn,'L', 'mm', 'A4');
-        $this->ledger=$p_jrn;
-        $this->a_Tva=$this->ledger->existing_vat();
+        parent::__construct($p_cn,'L', 'mm', 'A4',$p_jrn,$p_from,$p_to,$p_filter_operation);
+        
+        $this->a_Tva=$this->get_ledger()->existing_vat();
         foreach($this->a_Tva as $line_tva)
         {
             //initialize Amount TVA
@@ -51,8 +47,8 @@ class Print_Ledger_Simple extends PDF
          * get rappel to initialize amount rap_xx
          *the easiest way is to compute sum from quant_
          */
-        $from_periode=$http->get('from_periode',"number");
-        $this->previous=$this->ledger->previous_amount($from_periode);
+        $from_periode=$this->get_from();
+        $this->previous=$this->get_ledger()->previous_amount($from_periode);
 
         /* initialize the amount to report */
         foreach($this->previous['tva'] as $line_tva)
@@ -219,15 +215,14 @@ class Print_Ledger_Simple extends PDF
      */
     function export()
     {
-      bcscale(2);
-        $http=new HttpInput();
-
+        bcscale(2);
+        $ledger=$this->get_ledger();
         $ledger_history=Acc_Ledger_History::factory($this->cn, 
-                                        array($this->ledger->id), 
-                                        $http->get('from_periode','number'), 
-                                        $http->get('to_periode','number'), 
+                                        array($ledger->id), 
+                                        $this->get_from(), 
+                                        $this->get_to(), 
                                         'D', 
-                                        $this->filter_operation);
+                                        $this->get_filter_operation());
         $ledger_history->get_row();
         $a_jrn=$ledger_history->get_data();
 
@@ -237,7 +232,7 @@ class Print_Ledger_Simple extends PDF
         $flag_tva=(count($this->a_Tva) > 4)?true:false;
         
         // Prepare the query for reconcile date
-        $prepared_query=new Prepared_Query($this->ledger->db);
+        $prepared_query=new Prepared_Query($ledger->db);
         $prepared_query->prepare_reconcile_date();
         
         for ( $i=0;$i<count($a_jrn);$i++)
@@ -250,7 +245,7 @@ class Print_Ledger_Simple extends PDF
             }
 
             // retrieve info from ledger
-            $aAmountVat=$this->ledger->vat_operation($a_jrn[$i]['jr_grpt_id']);
+            $aAmountVat=$ledger->vat_operation($a_jrn[$i]['jr_grpt_id']);
 
             // put vat into array
             for ($f=0;$f<count($aAmountVat);$f++)
@@ -262,7 +257,7 @@ class Print_Ledger_Simple extends PDF
                 
             }
             $row=$a_jrn[$i];
-            $ret_reconcile=$this->ledger->db->execute('reconcile_date',array($row['jr_id']));
+            $ret_reconcile=$ledger->db->execute('reconcile_date',array($row['jr_id']));
             $this->LongLine(15,5,($row['jr_pj_number']),0);
             $this->write_cell(10,5,$row['str_date_short'],0,0);
             $this->write_cell(13,5,$row['jr_internal'],0,0);
@@ -274,7 +269,7 @@ class Print_Ledger_Simple extends PDF
             }
 
             /* get other amount (without vat, total vat included, private, ND */
-            $other=$this->ledger->get_other_amount($a_jrn[$i]['jr_grpt_id']);
+            $other=$ledger->get_other_amount($a_jrn[$i]['jr_grpt_id']);
             
             $this->write_cell(15,5,nbm($other['price']),0,0,'R');
             

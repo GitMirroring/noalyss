@@ -28,19 +28,22 @@
  */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
+
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
 require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
 require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-$gDossier=dossier::id();
 
+
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
-
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+
+
+$gDossier=dossier::id();
 $http=new HttpInput();
 
 $export=new Noalyss_Csv(_('journal'));
@@ -87,12 +90,13 @@ if ($get_jrn==0)
 {
     // find out all the available ledgers for the current user
     $a_jrn=Print_Ledger::available_ledger($get_from_periode);
+    $Jrn=new Acc_Ledger($cn,0);
 }
 else
 {
     $a_jrn=$get_jrn;
+    $Jrn=new Acc_Ledger($cn, $get_jrn);
 }
-$Jrn=new Acc_Ledger($cn, $get_jrn);
 
 $Jrn->get_name();
 $jrn_type=$Jrn->get_type();

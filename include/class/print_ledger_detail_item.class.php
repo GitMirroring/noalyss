@@ -25,19 +25,15 @@
  */
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
-require_once NOALYSS_INCLUDE.'/class/pdf_land.class.php';
+require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 
-class Print_Ledger_Detail_Item extends PDFLand
+class Print_Ledger_Detail_Item extends Print_Ledger
 {
-    public function __construct (Database $p_cn,Acc_Ledger $p_jrn,$p_filter_operation)
+    public function __construct (Database $p_cn,Acc_Ledger $p_jrn,$p_from,$p_to,$p_filter_operation)
     {
 
-        if($p_cn == null) die("No database connection. Abort.");
-
-        parent::__construct($p_cn,'L', 'mm', 'A4');
-        $this->ledger=$p_jrn;
+        parent::__construct($p_cn,'L', 'mm', 'A4',$p_jrn,$p_from,$p_to,$p_filter_operation);
         $this->show_col=true;
-        $this->filter_operation=$p_filter_operation;
     }
 
     function setDossierInfo($dossier = "n/a")
@@ -77,7 +73,7 @@ class Print_Ledger_Detail_Item extends PDFLand
     {
         $this->Ln(2);
         $this->SetFont('Arial', 'I', 8);
-        $this->Cell(50,8,' Journal '.$this->ledger->get_name(),0,0,'C');
+        $this->Cell(50,8,' Journal '.$this->get_ledger()->get_name(),0,0,'C');
         //Arial italic 8
         //Page number
         $this->Cell(30,8,'Date '.$this->date." - Page ".$this->PageNo().'/{nb}',0,0,'L');
@@ -92,18 +88,17 @@ class Print_Ledger_Detail_Item extends PDFLand
     function export()
     {
       bcscale(2);
-      $jrn_type=$this->ledger->get_type();
-      $http=new HttpInput();
+      $jrn_type=$this->get_ledger()->get_type();
 
       switch ($jrn_type)
       {
           case 'VEN':
-              $ledger=new Acc_Ledger_Sold($this->cn, $this->ledger->jrn_def_id);
-              $ret_detail=$ledger->get_detail_sale($http->get('from_periode','number'),$http->get('to_periode','number'), $this->filter_operation);
+              $ledger=new Acc_Ledger_Sold($this->cn, $this->get_ledger()->jrn_def_id);
+              $ret_detail=$ledger->get_detail_sale($this->get_from(),$this->get_to(), $this->filter_operation);
               break;
           case 'ACH':
-                $ledger=new Acc_Ledger_Purchase($this->cn, $this->ledger->jrn_def_id);
-                $ret_detail=$ledger->get_detail_purchase($http->get('from_periode','number'),$http->get('to_periode','number'),$this->filter_operation);
+                $ledger=new Acc_Ledger_Purchase($this->cn, $this->get_ledger()->jrn_def_id);
+                $ret_detail=$ledger->get_detail_purchase($this->get_from(),$this->get_to(),$this->filter_operation);
               break;
           default:
               die (__FILE__.":".__LINE__.'Journal invalide');
@@ -111,7 +106,7 @@ class Print_Ledger_Detail_Item extends PDFLand
       }
         if ( $ret_detail == null ) return;
         
-        $prepared_query=new Prepared_Query($this->ledger->db);
+        $prepared_query=new Prepared_Query($this->cn);
         $prepared_query->prepare_reconcile_date();
 
         $nb=Database::num_row($ret_detail);
@@ -141,7 +136,7 @@ class Print_Ledger_Detail_Item extends PDFLand
                 $this->line_new(6);
                 // Payment info
                 // Prepare the query for reconcile date
-                $ret_reconcile=$this->ledger->db->execute('reconcile_date', array($row['jr_id']));
+                $ret_reconcile=$this->cn->execute('reconcile_date', array($row['jr_id']));
                 $max=Database::num_row($ret_reconcile);
                 for ($e=0; $e<$max; $e++)
                 {

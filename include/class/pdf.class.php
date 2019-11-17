@@ -150,26 +150,5 @@ class PDF extends  PDF_Core
         }
         throw new Exception(_("Filter invalide ".$filter_operation), 5);
     }
-    /**
-     * Build a SQL clause to filter operation depending if they are paid, unpaid or no filter
-     * @return string SQL Clause
-     */
-    protected function build_filter_operation()
-    {
-        switch ($this->get_filter_operation())
-        {
-            case 'all':
-                $sql_filter="";
-                break;
-            case 'paid':
-                $sql_filter=" and (jr_date_paid is not null or  jr_rapt ='paid' ) ";
-                break;
-            case 'unpaid':
-                $sql_filter=" and (jr_date_paid  is null and coalesce(jr_rapt,'x') <> 'paid' ) ";
-                break;
-            default:
-                throw new Exception(_("Filtre invalide", 5));
-        }
-        return $sql_filter;
-    }
+
 }

@@ -24,20 +24,75 @@
  * @author danydb
  */
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/print_ledger_detail.class.php';
-require_once NOALYSS_INCLUDE.'/class/print_ledger_simple.class.php';
-require_once NOALYSS_INCLUDE.'/class/print_ledger_simple_without_vat.class.php';
-require_once NOALYSS_INCLUDE.'/class/print_ledger_fin.class.php';
-require_once NOALYSS_INCLUDE.'/class/print_ledger_misc.class.php';
-require_once NOALYSS_INCLUDE.'/class/print_ledger_detail_item.class.php';
+require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
 
 /**
  * @brief Strategie class for the print_ledger class
  * 
- */
-class Print_Ledger {
+*/
+class Print_Ledger extends PDF
+{
     protected  $filter_operation; // See Acc_Ledger_History::filter_operation
-    
+    private $ledger ; //!< concerned Ledger 
+    private $from ; //! integer parm_periode.p_id , start periode;
+    private $to ; //! integer parm_periode.p_id , end periode;
+    public function __construct(\Database $p_cn, 
+                                $orientation, 
+                                $unit, 
+                                $format,
+                                Acc_Ledger $p_ledger,
+                                $p_from,
+                                $p_to,
+                                $p_filter_operation)
+    {
+        parent::__construct($p_cn, $orientation, $unit, $format);
+        $this->ledger=$p_ledger;
+        $this->from=$p_from;
+        $this->to=$p_to;
+        $this->set_filter_operation($p_filter_operation);
+    }
+    public function get_ledger()
+    {
+        return $this->ledger;
+    }
+
+    public function get_from()
+    {
+        return $this->from;
+    }
+
+    public function get_to()
+    {
+        return $this->to;
+    }
+
+    public function set_ledger($ledger)
+    {
+        $this->ledger=$ledger;
+        return $this;
+    }
+
+    public function set_from($from)
+    {
+        $this->from=$from;
+        return $this;
+    }
+
+    public function set_to($to)
+    {
+        $this->to=$to;
+        return $this;
+    }
+    function get_filter_operation()
+    {
+        return $this->filter_operation;
+    }
+        /**
+     * Filter the operations , 
+     * @param string $filter_operation : all , paid, unpaid
+     * @return $this
+     * @throws Exception 5 , if filter invalid
+     */
     public function set_filter_operation($filter_operation)
     {
         if (in_array($filter_operation,['all','paid','unpaid']))
@@ -50,122 +105,39 @@ class Print_Ledger {
     /**
      * Create an object Print_Ledger* depending on $p_type_export ( 0 => accounting
      * 1-> one row per operation 2-> detail of item)
-     * @param type $cn
-     * @param type $p_type_export
-     * @param type $p_format_output CSV or PDF
+     * @param Database $cn
+     * @param char $p_type_export E(xtended) L(isting) A(ccounting) D(etail)
      * @param Acc_Ledger $ledger
      */
-    static function  factory(Database $cn, $p_type_export, $p_format_output, Acc_Ledger $p_ledger,$p_filter_operation) 
+    static function  factory(Database $cn, $p_type_export, Acc_Ledger $p_ledger,$p_from,$p_to,$p_filter_operation) 
     {
+        /**
+         * @Bug
+         * Strange PHP Bug when autoloader is not used , the require_once doesn't seems to
+         * work properly and does not include the files , except if you put them here
+         *
+         * if you put them on the top of this file,  export_ledger_pdf.php will include the files
+         * but not export_ledger_csv.php
+         */
+        require_once NOALYSS_INCLUDE.'/class/print_ledger_detail.class.php';
+        require_once NOALYSS_INCLUDE.'/class/print_ledger_simple.class.php';
+        require_once NOALYSS_INCLUDE.'/class/print_ledger_simple_without_vat.class.php';
+        require_once NOALYSS_INCLUDE.'/class/print_ledger_fin.class.php';
+        require_once NOALYSS_INCLUDE.'/class/print_ledger_misc.class.php';
+        require_once NOALYSS_INCLUDE.'/class/print_ledger_detail_item.class.php';
+
         /**
          * For PDF output
          */
-        if ($p_format_output == 'PDF') {
-            switch ($p_type_export) {
-                case 'D':
-                    $own=new Noalyss_Parameter_Folder($cn);
-                    $jrn_type=$p_ledger->get_type();
-                    //---------------------------------------------
-                    // Detailled Printing (accounting )
-                    //---------------------------------------------
-                    if ($jrn_type=='ACH'||$jrn_type=='VEN')
-                    {
-                        if (
-                                ($jrn_type=='ACH'&&$cn->get_value('select count(qp_id) from quant_purchase')
-                                ==0)||
-                                ($jrn_type=='VEN'&&$cn->get_value('select count(qs_id) from quant_sold')
-                                ==0)
-                        )
-                        {
-                            $pdf=new Print_Ledger_Simple_without_vat($cn,
-                                    $p_ledger,$p_filter_operation);
-                            $pdf->set_error(_('Ce journal ne peut être imprimé en mode simple'));
-                            return $pdf;
-                        }
-                        if ($own->MY_TVA_USE=='Y')
-                        {
-                            $pdf=new Print_Ledger_Simple($cn, $p_ledger,$p_filter_operation);
-                            return $pdf;
-                        }
-                        if ($own->MY_TVA_USE=='N')
-                        {
-                            $pdf=new Print_Ledger_Simple_without_vat($cn,
-                                    $p_ledger,$p_filter_operation);
-                            return $pdf;
-                        }
-                    }
-                    elseif ($jrn_type=='FIN')
-                    {
-                        $pdf=new Print_Ledger_Financial($cn, $p_ledger);
-                        return $pdf;
-                    } else 
-                    {
-                        return new Print_Ledger_Detail($cn, $p_ledger);
-                    }
-                    break;
-
-                case 'L':
-                    //----------------------------------------------------------------------
-                    // Simple Printing Purchase Ledger
-                    //---------------------------------------------------------------------
-                    $own=new Noalyss_Parameter_Folder($cn);
-                    $jrn_type=$p_ledger->get_type();
-
-
-                    if ($jrn_type=='ACH'||$jrn_type=='VEN')
-                    {
-                        if (
-                                ($jrn_type=='ACH'&&$cn->get_value('select count(qp_id) from quant_purchase')
-                                ==0)||
-                                ($jrn_type=='VEN'&&$cn->get_value('select count(qs_id) from quant_sold')
-                                ==0)
-                        )
-                        {
-                            $pdf=new Print_Ledger_Simple_without_vat($cn,
-                                    $p_ledger,$p_filter_operation);
-                            $pdf->set_error(_('Ce journal ne peut être imprimé en mode simple'));
-                            return $pdf;
-                        }
-                        if ($own->MY_TVA_USE=='Y')
-                        {
-                            $pdf=new Print_Ledger_Simple($cn, $p_ledger,$p_filter_operation);
-                            return $pdf;
-                        }
-                        if ($own->MY_TVA_USE=='N')
-                        {
-                            $pdf=new Print_Ledger_Simple_without_vat($cn,
-                                    $p_ledger,$p_filter_operation);
-                            return $pdf;
-                        }
-                    }
-
-                    if ($jrn_type=='FIN')
-                    {  
-                        $pdf=new Print_Ledger_Financial($cn, $p_ledger);
-                        return $pdf;
-                    }
-                    if ($jrn_type=='ODS'||$p_ledger->id==0)
-                    {
-                        $pdf=new Print_Ledger_Misc($cn, $p_ledger);
-                        return $pdf;
-                    }
-                    break;
-                case 'E':
-                    /**********************************************************
-                     * Print Detail Operation + Item
-                     * ********************************************************* */
-                    $own=new Noalyss_Parameter_Folder($cn);
-                    $jrn_type=$p_ledger->get_type();
-                    if ($jrn_type=='FIN')
-                    {
-                        $pdf=new Print_Ledger_Detail($cn, $p_ledger);
-                        return $pdf;
-                    }
-                    if ($jrn_type=='ODS'||$p_ledger->id==0)
-                    {
-                        $pdf=new Print_Ledger_Detail($cn, $p_ledger);
-                        return $pdf;
-                    }
+        switch ($p_type_export) {
+            case 'D':
+                $own=new Noalyss_Parameter_Folder($cn);
+                $jrn_type=$p_ledger->get_type();
+                //---------------------------------------------
+                // Detailled Printing (accounting )
+                //---------------------------------------------
+                if ($jrn_type=='ACH'||$jrn_type=='VEN')
+                {
                     if (
                             ($jrn_type=='ACH'&&$cn->get_value('select count(qp_id) from quant_purchase')
                             ==0)||
@@ -173,21 +145,113 @@ class Print_Ledger {
                             ==0)
                     )
                     {
-                        $pdf=new Print_Ledger_Simple_without_vat($cn, $p_ledger,$p_filter_operation);
-                        $pdf->set_error('Ce journal ne peut être imprimé en mode simple');
+                        $pdf=new Print_Ledger_Simple_without_vat($cn,
+                                $p_ledger,$p_from,$p_to,$p_filter_operation);
+                        $pdf->set_error(_('Ce journal ne peut être imprimé en mode simple'));
                         return $pdf;
                     }
-                    $pdf=new Print_Ledger_Detail_Item($cn, $p_ledger,$p_filter_operation);
+                    if ($own->MY_TVA_USE=='Y')
+                    {
+                        $pdf=new Print_Ledger_Simple($cn, $p_ledger,$p_from,$p_to,$p_filter_operation);
+                        return $pdf;
+                    }
+                    if ($own->MY_TVA_USE=='N')
+                    {
+                        $pdf=new Print_Ledger_Simple_without_vat($cn,
+                                $p_ledger,$p_from,$p_to,$p_filter_operation);
+                        return $pdf;
+                    }
+                }
+                elseif ($jrn_type=='FIN')
+                {
+                    $pdf=new Print_Ledger_Financial($cn, $p_ledger,$p_from,$p_to);
                     return $pdf;
-                case 'A':
-                    /***********************************************************
-                     * Accounting
-                     */
-                    $pdf=new Print_Ledger_Detail($cn, $p_ledger);
+                } else 
+                {
+                    return new Print_Ledger_Detail($cn, $p_ledger,$p_from,$p_to);
+                }
+                break;
+
+            case 'L':
+                //----------------------------------------------------------------------
+                // Simple Printing Purchase Ledger
+                //---------------------------------------------------------------------
+                $own=new Noalyss_Parameter_Folder($cn);
+                $jrn_type=$p_ledger->get_type();
+
+
+                if ($jrn_type=='ACH'||$jrn_type=='VEN')
+                {
+                    if (
+                            ($jrn_type=='ACH'&&$cn->get_value('select count(qp_id) from quant_purchase')
+                            ==0)||
+                            ($jrn_type=='VEN'&&$cn->get_value('select count(qs_id) from quant_sold')
+                            ==0)
+                    )
+                    {
+                        $pdf=new Print_Ledger_Simple_without_vat($cn,
+                                $p_ledger,$p_from,$p_to,$p_filter_operation);
+                        $pdf->set_error(_('Ce journal ne peut être imprimé en mode simple'));
+                        return $pdf;
+                    }
+                    if ($own->MY_TVA_USE=='Y')
+                    {
+                        $pdf=new Print_Ledger_Simple($cn, $p_ledger,$p_from,$p_to,$p_filter_operation);
+                        return $pdf;
+                    }
+                    if ($own->MY_TVA_USE=='N')
+                    {
+                        $pdf=new Print_Ledger_Simple_without_vat($cn,
+                                $p_ledger,$p_from,$p_to,$p_filter_operation);
+                        return $pdf;
+                    }
+                }
+
+                if ($jrn_type=='FIN')
+                {  
+                    $pdf=new Print_Ledger_Financial($cn, $p_ledger,$p_from,$p_to);
                     return $pdf;
-                    break;
-            } // end switch
-        } // end $p_format == PDF
+                }
+                $pdf=new Print_Ledger_Misc($cn, $p_ledger,$p_from,$p_to);
+                return $pdf;
+                break;
+            case 'E':
+                /**********************************************************
+                 * Print Detail Operation + Item
+                 * ********************************************************* */
+                $own=new Noalyss_Parameter_Folder($cn);
+                $jrn_type=$p_ledger->get_type();
+                if ($jrn_type=='FIN')
+                {
+                    $pdf=new Print_Ledger_Detail($cn, $p_ledger,$p_from,$p_to);
+                    return $pdf;
+                }
+                if ($jrn_type=='ODS'||$p_ledger->id==0)
+                {
+                    $pdf=new Print_Ledger_Detail($cn, $p_ledger,$p_from,$p_to);
+                    return $pdf;
+                }
+                if (
+                        ($jrn_type=='ACH'&&$cn->get_value('select count(qp_id) from quant_purchase')
+                        ==0)||
+                        ($jrn_type=='VEN'&&$cn->get_value('select count(qs_id) from quant_sold')
+                        ==0)
+                )
+                {
+                    $pdf=new Print_Ledger_Simple_without_vat($cn, $p_ledger,$p_from,$p_to,$p_filter_operation);
+                    $pdf->set_error('Ce journal ne peut être imprimé en mode simple');
+                    return $pdf;
+                }
+                $pdf=new Print_Ledger_Detail_Item($cn, $p_ledger,$p_from,$p_to,$p_filter_operation);
+                return $pdf;
+            case 'A':
+                /***********************************************************
+                 * Accounting
+                 */
+                $pdf=new Print_Ledger_Detail($cn, $p_ledger,$p_from,$p_to);
+                return $pdf;
+                break;
+        } // end switch
     }
 
 // end function
@@ -246,7 +310,28 @@ class Print_Ledger {
         }
         return $a;
     }
-
+    /**
+     * Build a SQL clause to filter operation depending if they are paid, unpaid or no filter
+     * @return string SQL Clause
+     */
+    protected function build_filter_operation()
+    {
+        switch ($this->get_filter_operation())
+        {
+            case 'all':
+                $sql_filter="";
+                break;
+            case 'paid':
+                $sql_filter=" and (jr_date_paid is not null or  jr_rapt ='paid' ) ";
+                break;
+            case 'unpaid':
+                $sql_filter=" and (jr_date_paid  is null and coalesce(jr_rapt,'x') <> 'paid' ) ";
+                break;
+            default:
+                throw new Exception(_("Filtre invalide", 5));
+        }
+        return $sql_filter;
+    }
 }
 
 ?>

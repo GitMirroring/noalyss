@@ -23,18 +23,15 @@
  * \brief this class extends PDF and let you export the detailled printing
  *  of any ledgers
  */
-require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
+require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 
-class Print_Ledger_Simple_Without_Vat extends PDF
+class Print_Ledger_Simple_Without_Vat extends Print_Ledger
 {
-    private $filter_operation;
-    public function __construct ($p_cn,$p_jrn,$p_filter_operation)
+    public function __construct ($p_cn,$p_jrn,$p_from,$p_to,$p_filter_operation)
     {
 
-        if($p_cn == null) die("No database connection. Abort.");
 
-        parent::__construct($p_cn,'L', 'mm', 'A4');
-        $this->ledger=$p_jrn;
+        parent::__construct($p_cn,'L', 'mm', 'A4',$p_jrn,$p_from,$p_to,$p_filter_operation);
         $this->jrn_type=$p_jrn->get_type();
         //----------------------------------------------------------------------
         /* report
@@ -42,13 +39,12 @@ class Print_Ledger_Simple_Without_Vat extends PDF
          * get rappel to initialize amount rap_xx
          *the easiest way is to compute sum from quant_
          */
-        $this->previous=$this->ledger->previous_amount($_GET['from_periode']);
+        $this->previous=$this->get_ledger()->previous_amount($p_from);
 
 
         $this->rap_htva=$this->previous['price'];
         $this->rap_tvac=$this->previous['price'];
         $this->rap_priv=$this->previous['priv'];
-        $this->filter_operation=$p_filter_operation;
 
     }
 
@@ -142,20 +138,24 @@ class Print_Ledger_Simple_Without_Vat extends PDF
      */
     function export()
     {
-        $http=new HttpInput;
-        $ledger_history=Acc_Ledger_History::factory($this->cn, 
-                                                array($this->ledger->id), 
-                                                $http->get('from_periode','number'), 
-                                                $http->get('to_periode','number'), 
-                                                'D', 
-                                                $this->filter_operation);
-        $a_jrn=$ledger_history->get_row();
         
-        if ( $a_jrn == null ) return;
+        $ledger_history=Acc_Ledger_History::factory($this->cn, 
+                                                array($this->get_ledger()->id), 
+                                                $this->get_from(), 
+                                                $this->get_to(), 
+                                                'D', 
+                                                $this->get_filter_operation());
+        
+        $ledger_history->get_row();
+        $a_jrn=$ledger_history->get_data();
+        
+        if ( empty($a_jrn ) ) return;
         
          // Prepare the query for reconcile date
         $prepared_query=new Prepared_Query($this->cn);
         $prepared_query->prepare_reconcile_date();
+        
+        $ledger=$this->get_ledger();
         
         for ( $i=0;$i<count($a_jrn);$i++)
         {
@@ -171,7 +171,7 @@ class Print_Ledger_Simple_Without_Vat extends PDF
             $this->LongLine(105,5,$row['jr_comment'],0,'L');
 
             /* get other amount (without vat, total vat included, private, ND */
-            $other=$this->ledger->get_other_amount($a_jrn[$i]['jr_grpt_id']);
+            $other=$ledger->get_other_amount($a_jrn[$i]['jr_grpt_id']);
             $this->tp_htva+=$other['price'];
             $this->tp_priv+=$other['priv'];
             $this->rap_htva+=$other['price'];
@@ -184,7 +184,7 @@ class Print_Ledger_Simple_Without_Vat extends PDF
             }
 
             $this->write_cell(15,5,sprintf("%.2f",$other['price']),0,0,'R');
-            $ret_reconcile=$this->cn->execute('reconcile_date',array($row['id']));
+            $ret_reconcile=$this->cn->execute('reconcile_date',array($row['jr_id']));
             $max=Database::num_row($ret_reconcile);
             $str_payment="";
             if ($max > 0) {
