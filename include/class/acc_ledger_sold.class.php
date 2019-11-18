@@ -1279,7 +1279,7 @@ EOF;
                 $Tva->set_attribute('compute', $i);
                 $Tva->set_filter("sale");
 
-                $Tva->js = 'onblur="format_number(this);clean_tva(' . $i . ');compute_ledger(' . $i . ')"';
+                $Tva->js = 'onblur="clean_tva(' . $i . ');compute_ledger(' . $i . ')"';
                 $Tva->value = $march_tva_id;
                 $array[$i]['tva'] = $Tva->input("e_march$i" . "_tva_id");
                 // vat amount

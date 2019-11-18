@@ -1273,7 +1273,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 // vat label
                 //--
                 $Tva=new ITva_Popup($this->db);
-                $Tva->js="onblur=\"format_number(this);clean_tva($i);compute_ledger($i)\"";
+                $Tva->js="onblur=\"clean_tva($i);compute_ledger($i)\"";
                 $Tva->in_table=true;
                 $Tva->set_attribute('compute',$i);
                 $Tva->set_filter("purchase");
