@@ -609,7 +609,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             'Erreur dans l\'enregistrement ' .
             __FILE__ . ':' . __LINE__ . ' ' .
             $e->getMessage();
-            echo $e->getTrace();
+            echo $e->getTraceAsString();
 
             $this->db->rollback();
             throw new Exception ($e);
