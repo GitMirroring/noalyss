@@ -374,6 +374,9 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                     $op->oa_description = sql_string($e_comm);
                     $op->save_form_plan($_POST, $i, $j_id);
                 }
+                if (empty( ${'e_march' . $i . '_price'}  ) ) ${'e_march' . $i . '_price'}  = 0;
+                if (empty( ${'e_march' . $i }  ) ) ${'e_march' . $i }  = 0;
+                if (empty( ${'e_quant' . $i }  ) ) ${'e_quant' . $i }  = 0;
                 if ($g_parameter->MY_TVA_USE == 'Y') {
                     /* save into quant_sold */
                     $r = $this->db->exec_sql("select insert_quant_sold ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)", array(null, /* 1 */
@@ -609,7 +612,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             'Erreur dans l\'enregistrement ' .
             __FILE__ . ':' . __LINE__ . ' ' .
             $e->getMessage();
-            echo $e->getTrace();
+            echo $e->getTraceAsString();
 
             $this->db->rollback();
             throw new Exception ($e);
