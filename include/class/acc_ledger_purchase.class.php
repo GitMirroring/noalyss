@@ -706,7 +706,12 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 }
                 // insert into quant_purchase
                 //-----
+                
+                if (empty( ${'e_march' . $i . '_price'}  ) ) ${'e_march' . $i . '_price'}  = 0;
+                if (empty( ${'e_march' . $i }  ) ) ${'e_march' . $i }  = 0;
+                if (empty( ${'e_quant' . $i }  ) ) ${'e_quant' . $i }  = 0;
                 $price_euro=bcdiv(${'e_march'.$i.'_price'}, $p_currency_rate);
+                
                 if ( $g_parameter->MY_TVA_USE=='Y')
                 {
 
@@ -1746,8 +1751,8 @@ $r.=<<<EOF
     </td>
 </tr>
 EOF;
-        } 
-        }else {
+        } // if ($p_currency_code !=0
+        }else { // if $g_parameter->MY_TVA_USE=='Y'
         $r.=<<<EOF
 <tr class="highlight">
     {$decalage}            

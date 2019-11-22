@@ -82,7 +82,7 @@ class INum extends IText
             $this->javascript='onchange="format_number(this,'.$this->prec.');"';
         }
         $this->name=($p_name==null)?$this->name:$p_name;
-        $this->value=($p_value==null)?$this->value:$p_value;
+        $this->value=($p_value===null)?$this->value:$p_value;
         $this->id=($this->id=="")?$this->name:$this->id;
 
         if ($this->readOnly==true)
