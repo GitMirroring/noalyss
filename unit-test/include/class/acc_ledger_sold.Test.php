@@ -115,6 +115,55 @@ class Acc_Ledger_SoldTest extends TestCase
         $cnt=$g_connection->get_value("select count(*) from jrn where jr_mt=$1",["1572714478.3155"]);
         $this->assertEquals(1,$cnt);
         $this->clean_operation();
+        
+        // If some data are corruptes
+        $sql="
+            from quant_sold 
+                  join jrnx using(j_id)  
+                   join jrn on (jr_grpt_id=j_grpt)
+                where 
+                   jr_mt='1572714478.3155'
+                   and j_qcode='MARCHA'
+                ";
+        // Test space in e_quant1 instead of zero
+        $array=$this->array;
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0, 1);
+        $array["amount_t0"]=24.2;
+        $array["hplan"]=array(array(-1), array(-1));
+        $array["val"]=array(array(24, 2), array(1212.5));
+        $array["mt"]="1572714478.3155";
+        $array['e_quant1']="";
+        $this->object->insert($array);
+        $this->assertEquals(0,$g_connection->get_value("select count(*)  ".$sql));
+        $this->clean_operation();
+      
+        // Test space in e_march1_price instead of zero must be 
+        $array=$this->array;
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0, 1);
+        $array["amount_t0"]=24.2;
+        $array["hplan"]=array(array(-1), array(-1));
+        $array["val"]=array(array(24, 2), array(1212.5));
+        $array["mt"]="1572714478.3155";
+        $array['e_march1_tva_amount']="";
+        $this->object->insert($array);
+        $this->assertEquals(254.6250,$g_connection->get_value("select qs_vat ".$sql));
+        $this->clean_operation();
+       
+        // Test space in e_march1_tva_amount instead of zero must be calculated
+        $array=$this->array;
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0, 1);
+        $array["amount_t0"]=24.2;
+        $array["hplan"]=array(array(-1), array(-1));
+        $array["val"]=array(array(24, 2), array(1212.5));
+        $array["mt"]="1572714478.3155";
+        $array['tva_march1']="";
+        $this->object->insert($array);
+        $this->assertEquals(254.63,$g_connection->get_value("select qs_vat ".$sql));
+        $this->clean_operation();
+        
     }
 
     /**

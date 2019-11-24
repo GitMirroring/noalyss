@@ -123,7 +123,81 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $this->assertEquals(1,
                 $g_connection->get_value ("select count(*) from jrn where jr_mt=$1",["1572704002.1732"]));
         $this->clean_operation();
-                
+
+                // If some data are corruptes
+        $sql="
+            from quant_purchase
+                  join jrnx using(j_id)  
+                   join jrn on (jr_grpt_id=j_grpt)
+                where 
+                   jr_mt='1572704002.1732'
+                   and j_qcode='DOCUME'
+                ";
+        // Test space in e_quant0 instead of zero
+        $array=$this->array;
+        $array["mt"]="1572704002.1732";
+        $array["nb_item"]=2;
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0);
+        $array["amount_t0"]=658.25;
+        $array['hplan']=array(array(-1));
+        $array["val"]=array(array(658.25));
+        $array=array_merge($array, array("e_march1"=>"DOCUME",
+                                        "e_march1_price"=>18.25,
+                                        "e_quant1"=>"",
+                                        "htva_march1"=>18.25,
+                                        "e_march1_tva_id"=>1,
+                                        "e_march1_tva_amount"=>22.08,
+                                        "tva_march1"=>3.83,
+                                        "tvac_march1"=>22.05));
+        
+        $this->object->insert($array);
+        $this->assertEquals(0,$g_connection->get_value("select count(*)  ".$sql));
+        $this->clean_operation();
+      
+        // Test space in e_march0_price instead of zero must be 
+        $array=$this->array;
+        $array["mt"]="1572704002.1732";
+        $array["nb_item"]=2;
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0);
+        $array["amount_t0"]=658.25;
+        $array['hplan']=array(array(-1));
+        $array["val"]=array(array(658.25));
+        $array=array_merge($array, array("e_march1"=>"DOCUME",
+                                        "e_march1_price"=>18.25,
+                                        "e_quant1"=>1,
+                                        "htva_march1"=>18.25,
+                                        "e_march1_tva_id"=>1,
+                                        "e_march1_tva_amount"=>"",
+                                        "tva_march1"=>3.83,
+                                        "tvac_march1"=>22.05));
+        $this->object->insert($array);
+        $this->assertEquals(3.83,$g_connection->get_value("select qp_vat ".$sql));
+        $this->clean_operation();
+       
+        // Test space in e_march0_tva_amount instead of zero must be calculated
+        $array=$this->array;
+        $array["mt"]="1572704002.1732";
+        $array["nb_item"]=2;
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0);
+        $array["amount_t0"]=658.25;
+        $array['hplan']=array(array(-1));
+        $array["val"]=array(array(658.25));
+        $array=array_merge($array, array("e_march1"=>"DOCUME",
+                                        "e_march1_price"=>18.25,
+                                        "e_quant1"=>1,
+                                        "htva_march1"=>18.25,
+                                        "e_march1_tva_id"=>1,
+                                        "e_march1_tva_amount"=>22.08,
+                                        "tva_march1"=>"",
+                                        "tvac_march1"=>22.05));
+
+        $this->object->insert($array);
+        $this->assertEquals(22.08,$g_connection->get_value("select qp_vat ".$sql));
+        $this->clean_operation();
+
     }
 
     /**

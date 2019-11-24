@@ -285,8 +285,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             /* Save all the items without vat */
             for ($i = 0; $i < $nb_item; $i++) {
                 $n_both = 0;
-                if (strlen(trim(${'e_march' . $i})) == 0)
-                    continue;
+                if ( empty(${'e_march'.$i}) || empty(${'e_quant'.$i}) ) continue;
 
                 /* First we save all the items without vat */
                 $fiche = new Fiche($this->db);
