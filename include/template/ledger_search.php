@@ -80,7 +80,7 @@ echo $f_accounting->input();  ?>
 
 <tr>
 <td style="text-align:right;width:30em">
-	<?php echo _('Et uniquement non payées')?>
+	<?php echo _('Statut')?>
 </td>
 
 <td>
