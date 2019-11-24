@@ -22,14 +22,13 @@
 /*!\file
  * \brief print a listing of financial
  */
-require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
-class Print_Ledger_Misc extends PDF
+require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
+
+class Print_Ledger_Misc extends Print_Ledger
 {
-    function __construct($p_cn,$p_jrn)
+    function __construct(Database $p_cn,$p_jrn,$p_from,$p_to)
     {
-        parent::__construct($p_cn,'P','mm','A4');
-        $this->ledger=$p_jrn;
-        $this->jrn_type=$p_jrn->get_type();
+        parent::__construct($p_cn,'P','mm','A4',$p_jrn,$p_from,$p_to,"all");
     }
     function Header()
     {
@@ -77,6 +76,7 @@ class Print_Ledger_Misc extends PDF
                                             $http->get('to_periode','number'));
         $this->SetFont('DejaVu', '', 6);
         if ( $a_jrn == null ) return;
+        $ledger=$this->get_ledger();
         for ( $i=0;$i<count($a_jrn);$i++)
         {
             $row=$a_jrn[$i];
@@ -85,7 +85,7 @@ class Print_Ledger_Misc extends PDF
             $this->LongLine(30,5,$row['jr_pj_number']);
             $this->write_cell(20,5,$row['jr_internal']);
 	    $type=$this->cn->get_value("select jrn_def_type from jrn_def where jrn_def_id=$1",array($a_jrn[$i]['jr_def_id']));
-	    $other=mb_substr($this->ledger->get_tiers($type,$a_jrn[$i]['jr_id']),0,25);
+	    $other=mb_substr($ledger->get_tiers($type,$a_jrn[$i]['jr_id']),0,25);
 	    $this->LongLine(25,5,$other,0,'L');
             $positive=$row['montant'];
             $this->LongLine(60,5,$row['comment'],0,'L');

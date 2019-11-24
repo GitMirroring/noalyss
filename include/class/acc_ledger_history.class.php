@@ -41,6 +41,8 @@ abstract class Acc_Ledger_History
     protected $ma_ledger; //!< Array of ledger id : jrn_def.jrn_def_id
     protected $m_mode; //!< mode of export L : one line, E accounting writing , D : Detail
     public $db; //!< database connx
+    protected $ledger_type; //! type of ledger VEN , ACH , ODS, FIN
+    protected $filter_operation; //!< to filter paid, unpaid or all operation
 
     /**
      * 
@@ -61,6 +63,7 @@ abstract class Acc_Ledger_History
         $this->m_from=$p_from;
         $this->m_to=$p_to;
         $this->m_mode=$p_mode;
+        $this->filter_operation='all';
     }
     /**
      * setter / getter
@@ -70,7 +73,23 @@ abstract class Acc_Ledger_History
     {
         return $this->m_from;
     }
-    /**
+    public function get_ledger_type()
+    {
+        return $this->ledger_type;
+    }
+
+    public function set_ledger_type($ledger_type)
+    {
+        if (! in_array($ledger_type,['ACH','ODS','VEN','FIN'])) {
+            record_log('Acc_Ledger_History:set_ledger_type '.var_export($ledger_type,TRUE));
+            throw new Exception (_("Donnée invalide",EXC_PARAM_VALUE));
+        }
+        
+        $this->ledger_type=$ledger_type;
+        return $this;
+    }
+
+        /**
      * setter / getter
      * @returns m_to (periode id)
      */
@@ -141,9 +160,10 @@ abstract class Acc_Ledger_History
      * @param integer $p_from periode id
      * @param integer $p_to periode id
      * @param char $p_mode L (list operation) E (extended detail) A (accouting writing) D (Detailled VAT)
+     * @param $p_paid values are all means all operations, paid only paid operation, unpaid for only unpaid
      * @return Acc_Ledger_History_Generic Acc_Ledger_History_Sale Acc_Ledger_History_Financial Acc_Ledger_History_Purchase
      */
-    static function factory(Database $cn, $pa_ledger, $p_from, $p_to, $p_mode)
+    static function factory(Database $cn, $pa_ledger, $p_from, $p_to, $p_mode,$p_paid)
     {
         // For Accounting writing , we use Acc_Ledger_History
         if ($p_mode=="A")
@@ -183,6 +203,7 @@ abstract class Acc_Ledger_History
             case "ACH":
                 $ret=new Acc_Ledger_History_Purchase($cn, $pa_ledger, $p_from,
                         $p_to, $p_mode);
+                $ret->set_filter_operation($p_paid);
                 return $ret;
                 break;
             case "FIN":
@@ -193,6 +214,7 @@ abstract class Acc_Ledger_History
             case "VEN":
                 $ret=new Acc_Ledger_History_Sale($cn, $pa_ledger, $p_from,
                         $p_to, $p_mode);
+                $ret->set_filter_operation($p_paid);
                 return $ret;
                 break;
 
@@ -233,11 +255,17 @@ abstract class Acc_Ledger_History
         switch ($p_jrn_type)
         {
             case 'VEN':
-                $tiers=$this->db->get_value('select max(qs_client) from quant_sold join jrnx using (j_id) join jrn on (jr_grpt_id=j_grpt) where jrn.jr_id=$1',
+                $tiers=$this->db->get_value('select max(qs_client) '
+                        . 'from quant_sold join jrnx using (j_id) '
+                        . 'join jrn on (jr_grpt_id=j_grpt) where jrn.jr_id=$1',
                         array($jr_id));
                 break;
             case 'ACH':
-                $tiers=$this->db->get_value('select max(qp_supplier) from quant_purchase join jrnx using (j_id) join jrn on (jr_grpt_id=j_grpt) where jrn.jr_id=$1',
+                $tiers=$this->db->get_value('select max(qp_supplier) '
+                        . ' from quant_purchase '
+                        . ' join jrnx using (j_id) '
+                        . ' join jrn on (jr_grpt_id=j_grpt) '
+                        . ' where jrn.jr_id=$1',
                         array($jr_id));
 
                 break;
@@ -287,4 +315,49 @@ abstract class Acc_Ledger_History
     abstract function export_html();
 
     abstract function get_row($p_limit, $p_offset);
+    
+    /**
+     * Build a SQL clause to filter operation depending if they are paid, unpaid or no filter
+     * @return string SQL Clause
+     */
+    protected  function build_filter_operation()
+    {
+        switch ( $this->get_filter_operation() )
+        {
+            case 'all':
+                $sql_filter="";
+                break;
+            case 'paid':
+                $sql_filter=" and (jr_date_paid is not null or  jr_rapt ='paid' ) ";
+                break;
+            case 'unpaid':
+                $sql_filter=" and (jr_date_paid  is null and coalesce(jr_rapt,'x') <> 'paid' ) ";
+                break;
+            default:
+                throw new Exception(_("Filtre invalide",5));
+                
+        }
+        return $sql_filter;
+    }
+    /**
+     * Filter operation
+     */
+    function get_filter_operation()
+    {
+       return $this->filter_operation;
+    }
+        /**
+     * Filter operation ,
+     * @param string $filter_operation, valid : all, paid, unpaid
+     */
+
+    public function set_filter_operation($filter_operation)
+    {
+        if (in_array($filter_operation,['all','paid','unpaid']))
+        {
+            $this->filter_operation=$filter_operation;
+            return $this;
+        }
+        throw new Exception(_("Filter invalide ".$filter_operation),5);
+    }
 }

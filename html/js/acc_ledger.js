@@ -1302,7 +1302,9 @@ function manage_search_filter(p_obj) {
  * @see Acc_Ledger_Search
  */
 function save_filter(p_div,p_dossier) {
-    var elt=['ledger_type','nb_jrn','date_start','date_end','date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting'];
+    var elt=['ledger_type','nb_jrn','date_start','date_end',
+        'date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting',
+        'operation_filter'];
     var eltValue={};
     eltValue['gDossier']=p_dossier;
     eltValue['op']="save_filter";
@@ -1326,8 +1328,6 @@ function save_filter(p_div,p_dossier) {
    
         }
     }
-    //unpaid
-    eltValue['unpaid']=$(p_div+"unpaid").checked;
     new Ajax.Request('ajax_misc.php', {
         method:"POST",
         parameters:eltValue,
@@ -1365,7 +1365,8 @@ function load_filter(p_div,p_dossier,p_filter_id) {
            try {
                 var answer=req.responseJSON;    
                 console.log(answer);
-                var elt=['ledger_type','date_start','date_end','date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting'];
+                var elt=['ledger_type','date_start','date_end','date_paid_start','date_paid_end',
+                    'desc','amount_min','amount_max','qcode','accounting','operation_filter'];
                 for (var i=0;i<elt.length;i++) {
                     var idx=elt[i];
                     $(p_div+idx).value=answer[elt[i]];
@@ -1390,12 +1391,7 @@ function load_filter(p_div,p_dossier,p_filter_id) {
                    eltHidden.setAttribute("value",answer.r_jrn[i]);
                    eltLedgerId.appendChild(eltHidden);
                }
-               if ( answer.unpaid == 'false') {
-                   $(p_div+"unpaid").checked=false;
-               }
-               if ( answer.unpaid == 'true') {
-                   $(p_div+"unpaid").checked=true;
-               }
+               
 
                
            } catch (e) {
@@ -1415,7 +1411,7 @@ identification element UL manage{div}
 */
 
 function delete_filter (p_div,p_dossier,p_filter_id) {
-    new Ajax.Request("ajax_misc",{
+    new Ajax.Request("ajax_misc.php",{
         parameters:{"gDossier":p_dossier,"div":p_div,"filter_id":p_filter_id,'op':"delete_search_operation"},
         method:"POST",
         onSuccess:function (req) {
@@ -1460,5 +1456,5 @@ function reset_filter(p_div) {
                eltLedgerId.appendChild(eltHidden);
   
   // By default , unpaid is uncked
-   $(p_div+"unpaid").checked=false;
+   $(p_div+"operation_filter").value="all";
 }

@@ -22,16 +22,16 @@
 /*!\file
  * \brief print a listing of financial
  */
-require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
-class Print_Ledger_Financial extends PDF
+require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
+
+class Print_Ledger_Financial extends Print_Ledger
 {
     private $rap_amount; /* amount from begining exercice */
     private $tp_amount; /* amount total page */
     
-    function __construct($p_cn,  Acc_Ledger $p_jrn)
+    function __construct(Database $p_cn,  Acc_Ledger $p_jrn,$p_from,$p_to)
     {
-        parent::__construct($p_cn,'P','mm','A4');
-        $this->ledger=$p_jrn;
+        parent::__construct($p_cn,'P','mm','A4',$p_jrn,$p_from,$p_to,'all');
         $this->jrn_type=$p_jrn->get_type();
         
         // report from begin exercice
@@ -40,7 +40,7 @@ class Print_Ledger_Financial extends PDF
         // total page
         $this->tp_amount=0;
         
-        $amount=$this->ledger->previous_amount($_GET['from_periode']);
+        $amount=$this->get_ledger()->previous_amount($this->get_from());
         $this->rap_amount=$amount['amount'];
     }
     function Header()
@@ -118,7 +118,7 @@ class Print_Ledger_Financial extends PDF
             $this->write_cell(10,5,$row['date_fmt']);
             $this->write_cell(10,5,$row['internal']);
 
-            $name=$this->ledger->get_tiers($this->jrn_type,$row['id']);
+            $name=$ledger->get_tiers($this->jrn_type,$row['id']);
             $this->write_cell(40,5,$name,0,0,'L');
 
             $this->LongLine(60,5,$row['comment'],0,'L');

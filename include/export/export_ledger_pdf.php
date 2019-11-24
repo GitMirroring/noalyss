@@ -46,7 +46,9 @@ try
 {
     $jrn_id=$http->get('jrn_id',"number");
     $p_simple=$http->get('p_simple',"string");
-
+    $filter_operation=$http->get("operation_type");
+    $from=$http->get("from_periode","number");
+    $to=$http->get("to_periode","number");
     
 }
 catch (Exception $exc)
@@ -71,11 +73,10 @@ if ($jrn_id != 0 && $g_user->check_jrn($jrn_id) == 'X') {
 }
 
 $ret = "";
-
+if ( $jrn_id == 0 ) $Jrn->id=0;
 $jrn_type = $Jrn->get_type();
 
-$pdf = Print_Ledger::factory($cn, $p_simple, "PDF", $Jrn);
-
+$pdf = Print_Ledger::factory($cn, $p_simple, $Jrn,$from,$to,$filter_operation);
 $pdf->setDossierInfo($Jrn->jrn_def_name);
 $pdf->AliasNbPages();
 $pdf->AddPage();

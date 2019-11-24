@@ -23,19 +23,16 @@
  * \brief this class extends PDF and let you export the detailled printing
  *  of any ledgers
  */
-require_once NOALYSS_INCLUDE.'/class/pdf_land.class.php';
+require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 
-class Print_Ledger_Detail extends PDF
+
+class Print_Ledger_Detail extends Print_Ledger
 {
-    public function __construct ($p_cn = null, Acc_Ledger $ledger)
+    public function __construct (Database $p_cn , Acc_Ledger $ledger,$p_from,$p_to)
     {
 
-        if($p_cn == null) die("No database connection. Abort.");
+        parent::__construct($p_cn,'L', 'mm', 'A4',$ledger,$p_from,$p_to,'all');
         
-        parent::__construct($p_cn,'L', 'mm', 'A4');
-        $this->ledger=$ledger;
-        date_default_timezone_set ('Europe/Paris');
-
     }
 
     function setDossierInfo($dossier = "n/a")
@@ -73,7 +70,7 @@ class Print_Ledger_Detail extends PDF
         $rap_deb=0;
         $rap_cred=0;
         // take all operations from jrn
-        $array=$this->ledger->get_operation($_GET['from_periode'],$_GET['to_periode']);
+        $array=$this->get_ledger()->get_operation($this->get_from(),$this->get_to());
 
         $this->SetFont('DejaVu','BI',7);
         $this->write_cell(215,7,'report Débit',0,0,'R');

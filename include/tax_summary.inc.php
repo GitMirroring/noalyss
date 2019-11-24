@@ -36,6 +36,15 @@ $end_periode = new IDate("end_date", $end);
 echo '<FORM METHOD="GET">';
 echo HtmlInput::array_to_hidden(['gDossier','ac'],$_GET);
 echo HtmlInput::hidden("do","display");
+$select_tva=new ISelect("tva_type");
+$select_tva->value=array(
+    array("value"=>'O',"label"=>_("Opération")),
+    array("value"=>'P',"label"=>_("Paiement")),
+    array("value"=>'T',"label"=>_("TVA"))
+);
+$select_tva->selected=$http->get('tva_type','string','O');
+printf(_("Calcul d'après la date"));
+echo $select_tva->input();
 printf(_("Période du %s au %s"),
     $start_periode->input(),
     $end_periode->input());
@@ -46,6 +55,7 @@ echo '<hr>';
 if ( $http->get("do","string","no") == "display")
 {
     $tax_summary=new Tax_Summary($cn,$start_periode->value,$end_periode->value);
+    $tax_summary->set_tva_type($select_tva->selected);
     try {
         try {
             $tax_summary->check();

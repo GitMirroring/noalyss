@@ -54,7 +54,7 @@ class User_filter_SQL extends Noalyss_SQL
             , "date_paid_end"=>"date_paid_end"
             , "ledger_type"=>"ledger_type"
             , "all_ledger"=>"all_ledger"
-            ,"unpaid"=>"unpaid"
+            ,"operation_filter"=>"operation_filter"
             ,'filter_name'=>"filter_name"
         );
         /*
@@ -76,7 +76,7 @@ class User_filter_SQL extends Noalyss_SQL
             , "date_paid_end"=>"text"
             , "ledger_type"=>"text"
             , "all_ledger"=>"numeric"
-            ,"unpaid"=>"text"
+            ,"operation_filter"=>"text"
             ,"filter_name"=>"text"
         );
 

@@ -55,7 +55,7 @@ class Acc_Ledger_History_SaleTest extends TestCase
     function testGet_row()
     {
         $this->object->get_row();
-        $this->assertSame(count($this->object->get_data()),4);
+        $this->assertSame(count($this->object->get_data()),6);
     }
      private function  save_file($p_name,$content)
     {
@@ -109,5 +109,13 @@ class Acc_Ledger_History_SaleTest extends TestCase
         
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
+    }
+     /**
+     * @covers Acc_Ledger_History::get_ledger_type
+     */
+    
+    function testGet_Ledger_type()
+    {
+        $this->assertEquals($this->object->get_ledger_type(),'VEN');
     }
 }

@@ -59,7 +59,7 @@ if ($op=='save_filter')
                 $http->post("date_paid_start", 'string', NULL));
         $new->setp("date_paid_end", $http->post("date_paid_end", 'string', NULL));
         $new->setp("ledger_type", $http->post("ledger_type", 'string'));
-        $new->setp("unpaid", $http->post("unpaid", 'string', NULL));
+        $new->setp("operation_filter", $http->post("operation_filter", 'string', NULL));
         $new->setp("filter_name", h($http->post("filter_name", 'string')));
         $aJrn=[];
         $max=$http->post("nb_jrn");

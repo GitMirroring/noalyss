@@ -140,6 +140,15 @@ class PDF extends  PDF_Core
             return array($customer_qc,$customer_name,$bank_qc,$bank_name);
         }
     }
-
+    
+    public function set_filter_operation($filter_operation)
+    {
+        if (in_array($filter_operation, ['all', 'paid', 'unpaid']))
+        {
+            $this->filter_operation=$filter_operation;
+            return $this;
+        }
+        throw new Exception(_("Filter invalide ".$filter_operation), 5);
+    }
 
 }
