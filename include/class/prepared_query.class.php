@@ -79,6 +79,27 @@ class Prepared_Query {
                                 where jra_concerned=$1)');
         }
     }
-    
-    
+    /**
+     * Prepare the query for find the amount in currency
+     */
+    public function prepare_currency()
+    {
+        $prepare=$this->db->is_prepare("amount_cur");
+        if ($prepare==FALSE)
+        {
+
+            $this->db->prepare("amount_cur",
+                    "select jrn2.jr_id , 
+                    sum(coalesce(oc_amount,0)) as sum_ocamount
+             	from operation_currency
+                    join jrnx using (j_id)
+                    join jrn as jrn2 on (j_grpt=jrn2.jr_grpt_Id) 
+             	where 
+                    j_id in (select j_id from jrnx where j_grpt=jrn2.jr_grpt_id )
+                    and  jr_id=$1
+                    group by jr_id"
+            );
+        }
+    }
+
 }

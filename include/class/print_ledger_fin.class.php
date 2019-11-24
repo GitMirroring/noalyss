@@ -93,24 +93,16 @@ class Print_Ledger_Financial extends Print_Ledger
      */
     function export()
     {
-        $http=new HttpInput();
-        $a_jrn=$this->ledger->get_operation($http->get('from_periode',"number"),
-                                            $http->get('to_periode','number'));
+        $ledger=$this->get_ledger();
+        $a_jrn=$ledger->get_operation($this->get_from(),$this->get_to());
+
         $this->SetFont('DejaVu', '', 6);
         if ( $a_jrn == null ) return;
         bcscale(2);
         
-        $this->cn->prepare("amount_cur",
-                "select jrn2.jr_id , 
-                    sum(coalesce(oc_amount,0)) as sum_ocamount
-             	from operation_currency
-                    join jrnx using (j_id)
-                    join jrn as jrn2 on (j_grpt=jrn2.jr_grpt_Id) 
-             	where 
-                    j_id in (select j_id from jrnx where j_grpt=jrn2.jr_grpt_id )
-                    and  jr_id=$1
-                    group by jr_id"
-                );
+        $prepare=new Prepared_Query($this->cn);
+        $prepare->prepare_currency();
+        
         for ( $i=0;$i<count($a_jrn);$i++)
         {
             $row=$a_jrn[$i];

@@ -70,10 +70,8 @@ class Print_Ledger_Misc extends Print_Ledger
      */
     function export()
     {
-        $http=new HttpInput();
-        
-        $a_jrn=$this->ledger->get_rowSimple($http->get('from_periode','number'),
-                                            $http->get('to_periode','number'));
+        $a_jrn=$this->get_ledger()->get_rowSimple($this->get_from(),$this->get_to());
+
         $this->SetFont('DejaVu', '', 6);
         if ( $a_jrn == null ) return;
         $ledger=$this->get_ledger();
