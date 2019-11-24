@@ -53,7 +53,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
 
     function __construct($p_cn, $p_init) {
         parent::__construct($p_cn, $p_init);
-        $this->type = 'VEN';
+        $this->ledger_type = 'VEN';
     }
 
     /*!\brief verify that the data are correct before inserting or confirming
@@ -285,8 +285,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             /* Save all the items without vat */
             for ($i = 0; $i < $nb_item; $i++) {
                 $n_both = 0;
-                if (strlen(trim(${'e_march' . $i})) == 0)
-                    continue;
+                if ( empty(${'e_march'.$i}) || empty(${'e_quant'.$i}) ) continue;
 
                 /* First we save all the items without vat */
                 $fiche = new Fiche($this->db);
@@ -1336,13 +1335,15 @@ EOF;
         return $r;
     }
     /**
-     * Retrieve data from the view v_detail_sale
+     * Retrieve data from the view v_detail_sale , gives all the row of an operation
+     * 
      * @remark  $g_user connected user
      * @param $p_from jrn.jr_tech_per from 
      * @param type $p_end jrn.jr_tech_per to
+     * @param $p_filter_operation valid option : all, paid, unpaid
      * @return type
      */
-    function get_detail_sale($p_from,$p_end)
+    function get_detail_sale($p_from,$p_end,$p_filter_operation='all')
     {
         global $g_user;
         // Journal valide
@@ -1351,12 +1352,28 @@ EOF;
         // Securite
         if ( $g_user->get_ledger_access($this->id) == 'X' ) return null;
         
+        switch ( $p_filter_operation)
+        {
+            case 'all':
+                $sql_filter="";
+                break;
+            case 'paid':
+                $sql_filter=" and (jr_date_paid is not null or  jr_rapt ='paid' ) ";
+                break;
+            case 'unpaid':
+                $sql_filter=" and (jr_date_paid  is null and coalesce(jr_rapt,'x') <> 'paid' ) ";
+                break;
+            default:
+                throw new Exception(_("Filtre invalide",5));
+                
+        }
         // get the data from the view
         $sql = "select * 
                 from v_detail_sale
                  where 
                 jr_def_id = $1 
                 and  jr_date >= (select p_start from parm_periode where p_id = $2) 
+                {$sql_filter}
 		and  jr_date <= (select p_end from parm_periode where p_id  = $3) "
                 .' order by jr_date,substring(jr_pj_number,\'[0-9]+$\')::numeric asc ';
         $ret = $this->db->exec_sql($sql, array($this->id,$p_from, $p_end));

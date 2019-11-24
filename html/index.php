@@ -205,7 +205,6 @@ echo '
 </TR>';
 
 
-
 if ( $g_captcha == true )
   {
     echo '<tr ><td colspan="2" style="width:auto">';
@@ -255,14 +254,16 @@ echo '
                 Email <input type="text"  class="input_text" name="email" nohistory>
                 </p>
                 <input type="submit" class="button" name="send_email" value="Envoi email">
-                
-            </form>
+                <input type="button" class="button" id="close_link_bt" value="Annuler">
 </div>
     <script>
         document.getElementById('recover_link').onclick=function() {
             document.getElementById('recover_box').style.display="block";
         }
         document.getElementById('close_link').onclick=function() {
+            document.getElementById('recover_box').style.display="none";
+        }
+        document.getElementById('close_link_bt').onclick=function() {
             document.getElementById('recover_box').style.display="none";
         }
     </script>

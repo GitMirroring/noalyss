@@ -57,7 +57,22 @@ class Tva_Rate_MTable extends Manage_Table_SQL
             ["value"=>1, "label"=>_("Autoliquidation")]
         ));
         $this->set_property_updatable("tva_id", FALSE);
-        $this->a_info=["tva_purchase"=>44,"tva_both_side"=>43,"tva_sale"=>45];
+        $this->set_col_label("tva_payment_purchase",_("Exigible achat"));
+        $this->set_col_type("tva_payment_purchase","select",
+                array(
+                    array("value"=>'O',"label"=>"Opération"),
+                    array("value"=>'P',"label"=>"Paiement")
+                    )
+                );
+        $this->set_col_label("tva_payment_sale",_("Exigible vente"));
+        $this->set_col_type("tva_payment_sale","select",
+                array(
+                    array("value"=>'O',"label"=>"Opération"),
+                    array("value"=>'P',"label"=>"Paiement")
+                    )
+                );
+        $this->a_info=["tva_purchase"=>44,"tva_both_side"=>43,"tva_sale"=>45
+            ,"tva_payment_sale"=>74,"tva_payment_purchase"=>74];
     }
 
     /**
@@ -183,6 +198,8 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $tva_purchase=(trim($this->table->tva_purchase)=="")?"#":$this->table->tva_purchase;
         $tva_sale=(trim($this->table->tva_sale)=="")?"#":$this->table->tva_sale;
         $tva_rate->setp("tva_poste", $tva_purchase.",".$tva_sale);
+        $tva_rate->setp("tva_payment_sale", $this->table->tva_payment_sale);
+        $tva_rate->setp("tva_payment_purchase", $this->table->tva_payment_purchase);
         $tva_rate->save();
         
         // reload the row

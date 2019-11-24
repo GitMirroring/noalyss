@@ -42,7 +42,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 	function __construct($p_cn, $p_init)
 	{
 		parent::__construct($p_cn, $p_init);
-		$this->type = 'FIN';
+		$this->ledger_type = 'FIN';
 	}
 
 	/**

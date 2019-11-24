@@ -108,6 +108,7 @@ class Acc_Ledger_FinTest extends TestCase
         $this->assertContains('<INPUT TYPE="hidden" id="dateop1" NAME="dateop1" VALUE="">',$result);
         $this->assertContains('<INPUT TYPE="hidden" id="chdate" NAME="chdate" VALUE="1">',$result);
         
+        
     }
     private function clean_operation()
     {
@@ -125,6 +126,8 @@ class Acc_Ledger_FinTest extends TestCase
                 [ '1572695340.6768']
                 );
         $g_connection->exec_sql(' delete from jrnx where j_grpt not in (select jr_grpt_id from jrn)');
+        $g_connection->exec_sql("alter sequence  s_jrn_pj1 restart with 48");
+
         $g_connection->commit();
         
     }
@@ -154,7 +157,7 @@ class Acc_Ledger_FinTest extends TestCase
         $ret=$this->object->insert($array);
         $this->assertContains('<table class="result" ><tr  ><th  >Date</th>',$ret);
         $this->assertContains(' HREF="javascript:modifyOperation',$ret);
-        $this->assertContains('-935,91',$ret);
+        $this->assertContains('-1.095,39',$ret);
         
         $this->clean_operation();
     }

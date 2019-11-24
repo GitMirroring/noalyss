@@ -953,7 +953,7 @@ class DatabaseCore
     static  function nb_column($p_ret) {
         return pg_num_fields($p_ret);
     }
-    
+
 }
 
 /* test::test_me(); */

@@ -204,15 +204,23 @@ class Acc_Ledger_Search
         $f_accounting->set_attribute('account', $this->div.'accounting');
         $info=Icon_Action::infobulle(13);
 
-        $f_paid=new ICheckbox('unpaid', null, $this->div.'unpaid');
-        $f_paid->selected=(isset($_REQUEST['unpaid']))?true:false;
+        // Status of the operation : paid, unpaid or all
+        $f_paid=new ISelect('operation_filter', null, $this->div.'operation_filter');
+        $f_paid->value=array(["value"=>'all',"label"=>_("Toutes")],
+                            ["value"=>'unpaid',"label"=>_("Non payées")],
+                            ["value"=>'paid',"label"=>_("Payées")]
+                            );
+        $f_paid->selected=$http->request("operation_filter","string","all");
 
         $r.=dossier::hidden();
         $r.=HtmlInput::hidden('ledger_type', $this->type,
                         $this->div."ledger_type");
-        $r.=HtmlInput::hidden('ac', $_REQUEST['ac']);
+        $r.=HtmlInput::hidden('ac', $http->request('ac'));
+        
+        // to avoid to find a given operation
         if (isset($_REQUEST['hide_operation']))
-            $r.=HtmlInput::hidden("hide_operation", $_REQUEST['hide_operation']);
+            $r.=HtmlInput::hidden("hide_operation", $http->request('hide_operation'));
+        
         ob_start();
         $search_filter=$this->build_search_filter();
         require_once NOALYSS_TEMPLATE.'/ledger_search.php';
@@ -526,12 +534,26 @@ class Acc_Ledger_Search
             $and=" and ";
         }
 
-        // Only the unpaid
-        if (isset($unpaid))
-        {
-            $fil_paid=$and.SQL_LIST_UNPAID_INVOICE;
-            $and=" and ";
+        // Only the unpaid, paid or all
+        if ( isset($operation_filter)) {
+            switch ($operation_filter) {
+                case "unpaid":
+                    $fil_paid=$and."(jr_rapt is null or jr_rapt = '') and jr_valid = true ";
+                    $and=" and ";
+                    break;
+                case "all":
+                    $fil_paid="";
+                    break;
+                case "paid":
+                    $fil_paid=$and."(jr_rapt is not null or jr_rapt = 'paid') and jr_valid = true ";
+                    $and=" and ";
+                    break;
+                default:
+                    throw new Exception(_("ALS01 Etat inconnu"),10);
+
+            }
         }
+        // Operations which must not be seen in the result
         if ( isset ($hide_operation) && trim($hide_operation) !="")
         {
             $fil_hide_operation=$and.sprintf( ' jr_id not in (%s)',sql_string($hide_operation));

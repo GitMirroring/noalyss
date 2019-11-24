@@ -260,15 +260,7 @@ class Acc_Account_Ledger
         return true;
 
     }
-    /*!\brief Get all the value for this object from the database
-     *        the data member are set
-     * \return false if this account doesn't exist otherwise true
-     */
-    function get()
-    {
-        echo "OBSOLETE Acc_Account_Ledger->get(), a remplacer par Acc_Account_Ledger->load()";
-        return $this->load();
-    }
+
 
     /*!
      * \brief  give the balance of an account

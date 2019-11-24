@@ -312,16 +312,17 @@ abstract class Noalyss_SQL extends Data_SQL
         return $this;
     }
     /**
-     * Turn an object (row) into an array
+     * Turn an object (row) into an array, and the key could be prefixed with $prefix
+     * @param string $prefix before the key 
      * @return array
      */
-    public function to_array()
+    public function to_array($prefix="")
     {
         $array=array();
         foreach ($this->name as $key=> $value)
         {
-            
-            $array[$key]=$this->$key;
+            $nkey=$prefix.$key;
+            $array[$nkey]=$this->$key;
         }
         return $array;
     }

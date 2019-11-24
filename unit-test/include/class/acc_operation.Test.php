@@ -33,16 +33,7 @@ class Acc_OperationTest extends TestCase
     }
 
     /**
-     * @covers Acc_OperationTest::get
-     * @todo   Implement testGet().
-     */
-    public function testGet()
-    {
-       $this->assertEquals(0,0);
-    }
-    /**
      *@covers Acc_Operation::seek_group
-     * @todo Implement seek_group()
      */
     public function testSeek_group()
     {
@@ -52,7 +43,6 @@ class Acc_OperationTest extends TestCase
     }
     /**
      * @covers Acc_Operation::set_id
-     * @todo Implement testId()
      * 
      */
     public function testSet_id()
@@ -67,7 +57,6 @@ class Acc_OperationTest extends TestCase
     }
     /**
      * @covers Acc_Operation::set_paid
-     * @todo Implement testSet_paid
      */
     function testSet_Paid()
     {
@@ -85,7 +74,6 @@ class Acc_OperationTest extends TestCase
     }
     /**
      * @covers Acc_Operation::get_amount
-     * @todo Implement testGet_amount
      */
     function testGet_Amount()
     {

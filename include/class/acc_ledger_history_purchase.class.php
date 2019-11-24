@@ -34,14 +34,21 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
 {
 
     private $data; //!< Contains rows from SQL
-
+   
     public function __construct(\Database $cn, $pa_ledger, $p_from, $p_to,
             $p_mode)
     {
         parent::__construct($cn, $pa_ledger, $p_from, $p_to, $p_mode);
+        $this->filter_operation='all';
+        $this->ledger_type='ACH';
+    }
+    public function get_filter_operation()
+    {
+        return $this->filter_operation;
     }
 
-    /**
+
+        /**
      * @brief display the accounting 
      */
     public function export_accounting_html()
@@ -115,7 +122,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                 'jr_tech_per');
 
         $cond_limite=($p_limit!=-1)?" limit ".$p_limit." offset ".$p_offset:"";
-
+         $sql_filter=$this->build_filter_operation();
         $ledger_list=join(",", $this->ma_ledger);
         $sql="
             with row_purchase as 
@@ -142,6 +149,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                     jr_id,
                     jr_pj_number,
                     to_char(jr_date,'DD.MM.YYYY') as str_date,
+                    to_char(jr_date,'DDMMYY') as str_date_short,
                     to_char(jr_date_paid,'DD.MM.YYYY') as str_date_paid,
                     jr_internal,
                     qp_supplier,
@@ -154,7 +162,8 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                     noded_vat,
                     private_amount,
                     novat+vat-tva_sided as tvac,
-                    n_text
+                    n_text,
+                    jr_grpt_id
             from
                 jrn
                 join row_purchase on (qp_internal=jr_internal)
@@ -162,6 +171,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                 left join jrn_note using (jr_id)
             where
                 jr_def_id in ({$ledger_list})
+                {$sql_filter}
                 and {$periode}
                 {$cond_limite}
                     order by jrn.jr_date, substring(jr_pj_number,'[0-9]+$')::numeric  ";
@@ -185,7 +195,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                     quant_purchase
                 where 
                     qp_internal = $1 
-                group by qp_vat_code,qp_internal order by qp_vat_code");
+                group by qp_vat_code order by qp_vat_code");
         }
 
         $nb_row=count($this->data);

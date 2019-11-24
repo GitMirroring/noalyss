@@ -33,11 +33,14 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
 {
 
     private $data; //!< Contains rows from SQL
-
+    
+    
     public function __construct(\Database $cn, $pa_ledger, $p_from, $p_to,
             $p_mode)
     {
         parent::__construct($cn, $pa_ledger, $p_from, $p_to, $p_mode);
+        $this->filter_operation='all';
+        $this->ledger_type='VEN';
     }
     /**
      * Display the operation of sales with detailled VAT
@@ -100,6 +103,7 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
             ");
         }
     }
+    
     /**
      * Get the rows from jrnx and quant* tables
      * @param int $p_limit max of rows to returns
@@ -111,7 +115,9 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                 'jr_tech_per');
 
         $cond_limite=($p_limit!=-1)?" limit ".$p_limit." offset ".$p_offset:"";
-
+        
+        $sql_filter=$this->build_filter_operation();
+        
         $ledger_list=join(",", $this->ma_ledger);
         $sql="
             with row_sale as 
@@ -143,13 +149,16 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                     vat,
                     tva_sided,
                     novat,
-                    novat+vat-tva_sided as tvac
+                    novat+vat-tva_sided as tvac,
+                    to_char(jr_date,'DDMMYY') as str_date_short,
+                    jr_grpt_id
             from
                 jrn
                 join row_sale on (qs_internal=jr_internal)
                 join client_detail on (qs_client=f_id)
             where
                 jr_def_id in ({$ledger_list})
+                {$sql_filter}
                 and {$periode}
                 {$cond_limite}
                      order by jr_date, substring(jr_pj_number,'[0-9]+$')::numeric ";
@@ -172,7 +181,7 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                     quant_sold 
                 where 
                     qs_internal = $1 
-                group by qs_vat_code,qs_internal order by qs_vat_code");
+                group by qs_vat_code order by qs_vat_code");
              
         }
         

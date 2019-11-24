@@ -28,19 +28,22 @@
  */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
+
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
 require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
 require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-$gDossier=dossier::id();
 
+
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
-
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+
+
+$gDossier=dossier::id();
 $http=new HttpInput();
 
 $export=new Noalyss_Csv(_('journal'));
@@ -57,6 +60,7 @@ try
     $get_option=$http->get('p_simple', "string");
     $get_from_periode=$http->get('from_periode', 'number');
     $get_to_periode=$http->get('to_periode', 'number');
+    $filter_operation=$http->get("operation_type");
 }
 catch (Exception $exc)
 {
@@ -86,12 +90,13 @@ if ($get_jrn==0)
 {
     // find out all the available ledgers for the current user
     $a_jrn=Print_Ledger::available_ledger($get_from_periode);
+    $Jrn=new Acc_Ledger($cn,0);
 }
 else
 {
     $a_jrn=$get_jrn;
+    $Jrn=new Acc_Ledger($cn, $get_jrn);
 }
-$Jrn=new Acc_Ledger($cn, $get_jrn);
 
 $Jrn->get_name();
 $jrn_type=$Jrn->get_type();
@@ -119,14 +124,14 @@ if ( $get_option=="E")
             case 'VEN':
                 $ledger=new Acc_Ledger_Sold($cn, $get_jrn);
                 $ret_detail=$ledger->get_detail_sale($get_from_periode,
-                        $get_to_periode);
+                        $get_to_periode,$filter_operation);
                 $a_heading=Acc_Ledger_Sold::heading_detail_sale();
 
                 break;
             case 'ACH':
                 $ledger=new Acc_Ledger_Purchase($cn, $get_jrn);
                 $ret_detail=$ledger->get_detail_purchase($get_from_periode,
-                        $get_to_periode);
+                        $get_to_periode,$filter_operation);
                 $a_heading=Acc_Ledger_Purchase::heading_detail_purchase();
                 break;
             default:
@@ -199,6 +204,7 @@ if ($get_option=='A')
             $get_from_periode, $get_to_periode, 'A');
         
     }
+     $acc_ledger_history->set_filter_operation($filter_operation);
     $acc_ledger_history->export_csv();
     exit;
 }
@@ -298,6 +304,7 @@ if ($get_option=="L" || $get_option == 'D')
                 $get_from_periode, $get_to_periode, 'D');
 
         }
+        $acc_ledger_history->set_filter_operation($filter_operation);
         $acc_ledger_history->export_csv();
         return;
     }
@@ -309,12 +316,14 @@ if ($get_option=="L" || $get_option == 'D')
     {
         $acc_ledger_history=new Acc_Ledger_History_Purchase($cn, [$Jrn->id],
                 $get_from_periode, $get_to_periode, 'D');
+        $acc_ledger_history->set_filter_operation($filter_operation);
         $acc_ledger_history->export_csv();
     }
     if ($jrn_type=="VEN")
     {
         $acc_ledger_history=new Acc_Ledger_History_Sale($cn, [$Jrn->id],
                 $get_from_periode, $get_to_periode, 'D');
+        $acc_ledger_history->set_filter_operation($filter_operation);
         $acc_ledger_history->export_csv();
     }
 }

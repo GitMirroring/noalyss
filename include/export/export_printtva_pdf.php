@@ -34,6 +34,7 @@ $http = new HttpInput();
 
 $from_periode = $http->request("date_start");
 $to_periode = $http->request("date_end");
+$tva_type = $http->request("tva_type");
 
 
 $gDossier = dossier::id();
@@ -41,6 +42,7 @@ $gDossier = dossier::id();
 /* Security */
 $cn = Dossier::connect();
 $tax_summary = new Tax_Summary($cn, $from_periode, $to_periode);
+$tax_summary->set_tva_type($tva_type);
 $pdf = new PDFLand($cn);
 $pdf->setDossierInfo(sprintf(_("Date") . " : %s %s", $from_periode, $to_periode));
 $pdf->AliasNbPages();
@@ -172,7 +174,7 @@ for ($i = 0; $i < $nb_sale; $i++) {
 }
 $pdf->line_new();
 
-$nb_array = count($array);
+$nb_array = count($a_sum);
 // initialize totals
 for ($e=2;$e<$nb_col;$e++){
     $a_tot[$a_col[$e]]=0;
@@ -185,14 +187,14 @@ for ($i = 0; $i < $nb_array; $i++) {
         $colname=$a_col[$e];
         if ( $e ==0 ) {
             // first column TVA_LABEL
-            $pdf->write_cell(40, 5, $array[$i][$colname], 1, 0, 'L');
+            $pdf->write_cell(40, 5, $a_sum[$i][$colname], 1, 0, 'L');
         } elseif ($e == 1 ){
             // Secund col. tva rate
-            $pdf->write_cell(40, 5, nbm($array[$i][$colname]*100), 1, 0, 'R');
+            $pdf->write_cell(40, 5, nbm($a_sum[$i][$colname]*100), 1, 0, 'R');
         }else {
             // Other cols,display amount and compute total
-            $a_tot[$colname] = bcadd($a_tot[$colname], $array[$i][$colname]);
-            $pdf->write_cell(40, 5, nbm($array[$i][$colname]), 1, 0, 'R');
+            $a_tot[$colname] = bcadd($a_tot[$colname], $a_sum[$i][$colname]);
+            $pdf->write_cell(40, 5, nbm($a_sum[$i][$colname]), 1, 0, 'R');
         }
     }
     $pdf->line_new();
@@ -326,6 +328,7 @@ for ($e=0;$e<$nb_col;$e++){
 }
 $pdf->line_new();
 
+$array=$tax_summary->get_summary_purchase();
 $nb_array = count($array);
 // initialize totals
 for ($e=2;$e<$nb_col;$e++){

@@ -150,6 +150,20 @@ $a = array(
 );
 $w->selected = 1;
 print '</TR>';
+/// All operation 
+$s_operation = new ISelect("operation_type");
+$s_operation->value=array(
+    array("label"=>_("Toutes les opérations"),"value"=>"all"),
+    array("label"=>_("Uniquement payées"),"value"=>"paid"),
+    array("label"=>_("Uniquement non payées"),"value"=>"unpaid")
+    );
+$s_operation->selected=$http->get("operation_type","string","all");
+echo "<tr>";
+echo td(_("Uniquement pour journaux vente et achat").Icon_Action::infobulle(75));
+echo td($s_operation->input());
+echo '</tr>';
+
+/// Type of printing
 print '<TR>';
 $simple=$http->get("p_simple","string","L");
 $w->selected = $simple;
@@ -182,6 +196,7 @@ if (isset($_REQUEST['bt_html']))
         $hid->input("jrn_id", $jrn_id) .
         $hid->input("from_periode", $from_periode) .
         $hid->input("to_periode", $to_periode);
+        echo $hid->input("operation_type", $s_operation->selected);
         echo $hid->input("p_simple", $simple);
         echo HtmlInput::get_to_hidden(array('ac', 'type'));
         echo "</form>";
@@ -195,6 +210,7 @@ if (isset($_REQUEST['bt_html']))
         $hid->input("from_periode", $from_periode) .
         $hid->input("to_periode", $to_periode);
         echo $hid->input("p_simple", $simple);
+        echo $hid->input("operation_type", $s_operation->selected);
         echo HtmlInput::get_to_hidden(array('ac', 'type'));
         echo "</form></TD>";
 
@@ -220,7 +236,7 @@ if (isset($_REQUEST['bt_html']))
         $a_ledger=[$jrn_id];
     }
     
-    $ledger_history=Acc_Ledger_History::factory($cn,$a_ledger,$from_periode,$to_periode,$simple);
+    $ledger_history=Acc_Ledger_History::factory($cn,$a_ledger,$from_periode,$to_periode,$simple,$s_operation->selected);
     
     $ledger_history->export_html();
     
