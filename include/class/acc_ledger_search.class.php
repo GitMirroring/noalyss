@@ -19,8 +19,7 @@
  */
 // Copyright (2016) Author Dany De Bontridder <dany@alchimerys.be>
 
-if (!defined('ALLOWED'))
-    die('Appel direct ne sont pas permis');
+// if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 
 /**
  * @file
@@ -36,8 +35,8 @@ class Acc_Ledger_Search
 
     /**
      * @brief return a HTML string with the form for the search
-     * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN
-     * @param  $all_type_ledger
+     * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN: uppercase !
+     * @param  $all_type_ledger 
      *       values :
      *         - 1 means all the ledger of this type
      *         - 0 No have the "Tous les journaux" availables
@@ -50,7 +49,7 @@ class Acc_Ledger_Search
     function __construct($p_type, $p_all=1, $p_div="")
     {
         $this->cn=Dossier::connect();
-        $this->type=$p_type;
+        $this->set_type($p_type);
         $this->all=$p_all;
         $this->div=$p_div;
     }
@@ -72,6 +71,10 @@ class Acc_Ledger_Search
 
     public function set_type($type)
     {
+        if (! in_array($type, ["ALL","VEN","ACH","ODS","FIN"]))
+        {
+            throw new Exception ("ALS02 : type invalide $type",EXC_PARAM_VALUE);
+        }
         $this->type=$type;
     }
 
@@ -265,7 +268,7 @@ class Acc_Ledger_Search
      * @brief this function will create a sql stmt to use to create the list for
      * the ledger,
      * @param  $p_array is usually the $_GET,
-     * @param  $p_order the order of the row
+     * @param  $p_order the order of the row --> not used
      * @param  $p_where is the sql condition if not null then the $p_array will not be used
      * \note the p_action will be used to filter the ledger but gl means ALL
      * struct array $p_array
@@ -407,7 +410,7 @@ class Acc_Ledger_Search
 
         $and='';
         $g_user=new User($this->cn);
-        $p_action=$ledger_type;
+        $p_action=(isset ($ledger_type)) ? $ledger_type:$this->type;
         if ($p_action=='')
             $p_action='ALL';
         if ($r_jrn==-1)
@@ -571,6 +574,8 @@ class Acc_Ledger_Search
         $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.$fil_amount.
             $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation;
         $sql.=" where ".$where;
+        
+        // Q?? Why do we return where if it is included in SQL ?
         return array($sql, $where);
     }
 
@@ -583,6 +588,7 @@ class Acc_Ledger_Search
      */
     function display_search_form()
     {
+        $http=new HttpInput();
         $r='';
         $r.='<div id="search_form" style="display:none">';
         $r.=HtmlInput::title_box(_('Recherche'), "search_form", "hide", "", "n");
@@ -597,18 +603,18 @@ class Acc_Ledger_Search
         
         
 
-        $r.=HtmlInput::hidden('ac', $_REQUEST['ac']);
+        $r.=HtmlInput::hidden('ac', $http->request('ac'));
 
 
         /*  when called from commercial.php some hidden values are needed */
         if (isset($_REQUEST['sa']))
-            $r.=HtmlInput::hidden("sa", $_REQUEST['sa']);
+            $r.=HtmlInput::hidden("sa", $http->request('sa'));
         if (isset($_REQUEST['sb']))
-            $r.=HtmlInput::hidden("sb", $_REQUEST['sb']);
+            $r.=HtmlInput::hidden("sb", $http->request('sb'));
         if (isset($_REQUEST['sc']))
-            $r.=HtmlInput::hidden("sc", $_REQUEST['sc']);
+            $r.=HtmlInput::hidden("sc", $http->request('sc'));
         if (isset($_REQUEST['f_id']))
-            $r.=HtmlInput::hidden("f_id", $_REQUEST['f_id']);
+            $r.=HtmlInput::hidden("f_id", $http->request('f_id'));
 
 
 
