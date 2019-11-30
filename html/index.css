@@ -215,8 +215,9 @@ BODY {
         z-index:-1;
         position:absolute;
         width:19%;
-        left:8%;
-        top:19.5%;
+        left:0%;
+        top:0%;
+        height: auto;
     }
     #login_frm {
         position:absolute;

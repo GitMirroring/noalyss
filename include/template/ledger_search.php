@@ -80,7 +80,7 @@ echo $f_accounting->input();  ?>
 
 <tr>
 <td style="text-align:right;width:30em">
-	<?php echo _('Statut')?>
+	<?php echo _('Etat')?>
 </td>
 
 <td>
