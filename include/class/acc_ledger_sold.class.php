@@ -334,9 +334,10 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         $l = new Acc_Tva($this->db, $idx_tva);
                         $l->load();
                         $tva_item = bcmul($amount, $l->get_parameter('rate'));
+			$tva_item=round($tva_item,2);
                     }
                     if (isset($tva[$idx_tva]))
-                        $tva[$idx_tva]+=$tva_item;
+                        $tva[$idx_tva]=bcadd($tva[$idx_tva],$tva_item);
                     else
                         $tva[$idx_tva] = $tva_item;
                     if ($oTva->get_parameter("both_side") == 0) {

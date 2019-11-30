@@ -148,7 +148,7 @@ class Acc_Ledger_SoldTest extends TestCase
         $array["mt"]="1572714478.3155";
         $array['e_march1_tva_amount']="";
         $this->object->insert($array);
-        $this->assertEquals(254.6250,$g_connection->get_value("select qs_vat ".$sql));
+        $this->assertEquals(254.63,$g_connection->get_value("select qs_vat ".$sql));
         $this->clean_operation();
        
         // Test space in e_march1_tva_amount instead of zero must be calculated
