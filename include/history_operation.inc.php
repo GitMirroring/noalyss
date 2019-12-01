@@ -128,7 +128,8 @@ echo dossier::hidden();
 list($count, $html) = $Ledger->list_operation($sql, $offset, $ask_pay);
 echo $html;
 echo $bar;
-$r = HtmlInput::get_to_hidden(array('search_opnb_jrn', 
+$r = HtmlInput::get_to_hidden(array('search_opnb_jrn',
+				    'operation_filter',
     'search_opqcode',
     'l', 
     'date_start', 
@@ -168,8 +169,8 @@ echo '</form>';
  * Export to csv
  */
 $r = HtmlInput::get_to_hidden(array('l', 'date_paid_start','date_paid_end',
-    'date_start', 'date_end', 'desc', 'amount_min', 'amount_max', 'qcode', 
-    'accounting', 'unpaid', 'gDossier', 'ledger_type', 'p_action'));
+				    'date_start', 'date_end', 'desc', 'amount_min', 'amount_max', 'qcode','operation_filter',
+				    'accounting', 'unpaid', 'gDossier', 'ledger_type', 'p_action'));
 if (isset($_GET['search_opr_jrn']))
 {
     foreach ($a_search_opr_jrn as $k => $v)
