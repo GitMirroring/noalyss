@@ -321,34 +321,79 @@ class Acc_Ledger_Search
 	     case
 	     when jrn_def_type='VEN' then
 		 (select ad_value from fiche_detail where ad_id=1
-		 and f_id=(select max(qs_client) from quant_sold join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
+		 and f_id=(select max(qs_client) from quant_sold join jrnx 
+                                using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) 
+                                where e.jr_id=x.jr_id))
 	    when jrn_def_type = 'ACH' then
-		(select ad_value from fiche_detail where ad_id=1
-		and f_id=(select max(qp_supplier) from quant_purchase join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
+		(select ad_value 
+                    from fiche_detail 
+                    where ad_id=1
+                    and f_id=(select max(qp_supplier) from quant_purchase 
+                        join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
 	    when jrn_def_type = 'FIN' then
 		(select ad_value from fiche_detail where ad_id=1
 		and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
 	    end as name,
 	   case
-	     when jrn_def_type='VEN' then (select ad_value from fiche_detail where ad_id=32 and f_id=(select max(qs_client) from quant_sold join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
-	    when jrn_def_type = 'ACH' then (select ad_value from fiche_detail where ad_id=32 and f_id=(select max(qp_supplier) from quant_purchase join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
-	    when jrn_def_type = 'FIN' then (select ad_value from fiche_detail where ad_id=32 and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
+	     when jrn_def_type='VEN' then 
+                (select ad_value from fiche_detail 
+                    where ad_id=32 
+                    and f_id=(select max(qs_client) 
+                            from quant_sold 
+                                join jrnx using (j_id) 
+                                join jrn as e on (e.jr_grpt_id=j_grpt) 
+                            where e.jr_id=x.jr_id))
+	    when jrn_def_type = 'ACH' then (select ad_value 
+                                            from fiche_detail 
+                                            where ad_id=32 
+                                                and f_id=(select max(qp_supplier) 
+                                                    from quant_purchase 
+                                                        join jrnx using (j_id) 
+                                                        join jrn as e on (e.jr_grpt_id=j_grpt) 
+                                                        where e.jr_id=x.jr_id))
+	    when jrn_def_type = 'FIN' then (select ad_value 
+                                            from fiche_detail 
+                                            where ad_id=32 
+                                                and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
 	    end as first_name,
 	    case
-	     when jrn_def_type='VEN' then (select ad_value from fiche_detail where ad_id=23 and f_id=(select max(qs_client) from quant_sold join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
-	    when jrn_def_type = 'ACH' then (select ad_value from fiche_detail where ad_id=23 and f_id=(select max(qp_supplier) from quant_purchase join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
-	    when jrn_def_type = 'FIN' then (select ad_value from fiche_detail where ad_id=23 and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
+	     when jrn_def_type='VEN' then 
+                            (select ad_value 
+                            from fiche_detail 
+                            where ad_id=23 
+                                and f_id=(select max(qs_client) 
+                                    from quant_sold 
+                                        join jrnx using (j_id) 
+                                        join jrn as e on (e.jr_grpt_id=j_grpt) 
+                                        where e.jr_id=x.jr_id))
+	    when jrn_def_type = 'ACH' then (select ad_value 
+                                            from fiche_detail 
+                                            where ad_id=23 
+                                                and f_id=(select max(qp_supplier) 
+                                                    from quant_purchase 
+                                                        join jrnx using (j_id) 
+                                                        join jrn as e on (e.jr_grpt_id=j_grpt) 
+                                                    where e.jr_id=x.jr_id))
+	    when jrn_def_type = 'FIN' then (select ad_value 
+                                            from fiche_detail 
+                                            where ad_id=23 
+                                                and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
 	    end as quick_code,
 	    case
 	     when jrn_def_type='VEN' then
 		     (select sum(qs_price)+sum(vat) from
-				(select qs_internal,qs_price,case when qs_vat_sided<>0 then 0 else qs_vat end as vat from quant_sold where qs_internal=X.jr_internal) as ven_invoice
+				(select qs_internal,qs_price,case when qs_vat_sided<>0 then 0 
+                                    else qs_vat end as vat 
+                                    from quant_sold 
+                                    where qs_internal=X.jr_internal) as ven_invoice
 			  )
 	    when jrn_def_type = 'ACH' then
 			(
 				select sum(qp_price)+sum(vat)+sum(qp_nd_tva)+sum(qp_nd_tva_recup)
 				from
-				 (select qp_internal,qp_price,qp_nd_tva,qp_nd_tva_recup,qp_vat-qp_vat_sided as vat from quant_purchase where qp_internal=X.jr_internal) as invoice_purchase
+				 (select qp_internal,qp_price,qp_nd_tva,qp_nd_tva_recup,qp_vat-qp_vat_sided as vat 
+                                 from quant_purchase 
+                                 where qp_internal=X.jr_internal) as invoice_purchase
 			)
 		else null
 		end as total_invoice,
@@ -1069,7 +1114,7 @@ class Acc_Ledger_Search
             }
             $r.="<TD align=\"right\">";
 
-            $r.=( $positive!=0 )?"<font color=\"red\">  - ".nbm($row['jr_montant'])."</font>":nbm($row['jr_montant']);
+            $r.=( $positive!=0 )?"<font color=\"red\">  - ".nbm($row['total_invoice'])."</font>":nbm($row['total_invoice']);
             $r.="</TD>";
 
 

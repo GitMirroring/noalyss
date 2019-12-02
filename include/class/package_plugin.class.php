@@ -26,7 +26,7 @@
 require_once NOALYSS_INCLUDE."/class/package_noalyss.class.php";
 
 /**
- * @class
+ * @class Package_Plugin
  * @brief Manage the installation of plug
  */
 class Package_Plugin extends Package_Noalyss
