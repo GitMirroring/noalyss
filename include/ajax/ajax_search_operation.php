@@ -45,8 +45,8 @@ $tiers=$http->get("tiers", "string", "");
 if (isset($_GET['amount_id']))
 {
     put_global(array(
-        array("key"=>'amount_min', 'value'=>$_GET['amount_id']),
-        array("key"=>'amount_max', 'value'=>$_GET['amount_id'])
+        array("key"=>'amount_min', 'value'=>$http->get('amount_id',"number",0)),
+        array("key"=>'amount_max', 'value'=>$http->get('amount_id',"number",0))
     ));
 }
 $target=$http->get("target", "string", "");
@@ -93,12 +93,14 @@ if (isset($_GET['viewsearch']))
 
     // Navigation bar
     $step=MAX_RECONCILE;
-    $page=(isset($_GET['offset']))?$_GET['page']:1;
-    $offset=(isset($_GET['offset']))?$_GET['offset']:0;
+    $page=$http->get("page","number",1);
+    $offset=$http->get("offset","number",0);
+
     if (count($_GET)==0)
         $array=null;
     else
         $array=$_GET;
+
     $array['p_action']='ALL';
     if (!isset($array['date_start'])||!isset($array['date_end']))
     {

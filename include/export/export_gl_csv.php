@@ -22,7 +22,7 @@
 /*! \file
  * \brief create GL comptes as CSV.
  * Argument $_GET
- * @code
+ @code
  * Array
 (
     [gDossier] => 10104
@@ -35,7 +35,7 @@
     [from_poste] => 
     [to_poste] => 
 )
- * @encode
+@encode
  */
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');

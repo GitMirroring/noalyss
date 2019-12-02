@@ -28,7 +28,7 @@ if (!defined('ALLOWED'))
  * 
  */
 /**
- * @class
+ * @class Anc_Account_Table
  * @brief derived from Manage_Table_SQL , 
  */
 require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
