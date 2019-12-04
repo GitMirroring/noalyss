@@ -34,13 +34,36 @@ class HttpInput
 {
 
     private $array;
+    private $empty; //!< if empty that replace by $empty
 
     function _construct()
     {
         $this->array=null;
+        $this->empty="";
+    }
+    public function get_array()
+    {
+        return $this->array;
     }
 
-    /**
+    public function get_empty()
+    {
+        return $this->empty;
+    }
+
+    public function set_array($array)
+    {
+        $this->array=$array;
+        return $this;
+    }
+    // $empty replace the empty value 
+    public function set_empty($empty)
+    {
+        $this->empty=$empty;
+        return $this;
+    }
+
+        /**
      * Check the type of the value
      * @param $p_name name of the variable
      * @param $p_type type of the variable (number,string,date,array)
@@ -53,10 +76,17 @@ class HttpInput
         {
             // no check on string
             if ($p_type=="string")
+            {
                 return;
+            }
             // Check if number
             else if ($p_type=="number")
             {
+                if (empty($this->array[$p_name]))
+                {
+                    $this->array[$p_name]=$this->empty;
+                }
+
                 if ( isNumber($this->array[$p_name])==0 )
                 {
                     throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
@@ -67,6 +97,10 @@ class HttpInput
             // Check if date dd.mm.yyyy
             else if ($p_type=="date")
             {
+                if (empty($this->array[$p_name]))
+                {
+                    $this->array[$p_name]=$this->empty;
+                }
                 if (isDate($this->array[$p_name]) <> $this->array[$p_name])
                 {
                     throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
@@ -76,6 +110,10 @@ class HttpInput
             }
             else if ($p_type=="array")
             {
+                if (empty($this->array[$p_name]))
+                {
+                    $this->array[$p_name]=$this->empty;
+                }
                 if (!is_array($this->array[$p_name]) ) {
                     throw new Exception(_("Type invalide")."[ $p_name ] = {$this->array[$p_name]}"
                 , EXC_PARAM_TYPE);
