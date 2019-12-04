@@ -30,6 +30,7 @@ require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 $gDossier=dossier::id();
 
 $cn=Dossier::connect();
+$http=new HttpInput();
 
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 
@@ -40,7 +41,7 @@ $export->send_header();
 
 if  ( isset ($_GET['fd_id']))
 {
-    $fiche_def=new Fiche_Def($cn,$_GET ['fd_id']);
+    $fiche_def=new Fiche_Def($cn,$http->get('fd_id',"number"));
     $fiche=new Fiche($cn);
     $e=$fiche_def->get_by_type();
     $o=0;
