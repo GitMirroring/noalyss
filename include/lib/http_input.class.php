@@ -82,7 +82,7 @@ class HttpInput
             // Check if number
             else if ($p_type=="number")
             {
-                if (empty($this->array[$p_name]))
+                if (trim($this->array[$p_name]) == "")
                 {
                     $this->array[$p_name]=$this->empty;
                 }
@@ -97,7 +97,7 @@ class HttpInput
             // Check if date dd.mm.yyyy
             else if ($p_type=="date")
             {
-                if (empty($this->array[$p_name]))
+                if (trim($this->array[$p_name]) == "" )
                 {
                     $this->array[$p_name]=$this->empty;
                 }
@@ -110,7 +110,7 @@ class HttpInput
             }
             else if ($p_type=="array")
             {
-                if (empty($this->array[$p_name]))
+                 if (trim($this->array[$p_name]) == "" )
                 {
                     $this->array[$p_name]=$this->empty;
                 }
