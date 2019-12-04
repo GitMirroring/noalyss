@@ -42,6 +42,7 @@ $base=basename($_SERVER['SCRIPT_NAME']);
 $inside=false;
 $tiers=$http->get("tiers", "string", "");
 // With the amount id, we find the amount in a html elt
+$http->set_empty(0);
 if (isset($_GET['amount_id']))
 {
     put_global(array(
