@@ -32,7 +32,7 @@ echo Dossier::hidden();
 global $cn, $g_user, $g_succeed, $g_failed;
 $cn=Dossier::connect();
 
-$ledger_history=Acc_Ledger_History::factory($cn, $ledger, $min, $max, "E");
+$ledger_history=Acc_Ledger_History::factory($cn, $ledger, $min, $max, "E","all");
 echo h1("Detailled Accounting");
 echo h2(_("export detail html all ledgers result = Detailled Accounting from Acc_Ledger_History_Generic"));
 $ledger_history->export_detail_html();
@@ -42,7 +42,7 @@ $ledger_history->set_m_mode("D");
 $ledger_history->export_html();
 
 echo h1(_("Only VEN from Acc_Ledger_History_Sale"));
-$ledger_history=Acc_Ledger_History::factory($cn, [2], $min , $max , "L");
+$ledger_history=Acc_Ledger_History::factory($cn, [2], $min , $max , "L","all");
 $ledger_history->export_detail_html();
 
 echo h2(_("Only VEN one line"));
@@ -61,13 +61,13 @@ $ledger_history->set_m_mode("E");
 $ledger_history->export_html();
 
 echo h2("VEN + ACH");
-$ledger_history=Acc_Ledger_History::factory($cn, [3,2], $min, $max , "L");
+$ledger_history=Acc_Ledger_History::factory($cn, [3,2], $min, $max , "L","all");
 
 $ledger_history->export_oneline_html();
 
 echo h1("ACH from Acc_Ledger_History_Purchase");
 echo h2("Detailled accouting");
-$ledger_history=new Acc_Ledger_History_Purchase($cn,[3],$max,$min,"A");
+$ledger_history=new Acc_Ledger_History_Purchase($cn,[3],$max,$min,"A","all");
 $ledger_history->export_html();
 echo h2("Ach one line");
 $ledger_history->set_m_mode("L");
@@ -81,7 +81,7 @@ $ledger_history->export_html();
 
 echo h1("FIN from Acc_Ledger_History_Financial");
 echo h2("Detailled accouting");
-$ledger_history=new Acc_Ledger_History_Financial($cn,[11,16],$min,$max,"A");
+$ledger_history=new Acc_Ledger_History_Financial($cn,[11,16],$min,$max,"A","all");
 $ledger_history->export_html();
 echo h2("FIN one line");
 $ledger_history->set_m_mode("L");
