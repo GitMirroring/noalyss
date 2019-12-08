@@ -155,7 +155,7 @@ if (isset($_GET['r_jrn']))
 }
 if (isset($_GET['search_opr_jrn']))
 {
-     $a_search_opr_jrn=$http->get('search_opr_jrn','array');
+     $a_search_opr_jrn=$http->get('search_opr_jrn');
     foreach ($a_search_opr_jrn as $k => $v)
           if (isNumber($v)) $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
 }
