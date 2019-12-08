@@ -395,7 +395,7 @@ class Acc_Ledger_Search
                                  from quant_purchase 
                                  where qp_internal=X.jr_internal) as invoice_purchase
 			)
-		else null
+		else jr_montant
 		end as total_invoice,
             jr_date_paid,
             to_char(jr_date_paid,'DD.MM.YY') as str_jr_date_paid,
