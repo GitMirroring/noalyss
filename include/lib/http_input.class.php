@@ -110,7 +110,7 @@ class HttpInput
             }
             else if ($p_type=="array")
             {
-                 if (trim($this->array[$p_name]) == "" )
+                 if ( empty($this->array[$p_name]) )
                 {
                     $this->array[$p_name]=$this->empty;
                 }
