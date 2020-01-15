@@ -402,7 +402,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $p_acc_operation->poste = $dna;
             $p_acc_operation->desc=$this->find_label($dna)." ND_TVA ".$p_fiche->strAttribut(ATTR_DEF_QUICKCODE);
             $j_id = $p_acc_operation->insert_jrnx();
-            if ( $g_parameter->MY_ANALYTIC != "nu" )
+            if ( $g_parameter->MY_ANALYTIC != "nu" 
+                    &&  $g_parameter->match_analytic($p_fiche->strAttribut(ATTR_DEF_ACCOUNT))
+               )
             {
                 $op=new Anc_Operation($this->db);
                 $op->oa_group=$p_group;
@@ -441,7 +443,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             if ($p_nd_amount->nd_ded_vat > 0)
                 $p_tot_debit = bcadd($p_tot_debit, $p_nd_amount->nd_ded_vat);
             $j_id = $p_acc_operation->insert_jrnx();
-           if ( $g_parameter->MY_ANALYTIC != "nu" )
+           if ( $g_parameter->MY_ANALYTIC != "nu" 
+                 &&  $g_parameter->match_analytic($p_fiche->strAttribut(ATTR_DEF_ACCOUNT))
+              )
             {
                 $op=new Anc_Operation($this->db);
                 $op->oa_group=$p_group;
