@@ -181,13 +181,13 @@ else
 				if ($row['j_debit'] == 't')
 				{
 					$export->add($row['j_montant'],"number");
-					$export->add("");
+					$export->add(0,"number");
 					$amount_deb=bcadd($amount_deb,$row['j_montant']);
 					$prog = bcadd($prog, $row['j_montant']);
 				}
 				else
 				{
-					$export->add("");
+				    $export->add(0,"number");
 					$export->add($row['j_montant'],"number");
 					$amount_cred=bcadd($amount_cred,$row['j_montant']);
 					$prog = bcsub($prog, $row['j_montant']);

@@ -28,7 +28,7 @@ require_once NOALYSS_INCLUDE.'/database/fiche_def_ref_sql.class.php';
  */
 
 /**
- * @class
+ * @class Template_Card_Category
  * @brief Manage the template of card category
  */
 class Template_Card_Category extends Manage_Table_SQL

@@ -25,7 +25,7 @@
  * @brief Inplace_edit class for ajax update of HtmlInput object
  */
 /**
- * @class
+ * @class Inplace_Edit
  * @brief Inplace_edit class for ajax update of HtmlInput object.
  * You need an ajax to response and modify the data. Some parameters will be sent
  * by default when you click on the element

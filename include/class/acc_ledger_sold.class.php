@@ -361,6 +361,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         $l = new Acc_Tva($this->db, $idx_tva);
                         $l->load();
                         $tva_item_currency = bcmul($amount, $l->get_parameter('rate'));
+			$tva_item=round($tva_item,2);
                     }
                     $tva_item=bcdiv($tva_item_currency,$p_currency_rate);
                     $tva_item=round($tva_item,2);

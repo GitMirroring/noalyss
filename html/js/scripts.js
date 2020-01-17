@@ -270,7 +270,7 @@ function compute_number(value)
             retval = eval(value);
         } catch (e)
         {
-            return 0;
+           return parseFloat(value);
         }
         /*pour gérer les divisions par 0*/
         if (retval == Infinity)

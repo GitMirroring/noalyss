@@ -19,8 +19,7 @@
  */
 // Copyright (2016) Author Dany De Bontridder <dany@alchimerys.be>
 
-if (!defined('ALLOWED'))
-    die('Appel direct ne sont pas permis');
+// if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 
 /**
  * @file
@@ -36,8 +35,8 @@ class Acc_Ledger_Search
 
     /**
      * @brief return a HTML string with the form for the search
-     * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN
-     * @param  $all_type_ledger
+     * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN: uppercase !
+     * @param  $all_type_ledger 
      *       values :
      *         - 1 means all the ledger of this type
      *         - 0 No have the "Tous les journaux" availables
@@ -50,7 +49,7 @@ class Acc_Ledger_Search
     function __construct($p_type, $p_all=1, $p_div="")
     {
         $this->cn=Dossier::connect();
-        $this->type=$p_type;
+        $this->set_type($p_type);
         $this->all=$p_all;
         $this->div=$p_div;
     }
@@ -72,6 +71,10 @@ class Acc_Ledger_Search
 
     public function set_type($type)
     {
+        if (! in_array($type, ["ALL","VEN","ACH","ODS","FIN"]))
+        {
+            throw new Exception ("ALS02 : type invalide $type",EXC_PARAM_VALUE);
+        }
         $this->type=$type;
     }
 
@@ -265,7 +268,7 @@ class Acc_Ledger_Search
      * @brief this function will create a sql stmt to use to create the list for
      * the ledger,
      * @param  $p_array is usually the $_GET,
-     * @param  $p_order the order of the row
+     * @param  $p_order the order of the row --> not used
      * @param  $p_where is the sql condition if not null then the $p_array will not be used
      * \note the p_action will be used to filter the ledger but gl means ALL
      * struct array $p_array
@@ -318,36 +321,81 @@ class Acc_Ledger_Search
 	     case
 	     when jrn_def_type='VEN' then
 		 (select ad_value from fiche_detail where ad_id=1
-		 and f_id=(select max(qs_client) from quant_sold join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
+		 and f_id=(select max(qs_client) from quant_sold join jrnx 
+                                using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) 
+                                where e.jr_id=x.jr_id))
 	    when jrn_def_type = 'ACH' then
-		(select ad_value from fiche_detail where ad_id=1
-		and f_id=(select max(qp_supplier) from quant_purchase join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
+		(select ad_value 
+                    from fiche_detail 
+                    where ad_id=1
+                    and f_id=(select max(qp_supplier) from quant_purchase 
+                        join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
 	    when jrn_def_type = 'FIN' then
 		(select ad_value from fiche_detail where ad_id=1
 		and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
 	    end as name,
 	   case
-	     when jrn_def_type='VEN' then (select ad_value from fiche_detail where ad_id=32 and f_id=(select max(qs_client) from quant_sold join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
-	    when jrn_def_type = 'ACH' then (select ad_value from fiche_detail where ad_id=32 and f_id=(select max(qp_supplier) from quant_purchase join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
-	    when jrn_def_type = 'FIN' then (select ad_value from fiche_detail where ad_id=32 and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
+	     when jrn_def_type='VEN' then 
+                (select ad_value from fiche_detail 
+                    where ad_id=32 
+                    and f_id=(select max(qs_client) 
+                            from quant_sold 
+                                join jrnx using (j_id) 
+                                join jrn as e on (e.jr_grpt_id=j_grpt) 
+                            where e.jr_id=x.jr_id))
+	    when jrn_def_type = 'ACH' then (select ad_value 
+                                            from fiche_detail 
+                                            where ad_id=32 
+                                                and f_id=(select max(qp_supplier) 
+                                                    from quant_purchase 
+                                                        join jrnx using (j_id) 
+                                                        join jrn as e on (e.jr_grpt_id=j_grpt) 
+                                                        where e.jr_id=x.jr_id))
+	    when jrn_def_type = 'FIN' then (select ad_value 
+                                            from fiche_detail 
+                                            where ad_id=32 
+                                                and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
 	    end as first_name,
 	    case
-	     when jrn_def_type='VEN' then (select ad_value from fiche_detail where ad_id=23 and f_id=(select max(qs_client) from quant_sold join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
-	    when jrn_def_type = 'ACH' then (select ad_value from fiche_detail where ad_id=23 and f_id=(select max(qp_supplier) from quant_purchase join jrnx using (j_id) join jrn as e on (e.jr_grpt_id=j_grpt) where e.jr_id=x.jr_id))
-	    when jrn_def_type = 'FIN' then (select ad_value from fiche_detail where ad_id=23 and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
+	     when jrn_def_type='VEN' then 
+                            (select ad_value 
+                            from fiche_detail 
+                            where ad_id=23 
+                                and f_id=(select max(qs_client) 
+                                    from quant_sold 
+                                        join jrnx using (j_id) 
+                                        join jrn as e on (e.jr_grpt_id=j_grpt) 
+                                        where e.jr_id=x.jr_id))
+	    when jrn_def_type = 'ACH' then (select ad_value 
+                                            from fiche_detail 
+                                            where ad_id=23 
+                                                and f_id=(select max(qp_supplier) 
+                                                    from quant_purchase 
+                                                        join jrnx using (j_id) 
+                                                        join jrn as e on (e.jr_grpt_id=j_grpt) 
+                                                    where e.jr_id=x.jr_id))
+	    when jrn_def_type = 'FIN' then (select ad_value 
+                                            from fiche_detail 
+                                            where ad_id=23 
+                                                and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
 	    end as quick_code,
 	    case
 	     when jrn_def_type='VEN' then
 		     (select sum(qs_price)+sum(vat) from
-				(select qs_internal,qs_price,case when qs_vat_sided<>0 then 0 else qs_vat end as vat from quant_sold where qs_internal=X.jr_internal) as ven_invoice
+				(select qs_internal,qs_price,case when qs_vat_sided<>0 then 0 
+                                    else qs_vat end as vat 
+                                    from quant_sold 
+                                    where qs_internal=X.jr_internal) as ven_invoice
 			  )
 	    when jrn_def_type = 'ACH' then
 			(
 				select sum(qp_price)+sum(vat)+sum(qp_nd_tva)+sum(qp_nd_tva_recup)
 				from
-				 (select qp_internal,qp_price,qp_nd_tva,qp_nd_tva_recup,qp_vat-qp_vat_sided as vat from quant_purchase where qp_internal=X.jr_internal) as invoice_purchase
+				 (select qp_internal,qp_price,qp_nd_tva,qp_nd_tva_recup,qp_vat-qp_vat_sided as vat 
+                                 from quant_purchase 
+                                 where qp_internal=X.jr_internal) as invoice_purchase
 			)
-		else null
+		else jr_montant
 		end as total_invoice,
             jr_date_paid,
             to_char(jr_date_paid,'DD.MM.YY') as str_jr_date_paid,
@@ -407,7 +455,7 @@ class Acc_Ledger_Search
 
         $and='';
         $g_user=new User($this->cn);
-        $p_action=$ledger_type;
+        $p_action=(isset ($ledger_type)) ? $ledger_type:$this->type;
         if ($p_action=='')
             $p_action='ALL';
         if ($r_jrn==-1)
@@ -571,6 +619,8 @@ class Acc_Ledger_Search
         $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.$fil_amount.
             $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation;
         $sql.=" where ".$where;
+        
+        // Q?? Why do we return where if it is included in SQL ?
         return array($sql, $where);
     }
 
@@ -583,6 +633,7 @@ class Acc_Ledger_Search
      */
     function display_search_form()
     {
+        $http=new HttpInput();
         $r='';
         $r.='<div id="search_form" style="display:none">';
         $r.=HtmlInput::title_box(_('Recherche'), "search_form", "hide", "", "n");
@@ -597,18 +648,18 @@ class Acc_Ledger_Search
         
         
 
-        $r.=HtmlInput::hidden('ac', $_REQUEST['ac']);
+        $r.=HtmlInput::hidden('ac', $http->request('ac'));
 
 
         /*  when called from commercial.php some hidden values are needed */
         if (isset($_REQUEST['sa']))
-            $r.=HtmlInput::hidden("sa", $_REQUEST['sa']);
+            $r.=HtmlInput::hidden("sa", $http->request('sa'));
         if (isset($_REQUEST['sb']))
-            $r.=HtmlInput::hidden("sb", $_REQUEST['sb']);
+            $r.=HtmlInput::hidden("sb", $http->request('sb'));
         if (isset($_REQUEST['sc']))
-            $r.=HtmlInput::hidden("sc", $_REQUEST['sc']);
+            $r.=HtmlInput::hidden("sc", $http->request('sc'));
         if (isset($_REQUEST['f_id']))
-            $r.=HtmlInput::hidden("f_id", $_REQUEST['f_id']);
+            $r.=HtmlInput::hidden("f_id", $http->request('f_id'));
 
 
 
@@ -1063,7 +1114,7 @@ class Acc_Ledger_Search
             }
             $r.="<TD align=\"right\">";
 
-            $r.=( $positive!=0 )?"<font color=\"red\">  - ".nbm($row['jr_montant'])."</font>":nbm($row['jr_montant']);
+            $r.=( $positive!=0 )?"<font color=\"red\">  - ".nbm($row['total_invoice'])."</font>":nbm($row['total_invoice']);
             $r.="</TD>";
 
 

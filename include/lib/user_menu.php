@@ -27,11 +27,10 @@ require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
 
-/*!   MenuAdmin */
-/* \brief show the menu for user/database management
-/*
-/* \return HTML code with the menu
-*/
+/*!   MenuAdmin 
+ * \brief show the menu for user/database management
+ * \return HTML code with the menu
+ */
 
 function MenuAdmin()
 {

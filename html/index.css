@@ -183,7 +183,7 @@ BODY {
        
         left:0px;
         top:20px;
-        /*! height: 15%; */
+        height: 15%;
     }
     #login_frm {
         position:absolute;
@@ -203,7 +203,7 @@ BODY {
         width: 20rem;
     }
 }
-@media only screen and (max-width : 1100px) {
+@media only screen and (min-width : 1100px) {
     #alternate_browser {
         position:absolute;
         bottom: 30px;
@@ -229,7 +229,7 @@ BODY {
     }
     #recover_link {
         position:absolute;
-        /*! top:397px; */
+        top:397px;
         left:539px;
         background-color: white;
         width:auto;
@@ -259,10 +259,10 @@ BODY {
     #logo_id {
      z-index: -1;
       position: absolute;
-      width: 148px;
+      width: 140px;
       left: 5px;
       top: 22px;
-      height: 155px;
+      height: 140px;
     }
     #login_frm {
         position:absolute;
@@ -274,11 +274,11 @@ BODY {
         width: 24rem;
     }
     #recover_link {
-        position:fixed;
+        position:absolute;
+        top:55%;
         left:55%;
         background-color: white;
         margin-top:0px;
-        bottom: 10px;
     }
     #recover_box {
 

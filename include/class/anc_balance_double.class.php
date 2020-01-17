@@ -32,7 +32,7 @@ require_once  NOALYSS_INCLUDE.'/class/anc_print.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
 /**
- * @class
+ * @class Anc_Balance_Double
  * @brief Print the crossed balance between 2 plan
  *
  */

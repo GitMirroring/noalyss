@@ -29,7 +29,7 @@ require_once NOALYSS_INCLUDE."/database/v_tva_rate_sql.class.php";
 require_once NOALYSS_INCLUDE."/database/tva_rate_sql.class.php";
 
 /**
- * @class
+ * @class Tva_Rate_MTable
  * @brief Configure the tva : code , rate, label ...
  * When using Manage_Table_SQL
  */
