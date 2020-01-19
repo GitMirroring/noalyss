@@ -16,7 +16,7 @@ class Acc_AccountTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp() :void
+    protected function setUp() 
     {
         global $g_connection, $g_parameter, $g_user;
         $_REQUEST['gDossier']=DOSSIER;
@@ -129,7 +129,6 @@ class Acc_AccountTest extends TestCase
             $this->assertEquals($ex->getCode(),EXC_PARAM_VALUE);
        }
        $duplicate->set_parameter('pcm_val','999TEST');
-       $duplicate->insert();
        $duplicate->delete();
        
     }
@@ -154,11 +153,15 @@ class Acc_AccountTest extends TestCase
 
     /**
      * @covers Acc_Account::insert
+     * @covers Acc_Account::find_by_value
      */
     public function testInsert()
     {
         $cn=Dossier::connect();
+        $cn->exec_sql("delete from tmp_pcmn where pcm_val=$1",
+                ['400A']);
         $new=new Acc_Account($cn);
+        
         $new->set_parameter("pcm_val", '400A');
         $new->set_parameter("pcm_val_parent", "400");
         $new->set_parameter("pcm_direct_use", "Y");
@@ -172,11 +175,16 @@ class Acc_AccountTest extends TestCase
         catch (Exception $e)
         {
             $this->assertEquals($e->getCode(), EXC_PARAM_VALUE);
+             $new->delete();
         }
 
         $new->set_parameter("pcm_lib", "Insertion test");
         $new->insert();
+        $check=new Acc_Account($cn);     
+        $check->find_by_value('400A');
+        $this->assertEquals("Insertion test",$check->get_lib());
         $new->delete();
+        
     }
 
     /**
@@ -201,11 +209,14 @@ class Acc_AccountTest extends TestCase
     public function testSave()
     {
         global $g_connection;
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val=$1",
+                ['999TEST']);
         $check=new Acc_Account($g_connection,'999TEST');
         $check->set_parameter("pcm_lib", "TESTING");
         $check->set_parameter('pcm_val_parent','9');
         $check->set_parameter('pcm_direct_use','N');
         // insert
+        
         $check->save();
         $check_new=new Acc_Account($g_connection,'999TEST');
         $this->assertEquals($check_new->get_lib(),$check->get_lib());
@@ -216,5 +227,11 @@ class Acc_AccountTest extends TestCase
         $this->assertNotEquals($check_new->get_lib(),"TESTING");
         $check->delete();
     }
-
+    
+    public function testfind_parent()
+    {
+        $this->object->set_parameter("pcm_val", 70000000);
+        $result=$this->object->find_parent();
+        $this->assertEquals($result,700);
+    }
 }
