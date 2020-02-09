@@ -950,7 +950,16 @@ class HtmlInput
             return $sel;
         }
     }
-
+    /**
+     * 
+     * * filter the rows in a table and keep the colored row in alternance
+     * @param dom_id $p_table_id table
+     * @param string $p_col , column to search example 0,1,2
+     * @param int $start_row row to always keep (header)
+     * @param string $p_name name of the input field
+     * @param string $p_old_value search value sent by $_GET (or $_REQUEST)
+     * @return string HTML
+     */
     static function filter_table_form($p_table_id, $p_col, $start_row, $p_name,
             $p_old_value)
     {
@@ -963,7 +972,13 @@ class HtmlInput
         $r.=' <span class="notice" id="info_'.$p_table_id.'"></span>';
         return $r;
     }
-
+    /**
+     * filter the rows in a table and keep the colored row in alternance
+     * @param dom_id $p_table_id table
+     * @param string $p_col , column to search example 0,1,2
+     * @param int $start_row row to always keep (header)
+     * @return string HTML
+     */
     static function filter_table($p_table_id, $p_col, $start_row)
     {
         $r="
