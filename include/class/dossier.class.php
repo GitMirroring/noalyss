@@ -405,5 +405,16 @@ class Dossier
             }
         }
     }
+    
+    /**
+     * Set the current dossier to $p_dossier
+     * @param numeric $p_dossier
+     */
+    static function set_current($p_dossier) {
+        
+        put_global(["gDossier"=>$p_dossier]);
+        self::check();
+        
+    }
 
 }
