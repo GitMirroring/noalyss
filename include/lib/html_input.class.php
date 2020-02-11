@@ -965,7 +965,8 @@ class HtmlInput
     {
         $r="
 			<span>
-			<input id=\"lk_".$p_table_id."\" name=\"$p_name\" value=\"$p_old_value\"autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\">
+                        <span  class=\"icon\"  >&#xf50d;</span>
+			<input id=\"lk_".$p_table_id."\" name=\"$p_name\" value=\"$p_old_value\"autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\" placeholder=\""._("Recherche")."\">
 			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row );\" value=\"X\">
 			</span>
 			";
@@ -983,7 +984,9 @@ class HtmlInput
     {
         $r="
 			<span>
-			<input id=\"lk_".$p_table_id."\" autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\">
+                        <span  class=\"icon\"  >&#xf50d;</span>
+
+			<input id=\"lk_".$p_table_id."\" autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\" placeholder=\""._("Recherche")."\">
 			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row );\" value=\"X\">
 			</span>
 			";
@@ -999,8 +1002,8 @@ class HtmlInput
     {
         $r="<span>";
         $r.='<span  class=" icon">&#xf50d;</span>';
-        $r.=sprintf('<input id="search_%s" type="TEXT" class="input_text" name="filter_list%s" onkeyup="filter_list(this,\'%s\')">',
-                $p_list_id,$p_list_id,$p_list_id);
+        $r.=sprintf('<input id="search_%s" type="TEXT" class="input_text" name="filter_list%s" placeholder="%s" onkeyup="filter_list(this,\'%s\')">',
+                $p_list_id,$p_list_id,_("Recherche"),$p_list_id);
         
         $r.=sprintf('<input type="button" class="smallbutton" onclick="$(\'search_%s\').value=\'\';filter_list(\'search_%s\',\'%s\')" value="x">',$p_list_id,$p_list_id,$p_list_id);
         $r.='</span>';
