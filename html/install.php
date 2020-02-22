@@ -316,8 +316,8 @@ if (!defined('PHP_VERSION_ID')) {
 
    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
-if ( PHP_VERSION_ID < 50500)  {
-    echo $g_failed. " ".phpversion." ". _("Version PHP trop basse , minimum 5.4");
+if ( PHP_VERSION_ID < 70033)  {
+    echo $g_failed. " ".phpversion." ". _("Version PHP trop basse , minimum 7.0.33");
     
 } else {
     echo $g_succeed. " ".phpversion();
@@ -420,10 +420,10 @@ $version=$cn->get_value($sql);
 
 echo _("Version base de données :"),$version;
 $majeur=explode(".",$version);
-if ( $majeur[0] < 9 )
+if ( $majeur[0] < 9 && $majeur[0] < 5 )
   {
 ?>
-  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 9.0 de PostGresql, si votre distribution n'en
+  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 9.5 de PostGresql, si votre distribution n'en
 offre pas, installez-en une en la compilant. Lisez attentivement la notice sur postgresql.org pour migrer
 vos bases de données")?>
 </p>
