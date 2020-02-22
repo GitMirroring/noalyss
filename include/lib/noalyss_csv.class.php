@@ -58,7 +58,7 @@ class Noalyss_Csv
      * Correct the name of the file , remove forbidden character and
      * add extension and date
      */
-    private  function correct_name()
+    protected  function correct_name()
     {
         if (trim(strlen($this->filename))==0) {
             record_log('CSV->correct_name filename is empty');
@@ -157,7 +157,7 @@ class Noalyss_Csv
     /**
      * clean the row
      */
-    private function clean()
+    protected function clean()
     {
         $this->element=array();
         $this->size=0;
@@ -166,7 +166,7 @@ class Noalyss_Csv
     * format the number for the CSV export
     * @param $p_number number
     */
-   private function nb($p_number)
+    protected function nb($p_number)
    {
        $p_number=trim($p_number);
        if ($p_number=="") {return $p_number;}
@@ -177,12 +177,118 @@ class Noalyss_Csv
        }
        return $r;
    }
-   private function encode($str)
+    protected function encode($str)
    {
        if ($this->encoding=="utf8") return $str;
        if ($this->encoding=="latin1") return utf8_decode ($str);
        throw new Exception(_("Encodage invalide"));
    }
-            
+    /**
+     * @return mixed
+     */
+    public function get_filename()
+    {
+        return $this->filename;
+        return $this;
+    }
+
+    /**
+     * @param mixed $filename
+     */
+    public function set_filename($filename)
+    {
+        $this->filename = $filename;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function get_element()
+    {
+        return $this->element;
+        return $this;
+    }
+
+    /**
+     * @param array $element
+     */
+    public function set_element($element)
+    {
+        $this->element = $element;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_sep_field()
+    {
+        return $this->sep_field;
+        return $this;
+    }
+
+    /**
+     * @param mixed $sep_field
+     */
+    public function set_sep_field($sep_field)
+    {
+        $this->sep_field = $sep_field;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_sep_dec()
+    {
+        return $this->sep_dec;
+        return $this;
+    }
+
+    /**
+     * @param mixed $sep_dec
+     */
+    public function set_sep_dec($sep_dec)
+    {
+        $this->sep_dec = $sep_dec;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_encoding()
+    {
+        return $this->encoding;
+        return $this;
+    }
+
+    /**
+     * @param mixed $encoding
+     */
+    public function set_encoding($encoding)
+    {
+        $this->encoding = $encoding;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function get_size()
+    {
+        return $this->size;
+        return $this;
+    }
+
+    /**
+     * @param int $size
+     */
+    public function set_size($size)
+    {
+        $this->size = $size;
+        return $this;
+    }
 
 }
