@@ -730,6 +730,7 @@ function save_card(obj)
       smoke.alert('Poste comptable trop grand');
       return false;
     }
+
     // Data must be taken here
 
     var    data=$('save_card').serialize(false);
@@ -896,6 +897,7 @@ function update_card(obj)
 {
 try {
     var name=obj.id;
+
     var qs=Form.serialize(name)+'&op2=upc&op=card';
     var action=new Ajax.Request ( 'ajax_misc.php',
 				  {
