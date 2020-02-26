@@ -529,10 +529,18 @@ class Fiche
             $w->name = "av_text" . $attr->ad_id;
             if ($attr->ad_id == 21 || $attr->ad_id==22||$attr->ad_id==20||$attr->ad_id==31)
             {
-                    $bulle=Icon_Action::infobulle(21);
+                    $bulle=Icon_Action::infobulle( 21);
             }
-            if ($attr->ad_id == ATTR_DEF_NAME || $attr->ad_id== ATTR_DEF_QUICKCODE) 
+
+            // Warning length quickcode
+            if ($attr->ad_id== ATTR_DEF_QUICKCODE ) {
+                $bulle=Icon_Action::warnbulle(76);
+            }
+            if ($attr->ad_id == ATTR_DEF_NAME || $attr->ad_id== ATTR_DEF_QUICKCODE)
+            {
                 $class=" input_text highlight info";
+
+            }
             else
                 $class="input_text";
             $r.="<TR>" . td(_($w->label)." $bulle", ' class="'.$class.'" ') . td($w->input()." $msg")." </TR>";
@@ -720,6 +728,10 @@ class Fiche
             else
                 $class="input_text";
 
+            // Warning length quickcode
+            if ($r->ad_id== ATTR_DEF_QUICKCODE ) {
+                $bulle=Icon_Action::warnbulle(76);
+            }
             $ret.="<TR>".td(_($r->ad_text).$bulle,'class="'.$class.'"').td($w->input()." ".$msg)." </TR>";
         }
 
