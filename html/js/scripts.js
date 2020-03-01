@@ -1399,6 +1399,20 @@ function set_reconcile(obj)
 
                         if (tiers && tiers.value != "") {
                             $(tiers.value).value = elmt.value;
+                            /* set the name */
+                            new Ajax.Request("fid.php",{
+                                method:"get",
+                                parameters:{gDossier:obj.elements['gDossier'].value,"FID":elmt.value},
+                                onSuccess:function(req){
+                                    // find the row number
+                                    //tiers.value = e_othern
+                                    var tiers_card=new String(tiers.value);
+                                    var num=tiers_card.replace("e_other","");
+                                    var tiers_name_id="e_other"+"_name"+num;
+                                    var answer = req.responseText.evalJSON();
+                                    $(tiers_name_id).value=answer["name"];
+                                }
+                            });
                         }
                     }
                     $(ctlc.value).value += nValue;
