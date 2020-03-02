@@ -71,14 +71,14 @@ class Pre_operation
     /*!\brief fill the object with the $_POST variable */
     function get_post()
     {
-        $this->nb_item=$_POST['nb_item'];
-        $this->p_jrn=$_REQUEST['p_jrn'];
-        $this->jrn_type=$_POST['jrn_type'];
-        
-	$this->name=$_POST['opd_name'];
+        $http=new HttpInput();
+        $this->nb_item=$http->post('nb_item',"number");
+        $this->p_jrn=$http->request('p_jrn',"number");
+        $this->jrn_type=$http->post('jrn_type');
+	    $this->name=$http->post('opd_name');
 
-        $this->name=(trim($this->name)=='')?$_POST['e_comm']:$this->name;
-        $this->description=  $_POST['od_description'];
+        $this->name=(trim($this->name)=='')?$http->post('e_comm'):$this->name;
+        $this->description= $http->post('od_description');
         if ( $this->name=="")
         {
             $n=$this->db->get_next_seq('op_def_op_seq');
@@ -106,7 +106,7 @@ class Pre_operation
         }
         if ( $this->count()  > MAX_PREDEFINED_OPERATION )
         {
-            echo '<span class="notice">'.("Vous avez atteint le max. d'op&eacute;ration pr&eacute;d&eacute;finie, d&eacute;sol&eacute;").'</span>';
+            echo '<span class="notice">'.("Vous avez atteint le max. d'opération prédéfinie, désolé").'</span>';
             return false;
         }
         $sql='insert into op_predef (jrn_def_id,od_name,od_item,od_jrn_type,od_direct,od_description)'.

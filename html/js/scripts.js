@@ -1227,9 +1227,7 @@ function mod_predf_op(dossier_id, od_id)
 {
     var target = "mod_predf_op";
     removeDiv(target);
-    var sx = '20%';
-    var sy = '10%';
-    var str_style = "top:" + sx + ";left:" + sy + ";";
+    var str_style = "top:10%;left:2%;width:96%";
 
     var div = {id: target, cssclass: 'inner_box', style: str_style, html: loading(), drag: 1};
 

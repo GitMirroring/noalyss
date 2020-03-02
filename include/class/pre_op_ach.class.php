@@ -40,18 +40,19 @@ class Pre_op_ach extends Pre_operation_detail
     function get_post()
     {
         parent::get_post();
+        $http=new HttpInput();
         $this->operation->od_direct='f';
-        $this->e_client=$_POST['e_client'];
+        $this->e_client=$http->post('e_client');
         for ($i=0;$i<$this->operation->nb_item;$i++)
         {
             $march="e_march".$i;
-            $this->$march=$_POST['e_march'.$i];
-            $this->{"e_march".$i."_price"}=(isset ($_POST['e_march'.$i."_price"]))?$_POST['e_march'.$i."_price"]:0;
-            $this->{"e_march".$i."_price"}=(trim($_POST['e_march'.$i."_price"])=="")?0:$_POST['e_march'.$i."_price"];
-            $this->{"e_march".$i."_tva_id"}=(isset ($_POST['e_march'.$i."_tva_id"]))?$_POST['e_march'.$i."_tva_id"]:0;
-            $this->{"e_march".$i."_tva_amount"}=(isset($_POST['e_march'.$i."_tva_amount"]))?$_POST['e_march'.$i."_tva_amount"]:0;
-            $this->{"e_march".$i."_label"}=(isset($_POST['e_march'.$i."_label"]))?$_POST['e_march'.$i."_label"]:null;
-            $this->{"e_quant".$i}=$_POST['e_quant'.$i];
+            $this->$march=$http->post('e_march'.$i);
+            $this->{"e_march".$i."_price"}=$http->post('e_march'.$i."_price","string",0);
+            $this->{"e_march".$i."_price"}=$http->post('e_march'.$i."_price","string",0);
+            $this->{"e_march".$i."_tva_id"}=$http->post('e_march'.$i."_tva_id","string",0);
+            $this->{"e_march".$i."_tva_amount"}=$http->post('e_march'.$i."_tva_amount","string",0);
+            $this->{"e_march".$i."_label"}=$http->post('e_march'.$i."_label","string",NULL);
+            $this->{"e_quant".$i}=$http->post('e_quant'.$i);
 
         }
     }
@@ -403,7 +404,7 @@ class Pre_op_ach extends Pre_operation_detail
 
         // Set correctly the REQUEST param for jrn_type
         $r.= HtmlInput::hidden('jrn_type','ACH');
-        $r.= HtmlInput::button('add_item',_('Ajout article'),      ' onClick="ledger_add_row()"');
+        $r.= Html_Input_Noalyss::ledger_add_item("O");
 
         return $r;
    }
