@@ -1332,7 +1332,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
         // Set correctly the REQUEST param for jrn_type
         $r.= HtmlInput::hidden('jrn_type','ACH');
-        $r.= HtmlInput::button('add_item',_('Ajout article'),      ' onClick="ledger_add_row()"');
+        $r.= Html_Input_Noalyss::ledger_add_item("O");
 
 
 

@@ -345,6 +345,22 @@ function ledger_fin_add_row()
 }
 
 /**
+ * Add multiple row
+ * @param p_numrow
+ */
+function ledger_add_multiple(p_elid)
+{
+    var nbrow=$(p_elid).value;
+    if (nbrow == NaN) {nbrow=1;}
+    var type_ledger=$(p_elid+"_ledger").value;
+    var i=0;
+    for (i=0;i<nbrow;i++) {
+        if ( type_ledger == 'O' ) {ledger_add_row();}
+        if ( type_ledger == 'F') { ledger_fin_add_row();}
+        if ( type_ledger == 'M') { quick_writing_add_row();}
+    }
+}
+/**
  *  add a line in the form for the purchase ledger
  * @param p_dossier folder id
  * @param p_table_name

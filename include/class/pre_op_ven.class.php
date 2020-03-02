@@ -406,8 +406,8 @@ class Pre_op_ven extends Pre_operation_detail
 
         // Set correctly the REQUEST param for jrn_type
         $r.=HtmlInput::hidden('jrn_type','VEN');
+        $r.= Html_Input_Noalyss::ledger_add_item("O");
 
-        $r.=HtmlInput::button('add_item',_('Ajout article'),      ' onClick="ledger_add_row()"');
         return $r;
     }
 }

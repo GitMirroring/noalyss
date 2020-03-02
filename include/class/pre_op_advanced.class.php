@@ -284,6 +284,7 @@ class Pre_Op_Advanced extends Pre_operation_detail
                 // If readonly == 1 then show CA
         }
         $ret.='</table>';
+        $ret.=Html_Input_Noalyss::ledger_add_item("M");
         return $ret;
     }
 }

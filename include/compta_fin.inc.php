@@ -145,7 +145,7 @@ try
 {
     echo $Ledger->input($array);
 
-    echo HtmlInput::button('add_item',_('Ajout article'),   ' onClick="ledger_fin_add_row()"');
+    echo  Html_Input_Noalyss::ledger_add_item("F");
     echo HtmlInput::submit('save',_('Sauve'));
     echo HtmlInput::reset(_('Effacer'));
 
