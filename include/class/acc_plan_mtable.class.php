@@ -62,21 +62,24 @@ class Acc_Plan_MTable extends Manage_Table_SQL
             ["label"=>_("Produit inversé"),"value"=>"PROINV"],
             ["label"=>_("Contexte"),"value"=>"CON"]
         ]);
-        $this->set_col_type("pcm_direct_use", "select",array(["label"=>_("Oui"),"value"=>"Y"],["label"=>"Non","value"=>"N"]));
-        $this->a_order=["pcm_val","pcm_lib","parent_accounting","pcm_direct_use","pcm_type","fiche_qcode"];
+        $this->set_col_type("pcm_direct_use", "select",
+            array(["label" => _("Oui"), "value" => "Y"], ["label" => "Non", "value" => "N"]));
+        $this->set_col_type("pcm_val", "custom");
+        $this->a_order = ["pcm_val", "pcm_lib", "parent_accounting", "pcm_direct_use", "pcm_type", "fiche_qcode"];
         $this->set_icon_mod("first");
     }
+
     /**
      * Display a row
      * @param type $p_row array of value key column=>value
      */
     function display_row($p_row)
     {
-         printf('<tr  id="%s_%s">', 
+         printf('<tr  id="%s_%s">',
                  $this->object_name,
                 $p_row[$this->table->primary_key])
         ;
-        
+
         $dossier_id=Dossier::id();
         $nb_order=count($this->a_order);
         for ($i=0; $i<$nb_order; $i++)
@@ -99,29 +102,29 @@ class Acc_Plan_MTable extends Manage_Table_SQL
             elseif ($v == "fiche_qcode") {
                 $count=$this->table->cn->get_value("select count(*) from fiche_detail where ad_id=5 and ad_value=$1",array($p_row['pcm_val']));
                if ($count ==  0) echo td("");
-               elseif ($count == 1 ) { 
+               elseif ($count == 1 ) {
                    echo '<td>';
-                   echo HtmlInput::card_detail($p_row[$v]) ; 
+                   echo HtmlInput::card_detail($p_row[$v]) ;
                    echo '</td>';
-               
+
                }
-               elseif ($count > 1) { 
+               elseif ($count > 1) {
                    echo '<td>';
                    $a_code=explode(",",$p_row[$v]);
                    $nb_code=count($a_code);
                    for ($xx = 0;$xx < $nb_code;$xx++)
                    {
-                       echo HtmlInput::card_detail($a_code[$xx])."," ; 
+                       echo HtmlInput::card_detail($a_code[$xx])."," ;
                    }
                    echo  " ($count) ";
                    echo Icon_Action::more(uniqid(), sprintf("display_all_card('%s','%s')",$dossier_id,$p_row["pcm_val"]));
                    echo '</td>';
-                   
-               } 
+
+               }
             }
             elseif ($v=="pcm_lib")
             {
-                
+
                 if ( $nb >0){
                     echo "<td>";
                     if ($nb_used > 0) {
@@ -148,13 +151,14 @@ class Acc_Plan_MTable extends Manage_Table_SQL
 
         echo '</tr>';
     }
+
     /**
-     * Check that the entered data are valid before recording them into 
+     * Check that the entered data are valid before recording them into
      * tmp_pcmn, the errors are stored into this->a_error and if someting wrong
      * is found it returns false, if the data can be saved it returns true
-     * @return return false if an error is found, 
+     * @return return false if an error is found,
      */
-    function check() 
+    function check()
     {
         $cn=Dossier::connect();
         $count=$cn->get_value("select count(*) from tmp_pcmn where pcm_val = $1 and id <> $2",
@@ -180,12 +184,25 @@ class Acc_Plan_MTable extends Manage_Table_SQL
         if ($exist_parent == 0) {
             $this->set_error("parent_accounting", _("Compte parent n'existe pas"));
         }
-        if ( count($this->aerror) > 0 ) return false;
+        /**
+         * check that accounting is not already used
+         */
+        $old_accounting = $cn->get_value("select pcm_val from tmp_pcmn where id = $1",
+            array($this->table->id));
+        // it is not a new accounting and is different
+        if ($old_accounting != "" && $old_accounting != $this->table->pcm_val) {
+            // count it is used
+            if ($cn->get_value("select count(*) from jrnx where j_poste=$1",
+                    [$old_accounting]) > 0) {
+                $this->set_error("pcm_val", _("Poste utilisé"));
+            }
+        }
+        if (count($this->aerror) > 0) return false;
         return true;
     }
-    
+
     /**
-     * @brief display into a dialog box the datarow in order 
+     * @brief display into a dialog box the datarow in order
      * to be appended or modified. Can be override if you need
      * a more complex form
      */
@@ -195,5 +212,31 @@ class Acc_Plan_MTable extends Manage_Table_SQL
         $dossier_id=Dossier::id();
         echo HtmlInput::button_action(_("Toutes les fiches") , sprintf("display_all_card('%s','%s')",$dossier_id,$this->table->pcm_val));
     }
-    
+
+    /**
+     * if pcm_val already used then it cannot be modified
+     *
+     * @param $p_key always pcm_val
+     * @param $p_value current value of pcm_val
+     * @return nothing|void
+     */
+    function input_custom($p_key, $p_value)
+    {
+        $readonly=true;
+        $cn=Dossier::connect();
+        if (
+             $p_value == "" ||
+            ($p_value !="" && $cn->get_value("select count(*) from jrnx where j_poste=$1",[$p_value]) == 0  )
+            )
+        {
+            $readonly=false;
+        }
+        $text=new IText($p_key);
+        $text->setReadOnly($readonly);
+        $text->value=$p_value;
+        $min_size=(strlen($p_value)<30)?30:strlen($p_value)+5;
+        $text->size=$min_size;
+        echo $text->input();
+    }
+
 }
