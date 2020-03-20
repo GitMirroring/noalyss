@@ -37,24 +37,101 @@ class Output_Html_Tab
 {
 
     private $a_tabs; //!< array of html tabs
-
+    private $class_tab; //!< for normal tab
+    private $class_tab_selected; //!< for class_tab_selected
+    private $mode; //!< mode default tabs
     /**
      *@example html_tab.test.php
      */
     function __construct()
     {
         $this->a_tabs=[];
+        $this->class_tab="tabs";
+        $this->class_tab_selected="tabs_selected";
     }
 
     /**
-     * Add Html_Tab 
+     * get the mode , possible value are row or tabs
+     * @return mixed
+     */
+    public function get_mode()
+    {
+        return $this->mode;
+        return $this;
+    }
+
+    /**
+     * set the mode , possible values are row or tabs
+     * @param mixed $mode
+     */
+    public function set_mode($mode)
+    {
+        if ($mode != "row" && $mode != "tab") {
+            throw new Exception(_("OUTPUTHTML070 Mode invalide"));
+        }
+        $this->mode = $mode;
+        if ($mode == "row") {
+            $this->set_class_tab_selected("tab_row_selected");
+            $this->set_class_tab("tab_row");
+        }
+        if ( $mode == "tab") {
+            $this->set_class_tab_selected("tabs_selected");
+            $this->set_class_tab("tabs");
+
+        }
+        return $this;
+    }
+
+    /**
+     * Add Html_Tab
      * @param Html_Tab $p_html_tab
      */
     function add(Html_Tab $p_html_tab)
     {
         $this->a_tabs[]=clone $p_html_tab;
+
     }
-    
+
+    /**
+     * get the CSS class of tabs
+     * @return mixed
+     */
+    public function get_class_tab()
+    {
+        return $this->class_tab;
+        return $this;
+    }
+
+    /**
+     * set the CSS class of tabs, default is tabs
+     * @param mixed $class_tab
+     */
+    public function set_class_tab($class_tab)
+    {
+        $this->class_tab = $class_tab;
+        return $this;
+    }
+
+    /**
+     * get the CSS class of tabs_selected
+     * @return mixed
+     */
+    public function get_class_tab_selected()
+    {
+        return $this->class_tab_selected;
+        return $this;
+    }
+
+    /**
+     * set the CSS class of tabs, default is tabs_selected
+     * @param mixed $class_tab_selected
+     */
+    public function set_class_tab_selected($class_tab_selected)
+    {
+        $this->class_tab_selected = $class_tab_selected;
+        return $this;
+    }
+
     /**
      * Build the javascript to change the class name of the selected tab, hide other div and show the selected one
      * @param string $p_not_hidden id of the showed tab
@@ -66,20 +143,32 @@ class Output_Html_Tab
         $nb=count($this->a_tabs);
         for ($i =0 ; $i < $nb;$i++)
         {
-            if ( $this->a_tabs[$i]->get_id() != $p_not_hidden) {
-                $r .= sprintf("$('div%s').hide();",$this->a_tabs[$i]->get_id() );
-                $r .= sprintf("$('tab%s').className='tabs';",$this->a_tabs[$i]->get_id() );
-            } else {
-                $r .= sprintf("$('div%s').show();",$p_not_hidden );
-                $r .= sprintf("$('tab%s').className='tabs_selected';",$p_not_hidden );
-                
+            if ($this->get_mode()=="tab") {
+
+                if ( $this->a_tabs[$i]->get_id() != $p_not_hidden) {
+                    $r .= sprintf("$('div%s').hide();",$this->a_tabs[$i]->get_id() );
+                    $r .= sprintf("$('tab%s').className='%s';",$this->a_tabs[$i]->get_id(),$this->class_tab );
+                } else {
+                    $r .= sprintf("$('div%s').show();",$p_not_hidden );
+                    $r .= sprintf("$('tab%s').className='%s';",$p_not_hidden ,$this->class_tab_selected);
+
+                }
+            } elseif ($this->get_mode()=="row") {
+                if ( $this->a_tabs[$i]->get_id() != $p_not_hidden) {
+                    $r .= sprintf("Effect.BlindUp('div%s',{duration : 1.0});",$this->a_tabs[$i]->get_id() );
+                    $r .= sprintf("$('tab%s').className='%s';",$this->a_tabs[$i]->get_id(),$this->class_tab );
+                } else {
+                    $r .= sprintf("Effect.SlideDown('div%s',{duration : 1.0});",$p_not_hidden );
+                    $r .= sprintf("$('tab%s').className='%s';",$p_not_hidden ,$this->class_tab_selected);
+
+                }
             }
         }
         return $r;
     }
     /**
      * print the html + javascript code of the tabs and the div
-     * 
+     *
      */
     function output()
     {
@@ -88,11 +177,11 @@ class Output_Html_Tab
         {
             return;
         }
-        echo '<ul class="tabs">';
+        printf ( '<ul class="%s">',$this->class_tab);
         for ($i=0; $i<$nb; $i++)
         {
-            printf ('<li id="tab%s" class="tabs">',
-                    $this->a_tabs[$i]->get_id());
+            printf ('<li id="tab%s" class="%s">',
+                    $this->a_tabs[$i]->get_id(),$this->class_tab);
             switch ($this->a_tabs[$i]->get_mode())
             {
                 case 'link':
@@ -122,14 +211,24 @@ class Output_Html_Tab
                     break;
             }
             echo '</li>';
+            if ( $this->get_mode()=="row") {
+                $this->print_div($i);
+            }
         }
         echo '</ul>';
-        for ($i=0;$i<$nb;$i++)
-        {
-            printf('<div id="div%s" style="display:none;clear:both">',$this->a_tabs[$i]->get_id());
-            echo $this->a_tabs[$i]->get_content();
-            echo '</div>';
+        if ( $this->get_mode()=="tab" ) {
+            for ($i=0;$i<$nb;$i++)
+            {
+                $this->print_div($i);
+            }
+
         }
     }
+    private function print_div($p_index)
+    {
+        printf('<div id="div%s" style="display:none;clear:both">',$this->a_tabs[$p_index]->get_id());
+        echo $this->a_tabs[$p_index]->get_content();
+        echo '</div>';
 
+    }
 }
