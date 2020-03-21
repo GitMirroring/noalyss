@@ -35,7 +35,7 @@ class Html_Tab
     private $content ; //!< static content of the tab
     private $mode ; //!< possible values are static if the content is static, ajax for calling an ajax, link for a html link, default static
     private $link; //!<  the javascript or an html link, depending of the $mode
-    
+    private $comment; //!< comment to add when we use the row
     /**
      *@example html_tab.test.php
      */
@@ -44,7 +44,27 @@ class Html_Tab
         $this->id=$p_id;
         $this->title=$p_title;
         $this->mode='static';
+        $this->comment="";
     }
+
+    /**
+     * @return string
+     */
+    public function get_comment()
+    {
+        return $this->comment;
+        return $this;
+    }
+
+    /**
+     * @param string $comment
+     */
+    public function set_comment($comment)
+    {
+        $this->comment = $comment;
+        return $this;
+    }
+
     public function get_id()
     {
         return $this->id;

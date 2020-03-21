@@ -2420,3 +2420,10 @@ span.warning {
      display:block;
      background-color: lightblue;
  }
+span.tab_row {
+    font-style: italic;
+    font-size:90%;
+}
+span.title_tab_row {
+   
+}

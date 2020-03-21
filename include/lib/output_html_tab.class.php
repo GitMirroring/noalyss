@@ -155,16 +155,28 @@ class Output_Html_Tab
                 }
             } elseif ($this->get_mode()=="row") {
                 if ( $this->a_tabs[$i]->get_id() != $p_not_hidden) {
-                    $r .= sprintf("Effect.BlindUp('div%s',{duration : 1.0});",$this->a_tabs[$i]->get_id() );
+                    $r .= sprintf("Effect.BlindUp('div%s',{duration : 0.7});",$this->a_tabs[$i]->get_id() );
                     $r .= sprintf("$('tab%s').className='%s';",$this->a_tabs[$i]->get_id(),$this->class_tab );
                 } else {
-                    $r .= sprintf("Effect.SlideDown('div%s',{duration : 1.0});",$p_not_hidden );
+                    $r .= sprintf("Effect.SlideDown('div%s',{duration : 0.7});",$p_not_hidden );
                     $r .= sprintf("$('tab%s').className='%s';",$p_not_hidden ,$this->class_tab_selected);
 
                 }
             }
         }
         return $r;
+    }
+
+    /**
+     * When printing row , a comment is written if not empty
+     * @param $p_index
+     */
+    protected function print_comment($p_index) {
+        printf ('<span class="%s"> %s </span>',
+            $this->get_class_tab(),
+            $this->a_tabs[$p_index]->get_comment()
+        );
+
     }
     /**
      * print the html + javascript code of the tabs and the div
@@ -188,7 +200,10 @@ class Output_Html_Tab
                     printf ('<a id="%s" href="%s">',
                             $this->a_tabs[$i]->get_id(),
                             $this->a_tabs[$i]->get_link());
-                    echo $this->a_tabs[$i]->get_title();
+                    printf ('<span class="title_%s"> %s </span>',
+                        $this->get_class_tab(),
+                        $this->a_tabs[$i]->get_title()
+                        );
                     echo '</a>';
 
                     break;
@@ -196,6 +211,11 @@ class Output_Html_Tab
                     printf('<a id="%s" onclick="%s">', 
                             $this->a_tabs[$i]->get_id(),
                             $this->a_tabs[$i]->get_link());
+                    printf ('<span class="title_%s"> %s </span>',
+                        $this->get_class_tab(),
+                        $this->a_tabs[$i]->get_title()
+                        );
+
                     echo $this->a_tabs[$i]->get_title();
                     echo '</a>';
                     break;
@@ -203,12 +223,19 @@ class Output_Html_Tab
                     // show one , hide other
                     $script=$this->build_js($this->a_tabs[$i]->get_id());
                     printf('<a onclick="%s">', $script);
-                    echo $this->a_tabs[$i]->get_title();
+                    printf ('<span class="title_%s"> %s </span>',
+                        $this->get_class_tab(),
+                        $this->a_tabs[$i]->get_title()
+                        );
+
                     echo '</a>';
                     
                     break;
                 default:
                     break;
+            }
+            if ( $this->get_mode()=="row") {
+                $this->print_comment($i);
             }
             echo '</li>';
             if ( $this->get_mode()=="row") {
@@ -226,7 +253,7 @@ class Output_Html_Tab
     }
     private function print_div($p_index)
     {
-        printf('<div id="div%s" style="display:none;clear:both">',$this->a_tabs[$p_index]->get_id());
+        printf('<div id="div%s" style="display:none;clear:both" class="tab_row">',$this->a_tabs[$p_index]->get_id());
         echo $this->a_tabs[$p_index]->get_content();
         echo '</div>';
 
