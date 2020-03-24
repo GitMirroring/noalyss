@@ -161,9 +161,9 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
     print ("\r\n");
     print ("// For changing the password of admin, go to preference or update in db");
     print ("\r\n");
-    print ("// this password is only used when installing ");
+    print ("// this password is only used when executing install.php ");
     print ("\r\n");
-    print ( 'define ("NOALYSS_PASSWORD","'.$icpassword_admin.'");');
+    print ( 'define ("NOALYSS_ADMIN_PASSWORD","'.$icpassword_admin.'");');
     print ("\r\n");
     
     print ( 'define ("LOCALE",'.$clocale.');');

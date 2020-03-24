@@ -272,6 +272,7 @@ if (isset($_POST['save_config'])) {
 //
 //------------------------------------------------------------------------
 if ( ! file_exists(NOALYSS_INCLUDE.'/config.inc.php')) {
+
   echo '<h1 class="info">'._('Entrez les informations nécessaires à noalyss').'</h1>';
   echo '<form method="post">';
   require_once NOALYSS_INCLUDE.'/lib/config_file.php';
@@ -524,7 +525,7 @@ if ($account == 0 ) {
   $cn->execute_script(NOALYSS_INCLUDE."/sql/account_repository/constraint.sql");
   /* update name administrator */
   $cadmin=NOALYSS_ADMINISTRATOR;
-  $cn->exec_sql("update ac_users set use_login=$1,use_password=md5($2),use_active=1 where use_id=1",
+  $cn->exec_sql("update ac_users set use_login=$1,use_pass=md5($2),use_active=1 where use_id=1",
               array(strtolower($cadmin),$icpassword_admin));
 
   $cn->commit($cn);
@@ -619,11 +620,11 @@ if  (defined("MULTI") && MULTI == 0)
             }
         }
         
-        $db->exec_sql("update ac_users set use_login=$1 where use_id=1",
-              array(strtolower(NOALYSS_ADMINISTRATOR)));
+        $db->exec_sql("update ac_users set use_login=$1,use_pass=2 where use_id=1",
+              array(strtolower(NOALYSS_ADMINISTRATOR),NOALYSS_ADMIN_PASSWORD));
         echo '<h1>'._('Important').'</h1>';
         echo '<p>'._('Utilisateur administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';
-        echo '<p>',_('Mot de passe par défaut à l\'installation'),' phpcompta','</p>';
+        
         echo "<h2 class=\"warning\">";
         printf (" VOUS DEVEZ EFFACER CE FICHIER %s",__FILE__);
         echo "</h2>";
@@ -642,9 +643,12 @@ define ('ALLOWED',1);
 define ('ALLOWED_ADMIN',1);
 
 $rep=new Database();
-if (defined(NOALYSS_ADMINISTRATOR))
+if (defined(NOALYSS_ADMINISTRATOR) && defined (NOALYSS_ADMIN_PASSWORD))
 {
-    $rep->exec_sql("update ac_users set use_login=$1 where use_id=1", array(strtolower(NOALYSS_ADMINISTRATOR)));
+    $rep->exec_sql("update ac_users set use_login=$1 ,use_pass=md5(2) 
+             where use_id=1", 
+            array(strtolower(NOALYSS_ADMINISTRATOR),
+                NOALYSS_ADMIN_PASSWORD));
 }
  Dossier::upgrade();
 echo '<h1>'._('Important').'</h1>';
