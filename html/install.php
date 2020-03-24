@@ -264,7 +264,12 @@ if (isset($_POST['save_config'])) {
       echo '</h2>';
   }
  }
+if ( strlen(trim($icpassword_admin))== 0 ) {
+      echo '<h2 class="warning">';
+      echo _('Le mot de passe du super admin ne peut être vide');
+      echo '</h2>';
 
+}
 
 //------------------------------------------------------------------------
 // Check that the file config.inc.php exists , if not then propose to 
@@ -297,6 +302,7 @@ if ( ! file_exists(NOALYSS_INCLUDE.'/config.inc.php')) {
 // magic_quotes_runtime = Off
 // magic_quotes_sybase = Off
 // include_path
+require_once NOALYSS_INCLUDE.'/config.inc.php';
 require_once NOALYSS_INCLUDE.'/lib/config_file.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
@@ -525,6 +531,7 @@ if ($account == 0 ) {
   $cn->execute_script(NOALYSS_INCLUDE."/sql/account_repository/constraint.sql");
   /* update name administrator */
   $cadmin=NOALYSS_ADMINISTRATOR;
+  $icpassword_admin=NOALYSS_ADMIN_PASSWORD;
   $cn->exec_sql("update ac_users set use_login=$1,use_pass=md5($2),use_active=1 where use_id=1",
               array(strtolower($cadmin),$icpassword_admin));
 
@@ -643,7 +650,7 @@ define ('ALLOWED',1);
 define ('ALLOWED_ADMIN',1);
 
 $rep=new Database();
-if (defined(NOALYSS_ADMINISTRATOR) && defined (NOALYSS_ADMIN_PASSWORD))
+if (defined("NOALYSS_ADMINISTRATOR") && defined ("NOALYSS_ADMIN_PASSWORD"))
 {
     $rep->exec_sql("update ac_users set use_login=$1 ,use_pass=md5(2) 
              where use_id=1", 
