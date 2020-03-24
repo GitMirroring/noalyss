@@ -194,6 +194,7 @@ $ctmp=$http->request("ctmp","string", "/tmp");
 $cpath=$http->request("cpath","string", "/usr/bin");
 $db_name=$http->request("cdbname", "string","");
 $cadmin=$http->request("cadmin","string", "admin");
+$icpassword_admin=$http->request("icpassword_admin","string", "phpcompta");
 $cadmin=strtolower($cadmin);
 //-------------------------------------------------------------------------
 // warn only if we can not write in include 
@@ -224,11 +225,12 @@ if (isset($_POST['save_config'])) {
   // -----
   if ( $cnx !== false ) {
        echo '<h1>'._('Important').'</h1>';
-       echo '<h2 class="warning">',_("Voici l'utilisateur et mot de passe de l'utilisateur administrateur de Noalyss , il a tous les droits et a accès à tout."
+       echo '<h2 class="warning">',_("Voici l'utilisateur et mot de passe de l'utilisateur administrateur de Noalyss , "
+               . " il a tous les droits et a accès à tout."
                . " Connectez-vous avec ses identifiants et changer le mot de passe dans préférence (en haut à droit)"),
 	 "</h2>";
        echo '<p style="font-size:120%">'._('Utilisateur administrateur'),' ','<span style="color:red"> ',$cadmin,'</span>','</p>';
-       echo '<p style="font-size:120%">',_('Mot de passe'),'<span style="color:red"> phpcompta </span>','</p>';
+       echo '<p style="font-size:120%">',_('Mot de passe'),'<span style="color:red"> '.$icpassword_admin.' </span>','</p>';
       // Create the db
       if (is_writable(NOALYSS_INCLUDE)) { 
         $url=config_file_create($_POST,1,$os); 
@@ -522,8 +524,8 @@ if ($account == 0 ) {
   $cn->execute_script(NOALYSS_INCLUDE."/sql/account_repository/constraint.sql");
   /* update name administrator */
   $cadmin=NOALYSS_ADMINISTRATOR;
-  $cn->exec_sql("update ac_users set use_login=$1,use_active=1 where use_id=1",
-              array(strtolower($cadmin)));
+  $cn->exec_sql("update ac_users set use_login=$1,use_password=md5($2),use_active=1 where use_id=1",
+              array(strtolower($cadmin,$icpassword_admin)));
 
   $cn->commit($cn);
 

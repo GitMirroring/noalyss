@@ -26,6 +26,7 @@
  * @brief
  *
  */
+
 ?>
 <div style="margin-left: 30">
 <table>
@@ -57,6 +58,14 @@
     </td>
     <td>
         <?php echo $icadmin->input();?>
+    </td>
+</tr>
+<tr>
+    <td>
+        <?php echo _('Mot de passe administrateur de noalyss')?>
+    </td>
+    <td>
+        <?php echo $icpassword_admin->input();?>
     </td>
 </tr>
 <TR>
