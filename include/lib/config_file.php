@@ -106,7 +106,8 @@ function config_file_form($p_array=null)
     $icdbname=new IText('cdbname');
     $icdbname->value=$cdbname;
     
-    $icpassword_admin=new IText('icpassword_admin');
+    $icpassword_admin=new IText('cpassword_admin');
+    $icpassword_admin->value=$cpassword_admin;
     
     require NOALYSS_TEMPLATE.'/template_config_form.php';
 }
@@ -153,8 +154,9 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
     print ( 'define ("noalyss_psql_host","'.$chost.'");');
     print ("\r\n");
     print ("\r\n");
-    print ("// If you change the NOALYSS_ADMINISTRATOR or NOALYSS_ADMIN_PASSWORD, "
-            . "you will need to rerun http://..../noalyss/html/install.php");
+    print ("// If you change the NOALYSS_ADMINISTRATOR , you will need to rerun http://..../noalyss/html/install.php");
+    print ("\r\n");
+    print ("// But it doesn't change the password");
     print ("\r\n");
     print ( 'define ("NOALYSS_ADMINISTRATOR","'.$cadmin.'");');
     print ("\r\n");
@@ -162,7 +164,7 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
     print ("\r\n");
     print ("// this password is only used when executing install.php ");
     print ("\r\n");
-    print ( 'define ("NOALYSS_ADMIN_PASSWORD","'.$icpassword_admin.'");');
+    print ( 'define ("NOALYSS_ADMIN_PASSWORD","'.$cpassword_admin.'");');
     print ("\r\n");
     
     print ( 'define ("LOCALE",'.$clocale.');');

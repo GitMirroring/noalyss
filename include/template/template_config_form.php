@@ -57,7 +57,7 @@
         <?php echo _('Administrateur de noalyss')?>
     </td>
     <td>
-        <?php echo $icadmin->input();?>
+        <?php echo $icadmin->input();echo Icon_Action::infobulle(210)?>
     </td>
 </tr>
 <tr>
@@ -66,6 +66,7 @@
     </td>
     <td>
         <?php echo $icpassword_admin->input();?>
+        <?php echo Icon_Action::infobulle(209)?>
     </td>
 </tr>
 <TR>

@@ -161,6 +161,8 @@ content[205]="<?php echo _("Port pour postgresql")?>";
 content[206]="<?php echo _("En version mono dossier, le nom de la base de données doit être mentionné")?>";
 content[207]="<?php echo _("Vous devez choisir si NOALYSS est installé sur l'un de vos servers ou sur un server mutualisé qui ne donne qu'une seule base de données")?>";
 content[208]="<?php echo _("Serveur postgresql")?>";
+content[209]="<?php echo _("Mot de passe administrateur, il peut être changé ensuite dans les préférences")?>";
+content[210]="<?php echo _("login administrateur")?>";
 
 </script>
 
@@ -181,7 +183,7 @@ if ( strpos($inc_path,";") != 0 ) {
   $new_path=$inc_path.':../../include:addon';
   $os=1;			/* $os is 1 for unix */
 }
-// Retrieve informations from the very screen
+// Retrieve informations from the  screen
 // 
 $http=new HttpInput();
 $db_user=$http->request("cuser","string", "");
@@ -194,7 +196,7 @@ $ctmp=$http->request("ctmp","string", "/tmp");
 $cpath=$http->request("cpath","string", "/usr/bin");
 $db_name=$http->request("cdbname", "string","");
 $cadmin=$http->request("cadmin","string", "admin");
-$icpassword_admin=$http->request("icpassword_admin","string", "phpcompta");
+$cpassword_admin=$http->request("cpassword_admin","string", "phpcompta");
 $cadmin=strtolower($cadmin);
 //-------------------------------------------------------------------------
 // warn only if we can not write in include 
@@ -214,6 +216,36 @@ if ( is_writable ('install.php') == false ) {
 
 if (isset($_POST['save_config'])) {
   require_once NOALYSS_INCLUDE.'/lib/config_file.php';
+  $err=0;
+   // check password and admin not empty 
+   //
+   if ( strlen(trim($cpassword_admin))== 0 ||
+        strlen(trim($cadmin))== 0
+      ) {
+         echo '<h2 class="warning">';
+         echo _('Le mot de passe du super admin et le login ne peuvent être vides');
+         echo '</h2>';
+         $err++;
+
+   }
+
+   // check password and admin not containing quote or double quote
+   //
+   if ( strpos($cpassword_admin,'"') !== false 
+        || strpos($cadmin,'"') !== false
+        || strpos($cpassword_admin,"'") !== false
+        || strpos($cadmin,"'") !== false
+        || strpos($cpassword_admin," ") !== false
+        || strpos($cadmin," ") !== false
+        || strpos($cadmin,"@mobile") !== false
+       ) {
+           echo '<h2 class="warning">';
+           echo _('Le mot de passe du super admin et le superadmin ne peut pas contenir des guillemets ou espaces, ni @mobile');
+           echo '</h2>';
+           $err++;
+
+   }
+   
   // Try to connect , if it doesn't work that do not create the config file 
   if ($multi=="N") {
     $cnx = new DatabaseCore($db_user, $db_password,'template1', $db_host, $db_port); 
@@ -223,14 +255,14 @@ if (isset($_POST['save_config'])) {
   // ----- 
   // If conx successfull save the file or display it
   // -----
-  if ( $cnx !== false ) {
+  if ( $err == 0 && $cnx !== false ) {
        echo '<h1>'._('Important').'</h1>';
        echo '<h2 class="warning">',_("Voici l'utilisateur et mot de passe de l'utilisateur administrateur de Noalyss , "
                . " il a tous les droits et a accès à tout."
                . " Connectez-vous avec ses identifiants et changer le mot de passe dans préférence (en haut à droit)"),
 	 "</h2>";
        echo '<p style="font-size:120%">'._('Utilisateur administrateur'),' ','<span style="color:red"> ',$cadmin,'</span>','</p>';
-       echo '<p style="font-size:120%">',_('Mot de passe'),'<span style="color:red"> '.$icpassword_admin.' </span>','</p>';
+       echo '<p style="font-size:120%">',_('Mot de passe'),'<span style="color:red"> '.$cpassword_admin.' </span>','</p>';
       // Create the db
       if (is_writable(NOALYSS_INCLUDE)) { 
         $url=config_file_create($_POST,1,$os); 
@@ -258,18 +290,13 @@ if (isset($_POST['save_config'])) {
           echo '</textarea>';
           return;
       }
-  } else {
+  } elseif ($err == 0 && $cnx == false) {
       echo '<h2 class="warning">';
       echo _('Impossible de se connecter à Postgresql, vérifiez les informations de connection');
       echo '</h2>';
   }
  }
-if ( strlen(trim($icpassword_admin))== 0 ) {
-      echo '<h2 class="warning">';
-      echo _('Le mot de passe du super admin ne peut être vide');
-      echo '</h2>';
 
-}
 
 //------------------------------------------------------------------------
 // Check that the file config.inc.php exists , if not then propose to 
@@ -374,7 +401,7 @@ for ($m=0;$m<$nb_need_module;$m++)
 if ( ini_get("max_execution_time") < 60 )  {
         echo "<li>";
         echo _('Avertissement').' : '.$failed;
-	echo '<span class="info"> ',
+	echo '<span class="info"> ',    
                 _("max_execution_time devrait être de 60 minimum"),
                 '</span>';
         echo "</li>";
@@ -531,9 +558,9 @@ if ($account == 0 ) {
   $cn->execute_script(NOALYSS_INCLUDE."/sql/account_repository/constraint.sql");
   /* update name administrator */
   $cadmin=NOALYSS_ADMINISTRATOR;
-  $icpassword_admin=NOALYSS_ADMIN_PASSWORD;
+  $cpassword_admin=NOALYSS_ADMIN_PASSWORD;
   $cn->exec_sql("update ac_users set use_login=$1,use_pass=md5($2),use_active=1 where use_id=1",
-              array(strtolower($cadmin),$icpassword_admin));
+              array(strtolower($cadmin),$cpassword_admin));
 
   $cn->commit($cn);
 
@@ -652,7 +679,7 @@ define ('ALLOWED_ADMIN',1);
 $rep=new Database();
 if (defined("NOALYSS_ADMINISTRATOR") && defined ("NOALYSS_ADMIN_PASSWORD"))
 {
-    $rep->exec_sql("update ac_users set use_login=$1 ,use_pass=md5(2) 
+    $rep->exec_sql("update ac_users set use_login=$1 ,use_pass=md5($2) 
              where use_id=1", 
             array(strtolower(NOALYSS_ADMINISTRATOR),
                 NOALYSS_ADMIN_PASSWORD));
