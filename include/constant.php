@@ -85,7 +85,7 @@ $g_succeed="<span style=\"font-size:18px;color:green\">&#x2713;</span>";
 define ('SMALLX','&#x2D5D;');
 define ('BUTTONADD',"&#10010;");
 
-
+    define("NOALYSS_VERSION",9999);
 define ('SVNINFO',NOALYSS_VERSION);
 if ( ! defined  ('DEBUG')) {
     define ("DEBUG",false);

@@ -525,7 +525,7 @@ if ($account == 0 ) {
   /* update name administrator */
   $cadmin=NOALYSS_ADMINISTRATOR;
   $cn->exec_sql("update ac_users set use_login=$1,use_password=md5($2),use_active=1 where use_id=1",
-              array(strtolower($cadmin,$icpassword_admin)));
+              array(strtolower($cadmin),$icpassword_admin));
 
   $cn->commit($cn);
 
