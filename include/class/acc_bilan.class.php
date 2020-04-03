@@ -258,9 +258,10 @@ class Acc_Bilan
      */
     function get_request_get()
     {
-        $this->b_id=(isset($_GET['b_id']))?$_GET['b_id']:"";
-        $this->from=( isset ($_GET['from_periode']))?$_GET['from_periode']:-1;
-        $this->to=( isset ($_GET['to_periode']))?$_GET['to_periode']:-1;
+        $http=new \HttpInput();
+        $this->b_id=$http->get("b_id","number","");
+        $this->from=$http->get("from_periode","number",-1);
+        $this->to=$http->get("to_periode","number",-1);
     }
     /*!\brief load from the database the document data  */
     function load()
@@ -501,7 +502,10 @@ class Acc_Bilan
         }
 
 	$header_txt=header_txt($this->db);
-
+        
+        if  ($this->b_type == "rtf") {
+            $header_txt=convert_to_rtf($header_txt);
+        }
         while ( !feof($p_file) )
         {
             $line_rtf=fgets($p_file);
@@ -537,7 +541,8 @@ class Acc_Bilan
                             if($ret[0]['acct_name'])
                             {
                                 /* for rtf we have the string to put it in latin1 */
-                                $a = utf8_decode($ret[0]['acct_name']);
+                                if ( $this->b_type != "rtf") { $a = utf8_decode($ret[0]['acct_name']);}
+                                if ( $this->b_type == "rtf") { $a =convert_to_rtf($ret[0]['acct_name']);}
                             }
                         }
                     }

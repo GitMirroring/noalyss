@@ -36,51 +36,55 @@ global $g_user;
 //-----------------------------------------------------
 // Form
 //-----------------------------------------------------
-
+$http=new \HttpInput();
 $bilan=new Acc_Bilan($cn);
 $bilan->get_request_get();
 echo '<div class="content">';
-$exercice=(isset($_GET['exercice']))?$_GET['exercice']:$g_user->get_exercice();
+$exercice=$http->get("exercice","number",$g_user->get_exercice());
+//----------------------------------------------------------------
+// Verification
+//----------------------------------------------------------------
 if ( ! isset ($_GET['verif']))
 {
-/*
- * Let you change the exercice
- */
-echo '<fieldset><legend>'._('Exercice').'</legend>';;
-echo '<form method="GET">';
-echo _('Choisissez un autre exercice');
-$ex=new Exercice($cn);
-$wex=$ex->select('exercice',$exercice,' onchange="submit(this)"');
-echo $wex->input();
-echo dossier::hidden();
-echo HtmlInput::get_to_hidden(array('ac','type'));
-echo '</form>';
-echo '</fieldset>';
+    /*
+     * Let you change the exercice
+     */
+    echo '<fieldset><legend>'._('Exercice').'</legend>';;
+    echo '<form method="GET">';
+    echo _('Choisissez un autre exercice');
+    $ex=new Exercice($cn);
+    $wex=$ex->select('exercice',$exercice,' onchange="submit(this)"');
+    echo $wex->input();
+    echo dossier::hidden();
+    echo HtmlInput::get_to_hidden(array('ac','type'));
+    echo '</form>';
+    echo '</fieldset>';
 
-$filter_year=" where p_exercice='".sql_string($exercice)."'";
-echo '<FORM  METHOD="GET">';
-echo HtmlInput::hidden('type','bilan');
-echo dossier::hidden();
+    $filter_year=" where p_exercice='".sql_string($exercice)."'";
+    echo '<FORM  METHOD="GET">';
+    echo HtmlInput::hidden('type','bilan');
+    echo dossier::hidden();
 
-// By default , show last day of exercice
-if ($bilan->to == -1 ){
-    $t_periode=new Periode($cn);
-    list($per_max,$per_min)=$t_periode->get_limit($exercice);
-    $bilan->to=$per_min->p_id;
+    // By default , show last day of exercice
+    if ($bilan->to == -1 ){
+        $t_periode=new Periode($cn);
+        list($per_max,$per_min)=$t_periode->get_limit($exercice);
+        $bilan->to=$per_min->p_id;
+    }
+    echo $bilan->display_form ($filter_year);
+    echo '<span class="notice"> '._('Attention : si le bilan n\'est pas équilibré.<br> Vérifiez <ul>
+           <li>L\'affectation du résultat est fait</li>
+           <li>Vos comptes actifs ont  un solde débiteur (sauf les comptes dit inversés)</li>
+           <li> les comptes passifs ont un solde créditeur (sauf les comptes dit inversés) </li>
+           </ul>
+           Utilisez la balance des comptes pour vérifier.').' </span>';
+    echo HtmlInput::submit('verif',_('Verification comptabilite'));
+    echo HtmlInput::get_to_hidden(array('ac','exercice'));
+    echo '</FORM>';
 }
-echo $bilan->display_form ($filter_year);
-echo '<span class="notice"> '._('Attention : si le bilan n\'est pas équilibré.<br> Vérifiez <ul>
-       <li>L\'affectation du résultat est fait</li>
-       <li>Vos comptes actifs ont  un solde débiteur (sauf les comptes dit inversés)</li>
-       <li> les comptes passifs ont un solde créditeur (sauf les comptes dit inversés) </li>
-       </ul>
-       Utilisez la balance des comptes pour vérifier.').' </span>';
-echo HtmlInput::submit('verif',_('Verification comptabilite'));
-echo HtmlInput::get_to_hidden(array('ac','exercice'));
-echo '</FORM>';
-}
-
-
+//----------------------------------------------------------------
+// Print 
+//----------------------------------------------------------------
 if ( isset($_GET['verif']))
 {
     $periode=new Periode($cn);
@@ -95,7 +99,7 @@ if ( isset($_GET['verif']))
     echo '<FORM METHOD="GET" ACTION="export.php">';
     echo dossier::hidden();
     echo HtmlInput::get_to_hidden(array('exercice'));
-    echo HtmlInput::hidden('b_id',$_GET['b_id']);
+    echo HtmlInput::hidden('b_id',$bilan->b_id);
     echo HtmlInput::hidden('act','OTH:Bilan');
 
     echo HtmlInput::hidden('from_periode',$bilan->from);
@@ -107,4 +111,4 @@ if ( isset($_GET['verif']))
 
 echo '<hr>';
 echo '</div>';
-?>
+
