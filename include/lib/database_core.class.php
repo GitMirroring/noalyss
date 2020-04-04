@@ -284,6 +284,7 @@ class DatabaseCore
         if ($hf == false) {
             throw new Exception ('Ne peut ouvrir ' . $script);
         }
+        printf (" open %s <br>", $script);
         $sql = "";
         $flag_function = false;
         while (!feof($hf)) {

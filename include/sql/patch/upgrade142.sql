@@ -2,7 +2,7 @@ begin;
 
 CREATE OR REPLACE FUNCTION comptaproc.find_pcm_type(pp_value account_type)
  RETURNS text
-AS $function$
+AS $BODY$
 declare
 	str_type parm_poste.p_type%TYPE;
 	str_value parm_poste.p_type%TYPE;
@@ -37,7 +37,8 @@ begin
 -- si ni parent ou parm_poste alors return CON
 return 'CON';
 end;
-$function$
- LANGUAGE plpgsql;
+$BODY$
+LANGUAGE plpgsql;
+
 insert into version (val,v_description) values (143,'Corrige function find_pcm_type');
 commit ;
