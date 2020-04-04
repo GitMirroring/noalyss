@@ -330,7 +330,13 @@ class Dossier
             $cn->rollback();
         }
     }
-
+    /**
+     * Upgrade check if the folder ACCOUNT_REPOSITORY  needs to be upgrade thanks the variable DBVERSIONREPO 
+     * and run  all the SQL script named  ac-upgradeX.sql from the folder noalyss/include/sql/patch 
+     * until  X equal DBVERSIONREPO-1
+     * After it will call the function apply_patch, remove_inexistant_user and clean_orphan_log for each folder
+     * 
+     */
     static function upgrade()
     {
         $rep=new Database();

@@ -113,8 +113,11 @@ class Database extends DatabaseCore
     }
 
     /**
-     * \brief loop to apply all the path to a folder or
-     *         a template
+     * \brief loop to apply all the path to a folder or     a template
+     * Upgrade check if the folder $p_name needs to be upgrade thanks the variable DBVERSION
+     * and run  all the SQL script named  upgradeX.sql from the folder noalyss/include/sql/patch 
+     * until  X equal DBVERSION-1
+     *
      * \param $p_name database name
      *
      */
@@ -142,8 +145,7 @@ class Database extends DatabaseCore
                 echo "<li>Patching " . $p_name .
                     " from the version " . $this->get_version() . " to $to ";
 
-                $this->execute_script(NOALYSS_INCLUDE . '/sql/patch/upgrade' . $i . '.sql');
-                echo $succeed;
+              
 
                 if (!DEBUG)
                     ob_start();
@@ -214,9 +216,17 @@ class Database extends DatabaseCore
                     $country = $this->get_value("select pr_value from parameter where pr_id='MY_COUNTRY'");
                     $this->execute_script(NOALYSS_INCLUDE . "/sql/patch/upgrade61." . $country . ".sql");
                 }
+                /**
+                 * Bug in parm_code for FRANCE
+                 */
+                if ($i == 141 ) {
+                     $country = $this->get_value("select pr_value from parameter where pr_id='MY_COUNTRY'");
+                     $this->execute_script(NOALYSS_INCLUDE . "/sql/patch/upgrade141." . $country . ".sql");
+                }
 
                 if (!DEBUG)
                     ob_end_clean();
+                
             }
         }
         echo '</ul>';
