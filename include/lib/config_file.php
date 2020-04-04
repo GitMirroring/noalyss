@@ -105,6 +105,10 @@ function config_file_form($p_array=null)
     }
     $icdbname=new IText('cdbname');
     $icdbname->value=$cdbname;
+    
+    $icpassword_admin=new IText('cpassword_admin');
+    $icpassword_admin->value=$cpassword_admin;
+    
     require NOALYSS_TEMPLATE.'/template_config_form.php';
 }
 /**
@@ -155,6 +159,12 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
     print ("// But it doesn't change the password");
     print ("\r\n");
     print ( 'define ("NOALYSS_ADMINISTRATOR","'.$cadmin.'");');
+    print ("\r\n");
+    print ("// For changing the password of admin, go to preference or update in db");
+    print ("\r\n");
+    print ("// this password is only used when executing install.php ");
+    print ("\r\n");
+    print ( 'define ("NOALYSS_ADMIN_PASSWORD","'.$cpassword_admin.'");');
     print ("\r\n");
     
     print ( 'define ("LOCALE",'.$clocale.');');

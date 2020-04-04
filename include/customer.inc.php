@@ -77,7 +77,7 @@ if ($low_action == "list")
             $a=$http->get("query","string",""); 
             echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
 
-            $choice_cat=$http->request("choice_cat", "",1);
+            $choice_cat=$http->request("choice_cat", "string",1);
 
             if ( $choice_cat == 1 )
             {

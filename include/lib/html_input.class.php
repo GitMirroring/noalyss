@@ -951,25 +951,43 @@ class HtmlInput
             return $sel;
         }
     }
-
+    /**
+     * 
+     * * filter the rows in a table and keep the colored row in alternance
+     * @param dom_id $p_table_id table
+     * @param string $p_col , column to search example 0,1,2
+     * @param int $start_row row to always keep (header)
+     * @param string $p_name name of the input field
+     * @param string $p_old_value search value sent by $_GET (or $_REQUEST)
+     * @return string HTML
+     */
     static function filter_table_form($p_table_id, $p_col, $start_row, $p_name,
             $p_old_value)
     {
         $r="
 			<span>
-			<input id=\"lk_".$p_table_id."\" name=\"$p_name\" value=\"$p_old_value\"autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\">
+                        <span  class=\"icon\"  >&#xf50d;</span>
+			<input id=\"lk_".$p_table_id."\" name=\"$p_name\" value=\"$p_old_value\"autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\" placeholder=\""._("Recherche")."\">
 			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row );\" value=\"X\">
 			</span>
 			";
         $r.=' <span class="notice" id="info_'.$p_table_id.'"></span>';
         return $r;
     }
-
+    /**
+     * filter the rows in a table and keep the colored row in alternance
+     * @param dom_id $p_table_id table
+     * @param string $p_col , column to search example 0,1,2
+     * @param int $start_row row to always keep (header)
+     * @return string HTML
+     */
     static function filter_table($p_table_id, $p_col, $start_row)
     {
         $r="
 			<span>
-			<input id=\"lk_".$p_table_id."\" autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\">
+                        <span  class=\"icon\"  >&#xf50d;</span>
+
+			<input id=\"lk_".$p_table_id."\" autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\" placeholder=\""._("Recherche")."\">
 			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row );\" value=\"X\">
 			</span>
 			";
@@ -985,8 +1003,8 @@ class HtmlInput
     {
         $r="<span>";
         $r.='<span  class=" icon">&#xf50d;</span>';
-        $r.=sprintf('<input id="search_%s" type="TEXT" class="input_text" name="filter_list%s" onkeyup="filter_list(this,\'%s\')">',
-                $p_list_id,$p_list_id,$p_list_id);
+        $r.=sprintf('<input id="search_%s" type="TEXT" class="input_text" name="filter_list%s" placeholder="%s" onkeyup="filter_list(this,\'%s\')">',
+                $p_list_id,$p_list_id,_("Recherche"),$p_list_id);
         
         $r.=sprintf('<input type="button" class="smallbutton" onclick="$(\'search_%s\').value=\'\';filter_list(\'search_%s\',\'%s\')" value="x">',$p_list_id,$p_list_id,$p_list_id);
         $r.='</span>';

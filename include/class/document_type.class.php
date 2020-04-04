@@ -48,7 +48,7 @@ class Document_type
 	{
 		$sql = "select * from document_type where dt_id=$1";
 		$R = $this->db->exec_sql($sql, array($this->dt_id));
-		if (count($R) == 0) return 1;
+		if ($this->db->count($R) == 0) return 1;
 		$r = Database::fetch_array($R, 0);
 		$this->dt_id = $r['dt_id'];
 		$this->dt_value = $r['dt_value'];
