@@ -133,7 +133,6 @@ class Database extends DatabaseCore
         echo '<ul style="list-type-style:square">';
         for ($i = 4; $i <= $MaxVersion; $i++) {
             $to = $i + 1;
-
             if ($this->get_version() <= $i) {
                 if ($this->get_version() == 97) {
                     if ($this->exist_schema("amortissement")) {
@@ -145,7 +144,8 @@ class Database extends DatabaseCore
                 echo "<li>Patching " . $p_name .
                     " from the version " . $this->get_version() . " to $to ";
 
-              
+               $this->execute_script(NOALYSS_INCLUDE . '/sql/patch/upgrade' . $i . '.sql');
+               echo $succeed;
 
                 if (!DEBUG)
                     ob_start();
