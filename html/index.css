@@ -164,9 +164,9 @@ BODY {
     }
     #login_frm {
         position:absolute;
-        left:25%;
+        left:15%;
         right:35%;
-        top:50%;
+        top:15%;
     }
 }
 @media only screen and (min-width : 901px) {
@@ -188,7 +188,7 @@ BODY {
     #login_frm {
         position:absolute;
         left:30%;
-        top:25%;
+        top:20%;
     }
     .input_text {
         width: 24em;
@@ -308,3 +308,12 @@ BODY {
     font-size: 0.9rem;
     opacity: 1;
 }
+@media only screen and (max-width:360px) {
+    #p_user{
+        width: 10rem;
+    }
+    #p_pass{
+        width:10rem
+    }
+}
+   
