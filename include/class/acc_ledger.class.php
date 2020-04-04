@@ -50,6 +50,7 @@ require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_currency.class.php';
 require_once NOALYSS_INCLUDE.'/database/operation_currency_sql.class.php';
 require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
+require_once NOALYSS_INCLUDE.'/class/html_input_noalyss.class.php';
 
 /** \file
  * @brief Class for jrn,  class acc_ledger for manipulating the ledger

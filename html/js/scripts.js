@@ -1230,9 +1230,7 @@ function mod_predf_op(dossier_id, od_id)
 {
     var target = "mod_predf_op";
     removeDiv(target);
-    var sx = '20%';
-    var sy = '10%';
-    var str_style = "top:" + sx + ";left:" + sy + ";";
+    var str_style = "top:10%;left:2%;width:96%";
 
     var div = {id: target, cssclass: 'inner_box', style: str_style, html: loading(), drag: 1};
 
@@ -1402,6 +1400,20 @@ function set_reconcile(obj)
 
                         if (tiers && tiers.value != "") {
                             $(tiers.value).value = elmt.value;
+                            /* set the name */
+                            new Ajax.Request("fid.php",{
+                                method:"get",
+                                parameters:{gDossier:obj.elements['gDossier'].value,"FID":elmt.value},
+                                onSuccess:function(req){
+                                    // find the row number
+                                    //tiers.value = e_othern
+                                    var tiers_card=new String(tiers.value);
+                                    var num=tiers_card.replace("e_other","");
+                                    var tiers_name_id="e_other"+"_name"+num;
+                                    var answer = req.responseText.evalJSON();
+                                    $(tiers_name_id).value=answer["name"];
+                                }
+                            });
                         }
                     }
                     $(ctlc.value).value += nValue;

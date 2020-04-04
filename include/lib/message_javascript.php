@@ -106,4 +106,5 @@ content[72]="<?php echo _("Pour les journaux FIN, ce sera la fiche du journal");
 content[73]="<?php echo _("Mettre à oui pour un journal dédié uniquement aux notes de crédit ou de débit, il affichera un avertissement si le montant n'est pas en négatif");?>";
 content[74]="<?php echo _('TVA due ou récupérable quand l\'opération est payée ou exécutée')?>";
 content[75]="<?php echo _('Journaux Achat ou vente en mode simple, TVA ou détaillé')?>";
+content[76]="<?php echo _('Il est conseillé d\'avoir un quickcode de moins de 9 car.')?>";
 </script>

@@ -176,31 +176,32 @@ if (!empty($array)) {
             if (${'lvl' . $ind . '_old'} == '') ${'lvl' . $ind . '_old'} = substr($r['poste'], 0, $ind);
             if (${'lvl' . $ind . '_old'} != substr($r['poste'], 0, $ind)) {
                 $pdf->SetFont('DejaVu', 'B', 7);
-                $pdf->LongLine(30, 6, ${'lvl' . $ind . '_old'});
+                $strTotal=sprintf(_("Totaux %s "),${'lvl' . $ind . '_old'});
+                $pdf->LongLine(30, 6, $strTotal,"TB");
                 $delta = bcsub(${'nlvl' . $ind}['solde_cred'], ${'nlvl' . $ind}['solde_deb']);
                 $side = ($delta < 0) ? "D" : "C";
                 if ($previous == 1) {
                     $delta_previous = bcsub(${'nlvl' . $ind}['solde_cred_previous'], ${'nlvl' . $ind}['solde_deb_previous']);
                     $side_previous = ($delta_previous < 0) ? "D" : "C";
-                    $pdf->write_cell(60, 6, " ", 0, 0, 'R');
-                    $pdf->write_cell(22, 6, nbm(${'nlvl' . $ind}['sum_deb_previous']), 0, 0, 'R');
-                    $pdf->write_cell(22, 6, nbm(${'nlvl' . $ind}['sum_cred_previous']), 0, 0, 'R');
-                    $pdf->write_cell(22, 6, nbm(abs($delta_previous)) . " $side_previous", 0, 0, 'R');
+                    $pdf->write_cell(60, 6, sprintf(_("niveau %s"),$ind), "TB", 0, 'R');
+                    $pdf->write_cell(22, 6, nbm(${'nlvl' . $ind}['sum_deb_previous']), "TB", 0, 'R');
+                    $pdf->write_cell(22, 6, nbm(${'nlvl' . $ind}['sum_cred_previous']), "TB", 0, 'R');
+                    $pdf->write_cell(22, 6, nbm(abs($delta_previous)) . " $side_previous", "TB", 0, 'R');
 
                 } else {
-                    $pdf->write_cell(60, 6, " ", 0, 0, 'R');
+                    $pdf->write_cell(60, 6, sprintf(_("niveau %s"),$ind), "TB", 0, 'R');
 
                 }
                 $solde_lv = bcsub(${'nlvl' . $ind}['sum_deb_ope'], ${'nlvl' . $ind}['sum_cred_ope']);
                 $side_lv = ($solde_lv < 0) ? " C" : " D";
                 $side_lv = ($solde_lv == 0) ? " " : $side_lv;
-                $pdf->write_cell(25, 6, nbm(abs($solde_lv)) . $side_lv, 0, 0, 'R');
-                $pdf->write_cell(25, 6, nbm(bcsub(${'nlvl' . $ind}['sum_deb'], ${'nlvl' . $ind}['sum_deb_ope'])), 0, 0, 'R');
-                $pdf->write_cell(25, 6, nbm(bcsub(${'nlvl' . $ind}['sum_cred'], ${'nlvl' . $ind}['sum_cred_ope'])), 0, 0, 'R');
+                $pdf->write_cell(25, 6, nbm(abs($solde_lv)) . $side_lv, "TB", 0, 'R');
+                $pdf->write_cell(25, 6, nbm(bcsub(${'nlvl' . $ind}['sum_deb'], ${'nlvl' . $ind}['sum_deb_ope'])), "TB", 0, 'R');
+                $pdf->write_cell(25, 6, nbm(bcsub(${'nlvl' . $ind}['sum_cred'], ${'nlvl' . $ind}['sum_cred_ope'])), "TB", 0, 'R');
                 $solde_lv = bcsub(${'nlvl' . $ind}['solde_deb'], ${'nlvl' . $ind}['solde_cred']);
                 $side_lv = ($solde_lv > 0) ? "D" : "C";
                 $side_lv = ($solde_lv == 0) ? "" : $side_lv;
-                $pdf->write_cell(25, 6, nbm(abs($solde_lv)) . " $side_lv", 0, 0, 'R');
+                $pdf->write_cell(25, 6, nbm(abs($solde_lv)) . " $side_lv", "TB", 0, 'R');
                 $pdf->line_new();
                 $pdf->SetFont('DejaVuCond', '', 7);
                 ${'lvl' . $ind . '_old'} = substr($r['poste'], 0, $ind);

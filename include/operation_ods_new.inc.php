@@ -108,7 +108,7 @@ $iconcerned->amount_id="totalDeb";
 printf (_("Opération rapprochée : %s"),$iconcerned->input());
 
 echo '<p>';
-echo HtmlInput::button('add', _('Ajout d\'une ligne'), 'onClick="quick_writing_add_row()"');
+echo Html_Input_Noalyss::ledger_add_item("M");
 echo HtmlInput::submit('summary', _('Sauvez'));
 echo '</p>';
 

@@ -96,6 +96,7 @@ $html=var_export($_REQUEST,true);
 // For storing extra information , example the HTML elt id to update
 // after creating
 $extra="";
+$http=new \HttpInput();
 switch($op2)
 {
     /* ------------------------------------------------------------ */
@@ -103,12 +104,11 @@ switch($op2)
     /* ------------------------------------------------------------ */
 case 'rmfa':
     if ($g_user->check_action(FICCAT)==0)exit();
-        ob_start();
-    if( ! isset($_GET['ad_id']) || isNumber($_GET['ad_id']) ==0)
-        throw new Exception ( _("Parametre ad_id est invalide"),11);
-    $ad_id=  $_GET['ad_id'];
+
+    ob_start();
     try
     {
+        $ad_id= $http->get("ad_id","number");
         $cn->start();
         $fa=new Fiche_Attr($cn,$ad_id);
         $fa->delete();
@@ -117,6 +117,7 @@ case 'rmfa':
     catch (Exception $e)
     {
         $cn->rollback();
+        record_log($e->getMessage());
         record_log($e->getTraceAsString());
         echo $e->getMessage();
     }
