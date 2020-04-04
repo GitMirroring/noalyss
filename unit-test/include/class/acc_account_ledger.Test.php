@@ -271,7 +271,7 @@ class Acc_Account_LedgerTest extends TestCase
         $expected=array (
                         'debit' => '0',
                         'credit' => '248.9700',
-                        'solde' => 248,
+                        'solde' => 248.97,
                       );
         $this->assertEquals($accounting->get_solde_detail(),$expected);
     }
