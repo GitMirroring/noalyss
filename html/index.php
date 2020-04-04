@@ -191,7 +191,7 @@ if (isset ($_REQUEST['reconnect']) && isset ($_REQUEST['backurl'])) {
 }
 echo '
 
-<IMG SRC="image/logo7200.png" id="logo_id" alt="NOALYSS">
+<IMG SRC="image/logo7300.png" id="logo_id" alt="NOALYSS">
 <form id="login_frm" action="login.php" method="post" name="loginform">'.
         '<h1>Noalyss</h1>'.
        $goto .
@@ -201,7 +201,7 @@ echo '
 <TD><input type="text" class="input_text" value="" id="p_user" name="p_user" autofocus tabindex="1" placeholder="User"></TD>
 </TR>
 <TR>
-<TD><INPUT TYPE="PASSWORD"  class="input_text" value=""  NAME="p_pass"  tabindex="2" placeholder="*******"></TD>
+<TD><INPUT TYPE="PASSWORD"  class="input_text" value=""  id="p_pass" NAME="p_pass"  tabindex="2" placeholder="*******"></TD>
 </TR>';
 
 
