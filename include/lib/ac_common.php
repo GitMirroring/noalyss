@@ -1347,4 +1347,22 @@ if(!function_exists('tracedebug')) {
     file_put_contents($tmp_file, $output, FILE_APPEND);
   }
 }
-?>
+/**
+ * encode the string for RTF, return a stringu
+ * @param $p_string string to convert
+ * @return string
+ */
+function convert_to_rtf($p_string)
+{
+    $result="";
+    $p_string2=utf8_decode($p_string);
+    $nb_result=strlen($p_string2);
+    for ($i = 0 ; $i < $nb_result ; $i++ ){
+        if (ord($p_string[$i]) < 127 ) {
+            $result.=$p_string[$i];
+        } else {
+            $result.='\u'.ord($p_string[$i]).chr(92).chr(39).'3f';
+        }
+    }
+    return $result;
+}

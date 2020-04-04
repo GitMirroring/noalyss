@@ -85,7 +85,6 @@ $g_succeed="<span style=\"font-size:18px;color:green\">&#x2713;</span>";
 define ('SMALLX','&#x2D5D;');
 define ('BUTTONADD',"&#10010;");
 
-
 define ('SVNINFO',NOALYSS_VERSION);
 if ( ! defined  ('DEBUG')) {
     define ("DEBUG",false);
@@ -108,7 +107,7 @@ if ( !defined ("NOALYSS_PACKAGE_REPOSITORY")) {
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
 }
-define ("DBVERSION",141);
+define ("DBVERSION",143);
 define ("MONO_DATABASE",25);
 define ("DBVERSIONREPO",18);
 define ('NOTFOUND','--not found--');

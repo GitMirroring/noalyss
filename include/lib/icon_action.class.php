@@ -342,4 +342,18 @@ class Icon_Action
                 $lock_cur);
         return $r;
     }    
+    
+    /**
+     * Display a icon ON is $p_value == 1 otherwise OFF
+     * @param string $p_div id of  element
+     * @param string $p_javascript
+     * @param string $p_style optionnal HTML code
+     * @param integer 0 or 1 , 0 means OFF and 1 means ON
+     * @return html string
+     */
+    static function icon_onoff($p_id,$p_javascript,$p_style,$p_value)
+    {
+        if ( $p_value == 1 ) { return \Icon_Action::iconon($p_id, $p_javascript,$p_style);}
+        if ( $p_value == 0 ) { return \Icon_Action::iconoff($p_id, $p_javascript,$p_style);}
+    }
 }

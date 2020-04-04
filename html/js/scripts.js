@@ -2193,6 +2193,9 @@ function filter_list(phrase, _id) {
 
     for (var r = 0; r < l_list.childNodes.length; r++) {
         var found = 0;
+        if (l_list.childNodes[r].nodeType != 1 ){
+            continue;
+        }
         if (l_list.childNodes[r].childElementCount == 0)
         {
             ele = l_list.childNodes[r].innerHTML;

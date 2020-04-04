@@ -73,8 +73,8 @@ if ($low_action == "list")
     	<form method="get" action="<?php echo $href;?>">
 		<?php
 		echo dossier::hidden();
-		$a = (isset($_GET['query'])) ? $_GET['query'] : "";
-                echo _("Cherche ").HtmlInput::filter_table_form("contact_tb", '0,1,2,3,4,5,6', 1,"query",$a);
+		$a = $http->get("query","string","");
+        echo _("Cherche ").HtmlInput::filter_table_form("contact_tb", '0,1,2,3,4,5,6', 1,"query",$a);
 
 		$sel_card = new ISelect('cat');
 		$sel_card->value = $cn->make_array('select fd_id, fd_label from fiche_def ' .
