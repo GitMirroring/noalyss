@@ -37,7 +37,7 @@
     <tr>
         <td><?php echo $f_type?></td>
         <td>
-            <?php echo $f_client_qcode?><?php echo $f_client_bt?><?php echo $str_add_button_tiers;?> <?php echo $f_client?></td>
+            <?php echo $f_client_qcode?><?php echo $f_client_bt?><?php echo $str_add_button_tiers;?> <?php echo $f_client?>
         </td>
     </tr>
     
