@@ -37,7 +37,10 @@ class FicheTest extends TestCase
      */
     public function testCmp_name()
     {
-       
+       include 'global.php';
+       $fiche=new \Fiche($g_connection,21);
+       $fiche_2=new \Fiche($g_connection,25);
+       $this->assertGreaterThan(\Fiche::cmp_name($fiche, $fiche_2),0);
     }
 
     /**
@@ -60,8 +63,25 @@ class FicheTest extends TestCase
      */
     public function testGet_row()
     {
-       $this->assertTrue(is_array($this->object->get_row(235,238)));
-       
+        include 'global.php';
+        $card_count=$g_connection->get_array("select count(*),f_id ". 
+        " from jrnx ".
+        " where ". 
+        " f_id is not null ".
+        "group by f_id order by count(*) desc");
+        $a=new Fiche($g_connection,$card_count[0]['f_id']);
+       try {
+            $a->get_row(235,238);
+            $this->assertFalse(TRUE,"Exception periode non executée");
+       } catch (\Exception $e) {
+           $this->assertTrue(TRUE);
+       }
+        $a_result= $a->get_row(92,131);
+        // Size == 25
+        
+        $nb_result=count($a_result);
+        $this->assertEquals ($nb_result,3,"Size array not correct ");
+        $this->assertEquals($a_result[0][24]["deb_montant"],204.71);
     }
 
 }
