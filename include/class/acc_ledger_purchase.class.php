@@ -1079,7 +1079,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         
         if ($wLedger == null) throw  new Exception(_('Pas de journal disponible'));
         $wLedger->javascript="onChange='update_predef(\"ach\",\"f\",\"".$_REQUEST['ac']."\");$add_js'";
-        $wLedger->table=1;
+        $wLedger->table=0;
         $f_jrn=$wLedger->input();
 
         // Comment

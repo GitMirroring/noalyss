@@ -1097,7 +1097,7 @@ EOF;
         $wLedger = $this->select_ledger('VEN', 2,FALSE);
         if ($wLedger == null)
             throw new Exception(_('Pas de journal disponible'));
-        $wLedger->table = 1;
+        $wLedger->table = 0;
         $wLedger->javascript = "onChange='update_predef(\"ven\",\"f\",\"".$_REQUEST['ac']."\");$add_js'";
         $wLedger->label = " Journal " . Icon_Action::infobulle(2);
 

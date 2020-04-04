@@ -196,6 +196,7 @@ class Acc_Ledger_SoldTest extends TestCase
         $object=new Acc_Ledger_Sold($g_connection, 2);
         
         $info=$object->input($this->array);
+       // var_dump($info);
         if (!is_string($info))
         {
             $this->assertTrue(FALSE);
@@ -208,7 +209,7 @@ class Acc_Ledger_SoldTest extends TestCase
         $this->assertContains(
                 '<INPUT TYPE="TEXT"  class="input_text"  id="e_pj" name="e_pj" value="VEN10" placeholder="" title=""',
                 $info);
-        $this->assertContains('ID="add_item" VALUE="Ajout article"  onClick="ledger_add_row()">', $info);
+        $this->assertContains('ID="add_item" VALUE="ligne à ajouter"  onClick="ledger_add_multiple', $info);
     }
 
 

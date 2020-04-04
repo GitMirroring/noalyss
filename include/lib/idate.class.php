@@ -56,7 +56,6 @@ class IDate extends HtmlInput
         if ($this->readOnly==true)
             return $this->display();
         if ($this->id=="")             $this->id=self::generate_id($this->name);
-        $t= 'title="'.$this->title.'" ';
         $autofocus=($this->autofocus)?" autofocus ":"";
         
         $r=sprintf('
@@ -66,7 +65,6 @@ class IDate extends HtmlInput
                  value ="%s" 
                  placeholder="%s"
                  title="%s"
-                 %s
                  pattern="[0-9]{1,2}.[0-9]{1,2}.[0-9]{4}"
                 />
                 <span  class="smallbutton icon"
@@ -74,7 +72,7 @@ class IDate extends HtmlInput
                 />
                 &#xe811;
                 </span>
-                ',$this->name,$this->id,$this->value,$this->placeholder,$this->title,$t,$this->id
+                ',$this->name,$this->id,$this->value,$this->placeholder,$this->title,$this->id
                 );
         
         $r.=sprintf('<script type="text/javascript">
