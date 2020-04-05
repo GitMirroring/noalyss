@@ -8,7 +8,10 @@
 <table>
     <tr>
         <td> 
-            <?php echo _('Journal')?> <?php echo $f_jrn?>
+            <?php echo _('Journal')?>
+        </td>
+        <td>
+			 <?php echo $f_jrn?>
         </td>
     </tr>
     <tr>
