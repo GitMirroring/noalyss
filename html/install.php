@@ -654,7 +654,7 @@ if  (defined("MULTI") && MULTI == 0)
             }
         }
         
-        $db->exec_sql("update ac_users set use_login=$1,use_pass=$2 where use_id=1",
+        $db->exec_sql("update ac_users set use_login=$1,use_pass=md5($2) where use_id=1",
               array(strtolower(NOALYSS_ADMINISTRATOR),NOALYSS_ADMIN_PASSWORD));
         echo '<h1>'._('Important').'</h1>';
         echo '<p>'._('Utilisateur administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';
