@@ -48,6 +48,7 @@ class Output_Html_Tab
         $this->a_tabs=[];
         $this->class_tab="tabs";
         $this->class_tab_selected="tabs_selected";
+        $this->set_mode("tab");
     }
 
     /**
@@ -232,6 +233,7 @@ class Output_Html_Tab
                     
                     break;
                 default:
+                    throw new Exception('OUTPUTHTMLTAB01');
                     break;
             }
             if ( $this->get_mode()=="row") {
@@ -253,7 +255,14 @@ class Output_Html_Tab
     }
     private function print_div($p_index)
     {
-        printf('<div id="div%s" style="display:none;clear:both" class="tab_row">',$this->a_tabs[$p_index]->get_id());
+        $class="";
+        if ( $this->get_mode() == "row") {
+            $class="tab_row";
+        }
+
+        printf('<div id="div%s" style="display:none;clear:both" class="%s">',
+                            $this->a_tabs[$p_index]->get_id(),
+                            $class);
         echo $this->a_tabs[$p_index]->get_content();
         echo '</div>';
 
