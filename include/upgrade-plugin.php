@@ -51,9 +51,12 @@ if ( $xml == NULL) {
 $a_plugin=$xml->xpath('//plugins/plugin');
 $nb_plugin=count($a_plugin);
 echo _("Les extensions doivent être activées dans le dossier après installation");
+echo '<p>';
+echo  _("Recherche").HtmlInput::filter_table("tab_plugin",'0,1,2,3',1);
+echo '</p>';
 ?>
 
-<table>
+<table id="tab_plugin" class="result">
     <tr>
         <th>
             <?= _("Nom") ?>
