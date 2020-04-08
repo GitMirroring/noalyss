@@ -84,9 +84,11 @@
 <tr id="div_db" style="visibility:hidden">
 	<td>
 		<?php echo _('Nom base de donnée');?>
+		
 	</td>
 	<td>
 		<?php echo $icdbname->input();echo Icon_Action::infobulle(206) ?>
+		<a href="https://wiki.noalyss.eu/doku.php?id=installation:installation_sur_serveur_mutualise" target="_blank"><?php echo _('Aide');?></a>
 	</td>
 </tr>
 </table>
