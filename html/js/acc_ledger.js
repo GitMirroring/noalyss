@@ -175,19 +175,21 @@ function update_row(ctl)
                             var answer = request.responseText.evalJSON(true);
                             var row = parseFloat(answer.row);
                             var current_row = parseFloat($('nb_item').value);
+                            var table_to_update=$(ctl);
                             if (current_row > row) {
-                                // Too many row
-                                var delta = $('nb_item').value - row;
+                                // Too many row, we always must keep 2 rows for the sum
+                                var delta = $('nb_item').value - row ;
                                 var idx = $('nb_item').value;
                                 for (var i = 0; i < delta; i++) {
-                                    $(ctl).deleteRow(-1);
+                                    var pos_row=table_to_update.rows.length;
+                                    table_to_update.deleteRow(pos_row-3);
                                     idx--;
                                 }
                                 $('nb_item').value = row;
                             }
                             if (current_row < row) {
                                 // We need to add rows
-                                var delta = row - current_row;
+                                var delta = row - current_row ;
                                 for (var i = 0; i < delta; i++) {
                                     if (ctl == 'fin_item') {
                                         ledger_fin_add_row();
@@ -505,6 +507,7 @@ function success_compute_ledger(request, json)
         g('tvac_march' + ctl).value = rtvac;
         g('sum').show();
         refresh_ledger();
+        CurrencyCompute('p_currency_rate','p_currency_euro');
 
         return;
     }
@@ -526,8 +529,9 @@ function success_compute_ledger(request, json)
     var tmp1 = Math.round(parseFloat(g('htva_march' + ctl).value) * 100) / 100;
     var tmp2 = Math.round(parseFloat(g('tva_march' + ctl).value) * 100) / 100;
     g('tvac_march' + ctl).value = Math.round((tmp1 + tmp2) * 100) / 100;
-
     refresh_ledger();
+    CurrencyCompute('p_currency_rate','p_currency_euro');
+    
 }
 
 /**
@@ -565,7 +569,7 @@ function compute_all_ledger()
     if (g('tvac'))
         g('tvac').innerHTML = Math.round(tvac * 100) / 100;
 
-
+   
 }
 
 function clean_tva(p_ctl)

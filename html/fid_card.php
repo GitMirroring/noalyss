@@ -47,6 +47,7 @@ $http=new HttpInput();
 $jrn= $http->request("j","number",-1); 
 $limit=$http->request("limit","number",12);
 
+$jrn= $http->request("j","number",-1); 
 $filter_card="";
 $cn=Dossier::connect();
 $d=$http->request('e');
@@ -128,6 +129,7 @@ $sql_str="select distinct f_id
 
 
 $fid=$http->request("FID");
+
 
 $sql=$cn->get_array($sql_str		    ,array($fid));
 

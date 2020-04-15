@@ -26,6 +26,9 @@
 var ask_reload = 0;
 var tag_choose = '';
 var aDraggableElement = new Array();
+var viewport = document.viewport.getDimensions(); // Gets the viewport as an object literal
+var width = viewport.width; // Usable window width
+var height = viewport.height;
 
 /**
  * callback function when we just need to update a hidden div with an info
@@ -3607,6 +3610,21 @@ function toggle_lock(p_domid)
     }
 
 
+}
+/**
+ * 
+ * @returns {undefined}
+ */
+function show_ledger_fin_currency()
+{
+    var ledger=$('p_jrn').value;
+    var dossier=$('gDossier').value;
+    // $('ledger_currency').
+    var a=new Ajax.Updater("ledger_currency",
+                    "ajax_misc.php",
+                    { 
+                        parameters: {"op":"currencyCode","gDossier":dossier,"ledger":ledger}
+                    });
 }
 
 /*** 

@@ -45,7 +45,11 @@ class Noalyss_Parameter_Folder
     var $MY_ALPHANUM;
     var $MY_UPDLAB;
     var $MY_STOCK;
+    var $MY_DEFAULT_ROUND_ERROR_DEB;
+    var $MY_DEFAULT_ROUND_ERROR_CRED;
     var $MY_ANC_FILTER;
+    var $MY_CURRENCY;
+    
     
     // constructor
     function __construct($p_cn)
@@ -166,6 +170,8 @@ class Noalyss_Parameter_Folder
         $this->save('MY_ALPHANUM');
         $this->save('MY_UPDLAB');
         $this->save('MY_STOCK');
+        $this->save('MY_DEFAULT_ROUND_ERROR_DEB');
+        $this->save('MY_DEFAULT_ROUND_ERROR_CRED');
         $this->save("MY_ANC_FILTER");
 
     }

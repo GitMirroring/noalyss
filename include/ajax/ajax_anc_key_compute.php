@@ -70,4 +70,3 @@ echo <<<EOF
 <code>$html</code>
 </data>
 EOF;
-?>        

@@ -448,7 +448,11 @@ class Lettering_Account extends Lettering
              select j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,
              j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
              coalesce(comptaproc.get_letter_jnt(j_id),-1) as letter,
-             jr_pj_number
+             jr_pj_number,
+             round(j_montant/currency_rate,4) as currency_amount,
+             currency_rate, 
+             currency_rate_ref,
+             (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
              from jrnx join jrn on (j_grpt = jr_grpt_id)
              where j_poste = $1 and j_date >= to_date($2,'DD.MM.YYYY') and j_date <= to_date ($3,'DD.MM.YYYY')
              and $this->sql_ledger
@@ -472,7 +476,11 @@ class Lettering_Account extends Lettering
 			select j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,jr_pj_number,
 						j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
 							coalesce(let_diff.jl_id,-1) as letter,
-					diff_letter1 as letter_diff
+					diff_letter1 as letter_diff,
+                                        round(j_montant/currency_rate,4) as currency_amount,
+                                        currency_rate, 
+                                        currency_rate_ref,
+		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
 						from jrnx join jrn on (j_grpt = jr_grpt_id)
 						left join letter_jl using (j_id)
 						left join let_diff using (jl_id)
@@ -496,7 +504,11 @@ class Lettering_Account extends Lettering
 			select j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,jr_pj_number,
 						j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
 						let_diff.jl_id as letter,
-					diff_letter1 as letter_diff
+					diff_letter1 as letter_diff,
+                                         round(j_montant/currency_rate,4) as currency_amount,
+                                        currency_rate, 
+                                        currency_rate_ref,
+		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
 						from jrnx join jrn on (j_grpt = jr_grpt_id)
 						 join letter_jl using (j_id)
 						left join let_diff using (jl_id)
@@ -519,7 +531,11 @@ class Lettering_Account extends Lettering
 			select  distinct j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,jr_pj_number,
 						j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
 						let_diff.jl_id as letter,
-					diff_letter1 as letter_diff
+					diff_letter1 as letter_diff,
+                                         round(j_montant/currency_rate,4) as currency_amount,
+                                        currency_rate, 
+                                        currency_rate_ref,
+                                        (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
 						from
 						jrnx join jrn on (j_grpt = jr_grpt_id)
 						 join letter_jl using (j_id)
@@ -541,7 +557,11 @@ class Lettering_Account extends Lettering
 			select j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,jr_pj_number,
 						j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
 						-1 as letter,
-					0 as letter_diff
+					0 as letter_diff,
+                                         round(j_montant/currency_rate,4) as currency_amount,
+                                        currency_rate, 
+                                        currency_rate_ref,
+		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
 						from jrnx join jrn on (j_grpt = jr_grpt_id)
              where j_poste = $1 and j_date >= to_date($2,'DD.MM.YYYY') and j_date <= to_date ($3,'DD.MM.YYYY')
              and $this->sql_ledger
@@ -612,7 +632,11 @@ class Lettering_Card extends Lettering
 			select distinct j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,jr_pj_number,
 						j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
 						coalesce(let_diff.jl_id,-1) as letter,
-					diff_letter1 as letter_diff
+					diff_letter1 as letter_diff,
+					 round(j_montant/currency_rate,4) as currency_amount,
+                                        currency_rate, 
+                                        currency_rate_ref,
+		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
 						from jrnx join jrn on (j_grpt = jr_grpt_id)
 						left join letter_jl using (j_id)
 						left join let_diff using (jl_id)
@@ -638,7 +662,11 @@ class Lettering_Card extends Lettering
 			select DISTINCT j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,jr_pj_number,
 						j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
 						coalesce(let_diff.jl_id,-1) as letter,
-					diff_letter1 as letter_diff
+					diff_letter1 as letter_diff,
+                                         round(j_montant/currency_rate,4) as currency_amount,
+                                        currency_rate, 
+                                        currency_rate_ref,
+		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
 						from jrnx join jrn on (j_grpt = jr_grpt_id)
 						left join letter_jl using (j_id)
 						left join let_diff using (jl_id)
@@ -655,7 +683,7 @@ class Lettering_Card extends Lettering
     public function get_letter()
     {
         $sql="
-    with let_diff as (select jl_id,deb_amount-cred_amount as diff_letter1
+     with let_diff as (select jl_id,deb_amount-cred_amount as diff_letter1
 			from
 			( select jl_id,coalesce(sum(j_montant),0) as cred_amount from letter_cred join jrnx using (j_id) group by jl_id) as CRED
 			left join (select jl_id,coalesce(sum(j_montant),0) as deb_amount from letter_deb join jrnx using (j_id) group by jl_id) as DEB using (jl_id)) ,
@@ -663,7 +691,11 @@ class Lettering_Card extends Lettering
 			select j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,jr_pj_number,
 						j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
 						let_diff.jl_id as letter,
-					diff_letter1 as letter_diff
+					diff_letter1 as letter_diff,
+					 round(j_montant/currency_rate,4) as currency_amount,
+                                        currency_rate, 
+                                        currency_rate_ref,
+		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
 						from jrnx join jrn on (j_grpt = jr_grpt_id)
 						join letter_jl using (j_id)
 						left join let_diff using (jl_id)
@@ -683,7 +715,11 @@ class Lettering_Card extends Lettering
 			select distinct j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,jr_pj_number,
 						j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
 						let_diff.jl_id as letter,
-					diff_letter1 as letter_diff
+					diff_letter1 as letter_diff,
+					 round(j_montant/currency_rate,4) as currency_amount,
+                                        currency_rate, 
+                                        currency_rate_ref,
+		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
 						from jrnx join jrn on (j_grpt = jr_grpt_id)
 						left join letter_jl using (j_id)
 						left join let_diff using (jl_id)
@@ -702,7 +738,11 @@ class Lettering_Card extends Lettering
              select j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,jr_pj_number,
              j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
              -1 as letter,
-			 0 as letter_diff
+			 0 as letter_diff,
+				 round(j_montant/currency_rate,4) as currency_amount,
+                                currency_rate, 
+                                currency_rate_ref,
+		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
              from jrnx join jrn on (j_grpt = jr_grpt_id)
              where j_qcode = upper($1) and j_date >= to_date($2,'DD.MM.YYYY') and j_date <= to_date ($3,'DD.MM.YYYY')
              and $this->sql_ledger

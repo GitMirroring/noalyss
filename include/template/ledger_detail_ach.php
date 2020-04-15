@@ -109,8 +109,7 @@ $str_anc="";
             </tr>
 
         </table>
-        <div class="myfieldset">
-            <table class="result">
+            <table class="result" style="margin-left:4px">
                 <?php
                 bcscale(2);
                 $total_htva = 0;
@@ -136,7 +135,11 @@ $str_anc="";
                     echo th(_('TVAC'), 'style="text-align:right"');
                 } else
                     echo th(_('Total'), 'style="text-align:right"');
-
+                if ( $obj->det->currency_id != 0 ) {
+                    $currency=$obj->db->get_value("select cr_code_iso from currency where id=$1",
+                            [$obj->det->currency_id]);
+                    echo th($currency, 'style="text-align:right"');
+                }
                 if ($owner->MY_ANALYTIC != 'nu' )
                 {
                     $anc = new Anc_Plan($cn);
@@ -161,6 +164,7 @@ $str_anc="";
 
                 }
                 echo '</tr>';
+                $sum_charge_euro=0;
                 for ($e = 0; $e < count($obj->det->array); $e++)
                 {
                     $row = '';
@@ -202,11 +206,11 @@ $str_anc="";
 
 
                     $row.=td(nbm($htva), 'class="num"');
-                    $tvac = bcadd($htva, $q['qp_vat']);
+                    $tva_rounded=round($q['qp_vat'],2);
+                    $tvac = bcadd($htva, $tva_rounded);
                     $tvac = bcadd($tvac, $q['qp_nd_tva']);
                     $tvac = bcadd($tvac, $q['qp_nd_tva_recup']);
                     $tvac = bcsub ($tvac,$q['qp_vat_sided']);
-
                     if ($owner->MY_TVA_USE == 'Y')
                     {
                         $tva_amount_nd = bcadd($q['qp_nd_tva_recup'], $q['qp_nd_tva']);
@@ -216,7 +220,7 @@ $str_anc="";
                             $class = ' style="text-decoration:line-through"';
                         }
                         $row.=td(nbm($tva_amount_nd), 'class="num" ' . $class);
-                        $row.=td(nbm($q['qp_vat']), 'class="num" ' . $class);
+                        $row.=td(nbm($tva_rounded), 'class="num" ' . $class);
                         $row.=td(nbm($tvac), 'class="num"');
                     }
                     $total_tvac=bcadd($total_tvac,$tvac);
@@ -240,12 +244,18 @@ $str_anc="";
                             $str_anc.=td($poste);
                             $str_anc.=td(nbm($htva)." {$side}");
                             $str_anc.=$anc_op->display_table(1, $htva, $div);
-                        } else
-                        {
-                            $row.=td('');
-                        }
+                        } 
                     }
                      $class=($e%2==0)?' class="even"':'class="odd"';
+                     /*
+                      * Display Currency in a column, if invoice not recorded in EUR
+                      */
+                     if ( $obj->det->currency_id != 0 ) {
+                         $value=$obj->db->get_value("select  oc_amount+oc_vat_amount from operation_currency where j_id=$1",[$q['j_id']]);
+                         $row.=td(nbm($value,2),' class="num"');
+                         $sum_charge_euro=bcadd($sum_charge_euro,$value,2);
+                         
+                     }
                      echo tr($row,$class);
                 }
                 if ($owner->MY_TVA_USE == 'Y')
@@ -255,12 +265,34 @@ $str_anc="";
                 $row.=td(nbm($total_htva), 'class="num" style="font-style:italic;font-weight: bolder;"');
                 if ($owner->MY_TVA_USE == 'Y')
                     $row.=td("") . td("").td(nbm($total_tvac), 'class="num" style="font-style:italic;font-weight: bolder;"');
+                
+                //Display total in currency
+                if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
+                {
+                    $currency=new Acc_Currency($obj->db, $obj->det->currency_id);
+                    $row.= td(nbm($sum_charge_euro),' class="num" style="font-style:italic;font-weight: bolder;"');
+                }
                 echo tr($row);
+                
                 ?>
             </table>
+<?php
+/*
+ * Info about currency if not in euro
+ */
+    // Add a row with currency and amount
+    if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
+    {
+        $currency=new Acc_Currency($obj->db, $obj->det->currency_id);
+        $four_space="&nbsp;"."&nbsp;"."&nbsp;"."&nbsp;";
+        
+        echo  $currency->get_code(),$four_space;
+        echo _("Taux utilisé"),"&nbsp;", $obj->det->currency_rate,$four_space;
+        echo _("Taux Réf"), "&nbsp;",$obj->det->currency_rate_ref.$four_space;
+        echo _("Montant en devise"), "&nbsp;",nbm($sum_charge_euro).$four_space;
+    }
+?>
 
-
-        </div>
 
 
 <?php

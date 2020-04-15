@@ -253,10 +253,14 @@ $path = array(
     'update_comment_followUp'=>'ajax_follow_up',
     // TVA param
     "tva_parameter"=>"ajax_tva_parameter",
-    // Display all cards using an accounting
-    "display_all_card"=>"ajax_display_all_card",
+     // Currency , add / remove / update currency 
+    "CurrencyManage"=>"ajax_currency",
+    // Currency  , delete a rate
+    "CurrencyRateDelete"=>"ajax_currency",
     // payment_method
-    "payment_method"=>"ajax_payment_method"
+    "payment_method"=>"ajax_payment_method",
+    // Display all cards using an accounting
+    "display_all_card"=>"ajax_display_all_card"
 )    ;
 
 if (array_key_exists($op, $path)) {
@@ -265,6 +269,60 @@ if (array_key_exists($op, $path)) {
 }
 switch ($op)
 {
+    /*
+     * Get the currency rate
+     */
+    case "CurrencyRate":
+        $a_answer=array();
+        $a_answer['status']="NOK";
+        $http=new HttpInput();
+        try
+        {
+             $code=$http->get("p_code");
+             if ( $code==-1) {
+                 $a_answer['content']=1;
+             }else {
+             $a_answer['content']=$cn->get_value("select ch_value from v_currency_last_value where currency_id=$1",
+                     [$code]);
+             }
+             $a_answer['status']="OK";
+        }
+        catch (Exception $ex)
+        {
+            $a_answer['content']=$ex->getMessage();
+        }
+        $jsson=json_encode($a_answer, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
+        header('Content-Type: application/json;charset=utf-8');
+        echo $jsson;
+        return;
+
+       
+        break;
+    /*
+     * Get the currency code
+     */
+    case "CurrencyCode":
+        $a_answer=array();
+        $a_answer['status']="NOK";
+        $http=new HttpInput();
+        try
+        {
+             $code=$http->get("p_code");
+             $a_answer['content']=$cn->get_value("select cr_code_iso||' ('||cr_name||')' from v_currency_last_value where currency_id=$1",
+                     [$code]);
+             $a_answer['status']="OK";
+        }
+        catch (Exception $ex)
+        {
+            $a_answer['content']=$ex->getMessage();
+        }
+        $jsson=json_encode($a_answer, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
+        header('Content-Type: application/json;charset=utf-8');
+        echo $jsson;
+        return;
+
+       
+        break;
     case "periode_change":
         $field=$http->get("field");
         $type=$http->get("type");
@@ -585,7 +643,12 @@ EOF;
             }
             exit();
             break;
-        
+        case 'currencyCode':
+            $ledger_id=$http->request('ledger',"number");
+            $code=$cn->get_value("select cr_code_iso from public.currency join jrn_def on (currency.id=jrn_def.currency_id) where jrn_def.jrn_def_id=$1",
+                    [$ledger_id]);
+            echo $code;
+            break;
 	default:
 		var_dump($_REQUEST);
 }

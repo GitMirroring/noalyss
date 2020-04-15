@@ -811,32 +811,33 @@ function check()
             }
             else
             {
-                if ( $this->get_col_type($v)=="select")
+                if ($this->get_col_type($v)=="select")
                 {
                     /**
-                     * we translate the code from the database into a hardcoded label
+                     * From database
                      */
                     $idx=$p_row[$v];
                     /*
-                    * Check if index exists
-                    */
+                     * Check if index exists
+                     */
                     $array_to_search=$this->a_select[$v];
                     $value=$p_row[$v];
                     
                     $nb_search=(is_array($array_to_search))?count($array_to_search):0;
                     $found=FALSE;
-                    for ( $e=0;$e< $nb_search;$e++) {
-                        if (isset ($array_to_search[$e]['value']) && $array_to_search[$e]['value']==$value ) {
+                    for ($e=0; $e<$nb_search; $e++)
+                    {
+                        if (isset($array_to_search[$e]['value'])&&$array_to_search[$e]['value']==$value)
+                        {
                             $found=TRUE;
                             echo td($array_to_search[$e]['label']);
                         }
                     }
 
-                    if ( ! $found) {
+                    if (!$found)
+                    {
                         echo td("--");
-
                     }
-                    
                 } elseif ($this->get_col_type($v)=="custom") {
                     // For custom col
                     echo td($this->display_row_custom($v,$p_row[$v]));
@@ -912,9 +913,27 @@ function check()
                         $text->size=$min_size;
                         echo $text->input();
                     }
-                    elseif ($this->a_type[$key]=="numeric")
+                    elseif ($this->a_type[$key]=="numeric") // number 2 decimale
                     {
                         $text=new INum($key);
+                        $text->value=$value;
+                        $min_size=(strlen($value)<10)?10:strlen($value)+1;
+                        $text->size=$min_size;
+                        echo $text->input();
+                    }
+                    elseif ($this->a_type[$key]=="numeric4") // number 4 decimale
+                    {
+                        $text=new INum($key);
+                        $text->prec=4;
+                        $text->value=$value;
+                        $min_size=(strlen($value)<10)?10:strlen($value)+1;
+                        $text->size=$min_size;
+                        echo $text->input();
+                    }
+                    elseif ($this->a_type[$key]=="numeric6") // number 6 decimale
+                    {
+                        $text=new INum($key);
+                        $text->prec=6;
                         $text->value=$value;
                         $min_size=(strlen($value)<10)?10:strlen($value)+1;
                         $text->size=$min_size;

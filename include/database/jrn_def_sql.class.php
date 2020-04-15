@@ -82,12 +82,10 @@ class Jrn_def_SQL extends Noalyss_SQL
             , "currency_id"=>"numeric"
             , "jrn_def_negative_amount"=>"text"
             ,"jrn_def_negative_warning"=>"text"
-        );
-
+            );
 
         $this->default=array(
-            "jrn_def_id"=>"auto"
-        );
+            "jrn_def_id"=>"auto");
 
         $this->date_format="DD.MM.YYYY";
         parent::__construct($p_cn, $p_id);

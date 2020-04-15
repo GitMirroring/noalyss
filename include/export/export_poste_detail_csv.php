@@ -85,6 +85,11 @@ if ( ! isset ($_REQUEST['oper_detail']))
         $title[]=_("Interne");
         $title[]=_("Tiers");
         $title[]=_("Description");
+        $title[]=_("Type");
+        $title[]=_("Code devise");
+        $title[]=_("Devise");
+        $title[]=_("Taux utilisé");
+        $title[]=_("Taux référence");
         $title[]=_("Débit");
         $title[]=_("Crédit");
         $title[]=_("Prog.");
@@ -116,6 +121,10 @@ if ( ! isset ($_REQUEST['oper_detail']))
                 $export->add("");
                 $export->add("");
                 $export->add("");
+                $export->add("");
+                $export->add("");
+                $export->add("");
+                $export->add("");
                 
                 $export->add($tot_deb,"number");
                 $export->add($tot_cred,"number");
@@ -134,6 +143,7 @@ if ( ! isset ($_REQUEST['oper_detail']))
             $tot_cred=bcadd($tot_cred,$op['cred_montant']);
             $diff=bcsub($op['deb_montant'],$op['cred_montant']);
             $prog=bcadd($prog,$diff);
+
             $export->add($op['j_date_fmt']);
             $export->add($pos['pcm_val']);
 	    $export->add($op['jr_pj_number']);
@@ -144,6 +154,12 @@ if ( ! isset ($_REQUEST['oper_detail']))
             $export->add($op['jr_internal']);
             $export->add($tiers);
             $export->add($op['description']);
+            $export->add($op['jr_optype']);
+            $export->add($op['cr_code_iso']);
+            $export->add($op['oc_amount'],"number");
+            $export->add($op['currency_rate'],"number");
+            $export->add($op['currency_rate_ref'],"number");
+            
             $export->add($op['deb_montant'],"number");
             $export->add($op['cred_montant'],"number");
             $export->add(abs($prog),"number");

@@ -43,8 +43,9 @@ class Print_Ledger_Misc extends Print_Ledger
         $this->Cell(30,6,_('Piece'));
         $this->Cell(20,6,_('Interne'));
         $this->Cell(25,6,_('Tiers'));
-        $this->Cell(80,6,_('Commentaire'));
-        $this->Cell(15,6,_('Montant'));
+        $this->Cell(60,6,_('Commentaire'));
+        $this->Cell(20,6,_('Devise'),0,0,'R');
+        $this->Cell(15,6,_('Montant'),0,0,'R');
         $this->Ln(6);
 
     }
@@ -70,6 +71,7 @@ class Print_Ledger_Misc extends Print_Ledger
     function export()
     {
         $a_jrn=$this->get_ledger()->get_rowSimple($this->get_from(),$this->get_to());
+
         $this->SetFont('DejaVu', '', 6);
         if ( $a_jrn == null ) return;
         $ledger=$this->get_ledger();
@@ -84,11 +86,12 @@ class Print_Ledger_Misc extends Print_Ledger
 	    $other=mb_substr($ledger->get_tiers($type,$a_jrn[$i]['jr_id']),0,25);
 	    $this->LongLine(25,5,$other,0,'L');
             $positive=$row['montant'];
-            $this->LongLine(80,5,$row['comment'],0,'L');
+            $this->LongLine(60,5,$row['comment'],0,'L');
              if ( $type == 'FIN' ) {
 	       $positive = $this->cn->get_value("select qf_amount from quant_fin  ".
 					  " where jr_id=".$row['jr_id']);
              }
+            $this->write_cell(20,5,nbm(bcadd($row['sum_ocvat_amount'],$row['sum_ocamount']),2).$row['cr_code_iso'],0,0,'R');
             $this->write_cell(15,5,nbm($positive),0,0,'R');
             $this->line_new(5);
 

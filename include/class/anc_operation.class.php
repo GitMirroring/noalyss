@@ -50,12 +50,25 @@ class Anc_Operation
     var $oa_date;	   /*!< equal to j_date if j_id is not	  null */
     var $pa_id;	/*!< the plan analytique id */
     var $card;  /*!< Card linked to the operation */
+    private $currency_rate;     /*!< currency rate */
     /**
      * In the case, the amount comes from a ND VAT, the variable
      * contents the jrnx.j_id of the source which was used to compute 
      * the amount
      */
-    var $oa_jrnx_id_source; 
+    var $oa_jrnx_id_source;    
+    
+    public function get_currency_rate()
+    {
+        return $this->currency_rate;
+    }
+
+    public function set_currency_rate($currency_rate)
+    {
+        $this->currency_rate=$currency_rate;
+        return $this;
+    }
+
     /**
      * @brief signed of the amount
      */
@@ -73,6 +86,7 @@ class Anc_Operation
         $this->has_data=0;
         $this->in_div="";
         $this->card="";
+        $this->currency_rate=1;
     }
     /*!\brief add a row  to the table operation_analytique
      * \note if $this->oa_group == 0 then a sequence id will be computed for
@@ -543,14 +557,18 @@ class Anc_Operation
         $table_id="t".$p_seq;
         $hidden=new IHidden();
 
-		$readonly=($p_mode==1)?false:true;
+        $readonly=($p_mode==1)?false:true;
 
-        $result.=$hidden->input('amount_'.$table_id,$p_amount);
-        if ( $p_mode==1 )
+        if ($p_mode==1)
+        {
+            $result.=$hidden->input('amount_'.$table_id,$p_amount);
             $result.='<table id="'.$p_id.$table_id.'">';
+        }
         else
+        {
             $result.='<table>';
-        $result.="<tr>".$plan->header()."<th>montant</th></tr>";
+        }
+        $result.="<tr>".$plan->header()."<th>"._("montant")."</th></tr>";
 
         /* compute the number of rows */
         $nb_row=(isset($val[$p_seq]))?count($val[$p_seq]):1;
@@ -592,16 +610,20 @@ class Anc_Operation
                     $select->readOnly=true;
                 }
                 if ($p_mode==1)
+                {
                     $result.='<td>'.$select->input().'</td>';
+                }
                 else
+                {
                     $result.='<td>'.$select->display().'</td>';
+                }
                 $count++;
 
 
             }
             $value=new INum();
 	    $value->javascript='onchange="format_number(this);anc_refresh_remain(\''.$this->in_div.$table_id.'\',\''.$p_seq.'\')"';
-            $value->name="val[".$p_seq."][]";
+            $value->name=($readonly)?"ro"."val[".$p_seq."][]":"val[".$p_seq."][]";
             $value->size=6;
             $value->value=(isset($val[$p_seq][$i]))?$val[$p_seq][$i]:abs($p_amount);
             $value->value=round($value->value,2);
@@ -712,6 +734,8 @@ class Anc_Operation
                 $op->j_id=$p_j_id;
                 $ratio=bcdiv($val[$p_item][$row],${"amount_t".$p_item});
                 $amount=  bcmul($p_nd, $ratio);
+                // convert to euro
+                $amount=bcmul($amount,$this->currency_rate);
                 $op->oa_amount=round($amount,2);
                 $op->oa_debit=$this->oa_debit;
                 $op->oa_date=$this->oa_date;
@@ -741,7 +765,7 @@ class Anc_Operation
         }
     }
     /*!\brief it called for each item, the data are taken from $p_array
-     *  data and set before in this.
+     *  data and set before in this. Amount will be transformed thanks the $this->currency_rate;
      * \param $p_item if the item nb for each item (purchase or selling
      *  merchandise)
      * \param $p_array structure
@@ -791,7 +815,8 @@ class Anc_Operation
                 $op->po_id=$hplan[$p_item][$e];
                 $op->oa_group=$this->oa_group;
                 $op->j_id=$p_j_id;
-                $op->oa_amount=$val[$p_item][$row];
+                // convert oa_amount to EUR
+                $op->oa_amount=bcdiv($val[$p_item][$row],$this->currency_rate);
                 $op->oa_debit=$this->oa_debit;
                 $op->oa_date=$this->oa_date;
 

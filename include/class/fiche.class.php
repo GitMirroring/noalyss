@@ -29,6 +29,7 @@ require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iposte.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 
 /*! \file
  * \brief define Class fiche, this class are using
@@ -76,7 +77,7 @@ class Fiche
         global $g_user;
       $sql_ledger=$g_user->get_ledger_sql('FIN',3);
       $avail=$this->cn->get_array("select jrn_def_id,jrn_def_name,"
-              . "jrn_def_bank,jrn_def_description from jrn_def where jrn_def_type='FIN' and $sql_ledger
+              . "jrn_def_bank,jrn_def_description,currency_id from jrn_def where jrn_def_type='FIN' and $sql_ledger
                             order by jrn_def_name");
 
       if ( count($avail) == 0 )
@@ -157,10 +158,10 @@ class Fiche
                    fiche
              natural join fiche_detail
 	     join jnt_fic_attr on (jnt_fic_attr.fd_id=fiche.fd_id and fiche_detail.ad_id=jnt_fic_attr.ad_id)
-             join attr_def on (attr_def.ad_id=fiche_detail.ad_id) where f_id=".$this->id.
+             join attr_def on (attr_def.ad_id=fiche_detail.ad_id) where f_id= $1".
              " order by jnt_order";
 
-        $Ret=$this->cn->exec_sql($sql);
+        $Ret=$this->cn->exec_sql($sql,[$this->id]);
         if ( ($Max=Database::num_row($Ret)) == 0 )
             return ;
         for ($i=0;$i<$Max;$i++)
@@ -609,7 +610,7 @@ class Fiche
                     $bulle=Icon_Action::infobulle(10);
 
                     if ($a['account_auto']=='t')
-                        $bulle.=" ".Icon_Action::warnbulle(11);
+                        $bulle.=Icon_Action::warnbulle(11);
                 }
                 elseif ($r->ad_id==ATTR_DEF_TVA)
                 {
@@ -782,7 +783,7 @@ class Fiche
          * Accounting
          */
         ksort($p_array);
-        $name="";
+	$name="";
         try
         {
             $this->cn->start();
@@ -814,7 +815,7 @@ class Fiche
                 {
                     if (strlen(trim($value))==0)
                         $value="pas de nom";
-                    $account_name=$value;
+		    $account_name=$value;
 
                 }
                 // account
@@ -828,10 +829,13 @@ class Fiche
                         {
                             if (strpos($value, ',')==0)
                             {
-                                if ( mb_strlen($value)>40) throw new Exception (_("Poste comptable trop long"), 1);
-                                $acc_account=new Acc_Account($this->cn,$v);
+			      if ( mb_strlen($value)>40) throw new Exception (_("Poste comptable trop long"), 1);
+			      
+			      $v=$this->cn->get_value("select format_account($1)",
+						      array($value));
+			      $acc_account=new Acc_Account($this->cn,$v);
                                 
-                                if ($acc_account->get_parameter("id")== -1 ) {
+			      if ($acc_account->get_parameter("id")== -1 ) {
                                     $acc_account->set_parameter("pcm_lib", $account_name);
                                    // By Default can be used directly
                                     $acc_account->set_parameter('pcm_direct_use',"Y") ;
@@ -846,8 +850,10 @@ class Fiche
                                     if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
                                         throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
                                     }
+
+			      }
+			      
                                 }
-                            }
                             else
                             {
                                                               
@@ -857,10 +863,16 @@ class Fiche
                                 
                                 $part1=$ac_array[0];
                                 $part2=$ac_array[1];
-
-                                if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
+				
+				if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
                                 if ( mb_strlen($part2)>40) throw new Exception (_("Poste comptable trop long"), 1);
-                                // Check that the accounting can be used directly
+
+				$part1=$this->cn->get_value('select format_account($1)',
+                                        array($part1));
+                                $part2=$this->cn->get_value('select format_account($1)',
+                                        array($part2));
+				
+				// Check that the accounting can be used directly
                                 $acc_account1=new Acc_Account($this->cn,$part1);
                                 if ($acc_account1->get_parameter("id")== -1 ) {
                                     $acc_account1->set_parameter("pcm_lib", $account_name);
@@ -882,7 +894,7 @@ class Fiche
                                 } else if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
                                     throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
                                 }
-
+                                $v=$part1.','.$part2;
 
                             }
                             $parameter=array($this->id, $v);
@@ -958,10 +970,10 @@ class Fiche
                     continue;
 
                 // retrieve jft_id to update table attr_value
-                $sql=" select jft_id from fiche_detail where ad_id=$1 and f_id=$2";
+		$sql=" select jft_id from fiche_detail where ad_id=$1 and f_id=$2";
                 $Ret=$this->cn->exec_sql($sql,[$id,$this->id]);
 
-                if (Database::num_row($Ret)==0)
+		if (Database::num_row($Ret)==0)
                 {
                     // we need to insert this new attribut
                     $jft_id=$this->cn->get_next_seq('s_jnt_fic_att_value');
@@ -994,9 +1006,9 @@ class Fiche
                 // account
                 if ($id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_strtoupper($value);                    
-                    
-                    if (trim($v)!='')
+		  $v=mb_strtoupper($value);
+
+		    if (trim($v)!='')
                     {
                         if (strpos($v, ',')!=0)
                         {
@@ -1005,7 +1017,12 @@ class Fiche
                                 throw new Exception('Désolé, il y a trop de virgule dans le poste comptable '.h($v));
                             $part1=$ac_array[0];
                             $part2=$ac_array[1];
-                            if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
+			    $part1=$this->cn->get_value('select format_account($1)',
+                                    array($part1));
+                            $part2=$this->cn->get_value('select format_account($1)',
+                                    array($part2));
+
+			    if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
                             if ( mb_strlen($part2)>40) throw new Exception (_("Poste comptable trop long"), 1);
                             
                             $part1=$this->cn->get_value('select format_account($1)',    array($part1));
@@ -1058,10 +1075,9 @@ class Fiche
                                     $acc_account->set_parameter("pcm_val_parent",$parent);
                                     $acc_account->save();
                                 }
-                            
-                            // Check that the accounting can be used directly
+			     
                             $acc_account=new Acc_Account($this->cn,$v);
-                            if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
+			     if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
                                 throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
                             }
                         }
@@ -1207,7 +1223,7 @@ class Fiche
      */
     function get_fiche_def_ref_id()
     {
-        $result=$this->cn->get_array("select frd_id from fiche join fiche_Def using (fd_id) where f_id=".$this->id);
+      $result=$this->cn->get_array("select frd_id from fiche join fiche_Def using (fd_id) where f_id=$1",[$this->id]);
         if ( $result == null )
             return null;
 
@@ -1277,24 +1293,37 @@ class Fiche
 
         $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
         $this->row=$this->cn->get_array("
-            with sqlletter as (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
-                select distinct substring(jr_pj_number,'[0-9]+$'),j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_qcode,".
+            with sqlletter as 
+            (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
+            select distinct substring(jr_pj_number,'[0-9]+$'),j1.j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_qcode,".
                                  "case when j_debit='t' then j_montant else 0 end as deb_montant,".
                                  "case when j_debit='f' then j_montant else 0 end as cred_montant,".
                                  " jr_comment as description,jrn_def_name as jrn_name,j_poste,".
 				 " jr_pj_number,".
-				 " jr_optype,".
                                  "j_debit, jr_internal,jr_id,(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id ) as letter , ".
+                                "jr_optype , ".
 				 " jr_tech_per,p_exercice,jrn_def_name,
-                                     (with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx using (j_id)  group by jl_id ),
-												deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx using (j_id)   group by jl_id )
-												select amount_deb-amount_cred
-												from 
-												cred 
-												full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter,
-								  jrn_def_code".
-                                 " from jrnx as j1 left join jrn_def on jrn_def_id=j_jrn_def ".
-                                 " left join jrn on jr_grpt_id=j_grpt".
+                                     (with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx as j3 on (j3.j_id=j1.j_id)  group by jl_id ),
+                                    deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx as j2 on (j2.j_id = j1.j_id)   group by jl_id )
+                                    select amount_deb-amount_cred
+                                    from 
+                                    cred 
+                                    full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter,
+								  jrn_def_code,
+                                  jrn.currency_rate,
+                                 jrn.currency_rate_ref,
+                                    jrn.currency_id,
+                                    (select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso,
+                                    j_montant,
+                                    sum_oc_amount as oc_amount,
+                                    sum_oc_vat_amount as oc_vat_amount
+                                  from jrnx as j1 left join jrn_def on jrn_def_id=j_jrn_def 
+                                  left join (select j_id,
+                                                coalesce(oc_amount,0) as sum_oc_amount ,
+                                                coalesce(oc_vat_amount,0) as sum_oc_vat_amount  
+                                                from jrnx left join operation_currency using (j_id)
+                                             )  as v1 on (v1.j_id=j1.j_id ) 
+                                  left join jrn on jr_grpt_id=j_grpt".
 				 " left join parm_periode on (p_id=jr_tech_per) ".
                                  " where j_qcode=$1 and ".
                                  " ( to_date($2,'DD.MM.YYYY') <= j_date and ".
@@ -1482,12 +1511,14 @@ class Fiche
         echo '<tbody>';
         echo "<TR>".
         "<TH style=\"text-align:left\">"._('Date')."</TH>".
-        "<TH style=\"text-align:left\">"._('n° pièce')." </TH>".
+        "<TH style=\"text-align:left\">"._('Pièce')." </TH>".
         "<TH style=\"text-align:left\">"._('Poste')." </TH>".
         "<TH style=\"text-align:left\">"._('Interne')." </TH>".
         "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
         "<TH style=\"text-align:left\">"._('Description')." </TH>".
-	 "<TH style=\"text-align:left\">"._('Type')." </TH>".
+        "<TH style=\"text-align:left\">"._('Type')."</TH>".
+        "<TH style=\"text-align:left\">"._('ISO')."</TH>".
+        "<TH style=\"text-align:right\">"._('Dev.')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."  </TH>".
         "<TH style=\"text-align:right\">"._('Crédit')." </TH>".
         th('Prog.','style="text-align:right"').
@@ -1522,7 +1553,7 @@ class Fiche
 			$side="&nbsp;".$this->get_amount_side($progress);
 		    echo "<TR class=\"highlight\">".
 		       "<TD>$old_exercice</TD>".
-		      td('').
+		     td('').
 		      td('').
 		      "<TD></TD>".td().
 		      "<TD>Totaux</TD>".
@@ -1552,8 +1583,18 @@ class Fiche
             "<TD>".$vw_operation."</TD>".
             td($tiers).
             "<TD>".h($op['description'])."</TD>".
-	        td($op['jr_optype']).
-            "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
+                    td($op['jr_optype']);
+            
+            /// If the currency is not the default one , then show the amount
+            if ( $op['currency_id'] > 0 && $op['oc_amount'] != 0)
+            {
+             echo   td($op['cr_code_iso']).
+                    td(nbm($op['oc_amount'],4),'style="text-align:right;padding-left:10px;"');
+            } else {
+                echo td().td();
+            }
+            
+            echo "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
             td($html_let, ' style="text-align:right"') .
@@ -1573,6 +1614,8 @@ class Fiche
                td().
         td(_('Totaux')).
                td().
+               td().
+        "<TD></TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
 	  "<TD style=\"text-align:right\">".nbm($diff)."</TD>".
@@ -1606,7 +1649,7 @@ class Fiche
         echo '<TR>';
 
         echo '<TD><form method="GET" ACTION="">'.
-            HtmlInput::submit('bt_other',"Autre poste").
+            HtmlInput::submit('bt_other',_("Autre poste")).
             HtmlInput::array_to_hidden(array('gDossier','ac'), $_REQUEST).
             dossier::hidden().
             $hid->input("type","poste").$hid->input('p_action','impress')."</form></TD>";
@@ -1678,7 +1721,31 @@ class Fiche
                      'solde'=>abs($r['sum_deb']-$r['sum_cred']));
     }
     /**
-     *get the bank balance with receipt or not
+     * Get the sum in Currency
+     * @param string $p_cond
+     * @return type
+     * @throws Exception
+     */
+    function get_bk_balance_currency($p_cond="")
+    {
+        if ( $this->id == 0 ) throw  new Exception('fiche->id est nul');
+
+        if ( $p_cond != "") $p_cond=" and ".$p_cond;
+        
+        $sql = "
+              select sum(sum_oc_amount)
+              from 
+              v_all_card_currency
+              where 
+              f_id=$1
+                $p_cond";
+        $val=$this->cn->get_value($sql,[$this->id]);
+        
+        return $val;
+                
+    }
+    /**
+     *get the bank balance with receipt or not in Euro
      *
      */
     function get_bk_balance($p_cond="")
@@ -1717,10 +1784,10 @@ class Fiche
         $sql="select ad_value
              from fiche_detail
              natural join fiche
-             left join attr_def using (ad_id) where f_id=".$this->id.
-             " and ad_id = ".$p_attr.
+             left join attr_def using (ad_id) where f_id=$1 ".
+             " and ad_id = $2 ".
              " order by ad_id";
-        $res=$this->cn->exec_sql($sql);
+        $res=$this->cn->exec_sql($sql,[$this->id,$p_attr]);
         if ( Database::num_row($res) == 0 ) return true;
         $text=Database::fetch_result($res,0,0);
         return (strlen(trim($text)) > 0)?false:true;
@@ -2008,7 +2075,7 @@ class Fiche
         $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
         $sql='select count(*) as c from jrnx where j_qcode=$1';
         $count=$this->cn->get_value($sql,array($qcode));
-        if ( $count > 0 ) return TRUE;
+	        if ( $count > 0 ) return TRUE;
         $count=$this->cn->get_value("select count(*) from action_gestion where f_id_dest=$1 or ag_contact=$1 ",
                 [$this->id]);
         if ( $count > 0 ) return TRUE;
@@ -2032,7 +2099,7 @@ class Fiche
     /*\brief remove a card without verification */
     function delete()
     {
-        $this->cn->start();
+              $this->cn->start();
 
         // Remove from attr_value
         $Res=$this->cn->exec_sql("delete from fiche_detail
@@ -2256,6 +2323,24 @@ class Fiche
 
     function filter_history($p_table_id) {
         return _('Cherche').' '.HtmlInput::filter_table($p_table_id, '0,1,2,3,4,5,6,7,8,9,10', 1);
+    }
+    /**
+     * Returns the Acc_Ledger_Fin ledger for which the card is the default bank account or null if no ledger is found.
+     */
+    function get_bank_ledger()
+    {
+        try {
+            $id=$this->cn->get_value("select jrn_def_id from jrn_def where jrn_def_bank = $1 ",[$this->id]);
+            if ($id == "") { return NULL;}
+            $ledger=new Acc_Ledger_Fin($this->cn,$id);
+            $ledger->load();
+            return $ledger;
+        }        
+        catch (Exception $e) {
+            record_log(__FILE__.":".__LINE__);
+            record_log($e->getMessage());
+            throw $e;
+        }
     }
 }
 

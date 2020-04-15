@@ -30,10 +30,13 @@ if (!defined('ALLOWED'))
     <tr>
         <th><?= _('Date') ?></th>
         <th><?= _('Banque') ?></th>
+        <th><?= _("Interne") ?></th>
         <th><?=_('Pièce')?></th>
         <th><?= _("Tiers") ?></th>
         <th><?= _("Libellé") ?></th>
-        <th><?= _("Montant") ?></th>
+        <th class="num"><?= _("Montant") ?></th>
+        <th class="num"><?= _("M. Devise") ?></th>
+        <th><?= _("Devise") ?></th>
         <th><?= _("Opérations rapprochées") ?></th>
     </tr>
     <?php
@@ -50,6 +53,11 @@ if (!defined('ALLOWED'))
                 <?= $this->data[$i]['bk_qcode']; ?>
             </td>
             <td>
+                <?php
+                    echo HtmlInput::detail_op($this->data[$i]['jr_id'], $this->data[$i]['jr_internal']);
+                ?>
+            </td>
+            <td>
                 <?= $this->data[$i]['jr_pj_number']; ?>
             </td>
             <td>
@@ -61,8 +69,14 @@ if (!defined('ALLOWED'))
             <td>
                 <?= h($this->data[$i]['jr_comment']) ?>
             </td>
-            <td>
+            <td class="num">
                 <?= nbm($this->data[$i]['qf_amount']) ?>
+            </td>
+            <td class="num">
+                <?=nbm($this->data[$i]['oc_amount'])?>
+            </td>
+            <td>
+                <?=$this->data[$i]['cr_code_iso']?>
             </td>
             <td>
                 <?php

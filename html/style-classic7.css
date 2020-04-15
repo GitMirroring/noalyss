@@ -1446,6 +1446,7 @@ div#box_search_card {
     position:absolute;
     right:15.625%;
     top:145px;
+    
 }
 @media only screen and (max-width:994px)
 {
@@ -2312,6 +2313,9 @@ div.progressbar {
     background-color:darkblue;
     color:antiquewhite;
     font-weight: bolder;
+}
+.nowrap td {
+    white-space: nowrap;
 }
 /**
  * Warning

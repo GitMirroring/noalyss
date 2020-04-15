@@ -33,9 +33,7 @@ require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 $http=new HttpInput();
-
 mb_internal_encoding("UTF-8");
-
 // if gDossier is not set redirect to form to choose a folder
 if ( ! isset($_REQUEST['gDossier']))
 {

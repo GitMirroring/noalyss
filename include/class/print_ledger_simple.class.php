@@ -132,7 +132,7 @@ class Print_Ledger_Simple extends  \Print_Ledger
         }
         $this->Cell(15,6,nbm($this->rap_tva_np),0,0,'R');  /* Tva ND */
         foreach($this->rap_tva as $line_tva)
-        $this->Cell(15,6,nbm($line_tva),0,0,'R');
+            $this->Cell(15,6,nbm($line_tva),0,0,'R');
         $this->Cell(15,6,nbm($this->rap_tvac),0,0,'R'); /* Tvac */
 
         $this->Ln(6);

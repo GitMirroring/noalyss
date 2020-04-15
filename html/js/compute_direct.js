@@ -18,6 +18,12 @@
 /*!\file
  *\brief common function for "Ecriture directe"
  */
+/**
+ * Compute the sum of the debit and credit of the operation in the input screen  for misceallenous operation
+ * Call CurrencyComputeMisc to update the amount in default currency for DEB (domid = default_currency_deb)
+ * and CRED ( domid = default_currency_cred), 
+ * @returns {Boolean} true if ok
+ */
 function checkTotalDirect()
 {
     var ie4=false;
@@ -77,6 +83,10 @@ function checkTotalDirect()
     r_total_deb=Math.round(total_deb*100)/100;
     document.getElementById('totalDeb').innerHTML=r_total_deb;
     document.getElementById('totalCred').innerHTML=r_total_cred;
+    // Currency , update the amount in default currency for DEB (domid = default_currency_deb)
+    // and CRED ( domid = default_currency_cred), 
+    CurrencyComputeMisc('p_currency_rate','p_currency_euro');
+    
     var diff=0;
     if ( r_total_deb != r_total_cred )
     {

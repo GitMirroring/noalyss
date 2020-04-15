@@ -114,5 +114,42 @@ class INum extends IText
 
         return $r;
     }
+    /**
+     * 
+     * @parameter $p_js_update optionnal script to execute if we update the fied
+     * @return string
+     */
+    function change($p_js_update="")
+    {
+        if ( $this->id=="") {
+            $this->id=uniqid();
+        }
+        $id_read=sprintf("x1_span_%s",$this->id);
+        $id_input=sprintf("x2_span_%s",$this->id);
+        
+        $p_javascript_read=sprintf("$('%s').hide();$('%s').show();",
+            $id_read,$id_input);
+        
+        $p_javascript_input=sprintf("$('%s').hide();$('%s').show();",
+            $id_input,$id_read);
+
+        $p_javascript_update=sprintf("$('update_%s').innerHTML=$('%s').value;$('%s').hide();$('%s').show();$p_js_update",
+            $this->id,
+                $this->id,
+            $id_input,$id_read);
+                
+        $r=sprintf('<span id="%s">',$id_read);
+        $r.=sprintf('<span id="update_%s">',$this->id).$this->value.'</span>';
+        $r.=Icon_Action::modify(uniqid(), $p_javascript_read);
+        $r.='</span>';
+            
+        $r.=sprintf('<span id="%s" style="display:none">',$id_input);
+        $r.=$this->input();
+       $r.=Icon_Action::validate(uniqid(), $p_javascript_update);
+       $r.=Icon_Action::cancel(uniqid(), $p_javascript_input);
+        $r.='</span>';
+        return $r;
+        
+    }
 
 }

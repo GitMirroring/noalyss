@@ -991,8 +991,6 @@ function action_remove_concerned(p_dossier,p_fiche_id,p_action_id)
  * @param object obj {gDossier,op,op2:rm_card,ctl,f_id}
  */    
 function delete_card(obj) {
-    console.debug("delete_card");
-    console.debug(obj);
     smoke.confirm("Confirmez ? ", function (e) {
         if (e) {
             waiting_box();

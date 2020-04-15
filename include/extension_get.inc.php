@@ -38,7 +38,6 @@ if ( ! file_exists(NOALYSS_PLUGIN.'/'.trim($ext->me_file)))
 		alert(j(_("Ce fichier n'existe pas ")));
 		return;
 	}
-echo '<div class="content">';
 require_once NOALYSS_PLUGIN.DIRECTORY_SEPARATOR.trim($ext->me_file);
 
 

@@ -57,13 +57,14 @@ if ( $http->get("do","string","no") == "display")
     $tax_summary=new Tax_Summary($cn,$start_periode->value,$end_periode->value);
     $tax_summary->set_tva_type($select_tva->selected);
     try {
-	try {
+        try {
             $tax_summary->check();
         }catch (Exception $e)
         {
-           echo '<span class="warning">';
-           echo $e->getMessage();
-           echo '</span>';
+            echo '<span class="warning">';
+            echo $e->getMessage();
+            echo '</span>';
+
         }
         echo '<ul class="aligned-block">';
         echo '<li>';

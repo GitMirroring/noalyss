@@ -48,8 +48,11 @@ if (isset($_POST['record_company']))
 	$m->MY_ALPHANUM = $http->post("p_alphanum");
 	$m->MY_UPDLAB = $http->post("p_updlab");
 	$m->MY_STOCK =$http->post("p_stock");
-	$m->MY_ANC_FILTER=$http->post("p_anc_filter");
-        try {
+	$m->MY_CURRENCY =$http->post("p_currency");
+        $m->MY_DEFAULT_ROUND_ERROR_DEB=$http->post("p_round_error_deb");
+        $m->MY_DEFAULT_ROUND_ERROR_CRED=$http->post("p_round_error_cred");
+        $m->MY_ANC_FILTER=$http->post("p_anc_filter");
+        try{
             $m->Update();
         } catch (Exception $e) {
             alert($e->getMessage());
@@ -119,6 +122,23 @@ $anc_filter=new IText("p_anc_filter", $my->MY_ANC_FILTER);
 $anc_filter->placeholder='6,7';
 $anc_filter->title=_("Uniquement des chiffres séparés par des virgules");
 
+$use_currency= new ISelect();
+$use_currency->table = 1;
+$use_currency->value = $updlab_array;
+$use_currency->selected = $my->MY_CURRENCY;
+
+$default_error_deb=new IPoste("p_round_error_deb",$my->MY_DEFAULT_ROUND_ERROR_DEB);
+$default_error_deb->name = 'p_round_error_deb';
+$default_error_deb->set_attribute('gDossier',Dossier::id());
+$default_error_deb->set_attribute('jrn',0);
+$default_error_deb->set_attribute('account','p_round_error_deb');
+
+$default_error_cred=new IPoste("p_round_error_deb",$my->MY_DEFAULT_ROUND_ERROR_CRED);
+$default_error_cred->name = 'p_round_error_cred';
+$default_error_cred->set_attribute('gDossier',Dossier::id());
+$default_error_cred->set_attribute('jrn',0);
+$default_error_cred->set_attribute('account','p_round_error_cred');
+
 // other parameters
 $all = new IText();
 $all->table = 1;
@@ -151,6 +171,7 @@ echo '<tr>'. td(_("Opération analytique uniquement pour les postes comptables c
         '</tr>';
 echo "<tr>" . td(_("Utilisation des stocks"), 'style="text-align:right"') . $stock->input() . "</tr>";
 
+echo "<tr>" . td(_("Utilisation de devises étrangères"), 'style="text-align:right"') . $use_currency->input("p_currency", $strict_array) . "</tr>";
 echo "<tr>" . td(_("Utilisation du mode strict "), 'style="text-align:right"') . $strict->input("p_strict", $strict_array) . "</tr>";
 echo "<tr>" . td(_("Assujetti à la tva"), 'style="text-align:right"') . $tva_use->input("p_tva_use", $strict_array) . "</tr>";
 echo "<tr>" . td(_("Suggérer le numéro de pièce justificative"), 'style="text-align:right"') . $pj_suggest->input("p_pj", $strict_array) . "</tr>";
@@ -158,7 +179,18 @@ echo "<tr>" . td(_("Suggérer la date"), 'style="text-align:right"') . $date_sug
 echo '<tr>' . td(_('Afficher la période comptable pour éviter les erreurs de date'), 'style="text-align:right"') . $check_periode->input('p_check_periode', $strict_array) . '</tr>';
 echo '<tr>' . td(_('Utilisez des postes comptables alphanumérique'), 'style="text-align:right"') . $alpha_num->input('p_alphanum') . '</tr>';
 echo '<tr>' . td(_('Changer le libellé des détails'), 'style="text-align:right"') . $updlab->input('p_updlab') . '</tr>';
-
+echo '<tr>' . 
+        td(_("Poste comptable de CHARGE (D) pour les différences d'arrondi pour les opérations en devise")).
+        '<td>'.$default_error_deb->input().
+        '</td>'.
+        '</tr>';
+        
+echo '<tr>' . 
+        td(_("Poste comptable en PRODUIT (C) pour les différences d'arrondi pour les opérations en devise")).
+        '<td>'.$default_error_cred->input().
+        '</td>'.
+        '</tr>';
+        
 echo "</table>";
 echo HtmlInput::submit("record_company", _("Sauve"));
 echo "</form>";

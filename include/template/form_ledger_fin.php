@@ -13,16 +13,61 @@
 			array('value'=>2,'label'=>_("Avec date opérations"))
 	);
 	$wchdate->selected=(isset($chdate))?$chdate:1;
-	$wchdate->javascript='onchange="show_fin_chdate(\'chdate\')"';
+	$wchdate->javascript='onchange="show_fin_chdate(\'chdate\');"';
 ?>
-<?php echo $wchdate->input();?>
-<span id="chdate_ext">
-   <?php echo _('Date').' '.$f_date ?>
-</span>
+<table>
+    <tr>
+        <td>
+            <?php echo $label_ledger; ?>
+        </td>
+        <td>
+            <?php echo $wLedger->input()?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+             <?php echo _('Banque')?>
+        </td>
+        <td>
+            <?php echo $f_bank ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo _("Style de date"); ?>
 
+        </td>
+        <td>
+            <?php echo $wchdate->input();?>
+
+        </td>
+    </tr>
+    <tr  id="chdate_ext">
+        <td>
+               <?php echo _('Date'); ?>
+
+        </td>
+        <td>
+               <?php echo $f_date ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo _("Devise")?>
+        </td>
+        <td id="ledger_currency">
+            <?php echo $this->get_currency()->get_code();?>
+        </td>
+    </tr>    
+</table>
+
+</p>
+<?php if ( $f_period <> "") :?>
+<p>
+    
 <?php echo $f_period?><br>
-<?php echo $f_jrn?><br>
-<?php echo _('Banque')?><?php echo $f_bank ?>
+</p>
+<?php endif;?>
 
 </fieldset>
 
@@ -61,6 +106,28 @@ $i++;
 
 }
 ?>
+<tr>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+</tr>
+<tr>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+</tr>
 </table>
 </fieldset>
 </fieldset>

@@ -90,7 +90,9 @@ class Acc_Account_Ledger
                                  "case when j_debit='f' then j_montant else 0 end as cred_montant,".
                                  " jr_comment as description,jrn_def_name as jrn_name,".
                                  "j_debit, jr_internal,jr_pj_number ".
+                                  ",oc_amount,oc_vat_amount".
                                  " from jrnx left join jrn_def on jrn_def_id=j_jrn_def ".
+                                 "  left join operation_currency using (j_id) ".
                                  " left join jrn on jr_grpt_id=j_grpt".
                                  " where j_poste=$1 and $periode ".
                                  " order by j_date",array($this->id));
@@ -162,7 +164,7 @@ class Acc_Account_Ledger
 	  }
         $this->row=$this->db->get_array("
  with sqlletter as (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
- select  j_id,jr_id,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_date,
+         select j1.j_id,jr_id,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_date,
                                 j_qcode
                                  ,case when j_debit='t' then j_montant else 0 end as deb_montant,
                                  case when j_debit='f' then j_montant else 0 end as cred_montant,
@@ -177,20 +179,28 @@ class Acc_Account_Ledger
                                  ,p_exercice
                                  ,jrn_def_name
                                  ,jrn_def_code
-                                 ,(with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx using (j_id)  group by jl_id ),
-												deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx using (j_id)   group by jl_id )
-												select amount_deb-amount_cred
-												from 
-												cred 
-												full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter
-                                  from jrnx as j1
-                                  join jrn_def on (jrn_def_id=j_jrn_def )
-                                   join jrn on (jr_grpt_id=j_grpt)
-                                   join tmp_pcmn on (j_poste=pcm_val)
-				   join parm_periode on (p_id=jr_tech_per)              
-                                  where j_poste=$1 and 
-                                  ( to_date($2,'DD.MM.YYYY') <= j_date and 
-                                    to_date($3,'DD.MM.YYYY') >= j_date )
+                                 ,(with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx using (j_id)  group by jl_id )
+                                , deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx using (j_id)   group by jl_id )
+        select amount_deb-amount_cred
+        from 
+        cred 
+        full  join deb using (jl_id) where jl_id=(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id  )) as delta_letter
+            ,jrn.currency_rate
+            ,jrn.currency_rate_ref
+            ,jrn.currency_id
+            ,(select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso
+            ,j_montant
+            ,oc_amount
+            ,oc_vat_amount
+  from jrnx as j1
+    left join operation_currency as va on (j1.j_id = va.j_id )
+          join jrn_def on (jrn_def_id=j_jrn_def )
+           join jrn on (jr_grpt_id=j_grpt)
+           join tmp_pcmn on (j1.j_poste=pcm_val)
+           join parm_periode on (p_id=jr_tech_per)              
+          where j1.j_poste=$1 and 
+          ( to_date($2,'DD.MM.YYYY') <= j_date and 
+            to_date($3,'DD.MM.YYYY') >= j_date )
                                   and $filter_sql  $sql_let 
                                   order by j_date,substring(jr_pj_number,'[0-9]+$') asc",array($this->id,$p_from,$p_to));
         $res_saldo = $this->db->exec_sql("select  sum(deb_montant),sum(cred_montant) from 
@@ -382,12 +392,14 @@ class Acc_Account_Ledger
         echo '<tbody>';
         echo "<TR>".
         "<TH style=\"text-align:left\">"._('Date')." </TH>".
-        "<TH style=\"text-align:left\">"._('n° de pièce')." </TH>".
-        "<TH style=\"text-align:left\">"._('QuickCode')."</TH>".
-        "<TH style=\"text-align:left\">"._('Code interne')." </TH>".
+        "<TH style=\"text-align:left\">"._('Pièce')." </TH>".
+        "<TH style=\"text-align:left\">"._('Code')."</TH>".
+        "<TH style=\"text-align:left\">"._('Interne')." </TH>".
         "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
         "<TH style=\"text-align:left\">"._('Description')."</TH>".
         "<TH style=\"text-align:left\">"._('Type')."</TH>".
+        "<TH style=\"text-align:left\">"._('ISO')."</TH>".
+        "<TH style=\"text-align:right\">"._('Dev.')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."</TH>".
         "<TH style=\"text-align:right\">"._("Crédit")."</TH>".
         th('Prog.','style="text-align:right"').
@@ -427,11 +439,11 @@ class Acc_Account_Ledger
 			$side="&nbsp;".$this->get_amount_side($progress);
 		    echo "<TR class=\"highlight\">".
 		      "<TD>$old_exercice</TD>".
-		      "<TD></TD>".td().td().td().
+		      "<TD></TD>".td().td().td().td().td().
 		      "<TD>"._("Totaux")."</TD>".td("").
-		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
-		      "<TD style=\"text-align:right\">".nbm($sum_cred)."</TD>".
-		      td(nbm(abs($progress)).$side,'style="text-align:right"').
+		      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($sum_deb)."</TD>".
+		      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($sum_cred)."</TD>".
+		      td(nbm(abs($progress)).$side,'style="text-align:right;padding-left:10px;"').
 		      td('').
 		      "</TR>";
 		    $sum_cred=0;
@@ -444,8 +456,8 @@ class Acc_Account_Ledger
 		$side="&nbsp;".$this->get_amount_side($progress);
 	    $sum_cred=bcadd($sum_cred,$op['cred_montant']);
 	    $sum_deb=bcadd($sum_deb,$op['deb_montant']);
-		if ($idx%2 == 0) $class='class="odd"'; else $class=' class="even"';
-		$idx++;
+            $class=($idx%2 == 0)?'class="odd"':$class=' class="even"';
+            $idx++;
 
 	    echo "<TR $class name=\"tr_" . $let . "_" . $from_div . "\">" .
 			"<TD>".smaller_date(format_date($op['j_date']))."</TD>".
@@ -454,9 +466,22 @@ class Acc_Account_Ledger
 	      "<TD>".$vw_operation."</TD>".
                 "<TD>".$tiers."</TD>".
 	      "<TD>".h($op['description'])."</TD>".
-                    td($op['jr_optype']).
-	      "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
-	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
+                    td($op['jr_optype']);
+                     /// If the currency is not the default one , then show the amount
+            if ( $op['currency_id'] > 0  )
+            {
+                // some amount are not directly recorded into operation_currency, like VAT
+                $currency_val=($op['oc_amount'] == 0)?round(bcmul ($op['j_montant'],$op['currency_rate']),2):$op['oc_amount'] ;
+               
+               echo   td($op['cr_code_iso']).
+                    td(nbm($currency_val,2),'style="text-align:right;padding-left:10px;"');
+            } else {
+                echo td().td();
+            }
+            
+            echo 
+	      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($op['deb_montant'])."</TD>".
+	      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
 
 	      td($html_let, ' style="color:red;text-align:right"') .
@@ -469,7 +494,7 @@ class Acc_Account_Ledger
 		$side="&nbsp;".$this->get_amount_side($diff);
         echo "<TR class=\"highlight\">".
                 td($op['p_exercice']).
-                td().td().td().td().
+                td().td().td().td().td().td().
         "<TD >Totaux</TD>".td("").
 	  "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	  "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
