@@ -254,7 +254,8 @@ function set_value(p_ctl, p_value, p_add)
 function compute_number(value)
 {
     var retval = 0;
-    var exp = new RegExp("^[0-9/*+-.]+$", "g");
+    
+    var exp = new RegExp("^[0-9/*+-.()]+$", "g");
     /*pour éviter un eval() mal intentionné*/
     var res = exp.test(value);
     if (res)
