@@ -322,7 +322,7 @@ if ( ! defined ("NOALYSS_URL")) {
         $protocol=$_SERVER['REQUEST_SCHEME'];
     }
     $base=$protocol.'://'.
-            $_SERVER['HTTP_HOST'].
+            $_SERVER['SERVER_NAME'].
             ":".$_SERVER['SERVER_PORT'].
             dirname($_SERVER['PHP_SELF']);
     define ("NOALYSS_URL",$base);
