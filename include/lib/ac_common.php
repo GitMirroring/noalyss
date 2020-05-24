@@ -342,7 +342,17 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     $p_script2 . "
     ";
     echo '<script language="javascript" src="js/calendar.js"></script>
-    <script type="text/javascript" src="js/lang/calendar-en.js"></script>
+    <script type="text/javascript" src="js/lang/calendar-en.js"></script>';
+
+    if (isset($_SESSION['g_lang']) && $_SESSION['g_lang']=='fr_FR.utf8' )
+    {
+	echo '<script type="text/javascript" src="js/lang/calendar-fr.js"></script>';
+    }
+    if (isset($_SESSION['g_lang']) && $_SESSION['g_lang']=='nl_NL.utf8' )
+    {
+	echo '<script type="text/javascript" src="js/lang/calendar-nl.js"></script>';
+    }
+    echo '
     <script language="javascript" src="js/calendar-setup.js"></script>
     <LINK REL="stylesheet" type="text/css" href="calendar-blue.css" media="screen">
     ';
