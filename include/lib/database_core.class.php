@@ -75,44 +75,10 @@ class DatabaseCore
         }
 
         $this->is_open = TRUE;
+        
 
     }
-    /**
-     * Connect by DSN : description of database connection like 
-     * return a Database_Core object
-     * @code
-     *  port=6002 host=x.x.x.x dbname=dbname user=admin password=www
-     * @endcode
-     * 
-     * @param string $p_dsn describing the connection
-     * 
-     */
-    function connect_dsn($p_dsn) 
-    {
-        $this->db =pg_connect($p_dsn);
 
-        if ( $this->db == false )
-        {
-            if (DEBUG) {
-            echo '<h2 class="error">Impossible de se connecter &agrave; postgreSql !</h2>';
-            echo '<p>';
-            echo "Vos param&egrave;tres sont incorrectes : <br>";
-            echo "<br>";
-            echo "base de donn&eacute;e : $p_dsn<br>";
-            echo '</p>';
-
-            exit ("Connection impossible : v&eacute;rifiez vos param&egrave;tres de base
-                  de donn&eacute;es");
-            } else {
-                echo '<h2 class="error">' . _('Erreur de connexion !') . '</h2>';
-                $this->is_open = false;
-                throw new Exception(_('Erreur Connexion'));
-            }
-
-        }
-        $this->is_open=TRUE;
-        return $this;
-    }
 
     public function verify()
     {
