@@ -2462,3 +2462,9 @@ span.title_tab_row {
     color:white;
     padding : 3px;
 }
+/* Selected row in a table */
+.background-selected {
+     background-color: #000066 !important;
+     color : white !important;
+     
+}
