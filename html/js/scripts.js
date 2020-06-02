@@ -3045,28 +3045,21 @@ function alert_box(p_message)
  */
 function alternate_row_color(p_table)
 {
-    var len = $(p_table).tBodies[0].rows.length;
+    var table_colored=$(p_table);
+    var len = table_colored.tBodies[0].rows.length;
     var i = 0;
     var localClass = "";
     for (i = 1; i < len; i++) {
         localClass = (i % 2 == 0) ? "even" : "odd";
-        if (localClass == "even" && $(p_table).tBodies[0].rows[i].hasClassName("odd"))
+        if ( table_colored.tBodies[0].rows[i].hasClassName("odd"))
         {
-            $(p_table).tBodies[0].rows[i].removeClassName("odd");
+            table_colored.tBodies[0].rows[i].removeClassName("odd");
         }
-        if (localClass == "even" && !$(p_table).tBodies[0].rows[i].hasClassName("even"))
+        if (table_colored.tBodies[0].rows[i].hasClassName("even"))
         {
-            $(p_table).tBodies[0].rows[i].addClassName("even");
+            table_colored.tBodies[0].rows[i].removeClassName("even");
         }
-
-        if (localClass == "odd" && $(p_table).tBodies[0].rows[i].hasClassName("even"))
-        {
-            $(p_table).tBodies[0].rows[i].removeClassName("even");
-        }
-        if (localClass == "odd" && !$(p_table).tBodies[0].rows[i].hasClassName("odd"))
-        {
-            $(p_table).tBodies[0].rows[i].addClassName("odd");
-        }
+        table_colored.tBodies[0].rows[i].addClassName(localClass);
     }
 
 }
