@@ -234,16 +234,25 @@ if ($histo->selected  == 3)
 	$cat_card = new Fiche_Def($cn);
 	$cat_card->id =$http->get('cat','number');
 	$aHeading = $cat_card->getAttribut();
-	if ( $allcard == 0) echo $str_add_card;
+        $str_add_card="";
+        if ( $allcard == 0 ) {
+            $h_add_card_b = new IButton('add_card');
+            $h_add_card_b->label = _('Créer une nouvelle fiche');
+            $h_add_card_b->javascript = "dis_blank_card({gDossier:$gDossier,fd_id:$fd_id,after_save:1,ref:2})";
+            $str_add_card=$h_add_card_b->input();
+        }
+        echo $str_add_card;
 	require_once NOALYSS_TEMPLATE.'/result_cat_card_summary.php';
 
 	$hid = new IHidden();
-	echo '<form method="GET" ACTION="export.php">' . dossier::hidden() .
-	HtmlInput::submit('bt_csv', _("Export CSV")) .
-	HtmlInput::hidden('act', "CSV:fiche") .
-	$hid->input("type", "fiche") .
-	$hid->input("ac", $http->request('ac')) .
-	$hid->input("fd_id", $http->request('cat',"number"));
+	echo '<form method="GET" ACTION="export.php">' . dossier::hidden() ;
+        echo $str_add_card;
+        echo 
+            HtmlInput::submit('bt_csv', _("Export CSV")) .
+            HtmlInput::hidden('act', "CSV:fiche") .
+            $hid->input("type", "fiche") .
+            $hid->input("ac", $http->request('ac')) .
+            $hid->input("fd_id", $http->request('cat',"number"));
 	echo "</form>";
 
 	return;

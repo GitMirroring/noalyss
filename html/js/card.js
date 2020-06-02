@@ -663,13 +663,16 @@ function dis_blank_card(obj)
     } else {
 	var dossier=obj.gDossier;
     }
-
     var queryString='gDossier='+dossier;
     queryString+='&ctl='+content;
     queryString+='&fd_id='+fd_id;
     queryString+=ref;
     queryString+='&op2=bc'; 	// bc for blank card
     queryString+='&op=card'; 	// bc for blank card
+    if (obj.after_save) {
+        queryString+='&after_save='+obj.after_save;
+    }
+
     if ( obj.elementId) queryString+="&eltid="+obj.elementId;
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
@@ -748,16 +751,42 @@ function save_card(obj)
                                   parameters:queryString,
                                   onFailure:errorFid,
                                   onSuccess:function (req,json) {
-                                     
                                       var elt=req.responseXML.getElementsByTagName("eltid");
                                       var status=req.responseXML.getElementsByTagName("status");
                                       var status_value='OK';
+                                      var after_savetag=req.responseXML.getElementsByTagName("after_save");
+                                      var after_save=0;
                                       if ( status.length !=0) {
                                         status_value=getNodeText(status[0]);
                                       }
-                                      if ( status_value == 'OK') {
+                                      if ( after_savetag.length !=0 ) {
+                                          after_save=getNodeText(after_savetag[0]);
+                                      }
+                                      // if status == OK and after_save == 0 
+                                      // then update the box
+                                      if ( status_value == 'OK' && after_save == 0) {
                                              fill_box(req,json);
                                       }
+                                      
+                                      // if status == OK and after_save == 1
+                                      // then add a row to the table
+                                      if ( status_value == 'OK' && after_save == 1) {
+                                            var table_card=$('fiche_tb_id');
+                                            f_id=getNodeText(req.responseXML.getElementsByTagName("f_id")[0]);
+                                             var row=new Element('tr');
+                                             row.id="row_card"+f_id;
+                                             row.innerHTML=getNodeText(req.responseXML.getElementsByTagName("code")[0]);
+                                             table_card.tBodies[0].appendChild(row);
+                                              new Effect.Highlight(row.id ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
+                                             //
+                                             if ( table_card.tBodies[0].rows.length % 2 == 0 ) {
+                                                 row.addClassName("odd");
+                                             } else {
+                                                 row.addClassName("even");
+                                                 
+                                             }
+                                      }
+                                      
                                       remove_waiting_box();
                                       if ( elt.length != 0) {
                                          var eltid=getNodeText(elt[0]);
@@ -1023,4 +1052,170 @@ function delete_card(obj) {
             });
         }
     });
+}
+/**
+ * Display a card , modify it , redraw the row
+ * before calling this function , it it neeed to have in the web page a hidden card_gdossier with the dossier id
+ * @param {type} p_fiche_id
+ * @returns {undefined}
+ */
+function modify_card(p_fiche_id)
+{
+    /* window with result */
+    card_layer++;
+
+    var content = 'card_' + card_layer;
+    var nTop = 170 + card_layer;
+    if (nTop > 300) {
+        nTop = 170;
+    }
+    var str_top = fixed_position(250, nTop)
+    var str_style = str_top + ";width:45em;height:auto;position:absolute";
+
+    var popup = {'id': content, 'cssclass': 'inner_box', 'style': str_style, 'html': loading(), 'drag': false};
+
+    add_div(popup);
+    
+    /* dossier id */
+    if ( ! document.getElementById("card_gdossier")) {
+        
+        console.error("card_gdossier error");
+        throw ("card_gdossier not set");
+    }
+    var dossier = $('card_gdossier').value;
+
+    
+    var action = new Ajax.Request('ajax_misc.php',
+            {
+                method: 'get',
+                parameters: {'gDossier':dossier,"op":'card',"op2":"dc","f_id":p_fiche_id,'ctl':content,after_save:2} ,
+                onFailure: errorFid,
+                onSuccess: function (respTxt) {
+                    fill_box(respTxt);
+                }
+            }
+    );
+}
+/**
+ * Delete a card and remove the row
+ * before calling this function , it it neeed to have in the web page a hidden card_gdossier with the dossier id
+ * @param {type} p_fiche_id
+ * @returns {undefined}
+ */
+function delete_card_id(p_fiche_id)
+{
+    var row="row_card"+p_fiche_id;
+    if ( ! document.getElementById("card_gdossier")) {
+        
+        console.error("card_gdossier error");
+        throw ("card_gdossier not set");
+    }
+    $(row).addClassName("background-selected");
+    var dossier = $('card_gdossier').value;
+    smoke.confirm(content[47], function (e) {
+        if (e) {
+            waiting_box();
+            new Ajax.Request("ajax_misc.php", {
+                "method": "get",
+                parameters: {'gDossier':dossier,"op":'card',"op2":"rm_card","f_id":p_fiche_id,'ctl':row} ,
+                onSuccess: function (req) {
+                    remove_waiting_box();
+                    var table_card=$('fiche_tb_id');
+                    var answer = req.responseXML;
+                    var a = answer.getElementsByTagName('ctl');
+                    if (a.length == 0)
+                    {
+                        var rec = req.responseText;
+                        alert_box('erreur :' + rec);
+                    }
+                    var html = answer.getElementsByTagName('code');
+                    var namectl = a[0].firstChild.nodeValue;
+                    var nodeXml = html[0];
+                    var code_html = getNodeText(nodeXml);
+                    code_html = unescape_xml(code_html);
+                   
+                    if ((code_html) == "OK") {
+                        Effect.Fade(row, {duration: 0.1});
+                        table_card.tBodies[0].removeChild($(row));
+                        alternate_row_color("fiche_tb_id");
+                    } else {
+                        smoke.alert(code_html);
+                        
+                    }
+                }
+                    
+            });
+        } else{ 
+                   $(row).removeClassName("background-selected");
+            
+        }
+    });
+  
+}
+
+/**
+* update a card in ajax , and update a row
+* 
+*/
+function update_row(obj)
+{
+    try {
+        var name = obj.id;
+
+        var qs = Form.serialize(name) + '&op2=upr&op=card';
+        var action = new Ajax.Request('ajax_misc.php',
+                {
+                    method: 'get',
+                    parameters: qs,
+                    onFailure: errorFid,
+                    onSuccess: function (req) {
+                        try {
+
+                            remove_waiting_box();
+
+                            var answer = req.responseXML;
+                            var a = answer.getElementsByTagName('ctl');
+                            var html = answer.getElementsByTagName('code');
+                            if (a.length === 0) {
+                                var rec = req.responseText;
+                                alert_box('erreur :' + rec);
+                            }
+                            var name_ctl = "row_card" + obj.f_id.value;
+                            var code_html = getNodeText(html[0]); // Firefox ne prend que les 4096 car.
+                            code_html = unescape_xml(code_html);
+                            
+                            if ( document.getElementById(name_ctl)) {
+                                // update the row
+                                $(name_ctl).innerHTML = code_html;
+                                new Effect.Highlight(name_ctl ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
+                                
+                            }
+                            $(a[0].firstChild.nodeValue).remove();
+                            
+                            
+                        } catch (e) {
+                            alert_box(e.message);
+                            if (console) {
+                                console.error(e);
+                                console.error("log answer = " + req.responseText);
+                            }
+                        }
+                        try {
+                            code_html.evalScripts();
+                        } catch (e) {
+                            if (console) {
+                                console.error(e);
+                                console.error("log answer = " + req.responseText);
+                            }
+                            alert_box(content[53] + "\n" + e.message);
+                        }
+                       
+                 
+                    }
+                }
+        );
+    } catch (e) {
+        alert_box(e.message);
+        return false;
+    }
 }

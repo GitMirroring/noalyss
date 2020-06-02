@@ -2257,6 +2257,45 @@ class Fiche
     function filter_history($p_table_id) {
         return _('Cherche').' '.HtmlInput::filter_table($p_table_id, '0,1,2,3,4,5,6,7,8,9,10', 1);
     }
+    /**
+     * @brief display card as a table row , the tag TR must be added
+     * 
+     * @return HTMLT string starting
+     * 
+     */
+    function display_row()
+    {
+        $this->getAttribut();
+        foreach($this->attribut as $attr) {
+            $sort="";
+
+            if ($attr->ad_type!='select') 
+            {
+
+                if ($attr->ad_type=="date") {
+                // format YYYYMMDD
+                $sort='sorttable_customkey="'.format_date($attr->av_text, "DD.MM.YYYY", "YYYYMMDD").'"';
+                }
+                elseif ($attr->ad_type=="poste"){
+                $sort='sorttable_customkey="TEXT'.$attr->av_text.'"';
+                }
+                echo td($attr->av_text, 'style="padding: 0 10 1 10;white-space:nowrap;" '.$sort);
+             }
+             else {
+                $value=$cn->make_array($attr->ad_extra);
+                $row_content="";
+                for ($e=0; $e<count($value); $e++) {
+                    if ( $value[$e]['value']==$attr->av_text) {
+                        $row_content=h($value[$e]['label']);
+                        break;
+                    }
+                }
+                echo td($row_content, 'style="padding: 0 10 1 10;white-space:nowrap;"');
+
+            }
+        }
+
+    }
 }
 
 ?>

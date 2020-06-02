@@ -353,7 +353,7 @@ class Extension extends Menu_Ref_sql
             $extension->me_type='PL';
             $extension->me_menu=trim($xml->plugin[$i]->name);
             $extension->me_parameter='plugin_code='.trim($xml->plugin[$i]->code);
-            $extension->depend=(isset($xml->plugin[$i]->depend))?trim($xml->plugin[$i]->depend):"";
+            $extension->depend=(isset($xml->plugin[$i]->depend))?trim($xml->plugin[$i]->depend):"EXT";
             $extension->order=(isset($xml->plugin[$i]->order))?trim($xml->plugin[$i]->order):9000;
             $a_extension[]=clone $extension;
         }

@@ -24,42 +24,22 @@ for ($i=0;$i<count($aHeading);$i++) :
 </tr>
 <?php 
 $e=0;
+ $fiche=new Fiche($cn);
+ echo HtmlInput::hidden("card_gdossier",Dossier::id());
 foreach ($array as $row ) :
  $e++;
    if ($e%2==0)
-   printf('<tr id="card%s" class="odd">',$row['f_id']);
+   printf('<tr id="row_card%s" class="odd">',$row['f_id']);
    else 
-   printf('<tr id="card%s" class="even">',$row['f_id']);
+   printf('<tr id="row_card%s" class="even">',$row['f_id']);
    
-   $fiche=new Fiche($cn);
-   $fiche->id=$row['f_id'];
- $fiche->getAttribut();
-$detail=HtmlInput::card_detail($fiche->strAttribut(ATTR_DEF_QUICKCODE));
+  $fiche->id=$row['f_id'];
+  $detail=Icon_Action::modify("mod".$fiche->id, sprintf("modify_card('%s')",$fiche->id)).
+          "&nbsp;".
+          Icon_Action::trash("del".$fiche->id,  sprintf("delete_card_id('%s')",$fiche->id));
 echo td($detail);
- foreach($fiche->attribut as $attr) :
-         $sort="";
+$fiche->display_row();
 
-	 if ( $attr->ad_type != 'select'):
-                if ($attr->ad_type=="date") :
-                    // format YYYYMMDD
-                    $sort='sorttable_customkey="'.format_date($attr->av_text, "DD.MM.YYYY", "YYYYMMDD").'"'; 
-                elseif ($attr->ad_type=="poste"):
-                    $sort='sorttable_customkey="TEXT'.$attr->av_text.'"'; 
-                endif;
-        	echo td($attr->av_text,'style="padding: 0 10 1 10;white-space:nowrap;" '.$sort);
-	 else:
-		$value=$cn->make_array($attr->ad_extra);
-                $row_content="";
-                for ($e=0;$e<count($value);$e++):
-                        if ( $value[$e]['value']==$attr->av_text):
-                                $row_content=h($value[$e]['label']);
-                                break;
-                        endif;
-                endfor;
-                echo td($row_content,'style="padding: 0 10 1 10;white-space:nowrap;"');
-
-	 endif;
- endforeach;
  echo '</tr>';
 endforeach;
 
