@@ -578,6 +578,22 @@ case 'reverseop':
     $html=ob_get_contents();
     ob_end_clean();
     break;
+    
+case 'duplicateop':
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Duplicate operation
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    $operation=new Acc_Operation($cn);
+    $operation->jr_id=$jr_id;
+    ob_start();
+    echo HtmlInput::title_box(_("Dupliquer une opération"), $div);
+    echo $operation->form_clone_operation("cloneit");
+    
+    $html=ob_get_contents();
+    ob_end_clean();
+    
+   
+    break;
 }
 $html=escape_xml($html);
  if ( ! headers_sent()) {     header('Content-type: text/xml; charset=UTF-8');} else { echo "HTML".unescape_xml($html);}

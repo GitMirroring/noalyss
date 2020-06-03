@@ -1,5 +1,6 @@
 <hr>
 <?php
+
 /**
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
@@ -10,6 +11,10 @@
  * Variables : $div = popup or box (det[0-9]
  * 
  */
+require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
+
+$select_box=new \Select_Box("sb_".$jr_id, _("Autre action"));
+$select_box->set_position("in-absolute");
 $cn=Dossier::connect();
 // Contains all the linked actions
 $a_followup = Follow_Up::get_all_operation($jr_id);
@@ -199,7 +204,6 @@ if ($aRap  != null ) {
                                           $e
 					  );
             $remove=Icon_Action::trash(uniqid(), $js);
-//      $remove=$rmReconciliation->input();
     }
     else
       $remove='';
@@ -315,25 +319,29 @@ if ( $div != 'popup' ) {
   echo HtmlInput::submit('save',_('Sauver'),'onClick="return verify_ca(\'popup\');"');
   $owner=new Noalyss_Parameter_Folder($cn);
   if ($owner->MY_ANALYTIC != 'nu' /*&& $div=='popup' */){
-    echo '<input type="button" class="smallbutton" value="'._('verifie CA').'" onClick="verify_ca(\''.$div.'\');">';
+      
+      $select_box->add_javascript(_("Vérification CA"), sprintf("verify_ca('%s')",$div));
   }
 
   $per=new Periode($cn,$obj->det->jr_tech_per);
   if ( $per->is_closed() == 0 && $owner->MY_STRICT=='N' && $g_user->check_action(RMOPER)==1)
   {
-    $remove=new IButton('Effacer');
-    $remove->label=_('Effacer');
-    $remove->javascript="return confirm_box(null,content[50],function () {removeOperation('".$obj->det->jr_id."',".dossier::id().",'".$div."')})";
-    echo $remove->input();
+    $javascript="return confirm_box(null,content[50],function () {removeOperation('".$obj->det->jr_id."',".dossier::id().",'".$div."')})";
+    $select_box->add_javascript(_("Effacer"), $javascript);
   }
  //----------------------------------------------------
  // Extourne
  //----------------------------------------------------
-  $reverse=new IButton('bext'.$div);
-  $reverse->label=_('Extourner');
-  $reverse->javascript="g('ext".$div."').style.display='block'";
-  echo $reverse->input();
-    echo '</p>';
+    $select_box->add_javascript(_("Extourne"), sprintf("g('ext%s').style.display='block'",$div));
+
+ //-------------------------------------------------------------------
+ // Duplicate
+ //-------------------------------------------------------------------
+ $select_box->add_javascript(_("Duplicate"),sprintf("duplicate_operation('%s','%s')",Dossier::id(),$obj->jr_id));
+
+ 
+echo $select_box->input();
+echo '</p>';
 echo '</form>';
 
   echo '<div id="ext'.$div.'" class="inner_box" style="position:absolute;top:40px;display:none">';
@@ -341,7 +349,7 @@ echo '</form>';
   $extourne_label=new IText("ext_label");
   $extourne_label->size=40;
   $r="<form id=\"form_".$div."\" onsubmit=\"return false;\">";
-  $r.=HtmlInput::hidden('jr_id',$_REQUEST['jr_id'])
+  $r.=HtmlInput::hidden('jr_id',$obj->jr_id)
       . HtmlInput::hidden('div',$div).dossier::hidden().HtmlInput::hidden('act','reverseop');
   $r.=HtmlInput::title_box(_('Extourner'), 'ext'.$div, 'hide');
   $r.="<p>";

@@ -604,11 +604,24 @@ class HtmlInput
                         }
                     }
                 }
-        }
-
+            }        
+            
         return $r;
     }
-
+    /**
+     * Transform a double array as a HTML string with hidden html value
+     * array has the formarray ["name"]="x",array['value']="y") the key name will be the hidden input name;
+     * @param double $array 
+     */
+    static function simple_array_to_hidden($array)
+    {
+        if (empty ($array)) return "";
+        $r="";
+        foreach ( $array as $key=>$value) {
+            $r.=HtmlInput::hidden($key, $value);
+        }
+        return $r;
+    }
     /**
      * @brief transform a json to hidden 
      * @param json $p_json
