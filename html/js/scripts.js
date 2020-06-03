@@ -2969,6 +2969,8 @@ function init_scroll()
     up.innerHTML = '<a class="icon" onclick="document.getElementById(\'go_up\').hide()" style="float:right;font-size:70%">&#xe816;</a> <a class="icon" href="#up_top" >&#xe81a;</a><a href="javascript:show_calc()" class="icon">&#xf1ec;</a>';
     document.body.appendChild(up);
     window.onscroll = function () {
+        if ( document.getElementById("select_box_content") )
+            { document.getElementById("select_box_content").setStyle({display:"none"})};
         if (document.viewport.getScrollOffsets().top > 0) {
             if ($('go_up').visible() == false) {
                 $('go_up').setOpacity(0.65);
@@ -2979,6 +2981,7 @@ function init_scroll()
             $('go_up').hide();
         }
     }
+    
 }
 /**
  * Confirm a form thanks a modal dialog Box, it returns true if we agree otherwise
