@@ -109,11 +109,13 @@ if ( ! isset($_REQUEST['action']))
 		echo td($l_line['use_name']);
 		echo td($l_line['use_first_name']);
 		echo td($profile);
-                // status of security on ledger and action 
-                $a_sec=$cn->get_row("select us_ledger,us_action from user_active_security where us_login =$1",
+		// status of security on ledger and action
+        $a_sec=$cn->get_row("select us_ledger,us_action from user_active_security where us_login =$1",
                         [$l_line['use_login']]);
-                echo td($a_sec['us_ledger']);
-                echo td($a_sec['us_action']);
+        if ( ! empty ($a_sec)) {
+            echo td($a_sec['us_ledger']);
+            echo td($a_sec['us_action']);
+        }
 		echo td($str);
 		echo "</TR>";
     }
