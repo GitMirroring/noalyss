@@ -78,7 +78,8 @@ class Sendmail_Core
      */
     function set_message($p_message)
     {
-        $this->message = $p_message;
+        // $this->message =wordwrap($p_message,70,"\r\n");
+        $this->message =$p_message;
     }
 
     /**
@@ -134,24 +135,26 @@ class Sendmail_Core
         $this->content .= "Content-Type: text/plain; charset=\"utf-8\"" . $eol;
         $this->content .= "Content-Transfer-Encoding: 7bit" . $eol.$eol ;
         $this->content .= $this->message . $eol ;
-
-        // attachment
-        for ($i = 0; $i < count($this->afile); $i++)
+        if ( ! empty($this->afile ) )
         {
-            $file = $this->afile[$i];
-            $file_size = filesize($file->full_name);
-            $handle = fopen($file->full_name, "r");
-            $content = fread($handle, $file_size);
-            fclose($handle);
-            $content = chunk_split(base64_encode($content));
-            $this->content .= "--" . $separator . $eol;
-            $this->content .= "Content-Type: " . $file->type . "; name=\"" . $file->filename . "\"" . $eol;
-            $this->content .= "Content-Disposition: attachment; filename=\"" . $file->filename . "\"" . $eol;
-            $this->content .= "Content-Transfer-Encoding: base64" . $eol;
-            $this->content.=$eol;
-            $this->content .= $content . $eol ;
+            // attachment
+            for ($i = 0; $i < count($this->afile); $i++)
+            {
+                $file = $this->afile[$i];
+                $file_size = filesize($file->full_name);
+                $handle = fopen($file->full_name, "r");
+                $content = fread($handle, $file_size);
+                fclose($handle);
+                $content = chunk_split(base64_encode($content));
+                $this->content .= "--" . $separator . $eol;
+                $this->content .= "Content-Type: " . $file->type . "; name=\"" . $file->filename . "\"" . $eol;
+                $this->content .= "Content-Disposition: attachment; filename=\"" . $file->filename . "\"" . $eol;
+                $this->content .= "Content-Transfer-Encoding: base64" . $eol;
+                $this->content.=$eol;
+                $this->content .= $content . $eol ;
+            }
         }
-        if ( count ($this->afile) == 0 ) $this->content.=$eol;
+        if ( empty ($this->afile) ) $this->content.=$eol;
 
         $this->content .= "--" . $separator . "--";
     }

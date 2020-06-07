@@ -37,7 +37,7 @@ global $g_user, $g_failed;
  */
 /* category */
 $categorie = new ISelect('cat');
-$categorie->value = $cn->make_array("select fd_id,fd_label||'('||(select count(*) from fiche where fiche.fd_id=fiche_def.fd_id)::text||')' from fiche_def order by fd_label");
+$categorie->value = $cn->make_array("select fd_id,fd_label||' ('||(select count(*) from fiche where fiche.fd_id=fiche_def.fd_id)::text||')' from fiche_def order by fd_label");
 $categorie->selected = $http->get('cat','number',0);
 $str_categorie = $categorie->input();
 $ac = $http->request('ac');
@@ -128,7 +128,8 @@ if ( $allcard == 0 ){
 	echo h1($fiche_def->label,"");
 	echo h2($fiche_def->fd_description,"");
 }
-if ($array == null && $allcard == 0)
+// if no card found , stop here
+if ($array == null && $allcard == 0 && $histo->selected != 3 )
 {
         echo '<div class="content">';
 	echo '<h2 class="info2"> '._('Aucune fiche trouvée').'</h2>';
@@ -138,10 +139,10 @@ if ($array == null && $allcard == 0)
 }
 
 echo '<div class="content">';
-/* * *********************************************************************************************************************************
+/* * *************************************************************************************************************
  * Liste
  *
- * ******************************************************************************************************************************** */
+ * ***************************************************************************************************************/
 if ($histo->selected   == -1)
 {
 	$write = $g_user->check_action(FICADD);
@@ -234,16 +235,25 @@ if ($histo->selected  == 3)
 	$cat_card = new Fiche_Def($cn);
 	$cat_card->id =$http->get('cat','number');
 	$aHeading = $cat_card->getAttribut();
-	if ( $allcard == 0) echo $str_add_card;
+        $str_add_card="";
+        if ( $allcard == 0 ) {
+            $h_add_card_b = new IButton('add_card');
+            $h_add_card_b->label = _('Créer une nouvelle fiche');
+            $h_add_card_b->javascript = "dis_blank_card({gDossier:$gDossier,fd_id:$fd_id,after_save:1,ref:2})";
+            $str_add_card=$h_add_card_b->input();
+        }
+        echo $str_add_card;
 	require_once NOALYSS_TEMPLATE.'/result_cat_card_summary.php';
 
 	$hid = new IHidden();
-	echo '<form method="GET" ACTION="export.php">' . dossier::hidden() .
-	HtmlInput::submit('bt_csv', _("Export CSV")) .
-	HtmlInput::hidden('act', "CSV:fiche") .
-	$hid->input("type", "fiche") .
-	$hid->input("ac", $http->request('ac')) .
-	$hid->input("fd_id", $http->request('cat',"number"));
+	echo '<form method="GET" ACTION="export.php">' . dossier::hidden() ;
+        echo $str_add_card;
+        echo 
+            HtmlInput::submit('bt_csv', _("Export CSV")) .
+            HtmlInput::hidden('act', "CSV:fiche") .
+            $hid->input("type", "fiche") .
+            $hid->input("ac", $http->request('ac')) .
+            $hid->input("fd_id", $http->request('cat',"number"));
 	echo "</form>";
 
 	return;

@@ -2427,3 +2427,10 @@ span.tab_row {
 span.title_tab_row {
    
 }
+
+/* Selected row in a table */
+.background-selected {
+     background-color: #000066 !important;
+     color : white !important;
+     
+}

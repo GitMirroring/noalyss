@@ -457,7 +457,7 @@ class PDF_Operation extends PDF {
         return $file_name;
     }
     function download_pdf() {
-        $this->pdf->Output("acc_op".$this->acc_detail->det->jr_internal.".pdf");
+        $this->pdf->Output("acc_op".$this->acc_detail->det->jr_internal.".pdf","D");
     }
     /**
      * @brief unlink the file if exists

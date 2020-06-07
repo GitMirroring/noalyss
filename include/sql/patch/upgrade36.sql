@@ -177,8 +177,7 @@ CREATE TABLE bud_hypothese
   CONSTRAINT fk_bud_hypo_pa_id FOREIGN KEY (pa_id)
       REFERENCES plan_analytique (pa_id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
-) 
-WITHOUT OIDS;
+);
 
 create sequence seq_bud_hypothese_bh_id;
 

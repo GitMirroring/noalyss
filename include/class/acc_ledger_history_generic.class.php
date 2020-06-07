@@ -417,7 +417,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
     function get_rowSimple($trunc=0, $p_limit=-1, $p_offset=-1)
     {
         global $g_user;
-        $jrn=" jrn_def_id in (".join($this->ma_ledger, ",").")";
+        $jrn=" jrn_def_id in (".join(',',$this->ma_ledger).")";
 
         $periode=sql_filter_per($this->db, $this->m_from, $this->m_to, 'p_id',
                 'jr_tech_per');

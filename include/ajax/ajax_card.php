@@ -77,7 +77,7 @@ foreach ($var as $v)
         $cont=1;
     }
 }
-extract($_REQUEST, EXTR_SKIP );
+extract($_REQUEST, EXTR_SKIP ); 
 
 if ( $cont != 0 ) exit();
 
@@ -132,6 +132,29 @@ case 'dc':
     $f=new Fiche($cn);
     /* add title + close */
     $html=HtmlInput::title_box(_("Détail fiche"), $ctl,"close","","y");
+    
+    // if there is no qcode then try to find it thanks the card id
+    if ( ! isset ($qcode) ){
+        $f->id=$http->get("f_id","number");
+        $qcode=$f->get_quick_code();
+    }
+    
+    // after save , we can either show a card in readonly or update a row
+    $safter_save=$http->request("after_save","string","1");
+    switch ($safter_save)
+    {
+        case "1":
+            // show a card it readonly and fade it
+            $after_save="update_card(this)";
+            break;
+        case "2":
+            // update a row in the table X
+            $after_save="card_update_row(this)";
+            break;
+        default:
+            break;
+    }
+
     if ( $qcode != '')
     {
         $f->get_by_qcode($qcode);
@@ -153,7 +176,7 @@ case 'dc':
 
 	    if ($can_modify==1)
 	      {
-		$html.='<form id="form_'.$ctl.'" method="get" onsubmit="update_card(this);return false;">';
+		$html.='<form id="form_'.$ctl.'" method="get" onsubmit="'.$after_save.';return false;">';
 		$html.=dossier::hidden();
 		$html.=HtmlInput::hidden('f_id',$f->id);
 		$html.=HtmlInput::hidden('ctl',$ctl);
@@ -207,6 +230,9 @@ case 'bc':
         if ( isset ($eltid)) {
             $r.=HtmlInput::hidden("eltid", $eltid);
         }
+        // Action after save = 0, the card is display one second and fade out
+        $after_save=$http->get("after_save","number",0);
+        $r.=HtmlInput::hidden("after_save",$after_save);
         $r.='</form>';
         $html=$r;
     }
@@ -336,7 +362,7 @@ return;
      *
      ----------------------------------------------------------------------*/
 case 'sc':
-    $html=HtmlInput::title_box(_("Choix de la catégorie"), $ctl);
+    
     if ( $g_user->check_action(FICADD)==1 )
     {
         $f=new Fiche($cn);
@@ -344,19 +370,46 @@ case 'sc':
         try {
             $f->insert($fd_id,$_POST);
             $f->Get();
-            $html.='<h2 class="notice">'._('Fiche sauvée').'</h2>';
-            $html.=$f->Display(true);
-            $js="";
-            if ( isset( $_POST['ref'])) $js=create_script(' window.location.reload()');
-            $html.=$js;
-            if ( isset ($eltid)) {
-                // after adding a new card, we update some field
-                $extra="<eltid>$eltid</eltid>".
-                        "<elt_value>{$f->get_quick_code ()}</elt_value>";
+            $after_save=$http->post("after_save","number",0);
 
+            // Action after save = 0, the card is display one second and fade out
+            //
+            if ( $after_save == 0 ) {
+                $html=HtmlInput::title_box(_("Choix de la catégorie"), $ctl);
+                $html.='<h2 class="notice">'._('Fiche sauvée').'</h2>';
+                $html.=$f->Display(true);
+                $js="";
+                if ( isset( $_POST['ref'])) $js=create_script(' window.location.reload()');
+                $html.=$js;
+                if ( isset ($eltid)) {
+                    // after adding a new card, we update some field
+                    $extra="<eltid>$eltid</eltid>".
+                            "<elt_value>{$f->get_quick_code ()}</elt_value>";
+                            
+
+                }
+                $extra.=$status;
+                $extra.="<after_save>0</after_save>";
+            
             }
-            $extra.=$status;
-            $html.=HtmlInput::button_close($ctl);
+            // Action after save = 1 ;  after adding a card the table must be updated
+            // see fiche.inc.php
+            //
+            if ( $after_save == 1 ){
+                $f_id=$f->id;
+                ob_start();
+                $detail=Icon_Action::modify("mod".$f_id, sprintf("modify_card('%s')",$f_id)).
+                "&nbsp;".
+                Icon_Action::trash("del".$f_id,  sprintf("delete_card_id('%s')",$f_id));
+                $html = td($detail);
+                $html .= $f->display_row();
+                $html.=ob_get_contents();
+                ob_clean();
+                $extra="<f_id>".$f_id."</f_id>";
+                $ctl="row_card".$f_id;
+                $extra.="<after_save>1</after_save>";
+                
+            }
         } catch (Exception $exc) {
             $html="<h2 class=\"error\">"._("Erreur sauvegarde")."</h2>";
             $html.=$exc->getMessage();
@@ -592,6 +645,9 @@ case 'scc':
         $ctl="info_div";
     }
     break;
+    
+// Update a card and then display the result
+// in a readonly box
 case 'upc':
     $html=HtmlInput::title_box("Détail fiche", $ctl);
 
@@ -619,17 +675,52 @@ case 'upc':
 	}
       }
       break;
-      //------------------------------------------------------------------
-      // Unlink a card
-      //------------------------------------------------------------------
-        case 'rm_card':
-             $html=HtmlInput::title_box("Détail fiche", $ctl);
+// Update a card and then display the result
+// in the table
+case 'upr':
+    $f_id=$http->get("f_id","number");
+    $html="";
+    if ( $g_user->check_action(FICADD)==0 )
+    {
+        $html.=alert(_('Action interdite'),true);
+    }
+  else
+    {
+      if ($cn->get_value('select count(*) from fiche where f_id=$1',array($f_id)) == '0' )
+	{
+	  $html.=alert(_('Fiche non valide'),true);
+	  }
 
-  if ( $g_user->check_action(FIC)==0 )
+      else
+	{
+
+	  $f=new Fiche($cn,$f_id );
+	  ob_start();
+	  $f->update($_GET);
+          $detail=Icon_Action::modify("mod".$f_id, sprintf("modify_card('%s')",$f_id)).
+                "&nbsp;".
+                Icon_Action::trash("del".$f_id,  sprintf("delete_card_id('%s')",$f_id));
+          $html.=td($detail);
+	  $html.=$f->display_row();
+	  $html.=ob_get_contents();
+	  ob_end_clean();
+	}
+      }
+      break;
+      
+      
+      
+//------------------------------------------------------------------
+// Unlink a card
+//------------------------------------------------------------------
+ case 'rm_card':
+    $html=HtmlInput::title_box("Détail fiche", $ctl);
+     
+    if ( $g_user->check_action(FIC)==0 )
     {
       $html.=alert(_('Action interdite'),true);
     }
-  else
+    else
     {
       if ($cn->get_value('select count(*) from fiche where f_id=$1',array($_GET['f_id'])) == '0' )
 	{

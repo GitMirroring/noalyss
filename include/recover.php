@@ -25,6 +25,7 @@ define('SIZE_REQUEST', 70);
 
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/sendmail.class.php';
 /**
  * @brief generate a random string of char
  * @param $car int length of the string
@@ -95,12 +96,22 @@ elseif ($action=="send_email") :
     if ($valid==true):
         $request_id=generate_random(SIZE_REQUEST);
         $user_password=generate_random(10);
-        /*
-         * save the request into 
-         */
-        $cn->exec_sql("insert into recover_pass(use_id,request,password,created_on,created_host) "
-                ." values ($1,$2,$3,now(),$4)", array($user_id, $request_id, $user_password, $_SERVER['REMOTE_ADDR']));
-
+        // exist a valid request for this user ?
+        $exist_request= $cn->get_array("select request , password from recover_pass 
+                        where use_id=$1 and created_on > now() - interval '12 hours'",[$user_id]);
+        if ( empty($exist_request ) ) {
+             /* save the request into  */
+            $cn->exec_sql("insert into recover_pass(use_id,request,password,created_on,created_host) "
+                    ." values ($1,$2,$3,now(),$4)", array($user_id, $request_id, $user_password, $_SERVER['REMOTE_ADDR']));
+        } else {
+            $request_id=$exist_request[0]["request"];
+            $user_password=$exist_request[0]['password'];
+            /* if too many request , there is a bug somewhere , so record an warning */
+            if ( count($exist_request)> 1 ){
+                error_log("WRE109 Trop de request pour ".var_export($exist_request,true));
+            }
+            
+        }
         /*
          * send an email
          */
