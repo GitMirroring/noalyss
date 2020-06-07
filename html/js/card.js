@@ -1157,7 +1157,7 @@ function delete_card_id(p_fiche_id)
 * update a card in ajax , and update a row
 * 
 */
-function update_row(obj)
+function card_update_row(obj)
 {
     try {
         var name = obj.id;

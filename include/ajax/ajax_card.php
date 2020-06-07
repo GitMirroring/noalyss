@@ -149,7 +149,7 @@ case 'dc':
             break;
         case "2":
             // update a row in the table X
-            $after_save="update_row(this)";
+            $after_save="card_update_row(this)";
             break;
         default:
             break;
