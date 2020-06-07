@@ -339,6 +339,12 @@ if ( $div != 'popup' ) {
  //-------------------------------------------------------------------
  $select_box->add_javascript(_("Duplicate"),sprintf("duplicate_operation('%s','%s')",Dossier::id(),$obj->jr_id));
 
+ //-------------------------------------------------------------------
+ // Export PDF
+ //-------------------------------------------------------------------
+ $select_box->add_url(_("Export PDF"),   "export.php?".
+         http_build_query(array("act"=>"PDF:operation_detail","gDossier"=>Dossier::id(),"operation_id"=>$obj->jr_id))); 
+ 
  
 echo $select_box->input();
 echo '</p>';
