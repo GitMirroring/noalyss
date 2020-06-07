@@ -601,7 +601,7 @@ if ($account == 0 ) {
  if ( ! DEBUG) ob_end_clean();
 echo '<h1>'._('Important').'</h1>';
 echo '<p>'._('Utilisateur  administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';
-echo '<p>',_('Mot de passe'),' phpcompta','</p>';
+echo '<p>',_('Mot de passe')," ",NOALYSS_ADMIN_PASSWORD,'</p>';
  }// end if
 // Add a french accountancy model
 //--

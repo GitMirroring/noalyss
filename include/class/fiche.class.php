@@ -2282,7 +2282,7 @@ class Fiche
                 echo td($attr->av_text, 'style="padding: 0 10 1 10;white-space:nowrap;" '.$sort);
              }
              else {
-                $value=$cn->make_array($attr->ad_extra);
+                $value=$this->cn->make_array($attr->ad_extra);
                 $row_content="";
                 for ($e=0; $e<count($value); $e++) {
                     if ( $value[$e]['value']==$attr->av_text) {
