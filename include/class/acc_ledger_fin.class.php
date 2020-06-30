@@ -1003,7 +1003,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			__FILE__ . ':' . __LINE__ . ' ' .
 			$e->getMessage();
 			$this->db->rollback();
-                        record_log($e->getTraceAsString());
+                         record_log($e->getMessage()." ".$e->getTraceAsString());;
 			throw new Exception($r);
 		}
 		$this->db->commit();

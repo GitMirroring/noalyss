@@ -86,7 +86,7 @@ class Pre_op_fin extends Pre_operation_detail
         }
         catch (Exception $e)
         {
-            record_log($e->getTraceAsString());
+             record_log($e->getMessage()." ".$e->getTraceAsString());;
             echo ($e->getMessage());
             $this->db->rollback();
         }

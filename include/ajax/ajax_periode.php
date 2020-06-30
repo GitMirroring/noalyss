@@ -205,7 +205,7 @@ switch ($act)
                 }
                 catch (Exception $e)
                 {
-                    record_log($e->getTraceAsString());
+                     record_log($e->getMessage()." ".$e->getTraceAsString());;
                     $html=$e->getTrace();
                     throw $e;
                 }

@@ -38,7 +38,7 @@ try {
 }catch (Exception $e )
 {
     record_log($e->getMessage());
-    record_log($e->getTraceAsString());
+     record_log($e->getMessage()." ".$e->getTraceAsString());;
     return;
 }
 

@@ -56,7 +56,7 @@ switch ($op)
         }
         catch (Exception $e)
         {
-            record_log($e->getTraceAsString());
+             record_log($e->getMessage()." ".$e->getTraceAsString());;
             echo span($e->getMessage(), ' class="notice"');
             Anc_Key::display_list();
             Anc_Key::key_add();

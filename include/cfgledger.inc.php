@@ -62,7 +62,7 @@ if (  $action_frm == 'update')
 	} catch (Exception $e)
 	{
             record_log($e->getMessage());
-            record_log($e->getTraceAsString());
+             record_log($e->getMessage()." ".$e->getTraceAsString());;
             alert($e->getMessage());
 	}
 }
@@ -88,7 +88,7 @@ if ($action_frm == 'delete' )
 	catch (Exception $e)
 	{
             record_log($e->getMessage());
-            record_log($e->getTraceAsString());
+             record_log($e->getMessage()." ".$e->getTraceAsString());;
             alert ($e->getMessage());
 	}
 
@@ -111,7 +111,7 @@ if (isset($_POST['add']))
 	catch (Exception $e)
 	{
             record_log($e->getMessage());
-            record_log($e->getTraceAsString());
+             record_log($e->getMessage()." ".$e->getTraceAsString());;
             alert($e->getMessage());
 	}
 }
@@ -146,7 +146,7 @@ switch ($sa)
 		catch (Exception $e)
 		{
                     record_log($e->getMessage());
-                    record_log($e->getTraceAsString());
+                     record_log($e->getMessage()." ".$e->getTraceAsString());;
                     alert($e->getMessage());
 		}
 		break;
