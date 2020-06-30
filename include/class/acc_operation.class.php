@@ -594,8 +594,8 @@ class Acc_Operation
             $ret=new Acc_Fin($this->db,$this->jr_id);
             break;
         default:
-			$ret=new Acc_Misc($this->db,$this->jr_id);
-			break;
+            $ret=new Acc_Misc($this->db,$this->jr_id);
+            break;
         }
         $ret->get();
         if ( empty($ret->det->array))
@@ -776,9 +776,20 @@ class Acc_Operation
         }
        
         $r.="</p>";
-        $r.=HtmlInput::simple_array_to_hidden($array);
       
-        //
+        // For Misc Operation , if a card is given then there is no accounting
+        if ( $operation->signature==="ODS") {
+            $nb_array=count($array);
+            for ($i=0;$i<$nb_array;$i++) {
+                if (isset ($array["qc_".$i] ) && $array["qc_".$i] != "" ) {
+                    $array["poste".$i]="";
+                }
+            }
+        }
+        
+        // transform the operation into hidden element
+        $r.=HtmlInput::simple_array_to_hidden($array);
+        
         $r.=HtmlInput::submit(uniqid(), _("Dupliquer"));
         $r.='</form>';
         
