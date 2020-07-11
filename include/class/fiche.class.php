@@ -1117,7 +1117,7 @@ class Fiche
             $e->getMessage().
             '</span>';
             record_log($e->getMessage());
-             record_log($e->getMessage()." ".$e->getTraceAsString());;
+              record_log($e);
             $this->cn->rollback();
             return;
         }

@@ -106,7 +106,7 @@ class Default_Menu
             }
         } catch (Exception $e)
         {
-             record_log($e->getMessage()." ".$e->getTraceAsString());;
+              record_log($e);
             echo $e->getMessage();
             throw $e;
         }

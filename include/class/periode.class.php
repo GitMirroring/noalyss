@@ -273,7 +273,7 @@ class Periode
         catch (Exception $e)
         {
             record_log($e->getMessage()." - ".$e->getCode());
-             record_log($e->getMessage()." ".$e->getTraceAsString());;
+              record_log($e);
             $this->cn->rollback();
             throw $e;
         }
@@ -495,7 +495,7 @@ class Periode
         }
         catch (Exception $e)
         {
-             record_log($e->getMessage()." ".$e->getTraceAsString());;
+              record_log($e);
             $this->cn->rollback();
             throw $e;
         }
