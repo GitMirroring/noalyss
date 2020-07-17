@@ -118,7 +118,7 @@ case 'rmfa':
     {
         $cn->rollback();
         record_log($e->getMessage());
-        record_log($e->getTraceAsString());
+          record_log($e);
         echo $e->getMessage();
     }
     $html=ob_get_contents();

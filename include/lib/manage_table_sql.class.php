@@ -1037,7 +1037,7 @@ function check()
         {
             $s1=$xml->createElement("status", "NOK");
             $s2=$xml->createElement("ctl_row",
-                    $this->object_name+"_"+$this->table->get_pk_value());
+            $this->object_name."_".$this->table->get_pk_value());
             $s4=$xml->createElement("ctl", $this->object_name);
             $s3=$xml->createElement("html", $ex->getTraceAsString());
             $root=$xml->createElement("data");
@@ -1113,7 +1113,7 @@ function check()
             $s1=$xml->createElement("status", "NOK");
             $s3=$xml->createElement("ctl", $this->object_name);
             $s2=$xml->createElement("ctl_row",
-                    $this->object_name+"_"+$this->table->get_pk_value());
+            $this->object_name."_".$this->table->get_pk_value());
             $s4=$xml->createElement("html", $ex->getTraceAsString());
             
             $root=$xml->createElement("data");

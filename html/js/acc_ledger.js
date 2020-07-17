@@ -879,7 +879,6 @@ function reverseOperation(obj)
 {
     var qs = $(obj).serialize()+ "&op=ledger";
     g('ext' + obj.divname).style.display = 'none';
-    g('bext' + obj.divname).style.display = 'none';
     waiting_box();
     new Ajax.Request(
             "ajax_misc.php",

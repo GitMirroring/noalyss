@@ -149,7 +149,7 @@ if ($sub_action == "update")
                     $act->get();
                     $act->fromArray($_POST);
                     $error_id=$e->getCode();
-                    record_log($e->getTraceAsString());
+                      record_log($e);
                 }
 	}
 	//----------------------------------------------------------------------
@@ -296,7 +296,7 @@ if ($sub_action == "save_action_st2")
         echo '</span>';
         $sub_action="add_action";
         $error_id=$e->getCode();
-        record_log($e->getTraceAsString());
+          record_log($e);
     }
 }
 //--------------------------------------------------------------------------------

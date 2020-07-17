@@ -1331,9 +1331,8 @@ function is_msie()
  */
 function record_log($p_message)
 {
-    error_log("noalyss".$p_message,0);
-    error_log("noalyss GET [".var_export($_GET, true)."]",0);
-    error_log( "noalyss POST [".var_export($_POST, true)."]",0);
+    error_log("noalyss".print_r($p_message,true),0);
+    error_log("noalyss GET [".var_export($_GET, true)."] POST [".var_export($_POST, true)."]",0);
 }
 if(!function_exists('tracedebug')) {
   function tracedebug($file,$var, $label = NULL) {

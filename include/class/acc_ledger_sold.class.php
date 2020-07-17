@@ -716,8 +716,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 }
             }
         } catch (Exception $e) {
-            record_log($e->getMessage());
-            record_log($e->getTraceAsString());
+              record_log($e);
             echo '<span class="error">' .
             'Erreur dans l\'enregistrement ' .
             __FILE__ . ':' . __LINE__ . ' ' .

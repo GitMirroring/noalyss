@@ -937,7 +937,7 @@ class Fiche
         }
         catch (Exception $e)
         {
-            record_log($e->getTraceAsString());
+            record_log($e->getMessage()." ".$e->getTraceAsString());
             $this->cn->rollback();
             throw ($e);
             return;
@@ -1133,7 +1133,7 @@ class Fiche
             $e->getMessage().
             '</span>';
             record_log($e->getMessage());
-            record_log($e->getTraceAsString());
+              record_log($e);
             $this->cn->rollback();
             return;
         }
