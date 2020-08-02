@@ -262,7 +262,7 @@ class Fiche
         {
             $a=sql_string($p_search);
             $sql="select * from vw_fiche_attr where frd_id=".$p_frd_id.
-                 " and vw_name ~* '$p_search'";
+                 " and vw_name ilike '%$p_search%'";
         }
 
         $Ret=$this->cn->exec_sql($sql.$p_sql);
@@ -1776,7 +1776,7 @@ class Fiche
             $search.=" and f_id in
                      (select distinct f_id from fiche_detail
                      where
-                     ad_id in (1,32,30,23,18,13) and ad_value ~* '$p_search')";
+                     ad_id in (1,32,30,23,18,13) and ad_value ilike '%$p_search%')";
         }
         // Get The result Array
         $step_tiers=$this->get_by_category($offset,$search.$filter_amount,'name');

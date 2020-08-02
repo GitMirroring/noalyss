@@ -1224,7 +1224,7 @@ function fill_box(req)
  *@param dossier_id
  *@param od_id from table op_predef
  */
-function mod_predf_op(dossier_id, od_id)
+function mod_predf_op(dossier_id, od_id,p_ledger)
 {
     var target = "mod_predf_op";
     removeDiv(target);
@@ -1234,7 +1234,7 @@ function mod_predf_op(dossier_id, od_id)
 
     add_div(div);
 
-    var qs = "gDossier=" + dossier_id + '&op=mod_predf&id=' + od_id;
+    var qs = "gDossier=" + dossier_id + '&op=mod_predf&id=' + od_id+'&ledger_id='+p_ledger;
 
     var action = new Ajax.Request('ajax_misc.php',
             {

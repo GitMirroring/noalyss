@@ -71,7 +71,7 @@ class contact extends Fiche
             $search=" and f_id in
                     (select f_id from fiche_Detail
                     where
-                    ad_id=1 and ad_value ~* '$p_search') ";
+                    ad_id=1 and ad_value ilike '%$p_search%') ";
         }
         // Get The result Array
         $step_contact=$this->get_by_category($offset,$search.$extra_sql.$p_sql);

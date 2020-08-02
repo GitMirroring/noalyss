@@ -1050,20 +1050,24 @@ class User
 		{
 			// show only available folders
 			// if user is not an admin
-			$Res = $cn->exec_sql("select distinct dos_id,dos_name,dos_description 
+			$Res = $cn->exec_sql("select 
+    						distinct dos_id,dos_name,dos_description 
                             from ac_users
-                            natural join jnt_use_dos
-                            natural join  ac_dossier
+								natural join jnt_use_dos
+								natural join  ac_dossier
                             where
-                            use_login= $1
-                            and use_active = 1
-                            and ( dos_name ~* $2 or dos_description ~* $2 )
+								use_login= $1
+								and use_active = 1
+								and ( dos_name ilike '%' || $2 || '%' or dos_description ilike '%' || $2 || '%' )
                             order by dos_name", array($this->login, $p_filter));
 		}
 		else
 		{
-			$Res = $cn->exec_sql("select distinct dos_id,dos_name,dos_description from ac_dossier
-             where   dos_name ~* $1 or dos_description ~* $1 order by dos_name", array($p_filter));
+			$Res = $cn->exec_sql("select 
+    			distinct dos_id,dos_name,dos_description from ac_dossier
+             where   
+                   dos_name  ilike '%' || $1|| '%' or dos_description ilike '%' || $1 || '%' 
+			  order by dos_name", array($p_filter));
 		}
 		require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
