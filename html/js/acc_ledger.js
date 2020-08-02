@@ -875,7 +875,6 @@ function reverseOperation(obj)
 {
     var qs = $(obj).serialize()+ "&op=ledger";
     g('ext' + obj.divname).style.display = 'none';
-    g('bext' + obj.divname).style.display = 'none';
     waiting_box();
     new Ajax.Request(
             "ajax_misc.php",
@@ -1469,4 +1468,44 @@ function reset_filter(p_div) {
   
   // By default , unpaid is uncked
    $(p_div+"operation_filter").value="all";
+}
+
+/**
+ * propose to duplicate an operation
+ */
+function duplicate_operation(p_dossier,p_jr_id) {
+    waiting_box();
+    var duplicate_div=create_div({id:"duplicate_operation_div",cssclass:"inner_box"});
+    
+    new Ajax.Request("ajax_misc.php", {
+                            parameters : {
+                                "op":"ledger",
+                                "gDossier":p_dossier,
+                                "jr_id":p_jr_id,
+                                "act":"duplicateop",
+                                "div":"duplicate_operation_div"
+                            },
+                            onSuccess:function(req) {
+                                remove_waiting_box();
+                                console.debug("success");
+                                var xml=req.responseXML;
+                                console.debug ("received"+xml);
+                                if ( xml.getElementsByTagName("ctl").length==0) {
+                                    console.log("erreur"+req.responseText);
+                                }
+                                console.debug("ok we display");
+                                 add_div(duplicate_div);
+                                console.debug (getNodeText(xml.getElementsByTagName("code")[0]));
+                                
+                                console.debug("fill div");
+                                duplicate_div.setStyle({"position":"fixed","top":"15%","z-index":"999",
+                                    "min-width":"30rem",
+                                    "left":"30%",
+                                    "width":"40%"});
+                                duplicate_div.innerHTML=getNodeText(xml.getElementsByTagName("code")[0]);
+                                duplicate_div.setStyle({display:"block"});
+                            }
+                        }
+                    
+                    );
 }

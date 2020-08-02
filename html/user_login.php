@@ -129,7 +129,7 @@ if ( $User->admin == 0 || (defined("MULTI")&& MULTI == 0 ) )
     $folder=$User->get_available_folder();
     if ( $folder != null  && count($folder) == 1 )
     {
-
+            echo _("Si la redirection ne fonctionne pas, vous devez changer la valeur de NOALYSS_URL ");
             redirect(NOALYSS_URL.'/do.php?gDossier='.$folder[0]['dos_id']);
             exit();
     }

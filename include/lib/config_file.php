@@ -70,6 +70,7 @@ function config_file_form($p_array=null)
 	$cdbname="";
         $chost="localhost";
         $cadmin='admin';
+        $cpassword_admin="";
 
     }
     else extract ($p_array, EXTR_SKIP);

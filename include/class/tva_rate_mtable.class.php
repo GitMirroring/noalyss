@@ -53,8 +53,8 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $this->set_col_label("tva_purchase", _("TVA Achat (D)"));
         $this->set_col_type("tva_both_side", "select",
                 array(
-            ["value"=>0, "label"=>_("Normal")],
-            ["value"=>1, "label"=>_("Autoliquidation")]
+            ["value"=>0, "label"=>_("Non")],
+            ["value"=>1, "label"=>_("Oui")]
         ));
         $this->set_property_updatable("tva_id", FALSE);
         $this->set_col_label("tva_payment_purchase",_("Exigible achat"));

@@ -1538,6 +1538,7 @@ div.box  {
     float:left;
     font-size:14px;
     font-size:0.90rem;
+    border-radius:5px;
 }
 @media only screen and (max-width: 1426px) {
     div.box {
@@ -2461,4 +2462,10 @@ span.title_tab_row {
     background-color: darkblue;
     color:white;
     padding : 3px;
+}
+/* Selected row in a table */
+.background-selected {
+     background-color: #000066 !important;
+     color : white !important;
+     
 }

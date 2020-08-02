@@ -194,7 +194,7 @@ class Document_modele
         }
         catch (Exception $e)
         {
-            record_log($e->getTraceAsString());
+              record_log($e);
             rollback($this->cn);
             return ;
         }
@@ -360,7 +360,7 @@ class Document_modele
         }
         catch (Exception $e)
         {
-            record_log($e->getTraceAsString());
+              record_log($e);
             rollback($this->cn);
             return ;
         }

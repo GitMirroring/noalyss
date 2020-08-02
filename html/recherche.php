@@ -28,6 +28,11 @@ require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+if ( ! isset ($_SESSION['g_theme']))
+{
+    echo "<h2>"._('Vous  êtes déconnecté')."</h2>";
+    die();
+}
 
 html_page_start($_SESSION['g_theme']);
 
@@ -69,7 +74,7 @@ window.onload=function ()
 {
     create_anchor_up();
     init_scroll();
-    sorttable.init
+    sorttable.init();
 }
 </script>
 <?php
@@ -118,10 +123,17 @@ if ( isset ($_GET['viewsearch']))
     /*
      * Export to csv
      */
-    $r=HtmlInput::get_to_hidden(array('l','date_start','date_end','desc','amount_min','amount_max','qcode','accounting','unpaid','gDossier','ledger_type'));
+    $r=HtmlInput::get_to_hidden(array('l','date_start','date_end','desc','amount_min','amount_max',
+        'qcode','accounting','unpaid','gDossier','ledger_type'));
     if (isset($_GET['r_jrn'])) {
-      foreach ($_GET['r_jrn'] as $k=>$v)
-	$r.=HtmlInput::hidden('r_jrn['.$k.']',$v);
+        $http=new HttpInput();
+        $a_rjrn=$http->get("r_jrn","array");
+      foreach ($a_rjrn as $k=>$v) {
+          // Protect : check that $k and $v are numeric
+        if (isNumber($k)&&isNumber($v)) {
+            $r.=HtmlInput::hidden('r_jrn['.$k.']',$v);
+        }
+      }
     }
     echo '<form action="export.php" method="get">';
     echo $r;

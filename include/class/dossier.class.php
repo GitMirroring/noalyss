@@ -326,7 +326,7 @@ class Dossier
         {
 
             echo_warning($e->getMessage());
-            record_log($e->getTraceAsString());
+              record_log($e);
             $cn->rollback();
         }
     }
