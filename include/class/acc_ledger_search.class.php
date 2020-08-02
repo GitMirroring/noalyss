@@ -560,9 +560,9 @@ class Acc_Ledger_Search
             $desc=sql_string($desc);
             $fil_desc=$and." ( upper(jr_comment) like upper('%".$desc."%') or upper(jr_pj_number) like upper('%".$desc."%') ".
                     " or upper(jr_internal)  like upper('%".$desc."%')
-                          or jr_grpt_id in (select j_grpt from jrnx where j_text ~* '".$desc."')
-                          or jr_id in (select jr_id from jrn_info where ji_value is not null and ji_value ~* '$desc')
-                          or jr_id in (select jr_id from jrn_note where upper(n_text) ~* '$desc' )
+                          or jr_grpt_id in (select j_grpt from jrnx where j_text ilike '%".$desc."%')
+                          or jr_id in (select jr_id from jrn_info where ji_value is not null and ji_value  ilike '%$desc%')
+                          or jr_id in (select jr_id from jrn_note where upper(n_text) ilike '%$desc%' )
                           )";
             $and=" and ";
         }
