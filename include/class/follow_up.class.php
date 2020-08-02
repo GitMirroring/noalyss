@@ -1320,9 +1320,9 @@ class Follow_Up
         if (isset($_REQUEST['action_query']))
         {
             // if a query is request build the sql stmt
-            $action_query="and (ag_title ~* '".sql_string($_REQUEST['action_query'])."' ".
+            $action_query="and (ag_title ilike '%".sql_string($_REQUEST['action_query'])."%' ".
                     "or ag_ref ='".trim(sql_string($_REQUEST['action_query'])).
-                    "' or ag_id in (select ag_id from action_gestion_comment where agc_comment ~* '".trim(sql_string($_REQUEST['action_query']))."')".
+                    "' or ag_id in (select ag_id from action_gestion_comment where agc_comment ilike '%".trim(sql_string($_REQUEST['action_query']))."%')".
                     ")";
         }
 

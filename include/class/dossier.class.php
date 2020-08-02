@@ -80,8 +80,8 @@ class Dossier
             $l_sql="select *, 'W' as priv_priv "
                     ."from ac_dossier "
                     ."where "
-                    ."dos_name ~* $2 "
-                    ."or dos_description ~* $2 "
+                    ."dos_name ilike '%'|| $2 ||'%'"
+                    ."or dos_description ilike '%'|| $2 || '%' "
                     ."ORDER BY dos_name $str_limit  ";
             $a_row=$cn->get_array($l_sql, $p_text);
             return $a_row;
@@ -93,7 +93,7 @@ class Dossier
                    natural join ac_users
                    where
                    use_login=$1
-                   and ( dos_name ~* $2 or dos_description ~* $2)
+                   and ( dos_name ilike '%'||  $2 || '%'  or dos_description ilike '%'|| $2|| '%' )
                    
                    order by dos_name 
                    $str_limit
@@ -104,10 +104,10 @@ class Dossier
         }
         else if ($p_type=='X')
         {
-            $l_sql=' select * from ac_dossier where dos_id not in 
+            $l_sql=" select * from ac_dossier where dos_id not in 
                   (select dos_id from jnt_use_dos where use_id=$1)
-                  and ( dos_name ~* $2 or dos_description ~* $2)
-                  order by dos_name '.$str_limit;
+                  and ( dos_name ilike '%'||  $2|| '%'  or dos_description ilike '%'||  $2 || '%')
+                  order by dos_name ".$str_limit;
             $a_row=$cn->get_array($l_sql, array($p_login, $p_text));
             return $a_row;
         }

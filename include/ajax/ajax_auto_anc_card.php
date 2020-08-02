@@ -13,12 +13,22 @@ $cn=Dossier::connect();
 
 if ( isset($_REQUEST['pa_id']) )
 {   
-    $res=$cn->exec_sql("select po_name,po_description from  poste_analytique where pa_id=$1  and (po_description ~* $2 or po_name ~* $3) order by po_id limit 12",
+    $res=$cn->exec_sql("select po_name,po_description 
+            from  poste_analytique 
+            where 
+                  pa_id=$1  
+              and (po_description ilike '%'|| $2||'%' or po_name ilike '%'|| $3 ||'%')
+            order by po_id limit 12",
         array($_REQUEST['pa_id'],$_POST['anccard'],$_POST['anccard']));
 }
 else
 {
-       $res=$cn->exec_sql("select po_name,po_description from  poste_analytique where po_description ~* $1 or po_name ~* $2 order by po_id limit 12 ",
+       $res=$cn->exec_sql("select po_name,po_description
+                from  poste_analytique 
+                where 
+                      po_description ilike '%'|| $1 ||'%' 
+                   or po_name ilike '%'|| $2||'%' 
+                order by po_id limit 12 ",
         array($_POST['anccard'],$_POST['anccard']));
 }
 $nb=Database::num_row($res);
