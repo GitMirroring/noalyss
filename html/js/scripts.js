@@ -1304,6 +1304,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
     str_style += ";width:92%;overflow:auto;";
     waiting_box();
     var hide_operation = $(ctl_concern).getAttribute("hide_operation");
+    var single_operation = $(ctl_concern).getAttribute("single_operation");
 
     var param_send = {gDossier: dossier,
         ctlc: ctl_concern,
@@ -1313,7 +1314,8 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
         ledger: ledger,
         target: target,
         tiers: tiers,
-        hide_operation: hide_operation
+        hide_operation: hide_operation,
+        single_operation:single_operation
     };
 
     var qs = encodeJSON(param_send);
@@ -1381,6 +1383,7 @@ function set_reconcile(obj)
         if (!obj.elements['target'])
             return;
         var target = obj.elements['target'].value;
+        var single_operation = obj.elements['single_operation'].value;
         for (var e = 0; e < obj.elements.length; e++)
         {
 
@@ -1414,7 +1417,12 @@ function set_reconcile(obj)
                             });
                         }
                     }
-                    $(ctlc.value).value += nValue;
+                    if (single_operation==0) {
+                        $(ctlc.value).value += nValue;
+                    } else {
+                        $(ctlc.value).value = nValue;
+                        
+                    }
                 }
             }
         }
