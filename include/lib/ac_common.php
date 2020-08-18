@@ -209,13 +209,13 @@ function cmpDate($p_date, $p_date_oth)
 /***!
  * @brief check if the argument is a number
  *
- * \param $p_int number to test
+ * @param $p_int number to test
  *
- * \return
+ * @return
  *        - 1 it's a number
  *        - 0 it is not
  */
-function isNumber(&$p_int)
+function isNumber($p_int)
 {
     if (strlen(trim($p_int)) == 0)
 	return 0;
@@ -1375,3 +1375,20 @@ function convert_to_rtf($p_string)
     }
     return $result;
 }
+/**
+ * When it is needed to eval a formula , this function prevent the divide by zero.
+ * the formula is a math operation to evaluate like : 1.0+2.0/1 (...) , it is used in "report", 
+ * it removes the operation "divide by 0 "
+ * 
+ * @param string $p_formula string containing a operation to evaluate
+ * 
+ * @see Impress::parse_formula
+ */
+function remove_divide_zero($p_formula)
+{
+    $test=str_replace(" ","",$p_formula).";";
+    $p_formula=preg_replace("![0-9]+\.*[0-9]*/0\.{0,1}0*(\+|-|\*|/|;){1}!","0$1",$test);
+    $p_formula=trim($p_formula,';');
+    return $p_formula;
+}
+
