@@ -494,7 +494,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
 
         $cond_limite=($p_limit!=-1)?" limit ".$p_limit." offset ".$p_offset:"";
 
-        $ledger_list=join($this->ma_ledger, ",");
+        $ledger_list=join( ",",$this->ma_ledger);
 // Grand livre == 0
         $Res=$this->db->exec_sql("select jr_id,j_id,j_id as int_j_id,to_char(j_date,'DD.MM.YYYY') as j_date,
                                      jr_internal,
