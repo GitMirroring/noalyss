@@ -441,7 +441,7 @@ case 'fs':
 	$r.='</span>';
     $r.=dossier::hidden().HtmlInput::hidden('op','fs');
     $array=array();
-    foreach (array('accvis','query','inp','jrn','label','typecard','price','tvaid') as $i)
+    foreach (array('accvis','inp','jrn','label','typecard','price','tvaid') as $i)
     {
         if  (isset(${$i}) )
         {
@@ -449,6 +449,7 @@ case 'fs':
             $sql_array[$i]=${$i};
         }
     }
+    $sql_array["query"]=$query;
     /* what is the type of the ledger */
     $type="GL";
     if (isset($jrn) && $jrn > 1)
@@ -462,12 +463,13 @@ case 'fs':
 
     if ( strpos($sql," in ()") != 0)
     {
-            $html=Icon_Action::close('search_card');
-             $html.='<div> '.h2info(_('Recherche de fiche')).'</div>';
+            $html="";
+             $html.=HtmlInput::title_box(_('Recherche de fiche'), 'search_card');
              $html.='<h3 class="notice">';
              $html.=_("Aucune catégorie de fiche ne correspond à".
             " votre demande, le journal pourrait n'avoir accès à aucune fiche");
              $html.='</h3>';
+             $html.=HtmlInput::button_close("search_card");
              break;
     }
      /* We limit the search to MAX_SEARCH_CARD records */

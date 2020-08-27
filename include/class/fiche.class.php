@@ -2131,8 +2131,9 @@ class Fiche
         {
             $query=sql_string($query);
 
-            if (strlen(trim($query))>1)
+            if (strlen(trim($query))>0)
             {
+                $query=str_replace(" ", "%", $query);
                 $filter_query=$and."(vw_name ilike '%$query%' or quick_code ilike ('%$query%') "
                         ." or vw_description ilike '%$query%' or tva_num ilike '%$query%' or accounting like upper('$query%'))";
             }

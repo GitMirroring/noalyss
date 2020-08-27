@@ -274,7 +274,9 @@ function search_get_card(obj)
     } else {
         queryString+="&accvis=0";
     }
+    queryString=encodeURI(queryString);
     $('asearch').innerHTML=loading();
+    
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
                                   method:'get',
