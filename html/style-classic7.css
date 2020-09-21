@@ -2469,3 +2469,8 @@ span.title_tab_row {
      color : white !important;
      
 }
+p.info {
+    font-size:90%;
+    font-family: sans-serif;
+    font-style: italic;
+}
