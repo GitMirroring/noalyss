@@ -741,17 +741,22 @@ class Acc_Operation
         $operation = $this->get_quant();
         $array=$operation->compute_array();
         global $g_user;
-        // Prepare the form
-        $r='<form id="'.$p_id.'" method="POST">';
-        $r.=Dossier::hidden();
         $a_code=$this->db->get_array("select code from v_menu_dependency vmd  where me_code=$1 and p_id=$2",
                 array( $operation->signature,$g_user->get_profile()));
-        
-        // select the menu where the operation will be duplicated
         if ( empty ($a_code)) {
             $r.=_("Menu invalide");
             return $r;
         }
+        /** 
+         * @bug : if several menu possible , will use only the first one, because request take first the GET and after
+         * the POST
+         */
+        // Prepare the form
+        $r=sprintf('<form id="%s" method="POST" ACTION="%s">',$p_id,NOALYSS_URL."/do.php?".http_build_query([
+                "ac"=>$a_code[0]['code'],"gDossier"=>Dossier::id()
+        ]));
+        $r.=Dossier::hidden();
+        // select the menu where the operation will be duplicated
         $r.="<p>";
         $r.="<ul style=\"margin-left:2rem;padding-left:0;list-style:none;\">";
         $r.=sprintf("<li>%s</li>",$operation->det->jr_pj_number);
