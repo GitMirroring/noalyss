@@ -752,6 +752,11 @@ class Acc_Operation
         $r=sprintf('<form id="%s" method="POST" ACTION="%s">',$p_id,NOALYSS_URL."/do.php?".Dossier::get());
         $r.=Dossier::hidden();
         // select the menu where the operation will be duplicated
+        $r=sprintf('<form id="%s" method="POST" ACTION="%s">',$p_id,NOALYSS_URL."/do.php?".http_build_query([
+                "ac"=>$a_code[0]['code'],"gDossier"=>Dossier::id()
+        ]));
+        $r.=Dossier::hidden();
+        // select the menu where the operation will be duplicated
         $r.="<p>";
         $r.="<ul style=\"margin-left:2rem;padding-left:0;list-style:none;\">";
         $r.=sprintf("<li>%s</li>",$operation->det->jr_pj_number);
