@@ -23,46 +23,52 @@
  * \brief save the new predefined operation 
  * included from ajax_misc
  */
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-$http=new HttpInput();
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-if ($g_user->check_module('PREDOP') == 0) exit();
-$name=$http->post("opd_name","string", "");
-if ( trim($name) != '')
-  {
-      try
-      {
-        $od_id=$http->post("od_id", "number");
-        $cn->exec_sql('delete from op_predef where od_id=$1',
-                      array($od_id));
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/operation_predef_mtable.class.php';
+$http=new HttpInput();
 
-        $cn->exec_sql("delete from op_predef_detail where od_id=$1",array($od_id));
 
-        $jrn_type=$http->post("jrn_type");
-        switch ($jrn_type) {
-            case 'ACH':
-            $operation=new Pre_op_ach($cn);
-            break;
-            case 'VEN':
-            $operation=new Pre_op_ven($cn);
-            break;
-            case 'ODS':
-            $operation=new Pre_Op_Advanced($cn);
-            break;
-        default :
-            throw new Exception(_('Type de journal invalide'));
-        }
-        $operation->get_post();
-        $operation->save();
-        $cn->commit();
-          
-      }
-      catch (Exception $exc)
-      {
-          error_log($exc->getTraceAsString());
-          throw $exc;
-      }
 
-  }
-?>
+try {
+    $table=$http->request('table');
+    $action=$http->request('action');
+    $p_id=$http->request('p_id', "number");
+    $ctl_id=$http->request('ctl');
+
+} catch(Exception $e) {
+    echo $e->getMessage();
+    return;
+}
+if  ( $g_user->check_module("PREDOP") == 0) die();
+
+$prd_op=new Op_predef_SQL($cn);
+$prd_op->set_pk_value($p_id);
+$prd_op->load();
+
+$operation_predef_mtable=new Operation_Predef_MTable($prd_op);
+
+
+$operation_predef_mtable->add_json_param("op","save_predf");
+$operation_predef_mtable->set_object_name($ctl_id);
+$operation_predef_mtable->set_callback("ajax_misc.php");
+
+if ($action=="input")
+{
+    header('Content-type: text/xml; charset=UTF-8');
+    echo $operation_predef_mtable->ajax_input()->saveXML();
+    return;
+}
+elseif ($action == "save")
+{
+    $xml=$operation_predef_mtable->ajax_save();
+    header('Content-type: text/xml; charset=UTF-8');
+    echo $xml->saveXML();
+}
+elseif ($action == "delete")
+{
+    $xml=$operation_predef_mtable->ajax_delete();
+    header('Content-type: text/xml; charset=UTF-8');
+    echo $xml->saveXML();
+}

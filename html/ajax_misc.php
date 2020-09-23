@@ -159,7 +159,6 @@ $path = array(
     "remove_submenu"=>"ajax_remove_submenu",
     "cardsearch"=>"ajax_boxcard_search",
     "saldo"=>"ajax_bank_saldo",
-    "up_predef"=>"ajax_update_predef",
     "upd_receipt"=>"ajax_get_receipt",
     "up_pay_method"=>"ajax_update_payment",
     "openancsearch"=>"ajax_anc_search",

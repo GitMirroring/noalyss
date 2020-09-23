@@ -5,12 +5,13 @@
 <legend><?php echo $f_legend ?>
 </legend>
 <?php echo $f_type?><?php echo $f_client_qcode?><?php echo $f_client_bt?> <?php echo $f_client?><br>
-<input type="hidden" id="p_jrn" name="p_jrn" value="<?php echo $this->jrn_def_id; ?>">    
+<input type="hidden" id="p_jrn" name="p_jrn" value="<?php echo $p_array["p_jrn"]; ?>">
 <?php echo $str_add_button?>
 </fieldset>
 
-<fieldset>
-<legend><?php echo $f_legend_detail?></legend>
+<div class="fieldset" style="overflow:auto;max-height:300px">
+<h1 class="fiedset"><?php echo $f_legend_detail?></h1>
+    <div style="">
 <table id="sold_item" width="100%" border="0">
 <tr>
 <th style="width:auto"colspan="2">Code <?php echo Icon_Action::infobulle(0)?></th>
@@ -79,6 +80,6 @@ echo '</tr>';
 <?php endif; ?>
 </div>
 
-</fieldset>
+</div>
 
 
