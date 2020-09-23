@@ -788,10 +788,11 @@ class Acc_Ledger  extends jrn_def_sql
                 ob_start();
         echo '<div id="predef_form">';
         echo HtmlInput::hidden('p_jrn_predef', $this->id);
-        $op=new Pre_op_ods($this->db);
-        $op->set('ledger', $this->id);
-        $op->set('ledger_type', "ODS");
-        $op->set('direct', 't');
+        $op=new Pre_operation( $this->db);
+        $op->set_p_jrn($this->id);
+        $op->set_jrn_type("ODS");
+        $op->set_od_direct('t');
+
         $url=http_build_query(
                 array('action'=>'use_opd', 
                     'p_jrn_predef'=>$this->id,
@@ -1328,14 +1329,16 @@ class Acc_Ledger  extends jrn_def_sql
 
             $this->pj=$acc_end->set_pj();
 
-            $this->db->exec_sql("update jrn set jr_internal='".$internal."' where ".
-                    " jr_grpt_id = ".$seq);
+            $this->db->exec_sql("update jrn set jr_internal=$1 
+                        where jr_grpt_id = $2",array($internal,$seq));
+
             $this->internal=$internal;
             // Save now the predef op
             //------------------------
             if (isset($opd_name)&&trim($opd_name)!="")
             {
-                $opd=new Pre_Op_Advanced($this->db);
+                $opd=new Pre_operation($this->db);
+                $opd->set_od_direct('t');
                 $opd->get_post();
                 $opd->save();
             }

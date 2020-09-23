@@ -30,22 +30,23 @@ require_once  NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 class Pre_op_ods extends Pre_operation_detail
 {
     var $op;
-    function __construct($cn,$p_id=0)
+    function __construct($cn)
     {
-        parent::__construct($cn,$p_id);
-        $this->operation->od_direct='f';
+        parent::__construct($cn);
     }
 
+    /***
+     * @brief retrieve data from $_POST
+     */
     function get_post()
     {
-        parent::get_post();
-        $this->operation->od_direct='f';
-        for ($i=0;$i<$this->operation->nb_item;$i++)
+        $http=new \HttpInput();
+        $nb=$http->post("nb_item","number");
+        for ($i=0;$i< $nb ;$i++)
         {
-
-            $this->{"e_account".$i}=$_POST['e_account'.$i];
-            $this->{"e_account".$i."_amount"}=$_POST['e_account'.$i."_amount"];
-            $this->{"e_account".$i."_type"}=$_POST['e_account'.$i."_type"];
+            $this->{"e_account".$i}=$http->post("e_account'.$i");
+            $this->{"e_account".$i."_amount"}=$http->post("e_account".$i."_amount","number",0);
+            $this->{"e_account".$i."_type"}=$http->post('e_account'.$i."_type");
 
         }
     }
@@ -53,45 +54,38 @@ class Pre_op_ods extends Pre_operation_detail
      * \brief save the detail and op in the database
      *
      */
-    function save()
+    function save($p_od_id,$p_nbitem)
     {
         try
         {
-            $this->db->start();
-            if ($this->operation->save() == false )
-                return;
-
             // save the selling
-            for ($i=0;$i<$this->operation->nb_item;$i++)
+            for ($i=0;$i< $p_nbitem ;$i++)
             {
-                $sql=sprintf('insert into op_predef_detail (opd_poste,opd_amount,'.
+                $sql='insert into op_predef_detail (opd_poste,opd_amount,'.
                              'opd_debit,od_id)'.
-                             ' values '.
-                             "('%s',%.2f,'%s',%d)",
-                             $this->{"e_account".$i},
-                             $this->{"e_account".$i."_amount"},
-                             ($this->{"e_account".$i."_type"}=='d')?'t':'f',
-                             $this->operation->od_id
-                            );
-                $this->db->exec_sql($sql);
+                             ' values ($1,$2,$3,$4)';
+
+                $this->db->exec_sql($sql,array($this->{"e_account".$i},
+                                                $this->{"e_account".$i."_amount"},
+                                                ($this->{"e_account".$i."_type"}=='d')?'t':'f',
+                                                $p_od_id)
+                                    );
             }
         }
         catch (Exception $e)
         {
-              record_log($e);
+            record_log($e);
             echo ($e->getMessage());
-            $this->db->rollback();
+            throw $e;
         }
 
     }
     /*!\brief compute an array accordingly with the FormVenView function
      */
-    function compute_array()
+    function compute_array($p_od_id)
     {
         $count=0;
-        $a_op=$this->operation->load();
-        $array=$this->operation->compute_array($a_op);
-        $p_array=$this->load();
+        $p_array=$this->load($p_od_id);
         foreach ($p_array as $row)
         {
             $c=($row['opd_debit']=='t')?'d':'c';
@@ -107,17 +101,13 @@ class Pre_op_ods extends Pre_operation_detail
     /*!\brief load the data from the database and return an array
      * \return an array 
      */
-    function load()
+    function load($p_od_id)
     {
         $sql="select opd_id,opd_poste,opd_amount,opd_debit".
-             "  from op_predef_detail where od_id=".$this->operation->od_id.
+             "  from op_predef_detail where od_id= $1 ".
              " order by opd_debit, opd_id,opd_amount";
-        $res=$this->db->exec_sql($sql);
+        $res=$this->db->exec_sql($sql,array($p_od_id));
         $array=Database::fetch_all($res);
         return $array;
-    }
-    function set_od_id($p_id)
-    {
-        $this->operation->od_id=$p_id;
     }
 }

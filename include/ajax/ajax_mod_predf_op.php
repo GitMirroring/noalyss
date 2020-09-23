@@ -26,8 +26,21 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 ob_start();
 require_once NOALYSS_INCLUDE.'/class/pre_operation.class.php';
-$op=new Pre_Operation($cn,$_GET['id']);
-$array=$op->load();
+$id=$http->get("id","number");
+
+$op=new Pre_Operation($cn,$id);
+
+// ----------------------------------------------------------------
+// if id > 0  then we display an existing template operation
+// otherwise a blank one
+// -----------------------------------------------------------------
+if ( $id > 0) {
+    $array = $op->load();
+} else {
+    $ledger_id=$http->get("ledger_id","number");
+    $op->set_jrn($ledger_id);
+    $array=$op->blank($ledger_id);
+}
 echo HtmlInput::title_box(_('Modification du nom'),'mod_predf_op','close','','n');
 
 echo '

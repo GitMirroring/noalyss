@@ -25,7 +25,7 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
-require_once  NOALYSS_INCLUDE.'/class/pre_op_ven.class.php';
+require_once  NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 require_once  NOALYSS_INCLUDE.'/class/document.class.php';
 require_once  NOALYSS_INCLUDE.'/class/acc_ledger_info.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
@@ -171,7 +171,7 @@ show_tabs(a_tab,'facturation_div_id');
             /* Save the predefined operation */
             if ( isset($_POST['opd_name']) && trim($_POST['opd_name']) != "" )
             {
-                $opd=new Pre_op_ven($cn);
+                $opd=new Pre_operation($cn);
                 $opd->get_post();
                 $opd->save();
             }
@@ -253,22 +253,14 @@ if (!isset($_REQUEST ['p_jrn']))
     $Ledger->id=$def_ledger['jrn_def_id'];
 }
 else
-    $Ledger->id=$_REQUEST ['p_jrn'];
+    $Ledger->id=$http->request('p_jrn');
+
 if (isset($_REQUEST['p_jrn_predef']))
 {
-    $Ledger->id=$_REQUEST['p_jrn_predef'];
+    $Ledger->id=$http->request('p_jrn_predef');
 }
 
-/* echo '<div id="predef_form">';
-echo HtmlInput::hidden('p_jrn_predef', $Ledger->id);
-$op=new Pre_op_ven($cn);
-$op->set('ledger',$Ledger->id);
-$op->set('ledger_type',"VEN");
-$op->set('direct','f');
-$url=http_build_query(array('p_jrn_predef'=>$Ledger->id,'ac'=>$_REQUEST['ac'],'gDossier'=>dossier::id()));
-echo $op->form_get('do.php?'.$url);
-echo '</div>';
-*/
+
 echo '<div class="content">';
 if ( $p_msg !="" ) echo '<span class="warning">'.$p_msg.'</span>';
 try
@@ -284,10 +276,10 @@ try
     {
         // used a predefined operation
         //
-       $op=new Pre_op_ven($cn);
-        $op->set_od_id($_REQUEST['pre_def']);
+       $op=new Pre_operation($cn);
+        $op->set_od_id($http->request('pre_def'));
         $p_post=$op->compute_array();
-        $Ledger->id=$_REQUEST ['p_jrn_predef'];
+        $Ledger->id=$http->request('p_jrn_predef');
 
         echo $Ledger->input($p_post);
         echo '<div class="content">';

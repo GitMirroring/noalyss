@@ -1310,11 +1310,12 @@ EOF;
         ob_start();
         echo '<div id="predef_form">';
         echo HtmlInput::hidden('p_jrn_predef', $this->id);
-        $op=new Pre_op_ven($this->db);
-        $op->set('ledger', $this->id);
-        $op->set('ledger_type', "VEN");
-        $op->set('direct', 'f');
-        $url=http_build_query(array('p_jrn_predef'=>$this->id, 'ac'=>$_REQUEST['ac'],
+        $op=new Pre_operation($this->db);
+        $op->set_jrn_type("VEN");
+        $op->set_p_jrn($this->id);
+        $op->set_od_direct('f');
+        $http=new \HttpInput();
+        $url=http_build_query(array('p_jrn_predef'=>$this->id, 'ac'=>$http->request('ac'),
             'gDossier'=>dossier::id()));
         echo $op->form_get('do.php?'.$url);
         echo '</div>';
