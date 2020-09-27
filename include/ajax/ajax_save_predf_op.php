@@ -56,8 +56,14 @@ $operation_predef_mtable->set_callback("ajax_misc.php");
 
 if ($action=="input")
 {
-    header('Content-type: text/xml; charset=UTF-8');
-    echo $operation_predef_mtable->ajax_input()->saveXML();
+    if ($p_id == -1 ) {
+        // new operation to insert
+
+    } else {
+        // display existing operation for updating
+        header('Content-type: text/xml; charset=UTF-8');
+        echo $operation_predef_mtable->ajax_input()->saveXML();
+    }
     return;
 }
 elseif ($action == "save")

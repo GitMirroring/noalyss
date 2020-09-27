@@ -3676,7 +3676,7 @@ function toggle_row_warning_enable(p_enable, p_row)
 
 /**
  * return a json object which is the merge of the 2 json objects
- *
+ * from 2015 : Object.assign(obj1, obj2);
  * @param p_json1 object 1 to merge
  * @param p_json2 object 2 to merge
  * @returns new json object
