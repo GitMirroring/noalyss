@@ -87,6 +87,10 @@ var ManageTable = function (p_table_name)
       
       this.sort_column=p_column;
     };
+
+    this.set_dialog_box=function (p_dialog_box){
+        this.control=p_dialog_box;
+    }
     /**
      * Insert the row a the right location
      * @param {type} p_element_row DOMElement TR
@@ -225,12 +229,12 @@ var ManageTable = function (p_table_name)
                     new Effect.Highlight(answer['ctl_row'] ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
                     alternate_row_color("tb"+answer['ctl']);
                     remove_waiting_box();
-                    $("dtr").hide();
+                    $(here.control).hide();
                     
                 } else {
                     remove_waiting_box();
                     smoke.alert(content[48]);
-                    $("dtr").update(answer['html']);
+                    $(here.control).update(answer['html']);
                    
                 }
             }
