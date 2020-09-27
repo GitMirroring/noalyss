@@ -3673,3 +3673,24 @@ function toggle_row_warning_enable(p_enable, p_row)
         $(p_row).hide();
     }
 }
+
+/**
+ * return a json object which is the merge of the 2 json objects
+ *
+ * @param p_json1 object 1 to merge
+ * @param p_json2 object 2 to merge
+ * @returns new json object
+ */
+function json_concat(p_json1,p_json2)
+{
+
+        var result = {};
+        for (var key in p_json1) {
+            result[key] = p_json1[key];
+        }
+        for (var key in p_json2) {
+            result[key] = p_json2[key];
+        }
+        return result;
+
+}
