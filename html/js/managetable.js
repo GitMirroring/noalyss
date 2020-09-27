@@ -189,18 +189,19 @@ var ManageTable = function (p_table_name)
      * set
      */
     this.save = function (form_id) {
+        var param_form={};
         waiting_box();
         try {
             this.param['action'] = 'save';
             var form = $(form_id).serialize(true);
-            this.param_add(form);
+            param_form = json_concat(this.param,form);
             var here=this; 
           } catch (e) {
             alert(e.message);
             return false;
           }
         new Ajax.Request(this.callback, {
-            parameters: this.param,
+            parameters: param_form,
             method: "post",
             onSuccess: function (req) {
                 try {
