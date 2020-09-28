@@ -52,7 +52,7 @@ if ( isset($_POST['action_fiche'] ) )
             return;
         }
 
-        $f_id=$hi->request('f_id',"number");
+        $f_id=$http->request('f_id',"number");
 
         $fiche=new Admin($cn,$f_id);
         $fiche->remove();
