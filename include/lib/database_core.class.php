@@ -611,7 +611,7 @@ class DatabaseCore
      *
      * \param $p_sql  sql statement, only the first two column will be returned in
      *  an array. The first col. is the label and the second the value
-     *  \param $p_null if the array start with a null value
+     *  \param $p_null if the array start with a null value Yes = 1 , No=0
      *  \param $p_array is the array with the bind value
      * \note this function is used with ISelect when it is needed to have a list of
      * options.
