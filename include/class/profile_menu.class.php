@@ -244,7 +244,8 @@ class Profile_Menu extends Profile_Menu_sql
 				", array($this->p_id));
             $aright_value=array(
                 array('value'=>'R', 'label'=>_('Lecture')),
-                array('value'=>'W', 'label'=>_('Ecriture')),
+                array('value'=>'W', 'label'=>_('Ecriture et suppression')),
+                array('value'=>'O', 'label'=>_('Ecriture')),
                 array('value'=>'X', 'label'=>_('Aucun accès'))
             );
             require_once NOALYSS_TEMPLATE.'/user_sec_profile.php';

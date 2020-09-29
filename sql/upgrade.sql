@@ -1,3 +1,4 @@
+
 CREATE OR REPLACE FUNCTION comptaproc.jrn_check_periode()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -40,5 +41,11 @@ if comptaproc.is_closed (ljr_tech_per,ljr_def_id) = true then
 end if;
 
 return lreturn;
-end;$function$
-;
+end;
+$function$;
+LANGUAGE plpgsql;
+
+-- New right for action : delete
+ALTER TABLE public.user_sec_action_profile drop CONSTRAINT user_sec_action_profile_ua_right_check;
+ALTER TABLE public.user_sec_action_profile ADD CONSTRAINT user_sec_action_profile_ua_right_check check (ua_right in ('R','W','X','O'));
+

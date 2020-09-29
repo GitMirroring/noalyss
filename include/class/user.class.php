@@ -1192,6 +1192,22 @@ class User
             if ( $this->get_status_security_action()==0)                return TRUE;
             $profile = $this->get_profile();
                     $r = $this->db->get_value(" select count(*) from action_gestion where ag_id=$1 and ag_dest in
+				(select p_granted from user_sec_action_profile where ua_right in ('W','O') and p_id=$2) ", array($dtoc, $profile));
+		if ($r == 0)
+			return FALSE;
+		return true;
+	}
+         /**
+         *Check if the profile of the user can write AND delete for this profile
+         * @param  $dtoc action_gestion.ag_id
+         * @return true if he can write otherwise false
+         */
+	function can_delete_action($dtoc)
+	{
+            if ( $this->Admin() == 1 ) return TRUE;
+            if ( $this->get_status_security_action()==0)                return TRUE;
+            $profile = $this->get_profile();
+                    $r = $this->db->get_value(" select count(*) from action_gestion where ag_id=$1 and ag_dest in
 				(select p_granted from user_sec_action_profile where ua_right='W' and p_id=$2) ", array($dtoc, $profile));
 		if ($r == 0)
 			return FALSE;
