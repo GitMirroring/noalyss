@@ -33,6 +33,10 @@ class Pre_Op_Advanced extends Pre_operation_detail
     {
         parent::__construct($cn);
     }
+    /**
+     * @brief get the post and stove them into data member , before saving them in the db
+     * @see save
+     */
     function get_post()
     {
         $http = new \HttpInput();
@@ -143,13 +147,24 @@ class Pre_Op_Advanced extends Pre_operation_detail
              " order by opd_id";
         $res=$this->db->exec_sql($sql,[$p_od_id]);
         $array=Database::fetch_all($res);
+        if ($array == false ) return array();
         return $array;
     }
+    /**
+     * Display the form for modifying or adding new predefined operation
+     * @param array  $p_array is the result of compute_array or blank
+     * @return string containing HTML code of the form
+     * @throws Exception
+     * @see compute_array
+     * @see load
+     *
+     */
    function display($p_array)
     {
         global $g_parameter, $g_user;
         require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
         $legder=new Acc_Ledger($this->db,$p_array['p_jrn']);
+
         $legder->nb=$legder->get_min_row();
 
         $add_js = "";
@@ -169,12 +184,11 @@ class Pre_Op_Advanced extends Pre_operation_detail
         $nb_row = (isset($p_array['nb_item']) ) ? $p_array['nb_item' ]: $legder->nb;
 
         $ret.=HtmlInput::hidden('nb_item', $nb_row);
-        $ret.=HtmlInput::hidden('p_jrn', $p_array['p_jrn']);
         $ret.=dossier::hidden();
         
         $ret.=dossier::hidden();
 
-        $ret.=HtmlInput::hidden('jrn_type', $legder->get_type());
+        $ret.=HtmlInput::hidden('jrn_type', "ODS");
         $info = Icon_Action::infobulle(0);
         $info_poste = Icon_Action::infobulle(9);
         if ($g_user->check_action(FICADD) == 1)

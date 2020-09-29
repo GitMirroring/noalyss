@@ -34,3 +34,7 @@ $description->style=' class="itextarea" style="width:30em;height:4em;vertical-al
     <?php echo  _('Description (max 50 car.)'); ?>
     <?php echo $description->input();?>
 </p>
+<p>
+    <?php echo _("Journal") ?>
+    <?php echo $select_ledger->input(); ?>
+</p>

@@ -33,7 +33,10 @@ class Pre_op_ach extends Pre_operation_detail
     {
         parent::__construct($cn);
     }
-
+    /**
+     * @brief get the post and stove them into data member , before saving them in the db
+     * @see save
+     */
     function get_post()
     {
         $http = new \HttpInput();
@@ -100,8 +103,11 @@ class Pre_op_ach extends Pre_operation_detail
             throw $e;
         }
     }
-    /*!\brief compute an array accordingly with the FormVenView function
+    /**
+     * @brief compute an array accordingly with the FormVenView function, first the data is fetched (via load)
+     * to the database and turns into an array to be use with Pre_Op_Ach::display
 	 * @return an array for filling the form
+     * @see load
      */
     function compute_array($p_od_id)
     {
@@ -144,10 +150,20 @@ class Pre_op_ach extends Pre_operation_detail
             " opd_quantity , opd_comment,opd_tva_amount from op_predef_detail where od_id= $1 ".
             " order by opd_id";
         $res=$this->db->exec_sql($sql,[$p_od_id]);
+        if ($res == false) return array();
         $array=Database::fetch_all($res);
         return $array;
     }
 
+    /**
+     * Display the form for modifying or adding new predefined operation
+     * @param array  $p_array is the result of compute_array or blank
+     * @return string containing HTML code of the form
+     * @throws Exception
+     * @see compute_array
+     * @see load
+     *
+     */
    function display($p_array)
    {
         require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
@@ -183,8 +199,6 @@ class Pre_op_ach extends Pre_operation_detail
        $r.=dossier::hidden();
        $f_legend=_('En-tête facture fournisseur');
 
-
-       /* if we suggest the next pj, then we need a javascript */
 
        // Display the customer
        //--
@@ -393,6 +407,5 @@ class Pre_op_ach extends Pre_operation_detail
 
        return $r;
 
-        return $r;
    }
 }
