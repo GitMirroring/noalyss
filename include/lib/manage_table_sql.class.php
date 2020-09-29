@@ -86,7 +86,7 @@ class Manage_Table_SQL
 
     private $icon_mod; //!< place of right or left the icon update or mod, default right, accepted value=left,right,first column for mod
     private $icon_del; //!< place of right or left the icon update or mod, default right, accepted value=left,right
-
+    private $dialogbox_style;
     /**
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the
@@ -123,6 +123,7 @@ class Manage_Table_SQL
         // By default no js sort
         $this->sort_column="";
         $this->dialog_box="dtr";
+        $this->dialogbox_style=array("position"=> "fixed", "top"=>  '15%',"width"=> "auto", "margin-left"=> "20%");
     }
     /**
      * send the XML headers for the ajax call 
@@ -130,6 +131,26 @@ class Manage_Table_SQL
     function send_header()
     {
         header('Content-type:text/xml;charset="UTF-8"');
+    }
+
+    /**
+     * return the db_style
+     * @return array
+     */
+    public function get_dialogbox_style()
+    {
+        return $this->dialogbox_style;
+    }
+
+    /**
+     * Dialog box style , by default {position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"}
+     *
+     * @param array $db_style , will be transformed into a json object
+     */
+    public function set_dialogbox_style($db_style)
+    {
+        $this->dialogbox_style = $db_style;
+        return $this;
     }
 
     /**
@@ -378,6 +399,7 @@ function check()
      */
     function create_js_script()
     {
+        $style=json_encode($this->dialogbox_style);
         echo "
 		<script>
 		var {$this->object_name}=new ManageTable(\"{$this->table->table}\");
@@ -385,6 +407,7 @@ function check()
 		{$this->object_name}.param_add({$this->json_parameter});
 		{$this->object_name}.set_sort({$this->get_col_sort()});
 		{$this->object_name}.set_control(\"{$this->get_dialog_box()}\");
+		{$this->object_name}.set_style($style);
 		</script>
 
 	";

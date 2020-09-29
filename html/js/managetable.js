@@ -74,9 +74,12 @@ var ManageTable = function (p_table_name)
 {
     this.callback = "ajax.php"; //!< File to call
     this.control = "dtr"; //<! Prefix Id of dialog box, table, row
-    
+    this.mt_style={position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"};
     this.sort_column=0;
     this.param = {"table": p_table_name, "ctl_id": this.control}; //<! default value to pass
+    this.set_style=function(p_json) {
+        this.mt_style=p_json;
+    };
     /**
      * Set the sort , 
      * @param {string} p_column  column number start from 0
@@ -308,7 +311,7 @@ var ManageTable = function (p_table_name)
                     var obj = {id: control, "cssclass": "inner_box", "html": loading()};
                     add_div(obj);
                     var pos = calcy(250);
-                    $(obj.id).setStyle({position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"});
+                    $(obj.id).setStyle(here.mt_style);
                     $(obj.id).update(x['html']);
                 } catch (e) {
                     smoke.alert(content[48] + e.message);
