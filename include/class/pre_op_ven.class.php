@@ -34,7 +34,10 @@ class Pre_op_ven extends Pre_operation_detail
     {
         parent::__construct($cn);
     }
-
+    /**
+     * @brief get the post and stove them into data member , before saving them in the db
+     * @see save
+     */
     function get_post()
     {
         $http=new \HttpInput();
@@ -144,13 +147,18 @@ class Pre_op_ven extends Pre_operation_detail
              " order by opd_id";
         $res=$this->db->exec_sql($sql,[$p_od_id]);
         $array=Database::fetch_all($res);
+        if ($res == false) return array();
         return $array;
     }
 
     /**
-     * @param array $p_array
-     * @return string
+     * Display the form for modifying or adding new predefined operation
+     * @param array  $p_array is the result of compute_array or blank
+     * @return string containing HTML code of the form
      * @throws Exception
+     * @see compute_array
+     * @see load
+     *
      */
     function display($p_array)
     {
@@ -158,7 +166,6 @@ class Pre_op_ven extends Pre_operation_detail
 
         require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
         $ledger=new Acc_Ledger_Sold($this->db,$p_array['p_jrn']);
-
         $flag_tva=$g_parameter->MY_TVA_USE;
         /* Add button */
         $f_add_button=new IButton('add_card');

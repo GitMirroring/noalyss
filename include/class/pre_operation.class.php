@@ -162,20 +162,19 @@ class Pre_operation
         }
         try {
             $this->db->start();
-            $sql='insert into op_predef (jrn_def_id,od_name,od_item,od_jrn_type,od_direct,od_description)'.
-                'values'.
-                "($1,$2,$3,$4,$5  ,$6               )";
-            $this->db->exec_sql($sql,array($this->p_jrn,
+            $sql='insert into op_predef (jrn_def_id,od_name,od_item,od_jrn_type,od_direct,od_description) '.
+                ' values '.
+                "($1,$2,$3,$4,$5  ,$6)".
+                'returning od_id';
+            $this->od_id= $this->db->get_value($sql,array($this->p_jrn,
                 $this->name,
                 $this->nb_item,
                 $this->jrn_type,
                 $this->od_direct,
                 $this->description,
             ));
-            $this->od_id=$this->db->get_current_seq('op_def_op_seq');
 
 
-           // $this->detail=Pre_operation_detail::build_detail($this->jrn_type,$this->db);
             $this->detail->save($this->od_id,$this->nb_item);
             $this->db->commit();
         } catch (Exception $e) {
@@ -215,23 +214,21 @@ class Pre_operation
      * @param $p_ledger_id
      * @throws Exception
      */
-    function blank($p_ledger_id) {
+    function blank() {
         $array["od_id"]=-1;
-        $array['jrn_def_id']=$p_ledger_id;
+        $array['jrn_def_id']=0;
         $array['od_name']="";
         $array['od_item']=2;
-        $array['od_jrn_type']=$this->db->get_value("select jrn_def_type from jrn_def where jrn_def_id=$1",[$p_ledger_id]);
+        $array['od_jrn_type']=$this->get_jrn_type();
         $array['od_description']="";
         foreach (array('jrn_def_id','od_name','od_item','od_jrn_type','od_description') as $field) {
             $this->$field=$array[$field];
         }
         $this->od_jrn_type=$array['od_jrn_type'];
 
-        $this->detail = Pre_operation_detail::build_detail($this->od_jrn_type, $this->db);
-        $this->detail->set_od_id(0);
-        $this->detail->set_jrn($p_ledger_id);
-
-        return $array;
+        $this->detail = Pre_operation_detail::build_detail($array['od_jrn_type'], $this->db);
+        $darray[0]=$array;
+        return $darray;
     }
 
     function compute_array()
@@ -239,7 +236,7 @@ class Pre_operation
         if ($this->od_id > 0) {
             $p_array = $this->load();
         } else {
-            $p_array=$this->blank($this->p_jrn);
+            $p_array=$this->blank();
         }
         $array=array(
                    "e_comm"=>$p_array[0]["od_name"],
@@ -254,8 +251,10 @@ class Pre_operation
 
     }
 
-    /*!\brief show the button for selecting a predefined operation */
-    function show_button()
+    /*!\brief show the button for selecting a predefined operation
+    @deprecated
+     */
+    function show_button_deprecated()
     {
 
         $select=new ISelect();
@@ -301,6 +300,8 @@ class Pre_operation
     function display() 
     {
         $array=$this->compute_array();
+        $select_ledger=$this->choose_ledger($array['jrn_type'],$array['p_jrn']);
+
         require NOALYSS_TEMPLATE."/pre_operation_display.php";
         echo $this->detail->display($array);
     }
@@ -408,7 +409,6 @@ class Pre_operation
     public function get_jrn_type()
     {
         return $this->jrn_type;
-        return $this;
     }
 
     /**
@@ -416,6 +416,7 @@ class Pre_operation
      */
     public function set_jrn_type($jrn_type)
     {
+        $jrn_type=strtoupper($jrn_type);
         if ( ! in_array ($jrn_type,['ACH','FIN','VEN','ODS'] )) throw new Exception('prop03.invalid ledger type');
         $this->jrn_type = $jrn_type;
         return $this;
@@ -502,6 +503,22 @@ class Pre_operation
         $this->p_jrn=$p_jrn;
         $this->jrn_type=$this->db->get_value("select jrn_def_type from jrn_def where jrn_def_id=$1",[$p_jrn]);
         return $this;
+    }
+
+    /**
+     * Build the select list for choosing the ledger
+     * @param string $p_string ledger type ACH VEN or ODS
+     * @param $p_default  selected ledger , -1 if none
+     * @return ISelect
+     */
+    function choose_ledger($p_ledger_type,$p_default) {
+        $select_ledger=new ISelect("p_jrn");
+        $select_ledger->value=$this->db->make_array("select jrn_def_id,jrn_def_name 
+                                                    from jrn_def where jrn_def_type=$1 order by 2",
+            0,
+            [$p_ledger_type]);
+        $select_ledger->selected=$p_default;
+        return $select_ledger;
     }
 }
 

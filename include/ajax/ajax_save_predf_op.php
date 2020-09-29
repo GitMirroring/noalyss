@@ -56,14 +56,13 @@ $operation_predef_mtable->set_callback("ajax_misc.php");
 
 if ($action=="input")
 {
-    if ($p_id == -1 ) {
-        // new operation to insert
+    if ($p_id  < 0 ) {
 
-    } else {
-        // display existing operation for updating
-        header('Content-type: text/xml; charset=UTF-8');
-        echo $operation_predef_mtable->ajax_input()->saveXML();
+        $operation_predef_mtable->set_force_ledger_type($p_id);
     }
+    // display existing operation for updating
+    header('Content-type: text/xml; charset=UTF-8');
+    echo $operation_predef_mtable->ajax_input()->saveXML();
     return;
 }
 elseif ($action == "save")

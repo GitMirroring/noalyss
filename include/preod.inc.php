@@ -35,4 +35,10 @@ $operation_predef_mtable->set_json(json_encode(array(   "ac"=>$http->request("ac
                                                         "gDossier"=>Dossier::id()
                                                      )));
 $operation_predef_mtable->create_js_script();
+echo '<p>';
+ $operation_predef_mtable->display_button_add();
+echo '</p>';
 $operation_predef_mtable->display_table();
+echo '<p>';
+$operation_predef_mtable->display_button_add();
+echo '</p>';

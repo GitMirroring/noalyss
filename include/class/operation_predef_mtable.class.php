@@ -27,10 +27,13 @@
 require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 require_once NOALYSS_INCLUDE."/database/op_predef_sql.class.php";
 require_once NOALYSS_INCLUDE."/class/pre_operation.class.php";
+require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
+
 
 class Operation_Predef_MTable extends Manage_Table_SQL
 {
     private $pre_operation;
+    private $force_ledger_type; //!< When adding , the ledger must be set
     function __construct(Op_predef_SQL $p_table)
     {
         parent::__construct($p_table);
@@ -45,7 +48,8 @@ class Operation_Predef_MTable extends Manage_Table_SQL
 
         $aLedger=$p_table->cn->make_array("select jrn_def_id,jrn_def_name from jrn_def order by jrn_def_name asc");
 
-        $this->set_sort_column("jrn_def_id");
+        $this->set_sort_column("od_name");
+        $this->set_col_sort(1);
         $this->set_order(array("jrn_def_id","od_name","od_description","od_jrn_type"));
         $this->set_col_type("jrn_def_id","select",$aLedger);
 
@@ -53,7 +57,30 @@ class Operation_Predef_MTable extends Manage_Table_SQL
         $this->set_property_updatable("jrn_def_id",false);
         $this->set_property_updatable("od_jrn_type",false);
         $this->pre_operation=null;
+        // create our own "Append button"
+        $this->set_append_row(false);
+        $this->set_dialog_box("prdfop");
+        $this->set_dialogbox_style(["position"=>"absolute","top"=>"5%","width:auto","min-width"=>"80%"]);
+    }
 
+    /**
+     * @return mixed
+     */
+    public function get_force_ledger_type()
+    {
+        return $this->force_ledger_type;
+    }
+
+    /**
+     * When adding the ledger_type must be set
+     *  if p_id == -2 then type ACH , 3 for VEN and 4 for ODS
+     * @param mixed $force_ledger_type
+     */
+    public function set_force_ledger_type($force_ledger_type)
+    {
+        $aLedger=array(-2=>'ACH',-3=>'VEN',-4=>'ODS');
+        $this->force_ledger_type = $aLedger[$force_ledger_type];
+        return $this;
     }
 
     /**
@@ -63,9 +90,20 @@ class Operation_Predef_MTable extends Manage_Table_SQL
     function input()
     {
         $obj=$this->get_table();
-        $this->pre_operation = new Pre_operation($obj->cn);
-        $this->pre_operation->set_od_id($obj->get("od_id"));
-        $this->pre_operation->display();
+        $od_id=$obj->get("od_id");
+        if ($od_id > 0 ) {
+            $this->pre_operation = new Pre_operation($obj->cn);
+            $this->pre_operation->set_od_id($obj->get("od_id"));
+            $this->pre_operation->display();
+        } else  {
+            // display blanck operation type ledger = ACH
+            $this->pre_operation = new Pre_operation($obj->cn);
+            // new operation od_id = -1
+            $this->pre_operation->set_od_id(-1);
+            $this->pre_operation->set_jrn_type($this->get_force_ledger_type());
+            $this->pre_operation->display();
+
+        }
     }
 
     /**
@@ -114,7 +152,27 @@ class Operation_Predef_MTable extends Manage_Table_SQL
     function save()
     {
        $this->pre_operation->save();
+       $this->set_pk($this->pre_operation->get_od_id());
+    }
 
+    /**
+     * Display a button to choose a type of operation and call a dialog box for adding
+     */
+    function display_button_add()
+    {
+        $select=new Select_Box(uniqid(),_("Ajout"));
+        $select->set_position('in-absolute');
+        $select->add_javascript(_("Achat"),sprintf("%s.input('-2','%s')",
+            $this->get_object_name(),
+            $this->get_object_name(), "xx", "smallbutton", BUTTONADD));
 
+        $select->add_javascript(_("Vente"),sprintf("%s.input('-3','%s')",
+            $this->get_object_name(),
+            $this->get_object_name(), "xx", "smallbutton", BUTTONADD));
+
+          $select->add_javascript(_("Opérations Diverses"),sprintf("%s.input('-4','%s')",
+              $this->get_object_name(),
+              $this->get_object_name(), "xx", "smallbutton", BUTTONADD));
+        echo $select->input();
     }
 }
