@@ -45,15 +45,15 @@ foreach (array('l','t','d','gDossier') as $a)
 
 }
 $cn=Dossier::connect();
-$op=new Pre_operation_detail($cn);
-$op->set('ledger',$l);
-$op->set('ledger_type',$t);
-$op->set('direct',$d);
+$op=new Pre_operation($cn);
+$op->set_p_jrn($l);
+$op->set_jrn_type($t);
+$op->set_od_direct($d);
 $url=http_build_query(array('action'=>'use_opd','p_jrn_predef'=>$l,'ac'=>$_GET['ac'],'gDossier'=>dossier::id()));
 $html="";
 
 $html.=HtmlInput::title_box(_("Modèle d'opérations"), 'modele_op_div', 'hide',"","n");
-$html.=$op->show_button('do.php?'.$url);
+$html.=$op->display_list_operation('do.php?'.$url);
 $html.=' <p style="text-align: center">'.
         HtmlInput::button_hide('modele_op_div').
         '</p>';

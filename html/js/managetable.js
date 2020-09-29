@@ -74,9 +74,12 @@ var ManageTable = function (p_table_name)
 {
     this.callback = "ajax.php"; //!< File to call
     this.control = "dtr"; //<! Prefix Id of dialog box, table, row
-    
+    this.mt_style={position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"};
     this.sort_column=0;
     this.param = {"table": p_table_name, "ctl_id": this.control}; //<! default value to pass
+    this.set_style=function(p_json) {
+        this.mt_style=p_json;
+    };
     /**
      * Set the sort , 
      * @param {string} p_column  column number start from 0
@@ -87,6 +90,10 @@ var ManageTable = function (p_table_name)
       
       this.sort_column=p_column;
     };
+
+    this.set_dialog_box=function (p_dialog_box){
+        this.control=p_dialog_box;
+    }
     /**
      * Insert the row a the right location
      * @param {type} p_element_row DOMElement TR
@@ -189,18 +196,19 @@ var ManageTable = function (p_table_name)
      * set
      */
     this.save = function (form_id) {
+        var param_form={};
         waiting_box();
         try {
             this.param['action'] = 'save';
             var form = $(form_id).serialize(true);
-            this.param_add(form);
+            param_form = json_concat(this.param,form);
             var here=this; 
           } catch (e) {
             alert(e.message);
             return false;
           }
         new Ajax.Request(this.callback, {
-            parameters: this.param,
+            parameters: param_form,
             method: "post",
             onSuccess: function (req) {
                 try {
@@ -224,12 +232,12 @@ var ManageTable = function (p_table_name)
                     new Effect.Highlight(answer['ctl_row'] ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
                     alternate_row_color("tb"+answer['ctl']);
                     remove_waiting_box();
-                    $("dtr").hide();
+                    $(here.control).hide();
                     
                 } else {
                     remove_waiting_box();
                     smoke.alert(content[48]);
-                    $("dtr").update(answer['html']);
+                    $(here.control).update(answer['html']);
                    
                 }
             }
@@ -303,7 +311,7 @@ var ManageTable = function (p_table_name)
                     var obj = {id: control, "cssclass": "inner_box", "html": loading()};
                     add_div(obj);
                     var pos = calcy(250);
-                    $(obj.id).setStyle({position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"});
+                    $(obj.id).setStyle(here.mt_style);
                     $(obj.id).update(x['html']);
                 } catch (e) {
                     smoke.alert(content[48] + e.message);

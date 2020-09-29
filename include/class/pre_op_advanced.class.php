@@ -29,18 +29,20 @@ require_once  NOALYSS_INCLUDE.'/class/pre_operation.class.php';
  */
 class Pre_Op_Advanced extends Pre_operation_detail
 {
-    var $op;
     function __construct($cn)
     {
         parent::__construct($cn);
-        $this->operation->od_direct='t';
     }
+    /**
+     * @brief get the post and stove them into data member , before saving them in the db
+     * @see save
+     */
     function get_post()
     {
-        parent::get_post();
-        $http=new HttpInput();
+        $http = new \HttpInput();
+        $nb = $http->post("nb_item", "number");
 
-        for ($i=0;$i<$this->operation->nb_item;$i++)
+        for ($i=0;$i<$nb;$i++)
         {
             $poste=$http->post("poste".$i,"string", null);
             $qcode=$http->post("qc_".$i,"string", null);
@@ -54,10 +56,14 @@ class Pre_Op_Advanced extends Pre_operation_detail
             }
             
             if ( $qcode != null && trim ($qcode) != "") {
-                $this->{'isqc'.$i}=(trim($_POST['qc_'.$i]) != "")?'t':'f';
+                $this->{'isqc'.$i}=(trim($http->post('qc_'.$i)) != "")?'t':'f';
                 $this->{'poste'.$i}=trim ($qcode);
-            }   
-            $this->{"amount".$i}=$_POST['amount'.$i];
+            }
+            $http->set_empty(0);
+            $this->{"amount".$i}=$http->post('amount'.$i);
+            $http->set_empty("");
+            $this->{"ld".$i}=$http->post("ld".$i);
+
             $this->{"ck".$i}=(isset($_POST['ck'.$i]))?'t':'f';
 
         }
@@ -66,60 +72,53 @@ class Pre_Op_Advanced extends Pre_operation_detail
      * \brief save the detail and op in the database
      *
      */
-    function save()
+    function save($p_od_id,$p_nb_item)
     {
         try
         {
-            if ($this->operation->save() == false )
-                return;
-            $this->db->start();
             // save the selling
-            for ($i=0;$i<$this->operation->nb_item;$i++)
+            for ($i=0;$i<$p_nb_item;$i++)
             {
                 if ( ! isset ($this->{"poste".$i}))
                     continue;
 
                 $sql=sprintf('insert into op_predef_detail (opd_poste,opd_amount,'.
-                             'opd_debit,od_id,opd_qc)'.
-                             ' values '.
-                             "('%s',%.2f,'%s',%d,'%s')",
-                             $this->{"poste".$i},
-                             $this->{"amount".$i},
-                             $this->{"ck".$i},
-                             $this->operation->od_id,
-                             $this->{'isqc'.$i}
+                             'opd_debit,od_id,opd_qc,opd_comment)'.
+                             ' values($1,$2,$3,$4,$5,$6) '
                             );
 
-                $this->db->exec_sql($sql);
+                $this->db->exec_sql($sql,[$this->{"poste".$i},
+                                        $this->{"amount".$i},
+                                        $this->{"ck".$i},
+                                        $p_od_id,
+                                        $this->{'isqc'.$i},
+                                        $this->{"ld".$i}]);
 
             }
-             $this->db->commit();
-            
+
         }
         catch (Exception $e)
         {
-              record_log($e);
-            echo ($e->getMessage());
-            $this->db->rollback();
+            record_log($e->getMessage().$e->getTraceAsString());
+            throw $e;
         }
 
     }
     /*!\brief compute an array accordingly with the FormVenView function
      */
-    function compute_array()
+    function compute_array($p_od_id)
     {
         $count=0;
-        $a_op=$this->operation->load();
-        $array=$this->operation->compute_array($a_op);
-        $array['desc']=$array['e_comm'];
-        $p_array=$this->load();
+        $array=array();
+        $p_array=$this->load($p_od_id);
 		if (empty($p_array)) return array();
         foreach ($p_array as $row)
         {
             $tmp_array=array("qc_".$count=>'',
                              "poste".$count=>'',
                              "amount".$count=>$row['opd_amount'],
-                             'ck'.$count=>$row['opd_debit']
+                             'ck'.$count=>$row['opd_debit'],
+                              "ld".$count=>$row['opd_comment']
                             );
 
             if ( $row['opd_qc'] == 't' )
@@ -141,28 +140,33 @@ class Pre_Op_Advanced extends Pre_operation_detail
     /*!\brief load the data from the database and return an array
      * \return an array
      */
-    function load()
+    function load($p_od_id)
     {
-        $sql="select opd_id,opd_poste,opd_amount,opd_debit,".
-             " opd_qc from op_predef_detail where od_id=".$this->operation->od_id.
+        $sql="select opd_id,opd_poste,opd_amount,opd_debit,opd_comment,".
+             " opd_qc from op_predef_detail where od_id=$1 ".
              " order by opd_id";
-        $res=$this->db->exec_sql($sql);
+        $res=$this->db->exec_sql($sql,[$p_od_id]);
         $array=Database::fetch_all($res);
+        if ($array == false ) return array();
         return $array;
     }
-    function set_od_id($p_id)
-    {
-        $this->operation->od_id=$p_id;
-    }
-       function display($p_array)
+    /**
+     * Display the form for modifying or adding new predefined operation
+     * @param array  $p_array is the result of compute_array or blank
+     * @return string containing HTML code of the form
+     * @throws Exception
+     * @see compute_array
+     * @see load
+     *
+     */
+   function display($p_array)
     {
         global $g_parameter, $g_user;
         require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-        $legder=new Acc_Ledger($this->db,$this->jrn_def_id);
+        $legder=new Acc_Ledger($this->db,$p_array['p_jrn']);
+
         $legder->nb=$legder->get_min_row();
 
-        if ($p_array != null)
-                extract($p_array, EXTR_SKIP);
         $add_js = "";
        
         $ret = "";
@@ -177,15 +181,14 @@ class Pre_Op_Advanced extends Pre_operation_detail
                 $f_add_button->input();
         }
        
-        $nb_row = (isset($nb_item) ) ? $nb_item : $legder->nb;
+        $nb_row = (isset($p_array['nb_item']) ) ? $p_array['nb_item' ]: $legder->nb;
 
         $ret.=HtmlInput::hidden('nb_item', $nb_row);
-        $ret.=HtmlInput::hidden('p_jrn', $this->jrn_def_id);
         $ret.=dossier::hidden();
         
         $ret.=dossier::hidden();
 
-        $ret.=HtmlInput::hidden('jrn_type', $legder->get_type());
+        $ret.=HtmlInput::hidden('jrn_type', "ODS");
         $info = Icon_Action::infobulle(0);
         $info_poste = Icon_Action::infobulle(9);
         if ($g_user->check_action(FICADD) == 1)
@@ -220,7 +223,7 @@ class Pre_Op_Advanced extends Pre_operation_detail
                 $quick_code->javascript = sprintf(' onchange="fill_data_onchange(\'%s\');" ', $quick_code->name);
 
                 $quick_code->jrn = $legder->id;
-                $quick_code->value = (isset(${'qc_' . $i})) ? ${'qc_' . $i} : "";
+                $quick_code->value = (isset($p_array['qc_' . $i])) ? $p_array['qc_' . $i]: "";
 
                 $label = '';
                 if ($quick_code->value != '')
@@ -240,7 +243,7 @@ class Pre_Op_Advanced extends Pre_operation_detail
                 $poste->set_attribute('account', 'poste' . $i);
                 $poste->set_attribute('dossier', Dossier::id());
 
-                $poste->value = (isset(${'poste' . $i})) ? ${"poste" . $i} : ''
+                $poste->value = (isset($p_array['poste' . $i])) ?$p_array['poste' . $i]: ''
                 ;
                 $poste->dbl_click_history();
 
@@ -256,20 +259,20 @@ class Pre_Op_Advanced extends Pre_operation_detail
                 $line_desc = new IText();
                 $line_desc->name = 'ld' . $i;
                 $line_desc->size = 30;
-                $line_desc->value = (isset(${"ld" . $i})) ? ${"ld" . $i} :
+                $line_desc->value = (isset($p_array["ld" . $i])) ? $p_array["ld" . $i] :
                                 $label;
 
                 // Amount
                 $amount = new INum();
                 $amount->size = 10;
                 $amount->name = 'amount' . $i;
-                $amount->value = (isset(${'amount' . $i})) ? ${"amount" . $i} : ''
+                $amount->value = (isset($p_array['amount' . $i])) ?$p_array['amount' . $i] : ''
                 ;
                 $amount->javascript = ' onChange="format_number(this);checkTotalDirect()"';
                 // D/C
                 $deb = new ICheckBox();
                 $deb->name = 'ck' . $i;
-                $deb->selected = (isset(${'ck' . $i})) ? true : false;
+                $deb->selected = (isset($p_array['ck' . $i])) ? true : false;
                 $deb->javascript = ' onChange="checkTotalDirect()"';
 
                 $ret.='<tr>';

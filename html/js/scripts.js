@@ -1224,7 +1224,7 @@ function fill_box(req)
  *@param dossier_id
  *@param od_id from table op_predef
  */
-function mod_predf_op(dossier_id, od_id)
+function mod_predf_op(dossier_id, od_id,p_ledger)
 {
     var target = "mod_predf_op";
     removeDiv(target);
@@ -1234,7 +1234,7 @@ function mod_predf_op(dossier_id, od_id)
 
     add_div(div);
 
-    var qs = "gDossier=" + dossier_id + '&op=mod_predf&id=' + od_id;
+    var qs = "gDossier=" + dossier_id + '&op=mod_predf&id=' + od_id+'&ledger_id='+p_ledger;
 
     var action = new Ajax.Request('ajax_misc.php',
             {
@@ -3664,4 +3664,25 @@ function toggle_row_warning_enable(p_enable, p_row)
     } else {
         $(p_row).hide();
     }
+}
+
+/**
+ * return a json object which is the merge of the 2 json objects
+ * from 2015 : Object.assign(obj1, obj2);
+ * @param p_json1 object 1 to merge
+ * @param p_json2 object 2 to merge
+ * @returns new json object
+ */
+function json_concat(p_json1,p_json2)
+{
+
+        var result = {};
+        for (var key in p_json1) {
+            result[key] = p_json1[key];
+        }
+        for (var key in p_json2) {
+            result[key] = p_json2[key];
+        }
+        return result;
+
 }

@@ -1318,10 +1318,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         ob_start();
         echo '<div id="predef_form">';
         echo HtmlInput::hidden('p_jrn_predef', $this->id);
-        $op = new Pre_op_ach($this->db);
-        $op->set('ledger', $this->id);
-        $op->set('ledger_type', "ACH");
-        $op->set('direct', 'f');
+        $op = new Pre_operation($this->db);
+        $op->set_p_jrn($this->id);
+        $op->set_jrn_type("ACH");
+        $op->set_od_direct('f');
         $url=http_build_query(array('p_jrn_predef'=>$this->id,'ac'=>$_REQUEST['ac'],'gDossier'=>dossier::id()));
         echo $op->form_get('do.php?'.$url);
         echo '</div>';

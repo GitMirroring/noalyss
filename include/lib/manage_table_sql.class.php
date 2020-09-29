@@ -71,21 +71,22 @@ class Manage_Table_SQL
     protected $a_prop; //!< property for each col.
     protected $a_type; //!< Type of the column : date , select ... Only in input
     protected $a_select; //!< Possible value if a_type is a SELECT
-    protected $object_name; //!< Object_name is used for the javascript
+    protected $object_name; //!< Object_name is used for the javascript , it is the row id to update or delete
     protected $row_delete; //!< Flag to indicate if rows can be deleted
     protected $row_update; //!< Flag to indicate if rows can be updated
     protected $row_append; //!< Flag to indicate if rows can be added
-    protected $json_parameter; //!< Default parameter to add (gDossier...)
+    protected $json_parameter; //!< Default parameter to add (gDossier...), sent to the ajax callback
     protected $aerror; //!< Array containing the error of the input data
     protected $col_sort; //!< when inserting, it is the column to sort,-1 to disable it and append only
     protected $a_info; //!< Array with the infotip
     protected $sort_column; //!< javascript sort , if empty there is no js sort
+    protected $dialog_box; //!< ID of the dialog box which display the result of the ajax calls
     const UPDATABLE=1;
     const VISIBLE=2;
 
     private $icon_mod; //!< place of right or left the icon update or mod, default right, accepted value=left,right,first column for mod
     private $icon_del; //!< place of right or left the icon update or mod, default right, accepted value=left,right
-
+    private $dialogbox_style;
     /**
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the
@@ -121,6 +122,8 @@ class Manage_Table_SQL
         $this->col_sort=0;
         // By default no js sort
         $this->sort_column="";
+        $this->dialog_box="dtr";
+        $this->dialogbox_style=array("position"=> "fixed", "top"=>  '15%',"width"=> "auto", "margin-left"=> "20%");
     }
     /**
      * send the XML headers for the ajax call 
@@ -129,6 +132,45 @@ class Manage_Table_SQL
     {
         header('Content-type:text/xml;charset="UTF-8"');
     }
+
+    /**
+     * return the db_style
+     * @return array
+     */
+    public function get_dialogbox_style()
+    {
+        return $this->dialogbox_style;
+    }
+
+    /**
+     * Dialog box style , by default {position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"}
+     *
+     * @param array $db_style , will be transformed into a json object
+     */
+    public function set_dialogbox_style($db_style)
+    {
+        $this->dialogbox_style = $db_style;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_dialog_box()
+    {
+        return $this->dialog_box;
+        return $this;
+    }
+
+    /**
+     * @param mixed $dialog_box
+     */
+    public function set_dialog_box($dialog_box)
+    {
+        $this->dialog_box = $dialog_box;
+        return $this;
+    }
+
     /**
      * When adding an element , it is column we checked to insert before,
      * @return none
@@ -357,12 +399,15 @@ function check()
      */
     function create_js_script()
     {
+        $style=json_encode($this->dialogbox_style);
         echo "
 		<script>
 		var {$this->object_name}=new ManageTable(\"{$this->table->table}\");
 		{$this->object_name}.set_callback(\"{$this->callback}\");
 		{$this->object_name}.param_add({$this->json_parameter});
 		{$this->object_name}.set_sort({$this->get_col_sort()});
+		{$this->object_name}.set_control(\"{$this->get_dialog_box()}\");
+		{$this->object_name}.set_style($style);
 		</script>
 
 	";
@@ -1046,9 +1091,10 @@ function check()
         try
         {
             $status=$p_status;
+
             ob_start();
 
-            echo HtmlInput::title_box("Donnée", "dtr","close","","y");
+            echo HtmlInput::title_box("Donnée", $this->dialog_box,"close","","y");
             printf('<form id="frm%s_%s" method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,
@@ -1058,7 +1104,7 @@ function check()
             echo HtmlInput::json_to_hidden($this->json_parameter);
             echo HtmlInput::hidden("p_id", $this->table->get_pk_value());
             // button Submit and cancel
-            $close=sprintf("\$('%s').remove()", "dtr");
+            $close=sprintf("\$('%s').remove()", $this->dialog_box);
             // display error if any
             $this->display_error();
             echo '<ul class="aligned-block">',

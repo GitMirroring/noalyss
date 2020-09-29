@@ -159,7 +159,6 @@ $path = array(
     "remove_submenu"=>"ajax_remove_submenu",
     "cardsearch"=>"ajax_boxcard_search",
     "saldo"=>"ajax_bank_saldo",
-    "up_predef"=>"ajax_update_predef",
     "upd_receipt"=>"ajax_get_receipt",
     "up_pay_method"=>"ajax_update_payment",
     "openancsearch"=>"ajax_anc_search",
@@ -256,7 +255,9 @@ $path = array(
     // Display all cards using an accounting
     "display_all_card"=>"ajax_display_all_card",
     // payment_method
-    "payment_method"=>"ajax_payment_method"
+    "payment_method"=>"ajax_payment_method",
+    // update list of predefined operation if ledger changes
+    "up_predef"=>"ajax_update_predef"
 )    ;
 
 if (array_key_exists($op, $path)) {
