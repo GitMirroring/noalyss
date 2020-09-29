@@ -255,7 +255,9 @@ $path = array(
     // Display all cards using an accounting
     "display_all_card"=>"ajax_display_all_card",
     // payment_method
-    "payment_method"=>"ajax_payment_method"
+    "payment_method"=>"ajax_payment_method",
+    // update list of predefined operation if ledger changes
+    "up_predef"=>"ajax_update_predef"
 )    ;
 
 if (array_key_exists($op, $path)) {
