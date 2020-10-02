@@ -61,6 +61,7 @@
  * @see sorttable.js
  * 
  */
+require_once NOALYSS_INCLUDE."/lib/http_input.class.php";
 
 class Manage_Table_SQL
 {
@@ -258,7 +259,7 @@ class Manage_Table_SQL
     }
 
     /**
-     * This function can be overrided to check the data before 
+     * @brief This function can be overrided to check the data before 
      * inserting , updating or removing, above an example of an overidden check.
      * 
      * Usually , you get the row of the table (get_table) , you check the conditions
@@ -268,7 +269,8 @@ class Manage_Table_SQL
      * 
      * @see set_error get_error count_error
      * @return boolean
-     * @code 
+     * 
+@code 
 function check()
     {
         global $cn;
@@ -292,7 +294,7 @@ function check()
         if ( $is_error > 0 ) return false;
         return true;
     }    
-     * @endcode
+@endcode
      */
     function check()
     {
@@ -776,6 +778,7 @@ function check()
     function from_request()
     {
         $nb=count($this->a_order);
+        $http=new HttpInput();
         for ($i=0; $i<$nb; $i++)
         {
             
@@ -783,7 +786,7 @@ function check()
             if ($this->get_property_visible($key)==TRUE&&$this->get_property_updatable($key)
                     ==TRUE)
             {
-                $v=HtmlInput::default_value_request($this->a_order[$i], "");
+                $v=$http->request($this->a_order[$i],"string","");
                 $this->table->$key=strip_tags($v);
             }
         }
@@ -1094,7 +1097,7 @@ function check()
 
             ob_start();
 
-            echo HtmlInput::title_box("Donnée", $this->dialog_box,"close","","y");
+            echo HtmlInput::title_box(_("Donnée"), $this->dialog_box,"close","","y");
             printf('<form id="frm%s_%s" method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,

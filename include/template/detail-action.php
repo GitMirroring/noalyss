@@ -7,7 +7,7 @@ $uniq=uniqid("tab",TRUE);
 
 
     <table>
-			<tr class="highlight">
+        <tr class="highlight">
             <TD>
 	    <?php echo _('N° document')?>
             </TD>
@@ -57,6 +57,7 @@ $uniq=uniqid("tab",TRUE);
           echo _('Pas de catégorie de contact');
       endif;
   endif;
+  
             ?>
           </td>
           </Tr>
@@ -65,7 +66,7 @@ $uniq=uniqid("tab",TRUE);
              <?php echo $spcontact->input(); ?>
           </td>
           </Tr>
-          <?php if ($this->ag_id > 0 ): ?>
+          <?php if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id)): ?>
           <tr>
               <td>
                   <?php echo _('Autres concernés')?>
@@ -280,132 +281,52 @@ echo '</span>';
 <?php endif; ?>
   </div>
 </div>
-<?php if ( $p_view !='READ'  ) :?>
-<input type='button' class="button" class="noprint" value="<?php echo _('Montrer articles');?>" id="toggleButton" onclick='toggleShowDetail()'>
-<?php endif; ?>
-<?php
-/**
- * check if there card to show,
- */
-$show_row=0;
-for ($i=0;$i<count($aArticle);$i++) :
-	if ( ($aCard[$i] != 0 && $p_view == 'READ') || $p_view != 'READ'){ $show_row=1;break;}
-endfor;
+<?php 
+/**********************************************************************************************************************
+ * START BLOCK Display Detail of follow up
+ *
+ **********************************************************************************************************************/
 ?>
 <?php
-/*
- * display detail if there card or if we are in UPDATE or NEW mode
- */
-if ($show_row !=0 ) :
+// Display detail if detail_operation is set
+if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_id)) Follow_Up_Detail::display($this,$p_view);
 
-	?>
-<div id="fldDetail" class="myfieldset" style='padding-bottom:  100px;display:block;top:2px'>
-   <LEGEND> <?php echo _('Détail')?>
-</LEGEND>
-<?php // hidden fields
-$show_row=0;
-for ($i=0;$i<count($aArticle);$i++) :
-	echo $aArticle[$i]['ad_id'];
-	echo $aArticle[$i]['hidden_tva'];
-	echo $aArticle[$i]['hidden_htva'];
-	if ( ($aCard[$i] != 0 && $p_view == 'READ') || $p_view != 'READ'){ $show_row=1;}
-endfor;
 ?>
-    <div>
-<table style="width:100%" id="art" >
-<tr>
-  <th><?php echo _('Fiche')?></th>
-  <th><?php echo _('Description')?></th>
-  <th><?php echo _('prix unitaire')?></th>
-<th><?php echo _('quantité')?></th>
-<th><?php echo _('Code TVA')?></th>
-<th><?php echo _('Montant TVA')?></th>
-<th><?php echo _('Montant TVAC')?></th>
+<?php 
+/**********************************************************************************************************************
+ * END BLOCK Display Detail of follow up
+ **********************************************************************************************************************/
+?>
 
-</tr>
-<?php for ($i=0;$i<count($aArticle);$i++): ?>
-<?php
-if ( ($aCard[$i] != 0 && $p_view == 'READ') || $p_view != 'READ'):
-	$show_row++;
-	?>
-<TR>
-<TD><?php echo $aArticle[$i]['fid'] ?></TD>
-<TD><?php echo $aArticle[$i]['desc'] ?></TD>
-<TD class="num"><?php echo $aArticle[$i]['pu'] ?></TD>
-<TD class="num"><?php echo $aArticle[$i]['quant'] ?></TD>
-<TD class="num"><?php echo $aArticle[$i]['tvaid'] ?></TD>
-<TD class="num"><?php echo $aArticle[$i]['tva'] ?></TD>
-<TD class="num"><?php echo $aArticle[$i]['tvac'] ?></TD>
-</TR>
-<?php endif; ?>
-<?php endfor; ?>
-</table>
-    </div>
-    <?php if ($p_view != "READ" ): ?>
-<script language="JavaScript">
-if ( $('e_march0') && $('e_march0').value =='') { toggleShowDetail();}
-function toggleShowDetail() {
-	try {var detail=g('fldDetail');
-	var but=g('toggleButton');
-	if (detail.style.display=='block' ) { but.value="<?php echo _("Montrer les détails")?>";detail.style.display='none';}
-	else { but.value="<?php echo _("Cacher les détails")?>";detail.style.display='block';} }
-	catch (error)  {alert(error);}
-	}
-</script>    
-<?php endif; ?>
-<?php if ( $show_row != 0 ): ?>
-<div>
+<div style="clear:both"></div>    
+
   
-    <div style=" float:right;margin-right: 2px" id="sum">
-    <br><span style="text-align: right;" class="highlight" id="htva"><?php echo bcsub($tot_item,$tot_vat) ?></span>
-     <br><span style="text-align: right" class="highlight" id="tva"><?php echo $tot_vat?></span>
-    <br><span style="text-align: right" class="highlight" id="tvac"><?php echo $tot_item?></span>
- </div>
 
-    <div  style="float:right;margin-right: 230px" >
-    <br>Total HTVA
-    <br>Total TVA
-    <br>Total TVAC
- </div>
+<div class="myfieldset" id="div_action_attached_doc">
+  <legend>
+     <?php echo _('Pièces attachées')?>
+  </legend>
+    <div class="noprint">
+        <?php 
+/**********************************************************************************************************************
+ * start BLOCK generate document
+ **********************************************************************************************************************/
+?>
 
- <?php if ( ! $readonly ) :  ?>
-    <div style="float:right" >
-    <input name="act" id="act_bt" class="smallbutton" value="<?php echo _('Actualiser')?>" onclick="compute_all_ledger();" type="button">
-     <input type="button" class="smallbutton" onclick="gestion_add_row()" value="<?php echo _("Ajouter une ligne")?>">
-     </div>
-     
-<?php endif; ?> 
-    <?php if ($p_view != 'READ' && $str_select_doc != '') : ?>
+ <?php if ($p_view != 'READ' && $str_select_doc != '') : ?>
          <?php echo _('Document à générer')?>
   </legend>
   <?php echo $str_select_doc;
  echo $str_submit_generate;
 
 endif; ?>
-    <legend>
-</div>
-<?php if ( $this->ag_id != 0 && ! $readonly) : ?>
-     <div >
-         <p>
-         <?php
-            $query=  http_build_query(array('gDossier'=>Dossier::id(),'ag_id'=>$this->ag_id,'create_invoice'=>1,'ac'=>$menu->get('code_invoice')));
-            echo HtmlInput::button_anchor(_("Transformer en facture"),"do.php?".$query,"create_invoice", '  target="_blank" ',"button");
-         ?>
-         </p>
-      </div>
-     <?php endif; ?>
-<?php endif; ?>
-</div>
-<?php endif; ?>
-
-<div style="clear:both"></div>    
-
-
-
-<div class="myfieldset" id="div_action_attached_doc">
-  <legend>
-     <?php echo _('Pièces attachées')?>
-  </legend>
+  
+<?php 
+/**********************************************************************************************************************
+ * end BLOCK generate document
+ **********************************************************************************************************************/
+?>
+    </div>
   <div class="print">
       <table>
   <?php
@@ -483,7 +404,7 @@ Document créé le <?php echo $this->ag_timestamp ?> par <?php echo $this->ag_ow
 <?php endif; ?>
 
 </div>
-<script>compute_all_ledger()</script>
+
 <script>
   $('related_action_tab<?php echo $uniq?>').onclick=function() {
       $('related_action_tab<?php echo $uniq?>').className='tabs_selected';

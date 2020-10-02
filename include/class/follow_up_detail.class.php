@@ -233,6 +233,11 @@ class Follow_Up_Detail
         if (trim($this->ad_total_amount)==""||isNumber($this->ad_total_amount)==0) $this->ad_total_amount=0;
         if (trim($this->ad_tva_id)=="" || isNumber($this->ad_tva_id)==0) $this->ad_tva_id=0;
     }
+    
+    public static function display(Follow_Up $p_follow_up,$p_view)
+    {
+         require NOALYSS_TEMPLATE."/follow_up_detail_display.php";
+    }
     /*!\brief
      *\param
      *\return

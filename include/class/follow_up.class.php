@@ -31,6 +31,7 @@ require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once NOALYSS_INCLUDE.'/class/document.class.php';
 require_once NOALYSS_INCLUDE.'/class/document_type.class.php';
 require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
+require_once NOALYSS_INCLUDE.'/class/document_option.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/class/follow_up_detail.class.php';
 require_once NOALYSS_INCLUDE.'/lib/inum.class.php';
@@ -152,7 +153,7 @@ class Follow_Up
      *
      * \return string containing the html code
      */
-    function Display($p_view, $p_gen, $p_base, $retour="")
+    function display($p_view, $p_gen, $p_base, $retour="")
     {
         global $g_user;
         if ($p_view=='UPD')
@@ -175,6 +176,8 @@ class Follow_Up
         {
             throw new Exception('class_action'.__LINE__.'Follow_Up::Display error unknown parameter'.$p_view);
         }
+        
+       
         // Compute the widget
         // Date
         $date=new IDate();
@@ -428,108 +431,9 @@ class Follow_Up
         $text=new IText();
         $num=new INum();
 
-        /* TVA */
-        $itva=new ITva_Popup($this->db);
-        $itva->in_table=true;
-        $aCard=array();
-        /* create aArticle for the detail section */
-        $article_count=(count($this->aAction_detail)==0)?MAX_ARTICLE:count($this->aAction_detail);
-        /* Compute total */
-        $tot_item=0;
-        $tot_vat=0;
-        for ($i=0; $i<$article_count; $i++)
-        {
-            /* fid = Icard  */
-            $icard=new ICard();
-            $icard->jrn=0;
-            $icard->table=0;
-            $icard->noadd="no";
-            $icard->extra='all';
-            $icard->name="e_march".$i;
-            $tmp_ad=(isset($this->aAction_detail[$i]))?$this->aAction_detail[$i]:false;
-            $icard->readOnly=$readonly;
-            $icard->value='';
-            $aCard[$i]=0;
-            if ($tmp_ad)
-            {
-                $march=new Fiche($this->db);
-                $f=$tmp_ad->get_parameter('qcode');
-                if ($f!=0)
-                {
-                    $march->id=$f;
-                    $icard->value=$march->get_quick_code();
-                    $aCard[$i]=$f;
-                }
-            }
-            $icard->set_dblclick("fill_ipopcard(this);");
-            // name of the field to update with the name of the card
-            $icard->set_attribute('label', "e_march".$i."_label");
-            // name of the field to update with the name of the card
-            $icard->set_attribute('typecard', $icard->extra);
-            $icard->set_attribute('ipopup', 'ipopcard');
-            $icard->set_function('fill_data');
-            $icard->javascript=sprintf(' onchange="fill_data_onchange(\'%s\');" ', $icard->name);
-
-            $aArticle[$i]['fid']=$icard->search().$icard->input();
-
-            $text->javascript=' onchange="clean_tva('.$i.');compute_ledger('.$i.')"';
-            $text->css_size="100%";
-            $text->name="e_march".$i."_label";
-            $text->id="e_march".$i."_label";
-            $text->size=40;
-            $text->value=($tmp_ad)?$tmp_ad->get_parameter('text'):"";
-            $text->readOnly=$readonly;
-            $aArticle[$i]['desc']=$text->input();
-
-            $num->javascript=' onchange="format_number(this,4);clean_tva('.$i.');compute_ledger('.$i.')"';
-            $num->name="e_march".$i."_price";
-            $num->id="e_march".$i."_price";
-            $num->size=8;
-            $num->readOnly=$readonly;
-            $num->value=($tmp_ad)?$tmp_ad->get_parameter('price_unit'):0;
-            $aArticle[$i]['pu']=$num->input();
-
-            $num->name="e_quant".$i;
-            $num->id="e_quant".$i;
-            $num->size=8;
-            $num->value=($tmp_ad)?$tmp_ad->get_parameter('quantity'):0;
-            $aArticle[$i]['quant']=$num->input();
-
-            $itva->name='e_march'.$i.'_tva_id';
-            $itva->id='e_march'.$i.'_tva_id';
-            $itva->value=($tmp_ad)?$tmp_ad->get_parameter('tva_id'):0;
-            $itva->readOnly=$readonly;
-            $itva->js=' onchange="format_number(this);clean_tva('.$i.');compute_ledger('.$i.')"';
-            $itva->set_attribute('compute', $i);
-
-            $aArticle[$i]['tvaid']=$itva->input();
-
-            $num->name="e_march".$i."_tva_amount";
-            $num->id="e_march".$i."_tva_amount";
-            $num->value=($tmp_ad)?$tmp_ad->get_parameter('tva_amount'):0;
-            $num->javascript=" onchange=\"compute_ledger('".$i." ')\"";
-            $num->size=8;
-            $aArticle[$i]['tva']=$num->input();
-            $tot_vat=bcadd($tot_vat,$num->value);
-
-            $num->name="tvac_march".$i;
-            $num->id="tvac_march".$i;
-            $num->value=($tmp_ad)?$tmp_ad->get_parameter('total'):0;
-            $num->size=8;
-            $aArticle[$i]['tvac']=$num->input();
-            $tot_item=bcadd($tot_item,$num->value);
-
-            $aArticle[$i]['hidden_htva']=HtmlInput::hidden('htva_march'.$i, 0);
-            $aArticle[$i]['hidden_tva']=HtmlInput::hidden('tva_march'.$i, 0);
-            $aArticle[$i]['ad_id']=($tmp_ad)?HtmlInput::hidden('ad_id'.$i, $tmp_ad->get_parameter('id')):HtmlInput::hidden('ad_id'.$i, 0);
-        }
-
         /* Add the needed hidden values */
         $r.=dossier::hidden();
 
-        /* add the number of item */
-        $Hid=new IHidden();
-        $r.=$Hid->input("nb_item", $article_count);
         $r.=HtmlInput::request_to_hidden(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag"));
         $a_tag=$this->tag_get();
         $menu=new Default_Menu();
@@ -671,9 +575,10 @@ class Follow_Up
             $this->ag_remind_date /* 13 */
                 )
         );
-
+        $http=new HttpInput();
+        $nb_item=$http->post("nb_item","number",0);
         /* insert also the details */
-        for ($i=0; $i<$_POST['nb_item']; $i++)
+        for ($i=0; $i<$nb_item; $i++)
         {
             $act=new Follow_Up_Detail($this->db);
             $act->from_array($_POST, $i);
@@ -861,7 +766,7 @@ class Follow_Up
      *
      * \return true on success otherwise false
      */
-    function Update()
+    function update()
     {
 
         // if ag_id == 0 nothing to do

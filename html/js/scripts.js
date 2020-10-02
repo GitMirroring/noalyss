@@ -26,7 +26,25 @@
 var ask_reload = 0;
 var tag_choose = '';
 var aDraggableElement = new Array();
-
+/**
+ * return undefined if nothing is found , otherwise return the DOM elemnt
+ * @param {type} p_name_dom
+ * @param {type} name_child
+ * @returns {undefined}
+ */
+function in_child(p_element,name_child) {
+    var element=p_element
+    if ( typeof p_element !== "object" ) {
+      element=document.getElementById(p_element);
+        
+    }
+    if ( ! element ) return undefined;
+    for ( var e=0; e < element.childElementCount;e++) {
+        if ( element.childNodes[e].id == name_child) {
+            return element.childNodes[e];
+        }
+    }
+}
 /**
  * callback function when we just need to update a hidden div with an info
  * message
@@ -2115,7 +2133,13 @@ function view_action(ag_id, dossier, modify)
                         });
                         $(id).innerHTML = code_html;
                         if (ctl_txt == 'ok') {
-                            compute_all_ledger();
+                            // compute detail
+                            var detail=in_child(id,"follow_up_detail");
+                            if (detail) {   
+                              compute_all_ledger();
+                            }
+                                             
+                            
                         }
                         code_html.evalScripts();
                     } catch (e) {
