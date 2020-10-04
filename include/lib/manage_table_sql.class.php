@@ -692,10 +692,12 @@ function check()
             if ($i==0)
             {
                 $this->display_table_header();
+                echo '<tbody>';
             }
             $row=Database::fetch_array($ret, $i);
             $this->display_row($row);
         }
+        echo '</tbody>';
         echo "</table>";
         if ($this->can_append_row()==TRUE)
         {
@@ -715,6 +717,7 @@ function check()
     function display_table_header()
     {
         $nb=count($this->a_order);
+        echo '<thead>';
         echo "<tr>";
 
         if ($this->can_update_row() && $this->icon_mod=="left")
@@ -745,6 +748,7 @@ function check()
             echo th(" ", 'style="width:40px"  class="sorttable_nosort" ');
         }
         echo "</tr>";
+        echo '</thead>';
     }
     /**
      * set the column to sort by default

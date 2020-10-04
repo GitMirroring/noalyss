@@ -3081,6 +3081,8 @@ function alert_box(p_message)
 function alternate_row_color(p_table)
 {
     var table_colored=$(p_table);
+    if (! table_colored.tBodies[0] ) return;
+
     var len = table_colored.tBodies[0].rows.length;
     var i = 0;
     var localClass = "";
