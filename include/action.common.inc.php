@@ -284,12 +284,13 @@ if ($sub_action == "save_action_st2")
 	$act->fromArray($_POST);
     try {
 	$act->d_id = 0;
+        $act->ag_id=$http->request("ag_id","number");
 	$act->md_id = (isset($_POST['gen_doc'])) ? $_POST['gen_doc'] : 0;
 
         $act->verify();
         
 	// insert into action_gestion
-	echo $act->save();
+	echo $act->update();
 	$url = "?$base&sa=detail&ag_id=" . $act->ag_id . '&' . dossier::get();
 	echo '<p><a class="mtitle" href="' . $url . '">' . hb(_('Evènement Sauvée').'  : ' . $act->ag_ref) . '</a></p>';
 
@@ -312,8 +313,9 @@ if ($sub_action == "add_action")
 {
 	$act = new Follow_Up($cn);
 	$act->fromArray($_POST);
-	$act->ag_id = 0;
+	$act->dt_id = $http->request("action_type","number");
 	$act->d_id = 0;
+	$act->save();
 	echo '<div class="content">';
 	// Add hidden tag
 	echo '<form method="post" action="do.php" name="form_add" id="form_add" enctype="multipart/form-data" >';

@@ -165,7 +165,6 @@ class Follow_Up
         {
             $upd=false;
             $readonly=false;
-            $this->ag_ref=_("Nouveau");
         }
         elseif ($p_view=='READ')
         {
@@ -390,7 +389,7 @@ class Follow_Up
         $h_agrefid=new IHidden();
         $iag_ref=new IText("ag_ref");
         $iag_ref->value=$this->ag_ref;
-        $iag_ref->readOnly=($p_view=="NEW"||$p_view=='READ')?true:false;
+        $iag_ref->readOnly=false;
         $str_ag_ref=$iag_ref->input();
         // Preparing the return string
         $r="";
@@ -871,7 +870,9 @@ class Follow_Up
         $doc->Upload($this->ag_id);
 
         /* save action details */
-        for ($i=0; $i<$_POST['nb_item']; $i++)
+        $http=new HttpInput();
+        $nb_item=$http->post("nb_item","number",0);        
+        for ($i=0; $i< $nb_item ; $i++)
         {
             $act=new Follow_Up_Detail($this->db);
             $act->from_array($_POST, $i);

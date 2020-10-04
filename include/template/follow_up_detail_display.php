@@ -31,8 +31,7 @@ $tot_vat=0;
 $text=new IText();
 $num=new INum();
 $itva=new ITva_Popup();
-$readonly=$p_view;
-
+$readonly=($p_view == "READ")?true:false;
 // default menu for invoice
 $menu=new Default_Menu();
 ?>
@@ -59,7 +58,7 @@ $menu=new Default_Menu();
             $icard->noadd="no";
             $icard->extra='all';
             $icard->name="e_march".$i;
-            $tmp_ad=(isset($p_follow_up->aAction_detail[$i]))?$p_follow_up->aAction_detail[$i]:$readonly;
+            $tmp_ad=(isset($p_follow_up->aAction_detail[$i]))?$p_follow_up->aAction_detail[$i]:false;
             $icard->readOnly=$readonly;
             $icard->value='';
             $aCard[$i]=0;
