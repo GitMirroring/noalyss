@@ -140,6 +140,18 @@
                    ?>
                </span>
             </p>
+            <p>
+                <?php 
+                echo _("Option étiquettes");
+                $iselect= new ISelect("tag_option");
+                $iselect->value=array(
+                    array("value"=>0,"label"=>_("Toutes les étiquettes")),
+                    array("value"=>1,"label"=>_("Au moins une étiquette"))
+                    );
+                $iselect->set_value($http->request("tag_option","number",0));
+                echo $iselect->input(); 
+                       ?>
+            </p>
                         
 		<input type="hidden" name="sa" value="list">
 		<?php echo  $supl_hidden?>

@@ -24,7 +24,8 @@
  *
  */
 var ask_reload = 0;
-var tag_choose = '';
+// tag_choose Element  which contains all the selected tags 
+var tag_choose = ''; 
 var aDraggableElement = new Array();
 /**
  * return undefined if nothing is found , otherwise return the DOM elemnt
@@ -2487,7 +2488,7 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post)
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
                         var posy = calcy(250);
-                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0, style: "position:fixed;top:" + posy + "px"});
+                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0, style: "position:fixed;top:15%;"});
                         $('tag_div').innerHTML = code_html;
                         try
                         {
@@ -2711,8 +2712,10 @@ function search_display_tag(p_dossier, p_prefix)
  * in the search screen
  * @param {type} p_dossier
  * @param {type} p_tag_id
+ * @param p_prefix is the prefix of the widget 
+ * @param p_obj is either g for group of tag or t for a single tag
  */
-function search_add_tag(p_dossier, p_tag_id, p_prefix)
+function search_add_tag(p_dossier, p_tag_id, p_prefix,p_obj)
 {
     try {
         var clear_button = 0;
@@ -2721,7 +2724,7 @@ function search_add_tag(p_dossier, p_tag_id, p_prefix)
             clear_button = 1;
         }
         waiting_box();
-        var queryString = "op=search_add_tag&gDossier=" + p_dossier + "&id=" + p_tag_id + "&clear=" + clear_button + '&pref=' + p_prefix;
+        var queryString = "op=search_add_tag&gDossier=" + p_dossier + "&id=" + p_tag_id + "&clear=" + clear_button + '&pref=' + p_prefix+"&obj="+p_obj;
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {

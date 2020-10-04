@@ -140,3 +140,36 @@ ALTER TABLE public.contact_option_ref DROP COLUMN document_option_id;
 ALTER TABLE public.contact_option_ref DROP COLUMN cor_value_json;
 ALTER TABLE public.contact_option_ref ADD cor_value_select varchar NULL;
 COMMENT ON COLUMN public.contact_option_ref.cor_value_select IS 'Select values';
+
+
+CREATE TABLE public.tag_group (
+	tg_id bigserial NOT NULL,
+	tg_name varchar NOT NULL
+);
+COMMENT ON TABLE public.tag_group IS 'Group of tags';
+
+-- Column comments
+
+COMMENT ON COLUMN public.tag_group.tg_name IS 'Nom du groupe';
+ALTER TABLE public.tag_group ADD CONSTRAINT tag_group_pk PRIMARY KEY (tg_id);
+
+-- public.jnt_tag_group_tag definition
+
+-- Drop table
+
+-- DROP TABLE public.jnt_tag_group_tag;
+
+CREATE TABLE public.jnt_tag_group_tag (
+	tag_group_id int8 NOT NULL,
+	tag_id int8 NOT NULL,
+	jt_id serial NOT NULL,
+	CONSTRAINT jnt_tag_group_tag_pkey PRIMARY KEY (jt_id),
+	CONSTRAINT jnt_tag_group_tag_un UNIQUE (tag_id, tag_group_id)
+);
+COMMENT ON TABLE public.jnt_tag_group_tag IS 'Many to Many table betwwen tag and tag group';
+
+
+-- public.jnt_tag_group_tag foreign keys
+
+ALTER TABLE public.jnt_tag_group_tag ADD CONSTRAINT jnt_tag_group_tag_fk FOREIGN KEY (tag_id) REFERENCES tags(t_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE public.jnt_tag_group_tag ADD CONSTRAINT jnt_tag_group_tag_fk_1 FOREIGN KEY (tag_group_id) REFERENCES tag_group(tg_id) ON UPDATE CASCADE ON DELETE CASCADE;

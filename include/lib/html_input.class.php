@@ -828,12 +828,12 @@ class HtmlInput
     /**
      * Title for boxes, you can customize the symbol thanks symbol with
      * the mode "custom"
-     * @param type $name Title
-     * @param type $div element id, except for mode none or custom
-     * @param type $mod hide , close , zoom , custom or none, with
+     * @param string $p_name Title
+     * @param string $div element id, except for mode none or custom
+     * @param string $p_mod hide , close , zoom , custom or none, with
      * custom , the $name contains all the code
-     * @param type $p_js contains the javascript if mod = "custom" or "zoom" contains button + code 
-     * @param type $p_draggable , if set to yes the box will be draggable
+     * @param string $p_js contains the javascript if mod = "custom" or "zoom" contains button + code 
+     * @param char $p_draggable , y = yes n = no ,if set to yes the box will be draggable
      * @return type
      */
     static function title_box($p_name, $p_div, $p_mod="close", $p_js="",
@@ -868,7 +868,9 @@ class HtmlInput
             $r.="";
         }
         else
-            die(__FILE__.":".__LINE__._('Paramètre invaide'));
+        {
+            throw new Exception(__FILE__.":".__LINE__._("Paramètre invalide p_mod = '$p_mod'"));
+        }
 
 
         $r.='</div>';

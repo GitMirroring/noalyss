@@ -1202,15 +1202,26 @@ class Follow_Up
         if ($p_array==null)
             $p_array=$_GET;
 
-        $query="";
         if (count($p_array['searchtag'])==0)
             return "";
+        $query="";
+        $operand = "1 = 0 ";
+        if ($p_array['tag_option'] == 0 )
+        {
+            $operand=" and ";
+        } elseif ($p_array['tag_option']==1)
+        {
+            $operand=" or ";
+        }
+        $and=" ";
         for ($i=0; $i<count($p_array['searchtag']); $i++)
         {
-            if (isNumber($p_array['searchtag'][$i])==1)
-                $query .= ' and ag_id in (select ag_id from action_tags where t_id= '.sql_string($p_array['searchtag'][$i]).')';
+            if (isNumber($p_array['searchtag'][$i])==1) {
+                $query .= $and .' ag_id in (select ag_id from action_tags where t_id= '.sql_string($p_array['searchtag'][$i]).')';
+                $and = $operand;
+            }
         }
-        return $query;
+        return "and (".$query.")";
     }
 
     /**
@@ -1479,12 +1490,12 @@ class Follow_Up
         $c=count($a_tag);
         for ($e=0; $e<$c; $e++)
         {
-            echo '<span style="border:1px solid black;margin-right:5px;">';
+            echo '<span style="border-radius:3px;border:1px solid;padding:5px;margin:1px">';
             echo $a_tag[$e]['t_tag'];
             if ($g_user->can_write_action($this->ag_id)==true)
             {
-                $js_remove=sprintf("onclick=\"action_tag_remove('%s','%s','%s')\"", dossier::id(), $this->ag_id, $a_tag[$e]['t_id']);
-                echo HtmlInput::anchor(SMALLX, "javascript:void(0)", $js_remove, ' class="smallbutton" style="padding:0px;display:inline" ');
+                $js_remove=sprintf("action_tag_remove('%s','%s','%s')", dossier::id(), $this->ag_id, $a_tag[$e]['t_id']);
+                echo Icon_Action::trash(uniqid(), $js_remove);
             }
             echo '</span>';
             echo '&nbsp;';

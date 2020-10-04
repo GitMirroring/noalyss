@@ -261,7 +261,11 @@ $path = array(
     // cfgaction type of document
     "cfgaction"=>'ajax_cfgaction',
     // list options for multiple contact
-    "contact_option_list"=>'ajax_contact_option_list'
+    "contact_option_list"=>'ajax_contact_option_list',
+    // Add group of tags
+   'tag_group'=>'ajax_tag_group',
+    // set the group for a tag
+    'tag_set_group'=>"ajax_tag_set_group"
 )    ;
 
 if (array_key_exists($op, $path)) {

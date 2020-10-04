@@ -90,18 +90,20 @@ class Tag
      */
     function select_search($p_prefix)
     {
+        $res="";
         $ret=$this->data->seek(' order by t_tag');
         require_once NOALYSS_TEMPLATE.'/tag_search_select.php';
+        return HtmlInput::title_box('Tag', $p_prefix.'tag_div').$res;
     }
     /**
      * In the screen search add this data to the cell
      */
     function update_search_cell($p_prefix) {
-        echo '<span id="sp_'.$p_prefix.$this->data->t_id.'" style="border:1px solid black;margin-right:5px;">';
+        echo '<span id="sp_'.$p_prefix.$this->data->t_id.'" style="border-radius:3px;border:1px solid;padding:5px;margin:1px">';
         echo h($this->data->t_tag);
         echo HtmlInput::hidden($p_prefix.'tag[]', $this->data->t_id);
         $js=sprintf("$('sp_".$p_prefix.$this->data->t_id."').remove();");
-        echo HtmlInput::anchor( SMALLX, "javascript:void(0)", "onclick=\"$js\"", ' class="smallbutton " style="padding:0px;display:inline" ');
+        echo Icon_Action::trash(uniqid(), $js);
         echo '</span>';
     }
     /**
