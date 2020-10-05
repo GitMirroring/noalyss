@@ -1117,7 +1117,7 @@ class Follow_Up
         /* State of documents */
         $type_state=new ISelect('state');
         $aState=$cn->make_array('select s_id,s_value from document_state order by s_value');
-        $aState[]=array('value'=>'-1', 'label'=>_('Tous les Etats'));
+        $aState[]=array('value'=>'-1', 'label'=>_('Tous les actions ouvertes'));
         $type_state->value=$aState;
         $type_state->selected=(isset($_GET['state']))?$_GET['state']:-1;
 
@@ -1235,7 +1235,7 @@ class Follow_Up
         if ($p_array==null)             $p_array=$_GET;
         
         $action_query="";
-
+        $ag_state=""; //<! selected status of the event , if not set or equal to -1 , it is all of them
         if (isset($_REQUEST['action_query']))
         {
             // if a query is request build the sql stmt
@@ -1268,6 +1268,8 @@ class Follow_Up
         if (isset($p_array['state'])&&$p_array['state'] !=-1)
         {
             $action_query .= ' and ag_state= '.sql_string($p_array['state']);
+            // a status is selected
+            $ag_state=$p_array['state'];
         }
         if (isset($p_array['hsstate'])&&$p_array['hsstate']!=-1)
         {
@@ -1313,7 +1315,8 @@ class Follow_Up
         {
             $action_query .= " and to_date('".sql_string($p_array['remind_date_end'])."','DD.MM.YYYY')>= ag_remind_date";
         }
-        if (!isset($p_array['closed_action']))
+        // only for open action or a closing status is selected
+        if (!isset($p_array['closed_action']) && $ag_state == "")
         {
             $action_query.=" and s_status is null ";
         }

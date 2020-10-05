@@ -56,6 +56,10 @@
 				<td style="text-align:right" ><?php echo  _("Etat")?></td>
 				<td><?php echo  $type_state->input()?></td>
 			</tr>
+                        <tr>
+				<td style="text-align:right"> <?php echo _("Affiche aussi les actions fermées");?></td>
+				<td><?php echo $closed_action->input();?></td>
+			</tr>
 			<tr>
 				<td style="text-align:right" ><?php echo  _("Exclure Etat")?></td>
 				<td><?php echo  $hsExcptype_state->input()?></td>
@@ -103,10 +107,7 @@
 					<?php echo $remind_date_end->input();?>
 				</td>
 			</tr>
-			<tr>
-				<td style="text-align:right"> <?php echo _("Affiche aussi les actions fermées");?></td>
-				<td><?php echo $closed_action->input();?></td>
-			</tr>
+        	
                        
                         </table>
 
