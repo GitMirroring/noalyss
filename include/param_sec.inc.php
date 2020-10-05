@@ -50,7 +50,6 @@ require_once  NOALYSS_INCLUDE.'/lib/user_menu.php';
 /////////////////////////////////////////////////////////////////////////
 if ( ! isset($_REQUEST['action']))
 {
-	$base_url=$_SERVER['PHP_SELF']."?ac=".$_REQUEST['ac']."&".dossier::get();
         $base_url=NOALYSS_URL."/do.php?".http_build_query(array("ac"=>$http->request("ac"),"gDossier"=>dossier::id()));
 
     echo '<DIV class="content" >';
