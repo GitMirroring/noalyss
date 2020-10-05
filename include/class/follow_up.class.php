@@ -1490,7 +1490,7 @@ class Follow_Up
         $c=count($a_tag);
         for ($e=0; $e<$c; $e++)
         {
-            echo '<span style="border-radius:3px;border:1px solid;padding:5px;margin:1px">';
+            echo '<span style="border-radius:3px;border:1px solid;padding:3px;margin:1px">';
             echo $a_tag[$e]['t_tag'];
             if ($g_user->can_write_action($this->ag_id)==true)
             {
