@@ -27,8 +27,8 @@ if ( $max == 0 ) {
     </tr>
 <?php
 $gDossier=Dossier::id();
-if (isNumber($_REQUEST['ag_id']) == 0 ) die ('ERROR : parameters invalid');
 $ag_id=$http->request("ag_id","number");
+if (isNumber($ag_id) == 0 ) die ('ERROR : parameters invalid');
     for ($i=0;$i<$max;$i++):
         $row=Database::fetch_array($ret, $i);
 ?>

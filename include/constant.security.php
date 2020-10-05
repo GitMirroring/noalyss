@@ -22,6 +22,7 @@ define ('FICADD',800);	 /* Ajout de fiche */
 define ("FIC",805);  //Création, modification et effacement de fiche
 define ("FICCAT",910);  //création, modification et effacement de catégorie de fiche
 define ('RMDOC',1020);   // Effacement de document pour follow up & comptabilité
+define ('TAGADD',1025);   // Ajout de tag
 define ('VIEWDOC',1010);   // Voir document pour follow up
 define ('PARCATDOC',1050);   // modifier type document pour follow up
 define ('RMRECEIPT',1110);   // Effacer un document d'une pièce comptable

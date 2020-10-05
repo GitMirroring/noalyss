@@ -173,3 +173,6 @@ COMMENT ON TABLE public.jnt_tag_group_tag IS 'Many to Many table betwwen tag and
 
 ALTER TABLE public.jnt_tag_group_tag ADD CONSTRAINT jnt_tag_group_tag_fk FOREIGN KEY (tag_id) REFERENCES tags(t_id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.jnt_tag_group_tag ADD CONSTRAINT jnt_tag_group_tag_fk_1 FOREIGN KEY (tag_group_id) REFERENCES tag_group(tg_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+insert into action values (1025,'Ajout d''étiquette','followup','TAGADD');
