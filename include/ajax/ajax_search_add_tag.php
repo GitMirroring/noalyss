@@ -42,7 +42,7 @@ if ($http->request("obj")=='t')
 elseif ($http->request("obj")=="g")
 {
     // Add all the tag from the group 
-    $aTag=$cn->get_array("select t_id,t_tag from jnt_tag_group_tag jtgt  join tags on (tag_id=t_id) where tag_group_id=1 order by 2 ");
+    $aTag=$cn->get_array("select t_id,t_tag from jnt_tag_group_tag jtgt  join tags on (tag_id=t_id) where tag_group_id=$1 order by 2 ",[$http->get("id", "number")]);
     $nb_atag=count($aTag);
     $pref=$http->get("pref");
     if ( $nb_atag > 0) {

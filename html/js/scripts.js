@@ -2575,13 +2575,14 @@ function action_tag_select(p_dossier, ag_id)
  * @brief Add the current tag to the current ag_id
  * @param {type} p_dossier
  * @param {type} ag_id
+ * @param p_isgroup g it is a group , t is a single tag
  * @returns {undefined}
  */
-function action_tag_add(p_dossier, ag_id, t_id)
+function action_tag_add(p_dossier, ag_id, t_id,p_isgroup)
 {
     try {
         waiting_box();
-        var queryString = "t_id=" + t_id + "&ag_id=" + ag_id + "&op=tag_add&gDossier=" + p_dossier;
+        var queryString = "t_id=" + t_id + "&ag_id=" + ag_id + "&op=tag_add&gDossier=" + p_dossier+"&isgroup="+p_isgroup;
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {

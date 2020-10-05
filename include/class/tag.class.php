@@ -42,6 +42,11 @@ class Tag
     function select()
     {
         $ret=$this->data->seek("where t_actif='Y' order by t_tag");
+        $ret=$this->cn->exec_sql(" select t_id,t_tag,t_description,'t' as tag_type 
+                    from tags 
+                    where t_actif='Y' 
+                union all 
+                select tg_id,tg_name ,'G','g' from tag_group order by 2");
         require_once NOALYSS_TEMPLATE.'/tag_select.php';
     }
     /**

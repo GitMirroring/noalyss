@@ -1504,9 +1504,10 @@ class Follow_Up
             echo '&nbsp;';
             echo '&nbsp;';
         }
-        $js=sprintf("onclick=\"action_tag_select('%s','%s')\"", dossier::id(), $this->ag_id);
+        
         if ($g_user->can_write_action($this->ag_id)==true)
         {
+            $js=sprintf("onclick=\"action_tag_select('%s','%s')\"", dossier::id(), $this->ag_id);
             echo HtmlInput::button('tag_bt', 'Ajout tag', $js, 'smallbutton');
         }
     }
