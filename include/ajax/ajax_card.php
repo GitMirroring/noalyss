@@ -518,9 +518,11 @@ case 'fs':
         require_once NOALYSS_INCLUDE.'/ajax/ajax_add_concerned_card.php';
         return;
     break;
-    case 'action_save_concerned':
+// add several card to an action follow⁻up
+    case 'link_concerned_card':
         require NOALYSS_INCLUDE.'/ajax/ajax_action_save_concerned.php';
         return;
+// remove card from an action follow⁻up
     case 'action_remove_concerned':
         require NOALYSS_INCLUDE.'/ajax/ajax_action_remove_concerned.php';
         return;
@@ -744,6 +746,23 @@ case 'upr':
 	}
       }
       break;
+ //---------------------------------------------------------------------------------------------------------------
+ // Display option of a contact in an action-followup       
+ //---------------------------------------------------------------------------------------------------------------       
+        case 'display_card_option':
+            
+            require_once NOALYSS_INCLUDE.'/ajax/ajax_display_card_option.php';
+            return;
+            break;
+            
+ //---------------------------------------------------------------------------------------------------------------
+ // Save option of a contact in an action-followup       
+ //---------------------------------------------------------------------------------------------------------------       
+        case 'save_card_option':
+            require_once NOALYSS_INCLUDE.'/ajax/ajax_save_card_option.php';
+            return;
+
+            break;
             
 } // switch
 $xml=escape_xml($html);

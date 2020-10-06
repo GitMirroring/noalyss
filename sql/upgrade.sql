@@ -96,20 +96,7 @@ COMMENT ON COLUMN public.contact_option_ref.cor_value_json IS 'json object if co
 COMMENT ON COLUMN public.contact_option_ref.document_option_id IS 'FK to document_option';
 
 
-CREATE TABLE public.action_person_option (
-	ap_id bigserial NOT NULL,
-	ap_value varchar NULL, -- Value of the option
-	contact_option_ref_id int8 NOT NULL,
-	action_person_id int8 NOT NULL,
-	CONSTRAINT action_person_option_pk PRIMARY KEY (ap_id),
-	CONSTRAINT action_person_option_fk FOREIGN KEY (action_person_id) REFERENCES action_person(ap_id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT contact_option_ref_fk FOREIGN KEY (contact_option_ref_id) REFERENCES contact_option_ref(cor_id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-COMMENT ON TABLE public.action_person_option IS 'option for each contact';
 
--- Column comments
-
-COMMENT ON COLUMN public.action_person_option.ap_value IS 'Value of the option';
 
 -- renomme le menu
 update menu_ref set me_description = 'Configuration des documents dans le suivi' ,me_file='cfg_action.inc.php' ,
@@ -176,3 +163,30 @@ ALTER TABLE public.jnt_tag_group_tag ADD CONSTRAINT jnt_tag_group_tag_fk_1 FOREI
 
 
 insert into action values (1025,'Ajout d''étiquette','followup','TAGADD');
+
+-- public.action_person_option definition
+
+-- Drop table
+
+-- DROP TABLE public.action_person_option;
+
+CREATE TABLE public.action_person_option (
+	ap_id bigserial NOT NULL,
+	ap_value varchar NULL, -- Value of the option
+	contact_option_ref_id int8 NOT NULL, -- FK to contact_option
+	action_person_id int8 NOT NULL, -- FK to action_person
+	CONSTRAINT action_person_option_pk PRIMARY KEY (ap_id)
+);
+COMMENT ON TABLE public.action_person_option IS 'option for each contact';
+
+-- Column comments
+
+COMMENT ON COLUMN public.action_person_option.ap_value IS 'Value of the option';
+COMMENT ON COLUMN public.action_person_option.contact_option_ref_id IS 'FK to contact_option';
+COMMENT ON COLUMN public.action_person_option.action_person_id IS 'FK to action_person';
+
+
+-- public.action_person_option foreign keys
+
+ALTER TABLE public.action_person_option ADD CONSTRAINT action_person_option_fk FOREIGN KEY (action_person_id) REFERENCES action_person(ap_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE public.action_person_option ADD CONSTRAINT contact_option_ref_fk FOREIGN KEY (contact_option_ref_id) REFERENCES contact_option_ref(cor_id) ON UPDATE CASCADE ON DELETE CASCADE;

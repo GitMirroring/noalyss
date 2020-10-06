@@ -1,0 +1,102 @@
+<?php
+
+/*
+ *   This file is part of NOALYSS.
+ *
+ *   PhpCompta is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   PhpCompta is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with PhpCompta; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+// Copyright (2002-2020) Author Dany De Bontridder <danydb@noalyss.eu>
+
+/**
+ * @file
+ * @brief in follow-up , add multiple cards to an event, an action
+ */
+class Card_Multiple
+{
+
+    function __construct()
+    {
+        
+    }
+
+    function build_sql($sql_array)
+    {
+        $cn=Dossier::connect();
+        $query=sql_string($sql_array['query']);
+
+        $string_sql="select * 
+              from vw_fiche_attr  
+              where 
+              vw_name ilike '%$query%' 
+              or quick_code ilike '%$query%'
+              order by vw_name 
+              limit 
+              ".MAX_CARD_SEARCH;
+        return $string_sql;
+    }
+
+    function count_sql($sql_array)
+    {
+        $cn=Dossier::connect();
+        $query=sql_string($sql_array['query']);
+
+        $string_sql="select count(*) 
+              from vw_fiche_attr  
+              where 
+              vw_name ilike '%$query%' 
+              or quick_code ilike '%$query%'";
+
+
+        return $cn->get_value($string_sql); ;
+    }
+    /**
+     * 
+     * @global type $g_user
+     * @param type $ap_id
+     * @return type
+     */
+    function display_option($p_action_person_id)
+    {
+        global $g_user;
+        $cn=Dossier::connect();
+        // retrieve card id (fiche.f_id) and the ag_id (action_gestion.ag_id)
+        $tmp=$cn->get_row("select f_id,ag_id from action_person where ap_id=$1 ", [$p_action_person_id]);
+        if ($tmp==NULL)
+        {
+            record_log("CMDO.01nothing found ".var_export($_REQUEST, true));
+            return;
+        }
+        $fiche_id=$tmp['f_id'];
+        $ag_id=$tmp['ag_id'];
+        if ( ! $g_user->can_read_action($ag_id)) {
+            throw new Exception (_("CMCDO01"."Security"));
+        }
+        $sql="select
+	cor.cor_id,
+	cor.cor_label,
+	cor.cor_type,
+	coalesce (apo.ap_id,-1) as ap_id,
+        ap_value,
+        cor_value_select
+from
+contact_option_ref cor
+left join action_person_option apo on (cor.cor_id=apo.contact_option_ref_id)
+where action_person_id is null or action_person_id=$1";
+        $a_option=$cn->get_array($sql,[$p_action_person_id]);
+        require NOALYSS_TEMPLATE."/card_multiple_display_option.php";
+        
+    }
+
+}

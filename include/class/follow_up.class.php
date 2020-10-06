@@ -1493,7 +1493,7 @@ class Follow_Up
         $c=count($a_tag);
         for ($e=0; $e<$c; $e++)
         {
-            echo '<span style="border-radius:3px;border:1px solid;padding:3px;margin:1px">';
+            echo '<span class="tagcell">';
             echo $a_tag[$e]['t_tag'];
             if ($g_user->can_write_action($this->ag_id)==true)
             {
@@ -1670,14 +1670,16 @@ class Follow_Up
         $a_linked=$this->db->get_array('select ap_id,f_id from action_person where ag_id=$1', array($this->ag_id));
         if (count($a_linked)==0)
             return "";
+        $dossier_id=Dossier::id();
         for ($i=0; $i<count($a_linked); $i++)
         {
             $fiche=new Fiche($this->db, $a_linked[$i]['f_id']);
             $qc=$fiche->get_quick_code();
-            $js_remove=sprintf("onclick=\"action_remove_concerned('%s','%s','%s')\"", dossier::id(), $a_linked[$i]['f_id'], $this->ag_id);
-            echo '<span style="border:1px solid black;margin-right:5px;">';
-            echo $qc;
-            echo HtmlInput::anchor(SMALLX, "javascript:void(0)", $js_remove, ' class="smallbutton" style="padding:0px;display:inline" ');
+            $js_remove=sprintf("action_remove_concerned('%s','%s','%s')", dossier::id(), $a_linked[$i]['f_id'], $this->ag_id);
+            echo '<span class="tagcell">';
+            echo HtmlInput::anchor($qc,"", sprintf("onclick=\"linked_card_option('%s','%s')\"",
+                    $a_linked[$i]['ap_id'],$dossier_id));
+            echo Icon_Action::trash(uniqid(), $js_remove);
             echo '</span>';
             echo '&nbsp;';
             echo '&nbsp;';
