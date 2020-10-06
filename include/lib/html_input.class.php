@@ -914,7 +914,7 @@ class HtmlInput
     {
         if ($p_js!="")
         {
-            $p_url="javascript:void(0)";
+            $p_url='href="#"';
           } else {
               $p_url=sprintf('href="%s"',$p_url);
         }
@@ -1140,7 +1140,7 @@ class HtmlInput
     {
         $dossier=Dossier::id();
         $javascript=<<<EOF
-                    obj={dossier:$dossier,ag_id:$p_agid};action_add_concerned_card(obj);
+                    obj={dossier:$dossier,ag_id:$p_agid};action_concerned_search_card(obj);
 EOF;
         $js=HtmlInput::button_action(_('Ajout autres'), $javascript, 'xx',
                         'smallbutton');
