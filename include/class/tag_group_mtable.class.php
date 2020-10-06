@@ -64,6 +64,10 @@ class Tag_Group_MTable extends Manage_Table_SQL
         $aTag=$cn->get_array("select jt_id,t_tag 
                                from tags join jnt_tag_group_tag on (tag_id=t_id) 
                                where tag_group_id=$1 order by 2", [$data_sql->tg_id]);
+        // not possible to add tag to inexisting group
+        if ( $data_sql->tg_id == -1){
+            return;
+        }
         echo '<ol id="ol_tag_group">';
         $nb=count($aTag);
         $dossier_id=Dossier::id();
