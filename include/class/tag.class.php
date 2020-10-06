@@ -104,7 +104,7 @@ class Tag
      * In the screen search add this data to the cell
      */
     function update_search_cell($p_prefix) {
-        echo '<span id="sp_'.$p_prefix.$this->data->t_id.'" style="border-radius:3px;border:1px solid;padding:3px;margin:1px">';
+        echo '<span id="sp_'.$p_prefix.$this->data->t_id.'" class="tagcell">';
         echo h($this->data->t_tag);
         echo HtmlInput::hidden($p_prefix.'tag[]', $this->data->t_id);
         $js=sprintf("$('sp_".$p_prefix.$this->data->t_id."').remove();");
