@@ -79,6 +79,11 @@ function search_card(obj)
         var price=obj.price;
         var tvaid=obj.tvaid;
         var jrn=obj.jrn;
+        var amount_from_type=0;
+        if ( obj.amount_from_type) {
+            amount_from_type=obj.amount_from_type;
+       
+        }
         if ( jrn==undefined)
         {
             if ( g('p_jrn'))   {
@@ -98,7 +103,8 @@ function search_card(obj)
                       'inp':inp,'label':label,'price':price,'tvaid':tvaid,
                       'ctl':'search_card','op2':'fs','jrn':jrn,
                       'typecard':typecard,'query':string_to_search,'op':'card',
-                      'accvis':accvis
+                      'accvis':accvis,
+                      'amount_from_type':amount_from_type
                              });
 	if (  $('search_card') ) {
 	    removeDiv('search_card');
@@ -318,7 +324,8 @@ function search_get_card(obj)
         queryString+="&accvis="+$F(accvis);
     } else {
         queryString+="&accvis=0";
-    }
+    } 
+
     queryString=encodeURI(queryString);
     $('asearch').innerHTML=loading();
     

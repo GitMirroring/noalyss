@@ -70,6 +70,11 @@ $i=new ICheckBox("detail_operation",1);
 if ( Document_Option::is_enable_operation_detail($table->dt_id)) $i->set_check(1);else $i->set_check(0);
 echo $i->input();
 echo _("Détail opération");
+$select_detail_operation=new ISelect("select_option_operation");
+$select_detail_operation->value=array(["value"=>"VEN","label"=>_("Prix vente")],
+                                      ["value"=>"ACH","label"=>_("Prix achat")]);
+$select_detail_operation->set_value(Document_Option::option_operation_detail($table->dt_id));
+echo $select_detail_operation->input();
 ?>
         </li> 
         <li>

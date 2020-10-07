@@ -457,6 +457,10 @@ case 'fs':
         $ledger=new Acc_Ledger($cn,$jrn);
         $type=$ledger->get_type();
     }
+    // if jrn == -10 , the search is called from the detail operation from an action follow-up
+    if ( isset($jrn) && $jrn == -10){
+        $type=$http->request("amount_from_type","string","VEN");
+    }
     $fiche=new Fiche($cn);
     /* Build the SQL and show result */
     $sql=$fiche->build_sql($sql_array);
@@ -496,7 +500,7 @@ case 'fs':
                                               $price,$amount);
         }
         if ( $type=="VEN" ){
-            $amount=(isNumber($a[$i]['vw_buy']) == 1 )?$a[$i]['vw_sell']:0;
+            $amount=(isNumber($aFound[$i]['vw_buy']) == 1 )?$aFound[$i]['vw_sell']:0;
             $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
                                               $price,$amount);
         }

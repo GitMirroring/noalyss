@@ -80,6 +80,7 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
         $this->other['contact_multiple']=$http->request("det_contact_mul", "string", 0);
         $this->other['make_invoice']=$http->request("make_invoice", "string", 0);
         $this->other['seq']=$http->request("seq", "string", 0);
+        $this->other['select_option_operation']=$http->request("select_option_operation", "string", null);
     }
 
     /**
@@ -172,9 +173,13 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
             $doc_type->set_number($this->other['seq']);
         }
         // Save detail operation
-        $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable) values ($1,$2,$3) 
+        $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable,do_option) values ($1,$2,$3,$4) 
             on conflict on constraint document_option_un
-            do update set do_enable=$3", ["detail_operation", $object_sql->dt_id, $this->other['detail_operation']]);
+            do update set do_enable=$3,do_option=$4", ["detail_operation", 
+                                            $object_sql->dt_id,
+                                            $this->other['detail_operation'],
+                                            $this->other['select_option_operation']
+                    ]);
 
         // Save contact_multiple
         $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable) values ($1,$2,$3) 
@@ -185,6 +190,8 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
         $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable) values ($1,$2,$3) 
             on conflict on constraint document_option_un
             do update set do_enable=$3 ", ["make_invoice", $object_sql->dt_id, $this->other['make_invoice']]);
+        
+        
     }
 
 }

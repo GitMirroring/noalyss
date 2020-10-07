@@ -136,6 +136,7 @@ class ICard extends HtmlInput
         $this->style='  ';
         $this->accvis=1; //!< account_visible =1 otherwise 0
         $this->limit=12; //!< Max of row show
+        $this->amount_from_type=''; //!< in the follow up ,when a card is selected you take Prix Vente or Prix Achat 
     }
    
     /**
@@ -322,7 +323,7 @@ class ICard extends HtmlInput
         if (!isset($this->id))
             $this->id=$this->name;
         $a="";
-        foreach (array('typecard', 'jrn', 'label', 'price', 'tvaid', 'accvis') as
+        foreach (array('typecard', 'jrn', 'label', 'price', 'tvaid', 'accvis','amount_from_type') as
                     $att)
         {
             if (isset($this->$att))

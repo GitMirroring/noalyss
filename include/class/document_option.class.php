@@ -48,6 +48,20 @@ class Document_Option
         }
         return $display_operation;
     }
+    /**
+     * returns option from  the operation_detail 
+     * 
+     * @param int $p_document_type Document_Type.dt_id
+     * @return string
+     */
+    static function option_operation_detail($p_document_type)
+    {
+        $cn=Dossier::connect();
+        $option_operation = $cn->get_value("select do_option from document_option where document_type_id=$1 "
+                . " and do_code = $2",
+                        [$p_document_type, 'detail_operation']);
+        return $option_operation;
+    }
 
     /**
      * returns true if the operation_detail is enable, otherwise false

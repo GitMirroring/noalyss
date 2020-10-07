@@ -32,6 +32,11 @@ $text=new IText();
 $num=new INum();
 $itva=new ITva_Popup();
 $readonly=($p_view == "READ")?true:false;
+// Check for the Price on ACH or VEN
+$cn=Dossier::connect();
+$document_type=$p_follow_up->db->get_value("select ag_type from action_gestion where ag_id = $1",[$p_follow_up->ag_id]);
+$option_detail= Document_Option::option_operation_detail($document_type);
+
 // default menu for invoice
 $menu=new Default_Menu();
 ?>
@@ -53,7 +58,7 @@ $menu=new Default_Menu();
         for ($i=0; $i<$article_count; $i++):
             /* fid = Icard  */
             $icard=new ICard();
-            $icard->jrn=0;
+            $icard->jrn=-10;
             $icard->table=0;
             $icard->noadd="no";
             $icard->extra='all';
@@ -81,6 +86,13 @@ $menu=new Default_Menu();
             $icard->set_attribute('ipopup', 'ipopcard');
             $icard->set_function('fill_data');
             $icard->javascript=sprintf(' onchange="fill_data_onchange(\'%s\');" ', $icard->name);
+            // name of the field to update with the name of the card
+            $icard->set_attribute('label', 'e_march' . $i . '_label');
+            // name of the field with the price
+            $icard->set_attribute('price', 'e_march' . $i . '_price');
+            // name of the field with the TVA_ID
+            $icard->set_attribute('tvaid', 'e_march' . $i . '_tva_id');
+           $icard->amount_from_type=$option_detail;
 
             $aArticle[$i]['fid']=$icard->search().$icard->input();
 
