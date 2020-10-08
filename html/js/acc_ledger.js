@@ -1106,16 +1106,16 @@ function search_letter(obj)
 function op_save(obj)
 {
     try {
-        var queryString = $(obj).serialize();
-        queryString += "&gDossier=" + obj.gDossier.value;
+        var queryString = $(obj).serialize(true);
+        queryString ["gDossier"]= obj.gDossier.value;
         var rapt2 = "rapt" + obj.whatdiv.value;
-        queryString += "&rapt=" + g(rapt2).value;
-        queryString += '&jr_id=' + obj.jr_id.value;
+        queryString ["rapt"] =   g(rapt2).value;
+        queryString  ["jr_id"] = obj.jr_id.value;
         var jr_id=obj.jr_id.value;
-        queryString += '&div=' + obj.whatdiv.value;
+        queryString ["div"]= obj.whatdiv.value;
         var divid=obj.whatdiv.value;
-        queryString += '&act=save';
-        queryString += '&op=ledger';
+        queryString ["act"]="save";
+        queryString ["op"]="ledger";
         
         waiting_box();
         /*
@@ -1126,7 +1126,7 @@ function op_save(obj)
             var action = new Ajax.Request('ajax_misc.php',
                     {
                         method: 'post',
-                        parameters: encodeURI(queryString),
+                        parameters: queryString,
                         onFailure: null,
                         onSuccess: infodiv
                     }
