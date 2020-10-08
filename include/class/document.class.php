@@ -533,6 +533,10 @@ class Document
      *  - [TITLE]
      *  - [DESCRIPTION]
      *  - [COMM_PAYMENT]
+     *  - [LABELOP]
+     *  - [COMMENT]
+     *  - [DESCRIPTION]
+     *  - [DOCUMENT_ID]
      *
      * \param $p_tag TAG
      * \param $p_array data from $_POST
@@ -789,6 +793,10 @@ class Document
         case 'NUMBER':
             $r=$this->d_number;
             break;
+        case "DOCUMENT_ID":
+            if (isset($p_array['ag_id'])) return $p_array['ag_id'];
+            return "";
+            break;
 
         case 'USER' :
             return $_SESSION['use_name'].', '.$_SESSION['use_first_name'];
@@ -814,16 +822,17 @@ class Document
              *  - [DATE_LIMIT]
              */
         case 'DATE_LIMIT_CALC':
-            extract ($p_array, EXTR_SKIP);
-            $id='e_ech' ;
-            if ( !isset (${$id}) ) return "";
-            $r=format_date(${$id},'DD.MM.YYYY','YYYY-MM-DD');
-            break;
+            if ( isset ($p_array["e_ech"] )) 
+                    return format_date($p_array["ech"],'DD.MM.YYYY','YYYY-MM-DD');
+            if ( isset ($p_array["ag_remind_date"] )) 
+                    return format_date($p_array["ag_remind_date"],'DD.MM.YYYY','YYYY-MM-DD');
+            
+                break;
       case 'DATE_LIMIT':
-            extract ($p_array, EXTR_SKIP);
-            $id='e_ech' ;
-            if ( !isset (${$id}) ) return "";
-            $r=${$id};
+         if ( isset ($p_array["e_ech"] )) 
+                    return $p_array["ech"];
+            if ( isset ($p_array["ag_remind_date"] )) 
+                    return $p_array["ag_remind_date"];
             break;
         case 'MARCH_NEXT':
             $this->counter++;
@@ -1130,7 +1139,7 @@ class Document
             else
                 return "";
             break;
-        case 'COMMENT':
+        case 'LABELOP':
             if ( isset($p_array['e_comm']))
                 return $p_array['e_comm'];
             break;
@@ -1160,9 +1169,36 @@ class Document
                 $ret=$this->db->get_value('select r_phone from public.stock_repository where r_id=$1',array($p_array['repo']));
                 return $ret;
         case 'TITLE':
-            $http=new HttpInput();
-            $title=$http->request("ag_title","string", "");
-            return $title;
+            if ( isset($p_array['ag_title']))                 return $p_array['ag_title'];
+            return "";
+            break;
+        case 'DESCRIPTION':
+            if ( isset($p_array['ag_id'])) {
+                // retrieve first comment
+                $description=$this->db->get_value("select agc_comment "
+                        . "  from action_gestion_comment "
+                        . "where ag_id=$1 order by 1 asc limit 1"
+                        ,[$p_array['ag_id']]);
+                return $description;
+            }
+            return "";
+            break;
+        case 'COMMENT':
+            if ( isset($p_array['ag_id'])) {
+                // retrieve first comment
+                $aComment=$this->db->get_array("select agc_comment "
+                        . "  from action_gestion_comment "
+                        . "where ag_id=$1 order by 1"
+                        ,[$p_array['ag_id']]);
+                $nb_comment=count($aComment);
+                $description="";
+                for ($i=0;$i< $nb_comment;$i++) {
+                    $description.=$aComment[$i]['agc_comment']."\n";
+                }
+                return $description;
+            }
+            return "";
+            break;
         case 'COMM_PAYMENT':
             if ( isset($p_array["e_comm_paiement"])) {
             return $p_array["e_comm_paiement"];

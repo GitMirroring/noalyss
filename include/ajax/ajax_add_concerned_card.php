@@ -96,6 +96,7 @@ $r.=HtmlInput::request_to_hidden(array('ag_id'));
 $r.=dossier::hidden().HtmlInput::hidden('op2', 'link_concerned_card').HtmlInput::hidden("op","card");
 // element to update with the answer
 $r.=HtmlInput::hidden("ctl","concerned_card_td");
+$array=[];
 for ($i=0; $i<count($a); $i++)
 {
     $ic=new ICheckBox("selected_card[]");
