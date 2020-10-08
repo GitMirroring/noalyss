@@ -441,14 +441,24 @@ case 'fs':
 	$r.='</span>';
     $r.=dossier::hidden().HtmlInput::hidden('op','fs');
     $array=array();
-    foreach (array('accvis','inp','jrn','label','typecard','price','tvaid') as $i)
+ 
+    // to navigate
+    $page_card=$http->get("page_card","number",0);
+    
+    // save previous info
+    $hidden="";
+    foreach (array('accvis','inp','jrn','label','typecard','price','tvaid','amount_from_type') as $i)
     {
         if  (isset(${$i}) )
         {
             $r.=HtmlInput::hidden($i,${$i});
+            $hidden.=HtmlInput::hidden($i,${$i});
             $sql_array[$i]=${$i};
         }
     }
+    $r.=$hidden;
+    $r.="</form>";
+
     $sql_array["query"]=$query;
     /* what is the type of the ledger */
     $type="GL";
@@ -477,25 +487,32 @@ case 'fs':
              break;
     }
      /* We limit the search to MAX_SEARCH_CARD records */
-    $sql=$sql.' order by vw_name limit '.MAX_SEARCH_CARD;
-    $a=$cn->get_array($sql);
-    for($i=0;$i<count($a);$i++)
-    {
-        $array[$i]['quick_code']=$a[$i]['quick_code'];
-        $array[$i]['name']=h($a[$i]['vw_name']);
-        $array[$i]['accounting']=$a[$i]['accounting'];
-        $array[$i]['first_name']=h($a[$i]['vw_first_name']);
-        $array[$i]['description']=h($a[$i]['vw_description']);
+   $sql=$sql.' order by vw_name ';
+   $total_card=$cn->get_value("select count(*) from ($sql) as c");
+    
+    $record_start=$page_card*MAX_SEARCH_CARD;
+    $sql.=' limit '.MAX_SEARCH_CARD.' offset '.$record_start;
+    
+    $aFound=$cn->get_array($sql);
+    $nb_found=count($aFound);
+    for($i=0;$i<$nb_found;$i++)
+     {
+        $array[$i]['quick_code']=$aFound[$i]['quick_code'];
+        $array[$i]['name']=h($aFound[$i]['vw_name']);
+        $array[$i]['accounting']=$aFound[$i]['accounting'];
+        $array[$i]['first_name']=h($aFound[$i]['vw_first_name']);
+        $array[$i]['description']=h($aFound[$i]['vw_description']);
         $array[$i]['javascript']=sprintf("set_value('%s','%s');",
                                          $inp,$array[$i]['quick_code']);
         $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
-                                          $label,j(h(strip_tags($a[$i]['vw_name']))));
+                       $label,j(h(strip_tags($aFound[$i]['vw_name']))));
+
 
         /* if it is a ledger of sales we use vw_buy
            if it is a ledger of purchase we use vw_sell*/
         
         if ( $type=="ACH" ){
-            $amount=(isNumber($a[$i]['vw_buy']) == 1 )?$a[$i]['vw_buy']:0;
+            $amount=(isNumber($aFound[$i]['vw_buy']) == 1 )?$aFound[$i]['vw_buy']:0;
             $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
                                               $price,$amount);
         }
@@ -505,7 +522,7 @@ case 'fs':
                                               $price,$amount);
         }
         $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
-                                          $tvaid,$a[$i]['tva_id']);
+                                          $tvaid,$aFound[$i]['tva_id']);
         $array[$i]['javascript'].="removeDiv('search_card');";
 
     }//foreach

@@ -325,6 +325,12 @@ function search_get_card(obj)
     } else {
         queryString+="&accvis=0";
     } 
+   if ( obj.elements['amount_from_type']) {
+        queryString+="&amount_from_type="+obj.elements['amount_from_type'].value;
+    }
+    if (obj.elements['page_card']) {
+        queryString+="&page_card="+obj.elements["page_card"].value;
+    }
 
     queryString=encodeURI(queryString);
     $('asearch').innerHTML=loading();
