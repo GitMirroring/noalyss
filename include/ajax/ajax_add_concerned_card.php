@@ -72,6 +72,12 @@ $r.=HtmlInput::submit('fs', _('Recherche'), "", "smallbutton");
 $r.='</span>';
 $r.=dossier::hidden().HtmlInput::hidden('op2', 'add_concerned_card');
 $r.=HtmlInput::request_to_hidden(array('ag_id'));
+$inactive=$http->get("inactive_card","string",0);
+if ($inactive=="undefined" || $inactive == "") $inactive=0;
+$is=new InputSwitch("inactive_card",$inactive);
+$is->value=$inactive;
+$r.=_("Toutes les fiches").$is->input();
+
 $r.='</form>';
 
 
@@ -79,6 +85,7 @@ $query=$http->get("query", "string","");
 $sql_array['query']=$query;
 $sql_array['typecard']='all';
 $sql_array['search_in']=$select->selected;
+$sql_array['inactive_card']=$inactive;
 
 $fiche=new Card_Multiple($cn);
 /* Build the SQL and show result */

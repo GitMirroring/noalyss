@@ -31,41 +31,68 @@ class Card_Multiple
         $this->sql="select f_id,quick_code,vw_name,accounting,vw_first_name,vw_description
                   from vw_fiche_attr  ";
     }
-
+    /**
+     * 
+     * @param type $sql_array
+     * @return type
+     */
     function build_sql($sql_array)
     {
         $cn=Dossier::connect();
+        $filter="";
+        if ( $sql_array["inactive_card"]==0) {
+            $filter=" and ".$this->filter_enable_card();
+        }
         $query=sql_string($sql_array['query']);
         if ( $sql_array['search_in'] == "-1")
         {
             $string_sql=$this->sql."
                   where 
-                  vw_name ilike '%$query%' 
-                  or quick_code ilike '%$query%'
+                  (vw_name ilike '%$query%' 
+                  or quick_code ilike '%$query%')
+                     ".$filter."
                   order by vw_name 
                   limit 
                   ".MAX_CARD_SEARCH;
         } else {
             $string_sql=sprintf($this->sql." where f_id in (select f_id from fiche_detail where 
-                    ad_id = '%s' and ad_value ilike '%%%s%%') "
-                    , sql_string($sql_array["search_in"]),$query);
+                    ad_id = '%s' and ad_value ilike '%%%s%%') and %s"
+                    , sql_string($sql_array["search_in"]),$query,$filter);
         }
         return $string_sql;
     }
-
+    /**
+     * 
+     * @param type $sql_array
+     * @return type
+     */
     function count_sql($sql_array)
     {
         $cn=Dossier::connect();
         $query=sql_string($sql_array['query']);
+        $filter="";
+        if ( $sql_array["inactive_card"]==0) {
+            $filter="and ".$this->filter_enable_card();
+        }
 
         $string_sql="select count(*) 
               from vw_fiche_attr  
               where 
-              vw_name ilike '%$query%' 
-              or quick_code ilike '%$query%'";
+              ( vw_name ilike '%$query%' 
+              or quick_code ilike '%$query%')
+                     ".$filter;
 
 
-        return $cn->get_value($string_sql); ;
+        return $cn->get_value($string_sql); 
+    }
+    /**
+     * 
+     * @return string
+     */
+    private function filter_enable_card()
+    {
+        $filter_enable_card="  f_id in (select f_id from fiche_detail where ad_value = '1' and ad_id=54) ";
+        return $filter_enable_card;
     }
     /**
      * 
