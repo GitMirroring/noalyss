@@ -183,6 +183,7 @@ function action_concerned_search_card(obj)
         var dossier = 0;
         var inp="";
         var ag_id=0;
+        var search_in=-1;
         
         if (obj.dossier) {
             dossier = obj.dossier; /* From the button */
@@ -204,6 +205,9 @@ function action_concerned_search_card(obj)
             if (obj.elements['ag_id']) {
                 ag_id = obj.elements['ag_id'].value;
             }
+            if (obj.elements['search_in']) {
+                search_in = obj.elements['search_in'].value;
+            }
         }
         if (dossier == 0) {
             throw "obj.dossier not found";
@@ -218,7 +222,8 @@ function action_concerned_search_card(obj)
             'ctl' : 'unused',
             'ag_id' : ag_id,
             'op':'card',
-            'accvis':0
+            'accvis':0,
+            'search_in':search_in
         });
 
         waiting_box();

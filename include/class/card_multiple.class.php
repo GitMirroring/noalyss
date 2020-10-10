@@ -25,25 +25,31 @@
  */
 class Card_Multiple
 {
-
+    private $sql ; //!< SQL with the right column name
     function __construct()
     {
-        
+        $this->sql="select f_id,quick_code,vw_name,accounting,vw_first_name,vw_description
+                  from vw_fiche_attr  ";
     }
 
     function build_sql($sql_array)
     {
         $cn=Dossier::connect();
         $query=sql_string($sql_array['query']);
-
-        $string_sql="select * 
-              from vw_fiche_attr  
-              where 
-              vw_name ilike '%$query%' 
-              or quick_code ilike '%$query%'
-              order by vw_name 
-              limit 
-              ".MAX_CARD_SEARCH;
+        if ( $sql_array['search_in'] == "-1")
+        {
+            $string_sql=$this->sql."
+                  where 
+                  vw_name ilike '%$query%' 
+                  or quick_code ilike '%$query%'
+                  order by vw_name 
+                  limit 
+                  ".MAX_CARD_SEARCH;
+        } else {
+            $string_sql=sprintf($this->sql." where f_id in (select f_id from fiche_detail where 
+                    ad_id = '%s' and ad_value ilike '%%%s%%') "
+                    , sql_string($sql_array["search_in"]),$query);
+        }
         return $string_sql;
     }
 
@@ -83,6 +89,7 @@ class Card_Multiple
         if ( ! $g_user->can_read_action($ag_id)) {
             throw new Exception (_("CMCDO01"."Security"));
         }
+        // First select the option
         $sql="select
 	cor.cor_id,
 	cor.cor_label,

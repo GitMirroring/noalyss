@@ -34,7 +34,7 @@ class Card_Attribut_MTable extends Manage_Table_SQL
     function __construct(\Data_SQL $p_table)
     {
         parent::__construct($p_table);
-        $this->set_property_visible("ad_id", FALSE);
+        $this->set_property_visible("ad_id", TRUE);
         $this->set_property_updatable("ad_id", FALSE);
         $this->set_col_label("ad_text", _("Nom"));
         $this->set_col_label("ad_type", _("Type"));

@@ -1,4 +1,4 @@
-<?php,
+<?php
 
 /*
  *   This file is part of NOALYSS.
@@ -65,7 +65,7 @@ $r.=_('Fiche contenant').Icon_Action::infobulle(19);
 $r.=$q->input();
 // where to search
 $select=new ISelect("search_in");
-$select->value=$cn->make_array("select ad_id, ad_text from attr_def order by 2 ",1);
+$select->value=$cn->make_array("select ad_id, ad_text from attr_def  where ad_search_followup = 1 order by 2 ",1);
 $select->selected=$http->get("search_in","string","");
 $r.=_("limité aux champs ").$select->input();
 $r.=HtmlInput::submit('fs', _('Recherche'), "", "smallbutton");
@@ -78,6 +78,7 @@ $r.='</form>';
 $query=$http->get("query", "string","");
 $sql_array['query']=$query;
 $sql_array['typecard']='all';
+$sql_array['search_in']=$select->selected;
 
 $fiche=new Card_Multiple($cn);
 /* Build the SQL and show result */
