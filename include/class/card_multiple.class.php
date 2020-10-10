@@ -28,7 +28,8 @@ class Card_Multiple
     private $sql ; //!< SQL with the right column name
     function __construct()
     {
-        $this->sql="select f_id,quick_code,vw_name,accounting,vw_first_name,vw_description
+        $this->sql="select f_id,quick_code,vw_name,accounting,vw_first_name,vw_description,
+            (select ad_value from fiche_detail fd where fd.f_id=vw_fiche_attr.f_id and fd.ad_id=25) as company
                   from vw_fiche_attr  ";
     }
     /**
