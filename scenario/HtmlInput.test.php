@@ -61,25 +61,25 @@ $http=new HttpInput();
     <pre>
         
     $input_switch=new InputSwitch('input_switch_value',<?php echo $http->get("input_switch_value","string","0")?>);
-    $input_switch->input();
+    echo $input_switch->input();
     </pre>
     input_switch 
     <?php
     
     $input_switch=new InputSwitch('input_switch_value',$http->get("input_switch_value","string","0"));
-    $input_switch->input();
+    echo $input_switch->input();
     ?>
     <h2>ReadOnly</h2>
     <pre>
     $input_switch=new InputSwitch('input_switch_readonly',0);
     $input_switch->readOnly=TRUE;
-    $input_switch->input();
+    echo  $input_switch->input();
     </pre>
     input_switch
     <?php
     $input_switch=new InputSwitch('input_switch_readonly',0);
     $input_switch->readOnly=TRUE;
-    $input_switch->input();
+    echo $input_switch->input();
     ?>
     <h1>Submit</h1>
     <pre>
