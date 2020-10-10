@@ -25,6 +25,7 @@ if (!defined('ALLOWED'))
  * @file
  * @brief called from p_id already set, 
  * @see action_document_type_mtable::input
+ * @see 
  */
 // SQL Object Document_Type
 $table=$this->get_table();
@@ -107,7 +108,12 @@ for ($i=0;$i<$nb_option;$i++)
     echo '<li>';
     
     echo HtmlInput::hidden("cor_id[]", $aOption[$i]["cor_id"]);
-    $is=new InputSwitch("contact_option$i",$aOption[$i]["jdoc_enable"]);
+    $is=new ICheckBox("contact_option$i",1);
+    if ($aOption[$i]['jdoc_enable'] ==1 ) {
+        $is->set_check(1);
+    } else {
+        $is->set_check(0);
+    }
     echo $is->input();
     echo "&nbsp;&nbsp;&nbsp;"._($aOption[$i]['cor_label']);
     echo '</li>';

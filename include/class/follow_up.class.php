@@ -616,7 +616,7 @@ class Follow_Up
         $table->add('Date Doc.', $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd');
         $table->add('Date Comm.', $url, 'order by last_comment', 'order by last_comment desc', 'dca', 'dcd');
         $table->add('Date Limite', $url, 'order by ag_remind_date asc', 'order by ag_remind_date  desc', 'ra', 'rd');
-        $table->add('Tag', $url, 'order by tags asc', 'order by tags desc', 'taa', 'tad');
+        $table->add('Etiquette', $url, 'order by tags asc', 'order by tags desc', 'taa', 'tad');
         $table->add('Réf.', $url, 'order by ag_ref asc', 'order by ag_ref desc', 'ra', 'rd');
         $table->add('Groupe', $url, "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe')", "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') desc", 'dea', 'ded');
         $table->add('Dest/Exp', $url, 'order by name asc', 'order by name desc', 'ea', 'ed');
@@ -666,7 +666,7 @@ class Follow_Up
         $r.='<th>'.$table->get_header(0).'</th>';
         $r.='<th>'.$table->get_header(1).'</th>';
         $r.='<th>'.$table->get_header(2).'</th>';
-        $r.='<th>'.$table->get_header(3).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(3).'</th>';
         $r.='<th>'.$table->get_header(4).'</th>';
         $r.='<th>'.$table->get_header(5).'</th>';
         $r.='<th>'.$table->get_header(6).'</th>';

@@ -224,9 +224,7 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
                 $cn->exec_sql("insert into jnt_document_option_contact
                     (jdoc_enable,document_type_id,contact_option_ref_id)
                     values ($1,$2,$3)",[$this->other["contact_option".$e],$object_sql->dt_id,$option_id]);
-                tracedebug("insert-into-contact.log", $cn->sql);
-                tracedebug("insert-into-contact.log", $cn->array);
-            }
+            } 
         }
         
     }
