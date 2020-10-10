@@ -39,7 +39,7 @@ class Fiche_Attr extends Attr_def_SQL
         if (strlen(trim($this->ad_type))==0)
             throw new Exception('Le type ne peut pas être vide', 1);
         $this->ad_type=strtolower($this->ad_type);
-        if (in_array($this->ad_type, array('date', 'text', 'numeric', 'zone', 'poste', 'card', 'select'))==false)
+        if (in_array($this->ad_type, array('date', 'text', 'numeric', 'zone', 'poste', 'card', 'select','check'))==false)
             throw new Exception('Le type doit être text, numeric,poste, card, select ou date', 1);
         if (trim($this->ad_size)==''||isNumber($this->ad_size)==0||$this->ad_size>22)
         {

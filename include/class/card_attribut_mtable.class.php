@@ -54,11 +54,13 @@ class Card_Attribut_MTable extends Manage_Table_SQL
                     ["value"=>"select", "label"=>_("Choix")],
                     ["value"=>"card", "label"=>_("Fiche")],
                     ["value"=>"zone", "label"=>_("Zone de texte")],
+                    ["value"=>"check", "label"=>_("Coche")],
                     ["value"=>"poste", "label"=>_("Poste comptable")]
         ));
         $this->set_col_tips("ad_search_followup", 77);
         // to prevent a call to this function for each row
         $this->dossier_id=Dossier::id();
+        $this->set_col_sort(1);
     }
 
     /**

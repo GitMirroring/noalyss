@@ -29,6 +29,7 @@ require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iposte.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
+require_once NOALYSS_INCLUDE."/lib/input_switch.class.php";
 
 /*! \file
  * \brief define Class fiche, this class are using
@@ -502,6 +503,11 @@ class Fiche
                             $w->table = 1;
                             $bulle = Icon_Action::infobulle(14);
                             break;
+                    case 'check':
+                            $w=new InputSwitch("av_text".$r->ad_id);
+                            $w->value=$r->av_text;
+                            $w->value=(trim($w->value)=="")?1:$w->value;
+                            break;
                     case 'select':
                             $w = new ISelect("av_text" . $attr->ad_id);
                             $w->value = $this->cn->make_array($attr->ad_extra);
@@ -641,6 +647,11 @@ class Fiche
                             $w->style=' class="itextarea" style="margin:0px;width:100%"';
                             $w->value=$r->av_text;
                             break;
+                        case 'check':
+                            $w=new InputSwitch("av_text".$r->ad_id);
+                             $w->value=$r->av_text;
+                            $w->value=(trim($w->value)=="")?1:$w->value;
+                            break;
                         case 'poste':
                             $w=new IPoste("av_text".$r->ad_id);
                             $w->set_attribute('ipopup', 'ipop_account');
@@ -711,6 +722,11 @@ class Fiche
                         $value=$x->display();
                         $w->value=$value;
                         break;
+                    case 'check':
+                       $w=new InputSwitch("av_text".$r->ad_id);
+                       $w->value=$r->av_text;
+                       $w->value=(trim($w->value)=="")?1:$w->value;
+                       break;
                     default:
                         $w->value=$r->av_text;
                 }
