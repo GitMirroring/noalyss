@@ -103,7 +103,7 @@ class Manage_Table_SQL
         foreach ($this->table->name as $key=> $value)
         {
 
-            $this->a_label_displaid[$value]=$value;
+            $this->a_label_displaid[$value]=$key;
             $this->a_order[$order]=$value;
             $this->a_prop[$value]=self::UPDATABLE|self::VISIBLE;
             $this->a_type[$value]=$this->table->type[$value];
@@ -833,9 +833,10 @@ function check()
      */
     function display_row($p_row)
     {
-
+        
+        $pk_id=$p_row[$this->table->primary_key];
         printf('<tr id="%s_%s">', $this->object_name,
-                $p_row[$this->table->primary_key])
+                $pk_id)
         ;
         
         if ($this->icon_mod=="left")
@@ -847,10 +848,11 @@ function check()
         for ($i=0; $i<$nb_order; $i++)
         {
             $v=$this->a_order[$i];
+            
             if ($i==0&&$this->icon_mod=="first"&&$this->can_update_row())
             {
                 $js=sprintf("onclick=\"%s.input('%s','%s');\"", $this->object_name,
-                        $p_row[$this->table->primary_key], $this->object_name);
+                        $pk_id, $this->object_name);
                 $td=($i == $this->col_sort ) ? sprintf('<td sort_value="X%s" >',$p_row[$v]):"<td>";
                 echo $td.HtmlInput::anchor($p_row[$v], "", $js).'</td>';
             }
@@ -878,7 +880,7 @@ function check()
                     $nb_search=(is_array($array_to_search))?count($array_to_search):0;
                     $found=FALSE;
                     for ( $e=0;$e< $nb_search;$e++) {
-                        if (isset ($array_to_search[$e]['value']) && $array_to_search[$e]['value']==$value ) {
+                        if (isset ($array_to_search[$e]['value']) && $array_to_search[$e]['value']==$value )                          {
                             $found=TRUE;
                             echo td($array_to_search[$e]['label']);
                         }
@@ -891,7 +893,7 @@ function check()
                     
                 } elseif ($this->get_col_type($v)=="custom") {
                     // For custom col
-                    echo td($this->display_row_custom($v,$p_row[$v]));
+                    echo td($this->display_row_custom($v,$p_row[$v],$pk_id));
                 }
                 else {
                     echo td($p_row[$v]);
@@ -911,12 +913,13 @@ function check()
      * For the type custom , we can call a function to display properly the value
      * @param $p_key string key name
      * @param $p_value string value
+     * @param int $p_id id of the row (optional default 0)
      * @see input_custom
      * @see set_type
      * @note must return a string which will be in surrounded by td in the function display_row
      * @return string
      */
-    function display_row_custom($p_key,$p_value) {
+    function display_row_custom($p_key,$p_value,$p_id=0) {
         return $p_value;
     }
     /**

@@ -99,31 +99,9 @@ $extra="";
 $http=new \HttpInput();
 switch($op2)
 {
-    /* ------------------------------------------------------------ */
-    /* Remove a attribut */
-    /* ------------------------------------------------------------ */
-case 'rmfa':
-    if ($g_user->check_action(FICCAT)==0)exit();
-
-    ob_start();
-    try
-    {
-        $ad_id= $http->get("ad_id","number");
-        $cn->start();
-        $fa=new Fiche_Attr($cn,$ad_id);
-        $fa->delete();
-        $cn->commit();
-    }
-    catch (Exception $e)
-    {
-        $cn->rollback();
-        record_log($e->getMessage());
-          record_log($e);
-        echo $e->getMessage();
-    }
-    $html=ob_get_contents();
-    ob_end_clean();
-    break;
+    case 'attribute':
+        require_once "ajax/ajax_card_attribute.php";
+        return ;
     /* ------------------------------------------------------------ */
     /* Display card detail */
     /* ------------------------------------------------------------ */
