@@ -63,6 +63,7 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/class/fiche_attr.class.php';
+require_once NOALYSS_INCLUDE.'/lib/input_switch.class.php';
 
 mb_internal_encoding("UTF-8");
 

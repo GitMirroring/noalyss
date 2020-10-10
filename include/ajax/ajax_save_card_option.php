@@ -49,12 +49,7 @@ $nb=count($ap_value);
 if ($nb == 0) return;
 
 for ($i=0;$i<$nb; $i++) {
-    if ( $ap_id[$i] == -1 ) {
-        $cn->exec_sql("INSERT INTO public.action_person_option (ap_value, contact_option_ref_id, action_person_id) 
-                        VALUES($1, $2, $3) ",
-                  [$ap_value[$i],$cor_id[$i],$action_person_id]);
-    } else {
-        $cn->exec_sql("UPDATE public.action_person_option SET ap_value=$1 WHERE ap_id=$2)",
-                [$ap_value[$i],$action_person_id]);
-    }
+
+        $cn->exec_sql("UPDATE public.action_person_option SET ap_value=$1 WHERE ap_id=$2",
+                [$ap_value[$i],$ap_id[$i]]);
 }

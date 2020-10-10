@@ -89,18 +89,30 @@ class Card_Multiple
         if ( ! $g_user->can_read_action($ag_id)) {
             throw new Exception (_("CMCDO01"."Security"));
         }
+        // insert new , synchronized
+        $cn->exec_sql("insert into action_person_option (ap_value,contact_option_ref_id ,action_person_id ) 
+            select null,cor_id,$1
+            from contact_option_ref 
+            where 
+            cor_id not in (
+                select contact_option_ref_id 
+                from action_person_option 
+                join action_person a on (a.ap_id=action_person_id) 
+                where f_id=$2)",[$p_action_person_id,$fiche_id]);
+
+        // delete disable
+        $cn->exec_sql("delete 
+                from action_person_option apo 
+                where contact_option_ref_id  in 
+               (select contact_option_ref_id from jnt_document_option_contact jdoc join action_gestion on                       (ag_type=document_type_id) 
+                    where ag_id=$1 and jdoc_enable=0)",[$ag_id]);
+        
         // First select the option
-        $sql="select
-	cor.cor_id,
-	cor.cor_label,
-	cor.cor_type,
-	coalesce (apo.ap_id,-1) as ap_id,
-        ap_value,
-        cor_value_select
-from
-contact_option_ref cor
-left join action_person_option apo on (cor.cor_id=apo.contact_option_ref_id)
-where action_person_id is null or action_person_id=$1";
+        $sql="select ap_id,cor_id,ap_value,cor_type ,cor_label,cor_value_select
+              from contact_option_ref cor 
+              join action_person_option apo on (cor.cor_id=apo.contact_option_ref_id) 
+              where action_person_id=$1 order by cor_label  ";
+        
         $a_option=$cn->get_array($sql,[$p_action_person_id]);
         require NOALYSS_TEMPLATE."/card_multiple_display_option.php";
         

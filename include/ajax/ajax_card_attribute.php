@@ -79,6 +79,7 @@ else
     {
         case "input":
             $mtable->set_pk($ad_id);
+            if ( $ad_id < 0 ) $mtable->get_table()->set("ad_search_followup",0);
             $mtable->send_header();
             echo $mtable->ajax_input()->saveXML();
 

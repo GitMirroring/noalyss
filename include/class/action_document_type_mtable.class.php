@@ -81,6 +81,13 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
         $this->other['make_invoice']=$http->request("make_invoice", "string", 0);
         $this->other['seq']=$http->request("seq", "string", 0);
         $this->other['select_option_operation']=$http->request("select_option_operation", "string", null);
+        $this->other["cor_id"]=$http->request("cor_id","array",[]);
+        $nb_corid=count($this->other["cor_id"]);
+        $http->set_empty(0);
+        for ($i=0;$i<$nb_corid;$i++) {
+            $this->other["contact_option$i"]=$http->request("contact_option".$i,"number",0);
+        }
+                 
     }
 
     /**
@@ -155,6 +162,22 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
     function input()
     {
         parent::input();
+        
+        
+        
+        // Detail option contact
+        $table=$this->get_table();
+        $cn=$table->cn;
+        $aOption=$cn->get_array("select cor_id,cor_label,cor_type,document_type_id ,coalesce(jdoc_enable,0) jdoc_enable
+                from 
+                contact_option_ref cor  
+                left join jnt_document_option_contact jdoc on (cor_id=contact_option_ref_id) 
+                where 
+                document_type_id is null
+                or document_type_id = $1
+                order by cor_label",[$this->table->dt_id]);
+        
+        // Detail option
         require NOALYSS_TEMPLATE."/action_document_type_mtable_input.php";
     }
 
@@ -191,6 +214,20 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
             on conflict on constraint document_option_un
             do update set do_enable=$3 ", ["make_invoice", $object_sql->dt_id, $this->other['make_invoice']]);
         
+        // Option contact to save
+        $cn->exec_sql("delete from jnt_document_option_contact where document_type_id=$1",[$object_sql->dt_id]);
+        $nb_contact_option=count($this->other["cor_id"]);
+        $aOption=$this->other["cor_id"];
+        for ( $e=0;$e<$nb_contact_option;$e++) {
+            $option_id=$aOption[$e];
+            if ( isset($this->other["contact_option".$e])  ) {
+                $cn->exec_sql("insert into jnt_document_option_contact
+                    (jdoc_enable,document_type_id,contact_option_ref_id)
+                    values ($1,$2,$3)",[$this->other["contact_option".$e],$object_sql->dt_id,$option_id]);
+                tracedebug("insert-into-contact.log", $cn->sql);
+                tracedebug("insert-into-contact.log", $cn->array);
+            }
+        }
         
     }
 

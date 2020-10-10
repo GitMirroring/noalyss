@@ -127,11 +127,7 @@ class Card_Attribut_MTable extends Manage_Table_SQL
         if ($p_key=="ad_search_followup")
         {
             $p_id=$this->get_table()->get("ad_id");
-            $ic=new ISelect("ad_search_followup", $p_value);
-            $ic->value=array(["value"=>0, "label"=>_("Non")],
-                ["value"=>0, "label"=>_("Oui")]
-            );
-            $ic->set_value($p_value);
+            $ic=new InputSwitch("ad_search_followup", $p_value);
             echo $ic->input();
         }
         /**

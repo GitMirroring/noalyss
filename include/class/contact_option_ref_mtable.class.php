@@ -36,13 +36,14 @@ class Contact_Option_Ref_MTable extends Manage_Table_SQL{
          $this->set_col_label("cor_label", _("Nom"));
          $this->set_col_label("cor_type", _("Type "));
          $this->set_col_label("document_option_id", _("Action"));
-         $this->set_col_label("core_value_select",_("Options"));
+         $this->set_col_label("cor_value_select",_("Options"));
          $this->set_property_visible("cor_id", false);
          $this->set_col_type("cor_type","select",[
              ["label"=>_("Texte"),"value"=>0],
              ["label"=>_("Nombre"),"value"=>1],
              ["label"=>_("Choix"),"value"=>3],
-             ["label"=>_("Date"),"value"=>2]
+             ["label"=>_("Date"),"value"=>2],
+             ["label"=>_("Coche"),"value"=>4]
          ]);
      }
 

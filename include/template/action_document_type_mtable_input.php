@@ -96,3 +96,22 @@ echo _("Création de facture");
     </ul>
 
 </div>
+<div>
+     <h3 class="info" sytle="margin-block: 4px"><?php echo _("Options contact") ?></h3>
+    <ul class="tab_row" style="padding-top: 0px">
+<?php        
+            
+$nb_option=count($aOption);
+for ($i=0;$i<$nb_option;$i++)
+{
+    echo '<li>';
+    
+    echo HtmlInput::hidden("cor_id[]", $aOption[$i]["cor_id"]);
+    $is=new InputSwitch("contact_option$i",$aOption[$i]["jdoc_enable"]);
+    echo $is->input();
+    echo "&nbsp;&nbsp;&nbsp;"._($aOption[$i]['cor_label']);
+    echo '</li>';
+}
+?>
+</ul>
+</div>

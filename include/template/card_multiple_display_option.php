@@ -79,6 +79,13 @@ if (!defined('ALLOWED'))
                     }
                 }
                 break;
+            case 4:
+                $input=new InputSwitch("ap_value[]");
+                if ( $a_option[$i]['ap_value'] =="") {
+                    $a_option[$i]['ap_value']=0;
+                }
+                break;
+                
         }
        $input->set_value ($a_option[$i]['ap_value']);
         echo '<span style="display:table-row">';
