@@ -80,7 +80,13 @@ $uniq=uniqid("tab",TRUE);
                ?>
               </td>
               <td>
-
+                    <?php
+                    $csv="export.php?".
+                            http_build_query(["gDossier"=>Dossier::id(),
+                                "act"=>"CSV:FollowUpContactOption",
+                                "ag_id"=>$ag_id]);
+                    echo HtmlInput::anchor(_("Export CSV"), $csv);
+                    ?>
               </td>
           </tr>
           <?php endif; ?>
@@ -149,7 +155,7 @@ $uniq=uniqid("tab",TRUE);
 <?php if ($this->ag_id > 0 ): ?>
           <tr>
             <TD>
-                Dossier / tags
+                Dossier / Etiquette
             </TD>
             
             <td id="action_tag_td">

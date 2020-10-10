@@ -50,6 +50,7 @@ if ( $action=='X'  || $g_user->check_print($action)==0 )
 
  $prfile=$cn->get_value("select me_file from menu_ref where me_code=$1",array($action));
  if ( $prfile == "") {
+     print $action;
      die (_('Export impossible'));
  }
  require_once NOALYSS_INCLUDE."/export/$prfile";

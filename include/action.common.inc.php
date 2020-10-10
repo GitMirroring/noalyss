@@ -209,9 +209,11 @@ if ($sub_action == 'detail')
             $act->ag_id = $ag_id;
             echo $act->get();
         }
+      
         
 	if ($g_user->can_write_action($ag_id)  == true)
 	{
+            
             echo '<form  enctype="multipart/form-data"  id="action_common_frm" class="print" action="do.php"  method="post"   >';
             echo $supl_hidden;
             echo HtmlInput::hidden('ac', $http->request('ac'));
@@ -221,6 +223,7 @@ if ($sub_action == 'detail')
             echo '<input type="hidden" id="delete" name="delete" value="0">';
             echo HtmlInput::submit("save", "Sauve",' onclick="$(\'delete\').value=0"');
             echo HtmlInput::submit("add_action_here", _("Ajoute un événement à celui-ci"),' onclick="$(\'delete\').value=0"');
+            
             // 
             if ($g_user->can_delete_action($ag_id))
             {
