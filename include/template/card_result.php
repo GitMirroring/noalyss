@@ -14,7 +14,7 @@
         echo '<form method="GET" onsubmit="this.ctl=\'ipop_card\';search_get_card(this);return false;">';           
         $url=$sql_array;
         $url["page_card"]=$page_card-1;
-        echo HtmlInput::array_to_hidden(array('accvis','inp','jrn','label','typecard','price','tvaid','amount_from_type','page_card','query'), $url);
+        echo HtmlInput::array_to_hidden(array('accvis','inp','jrn','label','typecard','price','tvaid','amount_from_type','page_card','query','inactive_card'), $url);
         echo HtmlInput::submit("previous","<");
         echo '</form>';
         echo '</li>';
@@ -24,7 +24,7 @@
          echo '<form method="GET" onsubmit="this.ctl=\'ipop_card\';search_get_card(this);return false;">';           
          $url=$sql_array;
         $url["page_card"]=$page_card+1;
-        echo HtmlInput::array_to_hidden(array('accvis','inp','jrn','label','typecard','price','tvaid','amount_from_type','page_card','query'), $url);
+        echo HtmlInput::array_to_hidden(array('accvis','inp','jrn','label','typecard','price','tvaid','amount_from_type','page_card','query','inactive_card'), $url);
         
         echo HtmlInput::submit("next",">");
         echo '</form>';

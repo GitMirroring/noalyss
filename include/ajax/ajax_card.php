@@ -423,6 +423,11 @@ case 'fs':
  
     // to navigate
     $page_card=$http->get("page_card","number",0);
+    $inactive=$http->get("inactive_card","string",0);
+    if ($inactive=="undefined" || $inactive == "") $inactive=0;
+    $is=new InputSwitch("inactive_card",$inactive);
+    $is->value=$inactive;
+    $r.=_("Toutes les fiches").$is->input();
     
     // save previous info
     $hidden="";
@@ -439,6 +444,7 @@ case 'fs':
     $r.="</form>";
 
     $sql_array["query"]=$query;
+    $sql_array["inactive_card"]=$inactive;
     /* what is the type of the ledger */
     $type="GL";
     if (isset($jrn) && $jrn > 1)
@@ -465,8 +471,15 @@ case 'fs':
              $html.=HtmlInput::button_close("search_card");
              break;
     }
+    /**
+     * if inactive == 0 , then only active card
+     */
+    if ( $inactive == 0 ) {
+        $sql.=" and f_id in (select f_id from fiche_detail where ad_id=54 and ad_value='1') ";
+    }
+    
      /* We limit the search to MAX_SEARCH_CARD records */
-   $sql=$sql.' order by vw_name ';
+    $sql=$sql.' order by vw_name ';
    $total_card=$cn->get_value("select count(*) from ($sql) as c");
     
     $record_start=$page_card*MAX_SEARCH_CARD;

@@ -79,6 +79,8 @@ function search_card(obj)
         var price=obj.price;
         var tvaid=obj.tvaid;
         var jrn=obj.jrn;
+        var inactive_card=0;
+        if ( obj.inactive_card) {inactive_card=obj.inactive_card.value;}
         var amount_from_type=0;
         if ( obj.amount_from_type) {
             amount_from_type=obj.amount_from_type;
@@ -104,7 +106,8 @@ function search_card(obj)
                       'ctl':'search_card','op2':'fs','jrn':jrn,
                       'typecard':typecard,'query':string_to_search,'op':'card',
                       'accvis':accvis,
-                      'amount_from_type':amount_from_type
+                      'amount_from_type':amount_from_type,
+                      'inactive_card':inactive_card
                              });
 	if (  $('search_card') ) {
 	    removeDiv('search_card');
@@ -184,6 +187,7 @@ function action_concerned_search_card(obj)
         var inp="";
         var ag_id=0;
         var search_in=-1;
+        var inactive_card=0;
         
         if (obj.dossier) {
             dossier = obj.dossier; /* From the button */
@@ -208,6 +212,9 @@ function action_concerned_search_card(obj)
             if (obj.elements['search_in']) {
                 search_in = obj.elements['search_in'].value;
             }
+            if ( obj.inactive_card) {
+                inactive_card=obj.elements['inactive_card'].value;
+            }
         }
         if (dossier == 0) {
             throw "obj.dossier not found";
@@ -223,7 +230,8 @@ function action_concerned_search_card(obj)
             'ag_id' : ag_id,
             'op':'card',
             'accvis':0,
-            'search_in':search_in
+            'search_in':search_in,
+            'inactive_card':inactive_card
         });
 
         waiting_box();
@@ -335,6 +343,9 @@ function search_get_card(obj)
     }
     if (obj.elements['page_card']) {
         queryString+="&page_card="+obj.elements["page_card"].value;
+    }
+    if ( obj.elements["inactive_card"]) {
+         queryString+="&inactive_card="+obj.elements["inactive_card"].value;
     }
 
     queryString=encodeURI(queryString);

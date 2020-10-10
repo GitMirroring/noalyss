@@ -16,3 +16,8 @@ contact_option_ref_id bigint references contact_option_ref(cor_id) on delete cas
 );
 ALTER TABLE public.jnt_document_option_contact ADD CONSTRAINT jnt_document_option_contact_un UNIQUE (document_type_id,contact_option_ref_id);
 ALTER TABLE public.jnt_document_option_contact ADD CONSTRAINT jnt_document_option_contact_check CHECK (jdoc_enable in (0,1));
+
+insert into attr_def(ad_id,ad_text,ad_type,ad_size) values (54,'Actif','check','1');
+insert into attr_min(frd_id,ad_id) select frd_id , 54 from fiche_def_ref ;
+insert into jnt_fic_attr  (fd_id,ad_id,jnt_order) select fd_id,54,30 from fiche_def;
+insert into fiche_detail (f_id,ad_id,ad_value) select f_id, 54,1 from fiche_detail where ad_id=1;
