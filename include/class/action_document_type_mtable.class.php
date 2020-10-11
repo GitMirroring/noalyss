@@ -168,6 +168,18 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
         // Detail option contact
         $table=$this->get_table();
         $cn=$table->cn;
+        // insert new contact options
+        $cn->exec_sql("insert into   jnt_document_option_contact (jdoc_enable,document_type_id,
+                                contact_option_ref_id) 
+                         select 0 , $1, cor_id 
+                         from contact_option_ref 
+                        where
+                        cor_id not in (select cor_id from 
+                                        jnt_document_option_contact a 
+                                        where a.document_type_id=$1)",[$table->dt_id]);
+        
+        // Select all
+        
         $aOption=$cn->get_array("select cor_id,cor_label,cor_type,document_type_id ,coalesce(jdoc_enable,0) jdoc_enable
                 from 
                 contact_option_ref cor  
