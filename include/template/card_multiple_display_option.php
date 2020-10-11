@@ -35,6 +35,9 @@ if (!defined('ALLOWED'))
  * @see Card_Multiple
  */
 ?>
+<h3 class="info" style="margin:1px">
+    <?=$aIdentity['name']." ".$aIdentity['first_name']." ".$aIdentity['qcode']?>
+</h2>
 <form method="POST" onsubmit="save_linked_card_option(this);return false">
     <input type="hidden" name="op" value="card">
     <input type="hidden" name="op2" value="save_card_option">

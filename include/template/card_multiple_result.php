@@ -13,7 +13,7 @@ $nb_array=count($array);
              ?>
         <?php printf (_("Nombre de fiches trouvées %d montrées %d"),$count_card,$nb_array);?>
         <table id="card_list" class="result" >
-            <th></th>
+            <th><?= ICheckBox::toggle_checkbox("all", "search_card2_frm")?></th>
             <th><?=_("QCode")?></th>
             <th><?=_("Société")?></th>
             <th><?=_("Nom")?></th>

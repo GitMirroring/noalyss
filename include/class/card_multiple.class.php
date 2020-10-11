@@ -127,6 +127,11 @@ class Card_Multiple
         if ( ! $g_user->can_read_action($ag_id)) {
             throw new Exception (_("CMCDO01"."Security"));
         }
+        // Retrieve Name, first Name and QCODE
+        $aIdentity=$cn->get_row("select (select ad_value from fiche_detail where f_id=$1 and ad_id=1) as name , 
+            (select ad_value from fiche_detail where f_id=$1 and ad_id=32) as first_name , 
+            (select ad_value from fiche_detail where f_id=$1 and ad_id=23) as qcode ",[$fiche_id]); 
+            
         // insert new , synchronized
         $cn->exec_sql("insert into action_person_option (ap_value,contact_option_ref_id ,action_person_id ) 
             select null,cor_id,$1
