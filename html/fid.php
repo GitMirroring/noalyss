@@ -115,7 +115,7 @@ if ( isset($_SESSION['isValid']) && $_SESSION['isValid'] == 1)
          from vw_fiche_attr
          where quick_code=upper($1)". $filter_card;
 
-    $array=$cn->get_array($sql,  array($_REQUEST['FID']));
+    $array=$cn->get_array($sql,  array($hi->request('FID')));
 
     if ( empty($array))
     {
