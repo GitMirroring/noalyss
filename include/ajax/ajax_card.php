@@ -427,7 +427,7 @@ case 'fs':
     if ($inactive=="undefined" || $inactive == "") $inactive=0;
     $is=new InputSwitch("inactive_card",$inactive);
     $is->value=$inactive;
-    $r.=_("Toutes les fiches").$is->input();
+    $r.=_("fiches inactives").$is->input();
     
     // save previous info
     $hidden="";
