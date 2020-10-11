@@ -509,7 +509,7 @@ case 'fs':
                                               $price,$amount);
         }
         if ( $type=="VEN" ){
-            $amount=(isNumber($aFound[$i]['vw_buy']) == 1 )?$aFound[$i]['vw_sell']:0;
+            $amount=(isNumber($aFound[$i]['vw_sell']) == 1 )?$aFound[$i]['vw_sell']:0;
             $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
                                               $price,$amount);
         }
