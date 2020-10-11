@@ -23,6 +23,7 @@ insert into attr_def(ad_id,ad_text,ad_type,ad_size) values (54,'Actif','check','
 insert into attr_min(frd_id,ad_id) select frd_id , 54 from fiche_def_ref ;
 insert into jnt_fic_attr  (fd_id,ad_id,jnt_order) select fd_id,54,30 from fiche_def;
 insert into fiche_detail (f_id,ad_id,ad_value) select f_id, 54,1 from fiche_detail where ad_id=1 and f_id not in (select f_id from fiche_detail where ad_id=54);
+update fiche_detail set ad_value='1' where ad_id=54;
 insert into menu_ref(me_code,me_menu,me_file,me_type) values ('CSV:FollowUpContactOption','Export action suivi','export_follow_up_contact_csv.php','PR');
 insert into profile_menu (me_code,p_id,p_type_display) select 'CSV:FollowUpContactOption',p_id,'P' from profile;
 

@@ -57,7 +57,7 @@ class Card_Multiple
                   ".MAX_CARD_SEARCH;
         } else {
             $string_sql=sprintf($this->sql." where f_id in (select f_id from fiche_detail where 
-                    ad_id = '%s' and ad_value ilike '%%%s%%') and %s"
+                    ad_id = '%s' and ad_value ilike '%%%s%%')  %s"
                     , sql_string($sql_array["search_in"]),$query,$filter);
         }
         return $string_sql;
