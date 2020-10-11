@@ -63,21 +63,31 @@ $q->value=(isset($query))?$query:'';
 $r.='<span style="margin-left:50px">';
 $r.=_('Fiche contenant').Icon_Action::infobulle(19);
 $r.=$q->input();
+
 // where to search
 $select=new ISelect("search_in");
 $select->value=$cn->make_array("select ad_id, ad_text from attr_def  where ad_search_followup = 1 order by 2 ",1);
 $select->selected=$http->get("search_in","string","");
 $r.=_("limité aux champs ").$select->input();
-$r.=HtmlInput::submit('fs', _('Recherche'), "", "smallbutton");
+
 $r.='</span>';
 $r.=dossier::hidden().HtmlInput::hidden('op2', 'add_concerned_card');
 $r.=HtmlInput::request_to_hidden(array('ag_id'));
+
+// Search by category
+$sel_Category=new ISelect("search_cat");
+$sel_Category->value=$cn->make_array("select fd_id,fd_label from fiche_def order by 2",1);
+$sel_Category->set_value($http->request("search_cat","string","-1"));
+$r.=_("Catégorie")." ".$sel_Category->input();
+
+// search also inactive card
 $inactive=$http->get("inactive_card","string",0);
 if ($inactive=="undefined" || $inactive == "") $inactive=0;
 $is=new InputSwitch("inactive_card",$inactive);
 $is->value=$inactive;
-$r.=_("Toutes les fiches").$is->input();
+$r.=_("Fiches inactives").$is->input();
 
+$r.=HtmlInput::submit('fs', _('Recherche'), "", "smallbutton");
 $r.='</form>';
 
 
@@ -86,6 +96,7 @@ $sql_array['query']=$query;
 $sql_array['typecard']='all';
 $sql_array['search_in']=$select->selected;
 $sql_array['inactive_card']=$inactive;
+$sql_array['search_cat']=$sel_Category->selected;
 
 $fiche=new Card_Multiple($cn);
 /* Build the SQL and show result */

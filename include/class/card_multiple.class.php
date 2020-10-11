@@ -44,6 +44,11 @@ class Card_Multiple
         if ( $sql_array["inactive_card"]==0) {
             $filter=" and ".$this->filter_enable_card();
         }
+        // By Cat of card
+        $sql_cat="";
+        if ( $sql_array['search_cat']!=-1) {
+            $sql_cat=' and fd_id = '.sql_string($sql_array['search_cat']);
+        }
         $query=sql_string($sql_array['query']);
         if ( $sql_array['search_in'] == "-1")
         {
@@ -51,14 +56,14 @@ class Card_Multiple
                   where 
                   (vw_name ilike '%$query%' 
                   or quick_code ilike '%$query%')
-                     ".$filter."
+                     ".$filter.$sql_cat."
                   order by vw_name 
                   limit 
                   ".MAX_CARD_SEARCH;
         } else {
             $string_sql=sprintf($this->sql." where f_id in (select f_id from fiche_detail where 
-                    ad_id = '%s' and ad_value ilike '%%%s%%')  %s"
-                    , sql_string($sql_array["search_in"]),$query,$filter);
+                    ad_id = '%s' and ad_value ilike '%%%s%%')  %s %s"
+                    , sql_string($sql_array["search_in"]),$query,$filter,$sql_cat);
         }
         return $string_sql;
     }
@@ -75,13 +80,18 @@ class Card_Multiple
         if ( $sql_array["inactive_card"]==0) {
             $filter="and ".$this->filter_enable_card();
         }
+        // By Cat of card
+        $sql_cat="";
+        if ( $sql_array['search_cat']!=-1) {
+            $sql_cat=' and fd_id = '.sql_string($sql_array['search_cat']);
+        }
 
         $string_sql="select count(*) 
               from vw_fiche_attr  
               where 
               ( vw_name ilike '%$query%' 
               or quick_code ilike '%$query%')
-                     ".$filter;
+                     ".$filter.$sql_cat;
 
 
         return $cn->get_value($string_sql); 

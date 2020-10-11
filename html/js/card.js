@@ -188,6 +188,7 @@ function action_concerned_search_card(obj)
         var ag_id=0;
         var search_in=-1;
         var inactive_card=0;
+        var search_cat=-1;
         
         if (obj.dossier) {
             dossier = obj.dossier; /* From the button */
@@ -212,8 +213,11 @@ function action_concerned_search_card(obj)
             if (obj.elements['search_in']) {
                 search_in = obj.elements['search_in'].value;
             }
-            if ( obj.inactive_card) {
+            if ( obj.elements['inactive_card']) {
                 inactive_card=obj.elements['inactive_card'].value;
+            }
+            if ( obj.elements['search_cat']) {
+                search_cat=obj.elements['search_cat'].value;
             }
         }
         if (dossier == 0) {
@@ -231,7 +235,8 @@ function action_concerned_search_card(obj)
             'op':'card',
             'accvis':0,
             'search_in':search_in,
-            'inactive_card':inactive_card
+            'inactive_card':inactive_card,
+            'search_cat':search_cat
         });
 
         waiting_box();
