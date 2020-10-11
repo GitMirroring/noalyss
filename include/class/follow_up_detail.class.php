@@ -236,16 +236,11 @@ class Follow_Up_Detail
     
     public static function display(Follow_Up $p_follow_up,$p_view)
     {
+        $option=$p_follow_up->db->get_value("select do_option from document_option "
+                . "  where document_type_id=$1 and do_code='detail_operation'",[$p_follow_up->dt_id]);
+        
          require NOALYSS_TEMPLATE."/follow_up_detail_display.php";
     }
-    /*!\brief
-     *\param
-     *\return
-     *\note
-     *\see
-     */
-    static function test_me()
-{}
 
 }
 

@@ -88,8 +88,13 @@ $menu=new Default_Menu();
             $icard->javascript=sprintf(' onchange="fill_data_onchange(\'%s\');" ', $icard->name);
             // name of the field to update with the name of the card
             $icard->set_attribute('label', 'e_march' . $i . '_label');
-            // name of the field with the price
-            $icard->set_attribute('price', 'e_march' . $i . '_price');
+            // name of the field with the price autocomplete 
+            if ( $option == 'ACH'){
+             $icard->set_attribute('purchase', 'e_march' . $i . '_price');
+            } else {
+             $icard->set_attribute('price','e_march'.$i.'_price'); 
+            }
+            
             // name of the field with the TVA_ID
             $icard->set_attribute('tvaid', 'e_march' . $i . '_tva_id');
            $icard->amount_from_type=$option_detail;
