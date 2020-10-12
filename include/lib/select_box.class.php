@@ -157,7 +157,7 @@ class Select_Box
         
 
         // display the button
-        printf('<input type="button" class="smallbutton icon " id="%s_bt" value="%s &#x25BE;" >',
+        printf('<input type="button" class="smallbutton " id="%s_bt" value="%s &#x25BE;" >',
                 $this->id, $this->value);
         printf('<input type="hidden" id="%s" name="%s" value="%s">', $this->id,
                 $this->id, $this->default_value);
