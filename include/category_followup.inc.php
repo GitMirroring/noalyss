@@ -40,8 +40,14 @@ $ag_id=$http->request("ag_id","string","0");
 if (! isset($_GET['submit_query'])) {$_REQUEST['closed_action']=1;$_GET['closed_action']=1;}
 
 $p_action=$http->request('ac');
-$base="ac=$p_action&sc=sv&sb=detail&f_id=".$_REQUEST['f_id']."&".HtmlInput::request_to_string(array("closed_action","remind_date_end","remind_date","sag_ref","only_internal","state","gDossier","qcode","ag_dest","query","tdoc","date_start","date_end","hsstate","searchtag","sb","sc"),"");
-$retour=HtmlInput::button_anchor('Retour','?'.dossier::get().'&'.$base);
+$base="do.php?".http_build_query(["ac"=>$p_action,
+                                "sc"=>"sv",
+                                "sb"=>"detail",
+                                "f_id"=>$http->request("f_id","number"),
+                                "gDossier"=>Dossier::id()
+                                ])."&amp;"
+        ;
+$retour=HtmlInput::button_anchor(_('retour'),$base);
 
 $fiche=new Fiche($cn,$http->request("f_id","number"));
 
