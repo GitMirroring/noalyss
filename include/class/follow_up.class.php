@@ -1510,7 +1510,7 @@ class Follow_Up
         if ($g_user->can_write_action($this->ag_id)==true)
         {
             $js=sprintf("onclick=\"action_tag_select('%s','%s')\"", dossier::id(), $this->ag_id);
-            echo HtmlInput::button('tag_bt', 'Ajout tag', $js, 'smallbutton');
+            echo HtmlInput::button('tag_bt', _('Ajout étiquette'), $js, 'smallbutton');
         }
     }
 
