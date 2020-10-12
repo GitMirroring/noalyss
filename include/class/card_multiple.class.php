@@ -146,9 +146,10 @@ class Card_Multiple
         // delete disable
         $cn->exec_sql("delete 
                 from action_person_option apo 
-                where contact_option_ref_id  in 
-               (select contact_option_ref_id from jnt_document_option_contact jdoc join action_gestion on                       (ag_type=document_type_id) 
-                    where ag_id=$1 and jdoc_enable=0)",[$ag_id]);
+                where contact_option_ref_id  not in 
+               (select contact_option_ref_id from jnt_document_option_contact jdoc join action_gestion on   
+               (ag_type=document_type_id) 
+                    where ag_id=$1 and jdoc_enable=1)",[$ag_id]);
         
         // First select the option
         $sql="select ap_id,cor_id,ap_value,cor_type ,cor_label,cor_value_select

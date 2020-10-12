@@ -197,6 +197,19 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
                     document_type_id is null
                     or document_type_id = $1
                     order by cor_label", [$this->table->dt_id]);
+                
+                // delete unused option by the action_person_
+                $cn->exec_sql("delete from action_person_option  where ap_id in (select apo.ap_id 
+                    from action_person a 
+                    left join action_person_option apo ON  (a.ap_id=apo.action_person_id)
+                    left join contact_option_ref cor on (apo.contact_option_ref_id=cor.cor_id)
+                    join action_gestion ag  on (a.ag_id=ag.ag_id)
+                    where  
+                    cor.cor_id not in (select jdoc2.contact_option_ref_id 
+                                        from jnt_document_option_contact jdoc2 
+                                        where jdoc2.document_type_id =$1 
+                                        and jdoc2.jdoc_enable =1));
+                    ",[$table->dt_id]);
             }
 
             // Detail option
