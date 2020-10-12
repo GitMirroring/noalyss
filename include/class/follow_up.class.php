@@ -614,14 +614,15 @@ class Follow_Up
         $url=$p_base.$arg;
 
         $table=new Sort_Table();
-        $table->add('Date Doc.', $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd');
-        $table->add('Date Comm.', $url, 'order by last_comment', 'order by last_comment desc', 'dca', 'dcd');
-        $table->add('Date Limite', $url, 'order by ag_remind_date asc', 'order by ag_remind_date  desc', 'ra', 'rd');
-        $table->add('Etiquette', $url, 'order by tags asc', 'order by tags desc', 'taa', 'tad');
-        $table->add('Réf.', $url, 'order by ag_ref asc', 'order by ag_ref desc', 'ra', 'rd');
-        $table->add('Groupe', $url, "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe')", "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') desc", 'dea', 'ded');
-        $table->add('Dest/Exp', $url, 'order by name asc', 'order by name desc', 'ea', 'ed');
-        $table->add('Titre', $url, 'order by ag_title asc', 'order by ag_title desc', 'ta', 'td');
+        $table->add(_('Date Doc.'), $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd');
+        $table->add(_('Date Comm.'), $url, 'order by last_comment', 'order by last_comment desc', 'dca', 'dcd');
+        $table->add(_('Date Limite'), $url, 'order by ag_remind_date asc', 'order by ag_remind_date  desc', 'ra', 'rd');
+        $table->add(_('Etiquette'), $url, 'order by tags asc', 'order by tags desc', 'taa', 'tad');
+        $table->add(_('Réf.'), $url, 'order by ag_ref asc', 'order by ag_ref desc', 'ra', 'rd');
+        $table->add(_('Groupe'), $url, "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe')", "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') desc", 'dea', 'ded');
+        $table->add(_('Dest/Exp'), $url, 'order by name asc', 'order by name desc', 'ea', 'ed');
+        $table->add(_('Titre'), $url, 'order by ag_title asc', 'order by ag_title desc', 'ta', 'td');
+        $table->add(_('Etat'), $url, 'order by s_value asc', 'order by s_value desc', 'ea', 'ed');
 
         $ord=(!isset($_GET['ord']))?"dcd":$_GET['ord'];
         $sort=$table->get_sql_order($ord);
@@ -673,6 +674,7 @@ class Follow_Up
         $r.='<th>'.$table->get_header(6).'</th>';
         $r.='<th>'.$table->get_header(7).'</th>';
         $r.=th('Priorité');
+        $r.='<th>'.$table->get_header(8).'</th>';
         $r.="</tr>";
 
 
@@ -728,7 +730,6 @@ class Follow_Up
             else
                 $r.="<td>$href Interne </a></td>";
 
-            $ref="";
 
 
             $r.='<td>'.$href.
@@ -740,18 +741,18 @@ class Follow_Up
             switch ($row['ag_priority'])
             {
                 case 1:
-                    $priority='Haute';
+                    $priority=_('Haute');
                     break;
                 case 2:
-                    $priority="Moyenne";
+                    $priority=_("Moyenne");
                     break;
                 case 3:
-                    $priority="Important";
+                    $priority=_("Important");
                     break;
             }
             $r.=td($priority);
 
-            $r.="<td>".$ref."</td>";
+            $r.="<td>".$row['s_value']."</td>";
             $r.="</tr>";
         }
 
