@@ -610,7 +610,8 @@ class Follow_Up
     function myList($p_base, $p_filter="", $p_search="")
     {
         // for the sort
-        $url=HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag")).'&'.$p_base;
+        $arg=HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag"),"");
+        $url=$p_base.$arg;
 
         $table=new Sort_Table();
         $table->add('Date Doc.', $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd');
@@ -689,7 +690,7 @@ class Follow_Up
         //show the sub_action
         foreach ($a_row as $row)
         {
-            $href='<A class="document" HREF="do.php?'.$p_base.HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "gDossier", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag", "ac"), "&").'&sa=detail&ag_id='.$row['ag_id'].'">';
+            $href='<A class="document" HREF="'.$p_base.HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "gDossier", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag", "ac"), "").'&sa=detail&ag_id='.$row['ag_id'].'" title="detail">';
             $i++;
             $tr=($i%2==0)?'even':'odd';
             if ($row['ag_priority']<2)

@@ -680,7 +680,7 @@ class HtmlInput
     static function array_to_string($array, $global_array, $start="?")
     {
 
-        $r=$start;
+        $r="";
 
         if (count($global_array)==0)
             return '';
@@ -704,7 +704,7 @@ class HtmlInput
             }
             $and="&amp;";
         }
-
+        if (trim ($r) != "") $r=$start.$r;
         return $r;
     }
 

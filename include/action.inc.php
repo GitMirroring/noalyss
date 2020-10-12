@@ -55,8 +55,7 @@ $sub_action=$http->request("sa","string","");
  */
 $ag_id=$http->request("ag_id","string","0");
 
-$ac=$http->request("ac");
-$base=HtmlInput::request_to_string(array('ac','gDossier'),"");
+$base="do.php?".http_build_query(["ac"=>$http->request("ac"),"gDossier"=>Dossier::id()]);
 echo '<div class="content">';
 require_once NOALYSS_INCLUDE.'/action.common.inc.php';
 echo "</div>";
