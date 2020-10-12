@@ -85,7 +85,7 @@ $uniq=uniqid("tab",TRUE);
                             http_build_query(["gDossier"=>Dossier::id(),
                                 "act"=>"CSV:FollowUpContactOption",
                                 "ag_id"=>$ag_id]);
-                    echo HtmlInput::anchor(_("Export CSV"), $csv);
+                    echo HtmlInput::anchor(_("Export CSV"), $csv,"",' class="line" title="Export Contacts options"');
                     ?>
               </td>
           </tr>
