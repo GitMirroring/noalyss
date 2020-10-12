@@ -45,6 +45,7 @@ class InputSwitch extends HtmlInput
 
     function input($p_name=NULL, $p_value=NULL)
     {
+        $r="";
         if ($p_name!=NULL)
             $this->value_container=$p_name;
         if ($p_value!==NULL)
@@ -56,25 +57,25 @@ class InputSwitch extends HtmlInput
              throw new Exception(_("Valeur invalide"),1);
         }
         if ($this->readOnly == TRUE) {
-            $this->display();
-            return;
+            return $this->display();
         }
-        echo HtmlInput::hidden($this->value_container, $this->value);
+        $r.= HtmlInput::hidden($this->value_container, $this->value);
         
         $this->javascript=sprintf('toggle_onoff(\'%s\',\'%s\');%s;',$this->icon,$this->value_container,$this->javascript);
         
         if ($this->value=='1') {
-            echo Icon_Action::iconon($this->icon, $this->javascript);
+            $r.=Icon_Action::iconon($this->icon, $this->javascript);
         } else {
-            echo Icon_Action::iconoff($this->icon, $this->javascript);
+            $r.=Icon_Action::iconoff($this->icon, $this->javascript);
         }
+        return $r;
     }
     function display()
     {
         if ($this->value=='1') {
-            echo Icon_Action::iconon($this->icon, "");
+            return  Icon_Action::iconon($this->icon, "");
         } else {
-            echo Icon_Action::iconoff($this->icon, "");
+            return Icon_Action::iconoff($this->icon, "");
         }
     }
 

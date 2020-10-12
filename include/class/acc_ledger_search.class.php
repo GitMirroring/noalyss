@@ -224,6 +224,9 @@ class Acc_Ledger_Search
         if (isset($_REQUEST['hide_operation']))
             $r.=HtmlInput::hidden("hide_operation", $http->request('hide_operation'));
         
+        if (isset($_REQUEST['single_operation']))
+            $r.=HtmlInput::hidden("single_operation", $http->request('single_operation'));
+        
         ob_start();
         $search_filter=$this->build_search_filter();
         require_once NOALYSS_TEMPLATE.'/ledger_search.php';

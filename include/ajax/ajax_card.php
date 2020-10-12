@@ -63,6 +63,7 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/class/fiche_attr.class.php';
+require_once NOALYSS_INCLUDE.'/lib/input_switch.class.php';
 
 mb_internal_encoding("UTF-8");
 
@@ -99,31 +100,9 @@ $extra="";
 $http=new \HttpInput();
 switch($op2)
 {
-    /* ------------------------------------------------------------ */
-    /* Remove a attribut */
-    /* ------------------------------------------------------------ */
-case 'rmfa':
-    if ($g_user->check_action(FICCAT)==0)exit();
-
-    ob_start();
-    try
-    {
-        $ad_id= $http->get("ad_id","number");
-        $cn->start();
-        $fa=new Fiche_Attr($cn,$ad_id);
-        $fa->delete();
-        $cn->commit();
-    }
-    catch (Exception $e)
-    {
-        $cn->rollback();
-        record_log($e->getMessage());
-          record_log($e);
-        echo $e->getMessage();
-    }
-    $html=ob_get_contents();
-    ob_end_clean();
-    break;
+    case 'attribute':
+        require_once "ajax/ajax_card_attribute.php";
+        return ;
     /* ------------------------------------------------------------ */
     /* Display card detail */
     /* ------------------------------------------------------------ */
@@ -441,14 +420,31 @@ case 'fs':
 	$r.='</span>';
     $r.=dossier::hidden().HtmlInput::hidden('op','fs');
     $array=array();
-    foreach (array('accvis','query','inp','jrn','label','typecard','price','tvaid') as $i)
+ 
+    // to navigate
+    $page_card=$http->get("page_card","number",0);
+    $inactive=$http->get("inactive_card","string",0);
+    if ($inactive=="undefined" || $inactive == "") $inactive=0;
+    $is=new InputSwitch("inactive_card",$inactive);
+    $is->value=$inactive;
+    $r.=_("fiches inactives").$is->input();
+    
+    // save previous info
+    $hidden="";
+    foreach (array('accvis','inp','jrn','label','typecard','price','tvaid','amount_from_type') as $i)
     {
         if  (isset(${$i}) )
         {
             $r.=HtmlInput::hidden($i,${$i});
+            $hidden.=HtmlInput::hidden($i,${$i});
             $sql_array[$i]=${$i};
         }
     }
+    $r.=$hidden;
+    $r.="</form>";
+
+    $sql_array["query"]=$query;
+    $sql_array["inactive_card"]=$inactive;
     /* what is the type of the ledger */
     $type="GL";
     if (isset($jrn) && $jrn > 1)
@@ -456,50 +452,69 @@ case 'fs':
         $ledger=new Acc_Ledger($cn,$jrn);
         $type=$ledger->get_type();
     }
+    // if jrn == -10 , the search is called from the detail operation from an action follow-up
+    if ( isset($jrn) && $jrn == -10){
+        $type=$http->request("amount_from_type","string","VEN");
+    }
     $fiche=new Fiche($cn);
     /* Build the SQL and show result */
     $sql=$fiche->build_sql($sql_array);
 
     if ( strpos($sql," in ()") != 0)
     {
-            $html=Icon_Action::close('search_card');
-             $html.='<div> '.h2info(_('Recherche de fiche')).'</div>';
+            $html="";
+             $html.=HtmlInput::title_box(_('Recherche de fiche'), 'search_card');
              $html.='<h3 class="notice">';
              $html.=_("Aucune catégorie de fiche ne correspond à".
             " votre demande, le journal pourrait n'avoir accès à aucune fiche");
              $html.='</h3>';
+             $html.=HtmlInput::button_close("search_card");
              break;
     }
+    /**
+     * if inactive == 0 , then only active card
+     */
+    if ( $inactive == 0 ) {
+        $sql.=" and f_id in (select f_id from fiche_detail where ad_id=54 and ad_value='1') ";
+    }
+    
      /* We limit the search to MAX_SEARCH_CARD records */
-    $sql=$sql.' order by vw_name limit '.MAX_SEARCH_CARD;
-    $a=$cn->get_array($sql);
-    for($i=0;$i<count($a);$i++)
-    {
-        $array[$i]['quick_code']=$a[$i]['quick_code'];
-        $array[$i]['name']=h($a[$i]['vw_name']);
-        $array[$i]['accounting']=$a[$i]['accounting'];
-        $array[$i]['first_name']=h($a[$i]['vw_first_name']);
-        $array[$i]['description']=h($a[$i]['vw_description']);
+    $sql=$sql.' order by vw_name ';
+   $total_card=$cn->get_value("select count(*) from ($sql) as c");
+    
+    $record_start=$page_card*MAX_SEARCH_CARD;
+    $sql.=' limit '.MAX_SEARCH_CARD.' offset '.$record_start;
+    
+    $aFound=$cn->get_array($sql);
+    $nb_found=count($aFound);
+    for($i=0;$i<$nb_found;$i++)
+     {
+        $array[$i]['quick_code']=$aFound[$i]['quick_code'];
+        $array[$i]['name']=h($aFound[$i]['vw_name']);
+        $array[$i]['accounting']=$aFound[$i]['accounting'];
+        $array[$i]['first_name']=h($aFound[$i]['vw_first_name']);
+        $array[$i]['description']=h($aFound[$i]['vw_description']);
         $array[$i]['javascript']=sprintf("set_value('%s','%s');",
                                          $inp,$array[$i]['quick_code']);
         $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
-                                          $label,j(h(strip_tags($a[$i]['vw_name']))));
+                       $label,j(h(strip_tags($aFound[$i]['vw_name']))));
+
 
         /* if it is a ledger of sales we use vw_buy
            if it is a ledger of purchase we use vw_sell*/
         
         if ( $type=="ACH" ){
-            $amount=(isNumber($a[$i]['vw_buy']) == 1 )?$a[$i]['vw_buy']:0;
+            $amount=(isNumber($aFound[$i]['vw_buy']) == 1 )?$aFound[$i]['vw_buy']:0;
             $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
                                               $price,$amount);
         }
         if ( $type=="VEN" ){
-            $amount=(isNumber($a[$i]['vw_buy']) == 1 )?$a[$i]['vw_sell']:0;
+            $amount=(isNumber($aFound[$i]['vw_sell']) == 1 )?$aFound[$i]['vw_sell']:0;
             $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
                                               $price,$amount);
         }
         $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
-                                          $tvaid,$a[$i]['tva_id']);
+                                          $tvaid,$aFound[$i]['tva_id']);
         $array[$i]['javascript'].="removeDiv('search_card');";
 
     }//foreach
@@ -516,9 +531,11 @@ case 'fs':
         require_once NOALYSS_INCLUDE.'/ajax/ajax_add_concerned_card.php';
         return;
     break;
-    case 'action_save_concerned':
+// add several card to an action follow⁻up
+    case 'link_concerned_card':
         require NOALYSS_INCLUDE.'/ajax/ajax_action_save_concerned.php';
         return;
+// remove card from an action follow⁻up
     case 'action_remove_concerned':
         require NOALYSS_INCLUDE.'/ajax/ajax_action_remove_concerned.php';
         return;
@@ -742,6 +759,23 @@ case 'upr':
 	}
       }
       break;
+ //---------------------------------------------------------------------------------------------------------------
+ // Display option of a contact in an action-followup       
+ //---------------------------------------------------------------------------------------------------------------       
+        case 'display_card_option':
+            
+            require_once NOALYSS_INCLUDE.'/ajax/ajax_display_card_option.php';
+            return;
+            break;
+            
+ //---------------------------------------------------------------------------------------------------------------
+ // Save option of a contact in an action-followup       
+ //---------------------------------------------------------------------------------------------------------------       
+        case 'save_card_option':
+            require_once NOALYSS_INCLUDE.'/ajax/ajax_save_card_option.php';
+            return;
+
+            break;
             
 } // switch
 $xml=escape_xml($html);

@@ -240,7 +240,7 @@ else
 	$Ledger->id = $request_jrn;
 
 if (isset ($_REQUEST['p_jrn_predef'])){
-	$Ledger->id=$_REQUEST['p_jrn_predef'];
+	$Ledger->id=$http->request('p_jrn_predef');
 }
 // pre defined operation
 //
@@ -259,6 +259,7 @@ try
     $acompte=$http->request("acompte", "string",0);
 
     echo "<FORM class=\"print\"NAME=\"form_detail\" METHOD=\"POST\" >";
+    echo HtmlInput::hidden("ac", $ac);
     /* request for a predefined operation */
     if (isset($_REQUEST['pre_def'])&&!isset($_POST['correct']) && ! isset($correct) )
     {

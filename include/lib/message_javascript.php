@@ -107,4 +107,5 @@ content[73]="<?php echo _("Mettre à oui pour un journal dédié uniquement aux 
 content[74]="<?php echo _('TVA due ou récupérable quand l\'opération est payée ou exécutée')?>";
 content[75]="<?php echo _('Journaux Achat ou vente en mode simple, TVA ou détaillé')?>";
 content[76]="<?php echo _('Il est conseillé d\'avoir un quickcode de moins de 9 car.')?>";
+content[77]="<?php echo _("Permet de chercher dans le suivi pour les contacts multiques")?>";
 </script>

@@ -2354,7 +2354,12 @@ class Acc_Ledger  extends jrn_def_sql
      */
     function verify_ledger($array)
     {
-        extract($array, EXTR_SKIP);
+        
+        $p_jrn=$array['p_jrn'];
+        $p_jrn_deb_max_line=$array['p_jrn_deb_max_line'];
+        $p_jrn_name=$array['p_jrn_name'];
+        $p_jrn_type=$array['p_jrn_type'];
+        
         try
         {
             if (isNumber($p_jrn)==0)
@@ -2368,8 +2373,10 @@ class Acc_Ledger  extends jrn_def_sql
                 throw new Exception(_("Un journal avec ce nom existe déjà"));
             if ($p_jrn_type=='FIN')
             {
+                $http=new \HttpInput();
                 $a=new Fiche($this->db);
-                $result=$a->get_by_qcode(trim(strtoupper($_POST['bank'])), false);
+                $bank=$http->post("bank");
+                $result=$a->get_by_qcode(trim(strtoupper($bank)), false);
                 if ($result==1)
                     throw new Exception(_("Aucun compte en banque n'est donné"));
             }
@@ -2378,11 +2385,17 @@ class Acc_Ledger  extends jrn_def_sql
                 throw new Exception(_('Choix du type de journal est obligatoire'));
             }
 
-           if (isset( $negative_warning) && $negative_amount == 1 && trim($negative_warning)=="") {
+           if ( isset( $array['negative_warning']) && 
+                isset( $array['negative_amount']) &&
+                $array['negative_amount'] == 1 
+                   && trim($array['negative_warning'])=="") {
 
                 throw new Exception(_("Avertissement ne peut être vide"));
             }
-            if ( isset( $negative_amount)  && $negative_amount <> 0 && $negative_amount <> 1 ){
+            if ( isset( $array['negative_amount'])  &&
+                 $array['negative_amount'] <> 0 &&
+                 $array['negative_amount'] <> 1 )
+             {
                   throw new Exception(_("Valeur invalide"));
             }
         }

@@ -22,6 +22,8 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $g_user;
+$http=new HttpInput();
+
 $retour=HtmlInput::button_anchor(_('Retour liste'),
 	HtmlInput::request_to_string(array("closed_action","remind_date_end","remind_date","sag_ref","only_internal","state","ac","gDossier","qcode","ag_dest_query","action_query","tdoc","date_start","date_end","hsstate","searchtag")),
         "","","smallbutton");
@@ -47,14 +49,15 @@ require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
 // propose to add one
 // permit also a search
 // show detail
-$sub_action=(isset($_REQUEST['sa']))?$_REQUEST['sa']:"";
+$sub_action=$http->request("sa","string","");
 /* if ag_id is set then we give it otherwise we have problem
  * with the generation of document
  */
-$ag_id=(isset($_REQUEST['ag_id']))?$_REQUEST['ag_id']:0;
-$ac=$_REQUEST['ac'];
-$base=HtmlInput::request_to_string(array('ac','gDossier'),"");
+$ag_id=$http->request("ag_id","string","0");
 
+$ac=$http->request("ac");
+$base=HtmlInput::request_to_string(array('ac','gDossier'),"");
+echo '<div class="content">';
 require_once NOALYSS_INCLUDE.'/action.common.inc.php';
 echo "</div>";
 

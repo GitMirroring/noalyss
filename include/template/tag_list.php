@@ -2,6 +2,7 @@
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 ?><?php
+$http=new HttpInput();
 $max=$this->cn->count($ret);
 echo HtmlInput::filter_table("tag_tb", '0,1', '1');
 $nDossier=Dossier::id();
@@ -14,13 +15,19 @@ $nDossier=Dossier::id();
         <th>
             <?php echo _("Description")?>
         </th>
+            
+        <th>
+            <?php echo _("Actif")?>
+        </th>
+     
     </tr>
 <?php
 $gDossier=Dossier::id();
-$ac=$_REQUEST['ac'];
+$ac=$http->request('ac');
+    
     for ($i=0;$i<$max;$i++):
-        $row=Database::fetch_array($ret, $i);
-?>
+                $row=Database::fetch_array($ret, $i);
+        ?>
     <tr class="<?php echo (($i%2==0)?'even':'odd');?>">
         <td>
             <?php
@@ -33,6 +40,7 @@ $ac=$_REQUEST['ac'];
             echo $row['t_description'];
             ?>
         </td>
+        
         <td>
             <?php
             $id=sprintf("tag_onoff%d",$row['t_id']);

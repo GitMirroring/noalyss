@@ -37,6 +37,13 @@ catch (Exception $exc)
     error_log($exc->getTraceAsString());
     return;
 }
+/*
+ * security Who can do it ?
+ */
+if ( ! $g_user->can_read_action($ag_id)  ) {
+    record_log(__FILE__."security : access refused");
+    return;
+}
 
 require_once 'class/follow_up.class.php';
 $follow=new Follow_Up($cn,$ag_id);
@@ -44,7 +51,7 @@ $follow=new Follow_Up($cn,$ag_id);
 ob_start();
 $follow->remove_linked_card($f_id);
 echo $follow->display_linked();
-HtmlInput::button_action_add_concerned_card( $follow->ag_id);
+echo HtmlInput::button_action_add_concerned_card( $follow->ag_id);
 
 $response = ob_get_clean();
 

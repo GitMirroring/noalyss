@@ -251,6 +251,12 @@ class Extension extends Menu_Ref_sql
         }
     }
 
+    /**
+     * compare the version of the plugin and the last version , propose to update it if a new version exists
+     * @todo add a mechanism to check once a day
+     * @global User $g_user
+     * @global number $version_plugin
+     */
     static function check_plugin_version()
     {
         global $g_user, $version_plugin;

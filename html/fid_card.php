@@ -118,13 +118,15 @@ else
         }
     }
 }
+// filter only enable card
+$filter_enable_card=" and f_id in (select f_id from fiche_detail where ad_value = '1' and ad_id=54) ";
 
 $sql_str="select distinct f_id 
          from fiche 
          join fiche_detail using (f_id) 
          where 
          ad_id in (9,1,23) 
-         and ad_value ilike '%'||$1||'%' ".$filter_card.' limit '.$limit;
+         and ad_value ilike '%'||$1||'%' ".$filter_enable_card.$filter_card.' limit '.$limit;
 
 
 $fid=$http->request("FID");

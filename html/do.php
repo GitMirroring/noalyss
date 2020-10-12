@@ -241,8 +241,10 @@ if (isset($_REQUEST['ac']))
         fclose($file_loginput);
     }
 
-    $_REQUEST['ac']=  trim(strtoupper($_REQUEST['ac']));
-    $AC=$http->request('ac');
+    $ac_post = trim(strtoupper($http->post("ac","string","")));
+    $ac_get  = trim(strtoupper($http->get("ac","string","")));
+    
+    $AC=($ac_post == "")?$ac_get:$ac_post;
     $user_profile=$g_user->get_profile();
     
     

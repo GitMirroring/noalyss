@@ -56,6 +56,10 @@
 				<td style="text-align:right" ><?php echo  _("Etat")?></td>
 				<td><?php echo  $type_state->input()?></td>
 			</tr>
+                        <tr>
+				<td style="text-align:right"> <?php echo _("Affiche aussi les actions fermées");?></td>
+				<td><?php echo $closed_action->input();?></td>
+			</tr>
 			<tr>
 				<td style="text-align:right" ><?php echo  _("Exclure Etat")?></td>
 				<td><?php echo  $hsExcptype_state->input()?></td>
@@ -103,10 +107,7 @@
 					<?php echo $remind_date_end->input();?>
 				</td>
 			</tr>
-			<tr>
-				<td style="text-align:right"> <?php echo _("Affiche aussi les actions fermées");?></td>
-				<td><?php echo $closed_action->input();?></td>
-			</tr>
+        	
                        
                         </table>
 
@@ -139,6 +140,18 @@
                        }
                    ?>
                </span>
+            </p>
+            <p>
+                <?php 
+                echo _("Option étiquettes");
+                $iselect= new ISelect("tag_option");
+                $iselect->value=array(
+                    array("value"=>0,"label"=>_("Toutes les étiquettes")),
+                    array("value"=>1,"label"=>_("Au moins une étiquette"))
+                    );
+                $iselect->set_value($http->request("tag_option","number",0));
+                echo $iselect->input(); 
+                       ?>
             </p>
                         
 		<input type="hidden" name="sa" value="list">

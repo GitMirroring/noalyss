@@ -12,7 +12,7 @@ $op=$http->request("op");
 global $g_user;
 $nDossier=Dossier::id();
 ///check security
-if ( $g_user->check_module('CFGTAG')==0)
+if ( $g_user->check_module('CFGTAG')==0  &&  $g_user->check_action(TAGADD) == 0)
 {
     die(_("non permis"));
 }

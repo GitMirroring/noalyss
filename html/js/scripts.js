@@ -24,9 +24,28 @@
  *
  */
 var ask_reload = 0;
-var tag_choose = '';
+// tag_choose Element  which contains all the selected tags 
+var tag_choose = ''; 
 var aDraggableElement = new Array();
-
+/**
+ * return undefined if nothing is found , otherwise return the DOM elemnt
+ * @param {type} p_name_dom
+ * @param {type} name_child
+ * @returns {undefined}
+ */
+function in_child(p_element,name_child) {
+    var element=p_element
+    if ( typeof p_element !== "object" ) {
+      element=document.getElementById(p_element);
+        
+    }
+    if ( ! element ) return undefined;
+    for ( var e=0; e < element.childElementCount;e++) {
+        if ( element.childNodes[e].id == name_child) {
+            return element.childNodes[e];
+        }
+    }
+}
 /**
  * callback function when we just need to update a hidden div with an info
  * message
@@ -1304,6 +1323,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
     str_style += ";width:92%;overflow:auto;";
     waiting_box();
     var hide_operation = $(ctl_concern).getAttribute("hide_operation");
+    var single_operation = $(ctl_concern).getAttribute("single_operation");
 
     var param_send = {gDossier: dossier,
         ctlc: ctl_concern,
@@ -1313,7 +1333,8 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
         ledger: ledger,
         target: target,
         tiers: tiers,
-        hide_operation: hide_operation
+        hide_operation: hide_operation,
+        single_operation:single_operation
     };
 
     var qs = encodeJSON(param_send);
@@ -1381,6 +1402,7 @@ function set_reconcile(obj)
         if (!obj.elements['target'])
             return;
         var target = obj.elements['target'].value;
+        var single_operation = obj.elements['single_operation'].value;
         for (var e = 0; e < obj.elements.length; e++)
         {
 
@@ -1414,7 +1436,12 @@ function set_reconcile(obj)
                             });
                         }
                     }
-                    $(ctlc.value).value += nValue;
+                    if (single_operation==0) {
+                        $(ctlc.value).value += nValue;
+                    } else {
+                        $(ctlc.value).value = nValue;
+                        
+                    }
                 }
             }
         }
@@ -2107,7 +2134,13 @@ function view_action(ag_id, dossier, modify)
                         });
                         $(id).innerHTML = code_html;
                         if (ctl_txt == 'ok') {
-                            compute_all_ledger();
+                            // compute detail
+                            var detail=in_child(id,"follow_up_detail");
+                            if (detail) {   
+                              compute_all_ledger();
+                            }
+                                             
+                            
                         }
                         code_html.evalScripts();
                     } catch (e) {
@@ -2455,7 +2488,7 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post)
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
                         var posy = calcy(250);
-                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0, style: "position:fixed;top:" + posy + "px"});
+                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0, style: "position:fixed;top:15%;"});
                         $('tag_div').innerHTML = code_html;
                         try
                         {
@@ -2542,13 +2575,14 @@ function action_tag_select(p_dossier, ag_id)
  * @brief Add the current tag to the current ag_id
  * @param {type} p_dossier
  * @param {type} ag_id
+ * @param p_isgroup g it is a group , t is a single tag
  * @returns {undefined}
  */
-function action_tag_add(p_dossier, ag_id, t_id)
+function action_tag_add(p_dossier, ag_id, t_id,p_isgroup)
 {
     try {
         waiting_box();
-        var queryString = "t_id=" + t_id + "&ag_id=" + ag_id + "&op=tag_add&gDossier=" + p_dossier;
+        var queryString = "t_id=" + t_id + "&ag_id=" + ag_id + "&op=tag_add&gDossier=" + p_dossier+"&isgroup="+p_isgroup;
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
@@ -2679,8 +2713,10 @@ function search_display_tag(p_dossier, p_prefix)
  * in the search screen
  * @param {type} p_dossier
  * @param {type} p_tag_id
+ * @param p_prefix is the prefix of the widget 
+ * @param p_obj is either g for group of tag or t for a single tag
  */
-function search_add_tag(p_dossier, p_tag_id, p_prefix)
+function search_add_tag(p_dossier, p_tag_id, p_prefix,p_obj)
 {
     try {
         var clear_button = 0;
@@ -2689,7 +2725,7 @@ function search_add_tag(p_dossier, p_tag_id, p_prefix)
             clear_button = 1;
         }
         waiting_box();
-        var queryString = "op=search_add_tag&gDossier=" + p_dossier + "&id=" + p_tag_id + "&clear=" + clear_button + '&pref=' + p_prefix;
+        var queryString = "op=search_add_tag&gDossier=" + p_dossier + "&id=" + p_tag_id + "&clear=" + clear_button + '&pref=' + p_prefix+"&obj="+p_obj;
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
@@ -3049,6 +3085,8 @@ function alert_box(p_message)
 function alternate_row_color(p_table)
 {
     var table_colored=$(p_table);
+    if (! table_colored.tBodies[0] ) return;
+
     var len = table_colored.tBodies[0].rows.length;
     var i = 0;
     var localClass = "";
@@ -3664,6 +3702,27 @@ function toggle_row_warning_enable(p_enable, p_row)
     } else {
         $(p_row).hide();
     }
+}
+
+/**
+ * return a json object which is the merge of the 2 json objects
+ * from 2015 : Object.assign(obj1, obj2);
+ * @param p_json1 object 1 to merge
+ * @param p_json2 object 2 to merge
+ * @returns new json object
+ */
+function json_concat(p_json1,p_json2)
+{
+
+        var result = {};
+        for (var key in p_json1) {
+            result[key] = p_json1[key];
+        }
+        for (var key in p_json2) {
+            result[key] = p_json2[key];
+        }
+        return result;
+
 }
 
 /**

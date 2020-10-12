@@ -28,9 +28,34 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 /**
  * Insert into follow-up the card (f_id) for the action_gestion (ag_id)
  */
+$http=new HttpInput();
+try {
+    // follow_up id
+    $ag_id=$http->request("ag_id","number");
+    $ctl=$http->request("ctl");
+    $selected_card=$http->request("selected_card","array",[]);
+} catch (Exception $ex) {
+     record_log(__FILE__.$ex->getMessage().$ex->getTraceAsString());
+     return;
+}
+/*
+ * security Who can do it ?
+ */
+if ( ! $g_user->can_write_action($ag_id)  ) {
+    record_log(__FILE__."security : access refused");
+    return;
+}
+
 require_once 'class/follow_up.class.php';
 $follow=new Follow_Up($cn,$ag_id);
-$follow->insert_linked_card($f_id);
+$nb_card=count($selected_card);
+for ($i=0;$i< $nb_card;$i++)
+{
+    $elt=$selected_card[$i];
+    if (isNumber($elt)) {
+        $follow->insert_linked_card($elt); 
+    }
+}
 /**
  * Display all the linked card
  */
@@ -44,7 +69,7 @@ header('Content-type: text/xml; charset=UTF-8');
 echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
-<ctl>unused</ctl>
+<ctl>$ctl</ctl>
 <code>$html</code>
 </data>
 EOF;

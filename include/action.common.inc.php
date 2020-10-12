@@ -30,18 +30,20 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
+$http=new HttpInput();
 $supl_hidden = '';
 if (isset($_REQUEST['sc']))
-	$supl_hidden.=HtmlInput::hidden('sc', $_REQUEST['sc']);
+	$supl_hidden.=HtmlInput::hidden('sc', $http->request("sc"));
 if (isset($_REQUEST['f_id']))
-	$supl_hidden.=HtmlInput::hidden('f_id', $_REQUEST['f_id']);
+	$supl_hidden.=HtmlInput::hidden('f_id', $http->request("f_id","number"));
 if (isset($_REQUEST['sb']))
-	$supl_hidden.=HtmlInput::hidden('sb', $_REQUEST['sb']);
-$supl_hidden.=HtmlInput::hidden('ac', $_REQUEST['ac']);
+	$supl_hidden.=HtmlInput::hidden('sb', $http->request("sb"));
+$supl_hidden.=HtmlInput::hidden('ac', $http->request("ac"));
+
 
 $correction = 0;
 $error_id=0;
-$http=new HttpInput();
+
 /*-----------------------------------------------------------------------------*/
 /* For other action
 /*-----------------------------------------------------------------------------*/
@@ -207,21 +209,29 @@ if ($sub_action == 'detail')
             $act->ag_id = $ag_id;
             echo $act->get();
         }
+      
         
 	if ($g_user->can_write_action($ag_id)  == true)
 	{
-		echo '<form  enctype="multipart/form-data"  id="action_common_frm" class="print" action="do.php"  method="post"   >';
-		echo $supl_hidden;
-		echo HtmlInput::hidden('ac', $_REQUEST['ac']);
-		echo dossier::hidden();
-		echo $act->Display('UPD', false, $base, $retour);
-		echo '<input type="hidden" name="sa" value="update">';
-		echo '<input type="hidden" id="delete" name="delete" value="0">';
-		echo HtmlInput::submit("save", "Sauve",' onclick="$(\'delete\').value=0"');
-		echo HtmlInput::submit("add_action_here", _("Ajoute un événement à celui-ci"),' onclick="$(\'delete\').value=0"');
-		echo HtmlInput::submit("delete_bt", _("Efface cet événement "), ' onclick="$(\'delete\').value=1;return confirm_box(\'action_common_frm\',\''. _("Vous confirmez l\'effacement") . '\')" ');
-		echo $retour;
-		echo '</form>';
+            
+            echo '<form  enctype="multipart/form-data"  id="action_common_frm" class="print" action="do.php"  method="post"   >';
+            echo $supl_hidden;
+            echo HtmlInput::hidden('ac', $http->request('ac'));
+            echo dossier::hidden();
+            echo $act->Display('UPD', false, $base, $retour);
+            echo '<input type="hidden" name="sa" value="update">';
+            echo '<input type="hidden" id="delete" name="delete" value="0">';
+            echo HtmlInput::submit("save", "Sauve",' onclick="$(\'delete\').value=0"');
+            echo HtmlInput::submit("add_action_here", _("Ajoute un événement à celui-ci"),' onclick="$(\'delete\').value=0"');
+            
+            // 
+            if ($g_user->can_delete_action($ag_id))
+            {
+                echo HtmlInput::submit("delete_bt", _("Efface cet événement "), 
+                        ' onclick="$(\'delete\').value=1;return confirm_box(\'action_common_frm\',\''. _("Vous confirmez l\'effacement") . '\')" ');
+            }
+            echo $retour;
+            echo '</form>';
 	}
 	else if ($g_user->can_read_action($ag_id) == true || $act->ag_dest == -1)
 	{
@@ -245,7 +255,7 @@ if ($sub_action == 'delete')
 	$act = new Follow_Up($cn);
 	$act->ag_id =$http->request("ag_id","number") ;
 	$act->get();
-	if ($g_user->can_write_action($act->ag_id)==true)	$act->remove();
+	if ($g_user->can_delete_action($act->ag_id)==true)	$act->remove();
 	$sub_action = "list";
 	$cn->commit();
 	Follow_Up::show_action_list($cn, $base);
@@ -277,12 +287,13 @@ if ($sub_action == "save_action_st2")
 	$act->fromArray($_POST);
     try {
 	$act->d_id = 0;
+        $act->ag_id=$http->request("ag_id","number");
 	$act->md_id = (isset($_POST['gen_doc'])) ? $_POST['gen_doc'] : 0;
 
         $act->verify();
         
 	// insert into action_gestion
-	echo $act->save();
+	echo $act->update();
 	$url = "?$base&sa=detail&ag_id=" . $act->ag_id . '&' . dossier::get();
 	echo '<p><a class="mtitle" href="' . $url . '">' . hb(_('Evènement Sauvée').'  : ' . $act->ag_ref) . '</a></p>';
 
@@ -305,8 +316,9 @@ if ($sub_action == "add_action")
 {
 	$act = new Follow_Up($cn);
 	$act->fromArray($_POST);
-	$act->ag_id = 0;
+	$act->dt_id = $http->request("action_type","number");
 	$act->d_id = 0;
+	$act->save();
 	echo '<div class="content">';
 	// Add hidden tag
 	echo '<form method="post" action="do.php" name="form_add" id="form_add" enctype="multipart/form-data" >';

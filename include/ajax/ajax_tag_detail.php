@@ -11,9 +11,11 @@ require_once NOALYSS_INCLUDE.'/lib/single_record.class.php';
 require_once NOALYSS_INCLUDE.'/class/tag.class.php';
 ob_start();
 $tag=new Tag($cn);
-$tag->data->t_id=$_GET['tag'];
+$http=new HttpInput();
+$tag->data->t_id=$http->get("tag","number");
+if ($tag->data->t_id == -1 &&  $g_user->check_action(TAGADD) == 0 ) return;
 $tag->data->load();
-echo HtmlInput::title_box(_("Détail du dossier ou étiquette"), "tag_div");
+echo HtmlInput::title_box(_("Détail du dossier ou étiquette"), "tag_div","close","","y");
 
 ?>
 <?php

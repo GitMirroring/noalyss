@@ -191,8 +191,8 @@ class Pre_Op_Advanced extends Pre_operation_detail
         $ret.=HtmlInput::hidden('jrn_type', "ODS");
         $info = Icon_Action::infobulle(0);
         $info_poste = Icon_Action::infobulle(9);
-        if ($g_user->check_action(FICADD) == 1)
-                $ret.=$f_add_button->input();
+        if ($g_user->check_action(FICADD) == 1)                 $ret.=$f_add_button->input();
+        $ret.='<div class="fieldset" style="overflow:auto;height:400px">';
         $ret.='<table id="quick_item" style="width:100%">';
         $ret.='<tr>' .
                         '<th style="text-align:left">Quickcode' . $info . '</th>' .
@@ -287,6 +287,7 @@ class Pre_Op_Advanced extends Pre_operation_detail
                 // If readonly == 1 then show CA
         }
         $ret.='</table>';
+        $ret.="</div>";
         $ret.=Html_Input_Noalyss::ledger_add_item("M");
         return $ret;
     }

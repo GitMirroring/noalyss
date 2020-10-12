@@ -33,7 +33,7 @@ function boxsearch_card(p_dossier)
 	{
 	waiting_box();
 	removeDiv('boxsearch_card_div');
-	var queryString="gDossier="+p_dossier+"&op=cardsearch"+"&card="+encodeURI($(card_search).value);
+	var queryString="gDossier="+p_dossier+"&op=cardsearch"+"&card="+encodeURI($("card_search").value);
 	var action = new Ajax.Request(
 				  "ajax_misc.php" ,
 				  {
@@ -57,14 +57,15 @@ function boxsearch_card(p_dossier)
 /**
  * show the ipopup with the form to search a card
  * the properties
- *  - jrn for the ledger
- *  - fs for the action
- *  - price for the price of the card (field to update)
- *  - tvaid for the tvaid of the card (field to update)
- *  - inp input text to update with the quickcode
- *  - label field to update with the name
- *  - ctl the id to fill with the HTML answer (ending with _content)
- *  - acc 1 if accounting are visible
+ * @param obj
+ * @param {int} obj.jrn for the ledger
+ * @param {int} obj.fs route to the action
+ * @param {string} obj.price for the price of the card (field to update)
+ * @param {string} obj.tvaid for the tvaid of the card (field to update)
+ * @param {string} obj.inp input text to update with the quickcode
+ * @param {string} obj.label field to update with the name
+ * @param {string} obj.ctl the id to fill with the HTML answer (ending with _content)
+ * @param {int} obj.acc 1 if accounting are visible
  */
 function search_card(obj)
 {
@@ -78,6 +79,13 @@ function search_card(obj)
         var price=obj.price;
         var tvaid=obj.tvaid;
         var jrn=obj.jrn;
+        var inactive_card=0;
+        if ( obj.inactive_card) {inactive_card=obj.inactive_card.value;}
+        var amount_from_type=0;
+        if ( obj.amount_from_type) {
+            amount_from_type=obj.amount_from_type;
+       
+        }
         if ( jrn==undefined)
         {
             if ( g('p_jrn'))   {
@@ -97,7 +105,9 @@ function search_card(obj)
                       'inp':inp,'label':label,'price':price,'tvaid':tvaid,
                       'ctl':'search_card','op2':'fs','jrn':jrn,
                       'typecard':typecard,'query':string_to_search,'op':'card',
-                      'accvis':accvis
+                      'accvis':accvis,
+                      'amount_from_type':amount_from_type,
+                      'inactive_card':inactive_card
                              });
 	if (  $('search_card') ) {
 	    removeDiv('search_card');
@@ -122,16 +132,63 @@ function search_card(obj)
     }
 }
 /**
- * Display form for select card to add to action : other_concerned
- *action_add_concerned_card
+ * Display found card and let you select several to link them to an action-followup
+ * @param {obj} obj form object
+ * @param {obj} obj form object
  */
-function action_add_concerned_card(obj)
+function action_concerned_save_card(obj)
+{
+    try {
+        waiting_box();
+        // get all data from FORM
+        var query = obj.serialize();
+        new Ajax.Request("ajax_misc.php", {
+            method: "POST",
+            parameters: query,
+            onSuccess: function (req) {
+                remove_waiting_box();
+                var answer = req.responseXML;
+                var a = answer.getElementsByTagName('ctl');
+                if (a.length == 0)
+                {
+                    var rec = req.responseText;
+                    alert_box('erreur :' + rec);
+                }
+                var html = answer.getElementsByTagName('code');
+                var namectl = a[0].firstChild.nodeValue;
+                var nodeXml = html[0];
+                var code_html = getNodeText(nodeXml);
+                code_html = unescape_xml(code_html);
+                $(namectl).update(code_html);
+                removeDiv('search_card');
+            }
+        });
+    } catch (e)
+    {
+
+        alert_box('action_concerned_save_card' + e.message);
+        return false;
+    }
+    return false;
+}
+/**
+ * Display form for searching cards to add to action-follow-up
+ *@see ajax_add_concerned_card.php
+ *@param {object} obj form object 
+ *@param obj.elements.ag_id id of the action (elements)
+ *@param obj.elements.gDossier folder id
+ *@param obj.elements.query
+ */
+function action_concerned_search_card(obj)
 {
     try
     {
         var dossier = 0;
         var inp="";
         var ag_id=0;
+        var search_in=-1;
+        var inactive_card=0;
+        var search_cat=-1;
         
         if (obj.dossier) {
             dossier = obj.dossier; /* From the button */
@@ -153,6 +210,15 @@ function action_add_concerned_card(obj)
             if (obj.elements['ag_id']) {
                 ag_id = obj.elements['ag_id'].value;
             }
+            if (obj.elements['search_in']) {
+                search_in = obj.elements['search_in'].value;
+            }
+            if ( obj.elements['inactive_card']) {
+                inactive_card=obj.elements['inactive_card'].value;
+            }
+            if ( obj.elements['search_cat']) {
+                search_cat=obj.elements['search_cat'].value;
+            }
         }
         if (dossier == 0) {
             throw "obj.dossier not found";
@@ -167,7 +233,10 @@ function action_add_concerned_card(obj)
             'ctl' : 'unused',
             'ag_id' : ag_id,
             'op':'card',
-            'accvis':0
+            'accvis':0,
+            'search_in':search_in,
+            'inactive_card':inactive_card,
+            'search_cat':search_cat
         });
 
         waiting_box();
@@ -204,7 +273,7 @@ function action_add_concerned_card(obj)
                         {
                             sx = document.body.scrollTop + 60;
                         }
-                        var div_style = "top:" + sx + "px;height:80%";
+                        var div_style = "top:" + sx + "px;height:52rem";
                         if ( ! $('search_card')) { add_div({id: 'search_card', cssclass: 'inner_box', html: "", style: div_style, drag: true}); }
                         $('search_card').innerHTML = code_html;
                         $('query').focus();
@@ -273,8 +342,20 @@ function search_get_card(obj)
         queryString+="&accvis="+$F(accvis);
     } else {
         queryString+="&accvis=0";
+    } 
+   if ( obj.elements['amount_from_type']) {
+        queryString+="&amount_from_type="+obj.elements['amount_from_type'].value;
     }
+    if (obj.elements['page_card']) {
+        queryString+="&page_card="+obj.elements["page_card"].value;
+    }
+    if ( obj.elements["inactive_card"]) {
+         queryString+="&inactive_card="+obj.elements["inactive_card"].value;
+    }
+
+    queryString=encodeURI(queryString);
     $('asearch').innerHTML=loading();
+    
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
                                   method:'get',
@@ -949,7 +1030,7 @@ try {
  * @param {type} p_action_id action_gestion.ag_id
  * @returns {undefined} nothing
  */
-function action_save_concerned(p_dossier, p_fiche_id, p_action_id) {
+function action_save_concerned(p_form_id) {
     var query = encodeJSON({'gDossier': p_dossier, 'f_id': p_fiche_id, 'ag_id': p_action_id,'op':'card','op2':'action_save_concerned','ctl':'unused'});
     var a=new Ajax.Request('ajax_misc.php',
             {
@@ -1218,4 +1299,51 @@ function card_update_row(obj)
         alert_box(e.message);
         return false;
     }
+}
+/**
+ * Display the option of a contact linked in a action-followup
+ * @param {int} p_action_person_id action_person.ap_id
+ * @param {int} p_dossier current folder
+ */
+function linked_card_option(p_action_person_id,p_dossier) {
+    try {
+        waiting_box();
+        new Ajax.Request("ajax_misc.php",{
+            method:"get",
+            parameters: {
+                ap_id:p_action_person_id,
+                gDossier:p_dossier,
+                op:"card",
+                op2:"display_card_option",
+                ctl:"notused"
+            },
+            onSuccess:function(req) {
+                remove_waiting_box();
+                add_div({ "id":"d_linked_card_option",cssclass:"inner_box",style:"position:fixed;top:30%;min-width:20rem;width:auto;",drag:0});
+                $("d_linked_card_option").update(req.responseText);
+                
+            }
+        });
+    } catch (e) {
+        console.error(e.message);
+    }
+}
+/**
+ * Save option for the contact 
+ * @param {object} obj form 
+ * @see card_multiple_display_option.php
+ * @returns {undefined}
+ */
+function save_linked_card_option(obj)
+{
+    waiting_box();
+    new Ajax.Request("ajax_misc.php",{
+        method:"post",
+        parameters:obj.serialize(),
+        onSuccess:function(req) {
+            remove_waiting_box();
+            removeDiv("d_linked_card_option");
+        }
+    });
+    return false;
 }

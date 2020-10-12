@@ -25,11 +25,10 @@ if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
  */
 
 require_once NOALYSS_INCLUDE.'/class/tag.class.php';
-ob_start();
 $tag=new Tag($cn);
-$tag->select_search($_GET['pref']);
 
-$response=  ob_get_clean();
+$response=  $tag->select_search($_GET['pref']);
+
 $html=escape_xml($response);
 header('Content-type: text/xml; charset=UTF-8');
 echo <<<EOF

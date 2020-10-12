@@ -61,6 +61,7 @@
  * @see sorttable.js
  * 
  */
+require_once NOALYSS_INCLUDE."/lib/http_input.class.php";
 
 class Manage_Table_SQL
 {
@@ -102,7 +103,7 @@ class Manage_Table_SQL
         foreach ($this->table->name as $key=> $value)
         {
 
-            $this->a_label_displaid[$value]=$value;
+            $this->a_label_displaid[$value]=$key;
             $this->a_order[$order]=$value;
             $this->a_prop[$value]=self::UPDATABLE|self::VISIBLE;
             $this->a_type[$value]=$this->table->type[$value];
@@ -258,7 +259,7 @@ class Manage_Table_SQL
     }
 
     /**
-     * This function can be overrided to check the data before 
+     * @brief This function can be overrided to check the data before 
      * inserting , updating or removing, above an example of an overidden check.
      * 
      * Usually , you get the row of the table (get_table) , you check the conditions
@@ -268,7 +269,8 @@ class Manage_Table_SQL
      * 
      * @see set_error get_error count_error
      * @return boolean
-     * @code 
+     * 
+@code 
 function check()
     {
         global $cn;
@@ -292,7 +294,7 @@ function check()
         if ( $is_error > 0 ) return false;
         return true;
     }    
-     * @endcode
+@endcode
      */
     function check()
     {
@@ -690,10 +692,12 @@ function check()
             if ($i==0)
             {
                 $this->display_table_header();
+                echo '<tbody>';
             }
             $row=Database::fetch_array($ret, $i);
             $this->display_row($row);
         }
+        echo '</tbody>';
         echo "</table>";
         if ($this->can_append_row()==TRUE)
         {
@@ -713,6 +717,7 @@ function check()
     function display_table_header()
     {
         $nb=count($this->a_order);
+        echo '<thead>';
         echo "<tr>";
 
         if ($this->can_update_row() && $this->icon_mod=="left")
@@ -743,6 +748,7 @@ function check()
             echo th(" ", 'style="width:40px"  class="sorttable_nosort" ');
         }
         echo "</tr>";
+        echo '</thead>';
     }
     /**
      * set the column to sort by default
@@ -776,6 +782,7 @@ function check()
     function from_request()
     {
         $nb=count($this->a_order);
+        $http=new HttpInput();
         for ($i=0; $i<$nb; $i++)
         {
             
@@ -783,7 +790,7 @@ function check()
             if ($this->get_property_visible($key)==TRUE&&$this->get_property_updatable($key)
                     ==TRUE)
             {
-                $v=HtmlInput::default_value_request($this->a_order[$i], "");
+                $v=$http->request($this->a_order[$i],"string","");
                 $this->table->$key=strip_tags($v);
             }
         }
@@ -826,9 +833,10 @@ function check()
      */
     function display_row($p_row)
     {
-
+        
+        $pk_id=$p_row[$this->table->primary_key];
         printf('<tr id="%s_%s">', $this->object_name,
-                $p_row[$this->table->primary_key])
+                $pk_id)
         ;
         
         if ($this->icon_mod=="left")
@@ -840,10 +848,11 @@ function check()
         for ($i=0; $i<$nb_order; $i++)
         {
             $v=$this->a_order[$i];
+            
             if ($i==0&&$this->icon_mod=="first"&&$this->can_update_row())
             {
                 $js=sprintf("onclick=\"%s.input('%s','%s');\"", $this->object_name,
-                        $p_row[$this->table->primary_key], $this->object_name);
+                        $pk_id, $this->object_name);
                 $td=($i == $this->col_sort ) ? sprintf('<td sort_value="X%s" >',$p_row[$v]):"<td>";
                 echo $td.HtmlInput::anchor($p_row[$v], "", $js).'</td>';
             }
@@ -871,7 +880,7 @@ function check()
                     $nb_search=(is_array($array_to_search))?count($array_to_search):0;
                     $found=FALSE;
                     for ( $e=0;$e< $nb_search;$e++) {
-                        if (isset ($array_to_search[$e]['value']) && $array_to_search[$e]['value']==$value ) {
+                        if (isset ($array_to_search[$e]['value']) && $array_to_search[$e]['value']==$value )                          {
                             $found=TRUE;
                             echo td($array_to_search[$e]['label']);
                         }
@@ -884,7 +893,7 @@ function check()
                     
                 } elseif ($this->get_col_type($v)=="custom") {
                     // For custom col
-                    echo td($this->display_row_custom($v,$p_row[$v]));
+                    echo td($this->display_row_custom($v,$p_row[$v],$pk_id));
                 }
                 else {
                     echo td($p_row[$v]);
@@ -904,12 +913,13 @@ function check()
      * For the type custom , we can call a function to display properly the value
      * @param $p_key string key name
      * @param $p_value string value
+     * @param int $p_id id of the row (optional default 0)
      * @see input_custom
      * @see set_type
      * @note must return a string which will be in surrounded by td in the function display_row
      * @return string
      */
-    function display_row_custom($p_key,$p_value) {
+    function display_row_custom($p_key,$p_value,$p_id=0) {
         return $p_value;
     }
     /**
@@ -1094,7 +1104,7 @@ function check()
 
             ob_start();
 
-            echo HtmlInput::title_box("Donnée", $this->dialog_box,"close","","y");
+            echo HtmlInput::title_box(_("Donnée"), $this->dialog_box,"close","","y");
             printf('<form id="frm%s_%s" method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,

@@ -5,7 +5,8 @@
 <div id="security_action_tbl">
     
     <?php
-
+     echo HtmlInput::button("grant_all_action", _("Toutes les actions"), " onclick=\" grant_action(1) \"");
+    echo HtmlInput::button("revoke_all_action", _("Aucune action"), " onclick=\" grant_action (0) \"");
 	function display_security_fieldset($p_legend,$p_array,$sec_User) {
 
 	$gDossier=dossier::id();

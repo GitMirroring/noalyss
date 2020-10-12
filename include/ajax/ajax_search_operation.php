@@ -109,6 +109,8 @@ if (isset($_GET['viewsearch']))
         list($array['date_start'], $array['date_end'])=$g_user->get_limit_current_exercice();
     }
     $array['hide_operation']=$hide_operation;
+    $array['single_operation']=$http->get("single_operation");
+    
     list($sql, $where)=$ledger->build_search_sql($array);
     // Count nb of line
     $max_line=$cn->count_sql($sql);
@@ -128,6 +130,7 @@ if (isset($_GET['viewsearch']))
         }
     }
     echo '<form method="get" onsubmit="set_reconcile(this);return false">';
+    echo HtmlInput::hidden("single_operation", $array['single_operation']);
     echo HtmlInput::hidden("tiers", $tiers);
     echo HtmlInput::submit("upd_rec", _("Mettre à jour"));
     echo HtmlInput::get_to_hidden(array('ctlc', 'amount_id', 'ledger'));

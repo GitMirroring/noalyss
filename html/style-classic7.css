@@ -2469,9 +2469,16 @@ span.title_tab_row {
      color : white !important;
      
 }
-/**
- * dialog box for adding, modifying predefined operation
- */
-#prdfop {
-
+p.info {
+    font-size:90%;
+    font-family: sans-serif;
+    font-style: italic;
 }
+
+/* Cell with tag */
+span.tagcell {
+    border-radius:3px;
+    border:1px solid darkblue;
+    padding:3px;margin:1px;
+    display: inline-block;
+}    

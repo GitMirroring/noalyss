@@ -72,7 +72,7 @@ if ( isset($_REQUEST['go']))
     $sql="select po_name , po_description from poste_analytique ".
          "where pa_id=$1 and ".
          " (po_name ilike '%'||$2||'%' or po_description ilike '%'|| $3||'%') order by po_name";
-    $array=$cn->get_array($sql,array($_c2,$plabel,$plabel));
+    $array=$cn->get_array($sql,array($c2,$plabel,$plabel));
 
     if (empty($array) == true)
     {

@@ -257,7 +257,15 @@ $path = array(
     // payment_method
     "payment_method"=>"ajax_payment_method",
     // update list of predefined operation if ledger changes
-    "up_predef"=>"ajax_update_predef"
+    "up_predef"=>"ajax_update_predef",
+    // cfgaction type of document
+    "cfgaction"=>'ajax_cfgaction',
+    // list options for multiple contact
+    "contact_option_list"=>'ajax_contact_option_list',
+    // Add group of tags
+   'tag_group'=>'ajax_tag_group',
+    // set the group for a tag
+    'tag_set_group'=>"ajax_tag_set_group"
 )    ;
 
 if (array_key_exists($op, $path)) {
@@ -388,58 +396,8 @@ EOF;
 </data>
 EOF;
 		break;
-	/* rem a cat of document */
-	case 'rem_cat_doc':
-		require_once NOALYSS_INCLUDE.'/class/document_type.class.php';
-		// if user can not return error message
-                $message="";
-		if ($g_user->check_action(PARCATDOC) == 0)
-		{
-			$html = "nok";
-                        $message=_('Action non autorisée');
-			header('Content-type: text/xml; charset=UTF-8');
-			echo <<<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<data>
-<dtid>$html</dtid>
-<message>$message</message>                                
-</data>
-EOF;
-			return;
-		}
-		// remove the cat if no action
-		$count_md = $cn->get_value('select count(*) from document_modele where md_type=$1', array($dt_id));
-		$count_a = $cn->get_value('select count(*) from action_gestion where ag_type=$1', array($dt_id));
+	
 
-		if ($count_md != 0 || $count_a != 0)
-		{
-                    $message=_('Des actions dépendent de cette catégorie');
-			$html = "nok";
-			header('Content-type: text/xml; charset=UTF-8');
-			echo <<<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<data>
-<dtid>$html</dtid>
-<message>$message</message>                                
-</data>
-EOF;
-			exit;
-		}
-		$cn->exec_sql('delete from document_type where dt_id=$1', array($dt_id));
-		$html = $dt_id;
-		header('Content-type: text/xml; charset=UTF-8');
-		echo <<<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<data>
-<dtid>$html</dtid>
-<message>$message</message>                                
-</data>
-EOF;
-		return;
-		break;
-	case 'mod_cat_doc':
-		require_once NOALYSS_TEMPLATE.'/document_mod_change.php';
-		break;
 	case 'dsp_tva':
 		$cn = Dossier::connect();
             // Filter the VAT 

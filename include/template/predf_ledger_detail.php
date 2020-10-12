@@ -8,7 +8,7 @@
 <?php echo $str_add_button?>
 </fieldset>
 
-<div class="fieldset">
+<div class="fieldset" style="overflow:auto;height:400px">
 <h1 class="fiedset"><?php echo $f_legend_detail?></h1>
 
 <table id="sold_item" width="100%" border="0">
