@@ -63,13 +63,15 @@ $action_document_type->set_object_name($ctl_id);
 
 if ($action=="input")
 {
-   
+   $action_document_type->set_order(["dt_id", "dt_value","dt_prefix"]);
+
     header('Content-type: text/xml; charset=UTF-8');
     echo $action_document_type->ajax_input()->saveXML();
     return;
 }
 elseif ($action=="save")
 {
+    $action_document_type->set_order(["dt_id", "dt_value","dt_prefix"]);
     $xml=$action_document_type->ajax_save();
     header('Content-type: text/xml; charset=UTF-8');
     echo $xml->saveXML();
