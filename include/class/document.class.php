@@ -548,7 +548,6 @@ class Document
         $p_tag=strtoupper($p_tag);
         $p_tag=str_replace('=','',$p_tag);
         $r="Tag inconnu";
-
         switch ($p_tag)
         {
 		case 'DATE':
@@ -1168,10 +1167,13 @@ class Document
                 if ( ! isset ($p_array['repo'])) return "";
                 $ret=$this->db->get_value('select r_phone from public.stock_repository where r_id=$1',array($p_array['repo']));
                 return $ret;
+        // Follow up
+        //Title
         case 'TITLE':
             if ( isset($p_array['ag_title']))                 return $p_array['ag_title'];
             return "";
             break;
+        // Description
         case 'DESCRIPTION':
             if ( isset($p_array['ag_id'])) {
                 // retrieve first comment
@@ -1183,17 +1185,39 @@ class Document
             }
             return "";
             break;
+        // Comment
         case 'COMMENT':
             if ( isset($p_array['ag_id'])) {
                 // retrieve first comment
-                $aComment=$this->db->get_array("select agc_comment "
+                $description=$this->db->get_array("select agc_comment ,"
+                        . " to_char(agc_date,'DD-MM-YY HH24:MI') as str_date ,"
+                        . " tech_user "
+                        . "  from action_gestion_comment "
+                        . "where ag_id=$1 order by 1 asc limit 2"
+                        ,[$p_array['ag_id']]);
+                if ( count($description) == 2 ) {
+                    return $description[1]['agc_comment'];
+                }
+            }
+            return "";
+            break;
+        // Comments
+        case 'COMMENTS':
+            if ( isset($p_array['ag_id'])) {
+                // retrieve first comment
+                $aComment=$this->db->get_array("select agc_comment ,"
+                        ." to_char(agc_date,'DD-MM-YY HH24:MI') as str_date ,"
+                        . " tech_user "
                         . "  from action_gestion_comment "
                         . "where ag_id=$1 order by 1"
                         ,[$p_array['ag_id']]);
                 $nb_comment=count($aComment);
                 $description="";
                 for ($i=0;$i< $nb_comment;$i++) {
-                    $description.=$aComment[$i]['agc_comment']."\n";
+                    $description.= sprintf(_('le %s , %s écrit %s'."\n"),
+                            $aComment[$i]['str_date'],
+                            $aComment[$i]['tech_user'],
+                            $aComment[$i]['agc_comment']);
                 }
                 return $description;
             }
