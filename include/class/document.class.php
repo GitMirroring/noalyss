@@ -550,11 +550,11 @@ class Document
         $r="Tag inconnu";
         switch ($p_tag)
         {
-		case 'DATE':
-			$r=(isset ($p_array['ag_timestamp']))?$p_array['ag_timestamp']:$p_array['e_date'];
-			break;
+            case 'DATE':
+                    $r=(isset ($p_array['ag_timestamp']))?$p_array['ag_timestamp']:$p_array['e_date'];
+                    break;
         case 'DATE_CALC':
-                $r=' Date inconnue ';
+                $r=' ';
             // Date are in $p_array['ag_date']
             // or $p_array['e_date']
             if ( isset ($p_array['ag_timestamp'])) {
@@ -565,6 +565,7 @@ class Document
                 $date=format_date($p_array['e_date'],'DD.MM.YYYY','YYYY-MM-DD');
                 $r=$date;
             }
+            return $r;
             break;
             //
             //  the company priv
@@ -822,16 +823,21 @@ class Document
              */
         case 'DATE_LIMIT_CALC':
             if ( isset ($p_array["e_ech"] )) 
+                    return format_date($p_array["e_ech"],'DD.MM.YYYY','YYYY-MM-DD');
+            if ( isset ($p_array["ech"] )) 
                     return format_date($p_array["ech"],'DD.MM.YYYY','YYYY-MM-DD');
             if ( isset ($p_array["ag_remind_date"] )) 
                     return format_date($p_array["ag_remind_date"],'DD.MM.YYYY','YYYY-MM-DD');
-            
+            return "";
                 break;
       case 'DATE_LIMIT':
-         if ( isset ($p_array["e_ech"] )) 
+              if ( isset ($p_array["ech"] )) 
                     return $p_array["ech"];
+             if ( isset ($p_array["e_ech"] )) 
+                    return $p_array["e_ech"];
             if ( isset ($p_array["ag_remind_date"] )) 
                     return $p_array["ag_remind_date"];
+            return "";
             break;
         case 'MARCH_NEXT':
             $this->counter++;
@@ -839,109 +845,108 @@ class Document
             break;
 
         case 'VEN_ART_NAME':
-            extract ($p_array, EXTR_SKIP);
-            $id='e_march'.$this->counter;
             // check if the march exists
-            if ( ! isset (${$id})) return "";
+            if ( ! isset ($p_array["e_march".$this->counter])) return "";
             // check that something is sold
-            if ( ${'e_march'.$this->counter.'_price'} != 0 && ${'e_quant'.$this->counter} != 0 )
+            if ( $p_array['e_march'.$this->counter.'_price'] != 0 && $p_array['e_quant'.$this->counter] != 0 )
             {
                 $f=new Fiche($this->db);
-                $f->get_by_qcode(${$id},false);
+                $f->get_by_qcode($p_array["e_march".$this->counter],false);
                 $r=$f->strAttribut(ATTR_DEF_NAME);
             }
             else $r = "";
             break;
        case 'VEN_ART_LABEL':
-            extract ($p_array, EXTR_SKIP);
             $id='e_march'.$this->counter."_label";
             // check if the march exists
 
-            if (! isset (${$id}) || (isset (${$id}) && strlen(trim(${$id})) == 0))
+            if (! isset ($p_array[$id]) || (isset ($p_array[$id]) && strlen(trim($p_array[$id])) == 0))
                 {
                     $id = 'e_march' . $this->counter;
                     // check if the march exists
-                    if (!isset(${$id}))
+                    if (!isset($p_array[$id]))
                         $r= "";
                     else 
                     {
                     // check that something is sold
-                        if (${'e_march' . $this->counter . '_price'} != 0 && ${'e_quant' . $this->counter} != 0)
+                        if ($p_array['e_march'.$this->counter. '_price'] != 0 
+                                && $p_array['e_quant' . $this->counter] != 0)
                         {
                             $f = new Fiche($this->db);
-                            $f->get_by_qcode(${$id}, false);
+                            $f->get_by_qcode($p_array[$id], false);
                             $r = $f->strAttribut(ATTR_DEF_NAME);
                         } else
                             $r = "";
                     }
                 }
                 else
-                    $r=${'e_march'.$this->counter.'_label'};
+                    $r=$p_array[$id];
             break;
         case 'VEN_ART_STOCK_CODE':
-            extract ($p_array, EXTR_SKIP);
                     $id = 'e_march' . $this->counter;
                     // check if the march exists
-                    if (!isset(${$id}))
+                    if (!isset($p_array[$id]))
                         $r= "";
                     else 
                     {
                     // check that something is sold
-                        if (${'e_march' . $this->counter . '_price'} != 0 && ${'e_quant' . $this->counter} != 0)
+                        if ($p_array['e_march' . $this->counter . '_price'] != 0 
+                                && $p_array['e_quant' . $this->counter] != 0)
                         {
                             $f = new Fiche($this->db);
-                            $f->get_by_qcode(${$id}, false);
+                            $f->get_by_qcode($p_array[$id], false);
                             $r = $f->strAttribut(ATTR_DEF_STOCK);
                             $r=($r == NOTFOUND)?'':$r;
                         } 
                     }
             break;
+        case 'VEN_QCODE':
+            $id='e_march'.$this->counter ;
+            if ( !isset ($p_array[$id]) ) return "";
+            return $p_array[$id];
+            break;
         case 'VEN_ART_PRICE':
-            extract ($p_array, EXTR_SKIP);
             $id='e_march'.$this->counter.'_price' ;
-            if ( !isset (${$id}) ) return "";
-			if (${$id} == 0 ) return "";
-            $r=${$id};
+            if ( !isset ($p_array[$id]) ) return "";
+			if ( $p_array[$id]  == 0 ) return "";
+            $r=$p_array[$id];
             break;
 
         case 'TVA_RATE':
         case 'VEN_ART_TVA_RATE':
-            extract ($p_array, EXTR_SKIP);
             $id='e_march'.$this->counter.'_tva_id';
-            if ( !isset (${$id}) ) return "";
-            if ( ${$id} == -1 || ${$id}=='' ) return "";
+            if ( !isset ($p_array[$id]) ) return "";
+            if ( $p_array[$id] == -1 || $p_array[$id]=='' ) return "";
             $march_id='e_march'.$this->counter.'_price' ;
-            if ( ! isset (${$march_id})) return '';
+            if ( ! isset ($p_array[$march_id])) return '';
             $tva=new Acc_Tva($this->db);
-            $tva->set_parameter("id",${$id});
+            $tva->set_parameter("id",$p_array[$id]);
             if ( $tva->load() == -1) return '';
             return $tva->get_parameter("rate");
             break;
 
         case 'TVA_CODE':
         case 'VEN_ART_TVA_CODE':
-            extract ($p_array, EXTR_SKIP);
             $id='e_march'.$this->counter.'_tva_id';
-            if ( !isset (${$id}) ) return "";
-            if ( ${$id} == -1 ) return "";
+            if ( !isset ($p_array[$id]) ) return "";
+            if ( $p_array[$id] == -1 ) return "";
             $qt='e_quant'.$this->counter;
             $price='e_march'.$this->counter.'_price' ;
-            if ( ${$price} == 0 || ${$qt} == 0
-                    || strlen(trim( $price )) ==0
-                    || strlen(trim($qt)) ==0)
+            if ( $p_array[$price] == 0 || $p_array[$qt] == 0
+                    || strlen(trim( $p_array[$price] )) ==0
+                    || strlen(trim($p_array[$qt])) ==0)
                 return "";
 
-            $r=${$id};
+            $r=$p_array[$id];
             break;
 
         case 'TVA_LABEL':
-            extract ($p_array, EXTR_SKIP);
             $id='e_march'.$this->counter.'_tva_id';
-            if ( !isset (${$id}) ) return "";
+            if ( !isset ($p_array[$id]) ) return "";
             $march_id='e_march'.$this->counter.'_price' ;
-            if ( ! isset (${$march_id})) return '';
-            if ( ${$march_id} == 0) return '';
-            $tva=new Acc_Tva($this->db,${$id});
+            if ( ! isset ($p_array[$march_id])) return '';
+            if ( $p_array[$march_id] == 0) return '';
+            $tva=new Acc_Tva($this->db,$p_array[$id]);
             if ($tva->load() == -1 ) return "";
             $r=$tva->get_parameter('label');
 
@@ -950,131 +955,126 @@ class Document
             /* total VAT for one sold */
         case 'TVA_AMOUNT':
         case 'VEN_TVA':
-            extract ($p_array, EXTR_SKIP);
             $qt='e_quant'.$this->counter;
             $price='e_march'.$this->counter.'_price' ;
             $tva='e_march'.$this->counter.'_tva_id';
             /* if we do not use vat this var. is not set */
-            if ( !isset(${$tva}) ) return '';
-            if ( !isset (${'e_march'.$this->counter}) ) return "";
-             if ( !isset (${$tva}) ) return "";
+            if ( !isset($p_array[$tva]) ) return '';
+            if ( !isset ($p_array [ 'e_march'.$this->counter ]) ) return "";
+             if ( !isset ($p_array[$tva]) ) return "";
             // check that something is sold
-            if ( ${$price} == 0 || ${$qt} == 0
-                    || strlen(trim( $price )) ==0
-                    || strlen(trim($qt)) ==0)
+            if ( $p_array[$price] == 0 || $p_array[$qt] == 0
+                    || strlen(trim( $p_array[$price] )) ==0
+                    || strlen(trim($p_array[$qt])) ==0)
                 return "";
-            $r=${'e_march'.$this->counter.'_tva_amount'};
+            $r=$p_array['e_march'.$this->counter.'_tva_amount'];
             break;
             /* TVA automatically computed */
         case 'VEN_ART_TVA':
         
-            extract ($p_array, EXTR_SKIP);
             $qt='e_quant'.$this->counter;
             $price='e_march'.$this->counter.'_price' ;
             $tva='e_march'.$this->counter.'_tva_id';
-            if ( !isset (${'e_march'.$this->counter}) ) return "";
-            if ( !isset (${$tva}) ) return "";
+            if ( !isset ($p_array['e_march'.$this->counter]) ) return "";
+            if ( !isset ($p_array[$tva]) ) return "";
             // check that something is sold
-            if ( ${$price} == 0 || ${$qt} == 0
-                    || strlen(trim( $price )) ==0
-                    || strlen(trim($qt)) ==0)
+            if ( $p_array[$price] == 0 || $p_array[$qt] == 0
+                    || strlen(trim( $p_array[$price] )) ==0
+                    || strlen(trim($p_array[$qt])) ==0)
                 return "";
-            $oTva=new Acc_Tva($this->db,${$tva});
+            $oTva=new Acc_Tva($this->db,$p_array[$tva]);
             if ($oTva->load() == -1 ) return "";
-            $r=round(${$price},2)*$oTva->get_parameter('rate');
+            $r=round($p_array[$price],2)*$oTva->get_parameter('rate');
             $r=round($r,2);
             break;
 
         case 'VEN_ART_TVAC':
-            extract ($p_array, EXTR_SKIP);
             $qt='e_quant'.$this->counter;
             $price='e_march'.$this->counter.'_price' ;
-            $tva='e_march'.$this->counter.'_tva_id';
-            if ( !isset (${'e_march'.$this->counter}) ) return "";
-             if ( !isset (${$tva}) ) return "";
+            if ( !isset ($p_array['e_march'.$this->counter]) ) return "";
+             if ( !isset ($p_array['e_march'.$this->counter.'_tva_id']) ) return "";
             // check that something is sold
-            if ( ${$price} == 0 || ${$qt} == 0
-                    || strlen(trim( $price )) ==0
-                    || strlen(trim($qt)) ==0)
+            if ( $p_array[$price] == 0 || $p_array[$qt] == 0
+                    || strlen(trim( $p_array[$price] )) ==0
+                    || strlen(trim($p_array[$qt])) ==0)
                 return "";
-            if ( ! isset (${$tva}) ) return '';
-            $tva=new Acc_Tva($this->db,${$tva});
+            if ( ! isset ($p_array['e_march'.$this->counter.'_tva_id']) ) return '';
+            $tva=new Acc_Tva($this->db,$p_array['e_march'.$this->counter.'_tva_id'] );
             if ($tva->load() == -1 )
             {
-                $r=round(${$price},2);
+                $r=round($p_array[$price],2);
             }
             else
             {
-                $r=round(${$price}*$tva->get_parameter('rate')+${$price},2);
+                $r=round($p_array[$price]*$tva->get_parameter('rate')+$p_array[$price],2);
             }
 
             break;
 
         case 'VEN_ART_QUANT':
-            extract ($p_array, EXTR_SKIP);
             $id='e_quant'.$this->counter;
-            if ( !isset (${$id}) ) return "";
+            if ( !isset ($p_array[$id]) ) return "";
             // check that something is sold
-            if ( ${'e_march'.$this->counter.'_price'} == 0
-                    || ${'e_quant'.$this->counter} == 0
-                    || strlen(trim( ${'e_march'.$this->counter.'_price'} )) ==0
-                    || strlen(trim(${'e_quant'.$this->counter})) ==0 )
+            if ( $p_array['e_march'.$this->counter.'_price'] == 0
+                    || $p_array['e_quant'.$this->counter] == 0
+                    || strlen(trim( $p_array['e_march'.$this->counter.'_price'] )) ==0
+                    || strlen(trim($p_array['e_quant'.$this->counter])) ==0 )
                 return "";
-            $r=${$id};
+            $r=$p_array[$id];
             break;
 
         case 'VEN_HTVA':
-            extract ($p_array, EXTR_SKIP);
             $id='e_march'.$this->counter.'_price' ;
             $quant='e_quant'.$this->counter;
-            if ( !isset (${$id}) ) return "";
+            if ( !isset ($p_array[$id]) ) return "";
 
             // check that something is sold
-            if ( ${'e_march'.$this->counter.'_price'} == 0 || ${'e_quant'.$this->counter} == 0
-                    || strlen(trim( ${'e_march'.$this->counter.'_price'} )) ==0
-                    || strlen(trim(${'e_quant'.$this->counter})) ==0)
+            if ( $p_array['e_march'.$this->counter.'_price'] == 0 || $p_array['e_quant'.$this->counter] == 0
+                    || strlen(trim( $p_array['e_march'.$this->counter.'_price'] )) ==0
+                    || strlen(trim($p_array['e_quant'.$this->counter])) ==0)
                 return "";
 			bcscale(4);
-            $r=bcmul(${$id},${$quant});
+            $r=bcmul($p_array[$id],$p_array[$quant]);
 			$r=round($r,2);
             break;
 
         case 'VEN_TVAC':
-            extract ($p_array, EXTR_SKIP);
             $id='e_march'.$this->counter.'_tva_amount' ;
             $price='e_march'.$this->counter.'_price' ;
             $quant='e_quant'.$this->counter;
-            if ( ! isset(${'e_march'.$this->counter.'_price'})|| !isset(${'e_quant'.$this->counter}))     return "";
+            if ( ! isset($p_array['e_march'.$this->counter.'_price'])|| !isset($p_array['e_quant'.$this->counter])) {
+                return "";
+            }
             // check that something is sold
-            if ( ${'e_march'.$this->counter.'_price'} == 0 || ${'e_quant'.$this->counter} == 0 ) return "";
+            if ( $p_array['e_march'.$this->counter.'_price'] == 0 || $p_array['e_quant'.$this->counter] == 0 ) { return "";}
 			bcscale(4);
             // if TVA not exist
-            if ( ! isset(${$id}))
-                $r=  bcmul(${$price},${$quant});
+            if ( ! isset($p_array[$id]))
+                $r=  bcmul($p_array[$price],$p_array[$quant]);
             else{
-                $r=  bcmul(${$price},${$quant});
-                $r=bcadd($r,${$id});
+                $r=  bcmul($p_array[$price],$p_array[$quant]);
+                $r=bcadd($r,$p_array[$id]);
 			}
 			$r=round($r,2);
 			return $r;
             break;
 
         case 'TOTAL_VEN_HTVA':
-            extract($p_array, EXTR_SKIP);
-			bcscale(4);
+            bcscale(4);
             $sum=0.0;
-            for ($i=0;$i<$nb_item;$i++)
+            if ( !isset($p_array["nb_item"]) ) return "";
+            for ($i=0;$i<$p_array["nb_item"];$i++)
             {
                 $sell='e_march'.$i.'_price';
                 $qt='e_quant'.$i;
 
-                if ( ! isset (${$sell}) ) break;
+                if ( ! isset ($p_array[$sell]) ) break;
 
-                if ( strlen(trim(${$sell})) == 0 ||
-                        strlen(trim(${$qt})) == 0 ||
-                        ${$qt}==0 || ${$sell}==0)
+                if ( strlen(trim($p_array[$sell])) == 0 ||
+                        strlen(trim($p_array[$qt])) == 0 ||
+                        $p_array[$qt]==0 || $p_array[$sell]==0)
                     continue;
-                $tmp1=bcmul(${$sell},${$qt});
+                $tmp1=bcmul($p_array[$sell],$p_array[$qt]);
                 $sum=bcadd($sum,$tmp1);
 
 
@@ -1082,20 +1082,20 @@ class Document
             $r=round($sum,2);
             break;
         case 'TOTAL_VEN_TVAC':
-            extract($p_array, EXTR_SKIP);
+            if ( !isset($p_array["nb_item"]) ) return "";
             $sum=0.0;
-			bcscale(4);
-            for ($i=0;$i<$nb_item;$i++)
+            bcscale(4);
+            for ($i=0;$i<$p_array["nb_item"];$i++)
             {
                 $tva='e_march'.$i.'_tva_amount';
                 $tva_amount=0;
                 /* if we do not use vat this var. is not set */
-                if ( isset(${$tva}) )
+                if ( isset($p_array[$tva]) )
                 {
-                    $tva_amount=${$tva};
+                    $tva_amount=$p_array[$tva];
                 }
-                $sell=${'e_march'.$i.'_price'};
-                $qt=${'e_quant'.$i};
+                $sell=$p_array['e_march'.$i.'_price'];
+                $qt=$p_array['e_quant'.$i];
                 $tot=bcmul($sell,$qt);
                 $tot=bcadd($tot,$tva_amount);
                 $sum=bcadd($sum,$tot);
@@ -1104,14 +1104,14 @@ class Document
 
             break;
         case 'TOTAL_TVA':
-            extract($p_array, EXTR_SKIP);
+            if ( !isset($p_array["nb_item"]) ) return "";
             $sum=0.0;
-            for ($i=0;$i<$nb_item;$i++)
+            for ($i=0;$i<$p_array["nb_item"];$i++)
             {
                 $tva='e_march'.$i.'_tva_amount';
-                if (! isset(${$tva})) $tva_amount=0.0;
+                if (! isset($p_array[$tva])) $tva_amount=0.0;
                 else {
-                    $tva_amount=${$tva};
+                    $tva_amount=$p_array[$tva];
                     $tva_amount=($tva_amount=="")?0:$tva_amount;
                 }
                 $sum+=$tva_amount;
