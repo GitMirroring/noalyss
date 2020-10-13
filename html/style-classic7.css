@@ -2482,3 +2482,8 @@ span.tagcell {
     padding:3px;margin:1px;
     display: inline-block;
 }    
+
+#action_add_action2_list {
+    height:15rem;
+    overflow: auto;
+}

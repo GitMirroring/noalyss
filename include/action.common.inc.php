@@ -30,6 +30,7 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
+require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
 $http=new HttpInput();
 $supl_hidden = '';
 if (isset($_REQUEST['sc']))
@@ -157,9 +158,9 @@ if ($sub_action == "update")
 	//----------------------------------------------------------------------
 	// Add a related action
 	//----------------------------------------------------------------------
-	if (isset($_POST['add_action_here']))
+	if (isset($_GET['add_action_here']))
 	{   
-                $ag_id=$http->post('ag_id',"number");
+                $ag_id=$http->get('ag_id',"number");
 		$act = new Follow_Up($cn,$ag_id);
                 if ($g_user->can_write_action($act->ag_id) == FALSE )
 		{
@@ -168,24 +169,37 @@ if ($sub_action == "update")
 			echo '</div>';
 			return;
 		}
-
-		//----------------------------------------
+                        //----------------------------------------
 		// puis comme ajout normal (copier / coller )
 		$act->ag_id = 0;
 		$act->d_id = 0;
-		$act->action = $http->post('ag_id',"number");
+		$act->action = $ag_id;
                 $act->ag_timestamp=date('d.m.Y');
+                $act->ag_dest=$g_user->get_profile();
                 $act->ag_hour="";
                 $act->ag_title="";
                 $act->ag_remind_date="";
+                $act->dt_id = $http->request("action_type","number");
+                $act->d_id = 0;
+                $act->ag_comment = "";
+                $act->qcode_dest="";
+                if (isset($_REQUEST['qcode'])){
+			$act->qcode_dest = $http->request ('qcode');
+                } else {
+                    // Retrieve recipient of previous followup-action
+                    $act->qcode_dest=$cn->get_value("select ad_value from action_gestion ag join fiche_detail fd
+                             on (fd.f_id=ag.f_id_dest)  where ag_id=$1 and ad_id=$2",
+                            [$ag_id,ATTR_DEF_QUICKCODE ]);
+                }
+                $act->f_id_dest=$act->qcode_dest;
+                $act->save();
 		echo '<div class="content">';
 
 		// Add hidden tag
 		echo '<form  enctype="multipart/form-data" action="do.php" method="post"">';
 
-		$act->ag_comment = "";
-		if (isset($_REQUEST['qcode_dest']))
-			$act->qcode_dest = $_REQUEST['qcode_dest'];
+		
+		
 		echo $act->Display('NEW', false, $base, $retour);
 
 		echo '<input type="hidden" name="ac" value="' . $http->request('ac') . '">';
@@ -195,6 +209,7 @@ if ($sub_action == "update")
 		echo $supl_hidden;
 		echo '</form>';
 		echo '</div>';
+                return;
 	}
 }
 //--------------------------------------------------------------------------------
@@ -222,7 +237,27 @@ if ($sub_action == 'detail')
             echo '<input type="hidden" name="sa" value="update">';
             echo '<input type="hidden" id="delete" name="delete" value="0">';
             echo HtmlInput::submit("save", "Sauve",' onclick="$(\'delete\').value=0"');
-            echo HtmlInput::submit("add_action_here", _("Ajoute un événement à celui-ci"),' onclick="$(\'delete\').value=0"');
+            
+            // Create select box for new Action
+            $selbox=new Select_Box("action_add_action2", _("Ajout action"));
+            $selbox->set_position("in-absolute");
+            $selbox->set_filter("y");
+            $aDocumentType=$cn->get_array("select dt_id,dt_value from document_type order by 2");
+            $nbDocumentType=count($aDocumentType);
+            $ac=$http->request("ac");
+            $dossier_id=Dossier::id();
+            $sup_parameter=HtmlInput::array_to_string(["sc","sb","f_id","qcode"], $_REQUEST,"&amp;");
+            for ($i=0;$i<$nbDocumentType;$i++) {
+                $selbox->add_url($aDocumentType[$i]['dt_value'], 
+                                "do.php?".http_build_query([ "ac"=>$ac,
+                                "gDossier"=>$dossier_id,
+                                "sa"=>"update",
+                                "add_action_here"=>"yes",
+                                "ag_id"=>$ag_id,
+                                "action_type"=>$aDocumentType[$i]["dt_id"]]).$sup_parameter);
+    
+            }
+            echo $selbox->input();
             
             // 
             if ($g_user->can_delete_action($ag_id))
@@ -291,15 +326,18 @@ if ($sub_action == "save_action_st2")
 	$act->md_id = (isset($_POST['gen_doc'])) ? $_POST['gen_doc'] : 0;
 
         $act->verify();
-        
+        $sup_parameter=HtmlInput::array_to_string(["sc","sb","f_id","qcode"], $_REQUEST,"&amp;");
 	// insert into action_gestion
-	echo $act->update();
-	$url = "?$base&sa=detail&ag_id=" . $act->ag_id . '&' . dossier::get();
-	echo '<p><a class="mtitle" href="' . $url . '">' . hb(_('Evènement Sauvée').'  : ' . $act->ag_ref) . '</a></p>';
+	$act->update();
+        
+	$url = "?sa=detail&ag_id=" . $act->ag_id . '&' . dossier::get()."&ac=".$http->request("ac").
+                $sup_parameter;
+	echo '<p><a class="mtitle" href="' . $url . '">' . hb(_('Action Sauvée').'  : ' . $act->ag_ref) . '</a></p>';
 
 	Follow_Up::show_action_list($cn,$base);
-	$url = "?$base&sa=detail&ag_id=" . $act->ag_id . '&' . dossier::get();
-	echo '<p><a class="mtitle" href="' . $url . '">' . hb(_('Evènement Sauvée').'  : ' . $act->ag_ref) . '</a></p>';
+	$url = "?sa=detail&ag_id=" . $act->ag_id . '&' . dossier::get()."&ac=".$http->request("ac").
+                $sup_parameter;
+	echo '<p><a class="mtitle" href="' . $url . '">' . hb(_('Action Sauvée').'  : ' . $act->ag_ref) . '</a></p>';
     } catch (Exception $e)
     {
         echo '<span class="notice">';
@@ -318,7 +356,13 @@ if ($sub_action == "add_action")
 	$act->fromArray($_POST);
 	$act->dt_id = $http->request("action_type","number");
 	$act->d_id = 0;
+        $f_id_dest=$http->request("f_id","number",null); 
+        if ( $f_id_dest != NULL ) {
+            $act->qcode_dest=$cn->get_value("select ad_value from fiche_detail where ad_id=$1 and f_id=$2",
+                    [ATTR_DEF_QUICKCODE,$f_id_dest]);
+        }
 	$act->save();
+        
 	echo '<div class="content">';
 	// Add hidden tag
 	echo '<form method="post" action="do.php" name="form_add" id="form_add" enctype="multipart/form-data" >';
@@ -328,7 +372,7 @@ if ($sub_action == "add_action")
 
 	$act->ag_comment =Decode($http->post("ag_comment","string",""));
 	if (isset($_REQUEST['qcode']))
-		$act->qcode_dest = $_REQUEST['qcode'];
+		$act->qcode_dest = $http->request('qcode');
 	echo $act->Display('NEW', false, $base, $retour);
 
 	echo '<input type="hidden" name="ac" value="' . $http->request("ac") . '">';

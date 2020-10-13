@@ -2448,3 +2448,7 @@ span.tagcell {
     color:black;
         
 }    
+#action_add_action2_list {
+    height:15rem;
+    overflow: auto;
+}
