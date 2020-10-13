@@ -83,7 +83,7 @@ class Follow_Up
     var $ag_dest;  /*!< $ag_dest person who is in charged */
     var $ag_contact;  /*!< $ag_contact contact */
     var $ag_remind_date;  /*!< $ag_contact contact */
-
+    var $f_id_dest ; /*!< followup action recipient */
     /**
      * @brief $operation string related operation
      */
@@ -108,6 +108,7 @@ class Follow_Up
         $this->operation="";
         $this->action="";
         $this->f_dest_id=0;
+        $this->f_id_dest=0;
     }
     /**
      * Create a filter based on the current user, 
