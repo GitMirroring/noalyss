@@ -517,8 +517,7 @@ class Follow_Up
     function save()
     {
 
-        // Get The sequence id,
-        $seq_name="seq_doc_type_".$this->dt_id;
+       
         $str_file="";
         $add_file='';
 
@@ -538,6 +537,8 @@ class Follow_Up
             $this->ag_title=$doc_mod->dt_value;
         }
         $this->ag_id=$this->db->get_next_seq('action_gestion_ag_id_seq');
+         // Get The sequence id,
+        $seq_name="seq_doc_type_".$this->dt_id;
 
         // Create the reference
         $ag_ref=$this->db->get_value('select dt_prefix from document_type where dt_id=$1', array($this->dt_id)).'-'.$this->db->get_next_seq($seq_name);
@@ -564,7 +565,7 @@ class Follow_Up
             $this->dt_id, /* 3 */
             $this->ag_title, /* 4 */
             $exp->id, /* 5 */
-            $ag_ref, /* 6 */
+            $this->ag_ref, /* 6 */
             $this->ag_dest, /* 7 */
             $this->ag_hour, /* 8 */
             $this->ag_priority, /* 9 */
@@ -797,7 +798,6 @@ class Follow_Up
         $old=new Follow_Up($this->db);
         $old->ag_id=$this->ag_id;
         $old->get();
-
         // If ag_ref changed then check if unique
         if ($old->ag_ref!=$this->ag_ref)
         {
