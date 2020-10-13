@@ -119,6 +119,7 @@ $bar = navigation_bar($offset, $max_line, $step, $page);
 
 echo $msg;
 echo $Ledger->display_search_form();
+echo HtmlInput::filter_table('history_operation_t', '0,1,2,3,4,5,6,7', 1);
 echo $bar;
 echo '<form method="GET" id="fpaida" class="print">';
 echo HtmlInput::hidden("ac", $http->request('ac'));

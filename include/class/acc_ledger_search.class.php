@@ -763,7 +763,7 @@ class Acc_Ledger_Search
             return array(0, _("Aucun enregistrement trouvé"));
         }
 
-        $r.='<table class="result">';
+        $r.='<table class="result" id="history_operation_t">';
 
 
         $r.="<tr >";
