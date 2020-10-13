@@ -107,22 +107,22 @@ class Select_Box
                         try {
                           
                             
-                            if (! document.getElementById("select_box_content") ) {
+                            if (! document.getElementById("select_box%s") ) {
                             
                                 var newDiv=new Element("div");
-                                newDiv.id="select_box_content";
+                                newDiv.id="select%s";
                                 document.body.appendChild(newDiv);
                                 newDiv.addClassName("select_box");
-                                $("select_box_content").onmouseleave=function() {
+                                $("select_box%s").onmouseleave=function() {
                                         try {
-                                           var newDiv=$("select_box_content");
+                                           var newDiv=$("select_box%s");
                                            newDiv.setStyle({display:"none"});
                                         } catch(e) {
                                              alert(e.message);
                                         }
                                        }
                             } else {
-                                 var newDiv=document.getElementById("select_box_content");
+                                 var newDiv=document.getElementById("select_box%s");
                             }
                             newDiv.innerHTML=$("select_box%s").innerHTML;
                             var pos=$("%s_bt").cumulativeOffset();
@@ -137,7 +137,7 @@ class Select_Box
                              alert(e.message);
                         }
                        }
-                        ', $this->id, $this->id, $this->id, $list_id, $list_id);
+                        ', $this->id,$this->id,$this->id,$this->id,$this->id, $this->id, $this->id, $this->id,$list_id, $list_id);
                
                         break;
             
