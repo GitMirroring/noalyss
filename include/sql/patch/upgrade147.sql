@@ -9,7 +9,8 @@ and dt_id in (2,3,4,5,10,20,21);
 
 INSERT INTO public.document_option (do_code, document_type_id, do_enable, do_option) select  'contact_multiple',dt_id , 1, NULL
 from document_type where 
-not exists (select 1 from document_option where document_type_id in (2,3,4,5,10,20) and do_code='contact_multiple' );
+not exists (select 1 from document_option where document_type_id in (2,3,4,5,10,20) and do_code='contact_multiple' )
+and dt_id in (2,3,4,5,10,20) ;
 
 INSERT INTO public.document_option (do_code, document_type_id, do_enable, do_option) select 'make_invoice', dt_id, 1, NULL
 from document_type 
