@@ -49,6 +49,23 @@ class Document_Option
         return $display_operation;
     }
     /**
+     * returns true if comment are available otherwise false
+     * 
+     * @param int $p_document_type Document_Type.dt_id
+     * @return boolean
+     */
+    static function is_enable_comment($p_document_type)
+    {
+        $display_operation=false;
+        $cn=Dossier::connect();
+        if ($cn->get_value("select do_enable from document_option where document_type_id=$1 and do_code = $2",
+                        [$p_document_type, 'followup_comment'])=='1')
+        {
+            $display_operation=true;
+        }
+        return $display_operation;
+    }
+    /**
      * returns option from  the operation_detail 
      * 
      * @param int $p_document_type Document_Type.dt_id
@@ -97,6 +114,20 @@ class Document_Option
             $return=true;
         }
         return $return;
+    }
+    /**
+     * Returns true if we can add a comment , or false if it is not possible
+     * @param integer $p_id is the action_gestion.ag_id
+     */
+    static  function can_add_comment($p_id) {
+        $cn=Dossier::connect();
+        $document_type=$cn->get_value("select ag_type from action_gestion where ag_id=$1",[$p_id]);
+        if (Document_Option::is_enable_comment($document_type)) return true;
+        // If comment are disable, only the first one is authorized as event description
+        $cnt=$cn->get_value("select count(*) from action_gestion_comment where ag_id=$1",[$p_id]);
+        if ($cnt == 0 ) return true;
+        return false;
+        
     }
 
 }

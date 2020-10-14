@@ -276,10 +276,12 @@ for( $c=0;$c<count($acomment);$c++){
         echo $comment;
 }
 echo '<span class="noprint">';
-echo $desc->input();
+if (  Document_Option::can_add_comment($ag_id) ) {
+    echo $desc->input();
+}
 echo '</span>';
 ?>
-<?php if ($p_view != "READ" ): ?>
+<?php if ($p_view != "READ" && Document_Option::can_add_comment($ag_id)): ?>
 <p class="noprint">
 <input type="button" id="bt_enlarge" <?php echo $style_enl?> value="+" onclick="enlarge('ag_comment');return false;">
 <input type="button" id="bt_small"  <?php echo $style_small?> value="-" style="display:none" onclick="small('ag_comment');return false;">

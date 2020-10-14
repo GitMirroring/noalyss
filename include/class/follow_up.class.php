@@ -38,6 +38,7 @@ require_once NOALYSS_INCLUDE.'/lib/inum.class.php';
 require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 require_once NOALYSS_INCLUDE.'/lib/irelated_action.class.php';
 require_once NOALYSS_INCLUDE.'/class/tag.class.php';
+require_once NOALYSS_INCLUDE.'/class/document_option.class.php';
 require_once NOALYSS_INCLUDE.'/class/default_menu.class.php';
 require_once NOALYSS_INCLUDE.'/lib/inplace_edit.class.php';
 require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
@@ -592,7 +593,7 @@ class Follow_Up
         /* Upload the documents */
         $doc=new Document($this->db);
         $doc->Upload($this->ag_id);
-        if (trim($this->ag_comment)!='')
+        if (trim($this->ag_comment)!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
                     , array($this->ag_id, $_SESSION['g_user'], $this->ag_comment));

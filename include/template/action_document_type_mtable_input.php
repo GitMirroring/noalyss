@@ -94,6 +94,14 @@ echo $i->input();
 echo _("Création de facture");
 ?>
         </li> 
+        <li>
+<?php
+$i=new ICheckBox("followup_comment",1);
+if ( Document_Option::is_enable_comment($table->dt_id)) $i->set_check(1); else $i->set_check(0);
+echo $i->input();
+echo _("Commentaire");
+?>
+        </li> 
     </ul>
 
 </div>

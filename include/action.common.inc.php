@@ -193,10 +193,9 @@ if ($sub_action == "update")
                 }
                 $act->f_id_dest=$act->qcode_dest;
                 $act->save();
-		echo '<div class="content">';
 
 		// Add hidden tag
-		echo '<form  enctype="multipart/form-data" action="do.php" method="post"">';
+		echo '<form  enctype="multipart/form-data" style="display:inline" action="do.php" method="post"">';
 
 		
 		
@@ -207,7 +206,6 @@ if ($sub_action == "update")
 		echo '<input type="submit" class="button" name="save_action_st2" value="' . _('Enregistrer') . '">';
 		echo $supl_hidden;
 		echo '</form>';
-		echo '</div>';
                 return;
 	}
 }
@@ -228,7 +226,7 @@ if ($sub_action == 'detail')
 	if ($g_user->can_write_action($ag_id)  == true)
 	{
             
-            echo '<form  enctype="multipart/form-data"  id="action_common_frm" class="print" action="do.php"  method="post"   >';
+            echo '<form  enctype="multipart/form-data"  id="action_common_frm" class="print" action="do.php"  method="post"    style="display:inline">';
             echo $supl_hidden;
             echo HtmlInput::hidden('ac', $http->request('ac'));
             echo dossier::hidden();
