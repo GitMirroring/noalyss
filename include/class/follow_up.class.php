@@ -1193,6 +1193,15 @@ class Follow_Up
         echo $act->myList($p_base, "", $query);
         echo '</form>';
     }
+    /**
+     * Show a button for adding follow-up action, display the FORM 
+     * @param array $pa_param , will be converted in a HIDDEN input type in the form
+     */
+    static function show_action_add($pa_param)
+    {
+        require_once NOALYSS_TEMPLATE.'/followup-show-action-add.php';
+
+    }
 
     /**
      * Create a subquery to filter thanks the selected tag
@@ -1843,8 +1852,8 @@ class Follow_Up
          */
         $parent=$this->get_parent();
 
-        $base=HtmlInput::request_to_string(array("gDossier", "ac", "sa", "sb", "sc",
-                    "f_id"));
+        $base=HtmlInput::request_to_string(array("gDossier", "ac",  "sb", "sc",
+                    "f_id"))."&amp;sa=detail";
         $parent=$this->get_parent();
         if ($parent==-1)
         {

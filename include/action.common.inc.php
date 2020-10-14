@@ -30,7 +30,7 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
+require_once NOALYSS_INCLUDE."/lib/select_dialog.class.php";
 $http=new HttpInput();
 $supl_hidden = '';
 if (isset($_REQUEST['sc']))
@@ -205,7 +205,6 @@ if ($sub_action == "update")
 		echo '<input type="hidden" name="ac" value="' . $http->request('ac') . '">';
 		echo '<input type="hidden" name="sa" value="save_action_st2">';
 		echo '<input type="submit" class="button" name="save_action_st2" value="' . _('Enregistrer') . '">';
-		echo '<input type="submit" class="button" name="generate" value="' . _('Génère le document') . '"></p>';
 		echo $supl_hidden;
 		echo '</form>';
 		echo '</div>';
@@ -237,27 +236,9 @@ if ($sub_action == 'detail')
             echo '<input type="hidden" name="sa" value="update">';
             echo '<input type="hidden" id="delete" name="delete" value="0">';
             echo HtmlInput::submit("save", "Sauve",' onclick="$(\'delete\').value=0"');
-            
-            // Create select box for new Action
-            $selbox=new Select_Box("action_add_action2", _("Ajout action"));
-            $selbox->set_position("in-absolute");
-            $selbox->set_filter("y");
-            $aDocumentType=$cn->get_array("select dt_id,dt_value from document_type order by 2");
-            $nbDocumentType=count($aDocumentType);
-            $ac=$http->request("ac");
-            $dossier_id=Dossier::id();
-            $sup_parameter=HtmlInput::array_to_string(["sc","sb","f_id","qcode"], $_REQUEST,"&amp;");
-            for ($i=0;$i<$nbDocumentType;$i++) {
-                $selbox->add_url($aDocumentType[$i]['dt_value'], 
-                                "do.php?".http_build_query([ "ac"=>$ac,
-                                "gDossier"=>$dossier_id,
-                                "sa"=>"update",
-                                "add_action_here"=>"yes",
-                                "ag_id"=>$ag_id,
-                                "action_type"=>$aDocumentType[$i]["dt_id"]]).$sup_parameter);
-    
-            }
-            echo $selbox->input();
+           
+
+           
             
             // 
             if ($g_user->can_delete_action($ag_id))
@@ -267,6 +248,8 @@ if ($sub_action == 'detail')
             }
             echo $retour;
             echo '</form>';
+             // Create select box for new Action
+            Follow_Up::show_action_add(["sa"=>"update","add_action_here"=>1,"ag_id"=>$ag_id]);
 	}
 	else if ($g_user->can_read_action($ag_id) == true || $act->ag_dest == -1)
 	{
