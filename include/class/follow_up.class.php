@@ -1773,8 +1773,9 @@ class Follow_Up
         }
     }
     /**
-     * Return the first parent of the event tree, or -1 if not found
-     * @return integer (ag_id)
+     * Return the first parent of the event tree, or -1 if not found. The parent is an action with a lower id, 
+     * so it can happen than an action has several ones
+     * @return arrary of integer (ag_id)
      */
     function get_parent() {
         $value=$this->db->get_array('
@@ -1790,11 +1791,11 @@ class Follow_Up
                 where
                   p2.aga_greatest is not null and
                   p2.aga_greatest = p1.aga_least
-              ) select * from t order by depth desc limit 1
+              ) select aga_least,aga_greatest,depth from t order by depth desc 
                 ' , array($this->ag_id)
                 );
         if ( ! empty($value ) ) 
-            return $value[0]['aga_least'];
+            return $value;
         else
             return -1;
     }
@@ -1817,7 +1818,7 @@ class Follow_Up
                         aga_least,aga_greatest , 1
                 from 
                         action_gestion_related
-              where aga_least=$1
+              where aga_least=$1  or aga_greatest = $1
                 union all
             select key_path||'-'||p2.aga_greatest::text,
               p2.aga_least,p2.aga_greatest,depth + 1
@@ -1831,7 +1832,6 @@ class Follow_Up
           from 
             action_gestion join t on (ag_id=aga_greatest)
             join document_type on (ag_type=dt_id)
-          order by key_path
             
 ";
          $ret_array=$this->db->get_array($sql,array($p_id));
@@ -1855,15 +1855,17 @@ class Follow_Up
 
         $base=HtmlInput::request_to_string(array("gDossier", "ac",  "sb", "sc",
                     "f_id"))."&amp;sa=detail";
-        $parent=$this->get_parent();
         if ($parent==-1)
         {
             echo _('Principal');
-            $parent = $this->ag_id;
+            $parent=array();
+            $parent [0]['aga_least']= $this->ag_id;
         }
-        else
+       
+        $nb_parent=count($parent);
+        for ($i=0;$i< $nb_parent;$i++)
         {
-            $fu_parent=new Follow_Up($this->db, $parent);
+            $fu_parent=new Follow_Up($this->db, $parent[$i]['aga_least']);
             $fu_parent->get();
             echo'<span class="highlight">';
             $xaction=sprintf('view_action(%d,%d,%d)', $fu_parent->ag_id,
@@ -1874,56 +1876,57 @@ class Follow_Up
                 h($fu_parent->ag_title),
                 '('.h($fu_parent->ag_ref).')',
                     '</a>';
-                            
+
             echo "</span>";
+            echo '<ul style="padding-left:10px;list-style-type: none;">';
+
+            $action=$this->get_children($parent[$i]['aga_least']);
+            for ($o=0; $o<count($action); $o++)
+            {
+                $class=($this->ag_id == $action[$o]['aga_greatest'])?' class="highlight" ':'';
+
+                // Count the number of direct parents
+                $count_parent =$this->db->get_value('select count(*) from action_gestion_related where aga_greatest = $1',array($action[$o]['aga_greatest']));
+                $direct_parent=($count_parent > 1 ) ? _('direct parent ').$count_parent:"";
+
+                $margin=($action[$o]['depth']>1 )?str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$action[$o]['depth']-1)."&#8680;":"";
+                if ($p_view!='READ'&&$p_base!='ajax')
+                {
+                    $rmAction=sprintf("return confirm_box(null,'"._('Voulez-vous effacer cette action ')."', function () {remove_action('%s','%s','%s');});",
+                            dossier::id(), $action[$o]['aga_greatest'],
+                            $_REQUEST['ag_id']);
+                    $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
+                    $js='<a class="tinybutton" id="acact'.$action[$o]['aga_greatest'].'" href="javascript:void(0)" onclick="'.$rmAction.'">'.SMALLX.'</a>';
+                    echo '<li '.$class.' id="act'.$action[$o]['aga_greatest'].'">'.$margin.$showAction.$action[$o]['str_date'].
+                    h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
+                    .$js.'</li>';
+                }
+                else
+                /*
+                 * Display detail requested from Ajax Div
+                 */
+                if ($p_base=='ajax')
+                {
+                    $xaction=sprintf('view_action(%d,%d,%d)', $action[$o]['aga_greatest'],
+                            Dossier::id(), 1);
+                    $showAction='<a class="line" href="javascript:'.$xaction.'">';
+                    echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
+                    h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
+                    .'</li>';
+                }
+                /*
+                 * READ ONLY
+                 */
+                else
+                {
+                    $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
+                    echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
+                    h($action[$o]['sub_title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
+                    .'</li>';
+                }
+            }
+            echo '</ul>';
         }
-        echo '<ul style="padding-left:10px;list-style-type: none;">';
-        $action=$this->get_children($parent);
-        for ($o=0; $o<count($action); $o++)
-        {
-            $class=($this->ag_id == $action[$o]['aga_greatest'])?' class="highlight" ':'';
-            
-            // Count the number of direct parents
-            $count_parent =$this->db->get_value('select count(*) from action_gestion_related where aga_greatest = $1',array($action[$o]['aga_greatest']));
-            $direct_parent=($count_parent > 1 ) ? _('direct parent ').$count_parent:"";
-            
-            $margin=($action[$o]['depth']>1 )?str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$action[$o]['depth']-1)."&#8680;":"";
-            if ($p_view!='READ'&&$p_base!='ajax')
-            {
-                $rmAction=sprintf("return confirm_box(null,'"._('Voulez-vous effacer cette action ')."', function () {remove_action('%s','%s','%s');});",
-                        dossier::id(), $action[$o]['aga_greatest'],
-                        $_REQUEST['ag_id']);
-                $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
-                $js='<a class="tinybutton" id="acact'.$action[$o]['aga_greatest'].'" href="javascript:void(0)" onclick="'.$rmAction.'">'.SMALLX.'</a>';
-                echo '<li '.$class.' id="act'.$action[$o]['aga_greatest'].'">'.$margin.$showAction.$action[$o]['str_date'].
-                h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
-                .$js.'</li>';
-            }
-            else
-            /*
-             * Display detail requested from Ajax Div
-             */
-            if ($p_base=='ajax')
-            {
-                $xaction=sprintf('view_action(%d,%d,%d)', $action[$o]['aga_greatest'],
-                        Dossier::id(), 1);
-                $showAction='<a class="line" href="javascript:'.$xaction.'">';
-                echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
-                h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
-                .'</li>';
-            }
-            /*
-             * READ ONLY
-             */
-            else
-            {
-                $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
-                echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
-                h($action[$o]['sub_title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
-                .'</li>';
-            }
-        }
-        echo '</ul>';
     }
     /**
      * Display the list of parent of the current Follow_Up

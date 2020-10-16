@@ -30,7 +30,6 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-
 $http=new HttpInput();
 $supl_hidden = '';
 if (isset($_REQUEST['sc']))
