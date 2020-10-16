@@ -38,7 +38,7 @@
         <?php
         echo HtmlInput::title_box(_('Recherche avancée'), "search_action_div", "close", "", "n");
         ?>
-	<form method="get" id="fsearchaction" style="padding:10px" onsubmit="result_search_action('fsearchaction');return false;">
+	<form method="get" id="fsearchaction" style="padding:10px" onsubmit="waiting_box();result_search_action('fsearchaction');return false;">
 		<?php echo HtmlInput::hidden('ctlc',$_GET['ctlc'])?>
 <?php endif; ?>
 		<?php echo  dossier::hidden()?>
