@@ -504,8 +504,7 @@ class Fiche
                             $bulle = Icon_Action::infobulle(14);
                             break;
                     case 'check':
-                            $w=new InputSwitch("av_text".$r->ad_id);
-                            $w->value=$r->av_text;
+                            $w=new InputSwitch("av_text".$attr->ad_id);
                             $w->value=(trim($w->value)=="")?1:$w->value;
                             break;
                     case 'select':
