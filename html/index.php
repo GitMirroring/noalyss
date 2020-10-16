@@ -191,7 +191,7 @@ if (isset ($_REQUEST['reconnect']) && isset ($_REQUEST['backurl'])) {
 }
 echo '
 
-<IMG SRC="image/logo7400.png" id="logo_id" alt="NOALYSS">
+<IMG SRC="image/logo7500.png" id="logo_id" alt="NOALYSS">
 <form id="login_frm" action="login.php" method="post" name="loginform">'.
         '<h1>Noalyss</h1>'.
        $goto .

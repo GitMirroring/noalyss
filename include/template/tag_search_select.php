@@ -56,10 +56,11 @@ $gDossier=Dossier::id();
 </table>
  
 <?php 
-    $tab_tag->set_content(ob_get_contents());
-    ob_end_clean();
+  $tab_tag->set_content(ob_get_contents());
+   ob_end_clean();
 // Tab for the groups 
 //
+ob_start();
 $tab_tag_group=new Html_Tab($p_prefix."tab_tag_group",_("Groupe"));
 $aGroup=$this->cn->get_array("select tg_id, tg_name from tag_group order by 2 desc");
 $nb_agroup=count($aGroup);
