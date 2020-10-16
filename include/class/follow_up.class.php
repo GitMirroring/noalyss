@@ -1246,15 +1246,26 @@ class Follow_Up
     static function create_query($cn, $p_array=null)
     {
         if ($p_array==null)             $p_array=$_GET;
-        
+        $http=new HttpInput();
+        $search_docid=0; // search for a document 
         $action_query="";
         $ag_state=""; //<! selected status of the event , if not set or equal to -1 , it is all of them
+        //
+        // search for a specific document id (ag_id) , if given then status and date doesn't count
+         if (isset ($p_array['ag_id']) && isNumber($p_array['ag_id'])==1&&$p_array['ag_id']!=0)
+        {
+            $action_query=" and ag_id= ".sql_string($p_array['ag_id']);
+            $search_docid=$p_array['ag_id']; 
+            return $action_query;
+        }
         if (isset($_REQUEST['action_query']))
         {
+            $action_query = $http->request('action_query');
             // if a query is request build the sql stmt
-            $action_query="and (ag_title ilike '%".sql_string($_REQUEST['action_query'])."%' ".
-                    "or ag_ref ='".trim(sql_string($_REQUEST['action_query'])).
-                    "' or ag_id in (select ag_id from action_gestion_comment where agc_comment ilike '%".trim(sql_string($_REQUEST['action_query']))."%')".
+            $action_query="and (ag_title ilike '%".sql_string($action_query)."%' ".
+                    "or ag_ref ='".trim(sql_string($action_query)).
+                    "' or ag_id in (select ag_id from action_gestion_comment ".
+                    " where agc_comment ilike '%".trim(sql_string($action_query))."%')".
                     ")";
         }
 
@@ -1266,7 +1277,7 @@ class Follow_Up
             {
 
                 $fiche=new Fiche($cn);
-                $fiche->get_by_qcode($_REQUEST['qcode']);
+                $fiche->get_by_qcode($http->request('qcode'));
                 // if quick code not found then nothing
                 if ($fiche->id==0)
                     $str=' and false ';
@@ -1317,10 +1328,6 @@ class Follow_Up
 
 
         if (isset ($p_array['ag_id']) && isNumber($p_array['ag_id'])==1&&$p_array['ag_id']!=0)
-        {
-            $action_query=" and ag_id= ".sql_string($p_array['ag_id']);
-        }
-        if (isset($p_array['$remind_date'])&&$p_array['remind_date']!=""&&isDate($p_array['remind_date'])==$p_array['remind_date'])
         {
             $action_query .= " and to_date('".sql_string($p_array['$remind_date'])."','DD.MM.YYYY')<= ag_remind_date";
         }
