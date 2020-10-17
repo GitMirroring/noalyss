@@ -710,7 +710,10 @@ class Anc_Operation
                 $op->po_id=$hplan[$p_item][$e];
                 $op->oa_group=$this->oa_group;
                 $op->j_id=$p_j_id;
-                $ratio=bcdiv($val[$p_item][$row],${"amount_t".$p_item});
+                $ratio=0;
+                if (${"amount_t".$p_item} != 0 ) {
+                    $ratio=bcdiv($val[$p_item][$row],${"amount_t".$p_item});
+                }
                 $amount=  bcmul($p_nd, $ratio);
                 $op->oa_amount=round($amount,2);
                 $op->oa_debit=$this->oa_debit;
