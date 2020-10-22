@@ -44,7 +44,7 @@ if (isNumber($ag_id) == 0 ) die ('ERROR : parameters invalid');
             if ( $row['t_description'] != "G"):
                 echo $row['t_description'];
             else :
-                echo '<span class="icon">&#0xe83d;</span>';
+                echo '<span class="icon">&#xe83e;</span>';
             endif;
             ?>
         </td>

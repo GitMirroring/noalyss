@@ -371,7 +371,7 @@ for ($i=0;$i<sizeof($aAttachedFile);$i++) :
     ?>
         </td>
         <td>
-  <?php if ($p_view != 'READ') : ?>  <span class="icon"  id="<?php echo "ac".$aAttachedFile[$i]['d_id'];?>" href="javascript:void(0)" onclick="<?php echo $rmDoc;?>">&#xe80f;</span><?php endif;?>
+  <?php if ($p_view != 'READ') : ?>  <span class="icon"  id="<?php echo "ac".$aAttachedFile[$i]['d_id'];?>" href="javascript:void(0)" onclick="<?php echo $rmDoc;?>">&#xe80d;</span><?php endif;?>
         </td>
   </tr>
   <?php

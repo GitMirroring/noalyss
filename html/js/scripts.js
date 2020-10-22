@@ -3728,6 +3728,26 @@ function toggle_onoff(icon_domid, p_value_domid)
     }
 }
 /**
+ * turn on or off ,  set an domElement to 1 or 0 and change the icon
+ * @param string icon_domid : id of the domElement which must be changed
+ * @param string p_value_domid : id of domElement containing 1 or 0
+ * @see param_jrn.php
+ */
+function toggle_checkbox_onoff(icon_domid, p_value_domid)
+{
+    console.log("toggle_checkbox_onoff");
+    console.log("icon_domid"+icon_domid);
+    console.log("p_value_domid"+p_value_domid);
+    
+    if ($(p_value_domid).value == 0) {
+        $(p_value_domid).value = 1;
+        $(icon_domid).innerHTML = '&#xe741;';
+    } else {
+        $(p_value_domid).value = 0;
+        $(icon_domid).innerHTML = '&#xf096;';
+    }
+}
+/**
  * in CFGLED show or hide the row depending if the warning is enable or not
  * 
  * @param {type} p_enable
