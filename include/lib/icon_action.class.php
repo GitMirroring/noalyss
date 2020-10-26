@@ -211,8 +211,19 @@ class Icon_Action
     static function hide($action, $javascript)
     {
         $r='';
-        $r.='<span id="hide" class="icon"   onclick="'.$javascript.'">&#xe83b;'.$action.'</span>';
+        $r.='<span id="hide" class="icon"   onclick="'.$javascript.'">'.$action.'</span>';
         return $r;
+    }
+    /**
+     * Return a html string with an eye
+     * @param type $javascript
+     * @return string
+     */
+    static function notvisible($javascript) {
+        $r='';
+        $r.='<span id="hide" class="icon"   onclick="'.$javascript.'">&#xe83b;</span>';
+        return $r;
+        
     }
     /**
      * Display the icon of a trashbin
