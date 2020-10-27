@@ -40,6 +40,8 @@ class Document
     var $d_description;       /*!< Description of the file*/
     var $d_number;    /*!< $d_number number of the document */
     var $md_id;       /*!< $md_id document's template */
+    private $counter; /*!< counter for the items ( goods ) */
+   
     /* Constructor
      * \param $p_cn Database connection
      */
@@ -47,8 +49,11 @@ class Document
     {
         $this->db=$p_cn;
         $this->d_id=$p_d_id;
+        
+        // counter for MARCH_NEXT
         $this->counter=0;
     }
+    
     /*!\brief insert a minimal document and set the d_id
      */
     function blank()
@@ -548,6 +553,24 @@ class Document
         $p_tag=strtoupper($p_tag);
         $p_tag=str_replace('=','',$p_tag);
         $r="Tag inconnu";
+        static $aComment=NULL;
+        static  $counter_comment =0  ; /*<! counter for the comment */
+        
+        static $aRelatedAction=NULL;
+        static  $counter_related_action =0 ; /*<! counter for the related action */
+        
+        static $aRelatedOperation=NULL;
+        static  $counter_related_operation =0 ; /*<! counter for the related operation */
+        
+        static $aFileAttached=NULL;
+        static  $counter_file =0 ; /*<! counter for the file */
+        
+        static $aOtherCard = NULL;
+        static  $counter_other_card =0 ; /*<! counter for the other card */
+        
+        static $aTag = NULL;
+        static  $counter_tag =0 ; /*<! counter for the tags */   
+        
         switch ($p_tag)
         {
             case 'DATE':
@@ -1173,56 +1196,211 @@ class Document
             if ( isset($p_array['ag_title']))                 return $p_array['ag_title'];
             return "";
             break;
-        // Description
+        // Description is the first comment
         case 'DESCRIPTION':
             if ( isset($p_array['ag_id'])) {
                 // retrieve first comment
                 $description=$this->db->get_value("select agc_comment "
                         . "  from action_gestion_comment "
-                        . "where ag_id=$1 order by 1 asc limit 1"
+                        . "where ag_id=$1 order by AGC_ID asc limit 1"
                         ,[$p_array['ag_id']]);
                 return $description;
             }
             return "";
             break;
-        // Comment
-        case 'COMMENT':
-            if ( isset($p_array['ag_id'])) {
-                // retrieve first comment
-                $description=$this->db->get_array("select agc_comment ,"
-                        . " to_char(agc_date,'DD-MM-YY HH24:MI') as str_date ,"
-                        . " tech_user "
-                        . "  from action_gestion_comment "
-                        . "where ag_id=$1 order by 1 asc limit 2"
-                        ,[$p_array['ag_id']]);
-                if ( count($description) == 2 ) {
-                    return $description[1]['agc_comment'];
-                }
-            }
-            return "";
-            break;
-        // Comments
+      
+        // Comments, use a counter to move to the next comment, only for Follow-Up
+        //
         case 'COMMENTS':
             if ( isset($p_array['ag_id'])) {
-                // retrieve first comment
-                $aComment=$this->db->get_array("select agc_comment ,"
-                        ." to_char(agc_date,'DD-MM-YY HH24:MI') as str_date ,"
-                        . " tech_user "
-                        . "  from action_gestion_comment "
-                        . "where ag_id=$1 order by 1"
-                        ,[$p_array['ag_id']]);
+                // Static value, if null the retrieve all of them
+                if ( $aComment == NULL ) {
+                    // retrieve comments
+                    $aComment=$this->db->get_array("select AGC_ID,agc_comment ,"
+                            ." to_char(agc_date,'DD-MM-YY HH24:MI') as str_date ,"
+                            . " tech_user "
+                            . "  from action_gestion_comment "
+                            . "where ag_id=$1 order by 1"
+                            ,[$p_array['ag_id']]);
+                }
                 $nb_comment=count($aComment);
                 $description="";
-                for ($i=0;$i< $nb_comment;$i++) {
+                if (count ($aComment) >  $this->counter_comment) {
                     $description.= sprintf(_('le %s , %s écrit %s'."\n"),
-                            $aComment[$i]['str_date'],
-                            $aComment[$i]['tech_user'],
-                            $aComment[$i]['agc_comment']);
+                            $aComment[$this->counter_comment]['str_date'],
+                            $aComment[$this->counter_comment]['tech_user'],
+                            $aComment[$this->counter_comment]['agc_comment']);
+                    $this->counter_comment++;
                 }
                 return $description;
             }
             return "";
             break;
+        // Related Action, use a counter to move to the next related action, only for Follow-Up
+        //
+        case 'RELATED_ACTION':
+            if ( isset($p_array['ag_id'])) {
+                // Static value, if null the retrieve all of them
+                if ( $aRelatedAction == NULL ) {
+                    // retrieve parent
+                    $followup=new Follow_Up($this->db,$p_array["ag_id"]);
+                    $aRelatedAction=array();
+                    $aParent=$followup->get_parent();
+                    $nb_parent=count($aParent);
+                    $sql_related_action = "
+                 select ag_id,
+                    f_id_dest,
+                    (select ad_value from fiche_detail fd1 where fd1.ad_id=23 and fd1.f_id=f_id_dest) as qcode,
+                    (select ad_value from fiche_detail fd1 where fd1.ad_id=1 and fd1.f_id=f_id_dest) as card_name,
+                    (select ad_value from fiche_detail fd1 where fd1.ad_id=32 and fd1.f_id=f_id_dest) as card_fname,
+                    ag_title,
+                    to_char(ag_timestamp,'DD.MM.YYYY') as strdate,
+                    ag_ref
+                    from action_gestion ag where ag_id=$1 ";
+                    
+                    for ($x = 0 ; $x < $nb_parent ; $x++ )
+                    {
+                        $aRelatedAction[]=$this->db->get_row($sql_related_action,[$aParent[$x]['aga_least']]);
+                        $aChild=$followup->get_children($aParent[$x]['aga_least']);
+                        $nb_child=count($aChild);
+                        for ($y=0;$y < $nb_child;$y++) {
+                            $aRelatedAction[]=$this->db->get_row($sql_related_action,[ $aChild[$y]['aga_greatest'] ]);
+                        }
+                        
+                    }
+                    
+                }
+                $description="";
+                if (count ($aRelatedAction) >  $counter_related_action ) {
+                    $description = sprintf("docid %s %s %s %s %s %s %s",
+                            $aRelatedAction[$counter_related_action]['ag_id'],
+                            $aRelatedAction[$counter_related_action]['ag_ref'],
+                            $aRelatedAction[$counter_related_action]['strdate'],
+                            $aRelatedAction[$counter_related_action]['qcode'],
+                            $aRelatedAction[$counter_related_action]['card_fname'],
+                            $aRelatedAction[$counter_related_action]['card_name'],
+                            $aRelatedAction[$counter_related_action]['ag_title']
+                            );
+                    
+                    $counter_related_action++;
+                }
+                return $description;
+            }
+            return "";
+            break;
+            
+        // Concerned operation, use a counter to move to the next one, only for Follow-Up
+        //
+        case 'CONCERNED_OPERATION':
+            if ( isset($p_array['ag_id'])) {
+                // Static value, if null the retrieve all of them
+                if ( $aRelatedOperation == NULL ) {
+                    // retrieve comments
+                    $aRelatedOperation=$this->db->get_array("select ago_id,
+                        j.jr_id,
+                        j.jr_internal,
+                        j.jr_comment,
+                        j.jr_pj_number,
+                        to_char(j.jr_date,'DD.MM.YY') as str_date
+			from jrn as j 
+                        join action_gestion_operation as ago on (j.jr_id=ago.jr_id)
+			where ag_id=$1 order by jr_date,jr_id"
+                            ,[$p_array['ag_id']]);
+                }
+                $description="";
+                if (count ($aRelatedOperation) >  $counter_related_operation) {
+                    $description.= sprintf('%s %s %s %s ',
+                            $aRelatedOperation[$counter_related_operation]['str_date'],
+                            $aRelatedOperation[$counter_related_operation]['jr_internal'],
+                            $aRelatedOperation[$counter_related_operation]['jr_comment'],
+                            $aRelatedOperation[$counter_related_operation]['jr_pj_number']
+                            );
+                    $counter_related_operation++;
+                }
+                return $description;
+            }
+            return "";
+            break;
+        // Other card, use a counter to move to the next one, only for Follow-Up
+        //
+        case 'OTHER_CARDS':
+            if ( isset($p_array['ag_id'])) {
+                // Static value, if null the retrieve all of them
+                if ( $aOtherCard == NULL ) {
+                    // retrieve comments
+                    $aOtherCard=$this->db->get_array("
+                        select 
+                        (select ad_value from fiche_detail where f_id = ap.f_id and ad_id = 1) as cname,
+                        (select ad_value from fiche_detail where f_id = ap.f_id and ad_id = 32) as cfname,
+                        (select ad_value from fiche_detail where f_id = ap.f_id and ad_id = 23) as qcode,
+                        (select ad_value from fiche_detail where f_id = ap.f_id and ad_id = 18 ) as email,
+                        (select ad_value from fiche_detail where f_id = ap.f_id and ad_id = 27 ) as mobile,
+                        (select ad_value from fiche_detail where f_id = ap.f_id and ad_id = 17 ) as phone
+                         from action_person ap  
+                         where ag_id=$1
+                            "
+                            ,[$p_array['ag_id']]);
+                }
+                $description="";
+                if (count ($aOtherCard) >  $counter_other_card ) {
+                    $description.= sprintf('%s %s %s %s %s %s ',
+                            $aOtherCard[$counter_other_card]['cname'],
+                            $aOtherCard[$counter_other_card]['cfname'],
+                            $aOtherCard[$counter_other_card]['qcode'],
+                            $aOtherCard[$counter_other_card]['email'],
+                            $aOtherCard[$counter_other_card]['phone'],
+                            $aOtherCard[$counter_other_card]['mobile']);
+                    $counter_other_card++;
+                }
+                return $description;
+            }
+            return "";
+            break;    
+        // Attachment , use a counter to move to the next one, only for Follow-Up
+        //
+        case 'ATTACHED_FILES':
+            if ( isset($p_array['ag_id'])) {
+                // Static value, if null the retrieve all of them
+                if ( $aFileAttached == NULL ) {
+                    // retrieve comments
+                    $aFileAttached=$this->db->get_array("
+                        select d_filename,d_description from document d  where ag_id=$1
+                            "
+                            ,[$p_array['ag_id']]);
+                }
+                $nb_comment=count($aFileAttached);
+                $description="";
+                if (count ($aFileAttached) >  $this->counter_comment) {
+                    $description.= sprintf("%s %s ",
+                           $aFileAttached[$counter_file]['d_filename'],
+                           $aFileAttached [$counter_file]['d_description']);
+                    $counter_file++;
+                }
+                return $description;
+            }
+            return "";
+            break;    
+        // Tag , use a counter to move to the next one
+        case 'TAGS':
+            if ( isset($p_array['ag_id'])) {
+                // Static value, if null the retrieve all of them
+                if ( $aTag == NULL ) {
+                    // retrieve comments
+                    $aTag=$this->db->get_array("
+                       select t_tag from action_tags at2 join tags t using(t_id)  where ag_id=$1
+                            "
+                            ,[$p_array['ag_id']]);
+                }
+                $description="";
+                if (count ($aTag) > $counter_tag) {
+                    $description.= sprintf("%s ",
+                           $aTag [$counter_tag]['t_tag']);
+                    $counter_tag++;
+                }
+                return $description;
+            }
+            return "";
+            break;    
         case 'COMM_PAYMENT':
             if ( isset($p_array["e_comm_paiement"])) {
             return $p_array["e_comm_paiement"];
