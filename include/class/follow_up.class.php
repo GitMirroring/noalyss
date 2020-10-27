@@ -1798,7 +1798,7 @@ class Follow_Up
                 where
                   p2.aga_greatest is not null and
                   p2.aga_greatest = p1.aga_least
-              ) select aga_least,aga_greatest,depth from t order by depth desc 
+              ) select aga_least,aga_greatest,depth from t order by depth desc,aga_least asc 
                 ' , array($this->ag_id)
                 );
         if ( ! empty($value ) ) 
