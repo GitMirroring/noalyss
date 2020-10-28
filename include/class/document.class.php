@@ -1211,7 +1211,7 @@ class Document
       
         // Comments, use a counter to move to the next comment, only for Follow-Up
         //
-        case 'COMMENTS':
+        case 'COMMENT':
             if ( isset($p_array['ag_id'])) {
                 // Static value, if null the retrieve all of them
                 if ( $aComment == NULL ) {
@@ -1225,12 +1225,12 @@ class Document
                 }
                 $nb_comment=count($aComment);
                 $description="";
-                if (count ($aComment) >  $this->counter_comment) {
-                    $description.= sprintf(_('le %s , %s écrit %s'."\n"),
-                            $aComment[$this->counter_comment]['str_date'],
-                            $aComment[$this->counter_comment]['tech_user'],
-                            $aComment[$this->counter_comment]['agc_comment']);
-                    $this->counter_comment++;
+                if (count ($aComment) >  $counter_comment) {
+                    $description.= sprintf(_('le %s , %s écrit %s'),
+                            $aComment[$counter_comment]['str_date'],
+                            $aComment[$counter_comment]['tech_user'],
+                            $aComment[$counter_comment]['agc_comment']);
+                    $counter_comment++;
                 }
                 return $description;
             }
@@ -1370,7 +1370,7 @@ class Document
                 }
                 $nb_comment=count($aFileAttached);
                 $description="";
-                if (count ($aFileAttached) >  $this->counter_comment) {
+                if (count ($aFileAttached) >  $counter_file) {
                     $description.= sprintf("%s %s ",
                            $aFileAttached[$counter_file]['d_filename'],
                            $aFileAttached [$counter_file]['d_description']);
@@ -1405,7 +1405,30 @@ class Document
             if ( isset($p_array["e_comm_paiement"])) {
             return $p_array["e_comm_paiement"];
              } else return "";
-	}
+             
+        // priority of the follow up  document
+            case 'PRIORITY':
+                if ( isset($p_array['ag_priority'])) {
+                    $aPriority=array(1=>_("Haute"),2=>_("Normale"),3=>_("Basse"));
+                    return $aPriority[$p_array["ag_priority"]];
+                }
+                return "";
+        // Priority of the follow up  document
+            case 'GROUPMGT':
+                if ( isset($p_array['ag_dest'])) {
+                   $profile=$this->db->get_value("select p_name from profile where p_id=$1",array($p_array['ag_dest']));
+                   return $profile;
+                }
+                return "";
+        // Hour in the follow up document
+            case 'HOUR':
+                if ( isset($p_array['ag_hour'])) {
+                    return $p_array["ag_hour"];
+                }
+                return "";
+                
+        
+    } // end switch 
         /*
          * retrieve the value of ATTR for e_march
          */
