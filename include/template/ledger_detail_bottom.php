@@ -173,13 +173,13 @@ endif;
  <?php 
           // display title only in popup
           if ($div == 'popup') :
-          ?> 
+          ?> er
                 <h1 class="legend"><?php echo $a_tab['linked_operation_div']['label']?></h1>
           <?php endif; ?>
 <?php 
 
 if ($aRap  != null ) {
-    $amount_tva_include=(isset($tvac))?$tvac:$detail->det->jr_montant;
+    $amount_tva_include=(isset($total_tvac))?$total_tvac:$detail->det->jr_montant;
   $tableid="tb".$div;
   $total_rec=0;
   echo '<table id="'.$tableid.'">';
@@ -187,8 +187,22 @@ if ($aRap  != null ) {
     $opRap=new Acc_Operation($cn);
     $opRap->jr_id=$aRap[$e];
     $internal=$opRap->get_internal();
-    $array_jr=$cn->get_array('select jr_date,jr_pj_number,jr_montant,jr_comment from jrn where jr_id=$1',array($aRap[$e]));
+    $array_jr=$cn->get_array('select jr_date,jr_pj_number,jr_montant,jr_comment , jr_internal 
+                                from jrn where jr_id=$1',
+        array($aRap[$e]));
     $amount=$array_jr[0]['jr_montant'];
+    switch (substr($array_jr[0]['jr_internal'],0,1)) {
+        case 'A':
+            $amount = $cn->get_value("select sum(qp_price+qp_vat-qp_vat_sided) from quant_purchase qp 
+                                            where qp_internal=$1",
+                array($internal));
+            break;
+        case 'V':
+            $amount=$cn->get_value("select sum(qs_price+qs_vat-qs_vat_sided) from quant_sold qs  
+                                        where qs_internal=$1",
+                array($internal));
+            break;
+    }
     $total_rec=bcadd($total_rec,$amount);
     $str="modifyOperation(".$aRap[$e].",".$gDossier.")";
     

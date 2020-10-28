@@ -32,7 +32,7 @@ $date->value=format_date($obj->det->jr_date);
 <?php 
 $bk=new Fiche($cn,$obj->det->array[0]['qf_bank']);
 $view_card_detail=HtmlInput::card_detail($bk->get_quick_code(),h($bk->getName()), ' class="line" ');
-echo td(_('Compte en banque')).td($view_card_detail).td();;
+echo td(_('Compte en banque')).td($view_card_detail).td();
 
 ?>
 </tr>
