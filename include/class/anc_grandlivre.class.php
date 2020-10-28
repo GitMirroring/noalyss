@@ -60,7 +60,7 @@ class Anc_GrandLivre extends Anc_Print
         $pa_id_cond="";
         if ( isset ( $this->pa_id) && $this->pa_id !='')
             $pa_id_cond= "pa_id=".$this->pa_id." and";
-        $array=$this->db->get_array("	select oa_id,
+        $array=$this->db->get_array("	 select oa_id,
 	po_name,
 	oa_description,
 	po_description,
@@ -73,11 +73,10 @@ class Anc_GrandLivre extends Anc_Print
 	jr_id,
 	coalesce(jr_comment,b.oa_description) as jr_comment,
 	case when j_poste is null and b.f_id is not null then
-        (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=".ATTR_DEF_ACCOUNT.")
+        (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=23)
             when j_poste is not null then
             j_poste
-            end as j_poste
-        ,
+            end as j_poste,
 	coalesce(jrnx.f_id,b.f_id) as f_id,
         case when jrnx.f_id is not null then 
 		 (select ad_value from fiche_Detail where f_id=jrnx.f_id and ad_id=23) 
@@ -86,10 +85,17 @@ class Anc_GrandLivre extends Anc_Print
 	end
 		 as qcode,
         jr_pj_number,
-        jr_tech_per
+        jr_tech_per,
+        ftiers.cardid,
+        (select ad_value from fiche_detail where f_id=ftiers.cardid and ad_id=23) as qcode_tiers
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
 	left join jrn on  (j_grpt=jr_grpt_id)
+	left join ( 	select distinct qp_supplier as cardid,j_id from  quant_purchase qp 
+					union
+			       	select distinct qs_client,j_id from  quant_sold qs  
+			       	union 
+					select distinct qf_bank,j_id from  quant_fin qf ) as ftiers using (j_id)
              where $pa_id_cond oa_amount <> 0.0  $cond_poste  $filter_date
 	order by po_name,oa_date::date,qcode,j_poste");
         $this->has_data=count($array);
@@ -123,6 +129,7 @@ class Anc_GrandLivre extends Anc_Print
 	end
 		 as qcode,
         coalesce(jr_comment,b.oa_description) as jr_comment,
+        (select ad_value from fiche_detail where f_id=ftiers.cardid and ad_id=23) as qcode_tiers,
         coalesce (jr_pj_number,'') as jr_pj_number,
 	coalesce(jr_internal,'') as jr_internal,
         coalesce(oa_group,0) as oa_group,
@@ -132,6 +139,11 @@ class Anc_GrandLivre extends Anc_Print
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
 	left join jrn on  (j_grpt=jr_grpt_id)
+        left join ( 	select distinct qp_supplier as cardid,j_id from  quant_purchase qp 
+					union
+			       	select distinct qs_client,j_id from  quant_sold qs  
+			       	union 
+					select distinct qf_bank,j_id from  quant_fin qf ) as ftiers using (j_id)
              where $pa_id_cond oa_amount <> 0.0  $cond_poste $filter_date
 	order by po_name,oa_date::date,qcode,j_poste");
 
@@ -214,6 +226,7 @@ class Anc_GrandLivre extends Anc_Print
                         '<th>' . _('Poste') . '</th>' .
                         '<th>' . _('Quick_code') . '</th>' .
                         '<th>' . _('Libellé') . '</th>' .
+                        th(_("Tiers")).
                         '<th>' . '</th>' .
                         '<th>' . _('Pièce') . '</th>' .
                         '<th>' . _('Interne') . '</th>' .
@@ -269,6 +282,7 @@ class Anc_GrandLivre extends Anc_Print
                     td($post_detail) .
                     td($card_detail) .
                     td($row['jr_comment']) .
+                    td($row["qcode_tiers"]).
                     '<td>' . $str_document . '</td>' .
                     td($row['jr_pj_number']) .
                     '<td>' . $detail . '</td>' .
@@ -330,6 +344,7 @@ class Anc_GrandLivre extends Anc_Print
         $aheader[]=array("title"=>'Poste','type'=>'string');
         $aheader[]=array("title"=>'Quick_Code','type'=>'string');
         $aheader[]=array("title"=>'libelle','type'=>'string');
+        $aheader[]=array("title"=>'tiers','type'=>'string');
         $aheader[]=array("title"=>'Pièce','type'=>'string');
         $aheader[]=array("title"=>'Num.interne','type'=>'string');
         $aheader[]=array("title"=>'row','type'=>'string');
