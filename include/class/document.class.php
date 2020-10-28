@@ -1426,6 +1426,14 @@ class Document
                     return $p_array["ag_hour"];
                 }
                 return "";
+        // State in the follow up document
+            case 'STATUS':
+                if ( isset($p_array['ag_state'])) {
+                    $status=$this->db->get_value("
+                            select s_value from document_state where s_id=$1",array($p_array['ag_state']));
+                   return $status;
+                }
+                return "";
                 
         
     } // end switch 
