@@ -75,6 +75,9 @@ class Inplace_Edit
      function ajax_input() {
          ob_start();
         echo $this->input->input();
+        if ($this->input instanceof ITextarea) {
+            echo '<br>';
+        } 
         echo '<a style="display:inline" class="smallbutton"  id="inplace_edit_ok'.$this->input->id.'">'._('ok').'</a>';
         echo '<a style="display:inline" class="smallbutton" id="inplace_edit_cancel'.$this->input->id.'">'._('cancel').'</a>';
         echo <<<EOF
@@ -108,11 +111,21 @@ EOF;
     function value()
     {
         $v=$this->input->get_value();
-        $v=(trim($v)=="")?$this->message:$v;
-        echo $v,
-                 '<span class="smallicon icon" style="margin-left:5px">&#xe80d;</span> ',
-                "
-            <script>
+         if ( $this->input instanceof ITextarea) {
+            echo '<span class="input_text" id="'.$this->input->id.'edit" >';
+            echo '<pre class="field_follow_up">';
+            $v=(trim($v)=="")?$this->message:$v;
+            echo $v;
+            echo '</pre>';
+            echo'<span class="smallbutton" style="margin-left:5px">Cliquer pour changer</span> ';
+        } else {
+            $v=(trim($v)=="")?$this->message:$v;
+            echo $v,
+                     '<span class="smallicon icon" style="margin-left:5px">&#xe80d;</span> ';
+        }
+                    
+         echo "
+                <script>
             $('{$this->input->id}edit').removeClassName('inplace_edit_input');
         {$this->input->id}edit.onclick=function() {
                  new Ajax.Updater('{$this->input->id}edit'
@@ -126,13 +139,23 @@ EOF;
      */
     function input() {
         ob_start();
+        $v=$this->input->get_value();
+        if ( $this->input instanceof ITextarea) {
+            echo '<span class="" id="'.$this->input->id.'edit" >';
+            echo '<pre class="field_follow_up">';
+            $v=(trim($v)=="")?$this->message:$v;
+            echo $v;
+            echo '</pre>';
+            echo'<span class="smallbutton" style="margin-left:5px">Cliquer pour changer</span> ';
+        } else {
+            $v=(trim($v)=="")?$this->message:$v;
         echo <<<EOF
             <span class="inplace_edit" id="{$this->input->id}edit" >
 EOF;
-        $v=$this->input->get_value();
-        $v=(trim($v)=="")?$this->message:$v;
-        echo $v;
-        echo'<span class="smallicon icon" style="margin-left:5px">&#xe80d;</span> ';
+            echo $v;
+            
+            echo'<span class="smallicon icon" style="margin-left:5px">&#xe80d;</span> ';
+        }
         echo "</span>";
         echo "
             
