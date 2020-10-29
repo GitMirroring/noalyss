@@ -71,4 +71,66 @@ if ($op=='update_comment_followUp')
             throw new Exception(__FILE__.':'.__LINE__.'Invalide value');
             break;
     }
+    return;
+}
+// Modify followup 
+if ($op == 'followup_comment_oneedit') {
+     $input=$http->request('input');
+    $action=$http->request('ieaction', 'string', 'display');
+    $agc_id=$http->request('agc_id', "number");
+    $ag_id=$http->request('ag_id', "number");
+    global $g_user;
+    // check comment is the comment of this ag_id
+    $ctl_ag_id=$cn->get_value("select ag_id from action_gestion_comment where agc_id=$1",[$agc_id]);
+    if ( $agc_id != -1 && $ctl_ag_id != $ag_id) {
+        record_log("FLP02 ag_id [$ag_id] <> ctl_ag_id [$ctl_ag_id]");
+        return;
+    }
+    // Build inplace input
+    $inplace_description=Inplace_Edit::build($input);
+    $inplace_description->set_callback("ajax_misc.php");
+    
+    $inplace_description->add_json_param("ag_id", $ag_id);
+    $inplace_description->add_json_param("gDossier", Dossier::id());
+    $inplace_description->add_json_param("op", "followup_comment_oneedit");
+    switch ($action)
+    {
+        case 'display':
+            $inplace_description->add_json_param("agc_id", $agc_id);
+            echo $inplace_description->ajax_input();
+
+            break;
+        case 'ok':
+            if ($g_user->check_action(VIEWDOC)==1)
+            {
+                $value=strip_tags($http->request('value'));
+                if ($g_user->can_write_action($ag_id))
+                {
+                    // retrieve the document
+                    if ( $agc_id==-1) {
+                      $agc_id=  $cn->get_value("insert into action_gestion_comment(ag_id,agc_comment,tech_user)
+                                values ($1,$2,$3) returning agc_id" ,[$ag_id,$value,$g_user->login]);
+                    } else {
+                          $cn->exec_sql("update action_gestion_comment set agc_comment=$1,tech_user=$2
+                                where agc_id=$3
+                                " ,[$value,$g_user->login,$agc_id]);
+                    }
+                    
+                }
+                $inplace_description->add_json_param("agc_id", $agc_id);
+                $inplace_description->set_value($value);
+            }
+            echo $inplace_description->value();
+            break;
+        case 'cancel':
+            $inplace_description->add_json_param("agc_id", $agc_id);
+            echo '<pre>';
+            echo $inplace_description->value();
+            echo '</pre>';
+            break;
+        default:
+            throw new Exception(__FILE__.':'.__LINE__.'Invalide value');
+            break;
+    }
+    return;
 }

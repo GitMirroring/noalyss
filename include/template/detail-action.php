@@ -245,43 +245,85 @@ function small(p_id_textarea){
     <div style="margin-left:10px;">
    <?php
    $style_enl='style="display:inline"';$style_small='style="display:none"';
+    if ( Document_Option::can_add_comment($ag_id) 
+            && Document_Option::option_comment($this->dt_id) == "ONE_EDIT")
+    {
+        if ( count($acomment)==0) {
+              echo $desc->input();
+        } else  {
+            echo '<pre class="field_follow_up">';
+            echo h($acomment[0]['agc_comment']);
+            echo '</pre>';
+            
+            $comment=new ITextarea("ag_comment_edit");
+            $comment->style='class="input_text field_follow_up" style="height:21rem"';
+            
+            $ag_comment_id= (count($acomment) > 1)?$acomment[1]['agc_id']:-1;
+            $comment->value=(count($acomment) > 1 )?$acomment[1]['agc_comment']:'';
+            $comment->id="ag_comment_edit";
 
-for( $c=0;$c<count($acomment);$c++){
-        if ($c == 0) { $m_desc=_('Description');}
-        else
-         { $m_desc=_('Commentaire');}
-         $comment="";
-         if ( $p_view != 'READ' && $c > 0)
-	{
-            $rmComment=sprintf("return confirm_box(null,'"._('Voulez-vous effacer ce commentaire')." ?',function() {remove_comment('%s','%s');});",
-                                            dossier::id(),
-                                            $acomment[$c]['agc_id']);
-            $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
-            $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".$acomment[$c]['str_agc_date'].')').$js.
-                            '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
-                            " ".h($acomment[$c]['agc_comment']).'</pre>'
-                            ;
+            // One editable comment is available
+            $editable_comment=new Inplace_Edit($comment);
+            $editable_comment->add_json_param("op", "followup_comment_oneedit");
+            $editable_comment->add_json_param("agc_id", $ag_comment_id);
+            $editable_comment->add_json_param("ag_id", $ag_id);
+            $editable_comment->add_json_param("gDossier", Dossier::id());
+            $editable_comment->set_callback("ajax_misc.php");
 
-	}
-	else
-	{
-		$comment=h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".$acomment[$c]['str_agc_date'].')').
-				'<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
-				" ".h($acomment[$c]['agc_comment']).'</pre>'
-				;
-                
+            echo $editable_comment->input();
+            
+        }
+        
+        
+    } elseif (Document_Option::can_add_comment($ag_id) 
+            && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")
+    {
+        for( $c=0;$c<count($acomment);$c++){
+            if ($c == 0) { $m_desc=_('Description');}
+            else
+             { $m_desc=_('Commentaire');}
+             $comment="";
+             if ( $p_view != 'READ' && $c > 0)
+            {
+                $rmComment=sprintf("return confirm_box(null,'"._('Voulez-vous effacer ce commentaire').
+                        " ?',function() {remove_comment('%s','%s');});",
+                                                dossier::id(),
+                                                $acomment[$c]['agc_id']);
+                $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
+                $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
+                        $acomment[$c]['str_agc_date'].')').$js.
+                                '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
+                                " ".h($acomment[$c]['agc_comment']).'</pre>'
+                                ;
 
-	}
-        $comment=preg_replace('/#([0-9]+)/','<a class="line" href="javascript:void()" onclick="view_action(\1,'.Dossier::id().',0)" >\1</a>',$comment);
-        echo $comment;
+            }
+            else
+            {
+                    $comment=h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
+                            $acomment[$c]['str_agc_date'].')').
+                                    '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
+                                    " ".h($acomment[$c]['agc_comment']).'</pre>'
+                                    ;
+
+
+            }
+            $comment=preg_replace('/#([0-9]+)/','<a class="line" href="javascript:void()" onclick="view_action(\1,'.
+                    Dossier::id().',0)" >\1</a>',$comment);
+            echo $comment;
+     }
 }
 echo '<span class="noprint">';
-if (  Document_Option::can_add_comment($ag_id) ) {
-    echo $desc->input();
+if (  Document_Option::can_add_comment($ag_id) && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")  {
+        echo $desc->input();
+     
 }
 echo '</span>';
 ?>
-<?php if ($p_view != "READ" && Document_Option::can_add_comment($ag_id)): ?>
+
+<?php if ($p_view != "READ" 
+        && Document_Option::can_add_comment($ag_id) 
+        && Document_Option::option_comment($this->dt_id) == "SOME_FIXED" ): ?>
+        
 <p class="noprint">
 <input type="button" id="bt_enlarge" <?php echo $style_enl?> value="+" onclick="enlarge('ag_comment');return false;">
 <input type="button" id="bt_small"  <?php echo $style_small?> value="-" style="display:none" onclick="small('ag_comment');return false;">

@@ -250,6 +250,8 @@ $path = array(
     'template_cat_category'=>'ajax_template_cat_category',
     // From FollowUp , update a comment on a file
     'update_comment_followUp'=>'ajax_follow_up',
+    // Update a follow up's comment
+    'followup_comment_oneedit'=>'ajax_follow_up',
     // TVA param
     "tva_parameter"=>"ajax_tva_parameter",
     // Display all cards using an accounting

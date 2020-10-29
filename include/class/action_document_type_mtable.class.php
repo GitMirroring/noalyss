@@ -80,8 +80,10 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
         $this->other['contact_multiple']=$http->request("det_contact_mul", "string", 0);
         $this->other['make_invoice']=$http->request("make_invoice", "string", 0);
         $this->other['followup_comment']=$http->request("followup_comment", "string", 0);
+        $this->other['enable_followup']=$http->request("enable_followup", "string", 0);
         $this->other['seq']=$http->request("seq", "string", 0);
         $this->other['select_option_operation']=$http->request("select_option_operation", "string", null);
+        $this->other['select_comment']=$http->request("select_comment", "string", null);
         $this->other["cor_id"]=$http->request("cor_id","array",[]);
         $nb_corid=count($this->other["cor_id"]);
         $http->set_empty(0);
@@ -244,7 +246,8 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
         // Save detail operation
         $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable,do_option) values ($1,$2,$3,$4) 
             on conflict on constraint document_option_un
-            do update set do_enable=$3,do_option=$4", ["detail_operation", 
+            do update set do_enable=$3,do_option=$4", 
+                        [                   "detail_operation", 
                                             $object_sql->dt_id,
                                             $this->other['detail_operation'],
                                             $this->other['select_option_operation']
@@ -260,9 +263,14 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
             on conflict on constraint document_option_un
             do update set do_enable=$3 ", ["make_invoice", $object_sql->dt_id, $this->other['make_invoice']]);
         // Option for comments
-            $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable) values ($1,$2,$3) 
+            $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable,do_option) values ($1,$2,$3,$4) 
                 on conflict on constraint document_option_un
-                do update set do_enable=$3 ", ["followup_comment", $object_sql->dt_id, $this->other['followup_comment']]);
+                do update set do_enable=$3,do_option=$4 ", 
+                    [   "followup_comment", 
+                        $object_sql->dt_id, 
+                        $this->other['followup_comment'],
+                        $this->other['select_comment']
+                    ]);
         
         // Option contact to save
         $cn->exec_sql("delete from jnt_document_option_contact where document_type_id=$1",[$object_sql->dt_id]);

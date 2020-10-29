@@ -129,5 +129,20 @@ class Document_Option
         return false;
         
     }
+    
+    /**
+     * returns option from  the operation_detail 
+     * 
+     * @param int $p_document_type Document_Type.dt_id
+     * @return string ONE_EDIT or SOME_FIXED
+     */
+    static function option_comment($p_document_type)
+    {
+        $cn=Dossier::connect();
+        $option_operation = $cn->get_value("select do_option from document_option where document_type_id=$1 "
+                . " and do_code = $2",
+                        [$p_document_type, 'followup_comment']);
+        return $option_operation;
+    }
 
-}
+    }

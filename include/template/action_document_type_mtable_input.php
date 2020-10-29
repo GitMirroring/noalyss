@@ -100,6 +100,11 @@ $i=new ICheckBox("followup_comment",1);
 if ( Document_Option::is_enable_comment($table->dt_id)) $i->set_check(1); else $i->set_check(0);
 echo $i->input();
 echo _("Commentaire");
+$select_comment_type=new ISelect("select_comment");
+$select_comment_type->value=array(["value"=>"ONE_EDIT","label"=>_("Unique")],
+                                      ["value"=>"SOME_FIXED","label"=>_("Multiples")]);
+$select_comment_type->set_value(Document_Option::option_comment($table->dt_id));
+echo $select_comment_type->input();
 ?>
         </li> 
     </ul>
