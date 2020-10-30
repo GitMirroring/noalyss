@@ -242,22 +242,62 @@ function small(p_id_textarea){
     <?php echo $title->input();
     ?>
 </p>
-    <div style="margin-left:10px;">
+    <div>
+        <?php 
+/**********************************************************************************************************************
+ * Start BLOCK Comment and description
+ **********************************************************************************************************************/
+?>
    <?php
    $style_enl='style="display:inline"';$style_small='style="display:none"';
-    if ( Document_Option::can_add_comment($ag_id) 
-            && Document_Option::option_comment($this->dt_id) == "ONE_EDIT")
-    {
-        if ( count($acomment)==0) {
-              echo $desc->input();
-        } else  {
+   // description
+   $description = new ITextarea("ag_description");
+   $description->id="ag_description";
+   //---------------------------------- Description -------------------------------------------------------------------
+   if ( count($acomment)> 0) {
+        $editable_description = Document_Option::is_enable_editable_description($this->dt_id);
+        if ( $editable_description == true){
+             echo h2(_("Description"));
+            $itDescription=new ITextarea("ag_description");
+            $itDescription->style='class="input_text field_follow_up" style="height:21rem;width:98%"';
+            
+            $ag_description_id= $acomment[0]['agc_id'];
+            $itDescription->value=$acomment[0]['agc_comment'];
+            $itDescription->id="ag_description";
+
+             // One editable comment is available
+            $editable_description=new Inplace_Edit($itDescription);
+            $editable_description->add_json_param("op", "followup_comment_oneedit");
+            $editable_description->add_json_param("agc_id", $ag_description_id);
+            $editable_description->add_json_param("ag_id", $ag_id);
+            $editable_description->add_json_param("gDossier", Dossier::id());
+            $editable_description->set_callback("ajax_misc.php");
+
+            echo $editable_description->input();
+        } 
+        elseif ($p_view == 'READ' || $editable_description == false)
+        {
+            echo h2(_("Description"));
+            
             echo '<pre class="field_follow_up">';
-            echo h($acomment[0]['agc_comment']);
-            echo '</pre>';
-            
+                echo h($acomment[0]['agc_comment']);
+                echo '</pre>';
+        }
+   } else {
+       echo h2(_("Description"));
+       echo $desc->input();
+   }
+   
+   //---------------------------------- Comment -----------------------------------------------------------------------
+   
+   if (    Document_Option::can_add_comment($ag_id)  && 
+           Document_Option::option_comment($this->dt_id) == "ONE_EDIT" ) 
+   {
+        if (count($acomment) > 1 && $p_view != 'READ')  {
+            echo h2(_("Commentaire"));
             $comment=new ITextarea("ag_comment_edit");
-            $comment->style='class="input_text field_follow_up" style="height:21rem"';
-            
+            $comment->style='class="input_text field_follow_up" style="height:21rem;width:98%"';
+
             $ag_comment_id= (count($acomment) > 1)?$acomment[1]['agc_id']:-1;
             $comment->value=(count($acomment) > 1 )?$acomment[1]['agc_comment']:'';
             $comment->id="ag_comment_edit";
@@ -269,16 +309,24 @@ function small(p_id_textarea){
             $editable_comment->add_json_param("ag_id", $ag_id);
             $editable_comment->add_json_param("gDossier", Dossier::id());
             $editable_comment->set_callback("ajax_misc.php");
-
+            echo '<p></p>';
             echo $editable_comment->input();
-            
+        } else {
+            echo '<span class="noprint">';
+            if (  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id) && $add_comment)  {
+            echo '<p></p>';
+            echo $desc->input();
+     
+            }
+            echo '</span>';
         }
-        
-        
-    } elseif (Document_Option::can_add_comment($ag_id) 
+   }
+    if (    Document_Option::can_add_comment($ag_id) 
             && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")
     {
-        for( $c=0;$c<count($acomment);$c++){
+        echo h2(_("Commentaire"));
+
+        for( $c=1;$c<count($acomment);$c++){
             if ($c == 0) { $m_desc=_('Description');}
             else
              { $m_desc=_('Commentaire');}
@@ -309,26 +357,22 @@ function small(p_id_textarea){
             }
             $comment=preg_replace('/#([0-9]+)/','<a class="line" href="javascript:void()" onclick="view_action(\1,'.
                     Dossier::id().',0)" >\1</a>',$comment);
+            echo '<p></p>';
             echo $comment;
-     }
-}
-echo '<span class="noprint">';
-if (  Document_Option::can_add_comment($ag_id) && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")  {
+        } // end for
+        echo '<span class="noprint">';
+        if (  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id))  {
+            echo '<p></p>';
         echo $desc->input();
      
-}
-echo '</span>';
+        }
+        echo '</span>';
+    }
+
+    
+
 ?>
 
-<?php if ($p_view != "READ" 
-        && Document_Option::can_add_comment($ag_id) 
-        && Document_Option::option_comment($this->dt_id) == "SOME_FIXED" ): ?>
-        
-<p class="noprint">
-<input type="button" id="bt_enlarge" <?php echo $style_enl?> value="+" onclick="enlarge('ag_comment');return false;">
-<input type="button" id="bt_small"  <?php echo $style_small?> value="-" style="display:none" onclick="small('ag_comment');return false;">
-</p>
-<?php endif; ?>
   </div>
 </div>
 <?php 
@@ -353,9 +397,9 @@ if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_i
   
 
 <div class="myfieldset" id="div_action_attached_doc">
-  <legend>
+  <h2>
      <?php echo _('Pièces attachées')?>
-  </legend>
+  </h2>
     <div class="noprint">
         <?php 
 /**********************************************************************************************************************

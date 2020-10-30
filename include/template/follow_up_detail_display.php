@@ -41,6 +41,8 @@ $option_detail= Document_Option::option_operation_detail($document_type);
 $menu=new Default_Menu();
 ?>
 <div id="follow_up_detail">
+    
+    <?php echo h2(_("Détail opération")) ?>
     <?php echo HtmlInput::hidden("nb_item", $article_count); ?>
 
     <table style="width:100%"  id="sold_item">

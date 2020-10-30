@@ -144,5 +144,23 @@ class Document_Option
                         [$p_document_type, 'followup_comment']);
         return $option_operation;
     }
+    
+    /**
+     * returns true if it is possible to edit the description , otherwise false
+     * 
+     * @param int $p_document_type Document_Type.dt_id
+     * @return boolean
+     */
+    static function is_enable_editable_description($p_document_type)
+    {
+        $return=false;
+        $cn=Dossier::connect();
+        if ($cn->get_value("select do_enable from document_option where document_type_id=$1 and do_code = $2",
+                        [$p_document_type, 'editable_description'])=='1')
+        {
+            $return=true;
+        }
+        return $return;
+    }
 
     }

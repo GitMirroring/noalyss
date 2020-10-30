@@ -94,6 +94,17 @@ echo $i->input();
 echo _("Création de facture");
 ?>
         </li> 
+        
+        <li>
+            <?php
+            $description=new ICheckBox("editable_description",1);
+            if ( Document_Option::is_enable_editable_description($table->dt_id)) $description->set_check(1); 
+                else $description->set_check(0);
+                
+            echo $description->input();
+            echo _("Description modifiable");
+            ?>
+        </li>
         <li>
 <?php
 $i=new ICheckBox("followup_comment",1);
