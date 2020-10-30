@@ -554,7 +554,7 @@ class Document
         $p_tag=str_replace('=','',$p_tag);
         $r="Tag inconnu";
         static $aComment=NULL;
-        static  $counter_comment =0  ; /*<! counter for the comment */
+        static  $counter_comment =1  ; /*<! counter for the comment , skip the first one which is the descrition*/
         
         static $aRelatedAction=NULL;
         static  $counter_related_action =0 ; /*<! counter for the related action */
@@ -1246,6 +1246,7 @@ class Document
                     $followup=new Follow_Up($this->db,$p_array["ag_id"]);
                     $aRelatedAction=array();
                     $aParent=$followup->get_parent();
+                    if ($aParent == -1 )return "";
                     $nb_parent=count($aParent);
                     $sql_related_action = "
                  select ag_id,
@@ -1434,6 +1435,16 @@ class Document
                    return $status;
                 }
                 return "";
+         // type of document
+            case 'DOCUMENT_TYPE':
+                $ret="";
+                if ( isset($p_array['ag_id'])){
+                    $ret=$this->db->get_value("select dt_value 
+                                             from action_gestion 
+                                             join document_type dt  on (ag_type=dt.dt_id) 
+                            where ag_id=$1",array($p_array["ag_id"]));
+                }
+                return $ret;
                 
         
     } // end switch 
