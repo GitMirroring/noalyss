@@ -86,14 +86,15 @@ table.sortable th,  table.table_large th,table.result th {
 
 h2 {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
-    color:#888;
+    color:white;
+    background-color:#6393c1;
     /*! margin:1px; */
-    padding:1px;
-    /*! font-style: italic; */
+    padding:3px;
+    font-style: italic; 
     font-size:15px;
-    font-size:1.2rem;
-    margin-bottom: 0;
+    font-size:1.1rem;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 div.info {
     background:#879ED4;
@@ -2096,7 +2097,6 @@ td.selectedmenu {
     white-space: -moz-pre-wrap;
     white-space: pre-wrap;
     border:1px solid blue;
-    width:95%;
 }
 
 @media only screen and (max-width:850px) {
