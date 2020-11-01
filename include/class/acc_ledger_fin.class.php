@@ -478,7 +478,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 		$r.='';
 		$r.='<fieldset><legend>Banque, caisse </legend>';
 		$r.= '<div id="jrn_name_div">';
-		$r.='<h2 id="jrn_name" style="display:inline">' . $this->get_name() . '</h2>';
+		$r.='<h1 id="jrn_name" style="display:inline">' . $this->get_name() . '</h1>';
 		$r.= '</div>';
 		$r.='<TABLE  width="100%">';
 		//  Date

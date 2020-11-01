@@ -540,7 +540,7 @@ EOF;
             if ( count($ajrn)==1)
             {
                 echo '<div>';
-                echo '<h2 id="info">'.$ajrn[0]['jrn_def_name'].'</h2>';
+                echo '<h1 >'.$ajrn[0]['jrn_def_name'].'</h1>';
                 if ( trim($ajrn[0]['jrn_def_description']) != "") {
                     echo '<p style="border:1px solid;margin-top:0px">'.$ajrn[0]['jrn_def_description'].'</p>';
                 }

@@ -108,7 +108,7 @@ if ( isset($_POST['confirm']))
 	if ( !isset($correct))
 	{
 		echo '<div id="jrn_name_div">';
-		echo '<h2 id="jrn_name" style="display:inline">' . $Ledger->get_name() . '</h2>';
+		echo '<h1 id="jrn_name" style="display:inline">' . $Ledger->get_name() . '</h1>';
 		echo '</div>';
 
 		echo '<div class="content">';

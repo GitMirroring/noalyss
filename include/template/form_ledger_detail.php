@@ -3,7 +3,7 @@
 //see licence.txt
 ?>
 	<div id="jrn_name_div">
-	<h2 id="jrn_name"> <?php echo $this->get_name()?></h2>
+	<h1 id="jrn_name"> <?php echo $this->get_name()?></h1>
 </div>
 <table>
     <tr>

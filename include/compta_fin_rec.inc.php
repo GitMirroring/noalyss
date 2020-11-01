@@ -182,7 +182,7 @@ $wLedger = $Ledger->select_ledger('FIN', 3,FALSE);
 if ($wLedger == null)
 	exit('Pas de journal disponible');
 echo '<div id="jrn_name_div">';
-echo '<h2 id="jrn_name" style="display:inline">' . $Ledger->get_name() . '</h2>';
+echo '<h1 id="jrn_name" style="display:inline">' . $Ledger->get_name() . '</h1>';
 echo '</div>';
 $wLedger->javascript = "onchange='this.form.submit()';";
 echo $wLedger->input();

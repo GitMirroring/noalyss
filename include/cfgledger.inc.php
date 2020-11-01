@@ -79,9 +79,9 @@ if ($action_frm == 'delete' )
 		$ledger->delete_ledger();
 		$sa="";
 		echo '<div id="jrn_name_div">';
-		echo '<h2 id="jrn_name">';
+		echo '<h1 id="jrn_name">';
                 printf(_(" %s est effacé"),h($name));
-                echo "</h2>";
+                echo "</h1>";
 		echo '</div>';
                 $show_menu=1;
 	}

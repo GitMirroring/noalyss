@@ -30,7 +30,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 echo '<div class="content">';
 echo h2(_("Confirmation"),'class="info"');
 echo '<div id="jrn_name_div">';
-echo '<h2 id="jrn_name" style="display:inline">' . $ledger->get_name() . '</h2>';
+echo '<h1 id="jrn_name" style="display:inline">' . $ledger->get_name() . '</h1>';
 echo '</div>';
 
 echo '<div id="warning_ven_id" class="notice" style="width: 50%; margin-left: 0px; float: right;">';

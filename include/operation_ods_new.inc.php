@@ -49,7 +49,7 @@ echo '<div class="content">';
 
 
 echo '<div id="jrn_name_div">';
-echo '<h2 id="jrn_name" style="display:inline">' . $ledger->get_name() . '</h2>';
+echo '<h1 id="jrn_name" style="display:inline">' . $ledger->get_name() . '</h1>';
 echo '</div>';
 
 // Show the predef operation
