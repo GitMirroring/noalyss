@@ -449,7 +449,7 @@ function success_misc(req)
 }
 function loading()
 {
-    var str = '<h2>' + content[64] + '</h2>';
+    var str = '<p>' + content[64] + '</p>';
     str = str + '<image src="image/loading.gif" alt="chargement"></image>';
     return str;
 }
