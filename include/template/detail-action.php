@@ -324,7 +324,7 @@ function small(p_id_textarea){
     if (    Document_Option::can_add_comment($ag_id) 
             && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")
     {
-        echo h2(_("Commentaire"));
+       if( count($acomment) >0 ) echo h2(_("Commentaire"));
 
         for( $c=1;$c<count($acomment);$c++){
             if ($c == 0) { $m_desc=_('Description');}
@@ -396,7 +396,7 @@ if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_i
 
   
 
-<div class="myfieldset" id="div_action_attached_doc">
+<div  id="div_action_attached_doc">
   <h2>
      <?php echo _('Pièces attachées')?>
   </h2>
@@ -409,7 +409,7 @@ if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_i
 
  <?php if ($p_view != 'READ' && $str_select_doc != '') : ?>
          <?php echo _('Document à générer')?>
-  </legend>
+
   <?php echo $str_select_doc;
  echo $str_submit_generate;
 
