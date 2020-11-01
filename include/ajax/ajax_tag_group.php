@@ -21,6 +21,12 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
+
+if ( $g_user->check_module('CFGTAG') == 0 ) {
+    record_log("forbidden : AJT01 ".__FILE__);
+    exit();
+}
+
 require_once NOALYSS_INCLUDE."/class/tag_group_mtable.class.php";
 /**
  * @file
@@ -36,6 +42,7 @@ try {
     echo $e->getMessage();
     return;
 }
+
 $obj=new Tag_Group_SQL($cn,$p_id);
 $obj_manage=new Tag_Group_MTable($obj);
 $obj_manage->set_callback("ajax_misc.php");

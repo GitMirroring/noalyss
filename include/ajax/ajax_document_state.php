@@ -24,7 +24,11 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE."/class/document_state_mtable.php";
 global $g_user;
 
-$g_user->check_action('CFGDOCST',2);
+if ( $g_user->check_module('CFGDOCST') == 0 ) {
+    record_log("forbidden : CFGDOCST ".__FILE__);
+    exit();
+}
+
 
 /**
  * @file
