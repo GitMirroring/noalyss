@@ -34,11 +34,30 @@ $operation_predef_mtable->set_json(json_encode(array(   "ac"=>$http->request("ac
                                                         "op"=>"save_predf",
                                                         "gDossier"=>Dossier::id()
                                                      )));
+echo '<form method="GET">';
+echo Dossier::hidden();
+echo HtmlInput::hidden("ac",$http->request("ac"));
+$filter_ledger=new ISelect("f_ledger");
+
+
+$filter_ledger->selected=$http->request('f_ledger',"number",-1);
+$sql_filter='where '.$g_user->get_ledger_sql('ALL',2);
+
+
+$filter_ledger->value=$cn->make_array("select jrn_def_id ,jrn_def_name from jrn_def
+$sql_filter and jrn_def_type !='FIN' order by jrn_def_name",1);
+echo $filter_ledger->input();
+echo HtmlInput::submit('ledgerf',_("Filter par journal"));
+$operation_predef_mtable->display_button_add();
+
+echo '</form>';
+if ( $filter_ledger->selected != -1 && isNumber($filter_ledger->selected ) == 1 ) {
+    $sql_filter.= ' and jrn_Def_id = '.sql_string($filter_ledger->selected);
+}
 $operation_predef_mtable->create_js_script();
 echo '<p>';
- $operation_predef_mtable->display_button_add();
 echo '</p>';
-$operation_predef_mtable->display_table();
+ $operation_predef_mtable->display_table($sql_filter);
 echo '<p>';
 $operation_predef_mtable->display_button_add();
 echo '</p>';
