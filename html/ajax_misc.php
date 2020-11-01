@@ -267,7 +267,9 @@ $path = array(
     // Add group of tags
    'tag_group'=>'ajax_tag_group',
     // set the group for a tag
-    'tag_set_group'=>"ajax_tag_set_group"
+    'tag_set_group'=>"ajax_tag_set_group",
+    // Document_state
+    "document_state"=>"ajax_document_state"
 )    ;
 
 if (array_key_exists($op, $path)) {
