@@ -59,7 +59,7 @@ class contact extends Fiche
         $script=$_SERVER['PHP_SELF'];
         // Creation of the nav bar
         // Get the max numberRow
-        $all_contact=$this->count_by_modele($this->fiche_def_ref,$p_search,$extra_sql);
+        $all_contact=$this->count_by_modele($this->fiche_def_ref,$p_search,$extra_sql.$p_sql);
         // Get offset and page variable
         $offset=( isset ($_REQUEST['offset'] )) ?$_REQUEST['offset']:0;
         $page=(isset($_REQUEST['page']))?$_REQUEST['page']:1;

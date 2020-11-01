@@ -29,8 +29,9 @@ require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 
 $http=new HttpInput();
 
-$low_action = (isset($_REQUEST['sb'])) ? $_REQUEST['sb'] : "list";
-/** \file
+$low_action = $http->request('sb','string','list');
+/**
+ * \file
  * \brief Called from the module "Gestion" to manage the contact
  */
 $href=basename($_SERVER['PHP_SELF']);
@@ -81,7 +82,7 @@ if ($low_action == "list")
 			' where  frd_id=' . FICHE_TYPE_CONTACT .
 			' order by fd_label ', 1);
 		$sel_card->selected = (isset($_GET['cat'])) ? $_GET['cat'] : -1;
-		$sel_card->javascript = ' onchange="submit(this);"';
+		$sel_card->javascript = ' onchange="waiting_box();submit(this);"';
 
 		echo _('Catégorie :') . $sel_card->input();
 
