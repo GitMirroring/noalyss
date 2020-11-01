@@ -745,7 +745,7 @@ class User
 	/**\brief Check if the user can access
 	 * otherwise warn and exit
 	 * \param $p_action requested action
-	 * \param $p_js = 1 javascript, or 0 just a text
+	 * \param $p_js = 1 javascript, or 0 just a text or 2 to log it silently
 	 * \return nothing the program exits automatically
 	 */
 
@@ -759,6 +759,9 @@ class User
 				echo "<script>";
 				echo "alert ('Cette action ne vous est pas autorisée. Contactez votre responsable');";
 				echo "</script>";
+			}
+			elseif ($p_js == 2) {
+				record_log(_("Access invalid").$p_action);
 			}
 			else
 			{
