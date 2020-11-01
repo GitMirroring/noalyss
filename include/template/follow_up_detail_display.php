@@ -189,7 +189,7 @@ $menu=new Default_Menu();
 
     </div>
     <div id="d_add_rows">
-    <?php echo Html_Input_Noalyss::ledger_add_item("O"); ?>
+    <?php if ( $p_view != 'READ' ) echo Html_Input_Noalyss::ledger_add_item("O"); ?>
         
     <?php echo HtmlInput::button('actualiser', _('Recalculer'), ' onClick="compute_all_ledger();"'); ?>
     </div>
