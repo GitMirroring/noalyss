@@ -174,19 +174,19 @@ bcscale(2);
             
         </td>
         <td style="text-align: right">
-            <?php echo nbm(abs($sum_fin));echo ($sum_fin < 0)?'C':($sum_fin == 0)?'=':'D'; ?>
+            <?php echo nbm(abs($sum_fin));echo ($sum_fin < 0)?'C':(($sum_fin == 0)?'=':'D'); ?>
         </td>
         <td style="text-align: right">
-            <?php echo nbm($sum_lt_30);echo ($sum_lt_30 < 0)?'C':($sum_lt_30 == 0)?'=':'D';?>
+            <?php echo nbm($sum_lt_30);echo ($sum_lt_30 < 0)?'C':(($sum_lt_30 == 0)?'=':'D');?>
         </td>
         <td style="text-align: right">
-            <?php echo nbm($sum_gt_30_lt_60);echo ($sum_gt_30_lt_60 < 0)?'C':($sum_gt_30_lt_60 == 0)?'=':'D';?>
+            <?php echo nbm($sum_gt_30_lt_60);echo ($sum_gt_30_lt_60 < 0)?'C':(($sum_gt_30_lt_60 == 0)?'=':'D');?>
         </td>
         <td style="text-align: right">
-            <?php echo nbm($sum_gt_60_lt_90);echo ($sum_gt_60_lt_90 < 0)?'C':($sum_gt_60_lt_90 == 0)?'=':'D';?>
+            <?php echo nbm($sum_gt_60_lt_90);echo ($sum_gt_60_lt_90 < 0)?'C':(($sum_gt_60_lt_90 == 0)?'=':'D');?>
         </td>
         <td style="text-align: right">
-            <?php echo nbm($sum_gt_90);echo ($sum_gt_90 < 0)?'C':($sum_gt_90 == 0)?'=':'D';?>
+            <?php echo nbm($sum_gt_90);echo ($sum_gt_90 < 0)?'C':(($sum_gt_90 == 0)?'=':'D');?>
         </td>
     </tr>
 </table>    
