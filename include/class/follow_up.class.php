@@ -692,6 +692,7 @@ class Follow_Up
         $today=date('d.m.Y');
         $i=0;
         $checkbox=new ICheckBox("mag_id[]");
+        $checkbox->set_range("action_followup_ck");
         //show the sub_action
         foreach ($a_row as $row)
         {
@@ -762,6 +763,7 @@ class Follow_Up
         $r.="</table>";
 
         $r.='<p>'.$bar.'</p>';
+        $r.=ICheckBox::javascript_set_range("action_followup_ck");
         return $r;
     }
 
@@ -1928,7 +1930,7 @@ class Follow_Up
                 {
                     $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
                     echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
-                    h($action[$o]['sub_title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
+                    h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
                     .'</li>';
                 }
             }

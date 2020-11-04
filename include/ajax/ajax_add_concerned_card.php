@@ -120,6 +120,7 @@ for ($i=0; $i<count($a); $i++)
 {
     $ic=new ICheckBox("selected_card[]");
     $ic->value=$a[$i]['f_id'];
+    $ic->set_range("select_card_ck");
     $array[$i]['checkbox']=$ic->input();
     $array[$i]['quick_code']=$a[$i]['quick_code'];
     $array[$i]['name']=h($a[$i]['vw_name']);
@@ -141,8 +142,6 @@ echo HtmlInput::button_close("search_card");
 echo '</li>';
 echo '</ul>';
 echo '</form>';
-
-
 $response=ob_get_contents();
 ob_end_clean();
 

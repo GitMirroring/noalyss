@@ -73,7 +73,10 @@
 					if ($write == 1)
 					{
 						$ck = new ICheckBox('f_id[]', $row['f_id']);
-						echo $ck->input();
+						if ( $allcard != 1 ) {
+                                                    $ck->set_range("range".$p_cat);
+                                                }
+                                                    echo $ck->input();
 					}
 					?>
 				</td>
@@ -83,6 +86,10 @@
 
 	</table>
 	<?php echo $str_add_card?>
+<?php
+if ( $allcard != 1 ) { echo ICheckBox::javascript_set_range("range".$p_cat); }
+
+?>
 <?php echo HtmlInput::hidden('action',"1");?>
 <?php echo HtmlInput::hidden('delete',"0");?>
 <?php echo HtmlInput::hidden('move',"0");?>

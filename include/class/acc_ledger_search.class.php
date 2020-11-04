@@ -897,6 +897,7 @@ class Acc_Ledger_Search
             if ($p_paid!=0)
             {
                 $w=new ICheckBox();
+                $w->set_range("paid_operation_ck");
                 $w->name="rd_paid".$row['jr_id'];
                 $w->selected=($row['jr_rapt']=='paid')?true:false;
                 // if p_paid == 2 then readonly
