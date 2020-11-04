@@ -618,7 +618,7 @@ class Follow_Up
 
         $table=new Sort_Table();
         $table->add(_('Date Doc.'), $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd');
-        $table->add(_('Date Comm.'), $url, 'order by last_comment', 'order by last_comment desc', 'dca', 'dcd');
+        //$table->add(_('Date Comm.'), $url, 'order by last_comment', 'order by last_comment desc', 'dca', 'dcd');
         $table->add(_('Date Limite'), $url, 'order by ag_remind_date asc', 'order by ag_remind_date  desc', 'ra', 'rd');
         $table->add(_('Etiquette'), $url, 'order by tags asc', 'order by tags desc', 'taa', 'tad');
         $table->add(_('Réf.'), $url, 'order by ag_ref asc', 'order by ag_ref desc', 'ra', 'rd');
@@ -668,16 +668,16 @@ class Follow_Up
         $r.='<table class="document">';
         $r.="<tr>";
         $r.='<th name="ag_id_td" style="display:none" >'.ICheckBox::toggle_checkbox('ag', 'list_ag_frm').'</th>';
-        $r.='<th>'.$table->get_header(0).'</th>';
-        $r.='<th>'.$table->get_header(1).'</th>';
-        $r.='<th>'.$table->get_header(2).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(0).'</th>';
+//        $r.='<th>'.$table->get_header(1).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(1).'</th>';
+        $r.=th('Priorité','style="width:5.57%"');
+        $r.='<th style="width:5.57%">'.$table->get_header(7).'</th>';
+        $r.='<th style="width:35%">'.$table->get_header(6).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(2).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(3).'</th>';
-        $r.='<th>'.$table->get_header(4).'</th>';
-        $r.='<th>'.$table->get_header(5).'</th>';
-        $r.='<th>'.$table->get_header(6).'</th>';
-        $r.='<th>'.$table->get_header(7).'</th>';
-        $r.=th('Priorité');
-        $r.='<th>'.$table->get_header(8).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(4).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(5).'</th>';
         $r.="</tr>";
 
 
@@ -714,8 +714,28 @@ class Follow_Up
             $checkbox->value=$row['ag_id'];
             $r.='<td name="ag_id_td" style="display:none">'.$checkbox->input().'</td>';
             $r.="<td>".$href.smaller_date($row['my_date']).'</a>'."</td>";
-            $r.="<td>".$href.$row['str_last_comment'].'</a>'."</td>";
+            //$r.="<td>".$href.$row['str_last_comment'].'</a>'."</td>";
             $r.="<td>".$href.smaller_date($row['my_remind']).'</a>'."</td>";
+                        /*
+             * State
+             */
+            switch ($row['ag_priority'])
+            {
+                case 1:
+                    $priority=_('Haute');
+                    break;
+                case 2:
+                    $priority=_("Moyenne");
+                    break;
+                case 3:
+                    $priority=_("Important");
+                    break;
+            }
+            $r.=td($priority);
+
+            $r.="<td>".$row['s_value']."</td>";
+             $r.='<td>'.$href.
+                    h($row['ag_title'])."</A></td>";
             $r.="<td>".$href.h($row['tags']).'</a>'."</td>";
             $r.="<td>".$href.$row['ag_ref'].'</a>'."</td>";
             $r.="<td>".$href.h($row['dest']).'</a>'."</td>";
@@ -736,27 +756,9 @@ class Follow_Up
 
 
 
-            $r.='<td>'.$href.
-                    h($row['ag_title'])."</A></td>";
+           
 
-            /*
-             * State
-             */
-            switch ($row['ag_priority'])
-            {
-                case 1:
-                    $priority=_('Haute');
-                    break;
-                case 2:
-                    $priority=_("Moyenne");
-                    break;
-                case 3:
-                    $priority=_("Important");
-                    break;
-            }
-            $r.=td($priority);
 
-            $r.="<td>".$row['s_value']."</td>";
             $r.="</tr>";
         }
 
