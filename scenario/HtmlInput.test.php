@@ -47,9 +47,11 @@ require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itextarea.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itva_popup.class.php';
 require_once NOALYSS_INCLUDE.'/lib/input_switch.class.php';
+require_once NOALYSS_INCLUDE.'/lib/input_checkbox.class.php';
 
 $http=new HttpInput();
 ?>
+<script src="js/noalyss_checkbox.js"></script>
 <pre>
     <?php var_dump($_GET);?>
 </pre>
@@ -67,6 +69,7 @@ $http=new HttpInput();
     <?php
     
     $input_switch=new InputSwitch('input_switch_value',$http->get("input_switch_value","string","0"));
+    
     echo $input_switch->input();
     ?>
     <h2>ReadOnly</h2>
@@ -81,6 +84,20 @@ $http=new HttpInput();
     $input_switch->readOnly=TRUE;
     echo $input_switch->input();
     ?>
+    <h2>InputCheckBox (Check Box)</h2>
+    <ul>
+        
+            
+    <?php
+    for ($i = 0 ; $i < 10 ; $i ++) :
+        echo '<li>';
+            $check[$i]=new InputCheckBox("check[]",1,"checkid".$i);
+            echo $i, " - name = ",$check[$i]->value_container,",id = " , $check[$i]->id_icon,$check[$i]->input();
+        echo '</li>';
+    endfor;
+    ?>
+    </ul>
+    
     <h1>Submit</h1>
     <pre>
         echo HtmlInput::submit("submit", _("Envoi"));
@@ -88,4 +105,26 @@ $http=new HttpInput();
     <p>
     <?php echo HtmlInput::submit("submit", _("Envoi"));?>
     </p>
+    <h2>ICheckBox</h2>
+    <p>
+        For using range all the checkbox must have the same name , like checkbox[]
+    </p>
+    <ol>
+       <?php
+       
+       for ($i=0;$i<10;$i++) {
+        $icheckbox=new ICheckBox('icheckbox[]',0);
+        $icheckbox->id=uniqid();
+        $icheckbox->set_range("icheckbox11");
+        echo '<li>';
+        printf ("%s ".$icheckbox->input(),$i);
+        echo '</li>';
+        
+       }
+       echo ICheckBox::javascript_set_range("icheckbox11");
+    ?>
+    </ol>
 </form>
+<div id="debug_box"></div>
+
+    

@@ -272,6 +272,7 @@ class Anc_GrandLivre extends Anc_Print
                 if ($str_document != "")
                 {
                     $ck = new ICheckBox('ck[]', $row['jr_id']);
+                    $ck->set_range("document_export_ck");
                     $str_ck = $ck->input();
                 }
             }
@@ -298,6 +299,7 @@ class Anc_GrandLivre extends Anc_Print
         $r.=td('') . td('') . td('') . td('') . td('') . td(nbm($tot_deb), ' class="num"') . td(nbm($tot_cred), ' class="num"') . td(nbm($tot_solde) . $sign, '  class="num"');
 
         $r.= '</table>';
+        $r.=ICheckBox::javascript_set_range("document_export_ck");
         return $r;
     }
       /*!

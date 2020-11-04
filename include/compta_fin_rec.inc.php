@@ -32,7 +32,43 @@ require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 bcscale(2);
 ?>
 <script>
+        function checkbox_set_range(evt, elt, p_name) {
+        if (!evt.shiftKey) {
+            lastcheck = elt;
+            return;
+        }
+        var aName = document.getElementsByClassName(p_name);
+
+        var from = 0;
+        var end = 0;
+        for (var i = 0; i < aName.length; i++) {
+            if (aName[i] == elt) {
+                endcheck = aName[i];
+                from = i;
+            }
+            if (aName[i] == lastcheck) {
+                end = i;
+            }
+        }
+        if (from > end) {
+            let a = from;
+            from = end;
+            end = a;
+        }
+        var check = (aName[from].checked) ? true : false;
+        for (x = from; x <= end; x++) {
+            aName[x].checked = check;
+            if( x < end && x > from ) {
+                update_selected(aName[x],aName[x].getAttribute('amount_operation'));
+                update_remain(aName[x],aName[x].getAttribute('amount_operation'));
+            }
+        }
+    }
+
+
     function update_selected(p_node,p_amount) {
+        p_amount=parseFloat(p_amount);
+        console.log("update_selected"+p_amount);
         try {
             if (p_node.checked ) 
             {
@@ -48,6 +84,7 @@ bcscale(2);
         }
     }
     function update_remain(p_node,p_amount) {
+         p_amount=parseFloat(p_amount);
     try {
             if ( parseFloat($('delta_amount').innerHTML) == 0) return;
             if (p_node.checked ) 
@@ -239,7 +276,7 @@ $r.=th('N° interne');
 $r.=th('Montant', ' style="text-align:right"');
 $r.=th('Selection', ' style="text-align:center" ');
 echo tr($r);
-$iradio = new ICheckBox('op[]');
+
 $tot_not_reconcilied = 0;
 $diff = 0;
 $delta=bcsub($end_extrait,$start_extrait);
@@ -247,6 +284,8 @@ $selected_amount=0;
 $remain_amount=$delta;
 for ($i = 0; $i < count($operation); $i++)
 {
+        $iradio = new ICheckBox('op[]');
+        $iradio->set_range("operation_ck");
 	$row = $operation[$i];
 	$r = '';
 	$js = HtmlInput::detail_op($row['jr_id'], $row['jr_internal']);
@@ -254,12 +293,13 @@ for ($i = 0; $i < count($operation); $i++)
 	$r.=td($row['jr_comment']);
 	$r.=td($js);
 	$amount=$cn->get_value('select qf_amount from quant_fin where jr_id=$1', array($row['jr_id']));
-	$r.='<td class="num" class="sorttable_numeric" sorttable_customkey="'.$amount.'" style="text-align:right">'.nbm ($amount).'</td>';
+	$r.='<td class="num" class="sorttable_numeric"  sorttable_customkey="'.$amount.'" style="text-align:right">'.nbm ($amount).'</td>';
 
 	$diff=bcadd($diff,$amount);
 	$tot_not_reconcilied+=$row['jr_montant'];
 	$iradio->value = $row['jr_id'];
 	$iradio->selected=false;
+        $iradio->set_attribute("amount_operation", $amount);
         $iradio->javascript=sprintf(' onchange = "update_selected(this,%s);update_remain(this,%s)"',$amount,$amount);
 	if (isset($_POST['op']))
 	{
@@ -281,6 +321,7 @@ for ($i = 0; $i < count($operation); $i++)
 		echo tr($r,' class="even" ');
 }
 echo '</table>';
+if ( $i>0) { echo $iradio->javascript_set_range("operation_ck"); }
 $bk_card = new Fiche($cn);
 $bk_card->id = $Ledger->get_bank();
 $filter_year = "  j_tech_per in (select p_id from parm_periode where  p_exercice='" . $g_user->get_exercice() . "')";

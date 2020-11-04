@@ -2783,6 +2783,7 @@ function load_all_script()
     echo js_include('nicEdit.js');
     echo js_include('managetable.js');
     echo js_include('taggroup.js');
+    echo js_include('noalyss_checkbox.js');
 
 
 }

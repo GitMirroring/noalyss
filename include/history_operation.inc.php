@@ -127,6 +127,8 @@ echo HtmlInput::hidden('ledger_type',$ledger_type);
 echo dossier::hidden();
 
 list($count, $html) = $Ledger->list_operation($sql, $offset, $ask_pay);
+
+
 echo $html;
 echo $bar;
 $r = HtmlInput::get_to_hidden(array('search_opnb_jrn',
@@ -162,8 +164,10 @@ if (isset($_GET['search_opr_jrn']))
 }
 echo $r;
 
-if ($ask_pay)
+if ($ask_pay) {
 	echo '<p>' . HtmlInput::submit('paid', _('Mise à jour paiement')) . IButton::select_checkbox('fpaida') . IButton::unselect_checkbox('fpaida') . '</p>';
+        echo ICheckBox::javascript_set_range("paid_operation_ck");
+}
 
 echo '</form>';
 /*

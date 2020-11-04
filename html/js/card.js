@@ -161,6 +161,8 @@ function action_concerned_save_card(obj)
                 code_html = unescape_xml(code_html);
                 $(namectl).update(code_html);
                 removeDiv('search_card');
+                
+
             }
         });
     } catch (e)
@@ -277,6 +279,7 @@ function action_concerned_search_card(obj)
                         if ( ! $('search_card')) { add_div({id: 'search_card', cssclass: 'inner_box', html: "", style: div_style, drag: true}); }
                         $('search_card').innerHTML = code_html;
                         $('query').focus();
+                        activate_checkbox_range('select_card_ck');
                         }catch (e) {
                             alert_box(e.message);
                         }
