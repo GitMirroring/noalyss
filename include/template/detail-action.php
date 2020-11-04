@@ -313,7 +313,7 @@ function small(p_id_textarea){
             echo $editable_comment->input();
         } else {
             echo '<span class="noprint">';
-            if (  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id) && $add_comment)  {
+            if (  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id) )  {
             echo '<p></p>';
             echo $desc->input();
      
