@@ -573,6 +573,7 @@ class Periode
         if ($obj->getp("p_closed")=="f")
         {
             $checkbox=new ICheckBox("sel_per_close[]");
+            $checkbox->set_range("sel_per_close_ck");
             $checkbox->set_attribute("per_id", $obj->getp("p_id"));
             $checkbox->value=$obj->getp("p_id");
             echo "<td>".$checkbox->input()."</td>";

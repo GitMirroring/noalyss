@@ -137,4 +137,5 @@ echo '</div>';
 ?>
 <script>
     Periode.filter_exercice('periode_tbl');
+    activate_checkbox_range("sel_per_close_ck");
 </script>

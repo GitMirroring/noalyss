@@ -627,7 +627,7 @@ class Follow_Up
         $table->add(_('Titre'), $url, 'order by ag_title asc', 'order by ag_title desc', 'ta', 'td');
         $table->add(_('Etat'), $url, 'order by s_value asc', 'order by s_value desc', 'ea', 'ed');
 
-        $ord=(!isset($_GET['ord']))?"dcd":$_GET['ord'];
+        $ord=(!isset($_GET['ord']))?"dd":$_GET['ord'];
         $sort=$table->get_sql_order($ord);
 
         if (strlen(trim($p_filter))!=0)
@@ -736,7 +736,7 @@ class Follow_Up
             $r.="<td>".$row['s_value']."</td>";
              $r.='<td>'.$href.
                     h($row['ag_title'])."</A></td>";
-            $r.="<td>".$href.h($row['tags']).'</a>'."</td>";
+            $r.="<td>".$href."<span style=\"font-size:75%\">".h($row['tags']).'</span>'.'</a>'."</td>";
             $r.="<td>".$href.$row['ag_ref'].'</a>'."</td>";
             $r.="<td>".$href.h($row['dest']).'</a>'."</td>";
 
