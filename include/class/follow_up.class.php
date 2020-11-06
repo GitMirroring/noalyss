@@ -748,10 +748,10 @@ class Follow_Up
                     $priority=_('Haute');
                     break;
                 case 2:
-                    $priority=_("Moyenne");
+                    $priority=_("Normale");
                     break;
                 case 3:
-                    $priority=_("Important");
+                    $priority=_("Basse");
                     break;
             }
             $r.=td($priority);
