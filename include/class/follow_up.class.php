@@ -617,14 +617,22 @@ class Follow_Up
         $url=$p_base.$arg;
 
         $table=new Sort_Table();
-        $table->add(_('Date Doc.'), $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd');
+        // 0
+        $table->add(_('Date Doc.'), $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd'); 
         //$table->add(_('Date Comm.'), $url, 'order by last_comment', 'order by last_comment desc', 'dca', 'dcd');
+        //1
         $table->add(_('Date Limite'), $url, 'order by ag_remind_date asc', 'order by ag_remind_date  desc', 'ra', 'rd');
-        $table->add(_('Etiquette'), $url, 'order by tags asc', 'order by tags desc', 'taa', 'tad');
+        //2
         $table->add(_('Réf.'), $url, 'order by ag_ref asc', 'order by ag_ref desc', 'ra', 'rd');
+        //3
+        $table->add(_('Etiquette'), $url, 'order by tags asc', 'order by tags desc', 'taa', 'tad');
+        //4
         $table->add(_('Groupe'), $url, "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe')", "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') desc", 'dea', 'ded');
+        //5
         $table->add(_('Dest/Exp'), $url, 'order by name asc', 'order by name desc', 'ea', 'ed');
+        //6
         $table->add(_('Titre'), $url, 'order by ag_title asc', 'order by ag_title desc', 'ta', 'td');
+        //7
         $table->add(_('Etat'), $url, 'order by s_value asc', 'order by s_value desc', 'ea', 'ed');
 
         $ord=(!isset($_GET['ord']))?"dd":$_GET['ord'];
@@ -669,15 +677,15 @@ class Follow_Up
         $r.="<tr>";
         $r.='<th name="ag_id_td" style="display:none" >'.ICheckBox::toggle_checkbox('ag', 'list_ag_frm').'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(0).'</th>';
-//        $r.='<th>'.$table->get_header(1).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(1).'</th>';
-        $r.=th('Priorité','style="width:5.57%"');
-        $r.='<th style="width:5.57%">'.$table->get_header(7).'</th>';
-        $r.='<th style="width:35%">'.$table->get_header(6).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(2).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(5).'</th>';
+//        $r.='<th>'.$table->get_header(1).'</th>';
+        $r.=th('Priorité','style="width:5.57%"');
+        $r.='<th style="width:35%">'.$table->get_header(6).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(7).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(3).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(4).'</th>';
-        $r.='<th style="width:5.57%">'.$table->get_header(5).'</th>';
         $r.="</tr>";
 
 
@@ -716,7 +724,22 @@ class Follow_Up
             $r.="<td>".$href.smaller_date($row['my_date']).'</a>'."</td>";
             //$r.="<td>".$href.$row['str_last_comment'].'</a>'."</td>";
             $r.="<td>".$href.smaller_date($row['my_remind']).'</a>'."</td>";
-                        /*
+            $r.="<td>".$href.$row['ag_ref'].'</a>'."</td>";
+            // Expediteur
+            $fexp=new Fiche($this->db);
+            $fexp->id=$row['f_id_dest'];
+            $qcode_dest=$fexp->strAttribut(ATTR_DEF_QUICKCODE);
+
+            $qexp=($qcode_dest==NOTFOUND)?"Interne":$qcode_dest;
+            $jsexp=sprintf("javascript:showfiche('%s')", $qexp);
+            if ($qexp!='Interne')
+            {
+                $r.="<td>$href".$qexp." : ".$fexp->getName().'</a></td>';
+            }
+            else
+                $r.="<td>$href Interne </a></td>";
+
+             /*
              * State
              */
             switch ($row['ag_priority'])
@@ -733,26 +756,13 @@ class Follow_Up
             }
             $r.=td($priority);
 
-            $r.="<td>".$row['s_value']."</td>";
              $r.='<td>'.$href.
                     h($row['ag_title'])."</A></td>";
+            $r.="<td>".$row['s_value']."</td>";
             $r.="<td>".$href."<span style=\"font-size:75%\">".h($row['tags']).'</span>'.'</a>'."</td>";
-            $r.="<td>".$href.$row['ag_ref'].'</a>'."</td>";
             $r.="<td>".$href.h($row['dest']).'</a>'."</td>";
 
-            // Expediteur
-            $fexp=new Fiche($this->db);
-            $fexp->id=$row['f_id_dest'];
-            $qcode_dest=$fexp->strAttribut(ATTR_DEF_QUICKCODE);
-
-            $qexp=($qcode_dest==NOTFOUND)?"Interne":$qcode_dest;
-            $jsexp=sprintf("javascript:showfiche('%s')", $qexp);
-            if ($qexp!='Interne')
-            {
-                $r.="<td>$href".$qexp." : ".$fexp->getName().'</a></td>';
-            }
-            else
-                $r.="<td>$href Interne </a></td>";
+            
 
 
 
