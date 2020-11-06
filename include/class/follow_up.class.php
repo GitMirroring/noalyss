@@ -682,7 +682,7 @@ class Follow_Up
         $r.='<th style="width:5.57%">'.$table->get_header(5).'</th>';
 //        $r.='<th>'.$table->get_header(1).'</th>';
         $r.=th('Priorité','style="width:5.57%"');
-        $r.='<th style="width:35%">'.$table->get_header(6).'</th>';
+        $r.='<th style="min-width:52%">'.$table->get_header(6).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(7).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(3).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(4).'</th>';

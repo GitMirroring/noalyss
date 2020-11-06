@@ -13,7 +13,7 @@
 echo HtmlInput::request_to_hidden(array("closed_action","remind_date_end","remind_date","sag_ref", "remind_date","only_internal", "state", "gDossier", "qcode", "start_date", "end_date", "ag_id", "ag_dest_query",
 		"tdoc",   "action_query","date_start","date_end","hsstate","searchtag"));
 ?>
-<div id="other_div" class="inner_box" style="left:25%;width:40%;display: none">
+<div id="other_div" class="inner_box" style="left:25%;width:45rem;display: none">
     <?php echo HtmlInput::title_box(_('Actions sur plusieurs documents'),'other_div', 'hide','action_hide_checkbox();') ?>
     <?php echo _("Sélectionner les documents et l' action :")?>
     <ul style='list-style-type: none;padding-left:30px;margin: 0px' >
@@ -61,6 +61,7 @@ echo HtmlInput::request_to_hidden(array("closed_action","remind_date_end","remin
 ?>
 </div>
 <script>
+    var obj=document.getElementById('other_div');
     new Draggable('other_div',{starteffect:function(){
                                     new Effect.Highlight(obj.id,{scroll:window,queue:'end'});
                                   }
