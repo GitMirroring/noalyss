@@ -74,7 +74,7 @@ $uniq=uniqid("tab",TRUE);
               <td id="concerned_card_td">
               <?php 
                     echo $this->display_linked();
-                     if  ($g_user->can_write_action($this->ag_id) == true ):
+                     if  ($p_view != 'READ' && $g_user->can_write_action($this->ag_id) == true ):
                         echo HtmlInput::button_action_add_concerned_card( $this->ag_id);
                      endif;
                ?>
@@ -160,7 +160,7 @@ $uniq=uniqid("tab",TRUE);
             
             <td id="action_tag_td">
                 <?php
-                   $this->tag_cell();
+                   $this->tag_cell($p_view);
                 ?>
             </td>
           </TR>
@@ -253,47 +253,48 @@ function small(p_id_textarea){
    // description
    $description = new ITextarea("ag_description");
    $description->id="ag_description";
-   //---------------------------------- Description -------------------------------------------------------------------
-   if ( count($acomment)> 0) {
-        $editable_description = Document_Option::is_enable_editable_description($this->dt_id);
-        if ( $editable_description == true){
-             echo h2(_("Description"));
-            $itDescription=new ITextarea("ag_description");
-            $itDescription->style='class="input_text field_follow_up" style="height:21rem;width:98%"';
-            
-            $ag_description_id= $acomment[0]['agc_id'];
-            $itDescription->value=$acomment[0]['agc_comment'];
-            $itDescription->id="ag_description";
+    //---------------------------------- Description -------------------------------------------------------------------
+    if ( count($acomment)> 0) {
+            $has_description = true;
+            $editable_description = Document_Option::is_enable_editable_description($this->dt_id);
+            if ( $p_view != 'READ' && $editable_description == true){
+                echo h2(_("Description"));
+                $itDescription=new ITextarea("ag_description");
+                $itDescription->style='class="input_text field_follow_up" style="height:21rem;width:98%"';
 
-             // One editable comment is available
-            $editable_description=new Inplace_Edit($itDescription);
-            $editable_description->add_json_param("op", "followup_comment_oneedit");
-            $editable_description->add_json_param("agc_id", $ag_description_id);
-            $editable_description->add_json_param("ag_id", $ag_id);
-            $editable_description->add_json_param("gDossier", Dossier::id());
-            $editable_description->set_callback("ajax_misc.php");
+                $ag_description_id= $acomment[0]['agc_id'];
+                $itDescription->value=$acomment[0]['agc_comment'];
+                $itDescription->id="ag_description";
 
-            echo $editable_description->input();
-        } 
-        elseif ($p_view == 'READ' || $editable_description == false)
-        {
-            echo h2(_("Description"));
-            
-            echo '<pre class="field_follow_up">';
+                // One editable comment is available
+                $editable_description=new Inplace_Edit($itDescription);
+                $editable_description->add_json_param("op", "followup_comment_oneedit");
+                $editable_description->add_json_param("agc_id", $ag_description_id);
+                $editable_description->add_json_param("ag_id", $ag_id);
+                $editable_description->add_json_param("gDossier", Dossier::id());
+                $editable_description->set_callback("ajax_misc.php");
+
+                echo $editable_description->input();
+            }
+            elseif ($p_view == 'READ' || $editable_description == false)
+            {
+                echo h2(_("Description"));
+
+                echo '<pre class="field_follow_up">';
                 echo h($acomment[0]['agc_comment']);
                 echo '</pre>';
-        }
-   } else {
-       echo h2(_("Description"));
-       echo $desc->input();
+            }
+    } else {
+          echo h2(_("Description"));
+          echo $description->input();
    }
-   
-   //---------------------------------- Comment -----------------------------------------------------------------------
+
+        //---------------------------------- Comment -----------------------------------------------------------------------
    
    if (    Document_Option::can_add_comment($ag_id)  && 
            Document_Option::option_comment($this->dt_id) == "ONE_EDIT" ) 
    {
-        if (count($acomment) > 1 && $p_view != 'READ')  {
+        if (count($acomment) > 1 )  {
             echo h2(_("Commentaire"));
             $comment=new ITextarea("ag_comment_edit");
             $comment->style='class="input_text field_follow_up" style="height:21rem;width:98%"';
@@ -302,34 +303,40 @@ function small(p_id_textarea){
             $comment->value=(count($acomment) > 1 )?$acomment[1]['agc_comment']:'';
             $comment->id="ag_comment_edit";
 
-            // One editable comment is available
-            $editable_comment=new Inplace_Edit($comment);
-            $editable_comment->add_json_param("op", "followup_comment_oneedit");
-            $editable_comment->add_json_param("agc_id", $ag_comment_id);
-            $editable_comment->add_json_param("ag_id", $ag_id);
-            $editable_comment->add_json_param("gDossier", Dossier::id());
-            $editable_comment->set_callback("ajax_misc.php");
-            echo '<p></p>';
-            echo $editable_comment->input();
+            if ( $p_view != 'READ') {
+
+                // One editable comment is available
+                $editable_comment=new Inplace_Edit($comment);
+                $editable_comment->add_json_param("op", "followup_comment_oneedit");
+                $editable_comment->add_json_param("agc_id", $ag_comment_id);
+                $editable_comment->add_json_param("ag_id", $ag_id);
+                $editable_comment->add_json_param("gDossier", Dossier::id());
+                $editable_comment->set_callback("ajax_misc.php");
+                echo '<p></p>';
+                echo $editable_comment->input();
+            } else {
+                echo '<p></p>';
+                echo $comment->display();
+            }
         } else {
             echo '<span class="noprint">';
-            if (  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id) )  {
-            echo '<p></p>';
-            echo $desc->input();
-     
+            if (  $p_view == 'UPD' &&  $has_description && Document_Option::can_add_comment($ag_id) )  {
+                echo h2(_("Commentaire"));
+                echo '<p></p>';
+                echo $desc->input();
+
             }
             echo '</span>';
         }
    }
-    if (    Document_Option::can_add_comment($ag_id) 
+    if (  count($acomment) > 0
+            &&  Document_Option::can_add_comment($ag_id)
             && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")
     {
-       if( count($acomment) >0 ) echo h2(_("Commentaire"));
+        echo h2(_("Commentaire"));
 
         for( $c=1;$c<count($acomment);$c++){
-            if ($c == 0) { $m_desc=_('Description');}
-            else
-             { $m_desc=_('Commentaire');}
+            $m_desc=_('Commentaire');
              $comment="";
              if ( $p_view != 'READ' && $c > 0)
             {
@@ -360,13 +367,16 @@ function small(p_id_textarea){
             echo '<p></p>';
             echo $comment;
         } // end for
-        echo '<span class="noprint">';
-        if (  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id))  {
+        if (  $has_description &&  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id))  {
+            echo '<span class="noprint">';
             echo '<p></p>';
-        echo $desc->input();
-     
+                echo $desc->input();
+
+            }
+            echo '</span>';
+            if  ($p_view == 'UPD') {
+
         }
-        echo '</span>';
     }
 
     

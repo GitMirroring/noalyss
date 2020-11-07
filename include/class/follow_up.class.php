@@ -596,7 +596,12 @@ class Follow_Up
         if (trim($this->ag_comment)!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION['g_user'], $this->ag_comment));
+                , array($this->ag_id, $_SESSION['g_user'], $this->ag_comment));
+        }
+        if (trim($this->ag_description)!='' && Document_Option::can_add_comment($this->ag_id))
+        {
+            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
+                , array($this->ag_id, $_SESSION['g_user'], $this->ag_description));
         }
         $this->insert_operation();
         $this->insert_action();
@@ -905,6 +910,11 @@ class Follow_Up
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
                     , array($this->ag_id, $_SESSION['g_user'], $this->ag_comment));
         }
+        if (trim($this->ag_description)!='')
+        {
+            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
+                    , array($this->ag_id, $_SESSION['g_user'], $this->ag_description));
+        }
         $this->insert_operation();
         $this->insert_action();
         return true;
@@ -949,29 +959,24 @@ class Follow_Up
     function fromArray($p_array)
     {
         global $g_user;
-        $this->ag_id=(isset($p_array['ag_id']))?$p_array['ag_id']:0;
-        $this->ag_ref=(isset($p_array['ag_ref']))?$p_array['ag_ref']:"";
-        $this->qcode_dest=(isset($p_array['qcode_dest']))?$p_array['qcode_dest']:"";
-        $this->f_id_dest=(isset($p_array['f_id_dest']))?$p_array['f_id_dest']:null;
-        $this->ag_timestamp=(isset($p_array['ag_timestamp']))?$p_array['ag_timestamp']:date('d.m.Y');
-        $this->qcode_dest=(isset($p_array['qcode_dest']))?$p_array['qcode_dest']:"";
-        $this->dt_id=(isset($p_array['dt_id']))?$p_array['dt_id']:"";
-        $this->ag_state=(isset($p_array['ag_state']))?$p_array['ag_state']:2;
-        $this->ag_ref=(isset($p_array['ag_ref']))?$p_array['ag_ref']:"";
-        $this->ag_title=(isset($p_array['ag_title']))?$p_array['ag_title']:"";
-        $this->ag_hour=(isset($p_array['ag_hour']))?$p_array['ag_hour']:"";
-        $this->ag_dest=(isset($p_array['ag_dest']))?$p_array['ag_dest']:$g_user->get_profile();
-        $this->ag_priority=(isset($p_array['ag_priority']))?$p_array['ag_priority']:2;
-        $this->ag_contact=(isset($p_array['ag_contact']))?$p_array['ag_contact']:"";
-        $this->ag_comment=(isset($p_array['ag_comment']))?$p_array['ag_comment']:"";
-        $this->ag_remind_date=(isset($p_array['ag_remind_date']))?$p_array['ag_remind_date']:null;
-        $this->operation=(isset($p_array['operation']))?$p_array['operation']:null;
-        /**
-         * @todo
-         * deprecated : to remove
-          $this->op = (isset($p_array['op'])) ? $p_array['op'] : null;
-         */
-        $this->action=(isset($p_array['action']))?$p_array['action']:null;
+        $http=new HttpInput();
+        $this->ag_id=$http->extract($p_array,"ag_id","number",0);
+        $this->ag_ref=$http->extract($p_array,"ag_ref","string","");
+        $this->qcode_dest=$http->extract($p_array,"qcode_dest","string","");
+        $this->f_id_dest=$http->extract($p_array,"f_id_dest","string",null);
+        $this->ag_timestamp=$http->extract($p_array,"ag_timestamp","string",date('d.m.Y'));
+        $this->dt_id=$http->extract($p_array,"dt_id","string","");
+        $this->ag_state=$http->extract($p_array,"ag_state","number",2);
+        $this->ag_title=$http->extract($p_array,"ag_title","string","");
+        $this->ag_hour=$http->extract($p_array,"ag_hour","string","");
+        $this->ag_dest=$http->extract($p_array,"ag_dest","string",$g_user->get_profile());
+        $this->ag_priority=$http->extract($p_array,"ag_priority","string","2");
+        $this->ag_contact=$http->extract($p_array,"ag_contact","string","");
+        $this->ag_comment=$http->extract($p_array,"ag_comment","string","");
+        $this->ag_description=$http->extract($p_array,"ag_description","string","");
+        $this->ag_remind_date=$http->extract($p_array,"ag_remind_date","string",null);
+        $this->operation=$http->extract($p_array,"operation","string",null);
+        $this->action=$http->extract($p_array,"action","string",null);
     }
 
     /**
@@ -1520,7 +1525,7 @@ class Follow_Up
      * @brief show the cell content in Display for the tags
      * called also by ajax
      */
-    function tag_cell()
+    function tag_cell($p_view='UPD')
     {
         global $g_user;
         $a_tag=$this->tag_get();
@@ -1529,7 +1534,7 @@ class Follow_Up
         {
             echo '<span class="tagcell">';
             echo $a_tag[$e]['t_tag'];
-            if ($g_user->can_write_action($this->ag_id)==true)
+            if ($g_user->can_write_action($this->ag_id)==true && $p_view != 'READ')
             {
                 $js_remove=sprintf("action_tag_remove('%s','%s','%s')", dossier::id(), $this->ag_id, $a_tag[$e]['t_id']);
                 echo Icon_Action::trash(uniqid(), $js_remove);
@@ -1539,7 +1544,7 @@ class Follow_Up
             echo '&nbsp;';
         }
         
-        if ($g_user->can_write_action($this->ag_id)==true)
+        if ($p_view != 'READ' && $g_user->can_write_action($this->ag_id)==true)
         {
             $js=sprintf("onclick=\"action_tag_select('%s','%s')\"", dossier::id(), $this->ag_id);
             echo HtmlInput::button('tag_bt', _('Ajout étiquette'), $js, 'smallbutton');
