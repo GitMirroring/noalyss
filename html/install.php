@@ -29,14 +29,18 @@
      h2 {
          font-size: 105%;
          text-align: left;
-         text-decoration: underline;
+         text-decoration: none;
+         color:darkblue;
+         margin-bottom: 1rem;
+         margin-top: 1rem;
+
      }
      h3 {
          font-size : 102%;
          font-style: italic;
          margin-left: 3px;
      }
- 
+
     .button {
         font-size:110%;
         color:white;
