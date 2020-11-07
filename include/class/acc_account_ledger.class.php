@@ -655,7 +655,7 @@ class Acc_Account_Ledger
     {
         $l=new Acc_Ledger($this->db,$p_jrn);
         $row=$l->get_propertie();
-        if ( strlen(trim($row['jrn_def_class_deb'])) == 0 ) return array();
+        if ( $row == null || strlen(trim($row['jrn_def_class_deb'])) == 0 ) return array();
         $valid_account=explode(" ",$row['jrn_def_class_deb']);
         return $valid_account;
     }
