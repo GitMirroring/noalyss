@@ -26,6 +26,7 @@
  * @brief show the result of a search into a inner windows
  *
  */
+
 ?>
 <form onsubmit="set_action_related('fresultaction');return false;" id="fresultaction">
 	<?php echo HtmlInput::hidden('ctlc',$_GET['ctlc'])?>
@@ -63,6 +64,7 @@
 			<?php
 			$ck=new ICheckBox('ag_id[]');
 			 $ck->value=$a_row[$i]['ag_id'];
+                         $ck->set_range("ag_id_search_ck");
 			 echo $ck->input();
 			?>
 		</td>
@@ -87,3 +89,6 @@
 </table>
 	<?php echo HtmlInput::submit("save_action", _("Mettre à jour"))?>
 </form>
+<?php
+echo ICheckBox::javascript_set_range("ag_id_search_ck");
+?>
