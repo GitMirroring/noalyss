@@ -88,15 +88,24 @@ table.sortable th,  table.table_large th,table.result th {
 h2 {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     color:white;
-    background-color:#6393c1;
+    background-color:#9fbcd6;
     /*! margin:1px; */
-    padding:3px;
     font-style: italic; 
     font-size:15px;
     font-size:1.1rem;
-    margin-bottom: 5px;
     margin-top: 5px;
+    font-size: 1.1rem;
+margin-bottom: 1rem;
+margin-top: 1rem;
+border-radius: 2px;
+padding: 0.5rem 0rem 0.7rem 2rem;
 }
+ @media only screen and (max-width: 1280px) {
+     h2{
+         margin-top:2px;
+         padding: 0.2rem 0rem 0.3rem 1rem;
+     }
+ }
 div.info {
     background:#879ED4;
     color:#FFFFFF;
@@ -438,9 +447,9 @@ div.content a {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'openSansRegular';
     text-decoration: none;
-    display: block;
+    display: inline-block;
    color: #0000FF;
-    padding: 0px;
+    padding: 0px 10px 0px 0px;
     text-decoration: underline;
 /*! background: rgb(247, 192, 156) none repeat scroll 0% 0%; */
 
@@ -453,7 +462,7 @@ div.content a:hover {
     color: #FFFFFF;
     background-color:#336699;
     text-decoration: none;
-    display: block;
+    display: inline-block;
 
     /*! border-top-color: white; */
     /*! border-top-style: solid; */
