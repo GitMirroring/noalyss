@@ -132,9 +132,11 @@
                    <?php echo Tag::button_search('search'); ?>
                    <?php
                        if ( isset($_GET['searchtag'])) {
+                           $http=new HttpInput();
                            echo Tag::add_clear_button('search');
-                           for ($i=0;$i<count($_GET['searchtag']);$i++) {
-                               $t=new Tag($cn, $_GET['searchtag'][$i]);
+                           $asearchtag= $http->get("searchtag","array",array());
+                           for ($i=0;$i<count($asearchtag);$i++) {
+                               $t=new Tag($cn, $asearchtag[$i]);
                                echo $t->update_search_cell('search');
                            }
                        }
