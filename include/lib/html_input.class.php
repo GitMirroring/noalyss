@@ -908,18 +908,19 @@ class HtmlInput
      * @param string $p_url  url
      * @param string $p_js javascript
      * @param string $p_style is the visuable effect (class, style...)
+     * @param string $p_title Title
      */
     static function anchor($p_text, $p_url="", $p_js="",
-            $p_style=' class="line" ')
+            $p_style=' class="line" ',$p_title="click")
     {
         if ($p_js!="")
         {
-            $p_url='href="#"';
+            $p_url='href="javascript:void(0)"';
           } else {
               $p_url=sprintf('href="%s"',$p_url);
         }
 
-        $str=sprintf('<a %s %s %s>%s</a>', $p_style, $p_url, $p_js, $p_text);
+        $str=sprintf('<a %s %s %s title="%s">%s</a>', $p_style, $p_url, $p_js, $p_title,$p_text);
         return $str;
     }
 
