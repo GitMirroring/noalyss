@@ -539,13 +539,17 @@ class Follow_Up
             $this->ag_title=$doc_mod->dt_value;
         }
         $this->ag_id=$this->db->get_next_seq('action_gestion_ag_id_seq');
-         // Get The sequence id,
         $seq_name="seq_doc_type_".$this->dt_id;
-
-        // Create the reference
-        $ag_ref=$this->db->get_value('select dt_prefix from document_type where dt_id=$1', array($this->dt_id)).'-'.$this->db->get_next_seq($seq_name);
+        // to avoid duplicate
+        do {
+            // Create the reference
+            $ag_ref=$this->db->get_value('select dt_prefix from document_type where dt_id=$1', array($this->dt_id)).'-'.$this->db->get_next_seq($seq_name);
+            // if reference does not exist , finish the loop
+            if ( $this->db->get_value("select count(*) from action_gestion where ag_ref = $1",array($ag_ref)) == 0)
+            break;
+        } while (1);
+        // check if the reference already exist and try to compute new one
         $this->ag_ref=$ag_ref;
-
         // save into the database
         if ($this->ag_remind_date!=null||$this->ag_remind_date!='')
         {
