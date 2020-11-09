@@ -83,7 +83,7 @@ echo $select_detail_operation->input();
 $i=new ICheckBox("det_contact_mul",1);
 if ( Document_Option::is_enable_contact_multiple($table->dt_id)) $i->set_check(1); else $i->set_check(0);
 echo $i->input();
-echo _("Contacts multiples");
+echo _("Autres fiches");
 ?>
         </li> 
         <li>

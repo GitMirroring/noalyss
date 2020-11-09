@@ -85,6 +85,7 @@ class Follow_Up
     var $ag_contact;  /*!< $ag_contact contact */
     var $ag_remind_date;  /*!< $ag_contact contact */
     var $f_id_dest ; /*!< followup action recipient */
+    var $ag_description; /*!< description of the action */
     /**
      * @brief $operation string related operation
      */
