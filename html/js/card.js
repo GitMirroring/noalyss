@@ -342,7 +342,7 @@ function search_get_card(obj)
     }
     if ( obj.elements['accvis'] ) 
     {
-        queryString+="&accvis="+$F(accvis);
+        queryString+="&accvis="+$F('accvis');
     } else {
         queryString+="&accvis=0";
     } 
