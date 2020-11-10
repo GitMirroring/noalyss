@@ -46,8 +46,8 @@ if ( ! $g_user->can_write_action($ag_id)  ) {
     return;
 }
 
-require_once 'class/follow_up.class.php';
-$follow=new Follow_Up($cn,$ag_id);
+require_once 'class/follow_up_other_concerned.class.php';
+$follow=new Follow_Up_Other_Concerned($cn,$ag_id);
 $nb_card=count($selected_card);
 for ($i=0;$i< $nb_card;$i++)
 {
@@ -61,8 +61,8 @@ for ($i=0;$i< $nb_card;$i++)
  */
 
 ob_start();
-$follow->display_linked();
-echo HtmlInput::button_action_add_concerned_card( $ag_id);
+$follow->display_linked_count();
+echo $follow->button_action_add_concerned_card( );
 $response = ob_get_clean();
 $html = escape_xml($response);
 header('Content-type: text/xml; charset=UTF-8');

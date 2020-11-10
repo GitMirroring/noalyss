@@ -21,7 +21,7 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-
+require_once NOALYSS_INCLUDE."/class/follow_up_other_concerned.class.php";
 /**
  * @file
  * @brief save option of card into action_person_option
@@ -53,3 +53,6 @@ for ($i=0;$i<$nb; $i++) {
         $cn->exec_sql("UPDATE public.action_person_option SET ap_value=$1 WHERE ap_id=$2",
                 [$ap_value[$i],$ap_id[$i]]);
 }
+$follow=new Follow_Up_Other_Concerned($cn,$ag_id);
+$aColumn = $follow->get_option();
+echo $follow->display_row($fiche_id, 0, $aColumn);

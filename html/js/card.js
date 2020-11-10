@@ -161,7 +161,10 @@ function action_concerned_save_card(obj)
                 code_html = unescape_xml(code_html);
                 $(namectl).update(code_html);
                 removeDiv('search_card');
-                
+                /* if dialog box exist with list other card, then refresh it */
+                if ( document.getElementById("action_concerned_list_dv") ) {
+                    action_concerned_list({ag_id:obj.ag_id.value,dossier:obj.gDossier.value});
+                }
 
             }
         });
@@ -172,6 +175,58 @@ function action_concerned_save_card(obj)
         return false;
     }
     return false;
+}
+/**
+ * Display the list of other card from a followup action
+ * @returns {undefined}
+ */
+function action_concerned_list(p_obj) {
+    try {
+        var action = new Ajax.Request('ajax_misc.php',
+                {
+                    method: 'get',
+                    parameters: {gDossier: p_obj.dossier, op: 'card', 'op2': "action_concerned_list", "ag_id": p_obj.ag_id
+                        ,"ctl":'action_concerned_list_dv'},
+                    onFailure: errorFid,
+                    onSuccess: function (req, txt)
+                    {
+                        try {
+                            var sx = 0;
+                            if (window.scrollY)
+                            {
+                                sx = window.scrollY + 40;
+                            } else
+                            {
+                                sx = document.body.scrollTop + 60;
+                            }
+                            var div_style = "top:" + sx + "px;";
+                            add_div({id: 'action_concerned_list_dv', cssclass: 'inner_box', html: "",
+                                style: div_style, drag: true});
+                            remove_waiting_box();
+                            var answer = req.responseXML;
+                            var a = answer.getElementsByTagName('ctl');
+                            if (a.length == 0)
+                            {
+                                var rec = req.responseText;
+                                alert_box('erreur :' + rec);
+                            }
+                            var html = answer.getElementsByTagName('code');
+                            var namectl = a[0].firstChild.nodeValue;
+                            var nodeXml = html[0];
+                            var code_html = getNodeText(nodeXml);
+                            code_html = unescape_xml(code_html);
+
+
+                            $('action_concerned_list_dv').innerHTML = code_html;
+                        } catch (e) {
+                            alert_box(e.message);
+                        }
+                    }
+                }
+        );
+    } catch (e) {
+        alert_box("action_concerned_list" + e.message);
+    }
 }
 /**
  * Display form for searching cards to add to action-follow-up
@@ -1089,8 +1144,11 @@ function action_remove_concerned(p_dossier,p_fiche_id,p_action_id)
                         var nodeXml=html[0];
                         var code_html = getNodeText(nodeXml);
                         code_html = unescape_xml(code_html);
-                        removeDiv('search_card');
                         $('concerned_card_td').innerHTML = code_html;
+                        removeDiv('search_card');
+                        
+                        $(namectl).remove();
+                        
                     } catch (e) {
                         if ( console) { console.log('Erreur ') + e.message;}
                         alert_box('action_remove_concerned '+e.message);
@@ -1346,6 +1404,8 @@ function save_linked_card_option(obj)
         onSuccess:function(req) {
             remove_waiting_box();
             removeDiv("d_linked_card_option");
+            $("other_"+obj.action_person_id.value).update(req.responseText);
+              new Effect.Highlight("other_"+obj.action_person_id.value,{startcolor: '#FAD4D4',endcolor: '#F78082' });
         }
     });
     return false;

@@ -45,22 +45,30 @@ if ( ! $g_user->can_read_action($ag_id)  ) {
     return;
 }
 
-require_once 'class/follow_up.class.php';
-$follow=new Follow_Up($cn,$ag_id);
+require_once 'class/follow_up_other_concerned.class.php';
+$follow=new Follow_Up_Other_Concerned($cn,$ag_id);
 
 ob_start();
+$action_person_id=$cn->get_value(" select ap_id from action_person where ag_id =$1 and f_id =$2 ",[$ag_id,$f_id]);
+
+// row id to update
+$ctl= "other_".$action_person_id;
+
 $follow->remove_linked_card($f_id);
-echo $follow->display_linked();
-echo HtmlInput::button_action_add_concerned_card( $follow->ag_id);
+$follow->display_linked_count();
+echo $follow->button_action_add_concerned_card( );
 
 $response = ob_get_clean();
 
+if (headers_sent() && DEBUG) {
+    echo $response;
+}
 $html = escape_xml($response);
 header('Content-type: text/xml; charset=UTF-8');
 echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
-<ctl>unused</ctl>
+<ctl>$ctl</ctl>
 <code>$html</code>
 </data>
 EOF;

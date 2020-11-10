@@ -1670,65 +1670,7 @@ class Follow_Up
             $this->f_id_dest=null;
     }
 
-    /**
-     *  Add another concerned (tiers, supplier...)
-     * @remark type $g_user
-     * @param type $p_fiche_id
-     */
-    function insert_linked_card($p_fiche_id)
-    {
-        global $g_user;
-        if ($g_user->can_write_action($this->ag_id))
-        {
-            /**
-             * insert into action_person
-             */
-            $count=$this->db->get_value('select count(*) from action_person where f_id=$1 and ag_id=$2', array($p_fiche_id, $this->ag_id));
-            if ($count==0)
-            {
-                $this->db->exec_sql('insert into action_person (ag_id,f_id) values ($1,$2)', array($this->ag_id, $p_fiche_id));
-            }
-        }
-    }
-
-    /**
-     * Remove  another concerned (tiers, supplier...)
-     * @remark type $g_user
-     * @param type $p_fiche_id
-     */
-    function remove_linked_card($p_fiche_id)
-    {
-        global $g_user;
-        if ($g_user->can_write_action($this->ag_id))
-        {
-            $this->db->exec_sql('delete from action_person where ag_id = $1 and f_id = $2', array($this->ag_id, $p_fiche_id));
-        }
-    }
-
-    /**
-     * Display the other concerned (tiers, supplier...)
-     * @return string
-     */
-    function display_linked()
-    {
-        $a_linked=$this->db->get_array('select ap_id,f_id from action_person where ag_id=$1', array($this->ag_id));
-        if (count($a_linked)==0)
-            return "";
-        $dossier_id=Dossier::id();
-        for ($i=0; $i<count($a_linked); $i++)
-        {
-            $fiche=new Fiche($this->db, $a_linked[$i]['f_id']);
-            $qc=$fiche->get_quick_code();
-            $js_remove=sprintf("action_remove_concerned('%s','%s','%s')", dossier::id(), $a_linked[$i]['f_id'], $this->ag_id);
-            echo '<span class="tagcell">';
-            echo HtmlInput::anchor($qc,"", sprintf("onclick=\"linked_card_option('%s','%s')\"",
-                    $a_linked[$i]['ap_id'],$dossier_id));
-            echo Icon_Action::trash(uniqid(), $js_remove);
-            echo '</span>';
-            echo '&nbsp;';
-            echo '&nbsp;';
-        }
-    }
+   
     /**
      * @brief display a small form to enter a new event
      * 

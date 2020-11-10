@@ -1,7 +1,8 @@
 #!/bin/bash
 
+export PGCLUSTER=10/main
 DOSSIER_TEST=rel70dossier25
-FILE_TEST=dossiertest200318-1402.sql
+FILE_TEST=dossiertest201107-1806.sql
 
 dropdb $DOSSIER_TEST
 createdb $DOSSIER_TEST

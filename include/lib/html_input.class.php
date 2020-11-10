@@ -480,7 +480,7 @@ class HtmlInput
             $id=uniqid("xx");
         }
         $r="";
-        $r.='<a  id="'.$id.'" class="'.$p_class.'" onclick="'.$javascript.'">'.$p_symbole.h($action).'</a>';
+        $r.='<a  id="'.$id.'" href="javascript:void(0)" class="'.$p_class.'" onclick="'.$javascript.'">'.$p_symbole.h($action).'</a>';
         return $r;
     }
 
@@ -1137,16 +1137,7 @@ class HtmlInput
         return $js;
     }
 
-    static function button_action_add_concerned_card($p_agid)
-    {
-        $dossier=Dossier::id();
-        $javascript=<<<EOF
-                    obj={dossier:$dossier,ag_id:$p_agid};action_concerned_search_card(obj);
-EOF;
-        $js=HtmlInput::button_action(_('Ajout autres'), $javascript, 'xx',
-                        'smallbutton');
-        return $js;
-    }
+
 
     static function button_action_add()
     {

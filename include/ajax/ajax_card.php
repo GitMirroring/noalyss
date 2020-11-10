@@ -776,6 +776,13 @@ case 'upr':
             return;
 
             break;
+  // ----------------------------------------------------------------------------------------------------------------
+  // Display a list of other card linked to the event / followup
+  // ----------------------------------------------------------------------------------------------------------------
+        case 'action_concerned_list':
+            require_once NOALYSS_INCLUDE.'/ajax/ajax_action_concerned_list.php';
+            return ;
+            break;
             
 } // switch
 $xml=escape_xml($html);

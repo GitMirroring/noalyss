@@ -1,4 +1,5 @@
 <?php
+require_once NOALYSS_INCLUDE."/class/follow_up_other_concerned.class.php";
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 $uniq=uniqid("tab",TRUE);
@@ -73,9 +74,10 @@ $uniq=uniqid("tab",TRUE);
               </td>
               <td id="concerned_card_td">
               <?php 
-                    echo $this->display_linked();
+                    $followup_other_concerned=new Follow_Up_Other_Concerned($this->db,$this->ag_id);
+                    echo $followup_other_concerned->display_linked_count();
                      if  ($p_view != 'READ' && $g_user->can_write_action($this->ag_id) == true ):
-                        echo HtmlInput::button_action_add_concerned_card( $this->ag_id);
+                        echo $followup_other_concerned->button_action_add_concerned_card();
                      endif;
                ?>
               </td>
