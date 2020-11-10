@@ -64,7 +64,7 @@ join contact_option_ref cor on (cor.cor_id=apo.contact_option_ref_id)
 where ag_id=$1 and f_id=$2  order by cor_id",array($ag_id,$lastcard));
        $nb_option=count($aOption);
        for ($h=0;$h < $nb_option;$h++) {
-           $csv->add($h);
+           $csv->add($aOption[$h]['ap_value']);
        }
        $csv->write();
        $lastcard=$aRow[$i]['f_id'];
