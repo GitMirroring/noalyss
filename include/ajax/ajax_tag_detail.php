@@ -12,9 +12,10 @@ require_once NOALYSS_INCLUDE.'/class/tag.class.php';
 ob_start();
 $tag=new Tag($cn);
 $http=new HttpInput();
-$tag->data->t_id=$http->get("tag","number");
-if ($tag->data->t_id == -1 &&  $g_user->check_action(TAGADD) == 0 ) return;
-$tag->data->load();
+$data=$tag->get_data();
+$data->t_id=$http->get("tag","number");
+if ($data->t_id == -1 &&  $g_user->check_action(TAGADD) == 0 ) return;
+$data->load();
 echo HtmlInput::title_box(_("Détail du dossier ou étiquette"), "tag_div","close","","y");
 
 ?>
@@ -32,9 +33,10 @@ else :
 <?php        endif; ?>        
     <?php
     echo dossier::hidden();
-    echo HtmlInput::hidden('t_id', $_GET['tag']);
-    echo HtmlInput::hidden('ac',$_GET['ac']);
-    $data=$tag->data;
+    echo HtmlInput::hidden('t_id', $http->get('tag') );
+    echo HtmlInput::hidden('ac',$http->get('ac'));
+
+
     require_once NOALYSS_TEMPLATE.'/tag_detail.php';
     echo HtmlInput::submit("save_tag_sb", "Valider");
     echo HtmlInput::button_close("tag_div");
@@ -43,8 +45,12 @@ else :
 </form>
 <?php
     $response=  ob_get_clean();
-    $html=escape_xml($response);
+if (headers_sent() && DEBUG )    {
+    echo $response;
+}else {
     header('Content-type: text/xml; charset=UTF-8');
+}
+    $html=escape_xml($response);
     echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>

@@ -29,7 +29,7 @@ $ac=$http->request('ac');
                 $row=Database::fetch_array($ret, $i);
         ?>
     <tr class="<?php echo (($i%2==0)?'even':'odd');?>">
-        <td>
+        <td class="tagcell-color<?=$row['t_color']?>">
             <?php
             $js=sprintf("show_tag('%s','%s','%s','p')",$gDossier,$ac,$row['t_id']);
             echo HtmlInput::anchor($row['t_tag'], "", "onclick=\"$js\"");

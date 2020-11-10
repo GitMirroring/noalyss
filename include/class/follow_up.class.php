@@ -663,7 +663,8 @@ class Follow_Up
                 ag_title,dt_value,ag_ref, ag_priority,ag_state,
                 coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') as dest,
                 (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=1) as name,
-                array_to_string((select array_agg(t1.t_tag) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags
+                array_to_string((select array_agg(t1.t_tag) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags,
+                array_to_string((select array_agg(t1.t_color) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags_color
             from action_gestion as ag
                 join document_type on (ag_type=dt_id)
                 join document_state on (ag_state=s_id)
@@ -769,7 +770,19 @@ class Follow_Up
              $r.='<td>'.$href.
                     h($row['ag_title'])."</A></td>";
             $r.="<td>".$row['s_value']."</td>";
-            $r.="<td>".$href."<span style=\"font-size:75%\">".h($row['tags']).'</span>'.'</a>'."</td>";
+            $r.="<td>";
+            if ($row['tags']!=""){
+                $r.=$href;
+                $aColor=explode(",", $row["tags_color"]);
+                $aTags=explode(",", $row["tags"]);
+                $nb_tag=count($aTags);
+                for ( $x=0;$x<$nb_tag;$x++) {
+                   $r.=sprintf('<span style="font-size:75%%" class="tagcell-color%s">%s</span>',$aColor[$x],$aTags[$x]);
+                   $r.="&nbsp;";
+                } // end loop $x
+                $r.='</a>';
+            }
+            $r.="</td>";
             $r.="<td>".$href.h($row['dest']).'</a>'."</td>";
 
             
@@ -1488,7 +1501,7 @@ class Follow_Up
     {
         if ($this->ag_id==0)
             return;
-        $sql='select b.ag_id,b.t_id,b.at_id,a.t_tag'
+        $sql='select b.ag_id,b.t_id,b.at_id,a.t_tag,a.t_color'
                 .' from '
                 .' tags as a join action_tags as b on (a.t_id=b.t_id)'
                 .' where ag_id=$1 '
@@ -1537,7 +1550,7 @@ class Follow_Up
         $c=count($a_tag);
         for ($e=0; $e<$c; $e++)
         {
-            echo '<span class="tagcell">';
+            echo '<span class="tagcell tagcell-color'.$a_tag[$e]['t_color'].'">';
             echo $a_tag[$e]['t_tag'];
             if ($g_user->can_write_action($this->ag_id)==true && $p_view != 'READ')
             {

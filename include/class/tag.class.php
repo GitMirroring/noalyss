@@ -21,12 +21,24 @@ require_once NOALYSS_INCLUDE.'/database/tag_sql.class.php';
 
 class Tag
 {
+    private $data; //<! Tag_SQL 
     function __construct($p_cn,$id=-1)
     {
         $this->cn=$p_cn;
         $this->data=new Tag_SQL($p_cn,$id);
     }
-    /**
+    public function get_data()
+    {
+        return $this->data;
+    }
+
+    public function set_data($data)
+    {
+        $this->data=$data;
+        return $this;
+    }
+
+        /**
      * Show the list of available tag
      * @return HTML
      */
@@ -42,11 +54,11 @@ class Tag
     function select()
     {
         $ret=$this->data->seek("where t_actif='Y' order by t_tag");
-        $ret=$this->cn->exec_sql(" select t_id,t_tag,t_description,'t' as tag_type 
+        $ret=$this->cn->exec_sql(" select t_id,t_tag,t_description,'t' as tag_type ,t_color
                     from tags 
                     where t_actif='Y' 
                 union all 
-                select tg_id,tg_name ,'G','g' from tag_group order by 2");
+                select tg_id,tg_name ,'G','g' ,1 from tag_group order by 2");
         require_once NOALYSS_TEMPLATE.'/tag_select.php';
     }
     /**
@@ -73,6 +85,7 @@ class Tag
         $this->data->t_tag=  strip_tags($p_array['t_tag']);
         $this->data->t_description=strip_tags($p_array['t_description']);
         $this->data->t_actif=$p_array['t_actif'];
+        $this->data->t_color=$p_array['tagcell_color'];
         $this->data->save();
     }
     function remove($p_array)

@@ -36,7 +36,7 @@ if ( $http->request("isgroup") == 't') {
     $fl->tag_add($http->request('t_id',"number"));
 } else {
         // Add all the tag from the group 
-    $aTag=$cn->get_array("select t_id,t_tag from jnt_tag_group_tag jtgt  join tags on (tag_id=t_id) where tag_group_id=$1 order by 2 ",[$http->request("t_id","number")]);
+    $aTag=$cn->get_array("select t_id,t_tag ,t_color from jnt_tag_group_tag jtgt  join tags on (tag_id=t_id) where tag_group_id=$1 order by 2 ",[$http->request("t_id","number")]);
     $nb_atag=count($aTag);
     if ( $nb_atag > 0) {
         for ($i=0;$i<$nb_atag;$i++){

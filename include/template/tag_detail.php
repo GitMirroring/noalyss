@@ -16,6 +16,8 @@ $t_actif->value=[
     ['label'=>_('Non actif'),'value'=>'N']
     ];
 $t_actif->selected=$data->t_actif;
+$icheckbox=new ICheckBox("tagcell_color");
+$icheckbox->javascript='onclick="uncheck_other(this,\'tagcell_color\');"';
 ?>
 <p>
    <?php echo _("Etiquette (tag)")?> : <?php echo $t_tag->input(); ?>
@@ -24,7 +26,29 @@ $t_actif->selected=$data->t_actif;
 <?php echo _("Description")?> : <?php echo $t_description->input(); ?>
 </p>
 <p>
-    <?=_("Etiquette(tag) actif") ?><?=$t_actif->input()?>
+    <?=_("Couleur")?>
+</p>
+<?php
+if ( $data->t_id == '-1') $data->t_color=1;
+$nb_color=20;
+
+for ($i=1 ; $i != $nb_color+1 ; $i++ ) {
+?>    
+        <span class="tagcell <?="tagcell-color".$i?>">
+            <?=_("Exemple").$i ?>
+            <?php $icheckbox->value=$i;
+            if ( $data->t_color==$i) { $icheckbox->set_check($i);} else {$icheckbox->selected=false;}
+            echo $icheckbox->input();
+            ?>
+        </span>
+    <?php if ( $i % 5 == 0 ) echo '<br>';?>
+<?php 
+
+} // end loop $i
+?>
+  
+<p>
+    <?=_("Etiquette actif") ?><?=$t_actif->input()?>
 </p>
 <?php
 // If exist you can remove it

@@ -33,7 +33,7 @@ if (isNumber($ag_id) == 0 ) die ('ERROR : parameters invalid');
         $row=Database::fetch_array($ret, $i);
 ?>
     <tr class="<?php echo (($i%2==0)?'even':'odd');?>">
-        <td>
+        <td class="tagcell-color<?=$row['t_color']?>">
             <?php
             $js=sprintf("action_tag_add('%s','%s','%s','%s')",$gDossier,$ag_id,$row['t_id'],$row['tag_type']);
             echo HtmlInput::anchor($row['t_tag'], "", "onclick=\"$js\"");

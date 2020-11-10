@@ -3804,3 +3804,18 @@ function json_concat(p_json1,p_json2)
         return result;
 
 }
+/**
+ * this function unchecks other checkbox , it mimics the way a radio behaves
+ * @param string p_click is the DOM id of the checkbox you clicked
+ * @param string p_name is the name of all the checkbox to uncheck
+ */
+function uncheck_other(p_click,p_name) 
+{
+    var aCheckbox=document.getElementsByName(p_name);
+    if (aCheckbox.length == 0) return;
+    var i=0;
+    for (i=0;i<aCheckbox.length;i++) {
+        aCheckbox[i].checked=false;
+    }
+    p_click.checked=true;
+}
