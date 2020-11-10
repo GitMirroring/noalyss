@@ -1388,7 +1388,7 @@ class Document
                 if ( $aTag == NULL ) {
                     // retrieve comments
                     $aTag=$this->db->get_array("
-                       select t_tag from action_tags at2 join tags t using(t_id)  where ag_id=$1
+                       select t_tag from action_tags at2 join tags t using(t_id)  where ag_id=$1 order by upper(t_tag)
                             "
                             ,[$p_array['ag_id']]);
                 }
