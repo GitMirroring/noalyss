@@ -230,7 +230,7 @@ EOF;
     from contact_option_ref cor 
     join jnt_document_option_contact jdoc on (cor.cor_id=jdoc.contact_option_ref_id ) 
     join action_gestion ag on (ag.ag_type=jdoc.document_type_id ) 
-    where ag_id=$1
+    where ag_id=$1 and jdoc.jdoc_enable=1
     order by upper(cor_label)",[$this->ag_id]);
         return $aColumn;
     }
