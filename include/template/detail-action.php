@@ -160,7 +160,7 @@ $uniq=uniqid("tab",TRUE);
                 Dossier / Etiquette
             </TD>
             
-            <td id="action_tag_td">
+            <td id="action_tag_td" style="max-width:35rem">
                 <?php
                    $this->tag_cell($p_view);
                 ?>

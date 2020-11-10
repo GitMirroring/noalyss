@@ -38,7 +38,7 @@ class Tag
         return $this;
     }
 
-        /**
+    /**
      * Show the list of available tag
      * @return HTML
      */
@@ -48,19 +48,7 @@ class Tag
         if ( $this->cn->count($ret) == 0) return "";
         require_once NOALYSS_TEMPLATE.'/tag_list.php';
     }
-    /**
-     * let select a tag to add
-     */
-    function select()
-    {
-        $ret=$this->data->seek("where t_actif='Y' order by t_tag");
-        $ret=$this->cn->exec_sql(" select t_id,t_tag,t_description,'t' as tag_type ,t_color
-                    from tags 
-                    where t_actif='Y' 
-                union all 
-                select tg_id,tg_name ,'G','g' ,1 from tag_group order by 2");
-        require_once NOALYSS_TEMPLATE.'/tag_select.php';
-    }
+    
     /**
      * Display a inner window with the detail of a tag
      */
@@ -93,43 +81,17 @@ class Tag
         $this->data->t_id=$p_array['t_id'];
         $this->data->delete();
     }
-    /**
-     * Show a button to select tag for Search
-     * @return HTML
+    /***
+     * query the active tag and returns the database handler
      */
-    static  function button_search($p_prefix)
-    {
-        $r="";
-        $r.=HtmlInput::button("choose_tag", _("Etiquette"), 'onclick="search_display_tag('.Dossier::id().',\''.$p_prefix.'\')"', "smallbutton");
-        return $r;
-    }
-    /**
-     * let select a tag to add to the search
-     */
-    function select_search($p_prefix)
-    {
-        $res="";
-        $ret=$this->data->seek(' order by t_tag');
-        require_once NOALYSS_TEMPLATE.'/tag_search_select.php';
-        return HtmlInput::title_box('Tag', $p_prefix.'tag_div').$res;
-    }
-    /**
-     * In the screen search add this data to the cell
-     */
-    function update_search_cell($p_prefix) {
-        echo '<span id="sp_'.$p_prefix.$this->data->t_id.'" class="tagcell">';
-        echo h($this->data->t_tag);
-        echo HtmlInput::hidden($p_prefix.'tag[]', $this->data->t_id);
-        $js=sprintf("$('sp_".$p_prefix.$this->data->t_id."').remove();");
-        echo Icon_Action::trash(uniqid(), $js);
-        echo '</span>';
-    }
-    /**
-     * clear the search cell
-     */
-    static function add_clear_button($p_prefix) {
-        $clear=HtmlInput::button('clear', 'X', 'onclick="search_clear_tag('.Dossier::id().',\''.$p_prefix.'\');"', 'smallbutton');
-        return $clear;
+    function query_active_tag()
+    {  
+        $ret=$this->cn->exec_sql(" select t_id,t_tag,t_description,'t' as tag_type ,t_color
+                    from tags 
+                    where t_actif='Y' 
+                union all 
+                select tg_id,tg_name ,'G','g' ,1 from tag_group order by 2");
+        return $ret;
     }
 }
 

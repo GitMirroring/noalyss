@@ -33,16 +33,16 @@ echo HtmlInput::request_to_hidden(array("closed_action","remind_date_end","remin
         <li>
             <?php $radio->value="ETIADD";echo $radio->input(); ?>
             <?php echo _("Ajout d'étiquettes");?>
-            <?php echo Tag::button_search('add'); ?>
-            <?php echo Tag::add_clear_button('add'); ?>
+            <?php echo Tag_Action::select_tag_search('add'); ?>
+            <?php echo Tag_Action::add_clear_button('add'); ?>
 				<span id="addtag_choose_td">
                                 </span>
         </li>
         <li>
             <?php $radio->value="ETIREM";echo $radio->input(); ?>
             <?php echo _("Enlever des étiquettes");?>
-            <?php echo Tag::button_search('rem'); ?>
-            <?php echo Tag::add_clear_button('rem'); ?>
+            <?php echo Tag_Action::select_tag_search('rem'); ?>
+            <?php echo Tag_Action::add_clear_button('rem'); ?>
 				<span id="remtag_choose_td">
                                 </span>
         </li>

@@ -24,10 +24,27 @@ if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
  *@see Tag
  */
 
-require_once NOALYSS_INCLUDE.'/class/tag.class.php';
-$tag=new Tag($cn);
+require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_operation.class.php';
 
-$response=  $tag->select_search($_GET['pref']);
+try {
+    $caller_obj=$http->request("caller_obj");
+    $prefix=$http->request("pref");
+} catch (Exception $ex) {
+    echo $ex->getMessage();
+    return;
+}
+
+if ( $caller_obj == 'Tag_Action' ) { 
+    $tag=new Tag_Action($cn);
+}elseif ($caller_obj=='Tag_Operation')
+{
+    $tag=new Tag_Operation( $cn);
+} else {
+    throw new Exception("AJD001 invalid caller [$caller_obj]");
+}
+
+$response=  $tag->select_search($pref);
 
 $html=escape_xml($response);
 header('Content-type: text/xml; charset=UTF-8');

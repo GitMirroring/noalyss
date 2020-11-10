@@ -1297,8 +1297,8 @@ function manage_search_filter(p_obj) {
        onSuccess:function(req) {
             remove_waiting_box();
             var x=posX;
-            var y=posY-20;
-            create_div({'id':'boxfilter'+p_obj.div,'cssclass':'inner_box','html':req.responseText,'style':'top:'+y+'px;left:'+x+'px;position:absolute;width:400px'});
+            var y=calcy(200)
+            create_div({'id':'boxfilter'+p_obj.div,'cssclass':'inner_box','html':req.responseText,'style':'top:'+y+'px;left:'+x+'px;position:absolute;width:400px',drag:1});
             $('boxfilter'+p_obj.div).show();
        }
     });
@@ -1315,8 +1315,9 @@ function manage_search_filter(p_obj) {
 function save_filter(p_div,p_dossier) {
     var elt=['ledger_type','nb_jrn','date_start','date_end',
         'date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting',
-        'operation_filter'];
+        'operation_filter','tag_option'];
     var eltValue={};
+    var i =0;
     eltValue['gDossier']=p_dossier;
     eltValue['op']="save_filter";
     eltValue['div']=p_div;
@@ -1339,6 +1340,12 @@ function save_filter(p_div,p_dossier) {
    
         }
     }
+      //ledger's tags
+    var aTag=Array.from(document.getElementsByName(p_div+"tag[]"));
+    eltValue["tag[]"]=[];
+    for (i=0 ; i < aTag.length;i++) {
+            eltValue["tag[]"][i]=aTag[i].value;
+    }
     new Ajax.Request('ajax_misc.php', {
         method:"POST",
         parameters:eltValue,
@@ -1349,7 +1356,7 @@ function save_filter(p_div,p_dossier) {
                     /*Add the new list to the selection */
                     var new_item=document.createElement('li');
                     new_item.innerHTML=answer.filter_name;
-                    new_item.setAttribute("id","li"+p_div+"_"+answer.filter_id);
+                    new_item.setAttribute("id","manageli"+p_div+"_"+answer.filter_id);
                     $('manage'+p_div).appendChild(new_item);
                     $(p_div+"filter_new").value="";
                 } else {
@@ -1377,7 +1384,7 @@ function load_filter(p_div,p_dossier,p_filter_id) {
                 var answer=req.responseJSON;    
                 console.log(answer);
                 var elt=['ledger_type','date_start','date_end','date_paid_start','date_paid_end',
-                    'desc','amount_min','amount_max','qcode','accounting','operation_filter'];
+                    'desc','amount_min','amount_max','qcode','accounting','operation_filter','tag_option'];
                 for (var i=0;i<elt.length;i++) {
                     var idx=elt[i];
                     $(p_div+idx).value=answer[elt[i]];
@@ -1402,8 +1409,15 @@ function load_filter(p_div,p_dossier,p_filter_id) {
                    eltHidden.setAttribute("value",answer.r_jrn[i]);
                    eltLedgerId.appendChild(eltHidden);
                }
+               new Ajax.Request("ajax_misc.php",{
+                   method:"get",
+                   parameters:{"gDossier":p_dossier,"div":p_div,"op":"display_filter_tag","filter_id":p_filter_id,
+                   uf_tag:answer.uf_tag},
+                   onSuccess:function (req) {
+                       $(p_div+'tag_choose_td').update(req.responseText);
+                   }
+               })
                
-
                
            } catch (e) {
               smoke.alert(e.message);

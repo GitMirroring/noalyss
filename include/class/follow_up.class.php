@@ -42,6 +42,7 @@ require_once NOALYSS_INCLUDE.'/class/document_option.class.php';
 require_once NOALYSS_INCLUDE.'/class/default_menu.class.php';
 require_once NOALYSS_INCLUDE.'/lib/inplace_edit.class.php';
 require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
 
 /**
  * \file

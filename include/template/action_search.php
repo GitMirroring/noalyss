@@ -129,14 +129,14 @@
             <p>
                 <?php echo _('Etiquette'); ?>
                <span id="searchtag_choose_td">
-                   <?php echo Tag::button_search('search'); ?>
+                   <?php echo Tag_Action::select_tag_search('search'); ?>
                    <?php
                        if ( isset($_GET['searchtag'])) {
                            $http=new HttpInput();
-                           echo Tag::add_clear_button('search');
+                           echo Tag_Action::add_clear_button('search');
                            $asearchtag= $http->get("searchtag","array",array());
                            for ($i=0;$i<count($asearchtag);$i++) {
-                               $t=new Tag($cn, $asearchtag[$i]);
+                               $t=new Tag_Action($cn, $asearchtag[$i]);
                                echo $t->update_search_cell('search');
                            }
                        }

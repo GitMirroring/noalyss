@@ -21,6 +21,8 @@
 
 // if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 
+require_once NOALYSS_INCLUDE."/class/tag_operation.class.php";
+
 /**
  * @file
  * @brief search in ledger
@@ -455,6 +457,7 @@ class Acc_Ledger_Search
         $fil_paid='';
         $fil_date_paid='';
         $fil_hide_operation='';
+        $fil_tag='';
 
         $and='';
         $g_user=new User($this->cn);
@@ -500,7 +503,27 @@ class Acc_Ledger_Search
                 $and='';
             }
         }
-
+        //----
+        // Search tags
+        if ( isset($p_array[$op."tag"] ))
+        {
+            $strTag=join(",", $p_array[$op."tag"]);
+            if ($p_array[$op."tag_option"] == 1){
+                // any tag
+                $fil_tag=$and.' jr_id in (select jrn_id from operation_tag where tag_id in ('.sql_string($strTag).')) ';
+            } else {
+                // all tags
+                $aTag=$p_array[$op."tag"];
+                $sub_tag=""; $nb_tag=count($aTag);
+                $and2='';
+                for ($x=0;$x < $nb_tag;$x++) {
+                    $sub_tag = " tag_id = ".sql_string($aTag[$x]);
+                    $fil_tag=$and.' jr_id in (select jrn_id from operation_tag where '.$sub_tag.')' ;
+                    $and=" and ";
+                }
+            }
+            $and=" and ";
+        }
         /* format the number */
         $amount_min=abs(toNumber($amount_min));
         $amount_max=abs(toNumber($amount_max));
@@ -620,7 +643,7 @@ class Acc_Ledger_Search
                     " and uj_priv in ('R','W'))";
         }
         $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.$fil_amount.
-            $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation;
+            $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation.$fil_tag;
         $sql.=" where ".$where;
         
         // Q?? Why do we return where if it is included in SQL ?

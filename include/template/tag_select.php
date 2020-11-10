@@ -27,15 +27,28 @@ if ( $max == 0 ) {
     </tr>
 <?php
 $gDossier=Dossier::id();
-$ag_id=$http->request("ag_id","number");
-if (isNumber($ag_id) == 0 ) die ('ERROR : parameters invalid');
+$id="none";
+
+if ( get_class($this) == 'Tag_Action' ) {
+    $id=$http->request("ag_id","number");
+ } elseif (get_class($this)=='Tag_Operation')
+{
+     $id=$http->request("jrn_id");
+}
+
+if (isNumber($id) == 0 ) die ('ERROR : parameters invalid');
     for ($i=0;$i<$max;$i++):
         $row=Database::fetch_array($ret, $i);
 ?>
     <tr class="<?php echo (($i%2==0)?'even':'odd');?>">
         <td class="tagcell-color<?=$row['t_color']?>">
             <?php
-            $js=sprintf("action_tag_add('%s','%s','%s','%s')",$gDossier,$ag_id,$row['t_id'],$row['tag_type']);
+            if ( get_class($this) == 'Tag_Action' ) {
+                $js=sprintf("action_tag_add('%s','%s','%s','%s')",$gDossier,$id,$row['t_id'],$row['tag_type']);
+            } else {
+                $js=sprintf("new operation_tag('%s').add('%s','%s','%s','%s')",$p_prefix,$gDossier,$id,$row['t_id'],$row['tag_type']);
+            }
+            
             echo HtmlInput::anchor($row['t_tag'], "", "onclick=\"$js\"");
             ?>
         </td>

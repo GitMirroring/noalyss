@@ -25,18 +25,18 @@ if (!defined('ALLOWED'))
  * @brief add tag , used for follow up
  * @see Tag
  */
-require_once NOALYSS_INCLUDE.'/class/tag.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
 //Single Tag
 ob_start();
 if ($_GET['clear']==1)
 {
     /* Add a clear button */
-    echo Tag::add_clear_button($_GET['pref']);
+    echo Tag_Action::add_clear_button($_GET['pref']);
 }
 if ($http->request("obj")=='t')
 {
 
-    $tag=new Tag($cn, $http->get("id", "number"));
+    $tag=new Tag_Action($cn, $http->get("id", "number"));
     $tag->update_search_cell($http->get("pref"));
 }
 elseif ($http->request("obj")=="g")
@@ -47,7 +47,7 @@ elseif ($http->request("obj")=="g")
     $pref=$http->get("pref");
     if ( $nb_atag > 0) {
         for ($i=0;$i<$nb_atag;$i++){
-            $tag=new Tag($cn,$aTag[$i]['t_id']);
+            $tag=new Tag_Action($cn,$aTag[$i]['t_id']);
             $tag->update_search_cell($pref);
         }
     }

@@ -42,6 +42,7 @@ require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
 require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_operation.class.php';
 $http=new HttpInput();
 
 /**

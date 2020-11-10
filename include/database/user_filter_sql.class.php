@@ -56,6 +56,9 @@ class User_filter_SQL extends Noalyss_SQL
             , "all_ledger"=>"all_ledger"
             ,"operation_filter"=>"operation_filter"
             ,'filter_name'=>"filter_name"
+            ,'uf_tag'=>'uf_tag'
+            ,'uf_tag_option'=>'uf_tag_option'
+            
         );
         /*
          * Type of columns
@@ -78,6 +81,8 @@ class User_filter_SQL extends Noalyss_SQL
             , "all_ledger"=>"numeric"
             ,"operation_filter"=>"text"
             ,"filter_name"=>"text"
+            ,'uf_tag'=>'text'
+            ,'uf_tag_option'=>'numeric'
         );
 
 

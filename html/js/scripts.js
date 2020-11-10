@@ -2711,13 +2711,16 @@ function activate_tag(p_dossier, p_tag_id) {
  * Display a div with available tags, this div can update the cell
  * tag_choose_td
  * @param {type} p_dossier
+ * @param {string} p_prefix is the prefix of the div
+ * @param {string} Calling object either Tag_Operation or Tag_Action
  * @returns {undefined}
+ * 
  */
-function search_display_tag(p_dossier, p_prefix)
+function search_display_tag(p_dossier, p_prefix,p_object)
 {
     try {
         waiting_box();
-        var queryString = "op=search_display_tag&gDossier=" + p_dossier + "&pref=" + p_prefix;
+        var queryString = { op : "search_display_tag",gDossier:p_dossier,pref:p_prefix,caller_obj:p_object};
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
@@ -3819,3 +3822,136 @@ function uncheck_other(p_click,p_name)
     }
     p_click.checked=true;
 }
+/**
+ * Manage the tag with operations
+ * @returns {undefined}
+ */
+var operation_tag = function (p_div)
+{
+    this.ctl = p_div;
+    console.log("ctl "+p_div);
+    /**
+     * Show a list of tag which can be added to the current followup document
+     * @param {type} p_dossier
+     * @param {type} jrn_id
+     * @returns {undefined}
+     */
+    this.select = function (p_dossier, p_jrn_id)
+    {
+        try {
+            waiting_box();
+            var queryString = {jrn_id:p_jrn_id,op:"operation_tag_select",gDossier:p_dossier,ctl:this.ctl};
+            var action = new Ajax.Request(
+                    "ajax_misc.php",
+                    {
+                        method: 'get', 
+                        parameters: queryString,
+                        onFailure: ajax_misc_failure,
+                        onSuccess: function (req, j) {
+                            remove_waiting_box();
+                            
+                            var answer = req.responseXML;
+                            var html = answer.getElementsByTagName('code');
+                            if (html.length === 0)
+                            {
+                                var rec = unescape_xml(req.responseText);
+                                error_message('erreur :' + rec);
+                            }
+                            var code_html = getNodeText(html[0]);
+                            code_html = unescape_xml(code_html);
+                            var pos = fixed_position(35, 229);
+                            add_div({id: 'tag_div', style: pos, cssclass: 'inner_box tag', drag: 0});
+
+                            remove_waiting_box();
+                            $('tag_div').innerHTML = code_html;
+                        }
+                    }
+            );
+        } catch (e) {
+            error_message(e.message);
+        }
+    };
+
+    /**
+     * @brief Add the current tag to the current ag_id
+     * @param {type} p_dossier
+     * @param {type} ag_id
+     * @param p_isgroup g it is a group , t is a single tag
+     * @returns {undefined}
+     */
+    this.add = function (p_dossier, p_jrn_id, t_id, p_isgroup)
+    {
+        try {
+            waiting_box();
+            var queryString = {t_id:t_id,jrn_id:p_jrn_id,op:"operation_tag_add",
+                gDossier:p_dossier,ctl:this.ctl,isgroup:p_isgroup};
+            var ctl=this.ctl;
+            var action = new Ajax.Request(
+                    "ajax_misc.php",
+                    {
+                        method: 'get', parameters: queryString,
+                        onFailure: ajax_misc_failure,
+                        onSuccess: function (req, j) {
+                            var answer = req.responseXML;
+                            console.log("1-ctl "+ctl);
+                            var html = answer.getElementsByTagName('code');
+                            if (html.length === 0)
+                            {
+                                var rec = unescape_xml(req.responseText);
+                                error_message('erreur :' + rec);
+                            }
+                            var code_html = getNodeText(html[0]);
+                            code_html = unescape_xml(code_html);
+                            remove_waiting_box();
+                            $('operation_tag_td'+ctl).innerHTML = code_html;
+                            removeDiv('tag_div');
+                        }
+                    }
+            );
+        } catch (e) {
+            error_message(e.message);
+        }
+    };
+    /**
+     * @brief remove the current tag to the current ag_id
+     * @param {type} p_dossier
+     * @param {type} ag_id
+     * @returns {undefined}
+     */
+    this.remove = function (p_dossier, p_jrn_id, t_id)
+    {
+        var ctl=this.ctl;
+         console.log("remove-1.ctl "+ctl);
+        confirm_box(null, content[50], function () {
+            try {
+                waiting_box();
+                var queryString = {t_id:t_id,jrn_id:p_jrn_id,op:"operation_tag_remove",gDossier:p_dossier,ctl:ctl};
+                var action = new Ajax.Request(
+                        "ajax_misc.php",
+                        {
+                            method: 'get', 
+                            parameters: queryString,
+                            onFailure: ajax_misc_failure,
+                            onSuccess: function (req, j) {
+                                var answer = req.responseXML;
+                                var html = answer.getElementsByTagName('code');
+                                if (html.length === 0)
+                                {
+                                    var rec = unescape_xml(req.responseText);
+                                    error_message('erreur :' + rec);
+                                }
+                                var code_html = getNodeText(html[0]);
+                                code_html = unescape_xml(code_html);
+                                remove_waiting_box();
+                                console.log("remove-2.ctl "+ctl);
+                                $('operation_tag_td'+ctl).innerHTML = code_html;
+
+                            }
+                        }
+                );
+                } catch (e) {
+                    error_message(e.message);
+                }
+            });
+    };
+};

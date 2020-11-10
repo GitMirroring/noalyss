@@ -124,7 +124,7 @@ if ( isset ($_GET['viewsearch']))
      * Export to csv
      */
     $r=HtmlInput::get_to_hidden(array('l','date_start','date_end','desc','amount_min','amount_max',
-        'qcode','accounting','unpaid','gDossier','ledger_type'));
+        'qcode','accounting','unpaid','gDossier','ledger_type','tag_option'));
     if (isset($_GET['r_jrn'])) {
         $http=new HttpInput();
         $a_rjrn=$http->get("r_jrn","array");
@@ -132,6 +132,16 @@ if ( isset ($_GET['viewsearch']))
           // Protect : check that $k and $v are numeric
         if (isNumber($k)&&isNumber($v)) {
             $r.=HtmlInput::hidden('r_jrn['.$k.']',$v);
+        }
+      }
+    }
+    if (isset($_GET['tag'])) {
+        $http=new HttpInput();
+        $aTag=$http->get("tag","array");
+      foreach ($aTag as $k=>$v) {
+          // Protect : check that $k and $v are numeric
+        if (isNumber($k)&&isNumber($v)) {
+            $r.=HtmlInput::hidden('tag[]',$v);
         }
       }
     }

@@ -240,6 +240,8 @@ $path = array(
     "save_filter"=>"ajax_search_filter",
     // Load a search filter
     "load_filter"=>"ajax_search_filter",
+    // display tag for filter
+    'display_filter_tag'=>'ajax_search_filter',
     // search operation to reconcile
     	'search_op'=>'ajax_search_operation',
     // delete operation
@@ -269,7 +271,13 @@ $path = array(
     // set the group for a tag
     'tag_set_group'=>"ajax_tag_set_group",
     // Document_state
-    "document_state"=>"ajax_document_state"
+    "document_state"=>"ajax_document_state",
+    // Operations tag add
+    'operation_tag_add'=>"ajax_operation_tag",
+    // Operations tag remove
+    'operation_tag_remove'=>"ajax_operation_tag",
+    // Operations tag select
+    'operation_tag_select'=>"ajax_operation_tag"
 )    ;
 
 if (array_key_exists($op, $path)) {
