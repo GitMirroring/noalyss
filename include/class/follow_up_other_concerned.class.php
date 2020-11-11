@@ -82,31 +82,6 @@ class Follow_Up_Other_Concerned
         return false;
     }
 
-//    /**
-//     * Display the other concerned (tiers, supplier...) in a small cell
-//     * @return string
-//     */
-//    function display_linked()
-//    {
-//        $a_linked=$this->db->get_array('select ap_id,f_id from action_person where ag_id=$1', array($this->ag_id));
-//        if (count($a_linked)==0)
-//            return "";
-//        $dossier_id=Dossier::id();
-//        for ($i=0; $i<count($a_linked); $i++)
-//        {
-//            $fiche=new Fiche($this->db, $a_linked[$i]['f_id']);
-//            $qc=$fiche->get_quick_code();
-//            $js_remove=sprintf("action_remove_concerned('%s','%s','%s')", dossier::id(), $a_linked[$i]['f_id'], 
-//                    $this->ag_id);
-//            echo '<span class="tagcell">';
-//            echo HtmlInput::anchor($qc,"", sprintf("onclick=\"linked_card_option('%s','%s')\"",
-//                    $a_linked[$i]['ap_id'],$dossier_id));
-//            echo Icon_Action::trash(uniqid(), $js_remove);
-//            echo '</span>';
-//            echo '&nbsp;';
-//            echo '&nbsp;';
-//        }
-//    }
 
     /**
      * Display the count of other concerned card (tiers, supplier...) in button which call 
@@ -121,7 +96,7 @@ class Follow_Up_Other_Concerned
         $javascript=<<<EOF
                     var obj={dossier:$dossier_id,ag_id:$this->ag_id};action_concerned_list(obj);
 EOF;
-        echo HtmlInput::anchor_action(count($a_linked), $javascript, null, "button");
+        echo HtmlInput::anchor_action(count($a_linked), $javascript, 'linked_card_bt', "button");
     }
 
     /**

@@ -255,6 +255,7 @@ function small(p_id_textarea){
    // description
    $description = new ITextarea("ag_description");
    $description->id="ag_description";
+   $has_description = false;
     //---------------------------------- Description -------------------------------------------------------------------
     if ( count($acomment)> 0) {
             $has_description = true;

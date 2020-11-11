@@ -30,7 +30,7 @@ $icheckbox->javascript='onclick="uncheck_other(this,\'tagcell_color\');"';
 </p>
 <?php
 if ( $data->t_id == '-1') $data->t_color=1;
-$nb_color=20;
+$nb_color=36;
 
 for ($i=1 ; $i != $nb_color+1 ; $i++ ) {
 ?>    
@@ -41,7 +41,6 @@ for ($i=1 ; $i != $nb_color+1 ; $i++ ) {
             echo $icheckbox->input();
             ?>
         </span>
-    <?php if ( $i % 5 == 0 ) echo '<br>';?>
 <?php 
 
 } // end loop $i

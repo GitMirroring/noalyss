@@ -694,9 +694,9 @@ class Follow_Up
         $r.='<th style="width:5.57%">'.$table->get_header(5).'</th>';
 //        $r.='<th>'.$table->get_header(1).'</th>';
         $r.=th('Priorité','style="width:5.57%"');
-        $r.='<th style="min-width:52%">'.$table->get_header(6).'</th>';
+        $r.='<th style="min-width:45%">'.$table->get_header(6).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(7).'</th>';
-        $r.='<th style="width:5.57%">'.$table->get_header(3).'</th>';
+        $r.='<th style="max-width:10%">'.$table->get_header(3).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(4).'</th>';
         $r.="</tr>";
 
@@ -778,7 +778,7 @@ class Follow_Up
                 $aTags=explode(",", $row["tags"]);
                 $nb_tag=count($aTags);
                 for ( $x=0;$x<$nb_tag;$x++) {
-                   $r.=sprintf('<span style="font-size:75%%" class="tagcell-color%s">%s</span>',$aColor[$x],$aTags[$x]);
+                   $r.=sprintf('<span style="font-size:75%%;padding:1px;border-color:transparent" class="tagcell tagcell-color%s">%s</span>',$aColor[$x],$aTags[$x]);
                    $r.="&nbsp;";
                 } // end loop $x
                 $r.='</a>';

@@ -2583,3 +2583,75 @@ span.tagcell {
     background-color:  yellow !important;
     color: orangered !important;
 }
+.tagcell-color21 {
+    background-color:  #151514 !important;
+    color: orangered !important;
+}
+.tagcell-color22 {
+	background-color: #0f0f0e !important;
+	color: #ffef00 !important;
+}
+.tagcell-color23 {
+	background-color: #64644a !important;
+	color: #ffbf00 !important;
+}
+.tagcell-color24 {
+	color: orangered !important;
+}
+.tagcell-color25 {
+	color: #ff0606 !important;
+	font-style: oblique;
+}
+.tagcell-color26 {
+	background-color: #fff !important;
+	color: #03038a;
+}
+.tagcell-color27 {
+	color: #08030b !important;
+	background-image: linear-gradient(to right, rgb(227, 175, 175), rgb(136, 13, 13));
+}
+.tagcell-color28 {
+	color: white !important;
+	background-image: linear-gradient(darkblue,lightblue) !important;
+}
+.tagcell-color29 {
+	background-color: yellow !important;
+	color: white !important;
+	background-image: linear-gradient(to right,black,yellow,red) !important;
+}
+.tagcell-color30 {
+	background-color: yellow !important;
+	color: white !important;
+	background-image: linear-gradient(to right,darkblue,white,red) !important;
+}
+.tagcell-color31 {
+	color: #e1d5d0 !important;
+	background-image: linear-gradient(to bottom right, #9abbe3a8,#6f6fac, #002ba3) !important;
+}
+.tagcell-color32 {
+	background-color: #ff00e3 !important;
+	font-family: SansationLight !important;
+}
+.tagcell-color33 {
+	color: white !important;
+	background-color: #8d3dcc !important;
+}
+.tagcell-color34 {
+	background-image: linear-gradient(to right,blue,white) !important;
+}
+.tagcell-color35 {
+	color: white !important;
+	background-image: linear-gradient(to right,#a61660,#e697d2) !important;
+}
+.tagcell-color36 {
+	background-image: linear-gradient(to right,#008000,#c8eec8) !important;
+	color: aquamarine !important;
+}
+/***************************************
+ * Button for linked card in follow up
+ * **************************************/
+#linked_card_bt {
+	font-size: 110%;
+	padding: 0.25em 1em 0.25em 1em;
+	font-family: bold;
+}
