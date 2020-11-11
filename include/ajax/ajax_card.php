@@ -440,7 +440,6 @@ case 'fs':
             $sql_array[$i]=${$i};
         }
     }
-    $r.=$hidden;
     $r.="</form>";
 
     $sql_array["query"]=$query;
