@@ -1392,3 +1392,35 @@ function remove_divide_zero($p_formula)
     return $p_formula;
 }
 
+/**
+ * Create randomly a string
+ * @param int $p_length length of the generate string
+ */
+function generate_random_string($car)
+{
+    $string="";
+    $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789*/+-=<>";
+    srand((double) microtime()*1020030);
+    for ($i=0; $i<$car; $i++)
+    {
+        $string .= $chaine[rand()%strlen($chaine)];
+    }
+    return $string;
+}
+
+/**
+ * generate a string of p_car character and a input text with name p_ctl_name
+ * work like a kind of captcha.The control code for checking is ctlcode.
+ * You compare the content of the variable p_ctl_name with ctlcode
+ * @param $p_ctl_name
+ * @param $p_car
+ */
+function confirm_with_string($p_ctl_name,$p_car)
+{
+    $code=generate_random_string($p_car );
+    $r =  HtmlInput::hidden("ctlcode",$code);
+    $r.='<span style="margin-left:1.2em;margin-right:1.2em;font-size:112%;font-weight:bold">'. $code.'</span>';
+    $ctl=new IText($p_ctl_name);
+    $r.=$ctl->input();
+    return $r;
+}

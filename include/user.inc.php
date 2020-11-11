@@ -57,6 +57,8 @@ if ( isset ($_POST["ADD"]) )
         $new_user->insert();
         $new_user->load();
         $_REQUEST['use_id']=$new_user->id;
+        User::audit_admin(sprintf('ADD USER %s %s',$new_user->id,$login));
+
         require_once NOALYSS_INCLUDE.'/user_detail.inc.php';
         return;
 

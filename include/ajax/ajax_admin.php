@@ -261,8 +261,8 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
         $confirm=new ICheckBox();
         $confirm->name="p_confirm";
         echo '<p>';
-        echo _('Cochez la case si vous êtes sûr de vouloir effacer ce dossier');
-        echo $confirm->input();
+        echo _("Tapez le code de confirmation");
+        echo confirm_with_string("fld_drop",5);
         echo '</p>';
         echo '<p style="text-align:center">';
         echo HtmlInput::submit('remove', _('Effacer'));

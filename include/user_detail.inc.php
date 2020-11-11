@@ -87,7 +87,16 @@ else if ($sbaction == "delete")
 //
 // Delete the user
 //
+    // check that the control is correct
+    $code=$http->post("userdel");
+    $ctl_code=$http->post('ctlcode');
+    if ( $code != $ctl_code) {
+        echo _("Code invalide, effacement refusé");
+        return;
+    }
     $cn = new Database();
+    $auser=$cn->get_row('select use_login from ac_users where use_id = $1',[$uid]);
+    if ( $auser == null) return;
     $Res = $cn->exec_sql("delete from jnt_use_dos where use_id=$1", array($uid));
     $Res = $cn->exec_sql("delete from ac_users where use_id=$1", array($uid));
     //------------------------------------
@@ -99,8 +108,10 @@ else if ($sbaction == "delete")
         for ( $i=0;$i<$nb;$i++)
             User::remove_inexistant_user($a_dossier[$i]['dos_id']);
     }
-    
-    echo "<center><H2 class=\"info\"> Utilisateur " . h($_POST['fname']) . " " . h($_POST['lname']) . " est effacé</H2></CENTER>";
+    User::audit_admin(sprintf('DELETE USER %s %s',$uid,$auser['use_login']));
+    echo "<H2 class=\"info\">";
+    printf (_("Utilisateur %s %s est effacé"),$http->post('fname'),$http->post('lname')) ;
+    echo " </H2>";
     require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
     require_once NOALYSS_INCLUDE.'/user.inc.php';
     return;
@@ -180,12 +191,39 @@ $it_pass->value="";
             </td>
         </tr>
     </table>
-    <input type="hidden" name="sbaction" id="sbaction" value="">
-        <input type="Submit" class="button" NAME="SAVE" VALUE="Sauver les changements" onclick="$('sbaction').value='save';return confirm_box('user_detail_frm','Confirmer changement ?');">
 
-        <input type="Submit"  class="button" NAME="DELETE" VALUE="Effacer" onclick="$('sbaction').value='delete';return confirm_box('user_detail_frm','Confirmer effacement ?');" >
+    <input type="hidden" name="sbaction" id="sbaction" value="save">
+
+        <input type="Submit" class="button" NAME="SAVE" VALUE="<?=('Sauver les changements')?>" onclick="return confirm_box('user_detail_frm','<?=_('Confirmer')?>');">
+
+        <input type="button"  class="button" NAME="DELETE" VALUE="<?=('Effacer')?>" onclick="$('delete_user_div').show();" >
 
 </FORM>
+<div id="delete_user_div" class="inner_box" style="display: none">
+<?=HtmlInput::title_box(_("Effacer"),'delete_user_div','hide')?>
+<FORM  id="user_detail_frm" METHOD="POST">
+    <INPUT   type="hidden" NAME="lname" value="<?=_("$UserChange->name")?>">
+    <INPUT type="hidden" NAME="fname" value="<?=_("$UserChange->first_name")?>">
+    <?php echo HtmlInput::hidden('UID',$uid)?>
+    <input type="hidden" name="sbaction" value="delete">
+    <p  class="info" id="codedel_div">
+        <?php
+        echo _("Pour effacer , confirmez en retapant le code");
+        echo confirm_with_string('userdel','5');
+        ?>
+
+    </p>
+    <ul class="aligned-block">
+        <li>
+            <input type="Submit"  class="button" NAME="DELETE" VALUE="<?=_("Confirmer")?>">
+        </li>
+        <li>
+            <?=HtmlInput::button_hide('delete_user_div')?>
+        </li>
+    </ul>
+</FORM>
+</div>
+
 <?php
 if  ($UserChange->admin == 0 ) :
 ?>

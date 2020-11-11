@@ -109,7 +109,7 @@ if ( ! defined ("SYSINFO_DISPLAY")) {
 }
 define ("DBVERSION",151);
 define ("MONO_DATABASE",25);
-define ("DBVERSIONREPO",18);
+define ("DBVERSIONREPO",19);
 define ('NOTFOUND','--not found--');
 define ("MAX_COMPTE",4);
 define ('MAX_ARTICLE',5);

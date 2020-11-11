@@ -1085,6 +1085,21 @@ class User
 		return $array;
 	}
 
+	/**
+	 * Audit action from the administration menu
+	 * @param $p_module description of the action
+	 */
+	static function audit_admin($p_module) {
+		$cn = new Database();
+		$sql = "insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
+
+		$cn->exec_sql($sql, array(
+			$_SESSION['g_user'],
+			$_SERVER["REMOTE_ADDR"],
+			$p_module,
+			$_SERVER['REQUEST_URI'],
+			'ADMIN'));
+	}
 	function audit($action = 'AUDIT', $p_module = "")
 	{
 		global $audit;
@@ -1364,19 +1379,28 @@ class User
     static function remove_inexistant_user($p_dossier)
     {
         $cnx_repo=new Database();
+        $name=$cnx_repo->format_name($p_dossier,'dos');
+        if ($cnx_repo->exist_database($name) == 0 )return;
         $cnx_dossier=new Database($p_dossier);
-        
-        $a_user=$cnx_dossier->get_array('select user_name from profile_user');
+		if ($cnx_dossier->exist_table('profile_user'))
+      	  $a_user=$cnx_dossier->get_array('select user_name from profile_user');
+		else
+			return;
+
         if ( ! $a_user ) return;
         $nb=count($a_user);
         for ($i=0;$i < $nb;$i++) {
             if ( $cnx_repo->get_value('select count(*) from ac_users where use_login=$1',
                     array($a_user[$i]['user_name'])) == 0) {
-                $cnx_dossier->exec_sql("delete from user_sec_jrn where uj_login=$1",array($a_user[$i]['user_name']));
-                $cnx_dossier->exec_sql("delete from profile_user where user_name=$1",array($a_user[$i]['user_name']));
-                $cnx_dossier->exec_sql("delete from user_sec_act where ua_login=$1",array($a_user[$i]['user_name']));
-                $cnx_dossier->exec_sql("delete from user_sec_jrn where uj_login=$1",array($a_user[$i]['user_name']));
-                $cnx_dossier->exec_sql("delete from user_active_security where us_login=$1",array($a_user[$i]['user_name']));
+            	if ($cnx_dossier->exist_table('user_sec_jrn'))
+            		$cnx_dossier->exec_sql("delete from user_sec_jrn where uj_login=$1",array($a_user[$i]['user_name']));
+            	$cnx_dossier->exec_sql("delete from profile_user where user_name=$1",array($a_user[$i]['user_name']));
+				if ($cnx_dossier->exist_table('user_sec_act'))
+		            $cnx_dossier->exec_sql("delete from user_sec_act where ua_login=$1",array($a_user[$i]['user_name']));
+				if ($cnx_dossier->exist_table('user_sec_jrn'))
+              	  $cnx_dossier->exec_sql("delete from user_sec_jrn where uj_login=$1",array($a_user[$i]['user_name']));
+				if ($cnx_dossier->exist_table('user_active_security'))
+             	   $cnx_dossier->exec_sql("delete from user_active_security where us_login=$1",array($a_user[$i]['user_name']));
             }
         }
     }
