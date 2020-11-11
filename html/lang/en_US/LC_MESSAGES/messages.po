@@ -8086,9 +8086,8 @@ msgstr "Add details failed"
 
 #: include/class/pre_operation.class.php:149
 #: include/class/pre_operation.class.php:550
-#, php-format
 msgid "Echec PreOperatoin chargement %s"
-msgstr "Fail loading operation template"
+msgstr "Fail loading operation template %s"
 
 #: include/dossier.inc.php:195 include/dossier.inc.php:196
 #: include/dossier.inc.php:199 include/dossier.inc.php:204
@@ -8881,12 +8880,12 @@ msgstr "Error:"
 #: include/class/acc_operation.class.php:281
 #, php-format
 msgid "Erreur : balance incorrecte :diff = %d"
-msgstr "wrong balance diff = %d"
+msgstr "Error balance diff = %d"
 
 #: include/class/acc_operation.class.php:281
 #, php-format
 msgid "Erreur : balance incorrecte :diff = %s"
-msgstr "wrong balance diff = %s"
+msgstr "Error balance diff = %s"
 
 #: include/class_noalyss_sql.php:316 include/lib/class_noalyss_sql.php:316
 #: include/lib/data_sql.class.php:286 include/lib/noalyss_sql.class.php:391
@@ -8900,7 +8899,7 @@ msgstr "Error exec_sql expects an array"
 #: include/ajax/ajax_todo_list.php:140 include/ajax/ajax_todo_list.php:157
 #: include/ajax/ajax_todo_list.php:159 include/ajax/ajax_todo_list.php:161
 msgid "Erreur : note invalide"
-msgstr "error : invalid note"
+msgstr "Error : invalid note"
 
 #: html/ajax_todo_list.php:214 html/ajax_todo_list.php:273
 #: html/ajax_todo_list.php:215 html/ajax_todo_list.php:274
@@ -8918,7 +8917,7 @@ msgstr "Error : invalid parameter"
 
 #: include/lib/database_core.class.php:73
 msgid "Erreur Connexion"
-msgstr "Disconnect"
+msgstr "Error connect"
 
 #: include/ext/import_account/include/class_impacc_csv.php:55
 #: include/ext/import_account/include/impacc_csv.class.php:55
