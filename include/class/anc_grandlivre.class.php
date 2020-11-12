@@ -116,6 +116,7 @@ class Anc_GrandLivre extends Anc_Print
         $array=$this->db->get_array("	select
 	po_name,
 	to_char(oa_date,'DD.MM.YYYY') as oa_date,
+        to_char(jr_date_paid,'DD.MM.YY') as strdate_paid,
 	case when j_poste is null and b.f_id is not null then
         (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=".ATTR_DEF_ACCOUNT.")
             when j_poste is not null then
@@ -343,6 +344,7 @@ class Anc_GrandLivre extends Anc_Print
         $aheader=array();
         $aheader[]=array("title"=>'Imp. Analytique','type'=>'string');
         $aheader[]=array("title"=>'Date','type'=>'string');
+        $aheader[]=array("title"=>'Date Pay','type'=>'string');
         $aheader[]=array("title"=>'Poste','type'=>'string');
         $aheader[]=array("title"=>'Quick_Code','type'=>'string');
         $aheader[]=array("title"=>'libelle','type'=>'string');
