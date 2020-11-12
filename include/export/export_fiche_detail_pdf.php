@@ -109,12 +109,12 @@ for ($e=0;$e<count($array);$e++)
             $diff_solde=bcsub($tot_deb,$tot_cred);
             if ( $diff_solde < 0 )
             {
-                $solde=" créditeur ";
+                $solde=" "._("créditeur")." ";
                 $diff_solde=bcmul($diff_solde,-1);
             }
             else
             {
-                 $solde=" débiteur ";
+                 $solde=" "._('débiteur')." ";
             }
             $str_diff_solde=sprintf("%12.2f €",$diff_solde);
 
@@ -129,7 +129,7 @@ for ($e=0;$e<count($array);$e++)
             /*
             * reset total and current_exercice
             */
-            $prog=0;
+            $progress=0;
             $current_exercice=$row['p_exercice'];
             $tot_deb=0;$tot_cred=0;    
             $pdf->SetFont('DejaVuCond','',8);
@@ -213,12 +213,12 @@ $str_credit=sprintf("% 12.2f €",$tot_cred);
 $diff_solde=$tot_deb-$tot_cred;
 if ( $diff_solde < 0 )
 {
-    $solde=" créditeur ";
+    $solde=" "._("créditeur")." ";
     $diff_solde*=-1;
 }
 else
 {
-    $solde=" débiteur ";
+    $solde=" "._('débiteur')." ";
 }
 $str_diff_solde=sprintf("%12.2f €",$diff_solde);
 
