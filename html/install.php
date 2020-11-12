@@ -83,7 +83,7 @@
 </head>
 <body>
 <p align="center">
-  <IMG SRC="image/logo7500.png" style="width: 30%;z-index:-1;position:fixed;top:30%;margin-left: 20%;opacity: 0.2" alt="NOALYSS">
+  <IMG SRC="image/logo8000.png" style="width: 30%;z-index:-1;position:fixed;top:30%;margin-left: 20%;opacity: 0.2" alt="NOALYSS">
 </p>
 <h1>NOALYSS : comptabilité - accountancy </h1>
 
