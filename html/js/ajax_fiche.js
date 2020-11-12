@@ -226,7 +226,7 @@ function ajax_success_saldo(request,json)
 * \param ctl : id of the div to show
 * \param page
 */
-function ajax_card(p_dossier,f_id,p_operation,ctl,page)
+function _saajax_card(p_dossier,f_id,p_operation,ctl,page)
 {
     $(ctl).show();
     var queryString="gDossier="+p_dossier+"&f_id="+f_id+"&op="+p_operation+"&p="+page+'&ctl='+ctl;
