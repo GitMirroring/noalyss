@@ -62,7 +62,7 @@ content[30]="<?php echo escape_xml(_("Peut contenir une information telle que le
 content[31]="<?php echo escape_xml(_("Peut contenir un numéro de bon de commande"))?>";
 // Because we are using HTML tag , we cannot escape and we must be careful with quote and double-quote, the best
 // is to avoid them
-content[32]="<?php echo _("<h3>        Remarque  : choix possibles    </h3>    <ul>        <li> Détail opérations ne donne pas le même résultat si on regarde tous les journaux ou un journal de type ACH ou VEN</li>        <li> Liste opérations ne donne pas le même résultat si on regarde tous les journaux ou un journal de type ACH ou VEN</li>        <li> Journaux VEN ou ACH en mode détail opérations donne les détails des factures, y compris les montants, TVA et quantité par article</li>        <li> Journaux VEN ou ACH en mode liste opérations donne pour chaque opération, le total de la TVA, ND, ...</li>    </ul>")?>";
+content[32]=_('Le résultat peut changer en fonction du type de journal');
 content[33]="<?php echo escape_xml(_("le type vaut :<ul>	<li> ME pour Menu</li>	<li> PR pour les impressions </li>	<li> PL pour les plugins</li>	<li> SP pour des valeurs spéciales</li>	</ul>"))?>";
 content[34]="<?php echo escape_xml(_("Cliquez sur le code AD pour ouvrir le menu dans un nouvel onglet"))?>";
 content[35]="<?php echo escape_xml(_("Cliquez sur le chemin pour ouvrir le menu"))?>";
