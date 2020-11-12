@@ -640,7 +640,7 @@ class Follow_Up
         //4
         $table->add(_('Groupe'), $url, "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe')", "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') desc", 'dea', 'ded');
         //5
-        $table->add(_('Dest/Exp'), $url, 'order by name asc', 'order by name desc', 'ea', 'ed');
+        $table->add(_('Dest/Exp'), $url, 'order by qcode asc', 'order by qcode desc', 'ea', 'ed');
         //6
         $table->add(_('Titre'), $url, 'order by ag_title asc', 'order by ag_title desc', 'ta', 'td');
         //7
@@ -664,6 +664,7 @@ class Follow_Up
                 ag_title,dt_value,ag_ref, ag_priority,ag_state,
                 coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') as dest,
                 (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=1) as name,
+                (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=23) as qcode,
                 array_to_string((select array_agg(t1.t_tag) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags,
                 array_to_string((select array_agg(t1.t_color) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags_color
             from action_gestion as ag
@@ -684,8 +685,10 @@ class Follow_Up
         $a_row=Database::fetch_all($Res);
 
         $r="";
+        $r.=HtmlInput::filter_table('mylist_tb', '1,2,3,4,5,6,7,8,9',1);
         $r.='<p>'.$bar.'</p>';
-        $r.='<table class="document">';
+        
+        $r.='<table id="mylist_tb" class="document">';
         $r.="<tr>";
         $r.='<th name="ag_id_td" style="display:none" >'.ICheckBox::toggle_checkbox('ag', 'list_ag_frm').'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(0).'</th>';
@@ -716,7 +719,7 @@ class Follow_Up
         //show the sub_action
         foreach ($a_row as $row)
         {
-            $href='<A class="document" HREF="'.$p_base.HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "gDossier", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag", "ac"), "").'&sa=detail&ag_id='.$row['ag_id'].'" title="detail">';
+            $href='<A class="document" HREF="'.$p_base.HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "gDossier", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag", "ac"), "").'&sa=detail&ag_id='.$row['ag_id'].'" title="'.$row['name'].'">';
             $i++;
             $tr=($i%2==0)?'even':'odd';
             if ($row['ag_priority']<2)
@@ -738,18 +741,13 @@ class Follow_Up
             $r.="<td>".$href.smaller_date($row['my_remind']).'</a>'."</td>";
             $r.="<td>".$href.$row['ag_ref'].'</a>'."</td>";
             // Expediteur
-            $fexp=new Fiche($this->db);
-            $fexp->id=$row['f_id_dest'];
-            $qcode_dest=$fexp->strAttribut(ATTR_DEF_QUICKCODE);
-
-            $qexp=($qcode_dest==NOTFOUND)?"Interne":$qcode_dest;
-            $jsexp=sprintf("javascript:showfiche('%s')", $qexp);
-            if ($qexp!='Interne')
+            if ($row['qcode']!='')
             {
-                $r.="<td>$href".$qexp." : ".$fexp->getName().'</a></td>';
+                $jsexp=sprintf("javascript:showfiche('%s')", $row['qcode']);
+                $r.="<td>$href".$row['qcode'].'</a></td>';
             }
             else
-                $r.="<td>$href Interne </a></td>";
+                $r.="<td></td>";
 
              /*
              * State
