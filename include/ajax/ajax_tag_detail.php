@@ -16,7 +16,7 @@ $data=$tag->get_data();
 $data->t_id=$http->get("tag","number");
 if ($data->t_id == -1 &&  $g_user->check_action(TAGADD) == 0 ) return;
 $data->load();
-echo HtmlInput::title_box(_("Détail du dossier ou étiquette"), "tag_div","close","","y");
+echo HtmlInput::title_box(_("Etiquette"), "tag_div","close","","y");
 
 ?>
 <?php
