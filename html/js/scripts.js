@@ -2664,7 +2664,7 @@ function action_tag_remove(p_dossier, ag_id, t_id)
                     {
                         method: 'get', parameters: queryString,
                         onFailure: ajax_misc_failure,
-                        onSuccess: function (req, j) {
+                        onSuccess: function (req) {
                             var answer = req.responseXML;
                             var html = answer.getElementsByTagName('code');
                             if (html.length === 0)

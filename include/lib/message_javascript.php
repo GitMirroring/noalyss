@@ -62,7 +62,7 @@ content[29]="<?php echo escape_xml(_("Si vous ne donnez pas de nom, ce sera le n
 content[30]="<?php echo escape_xml(_("Peut contenir une information telle que le message structuré sur le virement"))?>";
 content[31]="<?php echo escape_xml(_("Peut contenir un numéro de bon de commande"))?>";
 
-content[32]=_('Le résultat peut changer en fonction du type de journal');
+content[32]="<?php echo _('Le résultat peut changer en fonction du type de journal');?>";
 	
 content[33]="<?php echo escape_xml(_("le type vaut : ME pour Menu, PR pour les impressions,PL pour les plugins,SP pour des valeurs spéciales"))?>";
 content[34]="<?php echo escape_xml(_("Cliquez sur le code AD pour ouvrir le menu dans un nouvel onglet"))?>";
