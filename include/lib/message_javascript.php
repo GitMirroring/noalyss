@@ -24,6 +24,7 @@
  * @brief Contains all the javascript messages, this file must be included before
  * the javascript file. The message cannot contains a double quote even when
  * it is escaped !
+ * Avoid use of HTML Tag
  */
 ?>
 <script>
@@ -60,10 +61,10 @@ content[28]="<?php echo escape_xml(_("Attention Différence entre TVA calculée 
 content[29]="<?php echo escape_xml(_("Si vous ne donnez pas de nom, ce sera le nom du fichier qui sera utilisé"))?>";
 content[30]="<?php echo escape_xml(_("Peut contenir une information telle que le message structuré sur le virement"))?>";
 content[31]="<?php echo escape_xml(_("Peut contenir un numéro de bon de commande"))?>";
-// Because we are using HTML tag , we cannot escape and we must be careful with quote and double-quote, the best
-// is to avoid them
+
 content[32]=_('Le résultat peut changer en fonction du type de journal');
-content[33]="<?php echo escape_xml(_("le type vaut :<ul>	<li> ME pour Menu</li>	<li> PR pour les impressions </li>	<li> PL pour les plugins</li>	<li> SP pour des valeurs spéciales</li>	</ul>"))?>";
+	
+content[33]="<?php echo escape_xml(_("le type vaut : ME pour Menu, PR pour les impressions,PL pour les plugins,SP pour des valeurs spéciales"))?>";
 content[34]="<?php echo escape_xml(_("Cliquez sur le code AD pour ouvrir le menu dans un nouvel onglet"))?>";
 content[35]="<?php echo escape_xml(_("Cliquez sur le chemin pour ouvrir le menu"))?>";
 content[36]="<?php echo escape_xml(_("En utilisant les dates d échéance ou de paiement, seuls les journaux de type ACH et VEN seront utilisés ,vous excluez d office les autres journaux"))?>";
