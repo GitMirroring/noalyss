@@ -25,7 +25,11 @@ global $g_user;
 $http=new HttpInput();
 
 $retour=HtmlInput::button_anchor(_('Retour liste'),
-	HtmlInput::request_to_string(array("closed_action","remind_date_end","remind_date","sag_ref","only_internal","state","ac","gDossier","qcode","ag_dest_query","action_query","tdoc","date_start","date_end","hsstate","searchtag")),
+	HtmlInput::request_to_string(array("closed_action","remind_date_end","remind_date","sag_ref","only_internal",
+            "state","ac","gDossier","qcode","ag_dest_query","action_query","tdoc","date_start","date_end","hsstate",
+            "searchtag",
+            "closed_action",
+            "tag_option",)),
         "","","smallbutton");
 //-----------------------------------------------------
 // Follow_Up
