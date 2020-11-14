@@ -48,7 +48,6 @@ class IText extends HtmlInput
 
         $t= 'title="'.$this->title.'" ';
         $autofocus=($this->autofocus)?" autofocus ":"";
-        $this->value=str_replace('"','',$this->value);
         $require=($this->require)?"required":"";
         if ( ! isset ($this->css_size))
         {
@@ -58,7 +57,7 @@ class IText extends HtmlInput
                     ',$this->style,
                     $this->id,
                     $this->name,
-                    htmlentities($this->value, ENT_COMPAT, "UTF-8"),
+                    htmlentities($this->value, ENT_COMPAT|ENT_QUOTES, "UTF-8"),
                     $this->placeholder,
                     $this->title,
                     $this->size,
@@ -73,7 +72,7 @@ class IText extends HtmlInput
                     ',$this->style,
                     $this->id,
                     $this->name,
-                    htmlentities($this->value, ENT_COMPAT, "UTF-8"),
+                     htmlentities($this->value, ENT_COMPAT|ENT_QUOTES, "UTF-8"),
                     $this->placeholder,
                     $this->title,
                     $this->css_size,
@@ -98,7 +97,7 @@ class IText extends HtmlInput
         $extra=(isset($this->extra))?$this->extra:"";
 
         $readonly=" readonly ";
-        $this->value=str_replace('"','',$this->value);
+        htmlentities($this->value, ENT_COMPAT|ENT_QUOTES, "UTF-8"),
 		 $this->style=' class="input_text_ro" ';
          if ( ! isset ($this->css_size))
         {
