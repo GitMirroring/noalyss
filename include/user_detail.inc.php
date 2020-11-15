@@ -109,7 +109,7 @@ else if ($sbaction == "delete")
             User::remove_inexistant_user($a_dossier[$i]['dos_id']);
     }
     User::audit_admin(sprintf('DELETE USER %s %s',$uid,$auser['use_login']));
-ZZ    echo "<H2 class=\"info\">";
+    echo "<H2 class=\"info\">";
     printf (_("Utilisateur %s %s est effacé"),$http->post('fname'),$http->post('lname')) ;
     echo " </H2>";
     require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
