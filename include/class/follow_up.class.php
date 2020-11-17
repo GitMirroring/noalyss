@@ -104,6 +104,7 @@ class Follow_Up
         $this->aAction_detail=array();
         $this->operation="";
         $this->action="";
+        $this->f_dest_id=0;
     }
     /**
      * Create a filter based on the current user, 

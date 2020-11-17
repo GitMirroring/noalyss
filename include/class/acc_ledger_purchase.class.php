@@ -49,10 +49,12 @@ require_once NOALYSS_INCLUDE.'/class/stock_goods.class.php';
  */
 class  Acc_Ledger_Purchase extends Acc_Ledger
 {
+    private $payment_operation; /*<! id of the payment , set in insert */
     function __construct ($p_cn,$p_init)
     {
         $this->ledger_type='ACH';
         parent::__construct($p_cn,$p_init);
+        $this->payment_operation=-1;
     }
     /*!\brief verify that the data are correct before inserting or confirming
      *\param an array (usually $_POST)
@@ -960,7 +962,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $acc_pay->grpt=$acseq;
                 $acc_pay->jrn=$mp->get_parameter('ledger_target');
                 $acc_pay->periode=$tperiode;
-		$acc_pay->type=($famount>=0)?'c':'d';
+		        $acc_pay->type=($famount>=0)?'c':'d';
                 $acc_pay->insert_jrnx();
 
                 /* Insert supplier  */
@@ -996,6 +998,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 
                 // insert into the table JRN
                 $mp_jr_id=$acc_pay->insert_jrn();
+                $this->payment_operation=$mp_jr_id;
                 $acjrn->grpt_id=$acseq;
                 $acjrn->update_internal_code($acinternal);
                 // add an automatic PJ if ODS
@@ -1038,7 +1041,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         }//end try
         catch (Exception $e)
         {
-            record_log($e->getTraceAsString());
+              record_log($e);
             echo '<span class="error">'.
             'Erreur dans l\'enregistrement '.
             __FILE__.':'.__LINE__.' '.
@@ -1146,7 +1149,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             }
             catch (Exception $e)
             {
-                record_log($e->getTraceAsString());
+                  record_log($e);
                 if ($e->getCode() == 1 )
                 {
                     throw new Exception( _("Aucune période ouverte"));
@@ -1855,19 +1858,30 @@ EOF;
          */
         if ( $e_mp!=0 && strlen (trim (${'e_mp_qcode_'.$e_mp})) != 0 )
         {
+            $r.="<p>";
             $r.=HtmlInput::hidden('e_mp_qcode_'.$e_mp,${'e_mp_qcode_'.$e_mp});
             $r.=HtmlInput::hidden('acompte',$acompte);
-	    $r.=HtmlInput::hidden('e_comm_paiement',$e_comm_paiement);
-	    $r.=HtmlInput::hidden('mp_date',$mp_date);
+            $r.=HtmlInput::hidden('e_comm_paiement',$e_comm_paiement);
+	        $r.=HtmlInput::hidden('mp_date',$mp_date);
             /* needed for generating a invoice */
            $r.=HtmlInput::hidden('qcode_benef', ${'e_mp_qcode_' . $e_mp});
 			$fname = new Fiche($this->db);
 			$fname->get_by_qcode(${'e_mp_qcode_' . $e_mp});
+            $detail_payment="";
+            // payment operation
+            if ($this->payment_operation != 1) {
+                $pay_internal=$this->db->get_value("select jr_internal from jrn where jr_id=$1",
+                    [$this->payment_operation]);
+                $detail_payment=HtmlInput::detail_op($this->payment_operation,$pay_internal);
+            }
             $r.='<h2>' . _("Payé par")." " . ${'e_mp_qcode_' . $e_mp} .
-                    " " . $fname->getName() . '</h2> ' . '<p class="decale">' . _('Déduction acompte ') . h($acompte) . '</p>' .
+                " " . $fname->getName() .$detail_payment. '</h2> ' ;
+            $r.='<p class="decale">' . _('Déduction acompte ') . h($acompte) . '</p>' .
                     _('Libellé :') . h($e_comm_paiement) ;
             $r.='<br>';
             $r.='<br>';
+
+            $r.="</p>";
         }
         // check for upload piece
         /* 

@@ -609,8 +609,8 @@ class Acc_Operation
             $ret=new Acc_Fin($this->db,$this->jr_id);
             break;
         default:
-			$ret=new Acc_Misc($this->db,$this->jr_id);
-			break;
+            $ret=new Acc_Misc($this->db,$this->jr_id);
+            break;
         }
         $ret->get();
         if ( empty($ret->det->array))
@@ -747,6 +747,71 @@ class Acc_Operation
         $type_operation->selected=$p_status;
         return $type_operation;
     }
+    /**
+     * create a form to recreate the operation and returns it, just like a correct
+     * 
+     */
+    function form_clone_operation($p_id) {
+        // retrieve all info about operation
+        $operation = $this->get_quant();
+        $array=$operation->compute_array();
+        global $g_user;
+        // Prepare the form
+        $r='<form id="'.$p_id.'" method="POST">';
+        $r.=Dossier::hidden();
+        $a_code=$this->db->get_array("select code from v_menu_dependency vmd  where me_code=$1 and p_id=$2",
+                array( $operation->signature,$g_user->get_profile()));
+        
+        // select the menu where the operation will be duplicated
+        if ( empty ($a_code)) {
+            $r.=_("Menu invalide");
+            return $r;
+        }
+        $r.="<p>";
+        $r.="<ul style=\"margin-left:2rem;padding-left:0;list-style:none;\">";
+        $r.=sprintf("<li>%s</li>",$operation->det->jr_pj_number);
+        $r.=sprintf("<li>%s</li>",$operation->det->jr_comment);
+        $r.=sprintf("<li>%s</li>",$operation->det->jr_montant);
+        $r.="</ul>";
+        $r.="</p>";
+        if (count($a_code) == 1 ) {
+            $r.=HtmlInput::hidden("ac",$a_code[0]['code']);
+            $r.=sprintf(_("Voulez-vous aller à %s pour dupliquer cette opération ?"),$a_code[0]['code']);
+            
+        } else {
+            $select=new ISelect("ac");
+            $select->value=array();
+            $nb_code=count($a_code);
+            
+            for ($i=0;$i<$nb_code;$i++) {
+                $select->value[]=array("label"=>$a_code[$i]['code'],"value"=>$a_code[$i]['code']);
+            }
+            $r.=sprintf(_("Voulez-vous aller à %s pour dupliquer cette opération ?"),$select->input());
+                       
+        }
+       
+        $r.="</p>";
+      
+        // For Misc Operation , if a card is given then there is no accounting
+        if ( $operation->signature==="ODS") {
+            $nb_array=count($array);
+            for ($i=0;$i<$nb_array;$i++) {
+                if (isset ($array["qc_".$i] ) && $array["qc_".$i] != "" ) {
+                    $array["poste".$i]="";
+                }
+            }
+        }
+        
+        // transform the operation into hidden element
+        $r.=HtmlInput::simple_array_to_hidden($array);
+        
+        $r.=HtmlInput::submit(uniqid(), _("Dupliquer"));
+        $r.='</form>';
+        
+        
+        // return the form as a string 
+        return $r;
+    }
 
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -779,6 +844,19 @@ class Acc_Detail extends Acc_Operation
 	$this->det->note=$this->db->get_value($sql,array($this->jr_id));
 	$this->det->note=strip_tags($this->det->note);
     }
+    /**
+     * 
+     */
+    function compute_array()
+    {
+        $array=array();
+        $array['desc']=$this->det->jr_comment;
+        $array['e_date']="";
+        $array['e_ech']="";
+        $array['p_jrn']=$this->det->jr_def_id;
+        return $array;
+        
+    }
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
@@ -805,6 +883,30 @@ class Acc_Misc extends Acc_Detail
              FROM jrnx where j_grpt = $1 order by j_debit desc,j_poste";
         $this->det->array=$this->db->get_array($sql,array($this->det->jr_grpt_id));
     }
+    /***
+     * Compute an array for using with Acc_Ledger::insert
+     * 
+     */
+    function compute_array()
+    {
+        $this->get();
+        $array=parent::compute_array();
+        $nb_array=count($this->det->array);
+        $array['nb_item']=$nb_array;
+        
+        for ($i=0;$i<$nb_array;$i++) {
+            $array["qc_".$i]=$this->det->array[$i]['j_qcode'];
+            $array["poste".$i]=$this->det->array[$i]['j_poste'];
+            $array["amount".$i]=$this->det->array[$i]['j_montant'];
+            if ( $this->det->array[$i]['j_debit'] == 't') {
+                $array["ck".$i]=1;
+            }
+            $array["ld".$i]=$this->det->array[$i]['j_text'];
+         }
+         
+        return $array;
+        
+    }
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
@@ -827,6 +929,35 @@ class Acc_Sold extends Acc_Detail
              qs_vat_code, qs_client, qs_valid, j_id,j_text,qs_vat_sided , qs_unit , j_debit
              FROM quant_sold  join jrnx using(j_id) where j_grpt=$1";
         $this->det->array=$this->db->get_array($sql,array($this->det->jr_grpt_id));
+    }
+    /***
+     * Compute an array for using with Acc_Ledger::insert
+     * 
+     */
+    function compute_array()
+    {
+        $this->get();
+        $array=parent::compute_array();
+        $nb_array=count($this->det->array);
+        $array['nb_item']=$nb_array;
+        
+        
+        $array["e_client"]=$this->db->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=23",
+                    array($this->det->array[0]['qs_client']));
+            
+        for ($i=0;$i<$nb_array;$i++) {
+            $array["e_march".$i]=$this->db->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=23",
+                    array($this->det->array[$i]['qs_fiche']));
+            
+            $array["e_march".$i."_price"]=$this->det->array[$i]['qs_unit'];
+            $array["e_march".$i."_label"]=$this->det->array[$i]['j_text'];
+            $array["e_march".$i."_tva_id"]=$this->det->array[$i]['qs_vat_code'];
+            $array["e_march".$i."_tva_amount"]=$this->det->array[$i]['qs_vat'];
+            $array["e_quant".$i]=$this->det->array[$i]['qs_quantite'];
+         }
+         $array['correct']=1;
+        return $array;
+        
     }
     
 }
@@ -854,6 +985,37 @@ class Acc_Purchase extends Acc_Detail
              FROM quant_purchase  join jrnx using(j_id) where j_grpt=$1";
         $this->det->array=$this->db->get_array($sql,array($this->det->jr_grpt_id));
     }
+     /***
+     * Compute an array for using with Acc_Ledger::insert
+     * 
+     */
+    function compute_array()
+    {
+        $this->get();
+        $array=parent::compute_array();
+        $nb_array=count($this->det->array);
+        $array['nb_item']=$nb_array;
+        
+        
+        $array["e_client"]=$this->db->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=23",
+                    array($this->det->array[0]['qp_supplier']));
+            
+        for ($i=0;$i<$nb_array;$i++) {
+            $array["e_march".$i]=$this->db->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=23",
+                    array($this->det->array[$i]['qp_fiche']));
+            
+            $array["e_march".$i."_price"]=$this->det->array[$i]['qp_unit'];
+            $array["e_march".$i."_label"]=$this->det->array[$i]['j_text'];
+            $array["e_march".$i."_tva_id"]=$this->det->array[$i]['qp_vat_code'];
+            $array["e_march".$i."_tva_amount"]=$this->det->array[$i]['qp_vat'];
+            $array["e_quant".$i]=$this->det->array[$i]['qp_quantite'];
+         }
+         $array['correct']=1;
+        return $array;
+        
+    }
+    
+
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
@@ -875,5 +1037,28 @@ class Acc_Fin extends Acc_Detail
         $sql="SELECT qf_id, qf_bank, jr_id, qf_other, qf_amount,j_id
              FROM quant_fin where jr_id = $1";
         $this->det->array=$this->db->get_array($sql,array($this->jr_id));
+    }
+     /***
+     * Compute an array for using with Acc_Ledger::insert
+     * 
+     */
+    function compute_array()
+    {
+        $this->get();
+        $array=parent::compute_array();
+        $nb_array=count($this->det->array);
+        $array['nb_item']=$nb_array;
+        
+        
+        for ($i=0;$i<$nb_array;$i++) {
+            $array["e_other".$i]=$this->db->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=23",
+                    array($this->det->array[$i]['qf_other']));
+            
+            $array["e_other".$i."_amount"]=$this->det->array[$i]['qf_amount'];
+            $array["e_other".$i."_comment"]=$this->det->jr_comment;
+         }
+         $array['correct']=1;
+        return $array;
+        
     }
 }

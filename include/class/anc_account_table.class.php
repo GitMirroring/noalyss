@@ -74,7 +74,7 @@ class Anc_Account_Table extends Manage_Table_SQL
         $table->po_name=str_replace(">", '', $table->po_name);
         
         // po_name must be uniq in the Analytic Plan
-        if ( $cn->get_value("select count(*) from poste_analytique where pa_id=$1 and po_name=$2 and po_id != $3",
+        if ( $cn->get_value("select count(*) from poste_analytique where pa_id=$1 and po_name=upper($2) and po_id != $3",
                 array($table->pa_id,$table->po_name,$table->po_id)) > 0)
         {
             $is_error++;
@@ -90,4 +90,36 @@ class Anc_Account_Table extends Manage_Table_SQL
         if ($is_error==0)return TRUE;
         return FALSE;
     }
+    
+    /**
+    * @brief display a data row in the table, with the order defined
+    * in a_order and depending of the visibility of the column
+    */
+    function display_row($p_row)
+    {
+        $cn=Dossier::connect();
+        $count=$cn->get_value("select count(*) from public.operation_analytique where po_id=$1",[$p_row["po_id"]]);
+        $p_row["po_name"]=sprintf("%s (%d)",$p_row['po_name'],$count);
+        parent::display_row($p_row);
+    }
+    
+    /**
+     * Before deleting , we check that nothing is in a closed periode
+     */
+   function delete() {
+       $cn=Dossier::connect();
+       $count_closed=$cn->get_value(" select count(*)
+                    from jrnx as jx1 
+                    join jrn jn1  on (jx1.j_grpt  = jn1.jr_grpt_id )
+                    join jrn_def as jf1  on (jn1.jr_def_id =jf1.jrn_def_id )
+                    join jrn_periode as je1 on (jf1.jrn_def_id =je1.jrn_def_id )
+                    join operation_analytique as oa on (oa.j_id =jx1.j_id ) 
+                    where 
+                        je1.status  = 'CL' and  oa.po_id=$1 ",[$this->table->po_id]);
+       if ( $count_closed > 0 ) {
+           throw new \Exception(_("Effacement impossible : le poste est utilisé dans une période fermée"));
+       }
+       
+   }
+    
 }

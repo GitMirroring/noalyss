@@ -75,8 +75,10 @@ class DatabaseCore
         }
 
         $this->is_open = TRUE;
+        
 
     }
+
 
     public function verify()
     {

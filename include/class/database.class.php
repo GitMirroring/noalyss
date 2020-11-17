@@ -89,7 +89,7 @@ class Database extends DatabaseCore
             $r = pg_fetch_array($ret, 0);
             $old_oid = $r['jr_pj'];
             if (strlen($old_oid) != 0)
-                pg_lo_unlink($cn, $old_oid);
+                $this->lo_unlink( $old_oid);
         }
         // Load new document
         $this->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
@@ -115,7 +115,7 @@ class Database extends DatabaseCore
     /**
      * \brief loop to apply all the path to a folder or     a template
      * Upgrade check if the folder $p_name needs to be upgrade thanks the variable DBVERSION
-     * and run  all the SQL script named  upgradeX.sql from the folder noalyss/include/sql/patch 
+     * and run  all the SQL script named  upgradeX.sql from the folder noalyss/include/sql/patch
      * until  X equal DBVERSION-1
      *
      * \param $p_name database name
@@ -226,7 +226,7 @@ class Database extends DatabaseCore
 
                 if (!DEBUG)
                     ob_end_clean();
-                
+
             }
         }
         echo '</ul>';

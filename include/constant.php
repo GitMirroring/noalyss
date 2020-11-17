@@ -107,7 +107,7 @@ if ( !defined ("NOALYSS_PACKAGE_REPOSITORY")) {
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
 }
-define ("DBVERSION",143);
+define ("DBVERSION",144);
 define ("MONO_DATABASE",25);
 define ("DBVERSIONREPO",18);
 define ('NOTFOUND','--not found--');
@@ -325,7 +325,7 @@ if ( ! defined ("NOALYSS_URL")) {
         $protocol=$_SERVER['REQUEST_SCHEME'];
     }
     $base=$protocol.'://'.
-            $_SERVER['HTTP_HOST'].
+            $_SERVER['SERVER_NAME'].
             ":".$_SERVER['SERVER_PORT'].
             dirname($_SERVER['PHP_SELF']);
     define ("NOALYSS_URL",$base);

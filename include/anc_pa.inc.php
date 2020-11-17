@@ -145,8 +145,8 @@ if ($sa=="pa_detail")
     $accounting->add_json_param("pa_id", $pa_id);
     $accounting->set_sort_column("po_name");
     ob_start();
-    $accounting->display_table(" where pa_id = $1 order by po_name ",array($pa_id));
     $accounting->create_js_script();
+    $accounting->display_table(" where pa_id = $1 order by po_name ",array($pa_id));
     $ret.=ob_get_clean();
     $ret.= '</div>';
 }

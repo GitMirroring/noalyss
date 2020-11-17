@@ -342,7 +342,17 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     $p_script2 . "
     ";
     echo '<script language="javascript" src="js/calendar.js"></script>
-    <script type="text/javascript" src="js/lang/calendar-en.js"></script>
+    <script type="text/javascript" src="js/lang/calendar-en.js"></script>';
+
+    if (isset($_SESSION['g_lang']) && $_SESSION['g_lang']=='fr_FR.utf8' )
+    {
+	echo '<script type="text/javascript" src="js/lang/calendar-fr.js"></script>';
+    }
+    if (isset($_SESSION['g_lang']) && $_SESSION['g_lang']=='nl_NL.utf8' )
+    {
+	echo '<script type="text/javascript" src="js/lang/calendar-nl.js"></script>';
+    }
+    echo '
     <script language="javascript" src="js/calendar-setup.js"></script>
     <LINK REL="stylesheet" type="text/css" href="calendar-blue.css" media="screen">
     ';
@@ -1321,9 +1331,8 @@ function is_msie()
  */
 function record_log($p_message)
 {
-    error_log("noalyss".$p_message,0);
-    error_log("noalyss GET [".var_export($_GET, true)."]",0);
-    error_log( "noalyss POST [".var_export($_POST, true)."]",0);
+    error_log("noalyss".print_r($p_message,true),0);
+    error_log("noalyss GET [".var_export($_GET, true)."] POST [".var_export($_POST, true)."]",0);
 }
 if(!function_exists('tracedebug')) {
   function tracedebug($file,$var, $label = NULL) {

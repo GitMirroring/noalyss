@@ -42,7 +42,7 @@ try
 }
 catch (Exception $e)
 {
-    record_log($e->getTraceAsString());
+      record_log($e);
     return;
 }
 

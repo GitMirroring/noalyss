@@ -389,7 +389,7 @@ class Acc_Ledger  extends jrn_def_sql
         }
         catch (Exception $e)
         {
-            record_log($e->getTraceAsString());
+              record_log($e);
             $this->db->rollback();
             throw $e;
         }
@@ -869,7 +869,7 @@ class Acc_Ledger  extends jrn_def_sql
             }
             catch (Exception $e)
             {
-                record_log($e->getTraceAsString());
+                  record_log($e);
                 if ($e->getCode()==1)
                 {
                     echo _("Aucune période ouverte");
@@ -1503,7 +1503,7 @@ class Acc_Ledger  extends jrn_def_sql
         }
         catch (Exception $e)
         {
-            record_log($e->getTraceAsString());
+              record_log($e);
             $this->db->rollback();
             echo _('OPERATION ANNULEE ');
             echo '<hr>';
@@ -2307,7 +2307,7 @@ class Acc_Ledger  extends jrn_def_sql
             catch (Exception $e)
             {
                 $cn->rollback();
-                record_log($e->getTraceAsString());
+                  record_log($e);
             }
             $cn->commit();
         }
@@ -2576,7 +2576,7 @@ class Acc_Ledger  extends jrn_def_sql
         }
         catch (Exception $e)
         {
-            record_log($e->getTraceAsString());
+              record_log($e);
             throw $e;
         }
     }
@@ -2608,22 +2608,17 @@ class Acc_Ledger  extends jrn_def_sql
         switch ($this->jrn_def_type)
         {
             case 'ACH':
-                $this->jrn_def_fiche_cred=(isset($ACH_FICHECRED))?join($ACH_FICHECRED,
-                                ','):'';
-                $this->jrn_def_fiche_deb=(isset($ACH_FICHEDEB))?join($ACH_FICHEDEB,
-                                ','):"";
+                $this->jrn_def_fiche_cred=(isset($ACH_FICHECRED))?join(',',$ACH_FICHECRED):'';
+                $this->jrn_def_fiche_deb=(isset($ACH_FICHEDEB))?join(',',$ACH_FICHEDEB):"";
                 break;
             case 'VEN':
-                $this->jrn_def_fiche_cred=(isset($VEN_FICHECRED))?join($VEN_FICHECRED,
-                                ','):'';
-                $this->jrn_def_fiche_deb=(isset($VEN_FICHEDEB))?join($VEN_FICHEDEB,
-                                ','):"";
+                $this->jrn_def_fiche_cred=(isset($VEN_FICHECRED))?join(',',$VEN_FICHECRED):'';
+                $this->jrn_def_fiche_deb=(isset($VEN_FICHEDEB))?join(',',$VEN_FICHEDEB):"";
 
                 break;
             case 'ODS':
                 $this->jrn_def_class_deb=$p_jrn_class_deb;
-                $this->jrn_def_fiche_deb=(isset($ODS_FICHEDEB))?join($ODS_FICHEDEB,
-                                ','):''; ;
+                $this->jrn_def_fiche_deb=(isset($ODS_FICHEDEB))?join(',',$ODS_FICHEDEB):''; ;
                 $this->jrn_def_fiche_cred=null;
                 break;
 
@@ -2632,8 +2627,7 @@ class Acc_Ledger  extends jrn_def_sql
                 $result=$a->get_by_qcode(trim(strtoupper($_POST['bank'])), false);
                 $bank=$a->id;
                 $this->jrn_def_bank=$bank;
-                $this->jrn_def_fiche_deb=(isset($FIN_FICHEDEB))?join($FIN_FICHEDEB,
-                                ','):"";
+                $this->jrn_def_fiche_deb=(isset($FIN_FICHEDEB))?join(',',$FIN_FICHEDEB):"";
                 if ($result==-1)
                     throw new Exception(_("Aucun compte en banque n'est donné"));
                 $this->jrn_def_num_op=(isset($numb_operation))?1:0;
@@ -2812,22 +2806,17 @@ class Acc_Ledger  extends jrn_def_sql
         switch ($this->jrn_def_type)
         {
             case 'ACH':
-                $this->jrn_def_fiche_cred=(isset($ACH_FICHECRED))?join($ACH_FICHECRED,
-                                ','):'';
-                $this->jrn_def_fiche_deb=(isset($ACH_FICHEDEB))?join($ACH_FICHEDEB,
-                                ','):"";
+                $this->jrn_def_fiche_cred=(isset($ACH_FICHECRED))?join(',',$ACH_FICHECRED):'';
+                $this->jrn_def_fiche_deb=(isset($ACH_FICHEDEB))?join(',',$ACH_FICHEDEB):"";
                 break;
             case 'VEN':
-                $this->jrn_def_fiche_cred=(isset($VEN_FICHECRED))?join($VEN_FICHECRED,
-                                ','):'';
-                $this->jrn_def_fiche_deb=(isset($VEN_FICHEDEB))?join($VEN_FICHEDEB,
-                                ','):"";
+                $this->jrn_def_fiche_cred=(isset($VEN_FICHECRED))?join(',',$VEN_FICHECRED):'';
+                $this->jrn_def_fiche_deb=(isset($VEN_FICHEDEB))?join(',',$VEN_FICHEDEB):"";
 
                 break;
             case 'ODS':
                 $this->jrn_def_class_deb=$p_jrn_class_deb;
-                $this->jrn_def_fiche_deb=(isset($ODS_FICHEDEB))?join($ODS_FICHEDEB,
-                                ','):''; ;
+                $this->jrn_def_fiche_deb=(isset($ODS_FICHEDEB))?join(',',$ODS_FICHEDEB):''; ;
                 $this->jrn_def_fiche_cred=null;
                 break;
             case 'FIN':
@@ -2835,8 +2824,7 @@ class Acc_Ledger  extends jrn_def_sql
                 $result=$a->get_by_qcode(trim(strtoupper($_POST['bank'])), false);
                 $bank=$a->id;
                 $this->jrn_def_bank=$bank;
-                $this->jrn_def_fiche_deb=(isset($FIN_FICHEDEB))?join($FIN_FICHEDEB,
-                                ','):"";
+                $this->jrn_def_fiche_deb=(isset($FIN_FICHEDEB))?join(',',$FIN_FICHEDEB):"";
                 if ($result==-1)
                     throw new Exception(_("Aucun compte en banque n'est donné"));
                 $this->jrn_def_num_op=(isset($numb_operation))?1:0;
@@ -2862,7 +2850,7 @@ class Acc_Ledger  extends jrn_def_sql
         }
         catch (Exception $e)
         {
-            record_log($e->getTraceAsString());
+              record_log($e);
             throw $e;
         }
     }
