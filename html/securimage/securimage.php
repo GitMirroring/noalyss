@@ -1142,6 +1142,7 @@ class Securimage {
 	 */
 	function validate()
 	{
+            $code='';
 		// retrieve code from session, if no code exists check sqlite database if supported.
 		
 		if (isset($_SESSION['securimage_code_value']) && trim($_SESSION['securimage_code_value']) != '') {
