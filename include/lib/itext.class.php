@@ -46,6 +46,9 @@ class IText extends HtmlInput
         if ( $this->readOnly==true) return $this->display();
 	$this->id=($this->id=="")?$this->name:$this->id;
 
+	// Double quote makes troubles 
+	$this->value=str_replace('"','',$this->value);
+
         $t= 'title="'.$this->title.'" ';
         $autofocus=($this->autofocus)?" autofocus ":"";
         $require=($this->require)?"required":"";
