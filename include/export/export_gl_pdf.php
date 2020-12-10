@@ -101,7 +101,7 @@ foreach ($a_poste as $poste)
 
   $array1=$Poste->get_row_date($from_periode,$to_periode,$l,$s);
   // don't print empty account
-  if ( count($array1[0]) == 0 )
+  if (empty($array1) || count($array1[0]) == 0 )
     {
         continue;
     }
