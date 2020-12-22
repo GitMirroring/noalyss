@@ -66,7 +66,7 @@ catch (Exception $exc)
 }
 
 /**
- *if $_SESSION['g_user'] is not set : echo a warning
+ *if $_SESSION[SESSION_KEY.'g_user'] is not set : echo a warning
  */
 
 $cn=Dossier::connect();
@@ -224,7 +224,7 @@ case 'file':
     $obj=$op->get_quant();	/* return an obj. ACH / FIN or VEN or null if nothing is found*/
     
     $repo = new Database();
-    $theme = $repo->get_value("select the_filestyle from theme where the_name=$1", array($_SESSION['g_theme']));
+    $theme = $repo->get_value("select the_filestyle from theme where the_name=$1", array($_SESSION[SESSION_KEY.'g_theme']));
     html_min_page_start($theme);
 
     // if there is a receipt document
@@ -317,7 +317,7 @@ case 'loadfile':
 
         echo "<html><head>";
         $repo=new Database();
-        $theme=$repo->get_value("select the_filestyle from theme where the_name=$1",array($_SESSION['g_theme']));
+        $theme=$repo->get_value("select the_filestyle from theme where the_name=$1",array($_SESSION[SESSION_KEY.'g_theme']));
         echo    "   <LINK REL=\"stylesheet\" type=\"text/css\" href=\"$theme\" media=\"screen\">";
         echo "</head>";
 		if ( ! isset($_REQUEST['ajax']) ) echo "<body class=\"op_detail_frame\">"; else echo "<body>";
@@ -347,7 +347,7 @@ case 'rmf':
     {
         echo "<html><head>";
         $repo=new Database();
-        $theme=$repo->get_value("select the_filestyle from theme where the_name=$1",array($_SESSION['g_theme']));
+        $theme=$repo->get_value("select the_filestyle from theme where the_name=$1",array($_SESSION[SESSION_KEY.'g_theme']));
         echo    "   <LINK REL=\"stylesheet\" type=\"text/css\" href=\"$theme\" media=\"screen\">";
         echo "</head><body class=\"op_detail_frame\">";
 		echo "<h2>"._("Document")."</h2>";

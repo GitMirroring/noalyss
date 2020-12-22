@@ -53,28 +53,28 @@ class User
 		// if p_id is not set then check the connected user
 		if ($p_id == -1)
 		{
-			if (!isset($_SESSION['g_user']))
+			if (!isset($_SESSION[SESSION_KEY.'g_user']))
 			{
 				echo '<h2 class="error">' . _('Session expirée<br>Utilisateur déconnecté') . '</h2>';
 				redirect('index.php', 1);
 				exit();
 			}
 
-			$this->login =strtolower($_SESSION['g_user']);
-			$this->pass = $_SESSION['g_pass'];
-			$this->lang = (isset($_SESSION['g_lang'])) ? $_SESSION['g_lang'] : 'fr_FR.utf8';
-			$this->valid = (isset($_SESSION['isValid'])) ? 1 : 0;
+			$this->login =strtolower($_SESSION[SESSION_KEY.'g_user']);
+			$this->pass = $_SESSION[SESSION_KEY.'g_pass'];
+			$this->lang = (isset($_SESSION[SESSION_KEY.'g_lang'])) ? $_SESSION[SESSION_KEY.'g_lang'] : 'fr_FR.utf8';
+			$this->valid = (isset($_SESSION[SESSION_KEY.'isValid'])) ? 1 : 0;
 			$this->db = $p_cn;
 			$this->id = -1;
-			if (isset($_SESSION['g_theme']))
-				$this->theme = $_SESSION['g_theme'];
+			if (isset($_SESSION[SESSION_KEY.'g_theme']))
+				$this->theme = $_SESSION[SESSION_KEY.'g_theme'];
 
-			$this->admin = ( isset($_SESSION['use_admin']) ) ? $_SESSION['use_admin'] : 0;
+			$this->admin = ( isset($_SESSION[SESSION_KEY.'use_admin']) ) ? $_SESSION[SESSION_KEY.'use_admin'] : 0;
 
-			if (isset($_SESSION['use_name']))
-				$this->name = $_SESSION['use_name'];
-			if (isset($_SESSION['use_first_name']))
-				$this->first_name = $_SESSION['use_first_name'];
+			if (isset($_SESSION[SESSION_KEY.'use_name']))
+				$this->name = $_SESSION[SESSION_KEY.'use_name'];
+			if (isset($_SESSION[SESSION_KEY.'use_first_name']))
+				$this->first_name = $_SESSION[SESSION_KEY.'use_first_name'];
 			$this->load();
 		}
 		else // if p_id is set get data of another user
@@ -176,21 +176,21 @@ class User
 		if ($res > 0)
 		{
 			$r = Database::fetch_array($ret, 0);
-			$_SESSION['use_admin'] = $r['use_admin'];
-			$_SESSION['use_name'] = $r['use_name'];
-			$_SESSION['use_first_name'] = $r['use_first_name'];
-			$_SESSION['isValid'] = 1;
+			$_SESSION[SESSION_KEY.'use_admin'] = $r['use_admin'];
+			$_SESSION[SESSION_KEY.'use_name'] = $r['use_name'];
+			$_SESSION[SESSION_KEY.'use_first_name'] = $r['use_first_name'];
+			$_SESSION[SESSION_KEY.'isValid'] = 1;
 
-			$this->admin = $_SESSION['use_admin'];
-			$this->name = $_SESSION['use_name'];
-			$this->first_name = $_SESSION['use_first_name'];
+			$this->admin = $_SESSION[SESSION_KEY.'use_admin'];
+			$this->name = $_SESSION[SESSION_KEY.'use_name'];
+			$this->first_name = $_SESSION[SESSION_KEY.'use_first_name'];
 			$this->load_global_pref();
 		}
 		$sql = "insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
 
 		if ($res == 0)
 		{
-			$cn->exec_sql($sql, array($_SESSION['g_user'], $_SERVER["REMOTE_ADDR"], $from, $_SERVER['REQUEST_URI'], 'FAIL'));
+			$cn->exec_sql($sql, array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], $from, $_SERVER['REQUEST_URI'], 'FAIL'));
 			if (!$silent)
 			{
 				echo '<script> alert(\''._('Utilisateur ou mot de passe incorrect').'\')</script>';
@@ -203,7 +203,7 @@ class User
 		else
 		{
 			if ($from == 'LOGIN')
-				$cn->exec_sql($sql, array($_SESSION['g_user'], $_SERVER["REMOTE_ADDR"], $from, $_SERVER['REQUEST_URI'], 'SUCCESS'));
+				$cn->exec_sql($sql, array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], $from, $_SERVER['REQUEST_URI'], 'SUCCESS'));
 			$this->valid = 1;
 		}
 
@@ -597,7 +597,7 @@ class User
 			{
 				$cn = new Database();
 				$sql = "insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
-				$cn->exec_sql($sql, array($_SESSION['g_user'], $_SERVER["REMOTE_ADDR"], $p_action_id, $_SERVER['REQUEST_URI'], 'FAIL'));
+				$cn->exec_sql($sql, array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], $p_action_id, $_SERVER['REQUEST_URI'], 'FAIL'));
 			}
 			return 0;
 		}
@@ -654,7 +654,7 @@ class User
 				$this->load_global_pref();
 				return;
 			}
-			$_SESSION[$name] = $line[$parameter];
+			$_SESSION[SESSION_KEY.$name] = $line[$parameter];
 		}
 	}
 
@@ -1094,7 +1094,7 @@ class User
 		$sql = "insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
 
 		$cn->exec_sql($sql, array(
-			$_SESSION['g_user'],
+			$_SESSION[SESSION_KEY.'g_user'],
 			$_SERVER["REMOTE_ADDR"],
 			$p_module,
 			$_SERVER['REQUEST_URI'],
@@ -1115,7 +1115,7 @@ class User
 			$sql = "insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
 
 			$cn->exec_sql($sql, array(
-				$_SESSION['g_user'],
+				$_SESSION[SESSION_KEY.'g_user'],
 				$_SERVER["REMOTE_ADDR"],
 				$p_module,
 				$_SERVER['REQUEST_URI'],
@@ -1293,8 +1293,8 @@ class User
         if ($p_pass1 == $p_pass2) {
             $repo = new Database();
             $l_pass = md5($_POST['pass_1']);
-            $repo->exec_sql("update ac_users set use_pass=$1 where use_login=$2", array($l_pass, $_SESSION['g_user']));
-            $_SESSION['g_pass'] = $_POST['pass_1'];
+            $repo->exec_sql("update ac_users set use_pass=$1 where use_login=$2", array($l_pass, $_SESSION[SESSION_KEY.'g_user']));
+            $_SESSION[SESSION_KEY.'g_pass'] = $_POST['pass_1'];
         } else {
             alert(_("Les mots de passe ne correspondent pas. Mot de passe inchangé"));
         }
@@ -1306,7 +1306,7 @@ class User
     function save_email($p_email)
     {
         $repo=new Database();
-        $repo->exec_sql("update ac_users set use_email=$1 where use_login=$2", array($p_email, $_SESSION['g_user']));
+        $repo->exec_sql("update ac_users set use_email=$1 where use_login=$2", array($p_email, $_SESSION[SESSION_KEY.'g_user']));
     }
     /**
      * Remove a user and all his privileges

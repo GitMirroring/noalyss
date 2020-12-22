@@ -639,7 +639,7 @@ class Acc_Ledger_Search
             
             $fil_sec=$and." jr_def_id in ( select uj_jrn_id ".
                     " from user_sec_jrn where ".
-                    " uj_login='".sql_string($_SESSION['g_user'])."'".
+                    " uj_login='".sql_string($_SESSION[SESSION_KEY.'g_user'])."'".
                     " and uj_priv in ('R','W'))";
         }
         $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.$fil_amount.
@@ -712,7 +712,7 @@ class Acc_Ledger_Search
       // Count nb of line
       $max_line=$cn->count_sql($sql);
 
-      $step=$_SESSION['g_pagesize'];
+      $step=$_SESSION[SESSION_KEY.'g_pagesize'];
       $page=(isset($_GET['offset']))?$_GET['page']:1;
       $offset=(isset($_GET['offset']))?$_GET['offset']:0;
       // create the nav. bar
@@ -738,8 +738,8 @@ class Acc_Ledger_Search
         $gDossier=dossier::id();
         $amount_paid=0.0;
         $amount_unpaid=0.0;
-        $limit=($_SESSION['g_pagesize']!=-1)?" LIMIT ".$_SESSION['g_pagesize']:"";
-        $offset=($_SESSION['g_pagesize']!=-1)?" OFFSET ".Database::escape_string($offset):"";
+        $limit=($_SESSION[SESSION_KEY.'g_pagesize']!=-1)?" LIMIT ".$_SESSION[SESSION_KEY.'g_pagesize']:"";
+        $offset=($_SESSION[SESSION_KEY.'g_pagesize']!=-1)?" OFFSET ".Database::escape_string($offset):"";
         $order="  order by jr_date_order asc,jr_internal asc";
         // Sort
         $url="?".CleanUrl();
@@ -1011,7 +1011,7 @@ class Acc_Ledger_Search
       // Count nb of line
       $max_line=$this->cn->count_sql($sql);
 
-      $step=$_SESSION['g_pagesize'];
+      $step=$_SESSION[SESSION_KEY.'g_pagesize'];
       $page=(isset($_GET['offset']))?$_GET['page']:1;
       $offset=(isset($_GET['offset']))?$_GET['offset']:0;
       // create the nav. bar

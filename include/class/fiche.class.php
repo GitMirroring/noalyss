@@ -303,7 +303,7 @@ class Fiche
         }
         else
         {
-            $limit=($_SESSION['g_pagesize']!=-1)?"limit ".$_SESSION['g_pagesize']:"";
+            $limit=($_SESSION[SESSION_KEY.'g_pagesize']!=-1)?"limit ".$_SESSION[SESSION_KEY.'g_pagesize']:"";
             $sql="select *
                  from
                  fiche join fiche_Def using (fd_id) join vw_fiche_name using(f_id)
@@ -1776,7 +1776,7 @@ class Fiche
         // Get offset and page variable
         $offset=( isset ($_REQUEST['offset'] )) ?$_REQUEST['offset']:0;
         $page=(isset($_REQUEST['page']))?$_REQUEST['page']:1;
-        $bar=navigation_bar($offset,$all_tiers,$_SESSION['g_pagesize'],$page);
+        $bar=navigation_bar($offset,$all_tiers,$_SESSION[SESSION_KEY.'g_pagesize'],$page);
 
         // set a filter ?
         $search=$p_sql;

@@ -42,7 +42,7 @@ if ( ! isset($_REQUEST['gDossier']))
     redirect('user_login.php');
     exit();
 }
-if ( ! isset ($_SESSION['g_theme']))
+if ( ! isset ($_SESSION[SESSION_KEY.'g_theme']))
   {
     echo "<h2>"._('Vous  êtes déconnecté')."</h2>";
     $backurl=$_SERVER['REQUEST_URI'];
@@ -68,7 +68,7 @@ if ( ! $cn->exist_table('version')) {
     return;
 }
 
-$style_user=$http->post("style_user","string",$_SESSION['g_theme']);
+$style_user=$http->post("style_user","string",$_SESSION[SESSION_KEY.'g_theme']);
 
 html_page_start($style_user);
 if ( DEBUG ) {

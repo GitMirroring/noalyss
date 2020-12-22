@@ -206,7 +206,7 @@ if ($histo->selected   == -1)
 	// Create nav bar
 	$max = $cn->get_value("select count(*) from fiche as f " . $cond);
 
-	$step = $_SESSION['g_pagesize'];
+	$step = $_SESSION[SESSION_KEY.'g_pagesize'];
 	$page = (isset($_GET['offset'])) ? $_GET['page'] : 1;
 	$offset = (isset($_GET['offset'])) ? $_GET['offset'] : 0;
 	$bar = navigation_bar($offset, $max, $step, $page);

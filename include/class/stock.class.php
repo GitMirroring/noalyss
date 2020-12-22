@@ -55,7 +55,7 @@ class Stock extends Stock_Sql
 		$order = (isset($p_array['ord'])) ? $p_array['ord'] : 'da';
 
 		$sql.=$tb->get_sql_order($order);
-		$step = $_SESSION['g_pagesize'];
+		$step = $_SESSION[SESSION_KEY.'g_pagesize'];
 		$page = (isset($_GET['offset'])) ? $_GET['page'] : 1;
 		$offset = (isset($_GET['offset'])) ? $_GET['offset'] : 0;
 

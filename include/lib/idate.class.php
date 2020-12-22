@@ -18,16 +18,17 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-// Copyright Author Dany De Bontridder danydb@aevalys.eu
+// Copyright Author Dany De Bontridder danydb@noalyss.eu
 
   /**
    *\file
-   \brief Html Input
+   \brief Html Input Date type
   */
 
 
 /// Html Input : Input a date format dd.mm.yyyy
 /// The property title should be set to indicate what it is expected
+/// @see calendar-setup.js
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 
 class IDate extends HtmlInput
@@ -74,14 +75,15 @@ class IDate extends HtmlInput
                 </span>
                 ',$this->name,$this->id,$this->value,$this->placeholder,$this->title,$this->id
                 );
-        
+        // @see calendar-setup.js
         $r.=sprintf('<script type="text/javascript">
                 Calendar.setup({'.
-                'inputField     :    "%s",     // id of the input field
-            ifFormat       :    "%%d.%%m.%%Y",      // format of the input field
-            button         :    "%s_trigger",  // trigger for the calendar (button ID)
-            align          :    "Bl",           // alignment (defaults to "Bl")
-            singleClick    :    true
+                'inputField     :    "%s",    
+            ifFormat       :    "%%d.%%m.%%Y",     
+            button         :    "%s_trigger",  
+            align          :    "Bl",         
+            singleClick    :    true,
+            firstDay:0 
         });
             </script>'
                 ,$this->id,$this->id);

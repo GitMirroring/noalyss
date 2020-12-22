@@ -1788,7 +1788,7 @@ EOF;
         // Show list of unpaid sell
         // Date - date of payment - Customer - amount
         // Nav. bar
-        $step=$_SESSION['g_pagesize'];
+        $step=$_SESSION[SESSION_KEY.'g_pagesize'];
         $page=(isset($_GET['offset']))?$_GET['page']:1;
         $offset=(isset($_GET['offset']))?$_GET['offset']:0;
 

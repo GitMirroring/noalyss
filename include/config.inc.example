@@ -69,4 +69,6 @@ define ("dbname","");
 // In recent distribution linux, pdftk is a snap, you should set the path
 // for exporting document in PDF
 // $pdftk = /usr/bin/pdftk 
-// $pdftk = /snap/bin/pdftk 
+// $pdftk = /snap/bin/pdftk
+// Define a random session key if you work with different version of NOALYSS
+// define ('SESSION_KEY','abcde');

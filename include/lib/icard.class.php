@@ -344,7 +344,7 @@ class ICard extends HtmlInput
     static public function test_me()
     {
         require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-        $_SESSION['isValid']=1;
+        $_SESSION[SESSION_KEY.'isValid']=1;
         $a=new ICard('testme');
         $a->extra="all";
         $a->set_attribute('label', 'ctl_label');

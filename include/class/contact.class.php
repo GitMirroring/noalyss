@@ -63,7 +63,7 @@ class contact extends Fiche
         // Get offset and page variable
         $offset=( isset ($_REQUEST['offset'] )) ?$_REQUEST['offset']:0;
         $page=(isset($_REQUEST['page']))?$_REQUEST['page']:1;
-        $bar=navigation_bar($offset,$all_contact,$_SESSION['g_pagesize'],$page);
+        $bar=navigation_bar($offset,$all_contact,$_SESSION[SESSION_KEY.'g_pagesize'],$page);
         // set a filter ?
         $search="";
         if ( trim($p_search) != "" )

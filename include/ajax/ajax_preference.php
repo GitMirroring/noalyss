@@ -59,7 +59,7 @@ if (isset($_REQUEST['gDossier']) && $http->request("gDossier","number",0) != 0 )
     $style->value = $repo->make_array("select the_name,the_name
 	from theme
 	order by the_name");
-    $style->selected =$_SESSION['g_theme'];
+    $style->selected =$_SESSION[SESSION_KEY.'g_theme'];
     
 //----------------------------------------------------------------------------------------------
 // Display the form    
@@ -164,8 +164,8 @@ if ( $action == 'display_form' )
     			    <option value="200">200
     			    <option value="-1"><?php echo _('Illimité');?>
 				    <?php
-				    $label = ($_SESSION['g_pagesize'] == -1) ? _('Illimité') : $_SESSION['g_pagesize'];
-				    echo '<option value="' . $_SESSION['g_pagesize'] . '" selected>' . $label;
+				    $label = ($_SESSION[SESSION_KEY.'g_pagesize'] == -1) ? _('Illimité') : $_SESSION[SESSION_KEY.'g_pagesize'];
+				    echo '<option value="' . $_SESSION[SESSION_KEY.'g_pagesize'] . '" selected>' . $label;
 				    ?>
     			</SELECT>
 
@@ -180,7 +180,7 @@ if ( $action == 'display_form' )
             <legend><?=_("Format Export CSV")?></legend>
             <p>
                 <?php 
-                if ( $_SESSION['csv_fieldsep']==1 && $_SESSION['csv_decimal']==1)
+                if ( $_SESSION[SESSION_KEY.'csv_fieldsep']==1 && $_SESSION[SESSION_KEY.'csv_decimal']==1)
                 {
                  echo_warning(_("N'utilisez pas le même séparateur pour les champs et les décimales"));
                 }
@@ -198,7 +198,7 @@ if ( $action == 'display_form' )
                                 ["label"=>_("Point-virgule"),"value"=>0],
                                 ["label"=>_("virgule"),"value"=>1]
                             ];
-                            $csv_fieldsep->selected=$_SESSION['csv_fieldsep'];
+                            $csv_fieldsep->selected=$_SESSION[SESSION_KEY.'csv_fieldsep'];
                             echo $csv_fieldsep->input();
                         ?>
                     </td>
@@ -214,7 +214,7 @@ if ( $action == 'display_form' )
                                 ["label"=>_("point"),"value"=>0],
                                 ["label"=>_("virgule"),"value"=>1]
                             ];
-                            $csv_decimal->selected=$_SESSION['csv_decimal'];
+                            $csv_decimal->selected=$_SESSION[SESSION_KEY.'csv_decimal'];
                             echo $csv_decimal->input();
                         ?>
                     </td>
@@ -230,7 +230,7 @@ if ( $action == 'display_form' )
                                 ["label"=>_("utf8"),"value"=>'utf8'],
                                 ["label"=>_("latin1"),"value"=>'latin1']
                             ];
-                            $csv_encoding->selected=$_SESSION['csv_encoding'];
+                            $csv_encoding->selected=$_SESSION[SESSION_KEY.'csv_encoding'];
                             echo $csv_encoding->input();
                         ?>
                     </td>
@@ -268,7 +268,7 @@ if ( $action == 'display_form' )
 	for ($i = 0; $i < count($aLang); $i++)
 	{
 	    $sel = "";
-	    if ($aLang[$i][1] == $_SESSION['g_lang'])
+	    if ($aLang[$i][1] == $_SESSION[SESSION_KEY.'g_lang'])
 		$sel = " selected ";
 	    printf('<option value="%s" %s>%s</option>', $aLang[$i][1], $sel, $aLang[$i][0]);
 	}
@@ -324,9 +324,9 @@ if ($action == 'save')
     $g_user->save_global_preference('csv_encoding', $csv_encoding);
     $g_user->save_email($p_email);
     
-    $_SESSION['g_theme']=$style_user;
-    $_SESSION['g_pagesize']=$p_size;
-    $_SESSION['g_lang']=$lang;
+    $_SESSION[SESSION_KEY.'g_theme']=$style_user;
+    $_SESSION[SESSION_KEY.'g_pagesize']=$p_size;
+    $_SESSION[SESSION_KEY.'g_lang']=$lang;
     
     // find the right CSS theme
     $style= $repo->get_value("select the_filestyle from theme

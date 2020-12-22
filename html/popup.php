@@ -32,7 +32,7 @@ $http=new HttpInput();
 /*
  * Check if the user is still connected
  */
-if (  ! isset ($_SESSION['g_user'] ) )
+if (  ! isset ($_SESSION[SESSION_KEY.'g_user'] ) )
 {
     echo "<h2>"._('Vous  êtes déconnecté')."</h2>";
     $backurl=$_SERVER['REQUEST_URI'];
@@ -42,7 +42,7 @@ if (  ! isset ($_SESSION['g_user'] ) )
 }
 
 
-html_page_start($_SESSION['g_theme']);
+html_page_start($_SESSION[SESSION_KEY.'g_theme']);
 echo '<div style="float:left;">';
 ?>
 <script>

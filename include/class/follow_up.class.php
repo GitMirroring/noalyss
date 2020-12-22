@@ -577,7 +577,7 @@ class Follow_Up
             $this->ag_dest, /* 7 */
             $this->ag_hour, /* 8 */
             $this->ag_priority, /* 9 */
-            $_SESSION['g_user'], /* 10 */
+            $_SESSION[SESSION_KEY.'g_user'], /* 10 */
             $contact->id, /* 11 */
             $this->ag_state, /* 12 */
             $this->ag_remind_date /* 13 */
@@ -602,12 +602,12 @@ class Follow_Up
         if (trim($this->ag_comment)!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                , array($this->ag_id, $_SESSION['g_user'], $this->ag_comment));
+                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
         }
         if (trim($this->ag_description)!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                , array($this->ag_id, $_SESSION['g_user'], $this->ag_description));
+                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_description));
         }
         $this->insert_operation();
         $this->insert_action();
@@ -672,7 +672,7 @@ class Follow_Up
                 join document_state on (ag_state=s_id)
              where $p_filter_doc $p_search $sort";
         $max_line=$this->db->count_sql($sql);
-        $step=$_SESSION['g_pagesize'];
+        $step=$_SESSION[SESSION_KEY.'g_pagesize'];
         $page=(isset($_GET['offset']))?$_GET['page']:1;
         $offset=(isset($_GET['offset']))?Database::escape_string($_GET['offset']):0;
         if ($step!=-1)
@@ -925,12 +925,12 @@ class Follow_Up
         if (trim($this->ag_comment)!='')
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION['g_user'], $this->ag_comment));
+                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
         }
         if (trim($this->ag_description)!='')
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION['g_user'], $this->ag_description));
+                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_description));
         }
         $this->insert_operation();
         $this->insert_action();
@@ -1355,11 +1355,11 @@ class Follow_Up
         {
             $action_query.= " and ((ag_dest = ".sql_string($p_array['ag_dest_query'])." and ".self::sql_security_filter($cn, "R").") or ".
                     "(ag_dest = ".sql_string($p_array['ag_dest_query'])." and ".self::sql_security_filter($cn, "R")." and ".
-                    " ag_owner='".$_SESSION['g_user']."'))";
+                    " ag_owner='".$_SESSION[SESSION_KEY.'g_user']."'))";
         }
         else
         {
-            $action_query .=" and (ag_owner='".$_SESSION['g_user']."' or ".self::sql_security_filter($cn, "R")." or ag_dest=-1 )";
+            $action_query .=" and (ag_owner='".$_SESSION[SESSION_KEY.'g_user']."' or ".self::sql_security_filter($cn, "R")." or ag_dest=-1 )";
         }
 
 
@@ -1744,7 +1744,7 @@ class Follow_Up
             $ag_ref, /* 6 */
             $this->ag_dest, /* 7 */
             $this->ag_priority, /* 8 */
-            $_SESSION['g_user'], /* 9 */
+            $_SESSION[SESSION_KEY.'g_user'], /* 9 */
             $this->ag_state, /* 10 */
             $this->ag_remind_date, /* 11 */
             $this->ag_hour /* 12 */
@@ -1754,7 +1754,7 @@ class Follow_Up
         if (trim($this->ag_comment)!='')
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION['g_user'], $this->ag_comment));
+                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
         }
     }
     /**

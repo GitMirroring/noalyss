@@ -36,7 +36,7 @@ $div=$http->request('div');
 mb_internal_encoding("UTF-8");
 $http=new HttpInput();
 /**
- *if $_SESSION['g_user'] is not set : echo a warning
+ *if $_SESSION[SESSION_KEY.'g_user'] is not set : echo a warning
  */
 /* security */
 if ( $g_user->check_dossier(dossier::id(),true) == 'X' ) exit();

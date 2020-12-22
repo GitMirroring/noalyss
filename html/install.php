@@ -145,7 +145,7 @@ load_all_script();
 echo '<div id="info_div"></div>';
 if ( $_GET['lang'] == "en_US.utf8" || $_GET['lang']=='fr_FR.utf8')
 {
-    $_SESSION['g_lang']=$_GET['lang'];
+    $_SESSION[SESSION_KEY.'g_lang']=$_GET['lang'];
     set_language();
 }
 ?>

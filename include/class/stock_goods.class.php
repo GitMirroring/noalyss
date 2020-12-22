@@ -126,7 +126,7 @@ class Stock_Goods extends Stock_Goods_Sql
 			$ch->setp("c_comment", $p_array['p_motif']);
 			$ch->setp("r_id", $p_array['p_depot']);
 			$ch->setp("c_date", $p_array['p_date']);
-			$ch->setp('tech_user', $_SESSION['g_user']);
+			$ch->setp('tech_user', $_SESSION[SESSION_KEY.'g_user']);
 			$ch->insert();
 			$per = new Periode($cn);
 			$periode = $per->find_periode($p_array['p_date']);
@@ -154,7 +154,7 @@ class Stock_Goods extends Stock_Goods_Sql
 					$a->sg_quantity = abs($p_array['sg_quantity' . $i]);
 					$a->sg_type = ($p_array['sg_quantity' . $i] > 0) ? 'd' : 'c';
 					$a->sg_comment = $p_array['p_motif'];
-					$a->tech_user = $_SESSION['g_user'];
+					$a->tech_user = $_SESSION[SESSION_KEY.'g_user'];
 					$a->r_id = $p_array['p_depot'];
 					$a->sg_exercice = $exercice;
 					$a->c_id = $ch->c_id;

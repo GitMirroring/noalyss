@@ -344,11 +344,11 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     echo '<script language="javascript" src="js/calendar.js"></script>
     <script type="text/javascript" src="js/lang/calendar-en.js"></script>';
 
-    if (isset($_SESSION['g_lang']) && $_SESSION['g_lang']=='fr_FR.utf8' )
+    if (isset($_SESSION[SESSION_KEY.'g_lang']) && $_SESSION[SESSION_KEY.'g_lang']=='fr_FR.utf8' )
     {
 	echo '<script type="text/javascript" src="js/lang/calendar-fr.js"></script>';
     }
-    if (isset($_SESSION['g_lang']) && $_SESSION['g_lang']=='nl_NL.utf8' )
+    if (isset($_SESSION[SESSION_KEY.'g_lang']) && $_SESSION[SESSION_KEY.'g_lang']=='nl_NL.utf8' )
     {
 	echo '<script type="text/javascript" src="js/lang/calendar-nl.js"></script>';
     }
@@ -357,7 +357,7 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     <LINK REL="stylesheet" type="text/css" href="calendar-blue.css" media="screen">
     ';
     // language
-    if (isset($_SESSION['g_lang']))
+    if (isset($_SESSION[SESSION_KEY.'g_lang']))
     {
 		set_language();
     }
@@ -710,7 +710,7 @@ function set_language()
 {
     // desactivate local check
     if ( defined("LOCALE") && LOCALE==0 ) return;
-    if ( ! isset ($_SESSION['g_lang'])) return;
+    if ( ! isset ($_SESSION[SESSION_KEY.'g_lang'])) return;
     
     /*
      * If translation is not supported by current
@@ -721,12 +721,12 @@ function set_language()
     // set differently the language depending of the operating system
     if (what_os() == 1)
     {
-	$dir = setlocale(LC_MESSAGES, $_SESSION['g_lang']);
+	$dir = setlocale(LC_MESSAGES, $_SESSION[SESSION_KEY.'g_lang']);
 	if ($dir == "")
 	{
 	    $g_lang = 'fr_FR.utf8';
 	    $dir = setlocale(LC_MESSAGES, $g_lang);
-	   // echo '<span class="notice">' . $_SESSION['g_lang'] . ' domaine non supporté</h2>';
+	   // echo '<span class="notice">' . $_SESSION[SESSION_KEY.'g_lang'] . ' domaine non supporté</h2>';
 	}
 	bindtextdomain('messages', NOALYSS_HOME.'/lang');
 	textdomain('messages');
@@ -735,8 +735,8 @@ function set_language()
 	return;
     }
     // for windows
-    putenv('LANG=' . $_SESSION['g_lang']);
-    $dir = setlocale(LC_ALL, $_SESSION['g_lang']);
+    putenv('LANG=' . $_SESSION[SESSION_KEY.'g_lang']);
+    $dir = setlocale(LC_ALL, $_SESSION[SESSION_KEY.'g_lang']);
     bindtextdomain('messages', '.\\lang');
     textdomain('messages');
     bind_textdomain_codeset('messages', 'UTF8');
@@ -851,9 +851,9 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
 function ajax_disconnected($div)
 {
     /**
-     * if $_SESSION['g_user'] is not set : echo a warning
+     * if $_SESSION[SESSION_KEY.'g_user'] is not set : echo a warning
      */
-    if (!isset($_SESSION['g_user']))
+    if (!isset($_SESSION[SESSION_KEY.'g_user']))
     {
 	$script = 'var a=$("' . $div . '");a.style.height="70%";a.style.width="60%";';
 	$script.='a.style.top=posY-20+offsetY;a.style.left=posX+offsetX;';

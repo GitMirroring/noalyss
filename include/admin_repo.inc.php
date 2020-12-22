@@ -60,7 +60,7 @@ if ( $action== 'backup') {
         require_once NOALYSS_INCLUDE."/backup.inc.php";
         exit();
 }
-html_page_start($_SESSION['g_theme']);
+html_page_start($_SESSION[SESSION_KEY.'g_theme']);
 load_all_script();
 echo '<H2 class="info"> '._('Administration').'</H2>';
 echo '<div class="topmenu">';

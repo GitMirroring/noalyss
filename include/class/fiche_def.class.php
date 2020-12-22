@@ -324,10 +324,10 @@ $order
              where ad_id=1 and fd_id=$1 order by 2";
 
         // we use navigation_bar
-        if ($step == 1  && $_SESSION['g_pagesize'] != -1   )
+        if ($step == 1  && $_SESSION[SESSION_KEY.'g_pagesize'] != -1   )
         {
             $offset=(isset($_GET['offset']))?$_GET['offset']:0;
-            $step=$_SESSION['g_pagesize'];
+            $step=$_SESSION[SESSION_KEY.'g_pagesize'];
             $sql.=" offset $offset limit $step";
         }
 
@@ -370,7 +370,7 @@ $order
         $this->get();
         echo '<H2 class="info">'.$this->id." ".$this->label.'</H2>';
 
-        $step=$_SESSION['g_pagesize'];
+        $step=$_SESSION[SESSION_KEY.'g_pagesize'];
         $sql_limit="";
         $sql_offset="";
         $bar="";
@@ -398,7 +398,7 @@ $order
         $str="";
         // save the url
         // with offet &offset=15&step=15&page=2&size=15
-        if ( $_SESSION['g_pagesize'] != -1)
+        if ( $_SESSION[SESSION_KEY.'g_pagesize'] != -1)
         {
             $str=sprintf("&offset=%s&step=%s&page=%s&size=%s",
                          $offset,

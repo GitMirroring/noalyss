@@ -2016,8 +2016,8 @@ class Acc_Ledger  extends jrn_def_sql
             echo Acc_Reconciliation::$javascript;
             html_page_start();
             $cn=Dossier::connect();
-            $_SESSION['g_user']=NOALYSS_ADMINISTRATOR;
-            $_SESSION['g_pass']='phpcompta';
+            $_SESSION[SESSION_KEY.'g_user']=NOALYSS_ADMINISTRATOR;
+            $_SESSION[SESSION_KEY.'g_pass']='phpcompta';
 
             $id=(isset($_REQUEST['p_jrn']))?$_REQUEST['p_jrn']:-1;
             $a=new Acc_Ledger($cn, $id);
@@ -2109,8 +2109,8 @@ class Acc_Ledger  extends jrn_def_sql
             html_page_start();
             $cn=Dossier::connect();
             $ledger=new Acc_Ledger($cn, 0);
-            $_SESSION['g_user']=NOALYSS_ADMINISTRATOR;
-            $_SESSION['g_pass']='phpcompta';
+            $_SESSION[SESSION_KEY.'g_user']=NOALYSS_ADMINISTRATOR;
+            $_SESSION[SESSION_KEY.'g_pass']='phpcompta';
             echo $ledger->search_form('ALL');
         }
         ///////////////////////////////////////////////////////////////////////////

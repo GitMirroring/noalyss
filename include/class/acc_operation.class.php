@@ -56,7 +56,7 @@ class Acc_Operation
         global $g_user;
         $this->db=$p_cn;
         $this->qcode="";
-        $this->user=$_SESSION['g_user'];
+        $this->user=$_SESSION[SESSION_KEY.'g_user'];
         $this->periode=$g_user->get_periode();
         $this->jr_id=0;
         $this->jr_optype="NOR";
@@ -700,8 +700,8 @@ class Acc_Operation
     }
     static function test_me()
     {
-        $_SESSION['g_user']=NOALYSS_ADMINISTRATOR;
-        $_SESSION['g_pass']='dany';
+        $_SESSION[SESSION_KEY.'g_user']=NOALYSS_ADMINISTRATOR;
+        $_SESSION[SESSION_KEY.'g_pass']='dany';
         global $g_user;
         $cn=Dossier::connect();
         $g_user=new User($cn);

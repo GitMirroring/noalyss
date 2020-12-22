@@ -51,7 +51,9 @@ if ( !defined("FIX_BROKEN_PDF")) define ("FIX_BROKEN_PDF",'NO');
 if ( !defined('NOALYSS_ADMINISTRATOR')) {
     define ('NOALYSS_ADMINISTRATOR','phpcompta');
 }
-
+if (!defined ("SESSION_KEY")) {
+    define ("SESSION_KEY","RtYu0uu");
+}
 require_once NOALYSS_INCLUDE.'/constant.security.php';
 
 if ( strpos($inc_path,";") != 0 ) {

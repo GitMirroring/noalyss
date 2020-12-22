@@ -822,7 +822,7 @@ class Document
             break;
 
         case 'USER' :
-            return $_SESSION['use_name'].', '.$_SESSION['use_first_name'];
+            return $_SESSION[SESSION_KEY.'use_name'].', '.$_SESSION[SESSION_KEY.'use_first_name'];
 
             break;
         case 'REFERENCE':

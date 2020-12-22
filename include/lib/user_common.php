@@ -69,7 +69,7 @@ function isValid_deprecrated ($p_cn,$p_grpt_id)
  * \param $p_javascript javascript code to add
  * \note example :
 \verbatim
-   $step=$_SESSION['g_pagesize'];
+   $step=$_SESSION[SESSION_KEY.'g_pagesize'];
    $page=(isset($_GET['offset']))?$_GET['page']:1;
    $offset=(isset($_GET['offset']))?$_GET['offset']:0;
 
@@ -82,10 +82,10 @@ function navigation_bar($p_offset,$p_line,$p_size=0,$p_page=1,$p_javascript="")
 {
     // if the pagesize is unlimited return ""
     // in that case there is no nav. bar
-    if ( $_SESSION['g_pagesize'] == -1  ) return "";
+    if ( $_SESSION[SESSION_KEY.'g_pagesize'] == -1  ) return "";
     if ( $p_size==0)
     {
-        $p_size= $_SESSION['g_pagesize'];
+        $p_size= $_SESSION[SESSION_KEY.'g_pagesize'];
     }
     // if there is no row return an empty string
     if ( $p_line == 0 ) return "";
