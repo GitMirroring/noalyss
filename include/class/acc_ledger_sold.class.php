@@ -208,7 +208,9 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             $fiche->get_by_qcode(${'e_march' . $i});
             if ($fiche->belong_ledger($p_jrn, 'cred') != 1)
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('n\'est pas accessible à ce journal'), 10);
-            $nb++;
+           
+            if ( ${"e_quant".$i} != 0 && trim(${"e_quant".$i}) !="" ) {$nb++;}
+
         }
         if ($nb == 0)
             throw new Exception(_('Il n\'y a aucune marchandise'), 12);

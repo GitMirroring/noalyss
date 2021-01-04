@@ -60,6 +60,7 @@ class Acc_Operation
         $this->periode=$g_user->get_periode();
         $this->jr_id=0;
         $this->jr_optype="NOR";
+        $this->amount=0;
     }
     /**
      *@brief retrieve the grpt_id from jrn for a jr_id
@@ -183,6 +184,7 @@ class Acc_Operation
         $this->amount=abs($this->amount);
         $debit=($this->type=='c')?'false':'true';
         $this->desc=(isset($this->desc))?$this->desc:'';
+        $this->amount=(trim($this->amount)==''||$this->amount==NULL)?0:$this->amount;
         $Res=$this->db->exec_sql("select insert_jrnx
                                  ($1::text,abs($2)::numeric,$3::account_type,$4::integer,$5::integer,$6::bool,$7::text,$8::integer,upper($9),$10::text)",
                                  array(
@@ -287,8 +289,10 @@ class Acc_Operation
         {
             $this->mt=microtime(true);
         }
+        
         // if amount == -1then the triggers will throw an error
         //
+        $this->amount=(trim($this->amount)==''||$this->amount==NULL)?0:$this->amount;
         $Res=$this->db->exec_sql("insert into jrn (jr_def_id,jr_montant,jr_comment,".
                                  "jr_date,jr_ech,jr_grpt_id,jr_tech_per,jr_mt,jr_optype)   values (".
                                  "$1,$2,$3,".
