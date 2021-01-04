@@ -1206,6 +1206,8 @@ class Document
                         ,[$p_array['ag_id']]);
                 return $description;
             }
+            if ( isset($p_array['e_comm'])) {return $p_array['e_comm'] ; }
+            
             return "";
             break;
       
