@@ -260,7 +260,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 		      }
 		  }
 	      }
-	    $nb++;
+            if ( ${"e_quant".$i} != 0 && trim(${"e_quant".$i}) !="" ) {$nb++;}
         }
 
         if ( $nb == 0 )
