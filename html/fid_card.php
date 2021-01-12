@@ -119,7 +119,7 @@ else
     }
 }
 // filter only enable card
-$filter_enable_card=" and f_id in (select f_id from fiche_detail where ad_value = '1' and ad_id=54) ";
+$filter_enable_card=" and f_enable='1' ";
 
 $sql_str="select distinct f_id 
          from fiche 
