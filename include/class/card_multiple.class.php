@@ -102,7 +102,7 @@ class Card_Multiple
      */
     private function filter_enable_card()
     {
-        $filter_enable_card="  f_id in (select f_id from fiche_detail where ad_value = '1' and ad_id=54) ";
+        $filter_enable_card="  f_enable='1' ";
         return $filter_enable_card;
     }
     /**

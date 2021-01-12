@@ -474,7 +474,7 @@ case 'fs':
      * if inactive == 0 , then only active card
      */
     if ( $inactive == 0 ) {
-        $sql.=" and f_id in (select f_id from fiche_detail where ad_id=54 and ad_value='1') ";
+        $sql.=" and f_enable='1' ";
     }
     
      /* We limit the search to MAX_SEARCH_CARD records */
