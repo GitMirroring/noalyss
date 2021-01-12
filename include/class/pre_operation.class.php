@@ -332,9 +332,8 @@ class Pre_operation
 
         $value=$this->db->get_array("select od_id,od_name,od_description from op_predef ".
             " where jrn_def_id=$1".
-            " and od_direct =$2".
             " order by od_name",
-            array($this->p_jrn,$this->od_direct ));
+            array($this->p_jrn));
 
         if ( $this->p_jrn=='') $value=array();
 
