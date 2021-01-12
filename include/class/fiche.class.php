@@ -53,14 +53,49 @@ class Fiche
     var $fiche_def_ref; /*!< $fiche_def_ref Type */
     var $row;           /*! < All the row from the ledgers */
     var $quick_code;		/*!< quick_code of the card */
+    private $f_enable;  /*!< if card is enable (fiche.f_enable) */
     function __construct($p_cn,$p_id=0)
     {
         $this->cn=$p_cn;
         $this->id=$p_id;
         $this->quick_code='';
         $this->attribut=array();
+        $f_enable='1';
     }
-    /**
+    public function get_id()
+    {
+        return $this->id;
+    }
+
+    public function get_fiche_def_ref()
+    {
+        return $this->fiche_def_ref;
+    }
+
+    public function get_f_enable()
+    {
+        return $this->f_enable;
+    }
+
+    public function set_id($id)
+    {
+        $this->id=$id;
+        return $this;
+    }
+
+    public function set_fiche_def_ref($fiche_def_ref)
+    {
+        $this->fiche_def_ref=$fiche_def_ref;
+        return $this;
+    }
+
+    public function set_f_enable($f_enable)
+    {
+        $this->f_enable=$f_enable;
+        return $this;
+    }
+
+        /**
      *@brief used with a usort function, to sort an array of Fiche on the name
      */
     static function cmp_name(Fiche $o1,Fiche $o2)
@@ -168,6 +203,7 @@ class Fiche
         {
             $row=Database::fetch_array($Ret,$i);
             $this->fiche_def=$row['fd_id'];
+            $this->f_enable=$row['f_enable'];
             $t=new Fiche_Attr ($this->cn);
             $t->ad_id=$row['ad_id'];
             $t->ad_text=$row['ad_text'];
@@ -581,7 +617,7 @@ class Fiche
         {
             return 'FNT';
         }
-
+        
         /* for each attribute */
         foreach ($attr as $r)
         {
@@ -749,7 +785,16 @@ class Fiche
             }
             $ret.="<TR>".td(_($r->ad_text).$bulle,'class="'.$class.'"').td($w->input()." ".$msg)." </TR>";
         }
-
+        // Display if the card is enable or not
+        $enable_is=new InputSwitch("f_enable");
+        $enable_is->value=$this->f_enable;
+        $enable_is->readOnly=$p_readonly;
+                
+        $ret.=tr( 
+                td(_("Actif")).td($enable_is->input())
+                );
+        
+        
         $ret.="</table>";
 
         return $ret;
@@ -801,9 +846,10 @@ class Fiche
         try
         {
             $this->cn->start();
-            $sql=sprintf("insert into fiche(f_id,fd_id)".
-                    " values (%d,%d)", $fiche_id, $p_fiche_def);
-            $Ret=$this->cn->exec_sql($sql);
+            
+            $Ret=$this->cn->exec_sql("insert into fiche(f_id,f_enable,fd_id) value ($1,$2,$3)",
+                    array($fiche_id, $p_array['f_enable'],$p_fiche_def));
+            
             // parse the $p_array array
             foreach ($p_array as $name=> $value)
             {
@@ -961,6 +1007,9 @@ class Fiche
         try
         {
             $this->cn->start();
+            
+            $this->cn->exec_sql("update fiche set f_enable=$1 where f_id=$2",array($p_array['f_enable'],$this->id));
+            
             // parse the $p_array array
             foreach ($p_array as $name=> $value)
             {

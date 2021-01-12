@@ -791,7 +791,6 @@ class Acc_Ledger  extends jrn_def_sql
         $op=new Pre_operation( $this->db);
         $op->set_p_jrn($this->id);
         $op->set_jrn_type("ODS");
-        $op->set_od_direct('t');
 
         $url=http_build_query(
                 array('action'=>'use_opd', 
@@ -1652,7 +1651,7 @@ class Acc_Ledger  extends jrn_def_sql
         $filename="";
         $doc->Generate($p_array, $p_array['e_pj']);
         // Move the document to the jrn
-        $doc->MoveDocumentPj($internal);
+        $doc->moveDocumentPj($internal);
         // Update the comment with invoice number, if the comment is empty
         if (!isset($e_comm)||strlen(trim($e_comm))==0)
         {

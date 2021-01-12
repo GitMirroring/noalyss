@@ -50,7 +50,7 @@ if (isset($_POST['record_company']))
 	$m->MY_STOCK =$http->post("p_stock");
 	$m->MY_ANC_FILTER=$http->post("p_anc_filter");
         try {
-            $m->Update();
+            $m->update();
         } catch (Exception $e) {
             alert($e->getMessage());
         }

@@ -190,7 +190,8 @@ class User
 
 		if ($res == 0)
 		{
-			$cn->exec_sql($sql, array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], $from, $_SERVER['REQUEST_URI'], 'FAIL'));
+			$cn->exec_sql($sql, array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], 
+                            $from, $_SERVER['REQUEST_URI'], 'FAIL'));
 			if (!$silent)
 			{
 				echo '<script> alert(\''._('Utilisateur ou mot de passe incorrect').'\')</script>';
@@ -203,7 +204,8 @@ class User
 		else
 		{
 			if ($from == 'LOGIN')
-				$cn->exec_sql($sql, array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], $from, $_SERVER['REQUEST_URI'], 'SUCCESS'));
+				$cn->exec_sql($sql, array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], $from, 
+                                    $_SERVER['REQUEST_URI'], 'SUCCESS'));
 			$this->valid = 1;
 		}
 
@@ -249,7 +251,8 @@ class User
             if ($priv)
             {
                 // the access is granted
-                $jnt=$cn->get_value("select jnt_id from jnt_use_dos where dos_id=$1 and use_id=$2", array($db_id, $this->id));
+                $jnt=$cn->get_value("select jnt_id from jnt_use_dos where dos_id=$1 and use_id=$2",
+                        array($db_id, $this->id));
 
                 if ($cn->size()==0)
                 {
@@ -312,6 +315,11 @@ class User
 
 	function get_ledger($p_type = 'ALL', $p_access = 3,$disable=TRUE)
 	{
+            $p_type=strtoupper($p_type);
+            if (! in_array($p_type, ["FIN","ALL","ODS","VEN",'ACH'])) {
+                record_log(sprintf("UGL1, p_type %s",$p_type));
+                throw new Exception("UGL1"._("Type incorrecte"));
+            }
             if ($disable==TRUE) {
                 $sql_enable="";
             } else {
@@ -419,22 +427,26 @@ class User
 
 	function set_periode($p_periode)
 	{
-		$sql = "update user_local_pref set parameter_value='$p_periode' where user_id='$this->id' and parameter_type='PERIODE'";
-		$Res = $this->db->exec_sql($sql);
+		$sql = "update user_local_pref set parameter_value=$1 where user_id=$2 and parameter_type='PERIODE'";
+		$Res = $this->db->exec_sql($sql,[$p_periode,$this->id]);
 	}
 
 	private function set_default_periode()
 	{
 
 		/* get the first periode */
-		$sql = 'select min(p_id) as pid from parm_periode where p_closed = false and p_start = (select min(p_start) from parm_periode)';
+		$sql = 'select min(p_id) as pid '
+                        . ' from parm_periode '
+                        . ' where p_closed = false and p_start = (select min(p_start) from parm_periode)';
 		$Res = $this->db->exec_sql($sql);
 
 		$pid = Database::fetch_result($Res, 0, 0);
 		/* if all the periode are closed, then we use the last closed period */
 		if ($pid == null)
 		{
-			$sql = 'select min(p_id) as pid from parm_periode where p_start = (select max(p_start) from parm_periode)';
+			$sql = 'select min(p_id) as pid '
+                                . 'from parm_periode '
+                                . 'where p_start = (select max(p_start) from parm_periode)';
 			$Res2 = $this->db->exec_sql($sql);
 			$pid = Database::fetch_result($Res2, 0, 0);
 			if ($pid == null)
@@ -532,7 +544,6 @@ class User
 	 * \brief  Get the default user's preferences
 	 * \return array of (parameter_type => parameter_value)
 	 */
-
 	function get_preference()
 	{
 		$sql = "select parameter_type,parameter_value from user_local_pref where user_id=$1";
@@ -544,7 +555,16 @@ class User
 			$type = $row['parameter_type'];
 			$l_array[$type] = $row['parameter_value'];
 		}
-
+                $repo=new Database();
+                $a_global_pref=$repo->get_array("select parameter_type,parameter_value from user_global_pref 
+                                            where 
+                                            upper(user_id) = upper($1)",[$this->login]);
+                $nb_global=count($a_global_pref);
+                for ( $i = 0 ;$i< $nb_global ; $i++) {
+                    $idx=$a_global_pref[$i]['parameter_type'];
+                    $value=$a_global_pref[$i]['parameter_value'];
+                    $l_array[$idx]=$value;
+                }
 
 		return $l_array;
 	}
@@ -601,9 +621,9 @@ class User
 			}
 			return 0;
 		}
-		if ($Count == 1)
-			return 1;
-		echo "<H2 class=\"error\"> Action Invalide !!! $Count select * from user_sec_act where ua_login='$p_login' and ua_act_id=$p_action_id </H2>";
+		if ($Count == 1) 			return 1;
+                echo_error(_("Action invalide"));
+                record_log("User:check_action".sprintf("login %s ua_act_id %s",$this->login,$p_action_id));
 		exit();
 	}
 
@@ -620,7 +640,7 @@ class User
 		// Load everything in an array
 		$Res = $cn->exec_sql("select parameter_type,parameter_value from
                             user_global_pref
-                            where user_id='" . $this->login . "'");
+                            where user_id=$1",[$this->login]);
 		$Max = Database::num_row($Res);
 		if ($Max == 0)
 		{
@@ -635,7 +655,6 @@ class User
 			$row = Database::fetch_array($Res, $i);
 			$type = $row['parameter_type'];
 			$line[$type] = $row['parameter_value'];
-			;
 		}
 		// save array into g_ variable
 		$array_pref = array('g_theme' => 'THEME', 
@@ -756,18 +775,17 @@ class User
 			$this->audit('FAIL');
 			if ($p_js == 1)
 			{
-				echo "<script>";
-				echo "alert ('Cette action ne vous est pas autorisée. Contactez votre responsable');";
-				echo "</script>";
+                            echo create_script("alert_box(content[59])");
 			}
 			elseif ($p_js == 2) {
 				record_log(_("Access invalid").$p_action);
 			}
 			else
 			{
-				echo '<div class="redcontent">';
-				echo '<h2 class="error"> Cette action ne vous est pas autorisée Contactez votre responsable</h2>';
-				echo '</div>';
+                            echo '<h2 class="error">',
+                            htmlspecialchars(_("Cette action ne vous est pas autorisée Contactez votre responsable")),
+                                    '</h2>';
+                            echo '</div>';
 			}
 			exit(-1);
 		}
@@ -797,7 +815,6 @@ class User
 	 * \param $p_action requested action
 	 * \return nothing the program exits automatically
 	 */
-
 	function can_print($p_action, $p_js = 0)
 	{
 		if ($this->check_print($p_action) == 0)
@@ -805,15 +822,15 @@ class User
 			$this->audit('FAIL');
 			if ($p_js == 1)
 			{
-				echo "<script>";
-				echo "alert ('Cette action ne vous est pas autorisée. Contactez votre responsable');";
-				echo "</script>";
+                            echo create_script("alert_box(content[59])");
 			}
 			else
 			{
-				echo '<div class="redcontent">';
-				echo '<h2 class="error"> Cette action ne vous est pas autorisée Contactez votre responsable</h2>';
-				echo '</div>';
+                            echo '<div class="redcontent">';
+                            echo '<h2 class="error">',
+                            htmlspecialchars(_("Cette action ne vous est pas autorisée Contactez votre responsable")),
+                                    '</h2>';
+                            echo '</div>';
 			}
 			exit(-1);
 		}

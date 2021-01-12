@@ -115,7 +115,7 @@ function navigation_bar($p_offset,$p_line,$p_size=0,$p_page=1,$p_javascript="")
         $step=$p_size;
         $offset=($e-1)*$step;
 
-        $r='<A class="mtitle" href="'.basename($_SERVER['SCRIPT_FILENAME'])."?".$url."&offset=$offset&step=$step&page=$e&size=$step".'" '.$p_javascript.'>';
+        $r='<A class="mtitle" href="'.basename($_SERVER['PHP_SELF'])."?".$url."&offset=$offset&step=$step&page=$e&size=$step".'" '.$p_javascript.'>';
         $r.=" 	&larr;";
         // $r.='<INPUT TYPE="IMAGE" width="12" SRC="image/go-previous.png">';
         $r.="</A>&nbsp;&nbsp;";
@@ -181,35 +181,6 @@ function CleanUrl()
 {
     // Compute the url
     $url=http_build_query($_GET);
-   /* $get=$_GET;
-    if ( isset ($get) )
-    {
-        foreach ($get as $name=>$value )
-        {
-            // we clean the parameter offset, step, page and size
-            if (  ! in_array($name,array('offset','step','page','size','s','o','r_jrn')))
-            {
-                if (is_array($name)) {
-                    
-                } else {
-                    $url.=$and.$name."=".$value;
-                }
-                $and="&";
-            }// if
-        }//foreach
-        if ( isset($_GET['r_jrn']))
-        {
-            $r_jrn=$_GET['r_jrn'];
-            if (count($r_jrn) > 0 )
-            {
-                foreach ($r_jrn as $key=>$value)
-                {
-                    $url.=$and."r_jrn[$key]=".$value;
-                    $and="&";
-                }
-            }
-        }
-    }// if*/
     return $url;
 }
 function redirect($p_string,$p_time=0)
@@ -219,7 +190,8 @@ function redirect($p_string,$p_time=0)
     }
     echo '<HTML><head><META HTTP-EQUIV="REFRESH" content="'.$p_time.'; url='.$p_string.'"></head><body> Connecting... </body></html>';
 }
-/*!\brief remove the useless space, change comma by period and try to return
+/*!
+ * \brief remove the useless space, change comma by period and try to return
  * a number
  *\param $p_num number to format
  *\return the formatted number

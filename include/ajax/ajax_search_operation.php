@@ -38,7 +38,7 @@ require_once NOALYSS_INCLUDE.'/class/user.class.php';
 // display a search box
 
 
-$base=basename($_SERVER['SCRIPT_NAME']);
+$base=basename($_SERVER['PHP_SELF']);
 $inside=false;
 $tiers=$http->get("tiers", "string", "");
 // With the amount id, we find the amount in a html elt

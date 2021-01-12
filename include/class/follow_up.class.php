@@ -596,9 +596,9 @@ class Follow_Up
             $act->save();
         }
 
-        /* Upload the documents */
+        /* upload the documents */
         $doc=new Document($this->db);
-        $doc->Upload($this->ag_id);
+        $doc->upload($this->ag_id);
         if (trim($this->ag_comment)!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
@@ -905,9 +905,9 @@ class Follow_Up
                 $this->ag_ref /* 11 */
             ));
         }
-        // Upload  documents
+        // upload  documents
         $doc=new Document($this->db);
-        $doc->Upload($this->ag_id);
+        $doc->upload($this->ag_id);
 
         /* save action details */
         $http=new HttpInput();

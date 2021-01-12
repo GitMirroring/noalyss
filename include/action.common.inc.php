@@ -96,7 +96,7 @@ if (isset($_POST['generate']))
 	}
 	else
 	{
-		$act->Update();
+		$act->update();
 	}
         $doc_mod=$http->post('doc_mod',"number");
 	$act->generate_document($doc_mod, $_POST);
@@ -117,12 +117,12 @@ if (isset($_POST['corr']))
 // if this page is called from another menu (customer, supplier,...)
 // a button back is added
 //----------------------------------------------------------------------
-// Update the detail
+// update the detail
 // Add a new action related to this one or update
 //----------------------------------------------------------------------
 if ($sub_action == "update")
 {
-	// Update the modification
+	// update the modification
 	if (isset($_POST['save']))
 	{
 		$act2 = new Follow_Up($cn);
@@ -138,7 +138,7 @@ if ($sub_action == "update")
 		put_global(array(array('key' => "sa", "value" => "detail")));
                 try {
                     $act2->verify() ;
-                    $act2->Update() ;
+                    $act2->update() ;
                 }
                 catch (Exception $e)
                 {
