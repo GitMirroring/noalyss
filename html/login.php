@@ -48,30 +48,33 @@ if (  isset ($_POST["p_user"] ) )
      * Check repository version
      */
 
-	if ($version != DBVERSIONREPO)
-	{
-		echo alert(_('Version de base de données incorrectes, vous devez mettre à jour'));
-		echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url=admin-noalyss.php\">";
-		exit();
-	}
+    if ($version != DBVERSIONREPO)
+    {
+        echo html_page_start();
+        echo h1(_("Version base de donneés incorrecte"));
+        echo span(_('Un instant svp'));
+        echo alert(_('Version de base de données incorrectes, vous devez mettre à jour'));
+        echo "<META HTTP-EQUIV=\"REFRESH\" content=\"3;url=admin-noalyss.php??action=upgrade&sb=database\">";
+        exit();
+    }
     require_once NOALYSS_INCLUDE."/class/user.class.php";
     $User=new User($rep);
     $User->Check(false,'LOGIN');
     if ($g_captcha == true)
-      {
-	include("securimage/securimage.php");
-	$img = new Securimage();
-	$valid = $img->check($_POST['captcha_code']);
-	if ( $valid == false )
-	  {
-	    echo alert(_('Code invalide'));
-	    echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url=index.php\">";
-	    exit();
-	  }
+    {
+          include("securimage/securimage.php");
+          $img = new Securimage();
+          $valid = $img->check($_POST['captcha_code']);
+          if ( $valid == false )
+          {
+          echo alert(_('Code invalide'));
+          echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url=index.php\">";
+          exit();
       }
-      // force the nocache
-      $backurl='user_login.php?v='.microtime(true);
-      if ( isset ($_POST['backurl'])) {
+      }
+    // force the nocache
+    $backurl='user_login.php?v='.microtime(true);
+    if ( isset ($_POST['backurl'])) {
           $backurl=urldecode($_POST['backurl']);
       }
     echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url={$backurl}\">";
@@ -86,10 +89,13 @@ else
      */
 
     if ( $version != DBVERSIONREPO)
-      {
-	echo alert(_('Version de base de données incorrectes, vous devez mettre à jour'));
-	echo "<META HTTP-EQUIV=\"REFRESH\" content=\"1;url=admin-noalyss.php\">";
-	exit();
+    {
+          echo html_page_start();
+          echo h1(_("Version base de donneés incorrecte"));
+          echo span(_('Un instant svp'));
+          echo alert(_('Version de base de données incorrectes, vous devez mettre à jour'));
+	    echo "<META HTTP-EQUIV=\"REFRESH\" content=\"3;url=admin-noalyss.php?action=upgrade&sb=database\">";
+	    exit();
 
       }
 
