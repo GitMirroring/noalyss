@@ -241,6 +241,7 @@ if (isset($_REQUEST['ac']))
         fclose($file_loginput);
     }
 
+    // Priority to POST , otherwise "duplicate operation" doesn't work
     $ac_post = trim(strtoupper($http->post("ac","string","")));
     $ac_get  = trim(strtoupper($http->get("ac","string","")));
     
@@ -252,6 +253,8 @@ if (isset($_REQUEST['ac']))
       pm_id_v3,pm_id_v2,pm_id_v1
     from v_menu_profile where code= upper($1)  and p_id=$2',
             array($AC,$user_profile));
+    
+
     try {        
         if ( count($amenu_id) != 1 ) {
             // if AC is a simple code and this menu can be accessed 
@@ -262,20 +265,35 @@ if (isset($_REQUEST['ac']))
                     array($AC,$user_profile));
             if ( count($pm_id) > 0 ) {
                 show_menu($pm_id[0]['pm_id']);
+                return;
             } else {
                 throw new Exception(_('Erreur menu'),10);
             }
         }
-        
-        $module_id=$cn->get_value('select case when pm_id_v3 = 0 then (case when pm_id_v2 = 0 then pm_id_v1 else pm_id_v2 end) else pm_id_v3 end 
-            from v_menu_profile where p_id=$1 and upper(code)=upper($2)',
+        $amenu_id=complete_default_menu($amenu_id,$user_profile);
+    
+        $AC=rebuild_access_code($amenu_id);
+    
+        put_global(array(array("key"=>"ac","value"=>$AC)));        
+        $module_id=$cn->get_value('select 
+            case when pm_id_v3 = 0 then (case when pm_id_v2 = 0 then pm_id_v1 else pm_id_v2 end) else pm_id_v3 end 
+            from 
+            v_menu_profile 
+            where p_id            =$1 
+            and upper(code)=upper($2)',
                 array($user_profile,$AC));
         $g_user->audit();
         // Show module and highligt selected one
         show_module($module_id);
+        
+        
         show_menu( $amenu_id[0]['pm_id_v3']);
+
         show_menu( $amenu_id[0]['pm_id_v2']);
+
         show_menu($amenu_id[0]['pm_id_v1']);
+
+        
     } catch (Exception $e) {
         if ( $e->getCode() == 10 ) {
             alert(_('Accès menu impossible'));

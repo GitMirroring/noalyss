@@ -204,3 +204,8 @@ delete from fiche_detail where ad_id=54;
 delete from attr_min  where ad_id=54;
 delete from attr_def where ad_id=54;
 delete from jnt_fic_attr where ad_id =54;
+
+
+-- open COMPANY when PARAM is choosen for profile 1
+update profile_menu set pm_default=1,p_order=1 where pm_id=54;
+

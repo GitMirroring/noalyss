@@ -625,7 +625,8 @@ function getPeriodeFromMonth($p_cn, $p_date)
     return $R;
 }
 
-/**\brief Decode the html for the widegt richtext and remove newline
+/**
+ * \brief Decode the html for the widegt richtext and remove newline
  * \param $p_html string to decode
  * \return the html code without new line
  */
@@ -651,8 +652,7 @@ function Decode($p_html)
 function sql_filter_per($p_cn, $p_from, $p_to, $p_form='p_id', $p_field='jr_tech_per')
 {
 
-    if ($p_form != 'p_id' &&
-	    $p_form != 'date')
+    if ($p_form != 'p_id' && $p_form != 'date')
     {
 	echo_error(__FILE__, __LINE__, 'Mauvais parametres ');
 	exit(-1);
@@ -662,18 +662,26 @@ function sql_filter_per($p_cn, $p_from, $p_to, $p_form='p_id', $p_field='jr_tech
     $p_field=  sql_string($p_field);
     if ($p_form == 'p_id')
     {
+        if ( isNUmber($p_from)==0 || isNUmber($p_to)==0){
+            throw new Exception("SFP1"._("Nombre invalide"));
+        }
 	// retrieve the date
 	$pPeriode = new Periode($p_cn);
 	$a_start = $pPeriode->get_date_limit($p_from);
 	$a_end = $pPeriode->get_date_limit($p_to);
-	if ($a_start == null || $a_end == null)
-	    throw new Exception(__FILE__ . __LINE__ . sprintf(_('Attention periode 
-		     non trouvee periode p_from= %s p_to_periode = %s'), $p_from ,
-		    $p_to));
+	if ($a_start==null||$a_end==null)
+        {
+            throw new Exception(__FILE__.__LINE__.sprintf(_('Attention periode 
+		     non trouvee periode p_from= %s p_to_periode = %s'), $p_from, $p_to));
+        }
 
 
-	$p_from = $a_start['p_start'];
+        $p_from = $a_start['p_start'];
 	$p_to = $a_end['p_end'];
+    }else {
+        if ( isDate($p_from)==NULL || isDate($p_to)==NULL){
+            throw new Exception("SFP2"._("Date invalide"));
+        }
     }
     if ($p_from == $p_to)
 	$periode = " $p_field = (select p_id from parm_periode " .
@@ -778,7 +786,7 @@ function shrink_date($p_date)
 /**
  * @brief shrink the date, make a date shorter for the printing
  * @param $p_date format DD.MM.YYYY
- * @return date in the format DDMMYY (size = 13 mm in arial 8)
+ * @return date in the format DD.MM.YY (size = 13 mm in arial 8)
  */
 function smaller_date($p_date)
 {
@@ -826,7 +834,7 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
        case 'YYYYMMDD':
             $str_date = $date[0] . $date[1] . $date[2];
             break;
-		 case 'YYYY/MM/DD':
+        case 'YYYY/MM/DD':
             $str_date = $date[0] . '/' . $date[1] . '/' . $date[2];
             break;
         case "DD.MM.YY":
@@ -1038,7 +1046,8 @@ function show_menu($module)
     if ($module == 0)return;
     static $level=0;
     global $g_user;
-    
+    $http=new HttpInput();
+    $access_code=$http->request("ac");
     $cn = Dossier::connect();
     /**
      * Show the submenus
@@ -1068,11 +1077,13 @@ function show_menu($module)
         else {
             $style_menu=$a_style_menu[$level];
         }
-		require NOALYSS_TEMPLATE.'/menu.php';
-    } // there is only one submenu so we include the code or javascript 
-      // or we show the submenu
-    elseif (count($amenu) == 1)
+	require NOALYSS_TEMPLATE.'/menu.php';
+          $level++;
+           return;
+    } elseif (count($amenu) == 1)
     {
+        // there is only one submenu so we include the code or javascript 
+        // or we show the submenu
         if ( trim($amenu[0]['me_url']) != "" ||
              trim ($amenu[0]['me_file']) != "" ||
              trim ($amenu[0]['me_javascript']) != "" )
@@ -1081,8 +1092,11 @@ function show_menu($module)
 		echo h2info(_($amenu[0]['me_menu']));
 		echo '</div>';
 		$module = $amenu[0]['pm_id'];
+                display_menu($module);
+                $level++;
+                return;
         } else {
-           $url=$_REQUEST['ac'].'/'.$amenu[0]['me_code'];
+           $url=$access_code.'/'.$amenu[0]['me_code'];
            echo '<a href="do.php?gDossier='.Dossier::id().'&ac='.$url.'">';
            echo _($amenu[0]['me_menu']);
            echo '</a>';
@@ -1091,66 +1105,84 @@ function show_menu($module)
         }
     }
     
+    // !!! this point should never be reached 
     // There is no submenu or only one
     if (empty($amenu) || count($amenu) == 1)
     {
-		$file = $cn->get_array("select me_file,me_parameter,me_javascript,me_type
-		from menu_ref
-		join profile_menu using (me_code)
-		join profile_user using (p_id)
-		where
-		pm_id=$1 and
-		user_name=$2 and
-		(me_file is not null or trim(me_file) <>'' or
-		me_javascript is not null or trim (me_javascript) <> '')", array($module,$g_user->login));
-
-		if (count($file)==0)
-		{
-                        return;
-		}
-
-		if ($file[0]['me_file'] != "")
-		{
-			if ($file[0]['me_parameter'] !== "")
-			{
-				// if there are paramter put them in superglobal
-				$array=compute_variable($file[0]['me_parameter']);
-				put_global($array);
-			}
-                        if ( DEBUG ) echo  $file[0]['me_file']," param : ",$file[0]['me_parameter'] ;
-                        /*
-                         * Log the file we input to put in the folder test-noalyss for replaying it
-                         */
-                        if (LOGINPUT) {
-                                $file_loginput=fopen($_ENV['TMP'].'/scenario-'.$_SERVER['REQUEST_TIME'].'.php','a+');
-                                fwrite($file_loginput, "include '".$file[0]['me_file']."';");
-                                fwrite($file_loginput,"\n");
-                                fclose($file_loginput);
-                        }
-			// if file is not a plugin, include the file, otherwise
-			// include the plugin launcher
-			if ( $file[0]['me_type'] != 'PL') {
-                            if (file_exists ($file[0]['me_file']) )
-                            {
-				require_once $file[0]['me_file'];
-                            } elseif ( file_exists(NOALYSS_INCLUDE.'/'.$file[0]['me_file'])) {
-				require_once NOALYSS_INCLUDE.'/'.$file[0]['me_file'];
-                            }else {                            
-                                echo echo_warning(_("Fichier non trouvé"));
-                            }
-                        } else {
-				require 'extension_get.inc.php';
-                        }
-
-			exit();
-		}
-		if ( $file[0]['me_javascript'] != '')
-		{
-                    $js=  str_replace('<DOSSIER>', dossier::id(), $file[0]['me_javascript']);
-                    echo create_script($js);
-		}
+        display_menu($module);
+                
     }
     $level++;
+}
+/**
+ * Display a menu
+ * @global type $g_user
+ * @param type $p_menuid
+ * @return type
+ */
+function display_menu($p_menuid)
+{
+    if ($p_menuid == 0) return;
+    global $g_user;
+    $cn=Dossier::connect();
+    
+    $file = $cn->get_array("
+        select me_file,me_parameter,me_javascript,me_type
+        from menu_ref
+        join profile_menu using (me_code)
+        join profile_user using (p_id)
+        where
+        pm_id=$1 and
+        user_name=$2 and
+        (me_file is not null or trim(me_file) <>'' or
+        me_javascript is not null or trim (me_javascript) <> '')", array($p_menuid,$g_user->login));
+
+    if (count($file)==0)
+    {
+            return;
+    }
+
+    if ($file[0]['me_file'] != "")
+    {
+            if ($file[0]['me_parameter'] !== "")
+            {
+                    // if there are paramter put them in superglobal
+                    $array=compute_variable($file[0]['me_parameter']);
+                    put_global($array);
+            }
+            tracedebug("'menu", $file[0]['me_file'],__FUNCTION__.__LINE__."line");
+            tracedebug("'menu", $file[0]['me_parameter'],__FUNCTION__.__LINE__."parm ");
+            /*
+             * Log the file we input to put in the folder test-noalyss for replaying it
+             */
+            if (LOGINPUT) {
+                    $file_loginput=fopen($_ENV['TMP'].'/scenario-'.$_SERVER['REQUEST_TIME'].'.php','a+');
+                    fwrite($file_loginput, "include '".$file[0]['me_file']."';");
+                    fwrite($file_loginput,"\n");
+                    fclose($file_loginput);
+            }
+            // if file is not a plugin, include the file, otherwise
+            // include the plugin launcher
+            if ( $file[0]['me_type'] != 'PL') {
+                if (file_exists ($file[0]['me_file']) )
+                {
+                    require_once $file[0]['me_file'];
+                } elseif ( file_exists(NOALYSS_INCLUDE.'/'.$file[0]['me_file'])) {
+                    require_once NOALYSS_INCLUDE.'/'.$file[0]['me_file'];
+                }else {                            
+                    echo echo_warning(_("Fichier non trouvé"));
+                }
+            } else {
+                    require 'extension_get.inc.php';
+            }
+
+            exit();
+    } elseif ( $file[0]['me_javascript'] != '')
+    {
+        $js=  str_replace('<DOSSIER>', dossier::id(), $file[0]['me_javascript']);
+        echo create_script($js);
+    } 
+
 }
 /**
  * Put in superglobal (get,post,request) the value contained in
@@ -1332,7 +1364,7 @@ function is_msie()
 function record_log($p_message)
 {
     error_log("noalyss".print_r($p_message,true),0);
-    error_log("noalyss GET [".var_export($_GET, true)."] POST [".var_export($_POST, true)."]",0);
+    error_log("noalyss GET [".json_encode($_GET)."] POST [".json_encode($_POST)."]",0);
 }
 if(!function_exists('tracedebug')) {
   function tracedebug($file,$var, $label = NULL) {
@@ -1412,8 +1444,8 @@ function generate_random_string($car)
  * generate a string of p_car character and a input text with name p_ctl_name
  * work like a kind of captcha.The control code for checking is ctlcode.
  * You compare the content of the variable p_ctl_name with ctlcode
- * @param $p_ctl_name
- * @param $p_car
+ * @param $p_ctl_name name of the HTML input text
+ * @param $p_car length of the string
  */
 function confirm_with_string($p_ctl_name,$p_car)
 {
@@ -1423,4 +1455,74 @@ function confirm_with_string($p_ctl_name,$p_car)
     $ctl=new IText($p_ctl_name);
     $r.=$ctl->input();
     return $r;
+}
+/**
+ * Find the menu marked as default in the given profile
+ * @param number $pn_menu (profile_menu.id)
+ */
+function find_default_menu($pn_menu)
+{
+    $cn=Dossier::connect();
+    $sql = '  select pm_id from profile_menu where pm_default =1 and pm_id_dep = $1';
+    $aresult=$cn->get_array($sql, [$pn_menu]);
+    if (empty($aresult)) {
+        return 0;
+    }
+    return $aresult[0]['pm_id'];
+}
+
+/**
+ * Check if there is a default menu for this user and add it. The array is filling from 1 to 3
+ * @verbatim
+ * 
+ * COMPTA              0   -   0 - 173
+ * COMPTA/MENUACH      0   - 173 -   3
+ * COMPTA/MENUACH/ACH  173 -   3 -  85
+ * 
+ * @endverbatim
+ * 
+ *
+ * @param array $pa_menu if the array of option ; index pm_id_v1 , pm_id_v2 and pm_id_v3
+ * 
+ */
+function complete_default_menu($pa_menu)
+{
+    $a_result=$pa_menu;
+    // find the first one which is null
+    if ($pa_menu[0]['pm_id_v2'] == 0) {
+        $tmp=find_default_menu($pa_menu[0]['pm_id_v1']);
+        if ( $tmp <> 0 ) {
+            $a_result[0]['pm_id_v2']=$pa_menu[0]['pm_id_v1'];
+            $a_result[0]['pm_id_v1']=$tmp;
+        }
+    }
+    if ($pa_menu[0]['pm_id_v3'] == 0) {
+         $tmp=find_default_menu($a_result[0]['pm_id_v1']);
+        if ( $tmp <> 0 ) {
+            $a_result[0]['pm_id_v3']=$a_result[0]['pm_id_v2'];
+            $a_result[0]['pm_id_v2']=$a_result[0]['pm_id_v1'];
+            $a_result[0]['pm_id_v1']=$tmp;
+        }
+    }
+    return $a_result;
+}
+/**
+ * rebuild the access code
+ * @see complete_default_menu
+ * @param array of number $pan_code index row [0] =  index pm_id_v1 , pm_id_v2 and pm_id_v3
+ */
+function rebuild_access_code($pan_code) 
+{
+    if ( empty ($pan_code)) {return;}
+    $s_result="";
+    $cn=Dossier::connect();
+    $an_code=['pm_id_v3','pm_id_v2','pm_id_v1'];
+    $sep="";
+    for ($i=0;$i<3;$i++)
+    {
+        $ix=$an_code[$i];
+        $s_result.=$sep.$cn->get_value("select me_code from profile_menu where pm_id=$1",[ $pan_code[0][$ix] ]);
+        $sep=($s_result != "" )?"/":"";
+    }
+    return $s_result;
 }
