@@ -37,7 +37,7 @@ class IDate extends HtmlInput
     var $placeholder;
     var $title;
     var $autofocus;
-    var $firstDate; //<! first day in the calendar : 0 for sunday
+    static $firstDate=0; //<! first day in the calendar : 0 for sunday
 
     function __construct($name='', $value='', $p_id="")
     {
@@ -47,7 +47,6 @@ class IDate extends HtmlInput
         $this->extra="";
         $this->style=' class="input_text" ';
         $this->autofocus=false;
-        $this->firstDate=(defined("FIRST_WEEK_DAY"))?FIRST_WEEK_DAY:0;
     }
     /**
      * @return string
@@ -108,20 +107,18 @@ class IDate extends HtmlInput
      */
     public function get_firstDate()
     {
-        return $this->firstDate;
-        return $this;
+        return self::$firstDate;
     }
 
     /**
      * @param mixed $firstDate
      */
-    public function set_firstDate($firstDate)
+    static function set_firstDate($firstDate)
     {
         if (isNumber($firstDate)==0){
             throw new Exception("IDATE1: invalide data");
         }
-        $this->firstDate = $firstDate;
-        return $this;
+        self::$firstDate= $firstDate;
     }
 
 
@@ -165,7 +162,7 @@ class IDate extends HtmlInput
             </script>'
                 ,$this->id,
                 $this->id,
-                $this->firstDate);
+                self::$firstDate);
         return $r;
     }
 

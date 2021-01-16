@@ -28,6 +28,7 @@ $cn=Dossier::connect();
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 $g_user=new User($cn);
 $g_user->check(true);
+IDate::set_firstDate($g_user->get_first_week_day());
 set_language();
 /* if a code has been asked */
 if (isset($_REQUEST['plugin_code']) )

@@ -94,6 +94,8 @@ else
     $g_user->check(true);
 }
 
+IDate::set_firstDate($g_user->get_first_week_day());
+
 // For progress bar, for saving time , we check and answer directly
 if ($op == "progressBar") {
     $task_id=$http->request("task_id");
