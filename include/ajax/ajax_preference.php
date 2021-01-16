@@ -69,7 +69,7 @@ if ( $action == 'display_form' )
     echo HtmlInput::title_box(_('Préférence'), 'preference_div');
     echo '<DIV class="content">';
     echo '<p class="notice">';
-    echo _("Après validation, recharger si vous changez la langue");
+    echo _("Après validation, recharger pour appliquer les changements");
     echo '</p>';
     //----------------------------------------------------------------------
     //
@@ -145,6 +145,29 @@ if ( $action == 'display_form' )
                         <?=$exercice->select("exercice_setting",$selected_exercice,$js)->input();?>
                     </td>
                 </tr>
+            <tr>
+                <td>
+                    <?=_("Premier jour semaine")?>
+                </td>
+                <td>
+                    <?php
+                        $aFirstDay=array(
+                            ["label"=>_("Lundi"),"value"=>1],
+                            ["label"=>_("Mardi"),"value"=>2],
+                            ["label"=>_("Mercredi"),"value"=>3],
+                            ["label"=>_("Jeudi"),"value"=>4],
+                            ["label"=>_("Vendredi"),"value"=>5],
+                            ["label"=>_("Samedi"),"value"=>6],
+                            ["label"=>_("Dimanche"),"value"=>0],
+                        );
+                        $selFirstDay=new ISelect("selFirstDay");
+                        $selFirstDay->value=$aFirstDay;
+                        $selFirstDay->selected=$g_user->get_first_week_day();
+                        echo $selFirstDay->input();
+                    ?>
+
+                </td>
+            </tr>
     		<tr>
                     
                     <td><?php echo _('Période');?></td>
@@ -303,6 +326,7 @@ if ($action == 'save')
     $csv_fieldsep=$http->post("csv_fieldsep","number");
     $csv_decimal=$http->post("csv_decimal","number");
     $csv_encoding=$http->post("csv_encoding");
+    $firstday=$http->post("selFirstDay","number");
     
     if (strlen(trim($pass_1)) != 0 && strlen(trim($pass_2)) != 0)
     {
@@ -322,8 +346,9 @@ if ($action == 'save')
     $g_user->save_global_preference('csv_fieldsep', $csv_fieldsep);
     $g_user->save_global_preference('csv_decimal', $csv_decimal);
     $g_user->save_global_preference('csv_encoding', $csv_encoding);
+    $g_user->save_global_preference('first_week_day', $firstday);
     $g_user->save_email($p_email);
-    
+
     $_SESSION[SESSION_KEY.'g_theme']=$style_user;
     $_SESSION[SESSION_KEY.'g_pagesize']=$p_size;
     $_SESSION[SESSION_KEY.'g_lang']=$lang;
