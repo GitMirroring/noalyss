@@ -37,6 +37,7 @@ class IDate extends HtmlInput
     var $placeholder;
     var $title;
     var $autofocus;
+    var $firstDate; //<! first day in the calendar : 0 for sunday
 
     function __construct($name='', $value='', $p_id="")
     {
@@ -46,7 +47,83 @@ class IDate extends HtmlInput
         $this->extra="";
         $this->style=' class="input_text" ';
         $this->autofocus=false;
+        $this->firstDate=(defined("FIRST_WEEK_DAY"))?FIRST_WEEK_DAY:0;
     }
+    /**
+     * @return string
+     */
+    public function get_placeholder()
+    {
+        return $this->placeholder;
+        return $this;
+    }
+
+    /**
+     * @param string $placeholder
+     */
+    public function set_placeholder($placeholder)
+    {
+        $this->placeholder = $placeholder;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function get_title()
+    {
+        return $this->title;
+        return $this;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function set_title($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return false
+     */
+    public function get_autofocus()
+    {
+        return $this->autofocus;
+        return $this;
+    }
+
+    /**
+     * @param false $autofocus
+     */
+    public function set_autofocus($autofocus)
+    {
+        $this->autofocus = $autofocus;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_firstDate()
+    {
+        return $this->firstDate;
+        return $this;
+    }
+
+    /**
+     * @param mixed $firstDate
+     */
+    public function set_firstDate($firstDate)
+    {
+        if (isNumber($firstDate)==0){
+            throw new Exception("IDATE1: invalide data");
+        }
+        $this->firstDate = $firstDate;
+        return $this;
+    }
+
 
     /*!\brief show the html  input of the widget */
 
@@ -83,10 +160,12 @@ class IDate extends HtmlInput
             button         :    "%s_trigger",  
             align          :    "Bl",         
             singleClick    :    true,
-            firstDay:0 
+            firstDay:%s 
         });
             </script>'
-                ,$this->id,$this->id);
+                ,$this->id,
+                $this->id,
+                $this->firstDate);
         return $r;
     }
 

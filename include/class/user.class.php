@@ -127,7 +127,7 @@ class User
 		$this->login =strtolower($row['use_login']);
 		$this->admin = $row['use_admin'];
 		$this->password = $row['use_pass'];
-                $this->email=$row['use_email'];
+		$this->email=$row['use_email'];
 	}
 
 	function save()
@@ -555,16 +555,16 @@ class User
 			$type = $row['parameter_type'];
 			$l_array[$type] = $row['parameter_value'];
 		}
-                $repo=new Database();
-                $a_global_pref=$repo->get_array("select parameter_type,parameter_value from user_global_pref 
-                                            where 
-                                            upper(user_id) = upper($1)",[$this->login]);
-                $nb_global=count($a_global_pref);
-                for ( $i = 0 ;$i< $nb_global ; $i++) {
-                    $idx=$a_global_pref[$i]['parameter_type'];
-                    $value=$a_global_pref[$i]['parameter_value'];
-                    $l_array[$idx]=$value;
-                }
+		$repo=new Database();
+		$a_global_pref=$repo->get_array("select parameter_type,parameter_value from user_global_pref 
+									where 
+									upper(user_id) = upper($1)",[$this->login]);
+		$nb_global=count($a_global_pref);
+		for ( $i = 0 ;$i< $nb_global ; $i++) {
+			$idx=$a_global_pref[$i]['parameter_type'];
+			$value=$a_global_pref[$i]['parameter_value'];
+			$l_array[$idx]=$value;
+		}
 
 		return $l_array;
 	}
@@ -663,7 +663,8 @@ class User
                     'g_lang' => 'LANG',
                     'csv_fieldsep'=>'csv_fieldsep',
                     'csv_decimal'=>'csv_decimal' ,
-                    'csv_encoding'=>'csv_encoding');
+                    'csv_encoding'=>'csv_encoding',
+					'first_week_day'=>'first_week_day');
                 
 		foreach ($array_pref as $name => $parameter)
 		{
@@ -690,29 +691,28 @@ class User
 	{
 
 		$default_parameter = array("THEME" => "classic",
-			"PAGESIZE" => "50",
-			'TOPMENU' => 'TEXT',
-			'LANG' => 'fr_FR.utf8',
+						"PAGESIZE" => "50",
+						'TOPMENU' => 'TEXT',
+						'LANG' => 'fr_FR.utf8',
                         'csv_fieldsep'=>'0',
                         'csv_decimal'=>'0',
-                        'csv_encoding'=>'utf8'
+                        'csv_encoding'=>'utf8',
+						'first_week_day'=>1
                     );
 		$cn = new Database();
-		$Sql = "insert into user_global_pref(user_id,parameter_type,parameter_value)
-             values ('%s','%s','%s')";
+		$sql = "insert into user_global_pref(user_id,parameter_type,parameter_value)
+             values ($1,$2,$3)";
 		if ($p_type == "")
 		{
 			foreach ($default_parameter as $name => $value)
 			{
-				$Insert = sprintf($Sql, $this->login, $name, $value);
-				$cn->exec_sql($Insert);
+				$cn->exec_sql($sql,array($this->login,$name,$value));
 			}
 		}
 		else
 		{
 			$value = ($p_value == "") ? $default_parameter[$p_type] : $p_value;
-			$Insert = sprintf($Sql, $this->login, $p_type, $value);
-			$cn->exec_sql($Insert);
+			$cn->exec_sql($sql,array($this->login,$p_type,$value));
 		}
 	}
 
@@ -727,12 +727,13 @@ class User
 	function update_global_pref($p_type, $p_value = "")
 	{
 		$default_parameter = array("THEME" => "classic",
-			"PAGESIZE" => "50",
-			"LANG" => 'fr_FR.utf8',
-			'TOPMENU' => 'SELECT',
+						"PAGESIZE" => "50",
+						"LANG" => 'fr_FR.utf8',
+						'TOPMENU' => 'SELECT',
                         'csv_fieldsep'=>'0',
                         'csv_decimal'=>'0',
-                        'csv_encoding'=>'utf8'
+                        'csv_encoding'=>'utf8',
+						'first_week_day'=>1
                     );
 		$cn = new Database();
 		$Sql = "update user_global_pref set parameter_value=$1
@@ -1479,6 +1480,21 @@ class User
             $this->db->exec_sql("update user_active_security set us_action=$1 where us_login = $2",[$flag,$this->login]);
         }
     }
+
+	/**
+	 *
+	 */
+    function get_first_week_day()
+	{
+		$repocn=new Database();
+		$result=$repocn->get_value("select parameter_value from user_global_pref where parameter_type=$1 and user_id=$2 ",
+				array("first_week_day",$this->login));
+		if ($repocn->count() == 0 ) {
+			$this->save_global_preference("first_week_day",1);
+			return 1;
+		}
+		return $result;
+	}
 }
 
 ?>

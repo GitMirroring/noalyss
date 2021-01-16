@@ -56,6 +56,9 @@ $cn = Dossier::connect();
 global $g_user, $cn,$g_parameter,$http;
 $g_user = new User($cn);
 $http=new HttpInput();
+if ( ! defined("FIRST_WEEK_DAY")) {
+    define ("FIRST_WEEK_DAY",$g_user->get_first_week_day());
+}
 /*
  * check that the database is not empty
  */
