@@ -477,6 +477,7 @@ class Fiche
             {
                 $w=new IPoste("av_text".$attr->ad_id);
                 $w->set_attribute('ipopup','ipop_account');
+                $w->set_attribute('jrn','0');
                 $w->set_attribute('account',"av_text".$attr->ad_id);
 				$w->dbl_click_history();
                 //  account created automatically
@@ -639,6 +640,7 @@ class Fiche
                     $w->id=$p_in."av_text".$r->ad_id;
                     $w->set_attribute('ipopup', 'ipop_account');
                     $w->set_attribute('account', $w->id);
+                    $w->set_attribute('jrn','0');
                     $w->dbl_click_history();
                     //  account created automatically
                     $w->table=0;
@@ -696,6 +698,7 @@ class Fiche
                             $w->table=0;
                             $bulle=Icon_Action::infobulle(14);
                             $w->value=$r->av_text;
+                            $w->set_attribute('jrn','0');
                             break;
                         case 'card':
                             $uniq=rand(0, 1000);

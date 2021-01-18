@@ -927,7 +927,6 @@ class Acc_Ledger  extends jrn_def_sql
             // Account
             $poste=new IPoste();
             $poste->name='poste'.$i;
-            $poste->set_attribute('jrn', $this->id);
             $poste->set_attribute('ipopup', 'ipop_account');
             $poste->set_attribute('label', 'ld'.$i);
             $poste->set_attribute('account', 'poste'.$i);
