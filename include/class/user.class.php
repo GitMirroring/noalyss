@@ -41,13 +41,13 @@ class User
 	var $db;
 	var $admin;
 	var $valid;
-        var $first_name;
-        var $name;
-        var $active ;
-        var $login ;
-        var $password ;
-        var $email ;
-        
+    var $first_name;
+    var $name;
+    var $active ;
+    var $login ;
+    var $password ;
+    var $email ;
+
 	function __construct($p_cn, $p_id = -1)
 	{
 		// if p_id is not set then check the connected user
@@ -55,17 +55,26 @@ class User
 		{
 			if (!isset($_SESSION[SESSION_KEY.'g_user']))
 			{
-				echo '<h2 class="error">' . _('Session expirée<br>Utilisateur déconnecté') . '</h2>';
-				redirect('index.php', 1);
-				exit();
+                $http=new \HttpInput();
+                $user_login=$http->request("p_user","string","");
+                $user_password=$http->request("p_pass","string","");
+
+                if ($user_login != "" && $user_password != "") {
+                    $_SESSION[SESSION_KEY."g_user"]=$user_login;
+                    $_SESSION[SESSION_KEY."g_pass"]=$user_password;
+                } else {
+                    echo '<h2 class="error">' . _('Session expirée<br>Utilisateur déconnecté') . '</h2>';
+                    redirect('index.php', 1);
+                    exit();
+                }
 			}
 
 			$this->login =strtolower($_SESSION[SESSION_KEY.'g_user']);
 			$this->pass = $_SESSION[SESSION_KEY.'g_pass'];
+			$this->id = -1;
+			$this->db = $p_cn;
 			$this->lang = (isset($_SESSION[SESSION_KEY.'g_lang'])) ? $_SESSION[SESSION_KEY.'g_lang'] : 'fr_FR.utf8';
 			$this->valid = (isset($_SESSION[SESSION_KEY.'isValid'])) ? 1 : 0;
-			$this->db = $p_cn;
-			$this->id = -1;
 			if (isset($_SESSION[SESSION_KEY.'g_theme']))
 				$this->theme = $_SESSION[SESSION_KEY.'g_theme'];
 
@@ -84,6 +93,182 @@ class User
 			$this->load();
 		}
 	}
+
+    /**
+     * @return int|mixed
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int|mixed $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return default|mixed|string|string[]|null
+     */
+    public function getPass()
+    {
+        return $this->pass;
+    }
+
+    /**
+     * @param default|mixed|string|string[]|null $pass
+     */
+    public function setPass($pass): void
+    {
+        $this->pass = $pass;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    /**
+     * @param mixed $db
+     */
+    public function setDb($db): void
+    {
+        $this->db = $db;
+    }
+
+    /**
+     * @return default|int|mixed|string|string[]|null
+     */
+    public function getAdmin()
+    {
+        return $this->admin;
+    }
+
+    /**
+     * @param default|int|mixed|string|string[]|null $admin
+     */
+    public function setAdmin($admin): void
+    {
+        $this->admin = $admin;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValid(): int
+    {
+        return $this->valid;
+    }
+
+    /**
+     * @param int $valid
+     */
+    public function setValid(int $valid): void
+    {
+        $this->valid = $valid;
+    }
+
+    /**
+     * @return default|mixed|string|string[]|null
+     */
+    public function getFirstName()
+    {
+        return $this->first_name;
+    }
+
+    /**
+     * @param default|mixed|string|string[]|null $first_name
+     */
+    public function setFirstName($first_name): void
+    {
+        $this->first_name = $first_name;
+    }
+
+    /**
+     * @return default|mixed|string|string[]|null
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param default|mixed|string|string[]|null $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param mixed $active
+     */
+    public function setActive($active): void
+    {
+        $this->active = $active;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogin(): string
+    {
+        return $this->login;
+    }
+
+    /**
+     * @param string $login
+     */
+    public function setLogin(string $login): void
+    {
+        $this->login = $login;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public function setPassword($password): void
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email): void
+    {
+        $this->email = $email;
+    }
 
 	/**\brief load data from database.
 	 * if this->id == -1, it is unknown so we have to retrieve it
@@ -390,30 +575,29 @@ class User
 		return $sql;
 	}
 
+    /**
+     * synomym for isAdmin,
+     * @deprecated
+     */
+    function Admin()
+    {
+        return $this->isAdmin();
+    }
+
 	/**
-	 * \brief  Check if an user is an admin
+	 * @brief  Check if an user is an admin
 	 *
-	 * \return 1 for yes 0 for no
+	 * @return 1 for yes 0 for no
 	 */
-
-	function Admin()
+	function isAdmin()
 	{
-            $this->admin = 0;
-		if ($this->login != NOALYSS_ADMINISTRATOR )
-		{
-			$pass5 = md5($this->pass);
-			$sql = "select use_admin from ac_users where use_login=$1
-                 and use_active=1  ";
+	    $this->admin = 0;
+        $pass5 = md5($this->pass);
+        $sql = "select count(*) from ac_users where use_login=$1
+             and use_active=1 and use_admin=1 ";
 
-			$cn = new Database();
-			$res = $cn->exec_sql($sql, array($this->login));
-			if (Database::num_row($res) == 0)
-				throw  new Exception(__FILE__ . " " . __LINE__ . " aucun resultat");
-			$this->admin = Database::fetch_result($res, 0);
-		}
-		else
-			$this->admin = 1;
-
+        $cn = new Database();
+        $this->admin = $cn->get_value($sql, array($this->login));
 		return $this->admin;
 	}
 
@@ -424,7 +608,6 @@ class User
 	 * \param     - $p_user
 	 *
 	 */
-
 	function set_periode($p_periode)
 	{
 		$sql = "update user_local_pref set parameter_value=$1 where user_id=$2 and parameter_type='PERIODE'";
