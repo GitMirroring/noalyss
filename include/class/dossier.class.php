@@ -418,7 +418,7 @@ class Dossier
      */
     static function set_current($p_dossier) {
         
-        put_global(["gDossier"=>$p_dossier]);
+        put_global([ [ "key"=>"gDossier","value"=>$p_dossier]]);
         self::check();
         
     }

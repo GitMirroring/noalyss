@@ -134,11 +134,17 @@ $Ledger = new Acc_Ledger_Fin($cn, 0);
 if (!isset($_REQUEST['p_jrn']))
 {
 	$a = $Ledger->get_first('fin');
-	$Ledger->id = $a['jrn_def_id'];
+	if ( isset($a['jrn_def_id'])) {
+	    $Ledger->id = $a['jrn_def_id'];
+    } else {
+	    $Ledger->id=0;
+    }
 }
 else
-	$Ledger->id = $_REQUEST['p_jrn'];
-$jrn_priv = $g_user->get_ledger_access($Ledger->id);
+{
+    $Ledger->id =$http->request("p_jrn","number",0);
+}
+$jrn_priv = ($Ledger->id == 0)?"X":$g_user->get_ledger_access($Ledger->id);
 if (isset($_GET["p_jrn"]) && $jrn_priv == "X")
 {
 	NoAccess();

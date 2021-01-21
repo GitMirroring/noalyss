@@ -1198,7 +1198,8 @@ class Acc_Ledger_Search
         echo HtmlInput::title_box(_("Journaux"), $p_div."jrn_search");
         echo '<div style="padding:5px">';
         echo '<form method="GET" id="'.$p_div.'search_frm" onsubmit="return hide_ledger_choice(\''.$p_div.'search_frm\')">';
-        echo HtmlInput::hidden('nb_jrn', count($p_array));
+        $nb_array=(empty($p_array))?0:count($p_array);
+        echo HtmlInput::hidden('nb_jrn', $nb_array);
         echo _('Filtre ').HtmlInput::filter_table($p_div.'tb_jrn', '0,1,2', 2);
         echo HtmlInput::anchor_action(_('Inverser sel'),' toggle_checkbox(\''."{$p_div}search_frm".'\')','sel_'.$p_div,"nav");
         echo "-";
@@ -1222,7 +1223,7 @@ class Acc_Ledger_Search
         
         echo '</td>';
         echo '</tr>';
-        for ($e=0;$e<count($p_array);$e++)
+        for ($e=0;$e<$nb_array;$e++)
         {
             $row=$p_array[$e];
 //            if ( $row['jrn_enable']==0) continue;

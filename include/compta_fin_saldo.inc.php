@@ -62,9 +62,9 @@ $filter_year="  j_tech_per in (select p_id from parm_periode where  p_exercice='
 $idx=0;
 bcscale(2);
 $tot_extrait=0; $tot_diff=0; $tot_operation=0;
-
+$nb_array=(empty($array))?0:count($array);
 // for each account
-for ($i=0; $i<count($array); $i++)
+for ($i=0; $i<$nb_array; $i++)
 {
     if ($array[$i]->id==0)
     {

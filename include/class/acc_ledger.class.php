@@ -1388,12 +1388,13 @@ class Acc_Ledger  extends jrn_def_sql
     /**
      * @brief get the first ledger
      * @param  type
-     * @return the j_id
+     * @return the j_id or null if no user available
      */
     public function get_first($p_type, $p_access=3)
     {
         global $g_user;
         $all=$g_user->get_ledger($p_type, $p_access);
+        if (empty ($all)) return NULL;
         return $all[0];
     }
 
