@@ -24,6 +24,7 @@
  */
 require_once NOALYSS_INCLUDE.'/class/anc_print.class.php';
 require_once NOALYSS_INCLUDE.'/lib/impress.class.php';
+require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
 
 class Anc_GrandLivre extends Anc_Print
 {
@@ -162,7 +163,7 @@ class Anc_GrandLivre extends Anc_Print
     {
         if (CONVERT_GIF_PDF <> 'NOT' && PDFTK <> 'NOT')
         {
-            $r = "";
+            $r="";
             $r.= HtmlInput::hidden("to", $this->to);
             $r.= HtmlInput::hidden("from", $this->from);
             $r.= HtmlInput::hidden("pa_id", $this->pa_id);
@@ -201,7 +202,7 @@ class Anc_GrandLivre extends Anc_Print
         {
             return 0;
         }
-        $r.= '<table class="result" style="width:100%">';
+        $r.= '<table class="result" style="width:100%;border-color:transparent">';
         $ix = 0;
         $prev = 'xx';
         $idx = 0;
@@ -220,7 +221,7 @@ class Anc_GrandLivre extends Anc_Print
 		    $r.=td('') . td('') . td('');
                     $r.=td('') . td('') . td('') . td('') . td('') . td(nbm($tot_deb), ' class="num"') . td(nbm($tot_cred), ' class="num"') . td(nbm($tot_solde) . $sign, ' class="num"');
                 }
-                $r.='<tr>' . '<td colspan="7" style="width:auto">' . '<h2>' . h($row['po_name'] . ' ' . $row['po_description']) . '</td></tr>';
+                $r.='<tr>' . '<td colspan="12" style="width:auto">' . '<h2>' . h($row['po_name'] . ' ' . $row['po_description']) . '</td></tr>';
                 $r.= '<tr>' .
                         '<th>' . '</th>' .
                         '<th>' . _('Date') . '</th>' .
@@ -304,15 +305,10 @@ class Anc_GrandLivre extends Anc_Print
         return $r;
     }
       /*!
-     * \brief Show the button to export in PDF or CSV
-     * \param $url_csv url of the csv
-     * \param $url_pdf url of the pdf
-     * \param $p_string hidden data to include in the form
-     *
-     *
+     * \brief Show the button to export  CSV
      * \return string with the button
      */
-    function show_button($p_string="")
+    function button_export_csv($p_string="")
     {
         $r="";
         $r.= '<form method="GET" action="export.php"  style="display:inline">';
@@ -324,7 +320,7 @@ class Anc_GrandLivre extends Anc_Print
         $r.= HtmlInput::hidden("to_poste",$this->to_poste);
         $r.= $p_string;
         $r.= dossier::hidden();
-        $r.=HtmlInput::submit('bt_csv',"Export en CSV");
+        $r.=HtmlInput::submit('bt_csv',_("Export en CSV"));
         $r.= '</form>';
         return $r;
     }

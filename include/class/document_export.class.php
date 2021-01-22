@@ -78,6 +78,29 @@ class Document_Export
         }
     }
 
+    /**
+     * Make a zip file
+     */
+    function make_zip()
+    {
+        $zip=new Zip_Extended();
+        $res=$zip->open("{$this->store_pdf}/result.zip",ZipArchive::CREATE);
+        if ($res !== true) {
+            error_log("DE89 cannot create zip file");
+            throw new Exception ( __FILE__.":".__LINE__."cannot recreate zip");
+        }
+        chdir($this->store_pdf);
+        $zip->addGlob("stamp*pdf");
+        $zip->close();
+
+    }
+    /**
+     * copy the file
+     * @param $p_source
+     * @param $target
+     * @throws Exception
+     */
+
     function move_file($p_source, $target)
     {
         $this->check_file();
@@ -93,6 +116,17 @@ class Document_Export
         header('Cache-Control: private, max-age=0, must-revalidate');
         header('Pragma: public');
         echo file_get_contents($this->store_pdf . '/result.pdf');
+    }
+    /**
+     * @brief send the resulting PDF to the browser
+     */
+    function send_zip()
+    {
+        header('Content-Type: application/x-download');
+        header('Content-Disposition: attachment; filename="result.zip"');
+        header('Cache-Control: private, max-age=0, must-revalidate');
+        header('Pragma: public');
+        echo file_get_contents($this->store_pdf . '/result.zip');
     }
     /**
      * @brief remove folder and its content
@@ -118,8 +152,10 @@ class Document_Export
      * @brief export all the pieces in PDF and transform them into a PDF with
      * a stamp. If an error occurs then $this->feedback won't be empty
      * @param $p_array contents all the jr_id
+     * @param Progress_Bar $progress is the progress bar
+     * @param int $p_separate 1 everything in a single PDF or a ZIP with all PDF
      */
-    function export_all($p_array, Progress_Bar $progress)
+    function export_all($p_array, Progress_Bar $progress,$p_separate=1)
     {
         $this->check_file();
         if ( count($p_array)==0) return;
@@ -268,12 +304,21 @@ class Document_Export
         }
         
         $progress->set_value(93);
-        // concatenate all pdf into one
-        $this->concatenate_pdf();
-        
-        
-        ob_clean();
-        $this->send_pdf();
+
+        if ( $p_separate == 1) {
+            // concatenate all pdf into one
+            $this->concatenate_pdf();
+
+
+            ob_clean();
+            $this->send_pdf();
+
+        } else {
+            // Put all PDF In a zip file
+            $this->make_zip();
+            ob_clean();
+            $this->send_zip();
+        }
 
         $progress->set_value(100);
         // remove files from "conversion folder"
@@ -299,4 +344,5 @@ class Document_Export
             throw ($ex);
         }
     }
+
 }

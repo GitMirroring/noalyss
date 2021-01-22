@@ -39,6 +39,9 @@ if ($ck == 0)
     exit();
 }
 $anc=new Document_Export();
+$type_pdf=$http->get("type_pdf","number",1);
+
 $task_id=$http->request("task_id");
 $progress=new Progress_Bar($task_id);
-$anc->export_all($ck,$progress);
+$anc->export_all($ck,$progress,$type_pdf);
+
