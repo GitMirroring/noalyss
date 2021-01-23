@@ -45,6 +45,7 @@ if ($result != null)
         $type_pdf=new Select_Box("type_pdf",_("Type export PDF"));
         $type_pdf->add_value(_("Un seul PDF"),1);
         $type_pdf->add_value(_("Un PDF par opération"),2);
+        $type_pdf->set_position("absolute");
         echo $type_pdf->input();
 
         echo $grandLivre->button_export_pdf();
