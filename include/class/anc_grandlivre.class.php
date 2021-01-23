@@ -114,7 +114,7 @@ class Anc_GrandLivre extends Anc_Print
         $pa_id_cond="";
         if ( isset ( $this->pa_id) && $this->pa_id !='')
             $pa_id_cond= "pa_id=".$this->pa_id." and";
-        $array=$this->db->get_array("	select
+        $array=$this->db->get_array("	 select
 	po_name,
 	to_char(oa_date,'DD.MM.YYYY') as oa_date,
         to_char(jr_date_paid,'DD.MM.YY') as strdate_paid,
@@ -137,7 +137,8 @@ class Anc_GrandLivre extends Anc_Print
         coalesce(oa_group,0) as oa_group,
 	case when oa_debit='t' then oa_amount else  0 end as amount_deb,
 	case when oa_debit='f' then oa_amount else  0 end as amount_cred,
-        case when oa_debit='f' then 'C' else  'D' end as deb_cred
+        case when oa_debit='f' then 'C' else  'D' end as deb_cred,
+    ac.str_action   
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
 	left join jrn on  (j_grpt=jr_grpt_id)
@@ -146,7 +147,12 @@ class Anc_GrandLivre extends Anc_Print
 			       	select distinct qs_client,j_id from  quant_sold qs  
 			       	union 
 					select distinct qf_bank,j_id from  quant_fin qf ) as ftiers using (j_id)
-             where $pa_id_cond oa_amount <> 0.0  $cond_poste $filter_date
+    left join (select j.jr_id,string_agg( ag_id::text,'-') as str_action 
+                from jrn j  left 
+                join action_gestion_operation ago  on (j.jr_id=ago.jr_id ) 
+                group by j.jr_id) as ac on (ac.jr_id=jrn.jr_id)					
+    where 
+        $pa_id_cond oa_amount <> 0.0  $cond_poste $filter_date
 	order by po_name,oa_date::date,qcode,j_poste");
 
 
@@ -351,6 +357,7 @@ class Anc_GrandLivre extends Anc_Print
         $aheader[]=array("title"=>'Debit','type'=>'num');
         $aheader[]=array("title"=>'Credit','type'=>'num');
         $aheader[]=array("title"=>'D/C','type'=>'string');
+        $aheader[]=array("title"=>'Action','type'=>'string');
         Impress::array_to_csv($array, $aheader,"export-anc-grandlivre");
     }
 }
