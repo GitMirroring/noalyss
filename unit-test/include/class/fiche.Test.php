@@ -20,6 +20,8 @@ class FicheTest extends TestCase
      */
     protected function setUp()
     {
+        include 'global.php';
+        $this->object=new Fiche($g_connection);
     }
 
     /**
@@ -37,7 +39,7 @@ class FicheTest extends TestCase
      */
     public function testCmp_name()
     {
-       include 'global.php';
+        global $g_connection;
        $fiche=new \Fiche($g_connection,21);
        $fiche_2=new \Fiche($g_connection,25);
        $this->assertGreaterThan(\Fiche::cmp_name($fiche, $fiche_2),0);
@@ -49,7 +51,7 @@ class FicheTest extends TestCase
      */
     public function testGet_bk_account()
     {
-     include 'global.php';
+        include 'global.php';
      $this->object=new Fiche($g_connection);
      $result=$this->object->get_bk_account();
      $this->assertEquals(gettype($result),'array');
@@ -84,4 +86,30 @@ class FicheTest extends TestCase
         $this->assertEquals($a_result[0][24]["deb_montant"],204.71);
     }
 
+    /**
+     * @covers Fiche::count_by_modele()
+     */
+    public function testCount_by_modele()
+    {
+
+        $nb=$this->object->count_by_modele(1,"","");
+        $this->assertEquals(4,$nb,"number of Sales Card ");
+        $nb=$this->object->count_by_modele(3,"eau","");
+        $this->assertEquals(1,$nb,"Purchase card water ");
+        $nb=$this->object->count_by_modele(3,"EAU","");
+        $this->assertEquals(1,$nb,"Purchase card water ");
+        $nb=$this->object->count_by_modele(3,"ZZ","");
+        $this->assertEquals(0,$nb,"no  card  found");
+        $nb=$this->object->count_by_modele(3000,"","");
+        $this->assertEquals(0,$nb,"no  card found");
+        $nb=$this->object->count_by_modele(3,"","");
+        $this->assertEquals(7,$nb,"Purchase cards ");
+        // attempt to inject SQL command, you must get an error
+        try {
+            $nb=@$this->object->count_by_modele(3,""," and 1';delete from jrn;");
+            $this->assertFalse(true,"Inject SQL command");
+        }  catch(Exception $e) {
+            $this->assertTrue(true,"Inject SQL command");
+        }
+    }
 }
