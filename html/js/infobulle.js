@@ -65,3 +65,47 @@ function displayBulle(p_comment)  {
     d.style.left=posX+offsetX+"px";
     d.style.visibility="visible";
 }
+
+/**
+ *
+ * @param p_name
+ * @see select_box.class.php
+ */
+function displaySelectBox(p_name) {
+    try {
+        if (! document.getElementById("select_box_content") ) {
+
+            var newDiv=new Element("div");
+            newDiv.id="select_box_content";
+            document.body.appendChild(newDiv);
+            newDiv.addClassName("select_box");
+            $("select_box_content").onmouseleave=function() {
+                try {
+                    var newDiv=$("select_box_content");
+                    newDiv.setStyle({display:"none"});
+                } catch(e) {
+                    alert(e.message);
+                }
+            }
+        } else {
+            var newDiv=document.getElementById("select_box_content");
+        }
+        newDiv.innerHTML=$("select_box"+p_name).innerHTML;
+        var viewport = document.viewport.getDimensions();
+        newDiv.style.top=posY+"px";
+
+        newDiv.style.left=document.getElementById(p_name+"_bt").offsetLeft+"px";
+        newDiv.setStyle({display:"block",position:"absolute","z-index":999});
+
+        if ( $("search_"+p_name+"_list") ) {
+            var sTmp = newDiv.innerHTML;
+            var regex=new RegExp(p_name+"_list","g");
+            sTmp = sTmp.replace(regex,p_name+"_t_list");
+            newDiv.innerHTML=sTmp;
+            $("search_"+p_name+"_t_list").focus();
+        }
+    } catch(e) {
+        alert(e.message);
+    }
+
+}

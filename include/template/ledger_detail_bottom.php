@@ -14,7 +14,7 @@
 require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
 
 $select_box=new \Select_Box("sb_".$jr_id, _("Autre action"));
-$select_box->set_position("in-absolute");
+$select_box->set_position("normal");
 $cn=Dossier::connect();
 // Contains all the linked actions
 $a_followup = Follow_Up::get_all_operation($jr_id);
