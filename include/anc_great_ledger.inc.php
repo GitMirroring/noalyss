@@ -45,7 +45,7 @@ if ($result != null)
         $type_pdf=new Select_Box("type_pdf",_("Type export PDF"));
         $type_pdf->add_value(_("Un seul PDF"),1);
         $type_pdf->add_value(_("Un PDF par opération"),2);
-        $type_pdf->set_position("absolute");
+        $type_pdf->set_position("in-absolute");
         echo $type_pdf->input();
 
         echo $grandLivre->button_export_pdf();
@@ -67,11 +67,16 @@ if ($result != null)
                 break;
             }
         }
+        if (document.getElementById("type_pdf").value == "-1" )
+        {
+            valid=false;
+        }
+
         if ( valid  ) {
             progress_bar_start(p_task_id,p_message);
             return true;
         } else {
-            smoke.alert("<?=_('Choisissez au moins une opération')?>");
+            smoke.alert("<?=_('Choisissez au moins une opération et le type d\'export')?>");
             return false;
         }
         
