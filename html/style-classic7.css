@@ -279,16 +279,15 @@ td.mtitle {
     }
 }
 td.mtitle a.mtitle {
-    color : lightgray;
+    color : lightblue;
     display:block;
     font-size:1rem;
     font-family:OpenSansRegular;
-    /*! width:100%; */
     padding:0px;
     margin:0px;
-    height:100%;
+    height:42px;
     padding:4px 0px 0px 0px;
-    
+    border-radius:4px;
 }
 @media only screen and (max-width:1280px) {
    td.mtitle a.mtitle {
@@ -368,7 +367,7 @@ a.mtitle {
     text-decoration:none;
     display:inline;
     color: #0000FF;
-    pointer:cursor;
+    cursor: pointer;
     background-color: transparent;
 }
 a.mtitle:hover {
@@ -754,7 +753,7 @@ a#anchorbutton:hover, .button:hover,a.button:hover,div.content a.button:hover  {
 }
 a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     color:#FFFFFF;
-    font-weight: bold;
+    font-weight: normal;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
      /*! background-image: url("image/bg-submit2.gif"); */ 

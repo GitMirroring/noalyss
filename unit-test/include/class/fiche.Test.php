@@ -35,7 +35,6 @@ class FicheTest extends TestCase
 
     /**
      * @covers Fiche::cmp_name
-     * @todo   Implement testCmp_name().
      */
     public function testCmp_name()
     {
@@ -47,7 +46,6 @@ class FicheTest extends TestCase
 
     /**
      * @covers Fiche::get_bk_account
-     * @todo   Implement testGet_bk_account().
      */
     public function testGet_bk_account()
     {
@@ -106,10 +104,10 @@ class FicheTest extends TestCase
         $this->assertEquals(7,$nb,"Purchase cards ");
         // attempt to inject SQL command, you must get an error
         try {
-            $nb=@$this->object->count_by_modele(3,""," and 1';delete from jrn;");
-            $this->assertFalse(true,"Inject SQL command");
+            $nb=@$this->object->count_by_modele(3,""," ;delete from jrn;");
+            $this->assertFalse(true,"Inject SQL command not found");
         }  catch(Exception $e) {
-            $this->assertTrue(true,"Inject SQL command");
+            $this->assertTrue(true,"Inject SQL command found");
         }
     }
 }

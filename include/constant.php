@@ -314,6 +314,7 @@ define ('EMAIL_LIMIT',1002);
 define ('EXC_PARAM_VALUE',1005);
 define ('EXC_PARAM_TYPE',1006);
 define ('EXC_DUPLICATE',1200);
+define ('EXC_INVALID',1400);
 define ("UNPINDG","&#xf047;");
 define ("PINDG","&#xe809;");
 

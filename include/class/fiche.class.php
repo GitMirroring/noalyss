@@ -291,6 +291,8 @@ class Fiche
      */
     function count_by_modele($p_frd_id,$p_search="",$p_sql="")
     {
+        // Scan for SQL inject
+        $this->cn->search_sql_inject($p_sql);
 
         if ( $p_search != "" )
         {
@@ -305,7 +307,7 @@ class Fiche
             $result = $this->cn->get_value("select count(*)
                                  from
                                  fiche join fiche_Def using (fd_id)
-                                 where frd_id=$1 ".sql_string($p_sql)
+                                 where frd_id=$1 ".$p_sql
                 ,[$p_frd_id]);
             return $result;
         }
