@@ -291,10 +291,11 @@ class Fiche
      */
     function count_by_modele($p_frd_id,$p_search="",$p_sql="")
     {
-        $sql="select *
+        // Scan for SQL inject
+        $this->cn->search_sql_inject($p_sql);
              from
              fiche join fiche_Def using (fd_id)
-             where frd_id=".$p_frd_id;
+                                 where frd_id=$1 ".$p_sql
         if ( $p_search != "" )
         {
             $a=sql_string($p_search);
