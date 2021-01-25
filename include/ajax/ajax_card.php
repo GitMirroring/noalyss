@@ -110,14 +110,18 @@ switch($op2)
 case 'dc':
     $f=new Fiche($cn);
     /* add title + close */
-    $html=HtmlInput::title_box(_("Détail fiche"), $ctl,"close","","y");
-    
+    $qcode=$http->request("qcode","string",false);
     // if there is no qcode then try to find it thanks the card id
-    if ( ! isset ($qcode) ){
+    if ( $qcode == false ){
         $f->id=$http->get("f_id","number");
         $qcode=$f->get_quick_code();
+    } else {
+        $f->get_by_qcode($qcode);
+
     }
-    
+    $title=$f->getLabelCategory();
+    $html=HtmlInput::title_box($title, $ctl,"close","","y");
+
     // after save , we can either show a card in readonly or update a row
     $safter_save=$http->request("after_save","string","1");
     switch ($safter_save)
@@ -134,22 +138,21 @@ case 'dc':
             break;
     }
 
-    if ( $qcode != '')
+    if ( $qcode != null)
     {
-        $f->get_by_qcode($qcode);
-	$can_modify=$g_user->check_action(FIC);
-	if ( isset($ro) )
-	  {
-	    $can_modify=0;
-	  }
-	if ( $can_modify==1)
-	  $card=$f->Display(false,$ctl);
-	else
-	  $card=$f->Display(true);
-	if ( $card == 'FNT' )
-	  {
-	    $html.='<h2 class="error">'._('Fiche non trouvée').'</h2>';
-	  }
+        $can_modify=$g_user->check_action(FIC);
+        if ( isset($ro) )
+          {
+            $can_modify=0;
+          }
+        if ( $can_modify==1)
+          $card=$f->Display(false,$ctl);
+        else
+          $card=$f->Display(true);
+        if ( $card == 'FNT' )
+          {
+            $html.='<h2 class="error">'._('Fiche non trouvée').'</h2>';
+          }
 	else
 	  {
 

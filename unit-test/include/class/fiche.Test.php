@@ -20,6 +20,8 @@ class FicheTest extends TestCase
      */
     protected function setUp()
     {
+        include 'global.php';
+        $this->object=new Fiche($g_connection);
     }
 
     /**
@@ -36,7 +38,7 @@ class FicheTest extends TestCase
      */
     public function testCmp_name()
     {
-       include 'global.php';
+        global $g_connection;
        $fiche=new \Fiche($g_connection,21);
        $fiche_2=new \Fiche($g_connection,25);
        $this->assertGreaterThan(\Fiche::cmp_name($fiche, $fiche_2),0);
@@ -47,7 +49,7 @@ class FicheTest extends TestCase
      */
     public function testGet_bk_account()
     {
-     include 'global.php';
+        include 'global.php';
      $this->object=new Fiche($g_connection);
      $result=$this->object->get_bk_account();
      $this->assertEquals(gettype($result),'array');
@@ -87,6 +89,7 @@ class FicheTest extends TestCase
      */
     public function testCount_by_modele()
     {
+
         $nb=$this->object->count_by_modele(1,"","");
         $this->assertEquals(4,$nb,"number of Sales Card ");
         $nb=$this->object->count_by_modele(3,"eau","");
@@ -107,5 +110,4 @@ class FicheTest extends TestCase
             $this->assertTrue(true,"Inject SQL command found");
         }
     }
-}
 }

@@ -132,7 +132,7 @@ if ( $allcard == 0 ){
 if ($array == null && $allcard == 0 && $histo->selected != 3 )
 {
         echo '<div class="content">';
-	echo '<h2 class="info2"> '._('Aucune fiche trouvée').'</h2>';
+	echo '<h2 class="error"> '._('Aucune fiche trouvée').'</h2>';
 	echo $str_add_card;
         echo '</div>';
 	return;

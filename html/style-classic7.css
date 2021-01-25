@@ -264,6 +264,7 @@ td.mtitle {
     border-bottom-left-radius: 0px;
 
     border-collapse: collapse;
+    background-color: #366497;
 }
 @media only screen and (max-width:1250px) {
     td.mtitle {
@@ -278,16 +279,15 @@ td.mtitle {
     }
 }
 td.mtitle a.mtitle {
-    color : white;
+    color : lightblue;
     display:block;
     font-size:1rem;
     font-family:OpenSansRegular;
-    /*! width:100%; */
     padding:0px;
     margin:0px;
-    height:100%;
+    height:42px;
     padding:4px 0px 0px 0px;
-    
+    border-radius:4px;
 }
 @media only screen and (max-width:1280px) {
    td.mtitle a.mtitle {
@@ -367,7 +367,7 @@ a.mtitle {
     text-decoration:none;
     display:inline;
     color: #0000FF;
-    pointer:cursor;
+    cursor: pointer;
     background-color: transparent;
 }
 a.mtitle:hover {
@@ -517,7 +517,7 @@ a.document:hover {
     margin:1px;
 }
 .input_text {
-    border:solid text #4b4b91;
+    border:1px solid #4b4b91;
     margin:1px;
     border-radius: 2px;
 }
@@ -753,7 +753,7 @@ a#anchorbutton:hover, .button:hover,a.button:hover,div.content a.button:hover  {
 }
 a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     color:#FFFFFF;
-    font-weight: bold;
+    font-weight: normal;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
      /*! background-image: url("image/bg-submit2.gif"); */ 
@@ -922,7 +922,7 @@ div.inner_box  {
 /*! -webkit-box-shadow: 10px 10px 5px #888; */
 box-shadow: 15px 15px 15px #888;
 font-size:14.4px;
-font-size:0.90rem;
+font-size:0.9rem;
 }
 div.inner_box  {
     width: 85%;
@@ -930,7 +930,7 @@ div.inner_box  {
 @media only screen and (min-width: 1281px) {
 div.inner_box  {
     width: 85%;
-    /*! border-radius: 9px; */
+     border-radius: 9px; 
     /*! padding: 5px; */
     }
 }
@@ -1230,17 +1230,25 @@ h1.title {
 }
 h2.title {
  
-    color:#FFFFFF;
+    color:white;
     text-align:center;
   
     
     padding-top: 9px;
     margin-top: 0px;
     padding-bottom: 2px;
-    background-color: #366497;
-    font-size: 1.05rem;
+    background-color: #5681B7;
+    font-size: 1.1rem;
     height: 25px;
     vertical-align: middle;
+    border-bottom: white;
+    border-bottom-style: groove;
+    border-bottom-width: 2px;
+    font-style: normal;
+    font-stretch: normal;
+    font-variant-caps: all-small-caps;
+    font-family: OpenSansRegular;
+    margin-bottom: 1px;
 }
 h3.title {
     color: #0000FF;
@@ -1304,7 +1312,7 @@ div.menu2 a.mtitle:hover {
     /*! padding: 5px; */
 }
 div.menu2 table {
-    border-collapse: collapse;
+    border-collapse: separate;
     /*! border-spacing:1px; */
 }
 div.menu3 {
@@ -1977,8 +1985,8 @@ td.box {
   right: 0px;
   visibility: hidden;
   opacity: 0;
-  background: rgba(0,0,0,.3);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#90000000,endColorstr=#900000000);
+  background-color: rgba(0,0,0,.3);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#90000000,endColorstr=#90000000);
 }
 
 .smoke-base.smoke-visible {
@@ -2257,7 +2265,7 @@ div.menu2 td.mtitle, div.menu2 td.mtitle a{
     border-width: 0.1px;
     border-color:white;
     height:25px;
-    /*! border-radius: 0px 0px 0px 10px; */
+    border-radius: 4px 4px 4px 4px;
 }
 div.menu2 td.mtitle a{
     border-width:0px;
@@ -2282,7 +2290,7 @@ div.menu2 td.mtitle a{
  */
 div.bxbutton .icon
 {
-    color:white;
+    /*! color:white; */
     text-decoration:none;
     margin-left: 6px;
     margin-right:6px;
@@ -2292,6 +2300,7 @@ div.bxbutton .icon
     cursor: pointer;
     border:0px;
     height: 18px;
+    color: #f0d19a;
 }
 div.bxbutton .icon:hover
 {
@@ -2488,7 +2497,6 @@ p.info {
 /* Cell with tag */
 span.tagcell {
     border-radius:3px;
-    border:1px solid darkblue;
     padding:3px;margin:1px;
     display: inline-block;
 }    

@@ -207,7 +207,11 @@ if ( isset ($_GET['view']  ) )
 {
 
     $hid=new IHidden();
-
+    $from_periode=$http->get("from_periode","number");
+    $to_periode=$http->get("to_periode","number");
+    $from_poste=$http->get("from_poste","string");
+    $to_poste=$http->get("to_poste","string");
+    $p_filter=$http->get("p_filter");
 
     echo "<table>";
     echo '<TR>';
@@ -217,9 +221,9 @@ if ( isset ($_GET['view']  ) )
     HtmlInput::hidden("ac",$_REQUEST['ac']).
     HtmlInput::hidden("act","PDF:balance").
             HtmlInput::hidden("summary", $is_summary).
-    HtmlInput::hidden("from_periode",$_GET['from_periode']).
-    HtmlInput::hidden("to_periode",$_GET['to_periode']);
-    echo HtmlInput::hidden('p_filter',$_GET['p_filter']);
+    HtmlInput::hidden("from_periode",$from_periode).
+    HtmlInput::hidden("to_periode",$to_periode);
+    echo HtmlInput::hidden('p_filter',$p_filter);
     for ($e=0;$e<count($selected);$e++)
         if (isset($selected[$e]) && in_array ($selected[$e],$array))
             echo    HtmlInput::hidden("r_jrn[$e]",$selected[$e]);
@@ -227,8 +231,8 @@ if ( isset ($_GET['view']  ) )
         if (isset($select_cat[$e]))
             echo    HtmlInput::hidden("r_cat[$e]",$e);
 
-    echo HtmlInput::hidden("from_poste",$_GET['from_poste']).
-    HtmlInput::hidden("to_poste",$_GET['to_poste']);
+    echo HtmlInput::hidden("from_poste",$from_poste).
+    HtmlInput::hidden("to_poste",$to_poste);
     echo HtmlInput::get_to_hidden(array('lvl1','lvl2','lvl3','unsold','previous_exc'));
 
     echo "</form></TD>";
@@ -237,10 +241,10 @@ if ( isset ($_GET['view']  ) )
     HtmlInput::submit('bt_csv',"Export CSV").
     dossier::hidden().
     HtmlInput::hidden("act","CSV:balance").
-    HtmlInput::hidden("from_periode",$_GET['from_periode']).
-    HtmlInput::hidden("to_periode",$_GET['to_periode']);
+    HtmlInput::hidden("from_periode",$from_periode).
+    HtmlInput::hidden("to_periode",$to_periode);
     echo HtmlInput::get_to_hidden(array('ac'));
-    echo HtmlInput::hidden('p_filter',$_GET['p_filter']);
+    echo HtmlInput::hidden('p_filter',$p_filter);
     for ($e=0;$e<count($selected);$e++){
         if (isset($selected[$e]) && in_array ($selected[$e],$array)){
                 echo    HtmlInput::hidden("r_jrn[$e]",$selected[$e]);
@@ -250,8 +254,8 @@ if ( isset ($_GET['view']  ) )
         if (isset($select_cat[$e]))
             echo    HtmlInput::hidden("r_cat[$e]",$e);
 
-    echo   HtmlInput::hidden("from_poste",$_GET['from_poste']).
-    HtmlInput::hidden("to_poste",$_GET['to_poste']);
+    echo   HtmlInput::hidden("from_poste",$from_poste).
+    HtmlInput::hidden("to_poste",$to_poste);
     echo HtmlInput::get_to_hidden(array('unsold','previous_exc'));
 
     echo "</form></TD>";
@@ -295,9 +299,11 @@ if ( isset($_GET['view'] ) )
     $previous= (isset ($row[0]['sum_cred_previous']))?1:0;
 
     $periode=new Periode($cn);
-    $a=$periode->get_date_limit($_GET['from_periode']);
-    $b=$periode->get_date_limit($_GET['to_periode']);
-    echo "<h2 class=\"info\"> période du ".$a['p_start']." au ".$b['p_end']."</h2>";
+    $a=$periode->get_date_limit($from_periode);
+    $b=$periode->get_date_limit($to_periode);
+    echo '<h2>';
+    printf ( _("période du %s au %s"),$a['p_start'],$b['p_end']);
+    echo '</h2>';
 	echo '<span style="display:block">';
 	echo _('Cherche').Icon_Action::infobulle(24);
 	echo HtmlInput::filter_table("t_balance", "0,1","1");

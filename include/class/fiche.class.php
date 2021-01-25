@@ -20,7 +20,7 @@
 
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-include_once("class/fiche_attr.class.php");
+require_once NOALYSS_INCLUDE."/class/fiche_attr.class.php";
 require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itva_popup.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
@@ -60,7 +60,7 @@ class Fiche
         $this->id=$p_id;
         $this->quick_code='';
         $this->attribut=array();
-        $f_enable='1';
+        $this->f_enable='1';
     }
     public function get_id()
     {
@@ -162,8 +162,8 @@ class Fiche
     /**
      *@brief set an attribute by a value, if the attribut array is empty
      * a call to getAttribut is performed
-     *@param the AD_ID
-     *@param the value
+     *@param int  AD_ID
+     *@param int value
      *@see constant.php table: attr_def
      */
     function setAttribut($p_ad_id,$p_value)
@@ -253,9 +253,9 @@ class Fiche
     }
     /**
      * @brief find the card with the p_attribut equal to p_value, it is not case sensitive
-     * @param $p_attribut attribute to find see table attr_def
-     * @param $p_value value in attr_value.av_text
-     * @return return ARRAY OF jft_id,f_id,fd_id,ad_id,av_text
+     * @param int $p_attribut attribute to find see table attr_def
+     * @param string $p_value value in attr_value.av_text
+     * @return array returns ARRAY OF jft_id,f_id,fd_id,ad_id,av_text
      */
     function seek($p_attribut,$p_value)
     {
@@ -281,31 +281,38 @@ class Fiche
 
     /*!
      **************************************************
-     * \brief  Return array of card from the frd family
+     * \brief  Count the nb of card with the reference card id frd_id
      *
      * \param $p_frd_id the fiche_def_ref.frd_id
      * \param $p_search p_search is a filter on the name
      * \param $p_sql extra sql condition
      *
-     * \return array of fiche object
+     * \return nb of item found
      */
     function count_by_modele($p_frd_id,$p_search="",$p_sql="")
     {
         // Scan for SQL inject
         $this->cn->search_sql_inject($p_sql);
-             from
-             fiche join fiche_Def using (fd_id)
-                                 where frd_id=$1 ".$p_sql
+
         if ( $p_search != "" )
         {
-            $a=sql_string($p_search);
-            $sql="select * from vw_fiche_attr where frd_id=".$p_frd_id.
-                 " and vw_name ilike '%$p_search%'";
+            $result = $this->cn->get_value("select count(*) from 
+                        vw_fiche_attr 
+                        where 
+                        frd_id=$1 
+                        and vw_name ilike '%'||$2||'%'",
+                    [$p_frd_id,$p_search]);
+            return $result;
+        } else {
+            $result = $this->cn->get_value("select count(*)
+                                 from
+                                 fiche join fiche_Def using (fd_id)
+                                 where frd_id=$1 ".$p_sql
+                ,[$p_frd_id]);
+            return $result;
         }
 
-        $Ret=$this->cn->exec_sql($sql.$p_sql);
 
-        return Database::num_row($Ret) ;
     }
     /*!
      **************************************************
@@ -376,8 +383,8 @@ class Fiche
     /***
      * @brief  return the string of the given attribute
      *        (attr_def.ad_id)
-     * @param $p_ad_id the AD_ID from attr_def.ad_id
-     * @param $p_return 1 return NOTFOUND otherwise an empty string
+     * @param int  $p_ad_id  AD_ID from attr_def.ad_id
+     * @param int $p_return 1 return NOTFOUND otherwise an empty string
      * @see constant.php
      * @return string
      */
@@ -592,6 +599,17 @@ class Fiche
         return $r;
     }
 
+    /**
+     *
+     * @return string with the category
+     */
+    function getLabelCategory()
+    {
+        $type_card=$this->cn->get_value('select fd_label '
+            . ' from fiche_def join fiche using (fd_id) where f_id=$1',
+            array($this->id));
+        return $type_card;
+    }
 
     /*!
      * \brief  Display object instance, getAttribute
@@ -606,14 +624,9 @@ class Fiche
     {
         $this->GetAttribut();
         $attr=$this->attribut;
-        /* show card type here */
-        $type_card=$this->cn->get_value('select fd_label '
-                . ' from fiche_def join fiche using (fd_id) where f_id=$1',
-                array($this->id));
         $ret="";
-        $ret.=h2(_("Catégorie")." ".$type_card, 'style="display:inline"');
-        $ret.='<span style="margin-right:5px;float:right">'.
-                _('id fiche').':'.$this->id."</span>";
+        $ret.='<span style="margin-right:5px;float:right;font-size:80%">'.
+                _('id').':'.$this->id."</span>";
         $ret.="<table style=\"width:98%;margin:1%\">";
         if (empty($attr))
         {
@@ -850,8 +863,12 @@ class Fiche
         try
         {
             $this->cn->start();
-            
-            $Ret=$this->cn->exec_sql("insert into fiche(f_id,f_enable,fd_id) value ($1,$2,$3)",
+
+            // by default the card is available
+            if ( !isset ($p_array['f_enable'])) {
+                $p_array['f_enable']=1;
+            }
+            $Ret=$this->cn->exec_sql("insert into fiche(f_id,f_enable,fd_id) values ($1,$2,$3)",
                     array($fiche_id, $p_array['f_enable'],$p_fiche_def));
             
             // parse the $p_array array
@@ -1807,6 +1824,7 @@ class Fiche
     function Summary($p_search="",$p_action="",$p_sql="",$p_amount=false)
     {
         global $g_user;
+        $http=new HttpInput();
         $bank=new Acc_Parm_Code($this->cn,'BANQUE');
         $cash=new Acc_Parm_Code($this->cn,'CAISSE');
         $cc=new Acc_Parm_Code($this->cn,'COMPTE_COURANT');
@@ -1827,8 +1845,8 @@ class Fiche
 
         $all_tiers=$this->count_by_modele($this->fiche_def_ref,"",$p_sql.$filter_amount);
         // Get offset and page variable
-        $offset=( isset ($_REQUEST['offset'] )) ?$_REQUEST['offset']:0;
-        $page=(isset($_REQUEST['page']))?$_REQUEST['page']:1;
+        $offset=$http->request("offset","number",0);
+        $page=$http->request("page","number",1);
         $bar=navigation_bar($offset,$all_tiers,$_SESSION[SESSION_KEY.'g_pagesize'],$page);
 
         // set a filter ?
@@ -2141,7 +2159,7 @@ class Fiche
                 {
                     case 'cred':
                         if (!isset($jrn))
-                            throw ('Erreur pas de valeur pour jrn');
+                            throw Exception('Erreur pas de valeur pour jrn');
                         $filter_jrn=$this->cn->make_list("select jrn_def_fiche_cred from jrn_Def where jrn_def_id=$1",
                                 array($jrn));
                         $filter_fd_id=" fd_id in (".$filter_jrn.")";
@@ -2149,7 +2167,7 @@ class Fiche
                         break;
                     case 'deb':
                         if (!isset($jrn))
-                            throw ('Erreur pas de valeur pour jrn');
+                            throw Exception('Erreur pas de valeur pour jrn');
                         $filter_jrn=$this->cn->make_list("select jrn_def_fiche_deb from jrn_Def where jrn_def_id=$1",
                                 array($jrn));
                         $filter_fd_id=" fd_id in (".$filter_jrn.")";
@@ -2157,7 +2175,7 @@ class Fiche
                         break;
                     case 'filter':
                         if (!isset($jrn))
-                            throw ('Erreur pas de valeur pour jrn');
+                            throw Exception('Erreur pas de valeur pour jrn');
                         $filter_jrn=$this->cn->make_list("select jrn_def_fiche_deb from jrn_Def where jrn_def_id=$1",
                                 array($jrn));
 
