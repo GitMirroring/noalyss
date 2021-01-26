@@ -475,7 +475,7 @@ class Fiche
         $f=new Fiche_Def($this->cn,$p_fiche_def);
         $f->get();
         $array=$f->getAttribut();
-        $r=h2(_('Catégorie').' '.$f->label,"");
+        $r="";
         $r.='<table style="width:98%;margin:1%">';
         foreach ($array as $attr)
         {

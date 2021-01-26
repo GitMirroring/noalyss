@@ -552,7 +552,7 @@ EOF;
                 echo '<div>';
                 echo '<h1 >'.$ajrn[0]['jrn_def_name'].'</h1>';
                 if ( trim($ajrn[0]['jrn_def_description']) != "") {
-                    echo '<p style="border:1px solid;margin-top:0px">'.$ajrn[0]['jrn_def_description'].'</p>';
+                    echo '<p style="border:1px solid;margin-top:0px;padding:1rem">'.$ajrn[0]['jrn_def_description'].'</p>';
                 }
                 echo '</div>';
             }

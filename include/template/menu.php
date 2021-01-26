@@ -35,7 +35,7 @@
 	// Display the menu
 	for($i=0;$i < count($amenu);$i++):
 	    if ( (count($amenu)==1)) {
-		$class="selectedcell";
+		$class="mtitle selectedcell";
 ?>
 	<td class="<?php echo $class?>">
             <a class="mtitle" href="do.php?gDossier=<?php echo Dossier::id()?>&ac=<?php echo $access_code?>" title="<?php echo h(gettext($amenu[$i]['me_description']))?>" >
@@ -71,7 +71,7 @@
                             $url=$a_request[0].'/'.$a_request[1];
                         }
                         $url.='/'.$amenu[$i]['me_code'];
-                        if ($url == $access_code ) $class="selectedcell";
+                        if ($url == $access_code ) $class="mtitle selectedcell";
                         $url="do.php?gDossier=".Dossier::id()."&ac=".$url;
                     }
 

@@ -92,7 +92,11 @@ function displaySelectBox(p_name) {
         }
         newDiv.innerHTML=$("select_box"+p_name).innerHTML;
         var viewport = document.viewport.getDimensions();
-        newDiv.style.top=posY+"px";
+        var locPosY=posY;
+        if ( posY+offsetY+ newDiv.getHeight() > window.innerHeight -3) {
+        locPosY-=newDiv.getHeight()+20
+        }
+        newDiv.style.top=locPosY+"px";
 
         newDiv.style.left=document.getElementById(p_name+"_bt").offsetLeft+"px";
         newDiv.setStyle({display:"block",position:"absolute","z-index":999});

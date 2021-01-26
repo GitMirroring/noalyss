@@ -195,11 +195,11 @@ case 'dc':
 case 'bc':
     if ( $g_user->check_action(FICADD)==1 || $g_user->check_action(FIC)==1)
     {
-        $r=HtmlInput::title_box(_("Nouvelle fiche"), $ctl);
-	/* get cat. name */
-	$cat_name=$cn->get_value('select fd_label from fiche_def where fd_id=$1',
+	    /* get cat. name */
+	    $cat_name=$cn->get_value('select fd_label from fiche_def where fd_id=$1',
 				 array($fd_id));
-        $f=new Fiche($cn);
+        $r=HtmlInput::title_box($cat_name, $ctl);
+	        $f=new Fiche($cn);
         $r.='<form id="save_card" method="POST" onsubmit="this.ipopup=\''.$ctl.'\';save_card(this);return false;" >';
         $r.=dossier::hidden();
         $r.=(isset($ref))?HtmlInput::hidden('ref',1):'';
