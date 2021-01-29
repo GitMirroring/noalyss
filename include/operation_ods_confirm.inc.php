@@ -71,6 +71,7 @@ echo $ledger->confirm($_POST,false);
     <div id="document_div_id" style="display:none;height:185px;height:10rem">
       <?php
       $file = new IFile();
+      $file->setAlertOnSize(true);
         $file->table = 0;
         echo '<p class="decale">';
         echo _("Ajoutez une pièce justificative ");

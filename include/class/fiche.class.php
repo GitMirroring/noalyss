@@ -1899,7 +1899,7 @@ class Fiche
             $odd="";
              $odd  = ($i % 2 == 0 ) ? ' odd ': ' even ';
              $accounting=$tiers->strAttribut(ATTR_DEF_ACCOUNT);
-             if ( $p_action == 'bank' && $amount['debit'] <  $amount['credit']  ){
+             if ( ! empty($accounting) && $p_action == 'bank' && $amount['debit'] <  $amount['credit']  ){
                  if ( strpos($accounting,$bank->p_value)===0 || strpos($accounting,$cash->p_value)===0 || strpos($accounting,$cc->p_value)===0){
                  //put in red if c>d
                  $odd.=" notice ";

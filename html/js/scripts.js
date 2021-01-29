@@ -3955,3 +3955,48 @@ var operation_tag = function (p_div)
             });
     };
 };
+
+/**
+ * Check the sum of size of all the FILES to upload
+ * @param p_object the form DOM object,
+ * @param p_max_size MAX_FILE_SIZE constant (see config.inc.php or constant.php)
+ * @returns true if the sum of filesize is greater than the limit
+ */
+function check_file_size(p_object,p_max_size)
+{
+    var sum_file=0;
+    for(var i=0;i<p_object.elements.length;i++) {
+        var a=p_object.elements[i];
+        if ( p_object.elements[i].getAttribute('type')=="file" )
+        {
+            if( p_object.elements[i].files[0]){
+
+                sum_file+=p_object.elements[i].files[0].size;
+            }
+        }
+    }
+    if ( sum_file > p_max_size) {alert_box(content[78]);return false;}
+    return true;
+}
+
+/**
+ * Check that the receipt file is not too big
+ * @see ajax_ledger.php , ledger_detail_file
+ * @param int p_max_size maximum size
+ * @param p_info name of the waiting box
+ * @returns true if  file size is less than the maximum
+ */
+function check_receipt_size(p_max_size,p_info)
+{
+    document.getElementById(p_info).style.display="inline";
+    console.debug ("param  p_max_file_size"+p_max_size);
+    var f=document.getElementById("receipt_id");
+    if ( f && f.files[0] && f.files[0].size > parseFloat(p_max_size)) {
+        document.getElementById("receipt_info_id").innerHTML=content[78];
+        document.getElementById(p_info).style.display="none";
+        return false;
+    }
+    document.getElementById("receipt_info_id").innerHTML="";
+    document.getElementById("form_file").submit();
+    return true;
+}

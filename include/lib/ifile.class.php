@@ -25,13 +25,57 @@
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class IFile extends HtmlInput
 {
+    // if true , the size is tested and a box is displaid
+    private $alert_on_size;
+    function __construct($p_name = "", $p_value = "", $p_id = "")
+    {
+        parent::__construct($p_name, $p_value, $p_id);
+        $this->alert_on_size=false;
+    }
+
+    /**
+     * @return false
+     */
+    public function getAlertOnSize(): bool
+    {
+        return $this->alert_on_size;
+    }
+
+    /**
+     *  if true , the size is tested and a box is displaid
+     * @param false $alert_on_size
+     */
+    public function setAlertOnSize(bool $alert_on_size): void
+    {
+        $this->alert_on_size = $alert_on_size;
+    }
+
     /*!\brief show the html  input of the widget*/
     public function input($p_name=null,$p_value=null)
     {
         $this->name=($p_name==null)?$this->name:$p_name;
         $this->value=($p_value==null)?$this->value:$p_value;
         if ( $this->readOnly==true) return $this->display();
-        $r='<INPUT class="inp" TYPE="file" name="'.$this->name.'" VALUE="'.$this->value.'">';
+        if ($this->id=="") $this->id=uniqid("file_");
+        $r=sprintf('<INPUT class="inp" TYPE="file" name="%s" id="%s" value="%s">',
+            $this->name,
+            $this->id,
+            $this->value);
+        if ( $this->alert_on_size)
+        {
+            $max_size=MAX_FILE_SIZE;
+            $max_size_mb=round($max_size / 1024 /1024,2);
+            $too_large=h(_("Fichier trop grand(max = $max_size_mb MB)"));
+
+            $js_check_size=sprintf('
+            document.getElementById("%s").addEventListener("change",function () 
+            { 
+                var fFile=document.getElementById("%s");
+                if (fFile.files[0] && fFile.files[0].size>%s) { smoke.alert("%s");} 
+            });',$this->id,$this->id,$max_size,$too_large);
+            $r.=create_script($js_check_size);
+
+        }
         return $r;
 
     }

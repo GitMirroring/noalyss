@@ -228,8 +228,11 @@ define ("FICHE_TYPE_ACH_SER",3);
 define ("FICHE_TYPE_ACH_MAT",7);
 define ("FICHE_TYPE_PROJET",26);
 define ("FICHE_TYPE_MATERIAL",7);
-
-/** 
+// Max size is defined by default to 2MB,
+if ( ! defined("MAX_FILE_SIZE")) {
+    define ("MAX_FILE_SIZE",2097152);
+}
+/**
  * -- pour utiliser unoconv démarrer un server libreoffice 
  * commande
  * libreoffice --headless --accept="socket,host=127.0.0.1,port=2002;urp;" --nofirststartwizard 

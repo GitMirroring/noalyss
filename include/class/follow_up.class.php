@@ -401,6 +401,7 @@ class Follow_Up
         /* for new files */
         $upload=new IFile();
         $upload->name="file_upload[]";
+        $upload->setAlertOnSize(true);
         $upload->readOnly=$readonly;
         $upload->value="";
         $aAttachedFile=$this->db->get_array('select d_id,d_filename,d_description,d_mimetype,'.

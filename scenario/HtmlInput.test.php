@@ -125,6 +125,40 @@ $http=new HttpInput();
     ?>
     </ol>
 </form>
+<h2>
+    Fichier - IFile
+</h2>
+<form method="POST" enctype="application/x-www-form-urlencoded" onsubmit="check_size();return false;">
+
+<?php
+
+    $file=new IFILE("file_to_upload");
+    $file->id="file_to_upload";
+    echo "fichier ",$file->input();
+    echo HtmlInput::submit("file","Upload");
+?>
+</form>
+<script>
+    function check_size()
+    {
+        var aFile=document.getElementsByTagName("input");
+        console.debug("afile");
+        console.debug(aFile);
+
+        for (var i = 0;i < aFile.length;i++) {
+        if ( aFile[i].getAttribute("type")=="file" ) {
+                console.debug("file"+aFile[i].files[0].size);
+        }
+
+    }
+    }
+    document.getElementById("file_to_upload").addEventListener("change",function() {
+
+        if ( this.files[0] ) {
+            console.debug("file"+this.files[0].size);
+        }
+    });
+</script>
 <div id="debug_box"></div>
 
     

@@ -648,7 +648,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
         $r.='</table>';
 		// check for upload piece
 		$file = new IFile();
-
+        $file->setAlertOnSize(true);
 		$r.="<br>"._("Ajoutez une pièce justificative")." ";
 		$r.=$file->input("pj", "");
 
