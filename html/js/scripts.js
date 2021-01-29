@@ -330,6 +330,16 @@ function format_number(obj, p_prec)
 
     $(obj).value = value;
 }
+
+/**
+ * Replace slash and minus by dot
+ * @param p_object
+ */
+function format_date(p_object)
+{
+    p_object.value=p_object.value.replace(/\//g,'.');
+    p_object.value=p_object.value.replace(/-/g,'.');
+}
 /**
  *@brief check if the object is hidden or show and perform the opposite,
  * show the hidden obj or hide the shown one

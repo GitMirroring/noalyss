@@ -132,7 +132,7 @@ class IDate extends HtmlInput
             return $this->display();
         if ($this->id=="")             $this->id=self::generate_id($this->name);
         $autofocus=($this->autofocus)?" autofocus ":"";
-        
+        $onchange='onchange="format_date(this)"';
         $r=sprintf('
             <input type="text" name="%s" id="%s" 
                  class="input_text" 
@@ -140,14 +140,17 @@ class IDate extends HtmlInput
                  value ="%s" 
                  placeholder="%s"
                  title="%s"
-                 pattern="[0-9]{1,2}.[0-9]{1,2}.[0-9]{4}"
+                 pattern="[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}"
+                 %s
                 />
                 <span  class="smallbutton icon"
                 id="%s_trigger"
                 />
                 &#xe811;
                 </span>
-                ',$this->name,$this->id,$this->value,$this->placeholder,$this->title,$this->id
+                ',$this->name,$this->id,$this->value,$this->placeholder,$this->title,
+                $onchange,
+                $this->id
                 );
         // @see calendar-setup.js
         $r.=sprintf('<script type="text/javascript">
