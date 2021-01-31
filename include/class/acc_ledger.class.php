@@ -1087,7 +1087,7 @@ class Acc_Ledger  extends jrn_def_sql
                 throw new Exception(
                         sprintf ( 
                                 _('Vous utilisez le mode strict la dernière operation est la date du %s
-                vous ne pouvez pas encoder à une date antérieure',$last_date)),
+                vous ne pouvez pas encoder à une date antérieure'),$last_date),
                 15);
         }
 
