@@ -135,9 +135,12 @@ $http=new HttpInput();
     $file=new IFILE("file_to_upload");
     $file->id="file_to_upload";
     echo "fichier ",$file->input();
+    
     echo HtmlInput::submit("file","Upload");
 ?>
+    <p>Vérifier le changement de taille fichier dans la console JS</p>
 </form>
+
 <script>
     function check_size()
     {
@@ -159,6 +162,14 @@ $http=new HttpInput();
         }
     });
 </script>
+<h2>ICArd</h2>
+<h3>Aucun param suppl.</h3>
+<?php
+    $icard=new ICard("test");
+    echo $icard->input();
+    echo $icard->search();
+?>
+    
 <div id="debug_box"></div>
 
     

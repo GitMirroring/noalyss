@@ -120,7 +120,45 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 class ICard extends HtmlInput
 {
-
+    //!< $fct ,by default it is update_value called BEFORE the querystring is send
+    var $fct;
+    
+    //!< $dblclick action if double click
+    var $dblclick;
+    
+    //!< $callback , 
+    var $callback;
+    
+    //!< $choice 
+    var $choice;
+    
+    //!< $indicator, text displaid when searching
+    var $indicator;
+    
+    //!< $choice_create 1 , display a (+) button , default 1
+    var $choice_create;
+    
+    //!< $autocomplete : 1 enable - 0 disable
+    var $autocomplete;
+    
+    //!< $style supplemental CSS 
+    var $style='  ';
+    
+    //!< $accvis account_visible =1 otherwise 0, default 1
+    var $accvis; 
+    
+    //!< $limit Max of row show
+    var $limit;
+    
+    //!< $amount_from_type : accountancy , sell or purchase price
+    var $amount_from_type;
+    
+    //!< $typecard : type of card
+    var $typecard;
+    
+    //!< $autocomplete_file , ajax file used for autocompletion (see Ajax.Autocompleter)
+    private $autocomplete_file;
+    
     function __construct($name="", $value="", $p_id="")
     {
         parent::__construct($name, $value);
@@ -137,6 +175,8 @@ class ICard extends HtmlInput
         $this->accvis=1; //!< account_visible =1 otherwise 0
         $this->limit=12; //!< Max of row show
         $this->amount_from_type=''; //!< in the follow up ,when a card is selected you take Prix Vente or Prix Achat 
+        $this->typecard='all';
+        $this->autocomplete_file="fid_card.php";
     }
    
     /**
@@ -155,7 +195,8 @@ class ICard extends HtmlInput
     }
 
   
-    /**\brief set the javascript callback function
+    /**
+     * \brief set the javascript callback function
      * by default it is update_value called BEFORE the querystring is send
      *
      * \param $p_name callback function name
@@ -256,12 +297,12 @@ class ICard extends HtmlInput
 
             $query=http_build_query([ 'gDossier'=>Dossier::id(),'e'=>$this->typecard,'limit'=>$this->limit]);
             
-            $javascript=sprintf('try { new Ajax.Autocompleter("%s","%s","fid_card.php?%s",'.
+            $javascript=sprintf('try { new Ajax.Autocompleter("%s","%s","%s?%s",'.
                     '{paramName:"FID",minChars:1,indicator:%s, '.
                     'callback:%s, '.
                     'limit:%s,'.
                     ' afterUpdateElement:%s});} catch (e){alert(e.message);};',
-                    $this->id, $this->choice, $query, $this->indicator,
+                    $this->id, $this->choice, $this->autocomplete_file,$query, $this->indicator,
                     $this->callback, $this->limit, $this->fct);
 
             $javascript=create_script($javascript.$this->dblclick);
