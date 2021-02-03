@@ -85,6 +85,8 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
         $this->other['seq']=$http->request("seq", "string", 0);
         $this->other['select_option_operation']=$http->request("select_option_operation", "string", null);
         $this->other['select_comment']=$http->request("select_comment", "string", null);
+        $this->other['videoconf_server']=$http->request('videoconf_server',"string",0);
+        $this->other['videoconf_server_url']=$http->request('videoconf_server_url',"string",DEFAULT_SERVER_VIDEO_CONF);
         $this->other["cor_id"]=$http->request("cor_id","array",[]);
         $nb_corid=count($this->other["cor_id"]);
         $http->set_empty(0);
@@ -126,7 +128,9 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
             $error++;
         }
         if ($error>0)
+        {
             return false;
+        }
         return true;
     }
 
@@ -277,6 +281,19 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
                         $object_sql->dt_id, 
                         $this->other['followup_comment'],
                         $this->other['select_comment']
+                    ]);
+            
+        // Save videoconf setting
+        if ( $this->other['videoconf_server'] == 1 && trim($this->other['videoconf_server_url'])=="") {
+            $this->other['videoconf_server_url']=DEFAULT_SERVER_VIDEO_CONF;
+        }
+        $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable,do_option) values ($1,$2,$3,$4) 
+                on conflict on constraint document_option_un
+                do update set do_enable=$3,do_option=$4 ", 
+                    [   "videoconf_server", 
+                        $object_sql->dt_id, 
+                        $this->other['videoconf_server'],
+                        $this->other['videoconf_server_url']
                     ]);
         
         // Option contact to save

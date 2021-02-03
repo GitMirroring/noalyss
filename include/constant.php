@@ -109,7 +109,7 @@ if ( !defined ("NOALYSS_PACKAGE_REPOSITORY")) {
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
 }
-define ("DBVERSION",152);
+define ("DBVERSION",153);
 define ("MONO_DATABASE",25);
 define ("DBVERSIONREPO",19);
 define ('NOTFOUND','--not found--');
@@ -333,4 +333,7 @@ if ( ! defined ("NOALYSS_URL")) {
             ":".$_SERVER['SERVER_PORT'].
             dirname($_SERVER['PHP_SELF']);
     define ("NOALYSS_URL",$base);
+}
+if (!defined ("DEFAULT_SERVER_VIDEO_CONF")) {
+    define ("DEFAULT_SERVER_VIDEO_CONF","https://www.free-solutions.org/");
 }

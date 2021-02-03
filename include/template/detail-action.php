@@ -62,12 +62,25 @@ $uniq=uniqid("tab",TRUE);
             ?>
           </td>
           </Tr>
+<?php 
+//----------------------- Video Conf --------------------------------------------------------------------------------
+if (Document_Option::is_enable_video_conf($this->dt_id)):?>          
+          <tr>
+              <td><?=_("VideoConf")?></td>
+              <td><A href="<?=Document_Option::option_video_conf($this->dt_id)?>" target="_blank">
+    <?=_("Salle de réunion")?>
+                  </a>
+          </tr>
+<?php endif;?>          
 	<tr>
           <TD colspan="2">
              <?php echo $spcontact->input(); ?>
           </td>
           </Tr>
-          <?php if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id)): ?>
+<?php 
+//----------------------- Contact Multiple ----------------------------------------------------------------------------
+if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id)): 
+    ?>
           <tr>
               <td>
                   <?php echo _('Autres concernés')?>
