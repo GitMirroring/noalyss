@@ -2,6 +2,7 @@ begin;
 -- improve vw_fiche_attr
 alter table fiche add column f_enable char(1);
 update fiche set f_enable=ad_value from fiche_detail as fd1 where fd1.f_id=fiche.f_id and ad_id=54;
+update fiche set f_enable='1' where f_enable is null;
 alter table fiche alter f_enable set  not null;
 alter table fiche add constraint f_enable_ck  check (f_enable in ('0','1'));
 comment on column fiche.f_enable is 'value = 1 if card enable , otherwise 0 ';
