@@ -228,9 +228,9 @@ BODY {
         width: 24rem;
     }
     #recover_link {
-        position:absolute;
-        top:397px;
+        position:fixed;
         left:539px;
+        bottom:2px;
         background-color: white;
         width:auto;
         
@@ -274,9 +274,9 @@ BODY {
         width: 24rem;
     }
     #recover_link {
-        position:absolute;
-        top:55%;
+        position:fixed;
         left:55%;
+        bottom:20px;
         background-color: white;
         margin-top:0px;
     }
