@@ -36,7 +36,7 @@ class IFile extends HtmlInput
     /**
      * @return false
      */
-    public function getAlertOnSize(): bool
+    public function getAlertOnSize()
     {
         return $this->alert_on_size;
     }
@@ -45,7 +45,7 @@ class IFile extends HtmlInput
      *  if true , the size is tested and a box is displaid
      * @param false $alert_on_size
      */
-    public function setAlertOnSize(bool $alert_on_size): void
+    public function setAlertOnSize(bool $alert_on_size)
     {
         $this->alert_on_size = $alert_on_size;
     }
