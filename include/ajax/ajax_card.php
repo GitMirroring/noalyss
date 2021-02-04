@@ -113,7 +113,12 @@ case 'dc':
     $qcode=$http->request("qcode","string",false);
     // if there is no qcode then try to find it thanks the card id
     if ( $qcode == false ){
-        $f->id=$http->get("f_id","number");
+        $f->id=$http->get("f_id","number","0");
+        if ( $f->id==0) {
+            $html=HtmlInput::title_box(_("Fiche"), $ctl,"close","","y");
+            $html.='<h2 class="error">'._('Aucune fiche demandée').'</h2>';
+            break;
+        }
         $qcode=$f->get_quick_code();
     } else {
         $f->get_by_qcode($qcode);
