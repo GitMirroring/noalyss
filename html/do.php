@@ -254,29 +254,20 @@ if (isset($_REQUEST['ac']))
       pm_id_v3,pm_id_v2,pm_id_v1
     from v_menu_profile where code= upper($1)  and p_id=$2',
             array($AC,$user_profile));
-    
 
     try {        
-        if ( count($amenu_id) != 1 ) {
-            // if AC is a simple code and this menu can be accessed 
-            // we should find the first menu which used it and change the
-            // request AC to it
-            $pm_id=$cn->get_array('select pm_id from profile_menu '
-                    . ' where lower(me_code)=lower($1) and p_id=$2',
-                    array($AC,$user_profile));
-            if ( count($pm_id) > 0 ) {
-                show_menu($pm_id[0]['pm_id']);
-                return;
-            } else {
-                throw new Exception(_('Erreur menu'),10);
-            }
+        if (count($amenu_id) == 0 ) { throw new Exception(_('Erreur menu'),10);}
+        if ( count($amenu_id)> 1)     {
+            $tmp=$amenu_id[0];
+            $amenu_id=[];
+            $amenu_id[0]=$tmp;
         }
         $amenu_id=complete_default_menu($amenu_id,$user_profile);
     
         $AC=rebuild_access_code($amenu_id);
     
         put_global(array(array("key"=>"ac","value"=>$AC)));        
-        $module_id=$cn->get_value('select 
+        $module_id=$cn->get_value('select distinct
             case when pm_id_v3 = 0 then (case when pm_id_v2 = 0 then pm_id_v1 else pm_id_v2 end) else pm_id_v3 end 
             from 
             v_menu_profile 
