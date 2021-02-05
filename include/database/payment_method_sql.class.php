@@ -32,7 +32,7 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
 class Payment_method_SQL extends Noalyss_SQL
 {
 
-    function __construct(Database $p_cn, $p_id=-1)
+    function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
         $this->table="public.payment_method";
         $this->primary_key="mp_id";

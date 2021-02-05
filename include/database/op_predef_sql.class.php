@@ -29,7 +29,7 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
 class Op_predef_SQL extends Noalyss_SQL
 {
 
-    function __construct(Database $p_cn,$p_id=-1)
+    function __construct(DatabaseCore $p_cn,$p_id=-1)
     {
         $this->table = "public.op_predef";
         $this->primary_key = "od_id";

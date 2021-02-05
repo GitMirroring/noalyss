@@ -29,7 +29,7 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
 class Document_State_SQL extends Noalyss_SQL
 {
 
-    function __construct(Database $p_cn, $p_id=-1)
+    function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
         $this->table="public.document_state";
         $this->primary_key="s_id";

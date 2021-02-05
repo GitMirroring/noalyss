@@ -31,7 +31,7 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
 class V_Tva_Rate_SQL extends Noalyss_SQL
 {
 
-    function __construct(Database $p_cn, $p_id=-1)
+    function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
         $this->table="public.v_tva_rate";
         $this->primary_key="tva_id";

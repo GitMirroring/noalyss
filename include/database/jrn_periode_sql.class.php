@@ -34,7 +34,7 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
 class Jrn_periode_SQL extends Noalyss_SQL
 {
 
-    function __construct(Database $p_cn, $p_id=-1)
+    function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
         $this->table="public.jrn_periode";
         $this->primary_key="id";
