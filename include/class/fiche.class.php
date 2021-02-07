@@ -808,7 +808,7 @@ class Fiche
         $enable_is->readOnly=$p_readonly;
                 
         $ret.=tr( 
-                td(_("Actif")).td($enable_is->input())
+                td(_("Actif"),'class="input_text"').td($enable_is->input(),'class="input_text"')
                 );
         
         

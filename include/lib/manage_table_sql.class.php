@@ -124,7 +124,9 @@ class Manage_Table_SQL
         // By default no js sort
         $this->sort_column="";
         $this->dialog_box="dtr";
-        $this->dialogbox_style=array("position"=> "fixed", "top"=>  '15%',"width"=> "auto", "margin-left"=> "20%");
+        $this->dialogbox_style=array("position"=> "fixed", "top"=>  '15%',"width"=> "auto", 
+            "max-width"=>"60%",
+            "margin-left"=> "20%");
     }
     /**
      * send the XML headers for the ajax call 

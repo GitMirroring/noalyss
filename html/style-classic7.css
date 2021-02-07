@@ -40,13 +40,13 @@ input{
     font-family: 'OpenSansRegular';
     padding : 2px;
      margin:2px;
-    border:solid 1px #4b4b91; 
+    border:1px solid #4b4b91; 
     font-size:14px;
     color:#4b4b91;
     
 }
 input:focus {
-    border:solid 1px orange;
+    border:1px solid orange;
     margin:1px;
     background-color:  lightyellow;
 }
@@ -64,7 +64,7 @@ table.sortable, table.table_large, table.result  ,table.resultfooter {
     border-spacing:  1px;
    /*border-collapse:collapse; */
     
-    border:1px #5D90CD solid;
+    border:1px solid #5D90CD;
     border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
@@ -238,7 +238,7 @@ table.document th{
 }
 
 table.mtitle {
-    border:0;
+    border:0px;
     text-align:center;
     /*! border-spacing: 0; */
 }
@@ -246,7 +246,7 @@ td.mshort {
     height:15px;
     width:60px;
     text-align:center;
-    border:  1px solid;
+    border:  1px solid transparent;
     color:#5D90CD ;
     background-color:#DDE6FF;
 }
@@ -287,7 +287,7 @@ td.mtitle a.mtitle {
     margin:0px;
     height:42px;
     padding:4px 0px 0px 0px;
-    border-radius:4px;
+    border-radius:6px;
 }
 @media only screen and (max-width:1280px) {
    td.mtitle a.mtitle {
@@ -512,7 +512,7 @@ a.document:hover {
 
 }
 .input_text_ro {
-    border:solid 1px #0000FF;
+    border:1px solid  #0000FF;
     background:#EDEDED;
     color:#0000FF;
     margin:1px;
@@ -523,7 +523,7 @@ a.document:hover {
     border-radius: 2px;
 }
 .input_text:focus {
-   border:solid 1px orange;
+   border:1px solid orange;
     margin:1px;
     background-color:  lightyellow;
 }
@@ -685,7 +685,7 @@ div.content div.pc_calendar tr{
 }
 div.pc_calendar td{
     width:14%;
-    border:#879ED4 solid 1px;
+    border:1px solid  #879ED4 ;
 }
 
 div.pc_calendar td.weekend {
@@ -805,7 +805,7 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton .butt
     font-family: SansationLight;
 }
 td.tool {
-    border: solid 1px gray;
+    border: 1px solid gray;
     background-color: #FFFFFF;
     border-bottom-width: 2px;
     text-align:center;
@@ -820,7 +820,7 @@ td.tool {
     }
 }
 td.toolselected  {
-    border: solid 1px gray;
+    border: 1px solid gray;
     color: #FFFFFF;
     border-bottom-width: 2px;
     text-align:center;
@@ -917,7 +917,7 @@ div.inner_box  {
     overflow:hidden;
     z-index:3;
     position:absolute;
-    left : 5px;
+    left:10%;
     border:1px solid #00008B;
 -moz-box-shadow: 10px 10px 5px #888;
 /*! -webkit-box-shadow: 10px 10px 5px #888; */
@@ -933,7 +933,6 @@ div.inner_box  {
     width: 85%;
      border-radius: 9px; 
     /*! padding: 5px; */
-    left:10%;
     }
 }
 div.op_detail_title {
@@ -1272,7 +1271,7 @@ div.myfieldset
     margin-top: 5px;
     margin-left:5px;
     margin-right: 5px;
-    border:#EDF3FF 2px groove;
+    border:2px groove #EDF3FF ;
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -1344,14 +1343,14 @@ div.menu3 {
     font-size : 1.2em;
 }*/
 textarea.itextarea{
-    border:solid #0000FF 1px;
+    border:1px solid #0000FF ;
     width:90%;
     margin-left:5%;
     height:120px;
 }
 
 textarea.itextarea:focus {
-    border:solid 1px orange;
+    border:1px solid orange;
     background-color:  lightyellow;
 }
 div#notice {
@@ -1805,12 +1804,13 @@ li.highlight a,tr.highlight a{
     color: inherit;
 }
 /*******************************************************************************
- * Inner_box on a larger screen
+ * Inner_box on a smaller screen
  *******************************************************************************/
 @media only screen and (min-width: 1280px) {
     div.inner_box  {
-        width: 75%;
-        left:5%;
+        width: 95%;
+        left:2%;
+        /*! margin-bottom: 2%; */
         padding-bottom: 10px;
         }
 }
@@ -2227,7 +2227,7 @@ div.content a.arrow {
  * Select box : list of actions
  */
 .select_box {
-    border:solid 0.5px darkblue;
+    border:0.5px  solid darkblue;
     background:white;
     width:455px;
     max-width:250px;
