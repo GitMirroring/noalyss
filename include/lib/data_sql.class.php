@@ -27,13 +27,13 @@
 
 /**
  * @brief this an abstract class , all the SQL class, like noalyss_sql (table), 
- * Acc_Plan_SQL (based on a SQL not a table).
+ * Acc_Plan_SQL (based on a SQL not a table) or a view.
  * 
  * You must create a class extending this one, in the constructor
  * these variables have to be defined
  * 
  *   - table = name of the view or empty
- *   - select = name of the select
+ *   - sql = sql statement
  *   - name = array of column name, match between logic and actual name
  *   - type = array , match between column and type of data
  *   - default = array of column with a default value
