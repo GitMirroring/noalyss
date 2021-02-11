@@ -193,10 +193,10 @@ class Fiche
                    fiche
              natural join fiche_detail
 	     join jnt_fic_attr on (jnt_fic_attr.fd_id=fiche.fd_id and fiche_detail.ad_id=jnt_fic_attr.ad_id)
-             join attr_def on (attr_def.ad_id=fiche_detail.ad_id) where f_id=".$this->id.
+             join attr_def on (attr_def.ad_id=fiche_detail.ad_id) where f_id=$1".
              " order by jnt_order";
 
-        $Ret=$this->cn->exec_sql($sql);
+        $Ret=$this->cn->exec_sql($sql,[$this->id]);
         if ( ($Max=Database::num_row($Ret)) == 0 )
             return ;
         for ($i=0;$i<$Max;$i++)
