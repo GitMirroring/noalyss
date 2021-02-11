@@ -82,6 +82,7 @@ class Manage_Table_SQL
     protected $a_info; //!< Array with the infotip
     protected $sort_column; //!< javascript sort , if empty there is no js sort
     protected $dialog_box; //!< ID of the dialog box which display the result of the ajax calls
+    protected $search_table; //!< boolean , by default true ,it is possible to search in the table, 
     const UPDATABLE=1;
     const VISIBLE=2;
 
@@ -127,8 +128,29 @@ class Manage_Table_SQL
         $this->dialogbox_style=array("position"=> "fixed", "top"=>  '15%',"width"=> "auto", 
             "max-width"=>"60%",
             "margin-left"=> "20%");
+        $this->search_table=true;
     }
     /**
+     * Get if we can search in the table
+     * @return boolean
+     */
+    public function get_search_table()
+    {
+        return $this->search_table;
+    }
+
+    /**
+     * Set the table searchable or not
+     * @param boolean  : true we can search 
+     * @return $this
+     */
+    public function set_search_table($search_table)
+    {
+        $this->search_table=$search_table;
+        return $this;
+    }
+
+        /**
      * send the XML headers for the ajax call 
      */
     function send_header()
@@ -680,7 +702,10 @@ function check()
                 $visible++;
             }
         }
-        echo _('Cherche')." ".HtmlInput::filter_table("tb".$this->object_name, $result, 1);
+        if ( $this->get_search_table() )
+        {
+            echo _('Cherche')." ".HtmlInput::filter_table("tb".$this->object_name, $result, 1);
+        }
         
         // Set a sort on a column if sort_column is not empty
         if ( $this->sort_column =="")
@@ -1023,7 +1048,8 @@ function check()
     }
     /**
      * @brief Save the record from Request into the DB and returns an XML
-     * to update the Html Element
+     * to update the Html Element. The function check() will be called before saving
+     * @see check
      * @return \DOMDocument
      */
     function ajax_save()
