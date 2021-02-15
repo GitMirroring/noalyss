@@ -118,7 +118,6 @@ $select_comment_type->set_value(Document_Option::option_comment($table->dt_id));
 echo $select_comment_type->input();
 ?>
         </li> 
-    </ul>
     <li>
         <?php
         $i=new ICheckBox("videoconf_server",1);
@@ -132,6 +131,7 @@ echo $select_comment_type->input();
         echo $itVideoconfServer->input();
         ?>
     </li>
+    </ul>
 </div>
 <div>
      <h3 class="info" sytle="margin-block: 4px"><?php echo _("Options contact") ?></h3>
