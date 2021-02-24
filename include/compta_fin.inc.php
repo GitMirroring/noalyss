@@ -28,10 +28,10 @@ require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 global $g_user,$g_parameter;
 
 $gDossier=dossier::id();
-
+$http=new HttpInput();
 
 $cn=Dossier::connect();
-$menu_action="?ledger_type=fin&ac=".$_REQUEST['ac']."&".dossier::get();
+$menu_action="?ledger_type=fin&ac=".$http->request('ac')."&".dossier::get();
 
 $Ledger=new Acc_Ledger_Fin($cn,0);
 
@@ -40,7 +40,9 @@ $Ledger=new Acc_Ledger_Fin($cn,0);
 //--------------------------------------------------------------------------------
 
 if ( isset($_REQUEST['p_jrn']))
-	$Ledger->id=$_REQUEST['p_jrn'];
+{
+    $Ledger->id=$http->request('p_jrn',"number");
+}
 else
 {
 	$def_ledger=$Ledger->get_first('fin');
@@ -137,7 +139,7 @@ if ( $p_msg !="" ) echo '<span class="warning">'.$p_msg.'</span>';
 
 echo '<form class="print" name="form_detail" enctype="multipart/form-data" class="print" METHOD="POST">';
 echo HtmlInput::hidden('ledger_type','fin');
-echo HtmlInput::hidden('ac',$_REQUEST['ac']);
+echo HtmlInput::hidden('ac',$http->request("ac"));
 $array=( isset($correct))?$_POST:null;
 
 // show select ledger
@@ -149,13 +151,15 @@ try
     echo HtmlInput::submit('save',_('Sauve'));
     echo HtmlInput::reset(_('Effacer'));
 
+    $script="update_name();";
     if ( ! isset($_REQUEST['e_date'])&& $g_parameter->MY_DATE_SUGGEST=='Y')
     {
-            echo create_script(" get_last_date();ajax_saldo('first_sold');");
-    }else {
-            echo create_script(" ajax_saldo('first_sold');");
+            $script.=" get_last_date();";
     }
-    echo create_script(" update_name()");
+    if ( ! isset ($_REQUEST['first_sold']) ) {
+            $script.=" ajax_saldo('first_sold');";
+    }
+    echo create_script($script);
 } catch (Exception $ex) {
     echo $ex->getMessage();
 }
