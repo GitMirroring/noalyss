@@ -106,7 +106,9 @@ else
 {
     if (isset($_REQUEST['type']))
     {
-        if ($_REQUEST['type']=='gl' || $_REQUEST['type']=='') $filter_card='';
+        if ($_REQUEST['type']=='gl' || $_REQUEST['type']=='') {
+		    $filter_card='';
+        }
         else
         {
             $get_cred='jrn_def_fiche_cred';
@@ -168,7 +170,7 @@ if ($sql != false && sizeof($sql) != 0 )
     echo '</ul>';
     if (count($sql) > 12)
     {
-        printf ('<i>...'._('Résultat limité à 12').'  ...</i>');
+        printf ('<i>...'._('Résultat limité à %s').'  ...</i>',$limit);
     }
 }
 else
