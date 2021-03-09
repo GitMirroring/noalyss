@@ -65,7 +65,7 @@ class ISelect extends HtmlInput
         {
             $checked=($this->selected==$this->value[$i]['value'])?"SELECTED":"";
             $a.='<OPTION VALUE="'.$this->value[$i]['value'].'" '.$checked.'>';
-            $a.=$this->value[$i]['label'];
+            $a.=strip_tags($this->value[$i]['label']);
         }
         $a.="</SELECT>";
         if ( $this->table == 1 )		  $a='<td>'.$a.'</td>';
@@ -80,7 +80,7 @@ class ISelect extends HtmlInput
         {
             if ($this->selected==$this->value[$i]['value'] )
             {
-                $r=h($this->value[$i]['label']);
+                $r=htmlentities($this->value[$i]['label'],ENT_QUOTES|ENT_HTML5,'UTF-8',true);
 
             }
         }
@@ -96,7 +96,7 @@ class ISelect extends HtmlInput
         {
             if ($this->selected==$this->value[$i]['value'] )
             {
-                $r=h($this->value[$i]['label']);
+                $r=$this->value[$i]['label'];
 
             }
         }
