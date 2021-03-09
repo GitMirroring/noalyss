@@ -4010,3 +4010,17 @@ function check_receipt_size(p_max_size,p_info)
     document.getElementById("form_file").submit();
     return true;
 }
+/**
+ * @brief toggle size of a div : fullsize or normal
+ * 
+ */
+function full_size(p_div) {
+    div_dom=document.getElementById(p_div);
+    if ( ! div_dom ) return;
+    if ( div_dom.hasClassName('fullsize')) {
+       div_dom.removeClassName('fullsize');$('size_'+p_div).innerHTML='&#xe82a;';
+    } else {
+        div_dom.addClassName('fullsize');$('size_'+p_div).innerHTML='&#xe83d;';
+    }
+    
+}

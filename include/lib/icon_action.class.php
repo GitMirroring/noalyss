@@ -390,4 +390,11 @@ class Icon_Action
         if ( $p_value == 0 ) { return \Icon_Action::checked($p_id, $p_javascript); }
         if ( $p_value == 1 ) { return \Icon_Action::unchecked($p_id, $p_javascript);}
     }
+    static function full_size($p_div) {
+        $js=sprintf("full_size('%s')",$p_div);
+        $icon="&#xe82a;";
+        $r=sprintf('<span id="size_%s" onclick="%s" class="icon smallicon">%s</span>',
+                $p_div,$js,$icon);
+        return $r;
+    }
 }

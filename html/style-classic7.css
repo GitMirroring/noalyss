@@ -2667,3 +2667,23 @@ span.tagcell {
 	padding: 0.25em 1em 0.25em 1em;
 	font-family: bold;
 }
+/**
+ * set a element full size
+ */
+.fullsize {
+    width:100% !important;
+    height: 100% !important;
+    overflow:auto !important;
+    top:0px !important;
+    position:fixed !important;
+    left:0px !important;
+}
+
+ /*********************************************
+ * If a input is incorrect
+  */
+ .input-error {
+     border:1px dotted red !important;
+     color:darkred !important;
+
+ }
