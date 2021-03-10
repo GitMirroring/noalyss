@@ -92,12 +92,15 @@ $http=new HttpInput();
     for ($i = 0 ; $i < 10 ; $i ++) :
         echo '<li>';
             $check[$i]=new InputCheckBox("check[]",1,"checkid".$i);
+            $check[$i]->classrange="improvechkbox";
             echo $i, " - name = ",$check[$i]->value_container,",id = " , $check[$i]->id_icon,$check[$i]->input();
+            
         echo '</li>';
     endfor;
     ?>
     </ul>
-    
+    <aside>les selections par plage  ne fonctionnent pas encore avec les CHECKBOX améliorés</aside>
+    <script> activate_checkbox_range("improvechkbox")</script>
     <h1>Submit</h1>
     <pre>
         echo HtmlInput::submit("submit", _("Envoi"));
@@ -129,7 +132,7 @@ $http=new HttpInput();
     Fichier - IFile
 </h2>
 <form method="POST" enctype="application/x-www-form-urlencoded" onsubmit="check_size();return false;">
-
+    <span id="file-info"></span>
 <?php
 
     $file=new IFILE("file_to_upload");
@@ -147,10 +150,13 @@ $http=new HttpInput();
         var aFile=document.getElementsByTagName("input");
         console.debug("afile");
         console.debug(aFile);
-
+        var info=document.getElementById("file-info");
         for (var i = 0;i < aFile.length;i++) {
-        if ( aFile[i].getAttribute("type")=="file" ) {
+        if ( aFile[i].getAttribute("type")==="file" ) {
+            
                 console.debug("file"+aFile[i].files[0].size);
+                info.innerHTML+="file : "+aFile[i].files[0].name+":"+aFile[i].files[0].size+" bytes <br>";
+                
         }
 
     }

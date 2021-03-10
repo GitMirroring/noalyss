@@ -368,27 +368,28 @@ class Icon_Action
         if ( $p_value == 0 ) { return \Icon_Action::iconoff($p_id, $p_javascript,$p_style);}
     }
     
-    static function checked ($p_id,$p_javascript="") {
+    static function checked ($p_id,$p_javascript="",$p_classrange="") {
         $lock_cur="&#xe741;";
-        
-        $r=sprintf( '<span id="%s" onclick="%s" class="icon smallicon">%s</span>',
+        $r=sprintf( '<span id="%s" onclick="%s" class="icon smallicon %s" >%s</span>',
                 $p_id,
                 $p_javascript, 
+                $p_classrange,
                 $lock_cur);
         return $r;
     }
-    static function unchecked ($p_id,$p_javascript="") {
+    static function unchecked ($p_id,$p_javascript="",$p_classrange="") {
         $lock_cur="&#xf096";
         
-        $r=sprintf( '<span id="%s" onclick="%s" class="icon smallicon" >%s</span>',
+        $r=sprintf( '<span id="%s" onclick="%s" class="icon smallicon %s" >%s</span>',
                 $p_id,
                 $p_javascript, 
+                $p_classrange,
                 $lock_cur);
         return $r;
     }
-    static function checkbox ($p_id,$p_javascript="",$p_value=0) {
-        if ( $p_value == 0 ) { return \Icon_Action::checked($p_id, $p_javascript); }
-        if ( $p_value == 1 ) { return \Icon_Action::unchecked($p_id, $p_javascript);}
+    static function checkbox ($p_id,$p_javascript="",$p_value=0,$p_classrange="") {
+        if ( $p_value == 0 ) { return \Icon_Action::checked($p_id, $p_javascript,$p_classrange); }
+        if ( $p_value == 1 ) { return \Icon_Action::unchecked($p_id, $p_javascript,$p_classrange);}
     }
     static function full_size($p_div) {
         $js=sprintf("full_size('%s')",$p_div);
