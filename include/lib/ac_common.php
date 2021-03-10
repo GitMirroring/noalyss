@@ -32,12 +32,12 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 /**
  * \brief to protect again bad characters which can lead to a cross scripting attack
-  the string to be diplayed must be protected
+  the string to be diplayed must be protected. Side effects with htmlentities, especially for
+ * the date (transform dot in &periode;) and number
  */
-
 function h($p_string)
 {
-    return htmlspecialchars($p_string);
+    return htmlspecialchars($p_string,ENT_QUOTES|ENT_HTML5,'UTF-8',true);
 }
 
 function span($p_string, $p_extra='')
@@ -47,31 +47,31 @@ function span($p_string, $p_extra='')
 
 function hi($p_string)
 {
-    return '<i>' . htmlspecialchars($p_string) . '</i>';
+    return '<i>' . h($p_string) . '</i>';
 }
 
 function hb($p_string)
 {
-    return '<b>' . htmlspecialchars($p_string) . '</b>';
+    return '<b>' . h($p_string) . '</b>';
 }
 
 function th($p_string, $p_extra='',$raw='')
 {
-    return '<th  ' . $p_extra . '>' . htmlspecialchars($p_string).$raw . '</th>';
+    return '<th  ' . $p_extra . '>' . h($p_string).$raw . '</th>';
 }
 
 function h2info($p_string)
 {
-    return '<h2 class="info">' . htmlspecialchars($p_string) . '</h2>';
+    return '<h2 class="info">' . h($p_string) . '</h2>';
 }
 
 function h2($p_string, $p_class="",$raw="")
 {
-    return '<h2 ' . $p_class . '>' . $raw.htmlspecialchars($p_string) . '</h2>';
+    return '<h2 ' . $p_class . '>' . $raw.h($p_string) . '</h2>';
 }
 function h1($p_string, $p_class="")
 {
-    return '<h1 ' . $p_class . '>' . htmlspecialchars($p_string) . '</h1>';
+    return '<h1 ' . $p_class . '>' . h($p_string) . '</h1>';
 }
 /**
  * \brief surround the string with td
@@ -522,15 +522,23 @@ function ShowItem($p_array, $p_dir='V', $class="mtitle", $class_ref="mtitle", $d
 	    $title = "";
 	    $set = "XX";
 	    if (isset($href[2]))
-		$title = $href[2];
-	    if (isset($href[3]))
-		$set = $href[3];
+            {
+                $title=$href[2];
+            }
+            if (isset($href[3]))
+            {
+                $set=$href[3];
+            }
 
-	    if ($set == $default)
-		$ret.='<TR><TD CLASS="selectedcell"><A class="' . $class_ref . '" HREF="' . $href[0] . '" title="' . $title . '" ' . $javascript . '>' . $href[1] . '</A></TD></TR>';
-	    else
-		$ret.='<TR><TD CLASS="' . $class . '"><A class="' . $class_ref . '" HREF="' . $href[0] . '" title="' . $title . '" ' . $javascript . '>' . $href[1] . '</A></TD></TR>';
-	}
+            if ($set==$default)
+            {
+                $ret.='<TR><TD CLASS="selectedcell"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></TD></TR>';
+            }
+            else
+            {
+                $ret.='<TR><TD CLASS="'.$class.'"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></TD></TR>';
+            }
+        }
     }
     //direction Horizontal
     else if ($p_dir == 'H')
@@ -685,13 +693,17 @@ function sql_filter_per($p_cn, $p_from, $p_to, $p_form='p_id', $p_field='jr_tech
             throw new Exception("SFP2"._("Date invalide"));
         }
     }
-    if ($p_from == $p_to)
-	$periode = " $p_field = (select p_id from parm_periode " .
-		" where " .
-		" p_start = to_date('$p_from','DD.MM.YYYY')) ";
+    if ($p_from==$p_to)
+    {
+        $periode=" $p_field = (select p_id from parm_periode ".
+                " where ".
+                " p_start = to_date('$p_from','DD.MM.YYYY')) ";
+    }
     else
-	$periode = "$p_field in (select p_id from parm_periode " .
-		" where p_start >= to_date('$p_from','DD.MM.YYYY') and p_end <= to_date('$p_to','DD.MM.YYYY')) ";
+    {
+        $periode="$p_field in (select p_id from parm_periode ".
+                " where p_start >= to_date('$p_from','DD.MM.YYYY') and p_end <= to_date('$p_to','DD.MM.YYYY')) ";
+    }
     return $periode;
 }
 
@@ -709,7 +721,9 @@ function alert($p_msg, $buffer=false)
     $r.= '</script>';
 
     if ($buffer)
-	return $r;
+    {
+        return $r;
+    }
     echo $r;
 }
 
@@ -719,14 +733,23 @@ function alert($p_msg, $buffer=false)
 function set_language()
 {
     // desactivate local check
-    if ( defined("LOCALE") && LOCALE==0 ) return;
-    if ( ! isset ($_SESSION[SESSION_KEY.'g_lang'])) return;
-    
+    if (defined("LOCALE")&&LOCALE==0)
+    {
+        return;
+    }
+    if (!isset($_SESSION[SESSION_KEY.'g_lang']))
+    {
+        return;
+    }
+
     /*
      * If translation is not supported by current
      */
-    if (! function_exists("bindtextdomain")) return;
-    
+    if (!function_exists("bindtextdomain"))
+    {
+        return;
+    }
+
     $dir = "";
     // set differently the language depending of the operating system
     if (what_os() == 1)
