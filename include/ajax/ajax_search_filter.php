@@ -213,6 +213,7 @@ if ($op=="delete_search_operation")
 if ($op=='display_filter_tag')
 {
     $tag=$http->request("uf_tag");
+    if ( trim($tag)=="") {return;}
     $div=$http->request("div");
     $aTag=explode(',', $tag);
     if (is_array($aTag))
