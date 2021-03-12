@@ -76,6 +76,7 @@ var ManageTable = function (p_table_name)
     this.control = "dtr"; //<! Prefix Id of dialog box, table, row
     this.mt_style={position: "fixed", top:  '15%', width: "auto", "max-width":"60%","margin-left": "20%"};
     this.sort_column=0;
+    this.cssclass="inner_box";
     this.param = {"table": p_table_name, "ctl_id": this.control}; //<! default value to pass
     this.set_style=function(p_json) {
         this.mt_style=p_json;
@@ -308,13 +309,15 @@ var ManageTable = function (p_table_name)
                 remove_waiting_box();
                 try {
                     var x = here.parseXML(req);
-                    var obj = {id: control, "cssclass": "inner_box", "html": loading()};
+                    var obj = {id: control, "cssclass": here.cssclass, "html": loading()};
                     add_div(obj);
-                    var pos = calcy(250);
+                    var pos = calcy(50);
                     if (window.innerWidth < 1200) {
                         here.mt_style["margin-left"]="2%";
                         here.mt_style["max-width"]="80%";
                     }
+                    here.mt_style["position"]="absolute";
+                    here.mt_style["top"]=pos+"px";
                     console.log(here.mt_style);
                     $(obj.id).setStyle(here.mt_style);
                     $(obj.id).update(x['html']);
