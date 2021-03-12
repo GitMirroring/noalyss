@@ -82,12 +82,15 @@ class Manage_Table_SQL
     protected $a_info; //!< Array with the infotip
     protected $sort_column; //!< javascript sort , if empty there is no js sort
     protected $dialog_box; //!< ID of the dialog box which display the result of the ajax calls
+    protected $search_table; //!< boolean , by default true ,it is possible to search in the table, 
     const UPDATABLE=1;
     const VISIBLE=2;
 
     private $icon_mod; //!< place of right or left the icon update or mod, default right, accepted value=left,right,first column for mod
     private $icon_del; //!< place of right or left the icon update or mod, default right, accepted value=left,right
-    private $dialogbox_style;
+    private $dialogbox_style; 
+    private $button_add_top;  //!< place of the button add on the top, by default true
+    protected $title; //! < give the title of the diabox , default is Data
     /**
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the
@@ -124,9 +127,46 @@ class Manage_Table_SQL
         // By default no js sort
         $this->sort_column="";
         $this->dialog_box="dtr";
-        $this->dialogbox_style=array("position"=> "fixed", "top"=>  '15%',"width"=> "auto", "margin-left"=> "20%");
+        $this->dialogbox_style=array("position"=> "fixed", "top"=>  '15%',"width"=> "auto", 
+            "max-width"=>"60%",
+            "margin-left"=> "20%");
+        $this->search_table=true;
+        $this->button_add_top=true;
+        $this->title=_("Donnée");
     }
     /**
+     * Set the title of the diabox , default is Donnée
+     * @param type $p_title
+     */
+    function setTitle($p_title)
+    {
+        $this->title=$p_title;
+    }
+    function getTitle()
+    {
+        return $this->title;
+    }
+    /**
+     * Get if we can search in the table
+     * @return boolean
+     */
+    public function get_search_table()
+    {
+        return $this->search_table;
+    }
+
+    /**
+     * Set the table searchable or not
+     * @param boolean  : true we can search 
+     * @return $this
+     */
+    public function set_search_table($search_table)
+    {
+        $this->search_table=$search_table;
+        return $this;
+    }
+
+        /**
      * send the XML headers for the ajax call 
      */
     function send_header()
@@ -642,8 +682,18 @@ function check()
             }
         }
     }
+    public function get_button_add_top()
+    {
+        return $this->button_add_top;
+    }
 
-    /**
+    public function set_button_add_top($button_add_top)
+    {
+        $this->button_add_top=$button_add_top;
+        return $this;
+    }
+
+        /**
      * @brief display the data of the table
      * @param $p_order is the cond or order of the rows, 
      * if empty the primary key will be used
@@ -658,7 +708,7 @@ function check()
         }
         $ret=$this->table->seek($p_order, $p_array);
         $nb=Database::num_row($ret);
-        if ($this->can_append_row()==TRUE)
+        if ($this->can_append_row()==TRUE && $this->button_add_top == true)
         {
             echo HtmlInput::button_action(" "._("Ajout"),
                     sprintf("%s.input('-1','%s')", 
@@ -678,7 +728,10 @@ function check()
                 $visible++;
             }
         }
-        echo _('Cherche')." ".HtmlInput::filter_table("tb".$this->object_name, $result, 1);
+        if ( $this->get_search_table() )
+        {
+            echo _('Cherche')." ".HtmlInput::filter_table("tb".$this->object_name, $result, 1);
+        }
         
         // Set a sort on a column if sort_column is not empty
         if ( $this->sort_column =="")
@@ -925,7 +978,7 @@ function check()
     /**
      * @brief display into a dialog box the datarow in order 
      * to be appended or modified. Can be override if you need
-     * a more complex form
+     * a more complex form.
      */
     function input()
     {
@@ -1021,7 +1074,8 @@ function check()
     }
     /**
      * @brief Save the record from Request into the DB and returns an XML
-     * to update the Html Element
+     * to update the Html Element. The function check() will be called before saving
+     * @see check
      * @return \DOMDocument
      */
     function ajax_save()
@@ -1104,7 +1158,7 @@ function check()
 
             ob_start();
 
-            echo HtmlInput::title_box(_("Donnée"), $this->dialog_box,"close","","y");
+            echo HtmlInput::title_box($this->getTitle(), $this->dialog_box,"close","","y","y");
             printf('<form id="frm%s_%s" method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,
@@ -1119,10 +1173,10 @@ function check()
             $this->display_error();
             echo '<ul class="aligned-block">',
             '<li>',
-            HtmlInput::submit('update', _("OK")),
+            HtmlInput::submit('update', _("Sauver")),
             '</li>',
             '<li>',
-            HtmlInput::button_action(_("Cancel"), $close, "", "smallbutton"),
+            HtmlInput::button_action(_("Annuler"), $close, "", "smallbutton"),
             '</li>',
             '</ul>';
             echo "</form>";

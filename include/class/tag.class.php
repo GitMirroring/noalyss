@@ -25,6 +25,7 @@ class Tag
     function __construct($p_cn,$id=-1)
     {
         $this->cn=$p_cn;
+        $id = (trim($id)=="")?-1:$id;
         $this->data=new Tag_SQL($p_cn,$id);
     }
     public function get_data()

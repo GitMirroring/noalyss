@@ -84,3 +84,8 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
 <p>
     Comment<?php echo Icon_Action::comment("Allo ? l'heure d'été ?")?>
 </p>
+<p>
+<div id="enlarge_it" class="inner_box">
+    enlarge <?php echo Icon_Action::full_size("enlarge_it")?>
+</div>
+</p>

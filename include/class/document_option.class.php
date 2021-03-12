@@ -162,5 +162,38 @@ class Document_Option
         }
         return $return;
     }
-
+    
+     /**
+     * returns true there is a videoconf enable
+     * 
+     * @param int $p_document_type Document_Type.dt_id
+     * @return boolean
+     */
+    static function is_enable_video_conf ($p_document_type)
+    {
+         $return=false;
+        $cn=Dossier::connect();
+        if ($cn->get_value("select do_enable from document_option where document_type_id=$1 and do_code = $2",
+                        [$p_document_type, 'videoconf_server'])=='1')
+        {
+            $return=true;
+        }
+        return $return;
     }
+    
+     /**
+     * returns the videoconf server
+     * 
+     * @param int $p_document_type Document_Type.dt_id
+     * @return string with url to videoconf server
+     */
+    static function option_video_conf($p_document_type)
+    {
+        $cn=Dossier::connect();
+        $option_operation = $cn->get_value("select do_option from document_option where document_type_id=$1 "
+                . " and do_code = $2",
+                        [$p_document_type, 'videoconf_server']);
+        return $option_operation;
+    }
+
+}

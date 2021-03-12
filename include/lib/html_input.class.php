@@ -837,7 +837,7 @@ class HtmlInput
      * @return type
      */
     static function title_box($p_name, $p_div, $p_mod="close", $p_js="",
-            $p_draggable="n")
+            $p_draggable="n",$p_enlarge='n')
     {
         $p_div=strip_tags($p_div);
         $r='<div class="bxbutton">';
@@ -846,6 +846,9 @@ class HtmlInput
         if ($p_draggable=="y")
         {
             $r.=Icon_Action::draggable($p_div);
+        }
+        if ( $p_enlarge=='y') {
+            $r.=Icon_Action::full_size($p_div);
         }
         if ($p_mod=='close')
         {

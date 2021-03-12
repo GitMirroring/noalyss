@@ -29,7 +29,7 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
 class Attr_def_SQL extends Noalyss_SQL
 {
 
-    function __construct(Database $p_cn, $p_id=-1)
+    function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
         $this->table="public.attr_def";
         $this->primary_key="ad_id";

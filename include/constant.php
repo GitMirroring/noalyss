@@ -109,7 +109,7 @@ if ( !defined ("NOALYSS_PACKAGE_REPOSITORY")) {
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
 }
-define ("DBVERSION",151);
+define ("DBVERSION",153);
 define ("MONO_DATABASE",25);
 define ("DBVERSIONREPO",19);
 define ('NOTFOUND','--not found--');
@@ -228,8 +228,11 @@ define ("FICHE_TYPE_ACH_SER",3);
 define ("FICHE_TYPE_ACH_MAT",7);
 define ("FICHE_TYPE_PROJET",26);
 define ("FICHE_TYPE_MATERIAL",7);
-
-/** 
+// Max size is defined by default to 2MB,
+if ( ! defined("MAX_FILE_SIZE")) {
+    define ("MAX_FILE_SIZE",2097152);
+}
+/**
  * -- pour utiliser unoconv démarrer un server libreoffice 
  * commande
  * libreoffice --headless --accept="socket,host=127.0.0.1,port=2002;urp;" --nofirststartwizard 
@@ -314,6 +317,7 @@ define ('EMAIL_LIMIT',1002);
 define ('EXC_PARAM_VALUE',1005);
 define ('EXC_PARAM_TYPE',1006);
 define ('EXC_DUPLICATE',1200);
+define ('EXC_INVALID',1400);
 define ("UNPINDG","&#xf047;");
 define ("PINDG","&#xe809;");
 
@@ -329,4 +333,7 @@ if ( ! defined ("NOALYSS_URL")) {
             ":".$_SERVER['SERVER_PORT'].
             dirname($_SERVER['PHP_SELF']);
     define ("NOALYSS_URL",$base);
+}
+if (!defined ("DEFAULT_SERVER_VIDEO_CONF")) {
+    define ("DEFAULT_SERVER_VIDEO_CONF","https://www.free-solutions.org/");
 }

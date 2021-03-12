@@ -225,7 +225,8 @@ if ($sub_action == 'detail')
 	if ($g_user->can_write_action($ag_id)  == true)
 	{
             
-            echo '<form  enctype="multipart/form-data"  id="action_common_frm" class="print" action="do.php"  method="post"    style="display:inline">';
+            printf( '<form  enctype="multipart/form-data"  id="action_common_frm" class="print" action="do.php" 
+method="post"    style="display:inline" onsubmit="return check_file_size(this,%s)">',MAX_FILE_SIZE);
             echo $supl_hidden;
             echo HtmlInput::hidden('ac', $http->request('ac'));
             echo dossier::hidden();

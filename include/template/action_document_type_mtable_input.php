@@ -118,8 +118,20 @@ $select_comment_type->set_value(Document_Option::option_comment($table->dt_id));
 echo $select_comment_type->input();
 ?>
         </li> 
+    <li>
+        <?php
+        $i=new ICheckBox("videoconf_server",1);
+        $checked = (Document_Option::is_enable_video_conf($table->dt_id)==true) ?1:0;
+        $i->set_check($checked);
+        
+        echo $i->input();
+        echo _("Serveur de videoconf");
+        $itVideoconfServer=new IText("videoconf_server_url");
+        $itVideoconfServer->value=Document_Option::option_video_conf($table->dt_id);
+        echo $itVideoconfServer->input();
+        ?>
+    </li>
     </ul>
-
 </div>
 <div>
      <h3 class="info" sytle="margin-block: 4px"><?php echo _("Options contact") ?></h3>

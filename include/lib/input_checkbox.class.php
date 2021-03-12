@@ -50,6 +50,7 @@ class InputCheckBox extends HtmlInput
         $this->id_hidden=$p_id;
         $this->id_icon=uniqid($p_id);
         $this->javascript="";
+        $this->classrange="";
     }
 
     function input($p_name=NULL, $p_value=0)
@@ -75,9 +76,9 @@ class InputCheckBox extends HtmlInput
                 $this->javascript);
         
         if ($this->value=='1') {
-            $r.=Icon_Action::checked($this->id_icon,$this->javascript);
+            $r.=Icon_Action::checked($this->id_icon,$this->javascript,$this->classrange);
         } else {
-            $r.=Icon_Action::unchecked($this->id_icon,$this->javascript);
+            $r.=Icon_Action::unchecked($this->id_icon,$this->javascript,$this->classrange);
         }
         return $r;
     }

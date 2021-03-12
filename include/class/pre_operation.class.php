@@ -40,7 +40,7 @@ class Pre_operation
     private  $jrn_type;					/*!< $jrn_type */
     private  $name;						/*!< $name name of the predef. operation */
     private  $detail;                /*!< Pre_operation_detail object */
-    private  $od_direct ;    /*!< Compatibility for ACH in direct mode, only for ODS */
+    var     $od_direct ;    /*!< Compatibility for ACH in direct mode, only for ODS */
     private  $od_id;         /*!< id of the Predefined Operation */
     private $isloaded;
     private $description; /*!< description of the predefined operation */

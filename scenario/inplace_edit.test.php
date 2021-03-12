@@ -23,7 +23,7 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 //@description:Test the class Inplace_Edit , ajax and javascript
-
+$db=Dossier::connect();
 
 require_once NOALYSS_INCLUDE . '/lib/itext.class.php';
 require_once NOALYSS_INCLUDE . '/lib/inum.class.php';
@@ -44,13 +44,9 @@ if (!isset($_REQUEST["TestAjaxFile"])) {
     echo "TEXT #".$ajax_hello->input()."#";
     
     $select = new ISelect ("ajax_select");
+    $select->value=$db->make_array("select fd_id,fd_label from fiche_def order by 2");
     $select->id=uniqid("sel");
-    $select->value=[ 
-        ["value"=>1,"label"=>"ONE"],
-        ["value"=>2,"label"=>"TWO"],
-        ["value"=>3,"label"=>"THREE"],
-        ];
-    $select->selected="2";
+    $select->selected="10001";
     $ajax_select = new Inplace_Edit($select);
     $ajax_select->set_callback("ajax_test.php");
     $ajax_select->add_json_param("TestAjaxFile", __FILE__) ;

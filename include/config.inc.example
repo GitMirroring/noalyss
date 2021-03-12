@@ -72,3 +72,5 @@ define ("dbname","");
 // $pdftk = /snap/bin/pdftk
 // Define a random session key if you work with different version of NOALYSS
 // define ('SESSION_KEY','abcde');
+// Max size is defined by default to 2MB, it could be also needed to modify PHP Ini file
+//    define ("MAX_FILE_SIZE",2097152);

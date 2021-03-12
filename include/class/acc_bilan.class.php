@@ -272,8 +272,8 @@ class Acc_Bilan
                 throw new Exception(_("le formulaire id n'est pas donnee"));
 
             $sql="select b_name,b_file_template,b_file_form,lower(b_type) as b_type from bilan where".
-                 " b_id = ".$this->b_id;
-            $res=$this->db->exec_sql($sql);
+                 " b_id = $1";
+            $res=$this->db->exec_sql($sql,[$this->b_id]);
 
             if ( Database::num_row($res)==0)
                 throw new Exception (_('Aucun enregistrement trouve'));
@@ -284,7 +284,7 @@ class Acc_Bilan
         }
         catch(Exception $Ex)
         {
-              record_log($e);
+            record_log($e);
             echo $Ex->getMessage();
             throw $Ex;
         }
@@ -401,7 +401,7 @@ class Acc_Bilan
         $regex="/&lt;&lt;\\$[A-Z]*[0-9]*&gt;&gt;/";
         $lt="&lt;";
         $gt="&gt;";
-	$header_txt=header_txt($this->db);
+	$header_txt=utf8_encode(header_txt($this->db));
 
         while ( !feof($p_file) )
         {
@@ -656,7 +656,8 @@ class Acc_Bilan
             ob_start();
             // save the file in a temp folder
             // create a temp directory in /tmp to unpack file and to parse it
-            $dirname=tempnam($_ENV['TMP'].DIRECTORY_SEPARATOR.'tmp','bilan_');
+            // bug PHP 7 tempnam throw a notice
+            $dirname=@tempnam($_ENV['TMP'].DIRECTORY_SEPARATOR.'tmp','bilan_');
 
 
             unlink($dirname);

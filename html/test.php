@@ -38,12 +38,12 @@ require_once('lib/icon_action.class.php');
 require_once ('lib/function_javascript.php');
 require_once 'class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-
+html_page_start();
 global $http;
 
 $http=new HttpInput();
 
-load_all_script();
+
 $gDossier=$http->request('gDossier',"number", -1);
 if ($gDossier==-1)
 {
@@ -64,7 +64,7 @@ if (!file_exists('authorized_debug'))
     exit();
 }
 define('ALLOWED', 1);
-html_page_start("Classic");
+load_all_script();
 /******************************************************************************************************************/
 /*  Utilities 
 /******************************************************************************************************************/

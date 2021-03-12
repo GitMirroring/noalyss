@@ -111,6 +111,7 @@ EOF;
     function value()
     {
         $v=$this->input->get_value();
+        $v=html_entity_decode($v);
          if ( $this->input instanceof ITextarea) {
             echo '<span class="input_text" id="'.$this->input->id.'edit" >';
             echo '<pre class="field_follow_up">';
@@ -140,6 +141,7 @@ EOF;
     function input() {
         ob_start();
         $v=$this->input->get_value();
+        $v=html_entity_decode($v);
         if ( $this->input instanceof ITextarea) {
             echo '<span class="" id="'.$this->input->id.'edit" >';
             echo '<pre class="field_follow_up">';

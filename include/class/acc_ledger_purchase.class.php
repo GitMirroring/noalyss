@@ -1752,6 +1752,7 @@ EOF;
         $r.='<p class="decale">';
         // check for upload piece
         $file=new IFile();
+        $file->setAlertOnSize(true);
         $file->table=0;
         $r.=_("Ajoutez une pièce justificative ");
         $r.=$file->input("pj","");

@@ -218,16 +218,23 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			throw new Exception('Il n\'y a aucune opération', 12);
 
 		/* Check if the last_saldo and first_saldo are correct */
-		if (strlen(trim($last_sold)) != 0 && isNumber($last_sold) &&
-				strlen(trim($first_sold)) != 0 && isNumber($first_sold))
+		if (strlen(trim($last_sold)) != 0 
+                        && isNumber($last_sold) 
+                        && strlen(trim($first_sold)) != 0 
+                        && isNumber($first_sold)
+                    )
 		{
 			$diff = $last_sold - $first_sold;
 			$diff = round($diff, 2) - round($tot_amount, 2);
-			if ($first_sold != 0 && $last_sold != 0)
+                        $calc=bcadd($first_sold,$tot_amount,4);
+			if ($first_sold != 0 || $last_sold != 0)
 			{
-				if ($diff != 0)
-					throw new Exception('Le montant de l\'extrait est incorrect' .
-							$tot_amount . ' extrait ' . $diff, 13);
+				if ($diff != 0) {
+					throw new Exception(sprintf( _('Le montant de l\'extrait [%s] est incorrect,'.
+                                                " solde calculé [%s] , différence de [%s]") ,
+                                                $last_sold,$calc,$diff),13);
+                                    
+                                }
 			}
 		}
 	}
@@ -648,7 +655,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
         $r.='</table>';
 		// check for upload piece
 		$file = new IFile();
-
+        $file->setAlertOnSize(true);
 		$r.="<br>"._("Ajoutez une pièce justificative")." ";
 		$r.=$file->input("pj", "");
 

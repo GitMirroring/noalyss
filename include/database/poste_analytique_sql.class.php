@@ -35,7 +35,7 @@ require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
 class Poste_analytique_SQL extends Noalyss_SQL
 {
 
-    function __construct(Database $p_cn, $p_id=-1)
+    function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
         $this->table="public.poste_analytique";
         $this->primary_key="po_id";

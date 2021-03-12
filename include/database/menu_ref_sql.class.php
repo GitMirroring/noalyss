@@ -35,7 +35,7 @@ require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
 class Menu_Ref_SQL extends Noalyss_SQL
 {
 
-    function __construct(Database &$p_cn, $p_id=-1)
+    function __construct(DatabaseCore &$p_cn, $p_id=-1)
     {
         $this->table="public.menu_ref";
         $this->primary_key="me_code";

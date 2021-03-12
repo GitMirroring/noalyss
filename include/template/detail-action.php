@@ -62,12 +62,25 @@ $uniq=uniqid("tab",TRUE);
             ?>
           </td>
           </Tr>
+<?php 
+//----------------------- Video Conf --------------------------------------------------------------------------------
+if (Document_Option::is_enable_video_conf($this->dt_id)):?>          
+          <tr>
+              <td><?=_("VideoConf")?></td>
+              <td><A href="<?=Document_Option::option_video_conf($this->dt_id)?>" target="_blank">
+    <?=_("Salle de réunion")?>
+                  </a>
+          </tr>
+<?php endif;?>          
 	<tr>
           <TD colspan="2">
              <?php echo $spcontact->input(); ?>
           </td>
           </Tr>
-          <?php if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id)): ?>
+<?php 
+//----------------------- Contact Multiple ----------------------------------------------------------------------------
+if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id)): 
+    ?>
           <tr>
               <td>
                   <?php echo _('Autres concernés')?>
@@ -484,6 +497,11 @@ try {
 	docAdded=document.getElementById('add_file');
 	new_element=document.createElement('li');
 	new_element.innerHTML='<input class="inp" type="file" value="" name="file_upload[]"/><label>Description</label> <input type="input" class="input_text" name="input_desc[]" >';
+
+    new_element.innerHTML+='<span id="<?=uniqid("file")?>" onclick="document.getElementById(\'add_file\').removeChild(this.parentNode)" class="icon">&#xe80f;</span>';
+    
+    
+	
 	docAdded.appendChild(new_element);
 }
 catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>'); alert(exception.message);}
@@ -498,6 +516,10 @@ catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>
         ?>
         <label><?php echo _('Description')?></label>
         <input type="input" class="input_text" name="input_desc[]" >
+          <?php
+            $js="document.getElementById('add_file').removeChild(this.parentNode)";
+            echo Icon_Action::trash(uniqid(),$js);
+          ?>
       </li>
     </ol>
   <span   >

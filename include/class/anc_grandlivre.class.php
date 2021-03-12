@@ -24,6 +24,7 @@
  */
 require_once NOALYSS_INCLUDE.'/class/anc_print.class.php';
 require_once NOALYSS_INCLUDE.'/lib/impress.class.php';
+require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
 
 class Anc_GrandLivre extends Anc_Print
 {
@@ -113,7 +114,7 @@ class Anc_GrandLivre extends Anc_Print
         $pa_id_cond="";
         if ( isset ( $this->pa_id) && $this->pa_id !='')
             $pa_id_cond= "pa_id=".$this->pa_id." and";
-        $array=$this->db->get_array("	select
+        $array=$this->db->get_array("	 select
 	po_name,
 	to_char(oa_date,'DD.MM.YYYY') as oa_date,
         to_char(jr_date_paid,'DD.MM.YY') as strdate_paid,
@@ -136,7 +137,8 @@ class Anc_GrandLivre extends Anc_Print
         coalesce(oa_group,0) as oa_group,
 	case when oa_debit='t' then oa_amount else  0 end as amount_deb,
 	case when oa_debit='f' then oa_amount else  0 end as amount_cred,
-        case when oa_debit='f' then 'C' else  'D' end as deb_cred
+        case when oa_debit='f' then 'C' else  'D' end as deb_cred,
+    ac.str_action   
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
 	left join jrn on  (j_grpt=jr_grpt_id)
@@ -145,7 +147,12 @@ class Anc_GrandLivre extends Anc_Print
 			       	select distinct qs_client,j_id from  quant_sold qs  
 			       	union 
 					select distinct qf_bank,j_id from  quant_fin qf ) as ftiers using (j_id)
-             where $pa_id_cond oa_amount <> 0.0  $cond_poste $filter_date
+    left join (select j.jr_id,string_agg( ag_id::text,'-') as str_action 
+                from jrn j  left 
+                join action_gestion_operation ago  on (j.jr_id=ago.jr_id ) 
+                group by j.jr_id) as ac on (ac.jr_id=jrn.jr_id)					
+    where 
+        $pa_id_cond oa_amount <> 0.0  $cond_poste $filter_date
 	order by po_name,oa_date::date,qcode,j_poste");
 
 
@@ -162,7 +169,7 @@ class Anc_GrandLivre extends Anc_Print
     {
         if (CONVERT_GIF_PDF <> 'NOT' && PDFTK <> 'NOT')
         {
-            $r = "";
+            $r="";
             $r.= HtmlInput::hidden("to", $this->to);
             $r.= HtmlInput::hidden("from", $this->from);
             $r.= HtmlInput::hidden("pa_id", $this->pa_id);
@@ -201,7 +208,7 @@ class Anc_GrandLivre extends Anc_Print
         {
             return 0;
         }
-        $r.= '<table class="result" style="width:100%">';
+        $r.= '<table class="result" style="width:100%;border-color:transparent">';
         $ix = 0;
         $prev = 'xx';
         $idx = 0;
@@ -220,7 +227,7 @@ class Anc_GrandLivre extends Anc_Print
 		    $r.=td('') . td('') . td('');
                     $r.=td('') . td('') . td('') . td('') . td('') . td(nbm($tot_deb), ' class="num"') . td(nbm($tot_cred), ' class="num"') . td(nbm($tot_solde) . $sign, ' class="num"');
                 }
-                $r.='<tr>' . '<td colspan="7" style="width:auto">' . '<h2>' . h($row['po_name'] . ' ' . $row['po_description']) . '</td></tr>';
+                $r.='<tr>' . '<td colspan="12" style="width:auto">' . '<h2>' . h($row['po_name'] . ' ' . $row['po_description']) . '</td></tr>';
                 $r.= '<tr>' .
                         '<th>' . '</th>' .
                         '<th>' . _('Date') . '</th>' .
@@ -304,15 +311,10 @@ class Anc_GrandLivre extends Anc_Print
         return $r;
     }
       /*!
-     * \brief Show the button to export in PDF or CSV
-     * \param $url_csv url of the csv
-     * \param $url_pdf url of the pdf
-     * \param $p_string hidden data to include in the form
-     *
-     *
+     * \brief Show the button to export  CSV
      * \return string with the button
      */
-    function show_button($p_string="")
+    function button_export_csv($p_string="")
     {
         $r="";
         $r.= '<form method="GET" action="export.php"  style="display:inline">';
@@ -324,7 +326,7 @@ class Anc_GrandLivre extends Anc_Print
         $r.= HtmlInput::hidden("to_poste",$this->to_poste);
         $r.= $p_string;
         $r.= dossier::hidden();
-        $r.=HtmlInput::submit('bt_csv',"Export en CSV");
+        $r.=HtmlInput::submit('bt_csv',_("Export en CSV"));
         $r.= '</form>';
         return $r;
     }
@@ -355,6 +357,7 @@ class Anc_GrandLivre extends Anc_Print
         $aheader[]=array("title"=>'Debit','type'=>'num');
         $aheader[]=array("title"=>'Credit','type'=>'num');
         $aheader[]=array("title"=>'D/C','type'=>'string');
+        $aheader[]=array("title"=>'Action','type'=>'string');
         Impress::array_to_csv($array, $aheader,"export-anc-grandlivre");
     }
 }

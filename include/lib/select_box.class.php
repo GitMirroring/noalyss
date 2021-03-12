@@ -109,109 +109,14 @@ class Select_Box
         switch ($this->position)
         {
             case 'absolute':
-                // Show when click
-                $javascript=sprintf('
-                    $("%s_bt").onclick=function() {
-                        try {
-                          
-                            
-                            if (! document.getElementById("select_box%s") ) {
-                            
-                                var newDiv=new Element("div");
-                                newDiv.id="select_box%s";
-                                document.body.appendChild(newDiv);
-                                newDiv.addClassName("select_box");
-                                $("select_box%s").onmouseleave=function() {
-                                        try {
-                                           var newDiv=$("select_box%s");
-                                           newDiv.setStyle({display:"none"});
-                                        } catch(e) {
-                                             alert(e.message);
-                                        }
-                                       }
-                            } else {
-                                 var newDiv=document.getElementById("select_box%s");
-                            }
-                            newDiv.innerHTML=$("select_box%s").innerHTML;
-                            var pos=$("%s_bt").cumulativeOffset();
-                            var nTop=pos.top;
-                            var viewport = document.viewport.getDimensions();
-                            if ( nTop> viewport.height-newDiv.getHeight()-20) { nTop-=newDiv.getHeight()-5}
-                            
-                            newDiv.setStyle({display:"block",position:"absolute",top:nTop+"px",left:pos.left+5+"px","z-index":999});
-                           
-                           if ( $("search_%s") ) { $("search_%s").focus();}
-                        } catch(e) {
-                             alert(e.message);
-                        }
-                       }
-                        ', $this->id, $this->id, $this->id,$this->id, $this->id, $this->id, $this->id, $this->id, $list_id, $list_id);
-
-                break;
             case "normal":
-
-                // Show when click
-                $javascript=sprintf('$("%s_bt").onclick=function() {
-                        try {
-                           var newDiv=$("select_box%s");
-                           var pos=$("%s_bt").cumulativeOffset();
-                           newDiv.setStyle({display:"block",position:"fixed",top:pos.top+25+"px",left:pos.left+5+"px"});
-
-                           if ( $("search_%s") ) { $("search_%s").focus();}
-
-                        } catch(e) {
-                             alert(e.message);
-                        }
-                       }
-                        ', $this->id, $this->id, $this->id, $list_id, $list_id);
-                // Hide when out of the zone
-                $javascript.=sprintf('$("select_box%s").onmouseleave=function() {
-                try {
-                   var newDiv=$("select_box%s");
-                   newDiv.setStyle({display:"none"});
-                } catch(e) {
-                     alert(e.message);
-                }
-               }', $this->id, $this->id);
-                break;
             case "in-absolute":
                 // Show when click
                 $javascript=sprintf('
                     $("%s_bt").onclick=function() {
-                        try {
-                          
-                            
-                            if (! document.getElementById("select_box_content") ) {
-                            
-                                var newDiv=new Element("div");
-                                newDiv.id="select_box_content";
-                                document.body.appendChild(newDiv);
-                                newDiv.addClassName("select_box");
-                                $("select_box_content").onmouseleave=function() {
-                                        try {
-                                           var newDiv=$("select_box_content");
-                                           newDiv.setStyle({display:"none"});
-                                        } catch(e) {
-                                             alert(e.message);
-                                        }
-                                       }
-                            } else {
-                                 var newDiv=document.getElementById("select_box_content");
-                            }
-                            newDiv.innerHTML=$("select_box%s").innerHTML;
-                            var pos=$("%s_bt").cumulativeOffset();
-                            var nTop=pos.top;
-                            var viewport = document.viewport.getDimensions();
-                            if ( nTop> viewport.height-newDiv.getHeight()-20) { nTop-=newDiv.getHeight()-5}
-                            
-                            newDiv.setStyle({display:"block",position:"absolute",top:nTop+"px",left:pos.left+5+"px","z-index":999});
-                           
-                           if ( $("search_%s") ) { $("search_%s").focus();}
-                        } catch(e) {
-                             alert(e.message);
-                        }
+                        displaySelectBox("%s");
                        }
-                        ', $this->id, $this->id, $this->id, $list_id, $list_id);
+                        ', $this->id, $this->id);
 
                 break;
 
@@ -228,12 +133,13 @@ class Select_Box
         // Show when click
         $javascript=$this->compute_position();
 
-
-
         // display the button
-        printf('<input type="button" class="smallbutton " id="%s_bt" value="%s &#x25BE;" >', $this->id, $this->value);
-        printf('<input type="hidden" id="%s" name="%s" value="%s">', $this->id, $this->id, $this->default_value);
-        printf('<div class="select_box " id="select_box%s" style="%s">', $this->id, $this->style_box);
+        printf('<input type="button" class="smallbutton " id="%s_bt" value="%s &#x25BE;" >',
+            $this->id, $this->value);
+        printf('<input type="hidden" id="%s" name="%s" value="%s">',
+            $this->id, $this->id, $this->default_value);
+        printf('<div class="select_box " id="select_box%s" style="%s">',
+            $this->id, $this->style_box);
 
         // Show the filter if there is one, 
         if ($this->filter!="")

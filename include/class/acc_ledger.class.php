@@ -883,7 +883,7 @@ class Acc_Ledger  extends jrn_def_sql
         $ret.=HtmlInput::hidden('jrn_type', $this->get_type());
         $info=Icon_Action::infobulle(0);
         $info_poste=Icon_Action::infobulle(9);
-        $ret.='<table id="quick_item" style="position:float;width:100%">';
+        $ret.='<table id="quick_item" style="width:100%">';
         $ret.='<tr>'.
                 '<th style="text-align:left">Quickcode'.$info.'</th>'.
                 '<th style="text-align:left">'._('Poste').$info_poste.'</th>'.
@@ -1087,7 +1087,7 @@ class Acc_Ledger  extends jrn_def_sql
                 throw new Exception(
                         sprintf ( 
                                 _('Vous utilisez le mode strict la dernière operation est la date du %s
-                vous ne pouvez pas encoder à une date antérieure',$last_date)),
+                vous ne pouvez pas encoder à une date antérieure'),$last_date),
                 15);
         }
 
@@ -2040,7 +2040,7 @@ class Acc_Ledger  extends jrn_def_sql
                 echo '<input type="hidden" value="'.$id.'" name="p_jrn">';
                 $op=new Pre_operation($cn);
                 $op->p_jrn=$id;
-                $op->od_direct='t';
+
                 if ($op->count()!=0)
                 {
                     echo HtmlInput::submit('use_opd',
