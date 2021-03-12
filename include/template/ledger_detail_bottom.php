@@ -14,7 +14,7 @@
 require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
 
 $select_box=new \Select_Box("sb_".$jr_id, _("Autre action"));
-$select_box->set_position("in-absolute");
+$select_box->set_position("normal");
 $cn=Dossier::connect();
 // Contains all the linked actions
 $a_followup = Follow_Up::get_all_operation($jr_id);
@@ -44,6 +44,7 @@ $a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>
 $a_tab['document_operation_div']=array('id'=>'document_operation_div'.$div,'label'=>_('Document').'('.$nb_document.')','display'=>'block');
 $a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Actions Gestion').'('.count($a_followup).')','display'=>'none');
 $a_tab['analytic_div']=array('id'=>'analytic_div'.$div,'label'=>_('Comptabilité Analytique'),'display'=>'none');
+$a_tab['tag_operation_div']=array('id'=>'tag_operation_div'.$div,'label'=>_('Etiquette'),'display'=>'none');
 
  
 // show tabs
@@ -173,7 +174,7 @@ endif;
  <?php 
           // display title only in popup
           if ($div == 'popup') :
-          ?> 
+          ?> er
                 <h1 class="legend"><?php echo $a_tab['linked_operation_div']['label']?></h1>
           <?php endif; ?>
 <?php 
@@ -187,8 +188,22 @@ if ($aRap  != null ) {
     $opRap=new Acc_Operation($cn);
     $opRap->jr_id=$aRap[$e];
     $internal=$opRap->get_internal();
-    $array_jr=$cn->get_array('select jr_date,jr_pj_number,jr_montant,jr_comment from jrn where jr_id=$1',array($aRap[$e]));
+    $array_jr=$cn->get_array('select jr_date,jr_pj_number,jr_montant,jr_comment , jr_internal 
+                                from jrn where jr_id=$1',
+        array($aRap[$e]));
     $amount=$array_jr[0]['jr_montant'];
+    switch (substr($array_jr[0]['jr_internal'],0,1)) {
+        case 'A':
+            $amount = $cn->get_value("select sum(qp_price+qp_vat-qp_vat_sided) from quant_purchase qp 
+                                            where qp_internal=$1",
+                array($internal));
+            break;
+        case 'V':
+            $amount=$cn->get_value("select sum(qs_price+qs_vat-qs_vat_sided) from quant_sold qs  
+                                        where qs_internal=$1",
+                array($internal));
+            break;
+    }
     $total_rec=bcadd($total_rec,$amount);
     $str="modifyOperation(".$aRap[$e].",".$gDossier.")";
     
@@ -294,7 +309,23 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_file.php';
     </span>
 <?php endif;?>
 </div>
-
+<div id="tag_operation_div<?=$div?>" style="overflow:auto;display:<?php echo $a_tab['tag_operation_div']['display']?>"> 
+    <div id="operation_tag_td<?=$div?>">
+    <?php
+    /******************************************************************************************************************
+     * Tags on operation
+     *****************************************************************************************************************/
+    $tag_operation=new Tag_Operation($cn);
+    $tag_operation->set_jrn_id($obj->det->jr_id);
+    $tag_operation->tag_cell($div);
+    ?>
+    
+    </div>
+    <?php
+    // Button add tags
+         if ( $access=='W') { echo Tag_Operation::button_search($obj->det->jr_id,$div);}
+    ?>
+</div>
 <hr>
 <?php 
       echo '<p style="text-align:center">';

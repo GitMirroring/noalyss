@@ -87,7 +87,7 @@ class Acc_Ledger_Test extends TestCase
          put_global(array(["key"=>"ac","value"=>"phpunit"]));
         $ledger=new Acc_Ledger_Search('ALL');
         $r=$ledger->display_search_form();
-        $this->assertEquals(9066,strlen($r),"Size of the html string for display_search_form");
+        $this->assertEquals(8983,strlen($r),"Size of the html string for display_search_form");
     }
     /**
      * @covers ::build_search_filter

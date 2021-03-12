@@ -208,7 +208,9 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             $fiche->get_by_qcode(${'e_march' . $i});
             if ($fiche->belong_ledger($p_jrn, 'cred') != 1)
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('n\'est pas accessible à ce journal'), 10);
-            $nb++;
+           
+            if ( ${"e_quant".$i} != 0 && trim(${"e_quant".$i}) !="" ) {$nb++;}
+
         }
         if ($nb == 0)
             throw new Exception(_('Il n\'y a aucune marchandise'), 12);
@@ -1149,6 +1151,7 @@ EOF;
         // check for upload piece
         $file = new IFile();
         $file->table = 0;
+        $file->setAlertOnSize(true);
         $r.='<p class="decale">';
         $r.=_("Ajoutez une pièce justificative ");
         $r.=$file->input("pj", "");
@@ -1487,11 +1490,12 @@ EOF;
         ob_start();
         echo '<div id="predef_form">';
         echo HtmlInput::hidden('p_jrn_predef', $this->id);
-        $op=new Pre_op_ven($this->db);
-        $op->set('ledger', $this->id);
-        $op->set('ledger_type', "VEN");
-        $op->set('direct', 'f');
-        $url=http_build_query(array('p_jrn_predef'=>$this->id, 'ac'=>$_REQUEST['ac'],
+        $op=new Pre_operation($this->db);
+        $op->set_jrn_type("VEN");
+        $op->set_p_jrn($this->id);
+        $op->set_od_direct('f');
+        $http=new \HttpInput();
+        $url=http_build_query(array('p_jrn_predef'=>$this->id, 'ac'=>$http->request('ac'),
             'gDossier'=>dossier::id()));
         echo $op->form_get('do.php?'.$url);
         echo '</div>';

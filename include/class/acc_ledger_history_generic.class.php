@@ -510,12 +510,12 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
 
         $cond_limite=($p_limit!=-1)?" limit ".$p_limit." offset ".$p_offset:"";
 
-        $ledger_list=join($this->ma_ledger, ",");
+        $ledger_list=join( ",",$this->ma_ledger);
 // Grand livre == 0
         $Res=$this->db->exec_sql("select jr_id,j_id,j_id as int_j_id,to_char(j_date,'DD.MM.YYYY') as j_date,
                                      jr_internal,
-                                     case j_debit when 't' then j_montant::text else '   ' end as deb_montant,
-                                     case j_debit when 'f' then j_montant::text else '   ' end as cred_montant,
+                                     case j_debit when 't' then j_montant else 0 end as deb_montant,
+                                     case j_debit when 'f' then j_montant else 0 end as cred_montant,
                                      j_debit as debit,j_poste as poste,j_qcode,jr_montant , ".
                 "case when j_text='' or j_text is null then pcm_lib else j_text end as description,j_grpt as grp,
                                      jr_comment||' ('||jr_internal||')'  as jr_comment,

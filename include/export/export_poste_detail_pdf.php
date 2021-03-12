@@ -39,13 +39,14 @@ $poste_id=$http->request("poste_id");
 $from_periode=$http->request("from_periode");
 $to_periode=$http->request("to_periode");
 $ople=$http->request("ople");
+$poste_fille=$http->request("poste_fille","string",0);
 
 $gDossier=dossier::id();
 
 /* Security */
 $cn=Dossier::connect();
 
-if ( isset ( $poste_fille) )
+if (  $poste_fille ==  'on' )
 { //choisit de voir tous les postes
     $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like $1||'%' order by pcm_val",array($poste_id));
 }
@@ -53,7 +54,7 @@ else
 {
     $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text = $1 ",array($poste_id));
 }
-
+tracedebug("exportpostedetail",$a_poste,"a_poste");
 $ret="";
 
 $pdf=new PDF($cn);

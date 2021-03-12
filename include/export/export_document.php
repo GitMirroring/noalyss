@@ -45,7 +45,7 @@ if ($action == 'sh')
             $d_id=$http->request('d_id',"number");
 		// retrieve the document
 		$doc = new Document($cn, $d_id);
-		$doc->Send();
+		$doc->send();
 	}
 }
 /* remove the document */

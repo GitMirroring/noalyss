@@ -288,7 +288,7 @@ class Anc_Operation
             return _("Pas d'enregistrement trouvé");
 
         // navigation_bar
-        $step=$_SESSION['g_pagesize'];
+        $step=$_SESSION[SESSION_KEY.'g_pagesize'];
         $page=(isset($_GET['offset']))?$_GET['page']:1;
         $offset=(isset($_GET['offset']))?$_GET['offset']:0;
         $bar=navigation_bar($offset+1,count($array),$step,$page);
@@ -732,7 +732,10 @@ class Anc_Operation
                 $op->po_id=$hplan[$p_item][$e];
                 $op->oa_group=$this->oa_group;
                 $op->j_id=$p_j_id;
-                $ratio=bcdiv($val[$p_item][$row],${"amount_t".$p_item});
+                $ratio=0;
+                if (${"amount_t".$p_item} != 0 ) {
+                    $ratio=bcdiv($val[$p_item][$row],${"amount_t".$p_item});
+                }
                 $amount=  bcmul($p_nd, $ratio);
                 // convert to euro
                 $amount=bcmul($amount,$this->currency_rate);

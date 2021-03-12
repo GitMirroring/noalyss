@@ -31,14 +31,19 @@ require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once NOALYSS_INCLUDE.'/class/document.class.php';
 require_once NOALYSS_INCLUDE.'/class/document_type.class.php';
 require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
+require_once NOALYSS_INCLUDE.'/class/document_option.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/class/follow_up_detail.class.php';
 require_once NOALYSS_INCLUDE.'/lib/inum.class.php';
 require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 require_once NOALYSS_INCLUDE.'/lib/irelated_action.class.php';
 require_once NOALYSS_INCLUDE.'/class/tag.class.php';
+require_once NOALYSS_INCLUDE.'/class/document_option.class.php';
 require_once NOALYSS_INCLUDE.'/class/default_menu.class.php';
 require_once NOALYSS_INCLUDE.'/lib/inplace_edit.class.php';
+require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
+
 /**
  * \file
  * \brief class_action for manipulating actions
@@ -80,7 +85,8 @@ class Follow_Up
     var $ag_dest;  /*!< $ag_dest person who is in charged */
     var $ag_contact;  /*!< $ag_contact contact */
     var $ag_remind_date;  /*!< $ag_contact contact */
-
+    var $f_id_dest ; /*!< followup action recipient */
+    var $ag_description; /*!< description of the action */
     /**
      * @brief $operation string related operation
      */
@@ -105,6 +111,7 @@ class Follow_Up
         $this->operation="";
         $this->action="";
         $this->f_dest_id=0;
+        $this->f_id_dest=0;
     }
     /**
      * Create a filter based on the current user, 
@@ -150,7 +157,7 @@ class Follow_Up
      *
      * \return string containing the html code
      */
-    function Display($p_view, $p_gen, $p_base, $retour="")
+    function display($p_view, $p_gen, $p_base, $retour="")
     {
         global $g_user;
         if ($p_view=='UPD')
@@ -162,7 +169,6 @@ class Follow_Up
         {
             $upd=false;
             $readonly=false;
-            $this->ag_ref=_("Nouveau");
         }
         elseif ($p_view=='READ')
         {
@@ -173,6 +179,8 @@ class Follow_Up
         {
             throw new Exception('class_action'.__LINE__.'Follow_Up::Display error unknown parameter'.$p_view);
         }
+        
+       
         // Compute the widget
         // Date
         $date=new IDate();
@@ -261,7 +269,7 @@ class Follow_Up
         $ag_priority->name="ag_priority";
         $ag_priority->selected=$this->ag_priority;
         $ag_priority->value=array(array('value'=>1, 'label'=>_('Haute')),
-            array('value'=>2, 'label'=>_('Moyenne')),
+            array('value'=>2, 'label'=>_('Normale')),
             array('value'=>3, 'label'=>_('Basse'))
         );
         $str_ag_priority=$ag_priority->input();
@@ -385,7 +393,7 @@ class Follow_Up
         $h_agrefid=new IHidden();
         $iag_ref=new IText("ag_ref");
         $iag_ref->value=$this->ag_ref;
-        $iag_ref->readOnly=($p_view=="NEW"||$p_view=='READ')?true:false;
+        $iag_ref->readOnly=false;
         $str_ag_ref=$iag_ref->input();
         // Preparing the return string
         $r="";
@@ -393,6 +401,7 @@ class Follow_Up
         /* for new files */
         $upload=new IFile();
         $upload->name="file_upload[]";
+        $upload->setAlertOnSize(true);
         $upload->readOnly=$readonly;
         $upload->value="";
         $aAttachedFile=$this->db->get_array('select d_id,d_filename,d_description,d_mimetype,'.
@@ -426,108 +435,9 @@ class Follow_Up
         $text=new IText();
         $num=new INum();
 
-        /* TVA */
-        $itva=new ITva_Popup($this->db);
-        $itva->in_table=true;
-        $aCard=array();
-        /* create aArticle for the detail section */
-        $article_count=(count($this->aAction_detail)==0)?MAX_ARTICLE:count($this->aAction_detail);
-        /* Compute total */
-        $tot_item=0;
-        $tot_vat=0;
-        for ($i=0; $i<$article_count; $i++)
-        {
-            /* fid = Icard  */
-            $icard=new ICard();
-            $icard->jrn=0;
-            $icard->table=0;
-            $icard->noadd="no";
-            $icard->extra='all';
-            $icard->name="e_march".$i;
-            $tmp_ad=(isset($this->aAction_detail[$i]))?$this->aAction_detail[$i]:false;
-            $icard->readOnly=$readonly;
-            $icard->value='';
-            $aCard[$i]=0;
-            if ($tmp_ad)
-            {
-                $march=new Fiche($this->db);
-                $f=$tmp_ad->get_parameter('qcode');
-                if ($f!=0)
-                {
-                    $march->id=$f;
-                    $icard->value=$march->get_quick_code();
-                    $aCard[$i]=$f;
-                }
-            }
-            $icard->set_dblclick("fill_ipopcard(this);");
-            // name of the field to update with the name of the card
-            $icard->set_attribute('label', "e_march".$i."_label");
-            // name of the field to update with the name of the card
-            $icard->set_attribute('typecard', $icard->extra);
-            $icard->set_attribute('ipopup', 'ipopcard');
-            $icard->set_function('fill_data');
-            $icard->javascript=sprintf(' onchange="fill_data_onchange(\'%s\');" ', $icard->name);
-
-            $aArticle[$i]['fid']=$icard->search().$icard->input();
-
-            $text->javascript=' onchange="clean_tva('.$i.');compute_ledger('.$i.')"';
-            $text->css_size="100%";
-            $text->name="e_march".$i."_label";
-            $text->id="e_march".$i."_label";
-            $text->size=40;
-            $text->value=($tmp_ad)?$tmp_ad->get_parameter('text'):"";
-            $text->readOnly=$readonly;
-            $aArticle[$i]['desc']=$text->input();
-
-            $num->javascript=' onchange="format_number(this,4);clean_tva('.$i.');compute_ledger('.$i.')"';
-            $num->name="e_march".$i."_price";
-            $num->id="e_march".$i."_price";
-            $num->size=8;
-            $num->readOnly=$readonly;
-            $num->value=($tmp_ad)?$tmp_ad->get_parameter('price_unit'):0;
-            $aArticle[$i]['pu']=$num->input();
-
-            $num->name="e_quant".$i;
-            $num->id="e_quant".$i;
-            $num->size=8;
-            $num->value=($tmp_ad)?$tmp_ad->get_parameter('quantity'):0;
-            $aArticle[$i]['quant']=$num->input();
-
-            $itva->name='e_march'.$i.'_tva_id';
-            $itva->id='e_march'.$i.'_tva_id';
-            $itva->value=($tmp_ad)?$tmp_ad->get_parameter('tva_id'):0;
-            $itva->readOnly=$readonly;
-            $itva->js=' onchange="format_number(this);clean_tva('.$i.');compute_ledger('.$i.')"';
-            $itva->set_attribute('compute', $i);
-
-            $aArticle[$i]['tvaid']=$itva->input();
-
-            $num->name="e_march".$i."_tva_amount";
-            $num->id="e_march".$i."_tva_amount";
-            $num->value=($tmp_ad)?$tmp_ad->get_parameter('tva_amount'):0;
-            $num->javascript=" onchange=\"compute_ledger('".$i." ')\"";
-            $num->size=8;
-            $aArticle[$i]['tva']=$num->input();
-            $tot_vat=bcadd($tot_vat,$num->value);
-
-            $num->name="tvac_march".$i;
-            $num->id="tvac_march".$i;
-            $num->value=($tmp_ad)?$tmp_ad->get_parameter('total'):0;
-            $num->size=8;
-            $aArticle[$i]['tvac']=$num->input();
-            $tot_item=bcadd($tot_item,$num->value);
-
-            $aArticle[$i]['hidden_htva']=HtmlInput::hidden('htva_march'.$i, 0);
-            $aArticle[$i]['hidden_tva']=HtmlInput::hidden('tva_march'.$i, 0);
-            $aArticle[$i]['ad_id']=($tmp_ad)?HtmlInput::hidden('ad_id'.$i, $tmp_ad->get_parameter('id')):HtmlInput::hidden('ad_id'.$i, 0);
-        }
-
         /* Add the needed hidden values */
         $r.=dossier::hidden();
 
-        /* add the number of item */
-        $Hid=new IHidden();
-        $r.=$Hid->input("nb_item", $article_count);
         $r.=HtmlInput::request_to_hidden(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag"));
         $a_tag=$this->tag_get();
         $menu=new Default_Menu();
@@ -612,8 +522,7 @@ class Follow_Up
     function save()
     {
 
-        // Get The sequence id,
-        $seq_name="seq_doc_type_".$this->dt_id;
+       
         $str_file="";
         $add_file='';
 
@@ -633,11 +542,17 @@ class Follow_Up
             $this->ag_title=$doc_mod->dt_value;
         }
         $this->ag_id=$this->db->get_next_seq('action_gestion_ag_id_seq');
-
-        // Create the reference
-        $ag_ref=$this->db->get_value('select dt_prefix from document_type where dt_id=$1', array($this->dt_id)).'-'.$this->db->get_next_seq($seq_name);
+        $seq_name="seq_doc_type_".$this->dt_id;
+        // to avoid duplicate
+        do {
+            // Create the reference
+            $ag_ref=$this->db->get_value('select dt_prefix from document_type where dt_id=$1', array($this->dt_id)).'-'.$this->db->get_next_seq($seq_name);
+            // if reference does not exist , finish the loop
+            if ( $this->db->get_value("select count(*) from action_gestion where ag_ref = $1",array($ag_ref)) == 0)
+            break;
+        } while (1);
+        // check if the reference already exist and try to compute new one
         $this->ag_ref=$ag_ref;
-
         // save into the database
         if ($this->ag_remind_date!=null||$this->ag_remind_date!='')
         {
@@ -659,19 +574,20 @@ class Follow_Up
             $this->dt_id, /* 3 */
             $this->ag_title, /* 4 */
             $exp->id, /* 5 */
-            $ag_ref, /* 6 */
+            $this->ag_ref, /* 6 */
             $this->ag_dest, /* 7 */
             $this->ag_hour, /* 8 */
             $this->ag_priority, /* 9 */
-            $_SESSION['g_user'], /* 10 */
+            $_SESSION[SESSION_KEY.'g_user'], /* 10 */
             $contact->id, /* 11 */
             $this->ag_state, /* 12 */
             $this->ag_remind_date /* 13 */
                 )
         );
-
+        $http=new HttpInput();
+        $nb_item=$http->post("nb_item","number",0);
         /* insert also the details */
-        for ($i=0; $i<$_POST['nb_item']; $i++)
+        for ($i=0; $i<$nb_item; $i++)
         {
             $act=new Follow_Up_Detail($this->db);
             $act->from_array($_POST, $i);
@@ -681,13 +597,18 @@ class Follow_Up
             $act->save();
         }
 
-        /* Upload the documents */
+        /* upload the documents */
         $doc=new Document($this->db);
-        $doc->Upload($this->ag_id);
-        if (trim($this->ag_comment)!='')
+        $doc->upload($this->ag_id);
+        if (trim($this->ag_comment)!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION['g_user'], $this->ag_comment));
+                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
+        }
+        if (trim($this->ag_description)!='' && Document_Option::can_add_comment($this->ag_id))
+        {
+            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
+                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_description));
         }
         $this->insert_operation();
         $this->insert_action();
@@ -704,19 +625,29 @@ class Follow_Up
     function myList($p_base, $p_filter="", $p_search="")
     {
         // for the sort
-        $url=HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag")).'&'.$p_base;
+        $arg=HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag"),"");
+        $url=$p_base.$arg;
 
         $table=new Sort_Table();
-        $table->add('Date Doc.', $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd');
-        $table->add('Date Comm.', $url, 'order by last_comment', 'order by last_comment desc', 'dca', 'dcd');
-        $table->add('Date Limite', $url, 'order by ag_remind_date asc', 'order by ag_remind_date  desc', 'ra', 'rd');
-        $table->add('Tag', $url, 'order by tags asc', 'order by tags desc', 'taa', 'tad');
-        $table->add('Réf.', $url, 'order by ag_ref asc', 'order by ag_ref desc', 'ra', 'rd');
-        $table->add('Groupe', $url, "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe')", "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') desc", 'dea', 'ded');
-        $table->add('Dest/Exp', $url, 'order by name asc', 'order by name desc', 'ea', 'ed');
-        $table->add('Titre', $url, 'order by ag_title asc', 'order by ag_title desc', 'ta', 'td');
+        // 0
+        $table->add(_('Date Doc.'), $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd'); 
+        //$table->add(_('Date Comm.'), $url, 'order by last_comment', 'order by last_comment desc', 'dca', 'dcd');
+        //1
+        $table->add(_('Date Limite'), $url, 'order by ag_remind_date asc', 'order by ag_remind_date  desc', 'ra', 'rd');
+        //2
+        $table->add(_('Réf.'), $url, 'order by ag_ref asc', 'order by ag_ref desc', 'ra', 'rd');
+        //3
+        $table->add(_('Etiquette'), $url, 'order by tags asc', 'order by tags desc', 'taa', 'tad');
+        //4
+        $table->add(_('Groupe'), $url, "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe')", "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') desc", 'dea', 'ded');
+        //5
+        $table->add(_('Dest/Exp'), $url, 'order by qcode asc', 'order by qcode desc', 'ea', 'ed');
+        //6
+        $table->add(_('Titre'), $url, 'order by ag_title asc', 'order by ag_title desc', 'ta', 'td');
+        //7
+        $table->add(_('Etat'), $url, 'order by s_value asc', 'order by s_value desc', 'ea', 'ed');
 
-        $ord=(!isset($_GET['ord']))?"dcd":$_GET['ord'];
+        $ord=(!isset($_GET['ord']))?"dd":$_GET['ord'];
         $sort=$table->get_sql_order($ord);
 
         if (strlen(trim($p_filter))!=0)
@@ -734,13 +665,15 @@ class Follow_Up
                 ag_title,dt_value,ag_ref, ag_priority,ag_state,
                 coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') as dest,
                 (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=1) as name,
-                array_to_string((select array_agg(t1.t_tag) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags
+                (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=23) as qcode,
+                array_to_string((select array_agg(t1.t_tag) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags,
+                array_to_string((select array_agg(t1.t_color) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags_color
             from action_gestion as ag
                 join document_type on (ag_type=dt_id)
                 join document_state on (ag_state=s_id)
              where $p_filter_doc $p_search $sort";
         $max_line=$this->db->count_sql($sql);
-        $step=$_SESSION['g_pagesize'];
+        $step=$_SESSION[SESSION_KEY.'g_pagesize'];
         $page=(isset($_GET['offset']))?$_GET['page']:1;
         $offset=(isset($_GET['offset']))?Database::escape_string($_GET['offset']):0;
         if ($step!=-1)
@@ -753,19 +686,22 @@ class Follow_Up
         $a_row=Database::fetch_all($Res);
 
         $r="";
+        $r.=HtmlInput::filter_table('mylist_tb', '1,2,3,4,5,6,7,8,9',1);
         $r.='<p>'.$bar.'</p>';
-        $r.='<table class="document">';
+        
+        $r.='<table id="mylist_tb" class="document">';
         $r.="<tr>";
         $r.='<th name="ag_id_td" style="display:none" >'.ICheckBox::toggle_checkbox('ag', 'list_ag_frm').'</th>';
-        $r.='<th>'.$table->get_header(0).'</th>';
-        $r.='<th>'.$table->get_header(1).'</th>';
-        $r.='<th>'.$table->get_header(2).'</th>';
-        $r.='<th>'.$table->get_header(3).'</th>';
-        $r.='<th>'.$table->get_header(4).'</th>';
-        $r.='<th>'.$table->get_header(5).'</th>';
-        $r.='<th>'.$table->get_header(6).'</th>';
-        $r.='<th>'.$table->get_header(7).'</th>';
-        $r.=th('Priorité');
+        $r.='<th style="width:5.57%">'.$table->get_header(0).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(1).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(2).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(5).'</th>';
+//        $r.='<th>'.$table->get_header(1).'</th>';
+        $r.=th('Priorité','style="width:5.57%"');
+        $r.='<th style="min-width:45%">'.$table->get_header(6).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(7).'</th>';
+        $r.='<th style="max-width:10%">'.$table->get_header(3).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(4).'</th>';
         $r.="</tr>";
 
 
@@ -780,10 +716,11 @@ class Follow_Up
         $today=date('d.m.Y');
         $i=0;
         $checkbox=new ICheckBox("mag_id[]");
+        $checkbox->set_range("action_followup_ck");
         //show the sub_action
         foreach ($a_row as $row)
         {
-            $href='<A class="document" HREF="do.php?'.$p_base.HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "gDossier", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag", "ac"), "&").'&sa=detail&ag_id='.$row['ag_id'].'">';
+            $href='<A class="document" HREF="'.$p_base.HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "gDossier", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag", "ac"), "").'&sa=detail&ag_id='.$row['ag_id'].'" title="'.$row['name'].'">';
             $i++;
             $tr=($i%2==0)?'even':'odd';
             if ($row['ag_priority']<2)
@@ -801,56 +738,67 @@ class Follow_Up
             $checkbox->value=$row['ag_id'];
             $r.='<td name="ag_id_td" style="display:none">'.$checkbox->input().'</td>';
             $r.="<td>".$href.smaller_date($row['my_date']).'</a>'."</td>";
-            $r.="<td>".$href.$row['str_last_comment'].'</a>'."</td>";
+            //$r.="<td>".$href.$row['str_last_comment'].'</a>'."</td>";
             $r.="<td>".$href.smaller_date($row['my_remind']).'</a>'."</td>";
-            $r.="<td>".$href.h($row['tags']).'</a>'."</td>";
             $r.="<td>".$href.$row['ag_ref'].'</a>'."</td>";
-            $r.="<td>".$href.h($row['dest']).'</a>'."</td>";
-
             // Expediteur
-            $fexp=new Fiche($this->db);
-            $fexp->id=$row['f_id_dest'];
-            $qcode_dest=$fexp->strAttribut(ATTR_DEF_QUICKCODE);
-
-            $qexp=($qcode_dest==NOTFOUND)?"Interne":$qcode_dest;
-            $jsexp=sprintf("javascript:showfiche('%s')", $qexp);
-            if ($qexp!='Interne')
+            if ($row['qcode']!='')
             {
-                $r.="<td>$href".$qexp." : ".$fexp->getName().'</a></td>';
+                $jsexp=sprintf("javascript:showfiche('%s')", $row['qcode']);
+                $r.="<td>$href".$row['qcode'].'</a></td>';
             }
             else
-                $r.="<td>$href Interne </a></td>";
+                $r.="<td></td>";
 
-            $ref="";
-
-
-            $r.='<td>'.$href.
-                    h($row['ag_title'])."</A></td>";
-
-            /*
+             /*
              * State
              */
             switch ($row['ag_priority'])
             {
                 case 1:
-                    $priority='Haute';
+                    $priority=_('Haute');
                     break;
                 case 2:
-                    $priority="Moyenne";
+                    $priority=_("Normale");
                     break;
                 case 3:
-                    $priority="Important";
+                    $priority=_("Basse");
                     break;
             }
             $r.=td($priority);
 
-            $r.="<td>".$ref."</td>";
+             $r.='<td>'.$href.
+                    h($row['ag_title'])."</A></td>";
+            $r.="<td>".$row['s_value']."</td>";
+            $r.="<td>";
+            if ($row['tags']!=""){
+                $r.=$href;
+                $aColor=explode(",", $row["tags_color"]);
+                $aTags=explode(",", $row["tags"]);
+                $nb_tag=count($aTags);
+                for ( $x=0;$x<$nb_tag;$x++) {
+                   $r.=sprintf('<span style="font-size:75%%;padding:1px;border-color:transparent" class="tagcell tagcell-color%s">%s</span>',$aColor[$x],$aTags[$x]);
+                   $r.="&nbsp;";
+                } // end loop $x
+                $r.='</a>';
+            }
+            $r.="</td>";
+            $r.="<td>".$href.h($row['dest']).'</a>'."</td>";
+
+            
+
+
+
+           
+
+
             $r.="</tr>";
         }
 
         $r.="</table>";
 
         $r.='<p>'.$bar.'</p>';
+        $r.=ICheckBox::javascript_set_range("action_followup_ck");
         return $r;
     }
 
@@ -859,7 +807,7 @@ class Follow_Up
      *
      * \return true on success otherwise false
      */
-    function Update()
+    function update()
     {
 
         // if ag_id == 0 nothing to do
@@ -889,7 +837,6 @@ class Follow_Up
         $old=new Follow_Up($this->db);
         $old->ag_id=$this->ag_id;
         $old->get();
-
         // If ag_ref changed then check if unique
         if ($old->ag_ref!=$this->ag_ref)
         {
@@ -959,12 +906,14 @@ class Follow_Up
                 $this->ag_ref /* 11 */
             ));
         }
-        // Upload  documents
+        // upload  documents
         $doc=new Document($this->db);
-        $doc->Upload($this->ag_id);
+        $doc->upload($this->ag_id);
 
         /* save action details */
-        for ($i=0; $i<$_POST['nb_item']; $i++)
+        $http=new HttpInput();
+        $nb_item=$http->post("nb_item","number",0);        
+        for ($i=0; $i< $nb_item ; $i++)
         {
             $act=new Follow_Up_Detail($this->db);
             $act->from_array($_POST, $i);
@@ -977,7 +926,12 @@ class Follow_Up
         if (trim($this->ag_comment)!='')
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION['g_user'], $this->ag_comment));
+                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
+        }
+        if (trim($this->ag_description)!='')
+        {
+            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
+                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_description));
         }
         $this->insert_operation();
         $this->insert_action();
@@ -1023,29 +977,24 @@ class Follow_Up
     function fromArray($p_array)
     {
         global $g_user;
-        $this->ag_id=(isset($p_array['ag_id']))?$p_array['ag_id']:0;
-        $this->ag_ref=(isset($p_array['ag_ref']))?$p_array['ag_ref']:"";
-        $this->qcode_dest=(isset($p_array['qcode_dest']))?$p_array['qcode_dest']:"";
-        $this->f_id_dest=(isset($p_array['f_id_dest']))?$p_array['f_id_dest']:null;
-        $this->ag_timestamp=(isset($p_array['ag_timestamp']))?$p_array['ag_timestamp']:date('d.m.Y');
-        $this->qcode_dest=(isset($p_array['qcode_dest']))?$p_array['qcode_dest']:"";
-        $this->dt_id=(isset($p_array['dt_id']))?$p_array['dt_id']:"";
-        $this->ag_state=(isset($p_array['ag_state']))?$p_array['ag_state']:2;
-        $this->ag_ref=(isset($p_array['ag_ref']))?$p_array['ag_ref']:"";
-        $this->ag_title=(isset($p_array['ag_title']))?$p_array['ag_title']:"";
-        $this->ag_hour=(isset($p_array['ag_hour']))?$p_array['ag_hour']:"";
-        $this->ag_dest=(isset($p_array['ag_dest']))?$p_array['ag_dest']:$g_user->get_profile();
-        $this->ag_priority=(isset($p_array['ag_priority']))?$p_array['ag_priority']:2;
-        $this->ag_contact=(isset($p_array['ag_contact']))?$p_array['ag_contact']:"";
-        $this->ag_comment=(isset($p_array['ag_comment']))?$p_array['ag_comment']:"";
-        $this->ag_remind_date=(isset($p_array['ag_remind_date']))?$p_array['ag_remind_date']:null;
-        $this->operation=(isset($p_array['operation']))?$p_array['operation']:null;
-        /**
-         * @todo
-         * deprecated : to remove
-          $this->op = (isset($p_array['op'])) ? $p_array['op'] : null;
-         */
-        $this->action=(isset($p_array['action']))?$p_array['action']:null;
+        $http=new HttpInput();
+        $this->ag_id=$http->extract($p_array,"ag_id","number",0);
+        $this->ag_ref=$http->extract($p_array,"ag_ref","string","");
+        $this->qcode_dest=$http->extract($p_array,"qcode_dest","string","");
+        $this->f_id_dest=$http->extract($p_array,"f_id_dest","string",null);
+        $this->ag_timestamp=$http->extract($p_array,"ag_timestamp","string",date('d.m.Y'));
+        $this->dt_id=$http->extract($p_array,"dt_id","string","");
+        $this->ag_state=$http->extract($p_array,"ag_state","number",2);
+        $this->ag_title=$http->extract($p_array,"ag_title","string","");
+        $this->ag_hour=$http->extract($p_array,"ag_hour","string","");
+        $this->ag_dest=$http->extract($p_array,"ag_dest","string",$g_user->get_profile());
+        $this->ag_priority=$http->extract($p_array,"ag_priority","string","2");
+        $this->ag_contact=$http->extract($p_array,"ag_contact","string","");
+        $this->ag_comment=$http->extract($p_array,"ag_comment","string","");
+        $this->ag_description=$http->extract($p_array,"ag_description","string","");
+        $this->ag_remind_date=$http->extract($p_array,"ag_remind_date","string",null);
+        $this->operation=$http->extract($p_array,"operation","string",null);
+        $this->action=$http->extract($p_array,"action","string",null);
     }
 
     /**
@@ -1209,7 +1158,7 @@ class Follow_Up
         /* State of documents */
         $type_state=new ISelect('state');
         $aState=$cn->make_array('select s_id,s_value from document_state order by s_value');
-        $aState[]=array('value'=>'-1', 'label'=>_('Tous les Etats'));
+        $aState[]=array('value'=>'-1', 'label'=>_('Tous les actions ouvertes'));
         $type_state->value=$aState;
         $type_state->selected=(isset($_GET['state']))?$_GET['state']:-1;
 
@@ -1282,6 +1231,15 @@ class Follow_Up
         echo $act->myList($p_base, "", $query);
         echo '</form>';
     }
+    /**
+     * Show a button for adding follow-up action, display the FORM 
+     * @param array $pa_param , will be converted in a HIDDEN input type in the form
+     */
+    static function show_action_add($pa_param)
+    {
+        require_once NOALYSS_TEMPLATE.'/followup-show-action-add.php';
+
+    }
 
     /**
      * Create a subquery to filter thanks the selected tag
@@ -1294,15 +1252,26 @@ class Follow_Up
         if ($p_array==null)
             $p_array=$_GET;
 
-        $query="";
         if (count($p_array['searchtag'])==0)
             return "";
+        $query="";
+        $operand = "1 = 0 ";
+        if ($p_array['tag_option'] == 0 )
+        {
+            $operand=" and ";
+        } elseif ($p_array['tag_option']==1)
+        {
+            $operand=" or ";
+        }
+        $and=" ";
         for ($i=0; $i<count($p_array['searchtag']); $i++)
         {
-            if (isNumber($p_array['searchtag'][$i])==1)
-                $query .= ' and ag_id in (select ag_id from action_tags where t_id= '.sql_string($p_array['searchtag'][$i]).')';
+            if (isNumber($p_array['searchtag'][$i])==1) {
+                $query .= $and .' ag_id in (select ag_id from action_tags where t_id= '.sql_string($p_array['searchtag'][$i]).')';
+                $and = $operand;
+            }
         }
-        return $query;
+        return "and (".$query.")";
     }
 
     /**
@@ -1314,15 +1283,26 @@ class Follow_Up
     static function create_query($cn, $p_array=null)
     {
         if ($p_array==null)             $p_array=$_GET;
-        
+        $http=new HttpInput();
+        $search_docid=0; // search for a document 
         $action_query="";
-
+        $ag_state=""; //<! selected status of the event , if not set or equal to -1 , it is all of them
+        //
+        // search for a specific document id (ag_id) , if given then status and date doesn't count
+         if (isset ($p_array['ag_id']) && isNumber($p_array['ag_id'])==1&&$p_array['ag_id']!=0)
+        {
+            $action_query=" and ag_id= ".sql_string($p_array['ag_id']);
+            $search_docid=$p_array['ag_id']; 
+            return $action_query;
+        }
         if (isset($_REQUEST['action_query']))
         {
+            $action_query = $http->request('action_query');
             // if a query is request build the sql stmt
-            $action_query="and (ag_title ~* '".sql_string($_REQUEST['action_query'])."' ".
-                    "or ag_ref ='".trim(sql_string($_REQUEST['action_query'])).
-                    "' or ag_id in (select ag_id from action_gestion_comment where agc_comment ~* '".trim(sql_string($_REQUEST['action_query']))."')".
+            $action_query="and (ag_title ilike '%".sql_string($action_query)."%' ".
+                    "or ag_ref ='".trim(sql_string($action_query)).
+                    "' or ag_id in (select ag_id from action_gestion_comment ".
+                    " where agc_comment ilike '%".trim(sql_string($action_query))."%')".
                     ")";
         }
 
@@ -1334,7 +1314,7 @@ class Follow_Up
             {
 
                 $fiche=new Fiche($cn);
-                $fiche->get_by_qcode($_REQUEST['qcode']);
+                $fiche->get_by_qcode($http->request('qcode'));
                 // if quick code not found then nothing
                 if ($fiche->id==0)
                     $str=' and false ';
@@ -1349,6 +1329,8 @@ class Follow_Up
         if (isset($p_array['state'])&&$p_array['state'] !=-1)
         {
             $action_query .= ' and ag_state= '.sql_string($p_array['state']);
+            // a status is selected
+            $ag_state=$p_array['state'];
         }
         if (isset($p_array['hsstate'])&&$p_array['hsstate']!=-1)
         {
@@ -1374,19 +1356,15 @@ class Follow_Up
         {
             $action_query.= " and ((ag_dest = ".sql_string($p_array['ag_dest_query'])." and ".self::sql_security_filter($cn, "R").") or ".
                     "(ag_dest = ".sql_string($p_array['ag_dest_query'])." and ".self::sql_security_filter($cn, "R")." and ".
-                    " ag_owner='".$_SESSION['g_user']."'))";
+                    " ag_owner='".$_SESSION[SESSION_KEY.'g_user']."'))";
         }
         else
         {
-            $action_query .=" and (ag_owner='".$_SESSION['g_user']."' or ".self::sql_security_filter($cn, "R")." or ag_dest=-1 )";
+            $action_query .=" and (ag_owner='".$_SESSION[SESSION_KEY.'g_user']."' or ".self::sql_security_filter($cn, "R")." or ag_dest=-1 )";
         }
 
 
         if (isset ($p_array['ag_id']) && isNumber($p_array['ag_id'])==1&&$p_array['ag_id']!=0)
-        {
-            $action_query=" and ag_id= ".sql_string($p_array['ag_id']);
-        }
-        if (isset($p_array['$remind_date'])&&$p_array['remind_date']!=""&&isDate($p_array['remind_date'])==$p_array['remind_date'])
         {
             $action_query .= " and to_date('".sql_string($p_array['$remind_date'])."','DD.MM.YYYY')<= ag_remind_date";
         }
@@ -1394,7 +1372,8 @@ class Follow_Up
         {
             $action_query .= " and to_date('".sql_string($p_array['remind_date_end'])."','DD.MM.YYYY')>= ag_remind_date";
         }
-        if (!isset($p_array['closed_action']))
+        // only for open action or a closing status is selected
+        if (!isset($p_array['closed_action']) && $ag_state == "")
         {
             $action_query.=" and s_status is null ";
         }
@@ -1522,7 +1501,7 @@ class Follow_Up
     {
         if ($this->ag_id==0)
             return;
-        $sql='select b.ag_id,b.t_id,b.at_id,a.t_tag'
+        $sql='select b.ag_id,b.t_id,b.at_id,a.t_tag,a.t_color'
                 .' from '
                 .' tags as a join action_tags as b on (a.t_id=b.t_id)'
                 .' where ag_id=$1 '
@@ -1564,28 +1543,29 @@ class Follow_Up
      * @brief show the cell content in Display for the tags
      * called also by ajax
      */
-    function tag_cell()
+    function tag_cell($p_view='UPD')
     {
         global $g_user;
         $a_tag=$this->tag_get();
         $c=count($a_tag);
         for ($e=0; $e<$c; $e++)
         {
-            echo '<span style="border:1px solid black;margin-right:5px;">';
+            echo '<span class="tagcell tagcell-color'.$a_tag[$e]['t_color'].'">';
             echo $a_tag[$e]['t_tag'];
-            if ($g_user->can_write_action($this->ag_id)==true)
+            if ($g_user->can_write_action($this->ag_id)==true && $p_view != 'READ')
             {
-                $js_remove=sprintf("onclick=\"action_tag_remove('%s','%s','%s')\"", dossier::id(), $this->ag_id, $a_tag[$e]['t_id']);
-                echo HtmlInput::anchor(SMALLX, "javascript:void(0)", $js_remove, ' class="smallbutton" style="padding:0px;display:inline" ');
+                $js_remove=sprintf("action_tag_remove('%s','%s','%s')", dossier::id(), $this->ag_id, $a_tag[$e]['t_id']);
+                echo Icon_Action::trash(uniqid(), $js_remove);
             }
             echo '</span>';
             echo '&nbsp;';
             echo '&nbsp;';
         }
-        $js=sprintf("onclick=\"action_tag_select('%s','%s')\"", dossier::id(), $this->ag_id);
-        if ($g_user->can_write_action($this->ag_id)==true)
+        
+        if ($p_view != 'READ' && $g_user->can_write_action($this->ag_id)==true)
         {
-            echo HtmlInput::button('tag_bt', 'Ajout tag', $js, 'smallbutton');
+            $js=sprintf("onclick=\"action_tag_select('%s','%s')\"", dossier::id(), $this->ag_id);
+            echo HtmlInput::button('tag_bt', _('Ajout étiquette'), $js, 'smallbutton');
         }
     }
 
@@ -1703,63 +1683,7 @@ class Follow_Up
             $this->f_id_dest=null;
     }
 
-    /**
-     *  Add another concerned (tiers, supplier...)
-     * @remark type $g_user
-     * @param type $p_fiche_id
-     */
-    function insert_linked_card($p_fiche_id)
-    {
-        global $g_user;
-        if ($g_user->can_write_action($this->ag_id))
-        {
-            /**
-             * insert into action_person
-             */
-            $count=$this->db->get_value('select count(*) from action_person where f_id=$1 and ag_id=$2', array($p_fiche_id, $this->ag_id));
-            if ($count==0)
-            {
-                $this->db->exec_sql('insert into action_person (ag_id,f_id) values ($1,$2)', array($this->ag_id, $p_fiche_id));
-            }
-        }
-    }
-
-    /**
-     * Remove  another concerned (tiers, supplier...)
-     * @remark type $g_user
-     * @param type $p_fiche_id
-     */
-    function remove_linked_card($p_fiche_id)
-    {
-        global $g_user;
-        if ($g_user->can_write_action($this->ag_id))
-        {
-            $this->db->exec_sql('delete from action_person where ag_id = $1 and f_id = $2', array($this->ag_id, $p_fiche_id));
-        }
-    }
-
-    /**
-     * Display the other concerned (tiers, supplier...)
-     * @return string
-     */
-    function display_linked()
-    {
-        $a_linked=$this->db->get_array('select ap_id,f_id from action_person where ag_id=$1', array($this->ag_id));
-        if (count($a_linked)==0)
-            return "";
-        for ($i=0; $i<count($a_linked); $i++)
-        {
-            $fiche=new Fiche($this->db, $a_linked[$i]['f_id']);
-            $qc=$fiche->get_quick_code();
-            $js_remove=sprintf("onclick=\"action_remove_concerned('%s','%s','%s')\"", dossier::id(), $a_linked[$i]['f_id'], $this->ag_id);
-            echo '<span style="border:1px solid black;margin-right:5px;">';
-            echo $qc;
-            echo HtmlInput::anchor(SMALLX, "javascript:void(0)", $js_remove, ' class="smallbutton" style="padding:0px;display:inline" ');
-            echo '</span>';
-            echo '&nbsp;';
-            echo '&nbsp;';
-        }
-    }
+   
     /**
      * @brief display a small form to enter a new event
      * 
@@ -1821,7 +1745,7 @@ class Follow_Up
             $ag_ref, /* 6 */
             $this->ag_dest, /* 7 */
             $this->ag_priority, /* 8 */
-            $_SESSION['g_user'], /* 9 */
+            $_SESSION[SESSION_KEY.'g_user'], /* 9 */
             $this->ag_state, /* 10 */
             $this->ag_remind_date, /* 11 */
             $this->ag_hour /* 12 */
@@ -1831,12 +1755,13 @@ class Follow_Up
         if (trim($this->ag_comment)!='')
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION['g_user'], $this->ag_comment));
+                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
         }
     }
     /**
-     * Return the first parent of the event tree, or -1 if not found
-     * @return integer (ag_id)
+     * Return the first parent of the event tree, or -1 if not found. The parent is an action with a lower id, 
+     * so it can happen than an action has several ones
+     * @return arrary of integer (ag_id)
      */
     function get_parent() {
         $value=$this->db->get_array('
@@ -1852,11 +1777,11 @@ class Follow_Up
                 where
                   p2.aga_greatest is not null and
                   p2.aga_greatest = p1.aga_least
-              ) select * from t order by depth desc limit 1
+              ) select aga_least,aga_greatest,depth from t order by depth desc,aga_least asc 
                 ' , array($this->ag_id)
                 );
         if ( ! empty($value ) ) 
-            return $value[0]['aga_least'];
+            return $value;
         else
             return -1;
     }
@@ -1879,7 +1804,7 @@ class Follow_Up
                         aga_least,aga_greatest , 1
                 from 
                         action_gestion_related
-              where aga_least=$1
+              where aga_least=$1  or aga_greatest = $1
                 union all
             select key_path||'-'||p2.aga_greatest::text,
               p2.aga_least,p2.aga_greatest,depth + 1
@@ -1893,7 +1818,6 @@ class Follow_Up
           from 
             action_gestion join t on (ag_id=aga_greatest)
             join document_type on (ag_type=dt_id)
-          order by key_path
             
 ";
          $ret_array=$this->db->get_array($sql,array($p_id));
@@ -1915,17 +1839,19 @@ class Follow_Up
          */
         $parent=$this->get_parent();
 
-        $base=HtmlInput::request_to_string(array("gDossier", "ac", "sa", "sb", "sc",
-                    "f_id"));
-        $parent=$this->get_parent();
+        $base=HtmlInput::request_to_string(array("gDossier", "ac",  "sb", "sc",
+                    "f_id"))."&amp;sa=detail";
         if ($parent==-1)
         {
             echo _('Principal');
-            $parent = $this->ag_id;
+            $parent=array();
+            $parent [0]['aga_least']= $this->ag_id;
         }
-        else
+       
+        $nb_parent=count($parent);
+        for ($i=0;$i< $nb_parent;$i++)
         {
-            $fu_parent=new Follow_Up($this->db, $parent);
+            $fu_parent=new Follow_Up($this->db, $parent[$i]['aga_least']);
             $fu_parent->get();
             echo'<span class="highlight">';
             $xaction=sprintf('view_action(%d,%d,%d)', $fu_parent->ag_id,
@@ -1936,56 +1862,57 @@ class Follow_Up
                 h($fu_parent->ag_title),
                 '('.h($fu_parent->ag_ref).')',
                     '</a>';
-                            
+
             echo "</span>";
+            echo '<ul style="padding-left:10px;list-style-type: none;">';
+
+            $action=$this->get_children($parent[$i]['aga_least']);
+            for ($o=0; $o<count($action); $o++)
+            {
+                $class=($this->ag_id == $action[$o]['aga_greatest'])?' class="highlight" ':'';
+
+                // Count the number of direct parents
+                $count_parent =$this->db->get_value('select count(*) from action_gestion_related where aga_greatest = $1',array($action[$o]['aga_greatest']));
+                $direct_parent=($count_parent > 1 ) ? _('direct parent ').$count_parent:"";
+
+                $margin=($action[$o]['depth']>1 )?str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$action[$o]['depth']-1)."&#8680;":"";
+                if ($p_view!='READ'&&$p_base!='ajax')
+                {
+                    $rmAction=sprintf("return confirm_box(null,'"._('Voulez-vous effacer cette action ')."', function () {remove_action('%s','%s','%s');});",
+                            dossier::id(), $action[$o]['aga_greatest'],
+                            $_REQUEST['ag_id']);
+                    $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
+                    $js='<a class="tinybutton" id="acact'.$action[$o]['aga_greatest'].'" href="javascript:void(0)" onclick="'.$rmAction.'">'.SMALLX.'</a>';
+                    echo '<li '.$class.' id="act'.$action[$o]['aga_greatest'].'">'.$margin.$showAction.$action[$o]['str_date'].
+                    h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
+                    .$js.'</li>';
+                }
+                else
+                /*
+                 * Display detail requested from Ajax Div
+                 */
+                if ($p_base=='ajax')
+                {
+                    $xaction=sprintf('view_action(%d,%d,%d)', $action[$o]['aga_greatest'],
+                            Dossier::id(), 1);
+                    $showAction='<a class="line" href="javascript:'.$xaction.'">';
+                    echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
+                    h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
+                    .'</li>';
+                }
+                /*
+                 * READ ONLY
+                 */
+                else
+                {
+                    $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
+                    echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
+                    h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
+                    .'</li>';
+                }
+            }
+            echo '</ul>';
         }
-        echo '<ul style="padding-left:10px;list-style-type: none;">';
-        $action=$this->get_children($parent);
-        for ($o=0; $o<count($action); $o++)
-        {
-            $class=($this->ag_id == $action[$o]['aga_greatest'])?' class="highlight" ':'';
-            
-            // Count the number of direct parents
-            $count_parent =$this->db->get_value('select count(*) from action_gestion_related where aga_greatest = $1',array($action[$o]['aga_greatest']));
-            $direct_parent=($count_parent > 1 ) ? _('direct parent ').$count_parent:"";
-            
-            $margin=($action[$o]['depth']>1 )?str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$action[$o]['depth']-1)."&#8680;":"";
-            if ($p_view!='READ'&&$p_base!='ajax')
-            {
-                $rmAction=sprintf("return confirm_box(null,'"._('Voulez-vous effacer cette action ')."', function () {remove_action('%s','%s','%s');});",
-                        dossier::id(), $action[$o]['aga_greatest'],
-                        $_REQUEST['ag_id']);
-                $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
-                $js='<a class="tinybutton" id="acact'.$action[$o]['aga_greatest'].'" href="javascript:void(0)" onclick="'.$rmAction.'">'.SMALLX.'</a>';
-                echo '<li '.$class.' id="act'.$action[$o]['aga_greatest'].'">'.$margin.$showAction.$action[$o]['str_date'].
-                h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
-                .$js.'</li>';
-            }
-            else
-            /*
-             * Display detail requested from Ajax Div
-             */
-            if ($p_base=='ajax')
-            {
-                $xaction=sprintf('view_action(%d,%d,%d)', $action[$o]['aga_greatest'],
-                        Dossier::id(), 1);
-                $showAction='<a class="line" href="javascript:'.$xaction.'">';
-                echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
-                h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
-                .'</li>';
-            }
-            /*
-             * READ ONLY
-             */
-            else
-            {
-                $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
-                echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
-                h($action[$o]['sub_title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
-                .'</li>';
-            }
-        }
-        echo '</ul>';
     }
     /**
      * Display the list of parent of the current Follow_Up

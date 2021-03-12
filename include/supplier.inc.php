@@ -88,7 +88,7 @@ if ( $low_action == "list" )
                                          ' where  frd_id='.FICHE_TYPE_FOURNISSEUR.
                                          ' order by fd_label ',1);
         $sel_card->selected=$http->get("cat","number",-1);
-        $sel_card->javascript=' onchange="submit(this);"';
+        $sel_card->javascript=' onchange="waiting_box();submit(this);"';
         echo _('Catégorie :').$sel_card->input();
     } else 
     {

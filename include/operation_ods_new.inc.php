@@ -25,7 +25,8 @@
  * \brief to write into the ledgers ODS a new operation
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
+require_once  NOALYSS_INCLUDE.'/class/pre_operation.class.php';
+
 require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
 
 global $g_user,$g_parameter;
@@ -48,7 +49,7 @@ echo '<div class="content">';
 
 
 echo '<div id="jrn_name_div">';
-echo '<h2 id="jrn_name" style="display:inline">' . $ledger->get_name() . '</h2>';
+echo '<h1 id="jrn_name" style="display:inline">' . $ledger->get_name() . '</h1>';
 echo '</div>';
 
 // Show the predef operation
@@ -59,7 +60,7 @@ if ( isset ($_GET['action']) && ! isset($_POST['correct']) && ! isset($correct) 
 	if ( $_GET['action']=='use_opd')
 	{
             // get data from predef. operation
-            $op=new Pre_op_advanced($cn);
+            $op=new Pre_operation($cn);
             $p_post=null;
             if ( isset($_REQUEST['pre_def']) && $_REQUEST['pre_def'] != '')
             {

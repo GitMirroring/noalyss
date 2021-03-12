@@ -98,12 +98,12 @@ echo '<div class="content">';
 /*
  * Let you change the exercice
  */
-echo '<form method="GET">';
+echo '<form method="GET" onsubmit="waiting_box();return true;">';
 echo '<fieldset><legend>' . _('Exercice') . '</legend>';
 ;
 echo _('Choisissez un autre exercice').' :';
 $ex = new Exercice($cn);
-$wex = $ex->select('exercice', $exercice, ' onchange="submit(this)"');
+$wex = $ex->select('exercice', $exercice, ' onchange="waiting_box();submit(this)"');
 echo $wex->input();
 echo dossier::hidden();
 echo HtmlInput::get_to_hidden(array('ac', 'type'));
@@ -112,7 +112,7 @@ echo '</form>';
 ?>
 <?php
 
-echo '<FORM METHOD="GET">' . dossier::hidden();
+echo '<FORM METHOD="GET"  onsubmit="waiting_box();return true;">' . dossier::hidden();
 echo HtmlInput::get_to_hidden(array('ac', 'type'));
 echo HtmlInput::hidden('type', 'jrn');
 echo HtmlInput::get_to_hidden(array('exercice'));

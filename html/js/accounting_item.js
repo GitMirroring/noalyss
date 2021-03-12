@@ -77,6 +77,10 @@ function search_poste(obj)
         if ( obj.jrn)
         {
             queryString+="&j="+obj.jrn;
+        }else {
+            if ($("p_jrn")) {
+                queryString+="&j="+$("p_jrn").value;
+            }
         }
         if ( obj.account)
         {

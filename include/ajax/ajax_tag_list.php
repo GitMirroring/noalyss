@@ -23,20 +23,24 @@
    */
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/tag.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
 ob_start();
-$tag=new Tag($cn);
+$tag=new Tag_Action($cn);
 $tag->select();
 
 //------------------- Propose to add a tag
 
 $js=sprintf("onclick=\"show_tag('%s','%s','%s','j')\"",Dossier::id(),'','-1');
-echo HtmlInput::button("tag_add", _("Ajout d'un tag"), $js);
+if ( $g_user->check_action(TAGADD) == 1) { echo HtmlInput::button("tag_add", _("Ajout d'un tag"), $js);}
 echo HtmlInput::button_close("tag_div");
 
 $response=  ob_get_clean();
+if (headers_sent() && DEBUG ){
+    echo $response;
+} else {
+    header('Content-type: text/xml; charset=UTF-8');
+}
 $html=escape_xml($response);
-header('Content-type: text/xml; charset=UTF-8');
 echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>

@@ -82,7 +82,7 @@ if ( $low_action == "list" )
                                          ' where  frd_id=$1'.
                                          ' order by fd_label ',1,array(FICHE_TYPE_FIN));
         $sel_card->selected=$http->get("cat","number",-1);
-        $sel_card->javascript=' onchange="submit(this);"';
+        $sel_card->javascript=' onchange="waiting_box();submit(this);"';
         echo _('Catégorie :').$sel_card->input();
     }
     else

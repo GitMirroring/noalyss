@@ -153,6 +153,10 @@ class Impress
         // $p_eval is true then we eval and returns result
         if ( $p_eval == true)
         {
+            /*-------------------------------------
+             * Protect againt division by zero 
+             */
+            $p_formula=remove_divide_zero($p_formula);
             $p_formula="\$result=".$p_formula.";";
             eval("$p_formula");
 

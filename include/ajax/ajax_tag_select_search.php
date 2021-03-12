@@ -23,9 +23,9 @@ if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
  *@brief Show the tags to select
  *@see Tag
  */
-require_once NOALYSS_INCLUDE.'/class/tag.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
 ob_start();
-$tag=new Tag($cn);
+$tag=new Tag_Action($cn);
 $tag->select_search();
 
 $response=  ob_get_clean();

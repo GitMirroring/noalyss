@@ -70,3 +70,5 @@ for ($i=0;$i<$nb_dossier;$i++):
 endfor;
 ?>
 </table>
+<?php
+echo HtmlInput::button_close("folder_list_div");?>

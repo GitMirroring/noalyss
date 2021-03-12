@@ -101,7 +101,7 @@ foreach ($a_poste as $poste)
 
   $array1=$Poste->get_row_date($from_periode,$to_periode,$l,$s);
   // don't print empty account
-  if ( count($array1[0]) == 0 )
+  if (empty($array1) || count($array1[0]) == 0 )
     {
         continue;
     }
@@ -174,7 +174,7 @@ foreach ($a_poste as $poste)
                 $solde_d = 0.0;
                 $solde_c = 0.0;
                 $pdf->line_new();
-                $pdf->SetFont('DejaVuCond','',7);
+                $pdf->SetFont('DejaVuCond','',6);
 
             }
 
@@ -196,7 +196,7 @@ foreach ($a_poste as $poste)
         $pdf->LongLine($width[$i], 6, $detail['jr_internal'], 0, $lor[$i] );
         $i++;
         /* limit set to 40 for the substring */
-        $triple_point = (mb_strlen($detail['description']) > 40 ) ? '...':'';
+        //  $triple_point = (mb_strlen($detail['description']) > 40 ) ? '...':'';
         // $pdf->LongLine($width[$i], 6, mb_substr($detail['description'],0,40).$triple_point, 0,$lor[$i]);
         $pdf->LongLine($width[$i], 6,$detail['description'].'['.$detail['jr_optype'].']', 0,$lor[$i]);
         $i++;

@@ -23,7 +23,9 @@
  * \brief  class for the table document_type
  */
 
-/** \brief class for the table document_type
+/** \
+ *@brief class for the table document_type , a document_type is a kind of action in the follow up
+ * 
  * < dt_id pk document_type
  * < dt_value value
  */
@@ -91,40 +93,10 @@ class Document_type
 		return $array;
 	}
 
-	function insert($p_value, $p_prefix)
-	{
-		$sql = "insert into document_type(dt_value,dt_prefix) values ($1,$2)";
-		try
-		{
-			if ($this->db->count_sql('select * from document_type where upper(dt_value)=upper(trim($1))', array($p_value)) > 0)
-				throw new Exception('Nom en double');
-			if (strlen(trim($p_value)) > 0)
-				$this->db->exec_sql($sql, array($p_value, $p_prefix));
-		}
-		catch (Exception $e)
-		{
-                      record_log($e);
-			alert(j(_("Impossible d'ajouter [$p_value] ") . $e->getMessage()));
-		}
-	}
-
-	/**
-	 * Update
-	 */
-	function update()
-	{
-		try
-		{
-			$this->db->exec_sql("update document_type set dt_value=$1,dt_prefix=$2 where dt_id=$3", array($this->dt_value,
-				$this->dt_prefix, $this->dt_id));
-		}
-		catch (Exception $e)
-		{
-                      record_log($e);
-			alert(" Erreur " . $e->getMessage());
-		}
-	}
-
+        /**
+         * Restart the increment of the document
+         * @param type $p_int
+         */
 	function set_number($p_int)
 	{
 		try

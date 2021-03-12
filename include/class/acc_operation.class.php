@@ -59,10 +59,11 @@ class Acc_Operation
         global $g_user;
         $this->db=$p_cn;
         $this->qcode="";
-        $this->user=$_SESSION['g_user'];
+        $this->user=$_SESSION[SESSION_KEY.'g_user'];
         $this->periode=$g_user->get_periode();
         $this->jr_id=0;
         $this->jr_optype="NOR";
+        $this->amount=0;
         $this->currency_rate=1;
         $this->currency_rate_ref=1;
         $this->currency_id=NULL;
@@ -192,6 +193,7 @@ class Acc_Operation
         $this->amount=abs($this->amount);
         $debit=($this->type=='c')?'false':'true';
         $this->desc=(isset($this->desc))?$this->desc:'';
+        $this->amount=(trim($this->amount)==''||$this->amount==NULL)?0:$this->amount;
         $Res=$this->db->exec_sql("select insert_jrnx
                                  ($1::text,abs($2)::numeric,$3::account_type,$4::integer,$5::integer,$6::bool,$7::text,$8::integer,upper($9),$10::text)",
                                  array(
@@ -298,8 +300,10 @@ class Acc_Operation
         {
             $this->mt=microtime(true);
         }
+        
         // if amount == -1then the triggers will throw an error
         //
+        $this->amount=(trim($this->amount)==''||$this->amount==NULL)?0:$this->amount;
         $Res=$this->db->exec_sql("insert into jrn (jr_def_id,jr_montant,jr_comment,".
                                  "jr_date,jr_ech,jr_grpt_id,jr_tech_per,jr_mt,jr_optype,currency_id,currency_rate,currency_rate_ref)   values (".
                                  "$1,$2,$3,".
@@ -715,8 +719,8 @@ class Acc_Operation
     }
     static function test_me()
     {
-        $_SESSION['g_user']=NOALYSS_ADMINISTRATOR;
-        $_SESSION['g_pass']='dany';
+        $_SESSION[SESSION_KEY.'g_user']=NOALYSS_ADMINISTRATOR;
+        $_SESSION[SESSION_KEY.'g_pass']='dany';
         global $g_user;
         $cn=Dossier::connect();
         $g_user=new User($cn);
@@ -756,17 +760,22 @@ class Acc_Operation
         $operation = $this->get_quant();
         $array=$operation->compute_array();
         global $g_user;
-        // Prepare the form
-        $r='<form id="'.$p_id.'" method="POST">';
-        $r.=Dossier::hidden();
         $a_code=$this->db->get_array("select code from v_menu_dependency vmd  where me_code=$1 and p_id=$2",
                 array( $operation->signature,$g_user->get_profile()));
-        
-        // select the menu where the operation will be duplicated
         if ( empty ($a_code)) {
             $r.=_("Menu invalide");
             return $r;
         }
+       
+        // Prepare the form
+        $r=sprintf('<form id="%s" method="POST" ACTION="%s">',$p_id,NOALYSS_URL."/do.php?".Dossier::get());
+        $r.=Dossier::hidden();
+        // select the menu where the operation will be duplicated
+        $r=sprintf('<form id="%s" method="POST" ACTION="%s">',$p_id,NOALYSS_URL."/do.php?".http_build_query([
+                "ac"=>$a_code[0]['code'],"gDossier"=>Dossier::id()
+        ]));
+        $r.=Dossier::hidden();
+        // select the menu where the operation will be duplicated
         $r.="<p>";
         $r.="<ul style=\"margin-left:2rem;padding-left:0;list-style:none;\">";
         $r.=sprintf("<li>%s</li>",$operation->det->jr_pj_number);

@@ -98,7 +98,7 @@ if ( $type == 'ACH' || $type == 'VEN'||$new):
         <td>
            <?php
                 $negative->javascript="toggle_row_warning_enable('negative_amount','row_warning')";
-                $negative->input();
+                echo $negative->input();
             ?>
         </td>
     </tr>

@@ -48,23 +48,29 @@ $pdf->SetFont('DejaVu','BI',14);
 $pdf->write_cell(0,8,$name,0,1,'C');
 $pdf->SetTitle($name,1);
 $pdf->SetAuthor('NOALYSS');
+$http=new HttpInput();
+$start=$http->request('start');
+$end=$http->request('end');
+if ( isDate($start) == null || isDate ($end) == null ) 	 return;
+
 /* balance */
 if ( $_GET['histo'] == 4 )
 {
-    $fd=new Fiche_Def($cn,$_REQUEST['cat']);
+    $cat=$http->request('cat');
+    $fd=new Fiche_Def($cn,$cat);
     if ( $fd->hasAttribute(ATTR_DEF_ACCOUNT) == false )
     {
-        $pdf->write_cell(0,10, "Cette catégorie n'ayant pas de poste comptable n'a pas de balance");
+        $pdf->write_cell(0,10, _("Cette catégorie n'ayant pas de poste comptable n'a pas de balance"));
         //Save PDF to file
         $fDate=date('dmy-Hi');
         $pdf->Output("category-$fDate.pdf", 'D');
         exit;
     }
-    $aCard=$cn->get_array("select f_id,ad_value from fiche join fiche_Detail using (f_id)  where ad_id=1 and fd_id=$1 order by 2 ",array($_REQUEST['cat']));
+    $aCard=$cn->get_array("select f_id,ad_value from fiche join fiche_Detail using (f_id)  where ad_id=1 and fd_id=$1 order by 2 ",array($cat));
 
     if ( empty($aCard))
     {
-        $pdf->write_cell(0,10, "Aucune fiche trouvée");//Save PDF to file
+        $pdf->write_cell(0,10, _("Aucune fiche trouvée"));//Save PDF to file
         $fDate=date('dmy-Hi');
         $pdf->Output("category-$fDate.pdf", 'D');
         exit;
@@ -78,11 +84,10 @@ if ( $_GET['histo'] == 4 )
     $pdf->write_cell(20,7,'D/C',0,0,'C',0);
     $pdf->line_new();
     $idx=0;
+    $filter= " (j_date >= to_date('".$start."','DD.MM.YYYY') ".
+             " and  j_date <= to_date('".$end."','DD.MM.YYYY')) ";
     for ($i=0;$i < count($aCard);$i++)
     {
-        if ( isDate($_REQUEST['start']) == null || isDate ($_REQUEST['end']) == null ) 	 exit;
-        $filter= " (j_date >= to_date('".$_REQUEST['start']."','DD.MM.YYYY') ".
-                 " and  j_date <= to_date('".$_REQUEST['end']."','DD.MM.YYYY')) ";
         $oCard=new Fiche($cn,$aCard[$i]['f_id']);
         $solde=$oCard->get_solde_detail($filter);
         if ( $solde['debit'] == 0 && $solde['credit']==0) continue;

@@ -41,40 +41,49 @@ class User
 	var $db;
 	var $admin;
 	var $valid;
-        var $first_name;
-        var $name;
-        var $active ;
-        var $login ;
-        var $password ;
-        var $email ;
-        
+    var $first_name;
+    var $name;
+    var $active ;
+    var $login ;
+    var $password ;
+    var $email ;
+
 	function __construct($p_cn, $p_id = -1)
 	{
 		// if p_id is not set then check the connected user
 		if ($p_id == -1)
 		{
-			if (!isset($_SESSION['g_user']))
+			if (!isset($_SESSION[SESSION_KEY.'g_user']))
 			{
-				echo '<h2 class="error">' . _('Session expirée<br>Utilisateur déconnecté') . '</h2>';
-				redirect('index.php', 1);
-				exit();
+                $http=new \HttpInput();
+                $user_login=$http->request("p_user","string","");
+                $user_password=$http->request("p_pass","string","");
+
+                if ($user_login != "" && $user_password != "") {
+                    $_SESSION[SESSION_KEY."g_user"]=$user_login;
+                    $_SESSION[SESSION_KEY."g_pass"]=$user_password;
+                } else {
+                    echo '<h2 class="error">' . _('Session expirée<br>Utilisateur déconnecté') . '</h2>';
+                    redirect('index.php', 1);
+                    exit();
+                }
 			}
 
-			$this->login =strtolower($_SESSION['g_user']);
-			$this->pass = $_SESSION['g_pass'];
-			$this->lang = (isset($_SESSION['g_lang'])) ? $_SESSION['g_lang'] : 'fr_FR.utf8';
-			$this->valid = (isset($_SESSION['isValid'])) ? 1 : 0;
-			$this->db = $p_cn;
+			$this->login =strtolower($_SESSION[SESSION_KEY.'g_user']);
+			$this->pass = $_SESSION[SESSION_KEY.'g_pass'];
 			$this->id = -1;
-			if (isset($_SESSION['g_theme']))
-				$this->theme = $_SESSION['g_theme'];
+			$this->db = $p_cn;
+			$this->lang = (isset($_SESSION[SESSION_KEY.'g_lang'])) ? $_SESSION[SESSION_KEY.'g_lang'] : 'fr_FR.utf8';
+			$this->valid = (isset($_SESSION[SESSION_KEY.'isValid'])) ? 1 : 0;
+			if (isset($_SESSION[SESSION_KEY.'g_theme']))
+				$this->theme = $_SESSION[SESSION_KEY.'g_theme'];
 
-			$this->admin = ( isset($_SESSION['use_admin']) ) ? $_SESSION['use_admin'] : 0;
+			$this->admin = ( isset($_SESSION[SESSION_KEY.'use_admin']) ) ? $_SESSION[SESSION_KEY.'use_admin'] : 0;
 
-			if (isset($_SESSION['use_name']))
-				$this->name = $_SESSION['use_name'];
-			if (isset($_SESSION['use_first_name']))
-				$this->first_name = $_SESSION['use_first_name'];
+			if (isset($_SESSION[SESSION_KEY.'use_name']))
+				$this->name = $_SESSION[SESSION_KEY.'use_name'];
+			if (isset($_SESSION[SESSION_KEY.'use_first_name']))
+				$this->first_name = $_SESSION[SESSION_KEY.'use_first_name'];
 			$this->load();
 		}
 		else // if p_id is set get data of another user
@@ -84,6 +93,182 @@ class User
 			$this->load();
 		}
 	}
+
+    /**
+     * @return int|mixed
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int|mixed $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return default|mixed|string|string[]|null
+     */
+    public function getPass()
+    {
+        return $this->pass;
+    }
+
+    /**
+     * @param default|mixed|string|string[]|null $pass
+     */
+    public function setPass($pass): void
+    {
+        $this->pass = $pass;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    /**
+     * @param mixed $db
+     */
+    public function setDb($db): void
+    {
+        $this->db = $db;
+    }
+
+    /**
+     * @return default|int|mixed|string|string[]|null
+     */
+    public function getAdmin()
+    {
+        return $this->admin;
+    }
+
+    /**
+     * @param default|int|mixed|string|string[]|null $admin
+     */
+    public function setAdmin($admin): void
+    {
+        $this->admin = $admin;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValid(): int
+    {
+        return $this->valid;
+    }
+
+    /**
+     * @param int $valid
+     */
+    public function setValid(int $valid): void
+    {
+        $this->valid = $valid;
+    }
+
+    /**
+     * @return default|mixed|string|string[]|null
+     */
+    public function getFirstName()
+    {
+        return $this->first_name;
+    }
+
+    /**
+     * @param default|mixed|string|string[]|null $first_name
+     */
+    public function setFirstName($first_name): void
+    {
+        $this->first_name = $first_name;
+    }
+
+    /**
+     * @return default|mixed|string|string[]|null
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param default|mixed|string|string[]|null $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param mixed $active
+     */
+    public function setActive($active): void
+    {
+        $this->active = $active;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogin(): string
+    {
+        return $this->login;
+    }
+
+    /**
+     * @param string $login
+     */
+    public function setLogin(string $login): void
+    {
+        $this->login = $login;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public function setPassword($password): void
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email): void
+    {
+        $this->email = $email;
+    }
 
 	/**\brief load data from database.
 	 * if this->id == -1, it is unknown so we have to retrieve it
@@ -127,7 +312,7 @@ class User
 		$this->login =strtolower($row['use_login']);
 		$this->admin = $row['use_admin'];
 		$this->password = $row['use_pass'];
-                $this->email=$row['use_email'];
+		$this->email=$row['use_email'];
 	}
 
 	function save()
@@ -176,21 +361,22 @@ class User
 		if ($res > 0)
 		{
 			$r = Database::fetch_array($ret, 0);
-			$_SESSION['use_admin'] = $r['use_admin'];
-			$_SESSION['use_name'] = $r['use_name'];
-			$_SESSION['use_first_name'] = $r['use_first_name'];
-			$_SESSION['isValid'] = 1;
+			$_SESSION[SESSION_KEY.'use_admin'] = $r['use_admin'];
+			$_SESSION[SESSION_KEY.'use_name'] = $r['use_name'];
+			$_SESSION[SESSION_KEY.'use_first_name'] = $r['use_first_name'];
+			$_SESSION[SESSION_KEY.'isValid'] = 1;
 
-			$this->admin = $_SESSION['use_admin'];
-			$this->name = $_SESSION['use_name'];
-			$this->first_name = $_SESSION['use_first_name'];
+			$this->admin = $_SESSION[SESSION_KEY.'use_admin'];
+			$this->name = $_SESSION[SESSION_KEY.'use_name'];
+			$this->first_name = $_SESSION[SESSION_KEY.'use_first_name'];
 			$this->load_global_pref();
 		}
 		$sql = "insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
 
 		if ($res == 0)
 		{
-			$cn->exec_sql($sql, array($_SESSION['g_user'], $_SERVER["REMOTE_ADDR"], $from, $_SERVER['REQUEST_URI'], 'FAIL'));
+			$cn->exec_sql($sql, array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], 
+                            $from, $_SERVER['REQUEST_URI'], 'FAIL'));
 			if (!$silent)
 			{
 				echo '<script> alert(\''._('Utilisateur ou mot de passe incorrect').'\')</script>';
@@ -203,7 +389,8 @@ class User
 		else
 		{
 			if ($from == 'LOGIN')
-				$cn->exec_sql($sql, array($_SESSION['g_user'], $_SERVER["REMOTE_ADDR"], $from, $_SERVER['REQUEST_URI'], 'SUCCESS'));
+				$cn->exec_sql($sql, array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], $from, 
+                                    $_SERVER['REQUEST_URI'], 'SUCCESS'));
 			$this->valid = 1;
 		}
 
@@ -249,7 +436,8 @@ class User
             if ($priv)
             {
                 // the access is granted
-                $jnt=$cn->get_value("select jnt_id from jnt_use_dos where dos_id=$1 and use_id=$2", array($db_id, $this->id));
+                $jnt=$cn->get_value("select jnt_id from jnt_use_dos where dos_id=$1 and use_id=$2",
+                        array($db_id, $this->id));
 
                 if ($cn->size()==0)
                 {
@@ -312,6 +500,11 @@ class User
 
 	function get_ledger($p_type = 'ALL', $p_access = 3,$disable=TRUE)
 	{
+            $p_type=strtoupper($p_type);
+            if (! in_array($p_type, ["FIN","ALL","ODS","VEN",'ACH'])) {
+                record_log(sprintf("UGL1, p_type %s",$p_type));
+                throw new Exception("UGL1"._("Type incorrecte"));
+            }
             if ($disable==TRUE) {
                 $sql_enable="";
             } else {
@@ -382,30 +575,29 @@ class User
 		return $sql;
 	}
 
+    /**
+     * synomym for isAdmin,
+     * @deprecated
+     */
+    function Admin()
+    {
+        return $this->isAdmin();
+    }
+
 	/**
-	 * \brief  Check if an user is an admin
+	 * @brief  Check if an user is an admin
 	 *
-	 * \return 1 for yes 0 for no
+	 * @return 1 for yes 0 for no
 	 */
-
-	function Admin()
+	function isAdmin()
 	{
-            $this->admin = 0;
-		if ($this->login != NOALYSS_ADMINISTRATOR )
-		{
-			$pass5 = md5($this->pass);
-			$sql = "select use_admin from ac_users where use_login=$1
-                 and use_active=1  ";
+	    $this->admin = 0;
+        $pass5 = md5($this->pass);
+        $sql = "select count(*) from ac_users where use_login=$1
+             and use_active=1 and use_admin=1 ";
 
-			$cn = new Database();
-			$res = $cn->exec_sql($sql, array($this->login));
-			if (Database::num_row($res) == 0)
-				throw  new Exception(__FILE__ . " " . __LINE__ . " aucun resultat");
-			$this->admin = Database::fetch_result($res, 0);
-		}
-		else
-			$this->admin = 1;
-
+        $cn = new Database();
+        $this->admin = $cn->get_value($sql, array($this->login));
 		return $this->admin;
 	}
 
@@ -416,25 +608,28 @@ class User
 	 * \param     - $p_user
 	 *
 	 */
-
 	function set_periode($p_periode)
 	{
-		$sql = "update user_local_pref set parameter_value='$p_periode' where user_id='$this->id' and parameter_type='PERIODE'";
-		$Res = $this->db->exec_sql($sql);
+		$sql = "update user_local_pref set parameter_value=$1 where user_id=$2 and parameter_type='PERIODE'";
+		$Res = $this->db->exec_sql($sql,[$p_periode,$this->id]);
 	}
 
 	private function set_default_periode()
 	{
 
 		/* get the first periode */
-		$sql = 'select min(p_id) as pid from parm_periode where p_closed = false and p_start = (select min(p_start) from parm_periode)';
+		$sql = 'select min(p_id) as pid '
+                        . ' from parm_periode '
+                        . ' where p_closed = false and p_start = (select min(p_start) from parm_periode)';
 		$Res = $this->db->exec_sql($sql);
 
 		$pid = Database::fetch_result($Res, 0, 0);
 		/* if all the periode are closed, then we use the last closed period */
 		if ($pid == null)
 		{
-			$sql = 'select min(p_id) as pid from parm_periode where p_start = (select max(p_start) from parm_periode)';
+			$sql = 'select min(p_id) as pid '
+                                . 'from parm_periode '
+                                . 'where p_start = (select max(p_start) from parm_periode)';
 			$Res2 = $this->db->exec_sql($sql);
 			$pid = Database::fetch_result($Res2, 0, 0);
 			if ($pid == null)
@@ -532,7 +727,6 @@ class User
 	 * \brief  Get the default user's preferences
 	 * \return array of (parameter_type => parameter_value)
 	 */
-
 	function get_preference()
 	{
 		$sql = "select parameter_type,parameter_value from user_local_pref where user_id=$1";
@@ -544,7 +738,16 @@ class User
 			$type = $row['parameter_type'];
 			$l_array[$type] = $row['parameter_value'];
 		}
-
+		$repo=new Database();
+		$a_global_pref=$repo->get_array("select parameter_type,parameter_value from user_global_pref 
+									where 
+									upper(user_id) = upper($1)",[$this->login]);
+		$nb_global=count($a_global_pref);
+		for ( $i = 0 ;$i< $nb_global ; $i++) {
+			$idx=$a_global_pref[$i]['parameter_type'];
+			$value=$a_global_pref[$i]['parameter_value'];
+			$l_array[$idx]=$value;
+		}
 
 		return $l_array;
 	}
@@ -597,13 +800,13 @@ class User
 			{
 				$cn = new Database();
 				$sql = "insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
-				$cn->exec_sql($sql, array($_SESSION['g_user'], $_SERVER["REMOTE_ADDR"], $p_action_id, $_SERVER['REQUEST_URI'], 'FAIL'));
+				$cn->exec_sql($sql, array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], $p_action_id, $_SERVER['REQUEST_URI'], 'FAIL'));
 			}
 			return 0;
 		}
-		if ($Count == 1)
-			return 1;
-		echo "<H2 class=\"error\"> Action Invalide !!! $Count select * from user_sec_act where ua_login='$p_login' and ua_act_id=$p_action_id </H2>";
+		if ($Count == 1) 			return 1;
+                echo_error(_("Action invalide"));
+                record_log("User:check_action".sprintf("login %s ua_act_id %s",$this->login,$p_action_id));
 		exit();
 	}
 
@@ -620,7 +823,7 @@ class User
 		// Load everything in an array
 		$Res = $cn->exec_sql("select parameter_type,parameter_value from
                             user_global_pref
-                            where user_id='" . $this->login . "'");
+                            where user_id=$1",[$this->login]);
 		$Max = Database::num_row($Res);
 		if ($Max == 0)
 		{
@@ -635,7 +838,6 @@ class User
 			$row = Database::fetch_array($Res, $i);
 			$type = $row['parameter_type'];
 			$line[$type] = $row['parameter_value'];
-			;
 		}
 		// save array into g_ variable
 		$array_pref = array('g_theme' => 'THEME', 
@@ -644,7 +846,8 @@ class User
                     'g_lang' => 'LANG',
                     'csv_fieldsep'=>'csv_fieldsep',
                     'csv_decimal'=>'csv_decimal' ,
-                    'csv_encoding'=>'csv_encoding');
+                    'csv_encoding'=>'csv_encoding',
+					'first_week_day'=>'first_week_day');
                 
 		foreach ($array_pref as $name => $parameter)
 		{
@@ -654,7 +857,7 @@ class User
 				$this->load_global_pref();
 				return;
 			}
-			$_SESSION[$name] = $line[$parameter];
+			$_SESSION[SESSION_KEY.$name] = $line[$parameter];
 		}
 	}
 
@@ -671,29 +874,28 @@ class User
 	{
 
 		$default_parameter = array("THEME" => "classic",
-			"PAGESIZE" => "50",
-			'TOPMENU' => 'TEXT',
-			'LANG' => 'fr_FR.utf8',
+						"PAGESIZE" => "50",
+						'TOPMENU' => 'TEXT',
+						'LANG' => 'fr_FR.utf8',
                         'csv_fieldsep'=>'0',
                         'csv_decimal'=>'0',
-                        'csv_encoding'=>'utf8'
+                        'csv_encoding'=>'utf8',
+						'first_week_day'=>1
                     );
 		$cn = new Database();
-		$Sql = "insert into user_global_pref(user_id,parameter_type,parameter_value)
-             values ('%s','%s','%s')";
+		$sql = "insert into user_global_pref(user_id,parameter_type,parameter_value)
+             values ($1,$2,$3)";
 		if ($p_type == "")
 		{
 			foreach ($default_parameter as $name => $value)
 			{
-				$Insert = sprintf($Sql, $this->login, $name, $value);
-				$cn->exec_sql($Insert);
+				$cn->exec_sql($sql,array($this->login,$name,$value));
 			}
 		}
 		else
 		{
 			$value = ($p_value == "") ? $default_parameter[$p_type] : $p_value;
-			$Insert = sprintf($Sql, $this->login, $p_type, $value);
-			$cn->exec_sql($Insert);
+			$cn->exec_sql($sql,array($this->login,$p_type,$value));
 		}
 	}
 
@@ -708,12 +910,13 @@ class User
 	function update_global_pref($p_type, $p_value = "")
 	{
 		$default_parameter = array("THEME" => "classic",
-			"PAGESIZE" => "50",
-			"LANG" => 'fr_FR.utf8',
-			'TOPMENU' => 'SELECT',
+						"PAGESIZE" => "50",
+						"LANG" => 'fr_FR.utf8',
+						'TOPMENU' => 'SELECT',
                         'csv_fieldsep'=>'0',
                         'csv_decimal'=>'0',
-                        'csv_encoding'=>'utf8'
+                        'csv_encoding'=>'utf8',
+						'first_week_day'=>1
                     );
 		$cn = new Database();
 		$Sql = "update user_global_pref set parameter_value=$1
@@ -745,7 +948,7 @@ class User
 	/**\brief Check if the user can access
 	 * otherwise warn and exit
 	 * \param $p_action requested action
-	 * \param $p_js = 1 javascript, or 0 just a text
+	 * \param $p_js = 1 javascript, or 0 just a text or 2 to log it silently
 	 * \return nothing the program exits automatically
 	 */
 
@@ -756,15 +959,17 @@ class User
 			$this->audit('FAIL');
 			if ($p_js == 1)
 			{
-				echo "<script>";
-				echo "alert ('Cette action ne vous est pas autorisée. Contactez votre responsable');";
-				echo "</script>";
+                            echo create_script("alert_box(content[59])");
+			}
+			elseif ($p_js == 2) {
+				record_log(_("Access invalid").$p_action);
 			}
 			else
 			{
-				echo '<div class="redcontent">';
-				echo '<h2 class="error"> Cette action ne vous est pas autorisée Contactez votre responsable</h2>';
-				echo '</div>';
+                            echo '<h2 class="error">',
+                            htmlspecialchars(_("Cette action ne vous est pas autorisée Contactez votre responsable")),
+                                    '</h2>';
+                            echo '</div>';
 			}
 			exit(-1);
 		}
@@ -794,7 +999,6 @@ class User
 	 * \param $p_action requested action
 	 * \return nothing the program exits automatically
 	 */
-
 	function can_print($p_action, $p_js = 0)
 	{
 		if ($this->check_print($p_action) == 0)
@@ -802,15 +1006,15 @@ class User
 			$this->audit('FAIL');
 			if ($p_js == 1)
 			{
-				echo "<script>";
-				echo "alert ('Cette action ne vous est pas autorisée. Contactez votre responsable');";
-				echo "</script>";
+                            echo create_script("alert_box(content[59])");
 			}
 			else
 			{
-				echo '<div class="redcontent">';
-				echo '<h2 class="error"> Cette action ne vous est pas autorisée Contactez votre responsable</h2>';
-				echo '</div>';
+                            echo '<div class="redcontent">';
+                            echo '<h2 class="error">',
+                            htmlspecialchars(_("Cette action ne vous est pas autorisée Contactez votre responsable")),
+                                    '</h2>';
+                            echo '</div>';
 			}
 			exit(-1);
 		}
@@ -1050,20 +1254,24 @@ class User
 		{
 			// show only available folders
 			// if user is not an admin
-			$Res = $cn->exec_sql("select distinct dos_id,dos_name,dos_description 
+			$Res = $cn->exec_sql("select 
+    						distinct dos_id,dos_name,dos_description 
                             from ac_users
-                            natural join jnt_use_dos
-                            natural join  ac_dossier
+								natural join jnt_use_dos
+								natural join  ac_dossier
                             where
-                            use_login= $1
-                            and use_active = 1
-                            and ( dos_name ~* $2 or dos_description ~* $2 )
+								use_login= $1
+								and use_active = 1
+								and ( dos_name ilike '%' || $2 || '%' or dos_description ilike '%' || $2 || '%' )
                             order by dos_name", array($this->login, $p_filter));
 		}
 		else
 		{
-			$Res = $cn->exec_sql("select distinct dos_id,dos_name,dos_description from ac_dossier
-             where   dos_name ~* $1 or dos_description ~* $1 order by dos_name", array($p_filter));
+			$Res = $cn->exec_sql("select 
+    			distinct dos_id,dos_name,dos_description from ac_dossier
+             where   
+                   dos_name  ilike '%' || $1|| '%' or dos_description ilike '%' || $1 || '%' 
+			  order by dos_name", array($p_filter));
 		}
 		require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
@@ -1078,6 +1286,21 @@ class User
 		return $array;
 	}
 
+	/**
+	 * Audit action from the administration menu
+	 * @param $p_module description of the action
+	 */
+	static function audit_admin($p_module) {
+		$cn = new Database();
+		$sql = "insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
+
+		$cn->exec_sql($sql, array(
+			$_SESSION[SESSION_KEY.'g_user'],
+			$_SERVER["REMOTE_ADDR"],
+			$p_module,
+			$_SERVER['REQUEST_URI'],
+			'ADMIN'));
+	}
 	function audit($action = 'AUDIT', $p_module = "")
 	{
 		global $audit;
@@ -1093,7 +1316,7 @@ class User
 			$sql = "insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
 
 			$cn->exec_sql($sql, array(
-				$_SESSION['g_user'],
+				$_SESSION[SESSION_KEY.'g_user'],
 				$_SERVER["REMOTE_ADDR"],
 				$p_module,
 				$_SERVER['REQUEST_URI'],
@@ -1192,6 +1415,22 @@ class User
             if ( $this->get_status_security_action()==0)                return TRUE;
             $profile = $this->get_profile();
                     $r = $this->db->get_value(" select count(*) from action_gestion where ag_id=$1 and ag_dest in
+				(select p_granted from user_sec_action_profile where ua_right in ('W','O') and p_id=$2) ", array($dtoc, $profile));
+		if ($r == 0)
+			return FALSE;
+		return true;
+	}
+         /**
+         *Check if the profile of the user can write AND delete for this profile
+         * @param  $dtoc action_gestion.ag_id
+         * @return true if he can write otherwise false
+         */
+	function can_delete_action($dtoc)
+	{
+            if ( $this->Admin() == 1 ) return TRUE;
+            if ( $this->get_status_security_action()==0)                return TRUE;
+            $profile = $this->get_profile();
+                    $r = $this->db->get_value(" select count(*) from action_gestion where ag_id=$1 and ag_dest in
 				(select p_granted from user_sec_action_profile where ua_right='W' and p_id=$2) ", array($dtoc, $profile));
 		if ($r == 0)
 			return FALSE;
@@ -1255,8 +1494,8 @@ class User
         if ($p_pass1 == $p_pass2) {
             $repo = new Database();
             $l_pass = md5($_POST['pass_1']);
-            $repo->exec_sql("update ac_users set use_pass=$1 where use_login=$2", array($l_pass, $_SESSION['g_user']));
-            $_SESSION['g_pass'] = $_POST['pass_1'];
+            $repo->exec_sql("update ac_users set use_pass=$1 where use_login=$2", array($l_pass, $_SESSION[SESSION_KEY.'g_user']));
+            $_SESSION[SESSION_KEY.'g_pass'] = $_POST['pass_1'];
         } else {
             alert(_("Les mots de passe ne correspondent pas. Mot de passe inchangé"));
         }
@@ -1268,7 +1507,7 @@ class User
     function save_email($p_email)
     {
         $repo=new Database();
-        $repo->exec_sql("update ac_users set use_email=$1 where use_login=$2", array($p_email, $_SESSION['g_user']));
+        $repo->exec_sql("update ac_users set use_email=$1 where use_login=$2", array($p_email, $_SESSION[SESSION_KEY.'g_user']));
     }
     /**
      * Remove a user and all his privileges
@@ -1341,19 +1580,28 @@ class User
     static function remove_inexistant_user($p_dossier)
     {
         $cnx_repo=new Database();
+        $name=$cnx_repo->format_name($p_dossier,'dos');
+        if ($cnx_repo->exist_database($name) == 0 )return;
         $cnx_dossier=new Database($p_dossier);
-        
-        $a_user=$cnx_dossier->get_array('select user_name from profile_user');
+		if ($cnx_dossier->exist_table('profile_user'))
+      	  $a_user=$cnx_dossier->get_array('select user_name from profile_user');
+		else
+			return;
+
         if ( ! $a_user ) return;
         $nb=count($a_user);
         for ($i=0;$i < $nb;$i++) {
             if ( $cnx_repo->get_value('select count(*) from ac_users where use_login=$1',
                     array($a_user[$i]['user_name'])) == 0) {
-                $cnx_dossier->exec_sql("delete from user_sec_jrn where uj_login=$1",array($a_user[$i]['user_name']));
-                $cnx_dossier->exec_sql("delete from profile_user where user_name=$1",array($a_user[$i]['user_name']));
-                $cnx_dossier->exec_sql("delete from user_sec_act where ua_login=$1",array($a_user[$i]['user_name']));
-                $cnx_dossier->exec_sql("delete from user_sec_jrn where uj_login=$1",array($a_user[$i]['user_name']));
-                $cnx_dossier->exec_sql("delete from user_active_security where us_login=$1",array($a_user[$i]['user_name']));
+            	if ($cnx_dossier->exist_table('user_sec_jrn'))
+            		$cnx_dossier->exec_sql("delete from user_sec_jrn where uj_login=$1",array($a_user[$i]['user_name']));
+            	$cnx_dossier->exec_sql("delete from profile_user where user_name=$1",array($a_user[$i]['user_name']));
+				if ($cnx_dossier->exist_table('user_sec_act'))
+		            $cnx_dossier->exec_sql("delete from user_sec_act where ua_login=$1",array($a_user[$i]['user_name']));
+				if ($cnx_dossier->exist_table('user_sec_jrn'))
+              	  $cnx_dossier->exec_sql("delete from user_sec_jrn where uj_login=$1",array($a_user[$i]['user_name']));
+				if ($cnx_dossier->exist_table('user_active_security'))
+             	   $cnx_dossier->exec_sql("delete from user_active_security where us_login=$1",array($a_user[$i]['user_name']));
             }
         }
     }
@@ -1415,6 +1663,21 @@ class User
             $this->db->exec_sql("update user_active_security set us_action=$1 where us_login = $2",[$flag,$this->login]);
         }
     }
+
+	/**
+	 *
+	 */
+    function get_first_week_day()
+	{
+		$repocn=new Database();
+		$result=$repocn->get_value("select parameter_value from user_global_pref where parameter_type=$1 and user_id=$2 ",
+				array("first_week_day",$this->login));
+		if ($repocn->count() == 0 ) {
+			$this->save_global_preference("first_week_day",1);
+			return 1;
+		}
+		return $result;
+	}
 }
 
 ?>

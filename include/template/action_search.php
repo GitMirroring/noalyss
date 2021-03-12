@@ -38,7 +38,7 @@
         <?php
         echo HtmlInput::title_box(_('Recherche avancée'), "search_action_div", "close", "", "n");
         ?>
-	<form method="get" id="fsearchaction" style="padding:10px" onsubmit="result_search_action('fsearchaction');return false;">
+	<form method="get" id="fsearchaction" style="padding:10px" onsubmit="waiting_box();result_search_action('fsearchaction');return false;">
 		<?php echo HtmlInput::hidden('ctlc',$_GET['ctlc'])?>
 <?php endif; ?>
 		<?php echo  dossier::hidden()?>
@@ -55,6 +55,10 @@
 			<tr>
 				<td style="text-align:right" ><?php echo  _("Etat")?></td>
 				<td><?php echo  $type_state->input()?></td>
+			</tr>
+                        <tr>
+				<td style="text-align:right"> <?php echo _("Affiche aussi les actions fermées");?></td>
+				<td><?php echo $closed_action->input();?></td>
 			</tr>
 			<tr>
 				<td style="text-align:right" ><?php echo  _("Exclure Etat")?></td>
@@ -103,10 +107,7 @@
 					<?php echo $remind_date_end->input();?>
 				</td>
 			</tr>
-			<tr>
-				<td style="text-align:right"> <?php echo _("Affiche aussi les actions fermées");?></td>
-				<td><?php echo $closed_action->input();?></td>
-			</tr>
+        	
                        
                         </table>
 
@@ -128,17 +129,31 @@
             <p>
                 <?php echo _('Etiquette'); ?>
                <span id="searchtag_choose_td">
-                   <?php echo Tag::button_search('search'); ?>
+                   <?php echo Tag_Action::select_tag_search('search'); ?>
                    <?php
                        if ( isset($_GET['searchtag'])) {
-                           echo Tag::add_clear_button('search');
-                           for ($i=0;$i<count($_GET['searchtag']);$i++) {
-                               $t=new Tag($cn, $_GET['searchtag'][$i]);
+                           $http=new HttpInput();
+                           echo Tag_Action::add_clear_button('search');
+                           $asearchtag= $http->get("searchtag","array",array());
+                           for ($i=0;$i<count($asearchtag);$i++) {
+                               $t=new Tag_Action($cn, $asearchtag[$i]);
                                echo $t->update_search_cell('search');
                            }
                        }
                    ?>
                </span>
+            </p>
+            <p>
+                <?php 
+                echo _("Option étiquettes");
+                $iselect= new ISelect("tag_option");
+                $iselect->value=array(
+                    array("value"=>0,"label"=>_("Toutes les étiquettes")),
+                    array("value"=>1,"label"=>_("Au moins une étiquette"))
+                    );
+                $iselect->set_value($http->request("tag_option","number",0));
+                echo $iselect->input(); 
+                       ?>
             </p>
                         
 		<input type="hidden" name="sa" value="list">

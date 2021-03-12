@@ -40,8 +40,8 @@ global $g_user,$http;
 //-----------------------------------------------------
 echo '<div class="content">';
 
-echo '<FORM action="?" METHOD="GET">';
-echo HtmlInput::hidden('ac',$_REQUEST['ac']);
+echo '<FORM action="?" METHOD="GET" onsubmit="waiting_box();return true;">';
+echo HtmlInput::hidden('ac',$http->request('ac'));
 echo HtmlInput::hidden('type','gl_comptes');
 echo dossier::hidden();
 echo '<TABLE><TR>';
@@ -172,7 +172,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
 
         echo '<tr >
         <td colspan="8" style="width:auto">
-        <h2 class="info">'. $poste_id['pcm_val'].' '.h($Poste->label).'</h2>
+        <h2 class="">'. $poste_id['pcm_val'].' '.h($Poste->label).'</h2>
         </td>
         </tr>';
 

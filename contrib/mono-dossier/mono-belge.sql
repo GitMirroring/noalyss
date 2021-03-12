@@ -2332,7 +2332,6 @@ $$;
 
 SET default_tablespace = '';
 
-SET default_with_oids = true;
 
 --
 -- Name: action; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -2360,7 +2359,6 @@ COMMENT ON TABLE action IS 'The different privileges';
 COMMENT ON COLUMN action.ac_code IS 'this code will be used in the code with the function User::check_action ';
 
 
-SET default_with_oids = false;
 
 --
 -- Name: action_detail; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -2480,7 +2478,6 @@ CREATE SEQUENCE action_gestion_ag_id_seq
 SELECT pg_catalog.setval('action_gestion_ag_id_seq', 1, false);
 
 
-SET default_with_oids = true;
 
 --
 -- Name: action_gestion; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -2658,7 +2655,6 @@ CREATE SEQUENCE bilan_b_id_seq
 SELECT pg_catalog.setval('bilan_b_id_seq', 4, true);
 
 
-SET default_with_oids = false;
 
 --
 -- Name: bilan; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -2772,7 +2768,6 @@ CREATE SEQUENCE bud_detail_periode_bdp_id_seq
 SELECT pg_catalog.setval('bud_detail_periode_bdp_id_seq', 1, false);
 
 
-SET default_with_oids = true;
 
 --
 -- Name: centralized; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -2803,7 +2798,6 @@ CREATE TABLE centralized (
 COMMENT ON TABLE centralized IS 'The centralized journal';
 
 
-SET default_with_oids = false;
 
 --
 -- Name: del_action; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -2967,7 +2961,6 @@ CREATE SEQUENCE document_d_id_seq
 SELECT pg_catalog.setval('document_d_id_seq', 1, false);
 
 
-SET default_with_oids = true;
 
 --
 -- Name: document; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3129,7 +3122,6 @@ CREATE TABLE document_type (
 COMMENT ON TABLE document_type IS 'Type of document : meeting, invoice,...';
 
 
-SET default_with_oids = false;
 
 --
 -- Name: extension; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3220,7 +3212,6 @@ ALTER SEQUENCE extension_ex_id_seq OWNED BY extension.ex_id;
 SELECT pg_catalog.setval('extension_ex_id_seq', 1, true);
 
 
-SET default_with_oids = true;
 
 --
 -- Name: fiche; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3296,7 +3287,6 @@ CREATE TABLE fiche_detail (
 COMMENT ON TABLE fiche_detail IS 'join between the card and the attribut definition';
 
 
-SET default_with_oids = false;
 
 --
 -- Name: forecast; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3508,7 +3498,6 @@ ALTER SEQUENCE forecast_item_fi_id_seq OWNED BY forecast_item.fi_id;
 SELECT pg_catalog.setval('forecast_item_fi_id_seq', 1, false);
 
 
-SET default_with_oids = true;
 
 --
 -- Name: form; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3540,7 +3529,6 @@ CREATE TABLE formdef (
 );
 
 
-SET default_with_oids = false;
 
 --
 -- Name: groupe_analytique; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3608,7 +3596,6 @@ CREATE SEQUENCE s_jnt_id
 SELECT pg_catalog.setval('s_jnt_id', 53, true);
 
 
-SET default_with_oids = true;
 
 --
 -- Name: jnt_fic_attr; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3629,7 +3616,6 @@ CREATE TABLE jnt_fic_attr (
 COMMENT ON TABLE jnt_fic_attr IS 'join between the family card and the attribut definition';
 
 
-SET default_with_oids = false;
 
 --
 -- Name: jnt_letter; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3667,7 +3653,6 @@ ALTER SEQUENCE jnt_letter_jl_id_seq OWNED BY jnt_letter.jl_id;
 SELECT pg_catalog.setval('jnt_letter_jl_id_seq', 1, false);
 
 
-SET default_with_oids = true;
 
 --
 -- Name: jrn; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3756,7 +3741,6 @@ CREATE TABLE jrn_def (
 COMMENT ON TABLE jrn_def IS 'Definition of a journal, his properties';
 
 
-SET default_with_oids = false;
 
 --
 -- Name: jrn_info; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3851,7 +3835,6 @@ CREATE TABLE jrn_periode (
 );
 
 
-SET default_with_oids = true;
 
 --
 -- Name: jrn_rapt; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3919,7 +3902,6 @@ CREATE TABLE jrnx (
 COMMENT ON TABLE jrnx IS 'Journal: content one line for each accountancy writing';
 
 
-SET default_with_oids = false;
 
 --
 -- Name: letter_cred; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -4245,7 +4227,6 @@ CREATE TABLE operation_analytique (
 COMMENT ON TABLE operation_analytique IS 'History of the analytic account';
 
 
-SET default_with_oids = true;
 
 --
 -- Name: parameter; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -4315,7 +4296,6 @@ CREATE TABLE parm_periode (
 COMMENT ON TABLE parm_periode IS 'Periode definition';
 
 
-SET default_with_oids = false;
 
 --
 -- Name: parm_poste; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -4714,7 +4694,6 @@ CREATE TABLE quant_purchase (
 COMMENT ON COLUMN quant_purchase.qp_vat_sided IS 'amount of the VAT which avoid VAT, case of the VAT which add the same amount at the deb and cred';
 
 
-SET default_with_oids = true;
 
 --
 -- Name: quant_sold; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -5776,7 +5755,6 @@ CREATE SEQUENCE todo_list_tl_id_seq
 SELECT pg_catalog.setval('todo_list_tl_id_seq', 1, false);
 
 
-SET default_with_oids = false;
 
 --
 -- Name: todo_list; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -5798,7 +5776,6 @@ CREATE TABLE todo_list (
 COMMENT ON TABLE todo_list IS 'Todo list';
 
 
-SET default_with_oids = true;
 
 --
 -- Name: tva_rate; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -5871,7 +5848,6 @@ CREATE TABLE user_sec_act (
 );
 
 
-SET default_with_oids = false;
 
 --
 -- Name: user_sec_extension; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -5918,7 +5894,6 @@ ALTER SEQUENCE user_sec_extension_use_id_seq OWNED BY user_sec_extension.use_id;
 SELECT pg_catalog.setval('user_sec_extension_use_id_seq', 1, true);
 
 
-SET default_with_oids = true;
 
 --
 -- Name: user_sec_jrn; Type: TABLE; Schema: public; Owner: -; Tablespace: 

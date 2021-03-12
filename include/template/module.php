@@ -11,14 +11,14 @@
 <?php
 $http=new HttpInput();
 if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
-		where user_name=$1 and with_calc=true",array($_SESSION['g_user'])) ==1):
+		where user_name=$1 and with_calc=true",array($_SESSION[SESSION_KEY.'g_user'])) ==1):
   echo '<div id="calc">';
 	echo IButton::show_calc();
 echo '</div>';
 endif;
 
 if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
-		where user_name=$1 and with_direct_form=true",array($_SESSION['g_user'])) ==1):
+		where user_name=$1 and with_direct_form=true",array($_SESSION[SESSION_KEY.'g_user'])) ==1):
 ?>
 	<div id="direct">
 	<form method="get">

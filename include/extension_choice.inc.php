@@ -14,7 +14,7 @@ require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once  NOALYSS_INCLUDE.'/constant.security.php';
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 echo '<div class="topmenu">';
-@html_page_start($_SESSION['g_theme']);
+@html_page_start($_SESSION[SESSION_KEY.'g_theme']);
 
 $cn=Dossier::connect();
 global $g_user;

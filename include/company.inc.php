@@ -53,7 +53,7 @@ if (isset($_POST['record_company']))
         $m->MY_DEFAULT_ROUND_ERROR_CRED=$http->post("p_round_error_cred");
         $m->MY_ANC_FILTER=$http->post("p_anc_filter");
         try{
-            $m->Update();
+            $m->update();
         } catch (Exception $e) {
             alert($e->getMessage());
         }

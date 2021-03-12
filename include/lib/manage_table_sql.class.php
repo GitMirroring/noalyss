@@ -61,6 +61,7 @@
  * @see sorttable.js
  * 
  */
+require_once NOALYSS_INCLUDE."/lib/http_input.class.php";
 
 class Manage_Table_SQL
 {
@@ -71,21 +72,25 @@ class Manage_Table_SQL
     protected $a_prop; //!< property for each col.
     protected $a_type; //!< Type of the column : date , select ... Only in input
     protected $a_select; //!< Possible value if a_type is a SELECT
-    protected $object_name; //!< Object_name is used for the javascript
+    protected $object_name; //!< Object_name is used for the javascript , it is the row id to update or delete
     protected $row_delete; //!< Flag to indicate if rows can be deleted
     protected $row_update; //!< Flag to indicate if rows can be updated
     protected $row_append; //!< Flag to indicate if rows can be added
-    protected $json_parameter; //!< Default parameter to add (gDossier...)
+    protected $json_parameter; //!< Default parameter to add (gDossier...), sent to the ajax callback
     protected $aerror; //!< Array containing the error of the input data
     protected $col_sort; //!< when inserting, it is the column to sort,-1 to disable it and append only
     protected $a_info; //!< Array with the infotip
     protected $sort_column; //!< javascript sort , if empty there is no js sort
+    protected $dialog_box; //!< ID of the dialog box which display the result of the ajax calls
+    protected $search_table; //!< boolean , by default true ,it is possible to search in the table, 
     const UPDATABLE=1;
     const VISIBLE=2;
 
     private $icon_mod; //!< place of right or left the icon update or mod, default right, accepted value=left,right,first column for mod
     private $icon_del; //!< place of right or left the icon update or mod, default right, accepted value=left,right
-
+    private $dialogbox_style; 
+    private $button_add_top;  //!< place of the button add on the top, by default true
+    protected $title; //! < give the title of the diabox , default is Data
     /**
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the
@@ -101,7 +106,7 @@ class Manage_Table_SQL
         foreach ($this->table->name as $key=> $value)
         {
 
-            $this->a_label_displaid[$value]=$value;
+            $this->a_label_displaid[$value]=$key;
             $this->a_order[$order]=$value;
             $this->a_prop[$value]=self::UPDATABLE|self::VISIBLE;
             $this->a_type[$value]=$this->table->type[$value];
@@ -121,14 +126,92 @@ class Manage_Table_SQL
         $this->col_sort=0;
         // By default no js sort
         $this->sort_column="";
+        $this->dialog_box="dtr";
+        $this->dialogbox_style=array("position"=> "fixed", "top"=>  '15%',"width"=> "auto", 
+            "max-width"=>"60%",
+            "margin-left"=> "20%");
+        $this->search_table=true;
+        $this->button_add_top=true;
+        $this->title=_("Donnée");
     }
     /**
+     * Set the title of the diabox , default is Donnée
+     * @param type $p_title
+     */
+    function setTitle($p_title)
+    {
+        $this->title=$p_title;
+    }
+    function getTitle()
+    {
+        return $this->title;
+    }
+    /**
+     * Get if we can search in the table
+     * @return boolean
+     */
+    public function get_search_table()
+    {
+        return $this->search_table;
+    }
+
+    /**
+     * Set the table searchable or not
+     * @param boolean  : true we can search 
+     * @return $this
+     */
+    public function set_search_table($search_table)
+    {
+        $this->search_table=$search_table;
+        return $this;
+    }
+
+        /**
      * send the XML headers for the ajax call 
      */
     function send_header()
     {
         header('Content-type:text/xml;charset="UTF-8"');
     }
+
+    /**
+     * return the db_style
+     * @return array
+     */
+    public function get_dialogbox_style()
+    {
+        return $this->dialogbox_style;
+    }
+
+    /**
+     * Dialog box style , by default {position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"}
+     *
+     * @param array $db_style , will be transformed into a json object
+     */
+    public function set_dialogbox_style($db_style)
+    {
+        $this->dialogbox_style = $db_style;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_dialog_box()
+    {
+        return $this->dialog_box;
+        return $this;
+    }
+
+    /**
+     * @param mixed $dialog_box
+     */
+    public function set_dialog_box($dialog_box)
+    {
+        $this->dialog_box = $dialog_box;
+        return $this;
+    }
+
     /**
      * When adding an element , it is column we checked to insert before,
      * @return none
@@ -216,7 +299,7 @@ class Manage_Table_SQL
     }
 
     /**
-     * This function can be overrided to check the data before 
+     * @brief This function can be overrided to check the data before 
      * inserting , updating or removing, above an example of an overidden check.
      * 
      * Usually , you get the row of the table (get_table) , you check the conditions
@@ -226,7 +309,8 @@ class Manage_Table_SQL
      * 
      * @see set_error get_error count_error
      * @return boolean
-     * @code 
+     * 
+@code 
 function check()
     {
         global $cn;
@@ -250,7 +334,7 @@ function check()
         if ( $is_error > 0 ) return false;
         return true;
     }    
-     * @endcode
+@endcode
      */
     function check()
     {
@@ -357,12 +441,15 @@ function check()
      */
     function create_js_script()
     {
+        $style=json_encode($this->dialogbox_style);
         echo "
 		<script>
 		var {$this->object_name}=new ManageTable(\"{$this->table->table}\");
 		{$this->object_name}.set_callback(\"{$this->callback}\");
 		{$this->object_name}.param_add({$this->json_parameter});
 		{$this->object_name}.set_sort({$this->get_col_sort()});
+		{$this->object_name}.set_control(\"{$this->get_dialog_box()}\");
+		{$this->object_name}.set_style($style);
 		</script>
 
 	";
@@ -595,8 +682,18 @@ function check()
             }
         }
     }
+    public function get_button_add_top()
+    {
+        return $this->button_add_top;
+    }
 
-    /**
+    public function set_button_add_top($button_add_top)
+    {
+        $this->button_add_top=$button_add_top;
+        return $this;
+    }
+
+        /**
      * @brief display the data of the table
      * @param $p_order is the cond or order of the rows, 
      * if empty the primary key will be used
@@ -611,7 +708,7 @@ function check()
         }
         $ret=$this->table->seek($p_order, $p_array);
         $nb=Database::num_row($ret);
-        if ($this->can_append_row()==TRUE)
+        if ($this->can_append_row()==TRUE && $this->button_add_top == true)
         {
             echo HtmlInput::button_action(" "._("Ajout"),
                     sprintf("%s.input('-1','%s')", 
@@ -631,7 +728,10 @@ function check()
                 $visible++;
             }
         }
-        echo _('Cherche')." ".HtmlInput::filter_table("tb".$this->object_name, $result, 1);
+        if ( $this->get_search_table() )
+        {
+            echo _('Cherche')." ".HtmlInput::filter_table("tb".$this->object_name, $result, 1);
+        }
         
         // Set a sort on a column if sort_column is not empty
         if ( $this->sort_column =="")
@@ -645,10 +745,12 @@ function check()
             if ($i==0)
             {
                 $this->display_table_header();
+                echo '<tbody>';
             }
             $row=Database::fetch_array($ret, $i);
             $this->display_row($row);
         }
+        echo '</tbody>';
         echo "</table>";
         if ($this->can_append_row()==TRUE)
         {
@@ -668,6 +770,7 @@ function check()
     function display_table_header()
     {
         $nb=count($this->a_order);
+        echo '<thead>';
         echo "<tr>";
 
         if ($this->can_update_row() && $this->icon_mod=="left")
@@ -698,6 +801,7 @@ function check()
             echo th(" ", 'style="width:40px"  class="sorttable_nosort" ');
         }
         echo "</tr>";
+        echo '</thead>';
     }
     /**
      * set the column to sort by default
@@ -731,6 +835,7 @@ function check()
     function from_request()
     {
         $nb=count($this->a_order);
+        $http=new HttpInput();
         for ($i=0; $i<$nb; $i++)
         {
             
@@ -738,7 +843,7 @@ function check()
             if ($this->get_property_visible($key)==TRUE&&$this->get_property_updatable($key)
                     ==TRUE)
             {
-                $v=HtmlInput::default_value_request($this->a_order[$i], "");
+                $v=$http->request($this->a_order[$i],"string","");
                 $this->table->$key=strip_tags($v);
             }
         }
@@ -781,9 +886,10 @@ function check()
      */
     function display_row($p_row)
     {
-
+        
+        $pk_id=$p_row[$this->table->primary_key];
         printf('<tr id="%s_%s">', $this->object_name,
-                $p_row[$this->table->primary_key])
+                $pk_id)
         ;
         
         if ($this->icon_mod=="left")
@@ -795,10 +901,11 @@ function check()
         for ($i=0; $i<$nb_order; $i++)
         {
             $v=$this->a_order[$i];
+            
             if ($i==0&&$this->icon_mod=="first"&&$this->can_update_row())
             {
                 $js=sprintf("onclick=\"%s.input('%s','%s');\"", $this->object_name,
-                        $p_row[$this->table->primary_key], $this->object_name);
+                        $pk_id, $this->object_name);
                 $td=($i == $this->col_sort ) ? sprintf('<td sort_value="X%s" >',$p_row[$v]):"<td>";
                 echo $td.HtmlInput::anchor($p_row[$v], "", $js).'</td>';
             }
@@ -840,7 +947,7 @@ function check()
                     }
                 } elseif ($this->get_col_type($v)=="custom") {
                     // For custom col
-                    echo td($this->display_row_custom($v,$p_row[$v]));
+                    echo td($this->display_row_custom($v,$p_row[$v],$pk_id));
                 }
                 else {
                     echo td($p_row[$v]);
@@ -860,18 +967,19 @@ function check()
      * For the type custom , we can call a function to display properly the value
      * @param $p_key string key name
      * @param $p_value string value
+     * @param int $p_id id of the row (optional default 0)
      * @see input_custom
      * @see set_type
      * @note must return a string which will be in surrounded by td in the function display_row
      * @return string
      */
-    function display_row_custom($p_key,$p_value) {
+    function display_row_custom($p_key,$p_value,$p_id=0) {
         return $p_value;
     }
     /**
      * @brief display into a dialog box the datarow in order 
      * to be appended or modified. Can be override if you need
-     * a more complex form
+     * a more complex form.
      */
     function input()
     {
@@ -985,7 +1093,8 @@ function check()
     }
     /**
      * @brief Save the record from Request into the DB and returns an XML
-     * to update the Html Element
+     * to update the Html Element. The function check() will be called before saving
+     * @see check
      * @return \DOMDocument
      */
     function ajax_save()
@@ -1065,9 +1174,10 @@ function check()
         try
         {
             $status=$p_status;
+
             ob_start();
 
-            echo HtmlInput::title_box("Donnée", "dtr","close","","y");
+            echo HtmlInput::title_box($this->getTitle(), $this->dialog_box,"close","","y","y");
             printf('<form id="frm%s_%s" method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,
@@ -1077,15 +1187,15 @@ function check()
             echo HtmlInput::json_to_hidden($this->json_parameter);
             echo HtmlInput::hidden("p_id", $this->table->get_pk_value());
             // button Submit and cancel
-            $close=sprintf("\$('%s').remove()", "dtr");
+            $close=sprintf("\$('%s').remove()", $this->dialog_box);
             // display error if any
             $this->display_error();
             echo '<ul class="aligned-block">',
             '<li>',
-            HtmlInput::submit('update', _("OK")),
+            HtmlInput::submit('update', _("Sauver")),
             '</li>',
             '<li>',
-            HtmlInput::button_action(_("Cancel"), $close, "", "smallbutton"),
+            HtmlInput::button_action(_("Annuler"), $close, "", "smallbutton"),
             '</li>',
             '</ul>';
             echo "</form>";

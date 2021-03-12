@@ -36,6 +36,7 @@ class IText extends HtmlInput
         $this->extra="";
         $this->style=' class="input_text" ';
         $this->autofocus=false;
+        $this->require=false;
     }
     /*!\brief show the html  input of the widget*/
     public function input($p_name=null,$p_value=null)
@@ -45,38 +46,43 @@ class IText extends HtmlInput
         if ( $this->readOnly==true) return $this->display();
 	$this->id=($this->id=="")?$this->name:$this->id;
 
+	// Double quote makes troubles 
+	$this->value=str_replace('"','',$this->value);
+
         $t= 'title="'.$this->title.'" ';
         $autofocus=($this->autofocus)?" autofocus ":"";
-        $this->value=str_replace('"','',$this->value);
+        $require=($this->require)?"required":"";
         if ( ! isset ($this->css_size))
         {
             
             $r=  sprintf('<INPUT TYPE="TEXT" %s id="%s" name="%s" value="%s" placeholder="%s" title="%s"
-                     Size="%s"  %s %s  %s>
+                     Size="%s"  %s %s  %s %s>
                     ',$this->style,
                     $this->id,
                     $this->name,
-                    htmlentities($this->value, ENT_COMPAT, "UTF-8"),
+                    htmlentities($this->value, ENT_COMPAT|ENT_QUOTES, "UTF-8"),
                     $this->placeholder,
                     $this->title,
                     $this->size,
                     $this->javascript,
                     $this->extra,
-                    $autofocus
+                    $autofocus,
+                    $require
                     );
         } else {
             $r=  sprintf('<INPUT TYPE="TEXT" %s id="%s" name="%s" value="%s" placeholder="%s" title="%s"
-                     style="width:%s;"  %s %s  %s>
+                     style="width:%s;"  %s %s  %s %s>
                     ',$this->style,
                     $this->id,
                     $this->name,
-                    htmlentities($this->value, ENT_COMPAT, "UTF-8"),
+                     htmlentities($this->value, ENT_COMPAT|ENT_QUOTES, "UTF-8"),
                     $this->placeholder,
                     $this->title,
                     $this->css_size,
                     $this->javascript,
                     $this->extra,
-                    $autofocus
+                    $autofocus,
+                    $require
                     );
         }
 
@@ -94,8 +100,8 @@ class IText extends HtmlInput
         $extra=(isset($this->extra))?$this->extra:"";
 
         $readonly=" readonly ";
-        $this->value=str_replace('"','',$this->value);
-		 $this->style=' class="input_text_ro" ';
+        $this->value=htmlentities($this->value, ENT_COMPAT|ENT_QUOTES, "UTF-8");
+        $this->style=' class="input_text_ro" ';
          if ( ! isset ($this->css_size))
         {
         $r='<INPUT '.$this->style.' TYPE="TEXT" id="'.
@@ -114,6 +120,10 @@ class IText extends HtmlInput
 
         return $r;
 
+    }
+    function set_require($p_boolean)
+    {
+        $this->require=$p_boolean;
     }
     static public function test_me()
     {

@@ -32,12 +32,12 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 /**
  * \brief to protect again bad characters which can lead to a cross scripting attack
-  the string to be diplayed must be protected
+  the string to be diplayed must be protected. Side effects with htmlentities, especially for
+ * the date (transform dot in &periode;) and number
  */
-
 function h($p_string)
 {
-    return htmlspecialchars($p_string);
+    return htmlspecialchars($p_string,ENT_QUOTES|ENT_HTML5,'UTF-8',true);
 }
 
 function span($p_string, $p_extra='')
@@ -47,31 +47,31 @@ function span($p_string, $p_extra='')
 
 function hi($p_string)
 {
-    return '<i>' . htmlspecialchars($p_string) . '</i>';
+    return '<i>' . h($p_string) . '</i>';
 }
 
 function hb($p_string)
 {
-    return '<b>' . htmlspecialchars($p_string) . '</b>';
+    return '<b>' . h($p_string) . '</b>';
 }
 
 function th($p_string, $p_extra='',$raw='')
 {
-    return '<th  ' . $p_extra . '>' . htmlspecialchars($p_string).$raw . '</th>';
+    return '<th  ' . $p_extra . '>' . h($p_string).$raw . '</th>';
 }
 
 function h2info($p_string)
 {
-    return '<h2 class="info">' . htmlspecialchars($p_string) . '</h2>';
+    return '<h2 class="info">' . h($p_string) . '</h2>';
 }
 
 function h2($p_string, $p_class="",$raw="")
 {
-    return '<h2 ' . $p_class . '>' . $raw.htmlspecialchars($p_string) . '</h2>';
+    return '<h2 ' . $p_class . '>' . $raw.h($p_string) . '</h2>';
 }
 function h1($p_string, $p_class="")
 {
-    return '<h1 ' . $p_class . '>' . htmlspecialchars($p_string) . '</h1>';
+    return '<h1 ' . $p_class . '>' . h($p_string) . '</h1>';
 }
 /**
  * \brief surround the string with td
@@ -209,13 +209,13 @@ function cmpDate($p_date, $p_date_oth)
 /***!
  * @brief check if the argument is a number
  *
- * \param $p_int number to test
+ * @param $p_int number to test
  *
- * \return
+ * @return
  *        - 1 it's a number
  *        - 0 it is not
  */
-function isNumber(&$p_int)
+function isNumber($p_int)
 {
     if (strlen(trim($p_int)) == 0)
 	return 0;
@@ -344,11 +344,11 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     echo '<script language="javascript" src="js/calendar.js"></script>
     <script type="text/javascript" src="js/lang/calendar-en.js"></script>';
 
-    if (isset($_SESSION['g_lang']) && $_SESSION['g_lang']=='fr_FR.utf8' )
+    if (isset($_SESSION[SESSION_KEY.'g_lang']) && $_SESSION[SESSION_KEY.'g_lang']=='fr_FR.utf8' )
     {
 	echo '<script type="text/javascript" src="js/lang/calendar-fr.js"></script>';
     }
-    if (isset($_SESSION['g_lang']) && $_SESSION['g_lang']=='nl_NL.utf8' )
+    if (isset($_SESSION[SESSION_KEY.'g_lang']) && $_SESSION[SESSION_KEY.'g_lang']=='nl_NL.utf8' )
     {
 	echo '<script type="text/javascript" src="js/lang/calendar-nl.js"></script>';
     }
@@ -357,7 +357,7 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     <LINK REL="stylesheet" type="text/css" href="calendar-blue.css" media="screen">
     ';
     // language
-    if (isset($_SESSION['g_lang']))
+    if (isset($_SESSION[SESSION_KEY.'g_lang']))
     {
 		set_language();
     }
@@ -421,9 +421,11 @@ function html_min_page_start($p_theme="", $p_script="", $p_script2="")
     <LINK REL=\"stylesheet\" type=\"text/css\" href=\"$style\" media=\"screen\">
     <link rel=\"stylesheet\" type=\"text/css\" href=\"style-print.css\" media=\"print\">" .
     $p_script2 . "
+    <script src=\"js/prototype.js\" type=\"text/javascript\"></script>
     <script src=\"js/scripts.js\" type=\"text/javascript\"></script>
     <script src=\"js/acc_ledger.js\" type=\"text/javascript\"></script>
     <script src=\"js/smoke.js\" type=\"text/javascript\"></script>";
+    include_once NOALYSS_INCLUDE.'/lib/message_javascript.php';
     echo '</HEAD>
     ';
 
@@ -520,15 +522,23 @@ function ShowItem($p_array, $p_dir='V', $class="mtitle", $class_ref="mtitle", $d
 	    $title = "";
 	    $set = "XX";
 	    if (isset($href[2]))
-		$title = $href[2];
-	    if (isset($href[3]))
-		$set = $href[3];
+            {
+                $title=$href[2];
+            }
+            if (isset($href[3]))
+            {
+                $set=$href[3];
+            }
 
-	    if ($set == $default)
-		$ret.='<TR><TD CLASS="selectedcell"><A class="' . $class_ref . '" HREF="' . $href[0] . '" title="' . $title . '" ' . $javascript . '>' . $href[1] . '</A></TD></TR>';
-	    else
-		$ret.='<TR><TD CLASS="' . $class . '"><A class="' . $class_ref . '" HREF="' . $href[0] . '" title="' . $title . '" ' . $javascript . '>' . $href[1] . '</A></TD></TR>';
-	}
+            if ($set==$default)
+            {
+                $ret.='<TR><TD CLASS="selectedcell"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></TD></TR>';
+            }
+            else
+            {
+                $ret.='<TR><TD CLASS="'.$class.'"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></TD></TR>';
+            }
+        }
     }
     //direction Horizontal
     else if ($p_dir == 'H')
@@ -625,7 +635,8 @@ function getPeriodeFromMonth($p_cn, $p_date)
     return $R;
 }
 
-/**\brief Decode the html for the widegt richtext and remove newline
+/**
+ * \brief Decode the html for the widegt richtext and remove newline
  * \param $p_html string to decode
  * \return the html code without new line
  */
@@ -651,8 +662,7 @@ function Decode($p_html)
 function sql_filter_per($p_cn, $p_from, $p_to, $p_form='p_id', $p_field='jr_tech_per')
 {
 
-    if ($p_form != 'p_id' &&
-	    $p_form != 'date')
+    if ($p_form != 'p_id' && $p_form != 'date')
     {
 	echo_error(__FILE__, __LINE__, 'Mauvais parametres ');
 	exit(-1);
@@ -662,26 +672,38 @@ function sql_filter_per($p_cn, $p_from, $p_to, $p_form='p_id', $p_field='jr_tech
     $p_field=  sql_string($p_field);
     if ($p_form == 'p_id')
     {
+        if ( isNUmber($p_from)==0 || isNUmber($p_to)==0){
+            throw new Exception("SFP1"._("Nombre invalide"));
+        }
 	// retrieve the date
 	$pPeriode = new Periode($p_cn);
 	$a_start = $pPeriode->get_date_limit($p_from);
 	$a_end = $pPeriode->get_date_limit($p_to);
-	if ($a_start == null || $a_end == null)
-	    throw new Exception(__FILE__ . __LINE__ . sprintf(_('Attention periode 
-		     non trouvee periode p_from= %s p_to_periode = %s'), $p_from ,
-		    $p_to));
+	if ($a_start==null||$a_end==null)
+        {
+            throw new Exception(__FILE__.__LINE__.sprintf(_('Attention periode 
+		     non trouvee periode p_from= %s p_to_periode = %s'), $p_from, $p_to));
+        }
 
 
-	$p_from = $a_start['p_start'];
+        $p_from = $a_start['p_start'];
 	$p_to = $a_end['p_end'];
+    }else {
+        if ( isDate($p_from)==NULL || isDate($p_to)==NULL){
+            throw new Exception("SFP2"._("Date invalide"));
+        }
     }
-    if ($p_from == $p_to)
-	$periode = " $p_field = (select p_id from parm_periode " .
-		" where " .
-		" p_start = to_date('$p_from','DD.MM.YYYY')) ";
+    if ($p_from==$p_to)
+    {
+        $periode=" $p_field = (select p_id from parm_periode ".
+                " where ".
+                " p_start = to_date('$p_from','DD.MM.YYYY')) ";
+    }
     else
-	$periode = "$p_field in (select p_id from parm_periode " .
-		" where p_start >= to_date('$p_from','DD.MM.YYYY') and p_end <= to_date('$p_to','DD.MM.YYYY')) ";
+    {
+        $periode="$p_field in (select p_id from parm_periode ".
+                " where p_start >= to_date('$p_from','DD.MM.YYYY') and p_end <= to_date('$p_to','DD.MM.YYYY')) ";
+    }
     return $periode;
 }
 
@@ -699,7 +721,9 @@ function alert($p_msg, $buffer=false)
     $r.= '</script>';
 
     if ($buffer)
-	return $r;
+    {
+        return $r;
+    }
     echo $r;
 }
 
@@ -709,24 +733,33 @@ function alert($p_msg, $buffer=false)
 function set_language()
 {
     // desactivate local check
-    if ( defined("LOCALE") && LOCALE==0 ) return;
-    if ( ! isset ($_SESSION['g_lang'])) return;
-    
+    if (defined("LOCALE")&&LOCALE==0)
+    {
+        return;
+    }
+    if (!isset($_SESSION[SESSION_KEY.'g_lang']))
+    {
+        return;
+    }
+
     /*
      * If translation is not supported by current
      */
-    if (! function_exists("bindtextdomain")) return;
-    
+    if (!function_exists("bindtextdomain"))
+    {
+        return;
+    }
+
     $dir = "";
     // set differently the language depending of the operating system
     if (what_os() == 1)
     {
-	$dir = setlocale(LC_MESSAGES, $_SESSION['g_lang']);
+	$dir = setlocale(LC_MESSAGES, $_SESSION[SESSION_KEY.'g_lang']);
 	if ($dir == "")
 	{
 	    $g_lang = 'fr_FR.utf8';
 	    $dir = setlocale(LC_MESSAGES, $g_lang);
-	   // echo '<span class="notice">' . $_SESSION['g_lang'] . ' domaine non supporté</h2>';
+	   // echo '<span class="notice">' . $_SESSION[SESSION_KEY.'g_lang'] . ' domaine non supporté</h2>';
 	}
 	bindtextdomain('messages', NOALYSS_HOME.'/lang');
 	textdomain('messages');
@@ -735,8 +768,8 @@ function set_language()
 	return;
     }
     // for windows
-    putenv('LANG=' . $_SESSION['g_lang']);
-    $dir = setlocale(LC_ALL, $_SESSION['g_lang']);
+    putenv('LANG=' . $_SESSION[SESSION_KEY.'g_lang']);
+    $dir = setlocale(LC_ALL, $_SESSION[SESSION_KEY.'g_lang']);
     bindtextdomain('messages', '.\\lang');
     textdomain('messages');
     bind_textdomain_codeset('messages', 'UTF8');
@@ -778,7 +811,7 @@ function shrink_date($p_date)
 /**
  * @brief shrink the date, make a date shorter for the printing
  * @param $p_date format DD.MM.YYYY
- * @return date in the format DDMMYY (size = 13 mm in arial 8)
+ * @return date in the format DD.MM.YY (size = 13 mm in arial 8)
  */
 function smaller_date($p_date)
 {
@@ -826,7 +859,7 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
        case 'YYYYMMDD':
             $str_date = $date[0] . $date[1] . $date[2];
             break;
-		 case 'YYYY/MM/DD':
+        case 'YYYY/MM/DD':
             $str_date = $date[0] . '/' . $date[1] . '/' . $date[2];
             break;
         case "DD.MM.YY":
@@ -851,9 +884,9 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
 function ajax_disconnected($div)
 {
     /**
-     * if $_SESSION['g_user'] is not set : echo a warning
+     * if $_SESSION[SESSION_KEY.'g_user'] is not set : echo a warning
      */
-    if (!isset($_SESSION['g_user']))
+    if (!isset($_SESSION[SESSION_KEY.'g_user']))
     {
 	$script = 'var a=$("' . $div . '");a.style.height="70%";a.style.width="60%";';
 	$script.='a.style.top=posY-20+offsetY;a.style.left=posX+offsetX;';
@@ -1038,7 +1071,8 @@ function show_menu($module)
     if ($module == 0)return;
     static $level=0;
     global $g_user;
-    
+    $http=new HttpInput();
+    $access_code=$http->request("ac");
     $cn = Dossier::connect();
     /**
      * Show the submenus
@@ -1068,11 +1102,13 @@ function show_menu($module)
         else {
             $style_menu=$a_style_menu[$level];
         }
-		require NOALYSS_TEMPLATE.'/menu.php';
-    } // there is only one submenu so we include the code or javascript 
-      // or we show the submenu
-    elseif (count($amenu) == 1)
+	require NOALYSS_TEMPLATE.'/menu.php';
+          $level++;
+           return;
+    } elseif (count($amenu) == 1)
     {
+        // there is only one submenu so we include the code or javascript 
+        // or we show the submenu
         if ( trim($amenu[0]['me_url']) != "" ||
              trim ($amenu[0]['me_file']) != "" ||
              trim ($amenu[0]['me_javascript']) != "" )
@@ -1081,8 +1117,11 @@ function show_menu($module)
 		echo h2info(_($amenu[0]['me_menu']));
 		echo '</div>';
 		$module = $amenu[0]['pm_id'];
+                display_menu($module);
+                $level++;
+                return;
         } else {
-           $url=$_REQUEST['ac'].'/'.$amenu[0]['me_code'];
+           $url=$access_code.'/'.$amenu[0]['me_code'];
            echo '<a href="do.php?gDossier='.Dossier::id().'&ac='.$url.'">';
            echo _($amenu[0]['me_menu']);
            echo '</a>';
@@ -1091,66 +1130,85 @@ function show_menu($module)
         }
     }
     
+    // !!! this point should never be reached 
     // There is no submenu or only one
     if (empty($amenu) || count($amenu) == 1)
     {
-		$file = $cn->get_array("select me_file,me_parameter,me_javascript,me_type
-		from menu_ref
-		join profile_menu using (me_code)
-		join profile_user using (p_id)
-		where
-		pm_id=$1 and
-		user_name=$2 and
-		(me_file is not null or trim(me_file) <>'' or
-		me_javascript is not null or trim (me_javascript) <> '')", array($module,$g_user->login));
-
-		if (count($file)==0)
-		{
-                        return;
-		}
-
-		if ($file[0]['me_file'] != "")
-		{
-			if ($file[0]['me_parameter'] !== "")
-			{
-				// if there are paramter put them in superglobal
-				$array=compute_variable($file[0]['me_parameter']);
-				put_global($array);
-			}
-                        if ( DEBUG ) echo  $file[0]['me_file']," param : ",$file[0]['me_parameter'] ;
-                        /*
-                         * Log the file we input to put in the folder test-noalyss for replaying it
-                         */
-                        if (LOGINPUT) {
-                                $file_loginput=fopen($_ENV['TMP'].'/scenario-'.$_SERVER['REQUEST_TIME'].'.php','a+');
-                                fwrite($file_loginput, "include '".$file[0]['me_file']."';");
-                                fwrite($file_loginput,"\n");
-                                fclose($file_loginput);
-                        }
-			// if file is not a plugin, include the file, otherwise
-			// include the plugin launcher
-			if ( $file[0]['me_type'] != 'PL') {
-                            if (file_exists ($file[0]['me_file']) )
-                            {
-				require_once $file[0]['me_file'];
-                            } elseif ( file_exists(NOALYSS_INCLUDE.'/'.$file[0]['me_file'])) {
-				require_once NOALYSS_INCLUDE.'/'.$file[0]['me_file'];
-                            }else {                            
-                                echo echo_warning(_("Fichier non trouvé"));
-                            }
-                        } else {
-				require 'extension_get.inc.php';
-                        }
-
-			exit();
-		}
-		if ( $file[0]['me_javascript'] != '')
-		{
-                    $js=  str_replace('<DOSSIER>', dossier::id(), $file[0]['me_javascript']);
-                    echo create_script($js);
-		}
+        display_menu($module);
+                
     }
     $level++;
+}
+/**
+ * Display a menu
+ * @global type $g_user
+ * @param type $p_menuid
+ * @return type
+ */
+function display_menu($p_menuid)
+{
+    if ($p_menuid == 0) return;
+    global $g_user;
+    $cn=Dossier::connect();
+    
+    $file = $cn->get_array("
+        select me_file,me_parameter,me_javascript,me_type
+        from menu_ref
+        join profile_menu using (me_code)
+        join profile_user using (p_id)
+        where
+        pm_id=$1 and
+        user_name=$2 and
+        (me_file is not null or trim(me_file) <>'' or
+        me_javascript is not null or trim (me_javascript) <> '')", array($p_menuid,$g_user->login));
+
+    if (count($file)==0)
+    {
+            return;
+    }
+
+    if ($file[0]['me_file'] != "")
+    {
+            if ($file[0]['me_parameter'] !== "")
+            {
+                    // if there are paramter put them in superglobal
+                    $array=compute_variable($file[0]['me_parameter']);
+                    put_global($array);
+            }
+            tracedebug("'menu", $file[0]['me_file'],__FUNCTION__.__LINE__."line");
+            tracedebug("'menu", $file[0]['me_parameter'],__FUNCTION__.__LINE__."parm ");
+            if ( DEBUG ) { echo  $file[0]['me_file']," param : ",$file[0]['me_parameter'] ;}
+            /*
+             * Log the file we input to put in the folder test-noalyss for replaying it
+             */
+            if (LOGINPUT) {
+                    $file_loginput=fopen($_ENV['TMP'].'/scenario-'.$_SERVER['REQUEST_TIME'].'.php','a+');
+                    fwrite($file_loginput, "include '".$file[0]['me_file']."';");
+                    fwrite($file_loginput,"\n");
+                    fclose($file_loginput);
+            }
+            // if file is not a plugin, include the file, otherwise
+            // include the plugin launcher
+            if ( $file[0]['me_type'] != 'PL') {
+                if (file_exists ($file[0]['me_file']) )
+                {
+                    require_once $file[0]['me_file'];
+                } elseif ( file_exists(NOALYSS_INCLUDE.'/'.$file[0]['me_file'])) {
+                    require_once NOALYSS_INCLUDE.'/'.$file[0]['me_file'];
+                }else {                            
+                    echo echo_warning(_("Fichier non trouvé"));
+                }
+            } else {
+                    require 'extension_get.inc.php';
+            }
+
+            exit();
+    } elseif ( $file[0]['me_javascript'] != '')
+    {
+        $js=  str_replace('<DOSSIER>', dossier::id(), $file[0]['me_javascript']);
+        echo create_script($js);
+    } 
+
 }
 /**
  * Put in superglobal (get,post,request) the value contained in
@@ -1332,7 +1390,7 @@ function is_msie()
 function record_log($p_message)
 {
     error_log("noalyss".print_r($p_message,true),0);
-    error_log("noalyss GET [".var_export($_GET, true)."] POST [".var_export($_POST, true)."]",0);
+    error_log("noalyss GET [".json_encode($_GET)."] POST [".json_encode($_POST)."]",0);
 }
 if(!function_exists('tracedebug')) {
   function tracedebug($file,$var, $label = NULL) {
@@ -1374,4 +1432,123 @@ function convert_to_rtf($p_string)
         }
     }
     return $result;
+}
+/**
+ * When it is needed to eval a formula , this function prevent the divide by zero.
+ * the formula is a math operation to evaluate like : 1.0+2.0/1 (...) , it is used in "report", 
+ * it removes the operation "divide by 0 "
+ * 
+ * @param string $p_formula string containing a operation to evaluate
+ * 
+ * @see Impress::parse_formula
+ */
+function remove_divide_zero($p_formula)
+{
+    $test=str_replace(" ","",$p_formula).";";
+    $p_formula=preg_replace("![0-9]+\.*[0-9]*/0\.{0,1}0*(\+|-|\*|/|;){1}!","0$1",$test);
+    $p_formula=trim($p_formula,';');
+    return $p_formula;
+}
+
+/**
+ * Create randomly a string
+ * @param int $p_length length of the generate string
+ */
+function generate_random_string($car)
+{
+    $string="";
+    $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789*/+-=<>";
+    srand((double) microtime()*1020030);
+    for ($i=0; $i<$car; $i++)
+    {
+        $string .= $chaine[rand()%strlen($chaine)];
+    }
+    return $string;
+}
+
+/**
+ * generate a string of p_car character and a input text with name p_ctl_name
+ * work like a kind of captcha.The control code for checking is ctlcode.
+ * You compare the content of the variable p_ctl_name with ctlcode
+ * @param $p_ctl_name name of the HTML input text
+ * @param $p_car length of the string
+ */
+function confirm_with_string($p_ctl_name,$p_car)
+{
+    $code=generate_random_string($p_car );
+    $r =  HtmlInput::hidden("ctlcode",$code);
+    $r.='<span style="margin-left:1.2em;margin-right:1.2em;font-size:112%;font-weight:bold">'. $code.'</span>';
+    $ctl=new IText($p_ctl_name);
+    $r.=$ctl->input();
+    return $r;
+}
+/**
+ * Find the menu marked as default in the given profile
+ * @param number $pn_menu (profile_menu.id)
+ */
+function find_default_menu($pn_menu)
+{
+    $cn=Dossier::connect();
+    $sql = '  select pm_id from profile_menu where pm_default =1 and pm_id_dep = $1';
+    $aresult=$cn->get_array($sql, [$pn_menu]);
+    if (empty($aresult)) {
+        return 0;
+    }
+    return $aresult[0]['pm_id'];
+}
+
+/**
+ * Check if there is a default menu for this user and add it. The array is filling from 1 to 3
+ * @verbatim
+ * 
+ * COMPTA              0   -   0 - 173
+ * COMPTA/MENUACH      0   - 173 -   3
+ * COMPTA/MENUACH/ACH  173 -   3 -  85
+ * 
+ * @endverbatim
+ * 
+ *
+ * @param array $pa_menu if the array of option ; index pm_id_v1 , pm_id_v2 and pm_id_v3
+ * 
+ */
+function complete_default_menu($pa_menu)
+{
+    $a_result=$pa_menu;
+    // find the first one which is null
+    if ($pa_menu[0]['pm_id_v2'] == 0) {
+        $tmp=find_default_menu($pa_menu[0]['pm_id_v1']);
+        if ( $tmp <> 0 ) {
+            $a_result[0]['pm_id_v2']=$pa_menu[0]['pm_id_v1'];
+            $a_result[0]['pm_id_v1']=$tmp;
+        }
+    }
+    if ($pa_menu[0]['pm_id_v3'] == 0) {
+         $tmp=find_default_menu($a_result[0]['pm_id_v1']);
+        if ( $tmp <> 0 ) {
+            $a_result[0]['pm_id_v3']=$a_result[0]['pm_id_v2'];
+            $a_result[0]['pm_id_v2']=$a_result[0]['pm_id_v1'];
+            $a_result[0]['pm_id_v1']=$tmp;
+        }
+    }
+    return $a_result;
+}
+/**
+ * rebuild the access code
+ * @see complete_default_menu
+ * @param array of number $pan_code index row [0] =  index pm_id_v1 , pm_id_v2 and pm_id_v3
+ */
+function rebuild_access_code($pan_code) 
+{
+    if ( empty ($pan_code)) {return;}
+    $s_result="";
+    $cn=Dossier::connect();
+    $an_code=['pm_id_v3','pm_id_v2','pm_id_v1'];
+    $sep="";
+    for ($i=0;$i<3;$i++)
+    {
+        $ix=$an_code[$i];
+        $s_result.=$sep.$cn->get_value("select me_code from profile_menu where pm_id=$1",[ $pan_code[0][$ix] ]);
+        $sep=($s_result != "" )?"/":"";
+    }
+    return $s_result;
 }

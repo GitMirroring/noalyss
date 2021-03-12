@@ -97,7 +97,7 @@ class Extension extends Menu_Ref_sql
                 " menu_ref join profile_menu using (me_code)
 				 join profile_user using (p_id) where ".
                 " user_name=$1 and me_type='PL' ORDER BY ME_MENU";
-        $a=$cn->get_array($sql, array($_SESSION['g_user']));
+        $a=$cn->get_array($sql, array($_SESSION[SESSION_KEY.'g_user']));
         return $a;
     }
 
@@ -251,6 +251,12 @@ class Extension extends Menu_Ref_sql
         }
     }
 
+    /**
+     * compare the version of the plugin and the last version , propose to update it if a new version exists
+     * @todo add a mechanism to check once a day
+     * @global User $g_user
+     * @global number $version_plugin
+     */
     static function check_plugin_version()
     {
         global $g_user, $version_plugin;

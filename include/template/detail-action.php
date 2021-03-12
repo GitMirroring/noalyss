@@ -1,4 +1,5 @@
 <?php
+require_once NOALYSS_INCLUDE."/class/follow_up_other_concerned.class.php";
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 $uniq=uniqid("tab",TRUE);
@@ -7,7 +8,7 @@ $uniq=uniqid("tab",TRUE);
 
 
     <table>
-			<tr class="highlight">
+        <tr class="highlight">
             <TD>
 	    <?php echo _('N° document')?>
             </TD>
@@ -57,29 +58,50 @@ $uniq=uniqid("tab",TRUE);
           echo _('Pas de catégorie de contact');
       endif;
   endif;
+  
             ?>
           </td>
           </Tr>
+<?php 
+//----------------------- Video Conf --------------------------------------------------------------------------------
+if (Document_Option::is_enable_video_conf($this->dt_id)):?>          
+          <tr>
+              <td><?=_("VideoConf")?></td>
+              <td><A href="<?=Document_Option::option_video_conf($this->dt_id)?>" target="_blank">
+    <?=_("Salle de réunion")?>
+                  </a>
+          </tr>
+<?php endif;?>          
 	<tr>
           <TD colspan="2">
              <?php echo $spcontact->input(); ?>
           </td>
           </Tr>
-          <?php if ($this->ag_id > 0 ): ?>
+<?php 
+//----------------------- Contact Multiple ----------------------------------------------------------------------------
+if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id)): 
+    ?>
           <tr>
               <td>
                   <?php echo _('Autres concernés')?>
               </td>
               <td id="concerned_card_td">
               <?php 
-                    echo $this->display_linked();
-                     if  ($g_user->can_write_action($this->ag_id) == true ):
-                        echo HtmlInput::button_action_add_concerned_card( $this->ag_id);
+                    $followup_other_concerned=new Follow_Up_Other_Concerned($this->db,$this->ag_id);
+                    echo $followup_other_concerned->display_linked_count();
+                     if  ($p_view != 'READ' && $g_user->can_write_action($this->ag_id) == true ):
+                        echo $followup_other_concerned->button_action_add_concerned_card();
                      endif;
                ?>
               </td>
               <td>
-
+                    <?php
+                    $csv="export.php?".
+                            http_build_query(["gDossier"=>Dossier::id(),
+                                "act"=>"CSV:FollowUpContactOption",
+                                "ag_id"=>$ag_id]);
+                    echo HtmlInput::anchor(_("Export CSV"), $csv,"",' class="line" title="Export Contacts options"');
+                    ?>
               </td>
           </tr>
           <?php endif; ?>
@@ -148,12 +170,12 @@ $uniq=uniqid("tab",TRUE);
 <?php if ($this->ag_id > 0 ): ?>
           <tr>
             <TD>
-                Dossier / tags
+                Dossier / Etiquette
             </TD>
             
-            <td id="action_tag_td">
+            <td id="action_tag_td" style="max-width:35rem">
                 <?php
-                   $this->tag_cell();
+                   $this->tag_cell($p_view);
                 ?>
             </td>
           </TR>
@@ -235,177 +257,196 @@ function small(p_id_textarea){
     <?php echo $title->input();
     ?>
 </p>
-    <div style="margin-left:10px;">
+    <div>
+        <?php 
+/**********************************************************************************************************************
+ * Start BLOCK Comment and description
+ **********************************************************************************************************************/
+?>
    <?php
    $style_enl='style="display:inline"';$style_small='style="display:none"';
+   // description
+   $description = new ITextarea("ag_description");
+   $description->id="ag_description";
+   $has_description = false;
+    //---------------------------------- Description -------------------------------------------------------------------
+    if ( count($acomment)> 0) {
+            $has_description = true;
+            $editable_description = Document_Option::is_enable_editable_description($this->dt_id);
+            if ( $p_view != 'READ' && $editable_description == true){
+                echo h2(_("Description"));
+                $itDescription=new ITextarea("ag_description");
+                $itDescription->style='class="input_text field_follow_up" style="height:21rem;width:98%"';
 
-for( $c=0;$c<count($acomment);$c++){
-        if ($c == 0) { $m_desc=_('Description');}
-        else
-         { $m_desc=_('Commentaire');}
-         $comment="";
-         if ( $p_view != 'READ' && $c > 0)
-	{
-            $rmComment=sprintf("return confirm_box(null,'"._('Voulez-vous effacer ce commentaire')." ?',function() {remove_comment('%s','%s');});",
-                                            dossier::id(),
-                                            $acomment[$c]['agc_id']);
-            $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
-            $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".$acomment[$c]['str_agc_date'].')').$js.
-                            '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
-                            " ".h($acomment[$c]['agc_comment']).'</pre>'
-                            ;
+                $ag_description_id= $acomment[0]['agc_id'];
+                $itDescription->value=$acomment[0]['agc_comment'];
+                $itDescription->id="ag_description";
 
-	}
-	else
-	{
-		$comment=h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".$acomment[$c]['str_agc_date'].')').
-				'<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
-				" ".h($acomment[$c]['agc_comment']).'</pre>'
-				;
-                
+                // One editable comment is available
+                $editable_description=new Inplace_Edit($itDescription);
+                $editable_description->add_json_param("op", "followup_comment_oneedit");
+                $editable_description->add_json_param("agc_id", $ag_description_id);
+                $editable_description->add_json_param("ag_id", $ag_id);
+                $editable_description->add_json_param("gDossier", Dossier::id());
+                $editable_description->set_callback("ajax_misc.php");
 
-	}
-        $comment=preg_replace('/#([0-9]+)/','<a class="line" href="javascript:void()" onclick="view_action(\1,'.Dossier::id().',0)" >\1</a>',$comment);
-        echo $comment;
-}
-echo '<span class="noprint">';
-echo $desc->input();
-echo '</span>';
+                echo $editable_description->input();
+            }
+            elseif ($p_view == 'READ' || $editable_description == false)
+            {
+                echo h2(_("Description"));
+
+                echo '<pre class="field_follow_up">';
+                echo h($acomment[0]['agc_comment']);
+                echo '</pre>';
+            }
+    } else {
+          echo h2(_("Description"));
+          echo $description->input();
+   }
+
+        //---------------------------------- Comment -----------------------------------------------------------------------
+   
+   if (    Document_Option::can_add_comment($ag_id)  && 
+           Document_Option::option_comment($this->dt_id) == "ONE_EDIT" ) 
+   {
+        if (count($acomment) > 1 )  {
+            echo h2(_("Commentaire"));
+            $comment=new ITextarea("ag_comment_edit");
+            $comment->style='class="input_text field_follow_up" style="height:21rem;width:98%"';
+
+            $ag_comment_id= (count($acomment) > 1)?$acomment[1]['agc_id']:-1;
+            $comment->value=(count($acomment) > 1 )?$acomment[1]['agc_comment']:'';
+            $comment->id="ag_comment_edit";
+
+            if ( $p_view != 'READ') {
+
+                // One editable comment is available
+                $editable_comment=new Inplace_Edit($comment);
+                $editable_comment->add_json_param("op", "followup_comment_oneedit");
+                $editable_comment->add_json_param("agc_id", $ag_comment_id);
+                $editable_comment->add_json_param("ag_id", $ag_id);
+                $editable_comment->add_json_param("gDossier", Dossier::id());
+                $editable_comment->set_callback("ajax_misc.php");
+                echo '<p></p>';
+                echo $editable_comment->input();
+            } else {
+                echo '<p></p>';
+                echo $comment->display();
+            }
+        } else {
+            echo '<span class="noprint">';
+            if (  $p_view == 'UPD' &&  $has_description && Document_Option::can_add_comment($ag_id) )  {
+                echo h2(_("Commentaire"));
+                echo '<p></p>';
+                echo $desc->input();
+
+            }
+            echo '</span>';
+        }
+   }
+    if (  count($acomment) > 0
+            &&  Document_Option::can_add_comment($ag_id)
+            && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")
+    {
+        echo h2(_("Commentaire"));
+
+        for( $c=1;$c<count($acomment);$c++){
+            $m_desc=_('Commentaire');
+             $comment="";
+             if ( $p_view != 'READ' && $c > 0)
+            {
+                $rmComment=sprintf("return confirm_box(null,'"._('Voulez-vous effacer ce commentaire').
+                        " ?',function() {remove_comment('%s','%s');});",
+                                                dossier::id(),
+                                                $acomment[$c]['agc_id']);
+                $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
+                $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
+                        $acomment[$c]['str_agc_date'].')').$js.
+                                '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
+                                " ".h($acomment[$c]['agc_comment']).'</pre>'
+                                ;
+
+            }
+            else
+            {
+                    $comment=h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
+                            $acomment[$c]['str_agc_date'].')').
+                                    '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
+                                    " ".h($acomment[$c]['agc_comment']).'</pre>'
+                                    ;
+
+
+            }
+            $comment=preg_replace('/#([0-9]+)/','<a class="line" href="javascript:void()" onclick="view_action(\1,'.
+                    Dossier::id().',0)" >\1</a>',$comment);
+            echo '<p></p>';
+            echo $comment;
+        } // end for
+        if (  $has_description &&  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id))  {
+            echo '<span class="noprint">';
+            echo '<p></p>';
+                echo $desc->input();
+
+            }
+            echo '</span>';
+            if  ($p_view == 'UPD') {
+
+        }
+    }
+
+    
+
 ?>
-<?php if ($p_view != "READ" ): ?>
-<p class="noprint">
-<input type="button" id="bt_enlarge" <?php echo $style_enl?> value="+" onclick="enlarge('ag_comment');return false;">
-<input type="button" id="bt_small"  <?php echo $style_small?> value="-" style="display:none" onclick="small('ag_comment');return false;">
-</p>
-<?php endif; ?>
+
   </div>
 </div>
-<?php if ( $p_view !='READ'  ) :?>
-<input type='button' class="button" class="noprint" value="<?php echo _('Montrer articles');?>" id="toggleButton" onclick='toggleShowDetail()'>
-<?php endif; ?>
-<?php
-/**
- * check if there card to show,
- */
-$show_row=0;
-for ($i=0;$i<count($aArticle);$i++) :
-	if ( ($aCard[$i] != 0 && $p_view == 'READ') || $p_view != 'READ'){ $show_row=1;break;}
-endfor;
+<?php 
+/**********************************************************************************************************************
+ * START BLOCK Display Detail of follow up
+ *
+ **********************************************************************************************************************/
 ?>
 <?php
-/*
- * display detail if there card or if we are in UPDATE or NEW mode
- */
-if ($show_row !=0 ) :
+// Display detail if detail_operation is set
+if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_id)) Follow_Up_Detail::display($this,$p_view);
 
-	?>
-<div id="fldDetail" class="myfieldset" style='padding-bottom:  100px;display:block;top:2px'>
-   <LEGEND> <?php echo _('Détail')?>
-</LEGEND>
-<?php // hidden fields
-$show_row=0;
-for ($i=0;$i<count($aArticle);$i++) :
-	echo $aArticle[$i]['ad_id'];
-	echo $aArticle[$i]['hidden_tva'];
-	echo $aArticle[$i]['hidden_htva'];
-	if ( ($aCard[$i] != 0 && $p_view == 'READ') || $p_view != 'READ'){ $show_row=1;}
-endfor;
 ?>
-    <div>
-<table style="width:100%" id="art" >
-<tr>
-  <th><?php echo _('Fiche')?></th>
-  <th><?php echo _('Description')?></th>
-  <th><?php echo _('prix unitaire')?></th>
-<th><?php echo _('quantité')?></th>
-<th><?php echo _('Code TVA')?></th>
-<th><?php echo _('Montant TVA')?></th>
-<th><?php echo _('Montant TVAC')?></th>
+<?php 
+/**********************************************************************************************************************
+ * END BLOCK Display Detail of follow up
+ **********************************************************************************************************************/
+?>
 
-</tr>
-<?php for ($i=0;$i<count($aArticle);$i++): ?>
-<?php
-if ( ($aCard[$i] != 0 && $p_view == 'READ') || $p_view != 'READ'):
-	$show_row++;
-	?>
-<TR>
-<TD><?php echo $aArticle[$i]['fid'] ?></TD>
-<TD><?php echo $aArticle[$i]['desc'] ?></TD>
-<TD class="num"><?php echo $aArticle[$i]['pu'] ?></TD>
-<TD class="num"><?php echo $aArticle[$i]['quant'] ?></TD>
-<TD class="num"><?php echo $aArticle[$i]['tvaid'] ?></TD>
-<TD class="num"><?php echo $aArticle[$i]['tva'] ?></TD>
-<TD class="num"><?php echo $aArticle[$i]['tvac'] ?></TD>
-</TR>
-<?php endif; ?>
-<?php endfor; ?>
-</table>
-    </div>
-    <?php if ($p_view != "READ" ): ?>
-<script language="JavaScript">
-if ( $('e_march0') && $('e_march0').value =='') { toggleShowDetail();}
-function toggleShowDetail() {
-	try {var detail=g('fldDetail');
-	var but=g('toggleButton');
-	if (detail.style.display=='block' ) { but.value="<?php echo _("Montrer les détails")?>";detail.style.display='none';}
-	else { but.value="<?php echo _("Cacher les détails")?>";detail.style.display='block';} }
-	catch (error)  {alert(error);}
-	}
-</script>    
-<?php endif; ?>
-<?php if ( $show_row != 0 ): ?>
-<div>
+<div style="clear:both"></div>    
+
   
-    <div style=" float:right;margin-right: 2px" id="sum">
-    <br><span style="text-align: right;" class="highlight" id="htva"><?php echo bcsub($tot_item,$tot_vat) ?></span>
-     <br><span style="text-align: right" class="highlight" id="tva"><?php echo $tot_vat?></span>
-    <br><span style="text-align: right" class="highlight" id="tvac"><?php echo $tot_item?></span>
- </div>
 
-    <div  style="float:right;margin-right: 230px" >
-    <br>Total HTVA
-    <br>Total TVA
-    <br>Total TVAC
- </div>
+<div  id="div_action_attached_doc">
+  <h2>
+     <?php echo _('Pièces attachées')?>
+  </h2>
+    <div class="noprint">
+        <?php 
+/**********************************************************************************************************************
+ * start BLOCK generate document
+ **********************************************************************************************************************/
+?>
 
- <?php if ( ! $readonly ) :  ?>
-    <div style="float:right" >
-    <input name="act" id="act_bt" class="smallbutton" value="<?php echo _('Actualiser')?>" onclick="compute_all_ledger();" type="button">
-     <input type="button" class="smallbutton" onclick="gestion_add_row()" value="<?php echo _("Ajouter une ligne")?>">
-     </div>
-     
-<?php endif; ?> 
-    <?php if ($p_view != 'READ' && $str_select_doc != '') : ?>
+ <?php if ($p_view != 'READ' && $str_select_doc != '') : ?>
          <?php echo _('Document à générer')?>
-  </legend>
+
   <?php echo $str_select_doc;
  echo $str_submit_generate;
 
 endif; ?>
-    <legend>
-</div>
-<?php if ( $this->ag_id != 0 && ! $readonly) : ?>
-     <div >
-         <p>
-         <?php
-            $query=  http_build_query(array('gDossier'=>Dossier::id(),'ag_id'=>$this->ag_id,'create_invoice'=>1,'ac'=>$menu->get('code_invoice')));
-            echo HtmlInput::button_anchor(_("Transformer en facture"),"do.php?".$query,"create_invoice", '  target="_blank" ',"button");
-         ?>
-         </p>
-      </div>
-     <?php endif; ?>
-<?php endif; ?>
-</div>
-<?php endif; ?>
-
-<div style="clear:both"></div>    
-
-
-
-<div class="myfieldset" id="div_action_attached_doc">
-  <legend>
-     <?php echo _('Pièces attachées')?>
-  </legend>
+  
+<?php 
+/**********************************************************************************************************************
+ * end BLOCK generate document
+ **********************************************************************************************************************/
+?>
+    </div>
   <div class="print">
       <table>
   <?php
@@ -456,6 +497,11 @@ try {
 	docAdded=document.getElementById('add_file');
 	new_element=document.createElement('li');
 	new_element.innerHTML='<input class="inp" type="file" value="" name="file_upload[]"/><label>Description</label> <input type="input" class="input_text" name="input_desc[]" >';
+
+    new_element.innerHTML+='<span id="<?=uniqid("file")?>" onclick="document.getElementById(\'add_file\').removeChild(this.parentNode)" class="icon">&#xe80f;</span>';
+    
+    
+	
 	docAdded.appendChild(new_element);
 }
 catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>'); alert(exception.message);}
@@ -470,6 +516,10 @@ catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>
         ?>
         <label><?php echo _('Description')?></label>
         <input type="input" class="input_text" name="input_desc[]" >
+          <?php
+            $js="document.getElementById('add_file').removeChild(this.parentNode)";
+            echo Icon_Action::trash(uniqid(),$js);
+          ?>
       </li>
     </ol>
   <span   >
@@ -483,7 +533,7 @@ Document créé le <?php echo $this->ag_timestamp ?> par <?php echo $this->ag_ow
 <?php endif; ?>
 
 </div>
-<script>compute_all_ledger()</script>
+
 <script>
   $('related_action_tab<?php echo $uniq?>').onclick=function() {
       $('related_action_tab<?php echo $uniq?>').className='tabs_selected';

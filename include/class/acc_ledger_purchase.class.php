@@ -266,7 +266,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 		      }
 		  }
 	      }
-	    $nb++;
+            if ( ${"e_quant".$i} != 0 && trim(${"e_quant".$i}) !="" ) {$nb++;}
         }
 
         if ( $nb == 0 )
@@ -1429,10 +1429,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         ob_start();
         echo '<div id="predef_form">';
         echo HtmlInput::hidden('p_jrn_predef', $this->id);
-        $op = new Pre_op_ach($this->db);
-        $op->set('ledger', $this->id);
-        $op->set('ledger_type', "ACH");
-        $op->set('direct', 'f');
+        $op = new Pre_operation($this->db);
+        $op->set_p_jrn($this->id);
+        $op->set_jrn_type("ACH");
+        $op->set_od_direct('f');
         $url=http_build_query(array('p_jrn_predef'=>$this->id,'ac'=>$_REQUEST['ac'],'gDossier'=>dossier::id()));
         echo $op->form_get('do.php?'.$url);
         echo '</div>';
@@ -1907,6 +1907,7 @@ EOF;
         $r.='<p class="decale">';
         // check for upload piece
         $file=new IFile();
+        $file->setAlertOnSize(true);
         $file->table=0;
         $r.=_("Ajoutez une pièce justificative ");
         $r.=$file->input("pj","");
@@ -1943,7 +1944,7 @@ EOF;
         // Show list of unpaid sell
         // Date - date of payment - Customer - amount
         // Nav. bar
-        $step=$_SESSION['g_pagesize'];
+        $step=$_SESSION[SESSION_KEY.'g_pagesize'];
         $page=(isset($_GET['offset']))?$_GET['page']:1;
         $offset=(isset($_GET['offset']))?$_GET['offset']:0;
 

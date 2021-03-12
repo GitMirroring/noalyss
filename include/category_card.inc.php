@@ -34,7 +34,7 @@ global $http;
 
 $str_dossier=Dossier::get();
 
-$root="?".http_build_query(["ac"=>$http->request("ac"),"sb"=>"detail","f_id"=>$http->request("f_id","number")]);
+$root="do.php?".http_build_query(["ac"=>$http->request("ac"),"sb"=>"detail","f_id"=>$http->request("f_id","number")]);
 $root.="&".$str_dossier;
 
 $ss_action=$http->request("sc", "string", "dc");

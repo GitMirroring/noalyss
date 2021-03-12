@@ -8,7 +8,7 @@ require_once  NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
 $gDossier=dossier::id();
 if ( count($this->content) == 0 ) :
 ?>
-  <h2 class="info2"><?php echo _('Désolé aucun résultat trouvé')?></h2>
+  <h2 class="error"><?php echo _('Désolé aucun résultat trouvé')?></h2>
 
     <?php
   else :

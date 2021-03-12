@@ -28,13 +28,13 @@ require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-if ( ! isset ($_SESSION['g_theme']))
+if ( ! isset ($_SESSION[SESSION_KEY.'g_theme']))
 {
     echo "<h2>"._('Vous  êtes déconnecté')."</h2>";
     die();
 }
 
-html_page_start($_SESSION['g_theme']);
+html_page_start($_SESSION[SESSION_KEY.'g_theme']);
 
 load_all_script();
 
@@ -101,7 +101,7 @@ if ( isset ($_GET['viewsearch']))
 {
 
     // Navigation bar
-    $step=$_SESSION['g_pagesize'];
+    $step=$_SESSION[SESSION_KEY.'g_pagesize'];
     $page=$http->get("page","number",1);
     $offset=$http->get("offset","number",0);
     
@@ -124,7 +124,7 @@ if ( isset ($_GET['viewsearch']))
      * Export to csv
      */
     $r=HtmlInput::get_to_hidden(array('l','date_start','date_end','desc','amount_min','amount_max',
-        'qcode','accounting','unpaid','gDossier','ledger_type'));
+        'qcode','accounting','unpaid','gDossier','ledger_type','tag_option'));
     if (isset($_GET['r_jrn'])) {
         $http=new HttpInput();
         $a_rjrn=$http->get("r_jrn","array");
@@ -132,6 +132,16 @@ if ( isset ($_GET['viewsearch']))
           // Protect : check that $k and $v are numeric
         if (isNumber($k)&&isNumber($v)) {
             $r.=HtmlInput::hidden('r_jrn['.$k.']',$v);
+        }
+      }
+    }
+    if (isset($_GET['tag'])) {
+        $http=new HttpInput();
+        $aTag=$http->get("tag","array");
+      foreach ($aTag as $k=>$v) {
+          // Protect : check that $k and $v are numeric
+        if (isNumber($k)&&isNumber($v)) {
+            $r.=HtmlInput::hidden('tag[]',$v);
         }
       }
     }

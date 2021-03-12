@@ -55,7 +55,7 @@ $a_tab[$call_tab]='tabs_selected';
     <li class="<?php echo $a_tab['profile_gen_div']?>"><a href="javascript:void(0)"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_gen_div')"><?php echo _('Nom')?></a></li>
     <li class="<?php echo $a_tab['profile_menu_div']?>"><a href="javascript:void(0)"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_menu_div')"><?php echo _('Détail Menus')?></a></li>
     <li class="<?php echo $a_tab['profile_print_div']?>"><a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_print_div')"><?php echo _('Détail Impressions')?></a></li>
-    <li class="<?php echo $a_tab['profile_gestion_div']?>"><a href="javascript:void(0)" style="" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_gestion_div')"><?php echo _('Action Gestion')?> </a></li>
+    <li class="<?php echo $a_tab['profile_gestion_div']?>"><a href="javascript:void(0)" style="" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_gestion_div')"><?php echo _('Groupe Gestion')?> </a></li>
     <li class="<?php echo $a_tab['profile_repo_div']?>"><a href="javascript:void(0)"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_repo_div')"><?php echo _('Dépôts')?></a>&nbsp;
 </ul>
 
@@ -111,7 +111,6 @@ if ($profile->p_id > 0)
         echo '</div>';
         echo '<div class="myfieldset"  style="display:none" id="profile_menu_div">';
 	//Menu / Module /plugin in this profile
-	echo "<h1 class=\"legend\">"._("Menu")."</h2>";
 	$profile_menu = new Profile_Menu($cn);
         $profile_menu->p_id=$p_id;
 	$profile_menu->display_profile_menu_detail();
@@ -122,7 +121,7 @@ if ($profile->p_id > 0)
 	echo $add_impression;
         echo '</div>';
         echo '<div class="myfieldset"  style="display:none" id="profile_gestion_div">';
-	echo "<h1 class=\"legend\">".('Groupe gestion')."</h1>";
+	
 	$profile_menu->available_profile();
         echo '</div>';
         echo '<div class="myfieldset"  style="display:none" id="profile_repo_div">';

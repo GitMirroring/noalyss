@@ -23,6 +23,11 @@
  * \brief Html Input
  */
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
+
+/**
+ * @class ITextarea
+ * @brief Manage the TEXTAREA html element
+ */
 class ITextarea extends HtmlInput
 {
     /*!\brief show the html  input of the widget*/

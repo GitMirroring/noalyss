@@ -87,5 +87,40 @@ echo $f_accounting->input();  ?>
 <?php echo $f_paid->input();  ?>
 </td>
 </tr>
-
+<tr>
+    
+<td  style="text-align:right;width:30em">
+    
+        <?php
+         $iselect= new ISelect($this->div."tag_option");
+                $iselect->value=array(
+                    array("value"=>0,"label"=>_("Toutes les étiquettes")),
+                    array("value"=>1,"label"=>_("Au moins une étiquette"))
+                    );
+                
+                $iselect->set_value($http->request($this->div."tag_option","number",0));
+                echo $iselect->input(); 
+               
+        ?>
+        <?php
+        echo Tag_Operation::select_tag_search($this->div);
+        ?>
+</td>
+    <td >
+        <span id="<?=$this->div?>tag_choose_td">
+            <?php 
+            $aTag= $http->request($this->div."tag","string",0);
+                if (is_array($aTag) ) {
+                    $nb_tag=count($aTag);
+                    for ($j=0;$j< $nb_tag;$j++) {
+                        $tag_operation=new Tag_Operation($this->cn,$aTag[$j]);
+                        $tag_operation->update_search_cell($this->div);
+                    }
+                }
+            ?>
+        
+        </span>
+    </td>
+</tr>
+    
 </table>

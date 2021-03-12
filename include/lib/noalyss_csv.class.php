@@ -46,10 +46,10 @@ class Noalyss_Csv
         $this->size=0;
      
         $a_field=[';',','];
-        $this->sep_field=$a_field[$_SESSION['csv_fieldsep']];
+        $this->sep_field=$a_field[$_SESSION[SESSION_KEY.'csv_fieldsep']];
         $a_field=['.',','];
-        $this->sep_dec=$a_field[$_SESSION['csv_decimal']];
-        $this->encoding=$_SESSION['csv_encoding'];
+        $this->sep_dec=$a_field[$_SESSION[SESSION_KEY.'csv_decimal']];
+        $this->encoding=$_SESSION[SESSION_KEY.'csv_encoding'];
     
     }
 

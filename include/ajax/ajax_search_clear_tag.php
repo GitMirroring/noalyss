@@ -24,9 +24,9 @@ if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
  *@see Tag
  */
 
-require_once NOALYSS_INCLUDE.'/class/tag.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
 ob_start();
-echo Tag::button_search($_GET['pref']);
+echo Tag_Action::select_tag_search($_GET['pref']);
 $response=  ob_get_clean();
 $html=escape_xml($response);
 header('Content-type: text/xml; charset=UTF-8');

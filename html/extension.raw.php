@@ -45,7 +45,7 @@ $ext=new Extension($cn);
 if ( $ext->search($http->request("plugin_code")) != -1 )
   {
     /* security */
-    if ( !isset ($_SESSION['g_user']) || $ext->can_request($_SESSION['g_user']) == 0 )
+    if ( !isset ($_SESSION[SESSION_KEY.'g_user']) || $ext->can_request($_SESSION[SESSION_KEY.'g_user']) == 0 )
       {
 		exit();
       }

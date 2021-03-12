@@ -34,7 +34,7 @@ $sql="
     where user_name=$1
     order by 2 ";
 
-$a_menu=$cn->get_array($sql,array($_SESSION['g_user']));
+$a_menu=$cn->get_array($sql,array($_SESSION[SESSION_KEY.'g_user']));
 
 ?>
 <div class="content">

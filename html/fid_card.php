@@ -107,7 +107,9 @@ else
 {
     if (isset($_REQUEST['type']))
     {
-        if ($_REQUEST['type']=='gl' || $_REQUEST['type']=='') $filter_card='';
+        if ($_REQUEST['type']=='gl' || $_REQUEST['type']=='') {
+		    $filter_card='';
+        }
         else
         {
             $get_cred='jrn_def_fiche_cred';
@@ -119,13 +121,15 @@ else
         }
     }
 }
+// filter only enable card
+$filter_enable_card=" and f_enable='1' ";
 
 $sql_str="select distinct f_id 
          from fiche 
          join fiche_detail using (f_id) 
          where 
          ad_id in (9,1,23) 
-         and ad_value ilike '%'||$1||'%' ".$filter_card.' limit '.$limit;
+         and ad_value ilike '%'||$1||'%' ".$filter_enable_card.$filter_card.' limit '.$limit;
 
 
 $fid=$http->request("FID");
@@ -168,7 +172,7 @@ if ($sql != false && sizeof($sql) != 0 )
     echo '</ul>';
     if (count($sql) > 12)
     {
-        printf ('<i>...'._('Résultat limité à 12').'  ...</i>');
+        printf ('<i>...'._('Résultat limité à %s').'  ...</i>',$limit);
     }
 }
 else

@@ -20,7 +20,7 @@
 
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-include_once("class/fiche_attr.class.php");
+require_once NOALYSS_INCLUDE."/class/fiche_attr.class.php";
 require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itva_popup.class.php';
 require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
@@ -29,6 +29,7 @@ require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iposte.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
+require_once NOALYSS_INCLUDE."/lib/input_switch.class.php";
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 
 /*! \file
@@ -53,14 +54,49 @@ class Fiche
     var $fiche_def_ref; /*!< $fiche_def_ref Type */
     var $row;           /*! < All the row from the ledgers */
     var $quick_code;		/*!< quick_code of the card */
+    private $f_enable;  /*!< if card is enable (fiche.f_enable) */
     function __construct($p_cn,$p_id=0)
     {
         $this->cn=$p_cn;
         $this->id=$p_id;
         $this->quick_code='';
         $this->attribut=array();
+        $this->f_enable='1';
     }
-    /**
+    public function get_id()
+    {
+        return $this->id;
+    }
+
+    public function get_fiche_def_ref()
+    {
+        return $this->fiche_def_ref;
+    }
+
+    public function get_f_enable()
+    {
+        return $this->f_enable;
+    }
+
+    public function set_id($id)
+    {
+        $this->id=$id;
+        return $this;
+    }
+
+    public function set_fiche_def_ref($fiche_def_ref)
+    {
+        $this->fiche_def_ref=$fiche_def_ref;
+        return $this;
+    }
+
+    public function set_f_enable($f_enable)
+    {
+        $this->f_enable=$f_enable;
+        return $this;
+    }
+
+        /**
      *@brief used with a usort function, to sort an array of Fiche on the name
      */
     static function cmp_name(Fiche $o1,Fiche $o2)
@@ -127,8 +163,8 @@ class Fiche
     /**
      *@brief set an attribute by a value, if the attribut array is empty
      * a call to getAttribut is performed
-     *@param the AD_ID
-     *@param the value
+     *@param int  AD_ID
+     *@param int value
      *@see constant.php table: attr_def
      */
     function setAttribut($p_ad_id,$p_value)
@@ -168,6 +204,7 @@ class Fiche
         {
             $row=Database::fetch_array($Ret,$i);
             $this->fiche_def=$row['fd_id'];
+            $this->f_enable=$row['f_enable'];
             $t=new Fiche_Attr ($this->cn);
             $t->ad_id=$row['ad_id'];
             $t->ad_text=$row['ad_text'];
@@ -217,9 +254,9 @@ class Fiche
     }
     /**
      * @brief find the card with the p_attribut equal to p_value, it is not case sensitive
-     * @param $p_attribut attribute to find see table attr_def
-     * @param $p_value value in attr_value.av_text
-     * @return return ARRAY OF jft_id,f_id,fd_id,ad_id,av_text
+     * @param int $p_attribut attribute to find see table attr_def
+     * @param string $p_value value in attr_value.av_text
+     * @return array returns ARRAY OF jft_id,f_id,fd_id,ad_id,av_text
      */
     function seek($p_attribut,$p_value)
     {
@@ -245,30 +282,38 @@ class Fiche
 
     /*!
      **************************************************
-     * \brief  Return array of card from the frd family
+     * \brief  Count the nb of card with the reference card id frd_id
      *
      * \param $p_frd_id the fiche_def_ref.frd_id
      * \param $p_search p_search is a filter on the name
      * \param $p_sql extra sql condition
      *
-     * \return array of fiche object
+     * \return nb of item found
      */
     function count_by_modele($p_frd_id,$p_search="",$p_sql="")
     {
-        $sql="select *
-             from
-             fiche join fiche_Def using (fd_id)
-             where frd_id=".$p_frd_id;
+        // Scan for SQL inject
+        $this->cn->search_sql_inject($p_sql);
+
         if ( $p_search != "" )
         {
-            $a=sql_string($p_search);
-            $sql="select * from vw_fiche_attr where frd_id=".$p_frd_id.
-                 " and vw_name ~* '$p_search'";
+            $result = $this->cn->get_value("select count(*) from 
+                        vw_fiche_attr 
+                        where 
+                        frd_id=$1 
+                        and vw_name ilike '%'||$2||'%'",
+                    [$p_frd_id,$p_search]);
+            return $result;
+        } else {
+            $result = $this->cn->get_value("select count(*)
+                                 from
+                                 fiche join fiche_Def using (fd_id)
+                                 where frd_id=$1 ".$p_sql
+                ,[$p_frd_id]);
+            return $result;
         }
 
-        $Ret=$this->cn->exec_sql($sql.$p_sql);
 
-        return Database::num_row($Ret) ;
     }
     /*!
      **************************************************
@@ -303,7 +348,7 @@ class Fiche
         }
         else
         {
-            $limit=($_SESSION['g_pagesize']!=-1)?"limit ".$_SESSION['g_pagesize']:"";
+            $limit=($_SESSION[SESSION_KEY.'g_pagesize']!=-1)?"limit ".$_SESSION[SESSION_KEY.'g_pagesize']:"";
             $sql="select *
                  from
                  fiche join fiche_Def using (fd_id) join vw_fiche_name using(f_id)
@@ -339,8 +384,8 @@ class Fiche
     /***
      * @brief  return the string of the given attribute
      *        (attr_def.ad_id)
-     * @param $p_ad_id the AD_ID from attr_def.ad_id
-     * @param $p_return 1 return NOTFOUND otherwise an empty string
+     * @param int  $p_ad_id  AD_ID from attr_def.ad_id
+     * @param int $p_return 1 return NOTFOUND otherwise an empty string
      * @see constant.php
      * @return string
      */
@@ -431,7 +476,7 @@ class Fiche
         $f=new Fiche_Def($this->cn,$p_fiche_def);
         $f->get();
         $array=$f->getAttribut();
-        $r=h2(_('Catégorie').' '.$f->label,"");
+        $r="";
         $r.='<table style="width:98%;margin:1%">';
         foreach ($array as $attr)
         {
@@ -441,6 +486,7 @@ class Fiche
             {
                 $w=new IPoste("av_text".$attr->ad_id);
                 $w->set_attribute('ipopup','ipop_account');
+                $w->set_attribute('jrn','0');
                 $w->set_attribute('account',"av_text".$attr->ad_id);
 				$w->dbl_click_history();
                 //  account created automatically
@@ -503,6 +549,10 @@ class Fiche
                             $w->table = 1;
                             $bulle = Icon_Action::infobulle(14);
                             break;
+                    case 'check':
+                            $w=new InputSwitch("av_text".$attr->ad_id);
+                            $w->value=(trim($w->value)=="")?1:$w->value;
+                            break;
                     case 'select':
                             $w = new ISelect("av_text" . $attr->ad_id);
                             $w->value = $this->cn->make_array($attr->ad_extra);
@@ -550,6 +600,17 @@ class Fiche
         return $r;
     }
 
+    /**
+     *
+     * @return string with the category
+     */
+    function getLabelCategory()
+    {
+        $type_card=$this->cn->get_value('select fd_label '
+            . ' from fiche_def join fiche using (fd_id) where f_id=$1',
+            array($this->id));
+        return $type_card;
+    }
 
     /*!
      * \brief  Display object instance, getAttribute
@@ -564,20 +625,15 @@ class Fiche
     {
         $this->GetAttribut();
         $attr=$this->attribut;
-        /* show card type here */
-        $type_card=$this->cn->get_value('select fd_label '
-                . ' from fiche_def join fiche using (fd_id) where f_id=$1',
-                array($this->id));
         $ret="";
-        $ret.=h2(_("Catégorie")." ".$type_card, 'style="display:inline"');
-        $ret.='<span style="margin-right:5px;float:right">'.
-                _('id fiche').':'.$this->id."</span>";
+        $ret.='<span style="margin-right:5px;float:right;font-size:80%">'.
+                _('id').':'.$this->id."</span>";
         $ret.="<table style=\"width:98%;margin:1%\">";
         if (empty($attr))
         {
             return 'FNT';
         }
-
+        
         /* for each attribute */
         foreach ($attr as $r)
         {
@@ -599,6 +655,7 @@ class Fiche
                     $w->id=$p_in."av_text".$r->ad_id;
                     $w->set_attribute('ipopup', 'ipop_account');
                     $w->set_attribute('account', $w->id);
+                    $w->set_attribute('jrn','0');
                     $w->dbl_click_history();
                     //  account created automatically
                     $w->table=0;
@@ -642,6 +699,11 @@ class Fiche
                             $w->style=' class="itextarea" style="margin:0px;width:100%"';
                             $w->value=$r->av_text;
                             break;
+                        case 'check':
+                            $w=new InputSwitch("av_text".$r->ad_id);
+                             $w->value=$r->av_text;
+                            $w->value=(trim($w->value)=="")?1:$w->value;
+                            break;
                         case 'poste':
                             $w=new IPoste("av_text".$r->ad_id);
                             $w->set_attribute('ipopup', 'ipop_account');
@@ -651,6 +713,7 @@ class Fiche
                             $w->table=0;
                             $bulle=Icon_Action::infobulle(14);
                             $w->value=$r->av_text;
+                            $w->set_attribute('jrn','0');
                             break;
                         case 'card':
                             $uniq=rand(0, 1000);
@@ -712,6 +775,11 @@ class Fiche
                         $value=$x->display();
                         $w->value=$value;
                         break;
+                    case 'check':
+                       $w=new InputSwitch("av_text".$r->ad_id);
+                       $w->value=$r->av_text;
+                       $w->value=(trim($w->value)=="")?1:$w->value;
+                       break;
                     default:
                         $w->value=$r->av_text;
                 }
@@ -735,7 +803,16 @@ class Fiche
             }
             $ret.="<TR>".td(_($r->ad_text).$bulle,'class="'.$class.'"').td($w->input()." ".$msg)." </TR>";
         }
-
+        // Display if the card is enable or not
+        $enable_is=new InputSwitch("f_enable");
+        $enable_is->value=$this->f_enable;
+        $enable_is->readOnly=$p_readonly;
+                
+        $ret.=tr( 
+                td(_("Actif"),'class="input_text"').td($enable_is->input(),'class="input_text"')
+                );
+        
+        
         $ret.="</table>";
 
         return $ret;
@@ -787,9 +864,14 @@ class Fiche
         try
         {
             $this->cn->start();
-            $sql=sprintf("insert into fiche(f_id,fd_id)".
-                    " values (%d,%d)", $fiche_id, $p_fiche_def);
-            $Ret=$this->cn->exec_sql($sql);
+
+            // by default the card is available
+            if ( !isset ($p_array['f_enable'])) {
+                $p_array['f_enable']=1;
+            }
+            $Ret=$this->cn->exec_sql("insert into fiche(f_id,f_enable,fd_id) values ($1,$2,$3)",
+                    array($fiche_id, $p_array['f_enable'],$p_fiche_def));
+            
             // parse the $p_array array
             foreach ($p_array as $name=> $value)
             {
@@ -958,6 +1040,9 @@ class Fiche
         try
         {
             $this->cn->start();
+            
+            $this->cn->exec_sql("update fiche set f_enable=$1 where f_id=$2",array($p_array['f_enable'],$this->id));
+            
             // parse the $p_array array
             foreach ($p_array as $name=> $value)
             {
@@ -1806,6 +1891,7 @@ class Fiche
     function Summary($p_search="",$p_action="",$p_sql="",$p_amount=false)
     {
         global $g_user;
+        $http=new HttpInput();
         $bank=new Acc_Parm_Code($this->cn,'BANQUE');
         $cash=new Acc_Parm_Code($this->cn,'CAISSE');
         $cc=new Acc_Parm_Code($this->cn,'COMPTE_COURANT');
@@ -1826,9 +1912,9 @@ class Fiche
 
         $all_tiers=$this->count_by_modele($this->fiche_def_ref,"",$p_sql.$filter_amount);
         // Get offset and page variable
-        $offset=( isset ($_REQUEST['offset'] )) ?$_REQUEST['offset']:0;
-        $page=(isset($_REQUEST['page']))?$_REQUEST['page']:1;
-        $bar=navigation_bar($offset,$all_tiers,$_SESSION['g_pagesize'],$page);
+        $offset=$http->request("offset","number",0);
+        $page=$http->request("page","number",1);
+        $bar=navigation_bar($offset,$all_tiers,$_SESSION[SESSION_KEY.'g_pagesize'],$page);
 
         // set a filter ?
         $search=$p_sql;
@@ -1843,7 +1929,7 @@ class Fiche
             $search.=" and f_id in
                      (select distinct f_id from fiche_detail
                      where
-                     ad_id in (1,32,30,23,18,13) and ad_value ~* '$p_search')";
+                     ad_id in (1,32,30,23,18,13) and ad_value ilike '%$p_search%')";
         }
         // Get The result Array
         $step_tiers=$this->get_by_category($offset,$search.$filter_amount,'name');
@@ -1880,7 +1966,7 @@ class Fiche
             $odd="";
              $odd  = ($i % 2 == 0 ) ? ' odd ': ' even ';
              $accounting=$tiers->strAttribut(ATTR_DEF_ACCOUNT);
-             if ( $p_action == 'bank' && $amount['debit'] <  $amount['credit']  ){
+             if ( ! empty($accounting) && $p_action == 'bank' && $amount['debit'] <  $amount['credit']  ){
                  if ( strpos($accounting,$bank->p_value)===0 || strpos($accounting,$cash->p_value)===0 || strpos($accounting,$cc->p_value)===0){
                  //put in red if c>d
                  $odd.=" notice ";
@@ -2140,7 +2226,7 @@ class Fiche
                 {
                     case 'cred':
                         if (!isset($jrn))
-                            throw ('Erreur pas de valeur pour jrn');
+                            throw Exception('Erreur pas de valeur pour jrn');
                         $filter_jrn=$this->cn->make_list("select jrn_def_fiche_cred from jrn_Def where jrn_def_id=$1",
                                 array($jrn));
                         $filter_fd_id=" fd_id in (".$filter_jrn.")";
@@ -2148,7 +2234,7 @@ class Fiche
                         break;
                     case 'deb':
                         if (!isset($jrn))
-                            throw ('Erreur pas de valeur pour jrn');
+                            throw Exception('Erreur pas de valeur pour jrn');
                         $filter_jrn=$this->cn->make_list("select jrn_def_fiche_deb from jrn_Def where jrn_def_id=$1",
                                 array($jrn));
                         $filter_fd_id=" fd_id in (".$filter_jrn.")";
@@ -2156,7 +2242,7 @@ class Fiche
                         break;
                     case 'filter':
                         if (!isset($jrn))
-                            throw ('Erreur pas de valeur pour jrn');
+                            throw Exception('Erreur pas de valeur pour jrn');
                         $filter_jrn=$this->cn->make_list("select jrn_def_fiche_deb from jrn_Def where jrn_def_id=$1",
                                 array($jrn));
 
@@ -2198,8 +2284,9 @@ class Fiche
         {
             $query=sql_string($query);
 
-            if (strlen(trim($query))>1)
+            if (strlen(trim($query))>0)
             {
+                $query=str_replace(" ", "%", $query);
                 $filter_query=$and."(vw_name ilike '%$query%' or quick_code ilike ('%$query%') "
                         ." or vw_description ilike '%$query%' or tva_num ilike '%$query%' or accounting like upper('$query%'))";
             }

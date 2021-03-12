@@ -21,6 +21,8 @@
 
 // if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 
+require_once NOALYSS_INCLUDE."/class/tag_operation.class.php";
+
 /**
  * @file
  * @brief search in ledger
@@ -223,6 +225,9 @@ class Acc_Ledger_Search
         // to avoid to find a given operation
         if (isset($_REQUEST['hide_operation']))
             $r.=HtmlInput::hidden("hide_operation", $http->request('hide_operation'));
+        
+        if (isset($_REQUEST['single_operation']))
+            $r.=HtmlInput::hidden("single_operation", $http->request('single_operation'));
         
         ob_start();
         $search_filter=$this->build_search_filter();
@@ -452,6 +457,7 @@ class Acc_Ledger_Search
         $fil_paid='';
         $fil_date_paid='';
         $fil_hide_operation='';
+        $fil_tag='';
 
         $and='';
         $g_user=new User($this->cn);
@@ -497,7 +503,27 @@ class Acc_Ledger_Search
                 $and='';
             }
         }
-
+        //----
+        // Search tags
+        if ( isset($p_array[$op."tag"] ))
+        {
+            $strTag=join(",", $p_array[$op."tag"]);
+            if ($p_array[$op."tag_option"] == 1){
+                // any tag
+                $fil_tag=$and.' jr_id in (select jrn_id from operation_tag where tag_id in ('.sql_string($strTag).')) ';
+            } else {
+                // all tags
+                $aTag=$p_array[$op."tag"];
+                $sub_tag=""; $nb_tag=count($aTag);
+                $and2='';
+                for ($x=0;$x < $nb_tag;$x++) {
+                    $sub_tag = " tag_id = ".sql_string($aTag[$x]);
+                    $fil_tag=$and.' jr_id in (select jrn_id from operation_tag where '.$sub_tag.')' ;
+                    $and=" and ";
+                }
+            }
+            $and=" and ";
+        }
         /* format the number */
         $amount_min=abs(toNumber($amount_min));
         $amount_max=abs(toNumber($amount_max));
@@ -560,9 +586,9 @@ class Acc_Ledger_Search
             $desc=sql_string($desc);
             $fil_desc=$and." ( upper(jr_comment) like upper('%".$desc."%') or upper(jr_pj_number) like upper('%".$desc."%') ".
                     " or upper(jr_internal)  like upper('%".$desc."%')
-                          or jr_grpt_id in (select j_grpt from jrnx where j_text ~* '".$desc."')
-                          or jr_id in (select jr_id from jrn_info where ji_value is not null and ji_value ~* '$desc')
-                          or jr_id in (select jr_id from jrn_note where upper(n_text) ~* '$desc' )
+                          or jr_grpt_id in (select j_grpt from jrnx where j_text ilike '%".$desc."%')
+                          or jr_id in (select jr_id from jrn_info where ji_value is not null and ji_value  ilike '%$desc%')
+                          or jr_id in (select jr_id from jrn_note where upper(n_text) ilike '%$desc%' )
                           )";
             $and=" and ";
         }
@@ -613,11 +639,11 @@ class Acc_Ledger_Search
             
             $fil_sec=$and." jr_def_id in ( select uj_jrn_id ".
                     " from user_sec_jrn where ".
-                    " uj_login='".sql_string($_SESSION['g_user'])."'".
+                    " uj_login='".sql_string($_SESSION[SESSION_KEY.'g_user'])."'".
                     " and uj_priv in ('R','W'))";
         }
         $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.$fil_amount.
-            $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation;
+            $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation.$fil_tag;
         $sql.=" where ".$where;
         
         // Q?? Why do we return where if it is included in SQL ?
@@ -686,7 +712,7 @@ class Acc_Ledger_Search
       // Count nb of line
       $max_line=$cn->count_sql($sql);
 
-      $step=$_SESSION['g_pagesize'];
+      $step=$_SESSION[SESSION_KEY.'g_pagesize'];
       $page=(isset($_GET['offset']))?$_GET['page']:1;
       $offset=(isset($_GET['offset']))?$_GET['offset']:0;
       // create the nav. bar
@@ -712,8 +738,8 @@ class Acc_Ledger_Search
         $gDossier=dossier::id();
         $amount_paid=0.0;
         $amount_unpaid=0.0;
-        $limit=($_SESSION['g_pagesize']!=-1)?" LIMIT ".$_SESSION['g_pagesize']:"";
-        $offset=($_SESSION['g_pagesize']!=-1)?" OFFSET ".Database::escape_string($offset):"";
+        $limit=($_SESSION[SESSION_KEY.'g_pagesize']!=-1)?" LIMIT ".$_SESSION[SESSION_KEY.'g_pagesize']:"";
+        $offset=($_SESSION[SESSION_KEY.'g_pagesize']!=-1)?" OFFSET ".Database::escape_string($offset):"";
         $order="  order by jr_date_order asc,jr_internal asc";
         // Sort
         $url="?".CleanUrl();
@@ -760,7 +786,7 @@ class Acc_Ledger_Search
             return array(0, _("Aucun enregistrement trouvé"));
         }
 
-        $r.='<table class="result">';
+        $r.='<table class="result" id="history_operation_t">';
 
 
         $r.="<tr >";
@@ -894,6 +920,7 @@ class Acc_Ledger_Search
             if ($p_paid!=0)
             {
                 $w=new ICheckBox();
+                $w->set_range("paid_operation_ck");
                 $w->name="rd_paid".$row['jr_id'];
                 $w->selected=($row['jr_rapt']=='paid')?true:false;
                 // if p_paid == 2 then readonly
@@ -984,7 +1011,7 @@ class Acc_Ledger_Search
       // Count nb of line
       $max_line=$this->cn->count_sql($sql);
 
-      $step=$_SESSION['g_pagesize'];
+      $step=$_SESSION[SESSION_KEY.'g_pagesize'];
       $page=(isset($_GET['offset']))?$_GET['page']:1;
       $offset=(isset($_GET['offset']))?$_GET['offset']:0;
       // create the nav. bar
@@ -1171,7 +1198,8 @@ class Acc_Ledger_Search
         echo HtmlInput::title_box(_("Journaux"), $p_div."jrn_search");
         echo '<div style="padding:5px">';
         echo '<form method="GET" id="'.$p_div.'search_frm" onsubmit="return hide_ledger_choice(\''.$p_div.'search_frm\')">';
-        echo HtmlInput::hidden('nb_jrn', count($p_array));
+        $nb_array=(empty($p_array))?0:count($p_array);
+        echo HtmlInput::hidden('nb_jrn', $nb_array);
         echo _('Filtre ').HtmlInput::filter_table($p_div.'tb_jrn', '0,1,2', 2);
         echo HtmlInput::anchor_action(_('Inverser sel'),' toggle_checkbox(\''."{$p_div}search_frm".'\')','sel_'.$p_div,"nav");
         echo "-";
@@ -1195,7 +1223,7 @@ class Acc_Ledger_Search
         
         echo '</td>';
         echo '</tr>';
-        for ($e=0;$e<count($p_array);$e++)
+        for ($e=0;$e<$nb_array;$e++)
         {
             $row=$p_array[$e];
 //            if ( $row['jrn_enable']==0) continue;

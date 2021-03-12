@@ -57,7 +57,7 @@ class Todo_List
         $this->cn=$p_init;
         $this->tl_id=0;
         $this->tl_desc="";
-        $this->use_login=$_SESSION['g_user'];
+        $this->use_login=$_SESSION[SESSION_KEY.'g_user'];
         $this->is_public="N";
 
     }
@@ -228,7 +228,7 @@ class Todo_List
     public function delete()
     {
         global $g_user;
-        if ( $this->use_login != $_SESSION['g_user'] && $g_user->check_action(SHARENOTEREMOVE)==0) return;
+        if ( $this->use_login != $_SESSION[SESSION_KEY.'g_user'] && $g_user->check_action(SHARENOTEREMOVE)==0) return;
         
         $sql="delete from todo_list_shared where todo_list_id=$1 ";
         $res=$this->cn->exec_sql($sql,array($this->tl_id));
@@ -329,11 +329,11 @@ class Todo_List
       htmlspecialchars($this->tl_title).
       '</a>'.
        '</td>';
-        if ( $this->is_public == 'Y' && $this->use_login != $_SESSION['g_user'] )
+        if ( $this->is_public == 'Y' && $this->use_login != $_SESSION[SESSION_KEY.'g_user'] )
         { // This is a public note, cannot be removed
             $r.= '<td></td>';
         }
-        elseif ($this->use_login == $_SESSION['g_user'] )
+        elseif ($this->use_login == $_SESSION[SESSION_KEY.'g_user'] )
         {
             // This a note the user owns
             $r.=  '<td>'.

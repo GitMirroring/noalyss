@@ -70,16 +70,17 @@ class Inplace_Switch
             throw new Exception(_("Invalide value"));
         }
         
-        printf('<span style="text-decoration: none;color:%s" class="inplace_edit icon" id="%s">', $color,$this->name);
-        echo $icon;
-        echo '</span>';
-        echo <<<EOF
+        $r=sprintf('<span style="text-decoration: none;color:%s" class="inplace_edit icon" id="%s">', $color,$this->name);
+        $r.=$icon;
+        $r.= '</span>';
+        $r.=<<<EOF
         <script>
 {$this->name}.onclick=function() {new Ajax.Updater({$this->name},'{$this->callback}',{method:"get",parameters:{$this->json},evalScripts:true} );
    {$this->jscript} 
    }
 </script>
 EOF;
+    return $r;
     }
     public function get_jscript()
     {

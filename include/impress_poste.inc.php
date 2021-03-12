@@ -173,7 +173,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
             $result=$Poste->HtmlTable(null,$_GET['ople']);
             $table=ob_get_clean();
             if ( $result == 0) {
-            echo '<h2 class="info">'.$Poste->id." ".h($Poste->label).'</h2>';
+            echo '<h2 class="">'.$Poste->id." ".h($Poste->label).'</h2>';
             echo $table;
             }
 	    echo '</div>';
@@ -219,7 +219,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
         if ( ! isset($_REQUEST['oper_detail']) )
         {
             echo '<div class="content">';
-            echo '<h2 class="info"> ' .
+            echo '<h2 class=""> ' .
                 '(' . $fiche->id . ')' .
                 $fiche->getName() . ' ' .
                 ' [ ' . $fiche->get_quick_code() . ' ] ' .
@@ -233,7 +233,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
         {
             // Detail //
             echo '<div class="content">';
-            echo '<h2 class="info"> ' .
+            echo '<h2 class=""> ' .
                 '(' . $fiche->id . ')' .
                 $fiche->getName() . ' ' .
                 ' [ ' . $fiche->get_quick_code() . ' ] ' .
@@ -269,7 +269,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
                 $result=$Poste->HtmlTable(null,$_GET['ople']);
                 $table=ob_get_clean();
                 if ( $result == 0) {
-                echo '<h2 class="info">'.$Poste->id." ".h($Poste->label).'</h2>';
+                echo '<h2 class="">'.$Poste->id." ".h($Poste->label).'</h2>';
                 echo $table;
                 }
                 

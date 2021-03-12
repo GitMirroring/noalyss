@@ -68,7 +68,7 @@ class Sort_Table
     {
 	if ($p_ind < 0 || $p_ind > $this->nb)
 	    return 'ERREUR TRI';
-	$file = str_replace('extension.php', '', $_SERVER['SCRIPT_FILENAME']);
+	$file = str_replace('extension.php', '', $_SERVER['PHP_SELF']);
 
 	$base = $this->array[$p_ind]['url'];
 	$str = '';

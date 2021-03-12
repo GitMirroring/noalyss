@@ -28,6 +28,7 @@ $cn=Dossier::connect();
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 $g_user=new User($cn);
 $g_user->check(true);
+IDate::set_firstDate($g_user->get_first_week_day());
 set_language();
 /* if a code has been asked */
 if (isset($_REQUEST['plugin_code']) )
@@ -56,7 +57,7 @@ if (isset($_REQUEST['plugin_code']) )
     if ( $ext->search($_REQUEST['plugin_code']) != -1)
     {
         /* security */
-        if ( !isset ($_SESSION['g_user']) || $ext->can_request($_SESSION['g_user']) == 0 )
+        if ( !isset ($_SESSION[SESSION_KEY.'g_user']) || $ext->can_request($_SESSION[SESSION_KEY.'g_user']) == 0 )
         {
             exit();
         }

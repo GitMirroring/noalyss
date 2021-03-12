@@ -27,7 +27,7 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
-require_once  NOALYSS_INCLUDE.'/class/pre_op_ach.class.php';
+require_once  NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 $gDossier = dossier::id();
 global $g_parameter;
@@ -153,7 +153,7 @@ if (isset($_POST['record']))
 		/* Save the predefined operation */
                 if ( isset($_POST['opd_name']) && trim($_POST['opd_name']) != "" )
 		{
-			$opd = new Pre_op_ach($cn);
+			$opd = new Pre_operation($cn);
 			$opd->get_post();
 			$opd->save();
 		}
@@ -240,7 +240,7 @@ else
 	$Ledger->id = $request_jrn;
 
 if (isset ($_REQUEST['p_jrn_predef'])){
-	$Ledger->id=$_REQUEST['p_jrn_predef'];
+	$Ledger->id=$http->request('p_jrn_predef');
 }
 // pre defined operation
 //
@@ -259,13 +259,14 @@ try
     $acompte=$http->request("acompte", "string",0);
 
     echo "<FORM class=\"print\"NAME=\"form_detail\" METHOD=\"POST\" >";
+    echo HtmlInput::hidden("ac", $ac);
     /* request for a predefined operation */
     if (isset($_REQUEST['pre_def'])&&!isset($_POST['correct']) && ! isset($correct) )
     {
         // used a predefined operation
         $predef=$http->request("pre_def","string", "0");
         $p_jrn_predef=$http->request("p_jrn_predef","string", "0");
-        $op=new Pre_op_ach($cn);
+        $op=new Pre_operation($cn);
         $op->set_od_id($predef);
         $p_post=$op->compute_array();
         $Ledger->id=$p_jrn_predef;

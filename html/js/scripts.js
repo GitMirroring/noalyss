@@ -24,12 +24,31 @@
  *
  */
 var ask_reload = 0;
-var tag_choose = '';
+// tag_choose Element  which contains all the selected tags 
+var tag_choose = ''; 
 var aDraggableElement = new Array();
 var viewport = document.viewport.getDimensions(); // Gets the viewport as an object literal
 var width = viewport.width; // Usable window width
 var height = viewport.height;
-
+ /**
+ * return undefined if nothing is found , otherwise return the DOM elemnt
+ * @param {type} p_name_dom
+ * @param {type} name_child
+ * @returns {undefined}
+ */
+function in_child(p_element,name_child) {
+    var element=p_element
+    if ( typeof p_element !== "object" ) {
+      element=document.getElementById(p_element);
+        
+    }
+    if ( ! element ) return undefined;
+    for ( var e=0; e < element.childElementCount;e++) {
+        if ( element.childNodes[e].id == name_child) {
+            return element.childNodes[e];
+        }
+    }
+}
 /**
  * callback function when we just need to update a hidden div with an info
  * message
@@ -314,6 +333,16 @@ function format_number(obj, p_prec)
 
     $(obj).value = value;
 }
+
+/**
+ * Replace slash and minus by dot
+ * @param p_object
+ */
+function format_date(p_object)
+{
+    p_object.value=p_object.value.replace(/\//g,'.');
+    p_object.value=p_object.value.replace(/-/g,'.');
+}
 /**
  *@brief check if the object is hidden or show and perform the opposite,
  * show the hidden obj or hide the shown one
@@ -433,7 +462,7 @@ function success_misc(req)
 }
 function loading()
 {
-    var str = '<h2>' + content[64] + '</h2>';
+    var str = '<p>' + content[64] + '</p>';
     str = str + '<image src="image/loading.gif" alt="chargement"></image>';
     return str;
 }
@@ -1227,7 +1256,7 @@ function fill_box(req)
  *@param dossier_id
  *@param od_id from table op_predef
  */
-function mod_predf_op(dossier_id, od_id)
+function mod_predf_op(dossier_id, od_id,p_ledger)
 {
     var target = "mod_predf_op";
     removeDiv(target);
@@ -1237,7 +1266,7 @@ function mod_predf_op(dossier_id, od_id)
 
     add_div(div);
 
-    var qs = "gDossier=" + dossier_id + '&op=mod_predf&id=' + od_id;
+    var qs = "gDossier=" + dossier_id + '&op=mod_predf&id=' + od_id+'&ledger_id='+p_ledger;
 
     var action = new Ajax.Request('ajax_misc.php',
             {
@@ -1307,6 +1336,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
     str_style += ";width:92%;overflow:auto;";
     waiting_box();
     var hide_operation = $(ctl_concern).getAttribute("hide_operation");
+    var single_operation = $(ctl_concern).getAttribute("single_operation");
 
     var param_send = {gDossier: dossier,
         ctlc: ctl_concern,
@@ -1316,7 +1346,8 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
         ledger: ledger,
         target: target,
         tiers: tiers,
-        hide_operation: hide_operation
+        hide_operation: hide_operation,
+        single_operation:single_operation
     };
 
     var qs = encodeJSON(param_send);
@@ -1384,6 +1415,7 @@ function set_reconcile(obj)
         if (!obj.elements['target'])
             return;
         var target = obj.elements['target'].value;
+        var single_operation = obj.elements['single_operation'].value;
         for (var e = 0; e < obj.elements.length; e++)
         {
 
@@ -1417,7 +1449,12 @@ function set_reconcile(obj)
                             });
                         }
                     }
-                    $(ctlc.value).value += nValue;
+                    if (single_operation==0) {
+                        $(ctlc.value).value += nValue;
+                    } else {
+                        $(ctlc.value).value = nValue;
+                        
+                    }
                 }
             }
         }
@@ -2110,7 +2147,13 @@ function view_action(ag_id, dossier, modify)
                         });
                         $(id).innerHTML = code_html;
                         if (ctl_txt == 'ok') {
-                            compute_all_ledger();
+                            // compute detail
+                            var detail=in_child(id,"follow_up_detail");
+                            if (detail) {   
+                              compute_all_ledger();
+                            }
+                                             
+                            
                         }
                         code_html.evalScripts();
                     } catch (e) {
@@ -2171,7 +2214,7 @@ function filter_table(phrase, _id, colnr, start_row) {
     }
     if (tot_found == 0) {
         if ($('info_' + _id)) {
-            $('info_' + _id).innerHTML = content[69]
+            $('info_' + _id).innerHTML = content[69];
         }
     } else {
         if ($('info_' + _id)) {
@@ -2217,7 +2260,46 @@ function filter_list(phrase, _id) {
     }
     if (tot_found == 0) {
         if ($('info_' + _id)) {
-            $('info_' + _id).innerHTML = content[69]
+            $('info_' + _id).innerHTML = content[69];
+        }
+    } else {
+        if ($('info_' + _id)) {
+            $('info_' + _id).innerHTML = "  ";
+        }
+    }
+}
+
+/**
+ * @brief filter quickly a select 
+ * @param  phrase : DOM id of the input text where we find the word to seach
+ * @param  _id : id of the list
+ * @returns nothing
+ * @see HtmlInput::filter_list
+ */
+function filter_multiselect(phrase, _id) {
+    $('info_div').innerHTML = content[65];
+    $('info_div').style.display = "block";
+    var words = $(phrase).value.toLowerCase();
+    var l_list = document.getElementById(_id);
+
+    var tot_found = 0;
+
+    for (var r = 0; r < l_list.options.length; r++) {
+        var found = 0;
+        var ele = l_list.options[r].text;
+
+        if (ele.toLowerCase().indexOf(words) >= 0) {
+            tot_found++;
+            l_list.options[r].style.display = 'block';
+        } else {
+           l_list.options[r].style.display = 'none';
+        }
+        $('info_div').style.display = "none";
+        $('info_div').innerHTML = "";
+    }
+    if (tot_found == 0) {
+        if ($('info_' + _id)) {
+            $('info_' + _id).innerHTML = content[69];
         }
     } else {
         if ($('info_' + _id)) {
@@ -2458,7 +2540,7 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post)
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
                         var posy = calcy(250);
-                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0, style: "position:fixed;top:" + posy + "px"});
+                        add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0, style: "position:fixed;top:15%;"});
                         $('tag_div').innerHTML = code_html;
                         try
                         {
@@ -2545,13 +2627,14 @@ function action_tag_select(p_dossier, ag_id)
  * @brief Add the current tag to the current ag_id
  * @param {type} p_dossier
  * @param {type} ag_id
+ * @param p_isgroup g it is a group , t is a single tag
  * @returns {undefined}
  */
-function action_tag_add(p_dossier, ag_id, t_id)
+function action_tag_add(p_dossier, ag_id, t_id,p_isgroup)
 {
     try {
         waiting_box();
-        var queryString = "t_id=" + t_id + "&ag_id=" + ag_id + "&op=tag_add&gDossier=" + p_dossier;
+        var queryString = "t_id=" + t_id + "&ag_id=" + ag_id + "&op=tag_add&gDossier=" + p_dossier+"&isgroup="+p_isgroup;
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
@@ -2594,7 +2677,7 @@ function action_tag_remove(p_dossier, ag_id, t_id)
                     {
                         method: 'get', parameters: queryString,
                         onFailure: ajax_misc_failure,
-                        onSuccess: function (req, j) {
+                        onSuccess: function (req) {
                             var answer = req.responseXML;
                             var html = answer.getElementsByTagName('code');
                             if (html.length === 0)
@@ -2641,13 +2724,16 @@ function activate_tag(p_dossier, p_tag_id) {
  * Display a div with available tags, this div can update the cell
  * tag_choose_td
  * @param {type} p_dossier
+ * @param {string} p_prefix is the prefix of the div
+ * @param {string} Calling object either Tag_Operation or Tag_Action
  * @returns {undefined}
+ * 
  */
-function search_display_tag(p_dossier, p_prefix)
+function search_display_tag(p_dossier, p_prefix,p_object)
 {
     try {
         waiting_box();
-        var queryString = "op=search_display_tag&gDossier=" + p_dossier + "&pref=" + p_prefix;
+        var queryString = { op : "search_display_tag",gDossier:p_dossier,pref:p_prefix,caller_obj:p_object};
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
@@ -2665,8 +2751,8 @@ function search_display_tag(p_dossier, p_prefix)
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
                         add_div({id: p_prefix + 'tag_div', style: 'left:10%;width:70%', cssclass: 'inner_box', drag: 1});
-                        $(p_prefix + 'tag_div').style.top = posY - 80 + "px";
-                        $(p_prefix + 'tag_div').style.left = posX - 200 + "px";
+                        $(p_prefix + 'tag_div').style.top = calcy(200)+"px"
+                        $(p_prefix + 'tag_div').style.left = 20+ "%";
                         remove_waiting_box();
                         $(p_prefix + 'tag_div').innerHTML = code_html;
                         code_html.evalScripts();
@@ -2682,8 +2768,10 @@ function search_display_tag(p_dossier, p_prefix)
  * in the search screen
  * @param {type} p_dossier
  * @param {type} p_tag_id
+ * @param p_prefix is the prefix of the widget 
+ * @param p_obj is either g for group of tag or t for a single tag
  */
-function search_add_tag(p_dossier, p_tag_id, p_prefix)
+function search_add_tag(p_dossier, p_tag_id, p_prefix,p_obj)
 {
     try {
         var clear_button = 0;
@@ -2692,7 +2780,7 @@ function search_add_tag(p_dossier, p_tag_id, p_prefix)
             clear_button = 1;
         }
         waiting_box();
-        var queryString = "op=search_add_tag&gDossier=" + p_dossier + "&id=" + p_tag_id + "&clear=" + clear_button + '&pref=' + p_prefix;
+        var queryString = "op=search_add_tag&gDossier=" + p_dossier + "&id=" + p_tag_id + "&clear=" + clear_button + '&pref=' + p_prefix+"&obj="+p_obj;
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
@@ -3052,6 +3140,8 @@ function alert_box(p_message)
 function alternate_row_color(p_table)
 {
     var table_colored=$(p_table);
+    if (! table_colored.tBodies[0] ) return;
+
     var len = table_colored.tBodies[0].rows.length;
     var i = 0;
     var localClass = "";
@@ -3669,6 +3759,26 @@ function toggle_onoff(icon_domid, p_value_domid)
     }
 }
 /**
+ * turn on or off ,  set an domElement to 1 or 0 and change the icon
+ * @param string icon_domid : id of the domElement which must be changed
+ * @param string p_value_domid : id of domElement containing 1 or 0
+ * @see param_jrn.php
+ */
+function toggle_checkbox_onoff(icon_domid, p_value_domid)
+{
+    console.log("toggle_checkbox_onoff");
+    console.log("icon_domid"+icon_domid);
+    console.log("p_value_domid"+p_value_domid);
+    
+    if ($(p_value_domid).value == 0) {
+        $(p_value_domid).value = 1;
+        $(icon_domid).innerHTML = '&#xe741;';
+    } else {
+        $(p_value_domid).value = 0;
+        $(icon_domid).innerHTML = '&#xf096;';
+    }
+}
+/**
  * in CFGLED show or hide the row depending if the warning is enable or not
  * 
  * @param {type} p_enable
@@ -3682,4 +3792,253 @@ function toggle_row_warning_enable(p_enable, p_row)
     } else {
         $(p_row).hide();
     }
+}
+
+/**
+ * return a json object which is the merge of the 2 json objects
+ * from 2015 : Object.assign(obj1, obj2);
+ * @param p_json1 object 1 to merge
+ * @param p_json2 object 2 to merge
+ * @returns new json object
+ */
+function json_concat(p_json1,p_json2)
+{
+
+        var result = {};
+        for (var key in p_json1) {
+            result[key] = p_json1[key];
+        }
+        for (var key in p_json2) {
+            result[key] = p_json2[key];
+        }
+        return result;
+
+}
+
+/**
+ * return a json object which is the merge of the 2 json objects
+ * from 2015 : Object.assign(obj1, obj2);
+ * @param p_json1 object 1 to merge
+ * @param p_json2 object 2 to merge
+ * @returns new json object
+ */
+function json_concat(p_json1,p_json2)
+{
+
+        var result = {};
+        for (var key in p_json1) {
+            result[key] = p_json1[key];
+        }
+        for (var key in p_json2) {
+            result[key] = p_json2[key];
+        }
+        return result;
+
+}
+/**
+ * this function unchecks other checkbox , it mimics the way a radio behaves
+ * @param string p_click is the DOM id of the checkbox you clicked
+ * @param string p_name is the name of all the checkbox to uncheck
+ */
+function uncheck_other(p_click,p_name) 
+{
+    var aCheckbox=document.getElementsByName(p_name);
+    if (aCheckbox.length == 0) return;
+    var i=0;
+    for (i=0;i<aCheckbox.length;i++) {
+        aCheckbox[i].checked=false;
+    }
+    p_click.checked=true;
+}
+/**
+ * Manage the tag with operations
+ * @returns {undefined}
+ */
+var operation_tag = function (p_div)
+{
+    this.ctl = p_div;
+    console.log("ctl "+p_div);
+    /**
+     * Show a list of tag which can be added to the current followup document
+     * @param {type} p_dossier
+     * @param {type} jrn_id
+     * @returns {undefined}
+     */
+    this.select = function (p_dossier, p_jrn_id)
+    {
+        try {
+            waiting_box();
+            var queryString = {jrn_id:p_jrn_id,op:"operation_tag_select",gDossier:p_dossier,ctl:this.ctl};
+            var action = new Ajax.Request(
+                    "ajax_misc.php",
+                    {
+                        method: 'get', 
+                        parameters: queryString,
+                        onFailure: ajax_misc_failure,
+                        onSuccess: function (req, j) {
+                            remove_waiting_box();
+                            
+                            var answer = req.responseXML;
+                            var html = answer.getElementsByTagName('code');
+                            if (html.length === 0)
+                            {
+                                var rec = unescape_xml(req.responseText);
+                                error_message('erreur :' + rec);
+                            }
+                            var code_html = getNodeText(html[0]);
+                            code_html = unescape_xml(code_html);
+                            var pos = fixed_position(35, 229);
+                            add_div({id: 'tag_div', style: pos, cssclass: 'inner_box tag', drag: 0});
+
+                            remove_waiting_box();
+                            $('tag_div').innerHTML = code_html;
+                        }
+                    }
+            );
+        } catch (e) {
+            error_message(e.message);
+        }
+    };
+
+    /**
+     * @brief Add the current tag to the current ag_id
+     * @param {type} p_dossier
+     * @param {type} ag_id
+     * @param p_isgroup g it is a group , t is a single tag
+     * @returns {undefined}
+     */
+    this.add = function (p_dossier, p_jrn_id, t_id, p_isgroup)
+    {
+        try {
+            waiting_box();
+            var queryString = {t_id:t_id,jrn_id:p_jrn_id,op:"operation_tag_add",
+                gDossier:p_dossier,ctl:this.ctl,isgroup:p_isgroup};
+            var ctl=this.ctl;
+            var action = new Ajax.Request(
+                    "ajax_misc.php",
+                    {
+                        method: 'get', parameters: queryString,
+                        onFailure: ajax_misc_failure,
+                        onSuccess: function (req, j) {
+                            var answer = req.responseXML;
+                            console.log("1-ctl "+ctl);
+                            var html = answer.getElementsByTagName('code');
+                            if (html.length === 0)
+                            {
+                                var rec = unescape_xml(req.responseText);
+                                error_message('erreur :' + rec);
+                            }
+                            var code_html = getNodeText(html[0]);
+                            code_html = unescape_xml(code_html);
+                            remove_waiting_box();
+                            $('operation_tag_td'+ctl).innerHTML = code_html;
+                            removeDiv('tag_div');
+                        }
+                    }
+            );
+        } catch (e) {
+            error_message(e.message);
+        }
+    };
+    /**
+     * @brief remove the current tag to the current ag_id
+     * @param {type} p_dossier
+     * @param {type} ag_id
+     * @returns {undefined}
+     */
+    this.remove = function (p_dossier, p_jrn_id, t_id)
+    {
+        var ctl=this.ctl;
+         console.log("remove-1.ctl "+ctl);
+        confirm_box(null, content[50], function () {
+            try {
+                waiting_box();
+                var queryString = {t_id:t_id,jrn_id:p_jrn_id,op:"operation_tag_remove",gDossier:p_dossier,ctl:ctl};
+                var action = new Ajax.Request(
+                        "ajax_misc.php",
+                        {
+                            method: 'get', 
+                            parameters: queryString,
+                            onFailure: ajax_misc_failure,
+                            onSuccess: function (req, j) {
+                                var answer = req.responseXML;
+                                var html = answer.getElementsByTagName('code');
+                                if (html.length === 0)
+                                {
+                                    var rec = unescape_xml(req.responseText);
+                                    error_message('erreur :' + rec);
+                                }
+                                var code_html = getNodeText(html[0]);
+                                code_html = unescape_xml(code_html);
+                                remove_waiting_box();
+                                console.log("remove-2.ctl "+ctl);
+                                $('operation_tag_td'+ctl).innerHTML = code_html;
+
+                            }
+                        }
+                );
+                } catch (e) {
+                    error_message(e.message);
+                }
+            });
+    };
+};
+
+/**
+ * Check the sum of size of all the FILES to upload
+ * @param p_object the form DOM object,
+ * @param p_max_size MAX_FILE_SIZE constant (see config.inc.php or constant.php)
+ * @returns true if the sum of filesize is greater than the limit
+ */
+function check_file_size(p_object,p_max_size)
+{
+    var sum_file=0;
+    for(var i=0;i<p_object.elements.length;i++) {
+        var a=p_object.elements[i];
+        if ( p_object.elements[i].getAttribute('type')=="file" )
+        {
+            if( p_object.elements[i].files[0]){
+
+                sum_file+=p_object.elements[i].files[0].size;
+            }
+        }
+    }
+    if ( sum_file > p_max_size) {alert_box(content[78]);return false;}
+    return true;
+}
+
+/**
+ * Check that the receipt file is not too big
+ * @see ajax_ledger.php , ledger_detail_file
+ * @param int p_max_size maximum size
+ * @param p_info name of the waiting box
+ * @returns true if  file size is less than the maximum
+ */
+function check_receipt_size(p_max_size,p_info)
+{
+    document.getElementById(p_info).style.display="inline";
+    console.debug ("param  p_max_file_size"+p_max_size);
+    var f=document.getElementById("receipt_id");
+    if ( f && f.files[0] && f.files[0].size > parseFloat(p_max_size)) {
+        document.getElementById("receipt_info_id").innerHTML=content[78];
+        document.getElementById(p_info).style.display="none";
+        return false;
+    }
+    document.getElementById("receipt_info_id").innerHTML="";
+    document.getElementById("form_file").submit();
+    return true;
+}
+/**
+ * @brief toggle size of a div : fullsize or normal
+ * 
+ */
+function full_size(p_div) {
+    div_dom=document.getElementById(p_div);
+    if ( ! div_dom ) return;
+    if ( div_dom.hasClassName('fullsize')) {
+       div_dom.removeClassName('fullsize');$('size_'+p_div).innerHTML='&#xe82a;';
+    } else {
+        div_dom.addClassName('fullsize');$('size_'+p_div).innerHTML='&#xe83d;';
+    }
+    
 }

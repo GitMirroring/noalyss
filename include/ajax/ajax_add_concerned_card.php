@@ -29,6 +29,7 @@ if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/card_multiple.class.php';
 $http=new HttpInput();
 
 ob_start();
@@ -42,49 +43,105 @@ catch (Exception $exc)
     error_log($exc->getTraceAsString());
     return;
 }
+/*
+ * security Who can do it ?
+ */
+if ( ! $g_user->can_write_action($ag_id)  ) {
+    record_log(__FILE__."security : access refused");
+    return;
+}
 
 require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 
 $r=HtmlInput::title_box(_("Détail fiche"), 'search_card');
-
-$r.='<form id="search_card1_frm" method="GET" onsubmit="action_add_concerned_card(this);return false;">';
+//--------------------------------------------------------------------------------------------------------------------
+// Form search
+//--------------------------------------------------------------------------------------------------------------------
+$r.='<form id="search_card1_frm" method="GET" onsubmit="action_concerned_search_card(this);return false;">';
 $q=new IText('query');
 $q->value=(isset($query))?$query:'';
 $r.='<span style="margin-left:50px">';
 $r.=_('Fiche contenant').Icon_Action::infobulle(19);
 $r.=$q->input();
-$r.=HtmlInput::submit('fs', _('Recherche'), "", "smallbutton");
+
+// where to search
+$select=new ISelect("search_in");
+$select->value=$cn->make_array("select ad_id, ad_text from attr_def  where ad_search_followup = 1 order by 2 ",1);
+$select->selected=$http->get("search_in","string","");
+$r.=_("limité aux champs ").$select->input();
+
 $r.='</span>';
-$r.=dossier::hidden().HtmlInput::hidden('op', 'add_concerned_card');
+$r.=dossier::hidden().HtmlInput::hidden('op2', 'add_concerned_card');
 $r.=HtmlInput::request_to_hidden(array('ag_id'));
+
+// Search by category
+$sel_Category=new ISelect("search_cat");
+$sel_Category->value=$cn->make_array("select fd_id,fd_label from fiche_def order by 2",1);
+$sel_Category->set_value($http->request("search_cat","string","-1"));
+$r.=_("Catégorie")." ".$sel_Category->input();
+
+// search also inactive card
+$inactive=$http->get("inactive_card","string",0);
+if ($inactive=="undefined" || $inactive == "") $inactive=0;
+$is=new InputSwitch("inactive_card",$inactive);
+$is->value=$inactive;
+$r.=_("Fiches inactives").$is->input();
+
+$r.=HtmlInput::submit('fs', _('Recherche'), "", "smallbutton");
 $r.='</form>';
+
+
 $query=$http->get("query", "string","");
 $sql_array['query']=$query;
 $sql_array['typecard']='all';
+$sql_array['search_in']=$select->selected;
+$sql_array['inactive_card']=$inactive;
+$sql_array['search_cat']=$sel_Category->selected;
 
-$fiche=new Fiche($cn);
+$fiche=new Card_Multiple($cn);
 /* Build the SQL and show result */
 $sql=$fiche->build_sql($sql_array);
+$count_card=$fiche->count_sql($sql_array);
 
+//--------------------------------------------------------------------------------------------------------------------
+// Result
+//--------------------------------------------------------------------------------------------------------------------
 
 /* We limit the search to MAX_SEARCH_CARD records */
-$sql=$sql.' order by vw_name limit '.MAX_SEARCH_CARD;
 $a=$cn->get_array($sql);
+$r.='<form id="search_card2_frm" method="POST" onsubmit="action_concerned_save_card(this);return false;" '
+        . ' style="height:45rem">';
+$r.=HtmlInput::request_to_hidden(array('ag_id'));
+$r.=dossier::hidden().HtmlInput::hidden('op2', 'link_concerned_card').HtmlInput::hidden("op","card");
+// element to update with the answer
+$r.=HtmlInput::hidden("ctl","concerned_card_td");
+$array=[];
 for ($i=0; $i<count($a); $i++)
 {
+    $ic=new ICheckBox("selected_card[]");
+    $ic->value=$a[$i]['f_id'];
+    $ic->set_range("select_card_ck");
+    $array[$i]['checkbox']=$ic->input();
     $array[$i]['quick_code']=$a[$i]['quick_code'];
     $array[$i]['name']=h($a[$i]['vw_name']);
-    $array[$i]['accounting']=$a[$i]['accounting'];
     $array[$i]['first_name']=h($a[$i]['vw_first_name']);
     $array[$i]['description']=h($a[$i]['vw_description']);
-    $array[$i]['javascript']=sprintf("action_save_concerned(%d,'%s','%s')",$gDossier,$a[$i]['f_id'],$ag_id);
+    $array[$i]['company']=h($a[$i]['company']);
 }//foreach
 
-
-echo $r;
 // No accountancy history
 $accvis=0; 
-require_once(NOALYSS_TEMPLATE.'/card_result.php');
+echo $r;
+require_once(NOALYSS_TEMPLATE.'/card_multiple_result.php');
+echo '<ul class="aligned-block">';
+echo '<li>';
+echo HtmlInput::submit("add_concerned_card",_("Ajouter"));
+echo '</li>';
+echo '<li>';
+echo HtmlInput::button_close("search_card");
+echo '</li>';
+echo '</ul>';
+echo '</form>';
 $response=ob_get_contents();
 ob_end_clean();
 

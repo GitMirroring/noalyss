@@ -10,7 +10,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 echo '<div style="content">';
 global $http;
 require_once NOALYSS_INCLUDE.'/class/anc_grandlivre.class.php';
-
+$cn=Dossier::connect();
 $grandLivre=new Anc_Grandlivre($cn);
 
 $grandLivre->get_request();
@@ -35,18 +35,25 @@ if ($result != null)
           echo _('Tout sélectionner')." ".ICheckBox::toggle_checkbox('export_pdf_bt1','export_anc_receipt_pdf');
         echo '</span>';
         $task_id=uniqid();
-        echo $grandLivre->show_button();
-        printf ('<form method="GET" id="export_anc_receipt_pdf" action="export.php" style="display:inline" onsubmit="return start_export_anc_receipt_pdf(\'%s\',\'%s\');">',
-                $task_id,
-                _("Le traitement est en cours ,  merci de patienter sans recharger la page")
-               );
+        echo $grandLivre->button_export_csv();
+        printf ('<form method="GET" id="export_anc_receipt_pdf" action="export.php" 
+            style="display:inline" onsubmit="return start_export_anc_receipt_pdf(\'%s\',\'%s\');">',
+            $task_id,
+            _("Le traitement est en cours ,  merci de patienter sans recharger la page")
+            );
         echo HtmlInput::hidden("task_id",$task_id);
+        $type_pdf=new Select_Box("type_pdf",_("Type export PDF"));
+        $type_pdf->add_value(_("Un seul PDF"),1);
+        $type_pdf->add_value(_("Un PDF par opération"),2);
+        $type_pdf->set_position("in-absolute");
+        echo $type_pdf->input();
+
         echo $grandLivre->button_export_pdf();
         echo $grandLivre->display_html();
-        echo $grandLivre->button_export_pdf();
         echo HtmlInput::get_to_hidden(array('ac','gDossier','sa'));
+        echo $grandLivre->button_export_pdf();
         echo '</form>';
-        echo $grandLivre->show_button();
+        echo $grandLivre->button_export_csv();
         ?>
 <script>
     function start_export_anc_receipt_pdf(p_task_id,p_message)
@@ -60,11 +67,16 @@ if ($result != null)
                 break;
             }
         }
+        if (document.getElementById("type_pdf").value == "-1" )
+        {
+            valid=false;
+        }
+
         if ( valid  ) {
             progress_bar_start(p_task_id,p_message);
             return true;
         } else {
-            smoke.alert("<?=_('Choisissez au moins une opération')?>");
+            smoke.alert("<?=_('Choisissez au moins une opération et le type d\'export')?>");
             return false;
         }
         

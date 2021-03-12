@@ -105,6 +105,8 @@ if ( isset ($_POST["DATABASE"]) )
                            values ($1,$2,$3)",array($dos,$desc,$max_email));
         $l_id=$repo->get_current_seq('dossier_id');
         $repo->commit();
+
+
     }
     catch (Exception $e)
     {
@@ -181,7 +183,7 @@ if ( isset ($_POST["DATABASE"]) )
 
                 Dossier::synchro_admin($l_id);
                 User::remove_inexistant_user($l_id);
-
+                User::audit_admin(sprintf('CREATE DATABASE %s %s',$l_id,$dos));
 
             }
         }
@@ -204,6 +206,7 @@ if ( isset ($_POST["DATABASE"]) )
                     echo _("Echec création ");
                     exit;
                 }
+                User::audit_admin(sprintf('CREATE DATABASE %s %s',$l_id,$dos));
                 ob_flush();
             
         }
@@ -376,10 +379,11 @@ if ( $sa == 'list' )
 //---------------------------------------------------------------------------
 if ( $sa == 'remove' && isNumber($dossier_id) == 1 && $dossier_id != -1 )
 {
-    
-    if ( ! isset ($_REQUEST['p_confirm']))
+    $ctl=$http->request("fld_drop");
+    $ctl_code=$http->request("ctlcode");
+    if ( $ctl != $ctl_code)
     {
-        echo _('Désolé, vous n\'avez pas coché la case');
+        echo _('Désolé, le code est invalide');
         echo HtmlInput::button_anchor(_('Retour'),'?action=dossier_mgt');
         return;
     }
@@ -423,6 +427,7 @@ if ( $sa == 'remove' && isNumber($dossier_id) == 1 && $dossier_id != -1 )
     $cn->exec_sql($sql,array($dossier_id));
     print '<h2 class="error">';
     printf (_("Le dossier %s est effacé").'</h2>',h($name));
+    User::audit_admin(sprintf('DROP DATABASE %s %s',$dossier_id,$name));
     echo HtmlInput::button_anchor(_('Retour'),'?action=dossier_mgt');
 }
 ?>

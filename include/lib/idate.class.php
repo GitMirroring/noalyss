@@ -18,16 +18,17 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-// Copyright Author Dany De Bontridder danydb@aevalys.eu
+// Copyright Author Dany De Bontridder danydb@noalyss.eu
 
   /**
    *\file
-   \brief Html Input
+   \brief Html Input Date type
   */
 
 
 /// Html Input : Input a date format dd.mm.yyyy
 /// The property title should be set to indicate what it is expected
+/// @see calendar-setup.js
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 
 class IDate extends HtmlInput
@@ -36,6 +37,7 @@ class IDate extends HtmlInput
     var $placeholder;
     var $title;
     var $autofocus;
+    static $firstDate=0; //<! first day in the calendar : 0 for sunday
 
     function __construct($name='', $value='', $p_id="")
     {
@@ -46,6 +48,79 @@ class IDate extends HtmlInput
         $this->style=' class="input_text" ';
         $this->autofocus=false;
     }
+    /**
+     * @return string
+     */
+    public function get_placeholder()
+    {
+        return $this->placeholder;
+        return $this;
+    }
+
+    /**
+     * @param string $placeholder
+     */
+    public function set_placeholder($placeholder)
+    {
+        $this->placeholder = $placeholder;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function get_title()
+    {
+        return $this->title;
+        return $this;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function set_title($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return false
+     */
+    public function get_autofocus()
+    {
+        return $this->autofocus;
+        return $this;
+    }
+
+    /**
+     * @param false $autofocus
+     */
+    public function set_autofocus($autofocus)
+    {
+        $this->autofocus = $autofocus;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_firstDate()
+    {
+        return self::$firstDate;
+    }
+
+    /**
+     * @param mixed $firstDate
+     */
+    static function set_firstDate($firstDate)
+    {
+        if (isNumber($firstDate)==0){
+            throw new Exception("IDATE1: invalide data");
+        }
+        self::$firstDate= $firstDate;
+    }
+
 
     /*!\brief show the html  input of the widget */
 
@@ -57,7 +132,7 @@ class IDate extends HtmlInput
             return $this->display();
         if ($this->id=="")             $this->id=self::generate_id($this->name);
         $autofocus=($this->autofocus)?" autofocus ":"";
-        
+        $onchange='onchange="format_date(this)"';
         $r=sprintf('
             <input type="text" name="%s" id="%s" 
                  class="input_text" 
@@ -65,26 +140,32 @@ class IDate extends HtmlInput
                  value ="%s" 
                  placeholder="%s"
                  title="%s"
-                 pattern="[0-9]{1,2}.[0-9]{1,2}.[0-9]{4}"
+                 pattern="[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}"
+                 %s
                 />
                 <span  class="smallbutton icon"
                 id="%s_trigger"
                 />
                 &#xe811;
                 </span>
-                ',$this->name,$this->id,$this->value,$this->placeholder,$this->title,$this->id
+                ',$this->name,$this->id,$this->value,$this->placeholder,$this->title,
+                $onchange,
+                $this->id
                 );
-        
+        // @see calendar-setup.js
         $r.=sprintf('<script type="text/javascript">
                 Calendar.setup({'.
-                'inputField     :    "%s",     // id of the input field
-            ifFormat       :    "%%d.%%m.%%Y",      // format of the input field
-            button         :    "%s_trigger",  // trigger for the calendar (button ID)
-            align          :    "Bl",           // alignment (defaults to "Bl")
-            singleClick    :    true
+                'inputField     :    "%s",    
+            ifFormat       :    "%%d.%%m.%%Y",     
+            button         :    "%s_trigger",  
+            align          :    "Bl",         
+            singleClick    :    true,
+            firstDay:%s 
         });
             </script>'
-                ,$this->id,$this->id);
+                ,$this->id,
+                $this->id,
+                self::$firstDate);
         return $r;
     }
 

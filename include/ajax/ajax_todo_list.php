@@ -102,7 +102,7 @@ if ($ac == 'save')
     if ($id <> 0 ) { $todo->load(); }
     else
     {
-        $todo->set_parameter("owner", $_SESSION['g_user']);
+        $todo->set_parameter("owner", $_SESSION[SESSION_KEY.'g_user']);
     }
     
     $todo->set_parameter("date",$http->post("p_date_todo","string", ""));
@@ -111,7 +111,7 @@ if ($ac == 'save')
     $todo->set_is_public($http->post("p_public", "string","N"));
     
     ob_start();
-    if ( $todo->get_parameter('owner') == $_SESSION['g_user'] ) $todo->save();
+    if ( $todo->get_parameter('owner') == $_SESSION[SESSION_KEY.'g_user'] ) $todo->save();
     ob_end_clean();
     $dom=new DOMDocument('1.0','UTF-8');
     

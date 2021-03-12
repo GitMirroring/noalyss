@@ -443,31 +443,56 @@ class Acc_LedgerTest extends TestCase
      */
     public function testVerify_Ledger()
     {
-        global $g_connection;
+       global $g_connection;
        $ledger=new Acc_Ledger($g_connection,4);
        $array=[
-           "p_jrn"=>"15",
-           "p_jrn_deb_max_line"=>5,
-           "p_jrn_name"=>"New ledger",
-           "p_jrn_type"=>"ODS"
-       ];
-       // Must success
-       try {
-           $ledger->verify_ledger($array);
-           $this->assertTrue(TRUE);
-       } catch (Exception $ex) {
-           var_dump($ex->getMessage());
-           var_dump($ex->getTraceAsString());
-       }
+            "p_jrn"=>"15",
+            "p_jrn_deb_max_line"=>5,
+            "p_jrn_name"=>"New ledger",
+            "p_jrn_type"=>"ODS"
+            ];
+       //-----------------------------------------------
+       // Must succeed
+       //-----------------------------------------------
+      $ledger->verify_ledger($array);
+      
        
+       // succeeds if negative amount  1
+       $array["negative_amount"]=1;
+       $ledger->verify_ledger($array);
+       
+       //-----------------------------------------------
        // Must fail
-       $a_ledger["p_jrn"]="a";
+       //-----------------------------------------------
        try {
-           $ledger->verify_ledger($array);
-           $this->assertTrue(FALSE);
-       } catch (Exception $ex) {
-           $this->assertTrue(TRUE);
-       }
+            $array["p_jrn"]="a";
+            $ledger->verify_ledger($array);
+            $this->assertTrue(FALSE,"p_jrn is invalide");
+        }catch (\Exception $e) {
+            $this->assertTrue(TRUE);
+        }
+       // reset properly ,
+       $array["p_jrn"]="15";
+       $ledger->verify_ledger($array);
+
+       
+       // fails if negative amount neither 1 nor 0
+       try {
+            $array["negative_amount"]=2;
+            $ledger->verify_ledger($array);
+            $this->assertTrue(FALSE,"negative_amount must be 1 or 0");
+        }catch (\Exception $e) {
+            $this->assertTrue(TRUE);
+        }
+       
+        // negative amount not set , so fails
+       try {
+            $array["negative_warning"]="Yes";
+            $ledger->verify_ledger($array);
+            $this->assertTrue(FALSE,"negative_warning must be a string");
+        }catch (\Exception $e) {
+            $this->assertTrue(TRUE);
+        }
     }
 
     /**

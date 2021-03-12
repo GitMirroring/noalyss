@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   This file is part of NOALYSS.
  *
@@ -17,23 +18,42 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
+if (!defined('ALLOWED'))
+    die('Appel direct ne sont pas permis');
 /**
- *@file
- *@brief add tag , used for follow up
- *@see Tag
+ * @file
+ * @brief add tag , used for follow up
+ * @see Tag
  */
-
-require_once NOALYSS_INCLUDE.'/class/tag.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
+//Single Tag
 ob_start();
-if ($_GET['clear']==1) {
+if ($_GET['clear']==1)
+{
     /* Add a clear button */
-    echo Tag::add_clear_button($_GET['pref']);
+    echo Tag_Action::add_clear_button($_GET['pref']);
 }
-$tag=new Tag($cn,$_GET['id']);
-$tag->update_search_cell($_GET['pref']);
+if ($http->request("obj")=='t')
+{
 
-$response=  ob_get_clean();
+    $tag=new Tag_Action($cn, $http->get("id", "number"));
+    $tag->update_search_cell($http->get("pref"));
+}
+elseif ($http->request("obj")=="g")
+{
+    // Add all the tag from the group 
+    $aTag=$cn->get_array("select t_id,t_tag from jnt_tag_group_tag jtgt  join tags on (tag_id=t_id) where tag_group_id=$1 order by 2 ",[$http->get("id", "number")]);
+    $nb_atag=count($aTag);
+    $pref=$http->get("pref");
+    if ( $nb_atag > 0) {
+        for ($i=0;$i<$nb_atag;$i++){
+            $tag=new Tag_Action($cn,$aTag[$i]['t_id']);
+            $tag->update_search_cell($pref);
+        }
+    }
+    
+}
+$response=ob_get_clean();
 $html=escape_xml($response);
 header('Content-type: text/xml; charset=UTF-8');
 echo <<<EOF
@@ -44,7 +64,5 @@ echo <<<EOF
 </data>
 EOF;
 exit();
-
-
 ?>
 

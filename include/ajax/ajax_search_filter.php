@@ -24,6 +24,7 @@ if (!defined('ALLOWED'))
 
 require NOALYSS_INCLUDE.'/database/user_filter_sql.class.php';
 require NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_operation.class.php';
 $cn=Dossier::connect();
 $dossier_id=Dossier::id();
 global $g_user;
@@ -55,12 +56,19 @@ if ($op=='save_filter')
         $new->setp("amount_max", $http->post("amount_max", 'number', NULL));
         $new->setp("qcode", $http->post("qcode", 'string', NULL));
         $new->setp("accounting", $http->post("accounting", 'string', NULL));
+        $new->setp("uf_tag_option",$http->post("tag_option","string",null));
         $new->setp("date_paid_start",
                 $http->post("date_paid_start", 'string', NULL));
         $new->setp("date_paid_end", $http->post("date_paid_end", 'string', NULL));
         $new->setp("ledger_type", $http->post("ledger_type", 'string'));
         $new->setp("operation_filter", $http->post("operation_filter", 'string', NULL));
         $new->setp("filter_name", h($http->post("filter_name", 'string')));
+        $tag=$http->post("tag","string",'');
+        
+        if (is_array($tag) ) 
+            $new->setp("uf_tag",join(',',$tag));
+        else
+            $new->setp("uf_tag",null);
         $aJrn=[];
         $max=$http->post("nb_jrn");
         for ($i=0; $i<$max; $i++)
@@ -75,11 +83,11 @@ if ($op=='save_filter')
         $new->save();
         $rmAction=sprintf("delete_filter('%s','%s','%s')",  trim($http->post('div')), $dossier_id,
                 $new->getp('id'));
-        $answer['filter_name']=sprintf('<a class="tinybutton" style="display:inline" id="" onclick="'.$rmAction.'">'.SMALLX.'</a>'
-        );
-        $answer['filter_name'].=sprintf("<a style=\"display:inline\" onclick=\"load_filter('%s','%s','%s')\">%s</a>",
+        $answer['filter_name']="";
+        $answer['filter_name'].=sprintf("<a class=\"line\" style=\"display:inline;text-decoration:underline\" onclick=\"load_filter('%s','%s','%s')\">%s</a>",
                 trim($http->post('div')), $dossier_id, $new->getp('id'),
                 $new->getp("filter_name"));
+        $answer['filter_name'].='<span id="'.uniqid().'" onclick="'.$rmAction.'" class="icon" style="display:inline;margin-left:2em">&#xe80f;</span>';; 
         $answer['filter_id']=$new->getp("id");
         $answer['status']='OK';
     }
@@ -108,7 +116,8 @@ if ($op=="load_filter")
 
     $record['desc']=$record['description'];
     $record['r_jrn']=explode(",", $record['r_jrn']);
-
+    $record['tag']=explode(",",$record['uf_tag']);
+    $record['tag_option']=$record["uf_tag_option"];
     $result=array_merge($answer, $record);
 
 
@@ -148,7 +157,7 @@ if ($op=="display_search_filter")
     echo "</li>";
     
     echo "<li>";
-    echo HtmlInput::anchor(_("Remise à zéro"), "", "onclick=\"reset_filter('$p_div');removeDiv('boxfilter{$p_div}')\"");
+    echo HtmlInput::anchor(_("Remise à zéro"), "", "style=\"text-decoration:underline\" onclick=\"reset_filter('$p_div');removeDiv('boxfilter{$p_div}')\"");
     echo "</li>";
     
     // Link reset
@@ -157,12 +166,11 @@ if ($op=="display_search_filter")
         printf(' <li id="manageli%s_%d">', $p_div, $result[$i]["id"]);
         $rmAction=sprintf("delete_filter('%s','%s','%s')", $p_div, $dossier_id,
                 $result[$i]['id']);
-        printf('<a class="tinybutton" style="display:inline" id="" onclick="'.$rmAction.'">'.SMALLX.'</a>'
-        );
-        printf("<a style=\"display:inline\" onclick=\"load_filter('%s','%s','%s');removeDiv('boxfilter%s')\">",
+        printf("<a href=\"javascript:void(0)\" style=\"display:inline;text-decoration:underline\"  onclick=\"load_filter('%s','%s','%s');removeDiv('boxfilter%s')\">",
                 $p_div, $dossier_id, $result[$i]["id"],$p_div);
         echo $result[$i]["filter_name"];
         echo '</a>';
+        echo '<span id="'.uniqid().'" onclick="'.$rmAction.'" class="icon" style="display:inline;margin-left:2em">&#xe80f;</span>';
 
         printf("</li>");
     }
@@ -198,4 +206,23 @@ if ($op=="delete_search_operation")
     header('Content-Type: application/json;charset=utf-8');
     echo json_encode($answer);
     return;
+}
+//---------------------------------------------------------------------------------------------------------------
+// display_filter_tag : transform uf_tag into a list of tag , and display those tags in cells
+//----------------------------------------------------------------------------------------------------------------
+if ($op=='display_filter_tag')
+{
+    $tag=$http->request("uf_tag");
+    if ( trim($tag)=="") {return;}
+    $div=$http->request("div");
+    $aTag=explode(',', $tag);
+    if (is_array($aTag))
+    {
+        $nb_tag=count($aTag);
+        for ($j=0; $j<$nb_tag; $j++)
+        {
+            $tag_operation=new Tag_Operation($cn, $aTag[$j]);
+            $tag_operation->update_search_cell($div);
+        }
+    }
 }

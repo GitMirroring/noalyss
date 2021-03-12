@@ -25,6 +25,20 @@
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class ICheckBox extends HtmlInput
 {
+    var $range;
+    
+    function __construct($p_name="", $p_value="", $p_id="")
+    {
+        parent::__construct($p_name, $p_value, $p_id);
+        $this->range="";
+    }
+    
+    function get_range($p_name) {
+        return $this->range;
+    }
+    function set_range($p_name) {
+        $this->range=' class="'.$p_name.'" ';
+    }
     /*!\brief show the html  input of the widget*/
     public function input($p_name=null,$p_value=null,$id="")
     {
@@ -36,6 +50,7 @@ class ICheckBox extends HtmlInput
         $check=( $this->selected==true )?"checked":"unchecked";
         $r='<input type="CHECKBOX" id="'.$this->id.'" name="'.$this->name.'"'.' value="'.$this->value.'"';
         $r.="  $check";
+        $r.= $this->range;
         $r.=$this->get_node_attribute();
         $r.=' '.$this->disabled."  ".$this->javascript.'>';
 
@@ -69,7 +84,15 @@ class ICheckBox extends HtmlInput
             $a->javascript='onclick="toggle_checkbox(\''.$p_form.'\')"';
             return $a->input();
         }
-    static public function test_me()
-    {
+    /**
+     * Before calling this function , you must set a range with the function set_range. It will add the event on
+     * click (checkbox_set_range) 
+     *
+     * @param string $p_name
+     * @returns javascript to execute string
+     */    
+    static function javascript_set_range($p_name) {
+     $js=sprintf("(function () {activate_checkbox_range('%s');})();",$p_name);
+     return create_script($js);
     }
 }

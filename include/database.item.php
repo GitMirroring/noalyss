@@ -1,6 +1,5 @@
 <?php 
-Timing is on.
-Autocommit is  OFF
+
 $menu[]=_('Achat');  $desc[]=_('Nouvel achat ou dépense');$desc_long[]=_('Vous permet d\'encoder des achats, dépenses, des notes de frais ou des notes de crédits, vous pouvez spécifier un bénéficiaire ou un autre moyen de paiement');
 $menu[]=_('Historique');  $desc[]=_('Historique des imputations analytiques');$desc_long[]=_('Historique des imputations analytiques');
 $menu[]=_('Balance simple');  $desc[]=_('Balance simple des imputations analytiques');$desc_long[]=_('Balance simple des imputations analytiques');
@@ -123,7 +122,7 @@ $menu[]=_('Liste Suivi');  $desc[]=_('Document de suivi sous forme de liste');$d
 $menu[]=_('Moyen de paiement');  $desc[]=_('Config. des méthodes de paiement');$desc_long[]=_('Configuration des moyens de paiements que vous voulez utiliser dans les journaux de type VEN ou ACH, les moyens de paiement permettent de générer l\'opération de trésorerie en même temps que l\'achat, la note de frais ou la vente');
 $menu[]=_('Administration');  $desc[]=_('Suivi administration, banque');$desc_long[]=_('Suivi des administrations : courrrier, déclarations.');
 $menu[]=_('Prévision');  $desc[]=_('Prévision');$desc_long[]=_('Prévision de vos achats, revenus, permet de suivre l\'évolution de votre société. Vos prévisions sont des formules sur les postes comptables et vous permettent aussi vos marges brutes.');
-$menu[]=_('Export opérations rapprochées');  $desc[]=_('Export opérations rapprochées en CSV');$desc_long[]=_('');
+$menu[]=_('Export opérations rapprochées');  $desc[]=_('Export opérations rapprochées en CSV');$desc_long[]=_('Aucune');
 $menu[]=_('Administrateur');  $desc[]=_('Suivi des gérants, administrateurs et salariés');$desc_long[]=_('Suivi de vos salariés, managers ainsi que des administrateurs, pour les documents et les opérations comptables');
 $menu[]=_('Menu par défaut');  $desc[]=_('Configuration des menus par défaut');$desc_long[]=_('Configuration des menus par défaut, ces menus sont appelés par des actions dans d\'autres menus');
 $menu[]=_('Agenda');  $desc[]=_('Agenda');$desc_long[]=_('Agenda, présentation du suivi sous forme d\'agenda ');
@@ -141,11 +140,8 @@ $menu[]=_('Export ANC');
 $menu[]=_('Résumé TVA');  $desc[]=_('totaux  par TVA et par journal');$desc_long[]=_('Calcul des totaux  par TVA et par journal');
 $menu[]=_('Export Résumé TVA');  
 $menu[]=_('Export Résumé TVA');  
-Time: 1,027 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $attr_def[]=_('Durée Amortissement');
 $attr_def[]=_('Montant initial');
 $attr_def[]=_('TVA non déductible');
@@ -181,11 +177,8 @@ $attr_def[]=_('Gestion stock');
 $attr_def[]=_('Prix vente');
 $attr_def[]=_('Prix achat');
 $attr_def[]=_('Société');
-Time: 1,164 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $document_type[]=_('Document Interne');
 $document_type[]=_('Bons de commande client');
 $document_type[]=_('Bon de commande Fournisseur');
@@ -199,11 +192,8 @@ $document_type[]=_('Note de frais');
 $document_type[]=_('Réception commande Fournisseur');
 $document_type[]=_('Réception commande Client');
 $document_type[]=_('Réception magazine');
-Time: 1,120 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $action[]=_('Ajout de fiche');
 $action[]=_('Création, modification et effacement de fiche');
 $action[]=_('création, modification et effacement de catégorie de fiche');
@@ -215,52 +205,30 @@ $action[]=_('Effacer une opération ');
 $action[]=_('Partager une note');
 $action[]=_('Créer une note publique');
 $action[]=_('Effacer une note publique');
-Time: 0,661 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $mdp[]=_('Caisse');
 $mdp[]=_('Paiement électronique');
 $mdp[]=_('Caisse');
 $mdp[]=_('Par gérant ou administrateur');
-Time: 1,068 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $jrn_def_name[]=_('Opération Diverses');
 $jrn_def_name[]=_('Financier');
 $jrn_def_name[]=_('Vente');
 $jrn_def_name[]=_('Achat');
 $jrn_def_name[]=_('Note de crédit');
-Time: 1,213 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $jrn_def_description[]=_('Concerne toutes les opérations comme les amortissements, les comptes TVA, ...');
 $jrn_def_description[]=_('Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)');
 $jrn_def_description[]=_('Concerne toutes les ventes, notes de crédit envoyées');
 $jrn_def_description[]=_('Concerne tous les achats, factures reçues, notes de crédit reçues et notes de frais');
-
-Time: 0,806 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $jrn_type[]=_('Financier');
 $jrn_type[]=_('Vente');
 $jrn_type[]=_('Achat');
 $jrn_type[]=_('Opérations Diverses');
-Time: 0,523 ms
-?>
-Timing is on.
-Autocommit is  OFF
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-\jrn_def_negative_warning[]=_('WARNING ! WARNING !');
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-Time: 1,223 ms
+$jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
 ?>

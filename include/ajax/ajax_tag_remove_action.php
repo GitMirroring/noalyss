@@ -22,11 +22,11 @@
  *@brief remove a tag from an event in the follow up
  */
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
-
+$http=new HttpInput();
 $fl=new Follow_Up($cn);
-$fl->ag_id=$_REQUEST['ag_id'];
+$fl->ag_id=$http->request('ag_id');
 
-if ( $g_user->can_write_action($fl->ag_id) == TRUE ) $fl->tag_remove($_REQUEST['t_id']);
+if ( $g_user->can_write_action($fl->ag_id) == TRUE ) $fl->tag_remove($http->request('t_id'));
 
 ob_start();
 

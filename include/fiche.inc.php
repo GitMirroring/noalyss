@@ -132,7 +132,7 @@ if ( $allcard == 0 ){
 if ($array == null && $allcard == 0 && $histo->selected != 3 )
 {
         echo '<div class="content">';
-	echo '<h2 class="info2"> '._('Aucune fiche trouvée').'</h2>';
+	echo '<h2 class="error"> '._('Aucune fiche trouvée').'</h2>';
 	echo $str_add_card;
         echo '</div>';
 	return;
@@ -206,7 +206,7 @@ if ($histo->selected   == -1)
 	// Create nav bar
 	$max = $cn->get_value("select count(*) from fiche as f " . $cond);
 
-	$step = $_SESSION['g_pagesize'];
+	$step = $_SESSION[SESSION_KEY.'g_pagesize'];
 	$page = (isset($_GET['offset'])) ? $_GET['page'] : 1;
 	$offset = (isset($_GET['offset'])) ? $_GET['offset'] : 0;
 	$bar = navigation_bar($offset, $max, $step, $page);

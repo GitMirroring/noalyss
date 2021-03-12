@@ -129,7 +129,7 @@ class Calendar
                  " to_char(tl_date,'MM')::integer=$1 ".
                  " and to_char(tl_date,'YYYY')::integer=$2 ".
                  " and use_login=$3 group by to_char(tl_date,'DD')::integer ";
-            $array=$cn->get_array($sql,array($this->month,$this->year,$_SESSION['g_user']));
+            $array=$cn->get_array($sql,array($this->month,$this->year,$_SESSION[SESSION_KEY.'g_user']));
             for ($i=0;$i<count($array);$i++)
             {
                 $ind=$array[$i]['tl_date_day'];
@@ -143,7 +143,7 @@ class Calendar
                  " to_char(tl_date,'MM')::integer=$1 ".
                  " and to_char(tl_date,'YYYY')::integer=$2 ".
                  " and use_login=$3  ";
-            $array=$cn->get_array($sql,array($this->month,$this->year,$_SESSION['g_user']));
+            $array=$cn->get_array($sql,array($this->month,$this->year,$_SESSION[SESSION_KEY.'g_user']));
             for ($i=0;$i<count($array);$i++)
             {
                 $ind=$array[$i]['tl_date_day'];

@@ -28,23 +28,71 @@
  */
 
 ?>
-<div style="margin-left: 30">
-<table>
-	<tr>
-		<TD> <?php echo _('Répertoire temporaire');?> </TD>
-		<TD> <?php echo $ictmp->input(); echo Icon_Action::infobulle(200);?></TD>
+<div style="margin-left: 5em">
+    <h2><?=_("Application")?></h2>
+    <div style="margin-left:5rem">
 
-	</tr>
-	<TR>
+    <table>
+        <tr>
+            <td>
+                <?php echo _('Administrateur de noalyss')?>
+            </td>
+            <td>
+                <?php echo $icadmin->input();echo Icon_Action::infobulle(210)?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo _('Mot de passe administrateur de noalyss')?>
+            </td>
+            <td>
+                <?php echo $icpassword_admin->input();?>
+                <?php echo Icon_Action::infobulle(209)?>
+            </td>
+        </tr>
 
-		<TD><?php echo _('Changement de langue');?></TD>
-		<TD> <?php echo $iclocale->input();echo Icon_Action::infobulle(201)?></TD>
-	</TR>
-	<TR>
-		<TD><?php echo _('Chemin complet vers les executable de Postgresql');?> </TD>
-		<TD><?php echo $icpath->input();echo Icon_Action::infobulle(202)?></TD>
-	</TR>
-	<TR>
+    </table>
+    </div>
+    <h2><?=_("Serveur")?></h2>
+        <div style="margin-left:5rem">
+    <table>
+        <tr>
+            <TD> <?php echo _('Répertoire temporaire');?> </TD>
+            <TD> <?php echo $ictmp->input(); echo Icon_Action::infobulle(200);?></TD>
+
+        </tr>
+        <TR>
+
+            <TD><?php echo _('Changement de langue');?></TD>
+            <TD> <?php echo $iclocale->input();echo Icon_Action::infobulle(201)?></TD>
+        </TR>
+        <TR>
+            <TD><?php echo _('Chemin complet vers les executable de Postgresql');?> </TD>
+            <TD><?php echo $icpath->input();echo Icon_Action::infobulle(202)?></TD>
+        </TR>
+        <tr>
+            <td><?php echo _('Mode Serveur mutualisé'). Icon_Action::infobulle(207) ?></td>
+            <td><?php echo $smulti->input() ?></td>
+        </tr>
+        <tr id="div_db" style="visibility:hidden">
+            <td>
+                <?php echo _('Nom base de donnée');?>
+
+            </td>
+            <td>
+                <?php echo $icdbname->input();echo Icon_Action::infobulle(206) ?>
+                <a href="https://wiki.noalyss.eu/doku.php?id=installation:installation_sur_serveur_mutualise" target="_blank"><?php echo _('Aide');?></a>
+            </td>
+        </tr>
+
+    </table>
+        </div>
+
+    <h2><?=_("Postgresql")?></h2>
+    <div style="margin-left:5rem">
+
+    <table>
+    <TR>
 		<TD><?php echo _('Utilisateur Postgresql');?> </TD>
 		<TD><?php echo $icuser->input();echo Icon_Action::infobulle(203)?></TD>
 	</TR>
@@ -52,23 +100,6 @@
 		<TD><?php echo _('Mot de passe de l\'utilisateur Postgresql');?> </TD>
 		<TD><?php echo $icpasswd->input();echo Icon_Action::infobulle(204)?></TD>
 </TR>
-<tr>
-    <td>
-        <?php echo _('Administrateur de noalyss')?>
-    </td>
-    <td>
-        <?php echo $icadmin->input();echo Icon_Action::infobulle(210)?>
-    </td>
-</tr>
-<tr>
-    <td>
-        <?php echo _('Mot de passe administrateur de noalyss')?>
-    </td>
-    <td>
-        <?php echo $icpassword_admin->input();?>
-        <?php echo Icon_Action::infobulle(209)?>
-    </td>
-</tr>
 <TR>
 	<TD><?php echo _('Adresse Serveur Postgresql');?> </TD>
 	<TD><?php echo $ichost->input();echo Icon_Action::infobulle(208)?></TD>
@@ -77,21 +108,8 @@
 	<TD><?php echo _('Port de Postgresql');?> </TD>
 	<TD><?php echo $icport->input();echo Icon_Action::infobulle(205)?></TD>
 </TR>
-<tr>
-	<td><?php echo _('Mode Serveur mutualisé'). Icon_Action::infobulle(207) ?></td>
-	<td><?php echo $smulti->input() ?></td>
-</tr>
-<tr id="div_db" style="visibility:hidden">
-	<td>
-		<?php echo _('Nom base de donnée');?>
-		
-	</td>
-	<td>
-		<?php echo $icdbname->input();echo Icon_Action::infobulle(206) ?>
-		<a href="https://wiki.noalyss.eu/doku.php?id=installation:installation_sur_serveur_mutualise" target="_blank"><?php echo _('Aide');?></a>
-	</td>
-</tr>
 </table>
+    </div>
 </div>
 <div class="notice">
 	<?php

@@ -29,14 +29,18 @@
      h2 {
          font-size: 105%;
          text-align: left;
-         text-decoration: underline;
+         text-decoration: none;
+         color:darkblue;
+         margin-bottom: 1rem;
+         margin-top: 1rem;
+
      }
      h3 {
          font-size : 102%;
          font-style: italic;
          margin-left: 3px;
      }
- 
+
     .button {
         font-size:110%;
         color:white;
@@ -79,7 +83,7 @@
 </head>
 <body>
 <p align="center">
-  <IMG SRC="image/logo7400.png" style="width: 400px;z-index:-1;position:fixed;top:30px;rigth:50px;opacity: 0.2" alt="NOALYSS">
+  <IMG SRC="image/logo8100.png" style="width: 30%;z-index:-1;position:fixed;top:30%;margin-left: 20%;opacity: 0.2" alt="NOALYSS">
 </p>
 <h1>NOALYSS : comptabilité - accountancy </h1>
 
@@ -141,7 +145,7 @@ load_all_script();
 echo '<div id="info_div"></div>';
 if ( $_GET['lang'] == "en_US.utf8" || $_GET['lang']=='fr_FR.utf8')
 {
-    $_SESSION['g_lang']=$_GET['lang'];
+    $_SESSION[SESSION_KEY.'g_lang']=$_GET['lang'];
     set_language();
 }
 ?>
@@ -256,13 +260,15 @@ if (isset($_POST['save_config'])) {
   // If conx successfull save the file or display it
   // -----
   if ( $err == 0 && $cnx !== false ) {
-       echo '<h1>'._('Important').'</h1>';
-       echo '<h2 class="warning">',_("Voici l'utilisateur et mot de passe de l'utilisateur administrateur de Noalyss , "
+      echo '<div style="border:red 1px solid">';
+       echo '<h1 style="padding-top:0px;margin-top:0px;background-color:orangered">'._('Important').'</h1>';
+       echo '<p style="padding:10px">',_("Voici l'utilisateur et mot de passe de l'utilisateur administrateur de Noalyss , "
                . " il a tous les droits et a accès à tout."
                . " Connectez-vous avec ses identifiants et changer le mot de passe dans préférence (en haut à droit)"),
-	 "</h2>";
-       echo '<p style="font-size:120%">'._('Utilisateur administrateur'),' ','<span style="color:red"> ',$cadmin,'</span>','</p>';
-       echo '<p style="font-size:120%">',_('Mot de passe'),'<span style="color:red"> '.$cpassword_admin.' </span>','</p>';
+	 "</p>";
+       echo '<p style="padding:10px;font-size:120%">'._('Utilisateur administrateur'),' ','<span style="color:red"> ',$cadmin,'</span>','</p>';
+       echo '<p style="padding:10px;font-size:120%">',_('Mot de passe'),'<span style="color:red"> '.$cpassword_admin.' </span>','</p>';
+       echo '</div>';
       // Create the db
       if (is_writable(NOALYSS_INCLUDE)) { 
         $url=config_file_create($_POST,1,$os); 

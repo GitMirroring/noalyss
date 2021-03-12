@@ -481,7 +481,7 @@ class HtmlInput
             $id=uniqid("xx");
         }
         $r="";
-        $r.='<a  id="'.$id.'" class="'.$p_class.'" onclick="'.$javascript.'">'.$p_symbole.h($action).'</a>';
+        $r.='<a  id="'.$id.'" href="javascript:void(0)" class="'.$p_class.'" onclick="'.$javascript.'">'.$p_symbole.h($action).'</a>';
         return $r;
     }
 
@@ -681,7 +681,7 @@ class HtmlInput
     static function array_to_string($array, $global_array, $start="?")
     {
 
-        $r=$start;
+        $r="";
 
         if (count($global_array)==0)
             return '';
@@ -705,7 +705,7 @@ class HtmlInput
             }
             $and="&amp;";
         }
-
+        if (trim ($r) != "") $r=$start.$r;
         return $r;
     }
 
@@ -829,16 +829,16 @@ class HtmlInput
     /**
      * Title for boxes, you can customize the symbol thanks symbol with
      * the mode "custom"
-     * @param type $name Title
-     * @param type $div element id, except for mode none or custom
-     * @param type $mod hide , close , zoom , custom or none, with
+     * @param string $p_name Title
+     * @param string $div element id, except for mode none or custom
+     * @param string $p_mod hide , close , zoom , custom or none, with
      * custom , the $name contains all the code
-     * @param type $p_js contains the javascript if mod = "custom" or "zoom" contains button + code 
-     * @param type $p_draggable , if set to yes the box will be draggable
+     * @param string $p_js contains the javascript if mod = "custom" or "zoom" contains button + code 
+     * @param char $p_draggable , y = yes n = no ,if set to yes the box will be draggable
      * @return type
      */
     static function title_box($p_name, $p_div, $p_mod="close", $p_js="",
-            $p_draggable="n")
+            $p_draggable="n",$p_enlarge='n')
     {
         $p_div=strip_tags($p_div);
         $r='<div class="bxbutton">';
@@ -847,6 +847,9 @@ class HtmlInput
         if ($p_draggable=="y")
         {
             $r.=Icon_Action::draggable($p_div);
+        }
+        if ( $p_enlarge=='y') {
+            $r.=Icon_Action::full_size($p_div);
         }
         if ($p_mod=='close')
         {
@@ -869,7 +872,9 @@ class HtmlInput
             $r.="";
         }
         else
-            die(__FILE__.":".__LINE__._('Paramètre invaide'));
+        {
+            throw new Exception(__FILE__.":".__LINE__._("Paramètre invalide p_mod = '$p_mod'"));
+        }
 
 
         $r.='</div>';
@@ -907,18 +912,19 @@ class HtmlInput
      * @param string $p_url  url
      * @param string $p_js javascript
      * @param string $p_style is the visuable effect (class, style...)
+     * @param string $p_title Title
      */
     static function anchor($p_text, $p_url="", $p_js="",
-            $p_style=' class="line" ')
+            $p_style=' class="line" ',$p_title="click")
     {
         if ($p_js!="")
         {
-            $p_url="javascript:void(0)";
+            $p_url='href="javascript:void(0)"';
           } else {
               $p_url=sprintf('href="%s"',$p_url);
         }
 
-        $str=sprintf('<a %s %s %s>%s</a>', $p_style, $p_url, $p_js, $p_text);
+        $str=sprintf('<a %s %s %s title="%s">%s</a>', $p_style, $p_url, $p_js, $p_title,$p_text);
         return $str;
     }
 
@@ -1135,16 +1141,7 @@ class HtmlInput
         return $js;
     }
 
-    static function button_action_add_concerned_card($p_agid)
-    {
-        $dossier=Dossier::id();
-        $javascript=<<<EOF
-                    obj={dossier:$dossier,ag_id:$p_agid};action_add_concerned_card(obj);
-EOF;
-        $js=HtmlInput::button_action(_('Ajout autres'), $javascript, 'xx',
-                        'smallbutton');
-        return $js;
-    }
+
 
     static function button_action_add()
     {

@@ -94,20 +94,20 @@ if (!isset($p_array['date_start']))
 	list($date_start, $date_end) = $per->get_date_limit();
 	$p_array['date_start'] = $date_start;
 	$p_array['date_end'] = $date_end;
-	$msg='<h2 class="info2">'.sprintf(_("Période %s au %s "),$date_start,$date_end).'</h2>';
+	$msg='<h2 class="">'.sprintf(_("Période %s au %s "),$date_start,$date_end).'</h2>';
 }
 else
 {
     $date_start=$http->get("date_start","string","");
     $date_end=$http->get("date_end","string","");
-    $msg='<h2 class="info2">'.sprintf(_("Période %s au %s "),$date_start,$date_end) .'</h2>';
+    $msg='<h2 class="">'.sprintf(_("Période %s au %s "),$date_start,$date_end) .'</h2>';
 
 }
 /*  compute the sql stmt */
 list($sql, $where) = $Ledger->build_search_sql($p_array);
 $max_line = $cn->count_sql($sql);
 
-$step = $_SESSION['g_pagesize'];
+$step = $_SESSION[SESSION_KEY.'g_pagesize'];
 $page = (isset($_GET['offset'])) ? $http->get('page') : 1;
 $offset = (isset($_GET['offset'])) ? $http->get('offset') : 0;
 
@@ -119,6 +119,7 @@ $bar = navigation_bar($offset, $max_line, $step, $page);
 
 echo $msg;
 echo $Ledger->display_search_form();
+echo HtmlInput::filter_table('history_operation_t', '0,1,2,3,4,5,6,7', 1);
 echo $bar;
 echo '<form method="GET" id="fpaida" class="print">';
 echo HtmlInput::hidden("ac", $http->request('ac'));
@@ -126,6 +127,8 @@ echo HtmlInput::hidden('ledger_type',$ledger_type);
 echo dossier::hidden();
 
 list($count, $html) = $Ledger->list_operation($sql, $offset, $ask_pay);
+
+
 echo $html;
 echo $bar;
 $r = HtmlInput::get_to_hidden(array('search_opnb_jrn',
@@ -161,8 +164,10 @@ if (isset($_GET['search_opr_jrn']))
 }
 echo $r;
 
-if ($ask_pay)
+if ($ask_pay) {
 	echo '<p>' . HtmlInput::submit('paid', _('Mise à jour paiement')) . IButton::select_checkbox('fpaida') . IButton::unselect_checkbox('fpaida') . '</p>';
+        echo ICheckBox::javascript_set_range("paid_operation_ck");
+}
 
 echo '</form>';
 /*
@@ -170,16 +175,27 @@ echo '</form>';
  */
 $r = HtmlInput::get_to_hidden(array('l', 'date_paid_start','date_paid_end',
 				    'date_start', 'date_end', 'desc', 'amount_min', 'amount_max', 'qcode','operation_filter',
-				    'accounting', 'unpaid', 'gDossier', 'ledger_type', 'p_action'));
+				    'accounting', 'unpaid', 'gDossier', 'ledger_type', 'p_action','search_optag_option'));
 if (isset($_GET['search_opr_jrn']))
 {
     foreach ($a_search_opr_jrn as $k => $v)
        if (isNumber($v))  $r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
 }
+$r.=HtmlInput::hidden("tag_option",$http->request("search_optag_option","string",0));
 if (isset($_GET['r_jrn']))
 {
 	foreach ($a_rjn as $k => $v)
 	if (isNumber($v)) 	$r.=HtmlInput::hidden('r_jrn[' . $k . ']', $v);
+}
+if (isset($_GET['search_optag'])) {
+    $http=new HttpInput();
+    $aTag=$http->get("search_optag","array");
+  foreach ($aTag as $k=>$v) {
+      // Protect : check that $k and $v are numeric
+    if (isNumber($k)&&isNumber($v)) {
+        $r.=HtmlInput::hidden('tag[]',$v);
+    }
+  }
 }
 echo '<form action="export.php" method="get">';
 echo $r;

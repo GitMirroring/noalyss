@@ -198,7 +198,7 @@ class HttpInput
 
     /**
      * Retrieve from $_POST
-     * @param $p_name name of the variable
+     * @param string $p_name name of the variable
      * @param $p_type type of the variable , opt. default string
      * @param $p_default default value is variable is not set
      * @throws Exception if invalid

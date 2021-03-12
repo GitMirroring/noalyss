@@ -24,11 +24,26 @@ if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
  *@see Follow_Up
  *@see Tag
  */
+$http=new HttpInput();
 
 $fl=new Follow_Up($cn);
-$fl->ag_id=$_REQUEST['ag_id'];
-if ( $g_user->can_write_action($fl->ag_id) == TRUE ) 
-            $fl->tag_add($_REQUEST['t_id']);
+
+$fl->ag_id=$http->request("ag_id","number");
+
+if ( $g_user->can_write_action($fl->ag_id) != TRUE )  return;
+
+if ( $http->request("isgroup") == 't') {
+    $fl->tag_add($http->request('t_id',"number"));
+} else {
+        // Add all the tag from the group 
+    $aTag=$cn->get_array("select t_id,t_tag ,t_color from jnt_tag_group_tag jtgt  join tags on (tag_id=t_id) where tag_group_id=$1 order by 2 ",[$http->request("t_id","number")]);
+    $nb_atag=count($aTag);
+    if ( $nb_atag > 0) {
+        for ($i=0;$i<$nb_atag;$i++){
+             $fl->tag_add($aTag[$i]['t_id']);
+        }
+    }
+}
 
 ob_start();
 

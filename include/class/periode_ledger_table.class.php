@@ -131,6 +131,7 @@ class Periode_Ledger_Table
         if ($pa_row["status"] == "OP") {
             $checkbox=new ICheckBox("sel_per_close[]");
             $checkbox->set_attribute("per_id", $pa_row['id']);
+            $checkbox->set_range("sel_per_close_ck");
             $checkbox->value=$pa_row['id'];
             echo "<td>".$checkbox->input()."</td>";
         }else {

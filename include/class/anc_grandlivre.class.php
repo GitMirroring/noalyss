@@ -24,6 +24,7 @@
  */
 require_once NOALYSS_INCLUDE.'/class/anc_print.class.php';
 require_once NOALYSS_INCLUDE.'/lib/impress.class.php';
+require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
 
 class Anc_GrandLivre extends Anc_Print
 {
@@ -60,7 +61,7 @@ class Anc_GrandLivre extends Anc_Print
         $pa_id_cond="";
         if ( isset ( $this->pa_id) && $this->pa_id !='')
             $pa_id_cond= "pa_id=".$this->pa_id." and";
-        $array=$this->db->get_array("	select oa_id,
+        $array=$this->db->get_array("	 select oa_id,
 	po_name,
 	oa_description,
 	po_description,
@@ -73,11 +74,10 @@ class Anc_GrandLivre extends Anc_Print
 	jr_id,
 	coalesce(jr_comment,b.oa_description) as jr_comment,
 	case when j_poste is null and b.f_id is not null then
-        (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=".ATTR_DEF_ACCOUNT.")
+        (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=23)
             when j_poste is not null then
             j_poste
-            end as j_poste
-        ,
+            end as j_poste,
 	coalesce(jrnx.f_id,b.f_id) as f_id,
         case when jrnx.f_id is not null then 
 		 (select ad_value from fiche_Detail where f_id=jrnx.f_id and ad_id=23) 
@@ -86,10 +86,17 @@ class Anc_GrandLivre extends Anc_Print
 	end
 		 as qcode,
         jr_pj_number,
-        jr_tech_per
+        jr_tech_per,
+        ftiers.cardid,
+        (select ad_value from fiche_detail where f_id=ftiers.cardid and ad_id=23) as qcode_tiers
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
 	left join jrn on  (j_grpt=jr_grpt_id)
+	left join ( 	select distinct qp_supplier as cardid,j_id from  quant_purchase qp 
+					union
+			       	select distinct qs_client,j_id from  quant_sold qs  
+			       	union 
+					select distinct qf_bank,j_id from  quant_fin qf ) as ftiers using (j_id)
              where $pa_id_cond oa_amount <> 0.0  $cond_poste  $filter_date
 	order by po_name,oa_date::date,qcode,j_poste");
         $this->has_data=count($array);
@@ -107,9 +114,10 @@ class Anc_GrandLivre extends Anc_Print
         $pa_id_cond="";
         if ( isset ( $this->pa_id) && $this->pa_id !='')
             $pa_id_cond= "pa_id=".$this->pa_id." and";
-        $array=$this->db->get_array("	select
+        $array=$this->db->get_array("	 select
 	po_name,
 	to_char(oa_date,'DD.MM.YYYY') as oa_date,
+        to_char(jr_date_paid,'DD.MM.YY') as strdate_paid,
 	case when j_poste is null and b.f_id is not null then
         (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=".ATTR_DEF_ACCOUNT.")
             when j_poste is not null then
@@ -123,16 +131,28 @@ class Anc_GrandLivre extends Anc_Print
 	end
 		 as qcode,
         coalesce(jr_comment,b.oa_description) as jr_comment,
+        (select ad_value from fiche_detail where f_id=ftiers.cardid and ad_id=23) as qcode_tiers,
         coalesce (jr_pj_number,'') as jr_pj_number,
 	coalesce(jr_internal,'') as jr_internal,
         coalesce(oa_group,0) as oa_group,
 	case when oa_debit='t' then oa_amount else  0 end as amount_deb,
 	case when oa_debit='f' then oa_amount else  0 end as amount_cred,
-        case when oa_debit='f' then 'C' else  'D' end as deb_cred
+        case when oa_debit='f' then 'C' else  'D' end as deb_cred,
+    ac.str_action   
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
 	left join jrn on  (j_grpt=jr_grpt_id)
-             where $pa_id_cond oa_amount <> 0.0  $cond_poste $filter_date
+        left join ( 	select distinct qp_supplier as cardid,j_id from  quant_purchase qp 
+					union
+			       	select distinct qs_client,j_id from  quant_sold qs  
+			       	union 
+					select distinct qf_bank,j_id from  quant_fin qf ) as ftiers using (j_id)
+    left join (select j.jr_id,string_agg( ag_id::text,'-') as str_action 
+                from jrn j  left 
+                join action_gestion_operation ago  on (j.jr_id=ago.jr_id ) 
+                group by j.jr_id) as ac on (ac.jr_id=jrn.jr_id)					
+    where 
+        $pa_id_cond oa_amount <> 0.0  $cond_poste $filter_date
 	order by po_name,oa_date::date,qcode,j_poste");
 
 
@@ -149,7 +169,7 @@ class Anc_GrandLivre extends Anc_Print
     {
         if (CONVERT_GIF_PDF <> 'NOT' && PDFTK <> 'NOT')
         {
-            $r = "";
+            $r="";
             $r.= HtmlInput::hidden("to", $this->to);
             $r.= HtmlInput::hidden("from", $this->from);
             $r.= HtmlInput::hidden("pa_id", $this->pa_id);
@@ -188,7 +208,7 @@ class Anc_GrandLivre extends Anc_Print
         {
             return 0;
         }
-        $r.= '<table class="result" style="width:100%">';
+        $r.= '<table class="result" style="width:100%;border-color:transparent">';
         $ix = 0;
         $prev = 'xx';
         $idx = 0;
@@ -207,13 +227,14 @@ class Anc_GrandLivre extends Anc_Print
 		    $r.=td('') . td('') . td('');
                     $r.=td('') . td('') . td('') . td('') . td('') . td(nbm($tot_deb), ' class="num"') . td(nbm($tot_cred), ' class="num"') . td(nbm($tot_solde) . $sign, ' class="num"');
                 }
-                $r.='<tr>' . '<td colspan="7" style="width:auto">' . '<h2>' . h($row['po_name'] . ' ' . $row['po_description']) . '</td></tr>';
+                $r.='<tr>' . '<td colspan="12" style="width:auto">' . '<h2>' . h($row['po_name'] . ' ' . $row['po_description']) . '</td></tr>';
                 $r.= '<tr>' .
                         '<th>' . '</th>' .
                         '<th>' . _('Date') . '</th>' .
                         '<th>' . _('Poste') . '</th>' .
                         '<th>' . _('Quick_code') . '</th>' .
                         '<th>' . _('Libellé') . '</th>' .
+                        th(_("Tiers")).
                         '<th>' . '</th>' .
                         '<th>' . _('Pièce') . '</th>' .
                         '<th>' . _('Interne') . '</th>' .
@@ -259,6 +280,7 @@ class Anc_GrandLivre extends Anc_Print
                 if ($str_document != "")
                 {
                     $ck = new ICheckBox('ck[]', $row['jr_id']);
+                    $ck->set_range("document_export_ck");
                     $str_ck = $ck->input();
                 }
             }
@@ -269,6 +291,7 @@ class Anc_GrandLivre extends Anc_Print
                     td($post_detail) .
                     td($card_detail) .
                     td($row['jr_comment']) .
+                    td($row["qcode_tiers"]).
                     '<td>' . $str_document . '</td>' .
                     td($row['jr_pj_number']) .
                     '<td>' . $detail . '</td>' .
@@ -284,18 +307,14 @@ class Anc_GrandLivre extends Anc_Print
         $r.=td('') . td('') . td('') . td('') . td('') . td(nbm($tot_deb), ' class="num"') . td(nbm($tot_cred), ' class="num"') . td(nbm($tot_solde) . $sign, '  class="num"');
 
         $r.= '</table>';
+        $r.=ICheckBox::javascript_set_range("document_export_ck");
         return $r;
     }
       /*!
-     * \brief Show the button to export in PDF or CSV
-     * \param $url_csv url of the csv
-     * \param $url_pdf url of the pdf
-     * \param $p_string hidden data to include in the form
-     *
-     *
+     * \brief Show the button to export  CSV
      * \return string with the button
      */
-    function show_button($p_string="")
+    function button_export_csv($p_string="")
     {
         $r="";
         $r.= '<form method="GET" action="export.php"  style="display:inline">';
@@ -307,7 +326,7 @@ class Anc_GrandLivre extends Anc_Print
         $r.= HtmlInput::hidden("to_poste",$this->to_poste);
         $r.= $p_string;
         $r.= dossier::hidden();
-        $r.=HtmlInput::submit('bt_csv',"Export en CSV");
+        $r.=HtmlInput::submit('bt_csv',_("Export en CSV"));
         $r.= '</form>';
         return $r;
     }
@@ -327,15 +346,18 @@ class Anc_GrandLivre extends Anc_Print
         $aheader=array();
         $aheader[]=array("title"=>'Imp. Analytique','type'=>'string');
         $aheader[]=array("title"=>'Date','type'=>'string');
+        $aheader[]=array("title"=>'Date Pay','type'=>'string');
         $aheader[]=array("title"=>'Poste','type'=>'string');
         $aheader[]=array("title"=>'Quick_Code','type'=>'string');
         $aheader[]=array("title"=>'libelle','type'=>'string');
+        $aheader[]=array("title"=>'tiers','type'=>'string');
         $aheader[]=array("title"=>'Pièce','type'=>'string');
         $aheader[]=array("title"=>'Num.interne','type'=>'string');
         $aheader[]=array("title"=>'row','type'=>'string');
         $aheader[]=array("title"=>'Debit','type'=>'num');
         $aheader[]=array("title"=>'Credit','type'=>'num');
         $aheader[]=array("title"=>'D/C','type'=>'string');
+        $aheader[]=array("title"=>'Action','type'=>'string');
         Impress::array_to_csv($array, $aheader,"export-anc-grandlivre");
     }
 }

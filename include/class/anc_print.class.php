@@ -62,19 +62,20 @@ class Anc_Print
      */
     function get_request()
     {
+        $http=new HttpInput();
         if ( isset($_REQUEST['from']))
-            $this->from=$_REQUEST['from'];
+            $this->from=$http->request('from');
 
         if ( isset($_REQUEST['to']))
-            $this->to=$_REQUEST['to'];
+            $this->to=$http->request('to');
 
         if ( isset($_REQUEST['from_poste']))
-            $this->from_poste=$_REQUEST['from_poste'];
+            $this->from_poste=$http->request('from_poste');
 
         if ( isset($_REQUEST['to_poste']))
-            $this->to_poste=$_REQUEST['to_poste'];
+            $this->to_poste=$http->request('to_poste');
         if ( isset($_REQUEST['pa_id']))
-            $this->pa_id=$_REQUEST['pa_id'];
+            $this->pa_id=$http->request('pa_id');
         else
             $this->pa_id="";
 

@@ -823,10 +823,10 @@ class Acc_Ledger  extends jrn_def_sql
                 ob_start();
         echo '<div id="predef_form">';
         echo HtmlInput::hidden('p_jrn_predef', $this->id);
-        $op=new Pre_op_ods($this->db);
-        $op->set('ledger', $this->id);
-        $op->set('ledger_type', "ODS");
-        $op->set('direct', 't');
+        $op=new Pre_operation( $this->db);
+        $op->set_p_jrn($this->id);
+        $op->set_jrn_type("ODS");
+
         $url=http_build_query(
                 array('action'=>'use_opd', 
                     'p_jrn_predef'=>$this->id,
@@ -932,7 +932,7 @@ class Acc_Ledger  extends jrn_def_sql
         $ret.=HtmlInput::hidden('jrn_type', $this->get_type());
         $info=Icon_Action::infobulle(0);
         $info_poste=Icon_Action::infobulle(9);
-        $ret.='<table id="quick_item" style="position:float;width:100%">';
+        $ret.='<table id="quick_item" style="width:100%">';
         $ret.='<tr>'.
                 '<th style="text-align:left">Quickcode'.$info.'</th>'.
                 '<th style="text-align:left">'._('Poste').$info_poste.'</th>'.
@@ -976,7 +976,6 @@ class Acc_Ledger  extends jrn_def_sql
             // Account
             $poste=new IPoste();
             $poste->name='poste'.$i;
-            $poste->set_attribute('jrn', $this->id);
             $poste->set_attribute('ipopup', 'ipop_account');
             $poste->set_attribute('label', 'ld'.$i);
             $poste->set_attribute('account', 'poste'.$i);
@@ -1172,7 +1171,7 @@ class Acc_Ledger  extends jrn_def_sql
                 throw new Exception(
                         sprintf ( 
                                 _('Vous utilisez le mode strict la dernière operation est la date du %s
-                vous ne pouvez pas encoder à une date antérieure',$last_date)),
+                vous ne pouvez pas encoder à une date antérieure'),$last_date),
                 15);
         }
 
@@ -1474,14 +1473,16 @@ class Acc_Ledger  extends jrn_def_sql
 
             $this->pj=$acc_end->set_pj();
 
-            $this->db->exec_sql("update jrn set jr_internal='".$internal."' where ".
-                    " jr_grpt_id = ".$seq);
+            $this->db->exec_sql("update jrn set jr_internal=$1 
+                        where jr_grpt_id = $2",array($internal,$seq));
+
             $this->internal=$internal;
             // Save now the predef op
             //------------------------
             if (isset($opd_name)&&trim($opd_name)!="")
             {
-                $opd=new Pre_Op_Advanced($this->db);
+                $opd=new Pre_operation($this->db);
+                $opd->set_od_direct('t');
                 $opd->get_post();
                 $opd->save();
             }
@@ -1533,12 +1534,13 @@ class Acc_Ledger  extends jrn_def_sql
     /**
      * @brief get the first ledger
      * @param  type
-     * @return the j_id
+     * @return the j_id or null if no user available
      */
     public function get_first($p_type, $p_access=3)
     {
         global $g_user;
         $all=$g_user->get_ledger($p_type, $p_access);
+        if (empty ($all)) return NULL;
         return $all[0];
     }
 
@@ -1821,7 +1823,7 @@ class Acc_Ledger  extends jrn_def_sql
         $filename="";
         $doc->Generate($p_array, $p_array['e_pj']);
         // Move the document to the jrn
-        $doc->MoveDocumentPj($internal);
+        $doc->moveDocumentPj($internal);
         // Update the comment with invoice number, if the comment is empty
         if (!isset($e_comm)||strlen(trim($e_comm))==0)
         {
@@ -2186,8 +2188,8 @@ class Acc_Ledger  extends jrn_def_sql
             echo Acc_Reconciliation::$javascript;
             html_page_start();
             $cn=Dossier::connect();
-            $_SESSION['g_user']=NOALYSS_ADMINISTRATOR;
-            $_SESSION['g_pass']='phpcompta';
+            $_SESSION[SESSION_KEY.'g_user']=NOALYSS_ADMINISTRATOR;
+            $_SESSION[SESSION_KEY.'g_pass']='phpcompta';
 
             $id=(isset($_REQUEST['p_jrn']))?$_REQUEST['p_jrn']:-1;
             $a=new Acc_Ledger($cn, $id);
@@ -2211,7 +2213,7 @@ class Acc_Ledger  extends jrn_def_sql
                 echo '<input type="hidden" value="'.$id.'" name="p_jrn">';
                 $op=new Pre_operation($cn);
                 $op->p_jrn=$id;
-                $op->od_direct='t';
+
                 if ($op->count()!=0)
                 {
                     echo HtmlInput::submit('use_opd',
@@ -2279,8 +2281,8 @@ class Acc_Ledger  extends jrn_def_sql
             html_page_start();
             $cn=Dossier::connect();
             $ledger=new Acc_Ledger($cn, 0);
-            $_SESSION['g_user']=NOALYSS_ADMINISTRATOR;
-            $_SESSION['g_pass']='phpcompta';
+            $_SESSION[SESSION_KEY.'g_user']=NOALYSS_ADMINISTRATOR;
+            $_SESSION[SESSION_KEY.'g_pass']='phpcompta';
             echo $ledger->search_form('ALL');
         }
         ///////////////////////////////////////////////////////////////////////////
@@ -2542,7 +2544,12 @@ class Acc_Ledger  extends jrn_def_sql
      */
     function verify_ledger($array)
     {
-        extract($array, EXTR_SKIP);
+        
+        $p_jrn=$array['p_jrn'];
+        $p_jrn_deb_max_line=$array['p_jrn_deb_max_line'];
+        $p_jrn_name=$array['p_jrn_name'];
+        $p_jrn_type=$array['p_jrn_type'];
+        
         try
         {
             if (isNumber($p_jrn)==0)
@@ -2556,8 +2563,10 @@ class Acc_Ledger  extends jrn_def_sql
                 throw new Exception(_("Un journal avec ce nom existe déjà"));
             if ($p_jrn_type=='FIN')
             {
+                $http=new \HttpInput();
                 $a=new Fiche($this->db);
-                $result=$a->get_by_qcode(trim(strtoupper($_POST['bank'])), false);
+                $bank=$http->post("bank");
+                $result=$a->get_by_qcode(trim(strtoupper($bank)), false);
                 if ($result==1)
                     throw new Exception(_("Aucun compte en banque n'est donné"));
             }
@@ -2566,11 +2575,17 @@ class Acc_Ledger  extends jrn_def_sql
                 throw new Exception(_('Choix du type de journal est obligatoire'));
             }
 
-           if (isset( $negative_warning) && $negative_amount == 1 && trim($negative_warning)=="") {
+           if ( isset( $array['negative_warning']) && 
+                isset( $array['negative_amount']) &&
+                $array['negative_amount'] == 1 
+                   && trim($array['negative_warning'])=="") {
 
                 throw new Exception(_("Avertissement ne peut être vide"));
             }
-            if ( isset( $negative_amount)  && $negative_amount <> 0 && $negative_amount <> 1 ){
+            if ( isset( $array['negative_amount'])  &&
+                 $array['negative_amount'] <> 0 &&
+                 $array['negative_amount'] <> 1 )
+             {
                   throw new Exception(_("Valeur invalide"));
             }
         }

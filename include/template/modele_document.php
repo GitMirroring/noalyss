@@ -117,6 +117,6 @@ echo dossier::hidden();
 echo HtmlInput::hidden('sa','mod_template');
 echo HtmlInput::hidden('id',$doc->md_id);
 echo HtmlInput::submit("mod",_('Sauver'));
-
+echo HtmlInput::button_hide("mod_doc");
 ?>
 </form>

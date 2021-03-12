@@ -2441,7 +2441,6 @@ $$;
 
 SET default_tablespace = '';
 
-SET default_with_oids = true;
 
 
 CREATE TABLE action (
@@ -2460,7 +2459,6 @@ COMMENT ON TABLE action IS 'The different privileges';
 COMMENT ON COLUMN action.ac_code IS 'this code will be used in the code with the function User::check_action ';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE action_detail (
@@ -2530,7 +2528,6 @@ CREATE SEQUENCE action_gestion_ag_id_seq
     CACHE 1;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE action_gestion (
@@ -2594,7 +2591,6 @@ COMMENT ON COLUMN action_gestion.ag_contact IS ' contact of the third part ';
 COMMENT ON COLUMN action_gestion.ag_state IS 'state of the action same as document_state ';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE action_gestion_comment (
@@ -2760,7 +2756,6 @@ CREATE SEQUENCE action_tags_at_id_seq
 ALTER SEQUENCE action_tags_at_id_seq OWNED BY action_tags.at_id;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE attr_def (
@@ -2796,7 +2791,6 @@ CREATE SEQUENCE bilan_b_id_seq
     CACHE 1;
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE bilan (
@@ -2885,7 +2879,6 @@ CREATE SEQUENCE bud_detail_periode_bdp_id_seq
     CACHE 1;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE centralized (
@@ -2910,7 +2903,6 @@ CREATE TABLE centralized (
 COMMENT ON TABLE centralized IS 'The centralized journal';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE del_action (
@@ -3016,7 +3008,6 @@ CREATE SEQUENCE document_d_id_seq
     CACHE 1;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE document (
@@ -3118,7 +3109,6 @@ COMMENT ON TABLE document_type IS 'Type of document : meeting, invoice,...';
 COMMENT ON COLUMN document_type.dt_prefix IS 'Prefix for ag_ref';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE extension (
@@ -3172,7 +3162,6 @@ CREATE SEQUENCE extension_ex_id_seq
 ALTER SEQUENCE extension_ex_id_seq OWNED BY extension.ex_id;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE fiche (
@@ -3225,7 +3214,6 @@ CREATE TABLE fiche_detail (
 COMMENT ON TABLE fiche_detail IS 'join between the card and the attribut definition';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE forecast (
@@ -3350,7 +3338,6 @@ CREATE SEQUENCE forecast_item_fi_id_seq
 ALTER SEQUENCE forecast_item_fi_id_seq OWNED BY forecast_item.fi_id;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE form (
@@ -3373,7 +3360,6 @@ CREATE TABLE formdef (
 );
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE groupe_analytique (
@@ -3412,7 +3398,6 @@ CREATE SEQUENCE s_jnt_id
     CACHE 1;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE jnt_fic_attr (
@@ -3427,7 +3412,6 @@ CREATE TABLE jnt_fic_attr (
 COMMENT ON TABLE jnt_fic_attr IS 'join between the family card and the attribut definition';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE jnt_letter (
@@ -3448,7 +3432,6 @@ CREATE SEQUENCE jnt_letter_jl_id_seq
 ALTER SEQUENCE jnt_letter_jl_id_seq OWNED BY jnt_letter.jl_id;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE jrn (
@@ -3515,7 +3498,6 @@ COMMENT ON TABLE jrn_def IS 'Definition of a journal, his properties';
 COMMENT ON COLUMN jrn_def.jrn_enable IS 'Set to 1 if the ledger is enable ';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE jrn_info (
@@ -3582,7 +3564,6 @@ CREATE TABLE jrn_periode (
 );
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE jrn_rapt (
@@ -3632,7 +3613,6 @@ CREATE TABLE jrnx (
 COMMENT ON TABLE jrnx IS 'Journal: content one line for each accountancy writing';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE key_distribution (
@@ -4044,7 +4024,6 @@ COMMENT ON COLUMN operation_analytique.oa_positive IS 'Sign of the amount';
 COMMENT ON COLUMN operation_analytique.f_id IS 'FK to fiche.f_id , used only with ODS';
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE parameter (
@@ -4093,7 +4072,6 @@ CREATE TABLE parm_periode (
 COMMENT ON TABLE parm_periode IS 'Periode definition';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE parm_poste (
@@ -4385,7 +4363,6 @@ CREATE TABLE quant_purchase (
 COMMENT ON COLUMN quant_purchase.qp_vat_sided IS 'amount of the VAT which avoid VAT, case of the VAT which add the same amount at the deb and cred';
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE quant_sold (
@@ -4867,7 +4844,6 @@ CREATE SEQUENCE seq_doc_type_9
     CACHE 1;
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE stock_change (
@@ -4893,7 +4869,6 @@ CREATE SEQUENCE stock_change_c_id_seq
 ALTER SEQUENCE stock_change_c_id_seq OWNED BY stock_change.c_id;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE stock_goods (
@@ -4918,7 +4893,6 @@ CREATE TABLE stock_goods (
 COMMENT ON TABLE stock_goods IS 'About the goods';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE stock_repository (
@@ -5008,7 +4982,6 @@ CREATE SEQUENCE tmp_pcmn_id_seq
     CACHE 1;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE tmp_pcmn (
@@ -5034,7 +5007,6 @@ COMMENT ON COLUMN tmp_pcmn.id IS 'allow to identify the row, it is unique and no
 COMMENT ON COLUMN tmp_pcmn.pcm_direct_use IS 'Value are N or Y , N cannot be used directly , not even through a card';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE tmp_stockgood (
@@ -5158,7 +5130,6 @@ CREATE TABLE tool_uos (
 );
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE tva_rate (
@@ -5175,7 +5146,6 @@ CREATE TABLE tva_rate (
 COMMENT ON TABLE tva_rate IS 'Rate of vat';
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE user_active_security (
@@ -5248,7 +5218,6 @@ CREATE SEQUENCE user_filter_id_seq
 ALTER SEQUENCE user_filter_id_seq OWNED BY user_filter.id;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE user_local_pref (
@@ -5282,7 +5251,6 @@ CREATE TABLE user_sec_act (
 );
 
 
-SET default_with_oids = false;
 
 
 CREATE TABLE user_sec_action_profile (
@@ -5323,7 +5291,6 @@ CREATE SEQUENCE user_sec_action_profile_ua_id_seq
 ALTER SEQUENCE user_sec_action_profile_ua_id_seq OWNED BY user_sec_action_profile.ua_id;
 
 
-SET default_with_oids = true;
 
 
 CREATE TABLE user_sec_jrn (

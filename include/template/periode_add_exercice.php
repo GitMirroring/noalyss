@@ -70,9 +70,18 @@ de fin d'exercice: amortissements, régulations de compte... Avec une 13ième p�
             </td>
         </tr>
     </table>
-    <?php
-    echo HtmlInput::submit("add_exercicebt", _("Ajout d'un exercice comptable"));
-    ?>
+    <ul class="aligned-block">
+    <li>
+        <?php
+        echo HtmlInput::submit("add_exercicebt", _("Ajout d'un exercice comptable"));
+       ?>
+    </li>
+    <li>
+        <?php
+        echo HtmlInput::button_hide('exercice_add');
+       ?>
+    </li>
+    </ul>
 </form>
 <script charset="UTF8" lang="javascript">
     function validate()

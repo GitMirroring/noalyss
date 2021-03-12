@@ -611,7 +611,7 @@ class DatabaseCore
      *
      * \param $p_sql  sql statement, only the first two column will be returned in
      *  an array. The first col. is the label and the second the value
-     *  \param $p_null if the array start with a null value
+     *  \param $p_null if the array start with a null value Yes = 1 , No=0
      *  \param $p_array is the array with the bind value
      * \note this function is used with ISelect when it is needed to have a list of
      * options.
@@ -955,6 +955,24 @@ class DatabaseCore
      */
     static  function nb_column($p_ret) {
         return pg_num_fields($p_ret);
+    }
+    /**
+     * FInd if a SQL Select has a SQL stmt to inject or damage Data
+     * When a SELECT SQL string is build, this string could contain a SQL attempt to damage data,
+     *so the statement DELETE TRUNCATE ... are forbidden. Throw an exception EXC_INVALID
+     *
+     */
+    function search_sql_inject($p_sql)
+    {
+        $forbid_sql=array("update","delete","truncate","insert");
+        // protect against SQL inject
+        foreach ($forbid_sql as $forbid_key) {
+            if (stripos($p_sql,$forbid_key) !== false)
+            {
+                throw new Exception(_("Possible SQL inject",EXC_INVALID));
+            }
+
+        }
     }
 
 }

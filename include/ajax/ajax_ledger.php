@@ -42,6 +42,7 @@ require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
 require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/tag_operation.class.php';
 $http=new HttpInput();
 
 /**
@@ -65,7 +66,7 @@ catch (Exception $exc)
 }
 
 /**
- *if $_SESSION['g_user'] is not set : echo a warning
+ *if $_SESSION[SESSION_KEY.'g_user'] is not set : echo a warning
  */
 
 $cn=Dossier::connect();
@@ -223,8 +224,7 @@ case 'file':
     $obj=$op->get_quant();	/* return an obj. ACH / FIN or VEN or null if nothing is found*/
     
     $repo = new Database();
-    $theme = $repo->get_value("select the_filestyle from theme where the_name=$1", array($_SESSION['g_theme']));
-    html_min_page_start($theme);
+    html_min_page_start($_SESSION[SESSION_KEY.'g_theme']);
 
     // if there is a receipt document
     if ( $obj->det->jr_pj_name=='')
@@ -237,7 +237,9 @@ case 'file':
         }
         if ( $access=='W')
         {
-            echo '<FORM METHOD="POST" ENCTYPE="multipart/form-data" id="form_file">';
+            $check_receipt=sprintf("check_receipt_size('%s','file%s')",
+                MAX_FILE_SIZE,$div);
+            echo '<FORM METHOD="POST" ENCTYPE="multipart/form-data" id="form_file" >';
 
             $sp=new ISpan('file'.$div);
             $sp->style="display:none;background-color:red;color:white;font-size:12px";
@@ -247,8 +249,10 @@ case 'file':
             echo dossier::hidden();
             echo HtmlInput::hidden('jr_id',$jr_id);
             echo HtmlInput::hidden('div',$div);
+            echo '<INPUT TYPE="FILE" id="receipt_id" name="pj" onchange="'.$check_receipt.'">';
 
-            echo '<INPUT TYPE="FILE" name="pj" onchange="getElementById(\'file'.$div.'\').style.display=\'inline\';submit(this);">';
+            echo '<p id="receipt_info_id" class="error"></p>';
+
             echo '</FORM>';
         }
         else
@@ -284,17 +288,20 @@ case 'file':
         {
             // Not possible to remove the file thanks a modal dialog box,
             // because of the frameset
-            $x=sprintf('<a class="smallbutton icon" style="margin-left:12;margin-right:12" href="ajax_misc.php?op=ledger&gDossier=%d&div=%s&jr_id=%s&act=rmf" onclick="return confirm(\'Effacer le document ?\')">'."x".'</a>',
-                       $gDossier,$div,$jr_id);
-            
+
+            $x=Icon_Action::trash(uniqid(),
+                sprintf("if (confirm(content[47])) {document.location.href='ajax_misc.php?op=ledger&gDossier=%d&div=%s&jr_id=%s&act=rmf'}",
+                    $gDossier,$div,$jr_id));
+
         }  
         $filename= $obj->det->jr_pj_name;
-        if ( strlen($obj->det->jr_pj_name) > 20 )
+        if ( strlen($obj->det->jr_pj_name) > 60 )
         {
-            $filename=mb_substr($obj->det->jr_pj_name,0,23);
+            $filename=mb_substr($obj->det->jr_pj_name,0,60);
         }
         echo HtmlInput::show_receipt_document($jr_id,h($filename));
         echo $x;
+        echo '<p id="receipt_info_id" class="error"></p>';
         echo '</div>';
         echo '</body></html>';
         exit();
@@ -313,29 +320,24 @@ case 'loadfile':
         // Show a link to the new file
         $op->get();
         $obj=$op->get_quant();	/* return an obj. ACH / FIN or VEN or null if nothing is found*/
-
-        echo "<html><head>";
-        $repo=new Database();
-        $theme=$repo->get_value("select the_filestyle from theme where the_name=$1",array($_SESSION['g_theme']));
-        echo    "   <LINK REL=\"stylesheet\" type=\"text/css\" href=\"$theme\" media=\"screen\">";
-        echo "</head>";
+        html_min_page_start($_SESSION[SESSION_KEY.'g_theme']);
 		if ( ! isset($_REQUEST['ajax']) ) echo "<body class=\"op_detail_frame\">"; else echo "<body>";
-		echo "<h2>"._("Document")."</h2>";
         echo '<div class="op_detail_frame">';
-        
+        $x="";
         // check if the user can remove a document
         if ($g_user->check_action (RMRECEIPT) == 1) {
             // Not possible to remove the file thanks a modal dialog box,
             // because of the frameset
-            $x=sprintf('<a class="mtitle" class="notice" style="margin-left:12;margin-right:12px" href="ajax_misc.php?op=ledger&gDossier=%d&div=%s&jr_id=%s&act=rmf" onclick="return confirm(\'Effacer le document ?\')">'.SMALLX.'</a>',
-                   $gDossier,$div,$jr_id);
-            echo $x;
+            $x=Icon_Action::trash(uniqid(),
+                    sprintf("if (confirm(content[47])) {document.location.href='ajax_misc.php?op=ledger&gDossier=%d&div=%s&jr_id=%s&act=rmf'}",
+                    $gDossier,$div,$jr_id));
         }
         $filename= $obj->det->jr_pj_name;
         echo HtmlInput::show_receipt_document($jr_id,h($filename));
+        echo $x;
 
         echo '</div>';
-
+        echo '</body></html>';
     }
     exit();
 /////////////////////////////////////////////////////////////////////////////
@@ -344,16 +346,14 @@ case 'loadfile':
 case 'rmf':
     if (   $access == 'W' && $g_user->check_action (RMRECEIPT) == 1)
     {
-        echo "<html><head>";
         $repo=new Database();
-        $theme=$repo->get_value("select the_filestyle from theme where the_name=$1",array($_SESSION['g_theme']));
-        echo    "   <LINK REL=\"stylesheet\" type=\"text/css\" href=\"$theme\" media=\"screen\">";
-        echo "</head><body class=\"op_detail_frame\">";
-		echo "<h2>"._("Document")."</h2>";
+        html_min_page_start($_SESSION[SESSION_KEY.'g_theme']);
         echo '<div class="op_detail_frame">';
+        $check_receipt=sprintf("check_receipt_size('%s','file%s')",
+            MAX_FILE_SIZE,$div);
         echo '<FORM METHOD="POST" ENCTYPE="multipart/form-data" id="form_file">';
         $sp=new ISpan('file'.$div);
-        $sp->style="display:none;width:155;height:15;background-color:red;color:white;font-size:10";
+        $sp->style="display:none;width:155px;height:15px;background-color:red;color:white;font-size:10px";
         $sp->value=_("Chargement");
         echo $sp->input();
 
@@ -362,7 +362,8 @@ case 'rmf':
         echo HtmlInput::hidden('jr_id',$jr_id);
         echo HtmlInput::hidden('div',$div);
 
-        echo '<INPUT TYPE="FILE" name="pj" onchange="getElementById(\'file'.$div.'\').style.display=\'inline\';submit(this);">';
+        echo '<INPUT TYPE="FILE" id="receipt_id" name="pj" onchange="'.$check_receipt.'">';
+        echo '<p id="receipt_info_id" class="error"></p>';
         echo '</FORM>';
         $ret=$cn->exec_sql("select jr_pj from jrn where jr_id=$1",array($jr_id));
         if (Database::num_row($ret) != 0)

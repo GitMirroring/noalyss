@@ -34,14 +34,14 @@ require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
  */
 class Fiche_Def
 {
-    var $cn;           // database connection
-    var $id;			// id (fiche_def.fd_id
-    var $label;			// fiche_def.fd_label
-    var $class_base;		// fiche_def.fd_class_base
-    var $fiche_def;		// fiche_def.frd_id = fiche_def_ref.frd_id
-    var $create_account;		// fd_create_account: flag
+    var $cn;           //!< database connection
+    var $id;			//!< id (fiche_def.fd_id
+    var $label;			//!< fiche_def.fd_label
+    var $class_base;		//!< fiche_def.fd_class_base
+    var $fiche_def;		//!< fiche_def.frd_id = fiche_def_ref.frd_id
+    var $create_account;		//!< fd_create_account: flag
     var $all;
-    var $attribut;		// get from attr_xxx tables
+    var $attribut;		//!< get from attr_xxx tables
     function __construct($p_cn,$p_id = 0)
     {
         $this->cn=$p_cn;
@@ -75,10 +75,10 @@ class Fiche_Def
     function getAttribut()
     {
         $sql="select * from jnt_fic_attr ".
-             " natural join attr_def where fd_id=".$this->id.
+             " natural join attr_def where fd_id= $1".
              " order by jnt_order";
 
-        $Ret=$this->cn->exec_sql($sql);
+        $Ret=$this->cn->exec_sql($sql,[$this->id]);
 
         if ( ($Max=Database::num_row($Ret)) == 0 )
             return ;
@@ -324,10 +324,10 @@ $order
              where ad_id=1 and fd_id=$1 order by 2";
 
         // we use navigation_bar
-        if ($step == 1  && $_SESSION['g_pagesize'] != -1   )
+        if ($step == 1  && $_SESSION[SESSION_KEY.'g_pagesize'] != -1   )
         {
             $offset=(isset($_GET['offset']))?$_GET['offset']:0;
-            $step=$_SESSION['g_pagesize'];
+            $step=$_SESSION[SESSION_KEY.'g_pagesize'];
             $sql.=" offset $offset limit $step";
         }
 
@@ -370,7 +370,7 @@ $order
         $this->get();
         echo '<H2 class="info">'.$this->id." ".$this->label.'</H2>';
 
-        $step=$_SESSION['g_pagesize'];
+        $step=$_SESSION[SESSION_KEY.'g_pagesize'];
         $sql_limit="";
         $sql_offset="";
         $bar="";
@@ -398,7 +398,7 @@ $order
         $str="";
         // save the url
         // with offet &offset=15&step=15&page=2&size=15
-        if ( $_SESSION['g_pagesize'] != -1)
+        if ( $_SESSION[SESSION_KEY.'g_pagesize'] != -1)
         {
             $str=sprintf("&offset=%s&step=%s&page=%s&size=%s",
                          $offset,

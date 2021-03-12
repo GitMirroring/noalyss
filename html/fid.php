@@ -56,7 +56,7 @@ $fTva_id=$hi->request("t","string","none");
 $fPrice_sale=$hi->request("p","string","none");
 $fPrice_purchase=$hi->request("b","string","none");
 
-if ( isset($_SESSION['isValid']) && $_SESSION['isValid'] == 1)
+if ( isset($_SESSION[SESSION_KEY.'isValid']) && $_SESSION[SESSION_KEY.'isValid'] == 1)
 {
     $jrn=$hi->get('j', "number",'-1');
     $d=$hi->get('d',"string", '');
@@ -115,7 +115,7 @@ if ( isset($_SESSION['isValid']) && $_SESSION['isValid'] == 1)
          from vw_fiche_attr
          where quick_code=upper($1)". $filter_card;
 
-    $array=$cn->get_array($sql,  array($_REQUEST['FID']));
+    $array=$cn->get_array($sql,  array($hi->request('FID')));
 
     if ( empty($array))
     {

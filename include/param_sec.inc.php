@@ -50,7 +50,7 @@ require_once  NOALYSS_INCLUDE.'/lib/user_menu.php';
 /////////////////////////////////////////////////////////////////////////
 if ( ! isset($_REQUEST['action']))
 {
-	$base_url=$_SERVER['PHP_SELF']."?ac=".$_REQUEST['ac']."&".dossier::get();
+        $base_url=NOALYSS_URL."/do.php?".http_build_query(array("ac"=>$http->request("ac"),"gDossier"=>dossier::id()));
 
     echo '<DIV class="content" >';
 	$header=new Sort_Table();
@@ -59,7 +59,7 @@ if ( ! isset($_REQUEST['action']))
 	$header->add(_("Type d'utilisateur"),$base_url,"order by use_admin asc,use_login asc","order by use_admin desc,use_login desc",'ta','td');
 
 
-	$order=(isset($_REQUEST['ord']))?$_REQUEST['ord']:'la';
+	$order=$http->request("ord","string","la");
 
 	$ord_sql=$header->get_sql_order($order);
 
@@ -73,12 +73,13 @@ if ( ! isset($_REQUEST['action']))
                                             use_admin
                                                 from ac_users left join jnt_use_dos using (use_id)
 					where use_login != $2 and use_active=1
-					and (dos_id=$1  or (dos_id is null and use_admin=1))" . $ord_sql, array($gDossier,NOALYSS_ADMINISTRATOR));
+					and (dos_id=$1  or (dos_id is null and use_admin=1))" . $ord_sql, 
+                array($gDossier,NOALYSS_ADMINISTRATOR));
 
     $MaxUser = Database::num_row($user_sql);
 
 
-    echo '<TABLE class="result" style="width:80%;margin-left:10%">';
+    echo '<TABLE class="result" >';
 	echo "<tr>";
 	echo '<th>'.$header->get_header(0).'</th>';
 	echo '<th>'.$header->get_header(1).'</th>';
@@ -98,24 +99,28 @@ if ( ! isset($_REQUEST['action']))
         if ( $l_line['use_admin'] == 1 )
             $str=_('Administrateur');
 
-		// get profile
-		$profile=$cn->get_value("select p_name from profile
-				join profile_user using(p_id) where user_name=$1",array($l_line['use_login']));
+        // get profile
+        $profile=$cn->get_value("select p_name from profile
+                        join profile_user using(p_id) where user_name=$1",array($l_line['use_login']));
 
-		$url=$base_url."&action=view&user_id=".$l_line['use_id'];
-		echo "<td>";
-		echo HtmlInput::anchor($l_line['use_login'], $url);
-		echo "</td>";
-		echo td($l_line['use_name']);
-		echo td($l_line['use_first_name']);
-		echo td($profile);
-                // status of security on ledger and action 
-                $a_sec=$cn->get_row("select us_ledger,us_action from user_active_security where us_login =$1",
-                        [$l_line['use_login']]);
-                echo td($a_sec['us_ledger']);
-                echo td($a_sec['us_action']);
-		echo td($str);
-		echo "</TR>";
+        $url=$base_url."&action=view&user_id=".$l_line['use_id'];
+        echo "<td>";
+        echo HtmlInput::anchor($l_line['use_login'], $url);
+        echo "</td>";
+        echo td($l_line['use_name']);
+        echo td($l_line['use_first_name']);
+        echo td($profile);
+        // status of security on ledger and action 
+        $a_sec=$cn->get_row("select us_ledger,us_action from user_active_security where us_login =$1",
+                [$l_line['use_login']]);
+        if ( ! empty($a_sec )  )  {
+            echo td($a_sec['us_ledger']);
+            echo td($a_sec['us_action']);
+        } else {
+            echo td(_("Erreur sécurité"));
+        }
+        echo td($str);
+        echo "</TR>";
     }
     echo '</TABLE>';
 }
@@ -138,7 +143,7 @@ if ( isset ($_GET["action"] ))
 if ( $action == "view" )
 {
     $l_Db=sprintf("dossier%d",$gDossier);
-    $return= HtmlInput::button_anchor(_('Retour à la liste'),'?&ac='.$_REQUEST['ac'].'&'.dossier::get(),_('retour'),"",'smallbutton');
+    $return= HtmlInput::button_anchor(_('Retour à la liste'),'?&ac='.$http->request('ac').'&'.dossier::get(),_('retour'),"",'smallbutton');
 
     $repo=new Database();
     $user_id=$http->get('user_id',"number");
@@ -221,9 +226,7 @@ if ( $action == "view" )
     echo _("Profil")." ".$ie_profile->input();
     echo "</p>";
     echo '<Fieldset><legend>'._('Journaux').'</legend>';
-    echo HtmlInput::button("grant_all", _("Accès à tout"), " onclick=\" grant_ledgers ('W') \"");
-    echo HtmlInput::button("grant_readonly", _("Uniquement Lecture"), " onclick=\" grant_ledgers ('R') \"");
-    echo HtmlInput::button("revoke_all", _("Aucun accès"), " onclick=\" grant_ledgers ('X') \"");
+   
     //-------------------------------------------------------------------------
     // Enable or not the security on ledger
     //-------------------------------------------------------------------------
@@ -238,6 +241,7 @@ if ( $action == "view" )
         $status_sec_ledger=0;
         $sec_User->set_status_security_ledger(0);
     } else {
+      
         $sec_ledger=new Inplace_Switch("sec_ledger", $status_sec_ledger);
         $sec_ledger->set_callback("ajax_misc.php");
         $sec_ledger->add_json_param("gDossier", $n_dossier_id);
@@ -245,12 +249,19 @@ if ( $action == "view" )
         $sec_ledger->add_json_param("op", "user_sec_ledger");
         $sec_ledger->set_jscript(" if ( $('security_ledger_tbl').visible() ||  {$sec_User->Admin()}==1) { $('security_ledger_tbl').hide();} else { $('security_ledger_tbl').show();}");
         echo $sec_ledger->input();
+          echo "<p class='info'>";
+        echo _("La sécurité sur les journaux, permet de limiter l'accès de l'utilisateur aux journaux, si cette ".
+                " sécurité n'est pas activée , l'utilisateur a accès à tous les journaux en lecture et écriture");
+        echo "</p>";
     }
     echo "</p>";
     //------------------------------------------------------------------------
     // Access by ledgers, needed if the security on ledger is enable
     //------------------------------------------------------------------------
     echo '<div id="security_ledger_tbl">';
+    echo HtmlInput::button("grant_all", _("Accès à tout"), " onclick=\" grant_ledgers ('W') \"");
+    echo HtmlInput::button("grant_readonly", _("Uniquement Lecture"), " onclick=\" grant_ledgers ('R') \"");
+    echo HtmlInput::button("revoke_all", _("Aucun accès"), " onclick=\" grant_ledgers ('X') \"");
     echo '<table>';
     $MaxJrn=Database::num_row($Res);
     $jrn_priv=new ISelect("iledger");
@@ -285,12 +296,12 @@ if ( $action == "view" )
     echo '</div>';
     echo '</fieldset>';
 
+    echo '<hr>';
     //**********************************************************************
     // Show Priv. for actions
     //**********************************************************************
     echo '<fieldset> <legend>'._('Actions').'</legend>';
-    echo HtmlInput::button("grant_all_action", _("Toutes les actions"), " onclick=\" grant_action(1) \"");
-    echo HtmlInput::button("revoke_all_action", _("Aucune action"), " onclick=\" grant_action (0) \"");
+    
     //-------------------------------------------------------------------------
     // Enable or not the security on ledger
     //-------------------------------------------------------------------------
@@ -303,7 +314,7 @@ if ( $action == "view" )
         $status_sec_action=0;
         $sec_User->set_status_security_action(0);
     } else {
-
+        
         $status_sec_action=$sec_User->get_status_security_action();
         $sec_action=new Inplace_Switch("sec_action", $status_sec_action);
         $sec_action->set_callback("ajax_misc.php");
@@ -312,6 +323,10 @@ if ( $action == "view" )
         $sec_action->add_json_param("op", "user_sec_action");
         $sec_action->set_jscript(" if ( $('security_action_tbl').visible() ) { $('security_action_tbl').hide();} else { $('security_action_tbl').show();}");
         echo $sec_action->input();
+         echo "<p class='info'>";
+        echo _("La sécurité sur les actions permet de limiter ce que l'utilisateur peut faire, si "
+                . " elle n'est pas active l'utilisateur a donc accès à toutes ces actions");
+        echo "</p>";
     }
     echo "</p>";
     
@@ -358,7 +373,11 @@ if ( $action == "view" )
          var i=0;
         var str_id="";
         for (i = 0;i < a_select.length;i++) {
+            
           str_id = new String( a_select[i].id);
+          if ( str_id == 'sec_action')  {
+              continue;
+          }
            if ( str_id.search(/action/) > -1 ) {
              if ( p_value == 0 ) {
                  a_select[i].setStyle("color:red");

@@ -215,6 +215,17 @@ class Icon_Action
         return $r;
     }
     /**
+     * Return a html string with an eye
+     * @param type $javascript
+     * @return string
+     */
+    static function notvisible($javascript) {
+        $r='';
+        $r.='<span id="hide" class="icon"   onclick="'.$javascript.'">&#xe83b;</span>';
+        return $r;
+        
+    }
+    /**
      * Display the icon of a trashbin
      * @param string $p_id DOMid 
      * @param string $p_javascript
@@ -355,5 +366,36 @@ class Icon_Action
     {
         if ( $p_value == 1 ) { return \Icon_Action::iconon($p_id, $p_javascript,$p_style);}
         if ( $p_value == 0 ) { return \Icon_Action::iconoff($p_id, $p_javascript,$p_style);}
+    }
+    
+    static function checked ($p_id,$p_javascript="",$p_classrange="") {
+        $lock_cur="&#xe741;";
+        $r=sprintf( '<span id="%s" onclick="%s" class="icon smallicon %s" >%s</span>',
+                $p_id,
+                $p_javascript, 
+                $p_classrange,
+                $lock_cur);
+        return $r;
+    }
+    static function unchecked ($p_id,$p_javascript="",$p_classrange="") {
+        $lock_cur="&#xf096";
+        
+        $r=sprintf( '<span id="%s" onclick="%s" class="icon smallicon %s" >%s</span>',
+                $p_id,
+                $p_javascript, 
+                $p_classrange,
+                $lock_cur);
+        return $r;
+    }
+    static function checkbox ($p_id,$p_javascript="",$p_value=0,$p_classrange="") {
+        if ( $p_value == 0 ) { return \Icon_Action::checked($p_id, $p_javascript,$p_classrange); }
+        if ( $p_value == 1 ) { return \Icon_Action::unchecked($p_id, $p_javascript,$p_classrange);}
+    }
+    static function full_size($p_div) {
+        $js=sprintf("full_size('%s')",$p_div);
+        $icon="&#xe82a;";
+        $r=sprintf('<span id="size_%s" onclick="%s" class="icon smallicon">%s</span>',
+                $p_div,$js,$icon);
+        return $r;
     }
 }

@@ -59,11 +59,11 @@ class contact extends Fiche
         $script=$_SERVER['PHP_SELF'];
         // Creation of the nav bar
         // Get the max numberRow
-        $all_contact=$this->count_by_modele($this->fiche_def_ref,$p_search,$extra_sql);
+        $all_contact=$this->count_by_modele($this->fiche_def_ref,$p_search,$extra_sql.$p_sql);
         // Get offset and page variable
         $offset=( isset ($_REQUEST['offset'] )) ?$_REQUEST['offset']:0;
         $page=(isset($_REQUEST['page']))?$_REQUEST['page']:1;
-        $bar=navigation_bar($offset,$all_contact,$_SESSION['g_pagesize'],$page);
+        $bar=navigation_bar($offset,$all_contact,$_SESSION[SESSION_KEY.'g_pagesize'],$page);
         // set a filter ?
         $search="";
         if ( trim($p_search) != "" )
@@ -71,7 +71,7 @@ class contact extends Fiche
             $search=" and f_id in
                     (select f_id from fiche_Detail
                     where
-                    ad_id=1 and ad_value ~* '$p_search') ";
+                    ad_id=1 and ad_value ilike '%$p_search%') ";
         }
         // Get The result Array
         $step_contact=$this->get_by_category($offset,$search.$extra_sql.$p_sql);

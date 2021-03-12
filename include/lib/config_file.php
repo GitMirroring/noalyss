@@ -94,6 +94,7 @@ function config_file_form($p_array=null)
     $ichost=new IText("chost",$chost);
     
     $icadmin=new IText('cadmin',$cadmin);
+    $icadmin->set_require(true);
     /*
      * For version MONO
      */
@@ -109,6 +110,7 @@ function config_file_form($p_array=null)
     
     $icpassword_admin=new IText('cpassword_admin');
     $icpassword_admin->value=$cpassword_admin;
+    $icpassword_admin->set_require(true);
     
     require NOALYSS_TEMPLATE.'/template_config_form.php';
 }

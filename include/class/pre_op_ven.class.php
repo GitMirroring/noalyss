@@ -29,53 +29,52 @@ require_once  NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 */
 class Pre_op_ven extends Pre_operation_detail
 {
-    var $op;
     //< Pre_operation
-    function __construct($cn,$p_id=0)
+    function __construct($cn)
     {
-        parent::__construct($cn,$p_id);
-        $this->operation->od_direct='f'; //< Pre_operation
+        parent::__construct($cn);
     }
-
+    /**
+     * @brief get the post and stove them into data member , before saving them in the db
+     * @see save
+     */
     function get_post()
     {
-        parent::get_post();
-        $this->operation->od_direct='f';
-        $this->e_client=$_POST['e_client'];
-        for ($i=0;$i<$this->operation->nb_item;$i++)
+        $http=new \HttpInput();
+        $nb=$http->post("nb_item","number");
+        $this->e_client=$http->post("e_client");
+        for ($i=0;$i< $nb;$i++)
         {
             $march="e_march".$i;
-            $this->$march=$_POST['e_march'.$i];
-            $this->{"e_march".$i."_price"}=$_POST['e_march'.$i."_price"];
-            $this->{"e_march".$i."_tva_id"}=(isset($_POST['e_march'.$i."_tva_id"]))?$_POST['e_march'.$i."_tva_id"]:0;
-            $this->{"e_march".$i."_tva_amount"}=(isset($_POST['e_march'.$i."_tva_amount"]))?$_POST['e_march'.$i."_tva_amount"]:0;
-            $this->{"e_march".$i."_tva_id"}=(isset($_POST['e_march'.$i."_tva_id"]))?$_POST['e_march'.$i."_tva_id"]:0;
-            $this->{"e_march".$i."_label"}=(isset($_POST['e_march'.$i."_label"]))?$_POST['e_march'.$i."_label"]:null;
-            $this->{"e_quant".$i}=$_POST['e_quant'.$i];
+            $http->set_empty("");
+            $this->$march=$http->post('e_march'.$i);
+            $this->{"e_march".$i."_tva_id"}=$http->post('e_march'.$i."_tva_id","string",0);
+            $this->{"e_march".$i."_tva_id"}=$http->post('e_march'.$i."_tva_id","string","0");
+            $this->{"e_march".$i."_label"}=$http->post('e_march'.$i."_label","string","");
 
+            $http->set_empty(0);
+            $this->{"e_march".$i."_price"}=$http->post('e_march'.$i."_price","number");
+            $this->{"e_march".$i."_tva_amount"}=$http->post('e_march'.$i."_tva_amount","number","0");
+            $this->{"e_quant".$i}=$http->post('e_quant'.$i,"number");
         }
     }
     /*!
      * \brief save the detail and op in the database
      *
      */
-    function save()
+    function save($p_od_id,$p_nb_item)
     {
         try
         {
-            $this->db->start();
-            if ($this->operation->save() == false )
-                return;
             // save the client
             $sql=sprintf('insert into op_predef_detail (od_id,opd_poste,opd_debit)'.
-                         ' values '.
-                         "(%d,'%s','%s')",
-                         $this->operation->od_id,
-                         $this->e_client,
-                         "t");
+                ' values '.
+                "(%d,'%s','%s')",
+                $p_od_id,
+                $this->e_client,
+                "t");
             $this->db->exec_sql($sql);
-            // save the selling
-            for ($i=0;$i<$this->operation->nb_item;$i++)
+            for ($i=0;$i<$p_nb_item;$i++)
             {
                 if ( strlen(trim($this->{"e_march".$i}))=="") continue;
                 $sql= 'insert into op_predef_detail (opd_poste,'
@@ -94,7 +93,7 @@ class Pre_op_ven extends Pre_operation_detail
                              $this->{"e_march".$i."_tva_id"},
                              $this->{"e_quant".$i},
                              'f',
-                             $this->operation->od_id,
+                             $p_od_id,
                              $this->{"e_march".$i."_tva_amount"},
                              $this->{"e_march".$i."_label"},
                             ));
@@ -102,21 +101,17 @@ class Pre_op_ven extends Pre_operation_detail
         }
         catch (Exception $e)
         {
-              record_log($e);
-            echo ($e->getMessage());
-            $this->db->rollback();
+            record_log("PREOPVEN01".$e->getMessage().$e->getTraceAsString());
+              throw $e;
         }
-        $this->db->commit();
-
     }
     /*!\brief compute an array accordingly with the FormVenView function
      */
-    function compute_array()
+    function compute_array($p_od_id)
     {
         $count=0;
-        $a_op=$this->operation->load();
-        $array=$this->operation->compute_array($a_op);
-        $p_array=$this->load();
+        $array=array();
+        $p_array=$this->load($p_od_id);
 		if (empty($p_array)) return array();
         foreach ($p_array as $row)
         {
@@ -139,45 +134,45 @@ class Pre_op_ven extends Pre_operation_detail
                 }
             }
         }
-        // Find the ledger
-        $ledger=new Acc_Ledger($this->db,$this->operation->jrn_def_id);
-        // Find the max line of the ledger
-        $max_row=$ledger->get_min_row();
-        
-        // compute nb_item
-        $array['nb_item']=($max_row > $count)?$max_row:$count;
+
         return $array;
     }
     /*!\brief load the data from the database and return an array
      * \return an array
      */
-    function load()
+    function load($p_od_id)
     {
         $sql="select opd_id,opd_poste,opd_amount,opd_tva_id,opd_debit,".
-             " opd_quantity , opd_comment,opd_tva_amount from op_predef_detail where od_id=".$this->operation->od_id.
+             " opd_quantity , opd_comment,opd_tva_amount from op_predef_detail where od_id= $1 ".
              " order by opd_id";
-        $res=$this->db->exec_sql($sql);
+        $res=$this->db->exec_sql($sql,[$p_od_id]);
         $array=Database::fetch_all($res);
+        if ($res == false) return array();
         return $array;
     }
-    function set_od_id($p_id)
-    {
-        $this->operation->od_id=$p_id;
-    }
+
+    /**
+     * Display the form for modifying or adding new predefined operation
+     * @param array  $p_array is the result of compute_array or blank
+     * @return string containing HTML code of the form
+     * @throws Exception
+     * @see compute_array
+     * @see load
+     *
+     */
     function display($p_array)
     {
         global $g_parameter,$g_user;
-        if ( $p_array != null ) extract($p_array, EXTR_SKIP);
-        require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
-        $ledger=new Acc_Ledger_Sold($this->db,$this->jrn_def_id);
 
+        require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
+        $ledger=new Acc_Ledger_Sold($this->db,$p_array['p_jrn']);
         $flag_tva=$g_parameter->MY_TVA_USE;
         /* Add button */
         $f_add_button=new IButton('add_card');
 		$f_add_button->tabindex=-1;
         $f_add_button->label=_('Créer une nouvelle fiche');
         $f_add_button->set_attribute('ipopup','ipop_newcard');
-        $f_add_button->set_attribute('jrn',$ledger->id);
+        $f_add_button->set_attribute('jrn',$p_array['p_jrn']);
         $f_add_button->javascript="this.jrn=\$('p_jrn').value; select_card_type(this);";
 
         $f_add_button2=new IButton('add_card2');
@@ -209,7 +204,7 @@ class Pre_op_ven extends Pre_operation_detail
 
         // Save old value and set a new one
         //--
-        $e_client=( isset ($e_client) )?$e_client:"";
+        $e_client=( isset ($p_array["e_client"]) )?$p_array["e_client"]:"";
         $e_client_label="&nbsp;";//str_pad("",100,".");
 
 
@@ -256,10 +251,10 @@ class Pre_op_ven extends Pre_operation_detail
 
         // Record the current number of article
 		$min=$ledger->get_min_row();
-        $p_article= ( isset ($nb_item))?$nb_item:$min;
+        $p_article= ( isset ($p_array["nb_item"]))?$p_array["nb_item"]:$min;
         $max=($p_article < $min)?$min:$p_article;
 
-        $e_comment=(isset($e_comment))?$e_comment:"";
+        $e_comment=(isset($p_array["e_comment"]))?$p_array["e_comment"]:"";
         $Hid=new IHidden();
         $r.=$Hid->input("nb_item",$p_article);
 
@@ -271,16 +266,16 @@ class Pre_op_ven extends Pre_operation_detail
         {
             // Code id, price & vat code
             //--
-            $march=(isset(${"e_march$i"}))?${"e_march$i"}:""
+            $march=(isset($p_array["e_march$i"]))?$p_array["e_march$i"]:""
                    ;
-            $march_price=(isset(${"e_march".$i."_price"}))?${"e_march".$i."_price"}:""
+            $march_price=(isset($p_array["e_march".$i."_price"]))?$p_array["e_march".$i."_price"]:""
                          ;
             if ( $flag_tva=='Y')
             {
-                $march_tva_id=(isset(${"e_march$i"."_tva_id"}))?${"e_march$i"."_tva_id"}:"";
-                $march_tva_amount=(isset(${"e_march$i"."_tva_amount"}))?${"e_march$i"."_tva_amount"}:"";
+                $march_tva_id=(isset($p_array["e_march$i"."_tva_id"]))?$p_array["e_march$i"."_tva_id"]:"";
+                $march_tva_amount=(isset($p_array["e_march$i"."_tva_amount"]))?$p_array["e_march$i"."_tva_amount"]:"";
             }
-            $march_label=(isset(${"e_march".$i."_label"}))?${"e_march".$i."_label"}:"";
+            $march_label=(isset($p_array["e_march".$i."_label"]))?$p_array["e_march".$i."_label"]:"";
 
             // retrieve the tva label and name
             //--
@@ -291,7 +286,7 @@ class Pre_op_ven extends Pre_operation_detail
                 $march_label=$fMarch->strAttribut(ATTR_DEF_NAME);
                 if ( $flag_tva=='Y')
                 {
-                    if ( ! (isset(${"e_march$i"."_tva_id"})))
+                    if ( ! (isset($p_array["e_march$i"."_tva_id"])))
                         $march_tva_id=$fMarch->strAttribut(ATTR_DEF_TVA);
                 }
             }
@@ -385,7 +380,7 @@ class Pre_op_ven extends Pre_operation_detail
             }
             // quantity
             //--
-            $quant=(isset(${"e_quant$i"}))?${"e_quant$i"}:"1"
+            $quant=(isset($p_array["e_quant$i"]))?$p_array["e_quant$i"]:"1"
                    ;
             $Quantity=new INum();
             $Quantity->setReadOnly(false);
