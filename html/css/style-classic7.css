@@ -92,7 +92,7 @@ h2 {
     /*! margin:1px; */
     font-style: italic; 
     font-size:15px;
-    font-size:1.1rem;
+    font-size:1.1rem !important;
     margin-top: 5px;
     font-size: 1.1rem;
 margin-bottom: 1rem;
@@ -154,12 +154,12 @@ td.tool a.mtitle:hover {
 }
 #top {
     float:left;
-    margin-bottom: 40px;
+    /* margin-bottom: 40px; */
     width: 100%;
 }
 
 #module {
-    position:absolute;
+/*    position:absolute;*/
     top:0px;
     right:5px;
     text-align:right;
@@ -167,6 +167,7 @@ td.tool a.mtitle:hover {
     margin: 0px;
     font-size:12.16px;
     font-size:0.76rem;
+    float:right;
 }
 #module table,#module table tr,#module table td {
     border-collapse: separate;
@@ -858,7 +859,7 @@ div.topmenu {
 }
 @media only screen and (max-width:800px) {
     div.topmenu{ 
-        margin-top: 44px;
+    /*    margin-top: 44px; */
     }  
 }
 #dossier h2{
@@ -1176,13 +1177,14 @@ div.content a.nav:hover img,a.nav:hover img {
     background: transparent;
 }
 #dossier {
-    display:inline;
-    float:left;
+    display:none;
+ /*   float:left; */
     width:100%;
     top:0px;
     text-align: center;
     font-variant:small-caps;
     font-weight: bolder;
+    position : absolute;
     }
 @media only screen and (min-width: 955px) {
 #dossier {
@@ -1203,7 +1205,7 @@ div.foldercontent {
     margin-left: 2.5%;
     margin-top:30px;
 }
-@media only screen and (max-width: 955px) {
+@media only screen and (min-width: 1200px) {
 #dossier {
     display:inline;
     float:left;
@@ -1212,9 +1214,16 @@ div.foldercontent {
     text-align: left;
     font-variant:small-caps;
     font-weight: bolder;
+    text-align:center;
     }
 }
 
+@media only screen and (max-width: 1199px) {
+#dossier {
+    display:none;
+    }
+    
+}
 div.foldercontent {
     font-size:14px;
     font-size:0.95rem;
@@ -1361,9 +1370,9 @@ div#notice {
     border: 1px solid #000000;
 }
 div.name  {
-    position:absolute;
+/*    position:absolute;
     top:0px;
-    left:0px;
+    left:0px;*/
     display:block;
     }   
 div#modele_op_div{
@@ -1382,7 +1391,7 @@ div#modele_op_div{
 }
 @media only screen and (min-width: 955px) {
     div.name  {
-    position:absolute;
+    /* position:absolute; */
     top:0px;
     left:0px;
     }   
@@ -1548,7 +1557,7 @@ div.box  {
     background-color:#e4e7ed;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'openSansRegular';
-    margin-top:10px;
+ /*   margin-top:10px; */
     margin-left:3px;
     margin-right:3px;
     /*! padding:2px; */
@@ -1569,6 +1578,7 @@ div.box  {
 }
 @media only screen and (max-width: 955px) {
     div.box {
+    margin-top:10px;
     width: 98%;
     height: 380px;
     }

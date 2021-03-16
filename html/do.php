@@ -77,10 +77,10 @@ if ( DEBUG ) {
  * Debug Design
  */
 echo <<<EOF
-<div class="d-none d-sm-block d-md-none d-lg-none d-xl-none bg-info">Small</div>
-<div class="d-none d-md-block d-lg-none bg-info">Medium</div>
-<div class="d-none d-lg-block d-xl-none bg-info">Large</div>
-<div class="d-none d-xl-block bg-info">X Large</div>
+<div class="d-none d-sm-block d-md-none d-lg-none d-xl-none " style="background-color:red">Small</div>
+<div class="d-none d-md-block d-lg-none " style="background-color:orangered">Medium</div>
+<div class="d-none d-lg-block d-xl-none " style="background-color:orange">Large</div>
+<div class="d-none d-xl-block " style="background-color:wheat">X Large</div>
 EOF;
 
     ?>
