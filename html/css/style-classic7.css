@@ -4,13 +4,13 @@
   */
 @font-face {
 	font-family: 'SansationLight';
-	src: url('image/SansationLight/SansationLight.eot');
-	src: local('SansationLight'), url('image/SansationLight/SansationLight.woff') format('woff'), url('image/SansationLight/SansationLight.ttf') format('truetype');
+	src: url('font/SansationLight/SansationLight.eot');
+	src: local('SansationLight'), url('font/SansationLight/SansationLight.woff') format('woff'), url('font/SansationLight/SansationLight.ttf') format('truetype');
 }
 @font-face {
 	font-family: 'OpenSansRegular';
-	src: url('image/OpenSansRegular.eot');
-	src: local('OpenSansRegular'), url('image/OpenSansRegular.woff') format('woff'), url('image/OpenSansRegular.ttf') format('truetype');
+	src: url('font/OpenSansRegular.eot');
+	src: local('OpenSansRegular'), url('font/OpenSansRegular.woff') format('woff'), url('font/OpenSansRegular.ttf') format('truetype');
 }
 /* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_38327">Text with this font applied</p> */
 .fontsforweb_fontid_38327 {
@@ -18,11 +18,11 @@
 }
 @font-face {
       font-family: 'fontello';
-      src: url('image/fontello/fontello.eot?18582275');
-      src: url('image/fontello/fontello.eot?18582275#iefix') format('embedded-opentype'),
-           url('image/fontello/fontello.woff?18582275') format('woff'),
-           url('image/fontello/fontello.ttf?18582275') format('truetype'),
-           url('image/fontello/fontello.svg?18582275#fontello') format('svg');
+      src: url('font/fontello/fontello.eot?18582275');
+      src: url('font/fontello/fontello.eot?18582275#iefix') format('embedded-opentype'),
+           url('font/fontello/fontello.woff?18582275') format('woff'),
+           url('font/fontello/fontello.ttf?18582275') format('truetype'),
+           url('font/fontello/fontello.svg?18582275#fontello') format('svg');
       font-weight: normal;
       font-style: normal;
     }
@@ -721,7 +721,7 @@ a#anchorbutton, .button, a.button,div.content a.button {
     font-weight: bold;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
-    background-image: url("image/bg-submit2.gif");
+    background-image: url("font/bg-submit2.gif");
     background-repeat: repeat-x;
     background-position: left;
     border-color:  #0000FF;
@@ -757,7 +757,7 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     font-weight: normal;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
-     /*! background-image: url("image/bg-submit2.gif"); */ 
+     /*! background-image: url("font/bg-submit2.gif"); */ 
     /*! background-repeat: repeat-x; */
     /*! background-position: left; */
     font-size:12px;
@@ -1865,7 +1865,7 @@ div.content a.tinybutton,a.tinybutton{
     font-weight: bold;
     text-decoration: none;
     font-family: arial,verdana,sans-serif,helvetica;
-   /* background-image: url("image/bg-submit2.gif");
+   /* background-image: url("font/bg-submit2.gif");
     background-repeat: repeat-x;
     background-position: left; */
     font-size: 8px;

@@ -17,15 +17,15 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*! \file
+/* ! \file
  * \brief default page where user access
  */
-/*! \mainpage NOALYSS
+/* ! \mainpage NOALYSS
  * Documentation
  * - \subpage Francais
  * - \subpage English
  *
- *\page Francais
+ * \page Francais
  * \section intro_sec Introduction
  *
  * Cette partie contient de la documentation pour les développeurs.
@@ -61,7 +61,7 @@
  * <li>Related contient tous les \\todo</li>
  * <li>Global -> function pour lire toute la doc sur les fonctions</li>
  * <li>Regarder dans dossier1.html et account_repository.html  pour la doc des base de données
- *</ul>
+ * </ul>
  *  et il ne faut connaître que ces tags
  * <ul>
  * <li> \\file en début de fichier</li>
@@ -75,10 +75,10 @@
  * <li> \\return ce que la fonction retourne</li>
  * <li> \\code et \\endcode si on veut donner un morceau de code comme documentation</li>
  * <li> \\verbatim et \\endverbatim si on veut donner une description d'un tableau,  comme documentation</li>
- *<li>  \\see xxxx Ajoute un lien vers un fichier, une fonction ou une classe </li>
+ * <li>  \\see xxxx Ajoute un lien vers un fichier, une fonction ou une classe </li>
  * </ul>
- *----------------------------------------------------------------------
- *\page English
+ * ----------------------------------------------------------------------
+ * \page English
  * \section intro_sec Introduction
  *
  * This parts contains documentation for developpers
@@ -114,7 +114,7 @@
  * <li>Related contains all the \\todo</li>
  * <li>Global -> all the functions</li>
  * <li>check into mod1.html and account_repository.html for the database design
- *</ul>
+ * </ul>
  *  You need to know only these tags
  * <ul>
  * <li> \\file in the beginning of a file</li>
@@ -128,14 +128,14 @@
  * <li> \\return what the function returns</li>
  * <li> \\code and \\endcode code snippet given as example</li>
  * <li> \\verbatim and \\endverbatim if we want to keep the formatting without transformation</li>
- *<li>  \\see xxxx create a link to the file, function or object xxxx </li>
+ * <li>  \\see xxxx create a link to the file, function or object xxxx </li>
  * </ul>
  */
 
 
-if ( ! file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php'))
+if (!file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php'))
 {
-    header("Location: install.php",true, 307);
+    header("Location: install.php", true, 307);
     exit(0);
 }
 
@@ -146,7 +146,10 @@ echo '<!doctype html><HTML>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="index.css" media="screen">
+<link rel="stylesheet" type="text/css" href="css/bootstrap-reboot.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="css/bootstrap-grid.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="css/index.css" media="screen">
 <script src="js/scripts.js" type="text/javascript"></script>
 </head>
 <BODY>';
@@ -154,135 +157,148 @@ $my_domain="";
 require_once '../include/constant.php';
 require_once '../include/config.inc.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-if (file_exists("install.php")&& ! DEBUG ) {
+if (file_exists("install.php")&&!DEBUG)
+{
     // At the end of the installation procedure , the install file must be removed
-    if (isset($_GET['remove_install'])) {
-        if (is_writable(__DIR__."/install.php") ) {
+    if (isset($_GET['remove_install']))
+    {
+        if (is_writable(__DIR__."/install.php"))
+        {
             unlink(__DIR__."/install.php");
         }
     }
     // if removed failed then
-    if (file_exists("install.php") )
+    if (file_exists("install.php"))
     {
         /*
-        * This file shouldn't exist
-        */
+         * This file shouldn't exist
+         */
         echo "<h1>";
-       printf ( _("Le fichier %s/install.php est encore présent, après l'avoir exécuté pour vous mettre à jour, vous devez l'effacer."),__DIR__);
-       echo "<br>";
-       echo       _("Tant que ce n'est pas vous fait vous ne pouvez pas utiliser NOALYSS");
-       echo "</h1>";
-       return;
+        printf(_("Le fichier %s/install.php est encore présent, après l'avoir exécuté pour vous mettre à jour, vous devez l'effacer."),
+                __DIR__);
+        echo "<br>";
+        echo _("Tant que ce n'est pas vous fait vous ne pouvez pas utiliser NOALYSS");
+        echo "</h1>";
+        return;
     }
 }
-if ( strlen(domaine) > 0 )
+
+/**
+ * Debug Design
+ */
+if (DEBUG)
 {
-    $my_domain=sprintf(_("Domaine")." : %s",domaine);
+    echo <<<EOF
+<div class="d-none d-sm-block d-md-none d-lg-none d-xl-none bg-info">Small</div>
+<div class="d-none d-md-block d-lg-none bg-info">Medium</div>
+<div class="d-none d-lg-block d-xl-none bg-info">Large</div>
+<div class="d-none d-xl-block bg-info">X Large</div>
+EOF;
 }
 
-if (defined("RECOVER") && isset ($_REQUEST['recover']) )
+if (strlen(domaine)>0)
+{
+    $my_domain=sprintf(_("Domaine")." : %s", domaine);
+}
+
+if (defined("RECOVER")&&isset($_REQUEST['recover']))
 {
     require_once '../include/recover.php';
 }
 // reconnect , create a variable to reconnect properly in login.php
 $goto="";
-if (isset ($_REQUEST['reconnect']) && isset ($_REQUEST['backurl'])) {
+if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
+{
     $goto='<input type="hidden" value="'.strip_tags($_REQUEST['backurl']).'" name="backurl">';
 }
-echo '
-
-<IMG SRC="image/logo8100.png" id="logo_id" alt="NOALYSS">
-<form id="login_frm" action="login.php" method="post" name="loginform">'.
-        '<h1>Noalyss</h1>'.
-       $goto .
-'<TABLE><TR><TD>
-<TABLE  BORDER=0 CELLSPACING=0>
-<TR>
-<TD><input type="text" class="input_text" value="" id="p_user" name="p_user" autofocus tabindex="1" placeholder="User"></TD>
-</TR>
-<TR>
-<TD><INPUT TYPE="PASSWORD"  class="input_text" value=""  id="p_pass" NAME="p_pass"  tabindex="2" placeholder="*******"></TD>
-</TR>';
-
-
-if ( $g_captcha == true )
-  {
-    echo '<tr ><td colspan="2" style="width:auto">';
-    echo "<table style=\"border:1px solid black\">";
-    echo '<tr>';
-    echo '<td colspan="2" style="with:auto;font-size:12px;text-align:center">';
-    echo "Indiquer le code que vous lisez dans l'image";
-    echo '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo td('<img id="captcha" src="securimage/securimage_show.php" alt="CAPTCHA Image" border=1/>','colspan="2" style="width:auto;text-align:center"');
-    echo '</tr>';
-    echo '<tr>';
-
-    echo td('<input type="text" class="input_text" name="captcha_code" size="10" maxlength="6" autocomplete="off"/>'.
-	    '<a href="#" onclick="document.getElementById(\'captcha\').src = \'securimage/securimage_show.php?\' + Math.random(); return false">Reload Image</a>','colspan="2" style="width:auto;text-align:center"');
-    echo '</tr>';
-    echo '</table>';
-    echo '</td>';
-    echo '<tr>';
-  }
-echo '
-<TR style="height:50px;vertical-align:bottom">
-<TD style="width:auto;text-align:center" colspan="2">
-<INPUT TYPE="SUBMIT"  style="width:158px;height:34px;-moz-border-radius:10px;border-radius:10px" class="button" NAME="login" value="Se connecter">
-</TD>
-</TR>
-</table>
-</TD></TR>';
-
 ?>
-</table>
-</form>
-<?php if (defined("RECOVER")) : ?>
-    <a id="recover_link" href="#">Mot de passe oublié ? </a>
-    
-<div id="recover_box">
-    <span style="display:block;font-size:120%;padding:10px">Indiquez votre login ou votre email <span style="cursor: pointer;background-color: white;top:-5px;float: right;position:relative;right:-5px" id="close"><a ref="#" id="close_link"><?php echo SMALLX?></a></span></span>
-            <form method="POST">
-                <input type="hidden" value="send_email" name="id">
-                <input type="hidden" value="recover" name="recover" >
-                <p>
-                Login <input type="text"     class="input_text" name="login" nohistory>
-                </p>
-                <p>OU</p> 
-                <p>
-                Email <input type="text"  class="input_text" name="email" nohistory>
-                </p>
-                <input type="submit" class="button" name="send_email" value="Envoi email">
-                <input type="button" class="button" id="close_link_bt" value="Annuler">
-</div>
-    <script>
-        document.getElementById('recover_link').onclick=function() {
-            document.getElementById('recover_box').style.display="block";
-        }
-        document.getElementById('close_link').onclick=function() {
-            document.getElementById('recover_box').style.display="none";
-        }
-        document.getElementById('close_link_bt').onclick=function() {
-            document.getElementById('recover_box').style.display="none";
-        }
-    </script>
-<?php endif; ?>
-    
-      <span id="info_noalyss">
-version  NOALYSS_VERSION - <?php echo $my_domain; ?>
-</span>  
-<!-- <div  id="alternate_browser">
-    <p>Nous conseillons d'utiliser Firefox ou chrome.</p>
-    <p>We recommend to use Firefox or Chrome.</p>
-<ul style="list-style:none;display:block">
-    <li style="display:inline"> <a href="https://www.mozilla.org/fr/firefox/new/"> <img border="0" width="128px" src="image/header-firefox.png"></a></li>
-<li style="display:inline"><a href="https://www.google.fr/chrome/browser/desktop/"> <img border="0" width="128px" src="image/chrome_logo_2x.png"></a></li>
-</ul>
-</div>
--->
- <script> SetFocus('p_user'); </script>
+<div >
+    <div class="d-sm-none d-md-block">
+        <IMG SRC="image/logo8100.png" id="logo_id" alt="NOALYSS">
 
-</body>
-</html>
+    </div>    
+    <div class="container">
+
+        <div class="mx-auto" id="login_div">
+        <h1 style="text-align: center;color:darkblue">NOALYSS</h1>
+            <form id="login_frm" action="login.php" method="post" name="loginform" >
+                <?php echo $goto; ?>
+
+
+                <div class="form-group row ">
+                    <input type="text"  class="input_text " value="" id="p_user" name="p_user" autofocus tabindex="1" placeholder="User" >
+                </div>
+
+                <div class="form-group row">
+                    <INPUT TYPE="PASSWORD"  class="input_text" value=""  id="p_pass" NAME="p_pass"  tabindex="2" placeholder="*******" >
+                </div>
+
+                <?php
+// if captcha is used
+                if ($g_captcha==true) :
+                    ?>
+                    Indiquer le code que vous lisez dans l'image
+                    <img id="captcha" src="securimage/securimage_show.php" alt="CAPTCHA Image" border=1/>';
+
+                    <input type="text" class="input_text" name="captcha_code" size="10" maxlength="6" autocomplete="off"/>
+                    <a href="#" onclick="document.getElementById('captcha').src = 'securimage/securimage_show.php?\' + Math.random(); return false">Reload Image</a>
+
+                    <?php
+                endif;
+                ?>  
+                <div class="form-group  row">
+                    <INPUT TYPE="SUBMIT"  class="button" NAME="login" value="Se connecter">
+                </div>
+
+            </form>
+            <div>
+                <?php if (defined("RECOVER")) : ?>
+                    <a id="recover_link" href="#">Mot de passe oublié ? </a>
+
+                    <div id="recover_box">
+                        <span style="display:block;font-size:120%;background-color: white;margin:0px">Recouvrement identifiant
+                            <span style="cursor: pointer;float: right;position:relative;right:0px" id="close">
+                                <a ref="#" id="close_link"><?php echo SMALLX ?></a></span>
+                        </span>
+                        Indiquez votre login ou votre email
+                        <form method="POST" style="padding:20px">
+                            <input type="hidden" value="send_email" name="id">
+                            <input type="hidden" value="recover" name="recover" >
+                            <div class="form-group row ">
+                                <label for="login">Login</label>
+                                <input type="text"  class="input_text " value="" name="login" placeholder="login" nohistory >
+                            </div>
+                           
+                            <div class="mx-auto info" style="background-color: darkgray;text-align: center;">OU </div>
+                            <div class="form-group row ">
+                                 <label for="email">e-mail</label>
+                                
+                                 <input type="text"  class="input_text" name="email" nohistory placeholder="email@domain.eu">
+                            </div>
+                            <input type="submit" class="button" name="send_email" value="Envoi email">
+                            <input type="button" class="button" id="close_link_bt" value="Annuler">
+                            </div>
+                            </div>    
+                            <script>
+                                document.getElementById('recover_link').onclick = function () {
+                                    document.getElementById('recover_box').style.display = "block";
+                                }
+                                document.getElementById('close_link').onclick = function () {
+                                    document.getElementById('recover_box').style.display = "none";
+                                }
+                                document.getElementById('close_link_bt').onclick = function () {
+                                    document.getElementById('recover_box').style.display = "none";
+                                }
+                            </script>
+                        <?php endif; ?>
+
+                        <span id="info_noalyss">
+                            version  NOALYSS_VERSION - <?php echo $my_domain; ?>
+                        </SPAN>
+
+                </div>
+                <script> SetFocus('p_user');</script>
+
+                </body>
+                </html>
 

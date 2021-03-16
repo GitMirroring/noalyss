@@ -1,0 +1,110 @@
+
+/***
+ * LOGO
+*************************************/
+#logo_id {
+    width:19%;
+    display:none;
+}
+/** small **/
+@media (min-width : 576px) {
+    #logo_id {
+
+        z-index:-1;
+       width: 140px;
+        left: 5px;
+        top: 22px;
+        height: 140px;
+
+        left:0px;
+        display:block;
+
+    }
+}
+/** medium**/
+@media (min-width : 768px) {
+    #logo_id {
+        z-index:-1;
+       width: 140px;
+        left: 5px;
+        top: 22px;
+        height: 140px;
+        display:block;
+    }
+}
+/** large**/
+@media (min-width : 992px) {
+    #logo_id {
+        z-index:-1;
+        width: 140px;
+        left: 5px;
+        top: 22px;
+        height: 140px;
+
+        display:block;
+    }      
+}
+/** XL **/
+@media (min-width : 1200px) {
+    #logo_id {
+        z-index: -1;
+
+        width: 140px;
+        left: 5px;
+        top: 22px;
+        height: 140px;
+        display:block;
+    }
+} 
+
+#login_div {
+
+}
+@media (min-width : 576px) { 
+    #login_div{
+    }
+
+} 
+@media (min-width : 768px) { 
+    #login_div{
+        width:50%;
+    }
+}
+@media (min-width : 991px) {
+    #login_div{
+        width:50%;
+    }
+}
+@media (min-width : 1200px) {
+    #login_div {
+        width:50%;
+    }
+}
+#info_noalyss {
+    position:fixed;
+    bottom:15px;
+    width:100%;
+    display:block ;
+    text-align:center;
+}
+
+.input_text {
+    width:100%;
+}
+#recover_link {
+    position:absolute;
+    margin-bottom:30px;
+    width: 100%;
+}
+
+#recover_box {
+
+    display: none;
+    position: absolute;
+    top: 15%;
+    z-index: 1;
+    border: 2px solid darkblue;
+    margin-left: 1%;
+    background-color: whitesmoke;
+    padding : 15px;
+}
