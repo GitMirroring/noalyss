@@ -1283,14 +1283,12 @@ class Document
                             ."where ag_id=$1 order by AGC_ID asc limit 1"
                             , [$p_array['ag_id']]);
                     return $description;
-                }
-                if (isset($p_array['e_comm']))
-                {
-                    return $p_array['e_comm'];
-                }
-
-                return "";
-                break;
+            	}
+            if ( isset($p_array['e_comm'])) {return $p_array['e_comm'] ; }
+            
+            return "";
+            break;
+      
 
             // Comments, use a counter to move to the next comment, only for Follow-Up
             //
