@@ -3,10 +3,13 @@
 //see licence.txt
 ?><?php
 
+
 $max=$this->cn->count($ret);
 if ( $max == 0 ) {
-    echo h2(_("Aucune étiquette disponible"),' class="notice"');
-    return;
+    $res=h2(_("Aucune étiquette disponible"),' class="notice"').
+            HtmlInput::button_close($p_prefix.'tag_div');
+    return $res;
+    
 }
 require_once NOALYSS_INCLUDE."/lib/output_html_tab.class.php";
 $tab_tag=new Html_Tab($p_prefix."tab_tag",_("Etiquettes"));

@@ -67,6 +67,8 @@ class Acc_Ledger_SoldTest extends TestCase
             "e_mp"=>"0",
             "e_mp_qcode_1"=>"COMPTE",
             "e_mp_qcode_2"=>"",
+	     "p_currency_rate"=>1,
+	     "p_currency_code"=>0,
             "view_invoice"=>"Enregistrer");
     }
 

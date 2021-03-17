@@ -55,7 +55,9 @@ class Acc_Ledger_PurchaseTest extends TestCase
             "sa"=>"p",
             "e_mp"=>0,
             "view_invoice"=>"Enregistrer",
-            "ac"=>"ACH"
+            "ac"=>"ACH",
+	    "p_currency_rate"=>1.09,
+	    "p_currency_code"=>1
         );
     }
 
