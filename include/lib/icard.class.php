@@ -279,11 +279,15 @@ class ICard extends HtmlInput
             $e=sprintf(' ondblclick="%s" ', $this->dblclick);
             $this->dblclick=$e;
         }
-        $input=Icon_Action::clean_zone(uniqid("remove"),"$('{$this->id}').value=''");
+        
+        $input='<div class="d-none d-lg-inline">'.
+                Icon_Action::clean_zone(uniqid("remove"),"$('{$this->id}').value=''").
+                "</div>";
+             
         $input.=sprintf('
-            <INPUT TYPE="Text"  class="input_text"  
-                 NAME="%s" ID="%s" VALUE="%s" SIZE="%d" %s %s  %s>',
-                $this->name, $this->id, $this->value, $this->size,
+            <INPUT TYPE="Text"  class="input_text icard"  
+                 NAME="%s" ID="%s" VALUE="%s"  %s %s  %s>',
+                $this->name, $this->id, $this->value, 
                 $this->dblclick, $this->javascript, $this->style
         );
         if ($this->autocomplete==1)

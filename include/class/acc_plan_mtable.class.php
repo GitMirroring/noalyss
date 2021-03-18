@@ -67,6 +67,7 @@ class Acc_Plan_MTable extends Manage_Table_SQL
         $this->set_col_type("pcm_val", "custom");
         $this->a_order = ["pcm_val", "pcm_lib", "parent_accounting", "pcm_direct_use", "pcm_type", "fiche_qcode"];
         $this->set_icon_mod("first");
+        $this->set_dialogbox_style(["width"=>"auto"]);
     }
 
     /**

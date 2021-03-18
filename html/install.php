@@ -10,7 +10,7 @@
 <link rel="icon" type="image/ico" href="favicon.ico" />
  <META http-equiv="Content-Type" content="text/html; charset=UTF8">
  <script type="text/javascript" charset="utf-8" language="javascript" src="js/prototype.js"></script>
- <link type="text/css" REL="stylesheet" href="style-classic.css"/>
+ <link type="text/css" REL="stylesheet" href="css/style-classic7.css"/>
  <style>
      body {
          font : 100%;

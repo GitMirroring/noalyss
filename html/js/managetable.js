@@ -62,7 +62,19 @@
  - save
  - delete
  - input
- 
+
+ How to call a function AFTER save ?
+ You set a function afterSaveFct like in the example, it will be trigger after you submit the FORM
+
+ Example :
+ @code
+ // the object_name is tbl6030ee4ee519e
+ tbl6030ee4ee519e.afterSaveFct=function(p_param) {
+  console.log(p_param);
+  console.log(this)
+}
+ @endcode
+
  */
 /**
  * @class ManageTable
@@ -74,8 +86,9 @@ var ManageTable = function (p_table_name)
 {
     this.callback = "ajax.php"; //!< File to call
     this.control = "dtr"; //<! Prefix Id of dialog box, table, row
-    this.mt_style={position: "fixed", top:  '15%', width: "auto", "max-width":"60%","margin-left": "20%"};
+    this.mt_style={};
     this.sort_column=0;
+    this.afterSaveFct=undefined; // function to call after "save"
     this.param = {"table": p_table_name, "ctl_id": this.control}; //<! default value to pass
     this.set_style=function(p_json) {
         this.mt_style=p_json;
@@ -190,10 +203,30 @@ var ManageTable = function (p_table_name)
     };
 
     /**
-     *@brief call the ajax with the action save 
-     *@details update or append
-     * As a hidden parameter the Manage_Table:object_name must be
-     * set
+     *Call the ajax with the action save , it is possible to call a function after the save by setting
+     * a function to afterSaveFct.As a hidden parameter the Manage_Table:object_name must be  set
+     * @param form_id string id of the FORM format ("frm"+object_name+"_"+p_id)
+     *
+     *@example
+  tbl6030f6f8c336a.afterSaveFct=function() {
+    console.debug(this);
+    console.debug(this.param);
+    // if p_id == -1 then we are adding
+    if ( this.param.p_id != -1 ) { return;}
+    console.debug(this.new_row);
+    // retrive the id
+    var id=this.new_row.id.replace('tbl6030f6f8c336a_','');
+    console.debug(id);
+    // recall input ManageTable.input
+    this.input(id,'tbl6030f6f8c336a');
+
+}
+     <caption>when I introduce a new element I need to reopen it to complete the missing information. (this) contains
+     the current object
+     </caption>
+     *
+     *
+     *
      */
     this.save = function (form_id) {
         var param_form={};
@@ -217,11 +250,13 @@ var ManageTable = function (p_table_name)
                 /// if p_ctl_row does not exist it means it is a new
                 /// row , otherwise an update
                 var answer=here.parseXML(req);
+                var new_row;
                 if (answer ['status'] == 'OK') {
                     if ($(answer['ctl_row'])) {
+                        new_row=$(answer['ctl_row']);
                         $(answer['ctl_row']).update(answer['html']);
                     } else {
-                        var new_row = new Element("tr");
+                         new_row = new Element("tr");
                         new_row.id = answer['ctl_row'];
                         new_row.innerHTML = answer['html'];
                         /**
@@ -233,6 +268,16 @@ var ManageTable = function (p_table_name)
                     alternate_row_color("tb"+answer['ctl']);
                     remove_waiting_box();
                     $(here.control).hide();
+                    // if there is an afterSaveFct then call it
+                    if (here.afterSaveFct != undefined && typeof here.afterSaveFct  == "function") {
+                        try {
+                            here.afterSaveFct.call(here,new_row);
+                        } catch (e) {
+                            console.error("FAIL253 afterSaveFct ");
+                            console.error(e.message);
+                            console.error (here.afterSaveFct);
+                        }
+                    }
                     
                 } else {
                     remove_waiting_box();
@@ -305,19 +350,21 @@ var ManageTable = function (p_table_name)
             parameters: this.param,
             method: "get",
             onSuccess: function (req) {
-                remove_waiting_box();
+                
                 try {
                     var x = here.parseXML(req);
                     var obj = {id: control, "cssclass": "inner_box", "html": loading()};
-                    add_div(obj);
-                    var pos = calcy(250);
+                    create_div(obj);
+                    var pos = calcy(3);
                     if (window.innerWidth < 1200) {
                         here.mt_style["margin-left"]="2%";
                         here.mt_style["max-width"]="80%";
                     }
-                    console.log(here.mt_style);
+                    here.mt_style['top']=pos+"px";
                     $(obj.id).setStyle(here.mt_style);
+                    remove_waiting_box();
                     $(obj.id).update(x['html']);
+                    Effect.SlideDown(obj.id,{duration:0.3,scaleX:true,scaleY:true,scaleContent:false});
                 } catch (e) {
                     smoke.alert(content[48] + e.message);
                 }

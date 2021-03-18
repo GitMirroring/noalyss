@@ -127,9 +127,7 @@ class Manage_Table_SQL
         // By default no js sort
         $this->sort_column="";
         $this->dialog_box="dtr";
-        $this->dialogbox_style=array("position"=> "fixed", "top"=>  '15%',"width"=> "auto", 
-            "max-width"=>"60%",
-            "margin-left"=> "20%");
+        $this->dialogbox_style=array();
         $this->search_table=true;
         $this->button_add_top=true;
         $this->title=_("Donnée");

@@ -71,6 +71,16 @@ $style_user=$http->post("style_user","string",$_SESSION[SESSION_KEY.'g_theme']);
 
 html_page_start($style_user);
 if ( DEBUG ) {
+/**
+ * Debug Design
+ */
+echo <<<EOF
+<div class="d-none d-sm-block d-md-none d-lg-none d-xl-none " style="background-color:red">Small</div>
+<div class="d-none d-md-block d-lg-none " style="background-color:orangered">Medium</div>
+<div class="d-none d-lg-block d-xl-none " style="background-color:orange">Large</div>
+<div class="d-none d-xl-block " style="background-color:wheat">X Large</div>
+EOF;
+
     ?>
 <div id="debug_div" style="border:slategray solid 1px;margin-left: 0px;position:absolute;background:white;display:fixed;top:2px;left:25px;z-index:1000;display:none">
 	<h2 style="margin-top:100px"> Memory Usage </h2>
@@ -127,7 +137,8 @@ if ( DEBUG ) {
 <input type="button" class="tinybutton" style="position:absolute;display:fixed;top:40px;left:50px;margin-left:50px;z-index:1000" value="show request" onclick="show_debug_request()">
 
 <?php
-}
+
+} //<--- if DEBUG 
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 
 $g_user->Check();

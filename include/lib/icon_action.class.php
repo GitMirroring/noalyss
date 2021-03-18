@@ -68,7 +68,7 @@ class Icon_Action
      */
     static function clean_zone($id, $p_javascript, $p_style="")
     {
-        $r=sprintf('<input class="smallbutton" onclick="%s" id="%s" value="X" %s type="button" style="">',
+        $r=sprintf('<input class="smallbutton " onclick="%s" id="%s" value="X" %s type="button" style="">',
                 $p_javascript, $id, $p_style
         );
         return $r;

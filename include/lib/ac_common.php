@@ -337,8 +337,11 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     <TITLE>$title</TITLE>
 	<link rel=\"icon\" type=\"image/ico\" href=\"favicon.ico\" />
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"".$style."?version=".SVNINFO."\" media=\"screen\"/>
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"./style-print.css?version=".SVNINFO."\" media=\"print\"/>" .
+    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap-reboot.min.css\" media=\"screen\"/>
+    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/".$style."?version=".SVNINFO."\" media=\"screen\"/>
+    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css//bootstrap.min.css\" media=\"screen\"/>
+    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css//bootstrap-grid.min.css\" media=\"screen\"/>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/style-print.css?version=".SVNINFO."\" media=\"print\"/>" .
     $p_script2 . "
     ";
     echo '<script language="javascript" src="js/calendar.js"></script>
@@ -354,7 +357,7 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     }
     echo '
     <script language="javascript" src="js/calendar-setup.js"></script>
-    <LINK REL="stylesheet" type="text/css" href="calendar-blue.css" media="screen">
+    <LINK REL="stylesheet" type="text/css" href="css/calendar-blue.css" media="screen">
     ';
     // language
     if (isset($_SESSION[SESSION_KEY.'g_lang']))
@@ -418,8 +421,8 @@ function html_min_page_start($p_theme="", $p_script="", $p_script2="")
     echo "<HEAD>
     <TITLE>NOALYSS</TITLE>
     <META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF8\">
-    <LINK REL=\"stylesheet\" type=\"text/css\" href=\"$style\" media=\"screen\">
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"style-print.css\" media=\"print\">" .
+    <LINK REL=\"stylesheet\" type=\"text/css\" href=\"css/$style\" media=\"screen\">
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/style-print.css\" media=\"print\">" .
     $p_script2 . "
     <script src=\"js/prototype.js\" type=\"text/javascript\"></script>
     <script src=\"js/scripts.js\" type=\"text/javascript\"></script>
