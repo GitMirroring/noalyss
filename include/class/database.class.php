@@ -147,7 +147,7 @@ class Database extends DatabaseCore
                $this->execute_script(NOALYSS_INCLUDE . '/sql/patch/upgrade' . $i . '.sql');
                echo $succeed;
 
-                if (!DEBUG)
+                if ( DEBUGNOALYSS == 0)
                     ob_start();
                 // specific for version 4
                 if ($i == 4) {
@@ -224,7 +224,7 @@ class Database extends DatabaseCore
                      $this->execute_script(NOALYSS_INCLUDE . "/sql/patch/upgrade141." . $country . ".sql");
                 }
 
-                if (!DEBUG)
+                if (DEBUGNOALYSS == 0 )
                     ob_end_clean();
 
             }

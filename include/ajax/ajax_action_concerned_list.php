@@ -51,7 +51,7 @@ echo HtmlInput::button_anchor(_("Export CSV"), $csv,"",' title="Export Contacts 
 echo HtmlInput::button_close("action_concerned_list_dv");
 $response = ob_get_clean();
 
-if ( headers_sent() && DEBUG) {
+if ( headers_sent() && DEBUGNOALYSS > 0) {
     echo $response;
 } 
 $html = escape_xml($response);

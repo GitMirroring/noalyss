@@ -1180,7 +1180,11 @@ function display_menu($p_menuid)
             }
             tracedebug("'menu", $file[0]['me_file'],__FUNCTION__.__LINE__."line");
             tracedebug("'menu", $file[0]['me_parameter'],__FUNCTION__.__LINE__."parm ");
-            if ( DEBUG ) { echo  $file[0]['me_file']," param : ",$file[0]['me_parameter'] ;}
+            if ( DEBUGNOALYSS == 2)
+            { 
+                echo  $file[0]['me_file']," param : ",$file[0]['me_parameter'] ;
+                
+            }
             /*
              * Log the file we input to put in the folder test-noalyss for replaying it
              */

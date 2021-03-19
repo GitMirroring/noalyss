@@ -88,9 +88,10 @@ define ('SMALLX','&times;');
 define ('BUTTONADD',"&#10010;");
 
 define ('SVNINFO',NOALYSS_VERSION);
-if ( ! defined  ('DEBUG')) {
-    define ("DEBUG",false);
+if ( ! defined  ('DEBUGNOALYSS')) {
+    define ("DEBUGNOALYSS",0);
 }
+
 if ( ! defined ('LOGINPUT')) {
     define ("LOGINPUT",false);
 }
@@ -132,21 +133,31 @@ if ( ! defined ('MAX_SEARCH_CARD') ) {
 define ('MAX_FOLDER_TO_SHOW',80);
 define ('MAX_ACTION_SHOW',20);
 
-if ( DEBUG ) {
+if ( DEBUGNOALYSS == 0 ) {
+	// PRODUCTION : nothing is displaid , report only errors and warning
+        // Rapporte les erreurs d'exécution de script
+        error_reporting(E_ERROR | E_WARNING );
+        ini_set("display_errors",0);
+	ini_set("html_errors",0);
+        ini_set('log_errors',1);
+        ini_set('log_errors_max_len',0);
+}elseif (DEBUGNOALYSS==1) {
+    /* DEVELOPPEMENT : display all errors warning notice deprecated ...*/
 	error_reporting(2147483647);
 	ini_set("display_errors",1);
 	ini_set("display_startup_errors",1);
 	ini_set("html_errors",1);
         ini_set('log_errors',1);
         ini_set('log_errors_max_len',0);
-}
-else {
-        // Rapporte les erreurs d'exécution de script
-        error_reporting(E_ERROR | E_WARNING | E_PARSE|E_NOTICE);
-        ini_set("display_errors",0);
-	ini_set("html_errors",0);
+} elseif (DEBUGNOALYSS == 2 ) {
+	// like level 1 plus extra  info (filename, ...)
+	error_reporting(2147483647);
+	ini_set("display_errors",1);
+	ini_set("display_startup_errors",1);
+	ini_set("html_errors",1);
         ini_set('log_errors',1);
         ini_set('log_errors_max_len',0);
+
 }
 // Erreur
 define ("NOERROR",0);

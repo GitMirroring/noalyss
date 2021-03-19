@@ -514,7 +514,7 @@ case 'save':
     catch (Exception $e)
     {
           record_log($e);
-      if ( DEBUG )   echo $e->getMessage();
+      if ( DEBUGNOALYSS > 0 )   echo $e->getMessage();
       alert(_( "Changement impossible: on ne peut pas changer la date dans une période fermée"));
     }
     $html=ob_get_contents();

@@ -555,7 +555,7 @@ else
 if ($account == 0 ) {
 
   echo "Creation of ".domaine."account_repository";
-  if ( ! DEBUG) ob_start();
+  if ( DEBUGNOALYSS == 0 ) ob_start();
   $cn->exec_sql("create database ".domaine."account_repository encoding='utf8'");
   $cn=new Database();
   $cn->start();
@@ -570,13 +570,13 @@ if ($account == 0 ) {
 
   $cn->commit($cn);
 
-  if (!DEBUG)
+  if ( DEBUGNOALYSS ==  0 )
     {
         ob_end_clean();
     }
 
     echo _("Creation of Modele 1");
-  if (!DEBUG)
+  if ( DEBUGNOALYSS == 0 )
     {
         ob_start();
     }
@@ -589,7 +589,7 @@ if ($account == 0 ) {
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
   $cn->commit();
 
-  if (!DEBUG)
+  if ( DEBUGNOALYSS == 0 )
     {
         ob_end_clean();
     }
@@ -598,13 +598,13 @@ if ($account == 0 ) {
   $cn->exec_sql("create database ".domaine."mod2 encoding='utf8'");
   $cn=new Database(2,'mod');
   $cn->start();
-  if ( ! DEBUG) { ob_start();  }
+  if ( DEBUGNOALYSS == 0 ) { ob_start();  }
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/schema.sql');
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod2/data.sql');
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
   $cn->commit();
 
- if ( ! DEBUG) ob_end_clean();
+ if ( DEBUGNOALYSS == 0 ) ob_end_clean();
 echo '<h1>'._('Important').'</h1>';
 echo '<p>'._('Utilisateur  administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';
 echo '<p>',_('Mot de passe')," ",NOALYSS_ADMIN_PASSWORD,'</p>';
@@ -623,10 +623,10 @@ if  (defined("MULTI") && MULTI == 0)
 	$db = new Database();
 	if ($db->exist_table("repo_version") == false) 
 	{
-                        if ( ! DEBUG) { ob_start();  }
+                        if ( DEBUGNOALYSS > 0 ) { ob_start();  }
                         $db->execute_script(NOALYSS_INCLUDE.'/sql/mono/mono.sql');
                      
-            if ( ! DEBUG) ob_end_clean();
+            if ( DEBUGNOALYSS > 0 ) ob_end_clean();
 	}
        
         
@@ -651,7 +651,7 @@ if  (defined("MULTI") && MULTI == 0)
 	echo "<p class=\"info\">"._("Tout est installé"). $succeed;
         
          echo "<h2>"._("Mise à jour Repository")."</h2>";
-         if ( DEBUG == false ) ob_start();
+         if ( DEBUGNOALYSS == 0 ) ob_start();
         $MaxVersion=DBVERSIONREPO-1;
         for ($i=4;$i<= $MaxVersion;$i++)
         {
@@ -662,6 +662,9 @@ if  (defined("MULTI") && MULTI == 0)
         
         $db->exec_sql("update ac_users set use_login=$1,use_pass=md5($2) where use_id=1",
               array(strtolower(NOALYSS_ADMINISTRATOR),NOALYSS_ADMIN_PASSWORD));
+        
+        if ( DEBUGNOALYSS == 0 ) ob_end_clean();
+        
         echo '<h1>'._('Important').'</h1>';
         echo '<p>'._('Utilisateur administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';
         

@@ -70,7 +70,7 @@ if ( ! $cn->exist_table('version')) {
 $style_user=$http->post("style_user","string",$_SESSION[SESSION_KEY.'g_theme']);
 
 html_page_start($style_user);
-if ( DEBUG ) {
+if ( DEBUGNOALYSS > 1 ) {
 /**
  * Debug Design
  */

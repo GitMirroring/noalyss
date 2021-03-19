@@ -288,7 +288,7 @@ case 'st':
     if ( empty($array))
     {
         $html=_("Aucune catégorie de fiche ne correspond  à votre demande");
-        if ( DEBUG )        $html.=$sql;
+        if ( DEBUGNOALYSS > 0 )        $html.=$sql;
     }
     else
     {
@@ -793,7 +793,7 @@ case 'upr':
             
 } // switch
 $xml=escape_xml($html);
-if (DEBUG && headers_sent()) {
+if (DEBUGNOALYSS > 0 && headers_sent()) {
     echo $html;return;
 }
 header('Content-type: text/xml; charset=UTF-8');

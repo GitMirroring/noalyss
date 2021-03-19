@@ -157,7 +157,7 @@ $my_domain="";
 require_once '../include/constant.php';
 require_once '../include/config.inc.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-if (file_exists("install.php")&&!DEBUG)
+if ( file_exists("install.php")&& DEBUGNOALYSS == 0 )
 {
     // At the end of the installation procedure , the install file must be removed
     if (isset($_GET['remove_install']))
@@ -186,7 +186,7 @@ if (file_exists("install.php")&&!DEBUG)
 /**
  * Debug Design
  */
-if (DEBUG)
+if ( DEBUGNOALYSS == 0 )
 {
     echo <<<EOF
 <div class="d-none d-sm-block d-md-none d-lg-none d-xl-none bg-info">Small</div>

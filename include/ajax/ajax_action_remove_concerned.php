@@ -60,7 +60,7 @@ echo $follow->button_action_add_concerned_card( );
 
 $response = ob_get_clean();
 
-if (headers_sent() && DEBUG) {
+if (headers_sent() && DEBUGNOALYSS > 0) {
     echo $response;
 }
 $html = escape_xml($response);

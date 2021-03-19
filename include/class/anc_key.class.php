@@ -267,7 +267,7 @@ class Anc_Key
         catch (Exception $e)
         {
             
-            if ( DEBUG ) { echo $e->getTraceAsString(); } else { echo _('erreur').$e->getMessage();}
+            if ( DEBUGNOALYSS > 0 ) { echo $e->getTraceAsString(); } else { echo _('erreur').$e->getMessage();}
               record_log($e);
             $cn->rollback();
         }

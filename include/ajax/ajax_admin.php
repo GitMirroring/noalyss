@@ -354,10 +354,10 @@ if ($op=='upgradeCore')
         $progress->set_value(5);
         $core->download();
         $progress->set_value(55);
-        if (!DEBUG )
+        if ( DEBUGNOALYSS > 0 )
         {
             $core->install();
-        }
+        } 
         $progress->set_value(100);
 
         $url=sprintf('<a href="%s"> install.php</a>', NOALYSS_URL."/install.php");

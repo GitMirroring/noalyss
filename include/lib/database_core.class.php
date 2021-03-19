@@ -55,7 +55,7 @@ class DatabaseCore
         $this->db = pg_connect("dbname=$p_dbname host='$p_host' user='$p_user'
                      password='$p_password' port=$p_port");
         if ($this->db == false) {
-            if (DEBUG) {
+            if ( DEBUGNOALYSS > 0 ) {
 
                 echo '<h2 class="error">'._('Impossible de se connecter à postgreSql').'</h2>';
                 echo '<p>';
@@ -160,7 +160,7 @@ class DatabaseCore
             $this->array = $p_array;
 
             if ($p_array == null) {
-                if (!DEBUG)
+                if ( DEBUGNOALYSS == 0 )
                     $this->ret = pg_query($this->db, $p_string);
                 else
                     $this->ret = @pg_query($this->db, $p_string);
@@ -169,7 +169,7 @@ class DatabaseCore
                 if (!is_array($p_array)) {
                     throw new Exception(_("Erreur : exec_sql attend un array"));
                 }
-                if (!DEBUG)
+                if ( DEBUGNOALYSS == 0 )
                     $this->ret =@pg_query_params($this->db, $p_string, $p_array);
                 else
                     $this->ret = pg_query_params($this->db, $p_string, $p_array);
@@ -179,7 +179,7 @@ class DatabaseCore
                 throw new Exception("  SQL ERROR $p_string " . $str_error, 1);
             }
         } catch (Exception $a) {
-            if (DEBUG) {
+            if ( DEBUGNOALYSS > 0 ) {
                 print_r($p_string);
                 print_r($p_array);
                 echo $a->getMessage();
@@ -277,7 +277,7 @@ class DatabaseCore
     function execute_script($script)
     {
 
-        if (!DEBUG) {
+        if ( DEBUGNOALYSS == 0 ) {
             ob_start();
         } else {
             $debug = fopen("/tmp/debug.log", "w+");
@@ -335,11 +335,11 @@ class DatabaseCore
                 $buffer = str_replace(';', '', $buffer);
             }
             $sql .= $buffer;
-            if (DEBUG) fwrite($debug, $sql);
+            if ( DEBUGNOALYSS > 0 ) fwrite($debug, $sql);
             if ($this->exec_sql($sql) == false) {
 
                 $this->rollback();
-                if (!DEBUG)
+                if ( DEBUGNOALYSS == 0 )
                     ob_end_clean();
                 print "ERROR : $sql";
                 throw new Exception("ERROR : $sql");
@@ -349,7 +349,7 @@ class DatabaseCore
             print "<hr>";
         } // while (feof)
         fclose($hf);
-        if (!DEBUG)
+        if ( DEBUGNOALYSS == 0 )
             ob_end_clean();
     }
 

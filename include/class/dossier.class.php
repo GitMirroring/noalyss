@@ -349,7 +349,7 @@ class Dossier
         //----------------------------------------------------------------------
         echo "<h2>"._("Mise à jour de la base de données principale")."</h2>";
         $cn=new Database();
-        if (DEBUG==false)
+        if (DEBUGNOALYSS == 0)
             ob_start();
         $MaxVersion=DBVERSIONREPO-1;
         for ($i=4; $i<=$MaxVersion; $i++)
@@ -359,7 +359,7 @@ class Dossier
                 $cn->execute_script(NOALYSS_INCLUDE.'/sql/patch/ac-upgrade'.$i.'.sql');
             }
         }
-
+        if (DEBUGNOALYSS == 0)             ob_end_clean();
         //----------------------------------------------------------------------
         // Upgrade the folders
         //----------------------------------------------------------------------

@@ -45,7 +45,7 @@ else :
 </form>
 <?php
     $response=  ob_get_clean();
-if (headers_sent() && DEBUG )    {
+if (headers_sent() && DEBUGNOALYSS > 0 )    {
     echo $response;
 }else {
     header('Content-type: text/xml; charset=UTF-8');

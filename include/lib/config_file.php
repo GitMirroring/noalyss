@@ -172,7 +172,19 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
     
     print ( 'define ("LOCALE",'.$clocale.');');
     print ("\r\n");
-
+    echo <<<EOF
+    /* 
+     * DEBUGNOALYSS let you see more information when you develop.
+     * 0 = for production
+     * 1 = display all errors
+     * 2 = display all errors + more information 
+     */
+EOF;     
+    
+    print ("\r\n");
+    print ( 'define ("DEBUGNOALYSS",0);');
+    print ("\r\n");
+    
     print ( 'define ("domaine","");');
     print ("\r\n");
     if (isset($multi))
@@ -187,10 +199,6 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
     print ( 'define ("dbname","'.$cdbname.'");');
     print ("\r\n");
     
-    print (' // Uncomment to DEBUG');
-    print ("\r\n");
-    print ( '// define ("DEBUG",TRUE);');
-    print ("\r\n");
     print (' // Uncomment to log your input');
     print ("\r\n");   
     print ( '// define ("LOGINPUT",TRUE);');

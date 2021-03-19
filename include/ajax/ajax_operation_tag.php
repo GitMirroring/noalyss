@@ -67,7 +67,7 @@ switch ($op)
         echo HtmlInput::button_close("tag_div");
 
         $response=ob_get_clean();
-        if (headers_sent()&&DEBUG)
+        if (headers_sent()&& DEBUGNOALYSS > 0 )
         {
             echo $response;
         }
@@ -116,7 +116,7 @@ EOF;
         $tag_operation->tag_cell($ctl);
 
         $response=ob_get_clean();
-        if (headers_sent()&&DEBUG)
+        if (headers_sent()&& DEBUGNOALYSS > 0)
         {
             echo $response;
         }
@@ -145,7 +145,7 @@ EOF;
         $tag_operation->tag_cell($pref);
 
         $response=ob_get_clean();
-        if (headers_sent()&&DEBUG)
+        if (headers_sent()&& DEBUGNOALYSS > 0)
         {
             echo $response;
         }

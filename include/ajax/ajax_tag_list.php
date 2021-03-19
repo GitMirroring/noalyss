@@ -35,7 +35,7 @@ if ( $g_user->check_action(TAGADD) == 1) { echo HtmlInput::button("tag_add", _("
 echo HtmlInput::button_close("tag_div");
 
 $response=  ob_get_clean();
-if (headers_sent() && DEBUG ){
+if (headers_sent() && DEBUGNOALYSS > 0  ){
     echo $response;
 } else {
     header('Content-type: text/xml; charset=UTF-8');

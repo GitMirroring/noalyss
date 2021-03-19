@@ -152,7 +152,7 @@ case "sf":
     break;
 }
 $xml=escape_xml($html);
-if (headers_sent() && DEBUG ) {
+if (headers_sent() && DEBUGNOALYSS > 0) {
     echo $html;
 }
 else 

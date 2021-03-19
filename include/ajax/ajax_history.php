@@ -221,7 +221,7 @@ if ( isset($_REQUEST['pcm_val']))
       }
   }
 $xml=escape_xml($html);
-if (DEBUG && headers_sent()) {
+if (DEBUGNOALYSS > 0 && headers_sent()) {
     echo $html;return;
 }
 header('Content-type: text/xml; charset=UTF-8');

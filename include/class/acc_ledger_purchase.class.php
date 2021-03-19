@@ -773,12 +773,12 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $operation_currency->insert();
                 $tot_amount_cur=round(bcadd($tot_amount_cur,$acc_amount->amount_currency),2);
                 $tot_amount_cur=round(bcadd($tot_amount_cur,$acc_amount->amount_vat_currency),2);
-                if (DEBUG ) {
+                if ( DEBUGNOALYSS > 0 ) {
                     echo __LINE__." insert into operation currency oc_amount:{$acc_amount->amount_currency} oc_vat_amount {$acc_amount->amount_vat_currency} <br>";
                 }
             }       // end loop : save all items
             /*  save total customer */
-            if ( DEBUG ) { 
+            if ( DEBUGNOALYSS > 0 ) { 
                 echo __LINE__." tot_amount $tot_amount<br>"; 
                 echo __LINE__." tot_tva $tot_tva<br>"; 
             
@@ -861,7 +861,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             // Total DEB
             $acc_operation->amount=$this->db->get_value("select sum(j_montant) from jrnx where j_grpt = $1 and j_debit='t'",
                     array($seq));
-            if ( DEBUG ) { 
+            if ( DEBUGNOALYSS > 0 ) { 
                 echo __LINE__." amount ".$acc_operation->amount."<br>"; 
             
             }

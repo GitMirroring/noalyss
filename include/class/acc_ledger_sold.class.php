@@ -314,7 +314,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 
                 $tot_amount = bcadd($tot_amount, $amount);
                 $tot_amount = round($tot_amount, 2);
-                if ( DEBUG ) { echo __LINE__." tot_amount $tot_amount<br>";}
+                if ( DEBUGNOALYSS > 0 ) { echo __LINE__." tot_amount $tot_amount<br>";}
                 $acc_operation = new Acc_Operation($this->db);
                 $acc_operation->date = $e_date;
                 $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
@@ -462,7 +462,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             /*  save total customer */
             $cust_amount = bcadd($tot_amount, $tot_tva);
             $cust_amount = round($cust_amount,2);
-            if ( DEBUG ) { 
+            if ( DEBUGNOALYSS > 0 ) { 
                 echo __LINE__." cust_amount $cust_amount<br>"; 
                 echo __LINE__." tot_amount $tot_amount<br>"; 
                 echo __LINE__." tot_tva $tot_tva<br>"; 
@@ -499,7 +499,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
              * if if ($g_parameter->MY_TVA_USE == 'Y' )
              */
             if ($g_parameter->MY_TVA_USE == 'Y') {
-                if (DEBUG ) {
+                if ( DEBUGNOALYSS > 0 ) {
                     var_dump($tva);
                 }
                 foreach ($tva as $i => $value) {
@@ -524,7 +524,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         $tot_debit=round($tot_debit, 2);
                     }
                     $acc_operation->insert_jrnx();
-                    if ( DEBUG ) { 
+                    if ( DEBUGNOALYSS > 0 ) { 
                                     echo __LINE__." tot_tva $tot_tva<br>"; 
 
                     }
@@ -553,7 +553,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
              */
             
             /* insert into jrn */
-            if ( DEBUG ) { echo __LINE__." tot_debit ".round($tot_debit,2)."<br>"; }
+            if ( DEBUGNOALYSS > 0 ) { echo __LINE__." tot_debit ".round($tot_debit,2)."<br>"; }
             $acc_operation = new Acc_Operation($this->db);
             $acc_operation->date = $e_date;
             $acc_operation->echeance = $e_ech;
