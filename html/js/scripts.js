@@ -2984,8 +2984,11 @@ function show_tabs(a_tabs, p_display_tab)
 {
     try
     {
-        if (a_tabs.length == 0)
-            trow('a_tabs in empty');
+        if (a_tabs.length == 0) {
+            console.error('a_tabs in empty');
+            throw ("a_tabs empty");
+            return;
+        }
         var i = 0;
         for (i = 0; i < a_tabs.length; i++) {
             $(a_tabs[i]).hide();
@@ -4041,4 +4044,14 @@ function full_size(p_div) {
         div_dom.addClassName('fullsize');$('size_'+p_div).innerHTML='&#xe83d;';
     }
     
+}
+
+/**
+ * @brief download a document from an url
+ */
+function download_document(p_url) 
+{
+    waiting_box();
+    document.location=p_url;
+    remove_waiting_box();
 }

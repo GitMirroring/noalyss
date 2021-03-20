@@ -490,6 +490,18 @@ for ($i=0;$i<sizeof($aAttachedFile);$i++) :
 endfor;
   ?>
   </table>
+<?php if ( ! empty ($aAttachedFile)) :
+    /*** Propose to download all document in only one step */
+    $url="export.php?".http_build_query([ 
+        'ac'=>"FOLLOW",
+        "act"=>"RAW:document",
+        "gDossier"=>Dossier::id(),
+        "d_id"=>0,
+        "ag_id"=>$this->ag_id,
+        "a"=>"dwnall"]);
+    echo HtmlInput::button_anchor(_("Télécharger toutes les documents"), "", uniqid(),sprintf("onclick=\"download_document('%s')\"",$url));
+    
+endif;?>
   </div>
   <script language="javascript">
 function addFiles() {

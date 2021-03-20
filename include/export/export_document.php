@@ -21,7 +21,12 @@
 // Verify parameters
 /** 
  * \file
- * \brief retrieve a document
+ * \brief retrieve a document. It received http variables :
+ *      - a is the action : rm remove document, rmop: remove an operation : rmcomment , remove a comment,
+ *                      rmaction remove an action,dwnall download all document of an action into  a zip 
+ *      - id number
+ *      - ag_id action_gestion.ag_id
+ * 
  */
 if ( ! defined ('ALLOWED')) die (_('Non autorisé'));
 
@@ -31,6 +36,7 @@ require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
+// the parameter a is the action for the document, 
 $action = (isset($_REQUEST['a'])) ? $_REQUEST['a'] : 'sh';
 
 $id=$http->request('id','number','0');
@@ -101,4 +107,29 @@ if ($action == 'rmaction')
 	}
 	header("Content-type: text/html; charset: utf8", true);
 	print $json;
+}
+/**
+ * Download all document into a zip 
+ */
+if ($action == 'dwnall') {
+    // existing action ?
+    if ($ag_id == 0) {
+     throw new Exception("Action inconnue");
+    }
+    // check that user can read 
+    if (    $g_user->can_read_action($ag_id) == false 
+            || $g_user->check_action(VIEWDOC) == 0)
+    {
+            throw new Exception ("not allowed");
+    }
+    
+    // Retrieve all documents
+    $document=new Document($cn);
+    $aDocument=$document->get_all($ag_id);
+    
+    // Download all of them
+    $document->download($aDocument);
+    
+    
+    
 }

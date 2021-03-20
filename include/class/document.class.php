@@ -58,9 +58,9 @@ class Document
         $this->counter=0;
     }
 
-    /* !\brief insert a minimal document and set the d_id
+    /**
+     * @brief insert a minimal document and set the d_id
      */
-
     function blank()
     {
         $this->d_id=$this->db->get_next_seq("document_d_id_seq");
@@ -76,7 +76,7 @@ class Document
     }
 
     /**
-     * Insert the receipt number into the filename , each generated file
+     * @brief Insert the receipt number into the filename , each generated file
      * will have the name of the template (model) + receipt number)
      * @param type $pj the receipt number
      * @param type $filename the name of the file
@@ -352,15 +352,93 @@ class Document
         $this->db->commit();
         return 0;
     }
-
-    /* ! upload
-     * \brief upload a file into document
-     *  all the needed data are in $_FILES we don't increment the seq
-     * \param $p_file : array containing by default $_FILES
-     *
-     * \return
+    
+    /**
+     * @brief Download all documents in a ZIP files. The parameters is an array of Document, see 
+     * DOcument::get_all
+     * 
+     * @param array of Document $aDocument
+     * 
+     * @see Document::get_all()
      */
+    function download($aDocument)
+    {
+        
+        if (empty($aDocument)||is_array($aDocument)==false)
+        {
+            throw new Exception("Document.download expects an array");
+        }
+        // make a temp folder
+        $dirname=tempnam($_ENV['TMP'], 'document_dwnall');
+        unlink($dirname);
+        mkdir($dirname);
 
+        // download each file into that folder
+        $nb_document=count($aDocument);
+        $nCopy=0;
+        
+        // start a transaction to be able to export LOB
+        $this->db->start();
+        for ($i=0; $i<$nb_document; $i++)
+        {
+            // check that aDocument elt is a document object
+            if ( ! $aDocument[$i] instanceof  Document ) {
+                throw new Exception("Document.download.2 element is not a document object");
+            }
+            $filename=$dirname.DIRECTORY_SEPARATOR.$aDocument[$i]->d_filename;
+            // if file exists then add a number
+            if (file_exists($filename))
+            {
+
+                while (true)
+                {
+                    $nCopy++;
+                    $filename=$dirname.DIRECTORY_SEPARATOR.$nCopy."-".$aDocument[$i]->d_filename;
+                    if (!file_exists($filename))
+                    {
+                        $nCopy=0;
+                        break;
+                    }
+                } // end while true
+            } // end if fileexist
+            // export file
+            $this->db->lo_export($aDocument[$i]->d_lob,$filename);
+        } // end for $i 
+        // make a large PDF and send it
+        $zip=new Zip_Extended();
+        $name="document-".date ("Ymd-His").".zip";
+        if ( $zip->open($_ENV['TMP'].DIRECTORY_SEPARATOR.$name , ZipArchive::CREATE) != true)
+        {
+              die("Cannot create zip file");
+        }
+        $zip->add_recurse_folder($dirname . "/");
+        $zip->close();
+        // send it to stdout
+        ini_set('zlib.output_compression', 'off');
+        header("Pragma: public");
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+        header("Cache-Control: must-revalidate");
+        header('Content-type: zip/application');
+        header('Content-Disposition: attachment;filename="'.$name.'"', FALSE);
+        header("Accept-Ranges: bytes");
+        $file=fopen($_ENV['TMP'].DIRECTORY_SEPARATOR.$name, 'r');
+        while (!feof($file))
+        {
+            echo fread($file, 8192);
+        }
+        fclose($file);
+
+        $this->db->commit();
+        
+    }
+
+    /**
+     * @brief upload a file into document
+     *  all the needed data are in $_FILES we don't increment the seq
+     * @param $p_file : array containing by default $_FILES
+     *
+     */
     function upload($p_ag_id)
     {
         // nothing to save
@@ -505,6 +583,7 @@ class Document
         }
         return $a;
     }
+    
 
     /* !\brief Get  complete all the data member thx info from the database
      */
