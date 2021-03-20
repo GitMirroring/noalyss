@@ -167,5 +167,23 @@ class Ac_CommonTest extends TestCase
         $this->assertEquals(
                 $result, trim(sql_filter_per($g_connection, 98, 99, "p_id", "j_tech_per")));
     }
-
+    /***
+     * @covers add_http_link
+     */
+    function testAdd_Http_link()
+    {
+        $text="A link on http://demo.noalyss.eu is ok";
+        $result=add_http_link($text);
+        $this->assertEquals('A link on <a href="http://demo.noalyss.eu" target="_blank">http://demo.noalyss.eu</a> is ok',$result);
+        
+        $text="A link on https://demo.noalyss.eu/do.php?gDossier=33&ac=COMPTA/MENUFIN is ok";
+        $result=add_http_link($text);
+        $this->assertEquals('A link on <a href="https://demo.noalyss.eu/do.php?gDossier=33&ac=COMPTA/MENUFIN" target="_blank">https://demo.noalyss.eu/do.php?gDossier=33&ac=COMPTA/MENUFIN</a> is ok',$result);
+        
+        
+        
+        $text = "The chain is not going to change htps:/demo.noalyss.eu/do.php?gDossier=33&ac=COMPTA/MENUFIN";
+        $this->assertEquals($text,$text);
+        
+    }
 }

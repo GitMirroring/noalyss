@@ -1,5 +1,6 @@
 <?php
 require_once NOALYSS_INCLUDE."/class/follow_up_other_concerned.class.php";
+
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 $uniq=uniqid("tab",TRUE);
@@ -295,15 +296,17 @@ function small(p_id_textarea){
             elseif ($p_view == 'READ' || $editable_description == false)
             {
                 echo h2(_("Description"));
-
                 echo '<pre class="field_follow_up">';
-                echo h($acomment[0]['agc_comment']);
+                $comment_http= h($acomment[0]['agc_comment']);
+                $comment_http=add_http_link($comment_http);
+                echo $comment_http;
                 echo '</pre>';
             }
     } else {
           echo h2(_("Description"));
           echo $description->input();
    }
+
 
         //---------------------------------- Comment -----------------------------------------------------------------------
    
@@ -364,7 +367,7 @@ function small(p_id_textarea){
                 $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
                         $acomment[$c]['str_agc_date'].')').$js.
                                 '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
-                                " ".h($acomment[$c]['agc_comment']).'</pre>'
+                                " ".add_http_link(h($acomment[$c]['agc_comment'])).'</pre>'
                                 ;
 
             }
@@ -373,7 +376,7 @@ function small(p_id_textarea){
                     $comment=h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
                             $acomment[$c]['str_agc_date'].')').
                                     '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
-                                    " ".h($acomment[$c]['agc_comment']).'</pre>'
+                                    " ".add_http_link(h($acomment[$c]['agc_comment'])).'</pre>'
                                     ;
 
 
@@ -394,6 +397,7 @@ function small(p_id_textarea){
 
         }
     }
+   
 
     
 
@@ -488,6 +492,7 @@ for ($i=0;$i<sizeof($aAttachedFile);$i++) :
   </tr>
   <?php
 endfor;
+
   ?>
   </table>
 <?php if ( ! empty ($aAttachedFile)) :
@@ -540,7 +545,7 @@ catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>
   </div>
  <?php endif;?>
 </div>
-<?php if  ($p_view != 'NEW') : ?>
+<?php if  ($p_view != 'NEW') :  ?>
 Document créé le <?php echo $this->ag_timestamp ?> par <?php echo $this->ag_owner?>
 <?php endif; ?>
 

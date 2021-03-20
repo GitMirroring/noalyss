@@ -1559,3 +1559,15 @@ function rebuild_access_code($pan_code)
     }
     return $s_result;
 }
+
+/***
+ * Transform a http link into a clickable link
+ */
+function add_http_link($text)
+{
+    
+    $ret=preg_replace("!http[s]{0,1}://[[:graph:]*]*!",'<a href="\\0" target="_blank">\0</a>',$text);
+    
+    return $ret;
+
+}
