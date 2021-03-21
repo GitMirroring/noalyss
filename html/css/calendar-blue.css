@@ -19,8 +19,7 @@ div.calendar { position: relative; z-index:13; }
   border-radius: 0px;
 }
 
-.calendar .nav1 {
-  #background: #778 url(menuarrow.gif) no-repeat 100% 100%;
+.calendar .navcalendar {
 }
 
 .calendar thead .title { /* This holds the current "month, year" */
