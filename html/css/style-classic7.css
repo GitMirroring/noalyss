@@ -27,8 +27,8 @@
       font-style: normal;
     }
 BODY {
-    font-family: Arial, Helvetica, "Liberation Sans"  , FreeSans, sans-serif;
-    font-family: 'OpenSansRegular';
+    font-family: Arial, Helvetica, "Liberation Sans"  , FreeSans, sans-serif !important;
+    font-family: 'OpenSansRegular' !important;
     padding : 0px;
     margin:0px;
     color:darkblue !important;

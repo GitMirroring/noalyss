@@ -186,7 +186,7 @@ if ( file_exists("install.php")&& DEBUGNOALYSS == 0 )
 /**
  * Debug Design
  */
-if ( DEBUGNOALYSS == 0 )
+if ( DEBUGNOALYSS == 2 )
 {
     echo <<<EOF
 <div class="d-none d-sm-block d-md-none d-lg-none d-xl-none bg-info">Small</div>
@@ -226,11 +226,11 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
 
 
                 <div class="form-group row ">
-                    <input type="text"  class="input_text " value="" id="p_user" name="p_user" autofocus tabindex="1" placeholder="User" >
+                    <input type="text"  class="input_text " value="" id="p_user" name="p_user" autofocus tabindex="1" placeholder="User" style="padding:10px;margin:15px" >
                 </div>
 
                 <div class="form-group row">
-                    <INPUT TYPE="PASSWORD"  class="input_text" value=""  id="p_pass" NAME="p_pass"  tabindex="2" placeholder="*******" >
+                    <INPUT TYPE="PASSWORD"  class="input_text" value=""  id="p_pass" NAME="p_pass"  tabindex="2" placeholder="*******" style="padding:10px;margin:15px;">
                 </div>
 
                 <?php
@@ -297,6 +297,7 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
                         </SPAN>
 
                 </div>
+    </div>
                 <script> SetFocus('p_user');</script>
 
                 </body>

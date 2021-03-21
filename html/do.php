@@ -23,6 +23,7 @@ define('ALLOWED',1);
  * \brief Main file
  */
 require_once '../include/constant.php';
+
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
