@@ -89,6 +89,7 @@ var ManageTable = function (p_table_name)
     this.mt_style={};
     this.sort_column=0;
     this.afterSaveFct=undefined; // function to call after "save"
+    this.cssclass="inner_box";
     this.param = {"table": p_table_name, "ctl_id": this.control}; //<! default value to pass
     this.set_style=function(p_json) {
         this.mt_style=p_json;
@@ -353,14 +354,14 @@ var ManageTable = function (p_table_name)
                 
                 try {
                     var x = here.parseXML(req);
-                    var obj = {id: control, "cssclass": "inner_box", "html": loading()};
+                    var obj = {id: control, "cssclass": here.cssclass, "html": loading()};
                     create_div(obj);
                     var pos = calcy(3);
                     if (window.innerWidth < 1200) {
                         here.mt_style["margin-left"]="2%";
                         here.mt_style["max-width"]="80%";
                     }
-                    here.mt_style['top']=pos+"px";
+                    here.mt_style["top"]=pos+"px";
                     $(obj.id).setStyle(here.mt_style);
                     remove_waiting_box();
                     $(obj.id).update(x['html']);

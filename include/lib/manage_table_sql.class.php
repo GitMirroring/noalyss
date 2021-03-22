@@ -88,9 +88,11 @@ class Manage_Table_SQL
 
     private $icon_mod; //!< place of right or left the icon update or mod, default right, accepted value=left,right,first column for mod
     private $icon_del; //!< place of right or left the icon update or mod, default right, accepted value=left,right
-    private $dialogbox_style; 
+    private $dialogbox_style; //!< style of the dialog box
     private $button_add_top;  //!< place of the button add on the top, by default true
     protected $title; //! < give the title of the diabox , default is Data
+    private $cssclass; //! CSS class for the dialog box
+    
     /**
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the
@@ -131,7 +133,15 @@ class Manage_Table_SQL
         $this->search_table=true;
         $this->button_add_top=true;
         $this->title=_("Donnée");
+        $this->cssclass="inner_box";
+        
     }
+    function setCssClass($p_class) {
+		$this->cssclass=$p_class;
+	}
+	function getCssClass() {
+		return $this->cssclass;
+	}
     /**
      * Set the title of the diabox , default is Donnée
      * @param type $p_title
@@ -448,6 +458,7 @@ function check()
 		{$this->object_name}.set_sort({$this->get_col_sort()});
 		{$this->object_name}.set_control(\"{$this->get_dialog_box()}\");
 		{$this->object_name}.set_style($style);
+		{$this->object_name}.cssclass=\"{$this->cssclass}\";
 		</script>
 
 	";
@@ -977,7 +988,10 @@ function check()
     /**
      * @brief display into a dialog box the datarow in order 
      * to be appended or modified. Can be override if you need
-     * a more complex form.
+     * a more complex form or add elements with "set_order" before 
+     * calling this function. 
+     * This function does not add the form , only the table, 
+     *  
      */
     function input()
     {
