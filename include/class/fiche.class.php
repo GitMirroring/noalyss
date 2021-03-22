@@ -235,7 +235,7 @@ class Fiche
                 if ( $flag == 0 )
                 {
                     // there's a missing one, we insert it
-                    $t=new Fiche_Attr ($f->ad_id);
+                    $t=new Fiche_Attr ($this->cn,$f->ad_id);
                     $t->av_text="";
                     $t->ad_text=$f->ad_text;
                     $t->jnt_order=$f->jnt_order;
