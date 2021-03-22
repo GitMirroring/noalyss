@@ -1397,7 +1397,8 @@ function is_msie()
 function record_log($p_message)
 {
     error_log("noalyss".print_r($p_message,true),0);
-    error_log("noalyss GET [".json_encode($_GET)."] POST [".json_encode($_POST)."]",0);
+    error_log("noalyss GET [".json_encode($_GET)."]");
+    error_log("_POST [".json_encode($_POST)."]",0);
 }
 if(!function_exists('tracedebug')) {
   function tracedebug($file,$var, $label = NULL) {

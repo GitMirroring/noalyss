@@ -109,97 +109,103 @@ class Document
 
     function generate($p_array, $p_filename="")
     {
-        // create a temp directory in /tmp to unpack file and to parse it
-        $dirname=tempnam($_ENV['TMP'], 'doc_');
+        try {
+            // create a temp directory in /tmp to unpack file and to parse it
+            $dirname=tempnam($_ENV['TMP'], 'doc_');
 
 
-        unlink($dirname);
-        mkdir($dirname);
-        // Retrieve the lob and save it into $dirname
-        $this->db->start();
-        $dm_info="select md_name,md_type,md_lob,md_filename,md_mimetype
-                 from document_modele where md_id=$1";
-        $Res=$this->db->exec_sql($dm_info, [$this->md_id]);
+            unlink($dirname);
+            mkdir($dirname);
+            // Retrieve the lob and save it into $dirname
+            $this->db->start();
+            $dm_info="select md_name,md_type,md_lob,md_filename,md_mimetype
+                     from document_modele where md_id=$1";
+            $Res=$this->db->exec_sql($dm_info, [$this->md_id]);
 
-        $row=Database::fetch_array($Res, 0);
-        $this->d_lob=$row['md_lob'];
-        $this->d_filename=$row['md_filename'];
-        $this->d_mimetype=$row['md_mimetype'];
-        $this->d_name=$row['md_name'];
+            $row=Database::fetch_array($Res, 0);
+            $this->d_lob=$row['md_lob'];
+            $this->d_filename=$row['md_filename'];
+            $this->d_mimetype=$row['md_mimetype'];
+            $this->d_name=$row['md_name'];
 
 
-        chdir($dirname);
-        $filename=$row['md_filename'];
-        $exp=$this->db->lo_export($row['md_lob'], $dirname.DIRECTORY_SEPARATOR.$filename);
-        if ($exp===false)
-        {
-            record_log(sprintf('D1 ,  export failed %s', $filename));
-            throw new Exception(sprintf(_("Export a échoué pour %s", $filename)));
-        }
-
-        $type="n";
-        // if the doc is a OOo, we need to unzip it first
-        // and the name of the file to change is always content.xml
-        if (strpos($row['md_mimetype'], 'vnd.oasis')!=0)
-        {
-            ob_start();
-            $zip=new Zip_Extended;
-            if ($zip->open($filename)===TRUE)
+            chdir($dirname);
+            $filename=$row['md_filename'];
+            $exp=$this->db->lo_export($row['md_lob'], $dirname.DIRECTORY_SEPARATOR.$filename);
+            if ($exp===false)
             {
-                $zip->extractTo($dirname.DIRECTORY_SEPARATOR);
-                $zip->close();
+                record_log(sprintf('DOCUMENT.GENERATE.D1 ,  export failed %s %s',$dirname, $filename));
+                throw new Exception(sprintf(_("Export a échoué pour %s"), $filename));
+            }
+
+            $type="n";
+            // if the doc is a OOo, we need to unzip it first
+            // and the name of the file to change is always content.xml
+            if (strpos($row['md_mimetype'], 'vnd.oasis')!=0)
+            {
+                ob_start();
+                $zip=new Zip_Extended;
+                if ($zip->open($filename)===TRUE)
+                {
+                    $zip->extractTo($dirname.DIRECTORY_SEPARATOR);
+                    $zip->close();
+                }
+                else
+                {
+                    record_log(sprintf('DOCUMENT.GENERATE.D2  unzip failed %s', $filename));
+                    throw new Exception(sprintf(_("Décompression a échoué %s", $filename)));
+                }
+
+                // Remove the file we do  not need anymore
+                unlink($filename);
+                ob_end_clean();
+                $file_to_parse="content.xml";
+                $type="OOo";
             }
             else
             {
-                record_log(sprintf('D2  unzip failed %s', $filename));
-                throw new Exception(sprintf(_("Décompression a échoué %s", $filename)));
+                $file_to_parse=$filename;
             }
+            // affect a number
+            $this->d_number=$this->db->get_next_seq("seq_doc_type_".$row['md_type']);
 
-            // Remove the file we do  not need anymore
-            unlink($filename);
-            ob_end_clean();
-            $file_to_parse="content.xml";
-            $type="OOo";
-        }
-        else
-        {
-            $file_to_parse=$filename;
-        }
-        // affect a number
-        $this->d_number=$this->db->get_next_seq("seq_doc_type_".$row['md_type']);
+            // parse the document - return the doc number ?
+            $this->parseDocument($dirname, $file_to_parse, $type, $p_array);
 
-        // parse the document - return the doc number ?
-        $this->parseDocument($dirname, $file_to_parse, $type, $p_array);
-
-        $this->db->commit();
-        // if the doc is a OOo, we need to re-zip it
-        if (strpos($row['md_mimetype'], 'vnd.oasis')!=0)
-        {
-            ob_start();
-            $zip=new Zip_Extended;
-            $res=$zip->open($filename, ZipArchive::CREATE);
-            if ($res!==TRUE)
+            $this->db->commit();
+            // if the doc is a OOo, we need to re-zip it
+            if (strpos($row['md_mimetype'], 'vnd.oasis')!=0)
             {
-                record_log(sprintf('D3  zip failed %s', $filename));
-                throw new Exception(_('Echec compression'));
+                ob_start();
+                $zip=new Zip_Extended;
+                $res=$zip->open($filename, ZipArchive::CREATE);
+                if ($res!==TRUE)
+                {
+                    record_log(sprintf('DOCUMENT.GENERATE.D3  zip failed %s', $filename));
+                    throw new Exception(_('Echec compression'));
+                }
+                $zip->add_recurse_folder($dirname.DIRECTORY_SEPARATOR);
+                $zip->close();
+
+                ob_end_clean();
+
+                $file_to_parse=$filename;
             }
-            $zip->add_recurse_folder($dirname.DIRECTORY_SEPARATOR);
-            $zip->close();
+            if ($p_filename!="")
+            {
+                $this->d_filename=$this->compute_filename($p_filename, $this->d_filename);
+            }
+            $this->saveGenerated($dirname.DIRECTORY_SEPARATOR.$file_to_parse);
+            // Invoice
+            $href=http_build_query(array('gDossier'=>Dossier::id(), "d_id"=>$this->d_id, 'act'=>'RAW:document'));
+            $ret='<A class="mtitle" HREF="export.php?'.$href.'">'._('Document').'</A>';
 
-            ob_end_clean();
-
-            $file_to_parse=$filename;
+            return $ret;
+        } catch (Exception $e) {
+            record_log($e->getMessage());
+            record_log($e->getTraceAsString());
+            return span(_("Génération du document a échoué"),'class="notice"');
         }
-        if ($p_filename!="")
-        {
-            $this->d_filename=$this->compute_filename($p_filename, $this->d_filename);
-        }
-        $this->saveGenerated($dirname.DIRECTORY_SEPARATOR.$file_to_parse);
-        // Invoice
-        $href=http_build_query(array('gDossier'=>Dossier::id(), "d_id"=>$this->d_id, 'act'=>'RAW:document'));
-        $ret='<A class="mtitle" HREF="export.php?'.$href.'">'._('Document').'</A>';
-
-        return $ret;
     }
 
     /* ! parseDocument
