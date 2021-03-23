@@ -384,6 +384,7 @@ class Pre_op_ven extends Pre_operation_detail
                    ;
             $Quantity=new INum();
             $Quantity->setReadOnly(false);
+            $Quantity->prec=4;
             $Quantity->size=8;
             $Quantity->javascript="onChange='format_number(this);clean_tva($i);compute_ledger($i)'";
             $array[$i]['quantity']=$Quantity->input("e_quant".$i,$quant);

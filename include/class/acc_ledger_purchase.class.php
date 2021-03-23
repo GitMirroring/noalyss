@@ -1403,6 +1403,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $quant=(isset(${"e_quant$i"}))?${"e_quant$i"}:"1"
                    ;
             $Quantity=new INum();
+            $Quantity->prec=4;
             $Quantity->setReadOnly(false);
             $Quantity->size=9;
             $Quantity->javascript="onchange=\"format_number(this);clean_tva($i);compute_ledger($i)\"";
@@ -1646,7 +1647,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $r.=nbm(${"e_march".$i."_price"},4);
             $r.='</td>';
             $r.='<td class="num">';
-            $r.=nbm(${"e_quant".$i});
+            $r.=nbm(${"e_quant".$i},4);
             $r.='</td>';
             $both_side=0;
             if ($g_parameter->MY_TVA_USE == 'Y')

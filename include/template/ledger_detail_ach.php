@@ -198,7 +198,7 @@ $str_anc="";
                     $row.=td($sym_tva, 'style="text-align:center"');
                     $pu = $q['qp_unit'];
                     $row.=td(nbm($pu,4), 'class="num"');
-                    $row.=td(nbm($q['qp_quantite']), 'class="num"');
+                    $row.=td(nbm($q['qp_quantite'],4), 'class="num"');
 
                     $no_ded = bcadd($q['qp_dep_priv'], $q['qp_nd_amount']);
                     $row.=td(nbm($no_ded), ' style="text-align:right"');
