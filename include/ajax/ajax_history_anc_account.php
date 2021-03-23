@@ -66,4 +66,6 @@ echo HtmlInput::title_box($poste_analytic->getp("po_name"), $div, "close", "", "
 
 echo $anc_grandlivre->display_html(0);
 $anc_grandlivre->pa_id=$poste_analytic->pa_id;
-echo $anc_grandlivre->show_button();
+echo $anc_grandlivre->button_export_csv();
+echo HtmlInput::button_close($div);
+        

@@ -866,7 +866,7 @@ function check()
             $js=sprintf("%s.input('%s','%s');", $this->object_name,
                     $p_row[$this->table->primary_key], $this->object_name
             );
-            echo HtmlInput::image_click("crayon-mod-b24.png", $js, _("Modifier"));
+            echo Icon_Action::modify(uniqid(), $js);
             echo "</td>";
         }
     }
@@ -879,7 +879,7 @@ function check()
             $js=sprintf("%s.remove('%s','%s');", $this->object_name,
                     $p_row[$this->table->primary_key], $this->object_name
             );
-            echo HtmlInput::image_click("trash-24.gif", $js, _("Effacer"));
+            echo Icon_Action::trash(uniqid(), $js);
             echo "</td>";
         }
     }

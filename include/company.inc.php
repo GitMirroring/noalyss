@@ -23,10 +23,11 @@
  * CA ....
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
+require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
+
 global $g_user;
 $http=new HttpInput();
 echo '<div class="content">';
-require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 if (isset($_POST['record_company']))
 {
 	$m = new Noalyss_Parameter_Folder($cn);
@@ -162,7 +163,8 @@ $all->value = '';
 echo "<tr>" . td(_("Pays"), 'style="text-align:right"') . $all->input("p_pays", $my->MY_PAYS) . "</tr>";
 $all->value = '';
 echo "<tr>" . td(_("Numéro de Tva"), 'style="text-align:right"') . $all->input("p_tva", $my->MY_TVA) . "</tr>";
-echo "<tr>" . td(_("Utilisation de la compta. analytique"), 'style="text-align:right"') . $compta->input("p_compta", $array) . "</tr>";
+echo "<tr>" . td(_("Utilisation de la compta. analytique"), 'style="text-align:right"') . 
+        $compta->input("p_compta", $array) . "</tr>";
 echo '<tr>'. td(_("Opération analytique uniquement pour les postes comptables commençant par")).
         '<td>'.
         $anc_filter->input().

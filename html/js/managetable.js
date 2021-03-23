@@ -356,11 +356,8 @@ var ManageTable = function (p_table_name)
                     var x = here.parseXML(req);
                     var obj = {id: control, "cssclass": here.cssclass, "html": loading()};
                     create_div(obj);
-                    var pos = calcy(3);
-                    if (window.innerWidth < 1200) {
-                        here.mt_style["margin-left"]="2%";
-                        here.mt_style["max-width"]="80%";
-                    }
+                    var pos = calcy(50);
+      
                     here.mt_style["top"]=pos+"px";
                     $(obj.id).setStyle(here.mt_style);
                     remove_waiting_box();

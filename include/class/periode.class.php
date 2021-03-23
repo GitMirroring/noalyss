@@ -597,12 +597,12 @@ class Periode
             // Updatable 
             $js=sprintf("%s.box_display('%d')", $p_js, $obj->p_id);
             echo "<td>";
-            echo HtmlInput::image_click("crayon-mod-b24.png", $js, _("Effacer"));
+            echo Icon_Action::modify(uniqid(), $js);
             echo "</td>";
             //removable
             $js=sprintf("%s.remove('%d')", $p_js, $obj->p_id);
             echo "<td>";
-            echo HtmlInput::image_click("trash-24.gif", $js, _("Effacer"));
+            echo Icon_Action::trash(uniqid(), $js);
             echo "</td>";
         }
         else

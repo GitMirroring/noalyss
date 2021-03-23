@@ -328,9 +328,9 @@ class Anc_Operation
             $ret.=td(h($row['oa_description']));
             $js="anc_remove_operation(".$gDossier.",".$oldgroup.")";
              
-            $ret.="<td>".HtmlInput::image_click("trash-24.gif", $js, _("Effacer"))."</td>";
+            $ret.="<td>".Icon_Action::trash(uniqid(), $js) ."</td>";
             $js="anc_detail_op({$row['oa_group']},{$gDossier})";
-            $ret .= "<td>". HtmlInput::image_click("crayon-mod-b24.png", $js, _("Modifier"))."</td>";
+            $ret .= "<td>". Icon_Action::modify(uniqid(), $js)."</td>";
             $ret.="</tr>";
         }    
         $ret.='</table>';
