@@ -57,7 +57,7 @@ class Impress
         else
             $cond="( j_date >= to_date('$p_start','DD.MM.YYYY') and j_date <= to_date('$p_end','DD.MM.YYYY'))";
 
-        while (preg_match_all("(\[[0-9]*[A-Z]*%*c*d*s*\])",$p_formula,$e) == true)
+        while (preg_match_all("(\[[0-9]*[A-Z]*%*c*d*s*S*\])",$p_formula,$e) == true)
           {
             // remove the [ ]
             $x=$e[0];
@@ -70,11 +70,14 @@ class Impress
                   $compute='cred';
                 if ( strpos($line,'s') != 0 )
                   $compute='signed';
+                if ( strpos($line,'S') != 0 )
+                  $compute='cdsigned';
                 $line=str_replace ("[","",$line);
                 $line=str_replace ("]","",$line);
                 $line=str_replace ("d","",$line);
                 $line=str_replace ("c","",$line);
                 $line=str_replace ("s","",$line);
+                $line=str_replace ("S","",$line);
                 // If there is a FROM clause we must recompute
                 // the time cond
 
@@ -145,7 +148,9 @@ class Impress
                 if ( $compute=='cred')
                   $i=$detail['credit'];
                 if ( $compute=='signed')
-                  $i=$detail['debit']-$detail['credit'];
+                  $i=bcsub($detail['debit'],$detail['credit'],4);
+                if ( $compute=='cdsigned')
+                  $i=bcsub($detail['credit'],$detail['debit'],4);
                 $p_formula=str_replace($x[0],$i,$p_formula);
               }
           }
@@ -215,28 +220,29 @@ class Impress
         $p_string=str_replace("c","",$p_string);
         $p_string=str_replace("d","",$p_string);
         $p_string=str_replace("s","",$p_string);
+        $p_string=str_replace("S","",$p_string);
         // Remove T,t
         $p_string=str_replace("t","",$p_string);
 
-		// remove date
-		$p_string=  preg_replace("/FROM*=*[0-9]+/", "", $p_string);
-		// remove comment
-		$p_string=  preg_replace("/#.*/", "", $p_string);
-		// remove $C=
-		$p_string=  preg_replace('/\$[a-z]*[A-Z]*[0-9]*[A-Z]*[a-z]*/', "", $p_string);
-		$p_string=  preg_replace('/=/', "", $p_string);
+        // remove date
+        $p_string=  preg_replace("/FROM*=*[0-9]+/", "", $p_string);
+        // remove comment
+        $p_string=  preg_replace("/#.*/", "", $p_string);
+        // remove $C=
+        $p_string=  preg_replace('/\$[a-z]*[A-Z]*[0-9]*[A-Z]*[a-z]*/', "", $p_string);
+        $p_string=  preg_replace('/=/', "", $p_string);
 
-		// remove account
-		$p_string=  preg_replace("/\[[0-9]*[A-Z]*%*\]/", "", $p_string);
+        // remove account
+        $p_string=  preg_replace("/\[[0-9]*[A-Z]*%*\]/", "", $p_string);
 
-		$p_string=  preg_replace("/\+|-|\/|\*/", "", $p_string);
-		$p_string=  preg_replace("/[0-9]*\.*[0-9]/", "", $p_string);
+        $p_string=  preg_replace("/\+|-|\/|\*/", "", $p_string);
+        $p_string=  preg_replace("/[0-9]*\.*[0-9]/", "", $p_string);
 
-		//********************************************************************************************************************
-		// If the string is empty then formula should be good
-		//
-		//********************************************************************************************************************
-		if ($p_string == '')
+        //********************************************************************************************************************
+        // If the string is empty then formula should be good
+        //
+        //********************************************************************************************************************
+        if ($p_string == '')
         {
             return true;
         }

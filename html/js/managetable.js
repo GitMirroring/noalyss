@@ -199,6 +199,7 @@ var ManageTable = function (p_table_name)
             answer['html'] = getNodeText(html[0]);
             return answer;
         } catch (e) {
+            console.error("managetable:parseXML")
             throw e;
         }
     };

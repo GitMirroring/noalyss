@@ -1,5 +1,4 @@
 <?php
-
 /*
  *   This file is part of NOALYSS.
  *
@@ -20,307 +19,100 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/**\file
+/**
+ * \file
  * \brief display, add, delete and modify forecast
  */
+if (!defined('ALLOWED'))
+    die('Appel direct ne sont pas permis');
 
-if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/anticipation.class.php';
+require_once NOALYSS_INCLUDE."/database/forecast_sql.class.php";
+require_once NOALYSS_INCLUDE."/database/forecast_item_sql.class.php";
+require_once NOALYSS_INCLUDE."/database/forecast_category_sql.class.php";
+require_once NOALYSS_INCLUDE."/class/forecast_item_mtable.class.php";
+
+
 global $http;
-$action=$http->get("action","string","");
+
+$action=$http->get("action", "string", "");
+$ac=$http->request("ac");
+$forecast_id=$http->request('f_id', 'number',-1);
 
 echo '<div class="content">';
-$sa=$http->request("sa","string","list");
+$sa=$http->request("sa", "string", "list");
 /* * ********************************************************************
  * Remove a anticipation
  *
  *
  * ******************************************************************** */
-if ( $action == 'del' )
+if ($action=='del')
 {
-    $f_id=$http->get("f_id","number");
-    $forecast = new Forecast($cn, $f_id);
+    $f_id=$http->get("f_id", "number");
+    $forecast=new Forecast_SQL($cn, $f_id);
     $forecast->delete();
 }
-/*
+/* * *******************************************************************
  * Cloning
- */
-if ( $action == 'clone' )
+ * ******************************************************************* */
+if ($action=='clone')
 {
     echo "<h2> cloning</h2>";
     /*
      * We need to clone the forecast
      */
-    $f_id=$http->get("f_id","number");
-    $anti = new Forecast($cn, $f_id);
-    $anti->object_clone();
-    $sa="list";
+    $f_id=$http->get("f_id", "number");
+    $anti=new Anticipation($cn, $f_id);
+    $forecast_id=$anti->object_clone();
+    $action="mod_view";
 }
-/* * ********************************************************************
- * Save the modification mod_cat_save
- *
- *
- * ******************************************************************** */
-if (isset($_POST['mod_cat_save']))
-{
-    /*
-     * We save the forecast
-     */
-    $f_id=$http->post("f_id","number");
-    $an_name=$http->post("an_name");
-    $start_date=$http->post("start_date");
-    $end_date=$http->post("end_date");
-    $anti = new Forecast($cn,$f_id);
-    try
-    {
-	$cn->start();
-	/* Save forecast */
-	$anti->set_parameter('name', $an_name);
-	$anti->set_parameter('start_date', $start_date);
-	$anti->set_parameter('end_date', $end_date);
 
-	$anti->save();
-
-	/* add new category */
-	for ($i = 0; $i < MAX_CAT; $i++)
-	{
-	    if (isset($_POST['fr_cat_new' . $i]))
-	    {
-                $fr_cat_name=$http->post("fr_cat_new".$i);
-		if (strlen(trim($fr_cat_name)) != 0)
-		{
-                    $order=$http->post("fc_order_new".$i);
-                    $desc=$http->post('fr_cat_new' . $i);
-                    $f_id=$http->post("f_id","number");
-		    $c = new Forecast_Cat($cn);
-		    $c->set_parameter('order',$order);
-		    $c->set_parameter('desc', $desc);
-		    $c->set_parameter('forecast', $f_id);
-		    $c->save();
-		}
-	    }
-	}
-
-	/* update existing cat */
-	foreach ($_POST as $key => $value)
-	{
-	    $var = sscanf($key, 'fr_cat%d');
-	    $idx = sprintf("fr_cat%d", $var[0]);
-	    if (isset($_POST[$idx]))
-	    {
-		$fc = new Forecast_Cat($cn, $var[0]);
-		if (strlen(trim($_POST[$idx])) == 0)
-		{
-		    $fc->delete();
-		}
-		else
-		{
-                     $order=$http->post("fc_order".$var[0]);
-                    $desc=$http->post('fr_cat' . $var[0]);
-                    $f_id=$http->post("f_id","number");
-		    $fc->set_parameter('order', $order);
-		    $fc->set_parameter('desc', $desc);
-		    $fc->set_parameter('forecast', $f_id);
-		    $fc->save();
-		}
-	    }
-	}
-
-	$cn->commit();
-    }
-    catch (Exception $e)
-    {
-	alert($e->getMessage());
-	$cn->rollback();
-    }
-    $sa = 'vw';
-}
 /* * ********************************************************************
  * Save first the data for new
  *
  *
  * ******************************************************************** */
-if ($sa == 'new' || isset($_POST['step3']))
+if ($sa=='new')
 {
-    $correct = 0;
-    if (isset($_POST['step3']))
+    try
     {
-	/* save all the items */
-	try
-	{
-	    $cn->start();
-            $nb_row=$http->post("nbrow");
-	    for ($i = 0; $i < $nb_row; $i++)
-	    {
-
-		// Delete if needed
-		if (isset($_POST['fi_id' . $i]))
-		{
-		    if (strlen(trim($_POST['an_cat_acc' . $i])) == 0 && strlen(trim($_POST['an_qc' . $i])) == 0)
-		    {
-			$e = new Forecast_item($cn);
-			$e->set_parameter("id", $_POST['fi_id' . $i]);
-			$e->delete();
-		    }
-		}
-
-		if (strlen(trim($_POST['an_cat_acc' . $i])) != 0 || strlen(trim($_POST['an_qc' . $i])) != 0)
-		{
-		    /* we save only if there is something */
-		    $e = new Forecast_item($cn);
-		    if (isset($_POST['fi_id' . $i]))
-		    {
-			$e->set_parameter("id", $_POST['fi_id' . $i]);
-		    }
-		    $e->set_parameter('text', $_POST['an_label' . $i]);
-		    $e->set_parameter('amount', $_POST['an_cat_amount' . $i]);
-		    $e->set_parameter('debit', $_POST['an_deb' . $i]);
-		    $e->set_parameter('cat_id', $_POST['an_cat' . $i]);
-		    $e->set_parameter('account', $_POST['an_cat_acc' . $i]);
-		    $e->set_parameter('periode', $_POST['month' . $i]);
-		    $f = new Fiche($cn);
-		    if ($f->get_by_qcode($_POST['an_qc' . $i], false) == 0)
-			$e->set_parameter('card', $f->id);
-		    else
-			$e->set_parameter('card', null);
-		    $e->set_parameter('order', $i);
-		    $e->save();
-		}
-	    }
-	    $cn->commit();
-	    $sa = 'vw'; // to avoid to restart the add of new anticipation
-	}
-	catch (Exception $e)
-	{
-	    $cn->rollback();
-	    alert($e->getMessage());
-	    $correct = 1;
-	}
+        $f_name=$http->post("f_name");
+        $p_start=$http->post("p_start","number");
+        $p_end=$http->post("p_end","number");
+        if ( $f_name == "") {
+            throw new Exception(_("Le nom ne peut pas être vide"));
+        }
+        $forecast_sql=new Forecast_SQL($cn);
+        $forecast_sql->setp("f_name",$f_name);
+        $forecast_sql->setp("f_start_date",$p_start);
+        $forecast_sql->setp("f_end_date",$p_end);
+        $forecast_sql->save();
+        $action="mod_item";
+        $forecast_id=$forecast_sql->getp("f_id");
+        
     }
-    /* Second step : we save the name and category
-     * and propose the items we add the item */
-    if ($correct == 2 || isset($_POST['step2']))
+    catch (Exception $exc)
     {
-	try
-	{
-	    $cn->start();
-	    /* Save forecast */
-	    $a = new Forecast($cn);
-	    $a->set_parameter('name', $_POST['an_name']);
-	    $a->set_parameter('start_date', $_POST['start_date']);
-	    $a->set_parameter('end_date', $_POST['end_date']);
-
-
-	    $a->save();
-	    $id = $a->get_parameter("id");
-	    /* save cat */
-	    for ($i = 0; $i < MAX_CAT; $i++)
-	    {
-		if (strlen(trim($_POST['fr_cat' . $i])) != 0)
-		{
-		    $c = new Forecast_Cat($cn);
-		    $c->set_parameter('order', $_POST['fr_order' . $i]);
-		    $c->set_parameter('desc', $_POST['fr_cat' . $i]);
-		    $c->set_parameter('forecast', $id);
-		    $c->save();
-		}
-	    }
-	    $cn->commit();
-	}
-	catch (Exception $e)
-	{
-	    alert($e->getMessage());
-	    $correct = 1;
-	    unset($_POST['step2']);
-	    $cn->rollback();
-	}
+        echo_warning($exc->getMessage());
+        $sa="list";
     }
 }
 
-/* * ********************************************************************
- * Ask for a new anticipation (forecast)
- *
- *
- * ******************************************************************** */
-if ($sa == 'new')
-{
-    /* Second step : we save the name and category
-     * and propose the items we add the item */
-    if ($correct == 2 || isset($_POST['step2']))
-    {
-	/* Propose a form for the items
-	 */
-	$anticip = new Anticipation($cn, $a->get_parameter("id"));
-	echo '<div class="content">';
-
-	echo '<form method="post" action="?">';
-	echo dossier::hidden();
-	echo HtmlInput::hidden('sa', 'new');
-	echo HtmlInput::hidden('ac', $_REQUEST['ac']);
-	echo HtmlInput::hidden('f_id', $id);
-	echo $anticip->form_item();
-	echo HtmlInput::submit('step3', _('Sauver'));
-	echo '</form>';
-	echo '</div>';
-    }
-    /* First step, the name and the category */
-    if (!isset($_POST['step2']) || $correct == 1)
-    {
-	$anc = new Anticipation($cn);
-	echo '<div class="content">';
-	/* display a blank form for name and category */
-	echo '<form method="post" action="?">';
-	echo dossier::hidden();
-	echo HtmlInput::hidden('sa', 'new');
-	echo HtmlInput::hidden('ac', $_REQUEST['ac']);
-	echo $anc->form_cat();
-	echo HtmlInput::submit('step2', _('Sauver'));
-	echo '</form>';
-	echo '</div>';
-    }
-}
-/* * ********************************************************************
- * If we request to modify the category or the name
- *
- *
- * ******************************************************************** */
-if ( $action == 'mod_cat')
-{
-    $anc = new Anticipation($cn, $_GET['f_id']);
-    echo '<div class="content">';
-    /* display a blank form for name and category */
-    echo '<form method="post" action="?">';
-    echo dossier::hidden();
-    echo HtmlInput::hidden('sa', 'mod');
-    echo HtmlInput::hidden('ac', $_REQUEST['ac']);
-    echo $anc->form_cat();
-    echo HtmlInput::submit('mod_cat_save', _('Sauver'));
-
-    echo '</form>';
-    echo '</div>';
-    return;
-}
 /* * ********************************************************************
  * If we request to modify the items
  *
  *
  * ******************************************************************** */
-if ($action == 'mod_item' )
+if ($action=='mod_item')
 {
 
     /* Propose a form for the items
      */
-    $anticip = new Anticipation($cn, $_GET['f_id']);
-    echo '<div class="content">';
-    echo '<form method="post" action="?">';
-    echo dossier::hidden();
-    echo HtmlInput::hidden('sa', 'new');
-    echo HtmlInput::hidden('ac', $_REQUEST['ac']);
-    echo HtmlInput::hidden('f_id', $_GET['f_id']);
-    echo $anticip->form_item();
-    echo HtmlInput::submit('step3', _('Sauver'));
-    echo '</form>';
-    echo '</div>';
+    $anticipation=new Anticipation($cn, $forecast_id);
+    $anticipation->input_form();
+
+
+
     return;
 }
 /* * ********************************************************************
@@ -328,46 +120,47 @@ if ($action == 'mod_item' )
  *
  *
  * ******************************************************************** */
-if (isset($_REQUEST['f_id']) && $sa == "vw")
+if ($sa=="vw")
 {
     echo '<div class="content">';
-    $forecast = new Anticipation($cn);
-    $forecast->set_parameter("id", $_REQUEST['f_id']);
+    $forecast=new Anticipation($cn);
+    
+
+    $forecast->setForecastId($forecast_id);
     try
     {
-	echo $forecast->display();
-	echo '<div class="noprint">';
-	echo '<form id="forecast_frm" method="get">';
-	echo dossier::hidden();
-        echo HtmlInput::hidden('action','');
-	echo HtmlInput::hidden('f_id', $_REQUEST['f_id']);
-	echo HtmlInput::submit('mod_cat_bt', _('Modifier nom ou catégories'),'onclick="$(\'action\').value=\'mod_cat\';"');
-	echo HtmlInput::submit('mod_item_bt', _('Modifier éléments'),'onclick="$(\'action\').value=\'mod_item\';"');
-	//echo HtmlInput::submit('cvs',_('Export CVS'));
-	echo HtmlInput::submit('del_bt', _('Effacer'), 'onclick="$(\'action\').value=\'del\';return confirm_box(\'forecast_frm\',\'' . _('Vous confirmez l\\\' effacement') . '\')"');
-	echo HtmlInput::submit('clone_bt', _('Cloner'), 'onclick="$(\'action\').value=\'clone\';return confirm_box(\'forecast_frm\',\'' . _('Vous confirmez le clonage ') . '\')"');
-	echo HtmlInput::hidden('ac', $_REQUEST['ac']);
-        $href=http_build_query(array('ac'=>$_REQUEST['ac'],'gDossier'=>$_REQUEST['gDossier']));
+        echo $forecast->display();
+        echo '<div class="noprint">';
+        echo '<form id="forecast_frm" method="get">';
+        echo dossier::hidden();
+        echo HtmlInput::hidden('action', '');
+        echo HtmlInput::hidden('f_id', $forecast_id);
+        echo HtmlInput::submit('mod_item_bt', _('Modifier éléments'), 'onclick="$(\'action\').value=\'mod_item\';"');
+        //echo HtmlInput::submit('cvs',_('Export CVS'));
+    
+        echo HtmlInput::hidden('ac', $ac);
+        $href=http_build_query(array('ac'=>$ac, 'gDossier'=>Dossier::id()));
         echo '<a style="display:inline" class="smallbutton" href="do.php?'.$href.'">'._('Retour').'</a>';
-	echo '</form>';
-	echo '</div>';
-	echo '</div>';
-	return;
+        echo '</form>';
+        echo '</div>';
+        echo '</div>';
+        return;
     }
     catch (Exception $e)
     {
-	echo "<div class=\"error\"><p>" . _("Erreur")." : " . $e->getMessage() . '</p><p>' . _('Vous devez corriger') . '</p></div>';
-	$anc = new Anticipation($cn, $_GET['f_id']);
-	echo '<div class="content">';
-	/* display a blank form for name and category */
-	echo '<form method="post" action="?">';
-	echo dossier::hidden();
-	echo HtmlInput::hidden('sa', 'mod');
-	echo HtmlInput::hidden('ac', $_REQUEST['ac']);
-	echo $anc->form_cat();
-	echo HtmlInput::submit('mod_cat_save', _('Sauver'));
-	echo '</form>';
-	echo '</div>';
+        echo "<div class=\"error\"><p>"._("Erreur")." : ".$e->getMessage().
+        '</p><p>'._('Vous devez corriger').'</p></div>';
+        $anc=new Anticipation($cn, $forecast_id);
+        echo '<div class="content">';
+        /* display a blank form for name and category */
+        echo '<form method="post" action="?">';
+        echo dossier::hidden();
+        echo HtmlInput::hidden('sa', 'mod');
+        echo HtmlInput::hidden('ac', $ac);
+        echo $anc->form_cat();
+        echo HtmlInput::submit('mod_cat_save', _('Sauver'));
+        echo '</form>';
+        echo '</div>';
     }
 }
 /* * ********************************************************************
@@ -378,19 +171,23 @@ if (isset($_REQUEST['f_id']) && $sa == "vw")
 // display button add and list of forecast to display
 if ($sa=='list')
 {
+
+
     $aForecast=Forecast::load_all($cn);
     $menu=array();
     $get_dossier=dossier::get();
+    require_once NOALYSS_TEMPLATE."/forecast-new.php";
 
     echo '<div class="content">';
     echo _('Filtre')." ".HtmlInput::filter_table("forecast_table_id", '0', 1);
     echo '<TABLE id="forecast_table_id" class="vert_mtitle">';
-    $href="?ac=".$_REQUEST['ac']."&sa=new&".$get_dossier;
-    echo '<TR><TD class="first"><A HREF="'.$href.'">'._("Ajout d'une prévision").'</A></TD></TR>';
-    $def=(isset($_REQUEST['f_id']))?$_REQUEST['f_id']:-1;
+    $href="?ac=".$ac."&sa=new&".$get_dossier;
+    echo '<TR><TD class="first"><A HREF="#" onclick="document.getElementById(\'forecast_new_div\').show()">'._("Ajout d'une prévision").'</A></TD></TR>';
+    $forecast_id=$http->request('f_id', 'number', -1);
+
     for ($i=0; $i<count($aForecast); $i++)
     {
-        $href="?ac=".$_REQUEST['ac']."&sa=vw&".$get_dossier.'&f_id='.$aForecast[$i]['f_id'];
+        $href="?ac=".$ac."&sa=vw&".$get_dossier.'&f_id='.$aForecast[$i]['f_id'];
         $name=h($aForecast[$i]['f_name']);
         $menu[]=array($href, $name, $name, $aForecast[$i]['f_id']);
         echo '<TR><TD><A HREF="'.$href.'">'.h($name).'</A></TD></TR>';

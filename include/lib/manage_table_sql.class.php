@@ -354,7 +354,7 @@ function check()
      * select must supply an array of possible values [val=> , label=>] with
      * the variable $this->key_name->a_value
      * @param $p_key col name
-     * @param $p_type is SELECT NUMERIC TEXT , DATE  or custom 
+     * @param $p_type is "text", "numeric", "date", "select", "timestamp","custom"
      * @param $p_array if type is  SELECT an array is expected
      * @note if $p_type is custom  then a function named input_custom($p_key,$p_value) must be implemented 
      * in the class
@@ -918,9 +918,16 @@ function check()
                 $td=($i == $this->col_sort ) ? sprintf('<td sort_value="X%s" >',$p_row[$v]):"<td>";
                 echo $td.HtmlInput::anchor($p_row[$v], "", $js).'</td>';
             }
-            elseif ( $i == $this->col_sort && $this->get_property_visible($v))
+            elseif ( $i == $this->col_sort && $this->get_property_visible($v) )
             {
-                echo td($p_row[$v],sprintf(' sort_value="X%s" ',$p_row[$v]));
+                if (  $this->get_col_type($v) == 'text') {
+                    echo td($p_row[$v],sprintf(' sort_value="X%s" ',$p_row[$v]));
+                } elseif ( $this->get_col_type($v) == 'numeric') {
+                    echo td($p_row[$v],sprintf(' sort_value="%s" ',$p_row[$v]));
+                } else {
+                    echo td($p_row[$v],sprintf(' sort_value="X%s" ',$p_row[$v]));
+                    
+                }
             }
             elseif ( ! $this->get_property_visible($v)) { 
                 continue;

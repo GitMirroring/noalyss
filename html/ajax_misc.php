@@ -283,7 +283,13 @@ $path = array(
     // Operations tag remove
     'operation_tag_remove'=>"ajax_operation_tag",
     // Operations tag select
-    'operation_tag_select'=>"ajax_operation_tag"
+    'operation_tag_select'=>"ajax_operation_tag",
+    // add or update forecast_item
+    "forecast_item"=>"ajax_forecast_item",
+    // add or update forecast_category
+    "forecast_category"=>"ajax_forecast_category",
+    // manage forecast
+    "forecast"=>"ajax_forecast"
 )    ;
 
 if (array_key_exists($op, $path)) {

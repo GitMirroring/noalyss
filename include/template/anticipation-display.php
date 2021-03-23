@@ -41,15 +41,48 @@ Période du <?php echo $str_start?> à <?php echo $str_end;?>
 $amount=$aItem[$i][$e]['fi_amount'];
 if (count($aPerMonth[$i]) != 0 ){
 	for ($x=0;$x<count($aPerMonth[$i]);$x++) {
-		$amount=$aItem[$i][$e]['fi_amount'];
-		if ($aPeriode[$h]['p_id']==$aPerMonth[$i][$x]['fi_pid'] &&
-			$aItem[$i][$e]['fi_card']==$aPerMonth[$i][$x]['fi_card'] &&
-			$aItem[$i][$e]['fi_account']==$aPerMonth[$i][$x]['fi_account']
-			)
-			{
-				$amount=$aPerMonth[$i][$x]['fi_amount'];
-				break;
-			}
+            if (DEBUGNOALYSS>2) {
+                printf (" \$aItem [$i] [$e] = %s",$aItem[$i][$e]['fi_amount']);
+                echo  p("\$aPeriode[$h]['p_id']==\$aPerMonth[$i][$x]['fi_pid'] ".
+                        $aPeriode[$h]['p_id']."==".$aPerMonth[$i][$x]['fi_pid'] );
+                
+		echo p("	\$aItem[$i][$e]['fi_card']==\$aPerMonth[$i][$x]['fi_card'] ".
+                        	$aItem[$i][$e]['fi_card']."==".$aPerMonth[$i][$x]['fi_card'] );
+                echo p( "	\$aItem[$i][$e]['fi_account']==\$aPerMonth[$i][$x]['fi_account']".
+                        $aItem[$i][$e]['fi_account']."==".$aPerMonth[$i][$x]['fi_account']);
+                if ($aPeriode[$h]['p_id']==$aPerMonth[$i][$x]['fi_pid']) {
+                    echo p("\$aPeriode[$h]['p_id']==\$aPerMonth[$i][$x]['fi_pid'] YES");
+                } else {
+                    echo p("\$aPeriode[$h]['p_id']==\$aPerMonth[$i][$x]['fi_pid'] NO");
+                }
+                if ( $aItem[$i][$e]['fi_card']==$aPerMonth[$i][$x]['fi_card']){
+                    echo "\$aItem[$i][$e]['fi_card']==\$aPerMonth[$i][$x]['fi_card'] YES";
+                } else {
+                    echo "\$aItem[$i][$e]['fi_card']==\$aPerMonth[$i][$x]['fi_card'] NO";
+                    
+                }
+                if ($aItem[$i][$e]['fi_account']==$aPerMonth[$i][$x]['fi_account']) {
+                    echo p("\$aItem[$i][$e]['fi_account']==\$aPerMonth[$i][$x]['fi_account']YES");
+                } else {
+                    echo p("\$aItem[$i][$e]['fi_account']==\$aPerMonth[$i][$x]['fi_account']NO");
+                }
+                echo p("\$aItem[$i][$e]['fi_account'] [".$aItem[$i][$e]['fi_account']."]");
+                echo p("\$aPerMonth[$i][$x]['fi_account'] [".$aPerMonth[$i][$x]['fi_account']."]");
+            }
+            $amount=$aItem[$i][$e]['fi_amount'];
+            if (
+                $aPeriode[$h]['p_id']==$aPerMonth[$i][$x]['fi_pid'] &&
+                trim($aItem[$i][$e]['fi_card'])==trim($aPerMonth[$i][$x]['fi_card']) &&
+                trim($aItem[$i][$e]['fi_account'])==trim($aPerMonth[$i][$x]['fi_account'])
+                )
+                {
+                    $amount=$aPerMonth[$i][$x]['fi_amount'];
+                    if ( DEBUGNOALYSS > 1 ){
+                        echo p("\$aPerMonth[$i][$x]['fi_amount']".$aPerMonth[$i][$x]['fi_amount']);
+                        echo "\$amount = $amount ";
+                    }
+                    break;
+                }
 	}
 }
 $estm[$i][$e][$h]=$amount;
@@ -72,7 +105,8 @@ $tot_cat_estm=bcadd($amount,$tot_cat_estm);
 </td>
 <?php for ($h=0;$h<count($aPeriode);$h++):?>
 <td align="right">
-   <?php echo nbm(  $aReal[$i][$e][$h]);$tot_cat_real=bcadd($tot_cat_real,$aReal[$i][$e][$h]);$tot=bcadd($tot,$aReal[$i][$e][$h]);?>
+   <?php echo nbm(  $aReal[$i][$e][$h]);$tot_cat_real=bcadd($tot_cat_real,$aReal[$i][$e][$h]);
+   $tot=bcadd($tot,$aReal[$i][$e][$h]);?>
 </td>
 <?php endfor;?>
 <td align="right">
