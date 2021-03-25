@@ -128,7 +128,17 @@ var ManageTable = function (p_table_name)
         // value if less than insert before
         var i = 0;
         for (i = 1;i<p_table.rows.length;i++) {
-            if (p_table.rows[i].cells[sort_column].getAttribute('sort_value') > p_element_row.cells[sort_column].getAttribute('sort_value')) {
+            var table_value=p_table.rows[i].cells[sort_column].getAttribute('sort_value') ;
+            var element_value=p_element_row.cells[sort_column].getAttribute('sort_value');
+            
+                // if both are numeric so we force a numeric comparison
+            if ( ! isNaN(parseFloat(table_value))  && ! isNaN(parseFloat(element_value)) ) {
+                table_value=parseFloat(table_value);
+                element_value=parseFloat(element_value);
+            }
+            
+            if (table_value > element_value) {
+                
                 var row=p_table.insertRow(i);
                 row.innerHTML=p_element_row.innerHTML;
                 row.id=p_element_row.id;

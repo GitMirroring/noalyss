@@ -997,7 +997,10 @@ function check()
      * to be appended or modified. Can be override if you need
      * a more complex form or add elements with "set_order" before 
      * calling this function. 
-     * This function does not add the form , only the table, 
+     * This function does not add the form , only the table. 
+     * 
+     * It returns true , if it is not readyonly and the form will have a "save" button, if it returns nothing or false
+     * then there is no save button, nor form, the content is then readonly
      *  
      */
     function input()
@@ -1089,6 +1092,7 @@ function check()
             echo "</tr>";
         }
         echo "</table>";
+        return true;
     }
     /**
      * @brief this function let you create your own input , for example for a ITEXT , a IRADIO , ...
@@ -1179,7 +1183,10 @@ function check()
     }
 
     /**
-     * @brief send an xml with input of the object, create an xml answer.
+     * @brief send an xml with input of the object, create an xml answer. It will call Manage_Table_SQL.input to
+     * display the  input , but if that function returns false, the "save" button will disappear but the form can be
+     * submitted with enter.
+     * 
      * XML Tag 
      *   - status  : OK , NOK 
      *   - ctl     : Dom id to update 
@@ -1201,7 +1208,8 @@ function check()
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,
                     $this->table->get_pk_value());
-            $this->input();
+            $can_update=$this->input();
+            $can_update =(  $can_update===false) ? false:true;
             // JSON param to hidden
             echo HtmlInput::json_to_hidden($this->json_parameter);
             echo HtmlInput::hidden("p_id", $this->table->get_pk_value());
@@ -1209,11 +1217,14 @@ function check()
             $close=sprintf("\$('%s').remove()", $this->dialog_box);
             // display error if any
             $this->display_error();
-            echo '<ul class="aligned-block">',
-            '<li>',
-            HtmlInput::submit('update', _("Sauver")),
-            '</li>',
-            '<li>',
+            echo '<ul class="aligned-block">';
+            // form readonly
+            if ( $can_update ) {
+                echo '<li>',
+                    HtmlInput::submit('update', _("Sauver")),
+               '</li>';
+            }
+            echo '<li>',
             HtmlInput::button_action(_("Annuler"), $close, "", "smallbutton"),
             '</li>',
             '</ul>';
