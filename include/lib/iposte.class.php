@@ -78,6 +78,7 @@ $text->set_attribute('account','field');
  */
 class IPoste extends HtmlInput
 {
+    var $nb_row; // number of row, default 1
 
     function __construct($p_name="",$p_value="",$p_id="")
     {
@@ -90,9 +91,10 @@ class IPoste extends HtmlInput
         $this->disabled=false;
         $this->javascript="";
         $this->extra2="all";
+        $this->extra="";
         $this->attribute=array();
 	$this->id=$p_id;
-       
+        $this->nb_row=1;
 
     }
 
@@ -148,7 +150,12 @@ class IPoste extends HtmlInput
 		$this->id=($this->id=="")?$this->name:$this->id;
 
         /* create the text  */
-        $itext=new IText($this->name,$this->value,$this->id);
+        if ( $this->nb_row ==1 ) {
+            $itext=new IText($this->name,$this->value,$this->id);
+        }else {
+            $itext=new ITextarea($this->name, $this->value, $this->id);
+            $itext->style=$this->extra;
+        }
 
 	if ( isset ($this->css_size))
 	     $itext->css_size=$this->css_size;

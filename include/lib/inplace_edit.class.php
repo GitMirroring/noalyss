@@ -78,8 +78,8 @@ class Inplace_Edit
         if ($this->input instanceof ITextarea) {
             echo '<br>';
         } 
-        echo '<a style="display:inline" class="smallbutton"  id="inplace_edit_ok'.$this->input->id.'">'._('ok').'</a>';
-        echo '<a style="display:inline" class="smallbutton" id="inplace_edit_cancel'.$this->input->id.'">'._('cancel').'</a>';
+        echo Icon_Action::validate("inplace_edit_ok".$this->input->id,"");
+        echo Icon_Action::cancel("inplace_edit_cancel".$this->input->id, "");
         echo <<<EOF
         <script>
         $('{$this->input->id}edit').addClassName('inplace_edit_input');

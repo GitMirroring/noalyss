@@ -211,7 +211,20 @@ class Icon_Action
     static function hide($action, $javascript)
     {
         $r='';
-        $r.='<span id="hide" style="font-size:150%%" class="icon"   onclick="'.$javascript.'">'.$action.'</span>';
+        $r.='<span id="hide" style="font-size:150%" class="icon"   onclick="'.$javascript.'">'.$action.'</span>';
+        return $r;
+    }
+        /**
+     * Return a html string with an anchor to hide a div, put it in the right corner
+     * @param $action action action to perform (message)
+     * @param $javascript javascript
+     * @note not protected against html
+     * @see Acc_Ledger::display_search_form
+     */
+    static function hide_icon( $p_id,$javascript)
+    {
+        $r='';
+        $r.='<span id="'.$p_id.'"  class="icon"   onclick="'.$javascript.'">'."&#xe83b;".'</span>';
         return $r;
     }
     /**
@@ -219,9 +232,9 @@ class Icon_Action
      * @param type $javascript
      * @return string
      */
-    static function notvisible($javascript) {
+    static function show_icon($p_id,$javascript) {
         $r='';
-        $r.='<span id="hide" class="icon"   onclick="'.$javascript.'">&#xe83b;</span>';
+        $r.='<span id="'.$p_id.'" class="icon"   onclick="'.$javascript.'">&#xe803;</span>';
         return $r;
         
     }
@@ -281,7 +294,14 @@ class Icon_Action
     }
     static function more($p_id,$p_javascript)
     {
-        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">&#8608;</span>',
+        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">&#xe824;</span>',
+                $p_id,
+                $p_javascript);
+        return $r;
+    }
+    static function less($p_id,$p_javascript)
+    {
+        $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">&#xe827;</span>',
                 $p_id,
                 $p_javascript);
         return $r;

@@ -54,7 +54,11 @@ input:focus {
     color:orangered;
     font-style: italic;
     background-color:transparent;
-    
+    font-size: 115%;
+    font-weight: 0;
+    padding: 5px;
+    margin: 5px;
+    font-family: sans-serif;
 }
 a.mtitle span.notice {
     text-decoration: underline;

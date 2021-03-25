@@ -39,7 +39,10 @@ function h($p_string)
 {
     return htmlspecialchars($p_string,ENT_QUOTES|ENT_HTML5,'UTF-8',true);
 }
-
+function p($p_string)
+{
+    return '<p>'.$p_string."</p>";
+}
 function span($p_string, $p_extra='')
 {
     return '<span ' . $p_extra . '>' . $p_string . '</span>';

@@ -48,8 +48,17 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
 <p>
    warnbulle <?php echo Icon_Action::warnbulle(1);?>
 </p>
+<p>
+    
    hide <?php echo Icon_Action::hide("hide", "alert('test')");?>
-
+</p>
+<p>
+    
+   hide_icon <?php echo Icon_Action::hide_icon(uniqid(),"alert('test')");?>
+</p>
+<p>
+   show_icon <?php echo Icon_Action::show_icon(uniqid(), "alert('test')");?>
+</p>
 <p>
    trash <?php echo Icon_Action::trash(uniqid(), "alert('test')");?>
 </p>
@@ -62,11 +71,12 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
 <p>
    validate <?php echo Icon_Action::validate(uniqid(), "alert('test')");?>
 </p>
-<p>
-   detail <?php echo Icon_Action::detail(uniqid(), "alert('test')");?>
-</p>
+
 <p>
    more <?php echo Icon_Action::more(uniqid(), "alert('test')");?>
+</p>
+<p>
+   less <?php echo Icon_Action::less(uniqid(), "alert('test')");?>
 </p>
 
 <p>

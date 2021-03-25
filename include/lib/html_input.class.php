@@ -238,7 +238,7 @@ class HtmlInput
      */
 
     static function button_anchor($p_label, $p_value, $p_name="",
-            $p_javascript="", $p_class="button")
+            $p_javascript="", $p_class="smallbutton")
     {
         $href="";
         if ($p_value!="")
