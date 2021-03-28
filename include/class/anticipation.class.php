@@ -220,7 +220,8 @@ EOF;
         for ($j = 0; $j < count($aCat); $j++) {
             
             // Item of the category, estimation for a specific month
-            $aItem[$j] = $this->cn->get_array('select fi_card,fi_account,fi_text,fi_amount,fi_debit 
+            $aItem[$j] = $this->cn->get_array('select fi_card,fi_account,fi_text,fi_amount,fi_debit ,
+                fi_amount_initial
                    from forecast_item where fc_id=$1  and fi_pid=0 order by fi_order ', 
                     array($aCat[$j]['fc_id']));
             

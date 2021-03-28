@@ -98,6 +98,11 @@ $isDebit->selected=$object->getp("fi_debit");
 $isPeriode = new ISelect('fi_pid');
 $isPeriode->value = $aPeriode;
 $isPeriode->selected = $object->getp("fi_pid");
+
+$amount_initial= new INum("fi_amount_initial");
+$amount_initial->value=$object->getp("fi_amount_initial");
+$amount_initial->value=($amount_initial->value=='')?0:$amount_initial->value;
+
 ?>
 <table style="width:50rem">
     <tr>
@@ -145,6 +150,14 @@ $isPeriode->selected = $object->getp("fi_pid");
     <tr>
         <td><?= _("Montant") ?></td>
         <td><?= $amount->input(); ?></td>
+    </tr>
+    <tr>
+        <td>
+            <?=_("Montant initial")?>
+        </td>
+        <td>
+            <?=$amount_initial->input()?>
+        </td>
     </tr>
 
 </table>

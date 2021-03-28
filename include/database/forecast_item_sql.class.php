@@ -18,9 +18,8 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once NOALYSS_INCLUDE . '/lib/noalyss_sql.class.php';
-require_once NOALYSS_INCLUDE . '/class/database.class.php';
-
+require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 /**
  * class_forecast_item_sql.php
@@ -31,47 +30,48 @@ require_once NOALYSS_INCLUDE . '/class/database.class.php';
 class Forecast_Item_SQL extends Noalyss_SQL
 {
 
-    function __construct(DatabaseCore $p_cn, $p_id = -1)
+    function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
-        $this->table = "public.forecast_item";
-        $this->primary_key = "fi_id";
+        $this->table="public.forecast_item";
+        $this->primary_key="fi_id";
         /*
          * List of columns
          */
-        $this->name = array(
-            "fi_id" => "fi_id"
-        , "fi_text" => "fi_text"
-        , "fi_account" => "fi_account"
-        , "fi_card" => "fi_card"
-        , "fi_order" => "fi_order"
-        , "fc_id" => "fc_id"
-        , "fi_amount" => "fi_amount"
-        , "fi_debit" => "fi_debit"
-        , "fi_pid" => "fi_pid"
+        $this->name=array(
+            "fi_id"=>"fi_id"
+            , "fi_text"=>"fi_text"
+            , "fi_account"=>"fi_account"
+            , "fi_card"=>"fi_card"
+            , "fi_order"=>"fi_order"
+            , "fc_id"=>"fc_id"
+            , "fi_amount"=>"fi_amount"
+            , "fi_debit"=>"fi_debit"
+            , "fi_pid"=>"fi_pid"
+            , "fi_amount_initial"=>"fi_amount_initial"
         );
         /*
          * Type of columns
          */
-        $this->type = array(
-            "fi_id" => "numeric"
-        , "fi_text" => "text"
-        , "fi_account" => "text"
-        , "fi_card" => "numeric"
-        , "fi_order" => "numeric"
-        , "fc_id" => "numeric"
-        , "fi_amount" => "numeric"
-        , "fi_debit" => "char"
-        , "fi_pid" => "numeric"
+        $this->type=array(
+            "fi_id"=>"numeric"
+            , "fi_text"=>"text"
+            , "fi_account"=>"text"
+            , "fi_card"=>"numeric"
+            , "fi_order"=>"numeric"
+            , "fc_id"=>"numeric"
+            , "fi_amount"=>"numeric"
+            , "fi_debit"=>"char"
+            , "fi_pid"=>"numeric"
+            , "fi_amount_initial"=>"numeric"
         );
 
 
-        $this->default = array(
-            "fi_id" => "auto"
+        $this->default=array(
+            "fi_id"=>"auto"
         );
 
-        $this->date_format = "DD.MM.YYYY";
+        $this->date_format="DD.MM.YYYY";
         parent::__construct($p_cn, $p_id);
     }
-
 
 }

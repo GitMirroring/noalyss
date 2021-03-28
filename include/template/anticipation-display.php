@@ -7,7 +7,7 @@ Période du <?php echo $str_start?> à <?php echo $str_end;?>
 <?php if (count($aItem[$i])==0) continue;?>
 <fieldset>
 <legend>
-<?php echo $aCat[$i]['fc_desc'];$tot_cat_estm=0;$tot_cat_real=0;$tot_cum_real=0;?>
+<?php echo $aCat[$i]['fc_desc'];$tot_cat_estm=0;$tot_cat_real=0;$tot_cum_real=0;$tot_cum_estm=[];?>
 </legend>
 
 <?php for ($e=0;$e<count($aItem[$i]);$e++):?>
@@ -39,9 +39,14 @@ Période du <?php echo $str_start?> à <?php echo $str_end;?>
 <td style="text-align:right;">
 <?php
 $amount=$aItem[$i][$e]['fi_amount'];
+$amount_initial=0;
+// -- if first periode , get the initial amou
+if ( $h == 0 ) {
+    $amount_initial=$aItem[$i][$e]['fi_amount_initial'];
+}
 if (count($aPerMonth[$i]) != 0 ){
 	for ($x=0;$x<count($aPerMonth[$i]);$x++) {
-            if (DEBUGNOALYSS>2) {
+            if (DEBUGNOALYSS>1) {
                 printf (" \$aItem [$i] [$e] = %s",$aItem[$i][$e]['fi_amount']);
                 echo  p("\$aPeriode[$h]['p_id']==\$aPerMonth[$i][$x]['fi_pid'] ".
                         $aPeriode[$h]['p_id']."==".$aPerMonth[$i][$x]['fi_pid'] );
@@ -85,10 +90,11 @@ if (count($aPerMonth[$i]) != 0 ){
                 }
 	}
 }
+$amount=bcadd($amount,$amount_initial);
 $estm[$i][$e][$h]=$amount;
 echo nbm( $amount);
-
 $tot_estm=bcadd($tot_estm,$amount);
+$tot_cum_estm[$h]=$tot_estm;
 $tot_cat_estm=bcadd($amount,$tot_cat_estm);
 ?>
 
@@ -99,13 +105,15 @@ $tot_cat_estm=bcadd($amount,$tot_cat_estm);
 </td>
 </tr>
 
+
 <tr>
 <td>
 <?php echo _('Réel');$tot=0;?>
 </td>
 <?php for ($h=0;$h<count($aPeriode);$h++):?>
 <td align="right">
-   <?php echo nbm(  $aReal[$i][$e][$h]);$tot_cat_real=bcadd($tot_cat_real,$aReal[$i][$e][$h]);
+   <?php echo nbm(  $aReal[$i][$e][$h]);
+   $tot_cat_real=bcadd($tot_cat_real,$aReal[$i][$e][$h]);
    $tot=bcadd($tot,$aReal[$i][$e][$h]);?>
 </td>
 <?php endfor;?>
@@ -113,24 +121,40 @@ $tot_cat_estm=bcadd($amount,$tot_cat_estm);
 <?php echo nbm( $tot);?>
 </td>
 </tr>
-		<tr>
-			<td>
-						<?php echo _('Total réel');
+<tr>
+    <td>
+        <?=_('Total estimé')?>
+    </td>
+    <?php
+    /// row about cum. estimate amount
+     for ($h=0;$h<count($aPeriode);$h++):
+    ?>
+    <td class="num">
+        <?=nbm($tot_cum_estm[$h])?>
+    </td>
+    <?php
+     endfor;
+    ?>
+</tr>
 
-						$tot_cat_real = 0;
-						?>
-					</td>
-				<?php for ($h = 0; $h < count($aPeriode); $h++):?>
-				<td align="right">
-				<?php
-				$tot_cat_real = bcadd($tot_cat_real, $aReal[$i][$e][$h]);
-				$tot_cum_real=bcadd($tot_cum_real,$aReal[$i][$e][$h]);
-				echo nbm($tot_cat_real);
-			?>
-			</td>
-				<?php endfor;?>
+<tr>
+        <td>
+            <?php echo _('Total réel');
 
-		</tr>
+            $tot_cat_real = 0;
+            ?>
+        </td>
+            <?php for ($h = 0; $h < count($aPeriode); $h++):?>
+            <td align="right">
+            <?php
+            $tot_cat_real = bcadd($tot_cat_real, $aReal[$i][$e][$h]);
+            $tot_cum_real=bcadd($tot_cum_real,$aReal[$i][$e][$h]);
+            echo nbm($tot_cat_real);
+    ?>
+        </td>
+                <?php endfor;?>
+
+</tr>
 <tr>
 <td>
 <?php echo _('Différence');?>
@@ -139,7 +163,8 @@ $tot_cat_estm=bcadd($amount,$tot_cat_estm);
 
     <?php
  $diff= bcsub( $aReal[$i][$e][$h],$estm[$i][$e][$h]);
-if ( ($aItem[$i][$e]['fi_debit'] == 'C' && $diff < 0) || ($aItem[$i][$e]['fi_debit'] == 'D' && $diff > 0))
+if (       ( $aItem[$i][$e]['fi_card']!="" && $aItem[$i][$e]['fi_debit'] == 'C' && $diff < 0) 
+        || ($aItem[$i][$e]['fi_card'] && $aItem[$i][$e]['fi_debit'] == 'D' && $diff > 0))
   {
     echo '<td style="text-align:right;background-color:red;color:white">';
   }
@@ -147,9 +172,13 @@ else if ($diff==0)
   {
     echo '<td style="text-align:right;">';
   }
-else
+elseif ( $aItem[$i][$e]['fi_account']!="" && $diff > 0 )
   {
     echo '<td style="text-align:right;background-color:green;color:white">';
+  }
+  elseif ( $aItem[$i][$e]['fi_account']!="" && $diff < 0 ) {
+    echo '<td style="text-align:right;background-color:red;color:white">';
+      
   }
 
 echo nbm( $diff);

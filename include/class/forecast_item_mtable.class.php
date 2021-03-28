@@ -187,6 +187,8 @@ class Forecast_Item_MTable extends Manage_Table_SQL
         $object_sql->setp("fi_amount",$http->post('fi_amount',"number"));
         $object_sql->setp("fi_pid",$http->post('fi_pid',"number"));
         $object_sql->setp("fi_debit",$http->post('fi_debit'));
+        $object_sql->setp("fi_amount_initial",$http->post("fi_amount_initial","number"));
+        
         $card=trim($http->post("fi_card"));
         if ( $card !="") {
             $f_id=$object_sql->cn->get_value("select f_id from fiche_detail where ad_value=upper($1) and ad_id=23",[$card]);
