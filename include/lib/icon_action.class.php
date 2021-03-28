@@ -156,7 +156,7 @@ class Icon_Action
     static function close($p_div)
     {
         $r='';
-        $r.=sprintf('<A class="icon" style="font-size:150%%" onclick="removeDiv(\'%s\')">&times;</A>',
+        $r.=sprintf('<A class="icon text-danger"  onclick="removeDiv(\'%s\')">&#xe816;</A>',
                 $p_div);
         return $r;
     }
@@ -413,7 +413,7 @@ class Icon_Action
     }
     static function full_size($p_div) {
         $js=sprintf("full_size('%s')",$p_div);
-        $icon="&#xe82a;";
+        $icon="&#xe80a;";
         $r=sprintf('<span id="size_%s" onclick="%s" class="icon smallicon">%s</span>',
                 $p_div,$js,$icon);
         return $r;

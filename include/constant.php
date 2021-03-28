@@ -84,7 +84,7 @@ global $g_captcha,$g_failed,$g_succeed;
 $g_captcha=false;
 $g_failed="<span style=\"font-size:18px;color:red\">&#x2716;</span>";
 $g_succeed="<span style=\"font-size:18px;color:green\">&#x2713;</span>";
-define ('SMALLX','&times;');
+define ('SMALLX','#xe816;');
 define ('BUTTONADD',"&#10010;");
 
 define ('SVNINFO',NOALYSS_VERSION);

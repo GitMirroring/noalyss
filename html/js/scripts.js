@@ -4039,7 +4039,7 @@ function full_size(p_div) {
     div_dom=document.getElementById(p_div);
     if ( ! div_dom ) return;
     if ( div_dom.hasClassName('fullsize')) {
-       div_dom.removeClassName('fullsize');$('size_'+p_div).innerHTML='&#xe82a;';
+       div_dom.removeClassName('fullsize');$('size_'+p_div).innerHTML='&#xe80a;';
     } else {
         div_dom.addClassName('fullsize');$('size_'+p_div).innerHTML='&#xe83d;';
     }
