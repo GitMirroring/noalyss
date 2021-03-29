@@ -289,7 +289,9 @@ $path = array(
     // add or update forecast_category
     "forecast_category"=>"ajax_forecast_category",
     // manage forecast
-    "forecast"=>"ajax_forecast"
+    "forecast"=>"ajax_forecast",
+    // manage company
+    "company"=>"ajax_company"
 )    ;
 
 if (array_key_exists($op, $path)) {

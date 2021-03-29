@@ -698,6 +698,7 @@ class Document
         static $aTag=NULL;
         static $counter_tag=0; /* <! counter for the tags */
 
+        static $aParameterExtra=NULL; // Extra parameter for the company
         switch ($p_tag)
         {
             case 'DATE':
@@ -749,6 +750,8 @@ class Document
             case 'MY_PAYS':
                 $r=$g_parameter->MY_PAYS;
                 break;
+            
+            
 
             // customer
             /* \note The CUST_* are retrieved thx the $p_array['tiers']
@@ -1634,6 +1637,7 @@ class Document
                             where ag_id=$1", array($p_array["ag_id"]));
                 }
                 return $ret;
+           
         } // end switch 
         /*
          * retrieve the value of ATTR for e_march
@@ -1646,6 +1650,7 @@ class Document
             {
                 $id=$p_array['e_march'.$this->counter];
                 $r=$this->replace_special_tag($id, $p_tag);
+                return $r;
             }
         }
         /*
@@ -1657,6 +1662,7 @@ class Document
             $qcode=isset($p_array['qcode_benef'])?$p_array['qcode_benef']:'';
             // Retrieve f_id
             $r=$this->replace_special_tag($qcode, $p_tag);
+                return $r;
         }
         if (preg_match('/^CUSTATTR/', $p_tag)==1)
         {
@@ -1666,7 +1672,13 @@ class Document
                 $qcode=(isset($p_array['qcode_dest']))?$p_array['qcode_dest']:$p_array['e_client'];
                 $r=$this->replace_special_tag($qcode, $p_tag);
             }
+                return $r;
         }
+        
+        // check also if the tag does exist in parameter_extra table
+        $pe_value=$this->db->get_value("select pe_value from parameter_extra where pe_code=$1",[$p_tag]);
+        if ( $this->db->count() > 0 ) { return $pe_value;}
+        
         return $r;
     }
 
