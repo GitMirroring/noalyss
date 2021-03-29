@@ -240,6 +240,7 @@ class Anc_Operation
             oa_group,
             j_id ,
             jr_internal,
+            jr_pj_number ,
             jr_id,
             coalesce(jr_comment,b.oa_description) as jr_comment,
             case when j_poste is null and b.f_id is not null then

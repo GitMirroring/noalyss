@@ -164,7 +164,7 @@ class Anc_Listing extends Anc_Print
         $csv=new Noalyss_Csv("anc_listing");
         $csv->send_header();
         $csv->write_header(array("Date","Poste","QuickCode",
-            "Activité","description","montant","d/c"));
+            "Activité","interne","pièce","description","montant","d/c"));
         foreach ( $array as $row)
         {
             // the name and po_id
@@ -172,6 +172,8 @@ class Anc_Listing extends Anc_Print
             $csv->add($row['j_poste']);
             $csv->add($row['qcode']);
             $csv->add($row['po_name']);
+            $csv->add($row['jr_internal']);
+            $csv->add($row['jr_pj_number']);
             $csv->add($row['oa_description']);
             $csv->add($row['oa_amount'],"number");
             $csv->add(sprintf("'%s'",(($row['oa_debit']=='f')?'CREDIT':'DEBIT')));
