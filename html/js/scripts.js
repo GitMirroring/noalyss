@@ -1538,9 +1538,7 @@ function calcy(p_sy)
     {
         sy = document.documentElement.scrollTop + p_sy;
     }
-    if (document.viewport.getDimensions().width < 801) {
-        sy = sy / 2;
-    }
+
     return sy;
 
 }
