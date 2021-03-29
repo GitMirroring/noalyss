@@ -976,6 +976,7 @@ class Document
              *  - [VEN_TVA]
              *  - [TOTAL_VEN_HTVA]
              *  - [DATE_LIMIT]
+             *  - [DATE_PAID]
              */
             case 'DATE_LIMIT_CALC':
                 if (isset($p_array["e_ech"]))
@@ -994,6 +995,9 @@ class Document
                 if (isset($p_array["ag_remind_date"]))
                     return $p_array["ag_remind_date"];
                 return "";
+                break;
+            case 'DATE_PAID':
+                if ( isset ($p_array['jr_date_paid']) ) { return $p_array['jr_date_paid'];}
                 break;
             case 'MARCH_NEXT':
                 $this->counter++;
