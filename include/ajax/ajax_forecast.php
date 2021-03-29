@@ -19,7 +19,11 @@
 
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
 
+if (!defined('ALLOWED')) die('Appel direct ne sont pas permis');
+
 require_once NOALYSS_INCLUDE . "/database/forecast_sql.class.php";
+
+if ($g_user->check_module("FORECAST")==0) die();
 
 $http = new HttpInput();
 $input = $http->request("input");
