@@ -24,10 +24,6 @@
  * \brief display, add, delete and modify forecast_item, All rows are in $a_row
  * \see Forecast_Item_MTable::input
  */
-if ( $this->count_category() == 0 ) {
-    echo span(_("Sans catégorie il n'est pas possible d'ajouter de nouveaux éléments"),'class="notice"');
-    return;
-}
 
 $cn = $object->cn;
 $forecast = new Forecast_SQL($cn, $this->get_forecast_id());

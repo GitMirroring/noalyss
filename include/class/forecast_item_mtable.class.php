@@ -161,7 +161,13 @@ class Forecast_Item_MTable extends Manage_Table_SQL
     public function input()
     {
         $object=$this->get_table();
+        if ( $this->count_category() == 0 ) {
+            echo span(_("Sans catégorie il n'est pas possible d'ajouter de nouveaux éléments"),'class="notice"');
+        return false;
+        }
+
         require_once NOALYSS_TEMPLATE."/forecast_item_mtable-input.php";
+        return true;
     }
 
     /**
