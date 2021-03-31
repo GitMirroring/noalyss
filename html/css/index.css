@@ -3,7 +3,7 @@
  * LOGO
 *************************************/
 #logo_id {
-    width:70px;
+    width:90px;
     display:block;
 }
 /** small **/
@@ -11,10 +11,10 @@
     #logo_id {
 
         z-index:-1;
-       width: 140px;
+       width: 110px;
         left: 5px;
         top: 22px;
-        height: 140px;
+        height: 90px;
 
         left:0px;
         display:block;
@@ -25,10 +25,10 @@
 @media (min-width : 768px) {
     #logo_id {
         z-index:-1;
-       width: 140px;
+       width:110px;
         left: 5px;
         top: 22px;
-        height: 140px;
+        height: 90px;
         display:block;
     }
 }
@@ -36,10 +36,10 @@
 @media (min-width : 992px) {
     #logo_id {
         z-index:-1;
-        width: 140px;
+        width: 110px;
         left: 5px;
         top: 22px;
-        height: 140px;
+        height:90px;
 
         display:block;
     }      
@@ -49,10 +49,10 @@
     #logo_id {
         z-index: -1;
 
-        width: 140px;
+        width: 110px;
         left: 5px;
         top: 22px;
-        height: 140px;
+        height:90px;
         display:block;
     }
 } 
