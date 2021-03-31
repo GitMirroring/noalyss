@@ -861,7 +861,7 @@ class HtmlInput
         }
         elseif ($p_mod=='hide')
         {
-            $r.=Icon_Action::hide("#xe816;", "$('$p_div').hide();$p_js");
+            $r.=Icon_Action::hide("&#xe816;", "$('$p_div').hide();$p_js");
         }
         elseif ($p_mod=='custom')
         {

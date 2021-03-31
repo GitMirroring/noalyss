@@ -160,7 +160,7 @@ class Icon_Action
                 $p_div);
         return $r;
     }
-
+    
     /**
      * Display a icon for fix or move a div 
      * @param string $p_div id of  the div to fix/move
@@ -211,7 +211,7 @@ class Icon_Action
     static function hide($action, $javascript)
     {
         $r='';
-        $r.='<span id="hide" style="font-size:150%" class="icon"   onclick="'.$javascript.'">'.$action.'</span>';
+        $r.='<span id="hide" style="" class="icon text-danger"   onclick="'.$javascript.'">'.$action.'</span>';
         return $r;
     }
         /**

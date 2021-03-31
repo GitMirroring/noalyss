@@ -209,10 +209,29 @@ div.content{
     font-size:1rem;
 
 }
-@media only screen and (max-width:1280px) {
-    div.content {
+div.content {
         font-size:90%;
     }
+/* SM */
+@media (min-width: 576px) {
+    
+}
+/* MD */
+@media (min-width: 768px) {
+div.content {
+        font-size:100%;
+    }
+}
+/* LG */
+@media (min-width: 992px) {
+
+}
+/* XL */
+@media (min-width: 1200px) {
+
+}
+/**========*/
+@media only screen and (max-width:1280px) {
 }
 table.document {
     color:#0000FF;
@@ -1407,8 +1426,6 @@ div.name  {
 div#modele_op_div{
     display: none;
     background-color:#e4e7ed;
-    font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
     padding:0px;
     margin:0px;
     overflow:hidden;
@@ -1427,8 +1444,6 @@ div#modele_op_div{
     div#modele_op_div{
     display: none;
     background-color:#e4e7ed;
-    font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
     padding:0px;
     margin:0px;
     overflow:hidden;
@@ -2053,11 +2068,7 @@ td.box {
 
 .smoke {
   text-align: center;
-    background-color: #DCE1EF;
-    font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-        font-family: 'SansationLight';
-
-    padding:2px;
+    background-color: white;
     margin:0px;
     overflow:hidden;
     z-index:3;
@@ -2067,8 +2078,6 @@ td.box {
 -moz-box-shadow: 10px 10px 5px #888;
 -webkit-box-shadow: 10px 10px 5px #888;
 box-shadow: 10px 10px 5px #888;
-font-size:14.4px;
-font-size:0.90rem;
 width: 85%;
 }
 .dialog-buttons button:hover{
