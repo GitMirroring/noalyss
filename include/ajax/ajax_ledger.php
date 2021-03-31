@@ -388,6 +388,7 @@ case 'rmf':
 /////////////////////////////////////////////////////////////////////////////
 case 'save':
     ob_start();
+    $http=new HttpInput();
     try
     {
         $cn->start();
@@ -395,7 +396,7 @@ case 'save':
         {
 	  if (isset($_POST['p_ech']) )
 	    {
-	      $ech=$_POST['p_ech'];
+	      $ech=$http->post('p_ech');
 	      if ( trim($ech) != '' && isDate($ech) != null)
 		{
 		  $cn->exec_sql("update jrn set jr_ech=to_date($1,'DD.MM.YYYY') where jr_id=$2",
@@ -412,7 +413,7 @@ case 'save':
             
 	  if (isset($_POST['p_date_paid']) )
 	    {
-	      $ech=$_POST['p_date_paid'];
+	      $ech=$http->post('p_date_paid');
 	      if ( trim($ech) != '' && isDate($ech) != null)
 		{
 		  $cn->exec_sql("update jrn set jr_date_paid=to_date($1,'DD.MM.YYYY') where jr_id=$2",
@@ -428,9 +429,9 @@ case 'save':
 	    }
             
             $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY'),jr_optype=$5 where jr_id=$3",
-                          array($_POST['lib'],$_POST['npj'],$jr_id,$_POST['p_date'],$_POST['jr_optype']));
+                          array($http->post('lib'),$http->post('npj'),$jr_id,$http->post('p_date'),$http->post('jr_optype')));
 	    $cn->exec_sql("update jrnx set j_date=to_date($1,'DD.MM.YYYY') where j_grpt in (select jr_grpt_id from jrn where jr_id=$2)",
-			  array($_POST['p_date'],$jr_id));
+			  array($http->post('p_date'),$jr_id));
 	    $cn->exec_sql('update operation_analytique set oa_date=j_date from jrnx
 				where
 				operation_analytique.j_id=jrnx.j_id  and
@@ -439,16 +440,16 @@ case 'save':
 						where jr_id=$1)
 						',array($jr_id));
 	    $cn->exec_sql("select comptaproc.jrn_add_note($1,$2)",
-			  array($jr_id,$_POST['jrn_note']));
+			  array($jr_id , $http->post('jrn_note') ));
             $rapt=$_POST['rapt'];
 
             if ( $g_parameter->MY_UPDLAB=='Y' && isset ($_POST['j_id']))
             {
-                $a_rowid=$_POST["j_id"];
+                $a_rowid=$http->post("j_id");
                 for ($e=0;$e<count($a_rowid);$e++)
                 {
                     $id="e_march".$a_rowid[$e]."_label";
-                    $cn->exec_sql('update jrnx set j_text=$1 where j_id=$2',  array(strip_tags($_POST[$id]),$a_rowid[$e]));
+                    $cn->exec_sql('update jrnx set j_text=$1 where j_id=$2',  array($http->post($id),$a_rowid[$e]));
                 }
             }
             if (trim($rapt) != '')
@@ -496,26 +497,33 @@ case 'save':
             //////////////////////////////////////////////////////////////////
             //Save other info
             //////////////////////////////////////////////////////////////////
-            $op->save_info($_POST['OTHER'],'OTHER');
-            $op->save_info($_POST['BON_COMMANDE'],'BON_COMMANDE');
+            $op->save_info($http->post('OTHER'),'OTHER');
+            $op->save_info($http->post('BON_COMMANDE'),'BON_COMMANDE');
             
             ///////////////////////////////////////////////////////////////////
             // Save related
             //////////////////////////////////////////////////////////////////
             $related=$http->post("related","string");
-            if ($related == "0" )                
-                throw new Exception('Parameter not send -> related'.__FILE__.__LINE__,10);
+            if ($related=="0")
+            {
+                throw new Exception('Parameter not send -> related'.__FILE__.__LINE__, 10);
+            }
             $op->insert_related_action($related);
 
         }
-        echo _('Opération sauvée');
+        echo 'OK';
         $cn->commit();
     }
     catch (Exception $e)
     {
-          record_log($e);
+      $html=ob_get_contents();
+      ob_end_clean();
+      record_log($e);
+      record_log($html);
+      
       if ( DEBUGNOALYSS > 0 )   echo $e->getMessage();
-      alert(_( "Changement impossible: on ne peut pas changer la date dans une période fermée"));
+      echo _( "Changement impossible: on ne peut pas changer la date dans une période fermée");
+      return;
     }
     $html=ob_get_contents();
     ob_end_clean();

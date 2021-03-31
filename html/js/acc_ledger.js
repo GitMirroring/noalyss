@@ -1132,7 +1132,11 @@ function op_save(obj)
                         method: 'post',
                         parameters: queryString,
                         onFailure: null,
-                        onSuccess: infodiv
+                        onSuccess: function (req){
+                            if (req.responseText !=='OK') {
+                                smoke.alert(req.responseText);
+                            }
+                        }
                     }
             );
             // window.close();
@@ -1148,6 +1152,11 @@ function op_save(obj)
                         parameters: queryString,
                         onFailure: null,
                         onSuccess: function(req,json) {
+                            console.debug (req);
+                             
+                            if (req.responseXML == null ){
+                                 smoke.alert(req.responseText);
+                             }
                             new Ajax.Request('ajax_misc.php', {
                                 parameters:{'gDossier':obj.gDossier.value,
                                          'act':'de',
