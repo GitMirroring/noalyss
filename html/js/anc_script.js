@@ -59,11 +59,11 @@ function add_row(p_table, p_seq)
     {
         var cell = row.insertCell(i);
         var txt = rowToCopy.cells[i].innerHTML;
-//	txt=txt.replace(/row_1/g,"row_"+new_value);
         cell.innerHTML = txt;
     }
     var col = document.getElementsByName("val[" + p_seq + "][]");
-    col[col.length - 1].value = max - amount;
+    let tmp_amount=max - amount;
+    col[col.length - 1].value = Math.round(tmp_amount*100)/100;
     anc_refresh_remain(p_table, p_seq);
 }
 /**
