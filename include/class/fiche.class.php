@@ -2033,6 +2033,7 @@ class Fiche
             $this->fd_id=0;
         else
             $this->fd_id=$R;
+        return $this->fd_id;
     }
     /*!
      ***************************************************
