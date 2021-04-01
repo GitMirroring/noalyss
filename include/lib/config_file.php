@@ -266,3 +266,4 @@ function config_file_create($p_array,$from_setup,$p_os=1)
     fputs($hFile, $r);
     fclose($hFile);
 }
+?>
