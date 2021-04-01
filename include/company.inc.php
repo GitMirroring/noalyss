@@ -38,7 +38,7 @@ if (isset($_POST['record_company']))
     $m->MY_STREET=$http->post("p_street");
     $m->MY_NUMBER=$http->post("p_no");
     $m->MY_CP=$http->post("p_cp");
-    $m->MY_COMMUNE=$http->post("p_Commune");
+    $m->MY_COMMUNE=$http->post("p_commune");
     $m->MY_TEL=$http->post("p_tel");
     $m->MY_FAX=$http->post("p_fax");
     $m->MY_PAYS=$http->post("p_pays");
@@ -51,7 +51,7 @@ if (isset($_POST['record_company']))
     $m->MY_ALPHANUM=$http->post("p_alphanum");
     $m->MY_UPDLAB=$http->post("p_updlab");
     $m->MY_STOCK=$http->post("p_stock");
-    $m->MY_CURRENCY=$http->post("p_currency");
+    //$m->MY_CURRENCY=$http->post("p_currency");
     $m->MY_DEFAULT_ROUND_ERROR_DEB=$http->post("p_round_error_deb");
     $m->MY_DEFAULT_ROUND_ERROR_CRED=$http->post("p_round_error_cred");
     $m->MY_ANC_FILTER=$http->post("p_anc_filter");
@@ -155,42 +155,42 @@ $all->style=' class="input_text"';
             <div class="form-group">
 
                 <label class="w-20" for="p_tel"><?= _("Téléphone") ?></label>
-                <?= $all->input("p_name", $my->MY_TEL) ?>
+                <?= $all->input("p_tel", $my->MY_TEL) ?>
             </div>
             <div class="form-group">
 
                 <label class="w-20" for="p_fax"><?= _("Fax") ?></label>
-                <?= $all->input("p_name", $my->MY_FAX) ?>
+                <?= $all->input("p_fax", $my->MY_FAX) ?>
             </div>
             <div class="form-group">
 
                 <label class="w-20" for="p_street"><?= _("Rue") ?></label>
-                <?= $all->input("p_name", $my->MY_STREET) ?>
+                <?= $all->input("p_street", $my->MY_STREET) ?>
             </div>
             <div class="form-group">
 
                 <label class="w-20" for="p_no"><?= _("Numéro") ?></label>
-                <?= $all->input("p_name", $my->MY_NUMBER) ?>
+                <?= $all->input("p_no", $my->MY_NUMBER) ?>
             </div>
             <div class="form-group">
 
                 <label class="w-20" for="p_cp"><?= _("Code Postal") ?></label>
-                <?= $all->input("p_name", $my->MY_CP) ?>
+                <?= $all->input("p_cp", $my->MY_CP) ?>
             </div>
             <div class="form-group">
 
-                <label class="w-20" for="p_commune"><?= _("Nom Société") ?></label>
-                <?= $all->input("p_name", $my->MY_COMMUNE) ?>
+                <label class="w-20" for="p_commune"><?= _("Localité") ?></label>
+                <?= $all->input("p_commune", $my->MY_COMMUNE) ?>
             </div>
             <div class="form-group">
 
-                <label class="w-20" for="p_tva"><?= _("Pays") ?></label>
-                <?= $all->input("p_name", $my->MY_PAYS) ?>
+                <label class="w-20" for="p_pays"><?= _("Pays") ?></label>
+                <?= $all->input("p_pays", $my->MY_PAYS) ?>
             </div>
             <div class="form-group">
 
-                <label class="w-20" for="p_name"><?= _("Numéro de Tva") ?></label>
-                <?= $all->input("p_name", $my->MY_TVA) ?>
+                <label class="w-20" for="p_tva"><?= _("Numéro de Tva") ?></label>
+                <?= $all->input("p_tva", $my->MY_TVA) ?>
             </div>
             <div class="row">
                 <div class="col-4"></div>
