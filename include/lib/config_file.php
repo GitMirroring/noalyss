@@ -172,14 +172,14 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
     
     print ( 'define ("LOCALE",'.$clocale.');');
     print ("\r\n");
-    echo <<<EOF
+    echo "
     /* 
      * DEBUGNOALYSS let you see more information when you develop.
      * 0 = for production
      * 1 = display all errors
      * 2 = display all errors + more information 
      */
-EOF;     
+";     
     
     print ("\r\n");
     print ( 'define ("DEBUGNOALYSS",0);');
