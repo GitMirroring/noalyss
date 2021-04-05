@@ -358,11 +358,13 @@ if (!defined('PHP_VERSION_ID')) {
 
    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
-if ( PHP_VERSION_ID < 70033)  {
-    echo $g_failed. " ".phpversion." ". _("Version PHP trop basse , minimum 7.0.33");
-    
+if ( PHP_VERSION_ID < 70200)  {
+    echo $g_failed. " ".phpversion()." ". _("Version PHP trop basse , minimum 7.2");
+    echo '<p style="color:grey;margin-left:20px">';
+    printf(_("Il est déconseillé de travailler avec une version < 7.2"));
+    echo '</p>';
 } else {
-    echo $g_succeed. " ".phpversion();
+    echo $g_succeed. " Version PHP ".phpversion();
 }
 //ini_set("memory_limit","200M");
 echo "<ul style=\"list-style-type: square;\">";
