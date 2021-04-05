@@ -178,7 +178,203 @@ class ICard extends HtmlInput
         $this->typecard='all';
         $this->autocomplete_file="fid_card.php";
     }
-   
+    /**
+     * Function javascript by default it is update_value called BEFORE the querystring is send in ajax
+     * @return type
+     */
+    public function get_fct()
+    {
+        return $this->fct;
+    }
+    /**
+     * @brief id_of_div_to_populate with the output of the autocomplete_file, it is
+     * the autocomplete div presenting a list of possible choices. Default {this->id}_choices
+     * 
+     * @return html string (
+     */
+    public function get_choice()
+    {
+        if ( $this->choice==null) {
+            return sprintf("%s_choices", $this->id);
+        }
+        return $this->choice;
+    }
+    /**
+     * Id of the element to show that it is seaching
+     * @return type
+     */
+    public function get_indicator()
+    {
+        return $this->indicator;
+    }
+   /**
+     * @brief 1 if you want to create automatically the autocomplete DIV to fill with the the output of 
+    * "autocomplete_file"  or 0 if this DIV is created explicitly
+     * 
+     * @return this
+     */
+    public function get_choice_create()
+    {
+        return $this->choice_create;
+    }
+    /**
+     * @brief 1 autocomplete enable ; 0 autocomplete disable
+     * @return type
+     */
+    public function get_autocomplete()
+    {
+        return $this->autocomplete;
+    }
+    /**
+     * CSS Style  of the INPUT TEXT element
+     * @return type
+     */
+    public function get_style()
+    {
+        return $this->style;
+    }
+    /***
+     * @brief $accvis account_visible =1 otherwise 0, default 1
+     */
+    public function get_accvis()
+    {
+        return $this->accvis;
+    }
+
+    public function get_limit()
+    {
+        return $this->limit;
+    }
+    /**
+     * @brief amount_from_type : accountancy , sell or purchase price
+     * 
+     */
+    public function get_amount_from_type()
+    {
+        return $this->amount_from_type;
+    }
+
+    public function get_typecard()
+    {
+        return $this->typecard;
+    }
+    /**
+     * @brief php file to call to complete info from the card
+     * @param string $autocomplete_file
+     * @see fid_card.php
+     * @return $this
+     */
+    public function get_autocomplete_file()
+    {
+        return $this->autocomplete_file;
+    }
+    /***
+    * @brief Function javascript by default it is update_value called BEFORE the querystring is send in ajax
+    *@see afterUpdateElement
+    */
+    public function set_fct($fct)
+    {
+        $this->fct=$fct;
+        return $this;
+    }
+   /**
+     * @brief id_of_div_to_populate with the output of the autocomplete_file, it is
+     * the autocomplete div presenting a list of possible choices. Default {this->id}_choices
+     * 
+     * @return html string (
+     */
+    public function set_choice($choice)
+    {
+        $this->choice=$choice;
+        return $this;
+    }
+    /**
+     * @brief Id of the element to show that it is seaching
+     */
+    public function set_indicator($indicator)
+    {
+        $this->indicator=$indicator;
+        return $this;
+    }
+   /**
+     * @brief 1 if you want to create automatically the autocomplete DIV to fill with the the output of 
+    * "autocomplete_file"  or 0 if this DIV is created explicitly
+     * 
+     * @return this
+     */
+    public function set_choice_create($choice_create)
+    {
+        $this->choice_create=$choice_create;
+        return $this;
+    }
+    /**
+     * @brief 1 autocomplet enable ; 0 autocomplete disable
+     * @return type
+     */
+    public function set_autocomplete($autocomplete)
+    {
+        $this->autocomplete=$autocomplete;
+        return $this;
+    }
+    /**
+     * CSS Style  of the INPUT TEXT element
+     * @return type
+     */
+    public function set_style($style)
+    {
+        $this->style=$style;
+        return $this;
+    }
+    /***
+     * @brief $accvis account_visible =1 otherwise 0, default 1
+     */
+    public function set_accvis($accvis)
+    {
+        $this->accvis=$accvis;
+        return $this;
+    }
+
+    public function set_limit($limit)
+    {
+        $this->limit=$limit;
+        return $this;
+    }
+    /**
+     * @brief amount_from_type : accountancy , sell or purchase price
+     * @parameter $amount_from_type ACH VEN or GL
+     * 
+     */
+    public function set_amount_from_type($amount_from_type)
+    {
+        if ( ! in_array($amount_from_type,array("ACH","VEN","GL"))) {
+            throw new Exception('icard.305 '.sprintf("[%s]",$amount_from_type));
+        }
+        $this->amount_from_type=$amount_from_type;
+        return $this;
+    }
+    /**
+     * argument "e" passed to autocomplete_file ,
+     * @see fid_card.php
+     * @param type $typecard
+     * @return $this
+     */
+    public function set_typecard($typecard)
+    {
+        $this->typecard=$typecard;
+        return $this;
+    }
+    /**
+     * @brief php file to call to complete info from the card
+     * @param string $autocomplete_file
+     * @see fid_card.php
+     * @return $this
+     */
+    public function set_autocomplete_file($autocomplete_file)
+    {
+        $this->autocomplete_file=$autocomplete_file;
+        return $this;
+    }
+
     /**
      * @brief in the search box, the accounting will be shown it is the default
      */
@@ -292,10 +488,12 @@ class ICard extends HtmlInput
         );
         if ($this->autocomplete==1)
         {
+            // --- indicator 
             $this->indicator="ind_".$this->id;
             $ind=sprintf('<span id="%s" class="autocomplete" style="position:absolute;display:none;margin-left:-20px"><img src="image/ajax-loader.gif" alt="Chargement..."/></span>',
                     $this->indicator);
            // $this->indicator="null";
+            
             $div=($this->choice_create==1)?sprintf('<div id="%s"  class="autocomplete"></div>',
                             $this->choice):"";
 

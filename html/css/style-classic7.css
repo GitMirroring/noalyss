@@ -777,7 +777,7 @@ a#anchorbutton:hover, .button:hover,a.button:hover,div.content a.button:hover  {
     border-color:orange;
 }
 a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
-    color:#FFFFFF;
+    color:darkblue;
     font-weight: normal;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
@@ -801,17 +801,17 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     /*! -moz-border-radius: 2px; */
     -webkit-border-radius: 5px;
     font-family: SansationLight;
-  background: #ffffff;
+  background: lightgray;
 background: -moz-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%);
 background: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
 background: linear-gradient(to bottom, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
-     color: #746B6B;
+  
 }
 a#smallanchorbutton:hover, .smallbutton:hover,a.smallbutton:hover,div.content a.smallbutton:hover  {
     cursor:pointer;
     background-color:#FFFFFF;
-    color:darkblue;
+    color:orangered;
     margin:1px 2px 1px 2px;
    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,f1f1f1+50,e1e1e1+51,f6f6f6+100;White+Gloss+%231 */
 background: #f6f6f6;

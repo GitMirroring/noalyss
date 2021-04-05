@@ -23,16 +23,9 @@
 /*!\file
  * \brief this file is used by the autocomplete functionnality
  *\see ICard
- */
-
-require_once '../include/constant.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-/*!\brief
- *  Received parameters are
+ * *  Received parameters are
  *   - j for the ledger
- *   - e for extra (typecard)
+ *   - e for extra (typecard)poss. values : all , a sql condition or a  list of fd_id (fiche_def.fd_id) separated by comma
  *   - type is the ledger type (ach, ven, fin, gl or nothing)
  *   - FID contains the string the user is typing
  *\note the typecard can be
@@ -42,6 +35,12 @@ require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
  *   - list of fd_id
  *
  */
+
+require_once '../include/constant.php';
+require_once NOALYSS_INCLUDE.'/class/database.class.php';
+require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+ 
 $http=new HttpInput();
 
 $jrn= $http->request("j","number",-1); 
@@ -50,7 +49,7 @@ $limit=$http->request("limit","number",12);
 $jrn= $http->request("j","number",-1); 
 $filter_card="";
 $cn=Dossier::connect();
-$d=$http->request('e');
+$typecard=$http->request('e');
 $filter_card='';
 
 require_once('class/user.class.php');
@@ -60,19 +59,19 @@ $g_user->check();
 $g_user->check_dossier(dossier::id());
 set_language();
 
-if ( $d == 'all')
+if ( $typecard == 'all')
 {
     $filter_card='';
 }
-else if (strpos($d,'sql]')==true)
+else if (strpos($typecard,'sql]')==true)
 {
-	$filter_card=  str_replace('[sql]', " and ", $d);
+	$filter_card=  str_replace('[sql]', " and ", $typecard);
 } else
-    $filter_card="and fd_id in ($d)";
+    $filter_card="and fd_id in ($typecard)";
 
 if ( $jrn != -1 )
 {
-    switch ($d)
+    switch ($typecard)
     {
     case 'cred':
         $filter_jrn=$cn->make_list("select jrn_def_fiche_cred from jrn_def where jrn_def_id=$1",array($jrn));
@@ -170,7 +169,7 @@ if ($sql != false && sizeof($sql) != 0 )
               );
     }
     echo '</ul>';
-    if (count($sql) > 12)
+    if (count($sql) > $limit)
     {
         printf ('<i>...'._('Résultat limité à %s').'  ...</i>',$limit);
     }
