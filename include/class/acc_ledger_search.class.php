@@ -981,16 +981,20 @@ class Acc_Ledger_Search
         $tot=round($tot, 4);
         $r.="<TR>";
         $r.='<TD COLSPAN="5">Total</TD>';
+        $r.=td("").td("").td("").td('');
         $r.='<TD ALIGN="RIGHT">'.nbm($tot)."</TD>";
         $r.="</tr>";
         if ($p_paid!=0)
         {
             $r.="<TR>";
             $r.='<TD COLSPAN="5">'._("Payé").'</TD>';
+            $r.=td("").td("").td("").td('');
             $r.='<TD ALIGN="RIGHT">'.nbm($amount_paid)."</TD>";
             $r.="</tr>";
+            
             $r.="<TR>";
             $r.='<TD COLSPAN="5">'._("Non payé").'</TD>';
+            $r.=td("").td("").td("").td('');
             $r.='<TD ALIGN="RIGHT">'.nbm($amount_unpaid)."</TD>";
             $r.="</tr>";
         }
