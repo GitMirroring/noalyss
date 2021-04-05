@@ -158,7 +158,7 @@ if ( $report != 0 ) : ?>
 
     $result=$rapport->get_row($limit['start'],$limit['end'],'periode');
     $ix=0;
-    if ( count ($result) >  0)
+    if ( !empty ($result ) && count ($result) >  0)
     {
         echo '<table border="0" width="100%">';
         foreach ($result as $row) {
