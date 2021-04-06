@@ -1064,50 +1064,42 @@ span.remain {
     font-weight: bold;
     color:#000000;
 }
- div#jrn_name_div
-    {
-        float: right;
-        margin-right:150px;
+/**==============================*/
+/* Ledger name */
+/**==============================*/
+div#jrn_name_div
+   {
+       display:none;
+
+   }
+
+/* SM */
+@media (min-width: 576px) {
 
 
-    }
-    #predef_form {
-      /*  margin-left:35%;
-        width:60%;
-        position:absolute;
-        z-index:2
-      */
-    }
-@media only screen and (min-width: 1155px) {
+}
+/* MD */
+@media (min-width: 768px) {
+
+}
+/* LG */
+@media (min-width: 992px) {
     div#jrn_name_div
-    {
-        float: right;
-
-    }
-    #predef_form {
-        /*margin-left:35%;
-        width:60%;
-        position:absolute;
-        z-index:2
-        */
-    }
+   {
+        display:block;
+   }
 }
-@media only screen and (max-width: 1155px) {
+/* XL */
+@media (min-width: 1200px) {
     div#jrn_name_div
-    {
-        display: none;
-    }
-    #predef_form {
-    }
-    .visible_gt1155 {
-     display:none;   
-    }
+   {
+       float: right;
+       margin-right:2%;
+       display:block;
+   }
 }
-@media only screen and (max-width: 900px) {
-    #predef_form {
-        /* display: none;*/
-    }
-}
+/**========*/    
+
 #direct
 {
     display:inline;
@@ -1602,32 +1594,43 @@ div.box  {
     background-color:#e4e7ed;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'openSansRegular';
- /*   margin-top:10px; */
-    margin-left:3px;
-    margin-right:3px;
-    /*! padding:2px; */
     overflow:hidden;
     border:1px solid #00008B;
-    width:32%;
-    height:364px;
-    float:left;
-    font-size:14px;
+    font-size:10px;
     font-size:0.90rem;
     border-radius:5px;
+    width:97%;
+    margin:1% 1.5% 1% 1.5%;
+    margin-right:2px
+   
 }
-@media only screen and (max-width: 1426px) {
-    div.box {
-    width: 48%;
-    height: 380px;
+/* SM */
+@media (min-width: 576px) {
+
+
 }
+/* MD */
+@media (min-width: 768px) {
+
 }
-@media only screen and (max-width: 955px) {
-    div.box {
-    margin-top:10px;
-    width: 98%;
-    height: 380px;
+/* LG */
+@media (min-width: 992px) {
+    div.box  {
+        width: 46%;
+        margin: 1.5%;
+
+    }
+
+}
+/* XL */
+@media (min-width: 1200px) {
+    div.box  {
+        width: 32.8%;
+        margin: 0.2%;
+
     }
 }
+/**========*/
 div.box table{
     border-spacing:0px;
     font-size: 96%;
