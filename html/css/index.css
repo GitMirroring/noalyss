@@ -11,7 +11,7 @@
     #logo_id {
 
         z-index:-1;
-       width: 110px;
+       width: 150px;
         left: 5px;
         top: 22px;
         height: 90px;
@@ -25,7 +25,7 @@
 @media (min-width : 768px) {
     #logo_id {
         z-index:-1;
-       width:110px;
+      width: 150px;
         left: 5px;
         top: 22px;
         height: 90px;
@@ -36,7 +36,7 @@
 @media (min-width : 992px) {
     #logo_id {
         z-index:-1;
-        width: 110px;
+       width: 150px;
         left: 5px;
         top: 22px;
         height:90px;
@@ -49,7 +49,7 @@
     #logo_id {
         z-index: -1;
 
-        width: 110px;
+        width: 150px;
         left: 5px;
         top: 22px;
         height:90px;

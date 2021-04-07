@@ -2,6 +2,7 @@
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 ?><!-- left div -->
+<div class="row" style="margin-right: 0px;margin-left:0px">
 <div id="calendar_box_div" class="box">
 <?php echo HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"calendar_zoom($obj)",'n');?>
 <?php echo $cal->display('short',0); ?>
@@ -189,7 +190,97 @@ if ( $report != 0 ) : ?>
 endif;
 ?>
 
+
+
+
+
+<div id="last_operation_box_div" class="box">
+<?php echo HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','popup_recherche('.dossier::id().')','n')?>
+
+<table style="width: 100%">
+<?php
+for($i=0;$i<count($last_ledger);$i++):
+	$class=($i%2==0)?' class="even" ':' class="odd" ';
+?>
+<tr <?php echo $class ?>>
+	<td class="box">
+            <?php echo   smaller_date($last_ledger[$i]['jr_date_fmt'])?>
+	</td>
+	<td class="box">
+		<?php echo $last_ledger[$i]['jr_pj_number']?>
+            
+        </td>
+<td class="box">
+   <?php echo h(mb_substr($last_ledger[$i]['jr_comment'],0,40,'UTF-8'))?>
+</td>
+<td class="box">
+<?php echo HtmlInput::detail_op($last_ledger[$i]['jr_id'], $last_ledger[$i]['jr_internal'])?>
+</td>
+<td class="num box">
+<?php echo nbm($last_ledger[$i]['jr_montant'])?>
+</td>
+
+</tr>
+<?php endfor;?>
+</table>
     
+</div>
+<div id="last_operation_management_div" class="box">
+    <?php 
+     echo HtmlInput::title_box(_('Suivi'),"last_operation_management_div",'zoom','action_show('.dossier::id().')','n');
+    ?>
+    <?php
+    require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
+    $gestion=new Follow_Up($cn);
+    $array=$gestion->get_last(MAX_ACTION_SHOW);
+    $len_array=count($array);
+    ?>
+    <table style="width: 100%">
+    <?php
+    for ($i=0;$i < $len_array;$i++) :
+    ?>
+        <tr class=" <?php echo ($i%2==0)?'even':'odd'?>">
+            <td class="box">
+                <?php echo smaller_date($array[$i]['ag_timestamp_fmt']) ;?>
+            </td>
+            <td class="box">
+                <?php echo HtmlInput::detail_action($array[$i]['ag_id'], $array[$i]['ag_ref'], 1)  ?>
+            </td>
+            <td class="box">
+                <?php echo mb_substr(h($array[$i]['quick_code']),0,15)?>
+            </td>
+            <td class="box cut">
+                <?php echo h($array[$i]['ag_title'])?>
+            </td>
+        </tr>
+    <?php
+    endfor;
+    ?>
+    </table>
+</div>
+</div><!-- class="row" -->
+<div id="add_todo_list" class="box" style="display:none">
+	
+<form method="post">
+<?php
+$wDate=new IDate('p_date_todo');
+$wDate->id='p_date_todo';
+$wTitle=new IText('p_title');
+$wDesc=new ITextArea('p_desc');
+$wDesc->heigh=5;
+$wDesc->width=40;
+echo HtmlInput::title_box(_("Note"),"add_todo_list","hide",'',"n");
+echo _("Date")." ".$wDate->input().'<br>';
+echo _("Titre")." ".$wTitle->input().'<br>';
+echo _("Description")."<br>".$wDesc->input().'<br>';
+echo dossier::hidden();
+echo HtmlInput::hidden('tl_id',0);
+echo HtmlInput::submit('save_todo_list',_('Sauve'),'onClick="Effect.Fold(\'add_todo_list\');return true;"');
+echo HtmlInput::button('hide',_('Annuler'),'onClick="Effect.Fold(\'add_todo_list\');return true;"');
+?>
+</form>
+</div>
+
 <div id="action_late_div"  class="inner_box" style="position:fixed;display:none;margin-left:12%;top:25%;width:75%;min-height:50%;overflow: auto;">
 	<?php
 		echo HtmlInput::title_box(_("Action en retard"), "action_late_div","hide","","y")
@@ -258,103 +349,14 @@ endif;
         </p>
 <?php endif; ?>
 	</div>
-	<?php display_dashboard_operation($supplier_now,_("Fournisseurs à payer aujourd'hui"),'supplier_now_div'); ?>
-	<?php display_dashboard_operation($supplier_late,_("Fournisseurs en retad"),'supplier_late_div'); ?>
-	<?php display_dashboard_operation($customer_now,_("Encaissement clients aujourd'hui"),'customer_now_div'); ?>
-	<?php display_dashboard_operation($customer_late,_("Clients en retard"),'customer_late_div'); ?>
-</div>
-
-
-
-<div id="last_operation_box_div" class="box">
-<?php echo HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','popup_recherche('.dossier::id().')','n')?>
-
-<table style="width: 100%">
-<?php
-for($i=0;$i<count($last_ledger);$i++):
-	$class=($i%2==0)?' class="even" ':' class="odd" ';
-?>
-<tr <?php echo $class ?>>
-	<td class="box">
-            <?php echo   smaller_date($last_ledger[$i]['jr_date_fmt'])?>
-	</td>
-	<td class="box">
-		<?php echo $last_ledger[$i]['jr_pj_number']?>
-            
-        </td>
-<td class="box">
-   <?php echo h(mb_substr($last_ledger[$i]['jr_comment'],0,40,'UTF-8'))?>
-</td>
-<td class="box">
-<?php echo HtmlInput::detail_op($last_ledger[$i]['jr_id'], $last_ledger[$i]['jr_internal'])?>
-</td>
-<td class="num box">
-<?php echo nbm($last_ledger[$i]['jr_montant'])?>
-</td>
-
-</tr>
-<?php endfor;?>
-</table>
-    
-</div>
-<div id="last_operation_management_div" class="box">
-    <?php 
-     echo HtmlInput::title_box(_('Suivi'),"last_operation_management_div",'zoom','action_show('.dossier::id().')','n');
-    ?>
-    <?php
-    require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
-    $gestion=new Follow_Up($cn);
-    $array=$gestion->get_last(MAX_ACTION_SHOW);
-    $len_array=count($array);
-    ?>
-    <table style="width: 100%">
-    <?php
-    for ($i=0;$i < $len_array;$i++) :
-    ?>
-        <tr class=" <?php echo ($i%2==0)?'even':'odd'?>">
-            <td class="box">
-                <?php echo smaller_date($array[$i]['ag_timestamp_fmt']) ;?>
-            </td>
-            <td class="box">
-                <?php echo HtmlInput::detail_action($array[$i]['ag_id'], $array[$i]['ag_ref'], 1)  ?>
-            </td>
-            <td class="box">
-                <?php echo mb_substr(h($array[$i]['quick_code']),0,15)?>
-            </td>
-            <td class="box cut">
-                <?php echo h($array[$i]['ag_title'])?>
-            </td>
-        </tr>
-    <?php
-    endfor;
-    ?>
-    </table>
-</div>
-
-<div id="add_todo_list" class="box" style="display:none">
-	
-<form method="post">
-<?php
-$wDate=new IDate('p_date_todo');
-$wDate->id='p_date_todo';
-$wTitle=new IText('p_title');
-$wDesc=new ITextArea('p_desc');
-$wDesc->heigh=5;
-$wDesc->width=40;
-echo HtmlInput::title_box(_("Note"),"add_todo_list","hide",'',"n");
-echo _("Date")." ".$wDate->input().'<br>';
-echo _("Titre")." ".$wTitle->input().'<br>';
-echo _("Description")."<br>".$wDesc->input().'<br>';
-echo dossier::hidden();
-echo HtmlInput::hidden('tl_id',0);
-echo HtmlInput::submit('save_todo_list',_('Sauve'),'onClick="Effect.Fold(\'add_todo_list\');return true;"');
-echo HtmlInput::button('hide',_('Annuler'),'onClick="Effect.Fold(\'add_todo_list\');return true;"');
-?>
-</form>
-</div>
+  <?php display_dashboard_operation($supplier_now,_("Fournisseurs à payer aujourd'hui"),'supplier_now_div'); ?>
+        <?php display_dashboard_operation($supplier_late,_("Fournisseurs en retad"),'supplier_late_div'); ?>
+        <?php display_dashboard_operation($customer_now,_("Encaissement clients aujourd'hui"),'customer_now_div'); ?>
+        <?php display_dashboard_operation($customer_late,_("Clients en retard"),'customer_late_div'); ?>
 
 <script type="text/javascript" language="javascript" charset="utf-8">
 function display_detail(div) {
 	$(div).style.display="block";
 }
 </script>
+

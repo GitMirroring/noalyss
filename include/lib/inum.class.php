@@ -115,7 +115,7 @@ class INum extends IText
         return $r;
     }
     /**
-     * 
+     * @brief like inplace_edit but without the ajax call, the INPUT text will be changed but not submitted
      * @parameter $p_js_update optionnal script to execute if we update the fied
      * @return string
      */

@@ -525,7 +525,7 @@
     {
       "uid": "034e645aa3bad56ce68389a816547c87",
       "css": "up-hand",
-      "code": 59449,
+      "code": 57592,
       "src": "fontawesome"
     },
     {
@@ -615,8 +615,38 @@
     {
       "uid": "qdhvqjd167ee2byleebhw58j4omhb8pl",
       "css": "resize-small-1",
-      "code": 59206,
+      "code": 59456,
       "src": "modernpics"
+    },
+    {
+      "uid": "9f7e588c66cfd6891f6f507cf6f6596b",
+      "css": "phone",
+      "code": 59457,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "f755a58fb985eeb70bd47d9b31892a34",
+      "css": "minus-squared",
+      "code": 61766,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "18ef25350258541e8e54148ed79845c0",
+      "css": "minus-squared-alt",
+      "code": 61767,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "43fl9m553j1z5937vfjz0lgolrlspxwl",
+      "css": "ok-1",
+      "code": 59460,
+      "src": "typicons"
+    },
+    {
+      "uid": "1dq4tek4k8ea7zlj4kc3w83itnutaxg5",
+      "css": "cancel-1",
+      "code": 59461,
+      "src": "typicons"
     },
     {
       "uid": "fcb54009841c2a662bde504cb4b65116",

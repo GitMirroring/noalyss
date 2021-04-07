@@ -269,7 +269,7 @@ class Icon_Action
      */
     static function validate($p_id,$p_javascript)
     {
-        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="smallicon icon" style="margin-left:5px">&#x2713;</span>';
+        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="smallicon icon" style="background-color:lightgrey; border:1px solid blue;padding:2px;margin:0px 1px 0px 1px" >&#xe844;</span>';
         
         return $r;
     }
@@ -281,7 +281,7 @@ class Icon_Action
      */
     static function cancel($p_id,$p_javascript)
     {
-        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="smallicon icon" style="margin-left:5px">&#xe802;</span>';
+        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'"  style="background-color:lightgrey; border:1px solid blue;padding:2px;margin:0px 1px 0px 1px" class="smallicon icon" >&#xe845;</span>';
         
         return $r;
     }
