@@ -215,11 +215,11 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
 <div >
     <div class="d-sm-block">
         <IMG SRC="image/logo9000.png" id="logo_id" alt="NOALYSS">
-
+     
     </div>    
     <div class="container">
 
-        <div class="mx-auto" id="login_div">
+        <div class="mx-auto" id="login_div"> 
         <h1 style="text-align: center;color:darkblue;font-weight: 800">NOALYSS</h1>
             <form id="login_frm" action="login.php" method="post" name="loginform" class="p-sm-3" >
                 <?php echo $goto; ?>
@@ -258,7 +258,7 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
                     <div id="recover_box">
                         <span style="display:block;font-size:120%;background-color: white;margin:0px">Recouvrement identifiant
                             <span style="cursor: pointer;float: right;position:relative;right:0px" id="close">
-                                <a ref="#" id="close_link"><?php echo SMALLX ?></a></span>
+                                <a ref="#" id="close_link">&times;</a></span>
                         </span>
                         Indiquez votre login ou votre email
                         <form method="POST" style="padding:20px">

@@ -3,57 +3,42 @@
  * LOGO
 *************************************/
 #logo_id {
-    width:90px;
-    display:block;
+    position:absolute;
+    top : 0px;
+    left:0px;
+    width:40px;
+     height:auto;
+     margin-left:0px;
 }
 /** small **/
 @media (min-width : 576px) {
     #logo_id {
-
-        z-index:-1;
-       width: 150px;
-        left: 5px;
-        top: 22px;
-        height: 90px;
-
-        left:0px;
-        display:block;
+     top : 10px;
+    left:10px;
+       width: 60px;
+     margin-left:35px;
+      
 
     }
 }
 /** medium**/
 @media (min-width : 768px) {
     #logo_id {
-        z-index:-1;
-      width: 150px;
-        left: 5px;
-        top: 22px;
-        height: 90px;
-        display:block;
+    
     }
+      
 }
 /** large**/
 @media (min-width : 992px) {
     #logo_id {
-        z-index:-1;
-       width: 150px;
-        left: 5px;
-        top: 22px;
-        height:90px;
-
-        display:block;
+     
     }      
 }
 /** XL **/
 @media (min-width : 1200px) {
     #logo_id {
-        z-index: -1;
-
-        width: 150px;
-        left: 5px;
-        top: 22px;
-        height:90px;
-        display:block;
+      
+       
     }
 } 
 
@@ -98,7 +83,6 @@
 }
 
 #recover_box {
-
     display: none;
     position: absolute;
     top: 15%;
