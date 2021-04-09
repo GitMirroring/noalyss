@@ -107,6 +107,16 @@ class Sendmail_Core
             }
         }
     }
+    
+    /**
+     * 
+     * Function to override if supplemental header are needed
+     * @return string
+     */
+    function add_supplemental_header()
+    {
+        return '';
+    }
     /**
     * create the message before sending
     */
@@ -125,6 +135,7 @@ class Sendmail_Core
         // main header (multipart mandatory)
         $this->header = "From: " . $this->from . $eol;
         $this->header .= "MIME-Version: 1.0" . $eol;
+        $this->header .= $this->add_supplemental_header();
         $this->header .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\""  ;
         //$headers .= "Content-Transfer-Encoding: 7bit" . $eol;
         //$headers .= "This is a MIME encoded message." . $eol ;
