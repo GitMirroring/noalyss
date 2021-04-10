@@ -1691,15 +1691,15 @@ li.tabs {
     color:inherit;margin-left: 0px;
     padding: 5px;
     border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     border:1px #879ed4 solid;
     float:left;
-    background: whitesmoke;
+    background:  #36649724;;
     
     margin: 2px 3px 3px 3px;
 
 }
-li.tabs:hover {
+.inner_box li.tabs:hover ,li.tabs:hover {
     display:inline;
     background-color: lightblue;
     color:wheat;margin-left: 2px;
@@ -1713,28 +1713,33 @@ li.tabs:hover {
 @media only screen and (min-width: 1280px) {
    li.tabs {
     display:inline;
-    background-color: inherit;
+    background:  #36649724;;
       
 
     padding: 15px 7px 10px 10px;
     border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     border:1px #879ed4 solid;
 
-}
-    li.tabs:hover {
+    }
+    .inner_box li.tabs:hover ,li.tabs:hover {
         display:inline;
         background-color: lightblue;
         color:wheat;margin-left: 2px;
-        padding: 15px 7px 0px 10px;
+        padding: 15px 7px 10px 10px;
         border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
         border:1px #879ed4 solid;
        }
        li.tabs_selected {
             padding: 12px 15px 15px 15px;
        }
 }
+
+.inner_box li.tabs {
+    background-color: whitesmoke;
+}
+
 ul.tabs a {
     text-decoration: none;
     color:inherit;
