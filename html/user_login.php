@@ -114,7 +114,7 @@ include_once NOALYSS_INCLUDE."/lib/user_menu.php";
 
 $priv=($User->admin==1)?_("Administrateur"):_("Utilisateur");
 load_all_script();
-echo '<div class="welcome"> ';
+
 /**
  *
  * If the user is NOT admin and can access only ONE folder,
@@ -123,18 +123,7 @@ echo '<div class="welcome"> ';
  * folder if he's an "plugin user"
  */
 
-if ( $User->admin == 0 || (defined("MULTI")&& MULTI == 0 ) )
-{
-    // how many folder ?
-    $folder=$User->get_available_folder();
-    if ( $folder != null  && count($folder) == 1 )
-    {
-            echo _("Si la redirection ne fonctionne pas, vous devez changer la valeur de NOALYSS_URL ");
-            redirect(NOALYSS_URL.'/do.php?gDossier='.$folder[0]['dos_id']);
-            exit();
-    }
 
-}
 $result="";
 $result.="<table border=\"0\">";
 $result.='<TR>';
@@ -149,7 +138,20 @@ $result.='<TD  class="tool" ><A class="cell" HREF="logout.php" >'._('Deconnexion
 $result.="</TR>";
 $result.="</table>";
 
-echo '<div id="module">'.$result.'</div>';
+echo '<div id="module" style="position:absolute;">'.$result.'</div>';
+echo '<div class="welcome"> ';
+if ( $User->admin == 0 || (defined("MULTI")&& MULTI == 0 ) )
+{
+    // how many folder ?
+    $folder=$User->get_available_folder();
+    if ( $folder != null  && count($folder) == 1 )
+    {
+            echo _("Si la redirection ne fonctionne pas, vous devez changer la valeur de NOALYSS_URL ");
+            redirect(NOALYSS_URL.'/do.php?gDossier='.$folder[0]['dos_id']);
+            exit();
+    }
+
+}
 echo '</div>';
 ?>
 <div class="foldercontent">
