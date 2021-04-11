@@ -266,7 +266,35 @@ if (isset($_REQUEST['ac']))
             array($AC,$user_profile));
 
     try {        
-        if (count($amenu_id) == 0 ) { throw new Exception(_('Erreur menu'),10);}
+        if (count($amenu_id) == 0 ) { 
+            // if only an Access Direct is asked without the full path
+            
+            $aAccess=[];
+            // Find the possible path pm_id_v3 / pm_id_v2 / pm_id_v1
+            $direct_ac=$cn->get_array("select me_file,me_parameter,me_javascript  from profile_menu 
+                    join menu_ref using (me_code)
+                    where 
+                    p_id=$2 
+                    and me_code=$1", [strtoupper($AC),$user_profile]);
+            
+            // if the me_code is available for user, find all the possible path
+            if (!empty($direct_ac)) {
+               $aAccess=$cn->get_array("select code, me_code from v_menu_description where me_code=$1 and p_id=$2",
+                       [strtoupper($AC),$user_profile]);
+            }
+            
+            if (empty($aAccess)) {
+                throw new Exception(_('Erreur menu'),10);
+            }
+            
+            // retrieve the element path 
+            $amenu_id=$cn->get_array('select 
+                      pm_id_v3,pm_id_v2,pm_id_v1
+                        from v_menu_profile 
+                        where code= upper($1)  and p_id=$2',
+            array($aAccess[0]['code'],$user_profile));
+            
+        }
         if ( count($amenu_id)> 1)     {
             $tmp=$amenu_id[0];
             $amenu_id=[];
