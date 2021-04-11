@@ -104,8 +104,42 @@ class Template_Card_Category extends Manage_Table_SQL
         echo hi(_("par exemple ne pas changer Client par fournisseur"))."<br>";
         echo _("sinon le programme fonctionnera mal, ".
                 "utiliser uniquement des chiffres pour la classe de base ou rien")."</font>";
-        parent::input();
-
+        $error_name=$this->get_error("frd_text");
+        $error_account=$this->get_error("frd_class_base");
+        $error_name=($error_name=="")?"":HtmlInput::errorbulle($error_name);
+        $error_account=($error_account=="")?"":HtmlInput::errorbulle($error_account);
+        
+        $frd_id=HtmlInput::hidden("frd_id",$this->get_table()->getp("frd_id"));
+        $name=new IText("frd_text",$this->get_table()->getp("frd_text"));
+        $account=new IPoste("frd_class_base",$this->get_table()->getp("frd_class_base"));
+        $account->set_attribute('gDossier',Dossier::id());
+        $account->set_attribute('jrn',0);
+        $account->set_attribute('account','frd_class_base');
+        $name_label=_("Nom");
+        $account_label=_("Poste comptable de base");
+       echo <<<EOF
+        <table>
+            <tbody>
+                <tr>
+                    <td> ID  </td>
+                        <td>{$frd_id}{$this->get_table()->getp("frd_id")}</td>
+                </tr>
+                <tr>
+                    <td> {$name_label}  {$error_name}</td>
+                    <td>
+                    {$name->input()}
+                    </td>
+                </tr>
+                <tr>
+                    <td> {$account_label} {$error_account}</td>
+                        <td>
+                            {$account->input()}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+EOF;
+       echo HtmlInput::get_to_hidden(["gDossier","op","p_id"]);
         /**
          * Add / Remove attribut Minimum
          */
@@ -161,6 +195,7 @@ class Template_Card_Category extends Manage_Table_SQL
                 echo Icon_Action::icon_add(uniqid(), $js_script);
             }
         }
+     
     }
 
     /**
@@ -170,7 +205,7 @@ class Template_Card_Category extends Manage_Table_SQL
     function add_mandatory_attr()
     {
         $cn=Dossier::connect();
-        $frd_id=$this->table->frd_id;
+        $frd_id=$this->get_table()->getp("frd_id");
         $cn->exec_sql("insert into attr_min (frd_id,ad_id) values ($1,$2)",
                 [$frd_id, ATTR_DEF_NAME]);
         $cn->exec_sql("insert into attr_min (frd_id,ad_id) values ($1,$2)",

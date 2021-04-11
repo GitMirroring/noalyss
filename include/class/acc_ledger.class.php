@@ -1094,13 +1094,13 @@ class Acc_Ledger  extends jrn_def_sql
         $currency_code=$http->extract($p_array,"p_currency_code","number");
         $currency=new Acc_Currency($this->db,$currency_code);
 
-        if ( $currency->get_code() == -1 )
+        if ( $p_currency_code == -1 )
         {
             throw new Exception(_('Devise inconnue'), 3);
         }
         
         /* -- check the accounting for error of exchange -*/
-        if ( $currency->get_code() == 0 )
+        if ($p_currency_code >  0 )
         {
             $poste=new Acc_Account($this->db,$g_parameter->MY_DEFAULT_ROUND_ERROR_DEB);
             if ($poste->get_parameter("id") == -1 )

@@ -2859,3 +2859,14 @@ span.tagcell {
     padding: 2px;
     margin: 0px 1px 0px 1px;
 }
+
+.h3, h3 {
+	font-size: 1.4rem;
+}
+.content .h3, .content h3 {
+	font-size: 1.4rem;
+}
+
+#facturation_div_id {
+    margin-top:2rem;
+}

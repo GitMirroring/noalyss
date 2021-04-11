@@ -59,8 +59,10 @@ switch ($action)
     case "save":
         header('Content-type: text/xml; charset=UTF-8');
         echo $cat->ajax_save()->saveXML();
-        if ( $p_id == -1 )
+        if ( $p_id == -1 && $cat->get_table()->getp("frd_id")!=-1)
+        {
             $cat->add_mandatory_attr();
+        }
         return;
         break;
     case "delete":

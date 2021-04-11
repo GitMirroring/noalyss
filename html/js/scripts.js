@@ -1119,7 +1119,7 @@ function show_calc()
     shtml += '<a class="icon" onclick="pin(\'calc1\')" id="pin_calc1">&#xf047;</a>	<a onclick="removeDiv(\'calc1\');" href="javascript:void(0)" title="" class="icon">&#10761;</a>';
     shtml += "</div>";
     shtml += '   <h2 class="title">' + content[66] + '</h2>';
-    shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >' + content[68] + '<input class="input_text" type="text" size="30" id="inp" name="calculator"> <input type="button" value="Efface" class="button" onClick="Clean();return false;" > <input type="button" value="Efface historique" class="button" onClick="CleanHistory();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
+    shtml += '<form name="calc_line"  method="GET" onSubmit="cal();return false;" >' + content[68] + '<input class="input_text" type="text" id="inp" name="calculator"> <input type="button" value="Efface" class="button" onClick="Clean();return false;" > <input type="button" value="Efface historique" class="button" onClick="CleanHistory();return false;" > <input type="button" class="button" value="Fermer" onClick="removeDiv(\'calc1\')" >';
     shtml += '</form><span class="highligth" style="display:block" id="sub_total">  ' + content[67] + '  </span><span style="display:block"  id="listing"> </span>';
 
     var obj = {id: sid, html: shtml,

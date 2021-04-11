@@ -53,6 +53,8 @@ echo $ledger->confirm($_POST,false);
     <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Extourne")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'reverse_div_id')"> <?php echo _('Extourne')?> </a></li>
     <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Type opération")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'operationtype_div_id')"> <?php echo _('Type opération')?> </a></li>
 </ul>
+</div>
+<div id="facturation_div_id">
     <div id="modele_div_id">
         <?php echo Pre_operation::save_propose(); ?>
     </div>
@@ -86,6 +88,7 @@ echo $ledger->confirm($_POST,false);
         ?>
     </div>
 </div>
+
 <?php
 echo HtmlInput::submit("save",_("Confirmer"));
 echo HtmlInput::submit("correct",_("Corriger"));

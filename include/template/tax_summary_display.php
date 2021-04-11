@@ -26,6 +26,7 @@
  * @see Tax_Summary
  *
  */?>
+<div class="content">
 <h2><?php echo _("Vente")?></h2>
 
 <?php
@@ -173,6 +174,7 @@ $array =    $this->get_summary_sale();
 
 
 ?>
+<hr>
 <h2><?php echo _("Achat")?></h2>
 <?php
 $array=$this->get_row_purchase();
@@ -373,3 +375,4 @@ $a_sum=$this->get_summary_purchase();
         echo '</tr>';
         ?>
 </table>
+</div>

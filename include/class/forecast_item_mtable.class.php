@@ -75,7 +75,7 @@ class Forecast_Item_MTable extends Manage_Table_SQL
     /**
      * @param int $forecast_id
      */
-    public function set_forecast_id(int $forecast_id): void
+    public function set_forecast_id(int $forecast_id)
     {
         $this->forecast_id = $forecast_id;
         $this->add_json_param("forecast_id", $forecast_id);
