@@ -287,6 +287,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         if ( isNumber($p_currency_rate) == 0 || $p_currency_rate <=0 ) {
             throw new Exception(_('Taux devise invalide'),15);
         }
+        $this->check_currency_setting($p_currency_code);
     }
     /**
      * Compute the ND amount thanks the attribute of the concerned card. The object 

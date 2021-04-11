@@ -1094,30 +1094,7 @@ class Acc_Ledger  extends jrn_def_sql
         $currency_code=$http->extract($p_array,"p_currency_code","number");
         $currency=new Acc_Currency($this->db,$currency_code);
 
-        if ( $p_currency_code == -1 )
-        {
-            throw new Exception(_('Devise inconnue'), 3);
-        }
-        
-        /* -- check the accounting for error of exchange -*/
-        if ($p_currency_code >  0 )
-        {
-            $poste=new Acc_Account($this->db,$g_parameter->MY_DEFAULT_ROUND_ERROR_DEB);
-            if ($poste->get_parameter("id") == -1 )
-            {
-                throw new Exception(
-                        sprintf(_("Dans COMPANY, vous n'avez pas paramétré correctement ".
-                                " le compte de débit %s pour les erreurs de conversion"),$g_parameter->MY_DEFAULT_ROUND_ERROR_DEB), 3);
-            }
-            $poste=new Acc_Account($this->db,$g_parameter->MY_DEFAULT_ROUND_ERROR_CRED);
-            if ($poste->get_parameter("id") == -1 )
-            {
-                throw new Exception(
-                        sprintf(_("Dans COMPANY, vous n'avez pas paramétré correctement ".
-                                " le compte de crédit %s pour les erreurs de conversion"),$g_parameter->MY_DEFAULT_ROUND_ERROR_CRED), 3);
-            }
-
-        }        
+        $this->check_currency_setting($currency_code);
         
         /* check if we can write into this ledger */
         if ($g_user->check_jrn($p_jrn)!='W')
@@ -1751,7 +1728,43 @@ class Acc_Ledger  extends jrn_def_sql
             return false;
         throw new Exception("Valeur invalid ".__FILE__.':'.__LINE__);
     }
-    
+    /**
+     * Check that the currency code  does exist and the setting of the folder is correct
+     * 
+     * @param int $p_currency_code
+     * @throws Exception
+     */
+    function check_currency_setting ($p_currency_code)
+    {
+        global $g_parameter;
+          if ( $p_currency_code == -1 )
+        {
+            throw new Exception(_('Devise inconnue'), 3);
+        }
+        /* -- check the accounting for error of exchange -*/
+        if ($p_currency_code >  0 )
+        {
+            $poste=new Acc_Account($this->db,$g_parameter->MY_DEFAULT_ROUND_ERROR_DEB);
+           
+            if ($poste->get_parameter("id") == -1 )
+            {
+                throw new Exception(
+                        sprintf(_("Dans COMPANY, vous n'avez pas paramétré correctement ".
+                                " le compte de débit %s pour les erreurs de conversion"),
+                                $g_parameter->MY_DEFAULT_ROUND_ERROR_DEB), 3);
+            }
+            
+            $poste=new Acc_Account($this->db,$g_parameter->MY_DEFAULT_ROUND_ERROR_CRED);
+            if ($poste->get_parameter("id") == -1 )
+            {
+                throw new Exception(
+                        sprintf(_("Dans COMPANY, vous n'avez pas paramétré correctement ".
+                                " le compte de crédit %s pour les erreurs de conversion"),
+                                $g_parameter->MY_DEFAULT_ROUND_ERROR_CRED), 3);
+            }
+
+        }        
+    }
     /**
      * When we write a record for the payment at the same time as a sale or a purchase, to have a 
      * bank saldo reliable , all the bank operation must be in the same currency

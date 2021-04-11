@@ -245,6 +245,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
         if ( isNumber($p_currency_rate) == 0 || $p_currency_rate <=0 ) {
             throw new Exception(_('Taux devise invalide'),15);
         }
+        $this->check_currency_setting($p_currency_code);
     }
 
     /*!\brief insert into the database, it calls first the verify function,
