@@ -96,6 +96,9 @@ if ( ! defined ('LOGINPUT')) {
     define ("LOGINPUT",false);
 }
 
+if ( ! defined ('DEBUGNOALYSS') ) {
+	define ('DEBUGNOALYSS',0);
+}
 $version_noalyss=SVNINFO;
 
 // If you don't want to be notified of the update
