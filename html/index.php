@@ -219,7 +219,7 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
     </div>    
     <div class="container">
 
-        <div class="mx-auto" id="login_div"> 
+        <div class="mx-auto" id="login_div" style="margin-top:10%"> 
         <h1 style="text-align: center;color:darkblue;font-weight: 800">NOALYSS</h1>
             <form id="login_frm" action="login.php" method="post" name="loginform" class="p-sm-3" >
                 <?php echo $goto; ?>
