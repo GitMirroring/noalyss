@@ -1182,8 +1182,6 @@ function display_menu($p_menuid)
                     $array=compute_variable($file[0]['me_parameter']);
                     put_global($array);
             }
-            tracedebug("'menu", $file[0]['me_file'],__FUNCTION__.__LINE__."line");
-            tracedebug("'menu", $file[0]['me_parameter'],__FUNCTION__.__LINE__."parm ");
             if ( DEBUGNOALYSS == 2)
             { 
                 echo  $file[0]['me_file']," param : ",$file[0]['me_parameter'] ;
