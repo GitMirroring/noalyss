@@ -110,4 +110,19 @@ class FicheTest extends TestCase
             $this->assertTrue(true,"Inject SQL command found");
         }
     }
+    /**
+     * @covers Fiche->Summary
+     * @covers Fiche->get_by_category
+     * @covers Fiche::GetByDef
+     */
+    public function testSummary()
+    {
+        $_REQUEST['ac']="CARD";
+        $this->object->fiche_def_ref=-1;
+        $r=$this->object->summary();
+        $this->assertEquals('',$r);
+        $this->object->fiche_def_ref=9;
+        $r=$this->object->summary();
+        $this->assertContains('</TABLE>',$r);
+    }
 }

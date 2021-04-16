@@ -62,6 +62,7 @@ class Fiche
         $this->quick_code='';
         $this->attribut=array();
         $this->f_enable='1';
+       
     }
     public function get_id()
     {
@@ -1933,8 +1934,8 @@ class Fiche
         }
         // Get The result Array
         $step_tiers=$this->get_by_category($offset,$search.$filter_amount,'name');
-
-        if ( $all_tiers == 0 || count($step_tiers)==0 ) return "";
+        
+        if ( $all_tiers == 0 || empty($step_tiers ) ) { return ""; }
         $r="";
         $r.=$bar;
         
@@ -1966,12 +1967,19 @@ class Fiche
             $odd="";
              $odd  = ($i % 2 == 0 ) ? ' odd ': ' even ';
              $accounting=$tiers->strAttribut(ATTR_DEF_ACCOUNT);
-             if ( ! empty($accounting) && $p_action == 'bank' && $amount['debit'] <  $amount['credit']  ){
-                 if ( strpos($accounting,$bank->p_value)===0 || strpos($accounting,$cash->p_value)===0 || strpos($accounting,$cc->p_value)===0){
+             if ( ! empty($accounting) && $p_action == 'bank' 
+                     && $amount['debit'] <  $amount['credit']  
+                     &&
+                     ( /** the accounting is a financial account *****/
+                         (!empty ($bank->value) && strpos($accounting,$bank->p_value)===0 )
+                      || (!empty ($cash->value) && strpos($accounting,$cash->p_value)===0 )
+                      || ( !empty ($cc->value) && strpos($accounting,$cc->p_value)===0)
+                    )
+                )
+                {
                  //put in red if c>d
                  $odd.=" notice ";
                  }
-             }
         
              $odd=' class="'.$odd.'"';
              
@@ -2019,6 +2027,7 @@ class Fiche
 		$r.="</tfoot>";
         $r.="</TABLE>";
         $r.=$bar;
+        
         return $r;
     }
     /*!
