@@ -73,22 +73,23 @@ function displayBulle(p_comment)  {
  */
 function displaySelectBox(p_name) {
     try {
-        if (! document.getElementById("select_box_content") ) {
+        var newDiv=null;
+        if (! document.getElementById("select_box_content"+p_name) ) {
 
-            var newDiv=new Element("div");
-            newDiv.id="select_box_content";
+            newDiv=new Element("div");
+            newDiv.id="select_box_content"+p_name;
             document.body.appendChild(newDiv);
             newDiv.addClassName("select_box");
-            $("select_box_content").onmouseleave=function() {
+            $("select_box_content"+p_name).onmouseleave=function() {
                 try {
-                    var newDiv=$("select_box_content");
+                    var newDiv=$("select_box_content"+p_name);
                     newDiv.setStyle({display:"none"});
                 } catch(e) {
                     alert(e.message);
                 }
             }
         } else {
-            var newDiv=document.getElementById("select_box_content");
+            newDiv=document.getElementById("select_box_content"+p_name);
         }
         newDiv.innerHTML=$("select_box"+p_name).innerHTML;
         var viewport = document.viewport.getDimensions();
