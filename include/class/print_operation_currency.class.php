@@ -156,10 +156,10 @@ EOF;
             $r.=HtmlInput::detail_op($aData[$i]['jr_id'], $aData[$i]['jr_internal']);
             $r.="</td>";
             $r.=td($aData[$i]['currency_code_iso']);
-            $r.=td(nbm($aData[$i]['j_montant'],2));
-            $r.=td(round($aData[$i]['currency_rate'],4));
-            $r.=td(round($aData[$i]['currency_rate_ref'],4));
-            $r.=td(nbm($aData[$i]['oc_amount'],2));
+            $r.=td(nbm($aData[$i]['j_montant'],2),'class="num"');
+            $r.=td(round($aData[$i]['currency_rate'],4),'class="num"');
+            $r.=td(round($aData[$i]['currency_rate_ref'],4),'class="num"');
+            $r.=td(nbm($aData[$i]['oc_amount'],2),'class="num"');
             $r.="</tr>";
         }
         $r.="</table>";
