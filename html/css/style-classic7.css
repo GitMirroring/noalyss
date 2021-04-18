@@ -2368,13 +2368,13 @@ div.bxbutton .icon
     cursor: pointer;
     border:0px;
     height: 18px;
-    color: white;
+    color: #99f4e8d6;
     font-size: 100%;
 }
 div.bxbutton .icon:hover
 {
-    background-color: white;
-    color: blue;
+/*    background-color: white */;
+    color: yellow !important;
 }
 /**
  * progressBar
