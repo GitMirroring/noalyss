@@ -175,7 +175,8 @@ echo '</form>';
  */
 $r = HtmlInput::get_to_hidden(array('l', 'date_paid_start','date_paid_end',
 				    'date_start', 'date_end', 'desc', 'amount_min', 'amount_max', 'qcode','operation_filter',
-				    'accounting', 'unpaid', 'gDossier', 'ledger_type', 'p_action','search_optag_option'));
+				    'accounting', 'unpaid', 'gDossier', 'ledger_type', 
+                                    'p_action','search_optag_option','p_currency_code'));
 if (isset($_GET['search_opr_jrn']))
 {
     foreach ($a_search_opr_jrn as $k => $v)

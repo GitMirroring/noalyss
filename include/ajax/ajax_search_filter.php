@@ -63,6 +63,7 @@ if ($op=='save_filter')
         $new->setp("ledger_type", $http->post("ledger_type", 'string'));
         $new->setp("operation_filter", $http->post("operation_filter", 'string', NULL));
         $new->setp("filter_name", h($http->post("filter_name", 'string')));
+        $new->setp("uf_currency_code", h($http->post("p_currency_code", 'number',-1)));
         $tag=$http->post("tag","string",'');
         
         if (is_array($tag) ) 
@@ -118,6 +119,7 @@ if ($op=="load_filter")
     $record['r_jrn']=explode(",", $record['r_jrn']);
     $record['tag']=explode(",",$record['uf_tag']);
     $record['tag_option']=$record["uf_tag_option"];
+    $record['p_currency_code']=$record['uf_currency_code'];
     $result=array_merge($answer, $record);
 
 

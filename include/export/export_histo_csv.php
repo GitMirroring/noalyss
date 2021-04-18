@@ -47,6 +47,8 @@ $title[]=_("Tiers");
 $title[]=_("Description");
 $title[]=_("Note");
 $title[]=_("Montant opération");
+$title[]=_("Code Devise");
+$title[]=_("Taux");
 $export=new Noalyss_Csv("histo");
 $export->send_header();
 $export->write_header($title);
@@ -74,6 +76,9 @@ for ($i=0;$i<count($res);$i++)
 		if ( $positive !='' ) $amount=$positive;
       }
     $export->add($amount,"number");
+    $export->add($res[$i]['cr_code_iso']);
+    $export->add($res[$i]['currency_rate'],"number");
+    
 
     $export->write();
 

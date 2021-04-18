@@ -229,6 +229,17 @@ class Acc_Ledger_Search
         if (isset($_REQUEST['single_operation']))
             $r.=HtmlInput::hidden("single_operation", $http->request('single_operation'));
         
+        //------
+        // Devise
+        ///-------
+        $currency_id=$http->request("p_currency_code","string",-1);
+        $acc_currency=new Acc_Currency($this->cn);
+        
+        $sCurrency=$acc_currency->select_currency();
+        $sCurrency->id=$this->div."p_currency_code";
+        $sCurrency->value[]=array("label"=>_("Toutes"),"value"=>-1);
+        $sCurrency->selected=$currency_id;
+        
         ob_start();
         $search_filter=$this->build_search_filter();
         require_once NOALYSS_TEMPLATE.'/ledger_search.php';
@@ -404,7 +415,10 @@ class Acc_Ledger_Search
 		end as total_invoice,
             jr_date_paid,
             to_char(jr_date_paid,'DD.MM.YY') as str_jr_date_paid,
-            cas.jr_id as analytic_op
+            cas.jr_id as analytic_op,
+            x.currency_id,
+            (select cr_code_iso from currency c where c.id=x.currency_id) cr_code_iso,
+            x.currency_rate
              from
              jrn as X 
              left join jrn_note using(jr_id)
@@ -458,6 +472,7 @@ class Acc_Ledger_Search
         $fil_date_paid='';
         $fil_hide_operation='';
         $fil_tag='';
+        $fil_currency="";
 
         $and='';
         $g_user=new User($this->cn);
@@ -641,9 +656,15 @@ class Acc_Ledger_Search
                     " from user_sec_jrn where ".
                     " uj_login='".sql_string($_SESSION[SESSION_KEY.'g_user'])."'".
                     " and uj_priv in ('R','W'))";
+             $and=" and ";
+        }
+        if ( isset($p_currency_code) && $p_currency_code !=-1) {
+           $fil_currency=$and." x.currency_id = ".sql_string($p_currency_code);
+           $and=" and ";
         }
         $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.$fil_amount.
-            $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation.$fil_tag;
+            $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation.$fil_tag.$fil_currency;
+        
         $sql.=" where ".$where;
         
         // Q?? Why do we return where if it is included in SQL ?

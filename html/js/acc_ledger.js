@@ -1328,7 +1328,7 @@ function manage_search_filter(p_obj) {
 function save_filter(p_div,p_dossier) {
     var elt=['ledger_type','nb_jrn','date_start','date_end',
         'date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting',
-        'operation_filter','tag_option'];
+        'operation_filter','tag_option','p_currency_code'];
     var eltValue={};
     var i =0;
     eltValue['gDossier']=p_dossier;
@@ -1397,7 +1397,8 @@ function load_filter(p_div,p_dossier,p_filter_id) {
                 var answer=req.responseJSON;    
                 console.log(answer);
                 var elt=['ledger_type','date_start','date_end','date_paid_start','date_paid_end',
-                    'desc','amount_min','amount_max','qcode','accounting','operation_filter','tag_option'];
+                    'desc','amount_min','amount_max','qcode','accounting','operation_filter','tag_option'
+                    ,'p_currency_code'];
                 for (var i=0;i<elt.length;i++) {
                     var idx=elt[i];
                     $(p_div+idx).value=answer[elt[i]];
