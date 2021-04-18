@@ -180,6 +180,10 @@ elseif ( $aItem[$i][$e]['fi_account']!="" && $diff > 0 )
     echo '<td style="text-align:right;background-color:red;color:white">';
       
   }
+  else {
+    echo '<td style="text-align:right;background-color:green;color:white">';
+  }
+
 
 echo nbm( $diff);
 ?>
