@@ -24,7 +24,11 @@ if (!defined('ALLOWED'))
 
 /**
  * @file
- * @brief  export currency in CSV
+ * @brief  export currency operation in CSV see PCUR01 
  */
 require_once NOALYSS_INCLUDE.'/class/print_operation_currency.class.php';
-?>
+$http=new HttpInput();
+$export=new Noalyss_Csv(_('devise_export'));
+$export->send_header();
+$print_operation_currency=Print_Operation_Currency::build($http->get("search_type"));
+$print_operation_currency->export_csv($export);

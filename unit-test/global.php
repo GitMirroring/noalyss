@@ -32,6 +32,9 @@ $g_parameter = new Noalyss_Parameter_Folder($g_connection);
 $_SESSION[SESSION_KEY.'g_user']='admin';
 $_SESSION[SESSION_KEY.'g_pass']='phpcompta';
 $_SESSION[SESSION_KEY.'g_pagesize']='50';
+$_SESSION[SESSION_KEY.'csv_fieldsep']='0';
+$_SESSION[SESSION_KEY.'csv_decimal']='1';
+$_SESSION[SESSION_KEY.'csv_encoding']='utf8';
 $g_user=new User($g_connection);
 
 require_once __DIR__.'/facility.class.php';

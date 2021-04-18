@@ -24,120 +24,196 @@
  * @brief manage the operation in currency : export CSV, export PDF , output in HTML
  */
 require_once NOALYSS_INCLUDE."/class/acc_currency.class.php";
-
+require_once NOALYSS_INCLUDE."/class/data_currency_operation.class.php";
+require_once NOALYSS_INCLUDE."/class/filter_data_currency_card.class.php";
+require_once NOALYSS_INCLUDE."/class/filter_data_currency_accounting.class.php";
+require_once NOALYSS_INCLUDE."/class/filter_data_currency_card_category.class.php";
+require_once NOALYSS_INCLUDE."/lib/noalyss_csv.class.php";
+/**
+ * @class
+ * @brief manage the operation in currency : export CSV , output in HTML
+ */
 class Print_Operation_Currency
 {
-    
-    private $from_date;
-    private $to_date;
-    private $currency_id;
-    private $from_account;
-    private $to_account;
 
-    function __construct($cn)
+    private $data_operation;
+   
+
+    function __construct(Data_Currency_Operation $data_operation)
     {
-        
+        $this->data_operation=$data_operation;
     }
 
-    public function getFrom_date()
-    {
-        return $this->from_date;
-    }
+   
 
-    public function getTo_date()
+    /**
+     * @brief build a Print_Operation_Currency Object thanks the http request ($_REQUEST) with the right Filter 
+     * @param string $p_search possible values are "by_card" if we filter by card, by_account if we 
+     * filter by accounting, by_category or empty if we take everything
+     */
+    static function build($p_search)
     {
-        return $this->to_date;
-    }
-
-    public function getCurrency()
-    {
-        return $this->currency;
-    }
-
-    public function getFrom_account()
-    {
-        return $this->from_account;
-    }
-
-    public function getTo_account()
-    {
-        return $this->to_account;
-    }
-
-    public function setFrom_date($from_date)
-    {
-        $this->from_date=$from_date;
-    }
-
-    public function setTo_date($to_date)
-    {
-        $this->to_date=$to_date;
-    }
-
-    public function setCurrency($currency)
-    {
-        $this->currency=$currency;
-    }
-
-    public function setFrom_account($from_account)
-    {
-        $this->from_account=$from_account;
-    }
-    public function from_get()
-    {   
         $http=new HttpInput();
-        $this->from_date=$http->get("from_date","date");
-        $this->to_date=$http->get("to_date","date");
-        $this->from_account=$http->get("from_account");
-        $this->to_account=$http->get("to_account");
-        $this->currency_id=$http->get("currency_id","numeric");
-        
-    }
-    public function setTo_account($to_account)
-    {
-        $this->to_account=$to_account;
+        $from_account=$http->request("from_account", "string", "");
+        $to_account=$http->request("to_account", "string", "");
+        $currency_code=$http->request("p_currency_code", "string", "0");
+        $from_date=$http->request("from_date", "date", "");
+        $to_date=$http->request("to_date", "date", "");
+        $card=$http->request("card","string","");
+        $card_category_id=$http->request("card_category_id","string","0");
+        $cn=Dossier::connect();
+        if ($p_search=='by_card')
+        {
+            $data_operation=new Filter_Data_Currency_Card($cn,$from_date,$to_date,$currency_code,$card);
+        }
+        elseif ($p_search=='by_accounting')
+        {
+            $data_operation=new Filter_Data_Currency_Accounting($cn,$from_date,
+                    $to_date,$currency_code,$from_account,$to_account);
+        }
+        elseif ($p_search=="by_category")
+        {
+            $data_operation=new Filter_Data_Currency_Card_Category($cn,$from_date,$to_date,
+                    $currency_code,$card_category_id);
+        }
+        elseif ($p_search=="all")
+        {
+            $data_operation=new Data_Currency_Operation ($cn,$from_date,$to_date,$currency_code);
+        }
+        else
+        {
+            throw new Exception("PROC67 Invalid parameter");
+        }
+
+        $print_operation_currency=new Print_Operation_Currency($data_operation);
+        return $print_operation_currency;
     }
     /**
-     * @brief Return array of data
+     * @brief return Data_Currency_Operation with a possible filter
+     * @return type
      */
-    function get_date()
+    public function getData_operation()
     {
-        $aArray=$this->cn->get_array("select jr_id,
-            j_date,
-            j_montant,
-            oc_amount,
-            j_poste,
-            jr_comment,
-            jr_internal,
-            jr_pj_number,
-            currency_id,
-            currency_rate,
-            currency_rate_ref,
-            f_id
-        from jrnx
-            join jrn on (jr_grpt_id=jrnx.j_grpt)
-            join operation_currency oc using (j_id)
-        where 
-            j_poste >= $1 
-            and j_poste <= $2 
-            and j_date >= to_date($3 ,'DD.MM.YYYY')
-            and j_date <=to_date($4 ,'DD.MM.YYYY')
-            and currency_id = $5 
-            order by j_poste,j_date  
-        ",[$this->from_account,$this->to_account,$this->from_date,$this->to_date,$this->currency_id]);
-        return $aArray;
+        return $this->data_operation;
     }
+
+    /**
+     * @brief return Data_Currency_Operation with a possible filter
+     * @return type
+     */
+    public function setData_operation($data_operation)
+    {
+        $this->data_operation=$data_operation;
+    }
+    /**
+     * @brief Display in HTML
+     * @return string
+     */
     function export_html()
-    {
+    { 
+        $aData=$this->data_operation->get_data();
+        if ( empty ($aData)){
+            return h2(_("Aucune donnée"),'class="error"');
+        }
+        $date=_("Date");
+        $accounting=_("Poste comptable");
+        $card_qcode=_("Fiche");
+        $receipt=_("Pièce");
+        $internal=_("Internal");
+        $comment=_("Libellé");
+        $amount=_("Montant");
+        $amount_currency=_("Mont. Devise");
+        $rate_ref=_("Taux de référence");
+        $rate=_("Taux utilisé");
+        $currency=_("Devise");
+        $r=<<<EOF
+<table class="result">
+<tr>
+                <th>{$date}</th>
+                <th>{$accounting}</th>
+                <th>{$card_qcode}</th>
+                <th>{$receipt}</th>
+                <th>{$comment}</th>
+                <th>{$internal}</th>
+                <th>{$currency}</th>
+                <th>{$amount}</th>
+                <th>{$rate}</th>
+                <th>{$rate_ref}</th>
+                <th>{$amount_currency}</th>
+</tr>    
+
+EOF;
+        $nb_data=count($aData);
+        for ($i=0;$i<$nb_data;$i++)
+        {
+            $r.="<tr>";
+            $r.=td($aData[$i]['j_date']);
+            $r.=td($aData[$i]['j_poste']);
+            $r.=td($aData[$i]['fiche_qcode']);
+            $r.=td($aData[$i]['jr_pj_number']);
+            $r.=td($aData[$i]['jr_comment']);
+            $r.="<td>";
+            $r.=HtmlInput::detail_op($aData[$i]['jr_id'], $aData[$i]['jr_internal']);
+            $r.="</td>";
+            $r.=td($aData[$i]['currency_code_iso']);
+            $r.=td(nbm($aData[$i]['j_montant'],2));
+            $r.=td(round($aData[$i]['currency_rate'],4));
+            $r.=td(round($aData[$i]['currency_rate_ref'],4));
+            $r.=td(nbm($aData[$i]['oc_amount'],2));
+            $r.="</tr>";
+        }
+        $r.="</table>";
+        return $r;
         
     }
-    function export_csv()
+    /**
+     * @brief Output in CSV
+     */
+    function export_csv(Noalyss_CSV $export)
     {
+        $aData=$this->data_operation->get_data();
         
-    }
-    function export_pdf()
-    {
+        $date=_("Date");
+        $accounting=_("Poste comptable");
+        $card_qcode=_("Fiche");
+        $receipt=_("Pièce");
+        $internal=_("Internal");
+        $comment=_("Libellé");
+        $amount=_("Montant");
+        $amount_currency=_("Mont. Devise");
+        $rate_ref=_("Taux de référence");
+        $rate=_("Taux utilisé");
+        $currency=_("Devise");
         
+        $export->write_header(array ($date,
+            $accounting,
+            $card_qcode,
+            $receipt,
+            $comment,
+            $currency,
+            $internal,
+            $amount,
+            $rate,
+            $rate_ref,
+            $amount_currency));
+        $nb_data=count($aData);
+        for ($i=0;$i<$nb_data;$i++)
+        {
+            $export->add($aData[$i]['j_date']);
+            $export->add($aData[$i]['j_poste']);
+            $export->add($aData[$i]['fiche_qcode']);
+            $export->add($aData[$i]['jr_pj_number']);
+            $export->add($aData[$i]['jr_comment']);
+            $export->add($aData[$i]['jr_internal']);
+            $export->add($aData[$i]['currency_code_iso']);
+            $export->add(nbm($aData[$i]['j_montant'],2),"number");
+            $export->add(round($aData[$i]['currency_rate'],4),"number");
+            $export->add(round($aData[$i]['currency_rate_ref'],4),"number");
+            $export->add(nbm($aData[$i]['oc_amount'],2),"number"); 
+            $export->write();
+        }
     }
+
 }
+
 ?>

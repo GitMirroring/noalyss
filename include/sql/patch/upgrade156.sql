@@ -24,4 +24,3 @@ values ('CSV:pcur01','Export Devise CSV','export_pcur01_csv.php','PR'),
 insert into version (val,v_description) values (157,'new feature Currency search');
 commit ;
 
-commit;
