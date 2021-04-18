@@ -87,6 +87,17 @@ echo $f_accounting->input();  ?>
 <?php echo $f_paid->input();  ?>
 </td>
 </tr>
+
+<tr>
+<td style="text-align:right;width:30em">
+	<?php echo _('Devise')?>
+</td>
+
+<td>
+<?php echo $sCurrency->input();  ?>
+</td>
+</tr>
+
 <tr>
     
 <td  style="text-align:right;width:30em">

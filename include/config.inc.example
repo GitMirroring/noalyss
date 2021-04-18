@@ -19,8 +19,15 @@ define ("LOCALE",1);
 define ("domaine","");
 define ("MULTI",1);
 define ("dbname","");
- // Uncomment to DEBUG
-// define ("DEBUG",TRUE);
+
+/* 
+    * DEBUGNOALYSS let you see more information when you develop.
+    * 0 = for production
+    * 1 = display all errors
+    * 2 = display all errors + more information 
+    */
+
+define ("DEBUGNOALYSS",0);
 // Uncomment to log your input
 // define ("LOGINPUT",TRUE);
 // Uncomment if you want to activate the possibility to reinitialize

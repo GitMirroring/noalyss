@@ -207,9 +207,10 @@ $amount_idx=0; $sum_prod_currency=0;
         $four_space="&nbsp;"."&nbsp;"."&nbsp;"."&nbsp;";
         
         echo  $currency->get_code(),$four_space;
-        echo _("Taux utilisé"),"&nbsp;", $obj->det->currency_rate,$four_space;
-        echo _("Taux Réf"), "&nbsp;",$obj->det->currency_rate_ref.$four_space;
-        echo _("Montant en devise"), "&nbsp;",$sum_prod_currency,$four_space;
+        echo _("Taux utilisé"),"&nbsp;", nbm($obj->det->currency_rate,4),$four_space;
+        echo _("Taux Réf"), "&nbsp;",nbm($obj->det->currency_rate_ref,4).$four_space;
+        echo _("Montant en devise"), "&nbsp;",nbm($sum_prod_currency,4).$four_space;    
+        
     }
 ?>      
 </div>
