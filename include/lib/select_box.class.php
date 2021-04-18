@@ -134,7 +134,7 @@ class Select_Box
         $javascript=$this->compute_position();
 
         // display the button
-        printf('<input type="button" class="smallbutton " id="%s_bt" value="%s &#x25BE;" >',
+        printf('<input type="button" class="smallbutton " id="%s_bt" value="%s &#8681;" >',
             $this->id, $this->value);
         printf('<input type="hidden" id="%s" name="%s" value="%s">',
             $this->id, $this->id, $this->default_value);
@@ -194,10 +194,17 @@ class Select_Box
         $this->cnt++;
     }
 
-    function add_javascript($label, $javascript)
+    function add_javascript($label, $javascript,$replace=false)
     {
         $this->item[$this->cnt]['label']=$label;
-        $this->item[$this->cnt]['javascript']=$javascript.";$('select_box{$this->id}').hide()";
+        if ( $replace )
+        {
+            $this->item[$this->cnt]['javascript']=
+                sprintf("$('%s_bt').value='%s \u21E9';",$this->id,str_replace("'","",$label)).
+                $javascript.";$('select_box{$this->id}').hide()";
+        } else {
+            $this->item[$this->cnt]['javascript']=$javascript.";$('select_box{$this->id}').hide()";
+        }
         $this->item[$this->cnt]['type']="javascript";
         $this->cnt++;
     }
@@ -206,7 +213,7 @@ class Select_Box
     {
         $this->item[$this->cnt]['label']=$label;
         $this->item[$this->cnt]['update']=$value;
-        $this->item[$this->cnt]['javascript']=sprintf(" $('%s').value='%s';$('%s_bt').value='%s';$('select_box%s').hide()",
+        $this->item[$this->cnt]['javascript']=sprintf(" $('%s').value='%s';$('%s_bt').value='%s \u21E9';$('select_box%s').hide()",
                 $this->id, $value, $this->id, $label, $this->id);
         $this->item[$this->cnt]['type']='value';
         $this->cnt++;
