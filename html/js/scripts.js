@@ -4053,3 +4053,14 @@ function download_document(p_url)
     document.location=p_url;
     remove_waiting_box();
 }
+/**
+ * @brief download a document from a form
+ */
+function download_document_form(p_form_id) 
+{
+    waiting_box();
+    var url="export.php?"+$(p_form_id).serialize();
+   document.location=url;
+   remove_waiting_box();
+   return false;
+}
