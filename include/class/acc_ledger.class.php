@@ -3210,6 +3210,9 @@ class Acc_Ledger  extends jrn_def_sql
     function get_currency()
     {
         $cr=new Acc_Currency($this->db,$this->currency_id);
+        if ( $cr->get_id() < 0 ) {
+            throw new Exception("ACL.3214"._("Taux invalide"));
+        }
         return $cr;
     }
     /**

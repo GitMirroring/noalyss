@@ -140,15 +140,20 @@ class Acc_Currency
      */
     function get_rate_date($p_date)
     {
+        if ( $this->get_id() == 0 ) { return 1;}
         
-        if (isDate($p_date) == null ) return -1;
+        if (isDate($p_date) == null ) {
+            throw new Exception(_("Date invalide"));
+        }
         
         $sql="select ch_value from currency_history 
             where
             ch_from=(select max(ch_from) from currency_history where ch_from <= to_date($1,'DD.MM.YYYY') and currency_id=$2)
             and currency_id=$2";
         $value=$this->cn->get_value($sql,[$p_date,$this->get_id()]);
-        if ($value == "") return -2;
+        if ($value == "") {
+            throw new Exception(_("Aucun taux à cette date , aller sur CFGCURRENCY"));
+        }
         return $value;
     }
     

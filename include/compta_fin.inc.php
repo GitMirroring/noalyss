@@ -60,6 +60,8 @@ if ( $jrn_priv == 'X')
 	NoAccess();
 	exit -1;
 }
+$Ledger->set_currency_id();
+
 $p_msg="";
 //----------------------------------------
 // Confirm the operations

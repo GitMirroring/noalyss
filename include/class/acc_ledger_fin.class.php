@@ -806,8 +806,14 @@ class Acc_Ledger_Fin extends Acc_Ledger
 			$get_solde=true;
                         
                         $acc_currency=new Acc_Currency($this->db,$this->currency_id);
-                        $currency_rate=$acc_currency->get_rate_date($e_date);
                         
+                        // get the currency_rate when we have one date for all the operations
+                        if ( $chdate != 2 ) {
+                            $currency_rate=$acc_currency->get_rate_date($e_date);
+                        }
+                        if (DEBUGNOALYSS > 1) {
+                            printf("<p> rate %s </p>",$currency_rate);
+                        }
                         // for each item
 			for ($i = 0; $i < $nb_item; $i++)
 			{
@@ -816,7 +822,11 @@ class Acc_Ledger_Fin extends Acc_Ledger
 				if (strlen(trim(${"e_other$i"})) == 0)
 					continue;
 
-				if ( $chdate == 2 ) $e_date=${'dateop'.$i};
+                                // get the currency_rate when each  operation has its own date 
+				if ( $chdate == 2 ) {
+                                    $e_date=${'dateop'.$i};
+                                     $currency_rate=$acc_currency->get_rate_date($e_date);
+                                }
 				// if date is date of operation
 				if ($chdate == 2 && $get_solde )
 				{
