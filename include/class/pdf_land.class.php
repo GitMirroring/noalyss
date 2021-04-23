@@ -26,7 +26,7 @@ require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
 class PDFLand extends PDF
 {
 
-    public function __construct ($p_cn = null, $orientation = 'P', $unit = 'mm', $format = 'A4')
+    public function __construct ($p_cn = null, $orientation = 'L', $unit = 'mm', $format = 'A4')
     {
 
         if($p_cn == null) die("No database connection. Abort.");

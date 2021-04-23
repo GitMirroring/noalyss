@@ -54,6 +54,7 @@
                     cancel = 'Cancel',
                     classname = '',
                     buttons = '',
+                    sTitle = '',
                     box;
 
             if (f.type === 'prompt') {
@@ -62,7 +63,12 @@
                         '<input id="dialog-input-' + f.newid + '" type="text" ' + (f.params.value ? 'value="' + f.params.value + '"' : '') + ' />' +
                         '</div>';
             }
-
+            /**
+             * Add a title
+             */
+            if ( f.params.title) {
+                sTitle='<div class="dialog-title">'+f.params.title+'</div>';
+            }
             if (f.params.ok) {
                 ok = f.params.ok;
             }
@@ -119,6 +125,7 @@
             box =
                     '<div id="smoke-bg-' + f.newid + '" class="smokebg"></div>' +
                     '<div class="dialog smoke ' + classname + '">' +
+                     sTitle +
                     '<div class="dialog-inner">' +
                     e +
                     prompt +
@@ -425,7 +432,6 @@
             if (g.duration !== 'undefined') {
                 duration = g.duration;
             }
-
             var id = smoke.newdialog();
             smoke.build(e, {
                 type: 'signal',
