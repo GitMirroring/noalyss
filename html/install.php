@@ -1,4 +1,4 @@
- <?php
+<?php
 @session_start();
 ?>
 <!doctype html>
@@ -11,6 +11,7 @@
  <META http-equiv="Content-Type" content="text/html; charset=UTF8">
  <script type="text/javascript" charset="utf-8" language="javascript" src="js/prototype.js"></script>
  <link type="text/css" REL="stylesheet" href="css/style-classic7.css"/>
+    <LINK id="pagestyle" REL="stylesheet" type="text/css" href="css/font/fontello/css/fontello.css" media="screen"/>
  <style>
      body {
          font : 100%;
