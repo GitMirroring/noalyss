@@ -252,6 +252,8 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
     print ("// for exporting document in PDF\r\n");
     print ("// \$pdftk = /usr/bin/pdftk \r\n");
     print ("// \$pdftk = /snap/bin/pdftk \r\n");
+    print ("// uncomment to activate the captcha on login page\r\n");
+    print ("// define('NOALYSS_CAPTCHA',true);\r\n");
 
 }
 /*!\brief create the config file

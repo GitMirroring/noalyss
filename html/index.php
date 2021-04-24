@@ -150,6 +150,7 @@ echo '<!doctype html><HTML>
 <link rel="stylesheet" type="text/css" href="css/bootstrap-grid.min.css" media="screen">
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" media="screen">
 <link rel="stylesheet" type="text/css" href="css/index.css" media="screen">
+<script src="js/prototype.js" type="text/javascript"></script>
 <script src="js/scripts.js" type="text/javascript"></script>
 </head>
 <BODY>';
@@ -235,19 +236,19 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
 
                 <?php
 // if captcha is used
-                if ($g_captcha==true) :
+                if (defined('NOALYSS_CAPTCHA') && NOALYSS_CAPTCHA==true) :
                     ?>
                     Indiquer le code que vous lisez dans l'image
-                    <img id="captcha" src="securimage/securimage_show.php" alt="CAPTCHA Image" border=1/>';
+                    <img id="captcha" src="securimage/securimage_show.php" alt="CAPTCHA Image" border=1/>
 
                     <input type="text" class="input_text" name="captcha_code" size="10" maxlength="6" autocomplete="off"/>
-                    <a href="#" onclick="document.getElementById('captcha').src = 'securimage/securimage_show.php?\' + Math.random(); return false">Reload Image</a>
+                    <a href="#" onclick="document.getElementById('captcha').src = 'securimage/securimage_show.php?' + Math.random(); return false">Reload Image</a>
 
                     <?php
                 endif;
                 ?>  
                 <div class="form-group  row  justify-content-center">
-                    <INPUT TYPE="SUBMIT"  class="button" style="background-image: url('image/bg-submit2.gif'); width: 100%; height: 42px; border-radius: 11px; color: white;" NAME="login" value="se connecter">
+                    <INPUT TYPE="SUBMIT"  class="button" style="width:91%" NAME="login" value="se connecter">
                 </div>
 
             </form>

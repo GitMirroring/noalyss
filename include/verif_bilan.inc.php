@@ -27,7 +27,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_bilan.class.php';
 
-global $g_captcha,$g_failed,$g_succeed;
+global $g_failed,$g_succeed;
 $cn=Dossier::connect();
 $exercice=$g_user->get_exercice();
 echo '<div class="content">';

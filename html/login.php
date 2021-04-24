@@ -60,7 +60,7 @@ if (  isset ($_POST["p_user"] ) )
     require_once NOALYSS_INCLUDE."/class/user.class.php";
     $User=new User($rep);
     $User->Check(false,'LOGIN');
-    if ($g_captcha == true)
+    if (defined('NOALYSS_CAPTCHA') && NOALYSS_CAPTCHA==true) 
     {
           include("securimage/securimage.php");
           $img = new Securimage();

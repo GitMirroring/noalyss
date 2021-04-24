@@ -27,6 +27,8 @@ var ask_reload = 0;
 // tag_choose Element  which contains all the selected tags 
 var tag_choose = ''; 
 var aDraggableElement = new Array();
+
+// document.viewport depends of prototype.js
 var viewport = document.viewport.getDimensions(); // Gets the viewport as an object literal
 var width = viewport.width; // Usable window width
 var height = viewport.height;

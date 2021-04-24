@@ -79,9 +79,12 @@ if ( ! defined('OVERRIDE_PARAM')) {
  * Ini session
  */
 
+if (! defined('NOALYSS_CAPTCHA') ) 
+{
+    define ("NOALYSS_CAPTCHA",false);
+}
 
-global $g_captcha,$g_failed,$g_succeed;
-$g_captcha=false;
+global $g_failed,$g_succeed;
 $g_failed="<span style=\"font-size:18px;color:red\">&#x2716;</span>";
 $g_succeed="<span style=\"font-size:18px;color:green\">&#x2713;</span>";
 define ('SMALLX','#xe816;');
