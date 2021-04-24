@@ -135,7 +135,7 @@ td.tool a.mtitle {
     /*! color: #0000FF; */
     height: 100%;
     width: 100%;
-    
+    font-size:0.8rem;
     /*! color: orange; */
 }
 td.tool a.mtitle:hover {
@@ -303,6 +303,7 @@ td.mtitle a.mtitle {
     height:42px;
     padding:4px 0px 0px 0px;
     border-radius:6px;
+    font-size:0.9rem;
 }
 @media only screen and (max-width:1280px) {
    td.mtitle a.mtitle {
@@ -402,7 +403,7 @@ td.selectedcell a.mtitle,div.content td.selectedcell a.mtitle {
     color:white;
     /*! height: 100%; */
     /*! width: 100%; */
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: normal;
 }
 a.dossier {
@@ -2056,6 +2057,7 @@ td.box {
   width: 40%;
   left: 50%;
   margin-left: -20%;
+  border-radius:7px;
 }
 
 .dialog-prompt {
@@ -2069,7 +2071,7 @@ td.box {
 
 .smoke {
   text-align: center;
-    background-color: white;
+    background-color: #DCE1EF;
     margin:0px;
     overflow:hidden;
     z-index:3;
@@ -2087,13 +2089,13 @@ width: 85%;
 }
 
 .dialog-title {
-    background: lightgray;
+    background: transparent;
     padding: 5px;
     color: black;
     font-weight:700;
     font-size:110%;
     border: 1px edge blue;
-    border-bottom: outset 1px darkgray;
+    border-bottom: groove 2px white;
     color:#665757;
 }
 .dialog-buttons button {
@@ -2139,7 +2141,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
   border: 1px solid #aaa;
   width: 75%;
   display: inline-block;
-  background-color: transparent;
+  background-color: white;
   font-size: 16px;
   padding: 8px;
 }
@@ -2147,7 +2149,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 .smoke-base .dialog-inner {
   padding: 15px;
 
-  color:#202020;
+  color:#1a0777;
 }
 
 button.cancel {
@@ -2355,6 +2357,7 @@ div.menu2 td.mtitle, div.menu2 td.mtitle a{
     height:40px;
     border-radius: 4px 4px 4px 4px;
     /*! padding: 5px; */
+    font-size: 0.9rem;
 }
 div.menu2 td.mtitle a{
     border-width:0px;
