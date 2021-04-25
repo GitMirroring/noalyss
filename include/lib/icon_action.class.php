@@ -44,6 +44,20 @@ class Icon_Action
                 $id, $p_style, $p_javascript);
         return $r;
     }
+    /**
+     * Display a icon with a magnify glass
+     * @param string $id id of element
+     * @param string $p_javascript
+     * @param string $p_style optionnal HTML code
+     * @return type
+     */
+    static function button_magnifier($id, $p_javascript, $p_style="")
+    {
+        $r="";
+        $r.=sprintf('<input type="button"  id="%s" class=" smallbutton icon" style="%s" onclick="%s" value="&#xf50d;">',
+                $id, $p_style, $p_javascript);
+        return $r;
+    }
 
     /**
      * 

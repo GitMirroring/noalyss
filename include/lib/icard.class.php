@@ -580,7 +580,7 @@ class ICard extends HtmlInput
         $javascript=$a.' search_card(this);return false;';
         
         
-        $button=Icon_Action::icon_magnifier(uniqid(),$javascript);
+        $button=Icon_Action::button_magnifier(uniqid(),$javascript);
         return $button;
     }
 
