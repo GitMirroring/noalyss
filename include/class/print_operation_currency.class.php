@@ -126,8 +126,9 @@ class Print_Operation_Currency
         $rate_ref=_("Taux de référence");
         $rate=_("Taux utilisé");
         $currency=_("Devise");
-        $r=<<<EOF
-<table class="result">
+        $r=HtmlInput::filter_table("pcur01_tb", '0,1,2,3,4,5,6,7,8,9,10', 1);
+        $r.=<<<EOF
+<table id="pcur01_tb" class="result">
 <tr>
                 <th>{$date}</th>
                 <th>{$accounting}</th>
@@ -136,10 +137,10 @@ class Print_Operation_Currency
                 <th>{$comment}</th>
                 <th>{$internal}</th>
                 <th>{$currency}</th>
-                <th>{$amount}</th>
-                <th>{$rate}</th>
-                <th>{$rate_ref}</th>
-                <th>{$amount_currency}</th>
+                <th class="num">{$amount}</th>
+                <th class="num">{$rate}</th>
+                <th class="num">{$rate_ref}</th>
+                <th class="num">{$amount_currency}</th>
 </tr>    
 
 EOF;

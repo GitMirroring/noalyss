@@ -53,8 +53,8 @@ $to_account->set_attribute('gDossier',Dossier::id());
 $to_account->set_attribute('jrn',0);
 $to_account->set_attribute('account','to_account');
 
-$acc_currency=new Acc_Currency($cn);
-$selCurrency=$acc_currency->select_currency();
+$selCurrency=new ISelect("p_currency_code");
+$selCurrency->value=$cn->make_array("select id,cr_code_iso from currency where id >  0 order by cr_code_iso");
 $selCurrency->selected=$print_operation_currency->getData_operation()->getCurrency_id();
 
 

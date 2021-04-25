@@ -112,7 +112,7 @@ class Data_Currency_Operation
         $sql=" select jr_id,
             j_date,
             j_montant,
-            coalesce(oc_amount,j_montant) oc_amount,
+            coalesce(oc_amount,0) oc_amount,
             j_poste,
             jr_comment,
             jr_internal,
@@ -125,7 +125,7 @@ class Data_Currency_Operation
             (select ad_value from fiche_detail fd1 where fd1.f_id=jrnx.f_id and ad_id=23) as fiche_qcode
         from jrnx
             join jrn on (jr_grpt_id=jrnx.j_grpt)
-            left join operation_currency oc using (j_id)
+            join operation_currency oc using (j_id)
             join jrn_def on (jr_def_id=jrn_def.jrn_def_id) 
             ";
         $sql.=$this->SQL_Condition();
