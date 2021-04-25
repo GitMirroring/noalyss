@@ -289,6 +289,7 @@ function compute_number(value)
          points dans le nombre et eval() lève une exception*/
         try
         {
+            console.debug("value = "+value);
             retval = eval(value);
         } catch (e)
         {
@@ -320,7 +321,7 @@ function format_number(obj, p_prec)
         precision = p_prec;
     }
     var value = obj.value;
-    value = value.replace(/,/, '.');
+    value = value.replace(/,/g, '.');
     
     value=compute_number(value);    
     
@@ -604,15 +605,7 @@ function popup_select_tva(obj)
         alert_box("popup_select_tva " + e.message);
     }
 }
-/**
- *@brief display the popup with vat and explanations
- *@deprecated this function is not used anymore
- */
-function success_popup_select_tva_obsolete(req)
-{
 
-
-}
 
 /**
  *@brief display the popup with vat and explanation
