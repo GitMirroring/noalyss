@@ -1644,6 +1644,8 @@ class Fiche
 		      "<TD></TD>".td().
 		      "<TD>Totaux</TD>".
                             td().
+                            td().
+                            td().
 		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 		      "<TD style=\"text-align:right\">".nbm($sum_cred)."</TD>".
 		      td(nbm(abs($progress)).$side,'style="text-align:right"').
