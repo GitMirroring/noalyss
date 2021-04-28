@@ -798,8 +798,11 @@ function check()
             if ( $key == $this->sort_column) {
                 $sorted=' class="sorttable_sorted"';
             }
-            if ($this->get_property_visible($key)==true)
-                echo th("",$sorted,$this->a_label_displaid[$key]);
+
+            $style=($this->get_col_type($key)=="text")?"":' style="text-align:right;" ';
+            if ($this->get_property_visible($key)==true  ) {
+                echo th("", $sorted.$style, $this->a_label_displaid[$key]);
+            }
         }
         if ($this->can_update_row() && $this->icon_mod=="right")
         {
@@ -923,7 +926,7 @@ function check()
                 if (  $this->get_col_type($v) == 'text') {
                     echo td($p_row[$v],sprintf(' sort_value="X%s" ',$p_row[$v]));
                 } elseif ( $this->get_col_type($v) == 'numeric') {
-                    echo td($p_row[$v],sprintf(' sort_value="%s" ',$p_row[$v]));
+                    echo td($p_row[$v],sprintf('class="num" sort_value="%s" ',$p_row[$v]));
                 } else {
                     echo td($p_row[$v],sprintf(' sort_value="X%s" ',$p_row[$v]));
                     
@@ -964,6 +967,9 @@ function check()
                 } elseif ($this->get_col_type($v)=="custom") {
                     // For custom col
                     echo td($this->display_row_custom($v,$p_row[$v],$pk_id));
+                }
+                elseif ( $this->get_col_type($v)=="numeric") {
+                    echo td($p_row[$v],' class="num" ');
                 }
                 else {
                     echo td($p_row[$v]);
