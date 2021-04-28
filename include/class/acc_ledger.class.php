@@ -62,27 +62,47 @@ require_once NOALYSS_INCLUDE.'/class/html_input_noalyss.class.php';
 class Acc_Ledger  extends jrn_def_sql
 {
 
-    var $id;     /**< jrn_def.jrn_def_id */
-    var $db;     /**< database connextion */
-    var $row;    /**< row of the ledger */
-    var $ledger_type;   /**< type of the ledger ACH ODS FIN VEN or GL */
-    var $nb;     /**< default number of rows by  default 10 */
+    var $id;     /**!< jrn_def.jrn_def_id */
+    var $db;     /**!< database connextion */
+    var $row;    /**!< row of the ledger */
+    var $ledger_type;   /**!< type of the ledger ACH ODS FIN VEN or GL */
+    var $nb;     /**!< default number of rows by  default 10 */
     var $currency_id;
+    /**!< is_loaded true the ledger definition is loaded or false, it is not */
+    protected  $is_loaded ; 
+
+
     /**
      * @param $p_cn database connexion
      * @param $p_id jrn.jrn_def_id
      */
     function __construct($p_cn, $p_id)
     {
+        parent::__construct($p_cn, $p_id);
         $this->id=$p_id;
         $this->ledger_name=&$this->jrn_def_name;
         $this->jrn_def_id=&$this->id;
         $this->db=$p_cn;
         $this->row=null;
         $this->nb=MAX_ARTICLE;
-        if ($p_id <> 0 ) parent::__construct($p_cn, $p_id);
+        $this->is_loaded=false;
+        
+        if ($p_id <> 0 ) {
+            
+            $this->is_loaded=true;
+        }
     }
-    /**
+    public function get_is_loaded()
+    {
+        return $this->is_loaded;
+    }
+
+    public function set_is_loaded($is_loaded): void
+    {
+        $this->is_loaded=$is_loaded;
+    }
+
+        /**
      * retrieve currency_id from database
      */
     function set_currency_id()
@@ -98,7 +118,6 @@ class Acc_Ledger  extends jrn_def_sql
         if (isNumber($this->id)==0)
         {
             throw new Exception(_("Paramètre invalide"));
-            return;
         }
         if ($this->db->exist_sequence("s_jrn_pj".$this->id))
         {
@@ -113,7 +132,9 @@ class Acc_Ledger  extends jrn_def_sql
             return $last;
         }
         else
+        {
             $this->db->create_sequence("s_jrn_pj".$this->id);
+        }
         return 0;
     }
     /**
@@ -175,11 +196,15 @@ class Acc_Ledger  extends jrn_def_sql
     function delete()
     {
         if ($this->id==0)
+        {
             return;
+        }
         $grpt_id=$this->db->get_value('select jr_grpt_id from jrn where jr_id=$1',
                 array($this->jr_id));
         if ($this->db->count()==0)
+        {
             return;
+        }
         $this->db->exec_sql('delete from jrnx where j_grpt=$1', array($grpt_id));
         $this->db->exec_sql('delete from jrn where jr_id=$1',
                 array($this->jr_id));
@@ -228,11 +253,15 @@ class Acc_Ledger  extends jrn_def_sql
         {
             $this->db->start();
             if (!isset($this->jr_id)||$this->jr_id=='')
+            {
                 throw new Exception(_("this->jr_id is not set ou opération inconnue"));
+            }
 
             /* check if the date is valid */
             if (isDate($p_date)==null)
+            {
                 throw new Exception(_('Date invalide').$p_date);
+            }
 
             // if the operation is in a closed or centralized period
             // the operation is voided thanks the opposite operation
@@ -254,7 +283,9 @@ class Acc_Ledger  extends jrn_def_sql
             $per->find_periode($p_date);
 
             if ($per->is_open()==0)
+            {
                 throw new Exception(_('PERIODE FERMEE'));
+            }
 
 
 
@@ -272,7 +303,9 @@ class Acc_Ledger  extends jrn_def_sql
 
             // Check return code
             if ($Res==false)
+            {
                 throw new Exception(__FILE__.__LINE__."sql a echoue [ $sql ]");
+            }
 
             //////////////////////////////////////////////////
             // Reverse in jrnx* tables
@@ -297,7 +330,9 @@ class Acc_Ledger  extends jrn_def_sql
                     $row));
                 // Check return code
                 if ($Res==false)
+                {
                     throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));
+                }
                 $aj_id=$this->db->fetch(0);
                 $j_id=$aj_id['j_id'];
 
@@ -315,7 +350,9 @@ class Acc_Ledger  extends jrn_def_sql
                         array($p_internal, $j_id, $row));
 
                 if ($Res==false)
+                {
                     throw new Exception(__FILE__.__LINE__."sql a echoue [ $sql ]");
+                }
                 $Res=$this->db->exec_sql("INSERT INTO quant_purchase(
                                      qp_internal, j_id, qp_fiche, qp_quantite, qp_price, qp_vat,
                                      qp_vat_code, qp_nd_amount, qp_nd_tva, qp_nd_tva_recup, qp_supplier,
@@ -327,7 +364,9 @@ class Acc_Ledger  extends jrn_def_sql
                         array($p_internal, $j_id, $row));
 
                 if ($Res==false)
+                {
                     throw new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]");
+                }
             }
             $sql="insert into jrn (
               jr_id,
@@ -354,7 +393,9 @@ class Acc_Ledger  extends jrn_def_sql
                     array($seq, $p_date, $grp_new, $p_internal, $per->p_id, $this->jr_id,$p_label));
             // Check return code
             if ($Res==false)
+            {
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));
+            }
             // reverse in QUANT_FIN table
             $Res=$this->db->exec_sql("  INSERT INTO quant_fin(
                                  qf_bank,  qf_other, qf_amount,jr_id,j_id)
@@ -362,7 +403,9 @@ class Acc_Ledger  extends jrn_def_sql
                                  FROM quant_fin where jr_id=$2",
                     array($seq, $this->jr_id,$j_id));
             if ($Res==false)
+            {
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR[ $sql ]"));
+            }
 
             // Add a "concerned operation to bound these op.together
             //
@@ -384,7 +427,9 @@ class Acc_Ledger  extends jrn_def_sql
              from stock_goods natural join jrnx  where j_grpt=".$this->jr_grpt_id.")";
             $Res=$this->db->exec_sql($sql);
             if ($Res==false)
+            {
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));
+            }
             $this->db->commit();
         }
         catch (Exception $e)
@@ -411,7 +456,9 @@ class Acc_Ledger  extends jrn_def_sql
                 " jrn_def where jrn_def_id=$1", array($this->id));
         $Max=Database::num_row($Res);
         if ($Max==0)
+        {
             return null;
+        }
         $ret=Database::fetch_array($Res, 0);
         $this->ledger_name=$ret['jrn_def_name'];
         return $ret['jrn_def_name'];

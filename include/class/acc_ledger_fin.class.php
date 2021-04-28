@@ -460,6 +460,9 @@ class Acc_Ledger_Fin extends Acc_Ledger
     {
         global $g_parameter, $g_user;
         $r="";
+        if ( ! $this->get_is_loaded()) {
+            $this->load();
+        }
         bcscale(2);
         extract($p_array, EXTR_SKIP);
         $pPeriode=new Periode($this->db);
@@ -744,6 +747,10 @@ class Acc_Ledger_Fin extends Acc_Ledger
     public function insert($p_array=null)
     {
         global $g_parameter;
+        
+        if ( ! $this->get_is_loaded()) {
+            $this->load();
+        }
         bcscale(2);
         $internal_code="";
         $oid=0;
@@ -792,7 +799,6 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
 
 
-
         try
         {
             $this->db->start();
@@ -813,6 +819,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
             }
             if (DEBUGNOALYSS>1)
             {
+                printf("<p> currency_id %s </p>",$this->currency_id);
                 printf("<p> rate %s </p>", $currency_rate);
             }
             // for each item

@@ -96,7 +96,7 @@ $p_msg="";
     <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Modèle à sauver")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'modele_div_id')"> <?php echo _('Modèle')?> </a></li>
     <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Extourne")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'reverse_div_id')"> <?php echo _('Extourne')?> </a></li>
 </ul>
-    
+</div>   
 <?php
             echo $Ledger->select_depot(false, -1);
             echo $Ledger->extra_info();
@@ -129,7 +129,6 @@ $p_msg="";
 show_tabs(a_tab,'facturation_div_id');
 </script>
 <?php
-            echo '</div>';
             return;
         }
     }
@@ -262,7 +261,10 @@ if (isset($_REQUEST['p_jrn_predef']))
 
 
 echo '<div class="content">';
-if ( $p_msg !="" ) echo '<span class="warning">'.$p_msg.'</span>';
+if ($p_msg!="")
+{
+    echo '<span class="warning">'.$p_msg.'</span>';
+}
 try
 {
     $payment=$http->request("e_mp","string", 0);

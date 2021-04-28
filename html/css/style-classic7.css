@@ -2474,6 +2474,10 @@ span.warning {
  /* LI as list
  * Tabs like row
  ****************************************************************************/
+ #tab_id {
+     margin-bottom: 30px;
+     position:static;
+ }
  ul.tab_row {
      padding-top: 25px;
      display:block;
@@ -2889,8 +2893,4 @@ span.tagcell {
 }
 .content .h3, .content h3 {
 	font-size: 1.4rem;
-}
-
-#facturation_div_id {
-    margin-top:2rem;
 }
