@@ -773,9 +773,6 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     font-weight: normal;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
-     /*! background-image: url("font/bg-submit2.gif"); */ 
-    /*! background-repeat: repeat-x; */
-    /*! background-position: left; */
     font-size:12px;
     font-size:0.85rem;
     font-family: SansationLight;
@@ -793,12 +790,13 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     /*! -moz-border-radius: 2px; */
     -webkit-border-radius: 5px;
     font-family: SansationLight;
-  background: lightgray;
-background: -moz-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%);
-background: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
-background: linear-gradient(to bottom, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
-  
+    background: lightgray;
+    background: -moz-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%);
+    background: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+    background: linear-gradient(to bottom, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
+    display:inline-block;  
+    color:navy;
 }
 a#smallanchorbutton:hover, .smallbutton:hover,a.smallbutton:hover,div.content a.smallbutton:hover  {
     cursor:pointer;
@@ -814,7 +812,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     font-family: SansationLight;
      /*border-style:  inset ;*/
     /*! border-color:  darkblue; */
-
+    text-decoration:none;
     border-color: orange;
 }
 a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton .button {
@@ -1281,7 +1279,7 @@ h2.title {
     padding-bottom: 2px;
     background-color: #023575;
     font-size: 1.1rem;
-    height: 35px;
+    height: 40px;
     vertical-align: middle;
     border-bottom: white;
     border-bottom-style: groove;
