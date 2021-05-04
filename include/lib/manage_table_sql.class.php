@@ -80,7 +80,7 @@ class Manage_Table_SQL
     protected $aerror; //!< Array containing the error of the input data
     protected $col_sort; //!< when inserting, it is the column to sort,-1 to disable it and append only
     protected $a_info; //!< Array with the infotip
-    protected $sort_column; //!< javascript sort , if empty there is no js sort
+    protected $sort_column; //!< javascript sort on this column , if empty there is no js sort
     protected $dialog_box; //!< ID of the dialog box which display the result of the ajax calls
     protected $search_table; //!< boolean , by default true ,it is possible to search in the table, 
     const UPDATABLE=1;
@@ -918,17 +918,20 @@ function check()
             {
                 $js=sprintf("onclick=\"%s.input('%s','%s');\"", $this->object_name,
                         $pk_id, $this->object_name);
-                $td=($i == $this->col_sort ) ? sprintf('<td sort_value="X%s" >',$p_row[$v]):"<td>";
+                $td=($i == $this->col_sort ) ? sprintf('<td sorttable_customkey="X%s" >',$p_row[$v]):"<td>";
                 echo $td.HtmlInput::anchor($p_row[$v], "", $js).'</td>';
             }
             elseif ( $i == $this->col_sort && $this->get_property_visible($v) )
             {
                 if (  $this->get_col_type($v) == 'text') {
-                    echo td($p_row[$v],sprintf(' sort_value="X%s" ',$p_row[$v]));
+                    echo td($p_row[$v],sprintf(' sorttable_customkey="X%s" ',$p_row[$v]));
                 } elseif ( $this->get_col_type($v) == 'numeric') {
-                    echo td($p_row[$v],sprintf('class="num" sort_value="%s" ',$p_row[$v]));
-                } else {
-                    echo td($p_row[$v],sprintf(' sort_value="X%s" ',$p_row[$v]));
+                    echo td($p_row[$v],sprintf('class="num" ',$p_row[$v]));
+                }  elseif ($this->get_col_type($v)=="custom") {
+                    // For custom col
+                    echo $this->display_row_custom($v,$p_row[$v],$pk_id);
+                }else {
+                    echo td($p_row[$v],sprintf(' sorttable_customkey="X%s" ',$p_row[$v]));
                     
                 }
             }
@@ -966,7 +969,7 @@ function check()
                     }
                 } elseif ($this->get_col_type($v)=="custom") {
                     // For custom col
-                    echo td($this->display_row_custom($v,$p_row[$v],$pk_id));
+                    echo $this->display_row_custom($v,$p_row[$v],$pk_id);
                 }
                 elseif ( $this->get_col_type($v)=="numeric") {
                     echo td($p_row[$v],' class="num" ');
@@ -986,7 +989,9 @@ function check()
         echo '</tr>';
     }
     /**
-     * For the type custom , we can call a function to display properly the value
+     * @brief When displaying a row, if a column has the type "custom" , we can call this function to display properly the value
+     * including the tag "<td>".
+     * 
      * @param $p_key string key name
      * @param $p_value string value
      * @param int $p_id id of the row (optional default 0)
@@ -996,7 +1001,7 @@ function check()
      * @return string
      */
     function display_row_custom($p_key,$p_value,$p_id=0) {
-        return $p_value;
+        return td($p_value);
     }
     /**
      * @brief display into a dialog box the datarow in order 
