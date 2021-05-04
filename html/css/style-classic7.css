@@ -4,18 +4,19 @@
   */
 @font-face {
 	font-family: 'SansationLight';
-	src: url('font/SansationLight/SansationLight.eot');
-	src: local('SansationLight'), url('font/SansationLight/SansationLight.woff') format('woff'), url('font/SansationLight/SansationLight.ttf') format('truetype');
+	src: url('./font/SansationLight/SansationLight.eot');
+	src: local('SansationLight'), 
+            url('./font/SansationLight/SansationLight.woff') format('woff'), 
+            url('./font/SansationLight/SansationLight.ttf') format('truetype');
 }
 @font-face {
 	font-family: 'OpenSansRegular';
-	src: url('font/OpenSansRegular.eot');
-	src: local('OpenSansRegular'), url('font/OpenSansRegular.woff') format('woff'), url('font/OpenSansRegular.ttf') format('truetype');
+	src: url('./font/OpenSansRegular.eot');
+	src: local('OpenSansRegular'), 
+            url('./font/OpenSansRegular.woff') format('woff'), 
+            url('./font/OpenSansRegular.ttf') format('truetype');
 }
-/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_38327">Text with this font applied</p> */
-.fontsforweb_fontid_38327 {
-	font-family: 'OpenSansRegular' !important;
-}
+
 
 BODY {
     font-family: Arial, Helvetica, "Liberation Sans"  , FreeSans, sans-serif !important;

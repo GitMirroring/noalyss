@@ -305,15 +305,16 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
 	$style = "style-classic7.css";
     } // end if
 	$title="NOALYSS";
-
+        
 	if ( isset ($_REQUEST['ac'])) {
-		if (strpos($_REQUEST['ac'],'/') <> 0)
+            $ac=strip_tags($_REQUEST['ac']);
+		if (strpos($ac,'/') <> 0)
 		{
-			$m=  explode('/',$_REQUEST['ac']);
+			$m=  explode('/',$ac);
 			$title=$m[count($m)-1]."  ".$title;
 		}
 		else
-			$title=$_REQUEST['ac']."  ".$title;
+			$title=$ac."  ".$title;
 	}
     $is_msie=is_msie();
     
@@ -329,13 +330,18 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     }
     echo "<HTML>";
     
-    if ($p_script2 != "")
-	$p_script2 = '<script src="' . $p_script2 . '?version='.SVNINFO.'" type="text/javascript"></script>';
+    if ($p_script2!="")
+    {
+        $p_script2='<script src="'.$p_script2.'" type="text/javascript"></script>';
+    }
     $style=trim($style);
     echo "<HEAD>";
     echo '<meta charset="utf-8">';
     echo "<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">";
-    if ( $is_msie == 1 )echo '      <meta http-equiv="x-ua-compatible" content="IE=edge"/>';
+    if ($is_msie==1)
+    {
+        echo '      <meta http-equiv="x-ua-compatible" content="IE=edge"/>';
+    }
     echo "
     <TITLE>$title</TITLE>
 	<link rel=\"icon\" type=\"image/ico\" href=\"favicon.ico\" />
@@ -348,6 +354,11 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     <link rel=\"stylesheet\" type=\"text/css\" href=\"css/style-print.css?version=".SVNINFO."\" media=\"print\"/>" .
     $p_script2 . "
     ";
+    // preload font
+    echo    '<link rel="preload" href="./css/font/OpenSansRegular.woff" as="font" crossorigin="anonymous" />';
+    echo    '<link rel="preload" href="./css/font/SansationLight/SansationLight.woff" as="font" crossorigin="anonymous" />';
+    echo    '<link rel="preload" href="./css/font/fontello/fontello.woff" as="font" crossorigin="anonymous" />';
+    
     echo '<script language="javascript" src="js/calendar.js"></script>
     <script type="text/javascript" src="js/lang/calendar-en.js"></script>';
 
@@ -419,8 +430,10 @@ function html_min_page_start($p_theme="", $p_script="", $p_script2="")
     echo "<HTML>";
 
 
-    if ($p_script2 != "")
-	$p_script2 = '<script src="' . $p_script2 . '" type="text/javascript"></script>';
+    if ($p_script2!="")
+    {
+        $p_script2='<script src="'.$p_script2.'" type="text/javascript"></script>';
+    }
 
     echo "<HEAD>
     <TITLE>NOALYSS</TITLE>
