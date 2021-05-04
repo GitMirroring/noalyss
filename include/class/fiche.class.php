@@ -1945,7 +1945,7 @@ class Fiche
             <TR >
             <TH>'._('Quick Code').Icon_Action::infobulle(17).'</TH>'.
             '<th>'._('Poste comptable').'</th>'.
-            '<th  class="sorttable_sorted">'._('Nom').'<span id="sorttable_sortfwdind"><img src="image/up.gif"></span>'.'</th>
+            '<th  class="sorttable_sorted">'._('Nom').'</span>'.'</th>
             <th>'._('Adresse').'</th>
             <th style="text-align:right">'._('Total débit').'</th>
             <th style="text-align:right">'._('Total crédit').'</th>

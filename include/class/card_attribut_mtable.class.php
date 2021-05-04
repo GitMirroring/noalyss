@@ -107,10 +107,10 @@ class Card_Attribut_MTable extends Manage_Table_SQL
             $ic->add_json_param("ctl", $p_id);
             $ret=$ic->input();
 
-            return $ret;
+            return td($ret);
         }
         if ($p_key == "ad_text"){
-            return $p_value;
+            return td($p_value);
         }
         return;
     }

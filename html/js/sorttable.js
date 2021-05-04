@@ -45,6 +45,11 @@ var sorttable = {
             return;
         // flag this function so we don't do the same thing twice
         arguments.callee.done = true;
+        sorttable.icon_down='<span style="font-style: normal;vertical-align: super;\n' +
+            'padding: 2px;">&#9652;</span>';
+        sorttable.icon_up='<span style="font-style: normal;vertical-align: super;\n' +
+            'padding: 2px;">&#9662;</span>';
+
         // kill the timer
         if (_timer)
             clearInterval(_timer);
@@ -117,7 +122,7 @@ var sorttable = {
                     
                     sortrevind = document.createElement('span');
                     sortrevind.id = "sorttable_sortrevind";
-                    sortrevind.innerHTML = '<img src="image/down.gif">';
+                    sortrevind.innerHTML =  sorttable.icon_down;
                     headrow[i].appendChild(sortrevind);
             
                 }
@@ -125,7 +130,7 @@ var sorttable = {
             
                     sortfwdind = document.createElement('span');
                     sortfwdind.id = "sorttable_sortfwdind";
-                    sortfwdind.innerHTML = '<img src="image/up.gif">';
+                    sortfwdind.innerHTML =  sorttable.icon_up;
                     headrow[i].appendChild(sortfwdind);
         
                 }
@@ -144,7 +149,7 @@ var sorttable = {
                         sortrevind = document.createElement('span');
                         sortrevind.id = "sorttable_sortrevind";
                         // sortrevind.innerHTML = stIsIE ? '&nbsp<font face="webdings">5</font>' : '&nbsp;&#x25B4;';
-                        sortrevind.innerHTML = '<img src="image/down.gif">';
+                        sortrevind.innerHTML =  sorttable.icon_down;
                         this.appendChild(sortrevind);
                         return;
                     }
@@ -158,7 +163,7 @@ var sorttable = {
                         sortfwdind = document.createElement('span');
                         sortfwdind.id = "sorttable_sortfwdind";
 //            sortfwdind.innerHTML = stIsIE ? '&nbsp<font face="webdings">6</font>' : '&nbsp;&#x25BE;';
-                        sortfwdind.innerHTML = '<img src="image/up.gif">';
+                        sortfwdind.innerHTML = sorttable.icon_up;
                         this.appendChild(sortfwdind);
                         return;
                     }
@@ -184,7 +189,7 @@ var sorttable = {
                     sortfwdind = document.createElement('span');
                     sortfwdind.id = "sorttable_sortfwdind";
 //          sortfwdind.innerHTML = stIsIE ? '&nbsp<font face="webdings">6</font>' : '&nbsp;&#x25BE;';
-                    sortfwdind.innerHTML = '<img src="image/up.gif">';
+                    sortfwdind.innerHTML =  sorttable.icon_up;
                     this.appendChild(sortfwdind);
 
                     // build an array to sort. This is a Schwartzian transform thing,
