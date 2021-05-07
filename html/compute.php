@@ -51,6 +51,8 @@ foreach (array('t','c','p','q','n','gDossier') as $a)
 $cn=Dossier::connect();
 $User=new User($cn);
 $User->Check();
+$User->check_dossier(Dossier::id());
+
 // Retrieve the rate of vat, it $t == -1 it means no VAT
 if ( $t != -1 && isNumber($t) == 1 )
 {
