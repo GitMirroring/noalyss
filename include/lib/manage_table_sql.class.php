@@ -92,7 +92,7 @@ class Manage_Table_SQL
     private $button_add_top;  //!< place of the button add on the top, by default true
     protected $title; //! < give the title of the diabox , default is Data
     private $cssclass; //! CSS class for the dialog box
-    
+    private $current_row; //! in display_row and display_custom_row, it is the current row which is used
     /**
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the
@@ -701,8 +701,23 @@ function check()
         $this->button_add_top=$button_add_top;
         return $this;
     }
-
-        /**
+    /**
+     * @brief execute the query (Data_SQL.seek), called by display_table
+     * @param string (default empty) $p_order SQL string added to DatabaseCore::seek
+     * @param array (default null) $p_array Array for the SQL string
+     * @see Data_SQL.seek 
+     * @return pgsql resource 
+     */
+    function execute_query($p_order,$p_array=NULL)
+    {
+         if ($p_order=="")
+        {
+            $p_order="order by {$this->table->primary_key}";
+        }
+        $ret=$this->table->seek($p_order, $p_array);
+        return $ret;
+    }
+    /**
      * @brief display the data of the table
      * @param $p_order is the cond or order of the rows, 
      * if empty the primary key will be used
@@ -711,11 +726,7 @@ function check()
      */
     function display_table($p_order="", $p_array=NULL)
     {
-        if ($p_order=="")
-        {
-            $p_order="order by {$this->table->primary_key}";
-        }
-        $ret=$this->table->seek($p_order, $p_array);
+       $ret=$this->execute_query();
         $nb=Database::num_row($ret);
         if ($this->can_append_row()==TRUE && $this->button_add_top == true)
         {
@@ -912,6 +923,7 @@ function check()
         $nb_order=count($this->a_order);
         for ($i=0; $i<$nb_order; $i++)
         {
+            $this->current_row=$p_row;
             $v=$this->a_order[$i];
             
             if ($i==0&&$this->icon_mod=="first"&&$this->can_update_row())
@@ -989,12 +1001,32 @@ function check()
         echo '</tr>';
     }
     /**
+     * Return the current row printed in display_row
+     * @return array
+     */
+    public function get_current_row()
+    {
+        return $this->current_row;
+    }
+    /**
+     *  set the current row printed in display_row
+     * @param type $current_row
+     * @return this;
+     */
+    public function set_current_row($current_row)
+    {
+        $this->current_row=$current_row;
+        return $this;
+    }
+
+    /**
      * @brief When displaying a row, if a column has the type "custom" , we can call this function to display properly the value
      * including the tag "<td>".
+     * You can get the full array from display_row via get_current_row() or reload from db thanks $p_id
      * 
      * @param $p_key string key name
      * @param $p_value string value
-     * @param int $p_id id of the row (optional default 0)
+     * @param int $p_id id of the row , usually the pk of Data_SQL (optional default 0) 
      * @see input_custom
      * @see set_type
      * @note must return a string which will be in surrounded by td in the function display_row
@@ -1012,6 +1044,8 @@ function check()
      * 
      * It returns true , if it is not readyonly and the form will have a "save" button, if it returns nothing or false
      * then there is no save button, nor form, the content is then readonly
+     * 
+     *@see get_error , set_error  
      *  
      */
     function input()
@@ -1118,8 +1152,8 @@ function check()
      *   }
      * }
      * @endcode
-     * @parameter string $p_key name of the column
-     * @parameter string $p_value current value 
+     * @param string $p_key name of the column
+     * @param string $p_value current value 
      * @return nothing
      */
     function input_custom($p_key,$p_value) {
@@ -1198,7 +1232,8 @@ function check()
      * display the  input , but if that function returns false, the "save" button will disappear but the form can be
      * submitted with enter.
      * 
-     * XML Tag 
+     * @see input
+     * XML tag 
      *   - status  : OK , NOK 
      *   - ctl     : Dom id to update 
      *   - content : Html answer
