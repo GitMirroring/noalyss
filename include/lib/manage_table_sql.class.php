@@ -708,7 +708,7 @@ function check()
      * @see Data_SQL.seek 
      * @return pgsql resource 
      */
-    function execute_query($p_order,$p_array=NULL)
+    function execute_query($p_order="",$p_array=NULL)
     {
          if ($p_order=="")
         {
