@@ -726,7 +726,7 @@ function check()
      */
     function display_table($p_order="", $p_array=NULL)
     {
-       $ret=$this->execute_query();
+       $ret=$this->execute_query($p_order,$p_array);
         $nb=Database::num_row($ret);
         if ($this->can_append_row()==TRUE && $this->button_add_top == true)
         {
