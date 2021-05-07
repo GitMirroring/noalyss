@@ -19,7 +19,7 @@
  */
 // Copyright (2018) Author Dany De Bontridder <dany@alchimerys.be>
 
-require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 /**
@@ -27,7 +27,7 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
  *
  * @file
  * @brief abstract of the table public.currency_history */
-class Currency_history_SQL extends Noalyss_SQL
+class Currency_history_SQL extends Table_Data_SQL
 {
 
     function __construct(Database $p_cn, $p_id=-1)

@@ -23,9 +23,9 @@
  *
  * @author dany
  */
-require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 
-class Default_Menu_SQL extends Noalyss_SQL
+class Default_Menu_SQL extends Table_Data_SQL
 {
     var $md_id;
     var $md_code;

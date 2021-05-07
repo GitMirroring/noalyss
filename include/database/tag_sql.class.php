@@ -1,7 +1,7 @@
 <?php
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 /*
  *   This file is part of NOALYSS.
  *
@@ -23,7 +23,7 @@ require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
 /**
  * @brief Manage the table public.tag
  */
-class Tag_SQL extends Noalyss_SQL
+class Tag_SQL extends Table_Data_SQL
 {
 	/* example private $variable=array("easy_name"=>column_name,"email"=>"column_name_email","val3"=>0); */
 

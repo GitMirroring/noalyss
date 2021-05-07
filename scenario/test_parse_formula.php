@@ -3,7 +3,7 @@
 /*
 # check the Impress::check_formula and the parse_formula
 # This file is a part of NOALYSS under GPL
-# Author D. DE BONTRIDDER danydb@aevalys.eu
+# Author Dany WM DE BONTRIDDER danydb@aevalys.eu
 */
 
 include_once NOALYSS_INCLUDE.'/lib/impress.class.php';
@@ -29,23 +29,28 @@ foreach ( array('1',
 	    '[50%]*9.0FROM=01.2004',
 		'system',
 		'unlink',
-		'ls -1')
+		'ls -1',
+    '<script>document.location="https://yahoo.fr";</script>',
+    "[45ABC]*1",
+    
+    
+    )
 	as $a ) {
-  echo "Testing :".$a;
+  echo "Testing :".h($a);
   echo (Impress::check_formula($a)==false)?'Non valide ':'ok';
 
   echo '<br>';
   
   foreach (array('+','-','/') as $b ) {
     $ee=str_replace('*',$b,$a);
-    echo "Testing :".$ee;
+    echo "Testing :".h($ee);
     echo (Impress::check_formula($ee)==false)?'Non valide ':'ok';
     echo '<br>';
 
   }
   for($e=0;$e<3;$e++) {
     $a.="*".$a;
-  echo "Testing :".$a;
+  echo "Testing :".h($a);
   echo (Impress::check_formula($a)==false)?'Non valide ':'ok';
   echo '<br>';
 

@@ -23,13 +23,13 @@
  * @brief Class to manage distribution keys for SQL.  
  *
  */
-require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 
 
 /**
  * @brief Manage the table key_distribution.
  */
-class Anc_Key_SQL extends Noalyss_SQL
+class Anc_Key_SQL extends Table_Data_SQL
 {
 
     function __construct($p_cn, $p_id = -1)
@@ -62,7 +62,7 @@ class Anc_Key_SQL extends Noalyss_SQL
 /**
  * @brief manage table key_distribution_ledger
  */
-class Anc_Key_Ledger_SQL extends Noalyss_SQL
+class Anc_Key_Ledger_SQL extends Table_Data_SQL
 {
        function __construct(&$p_cn, $p_id = -1)
     {
@@ -93,7 +93,7 @@ class Anc_Key_Ledger_SQL extends Noalyss_SQL
 /**
  * @brief manage table key_distribution_detail
  */
-class Anc_Key_Detail_SQL extends Noalyss_SQL
+class Anc_Key_Detail_SQL extends Table_Data_SQL
 {
        function __construct(&$p_cn, $p_id = -1)
     {
@@ -128,7 +128,7 @@ class Anc_Key_Detail_SQL extends Noalyss_SQL
 /**
  * @brief manage table key_distribution_activity
  */
-class Anc_Key_Activity_SQL extends Noalyss_SQL
+class Anc_Key_Activity_SQL extends Table_Data_SQL
 {
        function __construct($p_cn, $p_id = -1)
     {

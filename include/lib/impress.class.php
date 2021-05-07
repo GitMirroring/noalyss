@@ -18,16 +18,22 @@
 */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-/*!\file
- * \brief contains function for the printing
-*/
+/*!
+ * \file
+ * \brief contains function for the parsing and computing formulae. Test are in scenario/test_parse_formula.php
+ */
 require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
-
+/**
+ * @class
+ * @brief contains function for the parsing and computing formulae . Test are in scenario/test_parse_formula.php
+ */
 class Impress
 {
-    /*! \brief   Purpose Parse a formula
+    /*! 
+     * 
+     * \brief   Purpose Parse a formula 
      *
      * \param $p_cn connexion
      * \param $p_label
@@ -238,10 +244,10 @@ class Impress
         $p_string=  preg_replace("/\+|-|\/|\*/", "", $p_string);
         $p_string=  preg_replace("/[0-9]*\.*[0-9]/", "", $p_string);
 
-        //********************************************************************************************************************
+        //************************************************************************************************************
         // If the string is empty then formula should be good
         //
-        //********************************************************************************************************************
+        //************************************************************************************************************
         if ($p_string == '')
         {
             return true;

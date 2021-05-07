@@ -23,7 +23,7 @@
  * @brief Manage the table public.fiche_def_ref , which concerns the template of
  * category of card
  */
-require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 /**
@@ -31,7 +31,7 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
  * @file Manage the table public.fiche_def_ref , which concerns the template of
  * category of card
  */
-class Fiche_def_ref_SQL extends Noalyss_SQL
+class Fiche_def_ref_SQL extends Table_Data_SQL
 {
 
     function __construct(DatabaseCore $p_cn, $p_id=-1)

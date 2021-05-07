@@ -19,7 +19,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * author : Dec 2017 , Dany De Bontridder (danydb@noalyss.eu)
  */
-require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 /**
@@ -28,7 +28,7 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
  * @file
  * @brief abstract of the table public.user_filter 
  */
-class User_filter_SQL extends Noalyss_SQL
+class User_filter_SQL extends Table_Data_SQL
 {
 
     function __construct(DatabaseCore $p_cn, $p_id=-1)

@@ -30,12 +30,12 @@
  */
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/noalyss_sql.class.php';
+require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 
 /**
  * @brief Manage the table public.profile_menu
  */
-class Profile_Menu_sql extends Noalyss_SQL
+class Profile_Menu_sql extends Table_Data_SQL
 {
 
     function __construct(&$p_cn,$p_id=-1)
