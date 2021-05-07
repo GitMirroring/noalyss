@@ -87,89 +87,13 @@ require NOALYSS_INCLUDE."/lib/data_sql.class.php";
 abstract class Noalyss_SQL extends Data_SQL
 {
 
-    var $default;
-    function __construct(&$p_cn, $p_id=-1)
+    
+    function __construct($p_cn, $p_id=-1)
     {
-        $this->cn=$p_cn;
-        $pk=$this->primary_key;
-        $this->$pk=$p_id;
-	// check that the definition is correct
-	if (count($this->name) != count($this->type) ){
-		throw new Exception (__FILE__." $this->table Cannot instantiate");
-	}
-        /* Initialize an empty object */
-        foreach ($this->name as $key)
-        {
-            $this->$key=null;
-        }
-        $this->$pk=$p_id;
-        /* load it */
-        if ($p_id != -1 )$this->load();
+        parent::__construct($p_cn, $p_id);
         
     }
-/**
- * Insert or update : if the row already exists, update otherwise insert
- */
-    public function save()
-    {
-       $count = $this->exist();
-        
-        if ($count == 0)
-            $this->insert();
-        else
-            $this->update();
-    }
-    /**
-     *@brief get the value thanks the colum name and not the alias (name). 
-     *@see getp
-     */
-    public function get($p_string)
-    {
-        if (array_key_exists($p_string, $this->type)) {
-            return $this->$p_string;
-        }
-        else
-            throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
-    }
 
-    /**
-     *@brief set the value thanks the colum name and not the alias (name)
-     *@see setp
-     */
-    public function set($p_string, $p_value)
-    {
-        if (array_key_exists($p_string, $this->type))    {
-            $this->$p_string=$p_value;
-        }        else
-            throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
-    }
-
-    /**
-     *@brief set the value thanks the alias name instead of the colum name 
-     *@see get
-     */
-    public function getp($p_string)
-    {
-        if (array_key_exists($p_string, $this->name)) {
-            $idx=$this->name[$p_string];
-            return $this->$idx;
-        }
-        else
-            throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
-    }
-
-    /**
-     *@brief set the value thanks the alias name instead of the colum name 
-     *@see set
-     */
-    public function setp($p_string, $p_value)
-    {
-        if (array_key_exists($p_string, $this->name))    {
-            $idx=$this->name[$p_string];
-            $this->$idx=$p_value;
-        }        else
-            throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
-    }
 
     public function insert()
     {
@@ -244,17 +168,9 @@ abstract class Noalyss_SQL extends Data_SQL
         $sql.=" where ".$this->primary_key." = $".$idx;
         $this->cn->exec_sql($sql, $array);
     }
-     public function set_pk_value($p_value)
-     {
-         $pk=$this->primary_key;
-           $this->$pk=$p_value;
-     }
-    public function get_pk_value()
-    {
-        $pk=$this->primary_key;
-          return $this->$pk;
-    }
-
+   /***
+    * @brief load a row , corresponding to the primary key
+    */
     public function load()
     {
         $sql=$this->build_query();
@@ -273,59 +189,6 @@ abstract class Noalyss_SQL extends Data_SQL
         }
     }
 
-    public function get_info()
-    {
-        return var_export($this, true);
-    }
-/**
- * @todo ajout vérification type (date, text ou numeric)
- * @return int
- */
-    public function verify()
-    {
-        foreach ($this->name as $key)
-        {
-            if (trim($this->$key)=='')
-                $this->$key=null;
-        }
-        return 0;
-    }
-
-    /**
-     * Transform an array into object
-     * @param type $p_array
-     * @return object
-     */
-    public function from_array($p_array)
-    {
-        foreach ($this->name as $key=> $value)
-        {
-            if (isset($p_array[$value]))
-            {
-                $this->$value=$p_array[$value];
-            }
-            else
-            {
-                $this->$value=null;
-            }
-        }
-        return $this;
-    }
-    /**
-     * Turn an object (row) into an array, and the key could be prefixed with $prefix
-     * @param string $prefix before the key 
-     * @return array
-     */
-    public function to_array($prefix="")
-    {
-        $array=array();
-        foreach ($this->name as $key=> $value)
-        {
-            $nkey=$prefix.$key;
-            $array[$nkey]=$this->$key;
-        }
-        return $array;
-    }
 
     /**
      * @brief retrieve array of object thanks a condition
@@ -342,51 +205,13 @@ abstract class Noalyss_SQL extends Data_SQL
         return $ret;
     }
 
-    /**
-     * get_seek return the next object, the return of the query must have all the column
-     * of the object
-     * @param $p_ret is the return value of an exec_sql
-     * @param $idx is the index
-     * @see seek
-     * @return object
-     */
-    public function next($ret, $i)
-    {
-        $array=$this->cn->fetch_array($ret, $i);
-        return $this->from_array($array);
-    }
 
     /**
-     * @see next
+     * return the number of count in the table corresponding to the where condition
+     * @param string $p_where the condition appended to the SQL select query , where must be given
+     * @param array $p_array variable from the $p_where condition
+     * @return type
      */
-    public function get_object($p_ret, $idx)
-    {
-        return $this->next($p_ret, $idx);
-    }
-
-    /**
-     * @brief return an array of objects. 
-     * Do not use this function if they are too many objects, it takes a lot of memory,
-     * and could slow down your application.
-     * @param $cond condition, order...
-     * @param $p_array array to use for a condition
-     * @note this function could slow down your application.
-     */
-    function collect_objects($cond='', $p_array=null)
-    {
-        if ($p_array != null && ! is_array($p_array) )
-        {
-            throw new Exception(_("Erreur : exec_sql attend un array"));
-        }
-        $ret=$this->seek($cond, $p_array);
-        $max=Database::num_row($ret);
-        $a_return=array();
-        for ($i=0; $i<$max; $i++)
-        {
-            $a_return[$i]=clone $this->next($ret, $i);
-        }
-        return $a_return;
-    }
     public function count($p_where="",$p_array=null) {
         $count=$this->cn->get_value("select count(*) from $this->table ".$p_where,$p_array);
         return $count;

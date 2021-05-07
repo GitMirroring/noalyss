@@ -75,6 +75,7 @@ abstract class Data_SQL
    var $primary_key;    //! Column name of the primary key 
    var $type;           //! Type of the data
    var $date_format;    //! defaullt date format
+   var $default;
    
    function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
@@ -85,9 +86,14 @@ abstract class Data_SQL
 	if (count($this->name) != count($this->type) ){
 		throw new Exception (__FILE__." $this->table Cannot instantiate");
 	}
+        // forbid the use of a column named type , date_format,  name  or primary_key to avoid conflict
+        
         /* Initialize an empty object */
         foreach ($this->name as $key)
         {
+            if ( in_array($key,['name','type','format_date','cn','date_format','default'] ) ) {
+                throw new Exception ('DATASQL-94 invalid column name'.$key);
+            }
             $this->$key=null;
         }
         $this->$pk=$p_id;
@@ -127,7 +133,7 @@ abstract class Data_SQL
     public function set($p_string, $p_value)
     {
         if (array_key_exists($p_string, $this->type))    {
-            $this->$idx=$p_value;
+            $this->$p_string=$p_value;
         }        else
             throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
     }
@@ -217,15 +223,17 @@ abstract class Data_SQL
         return $this;
     }
     /**
-     * Turn an object (row) into an array
+     * 
+     * Turn an object (row) into an array, and the key could be prefixed with $prefix
+     * @param string $prefix before the key 
      * @return array
      */
-    public function to_array()
+    public function to_array($prefix="")
     {
         $array=array();
         foreach ($this->name as $key=> $value)
         {
-            
+            $nkey=$prefix.$key;
             $array[$key]=$this->$key;
         }
         return $array;
