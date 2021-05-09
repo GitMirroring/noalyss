@@ -37,7 +37,7 @@ $menu=array(
 );
 $sb=$http->request("sb", "string", "application");
 echo '<div class="menu2">';
-echo ShowItem($menu, "H", "mtitle", "mtitle", $sb);
+echo ShowItem($menu, "H", "nav-item", "nav-link", $sb);
 echo '</div>';
 
 $sc=$http->get("sc", "string", "none");

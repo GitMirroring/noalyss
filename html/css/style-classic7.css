@@ -194,7 +194,8 @@ div.recherche_form{
 div.content{
     padding-top:0.0030%;
     margin-top:0.0030%;
-    width:98%;
+    margin-right: 0.15%;
+    width:99.7%;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'OpenSansRegular';
     font-size:12px;
@@ -2892,4 +2893,66 @@ span.tagcell {
 }
 .content .h3, .content h3 {
 	font-size: 1.4rem;
+}
+/***
+ * Main Menu
+ */
+.nav-fill .nav-item 
+{
+    margin: 1px;
+    background: navy;
+    color: white;
+    border-radius: 3px;
+}
+.nav-fill .nav-item:hover {
+    background-color:#6393c1;
+    color:navy;
+    text-decoration: none;
+}
+.nav-fill .nav-item:visited{
+    color:white;
+}
+.nav-pills .nav-link.active {
+    background-color: #b1c0d7 !important;
+     border-radius: 0px;
+} 
+.nav-pills .nav-link {
+    color:white !important;
+   
+}
+li.li-active {
+    background-color: lightgray !important;
+    
+}
+.nav-level2 {
+    background-color: #4a4a7d;;
+}
+.nav-level2>li {
+    border-right: 1px #9fbcd6 ridge;
+    border-bottom: 1px #9fbcd6 ridge;
+}
+.nav-level2>li:hover{
+    background-color:#6393c1;
+    color:navy;
+    text-decoration: none;
+}
+.nav-level3 {
+      background-color:#336699;
+      
+      
+}
+.nav-level3>li {
+    border-right: 1px #9fbcd6 ridge;
+    border-bottom: 1px #9fbcd6 ridge;
+}
+.nav-level3>li:hover{
+    background-color:#6393c1;
+    color:navy;
+    text-decoration: none;
+}
+.nav-level3 .active {
+    border-radius:0px !important;
+}
+.nav-level2 .active {
+    border-radius:0px !important;
 }

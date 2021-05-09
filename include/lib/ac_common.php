@@ -523,73 +523,54 @@ function sql_string($p_string)
  * \param  $p_array array like ( 0=>HREF reference, 1=>visible item (name),2=>Help(opt),
  * 3=>selected (opt) 4=>javascript (normally a onclick event) (opt)
  * \param $p_dir direction of the menu (H Horizontal  V vertical)
- * \param $class CSS for TD tag
+ * \param $class CSS for li tag
  * \param $class_ref CSS for the A tag
  * \param $default selected item
  * \param $p_extra extra code for the table tag (CSS or javascript)
  */
   /* \return : string */
 
-function ShowItem($p_array, $p_dir='V', $class="mtitle", $class_ref="mtitle", $default="", $p_extra="")
+function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link", $default="", $p_extra="nav nav-pills nav-fill")
 {
-
-    $ret = "<TABLE $p_extra>";
+    $ret = '';
+    // for comptability with old application  mtitle for anchor is replace by nav-link
+    
+    
     // direction Vertical
     if ($p_dir == 'V')
+    { 
+        $ret .= "<ul class=\"$p_extra \"  flex-row>";
+    } else {
+        $ret .= "<ul class=\"$p_extra \" >";
+       
+    }
+    
+    foreach ($p_array as $all => $href)
     {
-	foreach ($p_array as $all => $href)
-	{
-	    $javascript = (isset($href[4])) ? $href[4] : "";
-	    $title = "";
-	    $set = "XX";
-	    if (isset($href[2]))
-            {
-                $title=$href[2];
-            }
-            if (isset($href[3]))
-            {
-                $set=$href[3];
-            }
-
-            if ($set==$default)
-            {
-                $ret.='<TR><TD CLASS="selectedcell"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></TD></TR>';
-            }
-            else
-            {
-                $ret.='<TR><TD CLASS="'.$class.'"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></TD></TR>';
-            }
+        $javascript = (isset($href[4])) ? $href[4] : "";
+        $title = "";
+        $set = "XX";
+        if (isset($href[2]))
+        {
+            $title=$href[2];
         }
+        if (isset($href[3]))
+        {
+            $set=$href[3];
+        }
+
+        if ($set==$default)
+        {
+            $ret.='<li class="nav-item"><A class="'.$class_ref.' active'.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
+        }
+        else
+        {
+            $ret.='<li class="nav-item"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
+        }
+        
     }
-    //direction Horizontal
-    else if ($p_dir == 'H')
-    {
-
-	$ret.="<TR>";
-	foreach ($p_array as $all => $href)
-	{
-	    $title = "";
-	    $javascript = (isset($href[4])) ? $href[4] : "";
-
-	    $set = "A";
-	    if (isset($href[2]))
-		$title = $href[2];
-
-	    if (isset($href[3]))
-		$set = $href[3];
-
-	    if ($default === $href[0] || $set === $default)
-	    {
-		$ret.='<TD CLASS="selectedcell"><A class="' . $class_ref . '" HREF="' . $href[0] . '" title="' . $title . '" ' . $javascript . '>' . $href[1] . '</A></TD>';
-	    }
-	    else
-	    {
-		$ret.='<TD CLASS="' . $class . '"><A class="' . $class_ref . '" HREF="' . $href[0] . '" title="' . $title . '" ' . $javascript . '>' . $href[1] . '</A></TD>';
-	    }
-	}
-	$ret.="</TR>";
-    }
-    $ret.="</TABLE>";
+ 
+    $ret.="</ul>";
     return $ret;
 }
 

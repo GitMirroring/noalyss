@@ -1,52 +1,45 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+if (DEBUGNOALYSS > 1 ) { 
+    echo <<<EOF
+    <p> LEVEL MENU IS {$level}
+    access_code {$access_code}
+EOF;
+  //  print_r($amenu);
+};
 
-?><div class="<?php echo $style_menu; ?>">
-    <?php if ( count($amenu) > 4 && $level == 0) {
-	$style ='style= "width:100%"';
-    }
-     elseif ($level==0){
-        $http=new HttpInput();
-        $access_code=$http->request("ac");
-        switch (count($amenu))
-        {
-            case 4:
-            case 3:
-               $width=count($amenu)*20;
-               $left=round((100-$width)/2);
-            $style="style=\"width:$width%;margin-left:$left%\"";
-            break;
-            default:
-            $style="";
-        }   
+?><div class="">
+    <?php 
+  if ($level == 0) {
+      echo '<ul  class="nav nav-pills nav-fill flex-column flex-md-row" >';
+  }elseif ($level == 1) {
+      echo '<ul class="nav nav-pills nav-level2 ">';
+      
+  } else {
+      echo '<ul class="nav nav-pills nav-level3 ">';
+  }
+   ?>
+   
 
-}
-     else {
-		$style=" class=\"mtitle\"";
-
-        }?>
-<table  <?php echo $style?> >
-
-
-    <tr>
 	<?php
 	global $g_user;
 	// Display the menu
+        $class="nav-item ";
 	for($i=0;$i < count($amenu);$i++):
 	    if ( (count($amenu)==1)) {
-		$class="mtitle selectedcell";
 ?>
-	<td class="<?php echo $class?>">
-            <a class="mtitle" href="do.php?gDossier=<?php echo Dossier::id()?>&ac=<?php echo $access_code?>" title="<?php echo h(gettext($amenu[$i]['me_description']))?>" >
+	<li class="<?php echo $class?>">
+            <a class="nav-link active" href="do.php?gDossier=<?php echo Dossier::id()?>&ac=<?php echo $access_code?>" title="<?php echo h(gettext($amenu[$i]['me_description']))?>" >
 	    <?php echo gettext($amenu[$i]['me_menu'])?>
 	    </a>
-	</td>
+	</li>
 <?php 
             }
 	    else {
-                    $class="mtitle";
                     $js="";
+                    $class_list_element="nav-item";
+                    $class_link="nav-link";
 
                     if ( $amenu[$i]['me_url']!='')
                     {
@@ -60,27 +53,35 @@
                     else
                     {
                         $a_request=explode('/', $access_code);
+                        if ( isset($a_request [$level+1]) && $a_request[$level+1]==$amenu[$i]['me_code']) {
+                                    $class_link="nav-link active";
+                                    $class_list_element="nav-item li-active";
+                        }
                         if ( $level == 0) {
                             $url=$a_request[0];
 
-                            if (count($a_request) > 1 &&
-                                $url.'/'.$amenu[$i]['me_code'] == $a_request[0].'/'.$a_request[1]) 
-                                    $class="selectedcell";
                         } elseif ($level == 1)
                         {
                             $url=$a_request[0].'/'.$a_request[1];
+                                                     
+                        }
+                        elseif ($level == 2)
+                        {
+                            $url=$a_request[0].'/'.$a_request[1].'/'.$a_request[2];
+                                                     
                         }
                         $url.='/'.$amenu[$i]['me_code'];
-                        if ($url == $access_code ) $class="mtitle selectedcell";
+                        if ($url == $access_code ) {  $class="nav-link active"; }
                         $url="do.php?gDossier=".Dossier::id()."&ac=".$url;
                     }
+                    
 
 ?>	
-<td class="<?php echo $class?>">
-    <a class="mtitle" href="<?php echo $url;?>" <?php echo $js?> title="<?php echo h(gettext($amenu[$i]['me_description']))?>">
+<li class="<?=$class_list_element?>">
+    <a class="<?=$class_link?> <" href="<?php echo $url;?>" <?php echo $js?> title="<?php echo h(gettext($amenu[$i]['me_description']))?>">
     <?php echo gettext($amenu[$i]['me_menu'])?>
     </a>
-</td>
+</li>
 
 
 <?php 
@@ -90,8 +91,7 @@
 	<?php 
 	    endfor;
     	?>
-    </tr>
 
 
-</table>
+</ul>
 </div>

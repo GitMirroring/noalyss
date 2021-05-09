@@ -101,7 +101,7 @@ function MenuAdmin()
                 );
 
 	}
-    $menu=ShowItem($item,'H',"mtitle","mtitle",$def);
+    $menu=ShowItem($item,'H',"nav-item","nav-link",$def,'nav nav-pills nav-fill ');
     return $menu;
 }
 
