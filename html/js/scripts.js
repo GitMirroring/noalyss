@@ -2345,7 +2345,7 @@ function ask_navigator(p_dossier) {
                     onFailure: ajax_misc_failure,
                     onSuccess: function (req) {
                         remove_waiting_box();
-                        add_div({id: 'navi_div', style: 'top:2em;left:2em;width:90%', cssclass: 'inner_box'});
+                        add_div({id: 'navi_div', style: 'top:2em;', cssclass: 'inner_box'});
                         $('navi_div').innerHTML = req.responseText;
                         try
                         {
