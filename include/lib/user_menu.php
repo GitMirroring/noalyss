@@ -74,9 +74,11 @@ function MenuAdmin()
                  array("admin-noalyss.php?action=dossier_mgt",_("Dossiers"),_('Gestion des dossiers'),1),
                  array("admin-noalyss.php?action=modele_mgt",_("Modèles"),_('Gestion des modèles'),2),
                  array("admin-noalyss.php?action=restore",_("Restaure"),_("Restaure une base de données"),3),
-                 array("admin-noalyss.php?action=upgrade",_("Installation"),_("Installation Mise à jour du système et des bases de données"),5),
+                 array("admin-noalyss.php?action=upgrade",_("Installation"),
+                     _("Installation Mise à jour du système et des bases de données"),5),
                  array("admin-noalyss.php?action=audit_log",_("Audit"),_("Utilisateurs qui se sont connectés"),4),
-                 array("admin-noalyss.php?action=info",_("Information système"),('Information à propos de votre installation'),6),
+                 array("admin-noalyss.php?action=info",
+                     _("Information système"),('Information à propos de votre installation'),6),
                  array("login.php",_("Accueil"),"",7),
                  array("logout.php",_("Sortie"),"",8)
                 );
@@ -95,7 +97,8 @@ function MenuAdmin()
 	{
 		$item=array (array("admin-noalyss.php?action=user_mgt",_("Utilisateurs"),_('Gestion des utilisateurs'),0),
                  array("admin-noalyss.php?action=audit_log",_("Audit"),_("Utilisateurs qui se sont connectés"),4),
-                 array("admin-noalyss.php?action=info",_("Information système"),('Information à propos de votre installation'),6),
+                 array("admin-noalyss.php?action=info",
+                     _("Information système"),('Information à propos de votre installation'),6),
                  array("login.php",_("Accueil")),
                  array("logout.php",_("Sortie"))
                 );

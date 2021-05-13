@@ -36,8 +36,8 @@ $menu=array(
     ["?action=upgrade&sb=template", _("Modèle"), _("Installe des modèles"), "template"]
 );
 $sb=$http->request("sb", "string", "application");
-echo '<div class="menu2">';
-echo ShowItem($menu, "H", "nav-item", "nav-link", $sb);
+echo '<div class="">';
+echo ShowItem($menu, "H", "nav-item", "nav-link", $sb,"nav nav-pills nav-level2");
 echo '</div>';
 
 $sc=$http->get("sc", "string", "none");
