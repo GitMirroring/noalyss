@@ -48,10 +48,10 @@ class Acc_BalanceTest extends TestCase
         $min=$g_connection->get_value("select min(p_id) from parm_periode");
 	$this->object->jrn=NULL;
         $array=$this->object->get_row($min,$max);
-	$this->assertEquals(32,count($array));
+	$this->assertEquals(35,count($array));
 	$this->object->jrn=[2,4];
         $array=$this->object->get_row($min,$max);
-	$this->assertEquals(12,count($array));
+	$this->assertEquals(16,count($array));
 
     }
 

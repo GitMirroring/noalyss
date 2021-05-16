@@ -137,62 +137,13 @@ class Acc_BilanTest extends TestCase
       $this->object->to=103;
 
       $this->object->compute_formula($hFile);
-
-      $this->assertTrue(isset($this->object->C70));
-      $this->assertTrue(isset($this->object->C60));
+      $this->assertTrue(isset($this->object->C70),"Exist C70");
+      $this->assertTrue(isset($this->object->C60),"Exist C60");
+      $this->assertTrue(isset($this->object->C61),"Exist C61");
       $this->assertEquals($this->object->C70,456.8);
       $this->assertEquals($this->object->C60,0);
+      $this->assertEquals($this->object->C61,1491.50);
       
     }
-
-    /**
-     * @covers Acc_Bilan::generate_odt
-     * @todo   Implement testGenerate_odt().
-     */
-    public function testGenerate_odt()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Acc_Bilan::generate_plain
-     * @todo   Implement testGenerate_plain().
-     */
-    public function testGenerate_plain()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Acc_Bilan::generate
-     * @todo   Implement testGenerate().
-     */
-    public function testGenerate()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Acc_Bilan::send
-     * @todo   Implement testSend().
-     */
-    public function testSend()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-  
 
 }

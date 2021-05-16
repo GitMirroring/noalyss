@@ -78,7 +78,7 @@ class Acc_Ledger_History_FinancialTest extends TestCase
         echo \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+        ob_end_clean();
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
         
@@ -89,6 +89,7 @@ class Acc_Ledger_History_FinancialTest extends TestCase
         echo \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
+        ob_end_clean();
         
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);

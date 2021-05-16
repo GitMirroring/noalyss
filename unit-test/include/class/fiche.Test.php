@@ -72,7 +72,7 @@ class FicheTest extends TestCase
         $a=new Fiche($g_connection,$card_count[0]['f_id']);
        try {
             $a->get_row(235,238);
-            $this->assertFalse(TRUE,"Exception periode non executée");
+            $this->assertFalse(TRUE,"Exception periode invalide");
        } catch (\Exception $e) {
            $this->assertTrue(TRUE);
        }
@@ -81,7 +81,7 @@ class FicheTest extends TestCase
         
         $nb_result=count($a_result);
         $this->assertEquals ($nb_result,3,"Size array not correct ");
-        $this->assertEquals($a_result[0][24]["deb_montant"],204.71);
+        $this->assertEquals(198.74,$a_result[0][13]["deb_montant"],"Debit from operation 12");
     }
     
     /**

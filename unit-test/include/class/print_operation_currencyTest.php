@@ -41,10 +41,10 @@ class Print_Operation_CurrencyTest extends TestCase
     function testFilter_data_currency_card_categoryTest()
     {
         $cn=Dossier::connect();
-        $from_date='01.01.2000';
-        $to_date='01.01.2099';
+        $from_date='01.01.2020';
+        $to_date='31.12.2020';
         $currency_id=0;
-        $card_category=4;
+        $card_category=2;
         $object=new Filter_Data_Currency_Card_Category($cn, 
                 $from_date, 
                 $to_date,
@@ -54,12 +54,12 @@ class Print_Operation_CurrencyTest extends TestCase
        
         $this->assertContains(" and jrnx.f_id in ( select f_id from fiche where fd_id=$4)",$sql);
         $array=$object->get_data();
-        $this->assertEquals(count($array),29,"operation in EURO");
+        $this->assertEquals(count($array),2,"operation in EURO");
         
         
         $object->setCurrency_id(1);
         $array=$object->get_data();
-        $this->assertEquals(count($array),3,"operations in Dollars");
+        $this->assertEquals(count($array),2,"operations in Dollars");
         
     }
     /**
@@ -69,8 +69,8 @@ class Print_Operation_CurrencyTest extends TestCase
     function testData_currency_operationTest()
     {
        $cn=Dossier::connect();
-        $from_date='01.01.2000';
-        $to_date='01.01.2099';
+        $from_date='01.01.2020';
+         $to_date='31.12.2020';
         $currency_id=0;
        
         $object=new Data_Currency_Operation($cn, 
@@ -82,12 +82,12 @@ class Print_Operation_CurrencyTest extends TestCase
        
         $this->assertContains("where jrn.currency_id = $1 and",$sql);
         $array=$object->get_data();
-        $this->assertEquals(count($array),142,"operation in EURO");
+        $this->assertEquals(count($array),7,"operation in EURO");
         
         
         $object->setCurrency_id(1);
         $array=$object->get_data();
-        $this->assertEquals(count($array),21,"operations in Dollars");
+        $this->assertEquals(count($array),8,"operations in Dollars");
     }
     /**
      * @brief test Filter_Data_Currency_Card
@@ -96,10 +96,10 @@ class Print_Operation_CurrencyTest extends TestCase
       function testFilter_data_currency_cardTest()
       {
         $cn=Dossier::connect();
-        $from_date='01.01.2000';
-        $to_date='01.01.2099';
+        $from_date='01.01.2020';
+         $to_date='31.12.2020';
         $currency_id=0;
-        $card='FOURNI';
+        $card='FOURNI1';
         $object=new Filter_Data_Currency_Card($cn, 
                 $from_date, 
                 $to_date,
@@ -109,13 +109,13 @@ class Print_Operation_CurrencyTest extends TestCase
        
         $this->assertContains("and f_id=$4",$sql);
         $array=$object->get_data();
-        $this->assertEquals(count($array),4,"operation in EURO");
+        $this->assertEquals(count($array),1,"operation in EURO");
         
         
         $object->setCurrency_id(1);
         $object->setCard("FOURNI1");
         $array=$object->get_data();
-        $this->assertEquals(count($array),3,"operations in Dollars");
+        $this->assertEquals(count($array),1,"operations in Dollars");
       }
       /**
        * @brief test Filter_Data_Currency_Card_Accounting
@@ -124,8 +124,8 @@ class Print_Operation_CurrencyTest extends TestCase
       function testFilter_data_currency_accounting()
       {
         $cn=Dossier::connect();
-        $from_date='01.01.2000';
-        $to_date='01.01.2099';
+        $from_date='01.01.2020';
+         $to_date='31.12.2020';
         $currency_id=0;
         $from_poste='40';
         $to_poste='450';
@@ -139,18 +139,18 @@ class Print_Operation_CurrencyTest extends TestCase
         $sql=$object->SQL_Condition();
         $this->assertContains("and j_poste >= $4 and j_poste <= $5",$sql);
         $array=$object->get_data();
-        $this->assertEquals(72,count($array),"operation in EURO");
+        $this->assertEquals(3,count($array),"operation in EURO");
         
         
         $object->setCurrency_id(1);
        
         $array=$object->get_data();
-        $this->assertEquals(10,count($array),"operations in Dollars");
+        $this->assertEquals(3,count($array),"operations in Dollars");
       }
       function testPrint_operation_currency()
       {
         $_REQUEST['from_date']='01.01.2000';
-        $_REQUEST['to_date']='01.01.2099';
+        $_REQUEST['to_date']='31.12.2020';
         $_REQUEST['p_currency_code']=0;
         $_REQUEST['from_account']='40';
         $_REQUEST['to_account']='450';
@@ -170,7 +170,7 @@ class Print_Operation_CurrencyTest extends TestCase
         Noalyss\Facility::save_file(__DIR__."/file", "print_operation_currency_by_accounting.csv",
                 $csv);
         
-        $this->assertEquals(72,count($array),"by_accounting operation in EURO"); 
+        $this->assertEquals(5,count($array),"by_accounting operation in EURO"); 
         
         $_REQUEST['p_currency_code']=1;
         $print_operation=Print_Operation_Currency::build("by_card");
@@ -188,11 +188,11 @@ class Print_Operation_CurrencyTest extends TestCase
 
           
         
-        $this->assertEquals(3,count($array),"by_card operation in USD"); 
+        $this->assertEquals(4,count($array),"by_card operation in USD"); 
         
         $print_operation=Print_Operation_Currency::build("all");
         $array=$print_operation->getData_operation()->get_data();
-        $this->assertEquals(count($array),21,"all operations in Dollars");
+        $this->assertEquals(22,count($array),"all operations in Dollars");
         ob_start();
         $print_operation->export_csv($export);
         $csv=ob_get_contents();

@@ -70,12 +70,12 @@ class Acc_LedgerTest extends TestCase
         $this->object->set_ledger_id(2);
         $this->assertEquals($this->object->get_type(),'VEN',"Sales ledger");
         $a_vat=$this->object->existing_vat();
-        $this->assertEquals(2,count($a_vat));
+        $this->assertEquals(4,count($a_vat));
         
         $this->object->set_ledger_id(3);
         $this->assertEquals($this->object->get_type(),'ACH',"Purchases ledger");
         $a_vat=$this->object->existing_vat();
-        $this->assertEquals(5,count($a_vat));
+        $this->assertEquals(6,count($a_vat));
     }
     /**
      * @covers Acc_Ledger::get_last_pj
@@ -293,8 +293,8 @@ class Acc_LedgerTest extends TestCase
         $max=$g_connection->get_value("select max(p_id) from parm_periode");
         $min=$g_connection->get_value("select min(p_id) from parm_periode");
         $solde=$ledger->get_solde($min,$max);
-        $this->assertEquals($solde[0],4175.02);
-        $this->assertEquals($solde[1],4175.02);
+        $this->assertEquals($solde[1],10936.91);
+        $this->assertEquals($solde[0],10936.91);
         
     }
 
@@ -372,6 +372,8 @@ class Acc_LedgerTest extends TestCase
             "reverse_date"=>"",
             "ext_label"=>"",
             "jr_optype"=>"NOR",
+            "p_currency_code"=>0,
+            "p_currency_rate" => 1,
             "save"=>"Confirmer"
         ];
        $this->object->set_ledger_id(4);
@@ -464,6 +466,7 @@ class Acc_LedgerTest extends TestCase
        //-----------------------------------------------
        // Must fail
        //-----------------------------------------------
+            ob_start();
        try {
             $array["p_jrn"]="a";
             $ledger->verify_ledger($array);
@@ -471,12 +474,14 @@ class Acc_LedgerTest extends TestCase
         }catch (\Exception $e) {
             $this->assertTrue(TRUE);
         }
+            ob_end_clean();
        // reset properly ,
        $array["p_jrn"]="15";
        $ledger->verify_ledger($array);
 
        
        // fails if negative amount neither 1 nor 0
+            ob_start();
        try {
             $array["negative_amount"]=2;
             $ledger->verify_ledger($array);
@@ -484,8 +489,10 @@ class Acc_LedgerTest extends TestCase
         }catch (\Exception $e) {
             $this->assertTrue(TRUE);
         }
+            ob_end_clean();
        
         // negative amount not set , so fails
+            ob_start();
        try {
             $array["negative_warning"]="Yes";
             $ledger->verify_ledger($array);
@@ -493,6 +500,7 @@ class Acc_LedgerTest extends TestCase
         }catch (\Exception $e) {
             $this->assertTrue(TRUE);
         }
+            ob_end_clean();
     }
 
     /**
@@ -539,7 +547,9 @@ class Acc_LedgerTest extends TestCase
                 "od_description"=>"",
                 "reverse_date"=>"",
                 "ext_label"=>"",
-                "jr_optype"=>"NOR"
+                "jr_optype"=>"NOR",
+                "p_currency_rate"=>1,
+                "p_currency_code"=>0,
                 ];
         global $g_connection;
         $ledger=new Acc_Ledger($g_connection,4);
@@ -629,9 +639,12 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGet_last_date()
     {
+      global $g_connection;
       $this->object->set_ledger_id(2);
       $last_date=$this->object->get_last_date();
-      $this->assertEquals("24.04.2019",$last_date);
+      
+      $this->assertEquals($g_connection->get_value("select to_char(max(jr_date),'DD.MM.YYYY') from jrn where jr_def_id=2"),
+              $last_date);
     }
 
     /**
@@ -731,7 +744,9 @@ class Acc_LedgerTest extends TestCase
                     "ld4" => "",
                     "amount4" =>"", 
                     "jrn_concerned" => "",
-                    "summary" => "Sauvez"
+                    "summary" => "Sauvez",
+                    "p_currency_rate"=>1,
+                    "p_currency_code"=>0,
             ];
         $ledger=new Acc_Ledger($g_connection,4);
         

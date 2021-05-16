@@ -81,6 +81,13 @@ class Acc_Account_LedgerTest extends TestCase
                     'jrn_def_name'=>'Opération Diverses',
                     'jrn_def_code'=>'O01',
                     'delta_letter'=>NULL,
+                    'currency_rate' => '1.000000',
+                    'currency_rate_ref' => '1.000000',
+                    'currency_id' => '0',
+                    'cr_code_iso' => 'EUR',
+                    'j_montant' => '8.4000',
+                    'oc_amount' => null,
+                    'oc_vat_amount' => null
                 ),
                 1=>
                 array(
@@ -104,6 +111,14 @@ class Acc_Account_LedgerTest extends TestCase
                     'jrn_def_name'=>'Vente',
                     'jrn_def_code'=>'V01',
                     'delta_letter'=>NULL,
+                    'currency_rate' => '1.000000'
+                    ,'currency_rate_ref' => '1.000000'
+                    ,'currency_id' => '0'
+                    ,'cr_code_iso' => 'EUR'
+                    ,'j_montant' => '8.4000'
+                    ,'oc_amount' => null
+                    ,'oc_vat_amount' => null
+
                 ),
                 2=>
                 array(
@@ -127,6 +142,14 @@ class Acc_Account_LedgerTest extends TestCase
                     'jrn_def_name'=>'Vente',
                     'jrn_def_code'=>'V01',
                     'delta_letter'=>NULL,
+                     'currency_rate' => '1.000000'
+                    ,'currency_rate_ref' => '1.000000'
+                    ,'currency_id' => '0'
+                    ,'cr_code_iso' => 'EUR'
+                    ,'j_montant' => '5.2900'
+                    ,'oc_amount' => null
+                    ,'oc_vat_amount' => null
+
                 ),
                 3=>
                 array(
@@ -150,6 +173,14 @@ class Acc_Account_LedgerTest extends TestCase
                     'jrn_def_name'=>'Vente',
                     'jrn_def_code'=>'V01',
                     'delta_letter'=>NULL,
+                     'currency_rate' => '1.000000',
+                    'currency_rate_ref' => '1.000000',
+                     'currency_id' => '0',
+                     'cr_code_iso' => 'EUR',
+                     'j_montant' => '35.7400',
+                     'oc_amount' => null,
+                     'oc_vat_amount' => null
+
                 ),
                 4=>
                 array(
@@ -173,6 +204,13 @@ class Acc_Account_LedgerTest extends TestCase
                     'jrn_def_name'=>'Vente',
                     'jrn_def_code'=>'V01',
                     'delta_letter'=>NULL,
+                    'currency_rate' => '1.000000',
+                    'currency_rate_ref' => '1.000000',
+                    'currency_id' => '0',
+                    'cr_code_iso' => 'EUR',
+                    'j_montant' => '35.7400',
+                    'oc_amount' => null,
+                    'oc_vat_amount' => null
                 ),
                 5=>
                 array(
@@ -196,6 +234,14 @@ class Acc_Account_LedgerTest extends TestCase
                     'jrn_def_name'=>'Opération Diverses',
                     'jrn_def_code'=>'O01',
                     'delta_letter'=>NULL,
+                    'currency_rate' => '1.000000',
+                    'currency_rate_ref' => '1.000000',
+                    'currency_id' => '0',
+                    'cr_code_iso' => 'EUR',
+                    'j_montant' => '21.0000',
+                    'oc_amount' => null,
+                    'oc_vat_amount' => null
+
                 ),
             ),
             1=>'0',
@@ -258,7 +304,7 @@ class Acc_Account_LedgerTest extends TestCase
     {
        global $g_connection;
        $accounting=new Acc_Account_Ledger($g_connection, '4511');
-       $this->assertEquals($accounting->get_solde(),248.97);
+       $this->assertEquals(1397.87,$accounting->get_solde(),"get_solde");
     }
 
     /**
@@ -270,8 +316,8 @@ class Acc_Account_LedgerTest extends TestCase
         $accounting=new Acc_Account_Ledger($g_connection, '4511');
         $expected=array (
                         'debit' => '0',
-                        'credit' => '248.9700',
-                        'solde' => 248.97,
+                        'credit' => '1397.8700',
+                        'solde' => 1397.87,
                       );
         $this->assertEquals($accounting->get_solde_detail(),$expected);
     }

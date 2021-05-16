@@ -174,7 +174,7 @@ class Tax_SummaryTest extends TestCase
         $this->object->set_tva_type("T");
         $array=$this->object->get_row_purchase();
         //-- For creating the array
-        // Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_purchase.txt", var_export($array, TRUE));
+        Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_purchase.txt", var_export($array, TRUE));
         require __DIR__."/data/tax_summary_getrow_purchase_t.php";
         $this->check_result("tva_type = T , get_row_purchase",$array,$a_result,'ACH');
         
@@ -188,7 +188,7 @@ class Tax_SummaryTest extends TestCase
          $this->object->set_tva_type("O");
         $array=$this->object->get_row_sale();
         //-- For creating the array
-        //  Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale_o.txt", var_export($array, TRUE));
+         Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale_o.txt", var_export($array, TRUE));
        require __DIR__."/data/tax_summary_getrow_sale_o.php";
         $this->check_result("tva_type = O , get_row_sale",$array,$a_result,'VEN');
          
@@ -196,7 +196,7 @@ class Tax_SummaryTest extends TestCase
          $this->object->set_tva_type("P");
         $array=$this->object->get_row_sale();
         //-- For creating the array
-       //Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale_p.txt", var_export($array, TRUE));
+       Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale_p.txt", var_export($array, TRUE));
         require __DIR__."/data/tax_summary_getrow_sale_p.php";
         $this->check_result("tva_type = P , get_row_sale",$array,$a_result,'VEN');
 
@@ -204,7 +204,7 @@ class Tax_SummaryTest extends TestCase
          $this->object->set_tva_type("T");
          $array=$this->object->get_row_sale();
         //-- For creating the array
-        //Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale_t.txt", var_export($array, TRUE));
+        Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale_t.txt", var_export($array, TRUE));
         require __DIR__."/data/tax_summary_getrow_sale_t.php";
         $this->check_result("tva_type = T , get_row_sale",$array,$a_result,'VEN');
         
@@ -222,14 +222,14 @@ class Tax_SummaryTest extends TestCase
          $this->object->set_tva_type("O");
         $array=$this->object->get_summary_purchase();
         //-- For creating the array
-        //  Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_purchase_o.txt", var_export($array, TRUE));
+        Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_purchase_o.txt", var_export($array, TRUE));
         require __DIR__."/data/tax_summary_getsummary_purchase_o.php";
         $this->check_result("tva_type = O , get_summary_purchase",$array,$a_result,'SMRACH');
        
         $this->object->set_tva_type("P");
         $array=$this->object->get_summary_purchase();
         //-- For creating the array
-        // Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_purchase_p.txt", var_export($array, TRUE));
+        Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_purchase_p.txt", var_export($array, TRUE));
         require __DIR__."/data/tax_summary_getsummary_purchase_p.php";
         $this->check_result("tva_type = P , get_summary_purchase",$array,$a_result,'SMRACH');
        
@@ -241,7 +241,7 @@ class Tax_SummaryTest extends TestCase
         $this->object->set_tva_type("O");
         $array=$this->object->get_summary_sale();
         //-- For creating the array
-        //  Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_sale_o.txt", var_export($array, TRUE));
+        Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_sale_o.txt", var_export($array, TRUE));
         require __DIR__."/data/tax_summary_getsummary_sale_o.php";
         $this->check_result("tva_type = O , get_summary_sale",$array,$a_result,'SMRVEN');
         

@@ -1,16 +1,16 @@
 <?php
-
-$a_result = array (
+$a_result = 
+array (
   0 => 
   array (
     'tva_label' => '21%',
     'qs_vat_code' => '1',
     'tva_rate' => '0.2100',
     'tva_both_side' => '0',
-    'amount_vat' => '219.5700',
-    'amount_wovat' => '1045.6000',
+    'amount_vat' => '1343.9600',
+    'amount_wovat' => '6399.8500',
     'amount_sided' => '0.0000',
-    'tva_payment_sale' => 'P',
+    'tva_payment_sale' => 'O',
   ),
   1 => 
   array (
@@ -19,7 +19,7 @@ $a_result = array (
     'tva_rate' => '0.0000',
     'tva_both_side' => '0',
     'amount_vat' => '0.0000',
-    'amount_wovat' => '1198.4600',
+    'amount_wovat' => '1253.5100',
     'amount_sided' => '0.0000',
     'tva_payment_sale' => 'O',
   ),
@@ -27,8 +27,8 @@ $a_result = array (
   array (
     'tva_label' => 'INTRA',
     'qs_vat_code' => '5',
-    'tva_rate' => '0.0000',
-    'tva_both_side' => '0',
+    'tva_rate' => '0.2100',
+    'tva_both_side' => '1',
     'amount_vat' => '0.0000',
     'amount_wovat' => '1800.0000',
     'amount_sided' => '0.0000',
@@ -43,6 +43,6 @@ $a_result = array (
     'amount_vat' => '19.1500',
     'amount_wovat' => '91.2000',
     'amount_sided' => '0.0000',
-    'tva_payment_sale' => 'P',
+    'tva_payment_sale' => 'O',
   ),
 );

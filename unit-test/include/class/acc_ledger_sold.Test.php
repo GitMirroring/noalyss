@@ -207,7 +207,7 @@ class Acc_Ledger_SoldTest extends TestCase
                 \Noalyss\Facility::page_start().
                 $info);
         $this->assertContains(
-                'NAME="e_client" ID="e_client" VALUE="CLIENT" SIZE="20"  ondblclick="fill_ipopcard(this);" ', $info);
+                'NAME="e_client" ID="e_client" VALUE="CLIENT"   ondblclick="fill_ipopcard(this);" ', $info);
         $this->assertContains(
                 '<INPUT TYPE="TEXT"  class="input_text"  id="e_pj" name="e_pj" value="VEN10" placeholder="" title=""',
                 $info);
@@ -222,7 +222,7 @@ class Acc_Ledger_SoldTest extends TestCase
     public function testHeading_detail_sale()
     {
         $a=$this->object->heading_detail_sale();
-        $this->assertEquals(28,count($a));
+        $this->assertEquals(32,count($a));
     }
     /**
      * @covers Acc_Ledger_Sold::get_detail_sale

@@ -142,6 +142,7 @@ class Ac_CommonTest extends TestCase
 
     /**
      * @covers sql_filter_per
+     * @covers transform_sql_filter
      */
     function testSQL_filter_per()
     {
@@ -151,21 +152,38 @@ class Ac_CommonTest extends TestCase
                 "p_start >= to_date('01.07.2018','DD.MM.YYYY') and p_end <= to_date('31.08.2018','DD.MM.YYYY'))";
         $this->assertEquals(
                 $result, trim(sql_filter_per($g_connection, "01.07.2018", "31.08.2018", "date", "jr_tech_per")));
-
+        // transform cond for analytic
+        $anc_result="(  oa_date >= to_date('01.07.2018','DD.MM.YYYY') and oa_date <= to_date('31.08.2018','DD.MM.YYYY'))";
+        $this->assertEquals(
+                $anc_result, transform_sql_filter_per($result),"1. convert $result to $anc_result");
+        
         $result="j_tech_per in (select p_id from parm_periode  where ".
                 "p_start >= to_date('01.07.2018','DD.MM.YYYY') and p_end <= to_date('31.08.2018','DD.MM.YYYY'))";
         $this->assertEquals(
                 $result, trim(sql_filter_per($g_connection, "01.07.2018", "31.08.2018", "date", "j_tech_per")));
-
+        // transform cond for analytic
+        $anc_result="(  oa_date >= to_date('01.07.2018','DD.MM.YYYY') and oa_date <= to_date('31.08.2018','DD.MM.YYYY'))";
+        $this->assertEquals(
+                $anc_result, transform_sql_filter_per($result),"2. convert $result to $anc_result");
+        
         $result="j_tech_per = (select p_id from parm_periode  where ".
                 " p_start = to_date('01.07.2018','DD.MM.YYYY'))";
         $this->assertEquals(
                 $result, trim(sql_filter_per($g_connection, "01.07.2018", "01.07.2018", "date", "j_tech_per")));
-
+        // transform cond for analytic
+        $anc_result="(  oa_date = to_date('01.07.2018','DD.MM.YYYY'))";
+        $this->assertEquals(
+                $anc_result, transform_sql_filter_per($result),"3. convert $result to $anc_result");
+        
+        
         $result="j_tech_per in (select p_id from parm_periode  where ".
                 "p_start >= to_date('01.07.2018','DD.MM.YYYY') and p_end <= to_date('31.08.2018','DD.MM.YYYY'))";
         $this->assertEquals(
                 $result, trim(sql_filter_per($g_connection, 98, 99, "p_id", "j_tech_per")));
+        // transform cond for analytic
+        $anc_result="(  oa_date >= to_date('01.07.2018','DD.MM.YYYY') and oa_date <= to_date('31.08.2018','DD.MM.YYYY'))";
+        $this->assertEquals(
+                $anc_result, transform_sql_filter_per($result),"4. convert $result to $anc_result");
     }
     /***
      * @covers add_http_link

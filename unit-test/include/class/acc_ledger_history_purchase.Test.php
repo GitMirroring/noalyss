@@ -62,7 +62,7 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
     function testGet_Row()
     {
         $this->object->get_row();
-        $this->assertSame(count($this->object->get_data()),14);
+        $this->assertSame(19,count($this->object->get_data()),"Acc_Ledger_History_Purchase->get_data");
 
     }
     //@covers Acc_Ledger_History_Financial::export_oneline_html
@@ -75,7 +75,7 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
         echo \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+        ob_end_clean();
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
         
@@ -86,7 +86,7 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
         echo \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+        ob_end_clean();
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
         
@@ -97,7 +97,7 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
         echo \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+        ob_end_clean();
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
 
@@ -108,7 +108,7 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
         echo \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+        ob_end_clean();
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
     }

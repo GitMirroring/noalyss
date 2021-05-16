@@ -55,7 +55,7 @@ class Acc_Ledger_History_SaleTest extends TestCase
     function testGet_row()
     {
         $this->object->get_row();
-        $this->assertSame(count($this->object->get_data()),6);
+        $this->assertSame(10,count($this->object->get_data()),"Acc_Ledger_History_Sale->get_row");
     }
      private function  save_file($p_name,$content)
     {
@@ -73,7 +73,7 @@ class Acc_Ledger_History_SaleTest extends TestCase
         echo \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+        ob_end_clean();
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
         
@@ -84,7 +84,7 @@ class Acc_Ledger_History_SaleTest extends TestCase
         echo \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+        ob_end_clean();
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
         
@@ -95,7 +95,7 @@ class Acc_Ledger_History_SaleTest extends TestCase
         echo \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+        ob_end_clean();
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
 
@@ -106,7 +106,7 @@ class Acc_Ledger_History_SaleTest extends TestCase
         echo \Noalyss\Facility::page_start();
         $this->object->export_html();
         $content=ob_get_contents();
-        
+        ob_end_clean();
         $this->save_file($name, $content);
         $this->assertFileExists(__DIR__."/file/".$name);
     }

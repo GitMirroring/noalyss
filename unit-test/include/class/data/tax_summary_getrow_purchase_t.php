@@ -1,5 +1,6 @@
-<?php
-$a_result= array (
+<?php 
+$a_result  = 
+array (
   0 => 
   array (
     'jrn_def_name' => 'Achat',
@@ -8,7 +9,7 @@ $a_result= array (
     'tva_both_side' => '0',
     'qp_vat_code' => '4',
     'amount_vat' => '0.0000',
-    'amount_wovat' => '658.2500',
+    'amount_wovat' => '1262.1500',
     'amount_sided' => '0.0000',
     'amount_noded_amount' => '0.0000',
     'amount_noded_tax' => '0.0000',
@@ -37,8 +38,8 @@ $a_result= array (
     'tva_rate' => '0.2100',
     'tva_both_side' => '0',
     'qp_vat_code' => '1',
-    'amount_vat' => '44.5300',
-    'amount_wovat' => '212.0000',
+    'amount_vat' => '51.7200',
+    'amount_wovat' => '246.2500',
     'amount_sided' => '0.0000',
     'amount_noded_amount' => '0.0000',
     'amount_noded_tax' => '0.0000',
@@ -52,8 +53,8 @@ $a_result= array (
     'tva_rate' => '0.0600',
     'tva_both_side' => '0',
     'qp_vat_code' => '3',
-    'amount_vat' => '5.2800',
-    'amount_wovat' => '88.3200',
+    'amount_vat' => '7.7200',
+    'amount_wovat' => '129.2200',
     'amount_sided' => '0.0000',
     'amount_noded_amount' => '0.0000',
     'amount_noded_tax' => '0.0000',
@@ -83,7 +84,7 @@ $a_result= array (
     'tva_both_side' => '0',
     'qp_vat_code' => '6',
     'amount_vat' => '0.0000',
-    'amount_wovat' => '286.9500',
+    'amount_wovat' => '307.5900',
     'amount_sided' => '0.0000',
     'amount_noded_amount' => '0.0000',
     'amount_noded_tax' => '0.0000',
@@ -169,8 +170,8 @@ $a_result= array (
   array (
     'jrn_def_name' => 'Frais Divers',
     'tva_label' => 'INTRA',
-    'tva_rate' => '0.0000',
-    'tva_both_side' => '0',
+    'tva_rate' => '0.2100',
+    'tva_both_side' => '1',
     'qp_vat_code' => '5',
     'amount_vat' => '0.0000',
     'amount_wovat' => '1250.0000',
@@ -195,4 +196,5 @@ $a_result= array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-);
+)
+;

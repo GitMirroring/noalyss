@@ -1,5 +1,6 @@
 <?php
-$a_result= array (
+$a_result = 
+array (
   0 => 
   array (
     'jrn_def_name' => 'Achat',
@@ -45,4 +46,5 @@ $a_result= array (
     'amount_noded_return' => '0.0000',
     'amount_private' => '0.0000',
   ),
-);
+)
+;

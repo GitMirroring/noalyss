@@ -1,4 +1,4 @@
-<?php 
+<?php
 $a_result = 
 array (
   0 => 
@@ -11,7 +11,7 @@ array (
     'amount_vat' => '16.8000',
     'amount_wovat' => '80.0000',
     'amount_sided' => '0.0000',
-    'tva_type' => 'P',
+    'tva_type' => 'O',
   ),
   1 => 
   array (
@@ -23,6 +23,7 @@ array (
     'amount_vat' => '10.7500',
     'amount_wovat' => '51.2000',
     'amount_sided' => '0.0000',
-    'tva_type' => 'P',
+    'tva_type' => 'O',
   ),
-);
+)
+;

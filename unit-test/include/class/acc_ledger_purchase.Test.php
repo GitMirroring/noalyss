@@ -116,6 +116,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $array["amount_t0"]=658.25;
         $array['hplan']=array(array(-1));
         $array["val"]=array(array(658.25));
+      
         $this->clean_operation();
         
         $this->assertEquals(0,
@@ -151,7 +152,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
                                         "e_march1_tva_id"=>1,
                                         "e_march1_tva_amount"=>22.08,
                                         "tva_march1"=>3.83,
-                                        "tvac_march1"=>22.05));
+                                        "tvac_march1"=>22.08));
         
         $this->object->insert($array);
         $this->assertEquals(0,$g_connection->get_value("select count(*)  ".$sql));
@@ -165,6 +166,8 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $array["op"]=array(0);
         $array["amount_t0"]=658.25;
         $array['hplan']=array(array(-1));
+        $array["p_currency_code"] = 0;
+        $array["p_currency_rate"] = 1;
         $array["val"]=array(array(658.25));
         $array=array_merge($array, array("e_march1"=>"DOCUME",
                                         "e_march1_price"=>18.25,
@@ -173,7 +176,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
                                         "e_march1_tva_id"=>1,
                                         "e_march1_tva_amount"=>"",
                                         "tva_march1"=>3.83,
-                                        "tvac_march1"=>22.05));
+                                        "tvac_march1"=>22.08));
         $this->object->insert($array);
         $this->assertEquals(3.83,$g_connection->get_value("select qp_vat ".$sql));
         $this->clean_operation();
@@ -197,7 +200,8 @@ class Acc_Ledger_PurchaseTest extends TestCase
                                         "tvac_march1"=>22.05));
 
         $this->object->insert($array);
-        $this->assertEquals(22.08,$g_connection->get_value("select qp_vat ".$sql));
+        // en USD , 22.08 = 20.26€ * 1.09
+        $this->assertEquals(20.26,$g_connection->get_value("select qp_vat ".$sql));
         $this->clean_operation();
 
     }
@@ -239,6 +243,9 @@ class Acc_Ledger_PurchaseTest extends TestCase
     private function clean_operation()
     {
         global $g_connection;
+        $g_connection->exec_sql("delete from quant_purchase where j_id in ("
+                . " select j_id from jrnx join jrn on (jr_grpt_id = j_grpt) where "
+                . " jr_mt=$1 ) ", ["1572704002.1732"]);
         $g_connection->exec_sql("delete from jrn where jr_mt=$1", ["1572704002.1732"]);
         $g_connection->exec_sql("delete from jrnx where j_grpt not in (select jr_grpt_id from jrn)");
         $g_connection->exec_sql("alter sequence  s_jrn_pj3 restart with 52");
