@@ -12,7 +12,7 @@ EOF;
 ?><div class="">
     <?php 
   if ($level == 0) {
-      echo '<ul  class="nav nav-pills nav-fill flex-column flex-md-row" >';
+      echo '<ul  class="nav nav-pills nav-fill  flex-row" >';
   }elseif ($level == 1) {
       echo '<ul class="nav nav-pills nav-level2 ">';
       
@@ -78,7 +78,7 @@ EOF;
 
 ?>	
 <li class="<?=$class_list_element?>">
-    <a class="<?=$class_link?> <" href="<?php echo $url;?>" <?php echo $js?> title="<?php echo h(gettext($amenu[$i]['me_description']))?>">
+    <a class="<?=$class_link?>" href="<?php echo $url;?>" <?php echo $js?> title="<?php echo h(gettext($amenu[$i]['me_description']))?>">
     <?php echo gettext($amenu[$i]['me_menu'])?>
     </a>
 </li>

@@ -2779,6 +2779,7 @@ function load_all_script()
     echo js_include('acc_currency.js');
     echo js_include('taggroup.js');
     echo js_include('noalyss_checkbox.js');
+ 
 
 }
 /**

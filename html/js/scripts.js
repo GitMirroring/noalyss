@@ -3723,8 +3723,8 @@ function updatePreference()
             method: "post",
             parameters: param,
             onSuccess: function (req) {
-                var style = req.responseText.evalJSON();
-                $('pagestyle').setAttribute('href', style.style);
+              var style = req.responseText.evalJSON();
+               // $('pagestyle').setAttribute('href', style.style);
                 removeDiv('preference_div');
             }
         });

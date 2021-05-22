@@ -1,7 +1,8 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-?><div id="top">
+?>
+<div id="top">
       <div id="dossier">
 	<?php echo h(dossier::name())?>
 	</div>
@@ -54,21 +55,22 @@ endif;?>
     </div>
 
     <div id="module">
-	<table>
-	    <tr>
+	<div class="d-none d-md-block">
+	  <ul class="nav nav-pills nav-fill  flex-row" >
 		<?php
 		foreach ($amodule as $row):
 			$js="";
 		    $style="";
 		    if ( $row['me_code']=='new_line')
 		    {
-			echo "</tr><tr>";
+                        echo '</ul>';
+			echo '<ul class="nav nav-pills nav-fill  flex-row" >';
 			continue;
 		    }
-                    $style="tool";
+                    $style="nav-item-module";
 		    if ($row['me_code']==$selected_module)
 		    {
-			$style='toolselected';
+			$style='nav-item-active';
 		    }
 		    if ( $row['me_url']!='')
 		    {
@@ -85,15 +87,61 @@ endif;?>
 				$url="do.php?gDossier=".Dossier::id()."&ac=".$row['me_code'];
 		    }
 		    ?>
-		<td class="<?php echo $style?>">
-                    <a class="mtitle" href="<?php echo $url?>" title="<?php echo _($row['me_description'])?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a></td>
+		<li class="<?php echo $style?>">
+                    <a class="nav-link" href="<?php echo $url?>" title="<?php echo _($row['me_description'])?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a>
+                </li>
 		<?php 
 		    endforeach;
 		?>
-	    </tr>
-	</table>
+          </ul>
 
     </div>
+        <div class="d-md-none navbar-light"  >
+            <button id="showmodule" class="navbar-toggler" onclick="toggleHideShow('navbarToggleExternalContent','showmodule')">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div  style="display:none;position:absolute;top:2px;left:2px;z-index:10" id="navbarToggleExternalContent">
+                <ul class="nav nav-pills nav-fill  flex-column bg-dark" >
+                    <?php
+                    foreach ($amodule as $row):
+                            $js="";
+                        $style="";
+
+                        $style="nav-item-module";
+                        if ( $row['me_code']=='new_line')
+                        {
+                       			continue;
+                        }
+                        if ($row['me_code']==$selected_module)
+                        {
+                            $style='nav-item-active';
+                        }
+                        if ( $row['me_url']!='')
+                        {
+                            $url=$row['me_url'];
+                        }
+                        elseif ($row['me_javascript'] != '')
+                            {
+                                    $url="javascript:void(0)";
+                                    $js_dossier=str_replace('<DOSSIER>', Dossier::id(), $row['me_javascript']);
+                                    $js=sprintf(' onclick="%s"',$js_dossier);
+                            }
+                            else
+                        {
+                                    $url="do.php?gDossier=".Dossier::id()."&ac=".$row['me_code'];
+                        }
+                        ?>
+                    <li class="<?php echo $style?>">
+                        <a class="nav-link" href="<?php echo $url?>" title="<?php echo _($row['me_description'])?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a>
+                    </li>
+                    <?php 
+                        endforeach;
+                    ?>
+              </ul>
+            </div>
+            
+        </div>
   
+</div>
 </div>
 <div style="clear:both;"></div>
