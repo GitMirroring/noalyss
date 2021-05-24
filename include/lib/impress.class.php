@@ -90,7 +90,6 @@ class Impress
             $x=$e[0];
             foreach ($x as $line)
             {
-                  tracedebug("impress.debug.log", "$line", 'parse_formula-93 $line ' );
                
                 // If there is a FROM clause we must recompute
                 // the time cond
@@ -123,7 +122,6 @@ class Impress
              */
             $p_formula=remove_divide_zero($p_formula);
             $p_formula="\$result=".$p_formula.";";
-            tracedebug("impress.debug.log",$p_formula,"formula to evaluate +103");
             
             eval("$p_formula");
 
