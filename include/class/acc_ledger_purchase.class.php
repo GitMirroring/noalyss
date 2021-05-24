@@ -566,7 +566,6 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             /* Save all the items without vat and no deductible vat and expense*/
             for ($i=0;$i< $nb_item;$i++)
             {
-		$n_both=0;
                 if ( empty(${'e_march'.$i}) || empty(${'e_quant'.$i}) ) continue;
 
                 /* First we save all the items without vat */
@@ -768,7 +767,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                  */
                 $operation_currency=new Operation_currency_SQL($this->db);
                 $operation_currency->oc_amount=$acc_amount->amount_currency;
-                $operation_currency->oc_vat_amount=$acc_amount->amount_vat_currency;
+                $operation_currency->oc_vat_amount=($tva_both==0)?$acc_amount->amount_vat_currency:0;
                 $operation_currency->oc_price_unit=${'e_march'.$i.'_price'};
                 $operation_currency->j_id=$j_id;
                 $operation_currency->insert();

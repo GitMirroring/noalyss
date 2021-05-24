@@ -382,6 +382,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         $tot_tva = round($tot_tva, 2);
                     } else {
                         $n_both = $tva_item;
+                         $tva_item_currency = 0;
                         if ($n_both<0)
                         {
                             $tot_debit=round(bcadd($tot_debit, abs($n_both)),2);
