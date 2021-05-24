@@ -647,7 +647,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $acc_pay->jrn = $mp->get_parameter('ledger_target');
                 $acc_pay->periode = $tperiode;
                 $acc_pay->type = ($famount >= 0) ? 'd' : 'c';
-                $acc_pay->insert_jrnx();
+                $let_pay=$acc_pay->insert_jrnx();
 
                 /* Insert supplier  */
                 $acc_pay = new Acc_Operation($this->db);
@@ -662,12 +662,20 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $acc_pay->type = ($famount >= 0) ? 'c' : 'd';
                 $let_other = $acc_pay->insert_jrnx();
 
-                // insert into operation_currency
+                // insert into operation_currency customer
                 $operation_currency=new Operation_currency_SQL($this->db);
                 $operation_currency->oc_amount=bcsub($tot_amount_cur,$acompte);
                 $operation_currency->oc_vat_amount=0;
                 $operation_currency->oc_price_unit=0;
                 $operation_currency->j_id=$let_other;
+                $operation_currency->insert();                
+                
+                // insert into operation_currency bank
+                $operation_currency=new Operation_currency_SQL($this->db);
+                $operation_currency->oc_amount=bcsub($tot_amount_cur,$acompte);
+                $operation_currency->oc_vat_amount=0;
+                $operation_currency->oc_price_unit=0;
+                $operation_currency->j_id=$let_pay;
                 $operation_currency->insert();                
                 
                 // Add info for currency
