@@ -153,8 +153,8 @@ class Forecast
       /* save into forecast_item */
       for ($i=0;$i<count($array);$i++)
 	{
-	  $this->cn->exec_sql("insert into forecast_item (fi_text,fi_account,fi_card,fi_order,fc_id,fi_amount,fi_debit,fi_pid) ".
-			      " select fi_text,fi_account,fi_card,fi_order,$1,fi_amount,fi_debit,fi_pid ".
+	  $this->cn->exec_sql("insert into forecast_item (fi_text,fi_account,fi_order,fc_id,fi_amount,fi_pid) ".
+			      " select fi_text,fi_account,fi_order,$1,fi_amount,fi_pid ".
 			      " from forecast_item where fc_id=$2",array($array[$i]['fc_id'],$old[$i]['fc_id']));
 	}
     }

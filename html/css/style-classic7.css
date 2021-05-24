@@ -761,6 +761,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     color: #746B6B;
     font-family: SansationLight;
     font-size: 0.80rem;
+
+    padding: 9px;
+    color: navy;
+    font-size: 0.85rem;
 }
 a#anchorbutton:hover, .button:hover,a.button:hover,div.content a.button:hover  {
     cursor:pointer;

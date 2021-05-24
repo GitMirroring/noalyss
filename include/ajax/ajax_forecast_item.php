@@ -49,7 +49,7 @@ if ($action=="input")
     echo $forecast_item->ajax_input()->saveXML();
     return;
 }elseif ($action == "save") {
-    $forecast_item->send_header();
+   $forecast_item->send_header();
     echo $forecast_item->ajax_save()->saveXML();
     return;
 } elseif ($action == "delete") {

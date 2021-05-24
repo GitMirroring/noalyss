@@ -463,7 +463,12 @@ function check()
 
 	";
     }
-
+    function show_error($p_col)
+    {
+        $error=$this->get_error($p_col);
+        if ($error == "") { return "";}
+        return HtmlInput::errorbulle($error);
+    }
     /**
      * Set the object_name 
      * @param string $p_object_name name of the JS var, used in ajax response,id
@@ -1250,7 +1255,7 @@ function check()
             ob_start();
 
             echo HtmlInput::title_box($this->getTitle(), $this->dialog_box,"close","","y","y");
-            printf('<form id="frm%s_%s" method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
+            printf('<form id="frm%s_%s"  method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,
                     $this->table->get_pk_value());

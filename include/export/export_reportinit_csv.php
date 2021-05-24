@@ -46,7 +46,8 @@ if ( ! is_dir('tmp') )
 }
 
 $cn=Dossier::connect();
-$rap=new Acc_Report($cn,$_GET['f']);
+$http=new HttpInput();
+$rap=new Acc_Report($cn,$http->get('f',"number"));
 
 $file= fopen('php://output',"a+");
 header('Pragma: public');

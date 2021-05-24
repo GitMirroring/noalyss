@@ -52,44 +52,12 @@ $forecast_text = new IText("fi_text");
 $forecast_text->value = $object->getp("fi_text");
 
 /* Accounting*/
-$account = new IPoste('fi_account');
+$account = new ITextarea('fi_account');
+$account->value=$object->getp("fi_account");
+$account->id=uniqid("fi_account");
 $account->nb_row=3;
 $account->extra=' style = "margin-left:0px;width:100%;" class="input_text"';
-$account->set_attribute('account', 'fi_account');
-$account->set_attribute('bracket', 1);
-$account->set_attribute('no_overwrite', 1);
-$account->set_attribute('noquery', 1);
-$account->value = $object->getp("fi_account");
 $account->size="80rem";
-/*Quick Code */
-$qc = new ICard("fi_card");
-// If double click call the javascript fill_ipopcard
-$qc->set_dblclick("fill_ipopcard(this);");
-
-// name of the field to update with the name of the card
-$qc->set_attribute('label', 'an_label');
-
-// Type of card : all
-$qc->set_attribute('typecard', 'all');
-$qc->set_attribute('jrn', 0);
-$qc->extra = 'all';
-
-// when value selected in the autcomplete
-$qc->set_function('fill_data');
-if ($object->getp("fi_card") != "") {
-
-    $qc->value = $cn->get_value("select ad_value 
-    from fiche_detail 
-    where
-          ad_id=23 and f_id = $1", [$object->getp("fi_card")]);
-}
-
-$isDebit=new ISelect("fi_debit");
-$isDebit->value=array(
-        array("label"=>_("Crédit"),"value"=>'C'),
-        array("label"=>_("Débit"),"value"=>'D')
-    );
-$isDebit->selected=$object->getp("fi_debit");
 
 $isPeriode = new ISelect('fi_pid');
 $isPeriode->value = $aPeriode;
@@ -116,24 +84,13 @@ $amount_initial->value=($amount_initial->value=='')?0:$amount_initial->value;
     </tr>
     
     <tr>
-        <td><?= _("Intitulé") ?></td>
+        <td><?=$this->show_error("fi_text")?> <?= _("Intitulé") ?></td>
         <td><?= $forecast_text->input(); ?></td>
     </tr>
+    
     <tr>
         <td>
-            <?= _("Fiche") ?>
-        </td>
-        <td>
-            <?= $qc->input(); ?><?=$qc->search()?>
-            <span id="an_label"></span>
-        </td>
-    </tr>  
-    <tr>
-        <td><?= _("Positif") ?><?= Icon_Action::tips(_("Ne concerne que les fiches"))?></td>
-        <td><?=$isDebit->input(); ?></td>
-    </tr>
-    <tr>
-        <td>
+            <?=$this->show_error("fi_account")?> 
             <?= _("Formule") ?>
            ( <a href="https://wiki.noalyss.eu/doku.php?id=tutoriaux:les_rapports#un_mot_d_explication" target="_blank">
                 Aide</a> )
@@ -141,6 +98,10 @@ $amount_initial->value=($amount_initial->value=='')?0:$amount_initial->value;
         </td>
         <td>
             <?= $account->input() ?>
+            <?= HtmlInput::button_action(_("Cherche poste, fiche , analytique"), 
+                                sprintf('search_account_card({gDossier:%s,target:\'%s\'})',Dossier::id(),
+                                        $account->id))
+            ?>
         </td>
     </tr>
     <tr>

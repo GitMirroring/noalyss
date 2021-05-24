@@ -51,8 +51,7 @@ if (count($aPerMonth[$i]) != 0 ){
                 echo  p("\$aPeriode[$h]['p_id']==\$aPerMonth[$i][$x]['fi_pid'] ".
                         $aPeriode[$h]['p_id']."==".$aPerMonth[$i][$x]['fi_pid'] );
                 
-		echo p("	\$aItem[$i][$e]['fi_card']==\$aPerMonth[$i][$x]['fi_card'] ".
-                        	$aItem[$i][$e]['fi_card']."==".$aPerMonth[$i][$x]['fi_card'] );
+
                 echo p( "	\$aItem[$i][$e]['fi_account']==\$aPerMonth[$i][$x]['fi_account']".
                         $aItem[$i][$e]['fi_account']."==".$aPerMonth[$i][$x]['fi_account']);
                 if ($aPeriode[$h]['p_id']==$aPerMonth[$i][$x]['fi_pid']) {
@@ -60,12 +59,7 @@ if (count($aPerMonth[$i]) != 0 ){
                 } else {
                     echo p("\$aPeriode[$h]['p_id']==\$aPerMonth[$i][$x]['fi_pid'] NO");
                 }
-                if ( $aItem[$i][$e]['fi_card']==$aPerMonth[$i][$x]['fi_card']){
-                    echo "\$aItem[$i][$e]['fi_card']==\$aPerMonth[$i][$x]['fi_card'] YES";
-                } else {
-                    echo "\$aItem[$i][$e]['fi_card']==\$aPerMonth[$i][$x]['fi_card'] NO";
-                    
-                }
+               
                 if ($aItem[$i][$e]['fi_account']==$aPerMonth[$i][$x]['fi_account']) {
                     echo p("\$aItem[$i][$e]['fi_account']==\$aPerMonth[$i][$x]['fi_account']YES");
                 } else {
@@ -77,7 +71,6 @@ if (count($aPerMonth[$i]) != 0 ){
             $amount=$aItem[$i][$e]['fi_amount'];
             if (
                 $aPeriode[$h]['p_id']==$aPerMonth[$i][$x]['fi_pid'] &&
-                trim($aItem[$i][$e]['fi_card'])==trim($aPerMonth[$i][$x]['fi_card']) &&
                 trim($aItem[$i][$e]['fi_account'])==trim($aPerMonth[$i][$x]['fi_account'])
                 )
                 {
@@ -163,12 +156,7 @@ $tot_cat_estm=bcadd($amount,$tot_cat_estm);
 
     <?php
  $diff= bcsub( $aReal[$i][$e][$h],$estm[$i][$e][$h]);
-if (       ( $aItem[$i][$e]['fi_card']!="" && $aItem[$i][$e]['fi_debit'] == 'C' && $diff < 0) 
-        || ($aItem[$i][$e]['fi_card'] && $aItem[$i][$e]['fi_debit'] == 'D' && $diff > 0))
-  {
-    echo '<td style="text-align:right;background-color:red;color:white">';
-  }
-else if ($diff==0)
+ if ($diff==0)
   {
     echo '<td style="text-align:right;">';
   }
@@ -199,11 +187,7 @@ echo nbm( $diff);
 <?php
     $diff= bcsub($aReal[$i][$e][$h],$estm[$i][$e][$h]);
 $cum=bcadd($diff,$cum);
-if ( ($aItem[$i][$e]['fi_debit'] == 'C' && $cum < 0) || ($aItem[$i][$e]['fi_debit'] == 'D' && $cum > 0))
-  {
-    echo '<td style="text-align:right;background-color:red;color:white">';
-  }
-else if ($cum ==0)
+if ($cum ==0)
   {
     echo '<td style="text-align:right;">';
   }
@@ -218,14 +202,8 @@ echo nbm( $cum);
 </td>
 <?php endfor;?>
 <?php
-if ( ($aItem[$i][$e]['fi_debit'] == 'C' && $cum < 0) || ($aItem[$i][$e]['fi_debit'] == 'D' && $cum > 0))
-  {
-    echo '<td style="text-align:right;background-color:red;color:white">';
-  }
-else
-  {
+
     echo '<td style="text-align:right;background-color:green;color:white">';
-  }
  echo nbm(  $cum);
 ?>
 </td>

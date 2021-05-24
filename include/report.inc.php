@@ -28,6 +28,8 @@ require_once  NOALYSS_INCLUDE.'/lib/user_menu.php';
 require_once NOALYSS_INCLUDE.'/lib/ifile.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
+require_once NOALYSS_INCLUDE.'/class/acc_report_mtable.class.php';
+
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once  NOALYSS_INCLUDE.'/class/user.class.php';
@@ -36,6 +38,7 @@ global $http;
 
 $gDossier=dossier::id();
 $str_dossier=dossier::get();
+$http=new HttpInput();
 
 /* Admin. Dossier */
 $rep=Dossier::connect();
@@ -47,33 +50,18 @@ $rap=new Acc_Report($cn);
 $menu=0;
 if (isset($_POST["del_form"]))
 {
-    $rap->id=$http->post("fr_id","number");
+    $rap=$rap=new Acc_Report($cn,$http->post("fr_id","number"));
     $rap->delete();
     $menu=1;
 }
-if (isset($_POST["record"]))
-{
-    $rap->from_array($_POST);
-    $rap->save();
-    $menu=1;
-}
-if (isset($_POST['update']))
-{
-    $rap->from_array($_POST);
-    $rap->save($_POST);
-    $menu=0;
-}
-if (isset($_POST['upload']))
-{
-    $rap->upload();
-    $menu=1;
-}
+
+
 
 if (isset($_REQUEST["action"]) && $menu == 0)
 {
 
-    $action=$_REQUEST ["action"];
-    $rap->id=(isset($_REQUEST ['fr_id']))?$_REQUEST['fr_id']:0;
+    $action=$http->request("action");
+    $rap->id=$http->request('fr_id',"number",0);
 
     if ($action=="add"&&!isset($_REQUEST['fr_id']))
     {
@@ -82,67 +70,80 @@ if (isset($_REQUEST["action"]) && $menu == 0)
         echo '<h1>'._('Définition').'</h1>';
         echo '<form method="post" >';
         echo dossier::hidden();
-        $rap->id=0;
-        echo $rap->form(15);
-
-        echo HtmlInput::submit("record", _("Sauve"));
-        echo '</form>';
-        echo '<span class="notice">'._("Les lignes vides seront effacées").'</span>';
-        echo "</DIV>";
+        $form_definition=new Form_Definition_SQL($cn);
+        /* name cannot be empty */
+        $name=$http->post("fr_name");
+        $name=(trim($name==""))?"auto-".date('d.m.Y H:I'):$name;
+        $form_definition->setp("fr_label",$name);
+        
+        $form_definition->save();
+        /** if there is file ($_FILES['report']) then import first */
+        $rap=new Acc_Report($cn);
+        $rap->set_form_definition($form_definition);
+        $rap->upload();
+        
         echo '<DIV class="content">';
-
-        echo '<form method="post" enctype="multipart/form-data">';
-        echo '<h1> Importation</h1>';
-        echo dossier::hidden();
-        $rap->id=0;
-        $wUpload=new IFile();
-        $wUpload->name='report';
-        $wUpload->value='report_value';
-        echo _('Importer ce rapport').' ';
-        echo $wUpload->input();
-        echo HtmlInput::submit("upload", _("Sauve"));
-        echo '</form>';
-        echo '<span class="notice">'._("Les lignes vides seront effacées").'</span>';
+        $iName=$rap->input_name($name);
+        echo '<h3>';
+        echo $iName->input();
+         echo '</h3>';
+        
+        $acc_report_mtable=Acc_Report_MTable::build(0, $form_definition->getp("fr_id"));
+        $acc_report_mtable->create_js_script();
+        echo $acc_report_mtable->display_table();
+        
+        
         echo "</DIV>";
     }
     if ($action=="view" || $action == "record")
     {
         echo '<DIV class="content">';
-        $rap->id=$http->request("fr_id","number");
-        echo '<form method="post" style="display:inline">';
-        $rap->load();
-        echo h1($rap->name);
-        echo $rap->form();
-        echo HtmlInput::hidden("fr_id", $rap->id);
-        echo HtmlInput::hidden("action", "record");
-        echo HtmlInput::submit("update", _("Mise a jour"));
-        echo HtmlInput::submit("del_form", _("Effacement"));
-
-        echo '</form>';
-        echo '<form method="get" action="export.php" style="display:inline">';
+        $id=$http->request("fr_id","number");
+        $form_definition=new Form_Definition_SQL($cn,$id);
+        $name=$form_definition->getp("fr_label");
+        $rap=new Acc_Report($cn);
+        $rap->set_form_definition($form_definition);
+        $iName=$rap->input_name($name);
+        echo '<h3>';
+        echo  $iName->input();
+        echo '</h3>';
+        
+        $acc_report_mtable=Acc_Report_MTable::build(0, $id);
+        $acc_report_mtable->create_js_script();
+        echo $acc_report_mtable->display_table();
+        
+        echo '<form method="get"  action="export.php" style="display:inline" >';
         echo dossier::hidden();
         echo HtmlInput::hidden("act", "CSV:reportinit");
-        echo HtmlInput::hidden('f', $rap->id);
+        echo HtmlInput::hidden('f',$id);
         echo HtmlInput::submit('bt_csv', "Export CSV");
         echo HtmlInput::request_to_hidden(array('ac', 'action', 'p_action', 'fr_id'));
-        $href=http_build_query(array('ac'=>$_REQUEST['ac'],'gDossier'=>$_REQUEST['gDossier']));
-        echo '<a style="display:inline" class="smallbutton" href="do.php?'.$href.'">'._('Retour').'</a>';
+        $href=http_build_query(array('ac'=>$http->request('ac'),'gDossier'=>$gDossier));
+        
         echo '</form>';
-        echo '<span class="notice">'._("Les lignes vides seront effacées").'</span>';
+        echo '<form style="display:inline" method="post" id="del_form_frm" onsubmit="return confirm_box(\'del_form_frm\',content[47])">';
+        echo HtmlInput::request_to_hidden(array('ac',  'fr_id'));
+        echo HtmlInput::hidden("del_form","1");
+        echo HtmlInput::submit(uniqid(), _('Efface'));
+        echo '</form>';
+        echo '<a style="display:inline" class="button" href="do.php?'.$href.'">'._('Retour').'</a>';  
         echo "</DIV>";
     }
 }
 else
 {
-
+    $rap->create();
     $lis=$rap->get_list();
-    $ac="&ac=".$_REQUEST['ac'];
+    $ac="&ac=".$http->request('ac');
     $p_action='p_action=defreport';
     echo '<div class="content">';
    echo _('Cherche')." ".HtmlInput::filter_table("rapport_table_id", '0', 1);
 
     echo '<TABLE id="rapport_table_id" class="vert_mtitle">';
-    echo '<TR><TD class="first"><A HREF="?'.$p_action.$ac.'&action=add&'.$str_dossier.'">Ajout</A></TD></TR>';
+    echo '<TR><TD class="first">';
+    echo '<a href="#" onclick="document.getElementById(\'acc_report_create_div\').style.display=\'block\'">'
+            ._("Ajout")
+            .'</A></TD></TR>';
 
     foreach ($lis as $row)
     {
@@ -153,3 +154,4 @@ else
 }
 html_page_stop();
 ?>
+

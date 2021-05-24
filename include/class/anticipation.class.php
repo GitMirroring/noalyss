@@ -211,22 +211,22 @@ EOF;
         $aItem = array();
         $aReal = array();
         $poste = new Acc_Account_Ledger($this->cn, 0);
-        $fiche = new Fiche($this->cn);
+
         $aPeriode = $this->cn->get_array("select p_id,to_char(p_start,'MM.YYYY') as myear from parm_periode
-	                                 where p_start >= (select p_start from parm_periode where p_id=$start)
-                                         and p_end <= (select p_end from parm_periode where p_id=$end)
-					 order by p_start;");
+	                                 where p_start >= (select p_start from parm_periode where p_id=$1)
+                                         and p_end <= (select p_end from parm_periode where p_id=$2)
+					 order by p_start",[$start,$end]);
         $error = array();
         for ($j = 0; $j < count($aCat); $j++) {
             
-            // Item of the category, estimation for a specific month
-            $aItem[$j] = $this->cn->get_array('select fi_card,fi_account,fi_text,fi_amount,fi_debit ,
+            // Item of the category,montly estimation
+            $aItem[$j] = $this->cn->get_array('select fi_account,fi_text,fi_amount,
                 fi_amount_initial
                    from forecast_item where fc_id=$1  and fi_pid=0 order by fi_order ', 
                     array($aCat[$j]['fc_id']));
             
-            // Item of the category, montly estimation
-            $aPerMonth[$j] = $this->cn->get_array('select fi_pid,fi_card,fi_account,fi_text,fi_amount,fi_debit 
+            // Item of the category,  estimation for a specific month
+            $aPerMonth[$j] = $this->cn->get_array('select fi_pid,fi_account,fi_text,fi_amount
                     from forecast_item where fc_id=$1 and fi_pid !=0 order by fi_order ', 
                     array($aCat[$j]['fc_id']));
 
@@ -234,20 +234,8 @@ EOF;
             for ($k = 0; $k < count($aItem[$j]); $k++) {
                 /* for each periode */
                 for ($l = 0; $l < count($aPeriode); $l++) {
-                    if ($aItem[$j][$k]['fi_account'] == '') {
-                        $fiche->id = $aItem[$j][$k]['fi_card'];
-                        $amount = $fiche->get_solde_detail("j_tech_per = " . $aPeriode[$l]['p_id']);
-                        
-                        if ($aItem[$j][$k]['fi_debit'] == 'C' && $amount['debit'] > $amount['credit']) 
-                        {
-                            $amount['solde'] = $amount["solde"] * (-1);
-                        }
-                        if ($aItem[$j][$k]['fi_debit'] == 'D' && $amount['debit'] < $amount['credit']) 
-                        {
-                            $amount['solde'] = $amount["solde"] * (-1);
-                        }
-
-                    } else {
+                    if ($aItem[$j][$k]['fi_account'] != '') {
+                       
                         $poste->id = $aItem[$j][$k]['fi_account'];
                         $aresult = Impress::parse_formula($this->cn, "OK", $poste->id, $aPeriode[$l]['p_id'], $aPeriode[$l]['p_id']);
                         $tmp_label = $aresult['desc'];
@@ -299,9 +287,9 @@ EOF;
         $old = $this->cn->get_array("select fc_id from forecast_category where f_id=$1", array($this->forecast_id));
         /* save into forecast_item */
         for ($i = 0; $i < count($array); $i++) {
-            $this->cn->exec_sql("insert into forecast_item (fi_text,fi_account,fi_card,fi_order,fc_id,
-                           fi_amount,fi_debit,fi_pid) " .
-                " select fi_text,fi_account,fi_card,fi_order,$1,fi_amount,fi_debit,fi_pid " .
+            $this->cn->exec_sql("insert into forecast_item (fi_text,fi_account,fi_order,fc_id,
+                           fi_amount,fi_pid) " .
+                " select fi_text,fi_account,fi_order,$1,fi_amount,fi_pid " .
                 " from forecast_item where fc_id=$2", array($array[$i]['fc_id'], $old[$i]['fc_id']));
         }
         $this->cn->commit();

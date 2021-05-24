@@ -140,8 +140,8 @@ if ( ! empty ($array) )  {
  */
 $report=$g_user->get_mini_report();
 
-$rapport=new Acc_Report($cn);
-$rapport->id=$report;
+$rapport=new Acc_Report($cn,$report);
+
 if ( $rapport->exist() == false ) {
   $g_user->set_mini_report(0);
   $report=0;

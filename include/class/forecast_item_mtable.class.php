@@ -33,6 +33,7 @@
 require_once NOALYSS_INCLUDE . "/lib/manage_table_sql.class.php";
 require_once NOALYSS_INCLUDE . "/database/forecast_item_sql.class.php";
 require_once NOALYSS_INCLUDE . "/database/forecast_sql.class.php";
+require_once NOALYSS_INCLUDE . "/lib/impress.class.php";
 
 class Forecast_Item_MTable extends Manage_Table_SQL
 {
@@ -96,10 +97,8 @@ class Forecast_Item_MTable extends Manage_Table_SQL
     {
         
         $sql = "select fi_id,fi_text,fi_account,
-                case when fi_card is null then fi_account 
-                    else  (select ad_value from fiche_detail where ad_id=23 and f_id=fi_card) end str_account_card,
+                fi_account str_account_card,
                 fc_desc,
-                fi_card,
                 fi.fi_amount ,
                 (select p_start from parm_periode pp where pp.p_id=fi.fi_pid) as str_periode
                 from forecast_item fi join forecast_category fc on (fi.fc_id=fc.fc_id)
@@ -114,10 +113,8 @@ class Forecast_Item_MTable extends Manage_Table_SQL
         if ( ! isset($p_row['fc_desc'])) {
             $cn=$this->get_table()->cn;
          $sql=   "select fi_id,fi_text,fi_account,
-                case when fi_card is null then fi_account 
-                    else  (select ad_value from fiche_detail where ad_id=23 and f_id=fi_card) end str_account_card,
+                fi_account                 str_account_card,
                 fc_desc,
-                fi_card,
                 fi.fi_amount ,
                 (select p_start from parm_periode pp where pp.p_id=fi.fi_pid) as str_periode
                 from forecast_item fi join forecast_category fc on (fi.fc_id=fc.fc_id)
@@ -177,7 +174,6 @@ class Forecast_Item_MTable extends Manage_Table_SQL
     ctl: tbl6058da883ded6
     fc_id: 88
     fi_text: Gérant
-    fi_card:
     fi_account: [4160%]-[4890%]
     fi_amount: 3000.0000
     fi_pid: 0
@@ -192,17 +188,27 @@ class Forecast_Item_MTable extends Manage_Table_SQL
         $object_sql->setp("fi_account",$http->post('fi_account'));
         $object_sql->setp("fi_amount",$http->post('fi_amount',"number"));
         $object_sql->setp("fi_pid",$http->post('fi_pid',"number"));
-        $object_sql->setp("fi_debit",$http->post('fi_debit'));
         $object_sql->setp("fi_amount_initial",$http->post("fi_amount_initial","number"));
         
-        $card=trim($http->post("fi_card"));
-        if ( $card !="") {
-            $f_id=$object_sql->cn->get_value("select f_id from fiche_detail where ad_value=upper($1) and ad_id=23",[$card]);
-            if ( $f_id !="") {
-                $object_sql->setp("fi_card",$f_id);
-            }
-        }
+        
 
     }
-
+    function check()
+    {
+        $object=$this->get_table();
+        if ( trim($object->getp("fi_text") ) == "") {
+            $this->set_error("fi_text", _("Intitulé est vide"));
+        }
+        if ( trim ($object->getp("fi_account"))=="") {
+            $this->set_error("fi_account", _("Formule est vide"));
+        }
+        if ( trim ($object->getp("fi_account"))=="") {
+            $this->set_error("fi_account", _("Formule est vide"));
+        }
+         if ( ! Impress::check_formula($object->getp("fi_account"))) {
+            $this->set_error("fi_account", _("Formule invalide"));
+        }
+        if ( $this->count_error()==0) return true;
+        return false;
+    }
 }

@@ -2,7 +2,7 @@
 
 export PGCLUSTER=10/main
 DOSSIER_TEST=rel70dossier25
-FILE_TEST=dossiertest210516-1503.sql
+FILE_TEST=dossiertest210517-1111.sql
 
 dropdb $DOSSIER_TEST
 createdb $DOSSIER_TEST

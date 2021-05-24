@@ -346,8 +346,8 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     <TITLE>$title</TITLE>
 	<link rel=\"icon\" type=\"image/ico\" href=\"favicon.ico\" />
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\" media=\"screen\"/>
-    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/font/fontello/css/fontello.css\" media=\"screen\"/>
+    <LINK id=\"bootstrap\" REL=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\" media=\"screen\"/>
+    <LINK id=\"fontello\" REL=\"stylesheet\" type=\"text/css\" href=\"css/font/fontello/css/fontello.css\" media=\"screen\"/>
     <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/".$style."?version=".SVNINFO."\" media=\"screen\"/>
     <link rel=\"stylesheet\" type=\"text/css\" href=\"css/style-print.css?version=".SVNINFO."\" media=\"print\"/>" .
     $p_script2 . "
@@ -648,7 +648,22 @@ function Decode($p_html)
     $p_html = urldecode($p_html);
     return $p_html;
 }
-
+/**
+ * @brief transform the SQL for ANALYTIC table operation_analytique
+ * @see sql_filter_per
+ * @param string $p_sql
+ */
+function transform_sql_filter_per($p_sql)
+{
+    $result=str_replace("j_tech_per in (select p_id from parm_periode  where","",$p_sql);
+    $result=str_replace("jr_tech_per in (select p_id from parm_periode  where","",$result);
+    $result=str_replace("j_tech_per = (select p_id from parm_periode  where  p_start "," oa_date ",$result);
+    $result=str_replace("p_start >= to_date","oa_date >= to_date",$result);
+    $result=str_replace("p_end <= to_date","oa_date <= to_date",$result);
+ 
+    $result="( $result";
+    return $result;
+}
 /**\brief Create the condition to filter on the j_tech_per
  *        thanks a from and to date.
  * \param $p_cn database conx
@@ -673,7 +688,7 @@ function sql_filter_per($p_cn, $p_from, $p_to, $p_form='p_id', $p_field='jr_tech
     if ($p_form == 'p_id')
     {
         if ( isNUmber($p_from)==0 || isNUmber($p_to)==0){
-            throw new Exception("SFP1"._("Nombre invalide"));
+            throw new Exception("SFP1"._("Nombre invalide")."\$p_from=$p_from \$p_to=$p_to");
         }
 	// retrieve the date
 	$pPeriode = new Periode($p_cn);
@@ -690,7 +705,7 @@ function sql_filter_per($p_cn, $p_from, $p_to, $p_form='p_id', $p_field='jr_tech
 	$p_to = $a_end['p_end'];
     }else {
         if ( isDate($p_from)==NULL || isDate($p_to)==NULL){
-            throw new Exception("SFP2"._("Date invalide"));
+            throw new Exception("SFP2"._("Date invalide")."\$p_from=$p_from \$p_to=$p_to");
         }
     }
     if ($p_from==$p_to)

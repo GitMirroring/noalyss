@@ -52,7 +52,23 @@ class ImpressTest extends TestCase
     {
         
     }
-
+    private function setData()
+    {
+        global $g_connection;
+        $g_connection->exec_sql("delete from operation_analytique where oa_id > 48 and oa_id < 57");
+       $sql="INSERT INTO operation_analytique 
+           (oa_id,po_id,oa_amount,oa_description,oa_debit,j_id,oa_date,oa_row,oa_jrnx_id_source,oa_positive,f_id) 
+         VALUES
+	 (49,3,90.0000,'',true,18,'2018-02-24',0,NULL,'Y',NULL),
+	 (50,4,93.0000,'',true,18,'2018-02-24',1,NULL,'Y',NULL),
+	 (51,3,10.0000,'Déplacement',false,4,'2018-02-24',0,NULL,'Y',NULL),
+	 (52,1,30.0000,'Déplacement',false,4,'2018-02-24',1,NULL,'Y',NULL),
+	 (53,3,25.0000,'Vente de marchandises',false,7,'2018-02-24',0,NULL,'Y',NULL),
+	 (54,3,91.0000,'Eau',true,371,'2018-04-24',0,NULL,'Y',NULL),
+	 (55,3,80.0000,'Eau',true,371,'2018-04-24',1,NULL,'Y',NULL)";
+        $g_connection->exec_sql($sql);
+       
+    }
     /**
      * 
      * @covers Impress::check_formula
@@ -118,7 +134,7 @@ class ImpressTest extends TestCase
         global $g_connection;
         // filter on period
         $sql_periode="j_date >= '2018-01-01' and j_date <= '2018-12-31'";
-        
+         $and_sql_periode="oa_date >= '2018-01-01' and oa_date <= '2018-12-31'";
         // 0 = formula , 1 is the expected value
         $aFormula=array(
             ["[70%-s]", -456.8000],
@@ -128,7 +144,8 @@ class ImpressTest extends TestCase
             ["[61%-c]", 100.00]
         );
         foreach ($aFormula as $formula) {
-            $this->assertEquals($formula[1],\Impress::compute_amount($g_connection,$formula[0],$sql_periode),
+            $this->assertEquals($formula[1],\Impress::compute_amount($g_connection,$formula[0],
+                    $sql_periode,$and_sql_periode),
                     " {$formula[0]} = {$formula[1]}");
         }
     }
@@ -173,18 +190,52 @@ class ImpressTest extends TestCase
         
 
     }
+    /**
+     * @covers Impress::parse_formula
+     * @global type $g_connection
+     * @global type $g_user
+     */
     function test_parse_formula()
     {
         global $g_connection,$g_user;
+        $this->setData();
         $a_formula=array(
-            array("sum 70% (credit is negative)", "[70%-s]",-456.80),
-            array("sum 70% (credit is negative)", "0-round([70%-s],2)",456.80),
+            0=>array("sum 70% (credit is negative)", "[70%-s]",-456.80),
+            1=>array("sum 70% (debit is negative)", "0-round([70%-s],2)",456.80),
+            2=>array("sum 70% (debit is negative)", "0-round([70%-s],2)+150",606.80),
+            3=>array("sum 70% (debit is negative)", "0-round([70%-s],2)*0.2+150",241.36),
+            4=>array("sum FOURNI1 ", "{FOURNI1}",1496.34),
+            5=>array("sum FOURNI1 ", "{FOURNI1}+1",1497.34),
+            6=>array("sum FOURNI1 ", "round({FOURNI1}/3,2)",498.78),
+            7=>array("sum FOURNI1 ", "round({FOURNI1-s}/3,2)",-498.78),
+            8=>array("sum FOURNI1 + 70% ", "[70%-S]+round({FOURNI1-s}/3,2)",-41.98),
+            9=>array("Analytic DEVELOPPEMENT","{{DEVELOPPEMENT}}",226),
+            10=>array("Analytic DEVELOPPEMENT","{{DEVELOPPEMENT-S}}",-226),
+            11=>array("Analytic DEVELOPPEMENT","{{DEVELOPPEMENT-S}}+10",-216),
+            12=>array("Analytic DEVELOPPEMENT FROM","{{DEVELOPPEMENT}} FROM=04.2018",171),
+            13=>array("Analytic DEVELOPPEMENT Credit","{{DEVELOPPEMENT-c}}",35),
+            13=>array("Analytic DEVELOPPEMENT Débit","{{DEVELOPPEMENT-d}} ",261),
+             array("sum 70% Crédit", "[70%-c]",456.80),
+             array("sum 70% Débit", "[70%-d]",0),
+             array("sum FOURNI1 Crédit", "{FOURNI1-c}",1717.77),
+             array("sum FOURNI1 Débit", "{FOURNI1-d}",221.43),
         );
+        // ------ Periode ----------
         foreach ($a_formula as $formula) 
         {
             $result=\Impress::parse_formula($g_connection,$formula[0], $formula[1], 92, 103);
             $this->assertEquals($formula[2],$result['montant'],$formula[0]);
             
         }
+        //-----------Calendar -----------
+        // if there is a FROM clause, it will be skipped silently, so the amount is 316 and not 171
+        $a_formula[12][2]=226;
+        foreach ($a_formula as $formula) 
+        {
+            
+            $result=\Impress::parse_formula($g_connection,$formula[0], $formula[1], '01.01.2018', '31.12.2018',true,1);
+            $this->assertEquals($formula[2],$result['montant'],$formula[0]);
+            
+        }   
     }
 }

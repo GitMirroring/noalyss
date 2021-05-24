@@ -29,6 +29,7 @@ require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
 require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 global $g_user,$http;
+$access_code=$http->request('ac');
 //-----------------------------------------------------
 // If print is asked
 // First time in html
@@ -93,17 +94,22 @@ if ( isset( $_GET['bt_html'] ) )
 
     $hid=new IHidden();
     echo '<div class="content">';
+    $form_id=$Form->get_form_definition()->getp("fr_id");
+    $form_label=h($Form->get_form_definition()->getp("fr_label"));
+    
     if ($type_periode == 0)
     {
+        
         $t=($from_periode==$to_periode)?"":" -> ".getPeriodeName($cn,$to_periode,'p_end');
-        echo '<h2 class="info">'.$Form->id." ".$Form->name.
-        " - ".getPeriodeName($cn,$from_periode,'p_start').
-        " ".$t.
-        '</h2>';
+        echo '<h2 class="info">'.$form_id
+                ." ".$form_label
+                ." - ".getPeriodeName($cn,$from_periode,'p_start')
+                ." ".$t
+                .'</h2>';
     }
     else
     {
-        echo '<h2 class="info">'.$Form->id." ".$Form->name.
+        echo '<h2 class="info">'.$form_id." ".$form_label.
         ' Date :'.
         $from_date.
         " au ".
@@ -115,15 +121,15 @@ if ( isset( $_GET['bt_html'] ) )
     echo '<TD><form method="GET" ACTION="?">'.
     dossier::hidden().
     HtmlInput::submit('bt_other',"Autre Rapport").
-    $hid->input("type","rapport").$hid->input("ac",$_GET['ac'])."</form></TD>";
+    $hid->input("type","rapport").$hid->input("ac",$access_code)."</form></TD>";
 
     echo '<TD><form method="GET" ACTION="export.php">'.
     HtmlInput::submit('bt_pdf',"Export PDF").
       HtmlInput::hidden('act','PDF:report').
     dossier::hidden().
     $hid->input("type","rapport").
-    $hid->input("ac",$_GET['ac']).
-    $hid->input("form_id",$Form->id);
+    $hid->input("ac",$access_code).
+    $hid->input("form_id",$form_id);
     if ( isset($from_periode)) echo $hid->input("from_periode",$from_periode);
     if ( isset($to_periode)) echo $hid->input("to_periode",$to_periode);
     if (isset($p_step)) echo $hid->input("p_step",$p_step);
@@ -140,8 +146,8 @@ if ( isset( $_GET['bt_html'] ) )
     HtmlInput::submit('bt_csv',"Export CSV").
     dossier::hidden().
     $hid->input("type","form").
-    $hid->input("ac",$_GET['ac']).
-    $hid->input("form_id",$Form->id);
+    $hid->input("ac",$access_code).
+    $hid->input("form_id",$form_id);
     if ( isset($from_periode)) echo $hid->input("from_periode",$from_periode);
     if ( isset($to_periode)) echo $hid->input("to_periode",$to_periode);
     if (isset($p_step)) echo $hid->input("p_step",$p_step);
@@ -155,21 +161,22 @@ if ( isset( $_GET['bt_html'] ) )
     echo "</TR>";
 
     echo "</table>";
-    if ( count($Form->row ) == 0 )
+    
+    if ( empty($array)  )
         exit;
     if ( $type_periode== 0 )
     {
         if ( $p_step == 0)
         { // check the step
             // show tables
-            ShowReportResult($Form->row);
+            ShowReportResult($array);
         }
         else
         {
             $a=0;
             foreach ( $array as $e)
             {
-                echo '<h2 class="info">Periode : '.$periode_name[$a]."</h2>";
+                printf( '<h2 class="info">%s</h2> ',$periode_name[$a]);
                 $a++;
                 ShowReportResult($e);
             }
@@ -177,7 +184,7 @@ if ( isset( $_GET['bt_html'] ) )
     }
     else
     {
-        ShowReportResult($Form->row);
+        ShowReportResult($array);
     }
     echo "</div>";
     exit;
@@ -188,7 +195,7 @@ if ( isset( $_GET['bt_html'] ) )
 //-----------------------------------------------------
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 $ret=$cn->make_array("select fr_id,fr_label
-                     from formdef
+                     from form_definition
                      order by fr_label");
 if ( sizeof($ret) == 0 )
 {
@@ -199,8 +206,7 @@ if ( sizeof($ret) == 0 )
 // Form
 //-----------------------------------------------------
 echo '<div class="content">';
-$exercice=(isset($_GET['exercice']))?$_GET['exercice']:$g_user->get_exercice();
-
+$exercice=$http->get("exercice","number",$g_user->get_exercice());
 /*
  * Let you change the exercice
  */

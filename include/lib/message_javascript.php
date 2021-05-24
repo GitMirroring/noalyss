@@ -111,4 +111,7 @@ content[76]="<?php echo htmlspecialchars(_('Il est conseillé d\'avoir un quickc
 content[77]="<?php echo htmlspecialchars(_("Permet de chercher dans le suivi pour les contacts multiples"),ENT_QUOTES)?>";
 <?php $file_too_large=sprintf("Fichier trop grand , taille max = %s mb",(round(MAX_FILE_SIZE/1024/1024,2)));?>
 content[78]="<?php echo htmlspecialchars($file_too_large,ENT_QUOTES)?>";
+
+content[79]="<?php echo htmlspecialchars(_("Les postes comptables sont entre [] , les fiches entre {} et les postes analytiques entre {{ }}"))?>";
+    
 </script>

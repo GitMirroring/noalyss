@@ -25,25 +25,25 @@ require_once NOALYSS_INCLUDE.'/class/acc_tva.class.php';
 require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/zip_extended.class.php';
 
-/* ! \file
+/*! \file
  * \brief Class Document corresponds to the table document
  */
-/* ! \brief Class Document corresponds to the table document
+/*! \brief Class Document corresponds to the table document
  */
 
 class Document
 {
 
-    var $db;          /* !< $db Database connexion */
-    var $d_id;        /* !< $d_id Document id */
-    var $ag_id;       /* !< $ag_id action_gestion.ag_id (pk) */
-    var $d_mimetype;  /* !< $d_mimetype  */
-    var $d_filename;  /* !< $d_filename */
-    var $d_lob;       /* !< $d_lob the oid of the lob */
-    var $d_description;       /* !< Description of the file */
-    var $d_number;    /* !< $d_number number of the document */
-    var $md_id;       /* !< $md_id document's template */
-    private $counter; /* !< counter for the items ( goods ) */
+    var $db;          /*!< $db Database connexion */
+    var $d_id;        /*!< $d_id Document id */
+    var $ag_id;       /*!< $ag_id action_gestion.ag_id (pk) */
+    var $d_mimetype;  /*!< $d_mimetype  */
+    var $d_filename;  /*!< $d_filename */
+    var $d_lob;       /*!< $d_lob the oid of the lob */
+    var $d_description;       /*!< Description of the file */
+    var $d_number;    /*!< $d_number number of the document */
+    var $md_id;       /*!< $md_id document's template */
+    private $counter; /*!< counter for the items ( goods ) */
 
     /* Constructor
      * \param $p_cn Database connection
@@ -98,7 +98,7 @@ class Document
         return $new_filename;
     }
 
-    /* !
+    /*!
      * \brief Generate the document, Call $this-\>replace to replace
      *        tag by value
      * @param p_array contains the data normally it is the $_POST
@@ -208,7 +208,7 @@ class Document
         }
     }
 
-    /* ! parseDocument
+    /*! parseDocument
      * \brief This function parse a document and replace all
      *        the predefined tags by a value. This functions
      *        generate diffent documents (invoice, order, letter)
@@ -223,7 +223,7 @@ class Document
     function parseDocument($p_dir, $p_file, $p_type, $p_array)
     {
 
-        /* !\note replace in the doc the tags by their values.
+        /*!\note replace in the doc the tags by their values.
          *  - MY_*   table parameter
          *  - ART_VEN* table quant_sold for invoice
          *  - CUST_* table quant_sold and fiche for invoice
@@ -323,7 +323,7 @@ class Document
         }
     }
 
-    /* ! saveGenerated
+    /*! saveGenerated
      * \brief Save the generated Document
      * \param $p_file is the generated file
      *
@@ -506,7 +506,7 @@ class Document
         $cn->exec_sql($sql, array($p_ag_id, $p_lob, $p_filename, $p_mimetype, 1, $p_description));
     }
 
-    /* ! 
+    /*! 
      * \brief create and compute a string for reference the doc <A ...>
      *
      * \return a string
@@ -565,7 +565,7 @@ class Document
         $this->db->commit();
     }
 
-    /* !\brief get all the document of a given action
+    /*!\brief get all the document of a given action
      * \param $ag_id the ag_id from action::ag_id (primary key)
      * \return an array of objects document or an empty array if nothing found
      */
@@ -591,7 +591,7 @@ class Document
     }
     
 
-    /* !\brief Get  complete all the data member thx info from the database
+    /*!\brief Get  complete all the data member thx info from the database
      */
 
     function get()
@@ -611,7 +611,7 @@ class Document
         $this->d_description=$row['d_description'];
     }
 
-    /* !
+    /*!
      * \brief replace the TAG by the real value, this value can be into
      * the database or in $_POST
      * The possible tags are
@@ -1686,7 +1686,7 @@ class Document
         return $r;
     }
 
-    /* !\brief remove a row from the table document, the lob object is not deleted
+    /*!\brief remove a row from the table document, the lob object is not deleted
      *        because can be linked elsewhere
      */
 
@@ -1699,7 +1699,7 @@ class Document
             $this->db->lo_unlink($d_lob);
     }
 
-    /* !\brief Move a document from the table document into the concerned row
+    /*!\brief Move a document from the table document into the concerned row
      *        the document is not copied : it is only a link
      *
      * \param $p_internal internal code

@@ -668,7 +668,7 @@ class User
 	/**
          * 
          * \brief return the mini rapport to display on the welcome page
-	 * \return 0 if nothing if found or the report to display (formdef.fr_id)
+	 * \return 0 if nothing if found or the report to display (form_definition.fr_id)
 	 */
 
 	function get_mini_report()
