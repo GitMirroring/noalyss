@@ -45,25 +45,40 @@ if ( ! $m )
     return;
 }
 
+$dossier_id=Dossier::id();
 
 
-//----------------------------------------------------------------------
-// show the left menu
-//----------------------------------------------------------------------
 echo '
 <div class="menu2">
-<table clsas="mtitle">
-<tr>
-<td  class="mtitle" >
-<A class="mtitle" HREF="?ac='.$http->request("ac").'&new&'.$str_dossier.'"> '._('Nouveau').' </A>
-</td>
-<td  class="mtitle" >
-<A class="mtitle" HREF="?ac='.$http->request("ac").'&see&'.$str_dossier.'">'._('Liste opérations').' </A>
-</td>
-</tr>
-</table>
-</div>
 ';
+
+//<table clsas="mtitle">
+//<tr>
+//<td  class="mtitle" >
+//<A class="mtitle" HREF="?ac='.$http->request("ac").'&new&'.$str_dossier.'"> '._('Nouveau').' </A>
+//</td>
+//<td  class="mtitle" >
+//<A class="mtitle" HREF="?ac='.$http->request("ac").'&see&'.$str_dossier.'">'._('Liste opérations').' </A>
+//</td>
+//</tr>
+//</table>
+//</div>
+//';
+//----------------------------------------------------------------------
+// show the  menu
+//----------------------------------------------------------------------
+echo ShowItem(array(
+       array( 
+           "?".http_build_query(["ac"=>$http->request("ac"),"new"=>1,"gDossier"=>$dossier_id]),
+           _("Nouveau"),
+           _("Nouvelle opération")
+           ),
+       array (
+            "?".http_build_query(["ac"=>$http->request("ac"),"see"=>1,"gDossier"=>$dossier_id]),
+            _("Liste"),
+           _("Liste opérations")
+           )
+), "H", "nav-item", "nav-link", "", "nav nav-pills nav-level3");
 
 
 //----------------------------------------------------------------------

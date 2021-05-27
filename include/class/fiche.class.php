@@ -1588,11 +1588,11 @@ class Fiche
         $rep="";
 	if ( $from_div==1)
 	  {
-	    echo "<TABLE id=\"tbpopup\" class=\"resultfooter\" style=\"margin:1%;width:98%;;border-collapse:separate;border-spacing:0px 5px\">";
+	    echo "<TABLE id=\"tbpopup\" class=\"resultfooter\" style=\"margin:1%;width:98%;;border-collapse:collapse;border-spacing:0px 5px\">";
 	  }
 	else
 	  {
-	    echo "<TABLE id=\"tb" . $from_div . "\"class=\"result\" style=\"margin:1%;width:98%;border-collapse:separate;border-spacing:0px 2px\">";
+	    echo "<TABLE id=\"tb" . $from_div . "\"class=\"result\" style=\"margin:1%;width:98%;border-collapse:collapse;border-spacing:0px 2px\">";
 		}
         echo '<tbody>';
         echo "<TR>".

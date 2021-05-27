@@ -665,6 +665,7 @@ class Lettering_Card extends Lettering
 					diff_letter1 as letter_diff,
                                          round(j_montant/currency_rate,4) as currency_amount,
                                         currency_rate, 
+                                        currency_id,
                                         currency_rate_ref,
 		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
 						from jrnx join jrn on (j_grpt = jr_grpt_id)

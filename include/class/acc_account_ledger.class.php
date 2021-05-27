@@ -386,9 +386,9 @@ class Acc_Account_Ledger
 
         
         if ( $from_div == 1)
-			echo "<TABLE id=\"tbpopup\" class=\"resultfooter\" style=\"border-collapse:separate;margin:1%;width:98%;;border-spacing:0px 5px\">";
+			echo "<TABLE id=\"tbpopup\" class=\"resultfooter\" style=\"border-collapse:separate;margin:1%;width:98%;\">";
 		else
-			echo "<TABLE id=\"tb".$from_div."\" class=\"resultfooter\" style=\"border-collapse:separate;margin:1%;width:98%;;border-spacing:0px 2px\">";
+			echo "<TABLE id=\"tb".$from_div."\" class=\"resultfooter\" style=\"border-collapse:separate;margin:1%;width:98%;\">";
         echo '<tbody>';
         echo "<TR>".
         "<TH style=\"text-align:left\">"._('Date')." </TH>".
