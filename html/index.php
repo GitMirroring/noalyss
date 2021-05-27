@@ -151,7 +151,7 @@ echo '<!doctype html><HTML>
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" media="screen">
 <link rel="stylesheet" type="text/css" href="css/index.css" media="screen">
 <script src="js/prototype.js" type="text/javascript"></script>
-<script src="js/scripts.js" type="text/javascript"></script>
+<script src="js/noalyss_script.js" type="text/javascript"></script>
 </head>
 <BODY>';
 $my_domain="";

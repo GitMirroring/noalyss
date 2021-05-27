@@ -131,7 +131,7 @@ class ITva_Popup extends HtmlInput
      *@brief show a button, if it is pushed show a popup to select the need vat
      *@note
      * - a ipopup must be created before with the name popup_tva
-     * - the javascript scripts.js must be loaded
+     * - the javascript noalyss_script.js must be loaded
      *@return string with html code
      */
     function dbutton()

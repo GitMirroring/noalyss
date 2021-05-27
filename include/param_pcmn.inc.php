@@ -71,8 +71,8 @@ $mtable->set_callback("ajax_misc.php");
 $mtable->create_js_script();
 
 echo $mtable->display_table(" where pcm_val::text like '{$g_start}%' order by pcm_val::text ");
-/* it will override the classic onscroll (see scripts.js)
- * @see scripts.js
+/* it will override the classic onscroll (see noalyss_script.js)
+ * @see noalyss_script.js
 */
 
     ?>

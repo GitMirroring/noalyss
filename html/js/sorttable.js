@@ -458,7 +458,7 @@ if (/WebKit/i.test(navigator.userAgent)) { // sniff
 }
 
 /* for other browsers */
-// Moved into scripts.js 
+// Moved into noalyss_script.js 
 //window.onload = sorttable.init;
 
 // written by Dean Edwards, 2005

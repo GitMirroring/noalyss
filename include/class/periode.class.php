@@ -504,7 +504,7 @@ class Periode
     /**
      * Display a table with all the periode
      * @param $p_js javascript variable
-     * @see scripts.js
+     * @see noalyss_script.js
      */
     static function display_periode_global($p_js)
     {

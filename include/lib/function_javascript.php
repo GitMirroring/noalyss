@@ -2761,7 +2761,7 @@ function load_all_script()
     echo js_include('smoke.js');
     echo js_include('prototype.js');
     echo js_include('scriptaculous.js');
-    echo js_include('scripts.js');
+    echo js_include('noalyss_script.js');
     echo js_include('acc_ledger.js');
     echo js_include('accounting_item.js');
     echo js_include('ajax_fiche.js');

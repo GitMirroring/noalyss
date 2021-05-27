@@ -1039,7 +1039,7 @@ class HtmlInput
     /**
      * Zoom the calendar
      * @param type $obj objet json for the javascript
-     * @see calendar_zoom in scripts.js 
+     * @see calendar_zoom in noalyss_script.js 
      */
     static function calendar_zoom($obj)
     {
