@@ -99,26 +99,37 @@ echo '<div id="balance_advanced_div" style="display:none">';
 
 /*  add a all ledger choice */
 echo _('Filtre')." ";
+// temp var used to set the filter 
 $rad=new IRadio();
+
 $array_ledger=$g_user->get_ledger('ALL',3);
 $array=get_array_column($array_ledger,'jrn_def_id');
-$selected=(isset($_GET['r_jrn']))?$_GET['r_jrn']:array();
-$select_cat=(isset($_GET['r_cat']))?$_GET['r_cat']:array();
+$selected=$http->get('r_jrn','array',array());
+$select_cat=$http->get('r_cat','array',array());
+
 $array_cat=Acc_Ledger::array_cat();
+// filter type : none(0), ledger(1), catgory of ledger (sale,purchase...)(=2)
+$filter=$http->get('p_filter',"string",0);
+$filter = ($filter=="")?0:$filter;
 
 echo '<ul style="list-style-type:none">';
-if ( ! isset($_GET['p_filter']) || $_GET['p_filter']==0) $rad->selected='t';
-else $rad->selected=false;
+$rad->selected=false;
+if (  $filter==0) $rad->selected='t';
+
 echo '<li>'.$rad->input('p_filter',0)._('Aucun filtre, tous les journaux').'</li>';
-if (  isset($_GET['p_filter']) && $_GET['p_filter']==1) $rad->selected='t';
-else $rad->selected=false;
+
+$rad->selected=false;
+if ( $filter==1) $rad->selected='t';
 echo '<li>'.$rad->input('p_filter',1)._('Filtré par journal');
 echo HtmlInput::button_choice_ledger(array('div'=>'','type'=>'ALL','all_type'=>1));
 echo '</li>';
-if (  isset($_GET['p_filter']) && $_GET['p_filter']==2) $rad->selected='t';
-else $rad->selected=false;
+
+$rad->selected=false;
+if ( $filter==2) $rad->selected='t';
+
 echo '<li>'.$rad->input('p_filter',2)._('Filtré par catégorie').HtmlInput::select_cat($array_cat).'</li>';
 echo '</ul>';
+
 echo _('Totaux par sous-niveaux');
 $ck_lev1=new ICheckBox('lvl1');
 $ck_lev2=new ICheckBox('lvl2');
@@ -211,19 +222,19 @@ if ( isset ($_GET['view']  ) )
     $to_periode=$http->get("to_periode","number");
     $from_poste=$http->get("from_poste","string");
     $to_poste=$http->get("to_poste","string");
-    $p_filter=$http->get("p_filter");
+    
 
     echo "<table>";
     echo '<TR>';
     echo '<TD><form method="GET" ACTION="export.php">'.
     dossier::hidden().
     HtmlInput::submit('bt_pdf',"Export PDF").
-    HtmlInput::hidden("ac",$_REQUEST['ac']).
+    HtmlInput::hidden("ac",$http->request('ac')).
     HtmlInput::hidden("act","PDF:balance").
             HtmlInput::hidden("summary", $is_summary).
     HtmlInput::hidden("from_periode",$from_periode).
     HtmlInput::hidden("to_periode",$to_periode);
-    echo HtmlInput::hidden('p_filter',$p_filter);
+    echo HtmlInput::hidden('p_filter',$filter);
     for ($e=0;$e<count($selected);$e++)
         if (isset($selected[$e]) && in_array ($selected[$e],$array))
             echo    HtmlInput::hidden("r_jrn[$e]",$selected[$e]);
@@ -244,7 +255,7 @@ if ( isset ($_GET['view']  ) )
     HtmlInput::hidden("from_periode",$from_periode).
     HtmlInput::hidden("to_periode",$to_periode);
     echo HtmlInput::get_to_hidden(array('ac'));
-    echo HtmlInput::hidden('p_filter',$p_filter);
+    echo HtmlInput::hidden('p_filter',$filter);
     for ($e=0;$e<count($selected);$e++){
         if (isset($selected[$e]) && in_array ($selected[$e],$array)){
                 echo    HtmlInput::hidden("r_jrn[$e]",$selected[$e]);
@@ -275,22 +286,22 @@ if ( isset($_GET['view'] ) )
 {
     
     $bal=new Acc_Balance($cn);
-    if ( $_GET['p_filter']==1)
+    if ( $filter==1)
     {
         for ($e=0;$e<count($selected);$e++)
             if (isset($selected[$e]) && in_array ($selected[$e],$array))
                 $bal->jrn[]=$selected[$e];
     }
-    if ( $_GET['p_filter'] == 0 )
+    if ( $filter == 0 )
     {
-        $bal->jrn=null;
+        $bal->jrn=[];
     }
-    if ( $_GET['p_filter'] == 2 && isset ($_GET['r_cat']))
+    if ( $filter == 2 && ! empty($select_cat))
     {
-        $bal->filter_cat($_GET['r_cat']);
+        $bal->filter_cat($select_cat);
     }
-    $bal->from_poste=$_GET['from_poste'];
-    $bal->to_poste=$_GET['to_poste'];
+    $bal->from_poste=$http->get('from_poste');
+    $bal->to_poste=$http->get('to_poste');
     if ( isset($_GET['unsold']))  $bal->unsold=true;
     $previous=(isset($_GET['previous_exc']))?1:0;
     $from_periode=$http->get("from_periode","number");
@@ -312,15 +323,15 @@ if ( isset($_GET['view'] ) )
     echo '<th>'._("Poste Comptable").'</th>';
     echo '<th>'._("Libellé").'</th>';
     if ( $previous == 1 ){
-        echo '<th>'._("Débit N-1").'</th>';
-        echo '<th>'._('Crédit N-1').'</th>';
-        echo '<th>'._('Solde N-1').'</th>';
+        echo '<th style="text-align:right;">'._("Débit N-1").'</th>';
+        echo '<th style="text-align:right;">'._('Crédit N-1').'</th>';
+        echo '<th style="text-align:right;">'._('Solde N-1').'</th>';
             
     }
-    echo '<th>'._('Ouverture').'</th>';
-    echo '<th>'._('Débit').'</th>';
-    echo '<th>'._('Crédit').'</th>';
-    echo '<th>'._('Solde').'</th>';
+    echo '<th style="text-align:right;">'._('Ouverture').'</th>';
+    echo '<th style="text-align:right;">'._('Débit').'</th>';
+    echo '<th style="text-align:right;">'._('Crédit').'</th>';
+    echo '<th style="text-align:right;">'._('Solde').'</th>';
 
     $i=0;
     if ( $previous == 1) {

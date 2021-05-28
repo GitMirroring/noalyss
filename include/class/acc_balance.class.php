@@ -70,7 +70,7 @@ class Acc_Balance
         $from_poste="";
         $to_poste="";
         /* if several ledgers are asked then we filter here  */
-        if ($this->jrn!== null)
+        if ( !empty($this->jrn) )
         {
             /**
              *@file
