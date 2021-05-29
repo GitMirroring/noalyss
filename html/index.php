@@ -215,7 +215,7 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
 ?>
 <div >
     <div class="d-sm-block">
-        <IMG SRC="image/logo9000.png" id="logo_id" alt="NOALYSS">
+        <a href="https://www.noalyss.eu"><IMG SRC="image/logo9000.png" id="logo_id" alt="NOALYSS"></a>
      
     </div>    
     <div class="container">

@@ -24,8 +24,6 @@ BODY {
     padding : 0px;
     margin:0px;
     color:darkblue !important;
-    /*font-size:0.9em;
-    font-size:0.95rem;*/
     background-color:#FCFDFD; 
 }
 input{
@@ -2283,7 +2281,7 @@ td.selectedmenu {
     font-variant: small-caps;
     padding: 13px 20px 13px 20px;
     margin-top:20px;
-    background-color:#484954;
+    background-color:#141d77;
     color:#FE8300;
 }
 /*
