@@ -47,11 +47,14 @@ echo " <br>";
 $manage_table->create_js_script();
 
 // Test the column header
-$manage_table->set_col_label('pcm_val', "Poste");
+$manage_table->set_col_label('pcm_val', "Poste ");
 $manage_table->set_col_label('parent_accounting', "Dépend");
 $manage_table->set_col_label('pcm_lib', "Libellé");
 $manage_table->set_col_label('pcm_type', "Type de menu".Icon_Action::infobulle(33));
 $manage_table->set_sort_column("pcm_lib");
+$manage_table->set_col_option("pcm_lib",'style="color:red;text-align:center"');
+$manage_table->set_col_option("pcm_val", "onclick=\"alert('toto')\" style=\"text-decoration:underline\" onmouseover=\"this.style.cursor='pointer'\"");
+$manage_table->set_header_option("pcm_val", "onmouseover=\"smoke.alert('Click  on Poste for detail',undefined,{duration:500})\"");
 // Change visible property
 function test_visible_update(Manage_Table_SQL $p_manage_table,$p_property,$p_visible,$p_update) {
     global $g_failed,$g_succeed;

@@ -93,6 +93,9 @@ class Manage_Table_SQL
     protected $title; //! < give the title of the diabox , default is Data
     private $cssclass; //! CSS class for the dialog box
     private $current_row; //! in display_row and display_custom_row, it is the current row which is used
+    private $a_col_option; //!< Extra to add to the column : CSS  Style , CSS class, javascript ,...
+    private $a_header_option; //!< Extra to add to the column Header : CSS  Style , CSS class, javascript ,...
+    
     /**
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the
@@ -113,6 +116,8 @@ class Manage_Table_SQL
             $this->a_prop[$value]=self::UPDATABLE|self::VISIBLE;
             $this->a_type[$value]=$this->table->type[$value];
             $this->a_select[$value]=null;
+            $this->a_col_option[$value]="";
+            $this->a_header_option[$value]="";
             $order++;
         }
         $this->object_name=uniqid("tbl");
@@ -143,7 +148,7 @@ class Manage_Table_SQL
 		return $this->cssclass;
 	}
     /**
-     * Set the title of the diabox , default is Donnée
+     *@brief Set the title of the diabox , default is Donnée
      * @param type $p_title
      */
     function setTitle($p_title)
@@ -155,7 +160,7 @@ class Manage_Table_SQL
         return $this->title;
     }
     /**
-     * Get if we can search in the table
+     * @brief Get if we can search in the table
      * @return boolean
      */
     public function get_search_table()
@@ -164,7 +169,7 @@ class Manage_Table_SQL
     }
 
     /**
-     * Set the table searchable or not
+     * @brief Set the table searchable or not
      * @param boolean  : true we can search 
      * @return $this
      */
@@ -175,7 +180,7 @@ class Manage_Table_SQL
     }
 
         /**
-     * send the XML headers for the ajax call 
+     *@brief  send the XML headers for the ajax call 
      */
     function send_header()
     {
@@ -183,7 +188,7 @@ class Manage_Table_SQL
     }
 
     /**
-     * return the db_style
+     * @brief return the db_style
      * @return array
      */
     public function get_dialogbox_style()
@@ -192,7 +197,7 @@ class Manage_Table_SQL
     }
 
     /**
-     * Dialog box style , by default {position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"}
+     * @brief Dialog box style , by default {position: "fixed", top:  '15%', width: "auto", "margin-left": "20%"}
      *
      * @param array $db_style , will be transformed into a json object
      */
@@ -221,14 +226,14 @@ class Manage_Table_SQL
     }
 
     /**
-     * When adding an element , it is column we checked to insert before,
+     * @brief When adding an element , it is column we checked to insert before,
      * @return none
      */
     function get_col_sort() {
         return $this->col_sort;
     }
     /**
-     * Set the info for a column, use Icon_Action::infobulle
+     * @brief Set the info for a column, use Icon_Action::infobulle
      * the message are in message_javascript.php
      * @param string $p_key Column name
      * @param integer $p_comment comment idx
@@ -240,7 +245,7 @@ class Manage_Table_SQL
         $this->a_info[$p_key]=$p_comment;
     }
     /**
-     * When adding an element ,we place it thanks the DOM Attribute sort_value
+     * @brief When adding an element ,we place it thanks the DOM Attribute sort_value
      * set it to -1 if you want one to append
      * @param numeric $pn_num
      * @note you must be aware that the icon_mod or icon_del is in the first col, 
@@ -287,7 +292,7 @@ class Manage_Table_SQL
         $this->aerror[$p_col]=$p_message;
     }
     /**
-     * returns the nb of errors found
+     * @brief returns the nb of errors found
      */
     function count_error()
     {
@@ -348,8 +353,66 @@ function check()
     {
         return true;
     }
-
     /**
+     * @brief add extra to column, normally class , javascript or style 
+     * @param string $p_key column name
+     * @see set_col_option
+     */
+    public function get_col_option($p_key)
+    {
+        if (!isset($this->a_type[$p_key]))
+            throw new Exception("invalid key $p_key");
+
+        return $this->a_col_option[$p_col];
+    }
+    /**
+     * @brief add extra to column, normally class or style 
+     * 
+     * @param string $p_key column name
+     * @param string $p_value extra info for this column (CSS, js, ...)
+     * 
+    @code{.php}
+     $manage_table->set_col_option("pcm_lib",'style="color:red;text-align:center"');
+
+    $manage_table->set_col_option("pcm_val", "onclick=\"alert('toto')\" style=\"text-decoration:underline\" onmouseover=\"this.style.cursor='pointer'\"");
+    @endcode
+     * 
+     */
+    public function set_col_option($p_key,$p_value)
+    {
+        
+        if (!isset($this->a_type[$p_key]))
+            throw new Exception("invalid key $p_key");
+        $this->a_col_option[$p_key]=$p_value;
+        return $this;
+    }
+    /**
+     * @brief add extra to column Header, normally class , javascript or style 
+     * @param string $p_key column name
+     * @see set_col_option
+     */
+    public function get_header_option($p_key)
+    {
+        if (!isset($this->a_type[$p_key]))
+            throw new Exception("invalid key $p_key");
+
+        return $this->a_header_option[$p_col];
+    }
+    /**
+     * @brief add extra to column Header, normally class or style 
+     * @param string $p_key column name
+     * @param string $p_value extra info for this column (CSS, js, ...)
+     * @see set_col_option
+     */
+    public function set_header_option($p_key,$p_value)
+    {
+        if (!isset($this->a_type[$p_key]))
+            throw new Exception("invalid key $p_key");
+        $this->a_header_option[$p_key]=$p_value;
+        return $this;
+    }
+
+        /**
      * @brief set the type of a column , it will change in the input db box , the
      * select must supply an array of possible values [val=> , label=>] with
      * the variable $this->key_name->a_value
@@ -371,6 +434,10 @@ function check()
 
         $this->a_type[$p_key]=$p_value;
         $this->a_select[$p_key]=$p_array;
+        if ( $p_value == "numeric" && $this->a_col_option[$p_key]=="") {
+            $this->a_col_option[$p_key]=' class="num" ';
+        }
+         
     }
 
     /**
@@ -387,7 +454,7 @@ function check()
     }
 
     /**
-     * Get the object name
+     * @brief Get the object name
      * @details : return the object name , it is useful it
      * the javascript will return coded without the create_js_script function
      * @see create_js_script
@@ -397,7 +464,7 @@ function check()
         return $this->object_name;
     }
     /**
-     * Add json parameter to the current one
+     * @brief Add json parameter to the current one
      */
     function add_json_param($p_attribute,$p_value) {
         $x=json_decode($this->json_parameter,TRUE);
@@ -412,7 +479,7 @@ function check()
         return $this->object_name;
     }
     /**
-     * Set the parameter of the object (gDossier, ac, plugin_code...)
+     * @brief Set the parameter of the object (gDossier, ac, plugin_code...)
      * @detail By default , only gDossier will be set . The default value
      * is given in the constructor
      * @param string with json format $p_json 
@@ -424,7 +491,7 @@ function check()
         $this->set_json($p_json);
     }
     /**
-     * Set the parameter of the object (gDossier, ac, plugin_code...)
+     * @brief Set the parameter of the object (gDossier, ac, plugin_code...)
      * @detail By default , only gDossier will be set . The default value
      * is given in the constructor
      * @param string with json format $p_json 
@@ -470,7 +537,7 @@ function check()
         return HtmlInput::errorbulle($error);
     }
     /**
-     * Set the object_name 
+     * @brief Set the object_name 
      * @param string $p_object_name name of the JS var, used in ajax response,id
      * of the part of the id DOMElement to modify
      */
@@ -507,7 +574,7 @@ function check()
         return $this->row_update;
     }
     /**
-     * Set the icon to modify at the right ,the first col or left of the row
+     * @brief Set the icon to modify at the right ,the first col or left of the row
      * 
      * @param type $pString
      * @throws Exception
@@ -518,7 +585,7 @@ function check()
         $this->icon_mod=$pString;
     }
     /**
-     * Set the icon to delete at the right or left of the row
+     * @brief Set the icon to delete at the right or left of the row
      * @param type $pString
      * @throws Exception
      */
@@ -815,7 +882,7 @@ function check()
                 $sorted=' class="sorttable_sorted"';
             }
 
-            $style=($this->get_col_type($key)=="text")?"":' style="text-align:right;" ';
+            $style=$this->a_header_option[$key];
             if ($this->get_property_visible($key)==true  ) {
                 echo th("", $sorted.$style, $this->a_label_displaid[$key]);
             }
@@ -832,14 +899,14 @@ function check()
         echo '</thead>';
     }
     /**
-     * set the column to sort by default
+     * @brief set the column to sort by default
      */
     function set_sort_column($p_col)
     {
         $this->sort_column=$p_col;
     }
     /**
-     * return the column to sort
+     * @brief return the column to sort
      */
     function get_sort_column()
     {
@@ -935,7 +1002,8 @@ function check()
             {
                 $js=sprintf("onclick=\"%s.input('%s','%s');\"", $this->object_name,
                         $pk_id, $this->object_name);
-                $td=($i == $this->col_sort ) ? sprintf('<td sorttable_customkey="X%s" >',$p_row[$v]):"<td>";
+                $td=($i == $this->col_sort ) ? sprintf('<td sorttable_customkey="X%s" class="%s">',
+                        $p_row[$v],$this->a_col_option[$v]):"<td>";
                 echo $td.HtmlInput::anchor($p_row[$v], "", $js).'</td>';
             }
             elseif ( $i == $this->col_sort && $this->get_property_visible($v) )
@@ -943,12 +1011,12 @@ function check()
                 if (  $this->get_col_type($v) == 'text') {
                     echo td($p_row[$v],sprintf(' sorttable_customkey="X%s" ',$p_row[$v]));
                 } elseif ( $this->get_col_type($v) == 'numeric') {
-                    echo td($p_row[$v],sprintf('class="num" ',$p_row[$v]));
+                    echo td($p_row[$v],$this->a_col_option[$v],$p_row[$v]);
                 }  elseif ($this->get_col_type($v)=="custom") {
                     // For custom col
                     echo $this->display_row_custom($v,$p_row[$v],$pk_id);
                 }else {
-                    echo td($p_row[$v],sprintf(' sorttable_customkey="X%s" ',$p_row[$v]));
+                    echo td($p_row[$v],sprintf(' sorttable_customkey="X%s" ',$p_row[$v]),$this->a_col_option[$v]);
                     
                 }
             }
@@ -976,7 +1044,7 @@ function check()
                         if (isset($array_to_search[$e]['value'])&&$array_to_search[$e]['value']==$value)
                         {
                             $found=TRUE;
-                            echo td($array_to_search[$e]['label']);
+                            echo td($array_to_search[$e]['label'],$this->a_col_option[$v]);
                         }
                     }
 
@@ -988,11 +1056,8 @@ function check()
                     // For custom col
                     echo $this->display_row_custom($v,$p_row[$v],$pk_id);
                 }
-                elseif ( $this->get_col_type($v)=="numeric") {
-                    echo td($p_row[$v],' class="num" ');
-                }
                 else {
-                    echo td($p_row[$v]);
+                    echo td($p_row[$v],  $this->a_col_option[$v]);
                 }
             }
         }
