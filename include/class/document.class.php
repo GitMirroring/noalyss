@@ -1809,5 +1809,65 @@ class Document
         }
         return $p_buffer;
     }
+    
+    /**
+     * @brief export the file to the file system and complet $this->d_mimetype, d_filename and 
+     * @param string $p_destination_file path
+     * @return bool false for failure and true for success
+     */
+    function export_file($p_destination_file)
+    {
+        if ($this->d_id==0) {
+            return;
+        }
+         $this->db->start();
+        $ret=$this->db->exec_sql(
+                "select d_id,d_lob,d_filename,d_mimetype from document where d_id=$1", [$this->d_id]);
+        if (Database::num_row($ret)==0)
+        {
+            return;
+        }
+        $row=Database::fetch_array($ret, 0);
+        //the document  is saved into file $tmp
+        $tmp=$p_destination_file;
+        if ( $this->db->lo_export($row['d_lob'], $tmp) == true) { 
+            $this->d_mimetype=$row['d_mimetype'];
+            $this->d_filename=$row['d_filename'];
+            $this->db->commit();
+            return true;
+        } else {
+            $this->db->commit();
+            return false;
+            
+        }
 
+    }
+    /**
+     * @brief transform the current Document to a PDF, returns the full path of the PDF from the TMP folder
+     * @return string full path to the PDF file
+     */
+    function transform2pdf()
+    {
+        if (GENERATE_PDF == 'YES' && $pdf == 'on') {
+            \record_log(__FILE__."DOC37 : PDF not available");
+            throw new \Exception("Cannot not transform to PDF");
+        }
+            // Extract from public.document
+        $dirname=tempnam($_ENV['TMP'],"document");
+        unlink($dirname);
+        umask(0);
+        mkdir($dirname);
+        $destination_file=$dirname."/".$this->d_filename;
+        $this->export_file($destination_file);
+        passthru(OFFICE . escapeshellarg($destination_file), $status);
+        if ($status != 0) {
+            \record_log(__FILE__."DOC45 : Error  cannot transform into PDF");
+            throw new \Exception("Cannot not transform to PDF");
+        }
+        // remove extension
+        $ext = strrpos($this->d_filename, ".");
+        $pdf_file = substr($this->d_filename, 0, $ext);
+        $pdf_file .=".pdf";
+        return $dirname."/".$pdf_file;
+    }
 }
