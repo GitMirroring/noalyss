@@ -241,13 +241,7 @@ function errorPoste()
 {
     alert_box(content[53]);
 }
-function pausecomp(millis)
- {
-  var date = new Date();
-  var curDate = null;
-  do { curDate = new Date(); }
-  while(curDate-date < millis);
-}
+
 /**
  * Display the list of card using a given accounting
  * @param dossier
@@ -272,4 +266,35 @@ function display_all_card(p_dossier,p_accounting)
                                         }
                                       }
                                     );
+}
+
+/**
+ * Search an account or an analytic account or a card, used in REPORT
+ * @param {json} p_obj , 
+ *          property : - op for ajax_misc  , 
+ *                     - gDossier, 
+ *                     - target DOM element to update with the result
+ *                     - query  for the search
+ * @returns {void}
+ */
+function search_account_card(p_obj)
+{
+    p_obj['op']=p_obj['op']||"search_account_card";
+    var query=p_obj;
+    if (p_obj.tagName && p_obj.tagName=='FORM') {
+        query=p_obj.serialize(true);
+    }
+    
+    waiting_box();
+    new Ajax.Request("ajax_misc.php",{method:"get",parameters:query,
+        onSuccess: function (req){
+            
+            var pos=calcy(50);
+            var obj={id:"search_account_div",cssclass:"inner_box",style:"top:"+pos+"px",
+            html:req.responseText};
+            add_div(obj);
+            remove_waiting_box();
+        }
+    });
+    return false;
 }
