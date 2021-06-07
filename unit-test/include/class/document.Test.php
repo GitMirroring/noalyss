@@ -46,6 +46,13 @@ class DocumentTest extends TestCase
         $cn->exec_sql($sql, array($md_id, "Balise", "all-tags.odt", "application/vnd.oasis.opendocument.text", "4", "GES"));
         $oid=$cn->lo_import(__DIR__."/data/all_tags.odt");
         $cn->exec_sql("update document_modele set md_lob = $1 where md_id=$2", [$oid, $md_id]);
+               $cn->exec_sql("update  parameter set pr_value='Dossier Test' where pr_id=$1",
+                ['MY_NAME']);
+        $cn->exec_sql("update  parameter set pr_value='BE00112233' where pr_id=$1",
+                ['MY_TVA']);
+        $cn->exec_sql("update  parameter set pr_value='My street' where pr_id=$1",
+                ['MY_STREET']);
+      
         $cn->commit();
     }
 
@@ -107,26 +114,21 @@ class DocumentTest extends TestCase
         $document=new Document($cn);
         $array=[];
         $array['e_client']='CLIENT';
-        $cn->exec_sql("update  parameter set pr_value='Dossier Test' where pr_id=$1",
-                ['MY_NAME']);
-        $cn->exec_sql("update  parameter set pr_value='BE00112233' where pr_id=$1",
-                ['MY_TVA']);
-        $cn->exec_sql("update  parameter set pr_value='My street' where pr_id=$1",
-                ['MY_STREET']);
-      
+ 
         $this->assertTrue ( $document->replace('MY_NAME',array()) == 'Dossier Test','MY_NAME');
         $this->assertTrue ( $document->replace('MY_TVA',array()) == 'BE00112233','MY_TVA');
         $this->assertTrue ( $document->replace('MY_STREET',array()) == 'My street','MY_STREET');
         $this->assertTrue ( $document->replace('CUST_NAME',$array) == 'Client 1','CUST_NAME');
     }
     /**
+     * 
      * @covers Document::generate(), Document::parseDocument(),Document::replace();
      */
     function testGenerate()
     {
         $cn=Dossier::connect();
         $md_id=$cn->get_value('select max(md_id) md_id from document_modele where md_name=$1',['Balise']);
-        
+        echo " You must start unoconv -l in another session ";
         $array['e_client']='CLIENT';
         $array['e_date']='21.03.2020';
         $document=new Document($cn,$md_id);
