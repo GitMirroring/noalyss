@@ -23,7 +23,6 @@
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
-$sub_action=(isset ($_REQUEST['sa']))?$_REQUEST['sa']:"";
 
 $http=new HttpInput();
 
@@ -81,7 +80,7 @@ if ( $sub_action == 'mod_template')
 // Default action : Show the list
 //-----------------------------------------------------
 echo $doc->myList();
-echo '<div id="add_modele" class="inner_box" style="display:none">';
+echo '<div id="add_modele" class="inner_box" style="position:fixed;top:120px;display:none">';
 echo HtmlInput::title_box(_("Ajout d'un modèle"), "add_modele", "hide");
 echo $doc->form('');
 echo '</div>';

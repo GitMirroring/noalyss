@@ -186,16 +186,16 @@ class Document_modele
                 }
                 else
                 {
-                    echo "<H1>Error</H1>";
+                    echo "<H1>"._("Erreur opération annulée")."</H1>";
                     $this->cn->rollback();
-                   throw new Exception("Erreur".__FILE__.__LINE__);
+                   throw new Exception("DM191 : error loading  template".__FILE__.__LINE__);
                 }
             }
         }
         catch (Exception $e)
         {
               record_log($e);
-            rollback($this->cn);
+            $this->cn->rollback();
             return ;
         }
     }

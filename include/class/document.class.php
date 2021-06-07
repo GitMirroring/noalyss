@@ -84,17 +84,24 @@ class Document
      */
     function compute_filename($pj, $filename)
     {
-        foreach (array('/', '*', '<', '>', ';', ',', '\\', '.', ':', '(', ')', ' ', '[', ']') as $i)
-        {
-            $pj=str_replace($i, "-", $pj);
-        }
-        // save the suffix
         $pos_prefix=strrpos($filename, ".");
         if ($pos_prefix==0)
             $pos_prefix=strlen($filename);
         $filename_no=substr($filename, 0, $pos_prefix);
         $filename_suff=substr($filename, $pos_prefix, strlen($filename));
+        
+        foreach (array('/', '*', '<', '>', ';', ',', '\\', '.', ':', '(', ')', ' ', '[', ']',"'") as $i)
+        {
+            $pj=str_replace($i, "-", $pj);
+            $filename_no=str_replace($i,"-",$filename_no);
+        }
+        
+       
         $new_filename=strtolower($filename_no."-".$pj.$filename_suff);
+        $pj=str_replace("---","-",$pj);
+        $pj=str_replace("--","-",$pj);
+        $new_filename=str_replace("---","-",$new_filename);
+        $new_filename=str_replace("--","-",$new_filename);
         return $new_filename;
     }
 
@@ -596,8 +603,8 @@ class Document
 
     function get()
     {
-        $sql="select * from document where d_id=".$this->d_id;
-        $ret=$this->db->exec_sql($sql);
+        $sql="select * from document where d_id=$1";
+        $ret=$this->db->exec_sql($sql,[$this->d_id]);
         if (Database::num_row($ret)==0)
         {
             return;
@@ -1848,7 +1855,7 @@ class Document
      */
     function transform2pdf()
     {
-        if (GENERATE_PDF == 'YES' && $pdf == 'on') {
+        if (GENERATE_PDF == 'NO' ) {
             \record_log(__FILE__."DOC37 : PDF not available");
             throw new \Exception("Cannot not transform to PDF");
         }
@@ -1859,10 +1866,11 @@ class Document
         mkdir($dirname);
         $destination_file=$dirname."/".$this->d_filename;
         $this->export_file($destination_file);
+        
         passthru(OFFICE . escapeshellarg($destination_file), $status);
         if ($status != 0) {
             \record_log(__FILE__."DOC45 : Error  cannot transform into PDF");
-            throw new \Exception("Cannot not transform to PDF");
+            throw new \Exception("DOC45 Cannot not transform to PDF");
         }
         // remove extension
         $ext = strrpos($this->d_filename, ".");

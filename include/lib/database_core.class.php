@@ -801,24 +801,24 @@ class DatabaseCore
     /**
      * \brief wrapper for the function pg_lo_export
      * \param $p_oid is the oid of the log
-     * \param $tmp  is the file
+     * \param $tmp_file  is the file
      * \return result of the operation
      */
 
-    function lo_export($p_oid, $tmp)
+    function lo_export($p_oid, $tmp_file)
     {
-        return pg_lo_export($this->db, $p_oid, $tmp);
+        return pg_lo_export($this->db, $p_oid, $tmp_file);
     }
 
     /**\brief wrapper for the function pg_lo_export
-     * \param $p_oid is the filename
+     * \param $p_filename is the filename
      * \param $tmp  is the file
      * \return result of the operation
      */
 
-    function lo_import($p_oid)
+    function lo_import($p_filename)
     {
-        return pg_lo_import($this->db, $p_oid);
+        return pg_lo_import($this->db, $p_filename);
     }
 
     /**\brief wrapper for the function pg_escape_string

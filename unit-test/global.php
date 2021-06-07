@@ -29,6 +29,8 @@ if (!defined("DOSSIER"))define ("DOSSIER",25);
 $_REQUEST['gDossier'] = DOSSIER;
 $g_connection=new Database(DOSSIER);
 $g_parameter = new Noalyss_Parameter_Folder($g_connection);
+$_SESSION[SESSION_KEY.'use_name']='unit test';
+$_SESSION[SESSION_KEY.'use_first_name']='automatic';
 $_SESSION[SESSION_KEY.'g_user']='admin';
 $_SESSION[SESSION_KEY.'g_pass']='phpcompta';
 $_SESSION[SESSION_KEY.'g_pagesize']='50';
