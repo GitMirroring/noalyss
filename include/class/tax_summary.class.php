@@ -427,7 +427,9 @@ class Tax_Summary
      */
     function form_export_csv()
     {
-        echo '<form method="GET" action="export.php">';
+        $id=uniqid("export_");
+        echo '<form method="GET" action="export.php" ';
+        printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
         echo Dossier::hidden();
         echo HtmlInput::hidden("act", 'CSV:printtva');
         echo HtmlInput::hidden("date_start", $this->date_start);
@@ -444,7 +446,9 @@ class Tax_Summary
      */
     function form_export_pdf()
     {
-        echo '<form method="GET" action="export.php">';
+        $id=uniqid("export_");
+        echo '<form method="GET" action="export.php" ';
+        printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
         echo Dossier::hidden();
         echo HtmlInput::hidden("act", 'PDF:printtva');
         echo HtmlInput::hidden("date_start", $this->date_start);

@@ -45,7 +45,7 @@ $w_lettre->value=array(
 $w_lettre->selected=$let;
 
 ?>
-<form method="GET">
+<form method="GET" onsubmit="waiting_box()">
     <?php
         echo HtmlInput::request_to_hidden(array('gDossier','ac'));
     ?>
@@ -60,7 +60,12 @@ $w_lettre->selected=$let;
     return;
     endif;
 ?>
-<form method="get" action="export.php">
+<?php
+        $id=uniqid("export_");
+        $wb=sprintf( 'id="%s"  onsubmit="download_document_form(\'%s\')" ',$id,$id);
+
+?>
+<form method="get" action="export.php" <?=$wb?> >
     <?php 
         echo HtmlInput::request_to_hidden(array('gDossier','ac','p_type','p_let','p_date_start'));
         echo HtmlInput::hidden('act','CSV:balance_age');

@@ -47,7 +47,7 @@ echo '<div class="content">';
 /*
  * Let you change the exercice
  */
-echo '<form method="GET">';
+echo '<form method="GET" onsubmit="return waiting_box()">';
 echo _('Choisissez un autre exercice')." : ";
 $ex=new Exercice($cn);
 $js=sprintf("updatePeriode(%d,'%s','%s','%s',1)",Dossier::id(),'exercice','from_periode','to_periode');
@@ -226,8 +226,12 @@ if ( isset ($_GET['view']  ) )
 
     echo "<table>";
     echo '<TR>';
-    echo '<TD><form method="GET" ACTION="export.php">'.
-    dossier::hidden().
+    
+    echo '<TD><form method="GET" ACTION="export.php" ';
+    $id=uniqid("export_");
+    printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
+
+    echo dossier::hidden().
     HtmlInput::submit('bt_pdf',"Export PDF").
     HtmlInput::hidden("ac",$http->request('ac')).
     HtmlInput::hidden("act","PDF:balance").
@@ -248,8 +252,12 @@ if ( isset ($_GET['view']  ) )
 
     echo "</form></TD>";
 
-    echo '<TD><form method="GET" ACTION="export.php">'.
-    HtmlInput::submit('bt_csv',"Export CSV").
+    echo '<TD><form method="GET" ACTION="export.php" ';
+    $id=uniqid("export_");
+    printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
+
+    
+    echo HtmlInput::submit('bt_csv',"Export CSV").
     dossier::hidden().
     HtmlInput::hidden("act","CSV:balance").
     HtmlInput::hidden("from_periode",$from_periode).

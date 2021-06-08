@@ -12,12 +12,12 @@ EOF;
 ?><div class="">
     <?php 
   if ($level == 0) {
-      echo '<ul  class="nav nav-pills nav-fill  flex-row" >';
+      echo '<ul  class="nav nav-pills nav-fill  flex-row noprint" >';
   }elseif ($level == 1) {
-      echo '<ul class="nav nav-pills nav-level2 ">';
+      echo '<ul class="nav nav-pills nav-level2 noprint">';
       
   } else {
-      echo '<ul class="nav nav-pills nav-level3 ">';
+      echo '<ul class="nav nav-pills nav-level3 noprint">';
   }
    ?>
    

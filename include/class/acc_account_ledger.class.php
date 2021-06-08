@@ -552,14 +552,15 @@ class Acc_Account_Ledger
         $str_ople=(isset($_REQUEST['ople']))?HtmlInput::hidden('ople',$_REQUEST['ople']):'';
 	if ($actiontarget=='poste')
 	  {
-	    echo '<TD><form method="GET" ACTION="">'.
+	    echo '<TD><form method="GET" ACTION="export.php">'.
 	      dossier::hidden().
 	      HtmlInput::submit('bt_other',"Autre poste").
 	      $hid->input("type","poste").$hid->input('ac',$_REQUEST['ac'])."</form></TD>";
 	  }
 
-
-        echo '<TD><form method="GET" ACTION="export.php">'.
+        $id=uniqid("pdf_");
+        echo '<TD><form method="GET" ACTION="export.php" '.
+             'id="'.$id.'"  onsubmit="return download_document_form(\''.$id.'\')">'.
         dossier::hidden().
         HtmlInput::submit('bt_pdf',"Export PDF").
         HtmlInput::hidden('act',$action_pdf).
@@ -587,8 +588,8 @@ class Acc_Account_Ledger
             echo $hid->input('oper_detail','on');
 
         echo "</form></TD>";
-
-        echo '<TD><form method="GET" ACTION="export.php">'.
+        $id=uniqid("csv_");
+        echo '<TD><form method="GET" ACTION="export.php" id="'.$id.'"  onsubmit="download_document_form(\''.$id.'\')">'.
         dossier::hidden().
         HtmlInput::submit('bt_csv',"Export CSV").
 	HtmlInput::hidden('act',$action_csv).
@@ -616,7 +617,6 @@ class Acc_Account_Ledger
         if (isset($_REQUEST['poste_id'])) echo $hid->input("poste_id",$_REQUEST['poste_id']);
 
         echo "</form></TD>";
-	echo "</form></TD>";
 	echo '<td style="vertical-align:top">';
 	echo HtmlInput::print_window();
 	echo '</td>';

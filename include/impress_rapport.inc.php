@@ -118,13 +118,20 @@ if ( isset( $_GET['bt_html'] ) )
     }
     echo '<table >';
     echo '<TR>';
-    echo '<TD><form method="GET" ACTION="?">'.
-    dossier::hidden().
+    $id=uniqid("export_");
+
+    echo '<TD><form method="GET" ACTION="?" ';
+    printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
+    
+    echo dossier::hidden().
     HtmlInput::submit('bt_other',"Autre Rapport").
     $hid->input("type","rapport").$hid->input("ac",$access_code)."</form></TD>";
 
-    echo '<TD><form method="GET" ACTION="export.php">'.
-    HtmlInput::submit('bt_pdf',"Export PDF").
+    echo '<TD><form method="GET" ACTION="export.php" ';
+    $id=uniqid("export_");
+    printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
+
+    echo    HtmlInput::submit('bt_pdf',"Export PDF").
       HtmlInput::hidden('act','PDF:report').
     dossier::hidden().
     $hid->input("type","rapport").
@@ -141,13 +148,17 @@ if ( isset( $_GET['bt_html'] ) )
 
 
     echo "</form></TD>";
-    echo '<TD><form method="GET" ACTION="export.php">'.
-      HtmlInput::hidden('act','CSV:report').
-    HtmlInput::submit('bt_csv',"Export CSV").
-    dossier::hidden().
-    $hid->input("type","form").
-    $hid->input("ac",$access_code).
-    $hid->input("form_id",$form_id);
+    
+    echo '<TD><form method="GET" ACTION="export.php" ';
+    $id=uniqid("export_");
+    printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
+
+    echo  HtmlInput::hidden('act','CSV:report').
+        HtmlInput::submit('bt_csv',"Export CSV").
+        dossier::hidden().
+        $hid->input("type","form").
+        $hid->input("ac",$access_code).
+        $hid->input("form_id",$form_id);
     if ( isset($from_periode)) echo $hid->input("from_periode",$from_periode);
     if ( isset($to_periode)) echo $hid->input("to_periode",$to_periode);
     if (isset($p_step)) echo $hid->input("p_step",$p_step);
@@ -211,7 +222,9 @@ $exercice=$http->get("exercice","number",$g_user->get_exercice());
  * Let you change the exercice
  */
 echo '<fieldset><legend>'._('Exercice').'</legend>';;
-echo '<form method="GET">';
+echo '<form method="GET" ';
+printf( ' onsubmit="waiting_box()">');
+
 echo 'Choisissez un autre exercice :';
 $ex=new Exercice($cn);
 $wex=$ex->select('exercice',$exercice,' onchange="submit(this)"');
@@ -222,7 +235,7 @@ echo '</form>';
 echo '</fieldset>';
 
 
-echo '<FORM METHOD="GET">';
+echo '<FORM METHOD="GET" onsubmit="waiting_box()">';
 $hidden=new IHidden();
 echo $hidden->input("ac",$_GET['ac']);
 echo $hidden->input("type","rapport");

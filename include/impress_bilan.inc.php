@@ -50,7 +50,7 @@ if ( ! isset ($_GET['verif']))
      * Let you change the exercice
      */
     echo '<fieldset><legend>'._('Exercice').'</legend>';;
-    echo '<form method="GET">';
+    echo '<form method="GET" onsubmit="return waiting_box()">';
     echo _('Choisissez un autre exercice');
     $ex=new Exercice($cn);
     $wex=$ex->select('exercice',$exercice,' onchange="submit(this)"');
@@ -61,7 +61,7 @@ if ( ! isset ($_GET['verif']))
     echo '</fieldset>';
 
     $filter_year=" where p_exercice='".sql_string($exercice)."'";
-    echo '<FORM  METHOD="GET">';
+    echo '<FORM  METHOD="GET" onsubmit="waiting_box()">';
     echo HtmlInput::hidden('type','bilan');
     echo dossier::hidden();
 
@@ -96,7 +96,11 @@ if ( isset($_GET['verif']))
     $bilan->verify();
     $url_verify=http_build_query(array('ac'=>'VERIFBIL','gDossier'=>dossier::id()));
     echo _('Pour une vérification complète, allez dans ').'<a class="line" TARGET="_blank" href="?'.$url_verify.'"> VERIFBIL</a>';
-    echo '<FORM METHOD="GET" ACTION="export.php">';
+    $id=uniqid("export_");
+
+    echo '<FORM METHOD="GET" ACTION="export.php" ';
+    printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
+    
     echo dossier::hidden();
     echo HtmlInput::get_to_hidden(array('exercice'));
     echo HtmlInput::hidden('b_id',$bilan->b_id);

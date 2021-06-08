@@ -189,7 +189,7 @@ if (isset($_REQUEST['bt_html']))
     $jrn_id=$http->get("jrn_id","number");
     echo '<table>';
     echo '<td>';
-    echo '<form method="GET" ACTION="export.php">' . dossier::hidden() .
+    echo '<form method="GET" ACTION="export.php" id="export_pdf_frm" onsubmit="download_document_form(\'export_pdf_frm\')">' . dossier::hidden() .
         HtmlInput::submit('bt_pdf', "Export PDF") .
         HtmlInput::hidden('act', 'PDF:ledger') .
         $hid->input("type", "jrn") .
@@ -202,7 +202,8 @@ if (isset($_REQUEST['bt_html']))
         echo "</form>";
     echo '</td>';
 
-    echo '<TD><form method="GET" ACTION="export.php">' . dossier::hidden() .
+    echo '<TD><form method="GET" ACTION="export.php" id="export_csv_frm" onsubmit="download_document_form(\'export_csv_frm\')">'
+    . dossier::hidden() .
         HtmlInput::submit('bt_csv', "Export CSV") .
         HtmlInput::hidden('act', 'CSV:ledger') .
         $hid->input("type", "jrn") .

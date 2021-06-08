@@ -1743,7 +1743,10 @@ class Fiche
             $hid->input("type","poste").$hid->input('p_action','impress')."</form></TD>";
         $str_ople=(isset($_REQUEST['ople']))?HtmlInput::hidden('ople',$_REQUEST['ople']):'';
 
-        echo '<TD><form method="GET" ACTION="export.php">'.
+        echo '<TD><form method="GET" ACTION="export.php" ';
+        $id=uniqid("export_");
+        printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
+        echo 
             HtmlInput::submit('bt_pdf',_("Export PDF")).
             dossier::hidden().$str_ople.
               HtmlInput::hidden('act','PDF:fichedetail').
@@ -1758,8 +1761,11 @@ class Fiche
 
         echo "</form></TD>";
 
-        echo '<TD><form method="GET" ACTION="export.php">'.
-        HtmlInput::submit('bt_csv',_("Export CSV")).
+        echo '<TD><form method="GET" ACTION="export.php" ';
+        $id=uniqid("export_");
+        printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
+
+        echo HtmlInput::submit('bt_csv',_("Export CSV")).
 	  HtmlInput::hidden('act','CSV:fichedetail').
         dossier::hidden().$str_ople.
         $hid->input("type","poste").
