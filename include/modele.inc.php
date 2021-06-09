@@ -59,7 +59,7 @@ $fmod_dbid=$http->post("FMOD_DBID","number",0);
 if (isset($_POST["FMOD_NAME"]))
 {
         $encoding = $cn->get_value("select encoding from pg_database  where " .
-			" datname='" . domaine . 'dossier' . sql_string($fmod_dbid) . "'");
+			" datname=$1",array(domaine . 'dossier' . $fmod_dbid));
 
 	if ($encoding != 6)
 	{
@@ -241,7 +241,7 @@ if (isset($_POST["FMOD_NAME"]))
 }
 // Show all available templates
 require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
-$url=$_SERVER['PHP_SELF']."?sa=list&action=".$_REQUEST['action'];
+$url=$_SERVER['PHP_SELF']."?".http_build_query(array("sa"=>"list","action"=>$http->request('action')));
 
 $header=new Sort_Table();
 $header->add(_("id"),$url," order by mod_id asc"," order by mod_id desc","ia","id");
@@ -353,7 +353,7 @@ if ($sa == 'list')
 		$available.='</SELECT>';
 	}//if count !=0
 	?>
-	<form action="admin-noalyss.php?action=modele_mgt" METHOD="post">
+	<form action="admin-noalyss.php?action=modele_mgt" METHOD="post"  onsubmit="waiting_box();return true;">
 		<TABLE>
 			<tr>
 				<td><?php echo _('Nom')?> </TD>

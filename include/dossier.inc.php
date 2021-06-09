@@ -336,7 +336,7 @@ if ( $sa == 'list' )
 
     </TABLE>
 
-    <FORM ACTION="admin-noalyss.php?action=dossier_mgt" METHOD="POST">
+    <FORM ACTION="admin-noalyss.php?action=dossier_mgt" METHOD="POST" onsubmit="waiting_box();return true;">
                  <TABLE>
                  <TR>
                  <TD><?php echo _('Nom du dossier');
