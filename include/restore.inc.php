@@ -205,7 +205,7 @@ if ( isset ($_REQUEST['sa'] ))
 else
 {
     echo '<div class="content" style="width:80%;margin-left:10%">';
-    echo '<form method="POST" action="admin-noalyss.php" enctype="multipart/form-data" >';
+    echo '<form method="POST" action="admin-noalyss.php" enctype="multipart/form-data"  onsubmit="waiting_box();return true;" >';
     echo HtmlInput::hidden('action','restore');
     echo HtmlInput::hidden('sa','r');
     echo '<table>';
