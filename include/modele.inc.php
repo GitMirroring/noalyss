@@ -59,7 +59,7 @@ $fmod_dbid=$http->post("FMOD_DBID","number",0);
 if (isset($_POST["FMOD_NAME"]))
 {
         $encoding = $cn->get_value("select encoding from pg_database  where " .
-			" datname='" . domaine . 'dossier' . sql_string($fmod_dbid) . "'");
+			" datname=$1",array(domaine . 'dossier' . $fmod_dbid));
 
 	if ($encoding != 6)
 	{
