@@ -54,7 +54,12 @@ if ($action == "ok") {
     $data_sql = new Forecast_SQL($cn, $f_id);
     switch ($input->name) {
         case 'f_name':
-            $data_sql->setp($input->name, $value);
+            if ( trim($value)!="") {
+                $data_sql->setp($input->name, $value);
+            } else {
+                $value=$data_sql->getp('f_name');
+                  $ajax->set_value($value);
+            }
             break;
         case 'p_start':
             $data_sql->setp("f_start_date", $value);
