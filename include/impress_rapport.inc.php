@@ -84,7 +84,7 @@ if ( isset( $_GET['bt_html'] ) )
     }
     catch (Exception $ex)
     {
-        alert($ex->getMessage());;
+        alert($ex->getMessage());
         
     }
 
@@ -101,7 +101,7 @@ if ( isset( $_GET['bt_html'] ) )
     {
         
         $t=($from_periode==$to_periode)?"":" -> ".getPeriodeName($cn,$to_periode,'p_end');
-        echo '<h2 class="info">'.$form_id
+        echo '<h2 >'.$form_id
                 ." ".$form_label
                 ." - ".getPeriodeName($cn,$from_periode,'p_start')
                 ." ".$t
@@ -109,7 +109,7 @@ if ( isset( $_GET['bt_html'] ) )
     }
     else
     {
-        echo '<h2 class="info">'.$form_id." ".$form_label.
+        echo '<h2 >'.$form_id." ".$form_label.
         ' Date :'.
         $from_date.
         " au ".
@@ -124,8 +124,10 @@ if ( isset( $_GET['bt_html'] ) )
     printf( 'id="%s"  onsubmit="download_document_form(\'%s\')">',$id,$id);
     
     echo dossier::hidden().
-    HtmlInput::submit('bt_other',"Autre Rapport").
-    $hid->input("type","rapport").$hid->input("ac",$access_code)."</form></TD>";
+            $hid->input("form_id",$form_id).
+            HtmlInput::submit('bt_other',"Autre Rapport").
+            $hid->input("type","rapport").
+            $hid->input("ac",$access_code)."</form></TD>";
 
     echo '<TD><form method="GET" ACTION="export.php" ';
     $id=uniqid("export_");
@@ -187,7 +189,7 @@ if ( isset( $_GET['bt_html'] ) )
             $a=0;
             foreach ( $array as $e)
             {
-                printf( '<h2 class="info">%s</h2> ',$periode_name[$a]);
+                printf( '<h2>%s</h2> ',$periode_name[$a]);
                 $a++;
                 ShowReportResult($e);
             }
@@ -227,22 +229,24 @@ printf( ' onsubmit="waiting_box()">');
 
 echo 'Choisissez un autre exercice :';
 $ex=new Exercice($cn);
-$wex=$ex->select('exercice',$exercice,' onchange="submit(this)"');
+$wex=$ex->select('exercice',$exercice,
+        sprintf(' onchange="updatePeriode(\'%s\',\'exercice\',\'from_periode\',\'to_periode\',1)"',Dossier::id(),$exercice));
 echo $wex->input();
 echo dossier::hidden();
 echo HtmlInput::get_to_hidden(array('ac','type'));
-echo '</form>';
+
 echo '</fieldset>';
 
 
 echo '<FORM METHOD="GET" onsubmit="waiting_box()">';
 $hidden=new IHidden();
-echo $hidden->input("ac",$_GET['ac']);
+echo $hidden->input("ac",$access_code);
 echo $hidden->input("type","rapport");
 echo 	dossier::hidden();
 
 echo '<TABLE><TR>';
 $w=new ISelect();
+$w->selected=$http->request("form_id","string",0);
 $w->table=1;
 print td(_("Choisissez le rapport"));
 print $w->input("form_id",$ret);
@@ -282,7 +286,7 @@ $date_to=new IDate('to_date');
 $date_to->id='to_date';
 
 echo td(_("Calendrier depuis :"));
-echo td($date_from->input('from_date'));
+echo td($date_from->input('to_date'));
 echo td(_("jusque"));
 echo td($date_to->input('to_date'));
 echo '</tr>';

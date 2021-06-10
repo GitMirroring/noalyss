@@ -314,27 +314,27 @@ class Impress
      */
     static public function compute_periode($p_cn, $p_from,$p_end)
     {
-        global $g_user;
         // There is a FROM clause
         // then we must modify the cond for the periode
         
 
         // Get the periode
-        /* ! \note special value for the clause FROM=00.0000
+        /* ! \note special value for the clause FROM=00.0000, we take the first day of the exercice of $p_end
          */
         if ($p_from=='00.0000')
         {
-
+            $current_exercice=$p_cn->get_value('select p_exercice from parm_periode where p_id=$1',
+                    [$p_end]);
+            if ( $current_exercice=="") {
+                throw new Execution(_('CP329'));
+            }
+            $first_day=$p_cn->get_value("select to_char(min(p_start),'DD.MM.YYYY') as p_start from parm_periode where p_exercice=$1",
+                    [$current_exercice]);
+            $last_day=$p_cn->get_value("select to_char(p_end,'DD.MM.YYYY') from parm_periode where p_id=$1",[$p_end]);
             // retrieve the first month of this periode
-            $user_periode=$g_user->get_periode();
-            $oPeriode=new Periode($p_cn);
-            $periode=$oPeriode->get_exercice($user_periode);
-            list($first, $last)=$oPeriode->get_limit($periode);
-            $ret=$first->get_date_limit();
-            $end_date=$oPeriode->get_date_limit($p_end);
-            if ($ret==null)
+            if (empty($first_day))
                 throw new Exception('Pas de limite à cette période', 1);
-            $cond=sql_filter_per($p_cn, $ret['p_start'], $end_date['p_end'], 'date', 'j_tech_per');
+            $cond=sql_filter_per($p_cn, $first_day, $last_day, 'date', 'j_tech_per');
         }
         else
         {
@@ -349,17 +349,13 @@ class Impress
                 /* if none periode is found
                   then we take the first periode of the year
                  */
-                $user_periode=$g_user->get_periode();
-
-                $year=$oPeriode->get_exercice($user_periode);
-                list($first, $last)=$oPeriode->get_limit($year);
-                $ret=$first->get_date_limit();
-                $end_date=$oPeriode->get_date_limit($p_end);
-                if ($ret==null)
-                {
+               
+               $first_day=$p_cn->get_value("select to_char(min(p_start),'DD.MM.YYYY') as p_start from parm_periode");
+                $last_day=$p_cn->get_value("select to_char(p_end,'DD.MM.YYYY') from parm_periode where p_id=$1",[$p_end]);
+                // retrieve the first month of this periode
+                if (empty($first_day))
                     throw new Exception('Pas de limite à cette période', 1);
-                }
-                $cond=sql_filter_per($p_cn, $ret['p_start'], $end_date['p_end'], 'date', 'j_tech_per');
+                $cond=sql_filter_per($p_cn, $first_day, $last_day, 'date', 'j_tech_per');
             }
         }
         return $cond;

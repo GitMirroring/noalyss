@@ -180,15 +180,22 @@ class ImpressTest extends TestCase
     function test_computePeriode()
     {
         global $g_connection,$g_parameter,$g_user;
-        $g_user->set_periode(110);
+        $g_user->set_periode(98);
         $this->assertEquals(trim("j_tech_per in (select p_id from parm_periode  where p_start >= to_date('01.01.2017','DD.MM.YYYY') and p_end <= to_date('30.11.2017','DD.MM.YYYY'))"),trim(\Impress::compute_periode($g_connection, "00.0000",115))
                 ," SQL from 01.01.2017 to 01.11.2017");
+        $this->assertEquals(trim("j_tech_per in (select p_id from parm_periode  where p_start >= to_date('01.01.2020','DD.MM.YYYY') and p_end <= to_date('30.09.2020','DD.MM.YYYY'))"),trim(\Impress::compute_periode($g_connection, "00.0000",140))
+                ," SQL from 01.01.2020 to 01.11.2020");
+        $this->assertEquals(trim("j_tech_per in (select p_id from parm_periode  where p_start >= to_date('01.01.2019','DD.MM.YYYY') and p_end <= to_date('30.09.2019','DD.MM.YYYY'))"),trim(\Impress::compute_periode($g_connection, "00.0000",127))
+                ," SQL from 01.01.2019 to 30.09.2019");
         $this->assertEquals(
                 trim("j_tech_per in (select p_id from parm_periode  where p_start >= to_date('01.02.2017','DD.MM.YYYY') and p_end <= to_date('31.10.2017','DD.MM.YYYY'))"),
                 trim(\Impress::compute_periode($g_connection, "02.2017",114)),
                 " SQL from 01.02.2017 to 01.10.2017");
         
-
+        $this->assertEquals(
+                trim("j_tech_per in (select p_id from parm_periode  where p_start >= to_date('01.01.2017','DD.MM.YYYY') and p_end <= to_date('31.10.2017','DD.MM.YYYY'))"),
+                trim(\Impress::compute_periode($g_connection, "02.2000",114)),
+                " From periode doesn't exist, we start from the first period found SQL from 01.02.2017 to 01.10.2017");
     }
     /**
      * @covers Impress::parse_formula
