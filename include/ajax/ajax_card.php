@@ -83,10 +83,7 @@ extract($_REQUEST, EXTR_SKIP );
 if ( $cont != 0 ) exit();
 
 set_language();
-/*
- *echo a warning if disconnected
- */
-ajax_disconnected($_REQUEST['ctl']);
+
 $http=new HttpInput();
 $cn=Dossier::connect();
 global $g_user;

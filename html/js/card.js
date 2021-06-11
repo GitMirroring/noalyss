@@ -41,6 +41,9 @@ function boxsearch_card(p_dossier)
 				      onFailure:ajax_misc_failure,
 				      onSuccess:function(req){
 						remove_waiting_box();
+                                                if (req.responseText == 'NOCONX') {
+                                                    reconnect();
+                                                }
 						var y=posY+15;
 						var div_style="left:10%;width:80%;"+";top:"+y+"px";
 						add_div({id:'boxsearch_card_div',cssclass:'inner_box',html:loading(),style:div_style,drag:true});
@@ -433,6 +436,7 @@ function result_card_search(req)
     {
         
         remove_waiting_box();
+        if ( req.responseText == 'NOCONX') { reconnect();return;}
         var answer=req.responseXML;
         var a=answer.getElementsByTagName('ctl');
         if ( a.length == 0 )
@@ -648,6 +652,7 @@ function  successFill_ipopcard(req,json)
 {
     try
     {
+        if (req.responseText=='NOCONX') { reconnect();return; }
         var answer=req.responseXML;
         var a=answer.getElementsByTagName('ctl');
         var html=answer.getElementsByTagName('code');
@@ -704,9 +709,9 @@ function select_card_type(obj)
 
     var str_style="top:"+sx+"px;height:auto";
     waiting_box();
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
+    var popup={'id':  "content",'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
 
-    add_div(popup);
+   
 
     var queryString='gDossier='+dossier;
     queryString+='&ctl='+content;
@@ -746,6 +751,8 @@ function select_card_type(obj)
                                   parameters:queryString,
                                   onFailure:errorFid,
                                   onSuccess:function(req) { 
+                                      if (req.responseText=='NOCONX') { reconnect(); return;}
+                                       add_div(popup);
                                       // Get all the category, 
                                       var answer=req.responseXML.getElementsByTagName("fiche_cat_item");
                                       if (answer.length == 0) {

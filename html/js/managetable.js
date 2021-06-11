@@ -192,6 +192,7 @@ var ManageTable = function (p_table_name)
      */
     this.parseXML = function (req) {
         try {
+            if (req.responseText==='NOCONX') { reconnect();throw new Error("NOCONX") ;}
             var xml = req.responseXML;
             var status = xml.getElementsByTagName("status");
             var ctl = xml.getElementsByTagName("ctl");

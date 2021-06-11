@@ -151,6 +151,8 @@ function ajaxFid(p_ctl)
  */
 function successFid(request,json)
 {
+    if (request.responseText === 'NOCONX') { reconnect();return;}
+    
     var answer=request.responseText.evalJSON(true);
     var flabel=answer.flabel;
     if ( answer.answer=='nok' )
@@ -226,14 +228,14 @@ function ajax_success_saldo(request,json)
 * \param ctl : id of the div to show
 * \param page
 */
-function _saajax_card(p_dossier,f_id,p_operation,ctl,page)
-{
-    $(ctl).show();
-    var queryString="gDossier="+p_dossier+"&f_id="+f_id+"&op="+p_operation+"&p="+page+'&ctl='+ctl;
-    var action = new Ajax.Request(
-                 "ajax_card.php" , { method:'get', parameters:queryString,onFailure:ajax_get_failure,onSuccess:ajax_get_success}
-                 );
-}
+//function _saajax_card(p_dossier,f_id,p_operation,ctl,page)
+//{
+//    $(ctl).show();
+//    var queryString="gDossier="+p_dossier+"&f_id="+f_id+"&op="+p_operation+"&p="+page+'&ctl='+ctl;
+//    var action = new Ajax.Request(
+//                 "ajax_card.php" , { method:'get', parameters:queryString,onFailure:ajax_get_failure,onSuccess:ajax_get_success}
+//                 );
+//}
 /*!\brief callback function for ajax_get when successuf
 */
 function ajax_get_success(request,json)

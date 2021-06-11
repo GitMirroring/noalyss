@@ -38,6 +38,14 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+/**
+ * if not connected, session is expired then exit with a message NOCONX
+ */
+if ( ! isset($_SESSION[SESSION_KEY."g_user"])) {
+    echo "NOCONX";
+    die();
+}
+
 $gDossier=dossier::id();
 
 require_once('class/user.class.php');

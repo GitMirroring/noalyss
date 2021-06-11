@@ -49,6 +49,20 @@ require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
 $http=new HttpInput();
 
+/* we ask a dg box for disconnecting */
+if ($http->request('op',"string","") == 'disconnect') {
+     ajax_disconnected("reconnect_bx");
+    return ;
+}
+
+/**
+ * if not connected, session is expired then exit with a message NOCONX
+ */
+if ( ! isset($_SESSION[SESSION_KEY."g_user"])) {
+    echo "NOCONX";
+    die();
+}
+
 mb_internal_encoding("UTF-8");
 
 $var = array( 'op');
@@ -71,7 +85,7 @@ if ( ! isset($_REQUEST['gDossier'])) {
 if ($cont != 0) 	exit();
 
 extract($_REQUEST, EXTR_SKIP );
-if ( isset($div)) ajax_disconnected($div);
+
 global $g_user, $cn, $g_parameter;
 //
 // If database id == 0 then we are not connected to a folder 

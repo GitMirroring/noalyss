@@ -309,6 +309,7 @@ function action_add(p_dossier) {
             method:'get',
             parameters : {gDossier:p_dossier,'op':'action_add'},
             onSuccess : function(p_xml, p_text) {
+                 if (p_xml.responseText === 'NOCONX') { reconnect();return;}
                         remove_waiting_box();
                         add_div({id: 'action_add_div',
                             style:"top:1%;width:80%;left:10%" , 

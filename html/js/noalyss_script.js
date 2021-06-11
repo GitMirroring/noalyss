@@ -895,6 +895,7 @@ function show_ledger_choice(json_obj)
                     onFailure: ajax_misc_failure,
                     onSuccess: function (req, json) {
                         try {
+                            if ( req.responseText === 'NOCONX') { reconnect();return;}
                             var obj = {
                                 id: json_obj.div + 'jrn_search',
                                 cssclass: 'inner_box',
@@ -1214,7 +1215,7 @@ function save_periode(obj)
 function fill_box(req)
 {
     try {
-
+        if (req.responseText=='NOCONX') { reconnect(); return;}
         remove_waiting_box();
 
         var answer = req.responseXML;
@@ -2118,6 +2119,7 @@ function view_action(ag_id, dossier, modify)
                 onFailure: error_box,
                 onSuccess: function (req) {
                     try {
+                         if (req.responseText === 'NOCONX') { reconnect();return;}
                         remove_waiting_box();
                         var answer = req.responseXML;
                         var ctl = answer.getElementsByTagName('ctl');
@@ -2879,6 +2881,7 @@ function calendar_zoom(obj)
                     parameters: {"notitle": notitle, "op": 'calendar_zoom', 'from': from, 'gDossier': obj.gDossier, 'in': per_periode, 'out': obj.outdiv, 'distype': obj.distype},
                     onFailure: ajax_misc_failure,
                     onSuccess: function (req, j) {
+                        if (req.responseText === 'NOCONX') { reconnect();return;}
                         var answer = req.responseXML;
                         var html = answer.getElementsByTagName('html');
                         if (html.length === 0)
@@ -4069,4 +4072,24 @@ function pausecomp(millis)
   var curDate = null;
   do { curDate = new Date(); }
   while(curDate-date < millis);
+}
+/**
+ * @brief propose to reconnect
+ * @returns {undefined}
+ */
+function reconnect(){
+    remove_waiting_box();
+    new Ajax.Request('ajax_misc.php',{
+        method:'get',
+        parameters:{op:"disconnect"},
+        onSuccess:function (req) {
+            var pos="position:fixed;top:0px;width:95%;height:95%";
+            var div= add_div({
+                        'id':"reconnect_bx",
+                        cssclass:"inner_box",
+                        style:pos
+                    });
+            div.innerHTML=req.responseText;
+        }
+    });
 }

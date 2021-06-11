@@ -932,6 +932,7 @@ function modifyOperation(p_value, dossier)
                 parameters: querystring,
                 onFailure: error_box,
                 onSuccess: function (xml, txt) {
+                    if ( xml.responseText === 'NOCONX') { reconnect();return;}
                     var popup = {'id': id_div, 'cssclass': 'inner_box'
                         , 'html': "", 'drag': false};
                     remove_waiting_box();

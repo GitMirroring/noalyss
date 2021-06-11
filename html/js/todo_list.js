@@ -45,6 +45,7 @@ function todo_list_show(p_id)
                     onFailure: todo_list_show_error,
                     onSuccess: function (req)
                     {
+                           if ( req.responseText === 'NOCONX') { reconnect();return;}
                         try
                         {
                             var todo_div=create_div({id:'todo_list_div'+p_id,cssclass:'add_todo_list'});
