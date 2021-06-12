@@ -151,9 +151,14 @@ class Sendmail_Core
             // attachment
             for ($i = 0; $i < count($this->afile); $i++)
             {
+                
                 $file = $this->afile[$i];
                 $file_size = filesize($file->full_name);
                 $handle = fopen($file->full_name, "r");
+                if ( $handle == false ){ 
+                    \record_log("SC159 ".var_export($file,true));
+                    throw new Exception ('SC159 email not send file not added'.$file->full_name);
+                }
                 $content = fread($handle, $file_size);
                 fclose($handle);
                 $content = chunk_split(base64_encode($content));
