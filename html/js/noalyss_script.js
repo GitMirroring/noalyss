@@ -3670,8 +3670,16 @@ function updatePeriode(p_dossier, p_exercice, p_periode_from, p_periode_to, p_la
 {
     waiting_box();
     var exercice = $(p_exercice).value;
-    new Ajax.Updater(p_periode_from, "ajax_misc.php", {method: "get", parameters: {op: "periode_change", "gDossier": p_dossier, "exercice": exercice, field: p_periode_from, "type": "from", "last": p_last}});
-    new Ajax.Updater(p_periode_to, "ajax_misc.php", {method: "get", parameters: {op: "periode_change", "gDossier": p_dossier, "exercice": exercice, field: p_periode_to, "type": "to", "last": p_last}});
+    new Ajax.Updater(p_periode_from, "ajax_misc.php", 
+        {   method: "get",
+            parameters: {op: "periode_change", "gDossier": p_dossier, "exercice": exercice,
+                field: p_periode_from, "type": "from", "last": p_last}});
+    if ( p_periode_to && p_last ) {
+        new Ajax.Updater(p_periode_to, "ajax_misc.php", 
+        {   method: "get", 
+            parameters: {op: "periode_change", "gDossier": p_dossier, "exercice": exercice, 
+                field: p_periode_to, "type": "to", "last": p_last}});
+    }
     remove_waiting_box();
 }
 /**

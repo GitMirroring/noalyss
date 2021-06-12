@@ -31,6 +31,7 @@ require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_operation.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 require_once  NOALYSS_INCLUDE.'/class/anc_group_operation.class.php';
+require_once  NOALYSS_INCLUDE.'/class/exercice.class.php';
 
 global $g_user;
 $http=new HttpInput();
@@ -100,7 +101,14 @@ if ( isset($_GET['see']))
 
     echo dossier::hidden();
     $hid=new IHidden();
-
+    $exercice=$http->request("exercice","number",0);
+    if ($exercice == 0 ){
+        $exercice=$g_user->get_exercice();
+    }
+    $ex=new Exercice($cn);
+    $js=sprintf("updatePeriode(%d,'%s','%s')",Dossier::id(),'exercice','p_periode');
+    $wex=$ex->select('exercice',$exercice,' onchange="'.$js.'"');
+    echo $wex->input();
     $hid->name="ac";
     $hid->value=$http->request("ac");
     echo $hid->input();
@@ -114,7 +122,8 @@ if ( isset($_GET['see']))
 // filter on the current year
     $filter_year=" where p_exercice='".$g_user->get_exercice()."'";
 
-    $periode_start=$cn->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode $filter_year order by  p_start,p_end",1);
+    $periode_start=$cn->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode 
+           where p_exercice=$1 order by  p_start,p_end",1,[$exercice]);
     $g_user=new User($cn);
     $current=$http->get("p_periode","number",$g_user->get_periode());
     $w->value=$periode_start;

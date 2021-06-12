@@ -376,7 +376,7 @@ switch ($op)
         $field=$http->get("field");
         $type=$http->get("type");
         $exercice=$http->get("exercice","number");
-        $last=$http->get("last","number");
+        $last=$http->get("last","string",0);
         
         // if last == 1 then show first and last periode of the 
         // exercice
