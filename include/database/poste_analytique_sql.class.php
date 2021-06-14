@@ -49,6 +49,7 @@ class Poste_analytique_SQL extends Table_Data_SQL
             , "po_amount"=>"po_amount"
             , "po_description"=>"po_description"
             , "ga_id"=>"ga_id"
+            , 'po_state'=>'po_state'
         );
         /*
          * Type of columns
@@ -60,6 +61,7 @@ class Poste_analytique_SQL extends Table_Data_SQL
             , "po_amount"=>"numeric"
             , "po_description"=>"text"
             , "ga_id"=>"text"
+            , 'po_state'=>'numeric'
         );
 
 

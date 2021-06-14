@@ -584,12 +584,13 @@ class Anc_Operation
 
             foreach ($a_plan as $r_plan)
             {
-
+                $existing=(isset($hplan[$p_seq][$count]))?$hplan[$p_seq][$count]:-1;
                 $array=$this->db->make_array(
                            "select po_id as value,".
                            " html_quote(po_name) as label from poste_analytique ".
-                           " where pa_id = ".$r_plan['id'].
-                           " order by po_name",$p_null);
+                           " where pa_id = $1 ".
+                           " and ( po_state = 1 or po_id = $2) ".
+                           " order by po_name",$p_null,[$r_plan['id'],$existing]);
                 $select =new ISelect("hplan[".$p_seq."][]",$array);
                 $select->table=0;
                 // view only or editables
