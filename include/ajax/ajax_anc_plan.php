@@ -47,7 +47,7 @@ if ($action=="display") {
 }
 if ($action=="ok") {
     $value=$http->post("value");
-    if ( $input->name=="pa_name" && trim($input->value) == "") 
+    if ( $input->name=="pa_name" && trim($value) == "") 
     {
         echo _("Le nom ne peut être vide"),$answer->ajax_input();
     }else {
