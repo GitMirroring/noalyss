@@ -53,18 +53,6 @@ echo '
 <div class="menu2">
 ';
 
-//<table clsas="mtitle">
-//<tr>
-//<td  class="mtitle" >
-//<A class="mtitle" HREF="?ac='.$http->request("ac").'&new&'.$str_dossier.'"> '._('Nouveau').' </A>
-//</td>
-//<td  class="mtitle" >
-//<A class="mtitle" HREF="?ac='.$http->request("ac").'&see&'.$str_dossier.'">'._('Liste opérations').' </A>
-//</td>
-//</tr>
-//</table>
-//</div>
-//';
 //----------------------------------------------------------------------
 // show the  menu
 //----------------------------------------------------------------------
