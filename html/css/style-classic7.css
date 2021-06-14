@@ -163,7 +163,6 @@ td.tool a.mtitle:hover {
     padding:0px;
     margin: 0px;
     font-size:12.16px;
-    font-size:0.77rem;
     float:right;
 }
 #module table,#module table tr,#module table td {
@@ -1453,6 +1452,22 @@ div#modele_op_div{
     border:1px solid #00008B;
     width: 80%;
 }
+ div#preference_div {
+     background-color:#e4e7ed;
+     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
+     font-family: 'SansationLight';
+     padding:0px;
+     margin:0px;
+     overflow:hidden;
+     z-index:3;
+     position:absolute;
+     border:1px solid #00008B;
+     top:32px;
+     top:2rem;
+     left:1%;
+     width:98%;
+ }
+
 @media (min-width:1200px)  {
     div.name  {
         display:block !important;/* position:absolute; */
@@ -3002,6 +3017,8 @@ li.li-active {
     color:navy !important;
     border:1px solid blue;
     margin:1px;
+    border-radius: 0px;
+    font-size: 95%;
 }
 #module .nav-pills a.nav-link:hover {
     background-color: navy !important;

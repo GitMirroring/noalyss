@@ -248,7 +248,7 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
                 endif;
                 ?>  
                 <div class="form-group  row  justify-content-center">
-                    <INPUT TYPE="SUBMIT"  class="button" style="width:91%" NAME="login" value="se connecter">
+                    <INPUT TYPE="SUBMIT"  class="button" style="width:91%;height:53px" NAME="login" value="se connecter">
                 </div>
 
             </form>

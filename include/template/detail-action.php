@@ -1,6 +1,6 @@
 <?php
 require_once NOALYSS_INCLUDE."/class/follow_up_other_concerned.class.php";
-
+if ( DEBUGNOALYSS > 1 ){ echo __DIR__."/".__FILE__;}
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 $uniq=uniqid("tab",TRUE);

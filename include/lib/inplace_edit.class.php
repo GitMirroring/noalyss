@@ -113,7 +113,7 @@ EOF;
         $v=$this->input->get_value();
         $v=html_entity_decode($v);
          if ( $this->input instanceof ITextarea) {
-            echo '<span class="input_text" id="'.$this->input->id.'edit" >';
+           
             echo '<pre class="field_follow_up">';
             $v=(trim($v)=="")?$this->message:$v;
             echo $v;

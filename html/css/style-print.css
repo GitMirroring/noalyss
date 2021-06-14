@@ -17,9 +17,12 @@ form {
         visibility: visible;
 	}
 .noprint  {
-  display:none;
+  display:none !important;
  }
-
+ #module {
+  display:none !important;
+     
+ }
 .button, .smallbutton,.icon{
 	display:none;
 	}
