@@ -160,9 +160,12 @@ function update_row(ctl)
 {
     try
     {
+        var row_to_keep=3; /* Number of row to keep (head and foot)*/
+        if ( ctl === 'quick_item' ) { row_to_keep=2;} /* for ODS , only 2 rows to keep */
         var jrn = g('p_jrn').value;
         var dossier = g('gDossier').value;
         var qs = encodeURI('gDossier=' + dossier + '&op=minrow&j=' + jrn + '&ctl=' + ctl);
+        var current_row = parseFloat($('nb_item').value);
         var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
@@ -174,7 +177,7 @@ function update_row(ctl)
                         try {
                             var answer = request.responseText.evalJSON(true);
                             var row = parseFloat(answer.row);
-                            var current_row = parseFloat($('nb_item').value);
+                            
                             var table_to_update=$(ctl);
                             if (current_row > row) {
                                 // Too many row, we always must keep 2 rows for the sum
@@ -182,10 +185,35 @@ function update_row(ctl)
                                 var idx = $('nb_item').value;
                                 for (var i = 0; i < delta; i++) {
                                     var pos_row=table_to_update.rows.length;
-                                    table_to_update.deleteRow(pos_row-3);
-                                    idx--;
+                                    var cell0 = table_to_update.rows[pos_row-row_to_keep].cells[0];
+                                    var cell0Element=cell0.childNodes;
+                                    var canDelete=true;
+                                    /**
+                                     * prevent truncating
+                                     */
+                                    cell0Element.forEach(function (x) { 
+                                        if (canDelete && x.nodeName=='INPUT' && x.type==="text" && x.value) 
+                                        { 
+                                            canDelete=false;
+                                        }}
+                                            );
+                                   /* 
+                                    * prevent truncating
+                                    * For ODS we also need to check the second column 
+                                    * */
+                                    if ( canDelete && ctl === 'quick_item') {
+                                        var cell1 = table_to_update.rows[pos_row-row_to_keep].cells[1];
+                                        var cell1Element=cell1.childNodes;
+                                        cell1Element.forEach(function (x) { 
+                                        if (canDelete && x.nodeName=='INPUT' && x.type==="text" && x.value) 
+                                        { 
+                                            canDelete=false;
+                                        }});
+                                    }
+                                    if ( canDelete )  { table_to_update.deleteRow(pos_row-row_to_keep);idx--;}
+                                    
                                 }
-                                $('nb_item').value = row;
+                                $('nb_item').value = table_to_update.rows.length-row_to_keep;
                             }
                             if (current_row < row) {
                                 // We need to add rows
@@ -203,7 +231,7 @@ function update_row(ctl)
                                 }
                             }
                         } catch (e) {
-                            alert_box(e.message);
+                            alert_box("update_row:01"+e.message);
                         }
                     }
                 }
