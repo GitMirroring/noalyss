@@ -42,9 +42,12 @@ class Document_Export
         $this->store_pdf = tempnam($_ENV['TMP'], 'pdf_');
         unlink($this->store_convert);
         unlink($this->store_pdf);
+        $this->progress=NULL;
         umask(0);
-        if ( mkdir($this->store_convert) == FALSE )            throw new Exception(sprintf("Create %s failed",$this->store_onvert));
-        if ( mkdir($this->store_pdf)== FALSE )            throw new Exception(sprintf("Create %s failed",$this->store_pdf));
+        if ( mkdir($this->store_convert) == FALSE )            
+            throw new Exception(sprintf("Create %s failed",$this->store_onvert));
+        if ( mkdir($this->store_pdf)== FALSE )            
+            throw new Exception(sprintf("Create %s failed",$this->store_pdf));
     }
     /**
      * @brief concatenate all PDF into a single one and save it into the
@@ -151,169 +154,121 @@ class Document_Export
     /**
      * @brief export all the pieces in PDF and transform them into a PDF with
      * a stamp. If an error occurs then $this->feedback won't be empty
-     * @param $p_array contents all the jr_id
+     * @param $p_array contents all the jr_id 
      * @param Progress_Bar $progress is the progress bar
      * @param int $p_separate 1 everything in a single PDF or a ZIP with all PDF
+     * @param int $reconcilied_operation 1 with receipt of reconcilied operation 2 without them
+     * 
      */
-    function export_all($p_array, Progress_Bar $progress,$p_separate=1)
+    function     export_all($p_array, Progress_Bar $progress,$p_separate=1,$reconcilied_document)
     {
+        $this->progress=$this->progress;
+
         $this->check_file();
-        if ( count($p_array)==0) return;
+        if (count($p_array)==0)
+            return;
         ob_start();
         $cnt_feedback=0;
         global $cn;
-        // follow progress
-        $step=round(16/count($p_array),2);
         
-        $cn->start();
+        // follow progress
+        $step=round(16/count($p_array), 2);
+
         foreach ($p_array as $value)
         {
             $progress->increment($step);
-            // For each file save it into the temp folder,
-            $file = $cn->get_array('select jr_pj,jr_pj_name,jr_pj_number,jr_pj_type from jrn '
-                    . ' where jr_id=$1', array($value));
-            if ($file[0]['jr_pj'] == '')
-                continue;
 
-            $filename=clean_filename($file[0]['jr_pj_name']);
-            $cn->lo_export($file[0]['jr_pj'], $this->store_convert . '/' . $filename);
+            $output_receipt=$this->export_receipt($value, $progress, $step);
 
-            // Convert this file into PDF 
-            if ($file[0]['jr_pj_type'] != 'application/pdf')
+            if ($output_receipt==NULL)
             {
-                $status = 0;
-                $arg=" ".escapeshellarg($this->store_convert.DIRECTORY_SEPARATOR.$filename);
-                echo "arg = [".$arg."]";
-                passthru(OFFICE . " " . $arg , $status);
-                if ($status <> 0)
-                {
-                    $this->feedback[$cnt_feedback]['file'] = $filename;
-                    $this->feedback[$cnt_feedback]['message'] = ' cannot convert to PDF';
-                    $this->feedback[$cnt_feedback]['error'] = $status;
-                    $cnt_feedback++;
-                    continue;
-                }
-            } 
-            // Create a image with the stamp + formula
-            $img = imagecreatefromgif(NOALYSS_INCLUDE . '/template/template.gif');
-            $font = imagecolorallocatealpha($img, 100, 100, 100, 110);
-            imagettftext($img, 40, 25, 500, 1000, $font, NOALYSS_INCLUDE . '/tfpdf/font/unifont/DejaVuSans.ttf', _("Copie certifiée conforme à l'original"));
-            imagettftext($img, 40, 25, 550, 1100, $font, NOALYSS_INCLUDE. '/tfpdf/font/unifont/DejaVuSans.ttf', $file[0]['jr_pj_number']);
-            imagettftext($img, 40, 25, 600, 1200, $font, NOALYSS_INCLUDE. '/tfpdf/font/unifont/DejaVuSans.ttf', $file[0]['jr_pj_name']);
-            imagegif($img, $this->store_convert . '/' . 'stamp.gif');
-
-            // transform gif file to pdf with convert tool
-            $stmt = CONVERT_GIF_PDF . " " . escapeshellarg($this->store_convert . '/' . 'stamp.gif') . " " . escapeshellarg($this->store_convert . '/stamp.pdf');
-            passthru($stmt, $status);
-            if ($status <> 0)
-            {
-                $this->feedback[$cnt_feedback]['file'] = 'stamp.pdf';
-                $this->feedback[$cnt_feedback]['message'] = ' cannot convert to PDF';
-                $this->feedback[$cnt_feedback]['error'] = $status;
-                $cnt_feedback++;
                 continue;
             }
+            $output=$output_receipt['output'];
+            $file_pdf=$output_receipt['filepdf'];
 
-      
-             $progress->increment($step);
-            // 
-            // remove extension
-            $ext = strrpos($filename, ".");
-            $file_pdf = substr($filename, 0, $ext);
-            $file_pdf .=".pdf";
+            // export also the receipt of reconcilied operation
+            $a_reconcilied_operation=[];
+            if ( $reconcilied_document == 1 ) {
+                $a_reconcilied_operation=$cn->get_array("select jr_id,jra_concerned 
+                     from jrn_rapt where jra_concerned=$1 or jr_id=$1", [$value]);
+            }
             
-            //-----------------------------------
-            // Fix broken PDF , actually pdftk can not handle all the PDF
-            if ( FIX_BROKEN_PDF == 'YES' && PDF2PS != 'NOT' && PS2PDF != 'NOT') {
-                
-                $stmpt = PDF2PS." ". escapeshellarg($this->store_convert . '/' . $file_pdf)." ". escapeshellarg($this->store_convert . '/' . $file_pdf.'.ps');
-                
-                passthru($stmpt,$status);
-                
-                if ($status <> 0)
+            // for each reconcilied operation , export the receipt and concantenate
+            foreach ($a_reconcilied_operation as $reconcilied_operation)
+            {
+                $op=($reconcilied_operation['jr_id']==$value)?$reconcilied_operation['jra_concerned']:$reconcilied_operation['jr_id'];
+
+                $output_rec=$this->export_receipt($op, $progress, $step);
+                if ($output_rec==NULL)
                 {
-                    $this->feedback[$cnt_feedback]['file'] = $this->store_convert . '/' . $file_pdf;
-                    $this->feedback[$cnt_feedback]['message'] = ' cannot force to PDF';
-                    $this->feedback[$cnt_feedback]['error'] = $status;
+                    continue;
+                }
+                // concatenate detail operation with the output
+                $output3=$this->store_convert.'/tmp_operation_'.$file_pdf;
+
+                $stmt=PDFTK." ".$output." ".$output_rec['output'].
+                        ' output '.$output3;
+
+                passthru($stmt, $status);
+                if ($status<>0)
+                {
+                    $cnt_feedback=count($this->feedback);
+                    $this->feedback[$cnt_feedback]['file']=$output3;
+                    $this->feedback[$cnt_feedback]['message']=_('Echec  ');
+                    $this->feedback[$cnt_feedback]['error']=$status;
                     $cnt_feedback++;
                     continue;
                 }
-                $stmpt = PS2PDF." ". escapeshellarg($this->store_convert . '/' . $file_pdf.'.ps')." ". escapeshellarg($this->store_convert . '/' . $file_pdf.'.2');
-                
-                passthru($stmpt,$status);
-                
-                if ($status <> 0)
-                {
-                    $this->feedback[$cnt_feedback]['file'] = $this->store_convert . '/' . $file_pdf;
-                    $this->feedback[$cnt_feedback]['message'] = ' cannot force to PDF';
-                    $this->feedback[$cnt_feedback]['error'] = $status;
-                    $cnt_feedback++;
-                    continue;
-                }
-                rename ($this->store_convert . '/' . $file_pdf.'.2',$this->store_convert . '/' . $file_pdf);
+                unlink($output_rec['output']);
+                rename($output3, $output);
             }
             $progress->increment($step);
-            // output
-            $output = $this->store_convert . '/stamp_' . $file_pdf;
-            
-            // Concatenate stamp + file
-            $stmt = PDFTK . " " . escapeshellarg($this->store_convert . '/' . $file_pdf) . ' stamp ' . $this->store_convert .
-                    '/stamp.pdf output ' . $output;
 
-            passthru($stmt, $status);
-            if ($status <> 0)
-            {
-
-                $this->feedback[$cnt_feedback]['file'] = $file_pdf;
-                $this->feedback[$cnt_feedback]['message'] = _(' ne peut pas convertir en PDF');
-                $this->feedback[$cnt_feedback]['error'] = $status;
-                $cnt_feedback++;
-                continue;
-            }
-            
             // create the pdf with the detail of operation
-            $detail_operation = new PDF_Operation($cn,$value);
-            $detail_operation->export_pdf(array("acc","anc"));
+            $detail_operation=new PDF_Operation($cn, $value);
+            $detail_operation->export_pdf(array("acc", "anc"));
 
             // output 2
-            $output2 = $this->store_convert . '/operation_' . $file_pdf;
-            
+            $output2=$this->store_convert.'/operation_'.$file_pdf;
+
             // concatenate detail operation with the output
-            $stmt = PDFTK . " " . $detail_operation->get_pdf_filename()." ".$output. 
-                    ' output ' . $output2;
-            
+            $stmt=PDFTK." ".$detail_operation->get_pdf_filename()." ".$output.
+                    ' output '.$output2;
+
             $progress->increment($step);
             passthru($stmt, $status);
-            if ($status <> 0)
+            if ($status<>0)
             {
-
-                $this->feedback[$cnt_feedback]['file'] = $file_pdf;
-                $this->feedback[$cnt_feedback]['message'] = _('Echec Ajout detail ');
-                $this->feedback[$cnt_feedback]['error'] = $status;
+                $cnt_feedback=count($this->feedback);
+                $this->feedback[$cnt_feedback]['file']=$output2;
+                $this->feedback[$cnt_feedback]['message']=_('Echec Ajout detail ');
+                $this->feedback[$cnt_feedback]['error']=$status;
                 $cnt_feedback++;
                 continue;
             }
             // remove doc with detail
             $detail_operation->unlink();
-            
+
             // overwrite old with new PDF
-            rename ($output2,$output);
-            
+            rename($output2, $output);
+
             // Move the PDF into another temp directory 
-            $this->move_file($output, 'stamp_' . $file_pdf);
+            $this->move_file($output, 'stamp_'.$file_pdf);
         }
-        
+
         $progress->set_value(93);
 
-        if ( $p_separate == 1) {
+        if ($p_separate==1)
+        {
             // concatenate all pdf into one
             $this->concatenate_pdf();
 
-
             ob_clean();
             $this->send_pdf();
-
-        } else {
+        }
+        else
+        {
             // Put all PDF In a zip file
             $this->make_zip();
             ob_clean();
@@ -322,10 +277,10 @@ class Document_Export
 
         $progress->set_value(100);
         // remove files from "conversion folder"
-      //  $this->clean_folder();
-        
+        //  $this->clean_folder();
     }
-   /**
+
+    /**
     * @brief check that the files are installed
     * throw a exception if one is missing
     */
@@ -343,6 +298,137 @@ class Document_Export
         {
             throw ($ex);
         }
+    }
+
+    /**
+     * @brief export a file (
+     * @param type $p_jrn_id
+     * @param $progress
+     * @return string
+     */
+    function export_receipt($p_jrn_id, Progress_Bar $progress,$step)
+    {
+        global $cn;
+       $cnt_feedback=count($this->feedback);
+        
+        // For each file save it into the temp folder,
+        $file=$cn->get_array('select jr_pj,jr_pj_name,jr_pj_number,jr_pj_type from jrn '
+                .' where jr_id=$1', array($p_jrn_id));
+         
+         
+        if ($file[0]['jr_pj']=='')
+        {
+            return null;
+        }
+
+
+        $filename=clean_filename($file[0]['jr_pj_name']);
+        
+        $cn->start();
+        $cn->lo_export($file[0]['jr_pj'], $this->store_convert.'/'.$filename);
+        $cn->commit();
+        
+        // Convert this file into PDF 
+        if ($file[0]['jr_pj_type']!='application/pdf')
+        {
+            $status=0;
+            $arg=" ".escapeshellarg($this->store_convert.DIRECTORY_SEPARATOR.$filename);
+            echo "arg = [".$arg."]";
+            passthru(OFFICE." ".$arg, $status);
+            if ($status<>0)
+            {
+                $this->feedback[$cnt_feedback]['file']=$filename;
+                $this->feedback[$cnt_feedback]['message']=' cannot convert to PDF';
+                $this->feedback[$cnt_feedback]['error']=$status;
+                return null;
+            }
+        }
+        // Create a image with the stamp + formula
+        $img=imagecreatefromgif(NOALYSS_INCLUDE.'/template/template.gif');
+        $font=imagecolorallocatealpha($img, 100, 100, 100, 110);
+        imagettftext($img, 40, 25, 500, 1000, $font,
+                NOALYSS_INCLUDE.'/tfpdf/font/unifont/DejaVuSans.ttf'
+                , _("Copie certifiée conforme à l'original"));
+        imagettftext($img, 40, 25, 550, 1100, $font,
+                NOALYSS_INCLUDE.'/tfpdf/font/unifont/DejaVuSans.ttf'
+                , $file[0]['jr_pj_number']);
+        imagettftext($img, 40, 25, 600, 1200, $font,
+                NOALYSS_INCLUDE.'/tfpdf/font/unifont/DejaVuSans.ttf'
+                , $file[0]['jr_pj_name']);
+        imagegif($img, $this->store_convert.'/'.'stamp.gif');
+
+        // transform gif file to pdf with convert tool
+        $stmt=CONVERT_GIF_PDF." ".escapeshellarg($this->store_convert.'/'.'stamp.gif')." "
+                .escapeshellarg($this->store_convert.'/stamp.pdf');
+        passthru($stmt, $status);
+        if ($status<>0)
+        {
+            $this->feedback[$cnt_feedback]['file']='stamp.pdf';
+            $this->feedback[$cnt_feedback]['message']=' cannot convert to PDF';
+            $this->feedback[$cnt_feedback]['error']=$status;
+            return null;
+        }
+
+
+        $progress->increment($step);
+        // 
+        // remove extension
+        $ext=strrpos($filename, ".");
+        $file_pdf=substr($filename, 0, $ext);
+        $file_pdf.=".pdf";
+
+        //-----------------------------------
+        // Fix broken PDF , actually pdftk can not handle all the PDF
+        if (FIX_BROKEN_PDF=='YES'&&PDF2PS!='NOT'&&PS2PDF!='NOT')
+        {
+
+            $stmpt=PDF2PS." ".escapeshellarg($this->store_convert.'/'.$file_pdf).
+                    " ".escapeshellarg($this->store_convert.'/'.$file_pdf.'.ps');
+
+            passthru($stmpt, $status);
+
+            if ($status<>0)
+            {
+                $this->feedback[$cnt_feedback]['file']=$this->store_convert.'/'.$file_pdf;
+                $this->feedback[$cnt_feedback]['message']=' cannot force to PDF';
+                $this->feedback[$cnt_feedback]['error']=$status;
+                $cnt_feedback++;
+                return null;
+            }
+            $stmpt=PS2PDF." ".escapeshellarg($this->store_convert.'/'.$file_pdf.'.ps').
+                    " ".escapeshellarg($this->store_convert.'/'.$file_pdf.'.2');
+
+            passthru($stmpt, $status);
+
+            if ($status<>0)
+            {
+                $this->feedback[$cnt_feedback]['file']=$this->store_convert.'/'.$file_pdf;
+                $this->feedback[$cnt_feedback]['message']=' cannot force to PDF';
+                $this->feedback[$cnt_feedback]['error']=$status;
+                $cnt_feedback++;
+                return null;
+            }
+            rename($this->store_convert.'/'.$file_pdf.'.2', $this->store_convert.'/'.$file_pdf);
+        }
+        $progress->increment($step);
+        // output
+        $output=$this->store_convert.'/stamp_'.$file_pdf;
+
+        // Concatenate stamp + file
+        $stmt=PDFTK." ".escapeshellarg($this->store_convert.'/'.$file_pdf)
+                .' stamp '.$this->store_convert.
+                '/stamp.pdf output '.$output;
+
+        passthru($stmt, $status);
+        if ($status<>0)
+        {
+
+            $this->feedback[$cnt_feedback]['file']=$file_pdf;
+            $this->feedback[$cnt_feedback]['message']=_(' ne peut pas convertir en PDF');
+            $this->feedback[$cnt_feedback]['error']=$status;
+            return null;
+        }
+        return array("output"=>$output,"filepdf"=>$file_pdf);
     }
 
 }

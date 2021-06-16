@@ -47,6 +47,17 @@ if ($result != null)
         $type_pdf->add_value(_("Un PDF par opération"),2);
         $type_pdf->set_position("in-absolute");
         echo $type_pdf->input();
+        
+        // propose to download also the reconcilied operation with its receipt
+//        echo _("Avec documents des opérations rapprochées");
+//        $checkbox=new ICheckBox("receipt_reconcilied", 0);
+//        
+//        echo $checkbox->input();
+        $type_pdf=new Select_Box("reconcilied_document",_("Opérations rapprochées"));
+        $type_pdf->add_value(_("Opérations rapprochées avec documents"),1);
+        $type_pdf->add_value(_("Opérations rapprochées sans documents"),2);
+        $type_pdf->set_position("in-absolute");
+        echo $type_pdf->input();
 
         echo $grandLivre->button_export_pdf();
         echo $grandLivre->display_html();
@@ -71,16 +82,20 @@ if ($result != null)
         {
             valid=false;
         }
-
+         if (document.getElementById("reconcilied_document").value == "-1" )
+        {
+            valid=false;
+        }
         if ( valid  ) {
             progress_bar_start(p_task_id,p_message);
             return true;
         } else {
-            smoke.alert("<?=_('Choisissez au moins une opération et le type d\'export')?>");
+            smoke.alert("<?=_('Choisissez au moins une opération, les opérations rapprochées et le type d\'export')?>");
             return false;
         }
         
     }
+
 </script>
 <?php
     }

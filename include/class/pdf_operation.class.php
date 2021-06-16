@@ -272,6 +272,24 @@ class PDF_Operation extends PDF {
             $this->pdf->line_new(6);
         }
     }
+    /**
+     * print reconcilied operations
+     */
+    private function print_reconcilied_operation()
+    {
+        // find the reconcilied operations
+        $a_reconcilied_operation=$this->cn->get_array("select jr_id,jra_concerned from jrn_rapt where jra_concerned=$1 or jr_id=$1",
+                [$this->jr_id]);
+         $this->print_section(_("Opérations rapprochées"));
+        // for each operation , print info (amount, ledger,... )
+        foreach ($a_reconcilied_operation as $reconcilied_operation) {
+            $op=($reconcilied_operation['jr_id']==$this->jr_id)?$reconcilied_operation['jra_concerned']:$reconcilied_operation['jr_id'];
+            $operation=new PDF_Operation($this->cn,$op);
+            $operation->pdf=$this->pdf;
+            $operation->print_operation_info();
+        }
+        
+    }
     private function print_anc_header($pa_plan) {
         $nb=count($pa_plan);
         $this->pdf->SetFont('DejaVu', 'B', 8);
@@ -427,6 +445,8 @@ class PDF_Operation extends PDF {
         //write date + ledger + detail items + total
         $this->print_operation_info();
         
+
+        
         // Write only for Sale or purchase summary (QCode, label,amount,tva...)
         $this->print_operation_quant();
         
@@ -441,6 +461,8 @@ class PDF_Operation extends PDF {
         if (array_search("anc", $p_option) !== false )
             $this->print_anc_writing();
         
+        // write information for reconcilied operations
+        $this->print_reconcilied_operation();
         // if option contains EXTEND add document name + comment + action name
         // if options contains ANC export ANC plan table
     }
