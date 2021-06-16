@@ -768,8 +768,6 @@ class Acc_Operation
         }
        
         // Prepare the form
-        $r=sprintf('<form id="%s" method="POST" ACTION="%s">',$p_id,NOALYSS_URL."/do.php?".Dossier::get());
-        $r.=Dossier::hidden();
         // select the menu where the operation will be duplicated
         $r=sprintf('<form id="%s" method="POST" ACTION="%s">',$p_id,NOALYSS_URL."/do.php?".http_build_query([
                 "ac"=>$a_code[0]['code'],"gDossier"=>Dossier::id()
@@ -813,7 +811,7 @@ class Acc_Operation
         
         // transform the operation into hidden element
         $r.=HtmlInput::simple_array_to_hidden($array);
-        
+        $r.=HtmlInput::hidden("e_comm",$operation->det->jr_comment);
         $r.=HtmlInput::submit(uniqid(), _("Dupliquer"));
         $r.='</form>';
         
