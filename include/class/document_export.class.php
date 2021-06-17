@@ -59,7 +59,7 @@ class Document_Export
         try
         {
             $this->check_file();
-            $stmt=PDFTK." ".$this->store_pdf.'/stamp_*pdf  output '.$this->store_pdf.'/result.pdf';
+            $stmt=PDFTK." ".$this->store_pdf.'/*-stamp_*pdf  output '.$this->store_pdf.'/result.pdf';
             $status=0;
             echo $stmt;
             passthru($stmt, $status);
@@ -171,6 +171,8 @@ class Document_Export
         $cnt_feedback=0;
         global $cn;
         
+        $p_array=$this->reorder_array($p_array);
+        $order=0;
         // follow progress
         $step=round(16/count($p_array), 2);
 
@@ -254,7 +256,8 @@ class Document_Export
             rename($output2, $output);
 
             // Move the PDF into another temp directory 
-            $this->move_file($output, 'stamp_'.$file_pdf);
+            $this->move_file($output, $order.'-stamp_'.$file_pdf);
+            $order++;
         }
 
         $progress->set_value(93);
@@ -430,5 +433,19 @@ class Document_Export
         }
         return array("output"=>$output,"filepdf"=>$file_pdf);
     }
-
+    /**
+     * @brief Order the array with the date
+     * @param array $p_array array of jrn.jr_id
+     */
+    function reorder_array($p_array)
+    {
+        global $cn;
+        if (empty($p_array)) {return array();}
+        
+        $list_jrn_id=join(',', $p_array);
+        
+        $array=$cn->get_array("select jr_id ,jr_date from jrn where jr_id in ($list_jrn_id) order by jr_date");
+        $array=array_column($array, 'jr_id');
+        return $array;
+    }
 }

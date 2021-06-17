@@ -40,6 +40,7 @@ class DatabaseCore
     private $ret;
     /**< return value  */
     private $is_open;                   /*!< true is connected */
+    protected $sql;     //!< last SQL stmt executed
 
     /*** Connect to a database return an connx to db or false if it fails
      *
@@ -75,7 +76,7 @@ class DatabaseCore
         }
 
         $this->is_open = TRUE;
-        
+        $this->sql="";
 
     }
 
@@ -143,8 +144,25 @@ class DatabaseCore
     {
         $this->is_open = $is_open;
     }
-
+     /**
+     * last SQL stmt executed
+     * @param string $sql
+     */
+    public function get_sql()
+    {
+        return $this->sql;
+    }
     /**
+     * last SQL stmt executed
+     * @param string $sql
+     */
+    public function set_sql($sql)
+    {
+        $this->sql=$sql;
+        return $this;
+    }
+
+        /**
      * \brief send a sql string to the database
      * \param $p_string     sql string
      * \param $p_array array for the SQL string (see pg_query_params)
