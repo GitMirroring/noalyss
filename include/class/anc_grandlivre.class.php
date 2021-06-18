@@ -114,12 +114,12 @@ class Anc_GrandLivre extends Anc_Print
         $pa_id_cond="";
         if ( isset ( $this->pa_id) && $this->pa_id !='')
             $pa_id_cond= "pa_id=".$this->pa_id." and";
-        $array=$this->db->get_array("	 select
+        $array=$this->db->get_array("	select
 	po_name,
 	to_char(oa_date,'DD.MM.YYYY') as oa_date,
         to_char(jr_date_paid,'DD.MM.YY') as strdate_paid,
 	case when j_poste is null and b.f_id is not null then
-        (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=".ATTR_DEF_ACCOUNT.")
+        (select ad_value from fiche_detail where fiche_detail.f_id=b.f_id and ad_id=5)
             when j_poste is not null then
             j_poste
             end as j_poste
@@ -138,7 +138,22 @@ class Anc_GrandLivre extends Anc_Print
 	case when oa_debit='t' then oa_amount else  0 end as amount_deb,
 	case when oa_debit='f' then oa_amount else  0 end as amount_cred,
         case when oa_debit='f' then 'C' else  'D' end as deb_cred,
-    ac.str_action   
+    ac.str_action   ,
+    ag.str_action_ref ,
+    (
+    	select string_agg( j10.jr_pj_number::text,'-')   
+                from jrn j10
+                left join (select jr10.jr_id , jr10.jra_concerned  from jrn_rapt jr10 ) as opr_cnc1 on (j10.jr_id=opr_cnc1.jr_id or j10.jr_id=opr_cnc1.jra_concerned)
+		where 
+			opr_cnc1.jr_id=jrn.jr_id
+			or opr_cnc1.jra_concerned=jrn.jr_id) as agg_jr_pj_number,
+    (
+    	select string_agg( j11.jr_internal::text,'-')   
+                from jrn j11
+                left join (select jr11.jr_id , jr11.jra_concerned  from jrn_rapt jr11 ) as opr_cnc2 on (j11.jr_id=opr_cnc2.jr_id or j11.jr_id=opr_cnc2.jra_concerned)
+		where 
+			opr_cnc2.jr_id=jrn.jr_id
+			or opr_cnc2.jra_concerned=jrn.jr_id) as agg_jr_internal
 	from operation_analytique as B join poste_analytique using(po_id)
 	left join jrnx using (j_id)
 	left join jrn on  (j_grpt=jr_grpt_id)
@@ -150,10 +165,17 @@ class Anc_GrandLivre extends Anc_Print
     left join (select j.jr_id,string_agg( ag_id::text,'-') as str_action 
                 from jrn j  left 
                 join action_gestion_operation ago  on (j.jr_id=ago.jr_id ) 
-                group by j.jr_id) as ac on (ac.jr_id=jrn.jr_id)					
+                group by j.jr_id) as ac on (ac.jr_id=jrn.jr_id)	
+   left join (select j9.jr_id,string_agg( ag9.ag_ref::text,'-') as str_action_ref 
+                from jrn j9  left 
+                join action_gestion_operation ago9  on (j9.jr_id=ago9.jr_id )
+                join action_gestion ag9 on (ag9.ag_id =ago9.ag_id )
+                group by j9.jr_id) as ag on (ag.jr_id=jrn.jr_id) 
     where 
         $pa_id_cond oa_amount <> 0.0  $cond_poste $filter_date
-	order by po_name,oa_date::date,qcode,j_poste");
+	order by po_name,oa_date::date,qcode,j_poste
+        
+");
 
 
         return $array;
@@ -358,6 +380,9 @@ class Anc_GrandLivre extends Anc_Print
         $aheader[]=array("title"=>'Credit','type'=>'num');
         $aheader[]=array("title"=>'D/C','type'=>'string');
         $aheader[]=array("title"=>'Action','type'=>'string');
+        $aheader[]=array("title"=>'Suivi','type'=>'string');
+        $aheader[]=array("title"=>'Rapprochement pièce','type'=>'string');
+        $aheader[]=array("title"=>'Rapprochement n° interne','type'=>'string');
         Impress::array_to_csv($array, $aheader,"export-anc-grandlivre");
     }
 }
