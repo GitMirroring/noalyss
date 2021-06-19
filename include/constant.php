@@ -357,3 +357,22 @@ if ( ! defined ("NOALYSS_URL")) {
 if (!defined ("DEFAULT_SERVER_VIDEO_CONF")) {
     define ("DEFAULT_SERVER_VIDEO_CONF","https://www.free-solutions.org/");
 }
+/**
+ * @brief load automatically class
+ * 
+ * @param string $class classname to load
+ */
+function noalyss_class_autoloader($class) {
+    echo "class to load $class";
+    $class=strtolower($class);
+    $aClass = array(
+        "database"=>"/class/database.class.php",
+        "user"=>"/class/user.class.php"
+    );
+    if ( isset ($aClass[$class]) ) {
+        require_once NOALYSS_INCLUDE.$aClass[$class];
+    }
+    
+}
+
+spl_autoload_register('\noalyss_class_autoloader',true);
