@@ -23,9 +23,6 @@
  * \brief show the detail of a document and let you modify it
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
 
   /* 1. Check security */
 $cn=Dossier::connect();

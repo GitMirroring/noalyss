@@ -23,7 +23,6 @@
 /**\file
  * \brief Html Input 
  */
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 
 class IRadio extends HtmlInput
     {

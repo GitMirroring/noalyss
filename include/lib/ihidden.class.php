@@ -22,7 +22,6 @@
 /*!\file
  * \brief Html Input
  */
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class IHidden extends HtmlInput
 {
     /*!\brief show the html  input of the widget*/

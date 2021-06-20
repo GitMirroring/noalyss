@@ -24,7 +24,6 @@
  * @brief display summary of tax (VAT) possible parameter is time range
  *
  */
-require_once NOALYSS_INCLUDE.'/class/tax_summary.class.php';
 $http = new HttpInput();
 $limit = $g_user->get_limit_current_exercice();
 

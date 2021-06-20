@@ -56,14 +56,8 @@
  */
 if ( ! defined('ALLOWED')) die (_('Accès non autorisé'));
 
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
-require_once NOALYSS_INCLUDE.'/class/fiche_attr.class.php';
-require_once NOALYSS_INCLUDE.'/lib/input_switch.class.php';
 
 mb_internal_encoding("UTF-8");
 
@@ -413,7 +407,6 @@ case 'sc':
      *
      *----------------------------------------------------------------------*/
 case 'fs':
-    require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
     $r=HtmlInput::title_box(_("Détail fiche"), 'search_card');
     $r.='<form method="GET" onsubmit="this.ctl=\'ipop_card\';search_get_card(this);return false;">';
     $q=new IText('query');

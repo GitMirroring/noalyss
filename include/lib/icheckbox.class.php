@@ -22,7 +22,6 @@
 /*!\file
  * \brief Html Input
  */
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class ICheckBox extends HtmlInput
 {
     var $range;

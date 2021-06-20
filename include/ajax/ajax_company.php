@@ -30,7 +30,6 @@ global $g_user;
 
 if ($g_user->check_module("COMPANY")==0) die();
 
-require_once NOALYSS_INCLUDE.'/class/parameter_extra_mtable.class.php';
 
 $http=new HttpInput();
 try {

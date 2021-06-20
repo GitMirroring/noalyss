@@ -24,7 +24,6 @@
 
 if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE."/class/forecast_item_mtable.class.php";
 global $g_user;
 
 if ($g_user->check_module("FORECAST")==0) die();

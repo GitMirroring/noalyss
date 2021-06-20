@@ -26,7 +26,6 @@
  * @file
  * @brief show a switch, when you click on it an hidden field is changed, the value is 1 or 0 
  */
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 
 class InputSwitch extends HtmlInput
 {

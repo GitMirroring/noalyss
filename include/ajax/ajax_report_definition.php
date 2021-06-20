@@ -43,7 +43,6 @@ if ($sa =="acc_report_mtable")
         die("invalid data");
     }
 
-    require_once NOALYSS_INCLUDE."/class/acc_report_mtable.class.php";
 
     $acc_report=Acc_Report_MTable::build($id, $form_def);
     $acc_report->set_object_name($ctl);

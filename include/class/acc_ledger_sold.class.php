@@ -24,24 +24,8 @@
  * \file
  * \brief class for the sold, herits from acc_ledger
  */
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ifile.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_compute.class.php';
-require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
-require_once NOALYSS_INCLUDE.'/class/acc_payment.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itva_popup.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
-require_once NOALYSS_INCLUDE.'/class/stock_goods.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 
 /*!
  * \brief Handle the ledger of sold,

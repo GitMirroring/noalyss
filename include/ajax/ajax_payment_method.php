@@ -34,7 +34,6 @@ if (!defined('ALLOWED'))
  * 
  */
 require_once NOALYSS_INCLUDE."/database/payment_method_sql.class.php";
-require_once NOALYSS_INCLUDE."/class/payment_method_mtable.class.php";
 
 $id=$http->request("p_id", "number", -1);
 $action=$http->request("action");

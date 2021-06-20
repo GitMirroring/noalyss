@@ -27,7 +27,6 @@
  *
  */
 
-require_once  NOALYSS_INCLUDE.'/class/gestion_table.class.php';
 
 
 class gestion_sold extends gestion_table

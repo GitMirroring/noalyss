@@ -23,11 +23,6 @@
  * some variable are already defined ($cn, $g_user ...)
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
-require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 global $g_user,$http;
 $access_code=$http->request('ac');
 //-----------------------------------------------------
@@ -206,7 +201,6 @@ if ( isset( $_GET['bt_html'] ) )
 //-----------------------------------------------------
 // Show the jrn and date
 //-----------------------------------------------------
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
 $ret=$cn->make_array("select fr_id,fr_label
                      from form_definition
                      order by fr_label");

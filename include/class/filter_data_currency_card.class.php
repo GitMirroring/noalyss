@@ -19,7 +19,6 @@
  */
 // Copyright (2002-2020) Author Dany De Bontridder <danydb@noalyss.eu>
 
-require_once NOALYSS_INCLUDE."/class/data_currency_operation.class.php";
 
 /**
  * @file

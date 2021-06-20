@@ -6,8 +6,6 @@
    *@brief no used ?? 
    */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
 $cn=Dossier::connect();
 
 

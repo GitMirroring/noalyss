@@ -18,9 +18,6 @@
 */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
-require_once NOALYSS_INCLUDE.'/class/template_card_category.class.php';
 
 /*! 
  * @file

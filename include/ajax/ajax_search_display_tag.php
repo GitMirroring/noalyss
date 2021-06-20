@@ -24,8 +24,6 @@ if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
  *@see Tag
  */
 
-require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
-require_once NOALYSS_INCLUDE.'/class/tag_operation.class.php';
 
 try {
     $caller_obj=$http->request("caller_obj");

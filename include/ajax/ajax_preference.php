@@ -22,13 +22,6 @@
  *        it permits to change the user preferences
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iperiod.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
-require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
 
 global $g_user;

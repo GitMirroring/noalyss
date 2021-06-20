@@ -11,7 +11,6 @@
  * Variables : $div = popup or box (det[0-9]
  * 
  */
-require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
 
 $select_box=new \Select_Box("sb_".$jr_id, _("Autre action"));
 $select_box->set_position("normal");

@@ -29,7 +29,6 @@
 /// Html Input : Input a date format dd.mm.yyyy
 /// The property title should be set to indicate what it is expected
 /// @see calendar-setup.js
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 
 class IDate extends HtmlInput
 {

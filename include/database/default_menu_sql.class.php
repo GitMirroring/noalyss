@@ -23,7 +23,6 @@
  *
  * @author dany
  */
-require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 
 class Default_Menu_SQL extends Table_Data_SQL
 {

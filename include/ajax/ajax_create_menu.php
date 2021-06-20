@@ -7,7 +7,6 @@
    */
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/menu_ref.class.php';
 $msg=_("Création");
 $m=new Menu_Ref($cn);
 echo '<form method="POST" id="ajax_create_menu_frm" onsubmit="return confirm_box(this,\''._('Vous confirmez ?').'\')">';

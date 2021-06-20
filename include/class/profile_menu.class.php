@@ -85,10 +85,8 @@ class Profile_Menu extends Profile_Menu_sql
                         ", array($p_id, $me_code)); ?>
                     <span>
                         <?php
-                        echo HtmlInput::anchor(SMALLX, "",
-                                sprintf(" onclick = \"remove_sub_menu(%d,%d)\"",
-                                        Dossier::id(), $menu['pm_id']),
-                                'class="tinybutton"')
+                         echo Icon_Action::trash(uniqid(), sprintf (" remove_sub_menu(%d,%d)", Dossier::id(),
+                                 $menu['pm_id']))
                         ?>
                     </span>
                     <?php

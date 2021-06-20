@@ -22,7 +22,6 @@
 /*!\file
  * \brief included file for managing the predefined operation
  */
-require_once NOALYSS_INCLUDE.'/class/operation_predef_mtable.class.php';
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $http;
@@ -53,11 +52,12 @@ $operation_predef_mtable->display_button_add();
 echo '</form>';
 if ( $filter_ledger->selected != -1 && isNumber($filter_ledger->selected ) == 1 ) {
     $sql_filter.= ' and jrn_Def_id = '.sql_string($filter_ledger->selected);
-}
+} 
 $operation_predef_mtable->create_js_script();
 echo '<p>';
 echo '</p>';
- $operation_predef_mtable->display_table($sql_filter);
+ $operation_predef_mtable->display_table($sql_filter." and jrn_def_id not in "
+         . " ( select jrn_def_id from jrn_def where jrn_def_type ='FIN') ");
 echo '<p>';
 $operation_predef_mtable->display_button_add();
 echo '</p>';

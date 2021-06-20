@@ -18,8 +18,6 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 /**
  * class_operation_currency_sql.php

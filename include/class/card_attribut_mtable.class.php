@@ -24,9 +24,6 @@
  * @brief manage the table attr_def 
  * @see card_attr.inc.php
  */
-require_once NOALYSS_INCLUDE."/class/fiche_attr.class.php";
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
-require_once NOALYSS_INCLUDE."/lib/inplace_switch.class.php";
 
 class Card_Attribut_MTable extends Manage_Table_SQL
 {

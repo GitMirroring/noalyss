@@ -22,7 +22,6 @@
 /*!\file
  * \brief definition of the class Pre_op_ods
  */
-require_once  NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 
 /*---------------------------------------------------------------------- */
 /*!\brief concerns the predefined operation for ODS ledger

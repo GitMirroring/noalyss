@@ -21,9 +21,6 @@
  * \brief Create, view, modify and parse report
  */
 
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
-require_once NOALYSS_INCLUDE.'/lib/impress.class.php';
 require_once NOALYSS_INCLUDE.'/database/form_detail_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/form_definition_sql.class.php';
 

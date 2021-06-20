@@ -23,7 +23,6 @@
  * \brief print the all the operation reconciled or not, with or without the same amount
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once  NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 global $g_user;
 

@@ -7,7 +7,6 @@
  * @see Anc_Group
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/anc_group.class.php';
 
 $gr = new Anc_Group($cn);
 $gr->get_request();

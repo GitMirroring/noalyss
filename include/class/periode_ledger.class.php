@@ -23,8 +23,6 @@
  * @file
  * @brief Manage the periode of a specific ledger 
  */
-require_once NOALYSS_INCLUDE."/class/periode_ledger_table.class.php";
-require_once NOALYSS_INCLUDE."/class/periode.class.php";
 /**
  * @brief Manage the periode of a specif ledger, wrap the SQL Class Jrn_Periode_SQL
  * @see Periode

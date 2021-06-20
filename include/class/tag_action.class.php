@@ -22,7 +22,6 @@
  * 
  */
 
-require_once NOALYSS_INCLUDE.'/class/tag.class.php';
 
 /**
  * @file

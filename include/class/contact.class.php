@@ -18,7 +18,6 @@
 */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 //!\brief class for the contact, contact are derived from fiche
-require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once NOALYSS_INCLUDE.'/constant.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 /*! \file

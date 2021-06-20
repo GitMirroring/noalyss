@@ -21,10 +21,6 @@
  * the supplier category
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/class/bank.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
 global $g_user  , $http;
 
 $low_action=$http->request('sb',"string",'list');

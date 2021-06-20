@@ -19,7 +19,6 @@
  */
 // Copyright (2016) Author Dany De Bontridder <dany@alchimerys.be>
 
-require_once NOALYSS_INCLUDE.'/lib/manage_table_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/fiche_def_ref_sql.class.php';
 
 /**

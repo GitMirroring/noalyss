@@ -26,8 +26,6 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once  NOALYSS_INCLUDE."/class/tax_summary.class.php";
-require_once  NOALYSS_INCLUDE."/lib/noalyss_csv.class.php";
 $http=new HttpInput();
 $tax_summary = new Tax_Summary($cn,$http->get("date_start"),$http->get("date_end"));
 $tva_type = $http->request("tva_type");

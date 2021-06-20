@@ -22,7 +22,6 @@
 /*!\file
  * \brief print a listing of financial
  */
-require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 
 class Print_Ledger_Financial extends Print_Ledger
 {

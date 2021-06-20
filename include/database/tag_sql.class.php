@@ -1,7 +1,5 @@
 <?php
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 /*
  *   This file is part of NOALYSS.
  *

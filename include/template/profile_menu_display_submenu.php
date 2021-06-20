@@ -52,9 +52,10 @@
                    sprintf(" onclick =\"mod_menu (%d,%d) \" ",Dossier::id(),$a_module[$i]['pm_id']),
                    ' class="line" ')?>
         <span>
-                            <?php echo HtmlInput::anchor(SMALLX, "", 
-                                    sprintf (" onclick = \"remove_sub_menu(%d,%d)\"", Dossier::id(),$a_module[$i]['pm_id']),
-                                    'class="tinybutton"' ) ?>
+                            <?php 
+                             echo Icon_Action::trash(uniqid(), sprintf (" remove_sub_menu(%d,%d)", Dossier::id()
+                                     ,$a_module[$i]['pm_id']));
+                            ?>
         </span>
         <br/>
         <?php echo $url;?>

@@ -23,8 +23,6 @@
  * @file
  * @brief Configure the tva : code , rate, label ...
  */
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
-require_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
 require_once NOALYSS_INCLUDE."/database/v_tva_rate_sql.class.php";
 require_once NOALYSS_INCLUDE."/database/tva_rate_sql.class.php";
 

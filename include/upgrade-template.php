@@ -24,8 +24,6 @@ if (!defined('ALLOWED_ADMIN'))
 {
     die(_('Non autorisé'));
 }
-require_once NOALYSS_INCLUDE.'/class/package_repository.class.php';
-require_once NOALYSS_INCLUDE.'/class/extension.class.php';
 
 
 $package_repository=new Package_Repository();

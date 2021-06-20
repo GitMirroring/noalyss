@@ -19,7 +19,6 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 
 /**
  * @file 

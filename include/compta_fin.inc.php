@@ -23,8 +23,6 @@
  * \brief this file is to be included to handle the financial ledger
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once  NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 global $g_user,$g_parameter;
 
 $gDossier=dossier::id();

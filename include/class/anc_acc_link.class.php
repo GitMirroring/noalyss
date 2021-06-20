@@ -22,7 +22,6 @@
 /*!\file
  * \brief link between accountancy and analytic, like table but as a listing
  */
-require_once NOALYSS_INCLUDE.'/class/anc_print.class.php';
 
 class Anc_Acc_Link extends Anc_Print
 {

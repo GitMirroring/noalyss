@@ -25,7 +25,6 @@
  *
  */
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 
 class IPopup extends HtmlInput
 {
@@ -157,7 +156,6 @@ class IPopup extends HtmlInput
 
     static function test_me()
     {
-        require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
         $select=new ISelect('a');
         $select->value=array(array ('value'=>0,'label'=>'Première valeur'),
                              array ('value'=>0,'label'=>'Première valeur'),

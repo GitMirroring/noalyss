@@ -26,13 +26,11 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/stock.class.php';
 global $cn;
 // var_dump($_GET);
 $stock=new Stock($cn);
 $tmp_id = $stock->build_tmp_table($_GET);
 
-require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 $export=new Noalyss_Csv(_('résumé-stock'));
 $export->send_header();
 $export->write_header(array(_("Depot"),_("Adresse"),_("Ville"),_("Pays"),_("Code Stock"),_("Fiches"),_("IN"),_("OUT"),_("Delta")));

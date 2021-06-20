@@ -23,7 +23,6 @@
  * @brief  display and allow to update , add , delete document_type for the follow up
  * 
  */
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 require_once NOALYSS_INCLUDE."/database/document_type_sql.class.php";
 
 /**

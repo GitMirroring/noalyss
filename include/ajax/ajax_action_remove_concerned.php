@@ -24,7 +24,6 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
  *@file
  *@brief remove concerned operation , call from follow up
  */
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 try
 {
@@ -45,7 +44,6 @@ if ( ! $g_user->can_read_action($ag_id)  ) {
     return;
 }
 
-require_once 'class/follow_up_other_concerned.class.php';
 $follow=new Follow_Up_Other_Concerned($cn,$ag_id);
 
 ob_start();

@@ -27,7 +27,6 @@ if ( $g_user->check_module('CFGTAG') == 0 ) {
     exit();
 }
 
-require_once NOALYSS_INCLUDE."/class/tag_group_mtable.class.php";
 /**
  * @file
  * @brief Manage the group of tags

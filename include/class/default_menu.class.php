@@ -24,7 +24,6 @@
  * @author dany
  */
 require_once NOALYSS_INCLUDE.'/database/default_menu_sql.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 
 class Default_Menu
 {

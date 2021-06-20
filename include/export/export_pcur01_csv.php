@@ -26,7 +26,6 @@ if (!defined('ALLOWED'))
  * @file
  * @brief  export currency operation in CSV see PCUR01 
  */
-require_once NOALYSS_INCLUDE.'/class/print_operation_currency.class.php';
 $http=new HttpInput();
 $export=new Noalyss_Csv(_('devise_export'));
 $export->send_header();

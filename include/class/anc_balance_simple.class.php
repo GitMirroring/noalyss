@@ -23,11 +23,7 @@
   \brief manage the simple balance for CA, inherit from balance_ca
  */
 
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once  NOALYSS_INCLUDE.'/class/anc_print.class.php';
-require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 require_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/pdfbalance_simple.class.php';
 require_once  NOALYSS_INCLUDE.'/header_print.php';
 /*! \brief manage the simple balance for CA, inherit from balance_ca
  *

@@ -26,7 +26,6 @@
  *
  */
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
-require_once  NOALYSS_INCLUDE."/lib/html_input.class.php";
 
 /**
  * @class

@@ -24,7 +24,6 @@
  * @file
  * @brief 
  */
-require_once NOALYSS_INCLUDE."/class/package_noalyss.class.php";
 
 /**
  * @brief

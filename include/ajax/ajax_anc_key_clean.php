@@ -27,7 +27,6 @@
 // Copyright (2014) Author Dany De Bontridder danydb@aevalys.eu
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 try
@@ -45,7 +44,6 @@ catch (Exception $exc)
 }
 
 
-require_once 'class/anc_operation.class.php';
 global $g_user;
 
 if ($g_user->get_ledger_access($ledger)=='W')

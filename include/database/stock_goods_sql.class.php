@@ -25,7 +25,6 @@
  * @brief
  *
  */
-require_once NOALYSS_INCLUDE.'/lib/table_data_sql.class.php';
 
 class Stock_Goods_Sql extends Table_Data_SQL
 {

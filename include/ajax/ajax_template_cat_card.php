@@ -27,7 +27,6 @@ if (!defined('ALLOWED'))
  * @brief Manage the template of category of card
  */
 
-require_once NOALYSS_INCLUDE."/class/template_card_category.class.php";
 /**
  * ajax_template_cat_card add security , accessible only for CFGCARDCAT
  */

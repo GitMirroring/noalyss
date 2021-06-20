@@ -23,7 +23,6 @@
  * \brief Manage the attributs ,CFGATCARD
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/card_attribut_mtable.class.php';
 
 $obj=new Fiche_Attr($cn);
 $mtable=new Card_Attribut_MTable($obj);

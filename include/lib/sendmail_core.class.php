@@ -28,7 +28,6 @@
  *
  * @author dany
  */
-require_once NOALYSS_INCLUDE.'/lib/filetosend.class.php';
 
 class Sendmail_Core
 {

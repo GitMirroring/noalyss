@@ -21,8 +21,6 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/print_operation_currency.class.php';
-require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
 /**
  * @file
  * @brief show all the operation in currency by accounting

@@ -21,7 +21,6 @@
 
 // if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE."/class/tag_operation.class.php";
 
 /**
  * @file

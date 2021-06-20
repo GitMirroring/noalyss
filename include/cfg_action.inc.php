@@ -27,7 +27,6 @@
 
 // show list of document
 if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE."/class/action_document_type_mtable.class.php";
 echo '<div class="content">';
 $doc_type=new Document_type_SQL($cn);
 $action_document_type=new Action_Document_Type_MTable($doc_type);

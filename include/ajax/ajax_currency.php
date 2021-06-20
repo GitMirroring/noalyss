@@ -21,9 +21,7 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE."/class/currency_mtable.class.php";
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
-require_once NOALYSS_INCLUDE.'/database/v_currency_last_value_sql.class.php';
+
 /**
  * @file
  * @brief Ajax response for currency related calls

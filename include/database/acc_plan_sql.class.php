@@ -23,7 +23,6 @@
  * @file
  * @brief  Layer above Tmp_Pcmn_Sql
  */
-require_once NOALYSS_INCLUDE."/lib/data_sql.class.php";
 require_once NOALYSS_INCLUDE."/database/tmp_pcmn_sql.class.php";
 /**
  * @brief this class is above tmp_pcmn_sql and is a view of tmp_pcmn

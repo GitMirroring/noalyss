@@ -25,13 +25,6 @@
    */
 if ( ! defined('ALLOWED')) die (_('Accès interdit'));
 
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
-require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 $div=$http->request('div');
 mb_internal_encoding("UTF-8");
 $http=new HttpInput();

@@ -21,8 +21,6 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE."/class/document.class.php";
-require_once NOALYSS_INCLUDE."/lib/inplace_edit.class.php";
 /**
  * @file
  * @brief Update description on file

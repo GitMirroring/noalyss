@@ -27,9 +27,6 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/menu_ref.class.php';
-require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
-require_once NOALYSS_INCLUDE.'/class/extension.class.php';
 
 
 echo '<div class="content">';

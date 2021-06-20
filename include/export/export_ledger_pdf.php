@@ -26,18 +26,8 @@
  */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier = dossier::id();
-require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/lib/impress.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
-require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
 $http=new HttpInput();
 $cn = Dossier::connect();

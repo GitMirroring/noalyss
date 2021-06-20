@@ -39,7 +39,6 @@ class Stock extends Stock_Sql
 	{
 
 		$sql = $this->create_query_histo($p_array);
-		require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 		$p_url = HtmlInput::get_to_string(array("gDossier", "ac", "wcard", "wdate_start", "wdate_end", "wrepo",
 					"wamount_start", "wamount_end", "wcode_stock", "wdirection"));
 

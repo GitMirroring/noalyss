@@ -22,9 +22,6 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-require NOALYSS_INCLUDE.'/database/user_filter_sql.class.php';
-require NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
-require_once NOALYSS_INCLUDE.'/class/tag_operation.class.php';
 $cn=Dossier::connect();
 $dossier_id=Dossier::id();
 global $g_user;

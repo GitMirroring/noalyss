@@ -28,8 +28,6 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-require_once NOALYSS_INCLUDE.'/class/card_multiple.class.php';
 $http=new HttpInput();
 
 ob_start();
@@ -51,7 +49,6 @@ if ( ! $g_user->can_write_action($ag_id)  ) {
     return;
 }
 
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 
 $r=HtmlInput::title_box(_("Détail fiche"), 'search_card');
 //--------------------------------------------------------------------------------------------------------------------

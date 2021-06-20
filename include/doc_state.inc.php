@@ -27,7 +27,6 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE."/class/document_state_mtable.php";
 
 $document_state_sql=new Document_State_SQL($cn);
 $mtable=new Document_State_MTable($document_state_sql);

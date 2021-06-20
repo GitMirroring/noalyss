@@ -25,11 +25,7 @@
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once   NOALYSS_INCLUDE.'/constant.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once  NOALYSS_INCLUDE.'/lib/user_common.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
 if ( ! isset($_GET['gDossier']) ||
         ! isset($_GET['f']) )
 {

@@ -23,9 +23,6 @@
  *
  * @author danydb
  */
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
-require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 
 class Print_Ledger_Detail_Item extends Print_Ledger
 {

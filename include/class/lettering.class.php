@@ -22,7 +22,6 @@
 /*!\file
  * \brief letter the accounting entry (row level)
  */
-require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 
 /**
  *@brief mother class for the lettering by account and by card

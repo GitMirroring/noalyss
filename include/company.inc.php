@@ -24,8 +24,6 @@
  */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
-require_once NOALYSS_INCLUDE.'/class/parameter_extra_mtable.class.php';
 
 global $g_user;
 $http=new HttpInput();

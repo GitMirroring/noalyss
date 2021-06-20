@@ -26,7 +26,6 @@
  *
  */
 require_once NOALYSS_INCLUDE.'/database/acc_plan_sql.class.php';
-require_once NOALYSS_INCLUDE.'/lib/manage_table_sql.class.php';
 /**
  * @brief this instance extends Manage_Table_SQL and aims to manage 
  * the Table tmp_pcmn thanks a web interface (add , delete, display...)

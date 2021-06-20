@@ -26,5 +26,4 @@ if (!defined('ALLOWED'))
  * @file
  * @brief export currency in PDF
  */
-require_once NOALYSS_INCLUDE.'/class/print_operation_currency.class.php';
 ?>

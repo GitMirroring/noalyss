@@ -21,8 +21,6 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
-require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
 $http=new HttpInput();
 $ag_id=$http->get("ag_id", "number");

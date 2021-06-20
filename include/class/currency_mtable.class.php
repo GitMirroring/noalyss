@@ -23,7 +23,6 @@
  * @file
  * @brief Currency thanks the view v_currency_last_value
  */
-require_once NOALYSS_INCLUDE.'/lib/manage_table_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/currency_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/currency_history_sql.class.php';
 

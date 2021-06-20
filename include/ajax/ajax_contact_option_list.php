@@ -21,7 +21,6 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE."/class/contact_option_ref_mtable.class.php";
 
 /**
  * @file

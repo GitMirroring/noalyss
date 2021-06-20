@@ -11,7 +11,6 @@ if ( $max == 0 ) {
     return $res;
     
 }
-require_once NOALYSS_INCLUDE."/lib/output_html_tab.class.php";
 $tab_tag=new Html_Tab($p_prefix."tab_tag",_("Etiquettes"));
 ob_start();
 ?>

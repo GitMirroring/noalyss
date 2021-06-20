@@ -22,12 +22,8 @@
  * \brief Print the user security in pdf
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 $gDossier=dossier::id();
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 $cn=Dossier::connect();
@@ -46,7 +42,6 @@ catch (Exception $exc)
 
 // Check User
 $rep=new Database();
-require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 $User=new User($rep);
 
 //-----------------------------------------------------

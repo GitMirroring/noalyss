@@ -23,8 +23,6 @@
  *
  * @author danydb
  */
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
 
 /**
  * @brief Strategie class for the print_ledger class
@@ -119,12 +117,6 @@ class Print_Ledger extends PDF
          * if you put them on the top of this file,  export_ledger_pdf.php will include the files
          * but not export_ledger_csv.php
          */
-        require_once NOALYSS_INCLUDE.'/class/print_ledger_detail.class.php';
-        require_once NOALYSS_INCLUDE.'/class/print_ledger_simple.class.php';
-        require_once NOALYSS_INCLUDE.'/class/print_ledger_simple_without_vat.class.php';
-        require_once NOALYSS_INCLUDE.'/class/print_ledger_fin.class.php';
-        require_once NOALYSS_INCLUDE.'/class/print_ledger_misc.class.php';
-        require_once NOALYSS_INCLUDE.'/class/print_ledger_detail_item.class.php';
 
         /**
          * For PDF output

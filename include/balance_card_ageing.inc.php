@@ -25,10 +25,6 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
  * @brief Aged Balance for card
  *@see Balance_Age
  */
-require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
-require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
-require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
 $let=( isset ($_GET['p_let']))?'let':'unlet';
 // f_id
 $f_id=$http->get('f_id',"number");

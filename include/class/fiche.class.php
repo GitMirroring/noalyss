@@ -20,17 +20,6 @@
 
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-require_once NOALYSS_INCLUDE."/class/fiche_attr.class.php";
-require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itva_popup.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iposte.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
-require_once NOALYSS_INCLUDE."/lib/input_switch.class.php";
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 
 /*! \file
  * \brief define Class fiche, this class are using

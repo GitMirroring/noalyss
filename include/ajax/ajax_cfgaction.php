@@ -30,7 +30,6 @@ if ($g_user->check_action(PARCATDOC)==0)
     return;
 }
 
-require_once NOALYSS_INCLUDE."/class/action_document_type_mtable.class.php";
 
 $http=new HttpInput();
 

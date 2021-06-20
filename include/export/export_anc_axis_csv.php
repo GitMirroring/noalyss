@@ -24,7 +24,6 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 $http=new HttpInput();
 $pa_id=$http->get("pa_id","number");
 $name=$cn->get_value("select pa_name from plan_analytique where pa_id=$1",

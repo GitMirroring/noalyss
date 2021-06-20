@@ -3,8 +3,6 @@
 //see licence.txt
 ?><?php 
 require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
-require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
-require_once NOALYSS_INCLUDE.'/class/anc_plan.class.php';
  $str_anc="";
  $cn=Dossier::connect();
  // find out exercice
@@ -12,8 +10,6 @@ require_once NOALYSS_INCLUDE.'/class/anc_plan.class.php';
  $exercice=$periode_id->get_exercice();
 ?>
 <?php 
-require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
-require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 ?>
 <div class="content" style="padding:0">
 
@@ -90,7 +86,6 @@ require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 
 <div class="myfieldset">
 <?php 
-  require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
   $owner=new Noalyss_Parameter_Folder($cn);
 ?>
 <table class="result">

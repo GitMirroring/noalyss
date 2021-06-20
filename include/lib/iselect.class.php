@@ -26,7 +26,6 @@
  * 
  * @see Database::make_array
  */
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class ISelect extends HtmlInput
 {
     /**

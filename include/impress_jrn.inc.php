@@ -22,13 +22,6 @@
  * \brief ask for Printing the ledger (pdf,html)
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_history.class.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
 $gDossier = dossier::id();
 global $g_user,$http;
 

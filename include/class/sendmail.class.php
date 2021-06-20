@@ -24,8 +24,6 @@
  * is reached,
  * @see sendmail_core
  */
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once  NOALYSS_INCLUDE."/lib/sendmail_core.class.php";
 
 class Sendmail extends  Sendmail_Core
 {

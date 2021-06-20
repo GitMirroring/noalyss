@@ -23,9 +23,6 @@ if (!defined('RECOVER'))
 define('SIZE_REQUEST', 70);
 
 
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-require_once NOALYSS_INCLUDE.'/class/sendmail.class.php';
 /**
  * @brief generate a random string of char
  * @param $car int length of the string
@@ -64,8 +61,6 @@ if ($action=="") :
     </form>
     <?php
 elseif ($action=="send_email") :
-    require_once NOALYSS_INCLUDE.'/lib/sendmail_core.class.php';
-    require_once NOALYSS_INCLUDE.'/class/database.class.php';
     /*
      * Check if user exists, if yes save a recover request
      */
@@ -151,7 +146,6 @@ elseif ($action=="req") :
     $http=new HttpInput();
     $request_id=$http->request("req","string", "");
     if (strlen(trim($request_id))==SIZE_REQUEST) :
-        require_once NOALYSS_INCLUDE.'/class/database.class.php';
         $cn=new Database(0);
 
         $value=$cn->get_value("select password from recover_pass where request=$1 and created_on > now() - interval '12 hours' and recover_on is null", array($request_id));

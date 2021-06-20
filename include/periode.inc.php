@@ -23,15 +23,11 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 $gDossier=dossier::id();
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 echo '<div class="content">';
 $cn=Dossier::connect();
 //-----------------------------------------------------
 // Periode
 //-----------------------------------------------------
-require_once NOALYSS_INCLUDE."/class/periode.class.php";
-require_once NOALYSS_INCLUDE."/class/periode_ledger.class.php";
 $http=new HttpInput();
 
 $p_ledger_id=$http->request("jrn_def_id", "number", 0);

@@ -22,7 +22,6 @@
 /*!\file
  * \brief definition of the class Pre_Op_Advanced
  */
-require_once  NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 
 /*---------------------------------------------------------------------- */
 /*!\brief concerns the predefined operation for the operation from 'Ecriture direct'
@@ -162,7 +161,6 @@ class Pre_Op_Advanced extends Pre_operation_detail
    function display($p_array)
     {
         global $g_parameter, $g_user;
-        require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
         $legder=new Acc_Ledger($this->db,$p_array['p_jrn']);
 
         $legder->nb=$legder->get_min_row();

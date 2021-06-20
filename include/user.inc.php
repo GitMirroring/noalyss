@@ -26,8 +26,6 @@ if ( !defined ('ALLOWED')) die('Forbidden');
  * action=user_mgt
  *
  */
-require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 echo '<div class="content" >';
 /******************************************************/

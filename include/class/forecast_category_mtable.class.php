@@ -27,7 +27,6 @@
  */
 
 require_once NOALYSS_INCLUDE."/database/forecast_category_sql.class.php";
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 
 class Forecast_Category_MTable extends Manage_Table_SQL
 {

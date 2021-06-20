@@ -21,7 +21,6 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 require_once NOALYSS_INCLUDE."/database/payment_method_sql.class.php";
-require_once NOALYSS_INCLUDE."/class/payment_method_mtable.class.php";
 
 $payment_method_sql=new Payment_method_SQL($cn);
 $payment_method_mtable=new Payment_Method_MTable($payment_method_sql);

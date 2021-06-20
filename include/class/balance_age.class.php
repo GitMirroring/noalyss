@@ -17,7 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 
 /* * *
  * @file 
@@ -138,7 +137,6 @@ class Balance_Age
      */
     function export_csv($p_date_start, $p_let)
     {
-        require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
         bcscale(2);
         $export=new Noalyss_Csv('aged_balance');
         $header = array(_('QuickCode') ,

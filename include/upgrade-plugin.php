@@ -26,8 +26,6 @@ if (!defined('ALLOWED_ADMIN'))
 }
 
 
-require_once NOALYSS_INCLUDE.'/class/package_repository.class.php';
-require_once NOALYSS_INCLUDE.'/class/extension.class.php';
 
 /**
  * @file

@@ -22,14 +22,7 @@
 /*!\file
  * \brief Handle the table payment_method
  */
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
-require_once NOALYSS_INCLUDE.'/class/fiche_def.class.php';
 require_once NOALYSS_INCLUDE.'/constant.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
 /*!\brief Handle the table payment_method
  *\note the private data member are accessed via

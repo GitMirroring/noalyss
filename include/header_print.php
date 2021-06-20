@@ -24,9 +24,6 @@
  *
  */
 
-require_once  NOALYSS_INCLUDE.'/class/database.class.php';
-require_once  NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 
 
 date_default_timezone_set ('Europe/Brussels');

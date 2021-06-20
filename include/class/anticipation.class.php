@@ -29,13 +29,7 @@
  * @see Forecast Forecast_Cat Forecast_Item
  *
  */
-require_once NOALYSS_INCLUDE . '/class/forecast.class.php';
-require_once NOALYSS_INCLUDE . '/class/fiche.class.php';
-require_once NOALYSS_INCLUDE . '/class/acc_account_ledger.class.php';
-require_once NOALYSS_INCLUDE . '/class/periode.class.php';
-require_once NOALYSS_INCLUDE . '/lib/impress.class.php';
 require_once NOALYSS_INCLUDE . '/database/forecast_sql.class.php';
-require_once NOALYSS_INCLUDE . '/class/forecast_category_mtable.class.php';
 
 class Anticipation
 {

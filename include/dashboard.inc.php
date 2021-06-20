@@ -4,20 +4,9 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
  *@file
  *@brief Dashboard
  */
-require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 require_once  NOALYSS_INCLUDE.'/constant.php';
 require_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once  NOALYSS_INCLUDE.'/class/user.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_report.class.php';
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 require_once  NOALYSS_INCLUDE.'/lib/user_menu.php';
-require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/class/todo_list.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itextarea.class.php';
-require_once NOALYSS_INCLUDE.'/class/calendar.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/follow_up.class.php';
 
 echo '<div class="content">';
 global $g_user;

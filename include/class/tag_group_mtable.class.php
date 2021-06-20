@@ -26,7 +26,6 @@
  * 
  * 
  */
-require_once NOALYSS_INCLUDE.'/lib/manage_table_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/tag_group_sql.class.php';
 
 class Tag_Group_MTable extends Manage_Table_SQL

@@ -24,7 +24,6 @@
  *@see TFPDF
  */
 
-require_once NOALYSS_INCLUDE."/lib/pdf_core.class.php";
 
 class PDF extends  PDF_Core
 {

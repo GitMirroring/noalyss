@@ -27,11 +27,6 @@
  *
  */
 if ( !defined ('ALLOWED')) die('Forbidden');
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once  NOALYSS_INCLUDE.'/class/extension.class.php';
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 $sa = $http->request("sa", "string", 'list');
 if (isset($_POST['upd']) &&
@@ -240,7 +235,6 @@ if (isset($_POST["FMOD_NAME"]))
 
 }
 // Show all available templates
-require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 $url=$_SERVER['PHP_SELF']."?".http_build_query(array("sa"=>"list","action"=>$http->request('action')));
 
 $header=new Sort_Table();

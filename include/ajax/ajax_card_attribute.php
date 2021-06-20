@@ -26,8 +26,6 @@
 global $g_user;
 // security
 $g_user->can_request("CFGATCARD");
-require_once NOALYSS_INCLUDE."/lib/inplace_switch.class.php";
-require_once NOALYSS_INCLUDE.'/class/card_attribut_mtable.class.php';
 
 $http=new HttpInput();
 

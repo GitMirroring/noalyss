@@ -23,7 +23,6 @@
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
 define ('CODE_EXCP_DUPLICATE',901);
 /**
  * @brief Objec to check a double insert into the database, this duplicate occurs after

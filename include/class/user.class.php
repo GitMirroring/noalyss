@@ -30,7 +30,6 @@
 
 require_once NOALYSS_INCLUDE.'/constant.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 class User
@@ -1273,7 +1272,6 @@ class User
                    dos_name  ilike '%' || $1|| '%' or dos_description ilike '%' || $1 || '%' 
 			  order by dos_name", array($p_filter));
 		}
-		require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 		$max = Database::num_row($Res);
 		if ($max == 0)

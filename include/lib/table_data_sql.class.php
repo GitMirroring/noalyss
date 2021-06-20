@@ -82,7 +82,6 @@
  * @endcode
  *
  */
-require NOALYSS_INCLUDE."/lib/data_sql.class.php";
 
 abstract class Table_Data_SQL extends Data_SQL
 {

@@ -20,7 +20,6 @@
 
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
 
-require_once NOALYSS_INCLUDE.'/class/pdf.class.php';
 
 
 class PDFLand extends PDF

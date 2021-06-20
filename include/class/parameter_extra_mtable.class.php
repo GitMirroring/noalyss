@@ -27,7 +27,6 @@ if (!defined('ALLOWED'))
  * @brief 
  */
 require_once NOALYSS_INCLUDE."/database/parameter_extra_sql.class.php";
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 
 class Parameter_Extra_MTable extends Manage_Table_SQL
 {

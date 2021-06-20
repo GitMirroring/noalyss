@@ -1,10 +1,4 @@
 ﻿<?php
-require_once ('lib/icard.class.php');
-require_once('lib/ifile.class.php');
-require_once('class/database.class.php');
-require_once('lib/iselect.class.php');
-require_once('class/dossier.class.php');
-require_once('class/fiche.class.php');
 
 /* 
 Ma première extension, intégrer un fichier de client dans une catégorie 

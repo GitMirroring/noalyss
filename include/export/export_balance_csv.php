@@ -21,21 +21,16 @@
  * \brief Return the balance in CSV format
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
 include_once ("lib/ac_common.php");
 include_once("class/acc_balance.class.php");
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 
 $http=new HttpInput();
 $gDossier=dossier::id();
 
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 $cn=Dossier::connect();
 bcscale(2);
 
-require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 $http=new HttpInput();
 $export=new Noalyss_Csv('balance');
 $bal=new Acc_Balance($cn);

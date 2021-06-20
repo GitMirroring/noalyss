@@ -24,10 +24,7 @@
  * \brief Display a table and allow to change the predefined operation, insert or delete. Used the
  * class Manage_Table_SQL and the SQL Object for the tables op_predef and op_predef_detail.
  */
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 require_once NOALYSS_INCLUDE."/database/op_predef_sql.class.php";
-require_once NOALYSS_INCLUDE."/class/pre_operation.class.php";
-require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
 
 /*!
  * \brief Display a table and allow to change the predefined operation, insert or delete. Used the
@@ -67,7 +64,6 @@ class Operation_Predef_MTable extends Manage_Table_SQL
         // create our own "Append button"
         $this->set_append_row(false);
         $this->set_dialog_box("prdfop");
-        $this->set_dialogbox_style(["position"=>"fixed","top"=>"5%","width:auto","min-width"=>"80%"]);
     }
 
     /**

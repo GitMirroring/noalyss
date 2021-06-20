@@ -22,7 +22,6 @@
  */
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
 
 $http=new HttpInput();
 
@@ -38,7 +37,6 @@ $doc=new Document_modele($cn);
 //-----------------------------------------------------
 if ( $sub_action=='add_document')
 {
-    require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
     $doc=new Document_modele($cn);
     $doc->md_name=$http->post('md_name');
     $doc->md_id=-1; // because it is a new model
@@ -52,7 +50,6 @@ if ( $sub_action=='add_document')
 //-----------------------------------------------------
 if ( $sub_action=='rm_template')
 {
-    require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
     // Get all the document to remove
 
     foreach ( $_POST as $name=>$value )
@@ -71,7 +68,6 @@ if ( $sub_action=='rm_template')
 //----------------------------------------------------------------------
 if ( $sub_action == 'mod_template')
   {
-    require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
     $id=$http->post("id","number");
     $doc=new Document_modele($cn,$id);
     $doc->update($_POST);

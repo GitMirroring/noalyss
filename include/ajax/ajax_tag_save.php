@@ -18,7 +18,6 @@ if ( $g_user->check_module('CFGTAG')==0  &&  $g_user->check_action(TAGADD) == 0)
 }
 
 
-require_once NOALYSS_INCLUDE.'/class/tag.class.php';
 
 //Save a tag
 if ($op=='tag_save')

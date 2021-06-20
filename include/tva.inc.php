@@ -21,11 +21,6 @@
  * \brief included file for customizing with the vat (account,rate...)
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itextarea.class.php';
-require_once NOALYSS_INCLUDE."/class/tva_rate_mtable.class.php";
 
 $cn=Dossier::connect();
 $own=new Noalyss_Parameter_Folder($cn);

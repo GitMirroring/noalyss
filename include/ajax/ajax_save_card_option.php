@@ -21,7 +21,6 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE."/class/follow_up_other_concerned.class.php";
 /**
  * @file
  * @brief save option of card into action_person_option

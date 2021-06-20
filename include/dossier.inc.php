@@ -23,10 +23,6 @@ if ( !defined ('ALLOWED')) die('Forbidden');
 * \brief Management of the folder
  *
  */
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itextarea.class.php';
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 global $http;
 
 $sa=$http->request('sa','string','list');
@@ -220,7 +216,6 @@ if ( isset ($_POST["DATABASE"]) )
 // List of folder
 if ( $sa == 'list' )
 {
-	require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
         echo '<p>';
         echo HtmlInput::button(_('Ajouter'),_('Ajouter un dossier')," onclick=\$('folder_add_id').show()");
         echo '</p>';

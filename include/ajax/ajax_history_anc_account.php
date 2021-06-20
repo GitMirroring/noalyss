@@ -32,7 +32,6 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
         - op            history
         - exercice	integer
  */
-require_once NOALYSS_INCLUDE."/class/anc_grandlivre.class.php";
 
 try {
     $po_id=$http->get("po_id","number");

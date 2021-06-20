@@ -27,7 +27,6 @@ if (!defined('ALLOWED'))
  * @brief 
  * @param type $name Descriptionara
  */
-require_once NOALYSS_INCLUDE."/class/tva_rate_mtable.class.php";
 
 if ( $g_user->check_module('CFGTVA') ==0 )
 {

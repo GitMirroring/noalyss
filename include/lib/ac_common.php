@@ -25,9 +25,6 @@
  * @brief common utilities for a lot of procedure, classe
  */
 
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 /**

@@ -23,7 +23,6 @@
  * \brief Html Input
  *  - name is the name and id of the input
  */
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class IRelated_Action extends HtmlInput
 {
 

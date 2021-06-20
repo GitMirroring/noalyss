@@ -115,7 +115,6 @@
   $msg.=td($w->search().$label->input());
   @endcode
  */
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 class ICard extends HtmlInput
@@ -586,7 +585,6 @@ class ICard extends HtmlInput
 
     static public function test_me()
     {
-        require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
         $_SESSION[SESSION_KEY.'isValid']=1;
         $a=new ICard('testme');
         $a->extra="all";

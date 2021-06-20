@@ -23,9 +23,6 @@
 /*!
  * \brief Manage the account from the table tmp_pcmn
  */
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/database/tmp_pcmn_sql.class.php';
 
 class Acc_Account

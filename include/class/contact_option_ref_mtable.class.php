@@ -26,7 +26,6 @@
  * @todo to be implemented
  */
 require_once NOALYSS_INCLUDE."/database/contact_option_ref_sql.class.php";
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 
 class Contact_Option_Ref_MTable extends Manage_Table_SQL{
     

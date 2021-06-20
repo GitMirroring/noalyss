@@ -22,7 +22,6 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE."/class/anc_account_table.class.php";
 /**
  * @file
  * @brief Insert , update delete anc accounting

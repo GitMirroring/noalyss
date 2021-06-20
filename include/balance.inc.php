@@ -26,13 +26,6 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 include_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
 include_once NOALYSS_INCLUDE.'/class/acc_balance.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
-require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 global $g_user, $http;
 $gDossier=dossier::id();
 // Get the exercice

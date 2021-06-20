@@ -24,7 +24,6 @@
  */
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 
 $http=new HttpInput();
 echo '<div class="content">';

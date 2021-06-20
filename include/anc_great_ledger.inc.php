@@ -9,7 +9,6 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 echo '<div style="content">';
 global $http;
-require_once NOALYSS_INCLUDE.'/class/anc_grandlivre.class.php';
 $cn=Dossier::connect();
 $grandLivre=new Anc_Grandlivre($cn);
 

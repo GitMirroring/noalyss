@@ -38,8 +38,6 @@ if (!defined('ALLOWED'))
  * ledger_id == 0 or not
  * The answer must be in JSON
  */
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
-require_once NOALYSS_INCLUDE.'/class/periode_ledger.class.php';
 
 $err=0;
 $a_answer=[];

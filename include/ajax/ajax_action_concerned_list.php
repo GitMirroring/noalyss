@@ -34,7 +34,6 @@ if ( ! $g_user->can_write_action($ag_id)  ) {
     record_log(__FILE__."security : access refused");
     return;
 }
-require_once 'class/follow_up_other_concerned.class.php';
 ob_start();
 echo HtmlInput::title_box(_("Liste Autres Fiches"), "action_concerned_list_dv");
 

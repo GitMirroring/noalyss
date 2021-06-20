@@ -25,7 +25,6 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 ob_start();
-require_once NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 $id=$http->get("id","number");
 
 $op=new Pre_Operation($cn,$id);

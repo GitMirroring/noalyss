@@ -26,7 +26,6 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE . "/lib/inplace_edit.class.php";
 
 if ( $g_user->check_module("PLANANC ") ) die("forbidden");
 

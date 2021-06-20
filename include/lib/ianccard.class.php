@@ -27,7 +27,6 @@
 /*!
  * \brief
 */
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 class IAncCard extends HtmlInput

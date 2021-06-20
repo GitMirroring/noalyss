@@ -25,10 +25,6 @@
  * \brief file included to manage all the sold operation
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
-require_once  NOALYSS_INCLUDE.'/class/pre_operation.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 $gDossier = dossier::id();
 global $g_parameter;
 $http=new HttpInput();

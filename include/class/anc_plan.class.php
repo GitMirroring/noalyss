@@ -26,12 +26,8 @@
 /*! \brief
  *  Concerns the Analytic plan (table plan_analytique)
  */
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
 require_once NOALYSS_INCLUDE.'/constant.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/database/poste_analytique_sql.class.php';
-require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
 
 class Anc_Plan
 {

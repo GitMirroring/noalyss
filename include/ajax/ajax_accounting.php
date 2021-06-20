@@ -39,8 +39,6 @@ try {
 }
 if  ( $g_user->check_module("CFGPCMN") == 0) die();
 
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
-require_once NOALYSS_INCLUDE."/class/acc_plan_mtable.class.php";
 
 $obj=new Acc_Plan_SQL($cn);
 $obj->set_limit_fiche_qcode(5);

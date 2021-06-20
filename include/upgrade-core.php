@@ -23,7 +23,6 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 if ( ! defined ('ALLOWED_ADMIN')) { die (_('Non autorisé'));}
 
 global $version_noalyss;
-require_once NOALYSS_INCLUDE.'/class/package_repository.class.php';
 /**
  * @file
  * @brief 

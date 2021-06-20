@@ -5,7 +5,6 @@ $str_anc="";
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
 <div class="content" style="padding:0;">
     <?php
-    require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
     $owner = new Noalyss_Parameter_Folder($cn);
     ?>
 

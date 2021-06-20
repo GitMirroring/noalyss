@@ -8,7 +8,6 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/calendar.class.php';
 $cal=new Calendar();
 $cal->default_periode=(isset ($_GET['in']))?$_GET['in']:$g_user->get_periode();
 

@@ -23,10 +23,6 @@
  * \brief Html Input
  *
  */
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 /**
  *@brief show a button, for selecting a account and a input text for manually inserting an account
@@ -63,7 +59,6 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
  echo js_include('accounting_item.js');
 
 
-require_once NOALYSS_INCLUDE.'/lib/iposte.class.php';
 
 // In the FORM
 $text=new IPoste();

@@ -30,8 +30,6 @@ if (!defined('ALLOWED')) {    die('Appel direct ne sont pas permis'); }
 echo '<div class="content">';
 global $g_parameter;
 
-require_once NOALYSS_INCLUDE."/class/currency_mtable.class.php";
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 require_once NOALYSS_INCLUDE.'/database/v_currency_last_value_sql.class.php';
 
 $currency=new V_Currency_Last_Value_SQL($cn);

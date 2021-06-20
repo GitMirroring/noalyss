@@ -24,10 +24,6 @@
  *   must use it
  *
  */
-require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
-require_once  NOALYSS_INCLUDE.'/class/database.class.php';
-require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
 
 /*! \brief new class for managing the reconciliation it must be used
  * instead of the function InsertRapt, ...
@@ -459,7 +455,6 @@ j1.j_poste as poste
      */
     function export_csv($p_choice)
     {
-        require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
         $export=new Noalyss_Csv(_('rapprochement'));
         $export->send_header();
 

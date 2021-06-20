@@ -25,10 +25,6 @@
  *
  */
 if (!defined('ALLOWED')) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE . "/class/tax_summary.class.php";
-require_once NOALYSS_INCLUDE . '/class/user.class.php';
-require_once NOALYSS_INCLUDE . '/class/pdf_land.class.php';
-require_once NOALYSS_INCLUDE . '/lib/http_input.class.php';
 bcscale(4);
 $http = new HttpInput();
 

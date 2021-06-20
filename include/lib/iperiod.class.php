@@ -31,7 +31,6 @@
  *   - $show_end_date; $show_end_date is not set or false, do not show the end date  default = true
  *   - $show_start_date; $show_start_date is not set or false, do not show the start date  default=true
 */
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 class IPeriod extends HtmlInput
 {
     var $type; /*!< $type the type of the periode OPEN CLOSE NOTCENTRALIZED or ALL */

@@ -7,7 +7,6 @@
  *@see Anc_Balance_Double
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/anc_balance_double.class.php';
 $bc = new Anc_Balance_Double($cn);
 $bc->get_request();
 echo '<form method="get">';

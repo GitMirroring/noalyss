@@ -23,12 +23,6 @@
  * @file
  * @brief manage the operation in currency : export CSV, export PDF , output in HTML
  */
-require_once NOALYSS_INCLUDE."/class/acc_currency.class.php";
-require_once NOALYSS_INCLUDE."/class/data_currency_operation.class.php";
-require_once NOALYSS_INCLUDE."/class/filter_data_currency_card.class.php";
-require_once NOALYSS_INCLUDE."/class/filter_data_currency_accounting.class.php";
-require_once NOALYSS_INCLUDE."/class/filter_data_currency_card_category.class.php";
-require_once NOALYSS_INCLUDE."/lib/noalyss_csv.class.php";
 /**
  * @class
  * @brief manage the operation in currency : export CSV , output in HTML

@@ -23,9 +23,6 @@
 /*!
  * \brief Class for the document template
  */
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ifile.class.php';
 class Document_modele
 {
     var $cn;         	/*!< $cn  database connection */

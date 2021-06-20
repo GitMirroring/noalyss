@@ -26,7 +26,6 @@ if (!defined('ALLOWED'))
  * @file
  * @brief  display the options of a card
  */
-require_once NOALYSS_INCLUDE."/class/card_multiple.class.php";
 
 $card_multiple=new Card_Multiple();
 try

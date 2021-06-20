@@ -23,7 +23,6 @@
  * \brief show the status of a card
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/exercice.class.php';
 $http=new HttpInput();
 
 global $g_user;

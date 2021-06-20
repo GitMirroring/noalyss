@@ -25,7 +25,6 @@ if (!defined('ALLOWED'))
  * @brief add tag , used for follow up
  * @see Tag
  */
-require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
 //Single Tag
 ob_start();
 if ($_GET['clear']==1)

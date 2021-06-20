@@ -23,9 +23,6 @@
  * \file
  * \brief contains function for the parsing and computing formulae. Test are in scenario/test_parse_formula.php
  */
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
-require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
-require_once NOALYSS_INCLUDE.'/class/anc_account.class.php';
 
 /**
  * @class

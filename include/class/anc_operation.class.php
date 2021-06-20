@@ -22,11 +22,6 @@
 /*!\file
  *\brief definition of Anc_Operation
  */
-require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/class/anc_plan.class.php';
 require_once  NOALYSS_INCLUDE.'/lib/user_common.php';
 
 /*! \brief this class is used to show the form for entering an

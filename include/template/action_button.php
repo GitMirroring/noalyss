@@ -25,7 +25,6 @@
  * @brief show button in the list of actions
  *
  */
-require_once NOALYSS_INCLUDE."/lib/select_box.class.php";
 $http=new HttpInput();
 // Create select box for new Action
 Follow_Up::show_action_add(array("sa"=>"add_action"));

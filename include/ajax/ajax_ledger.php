@@ -31,18 +31,6 @@
 */
 if ( ! defined('ALLOWED')) die(_('Non authorisé'));
 
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
-require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
-require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
-require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-require_once NOALYSS_INCLUDE.'/class/tag_operation.class.php';
 $http=new HttpInput();
 
 /**

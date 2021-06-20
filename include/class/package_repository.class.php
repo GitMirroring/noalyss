@@ -23,10 +23,6 @@
  * @file
  * @brief contains the class Package_Repository
  */
-require_once NOALYSS_INCLUDE.'/class/package_core.class.php';
-require_once NOALYSS_INCLUDE.'/class/package_plugin.class.php';
-require_once NOALYSS_INCLUDE.'/class/package_template.class.php';
-require_once NOALYSS_INCLUDE.'/class/package_contrib.class.php';
 
 /**
  * @brief connect to NOALYSS_PACKAGE and fetch the file web.xml , it displays

@@ -22,9 +22,6 @@
 /*!\file
  * \brief Html Input
  */
-require_once  NOALYSS_INCLUDE.'/lib/ipopup.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
 /**
  *@brief let you choose a TVA in a popup
  *@code

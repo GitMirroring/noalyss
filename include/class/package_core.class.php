@@ -18,7 +18,6 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright (2018) Author Dany De Bontridder <dany@alchimerys.be>
-require_once NOALYSS_INCLUDE.'/class/package_noalyss.class.php';
 
 /**
  * @file

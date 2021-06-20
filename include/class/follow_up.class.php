@@ -18,31 +18,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-require_once NOALYSS_INCLUDE.'/lib/itextarea.class.php';
-require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ifile.class.php';
-require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
-require_once NOALYSS_INCLUDE.'/class/document.class.php';
-require_once NOALYSS_INCLUDE.'/class/document_type.class.php';
-require_once NOALYSS_INCLUDE.'/class/document_modele.class.php';
-require_once NOALYSS_INCLUDE.'/class/document_option.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
-require_once NOALYSS_INCLUDE.'/class/follow_up_detail.class.php';
-require_once NOALYSS_INCLUDE.'/lib/inum.class.php';
-require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
-require_once NOALYSS_INCLUDE.'/lib/irelated_action.class.php';
-require_once NOALYSS_INCLUDE.'/class/tag.class.php';
-require_once NOALYSS_INCLUDE.'/class/document_option.class.php';
-require_once NOALYSS_INCLUDE.'/class/default_menu.class.php';
-require_once NOALYSS_INCLUDE.'/lib/inplace_edit.class.php';
-require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
-require_once NOALYSS_INCLUDE.'/class/tag_action.class.php';
 
 /**
  * \file

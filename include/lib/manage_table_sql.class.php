@@ -61,7 +61,6 @@
  * @see sorttable.js
  * 
  */
-require_once NOALYSS_INCLUDE."/lib/http_input.class.php";
 
 class Manage_Table_SQL
 {

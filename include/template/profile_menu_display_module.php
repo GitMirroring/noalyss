@@ -64,9 +64,9 @@ $http=new HttpInput();
 		<td class="<?php echo $style?>" id="sub<?php echo $row['pm_id']?>">
                         <?php echo HtmlInput::anchor($row['me_code']." ".gettext($row['me_menu']),'',sprintf(" onclick =\"mod_menu (%d,%d) \" ",Dossier::id(),$row['pm_id']),' class="line" ')?>
                         <span>
-                            <?php echo HtmlInput::anchor(SMALLX, "", 
-                                    sprintf (" onclick = \"remove_sub_menu(%d,%d)\"", Dossier::id(),$row['pm_id']),
-                                    'class="tinybutton"' ) ?>
+                            <?php 
+                            echo Icon_Action::trash(uniqid(), sprintf (" remove_sub_menu(%d,%d)", Dossier::id(),$row['pm_id']))
+                            ?>
                         </span>
                         <p>
                         <?php echo _($row['me_description'])?>

@@ -73,7 +73,6 @@ $w_lettre->selected=$let;
 ?>
 </form>
 <?php
-    require_once NOALYSS_INCLUDE.'/class/balance_age.class.php';
     $balance=new Balance_Age($cn);
     
     if ( $type == "C") :

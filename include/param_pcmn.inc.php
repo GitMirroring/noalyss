@@ -21,20 +21,16 @@
  * \brief concerns the management of the "Plan Comptable"
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once  NOALYSS_INCLUDE.'/class/acc_account.class.php';
 require_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/constant.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 $http=new HttpInput();
 $gDossier=dossier::id();
 
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
 
 /* Admin. Dossier */
 $cn=Dossier::connect();
 
-require_once  NOALYSS_INCLUDE.'/class/user.class.php';
 
 require_once  NOALYSS_INCLUDE.'/lib/user_menu.php';
 echo '<div id="acc_update" class="inner_box" style="display:none;position:absolute;text-align:left;width:auto;z-index:1"></div>';
@@ -53,8 +49,6 @@ $g_start=$http->get('p_start',"number",1);
 
 <DIV CLASS="myfieldset" style="width:auto">
 <?php
-require_once NOALYSS_INCLUDE."/class/acc_plan_mtable.class.php";
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 /**
  * @file
  * @brief Test the Acc_Plan_MTable

@@ -24,11 +24,6 @@
  * @brief display or export operations in HTML , PDF or CSV 
  *
  */
-require_once NOALYSS_INCLUDE."/class/acc_ledger_history_generic.class.php";
-require_once NOALYSS_INCLUDE."/class/acc_ledger_history_sale.class.php";
-require_once NOALYSS_INCLUDE."/class/acc_ledger_history_purchase.class.php";
-require_once NOALYSS_INCLUDE."/class/acc_ledger_history_financial.class.php";
-require_once NOALYSS_INCLUDE."/class/prepared_query.class.php";
 /**
  * @brief Display history of operation
  * @see acc_ledger_historyTest.php

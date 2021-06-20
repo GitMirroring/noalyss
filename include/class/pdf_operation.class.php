@@ -25,11 +25,6 @@
  * Detail Operation ACC + ANC , it will use Acc_Operation and Anc_Operation
  * 
  */
-require_once NOALYSS_INCLUDE . '/class/pdf.class.php';
-require_once NOALYSS_INCLUDE . '/class/acc_operation.class.php';
-require_once NOALYSS_INCLUDE . '/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE . '/class/acc_operation.class.php';
-require_once NOALYSS_INCLUDE . '/class/anc_operation.class.php';
 
 class PDF_Operation extends PDF {
 

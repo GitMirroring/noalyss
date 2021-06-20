@@ -26,14 +26,6 @@
 /*! \brief group of object operations, used for misc operation
  *
  */
-require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once  NOALYSS_INCLUDE.'/class/anc_operation.class.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once  NOALYSS_INCLUDE.'/class/anc_plan.class.php';
-require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
 
 class Anc_Group_Operation
 {

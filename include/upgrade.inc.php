@@ -26,7 +26,6 @@
 if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 if ( ! defined ('ALLOWED_ADMIN')) { die (_('Non autorisé'));}
 
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 $menu=array(

@@ -23,9 +23,6 @@
  * \brief  this file match the tables jrn & jrnx the purpose is to
  *   remove or save accountant writing to these table.
  */
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 
 /*!
  * \brief  this file match the tables jrn & jrnx the purpose is to

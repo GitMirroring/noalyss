@@ -30,17 +30,8 @@ if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
-require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
-require_once NOALYSS_INCLUDE.'/class/print_ledger.class.php';
 
 
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 
 
 $gDossier=dossier::id();
@@ -69,7 +60,6 @@ catch (Exception $exc)
     throw $exc;
 }
 
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
 $g_user->Check();
 $g_user->check_dossier($gDossier);
 

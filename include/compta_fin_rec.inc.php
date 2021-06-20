@@ -28,7 +28,6 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $g_failed,$g_succeed,$http;
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
 bcscale(2);
 ?>
 <script>

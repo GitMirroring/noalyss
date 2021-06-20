@@ -28,11 +28,6 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 global $g_user,$cn,$http;
 $p_array = $_GET;
 $ledger_type=$http->get("ledger_type","string", 'ALL');

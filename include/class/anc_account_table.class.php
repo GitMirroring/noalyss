@@ -31,7 +31,6 @@ if (!defined('ALLOWED'))
  * @class Anc_Account_Table
  * @brief derived from Manage_Table_SQL , 
  */
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 require_once NOALYSS_INCLUDE.'/database/poste_analytique_sql.class.php';
 
 class Anc_Account_Table extends Manage_Table_SQL

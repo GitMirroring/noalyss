@@ -18,11 +18,6 @@
 */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 /*! \file
  * \brief Print account (html or pdf)
  *        file included from user_impress
@@ -33,7 +28,6 @@ require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 //-----------------------------------------------------
 // Show the jrn and date
 //-----------------------------------------------------
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
 global $g_user,$http;
 //-----------------------------------------------------
 // Form
@@ -110,7 +104,6 @@ echo '</div>';
 //-----------------------------------------------------
 if ( isset( $_REQUEST['bt_html'] ) )
 {
-  require_once NOALYSS_INCLUDE.'/class/acc_account_ledger.class.php';
   echo '<div class="content">';
     echo Acc_Account_Ledger::HtmlTableHeader("gl_comptes");
     echo '</div>';

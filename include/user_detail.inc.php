@@ -22,10 +22,7 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_menu.php';
-require_once  NOALYSS_INCLUDE.'/class/user.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 $rep = new Database();
 try {
@@ -112,7 +109,6 @@ else if ($sbaction == "delete")
     echo "<H2 class=\"info\">";
     printf (_("Utilisateur %s %s est effacé"),$http->post('fname'),$http->post('lname')) ;
     echo " </H2>";
-    require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
     require_once NOALYSS_INCLUDE.'/user.inc.php';
     return;
 }

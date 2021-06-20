@@ -27,7 +27,6 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $cn,$g_parameter,$g_user;
-require_once NOALYSS_INCLUDE.'/class/stock.class.php';
 
 // Show the form
 // Get by exercice

@@ -27,11 +27,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 
 // Security we check if user does exist and his privilege
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
 $allcard=(isset($_GET['allcard']))?1:0;
 $export=new Noalyss_Csv(_('fiche-balance'));

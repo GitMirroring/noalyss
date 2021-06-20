@@ -27,11 +27,6 @@
  * and op_def_detail
  *
  */
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/class/pre_op_ach.class.php';
-require_once NOALYSS_INCLUDE.'/class/pre_op_ven.class.php';
-require_once NOALYSS_INCLUDE.'/class/pre_op_advanced.class.php';
 class Pre_operation
 {
     private $db;						/*!< $db database connection */
@@ -546,7 +541,7 @@ class Pre_operation_detail
                 $detail=new Pre_op_advanced($database);
                 break;
             default:
-                throw new Exception(sprintf(_('Echec PreOperatoin chargement %s'),$p_jrn_type));
+                throw new Exception(sprintf(_('Echec PreOperation chargement %s'),$p_jrn_type));
         }
         return $detail;
     }

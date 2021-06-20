@@ -40,7 +40,7 @@ class DatabaseCore
     private $ret;
     /**< return value  */
     private $is_open;                   /*!< true is connected */
-    protected $sql;     //!< last SQL stmt executed
+    public $sql;     //!< last SQL stmt executed
 
     /*** Connect to a database return an connx to db or false if it fails
      *

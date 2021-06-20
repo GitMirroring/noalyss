@@ -24,8 +24,6 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/anc_table.class.php';
-require_once  NOALYSS_INCLUDE.'/lib/noalyss_csv.class.php';
 
 $atable=new Anc_Table($cn);
 $atable->get_request();

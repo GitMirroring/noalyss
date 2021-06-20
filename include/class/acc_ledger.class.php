@@ -18,39 +18,9 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/input_switch.class.php';
-require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iperiod.class.php';
-require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
-require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
-require_once NOALYSS_INCLUDE.'/class/anc_operation.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_account_ledger.class.php';
-require_once NOALYSS_INCLUDE.'/class/pre_op_advanced.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_reconciliation.class.php';
-require_once NOALYSS_INCLUDE.'/class/periode.class.php';
-require_once NOALYSS_INCLUDE.'/class/gestion_purchase.class.php';
-require_once NOALYSS_INCLUDE.'/class/gestion_sold.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_account.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/inum.class.php';
-require_once NOALYSS_INCLUDE.'/class/lettering.class.php';
-require_once NOALYSS_INCLUDE.'/lib/sort_table.class.php';
 require_once NOALYSS_INCLUDE.'/database/jrn_def_sql.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_payment.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger_history.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_currency.class.php';
 require_once NOALYSS_INCLUDE.'/database/operation_currency_sql.class.php';
-require_once NOALYSS_INCLUDE.'/class/pre_op_ods.class.php';
-require_once NOALYSS_INCLUDE.'/class/html_input_noalyss.class.php';
 
 /** \file
  * @brief Class for jrn,  class acc_ledger for manipulating the ledger

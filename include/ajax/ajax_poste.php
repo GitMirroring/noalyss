@@ -35,10 +35,7 @@
 if ( ! defined('ALLOWED')) die (_('Non authorisé'));
 
 require_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
-require_once  NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-require_once NOALYSS_INCLUDE.'/class/acc_account_ledger.class.php';
 mb_internal_encoding("UTF-8");
 
 extract($_REQUEST, EXTR_SKIP);

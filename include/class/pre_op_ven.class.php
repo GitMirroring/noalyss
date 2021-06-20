@@ -22,7 +22,6 @@
 /*!\file
  * \brief definition of the class Pre_op_ven
  */
-require_once  NOALYSS_INCLUDE.'/class/pre_operation.class.php';
 
 /*---------------------------------------------------------------------- */
 /*!\brief concerns the predefined operation for VEN ledger
@@ -164,7 +163,6 @@ class Pre_op_ven extends Pre_operation_detail
     {
         global $g_parameter,$g_user;
 
-        require_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
         $ledger=new Acc_Ledger_Sold($this->db,$p_array['p_jrn']);
         $flag_tva=$g_parameter->MY_TVA_USE;
         /* Add button */

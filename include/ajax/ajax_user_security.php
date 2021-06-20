@@ -23,11 +23,6 @@ if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
 
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/inum.class.php';
-require_once NOALYSS_INCLUDE.'/lib/inplace_edit.class.php';
-require_once NOALYSS_INCLUDE.'/lib/inplace_switch.class.php';
 
 /**
  * @file

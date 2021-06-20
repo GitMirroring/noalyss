@@ -38,8 +38,6 @@
  */
 require_once NOALYSS_INCLUDE.'/database/menu_ref_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/profile_sql.class.php';
-require_once NOALYSS_INCLUDE.'/class/menu_ref.class.php';
-require_once NOALYSS_INCLUDE.'/class/profile_menu.class.php';
 
 class Extension extends Menu_Ref_sql
 {

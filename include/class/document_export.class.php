@@ -18,8 +18,6 @@
 */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-require_once NOALYSS_INCLUDE.'/class/pdf_operation.class.php';
-require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
 /**
  * @brief Export DOCUMENT from Analytic accountancy, can transform into PDF
  * and add a stamp on each pages

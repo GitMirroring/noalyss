@@ -21,7 +21,6 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE."/class/contact_option_ref_mtable.class.php";
 echo '<div class="content">';
 /**
  * @file
@@ -40,7 +39,11 @@ catch (Exception $ex)
     return;
 }
 $cn=Dossier::connect();
-
+echo    '<p class="info">'.
+        '<a href="https://wiki.noalyss.eu/doku.php?id=menu:cfgaction" target="_blank">'.
+        _("Aide : voir CFGACTION").
+        '</a>'.
+        '</p>';
 // document_option id from document_option where do_code='contact_multiple' and document_type_id=p_id
 $obj=new Contact_option_ref_SQL($cn);
 

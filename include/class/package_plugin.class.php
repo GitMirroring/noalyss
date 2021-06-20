@@ -23,7 +23,6 @@
  * @file
  * @brief Manage the installation of plug
  */
-require_once NOALYSS_INCLUDE."/class/package_noalyss.class.php";
 
 /**
  * @class Package_Plugin

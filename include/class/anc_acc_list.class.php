@@ -23,7 +23,6 @@
  * \brief
  */
 
-require_once NOALYSS_INCLUDE.'/class/anc_acc_link.class.php';
 
 class Anc_Acc_List extends Anc_Acc_Link
 {

@@ -23,7 +23,6 @@
 /*!\file
  * \brief for the numeric input text field
  */
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
 /*!\brief
  * This class handles only the numeric input, the input will
  * call a javascript

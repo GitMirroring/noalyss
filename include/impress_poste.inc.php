@@ -18,11 +18,6 @@
 */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( ! defined ('ALLOWED') ) die(_('Non autorisé'));
-require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 /*! \file
  * \brief Print account (html or pdf)
  *        file included from user_impress
@@ -33,8 +28,6 @@ require_once NOALYSS_INCLUDE.'/class/acc_operation.class.php';
 //-----------------------------------------------------
 // Show the jrn and date
 //-----------------------------------------------------
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ipopup.class.php';
 global $g_user;
 $http=new HttpInput();
 //-----------------------------------------------------
@@ -129,7 +122,6 @@ if ( isset( $_REQUEST['bt_html'] ) )
         echo alert(_('Date malformée, désolée'));
         return;
     }
-    require_once NOALYSS_INCLUDE.'/class/acc_account_ledger.class.php';
     $go=0;
 // we ask a poste_id
     if ( isset($_GET['poste_id']) && strlen(trim($_GET['poste_id'])) != 0 )
@@ -149,7 +141,6 @@ if ( isset( $_REQUEST['bt_html'] ) )
     }
     if ( strlen(trim($_GET['f_id'])) != 0 )
     {
-        require_once NOALYSS_INCLUDE.'/class/fiche.class.php';
         // thanks the qcode we found the poste account
         $fiche=new Fiche($cn);
         $qcode=$fiche->get_by_qcode($http->get('f_id'));

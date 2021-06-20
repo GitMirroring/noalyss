@@ -31,7 +31,6 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 // Security 
 if ( $g_user->check_module('CFGPRO') == 0 ) die();
 
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 
 ob_start();
@@ -48,7 +47,6 @@ catch (Exception $exc)
     return;
 }
 
-require_once NOALYSS_INCLUDE.'/class/profile_menu.class.php';
 $p_level++;
 $profile=new Profile_Menu($cn);
 $profile->p_id=$p_id;

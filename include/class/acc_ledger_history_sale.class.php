@@ -24,7 +24,6 @@
  * @brief Acc_Ledger_History : Manage the list (history) of operations for display
  * display or export operations in HTML , PDF or CSV 
  */
-require_once NOALYSS_INCLUDE."/class/acc_ledger_history.class.php";
 
 /**
  * @brief Acc_Ledger_History : Manage the list (history) of operations for display

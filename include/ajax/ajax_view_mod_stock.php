@@ -25,7 +25,6 @@
  * @brief show detail of inv.
  *
  */
-require_once NOALYSS_INCLUDE.'/class/stock_goods.class.php';
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 $st=new Stock_Goods($cn);

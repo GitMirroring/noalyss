@@ -25,7 +25,6 @@
  * \brief contains the class for connecting to Noalyss
  */
 
-require_once NOALYSS_INCLUDE . '/lib/database_core.class.php';
 
 class Database extends DatabaseCore
 {

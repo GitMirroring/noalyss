@@ -26,11 +26,9 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-require_once NOALYSS_INCLUDE.'/class/anticipation.class.php';
 require_once NOALYSS_INCLUDE."/database/forecast_sql.class.php";
 require_once NOALYSS_INCLUDE."/database/forecast_item_sql.class.php";
 require_once NOALYSS_INCLUDE."/database/forecast_category_sql.class.php";
-require_once NOALYSS_INCLUDE."/class/forecast_item_mtable.class.php";
 
 
 global $http;

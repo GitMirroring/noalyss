@@ -33,7 +33,6 @@ if ($g_user->Admin()==0)
 }
 session_write_close();
 set_language();
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $http=new HttpInput();
 $op=$http->request("op");
 // From admin, grant  the access to a folder to an
@@ -343,8 +342,6 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
 //------------------------------------------------------------------
 if ($op=='upgradeCore')
 {
-    require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
-    require_once NOALYSS_INCLUDE.'/class/package_repository.class.php';
     $task_id=$http->request("task_id");
     $progress=new Progress_Bar($task_id);
     $progress->set_value(2);
@@ -376,8 +373,6 @@ if ($op=='upgradeCore')
 //---------------------------------------------------------------------------------------------------------
 if ($op=='upgradePlugin')
 {
-    require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
-    require_once NOALYSS_INCLUDE.'/class/package_repository.class.php';
     $task_id=$http->request("task_id");
     $code=$http->post("code_plugin");
     $progress=new Progress_Bar($task_id);
@@ -397,8 +392,6 @@ if ($op=='upgradePlugin')
 //------------------------------------------------------------------------------------------------------------------
 if ($op=="installTemplate")
 {
-    require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
-    require_once NOALYSS_INCLUDE.'/class/package_repository.class.php';
     $task_id=$http->request("task_id");
     $name=$http->post("code");
     $progress=new Progress_Bar($task_id);

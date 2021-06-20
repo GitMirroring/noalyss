@@ -19,9 +19,7 @@
  */
 // Copyright (2002-2021) Author Dany De Bontridder <danydb@noalyss.eu>
 
-require_once NOALYSS_INCLUDE."/lib/manage_table_sql.class.php";
 require_once NOALYSS_INCLUDE.'/database/form_detail_sql.class.php';
-require_once NOALYSS_INCLUDE."/lib/impress.class.php";
 /**
  * @file
  * @brief  manage simple report 

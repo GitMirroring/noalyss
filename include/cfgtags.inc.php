@@ -25,11 +25,6 @@ if (!defined('ALLOWED'))
  * @brief Manage the tags
  *
  */
-require_once NOALYSS_INCLUDE.'/class/tag.class.php';
-require_once NOALYSS_INCLUDE.'/lib/single_record.class.php';
-require_once NOALYSS_INCLUDE."/lib/html_tab.class.php";
-require_once NOALYSS_INCLUDE."/lib/output_html_tab.class.php";
-require_once NOALYSS_INCLUDE."/class/tag_group_mtable.class.php";
 
 /* * *****************************************************************************
  *  Tags
