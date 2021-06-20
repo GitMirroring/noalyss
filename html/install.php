@@ -252,11 +252,16 @@ if (isset($_POST['save_config'])) {
    }
    
   // Try to connect , if it doesn't work that do not create the config file 
-  if ($multi=="N") {
-    $cnx = new DatabaseCore($db_user, $db_password,'template1', $db_host, $db_port); 
-  }else {
-    $cnx = new DatabaseCore($db_user, $db_password,$db_name, $db_host, $db_port); 
-  }
+   try {
+        if ($multi=="N") {
+          $cnx = new DatabaseCore($db_user, $db_password,'template1', $db_host, $db_port); 
+        }else {
+          $cnx = new DatabaseCore($db_user, $db_password,$db_name, $db_host, $db_port); 
+        }
+       
+   } catch (Exception $ex) {
+       $cnx=false;
+   }
   // ----- 
   // If conx successfull save the file or display it
   // -----
