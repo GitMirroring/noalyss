@@ -3,15 +3,14 @@
 # This file is distributed under the same license as the NOALYSS package.
 # Dany De Bontridder <dany@alchimerys.be>
 #
-#: include/database.item.php:125
 # dany, 2014.
-# Dany De Bontridder <danydb@noalyss.eu>, 2014, 2015, 2016, 2017, 2018, 2019, 2020.
+# Dany De Bontridder <danydb@noalyss.eu>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: NOALYSS 672\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-12 22:12+0100\n"
-"PO-Revision-Date: 2020-11-16 11:15+0100\n"
+"POT-Creation-Date: 2020-11-13 08:52+0100\n"
+"PO-Revision-Date: 2021-06-20 13:45+0200\n"
 "Last-Translator: dany <danydb@noalyss.eu>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: en_US\n"
@@ -569,7 +568,7 @@ msgstr "Purchase ledgers"
 msgid "(beta) Encodage de fiche pour service après-vente"
 msgstr "After sales service"
 
-#: include/lib/message_javascript.php:39
+#: include/lib/message_javascript.php:39 include/lib/message_javascript.php:40
 msgid ""
 "(optionnel) Ce montant correspond au total tva, si vous le laissez à vide, "
 "il sera calculé automatiquement en fonction du taux"
@@ -577,25 +576,25 @@ msgstr ""
 "(optional) This amount is the VAT, let it empty it will be computed "
 "automatically"
 
-#: include/lib/message_javascript.php:38
+#: include/lib/message_javascript.php:38 include/lib/message_javascript.php:39
 msgid ""
 "(optionnel) Ces champs servent à contrôler que les montants correspondent à "
 "l'extrait"
 msgstr ""
 "(optional) these fields let you check that the amounts with the bank receipt"
 
-#: include/lib/message_javascript.php:35
+#: include/lib/message_javascript.php:35 include/lib/message_javascript.php:36
 msgid "(optionnel) L'échéance est la date limite de paiement"
 msgstr "(optional) Date limit "
 
-#: include/lib/message_javascript.php:32
+#: include/lib/message_javascript.php:32 include/lib/message_javascript.php:33
 msgid ""
 "(optionnel) La description est un commentaire libre qui sert à identifier "
 "cette opération"
 msgstr ""
 "(optional) the description is a free comment to identify this operation"
 
-#: include/lib/message_javascript.php:36
+#: include/lib/message_javascript.php:36 include/lib/message_javascript.php:37
 msgid ""
 "(optionnel)Le numéro d'extrait permet de retrouver plus facilement l'extrait "
 "de banque"
@@ -780,7 +779,7 @@ msgstr "From"
 msgid "ALS01 Etat inconnu"
 msgstr "ALS01 unknown status"
 
-#: include/lib/message_javascript.php:41
+#: include/lib/message_javascript.php:41 include/lib/message_javascript.php:42
 msgid ""
 "ATTENTION changer le poste comptable d'une fiche <b>ne modifiera pas toutes "
 "les opérations</b> où cette fiche est utilisée"
@@ -788,7 +787,7 @@ msgstr ""
 "Warning Changing the accounting of a card<b>won't change all the operations "
 "</b> were this card has been used"
 
-#: include/lib/message_javascript.php:42
+#: include/lib/message_javascript.php:42 include/lib/message_javascript.php:43
 msgid "ATTENTION si le poste comptable est  vide, il sera créé automatiquement"
 msgstr "Warning : if the accounting is empty it will be created automatically"
 
@@ -1050,7 +1049,7 @@ msgstr "Folder not available"
 #: html/ajax_misc.php:290 html/ajax_misc.php:382 html/ajax_misc.php:384
 #: html/ajax_misc.php:390 include/lib/message_javascript.php:90
 #: include/lib/message_javascript.php:92 html/ajax_misc.php:392
-#: html/ajax_misc.php:396
+#: html/ajax_misc.php:396 include/lib/message_javascript.php:93
 msgid "Action non autorisée"
 msgstr "Unauthorized"
 
@@ -1236,6 +1235,7 @@ msgstr "Display also the closed actions"
 #: include/ext/tva/ext_tvagen.class.php:114
 #: include/lib/message_javascript.php:94 include/lib/message_javascript.php:96
 #: include/tax_summary.inc.php:43 include/tax_summary.inc.php:52
+#: include/lib/message_javascript.php:97
 msgid "Afficher"
 msgstr "Display"
 
@@ -2138,6 +2138,7 @@ msgstr "Warning : you cannot use step with the calendar"
 #: include/class/acc_ledger_purchase.class.php:1549
 #: include/class/acc_ledger_purchase.class.php:1560
 #: include/class/acc_ledger_sold.class.php:807
+#: include/lib/message_javascript.php:60
 msgid "Attention Différence entre TVA calculée et donnée"
 msgstr "Warning difference computed with VAT"
 
@@ -2212,7 +2213,7 @@ msgid ""
 "\t\t     non trouvee periode p_from= %s p_to_periode = %s"
 msgstr "Warning : period not found from %s to %s"
 
-#: include/lib/message_javascript.php:58
+#: include/lib/message_javascript.php:58 include/lib/message_javascript.php:59
 msgid ""
 "Attention, <b>SI</b> la fiche a changé de poste comptable, c'est seulement "
 "le dernier qui est affiché"
@@ -2235,7 +2236,7 @@ msgid ""
 "confirmer"
 msgstr "Warning this operation is not yet recorded"
 
-#: include/lib/message_javascript.php:45
+#: include/lib/message_javascript.php:45 include/lib/message_javascript.php:46
 msgid "Attention, le poste comptable doit exister, il ne sera pas vérifié"
 msgstr "Warning : the accounting must exist, it won't be checked"
 
@@ -2554,7 +2555,7 @@ msgstr "No result"
 msgid "Aucun titre"
 msgstr "No title"
 
-#: include/class/document_state_mtable.php:48
+#: include/class/document_state_mtable.php:48 include/database.item.php:125
 msgid "Aucune"
 msgstr "None"
 
@@ -2652,6 +2653,7 @@ msgstr "No description"
 #: include/template/tax_summary_display.php:277
 #: include/template/ledger_detail_bottom.php:302 include/lib/ac_common.php:1257
 #: include/template/ledger_detail_bottom.php:303
+#: include/lib/message_javascript.php:103
 msgid "Aucune donnée"
 msgstr "no data"
 
@@ -2817,6 +2819,7 @@ msgid "Autoliquidation"
 msgstr "Autoreverse"
 
 #: include/lib/message_javascript.php:74 include/lib/message_javascript.php:76
+#: include/lib/message_javascript.php:77
 msgid "Autoliquidation : Utilisé en même temps au crédit et au débit"
 msgstr "Autoreverse : use in the same time on credit and debit"
 
@@ -3117,6 +3120,7 @@ msgid "Balance incorrecte "
 msgstr "wrong balance"
 
 #: include/lib/message_javascript.php:89 include/lib/message_javascript.php:91
+#: include/lib/message_javascript.php:92
 msgid "Balance incorrecte D/C"
 msgstr "Unbalanced D/C"
 
@@ -3370,6 +3374,7 @@ msgid "CONVERT_GIF_PDF n'est pas installé"
 msgstr "CONVERT_GIF_PDF is not installed"
 
 #: include/lib/message_javascript.php:93 include/lib/message_javascript.php:95
+#: include/lib/message_javascript.php:96
 msgid "Cacher"
 msgstr "Hide"
 
@@ -3414,10 +3419,12 @@ msgstr "Total VAT by ledger"
 #: include/class_ibutton.php:82 include/class_ibutton.php:84
 #: include/lib/class_ibutton.php:84 include/lib/ibutton.class.php:84
 #: include/lib/message_javascript.php:97 include/lib/message_javascript.php:99
+#: include/lib/message_javascript.php:100
 msgid "Calculatrice"
 msgstr "calculator"
 
 #: include/lib/message_javascript.php:99 include/lib/message_javascript.php:101
+#: include/lib/message_javascript.php:102
 msgid ""
 "Calculatrice simplifiée: écrivez simplement les opérations que vous voulez "
 "puis la touche retour. exemple : 1+2+3*(1/5)"
@@ -3991,7 +3998,7 @@ msgstr "Search"
 msgid "Chercher"
 msgstr "Search"
 
-#: include/lib/message_javascript.php:31
+#: include/lib/message_javascript.php:31 include/lib/message_javascript.php:32
 msgid ""
 "Cherchez en saisissant le quickcode, le poste comptable ou une partie du nom "
 "de la fiche ou de l'adresse"
@@ -4421,14 +4428,16 @@ msgid "Cliquez pour éditer"
 msgstr "Click to edit"
 
 #: include/lib/message_javascript.php:66 include/lib/message_javascript.php:68
+#: include/lib/message_javascript.php:69
 msgid "Cliquez sur le chemin pour ouvrir le menu"
 msgstr "Click on the path to open the menu"
 
 #: include/lib/message_javascript.php:65 include/lib/message_javascript.php:67
+#: include/lib/message_javascript.php:68
 msgid "Cliquez sur le code AD pour ouvrir le menu dans un nouvel onglet"
 msgstr "Click on AD Code to open the page in a new tab"
 
-#: include/lib/message_javascript.php:48
+#: include/lib/message_javascript.php:48 include/lib/message_javascript.php:49
 msgid "Cliquez sur le titre d'une colonne pour trier"
 msgstr "Click on the header of a column to sort"
 
@@ -7195,7 +7204,7 @@ msgstr "PDF document"
 msgid "Document généré"
 msgstr "Generated Document"
 
-#: include/lib/message_javascript.php:43
+#: include/lib/message_javascript.php:43 include/lib/message_javascript.php:44
 msgid "Document généré uniquement si le mode de paiement est utilisé"
 msgstr "Document generated only if the payment method is set"
 
@@ -7255,11 +7264,11 @@ msgstr "Give a name to this template of import"
 msgid "Donnez un nom pour sauver cette opération comme modèle"
 msgstr "Give a name to save this operation as a template"
 
-#: include/lib/message_javascript.php:52
+#: include/lib/message_javascript.php:52 include/lib/message_javascript.php:53
 msgid "Donnez un nombre entre 0 & 100"
 msgstr "Give a number between 0 & 100"
 
-#: include/lib/message_javascript.php:56
+#: include/lib/message_javascript.php:56 include/lib/message_javascript.php:57
 msgid ""
 "Donnez une partie du libellé, la date, le montant ou le numéro d'opération "
 "pour filtrer, cela n'efface pas ce qui a déjà été sélectionné"
@@ -7267,17 +7276,17 @@ msgstr ""
 "Give a part of the label, date, amount or the number of operation to filter, "
 "it won't change the selection"
 
-#: include/lib/message_javascript.php:54
+#: include/lib/message_javascript.php:54 include/lib/message_javascript.php:55
 msgid "Donnez une partie du nom du dossier ou de la description pour filtrer"
 msgstr "Give a part of the name of the folder or the description"
 
-#: include/lib/message_javascript.php:53
+#: include/lib/message_javascript.php:53 include/lib/message_javascript.php:54
 msgid ""
 "Donnez une partie du nom du dossier,du nom, du prénom ou du login pour "
 "filtrer"
 msgstr "Give the name of the folder, name or firstname to filter"
 
-#: include/lib/message_javascript.php:50
+#: include/lib/message_javascript.php:50 include/lib/message_javascript.php:51
 msgid ""
 "Donnez une partie du nom, de la description,  du n° de TVA du poste "
 "comptable ou du quick code"
@@ -7285,18 +7294,18 @@ msgstr ""
 "Give a part of the name, the description the VAT Number, accounting or "
 "quickcode"
 
-#: include/lib/message_javascript.php:49
+#: include/lib/message_javascript.php:49 include/lib/message_javascript.php:50
 msgid ""
 "Donnez une partie du nom, prénom, de la description, du poste comptable, du n"
 "° de TVA,quick code ... "
 msgstr ""
 "Give the name of the folder, name or firstname, VAT Number ... to filter"
 
-#: include/lib/message_javascript.php:55
+#: include/lib/message_javascript.php:55 include/lib/message_javascript.php:56
 msgid "Donnez une partie du poste comptable ou du libellé pour filtrer"
 msgstr "Give a  part of the accounting or label to filter"
 
-#: include/lib/message_javascript.php:57
+#: include/lib/message_javascript.php:57 include/lib/message_javascript.php:58
 msgid "Donnez une partie du quickcode, nom, description... pour filtrer"
 msgstr ""
 "Give the name of the quickcode, name or firstname, VAT Number ... to filter"
@@ -7326,6 +7335,7 @@ msgid "Donnée invalide"
 msgstr "Invalid data"
 
 #: include/lib/message_javascript.php:91 include/lib/message_javascript.php:93
+#: include/lib/message_javascript.php:94
 msgid "Donnée manquante ou déjà supprimée"
 msgstr "Missing data or already suppressed"
 
@@ -7883,6 +7893,7 @@ msgid "Désolé, le code est invalide"
 msgstr "Invalid code"
 
 #: include/lib/message_javascript.php:85 include/lib/message_javascript.php:87
+#: include/lib/message_javascript.php:88
 msgid "Désolé, les montants pour la comptabilité analytique sont incorrects"
 msgstr "Sorry amount for analytic account are incorrect"
 
@@ -7897,6 +7908,7 @@ msgid "Désolé, vous n'avez pas coché la case"
 msgstr "Sorry the box is not checked"
 
 #: include/lib/message_javascript.php:92 include/lib/message_javascript.php:94
+#: include/lib/message_javascript.php:95
 msgid "Désolé, événement en cours de création à sauver"
 msgstr "Sorry another event  must be saved first"
 
@@ -8198,6 +8210,7 @@ msgid "Echec"
 msgstr "Failed"
 
 #: include/lib/message_javascript.php:79 include/lib/message_javascript.php:81
+#: include/lib/message_javascript.php:82
 msgid "Echec "
 msgstr "Fail"
 
@@ -8242,6 +8255,7 @@ msgid "Echec de la restauration "
 msgstr "Issue when restoring"
 
 #: include/lib/message_javascript.php:80 include/lib/message_javascript.php:82
+#: include/lib/message_javascript.php:83
 msgid "Echec donnée manquante ou incorrecte"
 msgstr "Fail : missing or incorrect data"
 
@@ -8278,6 +8292,7 @@ msgid "Echec ouverture fichier "
 msgstr "Error opening file"
 
 #: include/lib/message_javascript.php:84 include/lib/message_javascript.php:86
+#: include/lib/message_javascript.php:87
 msgid "Echec réponse"
 msgstr "Response Failed"
 
@@ -8714,6 +8729,7 @@ msgid "En une opération"
 msgstr "In one operation"
 
 #: include/lib/message_javascript.php:67 include/lib/message_javascript.php:69
+#: include/lib/message_javascript.php:70
 msgid ""
 "En utilisant les dates d échéance ou de paiement, seuls les journaux de type "
 "ACH et VEN seront utilisés ,vous excluez d office les autres journaux"
@@ -11283,6 +11299,7 @@ msgid "Id"
 msgstr "Id"
 
 #: include/lib/message_javascript.php:109
+#: include/lib/message_javascript.php:110
 msgid "Il est conseillé d'avoir un quickcode de moins de 9 car."
 msgstr "It is recommanded to have a short quickcode (9 char max)"
 
@@ -11729,7 +11746,7 @@ msgstr "Include employees without operation:"
 msgid "Inclure les fournisseurs sans opération :"
 msgstr "Including beg wo operation"
 
-#: include/lib/message_javascript.php:37
+#: include/lib/message_javascript.php:37 include/lib/message_javascript.php:38
 msgid ""
 "Indiquez ici le prix hors tva si vous êtes affilié à la tva et que vous  "
 "pouvez la déduire , sinon indiquez ici le total tva incluse et utilisez un "
@@ -12217,6 +12234,7 @@ msgid "Journaux"
 msgstr "Ledgers"
 
 #: include/lib/message_javascript.php:108
+#: include/lib/message_javascript.php:109
 msgid "Journaux Achat ou vente en mode simple, TVA ou détaillé"
 msgstr "Ledger Sales or Purchase  , basic, detailled or VAT"
 
@@ -12503,6 +12521,7 @@ msgid "La numérotation est propre à chaque journal"
 msgstr "The numbering is only the for each ledger"
 
 #: include/lib/message_javascript.php:69 include/lib/message_javascript.php:71
+#: include/lib/message_javascript.php:72
 msgid ""
 "La numérotation est propre à chaque journal. Laissez à 0 pour ne pas changer "
 "le numéro"
@@ -12539,11 +12558,11 @@ msgid "Label"
 msgstr "Label"
 
 #: include/template/param_jrn.php:118 include/lib/message_javascript.php:71
-#: include/lib/message_javascript.php:73
+#: include/lib/message_javascript.php:73 include/lib/message_javascript.php:74
 msgid "Laissez à 0 pour ne pas changer le numéro"
 msgstr "0 for no change"
 
-#: include/lib/message_javascript.php:46
+#: include/lib/message_javascript.php:46 include/lib/message_javascript.php:47
 msgid "Laissez à 0 pour ne rien changer"
 msgstr "0 for no change"
 
@@ -12718,7 +12737,7 @@ msgid "Le poste %s n'est pas dans ce journal"
 msgstr "Account %s doesn't belong to this ledger"
 
 #: include/template/param_jrn.php:94 include/lib/message_javascript.php:70
-#: include/lib/message_javascript.php:72
+#: include/lib/message_javascript.php:72 include/lib/message_javascript.php:73
 msgid ""
 "Le préfixe des pièces doit être différent pour chaque journal, on peut aussi "
 "utiliser l'année"
@@ -12800,7 +12819,7 @@ msgid "Les clauses FROM sont ignorés avec les dates calendriers"
 msgstr "statement FROM are ignored if you use calendar"
 
 #: include/class_anc_print.php:120 include/lib/message_javascript.php:68
-#: include/lib/message_javascript.php:70
+#: include/lib/message_javascript.php:70 include/lib/message_javascript.php:71
 msgid "Les dates sont en format DD.MM.YYYY"
 msgstr "The date formats are DD.MM.YYYY"
 
@@ -12859,7 +12878,7 @@ msgstr ""
 msgid "Les lignes vides seront effacées"
 msgstr "The empty rows Will Be removed"
 
-#: include/lib/message_javascript.php:51
+#: include/lib/message_javascript.php:51 include/lib/message_javascript.php:52
 msgid ""
 "Les menus ne peuvent dépendre que dans d'un menu principal ou d'un menu, si "
 "cette liste est vide, ajouter des modules ou menu principal sans donner de "
@@ -12905,7 +12924,7 @@ msgstr ""
 "in your preference to have another default periode. To avoid this check, "
 "change in COMPANY"
 
-#: include/lib/message_javascript.php:34
+#: include/lib/message_javascript.php:34 include/lib/message_javascript.php:35
 msgid ""
 "Les périodes comptables servent comme un second contrôle pour la date de "
 "l'opération. Modifiez dans vos préférence pour avoir une autre période par "
@@ -13284,6 +13303,7 @@ msgid "Limite dossiers"
 msgstr "Folders limit"
 
 #: include/lib/message_javascript.php:104
+#: include/lib/message_javascript.php:105
 msgid ""
 "Limite le type de fiche si vous choisissez la fiche à la saisie, uniquement "
 "avec journaux OD"
@@ -13585,10 +13605,12 @@ msgid "Max. email / jour (-1 = illimité)"
 msgstr "Max of email / day (-1 for unlimited)"
 
 #: include/lib/message_javascript.php:87 include/lib/message_javascript.php:89
+#: include/lib/message_javascript.php:90
 msgid "Maximum"
 msgstr "Maximum"
 
 #: include/lib/message_javascript.php:86 include/lib/message_javascript.php:88
+#: include/lib/message_javascript.php:89
 msgid "Maximum 15 lignes"
 msgstr "Maximum 15 rows"
 
@@ -13759,6 +13781,11 @@ msgstr "Update system and databases"
 msgid "Methode paiement"
 msgstr "means of payment"
 
+#: include/lib/message_javascript.php:72 include/lib/message_javascript.php:74
+#: include/lib/message_javascript.php:75
+msgid "Mettez le pourcentage <br> à zéro pour effacer la ligne"
+msgstr "Put the percentage to 0 to remove the row"
+
 #: include/lib/message_javascript.php:72
 msgid "Mettez le pourcentage à zéro pour effacer la ligne"
 msgstr "Put the percentage to 0 to remove the row"
@@ -13785,6 +13812,7 @@ msgid "Mettre à jour"
 msgstr "Update"
 
 #: include/lib/message_javascript.php:106
+#: include/lib/message_javascript.php:107
 msgid ""
 "Mettre à oui pour un journal dédié uniquement aux notes de crédit ou de "
 "débit, il affichera un avertissement si le montant n'est pas en négatif"
@@ -14925,12 +14953,12 @@ msgstr "Do not give this accounting is not used for sales"
 msgid "Ne donner pas ce poste comptable si ce code n'est pas utilisé à l'achat"
 msgstr "Do not give this accounting is not used for purchase"
 
-#: include/lib/message_javascript.php:78
+#: include/lib/message_javascript.php:78 include/lib/message_javascript.php:79
 msgid ""
 "Ne donnez pas ce poste comptable si ce code n'est pas utilisé  à la vente"
 msgstr "Do not give this accounting is not used for sales"
 
-#: include/lib/message_javascript.php:77
+#: include/lib/message_javascript.php:77 include/lib/message_javascript.php:78
 msgid "Ne donnez pas ce poste comptable si ce code n'est pas utilisé à l'achat"
 msgstr "Do not give this accounting is not used for purchase"
 
@@ -17375,6 +17403,7 @@ msgid "Permet de changer le poste comptable de base des catégories de fiches"
 msgstr "Let modify the base accounting of category of card"
 
 #: include/lib/message_javascript.php:110
+#: include/lib/message_javascript.php:111
 msgid "Permet de chercher dans le suivi pour les contacts multiques"
 msgstr "Let you search in the follow-up for the multiples concerned"
 
@@ -17409,11 +17438,11 @@ msgstr "Contact person"
 msgid "Personnel"
 msgstr "Staff"
 
-#: include/lib/message_javascript.php:62
+#: include/lib/message_javascript.php:62 include/lib/message_javascript.php:63
 msgid "Peut contenir un numéro de bon de commande"
 msgstr "May contain an ordering number "
 
-#: include/lib/message_javascript.php:61
+#: include/lib/message_javascript.php:61 include/lib/message_javascript.php:62
 msgid ""
 "Peut contenir une information telle que le message structuré sur le virement"
 msgstr ""
@@ -18202,6 +18231,7 @@ msgid ""
 msgstr "To convert it in unicode, do first year in backup restore it"
 
 #: include/lib/message_javascript.php:105
+#: include/lib/message_javascript.php:106
 msgid "Pour les journaux FIN, ce sera la fiche du journal"
 msgstr "For the FIN Ledger, it will be the card of the ledger"
 
@@ -19800,7 +19830,7 @@ msgstr "Security"
 msgid "Selection"
 msgstr "Selection"
 
-#: include/lib/message_javascript.php:33
+#: include/lib/message_javascript.php:33 include/lib/message_javascript.php:34
 msgid "Selectionnez le journal où l'opération doit être sauvée"
 msgstr "Select the ledger where the operation must be recorded"
 
@@ -19816,6 +19846,7 @@ msgstr "Select the Analytic plan you are interested before clicking  on Search"
 
 #: include/class_anc_print.php:140 include/class_anc_print.php:181
 #: include/lib/message_javascript.php:73 include/lib/message_javascript.php:75
+#: include/lib/message_javascript.php:76
 msgid "Selectionnez le plan qui vous intéresse avant de cliquer sur Recherche"
 msgstr "Select the Analytic plan before clicking on search"
 
@@ -19866,8 +19897,8 @@ msgstr "Services, or good  Sold (D)"
 
 #: include/class_user.php:51 include/class_user.php:58
 #: include/class/class_user.php:58 include/class/user.class.php:58
-msgid "Session expirée Utilisateur déconnecté"
-msgstr "Session expired > User disconnected"
+msgid "Session expirée<br>Utilisateur déconnecté"
+msgstr "Session expired User disconnected"
 
 #: scenario/acc_ledger_historyTest.php:40
 msgid ""
@@ -19884,6 +19915,7 @@ msgid ""
 msgstr "If the redirect doesn't work change in the setting NOALYSS_URL"
 
 #: include/lib/message_javascript.php:83 include/lib/message_javascript.php:85
+#: include/lib/message_javascript.php:86
 msgid "Si vous changez de page vous perdez les reconciliations, continuez ?"
 msgstr "If you change , you'll lost your selection"
 
@@ -19897,7 +19929,7 @@ msgstr ""
 "If you don't use the automatic accounting, all the new cards will have the "
 "same accounting. "
 
-#: include/lib/message_javascript.php:60
+#: include/lib/message_javascript.php:60 include/lib/message_javascript.php:61
 msgid ""
 "Si vous ne donnez pas de nom, ce sera le nom du fichier qui sera utilisé"
 msgstr "If you don't give a nome it will the name of the file "
@@ -20559,6 +20591,7 @@ msgid "TVA annulée"
 msgstr "canceled VAT "
 
 #: include/lib/message_javascript.php:107
+#: include/lib/message_javascript.php:108
 msgid "TVA due ou récupérable quand l'opération est payée ou exécutée"
 msgstr "VAT due or deductible , when the operation is paid or executed "
 
@@ -20713,6 +20746,7 @@ msgid "Tant que ce n'est pas vous fait vous ne pouvez pas utiliser NOALYSS"
 msgstr "You cannot use Noalyss if this file is present"
 
 #: include/lib/message_javascript.php:98 include/lib/message_javascript.php:100
+#: include/lib/message_javascript.php:101
 msgid "Taper une formule (ex 20*5.1) puis enter"
 msgstr "Type a formula and press enter"
 
@@ -20720,7 +20754,7 @@ msgstr "Type a formula and press enter"
 msgid "Tapez le code de confirmation"
 msgstr "Type the confirmation code"
 
-#: include/lib/message_javascript.php:40
+#: include/lib/message_javascript.php:40 include/lib/message_javascript.php:41
 msgid ""
 "Tapez le numéro de poste ou une partie du poste ou du libellé puis sur "
 "recherche, Si vous avez donné un quickcode, le poste comptable ne sera pas "
@@ -21440,6 +21474,7 @@ msgid "Toutes opérations"
 msgstr "All operations"
 
 #: include/lib/message_javascript.php:95 include/lib/message_javascript.php:97
+#: include/lib/message_javascript.php:98
 msgid "Traitement en cours"
 msgstr "Working in progress"
 
@@ -21668,10 +21703,12 @@ msgid "URL"
 msgstr "URL"
 
 #: include/lib/message_javascript.php:96 include/lib/message_javascript.php:98
+#: include/lib/message_javascript.php:99
 msgid "Un instant"
 msgstr "A moment"
 
 #: include/lib/message_javascript.php:77 include/lib/message_javascript.php:79
+#: include/lib/message_javascript.php:80
 msgid "Un instant svp"
 msgstr "A moment please"
 
@@ -22297,6 +22334,7 @@ msgid "Votre base de données n'est pas à jour"
 msgstr "Your database is not updated"
 
 #: include/lib/message_javascript.php:103
+#: include/lib/message_javascript.php:104
 msgid "Votre demande est en cours de traitement"
 msgstr "Your request is being processed"
 
@@ -22453,10 +22491,12 @@ msgstr "Do you confirm"
 #: include/class/fiche_def.class.php:791 include/class/fiche_def.class.php:796
 #: include/ajax/ajax_create_menu.php:13 include/template/stock_inv.php:33
 #: include/lib/message_javascript.php:78 include/lib/message_javascript.php:80
+#: include/lib/message_javascript.php:81
 msgid "Vous confirmez ?"
 msgstr "Do you confirm?"
 
 #: include/lib/message_javascript.php:81 include/lib/message_javascript.php:83
+#: include/lib/message_javascript.php:84
 msgid "Vous confirmez effacement ?"
 msgstr "Do you confirm the removal ?"
 
@@ -22480,6 +22520,7 @@ msgid "Vous confirmez le clonage "
 msgstr "Confirm cloning"
 
 #: include/lib/message_javascript.php:82 include/lib/message_javascript.php:84
+#: include/lib/message_javascript.php:85
 msgid "Vous confirmez mise à jour ?"
 msgstr "Do you confirm the update?"
 
@@ -22533,7 +22574,7 @@ msgstr "you must save first"
 msgid "Vous devez donner la colonne quick_code"
 msgstr "You must give the quick_code column"
 
-#: include/lib/message_javascript.php:47
+#: include/lib/message_javascript.php:47 include/lib/message_javascript.php:48
 msgid "Vous devez donner la date par opération"
 msgstr "You must give the date"
 
@@ -22693,7 +22734,7 @@ msgstr ""
 "or like a folder to keep together documents  \n"
 "A document can belong to several folders or have several tags"
 
-#: include/lib/message_javascript.php:44
+#: include/lib/message_javascript.php:44 include/lib/message_javascript.php:45
 msgid "Vous pouvez utiliser le % pour indiquer le poste parent"
 msgstr "You can use the % to show the parent accounting"
 
@@ -22954,6 +22995,7 @@ msgid "budgets"
 msgstr "budgets"
 
 #: include/lib/message_javascript.php:88 include/lib/message_javascript.php:90
+#: include/lib/message_javascript.php:91
 msgid "calculé"
 msgstr "Computed"
 
@@ -23580,6 +23622,14 @@ msgstr "rate is invalid"
 #: include/ext/import_account/include/imd_parameter.inc.php:63
 msgid "le taux n'est pas un nombre"
 msgstr "rate is not a number"
+
+#: include/lib/message_javascript.php:67
+msgid ""
+"le type vaut : ME pour Menu, PR pour les impressions,PL pour les plugins,SP "
+"pour des valeurs spéciales"
+msgstr ""
+"The type is  :<ul><li> ME for Menu</li><li> PR for printing</li><li> "
+"PL plugins</li><li> SP Special values</li></ul>"
 
 #: include/lib/message_javascript.php:64 include/lib/message_javascript.php:66
 msgid ""
