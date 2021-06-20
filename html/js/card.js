@@ -693,7 +693,6 @@ function  successFill_ipopcard(req,json)
  */
 function select_card_type(obj)
 {
-
     var dossier=$('gDossier').value;
     var elementId="";
     // give a filter, -1 if not
@@ -709,7 +708,7 @@ function select_card_type(obj)
 
     var str_style="top:"+sx+"px;height:auto";
     waiting_box();
-    var popup={'id':  "content",'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
 
    
 
