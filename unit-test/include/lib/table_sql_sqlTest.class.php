@@ -79,6 +79,7 @@ VALUES(1, 'ACTIVITE', 'Activité commerciale Alchimerys sprl');
         $this->object->set("po_name", "Nouveau poste");
         $this->object->set("pa_id", "1");
         $this->object->set("po_amount", "0");
+        $this->object->set("po_state", "1");
         $this->object->save();
         $id=$this->object->get("po_id");
         $this->assertFalse(empty($id));
@@ -133,6 +134,7 @@ VALUES(1, 'ACTIVITE', 'Activité commerciale Alchimerys sprl');
         $this->object->set("po_name", "Nouveau poste");
         $this->object->set("pa_id", "1");
         $this->object->set("po_amount", "1250");
+        $this->object->set("po_state", "1");
         $this->object->save();
         $id=$this->object->get("po_id");
         $this->assertFalse(empty($id));
@@ -206,7 +208,7 @@ VALUES(1, 'ACTIVITE', 'Activité commerciale Alchimerys sprl');
     //@covers Noalyss_SQL::from_array
     public function testfrom_array()
     {
-        $this->object->from_array(["po_id"=>6, "po_name"=>"Test Unitaire", "po_description"=>"", "po_amount"=>0, "pa_id"=>1]);
+        $this->object->from_array(["po_id"=>6, "po_name"=>"Test Unitaire", "po_description"=>"", "po_amount"=>0, "pa_id"=>1,"po_state"=>0]);
         $this->object->insert();
         $this->object->load();
         $this->assertEquals($this->object->get("po_name"), "TESTUNITAIRE");
@@ -289,7 +291,7 @@ VALUES(1, 'ACTIVITE', 'Activité commerciale Alchimerys sprl');
     public function testbuild_query()
     {
         $str=$this->object->build_query();
-        $expected=" select po_id,po_name,pa_id,po_amount,po_description,ga_id from public.poste_analytique where po_id = $1";
+        $expected=" select po_id,po_name,pa_id,po_amount,po_description,ga_id,po_state from public.poste_analytique where po_id = $1";
         $this->assertEquals($str,$expected);
     }
 

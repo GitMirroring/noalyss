@@ -113,7 +113,7 @@ if ( $action == "info" && SYSINFO_DISPLAY == true) {
     echo "<li>". "NOALYSS_HOME".": ".NOALYSS_HOME."</li>";
     echo "<li>"."NOALYSS_INCLUDE".": ".NOALYSS_INCLUDE."</li>";
     echo "<li>"."NOALYSS_TEMPLATE".": ".NOALYSS_TEMPLATE."</li>";
-    echo "<li>"."DEBUG".": ".DEBUG."</li>";
+    echo "<li>"."DEBUG".": ".DEBUGNOALYSS."</li>";
     echo "<li>"."LOGINPUT".": ".LOGINPUT."</li>";
     echo "<li>"."LOCALE".": ".LOCALE."</li>";
     echo "<li>"."MULTI".": ".MULTI."</li>";

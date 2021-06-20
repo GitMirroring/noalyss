@@ -57,8 +57,8 @@ class Anc_Account_Table extends Manage_Table_SQL
             pa_id=$1
             order by 2",0,array($p_table->pa_id));
         $this->set_col_type("po_state","select",array(
-                                            [ "value"=>"0",'label'=>_("Inactif")],
-                                            [ "value"=>"1","label"=>_("Actif")]
+                                            [ "value"=>"1","label"=>_("Actif")],
+                                            [ "value"=>"0",'label'=>_("Inactif")]
                                 ));
         
     }

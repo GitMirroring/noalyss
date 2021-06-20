@@ -53,7 +53,7 @@ class DatabaseCore
 
     function __construct($p_user, $p_password, $p_dbname, $p_host, $p_port)
     {
-        $this->db = pg_connect("dbname=$p_dbname host='$p_host' user='$p_user'
+        $this->db = @pg_connect("dbname=$p_dbname host='$p_host' user='$p_user'
                      password='$p_password' port=$p_port");
         if ($this->db == false) {
             if ( DEBUGNOALYSS > 0 ) {
