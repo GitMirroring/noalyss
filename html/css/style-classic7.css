@@ -160,7 +160,6 @@ td.tool a.mtitle:hover {
     text-align:right;
     padding:0px;
     margin: 0px;
-    font-size:12.16px;
     float:right;
 }
 #module table,#module table tr,#module table td {
@@ -3016,7 +3015,7 @@ li.li-active {
     border:1px solid blue;
     margin:1px;
     border-radius: 0px;
-    font-size: 95%;
+    font-size: 75%;
 }
 #module .nav-pills a.nav-link:hover {
     background-color: navy !important;
