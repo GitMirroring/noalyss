@@ -831,13 +831,10 @@ function check()
         } else {
            printf('<table class="result sortable" id="tb%s">', $this->object_name);
         }
+        $this->display_table_header();
+        echo '<tbody>';
         for ($i=0; $i<$nb; $i++)
         {
-            if ($i==0)
-            {
-                $this->display_table_header();
-                echo '<tbody>';
-            }
             $row=Database::fetch_array($ret, $i);
             $this->display_row($row);
         }
