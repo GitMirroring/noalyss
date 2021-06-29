@@ -1366,7 +1366,7 @@ class Acc_Ledger  extends jrn_def_sql
                     $acc_op->desc=${'ld'.$i};
                     
                 // Amount in default currency , usually EUR
-                $acc_op->amount=round(bcdiv(${'amount'.$i},$p_currency_rate),2);
+                $acc_op->amount=round(bcdiv(${'amount'.$i},$currency_rate),2);
                 $acc_op->grpt=$seq;
                 $acc_op->poste=$poste;
                 $acc_op->jrn=$this->id;
