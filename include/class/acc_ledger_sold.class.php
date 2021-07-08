@@ -299,7 +299,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 
                 $tot_amount = bcadd($tot_amount, $amount);
                 $tot_amount = round($tot_amount, 2);
-                if ( DEBUGNOALYSS > 0 ) { echo __LINE__." tot_amount $tot_amount<br>";}
+                if ( DEBUGNOALYSS > 1 ) { echo __LINE__." tot_amount $tot_amount<br>";}
                 $acc_operation = new Acc_Operation($this->db);
                 $acc_operation->date = $e_date;
                 $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
@@ -448,7 +448,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
             /*  save total customer */
             $cust_amount = bcadd($tot_amount, $tot_tva);
             $cust_amount = round($cust_amount,2);
-            if ( DEBUGNOALYSS > 0 ) { 
+            if ( DEBUGNOALYSS > 1 ) { 
                 echo __LINE__." cust_amount $cust_amount<br>"; 
                 echo __LINE__." tot_amount $tot_amount<br>"; 
                 echo __LINE__." tot_tva $tot_tva<br>"; 
@@ -485,7 +485,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
              * if if ($g_parameter->MY_TVA_USE == 'Y' )
              */
             if ($g_parameter->MY_TVA_USE == 'Y') {
-                if ( DEBUGNOALYSS > 0 ) {
+                if ( DEBUGNOALYSS > 1 ) {
                     var_dump($tva);
                 }
                 foreach ($tva as $i => $value) {
@@ -510,7 +510,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                         $tot_debit=round($tot_debit, 2);
                     }
                     $acc_operation->insert_jrnx();
-                    if ( DEBUGNOALYSS > 0 ) { 
+                    if ( DEBUGNOALYSS > 1 ) { 
                                     echo __LINE__." tot_tva $tot_tva<br>"; 
 
                     }
@@ -539,7 +539,7 @@ class Acc_Ledger_Sold extends Acc_Ledger {
              */
             
             /* insert into jrn */
-            if ( DEBUGNOALYSS > 0 ) { echo __LINE__." tot_debit ".round($tot_debit,2)."<br>"; }
+            if ( DEBUGNOALYSS > 1 ) { echo __LINE__." tot_debit ".round($tot_debit,2)."<br>"; }
             $acc_operation = new Acc_Operation($this->db);
             $acc_operation->date = $e_date;
             $acc_operation->echeance = $e_ech;
@@ -566,11 +566,13 @@ class Acc_Ledger_Sold extends Acc_Ledger {
                 $this->inc_seq_pj();
             }
 
-            $this->db->exec_sql("update jrn set jr_internal='" . $internal . "' where " .
-                    " jr_grpt_id = " . $seq);
+            $this->db->exec_sql("update jrn set jr_internal=$1  where jr_grpt_id =  $2" ,[$internal,$seq]);
+            
 
             /* update quant_sold */
-            $this->db->exec_sql('update quant_sold set qs_internal = $1 where j_id in (select j_id from jrnx where j_grpt=$2)', array($internal, $seq));
+            $this->db->exec_sql('update quant_sold set qs_internal = $1 
+                    where j_id in (select j_id from jrnx where j_grpt=$2)'
+                    , array($internal, $seq));
 
             /* Save the attachment or generate doc */
             if (isset($_FILES['pj'])) {
