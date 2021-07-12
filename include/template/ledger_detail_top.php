@@ -28,4 +28,3 @@
 </div>
 <?php echo _("Opération ID")."=".hb($obj->det->jr_internal); ?>
 <div id="<?php echo $div.'info'?>" class="divinfo"></div>
-?>
