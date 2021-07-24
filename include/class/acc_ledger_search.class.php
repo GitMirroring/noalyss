@@ -1001,7 +1001,7 @@ class Acc_Ledger_Search
         $tot=round($tot, 4);
         $r.="<TR>";
         $r.='<TD COLSPAN="5">Total</TD>';
-        $r.=td("").td("").td("").td('');
+        $r.=td("").td("");
         $r.='<TD ALIGN="RIGHT">'.nbm($tot)."</TD>";
         $r.="</tr>";
         if ($p_paid!=0)
