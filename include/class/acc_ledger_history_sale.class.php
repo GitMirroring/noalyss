@@ -97,7 +97,7 @@ class Acc_Ledger_History_Sale extends Acc_Ledger_History
                     join jrnx using (j_id)              
                     join card_name on (card_name.f_id=qs_fiche)
                     join card_qcode on (card_qcode.f_id=qs_fiche)
-                    join tva_rate on ( qs_vat_code=tva_id)
+                    left join tva_rate on ( qs_vat_code=tva_id)
                     left join operation_currency using (j_id)
                 where
                     qs_internal=$1
