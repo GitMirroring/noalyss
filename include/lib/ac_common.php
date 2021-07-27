@@ -1204,6 +1204,21 @@ function display_menu($p_menuid)
 
 }
 /**
+ * @brief Send an header CSV with a filename
+ * @param string $p_filename , file name , caution , it must be sanitized BEFORE calling this function
+ */
+function header_csv($p_filename)
+{
+  
+    header('Pragma: public');
+    header('Content-type: application/csv');
+    header("Content-Disposition: attachment;filename=\"{$p_filename}\"",
+            FALSE);
+    header('Cache-Control: no-store, no-cache, must-revalidate');
+    header('Expires: Sun, 1 Jan 2000 12:00:00 GMT');
+    header('Last-Modified: '.gmdate('D, d M Y H:i:s').'GMT');
+}
+/**
  * Put in superglobal (get,post,request) the value contained in
  * the parameter field (me_parameter)
  * @param $array [key] [value]
