@@ -487,7 +487,7 @@ function NoAccess($js=1)
     exit - 1;
 }
 /**
- * replaced by sql_string
+ * @brief replaced by sql_string
  * @deprecated
  */
 function FormatString($p_string)
@@ -661,7 +661,8 @@ function transform_sql_filter_per($p_sql)
     $result="( $result";
     return $result;
 }
-/**\brief Create the condition to filter on the j_tech_per
+/**
+ * \brief Create the condition to filter on the j_tech_per
  *        thanks a from and to date.
  * \param $p_cn database conx
  * \param $p_from start date (date)
@@ -719,7 +720,8 @@ function sql_filter_per($p_cn, $p_from, $p_to, $p_form='p_id', $p_field='jr_tech
     return $periode;
 }
 
-/**\brief alert in javascript
+/**
+ * \brief alert in javascript
  * \param $p_msg is the message
  * \param $buffer if false, echo directly and execute the javascript, if $buffer is true, the alert javascript
  * is in the return string
@@ -890,7 +892,7 @@ function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.
 
 
 /**
- * Should a dialog box when you are disconnected from an ajax call
+ *@brief Should a dialog box when you are disconnected from an ajax call
  * propose to reload or to connect in another tab
  */
 function ajax_disconnected($p_div)
@@ -915,7 +917,7 @@ function ajax_disconnected($p_div)
 }
 
 /**
- *Show the modules
+ * @brief Show the modules
  * @param int $selected module selected profile_menu.pm_id
  */
 function show_module($selected)
@@ -973,7 +975,7 @@ function show_module($selected)
     }
 }
 /**
- * Find the default module or the first one
+ * @brief Find the default module or the first one
  * @var $g_user $g_user
  * @return default module (string)
  */
@@ -1052,7 +1054,7 @@ function find_default_module()
 }
 
 /**
- * show the module
+ * @brief show the module
  * @var $g_user
  * @param $module the $_REQUEST['ac'] exploded into an array
  * @param  $idx the index of the array : the AD code is splitted into an array thanks the slash
@@ -1131,7 +1133,7 @@ function show_menu($module)
     $level++;
 }
 /**
- * Display a menu
+ * @brief Display a menu
  * @global type $g_user
  * @param type $p_menuid
  * @return type
@@ -1219,7 +1221,7 @@ function header_csv($p_filename)
     header('Last-Modified: '.gmdate('D, d M Y H:i:s').'GMT');
 }
 /**
- * Put in superglobal (get,post,request) the value contained in
+ * @brief Put in superglobal (get,post,request) the value contained in
  * the parameter field (me_parameter)
  * @param $array [key] [value]
  */
@@ -1235,7 +1237,7 @@ function put_global($array)
     }
 }
 /**
- * the string has the format a=b&c=d, it is parsed and an array[][key,value]
+ * @brief the string has the format a=b&c=d, it is parsed and an array[][key,value]
  * is returned
  * @param $p_string
  * @return $array usable in put_global
@@ -1341,7 +1343,7 @@ function get_array_column($p_array,$key)
 }
 
 /**
- * This function create a ledger object and return the right one.
+ * @brief This function create a ledger object and return the right one.
  * It uses the factory pattern
  * @param Database $p_cn
  * @param type $ledger_id 
@@ -1378,7 +1380,7 @@ function factory_Ledger(Database &$p_cn, $ledger_id)
     return $obj;
 }
 /**
- * Check if we use IE 8 or 9
+ * @brief Check if we use IE 8 or 9
  * @return int 1 for IE8-9;0 otherwise
  */
 function is_msie()
@@ -1391,7 +1393,7 @@ function is_msie()
     return $is_msie;
 }
 /**
- * Record an error message into the log file of the server.
+ *@brief  Record an error message into the log file of the server.
  * Record also the GET and POST data
  * @param string $p_message
  */
@@ -1424,7 +1426,7 @@ if(!function_exists('tracedebug')) {
   }
 }
 /**
- * encode the string for RTF, return a stringu
+ * @brief encode the string for RTF, return a stringu
  * @param $p_string string to convert
  * @return string
  */
@@ -1443,7 +1445,7 @@ function convert_to_rtf($p_string)
     return $result;
 }
 /**
- * When it is needed to eval a formula , this function prevent the divide by zero.
+ * @brief When it is needed to eval a formula , this function prevent the divide by zero.
  * the formula is a math operation to evaluate like : 1.0+2.0/1 (...) , it is used in "report", 
  * it removes the operation "divide by 0 "
  * 
@@ -1460,7 +1462,7 @@ function remove_divide_zero($p_formula)
 }
 
 /**
- * Create randomly a string
+ * @brief Create randomly a string
  * @param int $p_length length of the generate string
  */
 function generate_random_string($car)
@@ -1476,7 +1478,7 @@ function generate_random_string($car)
 }
 
 /**
- * generate a string of p_car character and a input text with name p_ctl_name
+ *@brief  generate a string of p_car character and a input text with name p_ctl_name
  * work like a kind of captcha.The control code for checking is ctlcode.
  * You compare the content of the variable p_ctl_name with ctlcode
  * @param $p_ctl_name name of the HTML input text
@@ -1492,7 +1494,7 @@ function confirm_with_string($p_ctl_name,$p_car)
     return $r;
 }
 /**
- * Find the menu marked as default in the given profile
+ * @brief Find the menu marked as default in the given profile
  * @param number $pn_menu (profile_menu.id)
  */
 function find_default_menu($pn_menu)
@@ -1507,7 +1509,7 @@ function find_default_menu($pn_menu)
 }
 
 /**
- * Check if there is a default menu for this user and add it. The array is filling from 1 to 3
+ * @brief Check if there is a default menu for this user and add it. The array is filling from 1 to 3
  * @verbatim
  * 
  * COMPTA              0   -   0 - 173
@@ -1542,7 +1544,7 @@ function complete_default_menu($pa_menu)
     return $a_result;
 }
 /**
- * rebuild the access code
+ * @brief rebuild the access code
  * @see complete_default_menu
  * @param array of number $pan_code index row [0] =  index pm_id_v1 , pm_id_v2 and pm_id_v3
  */
@@ -1563,7 +1565,7 @@ function rebuild_access_code($pan_code)
 }
 
 /***
- * Transform a http link into a clickable link
+ *@brief Transform a http link into a clickable link
  */
 function add_http_link($text)
 {
