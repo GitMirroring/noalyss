@@ -2758,6 +2758,10 @@ function load_all_script()
     
     include_once NOALYSS_INCLUDE."/lib/message_javascript.php";
     echo JS_INFOBULLE;
+    echo js_include("jquery-3.6.0.min.js");
+    echo <<<EOF
+    <script>jQuery.noConflict();</script>
+EOF;    
     echo js_include('smoke.js');
     echo js_include('prototype.js');
     echo js_include('scriptaculous.js');

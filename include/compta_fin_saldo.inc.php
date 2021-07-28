@@ -155,6 +155,8 @@ echo td('');
 echo td('');
 echo td('');
 echo td(_('TOTAUX'), 'style="font-weight:bold;text-align:center"');
+echo td('');
+echo td('');
 echo td(nbm($tot_extrait), 'style="font-weight:bold" class="num"');
 echo td(nbm($tot_operation), ' style="font-weight:bold" class="num"');
 echo td(nbm($tot_diff), ' style="font-weight:bold" class="num"');

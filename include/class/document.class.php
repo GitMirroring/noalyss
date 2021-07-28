@@ -1860,10 +1860,12 @@ class Document
         mkdir($dirname);
         $destination_file=$dirname."/".$this->d_filename;
         $this->export_file($destination_file);
-        
+        ob_start();
         passthru(OFFICE . escapeshellarg($destination_file), $status);
+        $result =ob_get_contents();
+        ob_clean();
         if ($status != 0) {
-            \record_log(__FILE__."DOC45 : Error  cannot transform into PDF");
+            \record_log(__FILE__."DOC45 : Error  cannot transform into PDF"." output [$result]");
             throw new \Exception("DOC45 Cannot not transform to PDF");
         }
         // remove extension
