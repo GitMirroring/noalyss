@@ -26,7 +26,7 @@
  *@brief Menu_Ref let you manage the available menu
  */
 require_once NOALYSS_INCLUDE.'/database/menu_ref_sql.class.php';
-class Menu_Ref extends Menu_Ref_sql
+class Menu_Ref extends Menu_Ref_SQL
 {
     function format_code()
     {

@@ -22,10 +22,15 @@
 
 /**
  * @file
- * @brief
+ * @brief abstract of the table public.stock_repository */
  *
  */
 
+ /**
+  * @class Stock_Sql
+  *
+  * @brief ORM abstract of the table public.stock_repository
+  */
 class Stock_Sql extends Table_Data_SQL {
 	function __construct($cn,$p_id=-1)
 	{

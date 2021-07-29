@@ -25,6 +25,13 @@
  *
  *@file
  *@brief abstract of the table public.tag_group */
+
+
+/**
+ * @class Tag_group_SQL
+ * @brief ORM abstract of the table public.tag_group 
+ *
+ */
 class Tag_group_SQL extends Table_Data_SQL
 {
 

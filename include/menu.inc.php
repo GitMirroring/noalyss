@@ -20,7 +20,8 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/**\file
+/**
+ * \file
  *
  *
  * \brief Show the table menu and let you add your own
@@ -131,7 +132,7 @@ if ( $iselect->selected != '')
 {
 	$sql="where me_type='".sql_string($_REQUEST['p_type'])."'  ";
 }
-$menu=new Menu_Ref_sql($cn);
+$menu=new Menu_Ref_SQL($cn);
 $ret=$menu->seek($sql.$order);
 ?>
 <fieldset><legend><?php echo _('Recherche')?></legend>

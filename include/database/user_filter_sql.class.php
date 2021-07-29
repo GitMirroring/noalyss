@@ -26,6 +26,11 @@
  * @file
  * @brief abstract of the table public.user_filter 
  */
+
+/** 
+ * @class User_filter_SQL
+ * @brief ORM abstract of the table public.user_filter
+ */
 class User_filter_SQL extends Table_Data_SQL
 {
 

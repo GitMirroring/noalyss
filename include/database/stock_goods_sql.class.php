@@ -22,7 +22,11 @@
 
 /**
  * @file
- * @brief
+ * @brief abstract of the table public.stock_goods and public.stock_change
+ */
+/**
+ * @class Stock_Goods_Sql
+ * @brief ORM abstract of the table public.stock_goods
  *
  */
 
@@ -80,6 +84,10 @@ class Stock_Goods_Sql extends Table_Data_SQL
 
 }
 
+/**
+ * @class Stock_Change_Sql
+ * @brief ORM abstract of the table public.stock_change
+ */
 class Stock_Change_Sql extends Table_Data_SQL
 {
 

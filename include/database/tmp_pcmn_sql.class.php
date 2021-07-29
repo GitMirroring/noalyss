@@ -19,11 +19,16 @@
  */
 
 
-/* * *
+/**
  * @file 
- * @brief
+ * @brief abstract of the table public.tmp_pcmn
  *
  */
+ /**
+  * @class Tmp_Pcmn_SQL
+  *
+  * @brief ORM abstract of the table public.tmp_pcmn
+  */
 class Tmp_Pcmn_SQL extends Table_Data_SQL
 {
 

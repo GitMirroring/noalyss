@@ -26,7 +26,7 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $http;
 
-$prd_op=new Op_predef_SQL($cn);
+$prd_op=new Op_Predef_SQL($cn);
 
 $operation_predef_mtable=new Operation_Predef_MTable($prd_op);
 $operation_predef_mtable->set_json(json_encode(array(   "ac"=>$http->request("ac"),

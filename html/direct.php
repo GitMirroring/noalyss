@@ -17,7 +17,10 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
+/**
+ * @file
+ * @brief used by the autocomplete feature of the Direct Access
+ */
 require_once '../include/constant.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/user.class.php';

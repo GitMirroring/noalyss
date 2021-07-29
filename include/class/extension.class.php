@@ -24,7 +24,11 @@
  * \brief the extension class manages the plugins for the security, the access
  * the inclusion...
  */
-/*!\brief manage the extension, it involves the table extension
+/*!
+ *
+ * \class Extension 
+ *
+ * \brief manage the extension, it involves the table extension
  *
  * Data member
  * - $cn database connection

@@ -26,6 +26,10 @@
  * @brief abstract of the view public.v_tva_rate
  * 
  */
+/**
+ * @class V_Tva_Rate_SQL
+ * @brief ORM abstract of the view public.v_tva_rate
+ */
 class V_Tva_Rate_SQL extends Table_Data_SQL
 {
 

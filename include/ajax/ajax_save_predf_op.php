@@ -41,7 +41,7 @@ try {
 }
 if  ( $g_user->check_module("PREDOP") == 0) die();
 
-$prd_op=new Op_predef_SQL($cn);
+$prd_op=new Op_Predef_SQL($cn);
 $prd_op->set_pk_value($p_id);
 $prd_op->load();
 
