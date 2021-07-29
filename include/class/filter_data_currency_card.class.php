@@ -27,7 +27,7 @@
  */
 
 /**
- * @class
+ * @class Filter_Data_Currency_Card
  * @brief  filter data in currency froqm datase , inherit from Data_Currency_Operation, filter on 
  * a specific card 
  */

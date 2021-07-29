@@ -24,6 +24,12 @@
  *
  *@file
  *@brief abstract of the table public.op_predef */
+
+/**
+ *@class Op_Predef_SQL
+ *@brief ORM abstract of the table public.op_predef */
+ 
+
 class Op_predef_SQL extends Table_Data_SQL
 {
 

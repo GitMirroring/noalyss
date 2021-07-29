@@ -21,12 +21,17 @@
 
 /**
  * @file
- * @brief 
+ * @brief Manage the Payment method
  * @see Payment_Method_SQL
  * @see ajax_payment_method.php
  */
 require_once NOALYSS_INCLUDE."/database/jrn_def_sql.class.php";
-
+/**
+ * @class Payment_Method_MTable
+ * @brief Manage the Payment method
+ * @see Payment_Method_SQL
+ * @see ajax_payment_method.php
+ */
 class Payment_Method_MTable extends Manage_Table_SQL
 {
 

@@ -22,6 +22,11 @@
 /*!\file
  * \brief Html Input
  */
+
+/*!\class IHidden
+ * \brief Html Input
+ */
+
 class IHidden extends HtmlInput
 {
     /*!\brief show the html  input of the widget*/

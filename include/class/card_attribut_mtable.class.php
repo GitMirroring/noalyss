@@ -24,7 +24,11 @@
  * @brief manage the table attr_def 
  * @see card_attr.inc.php
  */
-
+/**
+ * @class Card_Attribut_MTable
+ * @brief manage the table attr_def
+ * @see card_attr.inc.php
+ */
 class Card_Attribut_MTable extends Manage_Table_SQL
 {
 

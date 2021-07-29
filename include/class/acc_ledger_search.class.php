@@ -26,6 +26,10 @@
  * @file
  * @brief search in ledger
  */
+/**
+ * @class Acc_Ledger_Search
+ * @brief search in ledger
+ */
 class Acc_Ledger_Search
 {
 

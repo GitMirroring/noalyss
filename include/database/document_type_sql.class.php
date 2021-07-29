@@ -27,7 +27,7 @@
  */
 
 /**
- * @class
+ * @class Document_type_SQL
  * @brief abstract of the table public.document_type 
  */
 class Document_type_SQL extends Table_Data_SQL

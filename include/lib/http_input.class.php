@@ -29,6 +29,10 @@
  * @file
  * @brief manage the http input (get , post, request)
  */
+/**
+ * @class HttpInput
+ * @brief manage the http input (get , post, request) and extract from an array
+ */
 
 class HttpInput
 {
@@ -56,7 +60,10 @@ class HttpInput
         $this->array=$array;
         return $this;
     }
-    // $empty replace the empty value 
+    /*!
+    * \brief $empty replace the empty value
+     *
+     */
     public function set_empty($empty)
     {
         $this->empty=$empty;
@@ -64,7 +71,7 @@ class HttpInput
     }
 
         /**
-     * Check the type of the value
+     *  \brief  Check the type of the value
      * @param $p_name name of the variable
      * @param $p_type type of the variable (number,string,date,array)
      * @throws Exception if the variable doesn't exist or type incorrect
@@ -132,7 +139,7 @@ class HttpInput
     }
 
     /**
-     * Retrieve from $this->array the variable
+     *  @brief  Retrieve from $this->array the variable
      * @param $p_name name of the variable
      * @param $p_type type of the variable (number,string,date('dd.mm.yyyy'),array)
      * @param $p_default default value is variable
@@ -172,7 +179,7 @@ class HttpInput
     }
 
     /**
-     * Retrieve from $_GET
+     * @brief Retrieve from $_GET
      * @param $p_name name of the variable
      * @param $p_type type of the variable , opt. default string
      * @param $p_default default value is variable is not set
@@ -197,7 +204,7 @@ class HttpInput
     }
 
     /**
-     * Retrieve from $_POST
+     * @brief Retrieve from $_POST
      * @param string $p_name name of the variable
      * @param $p_type type of the variable , opt. default string
      * @param $p_default default value is variable is not set
@@ -221,7 +228,7 @@ class HttpInput
         }
     }
     /**
-     * Retrieve from $_REQUEST
+     * @brief Retrieve from $_REQUEST
      * @param $p_name name of the variable
      * @param $p_type type of the variable , opt. default string
      * @param $p_default default value is variable is not set
@@ -245,7 +252,7 @@ class HttpInput
         }
     }
     /**
-     * Retrieve from $p_array
+     * @brief Retrieve from $p_array
      * @param $p_array source 
      * @param $p_name name of the variable
      * @param $p_type type of the variable , opt. default string
@@ -271,7 +278,7 @@ class HttpInput
     }
 
     /**
-     * Extract variable name from an exception message. If an exception is thrown
+     * @brief Extract variable name from an exception message. If an exception is thrown
      * then thanks this function it is possible to know what variable triggers
      * the exception
      * @param type $p_string

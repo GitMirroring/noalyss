@@ -19,10 +19,14 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
- * \brief object to show a table: link between accountancy and analytic
+/*!
+ * \file
+ * \brief printing analytic and accountancy as a table
  */
-
+/*!
+ * \class Anc_Table
+ * \brief  printing analytic and accountancy as a table
+ */
 class Anc_Table extends Anc_Acc_Link
 {
     function __construct($p_cn)

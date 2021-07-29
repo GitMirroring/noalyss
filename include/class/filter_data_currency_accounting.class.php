@@ -27,7 +27,7 @@
  */
 
 /**
- * @class
+ * @class Filter_Data_Currency_Accounting
  * @brief  filter data in currency from datase , inherit from Data_Currency_Operation, filter on 
  * a range of accounting or only one
  */

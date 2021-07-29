@@ -19,6 +19,15 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 require_once NOALYSS_INCLUDE.'/database/tag_sql.class.php';
 
+/**
+ * @file
+ * @brief Tag operations or actions to linked them together
+ */
+
+/**
+ * @class Tag
+ * @brief Tag operations or actions to linked them together
+ */
 class Tag
 {
     private $data; //<! Tag_SQL 

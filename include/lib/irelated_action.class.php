@@ -23,6 +23,12 @@
  * \brief Html Input
  *  - name is the name and id of the input
  */
+
+/*!
+ * \class IRelated_Action
+ * \brief Html Input
+ *  - name is the name and id of the input
+ */
 class IRelated_Action extends HtmlInput
 {
 

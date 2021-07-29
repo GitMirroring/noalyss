@@ -25,6 +25,12 @@
  * @brief Manage the goods
  *
  */
+
+/**
+ * @class Stock_Goods
+ * @brief Manage the goods
+ *
+ */
 require_once NOALYSS_INCLUDE.'/database/stock_goods_sql.class.php';
 
 class Stock_Goods extends Stock_Goods_Sql

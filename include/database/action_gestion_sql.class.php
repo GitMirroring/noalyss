@@ -24,7 +24,14 @@
  *
  * @file
  * @brief abstract of the table public.action_gestion */
-class Action_gestion_SQL extends Table_Data_SQL
+
+
+/**
+ * @class Action_Gestion_SQL
+ * @brief  ORM public.action_gestion 
+ */
+ 
+class Action_Gestion_SQL extends Table_Data_SQL
 {
 
     function __construct(DatabaseCore $p_cn, $p_id=-1)

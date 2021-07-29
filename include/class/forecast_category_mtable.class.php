@@ -25,7 +25,11 @@
  * \brief display, add, delete and modify forecast category
  *
  */
-
+/**
+ * \class Forecast_Category_MTable
+ * \brief display, add, delete and modify forecast category
+ *
+ */
 require_once NOALYSS_INCLUDE."/database/forecast_category_sql.class.php";
 
 class Forecast_Category_MTable extends Manage_Table_SQL

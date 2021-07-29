@@ -24,6 +24,12 @@
  *
  * @file
  * @brief abstract of the table public.action_gestion_comment */
+
+/**
+ * @class Action_Gestion_Comment_SQL
+ * @brief ORM SQL Action_Gestion_Comment
+ */
+ 
 class Action_Gestion_Comment_SQL extends Table_Data_SQL
 {
 

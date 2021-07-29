@@ -26,7 +26,7 @@
 require_once NOALYSS_INCLUDE."/database/document_type_sql.class.php";
 
 /**
- * @class 
+ * @class Action_Document_Type_MTable
  * @brief display , modify and add document_type for follow up
  * @see include/ajax/ajax_cfgaction.php
  * @see include/cfg_action.inc.php

@@ -26,7 +26,7 @@ require_once NOALYSS_INCLUDE."/database/v_currency_last_value_sql.class.php";
  */
 
 /**
- * @class
+ * @class Acc_Currency
  * @brief display currency , convert to euro , and save them if used. The default currency has the id 0 and is
  * normally EUR
  */

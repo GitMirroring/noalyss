@@ -22,6 +22,11 @@
 /*!\file
  * \brief Html Input
  */
+
+/*!
+ * \class IButton
+ * \brief Html Input
+ */
 class IButton extends HtmlInput
 {
     var $label;

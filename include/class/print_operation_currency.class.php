@@ -24,7 +24,7 @@
  * @brief manage the operation in currency : export CSV, export PDF , output in HTML
  */
 /**
- * @class
+ * @class Print_Operation_Currency
  * @brief manage the operation in currency : export CSV , output in HTML
  */
 class Print_Operation_Currency

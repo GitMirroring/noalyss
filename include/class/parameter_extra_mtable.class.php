@@ -24,8 +24,13 @@ if (!defined('ALLOWED'))
 
 /**
  * @file
- * @brief 
+ * @brief extra setting for company
  */
+/**
+ * @class Parameter_Extra_MTable
+ * @brief extra setting for company
+ */
+
 require_once NOALYSS_INCLUDE."/database/parameter_extra_sql.class.php";
 
 class Parameter_Extra_MTable extends Manage_Table_SQL

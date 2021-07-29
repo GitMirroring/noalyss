@@ -25,7 +25,11 @@
  * @brief display financial operations in HTML , PDF or CSV 
  * 
  */
-
+/**
+ * @class Acc_Ledger_History_Financial
+ * @brief display financial operations in HTML , PDF or CSV
+ *
+ */
 class Acc_Ledger_History_Financial extends Acc_Ledger_History
 {
     function __construct(Database $cn, $pa_ledger, $p_from, $p_to, $p_mode)

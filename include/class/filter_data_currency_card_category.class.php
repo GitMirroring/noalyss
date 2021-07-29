@@ -26,7 +26,7 @@
  */
 
 /**
- * \class
+ * \class Filter_Data_Currency_Card_Category
  * \brief  filter data in currency from datase , inherit from Data_Currency_Operation, filter on 
  * card category
  */

@@ -20,13 +20,20 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* !\file
+/*!
+ * \file
  * \brief Html Input
  *  - name is the name and id of the input
  *  - extra amount of the operation to reconcile
  *  - extra2 ledger paid
  */
-
+/*!
+ * \class IConcerned
+ * \brief Html Input
+ *  - name is the name and id of the input
+ *  - extra amount of the operation to reconcile
+ *  - extra2 ledger paid
+ */
 class IConcerned extends HtmlInput
 {
 

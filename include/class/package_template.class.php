@@ -1,3 +1,4 @@
+
 <?php
 
 /*
@@ -22,11 +23,12 @@
 
 /**
  * @file
- * @brief 
+ * @brief  Show , download and install template database for accountancy from the Package repository
  */
 
 /**
- * @brief
+ * @class Package_Template
+ * @brief  Show , download and install template database for accountancy from the Package repository
  * 
  */
 class Package_Template extends Package_Noalyss

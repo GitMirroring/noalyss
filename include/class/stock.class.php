@@ -22,9 +22,14 @@
 
 /**
  * @file
- * @brief
+ * @brief manage the stocks
  *
  *
+ */
+
+/**
+ * @class Stock
+ * @brief manage the stocks
  */
 require_once NOALYSS_INCLUDE.'/database/stock_sql.class.php';
 

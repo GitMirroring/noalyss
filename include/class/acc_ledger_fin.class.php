@@ -20,10 +20,16 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* * \file
+/**
+ * \file
  * \brief the class Acc_Ledger_Fin inherits from Acc_Ledger, this
  * object permit to manage the financial ledger
  */
+ /**
+  * \class Acc_Ledger_Fin
+  * \brief the class Acc_Ledger_Fin inherits from Acc_Ledger, this
+  * object permit to manage the financial ledger
+  */
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 class Acc_Ledger_Fin extends Acc_Ledger
@@ -36,8 +42,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
     }
 
     /**
-     * Verify that the data are correct before inserting or confirming
-     * @brief verify the data 
+     * @brief  Verify that the data are correct before inserting or confirming
      * @param an array (usually $_POST)
      * @return String
      * @throw Exception on error occurs
@@ -227,7 +232,8 @@ class Acc_Ledger_Fin extends Acc_Ledger
         }
     }
 
-    /*     * \brief
+    /**
+     * \brief display a form to enter an FIN operation
      * \param $p_array contains the value usually it is $_POST
      * \return string with html code
      * \note the form tag are not  set here

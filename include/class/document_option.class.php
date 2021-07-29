@@ -21,12 +21,14 @@
 
 /**
  * @file
- * @brief 
+ * @brief in follow-up , you have action which can be set with different options depending of the type of documents like
+ * invoicing, meeting, ...
  */
 
 /**
- * @class
- * @brief
+ * @class Document_Option
+ * @brief in follow-up , you have action which can be set with different options depending of the type of documents like
+ * invoicing, meeting, ...
  */
 class Document_Option
 {

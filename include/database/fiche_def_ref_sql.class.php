@@ -25,8 +25,8 @@
  */
 
 /**
- * @class
- * @file Manage the table public.fiche_def_ref , which concerns the template of
+ * @class Fiche_def_ref_SQL
+ * @brief ORM Manage the table public.fiche_def_ref , which concerns the template of
  * category of card
  */
 class Fiche_def_ref_SQL extends Table_Data_SQL

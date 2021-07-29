@@ -19,10 +19,17 @@
  */
 
 
-/***
+/**
  * @file 
  * @brief contains prepared query used in different classes of the application
  * 
+ *
+ */
+
+/**
+ * @class Prepared_Query
+ * @brief contains prepared query used in different classes of the application
+ *
  *
  */
 class Prepared_Query {
@@ -45,7 +52,7 @@ class Prepared_Query {
     }
 
     /**
-     * Prepare the query for fetching the linked operation. ONE paramete is needed : jrn.jr_id , returns all columns 
+     *@brief  Prepare the query for fetching the linked operation. ONE paramete is needed : jrn.jr_id , returns all columns
      * from  the table PUBLIC.JRN, column qcode_bank (default card for fin ledger) of the operation concerning
      * to the payment
      * 
@@ -80,7 +87,7 @@ class Prepared_Query {
         }
     }
     /**
-     * Prepare the query for find the amount in currency
+     * @brief  Prepare the query for find the amount in currency
      */
     public function prepare_currency()
     {

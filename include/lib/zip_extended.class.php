@@ -19,7 +19,12 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
+ * \brief extends the Zip object
+ */
+/*!
+ * \class Zip_Extended
  * \brief extends the Zip object
  */
 

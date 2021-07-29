@@ -23,6 +23,10 @@
  * @file
  * @brief Analytic account
  */
+/**
+ * @class Anc_Account
+ * @brief Analytic account ; get the balance
+ */
 class Anc_Account
 {
 

@@ -19,7 +19,13 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
+ * \brief Display the calendar
+ */
+
+/*!
+ * \class Calendar
  * \brief Display the calendar
  */
 class Calendar
@@ -42,7 +48,8 @@ class Calendar
             $this->day=29;
     }
 
-    /*!\brief fill the array given as parameter with the data from action_gestion
+    /*!
+     * \brief fill the array given as parameter with the data from action_gestion
      *\param $p_array array of the date of the month
      * \param $p_style is either short or long, short: for a small title, long for a complete one
      */
@@ -114,7 +121,8 @@ class Calendar
 		}
         }
     }
-    /*!\brief fill the array given as parameter with the data from todo
+    /*!
+     * \brief fill the array given as parameter with the data from todo
      *\param $p_array array of the date of the month
      * \param $p_style is either short or long, short: for a small title, long for a complete one
      */
@@ -152,7 +160,8 @@ class Calendar
             }
         }
     }
-    /*!\brief display a calendar after a call to Calendar::fill
+    /*!
+    * \brief display a calendar after a call to Calendar::fill
      *\param $p_type long or short
      * 
      *\return HTML String

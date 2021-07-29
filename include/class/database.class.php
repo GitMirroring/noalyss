@@ -25,7 +25,10 @@
  * \brief contains the class for connecting to Noalyss
  */
 
-
+/**
+ * \class Database
+ * \brief contains the class for connecting to Noalyss
+ */
 class Database extends DatabaseCore
 {
     /**\brief constructor

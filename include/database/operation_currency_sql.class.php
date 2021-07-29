@@ -25,6 +25,13 @@
  * @file
  * @brief abstract of the table public.operation_currency 
  */
+
+
+ /**
+ * @class Operation_currency_SQL
+ * @brief ORM abstract of the table public.operation_currency 
+ */
+
 class Operation_currency_SQL extends Table_Data_SQL
 {
 

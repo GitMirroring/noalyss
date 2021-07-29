@@ -20,8 +20,15 @@
 
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
 
+/**
+ * @file
+ * @brief PDF in landscape mode
+ */
 
-
+/**
+ * @class PDFLand
+ * @brief PDF in landscape mode
+ */
 class PDFLand extends PDF
 {
 

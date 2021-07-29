@@ -23,7 +23,9 @@
  *  \brief this class is the mother class for the CA printing
  */
 
-/*! \brief this class is the mother class for the CA printing
+/*!
+ * \class Anc_Print
+ * \brief this class is the mother class for the CA printing
  *
  *
  */

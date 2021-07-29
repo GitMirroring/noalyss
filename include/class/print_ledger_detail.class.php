@@ -19,7 +19,14 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
+ * \brief this class extends PDF and let you export the detailled printing
+ *  of any ledgers
+ */
+
+/*!
+ * \class Print_Ledger_Detail
  * \brief this class extends PDF and let you export the detailled printing
  *  of any ledgers
  */

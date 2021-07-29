@@ -22,6 +22,11 @@
 /*!\file
  * \brief Html Input 
  */
+
+/*!
+ * \class IFile
+ * \brief Html Input
+ */
 class IFile extends HtmlInput
 {
     // if true , the size is tested and a box is displaid

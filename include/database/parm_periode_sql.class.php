@@ -28,7 +28,8 @@
  */
 
 /**
- * *@brief Manage the table public.parm_periode
+ * @class Parm_periode_SQL
+ * @brief ORM Manage the table public.parm_periode
  */
 class Parm_periode_SQL extends Table_Data_SQL
 {

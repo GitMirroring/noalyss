@@ -27,7 +27,7 @@
  */
 
 /**
- * @class
+ * @class Noalyss_SQL
  * @brief this class is deprecated and inherits from Table_Data_SQL. It remains only for compatibility
  * purpose
  * @see Table_Data_SQL

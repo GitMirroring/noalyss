@@ -26,6 +26,11 @@ if (!defined('ALLOWED'))
  * @file
  * @brief   concerns the tags linked to an accountancy writing
  */
+
+/**
+ * @class Tag_Operation
+ * @brief   concerns the tags linked to an accountancy writing
+ */
 class Tag_Operation extends Tag
 {
 

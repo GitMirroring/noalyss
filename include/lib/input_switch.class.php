@@ -26,6 +26,10 @@
  * @file
  * @brief show a switch, when you click on it an hidden field is changed, the value is 1 or 0 
  */
+/**
+ * @class InputSwitch
+ * @brief show a switch, when you click on it an hidden field is changed, the value is 1 or 0
+ */
 
 class InputSwitch extends HtmlInput
 {

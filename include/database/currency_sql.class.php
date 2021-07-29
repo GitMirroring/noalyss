@@ -25,6 +25,11 @@
  *
  * @file
  * @brief abstract of the table public.currency */
+
+/**
+ * @class Currency_SQL
+ * @brief abstract of the table public.currency */
+
 class Currency_SQL extends Table_Data_SQL
 {
 

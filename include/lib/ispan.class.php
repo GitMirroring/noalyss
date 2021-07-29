@@ -19,7 +19,13 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
+ * \brief Html Input
+ */
+
+/*!
+ * \class ISpan
  * \brief Html Input
  */
 class ISpan extends HtmlInput

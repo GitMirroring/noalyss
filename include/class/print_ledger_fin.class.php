@@ -19,7 +19,12 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
+ * \brief print a listing of financial
+ */
+/*!
+ * \class Print_Ledger_Financial
  * \brief print a listing of financial
  */
 

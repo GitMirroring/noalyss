@@ -23,6 +23,11 @@
  * @file
  * @brief package noalyss is the mother class of the class to install and download package
  */
+/**
+ * @class Package_Noalyss
+ * @brief package noalyss is the mother class of the class to install and download package
+ */
+
 abstract class Package_Noalyss
 {
 

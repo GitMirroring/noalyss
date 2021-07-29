@@ -25,7 +25,8 @@
  */
 
 /*!
- * \brief
+* \class IAncCard
+ * \brief HtmlInput for card of analytic accountancy
 */
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 

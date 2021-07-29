@@ -23,7 +23,15 @@
  * \brief create a popup in html above the current layer
  * the html inside the popup cannot contain any floating elt as div..
  *
+ *
  */
+/*!
+ * \class IPopup
+ * \brief create a popup in html above the current layer
+ * the html inside the popup cannot contain any floating elt as div..
+ *
+ */
+
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 
 class IPopup extends HtmlInput

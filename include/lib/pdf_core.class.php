@@ -19,11 +19,16 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
  * \brief API for creating PDF, unicode, based on tfpdf
  *@see TFPDF
  */
-
+/*!
+ * \class Cellule
+ * \brief A Cellule is a cell to print
+ *@see TFPDF
+ */
 require_once NOALYSS_INCLUDE.'/tfpdf/tfpdf.php';
 class Cellule {
     var $width;
@@ -49,6 +54,11 @@ class Cellule {
         return $this;
     }
 }
+/*!
+ * \class PDF_Core
+ * \brief API for creating PDF, unicode, based on tfpdf
+ *@see TFPDF
+ */
 class PDF_Core extends TFPDF
 {
 
