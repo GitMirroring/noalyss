@@ -387,7 +387,7 @@ for ($i=0; $i<Database::num_row($ret); $i++)
             $gDossier, $row->p_id);
     echo '<tr>';
     echo "<td>".$js.$row->p_name.'</a>'.'</td>';
-    echo td($row->p_desc);
+    echo td($row->p_desc); 
     echo td($row->with_calc);
     echo td($row->with_direct_form);
     echo '</tr>';
@@ -399,7 +399,8 @@ echo "<td>".$js._("Ajouter un profil")." </td>";
 echo '</tr>';
 echo '</table>';
 echo '</div>';
-
+$profile_mobile=Mobile_Device_MTable::build(0,90);
+$profile_mobile->create_js_script();
 
 //*******************************************************
 // Show details of the selected profile

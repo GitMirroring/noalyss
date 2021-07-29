@@ -36,7 +36,7 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 class Profile_Menu_sql extends Table_Data_SQL
 {
 
-    function __construct(&$p_cn,$p_id=-1)
+    function __construct(&$p_cn, $p_id=-1)
     {
         $this->table="public.profile_menu";
         $this->primary_key="pm_id";
@@ -48,7 +48,7 @@ class Profile_Menu_sql extends Table_Data_SQL
             , "p_order"=>"p_order"
             , "p_type_display"=>"p_type_display"
             , "pm_default"=>"pm_default"
-            ,"pm_id_dep"=>"pm_id_dep"
+            , "pm_id_dep"=>"pm_id_dep"
         );
 
         $this->type=array(

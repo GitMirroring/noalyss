@@ -39,18 +39,19 @@ $profile=new Profile_sql($cn,$p_id);
 $gDossier=Dossier::id();
 $add_impression=HtmlInput::button("add", _("Ajout Menu"),"onclick=\"add_menu({dossier:$gDossier,p_id:$p_id,type:'pr'})\"");
 $call_tab=$http->post('tab', "string",'profile_gen_div');
-$a_tab=array('profile_gen_div'=>'tabs','profile_menu_div'=>'tabs','profile_print_div'=>'tabs','profile_gestion_div'=>'tabs','profile_repo_div'=>'tabs');
+$a_tab=array('profile_gen_div'=>'tabs','profile_menu_div'=>'tabs','profile_print_div'=>'tabs','profile_gestion_div'=>'tabs','profile_repo_div'=>'tabs',"profile_menu_mobile_div"=>"tabs");
 $a_tab[$call_tab]='tabs_selected';
 ?>
 <h1>Profil <?php echo $profile->p_name?></h1>
 <?php
-    echo HtmlInput::anchor(_('Retour'), "", " onclick = \" $('detail_profile').hide();$('list_profile').show(); \" ", 'class="line"');
+    echo HtmlInput::anchor("&#10094;"._('Retour'), "", " onclick = \" $('detail_profile').hide();$('list_profile').show(); \" ", 'class="line"');
 ?>
 <?php if ($p_id > 0 ) : ?>
 <ul class="tabs">
     
     <li class="<?php echo $a_tab['profile_gen_div']?>"><a href="javascript:void(0)"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_gen_div')"><?php echo _('Nom')?></a></li>
     <li class="<?php echo $a_tab['profile_menu_div']?>"><a href="javascript:void(0)"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_menu_div')"><?php echo _('Détail Menus')?></a></li>
+    <li class="<?php echo $a_tab['profile_menu_mobile_div']?>"><a href="javascript:void(0)"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_menu_mobile_div')"><?php echo _('Menu SmartPhone')?></a></li>
     <li class="<?php echo $a_tab['profile_print_div']?>"><a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_print_div')"><?php echo _('Détail Impressions')?></a></li>
     <li class="<?php echo $a_tab['profile_gestion_div']?>"><a href="javascript:void(0)" style="" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_gestion_div')"><?php echo _('Groupe Gestion')?> </a></li>
     <li class="<?php echo $a_tab['profile_repo_div']?>"><a href="javascript:void(0)"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';profile_show('profile_repo_div')"><?php echo _('Dépôts')?></a>&nbsp;
@@ -112,6 +113,12 @@ if ($profile->p_id > 0)
         $profile_menu->p_id=$p_id;
 	$profile_menu->display_profile_menu_detail();
         echo '</div>';
+        
+        
+        echo '<div class="myfieldset" style="display:none" id="profile_menu_mobile_div">';
+        $profile_menu->mobile_device();
+        echo '</div>';
+        
         echo '<div class="myfieldset"  style="display:none" id="profile_print_div">';
 	echo "<h1 class=\"legend\">"._("Impression")."</h1>";
 	$profile_menu->printing();

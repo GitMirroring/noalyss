@@ -312,7 +312,6 @@ function action_add(p_dossier) {
                  if (p_xml.responseText === 'NOCONX') { reconnect();return;}
                         remove_waiting_box();
                         add_div({id: 'action_add_div',
-                            style:"top:1%;width:80%;left:10%" , 
                             cssclass: 'inner_box'});
                         $('action_add_div').innerHTML=p_xml.responseText;
                         p_xml.responseText.evalScripts();

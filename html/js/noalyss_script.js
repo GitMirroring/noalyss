@@ -2034,7 +2034,7 @@ function show_fin_chdate(obj_id)
 function profile_show(p_div)
 {
     try {
-        var div = ['profile_gen_div', 'profile_menu_div', 'profile_print_div', 'profile_gestion_div', 'profile_repo_div'];
+        var div = ['profile_gen_div', 'profile_menu_div', 'profile_print_div', 'profile_gestion_div', 'profile_repo_div','profile_menu_mobile_div'];
         for (var r = 0; r < div.length; r++) {
             $(div[r]).hide();
         }

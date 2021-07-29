@@ -113,5 +113,5 @@ content[77]="<?php echo htmlspecialchars(_("Permet de chercher dans le suivi pou
 content[78]="<?php echo htmlspecialchars($file_too_large,ENT_QUOTES)?>";
 
 content[79]="<?php echo htmlspecialchars(_("Les postes comptables sont entre [] , les fiches entre {} et les postes analytiques entre {{ }}"))?>";
-    
+content[80]="<?php echo htmlspecialchars(_("Oui pour charger les fichiers javascripts et CSS standards"),ENT_QUOTES)?>";    
 </script>

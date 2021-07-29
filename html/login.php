@@ -25,7 +25,7 @@ include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
  * \brief Login page
  */
 
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
+
 // Verif if User and Pass match DB
     // if no, then redirect to the login page
 $rep=new Database();
@@ -37,11 +37,9 @@ if (defined('MULTI') && MULTI == 0)
 
 if (  isset ($_POST["p_user"] ) )
 {
-    $g_user=strtolower(sql_string($_POST["p_user"]));
-    $g_pass=$_POST["p_pass"];
-    $_SESSION[SESSION_KEY.'g_user']=$g_user;
-    $_SESSION[SESSION_KEY.'g_pass']=$g_pass;
 
+    $User=new User($rep);
+    $User->Check(false,'LOGIN');
 
 
     /*
@@ -57,9 +55,6 @@ if (  isset ($_POST["p_user"] ) )
         echo "<META HTTP-EQUIV=\"REFRESH\" content=\"3;url=admin-noalyss.php??action=upgrade&sb=database\">";
         exit();
     }
-    require_once NOALYSS_INCLUDE."/class/user.class.php";
-    $User=new User($rep);
-    $User->Check(false,'LOGIN');
     if (defined('NOALYSS_CAPTCHA') && NOALYSS_CAPTCHA==true) 
     {
           include("securimage/securimage.php");
@@ -70,15 +65,21 @@ if (  isset ($_POST["p_user"] ) )
           echo alert(_('Code invalide'));
           echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url=index.php\">";
           exit();
+        }
       }
+      if ($User->get_access_mode()=='PC')
+      {
+        // force the nocache
+        $backurl='user_login.php?v='.microtime(true);
+        if ( isset ($_POST['backurl'])) {
+              $backurl=urldecode($_POST['backurl']);
+          }
+        echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url={$backurl}\">";
+        exit();
+      } else {
+           echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url=mobile.php\">";
+           exit();
       }
-    // force the nocache
-    $backurl='user_login.php?v='.microtime(true);
-    if ( isset ($_POST['backurl'])) {
-          $backurl=urldecode($_POST['backurl']);
-      }
-    echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url={$backurl}\">";
-    exit();
 }
 else
 {
@@ -98,8 +99,6 @@ else
 	    exit();
 
       }
-
-    include_once ("class/user.class.php");
 
     $User=new User($rep);
     $User->Check();

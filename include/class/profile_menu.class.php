@@ -21,12 +21,18 @@
 require_once NOALYSS_INCLUDE.'/database/profile_menu_sql.class.php';
 
 /**
- * Manage the menu of a profile
+ * @file 
+ * @brief Manage the menu of a profile
  *
  * @author dany
  */
+/**
+ * @class Profile_Menu 
+ * @brief Manage the menu of a profile
+ */
 class Profile_Menu extends Profile_Menu_sql
 {
+    
 
     function __construct($p_cn, $p_id=-1)
     {
@@ -35,7 +41,7 @@ class Profile_Menu extends Profile_Menu_sql
     }
 
     /**
-     * Display the content of a profile menu for printing
+     * @brief Display the content of a profile menu for printing
      * @param type $resource
      * @param type $p_id
      */
@@ -97,7 +103,7 @@ class Profile_Menu extends Profile_Menu_sql
         }
 
         /**
-         * Show a table with all the menu and the type
+         * @brief Show a table with all the menu and the type
          * @param type $p_id profile.p_id
          */
         function display_profile_menu_detail()
@@ -224,7 +230,7 @@ class Profile_Menu extends Profile_Menu_sql
         }
 
         /**
-         * Show the available profile for the profile $p_id, it concerns only the action of management (action-gestion)
+         * @brief Show the available profile for the profile $p_id, it concerns only the action of management (action-gestion)
          * @param $p_id is the profile p_id
          */
         function available_profile()
@@ -250,7 +256,7 @@ class Profile_Menu extends Profile_Menu_sql
         }
 
         /**
-         * Show the available repository for the profile $p_id
+         * @brief Show the available repository for the profile $p_id
          * @param $p_id is the profile p_id
          */
         function available_repository()
@@ -272,6 +278,14 @@ class Profile_Menu extends Profile_Menu_sql
                 array('value'=>'X', 'label'=>_('Aucun accès'))
             );
             require_once NOALYSS_TEMPLATE.'/profile_sec_repository.php';
+        }
+        /**
+         * @brief menu for device
+         */
+        function mobile_device() {
+            $profile_mobile=Mobile_Device_MTable::build(0,$this->p_id);
+            $profile_mobile->display_table("where p_id=$1 order by pmo_order",[ $this->p_id ]);
+            echo create_script("profile_menu_mtable.param_add({profile_id:{$this->p_id}});");
         }
 
     }

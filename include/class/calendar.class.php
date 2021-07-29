@@ -152,7 +152,8 @@ class Calendar
             }
         }
     }
-    /*!\brief display a calendar after a call to Calendar::fill
+    /*!
+     *\brief display a calendar after a call to Calendar::fill
      *\param $p_type long or short
      * 
      *\return HTML String

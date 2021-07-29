@@ -309,7 +309,9 @@ $path = array(
     // report definition 
     "report_definition"=>"ajax_report_definition",
     // search all card , analytic or accounting
-    "search_account_card"=>"ajax_search_account_card"
+    "search_account_card"=>"ajax_search_account_card",
+    // Mobile device menu from mobile_device_mtable
+    "mobile_device_menu"=>"ajax_mobile_device_menu"
 )    ;
 
 if (array_key_exists($op, $path)) {

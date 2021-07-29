@@ -23,7 +23,8 @@ $nDay=$nFirstDay;
 for ($i=0;$i<=6;$i++){
 	echo "<th>";
 	$nDay=($nDay>6)?0:$nDay;
-	echo $week[$nDay];
+	echo '<span class="d-none d-sm-block ">'.$week[$nDay].'</span>';
+        echo '<span class=" d-block d-sm-none">'.substr($week[$nDay],0,2).'</span>';
 	$nDay++;
 	echo "</th>";
 }
@@ -36,18 +37,27 @@ $nCol=0;
 $today_month=date('m');
 $today_day=date('j');
 while ($ind <= $this->day) {
-    if ( $nCol == 0 ) echo "<tr>";
+     if ($nCol==0)
+    {
+        echo "<tr>";
+    }
     $class="workday";
-    if ( $week == 0 || $week == 6) $class="weekend";
+    if ($week==0||$week==6)
+    {
+        $class="weekend";
+    }
     // compute the date
     $timestamp_date=mktime(0,0,0,$this->month,$ind,$this->year);
     $date_calendar=date('w',$timestamp_date);
     $st="";
-    if ( $today_month==$this->month && $today_day==$ind)
-      $st='  style="border:1px solid red" ';
+    if ($today_month==$this->month&&$today_day==$ind)
+    {
+        $st='  style="border:1px solid red" ';
+    }
     if ( $date_calendar == $week ) {
         echo '<td class="'.$class.'" '.$st.'>'.'<span class="day">'.$ind."</span>";
-        echo $cell[$ind];
+        echo '<span class="d-none d-sm-block ">'.$cell[$ind].'<span>';
+        echo '<span class="d-block d-sm-none">'.$cell[$ind].'<span>';
         echo '</td>';
         $ind++;$week++;$nCol++;
     } else {

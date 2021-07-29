@@ -116,7 +116,7 @@ if ( !defined ("NOALYSS_PACKAGE_REPOSITORY")) {
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
 }
-define ("DBVERSION",163);
+define ("DBVERSION",164);
 define ("MONO_DATABASE",25);
 define ("DBVERSIONREPO",20);
 define ('NOTFOUND','--not found--');
@@ -596,8 +596,10 @@ function noalyss_class_autoloader($class) {
         "sort_table" => "lib/sort_table.class.php",
         "table_data_sql" => "lib/table_data_sql.class.php",
         "zip_extended" => "lib/zip_extended.class.php",
-        "document_state_mtable"=>"class/document_state_mtable.class.php"
-
+        "document_state_mtable"=>"class/document_state_mtable.class.php",
+        "noalyss\mobile"=>"class/mobile.class.php",
+        "profile_mobile_sql"=>"database/profile_mobile_sql.class.php",
+        "mobile_device_mtable"=>"class/mobile_device_mtable.class.php"
     );
     if ( isset ($aClass[$class]) ) {
         require_once NOALYSS_INCLUDE."/".$aClass[$class];
