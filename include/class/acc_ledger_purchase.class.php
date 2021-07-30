@@ -733,7 +733,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                                 ,$j_id		 /* 2 */
                                 ,${"e_march".$i} /* 3 */
                                 ,${"e_quant".$i}  /* 4 */
-                                ,round($acc_amount->$amount,2)	       /* 5 */
+                                ,round($acc_amount->amount,2)	       /* 5 */
                                 ,0 /* 6 */
                                 ,null/* 7 */
                                 ,$acc_amount->amount_nd     /* 8 */
