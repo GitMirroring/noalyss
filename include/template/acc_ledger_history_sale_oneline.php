@@ -100,8 +100,10 @@ for ($i=0;$i<$nb_data;$i++):
             <?=nbm($this->data[$i]['tvac'])?>
         </td>
         <td class="num">
+            <?php if ( $this->data[$i]['cr_code_iso'] != 0) : ?>
             <?=nbm ( bcadd($this->data[$i]['sum_oc_amount'],$this->data[$i]['sum_oc_vat_amount']),4)?>
             <?=$this->data[$i]['cr_code_iso']?>
+            <?php endif;?>
         </td>
         <td>
             

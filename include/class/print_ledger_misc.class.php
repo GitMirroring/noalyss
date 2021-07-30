@@ -94,7 +94,11 @@ class Print_Ledger_Misc extends Print_Ledger
 	       $positive = $this->cn->get_value("select qf_amount from quant_fin  ".
 					  " where jr_id=".$row['jr_id']);
              }
-            $this->write_cell(20,5,nbm(bcadd($row['sum_ocvat_amount'],$row['sum_ocamount']),2).$row['cr_code_iso'],0,0,'R');
+             if ( $row['currency_id'] != 0 )         {
+                 $this->write_cell(20,5,nbm(bcadd($row['sum_ocvat_amount'],$row['sum_ocamount']),2).$row['cr_code_iso'],0,0,'R');
+             } else {
+                 $this->write_cell(20,5,"");
+             }
             $this->write_cell(15,5,nbm($positive),0,0,'R');
             $this->line_new(5);
 
