@@ -25,6 +25,10 @@
  * @file
  * @brief abstract of the table public.forecast_item
  */
+/**
+ * @class Forecast_Item_SQL
+ * @brief ORM abstract of the table public.forecast_item
+ */
 class Forecast_Item_SQL extends Table_Data_SQL
 {
 

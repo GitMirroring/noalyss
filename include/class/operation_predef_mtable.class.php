@@ -17,16 +17,16 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-/*! \file
+/*! 
+ * \file
  * \brief Class to manage predefined operation thanks the class Manage Table
- */
-/*!
- * \brief Display a table and allow to change the predefined operation, insert or delete. Used the
+ * Display a table and allow to change the predefined operation, insert or delete. Used the
  * class Manage_Table_SQL and the SQL Object for the tables op_predef and op_predef_detail.
  */
 require_once NOALYSS_INCLUDE."/database/op_predef_sql.class.php";
 
 /*!
+ * \class Operation_Predef_MTable
  * \brief Display a table and allow to change the predefined operation, insert or delete. Used the
  * class Manage_Table_SQL and the SQL Object for the tables op_predef and op_predef_detail.
  * 
@@ -38,7 +38,7 @@ class Operation_Predef_MTable extends Manage_Table_SQL
 {
     private $pre_operation;
     private $force_ledger_type; //!< When adding , the ledger must be set
-    function __construct(Op_predef_SQL $p_table)
+    function __construct(Op_Predef_SQL $p_table)
     {
         parent::__construct($p_table);
 

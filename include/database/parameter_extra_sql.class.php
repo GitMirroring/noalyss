@@ -25,6 +25,10 @@
  *
  *@file
  *@brief abstract of the table public.parameter_extra */
+
+/**
+ * @class  Parameter_Extra_SQL
+  *@brief abstract of the table public.parameter_extra */
 class Parameter_Extra_SQL extends Table_Data_SQL
 {
 

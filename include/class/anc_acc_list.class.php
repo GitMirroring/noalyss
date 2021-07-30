@@ -23,6 +23,11 @@
  * \brief
  */
 
+/*!
+ * \class Anc_Acc_List
+ * \brief Manage the class for reporting about Analytic Accountancy and Accountancy : card - analytic account,
+ * accounting - analytic account,
+ */
 
 class Anc_Acc_List extends Anc_Acc_Link
 {
@@ -53,7 +58,7 @@ class Anc_Acc_List extends Anc_Acc_Link
     return $r;
   }
  /**
-   * load the data
+   * \brief load the data
    * does not return anything but give a value to this->aheader and this->arow
    */
   function load_anc_account()
@@ -103,7 +108,7 @@ END) <> 0::numeric  order by po_id,j_poste
 
   }
   /**
-   * load the data
+   * \brief load the data
    * does not return anything but give a value to this->aheader and this->arow
    */
   function load_anc_card()
@@ -153,7 +158,7 @@ END) <> 0::numeric order by po_name,name",array($this->pa_id));
   }
 
   /**
-   * load the data
+   * \brief load the data
    * does not return anything but give a value to this->aheader and this->arow
    */
   function load_poste()
@@ -206,7 +211,7 @@ END) <> 0::numeric  order by po_id,po_name
   }
 
   /**
-   * load the data
+   * \brief load the data
    * does not return anything but give a value to this->aheader and this->arow
    */
   function load_card()

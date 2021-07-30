@@ -245,7 +245,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                     join jrnx using (j_id)              
                     join card_name on (card_name.f_id=qp_fiche)
                     join card_qcode on (card_qcode.f_id=qp_fiche)
-                    join tva_rate on ( qp_vat_code=tva_id)
+                    left join tva_rate on ( qp_vat_code=tva_id)
                 where
                     qp_internal=$1
                 

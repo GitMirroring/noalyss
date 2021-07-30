@@ -22,11 +22,15 @@
 /*!\file
  * \brief contains HTML features
  */
+/*!
+ * \class Html_Table
+ * \brief contains HTML features
+ */
 
 class Html_Table
 {
   /**
-   * Receives a SQL command and returns a string with the HTML code
+   * @brief Receives a SQL command and returns a string with the HTML code
    * to display it as a table.
    * Simple table without any feature (link in certain cell, sort,...)
    * @param $cn database object

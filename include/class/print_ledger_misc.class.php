@@ -19,10 +19,14 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
- * \brief print a listing of financial
+/*!
+ * \file
+ * \brief print a listing of Miscelleaneous operation
  */
-
+/**
+ * \class Print_Ledger_Misc
+ * \brief print a listing of Miscelleaneous operation
+ */
 class Print_Ledger_Misc extends Print_Ledger
 {
     function __construct(Database $p_cn,$p_jrn,$p_from,$p_to)

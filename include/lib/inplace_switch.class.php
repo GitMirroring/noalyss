@@ -24,6 +24,12 @@
  * @brief  A switch let you switch between 2 values : 0 and 1, it is used to 
  * replace the check
  */
+/**
+ * @class Inplace_Switch
+ * @brief  A switch let you switch between 2 values : 0 and 1, it is used to
+ * replace the check
+ */
+
 class Inplace_Switch
 {
 

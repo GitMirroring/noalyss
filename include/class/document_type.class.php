@@ -19,17 +19,19 @@
  */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-/** \file
+/**
+ * \file
  * \brief  class for the table document_type
  */
 
-/** \
+/**
+ * @class Document_Type
  *@brief class for the table document_type , a document_type is a kind of action in the follow up
  * 
  * < dt_id pk document_type
  * < dt_value value
  */
-class Document_type
+class Document_Type
 {
 	/** document_type
 	 * \brief constructor

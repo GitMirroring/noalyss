@@ -25,7 +25,7 @@
  */
 
 /**
- * @class
+ * @class Data_Currency_Operation
  * @brief build the SQL and fetch data of data currency operation from database , 
  */
 class Data_Currency_Operation

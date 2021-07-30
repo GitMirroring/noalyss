@@ -18,7 +18,14 @@
 */
 
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
-
+/**
+ * @file
+ * @brief PDF For the balance report
+ */
+/**
+ * @class PDFBalance_simple
+ * @brief PDF For the balance report
+ */
 
 class PDFBalance_simple extends PDF
 {

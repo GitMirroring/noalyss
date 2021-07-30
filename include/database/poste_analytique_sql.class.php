@@ -26,7 +26,7 @@
  * @brief abstract of the table public.poste_analytique 
  * 
  * 
- * @class
+ * @class Poste_analytique_SQL
  * @brief abstract of the table public.poste_analytique */
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 

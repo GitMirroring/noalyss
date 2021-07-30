@@ -30,7 +30,7 @@
 /**
  * class_currency_history_sql.php
  *
- * @class
+ * @class V_Currency_Last_Value_SQL
  * @brief abstract of the view public.v_currency_last_value
  */
 class V_Currency_Last_Value_SQL extends Data_SQL

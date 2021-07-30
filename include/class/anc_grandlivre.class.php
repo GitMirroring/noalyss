@@ -19,10 +19,14 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
- * \brief show the Grand Livre for analytic
+/*!
+ *\file
+ * \brief report the Grand Livre for analytic
  */
 
+/*!\class Anc_GrandLivre
+ * \brief report he Grand Livre for analytic
+ */
 class Anc_GrandLivre extends Anc_Print
 {
     

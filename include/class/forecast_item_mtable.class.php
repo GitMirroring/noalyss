@@ -29,7 +29,10 @@
  * @file
  * @brief display the item for forecast
  */
-
+/**
+ * @class Forecast_Item_MTable
+ * @brief display the item for forecast
+ */
 require_once NOALYSS_INCLUDE . "/database/forecast_item_sql.class.php";
 require_once NOALYSS_INCLUDE . "/database/forecast_sql.class.php";
 

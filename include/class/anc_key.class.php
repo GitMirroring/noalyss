@@ -25,6 +25,14 @@
  * @brief Class to manage distribution keys for Analytic accountancy
  * 
  */
+
+
+/**
+ * @class Anc_Key
+ * @brief Class to manage distribution keys for Analytic accountancy
+ *
+ */
+
 require_once NOALYSS_INCLUDE.'/database/anc_key_sql.class.php';
 
 class Anc_Key

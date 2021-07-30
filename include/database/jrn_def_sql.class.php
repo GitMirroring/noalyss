@@ -24,6 +24,9 @@
  *
  * @file
  * @brief abstract of the table public.jrn_def */
+ /**
+ * @class Jrn_def_SQL
+ * @brief ORM abstract of the table public.jrn_def */
 class Jrn_def_SQL extends Table_Data_SQL
 {
 

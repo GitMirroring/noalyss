@@ -19,7 +19,14 @@
 
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
 
-/*!\file
+/*!
+ *  \file
+ * \brief Send email for Noalyss after checking if it is possible : if cannot be sent if the limit of max email
+ * is reached,
+ * @see sendmail_core
+ */
+/*!
+ *  \class Sendmail
  * \brief Send email for Noalyss after checking if it is possible : if cannot be sent if the limit of max email
  * is reached,
  * @see sendmail_core
@@ -28,7 +35,7 @@
 class Sendmail extends  Sendmail_Core
 {
     /**
-     * Send the message
+     * @brief Send the message
      * @throws Exception
      */
     function send()
@@ -47,7 +54,7 @@ class Sendmail extends  Sendmail_Core
         $this->increment_mail($repo,$dossier,$date);
     }
     /**
-     * Check if email can be sent from a folder
+     * @brief Check if email can be sent from a folder
      * @return boolean
      */
     function can_send() {
@@ -81,7 +88,7 @@ class Sendmail extends  Sendmail_Core
         return true;
     }
     /**
-     * return max email the folder can send
+     *@brief  return max email the folder can send
      * @param $p_repo Database
      * @param $p_dossier_id int
      */
@@ -92,7 +99,7 @@ class Sendmail extends  Sendmail_Core
         return $max_email;
     }
     /**
-     * Return the amount of send emails for the date (YYYYMMDD)
+     * @brief  Return the amount of send emails for the date (YYYYMMDD)
      * @param Database $p_repo
      * @param $p_dossier_id int
      * @param $p_date string YYYYMMDD
@@ -107,7 +114,7 @@ class Sendmail extends  Sendmail_Core
 
     }
     /**
-     * Add $p_amount_email to email sent
+     * @brief  Add $p_amount_email to email sent
      * @param $p_repo Database
      * @param $p_dossier int id of the folder (dossier.dos_id)
      * @param $p_date string (YYYYMMDD)

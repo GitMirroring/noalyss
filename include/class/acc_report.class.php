@@ -25,6 +25,7 @@ require_once NOALYSS_INCLUDE.'/database/form_detail_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/form_definition_sql.class.php';
 
 /*!
+ * \class Acc_Report
  * \brief Class rapport  Create, view, modify and parse report
  */
 
@@ -34,7 +35,9 @@ class Acc_Report
     private $form_definition; /*!< form_definition_sql
   
     var $nb;
-    /*!\brief  Constructor */
+    /*!
+    \brief  Constructor
+ */
     function __construct($p_cn,$p_id=-1)
     {
         $this->form_definition=new Form_Definition_SQL($p_cn,$p_id);
@@ -55,7 +58,8 @@ class Acc_Report
     {
         return $this->form_definition->getp("fr_label");
     }
-    /*!\brief return all the row and parse formula
+    /*!
+     * \brief return all the row and parse formula
      *        from a report
      * \param $p_start start periode
      * \param $p_end end periode
@@ -97,7 +101,8 @@ class Acc_Report
         return $col;
     }
    
-    /*!\brief save into form and form_def
+    /*!
+    * \brief save into form and form_def
      */
     function save()
     {

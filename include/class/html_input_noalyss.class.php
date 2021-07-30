@@ -22,14 +22,15 @@
 */
 /**
  * @file
- * @brief
+ *  @brief HtmlInput specific to Noalyss
  *
  */
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
 
 /**
- * @class
- * @brief
+ * @class Html_Input_Noalyss
+ * @brief HtmlInput specific to Noalyss
+ *
  *
  */
 class Html_Input_Noalyss extends HtmlInput

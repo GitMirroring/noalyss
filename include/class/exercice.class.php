@@ -20,7 +20,12 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
 /*!\file
- * \brief about the accountant exercice
+ * \brief  about the accountancy period (usually 1 year starting in January until december) = exercice
+ */
+
+/*!
+ * \class Exercice
+ * \brief about the accountancy period (usually 1 year starting in January until december) = exercice
  */
 class Exercice
 {

@@ -24,6 +24,10 @@ require_once NOALYSS_INCLUDE.'/database/form_detail_sql.class.php';
  * @file
  * @brief  manage simple report 
  */
+/**
+ * @class Acc_Report_MTable
+ * @brief  manage simple report
+ */
 class Acc_Report_MTable extends Manage_Table_SQL
 {
 
@@ -34,6 +38,14 @@ class Acc_Report_MTable extends Manage_Table_SQL
         parent::__construct($p_table);
     }
 
+    /**
+     *
+     * @brief build an object Acc_Report_MTable
+     * @param int $p_id  Form_Detail_SQL.id
+     * @param int $p_form_def_id Parent Form
+     * @returns Acc_Report_MTable
+     * @throws Exception
+     */
     static function build($p_id, $p_form_def_id)
     {
         $cn=Dossier::connect();

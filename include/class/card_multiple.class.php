@@ -23,6 +23,11 @@
  * @file
  * @brief in follow-up , add multiple cards to an event, an action
  */
+
+/**
+ * @class Card_Multiple
+ * @brief in follow-up , add multiple cards to an event, an action
+ */
 class Card_Multiple
 {
     private $sql ; //!< SQL with the right column name

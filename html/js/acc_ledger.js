@@ -19,14 +19,16 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
  * \brief javascript script for the ledger in accountancy,
  * compute the sum, add a row at the table..
  *
  */
 var layer = 1;
 /**
- *  update the list of available predefined operation when we change the ledger.
+ * \fn
+ * \brief update the list of available predefined operation when we change the ledger.
  */
 function update_predef(p_type, p_direct, p_ac)
 {

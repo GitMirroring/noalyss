@@ -24,6 +24,11 @@
  *
  * @file
  * @brief abstract of the table public.attr_def */
+
+/**
+ * @class Attr_def_SQL
+ * @brief abstract of the table public.attr_def
+ */
 class Attr_def_SQL extends Table_Data_SQL
 {
 

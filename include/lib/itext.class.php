@@ -18,8 +18,12 @@
 */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-
-/*!\file
+/*!
+ * \file
+ * \brief Html Input
+ */
+/*!
+ * \class IText
  * \brief Html Input
  */
 class IText extends HtmlInput

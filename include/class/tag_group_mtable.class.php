@@ -26,6 +26,13 @@
  * 
  * 
  */
+
+/**
+ * @class Tag_Group_MTable
+ * @brief manage tag_group table
+ *
+ *
+ */
 require_once NOALYSS_INCLUDE.'/database/tag_group_sql.class.php';
 
 class Tag_Group_MTable extends Manage_Table_SQL

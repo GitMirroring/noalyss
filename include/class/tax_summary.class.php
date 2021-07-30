@@ -26,6 +26,12 @@
  * @brief Compute , display and export the tax summary
  *
  */
+
+/**
+ * @class Tax_Summary
+ * @brief Compute , display and export the tax summary
+ *
+ */
 class Tax_Summary
 {
 

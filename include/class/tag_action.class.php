@@ -27,6 +27,11 @@
  * @file
  * @brief  concerns the tags linked to an action
  */
+
+/**
+ * @class Tag_Action
+ * @brief  concerns the tags linked to an action
+ */
 class Tag_Action extends Tag
 {
     function __construct($p_cn, $p_id=-1 )

@@ -28,7 +28,8 @@
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 /**
- * @brief Manage the table public.menu_ref
+ * @class Menu_Ref_SQL
+ * @brief ORM Manage the table public.menu_ref
  */
 class Menu_Ref_SQL extends Table_Data_SQL
 {

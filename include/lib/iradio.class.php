@@ -23,7 +23,9 @@
 /**\file
  * \brief Html Input 
  */
-
+/*!\class IRadio
+ * \brief Html Input
+ */
 class IRadio extends HtmlInput
     {
     /**\brief show the html  input of the widget */

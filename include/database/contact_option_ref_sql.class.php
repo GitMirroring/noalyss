@@ -26,6 +26,11 @@
  *
  * @file
  * @brief abstract of the table public.contact_option_ref */
+
+/**
+ * @class Contact_option_ref_SQL
+ * @brief abstract of the table public.contact_option_ref
+ */
 class Contact_option_ref_SQL extends Table_Data_SQL
 {
 

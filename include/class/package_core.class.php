@@ -23,6 +23,11 @@
  * @file
  * @brief Class Package Core to install the core , if possible
  */
+
+/**
+ * @class Package_Core
+ * @brief Class Package Core to install the core , if possible
+ */
 class Package_Core extends Package_Noalyss
 {
 

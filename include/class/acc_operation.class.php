@@ -25,6 +25,7 @@
  */
 
 /*!
+ * @class Acc_Operation
  * \brief  this file match the tables jrn & jrnx the purpose is to
  *   remove or save accountant writing to these table.
  *
@@ -819,6 +820,11 @@ class Acc_Operation
 
 }
 /////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @class Acc_Detail
+ * @brief Contains the detail of an operation Acc_Operation
+ */
 class Acc_Detail extends Acc_Operation
 {
     function __construct($p_cn,$p_jrid=0)
@@ -864,6 +870,7 @@ class Acc_Detail extends Acc_Operation
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
+ * @class Acc_Misc
  *@brief this class manage data from the JRNX and JRN
  * table
  *@note Data member are the column of the table
@@ -914,6 +921,7 @@ class Acc_Misc extends Acc_Detail
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
+ * @class Acc_Sold
  *@brief this class manage data from the QUANT_SOLD
  * table
  *@note Data member are the column of the table
@@ -967,6 +975,7 @@ class Acc_Sold extends Acc_Detail
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
+ *  @class Acc_Purchase
  *@brief this class manage data from the QUANT_PURCHASE
  * table
  *@note Data member are the column of the table
@@ -1023,6 +1032,7 @@ class Acc_Purchase extends Acc_Detail
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
+ * @class Acc_Fin
  *@brief this class manage data from the QUANT_FIN
  * table
  *@note Data member are the column of the table

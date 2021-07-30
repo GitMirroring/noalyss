@@ -22,8 +22,12 @@
 
 /**
  * @file 
- * @brief
- * @todo to be implemented
+ * @brief Manage the Options for the Card_Multiple in the Follow Up
+ */
+
+/**
+ * @class Contact_Option_Ref_MTable
+ * @brief Manage the Options for the Card_Multiple in the Follow Up
  */
 require_once NOALYSS_INCLUDE."/database/contact_option_ref_sql.class.php";
 

@@ -25,7 +25,7 @@
  */
 
 /**
- * @class
+ * @class Impress
  * @brief contains function for the parsing and computing formulae . Test are in scenario/test_parse_formula.php
  */
 class Impress

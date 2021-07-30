@@ -27,7 +27,7 @@
  */
 
 /**
- * @class
+ * @class Follow_Up_Other_Concerned
  * @brief Others concerned card in an action
  * @see Follow_Up
  */

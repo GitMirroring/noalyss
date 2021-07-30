@@ -22,6 +22,11 @@
 /*!\file
  * \brief Html Input
  */
+
+/*!
+ * \class ICheckBox
+ * \brief Html Input
+ */
 class ICheckBox extends HtmlInput
 {
     var $range;

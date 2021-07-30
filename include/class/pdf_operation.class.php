@@ -22,10 +22,14 @@
 
 /**
  * @file
- * Detail Operation ACC + ANC , it will use Acc_Operation and Anc_Operation
+ * @brief  Detail Operation ACC + ANC , it will use Acc_Operation and Anc_Operation
  * 
  */
-
+/**
+ * @class PDF_Operation
+ * @brief Detail Operation ACC + ANC , it will use Acc_Operation and Anc_Operation
+ *
+ */
 class PDF_Operation extends PDF {
 
     private $acc_detail; //!< Acc_Operation object

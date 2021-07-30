@@ -24,6 +24,9 @@
  *
  * @file
  * @brief abstract of the table public.form_definition */
+/**
+ * @class Form_Definition_SQL
+ * @brief ORM abstract of the table public.form_definition */
 
 class Form_Definition_SQL extends \Table_Data_SQL
 {

@@ -683,7 +683,7 @@ EXCLUDE_PATTERNS       = a?.php \
 			scriptaculous.js \
 			slider.js \
 			sound.js \
-			unittest.js.
+			unittest.js
 
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names

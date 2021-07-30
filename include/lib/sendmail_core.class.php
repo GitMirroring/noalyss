@@ -16,11 +16,17 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-// Copyright Author Dany De Bontridder danydb@aevalys.eu
+// Copyright Author Dany De Bontridder danydb@noalyss.eu
 
 /**
  *@file
  *@brief API for sending email 
+ */
+
+
+/**
+ *@class Sendmail_Core
+ *@brief API for sending email
  */
 
 /**
@@ -72,7 +78,7 @@ class Sendmail_Core
     }
 
     /**
-     * body of the message (utf8)
+     * @brief body of the message (utf8)
      * @param type $p_message
      */
     function set_message($p_message)
@@ -82,7 +88,7 @@ class Sendmail_Core
     }
 
     /**
-     * Add file to the message
+     *@brief  Add file to the message
      * @param FileToSend $file file to add to the message
      */
     function add_file(FileToSend $file)
@@ -91,7 +97,7 @@ class Sendmail_Core
     }
 
     /**
-     *  verify that the message is ready to go
+     * @brief  verify that the message is ready to go
      * @throws Exception
      */
     function verify()
@@ -109,7 +115,7 @@ class Sendmail_Core
     
     /**
      * 
-     * Function to override if supplemental header are needed
+     * @brief Function to override if supplemental header are needed
      * @return string
      */
     function add_supplemental_header()
@@ -117,7 +123,7 @@ class Sendmail_Core
         return '';
     }
     /**
-    * create the message before sending
+    *@brief  create the message before sending
     */
     function compose()
     {
@@ -136,9 +142,6 @@ class Sendmail_Core
         $this->header .= "MIME-Version: 1.0" . $eol;
         $this->header .= $this->add_supplemental_header();
         $this->header .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\""  ;
-        //$headers .= "Content-Transfer-Encoding: 7bit" . $eol;
-        //$headers .= "This is a MIME encoded message." . $eol ;
-        //$headers .= $eol . $eol;
 
         // message
         $this->content .= "--" . $separator . $eol;
@@ -175,7 +178,7 @@ class Sendmail_Core
     }
 
     /**
-     * Send email
+     *@brief  Send email
      * @throws Exception
      */
     function send()

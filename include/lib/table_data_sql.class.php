@@ -19,10 +19,13 @@
  */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-
 /**
  * @file
- * @brief this wrapper is used to created easily a wrapper to a table
+ * @brief interface : for creating ORM Object
+ */
+/**
+ * @class Table_Data_SQL
+ * @brief Interface :  this wrapper is used to created easily a wrapper to a table (ORM)
  * You must create a class extending this one, in the constructor
  * these variables have to be defined
  * 

@@ -23,6 +23,11 @@
  * \brief API for creating PDF, unicode, based on tfpdf
  *@see TFPDF
  */
+/*!
+ * \class PDF
+ * \brief API for creating PDF, unicode, based on tfpdf
+ *@see TFPDF
+ */
 
 
 class PDF extends  PDF_Core

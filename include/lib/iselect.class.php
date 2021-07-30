@@ -19,11 +19,21 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
  * \brief Html Input , create a tag <SELECT> ... </SELECT> 
  * if readonly == true then display the label corresponding to the selected value
  * You can use also $this->rowsize  to specify the number of lines to display
  * 
+ * @see Database::make_array
+ */
+
+/*!
+ * \class ISelect
+ * \brief Html Input , create a tag <SELECT> ... </SELECT>
+ * if readonly == true then display the label corresponding to the selected value
+ * You can use also $this->rowsize  to specify the number of lines to display
+ *
  * @see Database::make_array
  */
 class ISelect extends HtmlInput
