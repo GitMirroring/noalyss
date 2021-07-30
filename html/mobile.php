@@ -30,7 +30,7 @@ global $g_user;
 $cn=new Database();
 $g_user=new \User($cn);
 $g_user->check();
-define ('ALLOWED',true);
+if ( !defined ("ALLOWED") ) { define ('ALLOWED',true); }
 
 //-----------------------------------------------------------------
 /// if $_REQUEST['gDossier'] is not set then select the folder

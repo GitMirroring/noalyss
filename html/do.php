@@ -57,6 +57,7 @@ global $g_user, $cn,$g_parameter,$http;
 $g_user = new User($cn);
 $http=new HttpInput();
 IDate::set_firstDate($g_user->get_first_week_day());
+
 /*
  * check that the database is not empty
  */
@@ -68,6 +69,10 @@ if ( ! $cn->exist_table('version')) {
     echo '</p>';
     return;
 }
+/**
+ * if access_mode is MOBILE than force it to mobile.php
+ */
+if ($g_user->get_access_mode()=='MOBILE') { require NOALYSS_HOME."/mobile.php"; return;}
 
 $style_user=$http->post("style_user","string",$_SESSION[SESSION_KEY.'g_theme']);
 
