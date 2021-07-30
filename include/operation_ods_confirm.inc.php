@@ -40,56 +40,7 @@ echo '</div>';
 echo '<FORM METHOD="POST" enctype="multipart/form-data" class="print">';
 echo HtmlInput::request_to_hidden(array('ac','p_currency_code','p_currency_rate'));
 echo $ledger->confirm($_POST,false);
-
-
-?>
-<div id="tab_id" >
-    <script>
-        var a_tab = ['modele_div_id','reverse_div_id','document_div_id','operationtype_div_id'];
-    </script>
-<ul class="tabs">
-    <li class="tabs_selected" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Modèle à sauver")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'modele_div_id')"> <?php echo _('Modèle')?> </a></li>
-    <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Document")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'document_div_id')"> <?php echo _('Document')?> </a></li>
-    <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Extourne")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'reverse_div_id')"> <?php echo _('Extourne')?> </a></li>
-    <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Type opération")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'operationtype_div_id')"> <?php echo _('Type opération')?> </a></li>
-</ul>
-</div>
-<div >
-    <div id="modele_div_id">
-        <?php echo Pre_operation::save_propose(); ?>
-    </div>
-    <div id="reverse_div_id" style="display:none;height:185px;height:10rem">
-    <?php
-        $reverse_ck=new ICheckBox('reverse_ck');
-        echo _('Extourne opération')." ".$reverse_ck->input()." ";
-        $reverse_date=new IDate('reverse_date');
-        echo $reverse_date->input();
-        $msg_reverse=new IText("ext_label");
-        $msg_reverse->size=60;
-        $msg_reverse->placeholder=_("Message extourne");
-        echo _("Message")." ".$msg_reverse->input();
-    ?>
-    </div>
-    <div id="document_div_id" style="display:none;height:185px;height:10rem">
-      <?php
-      $file = new IFile();
-      $file->setAlertOnSize(true);
-        $file->table = 0;
-        echo '<p class="decale">';
-        echo _("Ajoutez une pièce justificative ");
-        echo $file->input("pj", "");
-        echo '</p>';
-        ?>
-    </div>
-    <div id="operationtype_div_id" style="display:none;height:185px;height:10rem">
-        <?php
-            $status=$http->request("jr_optype","string","NOR");
-            echo Acc_Operation::select_operation_type($status)->input();
-        ?>
-    </div>
-</div>
-
-<?php
+echo $ledger->input_extra_info();
 echo HtmlInput::submit("save",_("Confirmer"));
 echo HtmlInput::submit("correct",_("Corriger"));
 

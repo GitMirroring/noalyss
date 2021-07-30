@@ -2596,6 +2596,7 @@ span.warning {
  * Tabs like row
  ****************************************************************************/
  #tab_id {
+     margin-top:1rem;
      margin-bottom: 30px;
      position:static;
  }

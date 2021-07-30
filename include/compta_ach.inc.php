@@ -22,7 +22,7 @@
 
 /**
  *\file
- * \brief file included to manage all the sold operation
+ * \brief file included include the purchase operation
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 $gDossier = dossier::id();
@@ -73,50 +73,12 @@ if (isset($_POST['view_invoice']))
 
 		echo $Ledger->confirm($_POST);
 		echo HtmlInput::hidden('ac', $ac);
-                            ?>
-<div id="tab_id" >
-    <script>
-        var a_tab = ['modele_div_id','repo_div_id','facturation_div_id','reverse_div_id'];
-    </script>
-<ul class="tabs">
-    <li class="tabs_selected" style="float: none"><a href="javascript:void(0)" title="<?php echo _("Générer une facture ou charger un document")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'facturation_div_id')"><?php echo _('Facture')?></a></li>
-    <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Choix du dépôt")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'repo_div_id')"> <?php echo _('Dépôt')?> </a></li>
-    <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Modèle à sauver")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'modele_div_id')"> <?php echo _('Modèle')?> </a></li>
-    <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Extourne")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'reverse_div_id')"> <?php echo _('Extourne')?> </a></li>
-</ul>
-</div>
-<?php
-		echo $Ledger->select_depot(false, -1);
-                echo $Ledger->extra_info();
-                
-                echo '<div id="modele_div_id" style="display:none;height:185px;height:10rem">';
-                echo Pre_operation::save_propose();
-                echo '</div>';
-
-               
-                echo '<div id="reverse_div_id" style="display:none;height:185px;height:10rem">';
-                $reverse_date=new IDate('reverse_date');
-                $reverse_ck=new ICheckBox('reverse_ck');
-                echo _('Extourne opération')." ".$reverse_ck->input()." ";
-                echo $reverse_date->input();
-                $msg_reverse=new IText("ext_label");
-                $msg_reverse->placeholder=_("Message extourne");
-                $msg_reverse->size=60;
-                echo _("Message")." ".$msg_reverse->input();
-                echo '</div>';
-                
-                 echo HtmlInput::submit("record", _("Enregistrement"), 'onClick="return verify_ca(\'\');"');
+                $Ledger->input_extra_info();
+                echo HtmlInput::submit("record", _("Enregistrement"), 'onClick="return verify_ca(\'\');"');
 		echo HtmlInput::submit('correct', _("Corriger"));
 		echo '</form>';
-		echo '</div>'; /* tab_id */
-		echo '</div>';
-                ?>
-<script>
-     $('repo_div_id').hide();
-    $('modele_div_id').hide();
-show_tabs(a_tab,'facturation_div_id');
-</script>
-<?php
+                echo '</div>';
+                if (DEBUGNOALYSS>1) { echo "<!-- confirm_div_id -->";}
             return;
 	}
 }

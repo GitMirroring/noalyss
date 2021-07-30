@@ -1,7 +1,10 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-
+/**
+ * @file
+ * @brief Display a form to enter an operation Sale or Purchase 
+ */
 ?>
 	<div id="jrn_name_div">
 	<h1 id="jrn_name"> <?php echo $this->get_name()?></h1>

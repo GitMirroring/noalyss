@@ -65,7 +65,7 @@ class Print_Ledger_Financial extends Print_Ledger
         $this->Cell(10,6,_('Interne'));
         $this->Cell(40,6,_('Dest/Orig'));
         $this->Cell(60,6,_('Commentaire'));
-        $this->Cell(20,6,_('Device'),0,0,'R');
+        $this->Cell(20,6,_('Devise'),0,0,'R');
         $this->Cell(20,6,_('Montant'),0,0,'R');
         $this->Ln(6);
         

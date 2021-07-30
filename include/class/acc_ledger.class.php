@@ -3249,6 +3249,10 @@ class Acc_Ledger  extends jrn_def_sql
         }
         return "";
     }
+    function input_extra_info()
+    {
+        require NOALYSS_TEMPLATE."/acc_ledger-input_extra_info.php";
+    }
 }
 
 ?>
