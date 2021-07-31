@@ -1805,7 +1805,7 @@ class Follow_Up
     }
 
     /**
-     * Display the tree of childrens of the current Action + related parents
+     * @brief Display the tree of childrens of the current Action + related parents
      * @return return the tree of children in a unordered list , HTML string 
      */
     function display_children($p_view, $p_base)
@@ -1814,7 +1814,7 @@ class Follow_Up
          * First we retrieve the parent
          */
         $parent=$this->get_parent();
-
+        $http=new HttpInput();
         $base=HtmlInput::request_to_string(array("gDossier", "ac",  "sb", "sc",
                     "f_id"))."&amp;sa=detail";
         if ($parent==-1)
@@ -1856,9 +1856,9 @@ class Follow_Up
                 {
                     $rmAction=sprintf("return confirm_box(null,'"._('Voulez-vous effacer cette action ')."', function () {remove_action('%s','%s','%s');});",
                             dossier::id(), $action[$o]['aga_greatest'],
-                            $_REQUEST['ag_id']);
+                            $http->request('ag_id',"number"));
                     $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
-                    $js='<a class="tinybutton" id="acact'.$action[$o]['aga_greatest'].'" href="javascript:void(0)" onclick="'.$rmAction.'">'.SMALLX.'</a>';
+                    $js=Icon_Action::trash("acact".$action[$o]['aga_greatest'], $rmAction);
                     echo '<li '.$class.' id="act'.$action[$o]['aga_greatest'].'">'.$margin.$showAction.$action[$o]['str_date'].
                     h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
                     .$js.'</li>';
@@ -1891,7 +1891,7 @@ class Follow_Up
         }
     }
     /**
-     * Display the list of parent of the current Follow_Up
+     * @brief Display the list of parent of the current Follow_Up
      * \param $p_view form will be in readonly mode (value: READ, UPD or NEW  )
      * \param $p_base is the ac parameter
      * \see Follow_Up::Display
