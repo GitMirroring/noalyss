@@ -147,6 +147,10 @@ $post_jrn=$http->post("p_jrn", "string","");
             /* Save the additional information into jrn_info */
             $obj=new Acc_Ledger_Info($cn);
             $obj->save_extra($Ledger->jr_id,$_POST);
+            
+             /* save followup */
+             $Ledger->save_followup($http->request("action_gestion","string",""));
+             
              // extourne
             if (isset($_POST['reverse_ck']))
             {

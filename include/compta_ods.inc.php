@@ -86,8 +86,12 @@ elseif (isset($_POST['save']))
 	try
 	{
 		$ledger->save($array);
-		$jr_id = $cn->get_value('select jr_id from jrn where jr_internal=$1', array($ledger->internal));
-
+                $jr_id=$ledger->jr_id;
+                
+                /* save followup */
+                $ledger->save_followup($http->request("action_gestion","string",""));
+                                
+                
 		echo '<h2>'._("Opération enregistrée")._("Piece") . h($ledger->pj) . '</h2>';
 		if (strcmp($ledger->pj, $_POST['e_pj']) != 0)
 		{

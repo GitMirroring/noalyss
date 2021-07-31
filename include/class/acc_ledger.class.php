@@ -3253,6 +3253,21 @@ class Acc_Ledger  extends jrn_def_sql
     {
         require NOALYSS_TEMPLATE."/acc_ledger-input_extra_info.php";
     }
+    /**
+     * @brief attach action-followups to an operation, 
+     * @param string $s_related_action action.ag_id separated by comma
+     * @see Acc_Operation
+     * @return boolean true success ,false nothing inserted
+     */
+    function save_followup($s_related_action)
+    {
+        if ($this->jr_id == 0 || empty ($s_related_action))  { return false;  }
+        
+        $acc_operation=new Acc_Operation($this->cn);
+        $acc_operation->jr_id=$this->jr_id;
+        $acc_operation->insert_related_action($s_related_action);
+        return true;
+    }
 }
 
 ?>

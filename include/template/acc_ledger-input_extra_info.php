@@ -35,16 +35,17 @@ $a_div=["template"=>"modele_div_id",
     "invoice"=>"facturation_div_id",
     "reverse"=>"reverse_div_id",
     "type_operation"=>'operationtype_div_id',
-    "document"=>"document_div_id"];
+    "document"=>"document_div_id",
+    "action_gestion"=>"actiongestion_div_id"];
 
 //-- Define option to display 
 // template : template of operation , invoice : doc. to generate, document : document
 // to upload , reverse : reverse operation
  if ( $ledger_type  == 'ACH' || $ledger_type == 'VEN') {
-     $a_show=['template','repo','invoice','reverse'];
+     $a_show=['template','repo','invoice','reverse','action_gestion'];
      $show="facturation_div_id";
  } elseif ($ledger_type=='ODS') {
-     $a_show=['template','document','reverse','type_operation'];
+     $a_show=['template','document','reverse','type_operation','action_gestion'];
      $show="document_div_id";
  }
  
@@ -81,6 +82,10 @@ $a_div=["template"=>"modele_div_id",
     <?php if (in_array('type_operation',$a_show))	 :?>
         <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Type opération")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'operationtype_div_id')"> <?php echo _('Type opération')?> </a></li>
     <?php endif; ?>
+        
+    <?php if (in_array('action_gestion',$a_show))	 :?>
+        <li class="tabs" style="float: none"> <a href="javascript:void(0)" title="<?php echo _("Action gestion")?>"  onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected';show_tabs(a_tab,'actiongestion_div_id')"> <?php echo _('Action gestion')?> </a></li>
+    <?php endif; ?>        
 </ul>
 </div>
 <?php
@@ -127,6 +132,13 @@ if (in_array('invoice',$a_show)) {
         ?>
 </div>
                
+<div id="actiongestion_div_id" style="display:none;height:185px;height:10rem">
+    Action gestion
+        <?php
+            $irelated_action=new IRelated_Action("action_gestion");
+            echo $irelated_action->input();
+        ?>
+</div>
 		
 		
                 
