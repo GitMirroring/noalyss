@@ -450,10 +450,6 @@ function noalyss_class_autoloader($class) {
         "forecast_category_mtable" => "class/forecast_category_mtable.class.php",
         "forecast" => "class/forecast.class.php",
         "forecast_item_mtable" => "class/forecast_item_mtable.class.php",
-        "gestion_purchase" => "class/gestion_purchase.class.php",
-        "gestion_sold" => "class/gestion_sold.class.php",
-        "gestion_table" => "class/gestion_table.class.php",
-        "html_input_noalyss" => "class/html_input_noalyss.class.php",
         "lettering" => "class/lettering.class.php",
         "lettering_card" => "class/lettering.class.php",
         "lettering_account" => "class/lettering.class.php",
@@ -599,7 +595,8 @@ function noalyss_class_autoloader($class) {
         "document_state_mtable"=>"class/document_state_mtable.class.php",
         "noalyss\mobile"=>"class/mobile.class.php",
         "profile_mobile_sql"=>"database/profile_mobile_sql.class.php",
-        "mobile_device_mtable"=>"class/mobile_device_mtable.class.php"
+        "mobile_device_mtable"=>"class/mobile_device_mtable.class.php",
+        "html_input_noalyss"=>"class/html_input_noalyss.class.php"
     );
     if ( isset ($aClass[$class]) ) {
         require_once NOALYSS_INCLUDE."/".$aClass[$class];
