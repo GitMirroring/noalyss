@@ -325,10 +325,10 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
             /* if ND */
             if ($p_array['jrn_def_type']=='ACH')
             {
-                $purchase=new Gestion_Purchase($this->db);
-                $purchase->search_by_jid($code['j_id']);
-                $purchase->load();
-                $dep_priv+=$purchase->qp_dep_priv;
+                $qp_id=$this->get_value("select qp_id from quant_purchase where j_id=$1",[$code['j_id']]);
+                $purchase=new Quant_Purchase_SQL($this->db,$qp_id);
+
+                $dep_priv=bcadd ($dep_priv,$purchase->qp_dep_priv);
                 $p_array['dep_priv']=$dep_priv;
                 $p_array['dna']=bcadd($p_array['dna'], $purchase->qp_nd_amount);
                 $p_array['tva_dna']=bcadd($p_array['tva_dna'],
@@ -338,9 +338,8 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
             }
             if ($p_array['jrn_def_type']=='VEN')
             {
-                $sold=new gestion_sold($this->db);
-                $sold->search_by_jid($code['j_id']);
-                $sold->load();
+                $qs_id=$this->db->get_value("select qs_id from quant_sold where j_id=$1",array($code['j_id']));
+                $sold=new Quant_Sold_SQL($this->db,$qs_id);
                 $p_array['tva_np']=bcadd($sold->qs_vat_sided, $p_array['tva_np']);
             }
         }
