@@ -5,6 +5,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @backupGlobals enabled
  * @coversDefaultClass Acc_Ledger_Purchase
+ * @covers Fiche
  * 
  */
 class Acc_Ledger_PurchaseTest extends TestCase
@@ -120,11 +121,13 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $this->clean_operation();
         
         $this->assertEquals(0,
-                $g_connection->get_value ("select count(*) from jrn where jr_mt=$1",["1572704002.1732"]));
+                $g_connection->get_value ("select count(*) from jrn where jr_mt=$1",["1572704002.1732"]),
+                "avant les test verifie operation n'existe pas");
         
         $this->object->insert($array);
         $this->assertEquals(1,
-                $g_connection->get_value ("select count(*) from jrn where jr_mt=$1",["1572704002.1732"]));
+                $g_connection->get_value ("select count(*) from jrn where jr_mt=$1",["1572704002.1732"]),
+                "Operation Achat sauvée");
         $this->clean_operation();
 
                 // If some data are corruptes
@@ -155,7 +158,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
                                         "tvac_march1"=>22.08));
         
         $this->object->insert($array);
-        $this->assertEquals(0,$g_connection->get_value("select count(*)  ".$sql));
+        $this->assertEquals(0,$g_connection->get_value("select count(*)  ".$sql),"Quantite == 0 pas d'enregistrement");
         $this->clean_operation();
       
         // Test space in e_march0_price instead of zero must be 
@@ -178,7 +181,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
                                         "tva_march1"=>3.83,
                                         "tvac_march1"=>22.08));
         $this->object->insert($array);
-        $this->assertEquals(3.83,$g_connection->get_value("select qp_vat ".$sql));
+        $this->assertEquals(3.83,$g_connection->get_value("select qp_vat ".$sql),"Calcul TVA en EUR");
         $this->clean_operation();
        
         // Test space in e_march0_tva_amount instead of zero must be calculated
@@ -201,13 +204,85 @@ class Acc_Ledger_PurchaseTest extends TestCase
 
         $this->object->insert($array);
         // en USD , 22.08 = 20.26€ * 1.09
-        $this->assertEquals(20.26,$g_connection->get_value("select qp_vat ".$sql));
+        $this->assertEquals(20.26,$g_connection->get_value("select qp_vat ".$sql),"Calcul TVA en USD");
         $this->clean_operation();
+        
+    }
+    
+    /**
+     * @covers Acc_Ledger_Purchase::insert 
+     * @covers Fiche_Def::insertAttribut 
+     * @covers Fiche_Def::removeAttribut
+     */
+    public function testInsertPurchase_No_Ded()
+    {
+        global $g_connection;
+        // modify attribute for card category , add VAT non ded, Tax non ded , VAT completely non ded 0%
+        // category Misc Services & goods (5)
+        $fiche_def=new Fiche_Def($g_connection,5);
+        // prepare test , clean 
+        $fiche_def->RemoveAttribut([20,21,22,51,52,53]);
+        $this->assertEquals(35,$g_connection->get_value("select count(*) from fiche_detail join fiche using (f_id)
+                where fd_id=5"),"Efface 6 attributs");
 
+        // percent deductible
+        $fiche_def->InsertAttribut(20); 
+        $fiche_def->InsertAttribut(21); 
+        $fiche_def->InsertAttribut(22); 
+        
+        // accouting for not deductible
+        $fiche_def->InsertAttribut(51);
+        $fiche_def->InsertAttribut(52);
+        $fiche_def->InsertAttribut(53);
+        
+        // check that all card has these attributes
+        $this->assertEquals(77,$g_connection->get_value("select count(*) from fiche_detail join fiche using (f_id)
+                where fd_id=5"),"Ajout 6 attributs");
+        
+        
+       
+        
+        //-- modify card 29 : ELECTR
+        $fiche=new Fiche($g_connection,29);
+        $fiche->set_f_enable("1");
+        $a_attribut=$fiche->to_array();
+        $a_attribut['av_text20']= "33.33";
+        $this->assertEquals($a_attribut['av_text20'],33.33,"Attribut 20 set to 33%");
+        
+        $fiche->update($a_attribut);
+        
+        $this->assertEquals("33.33",$g_connection->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=$2",[29,20]),"Attribut ad_id 20 inserted");
+        $array=$this->array;
+        
+        $array['e_march0']='ELECTR';
+        $array['e_march0_tva_id']='1';
+        $array['tva_march0']=bcmul($array['e_march0_tva_amount'],0.21,2);
+        $array['tvac_march0']=bcmul ($array['htva_march0'],1.21,2);
+        $array['mt']='no-ded-33';
+        $this->clean_operation($array['mt']);
+        
+        $this->object->insert($array);
+
+        $row_quant=$g_connection->get_row("select * from quant_purchase where qp_internal in 
+             ( select jr_internal from jrn where jr_mt=$1)",[$array["mt"]]);
+        $this->assertFalse(empty($row_quant)," row inserted in quant_fin");
+        
+        // unit price not rounded
+        $this->assertEquals(603.8990,$row_quant['qp_unit']);
+        
+        // rounded to 2 decimal
+        $this->assertEquals(603.9000,$row_quant['qp_price']);
+        
+        $this->assertEquals(201.2800,$row_quant['qp_nd_amount']);
+
+        $this->clean_operation($array['mt']);
+        // end test clean
+      //  $fiche_def->RemoveAttribut([20,21,22,51,52,53]);
+        
     }
 
     /**
-     * @covers Acc_Ledger_Purchase::input
+     * @covers Acc_Ledger_Purchase::input 
      */
     public function testInput()
     {
@@ -240,13 +315,13 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $this->assertContains('NAME="e_quant0" VALUE="1">',$ret);
     }
   
-    private function clean_operation()
+    private function clean_operation($p_internal='1572704002.1732')
     {
         global $g_connection;
         $g_connection->exec_sql("delete from quant_purchase where j_id in ("
                 . " select j_id from jrnx join jrn on (jr_grpt_id = j_grpt) where "
-                . " jr_mt=$1 ) ", ["1572704002.1732"]);
-        $g_connection->exec_sql("delete from jrn where jr_mt=$1", ["1572704002.1732"]);
+                . " jr_mt=$1 ) ", [$p_internal]);
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1", [$p_internal]);
         $g_connection->exec_sql("delete from jrnx where j_grpt not in (select jr_grpt_id from jrn)");
         $g_connection->exec_sql("alter sequence  s_jrn_pj3 restart with 52");
 

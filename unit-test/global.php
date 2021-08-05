@@ -37,6 +37,7 @@ $_SESSION[SESSION_KEY.'g_pagesize']='50';
 $_SESSION[SESSION_KEY.'csv_fieldsep']='0';
 $_SESSION[SESSION_KEY.'csv_decimal']='1';
 $_SESSION[SESSION_KEY.'csv_encoding']='utf8';
+$_SESSION[SESSION_KEY.'access_mode']='PC';
 $g_user=new User($g_connection);
 
 require_once __DIR__.'/facility.class.php';

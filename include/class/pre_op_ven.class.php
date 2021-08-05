@@ -163,7 +163,7 @@ class Pre_op_ven extends Pre_operation_detail
     {
         global $g_parameter,$g_user;
 
-        $ledger=new Acc_Ledger_Sold($this->db,$p_array['p_jrn']);
+        $ledger=new Acc_Ledger_Sale($this->db,$p_array['p_jrn']);
         $flag_tva=$g_parameter->MY_TVA_USE;
         /* Add button */
         $f_add_button=new IButton('add_card');

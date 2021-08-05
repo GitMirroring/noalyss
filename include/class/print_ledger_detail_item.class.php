@@ -90,7 +90,7 @@ class Print_Ledger_Detail_Item extends Print_Ledger
       switch ($jrn_type)
       {
           case 'VEN':
-              $ledger=new Acc_Ledger_Sold($this->cn, $this->get_ledger()->jrn_def_id);
+              $ledger=new Acc_Ledger_Sale($this->cn, $this->get_ledger()->jrn_def_id);
               $ret_detail=$ledger->get_detail_sale($this->get_from(),$this->get_to(), $this->filter_operation);
               break;
           case 'ACH':

@@ -33,7 +33,7 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
  * @exception throw an exception is something is wrong
  */
 
-class Acc_Ledger_Sold extends Acc_Ledger {
+class Acc_Ledger_Sale extends Acc_Ledger {
 
     function __construct($p_cn, $p_init) {
         parent::__construct($p_cn, $p_init);

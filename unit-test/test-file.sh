@@ -43,6 +43,6 @@ else
 
 	# $PHPUNIT --bootstrap bootstrap.php --whitelist $FILETOTEST --coverage-text=${FILETOTEST%.php}.txt  --color $FILETOTEST 
 	# $PHPUNIT --bootstrap $CUR_DIR/bootstrap.php --whitelist=$CUR_DIR/../include/class --coverage-html=coverage --color $FILETOTEST 
-	$PHPUNIT --bootstrap bootstrap.php $FILETOTEST --testdox-html ${FILETOTEST%.php}-testdox.html --color $FILETOTEST 
+	$PHPUNIT --bootstrap bootstrap.php --whitelist=../include --coverage-html=coverage $FILETOTEST --testdox-html ${FILETOTEST%.php}-testdox.html --color $FILETOTEST 
 fi
 

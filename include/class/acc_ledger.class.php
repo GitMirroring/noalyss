@@ -296,7 +296,7 @@ class Acc_Ledger  extends jrn_def_sql
                   jrnx
                   where   j_id=$6 returning j_id";
                 $Res=$this->db->exec_sql($sql,
-                        array($p_date, $grp_new, $p_internal, $g_user->id, $per->p_id,
+                        array($p_date, $grp_new, $p_internal, $g_user->login, $per->p_id,
                     $row));
                 // Check return code
                 if ($Res==false)

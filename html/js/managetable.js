@@ -18,13 +18,12 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
 /**
- *@file
- *@brief Javascript object to manage ajax calls to 
+ *@class ManageTable Javascript object to manage ajax calls to 
  * save , input or delete data row. 
- *@details The callback must
+ * The callback must
  respond with a XML file , the tag status for the result
  and data the HTML code to display
- *@param p_table_name the data table on which we're working
+ *@param {string} p_table_name the data table on which we're working
  in javascript , to create an object to manipulate the table
  version.
  
@@ -76,12 +75,6 @@
  @endcode
 
  */
-/**
- * @class ManageTable
- * @param string p_table_name name of the table and schema
- */
-
-
 var ManageTable = function (p_table_name)
 {
     this.callback = "ajax.php"; //!< File to call

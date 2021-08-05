@@ -112,10 +112,10 @@ if ( $get_option=="E")
         switch ($jrn_type)
         {
             case 'VEN':
-                $ledger=new Acc_Ledger_Sold($cn, $get_jrn);
+                $ledger=new Acc_Ledger_Sale($cn, $get_jrn);
                 $ret_detail=$ledger->get_detail_sale($get_from_periode,
                         $get_to_periode,$filter_operation);
-                $a_heading=Acc_Ledger_Sold::heading_detail_sale();
+                $a_heading=Acc_Ledger_Sale::heading_detail_sale();
 
                 break;
             case 'ACH':

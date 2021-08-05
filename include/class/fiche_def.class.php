@@ -807,6 +807,51 @@ $order
 		echo HtmlInput::submit("add_modele" ,_("Sauve"));
 		echo '</FORM>';
 	}
+    /**
+     * @brief make an array of attributes of the category of card (FICHE_DEF.FD_ID)
+     *The array can be used with the function insert, it will return a struct like this :
+     * in the first key (av_textX),  X is the ATTR_DEF::AD_ID
+    \verbatim
+    Example
+    Array
+    (
+      [av_text1] => Nom
+      [av_text12] => Personne de contact
+      [av_text5] => Poste Comptable
+      [av_text13] => numéro de tva
+      [av_text14] => Adresse
+      [av_text15] => code postal
+      [av_text24] => Ville
+      [av_text16] => pays
+      [av_text17] => téléphone
+      [av_text18] => email
+      [av_text23] => Quick Code
+    )
+
+    \endverbatim
+     *\param $pfd_id FICHE_DEF::FD_ID
+     *\return an array of attribute
+     *\exception Exception if the cat of card doesn't exist, Exception.getCode()=1
+     *\see fiche::insert()
+     */
+    function to_array()
+    {
+        $sql="select 'av_text'||to_char(ad_id,'9999') as key,".
+             " ad_text ".
+             " from fiche_def join jnt_fic_attr using (fd_id)".
+             " join attr_def using (ad_id) ".
+             " where fd_id=$1 order by jnt_order";
+        $ret=$this->cn->get_array($sql,array($this->id));
+        if ( empty($ret)) throw new Exception(_('Cette categorie de card n\'existe pas').' '.$this->id,1);
+        $array=array();
+        foreach($ret as $idx=>$val)
+        {
+            $a=str_replace(' ','',$val['key']);
+            $array[$a]=$val['ad_text'];
+        }
+        return $array;
+
+    }
 
 }
 ?>

@@ -4,13 +4,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @backupGlobals enabled
- * @coversDefaultClass Acc_Ledger_Sold
+ * @coversDefaultClass Acc_Ledger_Sale
  */
-class Acc_Ledger_SoldTest extends TestCase
+class Acc_Ledger_SaleTest extends TestCase
 {
 
     /**
-     * @var Acc_Ledger_Sold
+     * @var Acc_Ledger_Sale
      */
     protected $object;
 
@@ -27,7 +27,7 @@ class Acc_Ledger_SoldTest extends TestCase
     protected function setUp()
     {
         include 'global.php';
-        $this->object=new Acc_Ledger_Sold($g_connection, 2);
+        $this->object=new Acc_Ledger_Sale($g_connection, 2);
         $this->array=array(
             "ledger_type"=>"VEN",
             "ac"=>"COMPTA/VENMENU/VEN",
@@ -88,7 +88,7 @@ class Acc_Ledger_SoldTest extends TestCase
         $g_connection->exec_sql("alter sequence  s_jrn_pj2 restart with 40");
     }
     /**
-     * @covers Acc_Ledger_Sold::verify
+     * @covers Acc_Ledger_Sale::verify
      */
     public function testVerify()
     {
@@ -97,7 +97,7 @@ class Acc_Ledger_SoldTest extends TestCase
     }
 
     /**
-     * @covers Acc_Ledger_Sold::insert
+     * @covers Acc_Ledger_Sale::insert
      */
     public function testInsert()
     {
@@ -169,14 +169,14 @@ class Acc_Ledger_SoldTest extends TestCase
     }
 
     /**
-     * @covers Acc_Ledger_Sold::confirm
+     * @covers Acc_Ledger_Sale::confirm
      */
     public function testConfirm()
     {
         $array=$this->array;
         $res=$this->object->confirm($array);
         \Noalyss\Facility::save_file(__DIR__."/file"
-                , "acc_ledger_sold_confirm.html"
+                , "Acc_Ledger_Sale_confirm.html"
                 , \Noalyss\Facility::page_start().$res);
         $this->assertContains(
                 '<input type="button" class="button" value="Vérifiez Imputation Analytique" onClick="verify_ca(\'\');">',
@@ -188,14 +188,14 @@ class Acc_Ledger_SoldTest extends TestCase
 
 
     /**
-     * @covers Acc_Ledger_Sold::input
+     * @covers Acc_Ledger_Sale::input
      * @todo   Implement testInput().
      */
     public function testInput()
     {
         global $g_connection;
         $_REQUEST['ac']='VEN';
-        $object=new Acc_Ledger_Sold($g_connection, 2);
+        $object=new Acc_Ledger_Sale($g_connection, 2);
         
         $info=$object->input($this->array);
        // var_dump($info);
@@ -203,7 +203,7 @@ class Acc_Ledger_SoldTest extends TestCase
         {
             $this->assertTrue(FALSE);
         }
-        \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger_sold_input.html",
+        \Noalyss\Facility::save_file(__DIR__."/file", "Acc_Ledger_Sale_input.html",
                 \Noalyss\Facility::page_start().
                 $info);
         $this->assertContains(
@@ -216,7 +216,7 @@ class Acc_Ledger_SoldTest extends TestCase
 
 
     /**
-     * @covers Acc_Ledger_Sold::heading_detail_sale
+     * @covers Acc_Ledger_Sale::heading_detail_sale
      * @todo   Implement testHeading_detail_sale().
      */
     public function testHeading_detail_sale()
@@ -225,7 +225,7 @@ class Acc_Ledger_SoldTest extends TestCase
         $this->assertEquals(32,count($a));
     }
     /**
-     * @covers Acc_Ledger_Sold::get_detail_sale
+     * @covers Acc_Ledger_Sale::get_detail_sale
      */
     public function testget_detail_sale()
     {

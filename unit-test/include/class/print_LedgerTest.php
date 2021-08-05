@@ -61,7 +61,7 @@ class print_LedgerTest extends TestCase
     function testFactory()
     {
         global $g_connection;
-        $ledger_sale=new Acc_Ledger_Sold($g_connection,2);
+        $ledger_sale=new Acc_Ledger_Sale($g_connection,2);
         $p_from=$this->from;
         $p_to=$this->to;
         

@@ -39,7 +39,7 @@ $post_jrn=$http->post("p_jrn", "string","");
 // empty form for encoding
 //----------------------------------------------------------------------
 
-    $Ledger=new Acc_Ledger_Sold($cn,0);
+    $Ledger=new Acc_Ledger_Sale($cn,0);
 
     // Check privilege
     if ( isset($_REQUEST['p_jrn']) &&
@@ -54,7 +54,7 @@ $post_jrn=$http->post("p_jrn", "string","");
     if ( isset ($_POST['view_invoice'] ) )
     {
         $p_jrn=$http->post("p_jrn","number");
-        $Ledger=new Acc_Ledger_Sold($cn,$p_jrn);
+        $Ledger=new Acc_Ledger_Sale($cn,$p_jrn);
         try
         {
             $Ledger->verify_operation($_POST);
@@ -103,7 +103,7 @@ $post_jrn=$http->post("p_jrn", "string","");
             exit -1;
         }
 
-        $Ledger=new Acc_Ledger_Sold($cn,$post_jrn);
+        $Ledger=new Acc_Ledger_Sale($cn,$post_jrn);
         try
         {
             $Ledger->verify_operation($_POST);
@@ -121,7 +121,7 @@ $post_jrn=$http->post("p_jrn", "string","");
              else
                 echo '<div class="content">';
 
-            $Ledger=new Acc_Ledger_Sold($cn,$_POST['p_jrn']);
+            $Ledger=new Acc_Ledger_Sale($cn,$_POST['p_jrn']);
             $internal=$Ledger->insert($_POST);
 
             /* Save the predefined operation */
@@ -197,7 +197,7 @@ $post_jrn=$http->post("p_jrn", "string","");
 //  ------------------------------
 
 $array=(isset($_POST['correct'])||isset ($correct))?$_POST:null;
-$Ledger=new Acc_Ledger_Sold($cn,0);
+$Ledger=new Acc_Ledger_Sale($cn,0);
 //
 // pre defined operation
 //

@@ -1352,7 +1352,7 @@ function get_array_column($p_array,$key)
  */
 function factory_Ledger(Database &$p_cn, $ledger_id)
 {
-    include_once NOALYSS_INCLUDE.'/class/acc_ledger_sold.class.php';
+    include_once NOALYSS_INCLUDE.'/class/acc_ledger_sale.class.php';
     include_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
     include_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
     
@@ -1362,7 +1362,7 @@ function factory_Ledger(Database &$p_cn, $ledger_id)
     switch ($type)
     {
         case 'VEN':
-            $obj=new Acc_Ledger_Sold($p_cn, $ledger_id);
+            $obj=new Acc_Ledger_Sale($p_cn, $ledger_id);
             break;
         case 'ACH':
             $obj=new Acc_Ledger_Purchase($p_cn, $ledger_id);

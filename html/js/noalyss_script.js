@@ -3859,7 +3859,7 @@ function uncheck_other(p_click,p_name)
     p_click.checked=true;
 }
 /**
- * Manage the tag with operations
+ * @class operation Tag Manage the tag with operations
  * @returns {undefined}
  */
 var operation_tag = function (p_div)
@@ -3909,11 +3909,11 @@ var operation_tag = function (p_div)
     };
 
     /**
-     * @brief Add the current tag to the current ag_id
-     * @param {type} p_dossier
-     * @param {type} ag_id
+     * Add the current tag to the current ag_id
+     * @param {int} p_dossier
+     * @param int ag_id
      * @param p_isgroup g it is a group , t is a single tag
-     * @returns {undefined}
+     * @returns void
      */
     this.add = function (p_dossier, p_jrn_id, t_id, p_isgroup)
     {
@@ -3949,10 +3949,10 @@ var operation_tag = function (p_div)
         }
     };
     /**
-     * @brief remove the current tag to the current ag_id
-     * @param {type} p_dossier
-     * @param {type} ag_id
-     * @returns {undefined}
+     * remove the current tag to the current ag_id
+     * @param {int} p_dossier
+     * @param {int} ag_id
+     * @returns void
      */
     this.remove = function (p_dossier, p_jrn_id, t_id)
     {

@@ -21,8 +21,8 @@
 
 /**
  * @file
- * @brief 
- * @param type $name Descriptionara
+ * @brief Test , experiment the class Fiche 
+ * @see Fiche
  */
 
  $_GET=array (
@@ -47,10 +47,10 @@ $card_count=$cn->get_array("select count(*),f_id ".
         " where ". 
         " f_id is not null ".
         "group by f_id order by count(*) desc");
-$a=new Fiche($cn,$card_count[0]['f_id']);
+$fiche=new Fiche($cn,$card_count[0]['f_id']);
 
-$result=$a->get_row($min,$max);
-$result_date=$a->get_row_date('01.01.2010','01.01.2090');
+$result=$fiche->get_row($min,$max);
+$result_date=$fiche->get_row_date('01.01.2010','01.01.2090');
 
 if ( count($result_date) != count($result)) {
     echo "Erreur";
@@ -63,3 +63,5 @@ echo h1("Fiche->get_row_date");
 
 var_dump($result_date);
 
+echo h1("to_array");
+var_dump($fiche->to_array());

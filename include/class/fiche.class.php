@@ -86,7 +86,7 @@ class Fiche
         return $this;
     }
 
-        /**
+    /**
      *@brief used with a usort function, to sort an array of Fiche on the name
      */
     static function cmp_name(Fiche $o1,Fiche $o2)
@@ -407,50 +407,28 @@ class Fiche
         }
         return $return;
     }
-    /**
-     * @brief make an array of attributes of the category of card (FICHE_DEF.FD_ID)
-     *The array can be used with the function insert, it will return a struct like this :
-     * in the first key (av_textX),  X is the ATTR_DEF::AD_ID
-    \verbatim
-    Example
-    Array
-    (
-      [av_text1] => Nom
-      [av_text12] => Personne de contact
-      [av_text5] => Poste Comptable
-      [av_text13] => numéro de tva
-      [av_text14] => Adresse
-      [av_text15] => code postal
-      [av_text24] => Ville
-      [av_text16] => pays
-      [av_text17] => téléphone
-      [av_text18] => email
-      [av_text23] => Quick Code
-    )
-
-    \endverbatim
-     *\param $pfd_id FICHE_DEF::FD_ID
-     *\return an array of attribute
-     *\exception Exception if the cat of card doesn't exist, Exception.getCode()=1
-     *\see fiche::insert()
+    /*!
+     * \brief  turn a card into an array , then it can be saved thanks update or insert
+     * \see Fiche::insert , Fiche::update
+     * 
      */
-    function to_array($pfd_id)
+    function to_array()
     {
-        $sql="select 'av_text'||to_char(ad_id,'9999') as key,".
-             " ad_text ".
-             " from fiche_def join jnt_fic_attr using (fd_id)".
-             " join attr_def using (ad_id) ".
-             " where fd_id=$1 order by jnt_order";
-        $ret=$this->cn->get_array($sql,array($pfd_id));
-        if ( empty($ret)) throw new Exception(_('Cette categorie de card n\'existe pas').' '.$pfd_id,1);
-        $array=array();
-        foreach($ret as $idx=>$val)
-        {
-            $a=str_replace(' ','',$val['key']);
-            $array[$a]=$val['ad_text'];
+        $array=$this->cn->get_array("select 'av_text'||fd.ad_id::text \"key\", ad_value
+            from fiche_detail  fd
+                join fiche  f using (f_id)
+                join jnt_fic_attr jfa using (fd_id,ad_id)
+            where 
+                f.f_id=$1
+                order by jfa.jnt_order",[$this->id]);
+        if ( empty ($array) ) return array();
+        $a_return=[];
+        foreach ($array as $row) {
+            $key=$row['key'];$value=$row['ad_value'];
+            $a_return[$key]=$value;
         }
-        return $array;
-
+        $a_return['f_enable']=$this->get_f_enable();
+        return $a_return;
     }
     /*!
      * \brief  insert a new record
@@ -1019,7 +997,8 @@ class Fiche
         return;
     }
 
-    /*!\brief update a card
+    /*!
+     * \brief update a card with an array
      */
     function update($p_array=null)
     {

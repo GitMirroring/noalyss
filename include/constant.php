@@ -383,7 +383,7 @@ function noalyss_class_autoloader($class) {
         "acc_ledger_info" => "class/acc_ledger_info.class.php",
         "acc_ledger_purchase" => "class/acc_ledger_purchase.class.php",
         "acc_ledger_search" => "class/acc_ledger_search.class.php",
-        "acc_ledger_sold" => "class/acc_ledger_sold.class.php",
+        "acc_ledger_sale" => "class/acc_ledger_sale.class.php",
         "acc_operation" => "class/acc_operation.class.php",
         "acc_detail" => "class/acc_operation.class.php",
         "acc_sold" => "class/acc_operation.class.php",

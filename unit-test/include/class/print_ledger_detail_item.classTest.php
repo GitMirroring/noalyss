@@ -112,7 +112,7 @@ class Print_Ledger_Detail_ItemTest extends TestCase
         //-------------------------------------------------------------------------------------------------------------
         // Sale
         //-------------------------------------------------------------------------------------------------------------
-        $ledger_sale=new Acc_Ledger_Sold($g_connection,2);
+        $ledger_sale=new Acc_Ledger_Sale($g_connection,2);
 
         // Paid
         //-----------------
