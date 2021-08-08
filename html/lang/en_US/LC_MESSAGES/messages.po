@@ -198,7 +198,6 @@ msgid " Erreur dans la formule "
 msgstr "Error in formula"
 
 #: include/ext/rapport_avance/include/rapav.class.php:153
-#, php-format
 msgid " Erreur dans la formule %s"
 msgstr "Error in formula"
 
@@ -612,22 +611,18 @@ msgstr "%"
 #: include/ext/import_card/include/class_import_card.php:369
 #: include/ext/import_card/include/import_card.class.php:369
 #: include/ext/import_card/include/import_card.class.php:397
-#, php-format
 msgid "%d fiches sont insérées dans la catégorie %s"
 msgstr "%d card are added into the category %s"
 
 #: include/template/ledger_detail_fin.php:103
-#, php-format
 msgid "%s Taux utilisé %s Montant en devise %s"
 msgstr "%s rate % amount currency %s"
 
 #: include/ext/tools/include/tools_exercice.inc.php:38
-#, php-format
 msgid "%s Vous avez ajouté %d mois depuis le %d/%d pour l'exercice %d "
 msgstr "You have added% s% d months since% d /% d% d for the year"
 
 #: include/ext/import_card/include/import_card.class.php:262
-#, php-format
 msgid "%s dans la col %s & %s <br>"
 msgstr "%s in column %s & %s <br>"
 
@@ -636,12 +631,10 @@ msgstr "%s in column %s & %s <br>"
 #: include/lib/sendmail.class.php:102 include/lib/sendmail_core.class.php:105
 #: include/lib/sendmail_core.class.php:106
 #: include/lib/sendmail_core.class.php:111
-#, php-format
 msgid "%s est vide"
 msgstr "%s is empty"
 
 #: include/ext/etat_annexe_ohada/include/pdf_writer.class.php:66
-#, php-format
 msgid "%s période %s - %s"
 msgstr "period between %s  and %s"
 
@@ -1423,7 +1416,6 @@ msgid "Afficher la période comptable pour éviter les erreurs de date"
 msgstr "Display the accounting period dates to AVOID errors"
 
 #: include/ajax/ajax_admin.php:364 include/ajax/ajax_admin.php:361
-#, php-format
 msgid ""
 "Afin de terminer l'installation aller sur %s , à la fin de la procédure , "
 "demandez à effacer le fichier install.php"
@@ -2053,7 +2045,6 @@ msgstr "Old balance"
 
 #: include/class/acc_ledger_fin.class.php:1107
 #: include/class/acc_ledger_fin.class.php:1116
-#, php-format
 msgid "Ancien solde %s %s"
 msgstr "Old balance %s %s"
 
@@ -2144,7 +2135,6 @@ msgstr "Year of purchase"
 
 #: include/class/periode.class.php:430 include/class/periode.class.php:432
 #: include/class/periode.class.php:434 include/class/periode.class.php:435
-#, php-format
 msgid "Année doit être entre %s et %s "
 msgstr "Year must be between %s and%s"
 
@@ -2212,7 +2202,6 @@ msgstr "After clicking on \"Use\" apply the format"
 
 #: include/template/action_search.php:119 include/template/action_search.php:52
 #: include/template/action_search.php:86 include/template/action_search.php:82
-#, php-format
 msgid "Après le "
 msgstr "After"
 
@@ -2249,7 +2238,6 @@ msgid "Attention "
 msgstr "Warning"
 
 #: include/ext/import_account/include/class_impacc_operation.php:61
-#, php-format
 msgid "Attention %s ne contient pas 11 colonnes"
 msgstr "Warning% s does not contain 11 columns"
 
@@ -2320,7 +2308,6 @@ msgid ""
 msgstr "Warning : it is preferable to use card than accounting"
 
 #: include/ext/transform/include/intervat_listing_assujetti_step_3.inc.php:37
-#, php-format
 msgid "Attention : il y a %d enregistrements incorrects "
 msgstr "Attention:% d records incorrect"
 
@@ -2425,7 +2412,6 @@ msgid ""
 msgstr "Warning : this period is closed, you cannot modify"
 
 #: html/admin/setup.php:442
-#, php-format
 msgid ""
 "Attention le param&egrave;tre effective_cache_size est de %s au lieu de 1000"
 msgstr "Warning the parameter effective_cache_size is %s instead of 1000"
@@ -2435,7 +2421,6 @@ msgstr "Warning the parameter effective_cache_size is %s instead of 1000"
 #: html/install.php:507 html/install.php:469 html/install.php:444
 #: html/install.php:450 html/install.php:453 html/install.php:502
 #: html/install.php:508 html/install.php:516
-#, php-format
 msgid "Attention le paramètre effective_cache_size est de %s au lieu de 1000"
 msgstr "Warning the parameter effective_cache_size is %s instead of 1000"
 
@@ -2484,7 +2469,6 @@ msgstr "Be careful not grade sheet cushion"
 #: include/lib/ac_common.php:641 include/lib/ac_common.php:642
 #: include/lib/ac_common.php:644 include/lib/ac_common.php:660
 #: include/lib/ac_common.php:670 include/lib/ac_common.php:697
-#, php-format
 msgid ""
 "Attention periode \n"
 "\t\t     non trouvee periode p_from= %s p_to_periode = %s"
@@ -3203,7 +3187,6 @@ msgid "Autre exercice"
 msgstr "Other exercise"
 
 #: include/balance_card.inc.php:61 include/balance_card.inc.php:60
-#, php-format
 msgid "Autre exercice %s"
 msgstr "Other exercise %s"
 
@@ -3527,7 +3510,6 @@ msgstr "Simple balance"
 
 #: include/class/pdfbalance_simple.class.php:35
 #: include/class/pdfbalance_simple.class.php:41
-#, php-format
 msgid "Balance simple %s"
 msgstr "Simple balance %s"
 
@@ -3540,7 +3522,6 @@ msgstr "Simple analytic balance for record"
 
 #: include/class/pdfbalance_simple.class.php:45
 #: include/class/pdfbalance_simple.class.php:51
-#, php-format
 msgid "Balance simple poste %s %s date %s %s"
 msgstr "Simple balance accounting %s %s date %s %s"
 
@@ -3599,13 +3580,11 @@ msgstr "Database"
 #: include/modele.inc.php:441 include/modele.inc.php:424
 #: include/modele.inc.php:428 include/modele.inc.php:433
 #: include/modele.inc.php:434
-#, php-format
 msgid "Base de donnée %s mod %s est accèdée, déconnectez-vous d'abord"
 msgstr "Database %s mod %s is accessed, disconnect first"
 
 #: include/modele.inc.php:94 include/modele.inc.php:92
 #: include/modele.inc.php:93 include/modele.inc.php:88
-#, php-format
 msgid "Base de donnée %sdossier%d\" est accèdée, déconnectez-vous en d'abord"
 msgstr "Database %smod%d is accessed, disconnect first"
 
@@ -3696,7 +3675,6 @@ msgid "Bilan"
 msgstr "Balance sheet"
 
 #: include/ext/bilan_interne/output_bilaninterne.class.php:183
-#, php-format
 msgid "Bilan interne du %s au %s"
 msgstr "Internal balance between %s  and %s"
 
@@ -3806,7 +3784,6 @@ msgid "Calcul automatique du poste comptable"
 msgstr "Automatic creation of the accounting"
 
 #: include/tax_summary.inc.php:46 include/tax_summary.inc.php:45
-#, php-format
 msgid "Calcul d'après la date"
 msgstr "Compute"
 
@@ -4436,7 +4413,6 @@ msgstr "full path to postgresql"
 #: include/class/acc_ledger.class.php:2422
 #: include/class/anc_listing.class.php:72 include/class/fiche.class.php:2419
 #: include/class/pre_operation.class.php:340
-#, php-format
 msgid "Cherche"
 msgstr "Search"
 
@@ -4701,7 +4677,6 @@ msgid "Choix du bilan"
 msgstr "Report choice"
 
 #: include/opening.inc.php:138 include/opening.inc.php:136
-#, php-format
 msgid "Choix du dossier : %s"
 msgstr "Selected folder %s"
 
@@ -6723,21 +6698,21 @@ msgstr "DIFF"
 #: include/class/acc_ledger_history_purchase.class.php:273
 #: include/class/acc_ledger_history_purchase.class.php:287
 msgid "DNA"
-msgstr "Unallowed fee"
+msgstr "not deductible fee"
 
 #: include/class/acc_ledger.class.php:1778
 #, php-format
 msgid ""
 "Dans COMPANY, vous n'avez pas paramétré correctement  le compte de crédit %s "
 "pour les erreurs de conversion"
-msgstr "In COMPANY the accounting for credit is not set"
+msgstr "In COMPANY the accounting for credit %s is not set"
 
 #: include/class/acc_ledger.class.php:1769
 #, php-format
 msgid ""
 "Dans COMPANY, vous n'avez pas paramétré correctement  le compte de débit %s "
 "pour les erreurs de conversion"
-msgstr "In COMPANY the accounting for debit is not set"
+msgstr "In COMPANY the accounting for debit %s is not set"
 
 #: include/class_acc_ledger.php:3849 include/class_acc_ledger.php:3879
 #: include/class_acc_ledger.php:3906 include/class_acc_ledger.php:3915
@@ -21331,7 +21306,7 @@ msgstr "Period %s"
 #: include/ext/importbank/include/template/show_list.php:53
 #, php-format
 msgid "Période %s %s %s"
-msgstr "Period  : %s %s"
+msgstr "Period  : %s %s %s"
 
 #: include/history_operation.inc.php:103 include/history_operation.inc.php:97
 #: include/history_operation.inc.php:92 include/history_operation.inc.php:98
