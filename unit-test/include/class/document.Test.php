@@ -121,7 +121,7 @@ class DocumentTest extends TestCase
         $this->assertTrue ( $document->replace('CUST_NAME',$array) == 'Client 1','CUST_NAME');
     }
     /**
-     * @testdox Document::generate(), Document::parseDocument(),Document::replace(); require  unoconv -l in another session
+     * @testdox Generate Document::generate(), Document::parseDocument(),Document::replace(); require  unoconv -l in another session
      * @covers Document::generate(), Document::parseDocument(),Document::replace();
      */
     function testGenerate()
@@ -136,12 +136,12 @@ class DocumentTest extends TestCase
         $document->md_id=$md_id;
         $cnt_before=$cn->get_value("select count(*) from document");
         $document->generate($array);
+        var_dump($document);
         $this->assertEquals($document->d_filename ,'all-tags.odt','Generated File ');
         $cnt_after=$cn->get_value("select count(*) from document");
         $this->assertTrue ($cnt_after == $cnt_before+1,"One file generated");
-        
-        
     }
+    
     /**
      * @testdox test $_ENV['TMP'] 
      */
@@ -155,11 +155,15 @@ class DocumentTest extends TestCase
         $document->ag_id=2;
         $document->md_id=$md_id;
         $cnt_before=$cn->get_value("select count(*) from document");
+        $tEnv=$_ENV['TMP'];
         $_ENV['TMP']='/not.exist';
         $this->assertContains ('échoué',$document->generate($array));
+        $_ENV['TMP']= $tEnv;
     }
+        
+
     /**
-     * @testdox export PDF tests Document::export_pdf, Document::transform2pdf()
+     * @testdox ExtractPdf export PDF tests Document::export_pdf, Document::transform2pdf()
      * 
      */
     function testExtractPdf()

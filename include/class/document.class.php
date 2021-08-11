@@ -244,7 +244,7 @@ class Document
         {
             if (mkdir($temp_dir)==false)
             {
-                $msg=sprintf(_("Ne peut pas créer le répertoire %s", $temp_dir));
+                $msg=sprintf("D221."._("Ne peut pas créer le répertoire %s", $temp_dir));
                 record_log("D221".$msg);
                 throw new Exception($msg);
             }
@@ -255,13 +255,13 @@ class Document
         // check if the opening is sucessfull
         if ($h===false)
         {
-            $msg=sprintf(_("Ne peut pas ouvrir [%s] [%s]"), $p_dir, $p_file);
+            $msg=sprintf("D232"._("Ne peut pas ouvrir [%s] [%s]"), $p_dir, $p_file);
             record_log("D232".$msg);
             throw new Exception($msg);
         }
         if ($output_file==false)
         {
-            $msg=sprintf(_("Ne peut pas ouvrir [%s] [%s]"), $p_dir, $output_name);
+            $msg=sprintf("D264."._("Ne peut pas ouvrir [%s] [%s]"), $p_dir, $output_name);
             record_log($msg);
             throw new Exception($msg);
         }

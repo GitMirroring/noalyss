@@ -437,7 +437,6 @@ function noalyss_class_autoloader($class) {
         "dossier" => "class/dossier.class.php",
         "exercice" => "class/exercice.class.php",
         "extension" => "class/extension.class.php",
-        "fiche_attr" => "class/fiche_attr.class.php",
         "fiche" => "class/fiche.class.php",
          "fiche_def" => "class/fiche_def.class.php",
         "fiche_def_ref" => "class/fiche_def_ref.class.php",

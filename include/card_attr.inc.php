@@ -24,7 +24,7 @@
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
-$obj=new Fiche_Attr($cn);
+$obj=new Attr_Def_SQL($cn);
 $mtable=new Card_Attribut_MTable($obj);
 $mtable->add_json_param("op", "card");
 $mtable->add_json_param("op2", "attribute");

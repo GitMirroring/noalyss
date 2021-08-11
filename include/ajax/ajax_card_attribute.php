@@ -65,14 +65,14 @@ if ($action=="enable_search")
 }
 else
 {
-    $obj=new Fiche_Attr($cn);
+    $obj=new Attr_Def_SQL($cn);
     $mtable=new Card_Attribut_MTable($obj);
     $mtable->add_json_param("op", "card");
     $mtable->add_json_param("op2", "attribute");
     $mtable->set_callback("ajax_misc.php");
     $mtable->set_object_name($http->request("ctl"));
     $ad_id=$http->request("p_id");
-    $mtable->get_table()->set_parameter("id", $ad_id);
+    $mtable->get_table()->setp("ad_id", $ad_id);
     switch ($action)
     {
         case "input":

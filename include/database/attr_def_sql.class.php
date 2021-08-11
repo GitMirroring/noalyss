@@ -40,12 +40,12 @@ class Attr_Def_SQL extends Table_Data_SQL
          * List of columns
          */
         $this->name=array(
-            "id"=>"ad_id"
-            , "desc"=>"ad_text"
-            , "type"=>"ad_type"
-            , "size"=>"ad_size"
-            , "extra"=>"ad_extra"
-            , "search_followup"=>"ad_search_followup"
+            "ad_id"=>"ad_id"
+            , "ad_text"=>"ad_text"
+            , "ad_type"=>"ad_type"
+            , "ad_size"=>"ad_size"
+            , "ad_extra"=>"ad_extra"
+            , "ad_search_followup"=>"ad_search_followup"
         );
         /*
          * Type of columns

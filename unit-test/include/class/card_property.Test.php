@@ -88,7 +88,6 @@ class Card_PropertyTest extends TestCase
 
     public static function tearDownAfterClass()
     {
-        return;
         require_once 'global.php';
         global $g_connection;
         $g_connection=Dossier::connect();

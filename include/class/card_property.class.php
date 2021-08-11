@@ -146,7 +146,8 @@ class Card_Property
             return;
         } elseif ($fiche->id==0 && $fiche->fiche_def ==0 )
         {
-            throw new Exception("CP147. Card category cannot be empty (fiche->set_fiche_def)",EXC_PARAM_VALUE);
+            return;
+//            throw new Exception("CP147. Card category cannot be empty (fiche->set_fiche_def)",EXC_PARAM_VALUE);
         }
         $sql="select *
              from
