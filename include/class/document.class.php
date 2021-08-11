@@ -759,7 +759,8 @@ class Document
             
 
             // customer
-            /* \note The CUST_* are retrieved thx the $p_array['tiers']
+            /**
+             * \note The CUST_* are retrieved thx the $p_array['tiers']
              * which contains the quick_code
              */
             case 'SOLDE':

@@ -32,22 +32,22 @@
 class Card_Property
 {
 
-    //!< ad_id int id of the attribute attr_def.ad_id
     var $ad_id;
-    //!< ad_text string label of the attribute attr_def.ad_def
+    //!< ad_id int id of the attribute attr_def.ad_id
     var $ad_text;
-    //!< av_text string value of this attribute 
+    //!< ad_text string label of the attribute attr_def.ad_def
     var $av_text;
-    //!< ad_type string : type of this attribute (select, text ,...)
+    //!< av_text string value of this attribute 
     var $ad_type;
-    //!< ad_size int size of the attribute
+    //!< ad_type string : type of this attribute (select, text ,...)
     var $ad_size;
-    //!< ad_extra extra info for a attribute
+    //!< ad_size int size of the attribute
     var $ad_extra;
-    //!< jnt_order order to display
+    //!< ad_extra extra info for a attribute
     var $jnt_order;
-    //!< cn database connexion
+    //!< jnt_order order to display
     var $cn;
+    //!< cn database connexion
 
     function __construct($cn, $ad_id=0)
     {
@@ -129,10 +129,10 @@ class Card_Property
      * @brief Load all the attribute of a card , it modifies the parameter $fiche. Usually called from fiche::insert 
      * and fiche::update . In the same time, it will synchronize the attributes which the database. 
      * The attributes (public.fiche_detail) will be ordered in the member attribute $fiche->attribut
-     * @param $fiche Fiche Full fill this card with all the attribute
+     * @param $fiche Fiche Full fill this card with all the attributes
      * @see  Fiche::update Fiche::insert
-     * @exception EXC_PARAM_VALUE it is not possible to compute the default attributes for a new card without the card
-     * category
+     * @note it is not possible to compute the default attributes for a new card without the card
+     * category, so it returns nothing
      * 
      */
     static function load(Fiche $fiche)
@@ -409,7 +409,7 @@ class Card_Property
         return $ret;
     }
 
-    /* !
+    /*!
      * \brief  update all the data of the card , including f_enable. if we are in a transaction
      * we don't commit here , else if not then a transaction is started and committed . The member attributes 
      * $p_fiche->attribut will be saved into fiche_detail after transforming if needed. 
