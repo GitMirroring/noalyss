@@ -18,7 +18,8 @@
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 /**
- * \brief include from client.inc.php and concerned only the customer card and
+ * \file
+ * \brief include from and concerned only the customer card and
  * the customer category
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');

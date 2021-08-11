@@ -26,10 +26,10 @@
  * @brief abstract of the table public.attr_def */
 
 /**
- * @class Attr_def_SQL
- * @brief abstract of the table public.attr_def
+ * @class Attr_Def_SQL
+ * @brief ORM of the table public.attr_def
  */
-class Attr_def_SQL extends Table_Data_SQL
+class Attr_Def_SQL extends Table_Data_SQL
 {
 
     function __construct(DatabaseCore $p_cn, $p_id=-1)

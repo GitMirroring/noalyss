@@ -874,7 +874,18 @@ class DatabaseCore
     {
 
     }
-
+    /**
+     * @brief get the transaction status : 
+     * The status can be 
+     *    -  PGSQL_TRANSACTION_IDLE (currently idle), 
+     *    -  PGSQL_TRANSACTION_ACTIVE (a command is in progress), 
+     *    -  PGSQL_TRANSACTION_INTRANS (idle, in a valid transaction block), 
+     *    -  PGSQL_TRANSACTION_INERROR (idle, in a failed transaction block). 
+     *    -  PGSQL_TRANSACTION_UNKNOWN is reported if the connection is bad. 
+     *    -  PGSQL_TRANSACTION_ACTIVE is reported only when a query has been sent to the server 
+     * and not yet completed.      
+     * * @return  PGSQL_TRANSACTION_IDLE | PGSQL_TRANSACTION_ACTIVE | PGSQL_TRANSACTION_INTRANS | PGSQL_TRANSACTION_INERROR | PGSQL_TRANSACTION_UNKNOWN | PGSQL_TRANSACTION_ACTIVE
+     */
     function status()
     {
         return pg_transaction_status($this->db);
@@ -924,7 +935,7 @@ class DatabaseCore
     }
 
     /**
-     * Check if a prepared statement already exists or not
+     * @brief Check if a prepared statement already exists or not
      * @param string $query_name name of the prepared query
      * @return boolean false is not yet prepared
      */
@@ -936,7 +947,7 @@ class DatabaseCore
     }
 
     /**
-     * with the handle of a successull query, echo each row into CSV and
+     * @brief with the handle of a successull query, echo each row into CSV and
      * send it directly
      * @param type $ret handle to a query
      * @param type $aheader double array, each item of the array contains
@@ -968,14 +979,14 @@ class DatabaseCore
         }
     }
     /**
-     * Returns the number of columns in a ret
+     * @brief Returns the number of columns in a ret
      * @param handler $p_ret handler to a query
      */
     static  function nb_column($p_ret) {
         return pg_num_fields($p_ret);
     }
     /**
-     * FInd if a SQL Select has a SQL stmt to inject or damage Data
+     * @brief FInd if a SQL Select has a SQL stmt to inject or damage Data
      * When a SELECT SQL string is build, this string could contain a SQL attempt to damage data,
      *so the statement DELETE TRUNCATE ... are forbidden. Throw an exception EXC_INVALID
      *

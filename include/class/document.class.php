@@ -113,10 +113,14 @@ class Document
         try {
             // create a temp directory in /tmp to unpack file and to parse it
             $dirname=tempnam($_ENV['TMP'], 'doc_');
-
+            if  ($dirname == false) {
+                throw new Exception ('DC117 cannot create tmp file',5000);
+            }
 
             unlink($dirname);
-            mkdir($dirname);
+            if (  mkdir($dirname) == false ) {
+                throw new Exception ("DC121 cannot create $dirname directory",5000);
+            }
             // Retrieve the lob and save it into $dirname
             $this->db->start();
             $dm_info="select md_name,md_type,md_lob,md_filename,md_mimetype
@@ -183,7 +187,7 @@ class Document
                 if ($res!==TRUE)
                 {
                     record_log(sprintf('DOCUMENT.GENERATE.D3  zip failed %s', $filename));
-                    throw new Exception(_('Echec compression'));
+                    throw new Exception(_('Echec compression'),5000);
                 }
                 $zip->add_recurse_folder($dirname.DIRECTORY_SEPARATOR);
                 $zip->close();
@@ -241,7 +245,7 @@ class Document
             if (mkdir($temp_dir)==false)
             {
                 $msg=sprintf(_("Ne peut pas créer le répertoire %s", $temp_dir));
-                report_log("D221".$msg);
+                record_log("D221".$msg);
                 throw new Exception($msg);
             }
         }
@@ -252,7 +256,7 @@ class Document
         if ($h===false)
         {
             $msg=sprintf(_("Ne peut pas ouvrir [%s] [%s]"), $p_dir, $p_file);
-            report_log("D232".$msg);
+            record_log("D232".$msg);
             throw new Exception($msg);
         }
         if ($output_file==false)
@@ -1850,23 +1854,30 @@ class Document
     function transform2pdf()
     {
         if (GENERATE_PDF == 'NO' ) {
-            \record_log(__FILE__."DOC37 : PDF not available");
-            throw new \Exception("Cannot not transform to PDF");
+            \record_log(__FILE__."D1857 PDF not available");
+            throw new \Exception("Cannot not transform to PDF",5000);
         }
             // Extract from public.document
         $dirname=tempnam($_ENV['TMP'],"document");
+        
+        if ( $dirname == false ) {
+            throw new Exception("D1862.cannot create tmp file",5000);
+        }
         unlink($dirname);
         umask(0);
-        mkdir($dirname);
+        if ( mkdir($dirname) == false ) {
+            throw new Exception("D1868.cannot create tmp directory",5000);
+        }
+        
         $destination_file=$dirname."/".$this->d_filename;
         $this->export_file($destination_file);
         ob_start();
         passthru(OFFICE . escapeshellarg($destination_file), $status);
         $result =ob_get_contents();
-        ob_clean();
+        ob_end_clean();
         if ($status != 0) {
-            \record_log(__FILE__."DOC45 : Error  cannot transform into PDF"." output [$result]");
-            throw new \Exception("DOC45 Cannot not transform to PDF");
+            \record_log(__FILE__."D1879 Error  cannot transform into PDF"." output [$result]");
+            throw new \Exception("D1879 Cannot not transform to PDF");
         }
         // remove extension
         $ext = strrpos($this->d_filename, ".");
