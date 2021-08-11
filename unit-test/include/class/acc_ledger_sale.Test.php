@@ -189,7 +189,7 @@ class Acc_Ledger_SaleTest extends TestCase
 
     /**
      * @covers Acc_Ledger_Sale::input
-     * @todo   Implement testInput().
+     * 
      */
     public function testInput()
     {
@@ -198,7 +198,7 @@ class Acc_Ledger_SaleTest extends TestCase
         $object=new Acc_Ledger_Sale($g_connection, 2);
         
         $info=$object->input($this->array);
-       // var_dump($info);
+        // var_dump($info);
         if (!is_string($info))
         {
             $this->assertTrue(FALSE);
@@ -217,7 +217,6 @@ class Acc_Ledger_SaleTest extends TestCase
 
     /**
      * @covers Acc_Ledger_Sale::heading_detail_sale
-     * @todo   Implement testHeading_detail_sale().
      */
     public function testHeading_detail_sale()
     {

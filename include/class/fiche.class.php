@@ -51,6 +51,10 @@ class Fiche
         $this->quick_code='';
         $this->attribut=array();
         $this->f_enable='1';
+        if ($p_id != 0 ) { $this->load();} else {
+            $this->fiche_def=0;
+        }
+        
        
     }
     public function get_id()
@@ -160,6 +164,7 @@ class Fiche
     function setAttribut($p_ad_id,$p_value)
     {
         if ( sizeof($this->attribut)==0 ) $this->getAttribut();
+        
         for ($e=0;$e <sizeof($this->attribut);$e++)
         {
             if ( $this->attribut[$e]->ad_id == $p_ad_id )
@@ -175,72 +180,7 @@ class Fiche
      */
     function getAttribut()
     {
-        if ( $this->id == 0)
-        {
-            return;
-        }
-        $sql="select *
-             from
-                   fiche
-             natural join fiche_detail
-	     join jnt_fic_attr on (jnt_fic_attr.fd_id=fiche.fd_id and fiche_detail.ad_id=jnt_fic_attr.ad_id)
-             join attr_def on (attr_def.ad_id=fiche_detail.ad_id) where f_id= $1".
-             " order by jnt_order";
-
-        $Ret=$this->cn->exec_sql($sql,[$this->id]);
-        if ( ($Max=Database::num_row($Ret)) == 0 )
-            return ;
-        for ($i=0;$i<$Max;$i++)
-        {
-            $row=Database::fetch_array($Ret,$i);
-            $this->fiche_def=$row['fd_id'];
-            $this->f_enable=$row['f_enable'];
-            $t=new Fiche_Attr ($this->cn);
-            $t->ad_id=$row['ad_id'];
-            $t->ad_text=$row['ad_text'];
-            $t->av_text=$row['ad_value'];
-            $t->ad_type=$row['ad_type'];
-            $t->ad_size=$row['ad_size'];
-            $t->ad_extra=$row['ad_extra'];
-            $t->jnt_order=$row['jnt_order'];
-            $this->attribut[$i]=$t;
-        }
-        $e=new Fiche_Def($this->cn,$this->fiche_def);
-        $e->GetAttribut();
-
-        if ( sizeof($this->attribut) != sizeof($e->attribut ) )
-        {
-
-            /*
-			 *!! Missing attribute
-			 */
-            foreach ($e->attribut as $f )
-            {
-                $flag=0;
-                foreach ($this->attribut as $g )
-                {
-                    if ( $g->ad_id == $f->ad_id )
-                        $flag=1;
-                }
-                if ( $flag == 0 )
-                {
-                    // there's a missing one, we insert it
-                    $t=new Fiche_Attr ($this->cn,$f->ad_id);
-                    $t->av_text="";
-                    $t->ad_text=$f->ad_text;
-                    $t->jnt_order=$f->jnt_order;
-                    $t->ad_type=$f->ad_type;
-                    $t->ad_size=$f->ad_size;
-                    $t->ad_id=$f->ad_id;
-                    $t->ad_extra=$f->ad_extra;
-                    $this->attribut[$Max]=$t;
-                    $Max++;
-                } // if flag == 0
-
-            }// foreach
-
-
-        }//missing attribut
+        Card_Property::load($this);
     }
     /**
      * @brief find the card with the p_attribut equal to p_value, it is not case sensitive
@@ -255,20 +195,6 @@ class Fiche
         $res=$this->cn->get_array($sql,array($p_attribut,$p_value));
         return $res;
     }
-
-    /*!
-     * \brief give the size of a card object
-     *
-     * \return size
-     */
-    function size()
-    {
-        if ( isset ($this->ad_id))
-            return sizeof($this->ad_id);
-        else
-            return 0;
-    }
-
 
     /*!
      **************************************************
@@ -307,10 +233,11 @@ class Fiche
     }
     /*!
      **************************************************
-     * \brief  Return array of card from the frd family
+     * \brief  Return array of card from the frd family deprecated , use insert get_by_category_id
      *
-     *
-     * \param  $p_frd_id the fiche_def_ref.frd_id
+     * \deprecated 
+     * \see Fiche::get_by_category
+     * \param  $p_frd_id the fiche_def_ref.frd_id NOT USED , $this->fiche_def_ref will be used instead
      * \param  $p_offset
      * \param  $p_search is an optional filter
      *\param $p_order : possible values are name, f_id
@@ -318,49 +245,7 @@ class Fiche
      */
     function GetByDef($p_frd_id,$p_offset=-1,$p_search="",$p_order='')
     {
-        switch($p_order)
-        {
-        case 'name' :
-                $order=' order by name';
-            break;
-        case 'f_id':
-            $order='order by f_id';
-            break;
-        default:
-            $order='';
-        }
-        if ( $p_offset == -1 )
-        {
-            $sql="select *
-                 from
-                 fiche join fiche_Def using (fd_id) join vw_fiche_name using(f_id)
-                 where frd_id=".$p_frd_id." $p_search ".$order;
-        }
-        else
-        {
-            $limit=($_SESSION[SESSION_KEY.'g_pagesize']!=-1)?"limit ".$_SESSION[SESSION_KEY.'g_pagesize']:"";
-            $sql="select *
-                 from
-                 fiche join fiche_Def using (fd_id) join vw_fiche_name using(f_id)
-                 where frd_id=".$p_frd_id." $p_search $order  "
-                 .$limit." offset ".$p_offset;
-
-        }
-
-        $Ret=$this->cn->exec_sql($sql);
-        if ( ($Max=Database::num_row($Ret)) == 0 )
-            return [];
-        $all[0]=new Fiche($this->cn);
-
-        for ($i=0;$i<$Max;$i++)
-        {
-            $row=Database::fetch_array($Ret,$i);
-            $t=new Fiche($this->cn,$row['f_id']);
-            $t->getAttribut();
-            $all[$i]=clone $t;
-
-        }
-        return $all;
+           return $this->get_by_category($p_offset,$p_search,$p_order);
     }
     function ShowTable()
     {
@@ -381,23 +266,11 @@ class Fiche
      */
     function strAttribut($p_ad_id,$p_return=1)
     {
-		$return=($p_return==1)?NOTFOUND:"";
-        if ( sizeof ($this->attribut) == 0 )
+        $return=($p_return==1)?NOTFOUND:"";
+        if ( empty ($this->attribut)  )
         {
 
-            if ($this->id==0) {
-					return $return;
-			}
-            // object is not in memory we need to look into the database
-            $sql="select ad_value from fiche_detail
-                 where f_id= $1  and ad_id= $2 ";
-            $Res=$this->cn->exec_sql($sql,array($this->id,$p_ad_id));
-            $row=Database::fetch_all($Res);
-            // if not found return error
-            if ( $row == false )
-                return $return;
-
-            return $row[0]['ad_value'];
+          $this->getAttribut();
         }
 
         foreach ($this->attribut as $e)
@@ -414,18 +287,13 @@ class Fiche
      */
     function to_array()
     {
-        $array=$this->cn->get_array("select 'av_text'||fd.ad_id::text \"key\", ad_value
-            from fiche_detail  fd
-                join fiche  f using (f_id)
-                join jnt_fic_attr jfa using (fd_id,ad_id)
-            where 
-                f.f_id=$1
-                order by jfa.jnt_order",[$this->id]);
-        if ( empty ($array) ) return array();
         $a_return=[];
-        foreach ($array as $row) {
-            $key=$row['key'];$value=$row['ad_value'];
-            $a_return[$key]=$value;
+        if ( empty ($this->attribut)) {
+            $this->getAttribut();
+        }
+        foreach ($this->attribut as $attr)
+        {
+            $a_return['av_text'.$attr->ad_id]=$attr->av_text;
         }
         $a_return['f_enable']=$this->get_f_enable();
         return $a_return;
@@ -441,128 +309,17 @@ class Fiche
     function blank($p_fiche_def)
     {
         // array = array of attribute object sorted on ad_id
-        $f=new Fiche_Def($this->cn,$p_fiche_def);
-        $f->get();
-        $array=$f->getAttribut();
+        $fiche_def=new Fiche_Def($this->cn,$p_fiche_def);
+        $fiche_def->get();
+        $array=$fiche_def->getAttribut();
         $r="";
         $r.='<table style="width:98%;margin:1%">';
         foreach ($array as $attr)
         {
             $table=0;
             $msg="";$bulle='';
-            if ( $attr->ad_id == ATTR_DEF_ACCOUNT)
-            {
-                $w=new IPoste("av_text".$attr->ad_id);
-                $w->set_attribute('ipopup','ipop_account');
-                $w->set_attribute('jrn','0');
-                $w->set_attribute('account',"av_text".$attr->ad_id);
-				$w->dbl_click_history();
-                //  account created automatically
-                $sql="select account_auto($p_fiche_def)";
-                $ret_sql=$this->cn->exec_sql($sql);
-                $a=Database::fetch_array($ret_sql,0);
-                $label=new ISpan();
-                $label->name="av_text".$attr->ad_id."_label";
-
-                if ( $a['account_auto'] == 't' )
-                    $msg.=$label->input()." <span style=\"color:red\">".
-						_("Rappel: Poste créé automatiquement à partir de ")
-						.$f->class_base." </span> ";
-                else
-                {
-                    // if there is a class base in fiche_def_ref, this account will be the
-                    // the default one
-                    if ( strlen(trim($f->class_base)) != 0 )
-                    {
-                        $msg.="<TD>".$label->input()." <span style=\"color:red\">"._("Rappel: Poste par défaut sera ").
-                              $f->class_base.
-                              " !</span> ";
-                        $w->value=$f->class_base;
-                    }
-
-                }
-                $r.="<TR>".td(_("Poste Comptable"),' class="highlight input_text" ' ).td($w->input().$msg)."</TR>";
-                continue;
-            }
-            elseif ( $attr->ad_id == ATTR_DEF_TVA)
-            {
-                $w=new ITva_Popup('popup_tva');
-                $w->table=1;
-            }
-
-            else
-            {
-	      switch ($attr->ad_type)
-                {
-                    case 'text':
-                            $w = new IText();
-                            $w->css_size = "100%";
-                            break;
-                    case 'numeric':
-                            $w = new INum();
-                            $w->prec=($attr->ad_extra=="")?2:$attr->ad_extra;
-                            $w->size = $attr->ad_size;
-                            break;
-                    case 'date':
-                            $w = new IDate();
-                            break;
-                    case 'zone':
-                            $w = new ITextArea();
-                            $w->style=' class="itextarea" style="margin:0px;width:100%"';
-                            break;
-                    case 'poste':
-                            $w = new IPoste("av_text" . $attr->ad_id);
-                            $w->set_attribute('ipopup', 'ipop_account');
-                            $w->set_attribute('account', "av_text" . $attr->ad_id);
-                            $w->table = 1;
-                            $bulle = Icon_Action::infobulle(14);
-                            break;
-                    case 'check':
-                            $w=new InputSwitch("av_text".$attr->ad_id);
-                            $w->value=(trim($w->value)=="")?1:$w->value;
-                            break;
-                    case 'select':
-                            $w = new ISelect("av_text" . $attr->ad_id);
-                            $w->value = $this->cn->make_array($attr->ad_extra);
-                            $w->style= 'style="width:100%"';
-                            break;
-                    case 'card':
-                            $w = new ICard("av_text" . $attr->ad_id);
-                            // filter on frd_id
-                            $w->extra = $attr->ad_extra;
-                            $w->extra2 = 0;
-                            $label = new ISpan();
-                            $label->name = "av_text" . $attr->ad_id . "_label";
-                            $w->set_attribute('ipopup', 'ipopcard');
-                            $w->set_attribute('typecard', $attr->ad_extra);
-                            $w->set_attribute('inp', "av_text" . $attr->ad_id);
-                            $w->set_attribute('label', "av_text" . $attr->ad_id . "_label");
-                            $msg = $w->search();
-                            $msg.=$label->input();
-                            break;
-                }
-                $w->table = 0;
-            }
-            $w->table = $table;
-            $w->label = $attr->ad_text;
-            $w->name = "av_text" . $attr->ad_id;
-            if ($attr->ad_id == 21 || $attr->ad_id==22||$attr->ad_id==20||$attr->ad_id==31)
-            {
-                    $bulle=Icon_Action::infobulle( 21);
-            }
-
-            // Warning length quickcode
-            if ($attr->ad_id== ATTR_DEF_QUICKCODE ) {
-                $bulle=Icon_Action::warnbulle(76);
-            }
-            if ($attr->ad_id == ATTR_DEF_NAME || $attr->ad_id== ATTR_DEF_QUICKCODE)
-            {
-                $class=" input_text highlight info";
-
-            }
-            else
-                $class="input_text";
-            $r.="<TR>" . td(_($w->label)." $bulle", ' class="'.$class.'" ') . td($w->input()." $msg")." </TR>";
+            $r.=$attr->input($fiche_def);
+           
         }
         $r.= '</table>';
         return $r;
@@ -602,6 +359,7 @@ class Fiche
             return 'FNT';
         }
         
+        $fiche_def=new Fiche_Def($this->cn,$this->fiche_def);
         /* for each attribute */
         foreach ($attr as $r)
         {
@@ -609,168 +367,14 @@ class Fiche
             $bulle="";
             if ($p_readonly)
             {
-                $w=new IText();
-                $w->table=1;
-                $w->readOnly=true;
-                $w->css_size="100%";
+                $ret .= $r->print();
             }
             if ($p_readonly==false)
             {
-
-                if ($r->ad_id==ATTR_DEF_ACCOUNT)
-                {
-                    $w=new IPoste("av_text".$r->ad_id);
-                    $w->id=$p_in."av_text".$r->ad_id;
-                    $w->set_attribute('ipopup', 'ipop_account');
-                    $w->set_attribute('account', $w->id);
-                    $w->set_attribute('jrn','0');
-                    $w->dbl_click_history();
-                    //  account created automatically
-                    $w->table=0;
-                    $w->value=$r->av_text;
-                    //  account created automatically
-                    $sql="select account_auto($this->fiche_def)";
-                    $ret_sql=$this->cn->exec_sql($sql);
-                    $a=Database::fetch_array($ret_sql, 0);
-                    $bulle=Icon_Action::infobulle(10);
-
-                    if ($a['account_auto']=='t')
-                        $bulle.=Icon_Action::warnbulle(11);
-                }
-                elseif ($r->ad_id==ATTR_DEF_TVA)
-                {
-                    $w=new ITva_Popup('popup_tva');
-                    $w->table=1;
-                    $w->value=$r->av_text;
-                }
-                else
-                {
-                    switch ($r->ad_type)
-                    {
-                        case 'text':
-                            $w=new IText('av_text'.$r->ad_id);
-                            $w->css_size="100%";
-                            $w->value=$r->av_text;
-                            break;
-                        case 'numeric':
-                            $w=new INum('av_text'.$r->ad_id);
-                            $w->size=$r->ad_size;
-                            $w->prec=($r->ad_extra=="")?2:$r->ad_extra;
-                            $w->value=$r->av_text;
-                            break;
-                        case 'date':
-                            $w=new IDate('av_text'.$r->ad_id);
-                            $w->value=$r->av_text;
-                            break;
-                        case 'zone':
-                            $w=new ITextArea('av_text'.$r->ad_id);
-                            $w->style=' class="itextarea" style="margin:0px;width:100%"';
-                            $w->value=$r->av_text;
-                            break;
-                        case 'check':
-                            $w=new InputSwitch("av_text".$r->ad_id);
-                             $w->value=$r->av_text;
-                            $w->value=(trim($w->value)=="")?1:$w->value;
-                            break;
-                        case 'poste':
-                            $w=new IPoste("av_text".$r->ad_id);
-                            $w->set_attribute('ipopup', 'ipop_account');
-                            $w->set_attribute('account', "av_text".$r->ad_id);
-                            $w->dbl_click_history();
-                            $w->width=$r->ad_size;
-                            $w->table=0;
-                            $bulle=Icon_Action::infobulle(14);
-                            $w->value=$r->av_text;
-                            $w->set_attribute('jrn','0');
-                            break;
-                        case 'card':
-                            $uniq=rand(0, 1000);
-                            $w=new ICard("av_text".$r->ad_id);
-                            $w->id="card_".$this->id.$uniq;
-                            // filter on ad_extra
-
-                            $filter=$r->ad_extra;
-                            $w->width=$r->ad_size;
-                            $w->extra=$filter;
-                            $w->extra2=0;
-                            $w->limit=6;
-                            $label=new ISpan();
-                            $label->name="av_text".$r->ad_id.$uniq."_label";
-                            $fiche=new Fiche($this->cn);
-                            $fiche->get_by_qcode($r->av_text);
-                            if ($fiche->id==0)
-                            {
-                                $label->value=(trim($r->av_text)=='')?"":" "._("Fiche non trouvée")." ";
-                                $r->av_text="";
-                            }
-                            else
-                            {
-                                $label->value=$fiche->strAttribut(ATTR_DEF_NAME).
-                                        " ".
-                                        $fiche->strAttribut(ATTR_DEF_FIRST_NAME,0);
-                            }
-                            $w->set_attribute('ipopup', 'ipopcard');
-                            $w->set_attribute('typecard', $filter);
-                            $w->set_attribute('inp', $w->id);
-                            $w->set_attribute('label', $label->name);
-                            $w->autocomplete=1;
-                            $w->dblclick="fill_ipopcard(this);";
-                            $msg=$w->search();
-                            $msg.=$label->input();
-                            $w->value=$r->av_text;
-                            break;
-                        case 'select':
-                            $w=new ISelect();
-                            $w->value=$this->cn->make_array($r->ad_extra);
-                            $w->selected=$r->av_text;
-                            $w->style=' style="width:100%" ';
-                            break;
-                        default:
-                            var_dump($r);
-                            throw new Exception("Type invalide");
-                    }
-                    $w->table=0;
-                }
+                $ret .= $r->input($fiche_def);
+               
             }
-            else
-            {
-                switch ($r->ad_type)
-                {
-                    case 'select':
-                        $x=new ISelect();
-                        $x->value=$this->cn->make_array($r->ad_extra);
-                        $x->selected=$r->av_text;
-                        $value=$x->display();
-                        $w->value=$value;
-                        break;
-                    case 'check':
-                       $w=new InputSwitch("av_text".$r->ad_id);
-                       $w->value=$r->av_text;
-                       $w->value=(trim($w->value)=="")?1:$w->value;
-                       break;
-                    default:
-                        $w->value=$r->av_text;
-                }
-            }
-
-            $w->name="av_text".$r->ad_id;
-            $w->readOnly=$p_readonly;
-
-            if ($r->ad_id==21||$r->ad_id==22||$r->ad_id==20||$r->ad_id==31)
-            {
-                $bulle=Icon_Action::infobulle(21);
-            }
-            if ($r->ad_id == ATTR_DEF_NAME || $r->ad_id== ATTR_DEF_QUICKCODE||$r->ad_id==ATTR_DEF_ACCOUNT) 
-                $class=" input_text highlight info";
-            else
-                $class="input_text";
-
-            // Warning length quickcode
-            if ($r->ad_id== ATTR_DEF_QUICKCODE ) {
-                $bulle=Icon_Action::warnbulle(76);
-            }
-            $ret.="<TR>".td(_($r->ad_text).$bulle,'class="'.$class.'"').td($w->input()." ".$msg)." </TR>";
-        }
+         }
         // Display if the card is enable or not
         $enable_is=new InputSwitch("f_enable");
         $enable_is->value=$this->f_enable;
@@ -787,11 +391,12 @@ class Fiche
     }
 
     /*!
-     * \brief  Save a card, call insert or update
+     * \brief  Save a card, call insert or update 
+     * \see Fiche::insert , Fiche::update
      *
      * \param p_fiche_def (default 0)
      */
-    function Save($p_fiche_def=0)
+    function save($p_fiche_def=0)
     {
         // new card or only a update ?
         if ( $this->id == 0 )
@@ -800,13 +405,13 @@ class Fiche
             $this->update();
     }
     /*!
-     * \brief  insert a new record
+     * \brief  insert a new record thanks an array , either as parameter or $_POST
      *
      * \param $p_fiche_def fiche_def.fd_id
      * \param $p_array is the array containing the data
-     *\param $transation if we want to manage the transaction in this function
-     * true for small insert and false for a larger loading, the BEGIN / COMMIT sql
-     * must be done into the caller
+     *\param $transation DEPRECATED : if we are in a transaction, we don't commit here , else if not, the
+     * then a transaction is started and committed 
+     * 
      av_textX where X is the ad_id
      *\verb
     example
@@ -820,18 +425,9 @@ class Fiche
 
         $fiche_id=$this->cn->get_next_seq('s_fiche');
         $this->id=$fiche_id;
-        // first we create the card
-        if ($transaction)
-            $this->cn->start();
-        /*
-         * Sort the array for having the name BEFORE the quickcode and the 
-         * Accounting
-         */
-        ksort($p_array);
-	$name="";
+        $this->fiche_def=$p_fiche_def;
         try
         {
-            $this->cn->start();
 
             // by default the card is available
             if ( !isset ($p_array['f_enable'])) {
@@ -839,360 +435,64 @@ class Fiche
             }
             $Ret=$this->cn->exec_sql("insert into fiche(f_id,f_enable,fd_id) values ($1,$2,$3)",
                     array($fiche_id, $p_array['f_enable'],$p_fiche_def));
-            
-            // parse the $p_array array
-            foreach ($p_array as $name=> $value)
-            {
-                /* avoid the button for searching an accounting item */
-                if (preg_match('/^av_text[0-9]+$/', $name)==0)
-                    continue;
-
-                list ($id)=sscanf($name, "av_text%d");
-                if ($id==null)
-                    continue;
-
-                // Special traitement
-                // quickcode
-                if ($id==ATTR_DEF_QUICKCODE)
-                {
-                    $sql=sprintf("select insert_quick_code(%d,'%s')", $fiche_id,
-                            sql_string($value));
-                    $this->cn->exec_sql($sql);
-                    continue;
-                }
-                // name
-                if ($id==ATTR_DEF_NAME)
-                {
-                    if (strlen(trim($value))==0)
-                        $value="pas de nom";
-		    $account_name=$value;
-
-                }
-                // account
-                if ($id==ATTR_DEF_ACCOUNT)
-                {
-                    $v=mb_strtoupper($value);
-                    try
-                    {
-                        // Check that the accounting can be used directly
-                        if (strlen(trim($v))!=0)
-                        {
-                            if (strpos($value, ',')==0)
-                            {
-			      if ( mb_strlen($value)>40) throw new Exception (_("Poste comptable trop long"), 1);
-			      
-			      $v=$this->cn->get_value("select format_account($1)",
-						      array($value));
-			      $acc_account=new Acc_Account($this->cn,$v);
-                                
-			      if ($acc_account->get_parameter("id")== -1 ) {
-                                    $acc_account->set_parameter("pcm_lib", $account_name);
-                                   // By Default can be used directly
-                                    $acc_account->set_parameter('pcm_direct_use',"Y") ;
-                                    $parent=$acc_account->find_parent();
-                                    $acc_account->set_parameter("pcm_val_parent",$parent);
-                                    $acc_account->save();
-                                } 
-                                else
-                                {
-                                    // Check that the accounting can be used directly
-                                    
-                                    if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
-                                        throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
-                                    }
-
-			      }
-			      
-                                }
-                            else
-                            {
-                                                              
-                                $ac_array=explode(",", $value);
-                                if (count($ac_array)<>2)
-                                    throw new Exception(_('Désolé, il y a trop de virgule dans le poste comptable ').h($value));
-                                
-                                $part1=$ac_array[0];
-                                $part2=$ac_array[1];
-				
-				if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
-                                if ( mb_strlen($part2)>40) throw new Exception (_("Poste comptable trop long"), 1);
-
-				$part1=$this->cn->get_value('select format_account($1)',
-                                        array($part1));
-                                $part2=$this->cn->get_value('select format_account($1)',
-                                        array($part2));
-				
-				// Check that the accounting can be used directly
-                                $acc_account1=new Acc_Account($this->cn,$part1);
-                                if ($acc_account1->get_parameter("id")== -1 ) {
-                                    $acc_account1->set_parameter("pcm_lib", $account_name);
-                                    $acc_account1->set_parameter('pcm_direct_use',"Y") ;
-                                    $parent=$acc_account1->find_parent();
-                                    $acc_account1->set_parameter("pcm_val_parent",$parent);
-                                    $acc_account1->save();
-                                } else if ($acc_account1->get_parameter('pcm_direct_use') == 'N') {
-                                    throw new Exception(_("Utilisation directe interdite du poste comptable $part1"));
-                                }
-                                // Check that the accounting can be used directly
-                                $acc_account2=new Acc_Account($this->cn,$part2);
-                                if ($acc_account2->get_parameter("id")== -1 ) {
-                                    $acc_account2->set_parameter("pcm_lib", $account_name);
-                                    $acc_account2->set_parameter('pcm_direct_use',"Y") ;
-                                    $parent=$acc_account2->find_parent();
-                                    $acc_account2->set_parameter("pcm_val_parent",$parent);
-                                    $acc_account2->save();
-                                } else if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
-                                    throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
-                                }
-                                $v=$part1.','.$part2;
-
-                            }
-                            $parameter=array($this->id, $v);
-                        }
-                        else
-                        {
-                            $parameter=array($this->id, null);
-                        }
-                        $v=$this->cn->get_value("select account_insert($1,$2)",
-                                $parameter);
-                    }
-                    catch (Exception $e)
-                    {
-                        throw ($e);
-                    }
-                    continue;
-                }
-                // TVA
-                if ($id==ATTR_DEF_TVA)
-                {
-                    // Verify if the rate exists, if not then do not update
-                    if (strlen(trim($value))!=0)
-                    {
-                        if (isNumber($value)==0)
-                            continue;
-                        if ($this->cn->count_sql("select * from tva_rate where tva_id=".$value)==0)
-                        {
-                            continue;
-                        }
-                    }
-                }
-                // Normal traitement
-                $value2=sql_string($value);
-
-                $sql=sprintf("select attribut_insert(%d,%d,'%s')", $fiche_id,
-                        $id, strip_tags(trim($value2)));
-                $this->cn->exec_sql($sql);
+            // compute a quick_code
+            if ( ! isset ($p_array["av_text".ATTR_DEF_QUICKCODE]  )) {
+                $p_array["av_text".ATTR_DEF_QUICKCODE]="";
             }
-            $this->cn->commit();
+            $sql=sprintf("select insert_quick_code(%d,'%s')", $fiche_id,
+                            sql_string($p_array['av_text'.ATTR_DEF_QUICKCODE]));
+            $this->getAttribut();
+            Card_Property::update($this);
         }
         catch (Exception $e)
         {
-            record_log($e->getMessage()." ".$e->getTraceAsString());
+            record_log("FIC603".$e->getMessage()." ".$e->getTraceAsString());
             $this->cn->rollback();
             throw ($e);
             return;
         }
-        if ($transaction)
-            $this->cn->commit();
         return;
     }
 
     /*!
      * \brief update a card with an array
+     * \param $p_array (optional) is the array containing the data , if NULL then $_POST will be uses
+     *\param $transation if we want to manage the transaction in this function
+     * true for small insert and false for a larger loading, the BEGIN / COMMIT sql
+     * must be done into the caller
+     av_textX where X is the ad_id
+     *\verb
+    example
+    av_text1=>'name'
+    \endverb
      */
     function update($p_array=null)
     {
-        global $g_user;
         if ($p_array==null)
-            $p_array=$_POST;
-
-        try
         {
-            $this->cn->start();
-            
-            $this->cn->exec_sql("update fiche set f_enable=$1 where f_id=$2",array($p_array['f_enable'],$this->id));
-            
-            // parse the $p_array array
-            foreach ($p_array as $name=> $value)
-            {
-                if (preg_match('/^av_text[0-9]+$/', $name)==0)
-                    continue;
-
-                list ($id)=sscanf($name, "av_text%d");
-
-                if ($id==null)
-                    continue;
-
-                // retrieve jft_id to update table attr_value
-		$sql=" select jft_id from fiche_detail where ad_id=$1 and f_id=$2";
-                $Ret=$this->cn->exec_sql($sql,[$id,$this->id]);
-
-		if (Database::num_row($Ret)==0)
-                {
-                    // we need to insert this new attribut
-                    $jft_id=$this->cn->get_next_seq('s_jnt_fic_att_value');
-
-                    $sql2="insert into fiche_detail(jft_id,ad_id,f_id,ad_value) values ($1,$2,$3,NULL)";
-
-                    $ret2=$this->cn->exec_sql($sql2,
-                            array($jft_id, $id, $this->id));
-                }
-                else
-                {
-                    $tmp=Database::fetch_array($Ret, 0);
-                    $jft_id=$tmp['jft_id'];
-                }
-                // Special traitement
-                // quickcode
-                if ($id==ATTR_DEF_QUICKCODE)
-                {
-                    $sql=sprintf("select update_quick_code(%d,'%s')", $jft_id,
-                            sql_string($value));
-                    $this->cn->exec_sql($sql);
-                    continue;
-                }
-                // name
-                if ($id==ATTR_DEF_NAME)
-                {
-                    if (strlen(trim($value))==0)
-                        continue;
-                }
-                // account
-                if ($id==ATTR_DEF_ACCOUNT)
-                {
-		  $v=mb_strtoupper($value);
-
-		    if (trim($v)!='')
-                    {
-                        if (strpos($v, ',')!=0)
-                        {
-                            $ac_array=explode(",", $v);
-                            if (count($ac_array)<>2)
-                                throw new Exception('Désolé, il y a trop de virgule dans le poste comptable '.h($v));
-                            $part1=$ac_array[0];
-                            $part2=$ac_array[1];
-			    $part1=$this->cn->get_value('select format_account($1)',
-                                    array($part1));
-                            $part2=$this->cn->get_value('select format_account($1)',
-                                    array($part2));
-
-			    if ( mb_strlen($part1)>40) throw new Exception (_("Poste comptable trop long"), 1);
-                            if ( mb_strlen($part2)>40) throw new Exception (_("Poste comptable trop long"), 1);
-                            
-                            $part1=$this->cn->get_value('select format_account($1)',    array($part1));
-                            $acc_account1=new Acc_Account($this->cn,$part1);
-                            
-                            if ($acc_account1->get_parameter("id")== -1 ) {
-                                $account_name=$this->strAttribut(ATTR_DEF_NAME);
-                                $acc_account1->set_parameter("pcm_lib", $account_name);
-                                $acc_account1->set_parameter('pcm_direct_use',"Y") ;
-                                $parent=$acc_account1->find_parent();
-                                $acc_account1->set_parameter("pcm_val_parent",$parent);
-                                $acc_account1->save();
-                            }
-                            // Check that the accounting can be used directly
-                            if ($acc_account1->get_parameter('pcm_direct_use') == 'N') {
-                                throw new Exception(_("Utilisation directe interdite du poste comptable $part1"));
-                            }
-                            // Part 2
-                            $part2=$this->cn->get_value('select format_account($1)',
-                                    array($part2));
-                            $acc_account2=new Acc_Account($this->cn,$part2);
-                            
-                                                                                    
-                            if ($acc_account2->get_parameter("id")== -1 ) {
-                                    $account_name=$this->strAttribut(ATTR_DEF_NAME);
-                                    $acc_account2->set_parameter("pcm_lib", $account_name);
-                                    $acc_account2->set_parameter('pcm_direct_use',"Y") ;
-                                    $parent=$acc_account2->find_parent();
-                                    $acc_account2->set_parameter("pcm_val_parent",$parent);
-                                    $acc_account2->save();
-                            }
-
-                            // Check that the accounting can be used directly
-                            if ($acc_account2->get_parameter('pcm_direct_use') == 'N') {
-                                throw new Exception(_("Utilisation directe interdite du poste comptable $part2"));
-                            }
-                            $v=$part1.','.$part2;
-                        }
-                        else
-                        {
-                            if ( mb_strlen($v)>40) throw new Exception (_("Poste comptable trop long"), 1);
-                            $acc_account=new Acc_Account($this->cn,$v);
-                            // Set default for new accounting
-                             if ($acc_account->get_parameter("id")== -1 ) {
-                                    $account_name=$this->strAttribut(ATTR_DEF_NAME);
-                                    $acc_account->set_parameter("pcm_lib", $account_name);
-                                   // By Default can be used directly
-                                    $acc_account->set_parameter('pcm_direct_use',"Y") ;
-                                    $parent=$acc_account->find_parent();
-                                    $acc_account->set_parameter("pcm_val_parent",$parent);
-                                    $acc_account->save();
-                                }
-			     
-                            $acc_account=new Acc_Account($this->cn,$v);
-			     if ($acc_account->get_parameter('pcm_direct_use') == 'N') {
-                                throw new Exception(_("Utilisation directe interdite du poste comptable $v"));
-                            }
-                        }
-                        $sql=sprintf("select account_update(%d,'%s')",
-                                $this->id, $v);
-                        try
-                        {
-                            $this->cn->exec_sql($sql);
-                        }
-                        catch (Exception $e)
-                        {
-                            throw new Exception(_("opération annulée")." ".$e->getMessage());
-                        }
-                        continue;
-                    }
-                    if (strlen(trim($v))==0)
-                    {
-
-                        $sql=sprintf("select account_update(%d,null)", $this->id);
-                        try
-                        {
-                            $Ret=$this->cn->exec_sql($sql);
-                        }
-                        catch (Exception $e)
-                        {
-                            throw new Exception(__LINE__."Erreur : ce compte [$v] n'a pas de compte parent.".
-                            "L'opération est annulée");
-                        }
-
-                        continue;
-                    }
-                }
-                // TVA
-                if ($id==ATTR_DEF_TVA)
-                {
-                    // Verify if the rate exists, if not then do not update
-                    if (strlen(trim($value))!=0)
-                    {
-                        if ($this->cn->count_sql("select * from tva_rate where tva_id=".$value)==0)
-                        {
-                            continue;
-                        }
-                    }
-                }
-                // Normal traitement
-                $sql="update fiche_detail set ad_value=$1 where jft_id=$2";
-                $this->cn->exec_sql($sql, array(strip_tags($value), $jft_id));
+            $p_array=$_POST;
+        }
+        $this->fiche_def = $this->cn->get_value("select fd_id from fiche where f_id=$1",[$this->id]);
+        if ( $this->cn->size()==0) {
+            throw new Exception("FICHE.UPDATE01"._("Fiche n'existe pas"),EXC_INVALID);
+        }
+        
+        
+        // get the card properties for this card category
+        $this->getAttribut();
+        
+        if ( empty ($this->attribut) ) {
+            throw new Exception("FICHE.UPDATE02"._("Aucun attribut ")."($fiche_def)",EXC_INVALID);
+        }
+        // for each property set the attribut on the card
+        foreach($this->attribut as $property) {
+            $key='av_text'.$property->ad_id;
+            if ( isset($p_array[$key])) {
+                $this->setAttribut($property->ad_id, $p_array[$key]);
             }
         }
-        catch (Exception $e)
-        {
-            echo '<span class="error">'.
-            $e->getMessage().
-            '</span>';
-            record_log($e->getMessage());
-              record_log($e);
-            $this->cn->rollback();
-            return;
-        }
-        $this->cn->commit();
-        return;
+        // save all
+        Card_Property::update($this);
     }
 
     /*!\brief  remove a card
@@ -1262,14 +562,57 @@ class Fiche
     {
         $this->getAttribut();
     }
-    /*!\brief get all the card thanks the fiche_def_ref
+    /*!
+     * \brief get all the card thanks the fiche_def_ref
      * \param $p_offset (default =-1)
      * \param $p_search sql condition
      * \return array of fiche object
      */
     function get_by_category($p_offset=-1,$p_search="",$p_order='')
     {
-        return fiche::GetByDef($this->fiche_def_ref,$p_offset,$p_search,$p_order);
+       switch($p_order)
+        {
+        case 'name' :
+                $order=' order by name';
+            break;
+        case 'f_id':
+            $order='order by f_id';
+            break;
+        default:
+            $order='';
+        }
+        if ( $p_offset == -1 )
+        {
+            $sql="select *
+                 from
+                 fiche join fiche_Def using (fd_id) join vw_fiche_name using(f_id)
+                 where frd_id=".$this->fiche_def_ref." $p_search ".$order;
+        }
+        else
+        {
+            $limit=($_SESSION[SESSION_KEY.'g_pagesize']!=-1)?"limit ".$_SESSION[SESSION_KEY.'g_pagesize']:"";
+            $sql="select *
+                 from
+                 fiche join fiche_Def using (fd_id) join vw_fiche_name using(f_id)
+                 where frd_id=".$this->fiche_def_ref." $p_search $order  "
+                 .$limit." offset ".$p_offset;
+
+        }
+
+        $Ret=$this->cn->exec_sql($sql);
+        if ( ($Max=Database::num_row($Ret)) == 0 )
+            return [];
+        $all[0]=new Fiche($this->cn);
+
+        for ($i=0;$i<$Max;$i++)
+        {
+            $row=Database::fetch_array($Ret,$i);
+            $t=new Fiche($this->cn,$row['f_id']);
+            $t->getAttribut();
+            $all[$i]=clone $t;
+
+        }
+        return $all;
     }
     /*!\brief retrieve the frd_id of the fiche it is the type of the
      *        card (bank, purchase...)
@@ -2337,7 +1680,7 @@ class Fiche
 
 	function get_gestion_title()
 	{
-		$r = "<h2 id=\"gestion_title\">" . h($this->getName()) . " " . h($this->getAttribut(ATTR_DEF_FIRST_NAME)) . '[' . $this->get_quick_code() . ']</h2>';
+		$r = "<h2 id=\"gestion_title\">" . h($this->getName()) . " " . h($this->strAttribut(ATTR_DEF_FIRST_NAME)) . '[' . $this->get_quick_code() . ']</h2>';
 		return $r;
 	}
 	function get_all_account()

@@ -19,16 +19,26 @@
 */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-
+O
 /*
  * Global variables
  */
 global $g_connection,$g_parameter,$g_user;
-define ("DOSSIER",48);
+if (!defined("DOSSIER"))define ("DOSSIER",25);
+
 $_REQUEST['gDossier'] = DOSSIER;
 $g_connection=new Database(DOSSIER);
 $g_parameter = new Noalyss_Parameter_Folder($g_connection);
-$_SESSION[SESSION_KEY.'g_user']='phpcompta';
-$_SESSION[SESSION_KEY.'g_pass']='dany';
+$_SESSION[SESSION_KEY.'use_name']='unit test';
+$_SESSION[SESSION_KEY.'use_first_name']='automatic';
+$_SESSION[SESSION_KEY.'g_user']='admin';
+$_SESSION[SESSION_KEY.'g_pass']='phpcompta';
 $_SESSION[SESSION_KEY.'g_pagesize']='50';
+$_SESSION[SESSION_KEY.'csv_fieldsep']='0';
+$_SESSION[SESSION_KEY.'csv_decimal']='1';
+$_SESSION[SESSION_KEY.'csv_encoding']='utf8';
+$_SESSION[SESSION_KEY.'access_mode']='PC';
 $g_user=new User($g_connection);
+$_ENV['TMP']="/tmp/";
+
+require_once __DIR__.'/facility.class.php';

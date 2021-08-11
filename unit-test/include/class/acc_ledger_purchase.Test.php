@@ -245,8 +245,8 @@ class Acc_Ledger_PurchaseTest extends TestCase
         //-- modify card 29 : ELECTR
         $fiche=new Fiche($g_connection,29);
         $fiche->set_f_enable("1");
+        $fiche->setAttribut(20,"33.33");
         $a_attribut=$fiche->to_array();
-        $a_attribut['av_text20']= "33.33";
         $this->assertEquals($a_attribut['av_text20'],33.33,"Attribut 20 set to 33%");
         
         $fiche->update($a_attribut);
@@ -277,7 +277,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
 
         $this->clean_operation($array['mt']);
         // end test clean
-      //  $fiche_def->RemoveAttribut([20,21,22,51,52,53]);
+        $fiche_def->RemoveAttribut([20,21,22,51,52,53]);
         
     }
 

@@ -596,7 +596,8 @@ function noalyss_class_autoloader($class) {
         "noalyss\mobile"=>"class/mobile.class.php",
         "profile_mobile_sql"=>"database/profile_mobile_sql.class.php",
         "mobile_device_mtable"=>"class/mobile_device_mtable.class.php",
-        "html_input_noalyss"=>"class/html_input_noalyss.class.php"
+        "html_input_noalyss"=>"class/html_input_noalyss.class.php",
+        "card_property"=>"class/card_property.class.php"
     );
     if ( isset ($aClass[$class]) ) {
         require_once NOALYSS_INCLUDE."/".$aClass[$class];

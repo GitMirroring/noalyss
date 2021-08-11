@@ -2,7 +2,9 @@
 help(){ 
 	echo "$0 -f filename [-i function ]"
 	echo "     -f filename , file to test"
+	echo "     -d folder to test "
 	echo "     -i function , optional filter to a function"
+	echo "     -c in the folder coverage , show the coverage"
 }
 
 cd `dirname $0`
@@ -11,13 +13,21 @@ CUR_DIR=`pwd`
 PHPUNIT=$CUR_DIR/phpunit
 FILETOTEST=""
 FUNCTION=""
-while getopts "f:i:" opt; do
+COVERAGE=""
+FOLDERTEST=""
+
+while getopts "f:i:cd:" opt; do
 	case $opt in
+		d)
+			FOLDERTEST=$OPTARG
+			;;
 		f)
 			FILETOTEST=$OPTARG
 			;;
 		i)
 			FUNCTION=$OPTARG
+			;;
+		c)	COVERAGE="--whitelist=../include --coverage-html=coverage"
 			;;
 		*)
 			help
@@ -25,11 +35,23 @@ while getopts "f:i:" opt; do
 	esac
 done
 
-if [ -z "$FILETOTEST" ] ;then
+if [ -z "$FILETOTEST" -a -z "$FOLDERTEST" ] ;then
 	help
-	echo "-f is mandatory"
+	echo "please give a file or a folder to test "
 	exit 2
 fi	
+
+if [ ! -z "$FOLDERTEST" -a ! -d "$FOLDERTEST" ] ; then
+	echo "Folder doesn't exist"
+	exit 3
+fi
+
+
+if [ ! -z "$FOLDERTEST" -a  -d "$FOLDERTEST" ] ; then
+
+	$PHPUNIT --bootstrap bootstrap.php $COVERAGE --testdox --color $FOLDERTEST
+	exit $?
+fi
 
 if [ ! -f "$FILETOTEST" ] ; then
 	echo "File $FILETOTEST not found"
@@ -43,6 +65,7 @@ else
 
 	# $PHPUNIT --bootstrap bootstrap.php --whitelist $FILETOTEST --coverage-text=${FILETOTEST%.php}.txt  --color $FILETOTEST 
 	# $PHPUNIT --bootstrap $CUR_DIR/bootstrap.php --whitelist=$CUR_DIR/../include/class --coverage-html=coverage --color $FILETOTEST 
-	$PHPUNIT --bootstrap bootstrap.php --whitelist=../include --coverage-html=coverage $FILETOTEST --testdox-html ${FILETOTEST%.php}-testdox.html --color $FILETOTEST 
+	$PHPUNIT --bootstrap bootstrap.php $COVERAGE $FILETOTEST --testdox --color $FILETOTEST 
+	#$PHPUNIT --bootstrap bootstrap.php --whitelist=../include --coverage-html=coverage $FILETOTEST --testdox-html ${FILETOTEST%.php}-testdox.html --color $FILETOTEST 
 fi
 

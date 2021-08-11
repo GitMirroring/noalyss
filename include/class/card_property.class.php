@@ -1,0 +1,618 @@
+<?php
+
+/*
+ *   This file is part of NOALYSS.
+ *
+ *   PhpCompta is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   PhpCompta is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with PhpCompta; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+// Copyright (2002-2021) Author Dany De Bontridder <danydb@noalyss.eu>
+
+/**
+ * @file
+ * @brief manage the attribute of a card 
+ */
+
+/**
+ * @class Card_Property
+ * @brief contains the attributes of a card , manage them, save them , ...
+ * 
+ */
+class Card_Property
+{
+
+    //!< ad_id int id of the attribute attr_def.ad_id
+    var $ad_id;
+    //!< ad_text string label of the attribute attr_def.ad_def
+    var $ad_text;
+    //!< av_text string value of this attribute 
+    var $av_text;
+    //!< ad_type string : type of this attribute (select, text ,...)
+    var $ad_type;
+    //!< ad_size int size of the attribute
+    var $ad_size;
+    //!< ad_extra extra info for a attribute
+    var $ad_extra;
+    //!< jnt_order order to display
+    var $jnt_order;
+    //!< cn database connexion
+    var $cn;
+
+    function __construct($cn, $ad_id=0)
+    {
+        $this->cn=$cn;
+        $this->ad_id=0;
+    }
+
+    public function get_ad_id()
+    {
+        return $this->ad_id;
+    }
+
+    public function get_ad_text()
+    {
+        return $this->ad_text;
+    }
+
+    public function get_av_text()
+    {
+        return $this->av_text;
+    }
+
+    public function get_ad_type()
+    {
+        return $this->ad_type;
+    }
+
+    public function get_ad_size()
+    {
+        return $this->ad_size;
+    }
+
+    public function get_ad_extra()
+    {
+        return $this->ad_extra;
+    }
+
+    public function get_jnt_order()
+    {
+        return $this->jnt_order;
+    }
+
+    public function set_ad_id($ad_id): void
+    {
+        $this->ad_id=$ad_id;
+    }
+
+    public function set_ad_text($ad_text): void
+    {
+        $this->ad_text=$ad_text;
+    }
+
+    public function set_av_text($av_text): void
+    {
+        $this->av_text=$av_text;
+    }
+
+    public function set_ad_type($ad_type): void
+    {
+        $this->ad_type=$ad_type;
+    }
+
+    public function set_ad_size($ad_size): void
+    {
+        $this->ad_size=$ad_size;
+    }
+
+    public function set_ad_extra($ad_extra): void
+    {
+        $this->ad_extra=$ad_extra;
+    }
+
+    public function set_jnt_order($jnt_order): void
+    {
+        $this->jnt_order=$jnt_order;
+    }
+
+    /**
+     * @brief Load all the attribute of a card , it modifies the parameter $fiche. Usually called from fiche::insert 
+     * and fiche::update . In the same time, it will synchronize the attributes which the database. 
+     * The attributes (public.fiche_detail) will be ordered in the member attribute $fiche->attribut
+     * @param $fiche Fiche Full fill this card with all the attribute
+     * @see  Fiche::update Fiche::insert
+     * @exception EXC_PARAM_VALUE it is not possible to compute the default attributes for a new card without the card
+     * category
+     * 
+     */
+    static function load(Fiche $fiche)
+    {
+        // if card is not yet saved then we don't load it from database but all the properties are set to empty
+        if ($fiche->id==0 && $fiche->fiche_def !=0 )
+        {
+            $fiche_def=new Fiche_Def($this->cn,$fiche->fiche_def);
+            $aProperty=$fiche_def->getAttribut();
+            $fiche->attribut=$aProperty;
+            return;
+        } elseif ($fiche->id==0 && $fiche->fiche_def ==0 )
+        {
+            throw new Exception("CP147. Card category cannot be empty (fiche->set_fiche_def)",EXC_PARAM_VALUE);
+        }
+        $sql="select *
+             from
+                   fiche
+             natural join fiche_detail
+	     join jnt_fic_attr on (jnt_fic_attr.fd_id=fiche.fd_id and fiche_detail.ad_id=jnt_fic_attr.ad_id)
+             join attr_def on (attr_def.ad_id=fiche_detail.ad_id) where f_id= $1".
+                " order by jnt_order";
+
+        $Ret=$fiche->cn->exec_sql($sql, [$fiche->id]);
+        if (($Max=Database::num_row($Ret))==0)
+            return;
+        for ($i=0; $i<$Max; $i++)
+        {
+            $row=Database::fetch_array($Ret, $i);
+            $fiche->fiche_def=$row['fd_id'];
+            $fiche->set_f_enable($row['f_enable']);
+            $t=new Card_Property($fiche->cn);
+            $t->ad_id=$row['ad_id'];
+            $t->ad_text=$row['ad_text'];
+            $t->av_text=$row['ad_value'];
+            $t->ad_type=$row['ad_type'];
+            $t->ad_size=$row['ad_size'];
+            $t->ad_extra=$row['ad_extra'];
+            $t->jnt_order=$row['jnt_order'];
+            $fiche->attribut[$i]=$t;
+        }
+        $e=new Fiche_Def($fiche->cn, $fiche->fiche_def);
+        $e->GetAttribut();
+
+        if (sizeof($fiche->attribut)!=sizeof($e->attribut))
+        {
+
+            /*
+             * !! Missing attribute
+             */
+            foreach ($e->attribut as $f)
+            {
+                $flag=0;
+                foreach ($fiche->attribut as $g)
+                {
+                    if ($g->ad_id==$f->ad_id)
+                        $flag=1;
+                }
+                if ($flag==0)
+                {
+                    // there's a missing one, we insert it
+                    $t=new Card_Property($fiche->cn, $f->ad_id);
+                    $t->av_text="";
+                    $t->ad_text=$f->ad_text;
+                    $t->jnt_order=$f->jnt_order;
+                    $t->ad_type=$f->ad_type;
+                    $t->ad_size=$f->ad_size;
+                    $t->ad_id=$f->ad_id;
+                    $t->ad_extra=$f->ad_extra;
+                    $fiche->attribut[$Max]=$t;
+                    $Max++;
+                } // if flag == 0
+            }// foreach
+        }//missing attribut
+    }
+
+    /**
+     * @brief input a property of a card
+     * @param Fiche_Def $p_fiche_def
+     * @return string HTML string with the right input type
+     */
+    function input($p_fiche_def=null)
+    {
+        $bulle=""; $msg="";
+        $r="";
+        if ($this->ad_id==ATTR_DEF_ACCOUNT)
+        {
+            $w=new IPoste("av_text".$this->ad_id);
+            $w->set_attribute('ipopup', 'ipop_account');
+            $w->set_attribute('jrn', '0');
+            $w->set_attribute('account', "av_text".$this->ad_id);
+            $w->dbl_click_history();
+            $w->value=$this->av_text;
+            //  account created automatically
+            $sql="select account_auto($p_fiche_def->id)";
+            $ret_sql=$this->cn->exec_sql($sql);
+            $a=Database::fetch_array($ret_sql, 0);
+            $label=new ISpan();
+            $label->name="av_text".$this->ad_id."_label";
+
+            if ($a['account_auto']=='t')
+            {
+                $msg.=$label->input()." <span style=\"color:red\">".
+                        _("Rappel: Poste créé automatiquement à partir de ")
+                        .$p_fiche_def->class_base." </span> ";
+            }
+            else
+            {
+                // if there is a class base in fiche_def_ref, this account will be the
+                // the default one
+                if (strlen(trim($p_fiche_def->class_base))!=0)
+                {
+                    $msg.="<TD>".$label->input()." <span style=\"color:red\">"._("Rappel: Poste par défaut sera ").
+                            $p_fiche_def->class_base.
+                            " !</span> ";
+                    $w->value=$p_fiche_def->class_base;
+                }
+            }
+            $r.="<TR>".td(_("Poste Comptable"), ' class="highlight input_text" ').td($w->input().$msg)."</TR>";
+            return $r;
+        }
+        elseif ($this->ad_id==ATTR_DEF_TVA)
+        {
+            $w=new ITva_Popup('popup_tva');
+            $w->table=1;
+            $w->value=$this->av_text;
+        }
+        else
+        {
+            switch ($this->ad_type)
+            {
+                case 'text':
+                    $w=new IText();
+                    $w->css_size="100%";
+                    $w->value=$this->av_text;
+                    break;
+                case 'numeric':
+                    $w=new INum();
+                    $w->prec=($this->ad_extra=="")?2:$this->ad_extra;
+                    $w->size=$this->ad_size;
+                    $w->value=$this->av_text;
+                    break;
+                case 'date':
+                    $w=new IDate();
+                    $w->value=$this->av_text;
+                    break;
+                case 'zone':
+                    $w=new ITextArea();
+                    $w->style=' class="itextarea" style="margin:0px;width:100%"';
+                    $w->value=$this->av_text;
+                    break;
+                case 'poste':
+                    $w=new IPoste("av_text".$this->ad_id);
+                    $w->set_attribute('ipopup', 'ipop_account');
+                    $w->set_attribute('account', "av_text".$this->ad_id);
+                    $w->table=1;
+                    $bulle=Icon_Action::infobulle(14);
+                    $w->value=$this->av_text;
+                    break;
+                case 'check':
+                    $w=new InputSwitch("av_text".$this->ad_id);
+                    $w->value=(trim($w->value)=="")?1:$w->value;
+                    break;
+                case 'select':
+                    $w=new ISelect("av_text".$this->ad_id);
+                    $w->value=$this->cn->make_array($this->ad_extra);
+                    $w->style='style="width:100%"';
+                    $w->value=$this->av_text;
+                    break;
+                case 'card':
+                    $w=new ICard("av_text".$this->ad_id);
+                    // filter on frd_id
+                    $w->extra=$this->ad_extra;
+                    $w->extra2=0;
+                    $w->id=uniqid();
+                    $label=new ISpan();
+                    $filter=$this->ad_extra;
+                    $w->width=$this->ad_size;
+                    $w->extra=$filter;
+                    $w->extra2=0;
+                    $w->limit=6;
+                    $label->name="av_text".$this->ad_id.$w->id."_label";
+                    $w->set_attribute('ipopup', 'ipopcard');
+                    $w->set_attribute('typecard', $this->ad_extra);
+                    $w->set_attribute('inp', $w->id);
+                    $w->set_attribute('label', "av_text".$this->ad_id.$w->id."_label");
+                    $w->autocomplete=1;
+                    $w->dblclick="fill_ipopcard(this);";
+                    $msg=$w->search();
+                    $msg.=$label->input();
+                    $w->value=$this->av_text;
+                    break;
+            }
+            $w->table=0;
+        }
+
+        $w->label=$this->ad_text;
+        $w->name="av_text".$this->ad_id;
+        if ($this->ad_id==21||$this->ad_id==22||$this->ad_id==20||$this->ad_id==31)
+        {
+            $bulle=Icon_Action::infobulle(21);
+        }
+
+        // Warning length quickcode
+        if ($this->ad_id==ATTR_DEF_QUICKCODE)
+        {
+            $bulle=Icon_Action::warnbulle(76);
+        }
+        if ($this->ad_id==ATTR_DEF_NAME||$this->ad_id==ATTR_DEF_QUICKCODE)
+        {
+            $class=" input_text highlight info";
+        }
+        else
+        {
+            $class="input_text";
+        }
+        $r.="<TR>".td(_($w->label)." $bulle", ' class="'.$class.'" ').td($w->input()." $msg")." </TR>";
+        return $r;
+    }
+
+    /**
+     * @brief Compute a HTML string in a TR element with information of this card property
+     * 
+     * @return string HTML into tr
+     */
+    function print()
+    {
+        $w=new IText();
+        $w->table=1;
+        $w->readOnly=true;
+        $w->css_size="100%";
+        $msg="";
+        $bulle="";
+        $ret="";
+        $value=$this->av_text;
+        if ($this->ad_id==21||$this->ad_id==22||$this->ad_id==20||$this->ad_id==31)
+        {
+            $bulle=Icon_Action::infobulle(21);
+        }
+
+        // Warning length quickcode
+        if ($this->ad_id==ATTR_DEF_QUICKCODE)
+        {
+            $bulle=Icon_Action::warnbulle(76);
+        }
+        if ($this->ad_id==ATTR_DEF_NAME||$this->ad_id==ATTR_DEF_QUICKCODE)
+        {
+            $class=" input_text highlight info";
+        }
+        else
+        {
+            $class="input_text";
+        }
+        switch ($this->ad_type)
+        {
+            case 'select':
+                $x=new ISelect();
+                $x->value=$this->cn->make_array($this->ad_extra);
+                $x->selected=$this->av_text;
+                $value=$x->display();
+                $w->value=$value;
+                break;
+            case 'check':
+                $w=new InputSwitch("av_text".$this->ad_id);
+                $w->value=$this->av_text;
+                $w->value=(trim($w->value)=="")?1:$w->value;
+                break;
+            default:
+                $w->value=$this->av_text;
+        }
+        $ret.="<TR>".td(_($this->ad_text)." $bulle", ' class="'.$class.'" ').td($value." $msg",
+                        'style="border:1px solid blue"')." </TR>";
+        return $ret;
+    }
+
+    /* !
+     * \brief  update all the data of the card , including f_enable. if we are in a transaction
+     * we don't commit here , else if not then a transaction is started and committed . The member attributes 
+     * $p_fiche->attribut will be saved into fiche_detail after transforming if needed. 
+     * If a transaction is started if there is none, so updating a card is always in a transaction. 
+     *
+     * 
+     */
+
+    static function update(Fiche $p_fiche)
+    {
+        //transaction in the function or from the caller 
+        $commit=false;
+        try
+        {
+            // are we inside a transaction (between BEGIN - COMMIT )
+            if ($p_fiche->cn->status()==PGSQL_TRANSACTION_IDLE)
+            {
+                $p_fiche->cn->start();
+                $commit=true;
+            }
+
+            $p_fiche->cn->exec_sql("update fiche set f_enable=$1 where f_id=$2",
+                    array($p_fiche->get_f_enable(), $p_fiche->id));
+
+            $name = $p_fiche->strAttribut(ATTR_DEF_NAME);
+            // parse the attribute
+            foreach ($p_fiche->attribut as $value)
+            {
+                // retrieve jft_id to update table attr_value
+                $sql=" select jft_id from fiche_detail where ad_id=$1 and f_id=$2";
+                $Ret=$p_fiche->cn->exec_sql($sql, [$value->ad_id, $p_fiche->id]);
+
+                // if attribute doesn't exist, then we insert one, 
+                if (Database::num_row($Ret)==0)
+                {
+                    // we need to insert this new attribut , $jft_id contains the PK of fiche_detail
+                    $jft_id=$p_fiche->cn->get_next_seq('s_jnt_fic_att_value');
+
+                    $sql2="insert into fiche_detail(jft_id,ad_id,f_id,ad_value) values ($1,$2,$3,NULL)";
+
+                    $ret2=$p_fiche->cn->exec_sql($sql2, array($jft_id, $value->ad_id, $p_fiche->id));
+                }
+                else
+                {
+                    $tmp=Database::fetch_array($Ret, 0);
+                    // $jft_id contains the PK of fiche_detail
+                    $jft_id=$tmp['jft_id'];
+                }
+                
+                // Special traitement
+                // quickcode
+                if ($value->ad_id==ATTR_DEF_QUICKCODE)
+                {
+                    $sql=sprintf("select update_quick_code(%d,'%s')", $jft_id, sql_string($value->av_text));
+                    $p_fiche->cn->exec_sql($sql);
+                    continue;
+                }
+                // name
+                if ($value->ad_id==ATTR_DEF_NAME && strlen(trim($value->av_text))==0 )
+                {
+                        continue;
+                }
+                // account
+                if ($value->ad_id==ATTR_DEF_ACCOUNT)
+                {
+                    $v=mb_strtoupper($value->av_text);
+                    // 2 accounts given 
+                    if (trim($v)!='')
+                    {
+                        if (strpos($v, ',')!=0)
+                        {
+                            $ac_array=explode(",", $v);
+                            if (count($ac_array)<>2)
+                                throw new Exception('Désolé, il y a trop de virgule dans le poste comptable '.h($v));
+                            $part1=$ac_array[0];
+                            $part2=$ac_array[1];
+                            $part1=$p_fiche->cn->get_value('select format_account($1)', array($part1));
+                            $part2=$p_fiche->cn->get_value('select format_account($1)', array($part2));
+
+                            if (mb_strlen($part1)>40)
+                                throw new Exception("CP475."._("Poste comptable trop long"), 1);
+                            if (mb_strlen($part2)>40)
+                                throw new Exception("CP476."._("Poste comptable trop long"), 1);
+
+                            $part1=$p_fiche->cn->get_value('select format_account($1)', array($part1));
+                            $acc_account1=new Acc_Account($p_fiche->cn, $part1);
+
+                            if ($acc_account1->get_parameter("id")==-1)
+                            {
+                                $account_name=$name;
+                                $acc_account1->set_parameter("pcm_lib", $account_name);
+                                $acc_account1->set_parameter('pcm_direct_use', "Y");
+                                $parent=$acc_account1->find_parent();
+                                $acc_account1->set_parameter("pcm_val_parent", $parent);
+                                $acc_account1->save();
+                            }
+                            // Check that the accounting can be used directly
+                            if ($acc_account1->get_parameter('pcm_direct_use')=='N')
+                            {
+                                throw new Exception("CP493."._("Utilisation directe interdite du poste comptable $part1"));
+                            }
+                            // Part 2
+                            $part2=$p_fiche->cn->get_value('select format_account($1)', array($part2));
+                            $acc_account2=new Acc_Account($p_fiche->cn, $part2);
+
+                            if ($acc_account2->get_parameter("id")==-1)
+                            {
+                                $account_name=$name;
+                                $acc_account2->set_parameter("pcm_lib", $account_name);
+                                $acc_account2->set_parameter('pcm_direct_use', "Y");
+                                $parent=$acc_account2->find_parent();
+                                $acc_account2->set_parameter("pcm_val_parent", $parent);
+                                $acc_account2->save();
+                            }
+
+                            // Check that the accounting can be used directly
+                            if ($acc_account2->get_parameter('pcm_direct_use')=='N')
+                            {
+                                throw new Exception("CP511."._("Utilisation directe interdite du poste comptable $part2"));
+                            }
+                            $v=$part1.','.$part2;
+                        }
+                        else
+                        {
+                            if (mb_strlen($v)>40)
+                                throw new Exception("CP520."._("Poste comptable trop long"), 1);
+                            $acc_account=new Acc_Account($p_fiche->cn, $v);
+                            // Set default for new accounting
+                            if ($acc_account->get_parameter("id")==-1)
+                            {
+                                $account_name=$name;
+                                $acc_account->set_parameter("pcm_lib", $account_name);
+                                // By Default can be used directly
+                                $acc_account->set_parameter('pcm_direct_use', "Y");
+                                $parent=$acc_account->find_parent();
+                                $acc_account->set_parameter("pcm_val_parent", $parent);
+                                $acc_account->save();
+                            }
+
+                            $acc_account=new Acc_Account($p_fiche->cn, $v);
+                            if ($acc_account->get_parameter('pcm_direct_use')=='N')
+                            {
+                                throw new Exception("CP537."._("Utilisation directe interdite du poste comptable $v"));
+                            }
+                        }
+                        $sql=sprintf("select account_update(%d,'%s')", $p_fiche->id, $v);
+                        try
+                        {
+                            $p_fiche->cn->exec_sql($sql);
+                        }
+                        catch (Exception $e)
+                        {
+                            throw new Exception("CP546."._("opération annulée")." ".$e->getMessage());
+                        }
+                        continue;
+                    }
+                    if (strlen(trim($v))==0)
+                    {
+
+                        $sql=sprintf("select account_update(%d,null)", $p_fiche->id);
+                        try
+                        {
+                            $Ret=$p_fiche->cn->exec_sql($sql);
+                        }
+                        catch (Exception $e)
+                        {
+                            throw new Exception("CP560."._("Erreur : Aucun compte parent ")."[$v]");
+                        }
+
+                        continue;
+                    }
+                }
+                // TVA
+                if ($value->ad_id==ATTR_DEF_TVA)
+                {
+                    // Verify if the rate exists, if not then do not update
+                    if (strlen(trim($value->av_text))!=0)
+                    {
+                        if ($p_fiche->cn->get_value("select count(*) from tva_rate where tva_id=$1",[$value->av_text])==0)
+                        {
+                            continue;
+                        }
+                    }
+                }
+                // Normal traitement
+                $sql="update fiche_detail set ad_value=$1 where jft_id=$2";
+                $p_fiche->cn->exec_sql($sql, array(strip_tags($value->av_text), $jft_id));
+            }
+            if ($commit)
+            {
+                $p_fiche->cn->commit();
+            }
+        }
+        catch (Exception $e)
+        {
+            echo '<span class="error">'.
+            $e->getMessage().
+            '</span>';
+            record_log("CP597.".$e->getMessage().$e->getTraceAsString());
+           if ($commit) {         $p_fiche->cn->rollback(); }
+            return;
+        }
+       
+        return;
+    }
+
+}

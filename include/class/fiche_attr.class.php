@@ -10,7 +10,7 @@
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE."/database/attr_def_sql.class.php";
 
-class Fiche_Attr extends Attr_def_SQL
+class Fiche_Attr extends Attr_Def_SQL
 {
     /* example private $variable=array("easy_name"=>column_name,"email"=>"column_name_email","val3"=>0); */
 
@@ -116,8 +116,8 @@ class Fiche_Attr extends Attr_def_SQL
         $sql="delete from attr_def where ad_id=$1";
         $res=$this->cn->exec_sql($sql, array($this->ad_id));
     }
-
-    /* !
+ 
+   /* !
      * @brief used with a usort function, to sort an array of Attribut on the attribut_id (ad_id)
      */
 
@@ -150,11 +150,8 @@ class Fiche_Attr extends Attr_def_SQL
         {
             $nkey=$prefix.$value;
             $array[$nkey]=$this->$value;
-//            $nkey=$prefix.$key;
-//            $array[$nkey]=$this->$value;
 //            
         }
-        tracedebug("card_attribute.log",$array);
         return $array;
     }
 }

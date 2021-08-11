@@ -41,6 +41,8 @@ class Fiche_Def
     {
         $this->cn=$p_cn;
         $this->id=$p_id;
+        
+        
     }
     /*!\brief show the content of the form to create  a new Fiche_Def_Ref
     */
@@ -65,7 +67,7 @@ class Fiche_Def
     /*!
      *  \brief  Get attribut of a fiche_def
      *
-     * \return string value of the attribute
+     * \return array of Card_Property 
      */
     function getAttribut()
     {
@@ -80,9 +82,10 @@ class Fiche_Def
         for ($i=0;$i < $Max;$i++)
         {
             $row=Database::fetch_array($Ret,$i);
-            $t = new Fiche_Attr($this->cn);
+            $t = new Card_Property($this->cn);
             $t->ad_id=$row['ad_id'];
             $t->ad_text=$row['ad_text'];
+            $t->av_text="";
             $t->jnt_order=$row['jnt_order'];
             $t->ad_size=$row['ad_size'];
             $t->ad_type=$row['ad_type'];
@@ -189,6 +192,7 @@ $order
      *              nom_mod
      *              class_base
      *              fd_description
+     *              create
      */
     function Add($array)
     {
