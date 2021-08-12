@@ -27,6 +27,7 @@ class Acc_Account_LedgerTest extends TestCase
         $g_parameter=new Noalyss_Parameter_Folder($g_connection);
         $g_user=new User($g_connection);
         $this->object=new Acc_Account_Ledger($g_connection, 400);
+        $g_connection->exec_sql("update jrn_def set jrn_def_class_deb='4* 2*' where jrn_def_type='ODS'");
     }
 
     /**
@@ -385,9 +386,10 @@ class Acc_Account_LedgerTest extends TestCase
     {
         return array(
             array(0, array()),
-            array(1, array('5*', '')),
-            array(2, array('4*')),
-            array(3, array('6*'))
+            array(1, array()),
+            array(2, array()),
+            array(3, array()),
+            array(4, array('4*','2*'))
         );
     }
 
@@ -414,10 +416,10 @@ class Acc_Account_LedgerTest extends TestCase
     {
         return array(
             array(0, ""),
-            array(1, "pcm_val::text like '5%'"),
-            array(2, "pcm_val::text like '4%'"),
-            array(3, "pcm_val::text like '6%'"),
-            array(4, "")
+            array(1, ""),
+            array(2, ""),
+            array(3, ""),
+            array(4, "pcm_val::text like '4%' or pcm_val::text like '2%'")
         );
     }
 
