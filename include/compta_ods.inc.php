@@ -43,7 +43,9 @@ $ledger = new Acc_Ledger($cn, $id_ledger);
 $first_ledger = $ledger->get_first('ODS');
 if ( empty ($first_ledger))
 {
-	exit(_('Pas de journal disponible'));
+	exit(  '<span class="warning">'.
+               _('Pas de journal disponible').
+               '</span>');
 }
 $ledger->id = ($ledger->id == -1) ? $first_ledger['jrn_def_id'] : $id_ledger;
 
@@ -95,12 +97,15 @@ elseif (isset($_POST['save']))
 		echo '<h2>'._("Opération enregistrée")._("Piece") . h($ledger->pj) . '</h2>';
 		if (strcmp($ledger->pj, $_POST['e_pj']) != 0)
 		{
-			echo '<h3 class="notice">' . _('Attention numéro pièce existante, elle a du être adaptée') . '</h3>';
+			echo '<h3 class="notice">' . _('Attention numéro pièce existante, elle a du être adaptée') .
+                             '</h3>';
 		}
-		printf('<a class="detail" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a><hr>', $jr_id, dossier::id(), $ledger->internal);
+		printf('<a class="detail" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a><hr>',
+                        $jr_id, dossier::id(), $ledger->internal);
 
 		// show feedback
-		echo '<div id="jrn_name_div">'; echo '<h1 id="jrn_name"  style="display:inline">' . $ledger->get_name() . '</h1>'; echo '</div>';
+		echo '<div id="jrn_name_div">'; echo '<h1 id="jrn_name"  style="display:inline">' .
+                        $ledger->get_name() . '</h1>'; echo '</div>';
 		echo $ledger->confirm($_POST, true);
                  // extourne
                 if (isset($_POST['reverse_ck']))

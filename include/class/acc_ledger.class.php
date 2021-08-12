@@ -254,7 +254,7 @@ class Acc_Ledger  extends jrn_def_sql
 
             if ($per->is_open()==0)
             {
-                throw new Exception(_('PERIODE FERMEE'));
+                throw new Exception(_('PERIODE FERMEE')." $p_date ");
             }
 
 

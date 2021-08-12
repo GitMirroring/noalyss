@@ -2592,11 +2592,16 @@ div.progressbar {
  * Warning
  */
 span.warning {
-    color:red;
+    color:white;
     font-style: normal;
     font-weight: bold;
     background-color: #eddadd;
     padding:10px;
+    margin:2px;
+     animation-name: error_h2;
+     animation-duration: 4s;
+     animation-iteration-count: infinite;
+     display: block;
 }
 /**********************************************************************************************************************/
  /* LI as list

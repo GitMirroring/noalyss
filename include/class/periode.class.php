@@ -397,9 +397,9 @@ class Periode
         $ret=$this->cn->exec_sql($sql, array($p_date));
         $nb_periode=Database::num_row($ret);
         if ($nb_periode==0)
-            throw (new Exception('Aucune période trouvée', 101));
+            throw (new Exception(_('Aucune période trouvée')." $p_date ", 101));
         if ($nb_periode>1)
-            throw (new Exception("Trop de périodes trouvées $nb_periode pour $p_date",
+            throw (new Exception(sprintf(_("Trop de périodes trouvées %s pour %s"),$nb_periode,$p_date),
             100));
         $per=Database::fetch_result($ret, 0);
         $this->p_id=$per;

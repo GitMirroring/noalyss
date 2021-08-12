@@ -41,6 +41,9 @@ $ledger->id = ($ledger->id == -1) ? $first_ledger['jrn_def_id'] : $id_ledger;
 if ( $g_user->check_jrn($ledger->id)=='X')
 {
 	alert(_("Vous ne pouvez pas écrire dans ce journal, contactez votre administrateur"));
+        echo '<span class="warning">'.
+              _("Vous ne pouvez pas écrire dans ce journal, contactez votre administrateur").
+              '</span>';
 	return;
 }              
 echo '<div class="content">';
@@ -68,7 +71,10 @@ if ( isset ($_GET['action']) && ! isset($_POST['correct']) && ! isset($correct) 
 	}
 }
 $p_msg=(isset($p_msg))?$p_msg:"";
-print '<p class="notice">'.$p_msg.'</p>';
+if ( !empty ($p_msg))
+{
+    print '<span class="warning">'.$p_msg.'</span>';
+}
 echo '<form method="post"  class="print" onsubmit="return controleBalance();" >';
 echo dossier::hidden();
 echo HtmlInput::request_to_hidden(array('ac','jr_optype'));
