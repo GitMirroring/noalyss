@@ -53,10 +53,17 @@ class Fiche
         $this->f_enable='1';
         if ($p_id != 0 ) { $this->load();} else {
             $this->fiche_def=0;
+            $this->fiche_def_ref=0;
         }
         
        
     }
+    public function set_fiche_def($p_fiche_def)
+    {
+        $this->fiche_def=$p_fiche_def;
+        return $this;
+    }
+
     public function get_id()
     {
         return $this->id;
@@ -418,7 +425,7 @@ class Fiche
     av_text1=>'name'
     \endverb
      */
-    function insert($p_fiche_def,$p_array=null,$transaction=true)
+    function insert($p_fiche_def, $p_array=null, $transaction=true)
     {
         if ($p_array==null)
             $p_array=$_POST;
@@ -430,19 +437,40 @@ class Fiche
         {
 
             // by default the card is available
-            if ( !isset ($p_array['f_enable'])) {
+            if (!isset($p_array['f_enable']))
+            {
                 $p_array['f_enable']=1;
             }
             $Ret=$this->cn->exec_sql("insert into fiche(f_id,f_enable,fd_id) values ($1,$2,$3)",
-                    array($fiche_id, $p_array['f_enable'],$p_fiche_def));
+                    array($fiche_id, $p_array['f_enable'], $p_fiche_def));
             // compute a quick_code
-            if ( ! isset ($p_array["av_text".ATTR_DEF_QUICKCODE]  )) {
+            if (!isset($p_array["av_text".ATTR_DEF_QUICKCODE]))
+            {
                 $p_array["av_text".ATTR_DEF_QUICKCODE]="";
             }
             $sql=sprintf("select insert_quick_code(%d,'%s')", $fiche_id,
-                            sql_string($p_array['av_text'.ATTR_DEF_QUICKCODE]));
-            $this->getAttribut();
+                    sql_string($p_array['av_text'.ATTR_DEF_QUICKCODE]));
+            
+            // get the card properties for this card category
+            $fiche_def=new Fiche_Def($this->cn, $p_fiche_def);
+            
+            $this->attribut=$fiche_def->getAttribut();
+
+            if (empty($this->attribut))
+            {
+                throw new Exception("FICHE.UPDATE02"._("Aucun attribut ")."($p_fiche_def)", EXC_INVALID);
+            }
+            // for each property set the attribut on the card
+            foreach ($this->attribut as $property)
+            {
+                $key='av_text'.$property->ad_id;
+                if (isset($p_array[$key]))
+                {
+                    $this->setAttribut($property->ad_id, $p_array[$key]);
+                }
+            }
             Card_Property::update($this);
+            $this->quick_code=$this->strAttribut(ATTR_DEF_QUICKCODE);
         }
         catch (Exception $e)
         {
@@ -493,6 +521,7 @@ class Fiche
         }
         // save all
         Card_Property::update($this);
+        $this->quick_code=$this->strAttribut(ATTR_DEF_QUICKCODE);
     }
 
     /*!\brief  remove a card
@@ -1514,7 +1543,7 @@ class Fiche
     /*\brief remove a card without verification */
     function delete()
     {
-              $this->cn->start();
+        $this->cn->start();
 
         // Remove from attr_value
         $Res=$this->cn->exec_sql("delete from fiche_detail

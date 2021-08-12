@@ -265,6 +265,8 @@ class FicheTest extends TestCase
         $new_fiche=new Fiche($g_connection);
         $aProperty=array('av_text1'=>'Nom', 'av_text23'=>'ZZZTEST');
         $new_fiche->insert(5, $aProperty);
+        $this->assertFalse(empty($new_fiche->attribut)," attributes array is empty");
+        
         $this->assertGreaterThan($last_card, $new_fiche->id, 'card created');
         $nb_fiche_after=$g_connection->get_value("select count(*) from fiche");
         $this->assertGreaterThan($nb_fiche, $nb_fiche_after, 'card created');
@@ -273,5 +275,29 @@ class FicheTest extends TestCase
         $nb_fiche_after=$g_connection->get_value("select count(*) from fiche");
         $this->assertEquals($nb_fiche, $nb_fiche_after, 'card removed');
     }
-
+    /**
+     * @testdox fiche->display
+     */
+    public function testDisplay()
+    {
+        global $g_connection;
+        $last_card=$g_connection->get_next_seq('s_fiche');
+        $nb_fiche=$g_connection->get_value("select count(*) from fiche");
+        
+        $new_fiche=new Fiche($g_connection);
+        $aProperty=array('av_text1'=>'Nom', 'av_text23'=>'ZZZTEST2');
+        $new_fiche->insert(5, $aProperty);
+        
+        $this->assertFalse(empty($new_fiche->attribut)," attributes array is empty");
+        $this->assertGreaterThan($last_card, $new_fiche->id, 'card  not created');
+        $result = $new_fiche->display(true);
+        
+        \Noalyss\Facility::save_file(__DIR__.'/file', 'testDisplay.txt', $result);
+        $this->assertNotEquals('FNT',$result,'card not found '.print_r($new_fiche,true));
+        
+        $new_fiche->remove();
+        
+        $nb_fiche_after=$g_connection->get_value("select count(*) from fiche");
+        $this->assertEquals($nb_fiche, $nb_fiche_after, 'card not removed');
+    }
 }

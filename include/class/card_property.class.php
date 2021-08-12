@@ -140,7 +140,7 @@ class Card_Property
         // if card is not yet saved then we don't load it from database but all the properties are set to empty
         if ($fiche->id==0 && $fiche->fiche_def !=0 )
         {
-            $fiche_def=new Fiche_Def($this->cn,$fiche->fiche_def);
+            $fiche_def=new Fiche_Def($fiche->cn,$fiche->fiche_def);
             $aProperty=$fiche_def->getAttribut();
             $fiche->attribut=$aProperty;
             return;
@@ -301,7 +301,7 @@ class Card_Property
                     $w=new ISelect("av_text".$this->ad_id);
                     $w->value=$this->cn->make_array($this->ad_extra);
                     $w->style='style="width:100%"';
-                    $w->value=$this->av_text;
+                    $w->selected=$this->av_text;
                     break;
                 case 'card':
                     $w=new ICard("av_text".$this->ad_id);

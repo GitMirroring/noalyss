@@ -177,9 +177,18 @@ class Card_PropertyTest extends TestCase
      */
     public function testLoad()
     {
+        global $g_connection;
         $fiche=$this->getFiche();
         Card_Property::load($fiche);
         $this->assertEquals(count($fiche->attribut), 35, 'there are not 35 attributes');
+        $fiche=new Fiche($g_connection);
+        Card_Property::load($fiche);
+        $this->assertTrue(empty($fiche->attribut),'Card property must be equals to 0 (unknown category ');
+        $fiche->set_fiche_def(5);
+        Card_Property::load($fiche);
+        $nb_attribut=$g_connection->get_value("select count(*) from jnt_fic_attr where fd_id=$1",[5]);
+        $this->assertTrue(count($fiche->attribut)==$nb_attribut,
+                'count of card properties must be the same than the card category (fiche_def )');
     }
 
 }
