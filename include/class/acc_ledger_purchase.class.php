@@ -260,6 +260,16 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             throw new Exception(_('Date de paiement invalide'),13);
             
         }
+        // check that MP is in a not closed and exists
+        if ( isset ($mp_date) && trim ($mp_date) != "" && isDate($mp_date) == $mp_date )  {
+              $periode=new Periode($this->cn); 
+              $periode->find_periode($mp_date);
+              $periode->set_ledger($this->id);
+              if ( $periode->is_closed() ) {
+                  throw new Exception(_("Période fermée")." $mp_date ");
+              }
+            
+        }
         // check limit date
         if ( isset ($e_ech) && trim ($e_ech)!="" && isDate($e_ech) == null )
         {

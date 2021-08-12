@@ -20,7 +20,11 @@ class Acc_Ledger_PurchaseTest extends TestCase
      * @var array transmitted by _POST
      */
     private $array;
-
+    
+    static function setUpBeforeClass() 
+    {
+        Acc_Ledger_PurchaseTest::setSpecialAttribute();
+    }
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -59,6 +63,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
             "ac"=>"ACH",
 	    "p_currency_rate"=>1.09,
 	    "p_currency_code"=>1
+            
         );
     }
 
@@ -70,7 +75,16 @@ class Acc_Ledger_PurchaseTest extends TestCase
     {
         
     }
-
+    static function tearDownAfterClass()
+    {
+        require 'global.php';
+          global $g_connection;
+        // modify attribute for card category , add VAT non ded, Tax non ded , VAT completely non ded 0%
+        // category Misc Services & goods (5)
+        $fiche_def=new Fiche_Def($g_connection,5);
+        // prepare test , clean 
+        $fiche_def->RemoveAttribut([20,21,22,50,51,52,53,31]);
+    }
     /**
      * @covers Acc_Ledger_Purchase::verify
      */
@@ -208,50 +222,75 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $this->clean_operation();
         
     }
-    
     /**
-     * @covers Acc_Ledger_Purchase::insert 
-     * @covers Fiche_Def::insertAttribut 
-     * @covers Fiche_Def::removeAttribut
+     * @brief set special attributes to test NOT DEDUCTIBLE : private, VAT and tax
+     * @global type $g_connection
      */
-    public function testInsertPurchase_No_Ded()
+    public static function setSpecialAttribute()
     {
-        global $g_connection;
+         global $g_connection;
         // modify attribute for card category , add VAT non ded, Tax non ded , VAT completely non ded 0%
         // category Misc Services & goods (5)
         $fiche_def=new Fiche_Def($g_connection,5);
         // prepare test , clean 
-        $fiche_def->RemoveAttribut([20,21,22,51,52,53]);
-        $this->assertEquals(35,$g_connection->get_value("select count(*) from fiche_detail join fiche using (f_id)
-                where fd_id=5"),"Efface 6 attributs");
+        $fiche_def->RemoveAttribut([20,21,22,50,51,52,53,31]);
+      
 
         // percent deductible
-        $fiche_def->InsertAttribut(20); 
-        $fiche_def->InsertAttribut(21); 
-        $fiche_def->InsertAttribut(22); 
+        $fiche_def->InsertAttribut(ATTR_DEF_DEPENSE_NON_DEDUCTIBLE); 
+        $fiche_def->InsertAttribut(ATTR_DEF_TVA_NON_DEDUCTIBLE); 
+        $fiche_def->InsertAttribut(ATTR_DEF_TVA_NON_DEDUCTIBLE_RECUP);
+        $fiche_def->InsertAttribut(ATTR_DEF_DEP_PRIV);
         
         // accouting for not deductible
-        $fiche_def->InsertAttribut(51);
-        $fiche_def->InsertAttribut(52);
-        $fiche_def->InsertAttribut(53);
-        
-        // check that all card has these attributes
-        $this->assertEquals(77,$g_connection->get_value("select count(*) from fiche_detail join fiche using (f_id)
-                where fd_id=5"),"Ajout 6 attributs");
-        
-        
+        $fiche_def->InsertAttribut(ATTR_DEF_ACCOUNT_ND_TVA);
+        $fiche_def->InsertAttribut(ATTR_DEF_ACCOUNT_ND_TVA_ND);
+        $fiche_def->InsertAttribut(ATTR_DEF_ACCOUNT_ND_PERSO);
+        $fiche_def->InsertAttribut(ATTR_DEF_ACCOUNT_ND);
+              // check that all card has these attributes
        
-        
+    }
+    public function data_no_deductible()
+    {
+        $aValue=array(
+            [ ATTR_DEF_DEPENSE_NON_DEDUCTIBLE, 33.33 ,'qp_nd_amount',201.28,ATTR_DEF_ACCOUNT_ND_PERSO,'4890'],
+            [ ATTR_DEF_TVA_NON_DEDUCTIBLE, 33.33 ,'qp_nd_tva',42.27,ATTR_DEF_ACCOUNT_ND_TVA_ND,'6740'],
+            [ ATTR_DEF_TVA_NON_DEDUCTIBLE_RECUP, 33.33,'qp_nd_tva_recup',42.27 ,ATTR_DEF_ACCOUNT_ND_TVA,'6040001'],
+            [ ATTR_DEF_DEP_PRIV, 33.33 ,"qp_dep_priv",201.28,ATTR_DEF_ACCOUNT_ND,'6740'],
+              [ ATTR_DEF_DEPENSE_NON_DEDUCTIBLE, 20.0 ,'qp_nd_amount',120.78,ATTR_DEF_ACCOUNT_ND_PERSO,'4890'],
+            [ ATTR_DEF_TVA_NON_DEDUCTIBLE, 20.0 ,'qp_nd_tva',25.36,ATTR_DEF_ACCOUNT_ND_TVA_ND,'6740'],
+            [ ATTR_DEF_TVA_NON_DEDUCTIBLE_RECUP, 20.0,'qp_nd_tva_recup',25.36 ,ATTR_DEF_ACCOUNT_ND_TVA,'6040001'],
+            [ ATTR_DEF_DEP_PRIV, 20.0 ,"qp_dep_priv",120.78,ATTR_DEF_ACCOUNT_ND,'6740'],
+                
+        );
+        return $aValue;
+    }
+    /**
+     * @testdox Purchase not deductible : VAT , TAX , PRIVATE fee
+     * @dataProvider data_no_deductible
+     * Parameters : $p_attribut if the no deductible attribute, the $p_value is the % not deductible, $p_amount
+     * is the corresponding column in quant_purchase and $p_accounting is the counterpart
+     * for this not deductible fee($p_counterpart) 
+     */
+    public function testInsertPurchase_No_Ded($p_attribut , $p_value,$p_column,$p_amount,$p_counterpart,$p_accounting)
+    {
+       global $g_connection;
+      
+       
         //-- modify card 29 : ELECTR
         $fiche=new Fiche($g_connection,29);
         $fiche->set_f_enable("1");
-        $fiche->setAttribut(20,"33.33");
+        $fiche->setAttribut($p_attribut,$p_value);
+        $fiche->setAttribut($p_counterpart,$p_accounting);
         $a_attribut=$fiche->to_array();
-        $this->assertEquals($a_attribut['av_text20'],33.33,"Attribut 20 set to 33%");
+        $this->assertEquals($a_attribut['av_text'.$p_attribut],$p_value,"Attribut $p_attribut not set to $p_value%");
         
         $fiche->update($a_attribut);
         
-        $this->assertEquals("33.33",$g_connection->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=$2",[29,20]),"Attribut ad_id 20 inserted");
+        $this->assertEquals($p_value,
+                $g_connection->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=$2",[29,$p_attribut]),
+                "Attribut ad_id $p_attribut not inserted");
+        
         $array=$this->array;
         
         $array['e_march0']='ELECTR';
@@ -265,19 +304,17 @@ class Acc_Ledger_PurchaseTest extends TestCase
 
         $row_quant=$g_connection->get_row("select * from quant_purchase where qp_internal in 
              ( select jr_internal from jrn where jr_mt=$1)",[$array["mt"]]);
-        $this->assertFalse(empty($row_quant)," row inserted in quant_fin");
+        $this->assertFalse(empty($row_quant)," row not inserted in quant_purchase");
         
         // unit price not rounded
         $this->assertEquals(603.8990,$row_quant['qp_unit']);
         
         // rounded to 2 decimal
         $this->assertEquals(603.9000,$row_quant['qp_price']);
+        $this->assertEquals($p_amount,$row_quant[$p_column]);
         
-        $this->assertEquals(201.2800,$row_quant['qp_nd_amount']);
-
         $this->clean_operation($array['mt']);
-        // end test clean
-        $fiche_def->RemoveAttribut([20,21,22,51,52,53]);
+       
         
     }
 
