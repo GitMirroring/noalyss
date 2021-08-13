@@ -34,6 +34,7 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
  */
 
 /**
+ * \class
  * \brief class_action for manipulating actions
  * action can be :
  * <ul>
@@ -1252,7 +1253,7 @@ class Follow_Up
 
     /**
      * @briefGet date from $_GET and create the sql stmt for the query
-     * @note the query is taken in $_REQUEST
+     * @note the query is taken from $_GET
      * @see Follow_Up::ShowActionList
      * @return string SQL condition
      */
@@ -1410,6 +1411,7 @@ class Follow_Up
     /**
      * @brief export to CSV the query the p_array has
      * @param array $p_array
+      @see ::create_query
      */
     function export_csv($p_array)
     {
@@ -1455,7 +1457,9 @@ class Follow_Up
         );
     }
     /**
-     * @brief export to CSV the query the p_array has
+     * @brief export to CSV the detailled actions (tags, comment, related operations...), 
+     * it could be a query in $p_array      *  task #0002035
+     * @see ::create_query
      * @param array $p_array
      */
     function export_csv_detail($p_array)

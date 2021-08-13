@@ -3053,7 +3053,7 @@ function create_anchor_up()
  */
 function init_scroll()
 {
-    var up = new Element('div', {"class": "inner_box",
+    var up = new Element('div', {"class": "",
         "style": "padding:5px;left:auto;width:auto;height: auto;display:none;position:fixed;bottom:30%;right:50px;text-align:center;font-size:20px",
         id: "go_up"
     });
