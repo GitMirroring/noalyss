@@ -107,7 +107,7 @@ class Impress
                 $amount=\Impress::compute_amount($p_cn,$line,$cond." ".$p_sql,$cond_anc." ".$p_sql);
       
 
-                $p_formula=str_replace($x[0], $amount, $p_formula);
+                $p_formula=str_replace($x[0],"(". $amount.")", $p_formula);
             }
         }
 
@@ -119,9 +119,11 @@ class Impress
              */
             $p_formula=remove_divide_zero($p_formula);
             $p_formula="\$result=".$p_formula.";";
-            
-            eval("$p_formula");
-
+            try {
+                eval("$p_formula");
+            } catch(Exception $e) {
+                return array("desc"=>"erreur","montant"=>'0');
+            }
             while (preg_match("/\[([0-9]+)(-[Tt]*)\]/", trim($p_label), $e)==1)
             {
                 $nom="!!".$e[1]."!!";
