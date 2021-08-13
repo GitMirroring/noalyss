@@ -247,6 +247,7 @@ class ImpressTest extends TestCase
              array("sum FOURNI1 Débit", "{FOURNI1-d}",221.43),
              array("sum FOURNI1 Débit", "{NOTEXIST-d}",0),
              array("sum FOURNI1 Débit", "{{NOTEXIST-d}}",0),
+             array("Double minus sign throw an error ParseError: syntax error, unexpected '--' (T_DEC) ", "[6%-S]-[6%-S]",0),
         );
         // ------ Periode ----------
         foreach ($a_formula as $formula) 
