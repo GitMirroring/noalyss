@@ -25,6 +25,7 @@
  *
  */
 /**
+ * @class
  * @brief Manage the anticipation of expense, sales,...
  * @see Forecast Forecast_Cat Forecast_Item
  *
@@ -259,7 +260,7 @@ EOF;
     }
 
     /**
-     * Clone completely Forecast and returns the new forecast_id
+     * @brief Clone completely Forecast and returns the new forecast_id
      * @return type
      */
     public function object_clone()

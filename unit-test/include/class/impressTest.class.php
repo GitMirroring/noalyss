@@ -125,29 +125,48 @@ class ImpressTest extends TestCase
         }
     }
 
-    /***
-     * @covers Impress::parse_formula
-     */
 
-    function test_compute_amount()
+    /**
+     * @brief supply data to test_compute_amount
+     * @return array[]
+     */
+    function getData_compute_amount()
+    {
+        return array(
+            ["[70%-s]", -456.8000],
+            ["[61%-s]", 1491.5000],
+            ["[61%-S]", -1491.5000],
+            ["[61%-d]", 1591.50],
+            ["[61%-c]", 100.00],
+            ["{EAU}", 915.00],
+            ["{EAU-d}", 915.00],
+            ["{EAU-c}", 0],
+            ["{EAU-s}", 915.00],
+            ["{EAU-S}", -915.00 ],
+            ["{ELECTR}", 0 ],
+            ["{ELECTR-c}", 0 ],
+            ["{ELECTR-d}", 0 ],
+            ["{ELECTR-s}", 0 ],
+            ["{ELECTR-S}", 0 ]
+        );
+    }
+    /**
+     * @covers Impress::parse_formula
+     * @dataProvider getData_compute_amount
+     */
+    function test_compute_amount($p_accounting,$p_amount)
     {
         global $g_connection;
         // filter on period
         $sql_periode="j_date >= '2018-01-01' and j_date <= '2018-12-31'";
          $and_sql_periode="oa_date >= '2018-01-01' and oa_date <= '2018-12-31'";
         // 0 = formula , 1 is the expected value
-        $aFormula=array(
-            ["[70%-s]", -456.8000],
-            ["[61%-s]", 1491.5000],
-            ["[61%-S]", -1491.5000],
-            ["[61%-d]", 1591.50],
-            ["[61%-c]", 100.00]
-        );
-        foreach ($aFormula as $formula) {
-            $this->assertEquals($formula[1],\Impress::compute_amount($g_connection,$formula[0],
+
+
+            $this->assertEquals($p_amount,\Impress::compute_amount($g_connection,$p_accounting,
                     $sql_periode,$and_sql_periode),
-                    " {$formula[0]} = {$formula[1]}");
-        }
+                    " {$p_accounting} != {$p_amount}");
+
     }
 
     /**
@@ -226,6 +245,8 @@ class ImpressTest extends TestCase
              array("sum 70% Débit", "[70%-d]",0),
              array("sum FOURNI1 Crédit", "{FOURNI1-c}",1717.77),
              array("sum FOURNI1 Débit", "{FOURNI1-d}",221.43),
+             array("sum FOURNI1 Débit", "{NOTEXIST-d}",0),
+             array("sum FOURNI1 Débit", "{{NOTEXIST-d}}",0),
         );
         // ------ Periode ----------
         foreach ($a_formula as $formula) 

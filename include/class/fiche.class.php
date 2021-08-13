@@ -1137,7 +1137,8 @@ class Fiche
         $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
 
         if ( $p_cond != "") $p_cond=" and ".$p_cond;
-        $Res=$this->cn->exec_sql("select sum(deb) as sum_deb, sum(cred) as sum_cred from
+        $Res=$this->cn->exec_sql("select coalesce(sum(deb),0) as sum_deb,
+                                    coalesce(sum(cred),0) as sum_cred from
                                  ( select j_poste,
                                  case when j_debit='t' then j_montant else 0 end as deb,
                                  case when j_debit='f' then j_montant else 0 end as cred

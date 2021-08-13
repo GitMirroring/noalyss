@@ -42,7 +42,7 @@ class Impress
      * \param $p_formula
      * \param $p_eval  true if we eval here otherwise the function returns
      *                 a string which must be evaluated
-     * \param $p_type_date : type of the date 0 for accountant period or 1
+      \param $p_type_date : type of the date 0 for accountant period or 1
      * for calendar
      * \return array key [ desc , montant ]
      *
