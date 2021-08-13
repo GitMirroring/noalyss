@@ -187,23 +187,26 @@ echo nbm( $diff);
 <?php
     $diff= bcsub($aReal[$i][$e][$h],$estm[$i][$e][$h]);
 $cum=bcadd($diff,$cum);
+$strColorCell="";
 if ($cum ==0)
   {
-    echo '<td style="text-align:right;">';
+      $strColorCell= '<td style="text-align:right;">';
   }
 
-else
+elseif ($cum > 0)
   {
-    echo '<td style="text-align:right;background-color:green;color:white">';
+      $strColorCell= '<td style="text-align:right;background-color:green;color:white">';
   }
-
+else {
+    $strColorCell= '<td style="text-align:right;background-color:red;color:white">';
+}
+echo $strColorCell;
 echo nbm( $cum);
 ?>
 </td>
 <?php endfor;?>
 <?php
-
-    echo '<td style="text-align:right;background-color:green;color:white">';
+    echo $strColorCell;
  echo nbm(  $cum);
 ?>
 </td>
