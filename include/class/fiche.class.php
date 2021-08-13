@@ -53,7 +53,6 @@ class Fiche
         $this->f_enable='1';
         if ($p_id != 0 ) { $this->load();} else {
             $this->fiche_def=0;
-            $this->fiche_def_ref=0;
         }
         
        
