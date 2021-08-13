@@ -211,6 +211,7 @@ if ($sub_action == "update")
 //--------------------------------------------------------------------------------
 // Show the detail of an action
 // permit the update
+//--------------------------------------------------------------------------------
 if ($sub_action == 'detail')
 {
 	echo '<div class="content">';
@@ -264,6 +265,7 @@ method="post"    style="display:inline" onsubmit="return check_file_size(this,%s
 }
 //-------------------------------------------------------------------------------
 // Delete an action
+//-------------------------------------------------------------------------------
 if ($sub_action == 'delete')
 {
 	// confirmed
@@ -282,6 +284,7 @@ if ($sub_action == 'delete')
 
 //--------------------------------------------------------------------------------
 // Show a list of the action
+//--------------------------------------------------------------------------------
 if ($sub_action == "list")
 {
 	// Add a button to export to Csv
@@ -289,7 +292,16 @@ if ($sub_action == "list")
 	echo HtmlInput::request_to_hidden(array("closed_action","remind_date_end","remind_date","sag_ref", "remind_date","only_internal", "state", "gDossier", "qcode", "start_date", "end_date", "ag_id", "ag_dest_query",
 		"tdoc",   "action_query","date_start","date_end","hsstate","searchtag"));
 	echo HtmlInput::hidden("act", "CSV:ActionGestion");
-	echo HtmlInput::submit("follow_up_csv", "Export CSV",'','smallbutton');
+	echo HtmlInput::hidden("export_type", "simple");
+	echo HtmlInput::submit("follow_up_csv", _("Export CSV"),'','smallbutton');
+	echo "</form>";
+        // Add a button to export complete to Csv
+	echo '<form method="GET" style="display:inline;" ACTION="export.php">';
+	echo HtmlInput::request_to_hidden(array("closed_action","remind_date_end","remind_date","sag_ref", "remind_date","only_internal", "state", "gDossier", "qcode", "start_date", "end_date", "ag_id", "ag_dest_query",
+		"tdoc",   "action_query","date_start","date_end","hsstate","searchtag"));
+	echo HtmlInput::hidden("act", "CSV:ActionGestion");
+	echo HtmlInput::hidden("export_type", "detail");
+	echo HtmlInput::submit("follow_up_csv", _("Export CSV détaillé"),'','smallbutton');
 	echo "</form>";
 	Follow_Up::show_action_list($cn, $base);
 }

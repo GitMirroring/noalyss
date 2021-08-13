@@ -1018,7 +1018,7 @@ class Follow_Up
     }
 
     /**
-     * get the action where the remind day is today
+     * @brief get the action where the remind day is today
      * @return array
      */
     function get_today()
@@ -1036,7 +1036,7 @@ class Follow_Up
     }
 
     /**
-     * get the action where the remind day is today
+     * @brief get the action where the remind day is today
      * @return array
      */
     function get_late()
@@ -1050,7 +1050,7 @@ class Follow_Up
     }
 
     /**
-     * insert a related operation
+     * @brief insert a related operation
      */
     function insert_operation()
     {
@@ -1068,7 +1068,7 @@ class Follow_Up
     }
 
     /**
-     * remove a related operation
+     * @brief remove a related operation
      * @deprecated not used : dead_code
      * @todo to remove
      */
@@ -1084,7 +1084,7 @@ class Follow_Up
     }
 
     /**
-     * Display only a search box for searching an action
+     * @brief Display only a search box for searching an action
      * @param $cn database connx
      * @param $inner true if coming from an ajax (ajax_search_action)
      */
@@ -1208,7 +1208,7 @@ class Follow_Up
         echo '</form>';
     }
     /**
-     * Show a button for adding follow-up action, display the FORM 
+     * @brief Show a button for adding follow-up action, display the FORM 
      * @param array $pa_param , will be converted in a HIDDEN input type in the form
      */
     static function show_action_add($pa_param)
@@ -1218,7 +1218,7 @@ class Follow_Up
     }
 
     /**
-     * Create a subquery to filter thanks the selected tag
+     *@brief Create a subquery to filter thanks the selected tag
      * @param  $cn db connx
      * @param $p_array
      * @return SQL 
@@ -1251,7 +1251,7 @@ class Follow_Up
     }
 
     /**
-     * Get date from $_GET and create the sql stmt for the query
+     * @briefGet date from $_GET and create the sql stmt for the query
      * @note the query is taken in $_REQUEST
      * @see Follow_Up::ShowActionList
      * @return string SQL condition
@@ -1361,7 +1361,7 @@ class Follow_Up
     }
 
     /**
-     * Show the result of a search in an inner windows, the result is limited to 25
+     * @brief Show the result of a search in an inner windows, the result is limited to 25
      * @param type $cn database connx
      * @param type $p_sql the query
      */
@@ -1386,7 +1386,7 @@ class Follow_Up
     }
 
     /**
-     * Insert a related action into the table action_gestion_related
+     * @brief Insert a related action into the table action_gestion_related
      */
     function insert_action()
     {
@@ -1407,9 +1407,8 @@ class Follow_Up
             }
         }
     }
-
     /**
-     * export to CSV the query the p_array has
+     * @brief export to CSV the query the p_array has
      * @param array $p_array
      */
     function export_csv($p_array)
@@ -1454,6 +1453,96 @@ class Follow_Up
             array("title"=>"profil", "type"=>"string")
                 )
         );
+    }
+    /**
+     * @brief export to CSV the query the p_array has
+     * @param array $p_array
+     */
+    function export_csv_detail($p_array)
+    {
+
+        
+        $p_search=self::create_query($this->db, $p_array);
+        $sql="
+select ag_id,
+        to_char(ag_timestamp,'DD.MM.YYYY') as my_date,
+        to_char(ag_remind_date,'DD.MM.YYYY') as my_remind,
+        to_char(coalesce((select max(agc_date) 
+                            from action_gestion_comment as agc 
+                            where agc.ag_id=ag.ag_id),ag.ag_timestamp),'DD.MM.YY HH24:MI') as last_comment,
+        array_to_string((select array_agg(t1.t_tag) 
+                            from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) 
+                            where a1.ag_id=ag.ag_id ),',') as tags,
+        array_to_string((select array_agg(coalesce(jrn1.jr_pj_number,jrn1.jr_internal)) 
+                            from action_gestion_operation ago join jrn jrn1 using (jr_id) 
+                            where ago.ag_id=ag.ag_id),',') as related_operation,
+        array_to_string((select array_agg(agc2.agc_comment order by agc2.agc_date desc) 
+                        from  action_gestion_comment agc2 where agc2.ag_id=ag.ag_id ),'|') as action_comment,
+        array_to_string((select  array_agg(followup_id) from (select agr1.aga_least followup_id
+                            from action_gestion_related agr1
+                            where agr1.aga_greatest = ag.ag_id 
+                            union 
+                            select agr2.aga_greatest 
+                            from 
+                            action_gestion_related agr2
+                            where  agr2.aga_least=ag.ag_id) as followup),',') follow_up,
+				(select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=1) as name,
+        ag_title,
+        dt_value,
+        ag_ref,
+        ag_priority,
+        ag_state,
+        coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') as dest
+from action_gestion as ag
+join document_type on (ag.ag_type=dt_id)
+join document_state on(ag.ag_state=s_id)
+where  
+    true  $p_search order by ag.ag_timestamp,ag.ag_id";
+        $ret=$this->db->exec_sql($sql);
+
+        $nb_record=Database::num_row($ret);
+        $export_csv=new Noalyss_Csv('action_gestion_detail');
+        $export_csv->send_header();
+        $export_csv->write_header([
+            _("Document id"),
+            _("Date"),
+            _("Date rappel"),
+            _("Destinataire"),
+            _("Référence "),
+            _("Titre "),
+            _("Commentaires "),
+            _("Date dernier commentaire "),
+            _("Etiquette "),
+            _("Priorité "),
+            _("Etat "),
+            _("Opérations"),
+            _("Autres actions"),
+            _("Type action"),
+            _("Groupe "),
+        ]);
+        for ($i=0;$i<$nb_record;$i++)
+        {
+            $row=Database::fetch_array($ret,$i);
+            $export_csv->add($row['ag_id']);
+            $export_csv->add($row['my_date']);
+            $export_csv->add($row['my_remind']);
+            $export_csv->add($row['name']);
+            $export_csv->add($row['ag_ref']);
+            $export_csv->add($row['ag_title']);
+            $export_csv->add($row['action_comment']);
+            $export_csv->add($row['last_comment']);
+            $export_csv->add($row['tags']);
+            $export_csv->add($row['ag_priority']);
+            $export_csv->add($row['ag_state']);
+            $export_csv->add($row['related_operation']);
+            $export_csv->add($row['follow_up']);
+            $export_csv->add($row['dt_value']);
+            $export_csv->add($row['dest']);
+            
+            $export_csv->write();
+        }
+        if ($nb_record==0)
+            return;
     }
 
     static function get_all_operation($p_jr_id)

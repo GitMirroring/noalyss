@@ -23,18 +23,27 @@
 /**
  * @file
  * @brief export Action Gestion to csv, taking in account the search
- *
+ * 
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-header('Pragma: public');
-header('Content-type: application/csv');
-header('Content-Disposition: attachment;filename="action-gestion.csv"',FALSE);
 
+$http=new HttpInput();
 $follow=new Follow_Up($cn);
 $array=$_GET;
-if ( isset ($_POST['query']) ) $p_array['query']=$_POST['query'];
 
-echo $follow->export_csv($_GET);
+//- export follow up  simple :no comment
+if ( $http->get("export_type") == "simple") { 
+    header('Pragma: public');
+    header('Content-type: application/csv');
+    header('Content-Disposition: attachment;filename="action-gestion.csv"',FALSE); 
+    echo $follow->export_csv($_GET); 
+}
+
+/*
+ * export follow up  full : comments
+ * Mantis task #0002035
+ */
+if ( $http->get("export_type") == "detail") { echo $follow->export_csv_detail($_GET); }
 
 exit();
 
