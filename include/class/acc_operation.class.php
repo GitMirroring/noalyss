@@ -623,6 +623,76 @@ class Acc_Operation
         $ret->get_info();
         return $ret;
     }
+     /**
+     *@brief retrieve amount in currency for the operation
+     *@return amount in currency or 0 if this operation doesn't use currency
+     *@see Acc_Sold Acc_Purchase Acc_Fin Acc_Detail Acc_Misc
+     */
+    function get_currency_amount()
+    {
+        if ( $this->det->currency_id == 0 ) {
+            return 0;
+        }
+        $ledger_id=$this->get_ledger();
+        if ( $ledger_id=='') throw new Exception(_('Journal non trouvé'));
+        $oledger=new Acc_Ledger($this->db,$ledger_id);
+
+        // retrieve info from jrn_info
+       
+
+        switch($oledger->get_type())
+        {
+        case 'VEN':
+            $sql_amount="
+                select 
+                sum(oc_amount)+sum(oc_vat_amount ) 
+                from operation_currency oc 
+                join quant_sold qs using(j_id) 
+                where 
+                oc.j_id in (select j_id 
+                    from jrnx join jrn on (jr_grpt_id=j_grpt) 
+                    where jr_id=$1);
+                ";
+            break;
+        case 'ACH':
+             $sql_amount="
+                select 
+                sum(oc_amount)+sum(oc_vat_amount ) 
+                from operation_currency oc 
+                join quant_purchase qs using(j_id) 
+                where 
+                oc.j_id in (select j_id 
+                    from jrnx join jrn on (jr_grpt_id=j_grpt) 
+                    where jr_id=$1);
+                ";
+            break;
+        case 'FIN':
+             $sql_amount="
+                select 
+                sum(oc_amount)+sum(oc_vat_amount ) 
+                from operation_currency oc 
+                join quant_fin qs using(j_id) 
+                where 
+                oc.j_id in (select j_id 
+                    from jrnx join jrn on (jr_grpt_id=j_grpt) 
+                    where jr_id=$1);
+                ";
+            break;
+        default:
+             $sql_amount="
+                select 
+                sum(oc_amount)+sum(oc_vat_amount ) 
+                from operation_currency oc 
+                join jrnx using(j_id) 
+                join jrn on (jr_grpt_id=j_grpt) 
+                where 
+                jr_id=$1 and j_debit='t';
+                ";
+            break;
+        }
+        $amount=$this->db->get_value($sql_amount,[$this->jr_id]);
+        return $amount;
+    }
     /**
      * @brief retrieve info from the jrn_info, create 2 new arrays
      * obj->info->command and obj->info->other

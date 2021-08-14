@@ -88,4 +88,42 @@ class Acc_OperationTest extends TestCase
         }
         
     }
+    /**
+     * provide data for testAmount_Currency
+     * @return type
+     */
+    public function data_amount_currency()
+    {
+        return array(
+            /* sale */
+            array(659,146.95),
+            array(657,146.95),
+            array(649,0),
+            /* purchase*/
+            array(680,680.33),
+            array(683,834.91),
+            array(526,0),
+            /* financial */
+            array(658,146.95),
+            array(684,200),
+            array(685,300),
+            /* misc operation */
+            array(686,25.25),
+            
+        );
+    }
+    /**
+     * @testdox acc_operation::get_amount_currency - sale-purchase-fin-misc
+     * @covers Acc_Operation::get_amount_currency
+     * @dataProvider data_amount_currency
+     */
+    function testGet_AmountCurrency($p_jrn_id,$p_amount_currency)
+    {
+        global $g_connection;
+        $acc_operation=new Acc_Detail($g_connection,$p_jrn_id);
+        $acc_operation->get();
+        $acc_operation->get_quant();
+        $actual_amount=round($acc_operation->get_currency_amount(),2);
+        $this->assertEquals($p_amount_currency,$actual_amount,"currency values doesn't match for $p_jrn_id");
+    }
 }

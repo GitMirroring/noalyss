@@ -83,6 +83,21 @@ class PDF_Operation extends PDF {
         $this->pdf->line_new(4);
         $this->pdf->write_cell(50, 6, _("Nom document"));
         $this->pdf->write_cell(100, 6, $this->acc_detail->det->jr_pj_name);
+        if ($this->acc_detail->det->currency_id != 0) 
+        {
+            $currency=new Acc_Currency($this->cn,$this->acc_detail->det->currency_id);
+            $this->pdf->line_new(4);
+            $this->pdf->write_cell(50, 6, _("Devise"));
+            $this->pdf->write_cell(50, 6, $currency->get_code());
+            $this->pdf->write_cell(25, 6, _("Taux utilisé"));
+            $this->pdf->write_cell(30, 6,nb($this->acc_detail->det->currency_rate,4));
+            $this->pdf->write_cell(25, 6, _("Taux référence"));
+            $this->pdf->write_cell(30, 6,nbm($this->acc_detail->det->currency_rate_ref,4));
+            $this->pdf->line_new(4);
+            $this->pdf->write_cell(50, 6, _("Montant Devise"));
+            $this->pdf->write_cell(50, 6, nb($this->acc_detail->get_currency_amount(),4));
+
+        }
         $this->pdf->line_new(8);
     }
     /**
@@ -279,6 +294,9 @@ class PDF_Operation extends PDF {
         // find the reconcilied operations
         $a_reconcilied_operation=$this->cn->get_array("select jr_id,jra_concerned from jrn_rapt where jra_concerned=$1 or jr_id=$1",
                 [$this->jr_id]);
+        if ( empty ($a_reconcilied_operation)) {
+            return;
+        }
          $this->print_section(_("Opérations rapprochées"));
         // for each operation , print info (amount, ledger,... )
         foreach ($a_reconcilied_operation as $reconcilied_operation) {

@@ -2616,7 +2616,7 @@ class Acc_Ledger  extends jrn_def_sql
                  $array['negative_amount'] <> 0 &&
                  $array['negative_amount'] <> 1 )
              {
-                  throw new Exception(_("Valeur invalide"));
+                  throw new Exception(_("Valeur invalide {$array['negative_amount']}"));
             }
         }
         catch (Exception $e)
