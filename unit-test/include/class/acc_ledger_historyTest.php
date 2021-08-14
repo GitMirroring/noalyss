@@ -118,17 +118,17 @@ class Acc_Ledger_HistoryTest extends TestCase
         $object=Acc_Ledger_History::factory($g_connection, [2],$p_min_id ,$p_max_id , "D", 'all');
         $object->get_row();
         $a_row=$object->get_data();
-        $this->assertEquals(15,count($a_row));
+        $this->assertEquals(13,count($a_row));
         
         $object->set_filter_operation("paid");
         $object->get_row();
         $a_row=$object->get_data();
-        $this->assertEquals(3,count($a_row));
+        $this->assertEquals(6,count($a_row));
         
         $object->set_filter_operation("unpaid");
         $object->get_row();
         $a_row=$object->get_data();
-        $this->assertEquals(12,count($a_row));
+        $this->assertEquals(7,count($a_row));
 
         
         }

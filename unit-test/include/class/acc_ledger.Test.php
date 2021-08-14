@@ -293,8 +293,8 @@ class Acc_LedgerTest extends TestCase
         $max=$g_connection->get_value("select max(p_id) from parm_periode");
         $min=$g_connection->get_value("select min(p_id) from parm_periode");
         $solde=$ledger->get_solde($min,$max);
-        $this->assertEquals($solde[1],10936.91);
-        $this->assertEquals($solde[0],10936.91);
+        $this->assertEquals($solde[1],4938.64);
+        $this->assertEquals($solde[0],4938.6400);
         
     }
 
@@ -304,7 +304,7 @@ class Acc_LedgerTest extends TestCase
     public function testSelect_ledger()
     {
         $select_available=$this->object->select_ledger();
-        $this->assertEquals(7,count($select_available->value));
+        $this->assertEquals(8,count($select_available->value));
     }
     /**
      * @covers Acc_Ledger::get_fiche_def
@@ -814,18 +814,16 @@ class Acc_LedgerTest extends TestCase
     public function testInput_new()
     {
         put_global([["key"=>"ac","value"=>"ODS"]]);
-//      ob_start();
-//      
-//      $this->object->set_ledger_id(4);
-//      $this->object->input_new();
-//      $result=ob_get_contents();
-//      $file=fopen(__DIR__."/file/acc_ledger_input_new.txt","w+");
-//      fwrite($file,$result);
-//      fclose($file);*/
-      $this->expectOutputRegex('!<tr><TD> <INPUT TYPE="CHECKBOX" VALUE="3" NAME="FIN_FICHEDEB\[\]" CHECKED>Banque<\/TD><\/TR><tr><TD> <INPUT TYPE="CHECKBOX" VALUE="2" NAME="FIN_FICHEDEB\[\]" CHECKED>Client<\/TD><\/TR><tr><TD> <INPUT TYPE="CHECKBOX" VALUE="4" NAME="FIN_FICHEDEB\[\]" CHECKED>Fournisseur<\/TD><\/TR><tr><TD> <INPUT TYPE="CHECKBOX" VALUE="1" NAME="FIN_FICHEDEB\[\]"  unchecked>Marchandises<\/TD><\/TR><tr><TD> <INPUT TYPE="CHECKBOX" VALUE="5" NAME="FIN_FICHEDEB\[\]"  unchecked>Services & Biens Divers<\/TD><\/TR><tr><TD> <INPUT TYPE="CHECKBOX" VALUE="500000" NAME="FIN_FICHEDEB\[\]"  unchecked>Stock<\/TD><\/TR><tr><TD> <INPUT TYPE="CHECKBOX" VALUE="6" NAME="FIN_FICHEDEB\[\]"  unchecked>Vente<\/TD><\/TR>    <\/TABLE>!
-');
+        
+        echo  \Noalyss\Facility::page_start();
         $this->object->set_ledger_id(4);
         $this->object->input_new();
+        $result=ob_get_contents();
+        \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledgder-input_new.html", $result);
+        $size=filesize(__DIR__."/file/acc_ledgder-input_new.html");
+        echo "size is [$size]";
+        
+        $this->assertEquals(15063,$size," output input_new is not what it is expected");
     }
 
     /**

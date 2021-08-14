@@ -305,7 +305,7 @@ class Acc_Account_LedgerTest extends TestCase
     {
        global $g_connection;
        $accounting=new Acc_Account_Ledger($g_connection, '4511');
-       $this->assertEquals(1397.87,$accounting->get_solde(),"get_solde");
+       $this->assertEquals(319.05,$accounting->get_solde(),"get_solde");
     }
 
     /**
@@ -317,8 +317,8 @@ class Acc_Account_LedgerTest extends TestCase
         $accounting=new Acc_Account_Ledger($g_connection, '4511');
         $expected=array (
                         'debit' => '0',
-                        'credit' => '1397.8700',
-                        'solde' => 1397.87,
+                        'credit' => '319.0500',
+                        'solde' => 319.05,
                       );
         $this->assertEquals($accounting->get_solde_detail(),$expected);
     }

@@ -2,7 +2,7 @@
 
 export PGCLUSTER=10/main
 DOSSIER_TEST=rel70dossier25
-FILE_TEST=dossiertest210620-1111.sql
+FILE_TEST=dossier25.sql
 
 dropdb $DOSSIER_TEST
 if  [ $? -ne 0 ] ; then

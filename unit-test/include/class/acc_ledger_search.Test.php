@@ -67,7 +67,7 @@ class Acc_Ledger_Test extends TestCase
         $result=$ledger->build_search_sql(NULL);
         $a_result=$g_connection->get_array($result[0]);
         $this->assertEquals(4,count($a_result));
-        $this->assertEquals(" jrn_def_id in (3,83,1,35,4,2,36,-1) and  jr_date >= to_date('02.01.2019','DD.MM.YYYY')".
+        $this->assertEquals(" jrn_def_id in (3,83,152,1,35,4,2,36,-1) and  jr_date >= to_date('02.01.2019','DD.MM.YYYY')".
                 " and  jr_date <= to_date('31.01.2019','DD.MM.YYYY')",$result[1]);
         
         // Expect exception

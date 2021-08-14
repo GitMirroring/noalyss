@@ -142,7 +142,7 @@ class Acc_BilanTest extends TestCase
       $this->assertTrue(isset($this->object->C61),"Exist C61");
       $this->assertEquals($this->object->C70,456.8);
       $this->assertEquals($this->object->C60,0);
-      $this->assertEquals($this->object->C61,1491.50);
+      $this->assertEquals($this->object->C61,1468.33);
       
     }
 

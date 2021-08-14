@@ -55,7 +55,7 @@ class Acc_Ledger_History_SaleTest extends TestCase
     function testGet_row()
     {
         $this->object->get_row();
-        $this->assertSame(10,count($this->object->get_data()),"Acc_Ledger_History_Sale->get_row");
+        $this->assertEquals(6,count($this->object->get_data()),"Acc_Ledger_History_Sale->get_row");
     }
      private function  save_file($p_name,$content)
     {

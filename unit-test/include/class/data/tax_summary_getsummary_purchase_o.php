@@ -49,7 +49,7 @@ array (
     'tva_rate' => '0.0600',
     'tva_both_side' => '0',
     'qp_vat_code' => '3',
-    'amount_vat' => '7.7200',
+    'amount_vat' => '5.2800',
     'amount_wovat' => '129.2200',
     'amount_sided' => '0.0000',
     'amount_noded_amount' => '0.0000',

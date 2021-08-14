@@ -33,19 +33,23 @@ class Facility
      */
     static function page_start()
     {
-        $noalyss_home=NOALYSS_HOME;
+        
+        $noalyss_url=NOALYSS_URL;
         $ret=<<<EOF
     <!doctype html>
 <HTML><HEAD><meta charset="utf-8"><META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <TITLE>PRINTJRN  NOALYSS</TITLE>
+    <TITLE>PHPUNIT  NOALYSS</TITLE>
 	<link rel="icon" type="image/ico" href="favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <LINK id="pagestyle" REL="stylesheet" type="text/css" href="{$noalyss_home}/style-classic7.css?version=7105" media="screen"/>
-    <link rel="stylesheet" type="text/css" href="./style-print.css?version=7105" media="print"/>
-    <script language="javascript" src="js/calendar.js"></script>
-    <script type="text/javascript" src="js/lang/calendar-en.js"></script>
-    <script language="javascript" src="js/calendar-setup.js"></script>
-    <LINK REL="stylesheet" type="text/css" href="calendar-blue.css" media="screen">
+    <LINK id="pagestyle" REL="stylesheet" type="text/css" href="{$noalyss_url}/css/style-classic7.css?version=7105" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="{$noalyss_url}/css/style-print.css?version=7105" media="print"/>
+    <script language="javascript" src="{$noalyss_url}/js/calendar.js"></script>
+    <script type="text/javascript" src="{$noalyss_url}/js/lang/calendar-en.js"></script>
+    <script language="javascript" src="{$noalyss_url}/js/calendar-setup.js"></script>
+    <script language="javascript" src="{$noalyss_url}/js/prototype.js"></script>
+    <script language="javascript" src="{$noalyss_url}/js/noalyss_script.js"></script>
+    <script language="javascript" src="{$noalyss_url}/js/javascript.js"></script>
+    <LINK REL="stylesheet" type="text/css" href="{$noalyss_url}/css/calendar-blue.css" media="screen">
     </HEAD>
     <body>
     <div class="content">

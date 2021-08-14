@@ -174,7 +174,7 @@ class Tax_SummaryTest extends TestCase
         $this->object->set_tva_type("T");
         $array=$this->object->get_row_purchase();
         //-- For creating the array
-        Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_purchase.txt", var_export($array, TRUE));
+        //Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_purchase.txt", var_export($array, TRUE));
         require __DIR__."/data/tax_summary_getrow_purchase_t.php";
         $this->check_result("tva_type = T , get_row_purchase",$array,$a_result,'ACH');
         

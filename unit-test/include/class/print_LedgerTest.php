@@ -141,7 +141,7 @@ class print_LedgerTest extends TestCase
     function test_availableLedger()
     {
         $a_jrn=\Print_Ledger::available_ledger(94);
-        $this->assertEquals(6,count($a_jrn),"Number of available ledger correct");
+        $this->assertEquals(7,count($a_jrn),"Number of available ledger correct");
     }
 
 }
