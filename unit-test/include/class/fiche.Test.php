@@ -23,7 +23,7 @@ class FicheTest extends TestCase
     protected function setUp()
     {
         include 'global.php';
-        $this->object=new Fiche($g_connection);
+        $this->object = new Fiche($g_connection);
     }
 
     /**
@@ -32,13 +32,13 @@ class FicheTest extends TestCase
      */
     protected function tearDown()
     {
-        
+
     }
 
     static function tearDownAfterClass()
     {
         include 'global.php';
-        $fiche_def=new Fiche_Def($g_connection, 5);
+        $fiche_def = new Fiche_Def($g_connection, 5);
         // prepare test , clean 
         $fiche_def->RemoveAttribut([20, 21, 22, 51, 52, 53]);
     }
@@ -49,8 +49,8 @@ class FicheTest extends TestCase
     public function testCmp_name()
     {
         global $g_connection;
-        $fiche=new \Fiche($g_connection, 21);
-        $fiche_2=new \Fiche($g_connection, 25);
+        $fiche = new \Fiche($g_connection, 21);
+        $fiche_2 = new \Fiche($g_connection, 25);
         $this->assertGreaterThan(\Fiche::cmp_name($fiche, $fiche_2), 0);
     }
 
@@ -60,10 +60,10 @@ class FicheTest extends TestCase
     public function testGet_bk_account()
     {
         include 'global.php';
-        $this->object=new Fiche($g_connection);
-        $result=$this->object->get_bk_account();
+        $this->object = new Fiche($g_connection);
+        $result = $this->object->get_bk_account();
         $this->assertEquals(gettype($result), 'array');
-        $count=count($result);
+        $count = count($result);
         $this->assertGreaterThan(0, $count);
     }
 
@@ -73,25 +73,22 @@ class FicheTest extends TestCase
     public function testGet_row()
     {
         include 'global.php';
-        $card_count=$g_connection->get_array("select count(*),f_id ".
-                " from jrnx ".
-                " where ".
-                " f_id is not null ".
-                "group by f_id order by count(*) desc");
-        $a=new Fiche($g_connection, $card_count[0]['f_id']);
-        try
-        {
+        $card_count = $g_connection->get_array("select count(*),f_id " .
+            " from jrnx " .
+            " where " .
+            " f_id is not null " .
+            "group by f_id order by count(*) desc");
+        $a = new Fiche($g_connection, $card_count[0]['f_id']);
+        try {
             $a->get_row(235, 238);
             $this->assertFalse(TRUE, "Exception periode invalide");
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->assertTrue(TRUE);
         }
-        $a_result=$a->get_row(92, 131);
+        $a_result = $a->get_row(92, 131);
         // Size == 25
 
-        $nb_result=count($a_result);
+        $nb_result = count($a_result);
         $this->assertEquals($nb_result, 3, "Size array not correct ");
         $this->assertEquals(198.74, $a_result[0][13]["deb_montant"], "Debit from operation 12");
     }
@@ -102,26 +99,23 @@ class FicheTest extends TestCase
     public function testCount_by_modele()
     {
 
-        $nb=$this->object->count_by_modele(1, "", "");
+        $nb = $this->object->count_by_modele(1, "", "");
         $this->assertEquals(4, $nb, "number of Sales Card ");
-        $nb=$this->object->count_by_modele(3, "eau", "");
+        $nb = $this->object->count_by_modele(3, "eau", "");
         $this->assertEquals(1, $nb, "Purchase card water ");
-        $nb=$this->object->count_by_modele(3, "EAU", "");
+        $nb = $this->object->count_by_modele(3, "EAU", "");
         $this->assertEquals(1, $nb, "Purchase card water ");
-        $nb=$this->object->count_by_modele(3, "ZZ", "");
+        $nb = $this->object->count_by_modele(3, "ZZ", "");
         $this->assertEquals(0, $nb, "no  card  found");
-        $nb=$this->object->count_by_modele(3000, "", "");
+        $nb = $this->object->count_by_modele(3000, "", "");
         $this->assertEquals(0, $nb, "no  card found");
-        $nb=$this->object->count_by_modele(3, "", "");
+        $nb = $this->object->count_by_modele(3, "", "");
         $this->assertEquals(7, $nb, "Purchase cards ");
         // attempt to inject SQL command, you must get an error
-        try
-        {
-            $nb=@$this->object->count_by_modele(3, "", " ;delete from jrn;");
+        try {
+            $nb = @$this->object->count_by_modele(3, "", " ;delete from jrn;");
             $this->assertFalse(true, "Inject SQL command not found");
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->assertTrue(true, "Inject SQL command found");
         }
     }
@@ -133,26 +127,27 @@ class FicheTest extends TestCase
      */
     public function testSummary()
     {
-        $_REQUEST['ac']="CARD";
-        $this->object->fiche_def_ref=-1;
-        $r=$this->object->summary();
+        $_REQUEST['ac'] = "CARD";
+        $this->object->fiche_def_ref = -1;
+        $r = $this->object->summary();
         $this->assertEquals('', $r);
-        $this->object->fiche_def_ref=9;
-        $r=$this->object->summary();
+        $this->object->fiche_def_ref = 9;
+        $r = $this->object->summary();
         $this->assertContains('</TABLE>', $r);
     }
+
     /**
-     * 
+     *
      *
      */
     function testFicheDefInsertAttribut()
     {
         global $g_connection;
-        $fiche_def=new Fiche_Def($g_connection, 5);
+        $fiche_def = new Fiche_Def($g_connection, 5);
         // prepare test , clean 
         $fiche_def->RemoveAttribut([20, 21, 22, 51, 52, 53]);
         $this->assertEquals(35,
-                $g_connection->get_value("select count(*) from fiche_detail join fiche using (f_id)
+            $g_connection->get_value("select count(*) from fiche_detail join fiche using (f_id)
                 where fd_id=5"), "Efface 6 attributs");
 
         // percent deductible
@@ -167,24 +162,24 @@ class FicheTest extends TestCase
 
         // check that all card has these attributes
         $this->assertEquals(77,
-                $g_connection->get_value("select count(*) from fiche_detail join fiche using (f_id)
+            $g_connection->get_value("select count(*) from fiche_detail join fiche using (f_id)
                 where fd_id=5"), "Ajout 6 attributs");
     }
 
     /**
-     * @covers Fiche_Def::RemoveAttribut
+     * @covers  Fiche_Def::RemoveAttribut
      * @depends testFicheDefInsertAttribut
      */
     function testFicheDefRemoveAttribut()
     {
         global $g_connection;
-        $fiche_def=new Fiche_Def($g_connection, 5);
+        $fiche_def = new Fiche_Def($g_connection, 5);
 
         // prepare test , clean 
         $fiche_def->RemoveAttribut([20, 21, 22, 51, 52, 53]);
 
         $this->assertEquals(35,
-                $g_connection->get_value("select count(*) from fiche_detail join fiche using (f_id)
+            $g_connection->get_value("select count(*) from fiche_detail join fiche using (f_id)
                 where fd_id=5"), "Efface 6 attributs");
     }
 
@@ -202,40 +197,37 @@ class FicheTest extends TestCase
         // modify attribute for card category , add VAT non ded, Tax non ded , VAT completely non ded 0%
         // category Misc Services & goods (5)
         //-- modify card 29 : ELECTR
-        $fiche=new Fiche($g_connection, 29);
+        $fiche = new Fiche($g_connection, 29);
         $fiche->set_f_enable("1");
         $fiche->setAttribut(20, "33.33");
-        $a_attribut=$fiche->to_array();
+        $a_attribut = $fiche->to_array();
         $this->assertEquals($a_attribut['av_text20'], 33.33, "Attribut 20 set to 33%");
 
         $fiche->update($a_attribut);
 
         $this->assertEquals("33.33",
-                $g_connection->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=$2", [29, 20]),
-                "Attribut ad_id 20 inserted");
+            $g_connection->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=$2", [29, 20]),
+            "Attribut ad_id 20 inserted");
 
         $this->assertEquals("33.33", $fiche->strAttribut(20), "retrieve attribute 20");
         $fiche->setAttribut(20, "0.05");
         Card_Property::update($fiche);
-         $this->assertEquals("0.05",
-                $g_connection->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=$2", [29, 20]),
-                "Attribut ad_id 20 updated");
+        $this->assertEquals("0.05",
+            $g_connection->get_value("select ad_value from fiche_detail where f_id=$1 and ad_id=$2", [29, 20]),
+            "Attribut ad_id 20 updated");
     }
 
     function testInexistantCard()
     {
         global $g_connection;
-        $last_card=$g_connection->get_next_seq('s_fiche');
-        $last_card=$g_connection->get_next_seq('s_fiche');
-        $inexistant_fiche=new Fiche($g_connection, $last_card+2000);
-        $_POST['av_text1']='not exist';
-        try
-        {
+        $last_card = $g_connection->get_next_seq('s_fiche');
+        $last_card = $g_connection->get_next_seq('s_fiche');
+        $inexistant_fiche = new Fiche($g_connection, $last_card + 2000);
+        $_POST['av_text1'] = 'not exist';
+        try {
             $inexistant_fiche->update();
             $this->assertTrue(false, 'Inexistant card not detected');
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->assertTrue(true, "Inexistant card properly detected");
         }
     }
@@ -247,7 +239,7 @@ class FicheTest extends TestCase
     {
         global $g_connection;
 
-        $fiche_goods=new Fiche($g_connection);
+        $fiche_goods = new Fiche($g_connection);
         $fiche_goods->get_by_qcode("MARCHA");
         $this->assertEquals($fiche_goods->id, 23, "retrieve card by qcode");
         $this->assertEquals($fiche_goods->strAttribut(ATTR_DEF_NAME), "Marchandise1", "Retrieve name");
@@ -260,44 +252,262 @@ class FicheTest extends TestCase
     public function testInsertAndRemoveCard()
     {
         global $g_connection;
-        $last_card=$g_connection->get_next_seq('s_fiche');
-        $nb_fiche=$g_connection->get_value("select count(*) from fiche");
-        $new_fiche=new Fiche($g_connection);
-        $aProperty=array('av_text1'=>'Nom', 'av_text23'=>'ZZZTEST');
+        $last_card = $g_connection->get_next_seq('s_fiche');
+        $nb_fiche = $g_connection->get_value("select count(*) from fiche");
+        $new_fiche = new Fiche($g_connection);
+        $aProperty = array('av_text1' => 'Nom', 'av_text23' => 'ZZZTEST');
         $new_fiche->insert(5, $aProperty);
-        $this->assertFalse(empty($new_fiche->attribut)," attributes array is empty");
-        
+        $this->assertFalse(empty($new_fiche->attribut), " attributes array is empty");
+
         $this->assertGreaterThan($last_card, $new_fiche->id, 'card created');
-        $nb_fiche_after=$g_connection->get_value("select count(*) from fiche");
+        $nb_fiche_after = $g_connection->get_value("select count(*) from fiche");
         $this->assertGreaterThan($nb_fiche, $nb_fiche_after, 'card created');
         $this->assertEquals("1", $new_fiche->get_f_enable(), "By default enable");
         $new_fiche->remove();
-        $nb_fiche_after=$g_connection->get_value("select count(*) from fiche");
+        $nb_fiche_after = $g_connection->get_value("select count(*) from fiche");
         $this->assertEquals($nb_fiche, $nb_fiche_after, 'card removed');
     }
+
     /**
      * @testdox fiche->display
      */
     public function testDisplay()
     {
         global $g_connection;
-        $last_card=$g_connection->get_next_seq('s_fiche');
-        $nb_fiche=$g_connection->get_value("select count(*) from fiche");
-        
-        $new_fiche=new Fiche($g_connection);
-        $aProperty=array('av_text1'=>'Nom', 'av_text23'=>'ZZZTEST2');
+        $last_card = $g_connection->get_next_seq('s_fiche');
+        $nb_fiche = $g_connection->get_value("select count(*) from fiche");
+
+        $new_fiche = new Fiche($g_connection);
+        $aProperty = array('av_text1' => 'Nom', 'av_text23' => 'ZZZTEST2');
         $new_fiche->insert(5, $aProperty);
-        
-        $this->assertFalse(empty($new_fiche->attribut)," attributes array is empty");
+
+        $this->assertFalse(empty($new_fiche->attribut), " attributes array is empty");
         $this->assertGreaterThan($last_card, $new_fiche->id, 'card  not created');
         $result = $new_fiche->display(true);
-        
-        \Noalyss\Facility::save_file(__DIR__.'/file', 'testDisplay.txt', $result);
-        $this->assertNotEquals('FNT',$result,'card not found '.print_r($new_fiche,true));
-        
+
+        \Noalyss\Facility::save_file(__DIR__ . '/file', 'testDisplay.txt', $result);
+        $this->assertNotEquals('FNT', $result, 'card not found ' . print_r($new_fiche, true));
+
         $new_fiche->remove();
-        
-        $nb_fiche_after=$g_connection->get_value("select count(*) from fiche");
+
+        $nb_fiche_after = $g_connection->get_value("select count(*) from fiche");
         $this->assertEquals($nb_fiche, $nb_fiche_after, 'card not removed');
+    }
+
+    public function dataEmptyQuickCode()
+    {
+        return array(
+            array("none", ""),
+            array("", ""),
+            array(",,,,", ""),
+            array("####", ""),
+            array("àz-5","AZ-5"),
+            array("àz-5&é","AZ-5E"),
+            array("é####àz-5","EAZ-5"),
+        );
+    }
+
+    /**
+     * @testdox Test if it is possible to insert e a empty quickcode
+     * @dataProvider dataEmptyQuickCode
+     */
+    public function testInsertEmptyQuickCode($name, $quick_code)
+    {
+        global $g_connection;
+        //insert
+        $fiche = new Fiche($g_connection);
+        $fiche->insert(2, ['av_text13' => $quick_code, "av_text1" => $name]);
+        $fiche->load();
+        $this->assertTrue($fiche->id > 0 && !empty(trim($fiche->strAttribut(23))), 'error : card created with empty quickcode');
+        $fiche->remove();
+
+    }
+    function dataUpdateQuickCode()
+    {
+        return array(
+            array('a+z+1-5', 'AZ1-5'),
+            array('///a+z+1-5', 'AZ1-5'),
+            array('/*/a+z+1-5', 'AZ1-5'),
+            array('.2a+z+1-5', '.2AZ1-5'),
+            array('a+z+1-5', 'AZ1-5'),
+            array('ÀÉ@Ê', 'AE@E'),
+            array('ça&"', 'CA'),
+            array("", "QC"),
+            array(",,,,", "QC"),
+            array("####", "QC")
+        );
+    }
+
+    /**
+     * @testdox Test if it is possible to update a empty quickcode
+     * @dataProvider dataUpdateQuickCode
+     */
+    public function testUpdateEmptyQuickCode($name, $quick_code)
+    {
+        global $g_connection;
+
+        //insert
+        $fiche = new Fiche($g_connection);
+        $fiche->insert(2, ['av_text23' => 'QC', "av_text1" => $name]);
+        $this->assertTrue($fiche->id > 0 && !empty($fiche->strAttribut(23)), 'error : card created with empty quickcode');
+
+
+        // add attributes of type card , and for another card, set it to this quickcode
+        $fiche_def_id=$g_connection->get_value("select fd_id from fiche where f_id=$1 ",[$fiche->id]);
+        $fiche_def=new Fiche_Def($g_connection,$fiche_def_id);
+        $aAttribute=$g_connection->get_array("
+select ad_id from attr_def a1
+where 
+      a1.ad_id not 
+            in (select j1.ad_id from jnt_fic_attr j1 where j1.fd_id=$1)
+    and a1.ad_type = $2",[$fiche_def_id,'card']);
+        foreach ($aAttribute as $nAttribute) {
+            var_dump($nAttribute);
+
+            $fiche_def->insertAttribut($nAttribute['ad_id']);
+        }
+        // related cards
+        $fiche_related1=new Fiche($g_connection);
+        $aAttributeRelated=array(
+            "av_text23"=>"FR1",
+            'av_text1'=>'Fiche reliée'
+        );
+        foreach ($aAttribute as $nAttribute) {
+            $aAttributeRelated['av_text'.$nAttribute['ad_id']]='QC';
+        }
+        $fiche_related1->insert(2,$aAttributeRelated);
+        $aAttributeRelated['av_text1']='Fiche reliée 2';
+        $aAttributeRelated['av_text23']='FR2';
+        $fiche_related2=new Fiche($g_connection);
+        $fiche_related2->insert(2,$aAttributeRelated);
+
+        // ----
+        // check that related cards are properly created
+        // ----
+        $fiche_related1->load();
+        $fiche_related2->load();
+        $this->assertTrue($fiche_related1->id > 0 &&  !empty($fiche_related1->strAttribut(23)),'error related card 
+        not created properly');
+        $this->assertTrue($fiche_related2->id > 0 &&  !empty($fiche_related2->strAttribut(23)),'error related card 
+        not created properly');
+        // ----
+        // check card attribute
+        // ----
+        foreach ($aAttribute as $nAttribute) {
+            $this->assertEquals('QC',$fiche_related1->strAttribut($nAttribute['ad_id']),'Attribute QC is not set');
+            $this->assertEquals('QC',$fiche_related2->strAttribut($nAttribute['ad_id']),'Attribute QC is not set');
+        }
+
+        $fiche->setAttribut(23, $name);
+
+
+        $fiche->update($fiche->to_array());
+        $compare = new Fiche($g_connection, $fiche->id);
+        $this->assertEquals($quick_code, $compare->get_quick_code(), 'Error : quickcode not correct');
+
+        // check that the other attributes of type card have been updated
+        foreach ($aAttribute as $nAttribute) {
+            $this->assertEquals($fiche->get_quick_code(),$fiche_related1->strAttribut($nAttribute['ad_id']),'Attribute QC is not set');
+            $this->assertEquals($fiche->get_quick_code(),$fiche_related2->strAttribut($nAttribute['ad_id']),'Attribute QC is not set');
+        }
+        $fiche->remove();
+        $fiche_related1->remove();
+        $fiche_related2->remove();
+        foreach ($aAttribute as $nAttribute) {
+            $fiche_def->removeAttribut($nAttribute['ad_id']);
+        }
+
+
+    }
+    function dataFormat_QuickCode()
+    {
+        return array(
+            array('a+z+1-5','AZ1-5'),
+            array('///a+z+1-5','AZ1-5'),
+            array('/*/a+z+1-5','AZ1-5'),
+            array('.2a+z+1-5','.2AZ1-5'),
+            array('a+z+1-5','AZ1-5'),
+            array('ÀÉ@Ê','AE@E'),
+            array('ça&"','CA'),
+              array("", ""),
+            array(",,,,", ""),
+            array("####", ""),
+        );
+    }
+    /**
+     * @testdox test comptaproc.format_quickcode
+     * @dataProvider dataFormat_Quickcode
+     */
+    public function testFormat_QuickCode($p_qcode,$p_result)
+    {
+        global $g_connection;
+        $this->assertEquals($p_result,$g_connection->get_value( "select comptaproc.format_quickcode($1)",
+        [$p_result]),'quickcode is not transformed correctly');
+    }
+    function dataInsertName()
+    {
+        return array(
+            ['',"Nom vide"],
+            ['Eléphant','Eléphant'],
+            ["L'alphabet","L'alphabet"]
+        );
+    }
+    /**
+     * @testdox Test if it is possible to insert or update a empty  name
+     * @dataProvider dataInsertName
+     */
+    public function testInsertName($p_name,$p_result)
+    {
+        global $g_connection;
+
+        //insert
+        $fiche = new Fiche($g_connection);
+        $fiche->insert(2, ['av_text23' => 'QC', "av_text1" => $p_name]);
+        $fiche->load();
+        $this->assertEquals($p_result,$fiche->strAttribut(ATTR_DEF_NAME),'incorrect name');
+
+    }
+    /**
+     * @testdox Test if it is possible to insert or update a empty  name
+     * @dataProvider dataInsertName
+     */
+    public function testUpdateName($p_name,$p_result)
+    {
+        global $g_connection;
+
+        //insert
+        $fiche = new Fiche($g_connection);
+        $fiche->insert(2, ['av_text23' => 'QC', "av_text1" => $p_name]);
+        $fiche->load();
+        $this->assertEquals($p_result,$fiche->strAttribut(ATTR_DEF_NAME),'incorrect name');
+        $fiche->remove();
+    }
+    /**
+     * @testdox quickcode is generated and get a number if already exists
+     */
+    public function testQuickCodeNumbering()
+    {
+        global $g_connection;
+        $fiche=new Fiche($g_connection);
+        $fiche->insert(2,array("av_text1"=>'Base Card','av_text23'=>'DUP'));
+        $this->assertTrue($fiche->id > 0 && 'DUP'==$fiche->strAttribut(23),
+            'error : card created with wrong quickcode'.$fiche->strAttribut(23));
+        for ($i=0;$i<100;$i++) {
+            $fiche_duplicate = new Fiche($g_connection);
+            $fiche_duplicate->insert(2, array("av_text1" => 'Base Card' . $i, 'av_text23' => 'DUP'));
+         /*   $this->assertTrue($fiche_duplicate->id > $fiche->id && 'DUP' . $i == $fiche_duplicate->strAttribut(23),
+                'error : card created with empty quickcode'.$fiche_duplicate->strAttribut(23));
+         */
+        }
+        $a_fiche_clean=$g_connection->get_array("select f_id from fiche where f_id >= $1",
+                    [$fiche->id]);
+        foreach($a_fiche_clean as $fiche_clean) {
+            $fiche=new Fiche($g_connection,$fiche_clean['f_id']);
+            $fiche->remove();
+            $this->assertEquals(0,
+                $g_connection->get_value("select count(*) from fiche where f_id=$1",
+                    array($fiche_clean['f_id']))
+                ,"Card not removed");
+        }
     }
 }

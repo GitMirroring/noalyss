@@ -163,8 +163,8 @@ class Fiche
     /**
      *@brief set an attribute by a value, if the attribut array is empty
      * a call to getAttribut is performed
-     *@param int  AD_ID
-     *@param int value
+     *@param int  AD_ID attr_def.ad_id
+     *@param int value value of this attribute
      *@see constant.php table: attr_def
      */
     function setAttribut($p_ad_id,$p_value)
@@ -442,6 +442,15 @@ class Fiche
             }
             $Ret=$this->cn->exec_sql("insert into fiche(f_id,f_enable,fd_id) values ($1,$2,$3)",
                     array($fiche_id, $p_array['f_enable'], $p_fiche_def));
+            // first we need to save the name , to compute properly the quickcode
+            if ( empty ($p_array['av_text'.ATTR_DEF_NAME])) {
+
+                $p_array['av_text'.ATTR_DEF_NAME]=_("Nom vide");
+            }
+            // the name must be saved first
+            $this->cn->exec_sql("insert into fiche_detail (f_id,ad_id,ad_value) values ($1,$2,$3)",
+                array($fiche_id,1,$p_array['av_text'.ATTR_DEF_NAME]));
+
             // compute a quick_code
             if (!isset($p_array["av_text".ATTR_DEF_QUICKCODE]))
             {
@@ -449,7 +458,7 @@ class Fiche
             }
             $sql=sprintf("select insert_quick_code(%d,'%s')", $fiche_id,
                     sql_string($p_array['av_text'.ATTR_DEF_QUICKCODE]));
-            
+            $this->cn->exec_sql($sql);
             // get the card properties for this card category
             $fiche_def=new Fiche_Def($this->cn, $p_fiche_def);
             

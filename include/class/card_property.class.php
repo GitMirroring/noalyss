@@ -435,6 +435,7 @@ class Card_Property
                     array($p_fiche->get_f_enable(), $p_fiche->id));
 
             $name = $p_fiche->strAttribut(ATTR_DEF_NAME);
+
             // parse the attribute
             foreach ($p_fiche->attribut as $value)
             {

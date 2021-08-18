@@ -116,7 +116,7 @@ if ( !defined ("NOALYSS_PACKAGE_REPOSITORY")) {
 if ( ! defined ("SYSINFO_DISPLAY")) {
     define ("SYSINFO_DISPLAY",TRUE);
 }
-define ("DBVERSION",165);
+define ("DBVERSION",166);
 define ("MONO_DATABASE",25);
 define ("DBVERSIONREPO",20);
 define ('NOTFOUND','--not found--');
