@@ -160,7 +160,7 @@ LANGUAGE plpgsql;
 
 create trigger fiche_detail_check_trg before update or insert 
     on
-    public.fiche_detail for each row execute function comptaproc.fiche_detail_check() ;
+    public.fiche_detail for each row execute procedure comptaproc.fiche_detail_check() ;
 
 
 insert into version (val,v_description) values (166,'Fix bug for card with empty name or quickcode');

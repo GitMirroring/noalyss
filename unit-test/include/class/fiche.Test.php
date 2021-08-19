@@ -453,7 +453,7 @@ where
         );
     }
     /**
-     * @testdox Test if it is possible to insert or update a empty  name
+     * @testdox Test if it is possible to insert an empty  name
      * @dataProvider dataInsertName
      */
     public function testInsertName($p_name,$p_result)
@@ -465,6 +465,7 @@ where
         $fiche->insert(2, ['av_text23' => 'QC', "av_text1" => $p_name]);
         $fiche->load();
         $this->assertEquals($p_result,$fiche->strAttribut(ATTR_DEF_NAME),'incorrect name');
+        $fiche->remove();
 
     }
     /**
