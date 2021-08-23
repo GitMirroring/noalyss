@@ -113,4 +113,30 @@ class UserTest extends TestCase
         // check his removal
         $this->assertEquals($cn->get_value('select count(*) from profile_user where user_name=$1',array('unknown/user')),0);
     }
+    public function dataPeriode()
+    {
+        return array(
+            [92],
+            [103],
+            [105],
+            [107],
+            [108],
+            [137],
+            [1137]
+        );
+    }
+    /**
+     * 
+     * @param type $p_id periode id
+     * @dataProvider dataPeriode
+     */
+    public function testPeriode($p_id)
+    {
+        global $g_connection; 
+        $this->object->db=$g_connection;
+        $restore=$this->object->get_periode();
+        $this->assertTrue(is_numeric($restore),"Old periode id is not an integer");
+        $this->object->set_periode($p_id);
+        $this->assertEquals($p_id,$this->object->get_periode(),"Cannot retrieve the right periode");
+    }
 }

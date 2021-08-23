@@ -992,8 +992,8 @@ class User
 
     function get_exercice()
     {
-        $sql="select p_exercice from parm_periode where p_id=".$this->get_periode();
-        $Ret=$this->db->exec_sql($sql);
+        $sql="select p_exercice from parm_periode where p_id=$1";
+        $Ret=$this->db->exec_sql($sql,[$this->get_periode()]);
         if (Database::num_row($Ret)==1)
         {
             $r=Database::fetch_array($Ret, 0);

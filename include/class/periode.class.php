@@ -378,8 +378,8 @@ class Periode
     {
         if ($p_id==0)
             $p_id=$this->p_id;
-        $sql="select p_exercice from parm_periode where p_id=".$p_id;
-        $Res=$this->cn->exec_sql($sql);
+        $sql="select p_exercice from parm_periode where p_id=$1";
+        $Res=$this->cn->exec_sql($sql,[$p_id]);
         if (Database::num_row($Res)==0)
             return null;
         return Database::fetch_result($Res, 0, 0);

@@ -234,4 +234,30 @@ class Acc_AccountTest extends TestCase
         $result=$this->object->find_parent();
         $this->assertEquals($result,700);
     }
+    public function dataFormatAccount()
+    {
+        return array(
+            ['60élépànç%','60ELEPANC'],
+            ['4000','4000'],
+            ['6é&" #çç!!!,%-.','6ECC'],
+            ['6-alpha6','6ALPHA6'],
+            ['6_alpha6','6ALPHA6'],
+            ['6.alpha6','6ALPHA6'],
+            ['6:alpha6','6:ALPHA6'],
+        );
+    }
+    /**
+     * @brief format properly the accounting
+     * @testdox check psql function format_account
+     * @param string $param
+     * @param string $p_result
+     * @dataProvider dataFormatAccount
+     */
+    public function testFormatAccount($param,$p_result)
+    {
+        global $g_connection;
+        $this->assertEquals($g_connection->get_value("select comptaproc.format_account($1)",[$param]),
+                $p_result,"comptaproc.format_account $param does not match $p_result");
+    }
+
 }

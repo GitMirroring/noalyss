@@ -53,8 +53,15 @@ class Lettering
         $this->db=$p_init;
         $a=new User($p_init);
         $exercice=$a->get_exercice();
-        $this->start='01.01.'.$exercice;
-        $this->end='31.12.'.$exercice;
+        if ($exercice > 0) {
+            $periode=new Periode($p_init);
+            $aLimite=$periode->get_limit($exercice);
+            $this->start=$aLimite[0]->first_day();
+            $this->end=$aLimite[1]->last_day();
+        } else {
+            $this->start='01.01.'.$exercice;
+            $this->end='31.12.'.$exercice;
+        }
         // available ledgers
         $this->sql_ledger=str_replace('jrn_def_id','jr_def_id',$a->get_ledger_sql('ALL',3));
 
@@ -387,11 +394,6 @@ class Lettering
     {
         throw new Exception ('delete not implemented');
     }
-    /**
-     * Unit test for the class
-     */
-    static function test_me()
-    {}
 
 }
 /**
@@ -477,6 +479,7 @@ class Lettering_Account extends Lettering
 							coalesce(let_diff.jl_id,-1) as letter,
 					diff_letter1 as letter_diff,
                                         round(j_montant/currency_rate,4) as currency_amount,
+                                          currency_id,
                                         currency_rate, 
                                         currency_rate_ref,
 		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
@@ -505,6 +508,7 @@ class Lettering_Account extends Lettering
 						let_diff.jl_id as letter,
 					diff_letter1 as letter_diff,
                                          round(j_montant/currency_rate,4) as currency_amount,
+                                         currency_id,
                                         currency_rate, 
                                         currency_rate_ref,
 		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
@@ -532,6 +536,7 @@ class Lettering_Account extends Lettering
 						let_diff.jl_id as letter,
 					diff_letter1 as letter_diff,
                                          round(j_montant/currency_rate,4) as currency_amount,
+                                           currency_id,
                                         currency_rate, 
                                         currency_rate_ref,
                                         (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
@@ -558,6 +563,7 @@ class Lettering_Account extends Lettering
 						-1 as letter,
 					0 as letter_diff,
                                          round(j_montant/currency_rate,4) as currency_amount,
+                                           currency_id,
                                         currency_rate, 
                                         currency_rate_ref,
 		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
@@ -694,6 +700,7 @@ class Lettering_Card extends Lettering
 					diff_letter1 as letter_diff,
 					 round(j_montant/currency_rate,4) as currency_amount,
                                         currency_rate, 
+                                         currency_id,
                                         currency_rate_ref,
 		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
 						from jrnx join jrn on (j_grpt = jr_grpt_id)
@@ -717,6 +724,7 @@ class Lettering_Card extends Lettering
 						let_diff.jl_id as letter,
 					diff_letter1 as letter_diff,
 					 round(j_montant/currency_rate,4) as currency_amount,
+                                           currency_id,
                                         currency_rate, 
                                         currency_rate_ref,
 		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
@@ -740,6 +748,7 @@ class Lettering_Card extends Lettering
              -1 as letter,
 			 0 as letter_diff,
 				 round(j_montant/currency_rate,4) as currency_amount,
+                                currency_id,
                                 currency_rate, 
                                 currency_rate_ref,
 		            (select cr_code_iso from currency where currency_id=currency.id) as cr_code_iso
