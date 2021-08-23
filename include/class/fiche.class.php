@@ -139,7 +139,7 @@ class Fiche
      * \param $p_qcode quick_code (ad_id=23)
      * \param $p_all retrieve all the attribut of the card, possible value
      * are true or false. false retrieves only the f_id. By default true
-     * \return 0 success 1 error not found
+     * \returns 0 success , card found / 1 error card not found
      */
     function get_by_qcode($p_qcode=null,$p_all=true)
     {
@@ -477,8 +477,11 @@ class Fiche
                     $this->setAttribut($property->ad_id, $p_array[$key]);
                 }
             }
+            // For accounting 
+            
             Card_Property::update($this);
-            $this->quick_code=$this->strAttribut(ATTR_DEF_QUICKCODE);
+            // reread from database
+            $this->getAttribut();
         }
         catch (Exception $e)
         {

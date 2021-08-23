@@ -308,7 +308,7 @@ class FicheTest extends TestCase
     }
 
     /**
-     * @testdox Test if it is possible to insert e a empty quickcode
+     * @testdox testInsertEmptyQuickCode Test if it is possible to insert an  empty quickcode
      * @dataProvider dataEmptyQuickCode
      */
     public function testInsertEmptyQuickCode($name, $quick_code)
@@ -339,7 +339,7 @@ class FicheTest extends TestCase
     }
 
     /**
-     * @testdox Test if it is possible to update a empty quickcode
+     * @testdox testUpdateEmptyQuickCode Test if it is possible to update an empty quickcode
      * @dataProvider dataUpdateQuickCode
      */
     public function testUpdateEmptyQuickCode($name, $quick_code)
@@ -362,8 +362,6 @@ where
             in (select j1.ad_id from jnt_fic_attr j1 where j1.fd_id=$1)
     and a1.ad_type = $2",[$fiche_def_id,'card']);
         foreach ($aAttribute as $nAttribute) {
-            var_dump($nAttribute);
-
             $fiche_def->insertAttribut($nAttribute['ad_id']);
         }
         // related cards
@@ -484,21 +482,22 @@ where
         $fiche->remove();
     }
     /**
-     * @testdox quickcode is generated and get a number if already exists
+     * @testdox testQuickCodeNumbering quickcode is generated with number if duplicate
      */
     public function testQuickCodeNumbering()
     {
         global $g_connection;
         $fiche=new Fiche($g_connection);
-        $fiche->insert(2,array("av_text1"=>'Base Card','av_text23'=>'DUP'));
+        $fiche->insert(2,array("av_text1"=>'Card for PHPUNIT','av_text23'=>'DUP'));
         $this->assertTrue($fiche->id > 0 && 'DUP'==$fiche->strAttribut(23),
             'error : card created with wrong quickcode'.$fiche->strAttribut(23));
         for ($i=0;$i<100;$i++) {
             $fiche_duplicate = new Fiche($g_connection);
             $fiche_duplicate->insert(2, array("av_text1" => 'Base Card' . $i, 'av_text23' => 'DUP'));
-         /*   $this->assertTrue($fiche_duplicate->id > $fiche->id && 'DUP' . $i == $fiche_duplicate->strAttribut(23),
-                'error : card created with empty quickcode'.$fiche_duplicate->strAttribut(23));
-         */
+            
+            $this->assertTrue($fiche_duplicate->id > $fiche->id && 'DUP' . $i == $fiche_duplicate->strAttribut(23),
+                " error : card created with  quickcode {$fiche_duplicate->strAttribut(23)} expected DUP{$i}");
+         
         }
         $a_fiche_clean=$g_connection->get_array("select f_id from fiche where f_id >= $1",
                     [$fiche->id]);
@@ -510,5 +509,169 @@ where
                     array($fiche_clean['f_id']))
                 ,"Card not removed");
         }
+    }
+    /**
+     * Create a card
+     * @global type $g_connection
+     * @param type $p_qcode
+     * @returns \Fiche
+     */
+    public function build_fiche($p_category,$p_qcode)
+    {
+                // insert a card in category 2 with automatic set 
+        global $g_connection;
+        $fiche=new Fiche($g_connection);
+        if ( $fiche->get_by_qcode($p_qcode) == 0 ) 
+        {
+            $fiche->remove();
+        }
+        
+        $fiche->insert($p_category,array("av_text1"=>'Card for PHPUNIT','av_text23'=>$p_qcode));
+        $this->assertTrue($fiche->id > 0 && $p_qcode==$fiche->strAttribut(23),
+            'error : card created with wrong quickcode'.$fiche->strAttribut(23));
+        return $fiche;
+    }
+    /**
+     * @testdox testAutomaticAccountingUpdate test accounting automatic compute(update)
+     */
+    public function testAutomaticAccountingUpdate()
+    {
+        global $g_connection;
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val like '6000%'");
+        
+        $fiche_def=new Fiche_Def($g_connection,2);
+        $fiche_def->set_autocreate(true);
+        $fiche_def->save_class_base('600');
+        $fiche=$this->build_fiche(2,'TESTACCOUNT');
+        $start=$fiche->id;
+        $this->assertEquals('600001',$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+        $aAccount=array();
+        for ( $i=600002; $i < 600999;$i++) {
+           $fiche->setAttribut(ATTR_DEF_ACCOUNT, "");
+           Card_Property::update($fiche);
+           $fiche->load();
+           $this->assertEquals($i,$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+           $aAccount[]="'$i'";
+            
+        }
+        $sAccount=join(",",$aAccount);
+       $g_connection->exec_sql("delete from tmp_pcmn where pcm_val in ($sAccount)");
+       $g_connection->exec_sql("delete from fiche_detail where f_id >= $1",[$start]);
+       $g_connection->exec_sql("delete from fiche where f_id >= $1",[$start]);
+    }
+    /**
+     * @testdox testAutomaticAccountingInsert test accounting automatic compute (insert)
+     */
+    public function testAutomaticAccountingInsert()
+    {
+
+        global $g_connection;
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val like '6000%'");
+          
+        $fiche_def=new Fiche_Def($g_connection,2);
+        $fiche_def->set_autocreate(true);
+        $fiche_def->save_class_base('600');
+        $first=true;
+        $aAccount=array();
+        for ( $i=600001; $i <  601000;$i++) {
+            $fiche=new Fiche($g_connection);
+            $fiche->insert(2,['av_text1'=>'PHPUNIT '.__FUNCTION__]);
+            if ( $first ) { 
+                $first=false;
+                $start=$fiche->id;
+            }
+           $fiche->load();
+           $this->assertEquals($i,$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+            $aAccount[]="'$i'";
+        }
+          $sAccount=join(",",$aAccount);
+       $g_connection->exec_sql("delete from tmp_pcmn where pcm_val in ($sAccount)");
+       $g_connection->exec_sql("delete from fiche_detail where f_id >= $1",[$start]);
+       $g_connection->exec_sql("delete from fiche where f_id >= $1",[$start]);
+
+    }
+    public function dataAccount()
+    {
+        return array(
+            ['600002','600002'],
+            ['600100','600100'],
+            ['6500','6500']
+        );
+    }
+    /**
+     * @brief test insert of the accounting
+     * @testdox testAccountInsert Set  of the accounting while inserting
+     * @dataProvider dataAccount
+     */
+    public function testAccountInsert($p_value,$p_expected)
+    {
+          global $g_connection;
+        $fiche=$this->build_fiche(2, 'PHPUNIT.ACCOUNT.INSERT');
+        $fiche->setAttribut(ATTR_DEF_ACCOUNT, $p_value);
+        Card_Property::update($fiche);
+        $this->assertEquals($p_expected,$fiche->strAttribut(ATTR_DEF_ACCOUNT)," cannot SET accounting");
+        $this->assertTrue($g_connection->get_value("select count(*) from tmp_pcmn where pcm_val = $1",[$p_expected])==1
+                ," accounting not created in TMP_PCMN");
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val=$1",[$p_expected]);
+        $fiche->remove();
+    }
+
+     /**
+     * @brief test update of the accounting
+     * @testdox testAccountUpdate et  of the accounting while updating
+     * @dataProvider dataAccount
+     */
+    public function testAccountUpdate($p_value,$p_expected)
+    {
+        global $g_connection;
+        $fiche=$this->build_fiche(2, 'PHPUNIT.ACCOUNT.UPDATE');
+        $fiche->setAttribut(ATTR_DEF_ACCOUNT, $p_value);
+        $fiche->update($fiche->to_array());
+        $this->assertEquals($p_expected,$fiche->strAttribut(ATTR_DEF_ACCOUNT)," cannot SET accounting");
+        $this->assertTrue($g_connection->get_value("select count(*) from tmp_pcmn where pcm_val = $1",[$p_expected])==1
+                ," accounting not created in TMP_PCMN");
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val=$1",[$p_expected]);
+        $fiche->remove();
+    }
+    /**
+     * @testdox testSameAccountingUpdate UPDATE test all the same accounting 
+     */
+    public function testSameAccountingUpdate()
+    {
+        // insert a card in category 2 with always the same account
+        global $g_connection;
+        $fiche_def=new Fiche_Def($g_connection,2);
+        $fiche_def->set_autocreate(false);
+        $fiche_def->save_class_base('600');
+        $fiche=$this->build_fiche(2,'TESTACCOUNT');
+        $this->assertEquals('600',$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+        for ( $i=600003; $i < 600025;$i++) {
+            $fiche->setAttribut(ATTR_DEF_ACCOUNT, "");
+           Card_Property::update($fiche);
+           $fiche->load();
+            $this->assertEquals(600,$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+            
+        }
+        $fiche->remove();
+    }
+     /**
+     * @testdox testSameAccountingInsert INSERT test all the same accounting 
+     */
+    public function testSameAccountingInsert()
+    {
+        // insert a card in category 2 with always the same account
+        global $g_connection;
+        $fiche_def=new Fiche_Def($g_connection,2);
+        $fiche_def->set_autocreate(false);
+        $fiche_def->save_class_base('600');
+        
+        for ( $i=600002; $i < 600025;$i++) {
+            $fiche=new Fiche($g_connection);
+            $fiche->insert(2,['av_text1'=>'PHPUNIT test Same accounting','av_text5'=>""]);
+            $fiche->load();
+            $this->assertEquals(600,$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+            $fiche->remove();
+        }
+        
     }
 }

@@ -495,7 +495,6 @@ class Card_Property
                             if (mb_strlen($part2)>40)
                                 throw new Exception("CP476."._("Poste comptable trop long"), 1);
 
-                            $part1=$p_fiche->cn->get_value('select format_account($1)', array($part1));
                             $acc_account1=new Acc_Account($p_fiche->cn, $part1);
 
                             if ($acc_account1->get_parameter("id")==-1)
@@ -513,7 +512,6 @@ class Card_Property
                                 throw new Exception("CP493."._("Utilisation directe interdite du poste comptable $part1"));
                             }
                             // Part 2
-                            $part2=$p_fiche->cn->get_value('select format_account($1)', array($part2));
                             $acc_account2=new Acc_Account($p_fiche->cn, $part2);
 
                             if ($acc_account2->get_parameter("id")==-1)
@@ -556,7 +554,7 @@ class Card_Property
                                 throw new Exception("CP537."._("Utilisation directe interdite du poste comptable $v"));
                             }
                         }
-                        $sql=sprintf("select account_update(%d,'%s')", $p_fiche->id, $v);
+                        $sql=sprintf("select account_insert(%d,'%s')", $p_fiche->id, $v);
                         try
                         {
                             $p_fiche->cn->exec_sql($sql);
@@ -570,7 +568,7 @@ class Card_Property
                     if (strlen(trim($v))==0)
                     {
 
-                        $sql=sprintf("select account_update(%d,null)", $p_fiche->id);
+                        $sql=sprintf("select account_insert(%d,null)", $p_fiche->id);
                         try
                         {
                             $Ret=$p_fiche->cn->exec_sql($sql);
