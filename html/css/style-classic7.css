@@ -1585,18 +1585,9 @@ div#preference_div {
 }
 
 div#box_search_card {
-    position:absolute;
-    right:3.625vh;
-    top:33vh;
-    
+      
 }
-@media only screen and (max-width:994px)
-{
-    div#box_search_card {
-    top:60vh;
-       
-    }
-}
+
 @media only screen and (max-width:804px)
 {
     div#box_search_card {
