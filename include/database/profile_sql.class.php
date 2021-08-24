@@ -48,6 +48,7 @@ class Profile_sql extends Table_Data_SQL
 			, "p_desc" => "p_desc"
 			, "with_calc" => "with_calc"
 			, "with_direct_form" => "with_direct_form"
+                        ,'with_search_card'=>'with_search_card'
 		);
 		$this->type = array(
 			"p_id" => "numeric"
@@ -55,6 +56,7 @@ class Profile_sql extends Table_Data_SQL
 			, "p_desc" => "text"
 			, "with_calc" => "text"
 			, "with_direct_form" => "text"
+                        ,'with_search_card'=>"numeric"
 		);
 		$this->default = array(
 			"p_id" => "auto",

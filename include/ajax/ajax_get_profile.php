@@ -71,6 +71,9 @@ $with_calc->set_check($profile->with_calc);
 $with_direct_form=new ICheckBox("with_direct_form","t");
 $with_direct_form->set_check($profile->with_direct_form);
 
+$with_search_card=new ICheckBox("with_search_card",1);
+$with_search_card->set_check($profile->with_search_card);
+
 // If $p_id == -1 it is a new profile
 if ( $p_id > 0 )
 {

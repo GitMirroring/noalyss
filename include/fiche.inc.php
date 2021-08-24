@@ -75,22 +75,17 @@ $histo->javascript = 'onchange="if (this.value==3 || this.value==-1) {
 
 $histo->selected =  $http->get('histo',"number", -1);
 $str_histo = $histo->input();
-echo '<div class="content">';
+?>
+<div class="content">
+
+<?php
 echo '<FORM method="GET">';
 echo dossier::hidden();
 echo HtmlInput::hidden('ac', $ac);
 require_once NOALYSS_TEMPLATE.'/impress_cat_card.php';
 echo HtmlInput::submit('cat_display', _('Recherche'));
 echo '</FORM>';
-$search_card=new IText('card_search');
-$search_card_js=sprintf('onclick="boxsearch_card(\'%d\')"',dossier::id());
-?>
-<div id="box_search_card">
 
-		<?php echo _('Recherche de fiche')?> <?php echo Icon_Action::infobulle(18)?> :<?php echo $search_card->input()?>
-		<?php echo HtmlInput::button_anchor(_("Chercher"),"javascript:void(0)","",$search_card_js,'smallbutton')?>
-</div>
-<?php
 echo '</div>';
 $str = "if (g('histo').value==3 || g('histo').value== -1 ) {
      g('trstart').style.display='none';g('trend').style.display='none';g('allcard').style.display='none';}

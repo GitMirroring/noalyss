@@ -45,4 +45,8 @@
 	<td><?php echo _("Avec  Accès Direct ")?></td>
 	<td><?php echo $with_direct_form->input()?></td>
 </tr>
+<tr>
+	<td><?php echo _("Recherche de fiche")?></td>
+	<td><?php echo $with_search_card->input()?></td>
+</tr>
 </table>

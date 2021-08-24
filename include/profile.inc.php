@@ -107,31 +107,35 @@ if (isset($_POST['change_stock']))
 
 if (isset($_POST['save_name']))
 {
-
-    extract($_POST, EXTR_SKIP);
+    $http=new HttpInput();
+    $p_name=$http->post("p_name");
+    $p_id=$http->post("p_id");
+    $with_calc=$http->post("with_calc","string",'f');
+    $with_direct_form=$http->post("with_direct_form","string",'f');
+    $with_search_card=$http->post("with_search_card","string",0);
+    $p_desc=$http->post('p_desc');
     try
     {
         if (strlen(trim($p_name))==0)
             throw new Exception("Nom ne peut être vide");
         if (isNumber($p_id)==0)
             throw new Exception("profile Invalide");
-        $wc=(isset($with_calc))?1:0;
-        $wd=(isset($with_direct_form))?1:0;
         $p_desc=(strlen(trim($p_desc))==0)?null:trim($p_desc);
         if ($p_id!=-1)
         {
             $cn->exec_sql("update profile set p_name=$1,p_desc=$2,
-					with_calc=$3, with_direct_form=$4 where p_id=$5",
+					with_calc=$3, with_direct_form=$4 ,with_search_card=$6
+                                        where p_id=$5",
                     array($p_name,
-                $p_desc, $wc, $wd, $p_id));
+                $p_desc, $with_calc, $with_direct_form, $p_id,$with_search_card));
         }
         else
         {
             $p_id=$cn->get_value("insert into profile (p_name,
-				p_desc,with_calc,with_direct_form) values
-				($1,$2,$3,$4) returning p_id",
+				p_desc,with_calc,with_direct_form,with_search_card) values
+				($1,$2,$3,$4,$5) returning p_id",
                     array(
-                $p_name, $p_desc, $wc, $wd
+                $p_name, $p_desc, $with_calc, $with_direct_form,$with_search_card
             ));
         }
     }
@@ -150,9 +154,9 @@ if (isset($_POST['clone']))
         $p_id = $http->post("p_id","number", 0);
         $cn->start();
         $new_id=$cn->get_value("insert into profile(p_name,p_desc,with_calc,
-			with_direct_form)
+			with_direct_form,with_search_card)
 			select 'copie de '||p_name,p_desc,with_calc,
-			with_direct_form from profile where p_id=$1 returning p_id", array($p_id));
+			with_direct_form , with_search_card from profile where p_id=$1 returning p_id", array($p_id));
         $cn->exec_sql("
                         insert into profile_menu (p_id,me_code,me_code_dep,p_order,p_type_display,pm_default)
                         select $1,me_code,me_code_dep,p_order,p_type_display,pm_default from profile_menu
@@ -406,7 +410,7 @@ $profile_mobile->create_js_script();
 // Show details of the selected profile
 //*******************************************************
 echo '<div id="detail_profile" class="content">';
-if (isset($_POST['p_id']))
+if (isset($_POST['p_id']) && $_POST['p_id'] != -1 )
 {
     require_once NOALYSS_INCLUDE.'/ajax/ajax_get_profile.php';
     ?>
