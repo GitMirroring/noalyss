@@ -118,7 +118,9 @@ if ($op=="profile")
         $value=$http->post("value");
         // save profile
         $sec_User=new User($cn, $user_id);
-        $sec_User->save_profile($value);
+        if ( $value > 0) {
+            $sec_User->save_profile($value);
+        }
         $ie_input=Inplace_Edit::build($input);
         $ie_input->set_callback("ajax_misc.php");
         $ie_input->add_json_param("op", "profile");

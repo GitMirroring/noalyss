@@ -1782,7 +1782,22 @@ class User
         }
         return $result;
     }
+    /**
+     * @brief clean the sessions 
+     */
+    static function clean_session()
+    {
 
+        $aSession=$_SESSION;
+        foreach($aSession as $key => $value) {
+            if(DEBUGNOALYSS>1) { echo "[$key]=>[$value]";}
+            
+            if ( strpos($key,SESSION_KEY) === 0) {
+                unset($_SESSION[$key]);
+               if(DEBUGNOALYSS>1) { echo "=> [$key] cleaned";}
+            }
+        }
+    }
 }
 
 ?>

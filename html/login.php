@@ -37,7 +37,10 @@ if (defined('MULTI') && MULTI == 0)
 
 if (  isset ($_POST["p_user"] ) )
 {
-
+    $http=new HttpInput();
+    
+    // clean OLD session 
+    User::clean_session($http->post("p_user"));
     $User=new User($rep);
     $User->Check(false,'LOGIN');
 

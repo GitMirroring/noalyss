@@ -23,14 +23,15 @@
 require_once '../include/constant.php';
 require_once ("lib/ac_common.php");
 require_once('class/database.class.php');
-session_unset();
 
 html_page_start("classic");
 
 /* clean Global variable */
-
-if ( isset ($g_user) ) unset ($GLOBAL['g_user']);
-if ( isset ($g_pass) ) unset ($GLOBAL['g_pass']);
+if(DEBUGNOALYSS>1) { 
+    echo h1(_("try to clean session"));
+    var_dump($_SESSION);
+}
+User::clean_session();
 //
 // Clean the possible cookies
 //
@@ -44,7 +45,13 @@ if (isset($_SERVER['HTTP_COOKIE'])) {
     }
 }
 echo '<h2 class="info">'._('Vous êtes déconnecté').'</h2>';
-echo '<META HTTP-EQUIV="REFRESH" content="0;url=index.html">';
 
+if(DEBUGNOALYSS>1) { 
+    echo h1(_("Session after cleansing"));
+    var_dump($_SESSION);
+     
+} else {
+    echo '<META HTTP-EQUIV="REFRESH" content="0;url=index.html">';
+}
 html_page_stop();
 ?>

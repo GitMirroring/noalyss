@@ -136,7 +136,7 @@ if ( isset ($_GET["action"] ))
 if ( $action == "view" )
 {
     $l_Db=sprintf("dossier%d",$gDossier);
-    $return= HtmlInput::button_anchor(_('Retour à la liste'),'?&ac='.$http->request('ac').'&'.dossier::get(),_('retour'),"",'smallbutton');
+    $return= HtmlInput::button_anchor(_('Retour à la liste'),'?&ac='.$http->request('ac').'&'.dossier::get(),_('retour'),"",'button');
 
     $repo=new Database();
     $user_id=$http->get('user_id',"number");
@@ -203,7 +203,7 @@ if ( $action == "view" )
     echo HtmlInput::hidden('user_id',$user_id);
     $i_profile=new ISelect ('profile');
     $i_profile->id=uniqid("profile");
-    $i_profile->value=$cn->make_array("select p_id,p_name from profile
+    $i_profile->value=$cn->make_array("select p_id,p_name from profile where p_id > 0
                     order by p_name");
     
     $i_profile->selected=$sec_User->get_profile();
