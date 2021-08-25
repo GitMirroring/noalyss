@@ -384,7 +384,7 @@ class User
 
         $cn=new Database();
         $this->id=$cn->get_value($Sql,
-                array($this->first_name, $this->last_name, $this->login, 1, 0, $this->pass, $this->email));
+                array($this->first_name, $this->last_name, $this->login, 1, $this->admin, $this->pass, $this->email));
     }
 
     /**

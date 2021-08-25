@@ -62,9 +62,88 @@ if ( isset ($_POST["ADD"]) )
 
     }
 } //SET login
+/******************************************************/
+// Update  user
+/******************************************************/
+$sbaction=$http->post('sbaction',"string", "");
+if ($sbaction == "save")
+{
+    $uid = $http->post("UID");
 
+    // Update User
+    $cn = new Database();
+    $UserChange = new User($cn, $uid);
+    
+    if ($UserChange->load() == -1)
+    {
+        alert(_("Cet utilisateur n'existe pas"));
+    }
+    else
+    {
+        $UserChange->first_name =$http->post('fname');
+        $UserChange->last_name = $http->post('lname');
+        $UserChange->active = $http->post('Actif');
+        $UserChange->admin = $http->post('Admin');
+        $UserChange->email = $http->post('email');
+        if ($UserChange->active ==-1 || $UserChange->admin ==-1)
+        {
+            die ('Missing data');
+        }
+        else if (  trim($_POST['password'])<>'')
+        {
+            $UserChange->pass = md5($_POST['password']);
+            $UserChange->save();
+        }
+        else
+	{
+            $UserChange->pass=$UserChange->password;
+            $UserChange->save();
+	}
+
+    }
+}
+else if ($sbaction == "delete")
+{
+/******************************************************/
+// Delete the user
+/******************************************************/
+    // check that the control is correct
+    try {
+        $code=$http->post("userdel");
+        $ctl_code=$http->post('ctlcode');
+        $uid = $http->request('use_id');
+    } catch (Exception $ex) {
+         echo_error($ex->getMessage());
+         throw $ex;
+    }
+    if ( DEBUGNOALYSS > 1) {
+        echo "code [$code] code control [$ctl_code]";
+    }
+    if ( $code != $ctl_code) {
+        echo _("Code invalide, effacement refusé");
+        return;
+    }
+    $cn = new Database();
+    $auser=$cn->get_row('select use_login from ac_users where use_id = $1',[$uid]);
+    if ( $auser == null) return;
+    $Res = $cn->exec_sql("delete from jnt_use_dos where use_id=$1", array($uid));
+    $Res = $cn->exec_sql("delete from ac_users where use_id=$1", array($uid));
+    //------------------------------------
+    // Remove user from all the dossiers
+    //------------------------------------
+    $a_dossier=$cn->get_array('select dos_id from ac_dossier');
+    if ( is_array($a_dossier) ) {
+        $nb=count($a_dossier);
+        for ( $i=0;$i<$nb;$i++)
+            User::remove_inexistant_user($a_dossier[$i]['dos_id']);
+    }
+    User::audit_admin(sprintf('DELETE USER %s %s',$uid,$auser['use_login']));
+    echo "<H2 class=\"notice\">";
+    printf (_("Utilisateur %s %s est effacé"),$http->post('fname'),$http->post('lname')) ;
+    echo " </H2>";
+}
 // View user detail
-if ( isset($_REQUEST['det']))
+if ( isset($_REQUEST['det']) && $sbaction=="")
 {
     require_once NOALYSS_INCLUDE.'/user_detail.inc.php';
 
@@ -84,7 +163,7 @@ if ( isset($_REQUEST['det']))
        <TR><TD style="text-align: right"> <?php echo _('Email')?></TD><TD> <INPUT class="input_text" TYPE="TEXT" NAME="EMAIL"></TD></TR>
 </TABLE>
 <?php
-echo HtmlInput::submit("ADD",_('Créer Utilisateur'));
+echo HtmlInput::submit("ADD",_('Créer Utilisateur'),"",'button');
 echo HtmlInput::button_action(_("Fermer"), "$('create_user').style.display='none';");
 
 ?>

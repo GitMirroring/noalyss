@@ -39,79 +39,7 @@ if ($UserChange->id == false)
     html_page_stop();
 }
 
-/*  
- * Update user changes 
- */
-$sbaction=$http->post('sbaction',"string", "");
-if ($sbaction == "save")
-{
-    $uid = $_POST['UID'];
 
-    // Update User
-    $cn = new Database();
-    $UserChange = new User($cn, $uid);
-    
-    if ($UserChange->load() == -1)
-    {
-        alert(_("Cet utilisateur n'existe pas"));
-    }
-    else
-    {
-        $UserChange->first_name =$http->post('fname');
-        $UserChange->last_name = $http->post('lname');
-        $UserChange->active = $http->post('Actif');
-        $UserChange->admin = $http->post('Admin');
-        $UserChange->email = $http->post('email');
-        if ($UserChange->active ==-1 || $UserChange->admin ==-1)
-        {
-            die ('Missing data');
-        }
-        else if (  trim($_POST['password'])<>'')
-        {
-            $UserChange->pass = md5($_POST['password']);
-            $UserChange->save();
-        }
-        else
-	{
-            $UserChange->pass=$UserChange->password;
-            $UserChange->save();
-	}
-
-    }
-}
-else if ($sbaction == "delete")
-{
-//
-// Delete the user
-//
-    // check that the control is correct
-    $code=$http->post("userdel");
-    $ctl_code=$http->post('ctlcode');
-    if ( $code != $ctl_code) {
-        echo _("Code invalide, effacement refusé");
-        return;
-    }
-    $cn = new Database();
-    $auser=$cn->get_row('select use_login from ac_users where use_id = $1',[$uid]);
-    if ( $auser == null) return;
-    $Res = $cn->exec_sql("delete from jnt_use_dos where use_id=$1", array($uid));
-    $Res = $cn->exec_sql("delete from ac_users where use_id=$1", array($uid));
-    //------------------------------------
-    // Remove user from all the dossiers
-    //------------------------------------
-    $a_dossier=$cn->get_array('select dos_id from ac_dossier');
-    if ( is_array($a_dossier) ) {
-        $nb=count($a_dossier);
-        for ( $i=0;$i<$nb;$i++)
-            User::remove_inexistant_user($a_dossier[$i]['dos_id']);
-    }
-    User::audit_admin(sprintf('DELETE USER %s %s',$uid,$auser['use_login']));
-    echo "<H2 class=\"info\">";
-    printf (_("Utilisateur %s %s est effacé"),$http->post('fname'),$http->post('lname')) ;
-    echo " </H2>";
-    require_once NOALYSS_INCLUDE.'/user.inc.php';
-    return;
-}
 $UserChange->load();
 $it_pass=new IText('password');
 $it_pass->value="";
