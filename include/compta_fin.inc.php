@@ -154,10 +154,13 @@ try
     echo HtmlInput::reset(_('Effacer'));
 
     $script="update_name();";
-    if ( ! isset($_REQUEST['e_date'])&& $g_parameter->MY_DATE_SUGGEST=='Y')
-    {
-            $script.=" get_last_date();";
-    }
+    $e_date=$http->request("e_date","string","");
+
+    if ($e_date=="" && $g_parameter->MY_DATE_SUGGEST=='Y'){
+	$script.=" get_last_date();";
+
+      }
+
     if ( ! isset ($_REQUEST['first_sold']) ) {
             $script.=" ajax_saldo('first_sold');";
     }

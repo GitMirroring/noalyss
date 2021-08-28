@@ -122,10 +122,12 @@ echo '</form>';
 echo "<script>checkTotalDirect();</script>";
 echo create_script(" update_name()");
 
-if (!isset($_REQUEST['e_date']) && $g_parameter->MY_DATE_SUGGEST=='Y')
-{
-	echo create_script(" get_last_date()");
-}
+$e_date=$http->request("e_date","string","");
+
+if ($e_date=="" && $g_parameter->MY_DATE_SUGGEST=='Y')  {
+    echo create_script(" get_last_date()");
+  }
+
 echo '</div>';
 
 ?>
