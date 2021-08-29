@@ -1,5 +1,11 @@
 begin;
 update menu_ref set me_menu='Profil' , me_description_etendue='Configuration des profils des utilisateurs, permet de fixer les journaux, profils dans les documents et stock que  ce profil peut utiliser. Cela limite les utilisateurs puisque ceux-ci ont un profil', me_description='Configuration profil' where me_code='CFGPRO';
+update menu_ref set me_menu = replace (me_menu,'profile','profil') where me_menu like '%profile%';
+update menu_ref set me_menu = replace (me_menu,'Profile','Profil') where me_menu like '%Profile%';
+update menu_ref set me_description = replace (me_description,'Profile','Profil') where me_description like '%Profile%';
+update menu_ref set me_description = replace (me_description,'Profile','Profil') where me_description like '%Profile%';
+update menu_ref set me_description_etendue = replace (me_description_etendue,'Profile','Profil') where me_description_etendue like '%Profile%';
+update menu_ref set me_description_etendue = replace (me_description_etendue,'Profile','Profil') where me_description_etendue like '%Profile%';
 
 
 update menu_ref set me_menu='Financier' , me_description_etendue='journaux financier, trésorerie, caisse', me_description='saisies de relevés bancaires, d''extraits de compte ' where me_code='MENUFIN';
