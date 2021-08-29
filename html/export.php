@@ -49,7 +49,7 @@ if ( $action=='X'  || $g_user->check_print($action)==0 )
 // get file and execute it
 
  $prfile=$cn->get_value("select me_file from menu_ref where me_code=$1",array($action));
- if ( $prfile == "") {
+ if ( $prfile == "" || !file_exists(NOALYSS_INCLUDE."/export/$prfile")) {
      print $action;
      die (_('Export impossible'));
  }
