@@ -130,7 +130,7 @@ if ( isset ($_POST["DATABASE"]) )
             if ( strlen($year) != 4 || isNumber($year) == 0 || $year > 2100 || $year < 2000 || $year != round($year,0))
             {
                 echo "$year"._(" est une année invalide");
-                $Res=$repo->exec_sql("delete from ac_dossier where dos_id=$l_id");
+                $Res=$repo->exec_sql("delete from ac_dossier where dos_id=$1",[$l_id]);
             }
             else
             {
@@ -180,7 +180,16 @@ if ( isset ($_POST["DATABASE"]) )
                 Dossier::synchro_admin($l_id);
                 User::remove_inexistant_user($l_id);
                 User::audit_admin(sprintf('CREATE DATABASE %s %s',$l_id,$dos));
-
+               
+                // -- patch it if need
+                $db=new Database($l_id, 'dos');
+                echo h2("$l_id - $dos");
+                $db->apply_patch($db->format_name($l_id, "dos"));
+                
+                echo '<p class="text-center">';
+                echo HtmlInput::button_anchor(_("Retour"), "?action=dossier_mgt", uniqid(),"","button");
+                echo '</p>';
+                return ;
             }
         }
         else {
