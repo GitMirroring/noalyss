@@ -51,7 +51,23 @@ class PDF_Operation extends PDF {
         $ledger = new Jrn_Def_sql($this->cn, $this->acc_detail->det->jr_def_id);
         return $ledger->jrn_def_name;
     }
+    /**
+     * @brief print info  (jrn_info)
+     */
+    private function print_info() {
+        $a_type=array(
+            'OTHER'=>_("Autre"),
+            'BON_COMMANDE'=>_("Bon de commande")
+        );
+        foreach ($a_type as $key=>$label){
+            $other_info=$this->cn->get_value("select ji_value from jrn_info where jr_id=$1 and id_type=$2",
+                    [$this->acc_detail->jr_id,$key]);
 
+            $this->pdf->write_cell(50, 6,$label);
+            $this->pdf->write_cell(100, 6, $other_info);
+            $this->pdf->line_new(4);
+        }
+    }
     /**
      * @brief Write basic information about the operation : date , ledger ,
      * receipt , comment , document name if any
@@ -98,6 +114,8 @@ class PDF_Operation extends PDF {
             $this->pdf->write_cell(50, 6, nb($this->acc_detail->get_currency_amount(),4));
 
         }
+        $this->pdf->line_new(4);
+        $this->print_info();
         $this->pdf->line_new(8);
     }
     /**
@@ -175,11 +193,11 @@ class PDF_Operation extends PDF {
             $this->pdf->write_cell($width[0],6,$i+1);
             $this->pdf->write_cell($width[1],6,$fiche->get_quick_code());
             $this->pdf->LongLine($width[2],6,$row['j_text']);
-            $this->pdf->write_cell($width[3],6,$row["qs_price"],"",0,"R");
+            $this->pdf->write_cell($width[3],6,nbm($row["qs_price"],2),"",0,"R");
             $str=$this->str_vat($row["qs_vat_code"]);
             $this->pdf->write_cell($width[4],6,$str);
-            $this->pdf->write_cell($width[5],6,$row["qs_vat"],"",0,"R");
-            $this->pdf->write_cell($width[6],6,bcadd($row["qs_price"],$row["qs_vat"]),"",0,"R");
+            $this->pdf->write_cell($width[5],6,nbm($row["qs_vat"],2),"",0,"R");
+            $this->pdf->write_cell($width[6],6,nbm(bcadd($row["qs_price"],$row["qs_vat"]),2),"",0,"R");
             $this->pdf->line_new(6);
 
             $sum_amount=bcadd($sum_amount,$row["qs_price"]);
@@ -189,10 +207,10 @@ class PDF_Operation extends PDF {
         $this->pdf->write_cell($width[0],6,"");
         $this->pdf->write_cell($width[1],6,"");
         $this->pdf->write_cell($width[2],6,"");
-        $this->pdf->write_cell($width[3],6,$sum_amount,"",0,"R");
+        $this->pdf->write_cell($width[3],6,nbm($sum_amount,2),"",0,"R");
         $this->pdf->write_cell($width[4],6,"");
-        $this->pdf->write_cell($width[5],6,$sum_vat,"",0,"R");
-        $this->pdf->write_cell($width[6],6,bcadd($sum_amount,$sum_vat),"",0,"R");
+        $this->pdf->write_cell($width[5],6,nbm($sum_vat,2),"",0,"R");
+        $this->pdf->write_cell($width[6],6,nbm(bcadd($sum_amount,$sum_vat),2),"",0,"R");
         $this->pdf->line_new(4);
         
     }    
@@ -220,11 +238,11 @@ class PDF_Operation extends PDF {
             $this->pdf->write_cell($width[0],6,$i+1);
             $this->pdf->write_cell($width[1],6,$fiche->get_quick_code());
             $this->pdf->LongLine($width[2],6,$row['j_text']);
-            $this->pdf->write_cell($width[3],6,$row["qp_price"],"",0,"R");
+            $this->pdf->write_cell($width[3],6,nbm($row["qp_price"],2),"",0,"R");
             $str=$this->str_vat($row["qp_vat_code"]);
             $this->pdf->write_cell($width[4],6,$str);
-            $this->pdf->write_cell($width[5],6,$row["qp_vat"],"",0,"R");
-            $this->pdf->write_cell($width[6],6,bcadd($row["qp_price"],$row["qp_vat"]),"",0,"R");
+            $this->pdf->write_cell($width[5],6,nbm($row["qp_vat"],2),"",0,"R");
+            $this->pdf->write_cell($width[6],6,nbm(bcadd($row["qp_price"],$row["qp_vat"]),2),"",0,"R");
             $this->pdf->line_new(6);
 
             $sum_amount=bcadd($sum_amount,$row["qp_price"]);
@@ -234,10 +252,10 @@ class PDF_Operation extends PDF {
         $this->pdf->write_cell($width[0],6,"");
         $this->pdf->write_cell($width[1],6,"");
         $this->pdf->write_cell($width[2],6,"");
-        $this->pdf->write_cell($width[3],6,$sum_amount,"",0,"R");
+        $this->pdf->write_cell($width[3],6,nbm($sum_amount,2),"",0,"R");
         $this->pdf->write_cell($width[4],6,"");
-        $this->pdf->write_cell($width[5],6,$sum_vat,"",0,"R");
-        $this->pdf->write_cell($width[6],6,bcadd($sum_amount,$sum_vat),"",0,"R");
+        $this->pdf->write_cell($width[5],6,nbm($sum_vat,2),"",0,"R");
+        $this->pdf->write_cell($width[6],6,nbm(bcadd($sum_amount,$sum_vat),2),"",0,"R");
         $this->pdf->line_new(10);
         
     }    
@@ -280,7 +298,7 @@ class PDF_Operation extends PDF {
                 }
             }
             $this->pdf->write_cell($width[3],6,$str);
-            $this->pdf->write_cell($width[4],6,$row["j_montant"],"",0,"R");
+            $this->pdf->write_cell($width[4],6,nbm($row["j_montant"],2),"",0,"R");
             $deb=($row["j_debit"]=="t")?"D":"C";
             $this->pdf->write_cell($width[5],6,$deb);
             $this->pdf->line_new(6);
@@ -328,7 +346,7 @@ class PDF_Operation extends PDF {
          $this->pdf->write_cell(25, 8,$p_j_id);
          $this->pdf->write_cell(40, 8,$row_jrnx["j_poste"]);
          $this->pdf->write_cell(40, 8,$row_jrnx["j_qcode"]);
-         $this->pdf->write_cell(40, 8,$row_jrnx["j_montant"]);
+         $this->pdf->write_cell(40, 8,nbm($row_jrnx["j_montant"],2));
          $this->pdf->line_new(8);
          // . Display a table with the plan (axis) name in the header
         $this->print_anc_header($pa_plan);
@@ -364,7 +382,7 @@ class PDF_Operation extends PDF {
                     $this->pdf->write_cell($width, 8, "", 1, "C", 0);
                 }
                 // print last column
-                $this->pdf->write_cell($width, 8, $old_row["signed_amount"], 1, "R", 0);
+                $this->pdf->write_cell($width, 8, nbm($old_row["signed_amount"],2), 1, "R", 0);
                 // Add to total
                 $tot_anc=  bcadd($tot_anc, $old_row["signed_amount"]);
                 // we start a new line 
@@ -396,7 +414,7 @@ class PDF_Operation extends PDF {
         if($idx_plan!=0) {
              $this->pdf->write_cell($width, 8, "", 1, "C", 0);
         }
-        $this->pdf->write_cell($width, 8, $old_row["signed_amount"], 1, "R", 0);
+        $this->pdf->write_cell($width, 8,nbm($old_row["signed_amount"],2), 1, "R", 0);
         $this->pdf->line_new(8);
        
         // Add to total
@@ -404,14 +422,14 @@ class PDF_Operation extends PDF {
         
         // Total
          $this->pdf->write_cell(40, 6,_("Comptabilité"));
-         $this->pdf->write_cell(40, 6,$row_jrnx["j_montant"],"","R",0);
+         $this->pdf->write_cell(40, 6,nbm($row_jrnx["j_montant"],2),"","R",0);
          $this->pdf->line_new();
          $this->pdf->write_cell(40, 6,_("Analytique"));
-         $this->pdf->write_cell(40, 6,$tot_anc,"","R",0);
+         $this->pdf->write_cell(40, 6,nbm($tot_anc,2),"","R",0);
          $this->pdf->line_new();
          
          $this->pdf->write_cell(40, 6,_("Diff"));
-         $this->pdf->write_cell(40, 6, bcsub($row_jrnx['j_montant'], $tot_anc),0,"R",0);
+         $this->pdf->write_cell(40, 6,nbm( bcsub($row_jrnx['j_montant'], $tot_anc),2),0,"R",0);
          $this->pdf->line_new();
     }
 
