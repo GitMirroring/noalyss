@@ -1086,10 +1086,7 @@ div#search_form
 /* LG */
 @media (min-width: 992px) {
    div#search_form {
-         top:15%;left:100px;
-        margin-left:25%;
-            width:50%;
-
+         top:15%;
       }  
 }
 /* XL */
