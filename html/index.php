@@ -146,8 +146,6 @@ echo '<!doctype html><HTML>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="css/bootstrap-reboot.min.css" media="screen">
-<link rel="stylesheet" type="text/css" href="css/bootstrap-grid.min.css" media="screen">
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" media="screen">
 <link rel="stylesheet" type="text/css" href="css/index.css" media="screen">
 <script src="js/prototype.js" type="text/javascript"></script>

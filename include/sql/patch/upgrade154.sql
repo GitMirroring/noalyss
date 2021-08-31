@@ -65,7 +65,7 @@ language plpgsql;
 
 select tmp_1();
 
-drop function tmp_1;
+drop function tmp_1();
 insert into version (val,v_description) values (155,'Rewriting of COMPANY add extra parameter');
 
 

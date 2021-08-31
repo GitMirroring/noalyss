@@ -48,7 +48,7 @@ language plpgsql;
 
 select tmp_1();
 
-drop function tmp_1;
+drop function tmp_1();
 insert into version (val,v_description) values (156,'insert default accounting');
 
 
