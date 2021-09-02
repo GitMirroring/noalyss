@@ -674,4 +674,25 @@ where
         }
         
     }
+    /**
+     * @testdox testUpdateEnable card enable and disable
+     */
+    public function testUpdateEnable()
+    {
+        global $g_connection;
+        $fiche= $fiche=$this->build_fiche(2,'PHPUNIT-ENABLE');
+        $fiche->update($fiche->to_array());
+        $this->assertEquals(1,$g_connection->get_value("select f_enable from fiche where f_id=$1",[$fiche->id])," Fiche::update card is not enabled" );
+        $fiche->set_f_enable(0);
+        $fiche->update($fiche->to_array());
+        $this->assertEquals(0,$g_connection->get_value("select f_enable from fiche where f_id=$1",[$fiche->id])," Fiche::update  card is not disabled" );
+        $fiche->set_f_enable(1);
+        Card_Property::update($fiche);
+        $this->assertEquals(1,$g_connection->get_value("select f_enable from fiche where f_id=$1",[$fiche->id]),"Card_Property:update card is not enabled" );
+        $fiche->set_f_enable(0);
+        Card_Property::update($fiche);
+        $this->assertEquals(0,$g_connection->get_value("select f_enable from fiche where f_id=$1",[$fiche->id]),"Card_Property:update card is not disabled" );
+        $fiche->remove();
+           
+    }
 }
