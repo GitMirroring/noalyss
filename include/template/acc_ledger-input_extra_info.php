@@ -95,6 +95,10 @@ if (in_array('repo',$a_show))	 {
 if (in_array('invoice',$a_show)) {
     echo $this->extra_info();
 }
+if ( in_array("document",$a_show)) {
+    if ( in_array("invoice",$a_show)) {
+        throw new Exception("ACC_LEDGER_INPUT100 : document and invoice available in same time");
+    }
 ?>
 <div id="document_div_id" style="display:none;height:185px;height:10rem">
   <?php
@@ -107,6 +111,10 @@ if (in_array('invoice',$a_show)) {
     echo '</p>';
     ?>
 </div>
+<?php 
+
+}
+?>
 <div id="modele_div_id" style="display:none;height:185px;height:10rem">
 <?php                echo Pre_operation::save_propose();?>
 </div>

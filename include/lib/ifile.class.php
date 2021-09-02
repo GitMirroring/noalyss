@@ -75,7 +75,7 @@ class IFile extends HtmlInput
             document.getElementById("%s").addEventListener("change",function () 
             { 
                 var fFile=document.getElementById("%s");
-                if (fFile.files[0] && fFile.files[0].size>%s) { smoke.alert("%s");} 
+                if (fFile.files[0] && fFile.files[0].size>%s) { smoke.alert("%s");fFile.value="";} 
             });',$this->id,$this->id,$max_size,$too_large);
             $r.=create_script($js_check_size);
 
