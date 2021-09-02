@@ -530,6 +530,11 @@ class Fiche
                 $this->setAttribut($property->ad_id, $p_array[$key]);
             }
         }
+        if ( isset($p_array['f_enable'])) {
+            $this->set_f_enable($p_array["f_enable"]);
+        }else {
+            $this->set_f_enable(1);
+        }
         // save all
         Card_Property::update($this);
         $this->quick_code=$this->strAttribut(ATTR_DEF_QUICKCODE);
