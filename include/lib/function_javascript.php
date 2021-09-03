@@ -2761,7 +2761,7 @@ function load_all_script()
     echo js_include("jquery-3.6.0.min.js");
     echo <<<EOF
     <script>jQuery.noConflict();</script>
-EOF;    
+EOF;
     echo js_include('smoke.js');
     echo js_include('prototype.js');
     echo js_include('scriptaculous.js');

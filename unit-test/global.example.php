@@ -19,7 +19,6 @@
 */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-O
 /*
  * Global variables
  */
