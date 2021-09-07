@@ -1404,10 +1404,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $quant=(isset(${"e_quant$i"}))?${"e_quant$i"}:"1"
                    ;
             $Quantity=new INum();
-            $Quantity->prec=4;
             $Quantity->setReadOnly(false);
             $Quantity->size=9;
-            $Quantity->javascript="onchange=\"format_number(this);clean_tva($i);compute_ledger($i)\"";
+            $Quantity->javascript="onchange=\"format_number(this,4);clean_tva($i);compute_ledger($i)\"";
             $array[$i]['quantity']=$Quantity->input("e_quant".$i,$quant);
 
         }

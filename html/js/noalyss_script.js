@@ -289,7 +289,6 @@ function compute_number(value)
          points dans le nombre et eval() lève une exception*/
         try
         {
-            console.debug("value = "+value);
             retval = eval(value);
         } catch (e)
         {
@@ -4025,7 +4024,7 @@ function check_file_size(p_object,p_max_size)
 function check_receipt_size(p_max_size,p_info)
 {
     document.getElementById(p_info).style.display="inline";
-    console.debug ("param  p_max_file_size"+p_max_size);
+    
     var f=document.getElementById("receipt_id");
     if ( f && f.files[0] && f.files[0].size > parseFloat(p_max_size)) {
         document.getElementById("receipt_info_id").innerHTML=content[78];

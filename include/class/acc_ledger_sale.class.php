@@ -430,6 +430,8 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                         $price_euro/* Price /unit */ 
                         ));
                 } else {
+                    $tva_item_currency=0;
+                    
                     $r = $this->db->exec_sql("select insert_quant_sold ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ", array(null, /* 1 */
                         $j_id, /* 2 */
                         ${'e_march' . $i}, /* 3 */
@@ -977,77 +979,79 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         // Format amount
         $tot_amount=nbm($tot_amount);
         $tot_tva=nbm($tot_tva);
-        
+    $rate=_("Taux ");      
 if ( $g_parameter->MY_TVA_USE=="Y")        {
-        $r.=<<<EOF
-<tr class="highlight">
-    {$decalage}            
-     <td>
-                {$str_tot} {$str_code}
-     </td>
-    <td class="num">
-        {$tot_tva}
-    </td>
-    <td class="num">
-        {$tot_amount}
-    </td>
-    <td class="num">
-        {$tot} {$str_code}
-    </td>
-   </tr>
+            $r.=<<<EOF
+    <tr class="highlight">
+        {$decalage}            
+         <td>
+                    {$str_tot} {$str_code}
+         </td>
+        <td class="num">
+            {$tot_tva}
+        </td>
+        <td class="num">
+            {$tot_amount}
+        </td>
+        <td class="num">
+            {$tot} {$str_code}
+        </td>
+       </tr>
 EOF;
-    if ($p_currency_code !=0) {
-        $rate=_("Taux ");
-$r.=<<<EOF
-<tr class="highlight">
-    {$decalage}            
-     <td>
-                
-     </td>
-    <td class="num">
-        
-    </td>
-    <td class="num">
-        {$rate} {$p_currency_rate}
-    </td>
-    <td class="num">
-        {$tot_eur}  EUR
-    </td>
-</tr>
+      
+        if ($p_currency_code !=0) {
+
+    $r.=<<<EOF
+    <tr class="highlight">
+        {$decalage}            
+         <td>
+
+         </td>
+        <td class="num">
+
+        </td>
+        <td class="num">
+            {$rate} {$p_currency_rate}
+        </td>
+        <td class="num">
+            {$tot_eur}  EUR
+        </td>
+    </tr>
 EOF;
-        } 
-   
-    } else {
-        $r.=<<<EOF
-<tr class="highlight">
-    {$decalage}            
-     <td>
-                {$str_tot} {$str_code}
-     </td>
-    <td class="num">
-        
-    </td>
-    <td class="num">
-        
-    </td>
-    <td class="num">
-        {$tot}
-    </td>
-        </tr>
-<tr class="highlight">
-    {$decalage}            
-     <td>
-     </td>
-    <td>
-    
-    </td>
-    <td>
+            } 
+
+        } else {
+            // without VAT
+            $r.=<<<EOF
+    <tr class="highlight">
+        {$decalage}            
+         <td>
+                    {$str_tot} {$str_code}
+         </td>
+        <td class="num">
+
+        </td>
+        <td class="num">
+
+        </td>
+        <td class="num">
+            {$tot}
+        </td>
+            </tr>
+    <tr class="highlight">
+        {$decalage}            
+         <td>
+         </td>
+        <td>
+
+        </td>
+        <td>
      {$rate} {$p_currency_rate}
-    </td>
-    <td class="num">
-        {$tot} {$str_code}
-    </td>
-</tr>
+        </td>
+        <td class="num">
+           {$tot_eur} EUR
+        </td>
+    </tr>
 EOF;
     }
         $r.='</table>';
@@ -1468,13 +1472,12 @@ EOF;
             }
             // quantity
             //--
-            $quant = (isset(${"e_quant$i"})) ? ${"e_quant$i"} : "1"
-            ;
+            $quant = (isset(${"e_quant$i"})) ? ${"e_quant$i"} : "1";
             $Quantity = new INum();
-            $Quantity->prec=4;
+            
             $Quantity->setReadOnly(false);
             $Quantity->size = 8;
-            $Quantity->javascript = "onchange=\"format_number(this);clean_tva($i);compute_ledger($i);\"";
+            $Quantity->javascript = "onchange=\"format_number(this,4);clean_tva($i);compute_ledger($i);\"";
             $array[$i]['quantity'] = $Quantity->input("e_quant" . $i, $quant);
         }// foreach article
         $f_type = _('Client');

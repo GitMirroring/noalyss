@@ -351,7 +351,7 @@ if ($op=='upgradeCore')
         $progress->set_value(5);
         $core->download();
         $progress->set_value(55);
-        if ( DEBUGNOALYSS > 0 )
+        if ( DEBUGNOALYSS == 0 )
         {
             $core->install();
         } 

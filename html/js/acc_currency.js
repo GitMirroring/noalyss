@@ -102,17 +102,17 @@ function CurrencyUpdateCode(p_dossier,p_code,p_update)
  */
 function CurrencyCompute(p_rate,p_update)
 {
-   var tvac=$('tvac').innerHTML;
+    var tvac=1;
+    
+    if ($('tvac')) {
+        tvac=$('tvac').innerHTML;
+    }
    
-   console.log("tvac= "+tvac);
    if (  isNaN(tvac)) {
-       console.log("tva is nan" + tvac);
        tvac=1;
    }
    var rate=$(p_rate).value;
-   console.log("rate = "+rate);
    if (  isNaN(rate)) {
-       console.log("rate is nan" + rate);
        rate=1;
    }
    var tot=tvac/rate;
@@ -132,20 +132,14 @@ function CurrencyComputeMisc(p_rate,p_update)
    var debAmount=$('totalDeb').innerHTML;
    var credAmount=$('totalCred').innerHTML;
    
-   console.log("debAmount= "+debAmount);
-   console.log("credAmount= "+credAmount);
    if (  isNaN(debAmount)) {
-       console.log("debAmount is nan" + debAmount);
        debAmount=0;
    }
    if (  isNaN(credAmount)) {
-       console.log("credAmount is nan" + credAmount);
        credAmount=0;
    }
    var rate=$(p_rate).value;
-   console.log("rate = "+rate);
    if (  isNaN(rate) || parseFloat(rate) == 0) {
-       console.log("rate is nan" + rate);
        rate=1;
    }
    var totDeb=debAmount/rate;
@@ -170,7 +164,7 @@ function CurrencyComputeMisc(p_rate,p_update)
 function LedgerCurrencyUpdate(p_dossier,p_code,p_update,p_rate,p_eur_amount)
 {
     // Hide or show the row of the table with the amount in EUR
-    if ($(p_code).value != -1) {
+    if ($(p_code).value != 0) {
         $('row_currency').show();
     }else {
         $('row_currency').hide();
