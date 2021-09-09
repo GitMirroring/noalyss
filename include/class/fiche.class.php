@@ -745,8 +745,8 @@ class Fiche
                                  "j_debit, jr_internal,jr_id,(select distinct jl_id from sqlletter  where sqlletter.j_id=j1.j_id ) as letter , ".
                                 "jr_optype , ".
 				 " jr_tech_per,p_exercice,jrn_def_name,
-                                     (with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred left join jrnx as j3 on (j3.j_id=j1.j_id)  group by jl_id ),
-                                    deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb left join jrnx as j2 on (j2.j_id = j1.j_id)   group by jl_id )
+                                     (with cred as (select jl_id, sum(j_montant) as amount_cred from letter_cred lc1 left join jrnx as j3 on (j3.j_id=lc1.j_id)  group by jl_id ),
+                                    deb as (select jl_id, sum(j_montant) as amount_deb from letter_deb ld1 left join jrnx as j2 on (j2.j_id = ld1.j_id)   group by jl_id )
                                     select amount_deb-amount_cred
                                     from 
                                     cred 
