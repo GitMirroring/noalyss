@@ -81,3 +81,5 @@ define ("DEBUGNOALYSS",0);
 // define ('SESSION_KEY','abcde');
 // Max size is defined by default to 2MB, it could be also needed to modify PHP Ini file
 //    define ("MAX_FILE_SIZE",2097152);
+// Create your own SESSION_KEY
+// define ("SESSION_KEY","irazap492pq11");

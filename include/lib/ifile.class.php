@@ -25,7 +25,7 @@
 
 /*!
  * \class IFile
- * \brief Html Input
+ * \brief Html Input for uploading file, must be in a form with enctype="multipart/form-data"
  */
 class IFile extends HtmlInput
 {
