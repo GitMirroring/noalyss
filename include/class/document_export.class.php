@@ -91,7 +91,7 @@ class Document_Export
             throw new Exception ( __FILE__.":".__LINE__."cannot recreate zip");
         }
         chdir($this->store_pdf);
-        $zip->addGlob("stamp*pdf");
+        $zip->addGlob("*-stamp_*pdf");
         $zip->close();
 
     }
