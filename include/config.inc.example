@@ -83,3 +83,6 @@ define ("DEBUGNOALYSS",0);
 //    define ("MAX_FILE_SIZE",2097152);
 // Create your own SESSION_KEY
 // define ("SESSION_KEY","irazap492pq11");
+// 
+// Audit everything
+// define ("AUDIT_ENABLE",true);
