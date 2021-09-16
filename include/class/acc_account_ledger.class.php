@@ -133,10 +133,10 @@ class Acc_Account_Ledger
         case 0:
                 break;
         case 1:
-            $sql_let=' and j_id in (select j_id from letter_cred union all select j_id from letter_deb)';
+            $sql_let=' and j1.j_id in (select j_id from letter_cred union all select j_id from letter_deb)';
             break;
         case '2':
-            $sql_let=' and j_id not in (select j_id from letter_cred union all select j_id from letter_deb) ';
+            $sql_let=' and j1.j_id not in (select j_id from letter_cred union all select j_id from letter_deb) ';
             break;
         }
 	if ( $solded == 1)
@@ -203,7 +203,7 @@ class Acc_Account_Ledger
         $res_saldo = $this->db->exec_sql("select  sum(deb_montant),sum(cred_montant) from 
                     (select case when j_debit='t' then j_montant else 0 end as deb_montant,
                     case when j_debit='f' then j_montant else 0 end as cred_montant
-                                  from jrnx 
+                                  from jrnx j1
                                   join jrn_def on (jrn_def_id=j_jrn_def )
                                    join jrn on (jr_grpt_id=j_grpt)
                                    join tmp_pcmn on (j_poste=pcm_val)
