@@ -123,10 +123,7 @@ h3.info {
     text-align:center;
 }
 
- @keyframes error_h2 {
-     from {background-color:  hsl(358,60%,44%);}
-     to {background-color: hsl(359,100%,44%);}
- }
+
  h2.error {
      background:#FF0000;
      color:#FFFFFF;
@@ -248,16 +245,45 @@ table.document th{
     background-color:#EDF3FF;
     font-style: italic;
 }
-.error {
-    width:60%;
-    margin-left:20%;
-    text-align: center;
 
-    color:#FFFFFF;
-    background-color:#FF0000;
-    font-weight: bolder;
+ @keyframes error_h2 {
+     from {background-color:  hsl(358,60%,44%);}
+     to {background-color: hsl(359,100%,44%);}
+ }
+ .error {
+     width:auto;
+     margin-left:2em;
+     text-align: center;
+
+     color:#FFFFFF;
+     background-color:#FF0000;
+     font-weight: bolder;
+     animation-name: error_h2;
+     animation-duration: 4s;
+     animation-iteration-count: infinite;
+ }
+@media (min-width: 576px) {
+
 }
+/* MeDium */
+@media (min-width: 768px) {
+    .error {
+        width:60%;
+        margin-left:20%;
+        text-align: center;
 
+        color:#FFFFFF;
+        background-color:#FF0000;
+        font-weight: bolder;
+    }
+}
+/* LarGe */
+@media (min-width: 992px) {
+}
+/* eXtraLarge */
+@media (min-width: 1200px) {
+
+}
 table.mtitle {
     border:0px;
     text-align:center;
@@ -2169,16 +2195,38 @@ td.box {
   bottom: 0px;
   right: 0px;
 }
+ .smoke-base .dialog {
+     position: absolute;
+     top: 10%;
+     width: auto;
+     left: 2px;
+     margin-left: 2px;
+     margin-right: 2px;
+     overflow: auto;
+ }
 
-.smoke-base .dialog {
-  position: absolute;
-    top: 25%;
-  width: 40%;
-  left: 50% !important;
-  margin-left: -20%;
-  border-radius:7px;
+@media (min-width: 576px) {
+
 }
+/* MeDium */
+@media (min-width: 768px) {
+    .smoke-base .dialog {
+        position: absolute;
+        top: 25%;
+        width: 40%;
+        left: 50% !important;
+        margin-left: -20%;
+         border-radius:7px;
+    } 
 
+}
+/* LarGe */
+@media (min-width: 992px) {
+}
+/* eXtraLarge */
+@media (min-width: 1200px) {
+
+}
 .dialog-prompt {
   margin-top: 15px;
   text-align: center;
