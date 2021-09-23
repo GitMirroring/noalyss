@@ -163,7 +163,7 @@ function update_row(ctl)
     try
     {
         var row_to_keep=3; /* Number of row to keep (head and foot)*/
-        if ( ctl === 'quick_item' ) { row_to_keep=2;} /* for ODS , only 2 rows to keep */
+        if ( ctl === 'quick_item' ) { row_to_keep=1;} /* for ODS , only 1 rows to keep */
         var jrn = g('p_jrn').value;
         var dossier = g('gDossier').value;
         var qs = encodeURI('gDossier=' + dossier + '&op=minrow&j=' + jrn + '&ctl=' + ctl);

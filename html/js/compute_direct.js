@@ -73,7 +73,7 @@ function checkTotalDirect()
                 total_cred+=amount;
             }
         }
-
+            
         //    alert_box("amount ="+i+"="+amount+" cred/deb = "+deb+"total d/b"+total_deb+"/"+total_cred);
     }
 
