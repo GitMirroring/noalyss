@@ -134,8 +134,8 @@ echo '</tr>';
     <td> </td>
     <td> </td>
     <td class="num visible_gt800">  <span id="htva">0.0</span></td>
-    <td> </td>
  <?php if ( $flag_tva=='Y' )  : ?>    
+    <td> </td>
     <td class="num visible_gt800">  <span id="tva">0.0</span> </td>
     <td class="num">  <span id="tvac" >0.0</span> </td>
   <?php    endif;     ?>  
@@ -149,8 +149,8 @@ echo '</tr>';
 <?php if ($flag_tva=='Y')  {?>
         <td class="num visible_gt800 visible_gt1155"></td>
         <td></td>
-<?php }         ?>
         <td class="num visible_gt800"></td>
+<?php }         ?>
         <td></td>
         <td></td>
         <td></td>
@@ -165,7 +165,7 @@ echo '</tr>';
 
 
 <script>
-    if ($('p_currency_code').value != -1) {
+    if ($('p_currency_code').value != 0) {
         $('row_currency').show();
     }
     compute_all_ledger();

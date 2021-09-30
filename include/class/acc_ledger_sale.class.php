@@ -1197,10 +1197,12 @@ EOF;
 
     function input($p_array = null, $p_readonly = 0) {
         global $g_parameter, $g_user;
-        if ($p_array != null)
-            extract($p_array, EXTR_SKIP);
         $http=new HttpInput();
-
+        if ($p_array != null) {
+            extract($p_array, EXTR_SKIP);
+            $http->set_array($p_array);
+        }
+        $http->set_array([]);
         $flag_tva = $g_parameter->MY_TVA_USE;
         /* Add button */
         
@@ -1484,12 +1486,12 @@ EOF;
          
         // Currency
         $currency_select = $this->CurrencyInput("currency_code", "p_currency_rate" , "p_currency_euro");
-        $currency_select->selected=$http->request('p_currency_code','string',0);
+        $currency_select->selected=$http->extract('p_currency_code','string',0);
         
         $currency_input=new INum("p_currency_rate");
         $currency_input->id="p_currency_rate";
         $currency_input->prec=6;
-        $currency_input->value=$http->request('p_currency_rate','string',1);
+        $currency_input->value=$http->extract('p_currency_rate','string',1);
         $currency_input->javascript='onchange="format_number(this,4);CurrencyCompute(\'p_currency_rate\',\'p_currency_euro\');"';
         
         $currency=new Acc_Currency($this->db,0);
@@ -1504,7 +1506,6 @@ EOF;
         $op->set_jrn_type("VEN");
         $op->set_p_jrn($this->id);
         $op->set_od_direct('f');
-        $http=new \HttpInput();
         $url=http_build_query(array('p_jrn_predef'=>$this->id, 'ac'=>$http->request('ac'),
             'gDossier'=>dossier::id()));
         echo $op->form_get('do.php?'.$url);

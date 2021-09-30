@@ -106,6 +106,8 @@ function CurrencyCompute(p_rate,p_update)
     
     if ($('tvac')) {
         tvac=$('tvac').innerHTML;
+    } else if ($("htva")) {
+        tvac=$('htva').innerHTML;
     }
    
    if (  isNaN(tvac)) {
