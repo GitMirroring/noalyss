@@ -1011,24 +1011,24 @@ div.inner_box  {
     font-size:14.4px;
     font-size:0.9rem;
     width: 100%;
-    left:0px !important;
+    left:0px ;
 }
 /* SM */
-@media (min-width: 576px) {
+@media (max-width: 576px) {
     div.inner_box  {
       width: 100%;
-      left:0px !important;
+      left:0px !important ;
     }
 }
 /* MD */
 @media (min-width: 768px) {
     div.inner_box  {
         width: 100%;
-        left:0px !important;
+        left:0px ;
     }
 }
 /* LG */
-@media (min-width: 992px) {
+@media (max-width: 992px) {
     div.inner_box  {
         left:0px !important;
         border-radius: 7px;
@@ -1038,9 +1038,10 @@ div.inner_box  {
 @media (min-width: 1200px) {
     div.inner_box  {
         width: 90%;
-        left:5% !important;
+        left:5%;
         /*! margin-bottom: 2%; */
         padding-bottom: 10px;
+           border-radius: 10px;
         }
 }
 /***********************************************************************************/
