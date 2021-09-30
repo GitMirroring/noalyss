@@ -56,7 +56,7 @@ switch ($op)
         catch (Exception $e)
         {
               record_log($e);
-            echo span($e->getMessage(), ' class="notice"');
+            echo span($e->getMessage(), ' class="warning"');
             Anc_Key::display_list();
             Anc_Key::key_add();
         }
@@ -70,7 +70,7 @@ switch ($op)
         }
         catch (Exception $e)
         {
-            echo span($e->getMessage(), ' class="notice"');
+            echo span($e->getMessage(), ' class="warning"');
         }
         Anc_Key::display_list();
         Anc_Key::key_add();

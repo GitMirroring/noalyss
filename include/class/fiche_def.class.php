@@ -200,11 +200,12 @@ $order
          * Check needed info
          */
         $http=new HttpInput();
-        $p_nom_mod = $http->extract($array,'nom_mod',"string","");
-        $p_fd_description = $http->extract($array,'fd_description',"string", "");
-        $p_class_base=$http->extract($array,'class_base',"string", "");
-        $p_fiche_def= $http->extract($array,'FICHE_REF',"string", "");
-        $p_create= $http->extract($array,'create',"string", "off");
+        $http->set_array($array);
+        $p_nom_mod = $http->extract('nom_mod',"string","");
+        $p_fd_description = $http->extract('fd_description',"string", "");
+        $p_class_base=$http->extract('class_base',"string", "");
+        $p_fiche_def= $http->extract('FICHE_REF',"string", "");
+        $p_create= $http->extract('create',"string", "off");
         
         // If there is no description then add a empty one
         if ( ! isset ($p_fd_description)) {

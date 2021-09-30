@@ -40,14 +40,14 @@ class Anc_Key
 
     private $key; /*!  the distribution key */
     /**
-     * Return the number of keys available.
+     *@brief  Return the number of keys available.
      *  Return the number of keys available for the ledger given in parameter
      * 
      * @global $cn database connection
      * @param $p_jrn number of the ledger (jrn_def.jrn_def_id
      * @return number of available keys
      */
-    static function key_avaiable($p_jrn)
+    static function key_available($p_jrn)
     {
         global $cn;
         $count=$cn->get_value (' select count(*) 
@@ -65,8 +65,18 @@ class Anc_Key
         $this->a_activity=null;
         $this->a_row=null;
     }
+    public function get_key()
+    {
+        return $this->key;
+    }
 
-    /**
+    public function set_key($key)
+    {
+        $this->key=$key;
+        return $this;
+    }
+
+        /**
      * @brief display list of available keys
      * @param $p_amount   amount to distribute
      * @param $p_target   target to update
@@ -142,7 +152,11 @@ class Anc_Key
      */
     function verify($p_array)
     {
-        $a_percent=$p_array['percent'];
+        $http=new HttpInput();
+        $http->set_array($p_array);
+        
+        $a_percent=$http->extract('percent',"array");
+        
         if (count($a_percent)==0)
         {
             throw new Exception(_('Aucune répartition'));
@@ -157,7 +171,8 @@ class Anc_Key
         {
             throw new Exception(_('Le total ne vaut pas 100, total calculé = ').$tot_percent);
         }
-        if ($p_array['name_key']=='') {
+
+        if (trim($http->extract('name_key'))=='') {
             throw new Exception (_('Le nom ne peut être vide'));
         }
     }
@@ -179,6 +194,8 @@ class Anc_Key
      * @verbatim
      
         'key_id' => string '1' (length=1)
+        "name_key" => "name"
+        "description_key" => "description"
         'row' => 
           array
             0 => string '1' (length=1)
@@ -220,16 +237,18 @@ class Anc_Key
         $this->verify($p_array);
         $cn->start();
         // for each row
-        $a_row=$p_array['row'];
         $http=new HttpInput();
-        $a_ledger=$http->extract($p_array,"jrn","string",array());
-        $a_percent=$p_array['percent'];
-        $a_po_id=$p_array['po_id'];
-        $a_plan=$p_array['pa'];
+        $http->set_array($p_array);
+        
+        $a_row=$http->extract('row',"array");
+        $a_ledger=$http->extract("jrn","string",array());
+        $a_percent=$http->extract('percent',"array",[]);
+        $a_po_id=$http->extract('po_id',"array",[]);
+        $a_plan=$http->extract('pa',"array",[]);
         try
         {
-            $this->key->setp('name',$p_array['name_key']);
-            $this->key->setp('description',$p_array['description_key']);
+            $this->key->setp('name',$http->extract('name_key'));
+            $this->key->setp('description',$http->extract('description_key'));
             $this->key->save();
             for ($i=0; $i<count($a_row); $i++)
             {

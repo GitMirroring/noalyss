@@ -18,7 +18,7 @@ class Anc_KeyTest extends TestCase
      */
     protected function setUp()
     {
-        $this->object=new Anc_Key;
+       
     }
 
     /**
@@ -29,6 +29,73 @@ class Anc_KeyTest extends TestCase
     {
         
     }
+    static function setUpBeforeClass()
+    {
+//       require_once 'global.php';
+//
+//        global $g_connection;
+//        $g_connection=Dossier::connect();
+        
+    }
+    static function tearDownAfterClass()
+    {
+        
+    }
+    /**
+     * @brief test Key Available and save
+     * @global type $g_connection
+     * @global type $cn
+     * @covers Anc_Key::key_available Anc_Key::save 
+     */
+    function testKeyAvailable()
+    {
+        require_once 'global.php';
 
+        global $g_connection,$cn;
+        $cn=Dossier::connect();
+        
+        // create several key
+        $key1=new Anc_Key(-1);
+        $key2=new Anc_Key(-1);
+        
+        $key1->save(array(
+            "key"=>-1,
+            'name_key'=>'Test.Key1',
+            "description_key"=>"Description de la clef",
+            "row"=>[-1,-1,-1,-1],
+            "pa"=>[1],
+            "po_id"=>array(
+                        [1],
+                        [2],
+                        [3],
+                        [4],
+                ),
+            "percent"=>[10,20,30,40],
+            "jrn"=>[1,152,83]
+            ));
+        $key2->save(array(
+            "key"=>-1,
+            'name_key'=>'Test.Key2',
+            "description_key"=>"Description de la clef",
+            "row"=>[-1,-1,-1,-1],
+            "pa"=>[1],
+            "po_id"=>array(
+                        [1],
+                        [2],
+                        [3],
+                        [4],
+                ),
+            "percent"=>[10,20,30,40],
+            "jrn"=>[152]
+            ));
+        $this->assertGreaterThan(-1,$key1->get_key()->getp("id")," Key not created");
+        $this->assertEquals(1,$key1::key_available(1),"Ledger 1 incorrect number of key");
+        $this->assertEquals(2,$key1::key_available(152),"Ledger 152 incorrect number of key");
+        $this->assertEquals(1,$key1::key_available(83),"Ledger 83 incorrect number of key");
+        $this->assertEquals(0,$key1::key_available(2),"Ledger 2 incorrect number of key");
+        $key1->delete();
+        $key2->delete();
+        $this->assertEquals(1,$cn->get_value("select count(*) from key_distribution"),"ANC_KEY Cannot delete keys");
+    }
 
 }

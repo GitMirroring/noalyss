@@ -955,23 +955,24 @@ class Follow_Up
     {
         global $g_user;
         $http=new HttpInput();
-        $this->ag_id=$http->extract($p_array,"ag_id","number",0);
-        $this->ag_ref=$http->extract($p_array,"ag_ref","string","");
-        $this->qcode_dest=$http->extract($p_array,"qcode_dest","string","");
-        $this->f_id_dest=$http->extract($p_array,"f_id_dest","string",null);
-        $this->ag_timestamp=$http->extract($p_array,"ag_timestamp","string",date('d.m.Y'));
-        $this->dt_id=$http->extract($p_array,"dt_id","string","");
-        $this->ag_state=$http->extract($p_array,"ag_state","number",2);
-        $this->ag_title=$http->extract($p_array,"ag_title","string","");
-        $this->ag_hour=$http->extract($p_array,"ag_hour","string","");
-        $this->ag_dest=$http->extract($p_array,"ag_dest","string",$g_user->get_profile());
-        $this->ag_priority=$http->extract($p_array,"ag_priority","string","2");
-        $this->ag_contact=$http->extract($p_array,"ag_contact","string","");
-        $this->ag_comment=$http->extract($p_array,"ag_comment","string","");
-        $this->ag_description=$http->extract($p_array,"ag_description","string","");
-        $this->ag_remind_date=$http->extract($p_array,"ag_remind_date","string",null);
-        $this->operation=$http->extract($p_array,"operation","string",null);
-        $this->action=$http->extract($p_array,"action","string",null);
+        $http->set_array($p_array);
+        $this->ag_id=$http->extract("ag_id","number",0);
+        $this->ag_ref=$http->extract("ag_ref","string","");
+        $this->qcode_dest=$http->extract("qcode_dest","string","");
+        $this->f_id_dest=$http->extract("f_id_dest","string",null);
+        $this->ag_timestamp=$http->extract("ag_timestamp","string",date('d.m.Y'));
+        $this->dt_id=$http->extract("dt_id","string","");
+        $this->ag_state=$http->extract("ag_state","number",2);
+        $this->ag_title=$http->extract("ag_title","string","");
+        $this->ag_hour=$http->extract("ag_hour","string","");
+        $this->ag_dest=$http->extract("ag_dest","string",$g_user->get_profile());
+        $this->ag_priority=$http->extract("ag_priority","string","2");
+        $this->ag_contact=$http->extract("ag_contact","string","");
+        $this->ag_comment=$http->extract("ag_comment","string","");
+        $this->ag_description=$http->extract("ag_description","string","");
+        $this->ag_remind_date=$http->extract("ag_remind_date","string",null);
+        $this->operation=$http->extract("operation","string",null);
+        $this->action=$http->extract("action","string",null);
     }
 
     /**

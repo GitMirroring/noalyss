@@ -252,23 +252,24 @@ class HttpInput
         }
     }
     /**
-     * @brief Retrieve from $p_array
-     * @param $p_array source 
+     * @brief Retrieve from $p_array, 
      * @param $p_name name of the variable
      * @param $p_type type of the variable , opt. default string
      * @param $p_default default value is variable is not set
      * @throws Exception if invalid
      */
-    function extract($p_array, $p_name, $p_type="string", $p_default="")
+    function extract( $p_name, $p_type="string", $p_default="")
     {
         try
         {
-            $this->array=$p_array;
-            if (func_num_args()==2)
+            if ( $this->array === null ) {
+                throw new Exception( _("HTTP266:array not set")) ;
+            }
+            if (func_num_args()==1)
                 return $this->get_value($p_name);
-            if (func_num_args()==3)
+            if (func_num_args()==2)
                 return $this->get_value($p_name, $p_type);
-            if (func_num_args()==4)
+            if (func_num_args()==3)
                 return $this->get_value($p_name, $p_type, $p_default);
         }
         catch (Exception $exc)

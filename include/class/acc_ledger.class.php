@@ -755,8 +755,9 @@ class Acc_Ledger  extends jrn_def_sql
 
             $ret.="</tr>";
         }
-        $currency_code=$http->extract($p_array,"p_currency_code","number");
-        $currency_rate=$http->extract($p_array,"p_currency_rate","number");
+        $http->set_array($p_array);
+        $currency_code=$http->extract("p_currency_code","number");
+        $currency_rate=$http->extract("p_currency_rate","number");
         $currency=new Acc_Currency($this->db,$currency_code);
         $msg_currency= ($currency_code != 0 )?sprintf(_("Totaux %s (%s)"),$currency->get_code(),$currency_rate):_("Totaux");
         
@@ -765,7 +766,7 @@ class Acc_Ledger  extends jrn_def_sql
         // Currency
         if ( $currency_code != 0)
         {
-            $currency_rate=$http->extract($p_array,"p_currency_rate","number");
+            $currency_rate=$http->extract("p_currency_rate","number");
             $default_currency=new Acc_Currency($this->db,0);
 
             $ret.=tr(td('').
@@ -1102,13 +1103,14 @@ class Acc_Ledger  extends jrn_def_sql
         $tot_cred=0;
         $tot_deb=0;
         $msg=array();
+        $http->set_array($p_array);
         /* Check currency : rate cannot be equal to 0 */
-        $currency_rate=$http->extract($p_array,"p_currency_rate","number");
+        $currency_rate=$http->extract("p_currency_rate","number");
         if ( $currency_rate <=0 ) {
             throw new Exception(_("Taux de conversion doit être supérieur à 0"),3);
         }
         /* Check currency : Does the currency parameter exist */
-        $currency_code=$http->extract($p_array,"p_currency_code","number");
+        $currency_code=$http->extract("p_currency_code","number");
         $currency=new Acc_Currency($this->db,$currency_code);
 
         $this->check_currency_setting($currency_code);
@@ -1321,8 +1323,9 @@ class Acc_Ledger  extends jrn_def_sql
             $count=0;
             
             // currency
-            $currency_code=$http->extract($p_array, "p_currency_code","number",0);
-            $currency_rate=$http->extract($p_array, "p_currency_rate","number",1);
+            $http->set_array($p_array);
+            $currency_code=$http->extract( "p_currency_code","number",0);
+            $currency_rate=$http->extract( "p_currency_rate","number",1);
             $currency_rate_ref=new Acc_Currency($this->db, $currency_code);
             
             for ($i=0; $i<$nb_item; $i++)
