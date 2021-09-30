@@ -173,6 +173,7 @@ if ($op=="display_search_filter")
 
         printf("</li>");
     }
+    echo HtmlInput::button_close("boxfilter".$p_div);
     return;
 }
 //-----------------------------------------------------------------------------

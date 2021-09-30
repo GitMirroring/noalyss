@@ -687,7 +687,7 @@ class Acc_Ledger_Search
         $r='';
         $r.='<div id="search_form" style="display:none">';
         $r.=HtmlInput::title_box(_('Recherche'), "search_form", "hide", "", "n");
-        $r.='<FORM METHOD="GET">';
+        $r.='<FORM METHOD="GET" >';
         $r.=$this->search_form();
         
         $r.=HtmlInput::submit('search', _('Rechercher'));
@@ -714,6 +714,7 @@ class Acc_Ledger_Search
 
 
 
+        $r.=HtmlInput::button_hide("search_form");
         $r.='</FORM>';
 
         $r.='</div>';

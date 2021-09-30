@@ -568,8 +568,8 @@ EOF;
 			$r.='</tr>';
 		}
 		$r.='</TABLE>';
+                $r.=HtmlInput::button_close("tva_select");
 		$r.='</div>';
-                
 		$html = escape_xml($r);
 
 		header('Content-type: text/xml; charset=UTF-8');
