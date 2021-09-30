@@ -1180,7 +1180,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $wLedger=$this->select_ledger('ACH',2,FALSE);
         
         if ($wLedger == null) throw  new Exception(_('Pas de journal disponible'));
-        $wLedger->javascript="onChange='update_predef(\"ach\",\"f\",\"".$_REQUEST['ac']."\");$add_js'";
+        $wLedger->javascript="onChange='update_predef(\"ach\",\"f\",\"".$http->request("ac")."\");$add_js'";
         $wLedger->table=0;
         $f_jrn=$wLedger->input();
 
@@ -1406,7 +1406,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $Quantity=new INum();
             $Quantity->setReadOnly(false);
             $Quantity->size=9;
-            $Quantity->javascript="onchange=\"format_number(this,4);clean_tva($i);compute_ledger($i)\"";
+            $Quantity->javascript="onchange=\"format_number(this,2);clean_tva($i);compute_ledger($i)\"";
             $array[$i]['quantity']=$Quantity->input("e_quant".$i,$quant);
 
         }
@@ -1434,7 +1434,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $op->set_p_jrn($this->id);
         $op->set_jrn_type("ACH");
         $op->set_od_direct('f');
-        $url=http_build_query(array('p_jrn_predef'=>$this->id,'ac'=>$_REQUEST['ac'],'gDossier'=>dossier::id()));
+        $url=http_build_query(array('p_jrn_predef'=>$this->id,'ac'=>$http->request('ac'),'gDossier'=>dossier::id()));
         echo $op->form_get('do.php?'.$url);
         echo '</div>';
         $str_op_template=ob_get_contents();

@@ -1477,7 +1477,7 @@ EOF;
             
             $Quantity->setReadOnly(false);
             $Quantity->size = 8;
-            $Quantity->javascript = "onchange=\"format_number(this,4);clean_tva($i);compute_ledger($i);\"";
+            $Quantity->javascript = "onchange=\"format_number(this,2);clean_tva($i);compute_ledger($i);\"";
             $array[$i]['quantity'] = $Quantity->input("e_quant" . $i, $quant);
         }// foreach article
         $f_type = _('Client');
