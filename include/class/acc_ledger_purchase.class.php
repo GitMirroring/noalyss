@@ -589,7 +589,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 
                 $acc_amount=new Acc_Compute();
                 $acc_amount->check=false;
-                $acc_amount->set_parameter('amount',$amount);
+                $acc_amount->set_parameter('amount',$amount_4);
                 // Set the currency rate
                 $acc_amount->set_parameter("currency_rate", $p_currency_rate);
                 $acc_amount->convert_euro();
@@ -764,8 +764,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $operation_currency->oc_price_unit=${'e_march'.$i.'_price'};
                 $operation_currency->j_id=$j_id;
                 $operation_currency->insert();
-                $tot_amount_cur=round(bcadd($tot_amount_cur,$acc_amount->amount_currency),2);
-                $tot_amount_cur=round(bcadd($tot_amount_cur,$acc_amount->amount_vat_currency),2);
+                $tot_amount_cur=round(bcadd($tot_amount_cur,$acc_amount->amount_currency,4),4);
+                $tot_amount_cur=round(bcadd($tot_amount_cur,$acc_amount->amount_vat_currency,4),4);
                 if ( DEBUGNOALYSS > 1 ) {
                     echo __LINE__." insert into operation currency oc_amount:{$acc_amount->amount_currency} oc_vat_amount {$acc_amount->amount_vat_currency} <br>";
                 }

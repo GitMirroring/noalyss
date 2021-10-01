@@ -453,8 +453,8 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 $operation_currency->oc_price_unit=${'e_march'.$i.'_price'};
                 $operation_currency->j_id=$j_id;
                 $operation_currency->insert();
-                $tot_amount_cur=round(bcadd($tot_amount_cur,$amount_currency),2);
-                $tot_amount_cur=round(bcadd($tot_amount_cur,$tva_item_currency),2);
+                $tot_amount_cur=round(bcadd($tot_amount_cur,$amount_currency,4),4);
+                $tot_amount_cur=round(bcadd($tot_amount_cur,$tva_item_currency,4),4);
             }// end loop : save all items
 
             /*  save total customer */
