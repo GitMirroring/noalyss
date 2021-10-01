@@ -94,8 +94,12 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
     echo th(_('Poste Comptable'));
     echo th(_('Quick Code'));
     echo th(_('Libellé'));
-echo th(_('Débit'), 'style="text-align:right"');
-echo th(_('Crédit'), 'style="text-align:right"');
+    echo th(_('Débit'), 'style="text-align:right"');
+    echo th(_('Crédit'), 'style="text-align:right"');
+    if ( $obj->det->currency_id != 0 ) {
+                        echo th(_("Devise"),' class="num" ');
+    }
+    
     if ($owner->MY_ANALYTIC != 'nu' /* && $div == 'popup' */ ){
       $anc=new Anc_Plan($cn);
       $a_anc=$anc->get_list(' order by pa_id ');
@@ -185,7 +189,11 @@ $amount_idx=0; $sum_prod_currency=0;
       }
     }
     $class=($e%2==0)?' class="even"':'class="odd"';
-
+    if ( $obj->det->currency_id != 0 ) {
+        $cur_amount=$cn->get_value("select oc_amount from operation_currency where j_id=$1",
+                [$q[$e]['j_id']]);
+        $row.=td(nbm($cur_amount,4),' class="num" ');
+    }
     echo tr($row,$class);
 
   }
