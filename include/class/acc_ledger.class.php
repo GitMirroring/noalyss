@@ -343,7 +343,7 @@ class Acc_Ledger  extends jrn_def_sql
                 }
                 // Reverse also in the currency table
                 $this->db->exec_sql("insert into operation_currency (oc_amount,oc_vat_amount,oc_price_unit,j_id) "
-                        . " select 0-oc_amount,0-oc_vat_amount,oc_price_unit,$j_id from operation_currency where j_id=$1",
+                        . " select oc_amount,oc_vat_amount,oc_price_unit,$j_id from operation_currency where j_id=$1",
                         [$row]);
             }
             $sql="insert into jrn (
