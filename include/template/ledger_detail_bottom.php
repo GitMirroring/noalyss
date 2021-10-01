@@ -187,7 +187,7 @@ if ($aRap  != null ) {
     $opRap=new Acc_Operation($cn);
     $opRap->jr_id=$aRap[$e];
     $internal=$opRap->get_internal();
-    $array_jr=$cn->get_array('select jr_date,jr_pj_number,jr_montant,jr_comment , jr_internal 
+    $array_jr=$cn->get_array('select jr_date,jr_pj_number,jr_montant,jr_comment , jr_internal ,jr_optype
                                 from jrn where jr_id=$1',
         array($aRap[$e]));
     $amount=$array_jr[0]['jr_montant'];
@@ -229,7 +229,7 @@ if ($aRap  != null ) {
             td($pj_nb).
             td($comment).
             td(_('montant').'='.nbm($amount)).
-            td(_('delta').'='.nbm(bcsub($amount_tva_include,$total_rec))).
+            td(_('delta').'='.nbm(bcsub(abs($amount_tva_include),abs($total_rec)))).
             td($remove),' id = "row'.$e.'"');
   }
   echo '</table>';
