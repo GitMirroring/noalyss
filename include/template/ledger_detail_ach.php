@@ -251,8 +251,8 @@ $str_anc="";
                       */
                      if ( $obj->det->currency_id != 0 ) {
                          $value=$obj->db->get_value("select  oc_amount+oc_vat_amount from operation_currency where j_id=$1",[$q['j_id']]);
-                         $row.=td(nbm($value,2),' class="num"');
-                         $sum_charge_euro=bcadd($sum_charge_euro,$value,2);
+                         $row.=td(nbm($value,4),' class="num"');
+                         $sum_charge_euro=bcadd($sum_charge_euro,$value,4);
                          
                      }
                      echo tr($row,$class);
@@ -269,7 +269,7 @@ $str_anc="";
                 if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
                 {
                     $currency=new Acc_Currency($obj->db, $obj->det->currency_id);
-                    $row.= td(nbm($sum_charge_euro),' class="num" style="font-style:italic;font-weight: bolder;"');
+                    $row.= td(nbm($sum_charge_euro,4),' class="num" style="font-style:italic;font-weight: bolder;"');
                 }
                 echo tr($row);
                 

@@ -154,7 +154,7 @@ EOF;
             $r.=td(nbm($aData[$i]['j_montant'],2),'class="num"');
             $r.=td(round($aData[$i]['currency_rate'],4),'class="num"');
             $r.=td(round($aData[$i]['currency_rate_ref'],4),'class="num"');
-            $r.=td(nbm($aData[$i]['oc_amount'],2),'class="num"');
+            $r.=td(nbm($aData[$i]['oc_amount'],4),'class="num"');
             $r.="</tr>";
         }
         $r.="</table>";
@@ -204,7 +204,7 @@ EOF;
             $export->add(nbm($aData[$i]['j_montant'],2),"number");
             $export->add(round($aData[$i]['currency_rate'],4),"number");
             $export->add(round($aData[$i]['currency_rate_ref'],4),"number");
-            $export->add(nbm($aData[$i]['oc_amount'],2),"number"); 
+            $export->add(nbm($aData[$i]['oc_amount'],4),"number"); 
             $export->write();
         }
     }

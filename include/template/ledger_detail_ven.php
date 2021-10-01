@@ -256,8 +256,8 @@ echo $ipaid->input();
                      */
                     if ( $obj->det->currency_id != 0 ) {
                          $value=$obj->db->get_value("select  oc_amount+oc_vat_amount from operation_currency where j_id=$1",[$q['j_id']]);
-                         $sum_prod_currency=bcadd($sum_prod_currency,$value,2);
-                         $row.=td(nbm($value,2),' class="num"');
+                         $sum_prod_currency=bcadd($sum_prod_currency,$value,4);
+                         $row.=td(nbm(round($value,4),4),' class="num"');
                          
                     }
                     echo tr($row,$class);
@@ -274,7 +274,7 @@ echo $ipaid->input();
                  //Display total in currency
                 if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
                 {
-                    $row.= td(nbm($sum_prod_currency,2),' class="num" style="font-style:italic;font-weight: bolder;"');
+                    $row.= td(nbm($sum_prod_currency,4),' class="num" style="font-style:italic;font-weight: bolder;"');
                 }
                 echo tr($row);
                 ?>
