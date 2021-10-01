@@ -284,7 +284,9 @@ class Acc_Ledger  extends jrn_def_sql
                     array($this->jr_grpt_id));
             for ($l=0; $l<count($a_jid); $l++)
             {
+                // jrnx.j_id to reverse
                 $row=$a_jid[$l]['j_id'];
+                
                 // Make also the change into jrnx
                 $sql="insert into jrnx (
                   j_date,j_montant,j_poste,j_grpt,
@@ -304,6 +306,8 @@ class Acc_Ledger  extends jrn_def_sql
                     throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));
                 }
                 $aj_id=$this->db->fetch(0);
+                
+                // jrnx.j_id of the reversed operation
                 $j_id=$aj_id['j_id'];
 
                 /* automatic lettering */
@@ -337,6 +341,10 @@ class Acc_Ledger  extends jrn_def_sql
                 {
                     throw new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]");
                 }
+                // Reverse also in the currency table
+                $this->db->exec_sql("insert into operation_currency (oc_amount,oc_vat_amount,oc_price_unit,j_id) "
+                        . " select 0-oc_amount,0-oc_vat_amount,oc_price_unit,$j_id from operation_currency where j_id=$1",
+                        [$row]);
             }
             $sql="insert into jrn (
               jr_id,
