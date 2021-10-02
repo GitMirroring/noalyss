@@ -204,6 +204,7 @@ case 'bc':
         $r.=$f->blank($fd_id);
         $r.='<p style="text-align:center">';
         $r.=HtmlInput::submit('sc',_('Sauve'));
+        $r.=HtmlInput::button_close($ctl);
         $r.='</p>';
         if ( isset ($eltid)) {
             $r.=HtmlInput::hidden("eltid", $eltid);

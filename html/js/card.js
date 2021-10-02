@@ -683,7 +683,7 @@ function  successFill_ipopcard(req,json)
     }
 }
 /**
- * show the ipopup for selecting a card type, it is a needed step before adding
+ *@brief show the ipopup for selecting a card type, it is a needed step before adding
  * a card
  *@param input field (obj) it must have the attribute ipopup
  *       possible attribute :

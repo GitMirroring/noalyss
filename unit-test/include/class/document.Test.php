@@ -136,7 +136,7 @@ class DocumentTest extends TestCase
         $document->md_id=$md_id;
         $cnt_before=$cn->get_value("select count(*) from document");
         $document->generate($array);
-        var_dump($document);
+        
         $this->assertEquals($document->d_filename ,'all-tags.odt','Generated File ');
         $cnt_after=$cn->get_value("select count(*) from document");
         $this->assertTrue ($cnt_after == $cnt_before+1,"One file generated");
