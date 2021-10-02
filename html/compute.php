@@ -48,6 +48,10 @@ foreach (array('t','c','p','q','n','gDossier') as $a)
     }
 
 }
+// sometime number uses coma instead of dot for dec
+$p=str_replace(",",".",$p);
+$q=str_replace(",",".",$q);
+
 $cn=Dossier::connect();
 $User=new User($cn);
 $User->Check();
@@ -69,7 +73,11 @@ if ( $t != -1 && isNumber($t) == 1 )
 
 $total=new Acc_Compute();
 bcscale(4);
-$amount=round(bcmul($p,$q),2);
+if ( isNUmber($p) && isNumber($q)) {
+    $amount=round(bcmul($p,$q,4),2);
+} else {
+    $amount = 0;
+}
 $total->set_parameter('amount',$amount);
 if ( $t != -1 && isNumber($t) == 1 )
 {
