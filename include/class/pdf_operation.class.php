@@ -455,7 +455,7 @@ class PDF_Operation extends PDF {
                 where j_id=$1
                 ",array($a_jrnxId[$index]["j_id"]));
             if ($count_ana == 0 ) continue;
-            if ($flag_print_section==0) $this->print_section (_("Détail"));
+            if ($flag_print_section==0) $this->print_section (_("Détail analytique"));
             $flag_print_section=1;
             $this->print_anc_detail($a_jrnxId[$index]["j_id"],$a_plan);
         }
