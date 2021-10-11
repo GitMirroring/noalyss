@@ -1,9 +1,30 @@
 Ce répertoire sert aux tests unitaires avec PHPUNIT, il faut d'abord changer dans le bootstrap.php pour que le path soit correct.
-Il faut configurer Netbeans pour pouvoir l'utiliser :
+Il faut configurer pour pouvoir l'utiliser :
 1 . Activer PHPUNIT, 
 2 . dans GLOBAL PATH (propriété du projet) ajouter le fichier phpunit.phar
 3. Donner unit-test comme répertoire de test
 
+Paramètrage
+===========
+
+Pour tester , 
+
+  * installer phpunit et adapter le chemin dans le fichier test-file.php
+  * copier  le fichier bootstrap.example.php vers bootstrap.php
+  * copier  le fichier global.example.php vers global.php
+  * adapter ces 2 fichiers global.php et bootstrap.php
+
+
+Fichiers 
+===========
+
+  * boostrap.example.php , exemple de fichier bootstrap pour phpunit
+  * global.example.php , exemple de fichier pour votre environnement : utilisateur et dossier
+  * facility.class.php , classe pour des outils utilisables dans vos tests
+  * test-file.sh script appelant phpunit 
+  * debug-php.sh pour debugguer les tests 
+
+  
 Global.php
 ==========
 
