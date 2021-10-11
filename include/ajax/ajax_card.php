@@ -495,7 +495,7 @@ case 'fs':
         $array[$i]['javascript']=sprintf("set_value('%s','%s');",
                                          $inp,$array[$i]['quick_code']);
         $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
-                       $label,j(h(strip_tags($aFound[$i]['vw_name']))));
+                       $label,j(strip_tags($aFound[$i]['vw_name'])));
 
 
         /* if it is a ledger of sales we use vw_buy
