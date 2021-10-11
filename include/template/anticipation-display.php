@@ -182,12 +182,13 @@ echo nbm( $diff);
 <td>
 <?php echo _('Diff. cumul.'); $cum=0.0; ?>
 </td>
+<?php $strColorCell="";?>
 <?php for ($h=0;$h<count($aPeriode);$h++):?>
 
 <?php
     $diff= bcsub($aReal[$i][$e][$h],$estm[$i][$e][$h]);
 $cum=bcadd($diff,$cum);
-$strColorCell="";
+
 if ($cum ==0)
   {
       $strColorCell= '<td style="text-align:right;">';
