@@ -27,7 +27,16 @@
  */
 ?>
 <?php echo  $bar?>
+<?php
+
+if ($allcard == 1 ) :  
+    echo HtmlInput::filter_table('fiche_list_table_id', '0,1,2,3', 1);
+else:
+     echo HtmlInput::filter_table('fiche_list_table_id', '0,1,2', 1);
+endif;
+?>
 <form method="POST" id="fiche_list_frm" class="print" style="display:inline" onsubmit="return confirm_box(this,'<?php echo _("Vous confirmez ?")?>')">
+    
 	<table class="sortable" id="fiche_list_table_id">
 		<tr>
 			<th >
