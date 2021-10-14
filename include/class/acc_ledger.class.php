@@ -1394,8 +1394,13 @@ class Acc_Ledger  extends jrn_def_sql
                 $operation_currency->insert();
                 
                 $tot_amount=bcadd($tot_amount,round($acc_op->amount, 2));
-                $tot_deb+=($acc_op->type=='d')?$acc_op->amount:0;
-                $tot_cred+=($acc_op->type=='c')?$acc_op->amount:0;
+                
+                if ( $acc_op->type == 'd') {
+                    $tot_deb=bcadd($tot_deb, $acc_op->amount);
+                }elseif ( $acc_op->type == 'c') {
+                    $tot_cred=bcadd($tot_cred,$acc_op->amount);
+                }
+                
                 if ($g_parameter->MY_ANALYTIC!="nu")
                 {
                     if ($g_parameter->match_analytic( $poste)==TRUE)
@@ -1420,7 +1425,8 @@ class Acc_Ledger  extends jrn_def_sql
             }// loop for each item
             $acc_end=new Acc_Operation($this->db);
             // Check the balance 
-            if ( $tot_deb != $tot_cred ) {
+            if ( bcsub($tot_deb,$tot_cred,2) != 0 && $currency_code != 0) 
+            {
                 
                 $diff=bcsub($tot_cred, $tot_deb);
                 // store the difference in currency_rounded_delta

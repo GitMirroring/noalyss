@@ -192,7 +192,7 @@ $amount_idx=0; $sum_prod_currency=0;
     if ( $obj->det->currency_id != 0 ) {
         $cur_amount=$cn->get_value("select oc_amount from operation_currency where j_id=$1",
                 [$q[$e]['j_id']]);
-        $row.=td(nbm($cur_amount,4),' class="num" ');
+        $row.=td(nbm($cur_amount,2),' class="num" ');
     }
     echo tr($row,$class);
 
