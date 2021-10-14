@@ -104,11 +104,10 @@ for ($i = 0; $i < $nb_array; $i++) {
     if ($ledger_name != $array[$i]['jrn_def_name']) {
         // Display totals
         $pdf->SetFont('DejaVuCond', 'B', 7);
-        $pdf->line_new();
-        $pdf->write_cell(70, 5, "");
+        $pdf->write_cell(80, 5, "");
         for ($e=2;$e<$nb_col;$e++){
             $colname=$a_col[$e];
-            $pdf->write_cell(40, 5, nbm($a_tot[$colname]), 0, 0, 'R');
+            $pdf->write_cell(40, 5, nbm($a_tot[$colname]), 1, 0, 'R');
             $a_tot[$colname]=0;
         }
         $pdf->line_new();
@@ -253,12 +252,11 @@ for ($i = 0; $i < $nb_array; $i++) {
     if ($ledger_name != $array[$i]['jrn_def_name']) {
         // Display totals
         $pdf->SetFont('DejaVuCond', 'B', 7);
-        $pdf->line_new();
-        $pdf->write_cell(70, 5, "");
+        $pdf->write_cell($a_size['tva_label']+$a_size['tva_rate'], 5, "");
         for ($e=2;$e<$nb_col;$e++){
             $t_idx=$a_colp[$e];
             $colname=$a_colp[$e];
-            $pdf->write_cell($a_size[$t_idx], 5, nbm($a_tot[$colname]), 0, 0, 'R');
+            $pdf->write_cell($a_size[$t_idx], 5, nbm($a_tot[$colname]), 1, 0, 'R');
             $a_tot[$colname]=0;
         }
         $pdf->line_new();
@@ -279,8 +277,12 @@ for ($i = 0; $i < $nb_array; $i++) {
             } else {
                 $pdf->write_cell($a_size[$t_idx], 5,$a_purchase_header[$e], 1, 0, 'R');
             }
-            $a_tot[$colname]=0;
         }
+          for ($e=2;$e<$nb_col;$e++){
+        $colname=$a_colp[$e];
+        $a_tot[$colname]=bcadd($a_tot[$colname],$array[$i][$colname]);
+    }
+        $pdf->line_new();
     }
     $pdf->SetFont('DejaVuCond', '', 7);
     for ($e=0;$e<$nb_col;$e++){
