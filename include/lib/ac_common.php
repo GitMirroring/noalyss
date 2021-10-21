@@ -240,7 +240,7 @@ function isDate($p_date)
 {
     if (strlen(trim($p_date)) == 0)
 	return null;
-    if (preg_match("/^[0-9]{1,2}\.[0-9]{1,2}\.20[0-9]{2}$/", $p_date) == 0)
+    if (preg_match("/^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}$/", $p_date) == 0)
     {
 
 	return null;

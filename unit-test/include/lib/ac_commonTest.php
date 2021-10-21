@@ -1,4 +1,4 @@
-<?php
+2<?php
 
 use PHPUnit\Framework\TestCase;
 
@@ -203,5 +203,55 @@ class Ac_CommonTest extends TestCase
         $text = "The chain is not going to change htps:/demo.noalyss.eu/do.php?gDossier=33&ac=COMPTA/MENUFIN";
         $this->assertEquals($text,$text);
         
+    }
+    /**
+     * provides data to testIsDate
+     */
+     function dataIsDate()
+     {
+        return array(
+            ['01.01.1992',1],
+            ['30.02.2001',0],
+            ['15.07.01',0],
+            ['21.08.2001',1]
+            );
+     }
+    /**
+     * @covers IsDate
+     * @testdox isDate
+     * @dataProvider dataIsDate
+     */
+    function testIsDate($p_date,$expected)
+    {
+        $return=($expected==1)?$p_date:null;
+        $this->assertEquals(isDate($p_date),$return,"Test $p_date");
+    }
+    function dataCompareDate ()
+    {
+        return array(
+            ['01.01.1992','05.02.2001',-1],
+            ['01.01.2012','05.02.2001',1],
+            ['05.02.2001','05.02.2001',0]);
+    }
+    /**
+     * @covers cmpDate
+     * @testDox test cmpDate
+     * @dataProvider dataCompareDate
+     */
+    function testCompareDate($p_date,$p_date_2,$p_result)
+    {
+        $cmp=cmpDate($p_date,$p_date_2);
+        switch ( $p_result ) {
+            case 0:
+                $this->assertEquals($cmp,0);
+                break;
+            case 1:
+                $this->assertGreaterThan(0,$cmp);
+                break;
+            case -1:
+                $this->assertLessThan(0,$cmp);
+                break;
+                
+        }
     }
 }
