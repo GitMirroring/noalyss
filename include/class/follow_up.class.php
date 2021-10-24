@@ -104,6 +104,9 @@ class Follow_Up
         $profile=$cn->get_value("select p_id from profile_user where user_name=$1", array($g_user->login));
         if ($profile=='')
             die("Security");
+        if ( $g_user->isAdmin() == 1) { 
+            return "(true)";
+        }
         if ($p_mode=='R')
         {
             $sql=" (ag_dest in (select p_granted from user_sec_action_profile where p_id=$profile ) ) ";
@@ -1262,6 +1265,7 @@ class Follow_Up
     {
         if ($p_array==null)             $p_array=$_GET;
         $http=new HttpInput();
+        $http->set_array($p_array);
         $search_docid=0; // search for a document 
         $action_query="";
         $ag_state=""; //<! selected status of the event , if not set or equal to -1 , it is all of them
@@ -1273,9 +1277,9 @@ class Follow_Up
             $search_docid=$p_array['ag_id']; 
             return $action_query;
         }
-        if (isset($_REQUEST['action_query']))
+        if (isset($_REQUEST['action_query']) && trim($_REQUEST['action_query']) != "")
         {
-            $action_query = $http->request('action_query');
+            $action_query = $http->extract('action_query');
             // if a query is request build the sql stmt
             $action_query="and (ag_title ilike '%".sql_string($action_query)."%' ".
                     "or ag_ref ='".trim(sql_string($action_query)).
@@ -1292,7 +1296,7 @@ class Follow_Up
             {
 
                 $fiche=new Fiche($cn);
-                $fiche->get_by_qcode($http->request('qcode'));
+                $fiche->get_by_qcode($http->extract('qcode'));
                 // if quick code not found then nothing
                 if ($fiche->id==0)
                     $str=' and false ';
@@ -1358,6 +1362,9 @@ class Follow_Up
         if (isset($p_array['searchtag']))
         {
             $action_query .= Follow_Up::filter_by_tag($cn, $p_array);
+        }
+        if ( DEBUGNOALYSS > 1) {
+            print "QUERY = [ $action_query.$str]";
         }
         return $action_query.$str;
     }
