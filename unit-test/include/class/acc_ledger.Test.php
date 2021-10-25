@@ -851,13 +851,43 @@ class Acc_LedgerTest extends TestCase
         $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",
                 [$array['p_jrn_name']]);
         $this->assertLessThan($jrn_def_id,0);
+        $this->assertEquals($jrn_def_id,$ledger->jrn_def_id);
         $ledger=new Acc_Ledger($g_connection,$jrn_def_id);
         $ledger->delete_ledger();
         $jrn_def_id=$g_connection->get_value("select jrn_def_id from jrn_def where jrn_def_name=$1",
                 [$array['p_jrn_name']]);
         $this->assertEquals($jrn_def_id,"");
     }
-
+    /**
+     * @testdox ComputerLedgerCode up to 2000
+     * @covers Acc_Ledger::save_new , 
+     * @global type $g_connection
+     */
+    public function testComputeLedgerCode()
+    {
+        global $g_connection;
+         $array=["p_jrn_name"=>"UNITTEST",
+                "p_ech_lib"=>"",
+                "p_jrn_deb_max_line"=>7,
+                'p_jrn_class_deb'=>'4*',
+                'p_jrn_type'=>'ODS',
+                'jrn_def_pj_pref'=>'TT/',
+                'min_row'=>5,
+                'p_description'=>'LEDGER UNIT TEST',
+                'negative_amount'=>0,
+                'negative_warning'=>'Warning'];
+         
+        $g_connection->exec_sql("delete from jrn_def where jrn_def_description=$1",['LEDGER UNIT TEST']);
+        for ($i=0;$i<2000;$i++) {
+            $array['p_jrn_name']='UNITEST'.str_pad($i,5,"0",STR_PAD_LEFT); 
+            $ledger=new Acc_Ledger($g_connection,-1);
+            $ledger->save_new($array);
+            $this->assertEquals($ledger->jrn_def_code,strtoupper("O".str_pad(base_convert($i+2, 10, 36),2,0,STR_PAD_LEFT)));
+         }
+        
+         // DELETE LEDGER with description = 'LEDGER UNIT TEST'
+         $g_connection->exec_sql("delete from jrn_def where jrn_def_description=$1",['LEDGER UNIT TEST']);
+    }
     /**
      * @covers Acc_Ledger::delete_ledger
      */

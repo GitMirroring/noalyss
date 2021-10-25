@@ -26,7 +26,9 @@ require_once NOALYSS_INCLUDE.'/database/operation_currency_sql.class.php';
  * @brief Class for jrn,  class acc_ledger for manipulating the ledger
  */
 
-/** @brief Class for jrn,  class acc_ledger for manipulating the ledger
+/**
+ * @class
+ * @brief Class for jrn,  class acc_ledger for manipulating the ledger AND some acc. operations
  *
  */
 class Acc_Ledger  extends jrn_def_sql
@@ -73,7 +75,7 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
         /**
-     * retrieve currency_id from database
+     * @brief retrieve currency_id from database
      */
     function set_currency_id()
     {
@@ -108,7 +110,7 @@ class Acc_Ledger  extends jrn_def_sql
         return 0;
     }
     /**
-     * Set the jrn_def.jrn_def_id
+     * @brief Set the jrn_def.jrn_def_id
      * @param integer $p_id
      */
     function set_ledger_id($p_id)
@@ -117,7 +119,7 @@ class Acc_Ledger  extends jrn_def_sql
         $this->jrn_def_id=&$this->id;
     }
     /**
-     * Set the jrn_def.jrn_def_id
+     * @brief Set the jrn_def.jrn_def_id
      * @return integer
      */
     function get_ledger_id()
@@ -149,7 +151,7 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * let you delete a operation
+     * @brief let you delete a operation
      * @note by cascade it will delete also in
      * - jrnx
      * - stock
@@ -181,7 +183,7 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * Display warning contained in an array
+     * @brief Display warning contained in an array
      * @return string with error message
      */
     function display_warning($pa_msg, $p_warning)
@@ -198,7 +200,7 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * reverse the operation by creating the opposite one,
+     * @brief reverse the operation by creating the opposite one,
      * the result is to avoid it
      * it must be done in
      *    - jrn
@@ -1587,8 +1589,8 @@ class Acc_Ledger  extends jrn_def_sql
     {
         if (!isset($this->grpt_id))
             throw new Exception(('ERREUR '.__FILE__.":".__LINE__));
-        $Res=$this->db->exec_sql("update jrn set jr_internal='".$p_internal."' where ".
-                " jr_grpt_id = ".$this->grpt_id);
+        $Res=$this->db->exec_sql("update jrn set jr_internal=$1 where 
+                 jr_grpt_id = $2 ",array($p_internal,$this->grpt_id));
     }
 
     /**
@@ -2841,8 +2843,8 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * Insert a new ledger
-     * @param type $array normally $_POST
+     * @brief Insert a new ledger , member variable  like jrn_def_id will changed 
+     * @param array $array normally $_POST
      * @see verify_ledger
      */
     function save_new($array)
@@ -2856,9 +2858,11 @@ class Acc_Ledger  extends jrn_def_sql
         $this->jrn_def_type=$p_jrn_type;
         $this->jrn_def_pj_pref=$jrn_def_pj_pref;
         $this->jrn_deb_max_line=$min_row;
-        $this->jrn_def_code=sprintf("%s%02d",
-                trim(substr($this->jrn_def_type, 0, 1)),
-                Acc_Ledger::next_number($this->db, $this->jrn_def_type));
+        $this->jrn_def_code=trim(substr($this->jrn_def_type, 0, 1));
+        $this->jrn_def_code.=str_pad(
+                    base_convert(
+                        Acc_Ledger::next_number($this->db, $this->jrn_def_type),10,36),2,"0",STR_PAD_LEFT);
+        $this->jrn_def_code=strtoupper($this->jrn_def_code);
         $this->jrn_def_description=$p_description;
         $this->currency_id=0;
         $this->jrn_def_negative_amount=$negative_amount;
