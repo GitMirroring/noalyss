@@ -112,7 +112,8 @@ if ( isset($_GET['f_id']))
  
 	if (   $result ==-1){
 	  echo h2(_("Aucune opération pour l'exercice courant"),'class="error"');
-	} else {
+          echo HtmlInput::button_close($div);
+          } else {
             echo $fiche->filter_history("tb".$div);
             echo $table;
             echo HtmlInput::button_close($div);
@@ -200,6 +201,7 @@ if ( isset($_REQUEST['pcm_val']))
         if ( $result == -1)
 	  {
 	    echo h2(_("Aucune opération pour l'exercice courant"),'class="error"');
+            echo HtmlInput::button_close($div);
 	  } else {
                 echo $poste->filter_history('tb'.$div);
                 echo $table;
