@@ -151,13 +151,15 @@ class Anc_Balance_Double extends Anc_Print
             $r.='<td>'.$row['dc'].'</td>';
             $r.='</tr>';
         }
+        $r.='<tr class="highlight">';
 	$r.=td('');
 	$r.=td('total');
 	$r.=td(nbm($tot_deb),'class="num"');
 	$r.=td(nbm($tot_cred),'class="num"');
 	$solde=bcsub($tot_cred,$tot_deb);
-	$sign=($tot_cred<$tot_deb)?" - ":" + ";
-	$r.=td($sign.nbm($solde),'class="num" style="border:solid 1px blue;font-weight:bold"');
+	$sign=($tot_cred<$tot_deb)?_("Débit"):_("Crédit");
+	$r.=td(nbm($solde),'class="num" style="border:solid 1px blue;font-weight:bold"');
+        $r.=td($sign);
 	$r.='</tr>';
         $r.='</table>';
 
@@ -460,14 +462,16 @@ class Anc_Balance_Double extends Anc_Print
              pb.po_name as b_po_name,
              sum(a_oa_amount_c) as a_c,
              sum(a_oa_amount_d) as a_d
-             from (select
+             from (select 
 			a.j_id,
              a.po_id as a_po_id,
              b.po_id as b_po_id,
              case when a.oa_debit='t' then a.oa_amount else 0 end as a_oa_amount_d,
              case when a.oa_debit='f' then a.oa_amount else 0 end as a_oa_amount_c
              from
-             operation_analytique as a join operation_analytique as b on (a.oa_row=b.oa_row and a.oa_group=b.oa_group)
+             operation_analytique as a join operation_analytique as b on (a.oa_row=b.oa_row 
+                        and a.oa_group=b.oa_group 
+                        and a.j_id = b.j_id)
 		join poste_analytique as poa on (a.po_id=poa.po_id)
 		join poste_analytique as pob on (b.po_id=pob.po_id)
              where poa.pa_id= $1

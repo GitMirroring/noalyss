@@ -48,7 +48,7 @@ function add_row(p_table, p_seq)
     if (max < amount)
     {
         alert_box(content[48]+' '+content[56]+ ' '+max + content[57]+' '+ amount);
-        return;
+        
     }
     // For the detail view (modify_op) there is several form and then several time the
     // element
