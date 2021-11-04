@@ -31,7 +31,25 @@ global $g_failed,$g_succeed,$http;
 bcscale(2);
 ?>
 <script>
-        function checkbox_set_range(evt, elt, p_name) {
+    var Bank_Reconciliation =
+    {
+    /**
+    * For each checkbox , add an event on click
+    * @param {string} p_range_name name of the checkbox object
+    * @returns {undefined}
+    */
+    activate_checkbox_range:function (p_range_name) {
+            let node_lstCheckBox = document.getElementsByClassName(p_range_name);
+            var aCheckBox=Array.from(node_lstCheckBox)
+            if (aCheckBox == undefined) {
+                console.error("Bank_Reconciliation.activate_checkbox_range_failed")
+            }
+
+            aCheckBox.forEach(elt => elt.addEventListener ('click',function (event) {
+                    Bank_Reconciliation.checkbox_set_range(event, elt, p_range_name);
+                },false));
+        },
+        checkbox_set_range:function (evt, elt, p_name) {
         if (!evt.shiftKey) {
             lastcheck = elt;
             return;
@@ -58,16 +76,16 @@ bcscale(2);
         for (x = from; x <= end; x++) {
             aName[x].checked = check;
             if( x < end && x > from ) {
-                update_selected(aName[x],aName[x].getAttribute('amount_operation'));
-                update_remain(aName[x],aName[x].getAttribute('amount_operation'));
+                Bank_Reconciliation.update_selected(aName[x],aName[x].getAttribute('amount_operation'));
+                Bank_Reconciliation.update_remain(aName[x],aName[x].getAttribute('amount_operation'));
             }
         }
-    }
+    },
 
 
-    function update_selected(p_node,p_amount) {
+    update_selected:function (p_node,p_amount) {
+        
         p_amount=parseFloat(p_amount);
-        console.log("update_selected"+p_amount);
         try {
             if (p_node.checked ) 
             {
@@ -79,10 +97,10 @@ bcscale(2);
 
             }
         } catch(e) {
-            if (console) {console.error('update_selected :'+e.message);}
+            if (console) {console.error('Bank_Reconciliation.update_selected :'+e.message);}
         }
-    }
-    function update_remain(p_node,p_amount) {
+    },
+    update_remain:function (p_node,p_amount) {
          p_amount=parseFloat(p_amount);
     try {
             if ( parseFloat($('delta_amount').innerHTML) == 0) return;
@@ -96,11 +114,11 @@ bcscale(2);
 
             }        
         } catch(e) {
-            if (console) {console.error('update_remain :'+e.message);}
+            if (console) {console.error('Bank_Reconciliation.update_remain :'+e.message);}
 
         }   
-    }
-    function update_delta() {
+    },
+    update_delta:function () {
         try {
             var delta=parseFloat($('end_extrait').value)-parseFloat($('start_extrait').value);
             delta=Math.round(delta*100)/100;
@@ -108,10 +126,10 @@ bcscale(2);
             var remain=delta-parseFloat($('selected_amount').innerHTML);
             $('remain_amount').innerHTML=Math.round(remain*100)/100;
         } catch(e) {
-            if (console) {console.error('update_delta :' +e.message);}
+            if (console) {console.error('Bank_Reconciliation.update_delta :' +e.message);}
         }
-    }
-    function recompute(p_form) {
+    },
+    recompute:function (p_form) {
         try {
             var form=$(p_form);
             var i=0;
@@ -121,10 +139,11 @@ bcscale(2);
                         e.click();
                 }
             }
-            
+            remove_waiting_box();
         } catch (e) {
-            if (console) {console.error('recompute :' +e.message);}
+            if (console) {console.error('Bank_Reconciliation.recompute :' +e.message);}
         }
+    }
     }
 </script>
 <?php
@@ -250,19 +269,19 @@ if ( isset ($_POST['ext'])) $iextrait->value=$_POST['ext']; else $iextrait->valu
 
 $nstart_extrait = new INum('start_extrait');
 $nstart_extrait->value=$start_extrait;
-$nstart_extrait->javascript='onchange="format_number(this,2);update_delta();"';
+$nstart_extrait->javascript='onchange="format_number(this,2);Bank_Reconciliation.update_delta();"';
 
 $nend_extrait = new INum('end_extrait');
 $nend_extrait->value=$end_extrait;
-$nend_extrait->javascript='onchange="format_number(this,2);update_delta();"';
+$nend_extrait->javascript='onchange="format_number(this,2);Bank_Reconciliation.update_delta();"';
 
-echo "Extrait / relevé :" . $iextrait->input();
-echo 'solde Début' . $nstart_extrait->input();
-echo 'solde Fin' . $nend_extrait->input();
-$select_all=new IButton('select_all');
-$select_all->label=_('Inverser la sélection');
-$select_all->javascript="recompute('rec1')";
-echo $select_all->input();
+echo _("Extrait / relevé :") . $iextrait->input();
+echo _('solde Début') . $nstart_extrait->input();
+echo _('solde Fin') . $nend_extrait->input();
+$take_end=new IButton('select_all');
+$take_end->label=_('Reprendre le solde de fin');
+$take_end->javascript="document.getElementById('start_extrait').value=document.getElementById('end_extrait').value;document.getElementById('end_extrait').focus()";
+echo $take_end->input();
 echo '</p>';
 echo '<p>';
 echo _('Cherche').Icon_Action::infobulle(25);
@@ -270,16 +289,17 @@ echo HtmlInput::filter_table("t_rec_bk", "0,1,2,3","1");
 echo '</p>';
 echo HtmlInput::submit('save', 'Mettre à jour le n° de relevé bancaire');
 echo '<span style="display:block">';
-
-
 	echo '</span>';
+$select_all=new IButton('select_all');
+$select_all->label=_('Inverser la sélection');
+$select_all->javascript="Bank_Reconciliation.recompute('rec1')";
 echo '<table id="t_rec_bk" class="sortable" style="width:90%;margin-left:5%">';
 
 $r ='<th class=" sorttable_sorted">'.'Date '.Icon_Action::infobulle(17).'</th>';
 $r.=th('Libellé');
 $r.=th('N° interne');
 $r.=th('Montant', ' style="text-align:right"');
-$r.=th('Selection', ' style="text-align:center" ');
+$r.='<th class="sorttable_nosort"   style="text-align:center">'.$select_all->input().'</th>';
 echo tr($r);
 
 $tot_not_reconcilied = 0;
@@ -298,19 +318,21 @@ for ($i = 0; $i < count($operation); $i++)
 	$r.=td($row['jr_comment']);
 	$r.=td($js);
 	$amount=$cn->get_value('select qf_amount from quant_fin where jr_id=$1', array($row['jr_id']));
-	$r.='<td class="num" class="sorttable_numeric"  sorttable_customkey="'.$amount.'" style="text-align:right">'.nbm ($amount).'</td>';
+	$r.='<td class="num sorttable_numeric"  sorttable_customkey="'.$amount.'" style="text-align:right">'.nbm ($amount).'</td>';
 
 	$diff=bcadd($diff,$amount);
 	$tot_not_reconcilied+=$row['jr_montant'];
 	$iradio->value = $row['jr_id'];
 	$iradio->selected=false;
         $iradio->set_attribute("amount_operation", $amount);
-        $iradio->javascript=sprintf(' onchange = "update_selected(this,%s);update_remain(this,%s)"',$amount,$amount);
+        $iradio->javascript=sprintf(' onchange = "Bank_Reconciliation.update_selected(this,%s);Bank_Reconciliation.update_remain(this,%s)"',$amount,$amount);
 	if (isset($_POST['op']))
 	{
-		for ($x=0;$x<count($_POST['op']);$x++)
+            $a_operation=$http->post("op");
+            $nb_operation=count($a_operation);
+		for ($x=0;$x<$nb_operation;$x++)
 		{
-			if ($row['jr_id']==$_POST['op'][$x])
+			if ($row['jr_id']==$a_operation[$x])
 			{
 				$iradio->selected=true;
                                 $selected_amount+=$amount;
@@ -326,7 +348,7 @@ for ($i = 0; $i < count($operation); $i++)
 		echo tr($r,' class="even" ');
 }
 echo '</table>';
-if ( $i>0) { echo $iradio->javascript_set_range("operation_ck"); }
+
 $bk_card = new Fiche($cn);
 $bk_card->id = $Ledger->get_bank();
 $filter_year = "  j_tech_per in (select p_id from parm_periode where  p_exercice='" . $g_user->get_exercice() . "')";
@@ -350,6 +372,7 @@ echo '
     <td>'._('Montant sélectionné').'</td>
     <td class="num"  id="selected_amount">'.$selected_amount.'</td>
     </tr>
+    <tr>
     <td>'._('Reste à selectionner').'</td>
     <td class="num" id="remain_amount">'.$remain_amount.'</td>
     </tr>
@@ -389,6 +412,13 @@ echo HtmlInput::submit('save', 'Mettre à jour le n° de relevé bancaire');
 echo '</p>';
 echo '</form>';
 echo '</div>';
+if ( count($operation) >0) { 
+    echo <<<EOF
+    <script>
+        (function () {Bank_Reconciliation.activate_checkbox_range('operation_ck');})()
+    </script>
+EOF;    
+}
 return;
 ?>
 
