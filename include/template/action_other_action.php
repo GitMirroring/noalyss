@@ -55,10 +55,21 @@ echo HtmlInput::request_to_hidden(array("closed_action","remind_date_end","remin
             <?php echo _("Effacer les documents choisis");?>
         </li>
     </ul>
+    <ul class="aligned-block">
+        <li>
+            <?php
+                echo HtmlInput::submit("other_action_bt", _("Valider"));
+            ?>
+            
+        </li>
+        <li>
+            <?php
+                echo HtmlInput::button_Hide("other_div");
+            ?>
+            
+        </li>
         
-<?php
-    echo HtmlInput::submit("other_action_bt", _("Valider"));
-?>
+    </ul>
 </div>
 <script>
     var obj=document.getElementById('other_div');
