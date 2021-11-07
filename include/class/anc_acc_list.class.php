@@ -20,7 +20,8 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
 /*!\file
- * \brief
+ * \brief Anc_Acc_List Manage the class for reporting about Analytic Accountancy and Accountancy : card - analytic account,
+ * accounting - analytic account,
  */
 
 /*!
@@ -130,12 +131,10 @@ with m as (select oa_id, po_id,
           WHERE fiche_detail.ad_id = 1 AND fiche_detail.f_id = operation_analytique.f_id)
          end
           AS name,
-           case when jrnx.j_poste is not null then
-        jrnx.j_poste
-        when jrnx.j_poste is null then
-        (SELECT fiche_detail.ad_value
-           FROM fiche_detail
-          WHERE fiche_detail.ad_id = 5 AND fiche_detail.f_id = operation_analytique.f_id) end as j_qcode
+           case when jrnx.j_qcode is not null then
+            jrnx.j_qcode
+            when jrnx.j_qcode is null then
+            jrnx.j_poste end as j_qcode
    FROM operation_analytique
    left JOIN jrnx USING (j_id) )        
 SELECT po.po_id, po.pa_id, po.po_name, po.po_description, sum(
@@ -320,6 +319,19 @@ order by
     $r.= $p_hidden;
     $r.= dossier::hidden();
     $r.=HtmlInput::submit('bt_csv',"Export en CSV");
+    $r.= '</form>';
+    $r.= '<form method="GET" action="export.php"  style="display:inline">';
+    $r.= HtmlInput::hidden("act","PDF:AncAccList");
+    $r.= HtmlInput::hidden("to",$this->to);
+    $r.= HtmlInput::hidden("from",$this->from);
+    $r.= HtmlInput::hidden("pa_id",$this->pa_id);
+    $r.= HtmlInput::hidden("from_poste",$this->from_poste);
+    $r.= HtmlInput::hidden("to_poste",$this->to_poste);
+    $r.= HtmlInput::hidden("card_poste",$this->card_poste);
+
+    $r.= $p_hidden;
+    $r.= dossier::hidden();
+    $r.=HtmlInput::submit('bt_pdf',"Export en PDF");
     $r.= '</form>';
     return $r;
   }
@@ -571,20 +583,18 @@ order by
 
 	for ($i=0;$i<count($this->arow);$i++)
 	  {
-            $idx=0;
-            $a_csv=array();
             
-            $a_csv[$idx]=$this->arow[$i]['j_qcode']; $idx++;
-            $a_csv[$idx]=$this->arow[$i]['name'];$idx++;
-            $a_csv[$idx]=$this->arow[$i]['name'];$idx++;
-            $a_csv[$idx]=$this->arow[$i]['po_name'];$idx++;
-            $a_csv[$idx]=$this->arow[$i]['po_description'];$idx++;
+            $csv->add($this->arow[$i]['j_qcode']); 
+            $csv->add($this->arow[$i]['name']);
+            $csv->add($this->arow[$i]['name']);
+            $csv->add($this->arow[$i]['po_name']);
+            $csv->add($this->arow[$i]['po_description']);
 
 	    $amount=$this->arow[$i]['sum_amount'];
             if ($amount==null)$amount=0;
-            $a_csv[$idx]=$amount;$idx++;
+            $csv->add($amount,"number");
             
-            $csv->write_header($a_csv);
+            $csv->write();
 	  }
       }
     //---------------------------------------------------------------------------
@@ -674,5 +684,5 @@ order by
 
 
   }
-
+  
 }

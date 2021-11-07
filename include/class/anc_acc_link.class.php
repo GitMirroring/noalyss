@@ -31,6 +31,8 @@ class Anc_Acc_Link extends Anc_Print
 {
   function __contruct($p_cn)
   {
+    parent::__construct($p_cn);
+    //@todo to remove = useless since the parent has a database object $db
     $this->cn=$p_cn;
   }
 
