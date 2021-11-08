@@ -758,7 +758,8 @@ class Fiche
                                     (select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso,
                                     j_montant,
                                     sum_oc_amount as oc_amount,
-                                    sum_oc_vat_amount as oc_vat_amount
+                                    sum_oc_vat_amount as oc_vat_amount ,
+	case when exists(select 1 from operation_analytique oa where j1.j_id=oa.j_id) then 1 else 0 end as op_analytic
                                   from jrnx as j1 left join jrn_def on jrn_def_id=j_jrn_def 
                                   left join (select j_id,
                                                 coalesce(oc_amount,0) as sum_oc_amount ,
@@ -1020,13 +1021,14 @@ class Fiche
             $idx++;
             
             $tiers=$operation->find_tiers($op['jr_id'], $op['j_id'], $op['j_qcode']);
+            $op_analytic=($op['op_analytic']==1)?'<span style="float:right;background:black;color:white;">&ni;</span>':'';
 	    echo "<TR $class name=\"tr_" . $let . "_" . $from_div . "\">" .
 			"<TD>".smaller_date(format_date($op['j_date_fmt']))."</TD>".
 	      td(h($op['jr_pj_number'])).
                td($op['j_poste']).
             "<TD>".$vw_operation."</TD>".
             td($tiers).
-            "<TD>".h($op['description'])."</TD>".
+            "<TD>".h($op['description']).$op_analytic."</TD>".
                     td($op['jr_optype']);
             
             /// If the currency is not the default one , then show the amount

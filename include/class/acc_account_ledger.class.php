@@ -188,7 +188,8 @@ class Acc_Account_Ledger
             ,(select cr_code_iso from currency where id=jrn.currency_id) as cr_code_iso
             ,j_montant
             ,oc_amount
-            ,oc_vat_amount
+            ,oc_vat_amount ,
+	case when exists(select 1 from operation_analytique oa where j1.j_id=oa.j_id) then 1 else 0 end as op_analytic
   from jrnx as j1
     left join operation_currency as va on (j1.j_id = va.j_id )
           join jrn_def on (jrn_def_id=j_jrn_def )
@@ -455,14 +456,14 @@ class Acc_Account_Ledger
 	    $sum_deb=bcadd($sum_deb,$op['deb_montant']);
             $class=($idx%2 == 0)?'class="odd"':$class=' class="even"';
             $idx++;
-
+ $op_analytic=($op['op_analytic']==1)?'<span style="float:right;background:black;color:white;">&ni;</span>':'';
 	    echo "<TR $class name=\"tr_" . $let . "_" . $from_div . "\">" .
 			"<TD>".smaller_date(format_date($op['j_date']))."</TD>".
 	      td(h($op['jr_pj_number'])).
 	      "<TD>".h($op['j_qcode'])."</TD>".
 	      "<TD>".$vw_operation."</TD>".
                 "<TD>".$tiers."</TD>".
-	      "<TD>".h($op['description'])."</TD>".
+	      "<TD>".h($op['description']).$op_analytic."</TD>".
                     td($op['jr_optype']);
                      /// If the currency is not the default one , then show the amount
             if ( $op['currency_id'] > 0  )
