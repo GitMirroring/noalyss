@@ -527,9 +527,9 @@ EOF;
 		$r.=HtmlInput::title_box(_('Choisissez la TVA'),'tva_select',"close","","y");
 		$r.='<div >';
                 $r.=_('Cherche')." ".HtmlInput::filter_table("tva_select_table",'0,1,2,3' , 1);
-		$r.= '<TABLE style="width:100%" id="tva_select_table">';
+		$r.= '<TABLE class="sortable" style="width:100%" id="tva_select_table">';
 		$r.=th(_('code'));
-		$r.=th(_('Taux'));
+		$r.=th(_('Taux'),'class="sorttable_sorted_reverse"');
 		$r.=th(_('Symbole'));
 		$r.=th(_('Explication'));
 

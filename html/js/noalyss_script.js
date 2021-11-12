@@ -599,6 +599,7 @@ function popup_select_tva(obj)
                             var popup = {'id': 'tva_select', 'cssclass': 'inner_box', 'style': str_style, 'html': code_html, 'drag': false};
                             add_div(popup);
                             $('lk_tva_select_table').focus();
+                            sorttable.makeSortable($('tva_select_table'));
                         } catch (e)
                         {
                             alert_box("success_popup_select_tva " + e.message);
