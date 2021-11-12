@@ -393,8 +393,8 @@ INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('781', 'Reprises sur amortissements et provisions (à inscrire dans les produits d''exploitation)', '7', 'PAS', 263, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('786', 'Reprises sur provisions pour risques (à inscrire dans les produits financiers)', '7', 'PAS', 264, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('787', 'Reprises sur provisions (à inscrire dans les produits exceptionnels)', '7', 'PAS', 265, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456601', 'TVA 19,6% - France métropolitaine - Taux immobilisations Déductible', '4456', 'ACT', 269, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445701', 'TVA 19,6% - France métropolitaine - Taux immobilisations Collectée ', '4457', 'PAS', 270, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456601', 'TVA 20,0% - France métropolitaine - Taux immobilisations Déductible', '4456', 'ACT', 269, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445701', 'TVA 20,0% - France métropolitaine - Taux immobilisations Collectée ', '4457', 'PAS', 270, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456602', 'TVA x% - France métropolitaine - Taux anciens Déductible', '4456', 'ACT', 271, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445702', 'TVA x% - France métropolitaine - Taux anciens Collectée ', '4457', 'PAS', 272, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4456603', 'TVA 8,5%  - DOM - Taux normal Déductible', '4456', 'ACT', 273, 'Y');
@@ -433,10 +433,10 @@ INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457019', 'TVA x% - Non imposable : Autres opérations Collectée ', '4457', 'PAS', 306, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44566020', 'TVA x% - Non imposable : Livraisons intracommunautaires/Pays Déductible', '4456', 'ACT', 307, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('4457020', 'TVA x% - Non imposable : Livraisons intracommunautaires/Pays Collectée ', '4457', 'PAS', 308, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445661', 'TVA 19,6% - France métropolitaine - Taux normal', '445', 'PAS', 309, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445661', 'TVA 20,0% - France métropolitaine - Taux normal', '445', 'PAS', 309, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445662', 'TVA 5,5% - France métropolitaine - Taux réduit', '445', 'PAS', 310, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('445663', 'TVA 2,1% - France métropolitaine - Taux super réduit', '445', 'PAS', 311, 'Y');
-INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44571', 'TVA 19,6% - France métropolitaine - Taux normal', '445', 'ACT', 312, 'Y');
+INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44571', 'TVA 20,0% - France métropolitaine - Taux normal', '445', 'ACT', 312, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44572', 'TVA 5,5% - France métropolitaine - Taux réduit', '445', 'ACT', 313, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('44573', 'TVA 2,1% - France métropolitaine - Taux super réduit', '445', 'ACT', 314, 'Y');
 INSERT INTO tmp_pcmn (pcm_val, pcm_lib, pcm_val_parent, pcm_type, id, pcm_direct_use) VALUES ('53', 'Caisse', '5', 'ACT', 223, 'N');
@@ -1384,10 +1384,10 @@ SELECT pg_catalog.setval('quant_fin_qf_id_seq', 1, false);
 
 
 
-INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (101, 'FR_NOR', 0.1960, 'TVA 19,6% - France métropolitaine - Taux normal', '445661,44571', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (101, 'FR_NOR', 0.2000, 'TVA 20,0% - France métropolitaine - Taux normal', '445661,44571', 0);
 INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (102, 'FR_RED', 0.0550, 'TVA 5,5% - France métropolitaine - Taux réduit', '445662,44572', 0);
 INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (103, 'FR_SRED', 0.0210, 'TVA 2,1% - France métropolitaine - Taux super réduit', '445663,44573', 0);
-INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (104, 'FR_IMMO', 0.1960, 'TVA 19,6% - France métropolitaine - Taux immobilisations', '4456601,445701', 0);
+INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (104, 'FR_IMMO', 0.2000, 'TVA 20,0% - France métropolitaine - Taux immobilisations', '4456601,445701', 0);
 INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (105, 'FR_ANC', 0.0000, 'TVA x% - France métropolitaine - Taux anciens', '4456602,445702', 0);
 INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (201, 'DOM', 0.0850, 'TVA 8,5%  - DOM - Taux normal', '4456603,445703', 0);
 INSERT INTO tva_rate (tva_id, tva_label, tva_rate, tva_comment, tva_poste, tva_both_side) VALUES (202, 'DOM_NPR', 0.0850, 'TVA 8,5% - DOM - Taux normal NPR', '4456604,445704', 0);
