@@ -689,6 +689,7 @@ case 'upc':
 	  $html.=$f->Display(true);
 	}
       }
+      $html.='<p style="text-align:center">'.HtmlInput::button_close($ctl).'</p>';
       break;
 // Update a card and then display the result
 // in the table
