@@ -348,7 +348,7 @@ function format_date(p_object)
     p_object.value=p_object.value.replace(/\.\./g,'.');
     var tmp_value = p_object.value;
     a_split=tmp_value.split('.');
-    if (a_split[2] && a_split[2].match(/[0-9]{2}/)) {
+    if (a_split[2] && a_split[2].match(/[0-9]{2}/) && a_split[2].length==2) {
         p_object.value=a_split[0]+"."+a_split[1]+"."+"20"+a_split[2];
     }
 }
