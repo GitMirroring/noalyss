@@ -557,7 +557,14 @@ class Anc_Operation
 
         if ($p_mode==1)
         {
-            $result.=$hidden->input('amount_'.$table_id,$p_amount);
+           $result .= sprintf('<input type="HIDDEN" id="amount_%s" class="%s%s-amount" name="amount_%s" value="%s">',
+                   $table_id,
+                   $this->in_div,
+                   $table_id,
+                   $table_id,
+                   $p_amount
+                   );
+            
             $result.='<table id="'.$p_id.$table_id.'">';
         }
         else
@@ -624,6 +631,7 @@ class Anc_Operation
             $value->size=6;
             $value->value=(isset($val[$p_seq][$i]))?$val[$p_seq][$i]:abs($p_amount);
             $value->value=round($value->value,2);
+             $value->style='class="inum '.$this->in_div.$table_id.'-value-'.$p_seq.'"';
             $value->readOnly=($p_mode==1)?false:true;
             $remain=bcsub($remain,$value->value);
             $result.='<td>'.$value->input().'</td>';

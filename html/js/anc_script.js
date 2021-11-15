@@ -31,13 +31,16 @@
 function add_row(p_table, p_seq)
 {
     var mytable = g(p_table).tBodies[0];
-    var max =Math.abs( parseFloat(g('amount_t' + p_seq).value));
-    if (!mytable)
+  if (!mytable)
     {
         return;
     }
-    var new_value = mytable.rows.length + 1;
-
+   var a_amount=document.getElementsByClassName(p_table+'-amount');
+      var max=0;
+      for (var e=0;e<a_amount.length;e++) {
+        max +=Math.abs( parseFloat(a_amount[e].value));
+        e=a_amount.length+1;
+      }
 
     if (mytable.rows.length > 15)
     {
@@ -78,15 +81,16 @@ function compute_total_table(p_table, seq)
 
         var i = 0;
         var tot = 0;
-        var col = document.getElementsByName("val[" + seq + "][]");
+        var col = document.getElementsByClassName(p_table+'-value-'+seq);
         var rounded_value = 0 ;
         for (i = 0; i < col.length; i++)
         {
-            if ( $(p_table).contains(col[i])) {
+          
                 rounded_value = Math.round(parseFloat(col[i].value) *100);
                 tot += rounded_value
-            }
+          
         }
+      console.log(`total computed (compute_total_table) ${p_table} ${tot/100}`)
         return tot/100;
     }
     catch (e)
@@ -102,12 +106,19 @@ function compute_total_table(p_table, seq)
  */
 function anc_refresh_remain(p_table, p_seq)
 {
+
     try
     {
-        var tot_line =Math.abs( parseFloat(g('amount_t' + p_seq).value));
+      var a_amount=document.getElementsByClassName(p_table+'-amount');
+      var tot_line=0;
+      for (var e=0;e<a_amount.length;e++) {
+        tot_line +=Math.abs( parseFloat(a_amount[e].value));
+        e=a_amount.length+1;
+      }
+        
         var tot_table = compute_total_table(p_table, p_seq);
-
         var remain = tot_line - tot_table;
+
         remain = Math.round(remain * 100) / 100;
         $('remain' + p_table).innerHTML = remain;
         if (remain == 0)
@@ -145,7 +156,8 @@ function verify_ca(div)
             {
                 var total_amount = 0;
                 // table is found compute the different val[]
-                var array_value = document.getElementsByName('val[' + idx + '][]');
+                  var array_value = document.getElementsByClassName(table+'-value-'+idx);
+                
 
                 for (var i = 0; i < array_value.length; i++)
                 {
@@ -156,7 +168,12 @@ function verify_ca(div)
 
                     total_amount += parseFloat(array_value[i].value);
                 }
-                var amount = Math.abs(parseFloat(g('amount_t' + idx).value));
+                var a_amount=document.getElementsByClassName(table+'-amount');
+                var amount=0;
+                for (var e=0;e<a_amount.length;e++) {
+                  amount +=Math.abs( parseFloat(a_amount[e].value));
+                  e=a_amount.length+1;
+                }
                 if (isNaN(amount)) {
                     amount=0;
                 } else {
