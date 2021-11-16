@@ -316,7 +316,7 @@ echo HtmlInput::button('hide',_('Annuler'),'onClick="Effect.Fold(\'add_todo_list
         </p>
 	</div>
 
-	<div id="action_now_div" class="inner_box" style="display:none;margin-left:25%;width: 50%;top:25%;min-height:50%;overflow: auto;">
+	<div id="action_now_div" class="inner_box" style="display:none">
 	<?php
 		echo HtmlInput::title_box(_("Action pour aujourd'hui"), "action_now_div","hide",'','y')
 	?>
@@ -355,7 +355,9 @@ echo HtmlInput::button('hide',_('Annuler'),'onClick="Effect.Fold(\'add_todo_list
 
 <script type="text/javascript" language="javascript" charset="utf-8">
 function display_detail(div) {
-	$(div).style.display="block";
+        var div=$(div);
+	div.style.display="block";
+        div.style.top=calcy(50)+"px";
 }
 </script>
 

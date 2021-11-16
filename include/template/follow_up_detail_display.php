@@ -49,11 +49,11 @@ $menu=new Default_Menu();
         <tr>
             <th><?php echo _('Fiche') ?></th>
             <th><?php echo _('Description') ?></th>
-            <th><?php echo _('prix unitaire') ?></th>
-            <th><?php echo _('quantité') ?></th>
-            <th><?php echo _('Code TVA') ?></th>
-            <th><?php echo _('Montant TVA') ?></th>
-            <th><?php echo _('Montant TVAC') ?></th>
+            <th class="num"><?php echo _('prix unitaire') ?></th>
+            <th class="num"><?php echo _('quantité') ?></th>
+            <th class="num"><?php echo _('Code TVA') ?></th>
+            <th class="num"><?php echo _('Montant TVA') ?></th>
+            <th class="num"><?php echo _('Montant TVAC') ?></th>
 
         </tr>
         <?php

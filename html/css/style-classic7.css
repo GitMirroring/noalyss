@@ -247,8 +247,12 @@ table.document th{
 }
 
  @keyframes error_h2 {
-     from {background-color:  hsl(358,60%,44%);}
-     to {background-color: hsl(359,100%,44%);}
+     from {
+background-color:  hsl(358,60%,44%);
+}
+     to {
+background-color: hsl(359,100%,44%);
+}
  }
  .error {
      width:auto;
@@ -605,7 +609,8 @@ select {
         padding-left: 10px;
         padding-right: 10px;
         color:#000000;
-        top:0px;left:0px;
+        top:0px;
+left:0px;
         visibility:hidden;
         width:80%;
         z-index:20;
@@ -622,7 +627,8 @@ select {
         padding-left: 10px;
         padding-right: 10px;
         color:#000000;
-        top:0px;left:0px;
+        top:0px;
+left:0px;
         visibility:hidden;
         width:400px;
         width:25rem;
@@ -983,7 +989,8 @@ h2.gest_name {
 }
 body.op_detail_frame,div.op_detail_frame  {
     background-color:#e4e7ed;
-    height:100%; width:100%;
+    height:100%; 
+width:100%;
 -moz-box-shadow: 10px 10px 5px #888;
 -webkit-box-shadow: 10px 10px 5px #888;
 box-shadow: 10px 10px 5px #888;
@@ -1055,7 +1062,8 @@ div.op_detail_title {
 div#div_cat{
     position:absolute;
     border:1px solid #000000;
-    top:15%;left:100px;
+    top:15%;
+left:100px;
     visibility:hidden;
     z-index:2;
     width:50em;
@@ -1657,7 +1665,8 @@ div#bookmark_div {
     padding-left: 2px;
     padding-right: 2px;
     color:#FF0000;
-    top:14%;left:2%;
+    top:14%;
+left:2%;
     visibility:hidden;
     z-index:20;
 }
@@ -1672,7 +1681,8 @@ div#bookmark_div {
     padding-left: 2px;
     padding-right: 2px;
     color:#FF0000;
-    top:40%;left:25%;
+    top:40%;
+left:25%;
     visibility:hidden;
     width:640px;
     width:40rem;
@@ -1695,7 +1705,8 @@ div#bookmark_div {
     padding-left: 2px;
     padding-right: 2px;
     color:#FF0000;
-    top:40%;left:25%;
+    top:40%;
+left:25%;
     visibility:hidden;
     width:640px;
     width:40rem;
@@ -1835,13 +1846,15 @@ li.tabs_selected {
 li.tabs {
     display:inline;
     background-color: inherit;
-    color:inherit;margin-left: 0px;
+    color:inherit;
+margin-left: 0px;
     padding: 5px;
     border-top-left-radius: 10px;
     border-bottom-right-radius: 10px;
     border:1px #879ed4 solid;
     float:left;
-    background:  #36649724;;
+    background:  #36649724;
+;
     
     margin: 2px 3px 3px 3px;
 
@@ -1849,7 +1862,8 @@ li.tabs {
 .inner_box li.tabs:hover ,li.tabs:hover {
     display:inline;
     background-color: lightblue;
-    color:wheat;margin-left: 2px;
+    color:wheat;
+margin-left: 2px;
     padding: 5px;
     border-top-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -1860,7 +1874,8 @@ li.tabs {
 @media only screen and (min-width: 1280px) {
    li.tabs {
     display:inline;
-    background:  #36649724;;
+    background:  #36649724;
+;
       
 
     padding: 15px 7px 10px 10px;
@@ -1872,7 +1887,8 @@ li.tabs {
     .inner_box li.tabs:hover ,li.tabs:hover {
         display:inline;
         background-color: lightblue;
-        color:wheat;margin-left: 2px;
+        color:wheat;
+margin-left: 2px;
         padding: 15px 7px 10px 10px;
         border-top-left-radius: 5px;
         border-bottom-right-radius: 5px;
@@ -2705,7 +2721,8 @@ span.warning {
  li.tab_row:hover {
      display:block;
      background-color: lightblue;
-     color:wheat;margin-left: 2px;
+     color:wheat;
+margin-left: 2px;
      padding: 5px;
      border-top-left-radius: 10px;
      border-top-right-radius: 10px;
@@ -2727,7 +2744,8 @@ span.warning {
      li.tab_row:hover {
          display:block;
          background-color: lightblue;
-         color:wheat;margin-left: 2px;
+         color:wheat;
+margin-left: 2px;
           padding: 20px 15px 15px 20px;
          margin: 20px 15px 15px 15px;
          border-top-left-radius: 5px;
@@ -2802,7 +2820,8 @@ p.info {
 /* Cell with tag */
 span.tagcell {
     border-radius:3px;
-    padding:3px;margin:1px;
+    padding:3px;
+margin:1px;
     display: inline-block;
 }    
 
@@ -3173,3 +3192,34 @@ li.li-active {
     text-align: center;
     font-weight: 700;
 }
+#action_now_div {
+    width:100%;
+
+}
+/* SM */
+@media (min-width: 576px) {
+    #action_now_div {
+
+    }
+
+}
+/* MD */
+@media (min-width: 768px) {
+    #action_now_div {
+    
+    }
+}
+/* LG */
+@media (min-width: 992px) {
+    #action_now_div {
+        max-width: 50%;
+        left:25%;
+    }
+}
+/* XL */
+@media (min-width: 1200px) {
+    #action_now_div {
+
+    }
+}
+/**========*/
