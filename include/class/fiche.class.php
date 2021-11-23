@@ -540,31 +540,23 @@ class Fiche
         $this->quick_code=$this->strAttribut(ATTR_DEF_QUICKCODE);
     }
 
-    /*!\brief  remove a card
+    /*!\brief  remove a card, check if not used first, must be synchro with is_used
     */
     function remove($silent=false)
     {
         if ( $this->id==0 ) return;
-        // verify if that card has not been used is a ledger
+        // verify if that card has not been used is a ledger nor in the followup
         // if the card has its own account in PCMN
         // Get the fiche_def.fd_id from fiche.f_id
-        $this->Get();
-        $fiche_def=new Fiche_Def($this->cn,$this->fiche_def);
-        $fiche_def->get();
-
-        // if the card is used do not removed it
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
-
-        if ( $this->cn->count_sql("select * from jrnx where j_qcode='".Database::escape_string($qcode)."'") != 0)
-        {
-            if ( ! $silent ) {
-		alert(_('Impossible cette fiche est utilisée dans un journal'));
-            }
-            return 1;
+        if ( $this->is_used() == FALSE) {
+            $this->delete();
+            return 0;
         }
-
-        $this->delete();
-		return 0;
+        
+        if ( ! $silent ) {
+            alert(_('Impossible cette fiche est utilisée dans un journal'));
+        }
+        return 1;
     }
 
 
