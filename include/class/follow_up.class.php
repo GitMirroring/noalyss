@@ -804,14 +804,14 @@ class Follow_Up
         else
         {
             $tiers=new Fiche($this->db);
-            if ($tiers->get_by_qcode($this->qcode_dest)==-1) // Error we cannot retrieve this qcode
-                return false;
+            if ($tiers->get_by_qcode($this->qcode_dest)== 1) // Error we cannot retrieve this qcode
+                $this->f_id_dest=null; // internal document
             else
                 $this->f_id_dest=$tiers->id;
         }
         $contact=new Fiche($this->db);
-        if ($contact->get_by_qcode($this->ag_contact)==-1)
-            $contact->id=0;
+        if ($contact->get_by_qcode($this->ag_contact)== 1)
+            $contact->id=null;
 
         // reload the old one
         $old=new Follow_Up($this->db);
