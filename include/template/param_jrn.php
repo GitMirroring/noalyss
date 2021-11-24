@@ -232,7 +232,7 @@ endif;
         }
       }
             echo '<tr>';
-      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="ACH_FICHEDEB[]" %s>%s</TD>',
+      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="ACH_FICHEDEB[]" class="ach_fichedeb" %s>%s</TD>',
               $res['fd_id'],$CHECKED,$res['fd_label']);
       $CHECKED=" unchecked";
       foreach ( $rcred as $element) {
@@ -241,7 +241,7 @@ endif;
           break;
         }
       }
-      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="ACH_FICHECRED[]" %s>%s</TD>',
+      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="ACH_FICHECRED[]" class="ach_fichecred" %s>%s</TD>',
               $res['fd_id'],$CHECKED,$res['fd_label']);
       echo '</TR>';
     }
@@ -290,7 +290,7 @@ endif;
         }
       }
             echo '<tr>';
-      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="VEN_FICHEDEB[]" %s>%s</TD>',
+      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="VEN_FICHEDEB[]" class="ven_fichedeb" %s>%s</TD>',
               $res['fd_id'],$CHECKED,$res['fd_label']);
       $CHECKED=" unchecked";
       foreach ( $rcred as $element) {
@@ -299,7 +299,7 @@ endif;
           break;
         }
       }
-      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="VEN_FICHECRED[]" %s>%s</TD>',
+      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="VEN_FICHECRED[]" class="ven_fichecred" %s>%s</TD>',
               $res['fd_id'],$CHECKED,$res['fd_label']);
       echo '</TR>';
     }
@@ -343,7 +343,7 @@ endif;
         }
       }
             echo '<tr>';
-      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="ODS_FICHEDEB[]" %s>%s</TD>',
+      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="ODS_FICHEDEB[]" class="ods_fichedeb" %s>%s</TD>',
               $res['fd_id'],$CHECKED,$res['fd_label']);
       $CHECKED=" unchecked";
       foreach ( $rcred as $element) {
@@ -394,7 +394,7 @@ endif;
         }
       }
             echo '<tr>';
-      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="FIN_FICHEDEB[]" %s>%s</TD>',
+      printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="FIN_FICHEDEB[]" class="fin_fichedeb" %s>%s</TD>',
               $res['fd_id'],$CHECKED,$res['fd_label']);
       $CHECKED=" unchecked";
       foreach ( $rcred as $element) {
@@ -434,7 +434,7 @@ endif;
    {
        hide_ledger();
        var ch=$('p_jrn_type_select_id').options[$('p_jrn_type_select_id').selectedIndex].value;
-       $(ch+'_div').style.display='block';
+      if ( ch != -1 ) {  $(ch+'_div').style.display='block';}
        switch (ch) {
            case 'FIN':
              hide_row();
@@ -472,6 +472,8 @@ endif;
     <?php
     endif;
     ?>
+
+
 </script>
 <?php endif; ?>
 <?php if ( $type=="ACH" || $type=="VEN") :?>
@@ -481,3 +483,8 @@ toggle_row_warning_enable('negative_amount','row_warning');
 <?php
 endif;
 ?>
+<script>
+/** activate checkbox */
+(function () {var a_checkbox=['ach_fichecred','ach_fichedeb','ven_fichecred','ven_fichedeb','ods_fichedeb','fin_fichedeb'];
+    a_checkbox.forEach(element => activate_checkbox_range(element));})()
+</script>
