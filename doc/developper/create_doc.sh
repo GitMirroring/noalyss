@@ -6,4 +6,4 @@ if [ ! -z "$PGUSER" ] ; then
 	postgresql_autodoc -u $PGUSER --password=$PGPASSWORD -h localhost -d ${DOMAIN}mod1
 	postgresql_autodoc  -u $PGUSER --password=$PGPASSWORD  -h localhost -d ${DOMAIN}account_repository
 fi
-cd ../../ && bash dev/compose_list.sh
+cd ../ && bash compose_list.sh
