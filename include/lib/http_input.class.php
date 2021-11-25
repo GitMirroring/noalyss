@@ -73,7 +73,7 @@ class HttpInput
         /**
      *  \brief  Check the type of the value
      * @param $p_name name of the variable
-     * @param $p_type type of the variable (number,string,date,array)
+     * @param $p_type type of the variable (number,string,text,date,array)
      * @throws Exception if the variable doesn't exist or type incorrect
      * @todo Add regex:pattern
      */
@@ -82,7 +82,7 @@ class HttpInput
         try
         {
             // no check on string
-            if ($p_type=="string")
+            if ($p_type=="string" || $p_type=="text")
             {
                 return;
             }
@@ -141,7 +141,7 @@ class HttpInput
     /**
      *  @brief  Retrieve from $this->array the variable
      * @param $p_name name of the variable
-     * @param $p_type type of the variable (number,string,date('dd.mm.yyyy'),array)
+     * @param $p_type type of the variable (number,string or text,date('dd.mm.yyyy'),array)
      * @param $p_default default value is variable
      * @throws Exception if invalid
      * @see check_type
