@@ -134,7 +134,7 @@ class Acc_Tva
      */
     public function load()
     {
-        $sql="select tva_id,tva_label,tva_rate, tva_comment,tva_poste,tva_both_side from tva_rate where tva_id=$1";
+        $sql="select * from tva_rate where tva_id=$1";
         $res=$this->cn->exec_sql(
                  $sql,
                  array($this->tva_id)
@@ -143,9 +143,9 @@ class Acc_Tva
         if ( $this->cn->size() == 0 ) return -1;
 
         $row=Database::fetch_array($res,0);
-        foreach ($row as $idx=>$value)
+        foreach (self::$variable as $idx)
         {
-            $this->$idx=$value;
+            $this->$idx=$row[$idx];
         }
         return 0;
     }
