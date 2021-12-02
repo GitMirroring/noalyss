@@ -34,7 +34,7 @@ class Exercice
     $this->cn=$cn;
   }
   /**
-   *return the number of different exercices into a folder
+   *@brief return the number of different exercices into a folder
    *@param $cn is the database connexion object database
    *@return the count of exercice
    */
@@ -44,7 +44,7 @@ class Exercice
     return $count;
   }
    /**
-    *Show a ISelect with the different exercices
+    *@brief Show a ISelect with the different exercices
     *@param $name of the iselect
     *@param $selected the selected year  (default = '')
     *@param $js javascript (default = '')
@@ -53,13 +53,13 @@ class Exercice
    function select($name,$selected='',$js='')
    {
      $iselect=new ISelect($name);
-     $iselect->value=$this->cn->make_array('select distinct p_exercice,p_exercice from parm_periode order by 1 desc');
+     $iselect->value=$this->cn->make_array('select distinct p_exercice,p_exercice_label from parm_periode order by 1 desc');
      $iselect->selected=$selected;
      $iselect->javascript=$js;
      return $iselect;
    }
    /**
-    *Show a ISelect with the different exercices, display start and end date
+    *@brief  Show a ISelect with the different exercices, display start and end date
     *@param $name of the iselect
     *@param $selected the selected year  (default = '')
     *@param $js javascript (default = '')
@@ -76,5 +76,16 @@ class Exercice
      $iselect->selected=$selected;
      $iselect->javascript=$js;
      return $iselect;
+   }
+   /**
+    * @brief retrieve the exercice from the exercice label
+    * @param string $p_label
+    */
+   function exercice_from_label($p_label)
+   {
+       $value  = $this->cn->get_value("select distinct p_exercice from parm_periode where p_exercice_label=$1",
+               [$p_label]);
+       if ($value == "") return -1;
+       return $value;
    }
 }

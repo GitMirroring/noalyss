@@ -31,16 +31,16 @@ $poste_id=$http->request("poste_id");
 $from_periode=$http->request("from_periode");
 $to_periode=$http->request("to_periode");
 $ople=$http->request("ople");
-$poste_fille=$http->request("poste_fille","string",0);
+$poste_fille=$http->request("poste_fille","string",-1);
 
 $gDossier=dossier::id();
 
 /* Security */
 $cn=Dossier::connect();
 
-if (  $poste_fille ==  'on' )
+if (  $poste_fille <> -1)
 { //choisit de voir tous les postes
-    $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like $1||'%' order by pcm_val",array($poste_id));
+    $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like $1||'%' order by pcm_val::text",array($poste_id));
 }
 else
 {

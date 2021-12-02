@@ -3334,7 +3334,7 @@ var Periode = function (p_ledger) {
                     onSuccess: function (req) {
                         remove_waiting_box();
                         var json = req.responseText.evalJSON();
-                        var y = calcy(100);
+                        var y = 100;
                         add_div({"id": "mod_periode", "style": "position:fixed;top:" + y + "px;width:50%", "cssclass": "inner_box", 'html': "wait"});
                         $('mod_periode').update(json.content);
                     }

@@ -39,7 +39,7 @@ $cn=Dossier::connect();
 
 if ( isset ( $_REQUEST['poste_fille']) )
 { //choisit de voir tous les postes
-  $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like $1||'%'",array($r_poste));
+  $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like $1||'%' order by pcm_val::text",array($r_poste));
 }
 else
 {

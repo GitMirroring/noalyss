@@ -175,6 +175,7 @@ switch ($act)
                         'onclick="removeDiv(\'mod_periode\')"');
         $html.=HtmlInput::hidden('p_id', $periode_id);
         $html.='</form>';
+        $a_answer['status']="OK";
         $a_answer['content']=$html;
         break;
 // Save a modification of a periode
@@ -187,19 +188,27 @@ switch ($act)
             $p_start=$http->post("p_start", "date");
             $p_end=$http->post("p_end", "date");
             $p_exercice=$http->post("p_exercice", "number");
-            if ($p_exercice>2099||$p_exercice<1980)
+            if ($p_exercice>COMPTA_MAX_YEAR||$p_exercice<COMPTA_MIN_YEAR)
             {
-                $html='';
-                $html.=_('Erreur exercice invalide');
+                
+                $a_answer['content']=_('Erreur exercice invalide');
             }
             else
             {
-                $sql="update parm_periode set p_start=to_date($1,'DD.MM.YYYY'),p_end=to_date($2,'DD.MM.YYYY'),p_exercice=$3 where p_id=$4";
+                $sql="update parm_periode set p_start=to_date($1,'DD.MM.YYYY'),p_end=to_date($2,'DD.MM.YYYY'),p_exercice=$3,p_exercice_label=$5 where p_id=$4";
                 try
                 {
+                    $cn->start();
+                    $exercice_label=$cn->get_value("select distinct p_exercice_label from "
+                            . " parm_periode where p_exercice=$1",
+                            [$p_exercice]);
+                    if (empty($exercice_label)) {
+                        $exercice_label=$p_exercice;
+                    }
                     $cn->exec_sql($sql,
-                            array($p_start, $p_end, $p_exercice, $periode_id));
+                            array($p_start, $p_end, $p_exercice, $periode_id,$exercice_label));
                     $a_answer["status"]="OK";
+                    $cn->commit();
                 }
                 catch (Exception $e)
                 {
@@ -207,15 +216,15 @@ switch ($act)
                     $html=$e->getTrace();
                     throw $e;
                 }
+                $parm_periode=new Parm_periode_SQL($cn, $periode_id);
+                ob_start();
+                Periode::display_row_global($parm_periode, 0, $js_var);
+                $a_answer['content']=ob_get_clean();
             }
-            $parm_periode=new Parm_periode_SQL($cn, $periode_id);
-            ob_start();
-            Periode::display_row_global($parm_periode, 0, $js_var);
-            $a_answer['content']=ob_get_clean();
         }
         catch (Exception $ex)
         {
-            $html=$ex->getTrace();
+            $html=$ex->getMessagei();
             $a_answer['content']=$html;
         }
         break;
@@ -239,8 +248,13 @@ switch ($act)
             $p_start=$http->post("p_start", "date");
             $p_end=$http->post("p_end", "date");
             $p_exercice=$http->post("p_exercice", "number");
+            $exercice_label=$cn->get_value("select distinct p_exercice_label from parm_periode where p_exercice=$1",
+                            [$p_exercice]);
+            if (empty($exercice_label)) {
+                $exercice_label=$p_exercice;
+            }
             $obj=new Periode($cn);
-            $p_id=$obj->insert($p_start, $p_end, $p_exercice);
+            $p_id=$obj->insert($p_start, $p_end, $p_exercice,$exercice_label);
             $parm_periode=new Parm_periode_SQL($cn, $p_id);
             ob_start();
             Periode::display_row_global($parm_periode, 0, $js_var);

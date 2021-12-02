@@ -223,7 +223,7 @@ class Periode
      * @return int p_id of the new periode
      * @exception Exception 10 Invalide date or exercice, 20 overlapping periode
      */
-    function insert($p_date_start, $p_date_end, $p_exercice)
+    function insert($p_date_start, $p_date_end, $p_exercice,$p_exercice_label)
     {
         try
         {
@@ -254,16 +254,16 @@ class Periode
                 throw new Exception (_("Période chevauchant une autre"),20);
             }
             $p_id=$this->cn->get_next_seq('s_periode');
-            $sql=" insert into parm_periode(p_id,p_start,p_end,p_closed,p_exercice)
+            $sql=" insert into parm_periode(p_id,p_start,p_end,p_closed,p_exercice,p_exercice_label)
                     values 
                         ($1,
                         to_date($2,'DD.MM.YYYY'),
                         to_date($3,'DD.MM.YYYY'),
                         'f',
-                        $4)";
+                        $4,$5)";
             
             $this->cn->start();
-            $Res=$this->cn->exec_sql($sql,[$p_id, $p_date_start, $p_date_end, $p_exercice]);
+            $Res=$this->cn->exec_sql($sql,[$p_id, $p_date_start, $p_date_end, $p_exercice,$p_exercice_label]);
             $Res=$this->cn->exec_sql("insert into jrn_periode (jrn_def_id,p_id,status) ".
                     "select jrn_def_id,$p_id,'OP' from jrn_def");
             $this->cn->commit();
@@ -286,7 +286,7 @@ class Periode
     {
         if ($this->p_id=='')
             $this->p_id=-1;
-        $row=$this->cn->get_array("select p_start,p_end,p_exercice,p_closed,p_central from parm_periode where p_id=$1",
+        $row=$this->cn->get_array("select p_start,p_end,p_exercice,p_closed,p_central,p_exercice_label from parm_periode where p_id=$1",
                 array($this->p_id));
         if ($row==null)
             return -1;
@@ -294,6 +294,7 @@ class Periode
         $this->p_start=$row[0]['p_start'];
         $this->p_end=$row[0]['p_end'];
         $this->p_exercice=$row[0]['p_exercice'];
+        $this->p_exercice_label=$row[0]['p_exercice_label'];
         $this->p_closed=$row[0]['p_closed'];
         $this->p_central=$row[0]['p_central'];
         return 0;
@@ -415,9 +416,10 @@ class Periode
      * @param $p_month number of month of the exercice
      * @param $p_opening 1 if we create a one-day periode for opening writings
      * @param $p_closing  1 if we create a one-day periode for closing writings
+     * @param $p_exercice_label label of the exercice
      */
     function insert_exercice($p_exercice, $p_year, $p_from_month, $p_month,
-            $p_opening, $p_closing)
+            $p_opening, $p_closing,$p_exercice_label)
     {
         try
         {
@@ -442,7 +444,9 @@ class Periode
                 throw new Exception(_("Mois de début n'existe pas "));
             if ($p_from_month>13||$p_from_month<1)
                 throw new Exception(_("Mois de début n'existe pas "));
-            
+            if ( empty($p_exercice_label)) {
+                $p_exercice_label=$p_exercice;
+            }
             $this->cn->start();
             $year=$p_year;
             $month=$p_from_month;
@@ -453,13 +457,13 @@ class Periode
                 if ($i==1&&$p_opening==1)
                 {
                     $fdate_start=sprintf('01.%02d.%d', $month, $year);
-                    $this->insert($fdate_start, $fdate_start, $p_exercice);
+                    $this->insert($fdate_start, $fdate_start, $p_exercice,$p_exercice_label);
 
                     $date_start=sprintf('02.%02d.%d', $month, $year);
                     $date_end=$this->cn->get_value("select to_char(to_date($1,'DD.MM.YYYY')+interval '1 month'-interval '1 day','DD.MM.YYYY')",
                             array($fdate_start));
 
-                    $this->insert($date_start, $date_end, $p_exercice);
+                    $this->insert($date_start, $date_end, $p_exercice,$p_exercice_label);
                 }
                 // The last month, we create a one-day periode for closing
                 elseif ($i==$p_month && $p_closing ==1 )
@@ -467,12 +471,12 @@ class Periode
                     $fdate_start=sprintf('01.%02d.%d', $month, $year);
                     $date_end=$this->cn->get_value("select to_char(to_date($1,'DD.MM.YYYY')+interval '1 month'-interval '2 day','DD.MM.YYYY')",
                             array($fdate_start));
-                    $this->insert($fdate_start, $date_end, $p_exercice);
+                    $this->insert($fdate_start, $date_end, $p_exercice,$p_exercice_label);
 
                     $date_end=$this->cn->get_value("select to_char(to_date($1,'DD.MM.YYYY')+interval '1 month'-interval '1 day','DD.MM.YYYY')",
                             array($fdate_start));
 
-                    $this->insert($date_end, $date_end, $p_exercice);
+                    $this->insert($date_end, $date_end, $p_exercice,$p_exercice_label);
                     
                 }
                 else
@@ -480,7 +484,7 @@ class Periode
                     $date_start=sprintf('01.%02d.%d', $month, $year);
                     $date_end=$this->cn->get_value("select to_char(to_date($1,'DD.MM.YYYY')+interval '1 month'-interval '1 day','DD.MM.YYYY')",
                             array($date_start));
-                    $this->insert($date_start, $date_end, $p_exercice);
+                    $this->insert($date_start, $date_end, $p_exercice,$p_exercice_label);
                 }
                 $month++;
                 if ($month == 13 )
@@ -521,6 +525,7 @@ class Periode
         echo th(_("Date Début"));
         echo th(_("Date Fin"));
         echo th(_("Exercice"));
+        echo th(_("Libellé"),'class="visible_gt800"');
         echo th(_("nb opérations"));
         echo th(_("Status"));
         echo "</tr>";
@@ -584,6 +589,7 @@ class Periode
         echo td(format_date($obj->getp("p_start"), "YYYY-MM-DD", "DD.MM.YYYY"));
         echo td(format_date($obj->getp("p_end"), "YYYY-MM-DD", "DD.MM.YYYY"));
         echo td($obj->getp("p_exercice"));
+        echo td($obj->getp("p_exercice_label"),'class="visible_gt800"');
         $nb_operation=$periode->count_operation();
         echo td($nb_operation);
         $closed=$obj->getp('p_closed');
@@ -634,6 +640,7 @@ class Periode
      *  - from_month
      *  - day_opening
      *  - day_closing
+     *  - p_exercice_label
      */
     static function form_exercice_add()
     {
@@ -663,7 +670,16 @@ class Periode
         $day_closing->value=1;
         $day_opening->value=1;
         $day_closing->set_check(1);
+        $exercice_label=new IText("p_exercice_label");
         require_once NOALYSS_TEMPLATE.'/periode_add_exercice.php';
+    }
+    /**
+     * @brief form to change the label of exercice
+     */
+    static function form_exercice_label()
+    {
+        $cn=Dossier::connect();
+        require_once NOALYSS_TEMPLATE."/periode-form_exercice_label.php";
     }
     function delete() {
         $this->cn->exec_sql("delete from parm_periode where p_id=$1",[$this->p_id]);
@@ -686,9 +702,10 @@ class Periode
      */
     static  function form_periode_add($p_js_var)
     {
+        $http=new \HttpInput();
         $cn=Dossier::connect();
         $p_exercice=new ISelect('p_exercice');
-        $p_exercice->value=$cn->make_array("select distinct p_exercice,p_exercice from parm_periode order by 1 desc");
+        $p_exercice->value=$cn->make_array("select distinct p_exercice,p_exercice_label from parm_periode order by 1 desc");
         $title=_('Ajout période');
         $title_par="<p>"._('On ne peut ajouter une période que sur un exercice qui existe déjà').
                 "</p>";
@@ -700,7 +717,7 @@ class Periode
         $html.=HtmlInput::title_box($title, 'periode_add','hide');
         $html.=$title_par;
         $html.='<form method="post" id="insert_periode_frm" onsubmit="'.$p_js_var.'.insert_periode();return false;">' ;
-        $html.=HtmlInput::hidden("ac", $_REQUEST['ac']);
+        $html.=HtmlInput::hidden("ac", $http->request('ac'));
         $html.=Dossier::hidden();
         $html.='<table>';
 
@@ -721,7 +738,7 @@ class Periode
     {
         $cn=Dossier::connect();
         $i_exercice=new ISelect("p_exercice_sel");
-        $i_exercice->value=$cn->make_array("select distinct p_exercice,p_exercice from parm_periode order by 1 desc", 1);
+        $i_exercice->value=$cn->make_array("select distinct p_exercice,p_exercice_label from parm_periode order by 1 desc", 1);
         $i_exercice->javascript="onchange=\"Periode.filter_exercice('periode_tbl')\"";
         $i_exercice->selected=$p_sel;
         echo $i_exercice->input();

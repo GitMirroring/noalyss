@@ -1,6 +1,12 @@
 <?php
+/**
+ * @file
+ * @brief Form to  add new exercice
+ */
+
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+$http=new HttpInput();
 ?>
 <?php echo HtmlInput::title_box(_("Ajout d'un exercice"), "exercice_add",
         "hide"); ?>
@@ -14,7 +20,7 @@ de fin d'exercice: amortissements, régulations de compte... Avec une 13ième p�
 
 <form method="post" style="padding-left: 20%" id="exercice_frm" onsubmit="return (validate() && confirm_box($('exercice_frm'), '<?php echo _("Confirmez vous l\'ajout d\'un exercice comptable ?") ?>'))">
     <?php
-    echo HtmlInput::hidden("ac", $_REQUEST['ac']);
+    echo HtmlInput::hidden("ac", $http->request('ac'));
     echo HtmlInput::hidden("jrn_def_id", "0");
     echo HtmlInput::hidden("add_exercice", "1");
     echo Dossier::hidden();
@@ -22,7 +28,16 @@ de fin d'exercice: amortissements, régulations de compte... Avec une 13ième p�
     <table>
         <tr>
             <td>
-<?= _("Exercice") ?>
+                <?=_("Nom de l'exercice")?>
+                
+            </td>
+            <td>
+                <?=$exercice_label->input()?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+<?= _("Exercice fiscal ou comptable") ?>
             </td>
             <td>
 <?php echo $exercice->input() ?>

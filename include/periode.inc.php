@@ -40,6 +40,52 @@ $p_ledger_id=$http->request("jrn_def_id", "number", 0);
 
 </script>
 <?php
+//-------------------------------------------------------------------
+//Modify exercice label
+//-------------------------------------------------------------------
+if ( isset($_POST['mod_exercice_label_bt'])) {
+    $err = 0;
+    $p_exercice_label=$http->post("p_exercice_label");
+    $p_exercice=$http->post("p_exercice");
+    if (empty(trim($p_exercice_label))) {
+     echo_warning(_("Libellé exercice ne peut pas être vide"));
+     $err =1;
+    } 
+    if ($err == 0 && $cn->get_value("select count(*) from parm_periode where p_exercice_label=$1 and p_exercice <>$2",
+            [$p_exercice_label,$p_exercice]) > 0) 
+    {
+        echo_warning(_("Le même libellé ne peut pas être utilisé pour 2 exercices"));
+        $err=1;
+    } 
+    
+    if ($err == 0) {
+        try
+        {
+           $cn->start();
+           /**
+            * @todo
+            * Rewrite : split table parm_periode into parm_periode and parm_exercice
+            * disabling temporarily a trigger is not the right solution , 
+            * but make the trigger more flexible and less secure
+            * is worst. The trigger is disable in a transaction means it is still enable
+            * for other session.
+            */
+           $cn->exec_sql("alter table parm_periode  disable trigger parm_periode_check_periode_trg");
+           $cn->exec_sql("update parm_periode set p_exercice_label=$1 where p_exercice=$2",
+                   [$p_exercice_label,$p_exercice]);
+           $cn->exec_sql("alter table parm_periode  enable trigger parm_periode_check_periode_trg");
+           $cn->commit();
+
+        }
+        catch (Exception $exc)
+        {
+            echo_warning( $exc->getMessage());
+            error_log($exc->getTraceAsString());
+            $cn->rollback();
+        }
+
+    }
+}
 //--------------------------------------------------------------------
 // Add an exercice 
 // receive nb_exercice
@@ -50,6 +96,7 @@ if (isset($_POST['add_exercice']))
     try
     {
         $p_exercice=$http->post("p_exercice", "number");
+        $p_exercice_label=$http->post("p_exercice_label", "string");
         $p_year=$http->post("p_year", "number");
         $nb_month=$http->post("nb_month", "number");
         $from_month=$http->post("from_month", "number");
@@ -57,7 +104,7 @@ if (isset($_POST['add_exercice']))
         $day_closing=$http->post("day_closing", "string", 0);
         $exercice=new Periode($cn);
         $exercice->insert_exercice($p_exercice, $p_year, $from_month, $nb_month,
-                $day_opening, $day_closing);
+                $day_opening, $day_closing,$p_exercice_label);
     }
     catch (Exception $ex)
     {
@@ -111,6 +158,13 @@ if ($p_ledger_id==0)
     echo '<div id="periode_add" style="display:none;width:auto" class="inner_box">';
     Periode::form_periode_add("jsper");
     echo '</div>';
+//-------------------------------------------------------------------
+// Change label of Exercice
+//-------------------------------------------------------------------
+    echo HtmlInput::button_action(_("Modifie libellé exercice"), "\$('exercice_label_div').show()");
+    echo '<div id="exercice_label_div" style="display:none;width:60ch" class="inner_box">';
+    Periode::form_exercice_label("jsper");
+    echo '</div>';    
 
 //-------------------------------------------------------------------
 // List of Periode

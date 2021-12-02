@@ -61,9 +61,10 @@ if ( isset($_GET['f_id']))
         $array['to_periode']=$limit_periode[1]->last_day();
 	if (isset($_GET['ex']))
 	  {
-            $ex=$http->get('ex','number');
-	    $limit_periode=$per->get_limit($ex);
-	    if ( $ex < $year)
+            $ex=$http->get('ex','string');
+               $other_year=$exercice->exercice_from_label($ex);
+	    $limit_periode=$per->get_limit($other_year);
+	    if ( $other_year < $year)
 	      $array['from_periode']=$limit_periode[0]->first_day();
 	    else
 	      $array['to_periode']=$limit_periode[1]->last_day();
@@ -75,7 +76,8 @@ if ( isset($_GET['f_id']))
 	 */
 	if ($exercice->count() > 1 )
 	  {
-	    $default=$http->get("ex","number",$year);
+	    $default_ex=$http->get("ex","string",$year);
+            $default=$exercice->exercice_from_label($default_ex);
 	    $dossier=dossier::id();
 	    if ( $div != 'popup')
 	      {
@@ -132,6 +134,7 @@ if ( isset($_GET['f_id']))
 ///////////////////////////////////////////////////////////////////////////
 if ( isset($_REQUEST['pcm_val']))
   {
+    $exercice=new Exercice($cn);
     $pcm_val=$http->request("pcm_val");
     $poste=new Acc_Account_Ledger($cn,$pcm_val);
     $poste->load();
@@ -143,7 +146,6 @@ if ( isset($_REQUEST['pcm_val']))
       }
     else
       {
-	$exercice=new Exercice($cn);
 	$old='';
         $per=new Periode($cn);
         $limit_periode=$per->get_limit($year);
@@ -151,9 +153,10 @@ if ( isset($_REQUEST['pcm_val']))
         $array['to_periode']=$limit_periode[1]->last_day();
 	if (isset($_GET['ex']))
 	  {
-            $ex=$http->get("ex","number");
-	    $limit_periode=$per->get_limit($ex);
-	    if ( $ex < $year)
+            $ex=$http->get("ex","string");
+            $other_year=$exercice->exercice_from_label($ex);
+	    $limit_periode=$per->get_limit($other_year);
+	    if ( $other_year < $year)
 	      $array['from_periode']=$limit_periode[0]->first_day();
 	    else
 	      $array['to_periode']=$limit_periode[1]->last_day();
@@ -164,7 +167,9 @@ if ( isset($_REQUEST['pcm_val']))
 	 */
 	if ($exercice->count() > 1 )
 	  {
-            $default=$http->get("ex","number",$year);
+            $default_ex=$http->get("ex","string",$year);
+            
+            $default=$exercice->exercice_from_label($default_ex);
 	    $dossier=dossier::id();
 	    if ( $div != 'popup')
 	      {

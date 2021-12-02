@@ -333,8 +333,8 @@ class FicheTest extends TestCase
             array('ÀÉ@Ê', 'AE@E'),
             array('ça&"', 'CA'),
             array("", "QC"),
-            array(",,,,", "QC"),
-            array("####", "QC")
+            array(",,,,", "QC0"),
+            array("####", "QC0")
         );
     }
 
@@ -408,9 +408,14 @@ where
             $this->assertEquals($fiche->get_quick_code(),$fiche_related1->strAttribut($nAttribute['ad_id']),'Attribute QC is not set');
             $this->assertEquals($fiche->get_quick_code(),$fiche_related2->strAttribut($nAttribute['ad_id']),'Attribute QC is not set');
         }
-        $fiche->remove();
-        $fiche_related1->remove();
-        $fiche_related2->remove();
+        if ( $fiche->id == 872 ) {
+            $this->assertEquals($fiche->remove(),1,"Removed used card not allowed {$fiche->id}");
+            
+        } else {
+            $this->assertEquals($fiche->remove(),0,"Cannot remove {$fiche->id}");
+        }
+        $this->assertEquals($fiche_related1->remove(),0,"Cannot remove {$fiche_related1->id}");
+        $this->assertEquals($fiche_related2->remove(),0,"Cannot remove {$fiche_related2->id}");
         foreach ($aAttribute as $nAttribute) {
             $fiche_def->removeAttribut($nAttribute['ad_id']);
         }

@@ -46,6 +46,7 @@ function __construct(DatabaseCore $p_cn,$p_id=-1)
 	,"p_start"=>"p_start"
 	,"p_end"=>"p_end"
 	,"p_exercice"=>"p_exercice"
+	,"p_exercice_label"=>"p_exercice_label"
 	,"p_closed"=>"p_closed"
 	,"p_central"=>"p_central"
         );
@@ -57,6 +58,7 @@ function __construct(DatabaseCore $p_cn,$p_id=-1)
 	,"p_start"=>"date"
 	,"p_end"=>"date"
 	,"p_exercice"=>"text"
+        ,"p_exercice_label"=>"text"
 	,"p_closed"=>"boolean"
 	,"p_central"=>"boolean"
           );
