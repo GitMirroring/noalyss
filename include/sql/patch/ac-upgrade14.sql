@@ -20,6 +20,7 @@ begin
 end;
 $function$
  language plpgsql;
+
 select upgrade_repo(15);
 
 commit;
