@@ -89,6 +89,8 @@ class Acc_Account_LedgerTest extends TestCase
                     'j_montant' => '8.4000',
                     'oc_amount' => null,
                     'oc_vat_amount' => null
+                    ,'op_analytic' => '0'
+
                 ),
                 1=>
                 array(
@@ -119,6 +121,8 @@ class Acc_Account_LedgerTest extends TestCase
                     ,'j_montant' => '8.4000'
                     ,'oc_amount' => null
                     ,'oc_vat_amount' => null
+                    ,'op_analytic' => '0'
+
 
                 ),
                 2=>
@@ -150,6 +154,7 @@ class Acc_Account_LedgerTest extends TestCase
                     ,'j_montant' => '5.2900'
                     ,'oc_amount' => null
                     ,'oc_vat_amount' => null
+                    ,'op_analytic' => '0'
 
                 ),
                 3=>
@@ -181,6 +186,7 @@ class Acc_Account_LedgerTest extends TestCase
                      'j_montant' => '35.7400',
                      'oc_amount' => null,
                      'oc_vat_amount' => null
+                     ,'op_analytic' => '0'
 
                 ),
                 4=>
@@ -212,6 +218,7 @@ class Acc_Account_LedgerTest extends TestCase
                     'j_montant' => '35.7400',
                     'oc_amount' => null,
                     'oc_vat_amount' => null
+                    ,'op_analytic' => '0'
                 ),
                 5=>
                 array(
@@ -242,6 +249,7 @@ class Acc_Account_LedgerTest extends TestCase
                     'j_montant' => '21.0000',
                     'oc_amount' => null,
                     'oc_vat_amount' => null
+                    ,'op_analytic' => '0'
 
                 ),
             ),
