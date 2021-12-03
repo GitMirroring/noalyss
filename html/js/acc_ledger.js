@@ -1183,7 +1183,7 @@ function op_save(obj)
                         parameters: queryString,
                         onFailure: null,
                         onSuccess: function(req,json) {
-                            console.debug (req);
+                            
                              
                             if (req.responseXML == null ){
                                  smoke.alert(req.responseText);
@@ -1547,7 +1547,7 @@ function duplicate_operation(p_dossier,p_jr_id) {
                             onSuccess:function(req) {
                                 remove_waiting_box();
                                 var xml=req.responseXML;
-                                console.debug ("received"+xml);
+                                
                                 if ( xml.getElementsByTagName("ctl").length==0) {
                                     console.log("erreur"+req.responseText);
                                 }
