@@ -55,7 +55,9 @@ class Dossier
     static function id()
     {
         self::check();
-        return $_REQUEST['gDossier'];
+        $http=new HttpInput();
+        
+        return $http->request('gDossier','number');
     }
 
     /**
@@ -259,7 +261,7 @@ class Dossier
     public function load()
     {
 
-        $sql="select dos_name,dos_description,dos_email from ac_dossier where dos_id=$1";
+        $sql="select * from ac_dossier where dos_id=$1";
 
         $res=$this->cn->exec_sql(
                 $sql, array($this->dos_id)
@@ -268,9 +270,9 @@ class Dossier
         if (Database::num_row($res)==0)
             return;
         $row=Database::fetch_array($res, 0);
-        foreach ($row as $idx=> $value)
+        foreach ( self::$variable as $idx)
         {
-            $this->$idx=$value;
+            $this->$idx=$row[$idx];
         }
     }
 

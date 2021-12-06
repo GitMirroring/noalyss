@@ -80,7 +80,6 @@ class Acc_BilanTest extends TestCase
 
     /**
      * @covers Acc_Bilan::load
-     * @todo   Implement testLoad().
      */
     public function testLoad()
     {

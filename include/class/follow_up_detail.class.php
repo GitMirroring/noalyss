@@ -22,7 +22,8 @@
  * \brief Follow_Up details are the details for a actions
  */
 
-/*!\brief Follow_Up Details are the details for an actions, it means
+/*!
+ * \brief Follow_Up Details are the details for an actions, it means
  * the details of an order, delivery order, submit a quote...
  * this class is linked to the table action_detail
  * - "id"=>"ad_id", primary key
@@ -164,24 +165,27 @@ class Follow_Up_Detail
         }
         return $aRet;
     }
-
+    /**
+     * @brief load the todo_list row thanks it's ID
+     * @return boolean true if found else false
+     */
     public function load()
     {
         $sql="SELECT ad_id, f_id, ad_text, ad_pu, ad_quant, ad_tva_id, ad_tva_amount,
              ad_total_amount, ag_id   FROM action_detail".
              " where ad_id=$1";
 
-        $res=$this->db->get_array($this->db,
+        $res=$this->db->get_array(
                                   $sql,
                                   array($this->ad_id)
                                  );
-        if ( $this->db->count() == 0 ) return;
+        if ( $this->db->count() == 0 ) return false;
         $row=$res[0];
-        foreach ($row as $idx=>$value)
+        foreach (self::$variable as $idx)
         {
-            $this->$idx=$value;
+            $this->$idx=$row[$idx];
         }
-
+        return true;
     }
     public function delete()
     {

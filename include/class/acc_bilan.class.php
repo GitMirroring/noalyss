@@ -273,8 +273,10 @@ class Acc_Bilan
             if ( Database::num_row($res)==0)
                 throw new Exception (_('Aucun enregistrement trouve'));
             $array=Database::fetch_array($res,0);
-            foreach ($array as $name=>$value)
-            $this->$name=$value;
+            $this->b_name=$array['b_name'];
+            $this->b_file_template=$array['b_file_template'];
+            $this->b_file_form=$array['b_file_form'];
+            $this->b_type=$array['b_type'];
 
         }
         catch(Exception $Ex)

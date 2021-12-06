@@ -145,7 +145,7 @@ EOF;
         $anc_acc_list->card_poste=3;
         $pdf_anc_acc=new PDF_Anc_Acc_List($anc_acc_list);
         $pdf_anc_acc->export_pdf()->Output(__DIR__."/file/pdf_anc_acc_list-activity-card.pdf","F");
-        $this->assertEquals(77690,filesize(__DIR__."/file/pdf_anc_acc_list-activity-card.pdf"),
+        $this->assertEquals(77689,filesize(__DIR__."/file/pdf_anc_acc_list-activity-card.pdf"),
                 __DIR__."/file/pdf_anc_acc_list-activity-card.pdf incorrect");
         
           // By Activity / Account
@@ -156,7 +156,7 @@ EOF;
         $anc_acc_list->card_poste=4;
         $pdf_anc_acc=new PDF_Anc_Acc_List($anc_acc_list);
         $pdf_anc_acc->export_pdf()->Output(__DIR__."/file/pdf_anc_acc_list-activity-account.pdf","F");
-        $this->assertEquals(76411,filesize(__DIR__."/file/pdf_anc_acc_list-activity-account.pdf"),
+        $this->assertEquals(76410,filesize(__DIR__."/file/pdf_anc_acc_list-activity-account.pdf"),
                 __DIR__."/file/pdf_anc_acc_list-activity-account.pdf incorrect");
     }
 

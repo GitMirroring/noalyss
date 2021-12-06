@@ -90,26 +90,30 @@ class Acc_Ledger_Info
             throw $e;
         }
     }
+    /**
+     * @brief load the todo_list row thanks it's ID
+     * @return boolean true if found else false
+     */
     function load()
     {
-        $sql="select jr_id,id_type,ji_value from jrn_info where ji_id=".$this->ji_id;
-        $r=$this->cn->exec_sql($sql);
+        $sql="select jr_id,id_type,ji_value from jrn_info where ji_id=$1";
+        $r=$this->cn->exec_sql($sql,[$this->ji_id]);
         if (Database::num_row ($r) > 0 )
         {
             $this->from_array(Database::fetch_array($r,0));
-            return 0;
+            return true;
         }
         else
         {
-            return 1;
+            return false;
         }
 
     }
     function from_array($p_array)
     {
-        foreach ($p_array as $col=>$value)
+        foreach (array("jr_id","id_type","ji_value") as $col)
         {
-            $this->$col=$value;
+            $this->$col=$p_array[$col];
         }
     }
     function set_id($p_ji_id)

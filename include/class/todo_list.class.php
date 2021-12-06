@@ -206,6 +206,10 @@ class Todo_List
         
         return $array;
     }
+    /**
+     * @brief load the todo_list row thanks it's ID
+     * @return boolean true if found else false
+     */
     public function load()
     {
 
@@ -217,13 +221,14 @@ class Todo_List
                  array($this->tl_id)
              );
 
-        if ( Database::num_row($res) == 0 ) return;
+        if ( Database::num_row($res) == 0 ) return false;
         $row=Database::fetch_array($res,0);
-        foreach ($row as $idx=>$value)
+        $aIndex=array_values(self::$variable);
+        foreach ($aIndex as $idx)
         {
-            $this->$idx=$value;
+            $this->$idx=$row[$idx];
         }
-
+        return true;
     }
     public function delete()
     {

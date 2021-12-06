@@ -27,7 +27,9 @@
  */
 class Forecast
 {
-  private static $variable=array ("id"=>"f_id","name"=>"f_name","start_date"=>"f_start_date","end_date"=>"f_end_date");
+  private static $variable=array ("id"=>"f_id",
+      "name"=>"f_name","start_date"=>"f_start_date","end_date"=>"f_end_date"
+      );
     private $cn;
     /**
      * @brief constructor
@@ -118,20 +120,25 @@ class Forecast
         $ret=$p_cn->get_array($sql);
         return $ret;
     }
+    /**
+     * @brief load from db
+     * @return boolean true if found else false 
+     */
     public function load()
     {
-        $sql="select f_name,f_start_date ,f_end_date from forecast where f_id=$1";
+        $sql="select f_id, f_name,f_start_date ,f_end_date from forecast where f_id=$1";
         $res=$this->cn->exec_sql(
                  $sql,
                  array($this->f_id)
              );
-        if ( Database::num_row($res) == 0 ) return -1;
+        if ( Database::num_row($res) == 0 ) return false;
         $row=Database::fetch_array($res,0);
-        foreach ($row as $idx=>$value)
+        $a_index=array_values(self::$variable);
+        foreach ( $a_index as $idx)
         {
-            $this->$idx=$value;
+            $this->$idx=$row[$idx];
         }
-
+        return true;
     }
     public function delete()
     {
@@ -158,11 +165,7 @@ class Forecast
 			      " from forecast_item where fc_id=$2",array($array[$i]['fc_id'],$old[$i]['fc_id']));
 	}
     }
-    /**
-     * @brief unit test
-     */
-    static function test_me()
-    {}
+
 
 }
 ?>

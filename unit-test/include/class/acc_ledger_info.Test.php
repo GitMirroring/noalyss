@@ -59,11 +59,12 @@ class Acc_Ledger_InfoTest extends TestCase
         $this->object->id_type='BON_COMMANDE';
         $this->object->ji_value='BON';
         
-        $cnt=$g_connection->get_array("select * from jrn_info where jr_id=$1",[$this->object->jr_id]);
-        $this->assertSame(count($cnt),0);
+        $g_connection->exec_sql("delete from jrn_info where jr_id=$1",[$this->object->jr_id]);
+        $cnt=$g_connection->get_value("select count(*) from jrn_info where jr_id=$1",[$this->object->jr_id]);
+        $this->assertEquals($cnt,0,"Error : bon_commande already exist");
         $this->object->insert();
-        $cnt=$g_connection->get_array("select * from jrn_info where jr_id=$1",[$this->object->jr_id]);
-        $this->assertSame(count($cnt),1);
+        $cnt=$g_connection->get_value("select count(*) from jrn_info where jr_id=$1",[$this->object->jr_id]);
+        $this->assertEquals($cnt,1,'Error : not inserted');
         $g_connection->exec_sql("delete from jrn_info where jr_id=$1",[$this->object->jr_id]);
 
     }
@@ -80,6 +81,29 @@ class Acc_Ledger_InfoTest extends TestCase
         $cnt=$g_connection->get_array("select * from jrn_info where jr_id=$1",[$this->object->jr_id]);
         $this->assertSame(count($cnt),1);
         $g_connection->exec_sql("delete from jrn_info where jr_id=$1",[$this->object->jr_id]);
+    }
+    /**
+     * @testdox test loading
+     */
+    function test_load()
+    {
+	global $g_connection;
+        $this->object->jr_id=3;
+        $this->object->id_type='BON_COMMANDE';
+        $this->object->ji_value='BONi 11111111';
+        
+        $cnt=$g_connection->get_array("select * from jrn_info where jr_id=$1",[$this->object->jr_id]);
+        $this->assertSame(count($cnt),0);
+        $this->object->insert();
+        $cnt=$g_connection->get_array("select * from jrn_info where jr_id=$1",[$this->object->jr_id]);
+	$this->assertSame(count($cnt),1);
+	$reload_id=$g_connection->get_value("select ji_id from jrn_info where jr_id=$1",[$this->object->jr_id]);
+	$reload=new Acc_Ledger_Info($g_connection,$reload_id);
+	$reload->load();
+	$this->assertSame($reload->ji_value,$this->object->ji_value,"Error cannot load");
+	
+        $g_connection->exec_sql("delete from jrn_info where jr_id=$1",[$this->object->jr_id]);
+	    
     }
     
 }

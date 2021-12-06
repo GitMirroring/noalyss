@@ -52,19 +52,19 @@ class Anc_Group extends Anc_Print
     {
         if (strlen ($this->ga_id) > 10 )            return '<span class="notice">'.
                 _('Taille de la code trop long maximum 10 caractères').'</span>';
-        $sql=" insert into groupe_analytique (ga_id,ga_description,pa_id) values ('%s','%s',%d)";
-        $sql=sprintf($sql,Database::escape_string($this->ga_id),
-                     Database::escape_string($this->ga_description),
-                     $this->pa_id);
+        $sql=" insert into groupe_analytique (ga_id,ga_description,pa_id) values ($1,$2,$3)";
         try
         {
-            $this->db->exec_sql($sql);
+            $this->db->exec_sql($sql,[$this->ga_id,
+                                    $this->ga_description,
+                                    $this->pa_id]);
+            return true;
         }
         catch (Exception $a)
         {
             return '<span class="notice">Doublon !!</span>';
+            return false;
         }
-        return "";
     }
     /*!
      * \brief remove from the database
@@ -74,26 +74,29 @@ class Anc_Group extends Anc_Print
     {
         $this->ga_id=str_replace(' ','',$this->ga_id);
         $this->ga_id=strtoupper($this->ga_id);
-        $sql=" delete from groupe_analytique where ga_id='".Database::escape_string($this->ga_id)."'";
+        $sql=" delete from groupe_analytique where ga_id=$1";
 
-        $this->db->exec_sql($sql);
+        $this->db->exec_sql($sql,array($this->ga_id));
     }
 
-    /*!
-     * \brief load from the database and make an object
+    /**
+     * @brief load the todo_list row thanks it's ID
+     * @return boolean true if found else false
      */
     function load()
     {
         $sql="select ga_id, ga_description,pa_id from groupe_analytique where".
-             " ga_id = ".$this->ga_id;
-        $res=$this->db->exec_sql($sql);
-        $array=Database::fetch_all($res);
+             " ga_id = $1";
+        $res=$this->db->exec_sql($sql,[$this->ga_id]);
+        $array=Database::fetch_array($res);
         if ( ! empty($array) )
         {
             $this->ga_id=$array['ga_id'];
             $this->ga_description=$array['ga_description'];
             $this->pa_id=$array['pa_id'];
+            return true;
         }
+        return false;
     }
 
     /*!

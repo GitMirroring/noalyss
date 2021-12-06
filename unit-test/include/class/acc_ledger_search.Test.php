@@ -88,7 +88,7 @@ class Acc_Ledger_Test extends TestCase
         $ledger=new Acc_Ledger_Search('ALL');
         $r=$ledger->display_search_form();
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger_search-test_display_search_form.html", $r);
-        $this->assertEquals(9665,strlen($r),"Size of the html string for display_search_form see "
+        $this->assertEquals(9669,strlen($r),"Size of the html string for display_search_form see "
                 . __DIR__."/file/acc_ledger_search-test_display_search_form.html ");
     }
     /**
@@ -98,35 +98,34 @@ class Acc_Ledger_Test extends TestCase
     {
          $ledger=new Acc_Ledger_Search('ALL');
          $ret   = $ledger->build_search_filter();
-         $result=sprintf("manage_search_filter({'div':'','ledger_type':'ALL','all_type':1,'dossier':%d})"
+         $result=sprintf("manage_search_filter({'div':'','ledger_type':'ALL','all_type':1,'dossier':'%d'})"
                  ,Dossier::id());
-         $this->assertEquals($ret,$result,"Build filter for ALL");
-         
+         $this->assertEquals($ret,$result,"Build filter for ALL");         
          $ledger=new Acc_Ledger_Search('FIN');
          $this->assertEquals($ret,$result);
          $ret   = $ledger->build_search_filter();
-         $result=sprintf("manage_search_filter({'div':'','ledger_type':'FIN','all_type':1,'dossier':%d})"
+         $result=sprintf("manage_search_filter({'div':'','ledger_type':'FIN','all_type':1,'dossier':'%d'})"
                  ,Dossier::id());
          $this->assertEquals($ret,$result,"Build filter for FIN");
          
          $ledger=new Acc_Ledger_Search('VEN');
          $this->assertEquals($ret,$result);
          $ret   = $ledger->build_search_filter();
-         $result=sprintf("manage_search_filter({'div':'','ledger_type':'VEN','all_type':1,'dossier':%d})"
+         $result=sprintf("manage_search_filter({'div':'','ledger_type':'VEN','all_type':1,'dossier':'%d'})"
                  ,Dossier::id());
          $this->assertEquals($ret,$result,"Build filter for VEN");
          
          $ledger=new Acc_Ledger_Search('ACH');
          $this->assertEquals($ret,$result);
          $ret   = $ledger->build_search_filter();
-         $result=sprintf("manage_search_filter({'div':'','ledger_type':'ACH','all_type':1,'dossier':%d})"
+         $result=sprintf("manage_search_filter({'div':'','ledger_type':'ACH','all_type':1,'dossier':'%d'})"
                  ,Dossier::id());
          $this->assertEquals($ret,$result,"Build filter for ACH");
 
          $ledger=new Acc_Ledger_Search('ODS');
          $this->assertEquals($ret,$result);
          $ret   = $ledger->build_search_filter();
-         $result=sprintf("manage_search_filter({'div':'','ledger_type':'ODS','all_type':1,'dossier':%d})"
+         $result=sprintf("manage_search_filter({'div':'','ledger_type':'ODS','all_type':1,'dossier':'%d'})"
                  ,Dossier::id());
          
          $this->assertEquals($ret,$result,"Build filter for ODS");

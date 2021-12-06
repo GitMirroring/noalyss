@@ -93,13 +93,15 @@ class Acc_Payment
                  array($this->mp_id)
              );
 
-        if ( Database::num_row($res) == 0 ) return;
+        if ( Database::num_row($res) == 0 ) return false;
+        
         $row=Database::fetch_array($res,0);
-        foreach ($row as $idx=>$value)
+        $a_index=array_values(self::$variable);
+        foreach ($a_index as $idx)
         {
-            $this->$idx=$value;
+            $this->$idx=$row[$idx];
         }
-
+        return true;
     }
    
     /*!\brief retrieve all the data for all ledgers
@@ -289,9 +291,11 @@ class Acc_Payment
      */
     public function from_array($p_array)
     {
-        $idx=array('mp_id','mp_lib','mp_fd_id','mp_jrn_def_id','mp_qcode','jrn_def_id');
-        foreach ($idx as $l)
-        if (isset($p_array[$l])) $this->$l=$p_array[$l];
+        $a_index=array_values(self::$variable);
+        // $idx=array('mp_id','mp_lib','mp_fd_id','mp_jrn_def_id','mp_qcode','jrn_def_id');
+        foreach ($a_index as $l) {
+            if (isset($p_array[$l])) $this->$l=$p_array[$l];
+        }
     }
     /**
      *@brief return an html with a form to add a new middle of payment
@@ -333,13 +337,6 @@ class Acc_Payment
         ob_end_clean();
         return $r;
     }
-    /*!\brief test function
-     */
-    static function test_me()
-    {
-
-    }
-
 }
 
 
