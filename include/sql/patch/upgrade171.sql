@@ -1,7 +1,10 @@
 begin;
 ALTER TABLE public.parm_periode ADD p_exercice_label text NULL;
 COMMENT ON COLUMN public.parm_periode.p_exercice_label IS 'label of the exercice';
+alter table parm_periode disable trigger parm_periode_check_periode_trg;
+
 update parm_periode set p_exercice_label =p_exercice ;
+alter table parm_periode enable trigger parm_periode_check_periode_trg;
 ALTER TABLE public.parm_periode ALTER COLUMN p_exercice_label SET NOT NULL;
 
 COMMENT ON COLUMN public.parm_periode.p_start IS 'Start date of periode';
