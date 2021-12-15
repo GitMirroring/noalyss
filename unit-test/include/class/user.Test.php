@@ -6,7 +6,7 @@ define('USE_FIRST_NAME', 'Unit test');
 define('USE_NAME', 'UNIT');
 define('USE_LOGIN', 'unit-test');
 define('USE_ACTIVE', 1);
-define('USE_PASS', 'passord');
+define('USE_PASS', md5('password'));
 define('USE_ADMIN', 0);
 define('USE_EMAIL', 'none@dev.null.eu');
 
@@ -141,5 +141,24 @@ class UserTest extends TestCase
         $this->assertTrue(is_numeric($restore),"Old periode id is not an integer");
         $this->object->set_periode($p_id);
         $this->assertEquals($p_id,$this->object->get_periode(),"Cannot retrieve the right periode");
+    }
+    /**
+     * @brief test the save_password function
+     */
+    public function testSave_Password() 
+    {
+        // password is in MD5 
+        $old_password=$this->object->getPassword();
+        $this->assertEquals(USE_PASS,$old_password,"Password mismatch");
+        
+        $this->assertFalse($this->object->save_password("test1","test2"),"Passwords must be identical");
+        $this->assertTrue($this->object->save_password("test2","test2"),"Identical passwords seen as different");
+        $this->object->load();
+        $new_password = $this->object->getPassword();
+        $this->assertTrue(($old_password != $new_password),"Password not changed old=$old_password new=$new_password");
+        $this->assertTrue($new_password=='ad0234829205b9033196ba818f7a872b',"Password incorrect");
+        
+        
+        
     }
 }

@@ -75,7 +75,7 @@ class User
             if ($user_login!=""&&$user_password!="")
             {
                 $_SESSION[SESSION_KEY."g_user"]=$user_login;
-                $_SESSION[SESSION_KEY."g_pass"]=$user_password;
+                $_SESSION[SESSION_KEY."g_pass"]=md5($user_password);
             }
             else
             {
@@ -100,7 +100,7 @@ class User
             $_SESSION[SESSION_KEY.'g_user']=$this->login;
         }
         $this->login=$_SESSION[SESSION_KEY."g_user"];
-        $this->pass=$_SESSION[SESSION_KEY.'g_pass'];
+        $this->password=$_SESSION[SESSION_KEY.'g_pass'];
         $this->id=-1;
         $this->lang=(isset($_SESSION[SESSION_KEY.'g_lang']))?$_SESSION[SESSION_KEY.'g_lang']:'fr_FR.utf8';
         $this->access_mode=$_SESSION[SESSION_KEY."access_mode"];
@@ -161,22 +161,6 @@ class User
     public function setId(int $id): void
     {
         $this->id=$id;
-    }
-
-    /**
-     * @return default|mixed|string|string[]|null
-     */
-    public function getPass()
-    {
-        return $this->pass;
-    }
-
-    /**
-     * @param default|mixed|string|string[]|null $pass
-     */
-    public function setPass($pass): void
-    {
-        $this->pass=$pass;
     }
 
     /**
@@ -375,7 +359,8 @@ class User
              ,use_active=$3,use_admin=$4,use_pass=$5 ,use_email = $7 where use_id=$6";
         $cn=new Database();
         $Res=$cn->exec_sql($Sql,
-                array($this->first_name, $this->last_name, $this->active, $this->admin, $this->pass, $this->id, $this->email));
+                array($this->first_name, $this->last_name, $this->active, $this->admin, $this->password, 
+                    $this->id, $this->email));
     }
 
     function insert()
@@ -388,7 +373,8 @@ class User
 
         $cn=new Database();
         $this->id=$cn->get_value($Sql,
-                array($this->first_name, $this->last_name, $this->login, 1, $this->admin, $this->pass, $this->email));
+                array($this->first_name, $this->last_name, $this->login, 1, $this->admin, 
+                    $this->password, $this->email));
     }
 
     /**
@@ -402,7 +388,7 @@ class User
     {
 
         $res=0;
-        $pass5=md5($this->pass);
+        $pass5=$this->password;
 
         $cn=new Database();
         $sql="select ac_users.use_login,ac_users.use_active, ac_users.use_pass,
@@ -650,7 +636,7 @@ class User
     function isAdmin()
     {
         $this->admin=0;
-        $pass5=md5($this->pass);
+        $pass5=md5($this->password);
         $sql="select count(*) from ac_users where use_login=$1
              and use_active=1 and use_admin=1 ";
 
@@ -960,7 +946,14 @@ class User
         else
         {
             $value=($p_value=="")?$default_parameter[$p_type]:$p_value;
-            $cn->exec_sql($sql, array($this->login, $p_type, $value));
+            if ( $cn->get_value("select count(*) from user_global_pref where user_id=$1 and parameter_type=$2",
+                array($this->login,$p_type)) == 1)
+            {
+                $cn->exec_sql("update user_global_pref set parameter_value=$1 where user_id=$2 and parameter_type=$3",
+                        array($value,$this->login,$p_type));
+            } else {
+                $cn->exec_sql($sql, array($this->login, $p_type, $value));
+            }
         }
     }
 
@@ -1575,20 +1568,34 @@ class User
             return false;
         return true;
     }
-
+    /**
+     * @brief store the password in session
+     */
+    function password_to_session()
+    {
+          $_SESSION[SESSION_KEY.'g_pass']=$this->getPassword();
+    }
+    /**
+     * @brief Save the password of the current user 
+     * @param string $p_pass1 password (clear)
+     * @param string $p_pass2 for confirming password (clear)
+     * @return true : password successfully changed otherwise false
+     */
     function save_password($p_pass1, $p_pass2)
     {
         if ($p_pass1==$p_pass2)
         {
             $repo=new Database();
-            $l_pass=md5($_POST['pass_1']);
+            $l_pass=md5($p_pass1);
+            $this->setPassword($l_pass);
             $repo->exec_sql("update ac_users set use_pass=$1 where use_login=$2",
-                    array($l_pass, $_SESSION[SESSION_KEY.'g_user']));
-            $_SESSION[SESSION_KEY.'g_pass']=$_POST['pass_1'];
+                    array($l_pass, $this->login));
+            return true;
         }
         else
         {
-            alert(_("Les mots de passe ne correspondent pas. Mot de passe inchangé"));
+            
+            return false;
         }
     }
 

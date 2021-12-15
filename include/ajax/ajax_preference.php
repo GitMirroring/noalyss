@@ -138,29 +138,7 @@ if ( $action == 'display_form' )
                         <?=$exercice->select("exercice_setting",$selected_exercice,$js)->input();?>
                     </td>
                 </tr>
-            <tr>
-                <td>
-                    <?=_("Premier jour semaine")?>
-                </td>
-                <td>
-                    <?php
-                        $aFirstDay=array(
-                            ["label"=>_("Lundi"),"value"=>1],
-                            ["label"=>_("Mardi"),"value"=>2],
-                            ["label"=>_("Mercredi"),"value"=>3],
-                            ["label"=>_("Jeudi"),"value"=>4],
-                            ["label"=>_("Vendredi"),"value"=>5],
-                            ["label"=>_("Samedi"),"value"=>6],
-                            ["label"=>_("Dimanche"),"value"=>0],
-                        );
-                        $selFirstDay=new ISelect("selFirstDay");
-                        $selFirstDay->value=$aFirstDay;
-                        $selFirstDay->selected=$g_user->get_first_week_day();
-                        echo $selFirstDay->input();
-                    ?>
-
-                </td>
-            </tr>
+          
     		<tr>
                     
                     <td><?php echo _('Période');?></td>
@@ -190,6 +168,29 @@ if ( $action == 'display_form' )
 		    <?php 
 		}
 		?>
+                  <tr>
+                <td>
+                    <?=_("Premier jour semaine")?>
+                </td>
+                <td>
+                    <?php
+                        $aFirstDay=array(
+                            ["label"=>_("Lundi"),"value"=>1],
+                            ["label"=>_("Mardi"),"value"=>2],
+                            ["label"=>_("Mercredi"),"value"=>3],
+                            ["label"=>_("Jeudi"),"value"=>4],
+                            ["label"=>_("Vendredi"),"value"=>5],
+                            ["label"=>_("Samedi"),"value"=>6],
+                            ["label"=>_("Dimanche"),"value"=>0],
+                        );
+                        $selFirstDay=new ISelect("selFirstDay");
+                        $selFirstDay->value=$aFirstDay;
+                        $selFirstDay->selected=$g_user->get_first_week_day();
+                        echo $selFirstDay->input();
+                    ?>
+
+                </td>
+            </tr>
 	    </table>
 	</fieldset>
         <fieldset>
@@ -323,7 +324,16 @@ if ($action == 'save')
     
     if (strlen(trim($pass_1)) != 0 && strlen(trim($pass_2)) != 0)
     {
-	$g_user->save_password($pass_1,$pass_2);
+        if ( $g_user->save_password($_POST['pass_1'],$pass_2) ) 
+        {        $g_user->password_to_session() ;
+        
+        } else {
+           /**
+            * password not changed
+            */ 
+            
+        }
+        
         
     }
     if ( $inside_dossier)
