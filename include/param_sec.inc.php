@@ -111,6 +111,7 @@ if ( ! isset($_REQUEST['action']))
             echo td($a_sec['us_action']);
         } else {
             echo td(_("Erreur sécurité"));
+            echo td(_(""));
         }
         echo td($str);
         echo "</TR>";
