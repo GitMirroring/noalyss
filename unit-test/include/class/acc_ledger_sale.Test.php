@@ -24,7 +24,7 @@ class Acc_Ledger_SaleTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp():void
     {
         include 'global.php';
         $this->object=new Acc_Ledger_Sale($g_connection, 2);
@@ -76,7 +76,7 @@ class Acc_Ledger_SaleTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown():void
     {
         
     }
@@ -178,11 +178,11 @@ class Acc_Ledger_SaleTest extends TestCase
         \Noalyss\Facility::save_file(__DIR__."/file"
                 , "Acc_Ledger_Sale_confirm.html"
                 , \Noalyss\Facility::page_start().$res);
-        $this->assertContains(
+        $this->assertStringContainsString(
                 '<input type="button" class="button" value="Vérifiez Imputation Analytique" onClick="verify_ca(\'\');">',
                 $res);
-        $this->assertContains('id="e_march1_tva_id" NAME="e_march1_tva_id" VALUE="1"', $res);
-        $this->assertContains("anc_key_choice(25,'t1',1212.5,'');", $res);
+        $this->assertStringContainsString('id="e_march1_tva_id" NAME="e_march1_tva_id" VALUE="1"', $res);
+        $this->assertStringContainsString("anc_key_choice(25,'t1',1212.5,'');", $res);
     }
 
 
@@ -206,12 +206,12 @@ class Acc_Ledger_SaleTest extends TestCase
         \Noalyss\Facility::save_file(__DIR__."/file", "Acc_Ledger_Sale_input.html",
                 \Noalyss\Facility::page_start().
                 $info);
-        $this->assertContains(
+        $this->assertStringContainsString(
                 'NAME="e_client" ID="e_client" VALUE="CLIENT"   ondblclick="fill_ipopcard(this);" ', $info);
-        $this->assertContains(
+        $this->assertStringContainsString(
                 '<INPUT TYPE="TEXT"  class="input_text"  id="e_pj" name="e_pj" value="VEN10" placeholder="" title=""',
                 $info);
-        $this->assertContains('ID="add_item" VALUE="ligne à ajouter"  onClick="ledger_add_multiple', $info);
+        $this->assertStringContainsString('ID="add_item" VALUE="ligne à ajouter"  onClick="ledger_add_multiple', $info);
     }
 
 

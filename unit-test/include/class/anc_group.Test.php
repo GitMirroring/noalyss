@@ -42,7 +42,7 @@ class Anc_GroupTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test method is executed.
      */
-    protected function setUp()
+    protected function setUp():void
     {
         include 'global.php';
     }
@@ -51,16 +51,16 @@ class Anc_GroupTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test method is executed.
      */
-    protected function tearDown()
+    protected function tearDown():void
     {
         
     }
 
     /**
-     * the setUpBeforeClass() template methods is called before the first test of the test case
+     * the setUpBeforeClass():void template methods is called before the first test of the test case
      *  class is run 
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         include 'global.php';
         global $g_connection;
@@ -72,10 +72,10 @@ class Anc_GroupTest extends TestCase
     }
 
     /**
-     *  tearDownAfterClass() template methods is calleafter the last test of the test case class is run,
+     *  tearDownAfterClass():void template methods is calleafter the last test of the test case class is run,
      *
      */
-    static function tearDownAfterClass()
+    static function tearDownAfterClass():void
     {
         include 'global.php';
          global $g_connection;

@@ -21,7 +21,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
      */
     private $array;
     
-    static function setUpBeforeClass() 
+    static function setUpBeforeClass():void 
     {
         Acc_Ledger_PurchaseTest::setSpecialAttribute();
     }
@@ -29,7 +29,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp():void
     {
         include 'global.php';
         $this->object=new Acc_Ledger_Purchase($g_connection, 3);
@@ -71,11 +71,11 @@ class Acc_Ledger_PurchaseTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown():void
     {
         
     }
-    static function tearDownAfterClass()
+    static function tearDownAfterClass():void
     {
         require 'global.php';
           global $g_connection;
@@ -328,11 +328,11 @@ class Acc_Ledger_PurchaseTest extends TestCase
         \Noalyss\Facility::save_file(__DIR__."/file", 
                 "acc_ledger_purchase_input.html",
                 \Noalyss\Facility::page_start().$res);
-        $this->assertContains(
+        $this->assertStringContainsString(
                 '<OPTION VALUE="3" SELECTED>Achat',
                 $res);
-        $this->assertContains('<INPUT TYPE="hidden" id="jrn_type" NAME="jrn_type" VALUE="ACH"',$res);
-        $this->assertContains('<td class="num">  <span id="tvac" >0.0</span> </td>',$res);
+        $this->assertStringContainsString('<INPUT TYPE="hidden" id="jrn_type" NAME="jrn_type" VALUE="ACH"',$res);
+        $this->assertStringContainsString('<td class="num">  <span id="tvac" >0.0</span> </td>',$res);
         
     }
 
@@ -347,9 +347,9 @@ class Acc_Ledger_PurchaseTest extends TestCase
         \Noalyss\Facility::save_file(__DIR__."/file", 
                 "acc_ledger_purchase_confirm.html",
                 \Noalyss\Facility::page_start().$ret);
-        $this->assertContains('name="amount_t0" value="658.25"',$ret);
-        $this->assertContains("value=\"Efface détail\" onClick=\"anc_key_clean('25','','658.25','','','0');",$ret);
-        $this->assertContains('NAME="e_quant0" VALUE="1">',$ret);
+        $this->assertStringContainsString('name="amount_t0" value="658.25"',$ret);
+        $this->assertStringContainsString("value=\"Efface détail\" onClick=\"anc_key_clean('25','','658.25','','','0');",$ret);
+        $this->assertStringContainsString('NAME="e_quant0" VALUE="1">',$ret);
     }
   
     private function clean_operation($p_internal='1572704002.1732')

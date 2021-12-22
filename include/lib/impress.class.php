@@ -60,14 +60,20 @@ class Impress
             else
                 return $p_formula;
         }
+        // Bug 
+        //     with PHP8  if ('periode'==0 ) echo "hello"; else echo 'different' ; => different
+        //     with PHP7 if ('periode'==0 ) echo "hello"; else echo 'different' ;  => hello
+
         if ($p_type_date==0)
         {
             $cond=sql_filter_per($p_cn, $p_start, $p_end, 'p_id', 'j_tech_per');
             $cond_anc= "and ".transform_sql_filter_per($cond);
         }
-        else {
+        elseif ($p_type_date == 1) {
             $cond="( j_date >= to_date('$p_start','DD.MM.YYYY') and j_date <= to_date('$p_end','DD.MM.YYYY'))";
             $cond_anc="and ( oa_date >= to_date('$p_start','DD.MM.YYYY') and oa_date <= to_date('$p_end','DD.MM.YYYY'))";
+        } else {
+             throw new Exception("impress72 invalid type_date [ {$p_type_date} ] ");
         }
 
         // ------------------- for accounting , analytic or card-------------------------------------

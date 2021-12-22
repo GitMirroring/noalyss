@@ -1185,10 +1185,12 @@ class Acc_Ledger  extends jrn_def_sql
         {
             $err=0;
 
-            // Check the balance
-            if (!isset(${'amount'.$i}))
+            // compatibily php 8.0 , if $amount is not a number then skip
+            if (!isset(${'amount'.$i}) || isNumber(${'amount'.$i})==0) {
                 continue;
-
+            }
+            
+            // Check the balance
             $amount=round(${'amount'.$i}, 2);
             $tot_deb+=(isset(${'ck'.$i}))?$amount:0;
             $tot_cred+=(!isset(${'ck'.$i}))?$amount:0;
@@ -1389,7 +1391,11 @@ class Acc_Ledger  extends jrn_def_sql
                 
                 // Save in currency
                 $operation_currency=new Operation_currency_SQL($this->db);
-                $operation_currency->oc_amount=round(${'amount'.$i}, 2);
+                if (isNumber(${'amount'.$i}) == 0) {
+                    $operation_currency->oc_amount=0;
+                }else {
+                    $operation_currency->oc_amount=round(${'amount'.$i}, 2);
+                }
                 $operation_currency->oc_vat_amount=0;
                 $operation_currency->oc_price_unit=0;
                 $operation_currency->j_id=$j_id;

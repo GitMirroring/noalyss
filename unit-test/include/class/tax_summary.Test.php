@@ -37,7 +37,7 @@ class Tax_SummaryTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp(): void
+    protected function setUp():void
     {
         global $g_connection;
         $this->object=new \Tax_Summary($g_connection, "01.01.2014", "31.12.2019");

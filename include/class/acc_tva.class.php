@@ -46,7 +46,11 @@ class Acc_Tva
     function __construct ($p_init,$p_tva_id=0)
     {
         $this->cn=$p_init;
-        $this->tva_id=$p_tva_id;
+        if ( isNumber($p_tva_id)==1) {
+            $this->tva_id=$p_tva_id;
+        } else {
+            $this->tva_id=0;
+        }
         $this->poste="";
         $this->tva_label=null;
         $this->tva_rate=0;

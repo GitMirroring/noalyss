@@ -47,7 +47,14 @@ class Fiche
     function __construct($p_cn,$p_id=0)
     {
         $this->cn=$p_cn;
-        $this->id=$p_id;
+        // in PHP7 , a null string == 0 
+        // in PHP8 , a null string == a null string and is not equal to 0
+        // to fix this, we set the fix here 
+        if ( isNumber($p_id) == 1 ) {
+            $this->id=$p_id;
+        } else {
+            $this->id=0;
+        }
         $this->quick_code='';
         $this->attribut=array();
         $this->f_enable='1';

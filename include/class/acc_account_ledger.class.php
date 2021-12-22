@@ -279,6 +279,8 @@ class Acc_Account_Ledger
      */
     function get_solde($p_cond=" true ")
     {
+        if (DEBUGNOALYSS  > 1 ) { echo __CLASS__.".".__FUNCTION__."p_cond {$p_cond}"; }
+
         $Res=$this->db->exec_sql("select sum(deb) as sum_deb, sum(cred) as sum_cred from
                                  ( select j_poste,
                                  case when j_debit='t' then j_montant else 0 end as deb,
@@ -288,6 +290,7 @@ class Acc_Account_Ledger
                                  j_poste::text like ('$this->id'::text) and
                                  $p_cond
                                  ) as m  ");
+        if (DEBUGNOALYSS  > 1 ) { echo $this->db->get_sql(); }
         $Max=Database::num_row($Res);
         if ($Max==0) return 0;
         $r=Database::fetch_array($Res,0);
@@ -302,8 +305,8 @@ class Acc_Account_Ledger
      */
     function get_solde_detail($p_cond="")
     {
-
         if ( $p_cond != "") $p_cond=" and ".$p_cond;
+
         $sql="select sum(deb) as sum_deb, sum(cred) as sum_cred from
              ( select j_poste,
              case when j_debit='t' then j_montant else 0 end as deb,
@@ -313,7 +316,7 @@ class Acc_Account_Ledger
              j_poste::text like ('$this->id'::text)
              $p_cond
              ) as m  ";
-
+        if (DEBUGNOALYSS  > 1 ) {  tracedebug("impress.debug.log", "$sql", 'acc_account_ledger:get_solde_detail'); }
         $Res=$this->db->exec_sql($sql);
         $Max=Database::num_row($Res);
 

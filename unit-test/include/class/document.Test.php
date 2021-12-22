@@ -35,7 +35,7 @@ class DocumentTest extends TestCase
      */
     private $document;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         // insert a document_modele
         $cn=Dossier::connect();
@@ -56,7 +56,7 @@ class DocumentTest extends TestCase
         $cn->commit();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass():void
     {
         // clean database
         $cn=Dossier::connect();
@@ -76,7 +76,7 @@ class DocumentTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp():void
     {
         
     }
@@ -85,7 +85,7 @@ class DocumentTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown():void
     {
         
     }
@@ -111,6 +111,8 @@ class DocumentTest extends TestCase
     function testReplace()
     {
         $cn=Dossier::connect();
+        global $g_parameter;
+        $g_parameter=new Noalyss_Parameter_Folder($cn);
         $document=new Document($cn);
         $array=[];
         $array['e_client']='CLIENT';
@@ -157,7 +159,7 @@ class DocumentTest extends TestCase
         $cnt_before=$cn->get_value("select count(*) from document");
         $tEnv=$_ENV['TMP'];
         $_ENV['TMP']='/not.exist';
-        $this->assertContains ('échoué',$document->generate($array));
+        $this->assertStringContainsString ('échoué',$document->generate($array));
         $_ENV['TMP']= $tEnv;
     }
         

@@ -46,7 +46,7 @@ class Todo_ListTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test method is executed.
      */
-    protected function setUp()
+    protected function setUp():void
     {
     }
 
@@ -54,16 +54,16 @@ class Todo_ListTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test method is executed.
      */
-    protected function tearDown()
+    protected function tearDown():void
     {
         
     }
 
     /**
-     * the setUpBeforeClass() template methods is called before the first test of the test case
+     * the setUpBeforeClass():void template methods is called before the first test of the test case
      *  class is run 
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         require 'global.php';
         global $g_connection;

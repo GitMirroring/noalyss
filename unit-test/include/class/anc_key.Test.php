@@ -16,7 +16,7 @@ class Anc_KeyTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp():void
     {
        
     }
@@ -25,11 +25,11 @@ class Anc_KeyTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown():void
     {
         
     }
-    static function setUpBeforeClass()
+    static function setUpBeforeClass():void
     {
 //       require_once 'global.php';
 //
@@ -37,7 +37,7 @@ class Anc_KeyTest extends TestCase
 //        $g_connection=Dossier::connect();
         
     }
-    static function tearDownAfterClass()
+    static function tearDownAfterClass():void
     {
         
     }

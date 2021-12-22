@@ -67,7 +67,9 @@ class Acc_Report
      */
     function get_row($p_start,$p_end,$p_type_date)
     {
-
+    if (DEBUGNOALYSS > 1) {
+        tracedebug("impress.debug.log",__FILE__."71.get_row({$p_start},{$p_end},{$p_type_date})");
+    }
         $Res=$this->form_definition->cn->exec_sql("select fo_id ,
                                  fo_fr_id,
                                  fo_pos,
@@ -84,16 +86,25 @@ class Acc_Report
             return null;
         }
         $col=array();
+        
+        $a_type_date=["periode"=>0,"calendar"=>1];
+        if (array_key_exists($p_type_date, $a_type_date) )
+        {
+            $type_date=$a_type_date[$p_type_date];
+        } else {
+            throw new Exception("acr93 invalid type_date [ {$p_type_date} ] ");
+        }
         for ($i=0;$i<$Max;$i++)
         {
             $l_line=Database::fetch_array($Res,$i);
+            
             $col[]=Impress::parse_formula($this->form_definition->cn,
                                 $l_line['fo_label'],
                                 $l_line['fo_formula'],
                                 $p_start,
                                 $p_end,
                                 true,
-                                $p_type_date
+                                $type_date
                                );
 
         } //for ($i

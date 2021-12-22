@@ -48,12 +48,14 @@ class Pre_op_ven extends Pre_operation_detail
             $http->set_empty("");
             $this->$march=$http->post('e_march'.$i);
             $this->{"e_march".$i."_tva_id"}=$http->post('e_march'.$i."_tva_id","string",0);
-            $this->{"e_march".$i."_tva_id"}=$http->post('e_march'.$i."_tva_id","string","0");
+            $this->{"e_march" . $i . "_tva_id"} =(empty($this->{"e_march" . $i . "_tva_id"}))?0:$this->{"e_march" . $i . "_tva_id"} ;
+
             $this->{"e_march".$i."_label"}=$http->post('e_march'.$i."_label","string","");
 
             $http->set_empty(0);
             $this->{"e_march".$i."_price"}=$http->post('e_march'.$i."_price","number");
             $this->{"e_march".$i."_tva_amount"}=$http->post('e_march'.$i."_tva_amount","number","0");
+            
             $this->{"e_quant".$i}=$http->post('e_quant'.$i,"number");
         }
     }
@@ -75,7 +77,7 @@ class Pre_op_ven extends Pre_operation_detail
             $this->db->exec_sql($sql);
             for ($i=0;$i<$p_nb_item;$i++)
             {
-                if ( strlen(trim($this->{"e_march".$i}))=="") continue;
+                if ( strlen(trim($this->{"e_march".$i}))== 0 ) continue;
                 $sql= 'insert into op_predef_detail (opd_poste,'
                         . 'opd_amount,'
                         . 'opd_tva_id,'

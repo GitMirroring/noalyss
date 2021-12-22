@@ -45,12 +45,15 @@ class Pre_op_ach extends Pre_operation_detail
             $march = "e_march" . $i;
             $http->set_empty("");
             $this->$march = $http->post('e_march' . $i);
-            $this->{"e_march" . $i . "_tva_id"} = $http->post('e_march' . $i . "_tva_id", "string", 0);
-            $this->{"e_march" . $i . "_tva_id"} = $http->post('e_march' . $i . "_tva_id", "string", "0");
             $this->{"e_march" . $i . "_label"} = $http->post('e_march' . $i . "_label", "string", "");
+            
             $http->set_empty(0);
+            
+            $this->{"e_march" . $i . "_tva_id"} = $http->post('e_march' . $i . "_tva_id", "string", 0);
+            $this->{"e_march" . $i . "_tva_id"} =(empty($this->{"e_march" . $i . "_tva_id"}))?null:$this->{"e_march" . $i . "_tva_id"} ;
             $this->{"e_march" . $i . "_price"} = $http->post('e_march' . $i . "_price","number");
             $this->{"e_march" . $i . "_tva_amount"} = $http->post('e_march' . $i . "_tva_amount", "string", "0");
+             $this->{"e_march" . $i . "_tva_amount"} = (empty( $this->{"e_march" . $i . "_tva_amount"} ))?0: $this->{"e_march" . $i . "_tva_amount"} ;
             $this->{"e_quant" . $i} = $http->post('e_quant' . $i, "number");
         }
     }
@@ -73,7 +76,7 @@ class Pre_op_ach extends Pre_operation_detail
 
             for ($i=0;$i<$p_nb_item;$i++)
             {
-                if ( strlen(trim($this->{"e_march".$i}))=="") continue;
+                if ( strlen(trim($this->{"e_march".$i}))==0) continue;
                 $sql= 'insert into op_predef_detail (opd_poste,'
                     . 'opd_amount,'
                     . 'opd_tva_id,'
@@ -84,6 +87,16 @@ class Pre_op_ach extends Pre_operation_detail
                     . 'opd_comment'.
                     ')'.
                     ' values ($1,$2,$3,$4,$5,$6,$7,$8)';
+//                if (DEBUGNOALYSS  >2 ) {
+//                    var_dump(array($this->{"e_march".$i},
+//                        $this->{"e_march".$i."_price"},
+//                        $this->{"e_march".$i."_tva_id"},
+//                        $this->{"e_quant".$i},
+//                        't',
+//                        $p_od_id,
+//                        $this->{"e_march".$i."_tva_amount"},
+//                        $this->{"e_march".$i."_label"}));
+//                }
                 $this->db->exec_sql($sql,
                     array($this->{"e_march".$i},
                         $this->{"e_march".$i."_price"},
@@ -92,7 +105,7 @@ class Pre_op_ach extends Pre_operation_detail
                         't',
                         $p_od_id,
                         $this->{"e_march".$i."_tva_amount"},
-                        $this->{"e_march".$i."_label"},
+                        $this->{"e_march".$i."_label"}
                     ));
             }
         }

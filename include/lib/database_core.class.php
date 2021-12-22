@@ -192,8 +192,8 @@ class DatabaseCore
                 else
                     $this->ret = pg_query_params($this->db, $p_string, $p_array);
             }
-            if (!$this->ret) {
-                $str_error = pg_last_error($this->db) . pg_result_error($this->ret);
+            if ($this->ret == false) {
+                $str_error = pg_last_error($this->db) ;
                 throw new Exception("  SQL ERROR $p_string " . $str_error, 1);
             }
         } catch (Exception $a) {
@@ -223,7 +223,7 @@ class DatabaseCore
     function count_sql($p_sql, $p_array = null)
     {
         $r_sql = $this->exec_sql($p_sql, $p_array);
-        return pg_NumRows($r_sql);
+        return pg_num_rows($r_sql);
     }
 
     /**
@@ -396,9 +396,9 @@ class DatabaseCore
     function size($p_ret = null)
     {
         if ($p_ret == null)
-            return pg_NumRows($this->ret);
+            return pg_num_rows($this->ret);
         else
-            return pg_NumRows($p_ret);
+            return pg_num_rows($p_ret);
     }
 
     /**
@@ -428,12 +428,12 @@ class DatabaseCore
     {
         try {
             $this->ret = $this->exec_sql($p_sql, $p_array);
-            $r = pg_NumRows($this->ret);
+            $r = pg_num_rows($this->ret);
             if ($r == 0)
                 return "";
             if ($r > 1) {
                 $array = pg_fetch_all($this->ret);
-                throw new Exception("Attention $p_sql retourne " . pg_NumRows($this->ret) . "  valeurs " .
+                throw new Exception("Attention $p_sql retourne " . pg_num_rows($this->ret) . "  valeurs " .
                     var_export($p_array, true) . " values=" . var_export($array, true));
             }
             $r = pg_fetch_row($this->ret, 0);
@@ -464,7 +464,7 @@ class DatabaseCore
     {
         $r = $this->exec_sql($p_sql, $p_array);
 
-        if (pg_NumRows($r) == 0)
+        if (pg_num_rows($r) == 0)
             return array();
         $array = pg_fetch_all($r);
         return $array;
@@ -662,7 +662,7 @@ class DatabaseCore
     function make_array($p_sql, $p_null = 0, $p_array = null)
     {
         $a = $this->exec_sql($p_sql, $p_array);
-        $max = pg_NumRows($a);
+        $max = pg_num_rows($a);
         if ($max == 0 && $p_null == 0)
             return null;
         for ($i = 0; $i < $max; $i++) {
@@ -726,14 +726,14 @@ class DatabaseCore
         return false;
     }
 
-    /**\brief wrapper for the function pg_NumRows
+    /**\brief wrapper for the function pg_num_rows
      * \param $ret is the result of a exec_sql
      * \return number of line affected
      */
 
     static function num_row($ret)
     {
-        return pg_NumRows($ret);
+        return pg_num_rows($ret);
     }
 
     /**\brief wrapper for the function pg_fetch_array
@@ -1003,7 +1003,7 @@ class DatabaseCore
 
         }
     }
-
+    
 }
 
 /* test::test_me(); */

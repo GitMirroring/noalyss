@@ -20,7 +20,7 @@ class Acc_Ledger_FinTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp():void
     {
         include 'global.php';
         $this->object=new Acc_Ledger_Fin($g_connection, 1);
@@ -75,7 +75,7 @@ class Acc_Ledger_FinTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown():void
     {
         
     }
@@ -88,7 +88,7 @@ class Acc_Ledger_FinTest extends TestCase
     public function testInput()
     {
         $result=$this->object->input($this->array);
-        $this->assertContains("show_fin_chdate('chdate');",$result);
+        $this->assertStringContainsString("show_fin_chdate('chdate');",$result);
     }
 
     /**
@@ -104,9 +104,9 @@ class Acc_Ledger_FinTest extends TestCase
         $array["last_sold"]="";
         $array["mt"]="1572695340.6768";
         $result=$this->object->confirm($array);
-        $this->assertContains('<fieldset><legend>Banque, caisse </legend><div id="jrn_name_div">',$result);
-        $this->assertContains('<INPUT TYPE="hidden" id="dateop1" NAME="dateop1" VALUE="">',$result);
-        $this->assertContains('<INPUT TYPE="hidden" id="chdate" NAME="chdate" VALUE="1">',$result);
+        $this->assertStringContainsString('<fieldset><legend>Banque, caisse </legend><div id="jrn_name_div">',$result);
+        $this->assertStringContainsString('<INPUT TYPE="hidden" id="dateop1" NAME="dateop1" VALUE="">',$result);
+        $this->assertStringContainsString('<INPUT TYPE="hidden" id="chdate" NAME="chdate" VALUE="1">',$result);
         
         
     }
@@ -155,9 +155,9 @@ class Acc_Ledger_FinTest extends TestCase
         );
         $this->clean_operation();
         $ret=$this->object->insert($array);
-        $this->assertContains('<table class="result" ><tr  ><th  >Date</th>',$ret);
-        $this->assertContains(' HREF="javascript:modifyOperation',$ret);
-        $this->assertContains('-1.095,39',$ret);
+        $this->assertStringContainsString('<table class="result" ><tr  ><th  >Date</th>',$ret);
+        $this->assertStringContainsString(' HREF="javascript:modifyOperation',$ret);
+        $this->assertStringContainsString('-1.095,39',$ret);
         
         $this->clean_operation();
     }

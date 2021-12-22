@@ -767,7 +767,7 @@ class Document
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $p=$tiers->strAttribut(ATTR_DEF_ACCOUNT);
+                $p=$tiers->strAttribut(ATTR_DEF_ACCOUNT,0);
                 $poste=new Acc_Account_Ledger($this->db, $p);
                 $r=$poste->get_solde(' true');
                 break;
@@ -775,13 +775,13 @@ class Document
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NAME);
+                $r=$tiers->strAttribut(ATTR_DEF_NAME,0);
                 break;
             case 'CUST_ADDR_1':
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_ADRESS);
+                $r=$tiers->strAttribut(ATTR_DEF_ADRESS,0);
 
                 break;
             case 'CUST_CP':
@@ -789,7 +789,7 @@ class Document
 
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_CP);
+                $r=$tiers->strAttribut(ATTR_DEF_CP,0);
 
                 break;
             case 'CUST_CITY':
@@ -797,7 +797,7 @@ class Document
 
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_CITY);
+                $r=$tiers->strAttribut(ATTR_DEF_CITY,0);
 
                 break;
 
@@ -806,7 +806,7 @@ class Document
 
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_PAYS);
+                $r=$tiers->strAttribut(ATTR_DEF_PAYS,0);
 
                 break;
             // Marchandise in $p_array['e_march*']
@@ -816,25 +816,25 @@ class Document
 
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NUMTVA);
+                $r=$tiers->strAttribut(ATTR_DEF_NUMTVA,0);
                 break;
             case 'CUST_NUM':
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NUMBER_CUSTOMER);
+                $r=$tiers->strAttribut(ATTR_DEF_NUMBER_CUSTOMER,0);
                 break;
             case 'CUST_BANQUE_NO':
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_BQ_NO);
+                $r=$tiers->strAttribut(ATTR_DEF_BQ_NO,0);
                 break;
             case 'CUST_BANQUE_NAME':
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_BQ_NAME);
+                $r=$tiers->strAttribut(ATTR_DEF_BQ_NAME,0);
                 break;
             /* -------------------------------------------------------------------------------- */
             /* BENEFIT (fee notes */
@@ -847,7 +847,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NAME);
+                $r=$tiers->strAttribut(ATTR_DEF_NAME,0);
                 break;
             case 'BENEF_ADDR_1':
                 $tiers=new Fiche($this->db);
@@ -858,7 +858,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_ADRESS);
+                $r=$tiers->strAttribut(ATTR_DEF_ADRESS,0);
 
                 break;
             case 'BENEF_CP':
@@ -871,7 +871,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_CP);
+                $r=$tiers->strAttribut(ATTR_DEF_CP,0);
 
                 break;
             case 'BENEF_CITY':
@@ -884,7 +884,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_CITY);
+                $r=$tiers->strAttribut(ATTR_DEF_CITY,0);
 
                 break;
 
@@ -898,7 +898,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_PAYS);
+                $r=$tiers->strAttribut(ATTR_DEF_PAYS,0);
 
                 break;
             // Marchandise in $p_array['e_march*']
@@ -913,7 +913,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NUMTVA);
+                $r=$tiers->strAttribut(ATTR_DEF_NUMTVA,0);
                 break;
             case 'BENEF_NUM':
                 $tiers=new Fiche($this->db);
@@ -924,7 +924,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NUMBER_CUSTOMER);
+                $r=$tiers->strAttribut(ATTR_DEF_NUMBER_CUSTOMER,0);
                 break;
             case 'BENEF_BANQUE_NO':
                 $tiers=new Fiche($this->db);
@@ -935,7 +935,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_BQ_NO);
+                $r=$tiers->strAttribut(ATTR_DEF_BQ_NO,0);
                 break;
             case 'BENEF_BANQUE_NAME':
                 $tiers=new Fiche($this->db);
@@ -946,7 +946,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_BQ_NAME);
+                $r=$tiers->strAttribut(ATTR_DEF_BQ_NAME,0);
                 break;
 
             // Marchandise in $p_array['e_march*']
@@ -1019,7 +1019,7 @@ class Document
                 {
                     $f=new Fiche($this->db);
                     $f->get_by_qcode($p_array["e_march".$this->counter], false);
-                    $r=$f->strAttribut(ATTR_DEF_NAME);
+                    $r=$f->strAttribut(ATTR_DEF_NAME,0);
                 }
                 else
                     $r="";
@@ -1041,7 +1041,7 @@ class Document
                         {
                             $f=new Fiche($this->db);
                             $f->get_by_qcode($p_array[$id], false);
-                            $r=$f->strAttribut(ATTR_DEF_NAME);
+                            $r=$f->strAttribut(ATTR_DEF_NAME,0);
                         }
                         else
                             $r="";
@@ -1062,7 +1062,7 @@ class Document
                     {
                         $f=new Fiche($this->db);
                         $f->get_by_qcode($p_array[$id], false);
-                        $r=$f->strAttribut(ATTR_DEF_STOCK);
+                        $r=$f->strAttribut(ATTR_DEF_STOCK,0);
                         $r=($r==NOTFOUND)?'':$r;
                     }
                 }

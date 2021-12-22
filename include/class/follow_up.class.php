@@ -339,7 +339,6 @@ class Follow_Up
         $ag_contact->name='ag_contact';
         $ag_contact->value='';
         $ag_contact->set_attribute('ipopup', 'ipopcard');
-
         if ($this->ag_contact!=0)
         {
             $contact=new Fiche($this->db, $this->ag_contact);

@@ -41,7 +41,7 @@ class Card_PropertyTest extends TestCase
      * @brief 
      * @global type $g_connection
      */
-    static function setUpBeforeClass()
+    static function setUpBeforeClass():void
     {
         require_once 'global.php';
         global $g_connection;
@@ -86,7 +86,7 @@ class Card_PropertyTest extends TestCase
         $fiche->load();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass():void
     {
         require_once 'global.php';
         global $g_connection;

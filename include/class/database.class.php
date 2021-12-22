@@ -167,7 +167,7 @@ class Database extends DatabaseCore
                     // now we use sequence instead of computing a max
                     //
                     $Res2 = $this->exec_sql('select coalesce(max(jr_grpt_id),1) as l from jrn');
-                    $Max2 = pg_NumRows($Res2);
+                    $Max2 = pg_num_rows($Res2);
                     if ($Max2 == 1) {
                         $Row = pg_fetch_array($Res2, 0);
                         var_dump($Row);
@@ -192,7 +192,7 @@ class Database extends DatabaseCore
                     }
                     $sql = "select jrn_def_id from jrn_def ";
                     $Res = $this->exec_sql($sql);
-                    $Max = pg_NumRows($Res);
+                    $Max = pg_num_rows($Res);
                     for ($seq = 0; $seq < $Max; $seq++) {
                         $row = pg_fetch_array($Res, $seq);
                         $sql = sprintf("select setval('s_jrn_%d',1,false)", $row['jrn_def_id']);

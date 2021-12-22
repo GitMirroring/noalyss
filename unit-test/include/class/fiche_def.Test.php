@@ -35,7 +35,7 @@ class Fiche_DefTest extends Testcase
 
     protected $fiche_def;
 
-    static function setUpBeforeClass()
+    static function setUpBeforeClass():void
     {
         require_once 'global.php';
 
@@ -58,7 +58,7 @@ class Fiche_DefTest extends Testcase
      * @brief clean after testing it
      * @global type $g_connection
      */
-    static function tearDownAfterClass()
+    static function tearDownAfterClass():void
     {
        require_once 'global.php';
         global $g_connection;
@@ -74,7 +74,7 @@ class Fiche_DefTest extends Testcase
             $g_connection->exec_sql("delete from fiche_def where fd_id=$1", [$fd_id]);
         } 
     }
-    protected function setUp()
+    protected function setUp():void
     {
         include 'global.php';
     }

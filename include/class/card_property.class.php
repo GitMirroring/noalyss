@@ -156,7 +156,7 @@ class Card_Property
 	     join jnt_fic_attr on (jnt_fic_attr.fd_id=fiche.fd_id and fiche_detail.ad_id=jnt_fic_attr.ad_id)
              join attr_def on (attr_def.ad_id=fiche_detail.ad_id) where f_id= $1".
                 " order by jnt_order";
-
+        
         $Ret=$fiche->cn->exec_sql($sql, [$fiche->id]);
         if (($Max=Database::num_row($Ret))==0)
             return;

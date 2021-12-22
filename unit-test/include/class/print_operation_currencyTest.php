@@ -29,7 +29,7 @@ use PHPUnit\Framework\TestCase;
 class Print_Operation_CurrencyTest extends TestCase
 {
 
-    protected function setUp()
+    protected function setUp():void
     {
         include 'global.php';
         
@@ -52,7 +52,7 @@ class Print_Operation_CurrencyTest extends TestCase
                 $card_category);
         $sql=$object->SQL_Condition();
        
-        $this->assertContains(" and jrnx.f_id in ( select f_id from fiche where fd_id=$4)",$sql);
+        $this->assertStringContainsString(" and jrnx.f_id in ( select f_id from fiche where fd_id=$4)",$sql);
         $array=$object->get_data();
         $this->assertEquals(count($array),0,"operation in EURO");
         
@@ -80,7 +80,7 @@ class Print_Operation_CurrencyTest extends TestCase
                 );
         $sql=$object->SQL_Condition();
        
-        $this->assertContains("where jrn.currency_id = $1 and",$sql);
+        $this->assertStringContainsString("where jrn.currency_id = $1 and",$sql);
         $array=$object->get_data();
         $this->assertEquals(0,count($array),"operation in EURO");
         
@@ -107,7 +107,7 @@ class Print_Operation_CurrencyTest extends TestCase
                 $card);
         $sql=$object->SQL_Condition();
        
-        $this->assertContains("and f_id=$4",$sql);
+        $this->assertStringContainsString("and f_id=$4",$sql);
         $array=$object->get_data();
         $this->assertEquals(0,count($array),"operation in EURO");
         
@@ -137,7 +137,7 @@ class Print_Operation_CurrencyTest extends TestCase
                 $to_poste);
         
         $sql=$object->SQL_Condition();
-        $this->assertContains("and j_poste >= $4 and j_poste <= $5",$sql);
+        $this->assertStringContainsString("and j_poste >= $4 and j_poste <= $5",$sql);
         $array=$object->get_data();
         $this->assertEquals(0,count($array),"operation in EURO");
         

@@ -37,7 +37,7 @@ class Noalyss_Parameter_FolderTest extends TestCase
      * This method is called before a test is executed.
      * 
      */
-    protected function setUp()
+    protected function setUp():void
     {
         global $g_connection, $g_user;
         $_REQUEST['gDossier']=DOSSIER;

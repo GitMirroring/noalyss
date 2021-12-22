@@ -47,7 +47,7 @@ class Acc_LedgerTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp():void
     {
         include 'global.php';
         $this->object=new Acc_Ledger($g_connection,0);
@@ -57,7 +57,7 @@ class Acc_LedgerTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown():void
     {
         
     }
@@ -379,7 +379,7 @@ class Acc_LedgerTest extends TestCase
        $this->object->set_ledger_id(4);
        $this->object->with_concerned=FALSE;
        $ret=$this->object->confirm($array);
-       $this->assertContains('td class="num">121,00<INPUT TYPE="hidden" id="amount2" NAME="amount2" VALUE="121"></td></tr><tr  class="highlight"><td  ></td><td  >Totaux</td><td  class="num">121.00</td><td  class="num">121.00</td></tr></table><input type="button" class="button" value="verifie Imputation Analytique" onClick="verify_ca(\'\');">',$ret);
+       $this->assertStringContainsString('td class="num">121,00<INPUT TYPE="hidden" id="amount2" NAME="amount2" VALUE="121"></td></tr><tr  class="highlight"><td  ></td><td  >Totaux</td><td  class="num">121.00</td><td  class="num">121.00</td></tr></table><input type="button" class="button" value="verifie Imputation Analytique" onClick="verify_ca(\'\');">',$ret);
                
     }
 
@@ -421,7 +421,7 @@ class Acc_LedgerTest extends TestCase
           fwrite($fileresult,$str);
 //          fclose($fileresult);
           
-          $this->assertContains(' onChange="format_number(this);checkTotalDirect()" ',
+          $this->assertStringContainsString(' onChange="format_number(this);checkTotalDirect()" ',
                   $str);
       } catch (Exception $ex) {
           $this->assertTrue(False);

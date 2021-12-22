@@ -107,14 +107,15 @@ class User
         
         if ($this->load()==-1)
         {
+           $cn=new Database();           
            echo '<h2 class="error">'._('Utilisateur ou mot de passe incorrect').'</h2>';
            $sql="insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
-           $this->db->exec_sql($sql,
+           $cn->exec_sql($sql,
                         array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], "DISCON",
                             $_SERVER['REQUEST_URI'], 'FAIL'));
            $this->clean_session();
            redirect('logout.php', 1);
-            exit();
+           exit();
         }
 
         $this->load_global_pref();

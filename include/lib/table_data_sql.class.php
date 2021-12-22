@@ -109,7 +109,8 @@ abstract class Table_Data_SQL extends Data_SQL
         {
             if (isset($this->default[$value])&&$this->default[$value]=="auto"&&$this->$value==null)
                 continue;
-            if ($value==$this->primary_key&&$this->$value==-1)
+            // prob. with table when the pk is not auto.
+            if ($value==$this->primary_key && $this->$value==-1 && isset($this->default[$value]) )
                 continue;
             $sql.=$sep.$value;
             switch ($this->type[$value])
@@ -177,6 +178,11 @@ abstract class Table_Data_SQL extends Data_SQL
     {
         $sql=$this->build_query();
         $pk=$this->primary_key;
+        // primary cannot be null or empty
+        if (trim($this->$pk)==="" || $this->$pk===null)  {
+            $this->pk=-1;
+            return;
+        }
        
         $result=$this->cn->get_array($sql,array ($this->$pk));
         if ($this->cn->count()==0)

@@ -20,7 +20,7 @@ class FicheTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp():void
     {
         include 'global.php';
         $this->object = new Fiche($g_connection);
@@ -30,12 +30,12 @@ class FicheTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown():void
     {
 
     }
 
-    static function tearDownAfterClass()
+    static function tearDownAfterClass():void
     {
         include 'global.php';
         $fiche_def = new Fiche_Def($g_connection, 5);
@@ -133,7 +133,7 @@ class FicheTest extends TestCase
         $this->assertEquals('', $r);
         $this->object->fiche_def_ref = 9;
         $r = $this->object->summary();
-        $this->assertContains('</TABLE>', $r);
+        $this->assertStringContainsString('</TABLE>', $r);
     }
 
     /**

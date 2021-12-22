@@ -41,7 +41,7 @@ class DatabaseCoreTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp():void
     {
         $noalyss_user = (defined("noalyss_user")) ? noalyss_user : phpcompta_user;
         $password = (defined("noalyss_password")) ? noalyss_password : phpcompta_password;
@@ -54,7 +54,7 @@ class DatabaseCoreTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown():void
     {
         
     }
