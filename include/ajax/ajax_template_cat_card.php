@@ -30,7 +30,7 @@ if (!defined('ALLOWED'))
 /**
  * ajax_template_cat_card add security , accessible only for CFGCARDCAT
  */
-if ( $g_user->check_module ("CFGCARDCAT")==0)
+if ( $g_user->check_module ("CMCARD")==0)
 {
     return;
 }

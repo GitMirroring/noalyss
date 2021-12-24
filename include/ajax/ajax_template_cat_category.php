@@ -38,7 +38,7 @@ $answer['message']=_("Commande inconnue");
  */
 try
 {
-    if ($g_user->check_module("CFGCARDCAT")==0)
+    if ($g_user->check_module("CMCARD")==0)
         throw new Exception(_("Accès non autorisé"));
     $http=new HttpInput();
     $action=$http->request("action");
