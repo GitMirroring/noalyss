@@ -25,7 +25,7 @@
  */
 global $g_user;
 // security
-$g_user->can_request("CFGATCARD");
+$g_user->can_request("CCARDAT");
 
 $http=new HttpInput();
 

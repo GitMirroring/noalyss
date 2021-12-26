@@ -20,7 +20,7 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
 /*!\file
- * \brief Manage the attributs ,CFGATCARD
+ * \brief Manage the attributs ,CCARDAT
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
