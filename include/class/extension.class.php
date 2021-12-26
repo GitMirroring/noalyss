@@ -45,7 +45,14 @@ require_once NOALYSS_INCLUDE.'/database/profile_sql.class.php';
 
 class Extension extends Menu_Ref_sql
 {
-
+    // code of the standard plugin (from noalyss-plugins)
+    const aStandard_plugin=
+            array('AMORTIS','BACKNOADM','COPRO','IMPCARD',
+                'IMPORTBANK','INVOICING','LISTING',
+                'MODOP','RAPAV','SAV',
+                'TOOLPCMN','TOOLS','TRANSFORM',
+                'TVA');
+    
     public function verify()
     {
         // Verify that the elt we want to add is correct
@@ -102,8 +109,15 @@ class Extension extends Menu_Ref_sql
         $a=$cn->get_array($sql, array($_SESSION[SESSION_KEY.'g_user']));
         return $a;
     }
-
-    static function check_version($i)
+    /**
+     * @brief check the version of the plugin , null stands for one of the standard plugins, it means
+     * self::aStandard_plugin
+     * @global type $version_noalyss
+     * @param type $i
+     * @param type $p_plugin_code
+     * @return type
+     */
+    static function check_version($i,$p_plugin_code=null)
     {
         global $version_noalyss;
         if (!isset($version_noalyss)||$version_noalyss<$i)
@@ -112,7 +126,7 @@ class Extension extends Menu_Ref_sql
                             ' Veuillez mettre votre programme a jour. Version minimum ').$i);
             return;
         }
-        Extension::check_plugin_version();
+        Extension::check_plugin_version($p_plugin_code);
     }
 
     /**
@@ -259,14 +273,14 @@ class Extension extends Menu_Ref_sql
      * @global User $g_user
      * @global number $version_plugin
      */
-    static function check_plugin_version()
+    static function check_plugin_version($p_plugin_code)
     {
         global $g_user, $version_plugin;
         if ($g_user->Admin()==1)
         {
-            if (SITE_UPDATE_PLUGIN!="")
+            if ( in_array($p_plugin_code, self::aStandard_plugin) && SITE_UPDATE_PLUGIN!="")
             {
-                $update=@file_get_contents(SITE_UPDATE_PLUGIN);
+               $update=@file_get_contents(SITE_UPDATE_PLUGIN);
                 if ($update>$version_plugin)
                 {
                     echo '<div id="version_plugin_div_id" class="inner_box" style="position:absolute;zindex:2;top:5px;left:37.5%;width:25%">';
