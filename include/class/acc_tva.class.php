@@ -138,6 +138,8 @@ class Acc_Tva
      */
     public function load()
     {
+        if ( trim($this->tva_id)=="" || isNumber($this->tva_id)==0) return -1;
+        
         $sql="select * from tva_rate where tva_id=$1";
         $res=$this->cn->exec_sql(
                  $sql,
@@ -176,6 +178,7 @@ class Acc_Tva
     }
     public function delete()
     {
+        if ( trim($this->tva_id)=="" || isNumber($this->tva_id)==0) return -1;
         $sql="delete from tva_rate where tva_id=$1";
         $res=$this->cn->exec_sql($sql,array($this->tva_id));
     }
