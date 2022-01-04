@@ -47,6 +47,7 @@ $it_pass->value="";
 <FORM  id="user_detail_frm" METHOD="POST">
 
 <?php echo HtmlInput::hidden('UID',$uid)?>
+<?php echo HtmlInput::hidden('use_id',$uid)?>
     <TABLE BORDER=0>
         <TR>
 
@@ -129,6 +130,7 @@ $it_pass->value="";
     <INPUT   type="hidden" NAME="lname" value="<?=_("$UserChange->name")?>">
     <INPUT type="hidden" NAME="fname" value="<?=_("$UserChange->first_name")?>">
     <?php echo HtmlInput::hidden('UID',$uid)?>
+    <?php echo HtmlInput::hidden('use_id',$uid)?>
     <input type="hidden" name="sbaction" value="delete">
     <p  class="info" id="codedel_div">
         <?php

@@ -44,7 +44,7 @@ if ( isset ($_POST["ADD"]) )
     $login=str_replace(" ","",$login);
     $login=strtolower($login);
     $new_user->login=$login;
-    $new_user->pass=$pass5;
+    $new_user->setPassword($pass5);
     $new_user->email=$http->post('EMAIL',"string",'');
     if ( trim($login)=="")
     {
@@ -52,10 +52,19 @@ if ( isset ($_POST["ADD"]) )
     }
     else
     {
-        $new_user->insert();
-        $new_user->load();
-        $_REQUEST['use_id']=$new_user->id;
-        User::audit_admin(sprintf('ADD USER %s %s',$new_user->id,$login));
+        $exist_user=$cn->get_value("select count(*) from ac_users where use_login=lower($1)",[$login]);
+        if ( $exist_user == 0 ) {
+            $new_user->insert();
+            $new_user->load();
+             put_global(array(['key'=>'use_id',"value"=>$new_user->id]));
+            User::audit_admin(sprintf('ADD USER %s %s',$new_user->id,$login));
+        } else {
+     echo_warning(_("Utilisateur existant"));
+            $uid=$cn->get_value("select use_id from ac_users where use_login=lower($1)",[$login]);
+            $new_user->setId($uid);
+            put_global(array(['key'=>'use_id',"value"=>$new_user->id]));
+            $new_user->load();
+        }
 
         require_once NOALYSS_INCLUDE.'/user_detail.inc.php';
         return;
@@ -89,14 +98,13 @@ if ($sbaction == "save")
         {
             die ('Missing data');
         }
-        else if (  trim($_POST['password'])<>'')
+        if (  trim($_POST['password'])<>'')
         {
-            $UserChange->pass = md5($_POST['password']);
+            $UserChange->setPassword(md5($_POST['password']));
             $UserChange->save();
         }
         else
 	{
-            $UserChange->pass=$UserChange->password;
             $UserChange->save();
 	}
 
