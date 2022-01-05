@@ -85,7 +85,7 @@ class Acc_LedgerTest extends TestCase
  
         $this->object->id=2;
         $sPj=$this->object->get_last_pj(2);
-        $this->assertEquals(39,$sPj);
+        $this->assertEquals(42,$sPj);
         $this->object->id=0;
         
         try {
@@ -233,7 +233,7 @@ class Acc_LedgerTest extends TestCase
     {
         $this->object->id=2;
         $r=$this->object->guess_pj();
-        $this->assertEquals("VEN40",$r);
+        $this->assertEquals("VEN43",$r);
     }
 
     /**
@@ -293,8 +293,8 @@ class Acc_LedgerTest extends TestCase
         $max=$g_connection->get_value("select max(p_id) from parm_periode");
         $min=$g_connection->get_value("select min(p_id) from parm_periode");
         $solde=$ledger->get_solde($min,$max);
-        $this->assertEquals($solde[1],4938.64);
-        $this->assertEquals($solde[0],4938.6400);
+        $this->assertEquals($solde[1],5156.4400);
+        $this->assertEquals($solde[0],5156.4400);
         
     }
 

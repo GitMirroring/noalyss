@@ -134,7 +134,7 @@ EOF;
         $anc_acc_list->card_poste=2;
         $pdf_anc_acc=new PDF_Anc_Acc_List($anc_acc_list);
         $pdf_anc_acc->export_pdf()->Output(__DIR__."/file/pdf_anc_acc_list-account-activity.pdf","F");
-        $this->assertEquals(77152,filesize(__DIR__."/file/pdf_anc_acc_list-account-activity.pdf"),
+        $this->assertEquals(77151,filesize(__DIR__."/file/pdf_anc_acc_list-account-activity.pdf"),
                __DIR__."/file/pdf_anc_acc_list-account-activity.pdf incorrect ");
         
         // By Activity / Card

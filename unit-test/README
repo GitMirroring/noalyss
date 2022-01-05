@@ -4,6 +4,13 @@ Il faut configurer pour pouvoir l'utiliser :
 2 . dans GLOBAL PATH (propriété du projet) ajouter le fichier phpunit.phar
 3. Donner unit-test comme répertoire de test
 
+Base de données 
+===============
+Une base de données (dossier25.sql.gz) est donnée pour fonctionner avec les tests. Il faut la restaurer vide 
+puis exécuter le script avec psql 
+
+voir https://wiki.noalyss.eu/doku.php?id=tutoriaux:restaurer_un_dossier_manuellement
+
 Paramètrage
 ===========
 

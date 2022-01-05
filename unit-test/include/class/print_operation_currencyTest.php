@@ -54,7 +54,7 @@ class Print_Operation_CurrencyTest extends TestCase
        
         $this->assertStringContainsString(" and jrnx.f_id in ( select f_id from fiche where fd_id=$4)",$sql);
         $array=$object->get_data();
-        $this->assertEquals(count($array),0,"operation in EURO");
+        $this->assertEquals(count($array),5,"operation in EURO");
         
         
         $object->setCurrency_id(1);
@@ -82,12 +82,12 @@ class Print_Operation_CurrencyTest extends TestCase
        
         $this->assertStringContainsString("where jrn.currency_id = $1 and",$sql);
         $array=$object->get_data();
-        $this->assertEquals(0,count($array),"operation in EURO");
+        $this->assertEquals(18,count($array),"operation in EURO");
         
         
         $object->setCurrency_id(1);
         $array=$object->get_data();
-        $this->assertEquals(18,count($array),"operations in Dollars");
+        $this->assertEquals(20,count($array),"operations in Dollars");
     }
     /**
      * @brief test Filter_Data_Currency_Card
@@ -109,13 +109,13 @@ class Print_Operation_CurrencyTest extends TestCase
        
         $this->assertStringContainsString("and f_id=$4",$sql);
         $array=$object->get_data();
-        $this->assertEquals(0,count($array),"operation in EURO");
+        $this->assertEquals(4,count($array),"operation in EURO");
         
         
         $object->setCurrency_id(1);
         $object->setCard("FOURNI1");
         $array=$object->get_data();
-        $this->assertEquals(2,count($array),"operations in Dollars");
+        $this->assertEquals(3,count($array),"operations in Dollars");
       }
       /**
        * @brief test Filter_Data_Currency_Card_Accounting
@@ -139,13 +139,13 @@ class Print_Operation_CurrencyTest extends TestCase
         $sql=$object->SQL_Condition();
         $this->assertStringContainsString("and j_poste >= $4 and j_poste <= $5",$sql);
         $array=$object->get_data();
-        $this->assertEquals(0,count($array),"operation in EURO");
+        $this->assertEquals(9,count($array),"operation in EURO");
         
         
         $object->setCurrency_id(1);
        
         $array=$object->get_data();
-        $this->assertEquals(7,count($array),"operations in Dollars");
+        $this->assertEquals(8,count($array),"operations in Dollars");
       }
       function testPrint_operation_currency()
       {
@@ -170,7 +170,7 @@ class Print_Operation_CurrencyTest extends TestCase
         Noalyss\Facility::save_file(__DIR__."/file", "print_operation_currency_by_accounting.csv",
                 $csv);
         
-        $this->assertEquals(0,count($array),"by_accounting operation in EURO"); 
+        $this->assertEquals(9,count($array),"by_accounting operation in EURO"); 
         
         $_REQUEST['p_currency_code']=1;
         $print_operation=Print_Operation_Currency::build("by_card");
@@ -188,11 +188,11 @@ class Print_Operation_CurrencyTest extends TestCase
 
           
         
-        $this->assertEquals(2,count($array),"by_card operation in USD"); 
+        $this->assertEquals(3,count($array),"by_card operation in USD"); 
         
         $print_operation=Print_Operation_Currency::build("all");
         $array=$print_operation->getData_operation()->get_data();
-        $this->assertEquals(20,count($array),"all operations in Dollars");
+        $this->assertEquals(22,count($array),"all operations in Dollars");
         ob_start();
         $print_operation->export_csv($export);
         $csv=ob_get_contents();
