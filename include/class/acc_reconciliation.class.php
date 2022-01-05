@@ -365,13 +365,21 @@ j1.j_poste as poste
         $this->prepare_query_detail_quant();
         for ($i=0;$i<count($array);$i++)
         {
+            
              $retdb=$this->db->execute("detail_quant",array($array[$i]['first']['jr_id']));
             if ( Database::num_row($retdb) != 0)
             {
-                // then second_amount takes in account the vat_sided
-                $row=Database::fetch_array($retdb, 0);
-                $total_price=bcadd($row['price'],$row['vat_amount']);
-                $total_price=bcsub($total_price,$row['vat_sided']);
+                  // then second_amount takes in account the vat_sided
+                $a_row=Database::fetch_all($retdb);
+                $total_price=0;
+                foreach ($a_row as $row) {
+                    $total_price=bcadd($total_price,$row['price']);
+                    $total_price=bcadd($total_price,$row['vat_amount']);
+                    $total_price=bcsub($total_price,$row['vat_sided']);
+                    $total_price=bcadd($total_price,$row['nd_amount']);
+                    $total_price=bcadd($total_price,$row['nd_tva_recup']);
+                    
+                }
                 $first_amount=$total_price;
 
             } else {
@@ -386,9 +394,16 @@ j1.j_poste as poste
                 if ( Database::num_row($retdb) != 0)
                 {
                     // then second_amount takes in account the vat_sided
-                    $row=Database::fetch_array($retdb, 0);
-                    $total_price=bcadd($row['price'],$row['vat_amount']);
-                    $total_price=bcsub($total_price,$row['vat_sided']);
+                   $a_row=Database::fetch_all($retdb);
+                    $total_price=0;
+                    foreach ($a_row as $row) {
+                        $total_price=bcadd($total_price,$row['price']);
+                        $total_price=bcadd($total_price,$row['vat_amount']);
+                        $total_price=bcsub($total_price,$row['vat_sided']);
+                        $total_price=bcadd($total_price,$row['nd_amount']);
+                        $total_price=bcadd($total_price,$row['nd_tva_recup']);
+                    
+                     }
                     $second_amount=bcadd($second_amount,$total_price);
                     
                 } else {

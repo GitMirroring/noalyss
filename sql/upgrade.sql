@@ -1,2 +1,1 @@
-set search_path=public,comptaproc;
-update parm_periode set p_exercice_label =p_exercice ;
+select * from v_quant_detail vqd where jr_id=6462;
