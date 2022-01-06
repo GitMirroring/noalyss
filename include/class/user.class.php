@@ -34,7 +34,7 @@ class User
 {
 
     var $id; //!<  in account_repository , ac_users.use_id
-    var $pass; //!< password
+    
     var $db; //!< database connx
     var $admin; //!< is or is not admin
     var $valid; //!< is or is not valid
@@ -60,7 +60,16 @@ class User
             $this->load();
         }
     }
-
+    /**
+     * @brief check the password and user
+     */
+    function can_connect()
+    {
+       $cn=new \Database();
+       $can_connect=$cn->get_value("select count(*) from ac_users where use_login=$1 and use_pass=$2",
+               [$this->login,$this->password]);
+       return $can_connect;
+    }
     /**
      * @brief connect the user and set the $_SESSION variables if not set thanks the $_REQUEST  
      */
@@ -71,7 +80,7 @@ class User
             $http=new \HttpInput();
             $user_login=$http->request("p_user", "string", "");
             $user_password=$http->request("p_pass", "string", "");
-
+            
             if ($user_login!=""&&$user_password!="")
             {
                 $_SESSION[SESSION_KEY."g_user"]=$user_login;
@@ -101,13 +110,14 @@ class User
         }
         $this->login=$_SESSION[SESSION_KEY."g_user"];
         $this->password=$_SESSION[SESSION_KEY.'g_pass'];
+        
         $this->id=-1;
         $this->lang=(isset($_SESSION[SESSION_KEY.'g_lang']))?$_SESSION[SESSION_KEY.'g_lang']:'fr_FR.utf8';
         $this->access_mode=$_SESSION[SESSION_KEY."access_mode"];
+        $cn=new Database();           
         
-        if ($this->load()==-1)
+        if ($this->can_connect() == 0 || $this->load()==-1  )
         {
-           $cn=new Database();           
            echo '<h2 class="error">'._('Utilisateur ou mot de passe incorrect').'</h2>';
            $sql="insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
            $cn->exec_sql($sql,
@@ -311,7 +321,7 @@ class User
     /*     * \brief load data from database.
      * if this->id == -1, it is unknown so we have to retrieve it
       from the database by the login
-     * return -1 if nothing is found
+     * return -1 if nothing is found or the use_id
      */
 
     function load()
@@ -351,6 +361,7 @@ class User
         $this->admin=$row['use_admin'];
         $this->password=$row['use_pass'];
         $this->email=$row['use_email'];
+        return $this->id;
     }
 
     function save()
@@ -415,7 +426,7 @@ class User
         }
         $sql="insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
 
-        if ($res==0)
+        if ($res==0 || $this->can_connect() == 0)
         {
             $cn->exec_sql($sql,
                     array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"],
@@ -637,7 +648,7 @@ class User
     function isAdmin()
     {
         $this->admin=0;
-        $pass5=md5($this->password);
+        $pass5=$this->password;
         $sql="select count(*) from ac_users where use_login=$1
              and use_active=1 and use_admin=1 ";
 

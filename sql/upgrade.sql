@@ -1,1 +1,0 @@
-select * from v_quant_detail vqd where jr_id=6462;
