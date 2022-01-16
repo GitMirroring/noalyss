@@ -289,7 +289,7 @@ class Fiche
         foreach ($this->attribut as $e)
         {
             if ( $e->ad_id == $p_ad_id )
-                return $e->av_text;
+                return trim($e->av_text);
         }
         return $return;
     }

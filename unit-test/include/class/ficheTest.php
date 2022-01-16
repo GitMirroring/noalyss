@@ -244,6 +244,11 @@ class FicheTest extends TestCase
         $this->assertEquals($fiche_goods->id, 23, "retrieve card by qcode");
         $this->assertEquals($fiche_goods->strAttribut(ATTR_DEF_NAME), "Marchandise1", "Retrieve name");
         $this->assertEquals($fiche_goods->getName(), "Marchandise1", "Retrieve name from db");
+        $fiche_2 = new Fiche($g_connection);
+        $fiche_2->get_by_qcode("marcha ");
+        $this->assertEquals($fiche_2->id, 23, "retrieve card by qcode");
+        $this->assertEquals($fiche_2->strAttribut(ATTR_DEF_NAME), "Marchandise1", "Retrieve name");
+        $this->assertEquals($fiche_2->getName(), "Marchandise1", "Retrieve name from db");
     }
 
     /**
@@ -699,5 +704,32 @@ where
         $this->assertEquals(0,$g_connection->get_value("select f_enable from fiche where f_id=$1",[$fiche->id]),"Card_Property:update card is not disabled" );
         $fiche->remove();
            
+    }
+    /**
+     * @testdox test the formating of quick-code : upper-case and some charater removed
+     * @global type $g_connection
+     */
+    public function testQuickCodeFormat()
+    {
+        global $g_connection;
+        // create a new card
+        $fiche=new Fiche($g_connection);
+        $fiche->set_fiche_def(5);
+        Card_Property::load($fiche);
+        $fiche->setAttribut(1, "Inserted by PHPUNIT");
+        $fiche->setAttribut(23, " a a a a");
+        $fiche->insert("5", $fiche->to_array());
+        $this->assertGreaterThan (0,$fiche->id, "Card no created");
+        $fiche_target=new Fiche($g_connection,$fiche->id);
+        $this->assertTrue("AAAA"==$fiche_target->strAttribut(23),"Insert Quick code format not correct");
+        $fiche_target->setAttribut(ATTR_DEF_QUICKCODE, " a a a a a a ");
+        $fiche_target->update($fiche_target->to_array());
+        
+        // reload the card !!
+        $fiche_target->load();
+        
+        $this->assertTrue("AAAAAA"==$fiche_target->strAttribut(23),"Update Quick code format not correct");
+        
+        $fiche->delete();
     }
 }

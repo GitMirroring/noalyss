@@ -37,13 +37,16 @@ class contact extends Fiche
         parent::__construct($p_cn,$p_id) ;
         $this->company="";
     }
-    /*!   Summary
-     **************************************************
-     * \brief  show the default screen
+    /*!   
+     * @brief display a summary of the contact card
+     
      *
-     * \param  p_search (filter)
+     * @param  p_search : filter on card name
+     * @param  p_action : nothing
+     * @param  p_sql : extra SQL command
+     * @param  p_nothing (filter)
      *
-     * \return string to display
+     * @returns string to display
      */
     function Summary($p_search="",$p_action="",$p_sql="",$p_nothing=false)
     {
@@ -52,7 +55,7 @@ class contact extends Fiche
         if ( $this->company != "")
         {
             $extra_sql="and f_id in (select f_id from fiche_detail
-                       where ad_value=upper('".$this->company."') and ad_id=".ATTR_DEF_COMPANY.") ";
+                       where ad_value='".sql_string(trim(strtoupper($this->company)))."' and ad_id=".ATTR_DEF_COMPANY.") ";
         }
         $url=urlencode($_SERVER['REQUEST_URI']);
         $script=$_SERVER['PHP_SELF'];
@@ -75,7 +78,7 @@ class contact extends Fiche
         // Get The result Array
         $step_contact=$this->get_by_category($offset,$search.$extra_sql.$p_sql);
 
-		if ( $all_contact == 0 ) return "";
+	if ( $all_contact == 0 ) return "";
         $r=$bar;
         $r.='<table id="contact_tb" class="sortable">
             <TR>
@@ -112,24 +115,25 @@ class contact extends Fiche
         {
             $l_company=new Fiche($this->cn);
             $l_company->get_by_qcode($contact->strAttribut(ATTR_DEF_COMPANY),false);
-            $l_company_name=$l_company->strAttribut(ATTR_DEF_NAME);
-            if ( $l_company_name == NOTFOUND ) $l_company_name="";
-            // add popup for detail
+            $l_company_name=$l_company->strAttribut(ATTR_DEF_NAME,0);
+            
+            // add popup for detail if the company does exist
             if ( $l_company_name !="")
             {
-				$l_company_name=HtmlInput::card_detail($contact->strAttribut(ATTR_DEF_COMPANY),$l_company_name,'style="text-decoration:underline;"');
+                $l_company_name=HtmlInput::card_detail($contact->strAttribut
+                        (ATTR_DEF_COMPANY),$l_company_name,'style="text-decoration:underline;"');
             }
             $tr=($idx%2==0)?' <tr class="odd">':'<tr class="even">';
             $idx++;
             $r.=$tr;
             $qcode=$contact->strAttribut(ATTR_DEF_QUICKCODE);
             $r.='<TD>'.HtmlInput::card_detail($qcode)."</TD>";
-            $r.="<TD>".$contact->strAttribut(ATTR_DEF_NAME)."</TD>";
-            $r.="<TD>".$contact->strAttribut(ATTR_DEF_FIRST_NAME)."</TD>";
+            $r.="<TD>".$contact->strAttribut(ATTR_DEF_NAME,0)."</TD>";
+            $r.="<TD>".$contact->strAttribut(ATTR_DEF_FIRST_NAME,0)."</TD>";
             $r.="<TD>".$l_company_name."</TD>";
-            $r.="<TD>".$contact->strAttribut(ATTR_DEF_TEL)."</TD>";
-            $r.="<TD>".$contact->strAttribut(ATTR_DEF_EMAIL)."</TD>".
-                "<TD> ".$contact->strAttribut(ATTR_DEF_FAX)."</TD>";
+            $r.="<TD>".$contact->strAttribut(ATTR_DEF_TEL,0)."</TD>";
+            $r.="<TD>".$contact->strAttribut(ATTR_DEF_EMAIL,0)."</TD>".
+                "<TD> ".$contact->strAttribut(ATTR_DEF_FAX,0)."</TD>";
 
             $r.="</TR>";
 
