@@ -42,7 +42,7 @@ class User
     var $name;
     var $active; //!< 1 active , 0 disables
     var $login; //!< login lower case
-    var $password; //!< password 
+    var $password; //!< md5 of the password
     var $email; //!< user's email
     var $access_mode; //!< MOBILE or PC depending if when connecting $login contains @mobile 
 
@@ -66,7 +66,9 @@ class User
     function can_connect()
     {
        $cn=new \Database();
-       $can_connect=$cn->get_value("select count(*) from ac_users where use_login=$1 and use_pass=$2",
+       $can_connect=$cn->get_value("select count(*) from ac_users 
+				   where use_active=1 and
+				   use_login=$1 and use_pass=$2",
                [$this->login,$this->password]);
        return $can_connect;
     }
