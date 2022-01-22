@@ -413,7 +413,7 @@ where
             $this->assertEquals($fiche->get_quick_code(),$fiche_related1->strAttribut($nAttribute['ad_id']),'Attribute QC is not set');
             $this->assertEquals($fiche->get_quick_code(),$fiche_related2->strAttribut($nAttribute['ad_id']),'Attribute QC is not set');
         }
-        if ( $fiche->id == 872 ) {
+        if ( $fiche->id == 872 || $fiche->id == 871 ) {
             $this->assertEquals($fiche->remove(),1,"Removed used card not allowed {$fiche->id}");
             
         } else {
