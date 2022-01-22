@@ -280,7 +280,7 @@ $date_to=new IDate('to_date');
 $date_to->id='to_date';
 
 echo td(_("Calendrier depuis :"));
-echo td($date_from->input('to_date'));
+echo td($date_from->input('from_date'));
 echo td(_("jusque"));
 echo td($date_to->input('to_date'));
 echo '</tr>';

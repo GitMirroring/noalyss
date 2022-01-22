@@ -63,13 +63,13 @@ class Acc_Report
      *        from a report
      * \param $p_start start periode
      * \param $p_end end periode
-     * \param $p_type_date type of the date : periode or calendar
+     * \param $p_type_date type of the date : periode (or 0)  or calendar (or 1)
      */
     function get_row($p_start,$p_end,$p_type_date)
     {
-    if (DEBUGNOALYSS > 1) {
-        tracedebug("impress.debug.log",__FILE__."71.get_row({$p_start},{$p_end},{$p_type_date})");
-    }
+        if (DEBUGNOALYSS > 1) {
+            tracedebug("impress.debug.log",__FILE__."71.get_row({$p_start},{$p_end},{$p_type_date})");
+        }
         $Res=$this->form_definition->cn->exec_sql("select fo_id ,
                                  fo_fr_id,
                                  fo_pos,
@@ -87,13 +87,15 @@ class Acc_Report
         }
         $col=array();
         
-        $a_type_date=["periode"=>0,"calendar"=>1];
-        if (array_key_exists($p_type_date, $a_type_date) )
-        {
-            $type_date=$a_type_date[$p_type_date];
+        if ( $p_type_date == '0' || $p_type_date=="periode") {
+            $type_date=0;
+        } elseif ($p_type_date == '1' || $p_type_date=="calendar") {
+            $type_date=1;
         } else {
-            throw new Exception("acr93 invalid type_date [ {$p_type_date} ] ");
+            throw new Exception("ACR93:invalid type_date [ {$p_type_date} ] ");
         }
+
+
         for ($i=0;$i<$Max;$i++)
         {
             $l_line=Database::fetch_array($Res,$i);
