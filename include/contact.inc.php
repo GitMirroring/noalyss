@@ -66,6 +66,7 @@ if ($low_action == "list")
     ?>
     <div class="content">
         <div>
+           
     	<form method="get" action="<?php echo $href;?>">
 		<?php
 		echo dossier::hidden();
@@ -94,6 +95,7 @@ if ($low_action == "list")
     	    <input type="submit" class="button" name="submit_query" value="<?php echo  _('recherche')?>">
     	    <input type="hidden" name="ac" value="<?php echo $http->request('ac')?>">
     	</form>
+             <p class="notice"><?=_("Si vous modifiez un contact, il faut recharger la page pour voir les changements")?></p>
         </div>
 	<?php
 	$client = new contact($cn);

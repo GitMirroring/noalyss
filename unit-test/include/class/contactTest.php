@@ -61,6 +61,7 @@ class ContactTest extends TestCase
     protected function tearDown():void
     {
         include 'global.php';
+        global $g_connection;
         $sql=new ArrayObject();
         $sql->append("delete from fiche_detail where f_id in (select f_id from fiche where fd_id = $1 )");
         $sql->append("delete from fiche where f_id not in (select f_id from fiche_detail where $1=$1)");
