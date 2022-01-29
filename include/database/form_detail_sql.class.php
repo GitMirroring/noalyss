@@ -56,7 +56,7 @@ class Form_Detail_SQL extends \Table_Data_SQL
         );
 
         $this->default=array(
-            "pk composé"=>"auto"
+            "fo_id"=>"auto"
         );
 
         $this->date_format="DD.MM.YYYY";
