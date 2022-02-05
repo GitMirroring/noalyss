@@ -320,7 +320,9 @@ function format_number(obj, p_prec)
         precision = p_prec;
     }
     var value = obj.value;
+    value = value.replace(/ /g, '');
     value = value.replace(/,/g, '.');
+
     
     value=compute_number(value);    
     
