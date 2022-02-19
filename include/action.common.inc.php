@@ -316,7 +316,7 @@ if ($sub_action == "save_action_st2")
     try {
 	$act->d_id = 0;
         $act->ag_id=$http->request("ag_id","number");
-	$act->md_id = (isset($_POST['gen_doc'])) ? $_POST['gen_doc'] : 0;
+	$act->md_id = $http->post('gen_doc','number',0);
 
         $act->verify();
         $sup_parameter=HtmlInput::array_to_string(["sc","sb","f_id","qcode"], $_REQUEST,"&amp;");
