@@ -95,7 +95,7 @@ class PDF_Operation extends PDF {
         $this->pdf->write_cell(100, 6, $this->acc_detail->det->jr_pj_number);
         $this->pdf->line_new(4);
         $this->pdf->write_cell(50, 6, _("Commentaire"));
-        $this->pdf->write_cell(100, 6, $this->acc_detail->det->jr_comment);
+        $this->pdf->LongLine(130, 3 , $this->acc_detail->det->jr_comment);
         $this->pdf->line_new(4);
         $this->pdf->write_cell(50, 6, _("Nom document"));
         $this->pdf->write_cell(100, 6, $this->acc_detail->det->jr_pj_name);
