@@ -340,7 +340,7 @@ function format_number(obj, p_prec)
 
 /**
  * Replace slash , space and minus by dot
- * @param p_object
+ * @param p_object DOM Element date to check
  */
 function format_date(p_object)
 {
@@ -351,8 +351,19 @@ function format_date(p_object)
     var tmp_value = p_object.value;
     a_split=tmp_value.split('.');
     if (a_split[2] && a_split[2].match(/[0-9]{2}/) && a_split[2].length==2) {
-        p_object.value=a_split[0]+"."+a_split[1]+"."+"20"+a_split[2];
+        a_split[2]="20"+a_split[2];
+        p_object.value=a_split[0]+"."+a_split[1]+"."+a_split[2];
     }
+    var nMonth=parseFloat(a_split[1])-1;
+    var ma_date = new Date(a_split[2], nMonth, a_split[0]);
+    if(ma_date.getFullYear()==a_split[2] && ma_date.getMonth()==nMonth && ma_date.getDate() == a_split[0]){
+        return;
+    } else {
+        new Effect.Highlight(p_object.id,{startcolor:"#ff0000"});
+        p_object.value="";
+    }
+    
+    
 }
 /**
  *@brief check if the object is hidden or show and perform the opposite,

@@ -963,6 +963,7 @@ class Follow_Up
         $this->qcode_dest=$http->extract("qcode_dest","string","");
         $this->f_id_dest=$http->extract("f_id_dest","string",null);
         $this->ag_timestamp=$http->extract("ag_timestamp","string",date('d.m.Y'));
+        $this->ag_timestamp=(isDate($this->ag_timestamp)==0)?date('d.m.Y'):$this->ag_timestamp;
         $this->dt_id=$http->extract("dt_id","string","");
         $this->ag_state=$http->extract("ag_state","number",2);
         $this->ag_title=$http->extract("ag_title","string","");

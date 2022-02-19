@@ -94,7 +94,7 @@ class Tax_Summary
     public function set_date_start($date_start)
     {
         if (isDate($date_start)==NULL)
-            throw Exception(_("Format date invalide").$date_start);
+            throw new Exception(_("Format date invalide").$date_start);
         $this->date_start=$date_start;
         return $this;
     }
@@ -114,7 +114,7 @@ class Tax_Summary
     public function set_date_end($date_end)
     {
         if (isDate($date_end)==NULL)
-            throw Exception(_("Format date invalide").$date_end);
+            throw new Exception(_("Format date invalide").$date_end);
         $this->date_end=$date_end;
         return $this;
     }

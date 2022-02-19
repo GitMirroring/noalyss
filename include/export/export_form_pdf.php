@@ -62,8 +62,20 @@ if ( $step == 0 )
     }
     else
     {
-        $from_date=$http->get('from_date',"date");
-        $to_date=$http->get('to_date',"date");
+        try {
+            $from_date=$http->get('from_date',"date");
+        } catch (Exception $e) {
+            $from_date=date('d.m.Y');
+        }
+        try
+        {
+            $to_date=$http->get('to_date',"date");
+        }
+        catch (Exception $exc)
+        {
+            $to_date=date('d.m.Y');
+        }
+
         $array=$Form->get_row( $from_date,$to_date, $type_periode);
     }
 
