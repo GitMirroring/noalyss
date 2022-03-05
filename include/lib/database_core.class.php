@@ -582,9 +582,9 @@ class DatabaseCore
         return true;
     }
 
-    /*
-     *!\brief test if a schema exists
-     * \return true if the schemas exists otherwise false
+    /***
+     * @brief test if a schema exists
+     * @return true if the schemas exists otherwise false
      */
 
     function exist_schema($p_name)
