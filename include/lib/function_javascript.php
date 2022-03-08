@@ -2793,7 +2793,7 @@ EOF;
  */
 function json_response($p_answer)
 {
-    header("Content-type: text/json; charset: utf8", true);
+    header("Content-type: application/json; charset: utf8", true);
     echo json_encode($p_answer,
             JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
 }
