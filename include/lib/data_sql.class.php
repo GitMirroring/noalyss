@@ -134,6 +134,7 @@ abstract class Data_SQL
     {
         if (array_key_exists($p_string, $this->type))    {
             $this->$p_string=$p_value;
+            return $this;
         }        else
             throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
     }
@@ -161,6 +162,7 @@ abstract class Data_SQL
         if (array_key_exists($p_string, $this->name))    {
             $idx=$this->name[$p_string];
             $this->$idx=$p_value;
+            return $this;
         }        else
             throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
     }
