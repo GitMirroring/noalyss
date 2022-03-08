@@ -1844,6 +1844,17 @@ class Fiche
         }
 
     }
+    /**
+     * @brief create a card from a qcode and returns a card
+     * @param string $p_qcode qcode of the card
+     */
+    static function from_qcode($p_qcode)
+    {
+        $cn=Dossier::connect();
+        $card=new Card($cn);
+        $card->get_by_qcode($p_qcode);
+        return $card;
+    }
 }
 
 ?>
