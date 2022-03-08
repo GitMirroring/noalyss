@@ -24,6 +24,7 @@
  * @brief manage the table attr_def 
  * @see card_attr.inc.php
  */
+
 /**
  * @class Card_Attribut_MTable
  * @brief manage the table attr_def
@@ -46,7 +47,7 @@ class Card_Attribut_MTable extends Manage_Table_SQL
         $this->set_col_type("ad_search_followup", "custom");
         $this->set_col_type("ad_text", "custom");
         $this->set_col_type("ad_size", "numeric");
-        $this->set_col_type("ad_extra", "text");
+        $this->set_col_type("ad_extra", "custom");
         $this->set_col_type("ad_type", "select",
                 array(
                     ["value"=>"text", "label"=>_("Texte")],
@@ -110,7 +111,12 @@ class Card_Attribut_MTable extends Manage_Table_SQL
 
             return td($ret);
         }
-        if ($p_key == "ad_text"){
+        if ($p_key=="ad_text")
+        {
+            return td($p_value);
+        }
+        if ($p_key=="ad_extra")
+        {
             return td($p_value);
         }
         return;
@@ -133,28 +139,34 @@ class Card_Attribut_MTable extends Manage_Table_SQL
             $ic=new InputSwitch("ad_search_followup", $p_value);
             echo $ic->input();
         }
-        /**
-         * Bug in firefox if id=ad_text , the widget is not displaid 
-         */
-        if ( $p_key == "ad_text") 
+        elseif ($p_key=="ad_text")
         {
-            $text=new IText("ad_text",$p_value);
+            /**
+             * Bug in firefox if id=ad_text , the widget is not displaid 
+             */
+            $text=new IText("ad_text", $p_value);
+            $text->id=uniqid();
+            echo $text->input();
+        }
+        elseif ($p_key=="ad_extra")
+        {
+            $text=new ITextarea("ad_extra", $p_value);
             $text->id=uniqid();
             echo $text->input();
         }
         echo "";
         return;
     }
-    
+
     function check()
     {
         $object_sql=$this->get_table();
 
-        if ($object_sql->get("ad_id")<9000 && $object_sql->get("ad_id")!=-1)
+        if ($object_sql->get("ad_id")<9000&&$object_sql->get("ad_id")!=-1)
         {
-            $this->set_error("ad_id",_("Bloqué"));
+            $this->set_error("ad_id", _("Bloqué"));
         }
-        
+
         // Duplicate
         $count="select count(*) 
                 from attr_def as ad1 
@@ -168,11 +180,11 @@ class Card_Attribut_MTable extends Manage_Table_SQL
             $this->set_error("ad_text", _("Doublon"));
         }
         // type
-         if (in_array($object_sql->get("ad_type"),
-                 array('date', 'text', 'numeric', 'zone', 'poste', 'card', 'select','check'))==false)
-         {
-             $this->set_error("ad_type", _("Type invalide"));
-         }
+        if (in_array($object_sql->get("ad_type"),
+                        array('date', 'text', 'numeric', 'zone', 'poste', 'card', 'select', 'check'))==false)
+        {
+            $this->set_error("ad_type", _("Type invalide"));
+        }
 
         // Name empty
         if (trim($object_sql->ad_text)=="")
@@ -180,7 +192,8 @@ class Card_Attribut_MTable extends Manage_Table_SQL
             $this->set_error("ad_text", _("Description ne peut pas être vide"));
         }
         // select protect 
-        if ( $object_sql->ad_size=="") {
+        if ($object_sql->ad_size=="")
+        {
             $object_sql->ad_size=22;
         }
         if ($object_sql->ad_type=='numeric')
@@ -188,51 +201,58 @@ class Card_Attribut_MTable extends Manage_Table_SQL
             $object_sql->ad_extra=(trim($object_sql->ad_extra)=='')?'2':$object_sql->ad_extra;
             if (isNumber($object_sql->ad_extra)==0)
             {
-                 $this->set_error("ad_text",_("La précision doit être un chiffre"));
+                $this->set_error("ad_text", _("La précision doit être un chiffre"));
             }
         }
-        
+
         if ($object_sql->ad_type=='select')
         {
-            if (trim($object_sql->ad_extra)=="") {
-                
-                $this->set_error("ad_extra",_("La requête SQL est vide "));
+            if (trim($object_sql->ad_extra)=="")
+            {
+
+                $this->set_error("ad_extra", _("La requête SQL est vide "));
             }
             if (preg_match('/^\h*select/i', $object_sql->ad_extra)==0)
             {
-               $this->set_error("ad_extra",_("La requête SQL doit commencer par SELECT "));
+                $this->set_error("ad_extra", _("La requête SQL doit commencer par SELECT "));
             }
-
         }
-        if ($this->count_error()>0) {
+        if ($this->count_error()>0)
+        {
             return false;
         }
         return true;
     }
 
-    function delete() {
-         $object_sql=$this->get_table();
-         
-         if ( $object_sql->getp("ad_id") < 9000 ) {
-             throw new Exception (_("Effacement bloqué"));
-         }
-         
-         $db=$object_sql->cn;
-         try {
-             $db->start();
-             $sql=$db->exec_sql("delete from fiche_detail  where ad_id=$1 ", array($object_sql->ad_id));
+    function delete()
+    {
+        $object_sql=$this->get_table();
+
+        if ($object_sql->getp("ad_id")<9000)
+        {
+            throw new Exception(_("Effacement bloqué"));
+        }
+
+        $db=$object_sql->cn;
+        try
+        {
+            $db->start();
+            $sql=$db->exec_sql("delete from fiche_detail  where ad_id=$1 ", array($object_sql->ad_id));
 
             $sql="delete from jnt_fic_attr where ad_id=$1";
             $res=$db->exec_sql($sql, array($object_sql->ad_id));
 
             $sql="delete from attr_def where ad_id=$1";
             $res=$db->exec_sql($sql, array($object_sql->ad_id));
-            
+
             $object_sql=$this->get_table()->delete();
             $db->commit();
-         } catch (Exception $ex) {
-             $db->rollback();
-            throw new Exception (_("Effacement bloqué : attribut utilisé"));
-         }
+        }
+        catch (Exception $ex)
+        {
+            $db->rollback();
+            throw new Exception(_("Effacement bloqué : attribut utilisé"));
+        }
     }
+
 }
