@@ -1166,7 +1166,7 @@ EOF;
         $r.=_("Ajoutez une pièce justificative ");
         $r.=$file->input("pj", "");
 
-        if ($this->db->count_sql("select md_id,md_name from document_modele where md_affect='VEN'") > 0) {
+        if ($this->db->count_sql("select md_id,md_name from document_modele where md_affect='VEN' ") > 0) {
 
 
             $r.=_('ou générer une facture') . ' <input type="checkbox" name="gen_invoice" CHECKED>';
@@ -1175,7 +1175,7 @@ EOF;
             $doc_gen->name = "gen_doc";
             $doc_gen->value = $this->db->make_array(
                     "select md_id,md_name " .
-                    " from document_modele where md_affect='VEN'");
+                    " from document_modele where md_affect='VEN' order by 2");
             $r.=$doc_gen->input() . '<br>';
         }
         $r.='<br>';

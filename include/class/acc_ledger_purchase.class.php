@@ -1922,7 +1922,7 @@ EOF;
             $doc_gen->name="gen_doc";
             $doc_gen->value=$this->db->make_array(
                                 "select md_id,md_name ".
-                                " from document_modele where md_affect='ACH'");
+                                " from document_modele where md_affect='ACH' order by 2");
             $r.=$doc_gen->input().'<br>';
         }
         $r.='<br>';
