@@ -673,6 +673,7 @@ class Document
      *  - [COMMENT]
      *  - [DESCRIPTION]
      *  - [DOCUMENT_ID]
+     *  - [DATE_PAID]
      *
      * \param $p_tag TAG
      * \param $p_array data from $_POST
