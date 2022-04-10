@@ -224,6 +224,7 @@ class Lettering
      */
     public function save($p_array)
     {
+        
         if (!isset($p_array['letter_j_id']))
         {
             // if nothing selected then remove
@@ -287,6 +288,7 @@ class Lettering
             echo $exc->getMessage();
             error_log($exc->getTraceAsString());
             $this->db->rollback();
+            return;
         }
 
 
@@ -384,7 +386,15 @@ class Lettering
         ob_end_clean();
         return $r;
     }
-
+    /**
+     * @brief for some reason , sometimes, a record in letter_X doesn't have his counterpart
+     * in letter_Y
+     */
+    function remove_incoherent()
+    {
+        $this->db->exec_sql("delete from letter_cred lc  where jl_id not in (select jl_id from letter_deb)");
+        $this->db->exec_sql("delete from letter_deb lc  where jl_id not in (select jl_id from letter_cred)");
+    }
     /**
      * wrapper : it call show_all, show_lettered or show_not_lettered depending
      * of the parameter
@@ -392,6 +402,7 @@ class Lettering
      */
     public function show_list($p_type)
     {
+        
         switch ($p_type)
         {
             case 'all':
@@ -505,7 +516,9 @@ class Lettering_Account extends Lettering
                 isNumber($this->fil_amount_max)==1&&
                 isNumber($this->fil_amount_min)==1&&
                 ($this->fil_amount_max!=0||$this->fil_amount_min!=0))
-            $filter_amount=" and (j_montant >= $this->fil_amount_min and j_montant<=$this->fil_amount_max  or (coalesce(comptaproc.get_letter_jnt($p_jid),-1)= coalesce(comptaproc.get_letter_jnt(j_id),-1) and coalesce(comptaproc.get_letter_jnt($p_jid),-1) <> -1 )) ";
+            $filter_amount=" and (j_montant >= $this->fil_amount_min and j_montant<=$this->fil_amount_max "
+                . " or (coalesce(comptaproc.get_letter_jnt($p_jid),-1)= coalesce(comptaproc.get_letter_jnt(j_id),-1) "
+                . " and coalesce(comptaproc.get_letter_jnt($p_jid),-1) <> -1 )) ";
         $sql="
              select j_id,j_date,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,
              j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,

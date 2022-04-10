@@ -123,7 +123,7 @@ $quick_code=strtoupper(trim($http->get('acc')));
 $letter->set_parameter('quick_code',$quick_code);
 $letter->set_parameter('start',$start->value);
 $letter->set_parameter('end',$end->value);
-
+$letter->remove_incoherent();
 if ( $sel->selected == 0 )
     echo $letter->show_list('all');
 if ( $sel->selected == 1 )
