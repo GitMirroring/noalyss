@@ -124,7 +124,7 @@ $letter=new Lettering_Account($cn);
 $letter->set_parameter('account',$http->get('acc'));
 $letter->set_parameter('start',$start->value);
 $letter->set_parameter('end',$end->value);
-
+$letter->remove_incoherent();
 if ( $sel->selected == 0 )
     echo $letter->show_list('all');
 if ( $sel->selected == 1 )

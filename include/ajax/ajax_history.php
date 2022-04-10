@@ -35,6 +35,8 @@ $http=new HttpInput();
 if ( $g_user->check_dossier(dossier::id(),true) == 'X' ) exit();
 
 $from_div = (isset($_REQUEST['ajax'])) ? 1 : $div;
+$clean_lettering=new Lettering($cn);
+$clean_lettering->remove_incoherent();
 
 ///////////////////////////////////////////////////////////////////////////
 /* first detail for a card */

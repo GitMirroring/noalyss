@@ -487,6 +487,9 @@ echo $export_pdf;
 echo $export_print;
 $fiche = new Fiche($cn);
 $histo=$http->get("histo","number");
+$clean_lettering=new Lettering($cn);
+$clean_lettering->remove_incoherent();
+
 for ($e = 0; $e < count($afiche); $e++)
 {
 	$array = Fiche::get_fiche_def($cn, $afiche[$e]['fd_id'], 'name_asc');
