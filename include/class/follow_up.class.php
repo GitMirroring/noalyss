@@ -612,15 +612,15 @@ class Follow_Up
         $table->add(_('Date Doc.'), $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd'); 
         //$table->add(_('Date Comm.'), $url, 'order by last_comment', 'order by last_comment desc', 'dca', 'dcd');
         //1
-        $table->add(_('Date Limite'), $url, 'order by ag_remind_date asc', 'order by ag_remind_date  desc', 'ra', 'rd');
+        $table->add(_('Date Limite'), $url, 'order by ag_remind_date asc nulls last', 'order by ag_remind_date  desc nulls last', 'ra', 'rd');
         //2
         $table->add(_('Réf.'), $url, 'order by ag_ref asc', 'order by ag_ref desc', 'ra', 'rd');
         //3
-        $table->add(_('Etiquette'), $url, 'order by tags asc', 'order by tags desc', 'taa', 'tad');
+        $table->add(_('Etiquette'), $url, 'order by tags asc nulls last', 'order by tags desc nulls last', 'taa', 'tad');
         //4
         $table->add(_('Groupe'), $url, "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe')", "order by coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') desc", 'dea', 'ded');
         //5
-        $table->add(_('Dest/Exp'), $url, 'order by qcode asc', 'order by qcode desc', 'ea', 'ed');
+        $table->add(_('Dest/Exp'), $url, 'order by qcode asc nulls last', 'order by qcode desc nulls last', 'ea', 'ed');
         //6
         $table->add(_('Titre'), $url, 'order by ag_title asc', 'order by ag_title desc', 'ta', 'td');
         //7
