@@ -18,7 +18,8 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-/**\file
+/**
+ * \file
  * \brief printing of category of card  : balance, historic
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
@@ -145,16 +146,17 @@ if ($histo->selected   == -1)
 	{
 		if ($write == 1)
 		{
-			$ack = $_POST['f_id'];
+                        $ack = $http->post("f_id","array",[]);
 			/**
 			 * Move
 			 */
 			if (isset($_POST['move'])&& $_POST['move'] == 1)
 			{
+                                $move_to=$http->post("move_to","number");
 				for ($i = 0; $i < count($ack); $i++)
 				{
 					$fiche = new Fiche($cn, $ack[$i]);
-					$fiche->move_to($_POST['move_to']);
+					$fiche->move_to($move_to);
 				}
 			}
 			/**
@@ -199,8 +201,8 @@ if ($histo->selected   == -1)
 	$max = $cn->get_value("select count(*) from fiche as f " . $cond);
 
 	$step = $_SESSION[SESSION_KEY.'g_pagesize'];
-	$page = (isset($_GET['offset'])) ? $_GET['page'] : 1;
-	$offset = (isset($_GET['offset'])) ? $_GET['offset'] : 0;
+        $page=$http->get("page","number",1);
+        $offset=$http->get("offset","number",0);
 	$bar = navigation_bar($offset, $max, $step, $page);
 	$limit = ($step == -1 ) ? "" : " limit " . $step;
 	$res = $cn->exec_sql("

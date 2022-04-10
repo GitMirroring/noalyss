@@ -44,7 +44,7 @@ $poste->set_attribute('label','account_label');
 $poste->set_attribute('account','acc');
 $acc_lib="";
 if (isset($_GET['acc'])) { 
-    $poste->value=$_GET['acc']; 
+    $poste->value=$http->get("acc");
     $acc_lib=$cn->get_value('select pcm_lib from tmp_pcmn where pcm_val=upper($1)',array($poste->value));
 }
 
