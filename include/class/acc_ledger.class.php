@@ -830,10 +830,11 @@ class Acc_Ledger  extends jrn_def_sql
         }
         $add_js.='update_row("quick_item");';
         $ret="";
+        $add_card=false;
         if ($g_user->check_action(FICADD)==1)
         {
             // Button for adding customer
-            $add_card=TRUE;
+            $add_card=true;
         }
         $wLedger=$this->select_ledger('ODS', 2,FALSE);
         if ($wLedger==null)
@@ -1042,7 +1043,7 @@ class Acc_Ledger  extends jrn_def_sql
             $deb->selected=(isset(${'ck'.$i}))?true:false;
             $deb->readonly=$p_readonly;
             $deb->javascript=' onChange="checkTotalDirect()"';
-            $str_add_button=($add_card==TRUE)?$this->add_card("-1",
+            $str_add_button=($add_card==true)?$this->add_card("-1",
                             $quick_code->id):"";
             $ret.='<tr>';
             $ret.='<td>'.$quick_code->input().$quick_code->search().$str_add_button.'</td>';
