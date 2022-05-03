@@ -28,29 +28,33 @@ global $cn,$http;
 //**********************************************
 if (isset($_POST['change_profile']))
 {
-    extract($_POST, EXTR_SKIP);
     try
     {
-        for ($e=0; $e<count($right); $e++)
+        $aRight=$http->post("right","array",array());
+        $aUserProfile=$http->post("ua_id","array",array());
+        $p_id=$http->post("p_id","number");
+        $aProfile=$http->post("ap_id","array",array());
+        
+        for ($e=0; $e<count($aUserProfile); $e++)
         {
-            if ($right[$e]=='X'&&$ua_id[$e]=='')
+            if ($aUserProfile[$e]=='X'&&$aUserProfile[$e]=='')
                 continue;
-            if ($right[$e]=='X'&&$ua_id[$e]!='')
+            if ($aUserProfile[$e]=='X'&&$aUserProfile[$e]!='')
             {
                 $cn->exec_sql("delete from user_sec_action_profile where p_id=$1 and p_granted=$2",
-                        array($p_id, $ap_id[$e]));
+                        array($p_id, $aProfile[$e]));
                 continue;
             }
-            if ($ua_id[$e]=="")
+            if ($aUserProfile[$e]=="")
             {
                 $cn->exec_sql("insert into user_sec_action_profile (p_id,p_granted,ua_right) values($1,$2,$3)",
-                        array($p_id, $ap_id[$e], $right[$e]));
+                        array($p_id, $aProfile[$e], $aRight[$e]));
                 continue;
             }
-            if ($ua_id[$e]!='')
+            if ($aUserProfile[$e]!='')
             {
                 $cn->exec_sql("update user_sec_action_profile set ua_right=$3 where  p_id=$1 and p_granted=$2 ",
-                        array($p_id, $ap_id[$e], $right[$e]));
+                        array($p_id, $aProfile[$e], $aRight[$e]));
                 continue;
             }
         }
@@ -67,9 +71,13 @@ if (isset($_POST['change_profile']))
 //**********************************************
 if (isset($_POST['change_stock']))
 {
-    extract($_POST, EXTR_SKIP);
     try
     {
+        $p_id=$http->post("p_id","number");
+        $right=$http->post("right","array",array());
+        $ar_id=$http->post("ar_id","array",array());
+        $ur_id=$http->post("ur_id","array",array());
+        
         for ($e=0; $e<count($right); $e++)
         {
             if ($right[$e]=='X'&&$ur_id[$e]=='')
@@ -188,9 +196,10 @@ if (isset($_POST['clone']))
 //************************************
 if (isset($_POST['delete_profil']))
 {
-    extract($_POST, EXTR_SKIP);
     try
     {
+        $p_id=$http->post("p_id","number");
+
         $cn->start();
         if ($p_id==1)
         {
