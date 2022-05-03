@@ -1605,7 +1605,7 @@ class Fiche
                             throw Exception('Erreur pas de valeur pour jrn');
                         $filter_jrn=$this->cn->make_list("select jrn_def_fiche_cred from jrn_Def where jrn_def_id=$1",
                                 array($jrn));
-                        $filter_fd_id=" fd_id in (".$filter_jrn.")";
+                        $filter_fd_id=(empty($filter_jrn))?" fd_id in (-1)  ":" fd_id in (".$filter_jrn.")";
                         $and=" and ";
                         break;
                     case 'deb':
@@ -1613,7 +1613,7 @@ class Fiche
                             throw Exception('Erreur pas de valeur pour jrn');
                         $filter_jrn=$this->cn->make_list("select jrn_def_fiche_deb from jrn_Def where jrn_def_id=$1",
                                 array($jrn));
-                        $filter_fd_id=" fd_id in (".$filter_jrn.")";
+                        $filter_fd_id=(empty($filter_jrn))?"fd_id in (-1) ":" fd_id in (".$filter_jrn.")";
                         $and=" and ";
                         break;
                     case 'filter':

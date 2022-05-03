@@ -73,9 +73,11 @@ if ( $typecard == 'all')
 else if (strpos($typecard,'sql]')==true)
 {
 	$filter_card=  str_replace('[sql]', " and ", $typecard);
-} else
+} else 
+{
+    $typecard=(empty($typecard))?-1:sql_string($typecard);
     $filter_card="and fd_id in ($typecard)";
-
+}
 if ( $jrn != -1 )
 {
     switch ($typecard)

@@ -234,26 +234,35 @@ case 'st':
         {
         case -1:
             $l=new Acc_Ledger($cn,$ledger);
+            $array=$l->get_all_fiche_def();
+            $array=(empty($array))?"-1":$array;
             $where='  where fd_id in ('.$l->get_all_fiche_def().')';
             break;
         case 'cred':
             $l=new Acc_Ledger($cn,$ledger);
             $prop=$l->get_propertie();
-            if ( $prop['jrn_def_fiche_cred']=='')$prop=-1;
-            $where='  where fd_id in ('.$prop['jrn_def_fiche_cred'].')';
+            if ( empty($prop) || empty($prop['jrn_def_fiche_cred'])=='')
+            {
+                $where ="";
+            }else {
+                $where='  where fd_id in ('.$prop['jrn_def_fiche_cred'].')';
+            }
             break;
         case 'deb':
             $l=new Acc_Ledger($cn,$ledger);
             $prop=$l->get_propertie();
-            if ( $prop=='')$prop=-1;
-            $where='  where fd_id in ('.$prop['jrn_def_fiche_deb'].')';
+            if ( empty($prop) || empty($prop['jrn_def_fiche_deb']) ) {
+                $where = "" ;
+            } else {
+                $where='  where fd_id in ('.$prop['jrn_def_fiche_deb'].')';
+            }
             break;
         }
     }
     else
     {
         /* we filter thanks a given model of card */
-        if ( isset($cat))
+        if ( isset($cat) && ! empty($cat))
         {
             $where=sprintf(' where frd_id in ('.sql_string ($cat).')');
         }

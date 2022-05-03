@@ -111,6 +111,7 @@ if ( isset($_SESSION[SESSION_KEY.'isValid']) && $_SESSION[SESSION_KEY.'isValid']
             break;
 
         default:
+            $d= ( empty($d) )?-1:$d;
             $filter_card="and fd_id in ($d)";
         }
     }
