@@ -27,8 +27,12 @@ $cn=Dossier::connect();
  * @file
  * @brief display a button for adding an followup action
  */
-echo HtmlInput::button(uniqid(), _("Ajout action"),
+global $g_user;
+if ( ! empty ($g_user->get_writable_profile())) 
+{
+    echo HtmlInput::button(uniqid(), _("Ajout action"),
         'onclick="document.getElementById(\'action_add_d\').style.display=\'block\';"');
+}
 ?>
 <div id="action_add_d" class="inner_box" style="width:25rem;display:none;top:10rem;">
     <?php echo HtmlInput::title_box(_("Choississez une action"), "action_add_d"); ?>

@@ -49,7 +49,7 @@ $profile->value=$cn->make_array("select  p_id as value, ".
                 " from profile  "
         . "where "
         . "p_id in "
-        . $g_user->get_writable_profile()
+        . $g_user->sql_writable_profile()
         . "order by 2");
 
 // priority

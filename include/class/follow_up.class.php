@@ -109,10 +109,10 @@ class Follow_Up
         }
         if ($p_mode=='R')
         {
-            $sql=" (ag_dest in (select p_granted from user_sec_action_profile where p_id=$profile ) ) ";
+            $sql=" (ag_dest in (select p_granted from user_sec_action_profile where p_id=$profile and ua_right !='X' ) ) ";
         } else if ($p_mode=='W')
         {
-            $sql=" ( ag_dest in (select p_granted from user_sec_action_profile where p_id=$profile and ua_right='W' ) )";
+            $sql=" ( ag_dest in (select p_granted from user_sec_action_profile where p_id=$profile and ua_right in ('W','O') ) )";
         } else  {
             record_log(_('Securité'));
             throw new Exception(_('Securité'));
@@ -270,7 +270,7 @@ class Follow_Up
         // select profile
         $aAg_dest=$this->db->make_array("select  p_id as value, ".
                 "p_name as label ".
-                " from profile  where p_id in ".$g_user->get_writable_profile()."order by 2");
+                " from profile  where p_id in ".$g_user->sql_writable_profile()." order by 2");
 
         $ag_dest->value=$aAg_dest;
         $ag_dest->selected=$this->ag_dest;
@@ -1170,20 +1170,20 @@ class Follow_Up
         $aAg_dest=$cn->make_array("select  p_id as value, ".
                 "p_name as label ".
                 " from profile where p_id in ".
-                $g_user->get_readable_profile().
+                $g_user->sql_readable_profile().
                 "order by 2");
-        $aAg_dest[]=array('value'=>'-2', 'label'=>_('Tous les profiles'));
+        $aAg_dest[]=array('value'=>'-2', 'label'=>_('Tous les profils'));
         $ag_dest=new ISelect();
         $ag_dest->name="ag_dest_query";
         $ag_dest->value=$aAg_dest;
-        $ag_dest->selected=(isset($_GET["ag_dest_query"]))?$_GET["ag_dest_query"]:-2;
+        $ag_dest->selected=$http->get("ag_dest_query","number",-2);
         $str_ag_dest=$ag_dest->input();
         $osag_ref=new IText("sag_ref");
-        $osag_ref->value=(isset($_GET['sag_ref']))?$_GET['sag_ref']:"";
+        $osag_ref->value=$http->get('sag_ref',"string","");
         $remind_date=new IDate('remind_date');
-        $remind_date->value=(isset($_GET['remind_date']))?$_GET['remind_date']:"";
+        $remind_date->value=$http->get('remind_date',"string","");
         $remind_date_end=new IDate('remind_date_end');
-        $remind_date_end->value=(isset($_GET['remind_date_end']))?$_GET['remind_date_end']:"";
+        $remind_date_end->value=$http->get('remind_date_end',"string","");
         $otag=new Tag($cn);
 
         // show the  action in

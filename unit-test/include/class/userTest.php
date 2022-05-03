@@ -161,4 +161,83 @@ class UserTest extends TestCase
         
         
     }
+    /**
+     * @brief test the writable profile : W (Read Write) and O (Read Write NO delete)
+     */
+    public function testsql_writable_profile()
+    {
+        $cn=Dossier::connect();
+        $user=new User($cn);
+         $_SESSION[SESSION_KEY.'use_admin']=0;
+         $user->admin=0;
+        $this->assertEquals(0 , $user->getAdmin()," Error user is admin");
+        
+        $sql=$user->sql_writable_profile();
+        $sql= " select count(*) from ".$sql." as a";
+        var_dump($sql);
+        
+        $this->assertEquals(3,$cn->get_value($sql),"Error writable profile must be = 3");
+        $this->assertEquals(3,count($user->get_writable_profile()),"Error writable profile must be = 3");
+        
+        $sql=$user->sql_readable_profile();
+        $sql= " select count(*) from ".$sql." as a";
+        
+        $this->assertEquals(3,$cn->get_value($sql),"Error readable profile must be = 3");
+        $this->assertEquals(3,count($user->get_writable_profile()),"Error readable profile must be = 3");
+        
+        // remove profile 1
+        $cn->exec_sql("delete from user_sec_action_profile where p_id=$1 and p_granted=$2",[$user->get_profile(),1]);
+            
+        $sql=$user->sql_writable_profile();
+        $sql= " select count(*) from ".$sql." as a";
+        var_dump($sql);
+        
+        $this->assertEquals(2,$cn->get_value($sql),"Error writable profile must be = 2 ");
+        $this->assertEquals(2,count($user->get_writable_profile()),"Error writable profile must be = 2");
+        
+        $sql=$user->sql_readable_profile();
+        $sql= " select count(*) from ".$sql." as a";
+        
+        $this->assertEquals(2,$cn->get_value($sql),"Error readable profile must be = 2");
+        $this->assertEquals(2,count($user->get_writable_profile()),"Error readable profile must be = 2");
+        
+        // add profile 1 read only
+         $cn->exec_sql("insert into user_sec_action_profile(p_id,p_granted,ua_right) values($1,$2,$3)"
+                 ,[$user->get_profile(),1,"R"]);
+        
+        $sql=$user->sql_writable_profile();
+        $sql= " select count(*) from ".$sql." as a";
+        
+        
+        $this->assertEquals(2,$cn->get_value($sql),"Error writable profile must be = ");
+        $this->assertEquals(2,count($user->get_writable_profile()),"Error writable profile must be = 2");
+        
+        $sql=$user->sql_readable_profile();
+        $sql= " select count(*) from ".$sql." as a";
+        var_dump($sql);
+        $this->assertEquals(3,$cn->get_value($sql),"Error readable profile must be = 3");
+        $this->assertEquals(3,count($user->get_readable_profile()),"Error readable profile must be = 3");
+        
+        // update  profile 1 O Write and no suppress
+         $cn->exec_sql("update user_sec_action_profile set ua_right = $3 where p_id =$1 and p_granted = $2"
+                 ,[$user->get_profile(),1,"O"]);
+        
+        $sql=$user->sql_writable_profile();
+        $sql= " select count(*) from ".$sql." as a";
+        
+        $this->assertEquals(3,$cn->get_value($sql),"Error writable profile must be = ");
+        $this->assertEquals(3,count($user->get_writable_profile()),"Error writable profile must be = 2");
+        
+        $sql=$user->sql_readable_profile();
+        $sql= " select count(*) from ".$sql." as a";
+        
+        $this->assertEquals(3,$cn->get_value($sql),"Error readable profile must be = 3");
+        $this->assertEquals(3,count($user->get_writable_profile()),"Error readable profile must be = 3");
+         
+        // update  profile 1 W Write 
+         $cn->exec_sql("update user_sec_action_profile set ua_right = $3 where p_id =$1 and p_granted = $2"
+                 ,[$user->get_profile(),1,"W"]);
+          $_SESSION[SESSION_KEY.'use_admin']=1;
+            $user->admin=1;
+    }
 }

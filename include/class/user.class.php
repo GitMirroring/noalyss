@@ -1356,7 +1356,7 @@ class User
     }
 
     /**
-     * Audit action from the administration menu
+     * @brief Audit action from the administration menu
      * @param $p_module description of the action
      */
     static function audit_admin($p_module)
@@ -1412,62 +1412,82 @@ class User
     }
 
     /**
-     * return the profile (p_id)
+     * @brief  return the profile (p_id)
      * @return profile.p_id
      */
     function get_profile()
     {
         $profile=$this->db->get_value("select p_id from profile_user where
-				lower(user_name)=lower($1)", array($this->login));
+				lower(user_name)=lower($1) ", array($this->login));
         return $profile;
     }
 
     /**
-     * Compute the SQL string for the writable profile, 
+     * @brief Compute the SQL string for the writable profile, 
      * the subselect for p_id , example
-     * p_id in $g_user->get_writable_profile.
+     * p_id in $g_user->sql_writable_profile.
      * The administrator can access all the profiles
+     * R = Read Only W = Write and delete O = write and not delete
      * @return SQL string with the subselect for p_id 
+     */
+    function sql_writable_profile()
+    {
+        if ($this->admin!=1)
+        {
+            $sql=" (select p_granted "
+                    ."     from user_sec_action_profile "
+                    ."     where ua_right in ('W','O') and p_id=".$this->get_profile().") ";
+        }
+        else
+        {
+            $sql="(select p_id p_granted from profile)";
+        }
+        return $sql;
+    }
+    /**
+     * @brief return array of writable action_profile 
+     * 
      */
     function get_writable_profile()
     {
-        if ($this->admin!=1)
-        {
-            $sql=" (select p_granted "
-                    ."     from user_sec_action_profile "
-                    ."     where ua_right='W' and p_id=".$this->get_profile().") ";
-        }
-        else
-        {
-            $sql="(select p_id from profile)";
-        }
-        return $sql;
+       $value=$this->db->get_array("select p_granted from ".$this->sql_writable_profile()." as m") ;
+       $aGranted=array_column($value,"p_granted");
+       return $aGranted;
     }
-
     /**
-     * Compute the SQL string for the readable profile, 
+     * @brief return array of readable action_profile 
+     * 
+     */
+    function get_readable_profile()
+    {
+       $value=$this->db->get_array("select p_granted from ".$this->sql_readable_profile()." as m") ;
+       $aGranted=array_column($value,"p_granted");
+       return $aGranted;
+    }
+    /**
+     *@brief  Compute the SQL string for the readable profile, 
      * the subselect for p_id , example
-     * p_id in $g_user->get_readable_profile.
+     * p_id in $g_user->sql_readable_profile.
      * The administrator can read all the profiles
      * @return SQL string with the subselect for p_id 
      */
-    function get_readable_profile()
+    function sql_readable_profile()
     {
         if ($this->admin!=1)
         {
             $sql=" (select p_granted "
                     ."     from user_sec_action_profile "
-                    ."     where ua_right in ('W','R') and p_id=".$this->get_profile().") ";
+                    ."     where ua_right in ('W','R','O') and p_id=".$this->get_profile().") ";
         }
         else
         {
-            $sql="(select p_id from profile)";
+            $sql="(select p_id p_granted from profile)";
         }
         return $sql;
     }
 
     /**
-     * Check if the current user can add an action in the profile given
+     * @brief Check if the current user can add an action in the profile given
      * in parameter
      * @param type $p_profile profile.p_id = action_gestion.ag_dest
      * @return boolean

@@ -40,6 +40,15 @@ if (isset($_REQUEST['sb']))
 	$supl_hidden.=HtmlInput::hidden('sb', $http->request("sb"));
 $supl_hidden.=HtmlInput::hidden('ac', $http->request("ac"));
 
+/**
+ * if no group available , then stop
+ */
+global $g_user;
+
+if ( empty ($g_user->get_readable_profile() ) ) {
+     echo_warning(_("Aucun profil disponible"));
+    return;
+}
 
 $correction = 0;
 $error_id=0;
@@ -343,7 +352,7 @@ if ($sub_action == "save_action_st2")
 }
 //--------------------------------------------------------------------------------
 // Add an action
-if ($sub_action == "add_action")
+if ($sub_action == "add_action" && ! empty($g_user->get_writable_profile() ) )
 {
 	$act = new Follow_Up($cn);
 	$act->fromArray($_POST);
