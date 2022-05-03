@@ -85,6 +85,9 @@ class ISelect extends HtmlInput
     public function display()
     {
         $r="";
+        if ($this->value == null) {
+            $this->value=array();
+        }
         for ( $i=0;$i<sizeof($this->value);$i++)
         {
             if ($this->selected==$this->value[$i]['value'] )
