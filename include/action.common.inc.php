@@ -46,7 +46,7 @@ $supl_hidden.=HtmlInput::hidden('ac', $http->request("ac"));
 global $g_user;
 
 if ( empty ($g_user->get_readable_profile() ) ) {
-     echo_warning(_("Aucun profil disponible"));
+    echo '<span class="warning">'. _("Aucun profil disponible").'</span>'; 
     return;
 }
 
