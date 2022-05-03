@@ -34,18 +34,17 @@ if (isset($_POST['change_profile']))
         $aUserProfile=$http->post("ua_id","array",array());
         $p_id=$http->post("p_id","number");
         $aProfile=$http->post("ap_id","array",array());
-        
         for ($e=0; $e<count($aUserProfile); $e++)
         {
             if ($aUserProfile[$e]=='X'&&$aUserProfile[$e]=='')
                 continue;
-            if ($aUserProfile[$e]=='X'&&$aUserProfile[$e]!='')
+            if ($aRight[$e]=='X'&&$aUserProfile[$e]!='')
             {
                 $cn->exec_sql("delete from user_sec_action_profile where p_id=$1 and p_granted=$2",
                         array($p_id, $aProfile[$e]));
                 continue;
             }
-            if ($aUserProfile[$e]=="")
+            if ($aUserProfile[$e]==""&& $aRight[$e] !='X')
             {
                 $cn->exec_sql("insert into user_sec_action_profile (p_id,p_granted,ua_right) values($1,$2,$3)",
                         array($p_id, $aProfile[$e], $aRight[$e]));
