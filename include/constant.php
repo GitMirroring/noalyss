@@ -599,7 +599,9 @@ function noalyss_class_autoloader($class) {
         "card_property"=>"class/card_property.class.php",
         "pdfland"=>"class/pdf_land.class.php",
         "pdf_anc_acc_list"=>"class/pdf_anc_acc_list.class.php",
-        'acc_reconciliation_lettering'=>'class/acc_reconciliation_lettering.class.php'
+        'acc_reconciliation_lettering'=>'class/acc_reconciliation_lettering.class.php',
+        "acc_other_tax_mtable"=>'class/acc_other_tax_mtable.class.php',
+        'acc_other_tax_sql'=>'database/acc_other_tax_sql.class.php'
     );
     if ( isset ($aClass[$class]) ) {
         require_once NOALYSS_INCLUDE."/".$aClass[$class];

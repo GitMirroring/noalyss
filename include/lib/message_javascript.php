@@ -114,4 +114,6 @@ content[78]="<?php echo htmlspecialchars($file_too_large,ENT_QUOTES)?>";
 
 content[79]="<?php echo htmlspecialchars(_("Les postes comptables sont entre [] , les fiches entre {} et les postes analytiques entre {{ }}"))?>";
 content[80]="<?php echo htmlspecialchars(_("Oui pour charger les fichiers javascripts et CSS standards"),ENT_QUOTES)?>";    
+content[81]="<?php echo htmlspecialchars(_("Recommendé d'avoir un poste propre"),ENT_QUOTES)?>";
+content[82]="<?php echo htmlspecialchars(_("valeur en % "),ENT_QUOTES)?>";
 </script>

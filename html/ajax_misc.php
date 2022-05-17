@@ -311,8 +311,10 @@ $path = array(
     // search all card , analytic or accounting
     "search_account_card"=>"ajax_search_account_card",
     // Mobile device menu from mobile_device_mtable
-    "mobile_device_menu"=>"ajax_mobile_device_menu"
-)    ;
+    "mobile_device_menu"=>"ajax_mobile_device_menu",
+    // other_tax
+    "other_tax"=>"ajax_other_tax"
+) ;
 
 if (array_key_exists($op, $path)) {
     require NOALYSS_INCLUDE.'/ajax/'.$path[$op].".php";
