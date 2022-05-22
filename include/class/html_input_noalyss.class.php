@@ -58,4 +58,32 @@ class Html_Input_Noalyss extends HtmlInput
 
         return $r;
     }
+
+    /**
+     * @brief display the supplementax if any
+     * @param $p_ledger_id jrn_def.jrn_def_id , id of the ledger
+     */
+    static function ledger_supplemental_tax($p_ledger_id)
+    {
+        $cn=Dossier::connect();
+        // if there is an additional tax for this ledger
+        $has_suppl_tax=$cn->get_value("select count(*) from acc_other_tax where array_position(ajrn_def_id,$1)
+is not null",[$p_ledger_id]);
+        if ($has_suppl_tax ==0 ) {
+            return "";
+        }
+        if ( $has_suppl_tax>1) {
+            throw new Exception("HIN76:too many supplemental taxes");
+        }
+        $ac_id=$cn->get_value("select ac_id 
+                from acc_other_tax 
+                where 
+                    array_position(ajrn_def_id,$1) is not null",[$p_ledger_id]);
+
+        $ac_other_tax=new Acc_Other_Tax_SQL($cn,$ac_id);
+        $msg=_("Autre taxe");
+        $checkbox=new ICheckBox("new_tax",$ac_id);
+
+
+    }
 }

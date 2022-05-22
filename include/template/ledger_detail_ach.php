@@ -2,6 +2,7 @@
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 $str_anc="";
+global $div,$g_parameter,$cn,$access,$jr_id,$obj;
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
 <div class="content" style="padding:0;">
     <?php
@@ -115,6 +116,9 @@ $str_anc="";
                 $total_tvac = 0;
                 echo th(_('Quick Code'));
                 echo th(_('Description'));
+
+                echo th(_('Prix/Un.'), 'style="text-align:right"');
+                echo th(_('Quantité'), 'style="text-align:right"');
                 if ($owner->MY_TVA_USE == 'Y')
                 {
                     echo th(_('Taux TVA'), 'style="text-align:right"');
@@ -122,8 +126,6 @@ $str_anc="";
                 {
                     echo th('');
                 }
-                echo th(_('Prix/Un.'), 'style="text-align:right"');
-                echo th(_('Quantité'), 'style="text-align:right"');
                 echo th(_('Non ded'), 'style="text-align:right"');
 
                 if ($owner->MY_TVA_USE == 'Y')
@@ -194,10 +196,10 @@ $str_anc="";
                         $input->value = $fiche->strAttribut(ATTR_DEF_NAME);
                     }
                     $row.=td($input->input() . $hidden);
-                    $row.=td($sym_tva, 'style="text-align:center"');
                     $pu = $q['qp_unit'];
                     $row.=td(nbm($pu,4), 'class="num"');
                     $row.=td(nbm($q['qp_quantite'],4), 'class="num"');
+                    $row.=td($sym_tva, 'style="text-align:center"');
 
                     $no_ded = bcadd($q['qp_dep_priv'], $q['qp_nd_amount']);
                     $row.=td(nbm($no_ded), ' style="text-align:right"');
@@ -257,14 +259,30 @@ $str_anc="";
                      }
                      echo tr($row,$class);
                 }
+
                 if ($owner->MY_TVA_USE == 'Y')
                     $row = td(_('Total'), ' style="font-style:italic;text-align:right;font-weight: bolder;width:auto" colspan="6"');
                 else
                     $row = td(_('Total'), ' style="font-style:italic;text-align:right;font-weight: bolder;width:auto" colspan="6"');
+                /**
+                 * display additional tax if any + currency
+                 */
+                $sum_add_tax=0;$sum_add_tax_cur=0;
+                Additional_Tax::display_row($jr_id,$sum_add_tax,$sum_add_tax_cur,2);
+                $sum_charge_euro=bcadd($sum_charge_euro,$sum_add_tax_cur);
+
+                $total_tvac=bcadd($sum_add_tax,$total_tvac);
+                if ($owner->MY_TVA_USE == 'N') {
+                    $total_htva=bcadd($sum_add_tax,$total_htva);
+                }
                 $row.=td(nbm($total_htva), 'class="num" style="font-style:italic;font-weight: bolder;"');
                 if ($owner->MY_TVA_USE == 'Y')
                     $row.=td("") . td("").td(nbm($total_tvac), 'class="num" style="font-style:italic;font-weight: bolder;"');
-                
+                /**
+                 * display additional tax if any + currency
+                 */
+
+
                 //Display total in currency
                 if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
                 {
@@ -276,6 +294,8 @@ $str_anc="";
                 ?>
             </table>
 <?php
+
+
 /*
  * Info about currency if not in euro
  */

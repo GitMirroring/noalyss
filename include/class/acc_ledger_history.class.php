@@ -355,4 +355,56 @@ abstract class Acc_Ledger_History
         }
         throw new Exception(_("Filter invalide ".$filter_operation),5);
     }
+
+    /**
+     * @brief count the number of addition tax for the ledger
+     * @return integer
+     */
+    public function has_other_tax()
+    {
+        $str_ledger=join(',',$this->ma_ledger);
+        $count=$this->db->get_value("select count(*) 
+                from jrn_tax 
+                    join jrnx using (j_id) 
+                    join jrn on (jr_grpt_id=j_grpt) 
+                    where jr_tech_per>=$1 and jr_tech_per <=$2
+                    and jr_def_id in ($str_ledger) ",[$this->m_from,$this->m_to]);
+        return $count;
+    }
+    /**
+     * @brief add additional info about additional tax. Add to $this->data an array containing the
+     * info about a additional tax. Concerns only purchase and sales ledgers
+     * @verbatim
+    $this->data[$i]['supp_tax']['ac_id'] id in Acc_Other_Tax
+    $this->data[$i]['supp_tax']['j_montant']  Amount of this tax
+    $this->data[$i]['supp_tax']['ac_label']   Label of this tax
+    $this->data[$i]['supp_tax']['ac_rate']    Rate of this tax
+    $this->data[$i]['supp_tax']['j_poste']    Accounting
+     * @endverbatim
+     */
+    protected function add_additional_tax_info()
+    {
+        $prepare=$this->db->is_prepare("supp_tax_info");
+        if ( $prepare == false ){
+            $this->db->prepare("supp_tax_info","
+                select j_montant,jt1.ac_id,ac_label,ac_rate,j_poste 
+                from 
+                    jrn_tax jt1 
+                    join acc_other_tax using (ac_id)
+                    join jrnx using (j_id) where j_grpt=$1
+            ");
+
+        }
+        $data=$this->get_data();
+        $nb_row=count($data);
+
+        for ($i=0;$i<$nb_row;$i++)
+        {
+            $ret=$this->db->execute("supp_tax_info",array($data[$i]["jr_grpt_id"]));
+            $array=Database::fetch_all($ret);
+            $array=($array==false)?array():$array;
+            $data[$i]["supp_tax"]=$array;
+        }
+        $this->set_data($data);
+    }
 }

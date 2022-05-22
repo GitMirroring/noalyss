@@ -542,6 +542,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         try
         {
             bcscale(4);
+            // total amount of the purchase
             $tot_amount=0;
             $tot_tva=0;
             $tot_debit=0;
@@ -585,8 +586,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $amount_4=bcmul(${'e_march'.$i.'_price'},${'e_quant'.$i});
                 
                 /* We have to compute all the amount thanks Acc_Compute */
-                $amount=round($amount_4,2);
-                
+
                 $acc_amount=new Acc_Compute();
                 $acc_amount->check=false;
                 $acc_amount->set_parameter('amount',$amount_4);
@@ -770,7 +770,45 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     echo __LINE__." insert into operation currency oc_amount:{$acc_amount->amount_currency} oc_vat_amount {$acc_amount->amount_vat_currency} <br>";
                 }
             }       // end loop : save all items
-            /*  save total customer */
+
+
+            /*** save other tax ****/
+            if ( $this->has_other_tax() && isset($p_array['other_tax'])) {
+                $row=$this->db->get_row("select ac_id,ac_label,ac_accounting 
+                                                from acc_other_tax 
+                                                where ac_id=$1 ",
+                    [$p_array['other_tax']]);
+                if ( ! empty ($row )) {
+                    $other_tax_amount=bcmul($p_array['other_tax_amount'],$p_currency_rate);
+                    $acc_operation=new Acc_Operation($this->db);
+                    $acc_operation->date=$e_date;
+                    $acc_operation->poste=$row['ac_accounting'];
+                    $acc_operation->amount=$other_tax_amount;
+                    $acc_operation->grpt=$seq;
+                    $acc_operation->jrn=$p_jrn;
+                    $acc_operation->type='d';
+                    $acc_operation->periode=$tperiode;
+                    $acc_operation->desc=$row['ac_label'];
+                    $jrn_tax_sql=new Jrn_Tax_SQL($this->db);
+                    $jrn_tax_sql->j_id=$acc_operation->insert_jrnx();
+                    $jrn_tax_sql->ac_id=$row['ac_id'];
+                    $jrn_tax_sql->pcm_val=$row['ac_accounting'];
+                    $jrn_tax_sql->insert();
+                    $operation_currency=new Operation_currency_SQL($this->db);
+                    $operation_currency->oc_amount=$p_array['other_tax_amount'];
+                    $operation_currency->oc_vat_amount=0;
+                    $operation_currency->oc_price_unit=0;
+                    $operation_currency->j_id=$jrn_tax_sql->j_id;
+                    $operation_currency->insert();
+
+                    $tot_debit=bcadd($tot_debit, abs($other_tax_amount));
+                    $tot_amount=bcadd($tot_amount,$other_tax_amount);
+                }
+
+            }
+
+
+            /***  save total customer ***/
             if ( DEBUGNOALYSS > 1 ) { 
                 echo __LINE__." tot_amount $tot_amount<br>"; 
                 echo __LINE__." tot_tva $tot_tva<br>"; 
@@ -847,6 +885,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
                 }
             }
+
             /* insert into jrn */
             $acc_operation=new Acc_Operation($this->db);
             $acc_operation->date=$e_date;
@@ -1038,7 +1077,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 		  }
 
 
-            }
+        }
+
+
         }//end try
         catch (Exception $e)
         {
@@ -1458,6 +1499,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         }
 		// set focus on date
 		$r.= create_script("$('".$Date->id."').focus()");
+        $r.=$this->input_additional_tax();
         return $r;
     }
 
@@ -1721,7 +1763,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         // Format amount
         $tot_amount=nbm($tot_amount);
         $tot_tva=nbm($tot_tva);
-        $tot=nbm($tot);
+        $tot_str=nbm($tot);
+
         if ( $g_parameter->MY_TVA_USE == 'Y') {
         $r.=<<<EOF
 <tr class="highlight">
@@ -1736,7 +1779,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         {$tot_amount}
     </td>
     <td class="num">
-        {$tot} {$str_code}
+        {$tot_str} {$str_code}
     </td>
 </tr>
 EOF;
@@ -1774,7 +1817,7 @@ EOF;
         
     </td>
     <td class="num">
-        {$tot} {$str_code}
+        {$tot_str} {$str_code}
     </td>
 </tr>
 <tr class="highlight">
@@ -1786,7 +1829,7 @@ EOF;
     <td>
     </td>
     <td class="num">
-        {$tot} {$str_code}
+        {$tot_str} {$str_code}
     </td>
 </tr>
 EOF;
@@ -1799,6 +1842,12 @@ EOF;
         
         $r.=(! $p_summary )?'<div id="total_div_id" >':'<div>';
         $r.='<h2>Totaux</h2>';
+        $other_tax_label="";
+        $other_tax_amount="";
+        if ( $this->has_other_tax() && isset($p_array['other_tax'])) {
+            $other_tax_label=_("Autre taxe");
+            $other_tax_amount=htmlspecialchars($p_array['other_tax_amount']);
+        }
         /* use VAT */
         if ($g_parameter->MY_TVA_USE == 'Y') {
             $r.='<table>';
@@ -1812,9 +1861,17 @@ EOF;
                 $r.=td(hb(nbm($tva[$i])),'class="num"');
             }
             $r.='<tr>'.td(_('Total TVA')).td(hb($tot_tva),'class="num"');
+            if ( ! empty($other_tax_label) ) {
+                $r.='<tr>'.td($other_tax_label).td(hb($other_tax_amount),'class="num"');
+            }
+            if ( $other_tax_amount!="") {$tot=bcadd($tot,$other_tax_amount,2);}
             $r.='<tr>'.td(_('Total TVAC')).td(hb($tot),'class="num"');
             $r.='</table>';
         } else {
+            if ( ! empty($other_tax_label) ) {
+                $r.='<tr>'.td($other_tax_label).td(hb($other_tax_amount),'class="num"');
+            }
+            if ( $other_tax_amount!="") {$tot=bcadd($tot,$other_tax_amount,2);}
             $r.='<br>Total '.hb($tot);
         }
         $r.='</div>';
@@ -1831,6 +1888,10 @@ EOF;
         $r.=HtmlInput::hidden('e_pj',$e_pj);
         $r.=HtmlInput::hidden('e_pj_suggest',$e_pj_suggest);
         $r.=HtmlInput::post_to_hidden(['p_currency_rate','p_currency_code']);
+        if ( $this->has_other_tax() && isset($p_array["other_tax"])) {
+            $r.=HtmlInput::hidden("other_tax",$p_array['other_tax']);
+            $r.=HtmlInput::hidden("other_tax_amount",$p_array['other_tax_amount']);
+        }
         $mt=microtime(true);
         $r.=HtmlInput::hidden('mt',$mt);
 

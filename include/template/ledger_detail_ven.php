@@ -1,7 +1,10 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
+global $div,$g_parameter,$cn,$access,$jr_id,$obj;
+?>
+
+<?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
 <?php
     $tab_account=$div."account";
     $tab_rapprochement=$div."rapproch";
@@ -9,7 +12,7 @@
     $tab_document=$div."document";
     $str_anc="";
  ?>
-<div class="content" style="padding:0;">
+<div class="content" style="padding:0px;">
     <?php
     $owner = new Noalyss_Parameter_Folder($cn);
     ?>
@@ -266,12 +269,24 @@ echo $ipaid->input();
                     $row = td(_('Total'), ' style="font-style:italic;text-align:right;font-weight: bolder;" colspan="5"');
                 else
                     $row = td(_('Total'), ' style="font-style:italic;text-align:right;font-weight: bolder;" colspan="5"');
+                /**
+                 * display additional tax if any + currency
+                 */
+                $sum_add_tax=0;$sum_add_tax_cur=0;
+                Additional_Tax::display_row($jr_id,$sum_add_tax,$sum_add_tax_cur);
+                $sum_prod_currency=bcadd($sum_prod_currency,$sum_add_tax_cur);
+
+                $total_tvac=bcadd($sum_add_tax,$total_tvac);
+                if ($owner->MY_TVA_USE == 'N') {
+                    $total_htva=bcadd($sum_add_tax,$total_htva);
+                }
                 $row.=td(nbm($total_htva), 'class="num" style="font-style:italic;font-weight: bolder;"');
-                if ($owner->MY_TVA_USE == 'Y')
+                if ($owner->MY_TVA_USE == 'Y') {
                     $row.=td("") . td(nbm($total_tvac), 'class="num" style="font-style:italic;font-weight: bolder;"');
-                
-                
-                 //Display total in currency
+
+                }
+
+                //Display total in currency
                 if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
                 {
                     $row.= td(nbm($sum_prod_currency,4),' class="num" style="font-style:italic;font-weight: bolder;"');
@@ -279,7 +294,7 @@ echo $ipaid->input();
                 echo tr($row);
                 ?>
             </table>
-            </td>
+            </form>
             </tr>
             </table>
             </td>
@@ -300,7 +315,9 @@ echo $ipaid->input();
         echo _("Taux Réf"), "&nbsp;",nbm($obj->det->currency_rate_ref,4).$four_space;
         echo _("Montant en devise"), "&nbsp;",nbm($sum_prod_currency,4).$four_space;
     }
-?>            
+
+?>
+
 <?php
 require_once NOALYSS_TEMPLATE.'/ledger_detail_bottom.php';
 ?>

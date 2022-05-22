@@ -2231,6 +2231,56 @@ class Acc_Ledger  extends jrn_def_sql
         return $ret;
     }
 
+    /**
+     * @brief retrieve the previous amount
+     * @param $p_to from the start of exercice until p_to
+     * @return array [other_tax_amount]
+     */
+    function previous_other_tax($p_to) {
+        $periode=new Periode($this->db, $p_to);
+        $exercise=$periode->get_exercice();
+        list ($min, $max)=$periode->get_limit($exercise);
+        // transform min into date
+        $min_date=$min->first_day();
+        // transform $p_to  into date
+        $periode_max=new Periode($this->db, $p_to);
+        $max_date=$periode_max->first_day();
+        bcscale(2);
+        // min periode
+        if ($this->get_type()=='ACH')
+        {
+
+            $sql=" 
+                select j_montant 
+                  from quant_purchase 
+                      join jrnx using(j_id)
+                    join jrn_tax using (j_id)
+                 where j_date >= to_date($1,'DD.MM.YYYY') and j_date < to_date($2,'DD.MM.YYYY') 
+                 and j_jrn_def = $3";
+            $amount=$this->db->get_value($sql,
+                array($min_date, $max_date, $this->id));
+
+            return array('other_tax_amount',$amount);
+
+        }
+        if ($this->get_type()=='VEN')
+        {
+
+            $sql=" 
+                select j_montant 
+                  from quant_sold 
+                      join jrnx using(j_id)
+                    join jrn_tax using (j_id)
+                 where j_date >= to_date($1,'DD.MM.YYYY') and j_date < to_date($2,'DD.MM.YYYY') 
+                 and j_jrn_def = $3";
+            $amount=$this->db->get_value($sql,
+                array($min_date, $max_date, $this->id));
+
+            return array('other_tax_amount',$amount);
+
+        }
+        return array('other_tax_amount',0);
+    }
     ////////////////////////////////////////////////////////////////////////////////
     // TEST MODULE
     ////////////////////////////////////////////////////////////////////////////////
@@ -3295,6 +3345,69 @@ class Acc_Ledger  extends jrn_def_sql
         $acc_operation->jr_id=$this->jr_id;
         $acc_operation->insert_related_action($s_related_action);
         return true;
+    }
+
+    /**
+     * @brief form : display additional tax available for this ledger and value, set 2 values : checkbox if tax applies
+     * and value
+     *
+     * @see template/form_ledger_detail.php
+     * @returns string
+     */
+    function input_additional_tax()
+    {
+
+        if ($this->has_other_tax() == false ) { return "";}
+        $amount=new INum("other_tax_amount",0);
+        $msg=_("Montant");
+        $row=$this->cn->get_row("select ac_id,ac_label,ac_rate from acc_other_tax where $1 = any (ajrn_def_id)",
+            [$this->id]);
+        $checkbox=new ICheckBox("other_tax",$row['ac_id']);
+        $label=h($row['ac_label']);
+        $title=_("Autre taxe");
+        $out=<<<EOF
+<div id="additional_tax">
+    <h2 class="h3">{$title}</h2>
+    {$checkbox->input()} {$label} {$row['ac_rate']}%: {$msg} {$amount->input()}
+</div>
+
+EOF;
+        return $out;
+    }
+
+    /**
+     * @brief in confirm screen , display the compute value for additional tax
+     * @parameter $p_additional_tax acc_other_tax.ac_id
+     */
+    function display_additional_tax($p_additional_tax,$p_amount)
+    {
+        $row=$this->cn->get_row("select ac_id,ac_label,ac_rate from acc_other_tax where ac_id=$1",
+            [$p_additional_tax]);
+        $label=h($row['ac_label']);
+        $title=_("Autre taxe");
+        $p_amount=h($p_amount);
+        $out=<<<EOF
+<div id="additional_tax">
+    <h2 class="h3">{$title}</h2>
+   {$label} {$row['ac_rate']}%: $p_amount
+</div>
+
+EOF;
+        return $out;
+    }
+
+
+    /**
+     * @brief returns true if the  ledger has an additional tax
+     */
+    function has_other_tax()
+    {
+        $cnt=$this->db->get_value('select count(*) 
+            from acc_other_tax 
+            where array_position(ajrn_def_id,$1) is not null',[$this->id]);
+        if ($cnt == 0 ) return false;
+        return true;
+
     }
 }
 
