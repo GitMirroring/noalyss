@@ -31,7 +31,7 @@ if (!defined('ALLOWED'))
 
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
 
-
+global $cn,$g_user;
 
 
 $gDossier=dossier::id();
@@ -130,9 +130,7 @@ if ( $get_option=="E")
         }
         if ($ret_detail==null)
             return;
-        $a_heading[]="";
-        $a_heading[]="";
-        $a_heading[]="";
+
         $a_heading[]=_("Date paiement");
         $a_heading[]=_("Montant paiement");
         $a_heading[]=_("Methode paiement");

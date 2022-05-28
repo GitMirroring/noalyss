@@ -27,7 +27,7 @@ if (!defined('ALLOWED'))
  * @brief display purchase on one line with sum of VAT, Operation, Private exp.
  * @todo prévoir aussi pour les non assujetti : faire disparaître les montants TVA
  */
-
+bcscale(2);
 ?>
 <table class="result">
     <tr>
@@ -58,10 +58,15 @@ if (!defined('ALLOWED'))
         <th class="num">
             <?=_('TVA')?>
         </th>
-              
+        <?php if ($nb_other_tax>0) :?>
+        <th class="num">
+            <?=_('Autre Taxe')?>
+        </th>
+        <?php endif;?>
         <th class="num">
             <?=_('TVAC')?>
         </th>
+
         <th class="num">
             <?=_('Devise')?>
         </th>
@@ -77,16 +82,18 @@ $tot_amount_tvac=0;
 $tot_amount_private=0;
 $tot_nonded_vat=0;
 $tot_nonded_amount=0;
-
+$tot_other_tax=0;
 for ($i=0;$i<$nb_data;$i++):
     $odd=($i%2==0)?' class="even" ':' class="odd" ';
     $tot_amount_novat=bcadd($tot_amount_novat,$this->data[$i]['novat']);
     $tot_amount_vat=bcadd($tot_amount_vat,$this->data[$i]['vat']);
     $tot_amount_vat=bcsub($tot_amount_vat,$this->data[$i]['tva_sided']);
     $tot_amount_tvac=bcadd($tot_amount_tvac,$this->data[$i]['tvac']);
+    $tot_amount_tvac=bcadd($tot_amount_tvac,$this->data[$i]['other_tax_amount']);
     $tot_nonded_amount=bcadd($tot_nonded_amount,$this->data[$i]['noded_amount']);
     $tot_nonded_amount=bcadd($tot_nonded_amount,$this->data[$i]['private_amount']);
     $tot_nonded_vat=bcadd($tot_nonded_vat, $this->data[$i]['noded_vat']);
+    $tot_other_tax=bcadd($tot_other_tax,$this->data[$i]['other_tax_amount']);
 ?>
     <tr <?=$odd?> >
         <td>
@@ -117,11 +124,16 @@ for ($i=0;$i<$nb_data;$i++):
             <?=nbm(bcsub($this->data[$i]['vat'],$this->data[$i]['tva_sided']))?>
         </td>
         <td class="num">
-            <?=nbm($this->data[$i]['tvac'])?>
+            <?=nbm($this->data[$i]['other_tax_amount'])?>
         </td>
+        <?php if ($nb_other_tax>0) :?>
+        <td class="num">
+            <?=nbm(bcadd($this->data[$i]['other_tax_amount'] ,$this->data[$i]['tvac']))?>
+        </td>
+        <?php endif;?>
         <td class="num">
             <?php if ( $this->data[$i]['currency_id'] != '0') : ?>
-            <?=nbm ( bcadd($this->data[$i]['sum_oc_amount'],$this->data[$i]['sum_oc_vat_amount']),4)?>
+            <?=nbm ( bcadd($this->data[$i]['sum_oc_amount'],$this->data[$i]['sum_oc_vat_amount'],2),2)?>
             <?=$this->data[$i]['cr_code_iso']?>
             <?php endif;?>
         </td>
@@ -157,6 +169,9 @@ for ($i=0;$i<$nb_data;$i++):
             <td class="num"><?=nbm($tot_amount_novat)?></td>
             <td class="num"><?=nbm($tot_nonded_amount)?></td>
             <td class="num"><?=nbm($tot_amount_vat)?></td>
+            <?php if ($nb_other_tax>0) :?>
+            <td class="num"><?=nbm($tot_other_tax)?></td>
+            <?php endif;?>
             <td class="num"><?=nbm($tot_amount_tvac)?></td>
             <td></td>
             <td></td>

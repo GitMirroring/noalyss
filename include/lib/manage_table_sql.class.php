@@ -1223,7 +1223,7 @@ function check()
      * @return nothing
      */
     function input_custom($p_key,$p_value) {
-     throw new Exception(__FILE__.":".__LINE__."-"._("non implémenté"));
+     throw new Exception(__FILE__.":".__LINE__."- input_custom "._("non implémenté"));
     }
     /**
      * @brief Save the record from Request into the DB and returns an XML

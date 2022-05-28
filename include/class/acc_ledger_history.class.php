@@ -387,11 +387,19 @@ abstract class Acc_Ledger_History
         $prepare=$this->db->is_prepare("supp_tax_info");
         if ( $prepare == false ){
             $this->db->prepare("supp_tax_info","
-                select j_montant,jt1.ac_id,ac_label,ac_rate,j_poste 
+                select 
+                   case when j.j_debit is false and jd.jrn_def_type='ACH'      then 0-j_montant
+                      when j.j_debit is true and jd.jrn_def_type='VEN'      then 0-j_montant
+                      else j.j_montant end j_montant,
+                    jt1.ac_id,
+                    ac_label,
+                    ac_rate,j_poste 
                 from 
                     jrn_tax jt1 
                     join acc_other_tax using (ac_id)
-                    join jrnx using (j_id) where j_grpt=$1
+                    join jrnx j using (j_id) 
+                    join jrn_def jd on (j.j_jrn_def=jd.jrn_def_id) 
+                where j_grpt=$1
             ");
 
         }

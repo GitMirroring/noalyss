@@ -1648,7 +1648,8 @@ EOF;
         $array['j_poste'] = _('Poste');
         $array['j_text'] = _('Commentaire');
         $array['j_qcode'] = _('Code Item');
-        $array['item_card'] = _('N° fiche');
+        $array['jr_rapt'] = _('Payé');
+        $array['item_card'] = _('N° item');
         $array['item_name'] = _('Nom fiche');
         $array['qs_client'] = _('N° fiche fournisseur');
         $array['tiers_name'] = _('Nom fournisseur');
@@ -1665,9 +1666,11 @@ EOF;
         $array['htva'] = _('HTVA Opération');
         $array['tot_vat'] = _('TVA Opération');
         $array['tot_vat_np'] = _('TVA ND');
+        $array['other_tax'] = _("Autre taxe");
         $array['oc_amount'] = _('Mont. Devise');
         $array['oc_vat_amount'] = _('Mont. TVA Devise');
         $array['cr_code_iso'] = _('Devise');
+
         
         return $array;
     }

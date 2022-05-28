@@ -24,6 +24,7 @@
  * @file
  * @brief detail of the list of operation with VAT and items
  */
+bcscale(2);
 ?>
 <table class="result">
     <tr>
@@ -69,6 +70,9 @@ for ($i=0;$i<$nb_data;$i++):
     $tot_amount_vat=bcadd($tot_amount_vat,$this->data[$i]['vat']);
     $tot_amount_vat=bcsub($tot_amount_vat,$this->data[$i]['tva_sided']);
     $tot_amount_tvac=bcadd($tot_amount_tvac,$this->data[$i]['tvac']);
+    $supp_tax=$this->data[$i]['supp_tax'];
+    $tot_other_tax=array_sum(array_column($supp_tax,'j_montant'));
+    $all_tax=bcadd($tot_other_tax,$this->data[$i]['vat']);
 ?>
     <tr <?=$odd?> >
         <td>
@@ -90,17 +94,19 @@ for ($i=0;$i<$nb_data;$i++):
             <?=h($this->data[$i]['jr_comment'])?>
         </td>
         <td class="num">
-            <?=nbm(bcadd($this->data[$i]['sum_oc_amount'],$this->data[$i]['sum_oc_vat_amount'],4),4)?>
+            <?php if ($this->data[$i]['currency_id'] !=0) : ?>
+            <?=nbm(bcadd($this->data[$i]['sum_oc_amount'],$this->data[$i]['sum_oc_vat_amount'],4),2)?>
             <?=$this->data[$i]['cr_code_iso']?>
+            <?php endif;?>
         </td>
         <td class="num">
             <?=nbm($this->data[$i]['novat'])?>
         </td>
         <td class="num">
-            <?=nbm(bcsub($this->data[$i]['vat'],$this->data[$i]['tva_sided']))?>
+            <?=nbm(bcsub($all_tax,$this->data[$i]['tva_sided']),2)?>
         </td>
         <td class="num">
-            <?=nbm($this->data[$i]['tvac'])?>
+            <?=nbm(bcadd($this->data[$i]['tvac'],$tot_other_tax))?>
         </td>
         <td>
             
@@ -154,7 +160,25 @@ for ($j=0;$j<$nb_detail;$j++):
 <?php
 endfor;
 ?>
-                
+                <?php
+                // print additional tax if any
+                $nb_supp_tax=count($this->data[$i]['supp_tax']);
+                for ($j=0;$j<$nb_supp_tax;$j++):
+                    ?>
+                    <tr>
+                        <td><?=$this->data[$i]['supp_tax'][$j]['j_poste']?>
+                            <?=$this->data[$i]['supp_tax'][$j]['ac_label']?>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="num"><?=nbm($this->data[$i]['supp_tax'][$j]['j_montant'])?></td>
+                    </tr>
+                <?php
+                endfor;
+                ?>
             </table>
         </td>
     </tr>    

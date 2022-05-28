@@ -56,7 +56,7 @@ class Print_Ledger_Detail_Item extends Print_Ledger
         $this->Cell(80, $high, _('Libellé'),0,'L',false);
         $this->Cell(20, $high, _('Tot HTVA'), 0, 0, 'R', false);
         $this->Cell(20, $high, _('Tot TVA NP'), 0, 0, 'R', false);
-        $this->Cell(20, $high, "", 0, 0, 'R', false);
+        $this->Cell(20, $high, _("Autre Tx"), 0, 0, 'R', false);
         $this->Cell(20, $high, _('Tot TVA'), 0, 0, 'R', false);
         $this->Cell(20, $high, _('TVAC'), 0, 0, 'R', false);
         $this->Ln(6);
@@ -117,16 +117,18 @@ class Print_Ledger_Detail_Item extends Print_Ledger
             $row=Database::fetch_array($ret_detail, $i);
             if ($internal != $row['jr_internal'])
             {
+
                 // Print the general info line width=270mm
                 $this->LongLine(20, $high, $row['jr_date'],1,  'L', true);
-                $this->write_cell(20, $high, $row['jr_internal'], 1, 0, 'L', true);
+                $this->write_cell(20, $high,$row['jr_pj_number'].".". $row['jr_internal'], 1, 0, 'L', true);
                 $this->LongLine(50, $high, $row['quick_code']." ".$row['tiers_name'],1,'L',true);
                 $this->LongLine(80, $high, $row['jr_comment'],1,'L',true);
                 $this->write_cell(20, $high, nbm($row['htva']), 1, 0, 'R', true);
                 $this->write_cell(20, $high, nbm($row['tot_tva_np']), 1, 0, 'R', true);
-                $this->write_cell(20, $high, "", 1, 0, 'R', true);
+                $this->write_cell(20, $high, nbm($row['other_tax_amount']), 1, 0, 'R', true);
                 $this->write_cell(20, $high, nbm($row['tot_vat']), 1, 0, 'R', true);
                 $sum=bcadd($row['htva'],$row['tot_vat']);
+                $sum=bcadd($row['other_tax_amount'],$sum);
                 $sum=bcsub($sum,$row['tot_tva_np']);
                 $this->write_cell(20, $high, nbm($sum), 1, 0, 'R', true);
                 $internal=$row['jr_internal'];

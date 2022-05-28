@@ -32,7 +32,17 @@
 class Acc_Ledger_History_Purchase extends Acc_Ledger_History
 {
 
-    private $data; //!< Contains rows from SQL
+    private $data;//!< Contains rows from SQL
+
+    /**
+     * @param mixed $data
+     */
+    public function set_data($data)
+    {
+        //!< Contains rows from SQL
+        $this->data = $data;
+        return $this;
+    }
    
     public function __construct(\Database $cn, $pa_ledger, $p_from, $p_to,
             $p_mode)
@@ -71,6 +81,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
     {
         $this->get_row();
         $this->add_vat_info();
+        $this->add_additional_tax_info();
         $this->prepare_detail();
         $this->prepare_reconcile_date();
         include NOALYSS_TEMPLATE."/acc_ledger_history_purchase_extended.php";
@@ -107,6 +118,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
     {
         $this->get_row();
         $this->prepare_reconcile_date();
+        $nb_other_tax=$this->has_other_tax();
         require_once NOALYSS_TEMPLATE.'/acc_ledger_history_purchase_oneline.php';
     }
 
@@ -146,13 +158,19 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                 from 
                     operation_currency
                     join jrnx using (j_id)
+                    join quant_purchase qp  using (j_id)
                 group by j_grpt
-              )
+              ),
+              other_tax as (select sum(case when j_debit is true 
+                            then j_montant else 0-j_montant end) other_tax_amount
+                            ,j_grpt 
+              	from jrnx j1
+              	join jrn_tax jt2 on (j1.j_id=jt2.j_id) group by j_grpt)
             select   
                     name,
                     first_name,
                     qcode,
-                    jr_id,
+                    jrn.jr_id,
                     jr_pj_number,
                     to_char(jr_date,'DD.MM.YYYY') as str_date,
                     to_char(jr_date,'DDMMYY') as str_date_short,
@@ -175,7 +193,8 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                     jrn.currency_rate_ref,
                     sum_oc_amount,
                     sum_oc_vat_amount,
-                    cr_code_iso
+                    cr_code_iso,
+                    coalesce (other_tax_amount,0) other_tax_amount
             from
                 jrn
                 join row_purchase on (qp_internal=jr_internal)
@@ -183,6 +202,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                 left join jrn_note using (jr_id)
                 left join row_currency as rc on (rc.j_grpt = jrn.jr_grpt_id)
                 left join currency as c on (c.id=jrn.currency_id)
+                left join other_tax as ot on (ot.j_grpt=jrn.jr_grpt_id)
             where
                 jr_def_id in ({$ledger_list})
                 {$sql_filter}
@@ -260,12 +280,17 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
     {
         return $this->data;
     }
+
+    /**
+     * @brief export Purchase in CSV
+     */
     function export_csv()
     {
         // Prepare the query for reconcile date
         $prepared_query=new Prepared_Query($this->db);
         $prepared_query->prepare_reconcile_date();
-        
+        $nb_other_tax=$this->has_other_tax();
+
         $export=new Noalyss_Csv(_('journal'));
         $export->send_header();
         
@@ -287,8 +312,8 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
         $title[]=_("DNA");
         $title[]=_("tva non ded.");
         $title[]=_("TVA NP");
-       
-       
+
+
 
         if ( $own->MY_TVA_USE=='Y')
         {
@@ -298,13 +323,16 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                 $title[]="Tva ".$line_tva['tva_label'];
             }
         }
+        if ($nb_other_tax>0) {
+            $title[]=_("Autre taxe");
+        }
         $title[]=_("TVAC/TTC");
         $title[]=_("Devise");
         $title[]=_("Devise HTVA");
         $title[]=_("Devise TVA");
         $title[]=_("Taux ref");
         $title[]=_("Taux utilisé");
- 	$title[]=_("Date paiement");
+ 	    $title[]=_("Date paiement");
         $title[]=_("Code paiement");
         $title[]=_("Méthode paiement");
         $title[]=_("Montant paiement");
@@ -349,7 +377,11 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                     $export->add($a_tva_amount[$a], "number");
                 }
             }
-            $export->add($line['tvac'],"number");
+            if ( $nb_other_tax > 0)
+            {
+                $export->add($line['other_tax_amount'],"number");
+            }
+            $export->add(bcadd($line['other_tax_amount'],$line['tvac'],2),"number");
             /**
              * Add currency info
              */
@@ -374,7 +406,7 @@ class Acc_Ledger_History_Purchase extends Acc_Ledger_History
                     $export->add($row['jr_internal']);
                 }
             }
-	    $export->write();
+	       $export->write();
 
         }
 

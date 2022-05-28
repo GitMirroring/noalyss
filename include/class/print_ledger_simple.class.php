@@ -44,6 +44,7 @@ class Print_Ledger_Simple extends  \Print_Ledger
             $tmp1=$line_tva['tva_id'];
             $this->rap_tva[$tmp1]=0;
         }
+        $this->rap_other_tax=0;
         $this->jrn_type=$p_jrn->get_type();
         //----------------------------------------------------------------------
         /* report
@@ -53,6 +54,7 @@ class Print_Ledger_Simple extends  \Print_Ledger
          */
         $from_periode=$this->get_from();
         $this->previous=$this->get_ledger()->previous_amount($from_periode);
+        $this->other_tax_previous=$this->get_ledger()->previous_other_tax($from_periode);
 
         /* initialize the amount to report */
         foreach($this->previous['tva'] as $line_tva)
@@ -70,6 +72,24 @@ class Print_Ledger_Simple extends  \Print_Ledger
         $this->rap_priv=$this->previous['priv'];
         $this->rap_nd=$this->previous['tva_nd'];
         $this->rap_tva_np=$this->previous['tva_np'];
+        $this->flag_other_tax=false;
+
+        if ($this->jrn_type == 'ACH' || $this->jrn_type=='VEN') {
+            $periode=new Periode($p_cn,$p_from);
+            $first_date=$periode->first_day();
+            $periode=new Periode($p_cn,$p_to);
+            $last_date=$periode->last_day();
+
+            $count=$this->cn->get_value("
+                select          count(*) 
+                from jrn_tax join jrnx using (j_id) 
+                join jrn on (j_grpt=jr_grpt_id) where
+                    j_date >= to_date($1,'DD.MM.YYYY')
+                    and j_date <= to_date($2,'DD.MM.YYYY')
+                    and j_jrn_def=$3",
+                array($first_date,$last_date,$p_jrn->id));
+            if ($count>0) { $this->flag_other_tax=true;}
+        }
     }
 
     function setDossierInfo($dossier = "n/a")
@@ -119,6 +139,10 @@ class Print_Ledger_Simple extends  \Print_Ledger
         {
             $this->Cell(15,6,$line_tva['tva_label'],0,0,'R');
         }
+        if ($this->flag_other_tax) {
+            $this->Cell(15,6,'Autre Tx',0,0,'R');
+
+        }
         $this->Cell(15,6,'TVAC',0,0,'R');
         $this->Ln(5);
 
@@ -137,6 +161,9 @@ class Print_Ledger_Simple extends  \Print_Ledger
         $this->Cell(15,6,nbm($this->rap_tva_np),0,0,'R');  /* Tva ND */
         foreach($this->rap_tva as $line_tva)
             $this->Cell(15,6,nbm($line_tva),0,0,'R');
+        if ($this->flag_other_tax) {
+            $this->Cell(15, 6, nbm($this->rap_other_tax), 0, 0, 'R'); /* Other tax */
+        }
         $this->Cell(15,6,nbm($this->rap_tvac),0,0,'R'); /* Tvac */
 
         $this->Ln(6);
@@ -146,6 +173,7 @@ class Print_Ledger_Simple extends  \Print_Ledger
         $this->tp_priv=0;
         $this->tp_nd=0;
         $this->tp_tva_np=0;
+        $this->tp_other_tax=0;
         foreach($this->a_Tva as $line_tva)
         {
             //initialize Amount TVA
@@ -179,7 +207,9 @@ class Print_Ledger_Simple extends  \Print_Ledger
             $l=$line_tva['tva_id'];
             $this->Cell(15,6,nbm($this->tp_tva[$l]),'T',0,'R');
         }
-        
+        if ($this->flag_other_tax) {
+            $this->Cell(15, 6, nbm($this->tp_other_tax), 'T', 0, 'R'); /* Tvac */
+        }
         $this->Cell(15,6,nbm($this->tp_tvac),'T',0,'R'); /* Tvac */
         $this->Ln(2);
         $flag_tva=(count($this->a_Tva) > 4)?true:false;
@@ -201,6 +231,9 @@ class Print_Ledger_Simple extends  \Print_Ledger
         {
             $l=$line_tva['tva_id'];
             $this->Cell(15,6,nbm($this->rap_tva[$l]),0,0,'R');
+        }
+        if ($this->flag_other_tax) {
+            $this->Cell(15, 6, nbm($this->rap_other_tax), 0, 0, 'R'); /* Other tax */
         }
         $this->Cell(15,6,nbm($this->rap_tvac),0,0,'R'); /* Tvac */
         $this->Ln(2);
@@ -290,8 +323,12 @@ class Print_Ledger_Simple extends  \Print_Ledger
                     $this->write_cell(15, 5, nbm($row_atva_amount), 0, 0, 'R');
             }
 
-	    $l_tvac=bcadd($other['price'], bcsub($other['vat'],$other['tva_np']));
-	    $l_tvac=bcadd($l_tvac,$other['tva_nd']);
+            $l_tvac=bcadd($other['price'], bcsub($other['vat'],$other['tva_np']));
+            $l_tvac=bcadd($l_tvac,$other['tva_nd']);
+	        $l_tvac=bcadd($l_tvac,$a_jrn[$i]['other_tax_amount']);
+            if ($this->flag_other_tax) {
+                $this->write_cell(15, 5, nbm($a_jrn[$i]['other_tax_amount']), 0, 0, 'R');
+            }
             $this->write_cell(15,5,nbm($l_tvac),0,0,'R');
             $this->line_new(2);
             // Add the payment information on another row
@@ -320,7 +357,8 @@ class Print_Ledger_Simple extends  \Print_Ledger
             $this->tp_tva_np=bcadd($this->tp_tva_np,$other['tva_np']);
             $this->tp_priv=bcadd($this->tp_priv,$other['priv']);
             $this->tp_nd=bcadd($this->tp_nd,$other['tva_nd']);
-            
+
+
             // Total report
             $this->rap_htva=bcadd($this->rap_htva,$other['price']);
             $this->rap_tvac=bcadd($this->rap_tvac,$other['price']);
@@ -330,6 +368,11 @@ class Print_Ledger_Simple extends  \Print_Ledger
             $this->rap_priv=bcadd($this->rap_priv,$other['priv']);
             $this->rap_nd=bcadd($this->rap_nd,$other['tva_nd']);
             $this->rap_tva_np=bcadd($this->rap_tva_np,$other['tva_np']);
+
+            if ($this->flag_other_tax) {
+                $this->tp_other_tax = bcadd($this->tp_other_tax, $a_jrn[$i]['other_tax_amount']);
+                $this->rap_other_tax = bcadd($this->rap_other_tax, $a_jrn[$i]['other_tax_amount']);
+            }
 
         }
     }

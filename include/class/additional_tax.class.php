@@ -40,24 +40,37 @@ class Additional_Tax
         $this->ac_rate=$ac_rate;
         $this->ac_accounting=$ac_accounting;
     }
-
+/**
+ * @brief create an array of Additional_Tax
+ * @param $p_jrn_id
+ * @param $sum_euro
+ * @param $sum_currency
+ * @return array
+ */
     static function get_by_operation($p_jrn_id,&$sum_euro,&$sum_currency)
     {
         bcscale(4);
         global $cn;
-        $array = $cn->get_array('select j_montant,currency_id,
-        oc.oc_amount,
+        $array = $cn->get_array("select 
+        case when j_debit is false and jn.jrn_def_type='ACH' then 0-j_montant
+            when j_debit is true and jn.jrn_def_type='VEN' then 0-j_montant
+            else j_montant end j_montant,
+        jrn.currency_id,
+      oc_amount,
         jt.ac_id,
+        jrnx.j_debit,
         aot.ac_label,
         aot.ac_rate,
-        aot.ac_accounting
+        aot.ac_accounting,
+        jn.jrn_def_type
             from jrn_tax jt
             join jrnx using (j_id)
             join jrn on (jrnx.j_grpt=jrn.jr_grpt_id)
+            join jrn_def jn on (jrn.jr_def_id=jn.jrn_def_id)
             join acc_other_tax aot on (jt.ac_id=aot.ac_id)
             left join operation_currency oc ON  (oc.j_id=jt.j_id)
-            where
-            jr_id=$1', [$p_jrn_id]);
+                where
+            jr_id=$1", [$p_jrn_id]);
         $sum_currency=0;$sum_euro=0;
         if (empty($array)) { return array();}
         $nb=count($array);
@@ -77,6 +90,14 @@ class Additional_Tax
         $sum_euro=round($sum_euro,2);
         return $a_additional_tax;
     }
+
+    /**
+     * @brief display the additional_tax in the ledger_detail for Sales and Purchase
+     * @param $p_jrn_id
+     * @param $sum_euro
+     * @param $sum_currency
+     * @param int $decalage
+     */
     static function display_row($p_jrn_id,&$sum_euro,&$sum_currency,$decalage=0)
     {
         $a_additional_tax=Additional_Tax::get_by_operation($p_jrn_id,$sum_euro,$sum_currency);

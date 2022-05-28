@@ -274,6 +274,7 @@ echo $ipaid->input();
                  */
                 $sum_add_tax=0;$sum_add_tax_cur=0;
                 Additional_Tax::display_row($jr_id,$sum_add_tax,$sum_add_tax_cur);
+                print_r("sum_add_tax_cur $sum_add_tax_cur");
                 $sum_prod_currency=bcadd($sum_prod_currency,$sum_add_tax_cur);
 
                 $total_tvac=bcadd($sum_add_tax,$total_tvac);
@@ -289,7 +290,7 @@ echo $ipaid->input();
                 //Display total in currency
                 if ( $obj->det->currency_id != "" && $obj->det->currency_id > 0) 
                 {
-                    $row.= td(nbm($sum_prod_currency,4),' class="num" style="font-style:italic;font-weight: bolder;"');
+                    $row.= td(nbm($sum_prod_currency,2),' class="num" style="font-style:italic;font-weight: bolder;"');
                 }
                 echo tr($row);
                 ?>
