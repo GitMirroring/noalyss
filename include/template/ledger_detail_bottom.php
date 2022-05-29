@@ -179,9 +179,11 @@ endif;
 <?php 
 
 if ($aRap  != null ) {
-    $amount_tva_include=(isset($total_tvac))?$total_tvac:$detail->det->jr_montant;
+  $amount_tva_include=(isset($total_tvac))?$total_tvac:$detail->det->jr_montant;
   $tableid="tb".$div;
   $total_rec=0;
+  $operation=new Acc_Operation($cn);
+  $operation->set_id($jr_id);
   echo '<table id="'.$tableid.'">';
   for ($e=0;$e<count($aRap);$e++)  {
     $opRap=new Acc_Operation($cn);
@@ -196,11 +198,17 @@ if ($aRap  != null ) {
             $amount = $cn->get_value("select sum(qp_price+qp_vat-qp_vat_sided) from quant_purchase qp 
                                             where qp_internal=$1",
                 array($internal));
+            // add additional tax if any
+            $add=$operation->get_sum_other_tax();
+            $amount=bcadd($amount,$add,2);
             break;
         case 'V':
             $amount=$cn->get_value("select sum(qs_price+qs_vat-qs_vat_sided) from quant_sold qs  
                                         where qs_internal=$1",
                 array($internal));
+            // add additional tax if any
+            $add=$operation->get_sum_other_tax();
+            $amount=bcadd($amount,$add,2);
             break;
     }
     $total_rec=bcadd($total_rec,$amount);

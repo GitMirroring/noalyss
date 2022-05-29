@@ -210,6 +210,7 @@ class Acc_Ledger  extends jrn_def_sql
      *    - quant_purchase
      *    - stock
      *    - ANC
+     *    - jrn_tax
      * Add or update a note into jrn_note
      * @param $p_date is the date of the reversed op
      * @exception if date is invalid or other prob
@@ -258,10 +259,6 @@ class Acc_Ledger  extends jrn_def_sql
             {
                 throw new Exception(_('PERIODE FERMEE')." $p_date ");
             }
-
-
-
-
 
             // Mark the operation invalid into the ledger
             // to avoid to nullify twice the same op., add or update a note into jrn_note
@@ -347,6 +344,13 @@ class Acc_Ledger  extends jrn_def_sql
                 $this->db->exec_sql("insert into operation_currency (oc_amount,oc_vat_amount,oc_price_unit,j_id) "
                         . " select oc_amount,oc_vat_amount,oc_price_unit,$j_id from operation_currency where j_id=$1",
                         [$row]);
+                // Extourne also into jrnx_tax
+                $jrn_tax_id=$this->db->exec_sql("insert into jrn_tax(j_id,pcm_val,ac_id) 
+                            select $j_id,pcm_val,ac_id from jrn_tax where j_id=$1 returning jt_id",
+                    [$row]);
+
+
+
             }
             $sql="insert into jrn (
               jr_id,

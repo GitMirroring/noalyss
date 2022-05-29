@@ -210,6 +210,28 @@ class Acc_Operation
         return $this->jrnx_id;
 
     }
+
+    /**
+     * @brief get the sum of other tax linked to this operation
+     */
+    function get_sum_other_tax() {
+        if ( $this->jr_id == 0 ) {return 0;}
+        $sum=$this->db->get_value("select 
+       sum(case when j_debit is false and jrn_def.jrn_def_type='ACH' 
+           then 0-j_montant when j_debit is true and jrn_def.jrn_def_type='VEN' 
+               then 0-j_montant 
+           else j_montant end) sum_tax
+         from 
+            jrn_tax join jrnx j1 using (j_id)  
+            join jrn on (jr_grpt_id=j1.j_grpt) 
+            join jrn_def on (jrn.jr_def_id=jrn_def.jrn_def_id)
+         where 
+         jrn.jr_id=$1",[$this->jr_id]);
+        ;
+        if ( $this->db->count()==0) {return 0;}
+        return $sum;
+    }
+
     /*!\brief set the pj of a operation in jrn. the jr_id must be set
      *\note if the jr_id it fails
      */
@@ -341,8 +363,8 @@ class Acc_Operation
     {
         $res=$this->db->exec_sql('select jr_id from jrn where jr_internal=$1',
                                  array($p_internal));
-        if ( Database::num_row($Res) == 0 ) return -1;
-        $this->jr_id=Database::fetch_result($Res,0,0);
+        if ( Database::num_row($res) == 0 ) return -1;
+        $this->jr_id=Database::fetch_result($res,0,0);
         return 0;
     }
     /*!\brief retrieve data from jrnx
@@ -748,7 +770,7 @@ class Acc_Operation
         }
     }
     /**
-     * 
+     * @brief set the operation id (jrn.jr_id)
      * @param type $p_id
      */
     function set_id($p_id) 
@@ -831,7 +853,7 @@ class Acc_Operation
         $a_code=$this->db->get_array("select code from v_menu_dependency vmd  where me_code=$1 and p_id=$2",
                 array( $operation->signature,$g_user->get_profile()));
         if ( empty ($a_code)) {
-            $r.=_("Menu invalide");
+            $r=_("Menu invalide");
             return $r;
         }
        

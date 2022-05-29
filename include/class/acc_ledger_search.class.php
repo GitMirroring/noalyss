@@ -398,24 +398,31 @@ class Acc_Ledger_Search
                                             where ad_id=23 
                                                 and f_id=(select qf_other from quant_fin where quant_fin.jr_id=x.jr_id))
 	    end as quick_code,
-	    case
+	    ( case
 	     when jrn_def_type='VEN' then
 		     (select sum(qs_price)+sum(vat) from
 				(select qs_internal,qs_price,case when qs_vat_sided<>0 then 0 
                                     else qs_vat end as vat 
                                     from quant_sold 
                                     where qs_internal=X.jr_internal) as ven_invoice
-			  )
+              )
 	    when jrn_def_type = 'ACH' then
-			(
-				select sum(qp_price)+sum(vat)+sum(qp_nd_tva)+sum(qp_nd_tva_recup)
+			(select sum(qp_price)+sum(vat)+sum(qp_nd_tva)+sum(qp_nd_tva_recup)
 				from
 				 (select qp_internal,qp_price,qp_nd_tva,qp_nd_tva_recup,qp_vat-qp_vat_sided as vat 
                                  from quant_purchase 
                                  where qp_internal=X.jr_internal) as invoice_purchase
-			)
+            )
 		else jr_montant
-		end as total_invoice,
+		end  + 
+		coalesce( case  when jrn_def_type='VEN' then
+			(select sum(case when j102.j_debit is true then 0-j102.J_montant else j102.j_montant end)
+                  from jrnx j102 join jrn_tax using(j_id) where j102.j_grpt =X.jr_grpt_id) 
+  		     when jrn_def_type='ACH' then
+  				(select sum(case when j103.j_debit is false then 0-j103.J_montant else j103.j_montant end)
+                  from jrnx j103 join jrn_tax using(j_id) where j103.j_grpt =X.jr_grpt_id) 
+         else 
+         0 end   ,0)        )       as total_invoice,
             jr_date_paid,
             to_char(jr_date_paid,'DD.MM.YY') as str_jr_date_paid,
             cas.jr_id as analytic_op,
