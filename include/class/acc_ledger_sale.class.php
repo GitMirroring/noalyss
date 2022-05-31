@@ -1329,6 +1329,7 @@ EOF;
         $add_js.='update_name();';
         $add_js.='update_pay_method();';
         $add_js.='update_row("sold_item");';
+        $add_js.='update_other_tax()';
 
         $wLedger = $this->select_ledger('VEN', 2,FALSE);
         if ($wLedger == null)
@@ -1581,7 +1582,9 @@ EOF;
         $r.=HtmlInput::hidden('jrn_type', 'VEN');
         $r.= Html_Input_Noalyss::ledger_add_item("O");
         $r.= create_script("$('" . $Date->id . "').focus()");
+        $r.='<div id="additional_tax_div">';
         $r.=$this->input_additional_tax();
+        $r.='</div>';
         return $r;
     }
     /**

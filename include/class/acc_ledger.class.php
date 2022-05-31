@@ -3363,19 +3363,28 @@ class Acc_Ledger  extends jrn_def_sql
 
         if ($this->has_other_tax() == false ) { return "";}
         $amount=new INum("other_tax_amount",0);
+
+        $amount->javascript='onchange="format_number(this,2);refresh_ledger();"';
         $msg=_("Montant");
         $row=$this->cn->get_row("select ac_id,ac_label,ac_rate from acc_other_tax where $1 = any (ajrn_def_id)",
             [$this->id]);
         $checkbox=new ICheckBox("other_tax",$row['ac_id']);
+        $checkbox->javascript=<<<EOF
+onchange='if (! this.checked) {  $("other_tax_amount").value=0;}compute_all_ledger();'
+EOF;
+
         $label=h($row['ac_label']);
         $title=_("Autre taxe");
         $out=<<<EOF
-<div id="additional_tax">
+
     <h2 class="h3">{$title}</h2>
     {$checkbox->input()} {$label} {$row['ac_rate']}%: {$msg} {$amount->input()}
-</div>
-
 EOF;
+
+        $out.="<h4>"._("Total opération").
+            "<span class=\"mx-4\" id='total_operation_other_tax'>".
+            "</span>".
+            "</h4>";
         return $out;
     }
 

@@ -1217,6 +1217,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $add_js.='update_name();';
         $add_js.='update_pay_method();';
         $add_js.='update_row("sold_item");';
+        $add_js.='update_other_tax()';
 
         $wLedger=$this->select_ledger('ACH',2,FALSE);
         
@@ -1499,7 +1500,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         }
 		// set focus on date
 		$r.= create_script("$('".$Date->id."').focus()");
+        $r.='<div id="additional_tax_div">';
         $r.=$this->input_additional_tax();
+        $r.='</div>';
         return $r;
     }
 

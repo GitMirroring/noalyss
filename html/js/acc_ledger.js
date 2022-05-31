@@ -88,7 +88,30 @@ function update_pay_method()
             }
     );
 }
-
+/**
+ *  update the list of additional tax
+ */
+function update_other_tax()
+{
+    waiting_box();
+    var jrn = g("p_jrn").value;
+    var dossier = g("gDossier").value;
+    var querystring ={gDossier: dossier,jrn_id:jrn ,op:"up_other_tax"};
+    var action = new Ajax.Request(
+        "ajax_misc.php",
+        {
+            method: 'get',
+            parameters: querystring,
+            onFailure: error_get_predef,
+            onSuccess: function (req) {
+                remove_waiting_box();
+                var answer = req.responseText;
+                answer.evalScripts();
+                $('additional_tax_div').innerHTML = answer;
+            }
+        }
+    );
+}
 /**
  * update ctl id =jrn_name with the value of p_jrn
  */
@@ -480,7 +503,11 @@ function compute_ledger(p_ctl_nb)
 
     g('e_quant' + p_ctl_nb).value = trim(g('e_quant' + p_ctl_nb).value);
     var quantity = g('e_quant' + p_ctl_nb).value;
-    var querystring = 'gDossier=' + dossier + '&c=' + qcode + '&t=' + tva_id + '&p=' + price + '&q=' + quantity + '&n=' + p_ctl_nb;
+    let other_tax=g("other_tax");
+    let other_tax_id=(other_tax && other_tax.checked)?other_tax.value:-1;
+
+    console.debug(`other tax is ${other_tax_id}`);
+    var querystring = { gDossier : dossier , c : qcode ,t :tva_id,p : price , q:quantity,n:p_ctl_nb,'other_tax_id':other_tax_id};
     var action = new Ajax.Request(
             "compute.php",
             {
@@ -500,7 +527,8 @@ function refresh_ledger()
     var htva = 0;
     var tvac = 0;
 
-    for (var i = 0; i < g("nb_item").value; i++)
+    nb_item=g("nb_item").value;
+    for (var i = 0; i < nb_item; i++)
     {
         if (g('tva_march' + i))
             tva += g('tva_march' + i).value * 1;
@@ -509,13 +537,22 @@ function refresh_ledger()
         if (g('tvac_march' + i))
             tvac += g('tvac_march' + i).value * 1;
     }
+    id_tva=g("tva");
+    id_htva=g("htva");
+    id_tvac=g("tvac");
+    id_other_tax=g("other_tax_amount");
+    if (id_tva)
+        id_tva.innerHTML = Math.round(tva * 100) / 100;
+    if (id_htva)
+        id_htva.innerHTML = Math.round(htva * 100) / 100;
+    if ( id_other_tax) {
+        let total_operation=tvac+parseFloat(id_other_tax.value);
+        $('total_operation_other_tax').innerHTML=Math.round(total_operation*100)/100;
+    }
+    if (id_tvac)
+        id_tvac.innerHTML = Math.round(tvac * 100) / 100;
 
-    if (g('tva'))
-        g('tva').innerHTML = Math.round(tva * 100) / 100;
-    if (g('htva'))
-        g('htva').innerHTML = Math.round(htva * 100) / 100;
-    if (g('tvac'))
-        g('tvac').innerHTML = Math.round(tvac * 100) / 100;
+
 }
 /**
  * update the field htva, tva_id and tvac, callback function for  compute_sold
@@ -529,7 +566,10 @@ function success_compute_ledger(request, json)
     var rtva = answer.tva;
     var rhtva = answer.htva;
     var rtvac = answer.tvac;
-
+    let other_tax=g("other_tax_amount")
+    if ( other_tax) {
+        other_tax.value=answer.other_tax;
+    }
     if (rtva == 'NA')
     {
         var rhtva = answer.htva * 1;
@@ -574,7 +614,8 @@ function error_compute_ledger(request, json)
 function compute_all_ledger()
 {
     var loop = 0;
-    for (loop = 0; loop < g("nb_item").value; loop++)
+    let nb_item=g("nb_item").value;
+    for (loop = 0; loop < nb_item; loop++)
     {
         compute_ledger(loop);
     }
@@ -582,7 +623,7 @@ function compute_all_ledger()
     var htva = 0;
     var tvac = 0;
 
-    for (var i = 0; i < g("nb_item").value; i++)
+    for (var i = 0; i < nb_item; i++)
     {
         if (g('tva_march'))
             tva += g('tva_march' + i).value * 1;
@@ -591,11 +632,12 @@ function compute_all_ledger()
         if (g('tvac_march' + i))
             tvac += g('tvac_march' + i).value * 1;
     }
-
+    id_other_tax=g("other_tax_amount");
     if (g('tva'))
         g('tva').innerHTML = Math.round(tva * 100) / 100;
     if (g('htva'))
         g('htva').innerHTML = Math.round(htva * 100) / 100;
+    if (id_other_tax) { tvac+=id_other_tax.value;}
     if (g('tvac'))
         g('tvac').innerHTML = Math.round(tvac * 100) / 100;
 

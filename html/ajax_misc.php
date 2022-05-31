@@ -652,6 +652,12 @@ EOF;
                     [$ledger_id]);
             echo $code;
             break;
+    case 'up_other_tax':
+        $cn =Dossier::connect();
+        $ledger_id=$http->request('jrn_id','number');
+        $acc_ledger=new Acc_Ledger($cn,$ledger_id);
+        echo $acc_ledger->input_additional_tax();
+        break;
 	default:
 		var_dump($_REQUEST);
 }

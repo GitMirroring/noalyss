@@ -48,6 +48,8 @@ foreach (array('t','c','p','q','n','gDossier') as $a)
     }
 
 }
+$http=new HttpInput();
+$tax_ac_id=$http->request("other_tax_id","number",-1);
 // sometime number uses coma instead of dot for dec
 $p=str_replace(",",".",$p);
 $q=str_replace(",",".",$q);
@@ -79,20 +81,29 @@ if ( isNUmber($p) && isNumber($q)) {
     $amount = 0;
 }
 $total->set_parameter('amount',$amount);
+$other_tax_amount=0;
+if ( $tax_ac_id !=-1) {
+    $other_tax=new Acc_Other_Tax_SQL($cn,$tax_ac_id);
+    $other_tax_amount=round(bcmul($amount,$other_tax->getp("ac_rate"),4)/100,2);
+}
 if ( $t != -1 && isNumber($t) == 1 )
 {
     $total->set_parameter('amount_vat_rate',$tva_rate->get_parameter('rate'));
     $total->compute_vat();
     if ($tva_rate->get_parameter('both_side')== 1) $total->set_parameter('amount_vat', 0);
     $tvac=($tva_rate->get_parameter('rate') == 0 || $tva_rate->get_parameter('both_side')== 1) ? $amount : bcadd($total->get_parameter('amount_vat'),$amount);
+
     header("Content-type: text/html; charset: utf8",true);
-    echo '{"ctl":"'.$n.'","htva":"'.$amount.'","tva":"'.$total->get_parameter('amount_vat').'","tvac":"'.$tvac.'"}';
+    $result=["ctl"=>$n,"htva"=>$amount,"tva"=>$total->get_parameter("amount_vat"),"tvac"=>$tvac,
+        "other_tax"=>$other_tax_amount];
+    echo json_encode($result);
 }
 else
 {
     /* there is no vat to compute */
     header("Content-type: text/html; charset: utf8",true);
-    echo '{"ctl":"'.$n.'","htva":"'.$amount.'","tva":"NA","tvac":"'.$amount.'"}';
+    $result=["ctl"=>$n,"htva"=>$amount,"tva"=>"NA","tvac"=>$amount,        "other_tax"=>$other_tax_amount];
+    echo json_encode($result);
 }
 ?>
 
