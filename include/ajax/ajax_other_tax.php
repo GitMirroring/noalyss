@@ -18,7 +18,10 @@
  *  Copyright (2002-2022) Author Dany De Bontridder <danydb@noalyss.eu>
  */
 global $g_user;
-if  ( $g_user->check_module("OTAX") == 0) die();
+if (!defined('ALLOWED'))
+    die('Appel direct ne sont pas permis');
+
+if  ( $g_user->check_module("OTAX") == 0) die("");
 
 try {
     $table=$http->request('table');

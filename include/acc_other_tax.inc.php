@@ -20,6 +20,7 @@
  * @file
  * @brief manage the public.acc_other_tax
  */
+if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 ?>
 <div class="content">
 <?php
