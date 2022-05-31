@@ -203,13 +203,19 @@ class PDF_Operation extends PDF {
             $sum_amount=bcadd($sum_amount,$row["qs_price"]);
             $sum_vat=bcadd($sum_vat,$row["qs_vat"]);
         }
+        /* print addition Tax */
+        $a=$b=0;
+        $sum_other_tax=$this->print_other_tax();
+
         $this->pdf->SetFont('DejaVu', 'B', 6);
         $this->pdf->write_cell($width[0],6,"");
         $this->pdf->write_cell($width[1],6,"");
         $this->pdf->write_cell($width[2],6,"");
         $this->pdf->write_cell($width[3],6,nbm($sum_amount,2),"",0,"R");
-        $this->pdf->write_cell($width[4],6,"");
+        $this->pdf->write_cell($width[4],6,nbm($sum_other_tax,2),"",0,"R"); // additional tax
         $this->pdf->write_cell($width[5],6,nbm($sum_vat,2),"",0,"R");
+        // add sum_other_ax to total
+        $sum_amount=bcadd($sum_other_tax,$sum_amount);
         $this->pdf->write_cell($width[6],6,nbm(bcadd($sum_amount,$sum_vat),2),"",0,"R");
         $this->pdf->line_new(4);
         
@@ -248,6 +254,10 @@ class PDF_Operation extends PDF {
             $sum_amount=bcadd($sum_amount,$row["qp_price"]);
             $sum_vat=bcadd($sum_vat,$row["qp_vat"]);
         }
+        /* print addition Tax */
+        $a=$b=0;
+        $sum_other_tax=$this->print_other_tax();
+
         $this->pdf->SetFont('DejaVu', 'B', 6);
         $this->pdf->write_cell($width[0],6,"");
         $this->pdf->write_cell($width[1],6,"");
@@ -255,6 +265,8 @@ class PDF_Operation extends PDF {
         $this->pdf->write_cell($width[3],6,nbm($sum_amount,2),"",0,"R");
         $this->pdf->write_cell($width[4],6,"");
         $this->pdf->write_cell($width[5],6,nbm($sum_vat,2),"",0,"R");
+        $this->pdf->write_cell($width[4],6,nbm($sum_other_tax,2),"",0,"R"); // additional tax
+        $sum_amount=bcadd($sum_other_tax,$sum_amount);
         $this->pdf->write_cell($width[6],6,nbm(bcadd($sum_amount,$sum_vat),2),"",0,"R");
         $this->pdf->line_new(10);
         
@@ -263,6 +275,26 @@ class PDF_Operation extends PDF {
          $this->pdf->SetFont('DejaVu', 'B', 10);
         $this->pdf->write_cell(60,8,$p_section,"1");
         $this->pdf->line_new(8);
+    }
+    private function print_other_tax()
+    {
+        $width=array(10,80,25,25,25,25);
+        $aOther_tax=Additional_Tax::get_by_operation($this->jr_id,$a,$b);
+        $total=0;
+        foreach ($aOther_tax as $other_tax)
+        {
+            $amount=$other_tax->getTaxAmount();
+            $total=bcadd($amount,$total,2);
+            $this->pdf->write_cell($width[0],6,"");
+            $this->pdf->write_cell($width[1],6,$other_tax->getAcLabel(). " ".$other_tax->getAcRate()."%");
+
+            $this->pdf->write_cell($width[3],6,"");
+            $this->pdf->write_cell($width[2],6,nbm($amount,2),"",0,"R");
+            $this->pdf->write_cell($width[4],6,"");
+            $this->pdf->write_cell($width[5],6,$total,"",0,"R");
+            $this->pdf->line_new(6);
+        }
+        return $total;
     }
     private function print_acc_writing(){
         $obj1=new Acc_Operation($this->cn);

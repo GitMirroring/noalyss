@@ -40,6 +40,63 @@ class Additional_Tax
         $this->ac_rate=$ac_rate;
         $this->ac_accounting=$ac_accounting;
     }
+
+    /**
+     * @return float
+     */
+    public function getTaxAmount(): float
+    {
+        return $this->tax_amount;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCurrencyAmount(): float
+    {
+        return $this->currency_amount;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrencyId()
+    {
+        return $this->currency_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcId()
+    {
+        return $this->ac_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcLabel()
+    {
+        return $this->ac_label;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcRate()
+    {
+        return $this->ac_rate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcAccounting()
+    {
+        return $this->ac_accounting;
+    }
+
 /**
  * @brief create an array of Additional_Tax
  * @param $p_jrn_id
