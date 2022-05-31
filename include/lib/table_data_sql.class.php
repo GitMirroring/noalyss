@@ -215,7 +215,7 @@ abstract class Table_Data_SQL extends Data_SQL
 
 
     /**
-     * return the number of count in the table corresponding to the where condition
+     * @brief return the number of count in the table corresponding to the where condition
      * @param string $p_where the condition appended to the SQL select query , where must be given
      * @param array $p_array variable from the $p_where condition
      * @return type
@@ -225,7 +225,7 @@ abstract class Table_Data_SQL extends Data_SQL
         return $count;
     }
     /**
-     * Count the number of record with the id ,
+     *@brief Count the number of record with the id ,
      * @return integer  0 doesn't exist , 1 exists
      */
     public function exist() {
@@ -235,7 +235,7 @@ abstract class Table_Data_SQL extends Data_SQL
     }
     
     /**
-     * Build the SQL select statement for querying the object and returns it
+     * @brief Build the SQL select statement for querying the object and returns it
      * @return string Query of the object 
      */
     public function build_query()
