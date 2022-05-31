@@ -3197,6 +3197,7 @@ class Acc_Ledger  extends jrn_def_sql
         $http=new HttpInput();
         $nb=$http->post("nb_item", "number", 0);
         echo HtmlInput::post_to_hidden(['p_currency_rate','p_currency_code']);
+        echo HtmlInput::post_to_hidden(['other_tax','other_tax_amount']);
         for ($i=0; $i<$nb; $i++)
         {
             echo HtmlInput::post_to_hidden(
@@ -3360,15 +3361,17 @@ class Acc_Ledger  extends jrn_def_sql
      */
     function input_additional_tax()
     {
-
+        $http=new HttpInput();
         if ($this->has_other_tax() == false ) { return "";}
         $amount=new INum("other_tax_amount",0);
+        $amount->value=$http->request("other_tax_amount","number",0);
 
         $amount->javascript='onchange="format_number(this,2);refresh_ledger();"';
         $msg=_("Montant");
         $row=$this->cn->get_row("select ac_id,ac_label,ac_rate from acc_other_tax where $1 = any (ajrn_def_id)",
             [$this->id]);
         $checkbox=new ICheckBox("other_tax",$row['ac_id']);
+        $checkbox->set_check($http->request("other_tax","number",-1));
         $checkbox->javascript=<<<EOF
 onchange='if (! this.checked) {  $("other_tax_amount").value=0;}compute_all_ledger();'
 EOF;

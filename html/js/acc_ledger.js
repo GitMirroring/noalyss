@@ -506,7 +506,6 @@ function compute_ledger(p_ctl_nb)
     let other_tax=g("other_tax");
     let other_tax_id=(other_tax && other_tax.checked)?other_tax.value:-1;
 
-    console.debug(`other tax is ${other_tax_id}`);
     var querystring = { gDossier : dossier , c : qcode ,t :tva_id,p : price , q:quantity,n:p_ctl_nb,'other_tax_id':other_tax_id};
     var action = new Ajax.Request(
             "compute.php",

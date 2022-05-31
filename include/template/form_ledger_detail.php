@@ -133,11 +133,11 @@ echo '</tr>';
     <td class="visible_gt800 visible_gt1155"> </td>
     <td> </td>
     <td> </td>
-    <td class="num visible_gt800">  <span id="htva">0.0</span></td>
+    <td style="text-align:center" class="visible_gt800">  <span id="htva">0.0</span></td>
  <?php if ( $flag_tva=='Y' )  : ?>    
     <td> </td>
-    <td class="num visible_gt800">  <span id="tva">0.0</span> </td>
-    <td class="num">  <span id="tvac" >0.0</span> </td>
+    <td style="text-align:center" class="visible_gt800">  <span id="tva">0.0</span> </td>
+    <td style="text-align:center">  <span id="tvac" >0.0</span> </td>
   <?php    endif;     ?>  
     </tr>
     
@@ -147,14 +147,14 @@ echo '</tr>';
     </td>
         <td class="num visible_gt800"></td>
 <?php if ($flag_tva=='Y')  {?>
-        <td class="num visible_gt800 visible_gt1155"></td>
+        <td style="text-align:center" class="visible_gt800 visible_gt1155"></td>
         <td></td>
-        <td class="num visible_gt800"></td>
+        <td class="visible_gt800"></td>
 <?php }         ?>
         <td></td>
         <td></td>
         <td></td>
-        <td class="num">
+        <td style="text-align:center">
             <span id="p_currency_euro"></span>
         </td>
     </tr>
