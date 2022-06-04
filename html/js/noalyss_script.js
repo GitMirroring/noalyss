@@ -3124,6 +3124,7 @@ function confirm_box(p_obj, p_message, p_callback_true)
         {
             smoke.confirm(p_message, function (e) {
                 if (e) {
+                    waiting_box();
                     $(name).submit();
                 }
             });
