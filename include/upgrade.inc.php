@@ -53,7 +53,7 @@ if ($sb=="database")
 echo _("Mettez vos bases de données à jour pour qu'elles correspondent à cette version de Noalyss");
 ?>
 </p>
-    <form method="get" id="frm_upg_all" onsubmit="return confirm_box('frm_upg_all', '<?php echo _('Confirmez') ?>')">
+    <form method="get" id="frm_upg_all" onsubmit="return confirm_box('frm_upg_all', '<?php echo _('Confirmez') ?>',false,true)">
         <input type="hidden" name="sb" value="database">
         <input type="hidden" name="sc" value="upg_all">
         <input type="hidden" name="action" value="upgrade">

@@ -3102,9 +3102,11 @@ function init_scroll()
  * @endcode
  * @param p_obj form element (object) or element id (string)
  * @param p_message message to display
+ * @param p_callback_true  callback function or null
+ * @param p_waiting if true display a waiting box
  * @returns true or false
  */
-function confirm_box(p_obj, p_message, p_callback_true)
+function confirm_box(p_obj, p_message, p_callback_true,p_waiting)
 {
     waiting_box();
     try {
@@ -3124,7 +3126,7 @@ function confirm_box(p_obj, p_message, p_callback_true)
         {
             smoke.confirm(p_message, function (e) {
                 if (e) {
-                    waiting_box();
+                    if (p_waiting){waiting_box();}
                     $(name).submit();
                 }
             });

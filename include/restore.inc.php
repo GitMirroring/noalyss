@@ -202,7 +202,7 @@ if ( isset ($_REQUEST['sa'] ))
 else
 {
     echo '<div class="content" style="width:80%;margin-left:10%">';
-    printf( '<form method="POST" action="admin-noalyss.php" enctype="multipart/form-data"  onsubmit="return (check_file_size(this,%s) && waiting_box())" >',MAX_FILE_SIZE);
+    printf( '<form method="POST" action="admin-noalyss.php" enctype="multipart/form-data"  onsubmit="return check_file_size(this,%s) " >',MAX_FILE_SIZE);
     echo HtmlInput::hidden('action','restore');
     echo HtmlInput::hidden('sa','r');
     echo '<table>';
