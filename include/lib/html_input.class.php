@@ -757,9 +757,9 @@ class HtmlInput
 
     /**
      * return default if the value if the value doesn't exist in the array
-     * @param $ind the index to check
-     * @param $default the value to return
-     * @param $array the array
+     * @param $ind string the index to check
+     * @param $default string  the value to return
+     * @param $array array the array
      */
     static function default_value($ind, $default, $array)
     {

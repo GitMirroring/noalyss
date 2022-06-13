@@ -17,9 +17,9 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
     $owner = new Noalyss_Parameter_Folder($cn);
     ?>
 
-    <?php if ($access == 'W') : ?>
-        <form class="print" onsubmit="return op_save(this);">
-        <?php endif; ?>
+    <?php if ($access == 'W') :
+        echo '<form class="print" onsubmit="return op_save(this);">';
+    endif; ?>
 
         <?php echo HtmlInput::hidden('whatdiv', $div) . HtmlInput::hidden('jr_id', $jr_id) . dossier::hidden(); ?>
         <table style="width:100%">
@@ -274,7 +274,7 @@ echo $ipaid->input();
                  */
                 $sum_add_tax=0;$sum_add_tax_cur=0;
                 Additional_Tax::display_row($jr_id,$sum_add_tax,$sum_add_tax_cur);
-                print_r("sum_add_tax_cur $sum_add_tax_cur");
+
                 $sum_prod_currency=bcadd($sum_prod_currency,$sum_add_tax_cur);
 
                 $total_tvac=bcadd($sum_add_tax,$total_tvac);
@@ -295,7 +295,7 @@ echo $ipaid->input();
                 echo tr($row);
                 ?>
             </table>
-            </form>
+            </td>
             </tr>
             </table>
             </td>
@@ -322,3 +322,4 @@ echo $ipaid->input();
 <?php
 require_once NOALYSS_TEMPLATE.'/ledger_detail_bottom.php';
 ?>
+</div>
