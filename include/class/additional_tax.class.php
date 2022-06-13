@@ -30,15 +30,15 @@ class Additional_Tax
     private $ac_rate;
     private $ac_accounting;
 
-    function __construct($tax_amount,$currency_amount,$currency_id,$ac_id,$ac_label,$ac_rate,$ac_accounting)
+    function __construct($tax_amount, $currency_amount, $currency_id, $ac_id, $ac_label, $ac_rate, $ac_accounting)
     {
-        $this->tax_amount=round($tax_amount,2);
-        $this->currency_amount=round($currency_amount,4);
-        $this->currency_id=$currency_id;
-        $this->ac_id=$ac_id;
-        $this->ac_label=$ac_label;
-        $this->ac_rate=$ac_rate;
-        $this->ac_accounting=$ac_accounting;
+        $this->tax_amount = round($tax_amount, 2);
+        $this->currency_amount = round($currency_amount, 4);
+        $this->currency_id = $currency_id;
+        $this->ac_id = $ac_id;
+        $this->ac_label = $ac_label;
+        $this->ac_rate = $ac_rate;
+        $this->ac_accounting = $ac_accounting;
     }
 
     /**
@@ -97,14 +97,14 @@ class Additional_Tax
         return $this->ac_accounting;
     }
 
-/**
- * @brief create an array of Additional_Tax
- * @param $p_jrn_id
- * @param $sum_euro
- * @param $sum_currency
- * @return array
- */
-    static function get_by_operation($p_jrn_id,&$sum_euro,&$sum_currency)
+    /**
+     * @brief create an array of Additional_Tax
+     * @param $p_jrn_id
+     * @param $sum_euro
+     * @param $sum_currency
+     * @return array
+     */
+    static function get_by_operation($p_jrn_id, &$sum_euro, &$sum_currency)
     {
         bcscale(4);
         global $cn;
@@ -128,23 +128,26 @@ class Additional_Tax
             left join operation_currency oc ON  (oc.j_id=jt.j_id)
                 where
             jr_id=$1", [$p_jrn_id]);
-        $sum_currency=0;$sum_euro=0;
-        if (empty($array)) { return array();}
-        $nb=count($array);
-        $a_additional_tax=array();
-        for ($i=0;$i<$nb;$i++) {
-            $a_additional_tax[]=new Additional_Tax($array[$i]['j_montant'],
-                    $array[$i]['oc_amount'],
-                    $array[$i]['currency_id'],
-                    $array[$i]['ac_id'],
-                    $array[$i]['ac_label'],
-                    $array[$i]['ac_rate'],
-                    $array[$i]['ac_accounting'],
-            );
-            $sum_euro=bcadd($sum_euro,$array[$i]['j_montant']);
-            $sum_currency=bcadd($sum_currency,$array[$i]['oc_amount']);
+        $sum_currency = 0;
+        $sum_euro = 0;
+        if (empty($array)) {
+            return array();
         }
-        $sum_euro=round($sum_euro,2);
+        $nb = count($array);
+        $a_additional_tax = array();
+        for ($i = 0; $i < $nb; $i++) {
+            $a_additional_tax[] = new Additional_Tax($array[$i]['j_montant'],
+                $array[$i]['oc_amount'],
+                $array[$i]['currency_id'],
+                $array[$i]['ac_id'],
+                $array[$i]['ac_label'],
+                $array[$i]['ac_rate'],
+                $array[$i]['ac_accounting'],
+            );
+            $sum_euro = bcadd($sum_euro, $array[$i]['j_montant']);
+            $sum_currency = bcadd($sum_currency, $array[$i]['oc_amount']);
+        }
+        $sum_euro = round($sum_euro, 2);
         return $a_additional_tax;
     }
 
@@ -155,21 +158,23 @@ class Additional_Tax
      * @param $sum_currency
      * @param int $decalage
      */
-    static function display_row($p_jrn_id,&$sum_euro,&$sum_currency,$decalage=0)
+    static function display_row($p_jrn_id, &$sum_euro, &$sum_currency, $decalage = 0)
     {
-        $a_additional_tax=Additional_Tax::get_by_operation($p_jrn_id,$sum_euro,$sum_currency);
-        $nb=count($a_additional_tax);
-        for ($i=0;$i<$nb;$i++) {
+        $a_additional_tax = Additional_Tax::get_by_operation($p_jrn_id, $sum_euro, $sum_currency);
+        $nb = count($a_additional_tax);
+        for ($i = 0; $i < $nb; $i++) {
             echo '<tr>';
 
             echo td($a_additional_tax[$i]->ac_accounting);
-            echo td($a_additional_tax[$i]->ac_label." ( ".$a_additional_tax[$i]->ac_rate." %)");
-            echo td(nbm($a_additional_tax[$i]->tax_amount),'class="num"');
-            echo td("").td("").td("").td("");
-            for ($e=0;$e<$decalage;$e++) { echo td("");}
-            echo td(nbm($a_additional_tax[$i]->tax_amount),'class="num"');
-            if ( $a_additional_tax[$i]->currency_id !=0 ) {
-                echo td(nbm($a_additional_tax[$i]->currency_amount),'class="num"');
+            echo td($a_additional_tax[$i]->ac_label . " ( " . $a_additional_tax[$i]->ac_rate . " %)");
+            echo td(nbm($a_additional_tax[$i]->tax_amount), 'class="num"');
+            echo td("") . td("") . td("") . td("");
+            for ($e = 0; $e < $decalage; $e++) {
+                echo td("");
+            }
+            echo td(nbm($a_additional_tax[$i]->tax_amount), 'class="num"');
+            if ($a_additional_tax[$i]->currency_id != 0) {
+                echo td(nbm($a_additional_tax[$i]->currency_amount), 'class="num"');
             }
             echo '</tr>';
         }

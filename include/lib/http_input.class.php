@@ -229,9 +229,9 @@ class HttpInput
     }
     /**
      * @brief Retrieve from $_REQUEST
-     * @param $p_name name of the variable
-     * @param $p_type type of the variable , opt. default string
-     * @param $p_default default value is variable is not set
+     * @param $p_name string name of the variable
+     * @param $p_type string type of the variable , opt. default string
+     * @param $p_default string default value is variable is not set
      * @throws Exception if invalid
      */
     function request($p_name, $p_type="string", $p_default="")
