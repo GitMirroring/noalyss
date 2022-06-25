@@ -3109,7 +3109,7 @@ function init_scroll()
 function confirm_box(p_obj, p_message, p_callback_true,p_waiting)
 {
     waiting_box();
-    try {
+        try {
         // Find id of the end
         var name = "";
         if (p_obj != null)
@@ -3122,8 +3122,9 @@ function confirm_box(p_obj, p_message, p_callback_true,p_waiting)
         }
 
         // execute the callback function or submit the form
-        if (p_callback_true == undefined || p_callback_true == null)
+        if ( ! p_callback_true )
         {
+
             smoke.confirm(p_message, function (e) {
                 if (e) {
                     if (p_waiting){waiting_box();}
