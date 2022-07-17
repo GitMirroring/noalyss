@@ -432,4 +432,19 @@ class Icon_Action
                 $p_div,$js,$icon);
         return $r;
     }
+    static function duplicate($p_js) {
+        $r=sprintf('<span id="%s" onclick="%s" class="icon smallicon">%s</span>',
+            uniqid(),$p_js,"&#xf0c5;");
+        return $r;
+    }
+    static function card($p_js) {
+        $r=sprintf('<span id="%s" onclick="%s" class="icon smallbutton">%s</span>',
+            uniqid(),$p_js,"&#xe843;");
+        return $r;
+    }
+    static function option($p_js) {
+        $r=sprintf('<span id="%s" onclick="%s" class="icon smallicon">%s</span>',
+            uniqid(),$p_js,"&#xf142;");
+        return $r;
+    }
 }

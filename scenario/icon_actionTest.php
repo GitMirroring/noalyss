@@ -99,3 +99,12 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
     enlarge <?php echo Icon_Action::full_size("enlarge_it")?>
 </div>
 </p>
+<p>
+    Duplicate <?php echo Icon_Action::duplicate( "alert('test')")?>
+</p>
+<p>
+    Card <?php echo Icon_Action::card( "alert('test')")?>
+</p>
+<p>
+    Option <?php echo Icon_Action::option( "alert('test')")?>
+</p>

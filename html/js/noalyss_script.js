@@ -2236,6 +2236,8 @@ function filter_table(phrase, _id, colnr, start_row) {
             $('info_' + _id).innerHTML = "  ";
         }
     }
+    $('info_div').style.display = "none";
+    $('info_div').innerHTML = "";
 }
 /**
  * @brief filter quickly a list
@@ -2270,8 +2272,7 @@ function filter_list(phrase, _id) {
         } else {
             l_list.childNodes[r].style.display = 'none';
         }
-        $('info_div').style.display = "none";
-        $('info_div').innerHTML = "";
+
     }
     if (tot_found == 0) {
         if ($('info_' + _id)) {
@@ -2282,6 +2283,8 @@ function filter_list(phrase, _id) {
             $('info_' + _id).innerHTML = "  ";
         }
     }
+    $('info_div').style.display = "none";
+    $('info_div').innerHTML = "";
 }
 
 /**

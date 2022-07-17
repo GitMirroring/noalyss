@@ -22,8 +22,9 @@ endif;
 if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
 		where user_name=$1 and with_search_card=1",array($_SESSION[SESSION_KEY.'g_user'])) ==1):
     $search_card=new IText('card_search');
+    $search_card->css_size='97%';
     $search_card_js=sprintf('onclick="boxsearch_card(\'%d\')"',dossier::id());
-    echo Icon_Action::button_magnifier(uniqid(), "$('box_search_card').show()");
+    echo Icon_Action::card( "$('box_search_card').show()");
     echo '<div id="box_search_card" style="display:none" class="inner_box">';
     echo HtmlInput::title_box(_("recherche"), "box_search_card","hide");
     echo _('Recherche de fiche');
@@ -34,11 +35,16 @@ if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
     echo '<p class="ml-1">';
     echo $search_card->input();
     echo '</p>';
+    $create_card_js='onclick="select_card_type({});"';
     echo '<ul class="aligned-block">';
     
     echo    '<li>'.
             HtmlInput::button_anchor(_("Chercher"),"javascript:void(0)","",$search_card_js,'button').
             '</li>';
+
+    echo    '<li>'.
+        HtmlInput::button_anchor(_("Créer fiche"),"javascript:void(0)","",$create_card_js,'button').
+        '</li>';
             
     echo    '<li>'. 
             HtmlInput::button_hide("box_search_card").

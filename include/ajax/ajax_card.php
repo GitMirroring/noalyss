@@ -266,14 +266,17 @@ case 'st':
         {
             $where=sprintf(' where frd_id in ('.sql_string ($cat).')');
         }
-        else
+        elseif ( isset($fil) && strlen(trim($fil)) > 0 && $fil != -1 )
+        {
             /* we filter thanks a given list of category of card
              */
-            if ( isset($fil) && strlen(trim($fil)) > 0 )
-            {
-                $where=sprintf(" where fd_id in (%s)",
+            $where=sprintf(" where fd_id in (%s)",
                                   sql_string($fil));
-            }
+        } else
+        {
+            // create any type of cards
+            $where ="";
+        }
     }
     if ( strpos($where," in ()") != 0)
     {
