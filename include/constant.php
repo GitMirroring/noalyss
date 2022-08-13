@@ -598,7 +598,9 @@ function noalyss_class_autoloader($class)
         "acc_other_tax_mtable" => 'class/acc_other_tax_mtable.class.php',
         'acc_other_tax_sql' => 'database/acc_other_tax_sql.class.php',
         'jrn_tax_sql' => 'database/jrn_tax_sql.class.php',
-        'additional_tax' => 'class/additional_tax.class.php'
+        'additional_tax' => 'class/additional_tax.class.php',
+        'noalyss_appearance' => 'class/noalyss_appearance.class.php',
+        'icolor'=>'lib/icolor.class.php'
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];

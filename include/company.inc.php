@@ -190,16 +190,7 @@ $all->style=' class="input_text"';
                 <label class="w-20" for="p_tva"><?= _("Numéro de Tva") ?></label>
                 <?= $all->input("p_tva", $my->MY_TVA) ?>
             </div>
-            <div class="row">
-                <div class="col-4"></div>
-                <div class="col-4">
-                    <?php
-                    echo HtmlInput::submit("record_company", _("Sauve"), "", "button");
-                    ?>
 
-                </div>
-                <div class="col-4"></div>
-            </div>
             <div class="row">
                 <div class="col">
                     <h2>Paramètre supplémentaire</h2>
@@ -209,6 +200,32 @@ $all->style=' class="input_text"';
                         $object->display_table();
                     ?>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h2><?=_("Apparence")?></h2>
+                    <?php
+                    $noalyss_appearance=new Noalyss_Appearance();
+                    $noalyss_appearance->load();
+                    if ( $noalyss_appearance->from_post() ) {
+                        if (DEBUGNOALYSS > 1 ) { echo "save appearance";}
+                        $noalyss_appearance->save();
+                    }
+                    echo $noalyss_appearance->input_form();
+                    ?>
+
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <?php
+                    echo HtmlInput::submit("record_company", _("Sauve"), "", "button");
+                    ?>
+
+                </div>
+                <div class="col-4"></div>
             </div>
         </div>
 
@@ -221,7 +238,7 @@ $all->style=' class="input_text"';
                 <label class="w-20" for="p_compta">
 <?= _("Utilisation de la compta. analytique") ?></label>
                     <?= $compta->input("p_compta", $array) ?>
-            </div>        
+            </div>
 
             <div class="form-group">
                 <label class="" for="p_anc_filter">
@@ -232,7 +249,7 @@ $all->style=' class="input_text"';
 echo $anc_filter->input();
 echo Icon_Action::tips($anc_filter->title);
 ?>
-            </div>        
+            </div>
 
             <div class="form-group">
                 <label class="w-20" for="p_stock"><?= _("Utilisation des stocks") ?></label>
@@ -242,32 +259,32 @@ echo Icon_Action::tips($anc_filter->title);
             <div class="form-group">
                 <label class="w-20" for="p_strict"><?= _("Utilisation du mode strict ") ?></label>
 <?= $strict->input("p_strict", $strict_array) ?>
-            </div>        
+            </div>
 
 
             <div class="form-group">
                 <label class="w-20" for="p_tva_use"><?= _("Assujetti à la tva") ?></label>
 <?= $tva_use->input("p_tva_use", $strict_array) ?>
-            </div>        
+            </div>
 
             <div class="form-group">
                 <label class="w-20" for="p_pj"><?= _("Suggérer le numéro de pièce justificative") ?>
                 </label>
 <?= $pj_suggest->input("p_pj", $strict_array) ?>
-            </div>        
+            </div>
 
 
             <div class="form-group">
                 <label class="w-20" for="p_date_suggest"><?= _("Suggérer la date") ?></label>
 <?= $date_suggest->input("p_date_suggest", $strict_array) ?>
-            </div>        
+            </div>
 
 
             <div class="form-group">
                 <label class="w-20" for="p_check_periode"><?= _('Afficher la période comptable pour éviter les erreurs de date') ?>
                 </label>
 <?= $check_periode->input('p_check_periode', $strict_array) ?>
-            </div>        
+            </div>
 
 
             <div class="form-group">
@@ -275,31 +292,32 @@ echo Icon_Action::tips($anc_filter->title);
 <?= _('Utilisez des postes comptables alphanumérique') ?>
                 </label>
                     <?= $alpha_num->input('p_alphanum') ?>
-            </div>        
+            </div>
 
             <div class="form-group">
                 <label class="w-20" for="p_updlab">
 <?= _('Changer le libellé des détails') ?>
                 </label>
                     <?= $updlab->input('p_updlab') ?>
-            </div>        
+            </div>
 
             <div class="form-group">
                 <label class="" for="p_round_error_deb">
 <?= _("Poste comptable de CHARGE (D) pour les différences d'arrondi pour les opérations en devise") ?>
                 </label>
                     <?= $default_error_deb->input() ?>
-            </div>        
+            </div>
 
             <div class="form-group">
                 <label class="" for="p_round_error_cred">
 <?= _("Poste comptable en PRODUIT (C) pour les différences d'arrondi pour les opérations en devise") ?>
                 </label>
                     <?= $default_error_cred->input() ?>
-            </div>        
+            </div>
 
-            <div class="row">
+
                 <div class="col-4"></div>
+
                 <div class="col-4">
 <?php
 echo HtmlInput::submit("record_company", _("Sauve"), "", "button");

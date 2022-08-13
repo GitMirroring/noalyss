@@ -376,6 +376,12 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     }
 
     echo load_all_script();
+
+    //  Retrieve colors for this folder
+    if ( isset($_REQUEST['gDossier'])  ) {
+        $noalyss_appearance=new Noalyss_Appearance();
+        $noalyss_appearance->print_css();
+    }
     echo '    </HEAD>    ';
 
     echo "<BODY $p_script>";
@@ -442,9 +448,12 @@ function html_min_page_start($p_theme="", $p_script="", $p_script2="")
     <script src=\"js/smoke.js\" type=\"text/javascript\"></script>";
     echo "<LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/font/fontello/css/fontello.css\" media=\"screen\"/>";
     include_once NOALYSS_INCLUDE.'/lib/message_javascript.php';
-    echo '</HEAD>
-    ';
-
+    //  Retrieve colors for this folder
+    if ( isset($_REQUEST['gDossier'])  ) {
+        $noalyss_appearance=new Noalyss_Appearance();
+        $noalyss_appearance->print_css();
+    }
+    echo '</HEAD>';
     echo "<BODY $p_script>";
     /* If we are on the user_login page */
     if (basename($_SERVER['PHP_SELF']) == 'user_login.php')

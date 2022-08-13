@@ -505,7 +505,6 @@ div.content a {
     font-family: 'openSansRegular';
     text-decoration: none;
     display: inline-block;
-   color: #0000FF;
     padding: 0px 10px 0px 0px;
     text-decoration: underline;
 /*! background: rgb(247, 192, 156) none repeat scroll 0% 0%; */
@@ -809,7 +808,7 @@ a#anchorbutton, .button, a.button,div.content a.button {
     font-weight: bold;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
-    background-image: url("font/bg-submit2.gif");
+    background-image: url("image/bg-submit2.gif");
     background-repeat: repeat-x;
     background-position: left;
     border-color:  #0000FF;
@@ -1332,6 +1331,8 @@ div.content a.nav:hover img,a.nav:hover img {
     text-align: center;
     font-variant:small-caps;
     font-weight: bolder;
+    height:5rem;
+    font-size: 125%;
     }
     
 }
