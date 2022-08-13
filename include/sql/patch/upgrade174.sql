@@ -14,7 +14,7 @@ insert into parm_appearance values ('H2' , '#9fbcd6')
                                  ,('FOLDER','#ffffff')
                                  ,('FONT-FOLDER','#000074')
                                  ,('TR-ODD','#DCE7F5')
-                                 ,('TR-EVEN','#e4e7ed')
+                                 ,('TR-EVEN','#ffffff')
                                  ,('INNER-BOX','#DCE1EF')
                             ;
 insert into version (val,v_description) values (175,'Folder Appearance');
