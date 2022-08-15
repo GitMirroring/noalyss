@@ -35,7 +35,7 @@ catch (Exception $exc)
     error_log($exc->getTraceAsString());
     return;
 }
-
+$cn=Dossier::connect();
 
 $r=$cn->exec_sql("select jr_def_id from jrn where jr_id=$1",array($jr_id));
 
@@ -46,7 +46,7 @@ if ( Database::num_row($r) == 0 )
 }
 $a=Database::fetch_array($r,0);
 $jrn=$a['jr_def_id'];
-
+global $g_user;
 if ($g_user->check_jrn($jrn) == 'X' )
 {
     /* Cannot Access */
@@ -55,7 +55,7 @@ if ($g_user->check_jrn($jrn) == 'X' )
 }
 
 $cn->start();
-$ret=$cn->exec_sql("select jr_pj,jr_pj_name,jr_pj_type from jrn where jr_id=$1",
+$ret=$cn->exec_sql("select jr_pj,jr_pj_name,jr_pj_type,jr_pj_number from jrn where jr_id=$1",
         array($jr_id));
 
 if ( Database::num_row ($ret) == 0 )
@@ -80,6 +80,13 @@ if ( $row['jr_pj']==null )
 }
 $tmp=tempnam($_ENV['TMP'],'document_');
 
+$new_name=$row['jr_pj_name'];
+$receipt_number=clean_filename($row['jr_pj_number']);
+if ( ! empty($receipt_number) && strpos($new_name,$receipt_number) === false ) {
+
+    $new_name=$receipt_number.'-'.$new_name;
+}
+
 $cn->lo_export($row['jr_pj'],$tmp);
 
 ini_set('zlib.output_compression','Off');
@@ -88,7 +95,7 @@ header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: must-revalidate");
 header('Content-type: '.$row['jr_pj_type']);
-header('Content-Disposition: attachment;filename="'.$row['jr_pj_name'].'"',FALSE);
+header('Content-Disposition: attachment;filename="'.$new_name.'"',FALSE);
 header("Accept-Ranges: bytes");
 $file=fopen($tmp,'r');
 while ( !feof ($file) )
