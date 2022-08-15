@@ -39,6 +39,7 @@ class Noalyss_Appearance
         'TR-ODD'=>'#DCE7F5',
         'TR-EVEN'=>'#e4e7ed',
         'INNER-BOX'=>'#DCE1EF',
+        'INNER-BOX-TITLE'=>'#023575',
         'FONT-MENU1' => '#ffffff',
         'FONT-MENU2' => '#ffffff',
         'FONT-TABLE' => '#222bd0',
@@ -59,6 +60,7 @@ class Noalyss_Appearance
             'TR-ODD'=>_("Ligne impaire"),
             'TR-EVEN'=>_("Ligne paire"),
             'INNER-BOX'=>_("Fond Boîte dialogue"),
+            'INNER-BOX-TITLE'=>_("Fond titre dialogue"),
             'FOLDER' => _("Couleur dossier"),
             'FONT-MENU1' => _("Couleur police menu principale"),
             'FONT-MENU2' => _("Couleur police menu second"),
@@ -119,6 +121,7 @@ class Noalyss_Appearance
         $tr_odd=$this->aColor['TR-ODD'];
         $tr_even=$this->aColor['TR-EVEN'];
         $inner_box=$this->aColor['INNER-BOX'];
+        $inner_box_title=$this->aColor['INNER-BOX-TITLE'];
 
         echo <<<EOF
     <style>
@@ -131,7 +134,10 @@ class Noalyss_Appearance
         color:{$font_default} !important;
     }
     h2 , hr {
-        background-color: {$h2} !important;
+        background-color: {$h2} ;
+    }
+    h2.title {
+        background-color: {$inner_box_title} ;
     }
     .nav-fill .nav-item {
          background: {$menu1};
