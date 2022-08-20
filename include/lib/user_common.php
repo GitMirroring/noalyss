@@ -223,7 +223,7 @@ function check_parameter($p_array,$p_needed)
 function clean_filename($p_filename)
 {
     $filename=$p_filename;
-    foreach (array('/','*','<','>',';',',','\\',':','(',')',' ','[',']','.') as $i) {
+    foreach (array('/','*','<','>',';',',','\\',':','(',')',' ','[',']') as $i) {
             $filename= str_replace($i, "-",$filename);
     }
     return $filename;
