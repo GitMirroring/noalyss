@@ -40,6 +40,7 @@ class IText extends HtmlInput
         $this->style=' class="input_text" ';
         $this->autofocus=false;
         $this->require=false;
+        $this->css_size="";
     }
     /*!\brief show the html  input of the widget*/
     public function input($p_name=null,$p_value=null)
