@@ -35,7 +35,7 @@ class Noalyss_Appearance
         'MENU1' => '#000074',
         'BODY' => '#ffffff',
         'MENU2' => '#3d3d87',
-        'MENU1-SELECTED' => '#3d3d87',
+        'MENU1-SELECTED' => '#506cb8',
         'TR-ODD'=>'#DCE7F5',
         'TR-EVEN'=>'#ffffff',
         'INNER-BOX'=>'#DCE1EF',
@@ -90,6 +90,16 @@ class Noalyss_Appearance
         }
     }
 
+    /**
+     * @param string[] $aColor
+     */
+    public function get_color($p_code)
+    {
+        if (isset($this->aColor[$p_code])) {
+            return $this->aColor[$p_code];
+        }
+        throw new Exception('NAP100: INVALID CODE');
+    }
     function set_color($p_code, $p_value)
     {
         $aKey = array_keys($this->aColor);
@@ -189,30 +199,71 @@ EOF;
         return $r;
 
     }
-    function input_form()
+
+    /**
+     * Build a html string for each color
+     * @param $p_key string key of $this->aCSSColor
+     * @return string
+     */
+    private function build_input_row(string $p_key):string
     {
-        $str = "";
-        $str = '<h3 style="text-align: center;border:1px solid black;">'._("Couleur de fond").'</h3>';
-        $f=0;
-        foreach (self::$aCSSColorName as $key => $value) {
-            $value = $this->aColor[$key];
-            $icolor = new IColor($key, $value);
-            $str_icolor = $icolor->input();
-            $label = self::$aCSSColorName[$key];
-            $part=mb_strcut($key,0,4);
-            if (  strcmp($part , "FONT")==0 && $f==0 ){
-                $str .=  '<h3 style="text-align: center;border:1px solid black;">'._("Couleur police").'</h3>';
-                $f=1;
-            }
-            $str .= <<<EOF
+        $value = $this->aColor[$p_key];
+        $icolor = new IColor($p_key, $value);
+        $label = self::$aCSSColorName[$p_key];
+        $str_icolor = $icolor->input();
+        $str="";
+        $str .= <<<EOF
 <div class="form-group">
-    <label for="{$key}">
+    <label for="{$p_key}">
     {$label}
 </label>
     {$str_icolor}
 </div>
 EOF;
-        }
+        return $str;
+    }
+    private function title($p_string)
+    {
+        return '<h3 class="">'.h($p_string).'</h3>';
+    }
+    /**
+     * Build the HTML string for inputing the color
+     * @return string
+     */
+    function input_form()
+    {
+        $str = "";
+        $str.=$this->title(_("(1) Général"));
+        $str .= $this->build_input_row('BODY');
+        $str .= $this->build_input_row('FONT-DEFAULT');
+
+        $str.=$this->title(_("(2) En-tête dossier"));
+        $str .= $this->build_input_row('FOLDER');
+        $str .= $this->build_input_row('FONT-FOLDER');
+
+        $str.=$this->title('(3)'._("Titre"));
+        $str .= $this->build_input_row('H2');
+
+        $str.=$this->title('(4)'._("Menu principal"));
+        $str .= $this->build_input_row('MENU1');
+        $str .= $this->build_input_row('FONT-MENU1');
+        $str .= $this->build_input_row('MENU1-SELECTED');
+
+        $str.=$this->title('(5)'._("Sous-Menu"));
+        $str .= $this->build_input_row('MENU2');
+        $str .= $this->build_input_row('FONT-MENU2');
+
+        $str.=$this->title('(6)'._("Tableau"));
+        $str .= $this->build_input_row('FONT-TABLE');
+        $str .= $this->build_input_row('TR-ODD');
+        $str .= $this->build_input_row('TR-EVEN');
+        $str .= $this->build_input_row('FONT-TABLE-HEADER');
+
+
+        $str.=$this->title('(7)'._("Boîte de dialogue"));
+        $str .= $this->build_input_row('INNER-BOX');
+        $str .= $this->build_input_row('INNER-BOX-TITLE');
+
         $str.=$this->input_reset();
         return $str;
     }

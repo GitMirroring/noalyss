@@ -201,22 +201,7 @@ $all->style=' class="input_text"';
                     ?>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <h2><?=_("Apparence")?></h2>
-                    <?php
-                    $noalyss_appearance=new Noalyss_Appearance();
-                    $noalyss_appearance->load();
-                    if ( $noalyss_appearance->from_post() ) {
-                        if (DEBUGNOALYSS > 1 ) { echo "save appearance";}
-                        $noalyss_appearance->save();
-                    }
-                    echo $noalyss_appearance->input_form();
-                    ?>
 
-
-                </div>
-            </div>
             <div class="row">
                 <div class="col-4"></div>
                 <div class="col-4">
