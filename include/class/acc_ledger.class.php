@@ -2322,7 +2322,7 @@ class Acc_Ledger  extends jrn_def_sql
                 echo dossier::hidden();
                 echo '<input type="hidden" value="'.$id.'" name="p_jrn">';
                 $op=new Pre_operation($cn);
-                $op->p_jrn=$id;
+                $op->set_p_jrn($id);
 
                 if ($op->count()!=0)
                 {
