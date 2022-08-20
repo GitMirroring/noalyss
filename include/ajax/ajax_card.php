@@ -148,6 +148,7 @@ case 'dc':
         if ( $card == 'FNT' )
           {
             $html.='<h2 class="error">'._('Fiche non trouvée').'</h2>';
+            $html.='<div style="text-align:center">'.HtmlInput::button_close($ctl).'</div>';
           }
 	else
 	  {
