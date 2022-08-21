@@ -53,21 +53,21 @@ class Noalyss_Appearance
     function __construct()
     {
         self::$aCSSColorName = ['H2' => _("Titre"),
-            'MENU1' => _("Menu principal"),
-            'BODY' => _("Fond d'écran"),
-            'MENU2' => _("Menu second"),
-            'MENU1-SELECTED' => _("Menu choisi"),
+            'MENU1' => _("Fond"),
+            'BODY' => _("Fond"),
+            'MENU2' => _("Fond"),
+            'MENU1-SELECTED' => _("Fond item choisi"),
             'TR-ODD'=>_("Ligne impaire"),
             'TR-EVEN'=>_("Ligne paire"),
             'INNER-BOX'=>_("Fond Boîte dialogue"),
             'INNER-BOX-TITLE'=>_("Fond titre dialogue"),
-            'FOLDER' => _("Couleur dossier"),
-            'FONT-MENU1' => _("Couleur police menu principale"),
-            'FONT-MENU2' => _("Couleur police menu second"),
-            'FONT-TABLE' => _("Couleur police dans les tables"),
-            'FONT-DEFAULT' => _("Couleur police par défaut"),
-            'FONT-TABLE-HEADER' => _("Couleur police en-tête table"),
-            'FONT-FOLDER' => _("Couleur police dossier")];
+            'FOLDER' => _("Fond "),
+            'FONT-MENU1' => _("Caractère"),
+            'FONT-MENU2' => _("Caractère"),
+            'FONT-TABLE' => _("Caractère"),
+            'FONT-DEFAULT' => _("Caractère par défaut"),
+            'FONT-TABLE-HEADER' => _("Caractère en-tête"),
+            'FONT-FOLDER' => _("Caractère")];
         $this->aColor=self::$aCSSColor;
     }
 
