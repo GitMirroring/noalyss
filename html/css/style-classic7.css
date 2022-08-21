@@ -2642,6 +2642,7 @@ div.progressbar {
     font-weight: bolder;
     font-size: 1.5rem;
     text-align: center;
+    background-image: linear-gradient(to right,white, navy);
 }
 .nowrap td {
     white-space: nowrap;
