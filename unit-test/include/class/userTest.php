@@ -174,8 +174,7 @@ class UserTest extends TestCase
         
         $sql=$user->sql_writable_profile();
         $sql= " select count(*) from ".$sql." as a";
-        var_dump($sql);
-        
+
         $this->assertEquals(3,$cn->get_value($sql),"Error writable profile must be = 3");
         $this->assertEquals(3,count($user->get_writable_profile()),"Error writable profile must be = 3");
         
@@ -190,7 +189,7 @@ class UserTest extends TestCase
             
         $sql=$user->sql_writable_profile();
         $sql= " select count(*) from ".$sql." as a";
-        var_dump($sql);
+
         
         $this->assertEquals(2,$cn->get_value($sql),"Error writable profile must be = 2 ");
         $this->assertEquals(2,count($user->get_writable_profile()),"Error writable profile must be = 2");
@@ -214,7 +213,7 @@ class UserTest extends TestCase
         
         $sql=$user->sql_readable_profile();
         $sql= " select count(*) from ".$sql." as a";
-        var_dump($sql);
+
         $this->assertEquals(3,$cn->get_value($sql),"Error readable profile must be = 3");
         $this->assertEquals(3,count($user->get_readable_profile()),"Error readable profile must be = 3");
         
