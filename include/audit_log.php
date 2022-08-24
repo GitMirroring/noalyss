@@ -25,7 +25,7 @@
 if ( !defined ('ALLOWED')) die('Forbidden');
 ?>
 <DIV class="content">
-<span class="notice">Liste limitée aux 100 dernières connexions</span>
+<span class="notice"><?=_("100 dernières connexions")?></span>
 <?php
 
     $cn=new Database();

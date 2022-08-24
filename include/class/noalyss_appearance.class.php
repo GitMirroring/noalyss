@@ -173,7 +173,7 @@ class Noalyss_Appearance
     background-color:{$inner_box};
    }
     tr.even {
-    background-color: {$tr_even} !important;
+    background-color: {$tr_even} ;
     }
     </style>
 
