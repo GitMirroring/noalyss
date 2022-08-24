@@ -46,7 +46,7 @@ echo td(_('Tiers')).td($view_card_detail);
 <tr>
 <?php 
   $itext=new IText('lib');
-  $itext->value=strip_tags($obj->det->jr_comment);
+  $itext->value=(!empty($obj->det->jr_comment))?strip_tags($obj->det->jr_comment):'';
   $itext->size=40;
   echo td(_('Libellé')).td($itext->input(),' colspan="2" style="width:auto"');
 
@@ -59,7 +59,7 @@ echo td(_('Tiers')).td($view_card_detail);
 <tr>
 <?php 
 $itext=new IText('npj');
-$itext->value=strip_tags($obj->det->jr_pj_number);
+$itext->value=(!empty($obj->det->jr_pj_number))?strip_tags($obj->det->jr_pj_number):'';
 echo td(_('Pièce')).td($itext->input());
 ?>
 

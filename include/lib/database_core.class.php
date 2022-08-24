@@ -846,7 +846,9 @@ class DatabaseCore
 
     static function escape_string($p_string)
     {
-        return pg_escape_string($p_string);
+        static $cn=null;
+        if ( $cn==null) $cn=new Database();
+        return pg_escape_string($cn->db,$p_string);
     }
 
     /**\brief wrapper for the function pg_close

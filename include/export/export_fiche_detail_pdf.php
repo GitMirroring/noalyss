@@ -149,7 +149,8 @@ for ($e=0;$e<count($array);$e++)
     $pdf->LongLine($size[$l],6,($description.'('.$row['jr_internal'].")"),0,$align[$l]);
 
     $l++;
-    $pdf->LongLine($size[$l],6,(($row['letter']!=-1)?strtoupper(base_convert($row['letter'],10,36)):''),0,$align[$l]);
+
+    $pdf->LongLine($size[$l],6,((!empty($row['letter']) && $row['letter']!=-1)?strtoupper(base_convert($row['letter'],10,36)):''),0,$align[$l]);
     $l++;
     $pdf->LongLine($size[$l],6,(sprintf('% 12.2f',$row['deb_montant'])),0,$align[$l]);
     $l++;

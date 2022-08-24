@@ -34,7 +34,7 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
  */
 function h($p_string)
 {
-    return htmlspecialchars($p_string,ENT_QUOTES|ENT_HTML5,'UTF-8',true);
+    return ( $p_string == null)?"":htmlspecialchars($p_string,ENT_QUOTES|ENT_HTML5,'UTF-8',true);
 }
 function p($p_string)
 {
@@ -852,6 +852,7 @@ function smaller_date($p_date)
  */
 function format_date($p_date, $p_from_format = 'YYYY-MM-DD',$p_to_format='DD.MM.YYYY')
 {
+    if (empty($p_date)) {return $p_date;}
     if ($p_from_format == 'YYYY-MM-DD')
     {
         $date = explode('-', $p_date);
@@ -1478,7 +1479,7 @@ function generate_random_string($car)
 {
     $string="";
     $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789*/+-=";
-    srand((double) microtime()*1020030);
+    srand((int) microtime()*1020030);
     for ($i=0; $i<$car; $i++)
     {
         $string .= $chaine[rand()%strlen($chaine)];

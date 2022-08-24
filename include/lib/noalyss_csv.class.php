@@ -142,8 +142,9 @@ class Noalyss_Csv
             }
             else
             {
+                $export=($this->element[$i]['value']==null)?"":$this->element[$i]['value'];
                 // remove break-line, 
-                $export=str_replace("\n"," ",$this->element[$i]['value']);
+                $export=str_replace("\n"," ",$export);
                 $export=str_replace("\r"," ", $export);
                 // remove double quote
                 $export=str_replace('"',"", $export);

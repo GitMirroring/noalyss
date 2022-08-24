@@ -141,7 +141,7 @@ if ( ! isset ($_REQUEST['oper_detail']))
         $export->add($op['deb_montant'],"number");
         $export->add($op['cred_montant'],"number");
         $export->add(abs($progress),"number");
-        if ($op['letter'] !=-1){
+        if ( $op['letter'] !=-1 && ! empty($op['letter'])){
             $export->add(strtoupper(base_convert($op['letter'],10,36)));
         } else {
             $export->add("");

@@ -174,7 +174,7 @@ hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #0
     $a_table=$html->getElementsByTagName("table");
     
     // For PHP  < 7 , we must change the attribute "width"
-    if ( substr(phpversion(),0,1) != "7" )
+    if ( substr(phpversion(),0,1) < 7 )
     {
         for ( $i = 0 ; $i < $a_table->length;$i++) {
             $node=$a_table->item($i);

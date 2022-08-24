@@ -36,7 +36,7 @@ class IButton extends HtmlInput
     {
         $this->name=($p_name==null)?$this->name:$p_name;
         $this->value=($p_value==null)?$this->value:$p_value;
-	$this->label=(trim($this->label) != '')?$this->label:$this->value;
+	    $this->label=(!empty($this->label))?$this->label:$this->value;
         $this->class=($p_class != "")?$p_class:$this->class;
         $this->class=($this->class=="")?"smallbutton ":$this->class;
         if ( $this->readOnly==true) return $this->display();
