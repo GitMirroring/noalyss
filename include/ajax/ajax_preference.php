@@ -355,7 +355,10 @@ if ($action == 'save')
     $_SESSION[SESSION_KEY.'g_theme']=$style_user;
     $_SESSION[SESSION_KEY.'g_pagesize']=$p_size;
     $_SESSION[SESSION_KEY.'g_lang']=$lang;
-    
+    $_SESSION[SESSION_KEY.'csv_fieldsep']=$csv_fieldsep;
+    $_SESSION[SESSION_KEY.'csv_decimal']=$csv_decimal;
+    $_SESSION[SESSION_KEY.'csv_encoding']=$csv_encoding;
+
     // find the right CSS theme
     $style= $repo->get_value("select the_filestyle from theme
                            where the_name=$1" ,[$style_user]);
