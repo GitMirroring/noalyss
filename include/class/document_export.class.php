@@ -57,7 +57,7 @@ class Document_Export
         try
         {
             $this->check_file();
-            $stmt=PDFTK." ".$this->store_pdf.'/*-stamp_*pdf  output '.$this->store_pdf.'/result.pdf';
+            $stmt=PDFTK." ".$this->store_pdf.'/*pdf  output '.$this->store_pdf.'/result.pdf';
             $status=0;
             echo $stmt;
             passthru($stmt, $status);
@@ -91,7 +91,7 @@ class Document_Export
             throw new Exception ( __FILE__.":".__LINE__."cannot recreate zip");
         }
         chdir($this->store_pdf);
-        $zip->addGlob("*-stamp_*pdf");
+        $zip->addGlob("*.pdf");
         $zip->close();
 
     }
@@ -102,9 +102,16 @@ class Document_Export
      * @throws Exception
      */
 
-    function move_file($p_source, $target)
+    function move_file($p_source, $p_target)
     {
         $this->check_file();
+        $i=1;
+        $target=$p_target;
+        // do not overwrite a document already present
+        while (file_exists($target)) {
+            $target = sprintf("%d-%s",$i,$p_target);
+            $i++;
+        }
         copy($p_source, $this->store_pdf . '/' . $target);
     }
     /**
@@ -254,7 +261,7 @@ class Document_Export
             rename($output2, $output);
 
             // Move the PDF into another temp directory 
-            $this->move_file($output, $order.'-stamp_'.$file_pdf);
+            $this->move_file($output, $file_pdf);
             $order++;
         }
 
@@ -324,7 +331,10 @@ class Document_Export
 
 
         $filename=clean_filename($file[0]['jr_pj_name']);
-        
+        $receipt=clean_filename($file[0]['jr_pj_number']);
+        $receipt=str_replace('.','-',$receipt);
+        $filename=$receipt.'-'.$filename;
+
         $cn->start();
         $cn->lo_export($file[0]['jr_pj'], $this->store_convert.'/'.$filename);
         $cn->commit();
