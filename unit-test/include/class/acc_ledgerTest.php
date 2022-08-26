@@ -822,7 +822,7 @@ class Acc_LedgerTest extends TestCase
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger-input_new.html", $result);
         $size=filesize(__DIR__."/file/acc_ledger-input_new.html");
                 
-        $this->assertEquals(16348,$size," output input_new is not what it is expected");
+        $this->assertEquals(15969,$size," output input_new is not what it is expected");
     }
 
     /**

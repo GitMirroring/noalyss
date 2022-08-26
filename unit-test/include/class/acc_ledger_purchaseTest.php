@@ -332,7 +332,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
                 '<OPTION VALUE="3" SELECTED>Achat',
                 $res);
         $this->assertStringContainsString('<INPUT TYPE="hidden" id="jrn_type" NAME="jrn_type" VALUE="ACH"',$res);
-        $this->assertStringContainsString('<td class="num">  <span id="tvac" >0.0</span> </td>',$res);
+        $this->assertStringContainsString('<span id="tvac" >0.0</span> </td>',$res);
         
     }
 

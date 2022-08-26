@@ -254,4 +254,52 @@ class Ac_CommonTest extends TestCase
                 
         }
     }
+
+    /**
+     * @covers h
+     * @return void
+     */
+    function testh()
+    {
+        $this->assertEquals("",h(null));
+        $this->assertEquals("",h(""));
+        $this->assertEquals("&lt;&amp;",h("<&"));
+        $this->assertEquals(0,h("0"));
+    }
+    function dataFormat_Date()
+    {
+        return array(
+                ["01.05.2000","DD.MM.YYYY","DD.MM.YY",'01.05.00'],
+                ["01.05.2000","DD.MM.YYYY","DD-MM-YY",'01-05-00'],
+                ["01.05.2000","DD.MM.YYYY","YYYYMMDD",'20000501'],
+                ["01.05.2000","DD.MM.YYYY","YYYY/MM/DD",'2000/05/01'],
+                ["2000-05-07","YYYY-MM-DD","DD.MM.YY",'07.05.00'],
+                ["","DD.MM.YYYY","DD.MM.YY",""],
+                ["1/1/1","DD.MM.YYYY","DD.MM.YY","1/1/1"],
+        );
+    }
+    /**
+     * @param $p_date
+     * @param $p_from
+     * @param $p_to
+     * @param $p_result
+     * @return void
+     * @throws Exception
+     * @dataProvider dataFormat_date
+     */
+    function testFormatDate($p_date,$p_from,$p_to,$p_result)
+    {
+        $this->assertEquals($p_result,format_date($p_date,$p_from,$p_to));
+    }
+    function testGenerate_Random_String()
+    {
+        $this->assertEquals(8,strlen(generate_random_string(8)));
+        $this->assertEquals(12,strlen(generate_random_string(12)));
+        $this->assertEquals(16,strlen(generate_random_string(16)));
+    }
+    function testDatabase_Escape_String()
+    {
+        $this->assertEquals("l''éléphant",Database::escape_string("l'éléphant"));
+        $this->assertEquals("l\''éléphant",Database::escape_string("l\'éléphant"));
+    }
 }
