@@ -51,7 +51,7 @@ class IText extends HtmlInput
 	$this->id=($this->id=="")?$this->name:$this->id;
 
 	// Double quote makes troubles 
-	$this->value=str_replace('"','',$this->value);
+	$this->value=noalyss_str_replace('"','',$this->value);
 
         $t= 'title="'.$this->title.'" ';
         $autofocus=($this->autofocus)?" autofocus ":"";

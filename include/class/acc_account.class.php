@@ -130,7 +130,7 @@ class Acc_Account
         if ( $count > 0)
             throw new Exception (_("Poste en double"),EXC_DUPLICATE);
         
-        if (trim($this->data_sql->pcm_lib)=="")
+        if (noalyss_trim($this->data_sql->pcm_lib)=="")
             throw new Exception (_("Libellé vide"),EXC_PARAM_VALUE);
         
         // can not depend of itself

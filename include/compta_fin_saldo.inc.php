@@ -121,9 +121,9 @@ for ($i=0; $i<$nb_array; $i++)
                 $array[$i]->strAttribut(ATTR_DEF_QUICKCODE)).
         "</TD>";
 
-        $saldo_rec=bcsub($saldo_reconcilied['debit'],
+        $saldo_rec=noalyss_bcsub($saldo_reconcilied['debit'],
                 $saldo_reconcilied['credit']);
-        $diff=bcsub($saldo_not_reconcilied['debit'],
+        $diff=noalyss_bcsub($saldo_not_reconcilied['debit'],
                 $saldo_not_reconcilied['credit']);
         echo "<TD >".
         $array[$i]->strAttribut(ATTR_DEF_NAME).

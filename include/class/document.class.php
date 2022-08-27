@@ -1806,11 +1806,11 @@ class Document
         {
             if ($p_type=='OOo')
             {
-                $p_value=str_replace('&', '&amp;', $p_value);
-                $p_value=str_replace('<', '&lt;', $p_value);
-                $p_value=str_replace('>', '&gt;', $p_value);
-                $p_value=str_replace('"', '&quot;', $p_value);
-                $p_value=str_replace("'", '&apos;', $p_value);
+                $p_value=noalyss_str_replace('&', '&amp;', $p_value);
+                $p_value=noalyss_str_replace('<', '&lt;', $p_value);
+                $p_value=noalyss_str_replace('>', '&gt;', $p_value);
+                $p_value=noalyss_str_replace('"', '&quot;', $p_value);
+                $p_value=noalyss_str_replace("'", '&apos;', $p_value);
             }
             $p_buffer=preg_replace('/'.$p_pattern.'/i', $p_value, $p_buffer, $p_limit);
         }

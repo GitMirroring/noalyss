@@ -137,7 +137,7 @@ function findSide($p_number)
 function nbm($p_number,$p_dec = 2)
 {
 
-    if (trim($p_number) == '')
+    if (noalyss_trim($p_number) == '')
 	return '';
     if ($p_number == 0)
 	return "0,00";
@@ -217,7 +217,7 @@ function cmpDate($p_date, $p_date_oth)
  */
 function isNumber($p_int)
 {
-    if (strlen(trim($p_int)) == 0)
+    if (strlen(noalyss_trim($p_int)) == 0)
 	return 0;
     if (is_numeric($p_int) === true)
 	return 1;
@@ -838,6 +838,7 @@ function shrink_date($p_date)
  */
 function smaller_date($p_date)
 {
+    if (empty ($p_date)) return "";
     $str_date = substr($p_date, 0, 6) . substr($p_date, 8, 2);
     return $str_date;
 }
@@ -1584,4 +1585,29 @@ function add_http_link($text)
     
     return $ret;
 
+}
+function noalyss_trim($p_string) {
+    if ($p_string===null) return "";
+    else return trim($p_string);
+}
+function noalyss_str_replace($search,$replace,$string) {
+    if ($string===null) return "";
+    else return str_replace($search,$replace,$string);
+}
+function noalyss_bcsub($p_first,$p_second)
+{
+    $p_first=(empty($p_first))?0:$p_first;
+    $p_second=(empty($p_second))?0:$p_second;
+    return bcsub($p_first,$p_second);
+}
+function noalyss_bcadd($p_first,$p_second)
+{
+    $p_first=(empty($p_first))?0:$p_first;
+    $p_second=(empty($p_second))?0:$p_second;
+    return bcadd($p_first,$p_second);
+}
+function noalyss_strip_tags($p_string)
+{
+    if ($p_string===null) return "";
+    return strip_tags($p_string);
 }

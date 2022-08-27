@@ -127,9 +127,9 @@ class Print_Ledger_Detail_Item extends Print_Ledger
                 $this->write_cell(20, $high, nbm($row['tot_tva_np']), 1, 0, 'R', true);
                 $this->write_cell(20, $high, nbm($row['other_tax_amount']), 1, 0, 'R', true);
                 $this->write_cell(20, $high, nbm($row['tot_vat']), 1, 0, 'R', true);
-                $sum=bcadd($row['htva'],$row['tot_vat']);
-                $sum=bcadd($row['other_tax_amount'],$sum);
-                $sum=bcsub($sum,$row['tot_tva_np']);
+                $sum=noalyss_bcadd($row['htva'],$row['tot_vat']);
+                $sum=noalyss_bcadd($row['other_tax_amount'],$sum);
+                $sum=noalyss_bcsub($sum,$row['tot_tva_np']);
                 $this->write_cell(20, $high, nbm($sum), 1, 0, 'R', true);
                 $internal=$row['jr_internal'];
                 $this->line_new(6);

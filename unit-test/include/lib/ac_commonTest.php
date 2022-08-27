@@ -302,4 +302,73 @@ class Ac_CommonTest extends TestCase
         $this->assertEquals("l''éléphant",Database::escape_string("l'éléphant"));
         $this->assertEquals("l\''éléphant",Database::escape_string("l\'éléphant"));
     }
+    function dataNoalyss_trim()
+    {
+        return array(["0","0"],
+            [" 0 1 1 1 ","0 1 1 1"],
+            [null,""],
+            );
+    }
+
+    /**
+     * @brief Comptability PHP 8.1 , null is not consider as an empty string
+     * @param $param
+     * @param $result
+     * @return void
+     * @dataProvider dataNoalyss_trim
+     */
+    function testNoalyss_trim($param,$result)
+    {
+        $this->assertEquals($result,noalyss_trim($param));
+    }
+    function dataNoalyss_replace() {
+        return array(["0","/","0A0A","/A/A"],
+            ["A","*","0A0A","0*0*"],
+            ["0","/",null,""],
+            ["0","/","",""]
+        );
+    }
+
+    /**
+     * @brief Comptability PHP 8.1 , null is not consider as an empty string
+     * @dataProvider dataNoalyss_replace
+     */
+    function testNoalyss_replace($search,$replace,$string,$expected)
+    {
+        $this->assertEquals($expected,noalyss_str_replace($search,$replace,$string));
+    }
+    function dataNoalyss_bcsub() {
+        return array(
+                [1,2,-1],
+                [0,2,-2],
+                ["",2,-2],
+                [null,2,-2]
+        );
+    }
+
+    /**
+     * @brief Comptability PHP 8.1 , null is not consider as an empty string
+     * @dataProvider dataNoalyss_bcsub
+     */
+    function testNoalyss_bcsub($numbera,$numberb,$expected)
+    {
+        $this->assertEquals($expected,noalyss_bcsub($numbera,$numberb));
+    }
+    function dataNoalyss_strip_tags() {
+        return array(
+           [null,""],
+           ["",""],
+           ["0","0"],
+           ["<script>0</script>","0"],
+        );
+    }
+
+    /**
+     * @brief Comptability PHP 8.1 , null is not consider as an empty string
+     * @dataProvider dataNoalyss_strip_tags
+     */
+    function testNoalyss_strip_tags($string,$expected)
+    {
+        $this->assertEquals($expected,noalyss_strip_tags($string));
+    }
 }

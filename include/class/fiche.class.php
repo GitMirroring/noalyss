@@ -1242,7 +1242,7 @@ class Fiche
         $res=$this->cn->exec_sql($sql,[$this->id,$p_attr]);
         if ( Database::num_row($res) == 0 ) return true;
         $text=Database::fetch_result($res,0,0);
-        return (strlen(trim($text)) > 0)?false:true;
+        return (strlen(noalyss_trim($text)) > 0)?false:true;
 
 
     }
@@ -1291,7 +1291,7 @@ class Fiche
         list($max,$min)=$tPeriode->get_limit($exercice);
 
 
-        if ( trim($p_search) != "" )
+        if ( noalyss_trim($p_search) != "" )
         {
             $search.=" and f_id in
                      (select distinct f_id from fiche_detail
@@ -1622,7 +1622,7 @@ class Fiche
                         $filter_jrn=$this->cn->make_list("select jrn_def_fiche_deb from jrn_Def where jrn_def_id=$1",
                                 array($jrn));
 
-                        if (trim($filter_jrn)!='')
+                        if (noalyss_trim($filter_jrn)!='')
                             $fp1=" fd_id in (".$filter_jrn.")";
                         else
                             $fp1="fd_id < 0";
@@ -1630,7 +1630,7 @@ class Fiche
                         $filter_jrn=$this->cn->make_list("select jrn_def_fiche_cred from jrn_Def where jrn_def_id=$1",
                                 array($jrn));
 
-                        if (trim($filter_jrn)!='')
+                        if (noalyss_trim($filter_jrn)!='')
                             $fp2=" fd_id in (".$filter_jrn.")";
                         else
                             $fp2="fd_id < 0";
@@ -1643,7 +1643,7 @@ class Fiche
                         $filter_fd_id=' true';
                         break;
                     default:
-                        if (trim($typecard)!='')
+                        if (noalyss_trim($typecard)!='')
                             $filter_fd_id=' fd_id in ('.$typecard.')';
                         else
                             $filter_fd_id=' fd_id < 0';

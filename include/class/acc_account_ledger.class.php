@@ -634,7 +634,7 @@ class Acc_Account_Ledger
     function belong_ledger($p_jrn)
     {
         $filter=$this->db->get_value("select jrn_def_class_cred from jrn_def where jrn_def_id=$1", array($p_jrn));
-        if ( trim ($filter) == '')
+        if ( noalyss_trim ($filter) == '')
             return 0;
 
         $valid_cred=explode(" ",$filter);

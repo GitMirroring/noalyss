@@ -198,7 +198,7 @@ abstract class Data_SQL
     {
         foreach ($this->name as $key)
         {
-            if (trim($this->$key)=='')
+            if (noalyss_trim($this->$key)=='')
                 $this->$key=null;
         }
         return 0;

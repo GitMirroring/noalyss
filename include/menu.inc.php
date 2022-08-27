@@ -174,10 +174,13 @@ for ($i = 0; $i < Database::num_row($ret); $i++)
             break;
     }
     $class = ( $i % 2 == 0) ? $class = ' class="odd"' : $class = ' class="even"';
+    // compatibility 8.1 , null is not an empty string
+    $me_description=($row->me_description===null)?"":_($row->me_description);
+    $me_menu=($row->me_menu===null)?"":_($row->me_menu);
     echo "<tr $class>";
     echo td($js);
-    echo td(_($row->me_menu));
-    echo td(h(_($row->me_description)));
+    echo td($me_menu);
+    echo td(h($me_description));
     echo td(h($row->me_type));
     echo td(h($row->me_file));
     echo td(h($row->me_url));

@@ -1000,7 +1000,7 @@ class DatabaseCore
         foreach ($forbid_sql as $forbid_key) {
             if (stripos($p_sql,$forbid_key) !== false)
             {
-                throw new Exception(_("Possible SQL inject",EXC_INVALID));
+                throw new Exception(_("Possible SQL inject"),EXC_INVALID);
             }
 
         }

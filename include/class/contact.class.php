@@ -68,7 +68,7 @@ class contact extends Fiche
         $bar=navigation_bar($offset,$all_contact,$_SESSION[SESSION_KEY.'g_pagesize'],$page);
         // set a filter ?
         $search="";
-        if ( trim($p_search) != "" )
+        if ( noalyss_trim($p_search) != "" )
         {
             $search=" and f_id in
                     (select f_id from fiche_Detail

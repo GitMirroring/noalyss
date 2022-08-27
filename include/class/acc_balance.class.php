@@ -88,12 +88,12 @@ class Acc_Balance
             $and=" and ";
         }
 
-        if ( strlen(trim($this->from_poste)) != 0 && $this->from_poste!=-1  )
+        if ( strlen(noalyss_trim($this->from_poste)) != 0 && $this->from_poste!=-1  )
         {
             $from_poste=" $and j_poste::text >= '".$this->from_poste."'";
             $and=" and ";
         }
-        if ( strlen(trim($this->to_poste)) != 0   && $this->to_poste!=-1 )
+        if ( strlen(noalyss_trim($this->to_poste)) != 0   && $this->to_poste!=-1 )
         {
             $to_poste=" $and j_poste::text <= '".$this->to_poste."'";
             $and=" and ";

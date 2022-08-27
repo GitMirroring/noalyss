@@ -196,7 +196,7 @@ class PDF_Core extends TFPDF
         for ($i=0;$i < $size ; $i++)
         {
             $a=$cell[$i];
-            $a->text= str_replace("\\", "", $a->text);
+            $a->text= noalyss_str_replace("\\", "", $a->text);
             switch ($a->type)
             {
                 case "M":

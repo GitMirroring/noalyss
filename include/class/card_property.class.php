@@ -595,7 +595,7 @@ class Card_Property
                 }
                 // Normal traitement
                 $sql="update fiche_detail set ad_value=$1 where jft_id=$2";
-                $p_fiche->cn->exec_sql($sql, array(strip_tags($value->av_text), $jft_id));
+                $p_fiche->cn->exec_sql($sql, array(noalyss_strip_tags($value->av_text), $jft_id));
             }
             if ($commit)
             {

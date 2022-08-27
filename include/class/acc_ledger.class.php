@@ -1709,7 +1709,7 @@ class Acc_Ledger  extends jrn_def_sql
                 $card.=$comma.$item['deb'];
                 $comma=',';
             }
-            if (strlen(trim($item['cred']))!='')
+            if (strlen(noalyss_trim($item['cred']))!=0)
             {
                 $card.=$comma.$item['cred'];
                 $comma=',';
@@ -2230,7 +2230,7 @@ class Acc_Ledger  extends jrn_def_sql
                      $min_date);
             }
             $saldo=$bank_card->get_bk_balance($cond);
-            $ret['amount']=bcsub($saldo['debit'], $saldo['credit']);
+            $ret['amount']=noalyss_bcsub($saldo['debit'], $saldo['credit']);
         }
         return $ret;
     }
