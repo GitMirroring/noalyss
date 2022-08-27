@@ -135,7 +135,8 @@ class Noalyss_Appearance
 
         echo <<<EOF
     <style>
-    #dossier {
+
+    #dossier,#module {
         color:{$folder_font};
         background-color: {$folder};
     }
