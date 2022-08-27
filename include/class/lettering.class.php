@@ -874,7 +874,7 @@ class Lettering_Card extends Lettering
                                                                 j_montant,j_debit,jr_comment,jr_internal,jr_id,jr_def_id,
                                                                 coalesce(let_diff.jl_id,-1) as letter,
                                                                 diff_letter1 as letter_diff,
-                                                                extract ('days' from coalesce(jr_date_paid,now())-coalesce(jr_ech,jr_date)) as day_paid,
+                                                                extract ('days' from coalesce(jr_date_paid,now())-jr_date) as day_paid,
                                                                 jd1.jrn_def_type
                                                                 from jrnx join jrn on (j_grpt = jr_grpt_id)
                                                                 join jrn_def as jd1 on (jrn.jr_def_id=jd1.jrn_def_id)
@@ -885,6 +885,7 @@ class Lettering_Card extends Lettering
                   j_qcode = upper($1) 
                 and j_date >= to_date($2,'DD.MM.YYYY')
                 and {$this->sql_ledger}
+		and jrn_def_type in ('VEN','ACH')
                  order by j_date,j_id";
         $this->content=$this->db->get_array($sql, array($this->quick_code, $this->start));
     }
