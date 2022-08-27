@@ -34,7 +34,7 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
  */
 function h($p_string)
 {
-    return ( $p_string == null)?"":htmlspecialchars($p_string,ENT_QUOTES|ENT_HTML5,'UTF-8',true);
+    return ( $p_string === null)?"":htmlspecialchars($p_string,ENT_QUOTES|ENT_HTML5,'UTF-8',true);
 }
 function p($p_string)
 {
