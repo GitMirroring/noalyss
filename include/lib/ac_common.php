@@ -325,7 +325,7 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
         echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 FINAL//EN" >';
         printf("\n");
     }
-    echo "<HTML>";
+    echo '<HTML>';
     
     if ($p_script2!="")
     {
@@ -350,9 +350,9 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     $p_script2 . "
     ";
     // preload font
-    echo    '<link rel="preload" href="./css/font/OpenSansRegular.woff" as="font" crossorigin="anonymous" />';
-    echo    '<link rel="preload" href="./css/font/SansationLight/SansationLight.woff" as="font" crossorigin="anonymous" />';
-    echo    '<link rel="preload" href="./css/font/fontello/fontello.woff" as="font" crossorigin="anonymous" />';
+    echo    '<link rel="preload" href="css/font/OpenSansRegular.woff" as="font" crossorigin="anonymous" />';
+    echo    '<link rel="preload" href="css/font/SansationLight/SansationLight.woff" as="font" crossorigin="anonymous" />';
+    echo    '<link rel="preload" href="css/font/fontello/fontello.woff" as="font" crossorigin="anonymous" />';
     
     echo '<script language="javascript" src="js/calendar.js"></script>
     <script type="text/javascript" src="js/lang/calendar-en.js"></script>';
