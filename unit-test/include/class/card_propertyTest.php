@@ -73,6 +73,7 @@ class Card_PropertyTest extends TestCase
             $fiche_def->InsertAttribut($property['ad_id']);
         }
         $fiche=new Fiche($g_connection);
+        $fiche->set_fiche_def($fiche_def->id);
         $fiche->attribut=$fiche_def->getAttribut();
         foreach ($fiche->attribut as $row)
         {
@@ -145,20 +146,47 @@ class Card_PropertyTest extends TestCase
      */
     public function testUpdate()
     {
-        $fiche_def=$this->getFiche();
         $fiche=$this->getFiche();
-        $fiche->load($fiche);
+        $fiche->load();
         $name="test ".microtime();
-        $this->assertFalse($fiche->getAttribut(1)==$name, 'name different');
+        $this->assertFalse($fiche->getAttribut(1)==$name, 'name not different');
         $fiche->setAttribut(1, $name);
         $aProperty=$fiche->to_array();
-        $this->assertEquals($name, $aProperty['av_text1'], 'name identical in array');
+        $this->assertEquals($name, $aProperty['av_text1'], 'name not identical in array');
 
         Card_Property::update($fiche);
 
         Card_Property::load($fiche);
         $this->assertEquals(trim($name), trim($fiche->strAttribut(1)), 'name identical in DB');
         $this->assertEquals(trim($name), trim($fiche->getName()), 'name identical in DB');
+    }
+
+    /**
+     * @brief test the inserting of new accounting based on the name
+     * @return void
+     */
+    public function testInsertDefaultAccounting()
+    {
+        $g_connection=Dossier::connect();
+        $name="test ".microtime();
+        $fiche=new Fiche($g_connection);
+        $fiche_def=$this->getFicheDef();
+        $fiche_def->get();
+
+        echo "fiche_def->id",$fiche_def->id;
+        $fiche->set_fiche_def($fiche_def->id);
+
+        $fiche->setAttribut(ATTR_DEF_NAME,$name);
+        $fiche->setAttribut(ATTR_DEF_ACCOUNT,$fiche_def->class_base.$name);
+
+        $fiche->insert($fiche_def->id,$fiche->to_array());
+        $this->assertEquals($name,$fiche->strAttribut(ATTR_DEF_NAME));
+
+        $accounting=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+        $acc_accounting=new Acc_Account($g_connection,$accounting);
+
+        $this->assertEquals($acc_accounting->get_lib("pcm_lib"),$name,"Cannot create a new accouting with 
+        the right label");
     }
 
     public function testInput()

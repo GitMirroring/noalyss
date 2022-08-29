@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NOALYSS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-27 14:41+0200\n"
+"POT-Creation-Date: 2022-08-30 00:37+0200\n"
 "PO-Revision-Date: 2019-07-31 13:23+0100\n"
 "Last-Translator: dany <danydb@noalyss.eu>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -635,6 +635,7 @@ msgid "%d fiches sont insérées dans la catégorie %s"
 msgstr "pluggen in de categorie ingevoegd"
 
 #: include/template/ledger_detail_fin.php:103
+#: include/template/ledger_detail_fin.php:104
 #, php-format
 msgid "%s Taux utilisé %s Montant en devise %s"
 msgstr ""
@@ -690,11 +691,13 @@ msgstr "Inkoopdagboeken"
 
 # Niet zeker of dit de juiste vertaling is
 #: include/class/noalyss_appearance.class.php:236
+#: include/class/noalyss_appearance.class.php:237
 #, fuzzy
 msgid "(1) Général"
 msgstr "Vorming"
 
 #: include/class/noalyss_appearance.class.php:240
+#: include/class/noalyss_appearance.class.php:241
 #, fuzzy
 msgid "(2) En-tête dossier"
 msgstr "Records Management"
@@ -1125,6 +1128,7 @@ msgstr "Verwerving over heel het jaar"
 #: include/class/anc_account_table.class.php:60
 #: include/class/fiche.class.php:802 include/user_detail.inc.php:88
 #: include/class/fiche.class.php:397 include/user.inc.php:216
+#: include/class/fiche.class.php:399
 #, fuzzy
 msgid "Actif"
 msgstr "Actie"
@@ -1429,6 +1433,7 @@ msgstr "Globale Administratie"
 #: include/class/fiche.class.php:1782 include/class/fiche.class.php:1808
 #: include/stock_cfg.inc.php:65 include/export/export_stock_resume_list.php:36
 #: include/class/fiche.class.php:1944 include/class/fiche.class.php:1313
+#: include/class/fiche.class.php:1319
 msgid "Adresse"
 msgstr "Adres"
 
@@ -2069,6 +2074,7 @@ msgstr "Voeg een lijn"
 #: include/class_fiche_def.php:767 include/class_fiche_def.php:774
 #: include/class_fiche_def.php:785 include/class/class_fiche_def.php:785
 #: include/class/fiche_def.class.php:786 include/class/fiche_def.class.php:781
+#: include/class/fiche_def.class.php:794
 msgid "Ajoutez cet élément"
 msgstr "Voeg dit element toe"
 
@@ -2442,7 +2448,7 @@ msgstr "Opgelet: wist alle gegevens die ermee gelinkt zijn"
 #: include/class_fiche_def.php:776 include/class_fiche_def.php:787
 #: include/class_fiche_def.php:799 include/class_fiche_def.php:798
 #: include/class/class_fiche_def.php:798 include/class/fiche_def.class.php:799
-#: include/class/fiche_def.class.php:794
+#: include/class/fiche_def.class.php:794 include/class/fiche_def.class.php:807
 msgid ""
 "Attention : il n'y aura pas de demande de confirmation pour enlever les\n"
 "                                   attributs sélectionnés. Il ne sera pas "
@@ -2819,6 +2825,7 @@ msgid "Aucun accès direct"
 msgstr "Geen toegang"
 
 #: include/class/fiche.class.php:476 include/class/fiche.class.php:531
+#: include/class/fiche.class.php:478 include/class/fiche.class.php:537
 #, fuzzy
 msgid "Aucun attribut "
 msgstr "Geen enkele klant"
@@ -3239,7 +3246,7 @@ msgstr "Beschrijving"
 #: include/export/export_fiche_detail_csv.php:54
 #: include/class/print_operation_currency.class.php:110
 #: include/template/ledger_detail_bottom.php:310 include/lib/ac_common.php:1334
-#: include/lib/ac_common.php:1335
+#: include/lib/ac_common.php:1335 include/lib/ac_common.php:1336
 msgid "Aucune donnée"
 msgstr "Geen enkel gegeven"
 
@@ -3550,6 +3557,7 @@ msgid "Autre information : "
 msgstr "Andere informatie :"
 
 #: include/class/fiche.class.php:1729 include/class/fiche.class.php:1097
+#: include/class/fiche.class.php:1103
 #, fuzzy
 msgid "Autre poste"
 msgstr "Van rekening"
@@ -4025,13 +4033,13 @@ msgstr ""
 
 #: include/class_fiche_def.php:175 include/class/class_fiche_def.php:175
 #: include/class/fiche_def.class.php:175 include/class/fiche_def.class.php:170
-#: include/class/fiche_def.class.php:173
+#: include/class/fiche_def.class.php:173 include/class/fiche_def.class.php:181
 msgid "Basé sur le modèle"
 msgstr ""
 
 #: include/class_fiche_def.php:173 include/class/class_fiche_def.php:173
 #: include/class/fiche_def.class.php:173 include/class/fiche_def.class.php:168
-#: include/class/fiche_def.class.php:171
+#: include/class/fiche_def.class.php:171 include/class/fiche_def.class.php:179
 #, fuzzy
 msgid "Basé sur le poste comptable"
 msgstr "de begrotingspost"
@@ -4123,6 +4131,7 @@ msgid "Boucle infinie"
 msgstr ""
 
 #: include/class/noalyss_appearance.class.php:263
+#: include/class/noalyss_appearance.class.php:264
 msgid "Boîte de dialogue"
 msgstr ""
 
@@ -4215,7 +4224,7 @@ msgstr "Basisklasse"
 
 #: include/class_fiche_def.php:174 include/class/class_fiche_def.php:174
 #: include/class/fiche_def.class.php:174 include/class/fiche_def.class.php:169
-#: include/class/fiche_def.class.php:172
+#: include/class/fiche_def.class.php:172 include/class/fiche_def.class.php:180
 #, fuzzy
 msgid "Calcul automatique du poste comptable"
 msgstr "Automatisch aanmaken van de boekhoudkundige post"
@@ -4403,7 +4412,7 @@ msgstr "Bestaande categorie"
 #: include/class_fiche_def.php:236 include/class_fiche_def.php:219
 #: include/class_fiche_def.php:225 include/class_fiche_def.php:235
 #: include/class/class_fiche_def.php:235 include/class/fiche_def.class.php:236
-#: include/class/fiche_def.class.php:231
+#: include/class/fiche_def.class.php:231 include/class/fiche_def.class.php:244
 msgid "Catégorie existante"
 msgstr "Bestaande categorie"
 
@@ -4444,6 +4453,7 @@ msgstr ""
 #: include/class_fiche_def.php:674 include/class_fiche_def.php:686
 #: include/class_fiche_def.php:685 include/class/class_fiche_def.php:685
 #: include/class/fiche_def.class.php:686 include/class/fiche_def.class.php:681
+#: include/class/fiche_def.class.php:694
 #, fuzzy
 msgid "Catégorie verrouillée "
 msgstr "Opgeslagen categorie"
@@ -4617,7 +4627,7 @@ msgstr "U bent niet bevoegd voor deze actie. Contacteer uw verantwoordelijke"
 #: include/class_fiche.php:406 include/class/class_fiche.php:406
 #: include/class/fiche.class.php:408 include/class/fiche.class.php:410
 #: include/class/fiche.class.php:409 include/class/fiche.class.php:445
-#: include/class/fiche_def.class.php:850
+#: include/class/fiche_def.class.php:850 include/class/fiche_def.class.php:858
 msgid "Cette categorie de card n'existe pas"
 msgstr "Deze cart categorie bestaat niet"
 
@@ -4782,7 +4792,7 @@ msgstr "Boekhoudkundige post of fiche veranderen"
 #: include/class_fiche_def.php:475 include/class_fiche_def.php:458
 #: include/class_fiche_def.php:464 include/class_fiche_def.php:476
 #: include/class/class_fiche_def.php:475 include/class/fiche_def.class.php:476
-#: include/class/fiche_def.class.php:471
+#: include/class/fiche_def.class.php:471 include/class/fiche_def.class.php:484
 msgid "Chaque fiche aura automatiquement son propre poste comptable : "
 msgstr "Iedere fiche zal automatische zijn eigen boekhoudkundige post hebben: "
 
@@ -4928,6 +4938,7 @@ msgstr ""
 #: include/class/acc_ledger.class.php:2502 include/class/fiche.class.php:1788
 #: include/ajax/ajax_card.php:311 include/compta_fin_rec.inc.php:287
 #: include/user.inc.php:225 include/dossier.inc.php:246
+#: include/class/fiche.class.php:1819
 #, fuzzy, php-format
 msgid "Cherche"
 msgstr "Vinden"
@@ -5558,6 +5569,7 @@ msgid "Cocher pour effacer"
 msgstr "Vink aan om deze fiche te verwijderen "
 
 #: include/class/noalyss_appearance.class.php:187
+#: include/class/noalyss_appearance.class.php:188
 msgid "Cocher pour remettre les couleurs d'origine"
 msgstr ""
 
@@ -5714,7 +5726,7 @@ msgstr ""
 #: include/lib/ac_common.php:1185 include/lib/ac_common.php:1187
 #: include/lib/ac_common.php:1211 include/lib/ac_common.php:1221
 #: include/lib/ac_common.php:1289 include/lib/ac_common.php:1298
-#: include/lib/ac_common.php:1299
+#: include/lib/ac_common.php:1299 include/lib/ac_common.php:1300
 msgid "Code Interne"
 msgstr "Interne code"
 
@@ -6306,6 +6318,7 @@ msgstr "Gemeente"
 #: include/template/ledger_detail_misc.php:108
 #: include/template/ledger_detail_ven.php:169
 #: include/template/ledger_detail_ach.php:162
+#: include/template/ledger_detail_fin.php:118
 msgid "Compt. Analytique"
 msgstr "Analytischer ekening"
 
@@ -6392,6 +6405,7 @@ msgstr "Resultatenrekening : product met debetsaldo"
 #: include/compta_fin_saldo.inc.php:48 include/template/param_jrn.php:48
 #: include/template/param_jrn.php:54 include/compta_fin_saldo.inc.php:47
 #: include/template/ledger_detail_fin.php:32
+#: include/template/ledger_detail_fin.php:33
 msgid "Compte en banque"
 msgstr "Bankrekening"
 
@@ -7334,6 +7348,7 @@ msgstr "Crébit"
 #: include/class/acc_account_ledger.class.php:405
 #: include/class/acc_ledger_history_generic.class.php:804
 #: include/operation_ods_new.inc.php:94 include/operation_ods_new.inc.php:103
+#: include/class/fiche.class.php:971
 msgid "Crédit"
 msgstr "Creditzijde"
 
@@ -7960,7 +7975,9 @@ msgstr ""
 #: tmp/import-advanced/template/select-acc-file.php:45
 #: tmp/import-advanced/template/operation_result.php:57
 #: tmp/import-advanced/template/select-anc-file.php:40
-#: include/lib/ac_common.php:1298
+#: include/lib/ac_common.php:1298 include/class/fiche.class.php:886
+#: include/class/fiche.class.php:961 include/template/ledger_detail_fin.php:23
+#: include/lib/ac_common.php:1299
 #, php-format
 msgid "Date"
 msgstr "Datum"
@@ -8882,6 +8899,8 @@ msgstr "Kan dit bestand op te slaan"
 #: include/dossier.inc.php:349 include/profile.inc.php:373
 #: include/lib/ac_common.php:1300 include/database.item.php:175
 #: include/database.item.php:170 include/lib/ac_common.php:1301
+#: include/class/fiche.class.php:887 include/class/fiche.class.php:966
+#: include/lib/ac_common.php:1302
 msgid "Description"
 msgstr "Beschrijving"
 
@@ -8995,6 +9014,7 @@ msgstr ""
 #: include/class/acc_account_ledger.class.php:399
 #: include/class/fiche.class.php:1596 include/class/fiche.class.php:963
 #: include/class/acc_account_ledger.class.php:403
+#: include/class/fiche.class.php:969
 msgid "Dev."
 msgstr ""
 
@@ -9483,6 +9503,7 @@ msgstr ""
 #: include/class_fiche_def.php:754 include/class_fiche_def.php:766
 #: include/class_fiche_def.php:765 include/class/class_fiche_def.php:765
 #: include/class/fiche_def.class.php:766 include/class/fiche_def.class.php:761
+#: include/class/fiche_def.class.php:774
 #, fuzzy
 msgid "Données générales"
 msgstr "Algemeen Opties"
@@ -9512,6 +9533,7 @@ msgstr "Ongeldig jaar"
 #: include/lib/ac_common.php:838 include/lib/ac_common.php:854
 #: include/lib/ac_common.php:864 include/lib/ac_common.php:902
 #: include/lib/ac_common.php:911 include/lib/ac_common.php:912
+#: include/lib/ac_common.php:913
 msgid "Données non disponibles"
 msgstr "Gegevens zijn niet beschikbaar"
 
@@ -9825,6 +9847,7 @@ msgstr "Afschrijvingstermijn"
 #: include/class/acc_ledger_history_generic.class.php:803
 #: include/operation_ods_new.inc.php:92 include/operation_ods_new.inc.php:101
 #: tmp/import-advanced/class/import/impacc2_fec.class.php:393
+#: include/class/fiche.class.php:970
 msgid "Débit"
 msgstr "debiet"
 
@@ -9844,6 +9867,7 @@ msgstr "Debet of Credit"
 #: include/class/fiche.class.php:1385 include/class/fiche.class.php:1399
 #: include/class/fiche.class.php:1400 include/class/fiche.class.php:1427
 #: include/class/fiche.class.php:1516 include/class/fiche.class.php:883
+#: include/class/fiche.class.php:889
 #, fuzzy
 msgid "Débit/Crédit"
 msgstr "Debet of Credit"
@@ -9925,6 +9949,7 @@ msgstr ""
 #: include/ac_common.php:786 include/ac_common.php:794
 #: include/ac_common.php:795 include/lib/ac_common.php:901
 #: include/lib/ac_common.php:910 include/lib/ac_common.php:911
+#: include/lib/ac_common.php:912
 msgid "Déconnecté"
 msgstr "Verbinding verbroken"
 
@@ -10461,6 +10486,7 @@ msgstr "de begrotingspost"
 #: include/class_fiche_def.php:767 include/class_fiche_def.php:779
 #: include/class_fiche_def.php:778 include/class/class_fiche_def.php:778
 #: include/class/fiche_def.class.php:779 include/class/fiche_def.class.php:774
+#: include/class/fiche_def.class.php:787
 #, fuzzy
 msgid "Détails"
 msgstr "Detail"
@@ -11074,7 +11100,7 @@ msgstr "Dit profiel verwijderen"
 #: include/class_fiche_def.php:769 include/class_fiche_def.php:779
 #: include/class_fiche_def.php:791 include/class_fiche_def.php:790
 #: include/class/class_fiche_def.php:790 include/class/fiche_def.class.php:791
-#: include/class/fiche_def.class.php:786
+#: include/class/fiche_def.class.php:786 include/class/fiche_def.class.php:799
 msgid "Effacer cette catégorie"
 msgstr "This categorie Wissen"
 
@@ -11346,7 +11372,7 @@ msgstr "verwijderen"
 #: include/class_fiche_def.php:773 include/class_fiche_def.php:783
 #: include/class_fiche_def.php:795 include/class_fiche_def.php:794
 #: include/class/class_fiche_def.php:794 include/class/fiche_def.class.php:795
-#: include/class/fiche_def.class.php:790
+#: include/class/fiche_def.class.php:790 include/class/fiche_def.class.php:803
 msgid "Enleve les éléments cochés"
 msgstr "Verwijdert van aangekruiste elements"
 
@@ -12217,7 +12243,8 @@ msgstr "Balans export"
 #: include/fiche.inc.php:305 include/fiche.inc.php:342
 #: include/class/fiche.class.php:1125 include/class/fiche.class.php:1756
 #: include/class/acc_account_ledger.class.php:754
-#: include/action.common.inc.php:305
+#: include/action.common.inc.php:305 include/class/fiche.class.php:1131
+#: include/class/fiche.class.php:1787
 msgid "Export CSV"
 msgstr "Export CSV"
 
@@ -12358,6 +12385,7 @@ msgstr "Export Kranten"
 #: include/class/fiche.class.php:1778
 #: include/class/acc_account_ledger.class.php:776
 #: include/template/ledger_detail_bottom.php:383
+#: include/class/fiche.class.php:1113 include/class/fiche.class.php:1809
 msgid "Export PDF"
 msgstr "PDF exporteren"
 
@@ -13052,6 +13080,7 @@ msgstr "Ongeldige opnemen"
 
 #: include/class/fiche.class.php:1181 include/class/fiche.class.php:1257
 #: include/class/fiche.class.php:523 include/class/fiche.class.php:580
+#: include/class/fiche.class.php:529 include/class/fiche.class.php:586
 #, fuzzy
 msgid "Fiche n'existe pas"
 msgstr "] Doorsturingslijst is leeg niet"
@@ -13217,6 +13246,7 @@ msgstr "Record niet gevonden"
 #: include/lib/ac_common.php:1129 include/lib/ac_common.php:1139
 #: include/lib/ac_common.php:1194 include/class/mobile.class.php:222
 #: include/lib/ac_common.php:1203 include/lib/ac_common.php:1204
+#: include/lib/ac_common.php:1205
 #, fuzzy
 msgid "Fichier non trouvé"
 msgstr "Record niet gevonden"
@@ -13510,7 +13540,7 @@ msgstr "Export CSV"
 #: include/lib/ac_common.php:811 include/lib/ac_common.php:813
 #: include/lib/ac_common.php:829 include/lib/ac_common.php:839
 #: include/lib/ac_common.php:886 include/lib/ac_common.php:895
-#: include/lib/ac_common.php:896
+#: include/lib/ac_common.php:896 include/lib/ac_common.php:897
 #, fuzzy
 msgid "Format Invalide"
 msgstr "act ongeldig"
@@ -14588,6 +14618,7 @@ msgstr ""
 #: include/class/acc_account_ledger.class.php:398
 #: include/class/fiche.class.php:1595 include/class/fiche.class.php:962
 #: include/class/acc_account_ledger.class.php:402
+#: include/class/fiche.class.php:968
 msgid "ISO"
 msgstr ""
 
@@ -14879,7 +14910,7 @@ msgstr "Invoegen"
 #: include/class/fiche.class.php:1117 include/class/fiche.class.php:1119
 #: include/class/fiche.class.php:1133 include/class/fiche.class.php:1134
 #: include/class/fiche.class.php:1161 include/class/fiche.class.php:1237
-#: include/class/fiche.class.php:564
+#: include/class/fiche.class.php:564 include/class/fiche.class.php:570
 msgid "Impossible cette fiche est utilisée dans un journal"
 msgstr ""
 
@@ -15426,6 +15457,7 @@ msgstr "Intern"
 #: include/class/acc_ledger_history_generic.class.php:798
 #: include/template/acc_ledger_history_purchase_extended.php:41
 #: include/template/acc_ledger_history_sale_extended.php:41
+#: include/class/fiche.class.php:964
 msgid "Interne"
 msgstr "Intern"
 
@@ -16176,7 +16208,7 @@ msgstr ""
 #: include/class/document_state_mtable.php:43
 #: include/class/anc_account_table.class.php:47
 #: include/class/document_state_mtable.class.php:42
-#: include/class/fiche_def.class.php:448
+#: include/class/fiche_def.class.php:448 include/class/fiche_def.class.php:461
 msgid "Label"
 msgstr "Etiket"
 
@@ -16314,7 +16346,7 @@ msgstr "De naam mag niet leeg zijn"
 #: include/class_fiche_def.php:210 include/class_fiche_def.php:216
 #: include/class_fiche_def.php:221 include/class_fiche_def.php:220
 #: include/class/class_fiche_def.php:220 include/class/fiche_def.class.php:221
-#: include/class/fiche_def.class.php:216
+#: include/class/fiche_def.class.php:216 include/class/fiche_def.class.php:229
 msgid "Le nom de la catégorie ne peut pas être vide"
 msgstr "De categorie naam mag niet leeg zijn"
 
@@ -17005,6 +17037,7 @@ msgstr "smaad"
 #: include/template/ledger_detail_bottom.php:408
 #: include/template/ledger_detail_ven.php:83
 #: include/template/periode-form_exercice_label.php:45
+#: include/template/ledger_detail_fin.php:52
 #, php-format
 msgid "Libellé"
 msgstr "Opstellen"
@@ -17652,6 +17685,7 @@ msgstr "Standaardmenu"
 
 #: include/class/noalyss_appearance.class.php:56
 #: include/class/noalyss_appearance.class.php:247
+#: include/class/noalyss_appearance.class.php:248
 #, fuzzy
 msgid "Menu principal"
 msgstr "Ongeldige code"
@@ -18207,6 +18241,7 @@ msgstr "Management Module"
 #: include/lib/ac_common.php:921 include/lib/ac_common.php:947
 #: include/class/extension.class.php:140 include/class/extension.class.php:154
 #: include/lib/ac_common.php:956 include/lib/ac_common.php:957
+#: include/lib/ac_common.php:958
 msgid "Module inexistant"
 msgstr "Module bestaat niet"
 
@@ -18556,7 +18591,8 @@ msgstr "Bedrag niet terug te vorderen BTW"
 #: tmp/import-advanced/class/import/impacc2_csv.class.php:570
 #: tmp/import-advanced/template/operation_result.php:42
 #: tmp/import-advanced/template/operation_result.php:47
-#: include/lib/ac_common.php:1303
+#: include/lib/ac_common.php:1303 include/class/fiche.class.php:888
+#: include/lib/ac_common.php:1304
 msgid "Montant"
 msgstr "Bedrag"
 
@@ -19568,6 +19604,7 @@ msgstr "Geen handeling"
 #: include/user.inc.php:169 include/user.inc.php:213
 #: include/dossier.inc.php:234 include/profile.inc.php:371
 #: include/database.item.php:172 include/database.item.php:167
+#: include/class/fiche.class.php:1318
 msgid "Nom"
 msgstr "Naam"
 
@@ -19639,7 +19676,7 @@ msgstr "Database"
 
 #: include/class_fiche_def.php:172 include/class/class_fiche_def.php:172
 #: include/class/fiche_def.class.php:172 include/class/fiche_def.class.php:167
-#: include/class/fiche_def.class.php:170
+#: include/class/fiche_def.class.php:170 include/class/fiche_def.class.php:178
 #, fuzzy
 msgid "Nom de fiche"
 msgstr "Naam fiche"
@@ -19849,7 +19886,7 @@ msgstr "Maatschappij Naam"
 msgid "Nom trop long max=80"
 msgstr ""
 
-#: include/class/fiche.class.php:455
+#: include/class/fiche.class.php:455 include/class/fiche.class.php:457
 #, fuzzy
 msgid "Nom vide"
 msgstr "is leeg"
@@ -22613,7 +22650,8 @@ msgstr "stuk"
 #: tmp/import-advanced/class/import/impacc2_csv.class.php:544
 #: tmp/import-advanced/class/import/impacc2_csv.class.php:567
 #: tmp/import-advanced/template/operation_result.php:66
-#: include/lib/ac_common.php:1300
+#: include/lib/ac_common.php:1300 include/class/fiche.class.php:962
+#: include/template/ledger_detail_fin.php:64 include/lib/ac_common.php:1301
 msgid "Pièce"
 msgstr "Bewijs"
 
@@ -22895,7 +22933,7 @@ msgstr "Archief"
 #: include/template/ledger_detail_ven.php:163
 #: include/template/ledger_detail_ach.php:156
 #: tmp/import-advanced/class/import/impacc2_fec.class.php:390
-#: include/database.item.php:75
+#: include/database.item.php:75 include/class/fiche.class.php:963
 msgid "Poste"
 msgstr "Rekening"
 
@@ -22956,7 +22994,7 @@ msgstr "rekening"
 #: include/class_fiche_def.php:466 include/class_fiche_def.php:449
 #: include/class_fiche_def.php:455 include/class_fiche_def.php:467
 #: include/class/class_fiche_def.php:466 include/class/fiche_def.class.php:467
-#: include/class/fiche_def.class.php:462
+#: include/class/fiche_def.class.php:462 include/class/fiche_def.class.php:475
 msgid "Poste Comptable de base"
 msgstr "Basis rekening"
 
@@ -23050,7 +23088,7 @@ msgstr "Kostenpost"
 #: include/class/acc_other_tax_mtable.class.php:41
 #: include/class/fiche.class.php:1311
 #: include/class/card_attribut_mtable.class.php:60
-#: include/class/pdf_operation.class.php:310
+#: include/class/pdf_operation.class.php:310 include/class/fiche.class.php:1317
 msgid "Poste comptable"
 msgstr "Accountant Vacature"
 
@@ -24209,7 +24247,7 @@ msgstr "Hoeveelheid"
 #: include/template/ledger_detail_ven.php:130
 #: include/template/ledger_detail_ach.php:117
 #: include/template/fiche_list.php:43 include/database.item.php:182
-#: include/database.item.php:177
+#: include/database.item.php:177 include/class/fiche.class.php:1316
 msgid "Quick Code"
 msgstr "Quick Code"
 
@@ -25286,6 +25324,7 @@ msgstr "Nieuwe lijn"
 #: tmp/import-advanced/template/input_file_anc.php:46
 #: tmp/import-advanced/template/input_file_acc.php:51
 #: tmp/import-advanced/template/input_file_acc.php:80
+#: include/class/fiche_def.class.php:820
 msgid "Sauve"
 msgstr "OPSLAAN"
 
@@ -25404,6 +25443,7 @@ msgstr "Geen enkel model"
 #: include/class/fiche_def.class.php:770
 #: include/class/acc_ledger.class.php:2345
 #: include/template/ledger_detail_bottom.php:357
+#: include/class/fiche_def.class.php:783
 msgid "Sauver"
 msgstr "OPSLAAN"
 
@@ -25441,6 +25481,7 @@ msgstr "Module instellen"
 #: include/class/fiche_def.class.php:788 include/operation_ods_new.inc.php:98
 #: include/operation_ods_new.inc.php:99 include/operation_ods_new.inc.php:111
 #: include/class/fiche_def.class.php:783 include/operation_ods_new.inc.php:117
+#: include/class/fiche_def.class.php:796
 msgid "Sauvez"
 msgstr "OPSLAAN"
 
@@ -25456,7 +25497,7 @@ msgid "Sauvé"
 msgstr "Bewaard"
 
 #: include/lib/ac_common.php:907 include/lib/ac_common.php:916
-#: include/lib/ac_common.php:917
+#: include/lib/ac_common.php:917 include/lib/ac_common.php:918
 msgid "Se connecter"
 msgstr ""
 
@@ -25747,7 +25788,7 @@ msgstr "Bedrijven"
 #: include/class/anc_balance_double.class.php:94
 #: include/class/anc_listing.class.php:116 include/class/fiche.class.php:1947
 #: include/class/pdfbalance_simple.class.php:64 include/fiche.inc.php:412
-#: include/class/fiche.class.php:1316
+#: include/class/fiche.class.php:1316 include/class/fiche.class.php:1322
 msgid "Solde"
 msgstr "evenwicht"
 
@@ -25871,6 +25912,7 @@ msgid "Sortie &#9094"
 msgstr "Uitgang"
 
 #: include/class/noalyss_appearance.class.php:252
+#: include/class/noalyss_appearance.class.php:253
 #, fuzzy
 msgid "Sous-Menu"
 msgstr "Lijn toevoegen"
@@ -26632,6 +26674,7 @@ msgstr "BTW Met"
 #: include/database.item.php:10 include/database.item.php:13
 #: include/database.item.php:7 include/database.item.php:6
 #: include/database.item.php:4 include/class/noalyss_appearance.class.php:256
+#: include/class/noalyss_appearance.class.php:257
 msgid "Tableau"
 msgstr "Tafel"
 
@@ -26988,6 +27031,7 @@ msgstr "Thema"
 #: include/class/fiche.class.php:959
 #: include/class/acc_account_ledger.class.php:399
 #: include/class/acc_ledger_history_generic.class.php:708
+#: include/class/fiche.class.php:965 include/template/ledger_detail_fin.php:43
 msgid "Tiers"
 msgstr "Derde"
 
@@ -27012,6 +27056,7 @@ msgstr "Derde"
 #: include/class/follow_up.class.php:622 include/class/follow_up.class.php:625
 #: include/class/noalyss_appearance.class.php:55
 #: include/class/noalyss_appearance.class.php:244
+#: include/class/noalyss_appearance.class.php:245
 msgid "Titre"
 msgstr "Titel"
 
@@ -27355,7 +27400,7 @@ msgstr "Totale last"
 #: include/class/fiche.class.php:1763 include/class/fiche.class.php:1765
 #: include/class/fiche.class.php:1783 include/class/fiche.class.php:1784
 #: include/class/fiche.class.php:1810 include/class/fiche.class.php:1946
-#: include/class/fiche.class.php:1315
+#: include/class/fiche.class.php:1315 include/class/fiche.class.php:1321
 msgid "Total crédit"
 msgstr "Credit Totaal"
 
@@ -27373,7 +27418,7 @@ msgstr "Rekeningoverzicht"
 #: include/class/fiche.class.php:1762 include/class/fiche.class.php:1764
 #: include/class/fiche.class.php:1782 include/class/fiche.class.php:1783
 #: include/class/fiche.class.php:1809 include/class/fiche.class.php:1945
-#: include/class/fiche.class.php:1314
+#: include/class/fiche.class.php:1314 include/class/fiche.class.php:1320
 msgid "Total débit"
 msgstr "Debet Totaal"
 
@@ -27528,6 +27573,7 @@ msgstr "Total Credit"
 #: include/template/acc_ledger_history_purchase_oneline.php:162
 #: include/template/acc_ledger_history_sale_oneline.php:146
 #: include/template/acc_ledger_history_sale_extended.php:198
+#: include/class/fiche.class.php:1066
 msgid "Totaux"
 msgstr "Totalen"
 
@@ -27912,6 +27958,7 @@ msgstr "BTW NTV"
 #: include/class/acc_account_ledger.class.php:401 include/user.inc.php:234
 #: tmp/import-advanced/template/select-acc-file.php:39
 #: tmp/import-advanced/template/history_file.php:41
+#: include/class/fiche.class.php:967
 msgid "Type"
 msgstr "Type"
 
@@ -28139,7 +28186,7 @@ msgstr ""
 
 #: include/class_fiche_def.php:227 include/class_fiche_def.php:226
 #: include/class/class_fiche_def.php:226 include/class/fiche_def.class.php:227
-#: include/class/fiche_def.class.php:222
+#: include/class/fiche_def.class.php:222 include/class/fiche_def.class.php:235
 #, fuzzy
 msgid "Un modéle de catégorie est obligatoire"
 msgstr "Keuze van het soort dagboek"
@@ -28387,7 +28434,7 @@ msgstr "Users"
 #: include/lib/ac_common.php:984 include/lib/ac_common.php:986
 #: include/lib/ac_common.php:1002 include/lib/ac_common.php:1012
 #: include/lib/ac_common.php:1038 include/lib/ac_common.php:1047
-#: include/lib/ac_common.php:1048
+#: include/lib/ac_common.php:1048 include/lib/ac_common.php:1049
 #, fuzzy
 msgid ""
 "Utilisateur n'a pas de profil, votre administrateur doit en configurer un "
@@ -28833,7 +28880,7 @@ msgstr "Gelieve opnieuw"
 #: include/lib/ac_common.php:837 include/lib/ac_common.php:839
 #: include/lib/ac_common.php:855 include/lib/ac_common.php:865
 #: include/lib/ac_common.php:903 include/lib/ac_common.php:912
-#: include/lib/ac_common.php:913
+#: include/lib/ac_common.php:913 include/lib/ac_common.php:914
 msgid ""
 "Veuillez vous reconnecter soit dans une autre fenêtre soit  en cliquant sur "
 "le lien"
@@ -29120,6 +29167,7 @@ msgstr "U bevestigt"
 #: include/ext/importbank/include/template/show_import.php:109
 #: include/ajax/ajax_add_menu.php:199 include/ajax/ajax_create_menu.php:12
 #: include/class/fiche_def.class.php:786 include/template/fiche_list.php:38
+#: include/class/fiche_def.class.php:799 include/class/fiche_def.class.php:804
 msgid "Vous confirmez ?"
 msgstr "U bevestigt"
 
@@ -30312,6 +30360,7 @@ msgstr "Stock Geschiedenis"
 #: include/dossier.inc.php:224 include/modele.inc.php:241
 #: include/class/fiche.class.php:620 include/class/tva_rate_mtable.class.php:45
 #: include/class/fiche.class.php:368 include/dossier.inc.php:233
+#: include/class/fiche.class.php:370
 msgid "id"
 msgstr "id"
 
@@ -30661,6 +30710,7 @@ msgstr ""
 #: include/class/acc_reconciliation.class.php:507
 #: include/class/acc_reconciliation.class.php:523
 #: include/template/ledger_detail_bottom.php:239
+#: include/template/ledger_detail_fin.php:58
 msgid "montant"
 msgstr "bedrag"
 
@@ -30906,6 +30956,7 @@ msgstr "Geen ruimte"
 #: include/class/fiche.class.php:1381 include/class/fiche.class.php:1395
 #: include/class/fiche.class.php:1396 include/class/fiche.class.php:1423
 #: include/class/fiche.class.php:1512 include/class/fiche.class.php:879
+#: include/class/fiche.class.php:885
 #, fuzzy
 msgid "n° de pièce / Code interne"
 msgstr "Interne code"
@@ -31624,6 +31675,7 @@ msgstr "Creditsaldo"
 #: include/class/fiche.class.php:1538 include/class/fiche.class.php:1682
 #: include/class/fiche.class.php:905 include/class/fiche.class.php:1050
 #: include/class/acc_account_ledger.class.php:493
+#: include/class/fiche.class.php:911 include/class/fiche.class.php:1056
 #, fuzzy
 msgid "solde créditeur"
 msgstr "Creditsaldo"
@@ -31656,6 +31708,7 @@ msgstr "Creditsaldo"
 #: include/class/fiche.class.php:1538 include/class/fiche.class.php:1682
 #: include/class/fiche.class.php:905 include/class/fiche.class.php:1050
 #: include/class/acc_account_ledger.class.php:493
+#: include/class/fiche.class.php:911 include/class/fiche.class.php:1056
 #, fuzzy
 msgid "solde débiteur"
 msgstr "Debetsaldo"

@@ -176,6 +176,7 @@ class Fiche
      */
     function setAttribut($p_ad_id,$p_value)
     {
+        if ( $this->fiche_def == 0) throw new Exception ("FICHE.179 Invalid category",EXC_INVALID);
         if ( sizeof($this->attribut)==0 ) $this->getAttribut();
         
         for ($e=0;$e <sizeof($this->attribut);$e++)
@@ -276,6 +277,7 @@ class Fiche
      * @param int $p_return 1 return NOTFOUND otherwise an empty string
      * @see constant.php
      * @return string
+     * @note reread data from database and so it reset previous unsaved change
      */
     function strAttribut($p_ad_id,$p_return=1)
     {
@@ -289,7 +291,7 @@ class Fiche
         foreach ($this->attribut as $e)
         {
             if ( $e->ad_id == $p_ad_id )
-                return trim($e->av_text);
+                return noalyss_trim($e->av_text);
         }
         return $return;
     }
@@ -519,6 +521,10 @@ class Fiche
             $p_array=$_POST;
         }
         $this->fiche_def = $this->cn->get_value("select fd_id from fiche where f_id=$1",[$this->id]);
+        // unexistant category of cardf
+        if ( empty($this->fiche_def)) {
+            throw new Exception('FICHE.UPDATE524 category not found',EXC_INVALID);
+        }
         if ( $this->cn->size()==0) {
             throw new Exception("FICHE.UPDATE01"._("Fiche n'existe pas"),EXC_INVALID);
         }
@@ -528,7 +534,7 @@ class Fiche
         $this->getAttribut();
         
         if ( empty ($this->attribut) ) {
-            throw new Exception("FICHE.UPDATE02"._("Aucun attribut ")."($fiche_def)",EXC_INVALID);
+            throw new Exception("FICHE.UPDATE02"._("Aucun attribut ")."($this->fiche_def)",EXC_INVALID);
         }
         // for each property set the attribut on the card
         foreach($this->attribut as $property) {
@@ -1707,13 +1713,15 @@ class Fiche
     static function test_me()
     {
         $cn=Dossier::connect();
+        $http=new HttpInput();
+        echo h1('Test select category');
         $a=new Fiche($cn);
         $select_cat=new ISelect('fd_id');
         $select_cat->value=$cn->make_array('select fd_id,fd_label from fiche_def where frd_id='.
                                            FICHE_TYPE_CLIENT);
         echo '<FORM METHOD="GET"> ';
         echo dossier::hidden();
-        echo HtmlInput::hidden('test_select',$_GET['test_select']);
+        echo HtmlInput::hidden('test_select',$http->get('test_select',"string",1));
         echo 'Choix de la catégorie';
         echo $select_cat->input();
         echo HtmlInput::submit('go_card','Afficher');
@@ -1723,6 +1731,29 @@ class Fiche
             $empty=$a->to_array($_GET['fd_id']);
             print_r($empty);
         }
+        // testing insert
+        echo h1("Insert new card");
+        $name="test ".microtime();
+        $fiche=new Fiche($cn);
+        $fiche_def=new Fiche_Def($cn,1);
+        $fiche_def->get();
+
+        $fiche->set_fiche_def($fiche_def->id);
+
+        $fiche->setAttribut(ATTR_DEF_NAME,$name);
+        $fiche->setAttribut(ATTR_DEF_ACCOUNT,$fiche_def->class_base.$name);
+
+        echo p(print_r($fiche->to_array(),false));
+        $fiche->insert(1,$fiche->to_array());
+        assert($name == $fiche->strAttribut(ATTR_DEF_NAME));
+
+        echo p("fiche ATTR_DEF_ACCOUNT after insert ",$fiche->strAttribut(ATTR_DEF_ACCOUNT));
+        $accounting=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+        $acc_accounting=new Acc_Account($cn,$accounting);
+
+        echo p("accounting id",$acc_accounting->get_parameter("id"));
+        assert($acc_accounting->get_lib("pcm_lib") == $name,"Cannot create a new accouting with 
+        the right label");
     }
 
 	function get_gestion_title()

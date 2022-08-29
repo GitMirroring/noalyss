@@ -95,6 +95,14 @@ class Fiche_Def
         return $this->attribut;
     }
 
+    /**
+     * @brief  alias for Fiche_Def->get(),
+     * @return void
+     */
+    function load()
+    {
+        $this->get();
+    }
     /*!
     * \brief  Get attribut of the fiche_def
     *

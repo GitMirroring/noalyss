@@ -65,6 +65,19 @@ if (!file_exists('authorized_debug'))
 }
 define('ALLOWED', 1);
 load_all_script();
+// To enable assert , set "zend.assertions" in the php.ini file
+ini_set("assert.active",1);
+assert_options(ASSERT_ACTIVE, 1);
+assert_options(ASSERT_WARNING, 1);
+assert_options(ASSERT_QUIET_EVAL, 1);
+function my_assert_handler($file, $line, $code)
+{
+    echo "<hr>Assert Failed :
+        File '$file'<br />
+        Line '$line'<br />
+        Code '$code'<br /><hr />";
+}
+assert_options(ASSERT_CALLBACK, 'my_assert_handler');
 /******************************************************************************************************************/
 /*  Utilities 
 /******************************************************************************************************************/

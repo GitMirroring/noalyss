@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: NOALYSS 672\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-27 14:41+0200\n"
-"PO-Revision-Date: 2022-08-29 10:44+0200\n"
+"PO-Revision-Date: 2022-08-30 00:39+0200\n"
 "Last-Translator: dany <danydb@noalyss.eu>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: en_US\n"
@@ -54,7 +54,7 @@ msgstr " %s is dropped"
 #: include/ext/tva/tva_pdf_writer.class.php:128
 #, php-format
 msgid " %s trimestre"
-msgstr "%s Quarter"
+msgstr "%s quarter"
 
 #: include/ext/importbank/include/class_import_bank.php:310
 #: include/ext/importbank/include/class_import_bank.php:288
