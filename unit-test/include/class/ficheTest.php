@@ -15,6 +15,7 @@ class FicheTest extends TestCase
      * @var Fiche
      */
     protected $object;
+    private $connection;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -24,6 +25,7 @@ class FicheTest extends TestCase
     {
         include 'global.php';
         $this->object = new Fiche($g_connection);
+        $this->connection=$g_connection;
     }
 
     /**
@@ -611,12 +613,12 @@ where
     }
     /**
      * @brief test insert of the accounting
-     * @testdox testAccountInsert Set  of the accounting while inserting
+     * @testdox testAccountInsert Set  of the accounting while inserting, numeric with automatic
      * @dataProvider dataAccount
      */
     public function testAccountInsert($p_value,$p_expected)
     {
-          global $g_connection;
+        global $g_connection;
         $fiche=$this->build_fiche(2, 'PHPUNIT.ACCOUNT.INSERT');
         $fiche->setAttribut(ATTR_DEF_ACCOUNT, $p_value);
         Card_Property::update($fiche);
@@ -627,6 +629,72 @@ where
         $fiche->remove();
     }
 
+    /**
+     * @testdox testAutomaticAccountingUpdateAlpha test accounting automatic compute(update) with alphanumeric enable
+     */
+    public function testAutomaticAccountingUpdateAlpha()
+    {
+        global $g_connection;
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val like '600%'");
+        $g_connection->exec_sql("update public.parameter set pr_value = $1 where pr_id=$2",
+            array('Y','MY_ALPHANUM'));
+        $fiche_def=new Fiche_Def($g_connection,2);
+        $fiche_def->set_autocreate(true);
+        $fiche_def->save_class_base('600');
+        $fiche=$this->build_fiche(2,'TESTACCOUNT');
+        $start=$fiche->id;
+        $this->assertEquals('600CARDFORPHPUNIT',$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+
+        for ( $i=600002; $i < 600999;$i++) {
+            $fiche->setAttribut(ATTR_DEF_NAME,'Card for testing '.$i);
+            $fiche->setAttribut(ATTR_DEF_ACCOUNT, "");
+            Card_Property::update($fiche);
+            $fiche->load();
+            $this->assertEquals("600CARDFORTESTING".$i,$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+
+
+        }
+
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val like '600%'");
+        $g_connection->exec_sql("delete from fiche_detail where f_id >= $1",[$start]);
+        $g_connection->exec_sql("delete from fiche where f_id >= $1",[$start]);
+        $g_connection->exec_sql("update public.parameter set pr_value = $1 where pr_id=$2",
+            array('N','MY_ALPHANUM'));
+    }
+    /**
+     * @testdox testAutomaticAccountingInsertAlpha test accounting automatic compute (insert) with alphanumeric enable
+     */
+    public function testAutomaticAccountingInsertAlpha()
+    {
+
+        global $g_connection;
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val like '600%'");
+        $g_connection->exec_sql("update public.parameter set pr_value = $1 where pr_id=$2",
+            array('Y','MY_ALPHANUM'));
+        $fiche_def=new Fiche_Def($g_connection,2);
+        $fiche_def->set_autocreate(true);
+        $fiche_def->save_class_base('600');
+        $first=true;
+
+        for ( $i=1; $i <  1000;$i++) {
+            $fiche=new Fiche($g_connection);
+            $fiche->insert(2,['av_text1'=>substr($i.' PHPUNIT '.__FUNCTION__,0,35)],);
+            if ( $first ) {
+                $first=false;
+                $start=$fiche->id;
+            }
+            $fiche->load();
+            $this->assertEquals(substr("600".$i."PHPUNITTESTAUTOMATICACCOUNTINGIN",0,36),$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+
+        }
+
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val like '600%'");
+        $g_connection->exec_sql("delete from fiche_detail where f_id >= $1",[$start]);
+        $g_connection->exec_sql("delete from fiche where f_id >= $1",[$start]);
+        $g_connection->exec_sql("update public.parameter set pr_value = $1 where pr_id=$2",
+            array('N','MY_ALPHANUM'));
+
+    }
      /**
      * @brief test update of the accounting
      * @testdox testAccountUpdate et  of the accounting while updating
