@@ -463,7 +463,7 @@ class Acc_Account_Ledger
 	    echo "<TR $class name=\"tr_" . $let . "_" . $from_div . "\">" .
 			"<TD>".smaller_date(format_date($op['j_date']))."</TD>".
 	      td(h($op['jr_pj_number'])).
-	      "<TD>".h($op['j_qcode'])."</TD>".
+	      "<TD>".\HtmlInput::card_detail($op['j_qcode'])."</TD>".
 	      "<TD>".$vw_operation."</TD>".
                 "<TD>".$tiers."</TD>".
 	      "<TD>".h($op['description']).$op_analytic."</TD>".

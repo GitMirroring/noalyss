@@ -565,11 +565,11 @@ class HtmlInput
     static function card_detail($p_qcode, $pname='', $p_style="",
             $p_nohistory=false)
     {
-        //if ($pname=='')$pname=$p_qcode;
+        if ($pname !=='') {$pname='<span class="v-large">('.$pname.')</span>';}
         $r="";
         $histo=($p_nohistory==true)?' ,nohistory:1':"";
-        $r.=sprintf('<a href="javascript:void(0)" %s onclick="fill_ipopcard({qcode:\'%s\' %s})">%s [%s]</a>',
-                $p_style, $p_qcode, $histo, $pname, $p_qcode);
+        $r.=sprintf('<a href="javascript:void(0)" %s class="detail" onclick="fill_ipopcard({qcode:\'%s\' %s})">%s %s</a>',
+                $p_style, $p_qcode, $histo, $p_qcode,$pname);
         return $r;
     }
 

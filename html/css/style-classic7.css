@@ -483,9 +483,9 @@ a.detail
 {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'openSansRegular';
-    /*! text-decoration: none; */
+    text-decoration: underline;
     display: block;
-    /*! color: #EBA308; */
+  //  color: #eb2208;
     font-weight: normal;
     background-color: transparent;
 }
@@ -808,7 +808,7 @@ a#anchorbutton, .button, a.button,div.content a.button {
     font-weight: bold;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
-    background-image: url("image/bg-submit2.gif");
+    background-image: url("../image/bg-submit2.gif");
     background-repeat: repeat-x;
     background-position: left;
     border-color:  #0000FF;
@@ -2360,6 +2360,8 @@ td.selectedmenu {
 .visible_gt800 {
     
 }
+.v-large { display: none;}
+
 .field_follow_up
 {
     margin-top:1px;
@@ -2387,6 +2389,7 @@ td.selectedmenu {
 
 
 }
+
 /** 
  * go_up
 */
@@ -2487,6 +2490,7 @@ div.content a.arrow {
 @media (min-width: 992px) {
     .label_item {
     }
+    .v-large { display: inline;}
 
 }
 /* XL */
