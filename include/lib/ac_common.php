@@ -1611,3 +1611,14 @@ function noalyss_strip_tags($p_string)
     if ($p_string===null) return "";
     return strip_tags($p_string);
 }
+
+/**
+ * to avoid deprecated in PHP8.1 : explode cannot use a null
+ * @param $separator
+ * @param $string
+ * @return array | empty string
+ */
+function noalyss_explode($separator,$string) {
+    if ($string===null) return '';
+    return explode($separator,$string);
+}
