@@ -56,7 +56,7 @@ class IText extends HtmlInput
         $t= 'title="'.$this->title.'" ';
         $autofocus=($this->autofocus)?" autofocus ":"";
         $require=($this->require)?"required":"";
-        if ( ! isset ($this->css_size))
+        if ( ! isset ($this->css_size) || empty ($this->css_size))
         {
             
             $r=  sprintf('<INPUT TYPE="TEXT" %s id="%s" name="%s" value="%s" placeholder="%s" title="%s"
