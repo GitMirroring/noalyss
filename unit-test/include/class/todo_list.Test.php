@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass \Todo_List
  */
-require 'global.php';
+require DIRTEST.'/global.php';
 
 class Todo_ListTest extends TestCase
 {

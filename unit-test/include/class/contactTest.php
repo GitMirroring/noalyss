@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass \Contact
  */
-require 'global.php';
+require DIRTEST.'/global.php';
 
 class ContactTest extends TestCase
 {

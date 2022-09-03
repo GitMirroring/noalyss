@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass \Acc_Payment
  */
-require 'global.php';
+require DIRTEST.'/global.php';
 
 class AccPaymentTest extends TestCase
 {

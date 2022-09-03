@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass \Anc_Group
  */
-require 'global.php';
+require DIRTEST.'/global.php';
 
 class Anc_GroupTest extends TestCase
 {

@@ -49,7 +49,7 @@ class Acc_LedgerTest extends TestCase
      */
     protected function setUp():void
     {
-        include 'global.php';
+        require DIRTEST.'/global.php';
         $this->object=new Acc_Ledger($g_connection,0);
     }
 

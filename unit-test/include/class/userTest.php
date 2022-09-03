@@ -14,7 +14,7 @@ define('USE_EMAIL', 'none@dev.null.eu');
  * @backupGlobals enabled
  * @coversDefaultClass \User
  */
-require 'global.php';
+require DIRTEST.'/global.php';
 
 class UserTest extends TestCase
 {

@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
  * @file
  * @brief  test \Document
  */
-require_once 'global.php';
+require DIRTEST.'/global.php';
 
 class DocumentTest extends TestCase
 {

@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass \Follow_Up_Detail
  */
-require 'global.php';
+require DIRTEST.'/global.php';
 
 class Follow_Up_DetailTest extends TestCase
 {

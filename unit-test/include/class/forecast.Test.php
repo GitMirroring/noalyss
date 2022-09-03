@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass \Forecast
  */
-require 'global.php';
+require DIRTEST.'/global.php';
 
 class ForecastTest extends TestCase
 {

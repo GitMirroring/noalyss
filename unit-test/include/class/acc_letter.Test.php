@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @backupGlobals enabled
  */
-require 'global.php';
+require DIRTEST.'/global.php';
 
 class Acc_Letter extends TestCase
 {

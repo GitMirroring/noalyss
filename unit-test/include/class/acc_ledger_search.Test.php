@@ -42,7 +42,7 @@ class Acc_Ledger_Test extends TestCase
      */
     protected function setUp():void
     {
-        include 'global.php';
+        require DIRTEST.'/global.php';
         global $g_user;
         $g_user->set_periode(119);
     }
@@ -88,7 +88,7 @@ class Acc_Ledger_Test extends TestCase
         $ledger=new Acc_Ledger_Search('ALL');
         $r=$ledger->display_search_form();
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger_search-test_display_search_form.html", $r);
-        $this->assertEquals(9669,strlen($r),"Size of the html string for display_search_form see "
+        $this->assertEquals(9697,strlen($r),"Size of the html string for display_search_form see "
                 . __DIR__."/file/acc_ledger_search-test_display_search_form.html ");
     }
     /**

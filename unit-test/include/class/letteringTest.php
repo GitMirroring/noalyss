@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass \Lettering
  */
-require 'global.php';
+require DIRTEST.'/global.php';
 
 class LetteringTest extends TestCase
 {

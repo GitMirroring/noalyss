@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass \Acc_Report
  */
-require 'global.php';
+require DIRTEST.'/global.php';
 
 class Acc_ReportTest extends TestCase
 {

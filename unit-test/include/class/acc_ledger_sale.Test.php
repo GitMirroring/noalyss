@@ -26,7 +26,7 @@ class Acc_Ledger_SaleTest extends TestCase
      */
     protected function setUp():void
     {
-        include 'global.php';
+        require DIRTEST.'/global.php';
         $this->object=new Acc_Ledger_Sale($g_connection, 2);
         $this->array=array(
             "ledger_type"=>"VEN",
@@ -221,7 +221,7 @@ class Acc_Ledger_SaleTest extends TestCase
     public function testHeading_detail_sale()
     {
         $a=$this->object->heading_detail_sale();
-        $this->assertEquals(32,count($a));
+        $this->assertEquals(34,count($a));
     }
     /**
      * @covers Acc_Ledger_Sale::get_detail_sale

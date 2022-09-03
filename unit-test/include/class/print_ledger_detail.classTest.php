@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
  * @brief concerne print_ledger_detail
  * @coversDefaultClass Print_Ledger_Detail
  */
-include_once 'global.php';
+require DIRTEST.'/global.php';
 
 class Print_Ledger_DetailTest extends TestCase
 {
