@@ -101,6 +101,8 @@ if ( $type == 'ACH' || $type == 'VEN'||$new):
                 echo $negative->input();
             ?>
         </td>
+
+
     </tr>
     <tr id="row_warning">
         <td style="white-space: nowrap">
@@ -108,6 +110,17 @@ if ( $type == 'ACH' || $type == 'VEN'||$new):
         </td>
         <td>
             <?php echo $negative_warning->input();?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo _('Utilisation des quantités')?>
+        </td>
+        <td>
+
+        <?php
+            echo $quantity->input();
+        ?>
         </td>
     </tr>
 <?php
@@ -225,7 +238,7 @@ endif;
     for ($i=0;$i<$num;$i++) {
       $res=$cn->fetch($i);
       $CHECKED=" unchecked";
-      foreach ( $rdeb as $element) {
+       foreach ( $rdeb as $element) {
         if ( $element == $res['fd_id'] ) {
           $CHECKED="CHECKED";
           break;
@@ -346,12 +359,7 @@ endif;
       printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="ODS_FICHEDEB[]" class="ods_fichedeb" %s>%s</TD>',
               $res['fd_id'],$CHECKED,$res['fd_label']);
       $CHECKED=" unchecked";
-      foreach ( $rcred as $element) {
-        if ( $element == $res['fd_id'] ) {
-          $CHECKED="CHECKED";
-          break;
-        }
-      }
+
       echo '</TR>';
     }
     ?>
@@ -397,12 +405,7 @@ endif;
       printf ('<TD> <INPUT TYPE="CHECKBOX" VALUE="%s" NAME="FIN_FICHEDEB[]" class="fin_fichedeb" %s>%s</TD>',
               $res['fd_id'],$CHECKED,$res['fd_label']);
       $CHECKED=" unchecked";
-      foreach ( $rcred as $element) {
-        if ( $element == $res['fd_id'] ) {
-          $CHECKED="CHECKED";
-          break;
-        }
-      }
+
       echo '</TR>';
     }
     ?>

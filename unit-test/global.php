@@ -40,5 +40,4 @@ $_SESSION[SESSION_KEY.'csv_encoding']='utf8';
 $_SESSION[SESSION_KEY.'access_mode']='PC';
 $g_user=new User($g_connection);
 $_ENV['TMP']="/tmp/";
-
 require_once __DIR__.'/facility.class.php';

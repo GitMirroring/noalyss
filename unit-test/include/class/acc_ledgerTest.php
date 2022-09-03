@@ -20,7 +20,7 @@ class Acc_LedgerTest extends TestCase
     /**
      * Get an operation
      * @global type $g_connection
-     * @return type
+     * @return type20
      */
     private function get_jrn_id($p_ledger='ODS')
     {
@@ -60,6 +60,15 @@ class Acc_LedgerTest extends TestCase
     protected function tearDown():void
     {
         
+    }
+
+    /**
+     * @backupGlobals enabled
+     */
+    static function tearDownAfterClass():void
+    {
+        global $g_connection;
+        $g_connection->exec_sql("update jrn_def set jrn_def_quantity=0 where jrn_def_id=4");
     }
     /**
      * covers ::existing_vat
@@ -245,7 +254,7 @@ class Acc_LedgerTest extends TestCase
         $this->object->id=2;
         $array=$this->object->get_propertie();
         // there are 16 columns in jrn_def
-        $this->assertEquals(count($array),20);
+        $this->assertEquals(count($array),21);
         $this->object->id=0;
         $array=$this->object->get_propertie();
         $this->assertEquals(null,$array);
@@ -399,6 +408,25 @@ class Acc_LedgerTest extends TestCase
         }
     }
 
+    /**
+     * @testdox Check if the column jrn_def_quantity is properly saved
+     * @return void
+     * @throws Exception
+     */
+    function testQuantity()
+    {
+        global $g_connection;
+        $ledger=new Acc_Ledger($g_connection,4);
+        $ledger->set_quantity(1);
+        $ledger->update();
+        $ledger->load();
+        $this->assertEquals(1,$ledger->has_quantity(),'jrn_def_quantity is not saved');
+        $ledger->set_quantity(0);
+        $ledger->update();
+        $ledger->load();
+        $this->assertEquals(0,$ledger->has_quantity(),'jrn_def_quantity is not saved');
+
+    }
     /**
      * @covers Acc_Ledger::input
      */
@@ -822,7 +850,7 @@ class Acc_LedgerTest extends TestCase
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger-input_new.html", $result);
         $size=filesize(__DIR__."/file/acc_ledger-input_new.html");
                 
-        $this->assertEquals(15969,$size," output input_new is not what it is expected");
+        $this->assertEquals(16514,$size," output input_new is not what it is expected");
     }
 
     /**

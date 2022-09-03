@@ -58,6 +58,7 @@ class Jrn_def_SQL extends Table_Data_SQL
             , "currency_id"=>"currency_id"
             , "jrn_def_negative_amount"=>"jrn_def_negative_amount"
             , "jrn_def_negative_warning"=>"jrn_def_negative_warning"
+            , 'jrn_def_quantity'=>'jrn_def_quantity'
         );
         /*
          * Type of columns
@@ -83,6 +84,7 @@ class Jrn_def_SQL extends Table_Data_SQL
             , "currency_id"=>"numeric"
             , "jrn_def_negative_amount"=>"text"
             ,"jrn_def_negative_warning"=>"text"
+            ,'jrn_def_quantity'=>"numeric"
             );
 
         $this->default=array(

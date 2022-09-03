@@ -2575,8 +2575,8 @@ class Acc_Ledger  extends jrn_def_sql
 
         /* Load the card */
         $card=$this->get_fiche_def();
-        $rdeb=explode(',', $card['deb']);
-        $rcred=explode(',', $card['cred']);
+        $rdeb=noalyss_explode(',', $card['deb']);
+        $rcred=noalyss_explode(',', $card['cred']);
         /* Numbering (only FIN) */
         $num_op=new ICheckBox('numb_operation');
         if ($this->jrn_def_num_op==1)
@@ -2607,8 +2607,11 @@ class Acc_Ledger  extends jrn_def_sql
 
         $negative=new InputSwitch('negative_amount',$this->jrn_def_negative_amount);
         $negative_warning=new IText("negative_warning",_($this->jrn_def_negative_warning));
-        $negative_warning->size=80;
-        
+        $negative_warning->size=55;
+
+        // use of quantity in ledger
+        $quantity=new InputSwitch('p_jrn_quantity',$this->jrn_def_quantity);
+
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
@@ -2654,12 +2657,14 @@ class Acc_Ledger  extends jrn_def_sql
      */
     function verify_ledger($array)
     {
-        
-        $p_jrn=$array['p_jrn'];
-        $p_jrn_deb_max_line=$array['p_jrn_deb_max_line'];
-        $p_jrn_name=$array['p_jrn_name'];
-        $p_jrn_type=$array['p_jrn_type'];
-        
+        $http=new HttpInput();
+        $http->set_array($array);
+        $p_jrn=$http->extract('p_jrn',);
+        $p_jrn_deb_max_line=$http->extract('p_jrn_deb_max_line');
+        $p_jrn_name=$http->extract('p_jrn_name');
+        $p_jrn_type=$http->extract('p_jrn_type');
+        $p_jrn_quantity=$http->extract('p_jrn_quantity','number',0);
+
         try
         {
             if (isNumber($p_jrn)==0)
@@ -2711,39 +2716,55 @@ class Acc_Ledger  extends jrn_def_sql
      * @param type $array  normally post
      * @see verify_ledger
      */
-    function update($array='')
+    function update($array=null)
     {
-        if ($array==null)
-            throw new Exception('save cannot use a empty array');
+        $this->jrn_def_quantity=(!isset($this->jrn_def_quantity)||$this->jrn_def_quantity===null)?1:$this->jrn_def_quantity;
 
-        extract($array, EXTR_SKIP);
-        $this->jrn_def_id=$p_jrn;
-        $this->jrn_def_name=$p_jrn_name;
-        $this->jrn_def_ech_lib=$p_ech_lib;
+        if ($array==null) {
+            // update with the current value
+            parent::update();
+            return;
+        }
+
+        $http=new HttpInput();
+        $http->set_array($array);
+        $p_jrn_deb_max_line=$http->extract("p_jrn_deb_max_line","number",-1);
+        $min_row=$http->extract("min_row");
+
+        $this->jrn_def_id=$http->extract('p_jrn');
+        $this->jrn_def_name=$http->extract('p_jrn_name');
+        $this->jrn_def_ech_lib=$http->extract('p_ech_lib');
         $this->jrn_def_max_line_deb=($p_jrn_deb_max_line<1)?1:$p_jrn_deb_max_line;
-        $this->jrn_def_type=$p_jrn_type;
-        $this->jrn_def_pj_pref=$jrn_def_pj_pref;
+        $this->jrn_def_type=$http->extract('p_jrn_type');
+        $this->jrn_def_pj_pref=$http->extract('jrn_def_pj_pref');
         $this->jrn_deb_max_line=($min_row<1)?1:$min_row;
-        $this->jrn_def_description=$p_description;
-        $this->jrn_enable=$jrn_enable;
+        $this->jrn_def_description=$http->extract('p_description');
+        $this->jrn_enable=$http->extract('jrn_enable');
         $this->currency_id=0;
-        $this->jrn_def_negative_amount=(isset($negative_amount))?$negative_amount:'0';
-        $this->jrn_def_negative_warning=(isset ($negative_warning))?$negative_warning:_("Attention, ce journal doit utiliser des montants négatifs");
-        
+        $this->jrn_def_negative_amount=$http->extract('negative_amount','string',0);
+        $this->jrn_def_negative_warning=$http->extract("negative_warning",'string',
+                _("Attention, ce journal doit utiliser des montants négatifs"));
+        $this->jrn_def_quantity=$http->extract('p_jrn_quantity','string',1);
+        $jrn_def_pj_seq=$http->extract("jrn_def_pj_seq");
         switch ($this->jrn_def_type)
         {
             case 'ACH':
-                $this->jrn_def_fiche_cred=(isset($ACH_FICHECRED))?join(',',$ACH_FICHECRED):'';
-                $this->jrn_def_fiche_deb=(isset($ACH_FICHEDEB))?join(',',$ACH_FICHEDEB):"";
+                $ACH_FICHECRED=$http->extract('ACH_FICHECRED','array',array());
+                $ACH_FICHEDEB=$http->extract('ACH_FICHEDEB','array',array());
+                $this->jrn_def_fiche_cred=(!empty($ACH_FICHECRED))?join(',',$ACH_FICHECRED):'';
+                $this->jrn_def_fiche_deb=(!empty($ACH_FICHEDEB))?join(',',$ACH_FICHEDEB):"";
                 break;
             case 'VEN':
-                $this->jrn_def_fiche_cred=(isset($VEN_FICHECRED))?join(',',$VEN_FICHECRED):'';
-                $this->jrn_def_fiche_deb=(isset($VEN_FICHEDEB))?join(',',$VEN_FICHEDEB):"";
+                $VEN_FICHECRED=$http->extract('VEN_FICHECRED','array',array());
+                $VEN_FICHEDEB=$http->extract('VEN_FICHEDEB','array',array());
+                $this->jrn_def_fiche_cred=(!empty($VEN_FICHECRED))?join(',',$VEN_FICHECRED):'';
+                $this->jrn_def_fiche_deb=(!empty($VEN_FICHEDEB))?join(',',$VEN_FICHEDEB):"";
 
                 break;
             case 'ODS':
-                $this->jrn_def_class_deb=$p_jrn_class_deb;
-                $this->jrn_def_fiche_deb=(isset($ODS_FICHEDEB))?join(',',$ODS_FICHEDEB):''; ;
+                $this->jrn_def_class_deb=$http->extract('p_jrn_class_deb','string');
+                $ODS_FICHEDEB=$http->extract('ODS_FICHEDEB','array',array());
+                $this->jrn_def_fiche_deb=(!empty($ODS_FICHEDEB))?join(',',$ODS_FICHEDEB):''; ;
                 $this->jrn_def_fiche_cred=null;
                 break;
 
@@ -2752,10 +2773,11 @@ class Acc_Ledger  extends jrn_def_sql
                 $result=$a->get_by_qcode(trim(strtoupper($_POST['bank'])), false);
                 $bank=$a->id;
                 $this->jrn_def_bank=$bank;
-                $this->jrn_def_fiche_deb=(isset($FIN_FICHEDEB))?join(',',$FIN_FICHEDEB):"";
+                $FIN_FICHEDEB=$http->extract('FIN_FICHEDEB','array',array());
+                $this->jrn_def_fiche_deb=(!empty($FIN_FICHEDEB))?join(',',$FIN_FICHEDEB):"";
                 if ($result==-1)
                     throw new Exception(_("Aucun compte en banque n'est donné"));
-                $this->jrn_def_num_op=(isset($numb_operation))?1:0;
+                $this->jrn_def_num_op=$http->extract('numb_operation','string',0);
                 // if nb operation == 0 then update currency_id
                 $nb_operation = $this->db->get_value("select count(*) from jrn where jr_def_id=$1",
                         [$this->jrn_def_id]);
@@ -2775,7 +2797,7 @@ class Acc_Ledger  extends jrn_def_sql
         //Reset sequence if needed
         if ($jrn_def_pj_seq!=0)
         {
-            $Res=$this->db->alter_seq("s_jrn_pj".$p_jrn, $jrn_def_pj_seq);
+            $Res=$this->db->alter_seq("s_jrn_pj".$this->jrn_def_id, $jrn_def_pj_seq);
         }
     }
     /**
@@ -2813,7 +2835,6 @@ class Acc_Ledger  extends jrn_def_sql
         $previous_p_jrn_name=$http->post('p_jrn_name', "string", '');
         $previous_p_jrn_type=$http->post("p_jrn_type", "string", "");
 //            }
-        global $g_user;
         $f_add_button=new ISmallButton('add_card');
         $f_add_button->label=_('Créer une nouvelle fiche');
         $f_add_button->tabindex=-1;
@@ -2899,7 +2920,10 @@ class Acc_Ledger  extends jrn_def_sql
         
         $negative=new InputSwitch('negative_amount',0);
         $negative_warning=new IText('negative_warning',_("Attention, ce journal doit utiliser des montants négatifs"));
-        $negative_warning->size=80;
+        $negative_warning->size="55";
+        // use of quantity in ledger
+        $quantity=new InputSwitch('p_jrn_quantity',1);
+
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
@@ -2958,7 +2982,7 @@ class Acc_Ledger  extends jrn_def_sql
                 $this->currency_id=$defaultCurrency;
                 break;
         }
-        
+        $this->jrn_def_quantity=(!isset($this->jrn_def_quantity)||$this->jrn_def_quantity==null)?1:$this->jrn_def_quantity;
         parent::insert();
     }
 
@@ -3238,6 +3262,21 @@ class Acc_Ledger  extends jrn_def_sql
     function is_enable()
     {
        return $this->db->get_value("select jrn_enable from jrn_def where jrn_def_id=$1",[$this->id]); 
+    }
+    /**
+     * Check if a ledger is enabled , 1 for yes and 0 if disabled
+     */
+    function has_quantity()
+    {
+        return $this->jrn_def_quantity;
+    }
+    /**
+     * @brief set quantity for the ledger to 1 or 0,
+     * @note do not save in the DB
+     */
+    function set_quantity($p_value)
+    {
+         $this->jrn_def_quantity=$p_value;
     }
     /**
      * Check if the operation is used in the table quant*
