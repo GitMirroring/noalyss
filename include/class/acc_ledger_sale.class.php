@@ -253,6 +253,8 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
     public function insert($p_array = null) {
         global $g_parameter;
+        // load ledger definition
+        $this->load();
         extract($p_array, EXTR_SKIP);
         $this->verify($p_array);
 
@@ -873,7 +875,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $r.='</tr>';
         $r.='</table>';
         $r.='</div>';
-        $r.='<div style="position:float;clear:both">';
+        $r.='<div style="float:none;clear:both">';
         $r.='</div>';
         
         $r.='<h2>' . _('Détail articles vendus') . '</h2>';
@@ -1254,6 +1256,8 @@ EOF;
 
     function input($p_array = null, $p_readonly = 0) {
         global $g_parameter, $g_user;
+        // load ledger definition
+        $this->load();
         $http=new HttpInput();
         if ($p_array != null) {
             extract($p_array, EXTR_SKIP);
@@ -1329,7 +1333,8 @@ EOF;
         $add_js.='update_name();';
         $add_js.='update_pay_method();';
         $add_js.='update_row("sold_item");';
-        $add_js.='update_other_tax()';
+        $add_js.='update_other_tax();';
+        $add_js.='update_visibility_quantity();';
 
         $wLedger = $this->select_ledger('VEN', 2,FALSE);
         if ($wLedger == null)

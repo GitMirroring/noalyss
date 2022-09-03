@@ -141,6 +141,7 @@ function error_get_predef(request, json)
     alert_box(content[49]);
 
 }
+
 /**
  *  update the list of available predefined operation when we change the ledger.
  */
@@ -264,6 +265,45 @@ function update_row(ctl)
     } catch (e) {
         alert_box(e.message);
     }
+}
+
+/**
+ * @brief hide or show the column quantity
+ */
+function update_visibility_quantity()
+{
+    var jrn = g("p_jrn").value;
+    var dossier = g("gDossier").value;
+    var querystring = 'gDossier=' + dossier + '&l=' + jrn + "&op=update_visibility_quantity";
+    var action = new Ajax.Request(
+        "ajax_misc.php",
+        {
+            method: 'get',
+            parameters: querystring,
+            onSuccess: function (req) {
+                try {
+                    // retrieve quantity
+                    var quantity_col=document.getElementsByClassName("col_quant");
+                    for (var i=0;i < quantity_col.length;i++){
+                        if (req.responseText=="0") {
+                            // hide the columns quantity and return
+                            quantity_col[i].hide();
+                            quantity_col[i].addClassName('d-none');
+                        }
+                        if (req.responseText=="1") {
+                            // show the columns quantity and return
+                            quantity_col[i].show();
+                            quantity_col[i].removeClassName('d-none');
+                        }
+                    }
+                } catch (e) {
+                    console.error("update_visibility_quantity"+e.message);
+                }
+
+
+            }
+        }
+    );
 }
 /**
  *  Put into the span, the name of the bank, the bank account
