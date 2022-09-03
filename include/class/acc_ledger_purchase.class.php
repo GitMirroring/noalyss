@@ -1131,6 +1131,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
     public function input($p_array=null,$p_readonly=0)
     {
         global $g_parameter,$g_user;
+        // load ledger definition
+        $this->load();
         $http=new HttpInput();
         if ( $p_array != null ) extract($p_array, EXTR_SKIP);
 
@@ -1217,7 +1219,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $add_js.='update_name();';
         $add_js.='update_pay_method();';
         $add_js.='update_row("sold_item");';
-        $add_js.='update_other_tax()';
+        $add_js.='update_other_tax();';
+        $add_js.='update_visibility_quantity();';
 
         $wLedger=$this->select_ledger('ACH',2,FALSE);
         

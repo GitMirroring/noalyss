@@ -313,7 +313,9 @@ $path = array(
     // Mobile device menu from mobile_device_mtable
     "mobile_device_menu"=>"ajax_mobile_device_menu",
     // other_tax
-    "other_tax"=>"ajax_other_tax"
+    "other_tax"=>"ajax_other_tax",
+    //visibility quantity
+    "update_visibility_quantity"=>"ajax_update_visibility_quantity"
 ) ;
 
 if (array_key_exists($op, $path)) {
@@ -639,7 +641,7 @@ EOF;
             {
                 echo '<div>';
                 echo '<h1 >'.$ajrn[0]['jrn_def_name'].'</h1>';
-                if ( trim($ajrn[0]['jrn_def_description']) != "") {
+                if ( noalyss_trim($ajrn[0]['jrn_def_description']) != "") {
                     echo '<p style="border:1px solid;margin-top:0px;padding:1rem">'.$ajrn[0]['jrn_def_description'].'</p>';
                 }
                 echo '</div>';

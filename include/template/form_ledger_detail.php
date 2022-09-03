@@ -81,6 +81,9 @@
      
       
 <br>
+<?php
+$hidden=($this->has_quantity()==0)?'d-none':'';
+?>
 <h2><?php echo $f_legend_detail?></h2>
 <table id="sold_item" >
 <tr>
@@ -88,7 +91,7 @@
       <th class="visible_gt800 visible_gt1155"><?php echo _('Dénomination')?></th>
 <?php if ($flag_tva =='Y') : ?>
       <th><?php echo _('prix/unité htva')?><?php echo Icon_Action::infobulle(6)?></th>
-      <th><?php echo _('quantité')?></th>
+      <th class="col_quant <?=$hidden?>"><?php echo _('quantité')?></th>
       <th class="visible_gt800" ><?php echo _('Total HTVA')?></th>
 	  <th><?php echo _('tva')?></th>
       <th class="visible_gt800"><?php echo _('tot.tva')?></th>
@@ -112,7 +115,7 @@ echo '<td>'.$item['bt'].$item['card_add'].'</td>';
 <td class="visible_gt800 visible_gt1155"><?php echo $item['denom'] ?></td>
 <?php 
 echo td($item['pu']);
-echo td($item['quantity' ]);
+echo td($item['quantity' ],'class="col_quant '. $hidden.'"');
 echo td($item['htva'],' class="visible_gt800" ');
 if ($flag_tva=='Y')  {
 	echo td($item['tva']);
