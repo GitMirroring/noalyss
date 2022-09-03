@@ -89,7 +89,7 @@ echo <<<EOF
 EOF;
 
     ?>
-<div id="debug_div" style="border:slategray solid 1px;margin-left: 0px;position:absolute;background:white;display:fixed;top:2px;left:25px;z-index:1000;display:none">
+<div id="debug_div" style="border:slategray solid 1px;margin-left: 0px;position:absolute;background:white;top:2px;left:25px;z-index:1000;display:none">
 	<h2 style="margin-top:100px"> Memory Usage </h2>
 	<?php  echo memory_get_usage()/1024.0 . " kb \n"; ?>
 
@@ -133,7 +133,7 @@ EOF;
     function show_debug_request() {
         var visible=document.getElementById('debug_div').style.display;
         var new_state="";
-        if ( visible == 'block') { new_state='none';}
+        if ( visible === 'block') { new_state='none';}
         else
         if ( visible == 'none') { new_state='block';}
         else 
@@ -141,7 +141,7 @@ EOF;
         document.getElementById('debug_div').style.display=new_state;
     }
 </script>
-<input type="button" class="tinybutton" style="position:absolute;display:fixed;top:40px;left:50px;margin-left:50px;z-index:1000" value="show request" onclick="show_debug_request()">
+<input type="button" class="tinybutton" style="position:absolute;top:40px;left:50px;margin-left:50px;z-index:1000" value="show request" onclick="show_debug_request()">
 
 <?php
 
