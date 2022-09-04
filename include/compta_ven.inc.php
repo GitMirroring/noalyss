@@ -212,13 +212,14 @@ if (!isset($_REQUEST ['p_jrn']))
     }
     $Ledger->id=$def_ledger['jrn_def_id'];
 }
-else
-    $Ledger->id=$http->request('p_jrn');
-
-if (isset($_REQUEST['p_jrn_predef']))
-{
-    $Ledger->id=$http->request('p_jrn_predef');
+else if ( isset($_REQUEST ['p_jrn']) ) {
+    $Ledger->id=$http->request('p_jrn','number');
 }
+else if (isset($_REQUEST['p_jrn_predef']))
+{
+    $Ledger->id=$http->request('p_jrn_predef','number');
+}
+
 
 
 echo '<div class="content">';

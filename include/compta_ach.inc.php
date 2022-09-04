@@ -197,10 +197,9 @@ if (!isset($_REQUEST ['p_jrn']))
 	}
 	$Ledger->id = $def_ledger['jrn_def_id'];
 }
-else
+else if (isset($_REQUEST ['p_jrn']))
 	$Ledger->id = $request_jrn;
-
-if (isset ($_REQUEST['p_jrn_predef'])){
+else if (isset ($_REQUEST['p_jrn_predef'])){
 	$Ledger->id=$http->request('p_jrn_predef');
 }
 // pre defined operation
