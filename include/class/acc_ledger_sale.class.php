@@ -1348,7 +1348,8 @@ EOF;
         $Commentaire = new IText();
         $Commentaire->table = 0;
         $Commentaire->setReadOnly(false);
-        $Commentaire->size = 60;
+        $Commentaire->size = (empty($e_comm))?60:strlen($e_comm)+5;
+        $Commentaire->size = ($Commentaire->size<60)?60:$Commentaire->size;
         $Commentaire->tabindex = 3;
 
         $label = Icon_Action::infobulle(1);

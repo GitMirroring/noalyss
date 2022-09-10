@@ -4127,3 +4127,21 @@ function reconnect(){
         }
     });
 }
+
+/**
+ * @brief enlarge an INPUT TEXT
+ *
+ */
+function enlarge_text(p_domid,p_size) {
+    try {
+        var element= document.getElementById(p_domid);
+        if ( !element) {console.error (`enlarge text doesn't exist [${p_domid}]`)}
+        var current_size=parseInt(element.getAttribute('size'));
+        element.setAttribute('size',current_size+parseInt(p_size));
+    } catch (e) {
+        console.error(`enlarge text fails with ${p_domid} ${p_size} `);
+        console.error(e.message);
+    }
+
+
+}

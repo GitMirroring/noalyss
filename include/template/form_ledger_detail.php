@@ -61,10 +61,10 @@
     <tr>
         <td>
              <?php echo _('Libellé')?> 
-             <?php echo $label ; ?> 
+             <?php echo $label ; ?>
         </td>
         <td>
-            <?php echo $f_desc?>
+            <?php echo $f_desc, Icon_Action::longer("e_comm",20)?>
         </td>
     </tr>
     <tr>

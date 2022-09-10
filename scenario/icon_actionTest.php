@@ -108,3 +108,7 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
 <p>
     Option <?php echo Icon_Action::option( "alert('test')")?>
 </p>
+<p>
+    Increase INPUT TEXT Element
+    <input type="text" id="text_element" size="20"><?php echo Icon_Action::longer("text_element",50)?>
+</p>

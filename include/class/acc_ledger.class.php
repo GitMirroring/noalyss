@@ -926,37 +926,41 @@ class Acc_Ledger  extends jrn_def_sql
         $wPJ->value=(isset($e_pj))?$e_pj:$default_pj;
         $ret.='</tr>';
         $ret.='<tr >';
-        $ret.='<td colspan="2" style="width:auto"> '._('Pièce').' : '.$wPJ->input();
-        $ret.=HtmlInput::hidden('e_pj_suggest', $default_pj);
-        $ret.='</tr>';
+        $ret.='<td style="width:auto"> '._('Pièce').' </td> ';
+        $ret.=td($wPJ->input());
         $ret.='</td>';
-
+        $ret.='</tr>';
         $ret.='<tr>';
-        $ret.='<td colspan="2" style="width:auto">';
-        $ret.=_('Libellé');
+        $ret.=td(_('Libellé'));
+        $ret.='<td>';
+
         $wDescription=new IText('desc');
         $wDescription->readonly=$p_readonly;
-        $wDescription->size="50";
+        $wDescription->size = (empty($desc))?60:strlen($desc)+5;
+        $wDescription->size = ($wDescription->size<60)?60:$wDescription->size;
         $wDescription->value=(isset($desc))?$desc:'';
-
         $ret.=$wDescription->input();
+        $ret.=Icon_Action::longer("desc",20);
         $ret.='</td>';
         $ret.='</tr>';
+        // Currency
+        $currency_select = $this->CurrencyInput("currency_code", "p_currency_rate" , "p_currency_euro");
+        $currency_select->selected=$http->request('p_currency_code','string',0);
+
+        $currency_input=new INum("p_currency_rate");
+        $currency_input->prec=6;
+        $currency_input->id="p_currency_rate";
+        $currency_input->value=$http->request('p_currency_rate','string',1);
+        $ret.=tr(td(_("Devise")).td($currency_select->input().
+            $currency_input->change('CurrencyComputeMisc(\'p_currency_rate\',\'p_currency_euro\');')));
+        $ret.='</div>';
+        $currency=new Acc_Currency($this->db,0);
 
         $ret.='</table>';
 
-        // Currency
-         $currency_select = $this->CurrencyInput("currency_code", "p_currency_rate" , "p_currency_euro");
-         $currency_select->selected=$http->request('p_currency_code','string',0);
-         
-         $currency_input=new INum("p_currency_rate");
-         $currency_input->prec=6;
-         $currency_input->id="p_currency_rate";
-         $currency_input->value=$http->request('p_currency_rate','string',1);
-         $ret.=_("Devise")." ".$currency_select->input();
-         $ret.=$currency_input->change('CurrencyComputeMisc(\'p_currency_rate\',\'p_currency_euro\');');
-         $currency=new Acc_Currency($this->db,0);
-         
+        $ret.=HtmlInput::hidden('e_pj_suggest', $default_pj);
+
+
          
         $nb_row=(isset($nb_item) )?$nb_item:$this->nb;
 

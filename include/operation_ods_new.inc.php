@@ -27,7 +27,7 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 
-global $g_user,$g_parameter;
+global $g_user,$g_parameter,$http;
 $cn=Dossier::connect();
 
 $id_predef = $http->request('p_jrn_predef','number',-1);
@@ -67,6 +67,8 @@ if ( isset ($_GET['action']) && ! isset($_POST['correct']) && ! isset($correct) 
             {
                 $op->set_od_id($http->request('pre_def','number'));
                 $p_post=$op->compute_array();
+                // operation description are not in the same variable
+                $p_post['desc']=$p_post['e_comm'];
             }
 	}
 }

@@ -447,4 +447,18 @@ class Icon_Action
             uniqid(),$p_js,"&#xf142;");
         return $r;
     }
+
+    /**
+     * @brief Increase size of input_text (p_domid) with p_domid
+     * @param $p_domid domid of the input "text" element
+     * @param $p_size   size of the element
+     * @return string HTML string
+     */
+    static function longer($p_domid,$p_size) {
+        $r=sprintf('<span id="%s_longer" '.
+        ' onclick="enlarge_text(\'%s\',\'%s\') "'.
+        ' class="icon smallicon">%s</span>',
+        $p_domid,$p_domid,$p_size,"&#xe81c");
+        return $r;
+    }
 }
