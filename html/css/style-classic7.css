@@ -2168,10 +2168,13 @@ ul.aligned-block li {
  * Total in confirmation VEN / ACH
  ******************************************************************************/
 #total_div_id {
-    float: right;
-    margin-right: 150px;
+    float: left;
+    /*margin-right: 150px;
+    margin-top: 50px;*/
     background: snow;
-    margin-top: 50px;
+    padding: 2rem;
+    border:1px solid navy;
+    margin-right:1rem;
 }
 /***************************************************************************
  * column in the dashboard
