@@ -79,7 +79,7 @@ class IPoste extends HtmlInput
     {
         $this->name=$p_name;
         $this->readOnly=false;
-        $this->size=10;
+        $this->size=15;
         $this->value=$p_value;
         $this->selected="";
         $this->table=0;
