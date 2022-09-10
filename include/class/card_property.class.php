@@ -222,6 +222,7 @@ class Card_Property
         if ($this->ad_id==ATTR_DEF_ACCOUNT)
         {
             $w=new IPoste("av_text".$this->ad_id);
+            $w->id=uniqid('accounting');
             $w->set_attribute('ipopup', 'ipop_account');
             $w->set_attribute('jrn', '0');
             $w->set_attribute('account', "av_text".$this->ad_id);

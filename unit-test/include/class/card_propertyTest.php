@@ -43,7 +43,7 @@ class Card_PropertyTest extends TestCase
      */
     static function setUpBeforeClass():void
     {
-        require_once 'global.php';
+
         global $g_connection;
         $g_connection=Dossier::connect();
         // clean if exists
@@ -89,7 +89,7 @@ class Card_PropertyTest extends TestCase
 
     public static function tearDownAfterClass():void
     {
-        require_once 'global.php';
+
         global $g_connection;
         $g_connection=Dossier::connect();
         // clean if exists
@@ -107,7 +107,6 @@ class Card_PropertyTest extends TestCase
 
     public function getFicheDef()
     {
-        require_once 'global.php';
 
         global $g_connection;
         $g_connection=Dossier::connect();
@@ -119,7 +118,6 @@ class Card_PropertyTest extends TestCase
 
     public function getFiche()
     {
-        require_once 'global.php';
 
         global $g_connection;
         $g_connection=Dossier::connect();
