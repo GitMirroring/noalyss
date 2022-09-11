@@ -508,7 +508,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         global $g_parameter;
         extract ($p_array, EXTR_SKIP);
         $this->verify($p_array) ;
-
+        if ( !isset($p_array['jrn_note_input'])) {$p_array['jrn_note_input']='';}
         $group=$this->db->get_next_seq("s_oa_group"); /* for analytic */
         $seq=$this->db->get_next_seq('s_grpt');
         $this->id=$p_jrn;
@@ -1078,8 +1078,15 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
 
         }
-
-
+            /*----------------------------------------------
+             * Save the note
+             ----------------------------------------------*/
+            if (isset($p_array['jrn_note_input']) && !empty($p_array['jrn_note_input'])) {
+                $acc_operation_note=Acc_Operation_Note::build_jrn_id(-1);
+                $acc_operation_note->setNote($p_array['jrn_note_input']);
+                $acc_operation_note->setOperation_id( $this->jr_id);
+                $acc_operation_note->save();
+            }
         }//end try
         catch (Exception $e)
         {
@@ -1519,7 +1526,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
     {
         global $g_parameter;
         extract ($p_array,EXTR_SKIP);
-
+        if ( !isset($p_array['jrn_note_input'])) {$p_array['jrn_note_input']='';}
 		// we don't need to verify if we need only a feedback
         if ( ! $p_summary ){$this->verify($p_array) ;}
         
@@ -1600,6 +1607,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $r.='<td> ' . _('Fournisseur') . '</td><td> ' . hb($e_client . ':' . $client_name) . '</td>';
         $r.='</tr>';
         $r.='</table>';
+        $r.='<pre>'._('Note').' '.h($p_array['jrn_note_input']).'</pre>';
         $r.='</div>';
         $r.='<div style="position:float;clear:both">';
         $r.='</div>';
@@ -1846,7 +1854,7 @@ EOF;
         if ( $g_parameter->MY_ANALYTIC!='nu' && !$p_summary) // use of AA
             $r.='<input type="button" class="button" value="'._('Vérifiez imputation analytique').'" onClick="verify_ca(\'\');">';
         
-        $r.=(! $p_summary )?'<div id="total_div_id" >':'<div>';
+        $r.='<div id="total_div_id" >';
         $r.='<h2>Totaux</h2>';
         $other_tax_label="";
         $other_tax_amount="";
@@ -1885,6 +1893,8 @@ EOF;
         $r.=HtmlInput::hidden('e_client',$e_client);
         $r.=HtmlInput::hidden('nb_item',$nb_item);
         $r.=HtmlInput::hidden('p_jrn',$p_jrn);
+        $r.=HtmlInput::hidden('jrn_note_input',h($p_array['jrn_note_input']));
+
         if ( isset($period))
             $r.=HtmlInput::hidden('period',$period);
         $r.=HtmlInput::hidden('e_comm',$e_comm);

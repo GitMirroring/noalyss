@@ -458,7 +458,17 @@ class Icon_Action
         $r=sprintf('<span id="%s_longer" '.
         ' onclick="enlarge_text(\'%s\',\'%s\') "'.
         ' class="icon smallicon">%s</span>',
-        $p_domid,$p_domid,$p_size,"&#xe81c");
+        $p_domid,$p_domid,$p_size,"&#xf138");
+        return $r;
+    }
+    /**
+     * @brief Increase size of input_text (p_domid) with p_domid
+     * @param $p_domid domid of the input "text" element
+     * @param $p_size   size of the element
+     * @return string HTML string
+     */
+    static function show_note($p_domid) {
+        $r='<span id="'.uniqid().'" class="smallicon icon"  style="background-color:yellow" onclick="document.getElementById(\''.$p_domid.'\').show()">&#xf0f6;</span>';
         return $r;
     }
 }

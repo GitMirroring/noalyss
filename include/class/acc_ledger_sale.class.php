@@ -768,6 +768,15 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                     $ledger->insert_quant_fin($acfiche->id, $mp_jr_id, $cust->id, bcmul($famount, 1),$let_other);
                 }
             }
+            /*----------------------------------------------
+           * Save the note
+           ----------------------------------------------*/
+            if (isset($p_array['jrn_note_input']) && !empty($p_array['jrn_note_input'])) {
+                $acc_operation_note=Acc_Operation_Note::build_jrn_id(-1);
+                $acc_operation_note->setNote($p_array['jrn_note_input']);
+                $acc_operation_note->setOperation_id( $this->jr_id);
+                $acc_operation_note->save();
+            }
         } catch (Exception $e) {
               record_log($e);
             echo '<span class="error">' .
@@ -796,7 +805,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
     function confirm($p_array, $p_summary = false) {
         global $g_parameter;
         extract($p_array, EXTR_SKIP);
-
+        if ( !isset($p_array['jrn_note_input'])) {$p_array['jrn_note_input']='';}
         // don't need to verify for a summary
         if (!$p_summary)
         {
@@ -874,6 +883,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $r.='<td> ' . _('Client') . '</td><td> ' . hb($e_client . ':' . $client_name) . '</td>';
         $r.='</tr>';
         $r.='</table>';
+        $r.='<pre>'._('Note').' '.h($p_array['jrn_note_input']).'</pre>';
         $r.='</div>';
         $r.='<div style="float:none;clear:both">';
         $r.='</div>';
@@ -1101,7 +1111,7 @@ EOF;
         $r.='</p>';
         if ($g_parameter->MY_ANALYTIC != 'nu' && ! $p_summary) // use of AA
             $r.='<input type="button" class="button" value="' . _('Vérifiez Imputation Analytique') . '" onClick="verify_ca(\'\');">';
-        $r.=(! $p_summary )?'<div id="total_div_id" >':'<div>';
+        $r.='<div id="total_div_id" >';
         $r.='<h2>Totaux</h2>';
         $other_tax_label="";
         $other_tax_amount="";
@@ -1142,6 +1152,7 @@ EOF;
         $r.=HtmlInput::hidden('e_client', $e_client);
         $r.=HtmlInput::hidden('nb_item', $nb_item);
         $r.=HtmlInput::hidden('p_jrn', $p_jrn);
+        $r.=HtmlInput::hidden('jrn_note_input',h($p_array['jrn_note_input']));
         $mt = microtime(true);
         $r.=HtmlInput::hidden('mt', $mt);
         $r.=HtmlInput::post_to_hidden(['p_currency_rate','p_currency_code']);
@@ -1259,11 +1270,12 @@ EOF;
         // load ledger definition
         $this->load();
         $http=new HttpInput();
+        $http->set_array([]);
         if ($p_array != null) {
             extract($p_array, EXTR_SKIP);
             $http->set_array($p_array);
         }
-        $http->set_array([]);
+        if ( !isset($p_array['jrn_note_input'])) {$p_array['jrn_note_input']='';}
         $flag_tva = $g_parameter->MY_TVA_USE;
         /* Add button */
         

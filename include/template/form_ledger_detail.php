@@ -69,6 +69,16 @@
     </tr>
     <tr>
         <td>
+            <?=_("Note")?>
+            <?php echo Icon_Action::show_note('jrn_note_div') ?>
+        </td>
+        <td >
+            <pre id="jrn_note_td"></pre>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
             <?=_("Devise")?>
         </td>
         <td>
@@ -78,7 +88,11 @@
         </td>
     </tr>
 </table>
-     
+<?php
+// note for operation
+$note=(isset($p_array['jrn_note_input']))?$p_array['jrn_note_input']:'';
+Acc_Operation_Note::input($note)
+?>
       
 <br>
 <?php

@@ -626,6 +626,7 @@ class Acc_Ledger  extends jrn_def_sql
             return _("Aucun résultat");
         $anc=null;
         extract($p_array, EXTR_SKIP);
+        if ( !isset($p_array['jrn_note_input'])) {$p_array['jrn_note_input']='';}
         $lPeriode=new Periode($this->db);
         if ($this->check_periode()==true)
         {
@@ -651,6 +652,9 @@ class Acc_Ledger  extends jrn_def_sql
         $date_limit=$lPeriode->get_date_limit();
         $ret.='<tr> '.td(_('Période Comptable')).td($date_limit['p_start'].'-'.$date_limit['p_end']).'</tr>';
         $ret.="<tr><td>"._('Libellé')." </td><td>".h($desc)."</td></tr>";
+        $ret.="<tr><td>";
+        $ret.=_('Note').'</td><td><pre>'. h($p_array['jrn_note_input']).'</pre>';
+        $ret.="</td></tr>";
         $ret.="<tr><td>"._('PJ Num')." </td><td>".h($e_pj)."</td></tr>";
         $ret.='</table>';
         $ret.="<table class=\"result\">";
@@ -679,6 +683,8 @@ class Acc_Ledger  extends jrn_def_sql
         $ret.=HtmlInput::hidden('period', $lPeriode->p_id);
         $ret.=HtmlInput::hidden('e_pj', $e_pj);
         $ret.=HtmlInput::hidden('e_pj_suggest', $e_pj_suggest);
+        $ret.=HtmlInput::hidden('jrn_note_input',h($p_array['jrn_note_input']));
+
         $mt=microtime(true);
         $ret.=HtmlInput::hidden('mt', $mt);
         // For predefined operation
@@ -943,6 +949,12 @@ class Acc_Ledger  extends jrn_def_sql
         $ret.=Icon_Action::longer("desc",20);
         $ret.='</td>';
         $ret.='</tr>';
+        $ret.='<tr>';
+        $ret.='<td>';
+        $ret.=_("Note").
+            Icon_Action::show_note('jrn_note_div');
+        $ret.='</td>';
+        $ret.='<td> <pre id="jrn_note_td"></pre></td>';
         // Currency
         $currency_select = $this->CurrencyInput("currency_code", "p_currency_rate" , "p_currency_euro");
         $currency_select->selected=$http->request('p_currency_code','string',0);
@@ -957,6 +969,13 @@ class Acc_Ledger  extends jrn_def_sql
         $currency=new Acc_Currency($this->db,0);
 
         $ret.='</table>';
+
+// note for operation
+        $note = (isset($p_array['jrn_note_input'])) ? $p_array['jrn_note_input'] : '';
+        ob_start();
+        Acc_Operation_Note::input($note);
+        $ret.=ob_get_contents();
+        ob_end_clean();
 
         $ret.=HtmlInput::hidden('e_pj_suggest', $default_pj);
 
@@ -1314,6 +1333,7 @@ class Acc_Ledger  extends jrn_def_sql
         bcscale(4);
         $http=new HttpInput();
         extract($p_array, EXTR_SKIP);
+        if ( !isset($p_array['jrn_note_input'])) {$p_array['jrn_note_input']='';}
         try
         {
             $msg=$this->verify($p_array);
@@ -1529,6 +1549,15 @@ class Acc_Ledger  extends jrn_def_sql
             if (isset($_FILES["pj"]))
             {
                 $this->db->save_receipt($seq);
+            }
+            /*----------------------------------------------
+             * Save the note
+             ----------------------------------------------*/
+            if (isset($p_array['jrn_note_input']) && !empty($p_array['jrn_note_input'])) {
+                $acc_operation_note=Acc_Operation_Note::build_jrn_id(-1);
+                $acc_operation_note->setNote($p_array['jrn_note_input']);
+                $acc_operation_note->setOperation_id( $jr_id);
+                $acc_operation_note->save();
             }
         }
         catch (Exception $e)
