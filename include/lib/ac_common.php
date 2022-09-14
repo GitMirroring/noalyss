@@ -1622,3 +1622,28 @@ function noalyss_explode($separator,$string) {
     if ($string===null) return '';
     return explode($separator,$string);
 }
+/**
+ * @brief compose a HTML string with phone
+ * @param string $p_tel
+ * @return false|string returns false if $p_tel is empty
+ */
+function phoneTo($p_tel) {
+     if (!empty($p_tel)) {
+     $r=sprintf('<a href="tel:%s">%s</a>',h($p_tel),h($p_tel));
+     return $r;
+     }
+    return false;
+}
+
+/**
+ * @brief compose a HTML string with email
+ * @param $p_email
+ * @return false|string returns false if email not valide
+ */
+function mailTo($p_email) {
+    if ( filter_var($p_email,FILTER_VALIDATE_EMAIL) ) {
+        $r=sprintf('<a href="mailto:%s">%s</a>',h($p_email),h($p_email));
+        return $r;
+    }
+    return false;
+}

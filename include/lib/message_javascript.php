@@ -116,4 +116,5 @@ content[79]="<?php echo htmlspecialchars(_("Les postes comptables sont entre [] 
 content[80]="<?php echo htmlspecialchars(_("Oui pour charger les fichiers javascripts et CSS standards"),ENT_QUOTES)?>";    
 content[81]="<?php echo htmlspecialchars(_("Recommendé d'avoir un poste propre"),ENT_QUOTES)?>";
 content[82]="<?php echo htmlspecialchars(_("valeur en % "),ENT_QUOTES)?>";
+content[83]="<?php echo htmlspecialchars(_("Données invalides "),ENT_QUOTES)?>";
 </script>

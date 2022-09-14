@@ -371,4 +371,29 @@ class Ac_CommonTest extends TestCase
     {
         $this->assertEquals($expected,noalyss_strip_tags($string));
     }
+
+    /**
+     * @testdox Test the TEL tag
+     * @return void
+     */
+    function testPhoneTo()
+    {
+        $this->assertFalse(phoneTo(""),"Invalide phone");
+        $expect=sprintf('<a href="tel:%s">%s</a>',h(123),h(123));
+        $expect=preg_replace('/\s+/','',$expect);
+        $this->assertEquals(strtoupper($expect),strtoupper(preg_replace("/\s+/",'',phoneTo('123'))),);
+    }
+    /**
+     * @testdox Test the MAILTO tag
+     * @return void
+     */
+    function testMailTo()
+    {
+        $this->assertEmpty(mailTo(""),"Invalide phone");
+        $expect=sprintf('<a href="mailto:%s">%s</a>',h("test@noalyss.be"),h("test@noalyss.be"));
+        $expect=preg_replace('/\s+/','',$expect);
+        $this->assertEquals(strtoupper($expect),strtoupper(preg_replace("/\s+/",'',mailTo('test@noalyss.be'))),);
+        $this->assertFalse(mailTo('test@noalyss.@be'),"Send email to invalidate email");
+
+    }
 }
