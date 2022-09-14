@@ -20,7 +20,10 @@
 /**\brief include from client.inc.php and concerned only the contact card and
  * the contact category
  */
+
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
+
+global $g_user,$cn;
 
 $http=new HttpInput();
 
@@ -98,26 +101,22 @@ if ($low_action == "list")
              <p class="notice"><?=_("Si vous modifiez un contact, il faut recharger la page pour voir les changements")?></p>
         </div>
 	<?php
-	$client = new contact($cn);
+	$contact = new contact($cn);
 	$search =$http->get("query","string","");
 	$sql = "";
 	if (isset($_GET['cat']))
 	{
 	    $cat=$http->get("cat","number");
-            if ($cat!= -1 )     $sql = sprintf(" and fd_id = %s", $cat);
+        $contact->filter_category($cat);
 	}
 	if (isset($_GET['sel_company']))
 	{
             $sel_company=$http->get("sel_company");
-	    if ($sel_company != '' && $sel_company != "-1")
-            {
-
-                $client->company=$sel_company;
-            }
+            $contact->filter_company($sel_company);
 	}
 
 	echo '<div class="content">';
-	echo $client->Summary($search,"contact",$sql);
+	echo $contact->Summary($search,"contact",$sql);
 
 
 	echo '<br>';
@@ -128,7 +127,7 @@ if ($low_action == "list")
 	$f_add_button->label = _('Créer une nouvelle fiche');
 	$f_add_button->set_attribute('win_refresh', 'yes');
 	$f_add_button->set_attribute('type_cat', FICHE_TYPE_CONTACT);
-	$f_add_button->javascript = " select_card_type(this);";
+	$f_add_button->javascript = "select_card_type(this);";
 	echo $f_add_button->input();
 
     $f_cat_button=new IButton('add_cat');

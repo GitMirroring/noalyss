@@ -616,4 +616,5 @@ class Card_Property
         return;
     }
 
+
 }

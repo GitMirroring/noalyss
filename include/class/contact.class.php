@@ -29,118 +29,148 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 
 class contact extends Fiche
 {
-    var $company; /*!< $company company of the contact (ad_id=ATTR_DEF_COMPANY)*/
+    private $filter;
+
     /*!\brief constructor */
     function __construct($p_cn,$p_id=0)
     {
         $this->fiche_def_ref=FICHE_TYPE_CONTACT;
         parent::__construct($p_cn,$p_id) ;
-        $this->company="";
+        $this->filter=[];
     }
-    /*!   
-     * @brief display a summary of the contact card
-     
+
+    /**
+     * @brief Build the SQL query thanks the parameter
+     * @param array $array if empty , we use $this->filter , otherwise $array will override it
+     * @return string
+     */
+    function build_sql($array)
+    {
+        if ( empty($array) ) $array=$this->filter;
+
+        $sql_query='
+        SELECT f_id,
+               contact_fname, 
+               contact_name, 
+               contact_qcode, 
+               contact_company, 
+               contact_mobile, 
+               contact_phone, 
+               contact_email, 
+               contact_fax
+        FROM public.v_contact
+        ';
+        $where=' where ';$and='';
+        if ( isset ($array['company'])) {
+            $sql_query.=$where.sprintf(" contact_company ilike '%%%s%%'",
+                    sql_string($array['company']));
+            $where='';$and=' and ';
+        }
+        if ( isset($array['search'])) {
+            $sql_query.=$where.$and.sprintf(" f_id in (select distinct f_id from fiche_detail where ad_value ilike '%%%s%%')",
+                    sql_string($array['search']));
+            $where='';$and=' and ';
+
+        }
+        if ( isset($array['category'])) {
+            $sql_query.=$where.$and.sprintf(" fd_id = %s",
+                    sql_string($array['category']));
+            $where='';$and=' and ';
+        }
+
+        return $sql_query;
+    }
+
+    function filter_category($pn_category) {
+        unset($this->filter['category']);
+        if ( !empty($pn_category)
+            && isNumber($pn_category)==1
+            && $pn_category != -1){
+            $this->filter['category']=$pn_category;
+        }
+    }
+    function filter_company($p_company=null) {
+        unset($this->filter['company']);
+        if ( ! empty($p_company) && $p_company != "-1")  {
+            $this->filter['company']= strtoupper($p_company);
+        }
+        return $this;
+    }
+    function filter_search($p_search="") {
+        unset($this->filter['search']);
+        if ( ! empty($p_search) ){
+            $this->filter['search']=$p_search;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilter(): array
+    {
+        return $this->filter;
+    }
+
+    /*!
+     * @brief display a summary of the contact card,
      *
-     * @param  p_search : filter on card name
-     * @param  p_action : nothing
-     * @param  p_sql : extra SQL command
-     * @param  p_nothing (filter)
+     * @param  string p_search : filter on card name, if empty , contact->filter will be used
+     * @param  string  p_action :  not used
+     * @param  string p_sql : extra SQL command not used
+     * @param  string  p_nothing (filter) not used
      *
      * @returns string to display
      */
     function Summary($p_search="",$p_action="",$p_sql="",$p_nothing=false)
     {
-        $p_search=sql_string($p_search);
-        $extra_sql="";
-        if ( $this->company != "")
-        {
-            $extra_sql="and f_id in (select f_id from fiche_detail
-                       where ad_value='".sql_string(trim(strtoupper($this->company)))."' and ad_id=".ATTR_DEF_COMPANY.") ";
+        $http=new HttpInput();
+        if ( !empty ($p_search) ) { $this->filter_search($p_search);}
+
+        $sql=$this->build_sql($this->filter);
+        if (DEBUGNOALYSS > 1) {
+            print_r("Contact::summary ($sql)");
         }
-        $url=urlencode($_SERVER['REQUEST_URI']);
-        $script=$_SERVER['PHP_SELF'];
         // Creation of the nav bar
         // Get the max numberRow
-        $all_contact=$this->count_by_modele($this->fiche_def_ref,$p_search,$extra_sql.$p_sql);
+        $all_contact=$this->cn->get_value("select count(*) from ($sql) as m");
+	    if ( $all_contact == 0 ) return "";
+
         // Get offset and page variable
-        $offset=( isset ($_REQUEST['offset'] )) ?$_REQUEST['offset']:0;
-        $page=(isset($_REQUEST['page']))?$_REQUEST['page']:1;
+        $offset=$http->request('offset','number',0);
+        $page=$http->request('page','number',1);
+
         $bar=navigation_bar($offset,$all_contact,$_SESSION[SESSION_KEY.'g_pagesize'],$page);
-        // set a filter ?
-        $search="";
-        if ( noalyss_trim($p_search) != "" )
-        {
-            $search=" and f_id in
-                    (select f_id from fiche_Detail
-                    where
-                    ad_id=1 and ad_value ilike '%$p_search%') ";
-        }
+
+
         // Get The result Array
-        $step_contact=$this->get_by_category($offset,$search.$extra_sql.$p_sql);
+        $step_contact=$this->fetch($sql);
 
-	if ( $all_contact == 0 ) return "";
-        $r=$bar;
-        $r.='<table id="contact_tb" class="sortable">
-            <TR>
-            <th>Quick Code</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-			<th>Société</th>
-            <th>Téléphone</th>
-            <th>email</th>
-            <th>Fax</th>
-            </TR>';
-        $base=$_SERVER['PHP_SELF'];
-        // Compute the url
-        $url="";
-        $and="?";
-        $get=$_GET;
-        if ( isset ($get) )
-        {
-            foreach ($get as $name=>$value )
-            {
-                // we clean the parameter offset, step, page and size
-                if (  ! in_array($name,array('f_id','detail')))
-                {
-                    $url.=$and.$name."=".$value;
-                    $and="&";
-                }// if
-            }//foreach
-        }// if
-        $back_url=urlencode($_SERVER['REQUEST_URI']);
-        if ( sizeof ($step_contact ) == 0 )
-            return $r;
-        $idx=0;
-        foreach ($step_contact as $contact )
-        {
-            $l_company=new Fiche($this->cn);
-            $l_company->get_by_qcode($contact->strAttribut(ATTR_DEF_COMPANY),false);
-            $l_company_name=$l_company->strAttribut(ATTR_DEF_NAME,0);
-            
-            // add popup for detail if the company does exist
-            if ( $l_company_name !="")
-            {
-                $l_company_name=HtmlInput::card_detail($contact->strAttribut
-                        (ATTR_DEF_COMPANY),$l_company_name,'style="text-decoration:underline;"');
-            }
-            $tr=($idx%2==0)?' <tr class="odd">':'<tr class="even">';
-            $idx++;
-            $r.=$tr;
-            $qcode=$contact->strAttribut(ATTR_DEF_QUICKCODE);
-            $r.='<TD>'.HtmlInput::card_detail($qcode)."</TD>";
-            $r.="<TD>".$contact->strAttribut(ATTR_DEF_NAME,0)."</TD>";
-            $r.="<TD>".$contact->strAttribut(ATTR_DEF_FIRST_NAME,0)."</TD>";
-            $r.="<TD>".$l_company_name."</TD>";
-            $r.="<TD>".$contact->strAttribut(ATTR_DEF_TEL,0)."</TD>";
-            $r.="<TD>".$contact->strAttribut(ATTR_DEF_EMAIL,0)."</TD>".
-                "<TD> ".$contact->strAttribut(ATTR_DEF_FAX,0)."</TD>";
 
-            $r.="</TR>";
+        $contact=$this;
+        require NOALYSS_TEMPLATE.'/contact-summary.php';
 
-        }
-        $r.="</TABLE>";
-        $r.=$bar;
-        return $r;
     }
 
+    /**
+     * @brief Fetch all rows from view, ordered by  by contact_name, with offset and limit
+     * @see Contact::build_sql()
+     * @param $ps_string
+     * @return array
+     */
+   private function fetch($ps_sql) {
+        $http=new HttpInput();
+        // Get offset and page variable
+        $offset=$http->request('offset','number',0);
+        $nb_pagesize=$_SESSION[SESSION_KEY.'g_pagesize'];
+        $limit = '';
+        $ps_sql.=' order by contact_name ';
+        if ( $nb_pagesize <0 ) {$limit='';} else {
+            $limit=sprintf(' limit %s offset %s',$nb_pagesize,$offset);
+        }
+        $ps_sql .=  $limit ;
+        if (DEBUGNOALYSS > 1) {
+            print_r("Contact::fetch ($ps_sql)");
+        }
+        return $this->cn->get_array($ps_sql);
+    }
 }

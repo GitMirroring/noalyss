@@ -242,6 +242,16 @@ abstract class Data_SQL
     }
 
     /**
+     * @brief turns a row fetched from the DB into a SQL object in updating all his attribute
+     * @param $p_array
+     * @return void
+     */
+    public function to_row($p_array) {
+        foreach ($this->name as $name) {
+            $this->$name=$p_array[$name];
+        }
+    }
+    /**
      * @brief retrieve array of object thanks a condition
      * @param $cond condition (where clause) (optional by default all the rows are fetched)
      * you can use this parameter for the order or subselect

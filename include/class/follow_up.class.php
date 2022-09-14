@@ -1301,7 +1301,7 @@ class Follow_Up
                 if ($fiche->id==0)
                     $str=' and false ';
                 else
-                    $str=" and (f_id_dest= ".$fiche->id." or ag_id in (select ag_id from action_person as ap where ap.f_id=".$fiche->id.")  )";
+                    $str=" and (f_id_dest= ".$fiche->id." or ag_id in (select ag_id from action_person as ap where ap.f_id=".$fiche->id.") or ag_contact=".$fiche->id."  )";
             }
         }
         if (isset($p_array['tdoc'])&&$p_array['tdoc'] !=-1)
@@ -1342,7 +1342,7 @@ class Follow_Up
         }
         else
         {
-            $action_query .=" and (ag_owner='".$_SESSION[SESSION_KEY.'g_user']."' or ".self::sql_security_filter($cn, "R")." or ag_dest=-1 )";
+            $action_query .=" and (ag_owner='".$_SESSION[SESSION_KEY.'g_user']."' or ".self::sql_security_filter($cn, "R")." or ag_dest=-1  )";
         }
 
 
@@ -1364,7 +1364,7 @@ class Follow_Up
             $action_query .= Follow_Up::filter_by_tag($cn, $p_array);
         }
         if ( DEBUGNOALYSS > 1) {
-            print "QUERY = [ $action_query.$str]";
+            print __FILE__.__LINE__."QUERY = [ $action_query.$str]";
         }
         return $action_query.$str;
     }

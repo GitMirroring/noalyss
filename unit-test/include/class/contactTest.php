@@ -28,12 +28,11 @@
  */
 use PHPUnit\Framework\TestCase;
 
+require DIRTEST.'/global.php';
 /**
  * @backupGlobals enabled
  * @coversDefaultClass \Contact
  */
-require DIRTEST.'/global.php';
-
 class ContactTest extends TestCase
 {
 
@@ -41,6 +40,7 @@ class ContactTest extends TestCase
      * @var Fiche
      */
     protected $object;
+    protected $connection;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -48,10 +48,11 @@ class ContactTest extends TestCase
      */
     protected function setUp():void
     {
-        include 'global.php';
+
         $this->object = new stdClass();
         $this->object->fiche_def=0;
         $this->object->card_to_clean=array();
+        $this->connection=Dossier::connect();
     }
 
     /**
@@ -60,8 +61,9 @@ class ContactTest extends TestCase
      */
     protected function tearDown():void
     {
-        include 'global.php';
-        global $g_connection;
+        if ( ! is_object($this->object->fiche_def)) return;
+        include_once DIRTEST.'/global.php';
+        $g_connection=Dossier::connect();
         $sql=new ArrayObject();
         $sql->append("delete from fiche_detail where f_id in (select f_id from fiche where fd_id = $1 )");
         $sql->append("delete from fiche where f_id not in (select f_id from fiche_detail where $1=$1)");
@@ -101,9 +103,9 @@ class ContactTest extends TestCase
      */
     public function createContact()
     {
-        include_once 'global.php';
+        include_once DIRTEST.'/global.php';
 
-        global $g_connection;
+        $g_connection=Dossier::connect();
         // create a category of card, type Charges
         $fiche_def=new Fiche_Def($g_connection);
         $aParam=["nom_mod"=>"Test.Contact", 
@@ -127,7 +129,8 @@ class ContactTest extends TestCase
      */
     public function createContactCard()
     {
-        global $g_connection;
+        include_once DIRTEST.'/global.php';
+
         if ( $this->object->fiche_def == 0) {
             $this->createContact();
         }
@@ -139,7 +142,7 @@ class ContactTest extends TestCase
         $aName[]=['name'=>'Daniel','company'=>'FOURNI'];
         $aName[]=['name'=>'Geert','company'=>'FOURNI'];
         foreach ($aName as $param  ) {
-            $fiche=new Fiche($g_connection);
+            $fiche=new Fiche($this->connection);
             $fiche->fiche_def=$this->object->fiche_def->id;
             $fiche->load();
             $fiche->setAttribut(ATTR_DEF_NAME, $param['name']);
@@ -157,6 +160,7 @@ class ContactTest extends TestCase
      */
     public function testSummary()
     {
+        include_once DIRTEST.'/global.php';
         global $g_connection;
         if ( $this->object->fiche_def == 0) {
             $this->createContactCard();
@@ -164,14 +168,110 @@ class ContactTest extends TestCase
         $contact=new Contact($g_connection);
         $_SERVER['REQUEST_URI']="?";
         $_SERVER['PHP_SELF']=__FILE__;
-        $r=$contact->summary();
-        $this->assertEquals(count($this->object->card_to_clean)*2 , substr_count($r,'fill_ipopcard')," 1. Missing card");
-        $contact->company=' fourni ';
-        $r=$contact->summary();
-        $this->assertEquals(6, substr_count($r,'fill_ipopcard') , 'not found all the contacts from FOURNI');
-        $r=$contact->summary('william');
-        $this->assertEquals(2, substr_count($r,'fill_ipopcard') , 'Search does not filter');
+        put_global(array(
+                    ["key"=>"offset","value"=>0],
+                    ["key"=>"ac","value"=>"CONTACT"],
+                    ["key"=>"page","value"=>1]));
+        ob_start();
+        $contact->summary();
+        $r=ob_get_contents();
+        ob_end_clean();
+        $path=__DIR__."/file/";
+        $filename="contact-summary-1.html";
+        \Noalyss\Facility::save_file($path,$filename,$r);
+        print "File saved into $path/$filename";
+        $this->assertEquals(4983, filesize ($path."/".$filename)," File not valide (1)");
+        $this->assertEquals(5 , preg_match_all('/<tr class="/',$r)," 1. Missing card");
+        $contact->filter_company(' fourni ');
+        ob_start();
+        $contact->summary();
+        $r=ob_get_contents();
+        ob_end_clean();
+        $filename="contact-summary-2.html";
+        \Noalyss\Facility::save_file($path,$filename,$r);
+
+        print "File saved into $path/$filename";
+        $this->assertEquals(3457,filesize ($path."/".$filename)," File not valide (2)");
+        $this->assertEquals(3 , preg_match_all('/<tr class="/',$r), 'not found all the contacts from FOURNI');
+
+
+        ob_start();
+        $contact->summary('william');
+        $r=ob_get_contents();
+        ob_end_clean();
+        $filename="contact-summary-3.html";
+        \Noalyss\Facility::save_file($path,$filename,$r);
+        print "File saved into $path/$filename";
+        $this->assertEquals(2018,filesize ($path."/".$filename)," File not valide (3)");
+        $this->assertEquals(1, preg_match_all('/<tr class="/',$r), 'Search does not filter');
         
     }
+
+    /**
+     * @testdox test the filters
+     * @return void
+     */
+    public function testFilter()
+    {
+        $contact=new Contact($this->connection);
+        $this->assertEquals(array(),$contact->getFilter(),' Filter not empty');
+        $contact->filter_search("search_sql");
+        $this->assertEquals(['search'=>'search_sql'],$contact->getFilter(),'Search not set');
+
+        $contact->filter_search("other_sql");
+        $this->assertEquals(['search'=>'other_sql'],$contact->getFilter(),'Search not replaced');
+
+        $contact->filter_company("company_sql");
+        $this->assertEquals(['search'=>'other_sql','company'=>'COMPANY_SQL'],$contact->getFilter(),'company not set');
+
+        $contact->filter_category(1);
+        $this->assertEquals(['search'=>'other_sql','company'=>'COMPANY_SQL','category'=>1],
+            $contact->getFilter(),'category not set');
+
+        $contact->filter_category(null);
+        $this->assertEquals(['search'=>'other_sql','company'=>'COMPANY_SQL'],$contact->getFilter(),'category not removed');
+
+    }
+
+    /**
+     * @depends testFilter
+     * @return void
+     */
+    function testBuildSQL()
+    {
+        $contact=new Contact($this->connection);
+        $contact->filter_category(1);
+        $contact->filter_search("search_sql");
+        $expected=strtoupper(preg_replace("/\s+/",'',"SELECT f_id,contact_fname, 
+               contact_name, 
+               contact_qcode, 
+               contact_company, 
+               contact_mobile, 
+               contact_phone, 
+               contact_email, 
+               contact_fax
+        FROM public.v_contact 
+        where  f_id in (select distinct f_id from fiche_detail where ad_value ilike '%search_sql%') and fd_id=1"));
+        $this->assertEquals($expected,strtoupper(preg_replace("/\s+/",'',$contact->build_sql([]))),' SQL Incorrect');
+
+    }
+
+    /**
+     * @testdox Test SQL V_Contact_SQL
+     * @return void
+     */
+    function testObjectSQL()
+    {
+        if ( $this->object->fiche_def == 0) {
+            $this->createContactCard();
+        }
+        // take a card
+        $f_id=$this->object->card_to_clean[0];
+        $contact_sql=new V_Contact_SQL($this->connection,$f_id);
+        $this->assertTrue($contact_sql->load()," Cannot load existing card");
+        $this->assertTrue($contact_sql->contact_name=='Chantal','Data not updated');
+        $this->assertTrue($contact_sql->getp("contact_name")=='Chantal','Data not updated');
+    }
+
 
 }

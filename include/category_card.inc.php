@@ -70,15 +70,21 @@ $f=new Fiche($cn, $f_id);
 
 echo '<div class="content">';
 echo $f->get_gestion_title();
-$menu=array(
-    array('href'=>$root."&sc=dc", 'label'=>_('Fiche'), 'alt'=>_('Détail de la fiche')),
-    array('href'=>$root.'&sc=sv', 'label'=>_('Suivi'), 'alt'=>_('Suivi Fournisseur, client, banque, devis, bon de commande, courrier')),
-    array('href'=>$root.'&sc=cn', 'label'=>_('Contact'), 'alt'=>_('Liste de contacts')),
-    array('href'=>$root.'&sc=op', 'label'=>_('Opérations'), 'alt'=>_('Toutes les opérations')),
-    array('href'=>$root.'&sc=bal', 'label'=>_('Balance'), 'alt'=>_('Balance du tiers')),
-    array('href'=>$root.'&sc=balag', 'label'=>_('Balance âgée'), 'alt'=>_('Balance âgée du tiers')),
-    array('href'=>$root.'&sc=let', 'label'=>_('Lettrage'), 'alt'=>_('Opérations & Lettrages'))
-);
+
+$from=$http->request("ac");
+
+
+$menu[]=    array('href'=>$root."&sc=dc", 'label'=>_('Fiche'), 'alt'=>_('Détail de la fiche'));
+$menu[]=array('href'=>$root.'&sc=sv', 'label'=>_('Suivi'), 'alt'=>_('Suivi Fournisseur, client, banque, devis, bon de commande, courrier'));
+// No submenu CONTACT for the menu CONTACT
+if ( strpos($from,"CONTACT") === false) {
+    $menu[]=array('href'=>$root.'&sc=cn', 'label'=>_('Contact'), 'alt'=>_('Liste de contacts'));
+}
+$menu[]=array('href'=>$root.'&sc=op', 'label'=>_('Opérations'), 'alt'=>_('Toutes les opérations'));
+$menu[]=array('href'=>$root.'&sc=bal', 'label'=>_('Balance'), 'alt'=>_('Balance du tiers'));
+$menu[]=array('href'=>$root.'&sc=balag', 'label'=>_('Balance âgée'), 'alt'=>_('Balance âgée du tiers'));
+$menu[]=array('href'=>$root.'&sc=let', 'label'=>_('Lettrage'), 'alt'=>_('Opérations & Lettrages'));
+
 echo '<ul class="tabs" style="padding-top:0px">';
 for ($i=0; $i<count($menu); $i++)
 {
@@ -141,8 +147,8 @@ if ($ss_action=='cn')
     echo dossier::hidden();
     $f=new Fiche($cn, $http->request('f_id','number'));
     $contact=new Contact($cn);
-    $contact->company=$f->get_quick_code();
-    echo $contact->summary("");
+    $contact->filter_company($f->get_quick_code());
+    echo $contact->summary();
 
     $sql=' select fd_id from fiche_def where frd_id='.FICHE_TYPE_CONTACT;
     $filter=$cn->make_list($sql);
