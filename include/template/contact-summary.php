@@ -68,7 +68,7 @@ $from=$http->request("ac","string","");
             ?>
         </td>
         <td>
-            <?=$contact['contact_mobile']?>
+             <?=phoneTo($contact['contact_mobile'])?>
         </td>
         <td>
             <?php
@@ -82,12 +82,10 @@ $from=$http->request("ac","string","");
             ?>
         </td>
         <td>
-            <?php if (!empty($contact['contact_phone'])):?>
-                <a href="tel:<?=$contact['contact_phone']?>"><?=$contact['contact_phone']?></a>
-            <?php endif;?>
+            <?=phoneTo($contact['contact_phone'])?>
         </td>
         <td>
-            <?=$contact['contact_phone']?>
+            <?=FaxTo($contact['contact_fax'])?>
         </td>
     </tr>
     <?php endforeach;?>

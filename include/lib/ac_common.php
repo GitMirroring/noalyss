@@ -1637,12 +1637,38 @@ function phoneTo($p_tel) {
 
 /**
  * @brief compose a HTML string with email
- * @param $p_email
+ * @param string $p_email email or emails separated by a comma
  * @return false|string returns false if email not valide
  */
 function mailTo($p_email) {
-    if ( filter_var($p_email,FILTER_VALIDATE_EMAIL) ) {
-        $r=sprintf('<a href="mailto:%s">%s</a>',h($p_email),h($p_email));
+    if (empty($p_email )) return "";
+    $nComma=preg_match("/,/",$p_email);
+    if ( $nComma > 0) {
+        $aEmail=explode(",",$p_email);
+    } else {
+        $aEmail[0]=$p_email;
+    }
+    $r="";
+    foreach ($aEmail as $email) {
+        if ( filter_var(trim($email),FILTER_VALIDATE_EMAIL) ) {
+            $r.=sprintf('<a href="mailto:%s">%s</a> ',h($email),h($email));
+        } else {
+            $r.=sprintf("%s",h($email));
+
+        }
+
+    }
+    return $r;
+}
+
+/**
+ * @brief compose a HTML string with fax
+ * @param string $p_fax fax number
+ * @return false|string returns false if $p_fax is empty
+ */
+function FaxTo($p_tel) {
+    if (!empty($p_tel)) {
+        $r=sprintf('<a href="fax:%s">%s</a>',h($p_tel),h($p_tel));
         return $r;
     }
     return false;

@@ -393,7 +393,25 @@ class Ac_CommonTest extends TestCase
         $expect=sprintf('<a href="mailto:%s">%s</a>',h("test@noalyss.be"),h("test@noalyss.be"));
         $expect=preg_replace('/\s+/','',$expect);
         $this->assertEquals(strtoupper($expect),strtoupper(preg_replace("/\s+/",'',mailTo('test@noalyss.be'))),);
-        $this->assertFalse(mailTo('test@noalyss.@be'),"Send email to invalidate email");
+        $this->assertEquals('test@noalyss.@be',mailTo('test@noalyss.@be'),"Send email to invalidate email");
+        $expect=sprintf('<a href="mailto:%s">%s</a>',h("test@noalyss.be"),h("test@noalyss.be"));
+        $expect.=sprintf('<a href="mailto:%s">%s</a>',h("test2@noalyss.be"),h("test2@noalyss.be"));
+        $expect=preg_replace('/\s+/','',$expect);
+        $this->assertEquals($expect,
+            preg_replace('/\s+/','',mailTo('test@noalyss.be,test2@noalyss.be'))
+            ,"Send email to invalidate email");
+
+    }
+    /**
+     * @testdox Test the FAX tag
+     * @return void
+     */
+    function testFaxTo()
+    {
+        $this->assertFalse(faxTo(""),"Invalide phone");
+        $expect=sprintf('<a href="fax:%s">%s</a>',h(123),h(123));
+        $expect=preg_replace('/\s+/','',$expect);
+        $this->assertEquals(strtoupper($expect),strtoupper(preg_replace("/\s+/",'',faxTo('123'))),);
 
     }
 }
