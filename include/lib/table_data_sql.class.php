@@ -181,14 +181,14 @@ abstract class Table_Data_SQL extends Data_SQL
         // primary cannot be null or empty
         if (trim($this->$pk)==="" || $this->$pk===null)  {
             $this->pk=-1;
-            return;
+            return false;
         }
        
         $result=$this->cn->get_array($sql,array ($this->$pk));
         if ($this->cn->count()==0)
         {
             $this->$pk=-1;
-            return;
+            return true;
         }
 
         foreach ($result[0] as $key=> $value)
