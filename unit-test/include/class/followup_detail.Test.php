@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass \Follow_Up_Detail
  */
-require DIRTEST.'/global.php';
+
 
 class Follow_Up_DetailTest extends TestCase
 {
@@ -48,7 +48,11 @@ class Follow_Up_DetailTest extends TestCase
      */
     protected function setUp():void
     {
-        include 'global.php';
+        require DIRTEST.'/global.php';
+        global $g_connection;
+        $this->g_connection=$g_connection;
+        $this->assertNotNull($this->g_connection , "Database",'invalide ressource');
+        $this->assertEquals(get_class ($this->g_connection) , "Database",'invalide ressource');
     }
 
     /**
@@ -62,12 +66,15 @@ class Follow_Up_DetailTest extends TestCase
 
     /**
      * the setUpBeforeClass():void template methods is called before the first test of the test case
-     *  class is run 
+     *  class is run
+     *  @backupGlobals enabled
      */
     public static function setUpBeforeClass():void
     {
+
         global $g_connection;
         $g_connection->exec_sql('delete from action_detail');
+
     }
 
     /**
@@ -114,14 +121,16 @@ class Follow_Up_DetailTest extends TestCase
      */
     public function testSQL_Update()
     {
-        global $g_connection;
-         $obj=new Follow_Up_Detail($g_connection);
+
+
+
+         $obj=new Follow_Up_Detail($this->g_connection);
         $this->insert($obj);
         $this->assertTrue($obj->get_parameter("id")>0,"Cannot insert");
         
         $obj->set_parameter('text','TEST UPDATE');
         $obj->save();
-        $reload=new Follow_Up_Detail($g_connection,$obj->get_parameter("id"));
+        $reload=new Follow_Up_Detail($this->g_connection,$obj->get_parameter("id"));
         $reload->load();
         $this->assertTrue($reload->get_parameter("text") == $obj->get_parameter("text"),"cannot update");
         $reload->delete();
