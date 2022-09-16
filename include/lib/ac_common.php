@@ -1673,3 +1673,12 @@ function FaxTo($p_tel) {
     }
     return false;
 }
+function linkTo($p_url)
+{
+    if (empty($p_url) ) return "";
+    if (filter_var(trim($p_url,FILTER_VALIDATE_URL)) ) {
+        return sprintf('<a href="%s" target="_blank">%s</a>',$p_url,$p_url);
+    } else {
+        return $p_url;
+    }
+}
