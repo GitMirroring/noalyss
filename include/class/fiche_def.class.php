@@ -295,20 +295,18 @@ $order
         if (sizeof($def_attr) != 0 )
         {
             // insert all the mandatory fields into jnt_fiche_attr
-            $jnt_order=10;
-            foreach ( $def_attr as $i=>$v)
+            foreach ( $def_attr as $row)
             {
-				$order=$jnt_order;
-                if ( $v['ad_id'] == ATTR_DEF_NAME )
+				$order=$row['ad_default_order'];
+                if ( $row['ad_id'] == ATTR_DEF_NAME )
                     $order=0;
-				$count=$this->cn->get_value("select count(*) from jnt_fic_attr where fd_id=$1 and ad_id=$2",array($fd_id,$v['ad_id']));
+				$count=$this->cn->get_value("select count(*) from jnt_fic_attr where fd_id=$1 and ad_id=$2",array($fd_id,$row['ad_id']));
 				if ($count == 0)
 				{
 					$sql=sprintf("insert into jnt_fic_Attr(fd_id,ad_id,jnt_order)
                              values (%d,%s,%d)",
-                             $fd_id,$v['ad_id'],$order);
+                             $fd_id,$row['ad_id'],$order);
 					$this->cn->exec_sql($sql);
-					$jnt_order+=10;
 				}
             }
         }
@@ -664,7 +662,7 @@ $order
     /*!\brief save the order of a card, update the column jnt_fic_attr.jnt_order
      *\param $p_array containing the order
      */
-    function save_order($p_array)
+    function jntsave_order($p_array)
     {
         extract($p_array, EXTR_SKIP);
         $this->GetAttribut();
@@ -734,10 +732,11 @@ $order
     {
 
         // find the min attr for the fiche_def_ref
-        $Sql="select ad_id,ad_text from attr_min natural join attr_def
+        $Sql="select ad_id,ad_text ,ad_default_order 
+                from attr_min natural join attr_def
              natural join fiche_def_ref
              where
-             frd_id= $1";
+             frd_id= $1 order by ad_default_order";
         $Res=$this->cn->exec_sql($Sql,array($p_fiche_def_ref));
         $Num=Database::num_row($Res);
 
@@ -750,6 +749,7 @@ $order
             $f=Database::fetch_array($Res,$i);
             $array[$i]['ad_id']=$f['ad_id'];
             $array[$i]['ad_text']=$f['ad_text'];
+            $array[$i]['ad_default_order']=$f['ad_default_order'];
         }
         return $array;
     }

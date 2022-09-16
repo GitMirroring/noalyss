@@ -847,6 +847,7 @@ class Acc_LedgerTest extends TestCase
         $this->object->set_ledger_id(4);
         $this->object->input_new();
         $result=ob_get_contents();
+        ob_end_clean();
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger-input_new.html", $result);
         $size=filesize(__DIR__."/file/acc_ledger-input_new.html");
                 

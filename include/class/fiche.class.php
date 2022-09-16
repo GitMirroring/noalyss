@@ -44,6 +44,7 @@ class Fiche
     var $row;           /*! < All the row from the ledgers */
     var $quick_code;		/*!< quick_code of the card */
     private $f_enable;  /*!< if card is enable (fiche.f_enable) */
+    private $display_mode ; /*!< how the card is displaid */
     function __construct($p_cn,$p_id=0)
     {
         $this->cn=$p_cn;
@@ -62,7 +63,29 @@ class Fiche
             $this->fiche_def=0;
         }
         
-       
+       $this->display_mode="window";
+    }
+
+    /**
+     * @brief how the card is display : either in a window or a greated container
+     * @param string $p_mode can be large or window
+     * @return Fiche
+     * @throws Exception
+     */
+    function setDisplayMode($p_mode) {
+        if ( ! in_array($p_mode,array("window","large"))) {
+            throw new Exception("FIC70 invalide display mode");
+        }
+        $this->display_mode=$p_mode;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisplayMode(): string
+    {
+        return $this->display_mode;
     }
     public function set_fiche_def($p_fiche_def)
     {
@@ -380,6 +403,7 @@ class Fiche
         {
             $msg="";
             $bulle="";
+            $r->setDisplayMode($this->display_mode);
             if ($p_readonly)
             {
                 $ret .= $r->print();
@@ -1268,7 +1292,7 @@ class Fiche
         $bank=new Acc_Parm_Code($this->cn,'BANQUE');
         $cash=new Acc_Parm_Code($this->cn,'CAISSE');
         $cc=new Acc_Parm_Code($this->cn,'COMPTE_COURANT');
-        
+
         bcscale(4);
         $gDossier=dossier::id();
         $p_search=sql_string($p_search);
@@ -1306,17 +1330,18 @@ class Fiche
         }
         // Get The result Array
         $step_tiers=$this->get_by_category($offset,$search.$filter_amount,'name');
-        
+
         if ( $all_tiers == 0 || empty($step_tiers ) ) { return ""; }
         $r="";
         $r.=$bar;
-        
+
         $r.='<table  id="tiers_tb" class="sortable"  style="">
             <TR >
             <TH>'._('Quick Code').Icon_Action::infobulle(17).'</TH>'.
             '<th>'._('Poste comptable').'</th>'.
             '<th  class="sorttable_sorted">'._('Nom').'</span>'.'</th>
             <th>'._('Adresse').'</th>
+            <th>'._('site web').'</th>
             <th style="text-align:right">'._('Total débit').'</th>
             <th style="text-align:right">'._('Total crédit').'</th>
             <th style="text-align:right">'._('Solde').'</th>';
@@ -1329,7 +1354,7 @@ class Fiche
         foreach ($step_tiers as $tiers )
         {
             $i++;
-            
+
              /* Filter on the default year */
              $amount=$tiers->get_solde_detail($filter_year);
 
@@ -1339,8 +1364,8 @@ class Fiche
             $odd="";
              $odd  = ($i % 2 == 0 ) ? ' odd ': ' even ';
              $accounting=$tiers->strAttribut(ATTR_DEF_ACCOUNT);
-             if ( ! empty($accounting) && $p_action == 'bank' 
-                     && $amount['debit'] <  $amount['credit']  
+             if ( ! empty($accounting) && $p_action == 'bank'
+                     && $amount['debit'] <  $amount['credit']
                      &&
                      ( /** the accounting is a financial account *****/
                          (!empty ($bank->value) && strpos($accounting,$bank->p_value)===0 )
@@ -1352,9 +1377,9 @@ class Fiche
                  //put in red if c>d
                  $odd.=" notice ";
                  }
-        
+
              $odd=' class="'.$odd.'"';
-             
+
             $r.="<TR $odd>";
             $url_detail=$script.'?'.http_build_query(array('sb'=>'detail','sc'=>'sv','ac'=>$_REQUEST['ac'],'f_id'=>$tiers->id,'gDossier'=>$gDossier));
             $e=sprintf('<A HREF="%s" title="Détail" class="line"> ',
@@ -1367,6 +1392,7 @@ class Fiche
                          " ".$tiers->strAttribut(ATTR_DEF_CP).
                          " ".$tiers->strAttribut(ATTR_DEF_PAYS)).
                 "</TD>";
+            $r.='<td>'.linkTo($tiers->strAttribut(ATTR_DEF_WEBSITE,0)).'</td>';
             $str_deb=(($amount['debit']==0)?0:nbm($amount['debit']));
             $str_cred=(($amount['credit']==0)?0:nbm($amount['credit']));
             $str_solde=nbm($amount['solde']);

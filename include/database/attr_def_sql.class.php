@@ -46,6 +46,7 @@ class Attr_Def_SQL extends Table_Data_SQL
             , "ad_size"=>"ad_size"
             , "ad_extra"=>"ad_extra"
             , "ad_search_followup"=>"ad_search_followup"
+            ,"ad_default_order"=>"ad_default_order"
         );
         /*
          * Type of columns
@@ -57,6 +58,7 @@ class Attr_Def_SQL extends Table_Data_SQL
             , "ad_size"=>"text"
             , "ad_extra"=>"text"
             , "ad_search_followup"=>"numeric"
+            , "ad_default_order"=>"numeric"
         );
 
 

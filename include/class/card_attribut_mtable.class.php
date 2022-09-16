@@ -40,7 +40,8 @@ class Card_Attribut_MTable extends Manage_Table_SQL
         $this->set_property_updatable("ad_id", FALSE);
         $this->set_col_label("ad_text", _("Nom"));
         $this->set_col_label("ad_type", _("Type"));
-        $this->set_col_label('ad_size', _("Taille"));
+        $this->set_col_label("ad_size", _("Taille"));
+        $this->set_col_label('ad_default_order', _("Ordre"));
         $this->set_col_label("ad_extra", _("Option sup."));
         $this->set_col_label("ad_search_followup", _("Recherche suivi"));
 
@@ -62,6 +63,7 @@ class Card_Attribut_MTable extends Manage_Table_SQL
         $this->set_col_tips("ad_search_followup", 77);
         // to prevent a call to this function for each row
         $this->dossier_id=Dossier::id();
+        $this->set_order(['ad_id','ad_text',"ad_type","ad_default_order","ad_size","ad_extra","ad_search_followup"]);
         $this->set_col_sort(1);
     }
 
@@ -216,6 +218,9 @@ class Card_Attribut_MTable extends Manage_Table_SQL
             {
                 $this->set_error("ad_extra", _("La requête SQL doit commencer par SELECT "));
             }
+        }
+        if ( $object_sql->ad_default_order < 11 || $object->ad_default_order > 9998) {
+            $this->set_error("ad_default_order",_("Valeur entre 11 et 9998"));
         }
         if ($this->count_error()>0)
         {

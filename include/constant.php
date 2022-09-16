@@ -115,7 +115,7 @@ if (!defined("NOALYSS_PACKAGE_REPOSITORY")) {
 if (!defined("SYSINFO_DISPLAY")) {
     define("SYSINFO_DISPLAY", TRUE);
 }
-define("DBVERSION", 178);
+define("DBVERSION", 179);
 define("MONO_DATABASE", 25);
 define("DBVERSIONREPO", 20);
 define('NOTFOUND', '--not found--');
@@ -225,6 +225,7 @@ define("ATTR_DEF_TVA_NON_DEDUCTIBLE", 21);
 define("ATTR_DEF_TVA_NON_DEDUCTIBLE_RECUP", 22);
 define("ATTR_DEF_QUICKCODE", 23);
 define("ATTR_DEF_FIRST_NAME", 32);
+define("ATTR_DEF_WEBSITE", 34);
 
 define('ATTR_DEF_ACCOUNT_ND_TVA', 50);
 define('ATTR_DEF_ACCOUNT_ND_TVA_ND', 51);

@@ -48,11 +48,25 @@ class Card_Property
     //!< jnt_order order to display
     var $cn;
     //!< cn database connexion
-
+    protected $display_mode;
+    //!< display mode determine if there link
     function __construct($cn, $ad_id=0)
     {
         $this->cn=$cn;
         $this->ad_id=0;
+        $this->display_mode='window';
+    }
+    public function setDisplayMode($p_mode)
+    {
+        if ( ! in_array($p_mode,array("window","large"))) {
+            throw new Exception("FIC70 invalide display mode");
+        }
+        $this->display_mode=$p_mode;
+        return $this;
+    }
+    public function getDisplayMode()
+    {
+        return $this->display_mode;
     }
 
     public function get_ad_id()
@@ -351,7 +365,10 @@ class Card_Property
         {
             $class="input_text";
         }
-        $r.="<TR>".td(_($w->label)." $bulle", ' class="'.$class.'" ').td($w->input()." $msg")." </TR>";
+        $url='<td>'.$this->add_link($this->ad_id,$this->av_text).'</td>';
+        $r.="<TR>".td(_($w->label)." $bulle", ' class="'.$class.'" ').td($w->input()." $msg").
+            $url.
+            " </TR>";
         return $r;
     }
 
@@ -405,8 +422,9 @@ class Card_Property
             default:
                 $w->value=$this->av_text;
         }
+        $url="<td>".$this->add_link($this->ad_id,$this->av_text).'</td>';
         $ret.="<TR>".td(_($this->ad_text)." $bulle", ' class="'.$class.'" ').td($value." $msg",
-                        'style="border:1px solid blue"')." </TR>";
+                        'style="border:1px solid blue"').'<td>'.$url.'</td>'." </TR>";
         return $ret;
     }
 
@@ -616,5 +634,23 @@ class Card_Property
         return;
     }
 
+    /**
+     * @brief add a link
+     * @param $p_ad_id
+     * @param $p_text
+     * @return false|mixed|string
+     */
+    private function add_link($p_ad_id,$p_text) {
+        if ( $this->display_mode=="large" && $p_ad_id == ATTR_DEF_WEBSITE) {
+            $url=linkTo($p_text);
+        }elseif ( $this->display_mode=="large" && $p_ad_id == ATTR_DEF_EMAIL) {
+            $url=mailTo($p_text);
+        }elseif ( $this->display_mode=="large" && $p_ad_id == ATTR_DEF_FAX) {
+            $url=faxTo($p_text);
+        }else {
+            return "";
+        }
+        return $url;
+    }
 
 }

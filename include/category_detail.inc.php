@@ -52,6 +52,7 @@ if ( ! $p_readonly) echo '<form id="catergory_detail_frm" method="post">';
 echo dossier::hidden();
 echo HtmlInput::hidden('sb','detail');
 echo HtmlInput::hidden('dc','cc');
+$supplier->setDisplayMode("large");
 echo $supplier->Display($p_readonly);
 $w=new IHidden();
 $w->name="p_action";
@@ -59,6 +60,7 @@ $w->value="supplier";
 echo $w->input();
 $w->name="f_id";
 $w->value=$f_id;
+
 echo $w->input();
 echo HtmlInput::hidden('action_fiche','');
 if ( ! $p_readonly)

@@ -91,7 +91,8 @@ if ( isset ($_POST['change_name']))
     if (isset ($_REQUEST['label']) )
     {
 	$fiche_def=new Fiche_Def($cn,$_REQUEST['fd_id']);
-        $fiche_def->SaveLabel($_REQUEST['label']);
+    $label=$http->request("label");
+        $fiche_def->SaveLabel($label);
         if ( isset($_REQUEST['create']))
         {
             $fiche_def->set_autocreate(true);
@@ -100,8 +101,8 @@ if ( isset ($_POST['change_name']))
         {
             $fiche_def->set_autocreate(false);
         }
-        $fiche_def->save_class_base($_REQUEST['class_base']);
-	$fiche_def->save_description($_REQUEST['fd_description']);
+        $fiche_def->save_class_base($http->request('class_base'));
+	    $fiche_def->save_description($http->request('fd_description'));
 
     }
 	echo $fiche_def->input_detail();
