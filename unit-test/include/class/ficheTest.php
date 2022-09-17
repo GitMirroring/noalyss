@@ -629,14 +629,16 @@ where
         $fiche->setAttribut(ATTR_DEF_ACCOUNT, "");
         Card_Property::update($fiche);
         $fiche->load();
-        $this->assertEquals('600CARDFORPHPUNIT',$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+        $this->assertEquals('600CARDF1',$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
 
-        for ( $i=600002; $i < 600999;$i++) {
+        for ( $i=600002; $i < 600099;$i++) {
             $fiche->setAttribut(ATTR_DEF_NAME,'Card for testing '.$i);
             $fiche->setAttribut(ATTR_DEF_ACCOUNT, "");
             Card_Property::update($fiche);
             $fiche->load();
-            $this->assertEquals("600CARDFORTESTING".$i,$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+
+            $idx=$i-600000;
+            $this->assertEquals("600CARDF".$idx,$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
 
 
         }
@@ -655,15 +657,13 @@ where
         $fiche_def->save_class_base('600');
         $first=true;
 
-        for ( $i=1; $i <  1000;$i++) {
+        for ( $i=1; $i <  100;$i++) {
             $fiche=new Fiche($this->g_connection);
             $fiche->insert(2,['av_text1'=>substr($i.' PHPUNIT '.__FUNCTION__,0,35)],);
-            if ( $first ) {
-                $first=false;
-                $start=$fiche->id;
-            }
+
             $fiche->load();
-            $this->assertEquals(substr("600".$i."PHPUNITTESTAUTOMATICACCOUNTINGIN",0,36),$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+            $expected="600".substr($i."PHPU",0,5);
+            $this->assertEquals($expected,$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
 
         }
 

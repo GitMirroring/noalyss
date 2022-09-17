@@ -71,7 +71,7 @@ class Follow_Up_DetailTest extends TestCase
      */
     public static function setUpBeforeClass():void
     {
-
+        require DIRTEST.'/global.php';
         global $g_connection;
         $g_connection->exec_sql('delete from action_detail');
 

@@ -180,7 +180,7 @@ class ContactTest extends TestCase
         $filename="contact-summary-1.html";
         \Noalyss\Facility::save_file($path,$filename,$r);
         print "File saved into $path/$filename";
-        $this->assertEquals(4983, filesize ($path."/".$filename)," File not valide (1)");
+        $this->assertEquals(4988, filesize ($path."/".$filename)," File not valide (1)");
         $this->assertEquals(5 , preg_match_all('/<tr class="/',$r)," 1. Missing card");
         $contact->filter_company(' fourni ');
         ob_start();
@@ -191,7 +191,7 @@ class ContactTest extends TestCase
         \Noalyss\Facility::save_file($path,$filename,$r);
 
         print "File saved into $path/$filename";
-        $this->assertEquals(3457,filesize ($path."/".$filename)," File not valide (2)");
+        $this->assertEquals(3460,filesize ($path."/".$filename)," File not valide (2)");
         $this->assertEquals(3 , preg_match_all('/<tr class="/',$r), 'not found all the contacts from FOURNI');
 
 
@@ -202,7 +202,7 @@ class ContactTest extends TestCase
         $filename="contact-summary-3.html";
         \Noalyss\Facility::save_file($path,$filename,$r);
         print "File saved into $path/$filename";
-        $this->assertEquals(2018,filesize ($path."/".$filename)," File not valide (3)");
+        $this->assertEquals(2019,filesize ($path."/".$filename)," File not valide (3)");
         $this->assertEquals(1, preg_match_all('/<tr class="/',$r), 'Search does not filter');
         
     }

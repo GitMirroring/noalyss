@@ -54,7 +54,7 @@ fi
 
 if [ ! -z "$FOLDERTEST" -a  -d "$FOLDERTEST" ] ; then
 
-	$PHPINI $PHPUNIT --globals-backup --bootstrap bootstrap.php $COVERAGE --testdox --color $FOLDERTEST
+	$PHPINI $PHPUNIT --bootstrap bootstrap.php $COVERAGE --testdox --color $FOLDERTEST
 	exit $?
 fi
 
@@ -65,12 +65,12 @@ fi
 
 if [ ! -z "$FUNCTION" ] ; then
 	echo "testing $FILETOTEST $FUNCTION"
-	$PHPINI $PHPUNIT --bootstrap $CUR_DIR/bootstrap.php --globals-backup --verbose --color --filter $FUNCTION $FILETOTEST
+	$PHPINI $PHPUNIT --bootstrap $CUR_DIR/bootstrap.php --verbose --color --filter $FUNCTION $FILETOTEST
 else
 
 	# $PHPUNIT --bootstrap bootstrap.php --whitelist $FILETOTEST --coverage-text=${FILETOTEST%.php}.txt  --color $FILETOTEST 
 	# $PHPUNIT --bootstrap $CUR_DIR/bootstrap.php --whitelist=$CUR_DIR/../include/class --coverage-html=coverage --color $FILETOTEST 
 	$PHPINI $PHPUNIT --bootstrap bootstrap.php $COVERAGE $FILETOTEST --testdox --color $FILETOTEST 
-	#$PHPUNIT --bootstrap bootstrap.php --whitelist=../include --globals-backup --coverage-html=coverage $FILETOTEST --testdox-html ${FILETOTEST%.php}-testdox.html --color $FILETOTEST 
+	#$PHPUNIT --bootstrap bootstrap.php --whitelist=../include --coverage-html=coverage $FILETOTEST --testdox-html ${FILETOTEST%.php}-testdox.html --color $FILETOTEST 
 fi
 
