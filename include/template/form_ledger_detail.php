@@ -112,7 +112,7 @@ $hidden=($this->has_quantity()==0)?'d-none':'';
       <th><?php echo _('tvac')?></th>
 <?php else: ?>
 	  <th><?php echo _('prix/unité ')?><?php echo Icon_Action::infobulle(6)?></th>
-      <th><?php echo _('quantité')?></th>
+      <th class="col_quant <?=$hidden?>"><?php echo _('quantité')?></th>
       <th><?php echo _('Total ')?></th>
 <?php endif;?>
 
