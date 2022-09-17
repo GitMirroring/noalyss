@@ -146,47 +146,83 @@ $all->style=' class="input_text"';
         <div class="col">
             <h2>Société</h2>
             <div class="form-group">
-
+                <?php
+                $all=new IText();
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
                 <label class="w-20" for="p_name"><?= _("Nom Société") ?></label>
                 <?= $all->input("p_name", $my->MY_NAME) ?>
             </div>
             <div class="form-group">
-
+                <?php
+                $all=new IText();
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
                 <label class="w-20" for="p_tel"><?= _("Téléphone") ?></label>
                 <?= $all->input("p_tel", $my->MY_TEL) ?>
             </div>
             <div class="form-group">
-
+                <?php
+                $all=new IText();
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
                 <label class="w-20" for="p_fax"><?= _("Fax") ?></label>
                 <?= $all->input("p_fax", $my->MY_FAX) ?>
             </div>
             <div class="form-group">
-
+                <?php
+                $all=new IText();
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
                 <label class="w-20" for="p_street"><?= _("Rue") ?></label>
                 <?= $all->input("p_street", $my->MY_STREET) ?>
             </div>
             <div class="form-group">
-
+                <?php
+                $all=new IText();
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
                 <label class="w-20" for="p_no"><?= _("Numéro") ?></label>
                 <?= $all->input("p_no", $my->MY_NUMBER) ?>
             </div>
             <div class="form-group">
-
+                <?php
+                $all=new IText();
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
                 <label class="w-20" for="p_cp"><?= _("Code Postal") ?></label>
                 <?= $all->input("p_cp", $my->MY_CP) ?>
             </div>
             <div class="form-group">
-
+                <?php
+                $all=new IText();
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
                 <label class="w-20" for="p_commune"><?= _("Localité") ?></label>
                 <?= $all->input("p_commune", $my->MY_COMMUNE) ?>
             </div>
             <div class="form-group">
-
+                <?php
+                $all=new IText();
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
                 <label class="w-20" for="p_pays"><?= _("Pays") ?></label>
                 <?= $all->input("p_pays", $my->MY_PAYS) ?>
             </div>
             <div class="form-group">
-
+                <?php
+                $all=new IText();
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
                 <label class="w-20" for="p_tva"><?= _("Numéro de Tva") ?></label>
                 <?= $all->input("p_tva", $my->MY_TVA) ?>
             </div>
