@@ -70,8 +70,7 @@ begin
     return sResult;
 end;
 $function$
-LANGUAGE plpgsql
-;
+LANGUAGE plpgsql ;
 
 insert into version (val,v_description) values (180,'Shorten Aphanumeric account');
 commit;

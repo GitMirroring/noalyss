@@ -11,59 +11,59 @@ comment on column attr_def.ad_default_order is 'Default order of the attribute';
 
 
 delete from attr_min where ad_id=30 and frd_id=2;
-insert into attr_min (frd_id,ad_id) values (2,5);
-insert into attr_min (frd_id,ad_id) values (3,5);
+insert into attr_min (frd_id,ad_id)  select 2,5 from fiche_def where frd_id=2 on conflict (frd_id,ad_id) do nothing;
+insert into attr_min (frd_id,ad_id)  select 3,5 from fiche_def where frd_id=3 on conflict (frd_id,ad_id) do nothing;
 
 
-insert into attr_min (frd_id,ad_id) values (3,5) on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 3,5 from fiche_def where frd_id=3  on conflict (frd_id ,ad_id ) do nothing;
 
-insert into attr_min (frd_id,ad_id) values (14,9) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (14,12) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (14,14) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (14,16) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (14,17) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (14,18) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (14,24) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (14,26) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (14,5) on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 14,9 from fiche_def where frd_id=14  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 14,12 from fiche_def where frd_id=14  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 14,14 from fiche_def where frd_id=14  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 14,16 from fiche_def where frd_id=14  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 14,17 from fiche_def where frd_id=14  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 14,18 from fiche_def where frd_id=14  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 14,24 from fiche_def where frd_id=14  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 14,26 from fiche_def where frd_id=14  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 14,5 from fiche_def where frd_id=14  on conflict (frd_id ,ad_id ) do nothing;
 
-insert into attr_min (frd_id,ad_id) values (25,14) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (25,32) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (25,27) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (25,18) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (25,27) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (25,32) on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 25,14 from fiche_def where frd_id=25  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 25,32 from fiche_def where frd_id=25  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 25,27 from fiche_def where frd_id=25  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 25,18 from fiche_def where frd_id=25  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 25,27 from fiche_def where frd_id=25  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 25,32 from fiche_def where frd_id=25  on conflict (frd_id ,ad_id ) do nothing;
 
-insert into attr_min (frd_id,ad_id) values (13,5) on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id) select 13,5 from fiche_def_ref where frd_id=13  on conflict (frd_id ,ad_id ) do nothing;
 
-insert into attr_min (frd_id,ad_id) values (8,5) on conflict (frd_id ,ad_id ) do nothing;
-
-
-insert into attr_min (frd_id,ad_id) values (7,5) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (7,11) on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 8,5 from fiche_def where frd_id=8  on conflict (frd_id ,ad_id ) do nothing;
 
 
-insert into attr_min (frd_id,ad_id) values (6,5) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (6,9) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (6,25) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (6,33) on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 7,5 from fiche_def where frd_id=7  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 7,11 from fiche_def where frd_id=7  on conflict (frd_id ,ad_id ) do nothing;
+
+
+insert into attr_min (frd_id,ad_id)  select 6,5 from fiche_def where frd_id=6  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 6,9 from fiche_def where frd_id=6  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 6,25 from fiche_def where frd_id=6  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 6,33 from fiche_def where frd_id=6  on conflict (frd_id ,ad_id ) do nothing;
 
 delete from attr_min where frd_id =10 and ad_id =12;
 
-insert into attr_min (frd_id,ad_id) values (10,5) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (10,9) on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 10,5 from fiche_def where frd_id=10  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 10,9 from fiche_def where frd_id=10  on conflict (frd_id ,ad_id ) do nothing;
 
 delete from attr_min where frd_id =12 and ad_id =12;
 
-insert into attr_min (frd_id,ad_id) values (12,5) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (12,9) on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 12,5 from fiche_def where frd_id=12  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 12,9 from fiche_def where frd_id=12  on conflict (frd_id ,ad_id ) do nothing;
 
 delete from attr_min where frd_id =4 and ad_id =4;
-insert into attr_min (frd_id,ad_id) values (4,5) on conflict (frd_id ,ad_id ) do nothing;
-insert into attr_min (frd_id,ad_id) values (4,26) on conflict (frd_id ,ad_id ) do nothing;;
+insert into attr_min (frd_id,ad_id)  select 4,5 from fiche_def where frd_id=4  on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 4,26 from fiche_def where frd_id=4  on conflict (frd_id ,ad_id ) do nothing;;
 
 delete from attr_min where frd_id =1 and ad_id =15;
-insert into attr_min (frd_id,ad_id) values (1,5) on conflict (frd_id ,ad_id ) do nothing;
+insert into attr_min (frd_id,ad_id)  select 1,5 from fiche_def where frd_id=1  on conflict (frd_id ,ad_id ) do nothing;
 
 insert into attr_def values (34,'Site Web','text',22,null,1,157);
 insert into attr_min values(8,34), (9,34),(14,34),(4,34);
