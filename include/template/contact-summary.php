@@ -72,13 +72,7 @@ $from=$http->request("ac","string","");
         </td>
         <td>
             <?php
-            $result=mailTo($contact['contact_email']);
-            if ($result) {
-                echo $result;
-            } else {
-                echo $contact['contact_email'];
-                echo Icon_Action::warnbulle(83);
-            }
+            echo mailTo($contact['contact_email']);
             ?>
         </td>
         <td>
