@@ -1597,7 +1597,7 @@ class Acc_Ledger  extends jrn_def_sql
     public function get_first($p_type, $p_access=3)
     {
         global $g_user;
-        $all=$g_user->get_ledger($p_type, $p_access);
+        $all=$g_user->get_ledger($p_type, $p_access,false);
         if (empty ($all)) return NULL;
         return $all[0];
     }
