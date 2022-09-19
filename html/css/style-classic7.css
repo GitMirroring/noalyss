@@ -82,7 +82,10 @@ table.sortable th,  table.table_large th,table.result th {
     font-style: italic;
 
 }
-
+h2.title {
+    border-radius: 0px;
+    margin: 0px;
+}
 h2 {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     color:white;
@@ -95,7 +98,9 @@ h2 {
     font-size: 1.1rem;
 margin-bottom: 1rem;
 margin-top: 1rem;
-border-radius: 2px;
+margin-right:1rem;
+margin-left:1rem;
+border-radius: 12px;
 padding: 0.5rem 0rem 0.7rem 2rem;
 }
  @media only screen and (max-width: 1280px) {
