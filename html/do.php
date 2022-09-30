@@ -78,73 +78,12 @@ $style_user=$http->post("style_user","string",$_SESSION[SESSION_KEY.'g_theme']);
 
 html_page_start($style_user);
 if ( DEBUGNOALYSS > 1 ) {
-/**
- * Debug Design
- */
-echo <<<EOF
-<div class="d-none d-sm-block d-md-none d-lg-none d-xl-none " style="background-color:red">Small</div>
-<div class="d-none d-md-block d-lg-none " style="background-color:orangered">Medium</div>
-<div class="d-none d-lg-block d-xl-none " style="background-color:orange">Large</div>
-<div class="d-none d-xl-block " style="background-color:wheat">X Large</div>
-EOF;
-
-    ?>
-<div id="debug_div" style="border:slategray solid 1px;margin-left: 0px;position:absolute;background:white;top:2px;left:25px;z-index:1000;display:none">
-	<h2 style="margin-top:100px"> Memory Usage </h2>
-	<?php  echo memory_get_usage()/1024.0 . " kb \n"; ?>
-
-
-    <h2>$_POST</h2>
-    <pre>
-    <?php        
-    print_r($_POST);
-    ?>
-        
-    </pre>
-    <h2>$_GET</h2>
-    <pre>
-    <?php        
-    print_r($_GET);
-    ?>
-    </pre>
-    <h2>$_REQUEST</h2>
-    <pre>
-    <?php        
-    print_r($_REQUEST);
-    ?>
-    </pre>
-    <h2>$_SESSION</h2>
-    <pre>
-    <?php        
-    print_r($_SESSION);
-    ?>
-    </pre>
-    
-    <h2>$GLOBALS</h2>
-    <pre>
-    <?php        
-    // Use much of memory
-    print_r($GLOBALS);
-    ?>
-    </pre>
-    
-</div>
-<script>
-    function show_debug_request() {
-        var visible=document.getElementById('debug_div').style.display;
-        var new_state="";
-        if ( visible === 'block') { new_state='none';}
-        else
-        if ( visible == 'none') { new_state='block';}
-        else 
-            console.log('erreur');
-        document.getElementById('debug_div').style.display=new_state;
-    }
-</script>
-<input type="button" class="tinybutton" style="position:absolute;top:40px;left:50px;margin-left:50px;z-index:1000" value="show request" onclick="show_debug_request()">
-
-<?php
-
+    /**
+     * Debug Design
+     */
+    debug_show_size();
+    debug_show_request();
+    debug_show_global();
 } //<--- if DEBUG 
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 
