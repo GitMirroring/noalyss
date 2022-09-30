@@ -61,6 +61,14 @@ if ( strpos($browser,'MSIE 6')!=false ||
 EOF;
     exit();
 }
+if ( DEBUGNOALYSS > 1 ) {
+    /**
+     * Debug Design
+     */
+    debug_show_size();
+    debug_show_request();
+    debug_show_global();
+} //<--- if DEBUG
 $ac=new Database();
 $hi=new HttpInput();
 
