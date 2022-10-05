@@ -6,7 +6,7 @@
     <TITLE>Noalyss - Install</TITLE>
     <META http-equiv="Content-Type" content="text/html; charset=UTF8">
     </title>
-<head>
+</HEAD>
 <link rel="icon" type="image/ico" href="favicon.ico" />
  <META http-equiv="Content-Type" content="text/html; charset=UTF8">
  <script type="text/javascript" charset="utf-8" language="javascript" src="js/prototype.js"></script>
@@ -14,7 +14,7 @@
     <LINK id="pagestyle" REL="stylesheet" type="text/css" href="css/font/fontello/css/fontello.css" media="screen"/>
  <style>
      body {
-         font : 100%;
+         font-size : 100%;
          color:darkblue;
          margin-left : 50px;
          margin-right: 50px;
@@ -81,7 +81,7 @@
 <?php
 ?>
 
-</head>
+</>
 <body>
 <p align="center">
   <IMG SRC="image/logo9000.png" style="width: 30%;z-index:-1;position:fixed;top:30%;margin-left: 20%;opacity: 0.2" alt="NOALYSS">
@@ -322,7 +322,7 @@ if ( ! file_exists(NOALYSS_INCLUDE.'/config.inc.php')) {
   require_once NOALYSS_INCLUDE.'/lib/config_file.php';
   
   echo config_file_form($_POST);
-  echo '<div style="position:float;float:left;"></div>';
+  echo '<div style="float:left;"></div>';
   echo '<p style="text-align:center">',
         HtmlInput::submit('save_config',_('Continuer'),"","button"),
           '</p>';
@@ -715,3 +715,4 @@ echo "</h2>";
 <p style="text-align: center">
 <A style="display:inline;margin:10px;padding:10px;" class="button" HREF="index.php?remove_install"><?php echo _("Essai effacement install.php et se connecter à NOALYSS")?></A>
 </p>
+</body>
