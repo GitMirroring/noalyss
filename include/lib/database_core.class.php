@@ -381,7 +381,7 @@ class DatabaseCore
     {
         if ($this->ret == false)
             throw new Exception('this->ret is empty');
-        return pg_fetch_array($this->ret, $p_indice);
+        return pg_fetch_array($this->ret, $p_indice,PGSQL_ASSOC);
     }
 
     /**
@@ -739,12 +739,13 @@ class DatabaseCore
     /**\brief wrapper for the function pg_fetch_array
      * \param $ret is the result of a pg_exec
      * \param $p_indice is the index
+     * \param $p_indice is the index
      * \return $array of column
      */
 
-    static function fetch_array($ret, $p_indice = 0)
+    static function fetch_array($ret, $p_indice = 0,$p_mode=PGSQL_ASSOC)
     {
-        return pg_fetch_array($ret, $p_indice);
+        return pg_fetch_array($ret, $p_indice,$p_mode);
     }
 
     /**\brief wrapper for the function pg_fetch_all

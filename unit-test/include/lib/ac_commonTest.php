@@ -393,7 +393,14 @@ class Ac_CommonTest extends TestCase
         $expect=sprintf('<a href="mailto:%s">%s</a>',h("test@noalyss.be"),h("test@noalyss.be"));
         $expect=preg_replace('/\s+/','',$expect);
         $this->assertEquals(strtoupper($expect),strtoupper(preg_replace("/\s+/",'',mailTo('test@noalyss.be'))),);
-        $this->assertEquals('test@noalyss.@be',mailTo('test@noalyss.@be'),"Send email to invalidate email");
+        $expect=<<<EOF
+test@noalyss.@be<span tabindex="-1" onmouseover="showBulle('83')" onclick="showBulle('83')" onmouseout="hideBulle(0)"style="color:red" class="icon">&#xe80e;</span>
+EOF;
+        $expect=preg_replace('/\s+/','',$expect);
+        $result=preg_replace('/\s+/','',mailTo("test@noalyss.@be"));
+        $this->assertEquals($expect,
+            $result,
+            "Send email to invalidate email");
         $expect=sprintf('<a href="mailto:%s">%s</a>',h("test@noalyss.be"),h("test@noalyss.be"));
         $expect.=sprintf('<a href="mailto:%s">%s</a>',h("test2@noalyss.be"),h("test2@noalyss.be"));
         $expect=preg_replace('/\s+/','',$expect);

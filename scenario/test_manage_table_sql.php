@@ -100,6 +100,10 @@ echo "<h2>"." Delete right"."</h2>";
 $manage_table->set_icon_del("right");
 $manage_table->display_table("where pcm_val::text >= '400'  order by pcm_val::text limit 10");
 
+echo "<h2>"." Custom , by default show the row"."</h2>";
+$manage_table->set_icon_mod("custom");
+$manage_table->display_table("where pcm_val::text >= '400'  order by pcm_val::text limit 10");
 
 
- ?>
+
+?>

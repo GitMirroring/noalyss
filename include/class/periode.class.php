@@ -346,7 +346,7 @@ class Periode
         $Res=$this->cn->exec_sql($sql, array($p_periode));
         if (Database::num_row($Res)==0)
             return null;
-        return Database::fetch_array($Res, 0);
+        return Database::fetch_array($Res, 0,PGSQL_BOTH);
     }
 
     /*!\brief return the first day of periode

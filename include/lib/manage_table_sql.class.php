@@ -85,7 +85,7 @@ class Manage_Table_SQL
     const UPDATABLE=1;
     const VISIBLE=2;
 
-    private $icon_mod; //!< place of right or left the icon update or mod, default right, accepted value=left,right,first column for mod
+    private $icon_mod; //!< place of right or left the icon update or mod, default right, accepted value=left,right,first,custom column for mod
     private $icon_del; //!< place of right or left the icon update or mod, default right, accepted value=left,right
     private $dialogbox_style; //!< style of the dialog box
     private $button_add_top;  //!< place of the button add on the top, by default true
@@ -573,13 +573,14 @@ function check()
         return $this->row_update;
     }
     /**
-     * @brief Set the icon to modify at the right ,the first col or left of the row
-     * 
-     * @param type $pString
-     * @throws Exception
+     * @brief Set the icon to modify at the right ,the first col or left of the row, if the mod if custom ,
+     * you have to override the function display_icon_custom
+     * @see Manage_Table_SQL::display_icon_custom($p_row)
+     * @param string $pString default right, accepted value=left,right,first,custom column for mod
+     * @throws Exception if invalide choice
      */
     function set_icon_mod($pString) {
-        if ($pString != "right" && $pString != "left" && $pString!="first") 
+        if (! in_array( $pString ,[ 'right','left','custom','first'] ) )
             throw new Exception('set_icon_mod invalide '.$pString);
         $this->icon_mod=$pString;
     }
@@ -987,6 +988,8 @@ function check()
             $this->display_icon_mod($p_row);
         if ($this->icon_del=="left")
             $this->display_icon_del($p_row);
+        if ( $this->icon_mod == "custom")
+            $this->display_icon_custom($p_row);
         
         $nb_order=count($this->a_order);
         for ($i=0; $i<$nb_order; $i++)
@@ -1501,4 +1504,15 @@ function check()
         echo "</ul>";
     }
 
+    /**
+     * @brief usually contain a link and calls another page, it must overriden
+     * @param array $p_row is the current database row
+     * @return void
+     */
+    function display_icon_custom($p_row)
+    {
+        echo '<td>'.'<a href="#">';
+        print_r($p_row);
+        echo '</a></td>';
+    }
 }
