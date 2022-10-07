@@ -590,7 +590,7 @@ function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link"
 
 function echo_warning($p_string)
 {
-    echo '<H2 class="error">' . $p_string . "</H2>";
+    echo '<span class="warning">' . $p_string . '</span>';
 }
 
 /**
