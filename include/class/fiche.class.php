@@ -363,6 +363,11 @@ class Fiche
         return $r;
     }
 
+    public function __toString(): string
+    {
+        return print_r($this,true);
+    }
+
     /**
      *
      * @return string with the category
@@ -1865,7 +1870,7 @@ class Fiche
     /**
      * @brief display card as a table row , the tag TR must be added
      * 
-     * @return HTMLT string starting
+     * @return HTML string starting
      * 
      */
     function display_row()
