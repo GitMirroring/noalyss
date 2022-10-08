@@ -219,7 +219,7 @@ class Card_Attribut_MTable extends Manage_Table_SQL
                 $this->set_error("ad_extra", _("La requête SQL doit commencer par SELECT "));
             }
         }
-        if ( $object_sql->ad_default_order < 11 || $object->ad_default_order > 9998) {
+        if ( $object_sql->ad_default_order < 11 || $object_sql->ad_default_order > 9998) {
             $this->set_error("ad_default_order",_("Valeur entre 11 et 9998"));
         }
         if ($this->count_error()>0)
