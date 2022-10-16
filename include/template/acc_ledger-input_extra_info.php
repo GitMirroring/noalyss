@@ -21,7 +21,7 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-if (DEBUGNOALYSS>1) { echo __FILE__;}
+\Noalyss\Dbg::echo_file(__FILE__);
 /**
  * @file
  * @brief display supplemental information to save when entering an operation of 

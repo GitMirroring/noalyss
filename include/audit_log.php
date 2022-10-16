@@ -23,6 +23,7 @@
  * \brief let you see the list of the connexion
  */
 if ( !defined ('ALLOWED')) die('Forbidden');
+\Noalyss\Dbg::echo_file(__FILE__);
 ?>
 <DIV class="content">
 <span class="notice"><?=_("100 dernières connexions")?></span>

@@ -81,9 +81,9 @@ if ( DEBUGNOALYSS > 1 ) {
     /**
      * Debug Design
      */
-    debug_show_size();
-    debug_show_request();
-    debug_show_global();
+    \Noalyss\Dbg::display_size();
+    \Noalyss\Dbg::display_request();
+    \Noalyss\Dbg::display_global();
 } //<--- if DEBUG 
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 

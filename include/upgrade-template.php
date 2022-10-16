@@ -24,7 +24,7 @@ if (!defined('ALLOWED_ADMIN'))
 {
     die(_('Non autorisé'));
 }
-
+\Noalyss\Dbg::echo_file(__FILE__);
 
 $package_repository=new Package_Repository();
 $xml=$package_repository->getContent();

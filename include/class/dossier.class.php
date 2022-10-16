@@ -292,7 +292,7 @@ class Dossier
     }
 
     /**
-     * connect to folder and give to admin. the profile Admin(builtin)
+     * @brief connect to folder and give to admin. the profile Admin(builtin)
      * @param int $p_id dossier::id()
      */
     static function synchro_admin($p_id)
@@ -331,7 +331,7 @@ class Dossier
         }
     }
     /**
-     * Upgrade check if the folder ACCOUNT_REPOSITORY  needs to be upgrade thanks the variable DBVERSIONREPO 
+     * @brief Upgrade check if the folder ACCOUNT_REPOSITORY  needs to be upgrade thanks the variable DBVERSIONREPO
      * and run  all the SQL script named  ac-upgradeX.sql from the folder noalyss/include/sql/patch 
      * until  X equal DBVERSIONREPO-1
      * After it will call the function apply_patch, remove_inexistant_user and clean_orphan_log for each folder

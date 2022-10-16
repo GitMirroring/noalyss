@@ -28,6 +28,7 @@ if ( !defined ('ALLOWED')) die('Forbidden');
  */
 $http=new HttpInput();
 echo '<div class="content" >';
+\Noalyss\Dbg::echo_file(__FILE__);
 /******************************************************/
 // Add user
 /******************************************************/

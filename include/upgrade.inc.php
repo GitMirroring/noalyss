@@ -25,7 +25,7 @@
  */
 if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 if ( ! defined ('ALLOWED_ADMIN')) { die (_('Non autorisé'));}
-
+\Noalyss\Dbg::echo_file(__FILE__);
 $http=new HttpInput();
 
 $menu=array(

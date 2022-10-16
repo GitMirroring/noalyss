@@ -40,6 +40,7 @@ $g_template_dir = $dirname . "/template";
 if (file_exists($dirname . '/config.inc.php')) require_once $dirname . '/config.inc.php';
 
 if (!defined("NOALYSS_HOME")) define("NOALYSS_HOME", dirname($dirname) . "/html");
+if (!defined("NOALYSS_BASE")) define("NOALYSS_BASE", dirname($dirname) );
 if (!defined("NOALYSS_PLUGIN")) define("NOALYSS_PLUGIN", $g_ext_dir);
 if (!defined("NOALYSS_INCLUDE")) define("NOALYSS_INCLUDE", $g_include_dir);
 if (!defined("NOALYSS_TEMPLATE")) define("NOALYSS_TEMPLATE", $g_template_dir);
@@ -360,6 +361,7 @@ if (!defined("DEFAULT_SERVER_VIDEO_CONF")) {
 function noalyss_class_autoloader($class)
 {
     $class = strtolower($class);
+
     foreach (array("class","lib","database") as $path) {
         if ( file_exists(NOALYSS_INCLUDE.'/'.$path.'/'.$class.'.class.php')) {
             require_once  NOALYSS_INCLUDE.'/'.$path.'/'.$class.'.class.php';
@@ -385,7 +387,8 @@ function noalyss_class_autoloader($class)
         "ismallbutton" => "lib/ibutton.class.php",
         "inputswitch" => "lib/input_switch.class.php",
         "noalyss\mobile" => "class/mobile.class.php",
-        "htmlinput" => "lib/html_input.class.php"
+        "htmlinput" => "lib/html_input.class.php",
+        "noalyss\dbg"=>"lib/dbg.php"
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];

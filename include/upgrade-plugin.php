@@ -25,7 +25,7 @@ if (!defined('ALLOWED_ADMIN'))
     die(_('Non autorisé'));
 }
 
-
+\Noalyss\Dbg::echo_file(__FILE__);
 
 /**
  * @file

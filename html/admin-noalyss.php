@@ -31,6 +31,7 @@ if (file_exists("../include/config.inc.php") ) {
     define ('ALLOWED',1);
     define ('ALLOWED_ADMIN',1);
     require_once '../include/constant.php';
+    \Noalyss\Dbg::echo_file(__FILE__);
     require_once NOALYSS_INCLUDE.'/admin_repo.inc.php';
 } else {
     // Redirect to install file , if this file exists then 

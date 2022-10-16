@@ -168,13 +168,10 @@ function nbm($p_number,$p_dec = 2)
 
 function echo_error($p_log, $p_line="", $p_message="")
 {
-    echo "ERREUR :" . $p_log . " " . $p_line . " " . $p_message;
-    $fdebug = fopen($_ENV['TMP'] . DIRECTORY_SEPARATOR . "noalyss_error.log", "a+");
-    if ($fdebug != null)
-    {
-	fwrite($fdebug, date("Ymd H:i:s") . $p_log . " " . $p_line . " " . $p_message . "\n");
-	fclose($fdebug);
-    }
+    $msg="ERREUR :" . $p_log . " " . $p_line . " " . $p_message;
+    echo $msg;
+    syslog(LOG_ERR,$msg);
+
 }
 
 /**
@@ -1179,11 +1176,7 @@ function display_menu($p_menuid)
                     $array=compute_variable($file[0]['me_parameter']);
                     put_global($array);
             }
-            if ( DEBUGNOALYSS == 2)
-            { 
-                echo  $file[0]['me_file']," param : ",$file[0]['me_parameter'] ;
-                
-            }
+            \Noalyss\Dbg::echo_var(1,$file[0]['me_file']." ".$file[0]['me_parameter']);
             /*
              * Log the file we input to put in the folder test-noalyss for replaying it
              */
@@ -1683,58 +1676,5 @@ function linkTo($p_url)
         return $p_url;
     }
 }
-function debug_show_size()
-{
-    echo <<<EOF
-<div class="d-block d-sm-none  " style="background-color:lightblue">Xtra  Small</div>
-<div class="d-none d-sm-block d-md-none d-lg-none d-xl-none " style="background-color:red">Small</div>
-<div class="d-none d-md-block d-lg-none " style="background-color:orangered">Medium</div>
-<div class="d-none d-lg-block d-xl-none " style="background-color:orange">Large</div>
-<div class="d-none d-xl-block " style="background-color:wheat">X Large</div>
-EOF;
-}
-/**
- * @brief for development , show request (POST, GET)
- * @return void
- */
- function debug_show_request() {
-    $id=uniqid("debug");
-    $title=\HtmlInput::title_box(_("REQUEST"),$id,"hide");
-    ?>
-    <div class=" col-10 inner_box" style="display:none" id="<?=$id?>">
-        <?=$title?>
 
-        <h2 style="margin-top:100px"> Memory Usage
-            <?php  echo round(memory_get_usage()/1024.0,2) . " kb \n"; ?>
-        </h2>
-        $_POST
-        <pre><?php echo print_r($_POST)?></pre>
-        $_GET
-        <pre><?=print_r($_GET)?></pre>
-        $_REQUEST
-        <pre><?=print_r($_REQUEST)?></pre>
-        <?=\HtmlInput::button_hide($id)?>
-    </div>
-    <input type="button" onclick="document.getElementById('<?=$id?>').show();" value="Show request">
-    <?php
-}
-
-/**
- * @brief for development , show GLOBAL and SESSION
- * @return void
- */
- function debug_show_global() {
-    $id=uniqid("debug");
-    $title=\HtmlInput::title_box(_("GLOBALS"),$id,"hide");
-    ?>
-    <div class=" col-10 inner_box" style="display:none" id="<?=$id?>">
-        <?=$title?>
-        $GLOBALS
-        <pre><?=print_r($GLOBALS)?></pre>
-
-        <?=\HtmlInput::button_hide($id)?>
-    </div>
-    <input type="button" onclick="document.getElementById('<?=$id?>').show();" value="Show session">
-    <?php
-}
 

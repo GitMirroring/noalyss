@@ -19,6 +19,7 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 if ( !defined ('ALLOWED')) die('Forbidden');
+\Noalyss\Dbg::echo_file(__FILE__);
 $http=new HttpInput();
 /*!\file
  * \brief restaure a database

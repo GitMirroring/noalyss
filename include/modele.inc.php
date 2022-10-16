@@ -27,6 +27,7 @@
  *
  */
 if ( !defined ('ALLOWED')) die('Forbidden');
+\Noalyss\Dbg::echo_file(__FILE__);
 $http=new HttpInput();
 $sa = $http->request("sa", "string", 'list');
 if (isset($_POST['upd']) &&
