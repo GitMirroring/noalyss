@@ -1676,5 +1676,3 @@ function linkTo($p_url)
         return $p_url;
     }
 }
-
-
