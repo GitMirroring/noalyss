@@ -369,22 +369,34 @@ function format_date(p_object)
  *@brief check if the object is hidden or show and perform the opposite,
  * show the hidden obj or hide the shown one
  *@param name of the object
+ * @param button id of the button
+ * @param rotate : if true with rotate the object of p_button otherwise
  */
-function toggleHideShow(p_obj, p_button)
+function toggleHideShow(p_obj, p_button,rotate)
 {
     var stat = g(p_obj).style.display;
-    var str = g(p_button).value;
+    var str = g(p_button).value??"";
     if (stat === 'none')
     {
-        show(p_obj);
+        $(p_obj).show()
         str = str.replace(/Afficher/, content[62]);
         g(p_button).value = str;
     } else
     {
-        hide(p_obj);
+        $(p_obj).hide();
         str = str.replace(/Cacher/, content[63]);
         g(p_button).value = str;
     }
+    if ( ! rotate ) return;
+    if ( stat == "none") {
+        g(p_button).addClassName ("icon-up-open-1")
+        g(p_button).removeClassName(" icon-down-open-2")
+    } else {
+        g(p_button).removeClassName("icon-up-open-1")
+        g(p_button).addClassName(" icon-down-open-2")
+
+    }
+
 }
 /**
  *@brief open popup with the search windows

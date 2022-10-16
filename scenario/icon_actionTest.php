@@ -112,3 +112,9 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
     Increase INPUT TEXT Element
     <input type="text" id="text_element" size="20"><?php echo Icon_Action::longer("text_element",50)?>
 </p>
+<p>
+    <?php echo \Icon_Action::toggle_hide(uniqid(),"example_div")?>
+    <div id="example_div" style="display:none">
+    Ceci est caché
+</div>
+</div>

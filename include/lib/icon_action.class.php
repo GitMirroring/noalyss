@@ -471,4 +471,19 @@ class Icon_Action
         $r='<span id="'.uniqid().'" class="smallicon icon"  style="background-color:yellow" onclick="document.getElementById(\''.$p_domid.'\').show()">&#xf0f6;</span>';
         return $r;
     }
+
+    /**
+     * @brief hide or display an element, to be used for an accordon
+     * @param $p_id ip of the icon
+     * @param $p_id_to_hide element to hide or show
+     * @return HTML string
+     */
+    static function toggle_hide($p_id,$p_id_to_hide)
+    {
+        $javascript=sprintf("toggleHideShow('%s','%s',true)",$p_id_to_hide,$p_id);
+        $r=sprintf('<i id="%s" onclick="%s" class="smallicon icon   icon-down-open-2" style="margin-left:5px"></i>',
+            $p_id,$javascript
+            );
+        return $r;
+    }
 }
