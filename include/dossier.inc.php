@@ -24,7 +24,7 @@ if ( !defined ('ALLOWED')) die('Forbidden');
  *
  */
 global $http;
-
+\Noalyss\Dbg::echo_file(__FILE__);
 $sa=$http->request('sa','string','list');
 //---------------------------------------------------------------------------
 // Update
@@ -83,7 +83,7 @@ if ( isset ($_POST["DATABASE"]) )
             alert(_('Désolé vous devez migrer ce modèle en unicode'));
             echo '<span class="error">';
             echo _('le modele ').domaine.'mod'.$_POST["FMOD_ID"]._(" doit être migré en unicode.");
-            echo _('Pour le passer en unicode, faites-en un backup puis restaurez le fichier reçu').'</span>';
+            echo _('Pour le passer en unicode, faites-en une sauvegarde puis restaurez le fichier reçu').'</span>';
             echo HtmlInput::button_anchor('Retour','admin-noalyss.php?action=dossier_mgt');
             return;
         }
@@ -290,7 +290,7 @@ if ( $sa == 'list' )
                 echo td(HtmlInput::anchor(_('Modifier'),'?action=dossier_mgt&sa=mod&d='
                                                  .$Dossier['dos_id']," onclick=\"folder_modify('".$Dossier['dos_id']."')\""));
 
-                echo td(HtmlInput::anchor(_('Backup'),'?action=backup&sa=b&t=d&d='
+                echo td(HtmlInput::anchor(_('Sauvegarde'),'?action=backup&sa=b&t=d&d='
                                               .$Dossier['dos_id']));
             } else
             {
