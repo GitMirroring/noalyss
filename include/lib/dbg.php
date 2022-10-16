@@ -1,6 +1,7 @@
 <?php
 
 namespace Noalyss;
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 class Dbg
 {
