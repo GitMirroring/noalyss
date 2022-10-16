@@ -66,6 +66,37 @@ class Noalyss_Parameter_Folder
         }
 
     }
+
+    public function __toString(): string
+    {
+        $r = <<<EOF
+MY_TVA = [	{$this->MY_TVA }]
+MY_STREET = [ 	{$this->MY_STREET }]
+MY_NUMBER= [	{$this->MY_NUMBER }]
+MY_CP= [	{$this->MY_CP }]
+MY_TEL= [	{$this->MY_TEL }]
+MY_PAYS= [	{$this->MY_PAYS }]
+MY_COMMUNE= [	{$this->MY_COMMUNE }]
+MY_FAX= [	{$this->MY_FAX }]
+MY_ANALYTIC= [	{$this->MY_ANALYTIC }]
+MY_STRICT= [	{$this->MY_STRICT }]
+MY_TVA_USE= [	{$this->MY_TVA_USE }]
+MY_PJ_SUGGEST= [	{$this->MY_PJ_SUGGEST }]
+MY_CHECK_PERIODE= [	{$this->MY_CHECK_PERIODE }]
+MY_DATE_SUGGEST= [	{$this->MY_DATE_SUGGEST }]
+MY_ALPHANUM= [	{$this->MY_ALPHANUM }]
+MY_UPDLAB= [	{$this->MY_UPDLAB }]
+MY_STOCK= [	{$this->MY_STOCK }]
+MY_DEFAULT_ROUND_ERROR_DEB= [	{$this->MY_DEFAULT_ROUND_ERROR_DEB }]
+MY_DEFAULT_ROUND_ERROR_CRED= [	{$this->MY_DEFAULT_ROUND_ERROR_CRED }]
+MY_ANC_FILTER= [	{$this->MY_ANC_FILTER }]
+MY_CURRENCY= [	{$this->MY_CURRENCY }]
+
+
+EOF;
+        return $r;
+    }
+
     function check_anc_filter($p_value)
     {
         $tmp_value=$p_value;

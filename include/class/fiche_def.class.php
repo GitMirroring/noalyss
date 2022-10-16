@@ -44,6 +44,12 @@ class Fiche_Def
         
         
     }
+
+    public function __toString(): string
+    {
+        return "fiche_def".print_r($this,true);
+    }
+
     /*!\brief show the content of the form to create  a new Fiche_Def_Ref
     */
     function input ()
@@ -258,7 +264,7 @@ $order
             $sql="insert into fiche_def(fd_label,fd_class_base,frd_id,fd_create_account,fd_description)
                  values ($1,$2,$3,$4,$5) returning fd_id";
 
-            $fd_id=$this->cn->get_value($sql,array($p_nom_mod,$p_class_base,$p_fiche_def,$p_create,$p_fd_description));
+            $this->id=$this->cn->get_value($sql,array($p_nom_mod,$p_class_base,$p_fiche_def,$p_create,$p_fd_description));
 
             // p_class must be added to tmp_pcmn if it is a single accounting
             if ( strpos(',',$p_class_base) ==0)
@@ -621,24 +627,32 @@ $order
 
     /*!\brief insert a new attribut for this fiche_def
      * \param $p_ad_id id of the attribut
+     * \param int $p_order order of the attribut if  -1 then computed
      */
-    function InsertAttribut($p_ad_id)
+    function insertAttribut($p_ad_id,$p_order=-1)
     {
         if ( $this->id == 0 ) return;
         /* ORDER */
         $this->GetAttribut();
-        $max=sizeof($this->attribut)*15;
+        $order=$p_order;
+        if ( $p_order == -1 ) {
+            $order = $this->cn->get_value("select ad_default_order from attr_def where ad_id=$1",[$p_ad_id]);
+            if ( $order == 0 || empty($order)) {
+                $max=$this->get_value("select count(*) from jnt_fic_attr where fd_id=$1",[$this->id]);
+                $order=$max*15;
+            }
+        }
         // Insert a new attribute for the model
         // it means insert a row in jnt_fic_attr
         $sql=sprintf("insert into jnt_fic_attr (fd_id,ad_id,jnt_order) values (%d,%d,%d)",
-                     $this->id,$p_ad_id,$max);
+                     $this->id,$p_ad_id,$order);
         $Res=$this->cn->exec_sql($sql);
     }
     /*!\brief remove an attribut for this fiche_def
      * \param array of ad_id to remove
      * \remark you can't remove the attribut defined in attr_min
      */
-    function RemoveAttribut($array)
+    function removeAttribut($array)
     {
         foreach ($array as $ch)
         {

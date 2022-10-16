@@ -40,7 +40,8 @@ class InputSwitch extends HtmlInput
 
     function __construct($name='', $value='', $p_id="")
     {
-        $this->value_container=$name;
+        $this->name=$name;
+        $this->value_container=uniqid();
         $this->value=$value;
         $this->icon=$p_id;
         $this->javascript="";
@@ -50,8 +51,8 @@ class InputSwitch extends HtmlInput
     {
         $r="";
         if ($p_name!=NULL)
-            $this->value_container=$p_name;
-        if ($p_value!==NULL)
+            $this->name=$p_name;
+        if ($p_value!=NULL)
             $this->value=$p_value;
 
         if ( $this->icon=="") $this->icon=uniqid ("inputSwitch");
@@ -62,7 +63,7 @@ class InputSwitch extends HtmlInput
         if ($this->readOnly == TRUE) {
             return $this->display();
         }
-        $r.= HtmlInput::hidden($this->value_container, $this->value);
+        $r.= HtmlInput::hidden($this->name, $this->value,$this->value_container);
         
         $this->javascript=sprintf('toggle_onoff(\'%s\',\'%s\');%s;',$this->icon,$this->value_container,$this->javascript);
         

@@ -60,6 +60,10 @@ class User
             $this->load();
         }
     }
+    public function __toString(): string
+    {
+        return "User ".print_r($this,true);
+    }
     /**
      * @brief check the password and user
      */

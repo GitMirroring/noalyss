@@ -182,7 +182,7 @@ class Fiche_DefTest extends Testcase
 	
         // percent deductible
         $fiche_def->InsertAttribut(20);
-        $fiche_def->InsertAttribut(21);
+        $fiche_def->InsertAttribut(21,120);
         $fiche_def->InsertAttribut(22);
 
         // accouting for not deductible

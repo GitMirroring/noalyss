@@ -45,6 +45,10 @@ class HttpInput
         $this->array=null;
         $this->empty="";
     }
+    public function __toString(): string
+    {
+        return "http_input".print_r($this,true);
+    }
     public function get_array()
     {
         return $this->array;
