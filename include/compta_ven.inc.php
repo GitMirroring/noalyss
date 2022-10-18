@@ -23,7 +23,7 @@
  * \brief file included to manage all the operations for the ledger of sales 
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-
+\Noalyss\Dbg::echo_file(__FILE__);
 $gDossier=dossier::id();
 $cn=Dossier::connect();
 //menu = show a list of ledger
