@@ -26,7 +26,7 @@
 <div class="inner_box" style="display:none;width:40em" id="jrn_note_div">
 <?=\HtmlInput::title_box(_("Note"),"jrn_note_div","hide")?>
 
-<textarea id="jrn_note_input" name= "jrn_note_input" class="input_text" cols="60" rows="7"><?=$p_current?></textarea>
+<textarea id="jrn_note_input" name= "jrn_note_input" class="input_text" cols="60" rows="7" style="margin:0.6em"><?=$p_current?></textarea>
 <ul class="aligned-block">
     <li>
         <?=HtmlInput::button_hide("jrn_note_div")?>

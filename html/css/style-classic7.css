@@ -71,7 +71,7 @@ table.sortable td, table.table_large td, table.result  td,table.resultfooter td 
         border: 1px solid lightblue;
 }
 table.sortable th,  table.table_large th,table.result th {
-    font-weight:bold;
+
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'OpenSansRegular';
     border-bottom:2px #5d90cd groove;
@@ -79,7 +79,7 @@ table.sortable th,  table.table_large th,table.result th {
 
     color:#0C106D;
     text-align: left;
-    font-style: italic;
+    font-style: normal;
 
 }
 h2.title {
@@ -3237,4 +3237,17 @@ li.li-active {
 
     }
 }
-/**========*/
+/**========* Highlight the sorted column ****/
+ /**========*/
+ .sorttable_sorted_reverse {
+     color: #5e5a55 !important;
+     font-style: italic !important;
+ }
+
+ /**========*/
+ .sorttable_sorted  {
+     color: #5e5a55 !important;
+     font-style: italic !important;
+
+ }
+
