@@ -21,7 +21,7 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-
+\Noalyss\Dbg::echo_file(__FILE__);
 /**
  * @file
  * @brief display purchase on one line with sum of VAT, Operation, Private exp.
@@ -58,7 +58,7 @@ bcscale(2);
         <th class="num">
             <?=_('TVA')?>
         </th>
-        <?php if ($nb_other_tax>0) :?>
+        <?php if ($nb_other_tax<>0) :?>
         <th class="num">
             <?=_('Autre Taxe')?>
         </th>
@@ -123,14 +123,16 @@ for ($i=0;$i<$nb_data;$i++):
         <td class="num">
             <?=nbm(bcsub($this->data[$i]['vat'],$this->data[$i]['tva_sided']))?>
         </td>
+        <?php if ($nb_other_tax<>0) :?>
         <td class="num">
             <?=nbm($this->data[$i]['other_tax_amount'])?>
         </td>
-        <?php if ($nb_other_tax>0) :?>
+        <?php endif;?>
+
         <td class="num">
+
             <?=nbm(bcadd($this->data[$i]['other_tax_amount'] ,$this->data[$i]['tvac']))?>
         </td>
-        <?php endif;?>
         <td class="num">
             <?php if ( $this->data[$i]['currency_id'] != '0') : ?>
             <?=nbm ( bcadd($this->data[$i]['sum_oc_amount'],$this->data[$i]['sum_oc_vat_amount'],2),2)?>

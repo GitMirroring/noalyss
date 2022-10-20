@@ -78,8 +78,8 @@ EOF;
 
 ?>	
 <li class="<?=$class_list_element?>">
-    <a class="<?=$class_link?>" href="<?php echo $url;?>" <?php echo $js?> title="<?php echo h(gettext($amenu[$i]['me_description']))?>">
-    <?php echo gettext($amenu[$i]['me_menu'])?>
+    <a class="<?=$class_link?>" href="<?php echo $url;?>" <?php echo $js?> title="<?php  if ( ! empty($amenu[$i]['me_description'])) echo h(gettext($amenu[$i]['me_description']))?>">
+    <?php if ( ! empty($amenu[$i]['me_menu'])) echo gettext($amenu[$i]['me_menu'])?>
     </a>
 </li>
 
