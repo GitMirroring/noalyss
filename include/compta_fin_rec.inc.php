@@ -189,7 +189,11 @@ if ( isNumber($start_extrait) == 0 )
 //-------------------------
 if (isset($_POST['save']))
 {
-	if (trim($_POST['ext']) != '' && isset($_POST['op']))
+    $receipt_nb=$http->post("ext");
+    if (trim($receipt_nb) == '' && isset($_POST['op'])) {
+        echo_warning(_('Numéro de relevé est obligatoire'));
+    }
+	if (trim($receipt_nb) != '' && isset($_POST['op']))
 	{
 		$array = $_POST['op'];
 		$tot = 0;
@@ -265,7 +269,7 @@ $operation = $cn->get_array("select jr_id,jr_internal,
 
 echo '<p>';
 $iextrait = new IText('ext');
-if ( isset ($_POST['ext'])) $iextrait->value=$_POST['ext']; else $iextrait->value = $Ledger->guess_pj();
+ $iextrait->value=$http->post('ext','string','');
 
 $nstart_extrait = new INum('start_extrait');
 $nstart_extrait->value=$start_extrait;
