@@ -70,7 +70,7 @@ class Acc_Plan_MTable extends Manage_Table_SQL
     }
 
     /**
-     * Display a row
+     * @brief  Display a row
      * @param type $p_row array of value key column=>value
      */
     function display_row($p_row)
@@ -100,7 +100,8 @@ class Acc_Plan_MTable extends Manage_Table_SQL
                         '</td>';
             }
             elseif ($v == "fiche_qcode") {
-                $count=$this->table->cn->get_value("select count(*) from fiche_detail where ad_id=5 and ad_value=$1",array($p_row['pcm_val']));
+                $count=$this->table->cn->get_value("select count(*) from fiche_detail where ad_id=5 and ad_value=$1"
+                    ,array($p_row['pcm_val']));
                if ($count ==  0) echo td("");
                elseif ($count == 1 ) {
                    echo '<td>';
@@ -112,12 +113,14 @@ class Acc_Plan_MTable extends Manage_Table_SQL
                    echo '<td>';
                    $a_code=explode(",",$p_row[$v]);
                    $nb_code=count($a_code);
+                   echo \Noalyss\Dbg::hidden_info("card",$p_row);
                    for ($xx = 0;$xx < $nb_code;$xx++)
                    {
-                       echo HtmlInput::card_detail($a_code[$xx])."," ;
+                       echo HtmlInput::card_detail($a_code[$xx],'','style="display:inline"')."," ;
                    }
                    echo  " ($count) ";
-                   echo Icon_Action::more(uniqid(), sprintf("display_all_card('%s','%s')",$dossier_id,$p_row["pcm_val"]));
+                   echo Icon_Action::more(uniqid(), sprintf("display_all_card('%s','%s')",
+                       $dossier_id,$p_row["pcm_val"]));
                    echo '</td>';
 
                }
@@ -153,7 +156,7 @@ class Acc_Plan_MTable extends Manage_Table_SQL
     }
 
     /**
-     * Check that the entered data are valid before recording them into
+     * @brief Check that the entered data are valid before recording them into
      * tmp_pcmn, the errors are stored into this->a_error and if someting wrong
      * is found it returns false, if the data can be saved it returns true
      * @return return false if an error is found,

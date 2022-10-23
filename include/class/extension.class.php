@@ -382,4 +382,10 @@ class Extension extends Menu_Ref_sql
         return $a_extension;
     }
 
+    public function __toString(): string
+    {
+        return "Extension";
+    }
+
+
 }
