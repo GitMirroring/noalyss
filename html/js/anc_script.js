@@ -24,7 +24,8 @@
  *  javascript for the analytic accountancy
  */
 
-/*!\brief add a row for the CA
+/**
+ *  add a row for the CA
  * \param p_table_id
  * \param p_amount amount to reach
  */
@@ -71,8 +72,8 @@ function add_row(p_table, p_seq)
 }
 /**
  *Compute total of a form from Anc_Operation::display_form_plan
- *@param p_table table id
- *@param seq sequence of the line
+ *@param {dom_id} p_table table id
+ *@param {int}seq sequence of the line
  *@see Anc_Operation::display_form_plan
  */
 function compute_total_table(p_table, seq)
@@ -134,12 +135,12 @@ function anc_refresh_remain(p_table, p_seq)
         alert_box(a.message);
     }
 }
-/*!
- * \brief Check the amount of the CA
- * \param p_style : error or ok, if ok show a ok box if the amount are equal
+/**
+ * Check the amount of the CA
+ * @param p_style : error or ok, if ok show a ok box if the amount are equal
  *
  *
- * \return true if the amounts are equal
+ * @returns true if the amounts are equal
  */
 function verify_ca(div)
 {
@@ -208,14 +209,11 @@ function verify_ca(div)
         return false;
     }
 }
-/*!
- * \brief open a window for searching a CA account,
- * \param p_dossier dossier id
- * \param p_target ctrl to update
- * \param p_source ctrl containing the pa_id
- *
- *
- * \return
+/***
+ *  open a window for searching a CA account,
+ * @param p_dossier dossier id
+ * @param  p_target ctrl to update
+ * @param  p_source ctrl containing the pa_id
  */
 function search_ca(p_dossier, p_target, p_source)
 {

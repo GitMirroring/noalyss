@@ -49,11 +49,11 @@ function cal()
         p_variable=p_variable.replace(/%/,'');
         p_variable=p_variable.replace(/;/,'');
         p_variable=p_variable.replace(/>/,'');
-	p_variable=p_variable.replace(/ /g,"");
-	p_variable=p_variable.replace(/\+/g,"+ ");
-	p_variable=p_variable.replace(/-/g,"- ");
-	p_variable=p_variable.replace(/\//g,"/ ");
-	p_variable=p_variable.replace(/,/g,".");
+        p_variable=p_variable.replace(/ /g,"");
+        p_variable=p_variable.replace(/\+/g,"+ ");
+        p_variable=p_variable.replace(/-/g,"- ");
+        p_variable=p_variable.replace(/\//g,"/ ");
+        p_variable=p_variable.replace(/,/g,".");
 
         sub=eval(p_variable);
         var result=parseFloat(sub);

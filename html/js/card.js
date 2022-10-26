@@ -19,7 +19,7 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*! \file
+/** \file
  * \brief javascript for searching a card
  */
 
@@ -486,15 +486,16 @@ function result_card_search(req)
 
 
 
-/*!\brief Set the value of 2 input fields
+/**
+ * Set the value of 2 input fields
 *
 * Set the quick code in the first ctrl and the label of the quickcode in the second one. This function is a variant of SetData for
 * some specific need.  This function is called if the caller is searchcardCtrl
 *
-*\param p_ctrl the input with the name of the quick code
-*\param  p_quickcode the found quick_code
-*\param p_ctrlname the name of the input field with the label
-*\param p_label the label of the quickcode
+*@param p_ctrl the input with the name of the quick code
+*@param  p_quickcode the found quick_code
+*@param p_ctrlname the name of the input field with the label
+*@param p_label the label of the quickcode
 */
 function setCtrl(p_ctrl,p_quickcode,p_ctrlname,p_label)
 {
@@ -512,8 +513,9 @@ function setCtrl(p_ctrl,p_quickcode,p_ctrlname,p_label)
 
 
 
-/*!\brief clean the row (the label, price and vat)
- * \param p_ctl the calling ctrl
+/**
+ * clean the row (the label, price and vat)
+ * @param p_ctl the calling ctrl
  */
 function clean_Fid(p_ctl)
 {
@@ -644,10 +646,8 @@ function fill_ipopcard(obj)
 }
 /**
  *
- * \param request : object request
- * \param json : json answer
-\code
-\endcode
+ * @param request : object request
+ * @param json : json answer
 */
 function  successFill_ipopcard(req,json)
 {
@@ -683,7 +683,7 @@ function  successFill_ipopcard(req,json)
     }
 }
 /**
- *@brief show the ipopup for selecting a card type, it is a needed step before adding
+ * show the ipopup for selecting a card type, it is a needed step before adding
  * a card
  *@param input field (obj) it must have the attribute ipopup
  *       possible attribute :

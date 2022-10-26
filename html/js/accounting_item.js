@@ -18,27 +18,6 @@
 /* $Revision$ */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-
-/*! \file
- * \brief
- * containing the javascript for opening a windows to search an account (poste comptable)
- */
-
-function set_poste_parent(p_ctl,p_value)
-{
-    var f=g(p_ctl);
-    f.value+='['+p_value+']';
-}
-
-function set_jrn_parent(p_ctl,p_value)
-{
-    var f=g(p_ctl);
-    if ( f )
-    {
-        if ( trim(f.value)!="") f.value+=' ';
-        f.value+=p_value;
-    }
-}
 /**
  * show the popup for search an accounting item
  *@param object this, it must contains some attribute as
@@ -48,7 +27,7 @@ function set_jrn_parent(p_ctl,p_value)
  * - label the tag which will contains the label
  * - bracket if the value must be surrounded by [ ]
  * - acc_query for the initial query
- *\see ajax_poste.php
+ *@see ajax_poste.php
  */
 function search_poste(obj)
 {

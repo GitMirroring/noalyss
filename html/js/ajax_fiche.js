@@ -19,14 +19,15 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*! \file
- * \brief This file permit to use the AJAX function to fill up
+/*
+ *  This file permit to use the AJAX function to fill up
  *        info from fiche
  *
  */
 
-/*!\brief clean the row (the label, price and vat)
- * \param p_ctl the calling ctrl
+/**
+ *  clean the row (the label, price and vat)
+ * @param p_ctl the calling ctrl
  */
 function clean_Fid(p_ctl)
 {
@@ -55,14 +56,15 @@ function errorFid(request,json)
 {
     alert_box('ERRFID'+content[48]);
 }
-/*!\brief this function fills the data from fid.php,
- * \param p_ctl object : field of the input,
+/**
+ *  this function fills the data from fid.php,
+ * @param {object} p_ctl  : field of the input,
  *  possible object member
  * - label field to update with the card's name
  * - price field to update with the card's price
  * - tvaid field to update with the card's tva_id
  * - jrn field to force the ledger
-  *\see successFid errorFid fid.php
+  *@see successFid errorFid fid.php
  */
 function ajaxFid(p_ctl)
 {
@@ -134,10 +136,11 @@ function ajaxFid(p_ctl)
 	}
 
 }
-/*!\brief callback function for ajax
- * \param request : object request
- * \param json : json answer
-\verbatim
+/**
+ callback function for ajax
+ * @param request : object request
+ * @param json : json answer
+@verbatim
  {"answer":"ok",
  "flabel":"none",
  "name":"Chambre de commerce",
@@ -147,7 +150,7 @@ function ajaxFid(p_ctl)
  "sell":" ",
  "fPrice_purchase":"none",
  "buy":" "}
-\endverbatim
+@endverbatim
  */
 function successFid(request,json)
 {
@@ -221,22 +224,9 @@ function ajax_success_saldo(request,json)
     $('first_sold').value=answer.saldo;
 
 }
-/*!\brief this function get data from ajax_card.php and fill the hidden div with the return html string
-* \param p_dossier
-* \param f_id fiche.f_id
-* \param p_operation what to do : op : history of operation
-* \param ctl : id of the div to show
-* \param page
-*/
-//function _saajax_card(p_dossier,f_id,p_operation,ctl,page)
-//{
-//    $(ctl).show();
-//    var queryString="gDossier="+p_dossier+"&f_id="+f_id+"&op="+p_operation+"&p="+page+'&ctl='+ctl;
-//    var action = new Ajax.Request(
-//                 "ajax_card.php" , { method:'get', parameters:queryString,onFailure:ajax_get_failure,onSuccess:ajax_get_success}
-//                 );
-//}
-/*!\brief callback function for ajax_get when successuf
+
+/**
+ *  callback function for ajax_get when successuf
 */
 function ajax_get_success(request,json)
 {
@@ -290,9 +280,9 @@ category_card.add_attribut=function (p_dossier,p_fiche_def_ref,p_object_name) {
 /**
  * Remove an attribute (id:p_object_name+"_elt"+ad_id (ad_id = attr_def.ad_id))
  * from the list (id:p_object_name+"list")
- * @param int p_dossier dossier nb
- * @param string p_object_name , name of the prefix for id 
- * @param int p_fiche_def_ref is the frd_id
+ * @param {int} p_dossier dossier nb
+ * @param {string} p_object_name , name of the prefix for id
+ * @param {int} p_fiche_def_ref is the frd_id
  * @param {type} p_attribute_id
  */
 category_card.remove_attribut=function (p_dossier,p_fiche_def_ref,p_object_name,p_attribute_id) {
