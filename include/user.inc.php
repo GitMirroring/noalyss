@@ -36,7 +36,7 @@ if ( isset ($_POST["ADD"]) )
 {
     $cn=new Database();
     $pass5=md5($_POST['PASS']);
-    $new_user=new User($cn,0);
+    $new_user=new Noalyss_user($cn,0);
     $new_user->first_name=$http->post('FNAME');
     $new_user->last_name=$http->post('LNAME');
     $login=$http->post('LOGIN');
@@ -58,7 +58,7 @@ if ( isset ($_POST["ADD"]) )
             $new_user->insert();
             $new_user->load();
              put_global(array(['key'=>'use_id',"value"=>$new_user->id]));
-            User::audit_admin(sprintf('ADD USER %s %s',$new_user->id,$login));
+            Noalyss_user::audit_admin(sprintf('ADD USER %s %s',$new_user->id,$login));
         } else {
      echo_warning(_("Utilisateur existant"));
             $uid=$cn->get_value("select use_id from ac_users where use_login=lower($1)",[$login]);
@@ -82,7 +82,7 @@ if ($sbaction == "save")
 
     // Update User
     $cn = new Database();
-    $UserChange = new User($cn, $uid);
+    $UserChange = new Noalyss_user($cn, $uid);
     
     if ($UserChange->load() == -1)
     {
@@ -144,9 +144,9 @@ else if ($sbaction == "delete")
     if ( is_array($a_dossier) ) {
         $nb=count($a_dossier);
         for ( $i=0;$i<$nb;$i++)
-            User::remove_inexistant_user($a_dossier[$i]['dos_id']);
+            Noalyss_user::remove_inexistant_user($a_dossier[$i]['dos_id']);
     }
-    User::audit_admin(sprintf('DELETE USER %s %s',$uid,$auser['use_login']));
+    Noalyss_user::audit_admin(sprintf('DELETE USER %s %s',$uid,$auser['use_login']));
     echo "<H2 class=\"notice\">";
     printf (_("Utilisateur %s %s est effacé"),$http->post('fname'),$http->post('lname')) ;
     echo " </H2>";

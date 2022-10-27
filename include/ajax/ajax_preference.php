@@ -26,7 +26,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 global $g_user;
 
-$g_user=new User($cn);
+$g_user=new Noalyss_User($cn);
 $inside_dossier = false;
 $http=new HttpInput();
 $action=$http->post("action","string","display_form");

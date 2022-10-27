@@ -64,7 +64,7 @@ if ($op=="ledger_access")
         $ie_input->add_json_param("gDossier", $n_dossier_id);
         $ie_input->add_json_param("user_id", $user_id);
         $ie_input->set_value($value);
-        $sec_User=new User($cn, $user_id);
+        $sec_User=new Noalyss_User($cn, $user_id);
         $count=$cn->get_value('select count(*) from user_sec_jrn where uj_login=$1 '.
                 ' and uj_jrn_id=$2', array($sec_User->login, $jrn_def_id));
         if ($count==0)
@@ -117,7 +117,7 @@ if ($op=="profile")
     {
         $value=$http->post("value");
         // save profile
-        $sec_User=new User($cn, $user_id);
+        $sec_User=new Noalyss_User($cn, $user_id);
         if ( $value > 0) {
             $sec_User->save_profile($value);
         }
@@ -154,7 +154,7 @@ if ($op=='ledger_access_all')
     $access=$http->post("access");
     if ($access!="W"&&$access!="X"&&$access!="R")
         die("Invalid access");
-    $sec_User=new User($cn, $user_id);
+    $sec_User=new Noalyss_User($cn, $user_id);
     // Insert all the existing ledgers to user_sec_jrn 
     $sql="insert into   user_sec_jrn(
 			uj_jrn_id,
@@ -183,7 +183,7 @@ if ($op=="action_access")
 {
     $action_id=$http->get("ac_id", "number");
     $user_id=$http->get("user_id","number");
-    $sec_User=new User($cn, $user_id);
+    $sec_User=new Noalyss_User($cn, $user_id);
     
     $right=$sec_User->check_action($action_id);
     $is_switch=new Inplace_Switch("action".$action_id,0);
@@ -209,7 +209,7 @@ if ($op=="action_access_all")
 {
     $user_id=$http->get("user_id","number");
     $access=$http->get("access","number");
-    $sec_User=new User($cn, $user_id);
+    $sec_User=new Noalyss_User($cn, $user_id);
     if ( $access==0) {
         $cn->exec_sql("delete from user_sec_act where ua_login=$1",array($sec_User->login));
     }
@@ -227,7 +227,7 @@ if ($op=="user_sec_ledger")
 {
     $user_id=$http->get("user_id", "number");
     $value=$http->get("value", "number");
-    $sec_user=new User($cn, $user_id);
+    $sec_user=new Noalyss_User($cn, $user_id);
     $status_sec_ledger=$sec_user->get_status_security_ledger();
     $sec_ledger=new Inplace_Switch("sec_ledger", $status_sec_ledger);
     $sec_ledger->set_callback("ajax_misc.php");
@@ -251,7 +251,7 @@ if ($op=="user_sec_action")
 {
     $user_id=$http->get("user_id", "number");
     $value=$http->get("value", "number");
-    $sec_user=new User($cn, $user_id);
+    $sec_user=new Noalyss_User($cn, $user_id);
     $status_sec_action=$sec_user->get_status_security_action();
     $sec_action=new Inplace_Switch("sec_action", $status_sec_action);
     $sec_action->set_callback("ajax_misc.php");

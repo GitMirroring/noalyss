@@ -31,7 +31,7 @@ if(DEBUGNOALYSS>1) {
     echo h1(_("try to clean session"));
     var_dump($_SESSION);
 }
-User::clean_session();
+Noalyss_user::clean_session();
 //
 // Clean the possible cookies
 //

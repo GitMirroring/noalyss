@@ -191,7 +191,7 @@ if ($sa=='step3')
     echo HtmlInput::hidden('f', $_REQUEST['f']);
     echo HtmlInput::hidden('p_periode', $_REQUEST['p_periode']);
     $wLedger=new ISelect();
-    $g_user=new User($cn);
+    $g_user=new Noalyss_user($cn);
     $avail=$g_user->get_ledger('ODS');
     /* compute select list */
     $array=array();

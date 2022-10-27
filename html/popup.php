@@ -25,7 +25,7 @@ require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 require_once NOALYSS_INCLUDE.'/class/periode.class.php';
 
 $http=new HttpInput();
@@ -60,7 +60,7 @@ window.onload=function ()
 <?php
 global $g_user;
 $cn=Dossier::connect();
-$g_user=new User($cn);
+$g_user=new Noalyss_user($cn);
 $g_user->Check();
 $g_user->check_dossier(Dossier::id());
 

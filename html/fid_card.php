@@ -59,9 +59,9 @@ $cn=Dossier::connect();
 $typecard=$http->request('e');
 $filter_card='';
 
-require_once('class/user.class.php');
+require_once('class/noalyss_user.class.php');
 global $g_user;
-$g_user=new User($cn);
+$g_user=new Noalyss_user($cn);
 $g_user->check();
 $g_user->check_dossier(dossier::id());
 set_language();

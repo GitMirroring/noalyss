@@ -318,7 +318,7 @@ class Dossier
             $cn->start();
             for ($i=0; $i<count($a_admin); $i++)
             {
-                User::grant_admin_access($a_admin[$i]['use_login'], $p_id);
+                Noalyss_user::grant_admin_access($a_admin[$i]['use_login'], $p_id);
             }
             $cn->commit();
         }
@@ -377,7 +377,7 @@ class Dossier
                 $db=new Database($db_row['dos_id'], 'dos');
                 $db->apply_patch($db_row['dos_name']);
                 Dossier::synchro_admin($db_row['dos_id']);
-                User::remove_inexistant_user($db_row['dos_id']);
+                Noalyss_user::remove_inexistant_user($db_row['dos_id']);
                 $db->clean_orphan_lob();
             }
             else

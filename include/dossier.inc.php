@@ -178,8 +178,8 @@ if ( isset ($_POST["DATABASE"]) )
                 $Res=$cn->exec_sql($sql);
 
                 Dossier::synchro_admin($l_id);
-                User::remove_inexistant_user($l_id);
-                User::audit_admin(sprintf('CREATE DATABASE %s %s',$l_id,$dos));
+                Noalyss_user::remove_inexistant_user($l_id);
+                Noalyss_user::audit_admin(sprintf('CREATE DATABASE %s %s',$l_id,$dos));
                
                 // -- patch it if need
                 $db=new Database($l_id, 'dos');
@@ -211,7 +211,7 @@ if ( isset ($_POST["DATABASE"]) )
                     echo _("Echec création ");
                     exit;
                 }
-                User::audit_admin(sprintf('CREATE DATABASE %s %s',$l_id,$dos));
+                Noalyss_user::audit_admin(sprintf('CREATE DATABASE %s %s',$l_id,$dos));
                 ob_flush();
             
         }
@@ -431,7 +431,7 @@ if ( $sa == 'remove' && isNumber($dossier_id) == 1 && $dossier_id != -1 )
     $cn->exec_sql($sql,array($dossier_id));
     print '<h2 class="error">';
     printf (_("Le dossier %s est effacé").'</h2>',h($name));
-    User::audit_admin(sprintf('DROP DATABASE %s %s',$dossier_id,$name));
+    Noalyss_user::audit_admin(sprintf('DROP DATABASE %s %s',$dossier_id,$name));
     echo HtmlInput::button_anchor(_('Retour'),'?action=dossier_mgt');
 }
 ?>

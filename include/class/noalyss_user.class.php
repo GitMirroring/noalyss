@@ -30,7 +30,7 @@ require_once NOALYSS_INCLUDE.'/constant.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
-class User
+class Noalyss_User
 {
 
     var $id; //!<  in account_repository , ac_users.use_id

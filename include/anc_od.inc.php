@@ -106,7 +106,7 @@ if ( isset($_GET['see']))
 
     $periode_start=$cn->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode 
            where p_exercice=$1 order by  p_start,p_end",1,[$exercice]);
-    $g_user=new User($cn);
+    $g_user=new Noalyss_user($cn);
     $current=$http->get("p_periode","number",$g_user->get_periode());
     $w->value=$periode_start;
     $w->selected=$current;

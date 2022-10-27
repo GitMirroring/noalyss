@@ -39,7 +39,7 @@ $http=new HttpInput();
 
 $cn= Dossier::connect();
 global $g_user;
-$g_user=new User($cn);
+$g_user=new Noalyss_User($cn);
 $g_user->check(true);
 $g_user->check_dossier(Dossier::id(),true);
 set_language();

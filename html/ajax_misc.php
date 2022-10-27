@@ -43,7 +43,7 @@ require_once  NOALYSS_INCLUDE.'/class/fiche.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once  NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
@@ -94,7 +94,7 @@ global $g_user, $cn, $g_parameter;
 if ($gDossier<>0) {
     $cn =Dossier::connect();
     $g_parameter=new Noalyss_Parameter_Folder($cn);
-    $g_user = new User($cn);
+    $g_user = new Noalyss_user($cn);
     $g_user->check(true);
     if ( $g_user->check_dossier($gDossier, true) == 'X' ) {
         die(_('Non autorisé'));
@@ -104,7 +104,7 @@ else
 {
     // connect to repository
     $cn=new Database(); 
-    $g_user = new User($cn);
+    $g_user = new Noalyss_user($cn);
     $g_user->check(true);
 }
 

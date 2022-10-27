@@ -42,7 +42,7 @@ class Acc_BalanceTest extends TestCase
     public function testGet_row()
     {
         global $g_connection,$g_user;
-        $g_user=new User($g_connection,1);
+        $g_user=new Noalyss_user($g_connection,1);
         
         $max=$g_connection->get_value("select max(p_id) from parm_periode");
         $min=$g_connection->get_value("select min(p_id) from parm_periode");

@@ -35,7 +35,7 @@ require_once  NOALYSS_INCLUDE.'/class/database.class.php';
 require_once  NOALYSS_INCLUDE.'/class/acc_compute.class.php';
 require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once  NOALYSS_INCLUDE.'/class/acc_tva.class.php';
-require_once  NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 
 // Check if the needed field does exist
 extract ($_GET, EXTR_SKIP );
@@ -55,7 +55,7 @@ $p=str_replace(",",".",$p);
 $q=str_replace(",",".",$q);
 
 $cn=Dossier::connect();
-$User=new User($cn);
+$User=new Noalyss_user($cn);
 $User->Check();
 $User->check_dossier(Dossier::id());
 

@@ -461,7 +461,7 @@ class Acc_Ledger_Search
             $qcode=(isset($p_array[$this->div."qcode"]))?$p_array[$this->div."qcode"]:"";
             $accounting=(isset($accounting))?$accounting:"";
             $periode=new Periode($this->cn);
-            $g_user=new User($this->cn);
+            $g_user=new Noalyss_user($this->cn);
             $p_id=$g_user->get_periode();
             if ($p_id!=null)
             {
@@ -485,7 +485,7 @@ class Acc_Ledger_Search
         $fil_currency="";
 
         $and='';
-        $g_user=new User($this->cn);
+        $g_user=new Noalyss_user($this->cn);
         $p_action=(isset ($ledger_type)) ? $ledger_type:$this->type;
         if ($p_action=='')
             $p_action='ALL';

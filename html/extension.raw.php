@@ -31,12 +31,12 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/class/extension.class.php';
 require_once  NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once  NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 
 global $g_user,$cn,$g_parameter;
 $http=new HttpInput();
 $cn=Dossier::connect();
-$g_user=new User($cn);
+$g_user=new Noalyss_user($cn);
 $g_user->check();
 $only_plugin=$g_user->check_dossier(dossier::id());
 set_language();

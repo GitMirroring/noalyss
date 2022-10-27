@@ -43,7 +43,7 @@ if ($op=='save_filter')
     $answer['message']="";
     try
     {
-        $new=new User_filter_SQL($cn, -1);
+        $new=new Noalyss_User_filter_SQL($cn, -1);
         $new->setp("login", $g_user->login);
         $new->setp("nb_jrn", $http->post("nb_jrn", 'number'));
         $new->setp("date_start", $http->post("date_start", 'string', NULL));
@@ -109,7 +109,7 @@ if ($op=="load_filter")
     $answer['status']='OK';
     $answer['filter_id']=0;
     $answer['message']="";
-    $filter=new User_filter_SQL($cn, $filter_id);
+    $filter=new Noalyss_User_filter_SQL($cn, $filter_id);
     $record=$filter->to_array();
 
     $record['desc']=$record['description'];

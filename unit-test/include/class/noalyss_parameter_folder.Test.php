@@ -42,7 +42,7 @@ class Noalyss_Parameter_FolderTest extends TestCase
         global $g_connection, $g_user;
         $_REQUEST['gDossier']=DOSSIER;
         $g_connection=new Database(DOSSIER);
-        $g_user=new User($g_connection);
+        $g_user=new Noalyss_user($g_connection);
         $this->object=new Noalyss_Parameter_Folder($g_connection);
         $this->a_param=explode(",","MY_COUNTRY,".                 
                                     "MY_DEFAULT_ROUND_ERROR_DEB,". 

@@ -31,7 +31,7 @@ $uid = $http->request('use_id');
      echo_error($ex->getMessage());
      throw $ex;
 }
-$UserChange = new User($rep, $uid);
+$UserChange = new Noalyss_user($rep, $uid);
 
 if ($UserChange->id == false)
 {
@@ -176,7 +176,7 @@ if ( $repo->count() == 0)
 
 $Dossier = $repo->show_dossier('R',$UserChange->login);
 
-$mod_user = new User(new Database(), $uid);
+$mod_user = new Noalyss_user(new Database(), $uid);
 ?>
            <TABLE id="database_list" class="result">
 <?php 

@@ -813,7 +813,7 @@ class Acc_Operation
         $_SESSION[SESSION_KEY.'g_pass']='dany';
         global $g_user;
         $cn=Dossier::connect();
-        $g_user=new User($cn);
+        $g_user=new Noalyss_user($cn);
         $a=new Acc_Operation($cn);
         $a->jr_id=1444;
         $b=$a->get_quant();

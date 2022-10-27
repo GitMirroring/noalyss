@@ -25,7 +25,7 @@ class Acc_Account_LedgerTest extends TestCase
         $_REQUEST['gDossier']=DOSSIER;
         $g_connection=new Database(DOSSIER);
         $g_parameter=new Noalyss_Parameter_Folder($g_connection);
-        $g_user=new User($g_connection);
+        $g_user=new Noalyss_user($g_connection);
         $this->object=new Acc_Account_Ledger($g_connection, 400);
         $g_connection->exec_sql("update jrn_def set jrn_def_class_deb='4* 2*' where jrn_def_type='ODS'");
     }

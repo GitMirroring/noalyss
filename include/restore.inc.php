@@ -133,7 +133,7 @@ if ( isset ($_REQUEST['sa'] ))
         $new_cn->apply_patch($name);
         echo '<span class="error">'._('Ne pas recharger la page, sinon votre base de données sera restaurée une fois de plus').'</span>';
 	Dossier::synchro_admin($id);
-        User::remove_inexistant_user($id);
+        Noalyss_user::remove_inexistant_user($id);
         $new_cn->clean_orphan_lob();
         echo $retour;
 

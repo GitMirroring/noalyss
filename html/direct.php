@@ -23,11 +23,11 @@
  */
 require_once '../include/constant.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
+require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 
 $cn=Dossier::connect();
 global $g_user;
-$g_user=new User($cn);
+$g_user=new Noalyss_user($cn);
 $g_user->Check();
 $g_user->check_dossier($_GET['gDossier']);
 $res=$cn->exec_sql("select distinct code,description from get_profile_menu($1) where code ~* $2 or description ~* $3 order by code limit 5  ",array($g_user->get_profile(),$_POST['acs'],$_POST['acs']));

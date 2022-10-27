@@ -214,7 +214,7 @@ class Acc_Letter extends TestCase
     public function testDateLimitComputed($p_periode_id,$p_first_day,$p_last_day)
     {
         global $g_connection;
-        $user=new User($g_connection);
+        $user=new Noalyss_user($g_connection);
         $restore=$user->get_periode();
         $user->set_periode($p_periode_id);
         

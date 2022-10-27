@@ -45,12 +45,12 @@ if ($op=='folder_add') // operation
     {
         $user_id=$http->get("p_user", "number"); // get variable
         $dossier_id=$http->get("p_dossier", "number"); // get variable
-        $user=new User($cn, $user_id);
+        $user=new Noalyss_User($cn, $user_id);
         $user->set_folder_access($dossier_id, true);
         $dossiercn=new Database($dossier_id);
-        // By default new user has the profile 1 (admin) and ledger's security
+        // By default new Noalyss_User has the profile 1 (admin) and ledger's security
         // + action's security are disabled
-        $user=new User($dossiercn, $user_id);
+        $user=new Noalyss_User($dossiercn, $user_id);
         $user->set_status_security_action(0);
         $user->set_status_security_ledger(0);
         $user->save_profile(1);
@@ -93,7 +93,7 @@ if ($op=='folder_remove') // operation
         $cn=new Database();
         $user_id=$http->get("p_user", "number"); // get variable
         $dossier_id=$http->get("p_dossier", "number"); // get variable
-        $user=new User($cn, $user_id);
+        $user=new Noalyss_User($cn, $user_id);
         $user->set_folder_access($dossier_id, false);
         $content="";
         $status='OK';
@@ -133,7 +133,7 @@ if ($op=='folder_display') // operation
         $user_id=$http->get("p_user", "number"); // get variable
         $p_filter=$http->get('p_filter', "string", '');
         ob_start();
-        $user=new User($cn, $user_id);
+        $user=new Noalyss_User($cn, $user_id);
         $a_dossier=Dossier::show_dossier('X', $user->id, $p_filter, MAX_FOLDER_TO_SHOW);
         echo HtmlInput::title_box(_("Liste dossier"), 'folder_list_div');
         ?>

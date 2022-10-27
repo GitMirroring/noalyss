@@ -12,7 +12,7 @@ define('USE_EMAIL', 'none@dev.null.eu');
 
 /**
  * @backupGlobals enabled
- * @coversDefaultClass \User
+ * @coversDefaultClass \Noalyss_User
  */
 require DIRTEST.'/global.php';
 
@@ -41,7 +41,7 @@ class UserTest extends TestCase
                 array(USE_ID, USE_FIRST_NAME, USE_NAME, USE_LOGIN, USE_ACTIVE, USE_PASS,
             USE_ADMIN, USE_EMAIL));
 
-        $this->object=new User($this->cn, USE_ID);
+        $this->object=new Noalyss_user($this->cn, USE_ID);
     }
 
     /**
@@ -58,7 +58,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @covers User::load
+     * @covers Noalyss_user::load
      */
     public function testLoad()
     {
@@ -75,31 +75,31 @@ class UserTest extends TestCase
     }
 
     /**
-     * @covers User::revoke_access
+     * @covers Noalyss_user::revoke_access
      * @todo   Implement testRevoke_access().
      */
     public function testRevoke_access()
     {
         $cn_dossier=new Database(DOSSIER);
-        User::revoke_access(USE_LOGIN, DOSSIER);
+        Noalyss_user::revoke_access(USE_LOGIN, DOSSIER);
         $this->assertEquals($cn_dossier->get_value('select count(*) from profile_user where user_name =$1 ',
                         array(USE_LOGIN)), 0);
     }
 
     /**
-     * @covers User::grant_admin_access
+     * @covers Noalyss_user::grant_admin_access
      * @todo   Implement testGrant_admin_access()
      */
     public function testGrant_admin_access()
     {
         $cn_dossier=new Database(DOSSIER);
-        User::grant_admin_access(USE_LOGIN, DOSSIER);
+        Noalyss_user::grant_admin_access(USE_LOGIN, DOSSIER);
 
         $this->assertEquals($cn_dossier->get_value('select count(*) from profile_user where user_name =$1 ',
                         array(USE_LOGIN)), 1);
     }
     /**
-     * @covers User::remove_inexistant_user
+     * @covers Noalyss_user::remove_inexistant_user
      */
     public function testRemove_inexistant_user() {
         // insert inexisting user
@@ -111,7 +111,7 @@ class UserTest extends TestCase
         $this->assertEquals($cn->get_value('select count(*) from profile_user where user_name=$1',array('unknown/user')),1);
         
         //remove him
-        User::remove_inexistant_user(DOSSIER);
+        Noalyss_user::remove_inexistant_user(DOSSIER);
         
         // check his removal
         $this->assertEquals($cn->get_value('select count(*) from profile_user where user_name=$1',array('unknown/user')),0);
@@ -135,7 +135,7 @@ class UserTest extends TestCase
      */
     public function testPeriode($p_id)
     {
-        $this->object=new User(Dossier::connect(), USE_ID);
+        $this->object=new Noalyss_user(Dossier::connect(), USE_ID);
         
         $restore=$this->object->get_periode();
         $this->assertTrue(is_numeric($restore),"Old periode id is not an integer");
@@ -167,7 +167,7 @@ class UserTest extends TestCase
     public function testsql_writable_profile()
     {
         $cn=Dossier::connect();
-        $user=new User($cn);
+        $user=new Noalyss_user($cn);
          $_SESSION[SESSION_KEY.'use_admin']=0;
          $user->admin=0;
         $this->assertEquals(0 , $user->getAdmin()," Error user is admin");

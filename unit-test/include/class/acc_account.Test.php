@@ -22,7 +22,7 @@ class Acc_AccountTest extends TestCase
         $_REQUEST['gDossier']=DOSSIER;
         $g_connection=new Database(DOSSIER);
         $g_parameter=new Noalyss_Parameter_Folder($g_connection);
-        $g_user=new User($g_connection);
+        $g_user=new Noalyss_user($g_connection);
         $cn=Dossier::connect();
         $this->object=new Acc_Account($cn, '400');
     }

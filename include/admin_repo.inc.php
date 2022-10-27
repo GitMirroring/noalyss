@@ -24,7 +24,7 @@
 if ( ! defined ('ALLOWED')) { die (_('Non autorisé'));}
 if ( ! defined ('ALLOWED_ADMIN')) { die (_('Non autorisé'));}
 \Noalyss\Dbg::echo_file(__FILE__);
-include_once NOALYSS_INCLUDE."/class/user.class.php";
+include_once NOALYSS_INCLUDE . "/class/noalyss_user.class.php";
 require_once NOALYSS_INCLUDE."/lib/user_common.php";
 include_once NOALYSS_INCLUDE."/lib/ac_common.php";
 require_once NOALYSS_INCLUDE."/lib/user_menu.php";
@@ -32,7 +32,7 @@ $http=new HttpInput();
 $action = $http->request("action","string", "");
 
 $rep=new Database();
-$User=new User($rep);
+$User=new Noalyss_user($rep);
 $User->Check();
 
 

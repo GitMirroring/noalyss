@@ -46,10 +46,10 @@ require_once NOALYSS_INCLUDE.'/class/database.class.php';
 /* Admin. Dossier */
 
 $cn=Dossier::connect();
-include_once NOALYSS_INCLUDE.'/class/user.class.php';
+include_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 
 global $g_user;
-$g_user=new User($cn);
+$g_user=new Noalyss_user($cn);
 $g_user->Check();
 $act=$g_user->check_dossier($gDossier);
 // AC CODE = SEARCH

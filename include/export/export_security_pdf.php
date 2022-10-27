@@ -42,12 +42,12 @@ catch (Exception $exc)
 
 // Check User
 $rep=new Database();
-$User=new User($rep);
+$User=new Noalyss_user($rep);
 
 //-----------------------------------------------------
 // Get User's info
 
-$SecUser=new User($rep,$user_id);
+$SecUser=new Noalyss_user($rep,$user_id);
 $admin=0;
 $access=$SecUser->get_folder_access($gDossier);
 

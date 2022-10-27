@@ -36,7 +36,7 @@ require_once ('class/dossier.class.php');
 require_once('lib/html_input.class.php');
 require_once('lib/icon_action.class.php');
 require_once ('lib/function_javascript.php');
-require_once 'class/user.class.php';
+require_once 'class/noalyss_user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 html_page_start();
 global $http;
@@ -55,7 +55,7 @@ global $cn, $g_user, $g_succeed, $g_failed;
 $cn=Dossier::connect();
 
 $g_parameter=new Noalyss_Parameter_Folder($cn);
-$g_user=new User($cn);
+$g_user=new Noalyss_user($cn);
 
 if (!file_exists('authorized_debug'))
 {

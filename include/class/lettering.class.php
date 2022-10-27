@@ -53,7 +53,7 @@ class Lettering
     function __construct($p_init)
     {
         $this->db=$p_init;
-        $a=new User($p_init);
+        $a=new Noalyss_user($p_init);
         $exercice=$a->get_exercice();
         if ($exercice>0)
         {

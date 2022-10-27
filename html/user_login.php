@@ -31,8 +31,8 @@ require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 
 @html_page_start($_SESSION[SESSION_KEY.'g_theme']);
 $rep=new Database();
-require_once NOALYSS_INCLUDE.'/class/user.class.php';
-$User=new User($rep);
+require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
+$User=new Noalyss_user($rep);
 
 $User->Check();
 /*  Check Browser version if < IE6 then unsupported */

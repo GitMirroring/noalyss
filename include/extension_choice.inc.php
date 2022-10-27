@@ -12,7 +12,7 @@ echo '<div class="topmenu">';
 
 $cn=Dossier::connect();
 global $g_user;
-$g_user=new User($cn);
+$g_user=new Noalyss_user($cn);
 $g_user->check();
 $only_plugin=$g_user->check_dossier(dossier::id());
 

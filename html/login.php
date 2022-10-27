@@ -40,8 +40,8 @@ if (  isset ($_POST["p_user"] ) )
     $http=new HttpInput();
     
     // clean OLD session 
-    User::clean_session($http->post("p_user"));
-    $User=new User($rep);
+    Noalyss_user::clean_session($http->post("p_user"));
+    $User=new Noalyss_user($rep);
     $User->Check(false,'LOGIN');
 
 
@@ -103,7 +103,7 @@ else
 
       }
 
-    $User=new User($rep);
+    $User=new Noalyss_user($rep);
     $User->Check();
 
     echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url=user_login.php?v=".microtime(true)."\">";

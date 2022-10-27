@@ -54,7 +54,7 @@ if ( ! isset ($_SESSION[SESSION_KEY.'g_user']))
 $cn = Dossier::connect();
 
 global $g_user, $cn,$g_parameter,$http;
-$g_user = new User($cn);
+$g_user = new Noalyss_user($cn);
 $http=new HttpInput();
 IDate::set_firstDate($g_user->get_first_week_day());
 

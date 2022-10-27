@@ -141,7 +141,7 @@ if ( $action == "view" )
 
     $repo=new Database();
     $user_id=$http->get('user_id',"number");
-    $User=new User($repo,$user_id);
+    $User=new Noalyss_user($repo,$user_id);
     $admin=0;
     $access=$User->get_folder_access($gDossier);
 
@@ -195,7 +195,7 @@ if ( $action == "view" )
 
     $Res=$cn->exec_sql("select jrn_def_id,jrn_def_name  from jrn_def ".
                                " order by jrn_def_name");
-    $sec_User=new User($cn,$user_id);
+    $sec_User=new Noalyss_user($cn,$user_id);
     $n_dossier_id=Dossier::id();
     $sHref=http_build_query(["act"=>"PDF:sec","user_id"=>$user_id,"gDossier"=>$n_dossier_id]);
 
