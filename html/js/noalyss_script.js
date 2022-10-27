@@ -87,7 +87,7 @@ function infodiv(req, json)
 
 }
 /**
- *@brief delete a row from a table (tb) the input button send the this
+ * delete a row from a table (tb) the input button send the this
  as second parameter
  */
 function deleteRow(tb, obj)
@@ -121,7 +121,7 @@ function trim(s)
 }
 
 /**
- * @brief retrieve an element thanks its ID
+ *  retrieve an element thanks its ID
  * @param ID is a string
  * @return the found object of undefined if not found
  */
@@ -139,7 +139,7 @@ function g(ID)
     }
 }
 /**
- *@brief enable the type of periode
+ * enable the type of periode
  */
 function enable_type_periode()
 {
@@ -161,7 +161,7 @@ function enable_type_periode()
 }
 
 /**
- *@brief will reload the window but it is dangerous if we have submitted
+ * will reload the window but it is dangerous if we have submitted
  * a form with POST
  */
 function refresh_window()
@@ -171,7 +171,7 @@ function refresh_window()
 
 /**
  *@fn encodeJSON(obj)
- *@brief we receive a json object as parameter and the function returns the string
+ * we receive a json object as parameter and the function returns the string
  *       with the format variable=value&var2=val2...
  */
 function encodeJSON(obj)
@@ -213,7 +213,7 @@ function show(p_param)
 }
 
 /**
- *@brief set the focus on the selected field
+ * set the focus on the selected field
  *@param Field id of  the control
  *@param selectIt : the value selected in case of Field is a object select, numeric
  */
@@ -227,7 +227,7 @@ function SetFocus(Field, SelectIt)
     return true;
 }
 /**
- * @brief set a DOM id with a value in the parent window (the caller),
+ *  set a DOM id with a value in the parent window (the caller),
  @param p_ctl is the name of the control
  @param p_value is the value to set in
  @param p_add if we don't replace the current value but we add something
@@ -238,7 +238,7 @@ function set_inparent(p_ctl, p_value, p_add)
 }
 
 /**
- * @brief set a DOM id with a value, it will consider if it the attribute
+ *  set a DOM id with a value, it will consider if it the attribute
  value or innerHTML has be used
  @param p_ctl is the name of the control
  @param p_value is the value to set in
@@ -271,7 +271,7 @@ function set_value(p_ctl, p_value, p_add)
     }
 }
 /**
- * @brief compute small math in numeric cells
+ *  compute small math in numeric cells
  * @param string value
  * @returns float 
  */
@@ -307,7 +307,7 @@ function compute_number(value)
     }
 }
 /**
- *@brief format the number change comma to point
+ * format the number change comma to point
  *@param HTML obj
  */
 function format_number(obj, p_prec)
@@ -366,24 +366,28 @@ function format_date(p_object)
     
 }
 /**
- *@brief check if the object is hidden or show and perform the opposite,
- * show the hidden obj or hide the shown one
+ * check if the object is hidden or show and perform the opposite,
+ * show the hidden obj or hide the shown one. With display : flex,
  *@param name of the object
  * @param button id of the button
  * @param rotate : if true with rotate the object of p_button otherwise
  */
 function toggleHideShow(p_obj, p_button,rotate)
 {
-    var stat = g(p_obj).style.display;
+    var div_obj=g(p_obj);
+    var stat = div_obj.style.display;
+    
     var str = g(p_button).value??"";
     if (stat === 'none')
     {
-        $(p_obj).show()
+        // specific for the DIV id search_form
+        if( div_obj.id=='search_form') { show(p_obj); } else { $(p_obj).show()}
         str = str.replace(/Afficher/, content[62]);
         g(p_button).value = str;
     } else
     {
-        $(p_obj).hide();
+        // specific for the DIV di search_form
+        if(!div_obj.id=='search_form') { hide(p_obj); } else { $(p_obj).hide()}
         str = str.replace(/Cacher/, content[63]);
         g(p_button).value = str;
     }
@@ -399,7 +403,7 @@ function toggleHideShow(p_obj, p_button,rotate)
 
 }
 /**
- *@brief open popup with the search windows
+ * open popup with the search windows
  *@param p_dossier the dossier where to search
  *@param p_style style of the detail value are E for expert or S for simple
  */
@@ -409,7 +413,7 @@ function popup_recherche(p_dossier)
     w.focus();
 }
 /**
- *@brief replace the special characters (><'") by their HTML representation
+ * replace the special characters (><'") by their HTML representation
  *@return a string without the offending char.
  */
 function unescape_xml(code_html)
@@ -422,7 +426,7 @@ function unescape_xml(code_html)
     return code_html;
 }
 /**
- *@brief Firefox splits the XML into 4K chunk, so to retrieve everything we need
+ * Firefox splits the XML into 4K chunk, so to retrieve everything we need
  * to get the different parts thanks textContent
  *@param xmlNode a node (result of var data = =answer.getElementsByTagName('code'))
  *@return all the content of the XML node
@@ -440,7 +444,7 @@ function getNodeText(xmlNode)
     return "";
 }
 /**
- *@brief change the periode in the calendar of the dashboard
+ * change the periode in the calendar of the dashboard
  *@param object select
  */
 function change_month(obj)
@@ -457,7 +461,7 @@ function change_month(obj)
 
 }
 /**
- *@brief basic answer to ajax on success, it will fill the DOMID code with
+ * basic answer to ajax on success, it will fill the DOMID code with
  * the code. In that case, you need to create the object before the Ajax.Request
  *The difference with success box is that
  *@see add_div removeDiv success_box is that the width and height are not changed ajax_misc.php
@@ -506,7 +510,7 @@ function ajax_misc_failure()
     alert_box(content[53]);
 }
 /**
- *@brief remove a document_modele
+ * remove a document_modele
  */
 function cat_doc_remove(p_dt_id, p_dossier)
 {
@@ -548,7 +552,7 @@ function cat_doc_remove(p_dt_id, p_dossier)
     );
 }
 /**
- *@brief change a document_modele
+ * change a document_modele
  */
 function cat_doc_change(p_dt_id, p_dossier)
 {
@@ -575,7 +579,7 @@ function cat_doc_change(p_dt_id, p_dossier)
 }
 
 /**
- *@brief display the popup with vat and explanation
+ * display the popup with vat and explanation
  *@param obj with 4 attributes gdossier, ctl,popup
  */
 function popup_select_tva(obj)
@@ -640,7 +644,7 @@ function popup_select_tva(obj)
 
 
 /**
- *@brief display the popup with vat and explanation
+ * display the popup with vat and explanation
  *@param obj with 4 attributes gdossier, ctl,popup
  */
 function set_tva_label(obj)
@@ -664,7 +668,7 @@ function set_tva_label(obj)
     }
 }
 /**
- *@brief display the popup with vat and explanations
+ * display the popup with vat and explanations
  *@param string req answer from ajax
  */
 function success_set_tva_label(req)
@@ -761,7 +765,7 @@ function create_div(obj)
     }
 }
 /**
- *@brief add dynamically a object for AJAX
+ * add dynamically a object for AJAX
  *@param obj.
  * the attributes are
  *   - style to add style
@@ -827,7 +831,7 @@ function waiting_box()
 
 }
 /**
- *@brief call add_div to add a DIV and after call the ajax
+ * call add_div to add a DIV and after call the ajax
  * the queryString, the callback for function for success and error management
  * the method is always GET
  *@param obj, the mandatory attributes are
@@ -860,7 +864,7 @@ function show_box(obj)
             });
 }
 /**
- *@brief receive answer from ajax and just display it into the IBox
+ * receive answer from ajax and just display it into the IBox
  * XML must contains at least 2 fields : ctl is the ID of the IBOX and
  * code is the HTML to put in it
  *@see fill_box
@@ -1236,7 +1240,7 @@ function save_periode(obj)
     return false;
 }
 /**
- *@brief basic answer to ajax on success, it will fill the ctl with
+ * basic answer to ajax on success, it will fill the ctl with
  * the code. In that case, you need to create the object before the Ajax.Request
  *The difference with success box is that
  *@see add_div removeDiv success_box is that the width and height are not changed
@@ -1540,7 +1544,7 @@ function get_profile_detail_success_obsolete(xml)
 
 }
 /**
- * @brief compute the string to position a div in a fixed way
+ *  compute the string to position a div in a fixed way
  * @return string
  */
 function fixed_position(p_sx, p_sy)
@@ -1553,7 +1557,7 @@ function fixed_position(p_sx, p_sy)
 
 }
 /**
- *@brief compute Y even if the windows has scrolled down or up
+ * compute Y even if the windows has scrolled down or up
  *@return the correct Y position
  */
 function calcy(p_sy)
@@ -1571,7 +1575,7 @@ function calcy(p_sy)
 
 }
 /**
- * @brief display a box with the menu option
+ *  display a box with the menu option
  * @param {type} gdossier
  * @param {type} pm_id
  * @returns {undefined}
@@ -1670,7 +1674,7 @@ function remove_sub_menu(p_dossier, profile_menu_id)
 
 }
 /**
- * @brief add a menu to a profile, propose only the available menu
+ *  add a menu to a profile, propose only the available menu
  * @param obj json object 
  *   - dossier  : , 
  *   - p_id : profile id , 
@@ -1712,7 +1716,7 @@ function add_menu(obj)
     );
 }
 /**
- * @brief Display a box to enter data for adding a new plugin from
+ *  Display a box to enter data for adding a new plugin from
  * the CFGMENU
  * @param {type} p_dossier
  * @returns {undefined}
@@ -1842,7 +1846,7 @@ function get_properties(obj)
     alert_box(s_type + a_array.join(","));
 }
 /**
- * @brief add a line in the form for the report
+ *  add a line in the form for the report
  * @param p_dossier dossier id to connect
  */
 function rapport_add_row(p_dossier)
@@ -1980,7 +1984,7 @@ function set_action_related(p_obj)
     }
 }
 /**
- *@brief Show a form to modify or add a new repository
+ * Show a form to modify or add a new repository
  *@param p_dossier 
  *@param r_id : repository id
  */
@@ -2097,7 +2101,7 @@ function detail_category_show(p_div, p_dossier, p_id)
     );
 }
 /**
- * @brief check if the parameter is a valid a valid date or not, returns true if it is valid otherwise
+ *  check if the parameter is a valid a valid date or not, returns true if it is valid otherwise
  * false
  * @param p_str_date the string of the date (format DD.MM.YYYY)
  */
@@ -2119,7 +2123,7 @@ function check_date(p_str_date)
 
 }
 /**
- * @brief get the string in the id and check if the date is valid
+ *  get the string in the id and check if the date is valid
  * @param p_id_date is the id of the element to check
  * @return true if the date is valid
  * @see check_date
@@ -2191,7 +2195,7 @@ function view_action(ag_id, dossier, modify)
     );
 }
 /**
- * @brief filter quickly a table
+ *  filter quickly a table
  * @param  phrase : phrase to seach
  * @param  _id : id of the table
  * @param  colnr : string containing the column number where you're searching separated by a comma
@@ -2252,7 +2256,7 @@ function filter_table(phrase, _id, colnr, start_row) {
     $('info_div').innerHTML = "";
 }
 /**
- * @brief filter quickly a list
+ *  filter quickly a list
  * @param  phrase : DOM id of the input text where we find the word to seach
  * @param  _id : id of the list
  * @returns nothing
@@ -2300,7 +2304,7 @@ function filter_list(phrase, _id) {
 }
 
 /**
- * @brief filter quickly a select 
+ *  filter quickly a select 
  * @param  phrase : DOM id of the input text where we find the word to seach
  * @param  _id : id of the list
  * @returns nothing
@@ -2338,7 +2342,7 @@ function filter_multiselect(phrase, _id) {
     }
 }
 /**
- * @brief
+ * 
  * Display the task late or for today in dashboard
  */
 function display_task(p_id)
@@ -2351,7 +2355,7 @@ function display_task(p_id)
 
 }
 /**
- * @brief
+ * 
  * Set a message in the info
  */
 function info_message(p_message)
@@ -2360,7 +2364,7 @@ function info_message(p_message)
     $('info_div').style.display = "block";
 }
 /**
- * @brief hide the info box
+ *  hide the info box
  */
 function info_hide()
 {
@@ -2402,7 +2406,7 @@ function ask_navigator(p_dossier) {
 
 }
 /**
- * @brief Display an internal windows to set the user's preference
+ *  Display an internal windows to set the user's preference
  * 
  */
 function set_preference(p_dossier) {
@@ -2436,7 +2440,7 @@ function set_preference(p_dossier) {
 
 }
 /**
- * @brief Display user's bookmark
+ *  Display user's bookmark
  * 
  */
 function show_bookmark(p_dossier) {
@@ -2472,7 +2476,7 @@ function show_bookmark(p_dossier) {
 
 }
 /**
- * @brief save the bookmark
+ *  save the bookmark
  */
 function save_bookmark() {
     try {
@@ -2505,7 +2509,7 @@ function save_bookmark() {
 
 }
 /**
- * @brief remove selected bookmark
+ *  remove selected bookmark
  */
 function remove_bookmark() {
     try {
@@ -2536,7 +2540,7 @@ function remove_bookmark() {
 
 }
 /**
- *@brief display the error message into the div error_content_div (included into error_div)
+ * display the error message into the div error_content_div (included into error_div)
  *@param message message to display
  *@note there is no protection
  */
@@ -2546,7 +2550,7 @@ function error_message(message)
     $('error_div').style.visibility = 'visible';
 }
 /**
- * @brief show the detail of a tag and propose to save it
+ *  show the detail of a tag and propose to save it
  */
 function show_tag(p_dossier, p_ac, p_tag_id, p_post)
 {
@@ -2589,7 +2593,7 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post)
 }
 
 /** 
- * @brief save the modified tag
+ *  save the modified tag
  */
 function save_tag()
 {
@@ -2654,7 +2658,7 @@ function action_tag_select(p_dossier, ag_id)
     }
 }
 /**
- * @brief Add the current tag to the current ag_id
+ *  Add the current tag to the current ag_id
  * @param {type} p_dossier
  * @param {type} ag_id
  * @param p_isgroup g it is a group , t is a single tag
@@ -2691,7 +2695,7 @@ function action_tag_add(p_dossier, ag_id, t_id,p_isgroup)
     }
 }
 /**
- * @brief remove the current tag to the current ag_id
+ *  remove the current tag to the current ag_id
  * @param {type} p_dossier
  * @param {type} ag_id
  * @returns {undefined}
@@ -2794,7 +2798,7 @@ function search_display_tag(p_dossier, p_prefix,p_object)
     }
 }
 /**
- * @brief Add the selected tag (p_tag_id) to the cell of tag_choose_td in the search screen
+ *  Add the selected tag (p_tag_id) to the cell of tag_choose_td in the search screen
  * in the search screen
  * @param {type} p_dossier
  * @param {type} p_tag_id
@@ -2949,7 +2953,7 @@ function calendar_zoom(obj)
 
 }
 /**
- * @brief add a line in the form for the stock
+ *  add a line in the form for the stock
  */
 function stock_add_row()
 {
@@ -3172,7 +3176,7 @@ function alert_box(p_message)
 
 
 /**
- * @brief Colorize the rows of the table 
+ *  Colorize the rows of the table 
  * @param string p_table id of the table
  */
 function alternate_row_color(p_table)
@@ -3537,7 +3541,7 @@ var Periode = function (p_ledger) {
         );
     };
     /**
-     * @brief Insert a periode into the list, always at the bottom !
+     *  Insert a periode into the list, always at the bottom !
      * DomId : 
      *   # FORM id :insert_periode_frm
      *   # DIV id = periode_add
@@ -4075,7 +4079,7 @@ function check_receipt_size(p_max_size,p_info)
     return true;
 }
 /**
- * @brief toggle size of a div : fullsize or normal
+ *  toggle size of a div : fullsize or normal
  * 
  */
 function full_size(p_div) {
@@ -4090,7 +4094,7 @@ function full_size(p_div) {
 }
 
 /**
- * @brief download a document from an url
+ *  download a document from an url
  */
 function download_document(p_url) 
 {
@@ -4099,7 +4103,7 @@ function download_document(p_url)
     remove_waiting_box();
 }
 /**
- * @brief download a document from a form
+ *  download a document from a form
  */
 function download_document_form(p_form_id) 
 {
@@ -4110,7 +4114,7 @@ function download_document_form(p_form_id)
    return false;
 }
 /**
- * @brief Pause a javascript
+ *  Pause a javascript
  */
 function pausecomp(millis)
  {
@@ -4120,7 +4124,7 @@ function pausecomp(millis)
   while(curDate-date < millis);
 }
 /**
- * @brief propose to reconnect
+ *  propose to reconnect
  * @returns {undefined}
  */
 function reconnect(){
@@ -4141,7 +4145,7 @@ function reconnect(){
 }
 
 /**
- * @brief enlarge an INPUT TEXT
+ *  enlarge an INPUT TEXT
  *
  */
 function enlarge_text(p_domid,p_size) {
