@@ -569,7 +569,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 /* tva */
                 if ($g_parameter->MY_TVA_USE=='Y')
                 {
-                    $idx_tva=${'e_march'.$i.'_tva_id'};
+                    $idx_tva=trim(${'e_march'.$i.'_tva_id'});
+                    \Noalyss\Dbg::echo_var(1," idx_tva [$idx_tva]",);
                     $oTva=new Acc_Tva($this->db);
                     $oTva->set_parameter('id',$idx_tva);
                     $oTva->load();

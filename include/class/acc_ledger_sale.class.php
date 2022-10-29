@@ -354,7 +354,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 if ($g_parameter->MY_TVA_USE == 'Y') {
                     /* Compute sum vat */
                     $oTva = new Acc_Tva($this->db);
-                    $idx_tva = ${'e_march' . $i . '_tva_id'};
+                    $idx_tva = trim(${'e_march' . $i . '_tva_id'});
                     $tva_item_currency = ${'e_march' . $i . '_tva_amount'};
                     $oTva->set_parameter("id", $idx_tva);
                     $oTva->load();
