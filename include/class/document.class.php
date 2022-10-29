@@ -1282,6 +1282,8 @@ class Document
                     $sell=$p_array['e_march'.$i.'_price'];
                     $qt=$p_array['e_quant'.$i];
                     $tot=bcmul($sell, $qt);
+                    $tva_amount=round($tva_amount,2);
+                    $tot=round($tot,2);
                     $tot=bcadd($tot, $tva_amount);
                     $sum=bcadd($sum, $tot);
                 }
