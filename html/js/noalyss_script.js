@@ -88,7 +88,7 @@ function infodiv(req, json)
 }
 /**
  * delete a row from a table (tb) the input button send the this
- as second parameter
+ * as second parameter
  */
 function deleteRow(tb, obj)
 {

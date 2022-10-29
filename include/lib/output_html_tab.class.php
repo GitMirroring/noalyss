@@ -282,7 +282,7 @@ class Output_Html_Tab
 
     }
     /**
-     * print the html + javascript code of the tabs and the div
+     * @brief print the html + javascript code of the tabs and the div
      *
      */
     function output()
