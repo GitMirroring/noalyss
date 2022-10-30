@@ -166,23 +166,28 @@ class Output_Html_Tab
     }
 
     /**
-     * set the mode , possible values are row or tabs
-     * @param mixed $mode
+     * @brief set the mode , possible values : row , tabs or accordeon
+     * @param string $mode possible values : row , tabs or accordeon
      */
     public function set_mode($mode)
     {
-        if ($mode != "row" && $mode != "tab") {
+        if (! in_array($mode,['tab','row','accordeon'] )) {
             throw new Exception(_("OUTPUTHTML070 Mode invalide"));
         }
         $this->mode = $mode;
         if ($mode == "row") {
             $this->set_class_tab_selected("tab_row_selected");
             $this->set_class_tab("tab_row");
-        }
-        if ( $mode == "tab") {
+
+        }elseif  ( $mode == "tab") {
             $this->set_class_tab_selected("tabs_selected");
             $this->set_class_tab("tabs");
 
+        }elseif ($mode == "accordeon") {
+            $this->set_class_tab_selected("");
+            $this->set_class_tab("tab_row");
+        } else {
+            throw new \Exception("OH186.unknow mode [$mode]");
         }
         return $this;
     }
@@ -244,9 +249,15 @@ class Output_Html_Tab
     {
         $r="";
         $nb=count($this->a_tabs);
+        $mode=$this->get_mode();
+        if ($mode=="accordeon") {
+            $r .= \Icon_Action::toggle_hide(uniqid(), sprintf("div%s", $p_not_hidden));
+
+            return $r;
+        }
         for ($i =0 ; $i < $nb;$i++)
         {
-            if ($this->get_mode()=="tab") {
+            if ($mode=="tab") {
 
                 if ( $this->a_tabs[$i]->get_id() != $p_not_hidden) {
                     $r .= sprintf("$('div%s').hide();",$this->a_tabs[$i]->get_id() );
@@ -256,7 +267,7 @@ class Output_Html_Tab
                     $r .= sprintf("$('tab%s').className='%s';",$p_not_hidden ,$this->class_tab_selected);
 
                 }
-            } elseif ($this->get_mode()=="row") {
+            } elseif ($mode=="row") {
                 if ( $this->a_tabs[$i]->get_id() != $p_not_hidden) {
                     $r .= sprintf("Effect.BlindUp('div%s',{duration : 0.7});",$this->a_tabs[$i]->get_id() );
                     $r .= sprintf("$('tab%s').className='%s';",$this->a_tabs[$i]->get_id(),$this->class_tab );
@@ -265,6 +276,8 @@ class Output_Html_Tab
                     $r .= sprintf("$('tab%s').className='%s';",$p_not_hidden ,$this->class_tab_selected);
 
                 }
+            }   else {
+                throw new \Exception("OH283.unknow mode [$mode]");
             }
         }
         return $r;
@@ -294,6 +307,7 @@ class Output_Html_Tab
         }
         printf('<div class="%s">',$this->class_div);
         printf ( '<ul class="%s">',$this->class_tab_main);
+        $mode=$this->get_mode();
         for ($i=0; $i<$nb; $i++)
         {
             printf ('<li id="tab%s" class="%s">',
@@ -326,33 +340,39 @@ class Output_Html_Tab
                     echo '</a>';
                     break;
                 case 'static':
-                    // show one , hide other
+                    // show one , hide other except for accordeon
                     $script=$this->build_js($this->a_tabs[$i]->get_id());
-                    printf('<a class="%s" onclick="%s">', $this->class_anchor,$script);
+                    if  ($mode != 'accordeon')  {
+                        printf('<a class="%s" onclick="%s">', $this->class_anchor,$script);
+                    } else {
+                        print $script;
+                    }
+
                     printf ('<span class="title_%s"> %s </span>',
                         $this->get_class_tab(),
                         $this->a_tabs[$i]->get_title()
                         );
 
                     echo '</a>';
-                    
+                    $script=$this->build_js($this->a_tabs[$i]->get_id());
+
                     break;
                 default:
                     throw new Exception('OUTPUTHTMLTAB01');
                     break;
             }
-            if ( $this->get_mode()=="row") {
+            if ( $mode =="row" || $mode == "accordeon") {
                 $this->print_comment($i);
             }
             echo '</li>';
-            if ( $this->get_mode()=="row") {
+            if ( $mode =="row" || $mode == "accordeon") {
                 $this->print_div($i);
             }
         }
         echo '</ul>';
         echo '</div>';
         
-        if ( $this->get_mode()=="tab" ) {
+        if ( $mode=="tab" ) {
             for ($i=0;$i<$nb;$i++)
             {
                 $this->print_div($i);
@@ -363,9 +383,12 @@ class Output_Html_Tab
     private function print_div($p_index)
     {
         $class="";
-        if ( $this->get_mode() == "row") {
+        if ( $this->get_mode() == "row" ) {
             $class="tab_row";
+        } elseif ( $this->get_mode() == 'accordeon') {
+            $class="";
         }
+
 
         printf('<div id="div%s" style="display:none;clear:both" class="%s">',
                             $this->a_tabs[$p_index]->get_id(),
