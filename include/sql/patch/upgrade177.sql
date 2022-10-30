@@ -15,6 +15,8 @@ select f_id,
        cd.fd_id as card_category
 from contact_data cd	;
 
+insert into fiche_def_ref(frd_id,frd_text) values(16,'Contact') on conflict  do nothing;
+
 insert into attr_min values (16,32);
 
 insert into jnt_fic_attr (fd_id,jnt_order,ad_id) select fd_id,10,32 from fiche_def where frd_id=16 on conflict(fd_id,ad_id) do nothing;
