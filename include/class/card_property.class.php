@@ -167,7 +167,7 @@ class Card_Property
             $result['input']->id = uniqid('accounting');
             $result['input']->set_attribute('ipopup', 'ipop_account');
             $result['input']->set_attribute('jrn', '0');
-            $result['input']->set_attribute('account', "av_text" . $this->ad_id);
+            $result['input']->set_attribute('account',  $result['input']->id);
             $result['input']->dbl_click_history();
             $result['input']->value = $this->av_text;
             //  account created automatically
