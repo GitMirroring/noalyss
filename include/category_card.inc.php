@@ -28,7 +28,7 @@
  */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-NoalyssDbg::echo_file(__FILE__);
+Noalyss\Dbg::echo_file(__FILE__);
 global $http;
 
 $str_dossier=Dossier::get();
