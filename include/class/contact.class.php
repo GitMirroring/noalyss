@@ -127,9 +127,7 @@ class contact extends Fiche
         if ( !empty ($p_search) ) { $this->filter_search($p_search);}
 
         $sql=$this->build_sql($this->filter);
-        if (DEBUGNOALYSS > 1) {
-            print_r("Contact::summary ($sql)");
-        }
+        \Noalyss\Dbg::echo_var(1,"Contact::summary ($sql)");
         // Creation of the nav bar
         // Get the max numberRow
         $all_contact=$this->cn->get_value("select count(*) from ($sql) as m");
