@@ -1226,7 +1226,7 @@ div#wait_box
     border:1px solid #00008B;
     width: 260px;
     opacity: 0.8;
-    border-radius: 5px;
+    border-radius: 20px;
 }
 #wait_box h2
 {
@@ -3251,3 +3251,50 @@ li.li-active {
 
  }
 
+ /**
+  * Waiting box and animation in CSS
+  */
+ #wait_box {
+     height:110px;
+ }
+ #wait_box p {
+     margin-top:10px;
+     letter-spacing: 4px;
+     font-weight: bold;
+ }
+ .loading_msg {
+     margin-top:20px;
+     border: 1px solid navy;
+     width: 1.5rem;
+     height: 1.5rem;
+     display: inline-block;
+     animation: turn-color 1.5s linear 0s infinite forwards;
+     position: relative;
+     left: 0px;
+     top: 10px;
+    background: rgb(176, 173, 230)
+
+ }
+
+
+ @keyframes turn-color{
+     0% { transform : rotate(0deg);opacity:0.1;}
+     50% { transform : rotate(90deg);opacity:0.9}
+     100% { transform : rotate(180deg);opacity:0.1}
+ }
+
+ /**
+  * style in TEXTAREA wysiwyg
+  */
+ div.nicEdit-main>blockquote {
+     margin-left:2rem !important;
+ }
+
+ div.nicEdit-main hr {
+     background-color: #756f6f !important;
+     width:90%  !important;
+     margin-left:5% !important;
+     margin-right:5% !important;
+     background-size:1px !important;
+     height:2px;
+ }

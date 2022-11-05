@@ -1236,26 +1236,22 @@ var nicColorOptions = {
 
 var nicEditorColorButton = nicEditorAdvancedButton.extend({	
 	addPane : function() {
-			var colorList = {0 : '00',1 : '33',2 : '66',3 :'99',4 : 'CC',5 : 'FF'};
+
 			var colorItems = new bkElement('DIV').setStyle({width: '270px'});
-			
-			for(var r in colorList) {
-				for(var b in colorList) {
-					for(var g in colorList) {
-						var colorCode = '#'+colorList[r]+colorList[g]+colorList[b];
-						
-						var colorSquare = new bkElement('DIV').setStyle({'cursor' : 'pointer', 'height' : '15px', 'float' : 'left'}).appendTo(colorItems);
+			const aColorCode=['000000','808080','C0C0C0','800000','FFFFFF','FF0000','FFB6C1','ff8c00','800080','FF00FF','008000','00FF00','808000','FFFF00','000080','0000FF','008080','00FFFF'];
+
+            for ( let x=0;x<aColorCode.length;x++) {
+
+                        let colorCode='#'+aColorCode[x];
+						var colorSquare = new bkElement('DIV').setStyle({'cursor' : 'pointer', 'height' : '30px', 'float' : 'left'}).appendTo(colorItems);
 						var colorBorder = new bkElement('DIV').setStyle({border: '2px solid '+colorCode}).appendTo(colorSquare);
-						var colorInner = new bkElement('DIV').setStyle({backgroundColor : colorCode, overflow : 'hidden', width : '11px', height : '11px'}).addEvent('click',this.colorSelect.closure(this,colorCode)).addEvent('mouseover',this.on.closure(this,colorBorder)).addEvent('mouseout',this.off.closure(this,colorBorder,colorCode)).appendTo(colorBorder);
+						var colorInner = new bkElement('DIV').setStyle({backgroundColor : colorCode, overflow : 'hidden', width : '26px', height : '26px'}).addEvent('click',this.colorSelect.closure(this,colorCode)).addEvent('mouseover',this.on.closure(this,colorBorder)).addEvent('mouseout',this.off.closure(this,colorBorder,colorCode)).appendTo(colorBorder);
 						
 						if(!window.opera) {
 							colorSquare.onmousedown = colorInner.onmousedown = bkLib.cancelEvent;
 						}
-
-					}	
-				}	
-			}
-			this.pane.append(colorItems.noSelect());	
+                    }
+			this.pane.append(colorItems.noSelect());
 	},
 	
 	colorSelect : function(c) {

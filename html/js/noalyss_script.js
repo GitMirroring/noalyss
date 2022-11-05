@@ -500,8 +500,12 @@ function success_misc(req)
 }
 function loading()
 {
-    var str = '<p>' + content[64] + '</p>';
-    str = str + '<image src="image/loading.gif" alt="chargement"></image>';
+    var str='<div class="loading_msg"></div>';
+    str+='<div class="loading_msg"></div>';
+    str+='<div class="loading_msg"></div>';
+    str+='<div class="loading_msg"></div>';
+    str+='<div class="loading_msg"></div>';
+
     return str;
 }
 
@@ -818,7 +822,7 @@ function waiting_node()
 function waiting_box()
 {
     var obj = {
-        id: 'wait_box', html: '<h2 class="title">' + content[65] + '</h2>' + loading()
+        id: 'wait_box', html:  loading()+'<p>' + content[65] + '</p>'
     };
     var y = fixed_position(10, 250)
     obj.style = y + ";width:20%;margin-left:40%;";
