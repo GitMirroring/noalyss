@@ -126,7 +126,7 @@ class IPoste extends HtmlInput
     public function dsp_button()
     {
 		$this->id=($this->id=="")?$this->name:$this->id;
-        $javascript='search_poste(this)';
+        $javascript='search_accounting(this)';
         $button=Icon_Action::icon_magnifier($this->id."_bt", $javascript);
         /*  add the property */
         $sc=$this->get_js_attr();

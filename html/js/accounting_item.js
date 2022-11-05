@@ -29,7 +29,7 @@
  * - acc_query for the initial query
  *@see ajax_poste.php
  */
-function search_poste(obj)
+function search_accounting(obj)
 {
 	var sx=0;
 	if ( window.scrollY)
