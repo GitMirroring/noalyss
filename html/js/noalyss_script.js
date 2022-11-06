@@ -585,8 +585,9 @@ function cat_doc_change(p_dt_id, p_dossier)
 /**
  * display the popup with vat and explanation
  *@param obj with 4 attributes gdossier, ctl,popup
+ *@param p_function_callback callback function to be called after,
  */
-function popup_select_tva(obj)
+function popup_select_tva(obj,p_function_callback)
 {
     try
     {
@@ -633,6 +634,9 @@ function popup_select_tva(obj)
                             add_div(popup);
                             $('lk_tva_select_table').focus();
                             sorttable.makeSortable($('tva_select_table'));
+                            if ( p_function_callback) {
+                                p_function_callback.call(null);
+                            }
                         } catch (e)
                         {
                             alert_box("success_popup_select_tva " + e.message);
@@ -3820,10 +3824,7 @@ function toggle_onoff(icon_domid, p_value_domid)
  */
 function toggle_checkbox_onoff(icon_domid, p_value_domid)
 {
-    console.log("toggle_checkbox_onoff");
-    console.log("icon_domid"+icon_domid);
-    console.log("p_value_domid"+p_value_domid);
-    
+
     if ($(p_value_domid).value == 0) {
         $(p_value_domid).value = 1;
         $(icon_domid).innerHTML = '&#xe741;';
