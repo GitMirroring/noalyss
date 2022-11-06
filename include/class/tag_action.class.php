@@ -76,7 +76,7 @@ class Tag_Action extends Tag
     function update_search_cell($p_prefix)
     {
         $data=$this->get_data();
-        echo '<span id="sp_'.$p_prefix.$data->t_id.'" class="tagcell">';
+        printf ('<span id="sp_%s%s" class="tagcell tagcell-color%s">',$p_prefix,$data->t_id,$data->t_color);
         echo h($data->t_tag);
         echo HtmlInput::hidden($p_prefix.'tag[]', $data->t_id);
         $js=sprintf("$('sp_".$p_prefix.$data->t_id."').remove();");
