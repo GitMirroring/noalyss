@@ -22,28 +22,29 @@
 /*!\file
  * \brief Html Input
  */
-/**
- *@brief let you choose a TVA in a popup
- *@code
-    $a=new IPopup('popup_tva');
-    $a->set_title('Choix de la tva');
-    echo $a->input();
-    $tva=new ITva_Popup("tva1");
-    $tva->with_button(true);
-    // You must add the attributes gDossier, popup
-    $tva->set_attribute('popup','popup_tva');
-    $tva->set_attribute('gDossier',dossier::id());
 
-    // We can add a label for the code
-    $tva->add_label('code');
-    $tva->js='onchange="set_tva_label(this);"';
-    echo $tva->input();
-@endcode
-*/
+/**
+ * @brief let you choose a TVA in a popup
+ * @code
+ * $a=new IPopup('popup_tva');
+ * $a->set_title('Choix de la tva');
+ * echo $a->input();
+ * $tva=new ITva_Popup("tva1");
+ * $tva->with_button(true);
+ * // You must add the attributes gDossier, popup
+ * $tva->set_attribute('popup','popup_tva');
+ * $tva->set_attribute('gDossier',dossier::id());
+ *
+ * // We can add a label for the code
+ * $tva->add_label('code');
+ * $tva->js='onchange="set_tva_label(this);"';
+ * echo $tva->input();
+ * @endcode
+ */
 class ITva_Popup extends HtmlInput
 {
     /**
-     *@brief by default, the p_name is the name/id of the input type
+     * @brief by default, the p_name is the name/id of the input type
      * the this->button is false (control if a button is visible) and
      * this->in_table=false (return the widget inside a table)
      * this->code is a span widget to display the code (in this case, you will
@@ -52,137 +53,145 @@ class ITva_Popup extends HtmlInput
      * by default it is 'popup_select_tva(this)';
      */
     private $filter; //!< filter the VAT by ledger PURCHASE or SALE or NO FILTER, default=NO
-    public function __construct($p_name=null,$p_value="",$p_id="")
+
+    public function __construct($p_name = null, $p_value = "", $p_id = "")
     {
-        $this->name=$p_name;
-        $this->button=true;
-        $this->in_table=false;
-        $this->value=$p_value;
-        $this->id=$p_id;
-        $this->filter='none';
+        $this->name = $p_name;
+        $this->button = true;
+        $this->in_table = false;
+        $this->value = $p_value;
+        $this->id = $p_id;
+        $this->filter = 'none';
     }
+
     function with_button($p)
     {
-        if ($p == true )
-            $this->button=true;
+        if ($p == true)
+            $this->button = true;
         else
-            $this->button=false;
+            $this->button = false;
     }
+
     /*!\brief show the html  input of the widget*/
-    public function input($p_name=null,$p_value=null)
+    public function input($p_name = null, $p_value = null)
     {
-        $this->name=($p_name==null)?$this->name:$p_name;
-        $this->value=($p_value==null)?$this->value:$p_value;
-        $this->js=(isset($this->js))?$this->js:'';
-	$this->id=($this->id=="")?$this->name:$this->id;
+        $this->name = ($p_name == null) ? $this->name : $p_name;
+        $this->value = ($p_value == null) ? $this->value : $p_value;
+        $this->js = (isset($this->js)) ? $this->js : '';
+        $this->id = ($this->id == "") ? $this->name : $this->id;
+        if ($this->readOnly == true) return $this->display();
 
-        if ( $this->readOnly==true) return $this->display();
+        $this->set_attribute('gDossier', dossier::id());
+        $this->set_attribute('ctl', $this->name);
 
-        $str='<input type="TEXT"  class="input_text" name="%s" value="%s" id="%s" size="3" %s>';
-        $r=sprintf($str,$this->name,$this->value,$this->id,$this->js);
+        $code="";
 
-        if ($this->in_table)
-            $table='<table>'.'<tr>'.td($r);
-
-        if ( $this->button==true && ! $this->in_table)
-            $r.=$this->dbutton();
-
-        if ( $this->button==true &&  $this->in_table)
-            $r=$table.td($this->dbutton()).'</tr></table>';
-
-        if ( isset($this->code))
-        {
-            if ( $this->cn != NULL)
-            {
+        // code is a span containing the label of the VAT (see add_label)
+        if (isset($this->code)) {
+            if ($this->cn != NULL) {
                 /* check if tva_id == integer */
-                if (trim($this->value)!='' &&  isNumber($this->value)==1 && strpos($this->value,',') === false)
-                    $this->code->value=$this->cn->get_value('select tva_label from tva_rate where tva_id=$1',
-                                                            array($this->value));
-                ;
+                if (trim($this->value) != '' && isNumber($this->value) == 1 && strpos($this->value, ',') === false)
+                    $this->code->value = $this->cn->get_value('select tva_label from tva_rate where tva_id=$1',
+                        array($this->value));;
             }
-            $r.=$this->code->input();
-            if ($this->table==1) $r=td($r);
-            $this->set_attribute('jcode',$this->code->name);
-            $this->set_attribute('gDossier',dossier::id());
-            $this->set_attribute('ctl',$this->name);
-            $r.=$this->get_js_attr();
+            $this->set_attribute('jcode', $this->code->name);
+            $code = $this->code->input();
 
         }
+        $strAttribut = $this->get_node_attribute();
 
+
+        $str = '<input type="TEXT"  class="input_text" name="%s" value="%s" id="%s" size="3" %s %s>';
+        $r = sprintf($str, $this->name, $this->value, $this->id, $this->js, $strAttribut);
+        $r.=$code;
+        if ($this->in_table)
+            $table = '<table>' . '<tr>' . td($r);
+
+        if ($this->button == true && !$this->in_table)
+            $r .= $this->dbutton();
+
+        if ($this->button == true && $this->in_table)
+            $r = $table . td($this->dbutton()) . '</tr></table>';
+
+        if ($this->table == 1) $r = td($r);
         return $r;
 
     }
+
     /**
-     * Set a filter to limit the choice of VAT ; 
-     * possible values are : 
+     * Set a filter to limit the choice of VAT ;
+     * possible values are :
      *         - sale  if there is an accounting for sale
      *         - purchase  if there is an accounting for purchase
-     *         - none  : show VAT 
-     * 
+     *         - none  : show VAT
+     *
      */
     function set_filter($p_filter)
     {
-        $this->filter=$p_filter;
+        $this->filter = $p_filter;
     }
+
     /**
-     *@brief show a button, if it is pushed show a popup to select the need vat
-     *@note
+     * @brief show a button, if it is pushed show a popup to select the need vat
+     * @note
      * - a ipopup must be created before with the name popup_tva
      * - the javascript noalyss_script.js must be loaded
-     *@return string with html code
+     * @return string with html code
      */
     function dbutton()
     {
-        if( trim($this->name)=='') throw new Exception (_('Le nom ne peut être vide'));
-		$this->id=($this->id=="")?$this->name:$this->id;
+        if (trim($this->name) == '') throw new Exception (_('Le nom ne peut être vide'));
+        $this->id = ($this->id == "") ? $this->name : $this->id;
 
         // button
-        $bt=new ISmallButton('bt_'.$this->id);
-		$bt->tabindex="-1";
-        $bt->label=_(' TVA ');
-        $bt->set_attribute('gDossier',dossier::id());
-        $bt->set_attribute('ctl',$this->id);
-        $bt->set_attribute('popup','popup_tva');
-        if ( isset($this->code))
-            $bt->set_attribute('jcode',$this->code->name);
-        if ( isset($this->compute))
-            $bt->set_attribute('compute',$this->compute);
+        $bt = new ISmallButton('bt_' . $this->id);
+        $bt->tabindex = "-1";
+        $bt->label = _(' TVA ');
+        $bt->set_attribute('gDossier', dossier::id());
+        $bt->set_attribute('ctl', $this->id);
+        $bt->set_attribute('popup', 'popup_tva');
+        if (isset($this->code))
+            $bt->set_attribute('jcode', $this->code->name);
+        if (isset($this->compute))
+            $bt->set_attribute('compute', $this->compute);
         $bt->set_attribute("filter", $this->filter);
-        $bt->javascript=(isset($this->but_javascript))?$this->but_javascript:'popup_select_tva(this)';
-        $r=$bt->input();
+        $bt->javascript = (isset($this->but_javascript)) ? $this->but_javascript : 'popup_select_tva(this)';
+        $r = $bt->input();
         return $r;
     }
 
     /*!\brief print in html the readonly value of the widget*/
     public function display()
     {
-        $cn=  Dossier::connect();
-        $tva=new Acc_Tva($cn, $this->value);
-        
-        $comment=($tva->load()  != "-1")? $tva->tva_label:"";
-	$res=sprintf('<input type="text" name="%s" size="6" class="input_text_ro" value="%s" id="%s" readonly="">%s',$this->name,$this->value,$this->name,$comment);
+        $cn = Dossier::connect();
+        $tva = new Acc_Tva($cn, $this->value);
+
+        $comment = ($tva->load() != "-1") ? $tva->tva_label : "";
+        $res = sprintf('<input type="text" name="%s" size="6" class="input_text_ro" value="%s" id="%s" readonly="">%s', $this->name, $this->value, $this->name, $comment);
         return $res;
     }
+
     /**
-     *@brief add a field to show the selected tva's label
-     *@param $p_code is the name of the label where you can see the label of VAT
-     *@param $p_cn is a database connection if NULL it doesn't seek in the database
+     * @brief add a field to show the selected tva's label
+     * @param $p_code is the name of the label where you can see the label of VAT
+     * @param $p_cn is a database connection if NULL it doesn't seek in the database
      */
-    public function add_label($p_code,$p_cn=null)
+    public function add_label($p_code, $p_cn = null)
     {
-        $this->cn=$p_cn;
-        $this->code=new ISpan($p_code);
+        $this->cn = $p_cn;
+        $this->code = new ISpan($p_code);
     }
+
     static public function test_me()
     {
-        $a=new IPopup('popup_tva');
+        $a = new IPopup('popup_tva');
         $a->set_title('Choix de la tva');
         echo $a->input();
-        $tva=new ITva_Popup("tva1");
+        $tva = new ITva_Popup("tva1");
         $tva->with_button(true);
         // We can add a label for the code
         $tva->add_label('code');
-        $tva->js='onchange="set_tva_label(this);"';
+        $tva->js = 'onchange="set_tva_label(this);"';
         echo $tva->input();
         echo $tva->dbutton();
     }

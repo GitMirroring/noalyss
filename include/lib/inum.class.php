@@ -92,12 +92,13 @@ class INum extends IText
         $extra=(isset($this->extra))?$this->extra:"";
 
         $this->value=str_replace('"', '', $this->value);
-        if (!isset($this->css_size))
+        $strAttribute=$this->get_node_attribute();
+        if (!isset($this->css_size)  || empty ($this->css_size))
         {
             $r='<INPUT '.$this->style.' TYPE="TEXT" id="'.
                     $this->id.'"'.$t.
                     'NAME="'.$this->name.'" VALUE="'.$this->value.'"  '.
-                    'SIZE="'.$this->size.'" '.$this->javascript."  $this->extra >";
+                    'SIZE="'.$this->size.'" '.$this->javascript."  $this->extra $strAttribute >";
             /* add tag for column if inside a table */
         }
         else
@@ -105,7 +106,7 @@ class INum extends IText
             $r='<INPUT '.$this->style.' TYPE="TEXT" id="'.
                     $this->id.'"'.$t.
                     'NAME="'.$this->name.'" VALUE="'.$this->value.'"  '.
-                    ' style="width:'.$this->css_size.';" '.$this->javascript."  $this->extra >";
+                    ' style="width:'.$this->css_size.';" '.$this->javascript."  $this->extra $strAttribute >";
         }
 
         if ($this->table==1)

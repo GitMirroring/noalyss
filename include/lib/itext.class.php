@@ -53,6 +53,8 @@ class IText extends HtmlInput
 	// Double quote makes troubles 
 	$this->value=noalyss_str_replace('"','',$this->value);
 
+    // compute attribute used by javascript
+        $strAttribute=$this->get_node_attribute();
         $t= 'title="'.$this->title.'" ';
         $autofocus=($this->autofocus)?" autofocus ":"";
         $require=($this->require)?"required":"";
@@ -60,7 +62,7 @@ class IText extends HtmlInput
         {
             
             $r=  sprintf('<INPUT TYPE="TEXT" %s id="%s" name="%s" value="%s" placeholder="%s" title="%s"
-                     Size="%s"  %s %s  %s %s>
+                     Size="%s"  %s %s  %s %s %s>
                     ',$this->style,
                     $this->id,
                     $this->name,
@@ -71,11 +73,12 @@ class IText extends HtmlInput
                     $this->javascript,
                     $this->extra,
                     $autofocus,
-                    $require
+                    $require,
+                $strAttribute
                     );
         } else {
             $r=  sprintf('<INPUT TYPE="TEXT" %s id="%s" name="%s" value="%s" placeholder="%s" title="%s"
-                     style="width:%s;"  %s %s  %s %s>
+                     style="width:%s;"  %s %s  %s %s %s>
                     ',$this->style,
                     $this->id,
                     $this->name,
@@ -86,7 +89,8 @@ class IText extends HtmlInput
                     $this->javascript,
                     $this->extra,
                     $autofocus,
-                    $require
+                    $require,
+                    $strAttribute
                     );
         }
 
