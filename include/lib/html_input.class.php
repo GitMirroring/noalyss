@@ -68,7 +68,7 @@ class HtmlInput
     var $javascript;                /*!< $javascript  is the javascript to add to the widget */
     var $ctrl;   /*!<$ctrl is the control to update (see js_search_card_control) */
     var $tabindex;
-
+    var $require;
     function __construct($p_name="", $p_value="", $p_id="")
     {
         $this->name=$p_name;
@@ -85,6 +85,7 @@ class HtmlInput
         $this->extra2="all";
         $this->attribute=array();
         $this->id=$p_id;
+        $this->require=false;
     }
 
     function setReadOnly($p_read)
@@ -187,13 +188,14 @@ class HtmlInput
     //#####################################################################
     /* Debug
      */
-    function debug()
+    function __toString()
     {
-        echo "Type ".$this->type."<br>";
-        echo "name ".$this->name."<br>";
-        echo "value".$this->value."<br>";
-        $readonly=($this->readonly==false)?"false":"true";
-        echo "read only".$readonly."<br>";
+        $r= "Type ".$this->type."<br>";
+        $r.= "name ".$this->name."<br>";
+        $r.= "value".$this->value."<br>";
+        $readonly=(isset($this->readOnly) && $this->readOnly==false)?"false":"true";
+        $r.= "read only".$readonly."<br>";
+        return $r;
     }
 
     static function submit($p_name, $p_value, $p_javascript="",
