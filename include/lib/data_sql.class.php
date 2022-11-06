@@ -76,8 +76,23 @@ abstract class Data_SQL
    var $type;           //! Type of the data
    var $date_format;    //! defaullt date format
    var $default;
-   
-   function __construct(DatabaseCore $p_cn, $p_id=-1)
+
+    public function __toString(): string
+    {
+        $ret="values ";
+        foreach ($this->name as $name) {
+            $ret.="[ $name => {$this->$name} ]";
+        }
+
+        $ret.="| type ".print_r($this->type,true);
+        $ret.="| default ".print_r($this->default,true);
+        $ret.="| primary key ".$this->primary_key;
+        $ret.="| date_format ".$this->date_format;
+        return $ret;
+    }
+
+
+    function __construct(DatabaseCore $p_cn, $p_id=-1)
     {
         $this->cn=$p_cn;
         $pk=$this->primary_key;
