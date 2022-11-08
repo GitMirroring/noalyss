@@ -35,7 +35,7 @@ class Noalyss_User
 
     var $id; //!<  in account_repository , ac_users.use_id
     
-    var $db; //!< database connx
+    var $db; //!< database connx to the folder NOT repository
     var $admin; //!< is or is not admin
     var $valid; //!< is or is not valid
     var $first_name;
@@ -53,12 +53,24 @@ class Noalyss_User
         if ($p_id==-1)
         {
             $this->connect_user();
+            $this->set_session_var();
         }
         else // if p_id is set get data of another user
         {
             $this->id=$p_id;
             $this->load();
         }
+    }
+
+    /**
+     * @brief   put user_login into Postgres config (session), it can be used for tracking users activities
+      * @return void
+     */
+    protected function  set_session_var()
+    {
+        $this->db->exec_sql(sprintf("select set_config('noalyss.user_login','%s',false)",
+        Database::escape_string($_SESSION[SESSION_KEY.'g_user'])));
+
     }
     public function __toString(): string
     {
