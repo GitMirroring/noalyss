@@ -39,7 +39,7 @@ if (isset($_REQUEST['f_id']))
 if (isset($_REQUEST['sb']))
 	$supl_hidden.=HtmlInput::hidden('sb', $http->request("sb"));
 $supl_hidden.=HtmlInput::hidden('ac', $http->request("ac"));
-
+\Noalyss\Dbg::echo_file(__FILE__);
 /**
  * if no group available , then stop
  */

@@ -28,7 +28,7 @@ require_once '../include/constant.php';
 global $g_user;
 
 $cn=new Database();
-$g_user=new \User($cn);
+$g_user=new \Noalyss_User($cn);
 $g_user->check();
 if ( !defined ("ALLOWED") ) { define ('ALLOWED',true); }
 

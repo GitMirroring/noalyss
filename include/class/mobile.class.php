@@ -153,7 +153,7 @@ class Mobile
             echo __CLASS__."&rarr;".__FUNCTION__;
         }
         $cn=Dossier::connect();
-        $user=new Noalyss_user($cn);
+        $user=new \Noalyss_user($cn);
 
         $aModule=$cn->get_array("select * 
             from profile_mobile pm 

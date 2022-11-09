@@ -25,7 +25,7 @@ if (!defined('ALLOWED'))
  * @file
  * @brief  show the mobile menu
  */
-\Noalyss\Dbg::dbgecho_file(__FILE__);
+\Noalyss\Dbg::echo_file(__FILE__);
 ?>
 <img src="<?=NOALYSS_URL?>/image/logo9000.png" width="100%" style="position:absolute;top:0px;left:0px;z-index:-1;opacity: 11%">
 <div id="mobile_module"  >
