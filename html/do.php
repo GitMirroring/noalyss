@@ -58,6 +58,9 @@ $g_user = new Noalyss_user($cn);
 $http=new HttpInput();
 IDate::set_firstDate($g_user->get_first_week_day());
 
+// check that the current user is saved into PostgreSQL setting in order to use it in PLPGSQL
+\Noalyss\Dbg::echo_var(1,sprintf("current user is [%s]",$cn->get_value("select current_setting('noalyss.user_login')")));
+
 /*
  * check that the database is not empty
  */

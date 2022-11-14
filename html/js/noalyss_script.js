@@ -3058,7 +3058,7 @@ function unselect_other_tab(p_tab)
         }
     } catch (e) {
         if (console)
-            console.log(e.message);
+            console.error(e.message);
         alert_box('unselect_other_tab ' + e.message);
     }
 }
@@ -3870,26 +3870,7 @@ function json_concat(p_json1,p_json2)
 
 }
 
-/**
- * return a json object which is the merge of the 2 json objects
- * from 2015 : Object.assign(obj1, obj2);
- * @param p_json1 object 1 to merge
- * @param p_json2 object 2 to merge
- * @returns new json object
- */
-function json_concat(p_json1,p_json2)
-{
 
-        var result = {};
-        for (var key in p_json1) {
-            result[key] = p_json1[key];
-        }
-        for (var key in p_json2) {
-            result[key] = p_json2[key];
-        }
-        return result;
-
-}
 /**
  * this function unchecks other checkbox , it mimics the way a radio behaves
  * @param string p_click is the DOM id of the checkbox you clicked
@@ -3912,7 +3893,6 @@ function uncheck_other(p_click,p_name)
 var operation_tag = function (p_div)
 {
     this.ctl = p_div;
-    console.log("ctl "+p_div);
     /**
      * Show a list of tag which can be added to the current followup document
      * @param {type} p_dossier
@@ -3976,7 +3956,6 @@ var operation_tag = function (p_div)
                         onFailure: ajax_misc_failure,
                         onSuccess: function (req, j) {
                             var answer = req.responseXML;
-                            console.log("1-ctl "+ctl);
                             var html = answer.getElementsByTagName('code');
                             if (html.length === 0)
                             {
@@ -4004,7 +3983,6 @@ var operation_tag = function (p_div)
     this.remove = function (p_dossier, p_jrn_id, t_id)
     {
         var ctl=this.ctl;
-         console.log("remove-1.ctl "+ctl);
         confirm_box(null, content[50], function () {
             try {
                 waiting_box();
@@ -4026,7 +4004,6 @@ var operation_tag = function (p_div)
                                 var code_html = getNodeText(html[0]);
                                 code_html = unescape_xml(code_html);
                                 remove_waiting_box();
-                                console.log("remove-2.ctl "+ctl);
                                 $('operation_tag_td'+ctl).innerHTML = code_html;
 
                             }
@@ -4050,11 +4027,14 @@ function check_file_size(p_object,p_max_size)
     var sum_file=0;
     for(var i=0;i<p_object.elements.length;i++) {
         var a=p_object.elements[i];
+
         if ( p_object.elements[i].getAttribute('type')=="file" )
         {
-            if( p_object.elements[i].files[0]){
+            for (let x = 0; x < p_object.elements[i].files.length ; x++) {
+                if( p_object.elements[i].files[x]){
 
-                sum_file+=p_object.elements[i].files[0].size;
+                    sum_file+=p_object.elements[i].files[x].size;
+                }
             }
         }
     }

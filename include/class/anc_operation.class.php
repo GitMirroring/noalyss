@@ -504,7 +504,8 @@ class Anc_Operation
               record_log($e);
         }
     }
-    /*!\brief display the form for PA
+    /*!
+     * \brief display the form for PA
      *\param $p_array contains POST (or GET) data (val[] hplan[][] op[])
      * \param $p_null = 1 if PA optional otherwise 0 mandatory
      * \param $p_mode == form 1 ==> read/write otherwise 0==>readonly

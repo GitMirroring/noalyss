@@ -1,9 +1,12 @@
 <?php
-if ( DEBUGNOALYSS > 1 ){ echo __DIR__."/".__FILE__;}
+
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 $uniq=uniqid("tab",TRUE);
 ?><div>
+    <?php
+    \Noalyss\Dbg::echo_file(__FILE__);
+    ?>
 <div style="float:left;">
 
 
