@@ -66,7 +66,7 @@ class Noalyss_User
      * @brief   put user_login into Postgres config (session), it can be used for tracking users activities
       * @return void
      */
-    protected function  set_session_var()
+    public function  set_session_var()
     {
         $this->db->exec_sql(sprintf("select set_config('noalyss.user_login','%s',false)",
         Database::escape_string($_SESSION[SESSION_KEY.'g_user'])));
@@ -132,7 +132,11 @@ class Noalyss_User
         $this->id=-1;
         $this->lang=(isset($_SESSION[SESSION_KEY.'g_lang']))?$_SESSION[SESSION_KEY.'g_lang']:'fr_FR.utf8';
         $this->access_mode=$_SESSION[SESSION_KEY."access_mode"];
-        $cn=new Database();           
+        $cn=new Database();
+
+        // share user login with the repository
+        $cn->exec_sql(sprintf("select set_config('noalyss.user_login','%s',false)",
+            Database::escape_string($_SESSION[SESSION_KEY.'g_user'])));
         
         if ($this->can_connect() == 0 || $this->load()==-1  )
         {
