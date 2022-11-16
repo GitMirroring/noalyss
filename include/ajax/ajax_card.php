@@ -242,7 +242,7 @@ case 'st':
         case 'cred':
             $l=new Acc_Ledger($cn,$ledger);
             $prop=$l->get_propertie();
-            if ( empty($prop) || empty($prop['jrn_def_fiche_cred'])=='')
+            if ( empty($prop) || empty($prop['jrn_def_fiche_cred']))
             {
                 $where ="";
             }else {
@@ -286,7 +286,6 @@ case 'st':
              break;
     }
     $sql.=" ".$where." order by fd_label";
-
     $array=$cn->get_array($sql);
     
     $list_fiche="";
