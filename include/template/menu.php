@@ -1,13 +1,8 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-if (DEBUGNOALYSS > 1 ) { 
-    echo <<<EOF
-    <p> LEVEL MENU IS {$level}
-    access_code {$access_code}
-EOF;
-  //  print_r($amenu);
-};
+ \Noalyss\Dbg::echo_var(1,"LEVEL MENU IS {$level}    access_code {$access_code}");
+
 
 ?><div class="">
     <?php 

@@ -57,9 +57,8 @@ $selCurrency->selected=$print_operation_currency->getData_operation()->getCurren
 
 
 
-if (DEBUGNOALYSS > 1) {
- echo "print_operation";   var_dump($print_operation_currency->getData_operation());
-}
+if ( DEBUGNOALYSS > 1) { echo \Noalyss\Dbg::hidden_info("print_operation ",$print_operation_currency->getData_operation());}
+
 
 $msg["all"]=_("Aucun filtre");
 $msg["by_card"]=_("Par fiche");
@@ -174,9 +173,10 @@ $select_box->add_javascript(_("Par catégorie de fiche"),"show_currency_type_sea
     <?php
     try
     {
-        if (DEBUGNOALYSS > 1) {
-            echo "SQL = ".$print_operation_currency->getData_operation()->build_SQL();
-        }
+
+        \Noalyss\Dbg::echo_var(1 ,"SQL = ".
+                $print_operation_currency->getData_operation()->build_SQL());
+
         echo $print_operation_currency->export_html();
         
     }
