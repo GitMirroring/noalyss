@@ -337,6 +337,13 @@ class Acc_Ledger_Search
              p_closed,
              jr_pj_number,
              n_text,
+             (select string_agg(a,' ')
+                from (select '<span style=\"font-size:80%\" class=\"tagcell tagcell-color'||t.t_color::text||'\">'||t_tag||'</span>' a 
+                        from operation_tag ot join tags t on(ot.tag_id=t.t_id)
+                        where ot.jrn_id=X.jr_id
+                        ) as tag_ml)
+              as tag_operation
+             ,
 	     case
 	     when jrn_def_type='VEN' then
 		 (select ad_value from fiche_detail where ad_id=1
@@ -867,10 +874,7 @@ class Acc_Ledger_Search
                 $tr='<TR class="even">';
             }
             $r.=$tr;
-            //internal code
-            // button  modify
-           
-          
+
             // date
             $r.="<TD>";
             $r.=$row['str_jr_date'];
@@ -910,7 +914,7 @@ class Acc_Ledger_Search
             
             // comment
             $r.="<TD>";
-            $tmp_jr_comment=h($row['jr_comment']);
+            $tmp_jr_comment=h($row['jr_comment']).$row['tag_operation'];
             $r.=$tmp_jr_comment;
             if ( $row['analytic_op'] != "")
                 $r.=sprintf('<span style="float:right;background:black;color:white;">&ni;</span>');
@@ -1158,7 +1162,7 @@ class Acc_Ledger_Search
             $r.=td($other);
             // comment
             $r.="<TD>";
-            $tmp_jr_comment=h($row['jr_comment']);
+            $tmp_jr_comment=h($row['jr_comment']).$row['tag_operation'];
             $r.=$tmp_jr_comment;
             $r.="</TD>";
             $r.=td(h($row['n_text']), ' style="font-size:0.87em"');
