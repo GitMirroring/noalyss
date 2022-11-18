@@ -38,14 +38,14 @@
 			$sep="";
 			$max=(count($det_qcode)>$limite)?$limite:count($det_qcode);
 			for ($e=0;$e<$max;$e++) {
-				echo $sep.HtmlInput::card_detail($det_qcode[$e]);
+				echo $sep.HtmlInput::card_detail($det_qcode[$e],"",'style="display:inline-block"');
 				$sep=" , ";
 			}
 			if ($max < count($det_qcode)) {
                             echo Icon_Action::detail(uniqid(), sprintf("display_all_card('%s','%s')",$dossier_id,$array[$i]['pcm_val']));
 			}
 		} else {
-			echo HtmlInput::card_detail($array[$i]['acode']);
+			echo HtmlInput::card_detail($array[$i]['acode'],"",'style="display:inline-block"');
 		}
 	}
 	?>
