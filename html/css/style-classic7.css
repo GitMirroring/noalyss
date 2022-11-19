@@ -3272,7 +3272,8 @@ li.li-active {
      position: relative;
      left: 0px;
      top: 10px;
-    background: rgb(176, 173, 230)
+    background: rgb(176, 173, 230);
+     box-shadow: navy 1px 1px 40px;
 
  }
 
