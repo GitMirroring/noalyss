@@ -87,12 +87,13 @@ class Tag_Action extends Tag
     /**
      * let select a tag to add to the search
      */
-    function select_search($p_prefix)
+    function select_search($p_prefix,$title=true)
     {
         $res="";
         $ret=$this->get_data()->seek(' order by t_tag');
         require_once NOALYSS_TEMPLATE.'/tag_search_select.php';
-        return HtmlInput::title_box('Tag', $p_prefix.'tag_div').$res;
+        if ($title)         return HtmlInput::title_box('Tag', $p_prefix.'tag_div').$res;
+        else return $res;
     }
 
 }
