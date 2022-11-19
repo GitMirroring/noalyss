@@ -47,6 +47,21 @@ class Periode
         $this->jrn_def_id=0;
     }
 
+    public function __toString(): string
+    {
+      $r=<<<EOF
+Object Periode [
+    \$jrn_def_id=>$jrn_def_id,
+     \$p_id=>$p_id,
+     \$status => $status,
+     \$p_start => $p_start,
+     \$p_end => $p_end,
+] 
+EOF;
+      return $r;
+
+    }
+
     function set_ledger($p_jrn)
     {
         $this->jrn_def_id=$p_jrn;

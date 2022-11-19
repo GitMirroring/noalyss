@@ -42,6 +42,11 @@ class Acc_Currency
         $this->currency=new V_Currency_Last_Value_SQL($p_cn, $p_id);
     }
 
+    public function __toString(): string
+    {
+        return "Acc_Currency [".$this->currency->__toString()."]";
+    }
+
     /**
      * Retrieve a V_Currency_Last_Value_SQL thanks its iso_code
      * @param string $p_iso

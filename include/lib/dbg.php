@@ -5,39 +5,45 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 class Dbg
 {
-    public static function echo_var($n_level, $msg)
+    public static function echo_var($n_level, $msg,$print=true)
     {
         if (DEBUGNOALYSS > $n_level) {
-            echo '<span style="font-size:12px;color:orangered;background-color:lightyellow;">';
+            $r= '<span style="font-size:12px;color:orangered;background-color:lightyellow;">';
             $type = gettype($msg);
             if (in_array($type, ["string", "integer", "double"])) {
-                echo $msg;
+                $r.= $msg;
             } else {
 
-                echo "<pre>DBG";
-                var_export($msg);
-                echo '</pre>';
+                $r.= "<pre>DBG";
+                $r.=print_r($msg,true);
+                $r.='</pre>';
             }
-            echo '</span>';
+            $r.='</span>';
+            if ($print) { echo $r;}
+            return $r;
         }
     }
 
-    public static function echo_function($msg)
+    public static function echo_function($msg,$print=true)
     {
         if (DEBUGNOALYSS > 1) {
-            echo '<span style="font-size:12px;color:lightgreen;background-color:lightyellow;">';
-            echo "[FILE: $msg]";
+            $r =  '<span style="font-size:12px;color:lightgreen;background-color:lightyellow;">';
+            $r.="[FILE: $msg]";
 
-            echo '</span>';
+            $r.= '</span>';
+            if ($print) { echo $r;}
+            return $r;
         }
     }
-    public static function echo_file($msg)
+    public static function echo_file($msg,$print=true)
     {
         if (DEBUGNOALYSS > 1) {
-            echo '<span style="font-size:12px;color:brown;background-color:lightyellow;">';
-            echo "[FILE: $msg]";
+            $r =  '<span style="font-size:12px;color:brown;background-color:lightyellow;">';
+            $r.="[FILE: $msg]";
 
-            echo '</span>';
+            $r.= '</span>';
+            if ($print) { echo $r;}
+            return $r;
         }
     }
 

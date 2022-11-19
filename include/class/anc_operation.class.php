@@ -58,6 +58,29 @@ class Anc_Operation
         return $this->currency_rate;
     }
 
+    public function __toString(): string
+    {
+     $r=<<<EOF
+Object Anc_Operation [
+     \$row=>$this->row,	
+     \$list=> $this->list,	
+     \$id  => $this->id,	
+     \$po_id => $this->po_id,
+     \$oa_amount $this->oa_amount,
+     \$oa_description => $this->oa_description,	
+     \$oa_debit => $this->oa_debit,	
+     \$j_id => $this->j_id,	
+     \$oa_group => $this->oa_group,  
+     \$oa_date => $this->oa_date,	
+     \$pa_id => $this->pa_id,
+     \$card => $this->card , 
+    private \$currency_rate => $this->currency_rate,
+    ]    
+EOF;
+     return $r;
+
+    }
+
     public function set_currency_rate($currency_rate)
     {
         $this->currency_rate=$currency_rate;
@@ -778,20 +801,87 @@ class Anc_Operation
      * \param $p_item if the item nb for each item (purchase or selling
      *  merchandise)
      * \param $p_array structure
-     * \verbatim
-      nb_tA A is the number of the item it contains the number of
+
+      nb_tx x is the number of the item it contains the number of
               rows of CA for this card
-      valAlR amount for the CA (item A row R)
+      <h1>val double array :   amount for the CA row ACC => sub row ANC </h1>
+            here Operation 0 has 2 row for a total of 10.31 and 1
+            here Operation 1 has 1 row for a total of 430
+    \verbatim
+    [val] => Array
+        (
+            [0] => Array
+                (
+                    [0] => 10.31
+                    [1] => 1
+                )
+
+            [1] => Array
+                (
+                    [0] => 430
+                )
+
+        )
+\endverbatim
+     <h1>amount_tx the amount for each row</h1>
+    It is the amount to split per accounting, it is possible that it is different from the sum of the given amount (<i>
+    see val</i>) per row
+    \verbatim
+      [amount_t0] => 11.31
+      [amount_t1] => 430
+    \endverbatim
       ta_AoCrow_R contains the value of the pa_id and po_id for this
                   row with the form pa_id_po_id %d_%d
+     <h1>  hplan = Double array operation</h1>
+   <p> Double array operation => all the amount but in linear form</p>
+
+    <p>Example if the amount of the operation 0 is splitted in 2 rows and 2 cols (because 2 analytic plan, means 2 cols)
+     we have an array of 4 values for operation 0, it gives the poste_analytique.po_id (from DB).</p>
+    <p> Here is the operation 0
+    (one row of the accounting) is splitted in  po_id = 1 (pa_id see in tables or array pa_id) and po_id=5 (second pa_id)
+    for 10.31 (<i>see array val</i>) and for 1 is set for po_id 1 and 4, p
+    </p>
+    \verbatim
+        [hplan] => Array
+        (
+            [0] => Array
+                (
+                    [0] => 1
+                    [1] => 5
+                    [2] => 1
+                    [3] => 4
+                )
+
+            [1] => Array
+                (
+                    [0] => 1
+                    [1] => 6
+                )
+
+        )
+    \endverbatim
+
+     <h1>   pa_id </h1>
+    pa_id array of plan_analytic.pa_id (1 per column), always ordered  by pa_id
+
+    \verbatim
+    [pa_id] => Array
+        (
+            [0] => 1
+            [1] => 2
+        )
+
      *\endverbatim
+     *
      * \attention The idea is one j_id matches several oa_id,
-     *  serveral data are set before the call :
-     *   -j_id
-     *   -oa_debit
-     *   -oa_group
-     *   -oa_date
-     *   -oa_description
+     *  serveral data <b>must be </b>set before the call :
+     *
+     *    <ul><li>  j_id</li>
+     *    <li>oa_debit</li>
+     *    <li>oa_group</li>
+     *    <li>oa_date</li>
+     *    <li>oa_description</li>
+     * </ul>
      *
      */
     function save_form_plan($p_array,$p_item,$p_j_id)

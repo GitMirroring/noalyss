@@ -66,6 +66,28 @@ class Acc_Operation
         $this->currency_rate_ref=1;
         $this->currency_id=NULL;
     }
+
+    function __toString(): string
+    {
+        $r=<<<EOF
+   Acc_Operation Object 
+     [   
+        db {$this->db} 
+        qcode {$this->qcode}
+        user {$this->user}
+        periode {$this->periode}
+        jr_id {$this->jr_id}
+        jr_optype {$this->jr_optype}
+        amount  {$this->amount}
+        currency_rate {$this->amount}
+        currency_rate_ref {$this->amount}
+        currency_id {$this->amount}
+    ]
+EOF;
+        return $r;
+        
+    }
+
     /**
      *@brief retrieve the grpt_id from jrn for a jr_id
      *@return jrn.jr_grpt_id or an empty string if not found
