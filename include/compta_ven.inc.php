@@ -255,9 +255,9 @@ try
     }
     else if (isset($_GET['create_invoice']))
     {
-        $array=$Ledger->convert_from_follow($_GET ['ag_id']);
+        $array=$Ledger->convert_from_follow($http->get('ag_id',"number"));
         echo HtmlInput::hidden("ledger_type", "VEN");
-        echo HtmlInput::hidden("ac", $_REQUEST['ac']);
+        echo HtmlInput::hidden("ac", $http->get('ac'));
         echo HtmlInput::hidden("sa", "p");
         echo $Ledger->input($array);
         echo '<div class="content">';

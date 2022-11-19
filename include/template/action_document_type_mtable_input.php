@@ -94,7 +94,15 @@ echo $i->input();
 echo _("Création de facture");
 ?>
         </li> 
-        
+        <li>
+<?php
+$i=new ICheckBox("make_feenote",1);
+if ( Document_Option::is_enable_make_feenote($table->dt_id)) $i->set_check(1); else $i->set_check(0);
+echo $i->input();
+echo _("Création de note de frais ou facture Achat");
+?>
+        </li>
+
         <li>
             <?php
             $description=new ICheckBox("editable_description",1);

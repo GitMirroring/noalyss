@@ -118,6 +118,23 @@ class Document_Option
         return $return;
     }
     /**
+     * returns true if the operation_detail is enable, otherwise false
+     *
+     * @param int $p_document_type Document_Type.dt_id
+     * @return boolean
+     */
+    static function is_enable_make_feenote($p_document_type)
+    {
+        $return=false;
+        $cn=Dossier::connect();
+        if ($cn->get_value("select do_enable from document_option where document_type_id=$1 and do_code = $2",
+                [$p_document_type, 'make_feenote'])=='1')
+        {
+            $return=true;
+        }
+        return $return;
+    }
+    /**
      * Returns true if we can add a comment , or false if it is not possible
      * @param integer $p_id is the action_gestion.ag_id
      */

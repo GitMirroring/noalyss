@@ -193,17 +193,34 @@ $menu=new Default_Menu();
         
     <?php echo HtmlInput::button('actualiser', _('Recalculer'), ' onClick="compute_all_ledger();"'); ?>
     </div>
-    <script>compute_all_ledger()</script>    
+    <script>compute_all_ledger()</script>
+    <div class="row">
+
     <?php
     if (Document_Option::is_enable_make_invoice($p_follow_up->dt_id)):
         ?>
-        <p id="follow_up_detail_invoice">
+        <div id="follow_up_detail_invoice" class="col m-3">
             <?php
             $query=http_build_query(array('gDossier'=>Dossier::id(), 'ag_id'=>$p_follow_up->ag_id, 'create_invoice'=>1, 'ac'=>$menu->get('code_invoice')));
-            echo HtmlInput::button_anchor(_("Transformer en facture"), "do.php?".$query, "create_invoice",
+            echo HtmlInput::button_anchor(_("Transformer en Facture de Vente"), "do.php?".$query, "create_invoice",
                     '  target="_blank" ', "button");
             ?>
-        </p>
+        </div>
         <?php
     endif;
     ?>
+
+    <?php
+    if (Document_Option::is_enable_make_feenote($p_follow_up->dt_id)):
+        ?>
+        <div id="follow_up_detail_feenote" class="col m-3">
+            <?php
+            $query=http_build_query(array('gDossier'=>Dossier::id(), 'ag_id'=>$p_follow_up->ag_id, 'create_feenote'=>1, 'ac'=>$menu->get('code_feenote')));
+            echo HtmlInput::button_anchor(_("Transformer en Note de frais ou Facture Achat"), "do.php?".$query, "create_feenote",
+                    '  target="_blank" ', "button");
+            ?>
+        </div>
+        <?php
+    endif;
+    ?>
+</div>

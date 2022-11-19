@@ -49,15 +49,24 @@ class Default_Menu
             $idx = $tmenu->getp('md_code');
             $this->a_menu_def[$idx] = $tmenu->getp('me_code');
         }
-        $this->code = explode(',', 'code_follow,code_invoice');
+        $this->code = explode(',', 'code_follow,code_invoice,code_feenote',);
     }
 
     function input_value()
     {
         $code_invoice = new IText('code_invoice', $this->a_menu_def['code_invoice']);
         $code_follow = new IText('code_follow', $this->a_menu_def['code_follow']);
-        echo '<p>' . _('Code pour création facture depuis gestion') . $code_invoice->input() . '</p>';
-        echo '<p>' . _('Code pour appel gestion') . $code_follow->input() . '</p>';
+        $code_feenote = new IText('code_feenote', $this->a_menu_def['code_feenote']);
+        echo '<div class="form-group">';
+        echo '<div class="form-text">' .'<label for="code_invoice">'._('Code AD pour création facture depuis gestion').
+        "</label>"."</div>". '<div class="form-text">' .$code_invoice->input() . '</div>';
+
+        echo '<div class="form-text">' .'<label for="code_follow">'._('Code AD pour appel gestion').
+        "</label>"."</div>". '<div class="form-text">' .$code_follow->input() . '</div>';
+
+        echo '<div class="form-text">' .'<label for="code_feenote">'._('Code AD pour création note de frais ou facture achat').
+        "</label>"."</div>". '<div class="form-text">' .$code_feenote->input() . '</div>';
+        echo '</div>';
     }
 
     private function check_code($p_string)

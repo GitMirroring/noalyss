@@ -78,6 +78,7 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
         $this->other['detail_operation']=$http->request("detail_operation", "string", 0);
         $this->other['contact_multiple']=$http->request("det_contact_mul", "string", 0);
         $this->other['make_invoice']=$http->request("make_invoice", "string", 0);
+        $this->other['make_feenote']=$http->request("make_feenote", "string", 0);
         $this->other['followup_comment']=$http->request("followup_comment", "string", 0);
         $this->other['editable_description']=$http->request("editable_description", "string", 0);
         $this->other['enable_followup']=$http->request("enable_followup", "string", 0);
@@ -272,6 +273,12 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
         $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable) values ($1,$2,$3) 
             on conflict on constraint document_option_un
             do update set do_enable=$3 ", ["make_invoice", $object_sql->dt_id, $this->other['make_invoice']]);
+
+        // Save make feenote
+        $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable) values ($1,$2,$3) 
+            on conflict on constraint document_option_un
+            do update set do_enable=$3 ", ["make_feenote", $object_sql->dt_id, $this->other['make_feenote']]);
+
         // Option for comments
             $cn->exec_sql("insert into document_option (do_code,document_type_id,do_enable,do_option) values ($1,$2,$3,$4) 
                 on conflict on constraint document_option_un

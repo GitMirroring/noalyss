@@ -239,6 +239,20 @@ try
         echo 'compute_all_ledger();';
         echo '</script>';
     }
+    else if (isset($_GET['create_feenote']))
+    {
+        $array=$Ledger->convert_from_follow($http->get('ag_id',"number"));
+        echo HtmlInput::hidden("ledger_type", "VEN");
+        echo HtmlInput::hidden("ac",$http->get('ac'));
+        echo HtmlInput::hidden("sa", "p");
+        echo $Ledger->input($array);
+        echo '<div class="content">';
+        echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);
+        echo '</div>';
+        echo '<script>';
+        echo 'compute_all_ledger();';
+        echo '</script>';
+    }
     else
     {
         echo $Ledger->input($array);
