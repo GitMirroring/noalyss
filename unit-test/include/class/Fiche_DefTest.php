@@ -198,4 +198,26 @@ class Fiche_DefTest extends Testcase
 			    
          $fiche_def->RemoveAttribut([20, 21, 22, 51, 52, 53]);		    
     }
+    /**
+    @testdox get a Fiche_Def
+    */
+    function testGet()
+    {
+      global $g_connection;
+      $fiche_def=$this->getFicheDef();
+      $fiche_def->get();
+      $this->assertTrue($fiche_def->label=='Test.card',"Can not retrieve label");
+    }
+    
+  /**
+    @testdox get all Fiche_Def
+    */
+    function testGetAll()
+    {
+      global $g_connection;
+      $fiche_def=$this->getFicheDef();
+      $all=$fiche_def->get_all();
+      $this->assertEquals(count($all) , 8 ,"Retrieve an wrong number of Fiche_Def");
+    }
+    
 }

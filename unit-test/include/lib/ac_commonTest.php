@@ -1,4 +1,4 @@
-2<?php
+<?php
 
 use PHPUnit\Framework\TestCase;
 

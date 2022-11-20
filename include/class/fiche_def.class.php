@@ -121,8 +121,8 @@ class Fiche_Def
         array($this->id));
         */
         $sql="select * from fiche_def ".
-             " where fd_id=".$this->id;
-        $Ret=$this->cn->exec_sql($sql);
+             " where fd_id= $1";
+        $Ret=$this->cn->exec_sql($sql,[$this->id]);
         if ( ($Max=Database::num_row($Ret)) == 0 )
             return ;
         $row=Database::fetch_array($Ret,0);
@@ -133,8 +133,7 @@ class Fiche_Def
         $this->fd_description=$row['fd_description'];
     }
     /*!
-     **************************************************
-     * \brief  Get all the fiche_def
+    * \brief  Get all the fiche_def
      *
      * \return an array of fiche_def object
      */
@@ -144,17 +143,18 @@ class Fiche_Def
 
         $Ret=$this->cn->exec_sql($sql);
         if ( ($Max=Database::num_row($Ret)) == 0 )
-            return ;
-
+            return array();
+        $all=array();
         for ( $i = 0; $i < $Max;$i++)
         {
             $row=Database::fetch_array($Ret,$i);
-            $this->all[$i]=new Fiche_Def($this->cn,$row['fd_id']);
-            $this->all[$i]->label=$row['fd_label'];
-            $this->all[$i]->class_base=$row['fd_class_base'];
-            $this->all[$i]->fiche_def=$row['frd_id'];
-            $this->all[$i]->create_account=$row['fd_create_account'];
+            $all[$i]=new Fiche_Def($this->cn,$row['fd_id']);
+            $all[$i]->label=$row['fd_label'];
+            $all[$i]->class_base=$row['fd_class_base'];
+            $all[$i]->fiche_def=$row['frd_id'];
+            $all[$i]->create_account=$row['fd_create_account'];
         }
+        return $all;
     }
     /*!
      **************************************************
@@ -196,7 +196,8 @@ $order
 
 		require_once NOALYSS_TEMPLATE.'/fiche_def_list.php';
 	}
-    /*!\brief Add a fiche category thanks the element from the array
+    /*!
+     * \brief Add a fiche category thanks the element from the array
      * you cannot add twice the same cat. name
      * table : insert into fiche_def
      *         insert into attr_def
