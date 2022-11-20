@@ -676,7 +676,7 @@ $order
     /*!\brief save the order of a card, update the column jnt_fic_attr.jnt_order
      *\param $p_array containing the order
      */
-    function jntsave_order($p_array)
+    function save_order($p_array)
     {
         extract($p_array, EXTR_SKIP);
         $this->GetAttribut();
