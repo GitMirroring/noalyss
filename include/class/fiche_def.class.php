@@ -639,7 +639,7 @@ $order
         if ( $p_order == -1 ) {
             $order = $this->cn->get_value("select ad_default_order from attr_def where ad_id=$1",[$p_ad_id]);
             if ( $order == 0 || empty($order)) {
-                $max=$this->get_value("select count(*) from jnt_fic_attr where fd_id=$1",[$this->id]);
+                $max=$this->cn->get_value("select count(*) from jnt_fic_attr where fd_id=$1",[$this->id]);
                 $order=$max*15;
             }
         }

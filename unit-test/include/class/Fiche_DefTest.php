@@ -158,6 +158,7 @@ class Fiche_DefTest extends Testcase
 	}
 	
     }
+
     /**
      * @testdox getAttribut
      */
@@ -183,7 +184,13 @@ class Fiche_DefTest extends Testcase
         // percent deductible
         $fiche_def->InsertAttribut(20);
         $fiche_def->InsertAttribut(21,120);
-        $fiche_def->InsertAttribut(22);
+
+        // check if the automatic order works
+        $defaultOrder=$g_connection->get_value("select ad_default_order from attr_def where ad_id=22");
+        $g_connection->exec_sql("update attr_def set ad_default_order=null where ad_id=22");
+        $fiche_def->InsertAttribut(22,-1);
+        $g_connection->exec_sql("update attr_def set ad_default_order=$1 where ad_id=22",[$defaultOrder]);
+
 
         // accouting for not deductible
         $fiche_def->InsertAttribut(51);
