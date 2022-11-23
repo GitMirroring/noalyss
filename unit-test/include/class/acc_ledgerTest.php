@@ -427,6 +427,65 @@ class Acc_LedgerTest extends TestCase
         $this->assertEquals(0,$ledger->has_quantity(),'jrn_def_quantity is not saved');
 
     }
+
+    /**
+     * @brief create a financial, update it
+     * @return void
+     */
+    function testManageFinancial()
+    {
+        global $g_connection;
+        // create a card financial
+        $new_fiche = new Fiche($g_connection);
+        $aProperty = array('av_text1' => 'Nom', 'av_text23' => 'BK1');
+
+        $new_fiche->insert(3, $aProperty);
+
+        //- create a new financial ledger
+        $array=["jrn_def_id"=>-1,
+            "p_jrn_name"=>"PhpUnit Fin",
+            "p_ech_lib"=>"",
+            "p_jrn_type"=>"FIN",
+            "bank"=>$new_fiche->get_quick_code(),
+            "negative_amount"=>0,
+            "negative_warning"=>"",
+            "p_jrn_quantity"=>0,
+            "min_row"=>"5",
+            "p_description"=>"",
+            "jrn_def_pj_pref"=>"PU" ,
+            "FIN_FICHE_DEF"=>[2,3,4],
+            "defaultCurrency"=>0,
+            "p_jrn_deb_max_line" => 10,
+        ];
+        // - update it
+        $acc_ledger=new Acc_Ledger($g_connection,-1);
+        $acc_ledger->save_new($array);
+        $this->assertTrue($acc_ledger->id > 0 ,'ledger not created' );
+        $update=array (
+            "p_jrn" => $acc_ledger->id,
+            "sa" => "detail",
+            "p_jrn_deb_max_line" => 10,
+            "p_ech_lib" => "echeance",
+            "p_jrn_type" => "FIN",
+            "p_jrn_name"=>"PhpUnit Fin2",
+            "bank"=>$new_fiche->get_quick_code(),
+            "min_row" => 5,
+            "p_description" => "",
+            "jrn_def_pj_pref" => "A",
+            "jrn_def_pj_seq" => 0,
+            "jrn_enable" => 0,
+            "FIN_FICHEDEB" =>array(2,3,4),
+            "defaultCurrency"=>0
+        );
+
+       $acc_ledger->update($update);
+       $this->assertTrue($acc_ledger->jrn_def_name=="PhpUnit Fin2"," cannot change ledger name");
+       $this->assertTrue($acc_ledger->jrn_def_bank==$new_fiche->id," set bank incorrect");
+
+       $acc_ledger->delete_ledger();
+       $new_fiche->delete();
+
+    }
     /**
      * @covers Acc_Ledger::input
      */
@@ -481,54 +540,63 @@ class Acc_LedgerTest extends TestCase
             "p_jrn_name"=>"New ledger",
             "p_jrn_type"=>"ODS"
             ];
+        try {
        //-----------------------------------------------
        // Must succeed
        //-----------------------------------------------
-      $ledger->verify_ledger($array);
-      
-       
-       // succeeds if negative amount  1
-       $array["negative_amount"]=1;
-       $ledger->verify_ledger($array);
-       
-       //-----------------------------------------------
-       // Must fail
-       //-----------------------------------------------
-            ob_start();
-       try {
-            $array["p_jrn"]="a";
-            $ledger->verify_ledger($array);
-            $this->assertTrue(FALSE,"p_jrn is invalide");
-        }catch (\Exception $e) {
-            $this->assertTrue(TRUE);
-        }
-            ob_end_clean();
-       // reset properly ,
-       $array["p_jrn"]="15";
-       $ledger->verify_ledger($array);
 
-       
-       // fails if negative amount neither 1 nor 0
-            ob_start();
-       try {
-            $array["negative_amount"]=2;
-            $ledger->verify_ledger($array);
-            $this->assertTrue(FALSE,"negative_amount must be 1 or 0");
-        }catch (\Exception $e) {
-            $this->assertTrue(TRUE);
+          $ledger->verify_ledger($array);
+           // succeeds if negative amount  1
+           $array["negative_amount"]=1;
+           $ledger->verify_ledger($array);
+           $this->assertTrue(true, "an unexpected exception");
+
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+           $this->assertTrue(false, "an unexpected exception");
         }
-            ob_end_clean();
-       
-        // negative amount not set , so fails
-            ob_start();
-       try {
-            $array["negative_warning"]="Yes";
-            $ledger->verify_ledger($array);
-            $this->assertTrue(FALSE,"negative_warning must be a string");
-        }catch (\Exception $e) {
-            $this->assertTrue(TRUE);
-        }
-            ob_end_clean();
+
+
+    }
+
+    /**
+     * @testdox verify_ledger , Wrong id
+     * @return void
+     */
+    public function testVerifyWrongId()
+    {
+        global $g_connection;
+        $ledger=new Acc_Ledger($g_connection,4);
+         $this->expectException(Exception::class);
+        $array=[
+            "p_jrn"=>"15",
+            "p_jrn_deb_max_line"=>5,
+            "p_jrn_name"=>"New ledger",
+            "p_jrn_type"=>"ODS"
+        ];
+
+        $array["p_jrn"]="a";
+        $ledger->verify_ledger($array);
+    }
+
+    /**
+     * @testdox verify_ledger , Negative amount
+     * @return void
+     */
+    public function testVerifyWrongNegativeAmount()
+    {
+        global $g_connection;
+        $ledger=new Acc_Ledger($g_connection,4);
+        $this->expectException(Exception::class);
+        $array=[
+            "p_jrn"=>"15",
+            "p_jrn_deb_max_line"=>5,
+            "p_jrn_name"=>"New ledger",
+            "p_jrn_type"=>"ODS"
+        ];
+
+        $array["negative_amount"]=2;
+        $ledger->verify_ledger($array);
     }
 
     /**
@@ -842,22 +910,23 @@ class Acc_LedgerTest extends TestCase
     public function testInput_new()
     {
         put_global([["key"=>"ac","value"=>"ODS"]]);
-        
+        ob_start();
         echo  \Noalyss\Facility::page_start();
+
         $this->object->set_ledger_id(4);
         $this->object->input_new();
         $result=ob_get_contents();
         ob_end_clean();
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger-input_new.html", $result);
         $size=filesize(__DIR__."/file/acc_ledger-input_new.html");
-                
-        $this->assertEquals(15649,$size," output input_new is not what it is expected");
+        $this->assertEquals(16320,$size," output input_new is not what it is expected");
+
     }
 
     /**
      * @covers Acc_Ledger::save_new
      */
-    public function testSave_new()
+    public function testODSSave_new()
     {
         global $g_connection;
         $ledger=new Acc_Ledger($g_connection,-1);

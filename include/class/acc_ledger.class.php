@@ -180,6 +180,7 @@ class Acc_Ledger  extends jrn_def_sql
         $this->db->exec_sql('delete from jrnx where j_grpt=$1', array($grpt_id));
         $this->db->exec_sql('delete from jrn where jr_id=$1',
                 array($this->jr_id));
+
     }
 
     /**
@@ -2668,7 +2669,9 @@ class Acc_Ledger  extends jrn_def_sql
     /**
      * Verify before update
      *
-     * @param type $array
+     * @param type
+     * @code
+     * $array
      *   'p_jrn' => string '3' (length=1)
       'sa' => string 'detail' (length=6)
       'gDossier' => string '82' (length=2)
@@ -2678,15 +2681,10 @@ class Acc_Ledger  extends jrn_def_sql
       'p_jrn_name' => string 'Achat' (length=5)
       'jrn_def_pj_pref' => string 'ACH' (length=3)
       'jrn_def_pj_seq' => string '0' (length=1)
-      'FICHECRED' =>
-      array
-      0 => string '4' (length=1)
-      'FICHEDEB' =>
-      array
-      0 => string '7' (length=1)
-      1 => string '5' (length=1)
-      2 => string '13' (length=2)
-      'update' => string 'Sauve' (length=5
+      'FICHECRED' =>array(fd_id)
+      'FICHEDEB' =>array(fd_id)
+        'update' => string 'Sauve' (length=5
+     * @endcode
      * @exception is throw is test are not valid
      */
     function verify_ledger($array)
@@ -2746,8 +2744,27 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * update a ledger
+     * @brief update a ledger
      * @param type $array  normally post
+     * @code
+     * // Example for a financial ledger
+     [p_jrn] => 83
+    [sa] => detail
+    [gDossier] => 25
+    [p_jrn_deb_max_line] => 10
+    [p_ech_lib] => echeance
+    [p_jrn_type] => FIN
+    [p_jrn_name] => Banque Privée
+    [bank] => BANQUE
+    [min_row] => 5
+    [p_description] => Compte fermé
+    [jrn_def_pj_pref] => BP19-
+    [jrn_def_pj_seq] => 0
+    [jrn_enable] => 0
+    [FIN_FICHEDEB] =>array(fd_id)
+    [defaultCurrency] => 0 // if there is no operation
+    [action_frm] => update
+     * @endcode
      * @see verify_ledger
      */
     function update($array=null)
@@ -2804,7 +2821,7 @@ class Acc_Ledger  extends jrn_def_sql
 
             case 'FIN':
                 $a=new Fiche($this->db);
-                $result=$a->get_by_qcode(trim(strtoupper($_POST['bank'])), false);
+                $result=$a->get_by_qcode(trim(strtoupper($http->extract('bank'))), false);
                 $bank=$a->id;
                 $this->jrn_def_bank=$bank;
                 $FIN_FICHEDEB=$http->extract('FIN_FICHEDEB','array',array());
@@ -2819,7 +2836,7 @@ class Acc_Ledger  extends jrn_def_sql
                  * Set the default currency except if there are already operation
                  */
                 if ( $nb_operation == 0 ){
-                    $this->currency_id=$defaultCurrency;
+                    $this->currency_id=$http->extract("defaultCurrency");
                 } else {
                     $this->currency_id=$this->db->get_value("select currency_id from jrn_def where jrn_def_id=$1",
                             [$this->jrn_def_id]);
@@ -2964,6 +2981,39 @@ class Acc_Ledger  extends jrn_def_sql
     /**
      * @brief Insert a new ledger , member variable  like jrn_def_id will changed 
      * @param array $array normally $_POST
+     * @code
+    Array
+    (
+    [gDossier] => 25
+    [ac] => CFG/MACC/CFGLED
+    [p_jrn] => -1
+    [p_action] => jrn
+    [sa] => add
+    [p_jrn_deb_max_line] => 10
+    [p_ech_lib] => echeance
+    [p_jrn_type] => VEN
+    [p_jrn_name] => test
+    [p_jrn_class_deb] =>
+    [bank] =>
+    [negative_amount] => 0
+    [negative_warning] => Attention, ce journal doit utiliser des montants négatifs
+    [p_jrn_quantity] => 1
+    [min_row] => 5
+    [p_description] =>
+    [jrn_def_pj_pref] => A
+    [defaultCurrency] => 0
+    [ACH_FICHECRED] => Array(fd_id)
+    [ACH_FICHEDEB] => Array (fd_id)
+    [VEN_FICHEDEB] => Array (fd_id)
+    [VEN_FICHECRED] => Array (fd_id)
+    [ODS_FICHEDEB] => Array(fd_id)
+    [FIN_FICHEDEB] => Array(fd_id)
+    [ defaultCurrency] =>"int"  only for Financial if there is no operation
+    )
+     *
+     *
+     * @endcode
+     *
      * @see verify_ledger
      */
     function save_new($array)
@@ -3006,9 +3056,9 @@ class Acc_Ledger  extends jrn_def_sql
                 break;
             case 'FIN':
                 $a=new Fiche($this->db);
-                $result=$a->get_by_qcode(trim(strtoupper($_POST['bank'])), false);
-                $bank=$a->id;
-                $this->jrn_def_bank=$bank;
+                $result=$a->get_by_qcode(trim(strtoupper($bank)), false);
+                $bank_id=$a->id;
+                $this->jrn_def_bank=$bank_id;
                 $this->jrn_def_fiche_deb=(isset($FIN_FICHEDEB))?join(',',$FIN_FICHEDEB):"";
                 if ($result==-1)
                     throw new Exception(_("Aucun compte en banque n'est donné"));
@@ -3018,10 +3068,11 @@ class Acc_Ledger  extends jrn_def_sql
         }
         $this->jrn_def_quantity=(!isset($this->jrn_def_quantity)||$this->jrn_def_quantity==null)?1:$this->jrn_def_quantity;
         parent::insert();
+        $this->id=$this->jrn_def_id;
     }
 
     /**
-     * delete a ledger IF is not already used
+     * @brief delete a ledger IF it doesn't contain anything
      * @exception : cannot delete
      */
     function delete_ledger()
@@ -3041,7 +3092,7 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * Get operation from the ledger type before, after or with the 
+     * @brief Get operation from the ledger type before, after or with the
      * given date . The array is filtered by the ledgers granted to the 
      * user
      * @global type $g_user
@@ -3079,7 +3130,8 @@ class Acc_Ledger  extends jrn_def_sql
         $array=$this->db->get_array($sql, array($p_date));
         return $array;
     }
-    /** @brief  Get simplified row from ledger
+    /**
+     * @brief  Get simplified row from ledger
      * Call Acc_Ledger_History_Generic:get_rowSimple
      * @param p_from periode
      * @param p_to periode
