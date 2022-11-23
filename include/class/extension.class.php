@@ -63,7 +63,7 @@ class Extension extends Menu_Ref_sql
         if (trim($this->me_file)=="")
             throw new Exception('Chemin incorrect');
         if (file_exists(NOALYSS_PLUGIN.'/'.$this->me_file)==false)
-            throw new Exception('Extension non trouvée, le chemin est-il correct?');
+            throw new Exception("$this->me_code $this->me_file".'Extension non trouvée, le chemin est-il correct?');
     }
 
     /*!@brief search a extension, the what is the column (extends_code */
