@@ -293,7 +293,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
                     if ( in_array($detail['jr_id'],$old) == TRUE ) continue;
                     $old[]=$detail['jr_id'];
                     echo tr(td("Journal :".$detail['jrn_def_name'],''),'style="width:auto" colspan="6"');
-                    echo '<tr><td class="mtitle" style="width:auto" colspan="6">'. $detail['j_date'].' '.$detail['jr_internal'].' '.hb($detail['description']).' '.hi($detail['jr_pj_number']).'</td></tr>';
+                    echo '<tr><td class="mtitle" style="width:auto;color:whitesmoke" colspan="6">'. $detail['j_date'].' '.$detail['jr_internal'].' '.hb($detail['description']).' '.hi($detail['jr_pj_number']).'</td></tr>';
 
                     $op=new Acc_Operation($cn);
                     $op->poste=$poste_id['pcm_val'];
