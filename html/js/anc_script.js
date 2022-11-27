@@ -91,7 +91,6 @@ function compute_total_table(p_table, seq)
                 tot += rounded_value
           
         }
-      console.log(`total computed (compute_total_table) ${p_table} ${tot/100}`)
         return tot/100;
     }
     catch (e)

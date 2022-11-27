@@ -56,7 +56,7 @@ a.mtitle span.notice {
 }
 table.sortable, table.table_large, table.result  ,table.resultfooter {
     width:99%;
-    border-spacing:  0px;
+    border-spacing:  0px 2px;
    border-collapse:collapse; 
     
     border:1px solid #5D90CD;
@@ -75,12 +75,19 @@ table.sortable th,  table.table_large th,table.result th {
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'OpenSansRegular';
     border-bottom:2px #5d90cd groove;
-    border-top:0;
+    border-top:0px;
 
     color:#0C106D;
     text-align: left;
     font-style: normal;
 
+}
+/* LarGe */
+@media (min-width: 992px) {
+    table.sortable , table.table_large, table.result {
+        border-collapse: separate;
+        border-spacing: 1px 3px;
+    }
 }
 h2.title {
     border-radius: 0px;
@@ -3272,22 +3279,23 @@ li.li-active {
      position: relative;
      left: 0px;
      top: 10px;
-    background: rgb(176, 173, 230);
-     box-shadow: navy 1px 1px 40px;
-
+     background: rgb(176, 173, 230);
+     box-shadow: #a7a7b3 1px 1px 40px;
+     border-radius: 5px;
  }
 
 
- @keyframes turn-color{
-     0% { transform : rotate(0deg);opacity:0.1;}
-     50% { transform : rotate(90deg);opacity:0.9}
-     100% { transform : rotate(180deg);opacity:0.1}
+  @keyframes turn-color{
+     0% { transform : rotate(0deg);opacity:0.1;transform:scale( 0.3);background-color:navy}
+     50% { transform : rotate(90deg);opacity:0.9;; }
+     100% { transform : rotate(180deg);opacity:0.1;transform:scale( 1.3)}
  }
 
  /**
-  * style in TEXTAREA wysiwyg
+  * style in TEXTAREA wysiwyg must be encapsuled in div with the class nicEdit-main
+  *
   */
- div.nicEdit-main>blockquote {
+ div.nicEdit-main blockquote {
      margin-left:2rem !important;
  }
 
@@ -3298,4 +3306,15 @@ li.li-active {
      margin-right:5% !important;
      background-size:1px !important;
      height:2px;
+ }
+
+ div.nicEdit-main h2 {
+     margin: 0px;
+     padding: 0px;
+     font-size: 1.6em;
+     font-style: normal;
+     margin-bottom: .5rem;
+     font-size: 2rem !important;
+     background-color: white;
+     color: navy;
  }

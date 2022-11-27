@@ -27,7 +27,7 @@ class Dbg
     public static function echo_function($msg,$print=true)
     {
         if (DEBUGNOALYSS > 1) {
-            $r =  '<span style="font-size:12px;color:lightgreen;background-color:lightyellow;">';
+            $r =  '<span style="font-size:12px;color:brown;background-color:bisque;">';
             $r.="[FILE: $msg]";
 
             $r.= '</span>';
