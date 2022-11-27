@@ -3275,7 +3275,7 @@ li.li-active {
      width: 1.5rem;
      height: 1.5rem;
      display: inline-block;
-     animation: turn-color 1.5s linear 0s infinite forwards;
+     animation: turn-color 2.5s linear 0s infinite forwards;
      position: relative;
      left: 0px;
      top: 10px;
