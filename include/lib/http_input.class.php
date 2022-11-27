@@ -119,6 +119,9 @@ class HttpInput
                 }
                 $this->array[$p_name]=h($this->array[$p_name]);
             }
+            else if ($p_type=="raw") {
+                /* NoOperation*/
+            }
             else if ($p_type=="array")
             {
                  if ( empty($this->array[$p_name]) )
@@ -159,7 +162,7 @@ class HttpInput
                 if (array_key_exists($p_name,$this->array) )
                 {
                     $this->check_type($p_name, $p_type);
- 		    if ( is_string($this->array[$p_name]) ) return preg_replace("/</","< ", $this->array[$p_name]);
+ 		    if ($p_type != 'raw' && is_string($this->array[$p_name]) ) return preg_replace("/</","< ", $this->array[$p_name]);
 		    return $this->array[$p_name];
                 }
                 else

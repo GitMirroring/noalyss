@@ -29,22 +29,73 @@
  */
 class ITextarea extends HtmlInput
 {
-    /*!\brief show the html  input of the widget*/
+    private $enrichText;
+    function __construct($p_name = "", $p_value = "", $p_id = "")
+    {
+        parent::__construct($p_name, $p_value, $p_id);
+        $this->style=' class="itextarea" ';
+        $this->enrichText="plain";
+    }
+
+    /**
+     * @brief return if enrichText is set to true or false
+     * @return mixed
+     */
+    public function get_enrichText()
+    {
+        return $this->enrichText;
+    }
+
+    /**
+     * @brief set enrichText  to plain or enrich , enrich for WYSIWYG function, plain, plain textarea and choose
+     * to display a button to switch to a WYSIWYG
+     * @param mixed $enrich
+     */
+    public function set_enrichText($enrich)
+    {
+        if ( ! in_array($enrich,['plain','enrich'])) {
+            throw new \Exception("IT57.Invalid option");
+        }
+        $this->enrichText = $enrich;
+        return $this;
+    }
+
+    /*!\brief show the html  input of the widget
+     * // style example style="height:15em;width: 80vw
+    */
     public function input($p_name=null,$p_value=null)
     {
-        $this->name=($p_name==null)?$this->name:$p_name;
-        $this->value=($p_value==null)?$this->value:$p_value;
-	if ( !isset ($this->style )) $this->style=' class="itextarea" ';
-	$this->id=($this->id=="")?$this->name:$this->id;
+        if ( $this->enrichText == "plain" ) {
+            $this->name=($p_name==null)?$this->name:$p_name;
+            $this->value=($p_value==null)?$this->value:$p_value;
+            $this->id=($this->id=="")?$this->name:$this->id;
 
-        if ( $this->readOnly==true) return $this->display();
+            if ( $this->readOnly==true) return $this->display();
 
-        $r="";
-        $r.='<TEXTAREA '.$this->style.'  name="'.$this->name.'" id="'.$this->id.'"';
-        $r.='>';
-        $r.=$this->value;
+            $r="";
+            $r.='<TEXTAREA '.$this->style.'  name="'.$this->name.'" id="'.$this->id.'"';
+            $r.='>';
+            $r.=$this->value;
 
-        $r.="</TEXTAREA>";
+            $r.="</TEXTAREA>";
+        } elseif ($this->enrichText=='enrich') {
+            if ( empty($this->id)) $this->id=$this->name;
+
+            $r=<<<EOF
+            <textarea name="{$this->name}" id="{$this->id}" {$this->style}>{$this->value}</textarea>
+<script type="text/javascript">
+                (function() {
+                    new nicEditor({
+                        buttonList : ['fontSize','fontFamily','fontFormat','bold','italic','underline',
+                        'strikethrough','subscript','superscript','link','unlink','bgcolor','forecolor','indent','outdent','ol',
+                        'ul','left','center','right','justify','hr','removeformat'],
+                        'iconsPath': 'image/nicEditorIcons.gif'
+                    }).panelInstance('{$this->id}');
+                })();
+            </script>
+EOF;
+        }
+
         return $r;
     }
 
@@ -52,11 +103,17 @@ class ITextarea extends HtmlInput
     /*!\brief print in html the readonly value of the widget*/
     public function display()
     {
-        $r='<p>';
-        $r.=h($this->value);
-        $r.=sprintf('<input type="hidden" name="%s" value="%s">',
-                    $this->name,h($this->value));
-        $r.='</p>';
+        if ( $this->enrichText=="plain")
+        {
+            $r='<p>';
+            $r.=h($this->value);
+            $r.=sprintf('<input type="hidden" name="%s" value="%s">',
+                        $this->name,h($this->value));
+            $r.='</p>';
+        } elseif ($this->enrichText=='enrich')  {
+            $r=$this->value;
+        }
+        return $r;
 
     }
     static public function test_me()

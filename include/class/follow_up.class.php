@@ -63,7 +63,7 @@ class Follow_Up
     var $ag_contact;  /*!< $ag_contact contact */
     var $ag_remind_date;  /*!< $ag_contact contact */
     var $f_id_dest ; /*!< followup action recipient */
-    var $ag_description; /*!< description of the action */
+    var $ag_description; /*!< description of the action with HTML tag*/
     /**
      * @brief $operation string related operation
      */
@@ -90,6 +90,32 @@ class Follow_Up
         $this->f_dest_id=0;
         $this->f_id_dest=0;
     }
+
+    public function __toString(): string
+    {
+        $r  = " Follow_Up object =>";
+        $r .= 'ag_timestamp = ['. $this->ag_timestamp.']';
+        $r .= 'dt_id = ['. $this->dt_id.']';
+        $r .= 'ag_state = ['. $this->ag_state.']';
+        $r .= 'd_number = ['. $this->d_number.']';
+        $r .= 'd_filename = ['. $this->d_filename.']';
+        $r .= 'd_mimetype = ['. $this->d_mimetype.']';
+        $r .= 'ag_title = ['. $this->ag_title.']';
+        $r .= 'f_id = ['. $this->f_id.']';
+        $r .= 'ag_ref = ['. $this->ag_ref.']';
+        $r .= 'ag_hour = ['. $this->ag_hour.']';
+        $r .= 'ag_priority = ['. $this->ag_priority.']';
+        $r .= 'ag_dest = ['. $this->ag_dest.']';
+        $r .= 'ag_contact = ['. $this->ag_contact.']';
+        $r .= 'ag_remind_date = ['. $this->ag_remind_date.']';
+        $r .= 'f_id_dest = ['. $this->f_id_dest.']';
+        $r .= 'ag_description = ['. $this->ag_description.']';
+
+        return $r;
+
+    }
+
+
     /**
      * Create a filter based on the current user, 
      * @remark type $g_user Connected user
@@ -186,10 +212,11 @@ class Follow_Up
 
         // Description
         $desc=new ITextArea();
+        $desc->set_enrichText("enrich");
         $desc->style=' class="itextarea" style="width:80%;margin-left:0px"';
         $desc->name="ag_comment";
         $desc->readOnly=$readonly;
-        $acomment=$this->db->get_array("SELECT agc_id, ag_id, to_char(agc_date,'DD.MM.YYYY HH24:MI') as str_agc_date, agc_comment, tech_user
+        $acomment=$this->db->get_array("SELECT agc_id, ag_id, to_char(agc_date,'DD.MM.YYYY HH24:MI') as str_agc_date, agc_comment, agc_comment_raw,tech_user
 				 FROM action_gestion_comment where ag_id=$1 order by agc_id", array($this->ag_id)
         );
 
@@ -422,7 +449,7 @@ class Follow_Up
         $menu=new Default_Menu();
         /* get template */
         ob_start();
-        require NOALYSS_TEMPLATE.'/detail-action.php';
+        require NOALYSS_TEMPLATE.'/follow_up-display.php';
         $content=ob_get_contents();
         ob_end_clean();
         $r.=$content;
@@ -581,13 +608,13 @@ class Follow_Up
         $doc->upload($this->ag_id);
         if (trim($this->ag_comment)!='' && Document_Option::can_add_comment($this->ag_id))
         {
-            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
+            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3)"
+                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], strip_tags($this->ag_description),$this->ag_comment));
         }
         if (trim($this->ag_description)!='' && Document_Option::can_add_comment($this->ag_id))
         {
-            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_description));
+            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3)"
+                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'],strip_tags($this->ag_description), $this->ag_description));
         }
         $this->insert_operation();
         $this->insert_action();
@@ -782,7 +809,31 @@ class Follow_Up
     }
 
     //----------------------------------------------------------------------
-    /*     * \brief Update the data into the database
+    /**
+     * \brief Update the data into the database, the field ag_description could contain some HTML tags and must be
+     * saved in 2 column : one without formatting , one with.
+     * @code
+    [p_jrn] =>
+    [sa] =>
+    [gDossier] => 25
+    [p_jrn_deb_max_line] => 10
+    [p_ech_lib] => echeance
+    [p_jrn_type] => FIN
+    [p_jrn_name] => Financier
+    [bank] => COMPTE
+    [min_row] => 5
+    [p_description] => Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)
+    [jrn_def_pj_pref] => FIN
+    [jrn_def_pj_seq] => 0
+    [jrn_enable] => 1
+    [FIN_FICHEDEB] => (fd_id  )
+    [defaultCurrency]
+     *
+    [action_frm] => update
+     @endcode
+     *
+     * @note [defaultCurrency] => 0 exists in the array if the bank account has no operation and the currency can
+     * be set
      *
      * \return true on success otherwise false
      */
@@ -904,13 +955,14 @@ class Follow_Up
         }
         if (trim($this->ag_comment)!='')
         {
-            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
+            $notag_comment=strip_tags($this->ag_comment);
+            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
+                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $notag_comment,$this->ag_comment));
         }
         if (trim($this->ag_description)!='')
         {
-            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_description));
+            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
+                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'],strip_tags($this->ag_description), $this->ag_description));
         }
         $this->insert_operation();
         $this->insert_action();
@@ -971,8 +1023,8 @@ class Follow_Up
         $this->ag_dest=$http->extract("ag_dest","string",$g_user->get_profile());
         $this->ag_priority=$http->extract("ag_priority","string","2");
         $this->ag_contact=$http->extract("ag_contact","string","");
-        $this->ag_comment=$http->extract("ag_comment","string","");
-        $this->ag_description=$http->extract("ag_description","string","");
+        $this->ag_comment=$http->extract("ag_comment","raw","");
+        $this->ag_description=$http->extract("ag_description","raw","");
         $this->ag_remind_date=$http->extract("ag_remind_date","string",null);
         $this->operation=$http->extract("operation","string",null);
         $this->action=$http->extract("action","string",null);

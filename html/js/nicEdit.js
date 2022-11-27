@@ -1163,13 +1163,14 @@ var nicEditorFontFamilySelect = nicEditorSelect.extend({
 });
 
 var nicEditorFontFormatSelect = nicEditorSelect.extend({
-		sel : {'p' : 'Paragraph', 'pre' : 'Pre', 'h6' : 'Heading&nbsp;6', 'h5' : 'Heading&nbsp;5', 'h4' : 'Heading&nbsp;4', 'h3' : 'Heading&nbsp;3', 'h2' : 'Heading&nbsp;2', 'h1' : 'Heading&nbsp;1'},
-		
+	/** original selection up to 6*/
+	// sel : {'p' : 'Paragraph', 'pre' : 'Pre', 'h1' : '1 Heading ', 'h2' : '2 Heading', 'h3' : '3 Heading', 'h4' : '4 Heading', 'h5' : '5 Heading', 'p6' : '6 Heading'},
+	sel : {'p' : 'Paragraph', 'pre' : 'Pre', 'h1' : '1 Heading ', 'h2' : '2 Heading', 'h3' : '3 Heading', 'h4' : '4 Heading'},
 	init : function() {
 		this.setDisplay('Font&nbsp;Format...');
 		for(itm in this.sel) {
 			var tag = itm.toUpperCase();
-			this.add('<'+tag+'>','<'+itm+' style="padding: 0px; margin: 0px;">'+this.sel[itm]+'</'+tag+'>');
+			this.add('<'+tag+'>',this.sel[itm]);
 		}
 	}
 });

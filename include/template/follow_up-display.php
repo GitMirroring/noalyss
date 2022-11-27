@@ -260,7 +260,7 @@ function small(p_id_textarea){
     <?php echo $title->input();
     ?>
 </p>
-    <div>
+    <div class="nicEdit-main">
         <?php 
 /**********************************************************************************************************************
  * Start BLOCK Comment and description
@@ -270,6 +270,7 @@ function small(p_id_textarea){
    $style_enl='style="display:inline"';$style_small='style="display:none"';
    // description
    $description = new ITextarea("ag_description");
+   $description->set_enrichText("enrich");
    $description->id="ag_description";
    $has_description = false;
     //---------------------------------- Description -------------------------------------------------------------------
@@ -298,15 +299,18 @@ function small(p_id_textarea){
             elseif ($p_view == 'READ' || $editable_description == false)
             {
                 echo h2(_("Description"));
-                echo '<pre class="field_follow_up">';
-                $comment_http= h($acomment[0]['agc_comment']);
-                $comment_http=add_http_link($comment_http);
-                echo $comment_http;
+                echo '<div class="nicEdit-main field_follow_up">';
+                echo $acomment[0]['agc_comment_raw'];
+                echo '</div>';
                 echo '</pre>';
             }
     } else {
           echo h2(_("Description"));
+          $description->set_enrichText('enrich');
+          $description->style='style="height:250px;width:90%;"';
+          echo '<div class="textarea" style="margin-left:5%;margin-right:5%">';
           echo $description->input();
+          echo '</div>';
    }
 
 
@@ -340,10 +344,13 @@ function small(p_id_textarea){
                 echo $comment->display();
             }
         } else {
+            // new comment
             echo '<span class="noprint">';
             if (  $p_view == 'UPD' &&  $has_description && Document_Option::can_add_comment($ag_id) )  {
                 echo h2(_("Commentaire"));
                 echo '<p></p>';
+                // if comment are editable it will be in
+                if ( Document_Option::option_comment($this->dt_id) == "ONE_EDIT") $desc->set_enrichText("plain");
                 echo $desc->input();
 
             }
@@ -368,8 +375,8 @@ function small(p_id_textarea){
                 $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
                 $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
                         $acomment[$c]['str_agc_date'].')').$js.
-                                '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
-                                " ".add_http_link(h($acomment[$c]['agc_comment'])).'</pre>'
+                                '<div class="nicEdit-main field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
+                                " ".$acomment[$c]['agc_comment_raw'].'</div>'
                                 ;
 
             }
@@ -377,8 +384,8 @@ function small(p_id_textarea){
             {
                     $comment=h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
                             $acomment[$c]['str_agc_date'].')').
-                                    '<pre class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
-                                    " ".add_http_link(h($acomment[$c]['agc_comment'])).'</pre>'
+                                    '<div class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
+                                    " ".$acomment[$c]['agc_comment_raw'].'</div>'
                                     ;
 
 
