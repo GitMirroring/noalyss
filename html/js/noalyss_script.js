@@ -377,7 +377,8 @@ function toggleHideShow(p_obj, p_button,rotate)
     var div_obj=g(p_obj);
     var stat = div_obj.style.display;
     
-    var str = g(p_button).value??"";
+    var str = ( g(p_button))?g(p_button).value:"";
+
     if (stat === 'none')
     {
         // specific for the DIV id search_form
