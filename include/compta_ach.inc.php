@@ -241,10 +241,12 @@ try
     }
     else if (isset($_GET['create_feenote']))
     {
-        $array=$Ledger->convert_from_follow($http->get('ag_id',"number"));
+        $action_id=$http->get('ag_id',"number");
+        $array=$Ledger->convert_from_follow($action_id);
         echo HtmlInput::hidden("ledger_type", "VEN");
         echo HtmlInput::hidden("ac",$http->get('ac'));
         echo HtmlInput::hidden("sa", "p");
+        echo HtmlInput::hidden("action_gestion",$action_id);
         echo $Ledger->input($array);
         echo '<div class="content">';
         echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);

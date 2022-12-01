@@ -144,6 +144,7 @@ if ( in_array("document",$a_show)) {
     Action gestion
         <?php
             $irelated_action=new IRelated_Action("action_gestion");
+            $irelated_action->value=$http->request("action_gestion","string","");
             echo $irelated_action->input();
         ?>
 </div>

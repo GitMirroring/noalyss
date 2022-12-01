@@ -39,159 +39,159 @@ $post_jrn=$http->post("p_jrn", "string","");
 // empty form for encoding
 //----------------------------------------------------------------------
 
-    $Ledger=new Acc_Ledger_Sale($cn,0);
+$Ledger=new Acc_Ledger_Sale($cn,0);
 
-    // Check privilege
-    if ( isset($_REQUEST['p_jrn']) &&
-            $g_user->check_jrn($http->request("p_jrn","number")) != 'W' )
+// Check privilege
+if ( isset($_REQUEST['p_jrn']) &&
+        $g_user->check_jrn($http->request("p_jrn","number")) != 'W' )
+{
+
+    NoAccess();
+    exit -1;
+}
+
+/* if a new invoice is encoded, we display a form for confirmation */
+if ( isset ($_POST['view_invoice'] ) )
+{
+    $p_jrn=$http->post("p_jrn","number");
+    $Ledger=new Acc_Ledger_Sale($cn,$p_jrn);
+    try
+    {
+        $Ledger->verify_operation($_POST);
+    }
+    catch (Exception $e)
+    {
+        alert($e->getMessage());
+        $p_msg=$e->getMessage();
+        $correct=1;
+    }
+    // if correct is not set it means it is correct
+    if ( ! isset($correct))
+    {
+        echo '<div class="content">';
+
+        echo '<div id="confirm_div_id" style="width: 47%; float: left;">';
+        echo h1(_("Confirmation"));
+        echo span(_("Vous devez encore confirmer"),' class="notice"');
+        echo '</div>';
+
+        echo '<div id="confirm_div_id" style="width: 100%; float: left;">';
+        echo '<form class="print" enctype="multipart/form-data" method="post">';
+        echo dossier::hidden();
+        echo $Ledger->confirm($_POST );
+        echo HtmlInput::hidden('ac',$strac);
+        $Ledger->input_extra_info();
+        echo HtmlInput::submit("record", _("Enregistrement"), 'onClick="return verify_ca(\'\');"');
+        echo HtmlInput::submit('correct', _("Corriger"));
+        echo '</form>';
+        echo '</div>';
+        if (DEBUGNOALYSS>1) { echo "<!-- confirm_div_id -->";}
+        return;
+    }
+}
+//------------------------------
+/* Record the invoice */
+//------------------------------
+
+if ( isset($_POST['record']) )
+{
+// Check privilege
+    if ( $g_user->check_jrn($post_jrn) != 'W' )
     {
 
         NoAccess();
         exit -1;
     }
 
-    /* if a new invoice is encoded, we display a form for confirmation */
-    if ( isset ($_POST['view_invoice'] ) )
+    $Ledger=new Acc_Ledger_Sale($cn,$post_jrn);
+    try
     {
-        $p_jrn=$http->post("p_jrn","number");
-        $Ledger=new Acc_Ledger_Sale($cn,$p_jrn);
-        try
-        {
-            $Ledger->verify_operation($_POST);
-        }
-        catch (Exception $e)
-        {
-            alert($e->getMessage());
-            $p_msg=$e->getMessage();
-            $correct=1;
-        }
-        // if correct is not set it means it is correct
-        if ( ! isset($correct))
-        {
+        $Ledger->verify_operation($_POST);
+    }
+    catch (Exception $e)
+    {
+        alert($e->getMessage());
+        $correct=1;
+    }
+
+    if ( ! isset($correct))
+    {
+        if ( is_msie() == 0 )
+            echo '<div style="position:absolute"  class="content">';
+         else
             echo '<div class="content">';
 
-            echo '<div id="confirm_div_id" style="width: 47%; float: left;">';
-            echo h1(_("Confirmation"));
-            echo span(_("Vous devez encore confirmer"),' class="notice"');
-            echo '</div>';
-            
-            echo '<div id="confirm_div_id" style="width: 100%; float: left;">';
-            echo '<form class="print" enctype="multipart/form-data" method="post">';
-            echo dossier::hidden();
-            echo $Ledger->confirm($_POST );
-            echo HtmlInput::hidden('ac',$strac);
-            $Ledger->input_extra_info();
-            echo HtmlInput::submit("record", _("Enregistrement"), 'onClick="return verify_ca(\'\');"');
-            echo HtmlInput::submit('correct', _("Corriger"));
-            echo '</form>';
-            echo '</div>';
-            if (DEBUGNOALYSS>1) { echo "<!-- confirm_div_id -->";}
-            return;
-        }
-    }
-    //------------------------------
-    /* Record the invoice */
-    //------------------------------
+        $Ledger=new Acc_Ledger_Sale($cn,$_POST['p_jrn']);
+        $internal=$Ledger->insert($_POST);
 
-    if ( isset($_POST['record']) )
-    {
-// Check privilege
-        if ( $g_user->check_jrn($post_jrn) != 'W' )
+        /* Save the predefined operation */
+        if ( isset($_POST['opd_name']) && trim($_POST['opd_name']) != "" )
         {
-
-            NoAccess();
-            exit -1;
+            $opd=new Pre_operation($cn);
+            $opd->get_post();
+            $opd->save();
         }
 
-        $Ledger=new Acc_Ledger_Sale($cn,$post_jrn);
-        try
+        /* Show button  */
+        echo '<h1> Enregistrement </h1>';
+
+        echo $Ledger->confirm($_POST,true);
+        /* Show link for Invoice */
+        if (isset ($Ledger->doc) )
         {
-            $Ledger->verify_operation($_POST);
+            echo '<h2>'._('Document').' </h2>';
+            echo $Ledger->doc;
         }
-        catch (Exception $e)
+
+
+        /* Save the additional information into jrn_info */
+        $obj=new Acc_Ledger_Info($cn);
+        $obj->save_extra($Ledger->jr_id,$_POST);
+
+         /* save followup */
+         $Ledger->save_followup($http->request("action_gestion","string",""));
+
+         // extourne
+        if (isset($_POST['reverse_ck']))
         {
-            alert($e->getMessage());
-            $correct=1;
-        }
-
-        if ( ! isset($correct))
-        {
-            if ( is_msie() == 0 ) 
-                echo '<div style="position:absolute"  class="content">';
-             else
-                echo '<div class="content">';
-
-            $Ledger=new Acc_Ledger_Sale($cn,$_POST['p_jrn']);
-            $internal=$Ledger->insert($_POST);
-
-            /* Save the predefined operation */
-            if ( isset($_POST['opd_name']) && trim($_POST['opd_name']) != "" )
+            $p_date=$http->post('reverse_date', "string",'');
+            $p_msg=$http->post("ext_label");
+            if (isDate($p_date)==$p_date)
             {
-                $opd=new Pre_operation($cn);
-                $opd->get_post();
-                $opd->save();
-            }
-
-            /* Show button  */
-            echo '<h1> Enregistrement </h1>';
-
-            echo $Ledger->confirm($_POST,true);
-            /* Show link for Invoice */
-            if (isset ($Ledger->doc) )
-            {
-                echo '<h2>'._('Document').' </h2>';
-                echo $Ledger->doc;
-            }
-
-
-            /* Save the additional information into jrn_info */
-            $obj=new Acc_Ledger_Info($cn);
-            $obj->save_extra($Ledger->jr_id,$_POST);
-            
-             /* save followup */
-             $Ledger->save_followup($http->request("action_gestion","string",""));
-             
-             // extourne
-            if (isset($_POST['reverse_ck']))
-            {
-                $p_date=$http->post('reverse_date', "string",'');
-                $p_msg=$http->post("ext_label");
-                if (isDate($p_date)==$p_date)
+                // reverse the operation
+                try
                 {
-                    // reverse the operation
-                    try
-                    {
-                        $Ledger->reverse($p_date,$p_msg);
-                        echo '<p>';
-                        echo _('Extourné au ').$p_date;
-                        echo '</p>';
+                    $Ledger->reverse($p_date,$p_msg);
+                    echo '<p>';
+                    echo _('Extourné au ').$p_date;
+                    echo '</p>';
 
-                    }
-                    catch (Exception $e)
-                    {
-                        echo '<span class="warning">'._('Opération non extournée').
-                            $e->getMessage().
-                            '</span>';
-                    }
                 }
-                else
+                catch (Exception $e)
                 {
-                    // warning because date is invalid
-                    echo '<span class="warning">'._('Date invalide, opération non extournée').'</span>';
+                    echo '<span class="warning">'._('Opération non extournée').
+                        $e->getMessage().
+                        '</span>';
                 }
             }
-            echo '<ul class="aligned-block">';
-            echo "<li>";
-            echo $Ledger->button_new_operation();
-            echo "</li>";
-            echo "<li>";
-            echo $Ledger->button_copy_operation();
-            echo "</li>"; 
-            echo "</ul>";
-            echo '</div>';
-            return;
+            else
+            {
+                // warning because date is invalid
+                echo '<span class="warning">'._('Date invalide, opération non extournée').'</span>';
+            }
         }
+        echo '<ul class="aligned-block">';
+        echo "<li>";
+        echo $Ledger->button_new_operation();
+        echo "</li>";
+        echo "<li>";
+        echo $Ledger->button_copy_operation();
+        echo "</li>";
+        echo "</ul>";
+        echo '</div>';
+        return;
     }
+}
 //  ------------------------------
 /* Display a blank form or a form with predef operation */
 //  ------------------------------
@@ -255,10 +255,12 @@ try
     }
     else if (isset($_GET['create_invoice']))
     {
-        $array=$Ledger->convert_from_follow($http->get('ag_id',"number"));
+        $action_id=$http->get('ag_id',"number");
+        $array=$Ledger->convert_from_follow($action_id);
         echo HtmlInput::hidden("ledger_type", "VEN");
         echo HtmlInput::hidden("ac", $http->get('ac'));
         echo HtmlInput::hidden("sa", "p");
+        echo HtmlInput::hidden("action_gestion",$action_id);
         echo $Ledger->input($array);
         echo '<div class="content">';
         echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);
@@ -272,7 +274,8 @@ try
         echo HtmlInput::hidden("ledger_type", "VEN");
         echo HtmlInput::hidden("ac", $strac);
         echo HtmlInput::hidden("sa", "p");
-
+        $action_id=$http->get('ag_id',"number");
+        echo HtmlInput::hidden("action_gestion",$action_id);
         echo $Ledger->input($array);
         echo '<div class="content">';
         echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);

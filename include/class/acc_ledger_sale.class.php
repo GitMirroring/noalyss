@@ -1251,7 +1251,7 @@ EOF;
         $r.='<br>';
         $obj = new IText();
         $r.=_('Numero de bon de commande : ') . $obj->input('bon_comm') . '<br>';
-        $r.=_('Autre information : ') . $obj->input('other_info') . '<br>';
+        $r.=_('Communication ou autre information  : ') . $obj->input('other_info') . '<br>';
         $r.='</p>';
         $r.='</div>';
         return $r;
