@@ -65,7 +65,7 @@ if (isset($_POST['save_tag_sb']))
 <?php
 $tag->show_list();
 $js=sprintf("onclick=\"show_tag('%s','%s','%s','p')\"", Dossier::id(), $_REQUEST['ac'], '-1');
-echo HtmlInput::button("tag_add", "Ajout d'un tag", $js);
+echo HtmlInput::button("tag_add", "Création étiquette", $js);
 ?>
 </div>
 <?php

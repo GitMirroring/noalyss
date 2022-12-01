@@ -30,7 +30,7 @@ $tag->select();
 //------------------- Propose to add a tag
 
 $js=sprintf("onclick=\"show_tag('%s','%s','%s','j')\"",Dossier::id(),'','-1');
-if ( $g_user->check_action(TAGADD) == 1) { echo HtmlInput::button("tag_add", _("Ajout d'un tag"), $js);}
+if ( $g_user->check_action(TAGADD) == 1) { echo HtmlInput::button("tag_add", _("Création étiquette"), $js);}
 echo HtmlInput::button_close("tag_div");
 
 $response=  ob_get_clean();

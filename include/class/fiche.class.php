@@ -1815,7 +1815,7 @@ class Fiche
                     "act"=>"CSV:fichedetail"
                     )
                 );
-        return '<a class="smallbutton" style="display:inline" href="'.$href.'">'._("Export CSV").'</a>';
+        return '<a class="smallbutton" style="display:inline-block" href="'.$href.'">'._("Export CSV").'</a>';
 
     }
     /**
@@ -1837,7 +1837,7 @@ class Fiche
                     "act"=>"PDF:fichedetail"
                     )
                 );
-        return '<a class="smallbutton" style="display:inline" href="'.$href.'">'._("Export PDF").'</a>';
+        return '<a class="smallbutton" style="display:inline-block" href="'.$href.'">'._("Export PDF").'</a>';
         
     }
     /**

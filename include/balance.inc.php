@@ -86,7 +86,7 @@ $input_to->cn=$cn;
 $input_to->user=$g_user;
 echo "  "._('jusque').' :'.$input_to->input();
 echo '<br>';
-echo HtmlInput::button_action(_('Avancé'), " if (\$('balance_advanced_div').style.display=='none') { \$('balance_advanced_div').show();} else { \$('balance_advanced_div').hide();}");
+echo HtmlInput::button_action(_('Avancé'), " if (\$('balance_advanced_div').style.display=='none') { \$('balance_advanced_div').show();} else { \$('balance_advanced_div').hide();}",uniqid(),"smallbutton");
 //-------------------------------------------------
 echo '<div id="balance_advanced_div" style="display:none">';
 

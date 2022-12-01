@@ -751,7 +751,7 @@ class Acc_Account_Ledger
                     "act"=>"CSV:postedetail"
                     )
                 );
-        return '<a class="smallbutton" style="display:inline" href="'.$href.'">'._("Export CSV").'</a>';
+        return '<a class="smallbutton" style="display:inline-block" href="'.$href.'">'._("Export CSV").'</a>';
 
     }
     /**
@@ -773,7 +773,7 @@ class Acc_Account_Ledger
                     "act"=>"PDF:postedetail"
                     )
                 );
-        return '<a class="smallbutton" style="display:inline" href="'.$href.'">'._("Export PDF").'</a>';
+        return '<a class="smallbutton" style="display:inline-block" href="'.$href.'">'._("Export PDF").'</a>';
         
     }
     /**

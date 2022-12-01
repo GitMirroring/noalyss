@@ -70,7 +70,7 @@ if ($action=="input")
 }
 elseif ($action=="save")
 {
-    $action_document_type->set_order(["dt_id", "dt_value","dt_prefix"]);
+    $action_document_type->set_order(["dt_id", "dt_prefix","dt_value"]);
     $xml=$action_document_type->ajax_save();
     header('Content-type: text/xml; charset=UTF-8');
     echo $xml->saveXML();
