@@ -280,7 +280,7 @@ function small(p_id_textarea){
             if ( $p_view != 'READ' && $editable_description == true){
                 echo h2(_("Description"));
                 $itDescription=new ITextarea("ag_description");
-                $itDescription->style='class="input_text field_follow_up" style="height:21rem;width:98%"';
+                $itDescription->style='class="input_text field_follow_up" style="height:21rem;width:98%;margin-left:1em;"';
 
                 $ag_description_id= $acomment[0]['agc_id'];
                 $itDescription->value=$acomment[0]['agc_comment'];
@@ -299,7 +299,7 @@ function small(p_id_textarea){
             elseif ($p_view == 'READ' || $editable_description == false)
             {
                 echo h2(_("Description"));
-                echo '<div class="nicEdit-main field_follow_up">';
+                echo '<div class="nicEdit-main field_follow_up" style="margin-left:5%;margin-bottom:1rem;width:90%;">';
                 echo $acomment[0]['agc_comment_raw'];
                 echo '</div>';
                 echo '</pre>';
@@ -308,7 +308,7 @@ function small(p_id_textarea){
           echo h2(_("Description"));
           $description->set_enrichText('enrich');
           $description->style='style="height:250px;width:90%;"';
-          echo '<div class="textarea" style="margin-left:5%;margin-right:5%">';
+          echo '<div class="textarea" style="margin-left:5%;margin-right:5%;margin-bottom:1rem;width:90%;">';
           echo $description->input();
           echo '</div>';
    }
@@ -322,7 +322,7 @@ function small(p_id_textarea){
         if (count($acomment) > 1 )  {
             echo h2(_("Commentaire"));
             $comment=new ITextarea("ag_comment_edit");
-            $comment->style='class="input_text field_follow_up" style="height:21rem;width:98%"';
+            $comment->style='class="input_text field_follow_up" style="height:21rem;width:98%;margin-left:5%;"';
 
             $ag_comment_id= (count($acomment) > 1)?$acomment[1]['agc_id']:-1;
             $comment->value=(count($acomment) > 1 )?$acomment[1]['agc_comment']:'';
@@ -375,7 +375,7 @@ function small(p_id_textarea){
                 $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
                 $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
                         $acomment[$c]['str_agc_date'].')').$js.
-                                '<div class="nicEdit-main field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
+                                '<div class="nicEdit-main field_follow_up" style="margin-left:5%;margin-bottom:2rem;width:90%" id="com'.$acomment[$c]['agc_id'].'"> '.
                                 " ".$acomment[$c]['agc_comment_raw'].'</div>'
                                 ;
 
@@ -396,10 +396,10 @@ function small(p_id_textarea){
             echo $comment;
         } // end for
         if (  $has_description &&  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id))  {
-            echo '<span class="noprint">';
-            echo '<p></p>';
+            	echo '<span class="noprint">';
+            	echo '<div style="margin-left:5%">';
                 echo $desc->input();
-
+		echo '</div>';
             }
             echo '</span>';
             if  ($p_view == 'UPD') {

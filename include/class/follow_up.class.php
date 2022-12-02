@@ -213,7 +213,7 @@ class Follow_Up
         // Description
         $desc=new ITextArea();
         $desc->set_enrichText("enrich");
-        $desc->style=' class="itextarea" style="width:80%;margin-left:0px"';
+        $desc->style=' class="itextarea" style="width:80%;margin-left:5%;"';
         $desc->name="ag_comment";
         $desc->readOnly=$readonly;
         $acomment=$this->db->get_array("SELECT agc_id, ag_id, to_char(agc_date,'DD.MM.YYYY HH24:MI') as str_agc_date, agc_comment, agc_comment_raw,tech_user
@@ -268,6 +268,7 @@ class Follow_Up
         $title->name="ag_title";
         $title->value=$this->ag_title;
         $title->size=60;
+	$title->style='style="font-size:2rem;font-weight:bold"';
 
 
         // Priority of the ag_priority

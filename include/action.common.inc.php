@@ -223,7 +223,7 @@ if ($sub_action == "update")
 //--------------------------------------------------------------------------------
 if ($sub_action == 'detail')
 {
-	echo '<div class="content">';
+	echo '<div class="content" style="padding:1rem">';
         if ( $correction == 0 )
         {
             $act = new Follow_Up($cn);
