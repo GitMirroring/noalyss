@@ -249,7 +249,7 @@ class HtmlInput
         $href="";
         if ($p_value!="")
             $href=sprintf('  href ="%s"  ', $p_value);
-        $r=sprintf('<span id="%s" > <A class="'.$p_class.'" style="display:inline;"  %s %s >%s</A></span>',
+        $r=sprintf('<span id="%s" > <A class="'.$p_class.'" style="display:inline-block;"  %s %s >%s</A></span>',
                 $p_name, $href, $p_javascript, $p_label);
         return $r;
     }

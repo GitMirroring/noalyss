@@ -78,6 +78,25 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
 
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <div id="operation_tag_td<?=$div?>">
+                                    <?php
+                                    /******************************************************************************************************************
+                                     * Tags on operation
+                                     *****************************************************************************************************************/
+                                    $tag_operation=new Tag_Operation($cn);
+                                    $tag_operation->set_jrn_id($obj->det->jr_id);
+                                    $tag_operation->tag_cell($div);
+                                    ?>
+
+                                    <?php
+                                    // Button add tags
+                                    if ( $access=='W') { echo Tag_Operation::button_search($obj->det->jr_id,$div);}
+                                    ?>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
                 </td>
 

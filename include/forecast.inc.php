@@ -138,7 +138,7 @@ if ($sa=="vw")
     
         echo HtmlInput::hidden('ac', $ac);
         $href=http_build_query(array('ac'=>$ac, 'gDossier'=>Dossier::id()));
-        echo '<a style="display:inline" class="smallbutton" href="do.php?'.$href.'">'._('Retour').'</a>';
+        echo '<a style="display:inline-block" class="smallbutton" href="do.php?'.$href.'">'._('Retour').'</a>';
         echo '</form>';
         echo '</div>';
         echo '</div>';

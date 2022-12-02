@@ -160,6 +160,7 @@ class Additional_Tax
      */
     static function display_row($p_jrn_id, &$sum_euro, &$sum_currency, $decalage = 0)
     {
+        global $g_parameter;
         $a_additional_tax = Additional_Tax::get_by_operation($p_jrn_id, $sum_euro, $sum_currency);
         $nb = count($a_additional_tax);
         for ($i = 0; $i < $nb; $i++) {
@@ -168,7 +169,10 @@ class Additional_Tax
             echo td($a_additional_tax[$i]->ac_accounting);
             echo td($a_additional_tax[$i]->ac_label . " ( " . $a_additional_tax[$i]->ac_rate . " %)");
             echo td(nbm($a_additional_tax[$i]->tax_amount), 'class="num"');
-            echo td("") . td("") . td("") . td("");
+            if ($g_parameter->MY_TVA_USE == 'Y')
+                echo td("") . td("") . td("") . td("");
+            else
+                echo td("") ;
             for ($e = 0; $e < $decalage; $e++) {
                 echo td("");
             }

@@ -43,7 +43,7 @@ $a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>
 $a_tab['document_operation_div']=array('id'=>'document_operation_div'.$div,'label'=>_('Document').'('.$nb_document.')','display'=>'block');
 $a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Actions Gestion').'('.count($a_followup).')','display'=>'none');
 $a_tab['analytic_div']=array('id'=>'analytic_div'.$div,'label'=>_('Comptabilité Analytique'),'display'=>'none');
-$a_tab['tag_operation_div']=array('id'=>'tag_operation_div'.$div,'label'=>_('Etiquette'),'display'=>'none');
+
 
  
 // show tabs
@@ -316,23 +316,7 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_file.php';
     </span>
 <?php endif;?>
 </div>
-<div id="tag_operation_div<?=$div?>" style="overflow:auto;display:<?php echo $a_tab['tag_operation_div']['display']?>"> 
-    <div id="operation_tag_td<?=$div?>">
-    <?php
-    /******************************************************************************************************************
-     * Tags on operation
-     *****************************************************************************************************************/
-    $tag_operation=new Tag_Operation($cn);
-    $tag_operation->set_jrn_id($obj->det->jr_id);
-    $tag_operation->tag_cell($div);
-    ?>
-    
-    </div>
-    <?php
-    // Button add tags
-         if ( $access=='W') { echo Tag_Operation::button_search($obj->det->jr_id,$div);}
-    ?>
-</div>
+
 <hr>
 <?php 
       echo '<p style="text-align:center">';

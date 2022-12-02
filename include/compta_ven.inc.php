@@ -274,7 +274,7 @@ try
         echo HtmlInput::hidden("ledger_type", "VEN");
         echo HtmlInput::hidden("ac", $strac);
         echo HtmlInput::hidden("sa", "p");
-        $action_id=$http->get('ag_id',"number");
+        $action_id=$http->get('ag_id',"string","");
         echo HtmlInput::hidden("action_gestion",$action_id);
         echo $Ledger->input($array);
         echo '<div class="content">';

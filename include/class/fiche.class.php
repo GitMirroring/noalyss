@@ -1368,7 +1368,7 @@ class Fiche
 
             $odd="";
              $odd  = ($i % 2 == 0 ) ? ' odd ': ' even ';
-             $accounting=$tiers->strAttribut(ATTR_DEF_ACCOUNT);
+             $accounting=$tiers->strAttribut(ATTR_DEF_ACCOUNT,0);
              if ( ! empty($accounting) && $p_action == 'bank'
                      && $amount['debit'] <  $amount['credit']
                      &&
@@ -1393,9 +1393,9 @@ class Fiche
             $r.="<TD> $e".$tiers->strAttribut(ATTR_DEF_QUICKCODE)."</A></TD>";
             $r.="<TD sorttable_customkey=\"text{$accounting}\"> $e".$accounting."</TD>";
             $r.="<TD>".h($tiers->strAttribut(ATTR_DEF_NAME))."</TD>";
-            $r.="<TD>".h($tiers->strAttribut(ATTR_DEF_ADRESS).
-                         " ".$tiers->strAttribut(ATTR_DEF_CP).
-                         " ".$tiers->strAttribut(ATTR_DEF_PAYS)).
+            $r.="<TD>".h($tiers->strAttribut(ATTR_DEF_ADRESS,0).
+                         " ".$tiers->strAttribut(ATTR_DEF_CP,0).
+                         " ".$tiers->strAttribut(ATTR_DEF_PAYS,0)).
                 "</TD>";
             $r.='<td>'.linkTo($tiers->strAttribut(ATTR_DEF_WEBSITE,0)).'</td>';
             $str_deb=(($amount['debit']==0)?0:nbm($amount['debit']));

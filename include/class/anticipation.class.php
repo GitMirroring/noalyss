@@ -159,13 +159,13 @@ EOF;
         $form.=HtmlInput::hidden('f_id', $this->getForecastId());
         $form.=HtmlInput::hidden('ac', $ac);
         
-        echo  '<form method="get" id="form_del" onsubmit="return confirm_box(this,content[\'47\'])" style="display:inline">';
+        echo  '<form method="get" id="form_del" onsubmit="return confirm_box(this,content[\'47\'])" style="display:inline-block">';
         echo $form;
         echo HtmlInput::hidden("action","del");
         echo HtmlInput::submit('del_bt', _('Effacer'));
         echo '</form>';
         
-        echo  '<form method="get" id="form_clone" onsubmit="return confirm_box(this,content[\'47\']) " style="display:inline" >';
+        echo  '<form method="get" id="form_clone" onsubmit="return confirm_box(this,content[\'47\']) " style="display:inline-block" >';
         echo $form;
         echo HtmlInput::hidden("action","clone");
         echo HtmlInput::submit("clone_bt",_("Clone"));

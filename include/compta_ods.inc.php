@@ -27,25 +27,24 @@
  * quant_purchase and quant_sold are not changed by this
  *
  */
-if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
+if (!defined('ALLOWED')) die('Appel direct ne sont pas permis');
+require_once NOALYSS_INCLUDE . '/lib/ac_common.php';
+require_once NOALYSS_INCLUDE . '/lib/function_javascript.php';
 
-global $g_user,$http;
+global $g_user, $http;
 
 $cn = Dossier::connect();
 
 
-$id_predef = $http->request('p_jrn_predef','number',-1);
-$id_ledger = $http->request('p_jrn','number',$id_predef);
+$id_predef = $http->request('p_jrn_predef', 'number', -1);
+$id_ledger = $http->request('p_jrn', 'number', $id_predef);
 
 $ledger = new Acc_Ledger($cn, $id_ledger);
 $first_ledger = $ledger->get_first('ODS');
-if ( empty ($first_ledger))
-{
-	exit(  '<span class="warning">'.
-               _('Pas de journal disponible').
-               '</span>');
+if (empty ($first_ledger)) {
+    exit('<span class="warning">' .
+        _('Pas de journal disponible') .
+        '</span>');
 }
 $ledger->id = ($ledger->id == -1) ? $first_ledger['jrn_def_id'] : $id_ledger;
 
@@ -54,105 +53,91 @@ $def = -1;
 $ledger->with_concerned = true;
 
 
-
-
-if ($g_user->check_jrn($ledger->id) == 'X')
-{
-	NoAccess();
-	exit - 1;
+if ($g_user->check_jrn($ledger->id) == 'X') {
+    NoAccess();
+    exit - 1;
 }
-$p_msg="";
-if (!isset($_POST['summary']) && !isset($_POST['save']))
-{
-	require NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
-	return;
-}
-elseif (isset($_POST['summary']))
-{
+$p_msg = "";
+if (!isset($_POST['summary']) && !isset($_POST['save'])) {
+    require NOALYSS_INCLUDE . '/operation_ods_new.inc.php';
+    return;
+} elseif (isset($_POST['summary'])) {
     try {
         $ledger->verify_operation($_POST);
-        require_once NOALYSS_INCLUDE.'/operation_ods_confirm.inc.php';
-    } catch (Exception $e)
-    {
+        require_once NOALYSS_INCLUDE . '/operation_ods_confirm.inc.php';
+    } catch (Exception $e) {
         echo alert($e->getMessage());
-        $p_msg=$e->getMessage();
-        require_once NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
+        $p_msg = $e->getMessage();
+        require_once NOALYSS_INCLUDE . '/operation_ods_new.inc.php';
 
     }
     return;
-}
-elseif (isset($_POST['save']))
-{
-	$array = $_POST;
-        echo '<div class="content">';
-	try
-	{
-		$ledger->save($array);
-                $jr_id=$ledger->jr_id;
-                
-                /* save followup */
-                $ledger->save_followup($http->request("action_gestion","string",""));
-                                
-                
-		echo '<h2>'._("Opération enregistrée")._("Piece") . h($ledger->pj) . '</h2>';
-		if (strcmp($ledger->pj, $_POST['e_pj']) != 0)
-		{
-			echo '<h3 class="notice">' . _('Attention numéro pièce existante, elle a du être adaptée') .
-                             '</h3>';
-		}
-		printf('<a class="detail" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a><hr>',
-                        $jr_id, dossier::id(), $ledger->internal);
+} elseif (isset($_POST['save'])) {
+    $array = $_POST;
+    echo '<div class="content">';
+    try {
+        $ledger->save($array);
+        $jr_id = $ledger->jr_id;
 
-		// show feedback
-		echo '<div id="jrn_name_div">'; echo '<h1 id="jrn_name"  style="display:inline">' .
-                        $ledger->get_name() . '</h1>'; echo '</div>';
-		echo $ledger->confirm($_POST, true);
-                 // extourne
-                if (isset($_POST['reverse_ck']))
-                {
-                    $p_date=$http->post('reverse_date',"string", '');
-                    $p_msg=$http->post("ext_label");
-                    if (isDate($p_date)==$p_date)
-                    {
-                        // reverse the operation
-                        try
-                        {
-                            $ledger->reverse($p_date,$p_msg);
-                            echo '<p>';
-                            echo _('Extourné au ').$p_date;
-                            echo '</p>';
-                        }
-                        catch (Exception $e)
-                        {
-                            echo '<span  class="warning">'._('Opération non extournée').
-                                $e->getMessage().
-                                '</span>';
-                                
-                            }
-                    }
-                    else
-                    {
-                        // warning because date is invalid
-                        echo '<span class="warning">'._('Date invalide, opération non extournée').'</span>';
-                    }
-                }
-                echo '<ul class="aligned-block">';
-                echo "<li>";
-                echo $ledger->button_new_operation();
-                echo "</li>";
-                echo "<li>";
-                echo $ledger->button_copy_operation();
-                echo "</li>"; 
-                echo "</ul>";
-	}
-	catch (Exception $e)
-	{
-		require NOALYSS_INCLUDE.'/operation_ods_new.inc.php';
-		alert($e->getMessage());
-                $p_msg=$e->getMessage();
-	}
+        /* save followup */
+        $ledger->save_followup($http->request("action_gestion", "string", ""));
+
+
+        echo '<h2>' . _("Opération enregistrée") ." ". _("Piece") ." ". h($ledger->pj) . '</h2>';
+        if (strcmp($ledger->pj, $_POST['e_pj']) != 0) {
+            echo '<h3 class="notice">' . _('Attention numéro pièce existante, elle a du être adaptée') .
+                '</h3>';
+        }
+        echo '<div style="margin-left:3rem">';
+        echo _("Détail opération");
+        echo " ";
+        printf('<a class="detail" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a><hr>',
+            $jr_id, dossier::id(), $ledger->internal);
         echo '</div>';
-	return;
+
+        // show feedback
+        echo '<div id="jrn_name_div">';
+        echo '<h1 id="jrn_name"  style="display:inline">' .
+            $ledger->get_name() . '</h1>';
+        echo '</div>';
+        echo $ledger->confirm($_POST, true);
+        // extourne
+        if (isset($_POST['reverse_ck'])) {
+            $p_date = $http->post('reverse_date', "string", '');
+            $p_msg = $http->post("ext_label");
+            if (isDate($p_date) == $p_date) {
+                // reverse the operation
+                try {
+                    $ledger->reverse($p_date, $p_msg);
+                    echo '<p>';
+                    echo _('Extourné au ') . $p_date;
+                    echo '</p>';
+                } catch (Exception $e) {
+                    echo '<span  class="warning">' . _('Opération non extournée') .
+                        $e->getMessage() .
+                        '</span>';
+
+                }
+            } else {
+                // warning because date is invalid
+                echo '<span class="warning">' . _('Date invalide, opération non extournée') . '</span>';
+            }
+        }
+        echo '<ul class="aligned-block">';
+        echo "<li>";
+        echo $ledger->button_new_operation();
+        echo "</li>";
+        echo "<li>";
+        echo $ledger->button_copy_operation();
+        echo "</li>";
+        echo "</ul>";
+    } catch (Exception $e) {
+        require NOALYSS_INCLUDE . '/operation_ods_new.inc.php';
+        alert($e->getMessage());
+        $p_msg = $e->getMessage();
+    }
+    echo '</div>';
+    return;
 }
 return;
 

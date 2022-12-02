@@ -113,7 +113,6 @@ class Acc_Plan_MTable extends Manage_Table_SQL
                    echo '<td>';
                    $a_code=explode(",",$p_row[$v]);
                    $nb_code=count($a_code);
-                   echo \Noalyss\Dbg::hidden_info("card",$p_row);
                    for ($xx = 0;$xx < $nb_code;$xx++)
                    {
                        echo HtmlInput::card_detail($a_code[$xx],'','style="display:inline"')."," ;
