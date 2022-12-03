@@ -1024,8 +1024,16 @@ class Follow_Up
         $this->ag_dest=$http->extract("ag_dest","string",$g_user->get_profile());
         $this->ag_priority=$http->extract("ag_priority","string","2");
         $this->ag_contact=$http->extract("ag_contact","string","");
-        $this->ag_comment=$http->extract("ag_comment","raw","");
-        $this->ag_description=$http->extract("ag_description","raw","");
+	$ag_comment=trim($http->extract("ag_comment","raw",""));
+	if ( strip_tags($ag_comment) == '') 
+		$this->ag_comment='';
+	else 
+		$this->ag_comment=$ag_comment;
+        $ag_description=trim($http->extract("ag_description","raw",""));
+	if ( strip_tags($ag_description) == '') 
+		$this->ag_description='';
+	else 
+		$this->ag_description=$ag_description;
         $this->ag_remind_date=$http->extract("ag_remind_date","string",null);
         $this->operation=$http->extract("operation","string",null);
         $this->action=$http->extract("action","string",null);
