@@ -90,11 +90,12 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
                                     $tag_operation->tag_cell($div);
                                     ?>
 
-                                    <?php
+                                 
+                                </div>
+                                   <?php
                                     // Button add tags
                                     if ( $access=='W') { echo Tag_Operation::button_search($obj->det->jr_id,$div);}
                                     ?>
-                                </div>
                             </td>
                         </tr>
                     </table>

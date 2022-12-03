@@ -127,11 +127,12 @@ $str_anc = "";
                                 $tag_operation->set_jrn_id($obj->det->jr_id);
                                 $tag_operation->tag_cell($div);
                                 ?>
-                            <?php
+                           
+                        </div>
+                         <?php
                             // Button add tags
                             if ( $access=='W') { echo Tag_Operation::button_search($obj->det->jr_id,$div);}
                             ?>
-                        </div>
                         </td>
                         </tr>
                     </table>

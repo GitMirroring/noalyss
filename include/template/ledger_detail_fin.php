@@ -96,11 +96,12 @@ echo td(_('Pièce')).td($itext->input());
                                     $tag_operation->tag_cell($div);
                                     ?>
 
+                                </div>
+                                
                                 <?php
                                 // Button add tags
                                 if ( $access=='W') { echo Tag_Operation::button_search($obj->det->jr_id,$div);}
                                 ?>
-                                </div>
                              </td>
                         </tr>
                     </table>
