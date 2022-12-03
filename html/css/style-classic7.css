@@ -1799,11 +1799,11 @@ div.box table{
     font-size: 96%;
 }
 div.box tr.odd {
-    background-color: #F2F6FD;
+    background-color: lightblue;
     
 }
 div.box tr.even {
-    background-color:#e4e7ed;
+    background-color: white;
     
 }
 #jrn_name_div h2{
