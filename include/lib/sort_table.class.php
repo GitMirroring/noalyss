@@ -71,11 +71,11 @@ class Sort_Table
 	$file = str_replace('extension.php', '', $_SERVER['PHP_SELF']);
 
 	$base = $this->array[$p_ind]['url'];
-	$str = '';
+	$str = $this->array[$p_ind]['head'] .'';
 	$str .= '<A style="display:inline;text-decoration:none" HREF="' . $base . '&ord=' . $this->array[$p_ind]['parm_asc'] . '">' .
 		$this->array[$p_ind]['car_asc'] .
 		'</A>' .
-		$this->array[$p_ind]['head'] .
+
 		'<A style="display:inline;text-decoration:none" HREF="' . $base . '&ord=' . $this->array[$p_ind]['parm_desc'] . '">' .
 		 $this->array[$p_ind]['car_desc'] .
 		'</A>';
