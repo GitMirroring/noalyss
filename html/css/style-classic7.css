@@ -607,8 +607,7 @@ select {
     border: 1px solid #0000FF;
     margin:2px;
     background-color:#FFFFFF;
-
-    text-shadow: initial;
+    border-radius: 3px;
     padding: 3px;
 }
 
