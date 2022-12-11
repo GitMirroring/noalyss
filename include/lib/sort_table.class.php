@@ -25,6 +25,8 @@
  */
 class Sort_Table
 {
+	private $nb;
+	private $array;
 
     function __construct()
     {
@@ -35,12 +37,12 @@ class Sort_Table
     /**
      *@brief add row of a header in the internal array ($this->array)
      * , it uses the $_GET['ord'] parameter,
-     * @param type $p_header label of the header
-     * @param type $p_url base url
-     * @param type $p_sql_asc sql if ascending
-     * @param type $p_sql_desc sql if descending
-     * @param type $p_get_asc the value in $_GET if ascending is choosen
-     * @param type $p_get_desc the value in $_GET if descending is choosen
+     * @param string $p_header label of the header
+     * @param string $p_url base url
+     * @param string $p_sql_asc sql if ascending
+     * @param string $p_sql_desc sql if descending
+     * @param string $p_get_asc the value in $_GET if ascending is choosen
+     * @param string $p_get_desc the value in $_GET if descending is choosen
      */
     function add($p_header, $p_url, $p_sql_asc, $p_sql_desc, $p_get_asc, $p_get_desc)
     {
@@ -51,8 +53,8 @@ class Sort_Table
 	    'sql_desc' => $p_sql_desc,
 	    'parm_asc' => $p_get_asc,
 	    'parm_desc' => $p_get_desc,
-	    'car_asc' => '<span>&#9650</span>',
-	    'car_desc' => '<span>&#9660</span>'
+	    'car_asc' => '<span style="font-size:70%">&#9650</span>',
+	    'car_desc' => '<span style="font-size:70%">&#9660</span>'
 	);
 	$ind = $this->nb;
 	$this->array[$ind] = $array;
@@ -61,7 +63,7 @@ class Sort_Table
 /**
  * Returns the header (the value into th tags) with the symbol ascending and
  * descending
- * @param  $p_ind the element (from 0 to nb)
+ * @param  int $p_ind the element (from 0 to nb)
  * @return string
  */
     function get_header($p_ind)
@@ -84,19 +86,19 @@ class Sort_Table
 
     function get_sql_order($p_get)
     {
-	for ($i = 0; $i < $this->nb; $i++)
-	{
-	    if ($p_get == $this->array[$i]['parm_asc'])
-	    {
-		$this->array[$i]['car_asc'] = '<span style="color:red">&#9650</span>';
-		return $this->array[$i]['sql_asc'];
-	    }
-	    if ($p_get == $this->array[$i]['parm_desc'])
-	    {
-		$this->array[$i]['car_desc'] = '<span style="color:red">&#9660</span>';
-		return $this->array[$i]['sql_desc'];
-	    }
-	}
+		for ($i = 0; $i < $this->nb; $i++)
+		{
+			if ($p_get == $this->array[$i]['parm_asc'])
+			{
+			$this->array[$i]['car_asc'] = '<span style="color:red;font-size:70%">&#9650</span>';
+			return $this->array[$i]['sql_asc'];
+			}
+			if ($p_get == $this->array[$i]['parm_desc'])
+			{
+			$this->array[$i]['car_desc'] = '<span style="color:red;font-size:70%">&#9660</span>';
+			return $this->array[$i]['sql_desc'];
+			}
+		}
     }
 
 }

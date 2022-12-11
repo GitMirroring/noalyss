@@ -27,6 +27,7 @@ if (!defined('ALLOWED'))
  * admin-noalyss.php
  * @see admin-noalyss.php ajax_misc.php admin.js
  */
+global $g_user;
 if ($g_user->Admin()==0)
 {
     die();
@@ -239,8 +240,16 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
         $max_email_input->value=$dos->get_parameter('max_email');
         $max_email_input->prec=0;
         echo $max_email_input->input();
-        echo '<br>';
+        echo '<ul class="aligned-block">';
+        echo "<li>";
         echo HtmlInput::submit('upd', _('Modifie'));
+        echo "</li>";
+        echo "<li>";
+        echo HtmlInput::button_close("folder_admin_div");
+        echo "</li>";
+        echo '</ul>';
+
+        
         echo '</form>';
         $content=ob_get_clean();
         $status='OK';
@@ -263,10 +272,16 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
         echo _("Tapez le code de confirmation");
         echo confirm_with_string("fld_drop",5);
         echo '</p>';
-        echo '<p style="text-align:center">';
+        echo '<ul class="aligned-block">';
+        echo "<li>";
         echo HtmlInput::submit('remove', _('Effacer'));
-        echo '</p>';
+        echo "</li>";
+        echo "<li>";
+        echo HtmlInput::button_close("folder_admin_div");
+        echo "</li>";
+        echo '</ul>';
         echo '</form>';
+
         $content=ob_get_clean();
         $status='OK';
     }
@@ -288,9 +303,15 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
         echo _('Cochez la case si vous êtes sûr de vouloir effacer ce modèle');
         echo $confirm->input();
         echo '</p>';
-        echo '<p style="text-align:center">';
+        echo '<ul class="aligned-block">';
+        echo "<li>";
         echo HtmlInput::submit('remove', _('Effacer'));
-        echo '</p>';
+        echo "</li>";
+        echo "<li>";
+        echo HtmlInput::button_close("folder_admin_div");
+        echo "</li>";
+        echo '</ul>';
+
         echo '</form>';
         $content=ob_get_clean();
         $status='OK';
@@ -317,8 +338,17 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
         echo $wDesc->input('desc', $desc);
         echo HtmlInput::hidden('m', $dossier);
         echo HtmlInput::hidden('action', 'modele_mgt');
-        echo '<br>';
-        echo HtmlInput::submit('upd', _('Modifie'));
+        
+        echo '<ul class="aligned-block">';
+        echo "<li>";
+        echo  HtmlInput::submit('upd', _('Modifie'));
+        echo "</li>";
+        echo "<li>";
+        echo HtmlInput::button_close("folder_admin_div");
+        echo "</li>";
+        echo '</ul>';
+
+
         echo '</form>';
         $content=ob_get_clean();
         $status='OK';
