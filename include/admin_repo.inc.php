@@ -178,7 +178,8 @@ hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #0
     {
         for ( $i = 0 ; $i < $a_table->length;$i++) {
             $node=$a_table->item($i);
-            $node->attributes->getNamedItem("width")->nodeValue="100%";
+            $node_width = $node->attributes->getNamedItem("width");
+            if ( $node_width != null ) $node_width->nodeValue="100%";
 
         }
     }
