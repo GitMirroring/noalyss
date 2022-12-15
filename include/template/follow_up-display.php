@@ -390,7 +390,7 @@ function small(p_id_textarea){
 
 
             }
-            $comment=preg_replace('/#([0-9]+)/','<a class="line" href="javascript:void()" onclick="view_action(\1,'.
+            $comment=preg_replace('/ #([0-9]+)/','  <a class="line" href="javascript:void()" onclick="view_action(\1,'.
                     Dossier::id().',0)" >\1</a>',$comment);
             echo '<p></p>';
             echo $comment;
