@@ -161,7 +161,7 @@ if ( $report != 0 ) : ?>
     $ix=0;
     if ( !empty ($result ) && count ($result) >  0)
     {
-        echo '<table border="0" width="100%">';
+        echo '<table class="result">';
         foreach ($result as $row) {
           $ix++;
               $class=($ix%2==0)?' class="even" ':' class="odd" ';
@@ -197,7 +197,7 @@ endif;
 <div id="last_operation_box_div" class="box">
 <?php echo HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','popup_recherche('.dossier::id().')','n')?>
 
-<table style="width: 100%">
+<table class="result" >
 <?php
 for($i=0;$i<count($last_ledger);$i++):
 	$class=($i%2==0)?' class="even" ':' class="odd" ';
@@ -234,7 +234,7 @@ for($i=0;$i<count($last_ledger);$i++):
     $array=$gestion->get_last(MAX_ACTION_SHOW);
     $len_array=count($array);
     ?>
-    <table style="width: 100%">
+    <table class="result" >
     <?php
     for ($i=0;$i < $len_array;$i++) :
     ?>
