@@ -215,14 +215,10 @@ var ManageTable = function (p_table_name)
      *
      *@example
   tbl6030f6f8c336a.afterSaveFct=function() {
-    console.debug(this);
-    console.debug(this.param);
     // if p_id == -1 then we are adding
     if ( this.param.p_id != -1 ) { return;}
-    console.debug(this.new_row);
     // retrive the id
     var id=this.new_row.id.replace('tbl6030f6f8c336a_','');
-    console.debug(id);
     // recall input ManageTable.input
     this.input(id,'tbl6030f6f8c336a');
 
