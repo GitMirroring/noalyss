@@ -206,6 +206,7 @@ class Acc_Ledger_SaleTest extends TestCase
         \Noalyss\Facility::save_file(__DIR__."/file", "Acc_Ledger_Sale_input.html",
                 \Noalyss\Facility::page_start().
                 $info);
+        echo "Save ".__DIR__."/file", "Acc_Ledger_Sale_input.html";
         $this->assertStringContainsString(
                 'NAME="e_client" ID="e_client" VALUE="CLIENT"   ondblclick="fill_ipopcard(this);" ', $info);
         $this->assertStringContainsString(
