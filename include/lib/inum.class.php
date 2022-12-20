@@ -91,7 +91,7 @@ class INum extends IText
 
         $extra=(isset($this->extra))?$this->extra:"";
 
-        $this->value=str_replace('"', '', $this->value);
+        $this->value=noalyss_str_replace('"', '', $this->value);
         $strAttribute=$this->get_node_attribute();
         if (!isset($this->css_size)  || empty ($this->css_size))
         {

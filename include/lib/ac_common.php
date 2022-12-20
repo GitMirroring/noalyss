@@ -1579,6 +1579,16 @@ function add_http_link($text)
     return $ret;
 
 }
+//---------------------------------------------------------------------------------------------------------------------
+//
+// PHP 8.2 fails with these functions when a NULL is given as argument
+//
+//---------------------------------------------------------------------------------------------------------------------
+
+function noalyss_strlen($p_string) :int{
+    if (empty ($p_string) ) return 0;
+    else return strlen($p_string);
+}
 function noalyss_trim($p_string) {
     if ($p_string===null) return "";
     else return trim($p_string);
