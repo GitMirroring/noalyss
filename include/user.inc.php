@@ -215,6 +215,7 @@ $header->add(_("Nom"), $url," order by use_name asc,use_first_name asc", "order 
 $header->add(_('Dossier'),$url,' order by ag_dossier asc','order by ag_dossier desc',
         'da','dd');
 $header->add(_("Actif"), $url," order by use_active asc", "order by  use_active desc","aa", "ad");
+$header->add(_("Email"), $url," order by use_email asc,use_name asc,use_first_name asc", "order by use_email desc,use_name desc,use_first_name desc","na", "nd");
 $ord=(isset($_REQUEST['ord']))?$_REQUEST['ord']:'la';
 $sql=$header->get_sql_order($ord);
 
@@ -231,6 +232,7 @@ if ( !empty ($a_user) )
     echo '<th>'.$header->get_header(0).'</th>';
     echo '<th>'.$header->get_header(1).'</th>';
     echo th(_("Prénom"));
+    echo '<th>'.$header->get_header(4).'</th>';
     echo '<th>'.$header->get_header(3).'</th>';
 	echo "<th>"._('Type')."</th>";
     echo '<th>'.$header->get_header(2).'</th>';
@@ -257,6 +259,7 @@ if ( !empty ($a_user) )
 
         echo td($r_user['use_name']);
         echo td($r_user['use_first_name']);
+        echo td($r_user['use_email']);
         echo td($Active);
         $type=($r_user['use_admin']==1)?_("Administrateur"):_("Utilisateur");
         echo "<td>".$type."</td>";
