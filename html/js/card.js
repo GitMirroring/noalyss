@@ -606,8 +606,8 @@ function fill_ipopcard(obj)
     var str_top="top:"+calcy(nTop)+"px";
 
     var str_style=str_top+";width:45em;height:auto;position:absolute";
-
-    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
+    waiting_box();
+    var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
 
     add_div(popup);
     var dossier=$('gDossier').value;
