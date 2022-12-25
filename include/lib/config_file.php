@@ -251,6 +251,12 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
     print ("// \$pdftk = /snap/bin/pdftk \r\n");
     print ("// uncomment to activate the captcha on login page\r\n");
     print ("// define('NOALYSS_CAPTCHA',true);\r\n");
+    print ("// Uncomment if you want to activate the possibility to reinitialize;\r\n");
+    print ("// password by email\r\n");
+    print ("// defined('RECOVER','1');\r\n");
+    print ("// Uncomment and define if you want to Name of the sender of the email \r\n");
+    print ("// if you activate the possibility to reinitialize password by email\r\n");
+    print ("// define('ADMIN_WEB', 'www-data@localhost');\r\n");
 
 }
 /*!\brief create the config file
