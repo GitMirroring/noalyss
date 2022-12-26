@@ -35,29 +35,51 @@
 */
 class Acc_Tva
 {
-    private  $cn;		/*!< $cn database connection */
     private static $variable=array("id"=>"tva_id",
                                    "label"=>"tva_label",
                                    "rate"=>"tva_rate",
                                    "comment"=>"tva_comment",
                                    "account"=>"tva_poste",
                                     "both_side"=>'tva_both_side');
+    public $tva_id;
+    public $tva_label;
+    public $tva_poste;
+    public $tva_rate;
+    public $tva_comment;
+    public $tva_both_side;
 
-    function __construct ($p_init,$p_tva_id=0)
+    private Tva_Rate_SQL $tva_rate_sql;
+
+    function __construct ($p_init,$p_tva_id=-1)
     {
         $this->cn=$p_init;
-        if ( isNumber($p_tva_id)==1) {
-            $this->tva_id=$p_tva_id;
-        } else {
-            $this->tva_id=0;
-        }
-        $this->poste="";
-        $this->tva_label=null;
-        $this->tva_rate=0;
-        $this->tva_comment=null;
-        $this->tva_poste=null;
-        $this->tva_both_side='f';
+        $this->tva_rate_sql=new Tva_Rate_SQL($p_init,$p_tva_id);
+        $this->tva_id=$p_tva_id;
+        $this->tva_label=&$this->tva_rate_sql->tva_label;
+        $this->tva_rate=&$this->tva_rate_sql->tva_rate;
+        $this->tva_comment=&$this->tva_rate_sql->tva_comment;
+        $this->tva_poste=&$this->tva_rate_sql->tva_poste;
+        $this->tva_both_side=&$this->tva_rate_sql->tva_both_side;
+
     }
+
+    /**
+     * @return Tva_Rate_SQL
+     */
+    public function getTvaRateSql(): Tva_Rate_SQL
+    {
+        return $this->tva_rate_sql;
+    }
+
+    /**
+     * @param Tva_Rate_SQL $tva_rate_sql
+     */
+    public function setTvaRateSql(Tva_Rate_SQL $tva_rate_sql)
+    {
+        $this->tva_rate_sql = $tva_rate_sql;
+        return $this;
+    }
+
     public function get_parameter($p_string)
     {
         if ( array_key_exists($p_string,self::$variable) )
@@ -80,57 +102,7 @@ class Acc_Tva
 
 
     }
-    public function get_info()
-    {
-        return var_export(self::$variable,true);
-    }
 
-    public function verify()
-    {
-        // Verify that the elt we want to add is correct
-    }
-    public function save()
-    {
-
-        if (  $this->tva_id == 0 )
-            $this->insert();
-        else
-            $this->update();
-    }
-
-    public function insert()
-    {
-        if ( $this->verify() != 0 ) return;
-        $sql="select tva_insert($1,$2,$3,$4,$5)";
-
-        $res=$this->cn->exec_sql(
-                 $sql,
-                 array($this->tva_label,
-                       $this->tva_rate,
-                       $this->tva_comment,
-                       $this->tva_poste,
-                        $this->tva_both_side)
-             );
-        $this->tva_id=$this->cn->get_current_seq('s_tva');
-        $err=Database::fetch_result($res);
-    }
-
-    public function update()
-    {
-        if ( $this->verify() != 0 ) return;
-        $sql="update tva_rate set tva_label=$1,tva_rate=$2,tva_comment=$3,tva_poste=$4,tva_both_side=$5 ".
-             " where tva_id = $6";
-        $res=$this->cn->exec_sql(
-                 $sql,
-                 array($this->tva_label,
-                       $this->tva_rate,
-                       $this->tva_comment,
-                       $this->tva_poste,
-                       $this->tva_both_side,
-                       $this->tva_id)
-             );
-
-    }
     /**
      *Load the VAT,
      *@note if the label is not found then we get an message error, so the best is probably
@@ -138,21 +110,9 @@ class Acc_Tva
      */
     public function load()
     {
-        if ( trim($this->tva_id)=="" || isNumber($this->tva_id)==0) return -1;
-        
-        $sql="select * from tva_rate where tva_id=$1";
-        $res=$this->cn->exec_sql(
-                 $sql,
-                 array($this->tva_id)
-             );
+        $this->tva_rate_sql->setp("tva_id",$this->tva_id);
 
-        if ( $this->cn->size() == 0 ) return -1;
-
-        $row=Database::fetch_array($res,0);
-        foreach (self::$variable as $idx)
-        {
-            $this->$idx=$row[$idx];
-        }
+        if ( !  $this->tva_rate_sql->load() ) return -1;
         return 0;
     }
     /*!\brief get the account of the side (debit or credit)
@@ -176,37 +136,4 @@ class Acc_Tva
             throw (new Exception (__FILE__.':'.__LINE__." param est d ou c, on a recu [ $p_side ]"));
         }
     }
-    public function delete()
-    {
-        if ( trim($this->tva_id)=="" || isNumber($this->tva_id)==0) return -1;
-        $sql="delete from tva_rate where tva_id=$1";
-        $res=$this->cn->exec_sql($sql,array($this->tva_id));
-    }
-    /*!\brief
-     * Test function
-     */
-    static function test_me()
-    {
-        $cn=Dossier::connect();
-        $a=new Acc_Tva($cn);
-        echo $a->get_info();
-        $a->set_parameter("id",1);
-        $a->load();
-        $a->set_parameter("id",0);
-        $a->set_parameter("rate","0.2222");
-        $a->set_parameter("label","test");
-        $a->save();
-        $a->load();
-        print_r($a);
-
-        $a->set_parameter("comment","un cht'it test");
-        $a->save();
-        $a->load();
-        print_r($a);
-
-        $a->delete();
-    }
-
 }
-
-/* test::test_me(); */

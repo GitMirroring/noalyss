@@ -188,13 +188,14 @@ abstract class Table_Data_SQL extends Data_SQL
         if ($this->cn->count()==0)
         {
             $this->$pk=-1;
-            return true;
+            return false;
         }
 
         foreach ($result[0] as $key=> $value)
         {
             $this->$key=$value;
         }
+        return true;
     }
 
 

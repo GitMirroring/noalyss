@@ -31,7 +31,7 @@
  * @class Tva_rate_SQL
  * @brief abstract of the table public.tva_rate
  */
-class Tva_rate_SQL extends Table_Data_SQL
+class Tva_Rate_SQL extends Table_Data_SQL
 {
 
     function __construct(DatabaseCore $p_cn, $p_id=-1)
