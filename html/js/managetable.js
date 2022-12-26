@@ -67,10 +67,12 @@
 
  Example :
  @code
- // the object_name is tbl6030ee4ee519e
+ // the object_name is tbl6030ee4ee519e , in the table each row (TR) has an attribute ctl_pk_id which is the id (primary key)
+ // <tr ctl_pk_id=""  ...> </tr>
  tbl6030ee4ee519e.afterSaveFct=function(p_param) {
   console.log(p_param);
   console.log(this)
+  console.log(p_param.getAttribute(ctl_pk_id))
 }
  @endcode
 
@@ -191,6 +193,7 @@ var ManageTable = function (p_table_name)
             var ctl = xml.getElementsByTagName("ctl");
             var html = xml.getElementsByTagName("html");
             var ctl_row = xml.getElementsByTagName("ctl_row");
+            var ctl_pk_id=xml.getElementsByTagName("ctl_pk_id");
             if (status.length == 0 || ctl.length == 0 || html.length == 0)
             {
                 throw content[53] + req.responseText;
@@ -201,6 +204,7 @@ var ManageTable = function (p_table_name)
             answer['ctl'] = getNodeText(ctl[0]);
             answer['ctl_row'] = getNodeText(ctl_row[0]);
             answer['html'] = getNodeText(html[0]);
+            answer['ctl_pk_id'] = getNodeText(ctl_pk_id[0]);
             return answer;
         } catch (e) {
             console.error("managetable:parseXML")
@@ -253,14 +257,17 @@ var ManageTable = function (p_table_name)
                 /// row , otherwise an update
                 var answer=here.parseXML(req);
                 var new_row;
+
                 if (answer ['status'] == 'OK') {
-                    if ($(answer['ctl_row'])) {
+                    if ($(answer['ctl_row']) ) {
                         new_row=$(answer['ctl_row']);
                         $(answer['ctl_row']).update(answer['html']);
+                        new_row.setAttribute("ctl_pk_id",answer['ctl_pk_id']);
                     } else {
                          new_row = new Element("tr");
                         new_row.id = answer['ctl_row'];
                         new_row.innerHTML = answer['html'];
+                        new_row.setAttribute("ctl_pk_id",answer['ctl_pk_id']);
                         /**
                          *  put the element at the right place
                          */
@@ -273,7 +280,7 @@ var ManageTable = function (p_table_name)
                     // if there is an afterSaveFct then call it
                     if (here.afterSaveFct != undefined && typeof here.afterSaveFct  == "function") {
                         try {
-                            here.afterSaveFct.call(here,new_row);
+                            here.afterSaveFct.call(here,new_row,req);
                         } catch (e) {
                             console.error("FAIL253 afterSaveFct ");
                             console.error(e.message);

@@ -59,7 +59,21 @@
  * @see ManageTable.js
  * @see ajax_accounting.php
  * @see sorttable.js
- * 
+ *
+ * If you need to add extra XML fields to manage them in the afterSaveFct then you can do like this
+ * in your php code answering the ajax call
+ *
+ * @code
+    header('Content-type: text/xml; charset=UTF-8');
+    $xml=$manage_table->ajax_save();
+    $s1=$xml->createElement("previous_id",$previous);
+    $data=$xml->getElementsByTagName("data");
+    $data[0]->append($s1);
+    echo $xml->saveXML();
+
+
+ * @endcode
+ *
  */
 
 class Manage_Table_SQL
@@ -969,19 +983,21 @@ function check()
 
     /**
      * @brief display a data row in the table, with the order defined
-     * in a_order and depending of the visibility of the column
+     * in a_order and depending of the visibility of the column, all the rows contains the attribute ctl_pk_id , to retrieve
+     * in javascript , ie with the function afterSaveFct (see managetable.js)
      * @param array $p_row contains a row from the database
      * @see set_col_type
      * @see input_custom
      * @see display_table
      * @see display_row_custom
+     * @see managetable.js
      */
     function display_row($p_row)
     {
         
         $pk_id=$p_row[$this->table->primary_key];
-        printf('<tr id="%s_%s">', $this->object_name,
-                $pk_id)
+        printf('<tr id="%s_%s" ctl_pk_id="%s">', $this->object_name,
+                $pk_id,$pk_id)
         ;
         
         if ($this->icon_mod=="left")
@@ -1261,6 +1277,7 @@ function check()
                 $ctl=$this->object_name."_".$this->table->get_pk_value();
                 $s2=$xml->createElement("ctl_row", $ctl);
                 $s4=$xml->createElement("ctl", $this->object_name);
+                $s5=$xml->createElement("ctl_pk_id", $this->table->get_pk_value());
                 ob_start();
                 $this->table->load();
                 $array=$this->table->to_array();
@@ -1277,6 +1294,7 @@ function check()
             $root->appendChild($s2);
             $root->appendChild($s3);
             $root->appendChild($s4);
+            $root->appendChild($s5);
             $xml->appendChild($root);
         }
         catch (Exception $ex)
@@ -1291,6 +1309,7 @@ function check()
             $root->appendChild($s2);
             $root->appendChild($s3);
             $root->appendChild($s4);
+            $root->appendChild($s5);
             $xml->appendChild($root);
         }
         return $xml;
@@ -1354,6 +1373,7 @@ function check()
             $s2=$xml->createElement("ctl_row", $ctl);
             $s4=$xml->createElement("ctl", $this->object_name);
             $s3=$xml->createElement("html");
+            $s5=$xml->createElement("ctl_pk_id", $this->table->get_pk_value());
             $t1=$xml->createTextNode($html);
             $s3->appendChild($t1);
 
@@ -1362,6 +1382,8 @@ function check()
             $root->appendChild($s2);
             $root->appendChild($s3);
             $root->appendChild($s4);
+            $root->appendChild($s5);
+
         }
         catch (Exception $ex)
         {
@@ -1370,12 +1392,15 @@ function check()
             $s2=$xml->createElement("ctl_row",
             $this->object_name."_".$this->table->get_pk_value());
             $s4=$xml->createElement("html", $ex->getTraceAsString());
-            
+            $s5=$xml->createElement("ctl_pk_id", $this->table->get_pk_value());
             $root=$xml->createElement("data");
             $root->appendChild($s1);
             $root->appendChild($s2);
             $root->appendChild($s3);
             $root->appendChild($s4);
+            $root->appendChild($s5);
+
+
         }
         $xml->appendChild($root);
         return $xml;
