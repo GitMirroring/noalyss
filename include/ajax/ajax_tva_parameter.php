@@ -41,7 +41,7 @@ try
 }
 catch (Exception $e)
 {
-      record_log($e);
+    record_log($e);
     return;
 }
 
@@ -63,9 +63,15 @@ if ($action=="input")
 }
 elseif ($action=="save")
 {
+    $previous=$http->request("old_tva_id","number");
+    $manage_table->setPreviousId($previous);
     $manage_table->set_object_name($ctl_id);
     header('Content-type: text/xml; charset=UTF-8');
-    echo $manage_table->ajax_save()->saveXML();
+    $xml=$manage_table->ajax_save();
+    $s1=$xml->createElement("previous_id",$previous);
+    $data=$xml->getElementsByTagName("data");
+    $data[0]->append($s1);
+    echo $xml->saveXML();
     return;
 }
 elseif ($action=="delete")

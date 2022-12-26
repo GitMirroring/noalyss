@@ -46,7 +46,6 @@ class Acc_Tva
     public $tva_poste;
     public $tva_rate;
     public $tva_comment;
-    public $tva_poste;
     public $tva_both_side;
 
     private Tva_Rate_SQL $tva_rate_sql;

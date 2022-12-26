@@ -42,3 +42,20 @@ $manage_table->create_js_script();
 $manage_table->display_table();
 echo '</div>';
 ?>
+<script>
+    <?=$manage_table->get_object_name()?>.afterSaveFct=function(p_param,p_xmltext) {
+
+    try {
+
+        var xml = p_xmltext.responseXML;
+        var old_tva_id=getNodeText(xml.getElementsByTagName("previous_id")[0]);
+        if (old_tva_id != p_param.getAttribute("ctl_pk_id")) {
+            var ctl_row=getNodeText(xml.getElementsByTagName("ctl")[0])+"_"+old_tva_id;
+            $(ctl_row).remove();
+        }
+
+    } catch (e) {
+        console.error(e.message);
+    }
+}
+</script>

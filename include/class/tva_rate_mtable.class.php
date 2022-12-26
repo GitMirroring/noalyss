@@ -34,6 +34,10 @@ require_once NOALYSS_INCLUDE."/database/tva_rate_sql.class.php";
 class Tva_Rate_MTable extends Manage_Table_SQL
 {
 
+    //!< previous tva_id, used to know if we update or insert,
+    private $previous_id;
+
+
     /**
      * 
      * @param V_Tva_rate_SQL $p_table
@@ -54,7 +58,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
             ["value"=>0, "label"=>_("Non")],
             ["value"=>1, "label"=>_("Oui")]
         ));
-        $this->set_property_updatable("tva_id", FALSE);
+        $this->set_property_updatable("tva_id", true);
         $this->set_col_label("tva_payment_purchase",_("Exigible achat"));
         $this->set_col_type("tva_payment_purchase","select",
                 array(
@@ -71,6 +75,25 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                 );
         $this->a_info=["tva_purchase"=>44,"tva_both_side"=>43,"tva_sale"=>45
             ,"tva_payment_sale"=>74,"tva_payment_purchase"=>74];
+        $this->previous_id=null;
+    }
+
+    /**
+     * @return int or null
+     */
+    public function getPreviousId()
+    {
+        return $this->previous_id;
+    }
+
+    /**
+     *
+     * @param int $previous_id
+     */
+    public function setPreviousId($previous_id): Tva_Rate_MTable
+    {
+        $this->previous_id = $previous_id;
+        return $this;
     }
 
     /**
@@ -90,6 +113,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
             $value=$this->table->get($key);
             $error=$this->get_error($key);
             $error=($error=="")?"":HtmlInput::errorbulle($error);
+
             if ($this->get_property_visible($key)===TRUE)
             {
                 $info="";
@@ -114,7 +138,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                         $text=new INum($key);
                         $text->value=$value;
                         $text->prec=4;
-                        $min_size=(strlen($value)<10)?10:strlen($value)+1;
+                        $min_size=(strlen($value??"")<10)?10:strlen($value)+1;
                         $text->size=$min_size;
                         echo $text->input();
                     }
@@ -128,7 +152,8 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                         $text->set_attribute('jrn', 0);
                         $text->set_attribute('account', 'tva_purchase');
                         echo $text->input();
-                        //@todo ajout infobulle pour prévenir que compte doit exister 
+                        $url="do.php?".http_build_query(array("gDossier"=>Dossier::id(),"ac"=>'CFGPCMN','p_start'=>4));
+                        echo HtmlInput::anchor(_("Configuration poste comptable"),$url,"",'target="_blank"');
                     }
                     elseif ($key=='tva_sale')
                     {
@@ -145,9 +170,14 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                     {
                         $text=new IText($key);
                         $text->value=$value;
-                        $min_size=(strlen($value)<30)?30:strlen($value)+5;
+                        $min_size=(strlen($value??"")<30)?30:strlen($value)+5;
                         $text->size=$min_size;
                         echo $text->input();
+                    } elseif ($key == "tva_id") {
+                        $inum=new INum($key,$value);
+                        echo $inum->input();
+                        echo \HtmlInput::hidden("old_tva_id",$value);
+
                     }
                     echo "</td>";
                 }
@@ -171,6 +201,9 @@ class Tva_Rate_MTable extends Manage_Table_SQL
      */
     function save()
     {
+        if ( $this->previous_id == null ) {
+            throw new \Exception ("TVA184: no previous TVA id");
+        }
         $cn=Dossier::connect();
         // if tva_both_side is 1 and tva_purchase or tva_sale is empty then
         // it is equal to the other value
@@ -186,7 +219,8 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                 $this->table->tva_sale=$this->table->tva_purchase;
             }
         }
-        $tva_rate=new Tva_rate_SQL($cn, $this->table->tva_id);
+        $new_tva_id=$this->table->tva_id;
+        $tva_rate=new Tva_rate_SQL($cn, $this->previous_id);
         $tva_rate->setp("tva_rate", $this->table->tva_rate);
         $tva_rate->setp("tva_label", $this->table->tva_label);
         $tva_rate->setp("tva_comment", $this->table->tva_comment);
@@ -199,10 +233,13 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $tva_rate->setp("tva_payment_sale", $this->table->tva_payment_sale);
         $tva_rate->setp("tva_payment_purchase", $this->table->tva_payment_purchase);
         $tva_rate->save();
-        
-        // reload the row
-        $this->table->set_pk_value($tva_rate->tva_id);
+        if ($this->previous_id != $new_tva_id) {
+            $cn->exec_sql("update tva_rate set tva_id = $1 where tva_id = $2",[$new_tva_id,$this->previous_id]);
+            $tva_rate->setp("tva_id",$new_tva_id);
+        }else
+            $this->table->setp("tva_id",$tva_rate->getp("tva_id"));
         $this->table->load();
+
     }
     /**
      * Check data are valid 
@@ -214,7 +251,9 @@ class Tva_Rate_MTable extends Manage_Table_SQL
     function check()
     {
         $cn=Dossier::connect();
-
+        if ( $this->previous_id == null ) {
+            throw new \Exception ("TVA184: no previous TVA id");
+        }
         // both accounting can not be empty
         if (trim($this->table->tva_purchase)==""&&trim($this->table->tva_sale)=="")
         {
@@ -232,7 +271,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
 
         //Check the label must be unique
         $count=$cn->get_value("select count(*) from tva_rate where tva_id<>$1 and lower(tva_label)=lower($2)",
-                [$this->table->tva_id, $this->table->tva_label]);
+                [$this->getPreviousId(), $this->table->tva_label]);
         if ($count>0)
         {
             $this->set_error("tva_label", _("Ce nom est déjà utilisé"));
@@ -265,7 +304,11 @@ class Tva_Rate_MTable extends Manage_Table_SQL
             $this->set_error("tva_both_side", _("Choix incorrect"));
         }
 
-
+        // Check if old tva_id was not overwritting something
+        if ( $this->previous_id != $this->table->tva_id && $cn->get_value("select count(*) from tva_rate where tva_id=$1",[$this->table->tva_id]) > 0)
+        {
+            $this->set_error("tva_id",_("Code TVA déjà utilisé"));
+        }
         if ($this->count_error()!=0)
             return false;
         return true;
