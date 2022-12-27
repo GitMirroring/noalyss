@@ -65,18 +65,16 @@ class ITextarea extends HtmlInput
     */
     public function input($p_name=null,$p_value=null)
     {
+        $this->name=($p_name==null)?$this->name:$p_name;
+        $this->value=($p_value==null)?$this->value:$p_value;
+        $this->id=($this->id=="")?$this->name:$this->id;
+        if ( $this->readOnly==true) return $this->display();
+
         if ( $this->enrichText == "plain" ) {
-            $this->name=($p_name==null)?$this->name:$p_name;
-            $this->value=($p_value==null)?$this->value:$p_value;
-            $this->id=($this->id=="")?$this->name:$this->id;
-
-            if ( $this->readOnly==true) return $this->display();
-
             $r="";
             $r.='<TEXTAREA '.$this->style.'  name="'.$this->name.'" id="'.$this->id.'"';
             $r.='>';
             $r.=$this->value;
-
             $r.="</TEXTAREA>";
         } elseif ($this->enrichText=='enrich') {
             if ( empty($this->id)) $this->id=$this->name;
@@ -95,7 +93,6 @@ class ITextarea extends HtmlInput
             </script>
 EOF;
         }
-
         return $r;
     }
 
@@ -110,13 +107,10 @@ EOF;
             $r.=sprintf('<input type="hidden" name="%s" value="%s">',
                         $this->name,h($this->value));
             $r.='</p>';
-        } elseif ($this->enrichText=='enrich')  {
+        } elseif ($this->enrichText=='enrich' )  {
             $r=$this->value;
         }
         return $r;
 
-    }
-    static public function test_me()
-    {
     }
 }

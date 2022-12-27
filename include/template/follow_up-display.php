@@ -274,27 +274,23 @@ function small(p_id_textarea){
    $description->id="ag_description";
    $has_description = false;
     //---------------------------------- Description -------------------------------------------------------------------
+    // if there are comments then the first one is the description
     if ( count($acomment)> 0) {
             $has_description = true;
             $editable_description = Document_Option::is_enable_editable_description($this->dt_id);
+            // if editable and the description can be changed
             if ( $p_view != 'READ' && $editable_description == true){
                 echo h2(_("Description"));
                 $itDescription=new ITextarea("ag_description");
                 $itDescription->style='class="input_text field_follow_up" style="height:21rem;width:98%;margin-left:1em;"';
-
+                $itDescription->set_enrichText('enrich');
                 $ag_description_id= $acomment[0]['agc_id'];
-                $itDescription->value=$acomment[0]['agc_comment'];
+                $itDescription->value=$acomment[0]['agc_comment_raw'];
                 $itDescription->id="ag_description";
+                echo \HtmlInput::hidden("ag_description_id",$acomment[0]['agc_id']);
 
-                // One editable comment is available
-                $editable_description=new Inplace_Edit($itDescription);
-                $editable_description->add_json_param("op", "followup_comment_oneedit");
-                $editable_description->add_json_param("agc_id", $ag_description_id);
-                $editable_description->add_json_param("ag_id", $ag_id);
-                $editable_description->add_json_param("gDossier", Dossier::id());
-                $editable_description->set_callback("ajax_misc.php");
+                echo $itDescription->input();
 
-                echo $editable_description->input();
             }
             elseif ($p_view == 'READ' || $editable_description == false)
             {
@@ -305,6 +301,7 @@ function small(p_id_textarea){
                 echo '</pre>';
             }
     } else {
+        // there is no comments so there is no description, just input one
           echo h2(_("Description"));
           $description->set_enrichText('enrich');
           $description->style='style="height:250px;width:90%;"';
@@ -322,6 +319,7 @@ function small(p_id_textarea){
         if (count($acomment) > 1 )  {
             echo h2(_("Commentaire"));
             $comment=new ITextarea("ag_comment_edit");
+            $comment->set_enrichText("plain");
             $comment->style='class="input_text field_follow_up" style="height:21rem;width:98%;margin-left:5%;"';
 
             $ag_comment_id= (count($acomment) > 1)?$acomment[1]['agc_id']:-1;
