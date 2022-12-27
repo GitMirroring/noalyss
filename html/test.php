@@ -69,7 +69,7 @@ load_all_script();
 ini_set("assert.active",1);
 assert_options(ASSERT_ACTIVE, 1);
 assert_options(ASSERT_WARNING, 1);
-assert_options(ASSERT_QUIET_EVAL, 1);
+//removed in PHP8 assert_options(ASSERT_QUIET_EVAL, 1);
 function my_assert_handler($file, $line, $code)
 {
     echo "<hr>Assert Failed :
