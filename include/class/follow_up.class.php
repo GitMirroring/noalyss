@@ -47,23 +47,46 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 class Follow_Up
 {
 
-    var $db; /*!<  $db  database connexion    */
-    var $ag_timestamp;  /*!<   $ag_timestamp document date (ag_gestion.ag_timestamp) */
-    var $dt_id;   /*!<   $dt_id type of the document (document_type.dt_id) */
-    var $ag_state; /*!<   $ag_state stage of the document (printed, send to client...) */
-    var $d_number;   /*!<   $d_number number of the document */
-    var $d_filename; /*!<   $d_filename filename's document      */
-    var $d_mimetype; /*!<   $d_mimetype document's filename      */
-    var $ag_title;   /*!<   $ag_title title document	      */
-    var $f_id; /*!<   $f_id_dest fiche id (From field )  */
-    var $ag_ref;  /*!< $ag_ref is the ref  */
-    var $ag_hour;  /*!< $ag_hour is the hour of the meeting, action */
-    var $ag_priority; /*!< $ag_priority is the priority 1 High, 2 medium, 3 low */
-    var $ag_dest;  /*!< $ag_dest person who is in charged */
-    var $ag_contact;  /*!< $ag_contact contact */
-    var $ag_remind_date;  /*!< $ag_contact contact */
-    var $f_id_dest ; /*!< followup action recipient */
-    var $ag_description; /*!< description of the action with HTML tag*/
+    /*!<  $db  database connexion    */
+    var $db;
+    /*!<   $ag_timestamp document date (ag_gestion.ag_timestamp) */
+    var $ag_timestamp;
+    /*!<   $dt_id type of the document (document_type.dt_id) */
+    var $dt_id;
+    /*!<   $ag_state stage of the document (printed, send to client...) */
+    var $ag_state;
+    /*!<   $d_number number of the document */
+    var $d_number;
+    /*!<   $d_filename filename's document      */
+    var $d_filename;
+    /*!<   $d_mimetype document's filename      */
+    var $d_mimetype;
+    /*!<   $ag_title title document	      */
+    var $ag_title;
+    /*!<   $f_id_dest fiche id (From field )  */
+    var $f_id;
+    /*!< $ag_ref is the ref  */
+    var $ag_ref;
+    /*!< $ag_hour is the hour of the meeting, action */
+    var $ag_hour;
+    /*!< $ag_priority is the priority 1 High, 2 medium, 3 low */
+    var $ag_priority;
+    /*!< $ag_dest person who is in charged */
+    var $ag_dest;
+    /*!< $ag_contact contact */
+    var $ag_contact;
+    /*!< $ag_contact contact */
+    var $ag_remind_date;
+    /*!< followup action recipient */
+    var $f_id_dest ;
+    /*!< description of the action with HTML tag*/
+    var $ag_description;
+
+    /**
+     * @var integer $ag_description_id if greater than 0 , it is the id in action_comment
+     * of the description (1st comment)
+     */
+    var $ag_description_id;
     /**
      * @brief $operation string related operation
      */
@@ -89,6 +112,7 @@ class Follow_Up
         $this->action="";
         $this->f_dest_id=0;
         $this->f_id_dest=0;
+        $this->ag_priority=2;
     }
 
     public function __toString(): string
@@ -268,7 +292,7 @@ class Follow_Up
         $title->name="ag_title";
         $title->value=$this->ag_title;
         $title->size=60;
-	$title->style='style="font-size:2rem;font-weight:bold"';
+	    $title->style='style="font-size:2rem;font-weight:bold"';
 
 
         // Priority of the ag_priority
@@ -954,16 +978,27 @@ class Follow_Up
                 continue;
             $act->save();
         }
-        if (trim($this->ag_comment)!='')
+        if (trim(strip_tags($this->ag_comment)) !='')
         {
             $notag_comment=strip_tags($this->ag_comment);
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
                     , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $notag_comment,$this->ag_comment));
         }
-        if (trim($this->ag_description)!='')
+        if (trim(strip_tags($this->ag_description))!='' )
         {
-            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
+            if (  $this->ag_description_id <0)
+                $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
                     , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'],strip_tags($this->ag_description), $this->ag_description));
+            else
+                $this->db->exec_sql("
+                    update action_gestion_comment 
+                            set agc_comment = $1 , 
+                            agc_comment_raw = $2,
+                            tech_user= $3
+                                where agc_id = $4 "
+                    , array(strip_tags($this->ag_description), $this->ag_description, $_SESSION[SESSION_KEY.'g_user'],
+                        $this->ag_description_id));
+
         }
         $this->insert_operation();
         $this->insert_action();
@@ -1024,16 +1059,17 @@ class Follow_Up
         $this->ag_dest=$http->extract("ag_dest","string",$g_user->get_profile());
         $this->ag_priority=$http->extract("ag_priority","string","2");
         $this->ag_contact=$http->extract("ag_contact","string","");
-	$ag_comment=trim($http->extract("ag_comment","raw",""));
-	if ( strip_tags($ag_comment) == '') 
-		$this->ag_comment='';
-	else 
-		$this->ag_comment=$ag_comment;
-        $ag_description=trim($http->extract("ag_description","raw",""));
-	if ( strip_tags($ag_description) == '') 
-		$this->ag_description='';
-	else 
-		$this->ag_description=$ag_description;
+    	$ag_comment=trim($http->extract("ag_comment","raw",""));
+        if ( strip_tags($ag_comment) == '')
+            $this->ag_comment='';
+        else
+            $this->ag_comment=$ag_comment;
+            $ag_description=trim($http->extract("ag_description","raw",""));
+        if ( strip_tags($ag_description) == '')
+            $this->ag_description='';
+        else
+            $this->ag_description=$ag_description;
+        $this->ag_description_id=$http->extract("ag_description_id","string",-1);
         $this->ag_remind_date=$http->extract("ag_remind_date","string",null);
         $this->operation=$http->extract("operation","string",null);
         $this->action=$http->extract("action","string",null);
@@ -1432,8 +1468,8 @@ class Follow_Up
 
     /**
      * @brief Show the result of a search in an inner windows, the result is limited to 25
-     * @param type $cn database connx
-     * @param type $p_sql the query
+     * @param Database $cn database connx
+     * @param string $p_sql where clause of the query
      */
     static function short_list($cn, $p_sql)
     {

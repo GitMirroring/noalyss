@@ -28,6 +28,10 @@ if (!defined('ALLOWED'))
 $op=$http->request('op');
 global $g_user;
 
+/*
+ * Ajax for modifying the description , does not support ITextarea + enrich text
+ *
+ *
 if ($op=='update_comment_followUp')
 {
     $input=$http->request('input');
@@ -71,6 +75,8 @@ if ($op=='update_comment_followUp')
     }
     return;
 }
+*/
+
 // Modify followup 
 if ($op == 'followup_comment_oneedit') {
      $input=$http->request('input');
@@ -101,17 +107,18 @@ if ($op == 'followup_comment_oneedit') {
         case 'ok':
             if ($g_user->check_action(VIEWDOC)==1)
             {
-                $value=strip_tags($http->request('value'));
+                $value=$http->request('value');
                 if ($g_user->can_write_action($ag_id))
                 {
                     // retrieve the document
                     if ( $agc_id==-1) {
-                      $agc_id=  $cn->get_value("insert into action_gestion_comment(ag_id,agc_comment,tech_user)
-                                values ($1,$2,$3) returning agc_id" ,[$ag_id,$value,$g_user->login]);
+                      $agc_id=  $cn->get_value("insert into action_gestion_comment(ag_id,agc_comment,agc_comment_raw,tech_user)
+                                values ($1,$2,$3,$4) returning agc_id" ,[$ag_id,strip_tags($value),$value,$g_user->login]);
                     } else {
-                          $cn->exec_sql("update action_gestion_comment set agc_comment=$1,tech_user=$2
-                                where agc_id=$3
-                                " ,[$value,$g_user->login,$agc_id]);
+                          $cn->exec_sql("update action_gestion_comment set agc_comment=$1,tech_user=$2 ,
+                                  agc_comment_raw=$3
+                                where agc_id=$4
+                                " ,[strip_tags($value),$g_user->login,$value,$agc_id]);
                     }
                     
                 }
