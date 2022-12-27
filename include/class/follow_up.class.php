@@ -47,48 +47,64 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 class Follow_Up
 {
 
-    /*!<  $db  database connexion    */
+    /**
+     *  database connexion
+     */
     var $db;
-    /*!<   $ag_timestamp document date (ag_gestion.ag_timestamp) */
+    /**
+     *   document date (ag_gestion.ag_timestamp)
+     */
     var $ag_timestamp;
-    /*!<   $dt_id type of the document (document_type.dt_id) */
+    /**
+     *  type of the document (document_type.dt_id)
+     */
     var $dt_id;
-    /*!<   $ag_state stage of the document (printed, send to client...) */
+    /**
+     *   $ag_state stage of the document (printed, send to client...)
+     */
     var $ag_state;
-    /*!<   $d_number number of the document */
+    /*
+     *   $d_number number of the document */
     var $d_number;
-    /*!<   $d_filename filename's document      */
+    /**
+     *  $d_filename filename's document
+     */
     var $d_filename;
-    /*!<   $d_mimetype document's filename      */
+    /**
+     *   $d_mimetype document's filename
+     */
     var $d_mimetype;
-    /*!<   $ag_title title document	      */
+    /**
+     *   $ag_title title document	      */
     var $ag_title;
-    /*!<   $f_id_dest fiche id (From field )  */
+    /**
+     *   $f_id_dest fiche id (From field )
+     */
     var $f_id;
-    /*!< $ag_ref is the ref  */
+    /** $ag_ref is the ref  */
     var $ag_ref;
-    /*!< $ag_hour is the hour of the meeting, action */
+    /** $ag_hour is the hour of the meeting, action */
     var $ag_hour;
-    /*!< $ag_priority is the priority 1 High, 2 medium, 3 low */
+    /** $ag_priority is the priority 1 High, 2 medium, 3 low */
     var $ag_priority;
-    /*!< $ag_dest person who is in charged */
+    /** $ag_dest person who is in charged */
     var $ag_dest;
-    /*!< $ag_contact contact */
+    /** $ag_contact contact */
     var $ag_contact;
-    /*!< $ag_contact contact */
+    /** $ag_contact contact */
     var $ag_remind_date;
-    /*!< followup action recipient */
+    /** followup action recipient */
     var $f_id_dest ;
-    /*!< description of the action with HTML tag*/
+    /** description of the action with HTML tag*/
     var $ag_description;
 
     /**
-     * @var integer $ag_description_id if greater than 0 , it is the id in action_comment
+     *  integer $ag_description_id if greater than 0 , it is the id in action_comment
      * of the description (1st comment)
      */
     var $ag_description_id;
     /**
-     * @brief $operation string related operation
+     * $operation string related operation
      */
     var $operation;
 
@@ -141,7 +157,7 @@ class Follow_Up
 
 
     /**
-     * Create a filter based on the current user, 
+     * @brief Create a filter based on the current user,
      * @remark type $g_user Connected user
      * @param type $cn Database connection
      * @param type $p_mode Mode is R (for Read) or W (for write)
@@ -646,7 +662,7 @@ class Follow_Up
     }
 
     /**
-     * myList($p_base, $p_filter = "", $p_search = "") 
+     * @brief myList($p_base, $p_filter = "", $p_search = "")
      * Show list of action by default if sorted on date
      * @param $p_base base url with ac...
      * @param $p_filter filters on the document_type
@@ -1353,9 +1369,9 @@ class Follow_Up
     }
 
     /**
-     * @briefGet date from $_GET and create the sql stmt for the query
+     * @brief Get date from $_GET and create the sql stmt for the query
      * @note the query is taken from $_GET
-     * @see Follow_Up::ShowActionList
+     * @see {Follow_Up::ShowActionList}
      * @return string SQL condition
      */
     static function create_query($cn, $p_array=null)
@@ -1516,7 +1532,7 @@ class Follow_Up
     /**
      * @brief export to CSV the query the p_array has
      * @param array $p_array
-      @see ::create_query
+      @see create_query
      */
     function export_csv($p_array)
     {
@@ -1564,7 +1580,7 @@ class Follow_Up
     /**
      * @brief export to CSV the detailled actions (tags, comment, related operations...), 
      * it could be a query in $p_array      *  task #0002035
-     * @see ::create_query
+     * @see create_query
      * @param array $p_array
      */
     function export_csv_detail($p_array)
@@ -2008,7 +2024,7 @@ where
      */
     function display_children($p_view, $p_base)
     {
-        /**
+        /*
          * First we retrieve the parent
          */
         $parent=$this->get_parent();
