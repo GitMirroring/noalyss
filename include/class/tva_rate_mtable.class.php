@@ -220,7 +220,8 @@ class Tva_Rate_MTable extends Manage_Table_SQL
             }
         }
         $new_tva_id=$this->table->tva_id;
-        $tva_rate=new Tva_rate_SQL($cn, $this->previous_id);
+        $tva_rate=new Tva_rate_SQL($cn);
+        $tva_rate->setp("tva_id",$new_tva_id);
         $tva_rate->setp("tva_rate", $this->table->tva_rate);
         $tva_rate->setp("tva_label", $this->table->tva_label);
         $tva_rate->setp("tva_comment", $this->table->tva_comment);
@@ -232,13 +233,15 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $tva_rate->setp("tva_poste", $tva_purchase.",".$tva_sale);
         $tva_rate->setp("tva_payment_sale", $this->table->tva_payment_sale);
         $tva_rate->setp("tva_payment_purchase", $this->table->tva_payment_purchase);
-        $tva_rate->save();
-        if ($this->previous_id != $new_tva_id) {
+        if ( $this->previous_id == -1 ) {
+            $tva_rate->insert();
+        } else {
+            $tva_rate->update();
+        }
+        if ( $this->previous_id != - 1 && $this->previous_id != $new_tva_id) {
             $cn->exec_sql("update tva_rate set tva_id = $1 where tva_id = $2",[$new_tva_id,$this->previous_id]);
-            $tva_rate->setp("tva_id",$new_tva_id);
-        }else
-            $this->table->setp("tva_id",$tva_rate->getp("tva_id"));
-        $this->table->load();
+            $this->table->setp("tva_id",$new_tva_id);
+        }else        $this->table->setp("tva_id",$tva_rate->getp("tva_id"));
 
     }
     /**

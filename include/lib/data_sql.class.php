@@ -112,7 +112,7 @@ abstract class Data_SQL
             $this->$key=null;
         }
         $this->$pk=$p_id;
-        /* load it */
+        /* load it , if the pk id doesn't exist, it will be turned into -1  */
         if ($p_id != -1 )$this->load();
         if ( empty($this->date_format) )         $this->date_format="DD.MM.YYYY";
     }
