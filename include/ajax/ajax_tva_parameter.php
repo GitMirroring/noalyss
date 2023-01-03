@@ -70,7 +70,7 @@ elseif ($action=="save")
     $xml=$manage_table->ajax_save();
     $s1=$xml->createElement("previous_id",$previous);
     $data=$xml->getElementsByTagName("data");
-    $data[0]->append($s1);
+    $data[0]->appendChild($s1);
     echo $xml->saveXML();
     return;
 }
