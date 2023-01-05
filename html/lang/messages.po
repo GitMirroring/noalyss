@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 00:37+0200\n"
+"POT-Creation-Date: 2022-08-21 10:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10050,7 +10050,7 @@ msgstr ""
 #: include/database.item.php:70 include/database.item.php:69
 #: include/database.item.php:72 include/database.item.php:66
 #: include/database.item.php:65 include/database.item.php:62
-#: include/database.item.php:63 include/database.item.php:63
+#: include/database.item.php:65
 msgid "Impression du grand livre"
 msgstr ""
 
@@ -10059,7 +10059,7 @@ msgstr ""
 #: include/database.item.php:71 include/database.item.php:70
 #: include/database.item.php:73 include/database.item.php:67
 #: include/database.item.php:66 include/database.item.php:63
-#: include/database.item.php:64 include/database.item.php:64
+#: include/database.item.php:66
 msgid "Impression des balances comptables"
 msgstr ""
 
@@ -10068,7 +10068,7 @@ msgstr ""
 #: include/database.item.php:72 include/database.item.php:71
 #: include/database.item.php:74 include/database.item.php:68
 #: include/database.item.php:67 include/database.item.php:64
-#: include/database.item.php:65 include/database.item.php:65
+#: include/database.item.php:67
 msgid "Menu achat"
 msgstr ""
 
@@ -10077,7 +10077,7 @@ msgstr ""
 #: include/database.item.php:73 include/database.item.php:72
 #: include/database.item.php:75 include/database.item.php:69
 #: include/database.item.php:68 include/database.item.php:65
-#: include/database.item.php:66 include/database.item.php:66
+#: include/database.item.php:68
 msgid "Menu et profil"
 msgstr ""
 
@@ -10086,7 +10086,7 @@ msgstr ""
 #: include/database.item.php:73 include/database.item.php:72
 #: include/database.item.php:75 include/database.item.php:69
 #: include/database.item.php:68 include/database.item.php:65
-#: include/database.item.php:66 include/database.item.php:66
+#: include/database.item.php:68
 msgid "Menu "
 msgstr ""
 
@@ -10119,7 +10119,7 @@ msgstr ""
 #: include/database.item.php:74 include/database.item.php:73
 #: include/database.item.php:76 include/database.item.php:70
 #: include/database.item.php:69 include/database.item.php:66
-#: include/database.item.php:67 include/database.item.php:67
+#: include/database.item.php:69
 msgid "Menu impression"
 msgstr ""
 
@@ -10128,7 +10128,7 @@ msgstr ""
 #: include/database.item.php:75 include/database.item.php:74
 #: include/database.item.php:77 include/database.item.php:71
 #: include/database.item.php:70 include/database.item.php:67
-#: include/database.item.php:68 include/database.item.php:68
+#: include/database.item.php:70
 msgid "Information Banque"
 msgstr ""
 
@@ -10137,7 +10137,7 @@ msgstr ""
 #: include/database.item.php:76 include/database.item.php:75
 #: include/database.item.php:78 include/database.item.php:72
 #: include/database.item.php:71 include/database.item.php:68
-#: include/database.item.php:69 include/database.item.php:69
+#: include/database.item.php:71
 msgid "Grand'Livre"
 msgstr ""
 
@@ -10146,7 +10146,7 @@ msgstr ""
 #: include/database.item.php:76 include/database.item.php:75
 #: include/database.item.php:78 include/database.item.php:72
 #: include/database.item.php:71 include/database.item.php:68
-#: include/database.item.php:69 include/database.item.php:69
+#: include/database.item.php:71
 msgid "Grand livre analytique"
 msgstr ""
 
@@ -10154,7 +10154,7 @@ msgstr ""
 #: include/database.item.php:14 include/database.item.php:76
 #: include/database.item.php:79 include/database.item.php:73
 #: include/database.item.php:72 include/database.item.php:69
-#: include/database.item.php:70 include/database.item.php:70
+#: include/database.item.php:72
 msgid "Gestion"
 msgstr ""
 
@@ -10162,7 +10162,7 @@ msgstr ""
 #: include/database.item.php:14 include/database.item.php:76
 #: include/database.item.php:79 include/database.item.php:73
 #: include/database.item.php:72 include/database.item.php:69
-#: include/database.item.php:70 include/database.item.php:70
+#: include/database.item.php:72
 msgid "Module gestion"
 msgstr ""
 
@@ -10193,8 +10193,8 @@ msgstr ""
 #: include/class/pdf_operation.class.php:456
 #: tmp/import-advanced/template/transfer-select-file.php:51
 #: include/database.item.php:150 include/database.item.php:73
-#: include/database.item.php:148 include/class/pdf_operation.class.php:456
-#: include/template/security_list_action.php:67 include/database.item.php:73
+#: include/template/security_list_action.php:67 include/database.item.php:75
+#: include/database.item.php:150
 #: include/database.item.php:148
 #: tmp/import-advanced/template/transfer-select-file.php:51
 msgid "Comptabilité"
@@ -10277,7 +10277,7 @@ msgstr ""
 #: include/database.item.php:81 include/database.item.php:84
 #: include/database.item.php:78 include/database.item.php:76
 #: include/database.item.php:98 include/database.item.php:151
-#: include/database.item.php:149 include/database.item.php:149
+#: include/database.item.php:151
 msgid "Configuration profil"
 msgstr ""
 
