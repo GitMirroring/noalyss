@@ -184,7 +184,7 @@ class Card_Property
             } else {
                 // if there is a class base in fiche_def_ref, this account will be the
                 // the default one
-                if (strlen(trim($p_fiche_def->class_base)) != 0) {
+                if (noalyss_strlen(noalyss_trim($p_fiche_def->class_base)) != 0) {
                     $result['msg'] .= " <span style=\"color:red\">" . _("Rappel: Poste par défaut sera ") .
                         $p_fiche_def->class_base .
                         " !</span> ";

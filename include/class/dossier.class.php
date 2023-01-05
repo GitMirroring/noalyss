@@ -140,6 +140,7 @@ class Dossier
                 use_id,
                 use_first_name,
                 use_name,
+                use_email,
                 use_login,
                 use_active,
                 use_admin,
