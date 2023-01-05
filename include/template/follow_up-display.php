@@ -300,7 +300,7 @@ function small(p_id_textarea){
                 echo '</div>';
                 echo '</pre>';
             }
-    } else {
+    } elseif ( count($acomment)> 0 && $p_view != 'READ') {
         // there is no comments so there is no description, just input one
           echo h2(_("Description"));
           $description->set_enrichText('enrich');
@@ -308,7 +308,9 @@ function small(p_id_textarea){
           echo '<div class="textarea" style="margin-left:5%;margin-right:5%;margin-bottom:1rem;width:90%;">';
           echo $description->input();
           echo '</div>';
-   }
+   } else {
+        // no description and no comment
+    }
 
 
         //---------------------------------- Comment -----------------------------------------------------------------------
