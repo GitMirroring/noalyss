@@ -47,59 +47,26 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 class Follow_Up
 {
 
-    /**
-     *  database connexion
-     */
-    var $db;
-    /**
-     *   document date (ag_gestion.ag_timestamp)
-     */
-    var $ag_timestamp;
-    /**
-     *  type of the document (document_type.dt_id)
-     */
-    var $dt_id;
-    /**
-     *   $ag_state stage of the document (printed, send to client...)
-     */
-    var $ag_state;
-    /*
-     *   $d_number number of the document */
-    var $d_number;
-    /**
-     *  $d_filename filename's document
-     */
-    var $d_filename;
-    /**
-     *   $d_mimetype document's filename
-     */
-    var $d_mimetype;
-    /**
-     *   $ag_title title document	      */
-    var $ag_title;
-    /**
-     *   $f_id_dest fiche id (From field )
-     */
-    var $f_id;
-    /** $ag_ref is the ref  */
-    var $ag_ref;
-    /** $ag_hour is the hour of the meeting, action */
-    var $ag_hour;
-    /** $ag_priority is the priority 1 High, 2 medium, 3 low */
-    var $ag_priority;
-    /** $ag_dest person who is in charged */
-    var $ag_dest;
-    /** $ag_contact contact */
-    var $ag_contact;
-    /** $ag_contact contact */
-    var $ag_remind_date;
-    /** followup action recipient */
-    var $f_id_dest ;
-    /** description of the action with HTML tag*/
-    var $ag_description;
+    var $db; /*!<  $db  database connexion    */
+    var $ag_timestamp;  /*!<   $ag_timestamp document date (ag_gestion.ag_timestamp) */
+    var $dt_id;   /*!<   $dt_id type of the document (document_type.dt_id) */
+    var $ag_state; /*!<   $ag_state stage of the document (printed, send to client...) */
+    var $d_number;   /*!<   $d_number number of the document */
+    var $d_filename; /*!<   $d_filename filename's document      */
+    var $d_mimetype; /*!<   $d_mimetype document's filename      */
+    var $ag_title;   /*!<   $ag_title title document	      */
+    var $f_id; /*!<   $f_id_dest fiche id (From field )  */
+    var $ag_ref;  /*!< $ag_ref is the ref  */
+    var $ag_hour;  /*!< $ag_hour is the hour of the meeting, action */
+    var $ag_priority; /*!< $ag_priority is the priority 1 High, 2 medium, 3 low */
+    var $ag_dest;  /*!< $ag_dest person who is in charged */
+    var $ag_contact;  /*!< $ag_contact contact */
+    var $ag_remind_date;  /*!< $ag_contact contact */
+    var $f_id_dest ; /*!< followup action recipient */
+    var $ag_description; /*!< description of the action with HTML tag*/
 
     /**
-     *  integer $ag_description_id if greater than 0 , it is the id in action_comment
+     * @var integer $ag_description_id if greater than 0 , it is the id in action_comment
      * of the description (1st comment)
      */
     var $ag_description_id;

@@ -16,7 +16,8 @@ FILETOTEST=""
 FUNCTION=""
 COVERAGE=""
 FOLDERTEST=""
-PHPINI="php "
+PHPINI="/opt/php/8.1/bin/php "
+# PHPINI="/opt/php/8.1/bin/php "
 
 while getopts "f:i:cd:x" opt; do
 	case $opt in
