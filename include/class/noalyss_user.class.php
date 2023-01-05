@@ -346,7 +346,7 @@ class Noalyss_User
      * return -1 if nothing is found or the use_id
      */
 
-    function load()
+    function load():int
     {
         /* if this->id == -1, it is unknown so we have to retrieve it from
           the database thanks it login */

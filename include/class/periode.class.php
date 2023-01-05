@@ -297,7 +297,7 @@ EOF;
      * \return 0 on success and -1 on error
      */
 
-    function load()
+    function load():int
     {
         if ($this->p_id=='')
             $this->p_id=-1;
@@ -330,11 +330,11 @@ EOF;
                 array($p_exercice));
         $rMax=new Periode($this->cn);
         $rMax->p_id=$max;
-        if ($rMax->load())
+        if ($rMax->load() == -1)
             throw new Exception('Periode n\'existe pas');
         $rMin=new Periode($this->cn);
         $rMin->p_id=$min;
-        if ($rMin->load())
+        if ($rMin->load() == -1)
             throw new Exception('Periode n\'existe pas');
         return array($rMax, $rMin);
     }

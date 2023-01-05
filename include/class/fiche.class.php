@@ -637,7 +637,7 @@ class Fiche
     }
     /*!\brief Synonum of fiche::getAttribut
      */
-    function load() 
+    function load() :void
     {
         $this->getAttribut();
     }

@@ -117,7 +117,7 @@ abstract class Data_SQL
         if ( empty($this->date_format) )         $this->date_format="DD.MM.YYYY";
     }
 /**
- * Insert or update : if the row already exists, update otherwise insert
+ *@brief Insert or update : if the row already exists, update otherwise insert
  */
     public function save()
     {
@@ -199,7 +199,7 @@ abstract class Data_SQL
           return $this->$pk;
     }
 
-    abstract function load();
+    abstract function load():bool;
 
     public function get_info()
     {
@@ -241,7 +241,7 @@ abstract class Data_SQL
     }
     /**
      * 
-     * Turn an object (row) into an array, and the key could be prefixed with $prefix
+     * @brief Turn an object (row) into an array, and the key could be prefixed with $prefix
      * @param string $prefix before the key 
      * @return array
      */
@@ -277,7 +277,7 @@ abstract class Data_SQL
     abstract  function seek($cond='', $p_array=null);
 
     /**
-     * get_seek return the next object, the return of the query must have all the column
+     * @brief get_seek return the next object, the return of the query must have all the column
      * of the object
      * @param $p_ret is the return value of an exec_sql
      * @param $idx is the index

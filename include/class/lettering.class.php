@@ -460,6 +460,7 @@ class Lettering
     public function load()
     {
         
+        throw new Exception('load not implemented');
     }
 
     public function delete()

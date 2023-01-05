@@ -84,7 +84,7 @@ class Acc_Payment
         return var_export(self::$variable,true);
     }
   
-    public function load()
+    public function load():bool
     {
         $sql='select mp_id,mp_lib,mp_fd_id,mp_jrn_def_id,mp_qcode,jrn_def_id from payment_method '.
              ' where mp_id = $1';

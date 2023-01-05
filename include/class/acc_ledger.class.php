@@ -2561,7 +2561,7 @@ class Acc_Ledger  extends jrn_def_sql
      */
     function display_ledger()
     {
-        if ($this->load()==-1)
+        if ($this->load()==false)
         {
             throw new Exception(_("Journal n'existe pas"), -1);
         }

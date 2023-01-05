@@ -210,7 +210,7 @@ class Todo_List
      * @brief load the todo_list row thanks it's ID
      * @return boolean true if found else false
      */
-    public function load()
+    public function load():bool
     {
 
         $sql="select tl_id,tl_title,tl_desc,to_char( tl_date,'DD.MM.YYYY') as tl_date,is_public,use_login

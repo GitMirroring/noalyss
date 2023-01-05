@@ -75,7 +75,7 @@ class Acc_Operation_Note
         return new Acc_Operation_Note(new Jrn_Note_SQL($cn,$n_id));
 
     }
-    function save()
+    function save():Acc_Operation_Note
     {
         $cn=Dossier::connect();
         $this->jrn_note_sql->setp("jr_id",$this->operation_id);
@@ -104,7 +104,7 @@ class Acc_Operation_Note
     function getOperation_id() {
         return $this->operation_id;
     }
-    function load()
+    function load():void
     {
         $this->jrn_note_sql->load();
         $this->operation_id=$this->jrn_note_sql->jr_id;

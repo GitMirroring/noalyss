@@ -259,7 +259,7 @@ class Acc_Bilan
         $this->to=$http->get("to_periode","number",-1);
     }
     /*!\brief load from the database the document data  */
-    function load()
+    function load():void
     {
         try
         {

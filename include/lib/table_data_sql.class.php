@@ -174,7 +174,7 @@ abstract class Table_Data_SQL extends Data_SQL
    /***
     * @brief load a row , corresponding to the primary key
     */
-    public function load()
+    public function load():bool
     {
         $sql=$this->build_query();
         $pk=$this->primary_key;

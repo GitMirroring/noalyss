@@ -122,9 +122,10 @@ class Acc_Report
         $this->form_definition->save();
     }
   
-    /*!\brief the fr_id MUST be set before calling
+    /*!
+     * \brief the fr_id MUST be set before calling
      */
-    function load()
+    function load():void
     {
        $this->form_definition->load();
 
@@ -133,7 +134,8 @@ class Acc_Report
     {
        $this->form_definition->delete();
     }
-    /*!\brief get a list from form_definition of all defined form
+    /*!
+     * \brief get a list from form_definition of all defined form
      *
      *\return array of object rapport
      *

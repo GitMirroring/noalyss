@@ -108,7 +108,7 @@ class Acc_Tva
      *@note if the label is not found then we get an message error, so the best is probably
      *to initialize the VAT object with default value
      */
-    public function load()
+    public function load():int
     {
         $this->tva_rate_sql->setp("tva_id",$this->tva_id);
 
@@ -122,7 +122,7 @@ class Acc_Tva
      */
     public function get_side($p_side)
     {
-        if ( strlen($this->tva_poste) == 0 ) $this->load();
+        if ( strlen($this->tva_poste??"") == 0 ) $this->load();
         list($deb,$cred)=explode(",",$this->tva_poste);
         switch ($p_side)
         {

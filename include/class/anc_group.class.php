@@ -83,7 +83,7 @@ class Anc_Group extends Anc_Print
      * @brief load the todo_list row thanks it's ID
      * @return boolean true if found else false
      */
-    function load()
+    function load():bool
     {
         $sql="select ga_id, ga_description,pa_id from groupe_analytique where".
              " ga_id = $1";

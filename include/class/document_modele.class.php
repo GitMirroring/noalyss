@@ -286,7 +286,7 @@ class Document_modele
     }
     /*!\brief load the value of a document_modele,the ag_id variable must be set
      */
-    function load()
+    function load():void
     {
         $array=$this->cn->get_array("SELECT md_id, md_name, md_lob, md_type, md_filename, md_mimetype,md_affect".
                                     " FROM document_modele where md_id=$1",array($this->md_id));

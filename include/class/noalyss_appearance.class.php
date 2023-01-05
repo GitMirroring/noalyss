@@ -71,7 +71,7 @@ class Noalyss_Appearance
         $this->aColor=self::$aCSSColor;
     }
 
-    function load()
+    function load():void
     {
         $cn = Dossier::connect();
         $aColor = $cn->get_array("select a_code,a_value from parm_appearance");

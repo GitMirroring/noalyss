@@ -35,7 +35,7 @@ class Anc_Balance_Simple extends Anc_Print
     /*!
      * \brief load the data from the database
      *
-     * \return array
+     * \return array or  null
      */
     function load()
     {

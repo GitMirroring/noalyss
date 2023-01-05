@@ -108,7 +108,7 @@ class V_Currency_Last_Value_SQL extends Data_SQL
         
     }
 
-    public function load()
+    public function load():bool
     {
         $sql=" select ";
         $sep="";
@@ -133,13 +133,14 @@ class V_Currency_Last_Value_SQL extends Data_SQL
         if ($this->cn->count()==0)
         {
             $this->$pk=-1;
-            return;
+            return false;
         }
 
         foreach ($result[0] as $key=> $value)
         {
             $this->$key=$value;
         }
+        return true;
     }
 
     function seek($cond='', $p_array=null)

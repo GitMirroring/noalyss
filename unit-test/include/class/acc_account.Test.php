@@ -60,7 +60,7 @@ class Acc_AccountTest extends TestCase
     public function testLoad()
     {
         $r=$this->object->load();
-        $this->assertNotEquals($r,-1);
+        $this->assertNotEquals($r,false);
     }
 
     /**

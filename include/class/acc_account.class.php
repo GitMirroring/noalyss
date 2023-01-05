@@ -94,9 +94,9 @@ class Acc_Account
      *        the data member are set
      * \return false if this account doesn't exist otherwise true
      */
-    function load()
+    function load():bool
     {
-      $this->data_sql->load();
+      return $this->data_sql->load();
     }
     
     function count($p_value)

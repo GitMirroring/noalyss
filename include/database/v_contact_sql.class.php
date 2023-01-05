@@ -63,7 +63,7 @@ class V_Contact_SQL extends Data_SQL
         throw new Exception("not implemented");
     }
 
-    function load()
+    function load():bool
     {
        $array=$this->cn->get_row("select * from ".$this->table." where f_id=$1",array($this->f_id));
        if (empty ($array) ) { $this->f_id=-1;return false;}

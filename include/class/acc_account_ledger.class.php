@@ -256,7 +256,7 @@ class Acc_Account_Ledger
      *        the data member are set
      * \return false if this account doesn't exist otherwise true
      */
-    function load()
+    function load():bool
     {
         $ret=$this->db->exec_sql("select pcm_lib,pcm_val_parent from
                                  tmp_pcmn where pcm_val=$1",array($this->id));

@@ -94,7 +94,7 @@ class Acc_Ledger_Info
      * @brief load the todo_list row thanks it's ID
      * @return boolean true if found else false
      */
-    function load()
+    function load():bool
     {
         $sql="select jr_id,id_type,ji_value from jrn_info where ji_id=$1";
         $r=$this->cn->exec_sql($sql,[$this->ji_id]);

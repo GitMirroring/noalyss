@@ -169,7 +169,7 @@ class Follow_Up_Detail
      * @brief load the todo_list row thanks it's ID
      * @return boolean true if found else false
      */
-    public function load()
+    public function load():bool
     {
         $sql="SELECT ad_id, f_id, ad_text, ad_pu, ad_quant, ad_tva_id, ad_tva_amount,
              ad_total_amount, ag_id   FROM action_detail".

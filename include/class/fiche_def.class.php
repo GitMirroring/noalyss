@@ -105,7 +105,7 @@ class Fiche_Def
      * @brief  alias for Fiche_Def->get(),
      * @return void
      */
-    function load()
+    function load():void
     {
         $this->get();
     }

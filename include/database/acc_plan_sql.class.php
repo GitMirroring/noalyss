@@ -121,7 +121,7 @@ class Acc_Plan_SQL extends Data_SQL
     {
         return $this->id;
     }
-    public function load()
+    public function load():bool
     {
         $pk=$this->primary_key;
         if ( $this->get_limit_fiche_qcode() != 0 ) 
@@ -135,13 +135,14 @@ class Acc_Plan_SQL extends Data_SQL
         if ($this->cn->count()==0)
         {
             $this->$pk=-1;
-            return;
+            return false;
         }
 
         foreach ($result[0] as $key=> $value)
         {
             $this->$key=$value;
         }
+        return true;
     }
 
     public function seek($cond='', $p_array=null)

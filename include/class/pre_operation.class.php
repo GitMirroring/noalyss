@@ -182,7 +182,7 @@ class Pre_operation
     /*!\brief load the data from the database and return an array
      * \return an double array containing all the data from database
      */
-    function load()
+    function load():array
     {
         $this->isloaded=true;
         //------------------------------------------

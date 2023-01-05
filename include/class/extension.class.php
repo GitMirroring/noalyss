@@ -71,7 +71,7 @@ class Extension extends Menu_Ref_sql
     function search($p_what)
     {
         $this->me_code=strtoupper($p_what);
-        if ($this->load()==-1)
+        if ($this->load()==false)
             return null;
         return 1;
     }

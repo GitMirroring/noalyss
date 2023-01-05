@@ -124,7 +124,7 @@ class Forecast
      * @brief load from db
      * @return boolean true if found else false 
      */
-    public function load()
+    public function load():bool
     {
         $sql="select f_id, f_name,f_start_date ,f_end_date from forecast where f_id=$1";
         $res=$this->cn->exec_sql(
