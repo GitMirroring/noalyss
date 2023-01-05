@@ -51,10 +51,10 @@ if (  $action_frm == 'update')
 	try
 	{
 		$ledger->set_ledger_id($http->post('p_jrn',"number"));
-		if ( $ledger->load() == -1) throw new Exception (_('Journal inexistant'));
+		if ( $ledger->load() == false ) throw new Exception (_('Journal inexistant'));
 		$ledger->verify_ledger($_POST);
 		$ledger->update($_POST);
-                $show_menu=1;
+		$show_menu=1;
 	} catch (Exception $e)
 	{
             record_log($e->getMessage());
@@ -129,7 +129,7 @@ switch ($sa)
 			echo '<div class="content">';
 			echo '<form id="cfg_ledger_frm"  method="POST">';
 			echo $ledger->display_ledger();
-                        echo HtmlInput::hidden('action_frm','');
+			echo HtmlInput::hidden('action_frm','');
 			echo '<INPUT TYPE="SUBMIT" class="smallbutton" VALUE="'._("Sauve").'" name="update" onClick="$(\'action_frm\').value=\'update\';return confirm_box(\'cfg_ledger_frm\',\'Valider ?\')">
 			<INPUT TYPE="RESET" class="smallbutton" VALUE="Reset">
 			<INPUT TYPE="submit" class="smallbutton"  name="efface" value="'._("Efface").'" onClick="$(\'action_frm\').value=\'delete\';return confirm_box(\'cfg_ledger_frm\',\'Vous effacez ce journal ?\')">';
