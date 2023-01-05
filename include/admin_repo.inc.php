@@ -59,7 +59,7 @@ if ( $action== 'backup') {
 }
 html_page_start($_SESSION[SESSION_KEY.'g_theme']);
 load_all_script();
-echo '<H2 class="info"> '._('Administration').'</H2>';
+echo '<H2 class="info w100"> '._('Administration').'</H2>';
 echo '<div class="topmenu">';
 
 echo MenuAdmin()."</div>";

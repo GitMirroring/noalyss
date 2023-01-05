@@ -129,7 +129,11 @@ content h2.info,h2.info,h2.info2 {
     margin-top:0px;
 }
 
-
+h2.w100 {
+	margin-right: 0px;
+	margin-left: 0px;
+	border-radius: 0px;
+}
 h3.info {
     background:#879ED4;
     color:#FFFFFF;
