@@ -1530,7 +1530,7 @@ function check()
     }
 
     /**
-     * @brief usually contain a link and calls another page, it must overriden
+     * @brief usually contain a link and calls another page, it must be overriden
      * @param array $p_row is the current database row
      * @return void
      */

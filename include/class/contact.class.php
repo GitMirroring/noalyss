@@ -167,7 +167,7 @@ class contact extends Fiche
         }
         $ps_sql .=  $limit ;
         if (DEBUGNOALYSS > 1) {
-            print_r("Contact::fetch ($ps_sql)");
+            var_export("Contact::fetch ($ps_sql)");
         }
         return $this->cn->get_array($ps_sql);
     }

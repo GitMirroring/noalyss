@@ -47,7 +47,7 @@ class HttpInput
     }
     public function __toString(): string
     {
-        return "http_input".print_r($this,true);
+        return "http_input".var_export($this,true);
     }
     public function get_array()
     {

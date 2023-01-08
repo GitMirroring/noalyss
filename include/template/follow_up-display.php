@@ -308,8 +308,15 @@ function small(p_id_textarea){
           echo '<div class="textarea" style="margin-left:5%;margin-right:5%;margin-bottom:1rem;width:90%;">';
           echo $description->input();
           echo '</div>';
-   } else {
-        // no description and no comment
+   } elseif (  $p_view != 'READ' ) {
+        // no description and no comment it is a new document
+
+          echo h2(_("Description"));
+          $description->set_enrichText('enrich');
+          $description->style='style="height:250px;width:90%;"';
+          echo '<div class="textarea" style="margin-left:5%;margin-right:5%;margin-bottom:1rem;width:90%;">';
+          echo $description->input();
+          echo '</div>';
     }
 
 

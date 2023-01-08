@@ -1403,9 +1403,9 @@ function is_msie()
  */
 function record_log($p_message)
 {
-    error_log("noalyss".print_r($p_message,true),0);
-    error_log("noalyss GET [".json_encode($_GET)."]");
-    error_log("_POST [".json_encode($_POST)."]",0);
+    error_log("noalyss".var_export($p_message,true),0);
+    error_log("noalyss GET [".json_encode($_GET,0,10)."]");
+    error_log("_POST [".json_encode($_POST,0,10)."]",0);
 }
 if(!function_exists('tracedebug')) {
   function tracedebug($file,$var, $label = NULL) {

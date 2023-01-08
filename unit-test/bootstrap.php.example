@@ -19,6 +19,8 @@
 */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
+define ('NOALYSS_URL','PHPUNIT');
+define ('DIRTEST',__DIR__);
 
 /**
  * constant.php contains a autoloader for classes
