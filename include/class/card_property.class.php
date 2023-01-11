@@ -49,11 +49,11 @@ class Card_Property
     var $cn;
     //!< cn database connexion
     protected $display_mode;
-    //!< display mode determine if there link
+    //!< display mode values are large , window , display Property depending of this mode.
     function __construct($cn, $ad_id=0)
     {
         $this->cn=$cn;
-        $this->ad_id=0;
+        $this->ad_id=$ad_id;
         $this->display_mode='window';
     }
     public function __toString(): string

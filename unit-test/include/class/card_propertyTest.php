@@ -217,4 +217,51 @@ class Card_PropertyTest extends TestCase
                 'count of card properties must be the same than the card category (fiche_def )');
     }
 
+    /**
+     * @testdox Build Input for automatic account , for a new card , the account is null
+     * @return void
+     */
+    public function testBuildInput1()
+    {
+        $g_connection=Dossier::connect();
+
+
+        $property=new \Card_Property($g_connection,ATTR_DEF_ACCOUNT);
+        $g_connection->exec_sql("update fiche_def set fd_create_account=true where fd_id=25");
+        $fiche_def=new \Fiche_Def($g_connection,25);
+
+        $result=$property->build_input($fiche_def);
+
+        /*
+           $file_result=__CLASS__."-".__FUNCTION__.".txt";
+            $file_target='target-'.$file_result;
+         \Noalyss\Facility::save_file(__DIR__."/file",$file_result,var_export($result,true));
+        $this->assertFileEquals(__DIR__."/file/$file_target",__DIR__."/file/$file_result","Card_Property::build_input failed");
+        */
+        $this->assertEquals("",$result["input"]->value," Accounting incorrect ");
+
+    }
+    /**
+     * @testdox Build Input for default account , for a new card , the account is the account of the category
+     * @return void
+     */
+
+    public function testBuildInput2()
+    {
+        $g_connection=Dossier::connect();
+        $g_connection->exec_sql("update fiche_def set fd_create_account=false where fd_id=25");
+
+        $property=new \Card_Property($g_connection,ATTR_DEF_ACCOUNT);
+        $fiche_def=new \Fiche_Def($g_connection,25);
+        $result=$property->build_input($fiche_def);
+        $g_connection->exec_sql("update fiche_def set fd_create_account=true where fd_id=25");
+        /*
+           $file_result=__CLASS__."-".__FUNCTION__.".txt";
+            $file_target='target-'.$file_result;
+         \Noalyss\Facility::save_file(__DIR__."/file",$file_result,var_export($result,true));
+        $this->assertFileEquals(__DIR__."/file/$file_target",__DIR__."/file/$file_result","Card_Property::build_input failed");
+        */
+        $this->assertEquals("600",$result["input"]->value," Accounting incorrect ");
+    }
+
 }
