@@ -188,7 +188,7 @@ class Card_Property
                     $result['msg'] .= " <span style=\"color:red\">" . _("Rappel: Poste par défaut sera ") .
                         $p_fiche_def->class_base .
                         " !</span> ";
-                    $result['input']->value = $p_fiche_def->class_base;
+                    $result['input']->value = (empty ($result['input']->value)) ?$p_fiche_def->class_base:$result['input']->value;
                 }
             }
             $result['label']=_("Poste comptable");
