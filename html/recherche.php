@@ -28,6 +28,8 @@ require_once NOALYSS_INCLUDE.'/class/acc_ledger.class.php';
 require_once NOALYSS_INCLUDE.'/class/acc_ledger_search.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+MaintenanceMode("block.html");
+
 if ( ! isset ($_SESSION[SESSION_KEY.'g_theme']))
 {
     echo "<h2>"._('Vous  êtes déconnecté')."</h2>";

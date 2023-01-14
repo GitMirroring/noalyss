@@ -1686,3 +1686,15 @@ function linkTo($p_url)
         return $p_url;
     }
 }
+/**
+ * @brief When you want to prevent users to connect, create a file in  noalyss/ (NOALYSS_BASE) with the
+ * message in Html
+ * @param string $p_file file in NOALYSS_BASE
+ */
+function MaintenanceMode($p_file)
+{
+    if ( file_exists(NOALYSS_BASE."/".$p_file )) {
+        include NOALYSS_BASE."/".$p_file;
+        exit;
+    }
+}

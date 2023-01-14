@@ -23,8 +23,11 @@
  * @file
  * @brief only for mobile device
  */
- 
+
 require_once '../include/constant.php';
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+MaintenanceMode("block.html");
+
 global $g_user;
 
 $cn=new Database();

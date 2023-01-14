@@ -14,12 +14,13 @@
  */
 if ( ! defined ('ALLOWED') ) define ('ALLOWED',1);
 require_once '../include/constant.php';
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 require_once NOALYSS_INCLUDE.'/class/extension.class.php';
 if ( !isset ($_REQUEST['gDossier'])) exit();
-
+MaintenanceMode("block.html");
 require_once NOALYSS_INCLUDE.'/class/noalyss_parameter_folder.class.php';
 mb_internal_encoding("UTF-8");
 /**
@@ -29,6 +30,7 @@ if ( ! isset($_SESSION[SESSION_KEY."g_user"])) {
     echo "NOCONX";
     die();
 }
+
 global $g_user,$cn,$g_parameter;
 $cn=Dossier::connect();
 $g_parameter=new Noalyss_Parameter_Folder($cn);

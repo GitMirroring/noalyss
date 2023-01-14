@@ -30,6 +30,8 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
 
 @html_page_start($_SESSION[SESSION_KEY.'g_theme']);
+MaintenanceMode("block.html");
+
 $rep=new Database();
 require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 $User=new Noalyss_user($rep);
