@@ -657,25 +657,25 @@ class Noalyss_User
      * synomym for isAdmin,
      * @deprecated
      */
-    function Admin()
+    function Admin():int
     {
         return $this->isAdmin();
     }
 
     /**
-     * @brief  Check if an user is an admin
+     * @brief  Check if an user is an admin and check also his password
      *
      * @return 1 for yes 0 for no
      */
-    function isAdmin()
+    function isAdmin():int
     {
         $this->admin=0;
         $pass5=$this->password;
         $sql="select count(*) from ac_users where use_login=$1
-             and use_active=1 and use_admin=1 ";
+             and use_active=1 and use_admin=1 and use_pass=$2 ";
 
         $cn=new Database();
-        $this->admin=$cn->get_value($sql, array($this->login));
+        $this->admin=$cn->get_value($sql, array($this->login,$pass5));
         return $this->admin;
     }
 

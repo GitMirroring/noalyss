@@ -28,7 +28,7 @@ if (!defined('ALLOWED'))
  * @see admin-noalyss.php ajax_misc.php admin.js
  */
 global $g_user;
-if ($g_user->Admin()==0)
+if ($g_user->isAdmin()==0)
 {
     die();
 }
