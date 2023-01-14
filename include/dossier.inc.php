@@ -82,7 +82,7 @@ if ( isset ($_POST["DATABASE"]) )
         {
             alert(_('Désolé vous devez migrer ce modèle en unicode'));
             echo '<span class="error">';
-            echo _('le modele ').domaine.'mod'.$_POST["FMOD_ID"]._(" doit être migré en unicode.");
+            echo _('le modele ').domaine.'mod'.$http->post("FMOD_ID","number")._(" doit être migré en unicode.");
             echo _('Pour le passer en unicode, faites-en une sauvegarde puis restaurez le fichier reçu').'</span>';
             echo HtmlInput::button_anchor('Retour','admin-noalyss.php?action=dossier_mgt');
             return;
