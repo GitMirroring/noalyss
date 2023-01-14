@@ -98,7 +98,7 @@ if ( $version < DBVERSIONREPO )
     echo '<a hreF="'.$base.'">'.$a.'</a></h2>';
 
 }
-if ( $User->Admin()  == 1)
+if ( $User->isAdmin()  == 1)
 {
     if (SITE_UPDATE !="") {
      $update=@file_get_contents(SITE_UPDATE);
@@ -137,7 +137,7 @@ load_all_script();
 $result="";
 $result.="<table border=\"0\">";
 $result.='<TR>';
-if ( $User->Admin()  == 1 )
+if ( $User->isAdmin()  == 1 )
 {
     $result.="<TD  class=\"tool\" ><A class=\"cell\" HREF=\"admin-noalyss.php\">"._("Administration")."  </A></TD>";
 }
