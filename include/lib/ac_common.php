@@ -1473,7 +1473,7 @@ function generate_random_string($car)
 {
     $string="";
     $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789*/+-=";
-    srand((int) microtime()*1020030);
+    srand((float) microtime(true)*1020030);
     for ($i=0; $i<$car; $i++)
     {
         $string .= $chaine[rand()%strlen($chaine)];
