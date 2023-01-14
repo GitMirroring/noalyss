@@ -24,7 +24,7 @@
  * Global variables
  */
 global $g_connection,$g_parameter,$g_user;
-if (!defined("DOSSIER"))define ("DOSSIER",25);
+if (!defined("DOSSIER"))define ("DOSSIER",101);
 
 $_REQUEST['gDossier'] = DOSSIER;
 $g_connection=new Database(DOSSIER);

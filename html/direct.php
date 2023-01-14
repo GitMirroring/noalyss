@@ -24,6 +24,8 @@
 require_once '../include/constant.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+MaintenanceMode("block.html");
 
 $cn=Dossier::connect();
 global $g_user;

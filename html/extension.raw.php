@@ -33,6 +33,8 @@ require_once  NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
 require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 
+MaintenanceMode("block.html");
+
 global $g_user,$cn,$g_parameter;
 $http=new HttpInput();
 $cn=Dossier::connect();

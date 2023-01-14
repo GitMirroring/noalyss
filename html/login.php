@@ -19,7 +19,8 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 require_once '../include/constant.php';
 
-include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+MaintenanceMode("block.html");
 
 /*! \file
  * \brief Login page

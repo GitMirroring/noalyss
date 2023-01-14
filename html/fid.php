@@ -33,7 +33,8 @@
    *\note if the j is -1 then all the card are shown
  */
 require_once '../include/constant.php';
-
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+MaintenanceMode("block.html");
 /**
  * if not connected, session is expired then exit with a message NOCONX
  */

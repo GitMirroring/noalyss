@@ -158,6 +158,8 @@ $my_domain="";
 require_once '../include/constant.php';
 require_once '../include/config.inc.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+MaintenanceMode("block.html");
+
 if ( file_exists("install.php")&& DEBUGNOALYSS == 0 )
 {
     // At the end of the installation procedure , the install file must be removed

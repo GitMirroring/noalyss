@@ -23,13 +23,15 @@ define('ALLOWED',1);
  * \brief Main file
  */
 require_once '../include/constant.php';
+require_once NOALYSS_INCLUDE.'/constant.security.php';
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+
+MaintenanceMode("block.html");
 
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
-require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-require_once NOALYSS_INCLUDE.'/constant.security.php';
 require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';

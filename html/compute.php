@@ -37,6 +37,9 @@ require_once  NOALYSS_INCLUDE.'/class/dossier.class.php';
 require_once  NOALYSS_INCLUDE.'/class/acc_tva.class.php';
 require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+MaintenanceMode("block.html");
+
 // Check if the needed field does exist
 extract ($_GET, EXTR_SKIP );
 foreach (array('t','c','p','q','n','gDossier') as $a)

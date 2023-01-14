@@ -40,6 +40,9 @@ require_once '../include/constant.php';
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 require_once NOALYSS_INCLUDE.'/class/dossier.class.php';
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+MaintenanceMode("block.html");
+
 /**
  * if not connected, session is expired then exit with a message NOCONX
  */
