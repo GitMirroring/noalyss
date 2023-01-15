@@ -58,7 +58,15 @@ function checkbox_set_range(evt, elt, p_name) {
     }
     var check = (aName[from].checked) ? true : false;
     for (x = from; x <= end; x++) {
-        aName[x].checked = check;
+        if (aName[x].parentNode.parentNode )
+        {
+            if ( window.getComputedStyle(aName[x].parentNode.parentNode).display != "none" ) {
+                /* console.debug(window.getComputedStyle(aName[x].parentNode.parentNode).display);*/
+                aName[x].checked = check;
+            }
+        } else  {
+            aName[x].checked = check;
+        }
     }
 }
 
