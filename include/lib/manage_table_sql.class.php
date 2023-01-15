@@ -31,7 +31,7 @@
   \code
   $objet->set_pk($p_id);
  // It is very important to set the name of the javascript variable 
- // Contained in the http_input variable "ctl"
+ // Contained in the http_input variable "ctl" , without this the list cannot be updated
   $objet->set_object_name($objet_name);
 
   // Set the ajax to call
@@ -50,6 +50,7 @@
   );
   $json=json_encode($aJson);
   $objet->param_set($json);
+
 
   // Display the box
     header('Content-type: text/xml; charset=UTF-8');
