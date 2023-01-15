@@ -38,7 +38,31 @@
  *   - type = array , match between column and type of data
  *   - default = array of column with a default value
  *   - date_format = format of the date
- * 
+ *
+ * if you give a SQL or a View you have to give a primary key, usually , the best is to use a key composed of
+ * different PK of the tables
+ * Example : in this SQL (or view) the PK is id and it is composed with the PK f_id and sg_id , remember that the
+ * pk cannot be null and must be unique ! For SQL , the value is computed , so you need a subselect like this
+ @code
+  select
+    ssw.sg_id::text||'-'||vfp.f_id::text id,
+    vfp.f_id,vfp.f_enable,vfp.person_name ,vfp.person_fname ,vfp.person_qcode ,ssw.sg_id
+    from rash.vw_fiche_person vfp
+    join rash.security_social_worker ssw using(f_id) ;
+ @endcode
+ *
+ * For SQL , the value is computed , so you need a subselect like this
+@code
+  select * from (
+        select
+        ssw.sg_id::text||'-'||vfp.f_id::text id,
+        vfp.f_id,vfp.f_enable,vfp.person_name ,vfp.person_fname ,vfp.person_qcode ,ssw.sg_id
+        from rash.vw_fiche_person vfp
+        join rash.security_social_worker ssw using(f_id))sub1
+@encode
+ *
+ *
+ *
  * After you call the parent constructor
  * @note the view or the table must include an unique key, otherwise the load 
  * doesn't work.
@@ -199,6 +223,33 @@ abstract class Data_SQL
           return $this->$pk;
     }
 
+    /**
+     * @brief Load the current row return false if not found
+     * @code
+    $pk=$this->primary_key;
+    if ( $this->get_limit_fiche_qcode() != 0 )
+    {
+        $sql=sprintf($this->sql," limit ".$this->get_limit_fiche_qcode());
+    } else
+    {
+        $sql=sprintf($this->sql,"  ");
+    }
+    $result=$this->cn->get_array($sql. " where id=$1",array ($this->$pk));
+    if ($this->cn->count()==0)
+    {
+        $this->$pk=-1;
+        return false;
+    }
+
+    foreach ($result[0] as $key=> $value)
+    {
+        $this->$key=$value;
+    }
+    return true;
+     *
+     * @endcode
+     * @return bool
+     */
     abstract function load():bool;
 
     public function get_info()
