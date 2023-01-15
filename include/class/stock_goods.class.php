@@ -74,10 +74,10 @@ class Stock_Goods extends Stock_Goods_Sql
 		$motif->size = 80;
 		$idepo = HtmlInput::select_stock($cn, "p_depot", "W");
 		$idepo->setReadOnly($p_readonly);
-		if (count($idepo->value) == 0)
+		if (empty($idepo->value) )
 		{
-			NoAccess();
-			die();
+			echo_warning(_("Aucun stock disponible"));
+			return;
 		}
 		$idepo->selected = $p_depot;
                 if ($p_readonly ) {
