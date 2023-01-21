@@ -3307,7 +3307,7 @@ li.li-active {
      margin-left:2rem !important;
  }
 
- div.nicEdit-main hr {
+ *  div.nicEdit-main hr {
      background-color: #756f6f !important;
      width:90%  !important;
      margin-left:5% !important;
@@ -3316,13 +3316,50 @@ li.li-active {
      height:2px;
  }
 
- div.nicEdit-main h2 {
+ * div.nicEdit-main h2 {
      margin: 0px;
      padding: 0px;
+     margin-left:2rem;
      font-size: 1.6em;
      font-style: normal;
      margin-bottom: .5rem;
      font-size: 2rem !important;
-     background-color: white;
+     background-color: transparent;
      color: navy;
+     text-decoration: underline;
+ }
+
+ * div.nicEdit-main h1 {
+     margin: 0px;
+     padding: 0px;
+     margin-left:1rem;
+     font-style: normal;
+     margin-bottom: .5rem;
+     font-size: 2.5rem !important;
+     background-color: transparent;
+     color: navy;
+     text-decoration: underline double;
+ }
+
+ * div.nicEdit-main h3 {
+     margin: 0px;
+     padding: 0px;
+     font-style: normal;
+     margin-bottom: .5rem;
+     font-size: 1.5 rem !important;
+     background-color: transparent;
+     color: navy;
+     text-decoration: underline dashed;
+     margin-left:3rem;
+ }
+ * div.nicEdit-main h4 {
+     margin: 0px;
+     padding: 0px;
+     font-style: normal;
+     margin-bottom: .5rem;
+     font-size: 1.1 rem !important;
+     background-color: transparent;
+     color: navy;
+     text-decoration: underline wavy;
+     margin-left:4rem;
  }
