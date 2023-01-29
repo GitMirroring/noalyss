@@ -64,6 +64,21 @@
 
  How to call a function AFTER save ?
  You set a function afterSaveFct like in the example, it will be trigger after you submit the FORM
+ a function  named afterSaveFct(r) where r is the row in HTML to display, with a attribute ctl_pk_id which is the    primary key and id of the row
+ Example :
+ @code
+ document_attach_obj.afterSaveFct=function(e) {
+    var ctl_pk_id=e.getAttribute("ctl_pk_id");
+  	var formData = new FormData();
+    var file_data=document.getElementById('da_file_name');
+    formData.append('da_file_name', file_data.files[0]);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "ajax.php?p_id="+ctl_pk_id+"&do=upload_document", true);
+	xhr.send(formData);
+}
+ </script>
+ @endcode
+  As a hidden parameter the Manage_Table:object_name must be  set
 
  Example :
  @code
@@ -231,7 +246,11 @@ var ManageTable = function (p_table_name)
      the current object
      </caption>
      *
-     *
+     *  *Call the ajax with the action save , it is possible to call a function after the save by creating
+     * +     * a function  named afterSaveFct(r) where r is the row in HTML to display, with a attribute ctl_pk_id which is the
+     * +     * primary key and id of the row
+     * +     *
+     * +     * As a hidden parameter the Manage_Table:object_name must be  set
      *
      */
     this.save = function (form_id) {
