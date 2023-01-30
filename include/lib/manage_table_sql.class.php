@@ -1170,7 +1170,7 @@ function check()
                     {
                         $text=new IText($key);
                         $text->value=$value;
-                        $min_size=(strlen($value)<30)?30:strlen($value)+5;
+                        $min_size=(noalyss_strlen($value)<30)?30:strlen($value)+5;
                         $text->size=$min_size;
                         echo $text->input();
                     }
@@ -1178,7 +1178,7 @@ function check()
                     {
                         $text=new INum($key);
                         $text->value=$value;
-                        $min_size=(strlen($value)<10)?10:strlen($value)+1;
+                        $min_size=(noalyss_strlen($value)<10)?10:strlen($value)+1;
                         $text->size=$min_size;
                         echo $text->input();
                     }
@@ -1187,7 +1187,7 @@ function check()
                         $text=new INum($key);
                         $text->prec=4;
                         $text->value=$value;
-                        $min_size=(strlen($value)<10)?10:strlen($value)+1;
+                        $min_size=(noalyss_strlen($value)<10)?10:strlen($value)+1;
                         $text->size=$min_size;
                         echo $text->input();
                     }
@@ -1196,7 +1196,7 @@ function check()
                         $text=new INum($key);
                         $text->prec=6;
                         $text->value=$value;
-                        $min_size=(strlen($value)<10)?10:strlen($value)+1;
+                        $min_size=(noalyss_strlen($value)<10)?10:strlen($value)+1;
                         $text->size=$min_size;
                         echo $text->input();
                     }
