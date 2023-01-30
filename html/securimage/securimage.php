@@ -503,7 +503,7 @@ class Securimage {
 	 * </code>
 	 *
 	 */
-	function Securimage()
+	function __construct()
 	{
 		// Initialize session or attach to existing
 		if ( session_id() == '' ) { // no session has been started yet, which is needed for validation
@@ -538,10 +538,10 @@ class Securimage {
 		$this->image_bg_color   = new Securimage_Color(0xff, 0xff, 0xff);
     $this->text_color       = new Securimage_Color(0x3d, 0x3d, 0x3d);
 		$this->multi_text_color = array(new Securimage_Color(0x0, 0x20, 0xCC),
-																		new Securimage_Color(0x0, 0x30, 0xEE),
-																		new Securimage_color(0x0, 0x40, 0xCC),
-																		new Securimage_Color(0x0, 0x50, 0xEE),
-																		new Securimage_Color(0x0, 0x60, 0xCC));
+                                                new Securimage_Color(0x0, 0x30, 0xEE),
+                                                new Securimage_color(0x0, 0x40, 0xCC),
+                                                new Securimage_Color(0x0, 0x50, 0xEE),
+                                                new Securimage_Color(0x0, 0x60, 0xCC));
 		$this->use_multi_text   = false;
 
 		$this->use_transparent_text         = false;
@@ -651,7 +651,7 @@ class Securimage {
 	 */
 	function doImage()
 	{
-		if ($this->use_gd_font == true) {
+		if ($this->use_gd_font == true || $this->iscale == null || $this->iscale == 0) {
 			$this->iscale = 1;
 		}
 		if($this->use_transparent_text == true || $this->bgimg != "") {
@@ -692,24 +692,42 @@ class Securimage {
 	function allocateColors()
 	{
 		// allocate bg color first for imagecreate
-		$this->gdbgcolor = imagecolorallocate($this->im, $this->image_bg_color->r, $this->image_bg_color->g, $this->image_bg_color->b);
-		
+		$this->gdbgcolor = imagecolorallocate($this->im, $this->image_bg_color->r??0, $this->image_bg_color->g??0, $this->image_bg_color->b??0);
+
+        $this->text_color->r=$this->text_color->r??rand(0,255);
+        $this->text_color->g=$this->text_color->g??rand(0,255);
+        $this->text_color->b=$this->text_color->b??rand(0,255);
+        $this->line_color->r=$this->line_color->r??rand(0,255);
+        $this->line_color->g=$this->line_color->g??rand(0,255);
+        $this->line_color->b=$this->line_color->b??rand(0,255);
+
+
+
 		$alpha = intval($this->text_transparency_percentage / 100 * 127);
 		
 		if ($this->use_transparent_text == true) {
-      $this->gdtextcolor = imagecolorallocatealpha($this->im, $this->text_color->r, $this->text_color->g, $this->text_color->b, $alpha);
-      $this->gdlinecolor = imagecolorallocatealpha($this->im, $this->line_color->r, $this->line_color->g, $this->line_color->b, $alpha);
-		} else {
+          $this->gdtextcolor = imagecolorallocatealpha($this->im, $this->text_color->r, $this->text_color->g, $this->text_color->b, $alpha);
+          $this->gdlinecolor = imagecolorallocatealpha($this->im, $this->line_color->r, $this->line_color->g, $this->line_color->b, $alpha);
+		} elseif ( $this->text_color != null ) {
 			$this->gdtextcolor = imagecolorallocate($this->im, $this->text_color->r, $this->text_color->g, $this->text_color->b);
-      $this->gdlinecolor = imagecolorallocate($this->im, $this->line_color->r, $this->line_color->g, $this->line_color->b);
-		}
+            $this->gdlinecolor = imagecolorallocate($this->im, $this->line_color->r, $this->line_color->g, $this->line_color->b);
+		} else {
+            $red=rand(0,255);
+            $green=rand(0,255);
+            $blue=rand(0,255);
+            $this->gdtextcolor = imagecolorallocate($this->im, $red, $green,$blue);
+            $this->gdlinecolor = imagecolorallocate($this->im, $red, $green, $blue);
+        }
     
-    $this->gdsignaturecolor = imagecolorallocate($this->im, $this->signature_color->r, $this->signature_color->g, $this->signature_color->b);
+    $this->gdsignaturecolor = imagecolorallocate($this->im, $this->signature_color->r??0, $this->signature_color->g??0, $this->signature_color->b??0);
     
     if ($this->use_multi_text == true) {
     	$this->gdmulticolor = array();
     	
-    	foreach($this->multi_text_color as $color) {
+    	foreach($this->multi_text_color??[] as $color) {
+            $color->r=$color->r??rand(0,255);
+            $color->g= $color->g??rand(0,255);
+            $color->b=$color->b??rand(0,255);
     		if ($this->use_transparent_text == true) {
     		  $this->gdmulticolor[] = imagecolorallocatealpha($this->im, $color->r, $color->g, $color->b, $alpha);
     		} else {
@@ -837,9 +855,9 @@ class Securimage {
 		$width2 = $this->image_width * $this->iscale;
 		$height2 = $this->image_height * $this->iscale;
 		 
-		if ($this->use_gd_font == true || !is_readable($this->ttf_file)) {
+		if ($this->use_gd_font == true || !is_readable($this->ttf_file??"")) {
 			if (!is_int($this->gd_font_file)) { //is a file name
-				$font = @imageloadfont($this->gd_font_file);
+				$font = @imageloadfont($this->gd_font_file??"");
 				if ($font == false) {
 					trigger_error("Failed to load GD Font file {$this->gd_font_file} ", E_USER_WARNING);
 					return;
@@ -897,7 +915,7 @@ class Securimage {
 						$max_x = $font_size + ($this->iscale * 5);
 					}
 					 
-					$x += rand($min_x, $max_x);
+					$x += rand((int)$min_x,(int) $max_x);
 				} //for loop
 			} // angled or multi-color
 		} //else ttf font
@@ -921,9 +939,9 @@ class Securimage {
 		 
 		// make array of poles AKA attractor points
 		for ($i = 0; $i < $numpoles; ++$i) {
-			$px[$i]  = rand($this->image_width * 0.3, $this->image_width * 0.7);
-			$py[$i]  = rand($this->image_height * 0.3, $this->image_height * 0.7);
-			$rad[$i] = rand($this->image_width * 0.4, $this->image_width * 0.7);
+			$px[$i]  = rand((int) ($this->image_width * 0.3), (int)( $this->image_width * 0.7));
+			$py[$i]  = rand((int) ($this->image_height * 0.3),(int) ($this->image_height * 0.7));
+			$rad[$i] = rand((int) ($this->image_width * 0.4), (int) ($this->image_width * 0.7));
 			$tmp     = -$this->frand() * 0.15 - 0.15;
 			$amp[$i] = $this->perturbation * $tmp;
 		}
@@ -958,7 +976,7 @@ class Securimage {
 				$y *= $this->iscale;
 
 				if ($x >= 0 && $x < $width2 && $y >= 0 && $y < $height2) {
-					$c = imagecolorat($this->tmpimg, $x, $y);
+					$c = imagecolorat($this->tmpimg, (int) $x,(int) $y);
 				}
 
 				if ($c != $bgCol) { // only copy pixels of letters to preserve any background image
@@ -1001,7 +1019,7 @@ class Securimage {
 	{
 		$code = '';
 
-		for($i = 1, $cslen = strlen($this->charset); $i <= $len; ++$i) {
+		for($i = 1, $cslen = strlen($this->charset??""); $i <= $len; ++$i) {
 			$code .= $this->charset[rand(0, $cslen - 1)];
 		}
 		return $code;
