@@ -122,6 +122,8 @@ class Anc_Account_Table extends Manage_Table_SQL
                         je1.status  = 'CL' and  oa.po_id=$1 ",[$this->table->po_id]);
        if ( $count_closed > 0 ) {
            throw new \Exception(_("Effacement impossible : le poste est utilisé dans une période fermée"));
+       } else {
+           $cn->exec_sql("delete from public.poste_analytique where po_id=$1",[$this->table->po_id]);
        }
        
    }
