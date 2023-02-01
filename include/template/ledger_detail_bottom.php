@@ -11,7 +11,7 @@
  * Variables : $div = popup or box (det[0-9]
  * 
  */
-
+\Noalyss\Dbg::echo_file(__FILE__);
 $select_box=new \Select_Box("sb_".$jr_id, _("Autre action"));
 $select_box->set_position("normal");
 $cn=Dossier::connect();
@@ -349,7 +349,7 @@ if ( $div != 'popup' ) {
   if ( $per->is_closed() == 0 && $owner->MY_STRICT=='N' && $g_user->check_action(RMOPER)==1)
   {
     $javascript="return confirm_box(null,content[50],function () {removeOperation('".$obj->det->jr_id."',".dossier::id().",'".$div."')})";
-    $select_box->add_javascript(_("Effacer"), $javascript);
+    $select_box->add_javascript(_("Supprimer"), $javascript);
   }
  //----------------------------------------------------
  // Extourne
@@ -359,7 +359,7 @@ if ( $div != 'popup' ) {
  //-------------------------------------------------------------------
  // Duplicate
  //-------------------------------------------------------------------
- $select_box->add_javascript(_("Duplicate"),sprintf("duplicate_operation('%s','%s')",Dossier::id(),$obj->jr_id));
+ $select_box->add_javascript(_("Dupliquer"),sprintf("duplicate_operation('%s','%s')",Dossier::id(),$obj->jr_id));
 
  //-------------------------------------------------------------------
  // Export PDF

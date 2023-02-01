@@ -1469,7 +1469,7 @@ function remove_divide_zero($p_formula)
  * @brief Create randomly a string
  * @param int $p_length length of the generate string
  */
-function generate_random_string($car)
+function generate_random_string($p_length)
 {
     $string="";
     $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789*/+-=";
