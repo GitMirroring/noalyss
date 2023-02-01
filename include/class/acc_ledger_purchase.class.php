@@ -66,7 +66,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             throw new Exception (_('Double Encodage'),5);
 
         /* check if there is a customer */
-        if ( strlen(trim($e_client)) == 0 )
+        if ( noalyss_strlentrim($e_client)== 0 )
             throw new Exception(_('Vous n\'avez pas donné de fournisseur'),11);
 
         /*  check if the date is valid */
@@ -157,7 +157,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         //----------------------------------------
         for ($i=0;$i< $nb_item;$i++)
         {
-            if ( strlen(trim(${'e_march'.$i}))== 0) continue;
+            if ( noalyss_strlentrim(${'e_march'.$i})== 0) continue;
             /* check if amount are numeric and */
             if ( isNumber(${'e_march'.$i.'_price'}) == 0 )
                 throw new Exception(_('La fiche ').${'e_march'.$i}._('a un montant invalide').' ['.${'e_march'.$i}.']',6);
@@ -600,7 +600,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 if ( $g_parameter->MY_TVA_USE=='Y')
                 {
                     $acc_amount->set_parameter('amount_vat_rate',$oTva->get_parameter('rate'));
-                    if ( strlen(trim(${'e_march'.$i.'_tva_amount'})) ==0 || ${'e_march'.$i.'_tva_amount'} == 0)
+                    if ( noalyss_strlentrim(${'e_march'.$i.'_tva_amount'}) ==0 || ${'e_march'.$i.'_tva_amount'} == 0)
                     {
                         // vat must computed and the amount is already converted to EUR
                         $acc_amount->compute_vat();
@@ -921,7 +921,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                                 array($internal,$seq));
 
             /**= e_pj then do not increment sequence */
-            if ( strcmp($e_pj,$e_pj_suggest) == 0 && strlen(trim($e_pj)) != 0 )
+            if ( strcmp($e_pj,$e_pj_suggest) == 0 && noalyss_strlentrim($e_pj) != 0 )
             {
                 $this->inc_seq_pj();
             }
@@ -1029,7 +1029,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 
                 /* insert into jrn */
                 $acc_pay->mt=$mt;
-                $acc_pay->desc=(!isset($e_comm_paiement) || strlen(trim($e_comm_paiement)) == 0) ?$e_comm:$e_comm_paiement;
+                $acc_pay->desc=(!isset($e_comm_paiement) || noalyss_strlentrim($e_comm_paiement) == 0) ?$e_comm:$e_comm_paiement;
                 
                 // Add info for currency
                 $acc_pay->currency_id=$p_currency_code;
@@ -1280,7 +1280,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         // retrieve e_client_label
         //--
 
-        if ( strlen(trim($e_client)) !=  0)
+        if ( noalyss_strlentrim($e_client) !=  0)
         {
             $fClient=new Fiche($this->db);
             $fClient->get_by_qcode($e_client);
@@ -1349,7 +1349,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $march_label=(isset(${"e_march".$i."_label"}))?${"e_march".$i."_label"}:"";
             // retrieve the tva label and name
             //--
-            if ( strlen(trim($march))!=0  && strlen(trim($march_label))==0 )
+            if ( noalyss_strlentrim($march)!=0  && noalyss_strlentrim($march_label)==0 )
             {
                 $fMarch=new Fiche($this->db);
                 $fMarch->get_by_qcode($march);
@@ -1653,7 +1653,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         for ($i = 0; $i < $nb_item;$i++)
         {
 			$tot_row=0;
-            if ( strlen(trim(${"e_march".$i})) == 0 ) continue;
+            if ( noalyss_strlentrim(${"e_march".$i}) == 0 ) continue;
 
             /* retrieve information for card */
             $fiche=new Fiche($this->db);

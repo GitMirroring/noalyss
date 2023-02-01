@@ -1233,7 +1233,7 @@ class Acc_Ledger  extends jrn_def_sql
                 if ($f->belong_ledger($p_jrn)<0)
                     throw new Exception("La fiche quick_code = ".
                     $f->quick_code." n'est pas dans ce journal", 4);
-                if (strlen(trim(${'qc_'.$i}))!=0&&isNumber(${'amount'.$i})==0)
+                if (noalyss_strlentrim(${'qc_'.$i})!=0&&isNumber(${'amount'.$i})==0)
                     throw new Exception(_('Montant invalide'), 3);
 
                 $strPoste=$f->strAttribut(ATTR_DEF_ACCOUNT);
@@ -1248,7 +1248,7 @@ class Acc_Ledger  extends jrn_def_sql
             }
 
             // Check if the account is permitted
-            if (isset(${'poste'.$i})&&strlen(trim(${'poste'.$i}))!=0)
+            if (isset(${'poste'.$i})&&noalyss_strlentrim(${'poste'.$i})!=0)
             {
                 $p=new Acc_Account_Ledger($this->db, ${'poste'.$i});
                 if ($p->belong_ledger($p_jrn)<0) {
@@ -1256,7 +1256,7 @@ class Acc_Ledger  extends jrn_def_sql
                             _("Le poste %s n'est pas dans ce journal",$p->id)),
                     5);
                 }
-                if (strlen(trim(${'poste'.$i}))!=0&&isNumber(${'amount'.$i})==0)
+                if (noalyss_strlentrim(${'poste'.$i})!=0&&isNumber(${'amount'.$i})==0)
                     throw new Exception(_('Poste invalide ['.${'poste'.$i}.']'),
                     3);
                 if ($p->do_exist()==0)
@@ -1408,7 +1408,7 @@ class Acc_Ledger  extends jrn_def_sql
                 if ($check_periode==false)
                     $acc_op->periode=$oPeriode->p_id;
                 $acc_op->desc=null;
-                if (strlen(trim(${'ld'.$i}))!=0)
+                if (noalyss_strlentrim(${'ld'.$i})!=0)
                     $acc_op->desc=${'ld'.$i};
                     
                 // Amount in default currency , usually EUR
@@ -1516,7 +1516,7 @@ class Acc_Ledger  extends jrn_def_sql
             $acc_end->pj=$e_pj;
 
             /* if e_suggest != e_pj then do not increment sequence */
-            if (strcmp($e_pj, $e_pj_suggest)==0&&strlen(trim($e_pj))!=0)
+            if (strcmp($e_pj, $e_pj_suggest)==0&&noalyss_strlentrim($e_pj)!=0)
             {
                 $this->inc_seq_pj();
             }
@@ -1739,7 +1739,7 @@ class Acc_Ledger  extends jrn_def_sql
         $comma='';
         foreach ($res as $item)
         {
-            if (strlen(trim($item['deb']))!=0)
+            if (noalyss_strlentrim($item['deb'])!=0)
             {
                 $card.=$comma.$item['deb'];
                 $comma=',';
@@ -1920,7 +1920,7 @@ class Acc_Ledger  extends jrn_def_sql
         // Move the document to the jrn
         $doc->moveDocumentPj($internal);
         // Update the comment with invoice number, if the comment is empty
-        if (!isset($e_comm)||strlen(trim($e_comm))==0)
+        if (!isset($e_comm)||noalyss_strlentrim($e_comm)==0)
         {
             $sql="update jrn set jr_comment=' document ".$doc->d_number."' where jr_internal='$internal'";
             $this->db->exec_sql($sql);

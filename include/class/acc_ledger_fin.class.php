@@ -131,7 +131,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
         //----------------------------------------
         for ($i=0; $i<$nb_item; $i++)
         {
-            if (strlen(trim(${'e_other'.$i}))==0)
+            if (noalyss_strlentrim(${'e_other'.$i})==0)
                 continue;
             /* check if amount are numeric and */
             if (isNumber(${'e_other'.$i.'_amount'})==0)
@@ -214,7 +214,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
             throw new Exception('Il n\'y a aucune opération', 12);
 
         /* Check if the last_saldo and first_saldo are correct */
-        if (strlen(trim($last_sold))!=0&&isNumber($last_sold)&&strlen(trim($first_sold))!=0&&isNumber($first_sold)
+        if (noalyss_strlentrim($last_sold)!=0&&isNumber($last_sold)&&noalyss_strlentrim($first_sold)!=0&&isNumber($first_sold)
         )
         {
             $diff=$last_sold-$first_sold;
@@ -582,7 +582,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
             $tiers=(isset(${"e_other".$i}))?${"e_other".$i}:""
             ;
 
-            if (strlen(trim($tiers))==0)
+            if (noalyss_strlentrim($tiers)==0)
                 continue;
             $tiers_label="";
             $tiers_amount=round(${"e_other$i"."_amount"}, 2);
@@ -823,7 +823,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
             {
                 // insert it into the database
                 // and quit the loop ?
-                if (strlen(trim(${"e_other$i"}))==0)
+                if (noalyss_strlentrim(${"e_other$i"})==0)
                     continue;
 
                 // get the currency_rate when each  operation has its own date 
@@ -1084,7 +1084,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                 }
             } // for nbitem
             // increment pj
-            if (strlen(trim($e_pj))!=0)
+            if (noalyss_strlentrim($e_pj)!=0)
             {
                 $this->inc_seq_pj();
             }

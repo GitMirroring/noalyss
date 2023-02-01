@@ -245,7 +245,7 @@ EOF;
 
             if (isDate($p_date_start)==null      ||
                     isDate($p_date_end)==null    ||
-                    strlen(trim($p_exercice))==0 ||
+                    noalyss_strlentrim($p_exercice)==0 ||
                     isNumber($p_exercice) ==0    ||
                     $p_exercice<COMPTA_MIN_YEAR  ||
                     $p_exercice>COMPTA_MAX_YEAR)

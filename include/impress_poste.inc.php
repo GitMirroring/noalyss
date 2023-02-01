@@ -124,7 +124,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
     }
     $go=0;
 // we ask a poste_id
-    if ( isset($_GET['poste_id']) && strlen(trim($_GET['poste_id'])) != 0 )
+    if ( isset($_GET['poste_id']) && noalyss_strlentrim($_GET['poste_id']) != 0 )
     {
         if ( isset ($_GET['poste_fille']) )
         {
@@ -139,7 +139,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
             $go=1;
         }
     }
-    if ( strlen(trim($_GET['f_id'])) != 0 )
+    if ( noalyss_strlentrim($_GET['f_id']) != 0 )
     {
         // thanks the qcode we found the poste account
         $fiche=new Fiche($cn);

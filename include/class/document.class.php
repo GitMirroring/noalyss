@@ -1029,7 +1029,7 @@ class Document
                 $id='e_march'.$this->counter."_label";
                 // check if the march exists
 
-                if (!isset($p_array[$id])||(isset($p_array[$id])&&strlen(trim($p_array[$id]))==0))
+                if (!isset($p_array[$id])||(isset($p_array[$id])&&noalyss_strlentrim($p_array[$id])==0))
                 {
                     $id='e_march'.$this->counter;
                     // check if the march exists
@@ -1109,7 +1109,7 @@ class Document
                     return "";
                 $qt='e_quant'.$this->counter;
                 $price='e_march'.$this->counter.'_price';
-                if ($p_array[$price]==0||$p_array[$qt]==0||strlen(trim($p_array[$price]))==0||strlen(trim($p_array[$qt]))==0)
+                if ($p_array[$price]==0||$p_array[$qt]==0||noalyss_strlentrim($p_array[$price])==0||noalyss_strlentrim($p_array[$qt])==0)
                     return "";
 
                 $r=$p_array[$id];
@@ -1145,7 +1145,7 @@ class Document
                 if (!isset($p_array[$tva]))
                     return "";
                 // check that something is sold
-                if ($p_array[$price]==0||$p_array[$qt]==0||strlen(trim($p_array[$price]))==0||strlen(trim($p_array[$qt]))==0)
+                if ($p_array[$price]==0||$p_array[$qt]==0||noalyss_strlentrim($p_array[$price])==0||noalyss_strlentrim($p_array[$qt])==0)
                     return "";
                 $r=$p_array['e_march'.$this->counter.'_tva_amount'];
                 break;
@@ -1160,7 +1160,7 @@ class Document
                 if (!isset($p_array[$tva]))
                     return "";
                 // check that something is sold
-                if ($p_array[$price]==0||$p_array[$qt]==0||strlen(trim($p_array[$price]))==0||strlen(trim($p_array[$qt]))==0)
+                if ($p_array[$price]==0||$p_array[$qt]==0||noalyss_strlentrim($p_array[$price])==0||noalyss_strlentrim($p_array[$qt])==0)
                     return "";
                 $oTva=new Acc_Tva($this->db, $p_array[$tva]);
                 if ($oTva->load()==-1)
@@ -1177,7 +1177,7 @@ class Document
                 if (!isset($p_array['e_march'.$this->counter.'_tva_id']))
                     return "";
                 // check that something is sold
-                if ($p_array[$price]==0||$p_array[$qt]==0||strlen(trim($p_array[$price]))==0||strlen(trim($p_array[$qt]))==0)
+                if ($p_array[$price]==0||$p_array[$qt]==0||noalyss_strlentrim($p_array[$price])==0||noalyss_strlentrim($p_array[$qt])==0)
                     return "";
                 if (!isset($p_array['e_march'.$this->counter.'_tva_id']))
                     return '';
@@ -1198,7 +1198,7 @@ class Document
                 if (!isset($p_array[$id]))
                     return "";
                 // check that something is sold
-                if ($p_array['e_march'.$this->counter.'_price']==0||$p_array['e_quant'.$this->counter]==0||strlen(trim($p_array['e_march'.$this->counter.'_price']))==0||strlen(trim($p_array['e_quant'.$this->counter]))==0)
+                if ($p_array['e_march'.$this->counter.'_price']==0||$p_array['e_quant'.$this->counter]==0||noalyss_strlentrim($p_array['e_march'.$this->counter.'_price'])==0||noalyss_strlentrim($p_array['e_quant'.$this->counter])==0)
                     return "";
                 $r=$p_array[$id];
                 break;
@@ -1210,7 +1210,7 @@ class Document
                     return "";
 
                 // check that something is sold
-                if ($p_array['e_march'.$this->counter.'_price']==0||$p_array['e_quant'.$this->counter]==0||strlen(trim($p_array['e_march'.$this->counter.'_price']))==0||strlen(trim($p_array['e_quant'.$this->counter]))==0)
+                if ($p_array['e_march'.$this->counter.'_price']==0||$p_array['e_quant'.$this->counter]==0||noalyss_strlentrim($p_array['e_march'.$this->counter.'_price'])==0||noalyss_strlentrim($p_array['e_quant'.$this->counter])==0)
                     return "";
                 bcscale(4);
                 $r=bcmul($p_array[$id], $p_array[$quant]);
@@ -1256,8 +1256,8 @@ class Document
                     if (!isset($p_array[$sell]))
                         break;
 
-                    if (strlen(trim($p_array[$sell]))==0||
-                            strlen(trim($p_array[$qt]))==0||
+                    if (noalyss_strlentrim($p_array[$sell])==0||
+                            noalyss_strlentrim($p_array[$qt])==0||
                             $p_array[$qt]==0||$p_array[$sell]==0)
                         continue;
                     $tmp1=bcmul($p_array[$sell], $p_array[$qt]);

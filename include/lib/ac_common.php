@@ -235,7 +235,7 @@ function isNumber($p_int)
 
 function isDate($p_date)
 {
-    if (strlen(trim($p_date)) == 0)
+    if (noalyss_strlentrim($p_date) == 0)
 	return null;
     if (preg_match("/^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}$/", $p_date) == 0)
     {
@@ -1474,7 +1474,7 @@ function generate_random_string($car)
     $string="";
     $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789*/+-=";
     srand((float) microtime(true)*1020030);
-    for ($i=0; $i<$car; $i++)
+    for ($i=0; $i<$p_length; $i++)
     {
         $string .= $chaine[rand()%strlen($chaine)];
     }
@@ -1592,6 +1592,10 @@ function noalyss_strlen($p_string) :int{
 function noalyss_trim($p_string) {
     if ($p_string===null) return "";
     else return trim($p_string);
+}
+function noalyss_strlentrim($p_string) :int {
+    if (empty($p_string)) return 0;
+    return strlen(trim($p_string));
 }
 function noalyss_str_replace($search,$replace,$string) {
     if ($string===null) return "";

@@ -76,7 +76,7 @@ class Pre_op_ach extends Pre_operation_detail
 
             for ($i=0;$i<$p_nb_item;$i++)
             {
-                if ( strlen(trim($this->{"e_march".$i}))==0) continue;
+                if ( noalyss_strlentrim($this->{"e_march".$i})==0) continue;
                 $sql= 'insert into op_predef_detail (opd_poste,'
                     . 'opd_amount,'
                     . 'opd_tva_id,'
@@ -224,7 +224,7 @@ class Pre_op_ach extends Pre_operation_detail
        // retrieve e_client_label
        //--
 
-       if ( strlen(trim($e_client)) !=  0)
+       if ( noalyss_strlentrim($e_client) !=  0)
        {
            $fClient=new Fiche($ledger->db);
            $fClient->get_by_qcode($e_client);
@@ -292,7 +292,7 @@ class Pre_op_ach extends Pre_operation_detail
 
            // retrieve the tva label and name
            //--
-           if ( strlen(trim($march))!=0 && strlen(trim($march_label))==0)
+           if ( noalyss_strlentrim($march)!=0 && noalyss_strlentrim($march_label)==0)
            {
                $fMarch=new Fiche($ledger->db);
                $fMarch->get_by_qcode($march);

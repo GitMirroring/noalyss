@@ -235,7 +235,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
             $poste=new Acc_Account_Ledger($this->db, $code['j_poste']);
 
             // if card retrieve name if the account is not a VAT account
-            if (strlen(trim($code['j_qcode']))!=0&&$poste->isTva()==0)
+            if (noalyss_strlentrim($code['j_qcode'])!=0&&$poste->isTva()==0)
             {
                 $fiche=new Fiche($this->db);
                 $fiche->get_by_qcode(trim($code['j_qcode']), false);
@@ -556,7 +556,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
             $tot_op=$line['jr_montant'];
 
             /* Check first if there is a quickcode */
-            if (strlen(trim($line['description']))==0&&strlen(trim($line['j_qcode']))
+            if (noalyss_strlentrim($line['description'])==0&&noalyss_strlentrim($line['j_qcode'])
                     !=0)
             {
                 $fiche=new Fiche($this->db);

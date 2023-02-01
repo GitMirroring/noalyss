@@ -56,7 +56,7 @@ if ( isset ($_REQUEST['sa'] ))
         exit();
     }
     if ( empty ($_FILES['file']['name']) ||
-            strlen(trim($_FILES['file']['name']))==0
+            noalyss_strlentrim($_FILES['file']['name'])==0
        )
     {
         echo '<div class="content">';
@@ -75,7 +75,7 @@ if ( isset ($_REQUEST['sa'] ))
         $cn=new Database();
         $id=$cn->get_next_seq('dossier_id');
 
-        if ( strlen(trim($_REQUEST['database'])) == 0 )
+        if ( noalyss_strlentrim($_REQUEST['database']) == 0 )
         {
             $lname=$id." Restauration :".sql_string($_FILES['file']['name']);
         }
@@ -84,7 +84,7 @@ if ( isset ($_REQUEST['sa'] ))
             $lname=$id." ".$_REQUEST['database'];
         }
 
-        if (strlen(trim($_REQUEST['desc']))==0)
+        if (noalyss_strlentrim($_REQUEST['desc'])==0)
         {
             $ldesc=$lname;
         }
@@ -149,7 +149,7 @@ if ( isset ($_REQUEST['sa'] ))
         $cn=new Database();
         $id=$cn->get_next_seq('s_modid');
 
-        if ( strlen(trim($_REQUEST['database'])) == 0 )
+        if ( noalyss_strlentrim($_REQUEST['database']) == 0 )
             $lname=$id." Restauration :".$_FILES['file']['name'];
         else
             $lname=$id." ".$_REQUEST['database'];

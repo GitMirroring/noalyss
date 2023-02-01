@@ -329,7 +329,7 @@ class Acc_Bilan
             // $a=(Impress::check_formula($buffer)  == true)?"$buffer ok<br>":'<font color="red">'.'Pas ok '.$buffer."</font><br>";
             // echo $a;
             // blank line are skipped
-            if (strlen(trim($buffer))==0)
+            if (noalyss_strlentrim($buffer)==0)
                 continue;
             // skip comment
             if ( strpos($buffer,'#') === true )

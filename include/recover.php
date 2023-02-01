@@ -145,7 +145,7 @@ L\'email a été envoyé avec un lien et le nouveau mot de passe, vérifiez vos 
 elseif ($action=="req") :
     $http=new HttpInput();
     $request_id=$http->request("req","string", "");
-    if (strlen(trim($request_id))==SIZE_REQUEST) :
+    if (noalyss_strlentrim($request_id)==SIZE_REQUEST) :
         $cn=new Database(0);
 
         $value=$cn->get_value("select password from recover_pass where request=$1 and created_on > now() - interval '12 hours' and recover_on is null", array($request_id));

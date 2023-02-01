@@ -259,7 +259,7 @@ EOF;
      */
     function set_pj()
     {
-        if ( strlen(trim($this->pj)) == 0 )
+        if ( noalyss_strlentrim($this->pj) == 0 )
         {
             $sql="update jrn set jr_pj_number=$1 where jr_id=$2";
             $this->db->exec_sql($sql,array(null,$this->jr_id));
@@ -337,7 +337,7 @@ EOF;
             return false;
         }
 
-        $echeance=( isset( $this->echeance) && strlen(trim($this->echeance)) != 0)?$this->echeance:null;
+        $echeance=( isset( $this->echeance) && noalyss_strlentrim($this->echeance) != 0)?$this->echeance:null;
         if ( ! isset($this->mt) )
         {
             $this->mt=microtime(true);
@@ -475,7 +475,7 @@ EOF;
 
             $r.='<td  '.$border.'>';
             //       $a=($l['vw_name']=="")?$l['j_qcode']:$l['pcm_lib'];
-            $a=(strlen(trim($l['j_qcode']))==0)?$l['pcm_lib']:$l['vw_name'];
+            $a=(noalyss_strlentrim($l['j_qcode'])==0)?$l['pcm_lib']:$l['vw_name'];
             $r_notable.=$a;
             $r.=h($a);
             $csv.='"'.$a.'";';

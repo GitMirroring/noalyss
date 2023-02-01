@@ -123,11 +123,11 @@ if (isset($_POST['save_name']))
     $p_desc=$http->post('p_desc');
     try
     {
-        if (strlen(trim($p_name))==0)
+        if (noalyss_strlentrim($p_name)==0)
             throw new Exception("Nom ne peut être vide");
         if (isNumber($p_id)==0)
             throw new Exception("profile Invalide");
-        $p_desc=(strlen(trim($p_desc))==0)?null:trim($p_desc);
+        $p_desc=(noalyss_strlentrim($p_desc)==0)?null:trim($p_desc);
         if ($p_id!=-1)
         {
             $cn->exec_sql("update profile set p_name=$1,p_desc=$2,
@@ -245,7 +245,7 @@ if (isset($_POST['mod']))
             $me_code_dep=-1;
         }
         $cn->start();
-        $p_order=(strlen(trim($p_order))==0)?"0":$p_order;
+        $p_order=(noalyss_strlentrim($p_order)==0)?"0":$p_order;
         if ($pm_default==1)
         {
             // reset all default

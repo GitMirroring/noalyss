@@ -267,7 +267,7 @@ case 'st':
         {
             $where=sprintf(' where frd_id in ('.sql_string ($cat).')');
         }
-        elseif ( isset($fil) && strlen(trim($fil)) > 0 && $fil != -1 )
+        elseif ( isset($fil) && noalyss_strlentrim($fil) > 0 && $fil != -1 )
         {
             /* we filter thanks a given list of category of card
              */
@@ -627,7 +627,7 @@ case 'scc':
         $nom_mod=$http->get("nom_mod");
         $class_base=$http->get("class_base");
         $fd_description=$http->get("nom_mod");
-        if ( strlen(trim($nom_mod)) != 0 )
+        if ( noalyss_strlentrim($nom_mod) != 0 )
         {
             $array=array("FICHE_REF"=>$cat,
                          "nom_mod"=>$nom_mod,

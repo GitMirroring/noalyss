@@ -260,7 +260,7 @@ class Follow_Up
             $h2->readonly=($p_view=='NEW')?false:true;
             $doc=new Document($this->db, $this->d_id);
             $doc->get();
-            if (strlen(trim($doc->d_lob))!=0)
+            if (noalyss_strlentrim($doc->d_lob)!=0)
             {
                 $d_id=new IHidden();
                 $doc_ref="<p> Document ".$doc->anchor().'</p>';
@@ -327,7 +327,7 @@ class Follow_Up
         $str_add_button=$f_add_button->input();
 
         // f_id_dest sender
-        if ($this->qcode_dest!=NOTFOUND&&strlen(trim($this->qcode_dest))!=0)
+        if ($this->qcode_dest!=NOTFOUND&&noalyss_strlentrim($this->qcode_dest)!=0)
         {
             $tiers=new Fiche($this->db);
             $tiers->get_by_qcode($this->qcode_dest);
@@ -664,7 +664,7 @@ class Follow_Up
         $ord=(!isset($_GET['ord']))?"dd":$_GET['ord'];
         $sort=$table->get_sql_order($ord);
 
-        if (strlen(trim($p_filter))!=0)
+        if (noalyss_strlentrim($p_filter)!=0)
             $p_filter_doc=" dt_id in ( $p_filter )";
         else
             $p_filter_doc=" 1=1 ";
@@ -1372,7 +1372,7 @@ class Follow_Up
         if (isset($p_array['qcode']))
         {
             // verify that qcode is not empty
-            if (strlen(trim($p_array['qcode']))!=0)
+            if (noalyss_strlentrim($p_array['qcode'])!=0)
             {
 
                 $fiche=new Fiche($cn);

@@ -79,7 +79,7 @@ class Todo_List
         }
         if ( strcmp ($p_idx, 'tl_date') == 0 )
         {
-            if ( strlen(trim($p_value)) ==0 ||strlen($p_value) > 12 || isDate ($p_value) == false) return false;
+            if ( noalyss_strlentrim($p_value) ==0 ||strlen($p_value) > 12 || isDate ($p_value) == false) return false;
         }
         if ( strcmp ($p_idx, 'tl_title') == 0 )
         {

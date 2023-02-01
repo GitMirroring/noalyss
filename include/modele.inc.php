@@ -411,7 +411,7 @@ if ($sa == 'list')
 		$cn = new Database();
 		$msg = "dossier";
 		$name = $cn->get_value("select mod_name from modeledef where mod_id=$1", array($mod_id));
-		if (strlen(trim($name)) == 0)
+		if (noalyss_strlentrim($name) == 0)
 		{
 			echo "<h2 class=\"error\"> $msg inexistant</h2>";
 			return;

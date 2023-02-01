@@ -69,7 +69,7 @@ class Forecast
     {
         // Verify that the elt we want to add is correct
         // the f_name must be unique (case insensitive)
-        if ( strlen(trim($this->f_name))==0) throw new Exception(_('Le nom ne peut pas être vide'));
+        if ( noalyss_strlentrim($this->f_name)==0) throw new Exception(_('Le nom ne peut pas être vide'));
 
         return 0;
     }

@@ -188,13 +188,13 @@ class Acc_Ledger_Info
     function save_extra($p_jr_id,$p_array)
     {
         $this->jr_id=$p_jr_id;
-        if (strlen(trim($p_array['bon_comm'] )) != 0 )
+        if (noalyss_strlentrim($p_array['bon_comm'] ) != 0 )
         {
             $this->set_type('BON_COMMANDE');
             $this->set_value($p_array['bon_comm']);
             $this->insert();
         }
-        if (strlen(trim($p_array['other_info'] )) != 0 )
+        if (noalyss_strlentrim($p_array['other_info'] ) != 0 )
         {
             $this->set_type('OTHER');
             $this->set_value($p_array['other_info']);

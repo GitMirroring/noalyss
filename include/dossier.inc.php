@@ -395,7 +395,7 @@ if ( $sa == 'remove' && isNumber($dossier_id) == 1 && $dossier_id != -1 )
     $cn=new Database();
     $msg="dossier";
     $name=$cn->get_value("select dos_name from ac_dossier where dos_id=$1",array($dossier_id));
-    if ( strlen(trim($name)) == 0 )
+    if ( noalyss_strlentrim($name) == 0 )
     {
         echo "<h2 class=\"error\"> $msg "._('inexistant')."</h2>";
         return;

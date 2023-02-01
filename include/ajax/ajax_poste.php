@@ -94,19 +94,19 @@ case "sf":
         }
     }
     /* show result */
-    if ( isset($q) && strlen(trim($q)) > 0)
+    if ( isset($q) && noalyss_strlentrim($q) > 0)
     {
         $q= sql_string($q);
         $sql.=sprintf(" $sep ( pcm_val::text like '%s%%' or pcm_lib::text ilike '%%%s%%') ",
                       $q,$q);
     }
     $sql.=' group by pcm_val,pcm_lib,pcm_val_parent, pcm_type  order by pcm_val::text limit 50';
-    if ( isset($q) && strlen(trim($q))> 0 )
+    if ( isset($q) && noalyss_strlentrim($q)> 0 )
     {
         $array=$cn->get_array($sql);
     }
     if ( ! isset($q) ) $array=array();
-    if ( isset($q) && strlen(trim($q))==0) $array=array();
+    if ( isset($q) && noalyss_strlentrim($q)==0) $array=array();
 
     /*  set the javascript */
     for ($i=0;$i<count($array);$i++)

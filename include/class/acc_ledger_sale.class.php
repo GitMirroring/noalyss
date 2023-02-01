@@ -68,7 +68,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             throw new Exception(_('Accès interdit'), 20);
 
         /* check if there is a customer */
-        if (strlen(trim($e_client)) == 0)
+        if (noalyss_strlentrim($e_client) == 0)
             throw new Exception(_('Vous n\'avez pas donné de client'), 11);
 
         /*  check if the date is valid */
@@ -141,7 +141,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         // foreach item
         //----------------------------------------
         for ($i = 0; $i < $nb_item; $i++) {
-            if (! isset (${'e_march' . $i}) || strlen(trim(${'e_march' . $i})) == 0)
+            if (! isset (${'e_march' . $i}) || noalyss_strlentrim(${'e_march' . $i}) == 0)
                 continue;
             /* check if amount are numeric and */
             if (isNumber(${'e_march' . $i . '_price'}) == 0)
@@ -617,7 +617,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
             /*             * = e_pj then do not increment sequence */
             /* and e_pj is not null */
-            if (strcmp($e_pj, $e_pj_suggest) == 0 && strlen(trim($e_pj)) != 0) {
+            if (strcmp($e_pj, $e_pj_suggest) == 0 && noalyss_strlentrim($e_pj) != 0) {
                 $this->inc_seq_pj();
             }
 
@@ -631,7 +631,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
             /* Save the attachment or generate doc */
             if (isset($_FILES['pj'])) {
-                if (strlen(trim($_FILES['pj']['name'])) != 0)
+                if (noalyss_strlentrim($_FILES['pj']['name']) != 0)
                     $this->db->save_receipt($seq);
                 else
                 /* Generate an invoice and save it into the database */
@@ -728,7 +728,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 /* insert into jrn */
                 $acc_pay->mt = $mt;
                 $acjrn->grpt_id = $acseq;
-                $acc_pay->desc = (!isset($e_comm_paiement) || strlen(trim($e_comm_paiement)) == 0) ? $e_comm : $e_comm_paiement;
+                $acc_pay->desc = (!isset($e_comm_paiement) || noalyss_strlentrim($e_comm_paiement) == 0) ? $e_comm : $e_comm_paiement;
                 $mp_jr_id = $acc_pay->insert_jrn();
                 $acjrn->update_internal_code($acinternal);
                 // add an automatic PJ if ODS
@@ -921,7 +921,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $tot_amount = 0.0;
         $tot_tva = 0.0;
         for ($i = 0; $i < $nb_item; $i++) {
-            if (strlen(trim(${"e_march" . $i})) == 0)
+            if (noalyss_strlentrim(${"e_march" . $i}) == 0)
                 continue;
 
             /* retrieve information for card */
@@ -1180,7 +1180,7 @@ EOF;
         }
 
         /* if the paymethod is not 0 and if a quick code is given */
-        if ($e_mp != 0 && strlen(trim(${'e_mp_qcode_' . $e_mp})) != 0) {
+        if ($e_mp != 0 && noalyss_strlentrim(${'e_mp_qcode_' . $e_mp}) != 0) {
             $r.=HtmlInput::hidden('e_mp_qcode_' . $e_mp, ${'e_mp_qcode_' . $e_mp});
             $r.=HtmlInput::hidden('acompte', $acompte);
             $r.=HtmlInput::hidden('e_comm_paiement', $e_comm_paiement);
@@ -1393,7 +1393,7 @@ EOF;
         // retrieve e_client_label
         //--
 
-        if (strlen(trim($e_client)) != 0) {
+        if (noalyss_strlentrim($e_client) != 0) {
             $fClient = new Fiche($this->db);
             $fClient->get_by_qcode($e_client);
             $e_client_label = $fClient->strAttribut(ATTR_DEF_NAME) . ' ' .
@@ -1451,7 +1451,7 @@ EOF;
 
             // retrieve the tva label and name
             //--
-            if (strlen(trim($march)) != 0 && strlen(trim($march_label)) == 0) {
+            if (noalyss_strlentrim($march) != 0 && noalyss_strlentrim($march_label) == 0) {
                 $fMarch = new Fiche($this->db);
                 $fMarch->get_by_qcode($march);
                 $march_label = $fMarch->strAttribut(ATTR_DEF_NAME);

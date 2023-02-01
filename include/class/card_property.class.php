@@ -184,7 +184,7 @@ class Card_Property
             } else {
                 // if there is a class base in fiche_def_ref, this account will be the
                 // the default one
-                if (noalyss_strlen(noalyss_trim($p_fiche_def->class_base)) != 0) {
+                if (noalyss_strlentrim($p_fiche_def->class_base) != 0) {
                     $result['msg'] .= " <span style=\"color:red\">" . _("Rappel: Poste par défaut sera ") .
                         $p_fiche_def->class_base .
                         " !</span> ";
@@ -502,7 +502,7 @@ class Card_Property
                     continue;
                 }
                 // name
-                if ($value->ad_id==ATTR_DEF_NAME && strlen(trim($value->av_text))==0 )
+                if ($value->ad_id==ATTR_DEF_NAME && noalyss_strlentrim($value->av_text)==0 )
                 {
                         continue;
                 }
@@ -598,7 +598,7 @@ class Card_Property
                         }
                         continue;
                     }
-                    if (strlen(trim($v))==0)
+                    if (noalyss_strlentrim($v)==0)
                     {
 
                         $sql=sprintf("select account_insert(%d,null)", $p_fiche->id);
@@ -618,7 +618,7 @@ class Card_Property
                 if ($value->ad_id==ATTR_DEF_TVA)
                 {
                     // Verify if the rate exists, if not then do not update
-                    if (strlen(trim($value->av_text))!=0)
+                    if (noalyss_strlentrim($value->av_text)!=0)
                     {
                         if ($p_fiche->cn->get_value("select count(*) from tva_rate where tva_id=$1",[$value->av_text])==0)
                         {

@@ -172,7 +172,7 @@ class Acc_Plan_MTable extends Manage_Table_SQL
             $this->set_error("pcm_val", _("Poste comptable ne peut être vide"));
         }
         // Check size
-         if ( strlen(trim($this->table->pcm_val)) > 40) {
+         if ( noalyss_strlentrim($this->table->pcm_val) > 40) {
             $this->set_error("pcm_val", _("Poste comptable trop long"));
         }
         if ( trim($this->table->parent_accounting) == "") {

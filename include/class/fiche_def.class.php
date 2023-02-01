@@ -231,13 +231,13 @@ $order
 
 
         // Name can't be empty
-        if ( strlen(trim($p_nom_mod)) == 0 )
+        if ( noalyss_strlentrim($p_nom_mod) == 0 )
 	{
             alert (_('Le nom de la catégorie ne peut pas être vide'));
             return 1;
 	}
         // $p_fiche_def can't be empty
-        if ( strlen(trim($p_fiche_def)) == 0 )
+        if ( noalyss_strlentrim($p_fiche_def) == 0 )
 	{
             alert (_('Un modéle de catégorie est obligatoire'));
             return 1;
@@ -253,7 +253,7 @@ $order
 		}
         // Set the value of fiche_def.fd_create_account
         // automatic creation for 'poste comptable'
-        if ( $p_create == "on" && strlen(trim($p_class_base)) != 0)
+        if ( $p_create == "on" && noalyss_strlentrim($p_class_base) != 0)
             $p_create='true';
         else
             $p_create='false';

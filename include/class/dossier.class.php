@@ -242,7 +242,7 @@ class Dossier
 
     public function update()
     {
-        if (strlen(trim($this->dos_name))==0)
+        if (noalyss_strlentrim($this->dos_name)==0)
             return;
 
         if ($this->cn->get_value("select count(*) from ac_dossier "

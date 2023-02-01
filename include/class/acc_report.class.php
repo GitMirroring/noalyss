@@ -197,7 +197,7 @@ class Acc_Report
     function upload()
     {
         if ( empty ($_FILES) ) return;
-        if ( strlen(trim($_FILES['report']['tmp_name'])) == 0 )
+        if ( noalyss_strlentrim($_FILES['report']['tmp_name'])== 0 )
         {
             alert("Nom de fichier est vide");
             return;

@@ -40,7 +40,7 @@ if ($g_parameter->MY_STOCK == 'N')
 if ( isset ($_POST['add_stock']))
 {
     $post_name=$http->post('r_name');
-    if ( strlen(trim($post_name)) != 0)
+    if ( noalyss_strlentrim($post_name) != 0)
     {
         $st=new Stock_Sql($cn);
 	$st->from_array($_POST);
@@ -50,7 +50,7 @@ if ( isset ($_POST['add_stock']))
 if ( isset ($_POST['mod_stock']))
 {
     $post_name=$http->post('r_name');
-    if ( strlen(trim($post_name)) != 0)
+    if ( noalyss_strlentrim($post_name) != 0)
     {
 
 	$st=new Stock_Sql($cn,$http->post('r_id',"number"));

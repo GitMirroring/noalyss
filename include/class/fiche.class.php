@@ -1697,7 +1697,7 @@ class Fiche
         {
             $query=sql_string($query);
 
-            if (strlen(trim($query))>0)
+            if (noalyss_strlentrim($query)>0)
             {
                 $query=str_replace(" ", "%", $query);
                 $filter_query=$and."(vw_name ilike '%$query%' or quick_code ilike ('%$query%') "
@@ -1728,7 +1728,7 @@ class Fiche
         $this->cn->commit();
     }
     /**
-     * return the letter C if amount is > 0, D if < 0 or =
+     * @brief return the letter C if amount is > 0, D if < 0 or =
      * @param type $p_amount
      * @return string
      */
