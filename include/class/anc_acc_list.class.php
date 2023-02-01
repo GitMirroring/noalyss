@@ -369,7 +369,7 @@ order by
 	    if ( $i == 0 )
 	      {
 		$prev=$this->arow[$i]['f_id'];
-		echo '<tr><td>'.HtmlInput::history_card ($this->arow[$i]['f_id'],$this->arow[$i]['j_qcode'].' '.$this->arow[$i]['name'],' display:inline').'</td></tr>';
+		echo '<tr><td>['.HtmlInput::history_card ($this->arow[$i]['f_id'],$this->arow[$i]['j_qcode'].'] '.$this->arow[$i]['name'],' display:inline').'</td></tr>';
 	      }
 	    $style= ( $i % 2 == 0)?' class="odd" ':' class="even" ';
 	    if ( $i != 0 && $prev != $this->arow[$i]['f_id'])
@@ -377,7 +377,7 @@ order by
 		echo  td('Total');
 		echo td(nbm($tot_card),' class="num"');
 		echo '</tr>';
-		echo '<tr  style="padding-top:5px"><td>'.HtmlInput::history_card($this->arow[$i]['f_id'],$this->arow[$i]['j_qcode'].' '.$this->arow[$i]['name'],' display:inline ').'</td></tr>';
+		echo '<tr  style="padding-top:5px"><td> ['.HtmlInput::history_card($this->arow[$i]['f_id'],$this->arow[$i]['j_qcode'].'] '.$this->arow[$i]['name'],' display:inline ').'</td></tr>';
 		$tot_card=0;
 		$prev = $this->arow[$i]['f_id'];
 	      }
@@ -420,7 +420,7 @@ order by
 	    if ( $i == 0 )
 	      {
 		$prev=$this->arow[$i]['j_poste'];
-		echo '<tr><td>'.HtmlInput::history_account ($this->arow[$i]['j_poste'],$this->arow[$i]['j_poste'].' '.$this->arow[$i]['name'],' display:inline').'</td></tr>';
+		echo '<tr><td>['.HtmlInput::history_account ($this->arow[$i]['j_poste'],$this->arow[$i]['j_poste'].'] '.$this->arow[$i]['name'],' display:inline').'</td></tr>';
 	      }
 	    $style= ( $i % 2 == 0)?' class="odd" ':' class="even" ';
 	    if ( $i != 0 && $prev != $this->arow[$i]['j_poste'])
@@ -428,7 +428,7 @@ order by
 		echo  td('Total');
 		echo td(nbm($tot_card),' class="num"');
 		echo '</tr>';
-		echo '<tr  style="padding-top:5px"><td>'.HtmlInput::history_account($this->arow[$i]['j_poste'],$this->arow[$i]['j_poste'].' '.$this->arow[$i]['name'],' display:inline ').'</td></tr>';
+		echo '<tr  style="padding-top:5px"><td>['.HtmlInput::history_account($this->arow[$i]['j_poste'],$this->arow[$i]['j_poste'].'] '.$this->arow[$i]['name'],' display:inline ').'</td></tr>';
 		$tot_card=0;
 		$prev = $this->arow[$i]['j_poste'];
 	      }
