@@ -362,12 +362,12 @@ $flag_php=0;
 if (!defined('PHP_VERSION_ID')) {
    $version = explode('.',PHP_VERSION);
 
-   define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+   define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 ));
 }
-if ( PHP_VERSION_ID < 70200)  {
-    echo $g_failed. " ".phpversion()." ". _("Version PHP trop basse , minimum 7.2");
+if ( PHP_VERSION_ID < 70400)  {
+    echo $g_failed. " ".phpversion()." ". _("Version PHP trop basse , minimum 7.4");
     echo '<p style="color:grey;margin-left:20px">';
-    printf(_("Il est déconseillé de travailler avec une version < 7.2"));
+    printf(_("Il est déconseillé de travailler avec une version < 7.4"));
     echo '</p>';
 } else {
     echo $g_succeed. " Version PHP ".phpversion();
