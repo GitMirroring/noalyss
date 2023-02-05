@@ -105,8 +105,8 @@ class HtmlInput
     }
 
     /**
-     * Set the value of input (IText, INum,...)
-     * @param type $p_string
+     * @brief Set the value of input (IText, INum,...)
+     * @param string $p_string
      */
     function set_value($p_string)
     {
@@ -114,7 +114,7 @@ class HtmlInput
     }
 
     /**
-     * Return the value of input (IText, INum,...)
+     * @brief Return the value of input (IText, INum,...)
      */
     function get_value()
     {
@@ -125,7 +125,7 @@ class HtmlInput
      * @brief you can add attribute to this in javascript
      * this function is a wrapper and create a script (in js) to modify
      * "this" (in javascript) with the value of obj->attribute from PHP
-     * @return return string with the javascript code
+     * @return string : return string with the javascript code
      */
     public function get_js_attr()
     {
@@ -146,7 +146,7 @@ class HtmlInput
     }
 
     /**
-     * Make a JSON object, this method create a javascript object
+     *@brief  Make a JSON object, this method create a javascript object
      * with the attribute set, it returns a javascript string with the object
      * @param $p_name : name of the object, can be null. If the name is not null, return
      * $p_name={} otherwise only the object {}
@@ -274,7 +274,7 @@ class HtmlInput
     }
 
     /**
-     * return a string containing the html code for calling the modifyOperation
+     * @brief return a string containing the html code for calling the modifyOperation
      */
     static function detail_op($p_jr_id, $p_mesg)
     {
@@ -296,7 +296,7 @@ class HtmlInput
     }
 
     /**
-     * return a string containing the html code for calling the modifyModeleDocument
+     * @brief return a string containing the html code for calling the modifyModeleDocument
      */
     static function detail_modele_document($p_id, $p_mesg)
     {
@@ -305,7 +305,7 @@ class HtmlInput
     }
 
     /**
-     * return a string containing the html code for calling the removeStock
+     *@brief  return a string containing the html code for calling the removeStock
      */
     static function remove_stock($p_id, $p_mesg)
     {
@@ -314,7 +314,7 @@ class HtmlInput
     }
 
     /**
-     * display a div with the history of the card
+     *@brief  display a div with the history of the card
      */
     static function history_card($f_id, $p_mesg, $p_style="",$p_exercice="")
     {
@@ -328,7 +328,7 @@ class HtmlInput
     }
 
     /**
-     * display a div with the history of the card
+     *@brief  display a div with the history of the card
      * @param int $f_id fiche.f_id
      * @param string $p_mesg string to display
      * @param int $p_exercice exercice of the history
@@ -348,7 +348,7 @@ class HtmlInput
     }
 
     /**
-     * display a div with the history of the account
+     * @brief display a div with the history of the account
      * @param string $p_account accounting
      * @param string $p_mesg string to display
      * @param string $p_style extra code for HTML
@@ -365,7 +365,7 @@ class HtmlInput
         return $view_history;
     }
     /**
-     * display a div with the history of the analytic account
+     * @brief display a div with the history of the analytic account
      * @param int $p_account  po_id 
      * @param string $p_mesg string to display
      * @param string $p_style extra code for HTML
@@ -383,7 +383,7 @@ class HtmlInput
     }
 
     /**
-     * create a hidden plus button to select the cat of ledger
+     * @brief create a hidden plus button to select the cat of ledger
      * @note the selected value is stored in the array p_cat
      */
     static function select_cat($array_cat)
@@ -672,7 +672,7 @@ class HtmlInput
      * @see HtmlInput::request_to_hidden
      * @return html string with the hidden data
      */
-    static function request_to_hidden($array)
+    static function request_to_hidden(array $array)
     {
         $r=self::array_to_hidden($array, $_REQUEST);
         return $r;

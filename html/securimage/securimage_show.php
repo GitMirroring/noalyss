@@ -40,18 +40,16 @@ $img = new securimage();
 
 // Change some settings
 
-$img->image_width = 205;
-$img->image_height = 50;
-$img->perturbation = 0.35; // 1.0 = high distortion, higher numbers = more distortion
-$img->image_bg_color = new Securimage_Color("#000000");
-//$img->text_color = new Securimage_Color("#EAEAEA");
-$img->text_transparency_percentage = 45; // 100 = completely transparent
-$img->num_lines = 0;
-$img->line_color = new Securimage_Color("#0033ff");
-$img->signature_color = new Securimage_Color(rand(0, 64), rand(64, 128), rand(128, 255));
+$img->image_width = 320;
+$img->image_height = 70;
+$img->perturbation = 0.80; // 1.0 = high distortion, higher numbers = more distortion
+
+$img->text_transparency_percentage = 40; // 100 = completely transparent
+$img->num_lines = 7;
+$img->line_color           = new Securimage_Color(rand(0, 255), rand(0, 255), rand(0, 255));
 $img->image_type = SI_IMAGE_JPEG;
 $img->background_directory="./backgrounds";
-$img->bgimg="./backgrounds/bg4.jpg";
+$img->bgimg="./backgrounds/bg3.jpg";
 $img->use_multi_text=true;
 
 $img->show(); // alternate use:  $img->show('/path/to/background_image.jpg');

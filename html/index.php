@@ -240,12 +240,13 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
 // if captcha is used
                 if (defined('NOALYSS_CAPTCHA') && NOALYSS_CAPTCHA==true) :
                     ?>
+                <div class="form-group row justify-content-center">
                     Indiquer le code que vous lisez dans l'image
                     <img id="captcha" src="securimage/securimage_show.php" alt="CAPTCHA Image" border=1/>
 
                     <input type="text" class="input_text" name="captcha_code" size="10" maxlength="6" autocomplete="off"/>
                     <a href="#" onclick="document.getElementById('captcha').src = 'securimage/securimage_show.php?' + Math.random(); return false">Reload Image</a>
-
+                </div>
                     <?php
                 endif;
                 ?>  

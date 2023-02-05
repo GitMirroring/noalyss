@@ -493,7 +493,7 @@ order by
 
 	    $tot_card=bcadd($tot_card,$amount);
 	    $tot_glob=bcadd($tot_glob,$amount);
-	    echo '<td style="padding-left:10">'.HtmlInput::history_card ($this->arow[$i]['f_id'],$this->arow[$i]['j_qcode'].' '.$this->arow[$i]['name'],' display:inline').'</td>';
+	    echo '<td style="padding-left:10px;">'.HtmlInput::history_card ($this->arow[$i]['f_id'],$this->arow[$i]['j_qcode'].' '.$this->arow[$i]['name'],' display:inline').'</td>';
 
 	    echo td(nbm($amount),' class="num" ');
 	    echo '</tr>';
@@ -548,7 +548,7 @@ order by
 
 	    $tot_card=bcadd($tot_card,$amount);
 	    $tot_glob=bcadd($tot_glob,$amount);
-	    echo '<td style="padding-left:10">'.HtmlInput::history_account ($this->arow[$i]['j_poste'],$this->arow[$i]['j_poste'].' '.$this->arow[$i]['name'],' display:inline').'</td>';
+	    echo '<td style="padding-left:10px;">'.HtmlInput::history_account ($this->arow[$i]['j_poste'],$this->arow[$i]['j_poste'].' '.$this->arow[$i]['name'],' display:inline').'</td>';
 	    echo td(nbm($amount),' class="num" ');
 	    echo '</tr>';
 
