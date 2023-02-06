@@ -443,12 +443,12 @@ function check()
             throw new Exception("invalid key $p_key");
 
         if (!in_array($p_value,
-                        array("text", "numeric", "date", "select", "timestamp","custom")))
+                        array("text", "numeric", "numeric4","numeric6","date", "select", "timestamp","custom")))
             throw new Exception("invalid type $p_value");
 
         $this->a_type[$p_key]=$p_value;
         $this->a_select[$p_key]=$p_array;
-        if ( $p_value == "numeric" && $this->a_col_option[$p_key]=="") {
+        if ( in_array($p_value ,array("numeric","numeric4","numeric6")) && $this->a_col_option[$p_key]=="") {
             $this->a_col_option[$p_key]=' class="num" ';
         }
          
@@ -1027,7 +1027,9 @@ function check()
                 if (  $this->get_col_type($v) == 'text') {
                     echo td($p_row[$v],sprintf(' sorttable_customkey="X%s" ',$p_row[$v]));
                 } elseif ( $this->get_col_type($v) == 'numeric') {
-                    echo td($p_row[$v],$this->a_col_option[$v],$p_row[$v]);
+                    echo td(nbm($p_row[$v],2),$this->a_col_option[$v]);
+                } elseif ( $this->get_col_type($v) == 'numeric4') {
+                    echo td(nbm($p_row[$v],4),$this->a_col_option[$v]);
                 }  elseif ($this->get_col_type($v)=="custom") {
                     // For custom col
                     echo $this->display_row_custom($v,$p_row[$v],$pk_id);
@@ -1071,6 +1073,12 @@ function check()
                 } elseif ($this->get_col_type($v)=="custom") {
                     // For custom col
                     echo $this->display_row_custom($v,$p_row[$v],$pk_id);
+                } elseif ( $this->get_col_type($v) == 'numeric') {
+                    echo td(nbm($p_row[$v],2),$this->a_col_option[$v]);
+                } elseif ( $this->get_col_type($v) == 'numeric4') {
+                    echo td(nbm($p_row[$v],4),$this->a_col_option[$v]);
+                }elseif ( $this->get_col_type($v) == 'numeric6') {
+                    echo td(nbm($p_row[$v],6),$this->a_col_option[$v]);
                 }
                 else {
                     echo td($p_row[$v],  $this->a_col_option[$v]);
@@ -1177,7 +1185,8 @@ function check()
                     elseif ($this->a_type[$key]=="numeric") // number 2 decimale
                     {
                         $text=new INum($key);
-                        $text->value=$value;
+                        $text->prec=2;
+                        $text->value=round($value??"0",2);
                         $min_size=(noalyss_strlen($value)<10)?10:strlen($value)+1;
                         $text->size=$min_size;
                         echo $text->input();
@@ -1186,7 +1195,7 @@ function check()
                     {
                         $text=new INum($key);
                         $text->prec=4;
-                        $text->value=$value;
+                        $text->value=round($value??"0",4);;
                         $min_size=(noalyss_strlen($value)<10)?10:strlen($value)+1;
                         $text->size=$min_size;
                         echo $text->input();
@@ -1195,7 +1204,7 @@ function check()
                     {
                         $text=new INum($key);
                         $text->prec=6;
-                        $text->value=$value;
+                        $text->value=round($value??"0",6);
                         $min_size=(noalyss_strlen($value)<10)?10:strlen($value)+1;
                         $text->size=$min_size;
                         echo $text->input();
