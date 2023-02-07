@@ -261,7 +261,8 @@ class Card_PropertyTest extends TestCase
          \Noalyss\Facility::save_file(__DIR__."/file",$file_result,var_export($result,true));
         $this->assertFileEquals(__DIR__."/file/$file_target",__DIR__."/file/$file_result","Card_Property::build_input failed");
         */
-        $this->assertEquals("600",$result["input"]->value," Accounting incorrect ");
+	$expected=$g_connection->get_value("select fd_class_base from fiche_def where fd_id=$1",[2]);
+        $this->assertEquals($expected,$result["input"]->value," Accounting incorrect ");
     }
 
 }

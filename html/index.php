@@ -215,7 +215,7 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
     $goto='<input type="hidden" value="'.strip_tags($_REQUEST['backurl']).'" name="backurl">';
 }
 ?>
-<div >
+<div>
     <div class="d-sm-block">
         <a href="https://www.noalyss.eu"><IMG SRC="image/logo9000.png" id="logo_id" alt="NOALYSS"></a>
      
@@ -301,6 +301,7 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
                         </SPAN>
 
                 </div>
+    </div>
     </div>
                 <script> SetFocus('p_user');</script>
 
