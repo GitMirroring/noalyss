@@ -132,6 +132,7 @@ var ManageTable = function (p_table_name)
              var row=p_table.insertRow(p_table.rows.length);
             row.innerHTML=p_element_row.innerHTML;
             row.id=p_element_row.id;
+            row.ctl_pk_id=row.id;
             return;
         }
         // loop for each row , compare the innerHTML of the column with the
@@ -152,6 +153,7 @@ var ManageTable = function (p_table_name)
                 var row=p_table.insertRow(i);
                 row.innerHTML=p_element_row.innerHTML;
                 row.id=p_element_row.id;
+                row.ctl_pk_id=row.id;
                 return;
             }
         }
