@@ -296,6 +296,9 @@ class Ac_CommonTest extends TestCase
         $this->assertEquals(8,strlen(generate_random_string(8)));
         $this->assertEquals(12,strlen(generate_random_string(12)));
         $this->assertEquals(16,strlen(generate_random_string(16)));
+	$generate=generate_random_string(12);
+	$generateOther=generate_random_string(12);
+	$this->assertNotEquals($generate,$generateOther , __FUNCTION__.' Generate 2 in a row the same string');
     }
     function testDatabase_Escape_String()
     {

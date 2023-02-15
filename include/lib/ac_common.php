@@ -1403,7 +1403,14 @@ function is_msie()
  */
 function record_log($p_message)
 {
-    error_log("noalyss".var_export($p_message,true),0);
+    if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
+
+        error_log("noalyss exception ".$p_message->getMessage(),0);
+        error_log("noalyss exception".$p_message->getTraceAsString(),0);
+    } else {
+        error_log("noalyss".var_export($p_message,true),0);
+
+    }
     error_log("noalyss GET [".json_encode($_GET,0,10)."]");
     error_log("_POST [".json_encode($_POST,0,10)."]",0);
 }
@@ -1473,7 +1480,9 @@ function generate_random_string($p_length)
 {
     $string="";
     $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789*/+-=";
-    srand((float) microtime(true)*1020030);
+    $microtime=microtime(true)*microtime(true)*100;
+    srand(0);
+    srand((int)$microtime);
     for ($i=0; $i<$p_length; $i++)
     {
         $string .= $chaine[rand()%strlen($chaine)];
@@ -1617,6 +1626,18 @@ function noalyss_strip_tags($p_string)
 {
     if ($p_string===null) return "";
     return strip_tags($p_string);
+}
+function noalyss_bcmul($p_first,$p_second)
+{
+    $p_first=(empty($p_first))?0:$p_first;
+    $p_second=(empty($p_second))?0:$p_second;
+      return bcmul($p_first??0,$p_second??0);
+}
+function noalyss_round($p_first,$p_second)
+{
+    $p_first=(empty($p_first))?0:$p_first;
+    $p_second=(empty($p_second))?0:$p_second;
+    return round($p_first??0,$p_second??0);
 }
 
 /**

@@ -39,7 +39,7 @@ class Acc_Ledger_History_PurchaseTest extends TestCase
      */
     protected function setUp():void
     {
-        include 'global.php';
+        include DIRTEST.'/global.php';
         global $g_connection;
         $this->object=new Acc_Ledger_History_Purchase($g_connection, [3], 92, 131, 'L');
     }

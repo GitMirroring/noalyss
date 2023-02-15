@@ -1165,8 +1165,8 @@ class Document
                 $oTva=new Acc_Tva($this->db, $p_array[$tva]);
                 if ($oTva->load()==-1)
                     return "";
-                $r=round($p_array[$price], 2)*$oTva->get_parameter('rate');
-                $r=round($r, 2);
+                $r=noalyss_round($p_array[$price], 2)*$oTva->get_parameter('rate');
+                $r=noalyss_round($r, 2);
                 break;
 
             case 'VEN_ART_TVAC':
@@ -1184,11 +1184,11 @@ class Document
                 $tva=new Acc_Tva($this->db, $p_array['e_march'.$this->counter.'_tva_id']);
                 if ($tva->load()==-1)
                 {
-                    $r=round($p_array[$price], 2);
+                    $r=noalyss_round($p_array[$price], 2);
                 }
                 else
                 {
-                    $r=round($p_array[$price]*$tva->get_parameter('rate')+$p_array[$price], 2);
+                    $r=noalyss_round($p_array[$price]*$tva->get_parameter('rate')+$p_array[$price], 2);
                 }
 
                 break;
@@ -1213,8 +1213,8 @@ class Document
                 if ($p_array['e_march'.$this->counter.'_price']==0||$p_array['e_quant'.$this->counter]==0||noalyss_strlentrim($p_array['e_march'.$this->counter.'_price'])==0||noalyss_strlentrim($p_array['e_quant'.$this->counter])==0)
                     return "";
                 bcscale(4);
-                $r=bcmul($p_array[$id], $p_array[$quant]);
-                $r=round($r, 2);
+                $r=noalyss_bcmul($p_array[$id], $p_array[$quant]);
+                $r=noalyss_round($r, 2);
                 break;
 
             case 'VEN_TVAC':
@@ -1233,13 +1233,13 @@ class Document
                 bcscale(4);
                 // if TVA not exist
                 if (!isset($p_array[$id]))
-                    $r=bcmul($p_array[$price], $p_array[$quant]);
+                    $r=noalyss_bcmul($p_array[$price], $p_array[$quant]);
                 else
                 {
-                    $r=bcmul($p_array[$price], $p_array[$quant]);
-                    $r=bcadd($r, $p_array[$id]);
+                    $r=noalyss_bcmul($p_array[$price], $p_array[$quant]);
+                    $r=noalyss_bcadd($r, $p_array[$id]);
                 }
-                $r=round($r, 2);
+                $r=noalyss_round($r, 2);
                 return $r;
                 break;
 
@@ -1260,10 +1260,10 @@ class Document
                             noalyss_strlentrim($p_array[$qt])==0||
                             $p_array[$qt]==0||$p_array[$sell]==0)
                         continue;
-                    $tmp1=bcmul($p_array[$sell], $p_array[$qt]);
-                    $sum=bcadd($sum, $tmp1);
+                    $tmp1=noalyss_bcmul($p_array[$sell], $p_array[$qt]);
+                    $sum=noalyss_bcadd($sum, $tmp1);
                 }
-                $r=round($sum, 2);
+                $r=noalyss_round($sum, 2);
                 break;
             case 'TOTAL_VEN_TVAC':
                 if (!isset($p_array["nb_item"]))
@@ -1279,15 +1279,16 @@ class Document
                     {
                         $tva_amount=$p_array[$tva];
                     }
+                    
                     $sell=$p_array['e_march'.$i.'_price'];
                     $qt=$p_array['e_quant'.$i];
-                    $tot=bcmul($sell, $qt);
-                    $tva_amount=round($tva_amount,2);
-                    $tot=round($tot,2);
-                    $tot=bcadd($tot, $tva_amount);
-                    $sum=bcadd($sum, $tot);
+                    $tot=noalyss_bcmul($sell, $qt);
+                    $tva_amount=noalyss_round($tva_amount,2);
+                    $tot=noalyss_round($tot,2);
+                    $tot=noalyss_bcadd($tot, $tva_amount);
+                    $sum=noalyss_bcadd($sum, $tot??0);
                 }
-                $r=round($sum, 2);
+                $r=noalyss_round($sum??0, 2);
 
                 break;
             case 'TOTAL_TVA':
@@ -1305,7 +1306,7 @@ class Document
                         $tva_amount=($tva_amount=="")?0:$tva_amount;
                     }
                     $sum+=$tva_amount;
-                    $sum=round($sum, 2);
+                    $sum=noalyss_round($sum, 2);
                 }
                 $r=$sum;
 
