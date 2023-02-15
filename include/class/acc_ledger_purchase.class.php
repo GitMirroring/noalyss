@@ -1000,7 +1000,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
                 /* Insert supplier  */
                 $acc_pay=new Acc_Operation($this->db);
-                $acc_pay->date=$mp_date;
+                $acc_pay->date=empty($mp_date)?$e_date:$mp_date;
                 $acc_pay->poste=$poste;
                 $acc_pay->qcode=$e_client;
                 $acc_pay->amount=abs(round($famount,2));
