@@ -204,7 +204,9 @@ class DatabaseCore
                 echo $a->getTraceAsString();
                 echo pg_last_error($this->db);
             }
-            record_log($a->getTraceAsString());
+            record_log($a);
+            record_log($p_string);
+            record_log($p_array);
             $this->rollback();
 
             throw ($a);
