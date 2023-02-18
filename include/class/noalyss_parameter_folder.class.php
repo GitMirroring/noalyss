@@ -49,7 +49,8 @@ class Noalyss_Parameter_Folder
     var $MY_DEFAULT_ROUND_ERROR_CRED;
     var $MY_ANC_FILTER;
     var $MY_CURRENCY;
-    
+    var $MY_COUNTRY;
+
     
     // constructor
     function __construct($p_cn)

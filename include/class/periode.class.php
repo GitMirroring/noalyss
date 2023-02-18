@@ -39,7 +39,10 @@ class Periode
       open and CE for centralized */
     var $p_start;   /*!< start of the periode */
     var $p_end;   /*!< end of the periode */
-
+    var $p_exercice ; /*!< exercice */
+    var $p_closed ; /*!< if exercice is closed */
+    var $p_central ; /*!< NOT USER  */
+    var $p_exercice_label ; /*!< Label of the exercice  */
     function __construct($p_cn, $p_id=0)
     {
         $this->p_id=$p_id;
