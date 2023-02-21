@@ -674,6 +674,7 @@ class Document
      *  - [DESCRIPTION]
      *  - [DOCUMENT_ID]
      *  - [DATE_PAID]
+     *  - [NOTE]
      *
      * \param $p_tag TAG
      * \param $p_array data from $_POST
@@ -1648,9 +1649,17 @@ class Document
                                              from action_gestion 
                                              join document_type dt  on (ag_type=dt.dt_id) 
                             where ag_id=$1", array($p_array["ag_id"]));
+                }  elseif (isset($p_array['gen_doc'])) {
+                    $ret = $this->db->get_value("
+                                        select md_name from public.document_modele where md_id=$1",
+                        [$p_array['gen_doc']]);
                 }
-                return $ret;
-           
+                 return $ret;
+            case 'NOTE':
+                return $p_array['jrn_note_input']??"";
+
+
+
         } // end switch 
         /*
          * retrieve the value of ATTR for e_march
