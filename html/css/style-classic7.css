@@ -3292,7 +3292,7 @@ li.li-active {
      border-radius: 5px;
  }
  .loading_msg:nth-child(2) {
-    background:orangered;
+    background:blue;
      animation: turn-color2 3.5s linear 0s infinite forwards;
  }
  .loading_msg:nth-child(3) {
@@ -3300,24 +3300,24 @@ li.li-active {
      animation: turn-color3 3.5s linear 0s infinite forwards;
  }
  .loading_msg:nth-child(4) {
-     background:orangered;
+     background:navy;
      animation: turn-color2 3.5s linear 0s infinite forwards;
  }
 
  @keyframes turn-color{
      0% { transform : rotate(0deg);opacity:0.1;transform:scale( 0.3);background-color:red;margin-left:0px;}
      50% { transform : rotate(90deg);opacity:0.9; background-color:orangered;margin-left:2px; }
-     100% { transform : rotate(180deg);opacity:0.1;transform:scale( 1.5);margin-left:30px;}
+     100% { transform : rotate(180deg);opacity:0.1;transform:scale( 1.2);margin-left:30px;border-radius: 13px;}
  }
  @keyframes turn-color2{
-     0% { transform : rotate(0deg);opacity:0.1;transform:scale( 0.3);background-color:orangered;margin-left:0px;}
-     50% { transform : rotate(90deg);opacity:0.9; background-color:orange;margin-left:2px; }
-     100% { transform : rotate(180deg);opacity:0.1;transform:scale( 0.9);margin-left:30px;}
+     0% { transform : rotate(0deg);opacity:0.1;transform:scale( 0.3);background-color:navy;margin-left:0px;}
+     50% { transform : rotate(90deg);opacity:0.9; background-color:lightblue;margin-left:2px; }
+     100% { transform : rotate(180deg);opacity:0.1;transform:scale( 0.9);margin-left:30px;border-radius: 13px;}
  }
  @keyframes turn-color3{
      0% { transform : rotate(0deg);opacity:0.1;transform:scale( 0.3);background-color:darkgreen;margin-left:0px;}
      50% { transform : rotate(90deg);opacity:0.9; background-color:lightgreen;margin-left:2px; }
-     100% { transform : rotate(180deg);opacity:0.1;transform:scale( 0.9);margin-left:30px;}
+     100% { transform : rotate(180deg);opacity:0.1;transform:scale( 0.9);margin-left:30px;border-radius: 13px;}
  }
 
 

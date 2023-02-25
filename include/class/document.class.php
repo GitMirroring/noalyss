@@ -39,7 +39,8 @@ class Document
     var $md_id;       /*!< $md_id document's template */
     private $counter; /*!< counter for the items ( goods ) */
 
-    /* Constructor
+    /*!
+     * @brief Constructor
      * \param $p_cn Database connection
      */
 
@@ -213,7 +214,8 @@ class Document
         }
     }
 
-    /*! parseDocument
+    /**
+     *
      * \brief This function parse a document and replace all
      *        the predefined tags by a value. This functions
      *        generate diffent documents (invoice, order, letter)
@@ -328,7 +330,7 @@ class Document
         }
     }
 
-    /*! saveGenerated
+    /*!
      * \brief Save the generated Document
      * \param $p_file is the generated file
      *
@@ -529,7 +531,7 @@ class Document
         return $r;
     }
 
-    /** Get
+    /**
      * \brief send the document
      */
     function send()
@@ -570,7 +572,8 @@ class Document
         $this->db->commit();
     }
 
-    /*!\brief get all the document of a given action
+    /**
+     * \brief get all the document of a given action
      * \param $ag_id the ag_id from action::ag_id (primary key)
      * \return an array of objects document or an empty array if nothing found
      */
@@ -596,7 +599,8 @@ class Document
     }
     
 
-    /*!\brief Get  complete all the data member thx info from the database
+    /**
+     * \brief Get  complete all the data member thx info from the database
      */
 
     function get()
@@ -1677,7 +1681,7 @@ class Document
             }
         }
         /*
-         * retrieve the value of ATTR for e_march
+         * @brief retrieve the value of ATTR for e_march
          */
         if (preg_match('/^BENEFATTR/', $p_tag)==1)
         {
@@ -1705,7 +1709,8 @@ class Document
         return $r;
     }
 
-    /*!\brief remove a row from the table document, the lob object is not deleted
+    /*!
+     * \brief remove a row from the table document, the lob object is not deleted
      *        because can be linked elsewhere
      */
 
@@ -1718,7 +1723,8 @@ class Document
             $this->db->lo_unlink($d_lob);
     }
 
-    /*!\brief Move a document from the table document into the concerned row
+    /*!
+     * \brief Move a document from the table document into the concerned row
      *        the document is not copied : it is only a link
      *
      * \param $p_internal internal code
@@ -1736,7 +1742,7 @@ class Document
     }
 
     /**
-     * replace a special tag *TAGxxxx with the value from fiche_detail, the xxxx
+     * @brief replace a special tag *TAGxxxx with the value from fiche_detail, the xxxx
      * is the ad_value
      * @param $p_qcode qcode of the card
      * @param $p_tag tag to parse
