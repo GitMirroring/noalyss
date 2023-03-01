@@ -92,13 +92,13 @@ class Anc_Table extends Anc_Acc_Link
                     WHEN oa1.oa_debit = true THEN oa1.oa_amount * (-1)::numeric
                     ELSE oa1.oa_amount
                 END) AS sum_amount, 
-                coalesce(jrnx.j_poste,fd1.ad_value) as card_account, 
-                tmp_pcmn.pcm_lib AS name
+                coalesce(jrnx.j_poste,fd1.ad_value) as card_account,
+                pcm_lib as name
         FROM operation_analytique as oa1
         JOIN poste_analytique po USING (po_id)
         left join fiche_detail as fd1 on (oa1.f_id=fd1.f_id and fd1.ad_id=5)
         left JOIN jrnx USING (j_id)
-        join tmp_pcmn ON (jrnx.j_poste::text = tmp_pcmn.pcm_val::text or tmp_pcmn.pcm_val=fd1.ad_value)
+        left join tmp_pcmn ON (jrnx.j_poste::text = tmp_pcmn.pcm_val::text)
      {$sResult}
        GROUP BY po.po_id, po.po_name, po.pa_id, coalesce(jrnx.j_poste,fd1.ad_value), tmp_pcmn.pcm_lib, po.po_description
       HAVING sum(
@@ -176,7 +176,7 @@ class Anc_Table extends Anc_Acc_Link
 
 
     /**
-     * load the data
+     * @brief  load the data
      * does not return anything but give a value to this->aheader and this->arow
      */
     function load_poste()
@@ -201,7 +201,7 @@ class Anc_Table extends Anc_Acc_Link
     }
 
     /**
-     * load the data
+     * @brief  load the data
      * does not return anything but give a value to this->aheader and this->arow
      */
     function load_card()
