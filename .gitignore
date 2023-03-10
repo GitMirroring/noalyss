@@ -43,3 +43,4 @@ include/ext/coprop-fake/*
 include/ext/tools/*
 include/ext/etat_annexe_ohada/*
 local/*
+/include/ext/noalyss_document/.idea/
