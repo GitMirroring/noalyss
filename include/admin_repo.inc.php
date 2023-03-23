@@ -17,8 +17,9 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-/*! \file
- * \brief Administration of the repository : creation of user, folder, security,
+/*!
+ *\file
+ *\brief Administration of the repository : creation of user, folder, security,
  *        templates... Accessible only by the administrator
  */
 if ( ! defined ('ALLOWED')) { die (_('Non autorisé'));}
