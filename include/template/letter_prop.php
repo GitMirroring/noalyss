@@ -10,6 +10,10 @@ if ( count($this->content) == 0 ) :
 
     <?php
   else :
+if (DEBUGNOALYSS>1) {
+    echo Noalyss\Dbg::hidden_info("linked ",$this->linked);
+    echo Noalyss\Dbg::hidden_info("content",$this->content);
+}
 $delta=0;
 ?>
 <table class="result">
@@ -43,7 +47,8 @@ $delta=0;
 </tr>
 
 <?php
-$this->content=array_merge($this->linked,$this->content);
+// ???
+// $this->content=array_merge($this->linked,$this->content);
 $amount_deb=($j_debit=='t')?$amount_init:0;
 $amount_cred=($j_debit=='f')?$amount_init:0;
 
@@ -153,18 +158,20 @@ if ($i<$linked_limit)
   $amount_cred+=( $jnt_id == $this->content[$i]['letter'] && $this->content[$i]['j_debit']=='f')?$this->content[$i]['j_montant']:0;
 }
     endfor;
-$delta = bcsub($amount_deb, $amount_cred);
+$delta = bcsub($amount_deb, $amount_cred,2);
 $side = _('Créditeur');
 if ($delta < 0 ) {
 $side = _("Débiteur");
 $delta = abs($delta);
+} elseif ($delta==0) {
+    $side="";
 }
 ?>
 </TABLE>
-  <h2 class="info"> <?php echo _("Total lettré")?></h2>
-<span style="display:block;font-size:14px"><?php echo _('Total Debit')?>   <?php echo $amount_deb?></span>
-<span style="display:block;font-size:14px"><?php echo _('Total Credit')?>   <?php echo $amount_cred?></span>
-<span style="display:block;font-size:14px"><?php echo _('Total')." ".$side?>   <?php echo $delta?></span>
+  <h3 class="title"> <?php echo _("Total lettré")?></h3>
+<span style="display:block;font-size:14px"><?php echo _('Total Debit')?>   <?php echo nbm($amount_deb,2)?></span>
+<span style="display:block;font-size:14px"><?php echo _('Total Credit')?>   <?php echo nbm($amount_cred,2)?></span>
+<span style="display:block;font-size:14px"><?php echo _('Différence ')." ".$side?>   <?php echo nbm($delta,2)?></span>
 
 <?php endif;?>
 <?php echo HtmlInput::button('check_all',_('Sélectionner tout'),' onclick="select_checkbox(\'letter_form\')"');?>
