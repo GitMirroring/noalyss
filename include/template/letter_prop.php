@@ -138,7 +138,7 @@ $r=sprintf('<A class="detail" style="text-decoration:underline"  HREF="javascrip
 	$operation->jr_id=$element;
 	$l_amount=$this->db->get_value("select jr_montant from jrn ".
 					 " where jr_id=$element");
-	echo "<A class=\"detail\" HREF=\"javascript:viewOperation('".$element."',".$gDossier.")\" > ".$operation->get_internal()." [ $l_amount &euro; ]</A>";
+	echo "<A class=\"detail\" HREF=\"javascript:viewOperation('".$element."',".$gDossier.")\" > ".$operation->get_internal()." [ ".nbm($l_amount,2)." &euro; ]</A>";
       }//for
     }// if ( $a != null ) {
 
