@@ -36,6 +36,8 @@ class Select_Box
     private $filter; //!< allow a dynamic not case sensitive search
     var $default_value;
     private $position; //!< change depending if we are in an absolute block or not
+    protected $style_box;
+    protected $value;
 
     /**
      * Default constructor

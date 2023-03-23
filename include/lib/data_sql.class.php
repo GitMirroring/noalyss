@@ -92,6 +92,7 @@
 @endcode
  * 
  */
+#[AllowDynamicProperties]
 abstract class Data_SQL
 {
    var $cn;         //! Database connection

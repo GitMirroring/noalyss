@@ -74,7 +74,7 @@ $text->set_attribute('account','field');
 class IPoste extends HtmlInput
 {
     var $nb_row; // number of row, default 1
-
+    var $jrn; //!< concerned ledger
     function __construct($p_name="",$p_value="",$p_id="")
     {
         $this->name=$p_name;

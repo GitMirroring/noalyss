@@ -32,7 +32,7 @@
  */
 class Card_Attribut_MTable extends Manage_Table_SQL
 {
-
+    public $dossier_id;
     function __construct(\Data_SQL $p_table)
     {
         parent::__construct($p_table);

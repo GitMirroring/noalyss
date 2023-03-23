@@ -100,16 +100,16 @@ class Manage_Table_SQL
     const UPDATABLE=1;
     const VISIBLE=2;
 
-    private $icon_mod; //!< place of right or left the icon update or mod, default right, accepted value=left,right,first,custom column for mod
-    private $icon_del; //!< place of right or left the icon update or mod, default right, accepted value=left,right
-    private $dialogbox_style; //!< style of the dialog box
-    private $button_add_top;  //!< place of the button add on the top, by default true
+    protected $icon_mod; //!< place of right or left the icon update or mod, default right, accepted value=left,right,first,custom column for mod
+    protected $icon_del; //!< place of right or left the icon update or mod, default right, accepted value=left,right
+    protected $dialogbox_style; //!< style of the dialog box
+    protected $button_add_top;  //!< place of the button add on the top, by default true
     protected $title; //! < give the title of the diabox , default is Data
-    private $cssclass; //! CSS class for the dialog box
-    private $current_row; //! in display_row and display_custom_row, it is the current row which is used
-    private $a_col_option; //!< Extra to add to the column : CSS  Style , CSS class, javascript ,...
-    private $a_header_option; //!< Extra to add to the column Header : CSS  Style , CSS class, javascript ,...
-    
+    protected $cssclass; //! CSS class for the dialog box
+    protected $current_row; //! in display_row and display_custom_row, it is the current row which is used
+    protected $a_col_option; //!< Extra to add to the column : CSS  Style , CSS class, javascript ,...
+    protected $a_header_option; //!< Extra to add to the column Header : CSS  Style , CSS class, javascript ,...
+    protected $callback;
     /**
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the

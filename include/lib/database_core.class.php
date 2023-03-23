@@ -41,7 +41,7 @@ class DatabaseCore
     /**< return value  */
     private $is_open;                   /*!< true is connected */
     public $sql;     //!< last SQL stmt executed
-
+    var $array;
     /*** Connect to a database return an connx to db or false if it fails
      *
      * @param string $p_user Username

@@ -50,6 +50,7 @@
  *      - FILE
  *      - SPAN
  */
+#[AllowDynamicProperties]
 class HtmlInput
 {
 
@@ -69,6 +70,14 @@ class HtmlInput
     var $ctrl;   /*!<$ctrl is the control to update (see js_search_card_control) */
     var $tabindex;
     var $require;
+
+var $width;
+var $heigh;
+var $attribute;
+var $id;
+var $style;
+var $css_size;
+
     function __construct($p_name="", $p_value="", $p_id="")
     {
         $this->name=$p_name;
