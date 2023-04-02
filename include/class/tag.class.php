@@ -31,7 +31,7 @@ require_once NOALYSS_INCLUDE.'/database/tag_sql.class.php';
 class Tag
 {
     private $data; //<! Tag_SQL
-    private $cn;
+    protected $cn;
     function __construct($p_cn,$id=-1)
     {
         $this->cn=$p_cn;
