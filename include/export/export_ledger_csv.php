@@ -156,11 +156,12 @@ if ( $get_option=="E")
             }
             $a_row=array();
             $type="text";
-            for ($j=0; $j<count($row)/2; $j++)
+            $idx_col=0;
+            foreach ($row as $col)
             {
-                if ($j>18)
-                    $type="number";
-                $export->add($row[$j], $type);
+                if ($idx_col> 18 ) $type="number";
+                $export->add($col,$type);
+                $idx_col++;
             }
             //info payment
             $ret_reconcile=$cn->execute('reconcile_date',array($row['jr_id']));
