@@ -169,7 +169,7 @@ class Noalyss_Csv
     */
     protected function nb($p_number)
    {
-       $p_number=trim($p_number);
+       $p_number=noalyss_trim($p_number);
        if ($p_number=="") {return $p_number;}
        if ( isNumber($p_number) == 1 ) {
             $r=number_format($p_number, 4, $this->sep_dec,'');
