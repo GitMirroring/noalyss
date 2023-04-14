@@ -52,7 +52,7 @@ while ($ind <= $this->day) {
     $st="";
     if ($today_month==$this->month&&$today_day==$ind)
     {
-        $st='  style="border:1px solid red" ';
+        $st='  style="border:2px solid darkblue;background-color:hsl(199, 60%, 95%);" ';
     }
     if ( $date_calendar == $week ) {
         echo '<td class="'.$class.'" '.$st.'>'.'<span class="day">'.$ind."</span>";

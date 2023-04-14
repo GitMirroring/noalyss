@@ -19,8 +19,7 @@
 
 
 BODY {
-    font-family: Arial, Helvetica, "Liberation Sans"  , FreeSans, sans-serif !important;
-    font-family: 'OpenSansRegular' !important;
+    font-family: 'OpenSansRegular' ,Arial, Helvetica, "Liberation Sans"  , FreeSans, sans-serif !important;
     padding : 0px;
     margin:0px;
     color:darkblue !important;
@@ -107,13 +106,15 @@ margin-bottom: 1rem;
 margin-top: 1rem;
 margin-right:1rem;
 margin-left:1rem;
-border-radius: 12px;
-padding: 0.5rem 0rem 0.7rem 2rem;
+border-radius: 10px 0px;
+padding:1rem;
 }
  @media only screen and (max-width: 1280px) {
      h2{
+         margin:0px;
          margin-top:2px;
          padding: 0.2rem 0rem 0.3rem 1rem;
+         border-radius: 0px;
      }
  }
 div.info {
@@ -147,6 +148,7 @@ h3.info {
      animation-name: error_h2;
      animation-duration: 4s;
      animation-iteration-count: infinite;
+     padding : 1rem;
  }
 
 

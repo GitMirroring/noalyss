@@ -356,7 +356,7 @@ echo HtmlInput::button('hide',_('Annuler'),'onClick="Effect.Fold(\'add_todo_list
 <script type="text/javascript" language="javascript" charset="utf-8">
 function display_detail(div) {
         var div=$(div);
-	div.style.display="block";
+		div.style.display="block";
         div.style.top=calcy(50)+"px";
 }
 </script>
