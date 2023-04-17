@@ -38,15 +38,16 @@
 if ( ! defined('ALLOWED')) define ('ALLOWED',1);
 
 require_once '../include/constant.php';
-require_once NOALYSS_INCLUDE.'/class/database.class.php';
-require_once  NOALYSS_INCLUDE.'/class/fiche.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
-require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
-require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
+//require_once NOALYSS_INCLUDE.'/class/database.class.php';
+//require_once  NOALYSS_INCLUDE.'/class/fiche.class.php';
+//require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
+//require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
+//require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
+//require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
+//require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+//require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
+//require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
+global $http;
 $http=new HttpInput();
 
 /* we ask a dg box for disconnecting */
@@ -315,7 +316,9 @@ $path = array(
     // other_tax
     "other_tax"=>"ajax_other_tax",
     //visibility quantity
-    "update_visibility_quantity"=>"ajax_update_visibility_quantity"
+    "update_visibility_quantity"=>"ajax_update_visibility_quantity",
+    // detail customer , supplier operation
+    "event_display_detail"=>"ajax_event_display_detail"
 ) ;
 
 if (array_key_exists($op, $path)) {

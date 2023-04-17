@@ -4147,3 +4147,81 @@ function enlarge_text(p_domid,p_size) {
 
 
 }
+
+/**
+ * @brief display a box with the customer , supplier or event for today or late
+ * @param p_detail , what to do
+ */
+function event_display_detail(p_dossier,p_detail) {
+
+    	try
+    		{
+                // create div if not exists
+    	        var dgbox="situation_detail_div";
+    	        waiting_box();
+
+    	        var queryString={gDossier:p_dossier,op:'event_display_detail','what':p_detail};
+                // call ajax and update content of the div
+    	        var action = new Ajax.Request(
+    					  "ajax_misc.php" ,
+    					  {
+    					      method:'get',
+    					      parameters:queryString,
+    					      onFailure:ajax_misc_failure,
+    					      onSuccess:function(req){
+    							remove_waiting_box();
+    	                        if (req.responseText == 'NOCONX') {
+    	                            reconnect();
+    	                            return;
+    	                        }
+                                if ( ! document.getElementById(dgbox)) {
+                                    var div_style="position:absolute;"+";top:30%";
+                                    add_div({id:dgbox,cssclass:'inner_box',html:loading(),style:div_style,drag:true});
+
+                                }
+
+    							$(dgbox).update(req.responseText)
+
+    					      }
+    					  }
+    	              );
+                event_display_main(p_dossier);
+    		}catch( e)
+    		{
+    			alert_box(e.message);
+    		}
+}
+
+/**
+ * @brief refresh the main display in the dashboard to reflect possible changes
+ * @param p_dossier
+ */
+function event_display_main(p_dossier) {
+    	try
+    		{
+    	        waiting_box();
+                var dgbox="situation_div";
+                var queryString={gDossier:p_dossier,op:'event_display_detail','what':"main_display"};
+    	        var action = new Ajax.Request(
+    					  "ajax_misc.php" ,
+    					  {
+    					      method:'GET',
+    					      parameters:queryString,
+    					      onFailure:ajax_misc_failure,
+    					      onSuccess:function(req){
+    							remove_waiting_box();
+    	                        if (req.responseText == 'NOCONX') {
+    	                            reconnect();
+    	                            return;
+    	                        }
+
+                                  $(dgbox).update(req.responseText)
+
+    					      }
+    					  }
+    	              );
+    		}catch( e)
+    		{
+    			alert_box(e.message);
+    		}
+}

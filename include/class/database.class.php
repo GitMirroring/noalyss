@@ -179,7 +179,7 @@ class Database extends DatabaseCore
                 if ($i == 17) {
                     $this->execute_script(NOALYSS_INCLUDE . '/sql/patch/upgrade17.sql');
                     $max = $this->get_value('select last_value from s_jnt_fic_att_value');
-                    $this->alter_seq($p_cn, 's_jnt_fic_att_value', $max + 1);
+                    $this->alter_seq('s_jnt_fic_att_value', $max + 1);
                 } // version
                 // reset sequence in the modele
                 //--

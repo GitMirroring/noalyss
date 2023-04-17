@@ -2787,7 +2787,7 @@ EOF;
 
 }
 /**
- * Send header and json object
+ * @brief Send header and json object
  * @param array $p_answer this array will be converted to json object
  * @see json_encode
  */

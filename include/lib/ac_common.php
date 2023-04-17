@@ -1273,66 +1273,7 @@ function ajax_xml_error($p_code,$p_string)
 </data>
 EOF;
 }
-/**
- * @brief Display a box with the contains
- * @param type $p_array Data to display
- * @param type $p_title Title of the box
- * @param type $p_div id of the box
- */
-function display_dashboard_operation($p_array,$p_title,$p_div)
-{
-	?>
-<div id="<?php echo $p_div;?>" class="inner_box" style="display:none;position:fixed;top:250px;left:12%;width: 75%;min-height:50%;overflow:auto;">
-	<?php
-	echo HtmlInput::title_box($p_title, $p_div, "hide",'','y');
-	?>
-	<?php if (count($p_array)>0) :?>
-	<table class="result">
-		<tr>
-			<th><?php echo _('Date')?></th>
-			<th><?php echo _('Code Interne')?></th>
-			<th><?php echo _('Pièce')?></th>
-			<th><?php echo _('Description')?></th>
-			<th>
-				<?php echo _('Montant')?>
-			</th>
 
-		</tr>
-		<?php
-			for ($i=0;$i<count($p_array);$i++):
-		?>
-		<tr class="<?php echo (($i%2)==0)?'odd':'even';?>">
-			<td>
-				<?php echo smaller_date(format_date($p_array[$i]['jr_date']) );?>
-			</td>
-			<td>
-				<?php echo HtmlInput::detail_op($p_array[$i]['jr_id'], $p_array[$i]['jr_internal']) ?>
-			</td>
-                        <td>
-                            <?php echo h($p_array[$i]['jr_pj_number'])?>
-                        </td>
-			<td>
-				<?php echo h($p_array[$i]['jr_comment']) ?>
-			</td>
-			<td>
-				<?php echo nbm($p_array[$i]['jr_montant']) ?>
-			</td>
-		</tr>
-		<?php
-		endfor;
-		?>
-	</table>
-    <p style="text-align: center">
-        <?php echo HtmlInput::button_hide($p_div)?>
-    </p>
-	<?php else: ?>
-	<h2 class="notice"><?php echo _('Aucune donnée')?></h2>
-	<?php
-	endif;
-	?>
-</div>
-<?php
-}
 function get_array_column($p_array,$key)
 {
     $array=array();
@@ -1356,10 +1297,6 @@ function get_array_column($p_array,$key)
  */
 function factory_Ledger(Database &$p_cn, $ledger_id)
 {
-    include_once NOALYSS_INCLUDE.'/class/acc_ledger_sale.class.php';
-    include_once NOALYSS_INCLUDE.'/class/acc_ledger_purchase.class.php';
-    include_once NOALYSS_INCLUDE.'/class/acc_ledger_fin.class.php';
-    
     $ledger=new Acc_Ledger($p_cn, $ledger_id);
     $type=$ledger->get_type();
 
@@ -1641,7 +1578,7 @@ function noalyss_round($p_first,$p_second)
 }
 
 /**
- * to avoid deprecated in PHP8.1 : explode cannot use a null
+ *  @brief to avoid deprecated in PHP8.1 : explode cannot use a null
  * @param $separator
  * @param $string
  * @return array | empty string
