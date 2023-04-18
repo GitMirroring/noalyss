@@ -320,8 +320,8 @@ class PDF_Operation extends PDF {
             $this->pdf->write_cell($width[1],6,$row['j_poste']);
             $this->pdf->write_cell($width[2],6,$row["j_qcode"]);
             $str=$row["j_text"];
-            if (trim($str)==""){
-                if (trim($row["j_qcode"])=="") {
+            if (empty($str)){
+                if (empty($row["j_qcode"])) {
                     $str=$this->cn->get_value("select pcm_lib from tmp_pcmn where pcm_val=$1",
                             array($row["j_poste"]));
                 } else {
