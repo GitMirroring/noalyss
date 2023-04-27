@@ -63,8 +63,10 @@ class Document_ModeleTest extends TestCase
 
         $g_connection->exec_sql("delete from document_modele where md_affect='TST'");
         $g_connection->exec_sql("delete from document_type where dt_value='PHPUNIT'");
+        $g_connection->exec_sql("delete from document_component where dc_code='TST'");
 
         $this->type_id=$g_connection->get_value("insert into document_type (dt_value,dt_prefix) values ('PHPUNIT','TST')returning  dt_id");
+        $g_connection->get_value("insert into document_component (dc_code,dc_comment) values ('TST','PHPUnit Test')");
 
         $md_id=$g_connection->get_next_seq('document_modele_md_id_seq');
         $sql="insert into document_modele(md_id,md_name,md_type,md_affect)
@@ -102,13 +104,13 @@ class Document_ModeleTest extends TestCase
      */
     static function tearDownAfterClass(): void
     {
-        //        include 'global.php';
+        $g_connection=\Dossier::connect();
+
+        $g_connection->exec_sql("delete from document_modele where md_affect='TST'");
+        $g_connection->exec_sql("delete from document_type where dt_value='PHPUNIT'");
+        $g_connection->exec_sql("delete from document_component where dc_code='TST'");
+        $g_connection->exec_sql("delete from document_component where dc_code='E'");
     }
-//
-//    public function dataExample()
-//    {
-//        return array([1], [2], [3]);
-//    }
 
     /**
      *
@@ -149,6 +151,7 @@ class Document_ModeleTest extends TestCase
         $this->assertTrue(! empty($lob_save),"Document no loaded");
 
         //unset ($_FILES);
+        $g_connection->get_value("insert into document_component (dc_code,dc_comment) values ('E','PHPUnit Test')");
 
         $document_modele->update(['md_name'=>'XXXX',"md_type"=>"1","md_affect"=>'E','seq'=>0]);
 
@@ -187,6 +190,7 @@ class Document_ModeleTest extends TestCase
         $this->assertEquals($document_modele->md_name,'UNIT TEST');
         $this->assertEquals($document_modele->md_type,$this->type_id);
         $this->assertEquals($document_modele->md_affect,'TST');
+
 
     }
 }

@@ -263,11 +263,7 @@ class Document_modele
         $r.=td(_('Affectation'));
         $waffect=new ISelect();
         $waffect->name='md_affect';
-        $waffect->value=array(
-                            array('value'=>'ACH','label'=>_('Uniquement journaux achat')),
-                            array('value'=>'VEN','label'=>_('Uniquement journaux vente')),
-                            array('value'=>'GES','label'=>_('Partie gestion'))
-                        );
+        $waffect->value=$this->cn->make_array("select dc_code,dc_comment from public.document_component order by dc_code");
 
         $r.=td($waffect->input());
         $r.='</tr>';
@@ -285,7 +281,13 @@ class Document_modele
         $r.='<td class="notice">Si vous laissez &agrave; 0, la num&eacute;rotation ne changera pas, la prochaine facture sera n+1, n étant le n° que vous avez donn&eacute;</td>';
         $r.="</tr>";
         $r.='</table>';
+        $r.='<ul class="aligned-block">';
+        $r.='<li>';
         $r.=HtmlInput::submit('add_document','Ajout');
+        $r.='</li>';
+        $r.='<li>';
+        $r.=HtmlInput::button_hide("add_modele");
+        $r.='</li>';
         $r.="</form></p>";
         return $r;
     }
