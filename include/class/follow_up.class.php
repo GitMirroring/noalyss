@@ -427,6 +427,7 @@ class Follow_Up
         $aDocMod->name='doc_mod';
         $aDocMod->value=$this->db->make_array('select md_id,dt_value||\' : \'||md_name as md_name'.
                 ' from document_modele join document_type on (md_type=dt_id)'.
+                " where md_affect ='GES' and md_type = ".$this->dt_id.
                 ' order by md_name');
         $str_select_doc=$aDocMod->input();
         /* if no document then do not show the generate button */
