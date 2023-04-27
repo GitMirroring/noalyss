@@ -27,6 +27,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
   /* 1. Check security */
 $cn=Dossier::connect();
   /* 2. find the document */
+global $doc;
 $doc=new Document_Modele($cn,$id);
 
   /* 3. display it */

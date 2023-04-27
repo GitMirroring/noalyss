@@ -1,6 +1,7 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+global $doc,$cn;
 ?>
     <?php echo HtmlInput::title_box("Modèle de document","mod_doc",'hide')?>
 <form  method="post" enctype="multipart/form-data">
@@ -44,12 +45,9 @@ echo $a->input();
 
        $waffect=new ISelect();
         $waffect->name='md_affect';
-        $waffect->value=array(
-                            array('value'=>'ACH','label'=>_('Uniquement journaux achat')),
-                            array('value'=>'VEN','label'=>_('Uniquement journaux vente')),
-                            array('value'=>'GES','label'=>_('Partie gestion'))
-                        );
-       $waffect->selected=$doc->md_affect;
+        $waffect->value=$cn->make_array("select dc_code,dc_comment from public.document_component order by dc_code");
+
+        $waffect->selected=$doc->md_affect;
        echo $waffect->input();
 ?>
 </td>
