@@ -34,11 +34,13 @@ class Document_modele
     var $sequence;        /*!< $sequence sequence number used by the create sequence start with */
     var $md_affect;	/*!< $md_affect if you can use it in VEN for sale, ACH for purchase or GES for follow-up */
     var $md_filename;   /*! < $md_filename is the filename of the template */
+    var $start;   /*! < $md_filename is the filename of the template */
     //Constructor parameter = database connexion
     function __construct($p_cn,$p_id=-1)
     {
         $this->cn=$p_cn;
         $this->md_id=$p_id;
+        $this->start=0;
     }
 
     /*!
@@ -157,7 +159,7 @@ class Document_modele
             $new_name=tempnam($_ENV['TMP'],'document_');
             if ( strlen ($_FILES['doc']['tmp_name']) != 0 )
             {
-                if (move_uploaded_file($_FILES['doc']['tmp_name'],
+                if ($this->move_uploaded_file($_FILES['doc']['tmp_name'],
                                        $new_name))
                 {
                     // echo "Image saved";
@@ -174,7 +176,7 @@ class Document_modele
                     {
                         $r=Database::fetch_array($ret,0);
                         $old_oid=$r['md_lob'];
-                        if (strlen($old_oid) != 0)
+                        if (strlen(""??$old_oid) != 0)
                             $this->cn->lo_unlink($old_oid);
                     }
                     // Load new document
@@ -196,6 +198,10 @@ class Document_modele
             return ;
         }
     }
+    function move_uploaded_file($temporary_name, $target_path)
+    {
+        return move_uploaded_file ($temporary_name, $target_path);
+    }
     /*!
      * \brief Remove a template
      * \return nothing
@@ -204,19 +210,18 @@ class Document_modele
     {
         $this->cn->start();
         // first we unlink the document
-        $sql="select md_lob from document_modele where md_id=".$this->md_id;
-        $res=$this->cn->exec_sql($sql);
+        $sql="select md_lob from document_modele where md_id=$1";
+        $res=$this->cn->exec_sql($sql,[$this->md_id]);
         $r=Database::fetch_array($res,0);
         // if a lob is found
-        if ( strlen ($r['md_lob']) &&
-                $this->cn->exist_blob($r['md_lob']) )
+        if ( !empty ($r['md_lob']) &&$this->cn->exist_blob($r['md_lob']) )
         {
             // we remove it first
             $this->cn->lo_unlink($r['md_lob']);
         }
         // now we can delete the row
-        $sql="delete from document_modele where md_id =".$this->md_id;
-        $sql=$this->cn->exec_sql($sql);
+        $sql="delete from document_modele where md_id =$1";
+        $res=$this->cn->exec_sql($sql,[$this->md_id]);
         $this->cn->commit();
     }
 
@@ -323,7 +328,7 @@ class Document_modele
             $new_name=tempnam($_ENV['TMP'],'document_');
             if ( strlen ($_FILES['doc']['tmp_name']) != 0 )
             {
-                if (move_uploaded_file($_FILES['doc']['tmp_name'],
+                if ($this->move_uploaded_file($_FILES['doc']['tmp_name'],
                                        $new_name))
                 {
                     // echo "Image saved";
@@ -344,7 +349,16 @@ class Document_modele
                             $this->cn->lo_unlink($old_oid);
                     }
                     // Load new document
-                    $this->cn->exec_sql("update document_modele set md_lob=".$oid.", md_mimetype='".$_FILES['doc']['type']."' ,md_filename='".$_FILES['doc']['name']."' where md_id=".$this->md_id);
+
+                    $this->cn->exec_sql("update document_modele 
+                        set md_lob=$1, 
+                            md_mimetype=$2,
+                            md_filename=$3
+                        where md_id=$4",[
+                            $oid,
+                            $_FILES['doc']['type'],
+                            $_FILES['doc']['name'],
+                            $this->md_id]);
                     $this->cn->commit();
                 }
                 else
@@ -357,8 +371,8 @@ class Document_modele
         }
         catch (Exception $e)
         {
-              record_log($e);
-            rollback($this->cn);
+            record_log($e);
+            $this->cn->rollback();
             return ;
         }
 	$this->cn->commit();
