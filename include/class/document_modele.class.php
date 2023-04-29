@@ -237,7 +237,8 @@ class Document_modele
         $r='<p class="notice">';
         $r.='Veuillez introduire les mod&egrave;les servant à g&eacute;n&eacute;rer vos documents';
         $r.='</p>';
-        $r.='<form enctype="multipart/form-data"  method="post">';
+        $r.='<form enctype="multipart/form-data"  method="post" onsubmit="return check_file_size(this,'.           MAX_FILE_SIZE.')">';
+        $r.=\HtmlInput::hidden("MAX_FILE_SIZE", MAX_FILE_SIZE);
         $r.=dossier::hidden();
         // we need to add the sub action as hidden
         $h=new IHidden();
@@ -270,6 +271,7 @@ class Document_modele
 
         $f=new IFile();
         $f->name="doc";
+        $f->setAlertOnSize(true);
         $r.="<tr><td>fichier</td><td> ".$f->input()."</td></tr>";
 
         $start=new IText();

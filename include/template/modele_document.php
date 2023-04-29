@@ -2,9 +2,12 @@
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 global $doc,$cn;
+\Noalyss\Dbg::echo_file(__FILE__);
+echo \Noalyss\Dbg::echo_var(1,"MAX SIZE IS ".MAX_FILE_SIZE);
 ?>
     <?php echo HtmlInput::title_box("Modèle de document","mod_doc",'hide')?>
-<form  method="post" enctype="multipart/form-data">
+<form  method="post" enctype="multipart/form-data"  onsubmit="return check_file_size(this,<?=MAX_FILE_SIZE?>)">
+<?php echo \HtmlInput::hidden("MAX_FILE_SIZE", MAX_FILE_SIZE);?>
 <table>
 
 <tr>
@@ -67,6 +70,7 @@ echo $a->input();
 <td>
 <?php
 $file=new IFile('doc');
+$file->setAlertOnSize(true);
 echo $file->input();
 
 
