@@ -38,15 +38,6 @@
 if ( ! defined('ALLOWED')) define ('ALLOWED',1);
 
 require_once '../include/constant.php';
-//require_once NOALYSS_INCLUDE.'/class/database.class.php';
-//require_once  NOALYSS_INCLUDE.'/class/fiche.class.php';
-//require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
-//require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-//require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-//require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
-//require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-//require_once NOALYSS_INCLUDE.'/lib/icon_action.class.php';
-//require_once NOALYSS_INCLUDE.'/lib/progress_bar.class.php';
 global $http;
 $http=new HttpInput();
 
