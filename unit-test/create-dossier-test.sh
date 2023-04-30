@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export PGCLUSTER=10/main
-DOSSIER_TEST=rel70dossier25
+export PGCLUSTER=12/main
+DOSSIER_TEST=rel91dossier25
 FILE_TEST=dossier25.sql
 
 dropdb $DOSSIER_TEST
