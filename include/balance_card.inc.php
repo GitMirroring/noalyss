@@ -25,7 +25,7 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 $http=new HttpInput();
 
-global $g_user;
+global $g_user,$cn;
 echo '<div class="content">';
 $exercice=new Exercice($cn);
 $old='';
@@ -42,10 +42,17 @@ else
     $array['from_periode']=$limit_periode[0]->first_day();
     $array['to_periode']=$limit_periode[1]->last_day();
     if (isset($_GET['ex']))
-      {
-	$limit_periode=$per->get_limit($http->get('ex','number'));
-	$array['from_periode']=$limit_periode[0]->first_day();
-      }
+    {
+        $ex=$http->get('ex','number');
+        $limit_periode=$per->get_limit($ex);
+
+        // if user's preference is greater $ex than I need operation until $ex otherwise since $ex
+        if ( $ex > $year) {
+            $array['to_periode']=$limit_periode[0]->last_day();
+        } else {
+            $array['from_periode']=$limit_periode[0]->first_day();
+        }
+    }
 
     /*
      * Add button to select another year
