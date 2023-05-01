@@ -217,14 +217,15 @@ class Acc_Ledger_Fin extends Acc_Ledger
         if (noalyss_strlentrim($last_sold)!=0&&isNumber($last_sold)&&noalyss_strlentrim($first_sold)!=0&&isNumber($first_sold)
         )
         {
-            $diff=$last_sold-$first_sold;
+            $diff=bcsub($last_sold,$first_sold);
             $diff=round($diff, 2)-round($tot_amount, 2);
             $calc=bcadd($first_sold, $tot_amount, 4);
             if ($first_sold!=0||$last_sold!=0)
             {
                 if ($diff!=0)
                 {
-                    throw new Exception(sprintf(_('Le montant de l\'extrait [%s] est incorrect,'.
+                    throw new Exception(sprintf(_('Le montant de l\'extrait est incorrect,'.
+                                                    " solde donné [ %s ]".
                                                     " solde calculé [%s] , différence de [%s]"), $last_sold, $calc,
                                             $diff), 13);
                 }
