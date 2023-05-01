@@ -1532,7 +1532,7 @@ function add_http_link($text)
 //---------------------------------------------------------------------------------------------------------------------
 
 function noalyss_strlen($p_string) :int{
-    if (empty ($p_string) ) return 0;
+    if ($p_string ==null ) return 0;
     else return strlen($p_string);
 }
 function noalyss_trim($p_string) {
@@ -1540,7 +1540,7 @@ function noalyss_trim($p_string) {
     else return trim($p_string);
 }
 function noalyss_strlentrim($p_string) :int {
-    if (empty($p_string)) return 0;
+    if ($p_string ==null ) return 0;
     return strlen(trim($p_string));
 }
 function noalyss_str_replace($search,$replace,$string) {
