@@ -676,7 +676,7 @@ class DatabaseCore
         if ($p_null == 1) {
             for ($i = $max; $i != 0; $i--) {
                 $r[$i]['value'] = $r[$i - 1]['value'];
-                $r[$i]['label'] = h($r[$i - 1]['label']);
+                $r[$i]['label'] = $r[$i - 1]['label'];
             }
             $r[0]['value'] = -1;
             $r[0]['label'] = " ";
