@@ -1355,7 +1355,7 @@ if(!function_exists('tracedebug')) {
   function tracedebug($file,$var, $label = NULL) {
 
     $tmp_file = sys_get_temp_dir().DIRECTORY_SEPARATOR.$file;
-
+    if ( ! is_writable($tmp_file)) return;
     $output = '';
     $output .= date('d-m-y H:i');
     if(!is_null($label)) {
