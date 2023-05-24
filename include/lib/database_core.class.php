@@ -80,7 +80,14 @@ class DatabaseCore
 
     }
 
-
+    /**
+     * return the name of the current database
+     * @return false|string
+     */
+    public function get_name () {
+        return pg_dbname($this->ret);
+    }
+    
     public function verify()
     {
         // Verify that the elt we want to add is correct
