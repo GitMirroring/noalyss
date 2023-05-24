@@ -8,7 +8,7 @@ class Dbg
     public static function echo_var($n_level, $msg,$print=true)
     {
         if (DEBUGNOALYSS > $n_level) {
-            $r= '<span style="font-size:12px;color:orangered;background-color:lightyellow;">';
+            $r= '<span style="font-size:12px;color:orangered;background-color:lightyellow;margin:1rem;border:1px black dashed">';
             $type = gettype($msg);
             if (in_array($type, ["string", "integer", "double"])) {
                 $r.= $msg;
@@ -28,7 +28,7 @@ class Dbg
     {
         if (DEBUGNOALYSS > 1) {
             $r =  '<span style="font-size:12px;color:brown;background-color:bisque;">';
-            $r.="[FILE: $msg]";
+            $r.="[FUNC: $msg]";
 
             $r.= '</span>';
             if ($print) { echo $r;}
@@ -38,7 +38,7 @@ class Dbg
     public static function echo_file($msg,$print=true)
     {
         if (DEBUGNOALYSS > 1) {
-            $r =  '<span style="font-size:12px;color:brown;background-color:lightyellow;">';
+            $r =  '<span style="font-size:12px;color:brown;background-color:lightyellow;display:table-row">';
             $r.="[FILE: $msg]";
 
             $r.= '</span>';
