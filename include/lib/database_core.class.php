@@ -307,7 +307,7 @@ class DatabaseCore
         if ( DEBUGNOALYSS == 0 ) {
             ob_start();
         } else {
-            $debug = fopen("/tmp/debug.log", "w+");
+            $debug = fopen("/tmp/debug_execute_script".uniqid().".log", "w+");
         }
         $hf = fopen($script, 'r');
         if ($hf == false) {
