@@ -114,7 +114,7 @@ if ($low_action == "list")
             $sel_company=$http->get("sel_company");
             $contact->filter_company($sel_company);
 	}
-
+    $contact->filter_active(true);
 	echo '<div class="content">';
 	echo $contact->Summary($search,"contact",$sql);
 

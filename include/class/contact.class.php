@@ -77,10 +77,19 @@ class contact extends Fiche
                     sql_string($array['category']));
             $where='';$and=' and ';
         }
-
+        if ( isset ($array['active']) && $array['active'] == true) {
+            $sql_query .= $where.$and.sprintf("  f_enable='1'  ");
+            $where='';$and=' and ';
+        }
         return $sql_query;
     }
-
+    function filter_active(bool $p_active) {
+        if ( $p_active) {
+            $this->filter['active']=true;
+        } else {
+             $this->filter['active']=false;
+        }
+    }
     function filter_category($pn_category) {
         unset($this->filter['category']);
         if ( !empty($pn_category)

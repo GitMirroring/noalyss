@@ -1281,7 +1281,7 @@ class Fiche
 
 
     }
-    /*! Summary
+    /*!
      * \brief  show the default screen
      *
      * \param $p_search (filter)
@@ -1425,7 +1425,7 @@ class Fiche
 		$solde=abs(bcsub($deb,$cred));
                 $side=($deb > $cred)?'Débit':'Crédit';
                 $r.='<tr class="highlight">';
-		$r.=td("").td("").td("").td("Totaux").td(nbm($deb),'class="num"').td(nbm($cred),'class="num"').td(" $side ".nbm($solde),'class="num"');
+		$r.=td("").td("").td("").td("").td("Totaux").td(nbm($deb),'class="num"').td(nbm($cred),'class="num"').td(" $side ".nbm($solde),'class="num"');
                 $r.='</tr>';
 		$r.="</tfoot>";
         $r.="</TABLE>";
