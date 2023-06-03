@@ -76,7 +76,7 @@ class Noalyss_Csv
     }
 
     /***
-     * Send an header for CSV , the filename is corrected 
+     *@brief  Send an header for CSV , the filename is corrected
      */
     function send_header()
     {
@@ -91,7 +91,7 @@ class Noalyss_Csv
     }
 
     /***
-     * write header
+     * @brief write header
      * @param array $p_array Array of 1 dimension with the contains of a row
      * 
      */
@@ -108,7 +108,7 @@ class Noalyss_Csv
         printf("\r\n");
     }
     /***
-     * Add column to export to csv , the string are enclosed with 
+     * @brief Add column to export to csv , the string are enclosed with
      * double-quote,
      * @param $p_item value to export
      * @param $p_type must be text(default) or number
@@ -124,7 +124,7 @@ class Noalyss_Csv
         $this->size++;
     }
     /***
-     * the string are enclosed with  double-quote,
+     * @brief the string are enclosed with  double-quote,
      *  we remove problematic character and
      * the number are formatted.
      * Clean the row after exporting
