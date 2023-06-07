@@ -113,8 +113,8 @@ if ($op=="load_filter")
     $record=$filter->to_array();
 
     $record['desc']=$record['description'];
-    $record['r_jrn']=explode(",", $record['r_jrn']);
-    $record['tag']=explode(",",$record['uf_tag']);
+    $record['r_jrn']=explode(",", $record['r_jrn']??"");
+    $record['tag']=explode(",",$record['uf_tag']??"");
     $record['tag_option']=$record["uf_tag_option"];
     $record['p_currency_code']=$record['uf_currency_code'];
     $result=array_merge($answer, $record);
