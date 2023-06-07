@@ -1545,7 +1545,7 @@ function noalyss_strlentrim($p_string) :int {
 }
 function noalyss_str_replace($search,$replace,$string) {
     if ($string===null) return "";
-    else return str_replace($search,$replace,$string);
+    else return str_replace($search,$replace??"",$string);
 }
 function noalyss_bcsub($p_first,$p_second)
 {
