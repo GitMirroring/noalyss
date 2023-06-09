@@ -101,8 +101,8 @@ class ITva_Popup extends HtmlInput
         $strAttribut = $this->get_node_attribute();
 
 
-        $str = '<input type="TEXT"  class="input_text" name="%s" value="%s" id="%s" size="3" %s %s>';
-        $r = sprintf($str, $this->name, $this->value, $this->id, $this->js, $strAttribut);
+        $str = '<input type="TEXT"  class="input_text" name="%s" value="%s" id="%s" placeholder="%s" size="3" %s %s>';
+        $r = sprintf($str, $this->name, $this->value, $this->id, _("C.TVA"),$this->js, $strAttribut);
         $r.=$code;
         if ($this->in_table)
             $table = '<table>' . '<tr>' . td($r);
