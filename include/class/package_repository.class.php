@@ -57,7 +57,18 @@ class Package_Repository
     }
 
     /**
-     * check that NOALYSS_HOME exists and is writable
+     * @brief set content
+     * @param $content xml file to be parsed
+     * @return Package_Repository
+     */
+    public function setContent($content)
+    {
+        $this->content=simplexml_load_string($content);
+        if ( $this->content==false ) throw new Exception ("XML INVALIDE [$content]",EXC_INVALID);
+        return $this;
+    }
+    /**
+     * @brief check that NOALYSS_HOME exists and is writable
      */
     function can_download()
     {
