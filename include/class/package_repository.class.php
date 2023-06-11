@@ -31,7 +31,8 @@
 class Package_Repository
 {
 
-    private $content;
+    protected $content;
+    static $time_cache_second = 3600; // cache time in second
 
     /**
      * @see package_repository.test.php
@@ -40,16 +41,55 @@ class Package_Repository
     {
         // Check we can resolve the name
         $host=parse_url(NOALYSS_PACKAGE_REPOSITORY,PHP_URL_HOST);
-        
-        if (gethostbyname($host) != $host)
-        {
+        $file=$_ENV['TMP']."/web.xml";
+
+        if ( file_exists($file) ) {
+            $date_time=new \DateTime();
+            $file_tmstamp=filemtime($file);
+
+            $delta=$date_time->getTimestamp() - $file_tmstamp;
+
+            // if file too old , refresh it
+            if ( $delta > self::$time_cache_second ) {
+                $web_repo = file_get_contents(NOALYSS_PACKAGE_REPOSITORY."/web.xml");
+                $f_file= fopen($file,"w+");
+                fwrite($f_file,$web_repo);
+                fclose($f_file);
+                $this->setContent($web_repo);
+            } else {
+                $this->setContent(file_get_contents($file));
+            }
+        } elseif( gethostbyname($host) != $host) {
             $content=file_get_contents(NOALYSS_PACKAGE_REPOSITORY."/web.xml");
             $this->content=simplexml_load_string($content);
+            $file=$_ENV['TMP']."/web.xml";
+            $f_file= fopen($file,"w+");
+            fwrite($f_file,$this->content->saveXML());
+            fclose($f_file);
         } else {
             $this->content=NULL;
         }
 
+
+
     }
+    /**
+     * @return int
+     */
+    public static function getTimeCacheSecond(): int
+    {
+        return self::$time_cache_second;
+    }
+
+    /**
+     * @param int $time_cache_second
+     */
+    public static function setTimeCacheSecond(int $time_cache_second):void
+    {
+        self::$time_cache_second = $time_cache_second;
+
+    }
+
 
     public function getContent()
     {

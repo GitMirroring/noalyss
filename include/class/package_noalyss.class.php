@@ -104,16 +104,18 @@ abstract class Package_Noalyss
 
     function download()
     {
+        if ( ! $this->can_download() ) return false;
         // If install is writable then download 
-        if ( $this->can_download() )
-        {
-            $full=$this->get_path()."/".$this->get_file();
-            $file = file_get_contents(NOALYSS_PACKAGE_REPOSITORY."/".$full);
-            $fh_file=fopen(NOALYSS_HOME."/tmp/".$this->get_file(),"w+");
-            
-            fwrite($fh_file, $file);
-             fclose($fh_file);
-        }
+
+
+        $full=$this->get_path()."/".$this->get_file();
+        $file = file_get_contents(NOALYSS_PACKAGE_REPOSITORY."/".$full);
+        $fh_file=fopen(NOALYSS_HOME."/tmp/".$this->get_file(),"w+");
+
+        fwrite($fh_file, $file);
+        fclose($fh_file);
+        return TRUE;
+
     }
 
     abstract function install();
