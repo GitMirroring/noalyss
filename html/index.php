@@ -40,7 +40,7 @@
  * <li>Tant que possible réutiliser ce qui existe déjà, </li>
  * <li>Améliorer ce qui existe déjà et vérifier que cela fonctionne toujours</li>
  * <li>Documenter avec les tags doxygen votre nouveau code,</li>
- * <li>Dans le répertoire include: Les noms de fichiers sont *.inc.php pour les fichiers à éxécuter</li>
+ * <li>Dans le répertoire include: Les noms de fichiers sont *.inc.php pour les fichiers à exécuter</li>
  * <li>Dans le répertoire include: Les noms de fichiers sont *.php pour les fichiers contenant des fonctions uniquement</li>
  * <li>Dans le répertoire include: Les noms de fichier sont
  * class_*.php pour les fichiers contenant des classes.</li>
@@ -180,7 +180,7 @@ if ( file_exists("install.php")&& DEBUGNOALYSS == 0 )
         printf(_("Le fichier %s/install.php est encore présent, après l'avoir exécuté pour vous mettre à jour, vous devez l'effacer."),
                 __DIR__);
         echo "<br>";
-        echo _("Tant que ce n'est pas vous fait vous ne pouvez pas utiliser NOALYSS");
+        echo _("Tant que ce n'est pas fait vous ne pouvez pas utiliser NOALYSS");
         echo "</h1>";
         return;
     }

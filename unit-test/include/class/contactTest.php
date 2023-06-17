@@ -181,7 +181,7 @@ class ContactTest extends TestCase
         \Noalyss\Facility::save_file($path,$filename,$r);
         print "File saved into $path/$filename";
         $filesize=filesize ($path."/".$filename);
-        $this->assertTrue($filesize == 4988 || $filesize==4325 ," File not valide (1) $filename");
+        $this->assertTrue($filesize == 4988 || $filesize==4325 ," File not valide (1) $filename size $filesize");
         $this->assertEquals(5 , preg_match_all('/<tr class="/',$r)," 1. Missing card");
         $contact->filter_company(' fourni ');
         ob_start();

@@ -28,7 +28,7 @@ if ( ! defined("ALLOWED"))  {
  * @brief concern acc_ledger_search
  * @coversDefaultClass  acc_ledger_search
  */
-class Acc_Ledger_Test extends TestCase
+class Acc_Ledger_searchTest extends TestCase
 {
 
     /**
