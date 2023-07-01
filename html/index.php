@@ -180,7 +180,7 @@ if ( file_exists("install.php")&& DEBUGNOALYSS == 0 )
         printf(_("Le fichier %s/install.php est encore présent, après l'avoir exécuté pour vous mettre à jour, vous devez l'effacer."),
                 __DIR__);
         echo "<br>";
-        echo _("Tant que ce n'est pas fait vous ne pouvez pas utiliser NOALYSS");
+        echo _("Tant que ce n'est pas fait, vous ne pouvez pas utiliser NOALYSS");
         echo "</h1>";
         return;
     }
