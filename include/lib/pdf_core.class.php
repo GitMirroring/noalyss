@@ -275,7 +275,7 @@ class PDF_Core extends TFPDF
     function is_fill($p_step)
     {
         if ($p_step % 2 == 0) {
-            $this->SetFillColor(220, 221, 255);
+            $this->SetFillColor(239, 239, 255);
             $fill = 1;
         } else {
             $this->SetFillColor(255, 255, 255);

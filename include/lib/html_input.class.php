@@ -233,10 +233,10 @@ var $css_size;
         if ( DEBUGNOALYSS > 2) {
             return '<span style="font-size:80%;color:blue;background-color:lightgoldenrodyellow">'.
                 $p_id .
-                '= <INPUT TYPE="text" id="'.strip_tags($p_id).'" NAME="'.$p_name.'" VALUE="'.strip_tags($p_value).'" style="color:blue;font-size:80%">'.
+                '= <INPUT TYPE="text" id="'.strip_tags($p_id).'" NAME="'.$p_name.'" VALUE="'.strip_tags($p_value??"").'" style="color:blue;font-size:80%">'.
                 '</span>';
         }else
-        return '<INPUT TYPE="hidden" id="'.strip_tags($p_id).'" NAME="'.$p_name.'" VALUE="'.strip_tags($p_value).'">';
+        return '<INPUT TYPE="hidden" id="'.strip_tags($p_id).'" NAME="'.$p_name.'" VALUE="'.strip_tags($p_value??"").'">';
     }
 
     static function extension()

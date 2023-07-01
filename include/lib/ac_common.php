@@ -1110,9 +1110,9 @@ function show_menu($module)
     {
         // there is only one submenu so we include the code or javascript 
         // or we show the submenu
-        if ( trim($amenu[0]['me_url']) != "" ||
-             trim ($amenu[0]['me_file']) != "" ||
-             trim ($amenu[0]['me_javascript']) != "" )
+        if ( trim($amenu[0]['me_url']??"") != "" ||
+             trim ($amenu[0]['me_file']??"") != "" ||
+             trim ($amenu[0]['me_javascript']??"") != "" )
         {
 		echo '<div class="topmenu">';
 		echo h2info(_($amenu[0]['me_menu']));
