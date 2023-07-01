@@ -1375,7 +1375,7 @@ div.foldercontent {
 
 @media only screen and (max-width: 1199px) {
 #dossier {
-    display:none;
+    display:flex;
     }
     
 }

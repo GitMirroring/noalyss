@@ -135,8 +135,11 @@ class Noalyss_Appearance
 
         echo <<<EOF
     <style>
-
-    #top,#dossier,#module {
+#top {
+        color:{$folder_font};
+        background-color: transparent;
+    }
+ #dossier,#module {
         color:{$folder_font};
         background-color: {$folder};
     }
