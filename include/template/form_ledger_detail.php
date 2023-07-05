@@ -5,6 +5,9 @@
  * @file
  * @brief Display a form to enter an operation Sale or Purchase 
  */
+
+$default_currency=new Acc_Currency(Dossier::connect(),0);
+
 ?>
 	<div id="jrn_name_div">
 	<h1 id="jrn_name"> <?php echo $this->get_name()?></h1>
@@ -159,8 +162,8 @@ echo '</tr>';
     </tr>
     
     <tr id="row_currency" class="highlight" style="display:none">
-    <td> <?php echo _("Total")?>  
-        EUR
+    <td> <?php printf( _("Total %s"),$default_currency->get_code() );?>
+
     </td>
         <td class="num visible_gt800"></td>
 <?php if ($flag_tva=='Y')  {?>

@@ -1566,7 +1566,7 @@ EOF;
         
         $currency_input=new INum("p_currency_rate");
         $currency_input->id="p_currency_rate";
-        $currency_input->prec=6;
+        $currency_input->prec=8;
         $currency_input->value=$http->extract('p_currency_rate','string',1);
         $currency_input->javascript='onchange="format_number(this,4);CurrencyCompute(\'p_currency_rate\',\'p_currency_euro\');"';
         

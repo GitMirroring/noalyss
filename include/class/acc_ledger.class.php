@@ -961,7 +961,7 @@ class Acc_Ledger  extends jrn_def_sql
         $currency_select->selected=$http->request('p_currency_code','string',0);
 
         $currency_input=new INum("p_currency_rate");
-        $currency_input->prec=6;
+        $currency_input->prec=8;
         $currency_input->id="p_currency_rate";
         $currency_input->value=$http->request('p_currency_rate','string',1);
         $ret.=tr(td(_("Devise")).td($currency_select->input().
