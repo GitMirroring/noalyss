@@ -305,7 +305,7 @@ class Document
 
                         // if the pattern if found we replace it
                         $value=$this->replace($tag, $p_array);
-                        if (strpos($value, 'ERROR')!=false)
+                        if (strpos($value??"", 'ERROR')!=false)
                             $value="";
                         /*
                          * Change type of cell to numeric

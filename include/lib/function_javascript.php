@@ -2719,7 +2719,7 @@ function unescapebycharacter($str)
  */
 function escape_xml($p_xml)
 {
-    $xml=$p_xml;
+    $xml=$p_xml??"";
     $xml=str_replace('&','&amp;',$xml);
     $xml=str_replace('<','&lt;',$xml);
     $xml=str_replace('>','&gt;',$xml);
@@ -2737,7 +2737,7 @@ function escape_xml($p_xml)
  */
 function unescape_xml($p_xml)
 {
-    $xml=$p_xml;
+    $xml=$p_xml??"";
     $xml=str_replace('&amp;','&',$xml);
     $xml=str_replace('&lt;','<',$xml);
     $xml=str_replace('&gt;','>',$xml);
