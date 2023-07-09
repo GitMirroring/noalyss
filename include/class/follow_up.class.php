@@ -336,7 +336,7 @@ class Follow_Up
         }
         else
         {
-            $qcode_dest_label=($this->f_id_dest==0||trim($this->qcode_dest)=="")?'Interne ':'Error';
+            $qcode_dest_label=($this->f_id_dest==0||trim($this->qcode_dest??"")=="")?'Interne ':'Error';
         }
 
         $h_ag_id=new IHidden();
@@ -549,7 +549,7 @@ class Follow_Up
         $contact=new Fiche($this->db);
         $contact->get_by_qcode($this->ag_contact);
 
-        if (trim($this->ag_title)=="")
+        if (trim($this->ag_title??"")=="")
         {
             $doc_mod=new document_type($this->db);
             $doc_mod->dt_id=$this->dt_id;
@@ -615,7 +615,7 @@ class Follow_Up
         /* upload the documents */
         $doc=new Document($this->db);
         $doc->upload($this->ag_id);
-        if (trim($this->ag_comment)!='' && Document_Option::can_add_comment($this->ag_id))
+        if (trim($this->ag_comment??"")!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
                 , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], strip_tags($this->ag_description),$this->ag_comment));
@@ -855,7 +855,7 @@ class Follow_Up
         // retrieve customer
         // f_id
 
-        if (trim($this->qcode_dest)=="")
+        if (trim($this->qcode_dest??"")=="")
         {
             // internal document
             $this->f_id_dest=null; // internal document
@@ -962,13 +962,13 @@ class Follow_Up
                 continue;
             $act->save();
         }
-        if (trim(strip_tags($this->ag_comment)) !='')
+        if (trim(strip_tags($this->ag_comment??"")) !='')
         {
             $notag_comment=strip_tags($this->ag_comment);
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
                     , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $notag_comment,$this->ag_comment));
         }
-        if (trim(strip_tags($this->ag_description))!='' )
+        if (trim(strip_tags($this->ag_description??""))!='' )
         {
             if (  $this->ag_description_id <0)
                 $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
@@ -1140,7 +1140,7 @@ class Follow_Up
      */
     function insert_operation()
     {
-        if (trim($this->operation)=='')
+        if (trim($this->operation??"")=='')
             return;
         $array=explode(",", $this->operation);
         for ($i=0; $i<count($array); $i++)
@@ -1358,14 +1358,14 @@ class Follow_Up
             $search_docid=$p_array['ag_id']; 
             return $action_query;
         }
-        if (isset($_REQUEST['action_query']) && trim($_REQUEST['action_query']) != "")
+        if (isset($_REQUEST['action_query']) && trim($_REQUEST['action_query']??"") != "")
         {
             $action_query = $http->extract('action_query');
             // if a query is request build the sql stmt
             $action_query="and (ag_title ilike '%".sql_string($action_query)."%' ".
-                    "or ag_ref ='".trim(sql_string($action_query)).
+                    "or ag_ref ='".trim(sql_string($action_query??"")).
                     "' or ag_id in (select ag_id from action_gestion_comment ".
-                    " where agc_comment ilike '%".trim(sql_string($action_query))."%')".
+                    " where agc_comment ilike '%".trim(sql_string($action_query??""))."%')".
                     ")";
         }
 
@@ -1399,7 +1399,7 @@ class Follow_Up
         {
             $action_query .= ' and ag_state <> '.sql_string($p_array['hsstate']);
         }
-        if (isset($p_array['sag_ref'])&&trim($p_array['sag_ref'])!="")
+        if (isset($p_array['sag_ref'])&&trim($p_array['sag_ref']??"")!="")
         {
             $action_query .= " and ag_ref= '".sql_string($p_array['sag_ref'])."'";
         }
@@ -1480,7 +1480,7 @@ class Follow_Up
      */
     function insert_action()
     {
-        if (trim($this->action)=='')
+        if (trim($this->action??"")=='')
             return;
         $array=explode(",", $this->action);
         for ($i=0; $i<count($array); $i++)
@@ -1910,7 +1910,7 @@ where
            )
         );
 
-        if (trim($this->ag_comment)!='')
+        if (trim($this->ag_comment??"")!='')
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
                     , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
