@@ -49,6 +49,7 @@ input:focus {
     margin: 5px;
     font-family: sans-serif;
     opacity:85%;
+    background-color: wheat;
 }
 a.mtitle span.notice {
     text-decoration: underline;
