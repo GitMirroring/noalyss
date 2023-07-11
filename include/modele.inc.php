@@ -35,7 +35,7 @@ if (isset($_POST['upd']) &&
 {
     $name=$http->post('name');
     $desc =$http->post('desc');
-    $mod_id=$http->post("m", 0);
+    $mod_id=$http->post("m", "number",0);
     
 	if (trim($name) != "" && $mod_id != 0 && isNumber($mod_id)==1)
 	{
