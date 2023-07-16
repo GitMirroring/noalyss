@@ -39,7 +39,7 @@ class Database extends DatabaseCore
 
     function __construct($p_database_id = 0, $p_type = 'dos')
     {
-        if (IsNumber($p_database_id) == false || strlen($p_database_id) > 10)
+        if (IsNumber($p_database_id) == false || strlen($p_database_id??"") > 10)
             die("-->Dossier invalide [$p_database_id]");
         $noalyss_user = (defined("noalyss_user")) ? noalyss_user : phpcompta_user;
         $password = (defined("noalyss_password")) ? noalyss_password : phpcompta_password;
@@ -90,7 +90,7 @@ class Database extends DatabaseCore
         if (pg_num_rows($ret) != 0) {
             $r = pg_fetch_array($ret, 0);
             $old_oid = $r['jr_pj'];
-            if (strlen($old_oid) != 0)
+            if (strlen($old_oid??"") != 0)
                 $this->lo_unlink( $old_oid);
         }
         // Load new document

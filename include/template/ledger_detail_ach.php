@@ -67,7 +67,7 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                             <td>
                                 <?php
                                 $itext = new IText('lib');
-                                $itext->value = strip_tags($obj->det->jr_comment);
+                                $itext->value = strip_tags($obj->det->jr_comment??"");
                                 $itext->size = 40;
                                 echo td(_('Libellé')) . td($itext->input(), ' colspan="2" ');
                                 ?>

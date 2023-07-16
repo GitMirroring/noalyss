@@ -108,7 +108,7 @@ class IText extends HtmlInput
         $extra=(isset($this->extra))?$this->extra:"";
 
         $readonly=" readonly ";
-        $this->value=htmlentities($this->value, ENT_COMPAT|ENT_QUOTES, "UTF-8");
+        $this->value=htmlentities($this->value??"", ENT_COMPAT|ENT_QUOTES, "UTF-8");
         $this->style=' class="input_text_ro" ';
          if ( ! isset ($this->css_size))
         {

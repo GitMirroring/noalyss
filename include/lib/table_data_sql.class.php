@@ -179,7 +179,7 @@ abstract class Table_Data_SQL extends Data_SQL
         $sql=$this->build_query();
         $pk=$this->primary_key;
         // primary cannot be null or empty
-        if (trim($this->$pk)==="" || $this->$pk===null)  {
+        if (trim($this->$pk??"")==="" || $this->$pk===null)  {
             $this->pk=-1;
             return false;
         }
