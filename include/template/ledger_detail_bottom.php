@@ -230,7 +230,7 @@ if ($aRap  != null ) {
     else
       $remove='';
     
-    $comment=strip_tags($array_jr[0]['jr_comment']);
+    $comment=strip_tags($array_jr[0]['jr_comment']??"");
     $pj_nb=h($array_jr[0]['jr_pj_number']);
     echo tr (td(format_date($array_jr[0]['jr_date'])).
             td('<a class="line" href="javascript:void(0)" onclick="'.$str.'" >'.$internal.'</A>').

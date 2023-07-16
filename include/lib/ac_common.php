@@ -413,7 +413,7 @@ function html_min_page_start($p_theme="", $p_script="", $p_script2="")
 	$Res = $cn->exec_sql("select the_filestyle from theme
                            where the_name='" . $p_theme . "'");
 	if (Database::num_row($Res) == 0)
-	    $style = "style-classic.css";
+	    $style = "style-classic7.css";
 	else
 	{
 	    $s = Database::fetch_array($Res, 0);
@@ -422,7 +422,7 @@ function html_min_page_start($p_theme="", $p_script="", $p_script2="")
     }
     else
     {
-	$style = "style-classic.css";
+	$style = "style-classic7.css";
     } // end if
     echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 FINAL//EN">';
     echo "<HTML>";
@@ -509,7 +509,7 @@ function FormatString($p_string)
 
 function sql_string($p_string)
 {
-    $p_string = trim($p_string);
+    $p_string = trim($p_string??"");
     if (strlen($p_string) == 0)
 	return null;
     $p_string = str_replace("'", "''", $p_string);

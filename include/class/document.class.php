@@ -1822,6 +1822,7 @@ class Document
         }
         if ($count==0)
         {
+	    $p_value='';
             if ($p_type=='OOo')
             {
                 $p_value=noalyss_str_replace('&', '&amp;', $p_value);
