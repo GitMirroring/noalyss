@@ -242,7 +242,9 @@ class Acc_Ledger_Search
         $sCurrency->id=$this->div."p_currency_code";
         $sCurrency->value[]=array("label"=>_("Toutes"),"value"=>-1);
         $sCurrency->selected=$currency_id;
-        
+        $tva_id_search=new ITva_Popup("tva_id_search",
+                                $http->request("tva_id_search","string",null),
+                                $this->div."tva_id_search");
         ob_start();
         $search_filter=$this->build_search_filter();
         require_once NOALYSS_TEMPLATE.'/ledger_search.php';
@@ -490,6 +492,7 @@ class Acc_Ledger_Search
         $fil_hide_operation='';
         $fil_tag='';
         $fil_currency="";
+        $fil_vat="";
 
         $and='';
         $g_user=new Noalyss_user($this->cn);
@@ -679,8 +682,21 @@ class Acc_Ledger_Search
            $fil_currency=$and." x.currency_id = ".sql_string($p_currency_code);
            $and=" and ";
         }
+        // VAT Code
+        if ( isset($tva_id_search) && ! empty (trim($tva_id_search??"")))
+        {
+            $fil_vat = $and." jr_internal in 
+                (   select distinct qp_internal 
+                        from quant_purchase 
+                        where qp_vat_code=".sql_string($tva_id_search).
+                "  union all  
+                    select distinct qs_internal 
+                        from quant_sold 
+                        where qs_vat_code=".sql_string($tva_id_search).")";
+
+        }
         $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.$fil_amount.
-            $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation.$fil_tag.$fil_currency;
+            $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation.$fil_tag.$fil_currency.$fil_vat;
         
         $sql.=" where ".$where;
         

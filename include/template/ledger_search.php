@@ -1,6 +1,7 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+global $g_parameter;
 ?>
 <table id="<?=$this->div?>table_search">
     
@@ -77,7 +78,19 @@
 echo $f_accounting->input();  ?>
 </td>
 </tr>
-
+    <?php
+    // if TVA
+    if ( $g_parameter->MY_TVA_USE=="Y"):
+    ?>
+<tr>
+    <td  style="text-align:right;width:30em">
+        <?=_("Code TVA")?>
+    </td>
+    <td>
+        <?=$tva_id_search->input()?>
+    </td>
+</tr>
+    <?php endif;?>
 <tr>
 <td style="text-align:right;width:30em">
 	<?php echo _('Etat')?>
