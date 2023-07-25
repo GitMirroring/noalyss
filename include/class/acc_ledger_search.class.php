@@ -695,7 +695,7 @@ class Acc_Ledger_Search
                         where qs_vat_code=".sql_string($tva_id_search).")";
 
         }
-        $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.$fil_amount.
+        $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.
             $fil_qcode.$fil_paid.$fil_account.$fil_date_paid.$fil_hide_operation.$fil_tag.$fil_currency.$fil_vat;
         
         $sql.=" where ".$where;
