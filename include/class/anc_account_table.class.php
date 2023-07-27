@@ -73,9 +73,9 @@ class Anc_Account_Table extends Manage_Table_SQL
         $is_error=0;
         $table->po_amount=0;
         // po_name must contains only valid letter (remove < > and ')
-        $table->po_name=str_replace("'", '', $table->po_name);
-        $table->po_name=str_replace("<", '', $table->po_name);
-        $table->po_name=str_replace(">", '', $table->po_name);
+        $table->po_name=noalyss_str_replace("'", '', $table->po_name);
+        $table->po_name=noalyss_str_replace("<", '', $table->po_name);
+        $table->po_name=noalyss_str_replace(">", '', $table->po_name);
         
         // po_name must be uniq in the Analytic Plan
         if ( $cn->get_value("select count(*) from poste_analytique where pa_id=$1 and po_name=upper($2) and po_id != $3",

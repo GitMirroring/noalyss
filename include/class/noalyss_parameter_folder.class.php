@@ -23,7 +23,7 @@
 /*!
  * \brief Class to manage the company parameter (address, name...)
  */
-
+#[AllowDynamicProperties]
 class Noalyss_Parameter_Folder
 {
     var $db;
@@ -50,6 +50,7 @@ class Noalyss_Parameter_Folder
     var $MY_ANC_FILTER;
     var $MY_CURRENCY;
     var $MY_COUNTRY;
+    var $MY_REPORT; //!< In Belgium , we need a report on the beginning of the exercice , not in French,
 
     
     // constructor
@@ -91,14 +92,13 @@ MY_STOCK= [	{$this->MY_STOCK }]
 MY_DEFAULT_ROUND_ERROR_DEB= [	{$this->MY_DEFAULT_ROUND_ERROR_DEB }]
 MY_DEFAULT_ROUND_ERROR_CRED= [	{$this->MY_DEFAULT_ROUND_ERROR_CRED }]
 MY_ANC_FILTER= [	{$this->MY_ANC_FILTER }]
-MY_CURRENCY= [	{$this->MY_CURRENCY }]
-
+MY_REPORT = [ {$this->MY_REPORT } ]
 
 EOF;
         return $r;
     }
 
-    function check_anc_filter($p_value)
+    function check_anc_filter($p_value):void
     {
         $tmp_value=$p_value;
         $tmp_value=preg_replace("/[0-9]|,/", '', $p_value);
@@ -118,7 +118,7 @@ EOF;
         {
             case 'MY_STRICT':
                 
-                if (empty(trim($p_value)) ||($p_value!='Y'&&$p_value!='N'))
+                if (empty($p_value) ||($p_value!='Y'&&$p_value!='N'))
                 {
                     $ret_value='N';
                 }
@@ -127,7 +127,7 @@ EOF;
             case 'MY_ANC_FILTER':
                 try
                 {
-                    $p_value=str_replace(" ", "", $p_value);
+                    $p_value=noalyss_str_replace(" ", "", $p_value);
                     $this->check_anc_filter($p_value);
                     $ret_value=$p_value;
                 }
@@ -205,6 +205,7 @@ EOF;
         $this->save('MY_DEFAULT_ROUND_ERROR_DEB');
         $this->save('MY_DEFAULT_ROUND_ERROR_CRED');
         $this->save("MY_ANC_FILTER");
+        $this->save("MY_REPORT");
 
     }
     /**

@@ -88,7 +88,7 @@ function navigation_bar($p_offset,$p_line,$p_size=0,$p_page=1,$p_javascript="")
     // Clean url, cut away variable coming frm here
     $url=cleanUrl();
     // action to clean
-    $url=str_replace('&p_action=delete','',$url);
+    $url=noalyss_str_replace('&p_action=delete','',$url);
 
     // compute max of page
     $nb_page=($p_line-($p_line%$p_size))/$p_size;
@@ -195,8 +195,8 @@ function toNumber($p_num)
 {
     $p_num=trim($p_num);
     if ($p_num=='') return 0;
-    $p_num=str_replace("'",'',$p_num);
-    $p_num=str_replace(',','.',$p_num);
+    $p_num=noalyss_str_replace("'",'',$p_num);
+    $p_num=noalyss_str_replace(',','.',$p_num);
     return $p_num;
 }
 /**
@@ -224,7 +224,7 @@ function clean_filename($p_filename)
 {
     $filename=$p_filename;
     foreach (array('/','*','<','>',';',',','\\',':','(',')',' ','[',']') as $i) {
-            $filename= str_replace($i, "-",$filename);
+            $filename= noalyss_str_replace($i, "-",$filename);
     }
     return $filename;
 

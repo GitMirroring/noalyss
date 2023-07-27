@@ -26,7 +26,7 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 include_once  NOALYSS_INCLUDE.'/lib/ac_common.php';
 include_once NOALYSS_INCLUDE.'/class/acc_balance.class.php';
-global $g_user, $http;
+global $g_user, $http,$g_parameter;
 $gDossier=dossier::id();
 // Get the exercice
 $exercice=$http->request("exercice","number",0);
@@ -56,7 +56,7 @@ echo HtmlInput::hidden('type','bal');
 echo dossier::hidden();
 
 
-
+$periode=new Periode($cn);
 // filter on the current year
 $from=$http->get("from_periode", "number",0);
 $input_from=new IPeriod("from_periode",$from,$exercice);
@@ -66,7 +66,10 @@ $input_from->type=ALL;
 $input_from->cn=$cn;
 $input_from->filter_year=true;
 $input_from->user=$g_user;
-
+if ( $g_parameter->MY_REPORT=='N') {
+    $input_from->filter_year=false;
+    if ($from == 0) { $input_from->value=$periode->get_first_periode();}
+}
 echo _('Depuis').' :'.$input_from->input();
 // filter on the current year
 $to=$http->get("to_periode", "number",0);
@@ -84,6 +87,7 @@ $input_to->filter_year=true;
 $input_to->type=ALL;
 $input_to->cn=$cn;
 $input_to->user=$g_user;
+
 echo "  "._('jusque').' :'.$input_to->input();
 echo '<br>';
 echo HtmlInput::button_action(_('Avancé'), " if (\$('balance_advanced_div').style.display=='none') { \$('balance_advanced_div').show();} else { \$('balance_advanced_div').hide();}",uniqid(),"smallbutton");

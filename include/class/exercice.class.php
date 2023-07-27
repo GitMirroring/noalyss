@@ -29,6 +29,7 @@
  */
 class Exercice
 {
+    var $cn;
   function __construct($cn)
   {
     $this->cn=$cn;

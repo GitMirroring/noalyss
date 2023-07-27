@@ -34,7 +34,7 @@ define("GF_XYSCALE",(1 << 6));
 define("GF_TWOBYTWO",(1 << 7));
 
 
-
+#[AllowDynamicProperties]
 class TTFontFile {
 
 var $maxUni;

@@ -29,7 +29,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 //-----------------------------------------------------
 // Show the jrn and date
 //-----------------------------------------------------
-global $g_user;
+global $g_user,$g_parameter;
 //-----------------------------------------------------
 // Form
 //-----------------------------------------------------
@@ -85,8 +85,14 @@ if ( ! isset ($_GET['verif']))
 if ( isset($_GET['verif']))
 {
     $periode=new Periode($cn);
-    $date_from=$periode->first_day($bilan->from);
-    $date_to=$periode->last_day($bilan->to);
+    if ( $g_parameter->MY_REPORT=='Y') {
+        $date_from=$periode->first_day($bilan->from);
+       $date_to=$periode->last_day($bilan->to);
+    }
+    else {
+        $date_from=$bilan->from;
+        $date_to=$bilan->to;
+    }
     echo '<h2>'._('Etape 2 :Impression')."   ".$date_from.'-'.$date_to.'</h2>';
     
     $bilan->get_request_get();

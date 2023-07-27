@@ -72,7 +72,7 @@ class Anc_Group extends Anc_Print
 
     function remove()
     {
-        $this->ga_id=str_replace(' ','',$this->ga_id);
+        $this->ga_id=noalyss_str_replace(' ','',$this->ga_id);
         $this->ga_id=strtoupper($this->ga_id);
         $sql=" delete from groupe_analytique where ga_id=$1";
 

@@ -45,6 +45,9 @@ class Fiche
     var $quick_code;		/*!< quick_code of the card */
     private $f_enable;  /*!< if card is enable (fiche.f_enable) */
     private $display_mode ; /*!< how the card is displaid */
+    var $tot_cred;
+    var $tot_deb;
+
     function __construct($p_cn,$p_id=0)
     {
         $this->cn=$p_cn;
@@ -1293,6 +1296,7 @@ class Fiche
     function Summary($p_search="",$p_action="",$p_sql="",$p_amount=false)
     {
         global $g_user;
+        global $g_parameter;
         $http=new HttpInput();
         $bank=new Acc_Parm_Code($this->cn,'BANQUE');
         $cash=new Acc_Parm_Code($this->cn,'CAISSE');
@@ -1361,7 +1365,11 @@ class Fiche
             $i++;
 
              /* Filter on the default year */
-             $amount=$tiers->get_solde_detail($filter_year);
+            if ( $g_parameter->MY_REPORT == 'N') {
+                $amount=$tiers->get_solde_detail($filter_year);
+            } else {
+                $amount = $tiers->get_solde_detail();
+            }
 
             /* skip the tiers without operation */
             if ( $p_amount && $amount['debit']==0 && $amount['credit'] == 0 && $amount['solde'] == 0 ) continue;
@@ -1688,7 +1696,7 @@ class Fiche
             }
             else
             {
-                $filter_fd_id=str_replace('[sql]', '', $typecard);
+                $filter_fd_id=noalyss_str_replace('[sql]', '', $typecard);
             }
         }
 
@@ -1699,7 +1707,7 @@ class Fiche
 
             if (noalyss_strlentrim($query)>0)
             {
-                $query=str_replace(" ", "%", $query);
+                $query=noalyss_str_replace(" ", "%", $query);
                 $filter_query=$and."(vw_name ilike '%$query%' or quick_code ilike ('%$query%') "
                         ." or vw_description ilike '%$query%' or tva_num ilike '%$query%' or accounting like upper('$query%'))";
             }

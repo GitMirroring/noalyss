@@ -810,10 +810,10 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
         {
             // should clean description : remove <b><i> tag and '; char
             $desc=$op['description'];
-            $desc=str_replace("<b>", "", $desc);
-            $desc=str_replace("</b>", "", $desc);
-            $desc=str_replace("<i>", "", $desc);
-            $desc=str_replace("</i>", "", $desc);
+            $desc=noalyss_str_replace("<b>", "", $desc);
+            $desc=noalyss_str_replace("</b>", "", $desc);
+            $desc=noalyss_str_replace("<i>", "", $desc);
+            $desc=noalyss_str_replace("</i>", "", $desc);
             if ($op['j_id']!="")
                 $old_id=$op['j_id'];
 

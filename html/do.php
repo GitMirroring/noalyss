@@ -74,6 +74,7 @@ if ( ! $cn->exist_table('version')) {
     echo '</p>';
     return;
 }
+
 /**
  * if access_mode is MOBILE than force it to mobile.php
  */

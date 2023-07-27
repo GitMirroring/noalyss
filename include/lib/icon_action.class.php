@@ -110,7 +110,7 @@ class Icon_Action
      */
     static function tips($p_comment)
     {
-        $p_comment=str_replace("'",' ',$p_comment);
+        $p_comment=noalyss_str_replace("'",' ',$p_comment);
         $r='<span tabindex="-1" class="icon" style="cursor:pointer;display:inline;text-decoration:none;" onmouseover="displayBulle(\''.$p_comment.'\')"  onclick="displayBulle(\''.$p_comment.'\')" onmouseout="hideBulle(0)">';
         $r.="&#xf086;";
         $r.='</span>';
@@ -125,7 +125,7 @@ class Icon_Action
      */
     static function comment($p_comment)
     {
-        $p_comment=str_replace("'",' ',$p_comment);
+        $p_comment=noalyss_str_replace("'",' ',$p_comment);
         $js=sprintf("displayBulle('%s')",$p_comment);
         
         $r=sprintf('<span tabindex="-1" class="icon" style="cursor:pointer;display:inline;text-decoration:none;" onmouseover="%s"  onclick="%s" onmouseout="hideBulle(0)">',

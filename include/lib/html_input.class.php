@@ -70,13 +70,12 @@ class HtmlInput
     var $ctrl;   /*!<$ctrl is the control to update (see js_search_card_control) */
     var $tabindex;
     var $require;
-
-var $width;
-var $heigh;
-var $attribute;
-var $id;
-var $style;
-var $css_size;
+    var $width;
+    var $heigh;
+    var $attribute;
+    var $id;
+    var $style;
+    var $css_size;
 
     function __construct($p_name="", $p_value="", $p_id="")
     {
@@ -1082,7 +1081,7 @@ var $css_size;
             'class'=>'inner_box'
         ));
 
-        $bledger_param=str_replace('"', "'", $bledger_param);
+        $bledger_param=noalyss_str_replace('"', "'", $bledger_param);
         $bledger=new ISmallButton('l');
         $bledger->label=_("choix des journaux");
         $bledger->javascript=" show_ledger_choice($bledger_param)";

@@ -332,7 +332,7 @@ class Document_Export
 
         $filename=clean_filename($file[0]['jr_pj_name']);
         $receipt=clean_filename($file[0]['jr_pj_number']);
-        $receipt=str_replace('.','-',$receipt);
+        $receipt=noalyss_str_replace('.','-',$receipt);
         $filename=$receipt.'-'.$filename;
 
         $cn->start();

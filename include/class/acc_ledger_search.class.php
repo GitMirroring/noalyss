@@ -37,7 +37,8 @@ class Acc_Ledger_Search
     private $type; //!< type of ledger : FIN,ODS,VEN,ACH
     private $all; //!< Flag to indicate if all ledgers must searched (1 for yes)
     private $div; //! prefix for id of DOM id
-
+    //! id of the ledger
+    var $id ;
     /**
      * @brief return a HTML string with the form for the search
      * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN: uppercase !
@@ -114,7 +115,7 @@ class Acc_Ledger_Search
             'div'=>$this->div
         ));
 
-        $bledger_param=str_replace('"', "'", $bledger_param);
+        $bledger_param=noalyss_str_replace('"', "'", $bledger_param);
         $bledger=new ISmallButton('l');
         $bledger->label=_("choix des journaux");
         $bledger->javascript=" show_ledger_choice($bledger_param)";
@@ -266,7 +267,7 @@ class Acc_Ledger_Search
     {
         $json=json_encode(["div"=>$this->div, "ledger_type"=>$this->type, "all_type"=>$this->all,
             "dossier"=>Dossier::id()]);
-        $json=str_replace('"', "'", $json);
+        $json=noalyss_str_replace('"', "'", $json);
         $r=sprintf('manage_search_filter(%s)', $json);
         return $r;
     }

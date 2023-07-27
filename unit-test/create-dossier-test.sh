@@ -11,5 +11,5 @@ if  [ $? -ne 0 ] ; then
 fi
 
 createdb $DOSSIER_TEST
-psql -X  $DOSSIER_TEST  < db/$FILE_TEST
+psql $DOSSIER_TEST  < db/$FILE_TEST
 

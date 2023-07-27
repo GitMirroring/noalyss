@@ -129,18 +129,15 @@ class PeriodeTest extends TestCase
     public function dataUpdate()
     {
         return array(
-            [ '01.01.2023' , '31.01.2023','2020','2020.2023','NOK'],
             [ '01.01.2023' , '31.01.2023','2023','2020.2023','OK'],
-            [ '01.02.2023' , '28.02.2023','2020','2020.2023','NOK'],
             [ '01.02.2023' , '28.02.2023','2023','2020.2023','OK'],
-            [ '01.02.2023' , '28.01.2023','2023','2020.2023','NOK']
             );
     }
 
     /**
      * @brief test the trigger comptaproc.check_periode()
      * @testdox update - comptaproc.check_periode
-     * @dataProvider dataInsert
+     * @dataProvider dataUpdate
      * 
      * 
      */
@@ -183,5 +180,85 @@ class PeriodeTest extends TestCase
             
         }
         $g_connection->exec_sql("delete from parm_periode where p_exercice =$1",["2024-PHPUNIT"]);
+    }
+
+
+    public function dataUpdateException()
+    {
+        return array(
+            [ '01.01.2023' , '31.01.2023','2020','2020.2023','NOK'],
+            [ '01.02.2023' , '28.02.2023','2020','2020.2023','NOK'],
+            [ '01.02.2023' , '28.01.2023','2023','2020.2023','NOK']
+        );
+    }
+
+    /**
+     * @brief test the trigger comptaproc.check_periode()
+     * @testdox update - comptaproc.check_periode
+     * @dataProvider dataUpdateException
+     *
+     *
+     */
+    public function testUpdateException($p_start,$p_end,$p_exercice,$p_exercice_label,$p_status)
+    {
+
+        global $g_connection;
+        /* insert the record to update */
+        $g_connection->exec_sql("delete from parm_periode where p_exercice =$1",["2024-PHPUNIT"]);
+        $obj=new Parm_periode_SQL($g_connection);
+        $obj->set('p_start','01.01.2024');
+        $obj->set('p_end','31.01.2024');
+        $obj->set('p_closed',false);
+        $obj->set('p_central',false);
+        $obj->set('p_exercice','2024');
+        $obj->set('p_exercice_label',"2024-PHPUNIT");
+        try {
+
+            $obj->insert();
+            $obj->set('p_start',$p_start);
+            $obj->set('p_end',$p_end);
+            $obj->set('p_closed',false);
+            $obj->set('p_central',false);
+            $obj->set('p_exercice',$p_exercice);
+            $obj->set('p_exercice_label',$p_exercice_label);
+            $obj->update();
+            if ($p_status== 'OK') {
+                $this->assertTrue(True,"Expected");
+            } else {
+                $this->assertTrue(FALSE,"Error");
+            }
+
+        } catch(Exception $e) {
+            if ($p_status == 'NOK') {
+                $this->assertTrue(True,"Expected");
+            } else {
+                $this->assertTrue(FALSE,"Error");
+                printf("message : %s",$e->getMessage());
+            }
+
+        }
+        $g_connection->exec_sql("delete from parm_periode where p_exercice =$1",["2024-PHPUNIT"]);
+    }
+
+    /**
+     * @testDox  Function get_first_date
+     * @return void
+     */
+    function testget_first_datet()
+    {
+        global $g_connection;
+        $periode=new Periode($g_connection);
+        $this->assertEquals('01.01.2017',$periode->get_first_date(),"First date is not correct");
+    }
+    /**
+     * @testDox  Function get_first_periode
+     * @return void
+     */
+    function Testget_first_periode()
+    {
+        global $g_connection;
+        $periode=new Periode($g_connection);
+        $this->assertEquals(122,$periode->get_first_periode(),"First periode is not correct");
+
     }
 }

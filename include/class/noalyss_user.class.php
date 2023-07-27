@@ -39,6 +39,7 @@ class Noalyss_User
     var $admin; //!< is or is not admin
     var $valid; //!< is or is not valid
     var $first_name;
+    var $last_name ; //!< user's last_name
     var $name;
     var $active; //!< 1 active , 0 disables
     var $login; //!< login lower case
@@ -46,8 +47,8 @@ class Noalyss_User
     var $email; //!< user's email
     var $access_mode; //!< MOBILE or PC depending if when connecting $login contains @mobile 
     var $lang ; //!< user's language
-    var $last_name ; //!< user's last_name
     var $theme ; //!< user's  CSS Theme
+    
     function __construct($p_cn, $p_id=-1)
     {
         $this->db=$p_cn;

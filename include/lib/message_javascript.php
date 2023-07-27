@@ -117,4 +117,5 @@ content[80]="<?php echo htmlspecialchars(_("Oui pour charger les fichiers javasc
 content[81]="<?php echo htmlspecialchars(_("Recommendé d'avoir un poste propre"),ENT_QUOTES)?>";
 content[82]="<?php echo htmlspecialchars(_("valeur en % "),ENT_QUOTES)?>";
 content[83]="<?php echo htmlspecialchars(_("Données invalides "),ENT_QUOTES)?>";
+content[84]="<?php echo htmlspecialchars(_("En Belgique, l'exercice commence par un report des comptes de 0 à 5, mais pas en France, ce solde est calculé depuis le tout premier exercice"),ENT_QUOTES)?>";
 </script>

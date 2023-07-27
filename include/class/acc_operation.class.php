@@ -48,6 +48,11 @@ class Acc_Operation
     var $currency_rate;             /*< currency rate used */
     var $currency_id;               /*< currency id */
     var $currency_rate_ref;         /*< currency rate in the table currency*/
+    //!< Qcode of item
+    var $qcode;
+    //!< internal code from jrn
+    var $jr_internal;
+    var $signature;
     /*!
      * \brief constructor set automatically the attributes user and periode
      * \param $p_cn the databse connection
@@ -397,7 +402,7 @@ EOF;
     {
         global $g_user;
         $filter_sql=$g_user->get_ledger_sql('ALL',3);
-        $filter_sql=str_replace('jrn_def_id','jr_def_id',$filter_sql);
+        $filter_sql=noalyss_str_replace('jrn_def_id','jr_def_id',$filter_sql);
         if ( $this->jr_id==0 ) return;
         $sql=" select  jr_id,j_id,jr_date,j_qcode,j_poste,j_montant,jr_internal,case when j_debit = 'f' then 'C' else 'D' end as debit,jr_comment as description,
              vw_name,pcm_lib,j_debit,coalesce(comptaproc.get_letter_jnt(j_id),-1) as letter,jr_def_id ".
@@ -941,6 +946,10 @@ EOF;
  */
 class Acc_Detail extends Acc_Operation
 {
+    public $det;
+    public $jr_id;
+    public $info;
+
     function __construct($p_cn,$p_jrid=0)
     {
         parent::__construct($p_cn);

@@ -50,7 +50,7 @@ for ($i=0;$i<$max_row;$i++)
 	$export->add($row['sg_code']);
 	$export->add($row['r_name']);
 	$export->add($row['qcode']);
-	$row['ccomment']=str_replace('"','',$row['ccomment']);
+	$row['ccomment']=noalyss_str_replace('"','',$row['ccomment']);
 	$export->add($row['ccomment']);
 	$export->add($row['sg_quantity'],"number");
 	$export->add($row['direction']);

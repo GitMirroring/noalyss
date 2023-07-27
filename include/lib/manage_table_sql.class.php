@@ -109,7 +109,7 @@ class Manage_Table_SQL
     protected $current_row; //! in display_row and display_custom_row, it is the current row which is used
     protected $a_col_option; //!< Extra to add to the column : CSS  Style , CSS class, javascript ,...
     protected $a_header_option; //!< Extra to add to the column Header : CSS  Style , CSS class, javascript ,...
-    protected $callback;
+    protected $callback; //!< Callback function
     /**
      * @brief Constructor : set the label to the column name,
      * the order of the column , set the properties and the

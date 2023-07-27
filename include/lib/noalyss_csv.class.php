@@ -38,6 +38,7 @@ class Noalyss_Csv
     private $sep_field;
     private $sep_dec;
     private $encoding;
+    private $size;
 
     function __construct($p_filename)
     {
@@ -67,11 +68,11 @@ class Noalyss_Csv
         $this->filename.="-".date("ymd-Hi");
         $this->filename.=".csv";
         
-        $this->filename=str_replace(";", "", $this->filename);
-        $this->filename=str_replace("/", "", $this->filename);
-        $this->filename=str_replace(":", "", $this->filename);
-        $this->filename=str_replace("*", "", $this->filename);
-        $this->filename=str_replace(" ", "_", $this->filename);
+        $this->filename=noalyss_str_replace(";", "", $this->filename);
+        $this->filename=noalyss_str_replace("/", "", $this->filename);
+        $this->filename=noalyss_str_replace(":", "", $this->filename);
+        $this->filename=noalyss_str_replace("*", "", $this->filename);
+        $this->filename=noalyss_str_replace(" ", "_", $this->filename);
         $this->filename=strtolower($this->filename);
     }
 
@@ -144,10 +145,10 @@ class Noalyss_Csv
             {
                 $export=($this->element[$i]['value']==null)?"":$this->element[$i]['value'];
                 // remove break-line, 
-                $export=str_replace("\n"," ",$export);
-                $export=str_replace("\r"," ", $export);
+                $export=noalyss_str_replace("\n"," ",$export);
+                $export=noalyss_str_replace("\r"," ", $export);
                 // remove double quote
-                $export=str_replace('"',"", $export);
+                $export=noalyss_str_replace('"',"", $export);
                 printf($sep.'"%s"', $this->encode($export));
             }
             $sep=$this->sep_field;
@@ -181,7 +182,7 @@ class Noalyss_Csv
     protected function encode($str)
    {
        if ($this->encoding=="utf8") return $str;
-       if ($this->encoding=="latin1") return utf8_decode ($str);
+       if ($this->encoding=="latin1") return mb_convert_encoding($str,'ISO-8859-1','UTF-8');
        throw new Exception(_("Encodage invalide"));
    }
     /**

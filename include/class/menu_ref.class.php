@@ -32,8 +32,8 @@ class Menu_Ref extends Menu_Ref_SQL
     {
         $this->me_code=strtoupper($this->me_code);
         $this->me_code=trim($this->me_code);
-        $this->me_code=str_replace('<','',$this->me_code);
-        $this->me_code=str_replace('>','',$this->me_code);
+        $this->me_code=noalyss_str_replace('<','',$this->me_code);
+        $this->me_code=noalyss_str_replace('>','',$this->me_code);
         
     }
     function verify()

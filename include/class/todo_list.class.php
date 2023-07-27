@@ -51,7 +51,7 @@ class Todo_List
                                  "is_public"=>"is_public");
     private $cn;
     private  $tl_id,$tl_date,$tl_title,$use_login,$is_public;
-
+    var $tl_desc;
     function __construct ($p_init)
     {
         $this->cn=$p_init;

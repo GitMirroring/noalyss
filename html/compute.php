@@ -54,8 +54,8 @@ foreach (array('t','c','p','q','n','gDossier') as $a)
 $http=new HttpInput();
 $tax_ac_id=$http->request("other_tax_id","number",-1);
 // sometime number uses coma instead of dot for dec
-$p=str_replace(",",".",$p);
-$q=str_replace(",",".",$q);
+$p=noalyss_str_replace(",",".",$p);
+$q=noalyss_str_replace(",",".",$q);
 
 $cn=Dossier::connect();
 $User=new Noalyss_user($cn);

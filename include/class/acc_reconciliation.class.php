@@ -33,11 +33,14 @@ class Acc_Reconciliation
 {
     var $db;			/*!< database connection */
     var $jr_id;			/*!< jr_id */
-
+    var $a_jrn;
+    var $start_day;
+    var $end_day;
     function   __construct($cn)
     {
         $this->db=$cn;
         $this->jr_id=0;
+        $this->a_jrn=null;
     }
 
     function set_jr_id($jr_id)
@@ -296,10 +299,10 @@ j1.j_poste as poste
         global $g_user;
         /* get the available ledgers for current user */
         $sql=$g_user->get_ledger_sql('ALL',3);
-        $sql=str_replace('jrn_def_id','jr_def_id',$sql);
+        $sql=noalyss_str_replace('jrn_def_id','jr_def_id',$sql);
         $r='';
         /* filter by this->r_jrn */
-        if ($this->a_jrn != null )
+        if ( ! empty ($this->a_jrn ) && is_array($this->a_jrn))
         {
             $sep='';
             $r='and jr_def_id in (';

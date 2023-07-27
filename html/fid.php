@@ -113,7 +113,7 @@ if ( isset($_SESSION[SESSION_KEY.'isValid']) && $_SESSION[SESSION_KEY.'isValid']
     else
     {
         $filter_card=$d;
-        $filter_card=str_replace('[sql]','',$d);
+        $filter_card=noalyss_str_replace('[sql]','',$d);
     }
     $sql="select vw_name,vw_addr,vw_cp,vw_buy,vw_sell,tva_id
          from vw_fiche_attr
@@ -135,10 +135,10 @@ if ( isset($_SESSION[SESSION_KEY.'isValid']) && $_SESSION[SESSION_KEY.'isValid']
     $tva_id=$array[0]['tva_id'];
 
     // Check null
-    $name=($name==null)?" ":str_replace('"','',$name);
-    $sell=($sell==null)?"0":str_replace('"','',$sell);
-    $buy=($buy==null)?"0":str_replace('"','',$buy);
-    $tva_id=($tva_id==null)?" ":str_replace('"','',$tva_id);
+    $name=($name==null)?" ":noalyss_str_replace('"','',$name);
+    $sell=($sell==null)?"0":noalyss_str_replace('"','',$sell);
+    $buy=($buy==null)?"0":noalyss_str_replace('"','',$buy);
+    $tva_id=($tva_id==null)?" ":noalyss_str_replace('"','',$tva_id);
     /* store the answer in an array and transform it later into a JSON object */
     $tmp=array();
     $tmp[]=array('flabel',$fLabel);

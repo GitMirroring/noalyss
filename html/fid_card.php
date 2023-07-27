@@ -75,7 +75,7 @@ if ( $typecard == 'all')
 }
 else if (strpos($typecard,'sql]')==true)
 {
-	$filter_card=  str_replace('[sql]', " and ", $typecard);
+	$filter_card=  noalyss_str_replace('[sql]', " and ", $typecard);
 } else 
 {
     $typecard=(empty($typecard))?-1:sql_string($typecard);

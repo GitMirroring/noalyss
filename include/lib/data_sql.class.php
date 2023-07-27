@@ -101,6 +101,7 @@ abstract class Data_SQL
    var $type;           //! Type of the data
    var $date_format;    //! defaullt date format
    var $default;
+    var $table;
 
     public function __toString(): string
     {

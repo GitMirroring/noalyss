@@ -82,7 +82,7 @@ $tmp=tempnam($_ENV['TMP'],'document_');
 
 $new_name=$row['jr_pj_name'];
 $receipt_number=clean_filename($row['jr_pj_number']);
-$receipt_number=str_replace('.','-',$receipt_number);
+$receipt_number=noalyss_str_replace('.','-',$receipt_number);
 if ( ! empty($receipt_number) && strpos($new_name,$receipt_number) === false ) {
 
     $new_name=$receipt_number.'-'.$new_name;

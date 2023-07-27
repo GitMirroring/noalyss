@@ -41,12 +41,12 @@ class Acc_Tva
                                    "comment"=>"tva_comment",
                                    "account"=>"tva_poste",
                                     "both_side"=>'tva_both_side');
-    public $tva_id;
-    public $tva_label;
-    public $tva_poste;
-    public $tva_rate;
-    public $tva_comment;
-    public $tva_both_side;
+    public $tva_id,
+        $tva_label,
+        $tva_rate,
+        $tva_comment,
+        $tva_poste,
+        $tva_both_side;
 
     private Tva_Rate_SQL $tva_rate_sql;
 
@@ -62,7 +62,6 @@ class Acc_Tva
         $this->tva_both_side=&$this->tva_rate_sql->tva_both_side;
 
     }
-
     /**
      * @return Tva_Rate_SQL
      */

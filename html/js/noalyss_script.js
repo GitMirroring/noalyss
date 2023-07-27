@@ -3712,10 +3712,10 @@ function updatePeriodePreference(p_dossier)
 /**
  * Update the from and to periode list when changing the exercice
  * @param {int} p_dossier
- * @param {string} p_exercice id of the exercice
+ * @param {string} p_exercice dom id of the exercice (SELECT)
  * @param {type} p_periode_from id of the starting periode
  * @param {type} p_periode_to id of the ending periode
- * @param {type} p_last possible value = 1 to show last periode or 0 the first
+ * @param {type} p_last possible value = 1 to show last date or 0 the first
  */
 function updatePeriode(p_dossier, p_exercice, p_periode_from, p_periode_to, p_last)
 {

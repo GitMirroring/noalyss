@@ -1986,7 +1986,7 @@ class Acc_Ledger  extends jrn_def_sql
     {
         global $g_user;
         $filter_ledger=$g_user->get_ledger_sql('ALL', 3);
-        $filter_ledger=str_replace('jrn_def_id', 'jr_def_id', $filter_ledger);
+        $filter_ledger=noalyss_str_replace('jrn_def_id', 'jr_def_id', $filter_ledger);
         $sql="
 			select jr_id,jr_pj_number,jr_date,to_char(jr_date,'DD.MM.YYYY') as jr_date_fmt,jr_montant, jr_comment,jr_internal,jrn_def_code
 			from jrn

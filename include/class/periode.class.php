@@ -41,7 +41,7 @@ class Periode
     var $p_end;   /*!< end of the periode */
     var $p_exercice ; /*!< exercice */
     var $p_closed ; /*!< if exercice is closed */
-    var $p_central ; /*!< NOT USER  */
+    var $p_central ; /*!< NOT USED  */
     var $p_exercice_label ; /*!< Label of the exercice  */
     function __construct($p_cn, $p_id=0)
     {
@@ -760,5 +760,24 @@ EOF;
         $i_exercice->javascript="onchange=\"Periode.filter_exercice('periode_tbl')\"";
         $i_exercice->selected=$p_sel;
         echo $i_exercice->input();
+    }
+
+    /**
+     * @brief retrieve the first day of the first exercice
+     * @return : string date format "DD.MM.YYYYY"
+     */
+     function  get_first_date():string
+    {
+        return $this->cn->get_value("select to_char(p_start,'DD.MM.YYYY') from parm_periode order by p_start limit 1");
+    }
+
+    /**
+     * @brief retrieve the first periode of the folder or -1 if none
+     *
+     * @return int
+     */
+    function get_first_periode():int
+    {
+        return $this->cn->get_value("select p_id from parm_periode order by p_start asc limit 1");
     }
 }

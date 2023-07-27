@@ -31,6 +31,8 @@ class IText extends HtmlInput
     var $placeholder; 
     var $title;
     var $autofocus;
+    var $css_size;
+
     function __construct($name='',$value='',$p_id="")
     {
         parent::__construct($name,$value,$p_id);

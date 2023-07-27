@@ -34,6 +34,7 @@ MaintenanceMode("block.html");
 
 $rep=new Database();
 require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
+
 $User=new Noalyss_user($rep);
 
 $User->Check();

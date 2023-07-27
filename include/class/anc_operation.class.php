@@ -52,7 +52,9 @@ class Anc_Operation
      * the amount
      */
     var $oa_jrnx_id_source;    
-    
+    var $has_data;
+    var $oa_id;
+    var $oa_row;
     public function get_currency_rate()
     {
         return $this->currency_rate;

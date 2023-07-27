@@ -115,7 +115,7 @@ endif;?>
 		    elseif ($row['me_javascript'] != '')
 			{
 				$url="javascript:void(0)";
-                                $js_dossier=str_replace('<DOSSIER>', Dossier::id(), $row['me_javascript']);
+                                $js_dossier=noalyss_str_replace('<DOSSIER>', Dossier::id(), $row['me_javascript']);
 				$js=sprintf(' onclick="%s"',$js_dossier);
 			}
 			else
@@ -159,7 +159,7 @@ endif;?>
                         elseif ($row['me_javascript'] != '')
                             {
                                     $url="javascript:void(0)";
-                                    $js_dossier=str_replace('<DOSSIER>', Dossier::id(), $row['me_javascript']);
+                                    $js_dossier=noalyss_str_replace('<DOSSIER>', Dossier::id(), $row['me_javascript']);
                                     $js=sprintf(' onclick="%s"',$js_dossier);
                             }
                             else

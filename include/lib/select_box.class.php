@@ -38,7 +38,7 @@ class Select_Box
     private $position; //!< change depending if we are in an absolute block or not
     protected $style_box;
     protected $value;
-
+    public $style_box;
     /**
      * Default constructor
      * @param type $p_id javascript DOMid
@@ -202,7 +202,7 @@ class Select_Box
         if ( $replace )
         {
             $this->item[$this->cnt]['javascript']=
-                sprintf("$('%s_bt').value='%s \u21E9';",$this->id,str_replace("'","",$label)).
+                sprintf("$('%s_bt').value='%s \u21E9';",$this->id,noalyss_str_replace("'","",$label)).
                 $javascript.";$('select_box{$this->id}').hide()";
         } else {
             $this->item[$this->cnt]['javascript']=$javascript.";$('select_box{$this->id}').hide()";

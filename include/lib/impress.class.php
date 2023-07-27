@@ -99,7 +99,7 @@ class Impress
 
                 if ($p_type_date==0&&preg_match("/FROM=[0-9]+\.[0-9]+/", $p_formula, $afrom)==1)
                 {
-                    $from=str_replace('FROM=','',$afrom[0]);
+                    $from=noalyss_str_replace('FROM=','',$afrom[0]);
                     $cond = \Impress::compute_periode($p_cn,$from,$p_end);
                     $cond_anc=" and ".transform_sql_filter_per($cond);
                     // We remove FROM out of the p_formula
@@ -113,7 +113,7 @@ class Impress
                 $amount=\Impress::compute_amount($p_cn,$line,$cond." ".$p_sql,$cond_anc." ".$p_sql);
       
 
-                $p_formula=str_replace($x[0],"(". $amount.")", $p_formula);
+                $p_formula=noalyss_str_replace($x[0],"(". $amount.")", $p_formula);
             }
         }
 
@@ -145,7 +145,7 @@ class Impress
                             $nom=strtolower($nom);
                     }
                 }
-                $p_label=str_replace($e[0], $nom, $p_label);
+                $p_label=noalyss_str_replace($e[0], $nom, $p_label);
             }
 
             $aret=array('desc'=>$p_label,
@@ -175,27 +175,27 @@ class Impress
 
 
 
-        $p_string=str_replace("round", "", $p_string);
-        $p_string=str_replace("abs", "", $p_string);
-        $p_string=str_replace("(", "", $p_string);
-        $p_string=str_replace(")", "", $p_string);
+        $p_string=noalyss_str_replace("round", "", $p_string);
+        $p_string=noalyss_str_replace("abs", "", $p_string);
+        $p_string=noalyss_str_replace("(", "", $p_string);
+        $p_string=noalyss_str_replace(")", "", $p_string);
         // for  the inline test like $a=(cond)?value:other;
-        $p_string=str_replace("?", "+", $p_string);
-        $p_string=str_replace(":", "+", $p_string);
-        $p_string=str_replace(">=", "+", $p_string);
-        $p_string=str_replace("<=", "+", $p_string);
-        $p_string=str_replace(">", "+", $p_string);
-        $p_string=str_replace("<", "+", $p_string);
+        $p_string=noalyss_str_replace("?", "+", $p_string);
+        $p_string=noalyss_str_replace(":", "+", $p_string);
+        $p_string=noalyss_str_replace(">=", "+", $p_string);
+        $p_string=noalyss_str_replace("<=", "+", $p_string);
+        $p_string=noalyss_str_replace(">", "+", $p_string);
+        $p_string=noalyss_str_replace("<", "+", $p_string);
         // eat Space + comma
-        $p_string=str_replace(" ", "", $p_string);
-        $p_string=str_replace(",", "", $p_string);
+        $p_string=noalyss_str_replace(" ", "", $p_string);
+        $p_string=noalyss_str_replace(",", "", $p_string);
         // Remove D/C/S
-        $p_string=str_replace("-c", "", $p_string);
-        $p_string=str_replace("-d", "", $p_string);
-        $p_string=str_replace("-s", "", $p_string);
-        $p_string=str_replace("-S", "", $p_string);
+        $p_string=noalyss_str_replace("-c", "", $p_string);
+        $p_string=noalyss_str_replace("-d", "", $p_string);
+        $p_string=noalyss_str_replace("-s", "", $p_string);
+        $p_string=noalyss_str_replace("-S", "", $p_string);
         // Remove T,t
-        $p_string=str_replace("-t", "", $p_string);
+        $p_string=noalyss_str_replace("-t", "", $p_string);
 
         // analytic accountancy (between {} )
         $p_string=preg_replace("/\{\{[[:alnum:]]*\}\}/", "", $p_string);
@@ -383,20 +383,20 @@ class Impress
         }
         $compute=\Impress::find_computing_mode($p_expression);
         // remove char for the mode
-        $p_expression=str_replace("-d", "", $p_expression);
-        $p_expression=str_replace("-c", "", $p_expression);
-        $p_expression=str_replace("-s", "", $p_expression);
-        $p_expression=str_replace("-S", "", $p_expression);
+        $p_expression=noalyss_str_replace("-d", "", $p_expression);
+        $p_expression=noalyss_str_replace("-c", "", $p_expression);
+        $p_expression=noalyss_str_replace("-s", "", $p_expression);
+        $p_expression=noalyss_str_replace("-S", "", $p_expression);
         // we have an account
         if (preg_match("/\[.*\]/", $p_expression)) {
-            $p_expression=str_replace("[", "", $p_expression);
-            $p_expression=str_replace("]", "", $p_expression);
+            $p_expression=noalyss_str_replace("[", "", $p_expression);
+            $p_expression=noalyss_str_replace("]", "", $p_expression);
             $P=new Acc_Account_Ledger($p_cn, $p_expression);
             $detail=$P->get_solde_detail($p_cond_sql);
         } elseif (preg_match("/\{\{.*\}\}/", $p_expression))
         { 
-            $p_expression=str_replace("{", "", $p_expression);
-            $p_expression=str_replace("}", "", $p_expression);
+            $p_expression=noalyss_str_replace("{", "", $p_expression);
+            $p_expression=noalyss_str_replace("}", "", $p_expression);
             $anc_account= new Anc_Account($p_cn);
             $anc_account->load_by_code($p_expression);
           
@@ -413,8 +413,8 @@ class Impress
         } elseif (preg_match("/\{.*\}/", $p_expression))
         { // we have a card
             // remove useless char
-            $p_expression=str_replace("{", "", $p_expression);
-            $p_expression=str_replace("}", "", $p_expression);
+            $p_expression=noalyss_str_replace("{", "", $p_expression);
+            $p_expression=noalyss_str_replace("}", "", $p_expression);
             $fiche=new Fiche($p_cn);
             if ( DEBUGNOALYSS > 1) 
             {

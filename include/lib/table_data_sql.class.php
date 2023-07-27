@@ -85,7 +85,7 @@
  * @endcode
  *
  */
-
+#[AllowDynamicProperties]
 abstract class Table_Data_SQL extends Data_SQL
 {
 

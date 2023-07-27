@@ -9,7 +9,7 @@
 *******************************************************************************/
 
 define('tFPDF_VERSION','1.24');
-
+#[AllowDynamicProperties]
 class tFPDF
 {
 
@@ -1256,9 +1256,6 @@ function _dochecks()
 	// Check mbstring overloading
 	if(ini_get('mbstring.func_overload') & 2)
 		$this->Error('mbstring overloading must be disabled');
-	// Ensure runtime magic quotes are disabled
-	if(version_compare(PHP_VERSION, '7.3.0','<') && get_magic_quotes_runtime())
-		@set_magic_quotes_runtime(0);
 }
 
 function _getfontpath()
@@ -1615,7 +1612,6 @@ function _parsegif($file)
 		ob_start();
 		imagepng($im);
 		$data = ob_get_clean();
-		imagedestroy($im);
 		fwrite($f,$data);
 		rewind($f);
 		$info = $this->_parsepngstream($f,$file);
@@ -1629,7 +1625,6 @@ function _parsegif($file)
 			$this->Error('Unable to create a temporary file');
 		if(!imagepng($im,$tmp))
 			$this->Error('Error while saving to temporary file');
-		imagedestroy($im);
 		$info = $this->_parsepng($tmp);
 		unlink($tmp);
 	}

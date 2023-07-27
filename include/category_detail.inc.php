@@ -33,7 +33,7 @@
 //---------------------------------------------------------------------------
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $http;
-
+Noalyss\Dbg::echo_file(__FILE__);
  $f_id=$http->request('f_id','number');
 if ( isset ($_POST['mod']))
 {

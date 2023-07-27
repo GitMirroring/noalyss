@@ -2720,11 +2720,11 @@ function unescapebycharacter($str)
 function escape_xml($p_xml)
 {
     $xml=$p_xml??"";
-    $xml=str_replace('&','&amp;',$xml);
-    $xml=str_replace('<','&lt;',$xml);
-    $xml=str_replace('>','&gt;',$xml);
-    $xml=str_replace("'",'&apos;',$xml);
-    $xml=str_replace('"','&quot;',$xml);
+    $xml=noalyss_str_replace('&','&amp;',$xml);
+    $xml=noalyss_str_replace('<','&lt;',$xml);
+    $xml=noalyss_str_replace('>','&gt;',$xml);
+    $xml=noalyss_str_replace("'",'&apos;',$xml);
+    $xml=noalyss_str_replace('"','&quot;',$xml);
     return $xml;
 }
 /**
@@ -2738,11 +2738,11 @@ function escape_xml($p_xml)
 function unescape_xml($p_xml)
 {
     $xml=$p_xml??"";
-    $xml=str_replace('&amp;','&',$xml);
-    $xml=str_replace('&lt;','<',$xml);
-    $xml=str_replace('&gt;','>',$xml);
-    $xml=str_replace('&apos;',"'",$xml);
-    $xml=str_replace('&quot;','"',$xml);
+    $xml=noalyss_str_replace('&amp;','&',$xml);
+    $xml=noalyss_str_replace('&lt;','<',$xml);
+    $xml=noalyss_str_replace('&gt;','>',$xml);
+    $xml=noalyss_str_replace('&apos;',"'",$xml);
+    $xml=noalyss_str_replace('&quot;','"',$xml);
     return $xml;
 }
 /**

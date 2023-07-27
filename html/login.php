@@ -36,6 +36,8 @@ if (defined('MULTI') && MULTI == 0)
 	else
 		$version = $rep->get_value('select val from version');
 
+$http=new HttpInput();
+
 if (  isset ($_POST["p_user"] ) )
 {
     $http=new HttpInput();

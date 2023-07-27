@@ -44,13 +44,17 @@ class Lettering
             )
 
     ;
-
+    var $db;
+    var $start;
+    var $end;
+    var $sql_ledger;
+    
     /**
      * constructor
      * @param $p_init resource to database
      * @note by default start and end are the 1.1.exercice to 31.12.exercice
      */
-    function __construct($p_init)
+    function __construct(public $p_init)
     {
         $this->db=$p_init;
         $a=new Noalyss_user($p_init);
@@ -68,7 +72,7 @@ class Lettering
             $this->end='31.12.'.$exercice;
         }
         // available ledgers
-        $this->sql_ledger=str_replace('jrn_def_id', 'jr_def_id', $a->get_ledger_sql('ALL', 3));
+        $this->sql_ledger=noalyss_str_replace('jrn_def_id', 'jr_def_id', $a->get_ledger_sql('ALL', 3));
     }
 
     public function get_parameter($p_string)

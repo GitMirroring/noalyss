@@ -32,8 +32,8 @@ require_once NOALYSS_INCLUDE.'/database/form_definition_sql.class.php';
 class Acc_Report
 {
 
-    private $form_definition; /*!< form_definition_sql
-  
+    private $form_definition; /*!< form_definition_sql */
+    var $row;
     var $nb;
     /*!
     \brief  Constructor

@@ -231,7 +231,7 @@ class Mobile
         }
         elseif ($aModule['me_javascript']!='')
         {
-            $js=str_replace('<DOSSIER>', dossier::id(), $aModule['me_javascript']);
+            $js=noalyss_str_replace('<DOSSIER>', dossier::id(), $aModule['me_javascript']);
             echo create_script($js);
         }
     }

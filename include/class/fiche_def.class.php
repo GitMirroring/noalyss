@@ -37,6 +37,8 @@ class Fiche_Def
     var $create_account;		//!< fd_create_account: flag
     var $all;
     var $attribut;		//!< get from attr_xxx tables
+    var $fd_description; //!< Description  of the Card Category
+
     function __construct($p_cn,$p_id = 0)
     {
         $this->cn=$p_cn;
@@ -874,7 +876,7 @@ $order
         $array=array();
         foreach($ret as $idx=>$val)
         {
-            $a=str_replace(' ','',$val['key']);
+            $a=noalyss_str_replace(' ','',$val['key']);
             $array[$a]=$val['ad_text'];
         }
         return $array;

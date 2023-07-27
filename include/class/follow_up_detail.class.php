@@ -50,6 +50,7 @@ class Follow_Up_Detail
                                  "total"=>"ad_total_amount",
                                  "ag_id"=>"ag_id"
                              );
+    public $db,$ad_id,$ag_id;
     function __construct ($p_cn,$p_id=0)
     {
         $this->db=$p_cn;

@@ -96,7 +96,7 @@ function tr($p_string, $p_extra='')
 function j($p_string)
 {
     $a = preg_replace("/\r?\n/", "\\n", addslashes($p_string));
-    $a = str_replace("'", '\'', $a);
+    $a = noalyss_str_replace("'", '\'', $a);
     return $a;
 }
 
@@ -108,7 +108,7 @@ function nb($p_number)
 {
     $r=trim($p_number);
     $r = sprintf('%.4f', $p_number);
-    $r = str_replace('.', ',', $r);
+    $r = noalyss_str_replace('.', ',', $r);
 
     return $r;
 }
@@ -512,8 +512,8 @@ function sql_string($p_string)
     $p_string = trim($p_string??"");
     if (strlen($p_string) == 0)
 	return null;
-    $p_string = str_replace("'", "''", $p_string);
-    $p_string = str_replace('\\', '\\\\', $p_string);
+    $p_string = noalyss_str_replace("'", "''", $p_string);
+    $p_string = noalyss_str_replace('\\', '\\\\', $p_string);
     return $p_string;
 }
 
@@ -646,8 +646,8 @@ function getPeriodeFromMonth($p_cn, $p_date)
 
 function Decode($p_html)
 {
-    $p_html = str_replace('%0D', '', $p_html);
-    $p_html = str_replace('%0A', '', $p_html);
+    $p_html = noalyss_str_replace('%0D', '', $p_html);
+    $p_html = noalyss_str_replace('%0A', '', $p_html);
     $p_html = urldecode($p_html);
     return $p_html;
 }
@@ -658,11 +658,11 @@ function Decode($p_html)
  */
 function transform_sql_filter_per($p_sql)
 {
-    $result=str_replace("j_tech_per in (select p_id from parm_periode  where","",$p_sql);
-    $result=str_replace("jr_tech_per in (select p_id from parm_periode  where","",$result);
-    $result=str_replace("j_tech_per = (select p_id from parm_periode  where  p_start "," oa_date ",$result);
-    $result=str_replace("p_start >= to_date","oa_date >= to_date",$result);
-    $result=str_replace("p_end <= to_date","oa_date <= to_date",$result);
+    $result=noalyss_str_replace("j_tech_per in (select p_id from parm_periode  where","",$p_sql);
+    $result=noalyss_str_replace("jr_tech_per in (select p_id from parm_periode  where","",$result);
+    $result=noalyss_str_replace("j_tech_per = (select p_id from parm_periode  where  p_start "," oa_date ",$result);
+    $result=noalyss_str_replace("p_start >= to_date","oa_date >= to_date",$result);
+    $result=noalyss_str_replace("p_end <= to_date","oa_date <= to_date",$result);
  
     $result="( $result";
     return $result;
@@ -824,7 +824,7 @@ function what_os()
  */
 function shrink_date($p_date)
 {
-    $date = str_replace('.', '', $p_date);
+    $date = noalyss_str_replace('.', '', $p_date);
     $str_date = substr($date, 0, 4) . substr($date, 6, 2);
     return $str_date;
 }
@@ -1204,7 +1204,7 @@ function display_menu($p_menuid)
             exit();
     } elseif ( $file[0]['me_javascript'] != '')
     {
-        $js=  str_replace('<DOSSIER>', dossier::id(), $file[0]['me_javascript']);
+        $js=  noalyss_str_replace('<DOSSIER>', dossier::id(), $file[0]['me_javascript']);
         echo create_script($js);
     } 
 
@@ -1381,7 +1381,7 @@ if(!function_exists('tracedebug')) {
 function convert_to_rtf($p_string)
 {
     $result="";
-    $p_string2=utf8_decode($p_string);
+    $p_string2=mb_convert_encoding($p_string,'ISO-8859-1','UTF-8');
     $nb_result=strlen($p_string2);
     for ($i = 0 ; $i < $nb_result ; $i++ ){
         if (ord($p_string[$i]) < 127 ) {
@@ -1403,7 +1403,7 @@ function convert_to_rtf($p_string)
  */
 function remove_divide_zero($p_formula)
 {
-    $test=str_replace(" ","",$p_formula).";";
+    $test=noalyss_str_replace(" ","",$p_formula).";";
     $p_formula=preg_replace("![0-9]+\.*[0-9]*/0\.{0,1}0*(\+|-|\*|/|;){1}!","0$1",$test);
     $p_formula=trim($p_formula,';');
     return $p_formula;
@@ -1547,17 +1547,17 @@ function noalyss_str_replace($search,$replace,$string) {
     if ($string===null) return "";
     else return str_replace($search,$replace??"",$string);
 }
-function noalyss_bcsub($p_first,$p_second)
+function noalyss_bcsub($p_first,$p_second,$p_decimal=4)
 {
     $p_first=(empty($p_first))?0:$p_first;
     $p_second=(empty($p_second))?0:$p_second;
-    return bcsub($p_first,$p_second);
+    return bcsub($p_first,$p_second,$p_decimal);
 }
-function noalyss_bcadd($p_first,$p_second)
+function noalyss_bcadd($p_first,$p_second,$p_decimal=4)
 {
     $p_first=(empty($p_first))?0:$p_first;
     $p_second=(empty($p_second))?0:$p_second;
-    return bcadd($p_first,$p_second);
+    return bcadd($p_first,$p_second,$p_decimal);
 }
 function noalyss_strip_tags($p_string)
 {

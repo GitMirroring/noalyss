@@ -33,6 +33,8 @@ class Acc_Account_Ledger
     var $row;         /*!< $row double array see get_row */
     var $tot_deb;    /*!< value set by  get_row */
     var $tot_cred;    /*!< value by  get_row */
+    var $name;
+
     function __construct ($p_cn,$p_id)
     {
         $this->db=$p_cn;
@@ -141,7 +143,7 @@ class Acc_Account_Ledger
         }
 	if ( $solded == 1)
 	  {
-	    $filter=str_replace('jrn_def_id','jr_def_id',$filter_sql);
+	    $filter=noalyss_str_replace('jrn_def_id','jr_def_id',$filter_sql);
 	    $bal_sql="select sum(amount_deb) as s_deb,sum(amount_cred) as s_cred, j_poste
                         from 						
                         (select case when j_debit='t' then j_montant else 0 end as amount_deb,

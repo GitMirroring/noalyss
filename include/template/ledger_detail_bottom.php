@@ -200,7 +200,7 @@ if ($aRap  != null ) {
                 array($internal));
             // add additional tax if any
             $add=$operation->get_sum_other_tax();
-            $amount=bcadd($amount,$add,2);
+            $amount=noalyss_bcadd($amount,$add,2);
             break;
         case 'V':
             $amount=$cn->get_value("select sum(qs_price+qs_vat-qs_vat_sided) from quant_sold qs  

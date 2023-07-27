@@ -53,6 +53,7 @@ if (isset($_POST['record_company']))
     $m->MY_DEFAULT_ROUND_ERROR_DEB=$http->post("p_round_error_deb");
     $m->MY_DEFAULT_ROUND_ERROR_CRED=$http->post("p_round_error_cred");
     $m->MY_ANC_FILTER=$http->post("p_anc_filter");
+    $m->MY_REPORT=$http->post("p_report");
     try
     {
         $m->update();
@@ -117,10 +118,6 @@ $anc_filter=new IText("p_anc_filter", $my->MY_ANC_FILTER);
 $anc_filter->placeholder='6,7';
 $anc_filter->title=_("Uniquement des chiffres séparés par des virgules");
 
-$use_currency=new ISelect();
-$use_currency->value=$updlab_array;
-$use_currency->selected=$my->MY_CURRENCY;
-
 $default_error_deb=new IPoste("p_round_error_deb", $my->MY_DEFAULT_ROUND_ERROR_DEB);
 $default_error_deb->name='p_round_error_deb';
 $default_error_deb->set_attribute('gDossier', Dossier::id());
@@ -132,6 +129,13 @@ $default_error_cred->name='p_round_error_cred';
 $default_error_cred->set_attribute('gDossier', Dossier::id());
 $default_error_cred->set_attribute('jrn', 0);
 $default_error_cred->set_attribute('account', 'p_round_error_cred');
+
+$report=new ISelect('p_report');
+$report->value = array(
+    array('value'=>'N', 'label'=>_('Non')),
+    array('value'=>'Y', 'label'=>_('Oui'))
+);
+$report->selected=$my->MY_REPORT;
 
 // other parameters
 $all=new IText();
@@ -253,7 +257,12 @@ $all->style=' class="input_text"';
         <div class="col">
             <h2>Fonctionnement</h2>
 
-
+            <div class="form-group">
+                <label class="w-40" for="p_report">
+                    <?= _("L'exercice commence par un report des soldes)") ?></label>
+                <?=Icon_Action::infobulle(84)?>
+                <?= $report->input() ?>
+            </div>
 
             <div class="form-group">
                 <label class="w-20" for="p_compta">

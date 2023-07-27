@@ -45,3 +45,4 @@ include/ext/etat_annexe_ohada/*
 local/*
 /include/ext/noalyss_document/.idea/
 .idea/*
+include/tfpdf/font/unifont/*

@@ -115,7 +115,7 @@ for ($e_scan=0; $e_scan<$maxscan; $e_scan++)
                 if (strpos($a_description[$w], '@description:')==true)
                 {
                     $description=$a_description[$w];
-                    $description=str_replace('//@description:', '', $description);
+                    $description=noalyss_str_replace('//@description:', '', $description);
                 }
             }
             $scenario[$cnt_scenario]['file']=$scan[$e_scan];
@@ -175,7 +175,7 @@ else if ($script=='all')
     
             $start_mem=memory_get_usage();
             $start_time=microtime(true);
-            $script=str_replace('../', '', $script);
+            $script=noalyss_str_replace('../', '', $script);
     
             echo '<h1>'.$nb." ".$scenario[$nb]['file']."</h1>";
             echo '<h2> description = '.$scenario[$nb]["desc"].'</h2>';
@@ -207,7 +207,7 @@ else
 {
     $start_mem=memory_get_usage();
     $start_time=microtime(true);
-    $script=str_replace('../', '', $script);
+    $script=noalyss_str_replace('../', '', $script);
     $description=$http->get("description","string", "aucune description");
     echo '<h1>'.$script."</h1>";
     echo '<p> description = '.$description.'<p>';

@@ -29,6 +29,7 @@ require_once NOALYSS_INCLUDE.'/header_print.php';
  * \brief this class handle the different bilan, from the table bilan, parse the form and replace
  * in the template
  */
+#[AllowDynamicProperties]
 class Acc_Bilan
 {
     var $db;						/*!< database connection */
@@ -49,37 +50,62 @@ class Acc_Bilan
      */
     function display_form($p_filter_year="")
     {
+        global $g_parameter;
         $r="";
         $r.=dossier::hidden();
-        $r.= '<TABLE>';
+        if ( $g_parameter->MY_REPORT == 'Y') {
 
-        $r.='<TR>';
-// filter on the current year
-        $w=new ISelect();
-        $w->table=1;
+            $r.= '<TABLE>';
 
-        $periode_start=$this->db->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode $p_filter_year order by p_start,p_end");
+            $r.='<TR>';
+    // filter on the current year
+            $w=new ISelect();
+            $w->table=1;
 
-        $periode_end=$this->db->make_array("select p_id,to_char(p_end,'DD-MM-YYYY') from parm_periode $p_filter_year order by p_end,p_start");
+            $periode_start=$this->db->make_array("select p_id,to_char(p_start,'DD-MM-YYYY') from parm_periode $p_filter_year order by p_start,p_end");
 
-        $w->label=_("Depuis");
-        $w->value=$this->from;
-        $w->selected=$this->from;
-        $r.= td($w->input('from_periode',$periode_start));
-        $w->label=_(" jusque ");
-        $w->value=$this->to;
-        $w->selected=$this->to;
-        $r.= td($w->input('to_periode',$periode_end));
-        $r.= "</TR>";
-        $r.="<tr>";
-        $mod=new ISelect();
-        $mod->table=1;
-        $mod->value=$this->db->make_array("select b_id, b_name from bilan order by b_name");
-        $mod->label=_("Choix du bilan");
-        $r.=td($mod->input('b_id'));
-        $r.="</tr>";
-        $r.= '</TABLE>';
-        return $r;
+            $periode_end=$this->db->make_array("select p_id,to_char(p_end,'DD-MM-YYYY') from parm_periode $p_filter_year order by p_end,p_start");
+
+            $w->label=_("Depuis");
+            $w->value=$this->from;
+            $w->selected=$this->from;
+            $r.= td($w->input('from_periode',$periode_start));
+            $w->label=_(" jusque ");
+            $w->value=$this->to;
+            $w->selected=$this->to;
+            $r.= td($w->input('to_periode',$periode_end));
+            $r.= "</TR>";
+            $r.="<tr>";
+            $mod=new ISelect();
+            $mod->table=1;
+            $mod->value=$this->db->make_array("select b_id, b_name from bilan order by b_name");
+            $mod->label=_("Choix du bilan");
+            $r.=td($mod->input('b_id'));
+            $r.="</tr>";
+            $r.= '</TABLE>';
+            return $r;
+        } elseif($g_parameter->MY_REPORT=="N") {
+
+            $periode=new Periode($this->db);
+            $from_periode=new IDate("from_periode");
+            $from_periode->value=$periode->get_first_date();
+            $to_periode=new IDate("to_periode");
+            $to_periode->value=$this->db->get_value("select to_char(max(p_end),'DD.MM.YYYY') from parm_periode $p_filter_year");
+            $r.='<p>';
+            $r.=_("Depuis")." ".$from_periode->input()." "._("jusque")." ".$to_periode->input();
+            $r.='</p>';
+            $mod=new ISelect();
+            $mod->value=$this->db->make_array("select b_id, b_name from bilan order by b_name");
+            $r.='<p>';
+            $r.=_("Choix du bilan");
+            $r.=$mod->input('b_id');
+            $r.='</p>';
+            return $r;
+        }else {
+            $dossier_id=Dossier::id();
+            $msg=_("Configurer le report ");
+            echo_warning($msg . HtmlInput::anchor('COMPANY',"?gDossier=$dossier_id&ac=CFG/COMPANY"));
+        }
     }
     /**
      * @brief check and warn if an accound has the wrong saldo
@@ -89,6 +115,19 @@ class Acc_Bilan
      */
     private function warning($p_message,$p_type,$p_deb)
     {
+        global $g_parameter;
+        $filter_sql="";
+        if ( $g_parameter->MY_REPORT=="Y") {
+            $filter_sql= sql_filter_per($this->db,$this->from,$this->to,'p_id','j_tech_per') ;
+            $periode=new Periode($this->db,$this->from);
+            $exercice=$periode->get_exercice();
+        } else {
+            $filter_sql=$this->filter_date();
+            $exercice=$this->db->get_value("select max( p_exercice) from parm_periode 
+                                            where p_start >= to_date($1,'DD.MM.YYYY') 
+                                              and p_end <=  to_date($2,'DD.MM.YYYY') ",
+                [$this->from,$this->to]);
+        }
         $sql="select
                 pcm_val,
                 pcm_lib,
@@ -101,7 +140,7 @@ class Acc_Bilan
                         case when j_debit='t' then j_montant  else 0 end as amount_deb,
                         case when j_debit='f' then j_montant else 0 end as amount_cred
                         from jrnx
-                        where ".sql_filter_per($this->db,$this->from,$this->to,'p_id','j_tech_per') ."
+                        where ".$filter_sql."
                  
                 ) as m on (j_poste=pcm_val)
         where
@@ -115,10 +154,9 @@ class Acc_Bilan
 
         $ret="";
         $obj=new Acc_Account_Ledger($this->db,0);
-        $sql=sql_filter_per($this->db,$this->from,$this->to,'p_id','j_tech_per');
+       // $sql=sql_filter_per($this->db,$this->from,$this->to,'p_id','j_tech_per');
         // Find exercice
-        $periode=new Periode($this->db,$this->from);
-        $exercice=$periode->get_exercice();
+
         for ($i=0;$i<$nRow;$i++)
         {
 
@@ -156,6 +194,7 @@ class Acc_Bilan
     /*!\brief verify that the saldo is good for the type of account */
     function verify()
     {
+        global $g_parameter;
 		bcscale(2);
         echo '<h3>'._("Comptes normaux").'</h3>';
         $this->warning(_('Actif avec un solde crediteur'),'ACT','D');
@@ -169,8 +208,13 @@ class Acc_Bilan
         $this->warning(_('Compte inverse : Charge avec un solde debiteur'),'CHAINV','C');
         $this->warning(_('Compte inverse : produit avec un solde crediteur'),'PROINV','D');
         echo '<h3'._("Solde").' </h3>';
-        /* set the periode filter */
-        $sql_periode=sql_filter_per($this->db,$this->from,$this->to,'p_id','j_tech_per');
+        if ( $g_parameter->MY_REPORT == 'Y') {
+
+            /* set the periode filter */
+            $sql_periode = sql_filter_per($this->db, $this->from, $this->to, 'p_id', 'j_tech_per');
+        } else {
+            $sql_periode=$this->filter_date();
+        }
         $sqlAccount="select sum(amount_deb) as amount_debit ,
                             sum(amount_cred) as amount_credit
                  from (
@@ -183,7 +227,8 @@ class Acc_Bilan
                     $sql_periode
                 ) as JP1 join tmp_pcmn on (JP1.j_poste=pcm_val) 
               where pcm_type=$1 or pcm_type=$2";
-        
+
+
         $this->db->prepare("sqlAccount",$sqlAccount);
         
       
@@ -253,10 +298,17 @@ class Acc_Bilan
      */
     function get_request_get()
     {
+        $g_parameter=new Noalyss_Parameter_Folder($this->db);
         $http=new \HttpInput();
         $this->b_id=$http->get("b_id","number","");
-        $this->from=$http->get("from_periode","number",-1);
-        $this->to=$http->get("to_periode","number",-1);
+        if ( $g_parameter->MY_REPORT=="Y") {
+            $this->from=$http->get("from_periode","number",-1);
+            $this->to=$http->get("to_periode","number",-1);
+        }else {
+            $this->from=$http->get("from_periode","date","");
+            $this->to=$http->get("to_periode","date","");
+
+        }
     }
     /*!\brief load from the database the document data  */
     function load():void
@@ -322,6 +374,7 @@ class Acc_Bilan
      */
     function compute_formula($p_handle)
     {
+        $g_parameter=new Noalyss_Parameter_Folder($this->db);
         while (! feof ($p_handle))
         {
             $buffer=trim(fgets($p_handle));
@@ -336,8 +389,9 @@ class Acc_Bilan
                 continue;
             // buffer contains a formula A$=....
             // We need to eval it
-            $a=Impress::parse_formula($this->db,"$buffer",$buffer,$this->from,$this->to,false);
-            $b=str_replace("$","\$this->",$a);
+            $type_date= ($g_parameter->MY_REPORT=="Y")?0:1;
+            $a=Impress::parse_formula($this->db,"$buffer",$buffer,$this->from,$this->to,false,$type_date);
+            $b=noalyss_str_replace("$","\$this->",$a);
            // echo $b;
             if ( eval("$b;") === false )
                 echo(__FILE__.__LINE__."Code failed with $b");
@@ -398,7 +452,7 @@ class Acc_Bilan
         $regex="/&lt;&lt;\\$[A-Z]*[0-9]*&gt;&gt;/";
         $lt="&lt;";
         $gt="&gt;";
-	$header_txt=utf8_encode(header_txt($this->db));
+	    $header_txt=mb_convert_encoding(header_txt($this->db),'UTF-8','ISO8859-1');
 
         while ( !feof($p_file) )
         {
@@ -422,9 +476,9 @@ class Acc_Bilan
 		    foreach ($f2_array as $f2_str)
 		      {
 			$to_remove=$f2_str;
-			$f2_value=str_replace("&lt;","",$f2_str);
-			$f2_value=str_replace("&gt;","",$f2_value);
-			$f2_value=str_replace("$","",$f2_value);
+			$f2_value=noalyss_str_replace("&lt;","",$f2_str);
+			$f2_value=noalyss_str_replace("&gt;","",$f2_value);
+			$f2_value=noalyss_str_replace("$","",$f2_value);
 
 
 
@@ -440,8 +494,8 @@ class Acc_Bilan
 				if($ret[0]['acct_name'])
 				  {
 				    $a = $ret[0]['acct_name'];
-				    $a=str_replace('<','&lt;',$a);
-				    $a=str_replace('>','&gt;',$a);
+				    $a=noalyss_str_replace('<','&lt;',$a);
+				    $a=noalyss_str_replace('>','&gt;',$a);
 				  }
 			      }
 			  }
@@ -457,15 +511,15 @@ class Acc_Bilan
                             /* -- for libreOffice < 5 or openoffice -- */
 			    $searched='office:value-type="string"><text:p>'.$f2_str;
 			    $replaced='office:value-type="float" office:value="'.$a.'"><text:p>'.$f2_str;
-			    $line_rtf=str_replace($searched, $replaced, $line_rtf);
+			    $line_rtf=noalyss_str_replace($searched, $replaced, $line_rtf);
                             /* -- for libreOffice > 5 -- */
 			    $searched='office:value-type="string" calcext:value-type="string"><text:p>'.$f2_str;
 			    $replaced='office:value-type="float" office:value="'.$a.'" calcext:value-type="float"><text:p>'.$f2_str;
-			    $line_rtf=str_replace($searched, $replaced, $line_rtf);
+			    $line_rtf=noalyss_str_replace($searched, $replaced, $line_rtf);
 			  }
 
 
-			$line_rtf=str_replace($f2_str,$a,$line_rtf);
+			$line_rtf=noalyss_str_replace($f2_str,$a,$line_rtf);
 
 		      }// foreach end
 		  } // foreach
@@ -521,9 +575,9 @@ class Acc_Bilan
                     // DEBUG
                     // echo "single_f2 = $f2_str <br>";
                     // replace single_f2 by its value
-                    $f2_value=str_replace($lt,"",$f2_str);
-                    $f2_value=str_replace($gt,"",$f2_value);
-                    $f2_value=str_replace("$","",$f2_value);
+                    $f2_value=noalyss_str_replace($lt,"",$f2_str);
+                    $f2_value=noalyss_str_replace($gt,"",$f2_value);
+                    $f2_value=noalyss_str_replace("$","",$f2_value);
 		    $f2_value=$f2_value[0];
 
                     // check for missing variables and labels (N vars)
@@ -538,7 +592,7 @@ class Acc_Bilan
                             if($ret[0]['acct_name'])
                             {
                                 /* for rtf we have the string to put it in latin1 */
-                                if ( $this->b_type != "rtf") { $a = utf8_decode($ret[0]['acct_name']);}
+                                if ( $this->b_type != "rtf") { $a = mb_convert_encoding(($ret[0]['acct_name']),'ISO-8859-1','UTF-8');}
                                 if ( $this->b_type == "rtf") { $a =convert_to_rtf($ret[0]['acct_name']);}
                             }
                         }
@@ -552,7 +606,7 @@ class Acc_Bilan
                     }
                     // DEBUG      echo " a = $a";
                     if ( $a=='-0' ) $a=0;
-                    $line_rtf=str_replace($f2_str,$a,$line_rtf);
+                    $line_rtf=noalyss_str_replace($f2_str,$a,$line_rtf);
 
                 }// foreach end
             }
@@ -757,6 +811,23 @@ class Acc_Bilan
 	    echo HtmlInput::submit('result','Sauve');
             echo '</form>';
         }
+    }
+
+    /**
+     * @brief compute the where clause for filtering with the date
+     * @return string where clause : where jrnx.j_date < ...
+     * @throws Exception if one of the dates is not valid
+     */
+    private function filter_date():string
+    {
+        global $g_parameter;
+        if ( empty(isDate($this->from)) || empty(isDate($this->to)))
+            throw new Exception (_("Date invalide"));
+        $from=format_date($this->from,'DD.MM.YYYY','YYYYMMDD');
+        $to=format_date($this->to,'DD.MM.YYYY','YYYYMMDD');
+        $sql_periode=" to_char(jrnx.j_date,'YYYYMMDD')>= '$from' 
+        and  to_char(jrnx.j_date,'YYYYMMDD') <='$to' ";
+        return $sql_periode;
     }
 }
 

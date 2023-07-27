@@ -87,16 +87,16 @@ class Document
         
         foreach (array('/', '*', '<', '>', ';', ',', '\\', '.', ':', '(', ')', ' ', '[', ']',"'") as $i)
         {
-            $pj=str_replace($i, "-", $pj);
-            $filename_no=str_replace($i,"-",$filename_no);
+            $pj=noalyss_str_replace($i, "-", $pj);
+            $filename_no=noalyss_str_replace($i,"-",$filename_no);
         }
         
        
         $new_filename=strtolower($filename_no."-".$pj.$filename_suff);
-        $pj=str_replace("---","-",$pj);
-        $pj=str_replace("--","-",$pj);
-        $new_filename=str_replace("---","-",$new_filename);
-        $new_filename=str_replace("--","-",$new_filename);
+        $pj=noalyss_str_replace("---","-",$pj);
+        $pj=noalyss_str_replace("--","-",$pj);
+        $new_filename=noalyss_str_replace("---","-",$new_filename);
+        $new_filename=noalyss_str_replace("--","-",$new_filename);
         return $new_filename;
     }
 
@@ -299,8 +299,8 @@ class Document
 
                         $to_remove=$pattern;
                         // we remove the < and > from the pattern
-                        $tag=str_replace($lt, '', $pattern);
-                        $tag=str_replace($gt, '', $tag);
+                        $tag=noalyss_str_replace($lt, '', $pattern);
+                        $tag=noalyss_str_replace($gt, '', $tag);
 
 
                         // if the pattern if found we replace it
@@ -689,7 +689,7 @@ class Document
     {
         global $g_parameter;
         $p_tag=strtoupper($p_tag);
-        $p_tag=str_replace('=', '', $p_tag);
+        $p_tag=noalyss_str_replace('=', '', $p_tag);
         $r="Tag inconnu";
         static $aComment=NULL;
         static $counter_comment=1; /* <! counter for the comment , skip the first one which is the descrition */
@@ -1800,7 +1800,7 @@ class Document
     static function replace_value($p_buffer, $p_pattern, $p_value, $p_limit=-1, $p_type='OOo')
     {
         $check=$p_pattern;
-        $check=str_replace(['&lt;', '&gt;', '<', '>', '='], "", $check);
+        $check=noalyss_str_replace(['&lt;', '&gt;', '<', '>', '='], "", $check);
         if (preg_replace('/[^[:alnum:]^_]/', '', $check)!=$check)
         {
             throw new Exception(sprintf(_("chaine à remplacer [%s] contient un caractère interdit"), $p_pattern));

@@ -373,6 +373,7 @@ switch ($op)
        
         break;
     case "periode_change":
+
         $field=$http->get("field");
         $type=$http->get("type");
         $exercice=$http->get("exercice","number");
@@ -382,19 +383,24 @@ switch ($op)
         // exercice
         $periode_start=0;
         $periode_end=0;
+        $t_periode=new Periode($cn);
         if ( $last==1) {
-            $t_periode=new Periode($cn);
             list($per_max,$per_min)=$t_periode->get_limit($exercice);
             $periode_start=$per_max->p_id;
             $periode_end=$per_min->p_id;
         }
-        
+
         $iperiod = new IPeriod($field);
         $iperiod->id=$field;
         $iperiod->user = $g_user;
         $iperiod->cn = $cn;
         $iperiod->filter_year = true;
         $iperiod->exercice=$exercice;
+        // For France , propose the first periode
+        if ( $g_parameter->MY_REPORT=='N') {
+            $periode_start=$t_periode->get_first_periode();
+            $iperiod->filter_year = false;
+        }
         if ( $type=="from")
         {
             $iperiod->show_end_date=FALSE;

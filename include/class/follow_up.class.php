@@ -55,15 +55,17 @@ class Follow_Up
     var $d_filename; /*!<   $d_filename filename's document      */
     var $d_mimetype; /*!<   $d_mimetype document's filename      */
     var $ag_title;   /*!<   $ag_title title document	      */
-    var $f_id; /*!<   $f_id_dest fiche id (From field )  */
+    var $f_id; /*!<   $f_id fiche id (From field )  */
     var $ag_ref;  /*!< $ag_ref is the ref  */
     var $ag_hour;  /*!< $ag_hour is the hour of the meeting, action */
     var $ag_priority; /*!< $ag_priority is the priority 1 High, 2 medium, 3 low */
     var $ag_dest;  /*!< $ag_dest person who is in charged */
     var $ag_contact;  /*!< $ag_contact contact */
     var $ag_remind_date;  /*!< $ag_contact contact */
-    var $f_id_dest ; /*!< followup action recipient */
     var $ag_description; /*!< description of the action with HTML tag*/
+    var $ag_id; //!< Follow_Up.ag_id
+    var $f_id_dest; /*!< followup action recipient */
+    var $aAction_detail; //!< Array of action details
 
     /**
      * @var integer $ag_description_id if greater than 0 , it is the id in action_comment
@@ -93,7 +95,6 @@ class Follow_Up
         $this->aAction_detail=array();
         $this->operation="";
         $this->action="";
-        $this->f_dest_id=0;
         $this->f_id_dest=0;
         $this->ag_priority=2;
     }
