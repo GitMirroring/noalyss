@@ -61,6 +61,7 @@ if ($op=='save_filter')
         $new->setp("operation_filter", $http->post("operation_filter", 'string', NULL));
         $new->setp("filter_name", h($http->post("filter_name", 'string')));
         $new->setp("uf_currency_code", h($http->post("p_currency_code", 'number',-1)));
+        $new->setp("tva_id_search", h($http->post("tva_id_search", 'number',null)));
         $tag=$http->post("tag","string",'');
         
         if (is_array($tag) ) 
