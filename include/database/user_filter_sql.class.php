@@ -62,6 +62,7 @@ class User_filter_SQL extends Table_Data_SQL
             ,'uf_tag'=>'uf_tag'
             ,'uf_tag_option'=>'uf_tag_option'
             ,'uf_currency_code'=>'uf_currency_code'
+            ,'tva_id_search'=>'tva_id_search'
             
         );
         /*
@@ -88,6 +89,7 @@ class User_filter_SQL extends Table_Data_SQL
             ,'uf_tag'=>'text'
             ,'uf_tag_option'=>'numeric'
             ,'uf_currency_code'=>'numeric'
+            ,'tva_id_search'=>'numeric'
         );
 
 

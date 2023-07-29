@@ -1440,7 +1440,7 @@ function manage_search_filter(p_obj) {
 function save_filter(p_div,p_dossier) {
     var elt=['ledger_type','nb_jrn','date_start','date_end',
         'date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting',
-        'operation_filter','tag_option','p_currency_code'];
+        'operation_filter','tag_option','p_currency_code','tva_id_search'];
     var eltValue={};
     var i =0;
     eltValue['gDossier']=p_dossier;
@@ -1507,10 +1507,9 @@ function load_filter(p_div,p_dossier,p_filter_id) {
        onSuccess:function (req) {
            try {
                 var answer=req.responseJSON;    
-                console.log(answer);
                 var elt=['ledger_type','date_start','date_end','date_paid_start','date_paid_end',
                     'desc','amount_min','amount_max','qcode','accounting','operation_filter','tag_option'
-                    ,'p_currency_code'];
+                    ,'p_currency_code','tva_id_search'];
                 for (var i=0;i<elt.length;i++) {
                     var idx=elt[i];
                     $(p_div+idx).value=answer[elt[i]];
@@ -1585,7 +1584,7 @@ function delete_filter (p_div,p_dossier,p_filter_id) {
  */
 function reset_filter(p_div) {
   // clean all the input fields but ledger_type remains
-  var elt=['date_start','date_end','date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting'];
+  var elt=['date_start','date_end','date_paid_start','date_paid_end','desc','amount_min','amount_max','qcode','accounting','tva_id_search'];
                 for (var i=0;i<elt.length;i++) {
                     var idx=elt[i];
                     $(p_div+idx).value="";
