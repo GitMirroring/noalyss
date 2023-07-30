@@ -38,6 +38,9 @@
 if ( ! defined('ALLOWED')) define ('ALLOWED',1);
 
 require_once '../include/constant.php';
+global $dirname;
+require_once $dirname."/lib/ac_common.php";
+
 global $http;
 $http=new HttpInput();
 
