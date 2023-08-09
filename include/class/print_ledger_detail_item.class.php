@@ -175,7 +175,7 @@ class Print_Ledger_Detail_Item extends Print_Ledger
             $this->write_cell(20,$high,nbm($row['quantity']),0,0,'R');
             $this->write_cell(20,$high,nbm($row['price']),0,0,'R');
             $this->write_cell(20,$high,nbm($row['vat_sided']),0,0,'R');
-            $this->write_cell(20,$high,$row['vat_code']." ".$row['tva_label']);
+            $this->write_cell(20,$high,$row['tva_label']);
             $this->write_cell(20,$high,nbm($row['vat']),0,0,'R');
             $sum=bcadd($row['price'],$row['vat']);
             $this->write_cell(20,$high,nbm($sum),0,0,'R');
