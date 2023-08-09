@@ -1800,7 +1800,8 @@ class Document
     static function replace_value($p_buffer, $p_pattern, $p_value, $p_limit=-1, $p_type='OOo')
     {
         $check=$p_pattern;
-        $check=noalyss_str_replace(['&lt;', '&gt;', '<', '>', '='], "", $check);
+        $p_value=$p_value??'';
+	$check=str_replace(['&lt;', '&gt;', '<', '>', '='], "", $check);
         if (preg_replace('/[^[:alnum:]^_]/', '', $check)!=$check)
         {
             throw new Exception(sprintf(_("chaine à remplacer [%s] contient un caractère interdit"), $p_pattern));
@@ -1822,7 +1823,7 @@ class Document
         }
         if ($count==0)
         {
-	    $p_value='';
+
             if ($p_type=='OOo')
             {
                 $p_value=noalyss_str_replace('&', '&amp;', $p_value);

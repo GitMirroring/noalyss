@@ -265,4 +265,28 @@ class Card_PropertyTest extends TestCase
         $this->assertEquals($expected,$result["input"]->value," Accounting incorrect ");
     }
 
+    /**
+     * @testdox test auto numbering of card for accounting.
+     * @return void
+     */
+    public function testCardAutoNumbering()
+    {
+        $g_connection=Dossier::connect();
+        $g_connection->start();
+        $fiche_def=$this->getFicheDef();
+        $fiche_def->save_class_base('620');
+
+        $g_connection->exec_sql("update fiche_def set fd_create_account=true where fd_id=25");
+
+        $fiche=$this->getFiche();
+        $fiche->setAttribut(ATTR_DEF_ACCOUNT, null);
+        $aProperty=$fiche->to_array();
+        Card_Property::update($fiche);
+        $g_connection->commit();
+
+        $fiche->load();
+
+        $this->assertTrue(!empty($fiche->strAttribut(ATTR_DEF_ACCOUNT)),' accounting not computed');
+
+    }
 }

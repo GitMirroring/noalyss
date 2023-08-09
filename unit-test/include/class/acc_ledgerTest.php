@@ -91,7 +91,9 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGet_last_pj()
     {   
- 
+        // reset sequence
+        global $g_connection;
+        $g_connection->exec_sql("alter sequence  s_jrn_pj2 restart with 43");
         $this->object->id=2;
         $sPj=$this->object->get_last_pj(2);
         $this->assertEquals(42,$sPj);
@@ -240,6 +242,8 @@ class Acc_LedgerTest extends TestCase
      */
     public function testGuess_pj()
     {
+        global $g_connection;
+        $g_connection->exec_sql("alter sequence  s_jrn_pj2 restart with 43");
         $this->object->id=2;
         $r=$this->object->guess_pj();
         $this->assertEquals("VEN43",$r);

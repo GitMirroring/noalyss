@@ -529,7 +529,7 @@ where
         }
     }
     /**
-     * Create a card
+     * @brief Create a card
      * @param type $p_qcode
      * @returns \Fiche
      */
@@ -557,12 +557,36 @@ where
         $fiche_def->set_autocreate(true);
         $fiche_def->save_class_base('600');
         $fiche=$this->build_fiche(2,'TESTACCOUNT');
-        $start=$fiche->id;
-        $this->assertEquals('600001',$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
-        for ( $i=600002; $i < 600999;$i++) {
+        // $start=$fiche->id;
+        $this->assertEquals('6000001',$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+        for ( $i=6000002; $i < 6000999;$i++) {
            $fiche->setAttribut(ATTR_DEF_ACCOUNT, "");
            Card_Property::update($fiche);
            $fiche->load();
+
+           $this->assertEquals($i,$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+
+        }
+
+    }
+    /**
+     * @testdox testAutomaticAccountingUpdate test accounting automatic compute(update)
+     */
+    public function testAutomaticAccounting620Update()
+    {
+        $this->g_connection->exec_sql("update public.parameter set pr_value = $1 where pr_id=$2",
+            array('N','MY_ALPHANUM'));
+        $fiche_def=new Fiche_Def($this->g_connection,2);
+        $fiche_def->set_autocreate(true);
+        $fiche_def->save_class_base('620');
+        $fiche=$this->build_fiche(2,'TESTACCOUNT');
+        // $start=$fiche->id;
+        $this->assertEquals('6200001',$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
+        for ( $i=6200002; $i < 6200999;$i++) {
+           $fiche->setAttribut(ATTR_DEF_ACCOUNT, "");
+           Card_Property::update($fiche);
+           $fiche->load();
+
            $this->assertEquals($i,$fiche->strAttribut(ATTR_DEF_ACCOUNT),'Account not properly created');
 
         }
@@ -579,7 +603,7 @@ where
         $fiche_def->set_autocreate(true);
         $fiche_def->save_class_base('600');
         $first=true;
-        for ( $i=600001; $i <  601000;$i++) {
+        for ( $i=6000001; $i <  6000999;$i++) {
             $fiche=new Fiche($this->g_connection);
             $fiche->insert(2,['av_text1'=>'PHPUNIT '.__FUNCTION__]);
             if ( $first ) { 
@@ -617,7 +641,7 @@ where
     /**
      * @testdox testAutomaticAccountingUpdateAlpha test accounting automatic compute(update) with alphanumeric enable
      */
-    public function testAutomaticAccountingUpdateAlpha()
+    public function testAlphaAutomaticAccountingUpdate()
     {
      
         $this->g_connection->exec_sql("update public.parameter set pr_value = $1 where pr_id=$2",
@@ -647,7 +671,7 @@ where
     /**
      * @testdox testAutomaticAccountingInsertAlpha test accounting automatic compute (insert) with alphanumeric enable
      */
-    public function testAutomaticAccountingInsertAlpha()
+    public function testAlphaAutomaticAccountingInsert()
     {
 
         $this->g_connection->exec_sql("update public.parameter set pr_value = $1 where pr_id=$2",
@@ -771,5 +795,39 @@ where
         $this->assertTrue("AAAAAA"==$fiche_target->strAttribut(23),"Update Quick code format not correct");
         
         $fiche->delete();
+    }
+
+    /**
+     * @brief  test if it is possible to generate an accounting if there is a mix of alpha numeric and numeric
+     * @testdox  test if it is possible to generate an accounting if there is a mix of alpha numeric and numeric
+     * accounting
+     * @return void
+     */
+    public function testMixedAlphaAccounting()
+    {
+
+
+        // set category : enable automatic compute + base = 600
+        $fiche_def=new Fiche_Def($this->g_connection,2);
+        $fiche_def->set_autocreate(true);
+        $fiche_def->save_class_base('600');
+
+        // insert a accounting 600TESTALPHA
+        $this->g_connection->exec_sql("insert into tmp_pcmn (pcm_val,pcm_lib,pcm_val_parent,pcm_type,pcm_direct_use) 
+                                          values('600TESTALPHA','Test Alpha','600','CHA','Y')");
+
+
+        $fiche=$this->build_fiche(2,'TESTACCOUNT');
+
+        // Try to generate an account
+        $fiche->setAttribut(ATTR_DEF_ACCOUNT, null);
+        $fiche->load();
+
+        Card_Property::update($fiche);
+        $fiche_updated=new Fiche($this->g_connection,$fiche->id);
+        $fiche_updated->load();
+        $this->assertEquals('6000001',$fiche_updated->strAttribut(ATTR_DEF_ACCOUNT),'account not computed properly');
+        $this->g_connection->exec_sql('delete from tmp_pcmn where pcm_val=$1',['600TESTALPHA']);
+      
     }
 }

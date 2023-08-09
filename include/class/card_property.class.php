@@ -509,7 +509,7 @@ class Card_Property
                 // account
                 if ($value->ad_id==ATTR_DEF_ACCOUNT)
                 {
-                    $v=mb_strtoupper($value->av_text);
+                    $v=mb_strtoupper($value->av_text??"");
                     // 2 accounts given 
                     if (trim($v)!='')
                     {
