@@ -31,7 +31,7 @@ global $g_user;
 /*
  * Ajax for modifying the description , does not support ITextarea + enrich text
  *
- *
+ */
 if ($op=='update_comment_followUp')
 {
     $input=$http->request('input');
@@ -75,7 +75,7 @@ if ($op=='update_comment_followUp')
     }
     return;
 }
-*/
+
 
 // Modify followup 
 if ($op == 'followup_comment_oneedit') {
