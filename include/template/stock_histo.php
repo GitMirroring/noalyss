@@ -59,12 +59,12 @@
 			<?php echo $row['r_name']?>
 		</td>
 		<td>
-			<?php if (trim($row['qcode'])!='') : ?>
+			<?php if (trim($row['qcode']??"")!='') : ?>
 			<?php echo HtmlInput::card_detail($row['qcode'],$row['fname'],' class="line" ')?>
 			<?php endif; ?>
 		</td>
 		<td>
-			<?php if (trim($row['jr_internal'])!='') : ?>
+			<?php if (trim($row['jr_internal']??"")!='') : ?>
 			<?php echo HtmlInput::detail_op($row['jr_id'],$row['jr_internal'])?>
 			<?php endif; ?>
 		</td>
