@@ -32,10 +32,16 @@ $gDossier=dossier::id();
 $cn=Dossier::connect();
 $g_user->Check();
 $g_user->check_dossier($gDossier);
-$name=$cn->get_value('select fd_label from fiche_def where fd_id=$1',array($_GET['cat']));
+
+$http=new HttpInput();
+
+$cat = $http->get("cat");
+$histo = $http->get("histo");
+
+$name=$cn->get_value('select fd_label from fiche_def where fd_id=$1',array($cat));
 
 $pdf=new PDF($cn);
-$pdf->setDossierInfo("  Periode : ".$_GET['start']." - ".$_GET['end']);
+$pdf->setDossierInfo("  Periode : ".$http->get('start')." - ".$http->get('end'));
 $pdf->AliasNbPages();
 $pdf->AddPage();
 
@@ -46,9 +52,9 @@ $allcard=(isset($_GET['allcard']))?1:0;
 /*
  * Balance
  */
-if ( $_GET['histo'] == 4 || $_GET['histo']==5)
+if ($histo == 4 || $histo==5)
 {
-    $fd=new Fiche_Def($cn,$_REQUEST['cat']);
+    $fd=new Fiche_Def($cn,$http->request('cat'));
     if ($allcard==1 &&  $fd->hasAttribute(ATTR_DEF_ACCOUNT) == false )
     {
         $pdf->write_cell(0,10, "Cette catégorie n'ayant pas de poste comptable n'a pas de balance");
@@ -64,7 +70,7 @@ if ( $_GET['histo'] == 4 || $_GET['histo']==5)
 	}
 	else
 	{
-		$afiche[0]=array('fd_id'=>$_REQUEST['cat']);
+		$afiche[0]=array('fd_id'=>$http->request('cat'));
 	}
 
 	if ( $allcard==0 && empty($afiche))
@@ -96,26 +102,16 @@ if ( $_GET['histo'] == 4 || $_GET['histo']==5)
     $idx=0;$sum_deb=0;$sum_cred=0;bcscale(4);
     for ($i=0;$i < count($aCard);$i++)
     {
-        if ( isDate($_REQUEST['start']) == null || isDate ($_REQUEST['end']) == null ) 	 exit;
-        $filter= " (j_date >= to_date('".$_REQUEST['start']."','DD.MM.YYYY') ".
-                 " and  j_date <= to_date('".$_REQUEST['end']."','DD.MM.YYYY')) ";
+        if ( isDate($http->request('start')) == null || isDate ($http->request('end')) == null ) 	 exit;
+        $filter= " (j_date >= to_date('".$http->request('start')."','DD.MM.YYYY') ".
+                 " and  j_date <= to_date('".$http->request('end')."','DD.MM.YYYY')) ";
         $oCard=new Fiche($cn,$aCard[$i]['f_id']);
         $solde=$oCard->get_solde_detail($filter);
         if ( $solde['debit'] == 0 && $solde['credit']==0) continue;
 	/* only not purged card */
-	if ($_GET['histo'] == 5 && $solde['debit'] == $solde['credit']) continue;
-
-        if ( $idx % 2 == 0 )
-        {
-            $pdf->SetFillColor(220,221,255);
-            $fill=1;
-        }
-        else
-        {
-            $pdf->SetFillColor(0,0,0);
-            $fill=0;
-        }
-        $idx++;
+	if ($histo == 5 && $solde['debit'] == $solde['credit']) continue;
+    $fill=$pdf->is_fill($idx);
+    $idx++;
 	$side='';
 	if(bcsub($solde['credit'],$solde['debit']) < 0) $side='Deb.';
 	if(bcsub($solde['credit'],$solde['debit']) > 0) $side='Cred.';
@@ -132,16 +128,8 @@ if ( $_GET['histo'] == 4 || $_GET['histo']==5)
         $pdf->write_cell(20,7,$side,0,0,'C',$fill);
         $pdf->line_new();
         }
-		if ( $idx % 2 == 0 )
-        {
-            $pdf->SetFillColor(220,221,255);
-            $fill=1;
-        }
-        else
-        {
-            $pdf->SetFillColor(0,0,0);
-            $fill=0;
-        }
+        $fill=$pdf->is_fill($idx);
+
 		$idx++;
         // Sum by category
         $pdf->write_cell(30,7,"",0,0,'L',$fill);
@@ -173,7 +161,7 @@ else
 	}
 	else
 	{
-		$afiche[0] = array('fd_id' => $_REQUEST['cat']);
+		$afiche[0] = array('fd_id' => $http->request('cat'));
 	}
 	$fic=new Fiche($cn);
 	for ($e = 0; $e < count($afiche); $e++)
@@ -194,25 +182,25 @@ else
 			$fic = new Fiche($cn, $row_fiche['f_id']);
 			$letter = new Lettering_Card($cn);
 			$letter->set_parameter('quick_code', $fic->strAttribut(ATTR_DEF_QUICKCODE));
-			$letter->set_parameter('start', $_GET['start']);
-			$letter->set_parameter('end', $_GET['end']);
+			$letter->set_parameter('start',$http->request('start'));
+			$letter->set_parameter('end',$http->request('end'));
 			// all
-			if ($_GET['histo'] == 0)
+			if ($histo == 0)
 			{
 				$letter->get_all();
 			}
 
 			// lettered
-			if ($_GET['histo'] == 1)
+			if ($histo == 1)
 			{
 				$letter->get_letter();
 			}
 			// unlettered
-			if ($_GET['histo'] == 2)
+			if ($histo == 2)
 			{
 				$letter->get_unletter();
 			}
-			if ($_GET['histo'] == 6)
+			if ($histo == 6)
 			{
 				$letter->get_letter_diff();
 			}
@@ -240,16 +228,7 @@ else
 			$prog=0;
 			for ($i = 0; $i < count($letter->content); $i++)
 			{
-				if ($i % 2 == 0)
-				{
-					$pdf->SetFillColor(220, 221, 255);
-					$fill = 1;
-				}
-				else
-				{
-					$pdf->SetFillColor(0, 0, 0);
-					$fill = 0;
-				}
+                $fill=$pdf->is_fill($i);
 				$pdf->SetFont('DejaVuCond', '', 7);
 				$row = $letter->content[$i];
 				$str_date = shrink_date($row['j_date_fmt']);
