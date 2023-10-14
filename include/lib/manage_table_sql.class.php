@@ -824,8 +824,10 @@ function check()
         }
         $nb_order=count($this->a_order);
         $virg=""; $result="";
+
         // filter only on visible column
-        $visible=0;
+        $visible=($this->icon_mod=='left')?1:0;
+        $visible=$visible+( ($this->icon_del=='left')?1:0);
         for ($e=0; $e<$nb_order; $e++)
         {
             if ($this->get_property_visible($this->a_order[$e])==TRUE)
