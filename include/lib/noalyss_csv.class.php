@@ -181,7 +181,7 @@ class Noalyss_Csv
     protected function encode($str)
    {
        if ($this->encoding=="utf8") return $str;
-       if ($this->encoding=="latin1") return utf8_decode ($str);
+       if ($this->encoding=="latin1") return  iconv('UTF-8','ISO-8859-1//IGNORE',$str); 
        throw new Exception(_("Encodage invalide"));
    }
     /**

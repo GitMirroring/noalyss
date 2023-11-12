@@ -398,7 +398,10 @@ class Acc_Bilan
         $regex="/&lt;&lt;\\$[A-Z]*[0-9]*&gt;&gt;/";
         $lt="&lt;";
         $gt="&gt;";
-	$header_txt=utf8_encode(header_txt($this->db));
+	// convert to UTF8
+	$header_txt=iconv('ISO-8859-1','UTF-8//IGNORE',header_txt($this->db));
+	
+	
 
         while ( !feof($p_file) )
         {

@@ -171,7 +171,7 @@ class Dossier
         try {
             $http=new HttpInput();
             $id=$http->request("gDossier","number");
-            if ($id > 999999 || $id < 0) throw new \Exception(_("Dossier max dépassé"));
+            if ($id > 999999 || $id < 0) throw new \Exception(_("Dossier max dépassé "));
         } catch (\Exception $e) {
 
             die('Dossier invalide ');

@@ -1374,14 +1374,17 @@ if(!function_exists('tracedebug')) {
   }
 }
 /**
- * @brief encode the string for RTF, return a stringu
+ * @brief encode the string for RTF, return a string
  * @param $p_string string to convert
  * @return string
  */
 function convert_to_rtf($p_string)
 {
     $result="";
-    $p_string2=utf8_decode($p_string);
+    // convert to latin 
+    $p_string2=iconv('UTF-8','ISO-8859-1//IGNORE',$p_string);
+ 
+    
     $nb_result=strlen($p_string2);
     for ($i = 0 ; $i < $nb_result ; $i++ ){
         if (ord($p_string[$i]) < 127 ) {

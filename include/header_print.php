@@ -34,7 +34,10 @@ function header_txt($p_cn)
     $soc=$own->MY_NAME;
 
     $date=date('d / m / Y H:i ');
-    $dossier=utf8_decode(" Dossier : ".dossier::name());
+    $str=sprintf(" Dossier : %s",dossier::name());
+    // convert to latin1
+    $dossier=iconv('UTF-8','ISO-8859-1//IGNORE',$str);
+    
     return $dossier." ".$soc." ".$date;
 }
 
