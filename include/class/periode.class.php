@@ -54,11 +54,11 @@ class Periode
     {
       $r=<<<EOF
 Object Periode [
-    \$jrn_def_id=>$jrn_def_id,
-     \$p_id=>$p_id,
-     \$status => $status,
-     \$p_start => $p_start,
-     \$p_end => $p_end,
+    \$jrn_def_id=>$this->jrn_def_id,
+     \$p_id=>$this->p_id,
+     \$status => $this->status,
+     \$p_start => $this->p_start,
+     \$p_end => $this->p_end,
 ] 
 EOF;
       return $r;

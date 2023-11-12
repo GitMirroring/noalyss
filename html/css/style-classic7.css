@@ -2388,11 +2388,12 @@ td.selectedmenu {
 }
 .v-large { display: none;}
 
+/*
+ * Comment in  follow-up
+ */
 .field_follow_up
 {
     margin-top:1px;
-    white-space: -moz-pre-wrap;
-    white-space: pre-wrap;
     border:1px solid blue;
 }
 
@@ -2433,7 +2434,6 @@ td.selectedmenu {
     text-decoration: none;
     color:blue;
     font-size:1.7em;
-    font-size: 1.7rem;
     padding: 0px;
     margin: 0px;
     background-color: inherit;

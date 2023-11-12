@@ -169,7 +169,7 @@ class DatabaseCore
         return $this;
     }
 
-        /**
+    /**
      * \brief send a sql string to the database
      * \param $p_string     sql string
      * \param $p_array array for the SQL string (see pg_query_params)
@@ -480,7 +480,7 @@ class DatabaseCore
     }
 
     /**
-     * Returns only one row from a query
+     * @brief  Returns only one row from a query
      * @param string $p_sql
      * @param array $p_array
      * @return array , idx = column of the table or null if nothing is found
@@ -735,7 +735,8 @@ class DatabaseCore
         return false;
     }
 
-    /**\brief wrapper for the function pg_num_rows
+    /**
+     * \brief wrapper for the function pg_num_rows
      * \param $ret is the result of a exec_sql
      * \return number of line affected
      */
@@ -745,7 +746,8 @@ class DatabaseCore
         return pg_num_rows($ret);
     }
 
-    /**\brief wrapper for the function pg_fetch_array
+    /**
+     * \brief wrapper for the function pg_fetch_array
      * \param $ret is the result of a pg_exec
      * \param $p_indice is the index
      * \param $p_indice is the index
@@ -757,7 +759,8 @@ class DatabaseCore
         return pg_fetch_array($ret, $p_indice,$p_mode);
     }
 
-    /**\brief wrapper for the function pg_fetch_all
+    /**
+     * \brief wrapper for the function pg_fetch_all
      * \param $ret is the result of pg_exec (exec_sql)
      * \return double array (row x col ) or false
      */
@@ -767,7 +770,8 @@ class DatabaseCore
         return pg_fetch_all($ret);
     }
 
-    /**\brief wrapper for the function pg_fetch_all
+    /**
+     * \brief wrapper for the function pg_fetch_all
      * \param $ret is the result of pg_exec (exec_sql)
      * \param $p_row is the indice of the row
      * \param $p_col is the indice of the col
@@ -790,7 +794,8 @@ class DatabaseCore
         return pg_fetch_row($ret, $p_row);
     }
 
-    /**\brief wrapper for the function pg_lo_unlink
+    /**
+     * \brief wrapper for the function pg_lo_unlink
      * \param $p_oid is the of oid
      * \return return the result of the operation
      */
@@ -838,7 +843,8 @@ class DatabaseCore
         return pg_lo_export($this->db, $p_oid, $tmp_file);
     }
 
-    /**\brief wrapper for the function pg_lo_export
+    /**
+     * \brief wrapper for the function pg_lo_export
      * \param $p_filename is the filename
      * \param $tmp  is the file
      * \return result of the operation
@@ -849,7 +855,8 @@ class DatabaseCore
         return pg_lo_import($this->db, $p_filename);
     }
 
-    /**\brief wrapper for the function pg_escape_string
+    /**
+     * \brief wrapper for the function pg_escape_string
      * \param $p_string is the string to escape
      * \return escaped string
      */
@@ -861,7 +868,8 @@ class DatabaseCore
         return pg_escape_string($cn->db,$p_string);
     }
 
-    /**\brief wrapper for the function pg_close
+    /**
+     * \brief wrapper for the function pg_close
      */
 
     function close()
@@ -870,7 +878,8 @@ class DatabaseCore
         $this->is_open = FALSE;
     }
 
-    /**\brief
+    /**
+     * \brief
      * \param
      * \return
      * \note

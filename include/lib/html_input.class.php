@@ -102,7 +102,8 @@ var $css_size;
         $this->readOnly=$p_read;
     }
 
-    /*!\brief set the extra javascript property for the INPUT field
+    /*!
+     * \brief set the extra javascript property for the INPUT field
      * \param $p_name name of the parameter
      * \param $p_value default value of this parameter
      */
@@ -440,7 +441,7 @@ var $css_size;
     }
 
     /**
-     * close button for the HTML popup
+     * @brief close button for the HTML popup
      * @see add_div modify_operation
      * @param $div_name is the name of the div to remove
      */
@@ -470,7 +471,7 @@ var $css_size;
     }
 
     /**
-     * Return a html string with an anchor which close the inside popup. (top-right corner)
+     * @brief Return a html string with an anchor which close the inside popup. (top-right corner)
      * @param name of the DIV to close
      * @deprecated 
      * @see Icon_Action::close
@@ -481,7 +482,7 @@ var $css_size;
     }
 
     /**
-     * Anchor Html with javascript
+     * @brief Anchor Html with javascript
      * @param $action action action to perform (message) without onclick
      * @param $javascript javascript to execute
      * @param $id is the DOM element id 
@@ -501,7 +502,7 @@ var $css_size;
     }
 
     /**
-     * button Html with javascript
+     * @brief button Html with javascript
      * @param $action action action to perform (message) without onclick
      * @param $javascript javascript to execute
      * @param $id is the DOM element id 
@@ -521,7 +522,7 @@ var $css_size;
     }
 
     /**
-     * Image to click , 
+     * @brief Image to click ,
      * @param string $p_image filename of the image under image/
      * @param string $p_js javascript when the image is clicked
      * @param string $p_message Message 
@@ -534,7 +535,7 @@ var $css_size;
     }
 
     /**
-     * button Html image
+     * @brief button Html image
      * @param $javascript javascript to execute
      * @param $id id of the button
      * @param  $class class of the button
@@ -553,7 +554,7 @@ var $css_size;
     }
 
     /**
-     * Return a html string with an anchor to hide a div, put it in the right corner
+     * @brief  Return a html string with an anchor to hide a div, put it in the right corner
      * @param $action action action to perform (message)
      * @param $javascript javascript
      * @note not protected against html
@@ -577,7 +578,7 @@ var $css_size;
     }
 
     /**
-     * show the detail of a card
+     * @brief  show the detail of a card
      */
     static function card_detail($p_qcode, $pname='', $p_style="",
             $p_nohistory=false)
@@ -591,7 +592,7 @@ var $css_size;
     }
 
     /**
-     * transform request data  to hidden
+     * @brief transform request data  to hidden
      * @param $array is an of indices
      * @param $request name of the superglobal $_POST $_GET $_REQUEST(default)
      * @return html string with the hidden data
@@ -625,7 +626,7 @@ var $css_size;
         return $r;
     }
     /**
-     * Transform a double array as a HTML string with hidden html value
+     * @brief  Transform a double array as a HTML string with hidden html value
      * array has the formarray ["name"]="x",array['value']="y") the key name will be the hidden input name;
      * @param double $array 
      */
@@ -652,7 +653,7 @@ var $css_size;
     }
 
     /**
-     * transform $_GET   data  to hidden
+     * @brief  transform $_GET   data  to hidden
      * @param $array is an of indices
      * @see HtmlInput::request_to_hidden
      * @return html string with the hidden data
@@ -1167,7 +1168,7 @@ var $css_size;
     }
 
     /**
-     * Insert attribute inside a INPUT TYPE, these attribute can be retrieved
+     * @brief Insert attribute inside a INPUT TYPE, these attribute can be retrieved
      * in javascript with element.getAttribute or changed with element.setAttribute
      * example insert my_attribute into a checkbox <input type="checkbox" "my_attribute"="XX"> 
      * @return string to insert into the HTML node
