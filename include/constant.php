@@ -106,9 +106,9 @@ $version_noalyss = SVNINFO;
 
 // If you don't want to be notified of the update
 if (!defined("SITE_UPDATE"))
-    define("SITE_UPDATE", 'http://www.noalyss.eu/last_version.txt');
+    define("SITE_UPDATE", 'https://www.noalyss.eu/last_version.txt');
 if (!defined("SITE_UPDATE_PLUGIN"))
-    define("SITE_UPDATE_PLUGIN", 'http://www.noalyss.eu/plugin_last_version.txt');
+    define("SITE_UPDATE_PLUGIN", 'https://www.noalyss.eu/plugin_last_version.txt');
 if (!defined("NOALYSS_PACKAGE_REPOSITORY")) {
     define("NOALYSS_PACKAGE_REPOSITORY", "https://package.noalyss.eu/");
 }

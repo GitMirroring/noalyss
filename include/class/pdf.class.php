@@ -72,7 +72,7 @@ class PDF extends  PDF_Core
         parent::Cell(0,8,'Date '.$this->date." - Page ".$this->PageNo().'/{nb}',0,0,'C');
         parent::Ln(3);
         // Created by NOALYSS
-        parent::Cell(0,8,'Created by NOALYSS, online on http://www.noalyss.eu',0,0,'C',false,'http://www.noalyss.eu');
+        parent::Cell(0,8,'Created by NOALYSS, online on https://www.noalyss.eu',0,0,'C',false,'https://www.noalyss.eu');
     }
     /**
      *@brief retrieve the client name and quick_code
