@@ -912,7 +912,7 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton .butt
     font-family: SansationLight;
 }
 td.tool {
-    border: 1px solid gray;
+    border: 1px grey solid ;
     background-color: #FFFFFF;
     border-bottom-width: 2px;
     text-align:center;
@@ -927,7 +927,7 @@ td.tool {
     }
 }
 td.toolselected  {
-    border: 1px solid gray;
+    border: 1px grey solid;
     color: #FFFFFF;
     border-bottom-width: 2px;
     text-align:center;
@@ -2421,7 +2421,7 @@ td.selectedmenu {
  * go_up
 */
 #go_up {
-    background-color: gray;
+    background-color: grey;
     border:0px;
     box-shadow: none;
     color:blue;
@@ -3387,4 +3387,12 @@ li.li-active {
      color: navy;
      text-decoration: underline wavy;
      margin-left:4rem;
+ }
+/**
+ * result of password strength
+ */
+ #info_passid {
+     position:absolute;
+     background-color: yellow;
+     color:red;
  }
