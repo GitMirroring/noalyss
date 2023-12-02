@@ -42,6 +42,7 @@ if ($UserChange->id == false)
 
 $UserChange->load();
 $it_pass=new IText('password');
+$it_pass->javascript='onkeyup="check_password_strength(\'password\',\'password_info\',1)"';
 $it_pass->value="";
 ?>
 <FORM  id="user_detail_frm" METHOD="POST">
@@ -81,6 +82,7 @@ $it_pass->value="";
             </td>
             <td>
                 <?php echo $it_pass->input();?>
+                <span id="password_info" style="background-color: yellow;color:red;position:absolute"></span>
             </td>
         </tr>
         <tr>

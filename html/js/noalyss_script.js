@@ -3786,9 +3786,13 @@ function updatePreference()
             method: "post",
             parameters: param,
             onSuccess: function (req) {
-              var style = req.responseText.evalJSON();
+              var answer = req.responseText.evalJSON();
                // $('pagestyle').setAttribute('href', style.style);
-                removeDiv('preference_div');
+                if ( answer['psw']=='NOK') {
+                    smoke.alert(answer['msg']);
+                } else {
+                    removeDiv('preference_div');
+                }
             }
         });
     } catch (e)
@@ -4224,4 +4228,50 @@ function event_display_main(p_dossier) {
     		{
     			alert_box(e.message);
     		}
+}
+
+/**
+ * @brief check if password is strong or not, update a DIV element
+ * @param p_pass_domid DOM ID of the INPUT element with the password
+ * @param p_result_domid DOM ID of the element to update
+ */
+function check_password_strength(p_pass_domid,p_result_domid,details)
+{
+  	try
+  		{
+          if ( $(p_pass_domid).value=="") {   $(p_result_domid).update("");return;}
+  	       var queryString= {
+                    'op':"password_chk"
+                    ,pass:$(p_pass_domid).value
+  	            };
+  	        var action = new Ajax.Request(
+  					  "ajax_misc.php" ,
+  					  {
+  					      method:'GET',
+  					      parameters:queryString,
+  					      onFailure:ajax_misc_failure,
+  					      onSuccess:function(req){
+  							remove_waiting_box();
+  	                        if (req.responseText == 'NOCONX') {
+  	                            return;
+  	                        }
+                            var answer=req.responseJSON;
+                              console.debug(answer);
+                              if (answer['password']=='nok') {
+
+                                $(p_pass_domid).setStyle("background-color:red");
+                                if ( details) {
+                                    $(p_result_domid).update(answer['msg'])
+                                }
+                                return;
+                              }
+                              $(p_pass_domid).setStyle("background-color: lightgreen");
+                              $(p_result_domid).update("")
+  					      }
+  					  }
+  	              );
+  		}catch( e)
+  		{
+  			alert_box(e.message);
+  		}
 }

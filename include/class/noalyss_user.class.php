@@ -1635,11 +1635,12 @@ class Noalyss_User
      * @brief Save the password of the current user 
      * @param string $p_pass1 password (clear)
      * @param string $p_pass2 for confirming password (clear)
+     * @see check_password_strength()
      * @return true : password successfully changed otherwise false
      */
     function save_password($p_pass1, $p_pass2)
     {
-        if ($p_pass1==$p_pass2)
+        if ($p_pass1==$p_pass2 && count(check_password_strength($p_pass1)['msg'])==0)
         {
             $repo=new Database();
             $l_pass=md5($p_pass1);
