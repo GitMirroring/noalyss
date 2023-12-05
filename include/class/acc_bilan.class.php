@@ -229,7 +229,7 @@ class Acc_Bilan
               where pcm_type=$1 or pcm_type=$2";
 
 
-        $this->db->prepare("sqlAccount",$sqlAccount);
+        if ( ! $this->db->is_prepare("sqlAccount") ) $this->db->prepare("sqlAccount",$sqlAccount);
         
       
         
@@ -298,10 +298,12 @@ class Acc_Bilan
      */
     function get_request_get()
     {
-        $g_parameter=new Noalyss_Parameter_Folder($this->db);
+        // $g_parameter=new Noalyss_Parameter_Folder($this->db);
+        global $g_parameter;
         $http=new \HttpInput();
         $this->b_id=$http->get("b_id","number","");
         if ( $g_parameter->MY_REPORT=="Y") {
+
             $this->from=$http->get("from_periode","number",-1);
             $this->to=$http->get("to_periode","number",-1);
         }else {
@@ -374,7 +376,7 @@ class Acc_Bilan
      */
     function compute_formula($p_handle)
     {
-        $g_parameter=new Noalyss_Parameter_Folder($this->db);
+        global $g_parameter;
         while (! feof ($p_handle))
         {
             $buffer=trim(fgets($p_handle));

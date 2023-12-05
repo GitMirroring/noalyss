@@ -35,9 +35,7 @@ function header_txt($p_cn)
 
     $date=date('d / m / Y H:i ');
     $dossier=mb_convert_encoding(" Dossier : ".dossier::name(),'ISO-8859-1','UTF-8');
-    // convert to latin1
-    $dossier=iconv('UTF-8','ISO-8859-1//IGNORE',$str);
-    
+
     return $dossier." ".$soc." ".$date;
 }
 

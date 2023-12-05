@@ -36,4 +36,5 @@ public.fiche_detail for each row execute function comptaproc.fiche_detail_check_
 
 update fiche_detail set ad_value=ad_value where ad_id in (select ad_id from attr_def where ad_type='card');
 
+insert into parameter values ('MY_REPORT','N') ON CONFLICT DO NOTHING;
 

@@ -54,7 +54,7 @@ class Lettering
      * @param $p_init resource to database
      * @note by default start and end are the 1.1.exercice to 31.12.exercice
      */
-    function __construct(public $p_init)
+    function __construct( $p_init)
     {
         $this->db=$p_init;
         $a=new Noalyss_user($p_init);

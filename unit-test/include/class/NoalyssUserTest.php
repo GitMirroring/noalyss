@@ -6,7 +6,7 @@ define('USE_FIRST_NAME', 'Unit test');
 define('USE_NAME', 'UNIT');
 define('USE_LOGIN', 'unit-test');
 define('USE_ACTIVE', 1);
-define('USE_PASS', md5('password'));
+define('USE_PASS', md5('password+123P'));
 define('USE_ADMIN', 0);
 define('USE_EMAIL', 'none@dev.null.eu');
 
@@ -16,7 +16,7 @@ define('USE_EMAIL', 'none@dev.null.eu');
  */
 require DIRTEST.'/global.php';
 
-class UserTest extends TestCase
+class NoalyssUserTest extends TestCase
 {
 
     /**
@@ -151,12 +151,12 @@ class UserTest extends TestCase
         $old_password=$this->object->getPassword();
         $this->assertEquals(USE_PASS,$old_password,"Password mismatch");
         
-        $this->assertFalse($this->object->save_password("test1","test2"),"Passwords must be identical");
-        $this->assertTrue($this->object->save_password("test2","test2"),"Identical passwords seen as different");
+        $this->assertFalse($this->object->save_password("test1+T123","test2+T123"),"Passwords must be identical");
+        $this->assertTrue($this->object->save_password("test2+T123","test2+T123"),"Identical passwords seen as different");
         $this->object->load();
         $new_password = $this->object->getPassword();
         $this->assertTrue(($old_password != $new_password),"Password not changed old=$old_password new=$new_password");
-        $this->assertTrue($new_password=='ad0234829205b9033196ba818f7a872b',"Password incorrect");
+        $this->assertTrue($new_password=='b37707c6d3d6a702aa7968b5f182772a',"Password incorrect $new_password");
         
         
         

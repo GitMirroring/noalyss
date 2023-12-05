@@ -35,6 +35,7 @@ require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 $gDossier=dossier::id();
 $cn=Dossier::connect();
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 mb_internal_encoding("UTF-8");
 $g_user=new Noalyss_user($cn);
 $g_user->Check();

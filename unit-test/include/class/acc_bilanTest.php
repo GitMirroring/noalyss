@@ -41,20 +41,40 @@ class Acc_BilanTest extends TestCase
      * @covers Acc_Bilan::display_form
      * @todo   Implement testDisplay_form().
      */
-    public function testDisplay_form()
+    public function testDisplay_formReport()
     {
+        global $g_parameter;
+        $g_parameter->MY_REPORT='Y';
         $r=$this->object->display_form();
-	$this->assertStringStartsWith('<input type="hidden" id="gDossier" name="gDossier" value=',$r);
-	$this->assertStringEndsWith('</TABLE>',$r);
-        
-    }
+        $this->assertFalse(empty($r), "display_form must return a HTML string");
+	    $this->assertStringStartsWith('<input type="hidden" id="gDossier" name="gDossier" value=',$r);
+        $this->assertStringEndsWith('</TABLE>',$r);
 
+    }
+    /**
+     * @covers Acc_Bilan::display_form
+     * @todo   Implement testDisplay_form().
+     */
+    public function testDisplay_formNoReport()
+    {
+        global $g_parameter;
+        $g_parameter->MY_REPORT='N';
+        $r=$this->object->display_form();
+        $this->assertFalse(empty($r), "display_form must return a HTML string");
+        $this->assertStringStartsWith('<input type="hidden" id="gDossier" name="gDossier" value=',$r);
+
+	    $this->assertStringEndsWith('</SELECT></p>',$r);
+    }
     /**
      * @covers Acc_Bilan::verify
      * @todo   Implement testVerify().
      */
-    public function testVerify()
+    public function testVerifyNoReport()
     {
+        global  $g_parameter;
+        $g_parameter->MY_REPORT='N';
+        $this->object->from='01.01.2000';
+        $this->object->to='31.12.2024';
       ob_start();
       $this->object->verify();
       $r=ob_get_contents();
@@ -62,13 +82,30 @@ class Acc_BilanTest extends TestCase
       
       $this->assertStringStartsWith('<h3>',$r);
     }
+    /**
+     * @covers Acc_Bilan::verify
+     * @todo   Implement testVerify().
+     */
+    public function testVerifyReport()
+    {
+        global  $g_parameter;
+        $g_parameter->MY_REPORT='Y';
+      ob_start();
+      $this->object->verify();
+      $r=ob_get_contents();
+      ob_end_clean();
+
+      $this->assertStringStartsWith('<h3>',$r);
+    }
 
     /**
      * @covers Acc_Bilan::get_request_get
      * @todo   Implement testGet_request_get().
      */
-    public function testGet_request_get()
+    public function testGet_request_getReport()
     {
+        global  $g_parameter;
+        $g_parameter->MY_REPORT='Y';
       $_GET['b_id']=111;
       $_GET['from_periode']=95;
       $_GET['to_periode']=100;
@@ -77,7 +114,22 @@ class Acc_BilanTest extends TestCase
       $this->assertEquals($this->object->from,95);
       $this->assertEquals($this->object->to,100);
     }
-
+    /**
+     * @covers Acc_Bilan::get_request_get
+     * @todo   Implement testGet_request_get().
+     */
+    public function testGet_request_getNoReport()
+    {
+        global  $g_parameter;
+        $g_parameter->MY_REPORT='N';
+        $_GET['b_id']=111;
+        $_GET['from_periode']='01.01.2000';
+        $_GET['to_periode']='31.12.2024';
+        $this->object->get_request_get();
+        $this->assertEquals($this->object->b_id,111);
+        $this->assertEquals($this->object->from,'01.01.2000');
+        $this->assertEquals($this->object->to,'31.12.2024');
+    }
     /**
      * @covers Acc_Bilan::load
      */
@@ -123,25 +175,48 @@ class Acc_BilanTest extends TestCase
 	$this->assertTrue(FALSE);
       }
     }
-
     /**
      * @covers Acc_Bilan::compute_formula
      */
-    public function testCompute_formula()
+    public function testCompute_formulaReport()
     {
+        global $g_parameter;
+        $g_parameter->MY_REPORT='Y';
+        $this->object->b_id=1;
+        $hFile=fopen("document/fr_be/bnb.form",'r');
+
+        $this->object->from=92;
+        $this->object->to=103;
+
+        $this->object->compute_formula($hFile);
+        $this->assertTrue(isset($this->object->C70),"Exist C70");
+        $this->assertTrue(isset($this->object->C60),"Exist C60");
+        $this->assertTrue(isset($this->object->C61),"Exist C61");
+        $this->assertEquals($this->object->C70,456.8);
+        $this->assertEquals($this->object->C60,0);
+        $this->assertEquals($this->object->C61,1468.33);
+
+    }
+    /**
+     * @covers Acc_Bilan::compute_formula
+     */
+    public function testCompute_formulaNoReport()
+    {
+        global $g_parameter;
+        $g_parameter->MY_REPORT='N';
       $this->object->b_id=1;
       $hFile=fopen("document/fr_be/bnb.form",'r');
 
-      $this->object->from=92;
-      $this->object->to=103;
+      $this->object->from='01.01.2000';
+      $this->object->to='31.12.2024';
 
       $this->object->compute_formula($hFile);
       $this->assertTrue(isset($this->object->C70),"Exist C70");
       $this->assertTrue(isset($this->object->C60),"Exist C60");
       $this->assertTrue(isset($this->object->C61),"Exist C61");
-      $this->assertEquals($this->object->C70,456.8);
+      $this->assertEquals($this->object->C70,4948.34);
       $this->assertEquals($this->object->C60,0);
-      $this->assertEquals($this->object->C61,1468.33);
+      $this->assertEquals($this->object->C61,10498.33);
       
     }
 
