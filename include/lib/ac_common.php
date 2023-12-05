@@ -1374,7 +1374,7 @@ if(!function_exists('tracedebug')) {
   }
 }
 /**
- * @brief encode the string for RTF, return a stringu
+ * @brief encode the string for RTF, return a string
  * @param $p_string string to convert
  * @return string
  */
@@ -1382,6 +1382,9 @@ function convert_to_rtf($p_string)
 {
     $result="";
     $p_string2=mb_convert_encoding($p_string,'ISO-8859-1','UTF-8');
+    $p_string2=iconv('UTF-8','ISO-8859-1//IGNORE',$p_string);
+ 
+    
     $nb_result=strlen($p_string2);
     for ($i = 0 ; $i < $nb_result ; $i++ ){
         if (ord($p_string[$i]) < 127 ) {
@@ -1413,10 +1416,13 @@ function remove_divide_zero($p_formula)
  * @brief Create randomly a string
  * @param int $p_length length of the generate string
  */
-function generate_random_string($p_length)
+function generate_random_string($p_length,$special=1)
 {
     $string="";
-    $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789*/+-=";
+    if ($special == 1)
+        $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789*/+-=";
+    if ($special == 0)
+        $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789";
     $microtime=microtime(true)*microtime(true)*100;
     srand(0);
     srand((int)$microtime);
@@ -1659,4 +1665,112 @@ function MaintenanceMode($p_file)
         include NOALYSS_BASE."/".$p_file;
         exit;
     }
+}
+
+/**
+ * @brief returns an double array with the error found and code , if the count is 0 then the password is very string, 5 means it is
+ * empty ,4 weak, ... the array contains the errors, [msg]=>array message [code] => array of code
+ * Codes are
+ *        - 1 : too short
+ *        - 2 : missing digit
+ *        - 3 : missing lowercase  letter
+ *        - 4 : missing uppercase  letter
+ *        - 5 : too many time same   letter or symbol..
+ *        - 6 : missing special char
+ *
+ * If the password is strong returns an empty array
+ *
+ * @param $password string
+ * @code
+
+ $error =  check_password_strength($password);
+  if ( count($error['msg']) > 0 ) {
+    echo "password to weak";
+    foreach ($error['msg'] as $item_error) {
+          echo "error $item_error";
+    }
+
+  } else {
+    echo "OK password strong";
+  }
+
+ * @endcode
+ */
+function check_password_strength($password) {
+    $errors=array();
+    $error_code=array();
+
+    $len=strlen($password??"");
+    if ( $len < 8) {
+        $errors[] = _("mot de passe de 8 lettres minimum");
+        $error_code[]=1;
+    }
+
+    if (!preg_match("#[0-9]+#", $password)) {
+        $errors[] = _("mot de passe doit inclure au moins un chiffre");
+        $error_code[]=2;
+    }
+
+    if (!preg_match("#[a-z]+#", $password)) {
+        $errors[] = _("mot de passe doit inclure au moins une minuscule");
+        $error_code[]=3;
+    }
+    if (!preg_match("#[A-Z]+#", $password)) {
+        $errors[] = _("mot de passe doit inclure au moins une majuscule");
+        $error_code[]=4;
+    }
+
+    if ( $len > 0 ) {
+        $cnt_diff=count(count_chars($password,1));
+        $ratio_diff=$len/$cnt_diff;
+
+        if ($ratio_diff > 2) {
+            $errors[] = _("Trop souvent le(s) même(s) symbole(s)");
+            $error_code[]=5;
+        }
+        $special_char=preg_replace('/[[:alnum:]]/','',$password);
+        if ( strlen($special_char??"")==0)
+        {
+            $errors[] = _("mot de passe doit inclure au moins un caractére spécial '+-/*[...'");
+            $error_code[]=6;
+
+        }
+    }
+
+    return  array( 'msg'=>$errors, 'code'=>$error_code);
+}
+/**
+ * @brief generate a strong random password
+ * @param $car int length of the password, minimum 8
+ *
+ */
+function generate_random_password($car):string
+{
+    $string="";
+    $car=($car < 8 )?8:$car;
+    $max_loop=20;$loop=0;
+    do
+    {
+        $loop++;
+        $string="";
+        $chaine="abcdefghijklmnpqrstuvwxy";
+       // srand( (int)microtime()*1020030);
+        for ($i=0; $i<$car; $i++)
+        {
+            $string .= $chaine[rand()%strlen($chaine)];
+        }
+        $chaine="ABCDEFGHIJKLMNPQRSTUVWXY";
+        for ($i=0;$i<2;$i++) {
+            $string[rand()%$car]=$chaine[rand()%strlen($chaine)];;
+        }
+        $chaine="0123456789";
+        for ($i=0;$i<2;$i++) {
+            $string[rand()%$car]=$chaine[rand()%strlen($chaine)];;
+        }
+        $special_set="+-/*;,.=:&()[]";
+        $special_car=$special_set[rand()%strlen($special_set)];
+        $string[rand()%$car]=$special_car;
+     //   echo $string."\n";
+    }while ( count(check_password_strength($string)['msg'])> 0 && $loop<$max_loop);
+    return $string;
 }

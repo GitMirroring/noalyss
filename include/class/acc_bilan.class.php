@@ -453,6 +453,9 @@ class Acc_Bilan
         $lt="&lt;";
         $gt="&gt;";
 	    $header_txt=mb_convert_encoding(header_txt($this->db),'UTF-8','ISO8859-1');
+	$header_txt=iconv('ISO-8859-1','UTF-8//IGNORE',header_txt($this->db));
+	
+	
 
         while ( !feof($p_file) )
         {

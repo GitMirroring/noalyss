@@ -59,4 +59,37 @@ class DossierTest extends TestCase
         $obj->load();
         $this->assertEquals(DOSSIER,$obj->get_parameter("id"),"Not the right folder");
     }
+    /**
+     * @testdox check
+     */
+    public function testCheck()
+    {
+        $_REQUEST['gDossier']='14';
+        \Dossier::check();
+        $this->assertTrue(true, 'check has failed');
+    }
+    /**
+     * @testdox hidden function
+     */
+     function testHidden()
+    {
+        $_REQUEST['gDossier']='14';
+        $this->assertEquals('<input type="hidden" id="gDossier" name="gDossier" value="14">', \Dossier::hidden());
+    }
+    /**
+     * @testdox get function
+     */
+     function testGet()
+    {
+        $_REQUEST['gDossier']='14';
+        $this->assertEquals('gDossier=14', \Dossier::get());
+    }
+    /**
+     * @testdox set current dossier
+     */
+     function testSetCurrentDossier()
+    {
+        \Dossier::set_current(15);
+        $this->assertEquals(15, \Dossier::id());
+    }
 }

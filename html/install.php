@@ -233,7 +233,19 @@ if (isset($_POST['save_config'])) {
          $err++;
 
    }
-
+    // check strenght password admin
+    $passw_error=check_password_strength($cpassword_admin);
+    if ( count($passw_error['msg'])>0) {
+        echo '<h2 class="warning">';
+        echo _("Mot de passe trop faible");
+        echo '</h2>';
+        echo '<ol>';
+        foreach ($passw_error['msg'] as $error) {
+            echo "<li>",$error,"</li>";
+        }
+        echo '</ol>';
+        $err++;
+    }
    // check password and admin not containing quote or double quote
    //
    if ( strpos($cpassword_admin,'"') !== false 

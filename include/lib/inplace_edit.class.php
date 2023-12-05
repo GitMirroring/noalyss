@@ -30,7 +30,11 @@
  * You need an ajax to response and modify the data. Some parameters will be sent
  * by default when you click on the element
  *  - input : htmlInput object serialized
- *  - action : ok or cancel , nothing if you just want to display the input
+ *  - ieaction : ok or cancel , nothing if you just want to display the input
+ *
+ * Very important it is the DOM ID of the HtmlInput element, it must unique. For the date
+ * set a uniq dom id, otherwise it fails
+ * $id_limit_date->id=uniqid("date");
  * 
  * @example inplace_edit.test.php
  */
@@ -111,7 +115,7 @@ EOF;
     function value()
     {
         $v=$this->input->get_value();
-        $v=html_entity_decode($v);
+        $v=html_entity_decode($v??"");
          if ( $this->input instanceof ITextarea) {
            
             echo '<pre class="field_follow_up">';

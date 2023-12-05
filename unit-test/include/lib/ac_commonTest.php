@@ -424,4 +424,46 @@ EOF;
         $this->assertEquals(strtoupper($expect),strtoupper(preg_replace("/\s+/",'',faxTo('123'))),);
 
     }
+
+    /**
+     * supply data for user password
+     * @return array[$password, $weakness] 0 means strong password
+     */
+    public function dataCheck_password_strength()
+    {
+        return array(
+             ["AAAAAAA",5]
+            ,["123456789",3]
+            ,["Az123456789",1]
+            ,["",4]
+            ,["+",4]
+            ,["AAAA121212abx",2]
+            ,["Az&123456789",0]
+            ,["l5F8Cny=",0]
+        );
+    }
+    /**
+     * @testDoc test the check_password_strength function
+     * @dataProvider dataCheck_password_strength()
+     */
+    public function testCheck_password_strength($p_password,$p_cnt)
+    {
+
+        $count=count(check_password_strength($p_password)['msg']);
+        $this->assertTrue($count ==$p_cnt,"error : $p_password weak password $count"    );
+
+    }
+
+    public function testGenerate_strong_password()
+    {
+
+        for ($i = 0; $i < 100; $i++)
+        {
+            $pass=generate_random_password(5);
+
+            $this->assertTrue( count(check_password_strength($pass)['msg'])==0
+                ,"error cannot generate strong password get $pass");
+        }
+    }
+
 }

@@ -2252,14 +2252,14 @@ function UTF8ToUTF16BE($str, $setbom=true) {
 	if ($setbom) {
 		$outstr .= "\xFE\xFF"; // Byte Order Mark (BOM)
 	}
-	$outstr .= mb_convert_encoding($str, 'UTF-16BE', 'UTF-8');
+	$outstr .= mb_convert_encoding($str??"", 'UTF-16BE', 'UTF-8');
 	return $outstr;
 }
 
 // Converts UTF-8 strings to codepoints array
 function UTF8StringToArray($str) {
    $out = array();
-   $len = strlen($str);
+   $len = strlen($str??"");
    for ($i = 0; $i < $len; $i++) {
 	$uni = -1;
       $h = ord($str[$i]);

@@ -1246,6 +1246,7 @@ function op_save(obj)
                         onFailure: null,
                         onSuccess: function (req){
                             if (req.responseText !=='OK') {
+                                console.error("D2. op_save")
                                 smoke.alert(req.responseText);
                             }
                         }
@@ -1283,6 +1284,7 @@ function op_save(obj)
                                          $(divid).innerHTML.evalScripts();
                                         remove_waiting_box();
                                         }  catch (e) {
+                                            console.error("D1. op_save")
                                             alert_box("1038"+e.message)
                                         } 
                                     }
@@ -1294,6 +1296,7 @@ function op_save(obj)
         return false;
     } catch (e)
     {
+        console.error("F1. op_save")
         alert_box(e.message);
     }
 }

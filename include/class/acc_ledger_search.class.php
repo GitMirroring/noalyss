@@ -105,7 +105,8 @@ class Acc_Ledger_Search
      */
     function search_form()
     {
-        global $g_user;
+        global $g_user,$g_parameter;
+        $g_parameter=new Noalyss_Parameter_Folder($this->cn);
         $http=new HttpInput();
         $r="";
         $bledger_param=json_encode(array(

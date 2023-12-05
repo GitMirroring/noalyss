@@ -50,11 +50,10 @@ class Dossier
         $this->dos_id=$p_id;
     }
 
-    /*!\brief return the $_REQUEST['gDossier'] after a check */
+    /*!\brief return the 'gDossier' value after a check */
 
     static function id()
     {
-        self::check();
         $http=new HttpInput();
         
         return $http->request('gDossier','number');
@@ -127,11 +126,12 @@ class Dossier
         return $nb_folder;
     }
 
-    /*!
-     * \brief Return all the users
-     * as an array
+    /**
+     * \brief Return all the users as an array but NOALYSS_ADMINISTRATOR, that user cannot be changed by the
+     * interface for administrating user
+     * \param SQL $sql sql string to add to the query :
+     * \note that string MUST be the result of  Database::escape_string
      */
-
     function get_user_folder($sql="")
     {
 
@@ -162,20 +162,21 @@ class Dossier
         return $res;
     }
 
-    /*!\brief check if gDossier is set */
+    /*!\brief check if gDossier is set
+    * ?? dead code ???
+    */
 
     static function check()
     {
-        if (!isset($_REQUEST['gDossier']))
-        {
-            echo_error('Dossier inconnu ');
-            exit('Dossier invalide ');
+        try {
+            $http=new HttpInput();
+            $id=$http->request("gDossier","number");
+            if ($id > 999999 || $id < 0) throw new \Exception(_("Dossier max dépassé "));
+        } catch (\Exception $e) {
+
+            die('Dossier invalide ');
         }
-        $id=$_REQUEST['gDossier'];
-        if (is_numeric($id)==0||
-                strlen($id)>6||
-                $id>999999)
-            exit('gDossier Invalide : '.$id);
+
     }
 
     /*!
@@ -184,27 +185,30 @@ class Dossier
 
     static function get()
     {
-        self::check();
-        return "gDossier=".$_REQUEST['gDossier'];
+        $http=new \HttpInput();
+        return "gDossier=".$http->request("gDossier","number");
     }
 
-    /*!\brief return a string to set gDossier into a FORM */
+    /*!
+     * \brief return a string to set gDossier into a FORM
+    */
 
     static function hidden()
     {
-        self::check();
-        return '<input type="hidden" id="gDossier" name="gDossier" value="'.$_REQUEST['gDossier'].'">';
+        $http=new \HttpInput();
+
+        return '<input type="hidden" id="gDossier" name="gDossier" value="'.$http->request("gDossier","number").'">';
     }
 
     /*!\brief retrieve the name of the current dossier */
 
     static function name($id=0)
     {
-        self::check();
 
+        $http=new \HttpInput();
         $cn=new Database();
-        $id=($id==0)?$_REQUEST['gDossier']:$id;
-        $name=$cn->get_value("select dos_name from ac_dossier where dos_id=$1", array($_REQUEST['gDossier']));
+        $id=($id==0)?$http->request("gDossier","number"):$id;
+        $name=$cn->get_value("select dos_name from ac_dossier where dos_id=$1", array($id));
         return $name;
     }
 
@@ -419,9 +423,9 @@ class Dossier
      */
     static function set_current($p_dossier) {
         
+        self::check($p_dossier);
         put_global([ [ "key"=>"gDossier","value"=>$p_dossier]]);
-        self::check();
-        
+
     }
 
 }

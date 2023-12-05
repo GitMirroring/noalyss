@@ -113,7 +113,22 @@ if ($op == "progressBar") {
     return;
 }
 
+//-------------------------------------------------------------------------------------------
+// check password
+//-------------------------------------------------------------------------------------------
+if ($op=='password_chk') {
+    $cnt = $http->request("pass");
+    $result=check_password_strength($cnt)['msg'];
+    if (count($result) == 0) {
+        echo json_response(["password" => "ok", "msg" => 0]);
+    } else {
+        $str="";
+        foreach ($result as $item) {$str.=sprintf("<li>%s</li>",$item);}
+        echo json_response(["password" => "nok", "msg" => '<ol>'.$str.'</ol>']);
 
+    }
+    return;
+}
 $html = var_export($_REQUEST, true);
 set_language();
 if ( LOGINPUT)

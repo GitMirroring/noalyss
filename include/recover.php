@@ -17,27 +17,14 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright (2014) Author Dany De Bontridder <dany@alchimerys.be>
+require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 if (!defined('RECOVER'))
     die('Appel direct ne sont pas permis');
 define('SIZE_REQUEST', 70);
 
 
-/**
- * @brief generate a random string of char
- * @param $car int length of the string
- */
-function generate_random($car)
-{
-    $string="";
-    $chaine="abcdefghijklmnpqrstuvwxyABCDEFGHIJKLMNPQRSTUVWXY0123456789";
-    srand((double) microtime()*1020030);
-    for ($i=0; $i<$car; $i++)
-    {
-        $string .= $chaine[rand()%strlen($chaine)];
-    }
-    return $string;
-}
+
 $http=new HttpInput();
 /**
  * @file
@@ -89,8 +76,8 @@ elseif ($action=="send_email") :
 
 
     if ($valid==true):
-        $request_id=generate_random(SIZE_REQUEST);
-        $user_password=generate_random(10);
+        $request_id=generate_random_string(SIZE_REQUEST,special: 0);
+        $user_password=generate_random_password(10);
         // exist a valid request for this user ?
         $exist_request= $cn->get_array("select request , password from recover_pass 
                         where use_id=$1 and created_on > now() - interval '12 hours'",[$user_id]);

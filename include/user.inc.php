@@ -35,6 +35,7 @@ echo '<div class="content" >';
 if ( isset ($_POST["ADD"]) )
 {
     $cn=new Database();
+    $a_result =check_password_strength($_POST['PASS']);
     $pass5=md5($_POST['PASS']);
     $new_user=new Noalyss_user($cn,0);
     $new_user->first_name=$http->post('FNAME');
@@ -45,11 +46,18 @@ if ( isset ($_POST["ADD"]) )
     $login=str_replace(" ","",$login);
     $login=strtolower($login);
     $new_user->login=$login;
-    $new_user->setPassword($pass5);
+
     $new_user->email=$http->post('EMAIL',"string",'');
     if ( trim($login)=="")
     {
             alert(_("Le login ne peut pas être vide"));
+    }elseif (count($a_result['msg']) > 0){
+        // password too weak
+        $msg='<span class="warning">'._("Mot de passe inchangé").'</span>';
+        foreach ($a_result['msg'] as $result ) {
+            $msg.="$result <br/>";
+        }
+        alert($msg);
     }
     else
     {
@@ -101,8 +109,18 @@ if ($sbaction == "save")
         }
         if (  trim($_POST['password'])<>'')
         {
-            $UserChange->setPassword(md5($_POST['password']));
-            $UserChange->save();
+            $a_result =check_password_strength($_POST['password']);
+            if (count($a_result['msg']) > 0){
+                // password too weak
+                $msg='<span class="warning">'._("Mot de passe inchangé").'</span>';
+                foreach ($a_result['msg'] as $result ) {
+                    $msg.="$result <br/>";
+                }
+            alert($msg);
+            } else {
+                $UserChange->setPassword(md5($_POST['password']));
+                $UserChange->save();
+            }
         }
         else
 	{
@@ -168,9 +186,19 @@ if ( isset($_REQUEST['det']) && $sbaction=="")
        <TR><TD style="text-align: right"> <?php echo _('login')?></TD><TD><INPUT id="input_login" class="input_text"  TYPE="TEXT" NAME="LOGIN"></TD></tr>
         <TR><TD style="text-align: right"> <?php echo _('Prénom')?></TD><TD><INPUT class="input_text" TYPE="TEXT" NAME="FNAME"></TD></tr>
        <TR><TD style="text-align: right"> <?php echo _('Nom')?></TD><TD><INPUT class="input_text"  TYPE="TEXT" NAME="LNAME"></TD></TR>
-       <TR><TD style="text-align: right"> <?php echo _('Mot de passe')?></TD><TD> <INPUT id="input_password" class="input_text" TYPE="TEXT" NAME="PASS"></TD></TR>
+       <TR>
+           <TD style="text-align: right"> <?php echo _('Mot de passe')?>
+           <?=\Icon_Action::tips("Mot de passe : longueur minimale = 8  dont au moins 1 majuscule, 1 minuscule,1 chiffre et 1 car.spécial")?>
+
+           </TD>
+           <TD> <INPUT id="input_password" class="input_text" TYPE="TEXT" NAME="PASS"
+        onkeyup=check_password_strength('input_password','info_passid')
+               >
+           <span id="info_passid"></span>
+           </TD></TR>
        <TR><TD style="text-align: right"> <?php echo _('Email')?></TD><TD> <INPUT class="input_text" TYPE="TEXT" NAME="EMAIL"></TD></TR>
 </TABLE>
+
 <?php
 echo HtmlInput::submit("ADD",_('Créer Utilisateur'),"",'button');
 echo HtmlInput::button_action(_("Fermer"), "$('create_user').style.display='none';");

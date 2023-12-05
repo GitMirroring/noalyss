@@ -148,6 +148,7 @@ class Extension extends Menu_Ref_sql
             throw new Exception(_('Profil inexistant'), 10);
         }
         // Menu exists
+        \Noalyss\Dbg::echo_var(1,__FILE__.__LINE__. "p_module to find $p_module");
         $module=new Menu_Ref($cn, $p_module);
         if ($module->me_code==null)
         {

@@ -75,6 +75,26 @@
 
  * @endcode
  *
+ * The afterSaveFct is the function called after saving, the param is the HTML Element
+ @code PHP
+// to redirect : we take the pk_id and redirect to another location
+
+      $obj=$this->get_object_name();
+      $url=DRIVINGSCHOOL_URL;
+      $script=<<<EOF
+(function(){
+{$obj}.afterSaveFct=function(p_param) {
+   let student=p_param.attributes["ctl_pk_id"].value;
+   window.location="{$url}/do.php?do=student&student_id="+student+"&act=detail";
+ }})();
+EOF;
+
+echo create_script($script);
+ {$obj}.afterSaveFct=function(p_param) {
+   let student=p_param.attributes["ctl_pk_id"].value;
+   window.location="{$url}/do.php?do=student&student_id="+student+"&act=detail";
+ }})();
+@endcode
  */
 
 class Manage_Table_SQL
@@ -824,8 +844,10 @@ function check()
         }
         $nb_order=count($this->a_order);
         $virg=""; $result="";
+
         // filter only on visible column
-        $visible=0;
+        $visible=($this->icon_mod=='left')?1:0;
+        $visible=$visible+( ($this->icon_del=='left')?1:0);
         for ($e=0; $e<$nb_order; $e++)
         {
             if ($this->get_property_visible($this->a_order[$e])==TRUE)

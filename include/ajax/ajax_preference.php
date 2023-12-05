@@ -84,8 +84,9 @@ if ( $action == 'display_form' )
 		<tr><td>
 			Mot de passe :
 		    </td>
-		    <td><input type="password" value="" class="input_text" name="pass_1" nohistory>
+		    <td><input type="password" value="" class="input_text" name="pass_1" id="pass_1" nohistory  onkeyup=check_password_strength('pass_1','info_passid',1)>
 			<input type="password" value="" class="input_text" name="pass_2" nohistory>
+            <span id="info_passid"></span>
 		    </td>
 		</tr>
 
@@ -321,20 +322,32 @@ if ($action == 'save')
     $csv_decimal=$http->post("csv_decimal","number");
     $csv_encoding=$http->post("csv_encoding");
     $firstday=$http->post("selFirstDay","number");
-    
+    $password="OK";
+    $msg ="";
     if (noalyss_strlentrim($pass_1) != 0 && noalyss_strlentrim($pass_2) != 0)
     {
         if ( $g_user->save_password($_POST['pass_1'],$pass_2) ) 
-        {        $g_user->password_to_session() ;
+        {
+            $g_user->password_to_session() ;
         
         } else {
            /**
             * password not changed
-            */ 
-            
+            */
+           $password="NOK";
+           $msg="";
+           if ( $_POST['pass_1'] !== $pass_2) {
+               $msg = _("Mot de passe ne correspondent pas");
+               $msg .="<br/>";
+           }
+           $a_pass_error=check_password_strength($_POST['pass_1']);
+           if ( count($a_pass_error['msg']) != 0 ) {
+                foreach($a_pass_error['msg'] as $pass_error) {
+                    $msg.=$pass_error."<br/>";
+                }
+           }
+
         }
-        
-        
     }
     if ( $inside_dossier)
     {
@@ -366,6 +379,6 @@ if ($action == 'save')
     {
         $style = "style-classic7.css";
     }
-    json_response(["style"=>$style]);
+    json_response(["style"=>$style,'psw'=>$password,'msg'=>$msg]);
     
 }

@@ -1051,7 +1051,8 @@ if ( $g_parameter->MY_TVA_USE=="Y")        {
         </td>
        </tr>
 EOF;
-      
+      $sql_currency=new Currency_SQL($this->cn,$p_currency_code);
+      $iso_code=$sql_currency->getp("cr_code_iso");
         if ($p_currency_code !=0) {
 
     $r.=<<<EOF
@@ -1067,13 +1068,15 @@ EOF;
             {$rate} {$p_currency_rate}
         </td>
         <td class="num">
-            {$tot_eur}  EUR
+            {$tot_eur}  {$iso_code}
         </td>
     </tr>
 EOF;
             } 
 
         } else {
+    $sql_currency=new Currency_SQL($this->cn,$p_currency_code);
+    $iso_code=$sql_currency->getp("cr_code_iso");
             // without VAT
             $r.=<<<EOF
     <tr class="highlight">
@@ -1102,7 +1105,7 @@ EOF;
      {$rate} {$p_currency_rate}
         </td>
         <td class="num">
-           {$tot_eur} EUR
+           {$tot_eur} {$iso_code}
         </td>
     </tr>
 EOF;
