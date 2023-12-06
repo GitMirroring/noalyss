@@ -90,6 +90,12 @@ $g_succeed = "<span style=\"font-size:18px;color:green\">&#x2713;</span>";
 define('SMALLX', '#xe816;');
 define('BUTTONADD', "&#10010;");
 
+// If noalyss_version is not defined it is likely directly taken from
+// git and so this variable is not set, this cause some issue
+if (! defined ("NOALYSS_VERSION"))
+{
+    define("NOALYSS_VERSION",9999);
+}
 define('SVNINFO', NOALYSS_VERSION);
 if (!defined('DEBUGNOALYSS')) {
     define("DEBUGNOALYSS", 0);
