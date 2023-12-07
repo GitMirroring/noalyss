@@ -451,5 +451,34 @@ class Acc_Account_LedgerTest extends TestCase
         $result=$this->object->find_card();
         $this->assertEquals($p_card, $result[0]['f_id']);
     }
+    public function dataGet_used_accounting()
+    {
+        $array=array(
+            ["01.01.2020","31.12.2020",5,7,4]
+            ,["01.01.2019","31.12.2020",5,7,10]
+            ,["01.01.2019","31.12.2020",5,6,3]
+            ,["01.01.2019","31.12.2020",5,5,0]
+            ,["01.01.2019","31.12.2020",5,2,0]
+            ,["01.01.2019","31.12.2020",5,2,0]
+            ,["01.01.2019","31.14.2020",5,7,0]
+            ,["01.13.2019","31.14.2020",5,7,0]
+        );
+        return $array;
+    }
+    /**
+     * @brief test function Acc_Account_Ledger::get_used_accounting
+     * @covers Acc_Account_Ledger::get_used_accounting
+     * @dataProvider dataGet_used_accounting
+     */
+    public function testGet_UsedAcccounting($from_date,$to_date,$from_accounting,$to_accounting,$nb_accounting)
+    {
+        $a_result=Acc_Account_Ledger::get_used_accounting(from_date:$from_date
+            ,to_date:$to_date
+            ,from_accounting:$from_accounting
+            ,to_accounting:$to_accounting);
 
+        $this->assertEquals($nb_accounting,count($a_result)
+            ,"number of accounting incorrect for (\$from_date,\$to_date,\$from_accounting,\$to_accounting,\$nb_accounting : ($from_date,$to_date,$from_accounting,$to_accounting,$nb_accounting");
+
+    }
 }
