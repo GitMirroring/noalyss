@@ -134,5 +134,20 @@ EOF;
 EOF;
         return $r;
     }
+
+    public static function timer_start()
+    {
+        global $timer;
+        $timer=hrtime(true);
+    }
+    public static function timer_show()
+    {
+        global $timer;
+        // $delta=$timer-microtime(true) ;
+        echo '<span style="font-size:80%;color:navy;background:lightgreen">';
+        echo _("Temps écoulé : ");
+        echo (hrtime(true)-$timer)/1e+6;
+        echo '</span>';
+    }
 }
 ?>
