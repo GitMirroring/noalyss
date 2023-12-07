@@ -111,55 +111,18 @@ class Acc_Account_Ledger
         }
         return array($this->row,$this->tot_deb,$this->tot_cred);
     }
-    /*!
-     * \brief  Get data for accounting entry between 2 date
-     *
-     *\param  $p_from date from DD.MM.YYYY
-     *\param  $p_to   end date DD.MM.YYYY
-     *\param $let 0 means all rows, 1 only lettered, 2 only unlettered
-     *\param $solded 0 means all account, 1 means only accounts with a saldo <> 0
-     *\note the data are filtered by the access of the current user
-     * \return double array (j_date,deb_montant,cred_montant,description,jrn_name,j_debit,jr_internal)
-     *         (tot_deb,tot_credit
-     *
+    /**
+     * @brief build the SQL for get_row_data
+     * @param $p_from date d.m.Y start date
+     * @param $p_to  date d.m.Y until date
+     * @param $sql_let  sql string for getting lettering info
+     * @param $filter_sql string SQL for filtering the ledgers , to respect security on ledgers
+     * @return  sql SELECT
      */
-    function get_row_date($p_from,$p_to,$let=0,$solded=0)
+    function make_sql_accounting_detail($p_from,$p_to,$sql_let,$filter_sql)
     {
-        global $g_user;
-        $filter_sql=$g_user->get_ledger_sql('ALL',3);
-        $sql_let='';
-        switch ($let)
-        {
-        case 0:
-                break;
-        case 1:
-            $sql_let=' and j1.j_id in (select j_id from letter_cred union all select j_id from letter_deb)';
-            break;
-        case '2':
-            $sql_let=' and j1.j_id not in (select j_id from letter_cred union all select j_id from letter_deb) ';
-            break;
-        }
-	if ( $solded == 1)
-	  {
-	    $filter=str_replace('jrn_def_id','jr_def_id',$filter_sql);
-	    $bal_sql="select sum(amount_deb) as s_deb,sum(amount_cred) as s_cred, j_poste
-                        from 						
-                        (select case when j_debit='t' then j_montant else 0 end as amount_deb,
-                                case when j_debit='f' then j_montant else 0 end as amount_cred,
-                                j_poste
-                                from jrnx join jrn on (j_grpt = jr_grpt_id)
-                                where
-                                j_poste=$1 and
-                                $filter and
-                                ( to_date($2,'DD.MM.YYYY') <= j_date and
-                                  to_date($3,'DD.MM.YYYY') >= j_date  )) as signed_amount
-						group by j_poste
-						";
-	    $r=$this->db->get_array($bal_sql,array($this->id,$p_from,$p_to));
-	    if ( $this->db->count() == 0 ) return array();
-	    if ($r[0]['s_deb']==$r[0]['s_cred']) return array();
-	  }
-        $this->row=$this->db->get_array("
+
+     $sql =  "
  with sqlletter as (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
          select j1.j_id,jr_id,to_char(j_date,'DD.MM.YYYY') as j_date_fmt,j_date,
                                 j_qcode
@@ -200,8 +163,44 @@ class Acc_Account_Ledger
           ( to_date($2,'DD.MM.YYYY') <= j_date and 
             to_date($3,'DD.MM.YYYY') >= j_date )
                                   and $filter_sql  $sql_let 
-                                  order by j_date,substring(jr_pj_number,'[0-9]+$') asc",array($this->id,$p_from,$p_to));
-        $res_saldo = $this->db->exec_sql("select  sum(deb_montant),sum(cred_montant) from 
+                                  order by j_date,substring(jr_pj_number,'[0-9]+$') asc";
+        return $sql;
+    }
+
+    /**
+     * @brief make the SQL for the balanced accounting
+     * @param $filter filter to respect the security on ledger
+     * @return sql SELECT
+     */
+    public function make_sql_not_balanced_account($filter)
+    {
+        $bal_sql="select sum(amount_deb) as s_deb,sum(amount_cred) as s_cred, j_poste
+                        from 						
+                        (select case when j_debit='t' then j_montant else 0 end as amount_deb,
+                                case when j_debit='f' then j_montant else 0 end as amount_cred,
+                                j_poste
+                                from jrnx join jrn on (j_grpt = jr_grpt_id)
+                                where
+                                j_poste=$1 and
+                                $filter and
+                                ( to_date($2,'DD.MM.YYYY') <= j_date and
+                                  to_date($3,'DD.MM.YYYY') >= j_date  )) as signed_amount
+						group by j_poste
+						";
+        return $bal_sql;
+    }
+
+    /**
+     * @brief make the SQL for the balance of an accounting
+     * @param $filter_sql filter to respect the security on ledger
+     * @param $sql_let string for getting lettering info
+     * @return sql SELECT
+     *
+     */
+    public function make_sql_saldo_account($filter_sql,$sql_let)
+    {
+        $sql_saldo="select  sum(deb_montant) as deb,sum(cred_montant) as cred
+                    from 
                     (select case when j_debit='t' then j_montant else 0 end as deb_montant,
                     case when j_debit='f' then j_montant else 0 end as cred_montant
                                   from jrnx j1
@@ -212,14 +211,74 @@ class Acc_Account_Ledger
                                   where j_poste=$1 and 
                                   ( to_date($2,'DD.MM.YYYY') <= j_date and 
                                     to_date($3,'DD.MM.YYYY') >= j_date ) 
-                                  and $filter_sql  $sql_let ) as m",array($this->id,$p_from,$p_to));
-        $this->tot_deb=$this->tot_cred=0;
-        
-        if ( Database::num_row($res_saldo) > 0 ) {
-            $this->tot_deb=Database::fetch_result($res_saldo, 0, 0);
-            $this->tot_cred=Database::fetch_result($res_saldo, 0, 1);
+                                  and $filter_sql  $sql_let ) as m";
+        return $sql_saldo;
+    }
+    /*!
+     * \brief  Get data for accounting entry between 2 date
+     *
+     *\param  $p_from date from DD.MM.YYYY
+     *\param  $p_to   end date DD.MM.YYYY
+     *\param $let 0 means all rows, 1 only lettered, 2 only unlettered
+     *\param $solded 0 means all account, 1 means only accounts with a saldo <> 0
+     *\note the data are filtered by the access of the current user
+     * \return double array (j_date,deb_montant,cred_montant,description,jrn_name,j_debit,jr_internal)
+     *         (tot_deb,tot_credit
+     *
+     */
+    function get_row_date($p_from, $p_to, $let = 0, $solded = 0)
+    {
+        global $g_user;
+        $filter_sql = $g_user->get_ledger_sql('ALL', 3);
+        $sql_let = '';
+        switch ($let) {
+            case 0:
+                break;
+            case 1:
+                $sql_let = ' and j1.j_id in (select j_id from letter_cred union all select j_id from letter_deb)';
+                break;
+            case '2':
+                $sql_let = ' and j1.j_id not in (select j_id from letter_cred union all select j_id from letter_deb) ';
+                break;
         }
-        return array($this->row,$this->tot_deb,$this->tot_cred);
+        // if accounting is balanced , D = C then returns an empty array
+        if ($solded == 1) {
+            if ($this->db->is_prepare("not_balanced_account") == false) {
+                $filter = str_replace('jrn_def_id', 'jr_def_id', $filter_sql);
+                $sql_balanced = $this->make_sql_not_balanced_account($filter);
+                $this->db->prepare("not_balanced_account", $sql_balanced);
+            }
+
+            $ret_balanced = $this->db->execute("not_balanced_account", array($this->id, $p_from, $p_to));
+
+            $r = Database::fetch_all($ret_balanced);
+            if (empty($r)) return array();
+            if ($r[0]['s_deb'] == $r[0]['s_cred']) return array();
+        }
+
+        // get the detail of accouting
+        if (!$this->db->is_prepare("sql_accounting_detail")) {
+            $sql = $this->make_sql_accounting_detail($p_from, $p_to, $sql_let, $filter_sql);
+            $this->db->prepare("sql_accounting_detail", $sql);
+
+        }
+        $ret = $this->db->execute("sql_accounting_detail", array($this->id, $p_from, $p_to));
+        $this->row = Database::fetch_all($ret);
+
+        // $this->row=$this->db->get_array(,array($this->id,$p_from,$p_to));
+        if ($this->db->is_prepare("saldo_account") == false) {
+            $sql_saldo = $this->make_sql_saldo_account($filter_sql, $sql_let);
+            $this->db->prepare("saldo_account", $sql_saldo);
+        }
+        $res_saldo = $this->db->execute("saldo_account", array($this->id, $p_from, $p_to));
+        $result=Database::fetch_all($res_saldo);
+        $this->tot_deb = $this->tot_cred = 0;
+
+        if (! empty($result) > 0) {
+            $this->tot_deb = $result[0]['deb'];
+            $this->tot_cred = $result[0]['cred'];
+        }
+        return array($this->row, $this->tot_deb, $this->tot_cred);
     }
 
 
@@ -784,5 +843,34 @@ class Acc_Account_Ledger
     function filter_history($p_table_id) {
         return _('Filtre rapide').' '.HtmlInput::filter_table($p_table_id, '0,1,2,3,4,5,6,7,8,9,10', 1);
     }
- 
+
+    public static function get_used_accounting($from_date, $to_date, $from_accounting, $to_accounting)
+    {
+        // check date
+        if (isDate($from_date) != $from_date || isDate($to_date) != $to_date) {
+            return array();
+        }
+        // build query
+        $sql = "select pcm_val,pcm_lib from tmp_pcmn  
+                       where pcm_val in 
+                             (select j_poste from jrnx where j_date >= to_date('$from_date','DD.MM.YYYY')
+    and j_date <= to_date('$to_date','DD.MM.YYYY') ) ";
+        $cond_poste="";
+        if ($from_accounting != '') {
+            $cond_poste .= "and pcm_val >= upper ('" . Database::escape_string($from_accounting) . "')";
+        }
+
+        if ($to_accounting != '') {
+            $cond_poste .= " and pcm_val <= upper ('" . Database::escape_string($to_accounting) . "')";
+        }
+
+        $sql = $sql . $cond_poste . '  order by pcm_val::text';
+
+        // get array
+        $cn=Dossier::connect();
+        $a_poste = $cn->get_array($sql);
+        // return array
+        return $a_poste;
+
+    }
 }
