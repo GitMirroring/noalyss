@@ -767,7 +767,7 @@ class DatabaseCore
 
     static function fetch_all($ret)
     {
-        return pg_fetch_all($ret);
+        return pg_fetch_all($ret,PGSQL_ASSOC);
     }
 
     /**
