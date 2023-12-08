@@ -152,7 +152,7 @@ class UserTest extends TestCase
         $this->assertEquals(USE_PASS,$old_password,"Password mismatch");
         
         $this->assertFalse($this->object->save_password("test1","test2"),"Passwords must be identical");
-        $this->assertTrue($this->object->save_password("test2","test2"),"Identical passwords seen as different");
+        $this->assertTrue($this->object->save_password("Test2++118","Test2++118"),"Identical passwords seen as different");
         $this->object->load();
         $new_password = $this->object->getPassword();
         $this->assertTrue(($old_password != $new_password),"Password not changed old=$old_password new=$new_password");

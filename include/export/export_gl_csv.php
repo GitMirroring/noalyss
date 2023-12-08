@@ -53,33 +53,12 @@ $gDossier=dossier::id();
 $cn=Dossier::connect();
 
 $export=new Noalyss_Csv(_('grandlivre'));
-$poste_id=$http->get('poste_id',"string","");
+$accounting_item_id=$http->get('poste_id',"string","");
 $export->send_header();
-  $cond_poste='';
-  $sql="select pcm_val from tmp_pcmn ";
-    if ($from_poste != '')
-      {
-	$cond_poste = '  where ';
-	$cond_poste .=" pcm_val >= upper ('".Database::escape_string($from_poste)."')";
-      }
 
-    if ( $to_poste != '')
-      {
-	if  ( $cond_poste == '')
-	  {
-	    $cond_poste =  " where pcm_val <= upper ('".Database::escape_string($to_poste)."')";
-	  }
-	else
-	  {
-	    $cond_poste.=" and pcm_val <= upper ('".Database::escape_string($to_poste)."')";
-	  }
-      }
+$a_accounting=Acc_Account_Ledger::get_used_accounting($from_periode,$to_periode,$from_poste,$to_poste);
 
-    $sql=$sql.$cond_poste.'  order by pcm_val::text';
-
-    $a_poste=$cn->get_array($sql);
-
-if ( count($a_poste) == 0 )
+if ( count($a_accounting) == 0 )
 {
     echo _('Aucun résultat');
     printf("\n");
@@ -92,13 +71,13 @@ $header = array( _("Date"), _("Référence"), _("Libellé"), _("Pièce"),_("Lett
 $l=(isset($_GET['letter']))?2:0;
 $s=(isset($_REQUEST['solded']))?1:0;
 
-foreach ($a_poste as $poste)
+foreach ($a_accounting as $accounting_item)
 {
 
 
-  $Poste=new Acc_Account_Ledger($cn,$poste['pcm_val']);
+  $acc_account_ledger=new Acc_Account_Ledger($cn,$accounting_item['pcm_val']);
 
-  $array1=$Poste->get_row_date($from_periode,$to_periode,$l,$s);
+  $array1=$acc_account_ledger->get_row_date($from_periode,$to_periode,$l,$s);
   // don't print empty account
   if ( count($array1) == 0 )
     {
@@ -114,7 +93,7 @@ foreach ($a_poste as $poste)
         continue;
     }
 
-    $export->add(sprintf("%s - %s ",$Poste->id,$Poste->get_name()));
+    $export->add(sprintf("%s - %s ",$accounting_item['pcm_val'],$accounting_item['pcm_lib']));
     $export->write();
     $export->write_header($header);
 
@@ -123,7 +102,7 @@ foreach ($a_poste as $poste)
     $solde_c = 0.0;
     bcscale(2);
     $current_exercice="";
-    foreach ($Poste->row as $detail)
+    foreach ($acc_account_ledger->row as $detail)
     {
 
         /*
@@ -148,7 +127,7 @@ foreach ($a_poste as $poste)
             $export->add($current_exercice);
             $export->add("");
             $export->add("");
-            $export->add(_('Total')." ".$Poste->id);
+            $export->add(_('Total')." ".$acc_account_ledger->id);
             if ( $solde_d > 0 ) {
                 $export->add($solde_d,"number");
             } else {
@@ -200,7 +179,7 @@ foreach ($a_poste as $poste)
         else
             $export->add("");
         $export->add(abs($solde),"number");
-	$export->add($Poste->get_amount_side($solde),"text");
+	$export->add($acc_account_ledger->get_amount_side($solde),"text");
         $export->write();
 
     }
@@ -210,7 +189,7 @@ foreach ($a_poste as $poste)
     $export->add($current_exercice);
     $export->add("");
     $export->add("");
-    $export->add(_('Total').$Poste->id);
+    $export->add(_('Total').$acc_account_ledger->id);
     if ($solde_d  > 0 ) $export->add($solde_d,"number"); else $export->add("");
     if ($solde_c  > 0 ) $export->add($solde_c,"number"); else $export->add("");
     $export->add(abs($solde_c-$solde_d),"number");
