@@ -104,44 +104,29 @@ echo '</div>';
 //-----------------------------------------------------
 if ( isset( $_REQUEST['bt_html'] ) )
 {
+    if ( DEBUGNOALYSS > 1 ) \Noalyss\Dbg::timer_start();
+
   echo '<div class="content">';
     echo Acc_Account_Ledger::HtmlTableHeader("gl_comptes");
     echo '</div>';
-    $sql='select pcm_val from tmp_pcmn ';
-    $cond_poste='';
+    try {
+        $from_periode=$http->request("from_periode","date");
+        $to_periode=$http->request("to_periode","date");
 
-    if ($from_poste->value != '')
-      {
-		$cond_poste = '  where ';
-		$cond_poste .=' pcm_val >= upper (\''.Database::escape_string($from_poste->value).'\')';
-      }
-
-    if ( $to_poste->value != '')
-      {
-	if  ( $cond_poste == '')
-	  {
-	    $cond_poste =  ' where pcm_val <= upper (\''.Database::escape_string($to_poste->value).'\')';
-	  }
-	else
-	  {
-	    $cond_poste.=' and pcm_val <= upper (\''.Database::escape_string($to_poste->value).'\')';
-	  }
-      }
-
-    $sql=$sql.$cond_poste.'  order by pcm_val::text';
-
-    $a_poste=$cn->get_array($sql);
-
-    if ( sizeof($a_poste) == 0 )
-    {
-        die("Nothing here. Strange.");
-        exit;
-    }
-    if ( isDate($_REQUEST['from_periode'])==null || isDate($_REQUEST['to_periode'])==null)
-    {
+    } catch (Exception $e) {
         echo alert(_('Date malformée, désolée'));
         return;
     }
+
+
+    $a_accounting=Acc_Account_Ledger::get_used_accounting($from_periode,$to_periode,$from_poste->value,$to_poste->value);
+
+    if ( sizeof($a_accounting) == 0 )
+    {
+        echo_warning(_("Aucune donnée"));
+        return;
+    }
+
     echo '<div class="content">';
 
 
@@ -150,14 +135,12 @@ if ( isset( $_REQUEST['bt_html'] ) )
 	$s=(isset($_REQUEST['solded']))?1:0;
     
     
-    foreach ($a_poste as $poste_id )
+    foreach ($a_accounting as $accounting_id )
     {
-        $Poste=new Acc_Account_Ledger ($cn, $poste_id['pcm_val']);
-        $Poste->load();
+        $acc_account_ledger=new Acc_Account_Ledger ($cn, $accounting_id['pcm_val']);
 
-
-        $Poste->get_row_date( $_GET['from_periode'], $_GET['to_periode'],$l,$s);
-        if ( empty($Poste->row))
+        $acc_account_ledger->get_row_date( $from_periode, $to_periode,$l,$s);
+        if ( empty($acc_account_ledger->row))
         {
             continue;
         }
@@ -165,7 +148,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
 
         echo '<tr >
         <td colspan="8" style="width:auto">
-        <h2 class="">'. $poste_id['pcm_val'].' '.h($Poste->label).'</h2>
+        <h2 class="">'. $accounting_id['pcm_val'].' '.h($accounting_id['pcm_lib']).'</h2>
         </td>
         </tr>';
 
@@ -188,7 +171,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
 	$i=0;
         $current_exercice="";
 
-        foreach ($Poste->row as $detail)
+        foreach ($acc_account_ledger->row as $detail)
         {
             /*
              * separation per exercice
@@ -199,7 +182,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
                 echo '<tr class="highlight">
                <td>'.$current_exercice.'</td>
                <td>'.''.'</td>
-               <td>'._("Total du compte").$poste_id['pcm_val'].'</td>
+               <td>'._("Total du compte").$accounting_id['pcm_val'].'</td>
                <td>'.''.'</td>'.td("").
                '<td align="right">'.($solde_d  > 0 ? nbm( $solde_d)  : '').'</td>
                <td align="right">'.($solde_c  > 0 ? nbm( $solde_c)  : '').'</td>
@@ -232,7 +215,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
 	      $solde   = bcadd($solde,$detail['deb_montant']);
 	      $solde_d = bcadd($solde_d,$detail['deb_montant']);
             }
-			$side="&nbsp;".$Poste->get_amount_side($solde);
+			$side="&nbsp;".$acc_account_ledger->get_amount_side($solde);
 	    $letter="";
 		$html_let="";
 		if ($detail['letter'] > 0) {
@@ -256,7 +239,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
         echo '<tr class="highlight">
         <td>'.$current_exercice.'</td>
         <td>'.''.'</td>
-        <td>'.'<b>'.'Total du compte '.$poste_id['pcm_val'].'</b>'.'</td>
+        <td>'.'<b>'.'Total du compte '.$accounting_id['pcm_val'].'</b>'.'</td>
         <td>'.''.'</td>'.td("").
         '<td align="right">'.'<b>'.($solde_d  > 0 ? nbm( $solde_d)  : '').'</b>'.'</td>
         <td align="right">'.'<b>'.($solde_c  > 0 ? nbm( $solde_c)  : '').'</b>'.'</td>
@@ -272,6 +255,8 @@ if ( isset( $_REQUEST['bt_html'] ) )
     echo '</table>';
     echo Acc_Account_Ledger::HtmlTableHeader("gl_comptes");
     echo "</div>";
-    exit;
+    if (DEBUGNOALYSS> 1) echo \Noalyss\Dbg::hidden_info("\$acc_account_ledger", $acc_account_ledger);
+    if ( DEBUGNOALYSS > 1 ) \Noalyss\Dbg::timer_show();
+    return;
 }
 ?>

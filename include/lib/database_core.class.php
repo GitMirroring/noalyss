@@ -767,7 +767,7 @@ class DatabaseCore
 
     static function fetch_all($ret)
     {
-        return pg_fetch_all($ret);
+        return pg_fetch_all($ret,PGSQL_ASSOC);
     }
 
     /**
@@ -1024,7 +1024,28 @@ class DatabaseCore
 
         }
     }
-    
+
+    /**
+     * @brief clear a prepare stmt
+     * @see DatabaseCore::is_prepare
+     * @see DatabaseCore::execute
+     * @see DatabaseCore::prepare
+     * @param $sql_name name of the prepare SQL
+     */
+    function clear_prepare($sql_name)
+    {
+        pg_exec($this->db,sprintf('DEALLOCATE "%s"'),DatabaseCore::escape_string($sql_name));
+    }
+    /**
+     * @brief clear all prepare stmt
+     * @see DatabaseCore::is_prepare
+     * @see DatabaseCore::execute
+     * @see DatabaseCore::prepare
+     */
+    function clear_all_prepare()
+    {
+        pg_exec($this->db,'DEALLOCATE ALL');
+    }
 }
 
 /* test::test_me(); */

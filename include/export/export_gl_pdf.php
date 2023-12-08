@@ -41,29 +41,7 @@ $cn=Dossier::connect();
 $g_user->Check();
 $g_user->check_dossier($gDossier);
 
-$sql="select pcm_val from tmp_pcmn ";
-
-$cond_poste="";
-if ($from_poste != '')
-  {
-    $cond_poste = '  where ';
-    $cond_poste .=' pcm_val >= upper (\''.Database::escape_string($from_poste).'\')';
-  }
-
-if ( $to_poste != '')
-  {
-    if  ( $cond_poste == '')
-      {
-	$cond_poste =  ' where pcm_val <= upper (\''.Database::escape_string($to_poste).'\')';
-      }
-    else
-      {
-	$cond_poste.=' and pcm_val <= upper (\''.Database::escape_string($to_poste).'\')';
-      }
-  }
-
-$sql=$sql.$cond_poste.'  order by pcm_val::text';
-$a_poste=$cn->get_array($sql);
+$a_accounting=Acc_Account_Ledger::get_used_accounting($from_periode,$to_periode,$from_poste,$to_poste);
 
 $pdf = new PDF($cn);
 $pdf->setDossierInfo(_("  Periode : ").$from_periode." - ".$to_periode);
@@ -72,7 +50,7 @@ $pdf->AddPage();
 $pdf->setTitle("Grand Livre",true);
 $pdf->SetAuthor('NOALYSS');
 
-if ( count($a_poste) == 0 )
+if ( count($a_accounting) == 0 )
 {
     $pdf->Output();
     return;
@@ -87,13 +65,12 @@ $width  = array( 13    , 20         , 60       , 15     ,  12     , 20     , 20 
 $l=(isset($_REQUEST['letter']))?2:0;
 $s=(isset($_REQUEST['solded']))?1:0;
 
-foreach ($a_poste as $poste)
+foreach ($a_accounting as $accounting_item)
 {
 
-  $Poste=new Acc_Account_Ledger($cn,$poste['pcm_val']);
-
-
-  $array1=$Poste->get_row_date($from_periode,$to_periode,$l,$s);
+  $acc_account_ledger=new Acc_Account_Ledger($cn,$accounting_item['pcm_val']);
+  
+  $array1=$acc_account_ledger->get_row_date($from_periode,$to_periode,$l,$s);
   // don't print empty account
   if (empty($array1) || count($array1[0]) == 0 )
     {
@@ -104,7 +81,7 @@ foreach ($a_poste as $poste)
   $tot_cred=$array1[2];
 
     $pdf->SetFont('DejaVuCond','',10);
-    $Libelle=sprintf("%s - %s ",$Poste->id,$Poste->get_name());
+    $Libelle=sprintf("%s - %s ",$accounting_item['pcm_val'],$accounting_item['pcm_lib']);
     $pdf->write_cell(0, 7, $Libelle, 1, 1, 'C');
 
     $pdf->SetFont('DejaVuCond','',6);
@@ -119,7 +96,7 @@ foreach ($a_poste as $poste)
     $solde_d = 0.0;
     $solde_c = 0.0;
     $current_exercice="";
-    foreach ($Poste->row as $detail)
+    foreach ($acc_account_ledger->row as $detail)
     {
 
         /*
@@ -151,7 +128,7 @@ foreach ($a_poste as $poste)
                 $i++;
                 $pdf->write_cell($width[$i], 6, '', 0, 0, $lor[$i]);
                 $i++;
-                $pdf->write_cell($width[$i], 6, 'Total du compte '.$Poste->id, 0, 0, 'R');
+                $pdf->write_cell($width[$i], 6, 'Total du compte '.$acc_account_ledger->id, 0, 0, 'R');
                 $i++;
                 $pdf->write_cell($width[$i], 6, ($solde_d  > 0 ? nbm($solde_d)  : ''), 0, 0, $lor[$i]);
                 $i++;
@@ -184,7 +161,7 @@ foreach ($a_poste as $poste)
         }
 
         $i = 0;
-		$side=" ".$Poste->get_amount_side($solde);
+		$side=" ".$acc_account_ledger->get_amount_side($solde);
         $pdf->LongLine($width[$i], 6, shrink_date($detail['j_date_fmt']), 0, $lor[$i]);
         $i++;
         $pdf->LongLine($width[$i], 6, $detail['jr_internal'], 0, $lor[$i] );
@@ -220,7 +197,7 @@ foreach ($a_poste as $poste)
     $i++;
     $pdf->write_cell($width[$i], 6, '', 0, 0, $lor[$i]);
     $i++;
-    $pdf->write_cell($width[$i], 6, 'Total du compte '.$Poste->id, 0, 0, 'R');
+    $pdf->write_cell($width[$i], 6, 'Total du compte '.$acc_account_ledger->id, 0, 0, 'R');
     $i++;
     $pdf->write_cell($width[$i], 6, ($solde_d  > 0 ? nbm($solde_d)  : ''), 0, 0, $lor[$i]);
     $i++;

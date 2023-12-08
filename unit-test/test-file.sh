@@ -9,15 +9,15 @@ help(){
 }
 
 cd `dirname $0`
-
+export XDEBUG_MODE=off
 CUR_DIR=`pwd`
 PHPUNIT=$CUR_DIR/phpunit
 FILETOTEST=""
 FUNCTION=""
 COVERAGE=""
 FOLDERTEST=""
-#PHPINI="/usr/bin/php"
-PHPINI="/usr/bin/php "
+PHPINI="/opt/php/8.1/bin/php"
+#PHPINI="/usr/bin/php "
 while getopts "f:i:cd:x" opt; do
 	case $opt in
 		d)
