@@ -9,7 +9,7 @@ help(){
 }
 
 cd `dirname $0`
-
+export XDEBUG_MODE=off
 CUR_DIR=`pwd`
 PHPUNIT=$CUR_DIR/phpunit
 FILETOTEST=""
