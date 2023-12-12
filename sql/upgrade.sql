@@ -38,3 +38,5 @@ update fiche_detail set ad_value=ad_value where ad_id in (select ad_id from attr
 
 insert into parameter values ('MY_REPORT','N') ON CONFLICT DO NOTHING;
 
+update menu_ref set me_file='payment_method.inc.php' where me_code='CFGPAY';
+
