@@ -165,7 +165,7 @@ class Document_Export
      * @param int $reconcilied_operation 1 with receipt of reconcilied operation 2 without them
      * 
      */
-    function     export_all($p_array, Progress_Bar $progress,$p_separate=1,$reconcilied_document)
+    function     export_all($p_array, Progress_Bar $progress,$p_separate=1,$reconcilied_document=2)
     {
         $this->progress=$this->progress;
 

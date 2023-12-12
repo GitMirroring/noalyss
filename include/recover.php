@@ -76,7 +76,7 @@ elseif ($action=="send_email") :
 
 
     if ($valid==true):
-        $request_id=generate_random_string(SIZE_REQUEST,special: 0);
+        $request_id=generate_random_string(SIZE_REQUEST, 0);
         $user_password=generate_random_password(10);
         // exist a valid request for this user ?
         $exist_request= $cn->get_array("select request , password from recover_pass 
