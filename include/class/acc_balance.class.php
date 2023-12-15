@@ -275,7 +275,7 @@ class Acc_Balance
         $side_delta=findSide($delta);
 
         $a['poste']="";
-        $a['label']=sprintf(_("Totaux %s %s"),nbm(abs($delta)),$side_delta);
+        $a['label']=sprintf(_("Totaux delta  %s %s"),nbm(abs($delta)),$side_delta);
         $a['sum_deb']=$tot_deb;
         $a['sum_cred']=$tot_cred;
         $a['solde_deb']=$tot_deb_saldo;

@@ -101,12 +101,21 @@ foreach ($row as $r)
     $export->add($r['sum_deb'],"number");
     $export->add($r['sum_cred'],"number");
 
-    if ( $delta < 0 ){
+    if ( $delta < 0){
         $export->add("0","number");
-        $export->add(abs($delta),"number");
-    }else {
-        $export->add(abs($delta),"number");
+        $export->add($r['solde_cred'],"number");
+    }elseif ( $delta > 0 ) {
+        $export->add($r['solde_deb'],"number");
         $export->add("0","number");
+    }elseif ($delta==0 && $r['poste']!="")
+    {
+        $export->add("0","number");
+        $export->add("0","number");
+    }elseif ( $delta == 0 && $r['poste'] =="" ) {
+        $export->add($r['solde_deb'],"number");
+        $export->add($r['solde_cred'],"number");
+    } else {
+        throw new \Exception(__FILE__.":".__LINE__);
     }
     $export->write();
 }
