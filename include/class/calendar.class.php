@@ -42,6 +42,7 @@ class Calendar
     var    $str_name;      // array of tiers for event - follow-up (T: action_gestion)
     var    $title;         // array of title for each event - follow-up (T: action_gestion)
     var    $hour ;         // array of hour for each event - follow-up (T: action_gestion)
+    var $default_periode;   //default periode
 
     function __construct()
     {
@@ -257,7 +258,7 @@ class Calendar
         {
             $p_id=$g_user->get_periode();
         }
-	$this->default_periode=$p_id;
+    	$this->default_periode=$p_id;
         return  $p_id;
     }
     /**
