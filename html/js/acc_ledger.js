@@ -1245,7 +1245,9 @@ function op_save(obj)
                         parameters: queryString,
                         onFailure: null,
                         onSuccess: function (req){
-                            if (req.responseText !=='OK') {
+                            remove_waiting_box();
+                            var answer=req.getElementsByTagName('code');
+                            if (answer[0] !=='OK') {
                                 console.error("D2. op_save")
                                 smoke.alert(req.responseText);
                             }
