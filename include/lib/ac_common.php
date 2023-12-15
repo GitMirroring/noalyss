@@ -1444,7 +1444,7 @@ function confirm_with_string($p_ctl_name,$p_car)
 {
     $code=generate_random_string($p_car );
     $r =  HtmlInput::hidden("ctlcode",$code);
-    $r.='<span style="margin-left:1.2em;margin-right:1.2em;font-size:112%;font-weight:bold">'. $code.'</span>';
+    $r.='<span style="margin-left:1.2em;margin-right:1.2em;font-size:112%;font-weight:bold;border:navy solid 1px ; padding:0.5rem">'. $code.'</span>';
     $ctl=new IText($p_ctl_name);
     $r.=$ctl->input();
     return $r;
