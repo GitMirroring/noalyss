@@ -67,6 +67,7 @@ if (strpos($inc_path, ";") != 0) {
 set_include_path($new_path);
 @ini_set('default_charset', "UTF-8");
 @ini_set('session.use_cookies', 1);
+// deprecated
 @ini_set('magic_quotes_gpc', 'off');
 
 if (!defined('OVERRIDE_PARAM')) {
