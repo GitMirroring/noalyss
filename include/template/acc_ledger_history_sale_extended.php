@@ -25,8 +25,10 @@
  * @brief detail of the list of operation with VAT and items
  */
 bcscale(2);
+
+
 ?>
-<table class="result">
+<table class="result" id="tb_print_ledger">
     <tr>
         <th>
             <?=_('Date')?>

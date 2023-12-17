@@ -26,6 +26,7 @@ if (!defined('ALLOWED'))
  * @file
  * @brief Display one purchase operation on one line , with the sum of VAT, ND...
  */
+echo \HtmlInput::filter_table("tb_print_ledger", "0,1,2,3,4,5,6,7", 1);
 ?>
 <TABLE class="result">
     <tr>
