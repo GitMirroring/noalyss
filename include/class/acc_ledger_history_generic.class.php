@@ -700,7 +700,9 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
     public function export_oneline_html()
     {
         $this->get_rowSimple();
-        echo '<TABLE class="result">';
+
+        echo \HtmlInput::filter_table("tb_print_ledger", "0,1,2,3,4,5,6", 1);
+        echo '<TABLE class="result" id="tb_print_ledger">';
         echo "<TR>".
         th(_("Date")).
         th(_("n° pièce")).

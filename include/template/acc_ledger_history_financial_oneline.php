@@ -25,8 +25,10 @@ if (!defined('ALLOWED'))
  * @file
  * @brief display Financial operation , simple and detailled
  */
+
+echo \HtmlInput::filter_table("tb_print_ledger", "0,1,2,3,4,5,6,7,8,9", 1);
 ?>
-<table class="result">
+<table class="result" id="tb_print_ledger">
     <tr>
         <th><?= _('Date') ?></th>
         <th><?= _('Banque') ?></th>
