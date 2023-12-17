@@ -184,7 +184,32 @@ class PDF_Core extends TFPDF
         }
         return false;
     }
-    private function print_row()
+
+    /**
+     * @brief print the current array of cell and reset it , if different colors are set on the same row
+     * you have to print it before changing
+     *@code
+     * // fill red , text white
+     * $this->SetFillColor(255,0,0);
+     * $this->SetTextColor(255,255,255);
+     * $this->write_cell(15,5,"PRICE",0,0,'R',fill:true);
+     *
+     * // print the cell without a linefeed
+     * $this->print_row();
+     *
+     * // text in black on green
+     *
+     * $this->SetTextColor(0,0,0);
+     * $this->SetFillColor(0,255,0);
+     *
+     * $this->write_cell(15,5,nbm($other['price']),0,0,'R');
+     *@endcode
+     * @see TFPDF::SetTextColor()
+     * @see TFPDF::SetFillColor()
+     * @see TFPDF::SetFontSize()
+     * @return void
+     */
+    protected function print_row()
     {
         static $e=0;
         $e++;
