@@ -36,11 +36,16 @@ require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 MaintenanceMode("block.html");
 
 global $g_user,$cn,$g_parameter;
+$cn=Dossier::connect();
+$g_parameter=new Noalyss_Parameter_Folder($cn);
+
 $http=new HttpInput();
 $cn=Dossier::connect();
 $g_user=new Noalyss_user($cn);
 $g_user->check();
 $only_plugin=$g_user->check_dossier(dossier::id());
+
+
 set_language();
 $ext=new Extension($cn);
 
