@@ -208,10 +208,10 @@ if ($aRap  != null ) {
                 array($internal));
             // add additional tax if any
             $add=$operation->get_sum_other_tax();
-            $amount=bcadd($amount,$add,2);
+            $amount=bcadd($amount??0,$add??0,2);
             break;
     }
-    $total_rec=bcadd($total_rec,$amount);
+    $total_rec=bcadd($total_rec,$amount??0);
     $str="modifyOperation(".$aRap[$e].",".$gDossier.")";
     
     // If write access , allow to drop Reconciles operations
