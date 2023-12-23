@@ -950,20 +950,22 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $mp=new Acc_Payment($this->db,$e_mp);
                 $mp->load();
 
-                /* fiche */
-                if ($mp->get_parameter('qcode') == '')
-                    $fqcode=${'e_mp_qcode_'.$e_mp};
-                else
-                    $fqcode=$mp->get_parameter('qcode');
-
-                $acfiche = new Fiche($this->db);
-                $acfiche->get_by_qcode($fqcode);
-
                 /* jrnx */
                 $acseq=$this->db->get_next_seq('s_grpt');
                 $acjrn=new Acc_Ledger($this->db,$mp->get_parameter('ledger_target'));
                 $acinternal=$acjrn->compute_internal_code($acseq);
-
+                /*
+                * for the use of the card of the bank
+                */
+                if ( $acjrn->get_type()=='FIN') {
+                   $acjrn=new Acc_Ledger_Fin($this->db, $mp->get_parameter('ledger_target'));
+                   $acfiche=new Fiche($this->db,$acjrn->get_bank());
+                   $fqcode=$acfiche->strAttribut(ATTR_DEF_QUICKCODE);
+                } else {
+                   $fqcode = ${'e_mp_qcode_' . $e_mp};
+                  $acfiche = new Fiche($this->db);
+                  $acfiche->get_by_qcode($fqcode);
+                }
                 /* Insert paid by  */
                 $acc_pay=new Acc_Operation($this->db);
                 $acc_pay->date=$e_date;
@@ -2140,6 +2142,7 @@ EOF;
         
         return $array;
     }
+
 
 }
 

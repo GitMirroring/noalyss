@@ -1136,11 +1136,12 @@ class Acc_Ledger_Fin extends Acc_Ledger
     }
 
     /**
-     * return the fiche_id of the bank
+     * @brief find and FICHE.F_ID of the bank or -1 if not found
      */
     function get_bank()
     {
         $bank_id=$this->db->get_value('select jrn_def_bank from jrn_def where jrn_def_id=$1', array($this->id));
+        if (empty($bank_id)) return -1;
         return $bank_id;
     }
 

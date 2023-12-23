@@ -242,9 +242,13 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $this->check_currency_setting($p_currency_code);
     }
 
-    /*!\brief insert into the database, it calls first the verify function,
-     * change the value of this->jr_id and this->jr_internal
-     * * It generates the document if gen_invoice is set and save the middle of payment if any ($e_mp)
+    /*!
+     * \brief insert into the database, it calls first the verify function,
+     * store the value of the inserted operation in $this->jr_id and this->jr_internal
+     *
+     *  It generates the document if gen_invoice is set and save the middle of payment if any ($e_mp)
+     *
+     *  It also create a second operation if there is a payment
      *
      * \param $p_array is usually $_POST or a predefined operation
      * \return string : internal number 
@@ -653,15 +657,24 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 $mp = new Acc_Payment($this->db, $e_mp);
                 $mp->load();
 
-                /* fiche */
-                $fqcode = ${'e_mp_qcode_' . $e_mp};
-                $acfiche = new Fiche($this->db);
-                $acfiche->get_by_qcode($fqcode);
 
                 /* jrnx */
                 $acseq = $this->db->get_next_seq('s_grpt');
                 $acjrn = new Acc_Ledger($this->db, $mp->get_parameter('ledger_target'));
                 $acinternal = $acjrn->compute_internal_code($acseq);
+
+                /*
+                 * for the use of the card of the bank
+                 */
+                if ( $acjrn->get_type()=='FIN') {
+                    $acjrn=new Acc_Ledger_Fin($this->db, $mp->get_parameter('ledger_target'));
+                    $acfiche=new Fiche($this->db,$acjrn->get_bank());
+                    $fqcode=$acfiche->strAttribut(ATTR_DEF_QUICKCODE);
+                } else {
+                    $fqcode = ${'e_mp_qcode_' . $e_mp};
+                    $acfiche = new Fiche($this->db);
+                    $acfiche->get_by_qcode($fqcode);
+                }
 
                 /* Insert paid by  */
                 $acc_pay = new Acc_Operation($this->db);

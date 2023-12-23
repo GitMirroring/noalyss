@@ -128,7 +128,7 @@ class Acc_Ledger  extends jrn_def_sql
     }
     /**
      * @brief Return the type of a ledger (ACH,VEN,ODS or FIN) or GL
-     *
+     * @return string FIN ODS ACH VEN or GL if id == 0
      */
     function get_type()
     {
