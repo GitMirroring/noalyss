@@ -1943,7 +1943,7 @@ class Acc_Ledger  extends jrn_def_sql
             $empl->get_by_qcode($e_mp_qcode);
             if ($empl->empty_attribute(ATTR_DEF_ACCOUNT)==true)
             {
-                throw new Exception(_("Celui qui paie n' a pas de poste comptable"),
+                throw new Exception(_("Le moyen de paiement choisi n'a pas de poste comptable"),
                 20);
             }
             /* get the account and explode if necessary */

@@ -109,6 +109,7 @@ class Sendmail extends  Sendmail_Core
 
         $email_sent = $p_repo->get_value ('select de_sent_email from dossier_sent_email where dos_id = $1 and de_date=$2',
             array($p_dossier_id,$p_date));
+        if ($email_sent == "") return 0;
         return $email_sent;
 
 
@@ -123,7 +124,7 @@ class Sendmail extends  Sendmail_Core
     {
         if ( $p_dossier == -1) return ;
         $email_sent = $this->get_email_sent($p_repo,$p_dossier,$p_date);
-        if (  $email_sent == 0 ){
+        if (  empty($email_sent) ){
             $p_repo->exec_sql("insert into public.dossier_sent_email(de_sent_email,dos_id,de_date) values($1,$2,$3)",
                 array(1,$p_dossier,$p_date));
             return;
