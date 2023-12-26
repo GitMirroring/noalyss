@@ -106,9 +106,9 @@ class Sendmail_Core
         for ($i = 0; $i < count($array); $i++)
         {
             $name = $array[$i];
-            if (trim($this->$name) == "")
+            if (trim($this->$name??"") == "")
             {
-                throw new Exception( sprintf(_("%s est vide"),$name));
+                throw new Exception( sprintf(_("%s est vide"),$name),EXC_INVALID);
             }
         }
     }
