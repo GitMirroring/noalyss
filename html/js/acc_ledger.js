@@ -452,7 +452,7 @@ function ledger_add_multiple(p_elid)
     for (i=0;i<nbrow;i++) {
         if ( type_ledger == 'O' ) {ledger_add_row();}
         if ( type_ledger == 'F') { ledger_fin_add_row();}
-        if ( type_ledger == 'M') { quick_writing_add_row();activate_checkbox_side();}
+        if ( type_ledger == 'M') { quick_writing_add_row();}
     }
 }
 /**
@@ -749,7 +749,10 @@ function quick_writing_add_row()
         new_tt.evalScripts();
 
     }
-    $('ck'+nb.value).addEventListener('click',display_range_dcside('click',$('ck'+nb.value)));
+    var ck=$('ck'+nb.value);
+    ck.addEventListener('click',function(event) { display_range_dcside(event,ck); display_dcside(ck);});
+
+
     $("qc_" + nb.value).value = "";
     $("amount" + nb.value).value = "";
     $("poste" + nb.value).value = "";
