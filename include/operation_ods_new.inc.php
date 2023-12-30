@@ -86,30 +86,41 @@ $default_currency=new Acc_Currency($cn,0);
 
 echo $ledger->input($p_post);
 
+$style=' style="display:inline-block;width: 15rem;text-align: right"';
+?>
+<div style="position:absolute;width:40%;right:20px">
+    <table class="info_op">
+        <tr>
+            <td style="border:1px solid "><?=_('Totaux')?></td>
+            <td style="border:1px solid lightgrey"><?= _('Débit') ?>
+            <span id="totalDeb" <?=$style?>></span>
+            </td>
+            <td style="border:1px solid lightgrey"><?= _('Crédit') ?>
+            <span id="totalCred"  <?=$style?>></span>
+            </td>
+            <td style="border:1px solid lightgrey"><?= _('Difference') ?>
+            <span id="totalDiff"   <?=$style?>></span>
+            </td>
+        </tr>
+        <?php // For currency ?>
+        <tr id="row_currency">
+            <td style="border:1px solid "><?=$default_currency->get_code()?></td>
 
+            <td style="border:1px solid lightgrey"><?= _('Débit') ?>
+            <span id="default_currency_deb"  <?=$style?>></span>
+            </td>
 
+            <td style="border:1px solid lightgrey"><?= _('Crédit') ?>
+            <span id="default_currency_cred"   <?=$style?>></span>
+            </td>
 
-echo '<div style="position:absolute;width:40%;right:20px">';
-echo '<table class="info_op">'.
- '<tr>'.td('').
-        td(_('Débit')) .
-        '<td id="totalDeb" class="num"></td>' .
-        td(_('Crédit')) .
-        ' <td id="totalCred" class="num"></td>' .
-        td(_('Difference')) . 
-        ' <td id="totalDiff"></td>'.
-        '</tr>';
-// For currency
-echo  '<tr id="row_currency">'.td($default_currency->get_code()).
-        td(_('Débit')) .
-        '<td id="default_currency_deb" class="num"></td>' .
-        td(_('Crédit')) .
-        ' <td id="default_currency_cred" class="num"></td>' .
-        td().
-        '</tr>';
-echo '</table>';
+            <td></td>
+        </tr>
+    </table>
 
-echo '</div>';
+</div>
+
+<?php
 
 $iconcerned=new IConcerned('jrn_concerned');
 $iconcerned->amount_id="totalDeb";
