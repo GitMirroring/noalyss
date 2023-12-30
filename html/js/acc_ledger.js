@@ -454,6 +454,10 @@ function ledger_add_multiple(p_elid)
         if ( type_ledger == 'F') { ledger_fin_add_row();}
         if ( type_ledger == 'M') { quick_writing_add_row();}
     }
+    if ( type_ledger == 'M') {
+        var aCheckBox=$$('.debit-credit')
+        aCheckBox.forEach((item)=>display_dcside(item))
+    }
 }
 /**
  *  add a line in the form for the purchase ledger
