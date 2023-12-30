@@ -1102,7 +1102,7 @@ class Acc_Ledger  extends jrn_def_sql
         }
         $ret.=create_script("$('".$wDate->id."').focus()");
         // for displaying Credit or Debit
-        $ret.=create_script("activate_checkbox_side()");
+        $ret.=create_script("(function(){activate_checkbox_side()})();");
 
         return $ret;
     }
