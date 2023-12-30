@@ -441,7 +441,7 @@ function ledger_fin_add_row()
 
 /**
  * Add multiple row
- * @param p_numrow
+ * @param string p_elid is the id of element  with the number of rows to add, and p_elid+"_ledger" is the type of ledger : M : Misc Operation O : Sales or purchase and F for financial
  */
 function ledger_add_multiple(p_elid)
 {
@@ -452,7 +452,7 @@ function ledger_add_multiple(p_elid)
     for (i=0;i<nbrow;i++) {
         if ( type_ledger == 'O' ) {ledger_add_row();}
         if ( type_ledger == 'F') { ledger_fin_add_row();}
-        if ( type_ledger == 'M') { quick_writing_add_row();}
+        if ( type_ledger == 'M') { quick_writing_add_row();activate_checkbox_side();}
     }
 }
 /**
@@ -747,7 +747,9 @@ function quick_writing_add_row()
         newCell.innerHTML = new_tt;
         newCell.className=rowToCopy.cells[e].className;
         new_tt.evalScripts();
+
     }
+    $('ck'+nb.value).addEventListener('click',display_range_dcside('click',$('ck'+nb.value)));
     $("qc_" + nb.value).value = "";
     $("amount" + nb.value).value = "";
     $("poste" + nb.value).value = "";
