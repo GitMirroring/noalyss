@@ -25,6 +25,7 @@
  * \brief to write into the ledgers ODS a new operation
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
+\Noalyss\Dbg::echo_file(__FILE__);
 
 
 global $g_user,$g_parameter,$http;

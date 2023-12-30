@@ -995,7 +995,7 @@ class Acc_Ledger  extends jrn_def_sql
                 '<th style="text-align:left">'._('Poste').$info_poste.'</th>'.
                 '<th class="visible_gt800 visible_gt1155" style="text-align:left">'._('Libellé').'</th>'.
                 '<th style="text-align:left">'._('Montant').'</th>'.
-                '<th style="text-align:left">'._('Débit').'</th>'.
+                '<th style="text-align:left">'._('Côté').'</th>'.
                 '</tr>';
 
 
@@ -1065,13 +1065,13 @@ class Acc_Ledger  extends jrn_def_sql
             $amount->value=(isset(${'amount'.$i}))?${"amount".$i}:''
             ;
             $amount->readonly=$p_readonly;
-            $amount->javascript=' onChange="format_number(this);checkTotalDirect()"';
+            $amount->javascript='onChange="format_number(this);checkTotalDirect()"';
             // D/C
             $deb=new ICheckBox();
             $deb->name='ck'.$i;
             $deb->selected=(isset(${'ck'.$i}))?true:false;
             $deb->readonly=$p_readonly;
-            $deb->javascript=' onChange="checkTotalDirect()"';
+            $deb->javascript='class="debit-credit"  onChange="checkTotalDirect()"';
             $str_add_button=($add_card==true)?$this->add_card("-1",
                             $quick_code->id):"";
             $ret.='<tr>';
@@ -1085,7 +1085,9 @@ class Acc_Ledger  extends jrn_def_sql
                     '</td>';
             $ret.='<td class="visible_gt800 visible_gt1155">'.$line_desc->input().'</td>';
             $ret.='<td>'.$amount->input().'</td>';
-            $ret.='<td>'.$deb->input().'</td>';
+            $ret.='<td>'.$deb->input()
+                    .'<span id="txt'.$deb->id.'"></span>'
+                .'</td>';
             $ret.='</tr>';
             // If readonly == 1 then show CA
         }
@@ -1099,6 +1101,9 @@ class Acc_Ledger  extends jrn_def_sql
             $ret.=sprintf(_("Réconciliation/rapprochements : %s"), $w->input());
         }
         $ret.=create_script("$('".$wDate->id."').focus()");
+        // for displaying Credit or Debit
+        $ret.=create_script("activate_checkbox_side()");
+
         return $ret;
     }
 

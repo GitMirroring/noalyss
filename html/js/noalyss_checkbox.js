@@ -87,6 +87,26 @@ function activate_checkbox_range(p_range_name) {
             checkbox_set_range(event, elt, p_range_name);
         },false));
 }
-;
 
+/**
+ * Checkbox for Debit - Credit , from Misc Operation
+ */
+function activate_checkbox_side()
+{
+    var aCheckBox=$$('.debit-credit')
+    aCheckBox.forEach((item)=>item.addEventListener('click',function (event) {display_dcside(item)}))
+    aCheckBox.forEach((item)=>display_dcside(item))
+}
 
+/**
+ * Update the SPAN , id based on checkbox id (txtck0), if checked , display Debit otherwise Credit
+ * @param item
+ */
+function display_dcside(item)
+{
+    if (item.checked == true) {
+        $('txt'+item.id).update("Débit")
+    } else {
+        $('txt'+item.id).update("Crédit")
+    }
+}
