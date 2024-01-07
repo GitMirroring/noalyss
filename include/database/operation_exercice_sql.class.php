@@ -49,6 +49,7 @@ class Operation_Exercice_SQL extends Table_Data_SQL
             "tech_date" => "tech_date",
             "oe_dossier_id" => "oe_dossier_id",
             "oe_exercice" => "oe_exercice",
+            "oe_transfer_date"=>"oe_transfer_date"
 
         );
         /*
@@ -63,7 +64,7 @@ class Operation_Exercice_SQL extends Table_Data_SQL
             "tech_date" => "date",
             "oe_dossier_id" => "number",
             "oe_exercice" => "number",
-
+            "oe_transfer_date"=>"date"
         );
 
 

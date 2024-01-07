@@ -26,6 +26,15 @@ $http=new HttpInput();
 if ( $http->request("sa","string","") == "" )
 {
     Operation_Exercice::input_source();
+    Operation_Exercice::list_draft();
+    return;
+
+}
+if ( $http->request("sa","string" ) == "remove" )
+{
+    Operation_Exercice::delete($http->post("operation_list"));
+    Operation_Exercice::input_source();
+    Operation_Exercice::list_draft();
     return;
 }
 if ( $http->request("sa") == "opening")
@@ -34,14 +43,33 @@ if ( $http->request("sa") == "opening")
     $operation_exercice_id= $http->get("operation_exercice_id","number",-1);
     $operation_opening=new Operation_Opening($operation_exercice_id);
     try {
-        // take data from request
-        $operation_opening->from_request();
         if ( $operation_exercice_id == -1 ) {
+            // take data from request
+            $operation_opening->from_request();
             $operation_opening->insert();
         }
         // Display result
         $operation_opening->display_result();
+        $operation_opening->input_transfer();
+    } catch (\Exception $e) {
+        echo $e->getMessage();
+    }
+    return;
+}
+if ( $http->request("sa") == "closing")
+{
 
+    $operation_exercice_id= $http->get("operation_exercice_id","number",-1);
+    $operation_closing=new Operation_Closing($operation_exercice_id);
+    try {
+        if ( $operation_exercice_id == -1 ) {
+            // take data from request
+            $operation_closing->from_request();
+            $operation_closing->insert();
+        }
+        // Display result
+        $operation_closing->display_result();
+        $operation_closing->input_transfer();
     } catch (\Exception $e) {
         echo $e->getMessage();
     }

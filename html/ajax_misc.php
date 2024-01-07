@@ -338,7 +338,12 @@ $path = array(
     "operation_exercice+display_total"=>"ajax_operation_exercice",
     // delete row  in exercice (opening/closing) operation
     "operation_exercice+delete_row"=>"ajax_operation_exercice",
-
+    // date in exercice (opening/closing) operation
+    "operation_exercice+date"=>"ajax_operation_exercice",
+    // text  in exercice (opening/closing) operation
+    "operation_exercice+text"=>"ajax_operation_exercice",
+    // transfer operation to accountancy
+    'operation_exercice+transfer'=>"ajax_operation_exercice",
 ) ;
 
 if (array_key_exists($op, $path)) {
