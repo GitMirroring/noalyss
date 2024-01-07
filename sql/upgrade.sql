@@ -72,6 +72,8 @@ create table operation_exercice
     oe_text text ,
     oe_dossier_id int not null,
     oe_exercice int not null,
+    jr_internal text,
+    oe_transfer_date timestamp,
     tech_user text,
     tech_date timestamp default  now()
 );

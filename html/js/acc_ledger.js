@@ -1697,7 +1697,7 @@ var operation_exercice = {
             console.error('oe-update_periode', e.message);
         }
     },
-    modify_row: function (row_operation_exercice,oe_id) {
+    modify_row: function (row_operation_exercice, oe_id) {
         try {
             var dgbox = "operation_exercice_bx";
             waiting_box();
@@ -1708,7 +1708,7 @@ var operation_exercice = {
             console.debug(row_operation_exercice);
             var queryString = {
                 op: 'operation_exercice+modify_row',
-                oe_id : oe_id,
+                oe_id: oe_id,
                 row_id: row_operation_exercice,
                 gDossier: $('gDossier').value
             };
@@ -1764,18 +1764,20 @@ var operation_exercice = {
                         }
 
                         if (req.responseJSON['status'] == "OK") {
-                            rowid=req.responseJSON['row_id'];
+                            rowid = req.responseJSON['row_id'];
                             if (queryString['row_id'] == -1) {
                                 var row = new Element("tr");
-                                row.id="oe_"+rowid;
-                                row.setAttribute("oed_id",rowid);
-                                row.setAttribute("oe_id",req.responseJSON['oe_id']);
+                                row.id = "oe_" + rowid;
+                                row.setAttribute("oed_id", rowid);
+                                row.setAttribute("oe_id", req.responseJSON['oe_id']);
                                 row.update(req.responseJSON['content']);
                                 $("operation_exercice_tb").appendChild(row);
-                                row.addEventListener("click",function(event) {operation_exercice.click_modify_row(row)})
+                                row.addEventListener("click", function (event) {
+                                    operation_exercice.click_modify_row(row)
+                                })
 
-                            } else{
-                                $("oe_"+rowid).update(req.responseJSON['content']);
+                            } else {
+                                $("oe_" + rowid).update(req.responseJSON['content']);
                             }
                             new Effect.Highlight("oe_" + req.responseJSON['row_id'], {
                                 startcolor: '#FAD4D4',
@@ -1863,6 +1865,39 @@ var operation_exercice = {
         }
     },
     click_modify_row: function (item) {
-        operation_exercice.modify_row(item.getAttribute("oed_id"),item.getAttribute("oe_id"));
+        operation_exercice.modify_row(item.getAttribute("oed_id"), item.getAttribute("oe_id"));
+    },
+    /**
+     * check and transfer if it is good
+     */
+    transfer: function () {
+        try {
+            var dgbox = "oe_transfer_div";
+            waiting_box();
+
+            var queryString = $("operation_exercice_transfer_frm").serialize(true);
+            var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        var answer=req.responseJSON;
+console.debug(answer['content']);
+                        $('operation_exercice_transfer_info').update(answer.content);
+
+
+                    }
+                }
+            );
+        } catch (e) {
+            alert_box(e.message);
+        }
     }
 }

@@ -26,6 +26,7 @@ class Operation_Exercice
 {
     protected $operation_exercice_sql;
 
+
     public function __construct($p_id = -1)
     {
         $this->operation_exercice_sql = new Operation_Exercice_SQL(Dossier::connect(), $p_id);
@@ -42,6 +43,27 @@ class Operation_Exercice
 
     function display_result()
     {
+        $date = new IDate("exercice_date");
+        $date->id = "exercice_date";
+        $date->value = format_date($this->operation_exercice_sql->getp("oe_date"), "DD.MM.YYYY");
+        $inplace_date = new Inplace_Edit($date);
+        $inplace_date->add_json_param("op", "operation_exercice+date");
+        $inplace_date->add_json_param("gDossier", Dossier::id());
+        $inplace_date->add_json_param("oe_id", $this->operation_exercice_sql->oe_id);
+        $inplace_date->set_callback("ajax_misc.php");
+        echo _("Date"), $inplace_date->input();
+
+        $text_operation = new IText("text_operation");
+        $text_operation->id = uniqid("text");
+        $text_operation->size = 80;
+        $text_operation->value = $this->operation_exercice_sql->getp("oe_text");
+        $inplace_text = new Inplace_Edit($text_operation);
+        $inplace_text->add_json_param("op", "operation_exercice+text");
+        $inplace_text->add_json_param("gDossier", Dossier::id());
+        $inplace_text->add_json_param("oe_id", $this->operation_exercice_sql->oe_id);
+        $inplace_text->set_callback("ajax_misc.php");
+        echo $inplace_text->input();
+
         $cn = Dossier::connect();
         // get data
         $a_data = $cn->get_array("
@@ -59,6 +81,7 @@ class Operation_Exercice
 
         ", [$this->operation_exercice_sql->oe_id]);
         $aheader = array(_("Poste"), _("Fiche"), _("Libellé"), _("Montant"), _("Débit/Crédit"));
+        echo '<div></div>';
         echo \HtmlInput::filter_table("operation_exercice_tb", '0,1,2,3,4', 1);
         echo \HtmlInput::button_action(_("Ajouter une ligne"), sprintf("operation_exercice.modify_row('-1','%s')", $this->operation_exercice_sql->oe_id));
         echo '<table class="result" id="operation_exercice_tb">';
@@ -107,7 +130,7 @@ select sum(signed_amount) delta,sum(debit) debit,sum(credit) credit from saldo_d
 
         echo span(sprintf(_("Débit   %s"), nbm($total['debit'])), $style);
         echo span(sprintf(_("Crédit  %s"), nbm($total['credit'])), $style);
-        $s="";
+        $s = "";
         if ($total['delta'] > 0) {
             $s = " Solde débiteur ";
         }
@@ -150,7 +173,125 @@ select sum(signed_amount) delta,sum(debit) debit,sum(credit) credit from saldo_d
      */
     public static function input_row(Operation_Exercice_Detail_SQL $operation_detail_sql)
     {
+        $operation=new Operation_Exercice_SQL($operation_detail_sql->get_cn(),$operation_detail_sql->getp("oe_id"));
+        if ( $operation->getp("oe_transfer_date") !="") {
+            require_once NOALYSS_TEMPLATE . "/operation_exercice-input_row-error.php";
+            return;
+        }
+
         require_once NOALYSS_TEMPLATE . "/operation_exercice-input_row.php";
+    }
+
+    /**
+     * @brief input data for transfering
+     * @return void
+     */
+    function input_transfer()
+    {
+        $operation=$this->operation_exercice_sql;
+        if ( $operation->getp("oe_transfer_date") !="") {
+            echo '<span class="warning">';
+            printf(_("Opération transférée le %s")
+                ,$operation->getp("oe_transfer_date") );
+            echo '</span>';
+            return;
+        }
+        require_once NOALYSS_TEMPLATE . "/operation_exercice-input_transfer.php";
+    }
+
+    /**
+     * @brief transfer to accountancy
+     * @param $ledger_id int the ledger id (jrn_def_id)
+     * @return void
+     */
+    function submit_transfer($ledger_id)
+    {
+        global $oe_result; // result of operation
+        global $oe_data; // transform data to array used by Acc_Ledger::insert
+        global $oe_status ; // status OK or NOK
+        $cn = Dossier::connect();
+
+        $this->transform($ledger_id);
+
+        $oe_status = "OK";
+        $ledger = new Acc_Ledger($cn, $ledger_id);
+        try {
+            $cn->start();
+            if ($this->operation_exercice_sql->getp("oe_transfer_date")!="") throw new \Exception("duplicate",EXC_DUPLICATE);
+            if ( empty($oe_data['e_date']  ) ) throw new \Exception ("Date null",2);
+            $ledger->verify_operation($oe_data);
+            $ledger->save($oe_data);
+            $oe_result=_("Détail opération");
+            $oe_result.=sprintf('<a class="detail" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a><hr>',
+                $ledger->jr_id, dossier::id(), $ledger->internal);
+
+            $cn->exec_sql("update operation_exercice set oe_transfer_date=to_timestamp($1,'DD.MM.YY HH24:MI') ,  jr_internal=$2 where oe_id=$3",
+            [date('d.m.Y H:i'),$ledger->internal,$this->operation_exercice_sql->oe_id]);
+
+            $cn->commit();
+            return true;
+        } catch (\Exception $e) {
+//            $a_error=array(2=>_("la date est obligatoire",),1=>_('Crédit et débit non équilibré'),3=>_("Montant invalide"),
+//                4=>_("Fiche non permise dans ce journal"),6=>_("Période fermée ou inexistante"),EXC_DUPLICATE=>_("Opération déja transférée"));
+//            $exc_code=$e->getCode();
+//
+//            if ( isset($a_error[$exc_code] ) )
+//                $oe_result=$a_error[$e->getCode()];
+//            else
+            $oe_result=$e->getMessage();
+
+            $oe_status='NOK';
+            $cn->rollback();
+        }
+        return false;
+
+    }
+
+    function transform($ledger_id)
+    {
+        global $oe_data; // transform data to array used by Acc_Ledger::verify_operation
+        $cn = Dossier::connect();
+        $acc_ledger=new \Acc_Ledger($cn, $ledger_id);
+        $oe_data = array();
+        $oe_data['p_currency_code'] = 0;
+        $oe_data['p_currency_rate'] = 1;
+        $oe_data['p_jrn'] = $ledger_id;
+        $oe_data['e_date'] = $this->operation_exercice_sql->oe_date;
+        $oe_data['desc']=$this->operation_exercice_sql->getp("oe_text");
+        $operation_detail_sql = new Operation_Exercice_Detail_SQL($cn);
+        $all_operation = $operation_detail_sql->collect_objects(' where oe_id = $1',[$this->operation_exercice_sql->oe_id]);
+        $nb = 0;
+        foreach ($all_operation as $item) {
+            $oe_data['qc_' . $nb] = $item->oed_qcode;
+            $oe_data['poste' . $nb] = $item->oed_poste;
+            $oe_data['ld' . $nb] = $item->oed_label;
+            $oe_data['amount' . $nb] = $item->oed_amount;
+
+            if ($item->oed_debit == "t") $oe_data['ck' . $nb] = 't';
+            $nb++;
+        }
+        $oe_data['nb_item']=$nb;
+        $oe_data['e_pj']=$acc_ledger->guess_pj();
+        $oe_data['e_pj_suggest']=$acc_ledger->guess_pj();
+        $oe_data['mt']=microtime(true);
+        $oe_data['jr_optype']=($this->operation_exercice_sql->getp('oe_type')=='opening')?'OPE':'CLO';
+
+    }
+
+    public static function list_draft()
+    {
+
+        require_once NOALYSS_TEMPLATE."/operation_exercice-list_draft.php";
+
+    }
+
+    public static function delete($aOperation_id)
+    {
+        $cn=Dossier::connect();
+        foreach ($aOperation_id as $operation_id)
+        {
+            $cn->exec_sql("delete from operation_exercice where oe_id=$1",[$operation_id]);
+        }
     }
 
 }
