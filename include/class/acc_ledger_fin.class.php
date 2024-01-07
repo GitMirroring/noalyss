@@ -654,7 +654,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                     td(_("Ancien solde")).
                     td(nbm($solde).$cur, 'class="num"')
             );
-            $new_solde=bcadd($solde, $tot_amount);
+            $new_solde=bcadd($solde??0, $tot_amount??0);
             $r.=tr(
                     td(_("Nouveau solde")).
                     td(nbm($new_solde).$cur, ' class="num"')

@@ -122,7 +122,7 @@ for($i=0;$i<count($last_ledger);$i++):
             
         </td>
 <td class="box">
-   <?php echo h(mb_substr($last_ledger[$i]['jr_comment'],0,40,'UTF-8'))?>
+   <?php echo h(mb_substr($last_ledger[$i]['jr_comment']??"",0,40,'UTF-8'))?>
 </td>
 <td class="box">
 <?php echo HtmlInput::detail_op($last_ledger[$i]['jr_id'], $last_ledger[$i]['jr_internal'])?>
