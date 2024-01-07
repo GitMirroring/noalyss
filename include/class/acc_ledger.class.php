@@ -1760,34 +1760,6 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * @brief get the saldo of an exercice, used for the opening of a folder
-     * @param$p_exercice is the exercice we want
-     * \return an array
-     * index =
-     * - solde (debit > 0 ; credit < 0)
-     * - j_poste
-     * - j_qcode
-     */
-    function get_saldo_exercice($p_exercice)
-    {
-        $sql="select sum(a.montant) as solde, j_poste, j_qcode
-             from
-             (select j_id, case when j_debit='t' then j_montant
-             else j_montant * (-1) end  as montant
-             from jrnx) as a
-             join jrnx using (j_id)
-             join parm_periode on (j_tech_per = p_id )
-             where
-             p_exercice=$1
-             and j_poste::text not like '7%'
-             and j_poste::text not like '6%'
-             group by j_poste,j_qcode
-             having (sum(a.montant) != 0 ) order by 1 desc";
-        $res=$this->db->get_array($sql, array($p_exercice));
-        return $res;
-    }
-
-    /**
      * @brief Check if a Dossier is using the strict mode or not
      * \return true if we are using the strict_mode
      */
