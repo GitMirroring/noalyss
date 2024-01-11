@@ -88,7 +88,7 @@ echo $ledger->input($p_post);
 
 $style=' style="display:inline-block;width: 15rem;text-align: right"';
 ?>
-<div style="position:absolute;width:40%;right:20px">
+<div style="position:absolute;right:20px">
     <table class="info_op">
         <tr>
             <td style="border:1px solid "><?=_('Totaux')?></td>
