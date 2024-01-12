@@ -7,7 +7,7 @@
  */
 
 $default_currency=new Acc_Currency(Dossier::connect(),0);
-
+\Noalyss\Dbg::echo_file(__FILE__);
 ?>
 	<div id="jrn_name_div">
 	<h1 id="jrn_name"> <?php echo $this->get_name()?></h1>
