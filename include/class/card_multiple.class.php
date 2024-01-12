@@ -146,7 +146,7 @@ class Card_Multiple
                 select contact_option_ref_id 
                 from action_person_option 
                 join action_person a on (a.ap_id=action_person_id) 
-                where f_id=$2)",[$p_action_person_id,$fiche_id]);
+                where f_id=$2 and ag_id=$3)",[$p_action_person_id,$fiche_id,$ag_id]);
 
         // delete disable
         $cn->exec_sql("delete 
