@@ -44,7 +44,7 @@ join fiche_detail f on (a.f_id=f.f_id)
 join fiche_def fd on (fd.fd_id=f1.fd_id)
 join jnt_fic_attr jfa on (fd.fd_id=jfa.fd_id and jfa.ad_id=f.ad_id)
 where ag_id=$1 
-order by f1.fd_id, a.f_id,jnt_order;;",[$ag_id]);
+order by f1.fd_id, a.f_id,jnt_order",[$ag_id]);
 
 $nb=count($aRow);
 $lastcat=0;$lastcard=0;
@@ -105,5 +105,14 @@ where ag_id=$1 and f_id=$2  order by cor_id",array($ag_id,$lastcard));
     $csv->add($aRow[$i]['ad_value']);
     
 }
-
+$aOption=$cn->get_array(" select ap_value
+from 
+action_person a
+join action_person_option apo on (a.ap_id=apo.action_person_id)
+join contact_option_ref cor on (cor.cor_id=apo.contact_option_ref_id)
+where ag_id=$1 and f_id=$2  order by cor_id",array($ag_id,$lastcard));
+$nb_option=count($aOption);
+for ($h=0;$h < $nb_option;$h++) {
+    $csv->add($aOption[$h]['ap_value']);
+}
 $csv->write();

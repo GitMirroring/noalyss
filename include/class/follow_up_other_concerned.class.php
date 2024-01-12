@@ -190,7 +190,8 @@ EOF;
                         where 
                         apo2.contact_option_ref_id =$1
                         and ap.f_id=$2
-                        ", array($pa_Column[$i]['cor_id'], $p_fid));
+                        and ap.ag_id=$3
+                        ", array($pa_Column[$i]['cor_id'], $p_fid, $this->ag_id));
             $r.=td($value);
         }
         $r.='<td>'.$remove.'</td>';
