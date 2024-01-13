@@ -140,7 +140,22 @@ abstract class Table_Data_SQL extends Data_SQL
         $sql=" delete from ".$this->table." where ".$this->primary_key."= $1";
         $this->cn->exec_sql($sql,array($this->$pk));
     }
+    /**
+     * @brief update the value of a column with an expression for $value for the current record
+     * @param $column_exp string like column = $1 or column=function($1)
+     * @param $value value replacing $1
+     * @note you can use it for entering a date with the hour and minute like this
+     *  $this->column_update("field_date = to_date($1,'DD.MM.YY HH24:MI'),date('d.m.Y H:i'))
+     *
+     * @return Table_Data_SQL
+     */
+    function column_update($column_expr,$value) {
+        $pk=$this->primary_key;
+        $sql="update ".$this->table." set {$column_expr} where {$this->primary_key} = $2";
+        $this->cn->exec_sql($sql,[$value,$this->$pk]);
+        return $this;
 
+    }
     public function update()
     {
         $this->verify();

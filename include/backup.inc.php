@@ -73,6 +73,7 @@ if ( isset ($_REQUEST['sa']) )
             $database=domaine."dossier".$dossier_number;
             $filename=  str_replace(array('/','\\' ,'<','>','"','[',']',':','*',' ','{','}','&'),'_', $name);
             $filename=  str_replace("__", "_", $filename);
+            $filename=str_replace(PHP_EOL,'',$filename);
             $filename.="-".date('Ymd');
             $args= " -Fc -Z9 --no-owner -h ".getenv("PGHOST")." -p ".getenv("PGPORT")." ".$database;
             header('Content-type: application/octet');
@@ -90,6 +91,7 @@ if ( isset ($_REQUEST['sa']) )
             $database=domaine."mod".$dossier_number;
             $filename=  str_replace(array('/','\\' ,'<','>','"','[',']',':','*',' ','{','}','&'),'_', $name);
             $filename=  str_replace("__", "_", $filename);
+            $filename=str_replace(PHP_EOL,'',$filename);
             $filename.="-".date('Ymd');
             $args= " -Fc -Z9 --no-owner -h ".getenv("PGHOST")." -p ".getenv("PGPORT")." ".$database;
             header('Content-type: bin/x-application');

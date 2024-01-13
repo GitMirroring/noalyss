@@ -87,6 +87,69 @@ function activate_checkbox_range(p_range_name) {
             checkbox_set_range(event, elt, p_range_name);
         },false));
 }
-;
 
+/**
+ * Checkbox for Debit - Credit , from Misc Operation
+ */
+function activate_checkbox_side()
+{
+    var aCheckBox=$$('.debit-credit')
+    aCheckBox.forEach((item)=>item.addEventListener('click',function (event) {
+        display_range_dcside(event,item);
+        display_dcside(item);
+        }
+    ));
+    aCheckBox.forEach((item)=>display_dcside(item))
+}
 
+/**
+ * Update the range of checkbox in Misc Operation
+ * @see Acc_Ledger::input
+ * @param item checkbox to change
+ * @param event event
+ */
+function display_range_dcside(evt,item)
+{
+    if (!evt.shiftKey) {
+        lastcheck = item;
+        return;
+    }
+    var p_name='debit-credit'
+    var aName = document.getElementsByClassName(p_name);
+
+    var from = 0;
+    var end = 0;
+    for (var i = 0; i < aName.length; i++) {
+        if (aName[i] == item) {
+            endcheck = aName[i];
+            from = i;
+        }
+        if (aName[i] == lastcheck) {
+            end = i;
+        }
+    }
+    if (from > end) {
+        let a = from;
+        from = end;
+        end = a;
+    }
+    var check = (aName[from].checked) ? true : false;
+    for (x = from; x <= end; x++) {
+           aName[x].checked = check;
+           display_dcside(aName[x]);
+    }
+    checkTotalDirect()
+}
+
+/**
+ * Update the SPAN for the range , id based on checkbox id (txtck0), if checked , display Debit otherwise Credit
+ * @param item
+ */
+function display_dcside(item)
+{
+    if (item.checked == true) {
+        $('txt'+item.id).update("Débit")
+    } else {
+        $('txt'+item.id).update("Crédit")
+    }
+}

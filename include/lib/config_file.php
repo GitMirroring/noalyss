@@ -19,7 +19,8 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ \file
  * \brief functions concerning the config file config.inc.php. The domain is not set into the form for security issues
  */
 
@@ -40,7 +41,8 @@ function is_unix()
 }
 
 
-/*!\brief
+/*
+ * !\brief
  *\param array with the index
  *  - ctmp temporary folder
  *  - cpath path to postgresql
@@ -112,63 +114,60 @@ function config_file_form($p_array=null)
     require NOALYSS_TEMPLATE.'/template_config_form.php';
 }
 /**
- * Display the  content of the config.inc.php with variables
+ * @brief Display the  content of the config.inc.php with variables
  * @param type $p_array
  * @param type $from_setup
  * @param type $p_os
  */
-function display_file_config($p_array,$from_setup=1,$p_os=1) 
+function display_file_config($p_array, $from_setup = 1, $p_os = 1)
 {
     extract($p_array, EXTR_SKIP);
     print ('<?php ');
-    print ("\r\n");
-    print ( 'date_default_timezone_set (\'Europe/Brussels\');');
-    print ("\r\n");
-    print ( "\$_ENV['TMP']='".$ctmp."';");
-    print ("\r\n");
-    print ( 'define("PG_PATH","'.$cpath.'");');
-    print ("\r\n");
-    if ( $p_os == 1 )
-    {
-        print ( 'define("PG_RESTORE","'.$cpath.DIRECTORY_SEPARATOR.'pg_restore ");');
-        print ("\r\n");
-        print ( 'define("PG_DUMP","'.$cpath.DIRECTORY_SEPARATOR.'pg_dump ");');
-        print ("\r\n");
-        print ( 'define ("PSQL","'.$cpath.DIRECTORY_SEPARATOR.'psql");');
+    echo PHP_EOL;
+    print ('date_default_timezone_set (\'Europe/Brussels\');');
+    echo PHP_EOL;
+    print ("\$_ENV['TMP']='" . $ctmp . "';");
+    echo PHP_EOL;
+    print ('define("PG_PATH","' . $cpath . '");');
+    echo PHP_EOL;
+    if ($p_os == 1) {
+        print ('define("PG_RESTORE","' . $cpath . DIRECTORY_SEPARATOR . 'pg_restore ");');
+        echo PHP_EOL;
+        print ('define("PG_DUMP","' . $cpath . DIRECTORY_SEPARATOR . 'pg_dump ");');
+        echo PHP_EOL;
+        print ('define ("PSQL","' . $cpath . DIRECTORY_SEPARATOR . 'psql");');
+    } else {
+        print ('define("PG_RESTORE","pg_restore.exe");');
+        echo PHP_EOL;
+        print ('define("PG_DUMP","pg_dump.exe");');
+        echo PHP_EOL;
+        print ('define ("PSQL","psql.exe");');
     }
-    else
-    {
-        print ( 'define("PG_RESTORE","pg_restore.exe");');
-        print ("\r\n");
-        print ( 'define("PG_DUMP","pg_dump.exe");');
-        print ("\r\n");
-        print ( 'define ("PSQL","psql.exe");');
-    }
-    print ("\r\n");
-    print ( 'define ("noalyss_user","'.$cuser.'");');
-    print ("\r\n");
-    print ( 'define ("noalyss_password","'.$cpasswd.'");');
-    print ("\r\n");
-    print ( 'define ("noalyss_psql_port","'.$cport.'");');
-    print ("\r\n");
-    print ( 'define ("noalyss_psql_host","'.$chost.'");');
-    print ("\r\n");
-    print ("\r\n");
+    echo PHP_EOL;
+    print ('define ("noalyss_user","' . $cuser . '");');
+    echo PHP_EOL;
+    print ('define ("noalyss_password","' . $cpasswd . '");');
+    echo PHP_EOL;
+    print ('define ("noalyss_psql_port","' . $cport . '");');
+    echo PHP_EOL;
+    print ('define ("noalyss_psql_host","' . $chost . '");');
+    echo PHP_EOL;
+    echo PHP_EOL;
     print ("// If you change the NOALYSS_ADMINISTRATOR , you will need to rerun http://..../noalyss/html/install.php");
-    print ("\r\n");
+    echo PHP_EOL;
     print ("// But it doesn't change the password");
-    print ("\r\n");
-    print ( 'define ("NOALYSS_ADMINISTRATOR","'.$cadmin.'");');
-    print ("\r\n");
+    echo PHP_EOL;
+    print ('define ("NOALYSS_ADMINISTRATOR","' . $cadmin . '");');
+    echo PHP_EOL;
     print ("// For changing the password of admin, go to preference or update in db");
-    print ("\r\n");
+    echo PHP_EOL;
     print ("// this password is only used when executing install.php ");
-    print ("\r\n");
-    print ( 'define ("NOALYSS_ADMIN_PASSWORD","'.$cpassword_admin.'");');
-    print ("\r\n");
-    
-    print ( 'define ("LOCALE",'.$clocale.');');
-    print ("\r\n");
+    echo PHP_EOL;
+    print ('define ("NOALYSS_ADMIN_PASSWORD","' . $cpassword_admin . '");');
+    echo PHP_EOL;
+
+    print ('define ("LOCALE",' . $clocale . ');');
+    echo PHP_EOL;
     echo "
     /* 
      * DEBUGNOALYSS let you see more information when you develop.
@@ -176,92 +175,125 @@ function display_file_config($p_array,$from_setup=1,$p_os=1)
      * 1 = display all errors
      * 2 = display all errors + more information 
      */
-";     
-    
-    print ("\r\n");
-    print ( 'define ("DEBUGNOALYSS",0);');
-    print ("\r\n");
-    
-    print ( 'define ("domaine","");');
-    print ("\r\n");
-    if (isset($multi))
-    {
-        print ( 'define ("MULTI",0);');
+";
+
+    echo PHP_EOL;
+    print ('define ("DEBUGNOALYSS",0);');
+    echo PHP_EOL;
+
+    print ('define ("domaine","");');
+    echo PHP_EOL;
+    if (isset($multi)) {
+        print ('define ("MULTI",0);');
     }
-    if (!isset($multi))
-    {
-        print ( 'define ("MULTI",1);');
+    if (!isset($multi)) {
+        print ('define ("MULTI",1);');
     }
-    print ("\r\n");
-    print ( 'define ("dbname","'.$cdbname.'");');
-    print ("\r\n");
-    
+    echo PHP_EOL;
+    print ('define ("dbname","' . $cdbname . '");');
+    echo PHP_EOL;
+
     print (' // Uncomment to log your input');
-    print ("\r\n");   
-    print ( '// define ("LOGINPUT",TRUE);');
-    print ("\r\n");
-    print ("\r\n");
-    print ("\r\n");
+    echo PHP_EOL;
+    print ('// define ("LOGINPUT",TRUE);');
+    echo PHP_EOL;
+    echo PHP_EOL;
+    echo PHP_EOL;
     print (' // Do not change below !!!');
-    print ("\r\n");
+    echo PHP_EOL;
     print (' // These variable are computed but could be changed in ');
-    print ("\r\n");
+    echo PHP_EOL;
     print (' // very special configuration');
-    print ("\r\n");
-    print ( '// define ("NOALYSS_HOME","");');
-    print ("\r\n");
-    print ( '// define ("NOALYSS_PLUGIN","");');
-    print ("\r\n");
-    print ( '// define ("NOALYSS_INCLUDE","");');
-    print ("\r\n");
-    print ( '// define ("NOALYSS_TEMPLATE","");');
-    print ("\r\n");
-    print ( '// define ("NOALYSS_INCLUDE","");');
-    print ("\r\n");
-    print ( '// define ("NOALYSS_TEMPLATE","");');
-    print ("\r\n");
-    print ( "// Fix an issue with PDF when exporting receipt in PDF in ANCGL"."\r\n");
-    print ( '// define ("FIX_BROKEN_PDF","NO");');
-    print ("\r\n");
+    echo PHP_EOL;
+    print ('// define ("NOALYSS_HOME","");');
+    echo PHP_EOL;
+    print ('// define ("NOALYSS_PLUGIN","");');
+    echo PHP_EOL;
+    print ('// define ("NOALYSS_INCLUDE","");');
+    echo PHP_EOL;
+    print ('// define ("NOALYSS_TEMPLATE","");');
+    echo PHP_EOL;
+    print ('// define ("NOALYSS_INCLUDE","");');
+    echo PHP_EOL;
+    print ('// define ("NOALYSS_TEMPLATE","");');
+    echo PHP_EOL;
+    print ("// Fix an issue with PDF when exporting receipt in PDF in ANCGL");
+    print ('// define ("FIX_BROKEN_PDF","NO");');
+    echo PHP_EOL;
     print ("// Uncomment if you want to convert to PDF");
-    print ("\r\n");
+    echo PHP_EOL;
     print ("// With the unoconv tool");
-    print ("\r\n");
-    print ( "//define ('OFFICE','HOME=/tmp unoconv ');");
-    print ("\r\n");
+    echo PHP_EOL;
+    print ("//define ('OFFICE','HOME=/tmp unoconv ');");
+    echo PHP_EOL;
     print ("//define ('GENERATE_PDF','YES');");
-    print ("\r\n");
-    print ( "// Uncomment if you don't want "."\r\n");
-    print ( "// to be informed when a new release is "."\r\n");
-    print ( "// published"."\r\n");
-    print ( '// define ("SITE_UPDATE","");'."\r\n");
-    print ( '// define ("SITE_UPDATE_PLUGIN","");'."\r\n");
-    print ( '// To allow to access the Info system'."\r\n");
-    print ( '// define ("SYSINFO_DISPLAY",true);'."\r\n");
-    print ( '// For developpement'."\r\n");
-    print ( '// define ("NOALYSS VERSION",9999);'."\r\n");
-    print (' // If you want to override the parameters you have to define OVERRIDE_PARAM'."\r\n");
-    print ('// and give your own parameters for max_execution_time and memory_limit'."\r\n");
-    print ("// define ('OVERRIDE_PARAM',1);\r\n");
-    print ("// ini_set ('max_execution_time',240);\r\n");
-    print ("// ini_set ('memory_limit','256M');\r\n");
-    print ("// In recent distribution linux, pdftk is a snap, you should set the path\r\n");
-    print ("// for exporting document in PDF\r\n");
-    print ("// \$pdftk = /usr/bin/pdftk \r\n");
-    print ("// \$pdftk = /snap/bin/pdftk \r\n");
-    print ("// uncomment to activate the captcha on login page\r\n");
-    print ("// define('NOALYSS_CAPTCHA',true);\r\n");
-    print ("// Uncomment if you want to activate the possibility to reinitialize;\r\n");
-    print ("// password by email\r\n");
-    print ("// defined('RECOVER','1');\r\n");
-    print ("// Uncomment and define if you want to Name of the sender of the email \r\n");
-    print ("// if you activate the possibility to reinitialize password by email\r\n");
-    print ("// define('ADMIN_WEB', 'www-data@localhost');\r\n");
-    print ("// Define a random session key if you work with different version of NOALYSS\r\n");
-    printf ("define ('SESSION_KEY','%s');",generate_random_string(10)) ;
+    echo PHP_EOL;
+    print ("// Uncomment if you don't want ");
+    echo PHP_EOL;
+    print ("// to be informed when a new release is ");
+    echo PHP_EOL;
+    print ("// published");
+    echo PHP_EOL;
+    print ('// define ("SITE_UPDATE","");');
+    echo PHP_EOL;
+    print ('// define ("SITE_UPDATE_PLUGIN","");');
+    echo PHP_EOL;
+    print ('// To allow to access the Info system');
+    echo PHP_EOL;
+    print ('// define ("SYSINFO_DISPLAY",true);');
+    echo PHP_EOL;
+    print ('// For developpement');
+    echo PHP_EOL;
+    print ('// define ("NOALYSS VERSION",9999);');
+    echo PHP_EOL;
+    print (' // If you want to override the parameters you have to define OVERRIDE_PARAM');
+    echo PHP_EOL;
+    print ('// and give your own parameters for max_execution_time and memory_limit');
+    echo PHP_EOL;
+    print ("// define ('OVERRIDE_PARAM',1);");
+    echo PHP_EOL;
+    print ("// ini_set ('max_execution_time',240);");
+    echo PHP_EOL;
+    print ("// ini_set ('memory_limit','256M');");
+    echo PHP_EOL;
+    print ("// In recent distribution linux, pdftk is a snap, you should set the path");
+    echo PHP_EOL;
+    print ("// for exporting document in PDF");
+    echo PHP_EOL;
+    print ("// \$pdftk = /usr/bin/pdftk ");
+    echo PHP_EOL;
+    print ("// \$pdftk = /snap/bin/pdftk ");
+    echo PHP_EOL;
+    print ("// uncomment to activate the captcha on login page");
+    echo PHP_EOL;
+    print ("// define('NOALYSS_CAPTCHA',true);");
+    echo PHP_EOL;
+    print ("// Uncomment if you want to activate the possibility to reinitialize;");
+    echo PHP_EOL;
+    print ("// password by email");
+    echo PHP_EOL;
+    print ("// define ('RECOVER','1');");
+    echo PHP_EOL;
+    print ("// Uncomment and define if you want to Name of the sender of the email ");
+    echo PHP_EOL;
+    print ("// if you activate the possibility to reinitialize password by email");
+    echo PHP_EOL;
+    print ("// define('ADMIN_WEB', 'www-data@localhost');");
+    echo PHP_EOL;
+    print ("// Define a random session key if you work with different version of NOALYSS");
+    echo PHP_EOL;
+    printf("define ('SESSION_KEY','%s');", generate_random_string(10));
+    echo PHP_EOL;
+    printf("// When sending an email , the domain of this email must be in comma separated list ,");
+    echo PHP_EOL;
+    print ("// if the list is an empty string then all the domain are allowed");
+    echo PHP_EOL;
+    printf("// define ('ALLOWED_EMAIL_DOMAIN','');");
+    echo PHP_EOL;
 
 }
-/*!\brief create the config file
+/*!
+ * \brief create the config file
  */
 function config_file_create($p_array,$from_setup,$p_os=1)
 {

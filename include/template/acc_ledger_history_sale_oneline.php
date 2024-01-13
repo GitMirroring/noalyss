@@ -24,9 +24,11 @@
  * @brief
  * @todo prévoir aussi pour les non assujetti : faire disparaître les montants TVA
  */
+$p_col=($nb_other_tax<>0)?"0,1,2,3,4,5,6,7,8,9,10":"0,1,2,3,4,5,6,7,8,9,10,11";
+echo \HtmlInput::filter_table("tb_print_ledger", $p_col, 1);
 
 ?>
-<table class="result">
+<table class="result" id="tb_print_ledger">
     <tr>
         <th>
             <?=_('Date')?>
@@ -46,23 +48,26 @@
         <th>
             <?=_('Description')?>
         </th>
-        <th class="num">
+        <th class="text-center">
             <?=_('HTVA')?>
         </th>
 
-        <th class="num">
+        <th class="text-center">
             <?=_('TVA')?>
         </th>
 <?php if ($nb_other_tax>0) :?>
-        <th class="num">
+        <th class="text-center">
             <?=_('Autre Taxe')?>
         </th>
 <?php endif;?>
-        <th class="num">
+        <th class="text-center">
             <?=_('TVAC')?>
         </th>
-        <th class="num">
+        <th class="text-center">
             <?=_('Devise')?>
+        </th>
+        <th class="text-center">
+            <?=_('Lien')?>
         </th>
     </tr>
 <?php 

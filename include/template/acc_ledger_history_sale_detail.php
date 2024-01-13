@@ -27,6 +27,8 @@ if (!defined('ALLOWED'))
  * @brief from Acc_Ledger_History_Sale::export_html_oneline
  * @todo prévoir aussi pour les non assujetti : faire disparaître les montants TVA
  */
+
+echo \HtmlInput::filter_table("tb_print_ledger", "0,1,2,3,4,5,6", 1);
 ?>
 <TABLE class="result">
     <tr>

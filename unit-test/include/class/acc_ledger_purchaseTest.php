@@ -223,6 +223,103 @@ class Acc_Ledger_PurchaseTest extends TestCase
         
     }
     /**
+     * @covers Acc_Ledger_Purchase::insert
+     */
+    public function testInsertPayment()
+    {
+        global $g_connection;
+        $array=$this->array;
+        $array["mt"]="1572704002.1732";
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0);
+        $array["amount_t0"]=658.25;
+        $array['hplan']=array(array(-1));
+        $array["val"]=array(array(658.25));
+        $sql="
+            from quant_purchase
+                  join jrnx using(j_id)  
+                   join jrn on (jr_grpt_id=j_grpt)
+                where 
+                   jr_mt='1572704002.1732'
+                   and j_qcode='LOYER'
+                ";
+
+        $this->clean_operation();
+        $array=array_merge($array, array("e_march1"=>"DOCUME",
+            "e_march1_price"=>18.25,
+            "e_quant1"=>"",
+            "htva_march1"=>18.25,
+            "e_march1_tva_id"=>1,
+            "e_march1_tva_amount"=>22.08,
+            "tva_march1"=>3.83,
+            "tvac_march1"=>22.08
+            ,"p_currency_rate"=>1
+	        ,"p_currency_code"=>0
+        ));
+
+        // create a payment method with a valid card
+        $payment_methodSQL=$this->insert_payment_method();
+        $array['mp_date'] ="";
+        $array['acompte'] = 0;
+        $array['e_mp'] = $payment_methodSQL->getp("mp_id");
+        $array['e_mp_qcode_'.$array['e_mp']]='CDOLLAR';
+        $this->object->insert($array);
+
+        $this->assertEquals($array['htva_march0'],$g_connection->get_value("select qp_price ".$sql));
+
+        // check payment
+        $nQuant_FinId=$this->get_reconcilied_operation();
+
+        $quant_fin=new Quant_Fin_SQL($g_connection,$nQuant_FinId);
+        $nQuantFin_Amount=$quant_fin->getp("qf_amount") ;
+
+        $this->assertTrue($nQuantFin_Amount == -658.25,"error : purchase 658.25 and payment {$nQuantFin_Amount} not equal ");
+
+        // check card used in bank
+        $expected_bank=$g_connection->get_value("
+  select jrn_def_bank 
+  from 
+        jrn_def jd1
+        join payment_method pm1 on (jd1.jrn_def_id=pm1.mp_jrn_def_id) 
+    where mp_id=$1",[$array['e_mp']]);
+
+        $found_bank =$quant_fin->getp("qf_bank");
+
+        $this->assertTrue($expected_bank==$found_bank,"error : payment done with a wrong card {$found_bank} instead of $expected_bank");
+       $payment_methodSQL->delete();
+       $this->clean_operation();
+
+    }
+
+    private function insert_payment_method()
+    {
+        global $g_connection;
+        $payment_methodSQl=new Payment_method_SQL($g_connection);
+        $payment_methodSQl->from_array([
+            "mp_lib"=>"caisse"
+            ,"mp_jrn_def_id"=>1
+            ,'mp_fd_id'=>3
+            ,"jrn_def_id"=>3
+        ]);
+        $payment_methodSQl->insert();
+        return $payment_methodSQl;
+
+
+    }
+    /**
+     * @brief return the reconcilied operation of this->object
+     * @return mixed|string
+     * @throws Exception
+     */
+    private function get_reconcilied_operation()
+    {
+        global $g_connection;
+        $nValue=$g_connection->get_value("select jra_concerned
+        from jrn_rapt where jr_id=$1",[$this->object->jr_id]);
+        $nQuant_FinId=$g_connection->get_value("select qf_id from quant_fin where jr_id=$1",[$nValue]);
+        return $nQuant_FinId;
+    }
+    /**
      * @brief set special attributes to test NOT DEDUCTIBLE : private, VAT and tax
      * @global type $g_connection
      */

@@ -128,7 +128,7 @@ class Acc_Ledger  extends jrn_def_sql
     }
     /**
      * @brief Return the type of a ledger (ACH,VEN,ODS or FIN) or GL
-     *
+     * @return string FIN ODS ACH VEN or GL if id == 0
      */
     function get_type()
     {
@@ -995,7 +995,7 @@ class Acc_Ledger  extends jrn_def_sql
                 '<th style="text-align:left">'._('Poste').$info_poste.'</th>'.
                 '<th class="visible_gt800 visible_gt1155" style="text-align:left">'._('Libellé').'</th>'.
                 '<th style="text-align:left">'._('Montant').'</th>'.
-                '<th style="text-align:left">'._('Débit').'</th>'.
+                '<th style="text-align:left">'._('Côté').'</th>'.
                 '</tr>';
 
 
@@ -1065,13 +1065,13 @@ class Acc_Ledger  extends jrn_def_sql
             $amount->value=(isset(${'amount'.$i}))?${"amount".$i}:''
             ;
             $amount->readonly=$p_readonly;
-            $amount->javascript=' onChange="format_number(this);checkTotalDirect()"';
+            $amount->javascript='onChange="format_number(this);checkTotalDirect()"';
             // D/C
             $deb=new ICheckBox();
             $deb->name='ck'.$i;
             $deb->selected=(isset(${'ck'.$i}))?true:false;
             $deb->readonly=$p_readonly;
-            $deb->javascript=' onChange="checkTotalDirect()"';
+            $deb->javascript='class="debit-credit"  onChange="checkTotalDirect()"';
             $str_add_button=($add_card==true)?$this->add_card("-1",
                             $quick_code->id):"";
             $ret.='<tr>';
@@ -1085,7 +1085,9 @@ class Acc_Ledger  extends jrn_def_sql
                     '</td>';
             $ret.='<td class="visible_gt800 visible_gt1155">'.$line_desc->input().'</td>';
             $ret.='<td>'.$amount->input().'</td>';
-            $ret.='<td>'.$deb->input().'</td>';
+            $ret.='<td>'.$deb->input()
+                    .'<span id="txt'.$deb->id.'"></span>'
+                .'</td>';
             $ret.='</tr>';
             // If readonly == 1 then show CA
         }
@@ -1099,6 +1101,9 @@ class Acc_Ledger  extends jrn_def_sql
             $ret.=sprintf(_("Réconciliation/rapprochements : %s"), $w->input());
         }
         $ret.=create_script("$('".$wDate->id."').focus()");
+        // for displaying Credit or Debit
+        $ret.=create_script("(function(){activate_checkbox_side()})();");
+
         return $ret;
     }
 
@@ -1755,34 +1760,6 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * @brief get the saldo of an exercice, used for the opening of a folder
-     * @param$p_exercice is the exercice we want
-     * \return an array
-     * index =
-     * - solde (debit > 0 ; credit < 0)
-     * - j_poste
-     * - j_qcode
-     */
-    function get_saldo_exercice($p_exercice)
-    {
-        $sql="select sum(a.montant) as solde, j_poste, j_qcode
-             from
-             (select j_id, case when j_debit='t' then j_montant
-             else j_montant * (-1) end  as montant
-             from jrnx) as a
-             join jrnx using (j_id)
-             join parm_periode on (j_tech_per = p_id )
-             where
-             p_exercice=$1
-             and j_poste::text not like '7%'
-             and j_poste::text not like '6%'
-             group by j_poste,j_qcode
-             having (sum(a.montant) != 0 ) order by 1 desc";
-        $res=$this->db->get_array($sql, array($p_exercice));
-        return $res;
-    }
-
-    /**
      * @brief Check if a Dossier is using the strict mode or not
      * \return true if we are using the strict_mode
      */
@@ -1943,7 +1920,7 @@ class Acc_Ledger  extends jrn_def_sql
             $empl->get_by_qcode($e_mp_qcode);
             if ($empl->empty_attribute(ATTR_DEF_ACCOUNT)==true)
             {
-                throw new Exception(_("Celui qui paie n' a pas de poste comptable"),
+                throw new Exception(_("Le moyen de paiement choisi n'a pas de poste comptable"),
                 20);
             }
             /* get the account and explode if necessary */

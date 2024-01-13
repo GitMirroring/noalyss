@@ -96,6 +96,7 @@ class Sendmail extends  Sendmail_Core
     {
         $max_email = $p_repo->get_value("select dos_email from ac_dossier where dos_id=$1",
             array($p_dossier_id));
+        if ($max_email == "") return 0;
         return $max_email;
     }
     /**
@@ -109,10 +110,48 @@ class Sendmail extends  Sendmail_Core
 
         $email_sent = $p_repo->get_value ('select de_sent_email from dossier_sent_email where dos_id = $1 and de_date=$2',
             array($p_dossier_id,$p_date));
+        if ($email_sent == "") return 0;
         return $email_sent;
 
 
     }
+
+    /**
+     * @brief check if there is a mandatory domain, if yes
+     * @return void
+     * @throws Exception
+     */
+    function verify()
+    {
+        try {
+            parent::verify();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+        if ( defined('ALLOWED_EMAIL_DOMAIN') )
+        {
+            if ( ALLOWED_EMAIL_DOMAIN != "")
+            {
+                $as_domain=explode(",", ALLOWED_EMAIL_DOMAIN);
+                $valid=0;
+                foreach ($as_domain as $domain) {
+                    $domain="@$domain";
+                    if (strpos($this->from,$domain) != 0 ) {
+                        $valid=1;
+                        break;
+                    }
+                }
+                if ( $valid == 0) {
+                    throw new Exception("Domaine email {$this->from} interdit",EXC_INVALID);
+
+                }
+
+            }
+
+        }
+
+    }
+
     /**
      * @brief  Add $p_amount_email to email sent
      * @param $p_repo Database

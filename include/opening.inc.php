@@ -250,7 +250,7 @@ if ($sa=='step4')
         $amount='amount'.$idx;
         $ck='ck'.$idx;
         $result[$qcode]=$row['j_qcode'];
-        if (trim($row['j_qcode'])=='')
+        if (trim($row['j_qcode']??"")=='')
             $result[$poste]=$row['j_poste'];
         $result[$amount]=abs($row['solde']);
         if ($row['solde']>0)

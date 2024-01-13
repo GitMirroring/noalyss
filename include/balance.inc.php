@@ -472,6 +472,7 @@ if ( isset($_GET['view'] ) )
         
     }
     echo '</table>';
+    if ( DEBUGNOALYSS>1) echo \Noalyss\Dbg::hidden_info("\$row", $row);
     // display the summary
     if ($is_summary==1) {
         if ( $previous == 1) {

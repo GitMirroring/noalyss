@@ -210,13 +210,7 @@ if (!empty($array)) {
             $nlvl3[$a] = bcadd($nlvl3[$a], $r[$a]);
         }
 
-        if ($i % 2 == 0) {
-            $pdf->SetFillColor(220, 221, 255);
-            $fill = 1;
-        } else {
-            $pdf->SetFillColor(0, 0, 0);
-            $fill = 0;
-        }
+        $fill=$pdf->is_fill($i);
 
         $pdf->LongLine(30, 6, $value['poste'], 0, 'L', $fill);
         $pdf->LongLine(60, 6, $value['label'], 0, 'L', $fill);

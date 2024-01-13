@@ -327,7 +327,23 @@ $path = array(
     //visibility quantity
     "update_visibility_quantity"=>"ajax_update_visibility_quantity",
     // detail customer , supplier operation
-    "event_display_detail"=>"ajax_event_display_detail"
+    "event_display_detail"=>"ajax_event_display_detail",
+    // update periode in opening operation
+    "operation_exercice+update_periode"=>"ajax_operation_exercice",
+    // modify row in exercice (opening/closing) operation
+    "operation_exercice+modify_row"=>"ajax_operation_exercice",
+    // save row  in exercice (opening/closing) operation
+    "operation_exercice+save_row"=>"ajax_operation_exercice",
+    // compute the balance after saving row  in exercice (opening/closing) operation
+    "operation_exercice+display_total"=>"ajax_operation_exercice",
+    // delete row  in exercice (opening/closing) operation
+    "operation_exercice+delete_row"=>"ajax_operation_exercice",
+    // date in exercice (opening/closing) operation
+    "operation_exercice+date"=>"ajax_operation_exercice",
+    // text  in exercice (opening/closing) operation
+    "operation_exercice+text"=>"ajax_operation_exercice",
+    // transfer operation to accountancy
+    'operation_exercice+transfer'=>"ajax_operation_exercice",
 ) ;
 
 if (array_key_exists($op, $path)) {

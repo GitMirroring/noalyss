@@ -83,8 +83,23 @@ class Acc_Ledger_SaleTest extends TestCase
     private function clean_operation()
     {
         global $g_connection;
-        $g_connection->exec_sql("delete from jrn where jr_mt=$1", ["1572714478.3155"]);
+        $mt="1572714478.3155";
+        //delete reconcilied operations
+        $g_connection->exec_sql("
+            delete from jrn 
+            where jr_id in (select jr2.jr_id 
+                        from jrn_rapt ra1 join jrn jr2 on (ra1.jr_id=jr2.jr_id)
+                        where jr2.jr_mt=$1)",[$mt]);
+
+        $g_connection->exec_sql("
+            delete from jrn 
+            where jr_id in (select jr2.jr_id 
+                        from jrn_rapt ra1 join jrn jr2 on (ra1.jra_concerned=jr2.jr_id)
+                        where jr2.jr_mt=$1)",[$mt]);
+
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1", [$mt]);
         $g_connection->exec_sql("delete from jrnx where j_grpt not in (select jr_grpt_id from jrn)");
+
         $g_connection->exec_sql("alter sequence  s_jrn_pj2 restart with 40");
     }
     /**
@@ -168,6 +183,78 @@ class Acc_Ledger_SaleTest extends TestCase
         
     }
 
+
+    /**
+     * @covers Acc_Ledger_Sale::insert
+     */
+    public function testInsertPayment()
+    {
+        global $g_connection;
+        $this->clean_operation();
+        $cnt=$g_connection->get_value("select count(*) from jrn where jr_mt=$1",["1572714478.3155"]);
+        $this->assertEquals(0,$cnt);
+
+        $sql="
+            from quant_sold 
+                  join jrnx using(j_id)  
+                   join jrn on (jr_grpt_id=j_grpt)
+                where 
+                   jr_mt='1572714478.3155'
+                   and j_qcode='MARCHA'
+                ";
+        $array=$this->array;
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0, 1);
+        $array["amount_t0"]=24.2;
+        $array["hplan"]=array(array(-1), array(-1));
+        $array["val"]=array(array(24, 2), array(1212.5));
+        $array["mt"]="1572714478.3155";
+
+        // create a payment method with a valid card
+        $array['mp_date'] ="";
+        $array['acompte'] = 0;
+        $array['e_mp'] = 1;
+
+        $this->object->insert($array);
+        $this->assertEquals($array['htva_march1'],$g_connection->get_value("select qs_price ".$sql));
+
+        // check payment
+        $nQuant_FinId=$this->get_reconcilied_operation();
+
+        $quant_fin=new Quant_Fin_SQL($g_connection,$nQuant_FinId);
+        $nQuantFin_Amount=$quant_fin->getp("qf_amount") ;
+
+        $this->assertTrue($nQuantFin_Amount ==bcadd( $array['tvac_march1'],$array['tvac_march0']),"error : sale {$array['tvac_march1']} and payment {$nQuantFin_Amount} not equal ");
+
+        // check card used in bank
+        $expected_bank=$g_connection->get_value("
+  select jrn_def_bank 
+  from 
+        jrn_def jd1
+        join payment_method pm1 on (jd1.jrn_def_id=pm1.mp_jrn_def_id) 
+    where mp_id=$1",[$array['e_mp']]);
+
+        $found_bank =$quant_fin->getp("qf_bank");
+
+        $this->assertTrue($expected_bank==$found_bank,"error : payment done with a wrong card {$found_bank} instead of $expected_bank");
+
+        $this->clean_operation();
+
+    }
+
+    /**
+     * @brief return the reconcilied operation of this->object
+     * @return mixed|string
+     * @throws Exception
+     */
+    private function get_reconcilied_operation()
+    {
+        global $g_connection;
+        $nValue=$g_connection->get_value("select jra_concerned
+        from jrn_rapt where jr_id=$1",[$this->object->jr_id]);
+        $nQuant_FinId=$g_connection->get_value("select qf_id from quant_fin where jr_id=$1",[$nValue]);
+        return $nQuant_FinId;
+    }
     /**
      * @covers Acc_Ledger_Sale::confirm
      */
@@ -240,4 +327,5 @@ class Acc_Ledger_SaleTest extends TestCase
         $ret=$this->object->get_detail_sale(92,103,'unpaid');
         $this->assertEquals(5,Database::num_row($ret),'only unpaid operations');
     }
+
 }

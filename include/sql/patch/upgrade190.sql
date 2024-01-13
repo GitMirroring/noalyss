@@ -1,35 +1,35 @@
-
+begin;
 
 -- protect against wrong card in fiche_detail
 
 CREATE OR REPLACE FUNCTION comptaproc.fiche_detail_check_qcode()
- RETURNS trigger
- LANGUAGE plpgsql
+    RETURNS trigger
+    LANGUAGE plpgsql
 AS $function$
 declare
-	i record;
+    i record;
 begin
-	if NEW.ad_id=23 and NEW.ad_value != OLD.ad_value then
-		update jrnx set j_qcode=NEW.ad_value where j_qcode = OLD.ad_value;
-	        update op_predef_detail set opd_poste=NEW.ad_value where opd_poste=OLD.ad_value;
-		for i in select ad_id from attr_def where ad_type = 'card' or ad_id=25 loop
-			update fiche_detail set ad_value=NEW.ad_value where ad_value=OLD.ad_value and ad_id=i.ad_id;
-			if i.ad_id=19 then
-				update stock_goods set sg_code=NEW.ad_value where sg_code=OLD.ad_value;
-			end if;
+    if NEW.ad_id=23 and NEW.ad_value != OLD.ad_value then
+        update jrnx set j_qcode=NEW.ad_value where j_qcode = OLD.ad_value;
+        update op_predef_detail set opd_poste=NEW.ad_value where opd_poste=OLD.ad_value;
+        for i in select ad_id from attr_def where ad_type = 'card' or ad_id=25 loop
+                update fiche_detail set ad_value=NEW.ad_value where ad_value=OLD.ad_value and ad_id=i.ad_id;
+                if i.ad_id=19 then
+                    update stock_goods set sg_code=NEW.ad_value where sg_code=OLD.ad_value;
+                end if;
 
-		end loop;
-	end if;
-return NEW;
+            end loop;
+    end if;
+    return NEW;
 end;
 $function$;
 
 drop trigger if exists fiche_detail_check_qcode_trg on public.fiche_detail ;
-drop function  comptaproc.fiche_detail_qcode_upd();
+drop function   if exists  comptaproc.fiche_detail_qcode_upd() cascade;
 
 create trigger fiche_detail_check_qcode_trg before insert
-or update on
-public.fiche_detail for each row execute function comptaproc.fiche_detail_check_qcode();
+    or update on
+    public.fiche_detail for each row execute function comptaproc.fiche_detail_check_qcode();
 
 
 
@@ -59,7 +59,7 @@ exception when others then
     return NEW;
 end ;
 $function$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 
 drop table if exists operation_exercice_detail;
 drop table if exists operation_exercice;
@@ -94,3 +94,6 @@ create trigger trg_set_tech_user  before insert or update on operation_exercice 
 update menu_ref set me_code='OPCL' , me_menu='Ouvert./Fermeture',me_file='operation_exercice.inc.php',me_description='Opération de cloture ou d''ouverture d''exercice'
                   ,me_description_etendue ='Ecriture d''ouverture ou de fermeture , , reporte les soldes des comptes de l''année passé du poste comptable 0xxx à 5xxxx sur l''année courante ou ferme les comptes de 6 à 7 de l''année '
 where me_code='OPEN';
+
+insert into version (val,v_description) values (191,'cloture-ouverture exercice-version 9112');
+commit;

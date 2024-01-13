@@ -44,6 +44,12 @@ class Dossier
         "desc"=>"dos_description",
         "max_email"=>'dos_email');
 
+    var $cn; //!< Database connexion
+    var $dos_id; //!< number of db
+    var $dos_name;
+    var $dos_description;
+    var $dos_email;
+
     function __construct($p_id)
     {
         $this->cn=new Database();  // Connect to the repository

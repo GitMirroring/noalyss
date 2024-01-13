@@ -89,3 +89,6 @@ define ("DEBUGNOALYSS",0);
 //
 // display a captcha
 // define ("NOALYSS_CAPTCHA",true);
+// When sending an email , the domain of this email must be in comma separated list ,
+// if the list is an empty string then all the domain are allowed
+// define ('ALLOWED_EMAIL_DOMAIN','');

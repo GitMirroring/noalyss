@@ -67,6 +67,7 @@ if (strpos($inc_path, ";") != 0) {
 set_include_path($new_path);
 @ini_set('default_charset', "UTF-8");
 @ini_set('session.use_cookies', 1);
+// deprecated
 @ini_set('magic_quotes_gpc', 'off');
 
 if (!defined('OVERRIDE_PARAM')) {
@@ -122,7 +123,7 @@ if (!defined("NOALYSS_PACKAGE_REPOSITORY")) {
 if (!defined("SYSINFO_DISPLAY")) {
     define("SYSINFO_DISPLAY", TRUE);
 }
-define("DBVERSION", 190);
+define("DBVERSION", 191);
 define("MONO_DATABASE", 25);
 define("DBVERSIONREPO", 20);
 define('NOTFOUND', '--not found--');
@@ -340,6 +341,7 @@ define('EXC_PARAM_VALUE', 1005);
 define('EXC_PARAM_TYPE', 1006);
 define('EXC_DUPLICATE', 1200);
 define('EXC_INVALID', 1400);
+define('EXC_FORBIDDEN', 1500);
 define("UNPINDG", "&#xf047;");
 define("PINDG", "&#xe809;");
 

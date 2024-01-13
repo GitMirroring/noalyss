@@ -48,9 +48,9 @@ if ( isset ($_POST["ADD"]) )
     $new_user->login=$login;
 
     $new_user->email=$http->post('EMAIL',"string",'');
-    if ( trim($login)=="")
+    if ( trim($login)=="" || strlen($login)<5)
     {
-            alert(_("Le login ne peut pas être vide"));
+            alert(_("Le login ne peut pas être vide et avoir au moins 5 lettres"));
     }elseif (count($a_result['msg']) > 0){
         // password too weak
         $msg='<span class="warning">'._("Mot de passe inchangé").'</span>';
@@ -182,6 +182,7 @@ if ( isset($_REQUEST['det']) && $sbaction=="")
 <?php echo HtmlInput::title_box(_('Ajout Utilisateur'),"create_user","hide");?>
     <form action="admin-noalyss.php?action=user_mgt" method="POST" onsubmit="return check_form()">
     <div style="text-align: center">
+        <span style="position:absolute;font-size:75%" id="info_passid"></span>
 <TABLE class="result" >            
        <TR><TD style="text-align: right"> <?php echo _('login')?></TD><TD><INPUT id="input_login" class="input_text"  TYPE="TEXT" NAME="LOGIN"></TD></tr>
         <TR><TD style="text-align: right"> <?php echo _('Prénom')?></TD><TD><INPUT class="input_text" TYPE="TEXT" NAME="FNAME"></TD></tr>
@@ -192,9 +193,9 @@ if ( isset($_REQUEST['det']) && $sbaction=="")
 
            </TD>
            <TD> <INPUT id="input_password" class="input_text" TYPE="TEXT" NAME="PASS"
-        onkeyup=check_password_strength('input_password','info_passid')
+                onkeyup="check_password_strength('input_password','info_passid',true)"
                >
-           <span id="info_passid"></span>
+
            </TD></TR>
        <TR><TD style="text-align: right"> <?php echo _('Email')?></TD><TD> <INPUT class="input_text" TYPE="TEXT" NAME="EMAIL"></TD></TR>
 </TABLE>
@@ -218,8 +219,14 @@ echo HtmlInput::button_action(_("Fermer"), "$('create_user').style.display='none
                 $('input_password').setStyle({border:"red solid 2px"});
                 return false;
             }
+            if ($F('input_login').length < 5) {
+                smoke.alert('<?php echo _('Le login doit avoir au moins 5 lettres') ?>');
+                $('input_password').setStyle({border:"red solid 2px"});
+                return false;
+            }
             return true;
         }
+
     </script>
 </div>
 
@@ -253,7 +260,7 @@ if ( !empty ($a_user) )
 {
 	echo '<span style="display:block">';
 	echo _('Cherche').Icon_Action::infobulle(22);
-	echo HtmlInput::filter_table("user", "0,1,2,5","1");
+	echo HtmlInput::filter_table("user", "0,1,2,3,5,6","1");
 	echo '</span>';
     echo '<table id="user" class="result">';
     echo '<tr>';

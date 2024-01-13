@@ -306,6 +306,17 @@ class Icon_Action
                 $p_javascript);
         return $r;
     }
+
+    static function detail_anchor($p_id,$url)
+    {
+        $r=sprintf('
+    <A HREF="%s">
+    <span id="%s"  class="smallicon icon" style="margin-left:5px">&#xe803;</span></A>',
+            $url
+                ,$p_id);
+
+        return $r;
+    }
     static function more($p_id,$p_javascript)
     {
         $r=sprintf('<span id="%s" onclick="%s" class="smallicon icon" style="margin-left:5px">&#xe824;</span>',

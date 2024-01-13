@@ -50,16 +50,16 @@ class Print_Ledger_Detail_Item extends Print_Ledger
         $this->Ln(20);
         $high=6;
         $this->SetFont('DejaVu', '', 6);
-        $this->Cell(20, $high, _('Date'),0,  'L', false);
-        $this->Cell(20, $high, _('Numéro interne'), 0, 0, 'L', false);
-        $this->Cell(50, $high, _('Code'),0,'L',false);
-        $this->Cell(80, $high, _('Libellé'),0,'L',false);
-        $this->Cell(20, $high, _('Tot HTVA'), 0, 0, 'R', false);
-        $this->Cell(20, $high, _('Tot TVA NP'), 0, 0, 'R', false);
-        $this->Cell(20, $high, _("Autre Tx"), 0, 0, 'R', false);
-        $this->Cell(20, $high, _('Tot TVA'), 0, 0, 'R', false);
-        $this->Cell(20, $high, _('TVAC'), 0, 0, 'R', false);
-        $this->Ln(6);
+        $this->write_cell(20, $high, _('Date'),0,0,  'L', false);
+        $this->write_cell(20, $high, _('Numéro interne'), 0,0,  'L', false);
+        $this->write_cell(50, $high, _('Code'),0,0,'L',false);
+        $this->write_cell(80, $high, _('Libellé'),0,0,'L',false);
+        $this->write_cell(20, $high, _('Tot HTVA'), 0, 0,'R', false,'R', false);
+        $this->write_cell(20, $high, _('Tot TVA NP'), 0, 0,'R', false, false);
+        $this->write_cell(20, $high, _("Autre Tx"), 0, 0, 'R', false);
+        $this->write_cell(20, $high, _('Tot TVA'), 0, 0, 'R', false);
+        $this->write_cell(20, $high, _('TVAC'), 0, 0, 'R', false);
+        $this->line_new(6);
         $this->show_col=true;
         
     }

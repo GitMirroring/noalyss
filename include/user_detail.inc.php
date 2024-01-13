@@ -82,7 +82,7 @@ $it_pass->value="";
             </td>
             <td>
                 <?php echo $it_pass->input();?>
-                <span id="password_info" style="background-color: yellow;color:red;position:absolute"></span>
+                <span id="password_info" style="background-color: rgba(255,160,122,0.58);color:orangered;position:absolute"></span>
             </td>
         </tr>
         <tr>

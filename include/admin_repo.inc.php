@@ -161,6 +161,7 @@ if ( $action == "info" && SYSINFO_DISPLAY == true) {
     echo phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES | INFO_ENVIRONMENT | INFO_VARIABLES);
     $r=ob_get_clean();
     $html=new DOMDocument();
+    libxml_use_internal_errors(true);
     $html->loadHTML($r);
     $nodelist=$html->getElementsByTagName("style");
     $nodelist->item(0)->nodeValue=' 
