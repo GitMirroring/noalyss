@@ -21,6 +21,8 @@ use PHPUnit\Framework\TestCase;
  */
 // Copyright (2002-2019) Author Dany De Bontridder <danydb@noalyss.eu>
 
+require_once DIRTEST."/global.php";
+
 /**
  * @file
  * @brief 
@@ -40,6 +42,7 @@ class Tax_SummaryTest extends TestCase
     protected function setUp():void
     {
         global $g_connection;
+        $g_connection=Dossier::connect();
         $this->object=new \Tax_Summary($g_connection, "01.01.2014", "31.12.2019");
     }
 
@@ -70,6 +73,8 @@ class Tax_SummaryTest extends TestCase
 
     function testDisplay()
     {
+        global $g_connection,$g_user;
+        $g_user=new Noalyss_user($g_connection);
         $this->expectOutputRegex("/.*0,00.*\<\/tr\>\<\/table\>\n/");
         $this->object->display();
     }
@@ -155,6 +160,9 @@ class Tax_SummaryTest extends TestCase
     }
     function testGet_row_purchase()
     {
+        global $g_connection,$g_user;
+        $g_user=new Noalyss_user($g_connection);
+
         // Operation date
         $this->object->set_tva_type("O");
         $array=$this->object->get_row_purchase();
@@ -185,7 +193,10 @@ class Tax_SummaryTest extends TestCase
 
     function testGet_row_sale()
     {
-         $this->object->set_tva_type("O");
+        global $g_connection,$g_user;
+        $g_user=new Noalyss_user($g_connection);
+
+        $this->object->set_tva_type("O");
         $array=$this->object->get_row_sale();
         //-- For creating the array
          Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getrow_sale_o.txt", var_export($array, TRUE));
@@ -212,7 +223,10 @@ class Tax_SummaryTest extends TestCase
 
     function testget_summary_purchase()
     {
-         $this->object->set_tva_type("T");
+        global $g_connection,$g_user;
+        $g_user=new Noalyss_user($g_connection);
+
+        $this->object->set_tva_type("T");
         $array=$this->object->get_summary_purchase();
         //-- For creating the array
         Noalyss\Facility::save_file(__DIR__."/file", "tax_summary_getsummary_purchase_t.txt", var_export($array, TRUE));
@@ -238,6 +252,9 @@ class Tax_SummaryTest extends TestCase
 
     function testget_summary_sale()
     {
+        global $g_connection,$g_user;
+        $g_user=new Noalyss_user($g_connection);
+
         $this->object->set_tva_type("O");
         $array=$this->object->get_summary_sale();
         //-- For creating the array

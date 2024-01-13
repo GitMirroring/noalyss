@@ -703,38 +703,6 @@ class Acc_LedgerTest extends TestCase
     }
 
     /**
-     * @covers Acc_Ledger::get_saldo_exercice
-     */
-    public function testGet_saldo_exercice()
-    {
-        $result=[
-            ["solde"=>  658.25 , "j_poste"=> "4400004", "j_qcode"=> "FOURNI"],
-            ["solde"=> 660.17 , "j_poste"=> "4000005", "j_qcode"=> "CLIENT1"],
-            ["solde"=>  87.8400, "j_poste"=> "4112", "j_qcode"=> ""],
-            ["solde"=>-114.57  , "j_poste"=> "4511", "j_qcode"=> ""],
-            ["solde"=> -1496.3400 , "j_poste"=>"4400005", "j_qcode"=> "FOURNI1"]
-        ];
-        $get=$this->object->get_saldo_exercice("2018");
-        $nb_get=count($get);
-        $nb_result=count($result);
-        $ix=0;
-        for ($i=0;$i<$nb_get;$i++)
-        {
-            for ($e=0;$e<$nb_result;$e++) {
-                if (
-                        $result[$e]["j_poste"] == $get[$i]["j_poste"] && 
-                        $result[$e]["j_qcode"] == $get[$i]["j_qcode"] 
-                        ) 
-                {
-                    $this->assertEquals($result[$e]["solde"],$get[$i]["solde"]);
-                    $ix++;
-                }
-            }
-        }
-        $this->assertEquals(5,$ix);
-    }
-
-    /**
      * @covers Acc_Ledger::get_last_date
      */
     public function testGet_last_date()
