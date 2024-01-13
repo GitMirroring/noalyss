@@ -19,9 +19,13 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu 6/01/24
 /*! 
  * \file
- * \brief 
+ * \brief Operation OUVERTURE
  */
 
+/**
+ * @class
+ * @brief Operation ouverture
+ */
 class Operation_Opening extends Operation_Exercice
 {
     private $signature;
