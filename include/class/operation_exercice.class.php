@@ -231,13 +231,6 @@ select sum(signed_amount) delta,sum(debit) debit,sum(credit) credit from saldo_d
             $cn->commit();
             return true;
         } catch (\Exception $e) {
-//            $a_error=array(2=>_("la date est obligatoire",),1=>_('Crédit et débit non équilibré'),3=>_("Montant invalide"),
-//                4=>_("Fiche non permise dans ce journal"),6=>_("Période fermée ou inexistante"),EXC_DUPLICATE=>_("Opération déja transférée"));
-//            $exc_code=$e->getCode();
-//
-//            if ( isset($a_error[$exc_code] ) )
-//                $oe_result=$a_error[$e->getCode()];
-//            else
             $oe_result=$e->getMessage();
 
             $oe_status='NOK';
@@ -247,6 +240,14 @@ select sum(signed_amount) delta,sum(debit) debit,sum(credit) credit from saldo_d
 
     }
 
+    /**
+     * @brief Transform the data in table OPERATION_EXERCICE and OPERATION_EXERCICE_DETAIL into an array usable
+     *  by Acc_Ledger, the result will be stored into the global variable $oe_data
+     * @globals $oe_data array with the data transformed
+     * @param $ledger_id
+     * @return void
+     * @throws Exception
+     */
     function transform($ledger_id)
     {
         global $oe_data; // transform data to array used by Acc_Ledger::verify_operation
@@ -293,5 +294,18 @@ select sum(signed_amount) delta,sum(debit) debit,sum(credit) credit from saldo_d
             $cn->exec_sql("delete from operation_exercice where oe_id=$1",[$operation_id]);
         }
     }
+
+    public function get_operation_exercice_sql(): Operation_Exercice_SQL
+    {
+        return $this->operation_exercice_sql;
+    }
+
+    public function set_operation_exercice_sql(Operation_Exercice_SQL $operation_exercice_sql): Operation_Exercice_SQL
+    {
+        $this->operation_exercice_sql = $operation_exercice_sql;
+        return $this;
+
+    }
+
 
 }
