@@ -212,7 +212,18 @@ if (!empty($array)) {
 
         $fill=$pdf->is_fill($i);
 
-        $pdf->LongLine(30, 6, $value['poste'], 0, 'L', $fill);
+        $label=$value['poste'];
+        if (in_array($r['type'],array('CHA','ACT','PASINV','PROINV')) && $value['sum_deb']<$value['sum_cred'])
+        {
+
+            $label.=" ".mb_chr(0x26a0);
+        }
+        if (in_array($r['type'],array('PRO','PAS','ACTINV','CHAINV')) && $value['sum_deb']>$value['sum_cred'])
+        {
+
+            $label.=" ".mb_chr(0x26a0);
+        }
+        $pdf->LongLine(30, 6, $label, 0, 'L', $fill);
         $pdf->LongLine(60, 6, $value['label'], 0, 'L', $fill);
         $summary_tab = $bal->summary_add($summary_tab, $value['poste'],
             $value['sum_deb'],

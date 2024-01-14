@@ -231,6 +231,7 @@ class Acc_Balance
 
             $a['poste']=$r['poste'];
             $a['label']=mb_substr($poste->get_lib(),0,40);
+            $a['type']=$poste->get_parameter("pcm_type");
             $a['sum_deb']=round($r['sum_deb'],2);
             $a['sum_cred']=round($r['sum_cred'],2);
             $a['solde_deb']=round(( $a['sum_deb']  >=  $a['sum_cred'] )? $a['sum_deb']- $a['sum_cred']:0,2);
