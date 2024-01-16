@@ -303,11 +303,7 @@ p#breakhere {page-break-before: always}
 {
     font-size:9pt;
     margin-top:10pt;
-    word-break: normal;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    
-    
+
 }
 .tinybutton {
     display:none;
@@ -326,3 +322,5 @@ span.inplace_edit_input
 .inum {
     text-align: right;
 }
+
+.concerned_action {display:block;}
