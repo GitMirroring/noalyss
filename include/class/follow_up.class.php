@@ -616,12 +616,12 @@ class Follow_Up
         /* upload the documents */
         $doc=new Document($this->db);
         $doc->upload($this->ag_id);
-        if (trim($this->ag_comment??"")!='' && Document_Option::can_add_comment($this->ag_id))
+        if (noalyss_trim($this->ag_comment??"")!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
                 , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], strip_tags($this->ag_description),$this->ag_comment));
         }
-        if (trim($this->ag_description)!='' && Document_Option::can_add_comment($this->ag_id))
+        if (noalyss_trim($this->ag_description)!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
                 , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'],strip_tags($this->ag_description), $this->ag_description));
@@ -1918,7 +1918,7 @@ where
         }
     }
     /**
-     * Return the first parent of the event tree, or -1 if not found. The parent is an action with a lower id, 
+     * @brief Return the first parent of the event tree, or -1 if not found. The parent is an action with a lower id,
      * so it can happen than an action has several ones
      * @return arrary of integer (ag_id)
      */
@@ -1977,7 +1977,7 @@ where
           from 
             action_gestion join t on (ag_id=aga_greatest)
             join document_type on (ag_type=dt_id)
-            
+             order by key_path
 ";
          $ret_array=$this->db->get_array($sql,array($p_id));
          // Empty returns
@@ -1996,82 +1996,80 @@ where
         /*
          * First we retrieve the parent
          */
-        $parent=$this->get_parent();
+        $parent_id=$this->db->get_value("select min( get_follow_up_tree) from comptaproc.get_follow_up_tree($1)",[$this->ag_id]);
         $http=new HttpInput();
         $base=HtmlInput::request_to_string(array("gDossier", "ac",  "sb", "sc",
                     "f_id"))."&amp;sa=detail";
-        if ($parent==-1)
+        $parent=array();
+        if (empty($parent_id))
         {
             echo _('Principal');
-            $parent=array();
-            $parent [0]['aga_least']= $this->ag_id;
+            $parent_id= $this->ag_id;
         }
-       
-        $nb_parent=count($parent);
-        for ($i=0;$i< $nb_parent;$i++)
+
+
+        $fu_parent=new Follow_Up($this->db, $parent_id);
+        $fu_parent->get();
+        echo'<span class="highlight">';
+        $xaction=sprintf('view_action(%d,%d,%d)', $fu_parent->ag_id,
+                    Dossier::id(), 1);
+        $showAction='<a class="line" href="javascript:'.$xaction.'">';
+        echo $showAction.
+            $fu_parent->ag_timestamp," ",
+            h($fu_parent->ag_title),
+            '('.h($fu_parent->ag_ref).')',
+                '</a>';
+
+        echo "</span>";
+        echo '<ul style="padding-left:10px;list-style-type: none;">';
+
+        $action=$this->get_children($parent_id);
+        for ($o=0; $o<count($action); $o++)
         {
-            $fu_parent=new Follow_Up($this->db, $parent[$i]['aga_least']);
-            $fu_parent->get();
-            echo'<span class="highlight">';
-            $xaction=sprintf('view_action(%d,%d,%d)', $fu_parent->ag_id,
-                        Dossier::id(), 1);
-            $showAction='<a class="line" href="javascript:'.$xaction.'">';
-            echo $showAction.
-                $fu_parent->ag_timestamp," ",
-                h($fu_parent->ag_title),
-                '('.h($fu_parent->ag_ref).')',
-                    '</a>';
+            $class=($this->ag_id == $action[$o]['aga_greatest'])?' class="highlight" ':'';
 
-            echo "</span>";
-            echo '<ul style="padding-left:10px;list-style-type: none;">';
+            // Count the number of direct parents
+            $count_parent =$this->db->get_value('select count(*) from action_gestion_related where aga_greatest = $1',array($action[$o]['aga_greatest']));
+            $direct_parent=($count_parent > 1 ) ? _('direct parent ').$count_parent:"";
 
-            $action=$this->get_children($parent[$i]['aga_least']);
-            for ($o=0; $o<count($action); $o++)
+            $margin=($action[$o]['depth']>1 )?str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$action[$o]['depth']-1)."&#8680;":"";
+            if ($p_view!='READ'&&$p_base!='ajax')
             {
-                $class=($this->ag_id == $action[$o]['aga_greatest'])?' class="highlight" ':'';
-
-                // Count the number of direct parents
-                $count_parent =$this->db->get_value('select count(*) from action_gestion_related where aga_greatest = $1',array($action[$o]['aga_greatest']));
-                $direct_parent=($count_parent > 1 ) ? _('direct parent ').$count_parent:"";
-
-                $margin=($action[$o]['depth']>1 )?str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$action[$o]['depth']-1)."&#8680;":"";
-                if ($p_view!='READ'&&$p_base!='ajax')
-                {
-                    $rmAction=sprintf("return confirm_box(null,'"._('Voulez-vous effacer cette action ')."', function () {remove_action('%s','%s','%s');});",
-                            dossier::id(), $action[$o]['aga_greatest'],
-                            $http->request('ag_id',"number"));
-                    $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
-                    $js=Icon_Action::trash("acact".$action[$o]['aga_greatest'], $rmAction);
-                    echo '<li '.$class.' id="act'.$action[$o]['aga_greatest'].'">'.$margin.$showAction.$action[$o]['str_date'].
-                    h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
-                    .$js.'</li>';
-                }
-                else
-                /*
-                 * Display detail requested from Ajax Div
-                 */
-                if ($p_base=='ajax')
-                {
-                    $xaction=sprintf('view_action(%d,%d,%d)', $action[$o]['aga_greatest'],
-                            Dossier::id(), 1);
-                    $showAction='<a class="line" href="javascript:'.$xaction.'">';
-                    echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
-                    h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
-                    .'</li>';
-                }
-                /*
-                 * READ ONLY
-                 */
-                else
-                {
-                    $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
-                    echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
-                    h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
-                    .'</li>';
-                }
+                $rmAction=sprintf("return confirm_box(null,'"._('Voulez-vous effacer cette action ')."', function () {remove_action('%s','%s','%s');});",
+                        dossier::id(), $action[$o]['aga_greatest'],
+                        $http->request('ag_id',"number"));
+                $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
+                $js=Icon_Action::trash("acact".$action[$o]['aga_greatest'], $rmAction);
+                echo '<li '.$class.' id="act'.$action[$o]['aga_greatest'].'">'.$margin.$showAction.$action[$o]['str_date'].
+                h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
+                .$js.'</li>';
             }
-            echo '</ul>';
+            else
+            /*
+             * Display detail requested from Ajax Div
+             */
+            if ($p_base=='ajax')
+            {
+                $xaction=sprintf('view_action(%d,%d,%d)', $action[$o]['aga_greatest'],
+                        Dossier::id(), 1);
+                $showAction='<a class="line" href="javascript:'.$xaction.'">';
+                echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
+                h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
+                .'</li>';
+            }
+            /*
+             * READ ONLY
+             */
+            else
+            {
+                $showAction='<a class="line" href="'.$base."&ag_id=".$action[$o]['aga_greatest'].'">';
+                echo '<li  '.$class.' >'.$margin.$showAction.$action[$o]['str_date']." ".
+                h($action[$o]['title']).'('.h($action[$o]['action_ref']).')'.$direct_parent.'</a>'." "
+                .'</li>';
+            }
         }
+        echo '</ul>';
+
     }
     /**
      * @brief Display the list of parent of the current Follow_Up
@@ -2084,18 +2082,23 @@ where
     {
         $a_parent=$this->db->get_array(
                 "
-                 select ag_id,ag_title as title ,to_char(ag_timestamp,'DD/MM/YY') as str_date,ag_ref||' '||dt_value as action_ref
-                 from 
-                action_gestion 
-                join document_type on (ag_type=dt_id)
-                where ag_id in (select aga_least from action_gestion_related where aga_greatest = $1)
-                order by ag_id
+ select ag1.ag_id
+      ,ag1.ag_title as title 
+      ,to_char(ag1.ag_timestamp,'DD/MM/YY') as str_date
+      ,ag1.ag_ref||' '||dt_value as action_ref
+ from 
+    action_gestion ag1
+    join document_type on (ag_type=dt_id)
+    join (select distinct get_follow_up_tree from comptaproc.get_follow_up_tree($1)) tree_ag 
+            on (tree_ag.get_follow_up_tree=ag1.ag_id)
+order by ag_id
                 ", array($this->ag_id)
                 );
         if ( empty($a_parent ) ) return;
         echo '<ul style="padding-left:10px;list-style-type: none;">';
         $base=HtmlInput::request_to_string(array("gDossier", "ac", "sa", "sb", "sc",
                     "f_id"));
+        $http=new HttpInput();
         for ($o=0; $o<count($a_parent); $o++)
         {
             $class=($this->ag_id == $a_parent[$o]['ag_id'])?' class="highlight" ':'';
@@ -2104,9 +2107,11 @@ where
             {
                 $rmAction=sprintf("return confirm_box(null,'"._('Voulez-vous effacer cette action ')."', function () {remove_action('%s','%s','%s');});",
                         dossier::id(), $a_parent[$o]['ag_id'],
-                        $_REQUEST['ag_id']);
+                        $http->request('ag_id',"number"));
                 $showAction='<a class="line" href="'.$base."&ag_id=".$a_parent[$o]['ag_id'].'">';
-                $js='<a class="tinybutton" id="acact'.$a_parent[$o]['ag_id'].'" href="javascript:void(0)" onclick="'.$rmAction.'">'.SMALLX.'</a>';
+
+                $js=\Icon_Action::trash('acact'.$a_parent[$o]['ag_id'],$rmAction);
+                
                 echo '<li '.$class.' id="act'.$a_parent[$o]['ag_id'].'">'.$showAction.$a_parent[$o]['str_date'].
                 h($a_parent[$o]['title']).'('.h($a_parent[$o]['action_ref']).')'.'</a>'." "
                 .$js.'</li>';
