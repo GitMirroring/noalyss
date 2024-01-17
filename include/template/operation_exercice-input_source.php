@@ -30,15 +30,15 @@ global $g_user;
 global $g_parameter;
 
 //-------------------------------------------------------------------------------------------
-// if DEBUG then show both , otherwise if MY_REPORT=Y shows opening otherwise , shows only closing
-// Show opening if report == Y or NOALYSS > 1
+//
+// Show opening
 //-------------------------------------------------------------------------------------------
-if ( $g_parameter->MY_REPORT=="Y" || DEBUGNOALYSS > 1) :
+
 ?>
 <div class="content">
 
     <div class="row">
-        <div class="col">
+        <div class="col-lg">
             <FORM method="POST">
 
                 <div class="" id="opening_div">
@@ -91,15 +91,14 @@ if ( $g_parameter->MY_REPORT=="Y" || DEBUGNOALYSS > 1) :
                 </div>
             </FORM>
 <?php
-endif;
+
 //-------------------------------------------------------------------------------------------
-// Show closing if report == N or NOALYSS > 1
+// Show closing
 //-------------------------------------------------------------------------------------------
 
-if ( $g_parameter->MY_REPORT=="N" || DEBUGNOALYSS > 1) :
 ?>
         </div>
-        <div class="col">
+        <div class="col-lg">
 
             <FORM method="POST">
                 <div class="" id="closing_div" style="display:grid">
@@ -124,6 +123,3 @@ if ( $g_parameter->MY_REPORT=="N" || DEBUGNOALYSS > 1) :
         </div>
 
     </div>
-<?php
-endif;
-?>

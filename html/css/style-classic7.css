@@ -3397,3 +3397,17 @@ li.li-active {
      color:red;
 
  }
+ /** followup : detail : list of concerned actions **/
+ div.concerned_action {
+         height: 11rem;
+         overflow: auto;
+     background-color: white;
+     border:navy 1px solid;
+     width: 100%;
+     scroll-padding-right: 20px;
+ }
+ div.FullDetailActionChildren {
+     z-index: 12;
+     position: absolute;
+     height: auto;
+ }

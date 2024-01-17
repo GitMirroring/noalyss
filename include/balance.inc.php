@@ -437,8 +437,21 @@ if ( isset($_GET['view'] ) )
         
         echo '<TR class="'.$tr.'">';
         echo td($view_history);
-        echo td(h($r['label']));
-      
+        // label + warning if the saldo is incorrect
+        $label=$r['label'];
+        if (in_array($r['type'],array('CHA','ACT','PASINV','PROINV')) && $r['sum_deb']<$r['sum_cred'])
+        {
+
+            $label.=" ".Icon_Action::warnbulle(85);
+        }
+        if (in_array($r['type'],array('PRO','PAS','ACTINV','CHAINV')) && $r['sum_deb']>$r['sum_cred'])
+        {
+
+            $label.=" ".Icon_Action::warnbulle(86);
+        }
+        print '<td>';
+        print $label;
+        print '</td>';
         if ($previous == 1 ) {
             echo td(nbm($r['sum_deb_previous']),' class="previous_year"');
             echo td(nbm($r['sum_cred_previous']),' class="previous_year" ');

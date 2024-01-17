@@ -85,7 +85,7 @@ $menu[]=array('href'=>$root.'&sc=bal', 'label'=>_('Balance'), 'alt'=>_('Balance 
 $menu[]=array('href'=>$root.'&sc=balag', 'label'=>_('Balance âgée'), 'alt'=>_('Balance âgée du tiers'));
 $menu[]=array('href'=>$root.'&sc=let', 'label'=>_('Lettrage'), 'alt'=>_('Opérations & Lettrages'));
 
-echo '<ul class="tabs" style="padding-top:0px">';
+echo '<ul class="tabs noprint" style="padding-top:0px">';
 for ($i=0; $i<count($menu); $i++)
 {
     $style=($def==($i+1))?"tabs_selected":"tabs";
