@@ -21,6 +21,8 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
+
+\Noalyss\Dbg::echo_file(__FILE__);
 $sup_parameter=HtmlInput::array_to_string(["sc","sb","f_id","qcode"], $_REQUEST,"&amp;");
 $cn=Dossier::connect();
 /**
@@ -34,10 +36,10 @@ if ( ! empty ($g_user->get_writable_profile()))
         'onclick="document.getElementById(\'action_add_d\').style.display=\'block\';"');
 }
 ?>
-<div id="action_add_d" class="inner_box" style="width:25rem;display:none;top:10rem;">
+<div id="action_add_d" class="inner_box" style="position:fixed;min-width:25rem;display:none;top:10rem;">
     <?php echo HtmlInput::title_box(_("Choississez une action"), "action_add_d"); ?>
     <div style="text-align: center">
-
+<?=\Noalyss\Dbg::echo_file(__FILE__)?>
         <form method="get" >
 
             <?php
@@ -71,3 +73,5 @@ if ( ! empty ($g_user->get_writable_profile()))
         </form>
     </div>
 </div>
+<?php
+include "show-all-variable.php";

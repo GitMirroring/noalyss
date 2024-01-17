@@ -3,13 +3,14 @@
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 $uniq=uniqid("tab",TRUE);
-?><div>
+?>
+<div>
     <?php
     \Noalyss\Dbg::echo_file(__FILE__);
     ?>
-<div style="float:left;">
+<div class="row">
 
-
+<div class="col">
     <table>
         <tr class="highlight">
             <TD>
@@ -110,9 +111,10 @@ if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id
           <?php endif; ?>
         </table>
  <?php if ($p_view != 'READ') echo $str_add_button;?>
-
 </div>
-<div style="float:left">
+
+
+<div class="col">
         <table>
 
          
@@ -186,16 +188,19 @@ if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id
         </table>
 
 </div>
-<div id="choice_other_info_div" style="float:left;">
+
+<div id="choice_other_info_div" class="col-12 col-lg-6">
+    <div class="row">
+
     <ul class="tabs noprint" >
         <li id="related_action_tab<?php echo $uniq?>" class="tabs_selected"><?php echo _("Actions concernées")?></li>
         <li id="related_operation_tab<?php echo $uniq?>" class="tabs"><?php echo _('Opérations concernées')?></li>
         <li id="dependant_action_tab<?php echo $uniq?>" class="tabs"><?php echo _('Dépendant')?></li>
     </ul>
-    
-    <div style="clear:both"></div>
-	<div id="related_operation_div<?php echo $uniq?>" style="display:none" class="print">
-
+    </div>
+    <div class="row">
+	<div id="related_operation_div<?php echo $uniq?>" style="display:none;" class="print concerned_action">
+        <?php if ($p_view != 'READ')   echo '<span class="noprint">'.$iconcerned->input().'</span>';?>
 		<ol>
 
 		<?php
@@ -218,27 +223,35 @@ if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id
 
 		?>
 		</ol>
-		<?php if ($p_view != 'READ')   echo '<span class="noprint">'.$iconcerned->input().'</span>';?>
+
 	</div>
+        <div id="related_action_div<?php echo $uniq?>" class="print concerned_action"  style="width: 95%" >
+            <div class="" style="display:block">
+                <div>
 
-        <div id="related_action_div<?php echo $uniq?>" class="print">
-		
-		
+                <?php if ( $p_view != 'READ') echo $iaction->input();?>
+                <?=\Icon_Action::detail('SmallDetailActionChildren'.$uniq.'_bt', "$('related_action_div{$uniq}').addClassName('FullDetailActionChildren');$('FullDetailActionChildren{$uniq}_bt').show();$('SmallDetailActionChildren{$uniq}_bt').hide()")?>
+                <?php
+                echo \Icon_Action::hide_icon("FullDetailActionChildren{$uniq}_bt"
+                    , "$('related_action_div{$uniq}').removeClassName('FullDetailActionChildren');$('FullDetailActionChildren{$uniq}_bt').hide();$('SmallDetailActionChildren{$uniq}_bt').show()");?>
+                </div>
+                <?php
+                $this->display_children($p_view,$p_base);
 
-		<?php
-		$this->display_children($p_view,$p_base);
-
-		?>
-		
-		<?php if ( $p_view != 'READ') echo '<span class="noprint">'.$iaction->input().'</span>';?>
+                ?>
+                <script>$('FullDetailActionChildren<?=$uniq?>_bt').hide()</script>
+            </div>
 	</div>
-        <div id="dependant_action_div<?php echo $uniq?>" style="display:none" class="print">
+        <div id="dependant_action_div<?php echo $uniq?>" style="display:none" class="print concerned_action">
         <?php
+        //@todo a enlever obsolete
             $this->display_parent($p_view,$p_base);
         ?>
         </div>
+    </div>
 </div>
 
+</div>
 </div>
 <div style="clear: both"></div>
 <div id="div_action_description">
@@ -256,7 +269,7 @@ function small(p_id_textarea){
 
    }
 </script>
-    <p style="margin-left:10px;">
+    <p style="margin-left:5%;">
     <?php echo $title->input();
     ?>
 </p>
