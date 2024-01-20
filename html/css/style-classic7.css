@@ -3411,3 +3411,11 @@ li.li-active {
      position: absolute;
      height: auto;
  }
+ /**
+  * Help item in EXTENSION
+  */
+ #help {
+    background-color:lightgoldenrodyellow;
+     color:navy !important;
+     text-decoration: underline;
+ }
