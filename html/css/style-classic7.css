@@ -2395,6 +2395,7 @@ td.selectedmenu {
 {
     margin-top:1px;
     border:1px solid blue;
+    min-height: 5rem;
 }
 
 @media only screen and (max-width:850px) {
