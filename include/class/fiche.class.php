@@ -1366,9 +1366,9 @@ class Fiche
 
              /* Filter on the default year */
             if ( $g_parameter->MY_REPORT == 'N') {
-                $amount=$tiers->get_solde_detail($filter_year);
-            } else {
                 $amount = $tiers->get_solde_detail();
+            } else {
+                $amount=$tiers->get_solde_detail($filter_year);
             }
 
             /* skip the tiers without operation */
