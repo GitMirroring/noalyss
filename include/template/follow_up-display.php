@@ -377,6 +377,7 @@ function small(p_id_textarea){
             echo '</span>';
         }
    }
+   $dossier_id=Dossier::id();
     if (  count($acomment) > 0
             &&  Document_Option::can_add_comment($ag_id)
             && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")
@@ -395,7 +396,7 @@ function small(p_id_textarea){
                 $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
                 $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
                         $acomment[$c]['str_agc_date'].')').$js.
-                                '<div class="nicEdit-main field_follow_up" style="margin-left:5%;margin-bottom:2rem;width:90%" id="com'.$acomment[$c]['agc_id'].'"> '.
+                                '<div class="nicEdit-main field_follow_up" style="margin-left:5%;margin-bottom:auto;width:90%" id="com'.$acomment[$c]['agc_id'].'"> '.
                                 " ".$acomment[$c]['agc_comment_raw'].'</div>'
                                 ;
 
@@ -414,10 +415,30 @@ function small(p_id_textarea){
                     Dossier::id().',0)" >\1</a>',$comment);
             echo '<p></p>';
             echo $comment;
+            // link to files to download
+            $aFile=$this->db->get_array('select d_id,d_filename,d_description,d_mimetype
+                from  action_comment_document 
+                join document  on (d_id=document_id) where action_gestion_comment_id=$1'
+                , array( $acomment[$c]['agc_id']));
+            if ( ! empty ($aFile)) {
+                echo '<div style="left:10%">';
+                echo _("Fichiers :");
+                foreach ($aFile as $file)
+                {
+                    $url="export.php?".http_build_query(array("act"=>'RAW:document'
+                            ,"gDossier"=>$dossier_id
+                        ,"d_id"=>$file["d_id"]));
+                    printf('<a class="print_line" href="%s">%s</a>',
+                    $url,h($file['d_filename']));
+
+                }
+                echo '</div>';
+            }
+
         } // end for
         if (  $has_description &&  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id))  {
             	echo '<span class="noprint">';
-            	echo '<div style="margin-left:5%">';
+            	echo '<div style="margin-left:5%;margin-top:2.5rem">';
                 echo $desc->input();
 		echo '</div>';
             }

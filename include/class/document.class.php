@@ -449,7 +449,10 @@ class Document
     /**
      * @brief upload a file into document
      *  all the needed data are in $_FILES we don't increment the seq
-     * @param $p_file : array containing by default $_FILES
+     * $_FILES  : array containing by default $_FILES
+     * @param int $p_ag_id  ACTION_GESTION.AG_ID
+     * @param int $agc_id ACTION_GESTION_COMMENT.AGC_ID
+     * @returns array of int DOCUMENT.D_ID (id of saved documents )
      *
      */
     function upload($p_ag_id)
@@ -463,6 +466,7 @@ class Document
         // Start Transaction
         $this->db->start();
         $name=$_FILES['file_upload']['name'];
+        $document_saved=array();
         for ($i=0; $i<sizeof($name); $i++)
         {
             $new_name=tempnam($_ENV['TMP'], 'doc_');
@@ -487,12 +491,13 @@ class Document
                 $this->d_description=strip_tags($_POST['input_desc'][$i]);
                 // insert into  the table
                 $sql="insert into document (ag_id, d_lob,d_filename,d_mimetype,d_number,d_description)"
-                        . " values ($1,$2,$3,$4,$5,$6)";
-                $this->db->exec_sql($sql,
+                        . " values ($1,$2,$3,$4,$5,$6) returning d_id";
+                $document_saved[]=$this->db->get_value($sql,
                         array($p_ag_id, $this->d_lob, $this->d_filename, $this->d_mimetype, 1, $this->d_description));
             }
         } /* end for */
         $this->db->commit();
+        return $document_saved;
     }
 
     /**

@@ -322,33 +322,32 @@ if ($sub_action == "save_action_st2")
 {
 	$act = new Follow_Up($cn);
 	$act->fromArray($_POST);
-    try {
-	$act->d_id = 0;
-        $act->ag_id=$http->request("ag_id","number");
-	$act->md_id = $http->post('gen_doc','number',0);
+	try {
+		$act->d_id = 0;
+		$act->ag_id = $http->request("ag_id", "number");
+		$act->md_id = $http->post('gen_doc', 'number', 0);
 
-        $act->verify();
-        $sup_parameter=HtmlInput::array_to_string(["sc","sb","f_id","qcode"], $_REQUEST,"&amp;");
-	// insert into action_gestion
-	$act->update();
-        
-	$url = "?sa=detail&ag_id=" . $act->ag_id . '&' . dossier::get()."&ac=".$http->request("ac").
-                $sup_parameter;
-	echo '<p><a class="mtitle" href="' . $url . '">' . hb(_('Action Sauvée').'  : ' . $act->ag_ref) . '</a></p>';
+		$act->verify();
+		$sup_parameter = HtmlInput::array_to_string(["sc", "sb", "f_id", "qcode"], $_REQUEST, "&amp;");
+		// insert into action_gestion
+		$act->update();
 
-	Follow_Up::show_action_list($cn,$base);
-	$url = "?sa=detail&ag_id=" . $act->ag_id . '&' . dossier::get()."&ac=".$http->request("ac").
-                $sup_parameter;
-	echo '<p><a class="mtitle" href="' . $url . '">' . hb(_('Action Sauvée').'  : ' . $act->ag_ref) . '</a></p>';
-    } catch (Exception $e)
-    {
-        echo '<span class="notice">';
-        echo _("Erreur")." ".$e->getMessage();
-        echo '</span>';
-        $sub_action="add_action";
-        $error_id=$e->getCode();
-          record_log($e);
-    }
+		$url = "?sa=detail&ag_id=" . $act->ag_id . '&' . dossier::get() . "&ac=" . $http->request("ac") .
+			$sup_parameter;
+		echo '<p><a class="mtitle" href="' . $url . '">' . hb(_('Action Sauvée') . '  : ' . $act->ag_ref) . '</a></p>';
+
+		Follow_Up::show_action_list($cn, $base);
+		$url = "?sa=detail&ag_id=" . $act->ag_id . '&' . dossier::get() . "&ac=" . $http->request("ac") .
+			$sup_parameter;
+		echo '<p><a class="mtitle" href="' . $url . '">' . hb(_('Action Sauvée') . '  : ' . $act->ag_ref) . '</a></p>';
+	} catch (Exception $e) {
+		echo '<span class="notice">';
+		echo _("Erreur") . " " . $e->getMessage();
+		echo '</span>';
+		$sub_action = "add_action";
+		$error_id = $e->getCode();
+		record_log($e);
+	}
 }
 //--------------------------------------------------------------------------------
 // Add an action
