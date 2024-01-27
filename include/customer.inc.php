@@ -26,7 +26,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 $http=new HttpInput();
 
 
-$low_action = (isset($_REQUEST['sb'])) ? $_REQUEST['sb'] : "list";
+$low_action = $http->request("sb","string","list");
 /** \file
  * \brief Called from the module "Gestion" to manage the customer
  */
