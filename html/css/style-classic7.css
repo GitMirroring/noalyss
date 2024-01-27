@@ -44,7 +44,7 @@ input:focus {
     font-style: italic;
     background-color:transparent;
     font-size: 100%;
-    font-weight: 0;
+    font-weight: 1.0;
     padding: 0px;
     margin: 0px;
     font-family: sans-serif;
@@ -504,7 +504,7 @@ a.detail
     font-family: 'openSansRegular';
     text-decoration: underline;
     display: block;
-  //  color: #eb2208;
+    color: #eb2208;
     font-weight: normal;
     background-color: transparent;
 }
