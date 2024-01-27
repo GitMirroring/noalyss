@@ -416,6 +416,7 @@ class Follow_Up
         /* for new files */
         $upload=new IFile();
         $upload->name="file_upload[]";
+        $upload->set_multiple(true);
         $upload->setAlertOnSize(true);
         $upload->readOnly=$readonly;
         $upload->value="";

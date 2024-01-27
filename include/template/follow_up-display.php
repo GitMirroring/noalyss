@@ -472,8 +472,26 @@ if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_i
  **********************************************************************************************************************/
 ?>
 
-<div style="clear:both"></div>    
+<div style="clear:both"></div>
+<?php if ($p_view != 'READ') : ?>
+    <div class="noprint">
+        <h3 >Fichiers à ajouter: </h3>
+        <ol id='add_file'  >
+            <li>
+                <?php echo $upload->input();
+                ?>
 
+                <?php
+                $js="document.getElementById('add_file').removeChild(this.parentNode)";
+                echo Icon_Action::trash(uniqid(),$js);
+                ?>
+            </li>
+        </ol>
+        <span   >
+ <input type="button" class="smallbutton"   onclick="addFiles();" value="<?php echo _("Ajouter un fichier")?>">
+  </span>
+    </div>
+<?php endif;?>
   
 
 <div  id="div_action_attached_doc">
@@ -563,7 +581,7 @@ function addFiles() {
 try {
 	docAdded=document.getElementById('add_file');
 	new_element=document.createElement('li');
-	new_element.innerHTML='<input class="inp" type="file" value="" name="file_upload[]"/><label>Description</label> <input type="input" class="input_text" name="input_desc[]" >';
+	new_element.innerHTML='<input class="inp" type="file" value=""  multiple name="file_upload[]"/>';
 
     new_element.innerHTML+='<span id="<?=uniqid("file")?>" onclick="document.getElementById(\'add_file\').removeChild(this.parentNode)" class="icon">&#xe80f;</span>';
     
@@ -574,26 +592,7 @@ try {
 catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>'); alert(exception.message);}
 }
 </script>
-<?php if ($p_view != 'READ') : ?>
-  <div class="noprint">
-     <h3 >Fichiers à ajouter: </h3>
-    <ol id='add_file'  >
-      <li>
-        <?php echo $upload->input();
-        ?>
-        <label><?php echo _('Description')?></label>
-        <input type="input" class="input_text" name="input_desc[]" >
-          <?php
-            $js="document.getElementById('add_file').removeChild(this.parentNode)";
-            echo Icon_Action::trash(uniqid(),$js);
-          ?>
-      </li>
-    </ol>
-  <span   >
- <input type="button" class="smallbutton" onclick="addFiles();" value="<?php echo _("Ajouter un fichier")?>">
-  </span>
-  </div>
- <?php endif;?>
+
 </div>
 <?php if  ($p_view != 'NEW') :  ?>
 Document créé le <?php echo $this->ag_timestamp ?> par <?php echo $this->ag_owner?>

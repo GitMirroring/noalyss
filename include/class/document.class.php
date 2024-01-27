@@ -467,6 +467,9 @@ class Document
         $this->db->start();
         $name=$_FILES['file_upload']['name'];
         $document_saved=array();
+        $http=new HttpInput();
+        $aDescription=$http->post("input_desc","array",array());
+        $description="";
         for ($i=0; $i<sizeof($name); $i++)
         {
             $new_name=tempnam($_ENV['TMP'], 'doc_');
@@ -488,7 +491,10 @@ class Document
                 $this->d_lob=$oid;
                 $this->d_filename=$_FILES['file_upload']['name'][$i];
                 $this->d_mimetype=$_FILES['file_upload']['type'][$i];
-                $this->d_description=strip_tags($_POST['input_desc'][$i]);
+                if ( isset($aDescription[$i])) {
+                    $description=$aDescription[$i];
+                }
+                $this->d_description=$description;
                 // insert into  the table
                 $sql="insert into document (ag_id, d_lob,d_filename,d_mimetype,d_number,d_description)"
                         . " values ($1,$2,$3,$4,$5,$6) returning d_id";
@@ -545,8 +551,19 @@ class Document
         $this->db->start();
         $ret=$this->db->exec_sql(
                 "select d_id,d_lob,d_filename,d_mimetype from document where d_id=$1", [$this->d_id]);
+
         if (Database::num_row($ret)==0)
         {
+            // send it to stdout
+            ini_set('zlib.output_compression', 'Off');
+            header("Pragma: public");
+            header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+            header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+            header("Cache-Control: must-revalidate");
+            header('Content-type: text');
+            header('Content-Disposition: attachment;filename="vide.txt"', FALSE);
+            header("Accept-Ranges: bytes");
+            echo "VIDE-EMPTY";
             return;
         }
         $row=Database::fetch_array($ret, 0);
@@ -555,7 +572,7 @@ class Document
         $this->db->lo_export($row['d_lob'], $tmp);
         $this->d_mimetype=$row['d_mimetype'];
         $this->d_filename=$row['d_filename'];
-
+        $file=fopen($tmp, 'r');
         // send it to stdout
         ini_set('zlib.output_compression', 'Off');
         header("Pragma: public");
@@ -565,7 +582,6 @@ class Document
         header('Content-type: '.$this->d_mimetype);
         header('Content-Disposition: attachment;filename="'.$this->d_filename.'"', FALSE);
         header("Accept-Ranges: bytes");
-        $file=fopen($tmp, 'r');
         while (!feof($file))
         {
             echo fread($file, 8192);
@@ -573,7 +589,6 @@ class Document
         fclose($file);
 
         unlink($tmp);
-
         $this->db->commit();
     }
 
