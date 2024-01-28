@@ -909,7 +909,7 @@ function ajax_disconnected($p_div)
     echo HtmlInput::title_box(_("Déconnecté"), $p_div);
     echo h2(_('Données non disponibles'), 'class="error" ');
     echo h2(_('Veuillez vous reconnecter soit dans une autre fenêtre soit '
-            . ' en cliquant sur le lien'), 'class="error"');
+            . ' en cliquant sur le bouton'), 'class="error"');
     // Reload button
     $reload=new IButton("reload");
     $reload->value=_("Se connecter");
@@ -918,7 +918,7 @@ function ajax_disconnected($p_div)
     // Link to log in another tab
     echo '<p style="text-align:center">';
     echo $reload->input();
-    echo HtmlInput::button_close($p_div);
+    echo HtmlInput::button_close($p_div,'button');
     echo '</p>';
 
 

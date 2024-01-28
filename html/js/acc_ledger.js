@@ -801,6 +801,8 @@ function view_history_account(p_value, dossier, p_exercice) {
             onFailure: error_box,
             onSuccess: function (req, xml) {
                 remove_waiting_box();
+                if (req.responseText === 'NOCONX') { reconnect();return;}
+
                 add_div(popup);
                 success_box(req, xml);
                 $(idbox).style.top = calcy(140 + (layer * 3)) + "px";
@@ -840,6 +842,8 @@ function view_history_anc_account(p_value, dossier, p_exercice) {
             onFailure: error_box,
             onSuccess: function (req, xml) {
                 remove_waiting_box();
+                if (req.responseText === 'NOCONX') { reconnect();return;}
+
                 add_div(popup);
                 $(idbox).innerHTML = req.responseText;
                 $(idbox).style.top = calcy(140 + (layer * 3)) + "px";
@@ -874,6 +878,8 @@ function update_history_account(obj) {
                 onFailure: error_box,
                 onSuccess: function (req, xml) {
                     remove_waiting_box();
+                    if (req.responseText === 'NOCONX') { reconnect();return;}
+
                     success_box(req, xml);
                     g(obj.div).style.top = calcy(140 + (layer * 3)) + "px";
                 }
@@ -915,6 +921,8 @@ function view_history_card(p_value, dossier, p_exercice) {
             onFailure: error_box,
             onSuccess: function (req, xml) {
                 remove_waiting_box();
+                if (req.responseText === 'NOCONX') { reconnect();return;}
+
                 add_div(popup);
                 success_box(req, xml);
                 g(idbox).style.top = calcy(140 + (layer * 3)) + "px";
@@ -947,6 +955,8 @@ function update_history_card(obj) {
                 parameters: querystring,
                 onFailure: error_box,
                 onSuccess: function (req, xml) {
+                    if (req.responseText === 'NOCONX') { reconnect();return;}
+
                     remove_waiting_box();
                     success_box(req, xml);
                     g(obj.div).style.top = calcy(140 + (layer * 3)) + "px";

@@ -31,10 +31,23 @@ class IFile extends HtmlInput
 {
     // if true , the size is tested and a box is displaid
     private $alert_on_size;
+    private $multiple ; // false by default, if true allow to select several files
     function __construct($p_name = "", $p_value = "", $p_id = "")
     {
         parent::__construct($p_name, $p_value, $p_id);
         $this->alert_on_size=false;
+        $this->multiple=false;
+    }
+
+    public function get_multiple(): bool
+    {
+        return $this->multiple;
+    }
+
+    public function set_multiple(bool $multiple): IFile
+    {
+        $this->multiple = $multiple;
+        return $this;
     }
 
     /**
@@ -61,7 +74,11 @@ class IFile extends HtmlInput
         $this->value=($p_value==null)?$this->value:$p_value;
         if ( $this->readOnly==true) return $this->display();
         if ($this->id=="") $this->id=uniqid("file_");
-        $r=sprintf('<INPUT class="inp" TYPE="file" name="%s" id="%s" value="%s">',
+        $multiple="";
+        if ( $this->multiple) $multiple=" multiple ";
+
+        $r=sprintf('<INPUT class="inp" %s TYPE="file" name="%s" id="%s" value="%s">',
+            $multiple,
             $this->name,
             $this->id,
             $this->value);

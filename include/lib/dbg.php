@@ -79,6 +79,8 @@ EOF;
             <pre><?= print_r($_GET) ?></pre>
             $_REQUEST
             <pre><?= print_r($_REQUEST) ?></pre>
+            $_FILES
+            <pre><?= print_r($_FILES) ?></pre>
             <?= \HtmlInput::button_hide($id) ?>
         </div>
         <input type="button" onclick="document.getElementById('<?= $id ?>').show();" value="Show request">

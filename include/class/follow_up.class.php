@@ -416,6 +416,7 @@ class Follow_Up
         /* for new files */
         $upload=new IFile();
         $upload->name="file_upload[]";
+        $upload->set_multiple(true);
         $upload->setAlertOnSize(true);
         $upload->readOnly=$readonly;
         $upload->value="";
@@ -948,7 +949,7 @@ class Follow_Up
         }
         // upload  documents
         $doc=new Document($this->db);
-        $doc->upload($this->ag_id);
+        $document_saved=$doc->upload($this->ag_id);
 
         /* save action details */
         $http=new HttpInput();
@@ -966,8 +967,15 @@ class Follow_Up
         if (trim(strip_tags($this->ag_comment??"")) !='')
         {
             $notag_comment=strip_tags($this->ag_comment);
-            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
+            $action_comment_id=$this->db->get_value("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4) returning agc_id"
                     , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $notag_comment,$this->ag_comment));
+            // saved also documents for this comment
+            if ( ! empty ($document_saved)) {
+                foreach ($document_saved as $document_id) {
+                    $this->db->exec_sql("insert into action_comment_document(document_id,action_gestion_comment_id) values ($1,$2)",
+                    [$document_id,$action_comment_id]);
+                }
+            }
         }
         if (trim(strip_tags($this->ag_description??""))!='' )
         {

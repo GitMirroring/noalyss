@@ -2430,6 +2430,7 @@ function set_preference(p_dossier) {
                     onFailure: ajax_misc_failure,
                     onSuccess: function (req) {
                         remove_waiting_box();
+                        if (req.responseText === 'NOCONX') { reconnect();return;}
                         add_div({id: 'preference_div', drag: 1});
                         $('preference_div').innerHTML = req.responseText;
                         try
