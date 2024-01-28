@@ -377,6 +377,7 @@ function small(p_id_textarea){
             echo '</span>';
         }
    }
+   $dossier_id=Dossier::id();
     if (  count($acomment) > 0
             &&  Document_Option::can_add_comment($ag_id)
             && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")
@@ -395,7 +396,7 @@ function small(p_id_textarea){
                 $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
                 $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
                         $acomment[$c]['str_agc_date'].')').$js.
-                                '<div class="nicEdit-main field_follow_up" style="margin-left:5%;margin-bottom:2rem;width:90%" id="com'.$acomment[$c]['agc_id'].'"> '.
+                                '<div class="nicEdit-main field_follow_up" style="margin-left:5%;margin-bottom:auto;width:90%" id="com'.$acomment[$c]['agc_id'].'"> '.
                                 " ".$acomment[$c]['agc_comment_raw'].'</div>'
                                 ;
 
@@ -414,10 +415,30 @@ function small(p_id_textarea){
                     Dossier::id().',0)" >\1</a>',$comment);
             echo '<p></p>';
             echo $comment;
+            // link to files to download
+            $aFile=$this->db->get_array('select d_id,d_filename,d_description,d_mimetype
+                from  action_comment_document 
+                join document  on (d_id=document_id) where action_gestion_comment_id=$1'
+                , array( $acomment[$c]['agc_id']));
+            if ( ! empty ($aFile)) {
+                echo '<div style="left:10%">';
+                echo _("Fichiers :");
+                foreach ($aFile as $file)
+                {
+                    $url="export.php?".http_build_query(array("act"=>'RAW:document'
+                            ,"gDossier"=>$dossier_id
+                        ,"d_id"=>$file["d_id"]));
+                    printf('<a class="print_line" href="%s">%s</a>',
+                    $url,h($file['d_filename']));
+
+                }
+                echo '</div>';
+            }
+
         } // end for
         if (  $has_description &&  $p_view == 'UPD' && Document_Option::can_add_comment($ag_id))  {
             	echo '<span class="noprint">';
-            	echo '<div style="margin-left:5%">';
+            	echo '<div style="margin-left:5%;margin-top:2.5rem">';
                 echo $desc->input();
 		echo '</div>';
             }
@@ -451,8 +472,26 @@ if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_i
  **********************************************************************************************************************/
 ?>
 
-<div style="clear:both"></div>    
+<div style="clear:both"></div>
+<?php if ($p_view != 'READ') : ?>
+    <div class="noprint">
+        <h3 >Fichiers à ajouter: </h3>
+        <ol id='add_file'  >
+            <li>
+                <?php echo $upload->input();
+                ?>
 
+                <?php
+                $js="document.getElementById('add_file').removeChild(this.parentNode)";
+                echo Icon_Action::trash(uniqid(),$js);
+                ?>
+            </li>
+        </ol>
+        <span   >
+ <input type="button" class="smallbutton"   onclick="addFiles();" value="<?php echo _("Ajouter un fichier")?>">
+  </span>
+    </div>
+<?php endif;?>
   
 
 <div  id="div_action_attached_doc">
@@ -480,7 +519,19 @@ endif; ?>
  **********************************************************************************************************************/
 ?>
     </div>
-  <div class="print">
+    <div id="icon_show_file_div_id<?=$uniq?>">
+    <?php
+    /** Start Block Document **/
+    printf ("Voir tous les fichiers");
+
+    echo \Icon_Action::show_icon(uniqid(), "$('all_attached_files_div{$uniq}').show();$('icon_show_file_div_id{$uniq}').hide()");
+    ?>
+    </div>
+  <div class="print" style="display: none" id="all_attached_files_div<?=$uniq?>">
+      <?php
+      echo "Cacher les fichiers";
+      echo \Icon_Action::hide_icon(uniqid(), "$('all_attached_files_div{$uniq}').hide();$('icon_show_file_div_id{$uniq}').show()")
+      ?>
       <table>
   <?php
 for ($i=0;$i<sizeof($aAttachedFile);$i++) :
@@ -524,6 +575,9 @@ endfor;
 
   ?>
   </table>
+
+      </div>
+          <div>
 <?php if ( ! empty ($aAttachedFile)) :
     /*** Propose to download all document in only one step */
     $url="export.php?".http_build_query([ 
@@ -542,7 +596,7 @@ function addFiles() {
 try {
 	docAdded=document.getElementById('add_file');
 	new_element=document.createElement('li');
-	new_element.innerHTML='<input class="inp" type="file" value="" name="file_upload[]"/><label>Description</label> <input type="input" class="input_text" name="input_desc[]" >';
+	new_element.innerHTML='<input class="inp" type="file" value=""  multiple name="file_upload[]"/>';
 
     new_element.innerHTML+='<span id="<?=uniqid("file")?>" onclick="document.getElementById(\'add_file\').removeChild(this.parentNode)" class="icon">&#xe80f;</span>';
     
@@ -553,26 +607,7 @@ try {
 catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>'); alert(exception.message);}
 }
 </script>
-<?php if ($p_view != 'READ') : ?>
-  <div class="noprint">
-     <h3 >Fichiers à ajouter: </h3>
-    <ol id='add_file'  >
-      <li>
-        <?php echo $upload->input();
-        ?>
-        <label><?php echo _('Description')?></label>
-        <input type="input" class="input_text" name="input_desc[]" >
-          <?php
-            $js="document.getElementById('add_file').removeChild(this.parentNode)";
-            echo Icon_Action::trash(uniqid(),$js);
-          ?>
-      </li>
-    </ol>
-  <span   >
- <input type="button" class="smallbutton" onclick="addFiles();" value="<?php echo _("Ajouter un fichier")?>">
-  </span>
-  </div>
- <?php endif;?>
+
 </div>
 <?php if  ($p_view != 'NEW') :  ?>
 Document créé le <?php echo $this->ag_timestamp ?> par <?php echo $this->ag_owner?>

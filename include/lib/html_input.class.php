@@ -444,10 +444,11 @@ class HtmlInput
      * @see add_div modify_operation
      * @param $div_name is the name of the div to remove
      */
-    static function button_close($div_name)
+    static function button_close($div_name,$class='smallbutton')
     {
         $a=new IButton('Fermer');
         $a->label=_("Fermer");
+        $a->class=$class;
         $a->javascript="removeDiv('".$div_name."')";
         $html=$a->input();
 

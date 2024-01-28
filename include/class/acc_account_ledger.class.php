@@ -304,6 +304,18 @@ class Acc_Account_Ledger
         }
         return $this->name;
     }
+    /*!
+    * \brief Return the type  of a account
+     * \returns string ACT,ACTINV,CHA,CHAINV,CON,PAS,PRO
+     */
+    function get_type()
+    {
+        $type=$this->db->get_value(
+            "select pcm_type from tmp_pcmn where
+                 pcm_val=$1",array($this->id));
+        return $type;
+    }
+
     /*!\brief check if the poste exist in the tmp_pcmn
      *\return the number of line (normally 1 or 0)
      */
@@ -446,6 +458,20 @@ class Acc_Account_Ledger
 
         $rep="";
 
+        $type =$this->get_type();
+        // label  warning if the saldo is incorrect
+        $label="";
+        if (in_array($type,array('CHA','ACT','PASINV','PROINV')) && $tot_deb<$tot_cred)
+        {
+
+            $label.=_("Solde créditeur au lieu de débiteur").'<span class="icon">&#xe80e;</span>';
+        }
+        if (in_array($type,array('PRO','PAS','ACTINV','CHAINV')) && $tot_deb>$tot_cred)
+        {
+
+            $label.=_("Solde débiteur au lieu de créditeur")." ".'<span class="icon">&#xe80e;</span>';
+        }
+        echo '<span class="notice">'.$label.'</span>';
         
         if ( $from_div == 1)
 			echo "<TABLE id=\"tbpopup\" class=\"resultfooter\" style=\"border-collapse:separate;margin:1%;width:98%;\">";
@@ -570,6 +596,8 @@ class Acc_Account_Ledger
         echo '</tbody>';
 
         echo "</table>";
+        if ( DEBUGNOALYSS>1) echo \Noalyss\Dbg::hidden_info("variable", get_defined_vars());
+        if ( DEBUGNOALYSS>1) echo \Noalyss\Dbg::hidden_info("this", $this);
 
         return;
     }
