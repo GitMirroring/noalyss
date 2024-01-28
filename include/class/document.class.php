@@ -492,7 +492,7 @@ class Document
                 $this->d_filename=$_FILES['file_upload']['name'][$i];
                 $this->d_mimetype=$_FILES['file_upload']['type'][$i];
                 if ( isset($aDescription[$i])) {
-                    $description=$aDescription[$i];
+                    $description=strip_tags($aDescription[$i]??"");
                 }
                 $this->d_description=$description;
                 // insert into  the table
