@@ -519,17 +519,18 @@ endif; ?>
  **********************************************************************************************************************/
 ?>
     </div>
-    <div id="icon_show_file_div_id">
+    <div id="icon_show_file_div_id<?=$uniq?>">
     <?php
     /** Start Block Document **/
-    printf ("Voir toutes les fichiers");
-    echo \Icon_Action::show_icon(uniqid(), "$('all_attached_files_div').show();$('icon_show_file_div_id').hide()");
+    printf ("Voir tous les fichiers");
+
+    echo \Icon_Action::show_icon(uniqid(), "$('all_attached_files_div{$uniq}').show();$('icon_show_file_div_id{$uniq}').hide()");
     ?>
     </div>
-  <div class="print" style="display: none" id="all_attached_files_div">
+  <div class="print" style="display: none" id="all_attached_files_div<?=$uniq?>">
       <?php
       echo "Cacher les fichiers";
-      echo \Icon_Action::hide_icon(uniqid(), "$('all_attached_files_div').hide();$('icon_show_file_div_id').show()")
+      echo \Icon_Action::hide_icon(uniqid(), "$('all_attached_files_div{$uniq}').hide();$('icon_show_file_div_id{$uniq}').show()")
       ?>
       <table>
   <?php
