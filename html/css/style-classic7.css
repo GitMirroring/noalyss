@@ -3414,7 +3414,8 @@ li.li-active {
   * Help item in EXTENSION
   */
  #help {
-    background-color:lightgoldenrodyellow;
+     background-color: yellow !important;;
+     padding: 0.5rem;
      color:navy !important;
      text-decoration: underline;
  }
