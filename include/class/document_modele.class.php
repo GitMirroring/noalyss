@@ -61,7 +61,8 @@ class Document_modele
 
 	  $r.='<p><form method="post">';
 	  $r.=dossier::hidden();
-	  $r.="<table>";
+      $r.=\HtmlInput::filter_table("document_template_tb",'0,1,2',1);
+	  $r.='<table id="document_template_tb" class="result" >';
 	  $r.="<tr> ";
 	  $r.=th(_('Nom'));
 	  $r.=th(_('Catégorie'));
