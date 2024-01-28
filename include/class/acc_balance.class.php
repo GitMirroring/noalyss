@@ -36,9 +36,9 @@ class Acc_Balance
     {
         $this->db=$p_cn;
         $this->jrn=array();
-        $from_poste="";
-        $to_poste="";
-	    $unsold=false;
+        $this->from_poste="";
+        $this->to_poste="";
+	    $this->unsold=false;
     }
 
 
