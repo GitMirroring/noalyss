@@ -519,7 +519,18 @@ endif; ?>
  **********************************************************************************************************************/
 ?>
     </div>
-  <div class="print">
+    <div id="icon_show_file_div_id">
+    <?php
+    /** Start Block Document **/
+    printf ("Voir toutes les fichiers");
+    echo \Icon_Action::show_icon(uniqid(), "$('all_attached_files_div').show();$('icon_show_file_div_id').hide()");
+    ?>
+    </div>
+  <div class="print" style="display: none" id="all_attached_files_div">
+      <?php
+      echo "Cacher les fichiers";
+      echo \Icon_Action::hide_icon(uniqid(), "$('all_attached_files_div').hide();$('icon_show_file_div_id').show()")
+      ?>
       <table>
   <?php
 for ($i=0;$i<sizeof($aAttachedFile);$i++) :
@@ -563,6 +574,9 @@ endfor;
 
   ?>
   </table>
+
+      </div>
+          <div>
 <?php if ( ! empty ($aAttachedFile)) :
     /*** Propose to download all document in only one step */
     $url="export.php?".http_build_query([ 
