@@ -25,6 +25,8 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 require_once NOALYSS_INCLUDE.'/header_print.php';
+global $g_parameter;
+
 $http=new HttpInput();
 
 $poste_id=$http->request("poste_id");
@@ -32,7 +34,6 @@ $from_periode=$http->request("from_periode");
 $to_periode=$http->request("to_periode");
 $ople=$http->request("ople");
 $poste_fille=$http->request("poste_fille","string",-1);
-
 $gDossier=dossier::id();
 
 /* Security */
@@ -247,6 +248,18 @@ foreach ($a_poste as $poste)
     $pdf->write_cell(30,5,$str_diff_solde,0,0,'R');
     $pdf->line_new();
 
+    // take saldo from 1st day until last
+    if ($g_parameter->MY_REPORT=='N') {
+
+        $solde_until_now=$Poste->get_solde_detail("  j_date <= to_date('$to_periode','DD.MM.YYYY')  ");
+
+        $pdf->write_cell(40,5,"Solde global",0,0,'R');
+        $pdf->write_cell(40,5,"D : ".nbm($solde_until_now['debit']),0,0,'R');
+        $pdf->write_cell(40,5,"C : ".nbm($solde_until_now['credit']),0,0,'R');
+        $pdf->write_cell(40,5,"Delta : ".nbm($solde_until_now['solde'])." ".$Poste->get_amount_side($solde_until_now['debit']-$solde_until_now['credit']),0,0,'R');
+        $pdf->line_new();
+
+    }
 }
 $fDate=date('dmy-Hi');
 $pdf->Output('poste-'.$fDate.'-'.$poste_id.'.pdf','D');
