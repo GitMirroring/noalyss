@@ -8,7 +8,7 @@ $uniq=uniqid("tab",TRUE);
     <?php
     \Noalyss\Dbg::echo_file(__FILE__);
     ?>
-<div class="row">
+<div class="row m-0">
 
 <div class="col">
     <table>
@@ -48,12 +48,18 @@ $uniq=uniqid("tab",TRUE);
   <?php echo $w->search().$w->input();
             ?>
           </td>
+        </tr>
+        <tr class="font-weight-bolder" style="background: lightsteelblue;color:navy">
+            <td style="width: auto" colspan="2" >
+                <?=$sp->input()?>
+            </td>
           </Tr>
 	<tr>
           <TD>
 	  <?php echo _('Contact')?>
           </TD>
-          <TD>
+
+        <TD>
   <?php 
   if  ($g_user->can_write_action($this->ag_id) == true ):
         if ( $ag_contact->extra != "" ):
@@ -65,7 +71,15 @@ $uniq=uniqid("tab",TRUE);
   
             ?>
           </td>
-          </Tr>
+    </tr>
+        <tr class="font-weight-bolder" style="background: lightsteelblue;color:navy;opacity: 0.8">
+            <td style="width: auto" colspan="2">
+                <?php //nom autre contact
+                echo $spcontact->input();
+                ?>
+            </td>
+
+        </Tr>
 <?php 
 //----------------------- Video Conf --------------------------------------------------------------------------------
 if (Document_Option::is_enable_video_conf($this->dt_id)):?>          
@@ -492,8 +506,8 @@ if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_i
   </span>
     </div>
 <?php endif;?>
-  
 
+<?php if (($p_view != 'READ' && $str_select_doc != '' )|| ! empty ($aAttachedFile)) : ?>
 <div  id="div_action_attached_doc">
   <h2>
      <?php echo _('Pièces attachées')?>
@@ -519,6 +533,9 @@ endif; ?>
  **********************************************************************************************************************/
 ?>
     </div>
+    <?php
+    if ( ! empty ($aAttachedFile)) :
+ ?>
     <div id="icon_show_file_div_id<?=$uniq?>">
     <?php
     /** Start Block Document **/
@@ -578,7 +595,7 @@ endfor;
 
       </div>
           <div>
-<?php if ( ! empty ($aAttachedFile)) :
+<?php
     /*** Propose to download all document in only one step */
     $url="export.php?".http_build_query([ 
         'ac'=>"FOLLOW",
@@ -609,6 +626,7 @@ catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>
 </script>
 
 </div>
+<?php endif;?>
 <?php if  ($p_view != 'NEW') :  ?>
 Document créé le <?php echo $this->ag_timestamp ?> par <?php echo $this->ag_owner?>
 <?php endif; ?>
