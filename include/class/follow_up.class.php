@@ -333,7 +333,7 @@ class Follow_Up
             $tiers=new Fiche($this->db);
             $tiers->get_by_qcode($this->qcode_dest);
             $qcode_dest_label=strtoupper($tiers->strAttribut(1));
-            $qcode_dest_label.=" ".$tiers->strAttribut(ATTR_DEF_FIRST_NAME);
+            $qcode_dest_label.=" ".$tiers->strAttribut(ATTR_DEF_FIRST_NAME,0);
             $this->f_id_dest=$tiers->id;
         }
         else
@@ -405,7 +405,7 @@ class Follow_Up
         if ($fiche_contact->id!=0)
         {
             $spcontact->value=strtoupper($fiche_contact->strAttribut(ATTR_DEF_NAME)??"");
-            $spcontact->value.=" ".$fiche_contact->strAttribut(ATTR_DEF_FIRST_NAME);
+            $spcontact->value.=" ".$fiche_contact->strAttribut(ATTR_DEF_FIRST_NAME,0);
         }
 
 

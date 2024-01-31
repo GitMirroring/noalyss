@@ -115,7 +115,7 @@ if ( isset($_SESSION[SESSION_KEY.'isValid']) && $_SESSION[SESSION_KEY.'isValid']
         $filter_card=$d;
         $filter_card=noalyss_str_replace('[sql]','',$d);
     }
-    $sql="select vw_name,vw_addr,vw_cp,vw_buy,vw_sell,tva_id
+    $sql="select vw_name,vw_first_name,vw_addr,vw_cp,vw_buy,vw_sell,tva_id
          from vw_fiche_attr
          where quick_code=upper($1)". $filter_card;
 
@@ -141,20 +141,18 @@ if ( isset($_SESSION[SESSION_KEY.'isValid']) && $_SESSION[SESSION_KEY.'isValid']
     $tva_id=($tva_id==null)?" ":noalyss_str_replace('"','',$tva_id);
     /* store the answer in an array and transform it later into a JSON object */
     $tmp=array();
-    $tmp[]=array('flabel',$fLabel);
-    $tmp[]=array('name',$name);
-    $tmp[]=array('ftva_id',$fTva_id);
-    $tmp[]=array('tva_id',$tva_id);
-    $tmp[]=array('fPrice_sale',$fPrice_sale);
-    $tmp[]=array('sell',$sell);
-    $tmp[]=array('fPrice_purchase',$fPrice_purchase);
-    $tmp[]=array('buy',$buy);
-    $a='{"answer":"ok"';
-    for ($o=0;$o < count($tmp);$o++)
-    {
-        $a.=sprintf(',"%s":"%s"',$tmp[$o][0],$tmp[$o][1]);
-    }
-    $a.='}';
+    //$tmp[]=array('flabel',$fLabel);
+    $tmp['flabel']=$fLabel;
+    //$tmp[]=array('name',$name);
+    $tmp['name']=$name." ".$array[0]['vw_first_name'];
+    $tmp['ftva_id']=$fTva_id;
+    $tmp['tva_id']=$tva_id;
+    $tmp['fPrice_sale']=$fPrice_sale;
+    $tmp['sell']=$sell;
+    $tmp['fPrice_purchase']=$fPrice_purchase;
+    $tmp['buy']=$buy;
+    $tmp["answer"]="ok";
+    $a=json_encode($tmp);
 }
 else
     $a='{"answer":"unauthorized"}';
