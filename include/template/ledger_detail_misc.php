@@ -54,7 +54,7 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
                       <td>
                         <?php 
                         $itext=new IText('npj');
-                        $itext->value=strip_tags($obj->det->jr_pj_number);
+                        $itext->value=strip_tags($obj->det->jr_pj_number??"");
                         echo td(_('Pièce')).td($itext->input());
                         ?>
                     </td>
