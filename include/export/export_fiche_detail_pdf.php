@@ -28,7 +28,7 @@ include_once("lib/ac_common.php");
 include_once("lib/impress.class.php");
 require_once  NOALYSS_INCLUDE.'/header_print.php';
 $http=new HttpInput();
-
+global $g_parameter;
 $f_id=$http->request("f_id", "number");
 $from_periode=$http->get("from_periode","date");
 $to_periode=$http->get("to_periode","date");
@@ -228,6 +228,19 @@ $pdf->line_new();
 $pdf->write_cell(160,5,'Solde '.$solde,0,0,'R');
 $pdf->write_cell(30,5,$str_diff_solde,0,0,'R');
 $pdf->line_new();
+
+// take saldo from 1st day until last
+if ($g_parameter->MY_REPORT=='N') {
+
+    $solde_until_now=$Fiche->get_solde_detail("  j_date <= to_date('$to_periode','DD.MM.YYYY')  ");
+
+    $pdf->write_cell(40,5,"Solde global",0,0,'R');
+    $pdf->write_cell(40,5,"D : ".nbm($solde_until_now['debit']),0,0,'R');
+    $pdf->write_cell(40,5,"C : ".nbm($solde_until_now['credit']),0,0,'R');
+    $pdf->write_cell(40,5,"Delta : ".nbm($solde_until_now['solde'])." ".$Fiche->get_amount_side($solde_until_now['debit']-$solde_until_now['credit']),0,0,'R');
+    $pdf->line_new();
+
+}
 
 $fDate=date('dmy-Hi');
 $pdf->Output('fiche-'.$fDate.'.pdf','D');
