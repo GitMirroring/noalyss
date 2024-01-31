@@ -332,7 +332,8 @@ class Follow_Up
         {
             $tiers=new Fiche($this->db);
             $tiers->get_by_qcode($this->qcode_dest);
-            $qcode_dest_label=$tiers->strAttribut(1);
+            $qcode_dest_label=strtoupper($tiers->strAttribut(1));
+            $qcode_dest_label.=" ".$tiers->strAttribut(ATTR_DEF_FIRST_NAME);
             $this->f_id_dest=$tiers->id;
         }
         else
@@ -363,7 +364,9 @@ class Follow_Up
         $w->set_function('fill_data');
         $w->javascript=sprintf(' onchange="fill_data_onchange(\'%s\');" ', $w->name);
 
+
         $sp=new ISpan();
+        $sp->extra='class="text-"';
         $sp->name='qcode_dest_label';
         $sp->value=$qcode_dest_label;
 
@@ -401,7 +404,8 @@ class Follow_Up
         $fiche_contact->get_by_qcode($this->ag_contact);
         if ($fiche_contact->id!=0)
         {
-            $spcontact->value=$fiche_contact->strAttribut(ATTR_DEF_NAME);
+            $spcontact->value=strtoupper($fiche_contact->strAttribut(ATTR_DEF_NAME)??"");
+            $spcontact->value.=" ".$fiche_contact->strAttribut(ATTR_DEF_FIRST_NAME);
         }
 
 
