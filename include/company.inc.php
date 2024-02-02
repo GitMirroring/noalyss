@@ -259,7 +259,7 @@ $all->style=' class="input_text"';
 
             <div class="form-group">
                 <label class="w-40" for="p_report">
-                    <?= _("L'exercice commence par un report des soldes)") ?></label>
+                    <?= _("L'exercice commence par un report des soldes") ?></label>
                 <?=Icon_Action::infobulle(84)?>
                 <?= $report->input() ?>
             </div>
@@ -298,13 +298,15 @@ echo Icon_Action::tips($anc_filter->title);
             </div>
 
             <div class="form-group">
-                <label class="w-20" for="p_pj"><?= _("Suggérer le numéro de pièce justificative") ?>
+                <label class="w-20" for="p_pj"><?= _("Le numéro de pièce justificative") ?>
                 </label>
-<?= $pj_suggest->input("p_pj", $strict_array) ?>
+                <?php
+                $receipt_array=array(["label"=>"Suggérer","value"=>"Y"],["label"=>"Automatique","value"=>"A"],["label"=>"Manuel","value"=>"N"]);
+                ?>
+                <?= $pj_suggest->input("p_pj", $receipt_array) ?>
             </div>
 
-
-            <div class="form-group">
+                <div class="form-group">
                 <label class="w-20" for="p_date_suggest"><?= _("Suggérer la date") ?></label>
 <?= $date_suggest->input("p_date_suggest", $strict_array) ?>
             </div>

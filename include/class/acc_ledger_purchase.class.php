@@ -505,7 +505,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
      */
     public function insert($p_array=null)
     {
-        global $g_parameter;
+        global $g_parameter,$g_user;
         extract ($p_array, EXTR_SKIP);
         $this->verify($p_array) ;
         if ( !isset($p_array['jrn_note_input'])) {$p_array['jrn_note_input']='';}
@@ -1218,10 +1218,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         //--
         /* if we suggest the next pj, then we need a javascript */
         $add_js="";
-        if ( $g_parameter->MY_PJ_SUGGEST=='Y')
+        if ( $g_parameter->MY_PJ_SUGGEST !='N')
         {
             $add_js="update_pj();";
-}
+        }
         if ($g_parameter->MY_DATE_SUGGEST == 'Y')
         {
                 $add_js.='get_last_date();';
@@ -1253,7 +1253,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         //--
         /* suggest PJ ? */
         $default_pj='';
-        if ( $g_parameter->MY_PJ_SUGGEST=='Y')
+        if ( $g_parameter->MY_PJ_SUGGEST !='N')
         {
             $default_pj=$this->guess_pj();
         }
@@ -1261,7 +1261,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $pj=new IText();
         $pj->value=(isset($e_pj))?$e_pj:$default_pj;
 
-
+        if ( $g_parameter->MY_PJ_SUGGEST=='A' || $g_user->check_action(UPDRECEIPT)==0)
+        {
+            $pj->setReadOnly(true);
+            $pj->id="e_pj";
+        }
         $pj->table=0;
         $pj->name="e_pj";
         $pj->size=10;
@@ -1507,7 +1511,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
 
         /* if we suggest the pj n# the run the script */
-        if ( $g_parameter->MY_PJ_SUGGEST=='Y')
+        if ( $g_parameter->MY_PJ_SUGGEST !='N')
         {
             $r.='<script> update_pj();</script>';
         }
@@ -1527,7 +1531,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
      */
     function confirm($p_array,$p_summary=false)
     {
-        global $g_parameter;
+        global $g_parameter,$g_user;
         extract ($p_array,EXTR_SKIP);
         if ( !isset($p_array['jrn_note_input'])) {$p_array['jrn_note_input']='';}
 		// we don't need to verify if we need only a feedback
@@ -1571,16 +1575,19 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $r.="</tr>";
         }
         $r.='<tr>';
+
+        $span=$this->warn_manual_receipt($p_array);
          if ( ! $p_summary) {
-            $r.='<td>' . _('Numéro Pièce') .'</td><td>'. hb($e_pj) . '</td>';
+            $r.='<td>' . _('Numéro Pièce') .$span.'</td><td>'. hb($e_pj) . '</td>';
         } else {
-            
+            if ( $g_parameter->MY_PJ_SUGGEST=="A" || $g_user->check_action(UPDRECEIPT)==0) $e_pj=$this->pj;
+
              if ( strcmp($this->pj,$e_pj) != 0 )
             {
-                $r.='<td>' . _('Numéro Pièce') .'</td><td>'. hb($this->pj) . 
+                $r.='<td>' . _('Numéro Pièce').$span .'</td><td>'. hb($this->pj) .
                         '<span class="notice"> '._('Attention numéro pièce existante, elle a du être adaptée').'</span></td>';
             } else {
-                $r.='<td>' . _('Numéro Pièce') .'</td><td>'. hb($this->pj) . '</td>';
+                $r.='<td>' . _('Numéro Pièce') .$span.'</td><td>'. hb($this->pj) . '</td>';
             }
         }
         $r.='</tr>';

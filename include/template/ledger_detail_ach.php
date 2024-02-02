@@ -59,6 +59,8 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                             <td>
                                 <?php
                                 $itext = new IText('npj');
+                                if ($owner->MY_PJ_SUGGEST=='A' || $g_user->check_action(UPDRECEIPT)==0)
+                                    $itext->setReadOnly(true);
                                 $itext->value = strip_tags($obj->det->jr_pj_number);
                                 echo td(_('Pièce')) . td($itext->input());
                                 ?>

@@ -71,6 +71,8 @@ $str_anc = "";
                             <?php
                             $itext = new IText('npj');
                             $itext->value = strip_tags($obj->det->jr_pj_number);
+                            if ($owner->MY_PJ_SUGGEST=='A' || $g_user->check_action(UPDRECEIPT)==0)
+                                $itext->setReadOnly(true);
                             echo td(_('Pièce')) . td($itext->input());
                             ?>
                         </td>

@@ -29,26 +29,23 @@
     - update of analytic content
 * 
 */
-if ( ! defined('ALLOWED')) die(_('Non authorisé'));
+if (!defined('ALLOWED')) die(_('Non authorisé'));
 
-$http=new HttpInput();
+$http = new HttpInput();
 
 /**
  * Check if we receive the needed data (jr_id...)
  */
-global $g_user,$cn,$g_parameter;
+global $g_user, $cn, $g_parameter;
 mb_internal_encoding("UTF-8");
 
-try
-{
-    $action=$http->request('act');
-    $jr_id=$http->request('jr_id');
-    $div=$http->request('div');		/* the div source and target for javascript */
-    $gDossier=dossier::id();
-    
-}
-catch (Exception $exc)
-{
+try {
+    $action = $http->request('act');
+    $jr_id = $http->request('jr_id');
+    $div = $http->request('div');        /* the div source and target for javascript */
+    $gDossier = dossier::id();
+
+} catch (Exception $exc) {
     error_log($exc->getTraceAsString());
     return;
 }
@@ -57,18 +54,17 @@ catch (Exception $exc)
  *if $_SESSION[SESSION_KEY.'g_user'] is not set : echo a warning
  */
 
-$cn=Dossier::connect();
-$g_parameter=new Noalyss_Parameter_Folder($cn);
+$cn = Dossier::connect();
+$g_parameter = new Noalyss_Parameter_Folder($cn);
 
 $g_user->check();
-if ( $g_user->check_dossier(dossier::id(),true)=='X' )
-{
+if ($g_user->check_dossier(dossier::id(), true) == 'X') {
     ob_start();
-    require_once  NOALYSS_TEMPLATE.'/ledger_detail_forbidden.php';
-	echo HtmlInput::button_close($div);
-    $html=ob_get_contents();
+    require_once NOALYSS_TEMPLATE . '/ledger_detail_forbidden.php';
+    echo HtmlInput::button_close($div);
+    $html = ob_get_contents();
     ob_end_clean();
-    $html=escape_xml($html);
+    $html = escape_xml($html);
     header('Content-type: text/xml; charset=UTF-8');
     echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -83,21 +79,24 @@ EOF;
 
 // check if the user can access the ledger where the operation is (view) and
 // if he can modify it
-$op=new Acc_Operation($cn);
-$op->jr_id=$jr_id;
-$ledger=$op->get_ledger();
-if ($ledger=="")
-{
+$op = new Acc_Operation($cn);
+$op->jr_id = $jr_id;
+$ledger = $op->get_ledger();
+if ($ledger == "") {
 
     ob_start();
-	echo HtmlInput::title_box(_("Information"), $div);
-    require_once NOALYSS_TEMPLATE.'/ledger_detail_forbidden.php';
-	echo HtmlInput::button_close($div);
-    $html=ob_get_contents();
+    echo HtmlInput::title_box(_("Information"), $div);
+    require_once NOALYSS_TEMPLATE . '/ledger_detail_forbidden.php';
+    echo HtmlInput::button_close($div);
+    $html = ob_get_contents();
     ob_end_clean();
 
-    $html=escape_xml($html);
-    if ( ! headers_sent()) {     header('Content-type: text/xml; charset=UTF-8');} else { echo "HTML".unescape_xml($html);}
+    $html = escape_xml($html);
+    if (!headers_sent()) {
+        header('Content-type: text/xml; charset=UTF-8');
+    } else {
+        echo "HTML" . unescape_xml($html);
+    }
     echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
@@ -108,16 +107,15 @@ EOF;
     exit();
 
 }
-$access=$g_user->get_ledger_access($ledger);
-if ( $access == 'X' )
-{
+$access = $g_user->get_ledger_access($ledger);
+if ($access == 'X') {
     ob_start();
-	echo HtmlInput::title_box(_("Information"), $div);
-    require_once NOALYSS_TEMPLATE.'/ledger_detail_forbidden.php';
-	echo HtmlInput::button_close($div);
-    $html=ob_get_contents();
+    echo HtmlInput::title_box(_("Information"), $div);
+    require_once NOALYSS_TEMPLATE . '/ledger_detail_forbidden.php';
+    echo HtmlInput::button_close($div);
+    $html = ob_get_contents();
     ob_end_clean();
-    $html=escape_xml($html);
+    $html = escape_xml($html);
     header('Content-type: text/xml; charset=UTF-8');
     echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -128,474 +126,421 @@ if ( $access == 'X' )
 EOF;
     exit();
 }
-$html=var_export($_REQUEST,true);
-switch ($action)
-{
+$html = var_export($_REQUEST, true);
+switch ($action) {
     ///////////////////////////////////////////////////////////////////////////
     //  remove op
     ///////////////////////////////////////////////////////////////////////////
-case 'rmop':
-        if ( $access=='W' && $g_user->check_action(RMOPER) == 1)
-        {
+    case 'rmop':
+        if ($access == 'W' && $g_user->check_action(RMOPER) == 1) {
             ob_start();
             /* get the ledger */
-            try
-            {
+            try {
                 $cn->start();
-                $oLedger=new Acc_Ledger($cn,$ledger);
-                $oLedger->jr_id=$jr_id=$http->request('jr_id',"number");
+                $oLedger = new Acc_Ledger($cn, $ledger);
+                $oLedger->jr_id = $jr_id = $http->request('jr_id', "number");
                 $oLedger->delete();
                 $cn->commit();
                 echo _("Opération Effacée");
-            }
-            catch (Exception $e)
-            {
-                  record_log($e);
+            } catch (Exception $e) {
+                record_log($e);
                 $e->getMessage();
                 $cn->rollback();
             }
-            $html=ob_get_contents();
+            $html = ob_get_contents();
             ob_end_clean();
+        } else {
+            $html = _("Effacement refusé");
         }
-        else 
-        {
-            $html= _("Effacement refusé");
-        }
-    break;
+        break;
     //////////////////////////////////////////////////////////////////////
     // DE Detail
     //////////////////////////////////////////////////////////////////////
-case 'de':
-    ob_start();
+    case 'de':
+        ob_start();
 
-    try
-    {
-        /* get detail op (D/C) */
-        $op->get();			
-        /* return an obj. ACH / FIN or VEN or null if nothing is found*/
-        $obj=$op->get_quant();	
-        
-        $oLedger=new Acc_Ledger($cn,$ledger);
-        if ( $obj==null || $obj->signature == 'ODS'  )
-        {
-            /* only the details */
-            require_once NOALYSS_TEMPLATE.'/ledger_detail_misc.php';
-        }
-        elseif ( $obj->signature=='ACH')
-        {
-            require_once NOALYSS_TEMPLATE.'/ledger_detail_ach.php';
-        }
-        elseif ($obj->signature=='FIN')
-        {
-            require_once NOALYSS_TEMPLATE.'/ledger_detail_fin.php';
-        }
-        elseif ( $obj->signature=='VEN')
-        {
-            require_once NOALYSS_TEMPLATE.'/ledger_detail_ven.php';
-        }
-    }
-    catch (Exception $e)
-    {
-          record_log($e);
-        echo Icon_Action::close($div);
-        echo '<h2 class="error">'._("Désolé il y a une erreur").'</h2>';
-    }
-    $html=ob_get_contents();
-    ob_end_clean();
+        try {
+            /* get detail op (D/C) */
+            $op->get();
+            /* return an obj. ACH / FIN or VEN or null if nothing is found*/
+            $obj = $op->get_quant();
 
-    break;
+            $oLedger = new Acc_Ledger($cn, $ledger);
+            if ($obj == null || $obj->signature == 'ODS') {
+                /* only the details */
+                require_once NOALYSS_TEMPLATE . '/ledger_detail_misc.php';
+            } elseif ($obj->signature == 'ACH') {
+                require_once NOALYSS_TEMPLATE . '/ledger_detail_ach.php';
+            } elseif ($obj->signature == 'FIN') {
+                require_once NOALYSS_TEMPLATE . '/ledger_detail_fin.php';
+            } elseif ($obj->signature == 'VEN') {
+                require_once NOALYSS_TEMPLATE . '/ledger_detail_ven.php';
+            }
+        } catch (Exception $e) {
+            record_log($e);
+            echo Icon_Action::close($div);
+            echo '<h2 class="error">' . _("Désolé il y a une erreur") . '</h2>';
+        }
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        break;
     /////////////////////////////////////////////////////////////////////////////
     // form for the file
     /////////////////////////////////////////////////////////////////////////////
-case 'file':
-    $op->get();
-    $obj=$op->get_quant();	/* return an obj. ACH / FIN or VEN or null if nothing is found*/
-    
-    $repo = new Database();
-    html_min_page_start($_SESSION[SESSION_KEY.'g_theme']);
+    case 'file':
+        $op->get();
+        $obj = $op->get_quant();    /* return an obj. ACH / FIN or VEN or null if nothing is found*/
 
-    // if there is a receipt document
-    if ( $obj->det->jr_pj_name=='')
-    {
-        if ( ! isset($_REQUEST['ajax']) ) {
+        $repo = new Database();
+        html_min_page_start($_SESSION[SESSION_KEY . 'g_theme']);
+
+        // if there is a receipt document
+        if ($obj->det->jr_pj_name == '') {
+            if (!isset($_REQUEST['ajax'])) {
                 echo '<div class="op_detail_frame">';
-        }else {
+            } else {
                 echo "<div>";
 
-        }
-        if ( $access=='W')
-        {
-            $check_receipt=sprintf("check_receipt_size('%s','file%s')",
-                MAX_FILE_SIZE,$div);
-            echo '<FORM METHOD="POST" ENCTYPE="multipart/form-data" id="form_file" >';
+            }
+            if ($access == 'W') {
+                $check_receipt = sprintf("check_receipt_size('%s','file%s')",
+                    MAX_FILE_SIZE, $div);
+                echo '<FORM METHOD="POST" ENCTYPE="multipart/form-data" id="form_file" >';
 
-            $sp=new ISpan('file'.$div);
-            $sp->style="display:none;background-color:red;color:white;font-size:12px";
-            $sp->value=_("Chargement");
-            echo $sp->input();
-            echo HtmlInput::hidden('act','loadfile');
-            echo dossier::hidden();
-            echo HtmlInput::hidden('jr_id',$jr_id);
-            echo HtmlInput::hidden('div',$div);
-            echo '<INPUT TYPE="FILE" id="receipt_id" name="pj" onchange="'.$check_receipt.'">';
+                $sp = new ISpan('file' . $div);
+                $sp->style = "display:none;background-color:red;color:white;font-size:12px";
+                $sp->value = _("Chargement");
+                echo $sp->input();
+                echo HtmlInput::hidden('act', 'loadfile');
+                echo dossier::hidden();
+                echo HtmlInput::hidden('jr_id', $jr_id);
+                echo HtmlInput::hidden('div', $div);
+                echo '<INPUT TYPE="FILE" id="receipt_id" name="pj" onchange="' . $check_receipt . '">';
 
-            echo '<p id="receipt_info_id" class="error"></p>';
+                echo '<p id="receipt_info_id" class="error"></p>';
 
-            echo '</FORM>';
-        }
-        else
-        {
-            if (!isset($_REQUEST['ajax']))
-            {
+                echo '</FORM>';
+            } else {
+                if (!isset($_REQUEST['ajax'])) {
                     echo '<div class="op_detail_frame">';
-            }
-            else
-            {
+                } else {
                     echo "<div>";
-            }
-            
+                }
 
-            echo _('Aucun fichier');
-    }
-    echo '</div>';
-    exit();
-    }
-    else
-    {
-        // There is no document attached to this writing
-        //
-        if ( ! isset($_REQUEST['ajax']) ) {
+
+                echo _('Aucun fichier');
+            }
+            echo '</div>';
+            exit();
+        } else {
+            // There is no document attached to this writing
+            //
+            if (!isset($_REQUEST['ajax'])) {
                 echo '<div class="op_detail_frame">';
-        }else {
+            } else {
                 echo "<div>";
 
-        }
-        echo '<div class="op_detail_frame">';
-        $x='';
-        if ($access=='W' && $g_user->check_action (RMRECEIPT) == 1)
-        {
-            // Not possible to remove the file thanks a modal dialog box,
-            // because of the frameset
+            }
+            echo '<div class="op_detail_frame">';
+            $x = '';
+            if ($access == 'W' && $g_user->check_action(RMRECEIPT) == 1) {
+                // Not possible to remove the file thanks a modal dialog box,
+                // because of the frameset
 
-            $x=Icon_Action::trash(uniqid(),
-                sprintf("if (confirm(content[47])) {document.location.href='ajax_misc.php?op=ledger&gDossier=%d&div=%s&jr_id=%s&act=rmf'}",
-                    $gDossier,$div,$jr_id));
+                $x = Icon_Action::trash(uniqid(),
+                    sprintf("if (confirm(content[47])) {document.location.href='ajax_misc.php?op=ledger&gDossier=%d&div=%s&jr_id=%s&act=rmf'}",
+                        $gDossier, $div, $jr_id));
 
-        }  
-        $filename= $obj->det->jr_pj_name;
-        if ( strlen($obj->det->jr_pj_name) > 60 )
-        {
-            $filename=mb_substr($obj->det->jr_pj_name,0,60);
+            }
+            $filename = $obj->det->jr_pj_name;
+            if (strlen($obj->det->jr_pj_name) > 60) {
+                $filename = mb_substr($obj->det->jr_pj_name, 0, 60);
+            }
+            echo HtmlInput::show_receipt_document($jr_id, h($filename));
+            echo $x;
+            echo '<p id="receipt_info_id" class="error"></p>';
+            echo '</div>';
+            echo '</body></html>';
+            exit();
         }
-        echo HtmlInput::show_receipt_document($jr_id,h($filename));
-        echo $x;
-        echo '<p id="receipt_info_id" class="error"></p>';
-        echo '</div>';
-        echo '</body></html>';
-        exit();
-    }
 /////////////////////////////////////////////////////////////////////////////
 // load a file
 /////////////////////////////////////////////////////////////////////////////
-case 'loadfile':
-    if ( $access == 'W' && isset ($_FILES))
-    {
-        $cn->start();
-        // remove the file
-        $grpt=$cn->get_value('select jr_grpt_id from jrn where jr_id=$1',array($jr_id));
-        $cn->save_receipt($grpt);
-        $cn->commit();
-        // Show a link to the new file
-        $op->get();
-        $obj=$op->get_quant();	/* return an obj. ACH / FIN or VEN or null if nothing is found*/
-        html_min_page_start($_SESSION[SESSION_KEY.'g_theme']);
-		if ( ! isset($_REQUEST['ajax']) ) echo "<body class=\"op_detail_frame\">"; else echo "<body>";
-        echo '<div class="op_detail_frame">';
-        $x="";
-        // check if the user can remove a document
-        if ($g_user->check_action (RMRECEIPT) == 1) {
-            // Not possible to remove the file thanks a modal dialog box,
-            // because of the frameset
-            $x=Icon_Action::trash(uniqid(),
+    case 'loadfile':
+        if ($access == 'W' && isset ($_FILES)) {
+            $cn->start();
+            // remove the file
+            $grpt = $cn->get_value('select jr_grpt_id from jrn where jr_id=$1', array($jr_id));
+            $cn->save_receipt($grpt);
+            $cn->commit();
+            // Show a link to the new file
+            $op->get();
+            $obj = $op->get_quant();    /* return an obj. ACH / FIN or VEN or null if nothing is found*/
+            html_min_page_start($_SESSION[SESSION_KEY . 'g_theme']);
+            if (!isset($_REQUEST['ajax'])) echo "<body class=\"op_detail_frame\">"; else echo "<body>";
+            echo '<div class="op_detail_frame">';
+            $x = "";
+            // check if the user can remove a document
+            if ($g_user->check_action(RMRECEIPT) == 1) {
+                // Not possible to remove the file thanks a modal dialog box,
+                // because of the frameset
+                $x = Icon_Action::trash(uniqid(),
                     sprintf("if (confirm(content[47])) {document.location.href='ajax_misc.php?op=ledger&gDossier=%d&div=%s&jr_id=%s&act=rmf'}",
-                    $gDossier,$div,$jr_id));
-        }
-        $filename= $obj->det->jr_pj_name;
-        echo HtmlInput::show_receipt_document($jr_id,h($filename));
-        echo $x;
+                        $gDossier, $div, $jr_id));
+            }
+            $filename = $obj->det->jr_pj_name;
+            echo HtmlInput::show_receipt_document($jr_id, h($filename));
+            echo $x;
 
-        echo '</div>';
-        echo '</body></html>';
-    }
-    exit();
+            echo '</div>';
+            echo '</body></html>';
+        }
+        exit();
 /////////////////////////////////////////////////////////////////////////////
 // remove a file
 /////////////////////////////////////////////////////////////////////////////
-case 'rmf':
-    if (   $access == 'W' && $g_user->check_action (RMRECEIPT) == 1)
-    {
-        $repo=new Database();
-        html_min_page_start($_SESSION[SESSION_KEY.'g_theme']);
-        echo '<div class="op_detail_frame">';
-        $check_receipt=sprintf("check_receipt_size('%s','file%s')",
-            MAX_FILE_SIZE,$div);
-        echo '<FORM METHOD="POST" ENCTYPE="multipart/form-data" id="form_file">';
-        $sp=new ISpan('file'.$div);
-        $sp->style="display:none;width:155px;height:15px;background-color:red;color:white;font-size:10px";
-        $sp->value=_("Chargement");
-        echo $sp->input();
+    case 'rmf':
+        if ($access == 'W' && $g_user->check_action(RMRECEIPT) == 1) {
+            $repo = new Database();
+            html_min_page_start($_SESSION[SESSION_KEY . 'g_theme']);
+            echo '<div class="op_detail_frame">';
+            $check_receipt = sprintf("check_receipt_size('%s','file%s')",
+                MAX_FILE_SIZE, $div);
+            echo '<FORM METHOD="POST" ENCTYPE="multipart/form-data" id="form_file">';
+            $sp = new ISpan('file' . $div);
+            $sp->style = "display:none;width:155px;height:15px;background-color:red;color:white;font-size:10px";
+            $sp->value = _("Chargement");
+            echo $sp->input();
 
-        echo HtmlInput::hidden('act','loadfile');
-        echo dossier::hidden();
-        echo HtmlInput::hidden('jr_id',$jr_id);
-        echo HtmlInput::hidden('div',$div);
+            echo HtmlInput::hidden('act', 'loadfile');
+            echo dossier::hidden();
+            echo HtmlInput::hidden('jr_id', $jr_id);
+            echo HtmlInput::hidden('div', $div);
 
-        echo '<INPUT TYPE="FILE" id="receipt_id" name="pj" onchange="'.$check_receipt.'">';
-        echo '<p id="receipt_info_id" class="error"></p>';
-        echo '</FORM>';
-        $ret=$cn->exec_sql("select jr_pj from jrn where jr_id=$1",array($jr_id));
-        if (Database::num_row($ret) != 0)
-        {
-            $r=Database::fetch_array($ret,0);
-            $old_oid=$r['jr_pj'];
-            if (strlen($old_oid) != 0)
-            {
-                // check if this pj is used somewhere else
-                $c=$cn->count_sql("select * from jrn where jr_pj=".$old_oid);
-                if ( $c == 1 )
-                    $cn->lo_unlink($old_oid);
+            echo '<INPUT TYPE="FILE" id="receipt_id" name="pj" onchange="' . $check_receipt . '">';
+            echo '<p id="receipt_info_id" class="error"></p>';
+            echo '</FORM>';
+            $ret = $cn->exec_sql("select jr_pj from jrn where jr_id=$1", array($jr_id));
+            if (Database::num_row($ret) != 0) {
+                $r = Database::fetch_array($ret, 0);
+                $old_oid = $r['jr_pj'];
+                if (strlen($old_oid) != 0) {
+                    // check if this pj is used somewhere else
+                    $c = $cn->count_sql("select * from jrn where jr_pj=" . $old_oid);
+                    if ($c == 1)
+                        $cn->lo_unlink($old_oid);
+                }
+                $cn->exec_sql("update jrn set jr_pj=null, jr_pj_name=null, " .
+                    "jr_pj_type=null  where jr_id=$1", array($jr_id));
             }
-            $cn->exec_sql("update jrn set jr_pj=null, jr_pj_name=null, ".
-                          "jr_pj_type=null  where jr_id=$1",array($jr_id));
         }
-    }
-    echo '</div>';
-    exit();
+        echo '</div>';
+        exit();
 /////////////////////////////////////////////////////////////////////////////
 // Save operation detail
 /////////////////////////////////////////////////////////////////////////////
-case 'save':
-    ob_start();
-    $http=new HttpInput();
-    try
-    {
-        $cn->start();
-        if ( $access=="W")
-        {
-	  if (isset($_POST['p_ech']) )
-	    {
-	      $ech=$http->post('p_ech');
-	      if ( trim($ech) != '' && isDate($ech) != null)
-		{
-		  $cn->exec_sql("update jrn set jr_ech=to_date($1,'DD.MM.YYYY') where jr_id=$2",
-				array($ech,$jr_id));
+    case 'save':
+        ob_start();
+        $http = new HttpInput();
+        try {
+            $cn->start();
+            if ($access == "W") {
+                if (isset($_POST['p_ech'])) {
+                    $ech = $http->post('p_ech');
+                    if (trim($ech) != '' && isDate($ech) != null) {
+                        $cn->exec_sql("update jrn set jr_ech=to_date($1,'DD.MM.YYYY') where jr_id=$2",
+                            array($ech, $jr_id));
 
-		}
-	      else
-		{
-		  $cn->exec_sql("update jrn set jr_ech=null where jr_id=$1",
-				array($jr_id));
+                    } else {
+                        $cn->exec_sql("update jrn set jr_ech=null where jr_id=$1",
+                            array($jr_id));
 
-		}
-	    }
-            
-	  if (isset($_POST['p_date_paid']) )
-	    {
-	      $ech=$http->post('p_date_paid');
-	      if ( trim($ech) != '' && isDate($ech) != null)
-		{
-		  $cn->exec_sql("update jrn set jr_date_paid=to_date($1,'DD.MM.YYYY') where jr_id=$2",
-				array($ech,$jr_id));
+                    }
+                }
 
-		}
-	      else
-		{
-		  $cn->exec_sql("update jrn set jr_date_paid=null where jr_id=$1",
-				array($jr_id));
+                if (isset($_POST['p_date_paid'])) {
+                    $ech = $http->post('p_date_paid');
+                    if (trim($ech) != '' && isDate($ech) != null) {
+                        $cn->exec_sql("update jrn set jr_date_paid=to_date($1,'DD.MM.YYYY') where jr_id=$2",
+                            array($ech, $jr_id));
 
-		}
-	    }
-            
-            $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY'),jr_optype=$5 where jr_id=$3",
-                          array($http->post('lib'),$http->post('npj'),$jr_id,$http->post('p_date'),$http->post('jr_optype')));
-	    $cn->exec_sql("update jrnx set j_date=to_date($1,'DD.MM.YYYY') where j_grpt in (select jr_grpt_id from jrn where jr_id=$2)",
-			  array($http->post('p_date'),$jr_id));
-	    $cn->exec_sql('update operation_analytique set oa_date=j_date from jrnx
+                    } else {
+                        $cn->exec_sql("update jrn set jr_date_paid=null where jr_id=$1",
+                            array($jr_id));
+
+                    }
+                }
+                $oLedger=new Acc_Ledger($cn,$ledger);
+                    $npj=$http->post('npj');
+                // protect receipt number
+                if ( ($g_parameter->MY_PJ_SUGGEST == 'A'||$g_user->check_action(UPDRECEIPT)==0)  && $oLedger->get_type() !='FIN') {
+                    $npj=$cn->get_value("select jr_pj_number from jrn where jr_id=$1",[$jr_id]);
+                }
+                $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY'),jr_optype=$5 where jr_id=$3",
+                    array($http->post('lib'), $npj, $jr_id, $http->post('p_date'), $http->post('jr_optype')));
+                $cn->exec_sql("update jrnx set j_date=to_date($1,'DD.MM.YYYY') where j_grpt in (select jr_grpt_id from jrn where jr_id=$2)",
+                    array($http->post('p_date'), $jr_id));
+                $cn->exec_sql('update operation_analytique set oa_date=j_date from jrnx
 				where
 				operation_analytique.j_id=jrnx.j_id  and
 				operation_analytique.j_id in (select j_id
 						from jrnx join jrn on (j_grpt=jr_grpt_id)
 						where jr_id=$1)
-						',array($jr_id));
-	    $cn->exec_sql("select comptaproc.jrn_add_note($1,$2)",
-			  array($jr_id , $http->post('jrn_note') ));
-            $rapt=$_POST['rapt'];
+						', array($jr_id));
+                $cn->exec_sql("select comptaproc.jrn_add_note($1,$2)",
+                    array($jr_id, $http->post('jrn_note')));
+                $rapt = $_POST['rapt'];
 
-            if ( $g_parameter->MY_UPDLAB=='Y' && isset ($_POST['j_id']))
-            {
-                $a_rowid=$http->post("j_id");
-                for ($e=0;$e<count($a_rowid);$e++)
-                {
-                    $id="e_march".$a_rowid[$e]."_label";
-                    $cn->exec_sql('update jrnx set j_text=$1 where j_id=$2',  array($http->post($id),$a_rowid[$e]));
+                if ($g_parameter->MY_UPDLAB == 'Y' && isset ($_POST['j_id'])) {
+                    $a_rowid = $http->post("j_id");
+                    for ($e = 0; $e < count($a_rowid); $e++) {
+                        $id = "e_march" . $a_rowid[$e] . "_label";
+                        $cn->exec_sql('update jrnx set j_text=$1 where j_id=$2', array($http->post($id), $a_rowid[$e]));
+                    }
                 }
-            }
-            if (trim($rapt) != '')
-            {
-                $rec=new Acc_Reconciliation ($cn);
-                $rec->set_jr_id($jr_id);
+                if (trim($rapt) != '') {
+                    $rec = new Acc_Reconciliation ($cn);
+                    $rec->set_jr_id($jr_id);
 
-                if (strpos($rapt,",") != 0 )
-                {
-                    $aRapt=explode(',',$rapt);
-                    /* reconcialition */
-                    foreach ($aRapt as $rRapt)
-                    {
-                        if ( isNumber($rRapt) == 1 )
-                        {
-                            // Add a "concerned operation to bound these op.together
-                            $rec->insert($rRapt);
+                    if (strpos($rapt, ",") != 0) {
+                        $aRapt = explode(',', $rapt);
+                        /* reconcialition */
+                        foreach ($aRapt as $rRapt) {
+                            if (isNumber($rRapt) == 1) {
+                                // Add a "concerned operation to bound these op.together
+                                $rec->insert($rRapt);
+                            }
                         }
-                    }
+                    } else
+                        if (isNumber($rapt) == 1) {
+                            $rec->insert($rapt);
+                        }
                 }
-                else
-                    if ( isNumber($rapt) == 1 )
-                    {
-                        $rec->insert($rapt);
-                    }
-            }
-              if ( isset($_POST['ipaid']))
-              {
-                  $cn->exec_sql("update jrn set jr_rapt='paid' where jr_id=$1",array($jr_id));
-              }
-              else
-              {
-                  $cn->exec_sql("update jrn set jr_rapt=null where jr_id=$1",array($jr_id));
-              }
-            ////////////////////////////////////////////////////
-            // CA
-            //////////////////////////////////////////////////
-            $owner = new Noalyss_Parameter_Folder($cn);
-            if ( $owner->MY_ANALYTIC != "nu" && isset ($_POST['op']) )
-            {
-                // for each item, insert into operation_analytique */
-                $opanc=new Anc_Operation($cn);
-                $opanc->save_update_form($_POST);
-            }
-            //////////////////////////////////////////////////////////////////
-            //Save other info
-            //////////////////////////////////////////////////////////////////
-            $op->save_info($http->post('OTHER'),'OTHER');
-            $op->save_info($http->post('BON_COMMANDE'),'BON_COMMANDE');
-            
-            ///////////////////////////////////////////////////////////////////
-            // Save related
-            //////////////////////////////////////////////////////////////////
-            $related=$http->post("related","string");
-            if ($related=="0")
-            {
-                throw new Exception('Parameter not send -> related'.__FILE__.__LINE__, 10);
-            }
-            $op->insert_related_action($related);
+                if (isset($_POST['ipaid'])) {
+                    $cn->exec_sql("update jrn set jr_rapt='paid' where jr_id=$1", array($jr_id));
+                } else {
+                    $cn->exec_sql("update jrn set jr_rapt=null where jr_id=$1", array($jr_id));
+                }
+                ////////////////////////////////////////////////////
+                // CA
+                //////////////////////////////////////////////////
+                $owner = new Noalyss_Parameter_Folder($cn);
+                if ($owner->MY_ANALYTIC != "nu" && isset ($_POST['op'])) {
+                    // for each item, insert into operation_analytique */
+                    $opanc = new Anc_Operation($cn);
+                    $opanc->save_update_form($_POST);
+                }
+                //////////////////////////////////////////////////////////////////
+                //Save other info
+                //////////////////////////////////////////////////////////////////
+                $op->save_info($http->post('OTHER'), 'OTHER');
+                $op->save_info($http->post('BON_COMMANDE'), 'BON_COMMANDE');
 
+                ///////////////////////////////////////////////////////////////////
+                // Save related
+                //////////////////////////////////////////////////////////////////
+                $related = $http->post("related", "string");
+                if ($related == "0") {
+                    throw new Exception('Parameter not send -> related' . __FILE__ . __LINE__, 10);
+                }
+                $op->insert_related_action($related);
+
+            }
+            echo 'OK';
+            $cn->commit();
+        } catch (Exception $e) {
+            $html = ob_get_contents();
+            ob_end_clean();
+            record_log($e);
+            record_log($html);
+
+            if (DEBUGNOALYSS > 0) echo $e->getMessage();
+            echo _("Changement impossible: on ne peut pas changer la date dans une période fermée");
+            return;
         }
-        echo 'OK';
-        $cn->commit();
-    }
-    catch (Exception $e)
-    {
-      $html=ob_get_contents();
-      ob_end_clean();
-      record_log($e);
-      record_log($html);
-      
-      if ( DEBUGNOALYSS > 0 )   echo $e->getMessage();
-      echo _( "Changement impossible: on ne peut pas changer la date dans une période fermée");
-      return;
-    }
-    $html=ob_get_contents();
-    ob_end_clean();
+        $html = ob_get_contents();
+        ob_end_clean();
 
-    break;
+        break;
     ////////////////////////////////////////////////////////////////////////////
     // remove a reconciliation
     ////////////////////////////////////////////////////////////////////////////
-case 'rmr':
-    if ( $access=='W')
-    {
-        $rec=new Acc_Reconciliation($cn);
-        $rec->set_jr_id($jr_id);
-        $rec->remove($_GET['jr_id2']);
-    }
-    break;
+    case 'rmr':
+        if ($access == 'W') {
+            $rec = new Acc_Reconciliation($cn);
+            $rec->set_jr_id($jr_id);
+            $rec->remove($_GET['jr_id2']);
+        }
+        break;
     ////////////////////////////////////////////////////////////////////////////
     // ask for a date for reversing the operation
     ////////////////////////////////////////////////////////////////////////////
-case 'ask_extdate':
-    $date=new IDate('p_date');
-    $html.="<form id=\"form_".$div."\" onsubmit=\"return reverseOperation(this);\">";
-    $html.=HtmlInput::hidden('jr_id',$_REQUEST['jr_id']).
-            HtmlInput::hidden('div',$div).
-            dossier::hidden().
-            HtmlInput::hidden('act','reverseop');
-    
-    $html.='<h2 class="info">'._('entrez une date').' </H2>'.$date->input();
-    $html.=HtmlInput::submit('x','accepter');
-    $html.=HtmlInput::button_close($div);
-    $html.='</form>';
-    break;
+    case 'ask_extdate':
+        $date = new IDate('p_date');
+        $html .= "<form id=\"form_" . $div . "\" onsubmit=\"return reverseOperation(this);\">";
+        $html .= HtmlInput::hidden('jr_id', $_REQUEST['jr_id']) .
+            HtmlInput::hidden('div', $div) .
+            dossier::hidden() .
+            HtmlInput::hidden('act', 'reverseop');
+
+        $html .= '<h2 class="info">' . _('entrez une date') . ' </H2>' . $date->input();
+        $html .= HtmlInput::submit('x', 'accepter');
+        $html .= HtmlInput::button_close($div);
+        $html .= '</form>';
+        break;
     ////////////////////////////////////////////////////////////////////////////
     // Reverse an operation
     ////////////////////////////////////////////////////////////////////////////
-case 'reverseop':
-    if ( $access=='W')
-    {
-        ob_start();
-        try
-        {
-            $ext_date=$http->request("ext_date","date");
-            $ext_label=$http->request("ext_label");
-            $cn->start();
-            $oLedger=new Acc_Ledger($cn,$ledger);
-            $oLedger->jr_id=$jr_id;
-            if ( trim($ext_label) == "" ) {
-                $ext_label=_("Extourne").$cn->get_value("select jr_comment from jrn where jr_id=$1",[$jr_id]);
+    case 'reverseop':
+        if ($access == 'W') {
+            ob_start();
+            try {
+                $ext_date = $http->request("ext_date", "date");
+                $ext_label = $http->request("ext_label");
+                $cn->start();
+                $oLedger = new Acc_Ledger($cn, $ledger);
+                $oLedger->jr_id = $jr_id;
+                if (trim($ext_label) == "") {
+                    $ext_label = _("Extourne") . $cn->get_value("select jr_comment from jrn where jr_id=$1", [$jr_id]);
+                }
+                $oLedger->reverse($ext_date, $ext_label);
+                $cn->commit();
+                echo _("Opération extournée");
+            } catch (Exception $e) {
+                record_log($e);
+                echo $e->getMessage();
+                $cn->rollback();
             }
-            $oLedger->reverse($ext_date,$ext_label);
-            $cn->commit();
-            echo _("Opération extournée");
         }
-        catch (Exception $e)
-        {
-              record_log($e);
-            echo $e->getMessage();
-            $cn->rollback();
-        }
-    }
-    $html=ob_get_contents();
-    ob_end_clean();
-    break;
-    
-case 'duplicateop':
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Duplicate operation
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    $operation=new Acc_Operation($cn);
-    $operation->jr_id=$jr_id;
-    ob_start();
-    echo HtmlInput::title_box(_("Dupliquer une opération"), $div);
-    echo $operation->form_clone_operation("cloneit");
-    
-    $html=ob_get_contents();
-    ob_end_clean();
-    
-   
-    break;
+        $html = ob_get_contents();
+        ob_end_clean();
+        break;
+
+    case 'duplicateop':
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Duplicate operation
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $operation = new Acc_Operation($cn);
+        $operation->jr_id = $jr_id;
+        ob_start();
+        echo HtmlInput::title_box(_("Dupliquer une opération"), $div);
+        echo $operation->form_clone_operation("cloneit");
+
+        $html = ob_get_contents();
+        ob_end_clean();
+
+
+        break;
 }
-$html=escape_xml($html);
- if ( ! headers_sent()) {     header('Content-type: text/xml; charset=UTF-8');} else { echo "HTML".unescape_xml($html);}
- 
- echo <<<EOF
+$html = escape_xml($html);
+if (!headers_sent()) {
+    header('Content-type: text/xml; charset=UTF-8');
+} else {
+    echo "HTML" . unescape_xml($html);
+}
+
+echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
 <ctl>$div</ctl>
