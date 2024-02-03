@@ -529,7 +529,10 @@ if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_i
 <?php if (($p_view != 'READ' && $str_select_doc != '' )|| ! empty ($aAttachedFile)) : ?>
 <div  id="div_action_attached_doc">
   <h2>
-     <?php echo _('Pièces attachées')?>
+     <?php
+     echo _('Pièces attachées');
+     printf("(%s)",count($aAttachedFile));
+     ?>
   </h2>
     <div class="noprint">
         <?php 
