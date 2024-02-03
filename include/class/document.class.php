@@ -451,7 +451,6 @@ class Document
      *  all the needed data are in $_FILES we don't increment the seq
      * $_FILES  : array containing by default $_FILES
      * @param int $p_ag_id  ACTION_GESTION.AG_ID
-     * @param int $agc_id ACTION_GESTION_COMMENT.AGC_ID
      * @returns array of int DOCUMENT.D_ID (id of saved documents )
      *
      */
@@ -498,8 +497,12 @@ class Document
                 // insert into  the table
                 $sql="insert into document (ag_id, d_lob,d_filename,d_mimetype,d_number,d_description)"
                         . " values ($1,$2,$3,$4,$5,$6) returning d_id";
-                $document_saved[]=$this->db->get_value($sql,
+                $document_id=$this->db->get_value($sql,
                         array($p_ag_id, $this->d_lob, $this->d_filename, $this->d_mimetype, 1, $this->d_description));
+
+
+                $document_saved[]=$document_id;
+
             }
         } /* end for */
         $this->db->commit();

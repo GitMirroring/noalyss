@@ -995,7 +995,8 @@ class Follow_Up
                                 where agc_id = $4 "
                     , array(strip_tags($this->ag_description), $this->ag_description, $_SESSION[SESSION_KEY.'g_user'],
                         $this->ag_description_id));
-
+            $this->db->exec_sql("insert into action_comment_document(document_id,action_gestion_comment_id) values ($1,$2)",
+                [$document_id,$this->ag_description_id]);
         }
         $this->insert_operation();
         $this->insert_action();
