@@ -617,7 +617,7 @@ class Acc_Ledger  extends jrn_def_sql
      */
     function confirm($p_array, $p_readonly=false)
     {
-        global $g_parameter;
+        global $g_parameter,$g_user;
         $http=new HttpInput();
         $msg=array();
         if (!$p_readonly)
