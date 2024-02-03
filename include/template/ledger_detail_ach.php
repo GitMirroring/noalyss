@@ -21,6 +21,9 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                         <?php
                         $date = new IDate('p_date');
                         $date->value = format_date($obj->det->jr_date);
+                        if (  $g_parameter->MY_STRICT=='Y' && $g_user->check_action(UPDDATE)==0) {
+                            $date->setReadOnly(true);
+                        }
                         echo td(_('Date')) . td($date->input());
                         ?>
                         <tr>

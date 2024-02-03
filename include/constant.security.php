@@ -28,6 +28,7 @@ define ('PARCATDOC',1050);   // modifier type document pour follow up
 define ('RMRECEIPT',1110);   // Effacer un document d'une pièce comptable
 define ('RMOPER',1120);   // Effacer une opération comptable
 define ('UPDRECEIPT',1130);   // change un numéro de pièce
+define ('UPDDATE',1140);   // change date operation
 define ('SHARENOTE',1210); // Can share a note
 define ('SHARENOTEPUBLIC',1220); // Can create public note
 define ('SHARENOTEREMOVE',1230); // Can drop drop of other
