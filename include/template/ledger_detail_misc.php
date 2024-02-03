@@ -27,6 +27,9 @@ $owner = new Noalyss_Parameter_Folder($cn);
                     <td>
                         <?php
                         $date=new IDate('p_date');
+                        if (  $g_parameter->MY_STRICT=='Y' && $g_user->check_action(UPDDATE)==0) {
+                            $date->setReadOnly(true);
+                        }
                         $date->value=format_date($obj->det->jr_date);
                          echo td(_('Date')).td($date->input());
 

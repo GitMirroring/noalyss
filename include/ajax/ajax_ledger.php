@@ -132,7 +132,7 @@ switch ($action) {
     //  remove op
     ///////////////////////////////////////////////////////////////////////////
     case 'rmop':
-        if ($access == 'W' && $g_user->check_action(RMOPER) == 1) {
+        if ($access == 'W' && $g_user->check_action(RMOPER) == 1 && $g_parameter->MY_STRICT=='N') {
             ob_start();
             /* get the ledger */
             try {
@@ -345,7 +345,7 @@ switch ($action) {
         $http = new HttpInput();
         try {
             $cn->start();
-            if ($access == "W") {
+            if ($access == "W" ) {
                 if (isset($_POST['p_ech'])) {
                     $ech = $http->post('p_ech');
                     if (trim($ech) != '' && isDate($ech) != null) {
@@ -372,15 +372,20 @@ switch ($action) {
                     }
                 }
                 $oLedger=new Acc_Ledger($cn,$ledger);
-                    $npj=$http->post('npj');
+                $npj=$http->post('npj');
                 // protect receipt number
                 if ( ($g_parameter->MY_PJ_SUGGEST == 'A'||$g_user->check_action(UPDRECEIPT)==0)  && $oLedger->get_type() !='FIN') {
                     $npj=$cn->get_value("select jr_pj_number from jrn where jr_id=$1",[$jr_id]);
                 }
+                // protect date in strict mode
+                $date=$http->post("p_date");
+                if (  $g_parameter->MY_STRICT=='Y' && $g_user->check_action(UPDDATE)==0) {
+                    $date=$cn->get_value("select to_char(jr_date,'DD.MM.YYYY') from jrn where jr_id=$1",[$jr_id]);
+                }
                 $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY'),jr_optype=$5 where jr_id=$3",
-                    array($http->post('lib'), $npj, $jr_id, $http->post('p_date'), $http->post('jr_optype')));
+                    array($http->post('lib'), $npj, $jr_id,$date, $http->post('jr_optype')));
                 $cn->exec_sql("update jrnx set j_date=to_date($1,'DD.MM.YYYY') where j_grpt in (select jr_grpt_id from jrn where jr_id=$2)",
-                    array($http->post('p_date'), $jr_id));
+                    array($date, $jr_id));
                 $cn->exec_sql('update operation_analytique set oa_date=j_date from jrnx
 				where
 				operation_analytique.j_id=jrnx.j_id  and
