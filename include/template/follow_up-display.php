@@ -3,6 +3,7 @@
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 $uniq=uniqid("tab",TRUE);
+$dossier_id=Dossier::id();
 ?>
 <div>
     <?php
@@ -345,7 +346,25 @@ function small(p_id_textarea){
           echo $description->input();
           echo '</div>';
     }
+        // link to files to download
+        $aFile=$this->db->get_array('select d_id,d_filename,d_description,d_mimetype
+                from  action_comment_document 
+                join document  on (d_id=document_id) where action_gestion_comment_id=$1'
+            , array($this->ag_id));
+        if ( ! empty ($aFile)) {
+            echo '<div style="left:10%">';
+            echo _("Fichiers :");
+            foreach ($aFile as $file)
+            {
+                $url="export.php?".http_build_query(array("act"=>'RAW:document'
+                    ,"gDossier"=>$dossier_id
+                    ,"d_id"=>$file["d_id"]));
+                printf('<a class="print_line" href="%s">%s</a>',
+                    $url,h($file['d_filename']));
 
+            }
+            echo '</div>';
+        }
 
         //---------------------------------- Comment -----------------------------------------------------------------------
    
@@ -391,7 +410,7 @@ function small(p_id_textarea){
             echo '</span>';
         }
    }
-   $dossier_id=Dossier::id();
+
     if (  count($acomment) > 0
             &&  Document_Option::can_add_comment($ag_id)
             && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")
