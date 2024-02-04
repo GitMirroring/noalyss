@@ -523,6 +523,22 @@ if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_i
         <span   >
  <input type="button" class="smallbutton"   onclick="addFiles();" value="<?php echo _("Ajouter un fichier")?>">
   </span>
+<script language="javascript">
+function addFiles() {
+try {
+	docAdded=document.getElementById('add_file');
+	new_element=document.createElement('li');
+	new_element.innerHTML='<input class="inp" type="file" value=""  multiple name="file_upload[]"/>';
+
+    new_element.innerHTML+='<span id="<?=uniqid("file")?>" onclick="document.getElementById(\'add_file\').removeChild(this.parentNode)" class="icon">&#xe80f;</span>';
+
+
+
+	docAdded.appendChild(new_element);
+}
+catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>'); alert(exception.message);}
+}
+</script>
     </div>
 <?php endif;?>
 
@@ -630,22 +646,6 @@ endfor;
     
 endif;?>
   </div>
-  <script language="javascript">
-function addFiles() {
-try {
-	docAdded=document.getElementById('add_file');
-	new_element=document.createElement('li');
-	new_element.innerHTML='<input class="inp" type="file" value=""  multiple name="file_upload[]"/>';
-
-    new_element.innerHTML+='<span id="<?=uniqid("file")?>" onclick="document.getElementById(\'add_file\').removeChild(this.parentNode)" class="icon">&#xe80f;</span>';
-    
-    
-	
-	docAdded.appendChild(new_element);
-}
-catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>'); alert(exception.message);}
-}
-</script>
 
 </div>
 <?php endif;?>
