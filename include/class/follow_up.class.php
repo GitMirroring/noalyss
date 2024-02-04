@@ -400,8 +400,8 @@ class Follow_Up
         $spcontact=new ISpan();
         $spcontact->name='ag_contact_label';
         $spcontact->value='';
-        $fiche_contact=new Fiche($this->db);
-        $fiche_contact->get_by_qcode($this->ag_contact);
+        $fiche_contact=new Fiche($this->db,$this->ag_contact);
+
         if ($fiche_contact->id!=0)
         {
             $spcontact->value=strtoupper($fiche_contact->strAttribut(ATTR_DEF_NAME)??"");
