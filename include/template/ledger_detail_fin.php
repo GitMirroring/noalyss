@@ -2,6 +2,7 @@
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 $str_anc="";
+global $g_parameter,$g_user;
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
 <div class="content" style="padding:0;">
 <?php
@@ -19,6 +20,9 @@ $str_anc="";
 <tr>
 <?php
 $date=new IDate('p_date');
+if (  $g_parameter->MY_STRICT=='Y' && $g_user->check_action(UPDDATE)==0) {
+    $date->setReadOnly(true);
+}
 $date->value=format_date($obj->det->jr_date);
  echo td(_('Date')).td($date->input());
 

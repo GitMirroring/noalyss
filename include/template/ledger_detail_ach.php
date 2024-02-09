@@ -21,6 +21,9 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                         <?php
                         $date = new IDate('p_date');
                         $date->value = format_date($obj->det->jr_date);
+                        if (  $g_parameter->MY_STRICT=='Y' && $g_user->check_action(UPDDATE)==0) {
+                            $date->setReadOnly(true);
+                        }
                         echo td(_('Date')) . td($date->input());
                         ?>
                         <tr>
@@ -59,6 +62,8 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                             <td>
                                 <?php
                                 $itext = new IText('npj');
+                                if ($owner->MY_PJ_SUGGEST=='A' || $g_user->check_action(UPDRECEIPT)==0)
+                                    $itext->setReadOnly(true);
                                 $itext->value = strip_tags($obj->det->jr_pj_number);
                                 echo td(_('Pièce')) . td($itext->input());
                                 ?>

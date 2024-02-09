@@ -35,7 +35,7 @@ create trigger fiche_detail_check_qcode_trg before insert
 
 update fiche_detail set ad_value=ad_value where ad_id in (select ad_id from attr_def where ad_type='card');
 
-insert into parameter values ('MY_REPORT','N') ON CONFLICT DO NOTHING;
+insert into parameter values ('MY_REPORT','Y') ON CONFLICT DO NOTHING;
 
 update menu_ref set me_file='payment_method.inc.php' where me_code='CFGPAY';
 

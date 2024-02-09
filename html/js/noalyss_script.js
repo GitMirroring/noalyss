@@ -4180,7 +4180,7 @@ function event_display_detail(p_dossier,p_detail) {
     	                            return;
     	                        }
                                 if ( ! document.getElementById(dgbox)) {
-                                    var div_style="position:absolute;"+";top:30%";
+                                    var div_style="position:fixed;"+";top:30%";
                                     add_div({id:dgbox,cssclass:'inner_box',html:loading(),style:div_style,drag:true});
 
                                 }

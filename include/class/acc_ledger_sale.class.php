@@ -256,7 +256,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
      */
 
     public function insert($p_array = null) {
-        global $g_parameter;
+        global $g_parameter,$g_user;
         // load ledger definition
         $this->load();
         extract($p_array, EXTR_SKIP);
@@ -816,7 +816,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
      */
 
     function confirm($p_array, $p_summary = false) {
-        global $g_parameter;
+        global $g_parameter,$g_user;
         extract($p_array, EXTR_SKIP);
         if ( !isset($p_array['jrn_note_input'])) {$p_array['jrn_note_input']='';}
         // don't need to verify for a summary
@@ -859,16 +859,18 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             $r.="</tr>";
         }
         $r.='<tr>';
+        $span=$this->warn_manual_receipt($p_array);
         if ( ! $p_summary) {
-            $r.='<td>' . _('Numéro Pièce') .'</td><td>'. hb($e_pj) . '</td>';
+            $r.='<td>' . _('Numéro Pièce') .$span.'</td><td>'. hb($e_pj) . '</td>';
         } else {
-            
+            if ( $g_parameter->MY_PJ_SUGGEST=="A" ||$g_user->check_action(UPDRECEIPT)==0)
+                $e_pj=$this->pj;
              if ( strcmp($this->pj,$e_pj) != 0 )
             {
-                $r.='<td>' . _('Numéro Pièce') .'</td><td>'. hb($this->pj) . 
+                $r.='<td>' . _('Numéro Pièce') .$span.'</td><td>'. hb($this->pj) .
                         '<span class="notice"> '._('Attention numéro pièce existante, elle a du être adaptée').'</span></td>';
             } else {
-                $r.='<td>' . _('Numéro Pièce') .'</td><td>'. hb($this->pj) . '</td>';
+                $r.='<td>' . _('Numéro Pièce') .$span.'</td><td>'. hb($this->pj) . '</td>';
             }
         }
         $r.='</tr>';
@@ -1352,7 +1354,7 @@ EOF;
         }
         /* if we suggest the next pj, then we need a javascript */
         $add_js = "";
-        if ($g_parameter->MY_PJ_SUGGEST == 'Y') {
+        if ($g_parameter->MY_PJ_SUGGEST != 'N') {
             $add_js = "update_pj();";
         }
         if ($g_parameter->MY_DATE_SUGGEST == 'Y') {
@@ -1387,11 +1389,16 @@ EOF;
         //--
         /* suggest PJ ? */
         $default_pj = '';
-        if ($g_parameter->MY_PJ_SUGGEST == 'Y') {
+        if ($g_parameter->MY_PJ_SUGGEST != 'N') {
             $default_pj = $this->guess_pj();
         }
 
         $pj = new IText();
+        if ( $g_parameter->MY_PJ_SUGGEST=='A'||$g_user->check_action(UPDRECEIPT)==0)
+        {
+               $pj->setReadOnly(true);
+               $pj->id="e_pj";
+        }
 
         $pj->table = 0;
         $pj->name = "e_pj";

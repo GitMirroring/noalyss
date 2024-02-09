@@ -448,6 +448,7 @@ class Acc_Account_Ledger
     {
         
         if ( $p_array==null)$p_array=$_REQUEST;
+        global $g_parameter;
         $this->get_name();
         list($array,$tot_deb,$tot_cred)=$this->get_row_date( $p_array['from_periode'],
 							     $p_array['to_periode'],$let
@@ -592,6 +593,17 @@ class Acc_Account_Ledger
 	echo   "<tr><TD>$solde_type</TD><td></td>".
 	  "<TD style=\"text-align:right\">".nbm(abs($diff))."</TD>".
         "</TR>";
+        // take saldo from 1st day until last
+        if ($g_parameter->MY_REPORT=='N') {
+            $solde_until_now=$this->get_solde_detail("  j_date <= to_date('{$p_array['to_periode']}','DD.MM.YYYY')  ");
+            echo '<tr style="font-weight:bold;color:orangered">';
+            echo td(_("Solde global"));
+            echo td("D : ".nbm($solde_until_now['debit']),'class="num"');
+            echo td("C : ".nbm($solde_until_now['credit']),'class="num"');
+            echo td("Delta : ".nbm($solde_until_now['solde'])." ".$this->get_amount_side($solde_until_now['debit']-$solde_until_now['credit']),'class="num"');
+            echo '</tr>';
+
+        }
         echo '</tfoot>';
         echo '</tbody>';
 

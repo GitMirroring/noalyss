@@ -8,6 +8,7 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
  // find out exercice
  $periode_id=new Periode($cn,$obj->det->jr_tech_per);
  $exercice=$periode_id->get_exercice();
+$owner = new Noalyss_Parameter_Folder($cn);
 ?>
 <?php 
 ?>
@@ -26,6 +27,9 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
                     <td>
                         <?php
                         $date=new IDate('p_date');
+                        if (  $g_parameter->MY_STRICT=='Y' && $g_user->check_action(UPDDATE)==0) {
+                            $date->setReadOnly(true);
+                        }
                         $date->value=format_date($obj->det->jr_date);
                          echo td(_('Date')).td($date->input());
 
@@ -54,7 +58,9 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
                       <td>
                         <?php 
                         $itext=new IText('npj');
-                        $itext->value=strip_tags($obj->det->jr_pj_number);
+                        if ($owner->MY_PJ_SUGGEST=='A' || $g_user->check_action(UPDRECEIPT)==0)
+                            $itext->setReadOnly(true);
+                        $itext->value=strip_tags($obj->det->jr_pj_number??"");
                         echo td(_('Pièce')).td($itext->input());
                         ?>
                     </td>

@@ -1,7 +1,7 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
-global $div, $g_parameter, $cn, $access, $jr_id, $obj;
+global $div, $g_parameter, $cn, $access, $jr_id, $obj,$g_user;
 ?>
 
 <?php require_once NOALYSS_TEMPLATE . '/ledger_detail_top.php'; ?>
@@ -31,6 +31,9 @@ $str_anc = "";
                         <td></td>
                         <?php
                         $date = new IDate('p_date');
+                        if (  $g_parameter->MY_STRICT=='Y' && $g_user->check_action(UPDDATE)==0) {
+                            $date->setReadOnly(true);
+                        }
                         $date->value = format_date($obj->det->jr_date);
                         echo td(_('Date')) . td($date->input());
                         ?>
@@ -71,6 +74,8 @@ $str_anc = "";
                             <?php
                             $itext = new IText('npj');
                             $itext->value = strip_tags($obj->det->jr_pj_number);
+                            if ($owner->MY_PJ_SUGGEST=='A' || $g_user->check_action(UPDRECEIPT)==0)
+                                $itext->setReadOnly(true);
                             echo td(_('Pièce')) . td($itext->input());
                             ?>
                         </td>

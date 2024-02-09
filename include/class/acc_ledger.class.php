@@ -617,7 +617,7 @@ class Acc_Ledger  extends jrn_def_sql
      */
     function confirm($p_array, $p_readonly=false)
     {
-        global $g_parameter;
+        global $g_parameter,$g_user;
         $http=new HttpInput();
         $msg=array();
         if (!$p_readonly)
@@ -656,7 +656,13 @@ class Acc_Ledger  extends jrn_def_sql
         $ret.="<tr><td>";
         $ret.=_('Note').'</td><td><pre>'. h($p_array['jrn_note_input']).'</pre>';
         $ret.="</td></tr>";
-        $ret.="<tr><td>"._('PJ Num')." </td><td>".h($e_pj)."</td></tr>";
+        $span=$this->warn_manual_receipt($p_array);
+        if ( $g_parameter->MY_PJ_SUGGEST=="A"||$g_user->check_action(UPDRECEIPT)==0)
+        {
+            $e_pj=$this->guess_pj();
+            $span="";
+        }
+        $ret.="<tr><td>"._('PJ Num')." </td><td>".h($e_pj).$span."</td></tr>";
         $ret.='</table>';
         $ret.="<table class=\"result\">";
         $ret.="<tr>";
@@ -831,7 +837,7 @@ class Acc_Ledger  extends jrn_def_sql
         if ($p_array!=null)
             extract($p_array, EXTR_SKIP);
         $add_js="";
-        if ($g_parameter->MY_PJ_SUGGEST=='Y')
+        if ($g_parameter->MY_PJ_SUGGEST !='N')
         {
             $add_js="update_pj();";
         }
@@ -926,11 +932,18 @@ class Acc_Ledger  extends jrn_def_sql
 
         /* suggest PJ ? */
         $default_pj='';
-        if ($g_parameter->MY_PJ_SUGGEST=='Y')
+        if ($g_parameter->MY_PJ_SUGGEST != 'N')
         {
             $default_pj=$this->guess_pj();
         }
-        $wPJ->value=(isset($e_pj))?$e_pj:$default_pj;
+        if ( $g_parameter->MY_PJ_SUGGEST=='A' || $g_user->check_action(UPDRECEIPT)==0)
+        {
+            $wPJ->setReadOnly(true);
+            $wPJ->value=$default_pj;
+            $wPJ->id="e_pj";
+        } else {
+            $wPJ->value=(isset($e_pj))?$e_pj:$default_pj;
+        }
         $ret.='</tr>';
         $ret.='<tr >';
         $ret.='<td style="width:auto"> '._('Pièce').' </td> ';
@@ -3526,6 +3539,35 @@ EOF;
         if ($cnt == 0 ) return false;
         return true;
 
+    }
+
+    /**
+     * @brief compare given receipt number and suggested one, if different , it means that the user enters a receipt number
+     * if e_pj or e_pj_suggest is not set or empty , or if both are equals then will return true,
+     * it returns only if they exist and are different
+     * @param $p_array same structure as input
+     * @return void
+     */
+    protected function verify_autonumber($p_array)
+    {
+        if (empty($p_array['e_pj'])) return true;
+        if (empty($p_array['e_pj_suggest'])) return true;
+        if ( noalyss_trim($p_array['e_pj'])===noalyss_trim($p_array['e_pj_suggest'])) { return true; }
+        return false;
+    }
+    /**
+     * @brief warn if the suggested receipt and receipt are different , it means that the user tried to
+     * number himself
+     * @param $p_array same structure as input
+     * @see Acc_Ledger::input()
+     * @see Acc_Ledger::confirm()
+     * @return void
+     */
+    protected function  warn_manual_receipt($p_array)
+    {
+        if ( $this->verify_autonumber($p_array) == false) {
+            return span (_("Attention ! Numéro de Pièce non automatique mais forcée"),'class="warning"');
+        }
     }
 }
 

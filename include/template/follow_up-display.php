@@ -3,12 +3,13 @@
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
 $uniq=uniqid("tab",TRUE);
+$dossier_id=Dossier::id();
 ?>
 <div>
     <?php
     \Noalyss\Dbg::echo_file(__FILE__);
     ?>
-<div class="row">
+<div class="row m-0">
 
 <div class="col">
     <table>
@@ -48,12 +49,18 @@ $uniq=uniqid("tab",TRUE);
   <?php echo $w->search().$w->input();
             ?>
           </td>
+        </tr>
+        <tr class="font-weight-bolder" style="background: lightsteelblue;color:navy">
+            <td style="width: auto" colspan="2" >
+                <?=$sp->input()?>
+            </td>
           </Tr>
 	<tr>
           <TD>
 	  <?php echo _('Contact')?>
           </TD>
-          <TD>
+
+        <TD>
   <?php 
   if  ($g_user->can_write_action($this->ag_id) == true ):
         if ( $ag_contact->extra != "" ):
@@ -65,7 +72,15 @@ $uniq=uniqid("tab",TRUE);
   
             ?>
           </td>
-          </Tr>
+    </tr>
+        <tr class="font-weight-bolder" style="background: lightsteelblue;color:navy;opacity: 0.8">
+            <td style="width: auto" colspan="2">
+                <?php //nom autre contact
+                echo $spcontact->input();
+                ?>
+            </td>
+
+        </Tr>
 <?php 
 //----------------------- Video Conf --------------------------------------------------------------------------------
 if (Document_Option::is_enable_video_conf($this->dt_id)):?>          
@@ -331,7 +346,25 @@ function small(p_id_textarea){
           echo $description->input();
           echo '</div>';
     }
+        // link to files to download
+        $aFile=$this->db->get_array('select d_id,d_filename,d_description,d_mimetype
+                from  action_comment_document 
+                join document  on (d_id=document_id) where action_gestion_comment_id=$1'
+            , array($this->ag_id));
+        if ( ! empty ($aFile)) {
+            echo '<div style="left:10%">';
+            echo _("Fichiers :");
+            foreach ($aFile as $file)
+            {
+                $url="export.php?".http_build_query(array("act"=>'RAW:document'
+                    ,"gDossier"=>$dossier_id
+                    ,"d_id"=>$file["d_id"]));
+                printf('<a class="print_line" href="%s">%s</a>',
+                    $url,h($file['d_filename']));
 
+            }
+            echo '</div>';
+        }
 
         //---------------------------------- Comment -----------------------------------------------------------------------
    
@@ -377,7 +410,7 @@ function small(p_id_textarea){
             echo '</span>';
         }
    }
-   $dossier_id=Dossier::id();
+
     if (  count($acomment) > 0
             &&  Document_Option::can_add_comment($ag_id)
             && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")
@@ -490,13 +523,32 @@ if ( $this->ag_id > 0 && Document_Option::is_enable_operation_detail($this->dt_i
         <span   >
  <input type="button" class="smallbutton"   onclick="addFiles();" value="<?php echo _("Ajouter un fichier")?>">
   </span>
+<script language="javascript">
+function addFiles() {
+try {
+	docAdded=document.getElementById('add_file');
+	new_element=document.createElement('li');
+	new_element.innerHTML='<input class="inp" type="file" value=""  multiple name="file_upload[]"/>';
+
+    new_element.innerHTML+='<span id="<?=uniqid("file")?>" onclick="document.getElementById(\'add_file\').removeChild(this.parentNode)" class="icon">&#xe80f;</span>';
+
+
+
+	docAdded.appendChild(new_element);
+}
+catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>'); alert(exception.message);}
+}
+</script>
     </div>
 <?php endif;?>
-  
 
+<?php if (($p_view != 'READ' && $str_select_doc != '' )|| ! empty ($aAttachedFile)) : ?>
 <div  id="div_action_attached_doc">
   <h2>
-     <?php echo _('Pièces attachées')?>
+     <?php
+     echo _('Pièces attachées');
+     printf("(%s)",count($aAttachedFile));
+     ?>
   </h2>
     <div class="noprint">
         <?php 
@@ -519,6 +571,9 @@ endif; ?>
  **********************************************************************************************************************/
 ?>
     </div>
+    <?php
+    if ( ! empty ($aAttachedFile)) :
+ ?>
     <div id="icon_show_file_div_id<?=$uniq?>">
     <?php
     /** Start Block Document **/
@@ -578,7 +633,7 @@ endfor;
 
       </div>
           <div>
-<?php if ( ! empty ($aAttachedFile)) :
+<?php
     /*** Propose to download all document in only one step */
     $url="export.php?".http_build_query([ 
         'ac'=>"FOLLOW",
@@ -591,24 +646,9 @@ endfor;
     
 endif;?>
   </div>
-  <script language="javascript">
-function addFiles() {
-try {
-	docAdded=document.getElementById('add_file');
-	new_element=document.createElement('li');
-	new_element.innerHTML='<input class="inp" type="file" value=""  multiple name="file_upload[]"/>';
-
-    new_element.innerHTML+='<span id="<?=uniqid("file")?>" onclick="document.getElementById(\'add_file\').removeChild(this.parentNode)" class="icon">&#xe80f;</span>';
-    
-    
-	
-	docAdded.appendChild(new_element);
-}
-catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>'); alert(exception.message);}
-}
-</script>
 
 </div>
+<?php endif;?>
 <?php if  ($p_view != 'NEW') :  ?>
 Document créé le <?php echo $this->ag_timestamp ?> par <?php echo $this->ag_owner?>
 <?php endif; ?>

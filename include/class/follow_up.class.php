@@ -332,7 +332,8 @@ class Follow_Up
         {
             $tiers=new Fiche($this->db);
             $tiers->get_by_qcode($this->qcode_dest);
-            $qcode_dest_label=$tiers->strAttribut(1);
+            $qcode_dest_label=strtoupper($tiers->strAttribut(1));
+            $qcode_dest_label.=" ".$tiers->strAttribut(ATTR_DEF_FIRST_NAME,0);
             $this->f_id_dest=$tiers->id;
         }
         else
@@ -363,7 +364,9 @@ class Follow_Up
         $w->set_function('fill_data');
         $w->javascript=sprintf(' onchange="fill_data_onchange(\'%s\');" ', $w->name);
 
+
         $sp=new ISpan();
+        $sp->extra='class="text-"';
         $sp->name='qcode_dest_label';
         $sp->value=$qcode_dest_label;
 
@@ -397,11 +400,12 @@ class Follow_Up
         $spcontact=new ISpan();
         $spcontact->name='ag_contact_label';
         $spcontact->value='';
-        $fiche_contact=new Fiche($this->db);
-        $fiche_contact->get_by_qcode($this->ag_contact);
+        $fiche_contact=new Fiche($this->db,$this->ag_contact);
+
         if ($fiche_contact->id!=0)
         {
-            $spcontact->value=$fiche_contact->strAttribut(ATTR_DEF_NAME);
+            $spcontact->value=strtoupper($fiche_contact->strAttribut(ATTR_DEF_NAME)??"");
+            $spcontact->value.=" ".$fiche_contact->strAttribut(ATTR_DEF_FIRST_NAME,0);
         }
 
 
@@ -991,7 +995,12 @@ class Follow_Up
                                 where agc_id = $4 "
                     , array(strip_tags($this->ag_description), $this->ag_description, $_SESSION[SESSION_KEY.'g_user'],
                         $this->ag_description_id));
-
+            if ( ! empty ($document_saved)) {
+                foreach ($document_saved as $document_id) {
+                    $this->db->exec_sql("insert into action_comment_document(document_id,action_gestion_comment_id) values ($1,$2)",
+                        [$document_id,$this->ag_id]);
+                }
+            }
         }
         $this->insert_operation();
         $this->insert_action();
