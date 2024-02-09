@@ -869,13 +869,14 @@ EOF;
         return $type_operation;
     }
     /**
-     * create a form to recreate the operation and returns it, just like a correct
-     * 
+     * @brief create a form to recreate the operation and returns it, just like a correct
+     * @param $p_id string DOMID of the form
      */
     function form_clone_operation($p_id) {
         // retrieve all info about operation
         $operation = $this->get_quant();
         $array=$operation->compute_array();
+
         global $g_user;
         $a_code=$this->db->get_array("select code from v_menu_dependency vmd  where me_code=$1 and p_id=$2",
                 array( $operation->signature,$g_user->get_profile()));
@@ -918,14 +919,30 @@ EOF;
       
         // For Misc Operation , if a card is given then there is no accounting
         if ( $operation->signature==="ODS") {
-            $nb_array=count($array);
-            for ($i=0;$i<$nb_array;$i++) {
-                if (isset ($array["qc_".$i] ) && $array["qc_".$i] != "" ) {
-                    $array["poste".$i]="";
+            $nb_array = count($array);
+            for ($i = 0; $i < $nb_array; $i++) {
+                if (isset ($array["qc_" . $i]) && $array["qc_" . $i] != "") {
+                    $array["poste" . $i] = "";
                 }
             }
         }
-        
+
+        if ( $operation->signature==="ACH" || $operation->signature=="VEN") {
+            $idx=0;
+            foreach ($operation->det->array as $item) {
+                if ( isset ($item['qs_vat_sided']) && $item['qs_vat_sided'] != 0 ) {
+                    $array['e_march'.$idx.'_tva_amount']=0;
+                }elseif (isset ($item['qp_vat_sided']) && $item['qp_vat_sided'] != 0 ){
+                    $array['e_march'.$idx.'_tva_amount']=0;
+                }
+                $idx++;
+            }
+            if ( DEBUGNOALYSS>1) {
+                echo \Noalyss\Dbg::hidden_info("operation->det_array", $operation->det->array);
+                echo \Noalyss\Dbg::hidden_info("array", $array);
+            }
+        }
+
         // transform the operation into hidden element
         $r.=HtmlInput::simple_array_to_hidden($array);
         $r.=HtmlInput::hidden("e_comm",$operation->det->jr_comment);
