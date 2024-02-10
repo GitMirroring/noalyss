@@ -107,16 +107,16 @@ $hidden=($this->has_quantity()==0)?'d-none':'';
 <th style="width:auto"colspan="2">Code <?php echo Icon_Action::infobulle(0)?></th>
       <th class="visible_gt800 visible_gt1155"><?php echo _('Dénomination')?></th>
 <?php if ($flag_tva =='Y') : ?>
-      <th><?php echo _('prix/unité htva')?><?php echo Icon_Action::infobulle(6)?></th>
-      <th class="col_quant <?=$hidden?>"><?php echo _('quantité')?></th>
-      <th class="visible_gt800" ><?php echo _('Total HTVA')?></th>
+      <th  class="text-center" ><?php echo _('prix/unité htva')?><?php echo Icon_Action::infobulle(6)?></th>
+      <th class="text-center col_quant <?=$hidden?>"><?php echo _('quantité')?></th>
+      <th class="text-center visible_gt800" ><?php echo _('Total HTVA')?></th>
 	  <th><?php echo _('tva')?></th>
-      <th class="visible_gt800"><?php echo _('tot.tva')?></th>
-      <th><?php echo _('tvac')?></th>
+      <th class="text-center visible_gt800"><?php echo _('tot.tva')?></th>
+      <th class="text-center "><?php echo _('tvac')?></th>
 <?php else: ?>
-	  <th><?php echo _('prix/unité ')?><?php echo Icon_Action::infobulle(6)?></th>
-      <th class="col_quant <?=$hidden?>"><?php echo _('quantité')?></th>
-      <th><?php echo _('Total ')?></th>
+	  <th class="text-center "><?php echo _('prix/unité ')?><?php echo Icon_Action::infobulle(6)?></th>
+      <th class="text-center  col_quant <?=$hidden?>"><?php echo _('quantité')?></th>
+      <th class="text-center "><?php echo _('Total ')?></th>
 <?php endif;?>
 
 
@@ -131,15 +131,15 @@ echo '<td>'.$item['bt'].$item['card_add'].'</td>';
 ?>
 <td class="visible_gt800 visible_gt1155"><?php echo $item['denom'] ?></td>
 <?php 
-echo td($item['pu']);
-echo td($item['quantity' ],'class="col_quant '. $hidden.'"');
-echo td($item['htva'],' class="visible_gt800" ');
+echo td($item['pu'],'class=" text-center"');
+echo td($item['quantity' ],'class="col_quant '. $hidden.' text-center"');
+echo td($item['htva'],' class="visible_gt800 text-center" ');
 if ($flag_tva=='Y')  {
 	echo td($item['tva']);
-	echo td($item['amount_tva'].$item['hidden'],' class="visible_gt800" ');
+	echo td($item['amount_tva'].$item['hidden'],' class="visible_gt800 text-center" ');
 
 }
-echo td($item['tvac']);
+echo td($item['tvac'],'class="text-center"');
 echo '</tr>';
 }
 
