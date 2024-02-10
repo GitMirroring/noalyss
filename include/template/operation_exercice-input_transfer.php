@@ -43,6 +43,8 @@ $cn=Dossier::connect();
 
         ?>
         <div id="operation_exercice_transfer_info" ></div>
+        <p>
+
         <ul class="aligned-block">
             <li>
                 <?= \HtmlInput::submit("save", _("Sauve")) ?>
@@ -52,5 +54,6 @@ $cn=Dossier::connect();
             </li>
 
         </ul>
+        </p>
     </form>
 </div>
