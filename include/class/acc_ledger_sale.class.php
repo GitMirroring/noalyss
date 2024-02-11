@@ -621,9 +621,9 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
             /*             * = e_pj then do not increment sequence */
             /* and e_pj is not null */
-            if (strcmp($e_pj, $e_pj_suggest) == 0 && noalyss_strlentrim($e_pj) != 0) {
-                $this->inc_seq_pj();
-            }
+//            if (strcmp($e_pj, $this->pj ) == 0 && noalyss_strlentrim($e_pj) != 0) {
+//                $this->inc_seq_pj();
+//            }
 
             $this->db->exec_sql("update jrn set jr_internal=$1  where jr_grpt_id =  $2" ,[$internal,$seq]);
             
