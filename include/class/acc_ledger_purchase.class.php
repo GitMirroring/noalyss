@@ -921,10 +921,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                                 array($internal,$seq));
 
             /**= e_pj then do not increment sequence */
-            if ( strcmp($e_pj,$e_pj_suggest) == 0 && noalyss_strlentrim($e_pj) != 0 )
-            {
-                $this->inc_seq_pj();
-            }
+//            if ( strcmp($e_pj,$this->pj) == 0 && noalyss_strlentrim($e_pj) != 0 )
+//            {
+//                $this->inc_seq_pj();
+//            }
 
             /* Save the attachment */
             if ( isset ($_FILES))
