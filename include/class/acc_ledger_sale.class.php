@@ -619,9 +619,11 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
             $this->pj = $acc_operation->set_pj();
 
-            /*             * = e_pj then do not increment sequence */
-            /* and e_pj is not null */
-            if (strcmp($e_pj, $e_pj_suggest) == 0 && noalyss_strlentrim($e_pj) != 0) {
+            /**
+             *
+             * if the given receipt number is equal to one computed then increment
+             */
+            if ($e_pj == $this->pj && noalyss_strlentrim($e_pj) != 0) {
                 $this->inc_seq_pj();
             }
 

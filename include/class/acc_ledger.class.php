@@ -1534,7 +1534,7 @@ class Acc_Ledger  extends jrn_def_sql
             $acc_end->pj=$e_pj;
 
             /* if e_suggest != e_pj then do not increment sequence */
-            if (strcmp($e_pj, $e_pj_suggest)==0&&noalyss_strlentrim($e_pj)!=0)
+            if ($e_pj == $e_pj_suggest &&noalyss_strlentrim($e_pj)!=0)
             {
                 $this->inc_seq_pj();
             }
