@@ -920,11 +920,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $this->db->exec_sql('update quant_purchase set qp_internal = $1 where j_id in (select j_id from jrnx where j_grpt=$2)',
                                 array($internal,$seq));
 
-            /**= e_pj then do not increment sequence */
-//            if ( strcmp($e_pj,$this->pj) == 0 && noalyss_strlentrim($e_pj) != 0 )
-//            {
-//                $this->inc_seq_pj();
-//            }
+            /**= e_pj then do not increment sequence , if the given receipt number is equal to one computed then increment */
+            if ($e_pj == $this->pj && noalyss_strlentrim($e_pj) != 0)
+            {
+                $this->inc_seq_pj();
+            }
 
             /* Save the attachment */
             if ( isset ($_FILES))
