@@ -1532,14 +1532,14 @@ class Acc_Ledger  extends jrn_def_sql
             if ($jr_id==false)
                 throw new Exception(_('Balance incorrecte'));
             $acc_end->pj=$e_pj;
-
+            $this->pj=$acc_end->set_pj();
             /* if e_suggest != e_pj then do not increment sequence */
-            if (strcmp($e_pj, $e_pj_suggest)==0&&noalyss_strlentrim($e_pj)!=0)
+            if ($this->pj == $e_pj_suggest &&noalyss_strlentrim($e_pj)!=0)
             {
                 $this->inc_seq_pj();
             }
 
-            $this->pj=$acc_end->set_pj();
+
 
             $this->db->exec_sql("update jrn set jr_internal=$1 
                         where jr_grpt_id = $2",array($internal,$seq));
