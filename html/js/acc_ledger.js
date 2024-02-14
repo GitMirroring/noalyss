@@ -930,6 +930,44 @@ function view_history_card(p_value, dossier, p_exercice) {
         }
     );
 }
+/*!
+ * \brief list followup of a card
+ * \param p_value int fiche.f_id of the card
+ */
+function view_followup_card(p_value, dossier) {
+    layer++;
+    var idbox = 'detfu' + layer;
+    var popup = {
+        'id': idbox,
+        'cssclass': 'inner_box',
+        'html': loading(),
+        'drag': false
+    };
+    var querystring = {
+        'gDossier': dossier,
+        'f_id': p_value,
+        'div': idbox,
+        "l": layer,
+        "op": "view_followup_card",
+    };
+    waiting_box();
+    var action = new Ajax.Request(
+        "ajax_misc.php",
+        {
+            method: 'get',
+            parameters: querystring,
+            onFailure: error_box,
+            onSuccess: function (req, xml) {
+                remove_waiting_box();
+                if (req.responseText === 'NOCONX') { reconnect();return;}
+
+                add_div(popup);
+                $(idbox).update(req.responseText);
+                g(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+            }
+        }
+    );
+}
 
 /**
  *  update history view after changing the exercice

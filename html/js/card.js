@@ -634,6 +634,9 @@ function fill_ipopcard(obj)
     if ( obj.nohistory != undefined) {
      queryString+='&nohistory';
     }
+    if ( obj.nofollowup != undefined) {
+        queryString+='&nofollowup';
+    }
     queryString=encodeURI(queryString);
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {

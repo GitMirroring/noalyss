@@ -344,6 +344,8 @@ $path = array(
     "operation_exercice+text"=>"ajax_operation_exercice",
     // transfer operation to accountancy
     'operation_exercice+transfer'=>"ajax_operation_exercice",
+    // view list of followup for a card
+    "view_followup_card"=>"ajax_follow_up",
 ) ;
 
 if (array_key_exists($op, $path)) {

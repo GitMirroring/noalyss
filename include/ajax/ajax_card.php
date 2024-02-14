@@ -29,7 +29,7 @@
  * - gDossier
  * - op
       - dc Detail of a card
-      parameter : $qcode , optional ro for readonly and nohistory without the history button
+      parameter : $qcode , optional ro for readonly and nohistory without the history button, nofollowup
       - bc Blank Card : display form for adding a card
       parameter fd_id (fiche_def:fd_id)
       - st Show Type : select type of card
@@ -168,6 +168,7 @@ case 'dc':
 		$html.=HtmlInput::submit('save',_('Sauver'));
 	      }
 	    if ( ! isset ($nohistory))$html.=HtmlInput::history_card_button($f->id,_('Historique'));
+	    if ( ! isset ($nofollowup))$html.=HtmlInput::followup_card_button($f->id,_('Suivi'));
             // Display a remove button if not used and can modify card
             if ( $can_modify == 1 && $f->is_used()==FALSE)
             {

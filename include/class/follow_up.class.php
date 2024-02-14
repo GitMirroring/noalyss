@@ -634,13 +634,56 @@ class Follow_Up
         $this->insert_operation();
         $this->insert_action();
     }
-
+    /**
+     * @brief return the SQL to make a list of actions
+     * Colum :
+     *      -  my_date string date action format DD.MM.YYYY
+     *      -  my_remind string date  reminder format DD.MM.YYYY
+     *      -  str_last_comment string last colemnt format DD.MM.YYYY
+     *      -  last_comment  date last comment
+     *      -  f_id_dest int fiche.f_id concerned card
+     *      -  s_value    string state of the action (cloturé, à suivre ,...)
+     *      -  s_id int id of document_state
+     *      -  ag_title   string Title of the follow-up
+     *      -  dt_value   string Type of document
+     *      -  ag_ref,    string ref of the action
+     *      -  ag_priority  int priority of the action
+     *      -  ag_state,   int state of the followup (see table : document_state )
+     *      -  dest   string profil group
+     *      -  name   string name of the recipient
+     *      -  qcode string qcode of the recipient
+     *      -  tag   string list of tags separated by  comma
+     *      - tags_color string list of tag colors separated by  comma
+     * @returns a SQL string to retrieve list of actions
+     */
+    public static function SQL_list_action():string
+    {
+       $sql = " select ag_id,to_char(ag_timestamp,'DD.MM.YYYY') as my_date,
+                to_char(ag_remind_date,'DD.MM.YYYY') as my_remind,
+                to_char(coalesce((select max(agc_date) from action_gestion_comment as agc where agc.ag_id=ag.ag_id),ag_timestamp),'DD.MM.YY') as str_last_comment,
+                coalesce((select max(agc_date) from action_gestion_comment as agc where agc.ag_id=ag.ag_id),ag_timestamp) as last_comment,
+                f_id_dest,
+                s_id,
+                s_value,
+                ag_title,dt_value,ag_ref, ag_priority,ag_state,
+                coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') as dest,
+                (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=1) as name,
+                (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=23) as qcode,
+                array_to_string((select array_agg(t1.t_tag) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags,
+                array_to_string((select array_agg(t1.t_color) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags_color
+            from action_gestion as ag
+                join document_type on (ag_type=dt_id)
+                join document_state on (ag_state=s_id)
+                ";
+       return $sql;
+    }
     /**
      * @brief myList($p_base, $p_filter = "", $p_search = "")
      * Show list of action by default if sorted on date
      * @param $p_base base url with ac...
      * @param $p_filter filters on the document_type
      * @param $p_search must a valid sql command ( ex 'and  ag_title like upper('%hjkh%'))
+     * @see Follow_Up::create_query()
      * @return string containing html code
      */
     function myList($p_base, $p_filter="", $p_search="")
@@ -676,23 +719,9 @@ class Follow_Up
         else
             $p_filter_doc=" 1=1 ";
 
-        $sql="
-             select ag_id,to_char(ag_timestamp,'DD.MM.YYYY') as my_date,
-                to_char(ag_remind_date,'DD.MM.YYYY') as my_remind,
-                to_char(coalesce((select max(agc_date) from action_gestion_comment as agc where agc.ag_id=ag.ag_id),ag_timestamp),'DD.MM.YY') as str_last_comment,
-                coalesce((select max(agc_date) from action_gestion_comment as agc where agc.ag_id=ag.ag_id),ag_timestamp) as last_comment,
-                f_id_dest,
-                s_value,
-                ag_title,dt_value,ag_ref, ag_priority,ag_state,
-                coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') as dest,
-                (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=1) as name,
-                (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=23) as qcode,
-                array_to_string((select array_agg(t1.t_tag) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags,
-                array_to_string((select array_agg(t1.t_color) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags_color
-            from action_gestion as ag
-                join document_type on (ag_type=dt_id)
-                join document_state on (ag_state=s_id)
-             where $p_filter_doc $p_search $sort";
+        // make SQL to find the action
+        $sql=Follow_Up::SQL_list_action()."                     where $p_filter_doc $p_search $sort";
+
         $max_line=$this->db->count_sql($sql);
         $step=$_SESSION[SESSION_KEY.'g_pagesize'];
         $page=(isset($_GET['offset']))?$_GET['page']:1;
@@ -823,6 +852,17 @@ class Follow_Up
         return $r;
     }
 
+    /**
+     * @brief display list of followup , used with card
+     * @param $query string SQL query
+     * @return void
+     */
+    function view_list($query)
+    {
+        $sql=Follow_Up::SQL_list_action();
+        $sql = " $sql $query";
+        require_once NOALYSS_TEMPLATE."/follow_up-view_list.php";
+    }
     //----------------------------------------------------------------------
     /**
      * \brief Update the data into the database, the field ag_description could contain some HTML tags and must be

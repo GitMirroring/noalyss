@@ -25,6 +25,7 @@ if (!defined('ALLOWED'))
  * @file
  * @brief Update description on file
  */
+global $http,$cn;
 $op=$http->request('op');
 global $g_user;
 
@@ -137,5 +138,20 @@ if ($op == 'followup_comment_oneedit') {
             throw new Exception(__FILE__.':'.__LINE__.'Invalide value');
             break;
     }
+    return;
+}
+
+/**************************************************************************
+ * See list of follow-up evebt
+ *************************************************************************/
+if ($op =="view_followup_card")
+{
+    $div=$http->get("div");
+    $card=new Fiche($cn,$http->get("f_id","number"));
+    echo HtmlInput::title_box("Suivi ".h($card->strAttribut(ATTR_DEF_NAME)),$div);
+    $query=Follow_Up::create_query($cn,["qcode"=>$card->strAttribut(ATTR_DEF_QUICKCODE)]);
+    $followup=new Follow_Up($cn);
+    echo $followup->view_list($query);
+    echo \HtmlInput::button_close($div);
     return;
 }
