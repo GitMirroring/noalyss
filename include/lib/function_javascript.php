@@ -2798,4 +2798,22 @@ function json_response($p_answer)
             JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK);
 }
 
+/**
+ * @brief build a string with the attribute that javascript can use , that string must be included in a DOM element.
+ * @note IMPORTANT :  special chars will be translated(see htmlspecialchars function) : quote, double-quote , ampersand...
+ * @param $pa_attribute array of pair key => value
+ * @see htmlspecialchars()
+ * @return HTML string
+ */
+function build_javascript_attribute($pa_attribute)
+{
+    $str_javascript_attr="";
+    if (! empty ($pa_attribute)) {
+        foreach ($pa_attribute as $key=>$value) {
+            $str_javascript_attr.=sprintf(' "%s"="%s" ',h($key),h($value));
+        }
+    }
+    return $str_javascript_attr;
+}
+
 ?>

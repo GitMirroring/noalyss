@@ -133,7 +133,8 @@ class HtmlInput
     /**
      * @brief you can add attribute to this in javascript
      * this function is a wrapper and create a script (in js) to modify
-     * "this" (in javascript) with the value of obj->attribute from PHP
+     * "this" (in javascript) with the value of obj->attribute from PHP.
+     * @see build_javascript_attribute() include the string in the DOM Element instead of in  a piece of code
      * @return string : return string with the javascript code
      */
     public function get_js_attr()
@@ -355,6 +356,22 @@ class HtmlInput
         $view_history=HtmlInput::button("hcb".$e, $p_mesg, $js);
         return $view_history;
     }
+    /**
+     *@brief  display a div with the history of the card
+     * @param int $f_id fiche.f_id
+     * @param string $p_mesg string to display
+     * @param int $p_exercice exercice of the history
+     */
+    static function followup_card_button($f_id, $p_mesg)
+    {
+         global $g_user;
+        $js=sprintf('onclick="view_followup_card(\'%s\',\'%s\')"', $f_id,
+                dossier::id());
+        $view_followup=HtmlInput::button(uniqid("fu"), $p_mesg, $js);
+        return $view_followup;
+    }
+
+
 
     /**
      * @brief display a div with the history of the account
@@ -581,13 +598,14 @@ class HtmlInput
      * @brief  show the detail of a card
      */
     static function card_detail($p_qcode, $pname='', $p_style="",
-            $p_nohistory=false)
+            $p_nohistory=false,$nofollowup=false)
     {
         if ($pname !=='') {$pname='<span class="v-large">('.$pname.')</span>';}
         $r="";
         $histo=($p_nohistory==true)?' ,nohistory:1':"";
-        $r.=sprintf('<a href="javascript:void(0)" %s class="detail" onclick="fill_ipopcard({qcode:\'%s\' %s})">%s %s</a>',
-                $p_style, $p_qcode, $histo, $p_qcode,$pname);
+        $followup=($nofollowup==true)?' ,nofollowup:1':"";
+        $r.=sprintf('<a href="javascript:void(0)" %s class="detail" onclick="fill_ipopcard({qcode:\'%s\' %s %s})">%s %s</a>',
+                $p_style, $p_qcode, $histo,$followup,$p_qcode,$pname);
         return $r;
     }
 
@@ -929,9 +947,11 @@ class HtmlInput
      * @param string $p_js javascript
      * @param string $p_style is the visuable effect (class, style...)
      * @param string $p_title Title
+     * @param array  $p_attribute javascript attribute to add to the anchor, CAUTION special chars will be translated(see htmlspecialchars function)
+     * @see h()
      */
     static function anchor($p_text, $p_url="", $p_js="",
-            $p_style=' class="line" ',$p_title="click")
+                           $p_style=' class="line" ', $p_title="click", array $p_attribute=[])
     {
         if ($p_js!="")
         {
@@ -939,8 +959,8 @@ class HtmlInput
           } else {
               $p_url=sprintf('href="%s"',$p_url);
         }
-
-        $str=sprintf('<a %s %s %s title="%s">%s</a>', $p_style, $p_url, $p_js, $p_title,$p_text);
+        $str_javascript_attr=build_javascript_attribute($p_attribute);
+        $str=sprintf('<a %s %s %s  %s title="%s">%s</a>', $str_javascript_attr,$p_style, $p_url, $p_js, $p_title,$p_text);
         return $str;
     }
 
