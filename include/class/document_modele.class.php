@@ -70,9 +70,12 @@ class Document_modele
 	  $r.=th(_('Fichier'));
 	  $r.=th(_('Effacer'));
 	  $r.="</tr>";
+      $idx=0;
 	  foreach ( $all as $row)
 	    {
-	      $r.="<tr>";
+          $even=($idx%2==0)?'class="odd"':'class="even"';
+          $idx++;
+	      $r.="<tr $even>";
 	      $r.="<td>";
 	      $r.=h($row['md_name']);
 	      $r.="</td>";
