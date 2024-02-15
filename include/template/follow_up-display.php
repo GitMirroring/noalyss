@@ -420,6 +420,7 @@ function small(p_id_textarea){
         for( $c=1;$c<count($acomment);$c++){
             $m_desc=_('Commentaire');
              $comment="";
+             $comment_style='style="margin-left:5%;margin-bottom:auto;width:90%;font-weight:bold"';
              if ( $p_view != 'READ' && $c > 0)
             {
                 $rmComment=sprintf("return confirm_box(null,'"._('Voulez-vous effacer ce commentaire').
@@ -427,8 +428,8 @@ function small(p_id_textarea){
                                                 dossier::id(),
                                                 $acomment[$c]['agc_id']);
                 $js=Icon_Action::trash("accom".$acomment[$c]['agc_id'], $rmComment);
-                $comment= h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
-                        $acomment[$c]['str_agc_date'].')').$js.
+                $comment=span( h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
+                        $acomment[$c]['str_agc_date'].')'),$comment_style).$js.
                                 '<div class="nicEdit-main field_follow_up" style="margin-left:5%;margin-bottom:auto;width:90%" id="com'.$acomment[$c]['agc_id'].'"> '.
                                 " ".$acomment[$c]['agc_comment_raw'].'</div>'
                                 ;
@@ -436,8 +437,8 @@ function small(p_id_textarea){
             }
             else
             {
-                    $comment=h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
-                            $acomment[$c]['str_agc_date'].')').
+                    $comment=span(h($m_desc.' '.$acomment[$c]['agc_id'].'('.$acomment[$c]['tech_user']." ".
+                            $acomment[$c]['str_agc_date'].')'),$comment_style).
                                     '<div class="field_follow_up" id="com'.$acomment[$c]['agc_id'].'"> '.
                                     " ".$acomment[$c]['agc_comment_raw'].'</div>'
                                     ;
