@@ -135,9 +135,17 @@
  */
 
 
-if (!file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php'))
+if (!file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php') )
 {
+    echo <<<EOF
+
+<script>
+window.location="install.php";
+</script>
+EOF;
+
     header("Location: install.php", true, 307);
+
     exit(0);
 }
 
