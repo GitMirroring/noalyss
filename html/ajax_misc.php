@@ -344,6 +344,10 @@ $path = array(
     "operation_exercice+text"=>"ajax_operation_exercice",
     // transfer operation to accountancy
     'operation_exercice+transfer'=>"ajax_operation_exercice",
+    //list filter for followup
+    'list_filter_followup'=>"ajax_follow_up",
+    //delete a filter for followup
+    'delete_filter_followup'=>"ajax_follow_up",
 ) ;
 
 if (array_key_exists($op, $path)) {

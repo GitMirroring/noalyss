@@ -139,3 +139,17 @@ if ($op == 'followup_comment_oneedit') {
     }
     return;
 }
+/********************************************************************************************************************
+ *  list the existing filter for followup
+ ******************************************************************************************************************/
+if ( $op == 'list_filter_followup') {
+    $followup_filter=Follow_Up_Filter::display_list($g_user->getLogin());
+    return;
+}
+/*******************************************************************************************************************
+ * delete_filter_followup(p_dossier,filter_id)
+ *******************************************************************************************************************/
+if ( $op == 'delete_filter_followup') {
+    $cn->exec_delete("delete from action_gestion_id where af_id=$1 and af_user=$2",
+    [$http->get("filter_id","number"),$g_user->getLogin()]);
+}

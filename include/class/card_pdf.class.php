@@ -61,7 +61,7 @@ class Card_PDF extends \PDF
             $this->write_cell(100,5,$this->card->attribut[$i]->av_text,$border);
             $this->line_new(5);
         }
-      
+
 
         $filename=$this->card->strAttribut(1)."-".$this->card->strAttribut(32).".pdf";
         $filename=sanitize_filename($filename);

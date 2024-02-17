@@ -399,3 +399,65 @@ function action_save_short()
     }
     return false;
 }
+
+/**
+ *  list of filter for follow up
+ * @param p_dossier int dossier id
+ * @param access_code string access_code
+ */
+function list_filter_followup(p_dossier,access_code)
+{
+    var queryString={
+        "gDossier":p_dossier,
+        "op":"list_filter_followup",
+        "ctl":"filter_followup_id",
+        "ac":access_code
+    };
+    var action=new Ajax.Request (
+        "ajax_misc.php",
+        {
+            method:'get',
+            parameters:queryString,
+            onSuccess:function(responseHtml)
+            {
+                var posy=calcy(250)
+                var div = create_div({"id":"filter_followup_id",
+                             'cssclass': "inner_box", 'style': 'width:90%,right:5%;top:'+posy+"px"});
+                div.update(responseHtml.responseText);
+                div.show();
+            }
+        }
+
+    );
+}
+
+/**
+ * @brief delete a filter of follow-up
+ * @param p_dossier int dossier id
+ * @param filter_id int table: action_gestion_comment.af_id
+ */
+function delete_filter_followup(p_dossier,filter_id)
+{
+    smoke.confirm(content[47], function (e) {
+            if (e) {
+
+                var queryString = {
+                    "gDossier": p_dossier,
+                    "op": "delete_filter_followup",
+                    "ctl": "filter_followup_id",
+                    "filter_id": filter_id
+                };
+                var action = new Ajax.Request(
+                    "ajax_misc.php",
+                    {
+                        method: 'get',
+                        parameters: queryString,
+                        onSuccess: function (responseHtml) {
+                            $('item_fu' + filter_id).remove();
+                        }
+                    }
+                );
+            }
+        }
+    );
+}
