@@ -1774,3 +1774,29 @@ function generate_random_password($car):string
     }while ( count(check_password_strength($string)['msg'])> 0 && $loop<$max_loop);
     return $string;
 }
+
+/**
+ * @brief removed invalid character when computing a filename, the suffix is kept
+ * @param $filename String filename to sanitize
+ * @return string without offending char
+ */
+function sanitize_filename($filename)
+{
+    // save the suffix
+    $pos_prefix=strrpos($filename, ".");
+    if ($pos_prefix==0)
+    {
+        $filename_suff=".pdf";
+        $filename.=$filename_suff;
+        $pos_prefix=strrpos($filename, ".");
+    }
+    else
+        $filename_suff=substr($filename, $pos_prefix, strlen($filename));
+
+    $filename=str_replace(array('/', '*', '<', '>', ';', ',', '\\', '.', ':', '(', ')', ' ', '[', ']'), "-", $filename);
+
+    $filename_no=substr($filename, 0, $pos_prefix);
+
+    $new_filename=strtolower($filename_no)."-".date("Ymd-Hi").$filename_suff;
+    return $new_filename;
+}
