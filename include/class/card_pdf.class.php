@@ -47,7 +47,7 @@ class Card_PDF extends \PDF
             throw new \Exception(_("card_pdf.044 , card_inexistante"));
         }
         $this->setTitle($this->card->get_quick_code()." ".strtoupper($this->card->strAttribut(1))
-            ." ".$this->card->strAttribut(32), true);
+            ." ".$this->card->strAttribut(32,0), true);
         $this->SetAuthor('NOALYSS');
         $this->AliasNbPages();
         $this->AddPage();
