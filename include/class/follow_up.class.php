@@ -1330,6 +1330,16 @@ class Follow_Up
     }
 
     /**
+     * @brief display a form with the saved search
+     * @return voidµ
+     */
+    public static function display_saved_search()
+    {
+        $http=new HttpInput();
+        echo \HtmlInput::button_action("Recherches sauvées",sprintf("list_filter_followup('%s','%s')",Dossier::id(),$http->request("ac")));
+
+    }
+    /**
      * @brief show a list of documents
      * @param $cn database connextion
      * @param $p_base base URL
@@ -1338,6 +1348,7 @@ class Follow_Up
     {
 
         Follow_Up::display_search($cn);
+        Follow_Up::display_saved_search();
 
         $act=new Follow_Up($cn);
         /** \brief
@@ -1350,6 +1361,7 @@ class Follow_Up
         require_once NOALYSS_TEMPLATE.'/action_other_action.php';
         echo $act->myList($p_base, "", $query);
         echo '</form>';
+
     }
     /**
      * @brief Show a button for adding follow-up action, display the FORM 
