@@ -494,11 +494,14 @@ class Card_Property
                 }
                 
                 // Special traitement
-                // quickcode
+                // quickcode , if already used in ledger , it cannot be changed
                 if ($value->ad_id==ATTR_DEF_QUICKCODE)
                 {
-                    $sql=sprintf("select update_quick_code(%d,'%s')", $jft_id, sql_string($value->av_text));
-                    $p_fiche->cn->exec_sql($sql);
+                    $used = $p_fiche->cn->get_value("select count(*) from jrnx where j_qcode= $1",[$value->av_text]);
+                    if ($used == 0) {
+                        $sql=sprintf("select update_quick_code(%d,'%s')", $jft_id, sql_string($value->av_text));
+                        $p_fiche->cn->exec_sql($sql);
+                    }
                     continue;
                 }
                 // name
