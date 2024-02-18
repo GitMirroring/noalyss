@@ -166,6 +166,6 @@ if ( $op == 'list_filter_followup') {
  * delete_filter_followup(p_dossier,filter_id)
  *******************************************************************************************************************/
 if ( $op == 'delete_filter_followup') {
-    $cn->exec_delete("delete from action_gestion_id where af_id=$1 and af_user=$2",
+    $cn->exec_sql("delete from action_gestion_filter where af_id=$1 and af_user=$2",
     [$http->get("filter_id","number"),$g_user->getLogin()]);
 }

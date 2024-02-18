@@ -29,16 +29,12 @@ $http = new HttpInput();
 $div = $http->request("ctl");
 $acces_code=$http->get("ac");
 echo \HtmlInput::title_box("liste ",$div);
-
+$dossier_id = Dossier::id();
 $a_list = $cn->get_array("select af_id, af_name,af_search 
 from action_gestion_filter 
 where af_user=$1 
 order by lower(af_name)", [$login]);
-if (count($a_list) == 0) {
-    echo_warning("Aucun filtre");
-    echo \HtmlInput::button_close($div);
-    return;
-}
+if (count($a_list) > 0) :
 
 
 ?>
@@ -57,7 +53,7 @@ echo \HtmlInput::filter_list("filter_list_ul");
 foreach ($a_list as $item) :
     $array = json_decode($item['af_search']);
     $url = "do.php?" . http_build_query($array);
-    $dossier_id = Dossier::id();
+
 ?>
 
 <li id="item_fu<?=$item['af_id']?>" class="list-group-item-action" style="background-color: transparent">
@@ -78,6 +74,13 @@ foreach ($a_list as $item) :
     ?>
 
 </ul>
+<?php
+else:
+    echo span("Aucun recherche sauvée",'class="notice"');
+
+endif;
+
+?>
 <ul  class="list-group m-2">
 
     <li class="list-group-item-action">
