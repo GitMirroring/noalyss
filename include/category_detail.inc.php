@@ -70,7 +70,15 @@ if ( ! $p_readonly)
 	echo HtmlInput::submit('delete_card',
                 _('Effacer cette fiche'),
                 'onclick="$(\'action_fiche\').value=\'delete_card\';return confirm_box(\'catergory_detail_frm\',\''.('Confirmer effacement ?').'\');"');
-	echo '</form>';
+    $button_pdf=HtmlInput::button_anchor(_("PDF"),
+                "export.php?".http_build_query([
+                                "act"=>"PDF:card",
+                                "card_id"=>$f_id,
+                                "gDossier"=>Dossier::id()
+                            ]));
+    echo $button_pdf;
+
+    echo '</form>';
 }
 echo '</div>';
 

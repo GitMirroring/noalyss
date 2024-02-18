@@ -63,7 +63,7 @@ class Card_PDF extends \PDF
         }
 
 
-        $filename=$this->card->strAttribut(1)."-".$this->card->strAttribut(32).".pdf";
+        $filename=$this->card->strAttribut(1)."-".$this->card->strAttribut(23).".pdf";
         $filename=sanitize_filename($filename);
         $this->Output($filename,"D");
     }
