@@ -662,7 +662,8 @@ class Acc_Ledger  extends jrn_def_sql
             $e_pj=$this->guess_pj();
             $span="";
         }
-        $ret.="<tr><td>"._('PJ Num')." </td><td>".h($e_pj).$span."</td></tr>";
+        if ($p_readonly == false) $ret.="<tr><td>"._('PJ Num')." </td><td>".h($e_pj).$span."</td></tr>";
+        if ($p_readonly == true ) $ret.="<tr><td>"._('PJ Num')." </td><td>".h($this->pj).$span."</td></tr>";
         $ret.='</table>';
         $ret.="<table class=\"result\">";
         $ret.="<tr>";

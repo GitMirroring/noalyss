@@ -45,7 +45,13 @@ if (count($a_list) == 0) {
 <p>
     Cliquer sur un filtre pour chercher
 </p>
-<ul>
+<?php
+echo \HtmlInput::filter_list("filter_list_ul");
+
+?>
+
+
+<ul id="filter_list_ul" class="list-group m-2">
 
 <?php
 foreach ($a_list as $item) :
@@ -54,12 +60,14 @@ foreach ($a_list as $item) :
     $dossier_id = Dossier::id();
 ?>
 
-<li id="item_fu<?=$item['af_id']?>">
+<li id="item_fu<?=$item['af_id']?>" class="list-group-item-action" style="background-color: transparent">
     <a href="<?=$url?>" class="line">
-
+    <span class="search-content">
         <?php
         echo h($item['af_name']);
         ?>
+
+    </span>
     </a>
         <?php
         echo \Icon_Action::trash(uniqid(), sprintf("delete_filter_followup('%s','%s')",
@@ -68,15 +76,20 @@ foreach ($a_list as $item) :
     <?php
     endforeach;
     ?>
-    <li>
+
+</ul>
+<ul  class="list-group m-2">
+
+    <li class="list-group-item-action">
         <?php
         $url = "do.php?".http_build_query(["ac"=> $acces_code,"gDossier"=>$dossier_id]);
         ?>
         <a href="<?=$url?>" >
-        Aucun filtre
+            Aucun filtre
         </a>
     </li>
 </ul>
+
 <ul class="aligned-block">
     <li>
 <?php
