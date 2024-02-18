@@ -169,6 +169,12 @@ case 'dc':
 	      }
 	    if ( ! isset ($nohistory))$html.=HtmlInput::history_card_button($f->id,_('Historique'));
 	    if ( ! isset ($nofollowup))$html.=HtmlInput::followup_card_button($f->id,_('Suivi'));
+        $button_pdf=HtmlInput::button_anchor(_("PDF"),"export.php?".http_build_query([
+                "act"=>"PDF:card",
+                "card_id"=>$f->id,
+                "gDossier"=>Dossier::id()
+            ]));
+        $html.=$button_pdf;
             // Display a remove button if not used and can modify card
             if ( $can_modify == 1 && $f->is_used()==FALSE)
             {

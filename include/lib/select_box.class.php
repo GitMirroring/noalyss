@@ -38,7 +38,7 @@ class Select_Box
     private $position; //!< change depending if we are in an absolute block or not
     protected $style_box;
     protected $value;
-
+   
     /**
      * Default constructor
      * @param type $p_id javascript DOMid

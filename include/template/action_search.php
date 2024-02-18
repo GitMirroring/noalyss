@@ -65,22 +65,24 @@
 				<td><?php echo  $hsExcptype_state->input()?></td>
 			</tr>
 			<td style="text-align:right"><?php printf(_('contenant le mot'))?></td>
-			<td ><input class="input_text" style="width:40%" type="text" name="action_query" value="<?php echo  $a?>"></td>
+			<td ><input class="input_text" style="width:100%" type="text" name="action_query" value="<?php echo  $a?>"></td>
 			</tr>
 			<tr>
 				<td style="text-align:right"><?php echo  _('Type de document')?></td>
 				<td><?php echo $type_doc->input();?></td>
 			</tr>
-			
+
 			</tr>
 			<tr>
 				<td style="text-align:right"><?php echo  _('Uniquement actions internes')?></td>
 				<td><?php echo  $only_internal->input()?>
 				</td>
 			</tr>
-                </table>
 
-		<table style="display:inline;width:30%">
+
+            </table>
+
+        <table style="display:inline;width:30%">
                     <tr>
 				<td style="text-align:right">
 					<?php printf(_("Après le "))?>
@@ -107,11 +109,7 @@
 					<?php echo $remind_date_end->input();?>
 				</td>
 			</tr>
-        	
-                       
-                        </table>
 
-                        <table style="display:inline;width:30%">
                         <tr>
 			<td style="text-align:right"> <?php echo _("Référence");?></td>
 				<td>
@@ -124,26 +122,11 @@
 					<?php $num=new INum('ag_id');echo $num->input();?>
 				</td>
 			</tr>
-                        
+
                         </table>
             <p>
-                <?php echo _('Etiquette'); ?>
-               <span id="searchtag_choose_td">
-                   <?php echo Tag_Action::select_tag_search('search'); ?>
-                   <?php
-                       if ( isset($_GET['searchtag'])) {
-                           $http=new HttpInput();
-                           echo Tag_Action::add_clear_button('search');
-                           $asearchtag= $http->get("searchtag","array",array());
-                           for ($i=0;$i<count($asearchtag);$i++) {
-                               $t=new Tag_Action($cn, $asearchtag[$i]);
-                               echo $t->update_search_cell('search');
-                           }
-                       }
-                   ?>
-               </span>
-            </p>
-            <p>
+
+
                 <?php 
                 echo _("Option étiquettes");
                 $iselect= new ISelect("tag_option");
@@ -154,8 +137,37 @@
                 $iselect->set_value($http->request("tag_option","number",0));
                 echo $iselect->input(); 
                        ?>
+                <?php echo _('Etiquette'); ?>
+                <span id="searchtag_choose_td">
+                   <?php echo Tag_Action::select_tag_search('search'); ?>
+                   <?php
+                   if ( isset($_GET['searchtag'])) {
+                       $http=new HttpInput();
+                       echo Tag_Action::add_clear_button('search');
+                       $asearchtag= $http->get("searchtag","array",array());
+                       for ($i=0;$i<count($asearchtag);$i++) {
+                           $t=new Tag_Action($cn, $asearchtag[$i]);
+                           echo $t->update_search_cell('search');
+                       }
+                   }
+                   ?>
+               </span>
             </p>
-                        
+        <?php if (! $inner ) :   ?>
+        <p>
+            Nom Filtre <?php
+            echo \Icon_Action::tips("Donner un nom pour sauver la recheche et la réutiliser");
+            $filter_name=new IText("filter_name");
+            echo $filter_name->input();
+            ?>
+            Filtre existant :
+            <?php
+                // charge les filtres existants et les propose
+                //ajout bouton pour charge ce filtre-là et non pas les conditions existantes
+                echo \HtmlInput::button_action("Liste des filtres",sprintf("list_filter_followup('%s','%s')",Dossier::id(),$http->request("ac")));
+            ?>
+        </p>
+       <?php endif;?>
 		<input type="hidden" name="sa" value="list">
 		<?php echo  $supl_hidden?>
             <ul class="aligned-block">

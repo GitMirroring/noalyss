@@ -312,6 +312,16 @@ if ($sub_action == "list")
 	echo HtmlInput::hidden("export_type", "detail");
 	echo HtmlInput::submit("follow_up_csv", _("Export CSV détaillé"),'','smallbutton');
 	echo "</form>";
+	//if filter_name exists then we save the $_GET into the DB as a JSON object
+	$filter_name=$http->get("filter_name","string",null);
+	if ( noalyss_trim($filter_name) != ""  ) {
+		// save filter
+		// $follow_up_filter=new Follow_Up_Filter($cn);
+		$a_content=json_encode($_GET);
+		$action_gestion_filter=new Follow_Up_Filter($filter_name,$a_content);
+		$action_gestion_filter->save();
+	}
+	// si filtered on charge la DB
 	Follow_Up::show_action_list($cn, $base);
 }
 //--------------------------------------------------------------------------------

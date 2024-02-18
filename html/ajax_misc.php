@@ -346,6 +346,10 @@ $path = array(
     'operation_exercice+transfer'=>"ajax_operation_exercice",
     // view list of followup for a card
     "view_followup_card"=>"ajax_follow_up",
+    //list filter for followup
+    'list_filter_followup'=>"ajax_follow_up",
+    //delete a filter for followup
+    'delete_filter_followup'=>"ajax_follow_up",
 ) ;
 
 if (array_key_exists($op, $path)) {
