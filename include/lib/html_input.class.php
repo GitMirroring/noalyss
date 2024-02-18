@@ -1050,8 +1050,18 @@ class HtmlInput
         return $r;
     }
     /**
-     * Display a field for searching an element in a list 
+     * @brief Display a field for searching an element in a list, the searchable text must be in an element with the className search-content
      * @param string $p_list_id DOM ID of the list (ul or ol)
+     * @code
+
+     <ul id="xx">
+     <li><span class="search-content"> Content used for searching</span> Content not used for search </li>
+     <li><span class="search-content"> Content used for searching</span> <a href="">Content not used for search</a> </li>
+     <li><span class="search-content"> Content used for searching</span> Content not used for search </li>
+     <li><a href=""><span class="search-content"> Content used for searching</span> </a></li>
+     <ul>
+     *
+     * @endcode
      * @return string
      */
     static function filter_list($p_list_id)
