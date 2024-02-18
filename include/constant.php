@@ -123,7 +123,7 @@ if (!defined("NOALYSS_PACKAGE_REPOSITORY")) {
 if (!defined("SYSINFO_DISPLAY")) {
     define("SYSINFO_DISPLAY", TRUE);
 }
-define("DBVERSION", 194);
+define("DBVERSION", 195);
 define("MONO_DATABASE", 25);
 define("DBVERSIONREPO", 20);
 define('NOTFOUND', '--not found--');
