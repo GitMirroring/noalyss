@@ -351,7 +351,7 @@ class Follow_Up
         $w->name='qcode_dest';
         $w->value=($this->f_id_dest!=0)?$this->qcode_dest:"";
         $w->label="";
-        $list_recipient=$this->db->make_list('select fd_id from fiche_def where frd_id in (14,25,8,9,16)');
+        $list_recipient=$this->db->make_list('select fd_id from fiche_def');
         $w->extra=$list_recipient;
         $w->set_attribute('typecard', $list_recipient);
         $w->set_dblclick("fill_ipopcard(this);");
