@@ -1672,6 +1672,28 @@ function reset_filter(p_div) {
     // By default , unpaid is uncked
     $(p_div + "operation_filter").value = "all";
 }
+function display_list_filter(p_dossier,access_code,ledger_type)
+{
+    new Ajax.Request("ajax_misc.php",{
+        parameters:{"gDossier":p_dossier
+            ,"op":"display_list_filter"
+            ,"ac":access_code
+            ,'ledger_type':ledger_type
+        },
+        method:'GET',
+        onSuccess: function (responseHtml) {
+            try {
+                var posy=calcy(250)
+                var div = create_div({"id":"display_list_filter_div",
+                    'cssclass': "inner_box", 'style': 'width:90%,right:5%;top:'+posy+"px"});
+                div.update(responseHtml.responseText);
+                div.show();
+            }catch (e) {
+                console.error(e.message);
+            }
+        }
+    })
+}
 
 /**
  * propose to duplicate an operation

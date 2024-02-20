@@ -35,7 +35,7 @@ from action_gestion_filter
 where af_user=$1 
 order by lower(af_name)", [$login]);
 if (count($a_list) == 0) {
-    echo_warning("Aucun filtre");
+    echo_warning("Aucune recherche sauvée");
     echo \HtmlInput::button_close($div);
     return;
 }
@@ -43,7 +43,7 @@ if (count($a_list) == 0) {
 
 ?>
 <p>
-    Cliquer sur un filtre pour chercher
+    Cliquez sur un lien pour affiche le résultat de la recherche
 </p>
 <?php
 echo \HtmlInput::filter_list("filter_list_ul");
