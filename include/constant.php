@@ -171,6 +171,7 @@ if (DEBUGNOALYSS == 0) {
     ini_set('log_errors', 1);
     ini_set('log_errors_max_len', 0);
 
+
 }
 // Erreur
 define("NOERROR", 0);
