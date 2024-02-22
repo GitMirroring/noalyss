@@ -175,9 +175,10 @@ having count(*) > 1
         
         </li>
         <ul>
-        <?php $all_dep=Database::fetch_all($poste); 
+        <?php
+        $all_dep=Database::fetch_all($poste);
         $nb_dep = ($all_dep == FALSE ) ? 0 :count($all_dep);
-        for ($e=0;$e<count($nb_dep);$e++):
+        for ($e=0;$e<$nb_dep;$e++):
         ?>
             <li>
                 <?php echo HtmlInput::history_account($all_dep[$e]['j_poste'],$all_dep[$e]['j_poste'],' display:inline ')?>

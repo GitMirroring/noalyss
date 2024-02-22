@@ -335,7 +335,7 @@ class Acc_Bilan
         }
         catch(Exception $Ex)
         {
-            record_log($e);
+            record_log($Ex);
             echo $Ex->getMessage();
             throw $Ex;
         }
@@ -437,7 +437,7 @@ class Acc_Bilan
 	    $zip->close();
 	  } else
 	  {
-	    echo __FILE__.":".__LINE__."cannot unzip model ".$filename;
+	    echo __FILE__.":".__LINE__."cannot unzip model ".$file_base;
 	  }
 
 	ob_end_clean();
@@ -738,7 +738,7 @@ class Acc_Bilan
 	      }
 	    else
 	      {
-		echo __FILE__.":".__LINE__."cannot unzip model ".$filename;
+		echo __FILE__.":".__LINE__."cannot unzip model ".$file_base;
 	      }
 
             // Remove the file we do  not need anymore
