@@ -28,9 +28,10 @@ if (empty ($array)) {
     return;
 }
 $idx=0;
+echo \HtmlInput::filter_table("view_list_tb", "0,1,2,3,4,5", 1);
 ?>
 
-<table class="result">
+<table class="result" id="view_list_tb">
     <thead>
 
     <tr>
