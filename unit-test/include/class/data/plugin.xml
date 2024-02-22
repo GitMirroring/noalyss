@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+/*
+ *   This file is part of NOALYSS.
+ *
+ *   NOALYSS is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   NOALYSS is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with NOALYSS; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+// Copyright  (c) 2002-2014 Author Dany De Bontridder danydb@aevalys.eu
+-->
+<plugins>
+    <plugin>
+        <name>
+            Skeleton for plugin
+        </name>
+        <description>
+            Example of an XML File for developing a plugin.
+
+        </description>
+        <code>
+            SKEL
+        </code>
+        <root>
+            skel
+        </root>
+        <file>
+            index.php
+        </file>
+        <author>
+            Dany De Bontridder
+        </author>
+        <noalyss_version>9000</noalyss_version>
+        <order>
+            9000
+        </order>
+        <depend>
+            EXT
+        </depend>
+        <schema>
+            skeleton
+        </schema>
+        <version>2000</version>
+    </plugin>
+    <plugin>
+        <name>
+            Second Skeleton for plugin
+        </name>
+        <description>
+            Example of an XML File for developing a plugin.
+            Second plugin inside
+        </description>
+        <code>
+            PLUGIN_TEST
+        </code>
+        <root>
+            skel
+        </root>
+        <file>
+            index-plugin_test.php
+        </file>
+        <author>
+            Dany De Bontridder
+        </author>
+        <noalyss_version>8111</noalyss_version>
+        <order>
+            9000
+        </order>
+        <depend>
+            EXT
+        </depend>
+        <schema>
+            skeleton
+        </schema>
+        <version>9019</version>
+    </plugin>
+</plugins>

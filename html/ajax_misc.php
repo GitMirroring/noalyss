@@ -266,6 +266,8 @@ $path = array(
     "save_filter"=>"ajax_search_filter",
     // Load a search filter
     "load_filter"=>"ajax_search_filter",
+    // display a list of filter (alias saved search)
+    "display_list_filter"=>"ajax_search_filter",
     // display tag for filter
     'display_filter_tag'=>'ajax_search_filter',
     // search operation to reconcile

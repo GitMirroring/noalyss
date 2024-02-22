@@ -111,13 +111,7 @@ if ($op=="load_filter")
     $answer['filter_id']=0;
     $answer['message']="";
     $filter=new User_filter_SQL($cn, $filter_id);
-    $record=$filter->to_array();
-
-    $record['desc']=$record['description'];
-    $record['r_jrn']=explode(",", $record['r_jrn']??"");
-    $record['tag']=explode(",",$record['uf_tag']??"");
-    $record['tag_option']=$record["uf_tag_option"];
-    $record['p_currency_code']=$record['uf_currency_code'];
+    $record=Acc_Ledger_Search::build_array($filter);
     $result=array_merge($answer, $record);
 
 
@@ -227,4 +221,25 @@ if ($op=='display_filter_tag')
             $tag_operation->update_search_cell($div);
         }
     }
+    return;
+}
+//---------------------------------------------------------------------------------------------------------------
+// display_list_filter : display a list of saved search alias filter
+//----------------------------------------------------------------------------------------------------------------
+if ($op=='display_list_filter')
+{
+    echo \HtmlInput::title_box("Recherches sauvées",'display_list_filter_div');
+
+    $ledger_search=new Acc_Ledger_Search($http->request("ledger_type"));
+    $ledger_search->display_list_filter();
+?>
+
+
+    <ul class="aligned-block">
+        <li>
+            <?=\HtmlInput::button_close("display_list_filter_div")?>
+        </li>
+    </ul>
+<?php
+    return;
 }

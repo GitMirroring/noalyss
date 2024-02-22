@@ -253,7 +253,7 @@ class Extension extends Menu_Ref_sql
     }
 
     /**
-     * remove all the schema from the plugins
+     * @brief remove all the standard  plugins schema
      * @param Database $p_cn
      */
     static function clean(Database $p_cn)
@@ -269,7 +269,7 @@ class Extension extends Menu_Ref_sql
     }
 
     /**
-     * compare the version of the plugin and the last version , propose to update it if a new version exists
+     * @brief compare the version of the plugin and the last version , propose to update it if a new version exists
      * @todo add a mechanism to check once a day
      * @global User $g_user
      * @global number $version_plugin
@@ -327,6 +327,9 @@ class Extension extends Menu_Ref_sql
                     throw new Exception(_('Manque répertoire racine'), 1);
                 if (!isset($xml->plugin[$i]->file))
                     throw new Exception(_('Manque fichier à inclure'), 1);
+                if (!isset($xml->plugin[$i]->version))
+                    throw new Exception(_("Manque version de l'extension"), 1);
+
                 if (!isset($xml->plugin[$i]->depend))
                     $xml->plugin[$i]->depend="EXT";
                 if (!isset($xml->plugin[$i]->order))
@@ -340,8 +343,9 @@ class Extension extends Menu_Ref_sql
     }
 
     /**
-     * Parse a XML file to complete an array of extension objects
-     * @brief Create extension from XML.
+     * @brief Parse a XML file to complete an array of extension objects, in the plugin.xml file , you can find
+     * several plugins sharing some parts.
+     *
      * @param string $p_file filename
      * @return array  array of Extension
      */
@@ -363,7 +367,7 @@ class Extension extends Menu_Ref_sql
             }
             catch (Exception $ex)
             {
-                echo_warning($e->getMessage());
+                echo_warning($ex->getMessage());
                 if ($ex->getCode()==1)
                 {
                     continue;
@@ -378,14 +382,46 @@ class Extension extends Menu_Ref_sql
             $extension->me_parameter='plugin_code='.trim($xml->plugin[$i]->code);
             $extension->depend=(isset($xml->plugin[$i]->depend))?trim($xml->plugin[$i]->depend):"EXT";
             $extension->order=(isset($xml->plugin[$i]->order))?trim($xml->plugin[$i]->order):9000;
+            $extension->version=trim($xml->plugin[$i]->version);
+            $extension->noalyss_version=(isset($xml->plugin[$i]->noalyss_version))?trim($xml->plugin[$i]->noalyss_version):8000;
             $a_extension[]=clone $extension;
         }
         return $a_extension;
     }
 
+    /**
+     * @brief find the extension with the me_code = last part of access_code
+     * @param $a_extension
+     * @param $access_code find the ME_CODE (normally last part )
+     * @return the extension or null
+     */
+    public static function find_extension_code($a_extension,$access_code):Extension|null
+    {
+        $a_me_code=explode("/", $access_code);
+        if (empty($a_me_code ) ) return null;
+        $nb_me_code=count($a_me_code);
+        $me_code=$a_me_code[$nb_me_code-1];
+        foreach ($a_extension as $extension) {
+            if ($extension->me_code==$me_code) return $extension;
+        }
+        return null;
+    }
+
     public function __toString(): string
     {
-        return "Extension";
+        $r = "";
+        $r .= "  me_code " . $this->me_code.PHP_EOL;
+        $r .= "  me_menu.".$this->me_menu.PHP_EOL;
+        $r .= "  version".$this->version.PHP_EOL;
+        $r .= "  noalyss_version".$this->noalyss_version.PHP_EOL;
+        $r .= "  me_file" . $this->me_file.PHP_EOL;
+        $r .= "  me_url" . $this->me_url.PHP_EOL;
+        $r .= "  me_description" . $this->me_description.PHP_EOL;
+        $r .= "  me_parameter" . $this->me_parameter.PHP_EOL;
+        $r .= "  me_javascript" . $this->me_javascript.PHP_EOL;
+        $r .= "  me_type" . $this->me_type.PHP_EOL;
+        $r .= "  me_descrition_etendue" . $this->me_description_etendue.PHP_EOL;
+        return "Extension $r";
     }
 
 
