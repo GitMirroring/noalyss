@@ -336,16 +336,17 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     {
         echo '      <meta http-equiv="x-ua-compatible" content="IE=edge"/>';
     }
-    echo "
+    global $version_noalyss;
+    echo <<<EOF
     <TITLE>$title</TITLE>
-	<link rel=\"icon\" type=\"image/ico\" href=\"favicon.ico\" />
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <LINK id=\"bootstrap\" REL=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\" media=\"screen\"/>
-    <LINK id=\"fontello\" REL=\"stylesheet\" type=\"text/css\" href=\"css/font/fontello/css/fontello.css\" media=\"screen\"/>
-    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/".$style."?version=".SVNINFO."\" media=\"screen\"/>
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/style-print.css?version=".SVNINFO."\" media=\"print\"/>" .
-    $p_script2 . "
-    ";
+	<link rel="icon" type="image/ico" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <LINK id="bootstrap" REL="stylesheet" type="text/css" href="css/bootstrap.min.css" media="screen"/>
+    <LINK id="fontello" REL="stylesheet" type="text/css" href="css/font/fontello/css/fontello.css" media="screen"/>
+    <LINK id="pagestyle" REL="stylesheet" type="text/css" href="css/$style?version=$version_noalyss" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/style-print.css?version=$version_noalyss" media="print"/>
+    $p_script2 
+EOF;
     // preload font
     echo    '<link rel="preload" href="css/font/OpenSansRegular.woff" as="font" crossorigin="anonymous" />';
     echo    '<link rel="preload" href="css/font/SansationLight/SansationLight.woff" as="font" crossorigin="anonymous" />';

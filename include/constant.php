@@ -93,11 +93,7 @@ define('BUTTONADD', "&#10010;");
 
 // If noalyss_version is not defined it is likely directly taken from
 // git and so this variable is not set, this cause some issue
-if (! defined ("NOALYSS_VERSION"))
-{
-    define("NOALYSS_VERSION",9999);
-}
-define('SVNINFO', NOALYSS_VERSION);
+define('NOALYSS_VERSION', 9114 );
 if (!defined('DEBUGNOALYSS')) {
     define("DEBUGNOALYSS", 0);
 }
@@ -109,7 +105,7 @@ if (!defined('LOGINPUT')) {
 if (!defined('DEBUGNOALYSS')) {
     define('DEBUGNOALYSS', 0);
 }
-$version_noalyss = SVNINFO;
+$version_noalyss = NOALYSS_VERSION;
 
 // If you don't want to be notified of the update
 if (!defined("SITE_UPDATE"))

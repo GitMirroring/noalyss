@@ -73,6 +73,7 @@ class Mobile
      */
     function page_start()
     {
+        global $version_noalyss;
         // check not called twiced
         static $already_call=0;
         if ($already_call==1)
@@ -96,8 +97,8 @@ class Mobile
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
     <LINK id=\"bootstrap\" REL=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\" media=\"screen\"/>
     <LINK id=\"fontello\" REL=\"stylesheet\" type=\"text/css\" href=\"css/font/fontello/css/fontello.css\" media=\"screen\"/>
-    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/".$style."?version=".SVNINFO."\" media=\"screen\"/>
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/style-print.css?version=".SVNINFO."\" media=\"print\"/>";
+    <LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/".$style."?version=".$version_noalyss."\" media=\"screen\"/>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/style-print.css?version=".$version_noalyss."\" media=\"print\"/>";
 
         // preload font
         echo '<link rel="preload" href="./css/font/OpenSansRegular.woff" as="font" crossorigin="anonymous" />';

@@ -305,7 +305,7 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
                         <?php endif; ?>
 
                         <span id="info_noalyss">
-                            version  NOALYSS_VERSION - <?php echo $my_domain; ?>
+                            version  <?=NOALYSS_VERSION?> - <?php echo $my_domain; ?>
                         </SPAN>
 
                 </div>
