@@ -424,5 +424,19 @@ class Extension extends Menu_Ref_sql
         return "Extension $r";
     }
 
+    /**
+     * @brief retrieve the version of the current plugin
+     * @param $xml_file always __DIR__."/plugin.xml"
+     * @param $plugin_code the plugin or $_REQUEST['ac']
+     * @return int version or -1 if not found
+     */
+    public static function get_version($xml_file,$plugin_code):int
+    {
+        $aExtension=\Extension::read_definition($xml_file);
+        $extension=self::find_extension_code($aExtension, $plugin_code);
+        if ( empty($plugin_code)) return -1;
+        return $extension->version;
+    }
+
 
 }
