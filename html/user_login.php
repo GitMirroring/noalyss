@@ -103,27 +103,7 @@ if ( $User->isAdmin()  == 1)
 {
     if (SITE_UPDATE !="") {
         $file=$_ENV['TMP']."/version_noalyss".domaine;
-        if (file_exists($file)) {
-            $date_time=new \DateTime();
-            $file_tmstamp=filemtime($file);
-
-            $delta= $date_time->getTimestamp()  - $file_tmstamp;
-            // 172800 = 2 days in second
-            if ( $delta > 172800 ) {
-                $update=@file_get_contents(SITE_UPDATE);
-                $f_file= fopen($file,"w+");
-                fwrite($f_file,$update);
-                fclose($f_file);
-            } else {
-                $update=@file_get_contents($file);
-            }
-
-        } else {
-            $update=@file_get_contents(SITE_UPDATE);
-            $f_file= fopen($file,"w+");
-            fwrite($f_file,$update);
-            fclose($f_file);
-        }
+        $update=\Noalyss\File_Cache::get_content(SITE_UPDATE,$file,172800);
 
 	 if ($update > $version_noalyss ) {
             echo '<div id="version_div" class="inner_box" style="width:25%;margin-left:10%;margin-top:3px;">';
