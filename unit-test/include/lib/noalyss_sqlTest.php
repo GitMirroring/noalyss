@@ -22,6 +22,7 @@
 /**
  * @file
  * @brief Test file for Noalyss_SQL , which is an abstract class
+ * @backupGlobals enable
  */
 use PHPUnit\Framework\TestCase;
 
@@ -38,10 +39,12 @@ class Noalyss_SQLTest extends TestCase
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
+
      */
     protected function setUp():void
     {
         global $g_connection;
+        $g_connection=\Dossier::connect();
         $this->object=new Poste_analytique_SQL($g_connection);
         $a_sql=[
             'delete from poste_analytique',

@@ -32,31 +32,33 @@ global $g_user,$cn,$http;
 $p_array = $_GET;
 $ledger_type=$http->get("ledger_type","string", 'ALL');
 
-$Ledger=new Acc_Ledger_Search($ledger_type,0,'search_op');
 switch($ledger_type)
 {
-        case 'ACH':
-                $ask_pay=1;
-                $p_array['ledger_type']='ACH';
-                break;
-        case 'ODS':
-                $ask_pay=0;
-                $p_array['ledger_type']='ODS';
-                break;
-        case 'ALL':
-                $ask_pay=0;
-                $p_array['ledger_type']='ALL';
-                break;
-        case 'VEN':
-                $ask_pay=1;
-                $p_array['ledger_type']='VEN';
-                break;
-        case 'FIN':
-                $ask_pay=0;
-                $p_array['ledger_type']='FIN';
-                break;
+    case 'ACH':
+            $ask_pay=1;
+            $p_array['ledger_type']='ACH';
+            break;
+    case 'ODS':
+            $ask_pay=0;
+            $p_array['ledger_type']='ODS';
+            break;
+    case 'ALL':
+            $ask_pay=0;
+            $p_array['ledger_type']='ALL';
+            break;
+    case 'VEN':
+            $ask_pay=1;
+            $p_array['ledger_type']='VEN';
+            break;
+    case 'FIN':
+            $ask_pay=0;
+            $p_array['ledger_type']='FIN';
+            break;
+    default:
+        throw new \Exception("HO58 : ledger_type unknown");
 
 }
+$Ledger=new Acc_Ledger_Search($p_array['ledger_type'],0,'search_op');
 echo '<div class="content">';
 // Check privilege
 $p_jrn=$http->request("p_jrn", "string",-1);
@@ -113,8 +115,9 @@ $offset=(isNumber($offset)==0)?0:$offset;
 $bar = navigation_bar($offset, $max_line, $step, $page);
 
 echo $msg;
-echo $Ledger->display_search_form();
+echo $Ledger->button_propose_filter();
 echo HtmlInput::filter_table('history_operation_t', '0,1,2,3,4,5,6,7', 1);
+echo $Ledger->display_search_form();
 echo $bar;
 echo '<form method="GET" id="fpaida" class="print">';
 echo HtmlInput::hidden("ac", $http->request('ac'));

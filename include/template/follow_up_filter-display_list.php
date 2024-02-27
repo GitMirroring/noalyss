@@ -39,7 +39,7 @@ if (count($a_list) > 0) :
 
 ?>
 <p>
-    Cliquer sur un filtre pour chercher
+    Cliquez sur un lien pour affiche le résultat de la recherche
 </p>
 <?php
 echo \HtmlInput::filter_list("filter_list_ul");

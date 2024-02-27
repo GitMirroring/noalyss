@@ -4280,3 +4280,7 @@ function check_password_strength(p_pass_domid,p_result_domid,details)
   			alert_box(e.message);
   		}
 }
+
+/**
+ * @brief
+ */

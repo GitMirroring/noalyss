@@ -102,7 +102,9 @@ if ( $version < DBVERSIONREPO )
 if ( $User->isAdmin()  == 1)
 {
     if (SITE_UPDATE !="") {
-     $update=@file_get_contents(SITE_UPDATE);
+        $file=$_ENV['TMP']."/version_noalyss".domaine;
+        $update=\Noalyss\File_Cache::get_content(SITE_UPDATE,$file,172800);
+
 	 if ($update > $version_noalyss ) {
             echo '<div id="version_div" class="inner_box" style="width:25%;margin-left:10%;margin-top:3px;">';
             echo '<p class="notice">';

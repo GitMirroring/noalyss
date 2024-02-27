@@ -108,8 +108,16 @@ echo '<div class="myfieldset"><h1 class="legend">'._('Vérification des comptes'
 $bilan=new Acc_Bilan($cn);
 $periode=new Periode($cn);
 list ($start_periode,$end_periode)=$periode->get_limit($exercice);
-$bilan->from=$start_periode->p_id;
-$bilan->to=$end_periode->p_id;
+global $g_parameter;
+if ( $g_parameter->MY_REPORT=="Y") {
+    $bilan->from=$start_periode->p_id;
+    $bilan->to=$end_periode->p_id;
+
+} else {
+    $first_periode=$cn->get_value("select to_char(p_start,'YYYY-MM-DD') from parm_periode order by p_start limit 1");
+    $bilan->from=format_date($first_periode,'YYYY-MM-DD','DD.MM.YYYY');
+    $bilan->to=$end_periode->last_day();
+}
 $bilan->verify();
 echo '</div>';
 ?>
@@ -167,9 +175,10 @@ having count(*) > 1
         
         </li>
         <ul>
-        <?php $all_dep=Database::fetch_all($poste); 
+        <?php
+        $all_dep=Database::fetch_all($poste);
         $nb_dep = ($all_dep == FALSE ) ? 0 :count($all_dep);
-        for ($e=0;$e<count($nb_dep);$e++):
+        for ($e=0;$e<$nb_dep;$e++):
         ?>
             <li>
                 <?php echo HtmlInput::history_account($all_dep[$e]['j_poste'],$all_dep[$e]['j_poste'],' display:inline ')?>

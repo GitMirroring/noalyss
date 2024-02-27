@@ -1615,10 +1615,10 @@ EOF;
 
         ob_start();
         require_once NOALYSS_TEMPLATE.'/form_ledger_detail.php';
-        $r.=ob_get_contents();
+        $form_ledger_detail=ob_get_contents();
         ob_end_clean();
 
-
+        $r.=$form_ledger_detail;
 
         // Set correctly the REQUEST param for jrn_type
         $r.=HtmlInput::hidden('jrn_type', 'VEN');

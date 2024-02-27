@@ -43,7 +43,7 @@ $dossier_id=Dossier::id();
 
 	<tr>
           <TD>
-	    <?php echo _('Destinataire')?>
+	    <?php echo _('Concerne')?>
           </TD>
           <TD>
   <?php echo $w->search().$w->input();

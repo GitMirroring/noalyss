@@ -42,7 +42,7 @@ class Acc_Ledger_Search
     /**
      * @brief return a HTML string with the form for the search
      * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN: uppercase !
-     * @param  $all_type_ledger 
+     * @param  $all_type_ledger
      *       values :
      *         - 1 means all the ledger of this type
      *         - 0 No have the "Tous les journaux" availables
@@ -50,6 +50,8 @@ class Acc_Ledger_Search
      * @param type $p_type
      * @param type $p_all
      * @param type $p_div
+     *
+     * @todo the parameter $all_type_ledger is useless : ALL means all the ledgers, VEN all the ledger of sales...
      */
 
     function __construct($p_type, $p_all=1, $p_div="")
@@ -279,7 +281,7 @@ class Acc_Ledger_Search
     function build_name_filter()
     {
         $name=new IText($this->div."filter_new");
-        $name->placeholder=_("Nom du filtre");
+        $name->placeholder=_("Nom de la recherche");
         $r=$name->input();
         $bt=new IButton($this->div."save_ok",_("Ajout"));
         $bt->javascript=sprintf("save_filter('%s','%s')",$this->div,Dossier::id());
@@ -724,7 +726,7 @@ class Acc_Ledger_Search
         
         $r.=HtmlInput::submit('search', _('Rechercher'));
         
-        $button_search=new IButton("{$this->div}button", _('Filtre'));
+        $button_search=new IButton("{$this->div}button", _('Recherches sauvées'));
         $button_search->javascript=$this->build_search_filter();
         $r.=$button_search->input();
         
@@ -1313,4 +1315,48 @@ class Acc_Ledger_Search
         return $ret;
     }
 
+    /**
+     * @brief use a user_filter row and turns it into an array for
+     * javascript purpose
+     * @param User_Filter_SQL $user_filter_sql
+     * @return array
+     */
+    static function build_array(User_Filter_SQL $user_filter_sql)
+    {
+        $record=$user_filter_sql->to_array();
+
+        $record['desc']=$record['description'];
+        $record['r_jrn']=explode(",", $record['r_jrn']??"");
+        $record['tag']=explode(",",$record['uf_tag']??"");
+        $record['tag_option']=$record["uf_tag_option"];
+        $record['p_currency_code']=$record['uf_currency_code'];
+        return $record;
+    }
+
+    /**
+     * @brief build an HTML string with a button to show the list of
+     * saved search
+     * @return string HTML button
+     * @throws Exception if $_REQUEST['ac'] is not set
+     */
+    public  function button_propose_filter()
+    {
+        $http=new HttpInput();
+        $button=HtmlInput::button_action("Recherches sauvées",
+            sprintf("display_list_filter('%s','%s','%s')"
+                ,Dossier::id()
+                , $http->request("ac")
+                ,$this->type
+                ),uniqid(),'smallbutton');
+        return $button;
+    }
+
+    /**
+     * @brief display a list of saved search
+     */
+    public function display_list_filter()
+    {
+       require_once NOALYSS_TEMPLATE."/acc_ledger_search-display_list_filter.php";
+
+    }
 }

@@ -16,6 +16,7 @@ License: GPL
  */
 function js_include($p_string)
 {
+    global $version_noalyss;
     static $ajs=array();		/* avoid to add twice the same script */
     static $seq=0;
     if ( in_array($p_string,$ajs)) return '';
@@ -24,7 +25,7 @@ function js_include($p_string)
 
     if ( !  file_exists('js/'.$p_string))
         alert("Erreur js/$p_string n existe pas");
-    $script='<script type="text/javascript" charset="utf-8" language="javascript" src="js/'.$p_string.'?version='.SVNINFO.'"></script>';
+    $script='<script type="text/javascript" charset="utf-8" language="javascript" src="js/'.$p_string.'?version='.$version_noalyss.'"></script>';
     // debug
 
     return $script;

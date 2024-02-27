@@ -23,8 +23,18 @@
  * and some parameter
  */
 
-// SVNVERSION
 global $version_noalyss;
+// version 
+define('NOALYSS_VERSION', 9200 );
+
+// Database schema version 
+define("DBVERSION", 196);
+
+// version for MONO_DATABASE
+define("MONO_DATABASE", 25);
+
+// Version schema of account_repository database
+define("DBVERSIONREPO", 20);
 /*
  * Include path
  */
@@ -93,11 +103,6 @@ define('BUTTONADD', "&#10010;");
 
 // If noalyss_version is not defined it is likely directly taken from
 // git and so this variable is not set, this cause some issue
-if (! defined ("NOALYSS_VERSION"))
-{
-    define("NOALYSS_VERSION",9999);
-}
-define('SVNINFO', NOALYSS_VERSION);
 if (!defined('DEBUGNOALYSS')) {
     define("DEBUGNOALYSS", 0);
 }
@@ -109,7 +114,7 @@ if (!defined('LOGINPUT')) {
 if (!defined('DEBUGNOALYSS')) {
     define('DEBUGNOALYSS', 0);
 }
-$version_noalyss = SVNINFO;
+$version_noalyss = NOALYSS_VERSION;
 
 // If you don't want to be notified of the update
 if (!defined("SITE_UPDATE"))
@@ -123,9 +128,6 @@ if (!defined("NOALYSS_PACKAGE_REPOSITORY")) {
 if (!defined("SYSINFO_DISPLAY")) {
     define("SYSINFO_DISPLAY", TRUE);
 }
-define("DBVERSION", 195);
-define("MONO_DATABASE", 25);
-define("DBVERSIONREPO", 20);
 define('NOTFOUND', '--not found--');
 define("MAX_COMPTE", 4);
 define('MAX_ARTICLE', 5);
@@ -170,6 +172,7 @@ if (DEBUGNOALYSS == 0) {
     ini_set("html_errors", 1);
     ini_set('log_errors', 1);
     ini_set('log_errors_max_len', 0);
+
 
 }
 // Erreur
@@ -394,13 +397,16 @@ function noalyss_class_autoloader($class)
         "httpinput" => "lib/http_input.class.php",
         "ismallbutton" => "lib/ibutton.class.php",
         "inputswitch" => "lib/input_switch.class.php",
-        "noalyss\mobile" => "class/mobile.class.php",
+        'noalyss\mobile' => "class/mobile.class.php",
         "htmlinput" => "lib/html_input.class.php",
-        "noalyss\dbg"=>"lib/dbg.php",
+        'noalyss\dbg'=>"lib/dbg.php",
+        'noalyss\file_cache'=>"lib/file_cache.class.php",
         "pdfland"=>"class/pdf_land.class.php"
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];
+    }else {
+        echo "autoloader fails with $class";
     }
 
 }

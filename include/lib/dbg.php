@@ -1,10 +1,47 @@
 <?php
+/*
+ *   This file is part of NOALYSS.
+ *
+ *   NOALYSS is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   NOALYSS is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with NOALYSS; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
+// Copyright Author Dany De Bontridder danydb@aevalys.eu
+
+/*!\file
+ * \brief This class contains utility for developpers
+ */
+/*!
+ *
+ * \class Dbg
+ * \brief utilities for showing debug message
+ */
 namespace Noalyss;
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
-
+/**
+ *
+ */
 class Dbg
 {
+    /**
+     * @brief Display the value of a var if DEBUGNOALYSS is greater than $n_level, the debugging info has a certain
+     * formatting
+     * @param $n_level integer if greater than DEBUGNOALYSS, the variable will be displaid
+     * @param $msg value to display : could be an object array, ..
+     * @param $print if true display , otherwise returns a string
+     * @return string|void
+     */
     public static function echo_var($n_level, $msg,$print=true)
     {
         if (DEBUGNOALYSS > $n_level) {
@@ -24,6 +61,12 @@ class Dbg
         }
     }
 
+    /**
+     * @brief returns a string , for the function with a specific style
+     * @param $msg function name __FUNCTION__ or __CLASS__
+     * @param $print if true display , otherwise returns a string
+     * @return string|void
+     */
     public static function echo_function($msg,$print=true)
     {
         if (DEBUGNOALYSS > 1) {
@@ -35,6 +78,13 @@ class Dbg
             return $r;
         }
     }
+
+    /**
+     * @brief display the file
+     * @param $msg name of file , usually always __FILE__
+     * @param $print if true display , otherwise returns a string
+     * @return string|void
+     */
     public static function echo_file($msg,$print=true)
     {
         if (DEBUGNOALYSS > 1) {
@@ -47,6 +97,10 @@ class Dbg
         }
     }
 
+    /**
+     * @brief display a bar depending of the size of the screen , it helps for CSS to see the media-size
+     * @return void
+     */
     static function display_size()
     {
         echo <<<EOF
@@ -137,11 +191,20 @@ EOF;
         return $r;
     }
 
+    /**
+     * @brief start a timer
+     * @return void
+     */
     public static function timer_start()
     {
         global $timer;
         $timer=hrtime(true);
     }
+
+    /**
+     * @brief stop the timer and show the elapsed time, it is used for optimising the code
+     * @return void
+     */
     public static function timer_show()
     {
         global $timer;
