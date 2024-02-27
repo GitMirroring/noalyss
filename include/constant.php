@@ -23,8 +23,18 @@
  * and some parameter
  */
 
-// SVNVERSION
 global $version_noalyss;
+// version 
+define('NOALYSS_VERSION', 9200 );
+
+// Database schema version 
+define("DBVERSION", 196);
+
+// version for MONO_DATABASE
+define("MONO_DATABASE", 25);
+
+// Version schema of account_repository database
+define("DBVERSIONREPO", 20);
 /*
  * Include path
  */
@@ -93,7 +103,6 @@ define('BUTTONADD', "&#10010;");
 
 // If noalyss_version is not defined it is likely directly taken from
 // git and so this variable is not set, this cause some issue
-define('NOALYSS_VERSION', 9114 );
 if (!defined('DEBUGNOALYSS')) {
     define("DEBUGNOALYSS", 0);
 }
@@ -119,9 +128,6 @@ if (!defined("NOALYSS_PACKAGE_REPOSITORY")) {
 if (!defined("SYSINFO_DISPLAY")) {
     define("SYSINFO_DISPLAY", TRUE);
 }
-define("DBVERSION", 195);
-define("MONO_DATABASE", 25);
-define("DBVERSIONREPO", 20);
 define('NOTFOUND', '--not found--');
 define("MAX_COMPTE", 4);
 define('MAX_ARTICLE', 5);
