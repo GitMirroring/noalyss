@@ -405,8 +405,6 @@ function noalyss_class_autoloader($class)
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];
-    }else {
-        echo "autoloader fails with $class";
     }
 
 }
