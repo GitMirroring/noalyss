@@ -855,12 +855,13 @@ class Follow_Up
     /**
      * @brief display list of followup , used with card
      * @param $query string SQL query
+     * @param $extra_sql string extra to add to the query , example "limit 20"
      * @return void
      */
-    function view_list($query)
+    function view_list($query,$extra_sql="")
     {
         $sql=Follow_Up::SQL_list_action();
-        $sql = " $sql $query";
+        $sql = " $sql $query order by ag_timestamp desc  $extra_sql";
         require_once NOALYSS_TEMPLATE."/follow_up-view_list.php";
     }
     //----------------------------------------------------------------------
