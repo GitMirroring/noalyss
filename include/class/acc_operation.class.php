@@ -952,6 +952,7 @@ EOF;
         $r.=HtmlInput::simple_array_to_hidden($array);
         $r.=HtmlInput::hidden("e_comm",$operation->det->jr_comment);
         $r.=HtmlInput::submit(uniqid(), _("Dupliquer"));
+        $r.=HtmlInput::button_close("duplicate_operation_div");
         $r.='</form>';
         
         

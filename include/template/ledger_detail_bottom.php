@@ -396,6 +396,7 @@ echo '</form>';
   $r.='<p  style="text-align:center">';
   $r.=HtmlInput::submit('x','accepter',
           'onclick="confirm_box($(\'form_'.$div.'\'),content[50],function () {$(\'form_'.$div.'\').divname=\''.$div.'\';reverseOperation($(\'form_'.$div.'\'))}); return false"');
+  $r.=HtmlInput::button_hide( "ext".$div);
     $r.="</p>";
   $r.='</form>';
   echo $r;
