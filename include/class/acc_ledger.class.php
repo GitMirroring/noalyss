@@ -353,6 +353,7 @@ class Acc_Ledger  extends jrn_def_sql
 
 
             }
+            $old_receipt=$this->db->get_row("select jr_pj_number,jr_def_id from jrn where jr_id=$1",[$this->jr_id]);
             $sql="insert into jrn (
               jr_id,
               jr_def_id,
@@ -373,14 +374,24 @@ class Acc_Ledger  extends jrn_def_sql
               $5, true,'EXT',currency_id,currency_rate,currency_rate_ref
               from
               jrn
-              where   jr_id=$6";
-            $Res=$this->db->exec_sql($sql,
+              where   jr_id=$6 returning jr_id";
+            try {
+
+                $reverse_id=$this->db->get_value($sql,
                     array($seq, $p_date, $grp_new, $p_internal, $per->p_id, $this->jr_id,$p_label));
+                $reverse_accOp=new Acc_Operation($this->db);
+                $reverse_accOp->set_id($reverse_id);
+                $reverse_accOp->pj=$old_receipt['jr_pj_number'];
+                $reverse_accOp->jrn=$old_receipt['jr_def_id'];
+                $reverse_accOp->set_pj();
             // Check return code
-            if ($Res==false)
-            {
-                throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));
+            } catch (\Exception $e){
+                throw new \Exception('Echec extourne');
+
             }
+
+
+
             // reverse in QUANT_FIN table
             $Res=$this->db->exec_sql("  INSERT INTO quant_fin(
                                  qf_bank,  qf_other, qf_amount,jr_id,j_id)
