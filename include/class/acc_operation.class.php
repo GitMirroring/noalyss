@@ -266,15 +266,19 @@ EOF;
     {
         if ( noalyss_strlentrim($this->pj) == 0 )
         {
+            echo __LINE__."debug {$this->pj} est vide";
             $sql="update jrn set jr_pj_number=$1 where jr_id=$2";
             $this->db->exec_sql($sql,array(null,$this->jr_id));
             return '';
         }
         /* is pj uniq ? */
-        if ( $this->db->count_sql("select jr_id from jrn where jr_pj_number=$1 and jr_def_id=$2",
-                                  array($this->pj,$this->jrn)
+        if ( $this->db->count_sql("select jr_id from jrn
+             where jr_pj_number=$1 and jr_def_id=$2
+                and jr_id !=$3",
+                                  array($this->pj,$this->jrn,$this->jr_id)
                                  ) == 0 )
         {
+            echo __LINE__."debug {$this->pj} est unique";
             $sql="update jrn set jr_pj_number=$1 where jr_id=$2";
             $this->db->exec_sql($sql,array($this->pj,$this->jr_id));
         }
@@ -300,8 +304,9 @@ EOF;
                 $this->pj=$pref.$seq;
 
                 /* check if the new pj numb exist */
-                $c=$this->db->count_sql("select jr_id from jrn where jr_pj_number=$1 and jr_def_id=$2",
-                                        array($this->pj,$this->jrn)
+                $c=$this->db->count_sql("select jr_id from jrn where jr_pj_number=$1 and jr_def_id=$2
+                                            and jr_id !=$3",
+                                        array($this->pj,$this->jrn,$this->jr_id)
                                        );
                 if ( $c == 0 )
                 {
@@ -947,6 +952,7 @@ EOF;
         $r.=HtmlInput::simple_array_to_hidden($array);
         $r.=HtmlInput::hidden("e_comm",$operation->det->jr_comment);
         $r.=HtmlInput::submit(uniqid(), _("Dupliquer"));
+        $r.=HtmlInput::button_close("duplicate_operation_div");
         $r.='</form>';
         
         

@@ -198,6 +198,11 @@ class Acc_LedgerTest extends TestCase
         $this->object->reverse($date,'unit test'.$date);
         $check=$g_connection->get_value("select jr_id from jrn where jr_comment=$1",["unit test".$date]);
         $this->assertFalse(empty($check),"NOT REVERSED" );
+        // check that the receipt number is correct
+        $receipt=$g_connection->get_value("select jr_pj_number from jrn where jr_id=$1",[$check]);
+        $this->assertFalse(empty($receipt)," no receipt number computed");
+        $orig_receipt=$g_connection->get_value("select jr_pj_number from jrn where jr_id=$1",[$this->object->jr_id]);
+        $this->assertNotEquals($receipt, $orig_receipt,"Wrong Receipt number ");
         $this->object->jr_id=$check;
         $this->object->delete();
     }
