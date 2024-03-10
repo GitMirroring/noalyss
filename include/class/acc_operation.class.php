@@ -278,7 +278,7 @@ EOF;
                                   array($this->pj,$this->jrn,$this->jr_id)
                                  ) == 0 )
         {
-            echo __LINE__."debug {$this->pj} est unique";
+
             $sql="update jrn set jr_pj_number=$1 where jr_id=$2";
             $this->db->exec_sql($sql,array($this->pj,$this->jr_id));
         }
