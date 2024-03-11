@@ -75,4 +75,28 @@ class Zip_Extended extends ZipArchive
       }
   }
 
+    /**
+     * @brief  add file to the current file from a folder matching the pattern $p_pattern
+     * @param $p_folder string folder where are the file to add
+     * @param $p_pattern string pattern syntax preg_match
+     * @return int number of files added
+     */
+  function add_file_pattern( $p_folder,$p_pattern):int
+  {
+      if (!is_dir($p_folder)) {
+          throw new \Exception("ERR-ZE87");
+
+      }
+        $dir=opendir($p_folder);
+        if( $p_folder==false) throw new \Exception("ERR-ZE90");
+       $added=0;
+       while( ($entry=readdir($dir)) != false) {
+           if ( preg_match($p_pattern, $entry)) {
+               $this->addFile($p_folder . "/" . $entry,$entry);
+               $added++;
+           }
+       }
+       return $added;
+  }
+
 }

@@ -58,7 +58,7 @@ class Progress_Bar
         $this->db=new Database();
         $this->task_id=$p_task_id;
         // Find value from db
-        $this->value = $this->db->exec_sql("select p_value from progress where p_id=$1",
+        $this->value = $this->db->get_value("select p_value from progress where p_id=$1",
                 [$p_task_id]);
         
         // if task doesn't exists, create it

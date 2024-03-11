@@ -25,6 +25,7 @@ if (!defined('ALLOWED'))
 
 // unlock session
 session_write_close();
+
 /**
  * export all the selected documents for Ana Accountancy in PDF
  */

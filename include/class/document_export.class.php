@@ -87,11 +87,16 @@ class Document_Export
         $zip=new Zip_Extended();
         $res=$zip->open("{$this->store_pdf}/result.zip",ZipArchive::CREATE);
         if ($res !== true) {
-            error_log("DE89 cannot create zip file");
+            error_log("ERR-DE89 cannot create zip file");
             throw new Exception ( __FILE__.":".__LINE__."cannot recreate zip");
         }
         chdir($this->store_pdf);
-        $zip->addGlob("*.pdf");
+        // addGmpn
+        $res=$zip->add_file_pattern($this->store_pdf,"/.*.pdf/");
+        if ($res == 0) {
+            error_log("ERR-DE96 aucun fichier trouvé");
+            throw new Exception ( __FILE__.":".__LINE__."cannot recreate zip");
+        }
         $zip->close();
 
     }
@@ -130,7 +135,7 @@ class Document_Export
      */
     function send_zip()
     {
-        header('Content-Type: application/x-download');
+        header('Content-Type: application/zip');
         header('Content-Disposition: attachment; filename="result.zip"');
         header('Cache-Control: private, max-age=0, must-revalidate');
         header('Pragma: public');
@@ -167,7 +172,7 @@ class Document_Export
      */
     function     export_all($p_array, Progress_Bar $progress,$p_separate=1,$reconcilied_document=2)
     {
-        $this->progress=$this->progress;
+        $this->progress=$progress;
 
         $this->check_file();
         if (count($p_array)==0)
@@ -338,7 +343,11 @@ class Document_Export
         $cn->start();
         $cn->lo_export($file[0]['jr_pj'], $this->store_convert.'/'.$filename);
         $cn->commit();
-        
+
+        if ( ! file_exists( $this->store_convert.'/'.$filename) ){
+            throw new \Exception("ERR:DE342 Ne peut pas exporter le fichier $filename");
+        }
+
         // Convert this file into PDF 
         if ($file[0]['jr_pj_type']!='application/pdf')
         {
