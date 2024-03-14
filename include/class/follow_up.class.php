@@ -1015,7 +1015,7 @@ class Follow_Up
             $action_comment_id=$this->db->get_value("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4) returning agc_id"
                     , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $notag_comment,$this->ag_comment));
             // saved also documents for this comment
-            if ( ! empty ($document_saved)) {
+            if ( ! empty ($document_saved) && Document_Option::is_enable_comment($this->dt_id)) {
                 foreach ($document_saved as $document_id) {
                     $this->db->exec_sql("insert into action_comment_document(document_id,action_gestion_comment_id) values ($1,$2)",
                     [$document_id,$action_comment_id]);
@@ -1025,7 +1025,10 @@ class Follow_Up
         if (trim(strip_tags($this->ag_description??""))!='' )
         {
             if (  $this->ag_description_id <0)
-                $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
+                $this->ag_description_id =  $this->db->get_value("
+                    insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) 
+                    values ($1,$2,$3,$4)
+                    returning  agc_id"
                     , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'],strip_tags($this->ag_description), $this->ag_description));
             else
                 $this->db->exec_sql("
@@ -1036,10 +1039,11 @@ class Follow_Up
                                 where agc_id = $4 "
                     , array(strip_tags($this->ag_description), $this->ag_description, $_SESSION[SESSION_KEY.'g_user'],
                         $this->ag_description_id));
+
             if ( ! empty ($document_saved)) {
                 foreach ($document_saved as $document_id) {
                     $this->db->exec_sql("insert into action_comment_document(document_id,action_gestion_comment_id) values ($1,$2)",
-                        [$document_id,$this->ag_id]);
+                        [$document_id,$this->ag_description_id]);
                 }
             }
         }
