@@ -80,6 +80,7 @@ class Zip_Extended extends ZipArchive
      * @param $p_folder string folder where are the file to add
      * @param $p_pattern string pattern syntax preg_match
      * @return int number of files added
+     * @exception throw an exception err message is ERR-EZ95 if file cannot be added
      */
   function add_file_pattern( $p_folder,$p_pattern):int
   {
@@ -88,11 +89,12 @@ class Zip_Extended extends ZipArchive
 
       }
         $dir=opendir($p_folder);
-        if( $p_folder==false) throw new \Exception("ERR-ZE90");
+        if( $dir==false) throw new \Exception("ERR-ZE90");
        $added=0;
        while( ($entry=readdir($dir)) != false) {
            if ( preg_match($p_pattern, $entry)) {
-               $this->addFile($p_folder . "/" . $entry,$entry);
+               if ( ! $this->addFile($p_folder . "/" . $entry,$entry) )
+                   throw new \Exception("ERR-EZ95 : cannot add $p_folder/$entry");
                $added++;
            }
        }
