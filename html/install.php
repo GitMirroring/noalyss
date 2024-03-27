@@ -368,6 +368,7 @@ echo '<h1>'._('Configuration').'</h1>';
 <?php
 
 $flag_php=0;
+$fatal=0;
 //------------------------------------------------------------------------------
 // PHP Version
 //------------------------------------------------------------------------------
@@ -376,11 +377,13 @@ if (!defined('PHP_VERSION_ID')) {
 
    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 ));
 }
+
 if ( PHP_VERSION_ID < 80000)  {
     echo $g_failed. " ".phpversion()." ". _("Version PHP trop basse , minimum 8.0");
     echo '<p style="color:grey;margin-left:20px">';
-    printf(_("Il est déconseillé de travailler avec une version < 8.0"));
+    printf(_("Cette version nécessite au moins une version supérieure ou égale à 8.0"));
     echo '</p>';
+    $fatal++;
 } else {
     echo $g_succeed. " Version PHP ".phpversion();
 }
@@ -418,6 +421,7 @@ for ($m=0;$m<$nb_need_module;$m++)
             sprintf($str_error_message, $a_need_module[$m]),
             ' </span>';
       $flag_php++;
+      $fatal++;
     } else echo 'module '.$a_need_module[$m].$succeed;
     echo "</li>";
 }
@@ -448,6 +452,7 @@ if ( ini_get("open_basedir") != "") {
 	print '<span class="warning"> '._('open_basedir empêche certaines fonctions de Noalyss,mettez-le à vide ').'</span>';
         echo "</li>";
 	$flag_php++;
+    $fatal++;
     
 }
  echo "</ul>";
@@ -482,14 +487,14 @@ $version=$cn->get_value($sql);
 
 echo _("Version base de données :"),$version;
 $majeur=explode(".",$version);
-if ( $majeur[0] < 9 && $majeur[0] < 5 )
+if ( $majeur[0] < 10  )
   {
 ?>
-  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 9.5 de PostGresql, si votre distribution n'en
+  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 10 de PostGresql, si votre distribution n'en
 offre pas, installez-en une en la compilant. Lisez attentivement la notice sur postgresql.org pour migrer
 vos bases de données")?>
 </p>
-<?php exit(); //'
+<?php $fatal++; //'
 } else {
     echo " ",$g_succeed;
 }
@@ -506,7 +511,8 @@ if ( $Res==0) { ?>
 <p><?php echo _("Pour cela, sur la ligne de commande en tant qu\'utilisateur postgres, faites createlang plpgsql template1")?>
 </p>
 
-<?php exit(); }
+<?php $fatal++;
+}
 
 include_once('lib/ac_common.php');
 require_once('class/dossier.class.php');
@@ -548,6 +554,13 @@ if ( $flag == 0 ) {
   printf (_('Il y a %s param&egrave;tre qui sont trop bas'),$flag);
   echo '</p>';
  }
+
+if ($fatal > 0) {
+    print ( '<span class="warning">');
+    printf(_("Désolé, votre installation ne permet à NOALYSS de fonctionner"));
+    print ( '</span>');
+    return;
+}
 if ( ! isset($_POST['go']) ) {
 ?>
 <span style="text-align: center">
