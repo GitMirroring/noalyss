@@ -60,6 +60,7 @@
         margin:1px 2px 1px 2px;
         -moz-border-radius:2px 2px;
         border-radius:2px 2px;
+        padding : 2.5rem;
      }
     .button:hover {
     cursor:pointer;
