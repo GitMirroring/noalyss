@@ -1260,7 +1260,7 @@ class Acc_Ledger  extends jrn_def_sql
             {
                 $f=new Fiche($this->db);
                 $f->quick_code=${'qc_'.$i};
-                if ($f->belong_ledger($p_jrn)<0)
+                if ($f->belong_ledger($p_jrn) < 1 )
                     throw new Exception("La fiche quick_code = ".
                     $f->quick_code." n'est pas dans ce journal", 4);
                 if (noalyss_strlentrim(${'qc_'.$i})!=0&&isNumber(${'amount'.$i})==0)
