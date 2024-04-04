@@ -1198,26 +1198,35 @@ var nicLinkButton = nicEditorAdvancedButton.extend({
 			'target' : {type : 'select', txt : 'Open In', options : {'' : 'Current Window', '_blank' : 'New Window'},style : {width : '100px'}}
 		},this.ln);
 	},
-	
-	submit : function(e) {
+
+	submit: function(e) {
 		var url = this.inputs['href'].value;
-		if(url == "http://" || url == "") {
+		if (url === "http://" || url === "") {
 			alert("You must enter a URL to Create a Link");
 			return false;
 		}
 		this.removePane();
-		
-		if(!this.ln) {
+
+		if (!this.ln) {
 			var tmp = 'javascript:nicTemp();';
-			this.ne.nicCommand("createlink",tmp);
-			this.ln = this.findElm('A','href',tmp);
+			this.ne.nicCommand("createlink", tmp);
+			this.ln = this.findElm('A', 'href', tmp);
+			// set the link text to the title or the url if there is no text selected
+			if (this.ln.innerHTML == tmp) {
+				this.ln.innerHTML = this.inputs['title'].value || url;
+			}
 		}
-		if(this.ln) {
+		if (this.ln) {
+			var oldTitle = this.ln.title;
 			this.ln.setAttributes({
-				href : this.inputs['href'].value,
-				title : this.inputs['title'].value,
-				target : this.inputs['target'].options[this.inputs['target'].selectedIndex].value
+				href: this.inputs['href'].value,
+				title: this.inputs['title'].value,
+				target: this.inputs['target'].options[this.inputs['target'].selectedIndex].value
 			});
+			// set the link text to the title or the url if the old text was the old title
+			if (this.ln.innerHTML == oldTitle) {
+				this.ln.innerHTML = this.inputs['title'].value || this.inputs['href'].value;
+			}
 		}
 	}
 });

@@ -1507,8 +1507,7 @@ class Fiche
         if ( $p_type == 'deb' )
         {
             $get='jrn_def_fiche_deb';
-        }
-        if ( $p_type == 'cred' )
+        }elseif ( $p_type == 'cred' )
         {
             $get='jrn_def_fiche_cred';
         }
