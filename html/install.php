@@ -49,6 +49,7 @@
          /*! color: #FF0000; */
          margin:1px 2px 1px 2px;
          border-color:orange;
+        padding : 2.5rem;
      }
      a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
          color:darkblue;
