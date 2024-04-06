@@ -249,14 +249,16 @@ if ($get_option=="L" && ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL') )
                     " where jr_id=$1", array($line['jr_id']));
 
             $export->add($positive, "number");
-            //$export->add("");
+            // for financial , all the rows are in the table operation_currency and then the
+            // amount is doubled
+            $export->add(bcdiv($line['sum_ocamount'],2,4),"number");
         }
         else
         {
             $export->add($line['montant'], "number");
+            $export->add(bcadd($line['sum_ocamount'],$line['sum_ocvat_amount']),"number");
         }
         //-- add currency
-       $export->add(bcadd($line['sum_ocamount'],$line['sum_ocvat_amount']),"number");
        $export->add($line['cr_code_iso']);
        $export->add($line['currency_rate']);
        $export->add($line['currency_rate_ref']);
