@@ -46,7 +46,7 @@
         font-size:110%;
         color:white;
         font-weight: bold;
-        border:0px;
+        border: 1px;
         text-decoration:none;
         font-family: helvetica,arial,sans-serif;
         background-image: url("image/bg-submit2.gif");
@@ -55,20 +55,23 @@
         text-decoration:none;
         font-family: helvetica,arial,sans-serif;
         border-width:0px;
-        padding:2px 4px 2px 4px;
         cursor:pointer;
-        margin:1px 2px 1px 2px;
+        margin:5px;
         -moz-border-radius:2px 2px;
-        border-radius:2px 2px;
+        border-radius:5px;
         padding : 2.5rem;
      }
     .button:hover {
-    cursor:pointer;
-    background-color:white;
-    border-style:  solid;
-    border-width:  0px;
-    font-color:blue;
-    margin:2px 2px 1px 2px;
+        cursor:pointer;
+
+        border-style:  solid;
+        border-width:  1px;
+        font-color:blue;
+        margin:5px;
+        padding : 2.5rem;
+        background-image: url("image/bg-submit2.gif");
+        background-repeat: repeat-x;
+        background-position: left;
     }
     .warning,.error {
         color:red;
