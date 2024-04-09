@@ -59,7 +59,7 @@ class INum extends IText
         $this->id=($this->id=="")?$this->name:$this->id;
 
         $style=' class="inum input_text_ro"';
-        $this->value=str_replace('"', '', $this->value);
+        $this->value=str_replace('"', '', $this->value??"");
         $r='<INPUT '.$style.' TYPE="TEXT" id="'.
                 $this->id.'"'.
                 'NAME="'.$this->name.'" VALUE="'.$this->value.'"  '.
