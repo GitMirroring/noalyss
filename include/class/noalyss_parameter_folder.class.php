@@ -50,7 +50,7 @@ class Noalyss_Parameter_Folder
     var $MY_ANC_FILTER;
     var $MY_CURRENCY;
     var $MY_COUNTRY;
-    var $MY_REPORT; //!< In Belgium , we need a report on the beginning of the exercice , not in French,
+    var $MY_REPORT; //!< In Belgium , we need a report on the beginning of the exercice , not in France,
 
     
     // constructor
