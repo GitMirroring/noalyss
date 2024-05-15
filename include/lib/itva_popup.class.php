@@ -184,15 +184,16 @@ class ITva_Popup extends HtmlInput
 
     static public function test_me()
     {
-        $a = new IPopup('popup_tva');
-        $a->set_title('Choix de la tva');
-        echo $a->input();
+
         $tva = new ITva_Popup("tva1");
         $tva->with_button(true);
         // We can add a label for the code
         $tva->add_label('code');
         $tva->js = 'onchange="set_tva_label(this);"';
         echo $tva->input();
+
+        echo '<hr>';
         echo $tva->dbutton();
+
     }
 }
