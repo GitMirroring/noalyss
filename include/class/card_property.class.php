@@ -194,7 +194,15 @@ class Card_Property
             $result['label']=_("Poste comptable");
             $result['class']=" highlight input_text";
             return $result;
-        } elseif ($this->ad_id == ATTR_DEF_TVA) {
+
+        }
+        elseif ($this->ad_id == ATTR_DEF_NUMTVA) {
+            /// Propose a button to check VAT
+            $result['input']=new IVATNumber( "av_text" . $this->ad_id,$this->av_text);
+            $result['label']=$this->ad_text;
+            return $result;
+       }
+        elseif ($this->ad_id == ATTR_DEF_TVA) {
             $result['input'] = new ITva_Popup('popup_tva');
             $result['input']->table = 0;
             $result['input']->value = $this->av_text;

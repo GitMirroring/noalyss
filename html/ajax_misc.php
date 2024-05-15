@@ -352,6 +352,7 @@ $path = array(
     'list_filter_followup'=>"ajax_follow_up",
     //delete a filter for followup
     'delete_filter_followup'=>"ajax_follow_up",
+    "check_vatnumber"=>"ajax_check_vatnumber"
 ) ;
 
 if (array_key_exists($op, $path)) {

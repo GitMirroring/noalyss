@@ -364,6 +364,9 @@ if (!defined("NOALYSS_URL")) {
 if (!defined("DEFAULT_SERVER_VIDEO_CONF")) {
     define("DEFAULT_SERVER_VIDEO_CONF", "https://www.free-solutions.org/");
 }
+
+define ("VATCHECK_URL","https://ec.europa.eu/taxation_customs/vies/rest-api/");
+
 /**
  * @brief load automatically class
  *
