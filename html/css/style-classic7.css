@@ -50,6 +50,17 @@ input:focus {
     opacity:85%;
     background-color: wheat;
 }
+ .valid {
+     color:green;
+     background-color:transparent;
+     font-size: 100%;
+     padding: 0px;
+     margin: 0px;
+     font-family: sans-serif;
+     opacity:85%;
+     background-color: lightgreen;
+ }
+
 a.mtitle span.notice {
     text-decoration: underline;
 }
