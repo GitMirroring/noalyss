@@ -178,14 +178,14 @@ class Card_Property
             $result['label']->name = "av_text" . $this->ad_id . "_label";
             $p_fiche_def->load();
             if ($a['account_auto'] == 't') {
-                $result['msg'] .= $result['label']->input() . " <span style=\"color:red\">" .
+                $result['msg'] .= $result['label']->input() . " <span style=\"color:red;font-size:80%;display:block\">" .
                     _("Rappel: Poste créé automatiquement à partir de ")
                     . $p_fiche_def->class_base . " </span> ";
             } else {
                 // if there is a class base in fiche_def_ref, this account will be the
                 // the default one
                 if (noalyss_strlentrim($p_fiche_def->class_base) != 0) {
-                    $result['msg'] .= " <span style=\"color:red\">" . _("Rappel: Poste par défaut sera ") .
+                    $result['msg'] .= " <span style=\"color:red;font-size:80%;display:block\">" . _("Rappel: Poste par défaut sera ") .
                         $p_fiche_def->class_base .
                         " !</span> ";
                     $result['input']->value = (empty ($result['input']->value)) ?$p_fiche_def->class_base:$result['input']->value;

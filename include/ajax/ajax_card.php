@@ -202,7 +202,7 @@ case 'bc':
 	    /* get cat. name */
 	    $cat_name=$cn->get_value('select fd_label from fiche_def where fd_id=$1',
 				 array($fd_id));
-        $r=HtmlInput::title_box($cat_name, $ctl);
+        $r=HtmlInput::title_box($cat_name, $ctl,p_draggable:true);
 	        $f=new Fiche($cn);
         $r.='<form id="save_card" method="POST" onsubmit="this.ipopup=\''.$ctl.'\';save_card(this);return false;" >';
         $r.=dossier::hidden();
