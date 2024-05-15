@@ -802,7 +802,7 @@ function dis_blank_card(obj)
     var content='div_new_card';
     var nTop=calcy(150);
     var nLeft=posX;
-    var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto";
+    var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto;width:45rem;";
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
   
