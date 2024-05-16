@@ -984,17 +984,20 @@ class DatabaseCore
         $csv->write_header($a_header);
 
         // fetch all the rows
-        for ($i = 0; $i < Database::num_row($ret); $i++) {
+        $nb = Database::num_row($ret);
+        for ($i = 0; $i < $nb; $i++) {
             $row = Database::fetch_array($ret, $i);
             // for each rows, for each value
-            for ($e = 0; $e < count($row) / 2; $e++) {
+            $e=0;
+            foreach ($row as $row_item){
                 switch ($aheader[$e]['type']) {
                     case 'num':
-                        $csv->add($row[$e], "number");
+                        $csv->add($row_item, "number");
                         break;
                     default:
-                        $csv->add($row[$e]);
+                        $csv->add($row_item);
                 }
+                $e++;
             }
             $csv->write();
         }
