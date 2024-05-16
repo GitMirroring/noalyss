@@ -639,8 +639,8 @@ class Follow_Up
      * Colum :
      *      -  my_date string date action format DD.MM.YYYY
      *      -  my_remind string date  reminder format DD.MM.YYYY
-     *      -  str_last_comment string last colemnt format DD.MM.YYYY
-     *      -  last_comment  date last comment
+     *      -  last_comment_date_str string last colemnt format DD.MM.YYYY
+     *      -  last_comment_date  date last comment
      *      -  f_id_dest int fiche.f_id concerned card
      *      -  s_value    string state of the action (cloturé, à suivre ,...)
      *      -  s_id int id of document_state
@@ -658,10 +658,8 @@ class Follow_Up
      */
     public static function SQL_list_action():string
     {
-       $sql = " select ag_id,to_char(ag_timestamp,'DD.MM.YYYY') as my_date,
+       $sql = " select ag.ag_id,to_char(ag.ag_timestamp,'DD.MM.YYYY') as my_date,
                 to_char(ag_remind_date,'DD.MM.YYYY') as my_remind,
-                to_char(coalesce((select max(agc_date) from action_gestion_comment as agc where agc.ag_id=ag.ag_id),ag_timestamp),'DD.MM.YY') as str_last_comment,
-                coalesce((select max(agc_date) from action_gestion_comment as agc where agc.ag_id=ag.ag_id),ag_timestamp) as last_comment,
                 f_id_dest,
                 s_id,
                 s_value,
@@ -670,10 +668,13 @@ class Follow_Up
                 (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=1) as name,
                 (select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=23) as qcode,
                 array_to_string((select array_agg(t1.t_tag) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags,
-                array_to_string((select array_agg(t1.t_color) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags_color
+                array_to_string((select array_agg(t1.t_color) from action_tags as a1 join tags as t1 on (a1.t_id=t1.t_id) where a1.ag_id=ag.ag_id ),',') as tags_color,
+                last_comment_date,
+                to_char(last_comment_date,'DD.MM.YY') last_comment_date_str
             from action_gestion as ag
                 join document_type on (ag_type=dt_id)
                 join document_state on (ag_state=s_id)
+                left join (select agc.ag_id,max(agc.agc_date) last_comment_date from action_gestion_comment agc group by agc.ag_id) last_comment on (last_comment.ag_id=ag.ag_id)
                 ";
        return $sql;
     }
@@ -695,7 +696,7 @@ class Follow_Up
         $table=new Sort_Table();
         // 0
         $table->add(_('Date Doc.'), $url, 'order by ag_timestamp asc', 'order by ag_timestamp desc', 'da', 'dd'); 
-        //$table->add(_('Date Comm.'), $url, 'order by last_comment', 'order by last_comment desc', 'dca', 'dcd');
+
         //1
         $table->add(_('Date Limite'), $url, 'order by ag_remind_date asc nulls last', 'order by ag_remind_date  desc nulls last', 'ra', 'rd');
         //2
@@ -710,8 +711,11 @@ class Follow_Up
         $table->add(_('Titre'), $url, 'order by ag_title asc', 'order by ag_title desc', 'ta', 'td');
         //7
         $table->add(_('Etat'), $url, 'order by s_value asc', 'order by s_value desc', 'ea', 'ed');
-
-        $ord=(!isset($_GET['ord']))?"dd":$_GET['ord'];
+        // 8
+        $table->add(_('Dernier comm.'), $url, 'order by last_comment_date nulls last', 'order by last_comment_date desc nulls last', 'dca', 'dcd');
+        // 9
+        $table->add(_('Priorité'), $url, 'order by last_comment_date nulls last', 'order by last_comment_date desc nulls last', 'dca', 'dcd');
+        $ord=(!isset($_GET['ord']))?"dcd":$_GET['ord'];
         $sort=$table->get_sql_order($ord);
 
         if (noalyss_strlentrim($p_filter)!=0)
@@ -724,8 +728,10 @@ class Follow_Up
 
         $max_line=$this->db->count_sql($sql);
         $step=$_SESSION[SESSION_KEY.'g_pagesize'];
-        $page=(isset($_GET['offset']))?$_GET['page']:1;
-        $offset=(isset($_GET['offset']))?Database::escape_string($_GET['offset']):0;
+        $http=new HttpInput();
+
+        $page=(isset($_GET['offset']))?$http->get("page","number"):1;
+        $offset=(isset($_GET['offset']))?Database::escape_string($http->get('offset',"number")):0;
         if ($step!=-1)
             $limit=" LIMIT $step OFFSET $offset ";
         else
@@ -744,6 +750,7 @@ class Follow_Up
         $r.='<th name="ag_id_td" style="display:none" >'.ICheckBox::toggle_checkbox('ag', 'list_ag_frm').'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(0).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(1).'</th>';
+        $r.='<th style="width:5.57%">'.$table->get_header(8).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(2).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(5).'</th>';
 //        $r.='<th>'.$table->get_header(1).'</th>';
@@ -790,6 +797,7 @@ class Follow_Up
             $r.="<td>".$href.smaller_date($row['my_date']).'</a>'."</td>";
             //$r.="<td>".$href.$row['str_last_comment'].'</a>'."</td>";
             $r.="<td>".$href.smaller_date($row['my_remind']).'</a>'."</td>";
+            $r.=td($row['last_comment_date_str']);
             $r.="<td>".$href.$row['ag_ref'].'</a>'."</td>";
             // Expediteur
             if ($row['qcode']!='')
@@ -1632,7 +1640,7 @@ class Follow_Up
         
         $p_search=self::create_query($this->db, $p_array);
         $sql="
-select ag_id,
+select ag.ag_id,
         to_char(ag_timestamp,'DD.MM.YYYY') as my_date,
         to_char(ag_remind_date,'DD.MM.YYYY') as my_remind,
         to_char(coalesce((select max(agc_date) 
@@ -1660,10 +1668,13 @@ select ag_id,
         ag_ref,
         ag_priority,
         ag_state,
-        coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') as dest
+        coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') as dest,
+        last_comment_date,
+                to_char(last_comment_date,'DD.MM.YY') last_comment_date_str
 from action_gestion as ag
 join document_type on (ag.ag_type=dt_id)
 join document_state on(ag.ag_state=s_id)
+ left join (select agc.ag_id,max(agc.agc_date) last_comment_date from action_gestion_comment agc group by agc.ag_id) last_comment on (last_comment.ag_id=ag.ag_id)
 where  
     true  $p_search order by ag.ag_timestamp,ag.ag_id";
         $ret=$this->db->exec_sql($sql);
