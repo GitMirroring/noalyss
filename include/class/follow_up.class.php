@@ -1412,7 +1412,7 @@ class Follow_Up
         for ($i=0; $i<count($p_array['searchtag']); $i++)
         {
             if (isNumber($p_array['searchtag'][$i])==1) {
-                $query .= $and .' ag_id in (select ag_id from action_tags where t_id= '.sql_string($p_array['searchtag'][$i]).')';
+                $query .= $and .' ag.ag_id in (select ag_id from action_tags where t_id= '.sql_string($p_array['searchtag'][$i]).')';
                 $and = $operand;
             }
         }
@@ -1447,7 +1447,7 @@ class Follow_Up
             // if a query is request build the sql stmt
             $action_query="and (ag_title ilike '%".sql_string($action_query)."%' ".
                     "or ag_ref ='".trim(sql_string($action_query??"")).
-                    "' or ag_id in (select ag_id from action_gestion_comment ".
+                    "' or ag.ag_id in (select ag_id from action_gestion_comment ".
                     " where agc_comment ilike '%".trim(sql_string($action_query??""))."%')".
                     ")";
         }
@@ -1465,7 +1465,7 @@ class Follow_Up
                 if ($fiche->id==0)
                     $str=' and false ';
                 else
-                    $str=" and (f_id_dest= ".$fiche->id." or ag_id in (select ag_id from action_person as ap where ap.f_id=".$fiche->id.") or ag_contact=".$fiche->id."  )";
+                    $str=" and (f_id_dest= ".$fiche->id." or ag.ag_id in (select ag_id from action_person as ap where ap.f_id=".$fiche->id.") or ag_contact=".$fiche->id."  )";
             }
         }
         if (isset($p_array['tdoc'])&&$p_array['tdoc'] !=-1)
