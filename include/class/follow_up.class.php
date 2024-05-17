@@ -714,8 +714,9 @@ class Follow_Up
         // 8
         $table->add(_('Dernier comm.'), $url, 'order by last_comment_date nulls last', 'order by last_comment_date desc nulls last', 'dca', 'dcd');
         // 9
-        $table->add(_('Priorité'), $url, 'order by last_comment_date nulls last', 'order by last_comment_date desc nulls last', 'dca', 'dcd');
-        $ord=(!isset($_GET['ord']))?"dcd":$_GET['ord'];
+        $table->add(_('Priorité'), $url, 'order by ag_priority ', 'order by ag_priority desc ', 'pra', 'prd');
+        $http=new HttpInput();
+        $ord=$http->get("ord","string","dcd");
         $sort=$table->get_sql_order($ord);
 
         if (noalyss_strlentrim($p_filter)!=0)
@@ -753,8 +754,7 @@ class Follow_Up
         $r.='<th style="width:5.57%">'.$table->get_header(8).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(2).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(5).'</th>';
-//        $r.='<th>'.$table->get_header(1).'</th>';
-        $r.=th('Priorité','style="width:5.57%"');
+        $r.='<th style="width:5.57%">'.$table->get_header(9).'</th>';
         $r.='<th style="min-width:45%">'.$table->get_header(6).'</th>';
         $r.='<th style="width:5.57%">'.$table->get_header(7).'</th>';
         $r.='<th style="max-width:10%">'.$table->get_header(3).'</th>';
@@ -842,14 +842,6 @@ class Follow_Up
             }
             $r.="</td>";
             $r.="<td>".$href.h($row['dest']).'</a>'."</td>";
-
-            
-
-
-
-           
-
-
             $r.="</tr>";
         }
 
@@ -1430,18 +1422,18 @@ class Follow_Up
         if ($p_array==null)             $p_array=$_GET;
         $http=new HttpInput();
         $http->set_array($p_array);
-        $search_docid=0; // search for a document 
+
         $action_query="";
         $ag_state=""; //<! selected status of the event , if not set or equal to -1 , it is all of them
         //
         // search for a specific document id (ag_id) , if given then status and date doesn't count
          if (isset ($p_array['ag_id']) && isNumber($p_array['ag_id'])==1&&$p_array['ag_id']!=0)
         {
-            $action_query=" and ag_id= ".sql_string($p_array['ag_id']);
-            $search_docid=$p_array['ag_id']; 
+            $action_query=" and ag.ag_id= ".sql_string($p_array['ag_id']);
+            $action_query.=" and ".Follow_Up::sql_security_filter($cn,'R');
             return $action_query;
         }
-        if (isset($_REQUEST['action_query']) && trim($_REQUEST['action_query']??"") != "")
+        if (isset($p_array['action_query']) && trim($p_array['action_query']??"") != "")
         {
             $action_query = $http->extract('action_query');
             // if a query is request build the sql stmt
@@ -1591,7 +1583,7 @@ class Follow_Up
         
         $p_search=self::create_query($this->db, $p_array);
         $sql="
-             select ag_id,
+             select ag.ag_id,
 			to_char(ag_timestamp,'DD.MM.YYYY') as my_date,
 			 to_char(ag_remind_date,'DD.MM.YYYY') as my_remind,
                          to_char(coalesce((select max(agc_date) from action_gestion_comment as agc where agc.ag_id=ag_id),ag_timestamp),'DD.MM.YY') as last_comment,
