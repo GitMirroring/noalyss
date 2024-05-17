@@ -969,9 +969,11 @@ class DatabaseCore
 
     /**
      * @brief with the handle of a successull query, echo each row into CSV and
-     * send it directly
-     * @param type $ret handle to a query
-     * @param type $aheader double array, each item of the array contains
+     * send it directly to output. To save it into a file, it is needed to send first the HEADER as CSV. If there are
+     *less column than column defined in $aheader, then the columns not included in the header are not displaid
+     *
+     * @param handle  $ret handle to a query
+     * @param array $aheader double array, each item of the array contains (idx : title, type)
      * a key type (num) and a key title
      */
     function query_to_csv($ret, $aheader)
@@ -990,6 +992,7 @@ class DatabaseCore
             // for each rows, for each value
             $e=0;
             foreach ($row as $row_item){
+                if ( $e >= count($a_header)) break;
                 switch ($aheader[$e]['type']) {
                     case 'num':
                         $csv->add($row_item, "number");

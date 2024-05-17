@@ -69,6 +69,61 @@ class DatabaseCoreTest extends TestCase
         
     }
 
+    /**
+     * @brief test the Query_to_CSV function
+     * @testDox  query_to_csv
+     * @return void
+     */
+    public function testQuery_to_csv()
+    {
+        $aheader=array();
+        $aheader[]=array("title"=>"date","type"=>"date");
+        $aheader[]=array("title"=>"Montant","type"=>"num");
+        $aheader[]=array("title"=>"Label","type"=>"string");
+
+        $ret=$this->object->exec_sql("select j_id,j_montant,j_text from jrnx where coalesce(j_text ,'') != '' order by j_id limit 10");
+        ob_start();
+        $this->object->query_to_csv($ret, $aheader);
+        $p_content=ob_get_contents();
+        ob_end_clean();
+        $filename=__FUNCTION__."_result.txt";
+        \Noalyss\Facility::save_file(__DIR__, $filename, $p_content);
+        $this->assertFileExists(__DIR__."/$filename");
+        $filesize=filesize(__DIR__."/$filename");
+        $this->assertEquals(284, $filesize,"$filename has not 284 bytes");
+        $this->assertStringContainsString("Documentation", $p_content,"$filename invalid content");
+
+    }
+    /**
+     * @brief test the Query_to_CSV function
+     * @testDox  query_to_csv
+     * @return void
+     */
+    public function testQuery_to_csvSmallHeader()
+    {
+        $aheader=array();
+        $aheader[]=array("title"=>"date","type"=>"date");
+        $aheader[]=array("title"=>"Montant","type"=>"num");
+        $aheader[]=array("title"=>"Label","type"=>"string");
+
+        $ret=$this->object->exec_sql("
+                    select j_id,j_montant,j_text,j_poste 
+                    from 
+                        jrnx 
+                    where 
+                        coalesce(j_text ,'') != '' order by j_id limit 10");
+        ob_start();
+        $this->object->query_to_csv($ret, $aheader);
+        $p_content=ob_get_contents();
+        ob_end_clean();
+        $filename=__FUNCTION__."_result.txt";
+        \Noalyss\Facility::save_file(__DIR__, $filename, $p_content);
+        $this->assertFileExists(__DIR__."/$filename");
+        $filesize=filesize(__DIR__."/$filename");
+        $this->assertEquals(284, $filesize,"$filename has not 284 bytes");
+        $this->assertStringContainsString("Documentation", $p_content,"$filename invalid content");
+
+    }
     
 
 }
