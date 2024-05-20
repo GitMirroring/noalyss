@@ -85,7 +85,7 @@ select t1.tot_amount
 	,(select ad_value fd2 from fiche_detail fd2 where fd2.f_id=t1.f_id and fd2.ad_id=23) qcode
 ,(select fd3.ad_value from fiche_detail fd3 where fd3.f_id=t1.f_id and fd3.ad_id=1) f_name
 ,abs(t1.tot_amount) atot_amount
-,case when tot_amount <0 then 'f' else 't' end debit
+,case when tot_amount <0 then 't' else 'f' end debit
 from total_account t1
 ";
         $exercice_report=$this->exercice;

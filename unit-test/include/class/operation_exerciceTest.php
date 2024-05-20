@@ -92,7 +92,7 @@ class Operation_ExerciceTest extends TestCase
      *  tearDownAfterClass() template methods is calleafter the last test of the test case class is run,
      *
      */
-    static function tearDownAfterClass(): void
+    static function atearDownAfterClass(): void
     {
         global $g_connection;
         global $aOperation;
@@ -160,11 +160,11 @@ values ($1,$2,$3,$4)",[$operation_id,'4111',$sum_cred-$sum_deb,'t']);
         $aOperation[]=$operation_id;
         $sum_cred=$g_connection->get_value("select sum(oed_amount) 
                 from operation_exercice_detail where oed_debit='f' and oe_id=$1",[$operation_id]);
-        $this->assertEquals(813.08,$sum_cred,'Total credit incorrect for operation $operation_id');
+        $this->assertEquals(1492.89,$sum_cred,'Total credit incorrect for operation $operation_id');
 
         $sum_deb=$g_connection->get_value("select sum(oed_amount) 
                 from operation_exercice_detail where oed_debit='t' and oe_id=$1",[$operation_id]);
-        $this->assertEquals(1492.89,$sum_deb,'Total debit incorrect for operation $operation_id');
+        $this->assertEquals(813.08,$sum_deb,'Total debit incorrect for operation $operation_id');
 
         $sum=$g_connection->get_value("select sum(oed_amount) 
                 from operation_exercice_detail where oe_id=$1",[$operation_id]);
