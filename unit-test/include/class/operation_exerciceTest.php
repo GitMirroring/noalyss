@@ -92,7 +92,7 @@ class Operation_ExerciceTest extends TestCase
      *  tearDownAfterClass() template methods is calleafter the last test of the test case class is run,
      *
      */
-    static function atearDownAfterClass(): void
+    static function tearDownAfterClass(): void
     {
         global $g_connection;
         global $aOperation;
