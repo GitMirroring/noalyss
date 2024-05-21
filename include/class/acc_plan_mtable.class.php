@@ -236,7 +236,7 @@ class Acc_Plan_MTable extends Manage_Table_SQL
         $text=new IText($p_key);
         $text->setReadOnly($readonly);
         $text->value=$p_value;
-        $min_size=(strlen($p_value)<30)?30:strlen($p_value)+5;
+        $min_size=(strlen($p_value??"")<30)?30:strlen($p_value)+5;
         $text->size=$min_size;
         echo $text->input();
     }
