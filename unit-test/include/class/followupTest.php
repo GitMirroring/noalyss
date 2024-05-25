@@ -119,4 +119,26 @@ class FollowupTest extends TestCase
         ob_end_clean();
         $this->assertStringContainsString("COURRI6-1", $content);
     }
+     /**
+      * @testdox test the output of view_followup_card
+      * @covers       Follow_Up::view_list,Follow_Up::create_query
+      * @backupGlobals enabled
+      */
+    function testAjax_View_list()
+    {
+        global $g_user;
+        $g_user=new Noalyss_User($this->connection);
+
+        $CARD_ID=22;
+        $get=array( "op"=>"view_followup_card",'f_id'=>22,'gDossier'=>DOSSIER,'div'=>'unit_test');
+        $_REQUEST=$_POST=$_GET=$get;
+        ob_start();
+        require_once  NOALYSS_HOME.'/ajax_misc.php';
+        $content=ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString("BONDEC3-1", $content);
+        $this->assertTrue(mb_strlen($content)==1613,"error result not valid $content size = ".mb_strlen($content));
+
+
+    }
 }
