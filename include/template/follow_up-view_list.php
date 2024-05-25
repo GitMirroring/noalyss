@@ -22,6 +22,7 @@
  * \brief display list of followup
  */
 global $cn;
+$cn=$this->db;
 $array=$cn->get_array($sql);
 if (empty ($array)) {
     echo_warning("Aucun suivi ");
@@ -62,7 +63,7 @@ echo \HtmlInput::filter_table("view_list_tb", "0,1,2,3,4,5", 1);
                 </td>
                 <td><?=h($item['ag_title'])?></td>
                 <td><?=h($item['qcode'])?></td>
-                <td><?=$item['str_last_comment']?></td>
+                <td><?=$item['last_comment_date_str']?></td>
                 <td><?=h($item['s_value'])?></td>
                 <td>
 

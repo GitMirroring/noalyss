@@ -149,8 +149,9 @@ if ($op =="view_followup_card")
     $div=$http->get("div");
     $card=new Fiche($cn,$http->get("f_id","number"));
     echo HtmlInput::title_box("Suivi ".h($card->strAttribut(ATTR_DEF_NAME)),$div);
-    $query=Follow_Up::create_query($cn,["qcode"=>$card->strAttribut(ATTR_DEF_QUICKCODE),
-        'closed_action'=>true]);
+
+    $query="where true=true  ".Follow_Up::create_query($cn,["qcode"=>$card->strAttribut(ATTR_DEF_QUICKCODE),
+            'closed_action'=>true]);
     $followup=new Follow_Up($cn);
     echo $followup->view_list($query,' limit 25');
     echo \HtmlInput::button_close($div);
