@@ -1296,7 +1296,7 @@ class Acc_Ledger_Search
             }
             $class=($e%2==0)?' class="even" ':' class="odd" ';
             echo '<tr '.$class.'>';
-            echo '<td style="white-space: nowrap">'.$r->input().$row['jrn_def_name'].'</td>';
+            echo '<td style="white-space: nowrap">'.$r->input().$row['jrn_def_name']."(".$row['jrn_def_code'].")".'</td>';
             echo '<td >'.$row['jrn_def_description'].'</td>';
             echo '<td >'.$row['jrn_def_type'].'</td>';
             echo '</tr>';

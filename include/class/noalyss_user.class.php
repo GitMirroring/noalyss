@@ -609,7 +609,7 @@ class Noalyss_User
                     break;
             }
 
-            $sql="select jrn_def_id,jrn_def_type,
+            $sql="select jrn_def_id,jrn_def_type,jrn_def_code,
                  jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_type_id,jrn_desc,uj_priv,
                  jrn_deb_max_line,jrn_cred_max_line,jrn_def_description,jrn_enable
                  from jrn_def join jrn_type on jrn_def_type=jrn_type_id
@@ -622,7 +622,7 @@ class Noalyss_User
         else
         {
             $sql_type=($p_type=='ALL')?'  '.$sql_enable:"where jrn_def_type=upper('".sql_string($p_type)."')  ".$sql_enable;
-            $sql="select jrn_def_id,jrn_def_type,jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_deb_max_line,jrn_cred_max_line,
+            $sql="select jrn_def_id,jrn_def_type,jrn_def_code,jrn_def_name,jrn_def_class_deb,jrn_def_class_cred,jrn_deb_max_line,jrn_cred_max_line,
                  jrn_type_id,jrn_desc,'W' as uj_priv,jrn_def_description,jrn_enable
                  from jrn_def join jrn_type on jrn_def_type=jrn_type_id
                  $sql_type
