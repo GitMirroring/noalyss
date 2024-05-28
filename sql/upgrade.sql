@@ -1,1 +1,2 @@
-
+with correct_periode as (select jr_tech_per, jr_grpt_id from jrn)
+update jrnx set j_tech_per = jr_tech_per from correct_periode where correct_periode.jr_grpt_id=j_grpt and correct_periode.jr_tech_per != j_tech_per;
