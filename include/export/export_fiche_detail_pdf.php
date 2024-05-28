@@ -40,7 +40,7 @@ $cn=Dossier::connect();
 
 $ret="";
 $pdf= new PDF($cn);
-$pdf->setDossierInfo("  Periode : ".$from_periode." - ".$to_periode);
+$pdf->setDossierInfo(" Periode : ".$from_periode." - ".$to_periode);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAuthor('NOALYSS');
@@ -50,7 +50,7 @@ $pdf->setTitle(_("Détail fiche"),true);
 $Fiche=new Fiche($cn,$f_id);
 $operation=new Acc_Operation($cn);
 
-list($array,$tot_deb,$tot_cred)=$Fiche->get_row_date($from_periode,$to_periode,$_GET['ople']);
+list($array,$tot_deb,$tot_cred)=$Fiche->get_row_date($from_periode,$to_periode,$http->get('ople'));
 // don't print empty account
 if ( count($array) == 0 )
 {
