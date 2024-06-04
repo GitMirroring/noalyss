@@ -1537,8 +1537,8 @@ class Follow_Up
 			 f_id_dest,
              substr(ag_title,1,40) as sub_ag_title,dt_value,ag_ref, ag_priority,ag_state,
 			coalesce((select p_name from profile where p_id=ag_dest),'Aucun groupe') as dest,
-				(select ad_value from fiche_Detail where f_id=action_gestion.f_id_dest and ad_id=1) as name
-             from action_gestion
+				(select ad_value from fiche_Detail where f_id=ag.f_id_dest and ad_id=1) as name
+             from action_gestion ag
              join document_type on (ag_type=dt_id)
 			 join document_state on (s_id=ag_state)
              where $p_sql";

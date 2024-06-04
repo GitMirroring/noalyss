@@ -133,11 +133,41 @@ class FollowupTest extends TestCase
         $get=array( "op"=>"view_followup_card",'f_id'=>22,'gDossier'=>DOSSIER,'div'=>'unit_test');
         $_REQUEST=$_POST=$_GET=$get;
         ob_start();
-        require_once  NOALYSS_HOME.'/ajax_misc.php';
+        require  NOALYSS_HOME.'/ajax_misc.php';
         $content=ob_get_contents();
         ob_end_clean();
         $this->assertStringContainsString("BONDEC3-1", $content);
         $this->assertTrue(mb_strlen($content)==1613,"error result not valid $content size = ".mb_strlen($content));
+
+
+    }
+    /**
+     * @testdox test ajax_search_action and function short_list
+     * @covers       Follow_Up::short_list
+     * @backupGlobals enabled
+     */
+    function testSearch_short_list()
+    {
+        global $g_user;
+        $g_user=new Noalyss_User($this->connection);
+        $array_search=
+
+        $query=Follow_Up::create_query($this->connection,array(
+            "ag_dest_query" => "-2",
+            "qcode" => "CLIENT1",
+            "ctlc"=>"action"
+        ));
+        $_GET['ctlc']="test";
+        $_GET['op']="search_action";
+        $_REQUEST['op']="search_action";
+        $sql=  "1=1  ".$query;
+        ob_start();
+        require   NOALYSS_HOME.'/ajax_misc.php';
+        echo Follow_Up::short_list($this->connection, $sql);
+        $content=ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString("BONDEC3-1", $content);
+
 
 
     }
