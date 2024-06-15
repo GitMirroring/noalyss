@@ -27,6 +27,7 @@
  * and op_def_detail
  *
  */
+#[AllowDynamicProperties]
 class Pre_operation
 {
     private $db;						/*!< $db database connection */
@@ -516,12 +517,17 @@ class Pre_operation
     }
 }
 
-/*!\brief mother of the pre_op_XXX, it contains only one data : an
+/*!
+@class
+@brief mother of the pre_op_XXX, it contains only one data : an
  * object Pre_Operation. The child class contains an array of
  * Pre_Operation object
+ *
  */
+#[AllowDynamicProperties]
 class Pre_operation_detail
 {
+    protected $db;
     function __construct($p_cn)
     {
         $this->db=$p_cn;

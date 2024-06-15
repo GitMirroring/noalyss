@@ -167,21 +167,18 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             // Check if the given tva id is valid
             if ( $g_parameter->MY_TVA_USE=='Y')
             {
-                if ( empty(${'e_march'.$i.'_tva_id'}) )
+                $tva_rate =  Acc_Tva::build($this->db,${'e_march' . $i . '_tva_id'});
+                if ($tva_rate === null)
                     throw new Exception(_('La fiche ').${'e_march'.$i}._('a un code tva invalide').' ['.${'e_march'.$i.'_tva_id'}.']',13);
-                $tva_rate=new Acc_Tva($this->db);
-                $tva_rate->set_parameter('id',${'e_march'.$i.'_tva_id'});
+                $tva_rate->load();
+                /*
+                 * check if the accounting for VAT are valid
+                 */
+                $a_poste=explode(',',$tva_rate->tva_poste);
 
-                if ( $tva_rate->load() != 0 )
-                    throw new Exception(_('La fiche ').${'e_march'.$i}._('a un code tva invalide').' ['.${'e_march'.$i.'_tva_id'}.']',13);
-		/*
-		 * check if the accounting for VAT are valid
-		 */
-		$a_poste=explode(',',$tva_rate->tva_poste);
-
-		if (
-		    $this->db->get_value('select count(*) from tmp_pcmn where pcm_val=$1',array($a_poste[0])) == 0 )
-		  throw new Exception(_(" La TVA ".$tva_rate->tva_label." utilise des postes comptables inexistants"));
+                if (
+                    $this->db->get_value('select count(*) from tmp_pcmn where pcm_val=$1',array($a_poste[0])) == 0 )
+                     throw new Exception(_(" La TVA ".$tva_rate->tva_label." utilise des postes comptables inexistants"));
 
             }
             /* check if all card has a ATTR_DEF_ACCOUNT*/
@@ -571,8 +568,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 {
                     $idx_tva=trim(${'e_march'.$i.'_tva_id'});
                     \Noalyss\Dbg::echo_var(1," idx_tva [$idx_tva]",);
-                    $oTva=new Acc_Tva($this->db);
-                    $oTva->set_parameter('id',$idx_tva);
+                    $oTva=Acc_Tva::build($this->db,$idx_tva);
+
                     $oTva->load();
                     $tva_both=$oTva->get_parameter("both_side");
                 }
@@ -846,8 +843,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                  */
                 foreach ($tva as $i => $value)
                 {
-                    $oTva=new Acc_Tva($this->db);
-                    $oTva->set_parameter('id',$i);
+                    $oTva=Acc_Tva::build($this->db,$i);
                     $oTva->load();
 
                     $poste_vat=$oTva->get_side('d');
@@ -1675,8 +1671,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             if ( $g_parameter->MY_TVA_USE=='Y')
             {
                 $idx_tva=${"e_march".$i."_tva_id"};
-                $oTva=new Acc_Tva($this->db);
-                $oTva->set_parameter('id',$idx_tva);
+                $oTva=Acc_Tva::build($this->db,$idx_tva);
+
                 $oTva->load();
                 $op=new Acc_Compute();
 
@@ -1878,7 +1874,7 @@ EOF;
             $r.='<tr><td>Total HTVA</td>';
             $r.=td(hb($tot_amount ),'class="num"');
             foreach ($tva as $i => $value) {
-                $oTva->set_parameter('id', $i);
+                $oTva=Acc_Tva::build($this->db,$i);
                 $oTva->load();
 
                 $r.='<tr><td>  TVA ' . $oTva->get_parameter('label').'</td>';

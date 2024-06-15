@@ -42,6 +42,7 @@ class V_Tva_Rate_SQL extends Table_Data_SQL
          */
         $this->name=array(
             "tva_id"=>"tva_id"
+            ,'tva_code'=>"tva_code"
             , "tva_label"=>"tva_label"
             , "tva_rate"=>"tva_rate"
             , "tva_comment"=>"tva_comment"
@@ -50,13 +51,14 @@ class V_Tva_Rate_SQL extends Table_Data_SQL
             , "tva_both_side"=>"tva_both_side"
             ,'tva_payment_purchase'=>'tva_payment_purchase'
             ,'tva_payment_sale'=>'tva_payment_sale'
-            
+
         );
         /*
          * Type of columns
          */
         $this->type=array(
             "tva_id"=>"numeric"
+            ,'tva_code'=>'text'
             , "tva_label"=>"text"
             , "tva_rate"=>"numeric"
             , "tva_comment"=>"text"

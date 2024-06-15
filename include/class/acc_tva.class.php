@@ -47,6 +47,7 @@ class Acc_Tva
         $tva_comment,
         $tva_poste,
         $tva_both_side;
+    private $cn; //!< Database connection
 
     private Tva_Rate_SQL $tva_rate_sql;
 
@@ -134,5 +135,26 @@ class Acc_Tva
         default:
             throw (new Exception (__FILE__.':'.__LINE__." param est d ou c, on a recu [ $p_side ]"));
         }
+    }
+
+    /**
+     * @brief retrieve TVA rate thanks the code that could be the tva_id or tva_code
+     * @param $db Database connection
+     * @param $p_code either tva_id or tva_code
+     * @return Acc_Tva or null
+     */
+    static function build($db,$p_code):Acc_Tva {
+        if (empty($p_code)) return new Acc_Tva($db,-1);
+        $tva_id = $db->get_value("select tva_id from public.tva_rate where tva_code=upper(trim($1))",[$p_code]);
+        if ( $db->size() == 1) {
+            return new Acc_Tva($db,$tva_id);
+        }
+
+        $exist = $db->get_value("select count(*) from public.tva_rate where tva_id=$1",[$p_code]);
+        if ( $db->size() == 1) {
+            return new Acc_Tva($db,$p_code);
+        }
+        new Acc_Tva($db,-1);
+
     }
 }

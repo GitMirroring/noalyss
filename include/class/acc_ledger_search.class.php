@@ -689,14 +689,18 @@ class Acc_Ledger_Search
         // VAT Code
         if ( isset($tva_id_search) && ! empty (trim($tva_id_search??"")))
         {
-            $fil_vat = $and." jr_internal in 
-                (   select distinct qp_internal 
-                        from quant_purchase 
-                        where qp_vat_code=".sql_string($tva_id_search).
-                "  union all  
-                    select distinct qs_internal 
-                        from quant_sold 
-                        where qs_vat_code=".sql_string($tva_id_search).")";
+            $acc_tva=Acc_Tva::build($this->cn, $tva_id_search);
+            if ($acc_tva->tva_id != -1 )
+            {
+                $fil_vat = $and." jr_internal in 
+                    (   select distinct qp_internal 
+                            from quant_purchase 
+                            where qp_vat_code=".sql_string($acc_tva->tva_id ).
+                    "  union all  
+                        select distinct qs_internal 
+                            from quant_sold 
+                            where qs_vat_code=".sql_string($acc_tva->tva_id ).")";
+            }
 
         }
         $where=$fil_ledger.$fil_amount.$fil_date.$fil_desc.$fil_sec.

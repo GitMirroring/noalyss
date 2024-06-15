@@ -47,12 +47,15 @@ class Tva_Rate_MTable extends Manage_Table_SQL
     {
         parent::__construct($p_table);
         $this->set_col_label("tva_id", _("id"));
+        $this->set_col_label("tva_code", _("Code"));
         $this->set_col_label("tva_label", _("label"));
         $this->set_col_label("tva_rate", _("taux"));
         $this->set_col_label("tva_comment", _("Description"));
         $this->set_col_label("tva_both_side", _("Autoliquidation"));
         $this->set_col_label("tva_sale", _("TVA Vente (C)"));
         $this->set_col_label("tva_purchase", _("TVA Achat (D)"));
+
+
         $this->set_col_type("tva_both_side", "select",
                 array(
             ["value"=>0, "label"=>_("Non")],
