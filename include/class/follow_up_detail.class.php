@@ -37,6 +37,7 @@
  * - "ag_id"=>"ag_id" => foreign key to action_gestion
  * -  db is the database connection
  */
+#[AllowDynamicProperties]
 class Follow_Up_Detail
 {
     private static $variable=array(
