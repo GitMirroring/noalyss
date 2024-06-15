@@ -68,7 +68,7 @@ class Card_Attribut_MTable extends Manage_Table_SQL
     }
 
     /**
-     * Display row of table attr_def
+     * @brief Display row of table attr_def
      * @param array $row 
      */
     function display_row($row)
@@ -89,7 +89,7 @@ class Card_Attribut_MTable extends Manage_Table_SQL
     }
 
     /**
-     * For the type custom , we can call a function to display properly the value
+     * @brief For the type custom , we can call a function to display properly the value
      * @param $p_key string key name
      * @param $p_value string value
      * @see input_custom
@@ -125,7 +125,7 @@ class Card_Attribut_MTable extends Manage_Table_SQL
     }
 
     /**
-     * For the type custom , we can call a function to display properly the value
+     * @brief For the type custom , we can call a function to display properly the value
      * @param $p_key string key name
      * @param $p_value string value
      * @see input_custom
@@ -214,9 +214,29 @@ class Card_Attribut_MTable extends Manage_Table_SQL
 
                 $this->set_error("ad_extra", _("La requête SQL est vide "));
             }
+            $cn= $this->get_table()->cn;
+            $cn->start();
+            try {
+                // remove SQL command like insert , delete , update, truncate , drop
+                $sql=$object_sql->ad_extra;
+                $sql=str_ireplace("delete", "del.ete", $sql);
+                $sql=str_ireplace("insert", "del.ete", $sql);
+                $sql=str_ireplace("update", "del.ete", $sql);
+                $sql=str_ireplace("truncate", "del.ete", $sql);
+                $sql=str_ireplace("drop", "del.ete", $sql);
+                $cn->exec_sql($sql);
+
+            } catch (\Exception $e) {
+                $this->set_error("ad_extra", _("ERREUR SQL : ")
+                        .$object_sql->ad_extra);
+            } finally {
+                $cn->rollback();
+            }
+
+
             if (preg_match('/^\h*select/i', $object_sql->ad_extra)==0)
             {
-                $this->set_error("ad_extra", _("La requête SQL doit commencer par SELECT "));
+
             }
         }
         if ( $object_sql->ad_default_order < 11 || $object_sql->ad_default_order > 9998) {
