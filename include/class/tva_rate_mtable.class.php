@@ -204,7 +204,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
      */
     function save()
     {
-        if ( $this->previous_id == null ) {
+        if ( $this->previous_id === null ) {
             throw new \Exception ("TVA184: no previous TVA id");
         }
         $cn=Dossier::connect();
@@ -257,11 +257,11 @@ class Tva_Rate_MTable extends Manage_Table_SQL
     function check()
     {
         $cn=Dossier::connect();
-        if ( $this->previous_id == null ) {
+        if ( $this->previous_id === null ) {
             throw new \Exception ("TVA184: no previous TVA id");
         }
         // both accounting can not be empty
-        if (trim($this->table->tva_purchase)==""&&trim($this->table->tva_sale)=="")
+        if (trim($this->table->tva_purchase??"")==""&&trim($this->table->tva_sale??"")=="")
         {
             $this->set_error("tva_purchase",
                     _("Les 2 postes comptables ne peuvent être nuls"));
@@ -270,7 +270,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         }
 
         // Check the tva rate
-        if (trim($this->table->tva_rate)==""||isNumber($this->table->tva_rate)==0||$this->table->tva_rate>1)
+        if (trim($this->table->tva_rate??"")==""||isNumber($this->table->tva_rate)==0||$this->table->tva_rate>1)
         {
             $this->set_error("tva_rate", _("Taux de TVA invalide"));
         }
@@ -284,7 +284,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         }
 
         // Check accounting exists for purchase
-        if (trim($this->table->tva_purchase)!=""&&$this->table->tva_purchase!="#")
+        if (trim($this->table->tva_purchase??"")!=""&&$this->table->tva_purchase!="#")
         {
             $count=$cn->get_value("select count(*) from tmp_pcmn where pcm_val = $1",
                     [$this->table->tva_purchase]);
@@ -294,7 +294,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
             }
         }
         // Check accounting exists for sale
-        if (trim($this->table->tva_sale)!=""&&$this->table->tva_sale!="#")
+        if (trim($this->table->tva_sale??"")!=""&&$this->table->tva_sale!="#")
         {
             $count=$cn->get_value("select count(*) from tmp_pcmn where pcm_val = $1",
                     [$this->table->tva_sale]);
@@ -309,19 +309,27 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         {
             $this->set_error("tva_both_side", _("Choix incorrect"));
         }
-        $flag = true;
-        if ( isNumber($this->table->tva_id) == 0 || $this->table->tva_id != round($this->table->tva_id) )
-        {
-            $this->set_error("tva_id",_("Valeur invalide"));
-            $flag=false;
-        }
+
         // Check if old tva_id was not overwritting something
-        if ( $flag && $this->previous_id != $this->table->tva_id && $cn->get_value("select count(*) from tva_rate where tva_id=$1",[$this->table->tva_id]) > 0)
+        if (  $this->previous_id != $this->table->tva_id && $cn->get_value("select count(*) from tva_rate where tva_id=$1",[$this->table->tva_id]) > 0)
         {
             $this->set_error("tva_id",_("Code TVA déjà utilisé"));
         }
-        // Check that tva_id is a integer not a float
+        // Check that tva code is unique and remove not letter
+        $this->table->tva_code=strtoupper(trim( $this->table->tva_code));
+        $tva_code=$this->table->tva_code;
 
+        $tva_code=strtoupper($tva_code);
+        $tva_code=preg_replace("/[A-Z]/", "", $tva_code);
+        $tva_code=preg_replace("/[0-9]/", "", $tva_code);
+
+        if (strlen($tva_code)>0){
+            $this->set_error("tva_code", _("code tva : Uniquement des chiffres et des lettres"));
+        }
+
+        if (strlen($this->table->tva_code)>5){
+            $this->set_error("tva_code", _("code tva : Maximum 5 caractères"));
+        }
         if ($this->count_error()!=0)
             return false;
         return true;
