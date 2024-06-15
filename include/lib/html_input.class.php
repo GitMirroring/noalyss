@@ -938,7 +938,7 @@ class HtmlInput
     }
 
     /**
-     * Return a simple anchor with a url or a javascript
+     * @brief Return a simple LINK with a url or a javascript
      * if $p_js is not null then p_url will be javascript:void(0)
      * we don't add the event onclick. You must give p_url OR p_js
      * default CSS class=line
@@ -965,7 +965,7 @@ class HtmlInput
     }
 
     /**
-     * Create an ISelect object containing the available repository for reading
+     * @brief  Create an ISelect object containing the available repository for reading
      * or writing
      * @remark $g_user global.
      *
@@ -1007,8 +1007,7 @@ class HtmlInput
         }
     }
     /**
-     * 
-     * * filter the rows in a table and keep the colored row in alternance
+     * @brief  filter the rows in a table and keep the colored row in alternance
      * @param dom_id $p_table_id table
      * @param string $p_col , column to search example 0,1,2
      * @param int $start_row row to always keep (header)
@@ -1030,7 +1029,7 @@ class HtmlInput
         return $r;
     }
     /**
-     * filter the rows in a table and keep the colored row in alternance
+     * @brief  filter the rows in a table and keep the colored row in alternance
      * @param dom_id $p_table_id table
      * @param string $p_col , column to search example 0,1,2
      * @param int $start_row row to always keep (header)
