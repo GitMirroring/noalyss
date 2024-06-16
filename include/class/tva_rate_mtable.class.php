@@ -309,9 +309,15 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         {
             $this->set_error("tva_both_side", _("Choix incorrect"));
         }
-
+        $flag = true;
+        // Check that tva_id is a integer not a float (TVA_ID is an integer)
+        if ( isNumber($this->table->tva_id) == 0 || $this->table->tva_id != round($this->table->tva_id) )
+        {
+            $this->set_error("tva_id",_("Valeur invalide"));
+            $flag=false;
+        }
         // Check if old tva_id was not overwritting something
-        if (  $this->previous_id != $this->table->tva_id && $cn->get_value("select count(*) from tva_rate where tva_id=$1",[$this->table->tva_id]) > 0)
+        if ( $flag && $this->previous_id != $this->table->tva_id && $cn->get_value("select count(*) from tva_rate where tva_id=$1",[$this->table->tva_id]) > 0)
         {
             $this->set_error("tva_id",_("Code TVA déjà utilisé"));
         }
