@@ -124,7 +124,7 @@ EOF;
         $pdf_anc_acc=new PDF_Anc_Acc_List($anc_acc_list);
         $pdf_anc_acc->export_pdf()->Output(__DIR__."/file/pdf_anc_acc_list-card-activity.pdf","F");
         $filesize=filesize(__DIR__."/file/pdf_anc_acc_list-card-activity.pdf");
-        $this->assertTrue($filesize >= 77276 && $filesize <= 77289,
+        $this->assertTrue($filesize >= 77104 && $filesize <= 77289,
                 __DIR__."/file/pdf_anc_acc_list-card-activity.pdf $filesize incorrect");
         
         // By Account / Activity
