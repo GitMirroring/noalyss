@@ -104,9 +104,10 @@ class Acc_Tva
     }
 
     /**
-     *Load the VAT,
+     *@brief Load the VAT, return 0 if the TVA_ID exists otherwise -1
      *@note if the label is not found then we get an message error, so the best is probably
      *to initialize the VAT object with default value
+     *
      */
     public function load():int
     {

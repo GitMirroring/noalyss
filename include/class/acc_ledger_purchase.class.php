@@ -168,7 +168,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             if ( $g_parameter->MY_TVA_USE=='Y')
             {
                 $tva_rate =  Acc_Tva::build($this->db,${'e_march' . $i . '_tva_id'});
-                if ($tva_rate === null)
+                if ($tva_rate->tva_id == -1)
                     throw new Exception(_('La fiche ').${'e_march'.$i}._('a un code tva invalide').' ['.${'e_march'.$i.'_tva_id'}.']',13);
                 $tva_rate->load();
                 /*
