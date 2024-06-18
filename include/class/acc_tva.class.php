@@ -138,10 +138,11 @@ class Acc_Tva
     }
 
     /**
-     * @brief retrieve TVA rate thanks the code that could be the tva_id or tva_code
+     * @brief retrieve TVA rate thanks the code that could be the tva_id or tva_code. Check first if p_code is a
+     * TVA_CODE and if not, check if it is a TVA_ID
      * @param $db Database connection
      * @param $p_code either tva_id or tva_code
-     * @return Acc_Tva or null
+     * @return Acc_Tva or Acc_TVA with tva_id=-1
      */
     static function build($db,$p_code):Acc_Tva {
         if (empty($p_code)) return new Acc_Tva($db,-1);
@@ -149,12 +150,12 @@ class Acc_Tva
         if ( $db->size() == 1) {
             return new Acc_Tva($db,$tva_id);
         }
-
+        if (isNumber($p_code) == 0) return new Acc_Tva($db,-1);
         $exist = $db->get_value("select count(*) from public.tva_rate where tva_id=$1",[$p_code]);
-        if ( $db->size() == 1) {
+        if ( $exist == 1) {
             return new Acc_Tva($db,$p_code);
         }
-        new Acc_Tva($db,-1);
+        return new Acc_Tva($db,-1);
 
     }
 }

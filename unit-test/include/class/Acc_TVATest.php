@@ -96,7 +96,7 @@ class Acc_TVATest extends TestCase
     }
 
     /**
-     * @testDox check TVA_CODE value
+     * @testdox check TVA_CODE value
      * @dataProvider dataCheck
      * @return void
      */
@@ -116,6 +116,30 @@ class Acc_TVATest extends TestCase
         $check = $tva_rate_mtable->check();
         $this->assertTrue($result==$check," erreur pour $tva_code ");
         $this->display_error($tva_rate_mtable);
+    }
+    function dataBuild()  {
+        return array(
+            ['0A',4]
+            ,['0B',6]
+            ,[6,6]
+            ,['NONE',-1]
+            ,[14,-1]
+            ,["  ",-1]
+            ,[null,-1]
+        );
+    }
+    /**
+     * @testdox check Acc_TVA::Build
+     * @dataProvider dataBuild
+     * @return void
+     */
+    function testBuild($tva_code,$result)
+    {
+        $cn=\Dossier::connect();
+        $tva=Acc_Tva::build($cn, $tva_code);
+        $tva->load();
+        $this->assertTrue($result==$tva->tva_id," erreur pour tva_code [$tva_code] tva_id {$tva->tva_id}");
+
     }
 
 }

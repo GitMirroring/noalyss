@@ -71,7 +71,43 @@ class ITva_Popup extends HtmlInput
         else
             $this->button = false;
     }
+    protected function make_datalist()
+    {
+        $cn=Dossier::connect();
+        $r="";
+        switch ($this->filter) {
+            case 'none':
+                $sql="select tva_code
+                        from v_tva_rate 
+                          where
+                        tva_purchase <> '#' and tva_sale <> '#'
+                       order by tva_code ";
+                break;
+            case 'sale':
+                $sql="select tva_code
+                        from v_tva_rate 
+                        where 
+                        tva_sale <> '#'
+                            order by tva_code ";
+                break;
+            case 'purchase':
+                $sql="select tva_code
+                        from v_tva_rate 
+                        where 
+                        tva_purchase <> '#'
+                            order by tva_code ";
+                break;
+        }
+        $a_tva_code=$cn->get_array($sql);
+        if ( empty($a_tva_code)) return "";
+        $r.=sprintf('<datalist id="dl_tva_%s">',$this->id);
+        foreach ($a_tva_code as $item) {
+            $r.=sprintf('<option value="%s"></option>',$item['tva_code']);
+        }
+        $r.='</datalist>';
+        return $r;
 
+    }
     /*!\brief show the html  input of the widget*/
     public function input($p_name = null, $p_value = null)
     {
@@ -101,8 +137,8 @@ class ITva_Popup extends HtmlInput
         $strAttribut = $this->get_node_attribute();
 
 
-        $str = '<input type="TEXT"  class="input_text" name="%s" value="%s" id="%s" placeholder="%s" size="3" %s %s>';
-        $r = sprintf($str, $this->name, $this->value, $this->id, _("C.TVA"),$this->js, $strAttribut);
+        $str = '<input type="TEXT"  class="input_text" name="%s" value="%s" id="%s" placeholder="%s" size="3" %s %s list="dl_tva_%s">';
+        $r = sprintf($str, $this->name, $this->value, $this->id, _("C.TVA"),$this->js, $strAttribut,$this->id);
         $r.=$code;
         if ($this->in_table)
             $table = '<table>' . '<tr>' . td($r);
@@ -114,6 +150,7 @@ class ITva_Popup extends HtmlInput
             $r = $table . td($this->dbutton()) . '</tr></table>';
 
         if ($this->table == 1) $r = td($r);
+        $r.=$this->make_datalist();
         return $r;
 
     }
