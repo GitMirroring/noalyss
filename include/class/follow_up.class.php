@@ -44,6 +44,8 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
  * </ul>
  * The table document_type are the possible actions
  */
+
+#[AllowDynamicProperties]
 class Follow_Up
 {
 
@@ -51,6 +53,7 @@ class Follow_Up
     var $ag_timestamp;  /*!<   $ag_timestamp document date (ag_gestion.ag_timestamp) */
     var $dt_id;   /*!<   $dt_id type of the document (document_type.dt_id) */
     var $ag_state; /*!<   $ag_state stage of the document (printed, send to client...) */
+    var $ag_owner; /*!<   $ag_owner of the followup  */
     var $d_number;   /*!<   $d_number number of the document */
     var $d_filename; /*!<   $d_filename filename's document      */
     var $d_mimetype; /*!<   $d_mimetype document's filename      */
@@ -66,7 +69,9 @@ class Follow_Up
     var $ag_id; //!< Follow_Up.ag_id
     var $f_id_dest; /*!< followup action recipient */
     var $aAction_detail; //!< Array of action details
-
+    var $ag_type; //!< type of document
+    var $d_id; //!< Document
+    var $state; //!< State of the document
     /**
      * @var integer $ag_description_id if greater than 0 , it is the id in action_comment
      * of the description (1st comment)

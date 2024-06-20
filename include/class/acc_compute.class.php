@@ -51,7 +51,7 @@
 
  */
 
-
+#[AllowDynamicProperties]
 class Acc_Compute
 {
     private static $variable=array( 'amount'=>'amount',
@@ -78,6 +78,8 @@ class Acc_Compute
     var $check;				// activate the check of the
     // order, valid value are
     // false or true
+
+
     function __construct ()
     {
         bcscale(4);

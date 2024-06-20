@@ -47,6 +47,7 @@ class Acc_Tva
         $tva_comment,
         $tva_poste,
         $tva_both_side;
+    private $cn; //!< Database connection
 
     private Tva_Rate_SQL $tva_rate_sql;
 
@@ -103,9 +104,10 @@ class Acc_Tva
     }
 
     /**
-     *Load the VAT,
+     *@brief Load the VAT, return 0 if the TVA_ID exists otherwise -1
      *@note if the label is not found then we get an message error, so the best is probably
      *to initialize the VAT object with default value
+     *
      */
     public function load():int
     {
@@ -134,5 +136,27 @@ class Acc_Tva
         default:
             throw (new Exception (__FILE__.':'.__LINE__." param est d ou c, on a recu [ $p_side ]"));
         }
+    }
+
+    /**
+     * @brief retrieve TVA rate thanks the code that could be the tva_id or tva_code. Check first if p_code is a
+     * TVA_CODE and if not, check if it is a TVA_ID
+     * @param $db Database connection
+     * @param $p_code either tva_id or tva_code
+     * @return Acc_Tva or Acc_TVA with tva_id=-1
+     */
+    static function build($db,$p_code):Acc_Tva {
+        if (empty($p_code)) return new Acc_Tva($db,-1);
+        $tva_id = $db->get_value("select tva_id from public.tva_rate where tva_code=upper(trim($1))",[$p_code]);
+        if ( $db->size() == 1) {
+            return new Acc_Tva($db,$tva_id);
+        }
+        if (isNumber($p_code) == 0) return new Acc_Tva($db,-1);
+        $exist = $db->get_value("select count(*) from public.tva_rate where tva_id=$1",[$p_code]);
+        if ( $exist == 1) {
+            return new Acc_Tva($db,$p_code);
+        }
+        return new Acc_Tva($db,-1);
+
     }
 }

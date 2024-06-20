@@ -71,4 +71,75 @@ class Acc_TVATest extends TestCase
         $this->assertEquals(0.2100 , $tva->tva_rate,"Cannot get tva rate after set_parameter");
     }
 
+    /**
+     * @brief display error from tva_rate_mtable
+     * @param Tva_Rate_MTable $tva_rate_mtable
+     * @return void
+     */
+    function display_error(Tva_Rate_MTable $tva_rate_mtable) {
+        $col=$tva_rate_mtable->get_order();
+        foreach($col as $item) {
+            $error =  $tva_rate_mtable->get_error($item);
+            if ( !empty ($error)) print "$error \n";
+        }
+    }
+
+    function dataCheck()  {
+         return array(
+             ['abc',true]
+             ,['13A',true]
+             ,['1',true]
+             ,['1-A',false]
+             ,['+a',false]
+             ,['abcdefg',false]
+         );
+    }
+
+    /**
+     * @testdox check TVA_CODE value
+     * @dataProvider dataCheck
+     * @return void
+     */
+    function testCheck($tva_code,$result)
+    {
+        $cn=\Dossier::connect();
+        $vtva_rate=new V_Tva_rate_SQL($cn,-1);
+        $vtva_rate->tva_code=$tva_code;
+        $vtva_rate->tva_label="Test";
+        $vtva_rate->tva_sale="451";
+        $vtva_rate->tva_both_side="0";
+        $vtva_rate->tva_rate=0.21;
+
+        $tva_rate_mtable=new Tva_Rate_MTable($vtva_rate);
+        $tva_rate_mtable->setPreviousId(0);
+
+        $check = $tva_rate_mtable->check();
+        $this->assertTrue($result==$check," erreur pour $tva_code ");
+        $this->display_error($tva_rate_mtable);
+    }
+    function dataBuild()  {
+        return array(
+            ['0A',4]
+            ,['0B',6]
+            ,[6,6]
+            ,['NONE',-1]
+            ,[14,-1]
+            ,["  ",-1]
+            ,[null,-1]
+        );
+    }
+    /**
+     * @testdox check Acc_TVA::Build
+     * @dataProvider dataBuild
+     * @return void
+     */
+    function testBuild($tva_code,$result)
+    {
+        $cn=\Dossier::connect();
+        $tva=Acc_Tva::build($cn, $tva_code);
+        $tva->load();
+        $this->assertTrue($result==$tva->tva_id," erreur pour tva_code [$tva_code] tva_id {$tva->tva_id}");
+
+    }
+
 }

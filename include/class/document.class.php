@@ -37,8 +37,9 @@ class Document
     var $d_description;       /*!< Description of the file */
     var $d_number;    /*!< $d_number number of the document */
     var $md_id;       /*!< $md_id document's template */
+    var $f_id;       /*!< fiche.f_id */
     private $counter; /*!< counter for the items ( goods ) */
-
+    var $d_name;    /*!< document name */
     /*!
      * @brief Constructor
      * \param $p_cn Database connection
@@ -1152,7 +1153,7 @@ class Document
                     return '';
                 if ($p_array[$march_id]==0)
                     return '';
-                $tva=new Acc_Tva($this->db, $p_array[$id]);
+                $tva= Acc_Tva::build($this->db, $p_array[$id]);
                 if ($tva->load()==-1)
                     return "";
                 $r=$tva->get_parameter('label');

@@ -179,7 +179,20 @@ class Noalyss_Parameter_FolderTest extends TestCase
         $this->assertTrue($this->object->match_analytic("71"));
         $this->assertTrue($this->object->match_analytic("7"));
         $this->assertFalse($this->object->match_analytic("5"));
+        // different class
+        $this->object->MY_ANC_FILTER="62,71";
+        $this->assertFalse($this->object->match_analytic("5"), "error 5 doesnt match {$this->object->MY_ANC_FILTER}");
+        $this->assertFalse($this->object->match_analytic("61"),"error 61 doesnt match {$this->object->MY_ANC_FILTER}");
+        $this->assertFalse($this->object->match_analytic("61A"),"error 61A doesnt match {$this->object->MY_ANC_FILTER}");
+        $this->assertFalse($this->object->match_analytic("72"),"error 72 doesnt match {$this->object->MY_ANC_FILTER}");
+        $this->assertFalse($this->object->match_analytic("73"),"error 73 doesnt match {$this->object->MY_ANC_FILTER}");
+        $this->assertTrue($this->object->match_analytic("71"), "error 71  match {$this->object->MY_ANC_FILTER}");
+        $this->assertTrue($this->object->match_analytic("62"), "error 62  match {$this->object->MY_ANC_FILTER}");
+        $this->assertTrue($this->object->match_analytic("6234"), "error 6234  match {$this->object->MY_ANC_FILTER}");
+        $this->assertTrue($this->object->match_analytic("62AA"), "error 62AA  match {$this->object->MY_ANC_FILTER}");
+
     }
+
 }
 
 ?>

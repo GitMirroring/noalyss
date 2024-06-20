@@ -215,9 +215,14 @@ EOF;
      */
     function match_analytic($p_accounting)
     {
-        $string="/^[".$this->MY_ANC_FILTER."]+/";
-        if ( preg_match($string,$p_accounting) == 0 ) return FALSE;
-        return TRUE;
+        $a_filter=explode(",",$this->MY_ANC_FILTER??"");
+        if (empty($a_filter)) return false;
+        foreach ($a_filter as $filter ) {
+            $string="/^".$filter.".*/";
+
+            if ( preg_match($string,$p_accounting) != 0 ) return TRUE;
+        }
+        return FALSE;
     }
 
 }

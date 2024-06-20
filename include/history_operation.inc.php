@@ -24,7 +24,7 @@
  * \file
  *
  *
- * \brief
+ * \brief display history of accountant , and let search into
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');

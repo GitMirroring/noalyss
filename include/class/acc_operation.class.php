@@ -53,6 +53,13 @@ class Acc_Operation
     //!< internal code from jrn
     var $jr_internal;
     var $signature;
+    var $desc;
+    var $type;
+    var $jrnx_id;
+    var $echeance;
+    var $pj;
+    var $mt;
+    var $f_id;
     /*!
      * \brief constructor set automatically the attributes user and periode
      * \param $p_cn the databse connection

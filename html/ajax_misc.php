@@ -567,6 +567,8 @@ EOF;
                 }else {
                     
                     $Res = $cn->exec_sql("select * from v_tva_rate 
+                                where
+                        tva_purchase <> '#' and tva_sale <> '#'
                             order by tva_rate desc");
                 }
 		$Max = Database::num_row($Res);
@@ -575,6 +577,7 @@ EOF;
 		$r.='<div >';
                 $r.=_('Cherche')." ".HtmlInput::filter_table("tva_select_table",'0,1,2,3' , 1);
 		$r.= '<TABLE class="sortable" style="width:100%" id="tva_select_table">';
+		$r.=th(_('id'));
 		$r.=th(_('code'));
 		$r.=th(_('Taux'),'class="sorttable_sorted_reverse"');
 		$r.=th(_('Symbole'));
@@ -609,6 +612,7 @@ EOF;
 			$class=($i%2 == 0)?' class="odd" ':' class="even" ';
 			$r.='<tr'.$class. $script.' style="cursor : pointer">';
 			$r.=td($row['tva_id']);
+			$r.=td($row['tva_code']);
 			$r.=td($row['tva_rate']);
 			$r.=td($row['tva_label']);
 			$r.=td($row['tva_comment']);
