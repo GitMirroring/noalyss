@@ -1487,7 +1487,7 @@ EOF;
             $W1->label = "";
             $W1->name = "e_march" . $i;
             $W1->value = $march;
-            $W1->table = 1;
+            $W1->table = 0;
             $W1->set_attribute('typecard', 'cred');            
             $W1->set_dblclick("fill_ipopcard(this);");
             $W1->set_attribute('ipopup', 'ipopcard');

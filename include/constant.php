@@ -100,6 +100,8 @@ $g_failed = "<span style=\"font-size:18px;color:red\">&#x2716;</span>";
 $g_succeed = "<span style=\"font-size:18px;color:green\">&#x2713;</span>";
 define('SMALLX', '#xe816;');
 define('BUTTONADD', "&#10010;");
+define('ICON_SEARCH', '&#x1F50E;');
+define('ICON_CLEAN', '&#x2715;');
 
 // If noalyss_version is not defined it is likely directly taken from
 // git and so this variable is not set, this cause some issue

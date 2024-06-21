@@ -129,6 +129,7 @@ if ( isset($_SESSION[SESSION_KEY.'isValid']) && $_SESSION[SESSION_KEY.'isValid']
 
 
     $name=$array[0]['vw_name'];
+    // use for followup
     $sell=(isNumber($array[0]['vw_sell']) == 1) ? $array[0]['vw_sell'] : 0 ;
     $buy=(isNumber($array[0]['vw_buy']) == 1) ?$array[0]['vw_buy']:0;
     

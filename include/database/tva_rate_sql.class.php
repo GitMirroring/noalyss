@@ -50,6 +50,7 @@ class Tva_Rate_SQL extends Table_Data_SQL
             , "tva_both_side"=>"tva_both_side"
             ,"tva_payment_purchase"=>"tva_payment_purchase"
             ,"tva_payment_sale"=>"tva_payment_sale"
+            ,"tva_code"=>"tva_code"
         );
         /*
          * Type of columns
@@ -63,7 +64,7 @@ class Tva_Rate_SQL extends Table_Data_SQL
             , "tva_both_side"=>"numeric"
             ,"tva_payment_purchase"=>"text"
             ,"tva_payment_sale"=>"text"
-
+            ,"tva_code"=>"text"
         );
 
 

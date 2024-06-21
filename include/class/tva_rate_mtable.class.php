@@ -226,6 +226,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $tva_rate=new Tva_rate_SQL($cn);
         $tva_rate->setp("tva_id",$new_tva_id);
         $tva_rate->setp("tva_rate", $this->table->tva_rate);
+        $tva_rate->setp("tva_code", $this->table->tva_code);
         $tva_rate->setp("tva_label", $this->table->tva_label);
         $tva_rate->setp("tva_comment", $this->table->tva_comment);
         $tva_rate->setp("tva_both_side", $this->table->tva_both_side);
@@ -335,6 +336,9 @@ class Tva_Rate_MTable extends Manage_Table_SQL
 
         if (strlen($this->table->tva_code)>5){
             $this->set_error("tva_code", _("code tva : Maximum 5 caractères"));
+        }
+        if (isNumber($this->table->tva_code) == 1){
+            $this->set_error("tva_code", _("code tva : doit aussi contenir des lettres"));
         }
         if ($this->count_error()!=0)
             return false;
