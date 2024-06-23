@@ -322,7 +322,7 @@ class Tax_Summary
         $sql=$this->build_sql_sale(TRUE);
         $sql.=" 
                     select jrn_def_name,
-                        tva_label ,
+                        tva_code ||' ('||tva_rate.tva_label||')' tva_label,
                         qs_vat_code,
                         tva_rate,
                         tva_both_side,
@@ -334,7 +334,7 @@ class Tax_Summary
                         detail_tva 
                         join tva_rate on (tva_rate.tva_id=qs_vat_code)
                         join jrn_def on (jrn_def.jrn_def_id=j_jrn_def)
-                    order by jrn_def_name,tva_label";
+                    order by jrn_def_name, tva_code ||' ('||tva_rate.tva_label||')'";
                 
         $array=$this->db->get_array($sql, [$this->date_start, $this->date_end]);
         return $array;
@@ -348,7 +348,7 @@ class Tax_Summary
     {
       $sql=$this->build_sql_purchase(TRUE)."
                 select jrn_def_name,
-                    tva_label ,
+                     tva_code ||' ('||tva_rate.tva_label||')' tva_label,
                     tva_rate,
                     tva_both_side,
                     qp_vat_code,
@@ -363,7 +363,7 @@ class Tax_Summary
                     detail_tva 
                     join tva_rate on (tva_rate.tva_id=qp_vat_code)
                     join jrn_def on (jrn_def.jrn_def_id=j_jrn_def)
-                order by jrn_def_name,tva_label";
+                order by jrn_def_name, tva_code ||' ('||tva_rate.tva_label||')'";
         $array=$this->db->get_array($sql, [$this->date_start, $this->date_end]);
         return $array;
     }
@@ -375,7 +375,7 @@ class Tax_Summary
     {
         $sql=$this->build_sql_sale(FALSE);
         $sql.="select 
-                    tva_label ,
+                     tva_code ||' ('||tva_rate.tva_label||')' tva_label,
                     qs_vat_code,
                     tva_rate,
                     tva_both_side,
@@ -386,7 +386,7 @@ class Tax_Summary
                 from
                     detail_tva 
                     join tva_rate on (tva_rate.tva_id=qs_vat_code)
-                    order by tva_label";
+                    order by  tva_code ||' ('||tva_rate.tva_label||')'";
         $array=$this->db->get_array($sql, [$this->date_start, $this->date_end]);
         return $array;
     }
@@ -399,7 +399,7 @@ class Tax_Summary
         
         $sql=$this->build_sql_purchase(FALSE)."
                 select 
-                    tva_label ,
+                     tva_code ||' ('||tva_rate.tva_label||')' tva_label,
                     tva_rate,
                     tva_both_side,
                     qp_vat_code,
@@ -413,7 +413,7 @@ class Tax_Summary
                 from
                     detail_tva 
                     join tva_rate on (tva_rate.tva_id=qp_vat_code)
-                order by tva_label";
+                order by  tva_code ||' ('||tva_rate.tva_label||')'";
         $array=$this->db->get_array($sql, [$this->date_start, $this->date_end]);
 
         return $array;
