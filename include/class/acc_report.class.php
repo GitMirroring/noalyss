@@ -35,6 +35,8 @@ class Acc_Report
     private $form_definition; /*!< form_definition_sql */
     var $row;
     var $nb;
+    var $id;
+    var $name;
     /*!
     \brief  Constructor
  */
