@@ -541,9 +541,9 @@ function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link"
     // direction Vertical
     if ($p_dir == 'V')
     { 
-        $ret .= "<ul class=\"$p_extra \"  flex-row>";
+        $ret .= "<ul class=\"$p_extra noprint \"  flex-row>";
     } else {
-        $ret .= "<ul class=\"$p_extra \" >";
+        $ret .= "<ul class=\"$p_extra noprint \" >";
        
     }
     
