@@ -2874,7 +2874,7 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * display screen to enter a new ledger
+     * @brief display FORM  to enter parameters to create a new ledger.
      */
     function input_new()
     {

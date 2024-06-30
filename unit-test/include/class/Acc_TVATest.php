@@ -88,7 +88,7 @@ class Acc_TVATest extends TestCase
          return array(
              ['abc',true]
              ,['13A',true]
-             ,['1',true]
+             ,['1',false]
              ,['1-A',false]
              ,['+a',false]
              ,['abcdefg',false]
@@ -96,7 +96,7 @@ class Acc_TVATest extends TestCase
     }
 
     /**
-     * @testdox check TVA_CODE value
+     * @testdox check TVA_CODE value must constains digit and letter
      * @dataProvider dataCheck
      * @return void
      */
