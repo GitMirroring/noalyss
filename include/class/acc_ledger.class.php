@@ -223,6 +223,7 @@ class Acc_Ledger  extends jrn_def_sql
     function reverse($p_date,$p_label)
     {
         global $g_user;
+        global $g_parameter;
         try
         {
             $this->db->start();
@@ -282,6 +283,8 @@ class Acc_Ledger  extends jrn_def_sql
             //////////////////////////////////////////////////
             $a_jid=$this->db->get_array("select j_id,j_debit from jrnx where j_grpt=$1",
                     array($this->jr_grpt_id));
+            $anc_group_id=0;
+            // for each item in JRNX
             for ($l=0; $l<count($a_jid); $l++)
             {
                 // jrnx.j_id to reverse
@@ -350,9 +353,40 @@ class Acc_Ledger  extends jrn_def_sql
                             select $j_id,pcm_val,ac_id from jrn_tax where j_id=$1 returning jt_id",
                     [$row]);
 
+                // if we use analytic , extourne also in operation_analytic
+                if ($g_parameter->MY_ANALYTIC != 'nu') {
+                    // if there is the first operation_analytic to insert , compute the group_id (operation_analytic.oa_group)
+                    if ($anc_group_id == 0 ) $anc_group_id=$this->db->get_next_seq('s_oa_group');
+                    $this->db->exec_sql("
+           insert into operation_analytique (po_id,oa_amount
+                    ,oa_description
+                    ,oa_debit
+                    ,j_id
+                    , oa_date
+                    , oa_row
+                    , oa_positive
+                    , f_id
+                    ,oa_jrnx_id_source
+                    ,oa_group) 
+                select po_id
+                     ,oa_amount
+                     ,oa_description
+                     ,case oa_debit when true then false else true end 
+                     , $j_id
+                     ,  to_date($2,'DD.MM.YYYY')
+                     , oa_row
+                     , oa_positive
+                     , f_id
+                     ,oa_jrnx_id_source
+                     ,$anc_group_id from operation_analytique 
+                            where 
+                                j_id=$1
+                    ",[$row, $p_date]);
+
+                }
 
 
-            }
+            } // end for each item in JRNX
             $old_receipt=$this->db->get_row("select jr_pj_number,jr_def_id from jrn where jr_id=$1",[$this->jr_id]);
             $sql="insert into jrn (
               jr_id,
@@ -426,6 +460,10 @@ class Acc_Ledger  extends jrn_def_sql
             {
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));
             }
+            /**
+             * reverse also in analytic account;
+             */
+
             $this->db->commit();
         }
         catch (Exception $e)
