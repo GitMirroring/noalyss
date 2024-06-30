@@ -115,7 +115,7 @@ if ( isset($_SESSION[SESSION_KEY.'isValid']) && $_SESSION[SESSION_KEY.'isValid']
         $filter_card=$d;
         $filter_card=noalyss_str_replace('[sql]','',$d);
     }
-    $sql="select vw_name,vw_first_name,vw_addr,vw_cp,vw_buy,vw_sell,tva_id
+    $sql="select vw_name,vw_first_name,vw_addr,vw_cp,vw_buy,vw_sell,tva_id,tva_code
          from vw_fiche_attr
          where quick_code=upper($1)". $filter_card;
 
@@ -133,7 +133,7 @@ if ( isset($_SESSION[SESSION_KEY.'isValid']) && $_SESSION[SESSION_KEY.'isValid']
     $sell=(isNumber($array[0]['vw_sell']) == 1) ? $array[0]['vw_sell'] : 0 ;
     $buy=(isNumber($array[0]['vw_buy']) == 1) ?$array[0]['vw_buy']:0;
     
-    $tva_id=$array[0]['tva_id'];
+    $tva_id=(empty($array[0]['tva_id']))?$array[0]['tva_code']:$array[0]['tva_id'];
 
     // Check null
     $name=($name==null)?" ":noalyss_str_replace('"','',$name);

@@ -4,9 +4,9 @@ update menu_ref set me_menu='Navigateur &#x1F9ED;' where me_code ~ 'NAVI';
 update menu_ref set me_menu='Configuration &#x1F527;' where me_code='CFG';
 
 
-ALTER TABLE public.tva_rate ADD CONSTRAINT tva_code_number_check CHECK (isnumeric(tva_code) = false);
+ALTER TABLE public.tva_rate ADD CONSTRAINT tva_code_number_check CHECK (tva_code::text !~ '^([0-9]+)$');
 
-drop view if exists  public.vw_fiche_attr;
+-- drop view if exists  public.vw_fiche_attr;
 
 CREATE OR REPLACE VIEW public.vw_fiche_attr
 AS SELECT a.f_id,

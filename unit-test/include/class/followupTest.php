@@ -150,8 +150,6 @@ class FollowupTest extends TestCase
     {
         global $g_user;
         $g_user=new Noalyss_User($this->connection);
-        $array_search=
-
         $query=Follow_Up::create_query($this->connection,array(
             "ag_dest_query" => "-2",
             "qcode" => "CLIENT1",
