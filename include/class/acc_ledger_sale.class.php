@@ -1064,9 +1064,9 @@ if ( $g_parameter->MY_TVA_USE=="Y")        {
         </td>
        </tr>
 EOF;
-      $sql_currency=new Currency_SQL($this->cn,$p_currency_code);
-      $iso_code=$sql_currency->getp("cr_code_iso");
         if ($p_currency_code !=0) {
+          $sql_currency=new Currency_SQL($this->cn,0);
+          $iso_code=$sql_currency->getp("cr_code_iso");
 
     $r.=<<<EOF
     <tr class="highlight">

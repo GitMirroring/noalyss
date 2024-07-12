@@ -121,8 +121,9 @@ class Acc_Reconciliation
                 ==0)
         {
             // Ok we can insert
-            $Res=$this->db->exec_sql("insert into jrn_rapt(jr_id,jra_concerned) values ".
-                                    "(".$this->jr_id.",$jr_id2)");
+            $Res=$this->db->exec_sql("insert into jrn_rapt(jr_id,jra_concerned) values ($1,$2)",
+                                        array($this->jr_id,$jr_id2)
+                                    );
             // try to letter automatically same account from both operation
             $this->auto_letter($jr_id2);
             

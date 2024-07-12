@@ -161,20 +161,23 @@ class Lettering
             return;
 
         // already linked
-        if ($let1!=0&&$let2!=0&&$let1!=$let2)
+     /*   if ($let1!=0&&$let2!=0&&$let1!=$let2)
             return;
-
+*/
         // none is linked
         if ($let1==0&&$let2==0)
         {
             $jl_id=$this->db->get_next_seq("jnt_letter_jl_id_seq");
             $this->db->exec_sql('insert into jnt_letter(jl_id) values($1)', array($jl_id));
-        }
-        // one is linked but not the other
-        if ($let1==0&&$let2!=0)
+        } elseif ($let1==0&&$let2!=0)
+        {
+            // one is linked but not the other
             $jl_id=$let2;
-        if ($let1!=0&&$let2==0)
+        }elseif  ($let1!=0&&$let2==0) {
             $jl_id=$let1;
+        } else {
+            throw new \Exception ("LET179 invalid");
+        }
 
         /* insert */
         if ($first=='t')

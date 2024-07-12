@@ -439,7 +439,7 @@ class Acc_Ledger  extends jrn_def_sql
 
             // Add a "concerned operation to bound these op.together
             //
-        $rec=new Acc_Reconciliation($this->db);
+            $rec=new Acc_Reconciliation($this->db);
             $rec->set_jr_id($seq);
             $rec->insert($this->jr_id);
 
@@ -449,13 +449,11 @@ class Acc_Ledger  extends jrn_def_sql
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));
             }
 
-
-
             // the table stock must updated
             // also in the stock table
             $sql="delete from stock_goods where sg_id = any ( select sg_id
-             from stock_goods natural join jrnx  where j_grpt=".$this->jr_grpt_id.")";
-            $Res=$this->db->exec_sql($sql);
+             from stock_goods natural join jrnx  where j_grpt=$1)";
+            $Res=$this->db->exec_sql($sql,array($this->jr_grpt_id));
             if ($Res==false)
             {
                 throw (new Exception(__FILE__.__LINE__."SQL ERROR [ $sql ]"));

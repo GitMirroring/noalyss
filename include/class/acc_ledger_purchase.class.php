@@ -1804,6 +1804,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 </tr>
 EOF;
     if ($p_currency_code !=0) {
+        $sql_currency=new Currency_SQL($this->cn,0);
+        $iso_code=$sql_currency->getp("cr_code_iso");
         $rate=_("Taux ");
 $r.=<<<EOF
 <tr class="highlight">
@@ -1818,7 +1820,7 @@ $r.=<<<EOF
         {$rate} {$p_currency_rate}
     </td>
     <td class="num">
-        {$tot_eur}  EUR
+        {$tot_eur}  {$iso_code}
     </td>
 </tr>
 EOF;
