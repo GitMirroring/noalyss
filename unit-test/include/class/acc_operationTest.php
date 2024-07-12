@@ -134,7 +134,9 @@ class Acc_OperationTest extends TestCase
     function testForm_clone_operation_sale()
     {
         global $g_connection;
+        //-----------------------------------
         // use  jr_id=160 : 5 rows
+        //-----------------------------------
         $duplicate = new Acc_Operation($g_connection);
         $duplicate->jr_id=160;
         ob_start();
@@ -142,8 +144,10 @@ class Acc_OperationTest extends TestCase
         $result=$duplicate->form_clone_operation("test");
         ob_end_clean();
 
-        $this->assertTrue(stripos($result,'<input type="hidden" id="nb_item" name="nb_item" value="5">')>0, "sale : HTML doesn't contain nb_item = 5");
+        $this->assertTrue(stripos($result,'<input type="hidden" id="nb_item" name="nb_item" value="5">')>0, "jr_id = ".$duplicate->jr_id." sale : HTML doesnt contain nb_item = 5");
+        //-----------------------------------
         // use  jr_id=910 : 1 rows
+        //-----------------------------------
         $duplicate = new Acc_Operation($g_connection);
         $duplicate->jr_id=910;
         ob_start();
@@ -152,9 +156,11 @@ class Acc_OperationTest extends TestCase
         $this->assertStringContainsString(strtoupper('<input type="hidden" id="nb_item" name="nb_item" value="1">'), strtoupper($result));
         $this->assertStringContainsString(
             strtoupper('<input type="hidden" id="e_march0" name="e_march0" value="DEPLAC">')
-            ,strtoupper($result));
+            ,strtoupper($result),"jr_id = ".$duplicate->jr_id."");
 
+        //-----------------------------------
         // use jr_id=659 VAT_SIDED
+        //-----------------------------------
         $duplicate = new Acc_Operation($g_connection);
         $duplicate->jr_id=659;
         ob_start();
@@ -162,14 +168,31 @@ class Acc_OperationTest extends TestCase
         ob_end_clean();
         $this->assertStringContainsString(
             strtoupper('<input type="hidden" id="e_march0_tva_id" name="e_march0_tva_id" value="5">')
-            , strtoupper($result));
+            , strtoupper($result),"jr_id = ".$duplicate->jr_id."");
         $this->assertStringContainsString(
         strtoupper('<input type="hidden" id="e_march0_tva_amount" name="e_march0_tva_amount" value="0">')
-            , strtoupper($result));
+            , strtoupper($result),"jr_id = ".$duplicate->jr_id."");
         $this->assertStringContainsString(
-            strtoupper( '<input type="hidden" id="e_march1_tva_amount" name="e_march1_tva_amount" value="17.3500">')
-            , strtoupper($result));
+            strtoupper( '<input type="hidden" id="e_march1_tva_amount" name="e_march1_tva_amount" value="88.392500">')
+            , strtoupper($result),"jr_id = ".$duplicate->jr_id."");
 
+        //-----------------------------------
+        // use jr_id=in another currency
+        //-----------------------------------
+        $duplicate = new Acc_Operation($g_connection);
+        $duplicate->jr_id=657;
+        ob_start();
+        $result=$duplicate->form_clone_operation("test");
+        ob_end_clean();
+        $this->assertStringContainsString(
+            strtoupper('<input type="hidden" id="p_currency_code" name="p_currency_code" value="1">')
+            , strtoupper($result),"jr_id = ".$duplicate->jr_id."");
+        $this->assertStringContainsString(
+            strtoupper('<input type="hidden" id="p_currency_rate" name="p_currency_rate" value="1.090000">')
+            , strtoupper($result),"jr_id = ".$duplicate->jr_id."");
+        $this->assertStringContainsString(
+            strtoupper( '<input type="hidden" id="e_march0_price" name="e_march0_price" value="20.000000">')
+            , strtoupper($result),"jr_id = ".$duplicate->jr_id."");
     }
 
     /**
@@ -178,7 +201,9 @@ class Acc_OperationTest extends TestCase
      */
     function testForm_clone_operation_purchase()
     { global $g_connection;
+        //-----------------------------------
         // use jr_id 158 4 rows
+        //-----------------------------------
         $duplicate = new Acc_Operation($g_connection);
         $duplicate->jr_id=158;
         ob_start();
@@ -196,8 +221,9 @@ class Acc_OperationTest extends TestCase
         $this->assertStringContainsString(
             strtoupper('<input type="hidden" id="e_march3" name="e_march3" value="DOCUME">')
             ,strtoupper($result));
-
+        //-----------------------------------
         // use jr_id 680 VAT_SIDED
+        //-----------------------------------
         $duplicate = new Acc_Operation($g_connection);
         $duplicate->jr_id=680;
         ob_start();
@@ -213,6 +239,23 @@ class Acc_OperationTest extends TestCase
         $this->assertStringContainsString(
             strtoupper('<input type="hidden" id="e_march1_tva_id" name="e_march1_tva_id" value="4">'),$result);
 
+        //-----------------------------------
+        // use jr_id=in another currency
+        //-----------------------------------
+        $duplicate = new Acc_Operation($g_connection);
+        $duplicate->jr_id=683;
+        ob_start();
+        $result=$duplicate->form_clone_operation("test");
+        ob_end_clean();
+        $this->assertStringContainsString(
+            strtoupper('<input type="hidden" id="p_currency_code" name="p_currency_code" value="1">')
+            , strtoupper($result));
+        $this->assertStringContainsString(
+            strtoupper('<input type="hidden" id="p_currency_rate" name="p_currency_rate" value="1.090000">')
+            , strtoupper($result));
+        $this->assertStringContainsString(
+            strtoupper( '<INPUT TYPE="HIDDEN" ID="E_MARCH0_PRICE" NAME="E_MARCH0_PRICE" VALUE="18.250000">')
+            , strtoupper($result));
     }
     /**
      * @testDox Test form_clone_operation MISC OP
@@ -252,6 +295,20 @@ class Acc_OperationTest extends TestCase
 
         $this->assertStringContainsString(
             strtoupper('<input type="hidden" id="e_other0_amount" name="e_other0_amount" value="3500.7800">')       ,
+            $result);
+        //-----------------------------------
+        // use jr_id=in another currency
+        //----------------------------------
+        $duplicate->jr_id=658;
+        ob_start();
+
+        $result=strtoupper($duplicate->form_clone_operation("test"));
+        ob_end_clean();
+        $this->assertStringContainsString(
+            strtoupper('<input type="hidden" id="e_other0_amount" name="e_other0_amount" value="146.950000">')       ,
+            $result);
+        $this->assertStringContainsString(
+            strtoupper('<INPUT TYPE="HIDDEN" ID="P_CURRENCY_RATE" NAME="P_CURRENCY_RATE" VALUE="1.090000">')       ,
             $result);
     }
 
