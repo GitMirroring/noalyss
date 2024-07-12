@@ -108,8 +108,14 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
         $fiche = new Fiche($this->db);
         $fiche->get_by_qcode($e_client);
+
+        if ($fiche->get_f_enable() == '0')
+            throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"),$e_client), 50);
+
         if ($fiche->empty_attribute(ATTR_DEF_ACCOUNT) == true)
             throw new Exception(_('La fiche ') . $e_client . _('n\'a pas de poste comptable'), 8);
+
+
 
         /* get the account and explode if necessary */
         $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
@@ -142,14 +148,19 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         for ($i = 0; $i < $nb_item; $i++) {
             if (! isset (${'e_march' . $i}) || noalyss_strlentrim(${'e_march' . $i}) == 0)
                 continue;
+            /* check if all card has a ATTR_DEF_ACCOUNT */
+            $fiche = new Fiche($this->db);
+            $fiche->get_by_qcode(${'e_march' . $i});
+            if ($fiche->get_f_enable() == '0')
+                throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"), ${'e_march' . $i}), 50);
+
+
             /* check if amount are numeric and */
             if (isNumber(${'e_march' . $i . '_price'}) == 0)
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('a un montant invalide [') . ${'e_march' . $i} . ']', 6);
             if (isNumber(${'e_quant' . $i}) == 0) 
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('a une quantité invalide [') . ${'e_quant' . $i} . ']', 7);
-            /* check if all card has a ATTR_DEF_ACCOUNT */
-            $fiche = new Fiche($this->db);
-            $fiche->get_by_qcode(${'e_march' . $i});
+
             if ($fiche->empty_attribute(ATTR_DEF_ACCOUNT) == true)
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('n\'a pas de poste comptable'), 8);
 

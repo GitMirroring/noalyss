@@ -1295,7 +1295,11 @@ class Acc_Ledger  extends jrn_def_sql
             if (isset(${'qc_'.$i})&&trim(${'qc_'.$i})!="")
             {
                 $f=new Fiche($this->db);
+                $f->get_by_qcode(${'qc_'.$i});
                 $f->quick_code=${'qc_'.$i};
+
+                if ($f->get_f_enable() == '0')
+                    throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"),${'qc_'.$i}), 50);
                 if ($f->belong_ledger($p_jrn) < 1 )
                     throw new Exception("La fiche quick_code = ".
                     $f->quick_code." n'est pas dans ce journal", 4);

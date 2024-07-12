@@ -111,9 +111,13 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         /* check the account */
         $fiche=new Fiche($this->db);
         $fiche->get_by_qcode($e_client);
+        if ($fiche->get_f_enable() == '0')
+            throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"),$e_client), 50);
 
         if ( $fiche->empty_attribute(ATTR_DEF_ACCOUNT) == true)
             throw new Exception(_('La fiche ').$e_client._('n\'a pas de poste comptable'),8);
+
+
 
         /* get the account and explode if necessary */
         $sposte=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
@@ -158,6 +162,13 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         for ($i=0;$i< $nb_item;$i++)
         {
             if ( noalyss_strlentrim(${'e_march'.$i})== 0) continue;
+
+            /* check if all card has a ATTR_DEF_ACCOUNT*/
+            $fiche=new Fiche($this->db);
+            $fiche->get_by_qcode(${'e_march'.$i});
+            if ($fiche->get_f_enable() == '0')
+                throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"), ${'e_march' . $i}), 50);
+
             /* check if amount are numeric and */
             if ( isNumber(${'e_march'.$i.'_price'}) == 0 )
                 throw new Exception(_('La fiche ').${'e_march'.$i}._('a un montant invalide').' ['.${'e_march'.$i}.']',6);
@@ -181,9 +192,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                      throw new Exception(_(" La TVA ".$tva_rate->tva_label." utilise des postes comptables inexistants"));
 
             }
-            /* check if all card has a ATTR_DEF_ACCOUNT*/
-            $fiche=new Fiche($this->db);
-            $fiche->get_by_qcode(${'e_march'.$i});
+
             if ( $fiche->empty_attribute(ATTR_DEF_ACCOUNT) == true)
                 throw new Exception(_('La fiche ').${'e_march'.$i}._('n\'a pas de poste comptable'),8);
 

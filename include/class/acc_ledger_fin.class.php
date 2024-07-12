@@ -133,6 +133,11 @@ class Acc_Ledger_Fin extends Acc_Ledger
         {
             if (noalyss_strlentrim(${'e_other'.$i})==0)
                 continue;
+            /* check if all card has a ATTR_DEF_ACCOUNT */
+            $fiche=new Fiche($this->db);
+            $fiche->get_by_qcode(${'e_other'.$i});
+            if ($fiche->get_f_enable() == '0')
+                throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"),${'e_other'.$i}), 50);
             /* check if amount are numeric and */
             if (isNumber(${'e_other'.$i.'_amount'})==0)
                 throw new Exception('La fiche '.${'e_other'.$i}.'a un montant invalide ['.${'e_other'.$i.'_amount'}.']',
@@ -140,9 +145,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
             /* compute the total */
             $tot_amount+=round(${'e_other'.$i.'_amount'}, 2);
-            /* check if all card has a ATTR_DEF_ACCOUNT */
-            $fiche=new Fiche($this->db);
-            $fiche->get_by_qcode(${'e_other'.$i});
+
             if ($fiche->empty_attribute(ATTR_DEF_ACCOUNT)==true)
                 throw new Exception('La fiche '.${'e_other'.$i}.'n\'a pas de poste comptable', 8);
 
