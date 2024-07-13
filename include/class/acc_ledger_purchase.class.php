@@ -1812,29 +1812,32 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
     </td>
 </tr>
 EOF;
-    if ($p_currency_code !=0) {
-        $sql_currency=new Currency_SQL($this->cn,0);
-        $iso_code=$sql_currency->getp("cr_code_iso");
-        $rate=_("Taux ");
-$r.=<<<EOF
-<tr class="highlight">
-    {$decalage}            
-     <td>
-                
-     </td>
-    <td class="num">
-        
-    </td>
-    <td class="num">
-        {$rate} {$p_currency_rate}
-    </td>
-    <td class="num">
-        {$tot_eur}  {$iso_code}
-    </td>
-</tr>
-EOF;
+        if ($p_currency_code !=0) {
+            $sql_currency=new Currency_SQL($this->cn,0);
+            $iso_code=$sql_currency->getp("cr_code_iso");
+            $rate=_("Taux ");
+    $r.=<<<EOF
+    <tr class="highlight">
+        {$decalage}            
+         <td>
+                    
+         </td>
+        <td class="num">
+            
+        </td>
+        <td class="num">
+            {$rate} {$p_currency_rate}
+        </td>
+        <td class="num">
+            {$tot_eur}  {$iso_code}
+        </td>
+    </tr>
+    EOF;
         } // if ($p_currency_code !=0
-        }else { // if $g_parameter->MY_TVA_USE=='Y'
+    }else // if $g_parameter->MY_TVA_USE=='Y'
+    {
+            $sql_currency=new Currency_SQL($this->cn,0);
+            $iso_code=$sql_currency->getp("cr_code_iso");
         $r.=<<<EOF
 <tr class="highlight">
     {$decalage}            
@@ -1860,7 +1863,7 @@ EOF;
     <td>
     </td>
     <td class="num">
-        {$tot_str} {$str_code}
+        {$tot_str} {$iso_code}
     </td>
 </tr>
 EOF;

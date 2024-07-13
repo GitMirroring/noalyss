@@ -1100,7 +1100,9 @@ EOF;
 
         } else {
     $sql_currency=new Currency_SQL($this->cn,$p_currency_code);
-    $iso_code=$sql_currency->getp("cr_code_iso");
+    $str_code=$sql_currency->getp("cr_code_iso");
+    $sql_currencydefault=new Currency_SQL($this->cn,0);
+    $iso_code=$sql_currencydefault->getp("cr_code_iso");
             // without VAT
             $r.=<<<EOF
     <tr class="highlight">
@@ -1115,7 +1117,7 @@ EOF;
 
         </td>
         <td class="num">
-            {$tot_str}
+            {$tot_str} {$str_code}
         </td>
             </tr>
     <tr class="highlight">
