@@ -3,6 +3,10 @@ update menu_ref set me_menu='Navigateur &#x1F9ED;' where me_code ~ 'NAVI';
 
 update menu_ref set me_menu='Configuration &#x1F527;' where me_code='CFG';
 
+update menu_ref set me_menu='Recherech  &#x1F50E;' where me_code='SEARCH';
+
+update menu_ref set me_menu='Agenda  &#x1f4c5;' where me_code='AGENDA';
+
 
 ALTER TABLE public.tva_rate ADD CONSTRAINT tva_code_number_check CHECK (tva_code::text !~ '^([0-9]+)$');
 
