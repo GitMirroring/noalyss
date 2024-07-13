@@ -953,11 +953,16 @@ EOF;
                 if (isset ($array["qc_" . $i]) && $array["qc_" . $i] != "") {
                     $array["poste" . $i] = "";
                 }
+
+            }
+            $idx=0;
+            foreach ($operation->det->array as $item) {
                 if ($operation->det->currency_id != 0) {
                     $array['amount'. $idx] = $item['oc_amount'];
                     $idx++;
                 }
             }
+
         }elseif ( $operation->signature==="ACH" || $operation->signature=="VEN") {
             $idx=0;
             foreach ($operation->det->array as $item) {
