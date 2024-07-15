@@ -143,6 +143,7 @@ class IDate extends HtmlInput
                  %s
                 />
                 <span  class="smallbutton icon"
+                style="color:cornflowerblue"
                 id="%s_trigger"
                 />
                 &#xe811;

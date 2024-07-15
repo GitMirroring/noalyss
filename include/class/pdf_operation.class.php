@@ -363,9 +363,9 @@ class PDF_Operation extends PDF {
         $width=25;
         $this->pdf->SetFillColor(220,221,255);
         for ($i = 0; $i<$nb; $i++) {
-             $this->pdf->write_cell($width,8,$pa_plan[$i]['pa_name'],1,"C",1);
+             $this->pdf->write_cell($width,8,$pa_plan[$i]['pa_name']);
         }
-        $this->pdf->write_cell($width,8,_('Montant'),1,"C",1);
+        $this->pdf->write_cell($width,8,_('Montant'),0,0,'R');
         $this->pdf->SetFillColor(0,0,0);
         $this->pdf->line_new(8);
     }
@@ -411,10 +411,10 @@ class PDF_Operation extends PDF {
             if ($old_row['oa_row']!=$current_row['oa_row']) {
                  if($idx_plan!=0) {
                      for ($e = $idx_plan; $e<$cnt_plan; $e++) 
-                    $this->pdf->write_cell($width, 8, "", 1, "C", 0);
+                    $this->pdf->write_cell($width, 8, "", 1,0, "c", 0);
                 }
                 // print last column
-                $this->pdf->write_cell($width, 8, nbm($old_row["signed_amount"],2), 1, "R", 0);
+                $this->pdf->write_cell($width, 8, nbm($old_row["signed_amount"],2), 1,0, "R", 0);
                 // Add to total
                 $tot_anc=  bcadd($tot_anc, $old_row["signed_amount"]);
                 // we start a new line 
@@ -423,17 +423,17 @@ class PDF_Operation extends PDF {
                 $idx_plan = 0;
             }
             if ($current_row['pa_id']==$pa_plan[$idx_plan]['pa_id']) {
-                    $this->pdf->write_cell($width, 8, $current_row['po_name'], 1, "L", 0);
+                    $this->pdf->write_cell($width, 8, $current_row['po_name'], 1,0, "L", 0);
             } else {
                 // print the post code in the right column
                 for ($e = $idx_plan; $e<$cnt_plan; $e++) {
                     if ($current_row['pa_id']==$pa_plan[$e]['pa_id']) {
-                        $this->pdf->write_cell($width, 8, $current_row['po_name'], 1, "L", 0);
+                        $this->pdf->write_cell($width, 8, $current_row['po_name'], 1, 0,"L", 0);
                         $idx_plan=$e;
                        // $idx_plan--;
                         break;
                     } else {
-                        $this->pdf->write_cell($width, 8, "", 1, "C", 0);
+                        $this->pdf->write_cell($width, 8, "", 1,0, "c", 0);
                     }
                 }
             }
@@ -444,9 +444,9 @@ class PDF_Operation extends PDF {
         // End
         // print last column
         if($idx_plan!=0) {
-             $this->pdf->write_cell($width, 8, "", 1, "C", 0);
+             $this->pdf->write_cell($width, 8, "", 1,0, "C", 0);
         }
-        $this->pdf->write_cell($width, 8,nbm($old_row["signed_amount"],2), 1, "R", 0);
+        $this->pdf->write_cell($width, 8,nbm($old_row["signed_amount"],2), 1, 0,"R", 0);
         $this->pdf->line_new(8);
        
         // Add to total
@@ -454,14 +454,14 @@ class PDF_Operation extends PDF {
         
         // Total
          $this->pdf->write_cell(40, 6,_("Comptabilité"));
-         $this->pdf->write_cell(40, 6,nbm($row_jrnx["j_montant"],2),"","R",0);
+         $this->pdf->write_cell(40, 6,nbm($row_jrnx["j_montant"],2),0,0,"r",0);
          $this->pdf->line_new();
          $this->pdf->write_cell(40, 6,_("Analytique"));
-         $this->pdf->write_cell(40, 6,nbm($tot_anc,2),"","R",0);
+         $this->pdf->write_cell(40, 6,nbm($tot_anc,2),0,0,"r",0);
          $this->pdf->line_new();
          
          $this->pdf->write_cell(40, 6,_("Diff"));
-         $this->pdf->write_cell(40, 6,nbm( bcsub($row_jrnx['j_montant'], $tot_anc),2),0,"R",0);
+         $this->pdf->write_cell(40, 6,nbm( bcsub($row_jrnx['j_montant'], $tot_anc),2),0,0,"R",0);
          $this->pdf->line_new();
     }
 

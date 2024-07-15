@@ -136,8 +136,8 @@ $a_detail=Database::fetch_all($det);
             <table style="width: 100%">
                 <tr>
                     <th><?=_("Item")?></th>
-                    <th class="num"><?=_("Prix Unit")?></th>
                     <th class="num"><?=_("Quantité")?></th>
+                    <th class="num"><?=_("Prix Unit")?></th>
                     <th class="num"><?=_("HTVA")?></th>
                     <th class="num"><?=_("TVA")?></th>
                     <th class="num"><?=_("Code TVA")?></th>

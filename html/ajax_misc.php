@@ -133,7 +133,7 @@ $html = var_export($_REQUEST, true);
 set_language();
 if ( LOGINPUT)
     {
-        $file_loginput=fopen($_ENV['TMP'].'/scenario-'.$_SERVER['REQUEST_TIME'].'.php','a+');
+        $file_loginput=fopen($_ENV['TMP'].'/scenario-ajax-'.$_SERVER['REQUEST_TIME'].'.php','a+');
         fwrite ($file_loginput,"<?php \n");
         fwrite ($file_loginput,'//@description:'.$op."\n");
         fwrite($file_loginput, '$_GET='.var_export($_GET,true));

@@ -266,7 +266,8 @@ EOF;
         return $sum;
     }
 
-    /*!\brief set the pj of a operation in jrn. the jr_id must be set
+    /*!
+     *\brief set the pj of a operation in jrn. the jr_id must be set
      *\note if the jr_id it fails
      */
     function set_pj()
@@ -394,7 +395,8 @@ EOF;
         $this->jr_internal= $l_line['jr_internal'];
         return $this->jr_internal;
     }
-    /*!\brief search an operation thankx it internal code
+    /*!
+     * \brief search an operation thankx it internal code
      * \param internal code
      * \return 0 ok -1 nok
      */
@@ -406,10 +408,11 @@ EOF;
         $this->jr_id=Database::fetch_result($res,0,0);
         return 0;
     }
-    /*!\brief retrieve data from jrnx
-      *\note the data are filtered by the access of the current user
-     * \return an array or FALSE if nothing found
-     */
+    /*!
+    * \brief retrieve data from jrnx
+    *\note the data are filtered by the access of the current user
+    * \return an array or FALSE if nothing found
+    */
     function get_jrnx_detail()
     {
         global $g_user;
@@ -848,8 +851,6 @@ EOF;
     }
     static function test_me()
     {
-        $_SESSION[SESSION_KEY.'g_user']=NOALYSS_ADMINISTRATOR;
-        $_SESSION[SESSION_KEY.'g_pass']='dany';
         global $g_user;
         $cn=Dossier::connect();
         $g_user=new Noalyss_user($cn);
@@ -881,7 +882,12 @@ EOF;
         return $type_operation;
     }
     /**
-     * @brief create a form to recreate the operation and returns it, just like a correct
+     * @brief create a form to recreate the operation and returns it,
+     * it works the same as when you want to correct an operation instead of confirming
+     *
+     * @see compta_ach.inc.php
+     * @see compta_ven.inc.php
+     *
      * @param $p_id string DOMID of the form
      */
     function form_clone_operation($p_id) {
@@ -903,12 +909,22 @@ EOF;
                 "ac"=>$a_code[0]['code'],"gDossier"=>Dossier::id()
         ]));
         $r.=Dossier::hidden();
+        $default_currency=new Acc_Currency($this->db,0);
         // select the menu where the operation will be duplicated
+
         $r.="<p>";
         $r.="<ul style=\"margin-left:2rem;padding-left:0;list-style:none;\">";
-        $r.=sprintf("<li>%s</li>",$operation->det->jr_pj_number);
-        $r.=sprintf("<li>%s</li>",$operation->det->jr_comment);
-        $r.=sprintf("<li>%s</li>",$operation->det->jr_montant);
+        $r.=sprintf("<li>%s %s</li>",_("Date"),$operation->det->jr_pj_number);
+        $r.=sprintf("<li>%s %s</li>",_("Libellé"),$operation->det->jr_comment);
+        $r.=sprintf("<li>%s %s %s</li>",_("Montant "),nbm($operation->det->jr_montant),$default_currency->get_code());
+        // Add info if the operation using a currency
+        if ( $operation->det->currency_id != 0 ) {
+            $currency=$this->db->get_value("select cr_code_iso from currency where id=$1",[$operation->det->currency_id]);
+            $r.=sprintf("<li>%s %s</li>",_('Devise'),$currency);
+            $r.=sprintf("<li>%s %s</li>",_("Taux"),$operation->det->currency_rate);
+            $array['p_currency_code']=$operation->det->currency_id;
+            $array['p_currency_rate']=$operation->det->currency_rate;
+        }
         $r.="</ul>";
         $r.="</p>";
         if (count($a_code) == 1 ) {
@@ -930,31 +946,57 @@ EOF;
         $r.="</p>";
       
         // For Misc Operation , if a card is given then there is no accounting
+        // modify amount with currency if not in default currency
         if ( $operation->signature==="ODS") {
             $nb_array = count($array);
             for ($i = 0; $i < $nb_array; $i++) {
                 if (isset ($array["qc_" . $i]) && $array["qc_" . $i] != "") {
                     $array["poste" . $i] = "";
                 }
-            }
-        }
 
-        if ( $operation->signature==="ACH" || $operation->signature=="VEN") {
+            }
             $idx=0;
             foreach ($operation->det->array as $item) {
+                if ($operation->det->currency_id != 0) {
+                    $array['amount'. $idx] = $item['oc_amount'];
+                    $idx++;
+                }
+            }
+
+        }elseif ( $operation->signature==="ACH" || $operation->signature=="VEN") {
+            $idx=0;
+            foreach ($operation->det->array as $item) {
+
+                // currency replace amount
+                if ($operation->det->currency_id != 0 ) {
+                    $array['e_march'.$idx.'_tva_amount']=$item['oc_vat_amount'];
+                    $array['e_march'.$idx.'_tva_amount']=$item['oc_amount'];
+                    $array['e_march'.$idx.'_price']=$item['oc_price_unit'];
+                }
+
                 if ( isset ($item['qs_vat_sided']) && $item['qs_vat_sided'] != 0 ) {
                     $array['e_march'.$idx.'_tva_amount']=0;
                 }elseif (isset ($item['qp_vat_sided']) && $item['qp_vat_sided'] != 0 ){
                     $array['e_march'.$idx.'_tva_amount']=0;
                 }
+
                 $idx++;
             }
-            if ( DEBUGNOALYSS>1) {
-                echo \Noalyss\Dbg::hidden_info("operation->det_array", $operation->det->array);
-                echo \Noalyss\Dbg::hidden_info("array", $array);
+        }elseif ($operation->signature=='FIN') {
+            $idx=0;
+            foreach ($operation->det->array as $item) {
+                if ($operation->det->currency_id != 0) {
+                    $array['e_other' . $idx . '_amount'] = $item['oc_amount'];
+                    $idx++;
+                }
             }
         }
 
+        if ( DEBUGNOALYSS>1) {
+            echo \Noalyss\Dbg::hidden_info("operation->det_array", $operation->det->array);
+            echo \Noalyss\Dbg::hidden_info("operation->det", $operation->det);
+            echo \Noalyss\Dbg::hidden_info("array", $array);
+        }
         // transform the operation into hidden element
         $r.=HtmlInput::simple_array_to_hidden($array);
         $r.=HtmlInput::hidden("e_comm",$operation->det->jr_comment);
@@ -1018,7 +1060,7 @@ class Acc_Detail extends Acc_Operation
         $array['e_ech']="";
         $array['p_jrn']=$this->det->jr_def_id;
         return $array;
-        
+
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -1041,10 +1083,30 @@ class Acc_Misc extends Acc_Detail
     function get()
     {
         parent::get();
-        $sql="SELECT j_id, j_date, j_montant, j_poste, j_grpt, j_rapt, j_jrn_def,
-             j_debit, j_text, j_centralized, j_internal, j_tech_user, j_tech_date,
-             j_tech_per, j_qcode,f_id
-             FROM jrnx where j_grpt = $1 order by j_debit desc,j_poste";
+        $sql="
+SELECT jx1.j_id
+	,jx1.j_date
+	,jx1.j_montant
+	,jx1.j_poste
+	,jx1.j_grpt
+	,jx1.j_rapt
+	,jx1.j_jrn_def
+	,jx1.j_debit
+	,jx1.j_text
+	,jx1.j_centralized
+	,jx1.j_internal
+	,jx1.j_tech_user
+	,jx1.j_tech_date
+	,jx1.j_tech_per
+	,jx1.j_qcode
+	,jx1.f_id
+	,oc1.oc_amount 
+	FROM jrnx jx1
+	left join operation_currency oc1 using(j_id)
+	where 
+	jx1.j_grpt = $1 
+	order by jx1.j_debit desc,jx1.j_poste
+";
         $this->det->array=$this->db->get_array($sql,array($this->det->jr_grpt_id));
     }
     /***
@@ -1090,13 +1152,33 @@ class Acc_Sold extends Acc_Detail
     function get()
     {
         parent::get();
-        $sql="SELECT qs_id, qs_internal, qs_fiche, qs_quantite, qs_price, qs_vat,
-             qs_vat_code, qs_client, qs_valid, j_id,j_text,qs_vat_sided , qs_unit , j_debit
-             FROM quant_sold  join jrnx using(j_id) where j_grpt=$1 order by j_id";
+        $sql="
+        select qs_id, qs_internal
+, jx1.j_id
+, qs1.qs_fiche
+, qs1.qs_quantite
+, qs1.qs_price
+, qs1.qs_vat
+, qs1.qs_vat_code
+, qs1.qs_client
+, qs1.qs_valid
+, jx1.j_text
+, qs_vat_sided
+, qs_unit 
+, jx1.j_debit
+,oc1.oc_amount
+,oc1.oc_vat_amount 
+,oc1.oc_price_unit 
+from quant_sold qs1
+join jrnx jx1	using(j_id)
+left join operation_currency oc1 using(j_id)
+where jx1.j_grpt = $1
+order by jx1.j_id;
+        ";
         $this->det->array=$this->db->get_array($sql,array($this->det->jr_grpt_id));
     }
     /***
-     * Compute an array for using with Acc_Ledger::insert
+     * @brief Compute an array for using with Acc_Ledger::insert
      * 
      */
     function compute_array()
@@ -1145,14 +1227,39 @@ class Acc_Purchase extends Acc_Detail
     function get()
     {
         parent::get();
-        $sql="SELECT qp_id, qp_internal, j_id, qp_fiche, qp_quantite, qp_price, qp_vat,
-             qp_vat_code, qp_nd_amount, qp_nd_tva, qp_nd_tva_recup, qp_supplier,
-             qp_valid, qp_dep_priv,j_text,qp_vat_sided,qp_unit , j_debit
-             FROM quant_purchase  join jrnx using(j_id) where j_grpt=$1  order by j_id";
+        $sql="
+        select qp_id, qp_internal
+, jx1.j_id
+, qp1.qp_fiche
+, qp1.qp_quantite
+, qp1.qp_price
+, qp1.qp_vat
+, qp1.qp_vat_code
+, qp1.qp_nd_amount
+, qp1.qp_nd_tva
+, qp1.qp_nd_tva_recup
+, qp1.qp_supplier
+, qp1.qp_valid
+, qp1.qp_dep_priv
+, jx1.j_text
+, qp1.qp_vat_sided
+, qp1.qp_unit 
+, jx1.j_debit
+,oc1.oc_amount
+,oc1.oc_vat_amount 
+,oc1.oc_price_unit 
+from quant_purchase qp1
+join jrnx jx1	using(j_id)
+left join operation_currency oc1 using(j_id)
+where jx1.j_grpt = $1
+order by jx1.j_id
+        ";
         $this->det->array=$this->db->get_array($sql,array($this->det->jr_grpt_id));
     }
+
+
      /***
-     * Compute an array for using with Acc_Ledger::insert
+     * @brief Compute an array for using with Acc_Ledger::insert
      * 
      */
     function compute_array()
@@ -1175,9 +1282,11 @@ class Acc_Purchase extends Acc_Detail
             $array["e_march".$i."_tva_id"]=$this->det->array[$i]['qp_vat_code'];
             $array["e_march".$i."_tva_amount"]=$this->det->array[$i]['qp_vat'];
             $array["e_quant".$i]=$this->det->array[$i]['qp_quantite'];
+
          }
          $array['correct']=1;
-        return $array;
+
+         return $array;
         
     }
     
@@ -1201,8 +1310,18 @@ class Acc_Fin extends Acc_Detail
     function get()
     {
         parent::get();
-        $sql="SELECT qf_id, qf_bank, jr_id, qf_other, qf_amount,j_id
-             FROM quant_fin where jr_id = $1";
+        $sql="SELECT qf_id
+                 ,qf_bank
+                 ,jr_id
+                 ,qf_other
+                 ,qf_amount,j_id
+                ,oc1.oc_amount
+                ,oc1.oc_vat_amount 
+                ,oc1.oc_price_unit 
+             FROM quant_fin
+        left      join operation_currency oc1 using(j_id)
+             where 
+                 jr_id = $1";
         $this->det->array=$this->db->get_array($sql,array($this->jr_id));
     }
      /***

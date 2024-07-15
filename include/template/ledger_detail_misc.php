@@ -210,8 +210,6 @@ $amount_idx=0; $sum_prod_currency=0;
 	$str_anc.=$anc_op->display_table(1,$q[$e]['j_montant'],$div);
         $str_anc.='</tr>';
 	$amount_idx++;
-      }  else {
-	$row.=td('');
       }
     }
     $class=($e%2==0)?' class="even"':'class="odd"';

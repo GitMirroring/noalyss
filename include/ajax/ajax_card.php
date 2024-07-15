@@ -530,9 +530,11 @@ case 'fs':
             $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
                                               $price,$amount);
         }
-        $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
-                                          $tvaid,$aFound[$i]['tva_id']);
-        $array[$i]['javascript'].="removeDiv('search_card');";
+        // if there is no TVA_ID in the view, it is possible we have a TVA_CODE
+       $tva_code=(empty($aFound[$i]['tva_id']))?$aFound[$i]['tva_code']:$aFound[$i]['tva_id'];
+         $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
+             $tvaid,$tva_code);
+         $array[$i]['javascript'].="removeDiv('search_card');";
 
     }//foreach
 

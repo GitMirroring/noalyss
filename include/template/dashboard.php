@@ -74,8 +74,10 @@ if ( $report != 0 ) : ?>
               $class=($ix%2==0)?' class="even" ':' class="odd" ';
           echo '<tr '.$class.'>';
 
-          echo '<td> '.$row['desc'].'</td>'.
-            '<td style="text-align:right">'.nbm($row['montant'])." &euro;</td>";
+          echo '<td> '.$row['desc'].'</td>';
+            $style='style="text-align:right;"';
+            if ($row['montant']<0) { $style='style="color:red;text-align:right;"';}
+            echo  "<td $style>".nbm($row['montant'])."</td>";
           echo '</tr>';
         }
         echo '</table>';

@@ -111,9 +111,13 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         /* check the account */
         $fiche=new Fiche($this->db);
         $fiche->get_by_qcode($e_client);
+        if ($fiche->get_f_enable() == '0')
+            throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"),$e_client), 50);
 
         if ( $fiche->empty_attribute(ATTR_DEF_ACCOUNT) == true)
             throw new Exception(_('La fiche ').$e_client._('n\'a pas de poste comptable'),8);
+
+
 
         /* get the account and explode if necessary */
         $sposte=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
@@ -158,6 +162,13 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         for ($i=0;$i< $nb_item;$i++)
         {
             if ( noalyss_strlentrim(${'e_march'.$i})== 0) continue;
+
+            /* check if all card has a ATTR_DEF_ACCOUNT*/
+            $fiche=new Fiche($this->db);
+            $fiche->get_by_qcode(${'e_march'.$i});
+            if ($fiche->get_f_enable() == '0')
+                throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"), ${'e_march' . $i}), 50);
+
             /* check if amount are numeric and */
             if ( isNumber(${'e_march'.$i.'_price'}) == 0 )
                 throw new Exception(_('La fiche ').${'e_march'.$i}._('a un montant invalide').' ['.${'e_march'.$i}.']',6);
@@ -181,9 +192,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                      throw new Exception(_(" La TVA ".$tva_rate->tva_label." utilise des postes comptables inexistants"));
 
             }
-            /* check if all card has a ATTR_DEF_ACCOUNT*/
-            $fiche=new Fiche($this->db);
-            $fiche->get_by_qcode(${'e_march'.$i});
+
             if ( $fiche->empty_attribute(ATTR_DEF_ACCOUNT) == true)
                 throw new Exception(_('La fiche ').${'e_march'.$i}._('n\'a pas de poste comptable'),8);
 
@@ -1366,7 +1375,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $W1->label="";
             $W1->name="e_march".$i;
             $W1->value=$march;
-            $W1->table=1;
+            $W1->table=0;
             $W1->set_dblclick("fill_ipopcard(this);");
             $W1->set_attribute('ipopup','ipopcard');
 
@@ -1803,27 +1812,32 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
     </td>
 </tr>
 EOF;
-    if ($p_currency_code !=0) {
-        $rate=_("Taux ");
-$r.=<<<EOF
-<tr class="highlight">
-    {$decalage}            
-     <td>
-                
-     </td>
-    <td class="num">
-        
-    </td>
-    <td class="num">
-        {$rate} {$p_currency_rate}
-    </td>
-    <td class="num">
-        {$tot_eur}  EUR
-    </td>
-</tr>
-EOF;
+        if ($p_currency_code !=0) {
+            $sql_currency=new Currency_SQL($this->cn,0);
+            $iso_code=$sql_currency->getp("cr_code_iso");
+            $rate=_("Taux ");
+    $r.=<<<EOF
+    <tr class="highlight">
+        {$decalage}            
+         <td>
+                    
+         </td>
+        <td class="num">
+            
+        </td>
+        <td class="num">
+            {$rate} {$p_currency_rate}
+        </td>
+        <td class="num">
+            {$tot_eur}  {$iso_code}
+        </td>
+    </tr>
+    EOF;
         } // if ($p_currency_code !=0
-        }else { // if $g_parameter->MY_TVA_USE=='Y'
+    }else // if $g_parameter->MY_TVA_USE=='Y'
+    {
+            $sql_currency=new Currency_SQL($this->cn,0);
+            $iso_code=$sql_currency->getp("cr_code_iso");
         $r.=<<<EOF
 <tr class="highlight">
     {$decalage}            
@@ -1849,7 +1863,7 @@ EOF;
     <td>
     </td>
     <td class="num">
-        {$tot_str} {$str_code}
+        {$tot_str} {$iso_code}
     </td>
 </tr>
 EOF;

@@ -18,9 +18,9 @@ class Acc_LedgerTest extends TestCase
         return $dataSet;
     }
     /**
-     * Get an operation
+     * @brief Get an operation
      * @global type $g_connection
-     * @return type20
+     * @return int
      */
     private function get_jrn_id($p_ledger='ODS')
     {
@@ -886,7 +886,10 @@ class Acc_LedgerTest extends TestCase
      */
     public function testInput_new()
     {
+        global $g_connection;
         put_global([["key"=>"ac","value"=>"ODS"]]);
+        $check_fichedef=$g_connection->get_value("select  count(*) from fiche_def");
+        $this->assertEquals(7, $check_fichedef,"too many fiche_def");
         ob_start();
         echo  \Noalyss\Facility::page_start();
 
@@ -896,7 +899,7 @@ class Acc_LedgerTest extends TestCase
         ob_end_clean();
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger-input_new.html", $result);
         $size=filesize(__DIR__."/file/acc_ledger-input_new.html");
-        $this->assertTrue($size == 16320 || $size == 15644 ," output input_new is not what it is expected");
+        $this->assertTrue($size == 15653  ," output input_new is not what it is expected");
 
     }
 
