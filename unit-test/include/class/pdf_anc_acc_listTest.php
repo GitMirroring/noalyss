@@ -157,7 +157,7 @@ EOF;
         $anc_acc_list->card_poste=4;
         $pdf_anc_acc=new PDF_Anc_Acc_List($anc_acc_list);
         $pdf_anc_acc->export_pdf()->Output(__DIR__."/file/pdf_anc_acc_list-activity-account.pdf","F");
-        $this->assertGreaterThan(76400,filesize(__DIR__."/file/pdf_anc_acc_list-activity-account.pdf"),
+        $this->assertGreaterThan(76500,filesize(__DIR__."/file/pdf_anc_acc_list-activity-account.pdf"),
                 __DIR__."/file/pdf_anc_acc_list-activity-account.pdf incorrect");
     }
 
