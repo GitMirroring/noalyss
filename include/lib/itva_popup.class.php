@@ -110,7 +110,9 @@ class ITva_Popup extends HtmlInput
         return $r;
 
     }
-    /*!\brief show the html  input of the widget*/
+    /*!
+    \brief show the html  input of the widget
+    */
     public function input($p_name = null, $p_value = null)
     {
         $this->name = ($p_name == null) ? $this->name : $p_name;
@@ -160,7 +162,7 @@ list="dl_tva_%s" autocomplete="off">';
     }
 
     /**
-     * Set a filter to limit the choice of VAT ;
+     *@brief Set a filter to limit the choice of VAT ;
      * possible values are :
      *         - sale  if there is an accounting for sale
      *         - purchase  if there is an accounting for purchase
