@@ -91,6 +91,7 @@ EOF;
 
 } else {
     $obj->status = 'NOK';
+    $obj->html=_('non valide');
 }
 
 echo json_response($obj);
