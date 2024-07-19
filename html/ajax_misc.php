@@ -36,13 +36,19 @@
  *
  */
 if ( ! defined('ALLOWED')) define ('ALLOWED',1);
-
 require_once '../include/constant.php';
 
 require_once NOALYSS_INCLUDE."/lib/ac_common.php";
 
 global $http;
 $http=new HttpInput();
+try {
+    $op= $http->request("op");
+    if ($op =='check_vatnumber') session_write_close();
+
+} catch (\Exception $e) {
+    exit();
+}
 
 /* we ask a dg box for disconnecting */
 if ($http->request('op',"string","") == 'disconnect') {
@@ -60,24 +66,12 @@ if ( ! isset($_SESSION[SESSION_KEY."g_user"])) {
 
 mb_internal_encoding("UTF-8");
 
-$var = array( 'op');
-$cont = 0;
-/*  check if mandatory parameters are given */
-foreach ($var as $v)
-{
-	if (!isset($_REQUEST [$v]))
-	{
-		echo "$v is not set ";
-		$cont = 1;
-	}
-}
-
 // If not connected to a folder
 if ( ! isset($_REQUEST['gDossier'])) {
     $gDossier=0;
 }
 
-if ($cont != 0) 	exit();
+
 
 extract($_REQUEST, EXTR_SKIP );
 
