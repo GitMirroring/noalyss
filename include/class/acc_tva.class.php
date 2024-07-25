@@ -61,6 +61,7 @@ class Acc_Tva
         $this->tva_comment=&$this->tva_rate_sql->tva_comment;
         $this->tva_poste=&$this->tva_rate_sql->tva_poste;
         $this->tva_both_side=&$this->tva_rate_sql->tva_both_side;
+        $this->tva_code=&$this->tva_rate_sql->tva_code;
 
     }
     /**
