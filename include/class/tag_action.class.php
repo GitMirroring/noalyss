@@ -40,7 +40,7 @@ class Tag_Action extends Tag
     }
 
     /**
-     * let select a tag to add
+     * @brief let select a tag to add
      */
     function select($p_prefix="")
     {
@@ -49,7 +49,7 @@ class Tag_Action extends Tag
     }
 
     /**
-     * Show a button to select tag for Search
+     * @brief Show a button to select tag for Search
      * @return HTML
      */
     static function select_tag_search($p_prefix)
@@ -61,7 +61,7 @@ class Tag_Action extends Tag
     }
 
     /**
-     * clear the search cell
+     * @brief clear the search cell
      */
     static function add_clear_button($p_prefix)
     {
@@ -71,7 +71,7 @@ class Tag_Action extends Tag
     }
 
     /**
-     * In the screen search add this data to the cell
+     *@brief  In the screen search add this data to the cell
      */
     function update_search_cell($p_prefix)
     {
@@ -85,7 +85,7 @@ class Tag_Action extends Tag
     }
 
     /**
-     * let select a tag to add to the search
+     * @brief let select a tag to add to the search
      */
     function select_search($p_prefix,$title=true)
     {
