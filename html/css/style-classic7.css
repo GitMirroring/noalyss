@@ -603,7 +603,22 @@ a.document:hover {
 .input_text {
     border:1px solid #4b4b91;
     margin:1px;
-    border-radius: 2px;
+    border-radius: 5px;
+}
+@media (min-width: 576px) {
+
+}
+/* MeDium */
+@media (min-width: 768px) {
+    border-radius: 5px;
+    padding: 2px;
+}
+/* LarGe */
+@media (min-width: 992px) {
+}
+/* eXtraLarge */
+@media (min-width: 1200px) {
+
 }
 .input_text:focus {
    border:1px solid orange;
