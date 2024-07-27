@@ -346,7 +346,10 @@ $path = array(
     'list_filter_followup'=>"ajax_follow_up",
     //delete a filter for followup
     'delete_filter_followup'=>"ajax_follow_up",
-    "check_vatnumber"=>"ajax_check_vatnumber"
+    // Check VAT NUMBER with VIES European VAT
+    "check_vatnumber"=>"ajax_check_vatnumber",
+    // Tax Detail
+    "tax_detail"=>"ajax_tax_detail"
 ) ;
 
 if (array_key_exists($op, $path)) {
