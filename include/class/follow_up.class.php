@@ -696,6 +696,7 @@ class Follow_Up
     {
         // for the sort
         $arg=HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag"),"");
+        $arg=($arg!="")?"&$arg":"";
         $url=$p_base.$arg;
 
         $table=new Sort_Table();
@@ -717,7 +718,7 @@ class Follow_Up
         //7
         $table->add(_('Etat'), $url, 'order by s_value asc', 'order by s_value desc', 'ea', 'ed');
         // 8
-        $table->add(_('Dernier comm.'), $url, 'order by last_comment_date nulls last', 'order by last_comment_date desc nulls last', 'dca', 'dcd');
+        $table->add(_('Dernier comm.'), $url, 'order by coalesce(last_comment_date, ag.ag_timestamp) asc', 'order by coalesce(last_comment_date, ag.ag_timestamp) desc', 'dca', 'dcd');
         // 9
         $table->add(_('Priorité'), $url, 'order by ag_priority ', 'order by ag_priority desc ', 'pra', 'prd');
         $http=new HttpInput();
