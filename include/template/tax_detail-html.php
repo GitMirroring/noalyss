@@ -52,10 +52,7 @@ foreach ($data as $item):
     $class=($idx%2==0)?'even':'odd';
     $receipt_number=($item['jr_pj_number']=="")?$item['jr_internal']:$item['jr_pj_number'];
     $control=bcmul($item['tva_rate'],$item['j_montant'],4);
-    $delta_control=bcsub($control,$item['vat_amount']);
- //   $delta_control=bcsub($delta_control,$item['qp_nd_tva_recup']);
-  //  $delta_control=bcsub($delta_control,$item['qp_nd_tva']);
-  /*  $delta_control=bcsub($delta_control,$item['qp_dep_priv']);*/
+    $delta_control=bcsub($control,$item['vat_amount'],2);
     $delta_control=round($delta_control,2);
     $w_amount="";
     if ( $delta_control != 0 ) {

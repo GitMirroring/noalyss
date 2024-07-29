@@ -54,7 +54,7 @@ $idateend->value = $http->get('to', 'date', $a_limit[1]);
             <?php
             $a_ledger_purchase=$g_user->get_ledger('ACH',3);
             $a_ledger_sale=$g_user->get_ledger('VEN',3);
-            $a_ledger=array_merge($a_ledger_sale,$a_ledger_purchase);
+            $a_ledger=array_merge($a_ledger_sale??[],$a_ledger_purchase??[]);
             if ( DEBUGNOALYSS > 1 ) echo \Noalyss\Dbg::hidden_info("a_ledger",$a_ledger);
             $select_value=array();
             $select_value[]=array('value'=>-1,"label"=>'Tous vente et Achat');

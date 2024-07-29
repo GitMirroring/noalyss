@@ -58,7 +58,9 @@ class Tax_Detail
 
         // Security
         if ($g_user->get_status_security_ledger()==1 && $g_user->isAdmin()==0)  {
-            $filter_ledger.=$g_user->get_ledger_sql('ALL')."   and ";
+            $sSecurity=$g_user->get_ledger_sql('ALL')."   and ";
+            $sSecurity=str_replace('jrn_def_id','v1.jr_def_id',$sSecurity);
+            $filter_ledger.=$sSecurity;
         }
 
         // filter on the date
