@@ -40,10 +40,10 @@ class Cellule {
     var $fill;
     var $link;
     var $type;
-    function __construct($w,$h,$txt,$border,$ln,$align,$fill,$link,$type)
+    function __construct($width,$height,$txt,$border,$ln,$align,$fill,$link,$type)
     {
-        $this->width=$w ;
-        $this->height=$h ;
+        $this->width=$width ;
+        $this->height=$height ;
         $this->text=$txt;
         $this->border=$border;
         $this->new_line=$ln;
@@ -227,25 +227,25 @@ class PDF_Core extends TFPDF
             {
                 case "M":
                 $x_m=$this->GetX();
-		$y_m=$this->GetY();
-		parent::MultiCell(
+                $y_m=$this->GetY();
+                parent::MultiCell(
                                     $a->width, 
                                     $a->height, 
                                     $a->text, 
                                     $a->border, 
                                     $a->align, 
                                     $a->fill
-                        );
-		$x_m=$x_m+$a->width;
-		$tmp=$this->GetY()-$y_m;
-		if ( $tmp > $this->bigger) $this->bigger=$tmp;
-		$this->SetXY($x_m,$y_m);
+                                );
+                $x_m=$x_m+$a->width;
+                $tmp=$this->GetY()-$y_m;
+                if ( $tmp > $this->bigger) $this->bigger=$tmp;
+                $this->SetXY($x_m,$y_m);
                 break;
                 
                 case "C":
-                    
+                    $height=($this->bigger==0)?$a->height:$this->bigger;
                      parent::Cell(   $a->width, 
-                                    $a->height, 
+                                    $height,
                                     $a->text, 
                                     $a->border, 
                                     $a->new_line, 
@@ -266,14 +266,14 @@ class PDF_Core extends TFPDF
         $this->cells[$size]=$Ce;
         
     }
-    function write_cell ($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link='')
+    function write_cell ($width, $heigh=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link='')
     {
-        $this->add_cell(new Cellule($w,$h,$txt,$border,$ln,$align,$fill,$link,'C'));
+        $this->add_cell(new Cellule($width,$heigh,$txt,$border,$ln,$align,$fill,$link,'C'));
         
     }
-    function LongLine($w,$h,$txt,$border=0,$align='',$fill=false)
+    function LongLine($width,$heigh,$txt,$border=0,$align='',$fill=false)
     {
-        $this->add_cell(new Cellule($w,$h,$txt,$border,0,$align,$fill,'','M'));
+        $this->add_cell(new Cellule($width,$heigh,$txt,$border,0,$align,$fill,'','M'));
 
     }
     /**
