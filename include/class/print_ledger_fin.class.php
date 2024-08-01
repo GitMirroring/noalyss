@@ -118,7 +118,7 @@ class Print_Ledger_Financial extends Print_Ledger
             $name=$ledger->get_tiers($this->jrn_type,$row['id']);
             $this->write_cell(40,5,$name,0,0,'L');
 
-            $this->LongLine(60,5,$row['comment'],0,'L');
+            $this->LongLine(60,3,$row['comment'],0,'L');
             $amount=$this->cn->get_value('select qf_amount from quant_fin where jr_id=$1',array( $row['id']));
             $ret_amount_cur=$this->cn->execute("amount_cur",array($row['id']));
 

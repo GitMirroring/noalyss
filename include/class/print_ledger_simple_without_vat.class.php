@@ -166,14 +166,14 @@ class Print_Ledger_Simple_Without_Vat extends Print_Ledger
         {
 
             $row=$a_jrn[$i];
-            $this->LongLine(15,5,($row['jr_pj_number']),0);
+            $this->LongLine(15,3,($row['jr_pj_number']),0);
             $this->write_cell(15,5,$row['str_date_short'],0,0);
             $this->write_cell(20,5,$row['jr_internal'],0,0);
             list($qc,$name)=$this->get_tiers($row['jr_id'],$this->jrn_type);
             $this->write_cell(20,5,$qc,0,0);
-            $this->LongLine(40,5,$name,0,'L');
+            $this->LongLine(40,3,$name,0,'L');
 
-            $this->LongLine(105,5,$row['jr_comment'],0,'L');
+            $this->LongLine(105,3,$row['jr_comment'],0,'L');
 
             /* get other amount (without vat, total vat included, private, ND */
             $other=$ledger->get_other_amount($a_jrn[$i]['jr_grpt_id']);
