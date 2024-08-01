@@ -45,6 +45,7 @@ class Action_Gestion_Comment_SQL extends Table_Data_SQL
             , "ag_id"=>"ag_id"
             , "agc_date"=>"agc_date"
             , "agc_comment"=>"agc_comment"
+            , "agc_comment_raw"=>"agc_comment_raw"
             , "tech_user"=>"tech_user"
         );
         /*
@@ -55,6 +56,7 @@ class Action_Gestion_Comment_SQL extends Table_Data_SQL
             , "ag_id"=>"numeric"
             , "agc_date"=>"timestamp with time zone"
             , "agc_comment"=>"text"
+            , "agc_comment_raw"=>"text"
             , "tech_user"=>"text"
         );
 

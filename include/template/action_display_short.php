@@ -34,7 +34,8 @@ $title->size="60";
 $title->css_isze="60%";
 // Description
 $summary=new ITextarea('summary');
-$summary->style='class="itextarea" style="padding:0px;margin:0px"';
+$summary->set_enrichText('enrich');
+$summary->style='class="itextarea" style="background-color:white;padding:0px;margin:0px"';
 
 // Type of document / event
 $type=new ISelect("type_event");
@@ -113,9 +114,9 @@ echo HtmlInput::title_box(_('Nouvel événement'), 'action_add_div',"close","","
 </p>
 <span > <?php echo _("Description")?>
 </span>
-<p>
+<div style="background-color:white">
     <?php echo $summary->input()?>
-</p>
+</div>
 <?php
 echo HtmlInput::hidden('gDossier',Dossier::id());
 echo HtmlInput::hidden('op','action_save');
