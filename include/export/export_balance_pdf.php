@@ -118,7 +118,7 @@ $pdf->SetAuthor('NOALYSS');
 $pdf->SetFont('DejaVuCond', '', 7);
 $pdf->setTitle(_("Balance comptable"), true);
 $pdf->write_cell(30, 6, _('poste'));
-$pdf->LongLine(60, 3, _('Libellé'));
+$pdf->write_multi(60, 3, _('Libellé'));
 if ($previous == 1) {
     $pdf->write_cell(20, 6, 'Débit N-1', 0, 0, 'R');
     $pdf->write_cell(20, 6, 'Crédit N-1', 0, 0, 'R');
@@ -171,7 +171,7 @@ if (!empty($array)) {
             if (${'lvl' . $ind . '_old'} != substr($r['poste'], 0, $ind)) {
                 $pdf->SetFont('DejaVu', 'B', 7);
                 $strTotal=sprintf(_("Totaux %s "),${'lvl' . $ind . '_old'});
-                $pdf->LongLine(30, 3, $strTotal,"TB");
+                $pdf->write_multi(30, 3, $strTotal,"TB");
                 $delta = bcsub(${'nlvl' . $ind}['solde_cred'], ${'nlvl' . $ind}['solde_deb']);
                 $side = ($delta < 0) ? "D" : "C";
                 if ($previous == 1) {
@@ -223,8 +223,8 @@ if (!empty($array)) {
 
             $label.=" ".mb_chr(0x26a0);
         }
-        $pdf->LongLine(30, 3, $label, 0, 'L', $fill);
-        $pdf->LongLine(60, 3, $value['label'], 0, 'L', $fill);
+        $pdf->write_multi(30, 3, $label, 0, 'L', $fill);
+        $pdf->write_multi(60, 3, $value['label'], 0, 'L', $fill);
         $summary_tab = $bal->summary_add($summary_tab, $value['poste'],
             $value['sum_deb'],
             $value['sum_cred']);
