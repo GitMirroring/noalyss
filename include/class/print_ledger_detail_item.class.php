@@ -111,6 +111,7 @@ class Print_Ledger_Detail_Item extends Print_Ledger
         $internal="";
         $this->SetFillColor(220,221,255);
         $high=4;
+        $high_lg=3;
         for ( $i=0;$i< $nb ;$i++)
         {
             
@@ -119,10 +120,10 @@ class Print_Ledger_Detail_Item extends Print_Ledger
             {
 
                 // Print the general info line width=270mm
-                $this->LongLine(20, $high, $row['jr_date'],1,  'L', true);
+                $this->LongLine(20, $high_lg, $row['jr_date'],1,  'L', true);
                 $this->write_cell(20, $high,$row['jr_pj_number'].".". $row['jr_internal'], 1, 0, 'L', true);
-                $this->LongLine(50, $high, $row['quick_code']." ".$row['tiers_name'],1,'L',true);
-                $this->LongLine(80, $high, $row['jr_comment'],1,'L',true);
+                $this->LongLine(50, $high_lg, $row['quick_code']." ".$row['tiers_name'],1,'L',true);
+                $this->LongLine(80, $high_lg, $row['jr_comment'],1,'L',true);
                 $this->write_cell(20, $high, nbm($row['htva']), 1, 0, 'R', true);
                 $this->write_cell(20, $high, nbm($row['tot_tva_np']), 1, 0, 'R', true);
                 $this->write_cell(20, $high, nbm($row['other_tax_amount']), 1, 0, 'R', true);
@@ -152,9 +153,9 @@ class Print_Ledger_Detail_Item extends Print_Ledger
 
                     
                     // Header detail
-                    $this->LongLine(30,$high,_('QuickCode'));
+                    $this->LongLine(30,$high_lg,_('QuickCode'));
                     $this->write_cell(30,$high,_('Poste'));
-                    $this->LongLine(70,$high,_('Libellé'));
+                    $this->LongLine(70,$high_lg,_('Libellé'));
                     $this->write_cell(20,$high,_('Prix/Unit'),0,0,'R');
                     $this->write_cell(20,$high,_('Quant.'),0,0,'R');
                     $this->write_cell(20,$high,_('HTVA'),0,0,'R');
@@ -167,10 +168,10 @@ class Print_Ledger_Detail_Item extends Print_Ledger
                  } 
             }
             // Print detail sale / purchase
-            $this->LongLine(30,$high,$row['j_qcode']);
+            $this->LongLine(30,$high_lg,$row['j_qcode']);
             $this->write_cell(30,$high,$row['j_poste']);
             $comment=($row['j_text']=="")?$row['item_name']:$row['j_text'];
-            $this->LongLine(70,$high,$comment);
+            $this->LongLine(70,$high_lg,$comment);
             $this->write_cell(20,$high,nbm($row['price_per_unit']),0,0,'R');
             $this->write_cell(20,$high,nbm($row['quantity']),0,0,'R');
             $this->write_cell(20,$high,nbm($row['price']),0,0,'R');

@@ -265,18 +265,58 @@ class PDF_Core extends TFPDF
         $this->cells[$size]=$Ce;
         
     }
-    function write_cell ($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link='')
+    /**
+     * @brief  add a cell the text is not cut and don't return to this line if too large
+     * @param $width width (in PDF unit )
+     * @param $height height (in PDF unit )
+     * @param $txt text to print (unicode)
+     * @param $border border valid values are 1 : border ,0 : no-border, T : top,B : bottom,L : left,R : right
+     * @param $interline (unit pt ) space between lines
+     * @param $align text alignment valid values are L : left,R : right
+     * @param $fill color true or false
+     * @param $link url
+     * @return void*/
+    function write_cell ($width, $height=0, $txt='', $border=0, $interline = 0, $align='', $fill=false, $link='')
     {
-        $this->add_cell(new Cellule($w,$h,$txt,$border,$ln,$align,$fill,$link,'C'));
+        $this->add_cell(new Cellule($width,$height,$txt,$border,$interline,$align,$fill,$link,'C'));
         
     }
+    /**
+     * @brief  add a cell with automatic return to the line if the text is too long
+     * @param $width width (in PDF unit )
+     * @param $interline interline (unit pt)
+     * @param $txt text to print (unicode)
+     * @param $border border valid values are 1 : border ,0 : no-border, T : top,B : bottom,L : left,R : right
+     * @param $align text alignment valid values are L : left,R : right
+     * @param $fill color true or false
+     * @return void
+     */
+    function write_multi($width,$interline,$txt,$border=0,$align='',$fill=false)
+    {
+        $this->add_cell(new Cellule($width,$interline,$txt,$border,0,$align,$fill,'','M'));
+
+    }
+
+    /**
+     * @brief  add a cell with automatic return to the line if the text is too long, deprecated ,
+     * it calls only PDFCore::write_cell_
+     * @see PDF_Core::write_multi()
+     * @param $w width (in PDF unit )
+     * @param $h interline (in pt)
+     * @param $txt text to display
+     * @param $border border valid values are 1 : border ,0 : no-border, T : top,B : bottom,L : left,R : right
+     * @param $align text align valid values are L : left,R : right
+     * @param $fill color true or false
+     * @return void
+     *@deprecated
+     */
     function LongLine($w,$h,$txt,$border=0,$align='',$fill=false)
     {
-        $this->add_cell(new Cellule($w,$h,$txt,$border,0,$align,$fill,'','M'));
+        $this->write_multi($w,$h,$txt,$border,$align,$fill);
 
     }
     /**
-     * Print all the cell stored and call Ln (new line)
+     * @brief Print all the cell stored and call Ln (new line)
      * @param int $p_step
      */
 
