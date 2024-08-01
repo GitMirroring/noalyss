@@ -58,7 +58,7 @@ if ($op=='action_save')
         $event_group=$http->get("event_group", "string",0);
         $event_priority=$http->get("event_priority", "string",0);
         $title=$http->get("title_event","string", NULL);
-        $summary=$http->get("summary","string", "");
+        $summary= $http->get("summary","raw", "");
         $type_event=$http->get('type_event', "string",-1);
         $hour_event=$http->get('hour_event', "string",null);
         if ($date_event==-1||isDate($date_event)==0)
@@ -103,7 +103,8 @@ if ($op=='action_save')
     $gestion->f_id_dest=$dest_id;
     $gestion->ag_state=3;
     $gestion->dt_id=$type_event;
-    $gestion->ag_comment=h($summary);
+    $gestion->ag_comment=strip_tags($summary);
+    $gestion->ag_comment=$summary;
     $gestion->ag_timestamp=$date_event;
     $gestion->ag_remind_date=$date_event;
     $gestion->ag_hour=$hour_event;

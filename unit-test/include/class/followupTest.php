@@ -171,4 +171,49 @@ class FollowupTest extends TestCase
 
 
     }
+    /**
+     * @testdox save a short event
+     * @covers       Follow_Up::save_short
+     * @backupGlobals enabled
+     */
+    function testSaveShort() {
+        global $g_user;
+        $title='phpunit'.date('y.m.d H:i');
+        $array=array(
+            "date_event"=>'22.04.2022'
+            ,"dest"=>''
+            ,'event_group'=>1
+            ,'event_priority'=>2
+            ,'title_event'=>$title
+            ,'summary'=>'<h1>Test</h1>'
+            ,"type_event"=>2
+            ,'hour_event'=>'07:30'
+            ,'op'=>'action_save'
+            ,'gDossier'=>DOSSIER
+        );
+        $_GET=$array;
+        $_REQUEST=$array;
+        ob_start();
+        require   NOALYSS_HOME.'/ajax_misc.php';
+        $content=ob_get_clean();
+
+        $this->assertStringContainsString('<status>OK</status>',$content);
+
+
+        global $cn;
+        $id = $cn->get_value("select ag_id from action_gestion where ag_title=$1",[$title]);
+
+        $this->assertTrue(!empty($id),'event not save in action_gestion');
+
+        $comment_nb=$cn->get_value("select count(*)  from action_gestion_comment where ag_id=$1",[$id]);
+        $this->assertTrue($comment_nb != 0 ,' event has no description');
+
+        $comment_id=$cn->get_value("select agc_id from action_gestion_comment where ag_id=$1",[$id]);
+
+        $a_row=new Action_Gestion_Comment_SQL($cn,$comment_id);
+        $this->assertTrue( ! empty($a_row->agc_comment) , 'comment not saved');
+        $this->assertTrue( ! empty($a_row->agc_comment_raw) , 'comment raw not saved');
+
+        $cn->exec_sql("delete from action_gestion where ag_title like 'phpunit%'");
+    }
 }

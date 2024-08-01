@@ -1930,7 +1930,7 @@ where
         include NOALYSS_TEMPLATE.'/action_display_short.php'; 
     }
     /**
-     * Add an event , with the minimum of informations, 
+     * @brief Add an event , with the minimum of informations,
      * used in Dashboard and Scheduler
      */
     function save_short()
@@ -1990,8 +1990,12 @@ where
 
         if (trim($this->ag_comment??"")!='')
         {
-            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
+            $action_comment=new Action_Gestion_Comment_SQL($this->db);
+            $action_comment->ag_id=$this->ag_id;
+            $action_comment->tech_user= $_SESSION[SESSION_KEY.'g_user'];
+            $action_comment->agc_comment=$this->ag_comment;
+            $action_comment->agc_comment_raw=$this->ag_comment;
+            $action_comment->insert();
         }
     }
     /**
@@ -2022,7 +2026,7 @@ where
             return -1;
     }
     /**
-     * Compute an array of the complete tree depending of $p_id
+     * @brief Compute an array of the complete tree depending of $p_id
      * @param $p_id ag_id
      * @return array 
      * key index :
