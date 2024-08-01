@@ -113,9 +113,9 @@ for ($e=0;$e<count($array);$e++)
             $str_diff_solde=sprintf("%12.2f ",$diff_solde);
 
             $pdf->SetFont('DejaVu','B',8);
-            $pdf->LongLine(15,6,_('totaux'),0,'L');
+            $pdf->write_multi(15,6,_('totaux'),0,'L');
             $pdf->write_cell(15,6,$current_exercice,0,0,'L');
-            $pdf->LongLine(40,6,$solde,0,'L');
+            $pdf->write_multi(40,6,$solde,0,'L');
             $pdf->write_cell(40,6,$str_debit,0,0,'R');
             $pdf->write_cell(40,6,$str_credit,0,0,'R');
             $pdf->write_cell(40,6,$str_diff_solde,0,0,'R');
@@ -146,17 +146,17 @@ for ($e=0;$e<count($array);$e++)
     $tiers=$operation->find_tiers($row['jr_id'], $row['j_id'], $row['j_qcode']);
     $description=($tiers=="")?$row["description"]:"[".$tiers."]".$row['description'];
 
-    $pdf->LongLine($size[$l],6,($description.'('.$row['jr_internal'].")"),0,$align[$l]);
+    $pdf->write_multi($size[$l],6,($description.'('.$row['jr_internal'].")"),0,$align[$l]);
 
     $l++;
 
-    $pdf->LongLine($size[$l],6,((!empty($row['letter']) && $row['letter']!=-1)?strtoupper(base_convert($row['letter'],10,36)):''),0,$align[$l]);
+    $pdf->write_multi($size[$l],6,((!empty($row['letter']) && $row['letter']!=-1)?strtoupper(base_convert($row['letter'],10,36)):''),0,$align[$l]);
     $l++;
-    $pdf->LongLine($size[$l],6,(sprintf('% 12.2f',$row['deb_montant'])),0,$align[$l]);
+    $pdf->write_multi($size[$l],6,(sprintf('% 12.2f',$row['deb_montant'])),0,$align[$l]);
     $l++;
-    $pdf->LongLine($size[$l],6,(sprintf('% 12.2f',$row['cred_montant'])),0,$align[$l]);
+    $pdf->write_multi($size[$l],6,(sprintf('% 12.2f',$row['cred_montant'])),0,$align[$l]);
     $l++;
-    $pdf->LongLine($size[$l],6,(sprintf('% 12.2f',abs($progress))),0,$align[$l]);
+    $pdf->write_multi($size[$l],6,(sprintf('% 12.2f',abs($progress))),0,$align[$l]);
     $l++;
     $pdf->line_new();
     $tot_deb=bcadd($tot_deb,$row['deb_montant']);
