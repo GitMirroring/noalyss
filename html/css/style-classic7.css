@@ -3353,6 +3353,10 @@ li.li-active {
   * style in TEXTAREA wysiwyg must be encapsuled in div with the class nicEdit-main
   *
   */
+ div.nicEdit-main {
+
+     font-family: 'OpenSansRegular';
+ }
  div.nicEdit-main blockquote {
      margin-left:2rem !important;
  }
