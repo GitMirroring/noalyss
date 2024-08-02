@@ -224,7 +224,9 @@ if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id
 			if ( $p_view != 'READ')
 				{
                                         $js  = HtmlInput::button_action_remove_operation($operation[$o]['ago_id']);
-					echo '<li id="op'.$operation[$o]['ago_id'].'">'.$operation[$o]['str_date']." ".HtmlInput::detail_op($operation[$o]['jr_id'],$operation[$o]['jr_internal'])." ".h($operation[$o]['jr_comment'])." "
+					echo '<li id="op'.$operation[$o]['ago_id'].'">'.$operation[$o]['str_date']." "
+                        .HtmlInput::detail_op($operation[$o]['jr_id'],sprintf("%s (%s) ",$operation[$o]['jr_pj_number'],$operation[$o]['jr_internal']))
+                    ." ".h($operation[$o]['jr_comment'])." "
 						.$js.'</li>';
 				}
 				else
