@@ -72,7 +72,19 @@ class Icon_Action
                 $p_javascript, $id, $p_style);
         return $r;
     }
-
+    /**
+     *
+     * @param type $id
+     * @param type $p_javascript
+     * @param type $p_style
+     * @return type
+     */
+    static function icon_remove($id, $p_javascript, $p_style="")
+    {
+        $r=sprintf('<input  class="smallbutton icon" onclick="%s" id="%s" type="button" %s value="&#xe828;">',
+            $p_javascript, $id, $p_style);
+        return $r;
+    }
     /**
      * 
      * @param string $id
@@ -497,4 +509,5 @@ class Icon_Action
             );
         return $r;
     }
+
 }

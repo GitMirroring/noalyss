@@ -88,23 +88,21 @@ if ( $action == 'remove_cat' )
 /*******************************************************************************************/
 if ( isset ($_POST['change_name']))
 {
-    if (isset ($_REQUEST['label']) )
-    {
-	$fiche_def=new Fiche_Def($cn,$_REQUEST['fd_id']);
-    $label=$http->request("label");
-        $fiche_def->SaveLabel($label);
-        if ( isset($_REQUEST['create']))
-        {
-            $fiche_def->set_autocreate(true);
-        }
-        else
-        {
-            $fiche_def->set_autocreate(false);
-        }
-        $fiche_def->save_class_base($http->request('class_base'));
-	    $fiche_def->save_description($http->request('fd_description'));
+	$fiche_def=new Fiche_Def($cn,$http->request('fd_id','number'));
 
+    $label=$http->request("nom_mod");
+    $fiche_def->SaveLabel($label);
+    if ( isset($_REQUEST['create']))
+    {
+        $fiche_def->set_autocreate(true);
     }
+    else
+    {
+        $fiche_def->set_autocreate(false);
+    }
+    $fiche_def->save_class_base($http->request('class_base'));
+    $fiche_def->save_description($http->request('fd_description'));
+
 	echo $fiche_def->input_detail();
 	echo $retour;
 	return;
@@ -152,8 +150,15 @@ if ( isset($_POST['add_modele']))
 		alert(_('Doublon'));
 	}
 }
+$fiche_def_id=$http->request("fd","number",0);
 $fiche_def=new Fiche_def($cn);
+if ( $fiche_def_id != 0 ){
+    $fiche_def->id=$fiche_def_id;
+    $fiche_def->load();
+    echo $fiche_def->input_detail();
+} elseif ($fiche_def_id == 0)
+{
+    $fiche_def->display();
 
-$fiche_def->display();
-$dossier=Dossier::id();
+}
 ?>

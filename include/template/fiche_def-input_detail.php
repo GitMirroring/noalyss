@@ -1,5 +1,4 @@
 <?php
-
 /*
  *   This file is part of NOALYSS.
  *
@@ -16,23 +15,10 @@
  *   You should have received a copy of the GNU General Public License
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+// Copyright Author Dany De Bontridder danydb@aevalys.eu 2/08/24
+/*! 
+ * \file
+ * \brief input card category detail
  */
-
-// Copyright Author Dany De Bontridder danydb@aevalys.eu
-
-/**
- * @file
- * @brief show detail of a fiche_def (category of card) + Attribut
- *
- */
-if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-global $g_user;
-
-if ( $g_user->check_action(FICCAT) == 0 && $g_user->check_module("CCARD") == 0 )
-    return;
-
-$http=new HttpInput();
-$id=$http->get("id","number");
-$fd=new Fiche_Def($cn,$id);
-$fd->input_new();
 ?>

@@ -390,7 +390,7 @@ span.even {
     display:block;
 }
 /* highlight table row */
-tr.odd {
+div.odd,tr.odd {
     background-color: #DCE7F5;
     /*! opacity: 50%; */
 }
@@ -405,7 +405,7 @@ tr.odd > td,tr.even > td {
 tr.highlight {
     font-weight: bold;
 }
-tr.even {
+div.even,tr.even {
     /*! background-color: #F7F8FC; */
 }
 td.odd{
@@ -630,6 +630,12 @@ h1.legend, legend {
     font-style: italic;
     font-size: 19.2px;
     font-size: 1.2rem;
+    border: navy;
+    border-width: 1px;
+    border-style: solid;
+    padding: 1rem;
+    width: 20rem;
+    border-radius: 5px;
 }
 fieldset fieldset legend {
     color:#888;

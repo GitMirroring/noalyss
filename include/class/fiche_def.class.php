@@ -56,19 +56,7 @@ class Fiche_Def
     */
     function input ()
     {
-        $ref=$this->cn->get_array("select * from fiche_def_ref order by frd_text");
-        $iradio=new IRadio();
-        /* the accounting item */
-        $class_base=new IPoste('class_base');
-        $class_base->set_attribute('ipopup','ipop_account');
-        $class_base->set_attribute('account','class_base');
-        $class_base->set_attribute('label','acc_label');
-        $f_class_base=$class_base->input();
-        $fd_description=new ITextarea('fd_description');
-        $fd_description->width=80;
-        $fd_description->heigh=4;
-        $fd_description->style='class="itextarea" style="margin-left:0px;vertical-align:text-top"';
-        require_once  NOALYSS_TEMPLATE.'/fiche_def_input.php';
+
         return;
     }
 
@@ -131,7 +119,7 @@ class Fiche_Def
         $this->label=$row['fd_label'];
         $this->class_base=$row['fd_class_base'];
         $this->fiche_def=$row['frd_id'];
-        $this->create_account=$row['fd_create_account'];
+        $this->create_account=($row['fd_create_account']=='f')?false:true;
         $this->fd_description=$row['fd_description'];
     }
     /*!
@@ -196,7 +184,7 @@ frd_text , fd_description FROM fiche_def join fiche_def_ref on (fiche_def.frd_id
 $order
 ");
 
-		require_once NOALYSS_TEMPLATE.'/fiche_def_list.php';
+		require_once NOALYSS_TEMPLATE.'/fiche_def-display.php';
 	}
     /*!
      * \brief Add a fiche category thanks the element from the array
@@ -220,7 +208,7 @@ $order
         $http->set_array($array);
         $p_nom_mod = $http->extract('nom_mod',"string","");
         $p_fd_description = $http->extract('fd_description',"string", "");
-        $p_class_base=$http->extract('class_base',"string", "");
+
         $p_fiche_def= $http->extract('FICHE_REF',"string", "");
         $p_create= $http->extract('create',"string", "off");
         
@@ -253,6 +241,12 @@ $order
 			 alert (_('Catégorie existante'));
 			return 1;
 		}
+        $default_acc=$this->cn->get_value("select frd_class_base from fiche_def_ref where frd_id=$1",[$p_fiche_def]);
+
+        // if the account is empty, takes the account of the template from fiche_def_ref
+        $p_class_base=$http->extract('class_base',"string", "");
+        $p_class_base=(noalyss_trim($p_class_base)=='')?$default_acc:$p_class_base;
+
         // Set the value of fiche_def.fd_create_account
         // automatic creation for 'poste comptable'
         if ( $p_create == "on" && noalyss_strlentrim($p_class_base) != 0)
@@ -457,41 +451,7 @@ $order
         echo $bar;
 
     }
-    /*!\brief show input for the basic attribute : label, class_base, create_account
-     * use only when we want to update
-     *
-     *\return HTML string with the form
-     */
-    function input_base()
-    {
-        $r="";
-        $r.=_('Label');
-        $label=new IText('label',$this->label);
-        $r.=$label->input();
-        $r.='<br>';
-        /* the accounting item */
-        $class_base=new IPoste('class_base',$this->class_base);
-        $class_base->set_attribute('ipopup','ipop_account');
-        $class_base->set_attribute('account','class_base');
-        $class_base->set_attribute('label','acc_label');
-        $fd_description=new ITextarea('fd_description',$this->fd_description);
-        $fd_description->width=80;
-        $fd_description->heigh=4;
-        $fd_description->style='class="itextarea" style="margin-left:0px;vertical-align:text-top"';
 
-        $r.=_('Poste Comptable de base').' : ';
-        $r.=$class_base->input();
-        $r.='<span id="acc_label"></span><br>';
-		$r.='<br/>';
-		$r.=" Description ".$fd_description->input();
-        /* auto Create */
-		$r.='<br/>';
-        $ck=new ICheckBox('create');
-        $ck->selected=($this->create_account=='f')?false:true;
-        $r.=_('Chaque fiche aura automatiquement son propre poste comptable : ');
-        $r.=$ck->input();
-        return $r;
-    }
     /*!\brief Display all the attribut of the fiche_def
      *\param $str give the action possible values are remove, empty
      */
@@ -606,6 +566,7 @@ $order
              "where                    fd_id=$2";
 
         $Res=$this->cn->exec_sql($sql,array($t,$this->id));
+
 
     }
     /*!\brief Save the class base
@@ -770,7 +731,8 @@ $order
         }
         return $array;
     }
-    /*!\brief count the number of fiche_def (category) which has the frd_id (type of category)
+    /*!
+     * \brief count the number of fiche_def (category) which has the frd_id (type of category)
      *\param $p_frd_id is the frd_id in constant.php the FICHE_TYPE_
      *\return the number of cat. of card of the given type
      *\see constant.php
@@ -780,6 +742,11 @@ $order
         $ret=$this->cn->count_sql("select fd_id from fiche_def where frd_id=$1",array($p_frd_id));
         return $ret;
     }
+
+    /**
+     * @brief ask for detail
+     * @return string
+     */
 	function input_detail()
 	{
 		$r = "";
@@ -790,16 +757,32 @@ $order
 		$r.= '<H2 class="info">' . $this->id . " " . h($this->label) . '</H2>';
 		$r.='<fieldset><legend>'._('Données générales').'</legend>';
 
-		/* show the values label class_base and create account */
-		$r.='<form method="post">';
-		$r.=dossier::hidden();
-		$r.=HtmlInput::hidden("fd_id", $this->id);
-		$r.=HtmlInput::hidden("p_action", "fiche");
-		$r.= $this->input_base();
-		$r.='<hr>';
-		$r.=HtmlInput::submit('change_name', _('Sauver'));
-		$r.='</form>';
+        $nom_mod=$this->label;
+        /* the accounting item */
+        $class_base=new IPoste('class_base');
+        $class_base->set_attribute('ipopup','ipop_account');
+        $class_base->set_attribute('account','class_base');
+        $class_base->set_attribute('label','acc_label');
+        $class_base->value=$this->class_base;
+        $f_class_base=$class_base->input();
+        $fd_description=new ITextarea('fd_description');
+        $fd_description->width=80;
+        $fd_description->heigh=4;
+        $fd_description->style='class="itextarea  form-control input_text" style="margin-left:0px;vertical-align:text-top"';
+        $fd_description->value=$this->fd_description;
+        $r.='<form method="post">';
+        $r.=\HtmlInput::hidden('fd_id',$this->id);
+        ob_start();
+        require_once  NOALYSS_TEMPLATE.'/fiche_def_input.php';
+        $r.=ob_get_contents();
+        ob_clean();
+        $r.=HtmlInput::submit('change_name', _('Sauver'));
+        $r.='</form>';
+
+		require NOALYSS_TEMPLATE.'/fiche_def-input_detail.php';
+
 		$r.='</fieldset>';
+        $r.='<hr>';
 		/* attributes */
 		$r.='<fieldset><legend>'._('Détails').'</legend>';
 
@@ -807,33 +790,46 @@ $order
 		$r.=dossier::hidden();
 		$r.=HtmlInput::hidden("fd_id", $this->id);
 		$r.=HtmlInput::hidden("action", "");
-		$r.= $this->DisplayAttribut("remove");
-		$r.= HtmlInput::submit('add_line_bt', _('Ajoutez cet élément'),
-                        'onclick="$(\'action\').value=\'add_line\'"');
-		$r.= HtmlInput::submit("save_line_bt", _("Sauvez"),
-                        'onclick="$(\'action\').value=\'save_line\'"');
-                        
-		$r.=HtmlInput::submit('remove_cat_bt', _('Effacer cette catégorie'), 'onclick="$(\'action\').value=\'remove_cat\';return confirm_box(\'input_detail_frm\',\'' . _('Vous confirmez ?') . '\')"');
-		// if there is nothing to remove then hide the button
-		if (strpos($r, "chk_remove") != 0)
-		{
-                    $r.=HtmlInput::submit('remove_line_bt', _("Enleve les éléments cochés"), 
-                            'onclick="$(\'action\').value=\'remove_line\';return confirm_box(\'input_detail_frm\',\'' . _('Vous confirmez ?') . '\')"');
-		}
+		// $r.= $this->DisplayAttribut("remove");
+        ob_start();
+        require NOALYSS_TEMPLATE."/fiche_def-input_detail-2.php";
+        $r.=ob_get_contents();
+        ob_clean();
+
 		$r.= "</form>";
-		$r.=" <p class=\"notice\"> " . _("Attention : il n'y aura pas de demande de confirmation pour enlever les
-                                   attributs sélectionnés. Il ne sera pas possible de revenir en arrière") . "</p>";
+
 		$r.='</fieldset>';
 		return $r;
 	}
+
+
+    /**
+     * @brief input for creating a new category
+     * @return void
+     */
 	function input_new()
 	{
 		$single=new Single_Record("dup");
-		echo '<form method="post" style="display:inline">';
+		echo '<form method="post" style="display:inline" onsubmit="return check_new_category()">';
 		echo $single->hidden();
 		echo HtmlInput::hidden("p_action","fiche");
 		echo dossier::hidden();
-		echo $this->input(); //    CreateCategory($cn,$search);
+        $ref=$this->cn->get_array("select * from fiche_def_ref order by frd_text");
+        $iradio=new IRadio();
+        $nom_mod="";
+        /* the accounting item */
+        $class_base=new IPoste('class_base');
+        $class_base->set_attribute('ipopup','ipop_account');
+        $class_base->set_attribute('account','class_base');
+        $class_base->set_attribute('label','acc_label');
+        $f_class_base=$class_base->input();
+        $fd_description=new ITextarea('fd_description');
+        $fd_description->width=80;
+        $fd_description->heigh=4;
+        $fd_description->style='class="itextarea  form-control input_text" style="margin-left:0px;vertical-align:text-top"';
+        require_once  NOALYSS_TEMPLATE.'/fiche_def_input.php';
+        require_once  NOALYSS_TEMPLATE.'/fiche_def-input_new.php';
+
 		echo HtmlInput::submit("add_modele" ,_("Sauve"));
 		echo '</FORM>';
 	}
