@@ -234,7 +234,9 @@ class Follow_Up
         );
 
         // List opération liées
-        $operation=$this->db->get_array("select ago_id,j.jr_id,j.jr_internal,j.jr_comment,to_char(j.jr_date,'DD.MM.YY') as str_date
+        $operation=$this->db->get_array("select ago_id,j.jr_id,j.jr_internal,j.jr_comment
+                                                ,to_char(j.jr_date,'DD.MM.YY') as str_date
+                                                ,jr_pj_number
 			from jrn as j join action_gestion_operation as ago on (j.jr_id=ago.jr_id)
 			where ag_id=$1 order by jr_date", array($this->ag_id));
         $iconcerned=new IConcerned('operation');
