@@ -634,6 +634,9 @@ h1.legend, legend {
     border-width: 1px;
     border-style: solid;
     padding: 1rem;
+    margin: 0.5rem 0rem 0.5rem 2rem;
+
+
     width: 20rem;
     border-radius: 5px;
 }
@@ -1851,6 +1854,7 @@ div.box tr.even {
 }
 fieldset {
     border-width: 1px;
+    margin-left: 0.5rem;
 }
 #tva_select table {
     border-spacing: 0px;
