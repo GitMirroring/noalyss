@@ -19,9 +19,9 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!
- * \file
- * \brief javascript script for the ledger in accountancy,
+/**
+ * @file
+ * javascript script for the ledger in accountancy,
  * compute the sum, add a row at the table..
  *
  */

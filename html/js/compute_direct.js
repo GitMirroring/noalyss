@@ -15,8 +15,9 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-/*!\file
- *\brief common function for "Ecriture directe"
+/**
+ * @file
+ *common function for "Ecriture directe"
  */
 /**
  * Compute the sum of the debit and credit of the operation in the input screen  for misceallenous operation

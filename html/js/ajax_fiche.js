@@ -18,8 +18,8 @@
 /* $Revision$ */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-
-/*
+/**
+ * @file
  *  This file permit to use the AJAX function to fill up
  *        info from fiche
  *

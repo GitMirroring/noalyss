@@ -19,8 +19,9 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
- * \brief javascript script, always added to every page
+/**
+ *
+ * javascript script, always added to every page
  *
  */
 var ask_reload = 0;
@@ -56,6 +57,7 @@ function in_child(p_element, name_child) {
 /**
  * callback function when we just need to update a hidden div with an info
  * message
+ * @see removeOperation , reverseOperation
  */
 function infodiv(req, json) {
     try {

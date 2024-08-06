@@ -19,8 +19,9 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/** \file
- * \brief javascript for searching a card
+/**
+ * @file
+ * javascript for searching a card
  */
 
 var card_layer=1;
@@ -1170,7 +1171,7 @@ function action_remove_concerned(p_dossier,p_fiche_id,p_action_id)
     }
 /**
  * Remove a card after checking it is not used
- * @param object obj {gDossier,op,op2:rm_card,ctl,f_id}
+ * @param obj {json} = gDossier,op,op2:rm_card,ctl,f_id
  */    
 function delete_card(obj) {
     smoke.confirm("Confirmez ? ", function (e) {
