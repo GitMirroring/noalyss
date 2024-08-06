@@ -879,5 +879,26 @@ $order
 
     }
 
+    /**
+     * @brief display existing attribut
+     * @param $attribut_id int SQL attr_def.ad_id
+     * @param $attribut_text SQL attr_def.ad_text
+     * @return void
+     */
+    public static function print_existing_attribut($attribut_id,$attribut_text)
+    {
+       include NOALYSS_TEMPLATE.'/fiche_def-print_existing_attribut.php';
+    }
+
+    /**
+     * @brief display available attribut
+     * @param $attribut_id int SQL attr_def.ad_id
+     * @param $attribut_text SQL attr_def.ad_text
+     * @return void
+     */
+    public static function print_available_attribut($attribut_id,$attribut_text,$class)
+    {
+        include NOALYSS_TEMPLATE.'/fiche_def-print_available_attribut.php';
+    }
 }
 ?>

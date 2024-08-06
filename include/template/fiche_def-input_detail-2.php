@@ -41,86 +41,69 @@ $available_attribut = $cn->get_array('
 <div class="row">
     <div class="col">
         <h3>Attributs de la classe</h3>
-<div id="attribut_card">
-        <?php
-        $i = 0;
-        foreach ($existing_attribut
-
-        as $item):
-        $class = ($i % 2 == 0) ? 'even' : 'odd';
-        $i++;
-        ?>
-
-        <div id="attr_<?=$item['jnt_id']?>" style="cursor: move;" class="<?= $class ?>" order="<?= $item['jnt_order'] ?>">
-
-
+        <ul id="attribut_card" class="list-unstyled" style="cursor: move;">
             <?php
-            echo $item['ad_text'];
-            ?>
-            <div style="float:right">
-             <?=\Icon_Action::trash("0","")?>
-            </div>
-        </div>
+            $i = 0;
+            foreach ($existing_attribut as $item):
+
+                Fiche_Def::print_existing_attribut($item['ad_id'], $item['ad_text']);
+                ?>
+
+
             <?php
             endforeach;
             ?>
-</div>
+        </ul>
     </div>
     <div class=" col-2">
         <h4> Ranger les attributs</h4>
         <p>
-            Supprimer un attribut n'est pas réversible: les données de ces attributs
+            Déplacer les attributs de la fiche en cliquant et déplacer sans relacher le bouton de la souris.
+        </p>
+
+        <p>
+            Supprimer un attribut n'est pas réversible:() les données de ces attributs
             seront définitivement perdus.
         </p>
-        <!--        <input type="submit" class="button" value="Sauver les attributs">-->
+        <p>
+            Ajouter des attributs depuis les attributs disponibles en cliquant sur la flèche.
+        </p>
+        <p>
+            <input type="button" class="button" onclick="categoryCardDefinition.save();return false" value="Sauve">
+        </p>
+
     </div>
 
-<div class="col border-dark">
-    <h3>Attributs disponibles</h3>
-    <?php
-    echo HtmlInput::filter_table("avail_attribut_id", '0', '0');
-    ?>
-    <table id="avail_attribut_id" style="width: 90%">
+    <div class="col border-dark">
+        <h3>Attributs disponibles</h3>
         <?php
-        $i = 0;
-        foreach ($available_attribut          as $item):
-        $class = ($i % 2 == 0) ? 'even' : 'odd';
-        $i++;
+        echo HtmlInput::filter_list("avail_attribut_id", '0', '0');
         ?>
-        <tr class="<?= $class ?>">
-            <td>
-                <?php
-                // ajout de l'attribut donc cette ligne disparait, et apparait de l'autre cote + maj db
-                $js_add=sprintf("f")
-                ?>
-
-                <span class="icon" onclick="<?=$js_add?>">&#x21e6;</span>
-            </td>
-
-
-            <td>
-
-                <?php
-                echo $item['ad_text'];
-                ?>
-            </td>
+        <ul id="avail_attribut_id" style="width: 90%" class="list-unstyled">
+            <?php
+            $i = 0;
+            foreach ($available_attribut as $item):
+                $class = ($i % 2 == 0) ? 'even' : 'odd';
+                $i++;
+                Fiche_Def::print_available_attribut($item['ad_id'], $item['ad_text'], $class);
+            ?>
             <?php
             endforeach;
             ?>
 
-    </table>
+        </ul>
+
+    </div>
 
 </div>
-
 </div>
 <div class="row">
 
-</div>
-<script>
+    <script>
 
-(function() {
+        (function () {
+            Sortable.create('attribut_card', {tag: 'li',hoverclass:'hoverclass-drag'});
+        })();
 
-    Sortable.create('attribut_card',{tag:'div',onChange:function(e) {console.debug(e)},onUpdate:function(e) { console.debug(e)}});
-
-})();
-</script>
+        var categoryCardDefinition=new CategoryCardDefinition(<?=Dossier::id()?>,<?=$this->id?>);
+    </script>

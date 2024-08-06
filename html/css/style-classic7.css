@@ -390,7 +390,7 @@ span.even {
     display:block;
 }
 /* highlight table row */
-div.odd,tr.odd {
+div.odd,tr.odd,li.odd {
     background-color: #DCE7F5;
     /*! opacity: 50%; */
 }
@@ -1788,9 +1788,9 @@ td.workday ol {
 }
 input.inum {
     text-align:right;
-    border:1px solid #0000FF;
+    border:1px solid #4b4b91;
     margin:2px;
-    border-radius: 2px;
+    border-radius: 5px;
 }
 div.box  {
     background-color:#e4e7ed;
@@ -3458,4 +3458,8 @@ li.li-active {
      padding: 0.5rem;
      color:navy !important;
      text-decoration: underline;
+ }
+
+ .hoverclass-drag {
+    background-color: white;
  }

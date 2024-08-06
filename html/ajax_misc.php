@@ -350,6 +350,8 @@ $path = array(
     "check_vatnumber"=>"ajax_check_vatnumber",
     // Tax Detail
     "tax_detail"=>"ajax_tax_detail"
+    // card category definition : from CCARD
+    ,"category_card_definition"=>"ajax_category_card_definition"
 ) ;
 
 if (array_key_exists($op, $path)) {
