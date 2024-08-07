@@ -2201,7 +2201,7 @@ function filter_table(phrase, _id, colnr, start_row) {
 }
 
 /**
- *  filter quickly a list
+ *  filter quickly a list, the content to check must be inside a SPAN with the CLASS "search-content"
  * @param  phrase : DOM id of the input text where we find the word to seach, the searchable content use the className searchContent
  * @param  _id : id of the list
  * @returns nothing
@@ -3158,6 +3158,30 @@ function alternate_row_color(p_table) {
     }
 
 }
+/**
+ *  Colorize the rows of the list
+ * @param string p_table id of the table
+ */
+function alternate_row_color_list(p_list) {
+    var list_colored = $(p_list);
+    if ( list_colored.children.length==0 ) return;
+
+    var len = list_colored.children.length;
+    var i = 0;
+    var localClass = "";
+    for (i = 1; i < len; i++) {
+        localClass = (i % 2 == 0) ? "even" : "odd";
+        if (list_colored.children[i].hasClassName("odd")) {
+            list_colored.children[i].removeClassName("odd");
+        }
+        if (list_colored.children[i].hasClassName("even")) {
+            list_colored.children[i].removeClassName("even");
+        }
+        list_colored.children[i].addClassName(localClass);
+    }
+
+}
+
 
 /**
  * Make an DOM element draggable or not
