@@ -1440,6 +1440,7 @@ var CategoryCardDefinition = function (dossier_id, fiche_def_id) {
 CategoryCardDefinition.prototype.save = function () {
 
     try {
+        var here = this;
         var aAttribut=Sortable.serialize(this.existing_list);
         var queryString = {
             gDossier: this.dossier_id,
@@ -1462,8 +1463,7 @@ CategoryCardDefinition.prototype.save = function () {
                     if ( req.responseText == 'OK') {
                         smoke.signal('Sauvé',function(e){},{duration:500});
                     }
-                    // if successfull add id on existing_list and remove from available_list
-                    console.debug(here);
+                 
                    
                 }
             }
@@ -1477,10 +1477,10 @@ CategoryCardDefinition.prototype.save = function () {
  * @param attribut_id {int} attr_def.ad_id , ad_id of attribute
  */
 CategoryCardDefinition.prototype.add_attribut = function (attribut_id) {
-    var here = this;
-    console.debug(`add ${attribut_id}`);
-    try {
 
+
+    try {
+        var here = this;
         var queryString = {
             gDossier: this.dossier_id,
             fiche_def_id: this.fiche_def_id,
@@ -1501,18 +1501,18 @@ CategoryCardDefinition.prototype.add_attribut = function (attribut_id) {
                     }
 
                     // if successfull add id on existing_list and remove from available_list
-                    console.debug(here);
+
                     // remove from available_list
                     $('avail_attr_' + attribut_id).remove();
-                    alternate_row_color_list(here.available_list);
                     var parser = new DOMParser();
                     var element = parser.parseFromString(req.responseText, 'text/html');
-                    $(here.existing_list).appendChild(element.body.firstChild);
+                     $(here.existing_list).appendChild(element.body.firstChild);
                     new Effect.Highlight('existing_attr_' + attribut_id, {
                         startcolor: '#FAD4D4',
                         endcolor: '#F78082'
                     });
                     Sortable.create('attribut_card', {tag: 'li'});
+                    alternate_row_color_list(here.available_list);
                 }
             }
         );
@@ -1525,7 +1525,7 @@ CategoryCardDefinition.prototype.add_attribut = function (attribut_id) {
  * @param attribut_id {int} attr_def.ad_id , ad_id of attribute
  */
 CategoryCardDefinition.prototype.remove_attribut = function (attribut_id) {
-    console.debug(`remove ${attribut_id}`);
+
     var here = this;
     try {
 
@@ -1549,7 +1549,7 @@ CategoryCardDefinition.prototype.remove_attribut = function (attribut_id) {
                     }
 
                     // if successfull add id on existing_list and remove from available_list
-                    console.debug(here);
+
                     // remove from available_list
                     $('existing_attr_' + attribut_id).remove();
                     var parser = new DOMParser();

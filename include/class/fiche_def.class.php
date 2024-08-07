@@ -770,13 +770,18 @@ $order
         $fd_description->heigh=4;
         $fd_description->style='class="itextarea  form-control input_text" style="margin-left:0px;vertical-align:text-top"';
         $fd_description->value=$this->fd_description;
-        $r.='<form method="post">';
+        $r.='<form method="post" style="display:inline">';
         $r.=\HtmlInput::hidden('fd_id',$this->id);
         ob_start();
         require_once  NOALYSS_TEMPLATE.'/fiche_def_input.php';
         $r.=ob_get_contents();
         ob_clean();
         $r.=HtmlInput::submit('change_name', _('Sauver'));
+        $r.='</form>';
+        $r.='<form method="post" style="display:inline" id="catcard_remove" onsubmit="return confirm_box(this,\'Effacer?\')">';
+        $r.=HtmlInput::hidden("action", "remove_cat");
+        $r.=HtmlInput::hidden('fd_id',$this->id);
+        $r.=HtmlInput::submit('remove_cat', _('Effacer'));
         $r.='</form>';
 
 		require NOALYSS_TEMPLATE.'/fiche_def-input_detail.php';

@@ -28,43 +28,6 @@ global $http;
 $retour=HtmlInput::button_anchor("Retour à la liste", HtmlInput::get_to_string(array("gDossier","ac")));
 $action=$http->post('action',"string", '');
 /*******************************************************************************************/
-// Add an attribut
-/*******************************************************************************************/
-if ( $action == 'add_line')
-{
-    $fd_id=$http->request("fd_id","number");
-    $ad_id=$http->request("ad_id","number");
-    $fiche_def=new Fiche_Def($cn,$fd_id);
-    $fiche_def->InsertAttribut($ad_id);
-    echo $fiche_def->input_detail();
-    echo $retour;
-    return;
-}
-/*******************************************************************************************/
-// Remove an attribut
-/*******************************************************************************************/
-if ( $action == 'remove_line' )
-{
-    $fd_id=$http->request("fd_id","number");
-    $fiche_def=new Fiche_Def($cn,$fd_id);
-    try
-    {
-        $ck_remove=$http->request('chk_remove');
-         $fiche_def->RemoveAttribut($ck_remove);
-    }
-    catch (Exception $exc)
-    {
-        throw new Exception(_("Vous devez choisir au moins une ligne"));
-    }    
-    finally
-    {
-      echo $fiche_def->input_detail();
-      echo $retour;
-      return;
-    }
-
-}
-/*******************************************************************************************/
 // Try to remove a category
 /*******************************************************************************************/
 if ( $action == 'remove_cat' ) 
@@ -107,18 +70,7 @@ if ( isset ($_POST['change_name']))
 	echo $retour;
 	return;
 }
-/*******************************************************************************************/
-// Save order of the attributes
-/*******************************************************************************************/
-if ( $action == 'save_line' )
-{
-    $fd_id=$http->request("fd_id","number");
-    $fiche_def=new Fiche_Def($cn,$fd_id);
-    $fiche_def->save_order($_POST);
-    echo $fiche_def->input_detail();
-    echo $retour;
-    return;
-}
+
 /*******************************************************************************************/
 // Save a new category of card
 /*******************************************************************************************/
