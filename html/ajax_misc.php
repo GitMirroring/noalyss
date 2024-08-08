@@ -633,21 +633,19 @@ EOF;
 		break;
 	case 'label_tva':
 		$cn =Dossier::connect();
-		if (isNumber($id) == 0)
+        $tva=Acc_Tva::build($cn, $id);
+
+        if ($tva->tva_id == -1 )
 			$value = _('tva inconnue');
 		else
 		{
-			$Res = $cn->get_array("select * from tva_rate where tva_id = $1", array($id));
-			if (count($Res) == 0)
-				$value = _('tva inconnue');
-			else
-				$value = $Res[0]['tva_label'];
+           $value=$tva->tva_label;
 		}
 		header('Content-type: text/xml; charset=UTF-8');
 		echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
-<code>$code</code>
+<code>$id</code>
 <value>$value</value>
 </data>
 EOF;
