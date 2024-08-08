@@ -3160,7 +3160,7 @@ function alternate_row_color(p_table) {
 }
 /**
  *  Colorize the rows of the list
- * @param string p_table id of the table
+ * @param p_list {string} DOM id of the list
  */
 function alternate_row_color_list(p_list) {
     var list_colored = $(p_list);
