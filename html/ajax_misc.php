@@ -632,6 +632,7 @@ EOF;
 EOF;
 		break;
 	case 'label_tva':
+        $code=$http->request('code','string','x');
 		$cn =Dossier::connect();
         $tva=Acc_Tva::build($cn, $id);
 
@@ -639,13 +640,13 @@ EOF;
 			$value = _('tva inconnue');
 		else
 		{
-           $value=$tva->tva_label;
+           $value=htmlentities($tva->tva_label);
 		}
 		header('Content-type: text/xml; charset=UTF-8');
 		echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
-<code>$id</code>
+<code>$code</code>
 <value>$value</value>
 </data>
 EOF;

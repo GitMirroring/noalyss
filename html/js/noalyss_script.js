@@ -626,8 +626,10 @@ function popup_select_tva(obj, p_function_callback) {
 function set_tva_label(obj) {
     try {
         var queryString = "gDossier=" + obj.gDossier + "&op=label_tva" + "&id=" + obj.value;
-        if (obj.jcode)
+        if (obj.jcode )
             queryString += '&code=' + obj.jcode;
+        else if ( obj.getAttribute("jcode") )
+            queryString += '&code=' + obj.getAttribute("jcode") ;
         var action = new Ajax.Request(
             "ajax_misc.php",
             {
