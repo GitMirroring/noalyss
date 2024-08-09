@@ -4280,5 +4280,46 @@ function check_password_strength(p_pass_domid, p_result_domid, details) {
 }
 
 /**
- * @brief
+ * activate a plugin , must comes from CFGPLUGIN
+ * @param elt {string}  DOMID of the element, must have the attribute gDossier, plugin and pr_id (for the profile)
+ * @test
  */
+function activate_plugin(elt)
+{
+    	try
+    		{
+                waiting_box();
+    	       var queryString =  {
+    	                op:'activate_plugin',
+    	                gDossier:elt.getAttribute('gDossier'),
+    	                mecode:elt.getAttribute('me_code'),
+    	                prid:elt.getAttribute('pr_id'),
+    	                dep:elt.getAttribute('dep'),
+    	                ord:elt.getAttribute('order'),
+                        activate:elt.checked
+    	            };
+    	        var action = new Ajax.Request(
+    					  "ajax_misc.php" ,
+    					  {
+    					      method:'GET',
+    					      parameters:queryString,
+    					      onFailure:ajax_misc_failure,
+    					      onSuccess:function(req){
+    							remove_waiting_box();
+    	                        if (req.responseText == 'NOCONX') {
+    	                            reconnect();
+    	                            return;
+    	                        }
+
+                                  if (req.responseText != 'OK') {
+                                      smoke.alert(req.responseText)
+                                      elt.checked=false;
+                                  }
+    					      }
+    					  }
+    	              );
+    		}catch( e)
+    		{
+    			alert_box(e.message);
+    		}
+}

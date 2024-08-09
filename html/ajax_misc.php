@@ -352,6 +352,8 @@ $path = array(
     "tax_detail"=>"ajax_tax_detail"
     // card category definition : from CCARD
     ,"category_card_definition"=>"ajax_category_card_definition"
+    // activate plugin for a profile
+    ,'activate_plugin'=>'ajax_activate_plugin'
 ) ;
 
 if (array_key_exists($op, $path)) {

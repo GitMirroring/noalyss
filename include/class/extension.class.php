@@ -162,7 +162,9 @@ class Extension extends Menu_Ref_sql
         // throw an exception if there is no dependency
         if (empty($dep_id))
         {
-            throw new Exception(_('Pas de menu ').$p_module, 30);
+            $msg = sprintf(_("Le menu %s dont dépend %s doit être crée ou %s doit être ajouté depuis le menu CFGPRO"),
+            $p_module,$this->me_code,$this->me_code);
+            throw new Exception($msg, 30);
         }
         $nb_dep=count($dep_id);
 
@@ -196,7 +198,20 @@ class Extension extends Menu_Ref_sql
     }
 
     /**
-     * Insert a plugin into the given profile, by default always insert into EXT
+     * @brief save a plugin into MENU_REF , calls insert_plugin or update_plugin if it already exists
+     * @return void
+     */
+    function save_plugin()
+    {
+        if ( $this->cn->get_value("select count(*) from menu_ref where me_code=$1",[$this->me_code]) > 0) {
+            $this->update_plugin();
+        } else {
+            $this->insert_plugin();
+
+        }
+    }
+    /**
+     * @brief Insert a plugin into the given profile, by default always insert into EXT
      * 
      * @param type $p_id profile.p_id
      * @throws Exception if duplicate or error db
