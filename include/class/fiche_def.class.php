@@ -253,7 +253,7 @@ $order
             $p_create='true';
         else
             $p_create='false';
-
+        $add_accounting=false;
         // Class is valid ?
         if ( sql_string($p_class_base) != null || ( $p_class_base !='' && strpos(',',$p_class_base) != 0 ))
         {
@@ -272,10 +272,11 @@ $order
 			// Get the fd_id
 			$fd_id=$this->cn->get_current_seq('s_fdef');
 
-			// update jnt_fic_attr
-			$sql=sprintf("insert into jnt_fic_attr(fd_id,ad_id,jnt_order)
-					 values (%d,%d,10)",$fd_id,ATTR_DEF_ACCOUNT);
-			$Res=$this->cn->exec_sql($sql);
+//			// update jnt_fic_attr
+//			$sql=sprintf("insert into jnt_fic_attr(fd_id,ad_id,jnt_order)
+//					 values (%d,%d,10)",$fd_id,ATTR_DEF_ACCOUNT);
+//			$Res=$this->cn->exec_sql($sql);
+            $add_accounting=true;
         }
         else
         {
@@ -295,23 +296,38 @@ $order
 
         //if defaut attr not null
         // build the sql insert for the table attr_def
+        $add_qcode=true;
         if (sizeof($def_attr) != 0 )
         {
             // insert all the mandatory fields into jnt_fiche_attr
             foreach ( $def_attr as $row)
             {
-				$order=$row['ad_default_order'];
-                if ( $row['ad_id'] == ATTR_DEF_NAME )
-                    $order=0;
+
 				$count=$this->cn->get_value("select count(*) from jnt_fic_attr where fd_id=$1 and ad_id=$2",array($fd_id,$row['ad_id']));
 				if ($count == 0)
 				{
 					$sql=sprintf("insert into jnt_fic_Attr(fd_id,ad_id,jnt_order)
                              values (%d,%s,%d)",
-                             $fd_id,$row['ad_id'],$order);
+                             $fd_id,$row['ad_id'],$row['ad_default_order']);
 					$this->cn->exec_sql($sql);
 				}
+                // if there is an accounting , then not needed to add one
+                if ( $row['ad_id']==ATTR_DEF_ACCOUNT) $add_accounting=FALSE;
+                if ( $row['ad_id']==ATTR_DEF_QUICKCODE) $add_qcode=FALSE;
             }
+        }
+        // if there is an base accounting, and the accounting is not in ATTR_MIN,
+        // then it is needed to add it
+        if ( $add_accounting) {
+            $sql=sprintf("insert into jnt_fic_attr(fd_id,ad_id,jnt_order)
+					 values (%d,%d,10)",$fd_id,ATTR_DEF_ACCOUNT);
+			$Res=$this->cn->exec_sql($sql);
+        }
+        // if there is no quick code in attr_min, it is added
+        if ( $add_qcode) {
+            $sql=sprintf("insert into jnt_fic_attr(fd_id,ad_id,jnt_order)
+					 values (%d,%d,10000)",$fd_id,ATTR_DEF_QUICKCODE);
+            $Res=$this->cn->exec_sql($sql);
         }
         $this->id=$fd_id;
         return 0;
@@ -710,9 +726,10 @@ $order
     {
 
         // find the min attr for the fiche_def_ref
-        $Sql="select ad_id,ad_text ,ad_default_order 
-                from attr_min natural join attr_def
-             natural join fiche_def_ref
+        $Sql="select ad_id,ad_text ,attr_min.ad_default_order 
+             from attr_min 
+                join attr_def using(ad_id)
+              join fiche_def_ref using(frd_id)
              where
              frd_id= $1 order by ad_default_order";
         $Res=$this->cn->exec_sql($Sql,array($p_fiche_def_ref));

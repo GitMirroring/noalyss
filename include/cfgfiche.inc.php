@@ -45,6 +45,9 @@ if ( $action == 'remove_cat' )
                   'Les fiches non utilisées ont cependant été effacées'));
         }
     }
+    $fiche_def=new Fiche_def($cn);
+    $fiche_def->display();
+    return;
 }
 /*******************************************************************************************/
 // Change some basis info

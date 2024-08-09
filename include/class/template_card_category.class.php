@@ -148,19 +148,20 @@ EOF;
             $cn=Dossier::connect();
             $dossier_id=Dossier::id();
             $objname=$this->get_object_name();
-            $a_attribut=$cn->get_array("select ad_id,ad_text,ad_type from attr_min join attr_def using (ad_id) where frd_id=$1 order by 2",
+            $a_attribut=$cn->get_array("select ad_id,ad_text,ad_type,a1.ad_default_order from attr_min a1 join attr_def using (ad_id) where frd_id=$1 order by a1.ad_default_order",
                     [$this->table->frd_id]);
             $nb_attribut=count($a_attribut);
-            printf('<ul id="%s_list"> ', $objname);
+            printf('<ul class="list-unstyled" style="width: 60%%;margin-left: 21%%" id="%s_list"> ', $objname);
             $used=$cn->get_value("select count(*) from jnt_fic_attr join fiche_def using (fd_id) where frd_id=$1",
                     [$this->table->frd_id]);
             if ($used!=0)
             {
-                echo _("Catégorie utilisée, les attributs ne peuvent pas être modifiés");
+                echo_warning( _("Catégorie utilisée, les attributs de base ne peuvent pas être modifiés"));
             }
+            echo _("Vous pouvez modifier l'ordre des attributs avec la souris");
             for ($i=0; $i<$nb_attribut; $i++)
             {
-                printf('<li id="%s_elt%d">', $objname
+                printf('<li id="%s_elt%d" style="cursor:move;border:1px solid navy;padding : 0.5rem 0.2rem 0.5rem 0.2rem;margin-top:2px">', $objname
                         , $a_attribut[$i]['ad_id']);
                 echo $a_attribut[$i]['ad_text'];
                 // cannot delete NAME and QUICKCODE + attribute used in a
@@ -193,22 +194,51 @@ EOF;
                         $dossier_id, $this->table->frd_id, $objname);
                 echo Icon_Action::icon_add(uniqid(), $js_script);
             }
+            echo \HtmlInput::hidden("attribut_order", "");
+            echo create_script("Sortable.create('{$objname}_list',{
+            onUpdate:function(){document.getElementById('attribut_order').value=Sortable.serialize('{$objname}_list')}})");
         }
      
     }
 
     /**
-     * When adding a template of category  of card, the minimum is the name 
+     * @brief When adding a template of category  of card, the minimum is the name
      * and the quickcode, which must be added into attr_min
      */
     function add_mandatory_attr()
     {
         $cn=Dossier::connect();
         $frd_id=$this->get_table()->getp("frd_id");
+        $cn->exec_sql("insert into attr_min (frd_id,ad_id,ad_default_order) values ($1,$2)",
+                [$frd_id, ATTR_DEF_NAME],1);
         $cn->exec_sql("insert into attr_min (frd_id,ad_id) values ($1,$2)",
-                [$frd_id, ATTR_DEF_NAME]);
-        $cn->exec_sql("insert into attr_min (frd_id,ad_id) values ($1,$2)",
-                [$frd_id, ATTR_DEF_QUICKCODE]);
+                [$frd_id, ATTR_DEF_QUICKCODE,10000]);
+    }
+
+    /**
+     * @brief save also the order
+     * @return void
+     */
+    function save()
+    {
+        parent::save();
+        $cn=$this->get_table()->get_cn();
+        $table_sql=$this->get_table();
+        $http=new HttpInput();
+        $ctl=$http->request("ctl")."_list";
+        $attribut_order=$http->post('attribut_order','string','');
+        if ($attribut_order=='') return;
+        parse_str($attribut_order,$aOrder);
+        if ( isset($aOrder[$ctl])) {
+            $order = 10;
+            foreach( $aOrder[$ctl] as $item) {
+                $ad_id = str_replace('elt','',$item);
+                $cn->exec_sql("update attr_min set ad_default_order = $1 where ad_id=$2 and frd_id=$3",
+                [$order,$ad_id,$table_sql->get('frd_id')]);
+                $order+=10;
+            }
+        }
+
     }
 
 }
