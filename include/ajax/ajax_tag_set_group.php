@@ -28,7 +28,7 @@ if (!defined('ALLOWED'))
  * @brief 
  */
 global $g_user;
-$g_user->can_request('CFGTAG');
+$g_user->can_request('C0TAG');
 
 /*
  * Received parameter

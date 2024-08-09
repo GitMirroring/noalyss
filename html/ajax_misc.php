@@ -159,9 +159,9 @@ $path = array(
     "user_sec_action"=>"ajax_user_security",
     // Update in once all the ledgers
     "ledger_access_all"=>"ajax_user_security",
-    // From the page CFGSEC,set the actions
+    // From the page C0SEC,set the actions
     "action_access"=>"ajax_user_security",
-    // From the page CFGSEC,set all the actions
+    // From the page C0SEC,set all the actions
     "action_access_all"=>"ajax_user_security",
     "todo_list"=>"ajax_todo_list",
     // Writing operation History for a card or an accounting
@@ -248,7 +248,7 @@ $path = array(
     "anc_accounting"=>"ajax_anc_accounting",
     // Update name and description
     "anc_updatedescription"=>"ajax_anc_plan",
-    // Update, insert or delete accounting frmo CFGPCMN
+    // Update, insert or delete accounting frmo C0PCMN
     "accounting"=>"ajax_accounting",
     // Show detail of an ANC operation
     "anc_detail_op"=>"ajax_anc_detail_operation",

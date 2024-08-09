@@ -41,7 +41,7 @@ catch (Exception $ex)
 $cn=Dossier::connect();
 echo    '<p class="info">'.
         '<a href="https://wiki.noalyss.eu/doku.php?id=menu:cfgaction" target="_blank">'.
-        _("Aide : voir CFGACTION").
+        _("Aide : voir C0ACT").
         '</a>'.
         '</p>';
 // document_option id from document_option where do_code='contact_multiple' and document_type_id=p_id

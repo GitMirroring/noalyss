@@ -1576,7 +1576,7 @@ function display_sub_menu(p_dossier, p_profile, p_dep, p_level) {
 }
 
 /**
- * in CFGPRO, ask to confirm before removing a submenu and its children
+ * in C0PROFL, ask to confirm before removing a submenu and its children
  * @param {type} p_dossier
  * @param {type} profile_menu_id
  * @returns {undefined}
@@ -3840,7 +3840,7 @@ function toggle_checkbox_onoff(icon_domid, p_value_domid) {
 }
 
 /**
- * in CFGLED show or hide the row depending if the warning is enable or not
+ * in C0JRN show or hide the row depending if the warning is enable or not
  *
  * @param {type} p_enable
  * @param {type} p_row
@@ -4280,7 +4280,7 @@ function check_password_strength(p_pass_domid, p_result_domid, details) {
 }
 
 /**
- * activate a plugin , must comes from CFGPLUGIN
+ * activate a plugin , must comes from C0PLG
  * @param elt {string}  DOMID of the element, must have the attribute gDossier, plugin and pr_id (for the profile)
  * @test
  */

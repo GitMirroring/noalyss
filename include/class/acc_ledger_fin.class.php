@@ -328,7 +328,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
         if ($this->bank_id=="")
         {
             echo h2("Journal de banque non configuré ".$this->get_name(), ' class="error"');
-            echo '<span class="error"> vous devez donner à ce journal un compte en banque (fiche), modifiez dans CFGLED</span>';
+            echo '<span class="error"> vous devez donner à ce journal un compte en banque (fiche), modifiez dans C0JRN</span>';
             alert("Journal de banque non configuré ".$this->get_name());
         }
 

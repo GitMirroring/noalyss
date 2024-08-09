@@ -162,7 +162,7 @@ class Extension extends Menu_Ref_sql
         // throw an exception if there is no dependency
         if (empty($dep_id))
         {
-            $msg = sprintf(_("Le menu %s dont dépend %s doit être crée ou %s doit être ajouté depuis le menu CFGPRO"),
+            $msg = sprintf(_("Le menu %s dont dépend %s doit être crée ou %s doit être ajouté depuis le menu C0PROFL"),
             $p_module,$this->me_code,$this->me_code);
             throw new Exception($msg, 30);
         }

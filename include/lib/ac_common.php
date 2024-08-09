@@ -1044,7 +1044,7 @@ function find_default_module()
                                 $cn->exec_sql('insert into profile_user(user_name,p_id) values ($1,1) ',array($g_user->login));
                                 return find_default_module();
                             }
-                            echo_warning(_("Utilisateur n'a pas de profil, votre administrateur doit en configurer un dans CFGSEC"));
+                            echo_warning(_("Utilisateur n'a pas de profil, votre administrateur doit en configurer un dans C0SEC"));
                             exit();
 			}
 		}

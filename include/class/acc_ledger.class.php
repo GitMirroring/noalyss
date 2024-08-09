@@ -3027,7 +3027,7 @@ class Acc_Ledger  extends jrn_def_sql
     Array
     (
     [gDossier] => 25
-    [ac] => CFG/MACC/CFGLED
+    [ac] => CFG/MACC/C0JRN
     [p_jrn] => -1
     [p_action] => jrn
     [sa] => add

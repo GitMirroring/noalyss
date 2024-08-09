@@ -1,8 +1,8 @@
 <?php 
-//@description:CFGLED
+//@description:C0JRN
 $_GET=array (
   'gDossier' => '42',
-  'ac' => 'PARAM/CFGLED',
+  'ac' => 'PARAM/C0JRN',
   'sa' => 'detail',
   'p_jrn' => '1',
 );

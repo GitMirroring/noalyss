@@ -28,7 +28,7 @@ if (!defined('ALLOWED'))
 
 global $g_user;
 
-if ($g_user->check_module('CFGPLUGIN') == 0) die();
+if ($g_user->check_module('C0PLG') == 0) die();
 
 try {
     $me_code = $http->get("mecode");

@@ -45,9 +45,9 @@ catch (Exception $ex)
 
 /* security check */
 /**
- * check if module CFGCURRENCY
+ * check if module C0DEV
  */
-if ($g_user->check_module('CFGCURRENCY')==0)
+if ($g_user->check_module('C0DEV')==0)
 {
     return;
 }
