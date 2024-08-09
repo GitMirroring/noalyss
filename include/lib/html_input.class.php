@@ -1210,7 +1210,7 @@ class HtmlInput
         for ($i=0; $i<$nb_attribute; $i++)
         {
             $r.=sprintf(' %s="%s" ', $this->attribute[$i][0],
-                    $this->attribute[$i][1]);
+                    htmlentities($this->attribute[$i][1]));
         }
         return $r;
     }
