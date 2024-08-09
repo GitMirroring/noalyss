@@ -73,9 +73,16 @@ if ($array[0]['p_type_display']!='P'):
 </tr>
 <?php endif;?>
 </table>
+    <ul class="aligned-block">
+        <li>
 <?php 
 echo HtmlInput::submit('modbt',_("Valider"));
-echo '</form>';
-
 
 ?>
+        </li>
+        <li>
+            <?=HtmlInput::button_close('divdm'.$pm_id);?>
+        </li>
+    </ul>
+
+</form>
