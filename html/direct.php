@@ -33,7 +33,7 @@ $http=new \HttpInput();
 $g_user=new Noalyss_user($cn);
 $g_user->Check();
 $g_user->check_dossier($http->get('gDossier'));
-$res=$cn->exec_sql("select distinct code,description from get_profile_menu($1) where code ~* $2 or description ~* $2 order by code limit 5  ",array($g_user->get_profile(),$http->post("acs")));
+$res=$cn->exec_sql("select distinct code,coalesce(description,code) description from get_profile_menu($1) where code ~* $2 or description ~* $2 order by code limit 5  ",array($g_user->get_profile(),$http->post("acs")));
 $nb=Database::num_row($res);
 	echo "<ul>";
 set_language();
