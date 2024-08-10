@@ -50,13 +50,18 @@ $max=Database::num_row($res);
 	</tR>
 <?php
 $dossier=Dossier::id();
+$http=new HttpInput();
+$ac=$http->request("ac");
+
+
 for ($i=0;$i<$max;$i++):
 	$class=($i%2==0)?' class="even" ':' class="odd" ';
 	$row=Database::fetch_array($res, $i);
+    $url=http_build_query(array("ac"=>$ac,"gDossier"=>$dossier,"fd"=>$row['fd_id']));
 ?>
 	<tr <?php echo $class?> >
 		<td>
-		<?php echo HtmlInput::anchor(h($row['fd_label']), "javascript:void(0)", "onclick=\"detail_category_show('detail_category_div','".$dossier."','".$row['fd_id']."')\"")?>
+		<?php echo HtmlInput::anchor(h($row['fd_label']), "do.php?".$url)?>
 		</td>
 		<td>
 			<?php echo h($row['fd_class_base'])?>
@@ -84,6 +89,6 @@ endfor;
 echo HtmlInput::button("cat_fiche_def_add",_("Ajout d'une nouvelle catégorie"), "onclick=\"detail_category_show('detail_category_div','".$dossier."','-1')\"");
 ?>
 </div>
-<div id="detail_category_div" style="display:none"">
+<div id="detail_category_div" style="display:none;margin-left:1rem">
 
 </div>

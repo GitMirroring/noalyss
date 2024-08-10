@@ -159,9 +159,9 @@ $path = array(
     "user_sec_action"=>"ajax_user_security",
     // Update in once all the ledgers
     "ledger_access_all"=>"ajax_user_security",
-    // From the page CFGSEC,set the actions
+    // From the page C0SEC,set the actions
     "action_access"=>"ajax_user_security",
-    // From the page CFGSEC,set all the actions
+    // From the page C0SEC,set all the actions
     "action_access_all"=>"ajax_user_security",
     "todo_list"=>"ajax_todo_list",
     // Writing operation History for a card or an accounting
@@ -248,7 +248,7 @@ $path = array(
     "anc_accounting"=>"ajax_anc_accounting",
     // Update name and description
     "anc_updatedescription"=>"ajax_anc_plan",
-    // Update, insert or delete accounting frmo CFGPCMN
+    // Update, insert or delete accounting frmo C0PCMN
     "accounting"=>"ajax_accounting",
     // Show detail of an ANC operation
     "anc_detail_op"=>"ajax_anc_detail_operation",
@@ -346,7 +346,14 @@ $path = array(
     'list_filter_followup'=>"ajax_follow_up",
     //delete a filter for followup
     'delete_filter_followup'=>"ajax_follow_up",
-    "check_vatnumber"=>"ajax_check_vatnumber"
+    // Check VAT NUMBER with VIES European VAT
+    "check_vatnumber"=>"ajax_check_vatnumber",
+    // Tax Detail
+    "tax_detail"=>"ajax_tax_detail"
+    // card category definition : from CCARD
+    ,"category_card_definition"=>"ajax_category_card_definition"
+    // activate plugin for a profile
+    ,'activate_plugin'=>'ajax_activate_plugin'
 ) ;
 
 if (array_key_exists($op, $path)) {
@@ -627,16 +634,15 @@ EOF;
 EOF;
 		break;
 	case 'label_tva':
+        $code=$http->request('code','string','x');
 		$cn =Dossier::connect();
-		if (isNumber($id) == 0)
+        $tva=Acc_Tva::build($cn, $id);
+
+        if ($tva->tva_id == -1 )
 			$value = _('tva inconnue');
 		else
 		{
-			$Res = $cn->get_array("select * from tva_rate where tva_id = $1", array($id));
-			if (count($Res) == 0)
-				$value = _('tva inconnue');
-			else
-				$value = $Res[0]['tva_label'];
+           $value=htmlentities($tva->tva_label);
 		}
 		header('Content-type: text/xml; charset=UTF-8');
 		echo <<<EOF

@@ -22,7 +22,7 @@
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-if ( $g_user->check_module('CFGTAG') == 0 ) {
+if ( $g_user->check_module('C0TAG') == 0 ) {
     record_log("forbidden : AJT01 ".__FILE__);
     exit();
 }

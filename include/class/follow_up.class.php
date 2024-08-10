@@ -234,7 +234,9 @@ class Follow_Up
         );
 
         // List opération liées
-        $operation=$this->db->get_array("select ago_id,j.jr_id,j.jr_internal,j.jr_comment,to_char(j.jr_date,'DD.MM.YY') as str_date
+        $operation=$this->db->get_array("select ago_id,j.jr_id,j.jr_internal,j.jr_comment
+                                                ,to_char(j.jr_date,'DD.MM.YY') as str_date
+                                                ,jr_pj_number
 			from jrn as j join action_gestion_operation as ago on (j.jr_id=ago.jr_id)
 			where ag_id=$1 order by jr_date", array($this->ag_id));
         $iconcerned=new IConcerned('operation');
@@ -1936,7 +1938,7 @@ where
         include NOALYSS_TEMPLATE.'/action_display_short.php'; 
     }
     /**
-     * Add an event , with the minimum of informations, 
+     * @brief Add an event , with the minimum of informations,
      * used in Dashboard and Scheduler
      */
     function save_short()
@@ -1996,8 +1998,12 @@ where
 
         if (trim($this->ag_comment??"")!='')
         {
-            $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment) values ($1,$2,$3)"
-                    , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], $this->ag_comment));
+            $action_comment=new Action_Gestion_Comment_SQL($this->db);
+            $action_comment->ag_id=$this->ag_id;
+            $action_comment->tech_user= $_SESSION[SESSION_KEY.'g_user'];
+            $action_comment->agc_comment=$this->ag_comment;
+            $action_comment->agc_comment_raw=$this->ag_comment;
+            $action_comment->insert();
         }
     }
     /**
@@ -2028,7 +2034,7 @@ where
             return -1;
     }
     /**
-     * Compute an array of the complete tree depending of $p_id
+     * @brief Compute an array of the complete tree depending of $p_id
      * @param $p_id ag_id
      * @return array 
      * key index :

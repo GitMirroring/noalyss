@@ -37,7 +37,7 @@ if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
 // Security 
-if ($g_user->check_module('CFGPRO')==0)
+if ($g_user->check_module('C0PROFL')==0)
     die();
 
 $http=new HttpInput();

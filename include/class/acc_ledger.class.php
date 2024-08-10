@@ -580,7 +580,7 @@ class Acc_Ledger  extends jrn_def_sql
      * @brief Show a select list   of the ledgers you can access in
      * writing, reading or simply accessing.
      * @param $p_type = ALL or the type of the ledger (ACH,VEN,FIN,ODS)
-     * @param $p_access =3 for READ and WRITE, 2 for write and 1 for readonly
+     * @param $p_access =3 for READ or WRITE, 2 for write and 1 for readonly
      * @param Boolean TRUE all ledger are selected, or FALSE only enable
      * \return     object HtmlInput select
      * 
@@ -3027,7 +3027,7 @@ class Acc_Ledger  extends jrn_def_sql
     Array
     (
     [gDossier] => 25
-    [ac] => CFG/MACC/CFGLED
+    [ac] => CFG/MACC/C0JRN
     [p_jrn] => -1
     [p_action] => jrn
     [sa] => add

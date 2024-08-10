@@ -19,8 +19,9 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
- * \brief javascript scripts for the gestion
+/**
+ * @file
+ * javascript scripts for the gestion
  *
  */
 
@@ -28,8 +29,8 @@
 
 /**
  * remove an attached document of an action
- *@param dossier
- *@param dt_id id of the document (pk document:d_id)
+ *@param {int} dossier
+ *@param {int} dt_id id of the document (pk document:d_id)
 */
 function remove_document(p_dossier,p_id)
 {

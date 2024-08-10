@@ -1,8 +1,8 @@
 <?php 
-//@description:CFGPCMN Plan comptable
+//@description:C0PCMN Plan comptable
 $_GET=array (
   'gDossier' => '42',
-  'ac' => 'PARAM/CFGPCMN',
+  'ac' => 'PARAM/C0PCMN',
 );
 $_POST=array (
 );

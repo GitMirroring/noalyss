@@ -17,7 +17,10 @@
  */
 // Copyright (2002-2020) Author Dany De Bontridder <danydb@noalyss.eu>
 
-
+/**
+ * @class
+ *
+ */
 var TagGroup = function ()
 {
     this.callback = "ajax_misc.php";

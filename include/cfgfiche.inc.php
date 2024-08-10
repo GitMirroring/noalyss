@@ -28,43 +28,6 @@ global $http;
 $retour=HtmlInput::button_anchor("Retour à la liste", HtmlInput::get_to_string(array("gDossier","ac")));
 $action=$http->post('action',"string", '');
 /*******************************************************************************************/
-// Add an attribut
-/*******************************************************************************************/
-if ( $action == 'add_line')
-{
-    $fd_id=$http->request("fd_id","number");
-    $ad_id=$http->request("ad_id","number");
-    $fiche_def=new Fiche_Def($cn,$fd_id);
-    $fiche_def->InsertAttribut($ad_id);
-    echo $fiche_def->input_detail();
-    echo $retour;
-    return;
-}
-/*******************************************************************************************/
-// Remove an attribut
-/*******************************************************************************************/
-if ( $action == 'remove_line' )
-{
-    $fd_id=$http->request("fd_id","number");
-    $fiche_def=new Fiche_Def($cn,$fd_id);
-    try
-    {
-        $ck_remove=$http->request('chk_remove');
-         $fiche_def->RemoveAttribut($ck_remove);
-    }
-    catch (Exception $exc)
-    {
-        throw new Exception(_("Vous devez choisir au moins une ligne"));
-    }    
-    finally
-    {
-      echo $fiche_def->input_detail();
-      echo $retour;
-      return;
-    }
-
-}
-/*******************************************************************************************/
 // Try to remove a category
 /*******************************************************************************************/
 if ( $action == 'remove_cat' ) 
@@ -82,45 +45,35 @@ if ( $action == 'remove_cat' )
                   'Les fiches non utilisées ont cependant été effacées'));
         }
     }
+    $fiche_def=new Fiche_def($cn);
+    $fiche_def->display();
+    return;
 }
 /*******************************************************************************************/
 // Change some basis info
 /*******************************************************************************************/
 if ( isset ($_POST['change_name']))
 {
-    if (isset ($_REQUEST['label']) )
-    {
-	$fiche_def=new Fiche_Def($cn,$_REQUEST['fd_id']);
-    $label=$http->request("label");
-        $fiche_def->SaveLabel($label);
-        if ( isset($_REQUEST['create']))
-        {
-            $fiche_def->set_autocreate(true);
-        }
-        else
-        {
-            $fiche_def->set_autocreate(false);
-        }
-        $fiche_def->save_class_base($http->request('class_base'));
-	    $fiche_def->save_description($http->request('fd_description'));
+	$fiche_def=new Fiche_Def($cn,$http->request('fd_id','number'));
 
+    $label=$http->request("nom_mod");
+    $fiche_def->SaveLabel($label);
+    if ( isset($_REQUEST['create']))
+    {
+        $fiche_def->set_autocreate(true);
     }
+    else
+    {
+        $fiche_def->set_autocreate(false);
+    }
+    $fiche_def->save_class_base($http->request('class_base'));
+    $fiche_def->save_description($http->request('fd_description'));
+
 	echo $fiche_def->input_detail();
 	echo $retour;
 	return;
 }
-/*******************************************************************************************/
-// Save order of the attributes
-/*******************************************************************************************/
-if ( $action == 'save_line' )
-{
-    $fd_id=$http->request("fd_id","number");
-    $fiche_def=new Fiche_Def($cn,$fd_id);
-    $fiche_def->save_order($_POST);
-    echo $fiche_def->input_detail();
-    echo $retour;
-    return;
-}
+
 /*******************************************************************************************/
 // Save a new category of card
 /*******************************************************************************************/
@@ -152,8 +105,15 @@ if ( isset($_POST['add_modele']))
 		alert(_('Doublon'));
 	}
 }
+$fiche_def_id=$http->request("fd","number",0);
 $fiche_def=new Fiche_def($cn);
+if ( $fiche_def_id != 0 ){
+    $fiche_def->id=$fiche_def_id;
+    $fiche_def->load();
+    echo $fiche_def->input_detail();
+} elseif ($fiche_def_id == 0)
+{
+    $fiche_def->display();
 
-$fiche_def->display();
-$dossier=Dossier::id();
+}
 ?>

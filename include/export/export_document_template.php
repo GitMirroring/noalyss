@@ -23,7 +23,7 @@
  */
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
-if ( $g_user->check_module("CFGDOC") == 0 ) exit();
+if ( $g_user->check_module("C0DOC") == 0 ) exit();
 // retrieve the document
 $r=$cn->exec_sql("select md_id,md_lob,md_filename,md_mimetype
                  from document_modele where md_id=$1",array($_REQUEST['md_id']));

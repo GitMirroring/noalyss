@@ -50,7 +50,7 @@ class Tag
     }
 
     /**
-     * Show the list of available tag
+     * @brief Show the list of available tag
      * @return HTML
      */
     function show_list()
@@ -61,7 +61,7 @@ class Tag
     }
     
     /**
-     * Display a inner window with the detail of a tag
+     * @brief Display a inner window with the detail of a tag
      */
     function form_add()
     {
@@ -93,7 +93,7 @@ class Tag
         $this->data->delete();
     }
     /***
-     * query the active tag and returns the database handler
+     *@brief  query the active tags and returns the database handler
      */
     function query_active_tag()
     {  
@@ -102,6 +102,19 @@ class Tag
                     where t_actif='Y' 
                 union all 
                 select tg_id,tg_name ,'G','g' ,1 from tag_group order by 2");
+        return $ret;
+    }
+    /**
+     * @brief  return the HTML string display the tag
+     * @returns HTML string
+     */
+    function display()
+    {
+        $data=$this->get_data();
+        $ret="";
+        $ret.=sprintf ('<span id="tagdis_%s" class="tagcell tagcell-color%s">',$data->t_id,$data->t_color);
+        $ret.= h($data->t_tag);
+        $ret.= '</span>';
         return $ret;
     }
 }

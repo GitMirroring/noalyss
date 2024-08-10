@@ -18,8 +18,8 @@
 /* $Revision$ */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-
-/*
+/**
+ * @file
  *  This file permit to use the AJAX function to fill up
  *        info from fiche
  *
@@ -266,11 +266,17 @@ category_card.add_attribut=function (p_dossier,p_fiche_def_ref,p_object_name) {
        onSuccess:function(req) {
            var answer=req.responseText.evalJSON();
            if ( answer.status == 'OK') {
-               var newli=document.createElement("li")
-               newli.setAttribute("id",p_object_name+"_elt"+selected_attr);
-               newli.innerHTML=answer.content
-               $(p_object_name+"_list").append(newli);
+               var newli = document.createElement("li")
+
+               $(p_object_name + "_list").append(newli);
+               newli.replace(answer.content);
+               document.getElementById('attribut_order').value = Sortable.serialize(p_object_name + "_list");
                select.remove(select.selectedIndex);
+               Sortable.create(p_object_name + '_list', {
+                   onUpdate: function () {
+                       document.getElementById('attribut_order').value = Sortable.serialize(p_object_name + "_list")
+                   }
+               });
            } else {
                smoke.alert(answer.message);
            }

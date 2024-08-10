@@ -33,6 +33,7 @@
 bcscale(4);
 $array=$this->get_row_sale();
 $nb_array=count($array);
+$dossier_id=Dossier::id();
 $ledger="";
 $r=0;
 $tot_vat=0;$tot_wovat=0;$tot_sided=0;
@@ -71,8 +72,13 @@ for ($i=0;$i < $nb_array;$i++):
 <tr class="<?php echo $color;?>">
     <td>
         <?=$array[$i]['tva_label']?>
+        <?php
+        // add a link to see the detail in ajax : ajax_ledger.php
+        $js_detail = $this->build_link_detail($dossier_id, $this->date_start, $this->date_end,$array[$i]['jrn_def_id'], $array[$i]['qs_vat_code']);
+        ?>
+        <a href="javascript:void(0)" onclick="<?=$js_detail?>">Détails</a>
     </td>
-    <td>
+    <td class="num">
         <?=$array[$i]['tva_rate']*100?>%
     </td>
     <td class="num">
@@ -143,6 +149,7 @@ $a_sum=$this->get_summary_sale();
 
         <td>
             <?=$a_sum[$e]['tva_label']?>
+
         </td>
         <td  class="num">
             <?=$a_sum[$e]['tva_rate']*100?>%
@@ -224,6 +231,11 @@ for ($i=0;$i < $nb_array;$i++):
     <tr class="<?php echo $color;?>">
         <td>
             <?=$array[$i]['tva_label']?>
+            <?php
+            // add a link to see the detail in ajax : ajax_ledger.php
+            $js_detail = $this->build_link_detail($dossier_id, $this->date_start, $this->date_end,$array[$i]['jrn_def_id'], $array[$i]['qp_vat_code']);
+            ?>
+            <a href="javascript:void(0)" onclick="<?=$js_detail?>">Détails</a>
         </td>
         <td>
             <?=$array[$i]['tva_rate']*100?>%
