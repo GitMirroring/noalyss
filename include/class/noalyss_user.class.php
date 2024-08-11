@@ -752,37 +752,6 @@ class Noalyss_User
         return $array['PERIODE'];
     }
 
-    /**
-     * 
-     * \brief return the mini rapport to display on the welcome page
-     * \return 0 if nothing if found or the report to display (form_definition.fr_id)
-     */
-    function get_mini_report()
-    {
-        $array=$this->get_preference();
-        $fr_id=(isset($array['MINIREPORT']))?$array['MINIREPORT']:0;
-        return $fr_id;
-    }
-
-    /**
-     * \brief set the mini rapport to display on the welcome page
-     */
-    function set_mini_report($p_id)
-    {
-        $count=$this->db->get_value("select count(*) from user_local_pref where user_id=$1 and parameter_type=$2",
-                array($this->id, 'MINIREPORT'));
-        if ($count==1)
-        {
-            $sql="update user_local_pref set parameter_value=$1 where user_id=$2 and parameter_type='MINIREPORT'";
-            $Res=$this->db->exec_sql($sql, array($p_id, $this->id));
-        }
-        else
-        {
-            $sql="insert into user_local_pref (user_id,parameter_type,parameter_value)".
-                    "values($1,'MINIREPORT',$2)";
-            $Res=$this->db->exec_sql($sql, array($this->id, $p_id));
-        }
-    }
 
     /**
      * @brief Save the preference , the scope is global, the settings are saved

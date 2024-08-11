@@ -143,6 +143,16 @@ if ( LOGINPUT)
         fwrite($file_loginput,"include '".basename(__FILE__)."';\n");
         fclose($file_loginput);
     }
+
+/**
+ * for widget we call immediately a file outside the ajax folder
+ */
+if ($op == 'widget') {
+    session_write_close();
+    require_once NOALYSS_INCLUDE.'/widget/ajax.php';
+    return;
+}
+
 $path = array(
     // search accounting , detail ...
     "account"=>"ajax_poste",

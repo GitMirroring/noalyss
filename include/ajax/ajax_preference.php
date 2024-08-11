@@ -257,23 +257,6 @@ if ( $action == 'display_form' )
                 
         </fieldset>
 	<?php
-	if ($inside_dossier)
-	{
-	    /* Pref for welcome page */
-	    echo '<fieldset style="margin: 1%">';
-	    echo '<legend>' . _('Options pour la page d\'accueil') . '</legend>';
-	    echo _('Mini-Rapport : ');
-	    $rapport = new Acc_Report($cn);
-	    $aRapport = $rapport->make_array();
-	    $aRapport[] = array("value" => 0, "label" => _('Aucun mini rapport'));
-	    $wRapport = new ISelect();
-	    $wRapport->name = "minirap";
-	    $wRapport->selected = $g_user->get_mini_report();
-	    $wRapport->value = $aRapport;
-	    echo $wRapport->input();
-	    echo '<span class="notice">' . _('Le mini rapport est un rapport qui s\'affiche  sur votre page d\'accueil') . '</span>';
-	    echo '</fieldset>';
-	}
 
 	echo '<fieldset  style="margin: 1%">';
 	echo '<legend>' . _('Langue') . '</legend>';
@@ -351,10 +334,8 @@ if ($action == 'save')
     }
     if ( $inside_dossier)
     {
-        $minirap=$http->post("minirap","number","0");
         $period=$http->post("period","number");
         $g_user->set_periode($period);
-        $g_user->set_mini_report($minirap);
     }
     $g_user->save_global_preference('THEME', $style_user);
     $g_user->save_global_preference('LANG', $lang);

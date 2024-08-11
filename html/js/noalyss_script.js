@@ -2886,11 +2886,11 @@ function calendar_zoom(obj) {
                         obj.outdiv = 'calendar_zoom_div';
                     }
                     if ($(obj.outdiv) == undefined) {
-                        var str_style = 'top:10%;margin-left:2%;';
+                        var str_style = 'top:10%;min-height:60rem';
 //                            var str_style = fixed_position(0, 120);
                         add_div({
                             id: obj.outdiv,
-                            style: 'margin-left:3%;width:94%;' + str_style,
+                            style: 'width:94%;' + str_style,
                             cssclass: "inner_box",
                             drag: 0
                         });
@@ -4322,4 +4322,271 @@ function activate_plugin(elt)
     		{
     			alert_box(e.message);
     		}
+}
+/**********************************************************************************************************************/
+/**
+ * @class Widget
+ */
+/**********************************************************************************************************************/
+
+Widget = function(dossier_id) {
+    this.dossier_id=dossier_id;
+}
+/**
+ * Display the widget in the elt box
+ * @param box DOMID of the target
+ * @param dossier_id
+ * @param user_widget_id
+ * @param widget_code
+ */
+Widget.prototype.display = function (box,user_widget_id,widget_code) {
+    try {
+
+        var queryString = {
+            gDossier: this.dossier_id,
+            'op': 'widget',
+            'user_widget_id': user_widget_id,
+            'widget_code': widget_code,
+            'action': 'widget.display'
+        }
+        var action = new Ajax.Request(
+            "ajax_misc.php",
+            {
+                method: 'GET',
+                parameters: queryString,
+                onFailure: ajax_misc_failure,
+                onSuccess: function (req) {
+                    if (req.responseText == 'NOCONX') {
+                        reconnect();
+                        return;
+                    }
+                    $(box).replace(req.responseText);
+
+                }
+            }
+        );
+    } catch (e) {
+        alert_box(e.message);
+    }
+
+}
+
+/**
+ * Manage the widget
+ * @param dossier_id
+ * @returns {boolean}
+ */
+Widget.prototype.manage = function () {
+    try {
+        var box = 'widget_box_id';
+        var queryString = {
+            gDossier: this.dossier_id,
+            'op': 'widget',
+            'action': 'widget.manage'
+        }
+        var action = new Ajax.Request(
+            "ajax_misc.php",
+            {
+                method: 'GET',
+                parameters: queryString,
+                onFailure: ajax_misc_failure,
+                onSuccess: function (req) {
+                    if (req.responseText == 'NOCONX') {
+                        reconnect();
+                        return;
+                    }
+                    var style = 'position:absolute;';
+                    var y = calcy(200);
+                    style = style + ' ;top : ' + y + 'px';
+
+                    add_div({id: box, cssclass: 'inner_box', html: loading(), style: style})
+
+                    $(box).update(req.responseText);
+
+                }
+            }
+        );
+    } catch (e) {
+        alert_box(e.message);
+        console.error("widget_manage" + e.message);
+    }
+    return false;
+}
+/**
+ * create a list  of sortable elements
+ */
+Widget.prototype.create_sortable=function() {
+
+    Sortable.create('contain_widget',{tag:'li',onUpdate:function(){ $('order_widget_hidden').value=Sortable.serialize('contain_widget')}})
+    $('order_widget_hidden').value=Sortable.serialize('contain_widget');
+}
+/**
+ * Save the order of widget
+ **/
+Widget.prototype.save = function () {
+    	try
+    		{
+                var here = this;
+    	        var dgbox="widget_box_id";
+    	        waiting_box();
+
+    	        // For form , most of the parameters are in the FORM
+    	        // method is then POST
+    	         //var queryString=$(p_form_id).serialize(true);
+
+    	       var queryString = {
+    	                op : 'widget',
+    	                action : 'widget.save',
+    	                gDossier: this.dossier_id,
+                        param : Sortable.serialize('contain_widget')
+    	            };
+    	        var action = new Ajax.Request(
+    					  "ajax_misc.php" ,
+    					  {
+    					      method:'GET',
+    					      parameters:queryString,
+    					      onFailure:ajax_misc_failure,
+    					      onSuccess:function(req){
+    							remove_waiting_box();
+    	                        if (req.responseText == 'NOCONX') {
+    	                            reconnect();
+    	                            return;
+    	                        }
+    							removeDiv(dgbox)
+                                here.refresh();
+
+    					      }
+    					  }
+    	              );
+    		}catch( e)
+    		{
+    			alert_box(e.message);
+    		}
+}
+/**
+ * refresh the DASHBOARD (dashboard_div_id)
+ */
+Widget.prototype.refresh = function () {
+    try {
+        var dgbox='dashboard_div_id'
+        var queryString = {
+            op : 'widget',
+            action : 'widget.refresh',
+            gDossier: this.dossier_id
+        };
+        var action = new Ajax.Request(
+                  "ajax_misc.php" ,
+                  {
+                      method:'GET',
+                      parameters:queryString,
+                      onFailure:ajax_misc_failure,
+                      onSuccess:function(req){
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+
+                        $(dgbox).replace(req.responseText);
+
+                      }
+                  }
+              );
+        }catch( e) {
+        console.error("widget.refresh "+e.message)
+        }
+}
+/**
+ * delete a widget : remove from the list
+ * @param user_widget_id {integer}
+ */
+Widget.prototype.delete=function (user_widget_id) {
+    $('elt_'+user_widget_id).remove()
+    $('order_widget_hidden').value=Sortable.serialize('contain_widget');
+}
+/**
+ * display list widget we can add
+ */
+Widget.prototype.input = function () {
+    try {
+        var box="widget_box_select_id";
+
+        var queryString = {
+            op: 'widget',
+            action: 'widget.input',
+            gDossier: this.dossier_id
+        };
+        var action = new Ajax.Request(
+            "ajax_misc.php",
+            {
+                method: 'GET',
+                parameters: queryString,
+                onFailure: ajax_misc_failure,
+                onSuccess: function (req) {
+                    remove_waiting_box();
+                    if (req.responseText == 'NOCONX') {
+                        reconnect();
+                        return;
+                    }
+                    var style = 'position:absolute;';
+                    var y = calcy(200);
+                    style = style + ' ;top : ' + y + 'px';
+
+                    add_div({id: box, cssclass: 'inner_box', html: loading(), style: style})
+
+                    $(box).update(req.responseText);
+
+
+                }
+            }
+        );
+    } catch (e) {
+        alert_box(e.message);
+    }
+}
+/**
+ * add a widget for  the user , refresh the dashboard afterward
+ * @param widget_code {string}
+ */
+Widget.prototype.add=function (widget_code) {
+    	try
+    		{
+                here=this;
+                var param = {};
+                if ($(widget_code+"_param")) {
+                    console.debug(`found a FORM`)
+                    param=$(widget_code+"_param").serialize()
+                }
+                query = {
+                    op : 'widget',
+                    action : 'widget.insert',
+                    gDossier: this.dossier_id,
+                    param : param,
+                    widget_code:widget_code
+                }
+    	        var action = new Ajax.Request(
+    					  "ajax_misc.php" ,
+    					  {
+    					      method:'GET',
+    					      parameters:query,
+    					      onFailure:ajax_misc_failure,
+    					      onSuccess:function(req){
+    	                        if (req.responseText == 'NOCONX') {
+    	                            reconnect();
+    	                            return;
+    	                        }
+                                var new_element=new Element("li");
+                                $('contain_widget').appendChild(new_element);
+                                new_element.replace(req.responseText)
+                                removeDiv('widget_box_select_id')
+                                  here.create_sortable()
+                                here.refresh()
+
+    					      }
+    					  }
+    	              );
+    		}catch( e)
+    		{
+    			alert_box(e.message);
+    		}
+
 }

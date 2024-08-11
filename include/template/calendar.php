@@ -12,9 +12,9 @@
  ?>
     
 <?php if ($zoom == 1 ): ?>    
-<table style="width:100%;height:80%">
+<table style="width:100%;height:70%">
     <?php else: ?>
-<table style="width:100%;">
+<table style="width:100%;height:70%">
     <?php endif; ?>
 <tr>
 <?php
@@ -36,10 +36,11 @@ $week=$nFirstDay;
 $nCol=0;
 $today_month=date('m');
 $today_day=date('j');
+$height=($zoom == 1)?"15vh":"2rem";
 while ($ind <= $this->day) {
      if ($nCol==0)
     {
-        echo "<tr>";
+        echo "<tr style='height:{$height} '>";
     }
     $class="workday";
     if ($week==0||$week==6)

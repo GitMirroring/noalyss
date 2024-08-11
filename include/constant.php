@@ -406,7 +406,8 @@ function noalyss_class_autoloader($class)
         "htmlinput" => "lib/html_input.class.php",
         'noalyss\dbg'=>"lib/dbg.php",
         'noalyss\file_cache'=>"lib/file_cache.class.php",
-        "pdfland"=>"class/pdf_land.class.php"
+        "pdfland"=>"class/pdf_land.class.php",
+        "noalyss\widget\widget"=>"widget/widget.php"
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];
