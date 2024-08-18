@@ -23,7 +23,7 @@
    */
 if ( !defined ('ALLOWED') )  die('Appel direct ne sont pas permis');
 $http=new HttpInput();
-
+$distype=$http->request('distype');
 ob_start();
 if ($notitle==0)
 {

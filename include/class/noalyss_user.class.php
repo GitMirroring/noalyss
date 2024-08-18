@@ -1496,6 +1496,7 @@ class Noalyss_User
      */
     function can_add_action($p_profile)
     {
+
         $r=$this->db->get_value(' select count(*) 
                 from user_sec_action_profile
                 where p_granted=$2
