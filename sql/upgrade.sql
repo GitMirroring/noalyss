@@ -57,13 +57,6 @@ INSERT INTO public.widget_dashboard (wd_id,wd_code,wd_description,wd_parameter,w
                                                                                       (6,'mini_report','Affiche des rapports de comptabilité',1,'Rapport');
 
 
-INSERT INTO public.user_widget (use_login,dashboard_widget_id,uw_parameter,uw_order)
-    VALUES
-         ('admin',1,NULL,10),
-         ('admin',3,NULL,30),
-         ('admin',4,NULL,40),
-         ('admin',5,NULL,50),
-         ('admin',2,NULL,45);
 
 alter table  public.widget_dashboard add wd_name text;
 ALTER TABLE public.widget_dashboard ALTER COLUMN wd_name SET NOT NULL;
