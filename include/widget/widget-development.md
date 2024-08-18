@@ -12,7 +12,7 @@ Il faut aussi l'ajouter dans la table WIDGET_DASHBOARD
 
 ## Installation
 
-Création dans le répertoire d'un fichier appelé "install.php" dans le sous-répertoide qui sera exécuté si 
+Création d'un fichier appelé "install.php" dans le sous-répertoire qui sera exécuté si 
 le widget n'est pas encore dans la base de données
 
 Exemple
@@ -44,7 +44,7 @@ La classe s'appele toujours "nom-du-widget.php" , elle est dérivée de widget e
 
 * display  : affichage du widget
 * input : affichage de la description et permet son activation (visible dans la box )
-* input-parameter : si des paramètres doivent être sauvées, les paramètres sont par utilisateurs et par widget activés,
+* input-parameter : si des paramètres doivent être sauvées, les paramètres sont par utilisateur et par widget activés,
 * display_parameter
 
 ### Paramètres

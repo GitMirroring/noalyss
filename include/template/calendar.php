@@ -36,7 +36,7 @@ $week=$nFirstDay;
 $nCol=0;
 $today_month=date('m');
 $today_day=date('j');
-$height=($zoom == 1)?"15vh":"2rem";
+$height=($zoom == 1)?"15vh":"3rem";
 while ($ind <= $this->day) {
      if ($nCol==0)
     {
