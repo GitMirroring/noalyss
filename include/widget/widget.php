@@ -180,10 +180,11 @@ where use_login=$1 order by uw.uw_order
         $widget->close_div();
 
         $dossier_id=\Dossier::id();
+        $widgetjs=uniqid('widget');
         echo <<<EOF
 <script>
-var widget= new Widget('{$dossier_id}') 
-widget.display('{$box}',{$widget->get_user_widget_id()},'{$widget->get_widget_code()}')
+var {$widgetjs}= new Widget('{$dossier_id}') 
+{$widgetjs}.display('{$box}',{$widget->get_user_widget_id()},'{$widget->get_widget_code()}')
 </script>
 
 
@@ -218,8 +219,11 @@ EOF;
      * @exception DatabaseCore fails , cannot update
      */
     static function save($array) {
-        if (empty($array)) return;
         global $cn,$g_user;
+        if (empty($array)) {
+            $cn->exec_sql("delete from user_widget where use_login = $1",[$g_user->getLogin()]);
+            return;
+        }
         try {
             $cn->start();
             $order=10;

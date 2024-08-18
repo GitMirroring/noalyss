@@ -11,3 +11,6 @@ echo \HtmlInput::button_action(_('Elements du tableau de bord'), "widget.manage(
 
 
 ?>
+<script>
+var widget=new Widget('<?=\Dossier::id()?>')
+</script>

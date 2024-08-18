@@ -95,7 +95,10 @@ if ( $action == 'widget.save') {
     $query=$http->request("param","string","");
     try {
         parse_str($query, $aWigdet);
-        \Noalyss\Widget\Widget::save($aWigdet['contain_widget']);
+        if (isset ($aWigdet['contain_widget']))
+            \Noalyss\Widget\Widget::save($aWigdet['contain_widget']);
+        else
+            \Noalyss\Widget\Widget::save(array());
 
     } catch (\Exception $e) {
         echo "NOK";
