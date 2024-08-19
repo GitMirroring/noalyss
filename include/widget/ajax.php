@@ -77,7 +77,7 @@ if ( $action == 'widget.manage') {
 
 
     echo '<ul class="aligned-block">';
-    echo '<li>'.\HtmlInput::button_close('widget_box_id','button').'</li>';
+    echo '<li>'.\HtmlInput::button_action(_('Fermer'),'widget.remove_ident();removeDiv('."'widget_box_id'".')').'</li>';
     echo '<li>'.\HtmlInput::button_action(_('Sauver'),'widget.save()').'</li>';
     echo '<li>'.\HtmlInput::button_action(_('Ajouter'),'widget.input()').'</li>';
 
@@ -138,6 +138,6 @@ if ($action == 'widget.insert') {
     $user_widget_id = $cn->get_value("insert into user_widget(use_login,dashboard_widget_id,uw_parameter,uw_order)
 values ($1,$2,$3,1000) returning uw_id",[$g_user->getLogin(),$widget_id,$param]);
         $widget=\Noalyss\Widget\Widget::build_user_widget($user_widget_id, $widget_code);
-        $widget->input();
+        $widget->input(false);
     return;
 }

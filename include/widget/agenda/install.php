@@ -25,4 +25,4 @@ global $cn;
 
 $cn->exec_sql("
 INSERT INTO widget_dashboard (wd_code,wd_description,wd_parameter,wd_name) VALUES
-('agenda','Présentation d''un calendrier avec les dates de rappel des événements',0,'Agenda')");
+('agenda','Présentation d''un calendrier avec les dates de rappel des événements',0,'Calendrier')");

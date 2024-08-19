@@ -28,6 +28,6 @@ $cn->exec_sql("insert into widget_dashboard (wd_code,wd_description,wd_parameter
         'bookmark'
         ,'Raccourcis vers vos menus préférés'
         ,0
-        ,'Raccourcis'
+        ,'Favoris'
         )
 );

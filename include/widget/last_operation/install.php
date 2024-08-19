@@ -25,6 +25,6 @@ global $cn;
 
 $cn->exec_sql("
 INSERT INTO widget_dashboard (wd_code,wd_description,wd_parameter,wd_name) VALUES
-	 ('last_operation','Affichage des dernières opérations comptables saisies',0,'Comptabilité');
+	 ('last_operation','Affichage des dernières opérations comptables saisies',0,'Dernières opérations');
 
 ");

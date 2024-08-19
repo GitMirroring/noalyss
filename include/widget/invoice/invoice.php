@@ -22,7 +22,10 @@
  * \brief display the next invoice to  to be paid or late for customer or supplier
  */
 namespace Noalyss\Widget;
-
+/*!
+ * \class
+ * \brief display the next invoice to  to be paid or late for customer or supplier
+ */
 class Invoice extends Widget
 {
     function input_parameter()

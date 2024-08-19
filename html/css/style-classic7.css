@@ -3563,3 +3563,16 @@ span.widget-name {
      border-style: groove;
      margin: 2px;
  }
+/**
+ * show the number in the widget
+ */
+ .box_ident {
+     border-radius: 10px;
+     background: beige;
+     color: navy;
+     font-size: 3.4rem;
+     padding: 20px;
+     margin-left: 10px;
+     margin-top: 10px;
+     position:absolute;
+ }

@@ -71,9 +71,10 @@ abstract class Widget
      * of the widget if it exists
      * @return mixed
      */
-    function input()
+    function input($flnumber=true)
     {
-
+        static $nb=0;
+        $nb++;
         //read description from database
         $row=$this->db->get_row("
                     select 
@@ -86,8 +87,9 @@ abstract class Widget
                     where 
                         wd_code=$1",
         [$this->widget_code]);
-
-        echo "<li id=\"elt_{$this->user_widget_id}\"> <span class='widget-name'>{$row['wd_name']}</span>{$row['wd_description']}";
+        $strNumber="";
+        if ( $flnumber) $strNumber="[ $nb ]";
+        echo "<li id=\"elt_{$this->user_widget_id}\">  $strNumber <span class='widget-name'>{$row['wd_name']}</span>{$row['wd_description']}";
 
         if ( $this->user_widget_id > 0) {
             if ( $row['wd_parameter'] == 1) {
@@ -153,7 +155,7 @@ where use_login=$1 order by uw.uw_order
      * @return void
      */
     function open_div() {
-        printf( '<div id="%s_%s" class="box">',$this->widget_code,$this->user_widget_id);
+        printf( '<div id="%s_%s" class="box widget-box">',$this->widget_code,$this->user_widget_id);
     }
     function close_div() {
         echo '</div>';
@@ -259,7 +261,7 @@ EOF;
         echo '<ul id="widget_add" class="list-unstyled">';
         foreach ($aWidget as $item) {
             $widget=Widget::build_user_widget(-1,$item['wd_code']);
-            $widget?->input();
+            $widget?->input(false);
 
         }
         echo '</ul>';

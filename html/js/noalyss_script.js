@@ -4378,6 +4378,7 @@ Widget.prototype.display = function (box,user_widget_id,widget_code) {
  */
 Widget.prototype.manage = function () {
     try {
+        this.show_ident();
         var box = 'widget_box_id';
         var queryString = {
             gDossier: this.dossier_id,
@@ -4399,10 +4400,9 @@ Widget.prototype.manage = function () {
                     var y = calcy(200);
                     style = style + ' ;top : ' + y + 'px';
 
-                    add_div({id: box, cssclass: 'inner_box', html: loading(), style: style})
+                    add_div({id: box, cssclass: 'inner_box', html: loading(), style: style,drag:true})
 
                     $(box).update(req.responseText);
-
                 }
             }
         );
@@ -4462,12 +4462,14 @@ Widget.prototype.save = function () {
     		{
     			alert_box(e.message);
     		}
+    this.remove_ident();
 }
 /**
  * refresh the DASHBOARD (dashboard_div_id)
  */
 Widget.prototype.refresh = function () {
     try {
+        var here = this;
         var dgbox='dashboard_div_id'
         var queryString = {
             op : 'widget',
@@ -4553,7 +4555,6 @@ Widget.prototype.add=function (widget_code) {
                 here=this;
                 var param = {};
                 if ($(widget_code+"_param")) {
-                    console.debug(`found a FORM`)
                     param=$(widget_code+"_param").serialize()
                 }
                 query = {
@@ -4578,8 +4579,7 @@ Widget.prototype.add=function (widget_code) {
                                 $('contain_widget').appendChild(new_element);
                                 new_element.replace(req.responseText)
                                 removeDiv('widget_box_select_id')
-                                  here.create_sortable()
-                                here.refresh()
+                                here.create_sortable()
 
     					      }
     					  }
@@ -4589,4 +4589,34 @@ Widget.prototype.add=function (widget_code) {
     			alert_box(e.message);
     		}
 
+}
+/**
+ * Show the number in the widget to improve the ergonomy
+ */
+Widget.prototype.show_ident = function ()
+{
+    var aBox = document.getElementsByClassName('widget-box')  ;
+    var nb=aBox .length
+    var idx=1;
+    for (var e=0;e <nb; e++) {
+        if (aBox[e].visible)
+        {
+            var spanx=new Element('span');
+            spanx.addClassName("box_ident");
+            aBox[e].insertBefore(spanx,aBox[e].firstChild);
+            spanx.update(idx);
+            idx++
+        }
+    }
+}
+/**
+ * Hide the number of the widget
+ */
+Widget.prototype.remove_ident = function ()
+{
+    while (true) {
+        var elt=document.getElementsByClassName("box_ident");
+        if ( elt.length == 0) break;
+        elt[0].remove()
+    }
 }

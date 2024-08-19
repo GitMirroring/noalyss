@@ -39,7 +39,7 @@ class Todo_List extends Widget
     function display()
     {
         global $cn;
-        echo '<div class="box" id="todo_list">';
+        echo '<div class="box widget-box" id="todo_list" >';
         echo \HtmlInput::title_box(_('Pense-Bête'), "todo_listg_div", 'zoom', "zoom_todo()", 'n');
         echo \Dossier::hidden();
         $todo = new \Todo_List($cn);

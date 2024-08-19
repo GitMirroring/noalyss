@@ -21,7 +21,7 @@
  * \file
  * \brief display events for 10 days
  */
-echo h2('Actions','class="title"');
+echo h2(_("A faire"),'class="title"');
 if ( empty ($array)) {
     echo _("Aucun événement en retard ou prévu");
     return;

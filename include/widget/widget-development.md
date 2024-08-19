@@ -88,6 +88,8 @@ Exemple pour mini_report
 
 Toujours commencer par un DIV (id=code_widget+uw_id), Widget::open_div et Widget::close_div
 
+Ce DIV doit avoir comme classe **box** et **widget-box** , le **widget-box** permet de numéroter les boites.
+
 Exemple :
 
       $this->open_div();
