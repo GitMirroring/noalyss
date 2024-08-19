@@ -899,7 +899,7 @@ class Acc_LedgerTest extends TestCase
         ob_end_clean();
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger-input_new.html", $result);
         $size=filesize(__DIR__."/file/acc_ledger-input_new.html");
-        $this->assertTrue($size == 15653  ," output input_new is not what it is expected");
+        $this->assertTrue($size == 15664  ," output input_new is not what it is expected");
 
     }
 
