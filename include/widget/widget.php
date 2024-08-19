@@ -169,16 +169,19 @@ where use_login=$1 order by uw.uw_order
     static function ajax_display(Widget $widget ){
         $box= sprintf( '%s_%s',$widget->get_widget_code(),$widget->get_user_widget_id());
         $widget->open_div();
+        echo h2(_("Un instant, on charge :-)"),' class="title" ');
 
+
+        print '<div style="display:flex;justify-content: flex-start">';
+        print '<div style="margin-top: 50px;margin-left: 20px;">';
         print '<div class="loading_msg"></div>';
         print '<div class="loading_msg"></div>';
         print '<div class="loading_msg"></div>';
         print '<div class="loading_msg"></div>';
         print '<div class="loading_msg"></div>';
-        print '<div class="loading_msg"></div>';
-        print '<div class="loading_msg"></div>';
-        print '<div class="loading_msg"></div>';
-        echo p(_("Un instant, on charge :-)"));
+        print '</div>';
+        print '</div>';
+
         $widget->close_div();
 
         $dossier_id=\Dossier::id();
