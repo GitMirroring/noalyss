@@ -4,6 +4,8 @@ alter table attr_min add ad_default_order int;
 
 update attr_min set ad_default_order = a1.ad_default_order from attr_def a1 where a1.ad_id = attr_min.ad_id;
 
+update menu_ref set me_menu='Etat des actions',me_description='Etat des actions dans le suivi',me_description_etendue ='Permet d''ajouter des état pour les documents utilisés dans le suivi (à faire, à suivre...)' where me_code='CFGDOCST';
+
 
 select replace_menu_code('CFGACC','C0PST');
 select replace_menu_code('CFGDOC','C0DOC');
@@ -11,8 +13,9 @@ select replace_menu_code('CFGSEC','C0SEC');
 select replace_menu_code('CFGPCMN','C0PCMN');
 select replace_menu_code('CFGPRO','C0PROFL');
 select replace_menu_code('CFGLED','C0JRN');
-select replace_menu_code('CFGDOCST','C1DOC');
+select replace_menu_code('CFGDOCST','C0ETS');
 select replace_menu_code('CFGDEFMENU','C0MENU');
+select replace_menu_code('CFGMENU','C1MENU');
 select replace_menu_code('CFGPAY','C0PAY');
 select replace_menu_code('CFGCURRENCY','C0DEV');
 select replace_menu_code('CFGACTION','C0ACT');
@@ -20,14 +23,17 @@ select replace_menu_code('CFGOPT1','C0OPT1');
 select replace_menu_code('CFGSTOCK','C0STOCK');
 select replace_menu_code('CFGPLUGIN','C0PLG');
 select replace_menu_code('CFGTAG','C0TAG');
+select replace_menu_code('CFGTVA','C0TVA');
+select replace_menu_code('CCARDAT','C0CARD');
+
 
 update menu_ref set me_description ='Configuration des extensions' where me_code='C0PLG';
 update menu_ref set me_description ='Clef de répartition pour la comptabilité analytique' where me_code='ANCKEY';
+update menu_ref set me_description ='Configuration des étiquettes',me_description_etendue='Configuration des étiquettes(tags) ou dossiers, on l''appele tag ou dossier suivant la façon dont vous utilisez
+cette fonctionnalité. Vous pouvez en ajouter, en supprimer ou les modifier' where me_code='C0TAG';
 
 --- widget pour DASHBOARD
-drop table dashboard_widget;
-drop table if exists user_widget;
-drop table if exists  user_widger;
+drop table if exists  user_widget;
 drop table if exists widget_dashboard;
 
 create table widget_dashboard(
@@ -57,11 +63,14 @@ COMMENT ON COLUMN public.widget_dashboard.wd_code IS 'Code';
 COMMENT ON COLUMN public.widget_dashboard.wd_description IS 'Description';
 COMMENT ON COLUMN public.widget_dashboard.wd_parameter IS 'presence of  there is a parameter';
 
-update menu_ref set me_menu = me_menu ||' &#128100;' where me_code='PREFERENCE';
+update menu_ref set me_menu = 'Preference' ||' &#128100;' where me_code='PREFERENCE';
 update menu_ref set me_menu = 'Impression &#x1F4CA;' where me_code='PRINT';
 update menu_ref set me_menu = me_menu || '&#x1F4CA;' where me_code='RAPAV';
 update menu_ref set me_menu = me_menu ||' &#x1F4C7;' where me_code='CARD';
 update menu_ref set me_menu  = 'Favori &#x2728;' where me_code='BOOKMARK';
+update attr_def set ad_text = initcap(ad_text)  where ad_id in (17,18,16);
+update attr_def set ad_text = 'Numéro TVA'  where ad_id = 13;
+
 
 insert into version (val,v_description) values (200,'Widget and improve menu');
 commit;
