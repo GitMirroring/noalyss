@@ -36,7 +36,7 @@ if (isset($_REQUEST['gDossier']) && $http->request("gDossier","number",0) != 0 )
         $g_user->load_global_pref();
         $msg = "";
         $cn =Dossier::connect();
-        $g_user->cn = $cn;
+        $g_user->db = $cn;
         $inside_dossier = true;
         $local_pref=$g_user->get_preference();
 }
