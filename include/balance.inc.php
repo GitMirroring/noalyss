@@ -439,12 +439,12 @@ if ( isset($_GET['view'] ) )
         echo td($view_history);
         // label + warning if the saldo is incorrect
         $label=$r['label'];
-        if (in_array($r['type'],array('CHA','ACT','PASINV','PROINV')) && $r['sum_deb']<$r['sum_cred'])
+        if (isset ($r['type']) && in_array($r['type'],array('CHA','ACT','PASINV','PROINV')) && $r['sum_deb']<$r['sum_cred'])
         {
 
             $label.=" ".Icon_Action::warnbulle(85);
         }
-        if (in_array($r['type'],array('PRO','PAS','ACTINV','CHAINV')) && $r['sum_deb']>$r['sum_cred'])
+        if (isset ($r['type']) && in_array($r['type'],array('PRO','PAS','ACTINV','CHAINV')) && $r['sum_deb']>$r['sum_cred'])
         {
 
             $label.=" ".Icon_Action::warnbulle(86);
