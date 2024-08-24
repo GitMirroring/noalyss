@@ -404,6 +404,8 @@ echo "<li>";
 
 echo "</li>";
 }
+
+
 //---------------------------------------------------------------------------------------
 // Check php modules
 //---------------------------------------------------------------------------------------
@@ -484,17 +486,20 @@ if ( (defined("MULTI") && MULTI==1)|| !defined("MULTI"))
 ?>
 <h2><?php echo _('Base de données')?></h2>
 <?php
- // Verify Psql version
- //--
+//-------------------------------------------------------------------------------------------
+// Verify Psql version
+//
+//-------------------------------------------------------------------------------------------
+
 $sql="select setting from pg_settings where name='server_version'";
 $version=$cn->get_value($sql);
 
 echo _("Version base de données :"),$version;
 $majeur=explode(".",$version);
-if ( $majeur[0] < 10  )
+if ( $majeur[0] < 12  )
   {
 ?>
-  <p><?php echo $failed . _(" Vous devez absolument utiliser au minimum une version 10 de PostGresql, si votre distribution n'en
+  <p><?php echo $failed . _(" Vous devez  utiliser au minimum une version 12 de PostGresql, si votre distribution n'en
 offre pas, installez-en une en la compilant. Lisez attentivement la notice sur postgresql.org pour migrer
 vos bases de données")?>
 </p>
@@ -594,19 +599,48 @@ if ($account == 0 ) {
   echo "Creation of ".domaine."account_repository";
   if ( DEBUGNOALYSS == 0 ) ob_start();
   $cn->exec_sql("create database ".domaine."account_repository encoding='utf8'");
-  $cn=new Database();
-  $cn->start();
-  $cn->execute_script(NOALYSS_INCLUDE."/sql/account_repository/schema.sql");
-  $cn->execute_script(NOALYSS_INCLUDE."/sql/account_repository/data.sql");
-  $cn->execute_script(NOALYSS_INCLUDE."/sql/account_repository/constraint.sql");
+  $repo=new Database();
+  $sql_trigger_activate="
+ create or replace procedure public.trigger_activate(to_enable bool)
+language plpgsql
+as
+$$
+declare
+	rec1 record;
+    cmd text;
+begin
+for rec1 in (select relname,nspname
+		from pg_catalog.pg_class pc join pg_catalog.pg_namespace pn on (pn.oid=pc.relnamespace)
+		where pn.nspname in ('public','comptaproc') and relhastriggers is true) loop
+		if to_enable is false  then
+			cmd=format('alter table %s.%s disable trigger all',rec1.nspname,rec1.relname);
+		else
+			cmd=format('alter table %s.%s enable trigger all',rec1.nspname,rec1.relname);
+		end if;
+		execute cmd;
+		raise notice '%',cmd;
+		end loop;
+end
+
+$$;
+ ";
+
+    $repo->exec_sql($sql_trigger_activate);
+    $repo->start();
+    $repo->execute_script(NOALYSS_INCLUDE."/sql/account_repository/schema.sql");
+    $repo->exec_sql("call public.trigger_activate(false) ");
+    $repo->execute_script(NOALYSS_INCLUDE."/sql/account_repository/data.sql");
+
+    $repo->commit($cn);
   /* update name administrator */
   $cadmin=NOALYSS_ADMINISTRATOR;
   $cpassword_admin=NOALYSS_ADMIN_PASSWORD;
-  $cn->exec_sql("update ac_users set use_login=$1,use_pass=md5($2),use_active=1 where use_id=1",
+    $repo->exec_sql("update public.ac_users set use_login=$1,use_pass=md5($2),use_active=1 where use_id=1",
               array(strtolower($cadmin),$cpassword_admin));
 
-  $cn->commit($cn);
 
+    $repo->exec_sql("call public.trigger_activate(true) ");
+    $repo->exec_sql("drop procedure public.trigger_activate ");
   if ( DEBUGNOALYSS ==  0 )
     {
         ob_end_clean();
@@ -620,27 +654,35 @@ if ($account == 0 ) {
     $cn->exec_sql("create database ".domaine."mod1 encoding='utf8'");
 
   $cn=new Database(1,'mod');
+    $cn->exec_sql($sql_trigger_activate);
   $cn->start();
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/schema.sql');
+    $cn->exec_sql("call public.trigger_activate(false) ");
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/data.sql');
-  $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
-  $cn->commit();
 
+  $cn->commit();
+  $cn->exec_sql("call public.trigger_activate(true) ");
+  $cn->exec_sql("drop procedure public.trigger_activate");
   if ( DEBUGNOALYSS == 0 )
     {
         ob_end_clean();
     }
 
-    echo _("Creation of Modele 2");
+  echo _("Creation of Modele 2");
   $cn->exec_sql("create database ".domaine."mod2 encoding='utf8'");
   $cn=new Database(2,'mod');
+  $cn->exec_sql($sql_trigger_activate);
+
   $cn->start();
   if ( DEBUGNOALYSS == 0 ) { ob_start();  }
-  $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/schema.sql');
-  $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod2/data.sql');
-  $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
-  $cn->commit();
 
+  $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/schema.sql');
+    $cn->exec_sql("call public.trigger_activate(false) ");
+  $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod2/data.sql');
+
+  $cn->commit();
+    $cn->exec_sql("call public.trigger_activate(true) ");
+    $cn->exec_sql("drop procedure public.trigger_activate");
  if ( DEBUGNOALYSS == 0 ) ob_end_clean();
 echo '<h1>'._('Important').'</h1>';
 echo '<p>'._('Utilisateur  administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';
@@ -725,7 +767,7 @@ define ('ALLOWED_ADMIN',1);
 $rep=new Database();
 if (defined("NOALYSS_ADMINISTRATOR") && defined ("NOALYSS_ADMIN_PASSWORD"))
 {
-    $rep->exec_sql("update ac_users set use_login=$1 ,use_pass=md5($2) 
+    $rep->exec_sql("update public.ac_users set use_login=$1 ,use_pass=md5($2) 
              where use_id=1", 
             array(strtolower(NOALYSS_ADMINISTRATOR),
                 NOALYSS_ADMIN_PASSWORD));
