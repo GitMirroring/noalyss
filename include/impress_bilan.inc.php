@@ -46,9 +46,9 @@ if ( ! isset ($_GET['verif']))
     /*
      * Let you change the exercice
      */
-    echo '<fieldset><legend>'._('Exercice').'</legend>';;
+    echo '<fieldset>';;
     echo '<form method="GET" onsubmit="return waiting_box()">';
-    echo _('Choisissez un autre exercice');
+    echo _('Choisissez un exercice');
     $ex=new Exercice($cn);
     $wex=$ex->select('exercice',$exercice,' onchange="submit(this)"');
     echo $wex->input();

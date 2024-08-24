@@ -67,10 +67,12 @@ if ( $w != "widget") {
         return;
     }
 }
+/**************************************************************************
 // action == manage , display a dialog box to add , remove or change parameter of widget
 // if must possible to add several time the same widget , example mini-report
+ *************************************************************************/
 if ( $action == 'widget.manage') {
-    echo \HtmlInput::title_box(_("Elements"), 'widget_box_id',p_mod: 'none');
+    echo \HtmlInput::title_box(_("Elements"), 'widget_box_id',p_mod: 'none',p_draggable: 'y');
     echo '<div style="padding:0.3rem">';
     echo span(_('Organiser les éléments en utilisant la souris (Drag & Drop) puis sauver'),'class="text-muted text-center"');
     \Noalyss\Widget\Widget::display_available();
@@ -115,7 +117,7 @@ if ($action == 'widget.refresh') {
     return;
 }
 if ($action == "widget.input") {
-    echo \HtmlInput::title_box(_("Elements à ajouter"), 'widget_box_select_id');
+    echo \HtmlInput::title_box(_("Elements à ajouter"), 'widget_box_select_id',p_draggable: 'y');
     echo '<div style="padding:0.3rem">';
     \Noalyss\Widget\Widget::select_available();
     echo '</div>';

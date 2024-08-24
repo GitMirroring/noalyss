@@ -4400,7 +4400,7 @@ Widget.prototype.manage = function () {
                     var y = calcy(200);
                     style = style + ' ;top : ' + y + 'px';
 
-                    add_div({id: box, cssclass: 'inner_box', html: loading(), style: style,drag:true})
+                    add_div({id: box, cssclass: 'inner_box', html: loading(), style: style,drag:false})
 
                     $(box).update(req.responseText);
                 }

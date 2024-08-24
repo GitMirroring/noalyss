@@ -217,11 +217,11 @@ $exercice=$http->get("exercice","number",$g_user->get_exercice());
 /*
  * Let you change the exercice
  */
-echo '<fieldset><legend>'._('Exercice').'</legend>';;
+echo '<fieldset>';;
 echo '<form method="GET" ';
 printf( ' onsubmit="waiting_box()">');
 
-echo 'Choisissez un autre exercice :';
+echo 'Choisissez un exercice :';
 $ex=new Exercice($cn);
 $wex=$ex->select('exercice',$exercice,
         sprintf(' onchange="updatePeriode(\'%s\',\'exercice\',\'from_periode\',\'to_periode\',1)"',Dossier::id(),$exercice));
