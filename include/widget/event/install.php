@@ -26,7 +26,7 @@ global $cn;
 $cn->exec_sql("insert into widget_dashboard (wd_code,wd_description,wd_parameter,wd_name) values ($1,$2,$3,$4)",
     array (
         'event'
-        ,'Affiche les actions à venir et celles en retards'
+        ,'Affiche les actions dont la date limite est à moins de 14 jours '
         ,0
         ,'A faire'
         )
