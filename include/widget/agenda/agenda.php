@@ -45,7 +45,7 @@ class Agenda extends Widget
             \Dossier::id(),'per','calendar_zoom_div','cal');
 
        $this->open_div();
-        echo \HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"calendar_zoom($obj)",'n');
+        echo \HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"calendar_zoom($obj)",'n',raw:'&#x1F4C5;');
         echo $cal->display('short',0);
         $this->close_div();
     }

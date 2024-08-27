@@ -4620,3 +4620,16 @@ Widget.prototype.remove_ident = function ()
         elt[0].remove()
     }
 }
+
+/**
+ * Put the widget in full size
+ * @param widget_domid {string} dom id of the widget to toggle the size
+ */
+Widget.prototype.toggle_full_size=function (widget_domid) {
+    if ( $(widget_domid).hasClassName('widget-full_size')) {
+        $(widget_domid).removeClassName('widget-full_size');
+    } else {
+        $(widget_domid).addClassName('widget-full_size');
+    }
+
+}

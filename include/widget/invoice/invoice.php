@@ -19,24 +19,36 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu 18/08/24
 /*! 
  * \file
- * \brief display the next invoice to  to be paid or late for customer or supplier
+ * \brief display the next invoice to be paid or late for customer or supplier
  */
 namespace Noalyss\Widget;
 /*!
  * \class
- * \brief display the next invoice to  to be paid or late for customer or supplier
+ * \brief display the next invoice to be paid or late for customer or supplier
  */
 class Invoice extends Widget
 {
+    static function getConstantTiers() : array
+    {
+        return ['S' => _("Fournisseurs"), "C" => _("Clients")];;
+    }
+    static function getConstantLimit() :array {
+        return  ['P' => _("Prochaines factures"), "R" => "facture en retard",'T'=>_("Aujourd'hui")];
+    }
     function input_parameter()
     {
         $tiers = new \ISelect('tiers');
-        $tiers->value[] = array('value' => 'S', 'label' => _("Fournisseurs"));
-        $tiers->value[] = array('value' => 'C', 'label' => _("Clients"));
+        $aTiers=Invoice::getConstantTiers();
+        $tiers->value=[];
+        foreach ($aTiers as $key=>$value) {
+            $tiers->value[]=['value'=>$key,'label'=>$value];
+        }
         $time_limit = new \ISelect('time_limit');
-        $time_limit->value[] = array('value' => 'P', 'label' => _("Prochaines factures"));
-        $time_limit->value[] = array('value' => 'R', 'label' => _("Factures en retard"));
-        $time_limit->value[] = array('value' => 'T', 'label' => _("Factures pour aujourd'hui"));
+        $aLimit=Invoice::getConstantLimit();
+        $time_limit->value=[];
+        foreach ($aLimit as $key=>$value) {
+            $time_limit->value[]=['value'=>$key,'label'=>$value];
+        }
 
         $input = _("Factures ") . $tiers->input() . " " . _("échéance") . " " . $time_limit->input();
         $this->make_form($input);
@@ -46,8 +58,8 @@ class Invoice extends Widget
     function display_parameter()
     {
         $aParam = $this->get_parameter();
-        $aTiers = ['S' => _("Fournisseurs"), "C" => _("Clients")];
-        $aLimit = ['P' => _("Prochaines"), "R" => "Retard",'T'=>_("Aujourd'hui")];
+        $aTiers =Invoice::getConstantTiers();
+        $aLimit = Invoice::getConstantLimit();
         echo '<span class="widget_param">'.$aTiers[$aParam['tiers']] . " " . $aLimit[$aParam["time_limit"]].'</span>';
     }
 
@@ -55,10 +67,12 @@ class Invoice extends Widget
     {
         $this->open_div();
         $aParam = $this->get_parameter();
-        $aTiers = ['S' => _("Fournisseurs"), "C" => _("Clients")];
-        $aLimit = ['P' => _("Prochaines factures"), "R" => "facture en retard",'T'=>_("Aujourd'hui")];
+        $aTiers = Invoice::getConstantTiers();
+        $aLimit = Invoice::getConstantLimit();
         $title = $aTiers[$aParam['tiers']] . " " . $aLimit[$aParam["time_limit"]];
-        echo h2($title, 'class="title"');
+
+        $this->title($title);
+
         $acc_ledger = new \Acc_Ledger($this->db, 0);
 
         $ledger_type = 'ACH';

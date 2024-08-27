@@ -3576,3 +3576,17 @@ span.widget-name {
      margin-top: 10px;
      position:absolute;
  }
+
+ /**
+ widget full size
+  */
+div.widget-full_size {
+ z-index: 5;
+ position: fixed;
+ top: 5px;
+ width: 96%;
+ height: 96%;
+ overflow: auto;
+ max-height: 100%;
+ margin: 2px;
+}

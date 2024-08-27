@@ -861,7 +861,7 @@ class HtmlInput
     }
 
     /**
-     * Title for boxes, you can customize the symbol thanks symbol with
+     * @brief Title for boxes, you can customize the symbol thanks symbol with
      * the mode "custom"
      * @param string $p_name Title
      * @param string $div element id, except for mode none or custom
@@ -872,7 +872,7 @@ class HtmlInput
      * @return type
      */
     static function title_box($p_name, $p_div, $p_mod="close", $p_js="",
-            $p_draggable="n",$p_enlarge='n')
+            $p_draggable="n",$p_enlarge='n',$raw="")
     {
         $p_div=strip_tags($p_div);
         $r='<div class="bxbutton">';
@@ -912,7 +912,7 @@ class HtmlInput
 
 
         $r.='</div>';
-        $r.=h2($p_name, ' class="title" ');
+        $r.=h2($p_name, ' class="title" ',$raw);
    
         return $r;
     }

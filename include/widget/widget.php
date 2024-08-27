@@ -155,7 +155,15 @@ where use_login=$1 order by uw.uw_order
      * @return void
      */
     function open_div() {
-        printf( '<div id="%s_%s" class="box widget-box">',$this->widget_code,$this->user_widget_id);
+        printf( '<div id="%s" class="box widget-box">',$this->get_div_domid());
+    }
+
+    /**
+     * @brief compute the DIV ID
+     * @return string
+     */
+    function get_div_domid() :string {
+        return sprintf( "%s_%s",$this->widget_code,$this->user_widget_id);
     }
     function close_div() {
         echo '</div>';
@@ -340,5 +348,26 @@ EOF;
         if (empty ($param)) return [];
         parse_str($param,$aParam);
         return $aParam;
+    }
+
+    /**
+     * @brief compute the button ZOOM to put in the title
+     * @return \html
+     */
+    function button_zoom() {
+        $bt = \Icon_Action::zoom(uniqid(), sprintf("widget.toggle_full_size('%s')",$this->get_div_domid()));
+        return $bt;
+    }
+    /**
+     * @brief display the title and the icon for zooming
+     * @param $title string title of the widget
+     */
+    function title( $title) {
+
+        $r='<div class="bxbutton">';
+        $r.='<span  id="span_'.uniqid().'" style="float:right;margin-right:5px">'.$this->button_zoom()."</span>";
+        $r.='</div>';
+        $r.=sprintf('<h2 class="title">%s</h2>',$title);
+        echo $r;
     }
 }

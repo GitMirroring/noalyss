@@ -55,8 +55,10 @@ class Mini_Report extends Widget
         }
         $this->open_div();
         if ($report != 0) {
+            $report_id=$this->get_div_domid();
             ?>
-           <?php echo HtmlInput::title_box($rapport->get_name(), 'report_div', 'none', '', 'n'); ?>
+            <?php echo $this->title($rapport->get_name()) ;?>
+
             <?php
             $exercice = $g_user->get_exercice();
             if ($exercice == 0) {

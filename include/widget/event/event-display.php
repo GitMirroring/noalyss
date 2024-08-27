@@ -21,7 +21,8 @@
  * \file
  * \brief display events for 10 days
  */
-echo h2(_("A faire"),'class="title"');
+//echo \HtmlInput::title_box(_("A faire"), uniqid(), 'custom', $this->button_zoom(), 'n');
+$this->title(_("Ev. pour 14 jours") );
 if ( empty ($array)) {
     echo _("Aucun événement en retard ou prévu");
     return;

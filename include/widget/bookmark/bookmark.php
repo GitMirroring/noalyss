@@ -29,7 +29,9 @@ class Bookmark extends Widget
     {
         global $g_user;
         $this->open_div();
-        echo '<h2 class="title">',_("Favoris"),'&#x2728;','</h2>';
+
+
+        $this->title(_("Favoris") . '&#x2728;');
         $bookmark_sql="select distinct b_id,b_action,b_order,me_code,me_description, javascript"
             . " from bookmark "
             . "join v_menu_description_favori on (code=b_action or b_action=me_code)"

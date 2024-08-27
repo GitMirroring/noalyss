@@ -40,7 +40,8 @@ class Last_Event extends Widget
     {
         global $cn;
         $this->open_div();
-        echo HtmlInput::title_box(_('Suivi'),"last_operation_management_div",'zoom','action_show('.dossier::id().')','n');
+        $this->title(_("Dernières actions du suivi"));
+
         $gestion=new \Follow_Up($cn);
         $array=$gestion->get_last(MAX_ACTION_SHOW);
         $len_array=count($array);

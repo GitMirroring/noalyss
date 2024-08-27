@@ -32,7 +32,7 @@ namespace Noalyss\Widget;
 class Event extends Widget
 {
     /**
-     * @brief get the action where the remind day is within 10 days
+     * @brief get the action where the remind day is within 14 days
      * @return array
      */
     function get_next10()

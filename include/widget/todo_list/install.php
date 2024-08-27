@@ -25,5 +25,5 @@ global $cn;
 
 $cn->exec_sql("
 INSERT INTO widget_dashboard (wd_code,wd_description,wd_parameter,wd_name) VALUES
-	 ('todo_list','Liste de choses à faire , de petites notes',0,'Pense-Bête');
+	 ('todo_list','Liste de choses à faire , de petites notes, qu''il est possible de partager',0,'Pense-Bête');
 ");
