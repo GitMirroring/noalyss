@@ -28,13 +28,26 @@ namespace Noalyss\Widget;
  */
 class Invoice extends Widget
 {
+    /**
+     * @brief return the constant array Tiers
+     * @return array
+     */
     static function getConstantTiers() : array
     {
         return ['S' => _("Fournisseurs"), "C" => _("Clients")];;
     }
+    /**
+     * @brief return the constant array Limit
+     * @return array
+     */
     static function getConstantLimit() :array {
         return  ['P' => _("Prochaines factures"), "R" => "facture en retard",'T'=>_("Aujourd'hui")];
     }
+
+    /**
+     * @brief let choice what to display
+     * @return void
+     */
     function input_parameter()
     {
         $tiers = new \ISelect('tiers');
@@ -55,6 +68,10 @@ class Invoice extends Widget
 
     }
 
+    /**
+     * @brief display the parameter
+     * @return void
+     */
     function display_parameter()
     {
         $aParam = $this->get_parameter();
@@ -63,6 +80,11 @@ class Invoice extends Widget
         echo '<span class="widget_param">'.$aTiers[$aParam['tiers']] . " " . $aLimit[$aParam["time_limit"]].'</span>';
     }
 
+    /**
+     * @brief display the widget
+     * @return void
+     * @throws \Exception
+     */
     function display()
     {
         $this->open_div();
