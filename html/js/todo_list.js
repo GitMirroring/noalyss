@@ -187,7 +187,7 @@ function zoom_todo ()
     {
         var clonetodo=$('todo_list').clone();
         clonetodo.setAttribute('id','clone_todo_list')
-        clonetodo.setStyle({'z-index':1,'position':'absolute','width':'95%','height':'95%','top':'2%','right':'2%','left':'2%'})
+        clonetodo.setStyle({'z-index':1,'position':'fixed','width':'95%','height':'95%','top':'2%','right':'2%','left':'2%'})
         clonetodo.innerHTML=$('todo_list').innerHTML;
         $('todo_list').innerHTML="";
         clonetodo.addClassName('inner_box');

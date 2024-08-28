@@ -2117,7 +2117,7 @@ function view_action(ag_id, dossier, modify) {
                     }
                     var code_html = getNodeText(html[0]);
                     code_html = unescape_xml(code_html);
-                    var pos = fixed_position(0, 50) + ";width:90%;left:5%;";
+                    var pos = fixed_position(0, 50) + ";width:90%;left:5%;z-index:"+layer;
                     add_div({
                         id: id,
                         cssclass: "inner_box",
@@ -4630,6 +4630,9 @@ Widget.prototype.toggle_full_size=function (widget_domid) {
         $(widget_domid).removeClassName('widget-full_size');
     } else {
         $(widget_domid).addClassName('widget-full_size');
+
+        layer++;
+        $(widget_domid).style.zIndex=layer;
     }
 
 }

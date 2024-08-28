@@ -3581,7 +3581,7 @@ span.widget-name {
  widget full size
   */
 div.widget-full_size {
- z-index: 5;
+ z-index: 1;
  position: fixed;
  top: 5px;
  width: 96%;

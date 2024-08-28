@@ -65,12 +65,13 @@ if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
 
 			$direct=new IText('ac');
 			$direct->style='class="input_text"';
+            $direct->placeholder=_('Accès direct ou menu');
 			$direct->value='';
 			$direct->size=20;
 			echo $direct->input();
 			$gDossier=dossier::id();
 			?>
-		<div id="ac_choices" class="autocomplete" style="width:150"></div>
+		<div id="ac_choices" class="autocomplete" style="width:150px"></div>
 		<?php 
 			echo HtmlInput::submit('go',_('Aller'));
 			?>
