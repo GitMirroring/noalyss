@@ -92,9 +92,9 @@ echo '<div class="content">';
  * Let you change the exercice
  */
 echo '<form method="GET" onsubmit="waiting_box();return true;">';
-echo '<fieldset><legend>' . _('Exercice') . '</legend>';
+echo '<fieldset>' ;
 ;
-echo _('Choisissez un autre exercice').' :';
+echo _('Choisissez un exercice').' :';
 $ex = new Exercice($cn);
 $wex = $ex->select('exercice', $exercice, ' onchange="waiting_box();submit(this)"');
 echo $wex->input();

@@ -19,9 +19,10 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*! \file
- * \brief This file show a little online calculator, in the caller
- *        the span id result, listing, the id form calc_line and the
+/**
+ * @file
+ * This file show a little online calculator, in the caller      the span id result,
+ * listing, the id form calc_line and the
  *       
  *
  */

@@ -28,7 +28,7 @@ if ( ! defined ('ALLOWED') ) die(_('Non autorisé'));
 $http=new HttpInput();
 
 // Security 
-if ($g_user->check_module('CFGPRO')==0)
+if ($g_user->check_module('C0PROFL')==0)
     die();
 try
 {

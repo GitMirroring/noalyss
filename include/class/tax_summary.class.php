@@ -67,7 +67,6 @@ class Tax_Summary
     public function get_db()
     {
         return $this->db;
-        return $this;
     }
 
     /**
@@ -85,7 +84,6 @@ class Tax_Summary
     public function get_date_start()
     {
         return $this->date_start;
-        return $this;
     }
 
     /**
@@ -105,7 +103,7 @@ class Tax_Summary
     public function get_date_end()
     {
         return $this->date_end;
-        return $this;
+
     }
 
     /**
@@ -240,9 +238,9 @@ class Tax_Summary
         return $sql;
     }
     /**
-     * Build the SQL for sale vat
+     * @brief Build the SQL for sale vat
      * 
-     * @param group by ledger
+     * @param $p_group_ledger bool true group by ledgers
      * 
      * @return string
      * 
@@ -329,12 +327,13 @@ class Tax_Summary
                         amount_vat,
                         amount_wovat,
                         amount_sided,
-                        tva_payment_sale as tva_type
+                        tva_payment_sale as tva_type,
+                        jrn_def.jrn_def_id
                     from
                         detail_tva 
                         join tva_rate on (tva_rate.tva_id=qs_vat_code)
                         join jrn_def on (jrn_def.jrn_def_id=j_jrn_def)
-                    order by jrn_def_name, tva_code ||' ('||tva_rate.tva_label||')'";
+                    order by jrn_def.jrn_def_id,jrn_def_name, tva_code ||' ('||tva_rate.tva_label||')'";
                 
         $array=$this->db->get_array($sql, [$this->date_start, $this->date_end]);
         return $array;
@@ -358,12 +357,13 @@ class Tax_Summary
                     amount_noded_amount,
                     amount_noded_tax,
                     amount_noded_return,
-                    amount_private
+                    amount_private,
+                   jrn_def.jrn_def_id
                 from
                     detail_tva 
                     join tva_rate on (tva_rate.tva_id=qp_vat_code)
                     join jrn_def on (jrn_def.jrn_def_id=j_jrn_def)
-                order by jrn_def_name, tva_code ||' ('||tva_rate.tva_label||')'";
+                order by  jrn_def.jrn_def_id,jrn_def_name, tva_code ||' ('||tva_rate.tva_label||')'";
         $array=$this->db->get_array($sql, [$this->date_start, $this->date_end]);
         return $array;
     }
@@ -392,7 +392,7 @@ class Tax_Summary
     }
 
     /**
-     * Summary for all purchase ledger
+     * @brief Summary for all purchase ledgers
      */
     function get_summary_purchase()
     {
@@ -462,6 +462,26 @@ class Tax_Summary
         echo HtmlInput::hidden("tva_type", $this->tva_type);
         echo HtmlInput::submit("PDF:printtva", _("Export PDF"));
         echo '</form>';
+    }
+
+    /**
+     * @brief Build a link to show the detail of a VAT ID
+     * @param $dateStart date from format 'DD.MM.YYYY'
+     * @param $DateeEd date to  format 'DD.MM.YYYY'
+     * @param $nLedger_id integer JRN_DEF.JRN_DEF_ID
+     * @param $nVAT_id integer TVA_RATE.TVA_ID
+     * @return javascript string
+     */
+    function build_link_detail($dossier_id,$dateStart,$DateeEd,$nLedger_id,$nVAT_id)
+    {
+
+
+        $js=sprintf("tax_detail_view('%s','%s','%s','%s','%s')",
+            $dossier_id,$this->date_start,$this->date_end,$nLedger_id,$nVAT_id);
+
+        return $js;
+        
+
     }
 
 }

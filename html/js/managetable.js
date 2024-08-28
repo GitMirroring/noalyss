@@ -16,44 +16,16 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-
 /**
- *@class ManageTable Javascript object to manage ajax calls to 
+ * @class
+ *  Javascript object to manage ajax calls to
  * save , input or delete data row. 
  * The callback must
  respond with a XML file , the tag status for the result
  and data the HTML code to display
- *@param {string} p_table_name the data table on which we're working
- in javascript , to create an object to manipulate the table
- version.
- 
- Example of code
- @code
- // Version will manage the table "version"
- var version=new ManageTable("version");
- 
- // the file ajax_my.php will be called
- version.set_callback("ajax_my.php");
- 
- // Add supplemental parameter to this file
- version.param_add ({"plugin_code":"OIC"};
- 
- // Set the id of dialog box , table and tr prefix
- version.set_control("dialbox1");
- 
- @endcode
- 
- 
- The answer from ajax must be like this template
- @verbatim
- <xml>
- <ctl> id of the control to update for diag.box, row </ctl>
- <status> OK , FAIL ...</status>
- <html> Html to display</html>
- </xml>
- @endverbatim
- 
+
  List of function
+ ====================
  - set_control(p_ctl_name)
  - set_callback (p_new_callback)
  - param_add (json object)
@@ -61,12 +33,11 @@
  - save
  - delete
  - input
-
  How to call a function AFTER save ?
  You set a function afterSaveFct like in the example, it will be trigger after you submit the FORM
  a function  named afterSaveFct(r) where r is the row in HTML to display, with a attribute ctl_pk_id which is the    primary key and id of the row
- Example :
- @code
+
+ @example
  document_attach_obj.afterSaveFct=function(e) {
     var ctl_pk_id=e.getAttribute("ctl_pk_id");
   	var formData = new FormData();
@@ -76,12 +47,8 @@
     xhr.open("POST", "ajax.php?p_id="+ctl_pk_id+"&do=upload_document", true);
 	xhr.send(formData);
 }
- </script>
- @endcode
   As a hidden parameter the Manage_Table:object_name must be  set
 
- Example :
- @code
  // the object_name is tbl6030ee4ee519e , in the table each row (TR) has an attribute ctl_pk_id which is the id (primary key)
  // <tr ctl_pk_id=""  ...> </tr>
  tbl6030ee4ee519e.afterSaveFct=function(p_param) {
@@ -89,9 +56,35 @@
   console.log(this)
   console.log(p_param.getAttribute(ctl_pk_id))
 }
- @endcode
-
  */
+
+/**
+ * @constructor
+ * @param {string} p_table_name the data table on which we're working
+ in javascript , to create an object to manipulate the table
+ version.
+@example
+// Version will manage the table "version"
+ var version=new ManageTable("version");
+
+ // the file ajax_my.php will be called
+ version.set_callback("ajax_my.php");
+
+ // Add supplemental parameter to this file
+ version.param_add ({"plugin_code":"OIC"};
+
+ // Set the id of dialog box , table and tr prefix
+ version.set_control("dialbox1");
+
+ //The answer from ajax must be like this template
+
+    <xml>
+    <ctl> id of the control to update for diag.box, row </ctl>
+    <status> OK , FAIL ...</status>
+    <html> Html to display</html>
+    </xml>
+
+*/
 var ManageTable = function (p_table_name)
 {
     this.callback = "ajax.php"; //!< File to call

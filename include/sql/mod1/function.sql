@@ -1,22 +1,23 @@
-CREATE FUNCTION account_add(p_id public.account_type, p_name character varying) RETURNS text
+CREATE FUNCTION comptaproc.account_add(p_id public.account_type, p_name character varying) RETURNS text
     LANGUAGE plpgsql
     AS $$
 declare
-	nParent tmp_pcmn.pcm_val_parent%type;
-	nCount integer;
-	sReturn text;
+    nParent tmp_pcmn.pcm_val_parent%type;
+    nCount integer;
+    sReturn text;
 begin
-	sReturn:= format_account(p_id);
-	select count(*) into nCount from tmp_pcmn where pcm_val=sReturn;
-	if nCount = 0 then
-		nParent=account_parent(p_id);
-		insert into tmp_pcmn (pcm_val,pcm_lib,pcm_val_parent)
-			values (p_id, p_name,nParent) returning pcm_val into sReturn;
-	end if;
-return sReturn;
+    -- patch 189
+    sReturn:= format_account(p_id);
+    select count(*) into nCount from tmp_pcmn where pcm_val=sReturn;
+    if nCount = 0 then
+        nParent=account_parent(p_id);
+        insert into tmp_pcmn (pcm_val,pcm_lib,pcm_val_parent)
+        values (p_id, p_name,nParent) returning pcm_val into sReturn;
+    end if;
+    return sReturn;
 end ;
 $$;
-CREATE FUNCTION account_alphanum() RETURNS boolean
+CREATE FUNCTION comptaproc.account_alphanum() RETURNS boolean
     LANGUAGE plpgsql
     AS $$
 declare
@@ -30,7 +31,7 @@ begin
 	return l_auto;
 end;
 $$;
-CREATE FUNCTION account_auto(p_fd_id integer) RETURNS boolean
+CREATE FUNCTION comptaproc.account_auto(p_fd_id integer) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
 declare
@@ -44,139 +45,167 @@ begin
 	return l_auto;
 end;
 $$;
-CREATE FUNCTION account_compute(p_f_id integer) RETURNS public.account_type
+CREATE FUNCTION comptaproc.account_compute(p_f_id integer) RETURNS public.account_type
     LANGUAGE plpgsql
     AS $$
 declare
-	class_base fiche_def.fd_class_base%type;
-	maxcode numeric;
-	sResult text;
-	bAlphanum bool;
-	sName text;
+    class_base fiche_def.fd_class_base%type;
+    maxcode numeric;
+    sResult account_type;
+    bAlphanum bool;
+    sName text;
+    nCount integer;
+    sNumber text;
 begin
-	select fd_class_base into class_base
-	from
-		fiche_def join fiche using (fd_id)
-	where
-		f_id=p_f_id;
-	raise notice 'account_compute class base %',class_base;
-	bAlphanum := account_alphanum();
-	if bAlphanum = false  then
-	raise info 'account_compute : Alphanum is false';
-		select count (pcm_val) into maxcode from tmp_pcmn where pcm_val_parent = class_base;
-		if maxcode = 0	then
-			maxcode:=class_base::numeric;
-		else
-			select max (pcm_val) into maxcode from tmp_pcmn where pcm_val_parent = class_base;
-			maxcode:=maxcode::numeric;
-		end if;
-		if maxcode::text = class_base then
-			maxcode:=class_base::numeric*1000;
-		end if;
-		maxcode:=maxcode+1;
-		raise notice 'account_compute Max code %',maxcode;
-		sResult:=maxcode::account_type;
-	else
-	raise info 'account_compute : Alphanum is true';
-		-- if alphanum, use name
-		select ad_value into sName from fiche_detail where f_id=p_f_id and ad_id=1;
-		raise info 'name is %',sName;
-		if sName is null then
-			raise exception 'Cannot compute an accounting without the name of the card for %',p_f_id;
-		end if;
-		sResult := class_base||sName;
-		sResult := substr(sResult,1,40);
-		raise info 'Result is %',sResult;
-	end if;
-	return sResult::account_type;
+    -- patch 189
+    select fd_class_base into class_base
+    from
+        fiche_def join fiche using (fd_id)
+    where
+            f_id=p_f_id;
+
+    bAlphanum := account_alphanum();
+    if bAlphanum = false  then
+        select max (pcm_val::numeric) into maxcode
+        from tmp_pcmn
+        where pcm_val_parent = class_base and pcm_val !~* '[[:alpha:]]'  ;
+        if maxcode is null	or length(maxcode::text) < length(class_base)+4 then
+            maxcode:=class_base::numeric*10000+1;
+        else
+            select max (pcm_val::numeric) into maxcode
+            from tmp_pcmn
+            where pcm_val !~* '[[:alpha:]]'
+              and pcm_val_parent = class_base
+              and substr(pcm_val::text,1,length(class_base))=class_base;
+
+            sNumber := substr(maxcode::text,length(class_base)+1);
+            nCount := sNumber::numeric+1;
+            sNumber := lpad (nCount::text,4,'0');
+
+            maxcode:=class_base||sNumber;
+        end if;
+        sResult:=maxcode::account_type;
+    else
+        -- if alphanum, use name
+        select ad_value into sName from fiche_detail where f_id=p_f_id and ad_id=1;
+        if sName is null then
+            raise exception 'Cannot compute an accounting without the name of the card for %',p_f_id;
+        end if;
+        sResult := account_compute_alpha(class_base,sName);
+    end if;
+    return sResult;
 end;
 $$;
-CREATE FUNCTION account_insert(p_f_id integer, p_account text) RETURNS text
+CREATE FUNCTION comptaproc.account_compute_alpha(p_class text, p_name text) RETURNS public.account_type
     LANGUAGE plpgsql
     AS $$
 declare
-	nParent tmp_pcmn.pcm_val_parent%type;
-	sName varchar;
-	sNew tmp_pcmn.pcm_val%type;
-	bAuto bool;
-	nFd_id integer;
-	sClass_Base fiche_def.fd_class_base%TYPE;
-	nCount integer;
-	first text;
-	second text;
-	s_account text;
+    sResult account_type;
+    sAccount account_type;
+    sFormatedAccount account_type;
+    nCount int;
+    idx int :=0;
 begin
+    sFormatedAccount := comptaproc.format_account(p_name);
 
-	if p_account is not null and length(trim(p_account)) != 0 then
-	-- if there is coma in p_account, treat normally
-		if position (',' in p_account) = 0 then
-			raise info 'p_account is not empty';
-				s_account := substr( p_account,1 , 40);
-				select count(*)  into nCount from tmp_pcmn where pcm_val=s_account::account_type;
-				raise notice 'found in tmp_pcm %',nCount;
-				if nCount !=0  then
-					raise info 'this account exists in tmp_pcmn ';
-					perform attribut_insert(p_f_id,5,s_account);
-				   else
-				       -- account doesn't exist, create it
-					select ad_value into sName from
-						fiche_detail
-					where
-					ad_id=1 and f_id=p_f_id;
+    sAccount := p_class||substring(sFormatedAccount for 5);
+    nCount := 0;
+    loop
+        select count(*) into nCount from tmp_pcmn where pcm_val = comptaproc.format_account(sAccount);
 
-					nParent:=account_parent(s_account::account_type);
-					insert into tmp_pcmn(pcm_val,pcm_lib,pcm_val_parent) values (s_account::account_type,sName,nParent);
-					perform attribut_insert(p_f_id,5,s_account);
-
-				end if;
-		else
-		raise info 'presence of a comma';
-		-- there is 2 accounts separated by a comma
-		first := split_part(p_account,',',1);
-		second := split_part(p_account,',',2);
-		-- check there is no other coma
-		raise info 'first value % second value %', first, second;
-
-		if  position (',' in first) != 0 or position (',' in second) != 0 then
-			raise exception 'Too many comas, invalid account';
-		end if;
-		perform attribut_insert(p_f_id,5,p_account);
-		end if;
-	else
-	raise info 'A000 : p_account is  empty';
-		select fd_id into nFd_id from fiche where f_id=p_f_id;
-		bAuto:= account_auto(nFd_id);
-
-		select fd_class_base into sClass_base from fiche_def where fd_id=nFd_id;
-raise info 'sClass_Base : %',sClass_base;
-		if bAuto = true and sClass_base similar to '[[:digit:]]*'  then
-			raise info 'account generated automatically';
-			sNew:=account_compute(p_f_id);
-			raise info 'sNew %', sNew;
-			select ad_value into sName from
-				fiche_detail
-			where
-				ad_id=1 and f_id=p_f_id;
-			nParent:=account_parent(sNew);
-			sNew := account_add  (sNew,sName);
-			perform attribut_insert(p_f_id,5,sNew);
-
-		else
-		-- if there is an account_base then it is the default
-		      select fd_class_base::account_type into sNew from fiche_def join fiche using (fd_id) where f_id=p_f_id;
-			if sNew is null or length(trim(sNew)) = 0 then
-				raise notice 'count is null';
-				 perform attribut_insert(p_f_id,5,null);
-			else
-				 perform attribut_insert(p_f_id,5,sNew);
-			end if;
-		end if;
-	end if;
-
-return 0;
+        exit when nCount = 0;
+        idx := idx + 1;
+        sAccount := p_class || substring(sFormatedAccount for 5)||idx::text;
+    end loop;
+    sResult := comptaproc.format_account(sAccount);
+    return sResult;
 end;
 $$;
-CREATE FUNCTION account_parent(p_account public.account_type) RETURNS public.account_type
+CREATE FUNCTION comptaproc.account_insert(p_f_id integer, p_account text) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+declare
+    nParent tmp_pcmn.pcm_val_parent%type;
+    sName varchar;
+    sNew tmp_pcmn.pcm_val%type;
+    bAuto bool;
+    nFd_id integer;
+    sClass_Base fiche_def.fd_class_base%TYPE;
+    nCount integer;
+    first text;
+    second text;
+    s_account text;
+begin
+    -- patch 189
+    -- accouting is given
+    if p_account is not null and length(trim(p_account)) != 0 then
+        -- if there is coma in p_account, treat normally
+        if position (',' in p_account) = 0 then
+            s_account := format_account(substr( p_account,1 , 40)::account_type);
+            select count(*)  into nCount from tmp_pcmn where pcm_val=s_account::account_type;
+            if nCount !=0  then
+                perform attribut_insert(p_f_id,5,s_account);
+            else
+                -- account doesn't exist, create it
+                select ad_value into sName from
+                    fiche_detail
+                where
+                        ad_id=1 and f_id=p_f_id;
+                -- retrieve parent account from card
+                select fd_class_base::account_type into nParent from fiche_def where fd_id=(select fd_id from fiche where f_id=p_f_id);
+                if nParent = null or nParent = '' then
+                    nParent:=account_parent(s_account::account_type);
+                end if;
+                insert into tmp_pcmn(pcm_val,pcm_lib,pcm_val_parent) values (s_account::account_type,sName,nParent);
+                perform attribut_insert(p_f_id,5,s_account);
+
+            end if;
+            return s_account;
+        else
+            -- there is 2 accounts separated by a comma
+            first := split_part(p_account,',',1);
+            second := split_part(p_account,',',2);
+            -- check there is no other coma
+
+            if  position (',' in first) != 0 or position (',' in second) != 0 then
+                raise exception 'Too many comas, invalid account';
+            end if;
+            perform attribut_insert(p_f_id,5,p_account);
+
+        end if;
+        return s_account;
+    end if;
+
+    select fd_id into nFd_id from fiche where f_id=p_f_id;
+    bAuto:= account_auto(nFd_id);
+
+    select fd_class_base into sClass_base from fiche_def where fd_id=nFd_id;
+    if bAuto = true and sClass_base similar to '[[:digit:]]*'  then
+        sNew:=account_compute(p_f_id);
+        select ad_value into sName from
+            fiche_detail
+        where
+                ad_id=1 and f_id=p_f_id;
+        nParent:=sClass_Base::account_type;
+        sNew := account_add  (sNew,sName);
+        update tmp_pcmn set pcm_val_parent=nParent where pcm_val=sNew;
+        perform attribut_insert(p_f_id,5,sNew);
+        return sNew;
+    else
+        -- if there is an account_base then it is the default
+        if trim(coalesce(sClass_base::text,'')) = '' then
+            perform attribut_insert(p_f_id,5,null);
+        else
+            perform attribut_insert(p_f_id,5,sClass_base);
+        end if;
+        return sClass_base;
+    end if;
+
+    raise notice 'ai89.account_insert nothing done : error';
+
+end;
+$$;
+CREATE FUNCTION comptaproc.account_parent(p_account public.account_type) RETURNS public.account_type
     LANGUAGE plpgsql
     AS $$
 declare
@@ -207,7 +236,7 @@ begin
 	return sSubParent;
 end;
 $$;
-CREATE FUNCTION account_update(p_f_id integer, p_account public.account_type) RETURNS integer
+CREATE FUNCTION comptaproc.account_update(p_f_id integer, p_account public.account_type) RETURNS integer
     LANGUAGE plpgsql
     AS $$
 declare
@@ -222,32 +251,35 @@ begin
 	if length(trim(p_account)) != 0 then
 		-- 2 accounts in card separated by comma
 		if position (',' in p_account) = 0 then
+			p_account := format_account(p_account);
 			select count(*) into nCount from tmp_pcmn where pcm_val=p_account;
 			if nCount = 0 then
-			select ad_value into sName from
-				fiche_detail
-				where
-				ad_id=1 and f_id=p_f_id;
-			nParent:=account_parent(p_account);
-			insert into tmp_pcmn(pcm_val,pcm_lib,pcm_val_parent) values (p_account,sName,nParent);
-		end if;
+				select ad_value into sName from
+					fiche_detail
+					where
+					ad_id=1 and f_id=p_f_id;
+					nParent:=account_parent(p_account);
+					raise notice 'insert into tmp_pcmn % %',p_account,sName;
+					insert into tmp_pcmn(pcm_val,pcm_lib,pcm_val_parent) values (p_account,sName,nParent);
+			end if;
 		else
-		raise info 'presence of a comma';
-		-- there is 2 accounts separated by a comma
-		first := split_part(p_account,',',1);
-		second := split_part(p_account,',',2);
-		-- check there is no other coma
-		raise info 'first value % second value %', first, second;
-
-		if  position (',' in first) != 0 or position (',' in second) != 0 then
-			raise exception 'Too many comas, invalid account';
-		end if;
-		-- check that both account are in PCMN
+			raise info 'presence of a comma';
+			-- there is 2 accounts separated by a comma
+			first := split_part(p_account,',',1);
+			second := split_part(p_account,',',2);
+			-- check there is no other coma
+			raise info 'first value % second value %', first, second;
+	
+			if  position (',' in first) != 0 or position (',' in second) != 0 then
+				raise exception 'Too many comas, invalid account';
+			end if;
+			-- check that both account are in PCMN
 
 		end if;
 	else
 		-- account is null
 		update fiche_detail set ad_value=null where f_id=p_f_id and ad_id=5 ;
+		return 0;
 	end if;
 
 	update fiche_detail set ad_value=p_account where f_id=p_f_id and ad_id=5 ;
@@ -255,7 +287,7 @@ begin
 return 0;
 end;
 $$;
-CREATE FUNCTION action_gestion_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.action_gestion_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
@@ -265,7 +297,7 @@ NEW.ag_owner := lower(NEW.ag_owner);
 return NEW;
 end;
 $$;
-CREATE FUNCTION action_gestion_related_ins_up() RETURNS trigger
+CREATE FUNCTION comptaproc.action_gestion_related_ins_up() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -286,7 +318,7 @@ return NEW;
 
 end;
 $$;
-CREATE FUNCTION anc_correct_tvand() RETURNS void
+CREATE FUNCTION comptaproc.anc_correct_tvand() RETURNS void
     LANGUAGE plpgsql
     AS $$ 
 declare
@@ -314,16 +346,21 @@ begin
          end loop;
 end;
  $$;
-CREATE FUNCTION attribut_insert(p_f_id integer, p_ad_id integer, p_value character varying) RETURNS void
+CREATE FUNCTION comptaproc.attribut_insert(p_f_id integer, p_ad_id integer, p_value character varying) RETURNS void
     LANGUAGE plpgsql
     AS $$
+declare 
+	nResult bigint;
 begin
-	insert into fiche_detail (f_id,ad_id, ad_value) values (p_f_id,p_ad_id,p_value);
-	
+	update fiche_detail set ad_value=p_value where ad_id=p_ad_id and f_id=p_f_id returning jft_id into nResult;
+	if nResult is null then
+		insert into fiche_detail (f_id,ad_id, ad_value) values (p_f_id,p_ad_id,p_value);
+	end if;
+
 return;
 end;
 $$;
-CREATE FUNCTION attribute_correct_order() RETURNS void
+CREATE FUNCTION comptaproc.attribute_correct_order() RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -343,7 +380,7 @@ begin
 	perform attribute_correct_order ();
 end;
 $$;
-CREATE FUNCTION card_after_delete() RETURNS trigger
+CREATE FUNCTION comptaproc.card_after_delete() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -354,7 +391,7 @@ begin
 
 end;
 $$;
-CREATE FUNCTION card_class_base(p_f_id integer) RETURNS text
+CREATE FUNCTION comptaproc.card_class_base(p_f_id integer) RETURNS text
     LANGUAGE plpgsql
     AS $$
 declare
@@ -370,7 +407,7 @@ begin
 return n_poste;
 end;
 $$;
-CREATE FUNCTION category_card_before_delete() RETURNS trigger
+CREATE FUNCTION comptaproc.category_card_before_delete() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -382,7 +419,7 @@ begin
 
 end;
 $$;
-CREATE FUNCTION check_balance(p_grpt integer) RETURNS numeric
+CREATE FUNCTION comptaproc.check_balance(p_grpt integer) RETURNS numeric
     LANGUAGE plpgsql
     AS $$
 declare
@@ -418,27 +455,37 @@ begin
 	return 0;
 end;
 $$;
-CREATE FUNCTION check_periode() RETURNS trigger
+CREATE FUNCTION comptaproc.check_periode() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
   nPeriode int;
+  nExerciceLabel int;
 begin
-if periode_exist(to_char(NEW.p_start,'DD.MM.YYYY'),NEW.p_id) <> -1 then
-       nPeriode:=periode_exist(to_char(NEW.p_start,'DD.MM.YYYY'),NEW.p_id) ;
-        raise info 'Overlap periode start % periode %',NEW.p_start,nPeriode;
-	return null;
-end if;
+	nPeriode:=periode_exist(to_char(NEW.p_start,'DD.MM.YYYY'),NEW.p_id);
+	if nPeriode <> -1 then
+       raise info 'Overlap periode start % periode %',NEW.p_start,nPeriode;
+		return null;
+	end if;
+	if new.p_exercice_label is null or trim (new.p_exercice_label ) = '' then
+		new.p_exercice_label := new.p_exercice;
+	end if;
+	select count(*) into nExerciceLabel 
+		from parm_periode 
+		where 
+		(p_exercice =new.p_exercice and p_exercice_label <> new.p_exercice_label) 
+		or 
+		(p_exercice <> new.p_exercice and p_exercice_label = new.p_exercice_label);
+		
+	if nExerciceLabel > 0 then
+		raise exception 'a label cannot be on two exercices';
+		return null;
+	end if;
 
-if periode_exist(to_char(NEW.p_end,'DD.MM.YYYY'),NEW.p_id) <> -1 then
-	nPeriode:=periode_exist(to_char(NEW.p_start,'DD.MM.YYYY'),NEW.p_id) ;
-        raise info 'Overlap periode end % periode %',NEW.p_end,nPeriode;
-	return null;
-end if;
 return NEW;
 end;
 $$;
-CREATE FUNCTION correct_sequence(p_sequence text, p_col text, p_table text) RETURNS integer
+CREATE FUNCTION comptaproc.correct_sequence(p_sequence text, p_col text, p_table text) RETURNS integer
     LANGUAGE plpgsql
     AS $$
 declare
@@ -469,7 +516,7 @@ return 0;
 
 end;
 $$;
-CREATE FUNCTION create_missing_sequence() RETURNS integer
+CREATE FUNCTION comptaproc.create_missing_sequence() RETURNS integer
     LANGUAGE plpgsql
     AS $$
 declare
@@ -492,7 +539,7 @@ return 0;
 
 end;
 $$;
-CREATE FUNCTION drop_index(p_constraint character varying) RETURNS void
+CREATE FUNCTION comptaproc.drop_index(p_constraint character varying) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -504,7 +551,7 @@ begin
 	end if;
 end;
 $$;
-CREATE FUNCTION drop_it(p_constraint character varying) RETURNS void
+CREATE FUNCTION comptaproc.drop_it(p_constraint character varying) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -516,7 +563,7 @@ begin
 	end if;
 end;
 $$;
-CREATE FUNCTION extension_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.extension_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -543,7 +590,7 @@ return NEW;
 end;
 
 $$;
-CREATE FUNCTION fiche_account_parent(p_f_id integer) RETURNS public.account_type
+CREATE FUNCTION comptaproc.fiche_account_parent(p_f_id integer) RETURNS public.account_type
     LANGUAGE plpgsql
     AS $$
 declare
@@ -556,7 +603,7 @@ begin
 	return ret;
 end;
 $$;
-CREATE FUNCTION fiche_attribut_synchro(p_fd_id integer) RETURNS void
+CREATE FUNCTION comptaproc.fiche_attribut_synchro(p_fd_id integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -578,7 +625,7 @@ begin
 	close list_missing;
 end; 
 $$;
-CREATE FUNCTION fiche_def_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.fiche_def_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
@@ -589,31 +636,41 @@ if position (',' in NEW.fd_class_base) != 0 then
 end if;
 return NEW;
 end;$$;
-CREATE FUNCTION fiche_detail_qcode_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.fiche_detail_check() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+	BEGIN
+		if new.ad_id = 23 and coalesce (new.ad_value,'') = '' then 
+			raise exception  'QUICKCODE can not be empty';
+		end if;
+	if new.ad_id = 1 and coalesce (new.ad_value,'') = '' then 
+			raise exception  'NAME can not be empty';
+		end if;
+	return new;
+	END;
+
+$$;
+CREATE FUNCTION comptaproc.fiche_detail_check_qcode() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
-	i record;
+    i record;
 begin
-	if NEW.ad_id=23 and NEW.ad_value != OLD.ad_value then
-		RAISE NOTICE 'new qcode [%] old qcode [%]',NEW.ad_value,OLD.ad_value;
-		update jrnx set j_qcode=NEW.ad_value where j_qcode = OLD.ad_value;    
-	        update op_predef_detail set opd_poste=NEW.ad_value where opd_poste=OLD.ad_value;
-	        raise notice 'TRG fiche_detail update op_predef_detail set opd_poste=% where opd_poste=%;',NEW.ad_value,OLD.ad_value;
-		for i in select ad_id from attr_def where ad_type = 'card' or ad_id=25 loop
-			update fiche_detail set ad_value=NEW.ad_value where ad_value=OLD.ad_value and ad_id=i.ad_id;
-			RAISE NOTICE 'change for ad_id [%] ',i.ad_id;
-			if i.ad_id=19 then
-				RAISE NOTICE 'Change in stock_goods OLD[%] by NEW[%]',OLD.ad_value,NEW.ad_value;
-				update stock_goods set sg_code=NEW.ad_value where sg_code=OLD.ad_value;
-			end if;
+    if NEW.ad_id=23 and NEW.ad_value != OLD.ad_value then
+        update jrnx set j_qcode=NEW.ad_value where j_qcode = OLD.ad_value;
+        update op_predef_detail set opd_poste=NEW.ad_value where opd_poste=OLD.ad_value;
+        for i in select ad_id from attr_def where ad_type = 'card' or ad_id=25 loop
+                update fiche_detail set ad_value=NEW.ad_value where ad_value=OLD.ad_value and ad_id=i.ad_id;
+                if i.ad_id=19 then
+                    update stock_goods set sg_code=NEW.ad_value where sg_code=OLD.ad_value;
+                end if;
 
-		end loop;
-	end if;
-return NEW;
+            end loop;
+    end if;
+    return NEW;
 end;
 $$;
-CREATE FUNCTION fill_quant_fin() RETURNS void
+CREATE FUNCTION comptaproc.fill_quant_fin() RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -767,7 +824,7 @@ begin
 	return;
 end;
 $$;
-CREATE FUNCTION find_pcm_type(pp_value public.account_type) RETURNS text
+CREATE FUNCTION comptaproc.find_pcm_type(pp_value public.account_type) RETURNS text
     LANGUAGE plpgsql
     AS $$
 declare
@@ -777,9 +834,23 @@ declare
 begin
 	str_value:=pp_value;
 	nLength:=length(str_value::text);
+
 	while nLength > 0 loop
 		select p_type into str_type from parm_poste where p_value=str_value;
 		if FOUND then
+			raise info 'Type of %s is %s',str_value,str_type;
+			return str_type;
+		end if;
+		nLength:=nLength-1;
+		str_value:=substring(str_value::text from 1 for nLength)::account_type;
+	end loop;
+	str_value := pp_value;
+	nLength:=length(str_value::text);
+	str_value:=substring(str_value::text from 1 for nLength)::account_type;
+	while nLength > 0 loop
+		select pcm_type into str_type from tmp_pcmn tp where pcm_val=str_value;
+		if FOUND then
+			raise info 'Type of %s is %s',str_value,str_type;
 			return str_type;
 		end if;
 		nLength:=nLength-1;
@@ -788,7 +859,7 @@ begin
 return 'CON';
 end;
 $$;
-CREATE FUNCTION find_periode(p_date text) RETURNS integer
+CREATE FUNCTION comptaproc.find_periode(p_date text) RETURNS integer
     LANGUAGE plpgsql
     AS $$
 
@@ -809,7 +880,7 @@ end if;
 return n_p_id;
 
 end;$$;
-CREATE FUNCTION format_account(p_account public.account_type) RETURNS public.account_type
+CREATE FUNCTION comptaproc.format_account(p_account public.account_type) RETURNS public.account_type
     LANGUAGE plpgsql
     AS $_$
 
@@ -830,14 +901,68 @@ $_$;
 
 
 
-COMMENT ON FUNCTION format_account(p_account public.account_type) IS 'format the accounting :
+COMMENT ON FUNCTION comptaproc.format_account(p_account public.account_type) IS 'format the accounting :
 - upper case
 - remove space and special char.
 ';
 
 
 
-CREATE FUNCTION get_letter_jnt(a bigint) RETURNS bigint
+CREATE FUNCTION comptaproc.format_quickcode(p_qcode text) RETURNS text
+    LANGUAGE plpgsql
+    AS $_$
+declare
+    tText text;
+BEGIN
+    tText := lower(trim(p_qcode));
+    tText := replace(tText,' ','');
+    tText:= translate(tText,E' $€µ£%+/\\!(){}(),;&|"#''^<>*','');
+    tText := translate(tText,E'éèêëàâäïîüûùöôç','eeeeaaaiiuuuooc');
+
+    return upper(tText);
+END;
+$_$;
+
+
+
+COMMENT ON FUNCTION comptaproc.format_quickcode(p_qcode text) IS 'Put in upper case and remove invalid char';
+
+
+
+CREATE FUNCTION comptaproc.four_upper_letter() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+    new.dc_code=transform_to_code(new.dc_code);
+    new.dc_code:=substr(new.dc_code,1,4);
+    return new;
+END;
+$$;
+CREATE FUNCTION comptaproc.get_follow_up_tree(action_gestion_id integer) RETURNS SETOF integer
+    LANGUAGE plpgsql
+    AS $$
+declare
+    i int;
+    x int;
+    e int;
+begin
+    for x in select aga_least
+             from action_gestion_related
+             where
+                 aga_greatest = action_gestion_id
+        loop
+            return next x;
+
+            for e in select *  from  comptaproc.get_follow_up_tree(x)
+                loop
+                    return next e;
+                end loop;
+
+        end loop;
+    return;
+end;
+$$;
+CREATE FUNCTION comptaproc.get_letter_jnt(a bigint) RETURNS bigint
     LANGUAGE plpgsql
     AS $$
 declare
@@ -853,7 +978,7 @@ begin
 return nResult;
 end;
 $$;
-CREATE FUNCTION get_menu_dependency(profile_menu_id integer) RETURNS SETOF integer
+CREATE FUNCTION comptaproc.get_menu_dependency(profile_menu_id integer) RETURNS SETOF integer
     LANGUAGE plpgsql
     AS $$
 declare
@@ -877,7 +1002,7 @@ begin
 	return;
 end;
 $$;
-CREATE FUNCTION get_menu_tree(p_code text, p_profile integer) RETURNS SETOF public.menu_tree
+CREATE FUNCTION comptaproc.get_menu_tree(p_code text, p_profile integer) RETURNS SETOF public.menu_tree
     LANGUAGE plpgsql
     AS $$
 declare
@@ -908,7 +1033,7 @@ begin
 	return;
 end;
 $$;
-CREATE FUNCTION get_pcm_tree(source public.account_type) RETURNS SETOF public.account_type
+CREATE FUNCTION comptaproc.get_pcm_tree(source public.account_type) RETURNS SETOF public.account_type
     LANGUAGE plpgsql
     AS $$
 declare
@@ -927,7 +1052,7 @@ begin
 	return;
 end;
 $$;
-CREATE FUNCTION get_profile_menu(p_profile integer) RETURNS SETOF public.menu_tree
+CREATE FUNCTION comptaproc.get_profile_menu(p_profile integer) RETURNS SETOF public.menu_tree
     LANGUAGE plpgsql
     AS $$
 declare
@@ -948,7 +1073,7 @@ loop
 return;
 end;
 $$;
-CREATE FUNCTION group_analytic_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.group_analytic_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -960,7 +1085,7 @@ name:=replace(name,' ','');
 NEW.ga_id:=name;
 return NEW;
 end;$$;
-CREATE FUNCTION group_analytique_del() RETURNS trigger
+CREATE FUNCTION comptaproc.group_analytique_del() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
@@ -968,7 +1093,7 @@ update poste_analytique set ga_id=null
 where ga_id=OLD.ga_id;
 return OLD;
 end;$$;
-CREATE FUNCTION html_quote(p_string text) RETURNS text
+CREATE FUNCTION comptaproc.html_quote(p_string text) RETURNS text
     LANGUAGE plpgsql
     AS $$
 declare
@@ -980,7 +1105,7 @@ begin
 	r:=replace(r,'''','&quot;');
 	return r;
 end;$$;
-CREATE FUNCTION info_def_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.info_def_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -999,7 +1124,7 @@ row_info_def.id_type:=str_type;
 return row_info_def;
 end;
 $$;
-CREATE FUNCTION insert_jrnx(p_date character varying, p_montant numeric, p_poste public.account_type, p_grpt integer, p_jrn_def integer, p_debit boolean, p_tech_user text, p_tech_per integer, p_qcode text, p_comment text) RETURNS void
+CREATE FUNCTION comptaproc.insert_jrnx(p_date character varying, p_montant numeric, p_poste public.account_type, p_grpt integer, p_jrn_def integer, p_debit boolean, p_tech_user text, p_tech_per integer, p_qcode text, p_comment text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 begin
@@ -1032,7 +1157,7 @@ begin
 return;
 end;
 $$;
-CREATE FUNCTION insert_quant_purchase(p_internal text, p_j_id numeric, p_fiche character varying, p_quant numeric, p_price numeric, p_vat numeric, p_vat_code integer, p_nd_amount numeric, p_nd_tva numeric, p_nd_tva_recup numeric, p_dep_priv numeric, p_client character varying, p_tva_sided numeric, p_price_unit numeric) RETURNS void
+CREATE FUNCTION comptaproc.insert_quant_purchase(p_internal text, p_j_id numeric, p_fiche character varying, p_quant numeric, p_price numeric, p_vat numeric, p_vat_code integer, p_nd_amount numeric, p_nd_tva numeric, p_nd_tva_recup numeric, p_dep_priv numeric, p_client character varying, p_tva_sided numeric, p_price_unit numeric) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1042,7 +1167,7 @@ declare
         fid_good_account account_type;
         n_dep_priv numeric;
 begin
-        n_dep_priv := 0;
+        n_dep_priv := p_dep_priv;
         select p_value into account_priv from parm_code where p_code='DEP_PRIV';
         select f_id into fid_client from
                 fiche_detail where ad_id=23 and ad_value=upper(trim(p_client));
@@ -1085,8 +1210,8 @@ begin
                 p_price_unit);
         return;
 end;
- $$;
-CREATE FUNCTION insert_quant_sold(p_internal text, p_jid numeric, p_fiche character varying, p_quant numeric, p_price numeric, p_vat numeric, p_vat_code integer, p_client character varying, p_tva_sided numeric, p_price_unit numeric) RETURNS void
+$$;
+CREATE FUNCTION comptaproc.insert_quant_sold(p_internal text, p_jid numeric, p_fiche character varying, p_quant numeric, p_price numeric, p_vat numeric, p_vat_code integer, p_client character varying, p_tva_sided numeric, p_price_unit numeric) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1105,73 +1230,66 @@ begin
         return;
 end;
  $$;
-CREATE FUNCTION insert_quick_code(nf_id integer, tav_text text) RETURNS integer
+CREATE FUNCTION comptaproc.insert_quick_code(nf_id integer, tav_text text) RETURNS integer
     LANGUAGE plpgsql
-    AS $_$
-	declare
-	ns integer;
-	nExist integer;
-	tText text;
-	tBase text;
-	tName text;
-	nCount Integer;
-	nDuplicate Integer;
-	begin
-	tText := lower(trim(tav_text));
-	tText := replace(tText,' ','');
-        tText:= translate(tText,E' $€µ£%+/\\!(){}(),;&|"#''^<>*','');
-	tText := translate(tText,E'éèêëàâäïîüûùöôç','eeeeaaaiiuuuooc');
-	nDuplicate := 0;
-	tBase := tText;
-	loop
-		-- take the next sequence
-		select nextval('s_jnt_fic_att_value') into ns;
-		if length (tText) = 0 or tText is null then
-			select count(*) into nCount from fiche_detail where f_id=nf_id and ad_id=1;
-			if nCount = 0 then
-				tText := 'FICHE'||ns::text;
-			else
-				select ad_value into tName from fiche_detail where f_id=nf_id and ad_id=1;
-				
-				tName := lower(trim(tName));
-				tName := substr(tName,1,6);
-				tName := replace(tName,' ','');
-				tName:= translate(tName,E' $€µ£%+/\\!(){}(),;&|"#''^<>*','');
-				tName := translate(tName,E'éèêëàâäïîüûùöôç','eeeeaaaiiuuuooc');
-				tBase := tName;
-				if nDuplicate = 0 then
-					tText := tName;
-				else
-					tText := tName||nDuplicate::text;
-				end if;
-			end if;
-		end if;
-		-- av_text already used ?
-		select count(*) into nExist
-			from fiche_detail
-		where
-			ad_id=23 and  ad_value=upper(tText);
+    AS $$
+declare
+    ns integer;
+    nExist integer;
+    tText text;
+    tBase text;
+    tName text;
+    nCount Integer;
+    nDuplicate Integer;
+begin
+    tText := comptaproc.format_quickcode(tav_text);
+    nDuplicate := 0;
+    tBase := tText;
+    -- take the next sequence
+    select nextval('s_jnt_fic_att_value') into ns;
+    loop
+        if length (tText) = 0 or tText is null then
+            select count(*) into nCount from fiche_detail where f_id=nf_id and ad_id=1;
+            if nCount = 0 then
+                tBase := 'CRD';
+            else
+                select ad_value into tName from fiche_detail where f_id=nf_id and ad_id=1;
+                tName := comptaproc.format_quickcode(tName);
+                tName := substr(tName,1,6);
+                tBase := tName;
+                if nDuplicate = 0 then
+                    tText := tName;
+                else
+                    tText := tBase||nDuplicate::text;
+                end if;
+            end if;
+        end if;
+        if coalesce(tText,'') = '' then
+            tText := 'CRD';
+        end if;
+        -- av_text already used ?
+        select count(*) into nExist
+        from fiche_detail
+        where
+                ad_id=23 and  ad_value=tText;
 
-		if nExist = 0 then
-			exit;
-		end if;
-		nDuplicate := nDuplicate + 1 ;
-		tText := tBase || nDuplicate::text;
-		
-		if nDuplicate > 9999 then
-			raise Exception 'too many duplicate % duplicate# %',tText,nDuplicate;
-		end if;
-	end loop;
+        if nExist = 0 then
+            exit;
+        end if;
+        nDuplicate := nDuplicate + 1 ;
+        tText := tBase || nDuplicate::text;
+
+        if nDuplicate > 99999 then
+            raise Exception 'too many duplicate % duplicate# %',tText,nDuplicate;
+        end if;
+    end loop;
 
 
-	insert into fiche_detail(jft_id,f_id,ad_id,ad_value) values (ns,nf_id,23,upper(tText));
-	return ns;
-	end;
-$_$;
-
-
-
-CREATE FUNCTION is_closed(p_periode integer, p_jrn_def_id integer) RETURNS boolean
+    insert into fiche_detail(jft_id,f_id,ad_id,ad_value) values (ns,nf_id,23,upper(tText));
+    return ns;
+end;
+$$;
+CREATE FUNCTION comptaproc.is_closed(p_periode integer, p_jrn_def_id integer) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1194,7 +1312,7 @@ end if;
 return false;
 end;
 $$;
-CREATE FUNCTION jnt_fic_attr_ins() RETURNS trigger
+CREATE FUNCTION comptaproc.jnt_fic_attr_ins() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1209,7 +1327,7 @@ NEW.jnt_order=i_max;
 return NEW;
 end;
 $$;
-CREATE FUNCTION jrn_add_note(p_jrid bigint, p_note text) RETURNS void
+CREATE FUNCTION comptaproc.jrn_add_note(p_jrid bigint, p_note text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1232,7 +1350,7 @@ begin
 	return;
 end;
 $$;
-CREATE FUNCTION jrn_check_periode() RETURNS trigger
+CREATE FUNCTION comptaproc.jrn_check_periode() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1243,38 +1361,51 @@ ljr_def_id jrn.jr_def_id%TYPE;
 lreturn jrn%ROWTYPE;
 begin
 if TG_OP='UPDATE' then
-	ljr_tech_per :=OLD.jr_tech_per ;
-	NEW.jr_tech_per := comptaproc.find_periode(to_char(NEW.jr_date,'DD.MM.YYYY'));
-	ljr_def_id   :=OLD.jr_def_id;
-	lreturn      :=NEW;
-	if NEW.jr_date = OLD.jr_date then
-		return NEW;
-	end if;
-	if comptaproc.is_closed(NEW.jr_tech_per,NEW.jr_def_id) = true then
-	      	raise exception 'Periode fermee';
-	end if;
+    ljr_tech_per :=OLD.jr_tech_per ;
+    NEW.jr_tech_per := comptaproc.find_periode(to_char(NEW.jr_date,'DD.MM.YYYY'));
+    ljr_def_id :=OLD.jr_def_id;
+    lreturn :=NEW;
+    if NEW.jr_date = OLD.jr_date then
+        return NEW;
+    end if;
+    if comptaproc.is_closed(NEW.jr_tech_per,NEW.jr_def_id) = true then
+              raise exception 'Periode fermee';
+    end if;
 end if;
 
 if TG_OP='INSERT' then
-	NEW.jr_tech_per := comptaproc.find_periode(to_char(NEW.jr_date,'DD.MM.YYYY'));
-	ljr_tech_per :=NEW.jr_tech_per ;
-	ljr_def_id   :=NEW.jr_def_id;
-	lreturn      :=NEW;
+    NEW.jr_tech_per := comptaproc.find_periode(to_char(NEW.jr_date,'DD.MM.YYYY'));
+    ljr_tech_per :=NEW.jr_tech_per ;
+    ljr_def_id :=NEW.jr_def_id;
+    lreturn :=NEW;
 end if;
 
 if TG_OP='DELETE' then
-	ljr_tech_per :=OLD.jr_tech_per;
-	ljr_def_id   :=OLD.jr_def_id;
-	lreturn      :=OLD;
+    ljr_tech_per :=OLD.jr_tech_per;
+    ljr_def_id :=OLD.jr_def_id;
+    lreturn :=OLD;
 end if;
 
-if comptaproc.is_closed (ljr_def_id,ljr_def_id) = true then
-   	raise exception 'Periode fermee';
+if comptaproc.is_closed (ljr_tech_per,ljr_def_id) = true then
+       raise exception 'Periode fermee';
 end if;
 
 return lreturn;
-end;$$;
-CREATE FUNCTION jrn_def_add() RETURNS trigger
+end;
+$$;
+CREATE FUNCTION comptaproc.jrn_currency() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin 
+	if new.currency_id is null then 
+		new.currency_id := 0;
+                new.currency_rate := 1;
+                new.currency_rate_ref := 1;
+	end if;
+	return new;
+end;
+$$;
+CREATE FUNCTION comptaproc.jrn_def_add() RETURNS trigger
     LANGUAGE plpgsql
     AS $$begin
 execute 'insert into jrn_periode(p_id,jrn_def_id,status) select p_id,'||NEW.jrn_def_id||',
@@ -1286,7 +1417,7 @@ from
 parm_periode ';
 return NEW;
 end;$$;
-CREATE FUNCTION jrn_def_delete() RETURNS trigger
+CREATE FUNCTION comptaproc.jrn_def_delete() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -1299,7 +1430,7 @@ if nb <> 0 then
 end if;
 return OLD;
 end;$$;
-CREATE FUNCTION jrn_del() RETURNS trigger
+CREATE FUNCTION comptaproc.jrn_del() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1349,7 +1480,7 @@ insert into del_jrn ( jr_id,
 return row;
 end;
 $$;
-CREATE FUNCTION jrnx_del() RETURNS trigger
+CREATE FUNCTION comptaproc.jrnx_del() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1367,7 +1498,7 @@ insert into del_jrnx(
 return row;
 end;
 $$;
-CREATE FUNCTION jrnx_ins() RETURNS trigger
+CREATE FUNCTION comptaproc.jrnx_ins() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1415,7 +1546,7 @@ NEW.f_id:=n_fid;
 return NEW;
 end;
 $$;
-CREATE FUNCTION jrnx_letter_del() RETURNS trigger
+CREATE FUNCTION comptaproc.jrnx_letter_del() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1428,7 +1559,7 @@ delete from jnt_letter
 return row;
 end;
 $$;
-CREATE FUNCTION menu_complete_dependency(n_profile numeric) RETURNS void
+CREATE FUNCTION comptaproc.menu_complete_dependency(n_profile numeric) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -1475,7 +1606,7 @@ begin
 	
 end;
 $$;
-CREATE FUNCTION opd_limit_description() RETURNS trigger
+CREATE FUNCTION comptaproc.opd_limit_description() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 	declare
@@ -1486,7 +1617,7 @@ CREATE FUNCTION opd_limit_description() RETURNS trigger
 	return NEW;
 	end;
 $$;
-CREATE FUNCTION periode_exist(p_date text, p_periode_id bigint) RETURNS integer
+CREATE FUNCTION comptaproc.periode_exist(p_date text, p_periode_id bigint) RETURNS integer
     LANGUAGE plpgsql
     AS $$
 
@@ -1509,7 +1640,7 @@ end if;
 return n_p_id;
 
 end;$$;
-CREATE FUNCTION plan_analytic_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.plan_analytic_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1522,7 +1653,7 @@ begin
 return NEW;
 end;
 $$;
-CREATE FUNCTION poste_analytique_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.poste_analytique_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$declare
 name text;
@@ -1548,7 +1679,7 @@ if NOT FOUND then
 end if;
 return NEW;
 end;$$;
-CREATE FUNCTION proc_check_balance() RETURNS trigger
+CREATE FUNCTION comptaproc.proc_check_balance() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -1565,7 +1696,7 @@ begin
 	end if;
 end;
 $$;
-CREATE FUNCTION quant_purchase_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.quant_purchase_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 	begin
@@ -1576,7 +1707,7 @@ CREATE FUNCTION quant_purchase_ins_upd() RETURNS trigger
 return NEW;
 end;
 $$;
-CREATE FUNCTION quant_sold_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.quant_sold_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 	begin
@@ -1587,7 +1718,24 @@ CREATE FUNCTION quant_sold_ins_upd() RETURNS trigger
 return NEW;
 end;
 $$;
-CREATE FUNCTION t_document_modele_validate() RETURNS trigger
+CREATE FUNCTION comptaproc.set_tech_user() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+declare
+    /* variable */
+    noalyss_user text;
+begin
+    new.tech_user := current_setting('noalyss.user_login');
+    new.tech_date := now();
+    return NEW;
+
+exception when others then
+    new.tech_date := now();
+    new.tech_user := current_user;
+    return NEW;
+end ;
+$$;
+CREATE FUNCTION comptaproc.t_document_modele_validate() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -1600,7 +1748,7 @@ begin
 	return modified;
 end;
 $$;
-CREATE FUNCTION t_document_type_insert() RETURNS trigger
+CREATE FUNCTION comptaproc.t_document_type_insert() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1613,7 +1761,7 @@ end if;
         RETURN NEW;
     END;
 $$;
-CREATE FUNCTION t_document_validate() RETURNS trigger
+CREATE FUNCTION comptaproc.t_document_validate() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1625,7 +1773,7 @@ begin
 	return modified;
 end;
 $$;
-CREATE FUNCTION t_jrn_def_description() RETURNS trigger
+CREATE FUNCTION comptaproc.t_jrn_def_description() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
     declare
@@ -1637,7 +1785,7 @@ CREATE FUNCTION t_jrn_def_description() RETURNS trigger
         RETURN NEW;
     END;
 $$;
-CREATE FUNCTION t_jrn_def_sequence() RETURNS trigger
+CREATE FUNCTION comptaproc.t_jrn_def_sequence() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1654,7 +1802,15 @@ nCounter integer;
         RETURN NEW;
     END;
 $$;
-CREATE FUNCTION tmp_pcmn_alphanum_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.t_parameter_extra_code() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+	new.pe_code := comptaproc.transform_to_code (new.pe_code);
+        return new;
+end;
+$$;
+CREATE FUNCTION comptaproc.tmp_pcmn_alphanum_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1666,7 +1822,7 @@ r_record.pcm_val:=format_account(NEW.pcm_val);
 return r_record;
 end;
 $$;
-CREATE FUNCTION tmp_pcmn_ins() RETURNS trigger
+CREATE FUNCTION comptaproc.tmp_pcmn_ins() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1680,7 +1836,28 @@ end if;
 return NEW;
 end;
 $$;
-CREATE FUNCTION trg_profile_user_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.transform_to_code(p_account text) RETURNS text
+    LANGUAGE plpgsql
+    AS $_$
+
+declare
+
+sResult text;
+
+begin
+sResult := lower(p_account);
+
+sResult := translate(sResult,E'éèêëàâäïîüûùöôç','eeeeaaaiiuuuooc');
+sResult := translate(sResult,E' $€µ£%.+-/\\!(){}(),;&|"#''^<>*','');
+
+return upper(sResult);
+
+end;
+$_$;
+
+
+
+CREATE FUNCTION comptaproc.trg_profile_user_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -1691,7 +1868,18 @@ return NEW;
 
 end;
 $$;
-CREATE FUNCTION trg_todo_list_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.trg_remove_script_tag() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+
+begin
+
+    NEW.agc_comment_raw:= regexp_replace(NEW.agc_comment_raw, '<script', 'scritp', 'i');
+    return NEW;
+
+end;
+$$;
+CREATE FUNCTION comptaproc.trg_todo_list_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -1702,7 +1890,7 @@ return NEW;
 
 end;
 $$;
-CREATE FUNCTION trg_todo_list_shared_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.trg_todo_list_shared_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -1713,7 +1901,7 @@ return NEW;
 
 end;
 $$;
-CREATE FUNCTION trg_user_sec_act_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.trg_user_sec_act_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -1724,7 +1912,7 @@ return NEW;
 
 end;
 $$;
-CREATE FUNCTION trg_user_sec_jrn_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.trg_user_sec_jrn_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -1735,7 +1923,7 @@ return NEW;
 
 end;
 $$;
-CREATE FUNCTION trim_cvs_quote() RETURNS trigger
+CREATE FUNCTION comptaproc.trim_cvs_quote() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1750,7 +1938,7 @@ begin
         return modified;
 end;
 $$;
-CREATE FUNCTION trim_space_format_csv_banque() RETURNS trigger
+CREATE FUNCTION comptaproc.trim_space_format_csv_banque() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1768,7 +1956,7 @@ begin
         return modified;
 end;
 $$;
-CREATE FUNCTION tva_delete(integer) RETURNS void
+CREATE FUNCTION comptaproc.tva_delete(integer) RETURNS void
     LANGUAGE plpgsql
     AS $_$ 
 declare
@@ -1794,7 +1982,7 @@ $_$;
 
 
 
-CREATE FUNCTION tva_insert(text, numeric, text, text, integer) RETURNS integer
+CREATE FUNCTION comptaproc.tva_insert(text, numeric, text, text, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
 declare
@@ -1831,7 +2019,7 @@ $_$;
 
 
 
-CREATE FUNCTION tva_modify(integer, text, numeric, text, text, integer) RETURNS integer
+CREATE FUNCTION comptaproc.tva_modify(integer, text, numeric, text, text, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
 declare
@@ -1867,75 +2055,65 @@ $_$;
 
 
 
-CREATE FUNCTION update_quick_code(njft_id integer, tav_text text) RETURNS integer
+CREATE FUNCTION comptaproc.update_quick_code(njft_id integer, tav_text text) RETURNS integer
     LANGUAGE plpgsql
-    AS $_$
-	declare
-	ns integer;
-	nExist integer;
-	tText text;
-	tBase text;
-	old_qcode varchar;
-	num_rows_jrnx integer;
-	num_rows_predef integer;
-	begin
-	-- get current value
-	select ad_value into old_qcode from fiche_detail where jft_id=njft_id;
-	-- av_text didn't change so no update
-	if tav_text = upper( trim(old_qcode)) then
-		raise notice 'nothing to change % %' , tav_text,old_qcode;
-		return 0;
-	end if;
+    AS $$
+declare
+    ns integer;
+    nExist integer;
+    tText text;
+    tBase text;
+    old_qcode varchar;
+    num_rows_jrnx integer;
+    num_rows_predef integer;
+    n_count integer;
+begin
+    n_count := 0;
+    -- get current value
+    select ad_value into old_qcode from fiche_detail where jft_id=njft_id;
+    -- av_text didn't change so no update
+    if tav_text = upper( trim(old_qcode)) then
+        raise notice 'nothing to change % %' , tav_text,old_qcode;
+        return 0;
+    end if;
 
-	tText := trim(lower(tav_text));
-	tText := replace(tText,' ','');
-        -- valid alpha is [ . : - _ ]
-	tText := translate(tText,E' $€µ£%+/\\!(){}(),;&|"#''^<>*','');
-	tText := translate(tText,E'éèêëàâäïîüûùöôç','eeeeaaaiiuuuooc');
-	tText := upper(tText);
-	if length ( tText) = 0 or tText is null then
-		return 0;
-	end if;
+    tText := comptaproc.format_quickcode(tav_text);
 
-	ns := njft_id;
-	tBase := tText;
-	loop
-		-- av_text already used ?
-		select count(*) into nExist
-			from fiche_detail
-		where
-			ad_id=23 and ad_value=tText
-			and jft_id <> njft_id;
+    if length ( tText) = 0 or tText is null then
+        return 0;
+    end if;
 
-		if nExist = 0 then
-			exit;
-		end if;
-		if tText = tBase||ns then
-			-- take the next sequence
-			select nextval('s_jnt_fic_att_value') into ns;
-		end if;
-		tText  :=tBase||ns;
+    ns := njft_id;
+    tBase := tText;
+    loop
+        -- av_text already used ?
+        select count(*) into nExist
+        from fiche_detail
+        where
+                ad_id=23 and ad_value=tText
+          and jft_id <> njft_id;
 
-	end loop;
-	update fiche_detail set ad_value = tText where jft_id=njft_id;
+        if nExist = 0 then
+            exit;
+        end if;
+        tText := tBase || n_count::text;
+        n_count := n_count + 1 ;
 
-	-- update also the contact
-	update fiche_detail set ad_value = tText
-		where jft_id in
-			( select jft_id
-				from fiche_detail
-			where ad_id=25 and ad_value=old_qcode);
+    end loop;
+    update fiche_detail set ad_value = tText where jft_id=njft_id;
+
+    -- update also the contact
+    update fiche_detail set ad_value = tText
+    where jft_id in
+          ( select jft_id
+            from fiche_detail
+            where ad_id in (select ad_id from attr_def where ad_type='card') and ad_value=old_qcode);
 
 
-	return ns;
-	end;
-$_$;
-
-
-SET search_path = public, pg_catalog;
-
-
-CREATE FUNCTION bud_card_ins_upd() RETURNS trigger
+    return ns;
+end;
+$$;
+CREATE FUNCTION public.bud_card_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$declare
  sCode text;
@@ -1947,7 +2125,7 @@ sCode:=substr(sCode,1,10);
 NEW.bc_code:=sCode;
 return NEW;
 end;$$;
-CREATE FUNCTION bud_detail_ins_upd() RETURNS trigger
+CREATE FUNCTION public.bud_detail_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$declare
 mline bud_detail%ROWTYPE;
@@ -1958,7 +2136,7 @@ if mline.po_id = -1 then
 end if;
 return mline;
 end;$$;
-CREATE FUNCTION correct_quant_purchase() RETURNS void
+CREATE FUNCTION public.correct_quant_purchase() RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -2007,7 +2185,7 @@ end loop;
 return;
 end;
 $$;
-CREATE FUNCTION correct_quant_sale() RETURNS void
+CREATE FUNCTION public.correct_quant_sale() RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -2056,7 +2234,21 @@ end loop;
 return;
 end;
 $$;
-CREATE FUNCTION modify_menu_system(n_profile numeric) RETURNS void
+CREATE FUNCTION public.isdate(text, text) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $_$
+DECLARE x timestamp;
+BEGIN
+    x := to_date($1,$2);
+    RETURN TRUE;
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END;
+$_$;
+
+
+
+CREATE FUNCTION public.modify_menu_system(n_profile numeric) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -2123,7 +2315,19 @@ loop
 end loop;	
 end;
 $$;
-CREATE FUNCTION upgrade_repo(p_version integer) RETURNS void
+CREATE FUNCTION public.replace_menu_code(code_source text, code_destination text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+begin
+    /*code */
+
+    update bookmark set b_action = replace(b_action,code_source,code_destination) where b_action ~ code_source;
+    update menu_ref set me_code =code_destination where me_code = code_source;
+    update profile_menu set me_code=code_destination where me_code = code_source;
+    update profile_menu set me_code_dep=code_destination where me_code_dep = code_source;
+end ;
+$$;
+CREATE FUNCTION public.upgrade_repo(p_version integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare 

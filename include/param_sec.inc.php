@@ -71,8 +71,8 @@ if ( ! isset($_REQUEST['action']))
 
     $MaxUser = Database::num_row($user_sql);
 
-
-    echo '<TABLE class="result" >';
+    echo \HtmlInput::filter_table("user_security_tb", '0,1,2,3', 1);
+    echo '<TABLE id="user_security_tb" class="result" >';
 	echo "<tr>";
 	echo '<th>'.$header->get_header(0).'</th>';
 	echo '<th>'.$header->get_header(1).'</th>';

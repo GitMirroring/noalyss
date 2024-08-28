@@ -53,7 +53,7 @@ function todo_list_show(p_id)
 
 
                             todo_div.style.top = (posY + offsetY) + 'px';
-                            todo_div.style.left = (posX + offsetX - 200) + 'px';
+                            todo_div.style.left = (posX + offsetX + 20) + 'px';
 
                             var answer = req.responseXML;
                             var tl_id = answer.getElementsByTagName('tl_id');
@@ -185,11 +185,11 @@ function zoom_todo ()
     waiting_box();
     if ( ! todo_maximize)
     {
-        var clonetodo=$('todo_listg_div').clone();
+        var clonetodo=$('todo_list').clone();
         clonetodo.setAttribute('id','clone_todo_list')
         clonetodo.setStyle({'z-index':1,'position':'absolute','width':'95%','height':'95%','top':'2%','right':'2%','left':'2%'})
-        clonetodo.innerHTML=$('todo_listg_div').innerHTML;
-        $('todo_listg_div').innerHTML="";
+        clonetodo.innerHTML=$('todo_list').innerHTML;
+        $('todo_list').innerHTML="";
         clonetodo.addClassName('inner_box');
         clonetodo.removeClassName('box');
         document.body.appendChild(clonetodo);
@@ -197,7 +197,7 @@ function zoom_todo ()
     } else
     {
         todo_maximize=false;
-         $('todo_listg_div').innerHTML=$('clone_todo_list').innerHTML;
+         $('todo_list').innerHTML=$('clone_todo_list').innerHTML;
         $('clone_todo_list').remove();
     }
     

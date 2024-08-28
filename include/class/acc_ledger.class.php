@@ -580,7 +580,7 @@ class Acc_Ledger  extends jrn_def_sql
      * @brief Show a select list   of the ledgers you can access in
      * writing, reading or simply accessing.
      * @param $p_type = ALL or the type of the ledger (ACH,VEN,FIN,ODS)
-     * @param $p_access =3 for READ and WRITE, 2 for write and 1 for readonly
+     * @param $p_access =3 for READ or WRITE, 2 for write and 1 for readonly
      * @param Boolean TRUE all ledger are selected, or FALSE only enable
      * \return     object HtmlInput select
      * 
@@ -3027,7 +3027,7 @@ class Acc_Ledger  extends jrn_def_sql
     Array
     (
     [gDossier] => 25
-    [ac] => CFG/MACC/CFGLED
+    [ac] => CFG/MACC/C0JRN
     [p_jrn] => -1
     [p_action] => jrn
     [sa] => add
@@ -3158,9 +3158,11 @@ class Acc_Ledger  extends jrn_def_sql
             default:
                 throw new Exception('Ledger_type invalid : '.$p_ledger_type);
         }
+        if ( ! in_array($sql_op ,array('>','<','=','>=','<='))) {
+            throw new \Exception ("AC3162 : invalid \$sql_op = [$sql_op]");
+        }
 
-
-        $sql="select jr_id, jr_internal, jr_date, jr_comment,jr_pj_number,jr_montant
+        $sql="select jr_id, jr_internal, jr_date, jr_comment,jr_pj_number,jr_montant,jr_ech
 				from jrn
 				join jrn_def on (jrn_def_id=jr_def_id)
 				where
@@ -3168,6 +3170,7 @@ class Acc_Ledger  extends jrn_def_sql
 				and jr_ech $sql_op to_date($1,'DD.MM.YYYY')
 				and coalesce (jr_rapt,'xx') <> 'paid'
 				and $filter
+                order by jr_date
 				";
         $array=$this->db->get_array($sql, array($p_date));
         return $array;

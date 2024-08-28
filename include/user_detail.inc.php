@@ -160,7 +160,7 @@ if  ($UserChange->admin == 0 ) :
         <p class="notice">
             Les autres droits doivent être réglés dans les dossiers (paramètre->sécurité), le fait de changer un utilisateur d'administrateur à utilisateur
 			normal ne change pas le profil administrateur dans les dossiers.
-			Il faut aller dans CFGSECURITY pour diminuer ses privilèges.
+			Il faut aller dans C0SEC pour diminuer ses privilèges.
         </p>
      
 <?php

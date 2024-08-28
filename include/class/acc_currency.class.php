@@ -157,7 +157,7 @@ class Acc_Currency
             and currency_id=$2";
         $value=$this->cn->get_value($sql,[$p_date,$this->get_id()]);
         if ($value == "") {
-            throw new Exception(_("Aucun taux à cette date , aller sur CFGCURRENCY"));
+            throw new Exception(_("Aucun taux à cette date , aller sur C0DEV"));
         }
         return $value;
     }

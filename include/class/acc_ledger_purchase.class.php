@@ -323,7 +323,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
     }
 
     /**
-     * Insert into JRNX the No Deductible amount and into Analytic Accountancy for the ND VAT
+     * @brief Insert into JRNX the No Deductible amount and into Analytic Accountancy for the ND VAT
      * @param Acc_Compute $p_nd_amount content ND amount
      * @param Fiche $p_fiche Card of the Service
      * @param type $p_tva_both  0 if TVA is normal or 1 if on both side

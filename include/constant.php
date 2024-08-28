@@ -25,10 +25,10 @@
 
 global $version_noalyss;
 // version 
-define('NOALYSS_VERSION', 9206 );
+define('NOALYSS_VERSION', 9300 );
 
 // Database schema version 
-define("DBVERSION", 198);
+define("DBVERSION", 200);
 
 // version for MONO_DATABASE
 define("MONO_DATABASE", 25);
@@ -406,7 +406,8 @@ function noalyss_class_autoloader($class)
         "htmlinput" => "lib/html_input.class.php",
         'noalyss\dbg'=>"lib/dbg.php",
         'noalyss\file_cache'=>"lib/file_cache.class.php",
-        "pdfland"=>"class/pdf_land.class.php"
+        "pdfland"=>"class/pdf_land.class.php",
+        "noalyss\widget\widget"=>"widget/widget.php"
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];

@@ -23,7 +23,7 @@ if (!defined('ALLOWED')) {    die('Appel direct ne sont pas permis'); }
 
 /**
  * @file
- * @brief CFGCURRENCY Manage the currency and the rate 
+ * @brief C0DEV Manage the currency and the rate
  * @example test_currency_mtable.php
  */
 

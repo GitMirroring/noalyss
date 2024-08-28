@@ -145,7 +145,7 @@ class ITva_Popup extends HtmlInput
 list="dl_tva_%s" autocomplete="off">';
         $r = sprintf($str, $this->name, $this->value, $this->id, _("C.TVA"),$this->js, $strAttribut,$this->id);
         $r.=$code;
-        $r.=$this->make_datalist();
+
         if ($this->in_table)
             $table = '<table>' . '<tr>' . td($r);
 

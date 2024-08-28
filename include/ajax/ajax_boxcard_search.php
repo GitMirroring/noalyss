@@ -26,6 +26,7 @@
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
+global $g_user;
 $sql="
 	select distinct vw.f_id,vw_name,vw_first_name,vw_description,fd_label,quick_code,tva_num,(select ad_value from fiche_Detail where f_id=pc.f_id and ad_id=5) as poste
 	from vw_fiche_attr as vw
@@ -35,12 +36,13 @@ $sql="
 	ad_value ~* $1
 	order by 2
 ";
+$preference=$g_user->get_preference();
 $array=$cn->get_array($sql,array($_GET['card']));
 echo HtmlInput::title_box(_("Résultat recherche"), "boxsearch_card_div");
-$max=(count($array)>MAX_CARD_SEARCH)?MAX_CARD_SEARCH:count($array);
+$max=(count($array)> $preference['PAGESIZE'])? $preference['PAGESIZE']:count($array);
 ?>
-<?php if (count($array)>MAX_CARD_SEARCH ): ?>
-<h2 class="notice"><?php printf (_("Résultat limité à %d , %d nombre de fiches trouvées"), MAX_CARD_SEARCH,count($array))?> </h2>
+<?php if (count($array)>$preference['PAGESIZE'] ): ?>
+<h2 class="notice"><?php printf (_("Résultat limité à %d dans vos préférences, %d fiches trouvées"), $preference['PAGESIZE'],count($array))?> </h2>
 
 <?php endif?>
 <?php echo _('Cherche')?> <?php echo Icon_Action::infobulle(26);echo HtmlInput::filter_table("tb_fiche", "0,1,2,3,4,5", 1); ?> :

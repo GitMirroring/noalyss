@@ -19,8 +19,9 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
- * \brief javascript scripts for the gestion
+/**
+ * @file
+ * javascript scripts for the gestion
  *
  */
 
@@ -28,8 +29,8 @@
 
 /**
  * remove an attached document of an action
- *@param dossier
- *@param dt_id id of the document (pk document:d_id)
+ *@param {int} dossier
+ *@param {int} dt_id id of the document (pk document:d_id)
 */
 function remove_document(p_dossier,p_id)
 {
@@ -281,7 +282,7 @@ function action_show(p_dossier)
             parameters : {gDossier:p_dossier,'op':'action_show'},
             onSuccess : function(p_xml, p_text) {
                         remove_waiting_box();
-                        add_div({id: 'action_list_div', style:"top:1%;width:90%;left:5%" , cssclass: 'inner_box'});
+                        add_div({id: 'action_list_div', style:"position:fixed;top:1%;width:90%;left:5%" , cssclass: 'inner_box'});
                         $('action_list_div').innerHTML=p_xml.responseText;
                         var table_followup=document.getElementById('event_followup');
                         if ( table_followup) {                         sorttable.makeSortable(table_followup); }

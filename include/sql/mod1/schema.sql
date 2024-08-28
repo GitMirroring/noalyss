@@ -1,28 +1,26 @@
 
+
 SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
+SET row_security = off;
 
 
 CREATE SCHEMA comptaproc;
 
 
 
+CREATE DOMAIN public.account_type AS character varying(40);
 
 
 
-
-
-SET search_path = public, pg_catalog;
-
-
-CREATE DOMAIN account_type AS character varying(40);
-
-
-
-CREATE TYPE anc_table_account_type AS (
+CREATE TYPE public.anc_table_account_type AS (
 	po_id bigint,
 	pa_id bigint,
 	po_name text,
@@ -34,7 +32,7 @@ CREATE TYPE anc_table_account_type AS (
 
 
 
-CREATE TYPE anc_table_card_type AS (
+CREATE TYPE public.anc_table_card_type AS (
 	po_id bigint,
 	pa_id bigint,
 	po_name text,
@@ -47,37 +45,36 @@ CREATE TYPE anc_table_card_type AS (
 
 
 
-CREATE TYPE menu_tree AS (
+CREATE TYPE public.menu_tree AS (
 	code text,
 	description text
 );
 
 
-SET search_path = comptaproc, pg_catalog;
 
-
-CREATE FUNCTION account_add(p_id public.account_type, p_name character varying) RETURNS text
+CREATE FUNCTION comptaproc.account_add(p_id public.account_type, p_name character varying) RETURNS text
     LANGUAGE plpgsql
     AS $$
 declare
-	nParent tmp_pcmn.pcm_val_parent%type;
-	nCount integer;
-	sReturn text;
+    nParent tmp_pcmn.pcm_val_parent%type;
+    nCount integer;
+    sReturn text;
 begin
-	sReturn:= format_account(p_id);
-	select count(*) into nCount from tmp_pcmn where pcm_val=sReturn;
-	if nCount = 0 then
-		nParent=account_parent(p_id);
-		insert into tmp_pcmn (pcm_val,pcm_lib,pcm_val_parent)
-			values (p_id, p_name,nParent) returning pcm_val into sReturn;
-	end if;
-return sReturn;
+    -- patch 189
+    sReturn:= format_account(p_id);
+    select count(*) into nCount from tmp_pcmn where pcm_val=sReturn;
+    if nCount = 0 then
+        nParent=account_parent(p_id);
+        insert into tmp_pcmn (pcm_val,pcm_lib,pcm_val_parent)
+        values (p_id, p_name,nParent) returning pcm_val into sReturn;
+    end if;
+    return sReturn;
 end ;
 $$;
 
 
 
-CREATE FUNCTION account_alphanum() RETURNS boolean
+CREATE FUNCTION comptaproc.account_alphanum() RETURNS boolean
     LANGUAGE plpgsql
     AS $$
 declare
@@ -94,7 +91,7 @@ $$;
 
 
 
-CREATE FUNCTION account_auto(p_fd_id integer) RETURNS boolean
+CREATE FUNCTION comptaproc.account_auto(p_fd_id integer) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
 declare
@@ -111,145 +108,176 @@ $$;
 
 
 
-CREATE FUNCTION account_compute(p_f_id integer) RETURNS public.account_type
+CREATE FUNCTION comptaproc.account_compute(p_f_id integer) RETURNS public.account_type
     LANGUAGE plpgsql
     AS $$
 declare
-	class_base fiche_def.fd_class_base%type;
-	maxcode numeric;
-	sResult text;
-	bAlphanum bool;
-	sName text;
+    class_base fiche_def.fd_class_base%type;
+    maxcode numeric;
+    sResult account_type;
+    bAlphanum bool;
+    sName text;
+    nCount integer;
+    sNumber text;
 begin
-	select fd_class_base into class_base
-	from
-		fiche_def join fiche using (fd_id)
-	where
-		f_id=p_f_id;
-	raise notice 'account_compute class base %',class_base;
-	bAlphanum := account_alphanum();
-	if bAlphanum = false  then
-	raise info 'account_compute : Alphanum is false';
-		select count (pcm_val) into maxcode from tmp_pcmn where pcm_val_parent = class_base;
-		if maxcode = 0	then
-			maxcode:=class_base::numeric;
-		else
-			select max (pcm_val) into maxcode from tmp_pcmn where pcm_val_parent = class_base;
-			maxcode:=maxcode::numeric;
-		end if;
-		if maxcode::text = class_base then
-			maxcode:=class_base::numeric*1000;
-		end if;
-		maxcode:=maxcode+1;
-		raise notice 'account_compute Max code %',maxcode;
-		sResult:=maxcode::account_type;
-	else
-	raise info 'account_compute : Alphanum is true';
-		-- if alphanum, use name
-		select ad_value into sName from fiche_detail where f_id=p_f_id and ad_id=1;
-		raise info 'name is %',sName;
-		if sName is null then
-			raise exception 'Cannot compute an accounting without the name of the card for %',p_f_id;
-		end if;
-		sResult := class_base||sName;
-		sResult := substr(sResult,1,40);
-		raise info 'Result is %',sResult;
-	end if;
-	return sResult::account_type;
+    -- patch 189
+    select fd_class_base into class_base
+    from
+        fiche_def join fiche using (fd_id)
+    where
+            f_id=p_f_id;
+
+    bAlphanum := account_alphanum();
+    if bAlphanum = false  then
+        select max (pcm_val::numeric) into maxcode
+        from tmp_pcmn
+        where pcm_val_parent = class_base and pcm_val !~* '[[:alpha:]]'  ;
+        if maxcode is null	or length(maxcode::text) < length(class_base)+4 then
+            maxcode:=class_base::numeric*10000+1;
+        else
+            select max (pcm_val::numeric) into maxcode
+            from tmp_pcmn
+            where pcm_val !~* '[[:alpha:]]'
+              and pcm_val_parent = class_base
+              and substr(pcm_val::text,1,length(class_base))=class_base;
+
+            sNumber := substr(maxcode::text,length(class_base)+1);
+            nCount := sNumber::numeric+1;
+            sNumber := lpad (nCount::text,4,'0');
+
+            maxcode:=class_base||sNumber;
+        end if;
+        sResult:=maxcode::account_type;
+    else
+        -- if alphanum, use name
+        select ad_value into sName from fiche_detail where f_id=p_f_id and ad_id=1;
+        if sName is null then
+            raise exception 'Cannot compute an accounting without the name of the card for %',p_f_id;
+        end if;
+        sResult := account_compute_alpha(class_base,sName);
+    end if;
+    return sResult;
 end;
 $$;
 
 
 
-CREATE FUNCTION account_insert(p_f_id integer, p_account text) RETURNS text
+CREATE FUNCTION comptaproc.account_compute_alpha(p_class text, p_name text) RETURNS public.account_type
     LANGUAGE plpgsql
     AS $$
 declare
-	nParent tmp_pcmn.pcm_val_parent%type;
-	sName varchar;
-	sNew tmp_pcmn.pcm_val%type;
-	bAuto bool;
-	nFd_id integer;
-	sClass_Base fiche_def.fd_class_base%TYPE;
-	nCount integer;
-	first text;
-	second text;
-	s_account text;
+    sResult account_type;
+    sAccount account_type;
+    sFormatedAccount account_type;
+    nCount int;
+    idx int :=0;
 begin
+    sFormatedAccount := comptaproc.format_account(p_name);
 
-	if p_account is not null and length(trim(p_account)) != 0 then
-	-- if there is coma in p_account, treat normally
-		if position (',' in p_account) = 0 then
-			raise info 'p_account is not empty';
-				s_account := substr( p_account,1 , 40);
-				select count(*)  into nCount from tmp_pcmn where pcm_val=s_account::account_type;
-				raise notice 'found in tmp_pcm %',nCount;
-				if nCount !=0  then
-					raise info 'this account exists in tmp_pcmn ';
-					perform attribut_insert(p_f_id,5,s_account);
-				   else
-				       -- account doesn't exist, create it
-					select ad_value into sName from
-						fiche_detail
-					where
-					ad_id=1 and f_id=p_f_id;
+    sAccount := p_class||substring(sFormatedAccount for 5);
+    nCount := 0;
+    loop
+        select count(*) into nCount from tmp_pcmn where pcm_val = comptaproc.format_account(sAccount);
 
-					nParent:=account_parent(s_account::account_type);
-					insert into tmp_pcmn(pcm_val,pcm_lib,pcm_val_parent) values (s_account::account_type,sName,nParent);
-					perform attribut_insert(p_f_id,5,s_account);
-
-				end if;
-		else
-		raise info 'presence of a comma';
-		-- there is 2 accounts separated by a comma
-		first := split_part(p_account,',',1);
-		second := split_part(p_account,',',2);
-		-- check there is no other coma
-		raise info 'first value % second value %', first, second;
-
-		if  position (',' in first) != 0 or position (',' in second) != 0 then
-			raise exception 'Too many comas, invalid account';
-		end if;
-		perform attribut_insert(p_f_id,5,p_account);
-		end if;
-	else
-	raise info 'A000 : p_account is  empty';
-		select fd_id into nFd_id from fiche where f_id=p_f_id;
-		bAuto:= account_auto(nFd_id);
-
-		select fd_class_base into sClass_base from fiche_def where fd_id=nFd_id;
-raise info 'sClass_Base : %',sClass_base;
-		if bAuto = true and sClass_base similar to '[[:digit:]]*'  then
-			raise info 'account generated automatically';
-			sNew:=account_compute(p_f_id);
-			raise info 'sNew %', sNew;
-			select ad_value into sName from
-				fiche_detail
-			where
-				ad_id=1 and f_id=p_f_id;
-			nParent:=account_parent(sNew);
-			sNew := account_add  (sNew,sName);
-			perform attribut_insert(p_f_id,5,sNew);
-
-		else
-		-- if there is an account_base then it is the default
-		      select fd_class_base::account_type into sNew from fiche_def join fiche using (fd_id) where f_id=p_f_id;
-			if sNew is null or length(trim(sNew)) = 0 then
-				raise notice 'count is null';
-				 perform attribut_insert(p_f_id,5,null);
-			else
-				 perform attribut_insert(p_f_id,5,sNew);
-			end if;
-		end if;
-	end if;
-
-return 0;
+        exit when nCount = 0;
+        idx := idx + 1;
+        sAccount := p_class || substring(sFormatedAccount for 5)||idx::text;
+    end loop;
+    sResult := comptaproc.format_account(sAccount);
+    return sResult;
 end;
 $$;
 
 
 
-CREATE FUNCTION account_parent(p_account public.account_type) RETURNS public.account_type
+CREATE FUNCTION comptaproc.account_insert(p_f_id integer, p_account text) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+declare
+    nParent tmp_pcmn.pcm_val_parent%type;
+    sName varchar;
+    sNew tmp_pcmn.pcm_val%type;
+    bAuto bool;
+    nFd_id integer;
+    sClass_Base fiche_def.fd_class_base%TYPE;
+    nCount integer;
+    first text;
+    second text;
+    s_account text;
+begin
+    -- patch 189
+    -- accouting is given
+    if p_account is not null and length(trim(p_account)) != 0 then
+        -- if there is coma in p_account, treat normally
+        if position (',' in p_account) = 0 then
+            s_account := format_account(substr( p_account,1 , 40)::account_type);
+            select count(*)  into nCount from tmp_pcmn where pcm_val=s_account::account_type;
+            if nCount !=0  then
+                perform attribut_insert(p_f_id,5,s_account);
+            else
+                -- account doesn't exist, create it
+                select ad_value into sName from
+                    fiche_detail
+                where
+                        ad_id=1 and f_id=p_f_id;
+                -- retrieve parent account from card
+                select fd_class_base::account_type into nParent from fiche_def where fd_id=(select fd_id from fiche where f_id=p_f_id);
+                if nParent = null or nParent = '' then
+                    nParent:=account_parent(s_account::account_type);
+                end if;
+                insert into tmp_pcmn(pcm_val,pcm_lib,pcm_val_parent) values (s_account::account_type,sName,nParent);
+                perform attribut_insert(p_f_id,5,s_account);
+
+            end if;
+            return s_account;
+        else
+            -- there is 2 accounts separated by a comma
+            first := split_part(p_account,',',1);
+            second := split_part(p_account,',',2);
+            -- check there is no other coma
+
+            if  position (',' in first) != 0 or position (',' in second) != 0 then
+                raise exception 'Too many comas, invalid account';
+            end if;
+            perform attribut_insert(p_f_id,5,p_account);
+
+        end if;
+        return s_account;
+    end if;
+
+    select fd_id into nFd_id from fiche where f_id=p_f_id;
+    bAuto:= account_auto(nFd_id);
+
+    select fd_class_base into sClass_base from fiche_def where fd_id=nFd_id;
+    if bAuto = true and sClass_base similar to '[[:digit:]]*'  then
+        sNew:=account_compute(p_f_id);
+        select ad_value into sName from
+            fiche_detail
+        where
+                ad_id=1 and f_id=p_f_id;
+        nParent:=sClass_Base::account_type;
+        sNew := account_add  (sNew,sName);
+        update tmp_pcmn set pcm_val_parent=nParent where pcm_val=sNew;
+        perform attribut_insert(p_f_id,5,sNew);
+        return sNew;
+    else
+        -- if there is an account_base then it is the default
+        if trim(coalesce(sClass_base::text,'')) = '' then
+            perform attribut_insert(p_f_id,5,null);
+        else
+            perform attribut_insert(p_f_id,5,sClass_base);
+        end if;
+        return sClass_base;
+    end if;
+
+    raise notice 'ai89.account_insert nothing done : error';
+
+end;
+$$;
+
+
+
+CREATE FUNCTION comptaproc.account_parent(p_account public.account_type) RETURNS public.account_type
     LANGUAGE plpgsql
     AS $$
 declare
@@ -283,7 +311,7 @@ $$;
 
 
 
-CREATE FUNCTION account_update(p_f_id integer, p_account public.account_type) RETURNS integer
+CREATE FUNCTION comptaproc.account_update(p_f_id integer, p_account public.account_type) RETURNS integer
     LANGUAGE plpgsql
     AS $$
 declare
@@ -298,32 +326,35 @@ begin
 	if length(trim(p_account)) != 0 then
 		-- 2 accounts in card separated by comma
 		if position (',' in p_account) = 0 then
+			p_account := format_account(p_account);
 			select count(*) into nCount from tmp_pcmn where pcm_val=p_account;
 			if nCount = 0 then
-			select ad_value into sName from
-				fiche_detail
-				where
-				ad_id=1 and f_id=p_f_id;
-			nParent:=account_parent(p_account);
-			insert into tmp_pcmn(pcm_val,pcm_lib,pcm_val_parent) values (p_account,sName,nParent);
-		end if;
+				select ad_value into sName from
+					fiche_detail
+					where
+					ad_id=1 and f_id=p_f_id;
+					nParent:=account_parent(p_account);
+					raise notice 'insert into tmp_pcmn % %',p_account,sName;
+					insert into tmp_pcmn(pcm_val,pcm_lib,pcm_val_parent) values (p_account,sName,nParent);
+			end if;
 		else
-		raise info 'presence of a comma';
-		-- there is 2 accounts separated by a comma
-		first := split_part(p_account,',',1);
-		second := split_part(p_account,',',2);
-		-- check there is no other coma
-		raise info 'first value % second value %', first, second;
-
-		if  position (',' in first) != 0 or position (',' in second) != 0 then
-			raise exception 'Too many comas, invalid account';
-		end if;
-		-- check that both account are in PCMN
+			raise info 'presence of a comma';
+			-- there is 2 accounts separated by a comma
+			first := split_part(p_account,',',1);
+			second := split_part(p_account,',',2);
+			-- check there is no other coma
+			raise info 'first value % second value %', first, second;
+	
+			if  position (',' in first) != 0 or position (',' in second) != 0 then
+				raise exception 'Too many comas, invalid account';
+			end if;
+			-- check that both account are in PCMN
 
 		end if;
 	else
 		-- account is null
 		update fiche_detail set ad_value=null where f_id=p_f_id and ad_id=5 ;
+		return 0;
 	end if;
 
 	update fiche_detail set ad_value=p_account where f_id=p_f_id and ad_id=5 ;
@@ -334,7 +365,7 @@ $$;
 
 
 
-CREATE FUNCTION action_gestion_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.action_gestion_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
@@ -347,7 +378,7 @@ $$;
 
 
 
-CREATE FUNCTION action_gestion_related_ins_up() RETURNS trigger
+CREATE FUNCTION comptaproc.action_gestion_related_ins_up() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -371,7 +402,7 @@ $$;
 
 
 
-CREATE FUNCTION anc_correct_tvand() RETURNS void
+CREATE FUNCTION comptaproc.anc_correct_tvand() RETURNS void
     LANGUAGE plpgsql
     AS $$ 
 declare
@@ -402,19 +433,24 @@ end;
 
 
 
-CREATE FUNCTION attribut_insert(p_f_id integer, p_ad_id integer, p_value character varying) RETURNS void
+CREATE FUNCTION comptaproc.attribut_insert(p_f_id integer, p_ad_id integer, p_value character varying) RETURNS void
     LANGUAGE plpgsql
     AS $$
+declare 
+	nResult bigint;
 begin
-	insert into fiche_detail (f_id,ad_id, ad_value) values (p_f_id,p_ad_id,p_value);
-	
+	update fiche_detail set ad_value=p_value where ad_id=p_ad_id and f_id=p_f_id returning jft_id into nResult;
+	if nResult is null then
+		insert into fiche_detail (f_id,ad_id, ad_value) values (p_f_id,p_ad_id,p_value);
+	end if;
+
 return;
 end;
 $$;
 
 
 
-CREATE FUNCTION attribute_correct_order() RETURNS void
+CREATE FUNCTION comptaproc.attribute_correct_order() RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -437,7 +473,7 @@ $$;
 
 
 
-CREATE FUNCTION card_after_delete() RETURNS trigger
+CREATE FUNCTION comptaproc.card_after_delete() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -451,7 +487,7 @@ $$;
 
 
 
-CREATE FUNCTION card_class_base(p_f_id integer) RETURNS text
+CREATE FUNCTION comptaproc.card_class_base(p_f_id integer) RETURNS text
     LANGUAGE plpgsql
     AS $$
 declare
@@ -470,7 +506,7 @@ $$;
 
 
 
-CREATE FUNCTION category_card_before_delete() RETURNS trigger
+CREATE FUNCTION comptaproc.category_card_before_delete() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -485,7 +521,7 @@ $$;
 
 
 
-CREATE FUNCTION check_balance(p_grpt integer) RETURNS numeric
+CREATE FUNCTION comptaproc.check_balance(p_grpt integer) RETURNS numeric
     LANGUAGE plpgsql
     AS $$
 declare
@@ -524,30 +560,40 @@ $$;
 
 
 
-CREATE FUNCTION check_periode() RETURNS trigger
+CREATE FUNCTION comptaproc.check_periode() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
   nPeriode int;
+  nExerciceLabel int;
 begin
-if periode_exist(to_char(NEW.p_start,'DD.MM.YYYY'),NEW.p_id) <> -1 then
-       nPeriode:=periode_exist(to_char(NEW.p_start,'DD.MM.YYYY'),NEW.p_id) ;
-        raise info 'Overlap periode start % periode %',NEW.p_start,nPeriode;
-	return null;
-end if;
+	nPeriode:=periode_exist(to_char(NEW.p_start,'DD.MM.YYYY'),NEW.p_id);
+	if nPeriode <> -1 then
+       raise info 'Overlap periode start % periode %',NEW.p_start,nPeriode;
+		return null;
+	end if;
+	if new.p_exercice_label is null or trim (new.p_exercice_label ) = '' then
+		new.p_exercice_label := new.p_exercice;
+	end if;
+	select count(*) into nExerciceLabel 
+		from parm_periode 
+		where 
+		(p_exercice =new.p_exercice and p_exercice_label <> new.p_exercice_label) 
+		or 
+		(p_exercice <> new.p_exercice and p_exercice_label = new.p_exercice_label);
+		
+	if nExerciceLabel > 0 then
+		raise exception 'a label cannot be on two exercices';
+		return null;
+	end if;
 
-if periode_exist(to_char(NEW.p_end,'DD.MM.YYYY'),NEW.p_id) <> -1 then
-	nPeriode:=periode_exist(to_char(NEW.p_start,'DD.MM.YYYY'),NEW.p_id) ;
-        raise info 'Overlap periode end % periode %',NEW.p_end,nPeriode;
-	return null;
-end if;
 return NEW;
 end;
 $$;
 
 
 
-CREATE FUNCTION correct_sequence(p_sequence text, p_col text, p_table text) RETURNS integer
+CREATE FUNCTION comptaproc.correct_sequence(p_sequence text, p_col text, p_table text) RETURNS integer
     LANGUAGE plpgsql
     AS $$
 declare
@@ -581,11 +627,11 @@ $$;
 
 
 
-COMMENT ON FUNCTION correct_sequence(p_sequence text, p_col text, p_table text) IS ' Often the primary key is a sequence number and sometimes the value of the sequence is not synchronized with the primary key ( p_sequence : sequence name, p_col : col of the pk,p_table : concerned table';
+COMMENT ON FUNCTION comptaproc.correct_sequence(p_sequence text, p_col text, p_table text) IS ' Often the primary key is a sequence number and sometimes the value of the sequence is not synchronized with the primary key ( p_sequence : sequence name, p_col : col of the pk,p_table : concerned table';
 
 
 
-CREATE FUNCTION create_missing_sequence() RETURNS integer
+CREATE FUNCTION comptaproc.create_missing_sequence() RETURNS integer
     LANGUAGE plpgsql
     AS $$
 declare
@@ -611,7 +657,7 @@ $$;
 
 
 
-CREATE FUNCTION drop_index(p_constraint character varying) RETURNS void
+CREATE FUNCTION comptaproc.drop_index(p_constraint character varying) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -626,7 +672,7 @@ $$;
 
 
 
-CREATE FUNCTION drop_it(p_constraint character varying) RETURNS void
+CREATE FUNCTION comptaproc.drop_it(p_constraint character varying) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -641,7 +687,7 @@ $$;
 
 
 
-CREATE FUNCTION extension_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.extension_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -671,7 +717,7 @@ $$;
 
 
 
-CREATE FUNCTION fiche_account_parent(p_f_id integer) RETURNS public.account_type
+CREATE FUNCTION comptaproc.fiche_account_parent(p_f_id integer) RETURNS public.account_type
     LANGUAGE plpgsql
     AS $$
 declare
@@ -687,7 +733,7 @@ $$;
 
 
 
-CREATE FUNCTION fiche_attribut_synchro(p_fd_id integer) RETURNS void
+CREATE FUNCTION comptaproc.fiche_attribut_synchro(p_fd_id integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -712,7 +758,7 @@ $$;
 
 
 
-CREATE FUNCTION fiche_def_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.fiche_def_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
@@ -726,34 +772,47 @@ end;$$;
 
 
 
-CREATE FUNCTION fiche_detail_qcode_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.fiche_detail_check() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+	BEGIN
+		if new.ad_id = 23 and coalesce (new.ad_value,'') = '' then 
+			raise exception  'QUICKCODE can not be empty';
+		end if;
+	if new.ad_id = 1 and coalesce (new.ad_value,'') = '' then 
+			raise exception  'NAME can not be empty';
+		end if;
+	return new;
+	END;
+
+$$;
+
+
+
+CREATE FUNCTION comptaproc.fiche_detail_check_qcode() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
-	i record;
+    i record;
 begin
-	if NEW.ad_id=23 and NEW.ad_value != OLD.ad_value then
-		RAISE NOTICE 'new qcode [%] old qcode [%]',NEW.ad_value,OLD.ad_value;
-		update jrnx set j_qcode=NEW.ad_value where j_qcode = OLD.ad_value;    
-	        update op_predef_detail set opd_poste=NEW.ad_value where opd_poste=OLD.ad_value;
-	        raise notice 'TRG fiche_detail update op_predef_detail set opd_poste=% where opd_poste=%;',NEW.ad_value,OLD.ad_value;
-		for i in select ad_id from attr_def where ad_type = 'card' or ad_id=25 loop
-			update fiche_detail set ad_value=NEW.ad_value where ad_value=OLD.ad_value and ad_id=i.ad_id;
-			RAISE NOTICE 'change for ad_id [%] ',i.ad_id;
-			if i.ad_id=19 then
-				RAISE NOTICE 'Change in stock_goods OLD[%] by NEW[%]',OLD.ad_value,NEW.ad_value;
-				update stock_goods set sg_code=NEW.ad_value where sg_code=OLD.ad_value;
-			end if;
+    if NEW.ad_id=23 and NEW.ad_value != OLD.ad_value then
+        update jrnx set j_qcode=NEW.ad_value where j_qcode = OLD.ad_value;
+        update op_predef_detail set opd_poste=NEW.ad_value where opd_poste=OLD.ad_value;
+        for i in select ad_id from attr_def where ad_type = 'card' or ad_id=25 loop
+                update fiche_detail set ad_value=NEW.ad_value where ad_value=OLD.ad_value and ad_id=i.ad_id;
+                if i.ad_id=19 then
+                    update stock_goods set sg_code=NEW.ad_value where sg_code=OLD.ad_value;
+                end if;
 
-		end loop;
-	end if;
-return NEW;
+            end loop;
+    end if;
+    return NEW;
 end;
 $$;
 
 
 
-CREATE FUNCTION fill_quant_fin() RETURNS void
+CREATE FUNCTION comptaproc.fill_quant_fin() RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -910,7 +969,7 @@ $$;
 
 
 
-CREATE FUNCTION find_pcm_type(pp_value public.account_type) RETURNS text
+CREATE FUNCTION comptaproc.find_pcm_type(pp_value public.account_type) RETURNS text
     LANGUAGE plpgsql
     AS $$
 declare
@@ -920,9 +979,23 @@ declare
 begin
 	str_value:=pp_value;
 	nLength:=length(str_value::text);
+
 	while nLength > 0 loop
 		select p_type into str_type from parm_poste where p_value=str_value;
 		if FOUND then
+			raise info 'Type of %s is %s',str_value,str_type;
+			return str_type;
+		end if;
+		nLength:=nLength-1;
+		str_value:=substring(str_value::text from 1 for nLength)::account_type;
+	end loop;
+	str_value := pp_value;
+	nLength:=length(str_value::text);
+	str_value:=substring(str_value::text from 1 for nLength)::account_type;
+	while nLength > 0 loop
+		select pcm_type into str_type from tmp_pcmn tp where pcm_val=str_value;
+		if FOUND then
+			raise info 'Type of %s is %s',str_value,str_type;
 			return str_type;
 		end if;
 		nLength:=nLength-1;
@@ -934,7 +1007,7 @@ $$;
 
 
 
-CREATE FUNCTION find_periode(p_date text) RETURNS integer
+CREATE FUNCTION comptaproc.find_periode(p_date text) RETURNS integer
     LANGUAGE plpgsql
     AS $$
 
@@ -958,7 +1031,7 @@ end;$$;
 
 
 
-CREATE FUNCTION format_account(p_account public.account_type) RETURNS public.account_type
+CREATE FUNCTION comptaproc.format_account(p_account public.account_type) RETURNS public.account_type
     LANGUAGE plpgsql
     AS $_$
 
@@ -979,14 +1052,78 @@ $_$;
 
 
 
-COMMENT ON FUNCTION format_account(p_account public.account_type) IS 'format the accounting :
+COMMENT ON FUNCTION comptaproc.format_account(p_account public.account_type) IS 'format the accounting :
 - upper case
 - remove space and special char.
 ';
 
 
 
-CREATE FUNCTION get_letter_jnt(a bigint) RETURNS bigint
+CREATE FUNCTION comptaproc.format_quickcode(p_qcode text) RETURNS text
+    LANGUAGE plpgsql
+    AS $_$
+declare
+    tText text;
+BEGIN
+    tText := lower(trim(p_qcode));
+    tText := replace(tText,' ','');
+    tText:= translate(tText,E' $€µ£%+/\\!(){}(),;&|"#''^<>*','');
+    tText := translate(tText,E'éèêëàâäïîüûùöôç','eeeeaaaiiuuuooc');
+
+    return upper(tText);
+END;
+$_$;
+
+
+
+COMMENT ON FUNCTION comptaproc.format_quickcode(p_qcode text) IS 'Put in upper case and remove invalid char';
+
+
+
+CREATE FUNCTION comptaproc.four_upper_letter() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+    new.dc_code=transform_to_code(new.dc_code);
+    new.dc_code:=substr(new.dc_code,1,4);
+    return new;
+END;
+$$;
+
+
+
+COMMENT ON FUNCTION comptaproc.four_upper_letter() IS 'Cut to the 4 first letter in uppercase';
+
+
+
+CREATE FUNCTION comptaproc.get_follow_up_tree(action_gestion_id integer) RETURNS SETOF integer
+    LANGUAGE plpgsql
+    AS $$
+declare
+    i int;
+    x int;
+    e int;
+begin
+    for x in select aga_least
+             from action_gestion_related
+             where
+                 aga_greatest = action_gestion_id
+        loop
+            return next x;
+
+            for e in select *  from  comptaproc.get_follow_up_tree(x)
+                loop
+                    return next e;
+                end loop;
+
+        end loop;
+    return;
+end;
+$$;
+
+
+
+CREATE FUNCTION comptaproc.get_letter_jnt(a bigint) RETURNS bigint
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1005,7 +1142,7 @@ $$;
 
 
 
-CREATE FUNCTION get_menu_dependency(profile_menu_id integer) RETURNS SETOF integer
+CREATE FUNCTION comptaproc.get_menu_dependency(profile_menu_id integer) RETURNS SETOF integer
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1032,7 +1169,7 @@ $$;
 
 
 
-CREATE FUNCTION get_menu_tree(p_code text, p_profile integer) RETURNS SETOF public.menu_tree
+CREATE FUNCTION comptaproc.get_menu_tree(p_code text, p_profile integer) RETURNS SETOF public.menu_tree
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1066,7 +1203,7 @@ $$;
 
 
 
-CREATE FUNCTION get_pcm_tree(source public.account_type) RETURNS SETOF public.account_type
+CREATE FUNCTION comptaproc.get_pcm_tree(source public.account_type) RETURNS SETOF public.account_type
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1088,7 +1225,7 @@ $$;
 
 
 
-CREATE FUNCTION get_profile_menu(p_profile integer) RETURNS SETOF public.menu_tree
+CREATE FUNCTION comptaproc.get_profile_menu(p_profile integer) RETURNS SETOF public.menu_tree
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1112,7 +1249,7 @@ $$;
 
 
 
-CREATE FUNCTION group_analytic_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.group_analytic_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -1127,7 +1264,7 @@ end;$$;
 
 
 
-CREATE FUNCTION group_analytique_del() RETURNS trigger
+CREATE FUNCTION comptaproc.group_analytique_del() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
@@ -1138,7 +1275,7 @@ end;$$;
 
 
 
-CREATE FUNCTION html_quote(p_string text) RETURNS text
+CREATE FUNCTION comptaproc.html_quote(p_string text) RETURNS text
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1153,11 +1290,11 @@ end;$$;
 
 
 
-COMMENT ON FUNCTION html_quote(p_string text) IS 'remove harmfull HTML char';
+COMMENT ON FUNCTION comptaproc.html_quote(p_string text) IS 'remove harmfull HTML char';
 
 
 
-CREATE FUNCTION info_def_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.info_def_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -1179,7 +1316,7 @@ $$;
 
 
 
-CREATE FUNCTION insert_jrnx(p_date character varying, p_montant numeric, p_poste public.account_type, p_grpt integer, p_jrn_def integer, p_debit boolean, p_tech_user text, p_tech_per integer, p_qcode text, p_comment text) RETURNS void
+CREATE FUNCTION comptaproc.insert_jrnx(p_date character varying, p_montant numeric, p_poste public.account_type, p_grpt integer, p_jrn_def integer, p_debit boolean, p_tech_user text, p_tech_per integer, p_qcode text, p_comment text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 begin
@@ -1215,7 +1352,7 @@ $$;
 
 
 
-CREATE FUNCTION insert_quant_purchase(p_internal text, p_j_id numeric, p_fiche character varying, p_quant numeric, p_price numeric, p_vat numeric, p_vat_code integer, p_nd_amount numeric, p_nd_tva numeric, p_nd_tva_recup numeric, p_dep_priv numeric, p_client character varying, p_tva_sided numeric, p_price_unit numeric) RETURNS void
+CREATE FUNCTION comptaproc.insert_quant_purchase(p_internal text, p_j_id numeric, p_fiche character varying, p_quant numeric, p_price numeric, p_vat numeric, p_vat_code integer, p_nd_amount numeric, p_nd_tva numeric, p_nd_tva_recup numeric, p_dep_priv numeric, p_client character varying, p_tva_sided numeric, p_price_unit numeric) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1225,7 +1362,7 @@ declare
         fid_good_account account_type;
         n_dep_priv numeric;
 begin
-        n_dep_priv := 0;
+        n_dep_priv := p_dep_priv;
         select p_value into account_priv from parm_code where p_code='DEP_PRIV';
         select f_id into fid_client from
                 fiche_detail where ad_id=23 and ad_value=upper(trim(p_client));
@@ -1268,11 +1405,11 @@ begin
                 p_price_unit);
         return;
 end;
- $$;
+$$;
 
 
 
-CREATE FUNCTION insert_quant_sold(p_internal text, p_jid numeric, p_fiche character varying, p_quant numeric, p_price numeric, p_vat numeric, p_vat_code integer, p_client character varying, p_tva_sided numeric, p_price_unit numeric) RETURNS void
+CREATE FUNCTION comptaproc.insert_quant_sold(p_internal text, p_jid numeric, p_fiche character varying, p_quant numeric, p_price numeric, p_vat numeric, p_vat_code integer, p_client character varying, p_tva_sided numeric, p_price_unit numeric) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1294,73 +1431,69 @@ end;
 
 
 
-CREATE FUNCTION insert_quick_code(nf_id integer, tav_text text) RETURNS integer
+CREATE FUNCTION comptaproc.insert_quick_code(nf_id integer, tav_text text) RETURNS integer
     LANGUAGE plpgsql
-    AS $_$
-	declare
-	ns integer;
-	nExist integer;
-	tText text;
-	tBase text;
-	tName text;
-	nCount Integer;
-	nDuplicate Integer;
-	begin
-	tText := lower(trim(tav_text));
-	tText := replace(tText,' ','');
-        tText:= translate(tText,E' $€µ£%+/\\!(){}(),;&|"#''^<>*','');
-	tText := translate(tText,E'éèêëàâäïîüûùöôç','eeeeaaaiiuuuooc');
-	nDuplicate := 0;
-	tBase := tText;
-	loop
-		-- take the next sequence
-		select nextval('s_jnt_fic_att_value') into ns;
-		if length (tText) = 0 or tText is null then
-			select count(*) into nCount from fiche_detail where f_id=nf_id and ad_id=1;
-			if nCount = 0 then
-				tText := 'FICHE'||ns::text;
-			else
-				select ad_value into tName from fiche_detail where f_id=nf_id and ad_id=1;
-				
-				tName := lower(trim(tName));
-				tName := substr(tName,1,6);
-				tName := replace(tName,' ','');
-				tName:= translate(tName,E' $€µ£%+/\\!(){}(),;&|"#''^<>*','');
-				tName := translate(tName,E'éèêëàâäïîüûùöôç','eeeeaaaiiuuuooc');
-				tBase := tName;
-				if nDuplicate = 0 then
-					tText := tName;
-				else
-					tText := tName||nDuplicate::text;
-				end if;
-			end if;
-		end if;
-		-- av_text already used ?
-		select count(*) into nExist
-			from fiche_detail
-		where
-			ad_id=23 and  ad_value=upper(tText);
+    AS $$
+declare
+    ns integer;
+    nExist integer;
+    tText text;
+    tBase text;
+    tName text;
+    nCount Integer;
+    nDuplicate Integer;
+begin
+    tText := comptaproc.format_quickcode(tav_text);
+    nDuplicate := 0;
+    tBase := tText;
+    -- take the next sequence
+    select nextval('s_jnt_fic_att_value') into ns;
+    loop
+        if length (tText) = 0 or tText is null then
+            select count(*) into nCount from fiche_detail where f_id=nf_id and ad_id=1;
+            if nCount = 0 then
+                tBase := 'CRD';
+            else
+                select ad_value into tName from fiche_detail where f_id=nf_id and ad_id=1;
+                tName := comptaproc.format_quickcode(tName);
+                tName := substr(tName,1,6);
+                tBase := tName;
+                if nDuplicate = 0 then
+                    tText := tName;
+                else
+                    tText := tBase||nDuplicate::text;
+                end if;
+            end if;
+        end if;
+        if coalesce(tText,'') = '' then
+            tText := 'CRD';
+        end if;
+        -- av_text already used ?
+        select count(*) into nExist
+        from fiche_detail
+        where
+                ad_id=23 and  ad_value=tText;
 
-		if nExist = 0 then
-			exit;
-		end if;
-		nDuplicate := nDuplicate + 1 ;
-		tText := tBase || nDuplicate::text;
-		
-		if nDuplicate > 9999 then
-			raise Exception 'too many duplicate % duplicate# %',tText,nDuplicate;
-		end if;
-	end loop;
+        if nExist = 0 then
+            exit;
+        end if;
+        nDuplicate := nDuplicate + 1 ;
+        tText := tBase || nDuplicate::text;
+
+        if nDuplicate > 99999 then
+            raise Exception 'too many duplicate % duplicate# %',tText,nDuplicate;
+        end if;
+    end loop;
 
 
-	insert into fiche_detail(jft_id,f_id,ad_id,ad_value) values (ns,nf_id,23,upper(tText));
-	return ns;
-	end;
-$_$;
+    insert into fiche_detail(jft_id,f_id,ad_id,ad_value) values (ns,nf_id,23,upper(tText));
+    return ns;
+end;
+$$;
 
 
 
-CREATE FUNCTION is_closed(p_periode integer, p_jrn_def_id integer) RETURNS boolean
+CREATE FUNCTION comptaproc.is_closed(p_periode integer, p_jrn_def_id integer) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1386,7 +1519,7 @@ $$;
 
 
 
-CREATE FUNCTION jnt_fic_attr_ins() RETURNS trigger
+CREATE FUNCTION comptaproc.jnt_fic_attr_ins() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1404,7 +1537,7 @@ $$;
 
 
 
-CREATE FUNCTION jrn_add_note(p_jrid bigint, p_note text) RETURNS void
+CREATE FUNCTION comptaproc.jrn_add_note(p_jrid bigint, p_note text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1430,7 +1563,7 @@ $$;
 
 
 
-CREATE FUNCTION jrn_check_periode() RETURNS trigger
+CREATE FUNCTION comptaproc.jrn_check_periode() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1441,41 +1574,57 @@ ljr_def_id jrn.jr_def_id%TYPE;
 lreturn jrn%ROWTYPE;
 begin
 if TG_OP='UPDATE' then
-	ljr_tech_per :=OLD.jr_tech_per ;
-	NEW.jr_tech_per := comptaproc.find_periode(to_char(NEW.jr_date,'DD.MM.YYYY'));
-	ljr_def_id   :=OLD.jr_def_id;
-	lreturn      :=NEW;
-	if NEW.jr_date = OLD.jr_date then
-		return NEW;
-	end if;
-	if comptaproc.is_closed(NEW.jr_tech_per,NEW.jr_def_id) = true then
-	      	raise exception 'Periode fermee';
-	end if;
+    ljr_tech_per :=OLD.jr_tech_per ;
+    NEW.jr_tech_per := comptaproc.find_periode(to_char(NEW.jr_date,'DD.MM.YYYY'));
+    ljr_def_id :=OLD.jr_def_id;
+    lreturn :=NEW;
+    if NEW.jr_date = OLD.jr_date then
+        return NEW;
+    end if;
+    if comptaproc.is_closed(NEW.jr_tech_per,NEW.jr_def_id) = true then
+              raise exception 'Periode fermee';
+    end if;
 end if;
 
 if TG_OP='INSERT' then
-	NEW.jr_tech_per := comptaproc.find_periode(to_char(NEW.jr_date,'DD.MM.YYYY'));
-	ljr_tech_per :=NEW.jr_tech_per ;
-	ljr_def_id   :=NEW.jr_def_id;
-	lreturn      :=NEW;
+    NEW.jr_tech_per := comptaproc.find_periode(to_char(NEW.jr_date,'DD.MM.YYYY'));
+    ljr_tech_per :=NEW.jr_tech_per ;
+    ljr_def_id :=NEW.jr_def_id;
+    lreturn :=NEW;
 end if;
 
 if TG_OP='DELETE' then
-	ljr_tech_per :=OLD.jr_tech_per;
-	ljr_def_id   :=OLD.jr_def_id;
-	lreturn      :=OLD;
+    ljr_tech_per :=OLD.jr_tech_per;
+    ljr_def_id :=OLD.jr_def_id;
+    lreturn :=OLD;
 end if;
 
-if comptaproc.is_closed (ljr_def_id,ljr_def_id) = true then
-   	raise exception 'Periode fermee';
+if comptaproc.is_closed (ljr_tech_per,ljr_def_id) = true then
+       raise exception 'Periode fermee';
 end if;
 
 return lreturn;
-end;$$;
+end;
+$$;
 
 
 
-CREATE FUNCTION jrn_def_add() RETURNS trigger
+CREATE FUNCTION comptaproc.jrn_currency() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin 
+	if new.currency_id is null then 
+		new.currency_id := 0;
+                new.currency_rate := 1;
+                new.currency_rate_ref := 1;
+	end if;
+	return new;
+end;
+$$;
+
+
+
+CREATE FUNCTION comptaproc.jrn_def_add() RETURNS trigger
     LANGUAGE plpgsql
     AS $$begin
 execute 'insert into jrn_periode(p_id,jrn_def_id,status) select p_id,'||NEW.jrn_def_id||',
@@ -1490,7 +1639,7 @@ end;$$;
 
 
 
-CREATE FUNCTION jrn_def_delete() RETURNS trigger
+CREATE FUNCTION comptaproc.jrn_def_delete() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -1506,7 +1655,7 @@ end;$$;
 
 
 
-CREATE FUNCTION jrn_del() RETURNS trigger
+CREATE FUNCTION comptaproc.jrn_del() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1559,7 +1708,7 @@ $$;
 
 
 
-CREATE FUNCTION jrnx_del() RETURNS trigger
+CREATE FUNCTION comptaproc.jrnx_del() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1580,7 +1729,7 @@ $$;
 
 
 
-CREATE FUNCTION jrnx_ins() RETURNS trigger
+CREATE FUNCTION comptaproc.jrnx_ins() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1631,7 +1780,7 @@ $$;
 
 
 
-CREATE FUNCTION jrnx_letter_del() RETURNS trigger
+CREATE FUNCTION comptaproc.jrnx_letter_del() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1647,7 +1796,7 @@ $$;
 
 
 
-CREATE FUNCTION menu_complete_dependency(n_profile numeric) RETURNS void
+CREATE FUNCTION comptaproc.menu_complete_dependency(n_profile numeric) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -1697,7 +1846,7 @@ $$;
 
 
 
-CREATE FUNCTION opd_limit_description() RETURNS trigger
+CREATE FUNCTION comptaproc.opd_limit_description() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 	declare
@@ -1711,7 +1860,7 @@ $$;
 
 
 
-CREATE FUNCTION periode_exist(p_date text, p_periode_id bigint) RETURNS integer
+CREATE FUNCTION comptaproc.periode_exist(p_date text, p_periode_id bigint) RETURNS integer
     LANGUAGE plpgsql
     AS $$
 
@@ -1737,7 +1886,7 @@ end;$$;
 
 
 
-CREATE FUNCTION plan_analytic_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.plan_analytic_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1753,7 +1902,7 @@ $$;
 
 
 
-CREATE FUNCTION poste_analytique_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.poste_analytique_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$declare
 name text;
@@ -1782,7 +1931,7 @@ end;$$;
 
 
 
-CREATE FUNCTION proc_check_balance() RETURNS trigger
+CREATE FUNCTION comptaproc.proc_check_balance() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -1802,7 +1951,7 @@ $$;
 
 
 
-CREATE FUNCTION quant_purchase_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.quant_purchase_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 	begin
@@ -1816,7 +1965,7 @@ $$;
 
 
 
-CREATE FUNCTION quant_sold_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.quant_sold_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 	begin
@@ -1830,7 +1979,27 @@ $$;
 
 
 
-CREATE FUNCTION t_document_modele_validate() RETURNS trigger
+CREATE FUNCTION comptaproc.set_tech_user() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+declare
+    /* variable */
+    noalyss_user text;
+begin
+    new.tech_user := current_setting('noalyss.user_login');
+    new.tech_date := now();
+    return NEW;
+
+exception when others then
+    new.tech_date := now();
+    new.tech_user := current_user;
+    return NEW;
+end ;
+$$;
+
+
+
+CREATE FUNCTION comptaproc.t_document_modele_validate() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -1846,7 +2015,7 @@ $$;
 
 
 
-CREATE FUNCTION t_document_type_insert() RETURNS trigger
+CREATE FUNCTION comptaproc.t_document_type_insert() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1862,7 +2031,7 @@ $$;
 
 
 
-CREATE FUNCTION t_document_validate() RETURNS trigger
+CREATE FUNCTION comptaproc.t_document_validate() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1877,7 +2046,7 @@ $$;
 
 
 
-CREATE FUNCTION t_jrn_def_description() RETURNS trigger
+CREATE FUNCTION comptaproc.t_jrn_def_description() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
     declare
@@ -1892,7 +2061,7 @@ $$;
 
 
 
-CREATE FUNCTION t_jrn_def_sequence() RETURNS trigger
+CREATE FUNCTION comptaproc.t_jrn_def_sequence() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1912,7 +2081,18 @@ $$;
 
 
 
-CREATE FUNCTION tmp_pcmn_alphanum_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.t_parameter_extra_code() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+	new.pe_code := comptaproc.transform_to_code (new.pe_code);
+        return new;
+end;
+$$;
+
+
+
+CREATE FUNCTION comptaproc.tmp_pcmn_alphanum_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1927,7 +2107,7 @@ $$;
 
 
 
-CREATE FUNCTION tmp_pcmn_ins() RETURNS trigger
+CREATE FUNCTION comptaproc.tmp_pcmn_ins() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -1944,7 +2124,28 @@ $$;
 
 
 
-CREATE FUNCTION trg_profile_user_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.transform_to_code(p_account text) RETURNS text
+    LANGUAGE plpgsql
+    AS $_$
+
+declare
+
+sResult text;
+
+begin
+sResult := lower(p_account);
+
+sResult := translate(sResult,E'éèêëàâäïîüûùöôç','eeeeaaaiiuuuooc');
+sResult := translate(sResult,E' $€µ£%.+-/\\!(){}(),;&|"#''^<>*','');
+
+return upper(sResult);
+
+end;
+$_$;
+
+
+
+CREATE FUNCTION comptaproc.trg_profile_user_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -1958,7 +2159,21 @@ $$;
 
 
 
-CREATE FUNCTION trg_todo_list_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.trg_remove_script_tag() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+
+begin
+
+    NEW.agc_comment_raw:= regexp_replace(NEW.agc_comment_raw, '<script', 'scritp', 'i');
+    return NEW;
+
+end;
+$$;
+
+
+
+CREATE FUNCTION comptaproc.trg_todo_list_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -1972,7 +2187,7 @@ $$;
 
 
 
-CREATE FUNCTION trg_todo_list_shared_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.trg_todo_list_shared_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -1986,7 +2201,7 @@ $$;
 
 
 
-CREATE FUNCTION trg_user_sec_act_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.trg_user_sec_act_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -2000,7 +2215,7 @@ $$;
 
 
 
-CREATE FUNCTION trg_user_sec_jrn_ins_upd() RETURNS trigger
+CREATE FUNCTION comptaproc.trg_user_sec_jrn_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 
@@ -2014,7 +2229,7 @@ $$;
 
 
 
-CREATE FUNCTION trim_cvs_quote() RETURNS trigger
+CREATE FUNCTION comptaproc.trim_cvs_quote() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -2032,7 +2247,7 @@ $$;
 
 
 
-CREATE FUNCTION trim_space_format_csv_banque() RETURNS trigger
+CREATE FUNCTION comptaproc.trim_space_format_csv_banque() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 declare
@@ -2053,7 +2268,7 @@ $$;
 
 
 
-CREATE FUNCTION tva_delete(integer) RETURNS void
+CREATE FUNCTION comptaproc.tva_delete(integer) RETURNS void
     LANGUAGE plpgsql
     AS $_$ 
 declare
@@ -2079,7 +2294,7 @@ $_$;
 
 
 
-CREATE FUNCTION tva_insert(text, numeric, text, text, integer) RETURNS integer
+CREATE FUNCTION comptaproc.tva_insert(text, numeric, text, text, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
 declare
@@ -2116,7 +2331,7 @@ $_$;
 
 
 
-CREATE FUNCTION tva_modify(integer, text, numeric, text, text, integer) RETURNS integer
+CREATE FUNCTION comptaproc.tva_modify(integer, text, numeric, text, text, integer) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
 declare
@@ -2152,75 +2367,72 @@ $_$;
 
 
 
-CREATE FUNCTION update_quick_code(njft_id integer, tav_text text) RETURNS integer
+CREATE FUNCTION comptaproc.update_quick_code(njft_id integer, tav_text text) RETURNS integer
     LANGUAGE plpgsql
-    AS $_$
-	declare
-	ns integer;
-	nExist integer;
-	tText text;
-	tBase text;
-	old_qcode varchar;
-	num_rows_jrnx integer;
-	num_rows_predef integer;
-	begin
-	-- get current value
-	select ad_value into old_qcode from fiche_detail where jft_id=njft_id;
-	-- av_text didn't change so no update
-	if tav_text = upper( trim(old_qcode)) then
-		raise notice 'nothing to change % %' , tav_text,old_qcode;
-		return 0;
-	end if;
+    AS $$
+declare
+    ns integer;
+    nExist integer;
+    tText text;
+    tBase text;
+    old_qcode varchar;
+    num_rows_jrnx integer;
+    num_rows_predef integer;
+    n_count integer;
+begin
+    n_count := 0;
+    -- get current value
+    select ad_value into old_qcode from fiche_detail where jft_id=njft_id;
+    -- av_text didn't change so no update
+    if tav_text = upper( trim(old_qcode)) then
+        raise notice 'nothing to change % %' , tav_text,old_qcode;
+        return 0;
+    end if;
 
-	tText := trim(lower(tav_text));
-	tText := replace(tText,' ','');
-        -- valid alpha is [ . : - _ ]
-	tText := translate(tText,E' $€µ£%+/\\!(){}(),;&|"#''^<>*','');
-	tText := translate(tText,E'éèêëàâäïîüûùöôç','eeeeaaaiiuuuooc');
-	tText := upper(tText);
-	if length ( tText) = 0 or tText is null then
-		return 0;
-	end if;
+    tText := comptaproc.format_quickcode(tav_text);
 
-	ns := njft_id;
-	tBase := tText;
-	loop
-		-- av_text already used ?
-		select count(*) into nExist
-			from fiche_detail
-		where
-			ad_id=23 and ad_value=tText
-			and jft_id <> njft_id;
+    if length ( tText) = 0 or tText is null then
+        return 0;
+    end if;
 
-		if nExist = 0 then
-			exit;
-		end if;
-		if tText = tBase||ns then
-			-- take the next sequence
-			select nextval('s_jnt_fic_att_value') into ns;
-		end if;
-		tText  :=tBase||ns;
+    ns := njft_id;
+    tBase := tText;
+    loop
+        -- av_text already used ?
+        select count(*) into nExist
+        from fiche_detail
+        where
+                ad_id=23 and ad_value=tText
+          and jft_id <> njft_id;
 
-	end loop;
-	update fiche_detail set ad_value = tText where jft_id=njft_id;
+        if nExist = 0 then
+            exit;
+        end if;
+        tText := tBase || n_count::text;
+        n_count := n_count + 1 ;
 
-	-- update also the contact
-	update fiche_detail set ad_value = tText
-		where jft_id in
-			( select jft_id
-				from fiche_detail
-			where ad_id=25 and ad_value=old_qcode);
+    end loop;
+    update fiche_detail set ad_value = tText where jft_id=njft_id;
+
+    -- update also the contact
+    update fiche_detail set ad_value = tText
+    where jft_id in
+          ( select jft_id
+            from fiche_detail
+            where ad_id in (select ad_id from attr_def where ad_type='card') and ad_value=old_qcode);
 
 
-	return ns;
-	end;
-$_$;
+    return ns;
+end;
+$$;
 
 
-SET search_path = public, pg_catalog;
+
+COMMENT ON FUNCTION comptaproc.update_quick_code(njft_id integer, tav_text text) IS 'update the qcode + related columns in other cards';
 
 
-CREATE FUNCTION bud_card_ins_upd() RETURNS trigger
+
+CREATE FUNCTION public.bud_card_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$declare
  sCode text;
@@ -2235,7 +2447,7 @@ end;$$;
 
 
 
-CREATE FUNCTION bud_detail_ins_upd() RETURNS trigger
+CREATE FUNCTION public.bud_detail_ins_upd() RETURNS trigger
     LANGUAGE plpgsql
     AS $$declare
 mline bud_detail%ROWTYPE;
@@ -2249,7 +2461,7 @@ end;$$;
 
 
 
-CREATE FUNCTION correct_quant_purchase() RETURNS void
+CREATE FUNCTION public.correct_quant_purchase() RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -2301,7 +2513,7 @@ $$;
 
 
 
-CREATE FUNCTION correct_quant_sale() RETURNS void
+CREATE FUNCTION public.correct_quant_sale() RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare
@@ -2353,7 +2565,21 @@ $$;
 
 
 
-CREATE FUNCTION modify_menu_system(n_profile numeric) RETURNS void
+CREATE FUNCTION public.isdate(text, text) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $_$
+DECLARE x timestamp;
+BEGIN
+    x := to_date($1,$2);
+    RETURN TRUE;
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END;
+$_$;
+
+
+
+CREATE FUNCTION public.modify_menu_system(n_profile numeric) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -2423,7 +2649,22 @@ $$;
 
 
 
-CREATE FUNCTION upgrade_repo(p_version integer) RETURNS void
+CREATE FUNCTION public.replace_menu_code(code_source text, code_destination text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+begin
+    /*code */
+
+    update bookmark set b_action = replace(b_action,code_source,code_destination) where b_action ~ code_source;
+    update menu_ref set me_code =code_destination where me_code = code_source;
+    update profile_menu set me_code=code_destination where me_code = code_source;
+    update profile_menu set me_code_dep=code_destination where me_code_dep = code_source;
+end ;
+$$;
+
+
+
+CREATE FUNCTION public.upgrade_repo(p_version integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 declare 
@@ -2441,9 +2682,54 @@ $$;
 
 SET default_tablespace = '';
 
+SET default_table_access_method = heap;
 
 
-CREATE TABLE action (
+CREATE TABLE public.acc_other_tax (
+    ac_id integer NOT NULL,
+    ac_label text NOT NULL,
+    ac_rate numeric(5,2) NOT NULL,
+    ajrn_def_id integer[],
+    ac_accounting public.account_type NOT NULL
+);
+
+
+
+COMMENT ON TABLE public.acc_other_tax IS 'Additional tax for Sale or Purchase ';
+
+
+
+COMMENT ON COLUMN public.acc_other_tax.ac_label IS 'Label of the tax';
+
+
+
+COMMENT ON COLUMN public.acc_other_tax.ac_rate IS 'rate of the tax in percent';
+
+
+
+COMMENT ON COLUMN public.acc_other_tax.ajrn_def_id IS 'array of to FK jrn_def (jrn_def_id)';
+
+
+
+COMMENT ON COLUMN public.acc_other_tax.ac_accounting IS 'FK tmp_pcmn (pcm_val)';
+
+
+
+CREATE SEQUENCE public.acc_other_tax_ac_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.acc_other_tax_ac_id_seq OWNED BY public.acc_other_tax.ac_id;
+
+
+
+CREATE TABLE public.action (
     ac_id integer NOT NULL,
     ac_description text NOT NULL,
     ac_module text,
@@ -2452,16 +2738,34 @@ CREATE TABLE action (
 
 
 
-COMMENT ON TABLE action IS 'The different privileges';
+COMMENT ON TABLE public.action IS 'The different privileges';
 
 
 
-COMMENT ON COLUMN action.ac_code IS 'this code will be used in the code with the function User::check_action ';
+COMMENT ON COLUMN public.action.ac_code IS 'this code will be used in the code with the function User::check_action ';
 
 
 
+CREATE TABLE public.action_comment_document (
+    acd_id bigint NOT NULL,
+    document_id bigint,
+    action_gestion_comment_id bigint
+);
 
-CREATE TABLE action_detail (
+
+
+ALTER TABLE public.action_comment_document ALTER COLUMN acd_id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.action_comment_document_acd_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+
+CREATE TABLE public.action_detail (
     ad_id integer NOT NULL,
     f_id bigint,
     ad_text text,
@@ -2475,39 +2779,39 @@ CREATE TABLE action_detail (
 
 
 
-COMMENT ON TABLE action_detail IS 'Detail of action_gestion, see class Action_Detail';
+COMMENT ON TABLE public.action_detail IS 'Detail of action_gestion, see class Action_Detail';
 
 
 
-COMMENT ON COLUMN action_detail.f_id IS 'the concerned	card';
+COMMENT ON COLUMN public.action_detail.f_id IS 'the concerned	card';
 
 
 
-COMMENT ON COLUMN action_detail.ad_text IS ' Description ';
+COMMENT ON COLUMN public.action_detail.ad_text IS ' Description ';
 
 
 
-COMMENT ON COLUMN action_detail.ad_pu IS ' price per unit ';
+COMMENT ON COLUMN public.action_detail.ad_pu IS ' price per unit ';
 
 
 
-COMMENT ON COLUMN action_detail.ad_quant IS 'quantity ';
+COMMENT ON COLUMN public.action_detail.ad_quant IS 'quantity ';
 
 
 
-COMMENT ON COLUMN action_detail.ad_tva_id IS ' tva_id ';
+COMMENT ON COLUMN public.action_detail.ad_tva_id IS ' tva_id ';
 
 
 
-COMMENT ON COLUMN action_detail.ad_tva_amount IS ' tva_amount ';
+COMMENT ON COLUMN public.action_detail.ad_tva_amount IS ' tva_amount ';
 
 
 
-COMMENT ON COLUMN action_detail.ad_total_amount IS ' total amount';
+COMMENT ON COLUMN public.action_detail.ad_total_amount IS ' total amount';
 
 
 
-CREATE SEQUENCE action_detail_ad_id_seq
+CREATE SEQUENCE public.action_detail_ad_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2516,11 +2820,11 @@ CREATE SEQUENCE action_detail_ad_id_seq
 
 
 
-ALTER SEQUENCE action_detail_ad_id_seq OWNED BY action_detail.ad_id;
+ALTER SEQUENCE public.action_detail_ad_id_seq OWNED BY public.action_detail.ad_id;
 
 
 
-CREATE SEQUENCE action_gestion_ag_id_seq
+CREATE SEQUENCE public.action_gestion_ag_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2529,9 +2833,8 @@ CREATE SEQUENCE action_gestion_ag_id_seq
 
 
 
-
-CREATE TABLE action_gestion (
-    ag_id integer DEFAULT nextval('action_gestion_ag_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.action_gestion (
+    ag_id integer DEFAULT nextval('public.action_gestion_ag_id_seq'::regclass) NOT NULL,
     ag_type integer,
     f_id_dest integer,
     ag_title text,
@@ -2539,7 +2842,7 @@ CREATE TABLE action_gestion (
     ag_ref text,
     ag_hour text,
     ag_priority integer DEFAULT 2,
-    ag_dest bigint DEFAULT (-1) NOT NULL,
+    ag_dest bigint DEFAULT '-1'::integer NOT NULL,
     ag_owner text,
     ag_contact bigint,
     ag_state integer,
@@ -2548,78 +2851,78 @@ CREATE TABLE action_gestion (
 
 
 
-COMMENT ON TABLE action_gestion IS 'Contains the details for the follow-up of customer, supplier, administration';
+COMMENT ON TABLE public.action_gestion IS 'Contains the details for the follow-up of customer, supplier, administration';
 
 
 
-COMMENT ON COLUMN action_gestion.ag_type IS ' type of action: see document_type ';
+COMMENT ON COLUMN public.action_gestion.ag_type IS ' type of action: see document_type ';
 
 
 
-COMMENT ON COLUMN action_gestion.f_id_dest IS ' third party ';
+COMMENT ON COLUMN public.action_gestion.f_id_dest IS 'third party';
 
 
 
-COMMENT ON COLUMN action_gestion.ag_title IS ' title ';
+COMMENT ON COLUMN public.action_gestion.ag_title IS 'title';
 
 
 
-COMMENT ON COLUMN action_gestion.ag_timestamp IS ' ';
+COMMENT ON COLUMN public.action_gestion.ag_ref IS 'its reference';
 
 
 
-COMMENT ON COLUMN action_gestion.ag_ref IS 'its reference ';
+COMMENT ON COLUMN public.action_gestion.ag_priority IS 'Low, medium, important';
 
 
 
-COMMENT ON COLUMN action_gestion.ag_priority IS 'Low, medium, important ';
+COMMENT ON COLUMN public.action_gestion.ag_dest IS 'is the profile which has to take care of this action';
 
 
 
-COMMENT ON COLUMN action_gestion.ag_dest IS ' is the profile which has to take care of this action ';
+COMMENT ON COLUMN public.action_gestion.ag_owner IS 'is the owner of this action';
 
 
 
-COMMENT ON COLUMN action_gestion.ag_owner IS ' is the owner of this action ';
+COMMENT ON COLUMN public.action_gestion.ag_contact IS 'contact of the third part';
 
 
 
-COMMENT ON COLUMN action_gestion.ag_contact IS ' contact of the third part ';
+COMMENT ON COLUMN public.action_gestion.ag_state IS 'state of the action same as document_state';
 
 
 
-COMMENT ON COLUMN action_gestion.ag_state IS 'state of the action same as document_state ';
-
-
-
-
-CREATE TABLE action_gestion_comment (
+CREATE TABLE public.action_gestion_comment (
     agc_id bigint NOT NULL,
     ag_id bigint,
     agc_date timestamp with time zone DEFAULT now(),
     agc_comment text,
-    tech_user text
+    tech_user text,
+    agc_comment_raw text
 );
 
 
 
-COMMENT ON COLUMN action_gestion_comment.agc_id IS 'PK';
+COMMENT ON TABLE public.action_gestion_comment IS 'comment on action management';
 
 
 
-COMMENT ON COLUMN action_gestion_comment.ag_id IS 'FK to action_gestion';
+COMMENT ON COLUMN public.action_gestion_comment.agc_id IS 'PK';
 
 
 
-COMMENT ON COLUMN action_gestion_comment.agc_comment IS 'comment';
+COMMENT ON COLUMN public.action_gestion_comment.ag_id IS 'FK to action_gestion';
 
 
 
-COMMENT ON COLUMN action_gestion_comment.tech_user IS 'user_login';
+COMMENT ON COLUMN public.action_gestion_comment.agc_comment IS 'comment';
 
 
 
-CREATE SEQUENCE action_gestion_comment_agc_id_seq
+COMMENT ON COLUMN public.action_gestion_comment.tech_user IS 'user_login';
+
+
+
+CREATE SEQUENCE public.action_gestion_comment_agc_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2628,11 +2931,31 @@ CREATE SEQUENCE action_gestion_comment_agc_id_seq
 
 
 
-ALTER SEQUENCE action_gestion_comment_agc_id_seq OWNED BY action_gestion_comment.agc_id;
+ALTER SEQUENCE public.action_gestion_comment_agc_id_seq OWNED BY public.action_gestion_comment.agc_id;
 
 
 
-CREATE TABLE action_gestion_operation (
+CREATE TABLE public.action_gestion_filter (
+    af_id bigint NOT NULL,
+    af_user text NOT NULL,
+    af_name text NOT NULL,
+    af_search text NOT NULL
+);
+
+
+
+ALTER TABLE public.action_gestion_filter ALTER COLUMN af_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.action_gestion_filter_af_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+
+CREATE TABLE public.action_gestion_operation (
     ago_id bigint NOT NULL,
     ag_id bigint,
     jr_id bigint
@@ -2640,19 +2963,23 @@ CREATE TABLE action_gestion_operation (
 
 
 
-COMMENT ON COLUMN action_gestion_operation.ago_id IS 'pk';
+COMMENT ON TABLE public.action_gestion_operation IS 'Operation linked on action';
 
 
 
-COMMENT ON COLUMN action_gestion_operation.ag_id IS 'fk to action_gestion';
+COMMENT ON COLUMN public.action_gestion_operation.ago_id IS 'pk';
 
 
 
-COMMENT ON COLUMN action_gestion_operation.jr_id IS 'fk to jrn';
+COMMENT ON COLUMN public.action_gestion_operation.ag_id IS 'fk to action_gestion';
 
 
 
-CREATE SEQUENCE action_gestion_operation_ago_id_seq
+COMMENT ON COLUMN public.action_gestion_operation.jr_id IS 'fk to jrn';
+
+
+
+CREATE SEQUENCE public.action_gestion_operation_ago_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2661,11 +2988,11 @@ CREATE SEQUENCE action_gestion_operation_ago_id_seq
 
 
 
-ALTER SEQUENCE action_gestion_operation_ago_id_seq OWNED BY action_gestion_operation.ago_id;
+ALTER SEQUENCE public.action_gestion_operation_ago_id_seq OWNED BY public.action_gestion_operation.ago_id;
 
 
 
-CREATE TABLE action_gestion_related (
+CREATE TABLE public.action_gestion_related (
     aga_id bigint NOT NULL,
     aga_least bigint NOT NULL,
     aga_greatest bigint NOT NULL,
@@ -2674,23 +3001,27 @@ CREATE TABLE action_gestion_related (
 
 
 
-COMMENT ON COLUMN action_gestion_related.aga_id IS 'pk';
+COMMENT ON TABLE public.action_gestion_related IS 'link between action';
 
 
 
-COMMENT ON COLUMN action_gestion_related.aga_least IS 'fk to action_gestion, smallest ag_id';
+COMMENT ON COLUMN public.action_gestion_related.aga_id IS 'pk';
 
 
 
-COMMENT ON COLUMN action_gestion_related.aga_greatest IS 'fk to action_gestion greatest ag_id';
+COMMENT ON COLUMN public.action_gestion_related.aga_least IS 'fk to action_gestion, smallest ag_id';
 
 
 
-COMMENT ON COLUMN action_gestion_related.aga_type IS 'Type de liens';
+COMMENT ON COLUMN public.action_gestion_related.aga_greatest IS 'fk to action_gestion greatest ag_id';
 
 
 
-CREATE SEQUENCE action_gestion_related_aga_id_seq
+COMMENT ON COLUMN public.action_gestion_related.aga_type IS 'Type de liens';
+
+
+
+CREATE SEQUENCE public.action_gestion_related_aga_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2699,11 +3030,11 @@ CREATE SEQUENCE action_gestion_related_aga_id_seq
 
 
 
-ALTER SEQUENCE action_gestion_related_aga_id_seq OWNED BY action_gestion_related.aga_id;
+ALTER SEQUENCE public.action_gestion_related_aga_id_seq OWNED BY public.action_gestion_related.aga_id;
 
 
 
-CREATE TABLE action_person (
+CREATE TABLE public.action_person (
     ap_id integer NOT NULL,
     ag_id integer NOT NULL,
     f_id integer NOT NULL
@@ -2711,19 +3042,19 @@ CREATE TABLE action_person (
 
 
 
-COMMENT ON TABLE action_person IS 'Person involved in the action';
+COMMENT ON TABLE public.action_person IS 'Person involved in the action';
 
 
 
-COMMENT ON COLUMN action_person.ap_id IS 'pk';
+COMMENT ON COLUMN public.action_person.ap_id IS 'pk';
 
 
 
-COMMENT ON COLUMN action_person.ag_id IS 'fk to fiche';
+COMMENT ON COLUMN public.action_person.ag_id IS 'fk to fiche';
 
 
 
-CREATE SEQUENCE action_person_ap_id_seq
+CREATE SEQUENCE public.action_person_ap_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2732,11 +3063,49 @@ CREATE SEQUENCE action_person_ap_id_seq
 
 
 
-ALTER SEQUENCE action_person_ap_id_seq OWNED BY action_person.ap_id;
+ALTER SEQUENCE public.action_person_ap_id_seq OWNED BY public.action_person.ap_id;
 
 
 
-CREATE TABLE action_tags (
+CREATE TABLE public.action_person_option (
+    ap_id bigint NOT NULL,
+    ap_value character varying,
+    contact_option_ref_id bigint NOT NULL,
+    action_person_id bigint NOT NULL
+);
+
+
+
+COMMENT ON TABLE public.action_person_option IS 'option for each contact';
+
+
+
+COMMENT ON COLUMN public.action_person_option.ap_value IS 'Value of the option';
+
+
+
+COMMENT ON COLUMN public.action_person_option.contact_option_ref_id IS 'FK to contact_option';
+
+
+
+COMMENT ON COLUMN public.action_person_option.action_person_id IS 'FK to action_person';
+
+
+
+CREATE SEQUENCE public.action_person_option_ap_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.action_person_option_ap_id_seq OWNED BY public.action_person_option.ap_id;
+
+
+
+CREATE TABLE public.action_tags (
     at_id integer NOT NULL,
     t_id integer,
     ag_id integer
@@ -2744,7 +3113,11 @@ CREATE TABLE action_tags (
 
 
 
-CREATE SEQUENCE action_tags_at_id_seq
+COMMENT ON TABLE public.action_tags IS 'Tags link to  action';
+
+
+
+CREATE SEQUENCE public.action_tags_at_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2753,37 +3126,46 @@ CREATE SEQUENCE action_tags_at_id_seq
 
 
 
-ALTER SEQUENCE action_tags_at_id_seq OWNED BY action_tags.at_id;
+ALTER SEQUENCE public.action_tags_at_id_seq OWNED BY public.action_tags.at_id;
 
 
 
-
-CREATE TABLE attr_def (
+CREATE TABLE public.attr_def (
     ad_id integer DEFAULT nextval(('s_attr_def'::text)::regclass) NOT NULL,
     ad_text text,
     ad_type text,
     ad_size text NOT NULL,
-    ad_extra text
+    ad_extra text,
+    ad_search_followup integer DEFAULT 1,
+    ad_default_order integer
 );
 
 
 
-COMMENT ON TABLE attr_def IS 'The available attributs for the cards';
+COMMENT ON TABLE public.attr_def IS 'The available attributs for the cards';
 
 
 
-CREATE TABLE attr_min (
+COMMENT ON COLUMN public.attr_def.ad_search_followup IS '1 : search  available  from followup , 0  : search not available in followup';
+
+
+
+COMMENT ON COLUMN public.attr_def.ad_default_order IS 'Default order of the attribute';
+
+
+
+CREATE TABLE public.attr_min (
     frd_id integer NOT NULL,
     ad_id integer NOT NULL
 );
 
 
 
-COMMENT ON TABLE attr_min IS 'The value of  attributs for the cards';
+COMMENT ON TABLE public.attr_min IS 'The value of  attributs for the cards';
 
 
 
-CREATE SEQUENCE bilan_b_id_seq
+CREATE SEQUENCE public.bilan_b_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2792,9 +3174,8 @@ CREATE SEQUENCE bilan_b_id_seq
 
 
 
-
-CREATE TABLE bilan (
-    b_id integer DEFAULT nextval('bilan_b_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.bilan (
+    b_id integer DEFAULT nextval('public.bilan_b_id_seq'::regclass) NOT NULL,
     b_name text NOT NULL,
     b_file_template text NOT NULL,
     b_file_form text,
@@ -2803,31 +3184,31 @@ CREATE TABLE bilan (
 
 
 
-COMMENT ON TABLE bilan IS 'contains the template and the data for generating different documents  ';
+COMMENT ON TABLE public.bilan IS 'contains the template and the data for generating different documents  ';
 
 
 
-COMMENT ON COLUMN bilan.b_id IS 'primary key';
+COMMENT ON COLUMN public.bilan.b_id IS 'primary key';
 
 
 
-COMMENT ON COLUMN bilan.b_name IS 'Name of the document';
+COMMENT ON COLUMN public.bilan.b_name IS 'Name of the document';
 
 
 
-COMMENT ON COLUMN bilan.b_file_template IS 'path of the template (document/...)';
+COMMENT ON COLUMN public.bilan.b_file_template IS 'path of the template (document/...)';
 
 
 
-COMMENT ON COLUMN bilan.b_file_form IS 'path of the file with forms';
+COMMENT ON COLUMN public.bilan.b_file_form IS 'path of the file with forms';
 
 
 
-COMMENT ON COLUMN bilan.b_type IS 'type = ODS, RTF...';
+COMMENT ON COLUMN public.bilan.b_type IS 'type = ODS, RTF...';
 
 
 
-CREATE TABLE bookmark (
+CREATE TABLE public.bookmark (
     b_id integer NOT NULL,
     b_order integer DEFAULT 1,
     b_action text,
@@ -2836,11 +3217,11 @@ CREATE TABLE bookmark (
 
 
 
-COMMENT ON TABLE bookmark IS 'Bookmark of the connected user';
+COMMENT ON TABLE public.bookmark IS 'Bookmark of the connected user';
 
 
 
-CREATE SEQUENCE bookmark_b_id_seq
+CREATE SEQUENCE public.bookmark_b_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2849,11 +3230,11 @@ CREATE SEQUENCE bookmark_b_id_seq
 
 
 
-ALTER SEQUENCE bookmark_b_id_seq OWNED BY bookmark.b_id;
+ALTER SEQUENCE public.bookmark_b_id_seq OWNED BY public.bookmark.b_id;
 
 
 
-CREATE SEQUENCE bud_card_bc_id_seq
+CREATE SEQUENCE public.bud_card_bc_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2862,7 +3243,7 @@ CREATE SEQUENCE bud_card_bc_id_seq
 
 
 
-CREATE SEQUENCE bud_detail_bd_id_seq
+CREATE SEQUENCE public.bud_detail_bd_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2871,7 +3252,7 @@ CREATE SEQUENCE bud_detail_bd_id_seq
 
 
 
-CREATE SEQUENCE bud_detail_periode_bdp_id_seq
+CREATE SEQUENCE public.bud_detail_periode_bdp_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2880,8 +3261,7 @@ CREATE SEQUENCE bud_detail_periode_bdp_id_seq
 
 
 
-
-CREATE TABLE centralized (
+CREATE TABLE public.centralized (
     c_id integer DEFAULT nextval(('s_centralized'::text)::regclass) NOT NULL,
     c_j_id integer,
     c_date date NOT NULL,
@@ -2889,7 +3269,7 @@ CREATE TABLE centralized (
     c_montant numeric(20,4) NOT NULL,
     c_debit boolean DEFAULT true,
     c_jrn_def integer NOT NULL,
-    c_poste account_type,
+    c_poste public.account_type,
     c_description text,
     c_grp integer NOT NULL,
     c_comment text,
@@ -2900,20 +3280,36 @@ CREATE TABLE centralized (
 
 
 
-COMMENT ON TABLE centralized IS 'The centralized journal';
+COMMENT ON TABLE public.centralized IS 'The centralized journal';
 
 
 
-
-CREATE TABLE del_action (
-    del_id integer NOT NULL,
-    del_name text NOT NULL,
-    del_time timestamp without time zone
+CREATE TABLE public.contact_option_ref (
+    cor_id bigint NOT NULL,
+    cor_label character varying NOT NULL,
+    cor_type integer DEFAULT 0 NOT NULL,
+    cor_value_select character varying
 );
 
 
 
-CREATE SEQUENCE del_action_del_id_seq
+COMMENT ON TABLE public.contact_option_ref IS 'Option for the contact';
+
+
+
+COMMENT ON COLUMN public.contact_option_ref.cor_label IS 'Label de l''option';
+
+
+
+COMMENT ON COLUMN public.contact_option_ref.cor_type IS '0 text , 1 select ,2 nombre , 3 date';
+
+
+
+COMMENT ON COLUMN public.contact_option_ref.cor_value_select IS 'Select values';
+
+
+
+CREATE SEQUENCE public.contact_option_ref_cor_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2922,11 +3318,112 @@ CREATE SEQUENCE del_action_del_id_seq
 
 
 
-ALTER SEQUENCE del_action_del_id_seq OWNED BY del_action.del_id;
+ALTER SEQUENCE public.contact_option_ref_cor_id_seq OWNED BY public.contact_option_ref.cor_id;
 
 
 
-CREATE TABLE del_jrn (
+CREATE TABLE public.currency (
+    id integer NOT NULL,
+    cr_code_iso character varying(10),
+    cr_name character varying(80)
+);
+
+
+
+COMMENT ON TABLE public.currency IS 'currency';
+
+
+
+COMMENT ON COLUMN public.currency.cr_code_iso IS 'Code ISO';
+
+
+
+COMMENT ON COLUMN public.currency.cr_name IS 'Name of the currency';
+
+
+
+CREATE TABLE public.currency_history (
+    id integer NOT NULL,
+    ch_value numeric(20,8) NOT NULL,
+    ch_from date NOT NULL,
+    currency_id integer NOT NULL,
+    CONSTRAINT currency_history_check CHECK ((ch_value > (0)::numeric))
+);
+
+
+
+COMMENT ON TABLE public.currency_history IS 'currency values history';
+
+
+
+COMMENT ON COLUMN public.currency_history.id IS 'pk';
+
+
+
+COMMENT ON COLUMN public.currency_history.ch_value IS 'rate of currency depending of currency of the folder';
+
+
+
+COMMENT ON COLUMN public.currency_history.ch_from IS 'Date when the rate is available';
+
+
+
+COMMENT ON COLUMN public.currency_history.currency_id IS 'FK to currency';
+
+
+
+CREATE SEQUENCE public.currency_history_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.currency_history_id_seq OWNED BY public.currency_history.id;
+
+
+
+CREATE SEQUENCE public.currency_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.currency_id_seq OWNED BY public.currency.id;
+
+
+
+CREATE TABLE public.del_action (
+    del_id integer NOT NULL,
+    del_name text NOT NULL,
+    del_time timestamp without time zone
+);
+
+
+
+COMMENT ON TABLE public.del_action IS 'deleted actions';
+
+
+
+CREATE SEQUENCE public.del_action_del_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.del_action_del_id_seq OWNED BY public.del_action.del_id;
+
+
+
+CREATE TABLE public.del_jrn (
     jr_id integer NOT NULL,
     jr_def_id integer,
     jr_montant numeric(20,4),
@@ -2952,7 +3449,11 @@ CREATE TABLE del_jrn (
 
 
 
-CREATE SEQUENCE del_jrn_dj_id_seq
+COMMENT ON TABLE public.del_jrn IS 'deleted operation';
+
+
+
+CREATE SEQUENCE public.del_jrn_dj_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2961,15 +3462,15 @@ CREATE SEQUENCE del_jrn_dj_id_seq
 
 
 
-ALTER SEQUENCE del_jrn_dj_id_seq OWNED BY del_jrn.dj_id;
+ALTER SEQUENCE public.del_jrn_dj_id_seq OWNED BY public.del_jrn.dj_id;
 
 
 
-CREATE TABLE del_jrnx (
+CREATE TABLE public.del_jrnx (
     j_id integer NOT NULL,
     j_date date,
     j_montant numeric(20,4),
-    j_poste account_type,
+    j_poste public.account_type,
     j_grpt integer,
     j_rapt text,
     j_jrn_def integer,
@@ -2987,7 +3488,11 @@ CREATE TABLE del_jrnx (
 
 
 
-CREATE SEQUENCE del_jrnx_djx_id_seq
+COMMENT ON TABLE public.del_jrnx IS 'delete operation details';
+
+
+
+CREATE SEQUENCE public.del_jrnx_djx_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2996,11 +3501,11 @@ CREATE SEQUENCE del_jrnx_djx_id_seq
 
 
 
-ALTER SEQUENCE del_jrnx_djx_id_seq OWNED BY del_jrnx.djx_id;
+ALTER SEQUENCE public.del_jrnx_djx_id_seq OWNED BY public.del_jrnx.djx_id;
 
 
 
-CREATE SEQUENCE document_d_id_seq
+CREATE SEQUENCE public.document_d_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3009,9 +3514,8 @@ CREATE SEQUENCE document_d_id_seq
 
 
 
-
-CREATE TABLE document (
-    d_id integer DEFAULT nextval('document_d_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.document (
+    d_id integer DEFAULT nextval('public.document_d_id_seq'::regclass) NOT NULL,
     ag_id integer NOT NULL,
     d_lob oid,
     d_number bigint NOT NULL,
@@ -3022,11 +3526,46 @@ CREATE TABLE document (
 
 
 
-COMMENT ON TABLE document IS 'This table contains all the documents : summary and lob files';
+COMMENT ON TABLE public.document IS 'This table contains all the documents : summary and lob files';
 
 
 
-CREATE SEQUENCE document_modele_md_id_seq
+CREATE TABLE public.document_component (
+    dc_id integer NOT NULL,
+    dc_code text NOT NULL,
+    dc_comment text NOT NULL
+);
+
+
+
+COMMENT ON TABLE public.document_component IS 'Give the component of NOALYSS that is using is';
+
+
+
+COMMENT ON COLUMN public.document_component.dc_id IS 'PK';
+
+
+
+COMMENT ON COLUMN public.document_component.dc_code IS 'Code used in document_modele';
+
+
+
+COMMENT ON COLUMN public.document_component.dc_comment IS 'Code used in document_modele';
+
+
+
+ALTER TABLE public.document_component ALTER COLUMN dc_id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.document_component_dc_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+
+CREATE SEQUENCE public.document_modele_md_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3035,8 +3574,8 @@ CREATE SEQUENCE document_modele_md_id_seq
 
 
 
-CREATE TABLE document_modele (
-    md_id integer DEFAULT nextval('document_modele_md_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.document_modele (
+    md_id integer DEFAULT nextval('public.document_modele_md_id_seq'::regclass) NOT NULL,
     md_name text NOT NULL,
     md_lob oid,
     md_type integer NOT NULL,
@@ -3047,11 +3586,41 @@ CREATE TABLE document_modele (
 
 
 
-COMMENT ON TABLE document_modele IS ' contains all the template for the  documents';
+COMMENT ON TABLE public.document_modele IS ' contains all the template for the  documents';
 
 
 
-CREATE SEQUENCE document_seq
+CREATE TABLE public.document_option (
+    do_id bigint NOT NULL,
+    do_code character varying(20) NOT NULL,
+    document_type_id bigint,
+    do_enable integer DEFAULT 1 NOT NULL,
+    do_option character varying
+);
+
+
+
+COMMENT ON TABLE public.document_option IS 'Reference of option addable to document_type';
+
+
+
+COMMENT ON COLUMN public.document_option.do_code IS 'Code of the option to add';
+
+
+
+COMMENT ON COLUMN public.document_option.document_type_id IS 'FK to document_type';
+
+
+
+COMMENT ON COLUMN public.document_option.do_enable IS '1 the option is activated, 0 is inativated';
+
+
+
+COMMENT ON COLUMN public.document_option.do_option IS 'Option for the detail';
+
+
+
+CREATE SEQUENCE public.document_option_do_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3060,11 +3629,11 @@ CREATE SEQUENCE document_seq
 
 
 
-COMMENT ON SEQUENCE document_seq IS 'Sequence for the sequence bound to the document modele';
+ALTER SEQUENCE public.document_option_do_id_seq OWNED BY public.document_option.do_id;
 
 
 
-CREATE SEQUENCE document_state_s_id_seq
+CREATE SEQUENCE public.document_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3073,19 +3642,32 @@ CREATE SEQUENCE document_state_s_id_seq
 
 
 
-CREATE TABLE document_state (
-    s_id integer DEFAULT nextval('document_state_s_id_seq'::regclass) NOT NULL,
+COMMENT ON SEQUENCE public.document_seq IS 'Sequence for the sequence bound to the document modele';
+
+
+
+CREATE SEQUENCE public.document_state_s_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+CREATE TABLE public.document_state (
+    s_id integer DEFAULT nextval('public.document_state_s_id_seq'::regclass) NOT NULL,
     s_value character varying(50) NOT NULL,
     s_status character(1)
 );
 
 
 
-COMMENT ON TABLE document_state IS 'State of the document';
+COMMENT ON TABLE public.document_state IS 'State of the document';
 
 
 
-CREATE SEQUENCE document_type_dt_id_seq
+CREATE SEQUENCE public.document_type_dt_id_seq
     START WITH 25
     INCREMENT BY 1
     NO MINVALUE
@@ -3094,24 +3676,23 @@ CREATE SEQUENCE document_type_dt_id_seq
 
 
 
-CREATE TABLE document_type (
-    dt_id integer DEFAULT nextval('document_type_dt_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.document_type (
+    dt_id integer DEFAULT nextval('public.document_type_dt_id_seq'::regclass) NOT NULL,
     dt_value character varying(80),
     dt_prefix text
 );
 
 
 
-COMMENT ON TABLE document_type IS 'Type of document : meeting, invoice,...';
+COMMENT ON TABLE public.document_type IS 'Type of document : meeting, invoice,...';
 
 
 
-COMMENT ON COLUMN document_type.dt_prefix IS 'Prefix for ag_ref';
+COMMENT ON COLUMN public.document_type.dt_prefix IS 'Prefix for ag_ref';
 
 
 
-
-CREATE TABLE extension (
+CREATE TABLE public.extension (
     ex_id integer NOT NULL,
     ex_name character varying(30) NOT NULL,
     ex_code character varying(15) NOT NULL,
@@ -3122,35 +3703,35 @@ CREATE TABLE extension (
 
 
 
-COMMENT ON TABLE extension IS 'Content the needed information for the extension';
+COMMENT ON TABLE public.extension IS 'Content the needed information for the extension';
 
 
 
-COMMENT ON COLUMN extension.ex_id IS 'Primary key';
+COMMENT ON COLUMN public.extension.ex_id IS 'Primary key';
 
 
 
-COMMENT ON COLUMN extension.ex_name IS 'code of the extension ';
+COMMENT ON COLUMN public.extension.ex_name IS 'code of the extension ';
 
 
 
-COMMENT ON COLUMN extension.ex_code IS 'code of the extension ';
+COMMENT ON COLUMN public.extension.ex_code IS 'code of the extension ';
 
 
 
-COMMENT ON COLUMN extension.ex_desc IS 'Description of the extension ';
+COMMENT ON COLUMN public.extension.ex_desc IS 'Description of the extension ';
 
 
 
-COMMENT ON COLUMN extension.ex_file IS 'path to the extension to include';
+COMMENT ON COLUMN public.extension.ex_file IS 'path to the extension to include';
 
 
 
-COMMENT ON COLUMN extension.ex_enable IS 'Y : enabled N : disabled ';
+COMMENT ON COLUMN public.extension.ex_enable IS 'Y : enabled N : disabled ';
 
 
 
-CREATE SEQUENCE extension_ex_id_seq
+CREATE SEQUENCE public.extension_ex_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3159,23 +3740,28 @@ CREATE SEQUENCE extension_ex_id_seq
 
 
 
-ALTER SEQUENCE extension_ex_id_seq OWNED BY extension.ex_id;
+ALTER SEQUENCE public.extension_ex_id_seq OWNED BY public.extension.ex_id;
 
 
 
-
-CREATE TABLE fiche (
+CREATE TABLE public.fiche (
     f_id integer DEFAULT nextval(('s_fiche'::text)::regclass) NOT NULL,
-    fd_id integer
+    fd_id integer,
+    f_enable character(1) NOT NULL,
+    CONSTRAINT f_enable_ck CHECK ((f_enable = ANY (ARRAY['0'::bpchar, '1'::bpchar])))
 );
 
 
 
-COMMENT ON TABLE fiche IS 'Cards';
+COMMENT ON TABLE public.fiche IS 'Cards';
 
 
 
-CREATE TABLE fiche_def (
+COMMENT ON COLUMN public.fiche.f_enable IS 'value = 1 if card enable , otherwise 0 ';
+
+
+
+CREATE TABLE public.fiche_def (
     fd_id integer DEFAULT nextval(('s_fdef'::text)::regclass) NOT NULL,
     fd_class_base text,
     fd_label text NOT NULL,
@@ -3186,23 +3772,23 @@ CREATE TABLE fiche_def (
 
 
 
-COMMENT ON TABLE fiche_def IS 'Cards definition';
+COMMENT ON TABLE public.fiche_def IS 'Cards definition';
 
 
 
-CREATE TABLE fiche_def_ref (
+CREATE TABLE public.fiche_def_ref (
     frd_id integer DEFAULT nextval(('s_fiche_def_ref'::text)::regclass) NOT NULL,
     frd_text text,
-    frd_class_base account_type
+    frd_class_base public.account_type
 );
 
 
 
-COMMENT ON TABLE fiche_def_ref IS 'Family Cards definition';
+COMMENT ON TABLE public.fiche_def_ref IS 'Family Cards definition';
 
 
 
-CREATE TABLE fiche_detail (
+CREATE TABLE public.fiche_detail (
     jft_id integer DEFAULT nextval(('s_jnt_fic_att_value'::text)::regclass) NOT NULL,
     f_id integer,
     ad_id integer,
@@ -3211,12 +3797,11 @@ CREATE TABLE fiche_detail (
 
 
 
-COMMENT ON TABLE fiche_detail IS 'join between the card and the attribut definition';
+COMMENT ON TABLE public.fiche_detail IS 'join between the card and the attribut definition';
 
 
 
-
-CREATE TABLE forecast (
+CREATE TABLE public.forecast (
     f_id integer NOT NULL,
     f_name text NOT NULL,
     f_start_date bigint,
@@ -3225,36 +3810,40 @@ CREATE TABLE forecast (
 
 
 
-COMMENT ON TABLE forecast IS 'contains the name of the forecast';
+COMMENT ON TABLE public.forecast IS 'contains the name of the forecast';
 
 
 
-CREATE TABLE forecast_cat (
+CREATE TABLE public.forecast_category (
     fc_id integer NOT NULL,
     fc_desc text NOT NULL,
-    f_id bigint,
+    f_id bigint NOT NULL,
     fc_order integer DEFAULT 0 NOT NULL
 );
 
 
 
-COMMENT ON COLUMN forecast_cat.fc_id IS 'primary key';
+COMMENT ON TABLE public.forecast_category IS 'Category of forecast';
 
 
 
-COMMENT ON COLUMN forecast_cat.fc_desc IS 'text of the category';
+COMMENT ON COLUMN public.forecast_category.fc_id IS 'primary key';
 
 
 
-COMMENT ON COLUMN forecast_cat.f_id IS 'Foreign key, it is the parent from the table forecast';
+COMMENT ON COLUMN public.forecast_category.fc_desc IS 'text of the category';
 
 
 
-COMMENT ON COLUMN forecast_cat.fc_order IS 'Order of the category, used when displaid';
+COMMENT ON COLUMN public.forecast_category.f_id IS 'Foreign key, it is the parent from the table forecast';
 
 
 
-CREATE SEQUENCE forecast_cat_fc_id_seq
+COMMENT ON COLUMN public.forecast_category.fc_order IS 'Order of the category, used when displaid';
+
+
+
+CREATE SEQUENCE public.forecast_cat_fc_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3263,11 +3852,11 @@ CREATE SEQUENCE forecast_cat_fc_id_seq
 
 
 
-ALTER SEQUENCE forecast_cat_fc_id_seq OWNED BY forecast_cat.fc_id;
+ALTER SEQUENCE public.forecast_cat_fc_id_seq OWNED BY public.forecast_category.fc_id;
 
 
 
-CREATE SEQUENCE forecast_f_id_seq
+CREATE SEQUENCE public.forecast_f_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3276,57 +3865,52 @@ CREATE SEQUENCE forecast_f_id_seq
 
 
 
-ALTER SEQUENCE forecast_f_id_seq OWNED BY forecast.f_id;
+ALTER SEQUENCE public.forecast_f_id_seq OWNED BY public.forecast.f_id;
 
 
 
-CREATE TABLE forecast_item (
+CREATE TABLE public.forecast_item (
     fi_id integer NOT NULL,
     fi_text text,
     fi_account text,
-    fi_card integer,
     fi_order integer,
     fc_id integer,
     fi_amount numeric(20,4) DEFAULT 0,
-    fi_debit "char" DEFAULT 'd'::"char" NOT NULL,
-    fi_pid integer
+    fi_pid integer,
+    fi_amount_initial numeric(20,4) DEFAULT 0
 );
 
 
 
-COMMENT ON COLUMN forecast_item.fi_id IS 'Primary key';
+COMMENT ON TABLE public.forecast_item IS 'items of forecast';
 
 
 
-COMMENT ON COLUMN forecast_item.fi_text IS 'Label of the i	tem';
+COMMENT ON COLUMN public.forecast_item.fi_id IS 'Primary key';
 
 
 
-COMMENT ON COLUMN forecast_item.fi_account IS 'Accountancy entry';
+COMMENT ON COLUMN public.forecast_item.fi_text IS 'Label of the i	tem';
 
 
 
-COMMENT ON COLUMN forecast_item.fi_card IS 'Card (fiche.f_id)';
+COMMENT ON COLUMN public.forecast_item.fi_account IS 'Accountancy entry';
 
 
 
-COMMENT ON COLUMN forecast_item.fi_order IS 'Order of showing (not used)';
+COMMENT ON COLUMN public.forecast_item.fi_order IS 'Order of showing (not used)';
 
 
 
-COMMENT ON COLUMN forecast_item.fi_amount IS 'Amount';
+COMMENT ON COLUMN public.forecast_item.fi_amount IS 'Amount';
 
 
 
-COMMENT ON COLUMN forecast_item.fi_debit IS 'possible values are D or C';
+COMMENT ON COLUMN public.forecast_item.fi_pid IS '0 for every month, or the value parm_periode.p_id ';
 
 
 
-COMMENT ON COLUMN forecast_item.fi_pid IS '0 for every month, or the value parm_periode.p_id ';
-
-
-
-CREATE SEQUENCE forecast_item_fi_id_seq
+CREATE SEQUENCE public.forecast_item_fi_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3335,14 +3919,24 @@ CREATE SEQUENCE forecast_item_fi_id_seq
 
 
 
-ALTER SEQUENCE forecast_item_fi_id_seq OWNED BY forecast_item.fi_id;
+ALTER SEQUENCE public.forecast_item_fi_id_seq OWNED BY public.forecast_item.fi_id;
 
 
 
+CREATE TABLE public.form_definition (
+    fr_id integer DEFAULT nextval(('s_formdef'::text)::regclass) NOT NULL,
+    fr_label text
+);
 
-CREATE TABLE form (
+
+
+COMMENT ON TABLE public.form_definition IS 'Simple Report name';
+
+
+
+CREATE TABLE public.form_detail (
     fo_id integer DEFAULT nextval(('s_form'::text)::regclass) NOT NULL,
-    fo_fr_id integer,
+    fo_fr_id integer NOT NULL,
     fo_pos integer,
     fo_label text,
     fo_formula text
@@ -3350,19 +3944,11 @@ CREATE TABLE form (
 
 
 
-COMMENT ON TABLE form IS 'Forms content';
+COMMENT ON TABLE public.form_detail IS 'Simple report details with formula';
 
 
 
-CREATE TABLE formdef (
-    fr_id integer DEFAULT nextval(('s_formdef'::text)::regclass) NOT NULL,
-    fr_label text
-);
-
-
-
-
-CREATE TABLE groupe_analytique (
+CREATE TABLE public.groupe_analytique (
     ga_id character varying(10) NOT NULL,
     pa_id integer,
     ga_description text
@@ -3370,7 +3956,11 @@ CREATE TABLE groupe_analytique (
 
 
 
-CREATE SEQUENCE historique_analytique_ha_id_seq
+COMMENT ON TABLE public.groupe_analytique IS 'Group of analytic accountancy';
+
+
+
+CREATE SEQUENCE public.historique_analytique_ha_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3379,18 +3969,32 @@ CREATE SEQUENCE historique_analytique_ha_id_seq
 
 
 
-CREATE TABLE info_def (
+CREATE TABLE public.info_def (
     id_type text NOT NULL,
     id_description text
 );
 
 
 
-COMMENT ON TABLE info_def IS 'Contains the types of additionnal info we can add to a operation';
+COMMENT ON TABLE public.info_def IS 'Contains the types of additionnal info we can add to a operation';
 
 
 
-CREATE SEQUENCE s_jnt_id
+CREATE TABLE public.jnt_document_option_contact (
+    jdoc_id bigint NOT NULL,
+    jdoc_enable integer NOT NULL,
+    document_type_id bigint,
+    contact_option_ref_id bigint,
+    CONSTRAINT jnt_document_option_contact_check CHECK ((jdoc_enable = ANY (ARRAY[0, 1])))
+);
+
+
+
+COMMENT ON TABLE public.jnt_document_option_contact IS 'Many to many table between document and contact option';
+
+
+
+CREATE SEQUENCE public.jnt_document_option_contact_jdoc_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3399,28 +4003,43 @@ CREATE SEQUENCE s_jnt_id
 
 
 
+ALTER SEQUENCE public.jnt_document_option_contact_jdoc_id_seq OWNED BY public.jnt_document_option_contact.jdoc_id;
 
-CREATE TABLE jnt_fic_attr (
+
+
+CREATE SEQUENCE public.s_jnt_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+CREATE TABLE public.jnt_fic_attr (
     fd_id integer,
     ad_id integer,
-    jnt_id bigint DEFAULT nextval('s_jnt_id'::regclass) NOT NULL,
+    jnt_id bigint DEFAULT nextval('public.s_jnt_id'::regclass) NOT NULL,
     jnt_order integer NOT NULL
 );
 
 
 
-COMMENT ON TABLE jnt_fic_attr IS 'join between the family card and the attribut definition';
+COMMENT ON TABLE public.jnt_fic_attr IS 'join between the family card and the attribut definition';
 
 
 
-
-CREATE TABLE jnt_letter (
+CREATE TABLE public.jnt_letter (
     jl_id integer NOT NULL
 );
 
 
 
-CREATE SEQUENCE jnt_letter_jl_id_seq
+COMMENT ON TABLE public.jnt_letter IS 'm2m tables for lettering';
+
+
+
+CREATE SEQUENCE public.jnt_letter_jl_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3429,12 +4048,37 @@ CREATE SEQUENCE jnt_letter_jl_id_seq
 
 
 
-ALTER SEQUENCE jnt_letter_jl_id_seq OWNED BY jnt_letter.jl_id;
+ALTER SEQUENCE public.jnt_letter_jl_id_seq OWNED BY public.jnt_letter.jl_id;
 
 
 
+CREATE TABLE public.jnt_tag_group_tag (
+    tag_group_id bigint NOT NULL,
+    tag_id bigint NOT NULL,
+    jt_id integer NOT NULL
+);
 
-CREATE TABLE jrn (
+
+
+COMMENT ON TABLE public.jnt_tag_group_tag IS 'Many to Many table betwwen tag and tag group';
+
+
+
+CREATE SEQUENCE public.jnt_tag_group_tag_jt_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.jnt_tag_group_tag_jt_id_seq OWNED BY public.jnt_tag_group_tag.jt_id;
+
+
+
+CREATE TABLE public.jrn (
     jr_id integer DEFAULT nextval(('s_jrn'::text)::regclass) NOT NULL,
     jr_def_id integer NOT NULL,
     jr_montant numeric(20,4) NOT NULL,
@@ -3456,20 +4100,23 @@ CREATE TABLE jrn (
     jr_pj_number text,
     jr_mt text,
     jr_date_paid date,
-    jr_optype character varying(3) DEFAULT 'NOR'::character varying
+    jr_optype character varying(3) DEFAULT 'NOR'::character varying,
+    currency_id bigint DEFAULT 0 NOT NULL,
+    currency_rate numeric(20,6) DEFAULT 1 NOT NULL,
+    currency_rate_ref numeric(20,6) DEFAULT 1 NOT NULL
 );
 
 
 
-COMMENT ON TABLE jrn IS 'Journal: content one line for a group of accountancy writing';
+COMMENT ON TABLE public.jrn IS 'Journal: content one line for a group of accountancy writing';
 
 
 
-COMMENT ON COLUMN jrn.jr_optype IS 'Type of operation , NOR = NORMAL , OPE opening , EXT extourne, CLO closing';
+COMMENT ON COLUMN public.jrn.jr_optype IS 'Type of operation , NOR = NORMAL , OPE opening , EXT extourne, CLO closing';
 
 
 
-CREATE TABLE jrn_def (
+CREATE TABLE public.jrn_def (
     jrn_def_id integer DEFAULT nextval(('s_jrn_def'::text)::regclass) NOT NULL,
     jrn_def_name text NOT NULL,
     jrn_def_class_deb text,
@@ -3486,21 +4133,41 @@ CREATE TABLE jrn_def (
     jrn_def_bank bigint,
     jrn_def_num_op integer,
     jrn_def_description text,
-    jrn_enable integer DEFAULT 1
+    jrn_enable integer DEFAULT 1,
+    currency_id integer DEFAULT 0 NOT NULL,
+    jrn_def_negative_amount character(1) DEFAULT '0'::bpchar NOT NULL,
+    jrn_def_negative_warning text,
+    jrn_def_quantity smallint DEFAULT 1 NOT NULL,
+    CONSTRAINT negative_amount_ck CHECK ((jrn_def_negative_amount = ANY (ARRAY['1'::bpchar, '0'::bpchar])))
 );
 
 
 
-COMMENT ON TABLE jrn_def IS 'Definition of a journal, his properties';
+COMMENT ON TABLE public.jrn_def IS 'Definition of a journal, his properties';
 
 
 
-COMMENT ON COLUMN jrn_def.jrn_enable IS 'Set to 1 if the ledger is enable ';
+COMMENT ON COLUMN public.jrn_def.jrn_enable IS 'Set to 1 if the ledger is enable ';
 
 
 
+COMMENT ON COLUMN public.jrn_def.currency_id IS 'Default currency for financial ledger';
 
-CREATE TABLE jrn_info (
+
+
+COMMENT ON COLUMN public.jrn_def.jrn_def_negative_amount IS '1 echo a warning if you are not using an negative amount, default 0 for no warning';
+
+
+
+COMMENT ON COLUMN public.jrn_def.jrn_def_negative_warning IS 'Yell a warning if the amount if not negative , in the case of jrn_def_negative_amount is Y';
+
+
+
+COMMENT ON COLUMN public.jrn_def.jrn_def_quantity IS 'Use the quantity column, 0->disable,1->enable,used only with Sale and Purchase otherwise ignored';
+
+
+
+CREATE TABLE public.jrn_info (
     ji_id integer NOT NULL,
     jr_id integer NOT NULL,
     id_type text NOT NULL,
@@ -3509,7 +4176,11 @@ CREATE TABLE jrn_info (
 
 
 
-CREATE SEQUENCE jrn_info_ji_id_seq
+COMMENT ON TABLE public.jrn_info IS 'extra info for operation';
+
+
+
+CREATE SEQUENCE public.jrn_info_ji_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3518,11 +4189,11 @@ CREATE SEQUENCE jrn_info_ji_id_seq
 
 
 
-ALTER SEQUENCE jrn_info_ji_id_seq OWNED BY jrn_info.ji_id;
+ALTER SEQUENCE public.jrn_info_ji_id_seq OWNED BY public.jrn_info.ji_id;
 
 
 
-CREATE TABLE jrn_note (
+CREATE TABLE public.jrn_note (
     n_id integer NOT NULL,
     n_text text,
     jr_id bigint NOT NULL
@@ -3530,11 +4201,11 @@ CREATE TABLE jrn_note (
 
 
 
-COMMENT ON TABLE jrn_note IS 'Note about operation';
+COMMENT ON TABLE public.jrn_note IS 'Note about operation';
 
 
 
-CREATE SEQUENCE jrn_note_n_id_seq
+CREATE SEQUENCE public.jrn_note_n_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3543,11 +4214,11 @@ CREATE SEQUENCE jrn_note_n_id_seq
 
 
 
-ALTER SEQUENCE jrn_note_n_id_seq OWNED BY jrn_note.n_id;
+ALTER SEQUENCE public.jrn_note_n_id_seq OWNED BY public.jrn_note.n_id;
 
 
 
-CREATE SEQUENCE jrn_periode_id_seq
+CREATE SEQUENCE public.jrn_periode_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3556,17 +4227,20 @@ CREATE SEQUENCE jrn_periode_id_seq
 
 
 
-CREATE TABLE jrn_periode (
+CREATE TABLE public.jrn_periode (
     jrn_def_id integer NOT NULL,
     p_id integer NOT NULL,
     status text,
-    id bigint DEFAULT nextval('jrn_periode_id_seq'::regclass) NOT NULL
+    id bigint DEFAULT nextval('public.jrn_periode_id_seq'::regclass) NOT NULL
 );
 
 
 
+COMMENT ON TABLE public.jrn_periode IS 'Period by ledger';
 
-CREATE TABLE jrn_rapt (
+
+
+CREATE TABLE public.jrn_rapt (
     jra_id integer DEFAULT nextval(('s_jrn_rapt'::text)::regclass) NOT NULL,
     jr_id integer NOT NULL,
     jra_concerned integer NOT NULL
@@ -3574,26 +4248,58 @@ CREATE TABLE jrn_rapt (
 
 
 
-COMMENT ON TABLE jrn_rapt IS 'Rapprochement between operation';
+COMMENT ON TABLE public.jrn_rapt IS 'Rapprochement between operation';
 
 
 
-CREATE TABLE jrn_type (
+CREATE TABLE public.jrn_tax (
+    jt_id integer NOT NULL,
+    j_id bigint NOT NULL,
+    pcm_val public.account_type NOT NULL,
+    ac_id integer NOT NULL
+);
+
+
+
+COMMENT ON COLUMN public.jrn_tax.j_id IS 'fk jrnx';
+
+
+
+COMMENT ON COLUMN public.jrn_tax.pcm_val IS 'FK tmp_pcmn';
+
+
+
+COMMENT ON COLUMN public.jrn_tax.ac_id IS 'FK to acc_other_tax';
+
+
+
+ALTER TABLE public.jrn_tax ALTER COLUMN jt_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.jrn_tax_jt_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+
+CREATE TABLE public.jrn_type (
     jrn_type_id character(3) NOT NULL,
     jrn_desc text
 );
 
 
 
-COMMENT ON TABLE jrn_type IS 'Type of journal (Sell, Buy, Financial...)';
+COMMENT ON TABLE public.jrn_type IS 'Type of journal (Sell, Buy, Financial...)';
 
 
 
-CREATE TABLE jrnx (
+CREATE TABLE public.jrnx (
     j_id integer DEFAULT nextval(('s_jrn_op'::text)::regclass) NOT NULL,
     j_date date DEFAULT now(),
     j_montant numeric(20,4) DEFAULT 0,
-    j_poste account_type NOT NULL,
+    j_poste public.account_type NOT NULL,
     j_grpt integer NOT NULL,
     j_rapt text,
     j_jrn_def integer NOT NULL,
@@ -3610,12 +4316,11 @@ CREATE TABLE jrnx (
 
 
 
-COMMENT ON TABLE jrnx IS 'Journal: content one line for each accountancy writing';
+COMMENT ON TABLE public.jrnx IS 'Journal: content one line for each accountancy writing';
 
 
 
-
-CREATE TABLE key_distribution (
+CREATE TABLE public.key_distribution (
     kd_id integer NOT NULL,
     kd_name text,
     kd_description text
@@ -3623,23 +4328,23 @@ CREATE TABLE key_distribution (
 
 
 
-COMMENT ON TABLE key_distribution IS 'Distribution key for analytic';
+COMMENT ON TABLE public.key_distribution IS 'Distribution key for analytic';
 
 
 
-COMMENT ON COLUMN key_distribution.kd_id IS 'PK';
+COMMENT ON COLUMN public.key_distribution.kd_id IS 'PK';
 
 
 
-COMMENT ON COLUMN key_distribution.kd_name IS 'Name of the key';
+COMMENT ON COLUMN public.key_distribution.kd_name IS 'Name of the key';
 
 
 
-COMMENT ON COLUMN key_distribution.kd_description IS 'Description of the key';
+COMMENT ON COLUMN public.key_distribution.kd_description IS 'Description of the key';
 
 
 
-CREATE TABLE key_distribution_activity (
+CREATE TABLE public.key_distribution_activity (
     ka_id integer NOT NULL,
     ke_id bigint NOT NULL,
     po_id bigint,
@@ -3648,27 +4353,27 @@ CREATE TABLE key_distribution_activity (
 
 
 
-COMMENT ON TABLE key_distribution_activity IS 'Contains the analytic account';
+COMMENT ON TABLE public.key_distribution_activity IS 'Contains the analytic account';
 
 
 
-COMMENT ON COLUMN key_distribution_activity.ka_id IS 'pk';
+COMMENT ON COLUMN public.key_distribution_activity.ka_id IS 'pk';
 
 
 
-COMMENT ON COLUMN key_distribution_activity.ke_id IS 'fk to key_distribution_detail';
+COMMENT ON COLUMN public.key_distribution_activity.ke_id IS 'fk to key_distribution_detail';
 
 
 
-COMMENT ON COLUMN key_distribution_activity.po_id IS 'fk to poste_analytique';
+COMMENT ON COLUMN public.key_distribution_activity.po_id IS 'fk to poste_analytique';
 
 
 
-COMMENT ON COLUMN key_distribution_activity.pa_id IS 'fk to plan_analytique';
+COMMENT ON COLUMN public.key_distribution_activity.pa_id IS 'fk to plan_analytique';
 
 
 
-CREATE SEQUENCE key_distribution_activity_ka_id_seq
+CREATE SEQUENCE public.key_distribution_activity_ka_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3677,11 +4382,11 @@ CREATE SEQUENCE key_distribution_activity_ka_id_seq
 
 
 
-ALTER SEQUENCE key_distribution_activity_ka_id_seq OWNED BY key_distribution_activity.ka_id;
+ALTER SEQUENCE public.key_distribution_activity_ka_id_seq OWNED BY public.key_distribution_activity.ka_id;
 
 
 
-CREATE TABLE key_distribution_detail (
+CREATE TABLE public.key_distribution_detail (
     ke_id integer NOT NULL,
     kd_id bigint NOT NULL,
     ke_row integer NOT NULL,
@@ -3690,23 +4395,23 @@ CREATE TABLE key_distribution_detail (
 
 
 
-COMMENT ON TABLE key_distribution_detail IS 'Row of activity and percent';
+COMMENT ON TABLE public.key_distribution_detail IS 'Row of activity and percent';
 
 
 
-COMMENT ON COLUMN key_distribution_detail.ke_id IS 'pk';
+COMMENT ON COLUMN public.key_distribution_detail.ke_id IS 'pk';
 
 
 
-COMMENT ON COLUMN key_distribution_detail.kd_id IS 'fk to key_distribution';
+COMMENT ON COLUMN public.key_distribution_detail.kd_id IS 'fk to key_distribution';
 
 
 
-COMMENT ON COLUMN key_distribution_detail.ke_row IS 'group order';
+COMMENT ON COLUMN public.key_distribution_detail.ke_row IS 'group order';
 
 
 
-CREATE SEQUENCE key_distribution_detail_ke_id_seq
+CREATE SEQUENCE public.key_distribution_detail_ke_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3715,11 +4420,11 @@ CREATE SEQUENCE key_distribution_detail_ke_id_seq
 
 
 
-ALTER SEQUENCE key_distribution_detail_ke_id_seq OWNED BY key_distribution_detail.ke_id;
+ALTER SEQUENCE public.key_distribution_detail_ke_id_seq OWNED BY public.key_distribution_detail.ke_id;
 
 
 
-CREATE SEQUENCE key_distribution_kd_id_seq
+CREATE SEQUENCE public.key_distribution_kd_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3728,11 +4433,11 @@ CREATE SEQUENCE key_distribution_kd_id_seq
 
 
 
-ALTER SEQUENCE key_distribution_kd_id_seq OWNED BY key_distribution.kd_id;
+ALTER SEQUENCE public.key_distribution_kd_id_seq OWNED BY public.key_distribution.kd_id;
 
 
 
-CREATE TABLE key_distribution_ledger (
+CREATE TABLE public.key_distribution_ledger (
     kl_id integer NOT NULL,
     kd_id bigint NOT NULL,
     jrn_def_id bigint NOT NULL
@@ -3740,23 +4445,23 @@ CREATE TABLE key_distribution_ledger (
 
 
 
-COMMENT ON TABLE key_distribution_ledger IS 'Legder where the distribution key can be used';
+COMMENT ON TABLE public.key_distribution_ledger IS 'Legder where the distribution key can be used';
 
 
 
-COMMENT ON COLUMN key_distribution_ledger.kl_id IS 'pk';
+COMMENT ON COLUMN public.key_distribution_ledger.kl_id IS 'pk';
 
 
 
-COMMENT ON COLUMN key_distribution_ledger.kd_id IS 'fk to key_distribution';
+COMMENT ON COLUMN public.key_distribution_ledger.kd_id IS 'fk to key_distribution';
 
 
 
-COMMENT ON COLUMN key_distribution_ledger.jrn_def_id IS 'fk to jrnd_def, ledger where this key is available';
+COMMENT ON COLUMN public.key_distribution_ledger.jrn_def_id IS 'fk to jrnd_def, ledger where this key is available';
 
 
 
-CREATE SEQUENCE key_distribution_ledger_kl_id_seq
+CREATE SEQUENCE public.key_distribution_ledger_kl_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3765,11 +4470,11 @@ CREATE SEQUENCE key_distribution_ledger_kl_id_seq
 
 
 
-ALTER SEQUENCE key_distribution_ledger_kl_id_seq OWNED BY key_distribution_ledger.kl_id;
+ALTER SEQUENCE public.key_distribution_ledger_kl_id_seq OWNED BY public.key_distribution_ledger.kl_id;
 
 
 
-CREATE TABLE letter_cred (
+CREATE TABLE public.letter_cred (
     lc_id integer NOT NULL,
     j_id bigint NOT NULL,
     jl_id bigint NOT NULL
@@ -3777,7 +4482,11 @@ CREATE TABLE letter_cred (
 
 
 
-CREATE SEQUENCE letter_cred_lc_id_seq
+COMMENT ON TABLE public.letter_cred IS 'Letter cred';
+
+
+
+CREATE SEQUENCE public.letter_cred_lc_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3786,11 +4495,11 @@ CREATE SEQUENCE letter_cred_lc_id_seq
 
 
 
-ALTER SEQUENCE letter_cred_lc_id_seq OWNED BY letter_cred.lc_id;
+ALTER SEQUENCE public.letter_cred_lc_id_seq OWNED BY public.letter_cred.lc_id;
 
 
 
-CREATE TABLE letter_deb (
+CREATE TABLE public.letter_deb (
     ld_id integer NOT NULL,
     j_id bigint NOT NULL,
     jl_id bigint NOT NULL
@@ -3798,7 +4507,11 @@ CREATE TABLE letter_deb (
 
 
 
-CREATE SEQUENCE letter_deb_ld_id_seq
+COMMENT ON TABLE public.letter_deb IS 'letter deb';
+
+
+
+CREATE SEQUENCE public.letter_deb_ld_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3807,18 +4520,18 @@ CREATE SEQUENCE letter_deb_ld_id_seq
 
 
 
-ALTER SEQUENCE letter_deb_ld_id_seq OWNED BY letter_deb.ld_id;
+ALTER SEQUENCE public.letter_deb_ld_id_seq OWNED BY public.letter_deb.ld_id;
 
 
 
-CREATE TABLE link_action_type (
+CREATE TABLE public.link_action_type (
     l_id bigint NOT NULL,
     l_desc character varying
 );
 
 
 
-CREATE SEQUENCE link_action_type_l_id_seq
+CREATE SEQUENCE public.link_action_type_l_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3827,11 +4540,11 @@ CREATE SEQUENCE link_action_type_l_id_seq
 
 
 
-ALTER SEQUENCE link_action_type_l_id_seq OWNED BY link_action_type.l_id;
+ALTER SEQUENCE public.link_action_type_l_id_seq OWNED BY public.link_action_type.l_id;
 
 
 
-CREATE TABLE menu_default (
+CREATE TABLE public.menu_default (
     md_id integer NOT NULL,
     md_code text NOT NULL,
     me_code text NOT NULL
@@ -3839,7 +4552,11 @@ CREATE TABLE menu_default (
 
 
 
-CREATE SEQUENCE menu_default_md_id_seq
+COMMENT ON TABLE public.menu_default IS 'default menu for certains actions';
+
+
+
+CREATE SEQUENCE public.menu_default_md_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3848,11 +4565,11 @@ CREATE SEQUENCE menu_default_md_id_seq
 
 
 
-ALTER SEQUENCE menu_default_md_id_seq OWNED BY menu_default.md_id;
+ALTER SEQUENCE public.menu_default_md_id_seq OWNED BY public.menu_default.md_id;
 
 
 
-CREATE TABLE menu_ref (
+CREATE TABLE public.menu_ref (
     me_code text NOT NULL,
     me_menu text,
     me_file text,
@@ -3866,30 +4583,34 @@ CREATE TABLE menu_ref (
 
 
 
-COMMENT ON COLUMN menu_ref.me_code IS 'Menu Code ';
+COMMENT ON TABLE public.menu_ref IS 'Definition of all the menu';
 
 
 
-COMMENT ON COLUMN menu_ref.me_menu IS 'Label to display';
+COMMENT ON COLUMN public.menu_ref.me_code IS 'Menu Code ';
 
 
 
-COMMENT ON COLUMN menu_ref.me_file IS 'if not empty file to include';
+COMMENT ON COLUMN public.menu_ref.me_menu IS 'Label to display';
 
 
 
-COMMENT ON COLUMN menu_ref.me_url IS 'url ';
+COMMENT ON COLUMN public.menu_ref.me_file IS 'if not empty file to include';
 
 
 
-COMMENT ON COLUMN menu_ref.me_type IS 'ME for menu
+COMMENT ON COLUMN public.menu_ref.me_url IS 'url ';
+
+
+
+COMMENT ON COLUMN public.menu_ref.me_type IS 'ME for menu
 PR for Printing
 SP for special meaning (ex: return to line)
 PL for plugin';
 
 
 
-CREATE TABLE mod_payment (
+CREATE TABLE public.payment_method (
     mp_id integer NOT NULL,
     mp_lib text NOT NULL,
     mp_jrn_def_id integer NOT NULL,
@@ -3900,15 +4621,15 @@ CREATE TABLE mod_payment (
 
 
 
-COMMENT ON TABLE mod_payment IS 'Contains the different media of payment and the corresponding ledger';
+COMMENT ON TABLE public.payment_method IS 'Contains the different media of payment and the corresponding ledger';
 
 
 
-COMMENT ON COLUMN mod_payment.jrn_def_id IS 'Ledger using this payment method';
+COMMENT ON COLUMN public.payment_method.jrn_def_id IS 'Ledger using this payment method';
 
 
 
-CREATE SEQUENCE mod_payment_mp_id_seq
+CREATE SEQUENCE public.mod_payment_mp_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3917,11 +4638,11 @@ CREATE SEQUENCE mod_payment_mp_id_seq
 
 
 
-ALTER SEQUENCE mod_payment_mp_id_seq OWNED BY mod_payment.mp_id;
+ALTER SEQUENCE public.mod_payment_mp_id_seq OWNED BY public.payment_method.mp_id;
 
 
 
-CREATE SEQUENCE op_def_op_seq
+CREATE SEQUENCE public.op_def_op_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3930,8 +4651,8 @@ CREATE SEQUENCE op_def_op_seq
 
 
 
-CREATE TABLE op_predef (
-    od_id integer DEFAULT nextval('op_def_op_seq'::regclass) NOT NULL,
+CREATE TABLE public.op_predef (
+    od_id integer DEFAULT nextval('public.op_def_op_seq'::regclass) NOT NULL,
     jrn_def_id integer NOT NULL,
     od_name text NOT NULL,
     od_item integer NOT NULL,
@@ -3942,19 +4663,19 @@ CREATE TABLE op_predef (
 
 
 
-COMMENT ON TABLE op_predef IS 'predefined operation';
+COMMENT ON TABLE public.op_predef IS 'predefined operation';
 
 
 
-COMMENT ON COLUMN op_predef.jrn_def_id IS 'jrn_id';
+COMMENT ON COLUMN public.op_predef.jrn_def_id IS 'jrn_id';
 
 
 
-COMMENT ON COLUMN op_predef.od_name IS 'name of the operation';
+COMMENT ON COLUMN public.op_predef.od_name IS 'name of the operation';
 
 
 
-CREATE SEQUENCE op_predef_detail_opd_id_seq
+CREATE SEQUENCE public.op_predef_detail_opd_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3963,12 +4684,12 @@ CREATE SEQUENCE op_predef_detail_opd_id_seq
 
 
 
-CREATE TABLE op_predef_detail (
-    opd_id integer DEFAULT nextval('op_predef_detail_opd_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.op_predef_detail (
+    opd_id integer DEFAULT nextval('public.op_predef_detail_opd_id_seq'::regclass) NOT NULL,
     od_id integer NOT NULL,
     opd_poste text NOT NULL,
     opd_amount numeric(20,4),
-    opd_tva_id integer,
+    opd_tva_id text,
     opd_quantity numeric(20,4),
     opd_debit boolean NOT NULL,
     opd_tva_amount numeric(20,4),
@@ -3978,11 +4699,11 @@ CREATE TABLE op_predef_detail (
 
 
 
-COMMENT ON TABLE op_predef_detail IS 'contains the detail of predefined operations';
+COMMENT ON TABLE public.op_predef_detail IS 'contains the detail of predefined operations';
 
 
 
-CREATE SEQUENCE s_oa_group
+CREATE SEQUENCE public.s_oa_group
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3991,14 +4712,14 @@ CREATE SEQUENCE s_oa_group
 
 
 
-CREATE TABLE operation_analytique (
-    oa_id integer DEFAULT nextval('historique_analytique_ha_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.operation_analytique (
+    oa_id integer DEFAULT nextval('public.historique_analytique_ha_id_seq'::regclass) NOT NULL,
     po_id integer NOT NULL,
     oa_amount numeric(20,4) NOT NULL,
     oa_description text,
     oa_debit boolean DEFAULT true NOT NULL,
     j_id integer,
-    oa_group integer DEFAULT nextval('s_oa_group'::regclass) NOT NULL,
+    oa_group integer DEFAULT nextval('public.s_oa_group'::regclass) NOT NULL,
     oa_date date NOT NULL,
     oa_row integer,
     oa_jrnx_id_source bigint,
@@ -4009,35 +4730,198 @@ CREATE TABLE operation_analytique (
 
 
 
-COMMENT ON TABLE operation_analytique IS 'History of the analytic account';
+COMMENT ON TABLE public.operation_analytique IS 'History of the analytic account';
 
 
 
-COMMENT ON COLUMN operation_analytique.oa_jrnx_id_source IS 'jrnx.j_id source of this amount, this amount is computed from an amount giving a ND VAT.Normally NULL  is there is no ND VAT.';
+COMMENT ON COLUMN public.operation_analytique.oa_jrnx_id_source IS 'jrnx.j_id source of this amount, this amount is computed from an amount giving a ND VAT.Normally NULL  is there is no ND VAT.';
 
 
 
-COMMENT ON COLUMN operation_analytique.oa_positive IS 'Sign of the amount';
+COMMENT ON COLUMN public.operation_analytique.oa_positive IS 'Sign of the amount';
 
 
 
-COMMENT ON COLUMN operation_analytique.f_id IS 'FK to fiche.f_id , used only with ODS';
+COMMENT ON COLUMN public.operation_analytique.f_id IS 'FK to fiche.f_id , used only with ODS';
 
 
 
+CREATE TABLE public.operation_currency (
+    id bigint NOT NULL,
+    oc_amount numeric(20,6) NOT NULL,
+    oc_vat_amount numeric(20,6) DEFAULT 0,
+    oc_price_unit numeric(20,6),
+    j_id bigint NOT NULL
+);
 
-CREATE TABLE parameter (
+
+
+COMMENT ON TABLE public.operation_currency IS 'Information about currency';
+
+
+
+COMMENT ON COLUMN public.operation_currency.oc_amount IS 'amount in currency';
+
+
+
+COMMENT ON COLUMN public.operation_currency.oc_vat_amount IS 'vat amount in currency';
+
+
+
+COMMENT ON COLUMN public.operation_currency.oc_price_unit IS 'unit price in currency';
+
+
+
+COMMENT ON COLUMN public.operation_currency.j_id IS 'fk to jrnx';
+
+
+
+CREATE SEQUENCE public.operation_currency_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.operation_currency_id_seq OWNED BY public.operation_currency.id;
+
+
+
+CREATE TABLE public.operation_exercice (
+    oe_id bigint NOT NULL,
+    oe_date date,
+    oe_type text NOT NULL,
+    oe_text text,
+    oe_dossier_id integer NOT NULL,
+    oe_exercice integer NOT NULL,
+    jr_internal text,
+    oe_transfer_date timestamp without time zone,
+    tech_user text,
+    tech_date timestamp without time zone DEFAULT now(),
+    CONSTRAINT operation_exercice_oe_type_check CHECK (((oe_type = 'opening'::text) OR (oe_type = 'closing'::text)))
+);
+
+
+
+CREATE TABLE public.operation_exercice_detail (
+    oed_id bigint NOT NULL,
+    oe_id bigint NOT NULL,
+    oed_poste public.account_type,
+    oed_qcode text,
+    oed_label text,
+    oed_amount numeric(20,4),
+    oed_debit boolean
+);
+
+
+
+ALTER TABLE public.operation_exercice_detail ALTER COLUMN oed_id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.operation_exercice_detail_oed_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+
+ALTER TABLE public.operation_exercice ALTER COLUMN oe_id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.operation_exercice_oe_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+
+CREATE TABLE public.operation_tag (
+    opt_id bigint NOT NULL,
+    jrn_id bigint,
+    tag_id integer
+);
+
+
+
+COMMENT ON TABLE public.operation_tag IS 'Tag for operation';
+
+
+
+CREATE SEQUENCE public.operation_tag_opt_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.operation_tag_opt_id_seq OWNED BY public.operation_tag.opt_id;
+
+
+
+CREATE TABLE public.parameter (
     pr_id text NOT NULL,
     pr_value text
 );
 
 
 
-COMMENT ON TABLE parameter IS 'parameter of the company';
+COMMENT ON TABLE public.parameter IS 'parameter of the company';
 
 
 
-CREATE TABLE parm_code (
+CREATE TABLE public.parameter_extra (
+    id integer NOT NULL,
+    pe_code text,
+    pe_label text,
+    pe_value text
+);
+
+
+
+COMMENT ON TABLE public.parameter_extra IS 'Extra parameter for the folder';
+
+
+
+COMMENT ON COLUMN public.parameter_extra.pe_code IS 'Code used in the Document:generate';
+
+
+
+COMMENT ON COLUMN public.parameter_extra.pe_label IS 'Label description';
+
+
+
+COMMENT ON COLUMN public.parameter_extra.pe_value IS 'Value which will replace the tag in Document:generate';
+
+
+
+CREATE SEQUENCE public.parameter_extra_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.parameter_extra_id_seq OWNED BY public.parameter_extra.id;
+
+
+
+CREATE TABLE public.parm_appearance (
+    a_code text NOT NULL,
+    a_value text NOT NULL
+);
+
+
+
+CREATE TABLE public.parm_code (
     p_code text NOT NULL,
     p_value text,
     p_comment text
@@ -4045,7 +4929,11 @@ CREATE TABLE parm_code (
 
 
 
-CREATE TABLE parm_money (
+COMMENT ON TABLE public.parm_code IS 'Parameter code and accountancy';
+
+
+
+CREATE TABLE public.parm_money (
     pm_id integer DEFAULT nextval(('s_currency'::text)::regclass),
     pm_code character(3) NOT NULL,
     pm_rate numeric(20,4)
@@ -4053,39 +4941,63 @@ CREATE TABLE parm_money (
 
 
 
-COMMENT ON TABLE parm_money IS 'Currency conversion';
+COMMENT ON TABLE public.parm_money IS 'Currency conversion';
 
 
 
-CREATE TABLE parm_periode (
+CREATE TABLE public.parm_periode (
     p_id integer DEFAULT nextval(('s_periode'::text)::regclass) NOT NULL,
     p_start date NOT NULL,
     p_end date NOT NULL,
     p_exercice text DEFAULT to_char(now(), 'YYYY'::text) NOT NULL,
     p_closed boolean DEFAULT false,
     p_central boolean DEFAULT false,
+    p_exercice_label text NOT NULL,
     CONSTRAINT parm_periode_check CHECK ((p_end >= p_start))
 );
 
 
 
-COMMENT ON TABLE parm_periode IS 'Periode definition';
+COMMENT ON TABLE public.parm_periode IS 'Periode definition';
 
 
 
+COMMENT ON COLUMN public.parm_periode.p_start IS 'Start date of periode';
 
-CREATE TABLE parm_poste (
-    p_value account_type NOT NULL,
+
+
+COMMENT ON COLUMN public.parm_periode.p_end IS 'End date of periode';
+
+
+
+COMMENT ON COLUMN public.parm_periode.p_exercice IS 'Exercice';
+
+
+
+COMMENT ON COLUMN public.parm_periode.p_closed IS 'is closed';
+
+
+
+COMMENT ON COLUMN public.parm_periode.p_central IS 'is centralized (obsolete)';
+
+
+
+COMMENT ON COLUMN public.parm_periode.p_exercice_label IS 'label of the exercice';
+
+
+
+CREATE TABLE public.parm_poste (
+    p_value public.account_type NOT NULL,
     p_type text NOT NULL
 );
 
 
 
-COMMENT ON TABLE parm_poste IS 'Contains data for finding is the type of the account (asset)';
+COMMENT ON TABLE public.parm_poste IS 'Contains data for finding is the type of the account (asset)';
 
 
 
-CREATE SEQUENCE plan_analytique_pa_id_seq
+CREATE SEQUENCE public.plan_analytique_pa_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4094,19 +5006,19 @@ CREATE SEQUENCE plan_analytique_pa_id_seq
 
 
 
-CREATE TABLE plan_analytique (
-    pa_id integer DEFAULT nextval('plan_analytique_pa_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.plan_analytique (
+    pa_id integer DEFAULT nextval('public.plan_analytique_pa_id_seq'::regclass) NOT NULL,
     pa_name text DEFAULT 'Sans Nom'::text NOT NULL,
     pa_description text
 );
 
 
 
-COMMENT ON TABLE plan_analytique IS 'Plan Analytique (max 5)';
+COMMENT ON TABLE public.plan_analytique IS 'Plan Analytique (max 5)';
 
 
 
-CREATE SEQUENCE poste_analytique_po_id_seq
+CREATE SEQUENCE public.poste_analytique_po_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4115,52 +5027,62 @@ CREATE SEQUENCE poste_analytique_po_id_seq
 
 
 
-CREATE TABLE poste_analytique (
-    po_id integer DEFAULT nextval('poste_analytique_po_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.poste_analytique (
+    po_id integer DEFAULT nextval('public.poste_analytique_po_id_seq'::regclass) NOT NULL,
     po_name text NOT NULL,
     pa_id integer NOT NULL,
     po_amount numeric(20,4) DEFAULT 0.0 NOT NULL,
     po_description text,
-    ga_id character varying(10)
+    ga_id character varying(10),
+    po_state integer DEFAULT 1 NOT NULL
 );
 
 
 
-COMMENT ON TABLE poste_analytique IS 'Poste Analytique';
+COMMENT ON TABLE public.poste_analytique IS 'Poste Analytique';
 
 
 
-CREATE TABLE profile (
+COMMENT ON COLUMN public.poste_analytique.po_state IS 'Analytic Account state : 0 disabled 0 enabled ';
+
+
+
+CREATE TABLE public.profile (
     p_name text NOT NULL,
     p_id integer NOT NULL,
     p_desc text,
     with_calc boolean DEFAULT true,
-    with_direct_form boolean DEFAULT true
+    with_direct_form boolean DEFAULT true,
+    with_search_card integer
 );
 
 
 
-COMMENT ON TABLE profile IS 'Available profile ';
+COMMENT ON TABLE public.profile IS 'Available profile ';
 
 
 
-COMMENT ON COLUMN profile.p_name IS 'Name of the profile';
+COMMENT ON COLUMN public.profile.p_name IS 'Name of the profile';
 
 
 
-COMMENT ON COLUMN profile.p_desc IS 'description of the profile';
+COMMENT ON COLUMN public.profile.p_desc IS 'description of the profile';
 
 
 
-COMMENT ON COLUMN profile.with_calc IS 'show the calculator';
+COMMENT ON COLUMN public.profile.with_calc IS 'show the calculator';
 
 
 
-COMMENT ON COLUMN profile.with_direct_form IS 'show the direct form';
+COMMENT ON COLUMN public.profile.with_direct_form IS 'show the direct form';
 
 
 
-CREATE TABLE profile_menu (
+COMMENT ON COLUMN public.profile.with_search_card IS 'Display a icon for searching card : 1 display, 0 not displaid';
+
+
+
+CREATE TABLE public.profile_menu (
     pm_id integer NOT NULL,
     me_code text,
     me_code_dep text,
@@ -4173,37 +5095,37 @@ CREATE TABLE profile_menu (
 
 
 
-COMMENT ON TABLE profile_menu IS 'Join  between the profile and the menu ';
+COMMENT ON TABLE public.profile_menu IS 'Join  between the profile and the menu ';
 
 
 
-COMMENT ON COLUMN profile_menu.me_code_dep IS 'menu code dependency';
+COMMENT ON COLUMN public.profile_menu.me_code_dep IS 'menu code dependency';
 
 
 
-COMMENT ON COLUMN profile_menu.p_id IS 'link to profile';
+COMMENT ON COLUMN public.profile_menu.p_id IS 'link to profile';
 
 
 
-COMMENT ON COLUMN profile_menu.p_order IS 'order of displaying menu';
+COMMENT ON COLUMN public.profile_menu.p_order IS 'order of displaying menu';
 
 
 
-COMMENT ON COLUMN profile_menu.p_type_display IS 'M is a module
+COMMENT ON COLUMN public.profile_menu.p_type_display IS 'M is a module
 E is a menu
 S is a select (for plugin)';
 
 
 
-COMMENT ON COLUMN profile_menu.pm_default IS 'default menu';
+COMMENT ON COLUMN public.profile_menu.pm_default IS 'default menu';
 
 
 
-COMMENT ON COLUMN profile_menu.pm_id_dep IS 'parent of this menu item';
+COMMENT ON COLUMN public.profile_menu.pm_id_dep IS 'parent of this menu item';
 
 
 
-CREATE SEQUENCE profile_menu_pm_id_seq
+CREATE SEQUENCE public.profile_menu_pm_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4212,18 +5134,57 @@ CREATE SEQUENCE profile_menu_pm_id_seq
 
 
 
-ALTER SEQUENCE profile_menu_pm_id_seq OWNED BY profile_menu.pm_id;
+ALTER SEQUENCE public.profile_menu_pm_id_seq OWNED BY public.profile_menu.pm_id;
 
 
 
-CREATE TABLE profile_menu_type (
+CREATE TABLE public.profile_menu_type (
     pm_type text NOT NULL,
     pm_desc text
 );
 
 
 
-CREATE SEQUENCE profile_p_id_seq
+COMMENT ON TABLE public.profile_menu_type IS 'Type of menu';
+
+
+
+CREATE TABLE public.profile_mobile (
+    pmo_id integer NOT NULL,
+    me_code text NOT NULL,
+    pmo_order integer NOT NULL,
+    p_id integer NOT NULL,
+    pmo_default character(1) DEFAULT '1'::bpchar
+);
+
+
+
+COMMENT ON TABLE public.profile_mobile IS 'Menu for mobile device';
+
+
+
+COMMENT ON COLUMN public.profile_mobile.pmo_id IS 'primary key';
+
+
+
+COMMENT ON COLUMN public.profile_mobile.me_code IS 'Code of menu_ref to execute';
+
+
+
+COMMENT ON COLUMN public.profile_mobile.pmo_order IS 'item order in menu';
+
+
+
+COMMENT ON COLUMN public.profile_mobile.p_id IS 'Profile id ';
+
+
+
+COMMENT ON COLUMN public.profile_mobile.pmo_default IS 'possible values are 1 , the default HTML header (javascript,CSS,...) is loaded ,  0  nothing is loaded from noalyss ';
+
+
+
+CREATE SEQUENCE public.profile_mobile_pmo_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4232,11 +5193,24 @@ CREATE SEQUENCE profile_p_id_seq
 
 
 
-ALTER SEQUENCE profile_p_id_seq OWNED BY profile.p_id;
+ALTER SEQUENCE public.profile_mobile_pmo_id_seq OWNED BY public.profile_mobile.pmo_id;
 
 
 
-CREATE TABLE profile_sec_repository (
+CREATE SEQUENCE public.profile_p_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.profile_p_id_seq OWNED BY public.profile.p_id;
+
+
+
+CREATE TABLE public.profile_sec_repository (
     ur_id bigint NOT NULL,
     p_id bigint,
     r_id bigint,
@@ -4246,27 +5220,27 @@ CREATE TABLE profile_sec_repository (
 
 
 
-COMMENT ON TABLE profile_sec_repository IS 'Available profile for user';
+COMMENT ON TABLE public.profile_sec_repository IS 'Available profile for user';
 
 
 
-COMMENT ON COLUMN profile_sec_repository.ur_id IS 'pk';
+COMMENT ON COLUMN public.profile_sec_repository.ur_id IS 'pk';
 
 
 
-COMMENT ON COLUMN profile_sec_repository.p_id IS 'fk to profile';
+COMMENT ON COLUMN public.profile_sec_repository.p_id IS 'fk to profile';
 
 
 
-COMMENT ON COLUMN profile_sec_repository.r_id IS 'fk to stock_repository';
+COMMENT ON COLUMN public.profile_sec_repository.r_id IS 'fk to stock_repository';
 
 
 
-COMMENT ON COLUMN profile_sec_repository.ur_right IS 'Type of right : R for readonly W for write';
+COMMENT ON COLUMN public.profile_sec_repository.ur_right IS 'Type of right : R for readonly W for write';
 
 
 
-CREATE SEQUENCE profile_sec_repository_ur_id_seq
+CREATE SEQUENCE public.profile_sec_repository_ur_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4275,11 +5249,11 @@ CREATE SEQUENCE profile_sec_repository_ur_id_seq
 
 
 
-ALTER SEQUENCE profile_sec_repository_ur_id_seq OWNED BY profile_sec_repository.ur_id;
+ALTER SEQUENCE public.profile_sec_repository_ur_id_seq OWNED BY public.profile_sec_repository.ur_id;
 
 
 
-CREATE TABLE profile_user (
+CREATE TABLE public.profile_user (
     user_name text NOT NULL,
     pu_id integer NOT NULL,
     p_id integer
@@ -4287,19 +5261,19 @@ CREATE TABLE profile_user (
 
 
 
-COMMENT ON TABLE profile_user IS 'Contains the available profile for users';
+COMMENT ON TABLE public.profile_user IS 'Contains the available profile for users';
 
 
 
-COMMENT ON COLUMN profile_user.user_name IS 'fk to available_user : login';
+COMMENT ON COLUMN public.profile_user.user_name IS 'fk to available_user : login';
 
 
 
-COMMENT ON COLUMN profile_user.p_id IS 'fk to profile';
+COMMENT ON COLUMN public.profile_user.p_id IS 'fk to profile';
 
 
 
-CREATE SEQUENCE profile_user_pu_id_seq
+CREATE SEQUENCE public.profile_user_pu_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4308,25 +5282,26 @@ CREATE SEQUENCE profile_user_pu_id_seq
 
 
 
-ALTER SEQUENCE profile_user_pu_id_seq OWNED BY profile_user.pu_id;
+ALTER SEQUENCE public.profile_user_pu_id_seq OWNED BY public.profile_user.pu_id;
 
 
 
-CREATE TABLE quant_fin (
+CREATE TABLE public.quant_fin (
     qf_id bigint NOT NULL,
     qf_bank bigint,
     jr_id bigint,
     qf_other bigint,
-    qf_amount numeric(20,4) DEFAULT 0
+    qf_amount numeric(20,4) DEFAULT 0,
+    j_id bigint
 );
 
 
 
-COMMENT ON TABLE quant_fin IS 'Simple operation for financial';
+COMMENT ON TABLE public.quant_fin IS 'Simple operation for financial';
 
 
 
-CREATE SEQUENCE quant_fin_qf_id_seq
+CREATE SEQUENCE public.quant_fin_qf_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4335,11 +5310,11 @@ CREATE SEQUENCE quant_fin_qf_id_seq
 
 
 
-ALTER SEQUENCE quant_fin_qf_id_seq OWNED BY quant_fin.qf_id;
+ALTER SEQUENCE public.quant_fin_qf_id_seq OWNED BY public.quant_fin.qf_id;
 
 
 
-CREATE TABLE quant_purchase (
+CREATE TABLE public.quant_purchase (
     qp_id integer DEFAULT nextval(('s_quantity'::text)::regclass) NOT NULL,
     qp_internal text,
     j_id integer NOT NULL,
@@ -4360,12 +5335,15 @@ CREATE TABLE quant_purchase (
 
 
 
-COMMENT ON COLUMN quant_purchase.qp_vat_sided IS 'amount of the VAT which avoid VAT, case of the VAT which add the same amount at the deb and cred';
+COMMENT ON TABLE public.quant_purchase IS 'Supplemental info for purchase';
 
 
 
+COMMENT ON COLUMN public.quant_purchase.qp_vat_sided IS 'amount of the VAT which avoid VAT, case of the VAT which add the same amount at the deb and cred';
 
-CREATE TABLE quant_sold (
+
+
+CREATE TABLE public.quant_sold (
     qs_id integer DEFAULT nextval(('s_quantity'::text)::regclass) NOT NULL,
     qs_internal text,
     qs_fiche integer NOT NULL,
@@ -4382,11 +5360,11 @@ CREATE TABLE quant_sold (
 
 
 
-COMMENT ON TABLE quant_sold IS 'Contains about invoice for customer';
+COMMENT ON TABLE public.quant_sold IS 'Contains about invoice for customer';
 
 
 
-CREATE SEQUENCE s_attr_def
+CREATE SEQUENCE public.s_attr_def
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4395,7 +5373,7 @@ CREATE SEQUENCE s_attr_def
 
 
 
-CREATE SEQUENCE s_cbc
+CREATE SEQUENCE public.s_cbc
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4404,7 +5382,7 @@ CREATE SEQUENCE s_cbc
 
 
 
-CREATE SEQUENCE s_central
+CREATE SEQUENCE public.s_central
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4413,7 +5391,7 @@ CREATE SEQUENCE s_central
 
 
 
-CREATE SEQUENCE s_central_order
+CREATE SEQUENCE public.s_central_order
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4422,7 +5400,7 @@ CREATE SEQUENCE s_central_order
 
 
 
-CREATE SEQUENCE s_centralized
+CREATE SEQUENCE public.s_centralized
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4431,7 +5409,7 @@ CREATE SEQUENCE s_centralized
 
 
 
-CREATE SEQUENCE s_currency
+CREATE SEQUENCE public.s_currency
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4440,7 +5418,7 @@ CREATE SEQUENCE s_currency
 
 
 
-CREATE SEQUENCE s_fdef
+CREATE SEQUENCE public.s_fdef
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4449,7 +5427,7 @@ CREATE SEQUENCE s_fdef
 
 
 
-CREATE SEQUENCE s_fiche
+CREATE SEQUENCE public.s_fiche
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4458,7 +5436,7 @@ CREATE SEQUENCE s_fiche
 
 
 
-CREATE SEQUENCE s_fiche_def_ref
+CREATE SEQUENCE public.s_fiche_def_ref
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4467,7 +5445,7 @@ CREATE SEQUENCE s_fiche_def_ref
 
 
 
-CREATE SEQUENCE s_form
+CREATE SEQUENCE public.s_form
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4476,7 +5454,7 @@ CREATE SEQUENCE s_form
 
 
 
-CREATE SEQUENCE s_formdef
+CREATE SEQUENCE public.s_formdef
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4485,7 +5463,7 @@ CREATE SEQUENCE s_formdef
 
 
 
-CREATE SEQUENCE s_grpt
+CREATE SEQUENCE public.s_grpt
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4494,7 +5472,7 @@ CREATE SEQUENCE s_grpt
 
 
 
-CREATE SEQUENCE s_idef
+CREATE SEQUENCE public.s_idef
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4503,7 +5481,7 @@ CREATE SEQUENCE s_idef
 
 
 
-CREATE SEQUENCE s_internal
+CREATE SEQUENCE public.s_internal
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4512,7 +5490,7 @@ CREATE SEQUENCE s_internal
 
 
 
-CREATE SEQUENCE s_invoice
+CREATE SEQUENCE public.s_invoice
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4521,7 +5499,7 @@ CREATE SEQUENCE s_invoice
 
 
 
-CREATE SEQUENCE s_isup
+CREATE SEQUENCE public.s_isup
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4530,7 +5508,7 @@ CREATE SEQUENCE s_isup
 
 
 
-CREATE SEQUENCE s_jnt_fic_att_value
+CREATE SEQUENCE public.s_jnt_fic_att_value
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4539,7 +5517,7 @@ CREATE SEQUENCE s_jnt_fic_att_value
 
 
 
-CREATE SEQUENCE s_jrn
+CREATE SEQUENCE public.s_jrn
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4548,7 +5526,7 @@ CREATE SEQUENCE s_jrn
 
 
 
-CREATE SEQUENCE s_jrn_1
+CREATE SEQUENCE public.s_jrn_1
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4557,7 +5535,7 @@ CREATE SEQUENCE s_jrn_1
 
 
 
-CREATE SEQUENCE s_jrn_2
+CREATE SEQUENCE public.s_jrn_2
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4566,7 +5544,7 @@ CREATE SEQUENCE s_jrn_2
 
 
 
-CREATE SEQUENCE s_jrn_3
+CREATE SEQUENCE public.s_jrn_3
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4575,7 +5553,7 @@ CREATE SEQUENCE s_jrn_3
 
 
 
-CREATE SEQUENCE s_jrn_4
+CREATE SEQUENCE public.s_jrn_4
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4584,7 +5562,7 @@ CREATE SEQUENCE s_jrn_4
 
 
 
-CREATE SEQUENCE s_jrn_def
+CREATE SEQUENCE public.s_jrn_def
     START WITH 5
     INCREMENT BY 1
     NO MINVALUE
@@ -4593,7 +5571,7 @@ CREATE SEQUENCE s_jrn_def
 
 
 
-CREATE SEQUENCE s_jrn_op
+CREATE SEQUENCE public.s_jrn_op
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4602,7 +5580,7 @@ CREATE SEQUENCE s_jrn_op
 
 
 
-CREATE SEQUENCE s_jrn_pj1
+CREATE SEQUENCE public.s_jrn_pj1
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4611,7 +5589,7 @@ CREATE SEQUENCE s_jrn_pj1
 
 
 
-CREATE SEQUENCE s_jrn_pj2
+CREATE SEQUENCE public.s_jrn_pj2
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4620,7 +5598,7 @@ CREATE SEQUENCE s_jrn_pj2
 
 
 
-CREATE SEQUENCE s_jrn_pj3
+CREATE SEQUENCE public.s_jrn_pj3
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4629,7 +5607,7 @@ CREATE SEQUENCE s_jrn_pj3
 
 
 
-CREATE SEQUENCE s_jrn_pj4
+CREATE SEQUENCE public.s_jrn_pj4
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4638,7 +5616,7 @@ CREATE SEQUENCE s_jrn_pj4
 
 
 
-CREATE SEQUENCE s_jrn_rapt
+CREATE SEQUENCE public.s_jrn_rapt
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4647,7 +5625,7 @@ CREATE SEQUENCE s_jrn_rapt
 
 
 
-CREATE SEQUENCE s_jrnaction
+CREATE SEQUENCE public.s_jrnaction
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4656,7 +5634,7 @@ CREATE SEQUENCE s_jrnaction
 
 
 
-CREATE SEQUENCE s_jrnx
+CREATE SEQUENCE public.s_jrnx
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4665,7 +5643,7 @@ CREATE SEQUENCE s_jrnx
 
 
 
-CREATE SEQUENCE s_periode
+CREATE SEQUENCE public.s_periode
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4674,7 +5652,7 @@ CREATE SEQUENCE s_periode
 
 
 
-CREATE SEQUENCE s_quantity
+CREATE SEQUENCE public.s_quantity
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4683,7 +5661,7 @@ CREATE SEQUENCE s_quantity
 
 
 
-CREATE SEQUENCE s_stock_goods
+CREATE SEQUENCE public.s_stock_goods
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4692,7 +5670,7 @@ CREATE SEQUENCE s_stock_goods
 
 
 
-CREATE SEQUENCE s_tva
+CREATE SEQUENCE public.s_tva
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4701,7 +5679,7 @@ CREATE SEQUENCE s_tva
 
 
 
-CREATE SEQUENCE s_user_act
+CREATE SEQUENCE public.s_user_act
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4710,7 +5688,7 @@ CREATE SEQUENCE s_user_act
 
 
 
-CREATE SEQUENCE s_user_jrn
+CREATE SEQUENCE public.s_user_jrn
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4719,7 +5697,7 @@ CREATE SEQUENCE s_user_jrn
 
 
 
-CREATE SEQUENCE seq_bud_hypothese_bh_id
+CREATE SEQUENCE public.seq_bud_hypothese_bh_id
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4728,7 +5706,7 @@ CREATE SEQUENCE seq_bud_hypothese_bh_id
 
 
 
-CREATE SEQUENCE seq_doc_type_1
+CREATE SEQUENCE public.seq_doc_type_1
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4737,7 +5715,7 @@ CREATE SEQUENCE seq_doc_type_1
 
 
 
-CREATE SEQUENCE seq_doc_type_10
+CREATE SEQUENCE public.seq_doc_type_10
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4746,7 +5724,7 @@ CREATE SEQUENCE seq_doc_type_10
 
 
 
-CREATE SEQUENCE seq_doc_type_2
+CREATE SEQUENCE public.seq_doc_type_2
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4755,7 +5733,7 @@ CREATE SEQUENCE seq_doc_type_2
 
 
 
-CREATE SEQUENCE seq_doc_type_20
+CREATE SEQUENCE public.seq_doc_type_20
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4764,7 +5742,7 @@ CREATE SEQUENCE seq_doc_type_20
 
 
 
-CREATE SEQUENCE seq_doc_type_21
+CREATE SEQUENCE public.seq_doc_type_21
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4773,7 +5751,7 @@ CREATE SEQUENCE seq_doc_type_21
 
 
 
-CREATE SEQUENCE seq_doc_type_22
+CREATE SEQUENCE public.seq_doc_type_22
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4782,7 +5760,7 @@ CREATE SEQUENCE seq_doc_type_22
 
 
 
-CREATE SEQUENCE seq_doc_type_3
+CREATE SEQUENCE public.seq_doc_type_3
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4791,7 +5769,7 @@ CREATE SEQUENCE seq_doc_type_3
 
 
 
-CREATE SEQUENCE seq_doc_type_4
+CREATE SEQUENCE public.seq_doc_type_4
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4800,7 +5778,7 @@ CREATE SEQUENCE seq_doc_type_4
 
 
 
-CREATE SEQUENCE seq_doc_type_5
+CREATE SEQUENCE public.seq_doc_type_5
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4809,7 +5787,7 @@ CREATE SEQUENCE seq_doc_type_5
 
 
 
-CREATE SEQUENCE seq_doc_type_6
+CREATE SEQUENCE public.seq_doc_type_6
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4818,7 +5796,7 @@ CREATE SEQUENCE seq_doc_type_6
 
 
 
-CREATE SEQUENCE seq_doc_type_7
+CREATE SEQUENCE public.seq_doc_type_7
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4827,7 +5805,7 @@ CREATE SEQUENCE seq_doc_type_7
 
 
 
-CREATE SEQUENCE seq_doc_type_8
+CREATE SEQUENCE public.seq_doc_type_8
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4836,7 +5814,7 @@ CREATE SEQUENCE seq_doc_type_8
 
 
 
-CREATE SEQUENCE seq_doc_type_9
+CREATE SEQUENCE public.seq_doc_type_9
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4845,8 +5823,7 @@ CREATE SEQUENCE seq_doc_type_9
 
 
 
-
-CREATE TABLE stock_change (
+CREATE TABLE public.stock_change (
     c_id bigint NOT NULL,
     c_comment text,
     c_date date,
@@ -4857,7 +5834,11 @@ CREATE TABLE stock_change (
 
 
 
-CREATE SEQUENCE stock_change_c_id_seq
+COMMENT ON TABLE public.stock_change IS 'Change of stock';
+
+
+
+CREATE SEQUENCE public.stock_change_c_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4866,12 +5847,11 @@ CREATE SEQUENCE stock_change_c_id_seq
 
 
 
-ALTER SEQUENCE stock_change_c_id_seq OWNED BY stock_change.c_id;
+ALTER SEQUENCE public.stock_change_c_id_seq OWNED BY public.stock_change.c_id;
 
 
 
-
-CREATE TABLE stock_goods (
+CREATE TABLE public.stock_goods (
     sg_id integer DEFAULT nextval(('s_stock_goods'::text)::regclass) NOT NULL,
     j_id integer,
     f_id integer,
@@ -4890,12 +5870,11 @@ CREATE TABLE stock_goods (
 
 
 
-COMMENT ON TABLE stock_goods IS 'About the goods';
+COMMENT ON TABLE public.stock_goods IS 'About the goods';
 
 
 
-
-CREATE TABLE stock_repository (
+CREATE TABLE public.stock_repository (
     r_id bigint NOT NULL,
     r_name text,
     r_adress text,
@@ -4906,35 +5885,35 @@ CREATE TABLE stock_repository (
 
 
 
-COMMENT ON TABLE stock_repository IS 'stock repository';
+COMMENT ON TABLE public.stock_repository IS 'stock repository';
 
 
 
-COMMENT ON COLUMN stock_repository.r_id IS 'pk';
+COMMENT ON COLUMN public.stock_repository.r_id IS 'pk';
 
 
 
-COMMENT ON COLUMN stock_repository.r_name IS 'name of the stock';
+COMMENT ON COLUMN public.stock_repository.r_name IS 'name of the stock';
 
 
 
-COMMENT ON COLUMN stock_repository.r_adress IS 'adress of the stock';
+COMMENT ON COLUMN public.stock_repository.r_adress IS 'adress of the stock';
 
 
 
-COMMENT ON COLUMN stock_repository.r_country IS 'country of the stock';
+COMMENT ON COLUMN public.stock_repository.r_country IS 'country of the stock';
 
 
 
-COMMENT ON COLUMN stock_repository.r_city IS 'City of the stock';
+COMMENT ON COLUMN public.stock_repository.r_city IS 'City of the stock';
 
 
 
-COMMENT ON COLUMN stock_repository.r_phone IS 'Phone number';
+COMMENT ON COLUMN public.stock_repository.r_phone IS 'Phone number';
 
 
 
-CREATE SEQUENCE stock_repository_r_id_seq
+CREATE SEQUENCE public.stock_repository_r_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4943,25 +5922,58 @@ CREATE SEQUENCE stock_repository_r_id_seq
 
 
 
-ALTER SEQUENCE stock_repository_r_id_seq OWNED BY stock_repository.r_id;
+ALTER SEQUENCE public.stock_repository_r_id_seq OWNED BY public.stock_repository.r_id;
 
 
 
-CREATE TABLE tags (
+CREATE TABLE public.tag_group (
+    tg_id bigint NOT NULL,
+    tg_name character varying NOT NULL
+);
+
+
+
+COMMENT ON TABLE public.tag_group IS 'Group of tags';
+
+
+
+COMMENT ON COLUMN public.tag_group.tg_name IS 'Nom du groupe';
+
+
+
+CREATE SEQUENCE public.tag_group_tg_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+ALTER SEQUENCE public.tag_group_tg_id_seq OWNED BY public.tag_group.tg_id;
+
+
+
+CREATE TABLE public.tags (
     t_id integer NOT NULL,
     t_tag text NOT NULL,
     t_description text,
     t_actif character(1) DEFAULT 'Y'::bpchar,
+    t_color integer DEFAULT 1,
     CONSTRAINT tags_check CHECK ((t_actif = ANY (ARRAY['N'::bpchar, 'Y'::bpchar])))
 );
 
 
 
-COMMENT ON COLUMN tags.t_actif IS 'Y if the tag is activate and can be used ';
+COMMENT ON TABLE public.tags IS 'Tags name';
 
 
 
-CREATE SEQUENCE tags_t_id_seq
+COMMENT ON COLUMN public.tags.t_actif IS 'Y if the tag is activate and can be used ';
+
+
+
+CREATE SEQUENCE public.tags_t_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4970,11 +5982,11 @@ CREATE SEQUENCE tags_t_id_seq
 
 
 
-ALTER SEQUENCE tags_t_id_seq OWNED BY tags.t_id;
+ALTER SEQUENCE public.tags_t_id_seq OWNED BY public.tags.t_id;
 
 
 
-CREATE SEQUENCE tmp_pcmn_id_seq
+CREATE SEQUENCE public.tmp_pcmn_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4983,40 +5995,38 @@ CREATE SEQUENCE tmp_pcmn_id_seq
 
 
 
-
-CREATE TABLE tmp_pcmn (
-    pcm_val account_type NOT NULL,
+CREATE TABLE public.tmp_pcmn (
+    pcm_val public.account_type NOT NULL,
     pcm_lib text,
-    pcm_val_parent account_type DEFAULT 0,
+    pcm_val_parent public.account_type DEFAULT 0,
     pcm_type text,
-    id bigint DEFAULT nextval('tmp_pcmn_id_seq'::regclass) NOT NULL,
+    id bigint DEFAULT nextval('public.tmp_pcmn_id_seq'::regclass) NOT NULL,
     pcm_direct_use character varying(1) DEFAULT 'Y'::character varying NOT NULL,
-    CONSTRAINT pcm_direct_use_ck CHECK (((pcm_direct_use)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT pcm_direct_use_ck CHECK (((pcm_direct_use)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
 
-COMMENT ON TABLE tmp_pcmn IS 'Plan comptable minimum normalisé';
+COMMENT ON TABLE public.tmp_pcmn IS 'Plan comptable minimum normalisé';
 
 
 
-COMMENT ON COLUMN tmp_pcmn.id IS 'allow to identify the row, it is unique and not null (pseudo pk)';
+COMMENT ON COLUMN public.tmp_pcmn.id IS 'allow to identify the row, it is unique and not null (pseudo pk)';
 
 
 
-COMMENT ON COLUMN tmp_pcmn.pcm_direct_use IS 'Value are N or Y , N cannot be used directly , not even through a card';
+COMMENT ON COLUMN public.tmp_pcmn.pcm_direct_use IS 'Value are N or Y , N cannot be used directly , not even through a card';
 
 
 
-
-CREATE TABLE tmp_stockgood (
+CREATE TABLE public.tmp_stockgood (
     s_id bigint NOT NULL,
     s_date timestamp without time zone DEFAULT now()
 );
 
 
 
-CREATE TABLE tmp_stockgood_detail (
+CREATE TABLE public.tmp_stockgood_detail (
     d_id bigint NOT NULL,
     s_id bigint,
     sg_code text,
@@ -5028,7 +6038,7 @@ CREATE TABLE tmp_stockgood_detail (
 
 
 
-CREATE SEQUENCE tmp_stockgood_detail_d_id_seq
+CREATE SEQUENCE public.tmp_stockgood_detail_d_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5037,11 +6047,11 @@ CREATE SEQUENCE tmp_stockgood_detail_d_id_seq
 
 
 
-ALTER SEQUENCE tmp_stockgood_detail_d_id_seq OWNED BY tmp_stockgood_detail.d_id;
+ALTER SEQUENCE public.tmp_stockgood_detail_d_id_seq OWNED BY public.tmp_stockgood_detail.d_id;
 
 
 
-CREATE SEQUENCE tmp_stockgood_s_id_seq
+CREATE SEQUENCE public.tmp_stockgood_s_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5050,11 +6060,11 @@ CREATE SEQUENCE tmp_stockgood_s_id_seq
 
 
 
-ALTER SEQUENCE tmp_stockgood_s_id_seq OWNED BY tmp_stockgood.s_id;
+ALTER SEQUENCE public.tmp_stockgood_s_id_seq OWNED BY public.tmp_stockgood.s_id;
 
 
 
-CREATE SEQUENCE todo_list_tl_id_seq
+CREATE SEQUENCE public.todo_list_tl_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5063,8 +6073,8 @@ CREATE SEQUENCE todo_list_tl_id_seq
 
 
 
-CREATE TABLE todo_list (
-    tl_id integer DEFAULT nextval('todo_list_tl_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.todo_list (
+    tl_id integer DEFAULT nextval('public.todo_list_tl_id_seq'::regclass) NOT NULL,
     tl_date date NOT NULL,
     tl_title text NOT NULL,
     tl_desc text,
@@ -5075,15 +6085,15 @@ CREATE TABLE todo_list (
 
 
 
-COMMENT ON TABLE todo_list IS 'Todo list';
+COMMENT ON TABLE public.todo_list IS 'Todo list';
 
 
 
-COMMENT ON COLUMN todo_list.is_public IS 'Flag for the public parameter';
+COMMENT ON COLUMN public.todo_list.is_public IS 'Flag for the public parameter';
 
 
 
-CREATE TABLE todo_list_shared (
+CREATE TABLE public.todo_list_shared (
     id integer NOT NULL,
     todo_list_id integer NOT NULL,
     use_login text NOT NULL
@@ -5091,19 +6101,19 @@ CREATE TABLE todo_list_shared (
 
 
 
-COMMENT ON TABLE todo_list_shared IS 'Note of todo list shared with other users';
+COMMENT ON TABLE public.todo_list_shared IS 'Note of todo list shared with other users';
 
 
 
-COMMENT ON COLUMN todo_list_shared.todo_list_id IS 'fk to todo_list';
+COMMENT ON COLUMN public.todo_list_shared.todo_list_id IS 'fk to todo_list';
 
 
 
-COMMENT ON COLUMN todo_list_shared.use_login IS 'user login';
+COMMENT ON COLUMN public.todo_list_shared.use_login IS 'user login';
 
 
 
-CREATE SEQUENCE todo_list_shared_id_seq
+CREATE SEQUENCE public.todo_list_shared_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5112,11 +6122,11 @@ CREATE SEQUENCE todo_list_shared_id_seq
 
 
 
-ALTER SEQUENCE todo_list_shared_id_seq OWNED BY todo_list_shared.id;
+ALTER SEQUENCE public.todo_list_shared_id_seq OWNED BY public.todo_list_shared.id;
 
 
 
-CREATE SEQUENCE uos_pk_seq
+CREATE SEQUENCE public.uos_pk_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5125,53 +6135,89 @@ CREATE SEQUENCE uos_pk_seq
 
 
 
-CREATE TABLE tool_uos (
-    uos_value bigint DEFAULT nextval('uos_pk_seq'::regclass) NOT NULL
+CREATE TABLE public.tool_uos (
+    uos_value bigint DEFAULT nextval('public.uos_pk_seq'::regclass) NOT NULL
 );
 
 
 
-
-CREATE TABLE tva_rate (
-    tva_id integer DEFAULT nextval('s_tva'::regclass) NOT NULL,
+CREATE TABLE public.tva_rate (
+    tva_id integer DEFAULT nextval('public.s_tva'::regclass) NOT NULL,
     tva_label text NOT NULL,
     tva_rate numeric(8,4) DEFAULT 0.0 NOT NULL,
     tva_comment text,
     tva_poste text,
-    tva_both_side integer DEFAULT 0
+    tva_both_side integer DEFAULT 0,
+    tva_payment_sale character(1) DEFAULT 'O'::bpchar,
+    tva_payment_purchase character(1) DEFAULT 'O'::bpchar,
+    tva_code text NOT NULL,
+    CONSTRAINT tva_code_number_check CHECK ((tva_code !~ '^([0-9]+)$'::text)),
+    CONSTRAINT tva_rate_purchase_check CHECK ((tva_payment_purchase = ANY (ARRAY['O'::bpchar, 'P'::bpchar]))),
+    CONSTRAINT tva_rate_sale_check CHECK ((tva_payment_sale = ANY (ARRAY['O'::bpchar, 'P'::bpchar])))
 );
 
 
 
-COMMENT ON TABLE tva_rate IS 'Rate of vat';
+COMMENT ON TABLE public.tva_rate IS 'Rate of vat';
 
 
 
+COMMENT ON COLUMN public.tva_rate.tva_label IS 'Label';
 
-CREATE TABLE user_active_security (
+
+
+COMMENT ON COLUMN public.tva_rate.tva_rate IS 'Rate';
+
+
+
+COMMENT ON COLUMN public.tva_rate.tva_comment IS 'Description of VAT';
+
+
+
+COMMENT ON COLUMN public.tva_rate.tva_poste IS 'accounting';
+
+
+
+COMMENT ON COLUMN public.tva_rate.tva_both_side IS 'If set to 1 , the amount VAT will be reversed (autoliquidation)';
+
+
+
+COMMENT ON COLUMN public.tva_rate.tva_payment_sale IS 'Check if the VAT on Sale  must be declared when at the date of payment (P) or the date of operation (O)';
+
+
+
+COMMENT ON COLUMN public.tva_rate.tva_payment_purchase IS 'Check if the VAT on Purchase must be declared when at the date of payment (P) or the date of operation (O)';
+
+
+
+CREATE TABLE public.user_active_security (
     id integer NOT NULL,
     us_login text NOT NULL,
     us_ledger character varying(1) NOT NULL,
     us_action character varying(1) NOT NULL,
-    CONSTRAINT user_active_security_action_check CHECK (((us_action)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))),
-    CONSTRAINT user_active_security_ledger_check CHECK (((us_ledger)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT user_active_security_action_check CHECK (((us_action)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text]))),
+    CONSTRAINT user_active_security_ledger_check CHECK (((us_ledger)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
 
-COMMENT ON COLUMN user_active_security.us_login IS 'user''s login';
+COMMENT ON TABLE public.user_active_security IS 'Security for user';
 
 
 
-COMMENT ON COLUMN user_active_security.us_ledger IS 'Flag Security for ledger';
+COMMENT ON COLUMN public.user_active_security.us_login IS 'user''s login';
 
 
 
-COMMENT ON COLUMN user_active_security.us_action IS 'Security for action';
+COMMENT ON COLUMN public.user_active_security.us_ledger IS 'Flag Security for ledger';
 
 
 
-CREATE SEQUENCE user_active_security_id_seq
+COMMENT ON COLUMN public.user_active_security.us_action IS 'Security for action';
+
+
+
+CREATE SEQUENCE public.user_active_security_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5180,11 +6226,11 @@ CREATE SEQUENCE user_active_security_id_seq
 
 
 
-ALTER SEQUENCE user_active_security_id_seq OWNED BY user_active_security.id;
+ALTER SEQUENCE public.user_active_security_id_seq OWNED BY public.user_active_security.id;
 
 
 
-CREATE TABLE user_filter (
+CREATE TABLE public.user_filter (
     id bigint NOT NULL,
     login text,
     nb_jrn integer,
@@ -5201,12 +6247,40 @@ CREATE TABLE user_filter (
     ledger_type character varying(5),
     all_ledger integer,
     filter_name text NOT NULL,
-    unpaid character varying
+    operation_filter text NOT NULL,
+    uf_tag text,
+    uf_tag_option integer,
+    uf_currency_code integer,
+    tva_id_search integer
 );
 
 
 
-CREATE SEQUENCE user_filter_id_seq
+COMMENT ON TABLE public.user_filter IS 'Filter for the search';
+
+
+
+COMMENT ON COLUMN public.user_filter.operation_filter IS 'Status of the operation  : paid, unpaid or all operation';
+
+
+
+COMMENT ON COLUMN public.user_filter.uf_tag IS 'Tag list';
+
+
+
+COMMENT ON COLUMN public.user_filter.uf_tag_option IS '0 : all tags must be present, 1: at least one';
+
+
+
+COMMENT ON COLUMN public.user_filter.uf_currency_code IS 'correspond to currency.id';
+
+
+
+COMMENT ON COLUMN public.user_filter.tva_id_search IS 'VAT id ';
+
+
+
+CREATE SEQUENCE public.user_filter_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5215,12 +6289,11 @@ CREATE SEQUENCE user_filter_id_seq
 
 
 
-ALTER SEQUENCE user_filter_id_seq OWNED BY user_filter.id;
+ALTER SEQUENCE public.user_filter_id_seq OWNED BY public.user_filter.id;
 
 
 
-
-CREATE TABLE user_local_pref (
+CREATE TABLE public.user_local_pref (
     user_id text NOT NULL,
     parameter_type text NOT NULL,
     parameter_value text
@@ -5228,23 +6301,23 @@ CREATE TABLE user_local_pref (
 
 
 
-COMMENT ON TABLE user_local_pref IS 'The user''s local parameter ';
+COMMENT ON TABLE public.user_local_pref IS 'The user''s local parameter ';
 
 
 
-COMMENT ON COLUMN user_local_pref.user_id IS 'user''s login ';
+COMMENT ON COLUMN public.user_local_pref.user_id IS 'user''s login ';
 
 
 
-COMMENT ON COLUMN user_local_pref.parameter_type IS 'the type of parameter ';
+COMMENT ON COLUMN public.user_local_pref.parameter_type IS 'the type of parameter ';
 
 
 
-COMMENT ON COLUMN user_local_pref.parameter_value IS 'the value of parameter ';
+COMMENT ON COLUMN public.user_local_pref.parameter_value IS 'the value of parameter ';
 
 
 
-CREATE TABLE user_sec_act (
+CREATE TABLE public.user_sec_act (
     ua_id integer DEFAULT nextval(('s_user_act'::text)::regclass) NOT NULL,
     ua_login text,
     ua_act_id integer
@@ -5252,34 +6325,37 @@ CREATE TABLE user_sec_act (
 
 
 
+COMMENT ON TABLE public.user_sec_act IS 'Security on actions for user';
 
-CREATE TABLE user_sec_action_profile (
+
+
+CREATE TABLE public.user_sec_action_profile (
     ua_id bigint NOT NULL,
     p_id bigint,
     p_granted bigint,
     ua_right character(1),
-    CONSTRAINT user_sec_action_profile_ua_right_check CHECK ((ua_right = ANY (ARRAY['R'::bpchar, 'W'::bpchar])))
+    CONSTRAINT user_sec_action_profile_ua_right_check CHECK ((ua_right = ANY (ARRAY['R'::bpchar, 'W'::bpchar, 'X'::bpchar, 'O'::bpchar])))
 );
 
 
 
-COMMENT ON TABLE user_sec_action_profile IS 'Available profile for user';
+COMMENT ON TABLE public.user_sec_action_profile IS 'Available profile for user';
 
 
 
-COMMENT ON COLUMN user_sec_action_profile.ua_id IS 'pk';
+COMMENT ON COLUMN public.user_sec_action_profile.ua_id IS 'pk';
 
 
 
-COMMENT ON COLUMN user_sec_action_profile.p_id IS 'fk to profile';
+COMMENT ON COLUMN public.user_sec_action_profile.p_id IS 'fk to profile';
 
 
 
-COMMENT ON COLUMN user_sec_action_profile.ua_right IS 'Type of right : R for readonly W for write';
+COMMENT ON COLUMN public.user_sec_action_profile.ua_right IS 'Type of right : R for readonly W for write';
 
 
 
-CREATE SEQUENCE user_sec_action_profile_ua_id_seq
+CREATE SEQUENCE public.user_sec_action_profile_ua_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5288,12 +6364,11 @@ CREATE SEQUENCE user_sec_action_profile_ua_id_seq
 
 
 
-ALTER SEQUENCE user_sec_action_profile_ua_id_seq OWNED BY user_sec_action_profile.ua_id;
+ALTER SEQUENCE public.user_sec_action_profile_ua_id_seq OWNED BY public.user_sec_action_profile.ua_id;
 
 
 
-
-CREATE TABLE user_sec_jrn (
+CREATE TABLE public.user_sec_jrn (
     uj_id integer DEFAULT nextval(('s_user_jrn'::text)::regclass) NOT NULL,
     uj_login text,
     uj_jrn_id integer,
@@ -5302,86 +6377,622 @@ CREATE TABLE user_sec_jrn (
 
 
 
-CREATE VIEW v_all_menu AS
-    SELECT pm.me_code, pm.pm_id, pm.me_code_dep, pm.p_order, pm.p_type_display, p.p_name, p.p_desc, mr.me_menu, mr.me_file, mr.me_url, mr.me_parameter, mr.me_javascript, mr.me_type, pm.p_id, mr.me_description FROM ((profile_menu pm JOIN profile p ON ((p.p_id = pm.p_id))) JOIN menu_ref mr USING (me_code)) ORDER BY pm.p_order;
+COMMENT ON TABLE public.user_sec_jrn IS 'Security on ledger for users';
 
 
 
-CREATE VIEW vw_fiche_attr AS
-    SELECT a.f_id, a.fd_id, a.ad_value AS vw_name, k.ad_value AS vw_first_name, b.ad_value AS vw_sell, c.ad_value AS vw_buy, d.ad_value AS tva_code, tva_rate.tva_id, tva_rate.tva_rate, tva_rate.tva_label, e.ad_value AS vw_addr, f.ad_value AS vw_cp, j.ad_value AS quick_code, h.ad_value AS vw_description, i.ad_value AS tva_num, fiche_def.frd_id, l.ad_value AS accounting FROM (((((((((((((SELECT fiche.f_id, fiche.fd_id, fiche_detail.ad_value FROM (fiche LEFT JOIN fiche_detail USING (f_id)) WHERE (fiche_detail.ad_id = 1)) a LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 6)) b ON ((a.f_id = b.f_id))) LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 7)) c ON ((a.f_id = c.f_id))) LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 2)) d ON ((a.f_id = d.f_id))) LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 14)) e ON ((a.f_id = e.f_id))) LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 15)) f ON ((a.f_id = f.f_id))) LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 23)) j ON ((a.f_id = j.f_id))) LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 9)) h ON ((a.f_id = h.f_id))) LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 13)) i ON ((a.f_id = i.f_id))) LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 32)) k ON ((a.f_id = k.f_id))) LEFT JOIN tva_rate ON ((d.ad_value = (tva_rate.tva_id)::text))) JOIN fiche_def USING (fd_id)) LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 5)) l ON ((a.f_id = l.f_id)));
+CREATE VIEW public.v_all_account_currency AS
+ SELECT sum(oc.oc_amount) AS sum_oc_amount,
+    sum(oc.oc_vat_amount) AS sum_oc_vat_amount,
+    x.j_poste,
+    x.j_id
+   FROM ((public.quant_fin q1
+     JOIN ( SELECT j1.j_id,
+            j.jr_id,
+            j1.f_id,
+            j1.j_poste
+           FROM (public.jrnx j1
+             JOIN public.jrn j ON ((j1.j_grpt = j.jr_grpt_id)))) x ON ((q1.jr_id = x.jr_id)))
+     JOIN public.operation_currency oc ON ((oc.j_id = q1.j_id)))
+  GROUP BY x.j_poste, x.j_id
+UNION ALL
+ SELECT sum(oc.oc_amount) AS sum_oc_amount,
+    sum(oc.oc_vat_amount) AS sum_oc_vat_amount,
+    x.j_poste,
+    x.j_id
+   FROM ((public.quant_purchase q1
+     JOIN ( SELECT j1.j_id,
+            j.jr_id,
+            j1.f_id,
+            j1.j_poste,
+            j.jr_internal
+           FROM (public.jrnx j1
+             JOIN public.jrn j ON ((j1.j_grpt = j.jr_grpt_id)))) x ON (((q1.qp_internal = x.jr_internal) AND ((x.f_id = q1.qp_fiche) OR (x.f_id = q1.qp_supplier)))))
+     JOIN public.operation_currency oc ON ((oc.j_id = q1.j_id)))
+  GROUP BY x.j_poste, x.j_id
+UNION ALL
+ SELECT sum(oc.oc_amount) AS sum_oc_amount,
+    sum(oc.oc_vat_amount) AS sum_oc_vat_amount,
+    x.j_poste,
+    x.j_id
+   FROM ((public.quant_sold q1
+     JOIN ( SELECT j1.j_id,
+            j.jr_id,
+            j1.f_id,
+            j1.j_poste,
+            j.jr_internal
+           FROM (public.jrnx j1
+             JOIN public.jrn j ON ((j1.j_grpt = j.jr_grpt_id)))) x ON (((q1.qs_internal = x.jr_internal) AND ((x.f_id = q1.qs_fiche) OR (x.f_id = q1.qs_client)))))
+     JOIN public.operation_currency oc ON ((oc.j_id = q1.j_id)))
+  GROUP BY x.j_poste, x.j_id;
 
 
 
-CREATE VIEW vw_fiche_name AS
-    SELECT fiche_detail.f_id, fiche_detail.ad_value AS name FROM fiche_detail WHERE (fiche_detail.ad_id = 1);
+CREATE VIEW public.v_all_card_currency AS
+ SELECT sum(operation_currency.oc_amount) AS sum_oc_amount,
+    sum(operation_currency.oc_vat_amount) AS sum_oc_vat_amount,
+    jrnx.f_id,
+    operation_currency.j_id
+   FROM (public.operation_currency
+     JOIN public.jrnx USING (j_id))
+  GROUP BY jrnx.f_id, operation_currency.j_id;
 
 
 
-CREATE VIEW v_detail_purchase AS
-    WITH m AS (SELECT sum(quant_purchase.qp_price) AS htva, sum(quant_purchase.qp_vat) AS tot_vat, sum(quant_purchase.qp_vat_sided) AS tot_tva_np, jrn.jr_id FROM ((quant_purchase JOIN jrnx USING (j_id)) JOIN jrn ON ((jrnx.j_grpt = jrn.jr_grpt_id))) GROUP BY jrn.jr_id) SELECT jrn.jr_id, jrn.jr_date, jrn.jr_date_paid, jrn.jr_ech, jrn.jr_tech_per, jrn.jr_comment, jrn.jr_pj_number, jrn.jr_internal, jrn.jr_def_id, jrnx.j_poste, jrnx.j_text, jrnx.j_qcode, quant_purchase.qp_fiche AS item_card, a.name AS item_name, quant_purchase.qp_supplier, b.vw_name AS tiers_name, b.quick_code, tva_rate.tva_label, tva_rate.tva_comment, tva_rate.tva_both_side, quant_purchase.qp_vat_sided AS vat_sided, quant_purchase.qp_vat_code AS vat_code, quant_purchase.qp_vat AS vat, quant_purchase.qp_price AS price, quant_purchase.qp_quantite AS quantity, (quant_purchase.qp_price / quant_purchase.qp_quantite) AS price_per_unit, quant_purchase.qp_nd_amount AS non_ded_amount, quant_purchase.qp_nd_tva AS non_ded_tva, quant_purchase.qp_nd_tva_recup AS non_ded_tva_recup, m.htva, m.tot_vat, m.tot_tva_np FROM ((((((jrn JOIN jrnx ON ((jrn.jr_grpt_id = jrnx.j_grpt))) JOIN quant_purchase USING (j_id)) JOIN vw_fiche_name a ON ((quant_purchase.qp_fiche = a.f_id))) JOIN vw_fiche_attr b ON ((quant_purchase.qp_supplier = b.f_id))) JOIN tva_rate ON ((quant_purchase.qp_vat_code = tva_rate.tva_id))) JOIN m ON ((m.jr_id = jrn.jr_id)));
+CREATE VIEW public.v_all_menu AS
+ SELECT pm.me_code,
+    pm.pm_id,
+    pm.me_code_dep,
+    pm.p_order,
+    pm.p_type_display,
+    p.p_name,
+    p.p_desc,
+    mr.me_menu,
+    mr.me_file,
+    mr.me_url,
+    mr.me_parameter,
+    mr.me_javascript,
+    mr.me_type,
+    pm.p_id,
+    mr.me_description
+   FROM ((public.profile_menu pm
+     JOIN public.profile p ON ((p.p_id = pm.p_id)))
+     JOIN public.menu_ref mr USING (me_code))
+  ORDER BY pm.p_order;
 
 
 
-CREATE VIEW v_detail_sale AS
-    WITH m AS (SELECT sum(quant_sold.qs_price) AS htva, sum(quant_sold.qs_vat) AS tot_vat, sum(quant_sold.qs_vat_sided) AS tot_tva_np, jrn.jr_id FROM ((quant_sold JOIN jrnx USING (j_id)) JOIN jrn ON ((jrnx.j_grpt = jrn.jr_grpt_id))) GROUP BY jrn.jr_id) SELECT jrn.jr_id, jrn.jr_date, jrn.jr_date_paid, jrn.jr_ech, jrn.jr_tech_per, jrn.jr_comment, jrn.jr_pj_number, jrn.jr_internal, jrn.jr_def_id, jrnx.j_poste, jrnx.j_text, jrnx.j_qcode, quant_sold.qs_fiche AS item_card, a.name AS item_name, quant_sold.qs_client, b.vw_name AS tiers_name, b.quick_code, tva_rate.tva_label, tva_rate.tva_comment, tva_rate.tva_both_side, quant_sold.qs_vat_sided AS vat_sided, quant_sold.qs_vat_code AS vat_code, quant_sold.qs_vat AS vat, quant_sold.qs_price AS price, quant_sold.qs_quantite AS quantity, (quant_sold.qs_price / quant_sold.qs_quantite) AS price_per_unit, m.htva, m.tot_vat, m.tot_tva_np FROM ((((((jrn JOIN jrnx ON ((jrn.jr_grpt_id = jrnx.j_grpt))) JOIN quant_sold USING (j_id)) JOIN vw_fiche_name a ON ((quant_sold.qs_fiche = a.f_id))) JOIN vw_fiche_attr b ON ((quant_sold.qs_client = b.f_id))) JOIN tva_rate ON ((quant_sold.qs_vat_code = tva_rate.tva_id))) JOIN m ON ((m.jr_id = jrn.jr_id)));
+CREATE VIEW public.v_contact AS
+ WITH contact_data AS (
+         SELECT f.f_id,
+            f.f_enable,
+            f.fd_id
+           FROM (public.fiche f
+             JOIN public.fiche_def fd ON ((f.fd_id = fd.fd_id)))
+          WHERE (fd.frd_id = 16)
+        )
+ SELECT cd.f_id,
+    cd.f_enable,
+    ( SELECT fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE ((fiche_detail.ad_id = 32) AND (fiche_detail.f_id = cd.f_id))) AS contact_fname,
+    ( SELECT fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE ((fiche_detail.ad_id = 1) AND (fiche_detail.f_id = cd.f_id))) AS contact_name,
+    ( SELECT fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE ((fiche_detail.ad_id = 23) AND (fiche_detail.f_id = cd.f_id))) AS contact_qcode,
+    ( SELECT fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE ((fiche_detail.ad_id = 25) AND (fiche_detail.f_id = cd.f_id))) AS contact_company,
+    ( SELECT fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE ((fiche_detail.ad_id = 27) AND (fiche_detail.f_id = cd.f_id))) AS contact_mobile,
+    ( SELECT fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE ((fiche_detail.ad_id = 17) AND (fiche_detail.f_id = cd.f_id))) AS contact_phone,
+    ( SELECT fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE ((fiche_detail.ad_id = 18) AND (fiche_detail.f_id = cd.f_id))) AS contact_email,
+    ( SELECT fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE ((fiche_detail.ad_id = 26) AND (fiche_detail.f_id = cd.f_id))) AS contact_fax,
+    cd.fd_id AS card_category
+   FROM contact_data cd;
 
 
 
-CREATE VIEW v_menu_dependency AS
-    WITH t_menu AS (SELECT pm.pm_id, mr.me_menu, pm.me_code, pm.me_code_dep, pm.p_type_display, mr.me_file, mr.me_javascript, mr.me_description, mr.me_description_etendue, p.p_id FROM ((profile_menu pm JOIN profile p ON ((p.p_id = pm.p_id))) JOIN menu_ref mr USING (me_code))) SELECT DISTINCT ((COALESCE((v3.me_code || '/'::text), ''::text) || COALESCE(v2.me_code, ''::text)) || CASE WHEN (v2.me_code IS NULL) THEN COALESCE(v1.me_code, ''::text) WHEN (v2.me_code IS NOT NULL) THEN COALESCE(('/'::text || v1.me_code), ''::text) ELSE NULL::text END) AS code, v1.pm_id, v1.me_code, v1.me_description, v1.me_description_etendue, v1.me_file, ('> '::text || v1.me_menu) AS v1menu, CASE WHEN (v2.pm_id IS NOT NULL) THEN v2.pm_id WHEN (v3.pm_id IS NOT NULL) THEN v3.pm_id ELSE NULL::integer END AS higher_dep, CASE WHEN (COALESCE(v3.me_menu, ''::text) <> ''::text) THEN (' > '::text || v2.me_menu) ELSE v2.me_menu END AS v2menu, v3.me_menu AS v3menu, v3.p_type_display, COALESCE(v1.me_javascript, COALESCE(v2.me_javascript, v3.me_javascript)) AS javascript, v1.p_id, v2.p_id AS v2pid, v3.p_id AS v3pid FROM ((t_menu v1 LEFT JOIN t_menu v2 ON ((v1.me_code_dep = v2.me_code))) LEFT JOIN t_menu v3 ON ((v2.me_code_dep = v3.me_code))) WHERE (((COALESCE(v2.p_id, v1.p_id) = v1.p_id) AND (COALESCE(v3.p_id, v1.p_id) = v1.p_id)) AND (v1.p_type_display <> 'P'::text)) ORDER BY v1.pm_id;
+CREATE VIEW public.v_currency_last_value AS
+ WITH recent_rate AS (
+         SELECT currency_history.currency_id,
+            max(currency_history.ch_from) AS rc_from
+           FROM public.currency_history
+          GROUP BY currency_history.currency_id
+        )
+ SELECT cr1.id AS currency_id,
+    cr1.cr_name,
+    cr1.cr_code_iso,
+    ch1.id AS currency_history_id,
+    ch1.ch_value,
+    to_char((recent_rate.rc_from)::timestamp with time zone, 'DD.MM.YYYY'::text) AS str_from
+   FROM ((public.currency cr1
+     JOIN recent_rate ON ((recent_rate.currency_id = cr1.id)))
+     JOIN public.currency_history ch1 ON (((recent_rate.currency_id = ch1.currency_id) AND (recent_rate.rc_from = ch1.ch_from))));
 
 
 
-CREATE VIEW v_menu_description AS
-    WITH t_menu AS (SELECT pm.pm_id, pm.pm_id_dep, pm.p_id, mr.me_menu, pm.me_code, pm.me_code_dep, pm.p_type_display, pu.user_name, mr.me_file, mr.me_javascript, mr.me_description, mr.me_description_etendue FROM (((profile_menu pm JOIN profile_user pu ON ((pu.p_id = pm.p_id))) JOIN profile p ON ((p.p_id = pm.p_id))) JOIN menu_ref mr USING (me_code))) SELECT DISTINCT ((COALESCE((v3.me_code || '/'::text), ''::text) || COALESCE(v2.me_code, ''::text)) || CASE WHEN (v2.me_code IS NULL) THEN COALESCE(v1.me_code, ''::text) WHEN (v2.me_code IS NOT NULL) THEN COALESCE(('/'::text || v1.me_code), ''::text) ELSE NULL::text END) AS code, v1.me_code, v1.me_description, v1.me_description_etendue, v1.me_file, v1.user_name, ('> '::text || v1.me_menu) AS v1menu, CASE WHEN (COALESCE(v3.me_menu, ''::text) <> ''::text) THEN (' > '::text || v2.me_menu) ELSE v2.me_menu END AS v2menu, v3.me_menu AS v3menu, v3.p_type_display, COALESCE(v1.me_javascript, COALESCE(v2.me_javascript, v3.me_javascript)) AS javascript, v1.pm_id, v1.pm_id_dep, v1.p_id FROM ((t_menu v1 LEFT JOIN t_menu v2 ON ((v1.me_code_dep = v2.me_code))) LEFT JOIN t_menu v3 ON ((v2.me_code_dep = v3.me_code))) WHERE ((v1.p_type_display <> 'P'::text) AND ((COALESCE(v1.me_file, ''::text) <> ''::text) OR (COALESCE(v1.me_javascript, ''::text) <> ''::text)));
+CREATE VIEW public.vw_fiche_attr AS
+ SELECT a.f_id,
+    a.fd_id,
+    a.ad_value AS vw_name,
+    k.ad_value AS vw_first_name,
+    b.ad_value AS vw_sell,
+    c.ad_value AS vw_buy,
+    d.ad_value AS tva_code,
+    tva_rate.tva_id,
+    tva_rate.tva_rate,
+    tva_rate.tva_label,
+    e.ad_value AS vw_addr,
+    f.ad_value AS vw_cp,
+    j.ad_value AS quick_code,
+    h.ad_value AS vw_description,
+    i.ad_value AS tva_num,
+    fiche_def.frd_id,
+    l.ad_value AS accounting,
+    a.f_enable
+   FROM ((((((((((((( SELECT fiche.f_id,
+            fiche.fd_id,
+            fiche.f_enable,
+            fiche_detail.ad_value
+           FROM (public.fiche
+             LEFT JOIN public.fiche_detail USING (f_id))
+          WHERE (fiche_detail.ad_id = 1)) a
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 6)) b ON ((a.f_id = b.f_id)))
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 7)) c ON ((a.f_id = c.f_id)))
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 2)) d ON ((a.f_id = d.f_id)))
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 14)) e ON ((a.f_id = e.f_id)))
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 15)) f ON ((a.f_id = f.f_id)))
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 23)) j ON ((a.f_id = j.f_id)))
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 9)) h ON ((a.f_id = h.f_id)))
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 13)) i ON ((a.f_id = i.f_id)))
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 32)) k ON ((a.f_id = k.f_id)))
+     LEFT JOIN public.tva_rate ON ((d.ad_value = (tva_rate.tva_id)::text)))
+     JOIN public.fiche_def USING (fd_id))
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 5)) l ON ((a.f_id = l.f_id)));
 
 
 
-COMMENT ON VIEW v_menu_description IS 'Description des menus';
+COMMENT ON VIEW public.vw_fiche_attr IS 'Some attribute for all cards';
 
 
 
-CREATE VIEW v_menu_description_favori AS
-    WITH t_menu AS (SELECT mr.me_menu, pm.me_code, pm.me_code_dep, pm.p_type_display, pu.user_name, mr.me_file, mr.me_javascript, mr.me_description, mr.me_description_etendue FROM (((profile_menu pm JOIN profile_user pu ON ((pu.p_id = pm.p_id))) JOIN profile p ON ((p.p_id = pm.p_id))) JOIN menu_ref mr USING (me_code))) SELECT DISTINCT ((COALESCE((v3.me_code || '/'::text), ''::text) || COALESCE(v2.me_code, ''::text)) || CASE WHEN (v2.me_code IS NULL) THEN COALESCE(v1.me_code, ''::text) WHEN (v2.me_code IS NOT NULL) THEN COALESCE(('/'::text || v1.me_code), ''::text) ELSE NULL::text END) AS code, v1.me_code, v1.me_description, v1.me_description_etendue, v1.me_file, v1.user_name, ('> '::text || v1.me_menu) AS v1menu, CASE WHEN (COALESCE(v3.me_menu, ''::text) <> ''::text) THEN (' > '::text || v2.me_menu) ELSE v2.me_menu END AS v2menu, v3.me_menu AS v3menu, v3.p_type_display, COALESCE(v1.me_javascript, COALESCE(v2.me_javascript, v3.me_javascript)) AS javascript FROM ((t_menu v1 LEFT JOIN t_menu v2 ON ((v1.me_code_dep = v2.me_code))) LEFT JOIN t_menu v3 ON ((v2.me_code_dep = v3.me_code))) WHERE (v1.p_type_display <> 'P'::text);
+CREATE VIEW public.vw_fiche_name AS
+ SELECT fiche_detail.f_id,
+    fiche_detail.ad_value AS name
+   FROM public.fiche_detail
+  WHERE (fiche_detail.ad_id = 1);
 
 
 
-CREATE VIEW v_menu_profile AS
-    WITH t_menu AS (SELECT pm.pm_id, pm.pm_id_dep, pm.me_code, pm.me_code_dep, pm.p_type_display, pm.p_id FROM (profile_menu pm JOIN profile p ON ((p.p_id = pm.p_id)))) SELECT DISTINCT ((COALESCE((v3.me_code || '/'::text), ''::text) || COALESCE(v2.me_code, ''::text)) || CASE WHEN (v2.me_code IS NULL) THEN COALESCE(v1.me_code, ''::text) WHEN (v2.me_code IS NOT NULL) THEN COALESCE(('/'::text || v1.me_code), ''::text) ELSE NULL::text END) AS code, v3.p_type_display, COALESCE(v3.pm_id, 0) AS pm_id_v3, COALESCE(v2.pm_id, 0) AS pm_id_v2, v1.pm_id AS pm_id_v1, v1.p_id FROM ((t_menu v1 LEFT JOIN t_menu v2 ON ((v1.pm_id_dep = v2.pm_id))) LEFT JOIN t_menu v3 ON ((v2.pm_id_dep = v3.pm_id))) WHERE (v1.p_type_display <> 'P'::text);
+CREATE VIEW public.v_detail_purchase AS
+ WITH m AS (
+         SELECT sum(quant_purchase_1.qp_price) AS htva,
+            sum(quant_purchase_1.qp_vat) AS tot_vat,
+            sum(quant_purchase_1.qp_vat_sided) AS tot_tva_np,
+            jrn_1.jr_id
+           FROM ((public.quant_purchase quant_purchase_1
+             JOIN public.jrnx jrnx_1 USING (j_id))
+             JOIN public.jrn jrn_1 ON ((jrnx_1.j_grpt = jrn_1.jr_grpt_id)))
+          GROUP BY jrn_1.jr_id
+        ), other_tax AS (
+         SELECT jrnx_1.j_grpt,
+            sum(
+                CASE
+                    WHEN (jrnx_1.j_debit IS FALSE) THEN ((0)::numeric - jrnx_1.j_montant)
+                    ELSE jrnx_1.j_montant
+                END) AS other_tax_amount
+           FROM (public.jrnx jrnx_1
+             JOIN public.jrn_tax USING (j_id))
+          GROUP BY jrnx_1.j_grpt
+        )
+ SELECT jrn.jr_id,
+    jrn.jr_date,
+    jrn.jr_date_paid,
+    jrn.jr_ech,
+    jrn.jr_tech_per,
+    jrn.jr_comment,
+    jrn.jr_pj_number,
+    jrn.jr_internal,
+    jrn.jr_def_id,
+    jrnx.j_poste,
+    jrnx.j_text,
+    jrnx.j_qcode,
+    jrn.jr_rapt,
+    quant_purchase.qp_fiche AS item_card,
+    a.name AS item_name,
+    quant_purchase.qp_supplier,
+    b.vw_name AS tiers_name,
+    b.quick_code,
+    tva_rate.tva_label,
+    tva_rate.tva_comment,
+    tva_rate.tva_both_side,
+    quant_purchase.qp_vat_sided AS vat_sided,
+    quant_purchase.qp_vat_code AS vat_code,
+    quant_purchase.qp_vat AS vat,
+    quant_purchase.qp_price AS price,
+    quant_purchase.qp_quantite AS quantity,
+    (quant_purchase.qp_price / quant_purchase.qp_quantite) AS price_per_unit,
+    quant_purchase.qp_nd_amount AS non_ded_amount,
+    quant_purchase.qp_nd_tva AS non_ded_tva,
+    quant_purchase.qp_nd_tva_recup AS non_ded_tva_recup,
+    m.htva,
+    m.tot_vat,
+    m.tot_tva_np,
+    ot.other_tax_amount,
+    oc.oc_amount,
+    oc.oc_vat_amount,
+    ( SELECT currency.cr_code_iso
+           FROM public.currency
+          WHERE (jrn.currency_id = currency.id)) AS cr_code_iso
+   FROM ((((((((public.jrn
+     JOIN public.jrnx ON ((jrn.jr_grpt_id = jrnx.j_grpt)))
+     JOIN public.quant_purchase USING (j_id))
+     JOIN public.vw_fiche_name a ON ((quant_purchase.qp_fiche = a.f_id)))
+     JOIN public.vw_fiche_attr b ON ((quant_purchase.qp_supplier = b.f_id)))
+     LEFT JOIN public.tva_rate ON ((quant_purchase.qp_vat_code = tva_rate.tva_id)))
+     JOIN m ON ((m.jr_id = jrn.jr_id)))
+     LEFT JOIN public.operation_currency oc ON ((oc.j_id = jrnx.j_id)))
+     LEFT JOIN other_tax ot ON ((ot.j_grpt = jrn.jr_grpt_id)));
 
 
 
-COMMENT ON VIEW v_menu_profile IS 'Give the profile and the menu + dependencies';
+CREATE VIEW public.v_detail_sale AS
+ WITH m AS (
+         SELECT sum(quant_sold_1.qs_price) AS htva,
+            sum(quant_sold_1.qs_vat) AS tot_vat,
+            sum(quant_sold_1.qs_vat_sided) AS tot_tva_np,
+            jrn_1.jr_id
+           FROM ((public.quant_sold quant_sold_1
+             JOIN public.jrnx jrnx_1 USING (j_id))
+             JOIN public.jrn jrn_1 ON ((jrnx_1.j_grpt = jrn_1.jr_grpt_id)))
+          GROUP BY jrn_1.jr_id
+        ), other_tax AS (
+         SELECT jrnx_1.j_grpt,
+            sum(
+                CASE
+                    WHEN (jrnx_1.j_debit IS TRUE) THEN ((0)::numeric - jrnx_1.j_montant)
+                    ELSE jrnx_1.j_montant
+                END) AS other_tax_amount
+           FROM (public.jrnx jrnx_1
+             JOIN public.jrn_tax USING (j_id))
+          GROUP BY jrnx_1.j_grpt
+        )
+ SELECT jrn.jr_id,
+    jrn.jr_date,
+    jrn.jr_date_paid,
+    jrn.jr_ech,
+    jrn.jr_tech_per,
+    jrn.jr_comment,
+    jrn.jr_pj_number,
+    jrn.jr_internal,
+    jrn.jr_def_id,
+    jrnx.j_poste,
+    jrnx.j_text,
+    jrnx.j_qcode,
+    jrn.jr_rapt,
+    quant_sold.qs_fiche AS item_card,
+    a.name AS item_name,
+    quant_sold.qs_client,
+    b.vw_name AS tiers_name,
+    b.quick_code,
+    tva_rate.tva_label,
+    tva_rate.tva_comment,
+    tva_rate.tva_both_side,
+    quant_sold.qs_vat_sided AS vat_sided,
+    quant_sold.qs_vat_code AS vat_code,
+    quant_sold.qs_vat AS vat,
+    quant_sold.qs_price AS price,
+    quant_sold.qs_quantite AS quantity,
+    (quant_sold.qs_price / quant_sold.qs_quantite) AS price_per_unit,
+    m.htva,
+    m.tot_vat,
+    m.tot_tva_np,
+    ot.other_tax_amount,
+    oc.oc_amount,
+    oc.oc_vat_amount,
+    ( SELECT currency.cr_code_iso
+           FROM public.currency
+          WHERE (jrn.currency_id = currency.id)) AS cr_code_iso
+   FROM ((((((((public.jrn
+     JOIN public.jrnx ON ((jrn.jr_grpt_id = jrnx.j_grpt)))
+     JOIN public.quant_sold USING (j_id))
+     JOIN public.vw_fiche_name a ON ((quant_sold.qs_fiche = a.f_id)))
+     JOIN public.vw_fiche_attr b ON ((quant_sold.qs_client = b.f_id)))
+     LEFT JOIN public.tva_rate ON ((quant_sold.qs_vat_code = tva_rate.tva_id)))
+     JOIN m ON ((m.jr_id = jrn.jr_id)))
+     LEFT JOIN public.operation_currency oc ON ((oc.j_id = jrnx.j_id)))
+     LEFT JOIN other_tax ot ON ((ot.j_grpt = jrn.jr_grpt_id)));
 
 
 
-CREATE VIEW v_quant_detail AS
-    WITH quant AS (SELECT quant_purchase.j_id, quant_purchase.qp_fiche AS fiche_id, quant_purchase.qp_supplier AS tiers, quant_purchase.qp_vat AS vat_amount, quant_purchase.qp_price AS price, quant_purchase.qp_vat_code AS vat_code, quant_purchase.qp_dep_priv AS dep_priv, quant_purchase.qp_nd_tva AS nd_tva, quant_purchase.qp_nd_tva_recup AS nd_tva_recup, quant_purchase.qp_nd_amount AS nd_amount, quant_purchase.qp_vat_sided AS vat_sided FROM quant_purchase UNION ALL SELECT quant_sold.j_id, quant_sold.qs_fiche, quant_sold.qs_client, quant_sold.qs_vat, quant_sold.qs_price, quant_sold.qs_vat_code, 0, 0, 0, 0, quant_sold.qs_vat_sided FROM quant_sold) SELECT jrn.jr_id, quant.tiers, jrn_def.jrn_def_name, jrn_def.jrn_def_type, vw_fiche_name.name, jrn.jr_comment, jrn.jr_montant, sum(quant.price) AS price, quant.vat_code, sum(quant.vat_amount) AS vat_amount, sum(quant.dep_priv) AS dep_priv, sum(quant.nd_tva) AS nd_tva, sum(quant.nd_tva_recup) AS nd_tva_recup, sum(quant.nd_amount) AS nd_amount, quant.vat_sided, tva_rate.tva_label FROM (((((jrn JOIN jrnx ON ((jrnx.j_grpt = jrn.jr_grpt_id))) JOIN quant USING (j_id)) LEFT JOIN vw_fiche_name ON ((quant.tiers = vw_fiche_name.f_id))) JOIN jrn_def ON ((jrn_def.jrn_def_id = jrn.jr_def_id))) JOIN tva_rate ON ((tva_rate.tva_id = quant.vat_code))) GROUP BY jrn.jr_id, quant.tiers, jrn.jr_comment, jrn.jr_montant, quant.vat_code, quant.vat_sided, vw_fiche_name.name, jrn_def.jrn_def_name, jrn_def.jrn_def_type, tva_rate.tva_label;
+CREATE VIEW public.v_menu_dependency AS
+ WITH t_menu AS (
+         SELECT pm.pm_id,
+            mr.me_menu,
+            pm.me_code,
+            pm.me_code_dep,
+            pm.p_type_display,
+            mr.me_file,
+            mr.me_javascript,
+            mr.me_description,
+            mr.me_description_etendue,
+            p.p_id
+           FROM ((public.profile_menu pm
+             JOIN public.profile p ON ((p.p_id = pm.p_id)))
+             JOIN public.menu_ref mr USING (me_code))
+        )
+ SELECT DISTINCT ((COALESCE((v3.me_code || '/'::text), ''::text) || COALESCE(v2.me_code, ''::text)) ||
+        CASE
+            WHEN (v2.me_code IS NULL) THEN COALESCE(v1.me_code, ''::text)
+            WHEN (v2.me_code IS NOT NULL) THEN COALESCE(('/'::text || v1.me_code), ''::text)
+            ELSE NULL::text
+        END) AS code,
+    v1.pm_id,
+    v1.me_code,
+    v1.me_description,
+    v1.me_description_etendue,
+    v1.me_file,
+    ('> '::text || v1.me_menu) AS v1menu,
+        CASE
+            WHEN (v2.pm_id IS NOT NULL) THEN v2.pm_id
+            WHEN (v3.pm_id IS NOT NULL) THEN v3.pm_id
+            ELSE NULL::integer
+        END AS higher_dep,
+        CASE
+            WHEN (COALESCE(v3.me_menu, ''::text) <> ''::text) THEN (' > '::text || v2.me_menu)
+            ELSE v2.me_menu
+        END AS v2menu,
+    v3.me_menu AS v3menu,
+    v3.p_type_display,
+    COALESCE(v1.me_javascript, COALESCE(v2.me_javascript, v3.me_javascript)) AS javascript,
+    v1.p_id,
+    v2.p_id AS v2pid,
+    v3.p_id AS v3pid
+   FROM ((t_menu v1
+     LEFT JOIN t_menu v2 ON ((v1.me_code_dep = v2.me_code)))
+     LEFT JOIN t_menu v3 ON ((v2.me_code_dep = v3.me_code)))
+  WHERE ((COALESCE(v2.p_id, v1.p_id) = v1.p_id) AND (COALESCE(v3.p_id, v1.p_id) = v1.p_id) AND (v1.p_type_display <> 'P'::text))
+  ORDER BY v1.pm_id;
 
 
 
-CREATE VIEW v_tva_rate AS
-    SELECT tva_rate.tva_id, tva_rate.tva_rate, tva_rate.tva_label, tva_rate.tva_comment, split_part(tva_rate.tva_poste, ','::text, 1) AS tva_purchase, split_part(tva_rate.tva_poste, ','::text, 2) AS tva_sale, tva_rate.tva_both_side FROM tva_rate;
+CREATE VIEW public.v_menu_description AS
+ WITH t_menu AS (
+         SELECT pm.pm_id,
+            pm.pm_id_dep,
+            pm.p_id,
+            mr.me_menu,
+            pm.me_code,
+            pm.me_code_dep,
+            pm.p_type_display,
+            pu.user_name,
+            mr.me_file,
+            mr.me_javascript,
+            mr.me_description,
+            mr.me_description_etendue
+           FROM (((public.profile_menu pm
+             JOIN public.profile_user pu ON ((pu.p_id = pm.p_id)))
+             JOIN public.profile p ON ((p.p_id = pm.p_id)))
+             JOIN public.menu_ref mr USING (me_code))
+        )
+ SELECT DISTINCT ((COALESCE((v3.me_code || '/'::text), ''::text) || COALESCE(v2.me_code, ''::text)) ||
+        CASE
+            WHEN (v2.me_code IS NULL) THEN COALESCE(v1.me_code, ''::text)
+            WHEN (v2.me_code IS NOT NULL) THEN COALESCE(('/'::text || v1.me_code), ''::text)
+            ELSE NULL::text
+        END) AS code,
+    v1.me_code,
+    v1.me_description,
+    v1.me_description_etendue,
+    v1.me_file,
+    v1.user_name,
+    ('> '::text || v1.me_menu) AS v1menu,
+        CASE
+            WHEN (COALESCE(v3.me_menu, ''::text) <> ''::text) THEN (' > '::text || v2.me_menu)
+            ELSE v2.me_menu
+        END AS v2menu,
+    v3.me_menu AS v3menu,
+    v3.p_type_display,
+    COALESCE(v1.me_javascript, COALESCE(v2.me_javascript, v3.me_javascript)) AS javascript,
+    v1.pm_id,
+    v1.pm_id_dep,
+    v1.p_id
+   FROM ((t_menu v1
+     LEFT JOIN t_menu v2 ON ((v1.me_code_dep = v2.me_code)))
+     LEFT JOIN t_menu v3 ON ((v2.me_code_dep = v3.me_code)))
+  WHERE ((v1.p_type_display <> 'P'::text) AND ((COALESCE(v1.me_file, ''::text) <> ''::text) OR (COALESCE(v1.me_javascript, ''::text) <> ''::text)));
 
 
 
-COMMENT ON VIEW v_tva_rate IS 'Show this table to be easily used by  Tva_Rate_MTable';
+COMMENT ON VIEW public.v_menu_description IS 'Description des menus';
 
 
 
-COMMENT ON COLUMN v_tva_rate.tva_purchase IS ' VAT used for purchase';
+CREATE VIEW public.v_menu_description_favori AS
+ WITH t_menu AS (
+         SELECT mr.me_menu,
+            pm.me_code,
+            pm.me_code_dep,
+            pm.p_type_display,
+            pu.user_name,
+            mr.me_file,
+            mr.me_javascript,
+            mr.me_description,
+            mr.me_description_etendue
+           FROM (((public.profile_menu pm
+             JOIN public.profile_user pu ON ((pu.p_id = pm.p_id)))
+             JOIN public.profile p ON ((p.p_id = pm.p_id)))
+             JOIN public.menu_ref mr USING (me_code))
+        )
+ SELECT DISTINCT ((COALESCE((v3.me_code || '/'::text), ''::text) || COALESCE(v2.me_code, ''::text)) ||
+        CASE
+            WHEN (v2.me_code IS NULL) THEN COALESCE(v1.me_code, ''::text)
+            WHEN (v2.me_code IS NOT NULL) THEN COALESCE(('/'::text || v1.me_code), ''::text)
+            ELSE NULL::text
+        END) AS code,
+    v1.me_code,
+    v1.me_description,
+    v1.me_description_etendue,
+    v1.me_file,
+    v1.user_name,
+    ('> '::text || v1.me_menu) AS v1menu,
+        CASE
+            WHEN (COALESCE(v3.me_menu, ''::text) <> ''::text) THEN (' > '::text || v2.me_menu)
+            ELSE v2.me_menu
+        END AS v2menu,
+    v3.me_menu AS v3menu,
+    v3.p_type_display,
+    COALESCE(v1.me_javascript, COALESCE(v2.me_javascript, v3.me_javascript)) AS javascript
+   FROM ((t_menu v1
+     LEFT JOIN t_menu v2 ON ((v1.me_code_dep = v2.me_code)))
+     LEFT JOIN t_menu v3 ON ((v2.me_code_dep = v3.me_code)))
+  WHERE (v1.p_type_display <> 'P'::text);
 
 
 
-COMMENT ON COLUMN v_tva_rate.tva_sale IS ' VAT used for sale';
+CREATE VIEW public.v_menu_profile AS
+ WITH t_menu AS (
+         SELECT pm.pm_id,
+            pm.pm_id_dep,
+            pm.me_code,
+            pm.me_code_dep,
+            pm.p_type_display,
+            pm.p_id
+           FROM (public.profile_menu pm
+             JOIN public.profile p ON ((p.p_id = pm.p_id)))
+        )
+ SELECT DISTINCT ((COALESCE((v3.me_code || '/'::text), ''::text) || COALESCE(v2.me_code, ''::text)) ||
+        CASE
+            WHEN (v2.me_code IS NULL) THEN COALESCE(v1.me_code, ''::text)
+            WHEN (v2.me_code IS NOT NULL) THEN COALESCE(('/'::text || v1.me_code), ''::text)
+            ELSE NULL::text
+        END) AS code,
+    v3.p_type_display,
+    COALESCE(v3.pm_id, 0) AS pm_id_v3,
+    COALESCE(v2.pm_id, 0) AS pm_id_v2,
+    v1.pm_id AS pm_id_v1,
+    v1.p_id
+   FROM ((t_menu v1
+     LEFT JOIN t_menu v2 ON ((v1.pm_id_dep = v2.pm_id)))
+     LEFT JOIN t_menu v3 ON ((v2.pm_id_dep = v3.pm_id)))
+  WHERE (v1.p_type_display <> 'P'::text);
 
 
 
-COMMENT ON COLUMN v_tva_rate.tva_both_side IS 'if 1 ,  VAT avoided ';
+COMMENT ON VIEW public.v_menu_profile IS 'Give the profile and the menu + dependencies';
 
 
 
-CREATE TABLE version (
+CREATE VIEW public.v_quant_detail AS
+ WITH quant AS (
+         SELECT quant_purchase.j_id,
+            quant_purchase.qp_fiche AS fiche_id,
+            quant_purchase.qp_supplier AS tiers,
+            quant_purchase.qp_vat AS vat_amount,
+            quant_purchase.qp_price AS price,
+            quant_purchase.qp_vat_code AS vat_code,
+            quant_purchase.qp_dep_priv AS dep_priv,
+            quant_purchase.qp_nd_tva AS nd_tva,
+            quant_purchase.qp_nd_tva_recup AS nd_tva_recup,
+            quant_purchase.qp_nd_amount AS nd_amount,
+            quant_purchase.qp_vat_sided AS vat_sided
+           FROM public.quant_purchase
+        UNION ALL
+         SELECT quant_sold.j_id,
+            quant_sold.qs_fiche,
+            quant_sold.qs_client,
+            quant_sold.qs_vat,
+            quant_sold.qs_price,
+            quant_sold.qs_vat_code,
+            0,
+            0,
+            0,
+            0,
+            quant_sold.qs_vat_sided
+           FROM public.quant_sold
+        )
+ SELECT jrn.jr_id,
+    quant.tiers,
+    jrn_def.jrn_def_name,
+    jrn_def.jrn_def_type,
+    vw_fiche_name.name,
+    jrn.jr_comment,
+    jrn.jr_montant,
+    sum(quant.price) AS price,
+    quant.vat_code,
+    sum(quant.vat_amount) AS vat_amount,
+    sum(quant.dep_priv) AS dep_priv,
+    sum(quant.nd_tva) AS nd_tva,
+    sum(quant.nd_tva_recup) AS nd_tva_recup,
+    sum(quant.nd_amount) AS nd_amount,
+    quant.vat_sided,
+    tva_rate.tva_label
+   FROM (((((public.jrn
+     JOIN public.jrnx ON ((jrnx.j_grpt = jrn.jr_grpt_id)))
+     JOIN quant USING (j_id))
+     LEFT JOIN public.vw_fiche_name ON ((quant.tiers = vw_fiche_name.f_id)))
+     JOIN public.jrn_def ON ((jrn_def.jrn_def_id = jrn.jr_def_id)))
+     JOIN public.tva_rate ON ((tva_rate.tva_id = quant.vat_code)))
+  GROUP BY jrn.jr_id, quant.tiers, jrn.jr_comment, jrn.jr_montant, quant.vat_code, quant.vat_sided, vw_fiche_name.name, jrn_def.jrn_def_name, jrn_def.jrn_def_type, tva_rate.tva_label;
+
+
+
+CREATE VIEW public.v_tva_rate AS
+ SELECT tva_rate.tva_id,
+    tva_rate.tva_rate,
+    tva_rate.tva_code,
+    tva_rate.tva_label,
+    tva_rate.tva_comment,
+    split_part(tva_rate.tva_poste, ','::text, 1) AS tva_purchase,
+    split_part(tva_rate.tva_poste, ','::text, 2) AS tva_sale,
+    tva_rate.tva_both_side,
+    tva_rate.tva_payment_purchase,
+    tva_rate.tva_payment_sale
+   FROM public.tva_rate;
+
+
+
+CREATE TABLE public.version (
     val integer NOT NULL,
     v_description text,
     v_date timestamp without time zone DEFAULT now()
@@ -5389,1010 +7000,1973 @@ CREATE TABLE version (
 
 
 
-CREATE VIEW vw_client AS
-    SELECT fiche.f_id, a1.ad_value AS name, a.ad_value AS quick_code, b.ad_value AS tva_num, c.ad_value AS poste_comptable, d.ad_value AS rue, e.ad_value AS code_postal, f.ad_value AS pays, g.ad_value AS telephone, h.ad_value AS email FROM (((((((((((fiche JOIN fiche_def USING (fd_id)) JOIN fiche_def_ref USING (frd_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 1)) a1 USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 13)) b USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 23)) a USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 5)) c USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 14)) d USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 15)) e USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 16)) f USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 17)) g USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 18)) h USING (f_id)) WHERE (fiche_def_ref.frd_id = 9);
+COMMENT ON TABLE public.version IS 'DB version';
+
+
+
+CREATE VIEW public.vw_client AS
+ SELECT fiche.f_id,
+    a1.ad_value AS name,
+    a.ad_value AS quick_code,
+    b.ad_value AS tva_num,
+    c.ad_value AS poste_comptable,
+    d.ad_value AS rue,
+    e.ad_value AS code_postal,
+    f.ad_value AS pays,
+    g.ad_value AS telephone,
+    h.ad_value AS email
+   FROM (((((((((((public.fiche
+     JOIN public.fiche_def USING (fd_id))
+     JOIN public.fiche_def_ref USING (frd_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 1)) a1 USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 13)) b USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 23)) a USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 5)) c USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 14)) d USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 15)) e USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 16)) f USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 17)) g USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 18)) h USING (f_id))
+  WHERE (fiche_def_ref.frd_id = 9);
+
+
+
+CREATE VIEW public.vw_fiche_def AS
+ SELECT jnt_fic_attr.fd_id,
+    jnt_fic_attr.ad_id,
+    attr_def.ad_text,
+    fiche_def.fd_class_base,
+    fiche_def.fd_label,
+    fiche_def.fd_create_account,
+    fiche_def.frd_id
+   FROM ((public.fiche_def
+     JOIN public.jnt_fic_attr USING (fd_id))
+     JOIN public.attr_def ON ((attr_def.ad_id = jnt_fic_attr.ad_id)));
+
+
+
+COMMENT ON VIEW public.vw_fiche_def IS 'all the attributs for	card family';
+
+
+
+CREATE VIEW public.vw_fiche_min AS
+ SELECT attr_min.frd_id,
+    attr_min.ad_id,
+    attr_def.ad_text,
+    fiche_def_ref.frd_text,
+    fiche_def_ref.frd_class_base
+   FROM ((public.attr_min
+     JOIN public.attr_def USING (ad_id))
+     JOIN public.fiche_def_ref USING (frd_id));
+
+
+
+CREATE VIEW public.vw_poste_qcode AS
+ SELECT c.f_id,
+    a.ad_value AS j_poste,
+    b.ad_value AS j_qcode
+   FROM ((public.fiche c
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 5)) a USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.f_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 23)) b USING (f_id));
+
+
+
+CREATE VIEW public.vw_supplier AS
+ SELECT fiche.f_id,
+    a1.ad_value AS name,
+    a.ad_value AS quick_code,
+    b.ad_value AS tva_num,
+    c.ad_value AS poste_comptable,
+    d.ad_value AS rue,
+    e.ad_value AS code_postal,
+    f.ad_value AS pays,
+    g.ad_value AS telephone,
+    h.ad_value AS email
+   FROM (((((((((((public.fiche
+     JOIN public.fiche_def USING (fd_id))
+     JOIN public.fiche_def_ref USING (frd_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 1)) a1 USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 13)) b USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 23)) a USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 5)) c USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 14)) d USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 15)) e USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 16)) f USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 17)) g USING (f_id))
+     LEFT JOIN ( SELECT fiche_detail.jft_id,
+            fiche_detail.f_id,
+            fiche_detail.ad_id,
+            fiche_detail.ad_value
+           FROM public.fiche_detail
+          WHERE (fiche_detail.ad_id = 18)) h USING (f_id))
+  WHERE (fiche_def_ref.frd_id = 8);
 
 
 
-CREATE VIEW vw_fiche_def AS
-    SELECT jnt_fic_attr.fd_id, jnt_fic_attr.ad_id, attr_def.ad_text, fiche_def.fd_class_base, fiche_def.fd_label, fiche_def.fd_create_account, fiche_def.frd_id FROM ((fiche_def JOIN jnt_fic_attr USING (fd_id)) JOIN attr_def ON ((attr_def.ad_id = jnt_fic_attr.ad_id)));
+ALTER TABLE ONLY public.acc_other_tax ALTER COLUMN ac_id SET DEFAULT nextval('public.acc_other_tax_ac_id_seq'::regclass);
 
 
 
-COMMENT ON VIEW vw_fiche_def IS 'all the attributs for	card family';
+ALTER TABLE ONLY public.action_detail ALTER COLUMN ad_id SET DEFAULT nextval('public.action_detail_ad_id_seq'::regclass);
 
 
 
-CREATE VIEW vw_fiche_min AS
-    SELECT attr_min.frd_id, attr_min.ad_id, attr_def.ad_text, fiche_def_ref.frd_text, fiche_def_ref.frd_class_base FROM ((attr_min JOIN attr_def USING (ad_id)) JOIN fiche_def_ref USING (frd_id));
+ALTER TABLE ONLY public.action_gestion_comment ALTER COLUMN agc_id SET DEFAULT nextval('public.action_gestion_comment_agc_id_seq'::regclass);
 
 
 
-CREATE VIEW vw_poste_qcode AS
-    SELECT c.f_id, a.ad_value AS j_poste, b.ad_value AS j_qcode FROM ((fiche c LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 5)) a USING (f_id)) LEFT JOIN (SELECT fiche_detail.f_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 23)) b USING (f_id));
+ALTER TABLE ONLY public.action_gestion_operation ALTER COLUMN ago_id SET DEFAULT nextval('public.action_gestion_operation_ago_id_seq'::regclass);
 
 
 
-CREATE VIEW vw_supplier AS
-    SELECT fiche.f_id, a1.ad_value AS name, a.ad_value AS quick_code, b.ad_value AS tva_num, c.ad_value AS poste_comptable, d.ad_value AS rue, e.ad_value AS code_postal, f.ad_value AS pays, g.ad_value AS telephone, h.ad_value AS email FROM (((((((((((fiche JOIN fiche_def USING (fd_id)) JOIN fiche_def_ref USING (frd_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 1)) a1 USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 13)) b USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 23)) a USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 5)) c USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 14)) d USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 15)) e USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 16)) f USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 17)) g USING (f_id)) LEFT JOIN (SELECT fiche_detail.jft_id, fiche_detail.f_id, fiche_detail.ad_id, fiche_detail.ad_value FROM fiche_detail WHERE (fiche_detail.ad_id = 18)) h USING (f_id)) WHERE (fiche_def_ref.frd_id = 8);
+ALTER TABLE ONLY public.action_gestion_related ALTER COLUMN aga_id SET DEFAULT nextval('public.action_gestion_related_aga_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.action_person ALTER COLUMN ap_id SET DEFAULT nextval('public.action_person_ap_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.action_person_option ALTER COLUMN ap_id SET DEFAULT nextval('public.action_person_option_ap_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.action_tags ALTER COLUMN at_id SET DEFAULT nextval('public.action_tags_at_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.bookmark ALTER COLUMN b_id SET DEFAULT nextval('public.bookmark_b_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.contact_option_ref ALTER COLUMN cor_id SET DEFAULT nextval('public.contact_option_ref_cor_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.currency ALTER COLUMN id SET DEFAULT nextval('public.currency_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.currency_history ALTER COLUMN id SET DEFAULT nextval('public.currency_history_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.del_action ALTER COLUMN del_id SET DEFAULT nextval('public.del_action_del_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.del_jrn ALTER COLUMN dj_id SET DEFAULT nextval('public.del_jrn_dj_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.del_jrnx ALTER COLUMN djx_id SET DEFAULT nextval('public.del_jrnx_djx_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.document_option ALTER COLUMN do_id SET DEFAULT nextval('public.document_option_do_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.extension ALTER COLUMN ex_id SET DEFAULT nextval('public.extension_ex_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.forecast ALTER COLUMN f_id SET DEFAULT nextval('public.forecast_f_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.forecast_category ALTER COLUMN fc_id SET DEFAULT nextval('public.forecast_cat_fc_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.forecast_item ALTER COLUMN fi_id SET DEFAULT nextval('public.forecast_item_fi_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.jnt_document_option_contact ALTER COLUMN jdoc_id SET DEFAULT nextval('public.jnt_document_option_contact_jdoc_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.jnt_letter ALTER COLUMN jl_id SET DEFAULT nextval('public.jnt_letter_jl_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.jnt_tag_group_tag ALTER COLUMN jt_id SET DEFAULT nextval('public.jnt_tag_group_tag_jt_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.jrn_info ALTER COLUMN ji_id SET DEFAULT nextval('public.jrn_info_ji_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.jrn_note ALTER COLUMN n_id SET DEFAULT nextval('public.jrn_note_n_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.key_distribution ALTER COLUMN kd_id SET DEFAULT nextval('public.key_distribution_kd_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.key_distribution_activity ALTER COLUMN ka_id SET DEFAULT nextval('public.key_distribution_activity_ka_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.key_distribution_detail ALTER COLUMN ke_id SET DEFAULT nextval('public.key_distribution_detail_ke_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.key_distribution_ledger ALTER COLUMN kl_id SET DEFAULT nextval('public.key_distribution_ledger_kl_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.letter_cred ALTER COLUMN lc_id SET DEFAULT nextval('public.letter_cred_lc_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.letter_deb ALTER COLUMN ld_id SET DEFAULT nextval('public.letter_deb_ld_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.link_action_type ALTER COLUMN l_id SET DEFAULT nextval('public.link_action_type_l_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.menu_default ALTER COLUMN md_id SET DEFAULT nextval('public.menu_default_md_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.operation_currency ALTER COLUMN id SET DEFAULT nextval('public.operation_currency_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.operation_tag ALTER COLUMN opt_id SET DEFAULT nextval('public.operation_tag_opt_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.parameter_extra ALTER COLUMN id SET DEFAULT nextval('public.parameter_extra_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.payment_method ALTER COLUMN mp_id SET DEFAULT nextval('public.mod_payment_mp_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.profile ALTER COLUMN p_id SET DEFAULT nextval('public.profile_p_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.profile_menu ALTER COLUMN pm_id SET DEFAULT nextval('public.profile_menu_pm_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.profile_mobile ALTER COLUMN pmo_id SET DEFAULT nextval('public.profile_mobile_pmo_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.profile_sec_repository ALTER COLUMN ur_id SET DEFAULT nextval('public.profile_sec_repository_ur_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.profile_user ALTER COLUMN pu_id SET DEFAULT nextval('public.profile_user_pu_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.quant_fin ALTER COLUMN qf_id SET DEFAULT nextval('public.quant_fin_qf_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.stock_change ALTER COLUMN c_id SET DEFAULT nextval('public.stock_change_c_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.stock_repository ALTER COLUMN r_id SET DEFAULT nextval('public.stock_repository_r_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.tag_group ALTER COLUMN tg_id SET DEFAULT nextval('public.tag_group_tg_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.tags ALTER COLUMN t_id SET DEFAULT nextval('public.tags_t_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.tmp_stockgood ALTER COLUMN s_id SET DEFAULT nextval('public.tmp_stockgood_s_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.tmp_stockgood_detail ALTER COLUMN d_id SET DEFAULT nextval('public.tmp_stockgood_detail_d_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.todo_list_shared ALTER COLUMN id SET DEFAULT nextval('public.todo_list_shared_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.user_active_security ALTER COLUMN id SET DEFAULT nextval('public.user_active_security_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.user_filter ALTER COLUMN id SET DEFAULT nextval('public.user_filter_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.user_sec_action_profile ALTER COLUMN ua_id SET DEFAULT nextval('public.user_sec_action_profile_ua_id_seq'::regclass);
 
 
 
+ALTER TABLE ONLY public.acc_other_tax
+    ADD CONSTRAINT acc_other_tax_pk PRIMARY KEY (ac_id);
 
 
 
+ALTER TABLE ONLY public.action_comment_document
+    ADD CONSTRAINT action_comment_document_pkey PRIMARY KEY (acd_id);
 
 
 
+ALTER TABLE ONLY public.action_comment_document
+    ADD CONSTRAINT action_comment_document_un UNIQUE (document_id, action_gestion_comment_id);
 
 
 
+ALTER TABLE ONLY public.action_gestion_operation
+    ADD CONSTRAINT action_comment_operation_pkey PRIMARY KEY (ago_id);
 
 
 
+ALTER TABLE ONLY public.action_detail
+    ADD CONSTRAINT action_detail_pkey PRIMARY KEY (ad_id);
 
 
 
+ALTER TABLE ONLY public.action_gestion_comment
+    ADD CONSTRAINT action_gestion_comment_pkey PRIMARY KEY (agc_id);
 
 
 
+ALTER TABLE ONLY public.action_gestion
+    ADD CONSTRAINT action_gestion_pkey PRIMARY KEY (ag_id);
 
 
 
+ALTER TABLE ONLY public.action_gestion_related
+    ADD CONSTRAINT action_gestion_related_pkey PRIMARY KEY (aga_id);
 
 
 
+ALTER TABLE ONLY public.action_person_option
+    ADD CONSTRAINT action_person_option_pk PRIMARY KEY (ap_id);
 
 
 
+ALTER TABLE ONLY public.action_person
+    ADD CONSTRAINT action_person_pkey PRIMARY KEY (ap_id);
 
 
 
+ALTER TABLE ONLY public.action
+    ADD CONSTRAINT action_pkey PRIMARY KEY (ac_id);
 
 
 
+ALTER TABLE ONLY public.action_tags
+    ADD CONSTRAINT action_tags_pkey PRIMARY KEY (at_id);
 
 
 
+ALTER TABLE ONLY public.attr_def
+    ADD CONSTRAINT attr_def_pkey PRIMARY KEY (ad_id);
 
 
 
+ALTER TABLE ONLY public.bilan
+    ADD CONSTRAINT bilan_b_name_key UNIQUE (b_name);
 
 
 
+ALTER TABLE ONLY public.bilan
+    ADD CONSTRAINT bilan_pkey PRIMARY KEY (b_id);
 
 
 
+ALTER TABLE ONLY public.bookmark
+    ADD CONSTRAINT bookmark_pkey PRIMARY KEY (b_id);
 
 
 
+ALTER TABLE ONLY public.centralized
+    ADD CONSTRAINT centralized_pkey PRIMARY KEY (c_id);
 
 
 
+ALTER TABLE ONLY public.contact_option_ref
+    ADD CONSTRAINT contact_option_ref_pk PRIMARY KEY (cor_id);
 
 
 
+ALTER TABLE ONLY public.currency_history
+    ADD CONSTRAINT currency_history_pk PRIMARY KEY (id);
 
 
 
+ALTER TABLE ONLY public.currency
+    ADD CONSTRAINT currency_pk PRIMARY KEY (id);
 
 
 
+ALTER TABLE ONLY public.currency
+    ADD CONSTRAINT currency_un UNIQUE (cr_code_iso);
 
 
 
+ALTER TABLE ONLY public.del_action
+    ADD CONSTRAINT del_action_pkey PRIMARY KEY (del_id);
 
 
 
+ALTER TABLE ONLY public.del_jrn
+    ADD CONSTRAINT dj_id PRIMARY KEY (dj_id);
 
 
 
+ALTER TABLE ONLY public.del_jrnx
+    ADD CONSTRAINT djx_id PRIMARY KEY (djx_id);
 
 
 
+ALTER TABLE ONLY public.document_component
+    ADD CONSTRAINT document_component_pk PRIMARY KEY (dc_id);
 
 
 
+ALTER TABLE ONLY public.document_component
+    ADD CONSTRAINT document_component_un UNIQUE (dc_code);
 
 
 
+ALTER TABLE ONLY public.document_modele
+    ADD CONSTRAINT document_modele_pkey PRIMARY KEY (md_id);
 
 
 
+ALTER TABLE ONLY public.document_option
+    ADD CONSTRAINT document_option_ref_pk PRIMARY KEY (do_id);
 
 
 
+ALTER TABLE ONLY public.document_option
+    ADD CONSTRAINT document_option_un UNIQUE (do_code, document_type_id);
 
 
 
+ALTER TABLE ONLY public.document
+    ADD CONSTRAINT document_pkey PRIMARY KEY (d_id);
 
 
 
+ALTER TABLE ONLY public.document_state
+    ADD CONSTRAINT document_state_pkey PRIMARY KEY (s_id);
 
 
 
+ALTER TABLE ONLY public.document_type
+    ADD CONSTRAINT document_type_pkey PRIMARY KEY (dt_id);
 
 
 
+ALTER TABLE ONLY public.fiche_def
+    ADD CONSTRAINT fiche_def_pkey PRIMARY KEY (fd_id);
 
 
 
+ALTER TABLE ONLY public.fiche_def_ref
+    ADD CONSTRAINT fiche_def_ref_pkey PRIMARY KEY (frd_id);
 
 
 
+ALTER TABLE ONLY public.fiche
+    ADD CONSTRAINT fiche_pkey PRIMARY KEY (f_id);
 
 
 
+ALTER TABLE ONLY public.forecast_category
+    ADD CONSTRAINT forecast_cat_pk PRIMARY KEY (fc_id);
 
 
 
+ALTER TABLE ONLY public.forecast_item
+    ADD CONSTRAINT forecast_item_pkey PRIMARY KEY (fi_id);
 
 
 
+ALTER TABLE ONLY public.forecast
+    ADD CONSTRAINT forecast_pk PRIMARY KEY (f_id);
 
 
 
+ALTER TABLE ONLY public.form_detail
+    ADD CONSTRAINT form_pkey PRIMARY KEY (fo_id);
 
 
 
+ALTER TABLE ONLY public.form_definition
+    ADD CONSTRAINT formdef_pkey PRIMARY KEY (fr_id);
 
 
 
+ALTER TABLE ONLY public.attr_min
+    ADD CONSTRAINT frd_ad_attr_min_pk PRIMARY KEY (frd_id, ad_id);
 
 
 
+ALTER TABLE ONLY public.operation_analytique
+    ADD CONSTRAINT historique_analytique_pkey PRIMARY KEY (oa_id);
 
 
 
+ALTER TABLE ONLY public.tmp_pcmn
+    ADD CONSTRAINT id_ux UNIQUE (id);
 
 
 
+ALTER TABLE ONLY public.extension
+    ADD CONSTRAINT idx_ex_code UNIQUE (ex_code);
 
 
 
+ALTER TABLE ONLY public.info_def
+    ADD CONSTRAINT info_def_pkey PRIMARY KEY (id_type);
 
 
 
+ALTER TABLE ONLY public.jnt_document_option_contact
+    ADD CONSTRAINT jnt_document_option_contact_pkey PRIMARY KEY (jdoc_id);
 
 
 
+ALTER TABLE ONLY public.jnt_document_option_contact
+    ADD CONSTRAINT jnt_document_option_contact_un UNIQUE (document_type_id, contact_option_ref_id);
 
 
 
+ALTER TABLE ONLY public.fiche_detail
+    ADD CONSTRAINT jnt_fic_att_value_pkey PRIMARY KEY (jft_id);
 
 
 
+ALTER TABLE ONLY public.jnt_letter
+    ADD CONSTRAINT jnt_letter_pk PRIMARY KEY (jl_id);
 
 
 
+ALTER TABLE ONLY public.jnt_tag_group_tag
+    ADD CONSTRAINT jnt_tag_group_tag_pkey PRIMARY KEY (jt_id);
 
 
 
+ALTER TABLE ONLY public.jnt_tag_group_tag
+    ADD CONSTRAINT jnt_tag_group_tag_un UNIQUE (tag_id, tag_group_id);
 
 
 
+ALTER TABLE ONLY public.jrn_def
+    ADD CONSTRAINT jrn_def_jrn_def_name_key UNIQUE (jrn_def_name);
 
 
 
+ALTER TABLE ONLY public.jrn_def
+    ADD CONSTRAINT jrn_def_pkey PRIMARY KEY (jrn_def_id);
 
 
 
+ALTER TABLE ONLY public.jrn_info
+    ADD CONSTRAINT jrn_info_pkey PRIMARY KEY (ji_id);
 
 
 
+ALTER TABLE ONLY public.jrn_periode
+    ADD CONSTRAINT jrn_periode_periode_ledger UNIQUE (jrn_def_id, p_id);
 
 
 
+ALTER TABLE ONLY public.jrn_periode
+    ADD CONSTRAINT jrn_periode_pk PRIMARY KEY (id);
 
 
 
+ALTER TABLE ONLY public.jrn
+    ADD CONSTRAINT jrn_pkey PRIMARY KEY (jr_id);
 
 
 
+ALTER TABLE ONLY public.jrn_rapt
+    ADD CONSTRAINT jrn_rapt_pkey PRIMARY KEY (jra_id);
 
 
 
+ALTER TABLE ONLY public.jrn_tax
+    ADD CONSTRAINT jrn_tax_pk PRIMARY KEY (jt_id);
 
 
 
+ALTER TABLE ONLY public.jrn_type
+    ADD CONSTRAINT jrn_type_pkey PRIMARY KEY (jrn_type_id);
 
 
 
+ALTER TABLE ONLY public.jrn_note
+    ADD CONSTRAINT jrnx_note_pkey PRIMARY KEY (n_id);
 
 
 
+ALTER TABLE ONLY public.jrnx
+    ADD CONSTRAINT jrnx_pkey PRIMARY KEY (j_id);
 
 
 
+ALTER TABLE ONLY public.key_distribution_activity
+    ADD CONSTRAINT key_distribution_activity_pkey PRIMARY KEY (ka_id);
 
 
 
+ALTER TABLE ONLY public.key_distribution_detail
+    ADD CONSTRAINT key_distribution_detail_pkey PRIMARY KEY (ke_id);
 
 
 
+ALTER TABLE ONLY public.key_distribution_ledger
+    ADD CONSTRAINT key_distribution_ledger_pkey PRIMARY KEY (kl_id);
 
 
 
+ALTER TABLE ONLY public.key_distribution
+    ADD CONSTRAINT key_distribution_pkey PRIMARY KEY (kd_id);
 
 
 
+ALTER TABLE ONLY public.letter_cred
+    ADD CONSTRAINT letter_cred_j_id_key UNIQUE (j_id);
 
 
 
+ALTER TABLE ONLY public.letter_cred
+    ADD CONSTRAINT letter_cred_pk PRIMARY KEY (lc_id);
 
 
 
+ALTER TABLE ONLY public.letter_deb
+    ADD CONSTRAINT letter_deb_j_id_key UNIQUE (j_id);
 
 
 
+ALTER TABLE ONLY public.letter_deb
+    ADD CONSTRAINT letter_deb_pk PRIMARY KEY (ld_id);
 
 
 
+ALTER TABLE ONLY public.link_action_type
+    ADD CONSTRAINT link_action_type_pkey PRIMARY KEY (l_id);
 
 
 
+ALTER TABLE ONLY public.menu_default
+    ADD CONSTRAINT menu_default_md_code_key UNIQUE (md_code);
 
 
 
+ALTER TABLE ONLY public.menu_default
+    ADD CONSTRAINT menu_default_pkey PRIMARY KEY (md_id);
 
 
 
+ALTER TABLE ONLY public.menu_ref
+    ADD CONSTRAINT menu_ref_pkey PRIMARY KEY (me_code);
 
 
 
+ALTER TABLE ONLY public.payment_method
+    ADD CONSTRAINT mod_payment_pkey PRIMARY KEY (mp_id);
 
 
 
+ALTER TABLE ONLY public.op_predef
+    ADD CONSTRAINT op_def_op_name_key UNIQUE (od_name, jrn_def_id);
 
 
 
+ALTER TABLE ONLY public.op_predef
+    ADD CONSTRAINT op_def_pkey PRIMARY KEY (od_id);
 
 
 
+ALTER TABLE ONLY public.op_predef_detail
+    ADD CONSTRAINT op_predef_detail_pkey PRIMARY KEY (opd_id);
 
 
 
+ALTER TABLE ONLY public.operation_currency
+    ADD CONSTRAINT operation_currency_pk PRIMARY KEY (id);
 
 
 
+ALTER TABLE ONLY public.operation_exercice_detail
+    ADD CONSTRAINT operation_exercice_detail_pkey PRIMARY KEY (oed_id);
 
 
 
+ALTER TABLE ONLY public.operation_exercice
+    ADD CONSTRAINT operation_exercice_pkey PRIMARY KEY (oe_id);
 
 
 
+ALTER TABLE ONLY public.operation_tag
+    ADD CONSTRAINT operation_tag_pkey PRIMARY KEY (opt_id);
 
 
 
+ALTER TABLE ONLY public.parameter_extra
+    ADD CONSTRAINT parameter_extra_pkey PRIMARY KEY (id);
 
 
 
+ALTER TABLE ONLY public.parameter
+    ADD CONSTRAINT parameter_pkey PRIMARY KEY (pr_id);
 
 
 
+ALTER TABLE ONLY public.parm_appearance
+    ADD CONSTRAINT parm_appearance_pkey PRIMARY KEY (a_code);
 
 
 
+ALTER TABLE ONLY public.parm_code
+    ADD CONSTRAINT parm_code_pkey PRIMARY KEY (p_code);
 
 
 
+ALTER TABLE ONLY public.parm_money
+    ADD CONSTRAINT parm_money_pkey PRIMARY KEY (pm_code);
 
 
 
+ALTER TABLE ONLY public.parm_periode
+    ADD CONSTRAINT parm_periode_pkey PRIMARY KEY (p_id);
 
 
 
+ALTER TABLE ONLY public.parm_poste
+    ADD CONSTRAINT parm_poste_pkey PRIMARY KEY (p_value);
 
 
 
+ALTER TABLE ONLY public.parameter_extra
+    ADD CONSTRAINT pe_code_ux UNIQUE (pe_code);
 
 
 
+ALTER TABLE ONLY public.extension
+    ADD CONSTRAINT pk_extension PRIMARY KEY (ex_id);
 
 
 
+ALTER TABLE ONLY public.groupe_analytique
+    ADD CONSTRAINT pk_ga_id PRIMARY KEY (ga_id);
 
 
 
+ALTER TABLE ONLY public.jnt_fic_attr
+    ADD CONSTRAINT pk_jnt_fic_attr PRIMARY KEY (jnt_id);
 
 
 
+ALTER TABLE ONLY public.user_local_pref
+    ADD CONSTRAINT pk_user_local_pref PRIMARY KEY (user_id, parameter_type);
 
 
 
+ALTER TABLE ONLY public.plan_analytique
+    ADD CONSTRAINT plan_analytique_pa_name_key UNIQUE (pa_name);
 
 
 
+ALTER TABLE ONLY public.plan_analytique
+    ADD CONSTRAINT plan_analytique_pkey PRIMARY KEY (pa_id);
 
 
 
+ALTER TABLE ONLY public.poste_analytique
+    ADD CONSTRAINT poste_analytique_pkey PRIMARY KEY (po_id);
 
 
 
+ALTER TABLE ONLY public.profile_menu
+    ADD CONSTRAINT profile_menu_pkey PRIMARY KEY (pm_id);
 
 
 
-CREATE UNIQUE INDEX fd_id_ad_id_x ON jnt_fic_attr USING btree (fd_id, ad_id);
+ALTER TABLE ONLY public.profile_menu_type
+    ADD CONSTRAINT profile_menu_type_pkey PRIMARY KEY (pm_type);
 
 
 
-CREATE UNIQUE INDEX fiche_detail_f_id_ad_id ON fiche_detail USING btree (f_id, ad_id);
+ALTER TABLE ONLY public.profile_mobile
+    ADD CONSTRAINT profile_mobile_code_uq UNIQUE (p_id, me_code);
 
 
 
-CREATE INDEX fk_action_person_action_gestion ON action_person USING btree (ag_id);
+ALTER TABLE ONLY public.profile_mobile
+    ADD CONSTRAINT profile_mobile_pkey PRIMARY KEY (pmo_id);
 
 
 
-CREATE INDEX fk_action_person_fiche ON action_person USING btree (f_id);
+ALTER TABLE ONLY public.profile
+    ADD CONSTRAINT profile_pkey PRIMARY KEY (p_id);
 
 
 
-CREATE INDEX fk_stock_good_repository_r_id ON stock_goods USING btree (r_id);
+ALTER TABLE ONLY public.profile_sec_repository
+    ADD CONSTRAINT profile_sec_repository_pkey PRIMARY KEY (ur_id);
 
 
 
-CREATE INDEX fk_stock_goods_f_id ON stock_goods USING btree (f_id);
+ALTER TABLE ONLY public.profile_sec_repository
+    ADD CONSTRAINT profile_sec_repository_r_id_p_id_u UNIQUE (r_id, p_id);
 
 
 
-CREATE INDEX fk_stock_goods_j_id ON stock_goods USING btree (j_id);
+ALTER TABLE ONLY public.profile_user
+    ADD CONSTRAINT profile_user_pkey PRIMARY KEY (pu_id);
 
 
 
-CREATE INDEX fki_f_end_date ON forecast USING btree (f_end_date);
+ALTER TABLE ONLY public.profile_user
+    ADD CONSTRAINT profile_user_user_name_key UNIQUE (user_name, p_id);
 
 
 
-CREATE INDEX fki_f_start_date ON forecast USING btree (f_start_date);
+ALTER TABLE ONLY public.quant_purchase
+    ADD CONSTRAINT qp_id_pk PRIMARY KEY (qp_id);
 
 
 
-CREATE INDEX fki_jrn_jr_grpt_id ON jrn USING btree (jr_grpt_id);
+ALTER TABLE ONLY public.quant_sold
+    ADD CONSTRAINT qs_id_pk PRIMARY KEY (qs_id);
 
 
 
-CREATE INDEX fki_jrnx_f_id ON jrnx USING btree (f_id);
+ALTER TABLE ONLY public.quant_fin
+    ADD CONSTRAINT quant_fin_pk PRIMARY KEY (qf_id);
 
 
 
-CREATE INDEX fki_jrnx_j_grpt ON jrnx USING btree (j_grpt);
+ALTER TABLE ONLY public.stock_change
+    ADD CONSTRAINT stock_change_pkey PRIMARY KEY (c_id);
 
 
 
-CREATE INDEX fki_profile_menu_me_code ON profile_menu USING btree (me_code);
+ALTER TABLE ONLY public.stock_goods
+    ADD CONSTRAINT stock_goods_pkey PRIMARY KEY (sg_id);
 
 
 
-CREATE INDEX fki_profile_menu_profile ON profile_menu USING btree (p_id);
+ALTER TABLE ONLY public.stock_repository
+    ADD CONSTRAINT stock_repository_pkey PRIMARY KEY (r_id);
 
 
 
-CREATE INDEX fki_profile_menu_type_fkey ON profile_menu USING btree (p_type_display);
+ALTER TABLE ONLY public.tag_group
+    ADD CONSTRAINT tag_group_pk PRIMARY KEY (tg_id);
 
 
 
-CREATE INDEX idx_qs_internal ON quant_sold USING btree (qs_internal);
+ALTER TABLE ONLY public.operation_tag
+    ADD CONSTRAINT tag_operation_uq UNIQUE (jrn_id, tag_id);
 
 
 
-CREATE INDEX jnt_fic_att_value_fd_id_idx ON fiche_detail USING btree (f_id);
+ALTER TABLE ONLY public.tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (t_id);
 
 
 
-CREATE INDEX jnt_fic_attr_fd_id_idx ON jnt_fic_attr USING btree (fd_id);
+ALTER TABLE ONLY public.tmp_pcmn
+    ADD CONSTRAINT tmp_pcmn_pkey PRIMARY KEY (pcm_val);
 
 
 
-CREATE INDEX jrnx_j_qcode_ix ON jrnx USING btree (j_qcode);
+ALTER TABLE ONLY public.tmp_stockgood_detail
+    ADD CONSTRAINT tmp_stockgood_detail_pkey PRIMARY KEY (d_id);
 
 
 
-CREATE UNIQUE INDEX k_ag_ref ON action_gestion USING btree (ag_ref);
+ALTER TABLE ONLY public.tmp_stockgood
+    ADD CONSTRAINT tmp_stockgood_pkey PRIMARY KEY (s_id);
 
 
 
-CREATE INDEX link_action_type_fki ON action_gestion_related USING btree (aga_type);
+ALTER TABLE ONLY public.todo_list
+    ADD CONSTRAINT todo_list_pkey PRIMARY KEY (tl_id);
 
 
 
-CREATE UNIQUE INDEX qcode_idx ON fiche_detail USING btree (ad_value) WHERE (ad_id = 23);
+ALTER TABLE ONLY public.todo_list_shared
+    ADD CONSTRAINT todo_list_shared_pkey PRIMARY KEY (id);
 
 
 
-CREATE UNIQUE INDEX qf_jr_id ON quant_fin USING btree (jr_id);
+ALTER TABLE ONLY public.tool_uos
+    ADD CONSTRAINT tool_uos_pkey PRIMARY KEY (uos_value);
 
 
 
-CREATE UNIQUE INDEX qp_j_id ON quant_purchase USING btree (j_id);
+ALTER TABLE ONLY public.tva_rate
+    ADD CONSTRAINT tva_code_unique UNIQUE (tva_code);
 
 
 
-CREATE UNIQUE INDEX qs_j_id ON quant_sold USING btree (j_id);
+ALTER TABLE ONLY public.tva_rate
+    ADD CONSTRAINT tva_id_pk PRIMARY KEY (tva_id);
 
 
 
-CREATE INDEX quant_purchase_jrn_fki ON quant_purchase USING btree (qp_internal);
+ALTER TABLE ONLY public.user_sec_jrn
+    ADD CONSTRAINT uniq_user_ledger UNIQUE (uj_login, uj_jrn_id);
 
 
 
-CREATE INDEX quant_sold_jrn_fki ON quant_sold USING btree (qs_internal);
+COMMENT ON CONSTRAINT uniq_user_ledger ON public.user_sec_jrn IS 'Create an unique combination user / ledger';
 
 
 
-CREATE UNIQUE INDEX uj_login_uj_jrn_id ON user_sec_jrn USING btree (uj_login, uj_jrn_id);
+ALTER TABLE ONLY public.todo_list_shared
+    ADD CONSTRAINT unique_todo_list_id_login UNIQUE (todo_list_id, use_login);
 
 
 
-CREATE UNIQUE INDEX ux_po_name ON poste_analytique USING btree (po_name);
+ALTER TABLE ONLY public.user_active_security
+    ADD CONSTRAINT user_active_security_pk PRIMARY KEY (id);
 
 
 
-CREATE UNIQUE INDEX x_jrn_jr_id ON jrn USING btree (jr_id);
+ALTER TABLE ONLY public.user_filter
+    ADD CONSTRAINT user_filter_pkey PRIMARY KEY (id);
 
 
 
-CREATE INDEX x_mt ON jrn USING btree (jr_mt);
+ALTER TABLE ONLY public.user_sec_act
+    ADD CONSTRAINT user_sec_act_pkey PRIMARY KEY (ua_id);
 
 
 
-CREATE UNIQUE INDEX x_periode ON parm_periode USING btree (p_start, p_end);
+ALTER TABLE ONLY public.user_sec_action_profile
+    ADD CONSTRAINT user_sec_action_profile_p_id_p_granted_u UNIQUE (p_id, p_granted);
 
 
 
-CREATE INDEX x_poste ON jrnx USING btree (j_poste);
+ALTER TABLE ONLY public.user_sec_action_profile
+    ADD CONSTRAINT user_sec_action_profile_pkey PRIMARY KEY (ua_id);
 
 
 
+ALTER TABLE ONLY public.user_sec_jrn
+    ADD CONSTRAINT user_sec_jrn_pkey PRIMARY KEY (uj_id);
 
 
 
+ALTER TABLE ONLY public.action_gestion_related
+    ADD CONSTRAINT ux_aga_least_aga_greatest UNIQUE (aga_least, aga_greatest);
 
 
 
+ALTER TABLE ONLY public.jrn
+    ADD CONSTRAINT ux_internal UNIQUE (jr_internal);
 
 
 
+ALTER TABLE ONLY public.version
+    ADD CONSTRAINT version_pkey PRIMARY KEY (val);
 
 
 
+CREATE UNIQUE INDEX fd_id_ad_id_x ON public.jnt_fic_attr USING btree (fd_id, ad_id);
 
 
 
+CREATE INDEX fiche_detail_attr_ix ON public.fiche_detail USING btree (ad_id);
 
 
 
+CREATE UNIQUE INDEX fiche_detail_f_id_ad_id ON public.fiche_detail USING btree (f_id, ad_id);
 
 
 
+CREATE INDEX fk_action_person_action_gestion ON public.action_person USING btree (ag_id);
 
 
 
+CREATE INDEX fk_action_person_fiche ON public.action_person USING btree (f_id);
 
 
 
+CREATE INDEX fk_stock_good_repository_r_id ON public.stock_goods USING btree (r_id);
 
 
 
+CREATE INDEX fk_stock_goods_f_id ON public.stock_goods USING btree (f_id);
 
 
 
+CREATE INDEX fk_stock_goods_j_id ON public.stock_goods USING btree (j_id);
 
 
 
+CREATE INDEX fki_f_end_date ON public.forecast USING btree (f_end_date);
 
 
 
+CREATE INDEX fki_f_start_date ON public.forecast USING btree (f_start_date);
 
 
 
+CREATE INDEX fki_jrn_jr_grpt_id ON public.jrn USING btree (jr_grpt_id);
 
 
 
+CREATE INDEX fki_jrnx_f_id ON public.jrnx USING btree (f_id);
 
 
 
+CREATE INDEX fki_jrnx_j_grpt ON public.jrnx USING btree (j_grpt);
 
 
 
+CREATE INDEX fki_profile_menu_me_code ON public.profile_menu USING btree (me_code);
 
 
 
+CREATE INDEX fki_profile_menu_profile ON public.profile_menu USING btree (p_id);
 
 
 
+CREATE INDEX fki_profile_menu_type_fkey ON public.profile_menu USING btree (p_type_display);
 
 
 
+CREATE INDEX idx_qs_internal ON public.quant_sold USING btree (qs_internal);
 
 
 
+CREATE INDEX jnt_fic_att_value_fd_id_idx ON public.fiche_detail USING btree (f_id);
 
 
 
+CREATE INDEX jnt_fic_attr_fd_id_idx ON public.jnt_fic_attr USING btree (fd_id);
 
 
 
+CREATE INDEX jrnx_j_qcode_ix ON public.jrnx USING btree (j_qcode);
 
 
 
+CREATE UNIQUE INDEX k_ag_ref ON public.action_gestion USING btree (ag_ref);
 
 
 
+CREATE INDEX link_action_type_fki ON public.action_gestion_related USING btree (aga_type);
 
 
 
+CREATE UNIQUE INDEX qcode_idx ON public.fiche_detail USING btree (ad_value) WHERE (ad_id = 23);
 
 
 
+CREATE UNIQUE INDEX qf_jr_id ON public.quant_fin USING btree (jr_id);
 
 
 
+CREATE UNIQUE INDEX qp_j_id ON public.quant_purchase USING btree (j_id);
 
 
 
+CREATE UNIQUE INDEX qs_j_id ON public.quant_sold USING btree (j_id);
 
 
 
+CREATE INDEX quant_purchase_jrn_fki ON public.quant_purchase USING btree (qp_internal);
 
 
 
+CREATE INDEX quant_sold_jrn_fki ON public.quant_sold USING btree (qs_internal);
 
 
 
+CREATE UNIQUE INDEX uj_login_uj_jrn_id ON public.user_sec_jrn USING btree (uj_login, uj_jrn_id);
 
 
 
+CREATE UNIQUE INDEX ux_po_name ON public.poste_analytique USING btree (po_name);
 
 
 
+CREATE UNIQUE INDEX x_jrn_jr_id ON public.jrn USING btree (jr_id);
 
 
 
+CREATE INDEX x_mt ON public.jrn USING btree (jr_mt);
 
 
 
+CREATE UNIQUE INDEX x_periode ON public.parm_periode USING btree (p_start, p_end);
 
 
 
+CREATE INDEX x_poste ON public.jrnx USING btree (j_poste);
 
 
 
+CREATE TRIGGER action_gestion_t_insert_update BEFORE INSERT OR UPDATE ON public.action_gestion FOR EACH ROW EXECUTE FUNCTION comptaproc.action_gestion_ins_upd();
 
 
 
+COMMENT ON TRIGGER action_gestion_t_insert_update ON public.action_gestion IS 'Truncate the column ag_title to 70 char';
 
 
 
+CREATE TRIGGER document_modele_validate BEFORE INSERT OR UPDATE ON public.document_modele FOR EACH ROW EXECUTE FUNCTION comptaproc.t_document_modele_validate();
 
 
 
+CREATE TRIGGER document_validate BEFORE INSERT OR UPDATE ON public.document FOR EACH ROW EXECUTE FUNCTION comptaproc.t_document_validate();
 
 
 
+CREATE TRIGGER fiche_def_ins_upd BEFORE INSERT OR UPDATE ON public.fiche_def FOR EACH ROW EXECUTE FUNCTION comptaproc.fiche_def_ins_upd();
 
 
 
+CREATE TRIGGER fiche_detail_check_qcode_trg BEFORE INSERT OR UPDATE ON public.fiche_detail FOR EACH ROW EXECUTE FUNCTION comptaproc.fiche_detail_check_qcode();
 
 
 
+CREATE TRIGGER fiche_detail_check_trg BEFORE INSERT OR UPDATE ON public.fiche_detail FOR EACH ROW EXECUTE FUNCTION comptaproc.fiche_detail_check();
 
 
 
+CREATE TRIGGER info_def_ins_upd_t BEFORE INSERT OR UPDATE ON public.info_def FOR EACH ROW EXECUTE FUNCTION comptaproc.info_def_ins_upd();
 
 
 
+CREATE TRIGGER jrn_def_description_ins_upd BEFORE INSERT OR UPDATE ON public.jrn_def FOR EACH ROW EXECUTE FUNCTION comptaproc.t_jrn_def_description();
 
 
 
+CREATE TRIGGER opd_limit_description BEFORE INSERT OR UPDATE ON public.op_predef FOR EACH ROW EXECUTE FUNCTION comptaproc.opd_limit_description();
 
 
 
+CREATE TRIGGER parm_periode_check_periode_trg BEFORE INSERT OR UPDATE ON public.parm_periode FOR EACH ROW EXECUTE FUNCTION comptaproc.check_periode();
 
 
 
+CREATE TRIGGER profile_user_ins_upd BEFORE INSERT OR UPDATE ON public.profile_user FOR EACH ROW EXECUTE FUNCTION comptaproc.trg_profile_user_ins_upd();
 
 
 
+COMMENT ON TRIGGER profile_user_ins_upd ON public.profile_user IS 'Force the column user_name to lowercase';
 
 
 
+CREATE TRIGGER quant_sold_ins_upd_tr AFTER INSERT OR UPDATE ON public.quant_purchase FOR EACH ROW EXECUTE FUNCTION comptaproc.quant_purchase_ins_upd();
 
 
 
+CREATE TRIGGER quant_sold_ins_upd_tr AFTER INSERT OR UPDATE ON public.quant_sold FOR EACH ROW EXECUTE FUNCTION comptaproc.quant_sold_ins_upd();
 
 
 
+CREATE TRIGGER remove_action_gestion AFTER DELETE ON public.fiche FOR EACH ROW EXECUTE FUNCTION comptaproc.card_after_delete();
 
 
 
+CREATE TRIGGER t_check_balance AFTER INSERT OR UPDATE ON public.jrn FOR EACH ROW EXECUTE FUNCTION comptaproc.proc_check_balance();
 
 
 
+CREATE TRIGGER t_check_jrn BEFORE INSERT OR DELETE OR UPDATE ON public.jrn FOR EACH ROW EXECUTE FUNCTION comptaproc.jrn_check_periode();
 
 
 
+CREATE TRIGGER t_code BEFORE INSERT OR UPDATE ON public.document_component FOR EACH ROW EXECUTE FUNCTION comptaproc.four_upper_letter();
 
 
 
+CREATE TRIGGER t_group_analytic_del BEFORE DELETE ON public.groupe_analytique FOR EACH ROW EXECUTE FUNCTION comptaproc.group_analytique_del();
 
 
 
+CREATE TRIGGER t_group_analytic_ins_upd BEFORE INSERT OR UPDATE ON public.groupe_analytique FOR EACH ROW EXECUTE FUNCTION comptaproc.group_analytic_ins_upd();
 
 
 
+CREATE TRIGGER t_jnt_fic_attr_ins AFTER INSERT ON public.jnt_fic_attr FOR EACH ROW EXECUTE FUNCTION comptaproc.jnt_fic_attr_ins();
 
 
 
+CREATE TRIGGER t_jrn_currency BEFORE INSERT OR UPDATE ON public.jrn FOR EACH ROW EXECUTE FUNCTION comptaproc.jrn_currency();
 
 
 
+CREATE TRIGGER t_jrn_def_add_periode AFTER INSERT ON public.jrn_def FOR EACH ROW EXECUTE FUNCTION comptaproc.jrn_def_add();
 
 
 
+CREATE TRIGGER t_jrn_def_delete BEFORE DELETE ON public.jrn_def FOR EACH ROW EXECUTE FUNCTION comptaproc.jrn_def_delete();
 
 
 
+CREATE TRIGGER t_jrn_del BEFORE DELETE ON public.jrn FOR EACH ROW EXECUTE FUNCTION comptaproc.jrn_del();
 
 
 
+CREATE TRIGGER t_jrnx_del BEFORE DELETE ON public.jrnx FOR EACH ROW EXECUTE FUNCTION comptaproc.jrnx_del();
 
 
 
+CREATE TRIGGER t_jrnx_ins BEFORE INSERT ON public.jrnx FOR EACH ROW EXECUTE FUNCTION comptaproc.jrnx_ins();
 
 
 
+COMMENT ON TRIGGER t_jrnx_ins ON public.jrnx IS 'check that the qcode used by the card exists and format it : uppercase and trim the space';
 
 
 
+CREATE TRIGGER t_letter_del AFTER DELETE ON public.jrnx FOR EACH ROW EXECUTE FUNCTION comptaproc.jrnx_letter_del();
 
 
 
+COMMENT ON TRIGGER t_letter_del ON public.jrnx IS 'Delete the lettering for this row';
 
 
 
+CREATE TRIGGER t_plan_analytique_ins_upd BEFORE INSERT OR UPDATE ON public.plan_analytique FOR EACH ROW EXECUTE FUNCTION comptaproc.plan_analytic_ins_upd();
 
 
 
+CREATE TRIGGER t_poste_analytique_ins_upd BEFORE INSERT OR UPDATE ON public.poste_analytique FOR EACH ROW EXECUTE FUNCTION comptaproc.poste_analytique_ins_upd();
 
 
 
+CREATE TRIGGER t_remove_script_tag BEFORE INSERT OR UPDATE ON public.action_gestion_comment FOR EACH ROW EXECUTE FUNCTION comptaproc.trg_remove_script_tag();
 
 
 
+CREATE TRIGGER t_tmp_pcm_alphanum_ins_upd BEFORE INSERT OR UPDATE ON public.tmp_pcmn FOR EACH ROW EXECUTE FUNCTION comptaproc.tmp_pcmn_alphanum_ins_upd();
 
 
 
+CREATE TRIGGER t_tmp_pcmn_ins BEFORE INSERT ON public.tmp_pcmn FOR EACH ROW EXECUTE FUNCTION comptaproc.tmp_pcmn_ins();
 
 
 
+CREATE TRIGGER todo_list_ins_upd BEFORE INSERT OR UPDATE ON public.todo_list FOR EACH ROW EXECUTE FUNCTION comptaproc.trg_todo_list_ins_upd();
 
 
 
+COMMENT ON TRIGGER todo_list_ins_upd ON public.todo_list IS 'Force the column use_login to lowercase';
 
 
 
+CREATE TRIGGER todo_list_shared_ins_upd BEFORE INSERT OR UPDATE ON public.todo_list_shared FOR EACH ROW EXECUTE FUNCTION comptaproc.trg_todo_list_shared_ins_upd();
 
 
 
+COMMENT ON TRIGGER todo_list_shared_ins_upd ON public.todo_list_shared IS 'Force the column ua_login to lowercase';
 
 
 
+CREATE TRIGGER trg_action_gestion_related BEFORE INSERT OR UPDATE ON public.action_gestion_related FOR EACH ROW EXECUTE FUNCTION comptaproc.action_gestion_related_ins_up();
 
 
 
+CREATE TRIGGER trg_category_card_before_delete BEFORE DELETE ON public.fiche_def FOR EACH ROW EXECUTE FUNCTION comptaproc.category_card_before_delete();
 
 
 
+CREATE TRIGGER trg_extension_ins_upd BEFORE INSERT OR UPDATE ON public.extension FOR EACH ROW EXECUTE FUNCTION comptaproc.extension_ins_upd();
 
 
 
+CREATE TRIGGER trg_set_tech_user BEFORE INSERT OR UPDATE ON public.operation_exercice FOR EACH ROW EXECUTE FUNCTION comptaproc.set_tech_user();
 
 
 
+CREATE TRIGGER trigger_document_type_i AFTER INSERT ON public.document_type FOR EACH ROW EXECUTE FUNCTION comptaproc.t_document_type_insert();
 
 
 
+CREATE TRIGGER trigger_jrn_def_sequence_i AFTER INSERT ON public.jrn_def FOR EACH ROW EXECUTE FUNCTION comptaproc.t_jrn_def_sequence();
 
 
 
+CREATE TRIGGER trigger_parameter_extra_format_code_biu BEFORE INSERT OR UPDATE ON public.parameter_extra FOR EACH ROW EXECUTE FUNCTION comptaproc.t_parameter_extra_code();
 
 
 
+CREATE TRIGGER user_sec_act_ins_upd BEFORE INSERT OR UPDATE ON public.user_sec_act FOR EACH ROW EXECUTE FUNCTION comptaproc.trg_user_sec_act_ins_upd();
 
 
 
+COMMENT ON TRIGGER user_sec_act_ins_upd ON public.user_sec_act IS 'Force the column ua_login to lowercase';
 
 
 
+CREATE TRIGGER user_sec_jrn_after_ins_upd BEFORE INSERT OR UPDATE ON public.user_sec_jrn FOR EACH ROW EXECUTE FUNCTION comptaproc.trg_user_sec_jrn_ins_upd();
 
 
 
+COMMENT ON TRIGGER user_sec_jrn_after_ins_upd ON public.user_sec_jrn IS 'Force the column uj_login to lowercase';
 
 
 
+ALTER TABLE ONLY public.centralized
+    ADD CONSTRAINT "$1" FOREIGN KEY (c_jrn_def) REFERENCES public.jrn_def(jrn_def_id);
 
 
 
+ALTER TABLE ONLY public.user_sec_act
+    ADD CONSTRAINT "$1" FOREIGN KEY (ua_act_id) REFERENCES public.action(ac_id);
 
 
 
+ALTER TABLE ONLY public.fiche_def
+    ADD CONSTRAINT "$1" FOREIGN KEY (frd_id) REFERENCES public.fiche_def_ref(frd_id);
 
 
 
+ALTER TABLE ONLY public.attr_min
+    ADD CONSTRAINT "$1" FOREIGN KEY (frd_id) REFERENCES public.fiche_def_ref(frd_id);
 
 
 
+ALTER TABLE ONLY public.fiche
+    ADD CONSTRAINT "$1" FOREIGN KEY (fd_id) REFERENCES public.fiche_def(fd_id);
 
 
 
+ALTER TABLE ONLY public.fiche_detail
+    ADD CONSTRAINT "$1" FOREIGN KEY (f_id) REFERENCES public.fiche(f_id);
 
 
 
+ALTER TABLE ONLY public.jnt_fic_attr
+    ADD CONSTRAINT "$1" FOREIGN KEY (fd_id) REFERENCES public.fiche_def(fd_id);
 
 
 
+ALTER TABLE ONLY public.jrn
+    ADD CONSTRAINT "$1" FOREIGN KEY (jr_def_id) REFERENCES public.jrn_def(jrn_def_id);
 
 
 
+ALTER TABLE ONLY public.jrn_def
+    ADD CONSTRAINT "$1" FOREIGN KEY (jrn_def_type) REFERENCES public.jrn_type(jrn_type_id);
 
 
 
+ALTER TABLE ONLY public.jrnx
+    ADD CONSTRAINT "$2" FOREIGN KEY (j_jrn_def) REFERENCES public.jrn_def(jrn_def_id);
 
 
 
+ALTER TABLE ONLY public.attr_min
+    ADD CONSTRAINT "$2" FOREIGN KEY (ad_id) REFERENCES public.attr_def(ad_id);
 
 
 
+ALTER TABLE ONLY public.action_comment_document
+    ADD CONSTRAINT action_comment_document_action_gestion_comment_id_fkey FOREIGN KEY (action_gestion_comment_id) REFERENCES public.action_gestion_comment(agc_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_comment_document
+    ADD CONSTRAINT action_comment_document_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.document(d_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_gestion_operation
+    ADD CONSTRAINT action_comment_operation_ag_id_fkey FOREIGN KEY (ag_id) REFERENCES public.action_gestion(ag_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_gestion_operation
+    ADD CONSTRAINT action_comment_operation_jr_id_fkey FOREIGN KEY (jr_id) REFERENCES public.jrn(jr_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_detail
+    ADD CONSTRAINT action_detail_ag_id_fkey FOREIGN KEY (ag_id) REFERENCES public.action_gestion(ag_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_person
+    ADD CONSTRAINT action_gestion_ag_id_fk2 FOREIGN KEY (ag_id) REFERENCES public.action_gestion(ag_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_gestion_comment
+    ADD CONSTRAINT action_gestion_comment_ag_id_fkey FOREIGN KEY (ag_id) REFERENCES public.action_gestion(ag_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_gestion_related
+    ADD CONSTRAINT action_gestion_related_aga_greatest_fkey FOREIGN KEY (aga_greatest) REFERENCES public.action_gestion(ag_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_gestion_related
+    ADD CONSTRAINT action_gestion_related_aga_least_fkey FOREIGN KEY (aga_least) REFERENCES public.action_gestion(ag_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_gestion_related
+    ADD CONSTRAINT action_gestion_related_aga_type_fkey FOREIGN KEY (aga_type) REFERENCES public.link_action_type(l_id);
 
 
 
+ALTER TABLE ONLY public.action_person
+    ADD CONSTRAINT action_person_ag_id_fkey FOREIGN KEY (ag_id) REFERENCES public.action_gestion(ag_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_person
+    ADD CONSTRAINT action_person_f_id_fkey FOREIGN KEY (f_id) REFERENCES public.fiche(f_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_person_option
+    ADD CONSTRAINT action_person_option_fk FOREIGN KEY (action_person_id) REFERENCES public.action_person(ap_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_tags
+    ADD CONSTRAINT action_tags_ag_id_fkey FOREIGN KEY (ag_id) REFERENCES public.action_gestion(ag_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_tags
+    ADD CONSTRAINT action_tags_t_id_fkey FOREIGN KEY (t_id) REFERENCES public.tags(t_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_person_option
+    ADD CONSTRAINT contact_option_ref_fk FOREIGN KEY (contact_option_ref_id) REFERENCES public.contact_option_ref(cor_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.currency_history
+    ADD CONSTRAINT currency_history_currency_fk FOREIGN KEY (currency_id) REFERENCES public.currency(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 
+ALTER TABLE ONLY public.document_modele
+    ADD CONSTRAINT document_modele_fk FOREIGN KEY (md_affect) REFERENCES public.document_component(dc_code) ON UPDATE CASCADE;
 
 
 
+ALTER TABLE ONLY public.document_option
+    ADD CONSTRAINT document_option_ref_fk FOREIGN KEY (document_type_id) REFERENCES public.document_type(dt_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.fiche_detail
+    ADD CONSTRAINT fiche_detail_attr_def_fk FOREIGN KEY (ad_id) REFERENCES public.attr_def(ad_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.action_person
+    ADD CONSTRAINT fiche_f_id_fk2 FOREIGN KEY (f_id) REFERENCES public.fiche(f_id);
 
 
 
+ALTER TABLE ONLY public.action_gestion
+    ADD CONSTRAINT fiche_f_id_fk3 FOREIGN KEY (f_id_dest) REFERENCES public.fiche(f_id);
 
 
 
+ALTER TABLE ONLY public.action_gestion
+    ADD CONSTRAINT fk_action_gestion_document_type FOREIGN KEY (ag_type) REFERENCES public.document_type(dt_id);
 
 
 
+ALTER TABLE ONLY public.quant_fin
+    ADD CONSTRAINT fk_card FOREIGN KEY (qf_bank) REFERENCES public.fiche(f_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.quant_fin
+    ADD CONSTRAINT fk_card_other FOREIGN KEY (qf_other) REFERENCES public.fiche(f_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.forecast_item
+    ADD CONSTRAINT fk_forecast FOREIGN KEY (fc_id) REFERENCES public.forecast_category(fc_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.jrn_info
+    ADD CONSTRAINT fk_info_def FOREIGN KEY (id_type) REFERENCES public.info_def(id_type) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.jrn_info
+    ADD CONSTRAINT fk_jrn FOREIGN KEY (jr_id) REFERENCES public.jrn(jr_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.quant_fin
+    ADD CONSTRAINT fk_jrn FOREIGN KEY (jr_id) REFERENCES public.jrn(jr_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.groupe_analytique
+    ADD CONSTRAINT fk_pa_id FOREIGN KEY (pa_id) REFERENCES public.plan_analytique(pa_id) ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.jrnx
+    ADD CONSTRAINT fk_pcmn_val FOREIGN KEY (j_poste) REFERENCES public.tmp_pcmn(pcm_val);
 
 
 
+ALTER TABLE ONLY public.centralized
+    ADD CONSTRAINT fk_pcmn_val FOREIGN KEY (c_poste) REFERENCES public.tmp_pcmn(pcm_val);
 
 
 
+ALTER TABLE ONLY public.stock_goods
+    ADD CONSTRAINT fk_stock_good_f_id FOREIGN KEY (f_id) REFERENCES public.fiche(f_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.todo_list_shared
+    ADD CONSTRAINT fk_todo_list_shared_todo_list FOREIGN KEY (todo_list_id) REFERENCES public.todo_list(tl_id);
 
 
 
+ALTER TABLE ONLY public.forecast_category
+    ADD CONSTRAINT forecast_child FOREIGN KEY (f_id) REFERENCES public.forecast(f_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY public.forecast
+    ADD CONSTRAINT forecast_f_end_date_fkey FOREIGN KEY (f_end_date) REFERENCES public.parm_periode(p_id) ON UPDATE SET NULL ON DELETE SET NULL;
+
+
+
+ALTER TABLE ONLY public.forecast
+    ADD CONSTRAINT forecast_f_start_date_fkey FOREIGN KEY (f_start_date) REFERENCES public.parm_periode(p_id) ON UPDATE SET NULL ON DELETE SET NULL;
+
+
+
+ALTER TABLE ONLY public.form_detail
+    ADD CONSTRAINT formdef_fk FOREIGN KEY (fo_fr_id) REFERENCES public.form_definition(fr_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.letter_cred
+    ADD CONSTRAINT jnt_cred_fk FOREIGN KEY (jl_id) REFERENCES public.jnt_letter(jl_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.letter_deb
+    ADD CONSTRAINT jnt_deb_fk FOREIGN KEY (jl_id) REFERENCES public.jnt_letter(jl_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jnt_document_option_contact
+    ADD CONSTRAINT jnt_document_option_contact_contact_option_ref_id_fkey FOREIGN KEY (contact_option_ref_id) REFERENCES public.contact_option_ref(cor_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jnt_document_option_contact
+    ADD CONSTRAINT jnt_document_option_contact_document_type_id_fkey FOREIGN KEY (document_type_id) REFERENCES public.document_type(dt_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jnt_fic_attr
+    ADD CONSTRAINT jnt_fic_attr_attr_def_fk FOREIGN KEY (ad_id) REFERENCES public.attr_def(ad_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jnt_tag_group_tag
+    ADD CONSTRAINT jnt_tag_group_tag_fk FOREIGN KEY (tag_id) REFERENCES public.tags(t_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jnt_tag_group_tag
+    ADD CONSTRAINT jnt_tag_group_tag_fk_1 FOREIGN KEY (tag_group_id) REFERENCES public.tag_group(tg_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jrn
+    ADD CONSTRAINT jrn_currency_fk FOREIGN KEY (currency_id) REFERENCES public.currency(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+
+ALTER TABLE ONLY public.jrn_def
+    ADD CONSTRAINT jrn_def_currency_fk FOREIGN KEY (currency_id) REFERENCES public.currency(id);
+
+
+
+ALTER TABLE ONLY public.op_predef
+    ADD CONSTRAINT jrn_def_id_fk FOREIGN KEY (jrn_def_id) REFERENCES public.jrn_def(jrn_def_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jrn_periode
+    ADD CONSTRAINT jrn_per_jrn_def_id FOREIGN KEY (jrn_def_id) REFERENCES public.jrn_def(jrn_def_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jrn_periode
+    ADD CONSTRAINT jrn_periode_p_id FOREIGN KEY (p_id) REFERENCES public.parm_periode(p_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jrn_rapt
+    ADD CONSTRAINT jrn_rapt_jr_id_fkey FOREIGN KEY (jr_id) REFERENCES public.jrn(jr_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jrn_rapt
+    ADD CONSTRAINT jrn_rapt_jra_concerned_fkey FOREIGN KEY (jra_concerned) REFERENCES public.jrn(jr_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jrn_tax
+    ADD CONSTRAINT jrn_tax_acc_other_tax_fk FOREIGN KEY (ac_id) REFERENCES public.acc_other_tax(ac_id);
+
+
+
+ALTER TABLE ONLY public.jrn_tax
+    ADD CONSTRAINT jrn_tax_fk FOREIGN KEY (j_id) REFERENCES public.jrnx(j_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jrnx
+    ADD CONSTRAINT jrnx_f_id_fkey FOREIGN KEY (f_id) REFERENCES public.fiche(f_id) ON UPDATE CASCADE;
+
+
+
+ALTER TABLE ONLY public.quant_fin
+    ADD CONSTRAINT jrnx_j_id_fk FOREIGN KEY (j_id) REFERENCES public.jrnx(j_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.jrn_note
+    ADD CONSTRAINT jrnx_note_j_id_fkey FOREIGN KEY (jr_id) REFERENCES public.jrn(jr_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.key_distribution_activity
+    ADD CONSTRAINT key_distribution_activity_ke_id_fkey FOREIGN KEY (ke_id) REFERENCES public.key_distribution_detail(ke_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.key_distribution_activity
+    ADD CONSTRAINT key_distribution_activity_pa_id_fkey FOREIGN KEY (pa_id) REFERENCES public.plan_analytique(pa_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.key_distribution_activity
+    ADD CONSTRAINT key_distribution_activity_po_id_fkey FOREIGN KEY (po_id) REFERENCES public.poste_analytique(po_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.key_distribution_detail
+    ADD CONSTRAINT key_distribution_detail_kd_id_fkey FOREIGN KEY (kd_id) REFERENCES public.key_distribution(kd_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.key_distribution_ledger
+    ADD CONSTRAINT key_distribution_ledger_jrn_def_id_fkey FOREIGN KEY (jrn_def_id) REFERENCES public.jrn_def(jrn_def_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.key_distribution_ledger
+    ADD CONSTRAINT key_distribution_ledger_kd_id_fkey FOREIGN KEY (kd_id) REFERENCES public.key_distribution(kd_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.letter_cred
+    ADD CONSTRAINT letter_cred_fk FOREIGN KEY (j_id) REFERENCES public.jrnx(j_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.letter_deb
+    ADD CONSTRAINT letter_deb_fk FOREIGN KEY (j_id) REFERENCES public.jrnx(j_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.document_modele
+    ADD CONSTRAINT md_type FOREIGN KEY (md_type) REFERENCES public.document_type(dt_id);
+
+
+
+ALTER TABLE ONLY public.payment_method
+    ADD CONSTRAINT mod_payment_jrn_def_id_fk FOREIGN KEY (jrn_def_id) REFERENCES public.jrn_def(jrn_def_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.payment_method
+    ADD CONSTRAINT mod_payment_mp_fd_id_fkey FOREIGN KEY (mp_fd_id) REFERENCES public.fiche_def(fd_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.payment_method
+    ADD CONSTRAINT mod_payment_mp_jrn_def_id_fkey FOREIGN KEY (mp_jrn_def_id) REFERENCES public.jrn_def(jrn_def_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.operation_analytique
+    ADD CONSTRAINT operation_analytique_fiche_id_fk FOREIGN KEY (f_id) REFERENCES public.fiche(f_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.operation_analytique
+    ADD CONSTRAINT operation_analytique_j_id_fkey FOREIGN KEY (j_id) REFERENCES public.jrnx(j_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.operation_analytique
+    ADD CONSTRAINT operation_analytique_po_id_fkey FOREIGN KEY (po_id) REFERENCES public.poste_analytique(po_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.operation_currency
+    ADD CONSTRAINT operation_currency_jrnx_fk FOREIGN KEY (j_id) REFERENCES public.jrnx(j_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.operation_exercice_detail
+    ADD CONSTRAINT operation_exercice_detail_oe_id_fkey FOREIGN KEY (oe_id) REFERENCES public.operation_exercice(oe_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.operation_tag
+    ADD CONSTRAINT opt_jrnx FOREIGN KEY (jrn_id) REFERENCES public.jrn(jr_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.operation_tag
+    ADD CONSTRAINT opt_tag_id FOREIGN KEY (tag_id) REFERENCES public.tags(t_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.poste_analytique
+    ADD CONSTRAINT poste_analytique_pa_id_fkey FOREIGN KEY (pa_id) REFERENCES public.plan_analytique(pa_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.action_gestion
+    ADD CONSTRAINT profile_fkey FOREIGN KEY (ag_dest) REFERENCES public.profile(p_id) ON UPDATE SET NULL ON DELETE SET NULL;
+
+
+
+ALTER TABLE ONLY public.profile_menu
+    ADD CONSTRAINT profile_menu_me_code_fkey FOREIGN KEY (me_code) REFERENCES public.menu_ref(me_code) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.profile_menu
+    ADD CONSTRAINT profile_menu_p_id_fkey FOREIGN KEY (p_id) REFERENCES public.profile(p_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.profile_menu
+    ADD CONSTRAINT profile_menu_type_fkey FOREIGN KEY (p_type_display) REFERENCES public.profile_menu_type(pm_type);
+
+
+
+ALTER TABLE ONLY public.profile_mobile
+    ADD CONSTRAINT profile_mobile_menu_ref_fk FOREIGN KEY (me_code) REFERENCES public.menu_ref(me_code);
+
+
+
+ALTER TABLE ONLY public.profile_mobile
+    ADD CONSTRAINT profile_mobile_profile_fk FOREIGN KEY (p_id) REFERENCES public.profile(p_id);
+
+
+
+ALTER TABLE ONLY public.profile_sec_repository
+    ADD CONSTRAINT profile_sec_repository_p_id_fkey FOREIGN KEY (p_id) REFERENCES public.profile(p_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.profile_sec_repository
+    ADD CONSTRAINT profile_sec_repository_r_id_fkey FOREIGN KEY (r_id) REFERENCES public.stock_repository(r_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.profile_user
+    ADD CONSTRAINT profile_user_p_id_fkey FOREIGN KEY (p_id) REFERENCES public.profile(p_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.quant_purchase
+    ADD CONSTRAINT qp_vat_code_fk FOREIGN KEY (qp_vat_code) REFERENCES public.tva_rate(tva_id) ON UPDATE CASCADE;
+
+
+
+ALTER TABLE ONLY public.quant_sold
+    ADD CONSTRAINT qs_vat_code_fk FOREIGN KEY (qs_vat_code) REFERENCES public.tva_rate(tva_id) ON UPDATE CASCADE;
+
+
+
+ALTER TABLE ONLY public.quant_purchase
+    ADD CONSTRAINT quant_purchase_j_id_fkey FOREIGN KEY (j_id) REFERENCES public.jrnx(j_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.quant_purchase
+    ADD CONSTRAINT quant_purchase_qp_internal_fkey FOREIGN KEY (qp_internal) REFERENCES public.jrn(jr_internal) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
+
+
+
+ALTER TABLE ONLY public.quant_sold
+    ADD CONSTRAINT quant_sold_j_id_fkey FOREIGN KEY (j_id) REFERENCES public.jrnx(j_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.quant_sold
+    ADD CONSTRAINT quant_sold_qs_internal_fkey FOREIGN KEY (qs_internal) REFERENCES public.jrn(jr_internal) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
+
+
+
+ALTER TABLE ONLY public.stock_change
+    ADD CONSTRAINT stock_change_r_id_fkey FOREIGN KEY (r_id) REFERENCES public.stock_repository(r_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.stock_goods
+    ADD CONSTRAINT stock_goods_c_id_fkey FOREIGN KEY (c_id) REFERENCES public.stock_change(c_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.stock_goods
+    ADD CONSTRAINT stock_goods_j_id_fkey FOREIGN KEY (j_id) REFERENCES public.jrnx(j_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.tmp_stockgood_detail
+    ADD CONSTRAINT tmp_stockgood_detail_s_id_fkey FOREIGN KEY (s_id) REFERENCES public.tmp_stockgood(s_id) ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.user_sec_jrn
+    ADD CONSTRAINT uj_priv_id_fkey FOREIGN KEY (uj_jrn_id) REFERENCES public.jrn_def(jrn_def_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.user_sec_action_profile
+    ADD CONSTRAINT user_sec_action_profile_p_granted_fkey FOREIGN KEY (p_granted) REFERENCES public.profile(p_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.user_sec_action_profile
+    ADD CONSTRAINT user_sec_action_profile_p_id_fkey FOREIGN KEY (p_id) REFERENCES public.profile(p_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 

@@ -19,8 +19,9 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/** \file
- * \brief javascript for searching a card
+/**
+ * @file
+ * javascript for searching a card
  */
 
 var card_layer=1;
@@ -88,7 +89,7 @@ function search_card(obj)
         var amount_from_type=0;
         if ( obj.amount_from_type) {
             amount_from_type=obj.amount_from_type;
-       
+
         }
         if ( jrn==undefined)
         {
@@ -116,10 +117,10 @@ function search_card(obj)
 	if (  $('search_card') ) {
 	    removeDiv('search_card');
 	}
-	
-	
+
+
         waiting_box();
-	
+
 
         var action=new Ajax.Request ( 'ajax_misc.php',
                                       {
@@ -235,7 +236,7 @@ function action_concerned_list(p_obj) {
 /**
  * Display form for searching cards to add to action-follow-up
  *@see ajax_add_concerned_card.php
- *@param {object} obj form object 
+ *@param {object} obj form object
  *@param obj.elements.ag_id id of the action (elements)
  *@param obj.elements.gDossier folder id
  *@param obj.elements.query
@@ -250,16 +251,16 @@ function action_concerned_search_card(obj)
         var search_in=-1;
         var inactive_card=0;
         var search_cat=-1;
-        
+
         if (obj.dossier) {
             dossier = obj.dossier; /* From the button */
-        } 
+        }
         if (obj.ag_id) {
             ag_id=obj.ag_id;
         }
         /* from the form */
         if (obj.elements) {
-            if (obj.elements['gDossier']) 
+            if (obj.elements['gDossier'])
             {
                 dossier = obj.elements['gDossier'].value;
             }
@@ -399,12 +400,12 @@ function search_get_card(obj)
     {
         queryString+="&ctl="+obj.ctl;
     }
-    if ( obj.elements['accvis'] ) 
+    if ( obj.elements['accvis'] )
     {
         queryString+="&accvis="+$F('accvis');
     } else {
         queryString+="&accvis=0";
-    } 
+    }
    if ( obj.elements['amount_from_type']) {
         queryString+="&amount_from_type="+obj.elements['amount_from_type'].value;
     }
@@ -417,7 +418,7 @@ function search_get_card(obj)
 
     queryString=encodeURI(queryString);
     $('asearch').innerHTML=loading();
-    
+
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
                                   method:'get',
@@ -435,7 +436,7 @@ function result_card_search(req)
 {
     try
     {
-        
+
         remove_waiting_box();
         if ( req.responseText == 'NOCONX') { reconnect();return;}
         var answer=req.responseXML;
@@ -451,7 +452,7 @@ function result_card_search(req)
         var nodeXml=html[0];
         var code_html=getNodeText(nodeXml);
         code_html=unescape_xml(code_html);
-        
+
         var sx=0;
 	if ( window.scrollY)
 	{
@@ -464,9 +465,9 @@ function result_card_search(req)
 
         var div_style="top:"+sx+"px;min-height:80%;height:auto";
         add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:false,effect:'blinddown'});
-        
+
         $('search_card').innerHTML=code_html;
-        
+
         if ($('query')) { $('query').focus();}
     }
     catch (e)
@@ -714,7 +715,7 @@ function select_card_type(obj)
     waiting_box();
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
 
-   
+
 
     var queryString='gDossier='+dossier;
     queryString+='&ctl='+content;
@@ -753,10 +754,10 @@ function select_card_type(obj)
                                   method:'get',
                                   parameters:queryString,
                                   onFailure:errorFid,
-                                  onSuccess:function(req) { 
+                                  onSuccess:function(req) {
                                       if (req.responseText=='NOCONX') { reconnect(); return;}
                                        add_div(popup);
-                                      // Get all the category, 
+                                      // Get all the category,
                                       var answer=req.responseXML.getElementsByTagName("fiche_cat_item");
                                       if (answer.length == 0) {
                                           removeDiv(content);
@@ -805,7 +806,7 @@ function dis_blank_card(obj)
     var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto;width:45rem;";
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
-  
+
     add_div(popup);
 
     if ( obj.gDossier.value != undefined ) {
@@ -830,8 +831,8 @@ function dis_blank_card(obj)
                                   parameters:queryString,
                                   onFailure:errorFid,
                                   onSuccess: function (req,json) {
-                                      
-                                      
+
+
                                       successFill_ipopcard(req,json);
                                   }
                               }
@@ -847,7 +848,7 @@ function form_blank_card(obj)
     var str_style="top:"+nTop+"px;left:"+nLeft+"px;width:60em;height:auto";
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
-    if ( $(content)) {removeDiv(content);} 
+    if ( $(content)) {removeDiv(content);}
     add_div(popup);
 
 
@@ -912,12 +913,12 @@ function save_card(obj)
                                       if ( after_savetag.length !=0 ) {
                                           after_save=getNodeText(after_savetag[0]);
                                       }
-                                      // if status == OK and after_save == 0 
+                                      // if status == OK and after_save == 0
                                       // then update the box
                                       if ( status_value == 'OK' && after_save == 0) {
                                              fill_box(req,json);
                                       }
-                                      
+
                                       // if status == OK and after_save == 1
                                       // then add a row to the table
                                       if ( status_value == 'OK' && after_save == 1) {
@@ -933,10 +934,10 @@ function save_card(obj)
                                                  row.addClassName("odd");
                                              } else {
                                                  row.addClassName("even");
-                                                 
+
                                              }
                                       }
-                                      
+
                                       remove_waiting_box();
                                       if ( elt.length != 0) {
                                          var eltid=getNodeText(elt[0]);
@@ -948,15 +949,15 @@ function save_card(obj)
                                         }
                                       }
                                       if (status_value == "OK") {
-                                            Effect.SlideUp(content, { duration: 1.0 });    
+                                            Effect.SlideUp(content, { duration: 1.0 });
                                         }
                                       if ( status_value == 'NOK') {
                                           var xml_message=req.responseXML.getElementsByTagName("code");
                                           var message=getNodeText(xml_message[0]);
                                           smoke.alert(message);
                                       }
-                                    
-                                      
+
+
                                   }
                               }
                         );
@@ -1125,7 +1126,7 @@ function action_save_concerned(p_form_id) {
                         removeDiv('search_card');
                         $('concerned_card_td').innerHTML = code_html;
                     } catch (e) {
-                       
+
                     }
                 }
             }
@@ -1157,9 +1158,9 @@ function action_remove_concerned(p_dossier,p_fiche_id,p_action_id)
                         code_html = unescape_xml(code_html);
                         $('concerned_card_td').innerHTML = code_html;
                         removeDiv('search_card');
-                        
+
                         $(namectl).remove();
-                        
+
                     } catch (e) {
                         if ( console) { console.log('Erreur ') + e.message;}
                         alert_box('action_remove_concerned '+e.message);
@@ -1170,8 +1171,8 @@ function action_remove_concerned(p_dossier,p_fiche_id,p_action_id)
     }
 /**
  * Remove a card after checking it is not used
- * @param object obj {gDossier,op,op2:rm_card,ctl,f_id}
- */    
+ * @param obj {json} = gDossier,op,op2:rm_card,ctl,f_id
+ */
 function delete_card(obj) {
     smoke.confirm("Confirmez ? ", function (e) {
         if (e) {
@@ -1194,7 +1195,7 @@ function delete_card(obj) {
                     var code_html = getNodeText(nodeXml);
                     code_html = unescape_xml(code_html);
                     if ( code_html == "OK") {
-                        Effect.Fade(obj['ctl'], { duration: 1.5 });    
+                        Effect.Fade(obj['ctl'], { duration: 1.5 });
                     } else {
                         smoke.alert(code_html);
                     }
@@ -1226,16 +1227,16 @@ function modify_card(p_fiche_id)
     var popup = {'id': content, 'cssclass': 'inner_box', 'style': str_style, 'html': loading(), 'drag': false};
 
     add_div(popup);
-    
+
     /* dossier id */
     if ( ! document.getElementById("card_gdossier")) {
-        
+
         console.error("card_gdossier error");
         throw ("card_gdossier not set");
     }
     var dossier = $('card_gdossier').value;
 
-    
+
     var action = new Ajax.Request('ajax_misc.php',
             {
                 method: 'get',
@@ -1257,7 +1258,7 @@ function delete_card_id(p_fiche_id)
 {
     var row="row_card"+p_fiche_id;
     if ( ! document.getElementById("card_gdossier")) {
-        
+
         console.error("card_gdossier error");
         throw ("card_gdossier not set");
     }
@@ -1284,29 +1285,29 @@ function delete_card_id(p_fiche_id)
                     var nodeXml = html[0];
                     var code_html = getNodeText(nodeXml);
                     code_html = unescape_xml(code_html);
-                   
+
                     if ((code_html) == "OK") {
                         Effect.Fade(row, {duration: 0.1});
                         table_card.tBodies[0].removeChild($(row));
                         alternate_row_color("fiche_tb_id");
                     } else {
                         smoke.alert(code_html);
-                        
+
                     }
                 }
-                    
+
             });
-        } else{ 
+        } else{
                    $(row).removeClassName("background-selected");
-            
+
         }
     });
-  
+
 }
 
 /**
 * update a card in ajax , and update a row
-* 
+*
 */
 function card_update_row(obj)
 {
@@ -1334,16 +1335,16 @@ function card_update_row(obj)
                             var name_ctl = "row_card" + obj.f_id.value;
                             var code_html = getNodeText(html[0]); // Firefox ne prend que les 4096 car.
                             code_html = unescape_xml(code_html);
-                            
+
                             if ( document.getElementById(name_ctl)) {
                                 // update the row
                                 $(name_ctl).innerHTML = code_html;
                                 new Effect.Highlight(name_ctl ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
-                                
+
                             }
                             $(a[0].firstChild.nodeValue).remove();
-                            
-                            
+
+
                         } catch (e) {
                             alert_box(e.message);
                             if (console) {
@@ -1360,8 +1361,8 @@ function card_update_row(obj)
                             }
                             alert_box(content[53] + "\n" + e.message);
                         }
-                       
-                 
+
+
                     }
                 }
         );
@@ -1391,7 +1392,7 @@ function linked_card_option(p_action_person_id,p_dossier) {
                 remove_waiting_box();
                 add_div({ "id":"d_linked_card_option",cssclass:"inner_box",style:"position:fixed;top:30%;min-width:20rem;width:auto;",drag:0});
                 $("d_linked_card_option").update(req.responseText);
-                
+
             }
         });
     } catch (e) {
@@ -1399,8 +1400,8 @@ function linked_card_option(p_action_person_id,p_dossier) {
     }
 }
 /**
- * Save option for the contact 
- * @param {object} obj form 
+ * Save option for the contact
+ * @param {object} obj form
  * @see card_multiple_display_option.php
  * @returns {undefined}
  */
@@ -1419,3 +1420,148 @@ function save_linked_card_option(obj)
     });
     return false;
 }
+
+/**
+ * @class
+ * Manage adding, removing and ordering attributs of a card template (FICHE_DEF), used in the module CCARD
+ * @param dossier_id {int} Folder
+ * @param fiche_def_id {int} SQL : FICHE_DEF.FD_ID
+ */
+var CategoryCardDefinition = function (dossier_id, fiche_def_id) {
+    this.dossier_id = dossier_id;
+    this.fiche_def_id = fiche_def_id;
+    this.available_list = 'avail_attribut_id';
+    this.existing_list = 'attribut_card';
+    this.op = 'category_card_definition';
+}
+/**
+ * save the order + new attributes, remove old ones
+ */
+CategoryCardDefinition.prototype.save = function () {
+
+    try {
+        var here = this;
+        var aAttribut=Sortable.serialize(this.existing_list);
+        var queryString = {
+            gDossier: this.dossier_id,
+            fiche_def_id: this.fiche_def_id,
+            op: this.op,
+            op2: 'save',
+            attribut:aAttribut
+        };
+        var action = new Ajax.Request(
+            "ajax_misc.php",
+            {
+                method: 'POST',
+                parameters: queryString,
+                onFailure: ajax_misc_failure,
+                onSuccess: function (req) {
+                    if (req.responseText == 'NOCONX') {
+                        reconnect();
+                        return;
+                    }
+                    if ( req.responseText == 'OK') {
+                        smoke.signal('Sauvé',function(e){},{duration:500});
+                    }
+                 
+                   
+                }
+            }
+        );
+    } catch (e) {
+        alert_box("CategoryCardDefinition.save" + e.message);
+    }
+};
+/**
+ * add an attribut from the DOM Element avail_attribut_id , do add an element in attribut_card and remove from avail_attribut_id
+ * @param attribut_id {int} attr_def.ad_id , ad_id of attribute
+ */
+CategoryCardDefinition.prototype.add_attribut = function (attribut_id) {
+
+
+    try {
+        var here = this;
+        var queryString = {
+            gDossier: this.dossier_id,
+            fiche_def_id: this.fiche_def_id,
+            op: this.op,
+            op2: 'add',
+            ad_id: attribut_id
+        };
+        var action = new Ajax.Request(
+            "ajax_misc.php",
+            {
+                method: 'GET',
+                parameters: queryString,
+                onFailure: ajax_misc_failure,
+                onSuccess: function (req) {
+                    if (req.responseText == 'NOCONX') {
+                        reconnect();
+                        return;
+                    }
+
+                    // if successfull add id on existing_list and remove from available_list
+
+                    // remove from available_list
+                    $('avail_attr_' + attribut_id).remove();
+                    var parser = new DOMParser();
+                    var element = parser.parseFromString(req.responseText, 'text/html');
+                     $(here.existing_list).appendChild(element.body.firstChild);
+                    new Effect.Highlight('existing_attr_' + attribut_id, {
+                        startcolor: '#FAD4D4',
+                        endcolor: '#F78082'
+                    });
+                    Sortable.create('attribut_card', {tag: 'li'});
+                    alternate_row_color_list(here.available_list);
+                }
+            }
+        );
+    } catch (e) {
+        alert_box("CategoryCardDefinition.add_attribut" + e.message);
+    }
+};
+/**
+ * remove an attribut from the DOM Element attribut_card , do add an element in avail_attribut_id and remove from attribut_card
+ * @param attribut_id {int} attr_def.ad_id , ad_id of attribute
+ */
+CategoryCardDefinition.prototype.remove_attribut = function (attribut_id) {
+
+    var here = this;
+    try {
+
+        var queryString = {
+            gDossier: this.dossier_id,
+            fiche_def_id: this.fiche_def_id,
+            op: this.op,
+            op2: 'remove',
+            ad_id: attribut_id
+        };
+        var action = new Ajax.Request(
+            "ajax_misc.php",
+            {
+                method: 'GET',
+                parameters: queryString,
+                onFailure: ajax_misc_failure,
+                onSuccess: function (req) {
+                    if (req.responseText == 'NOCONX') {
+                        reconnect();
+                        return;
+                    }
+
+                    // if successfull add id on existing_list and remove from available_list
+
+                    // remove from available_list
+                    $('existing_attr_' + attribut_id).remove();
+                    var parser = new DOMParser();
+                    var element = parser.parseFromString(req.responseText, 'text/html');
+                    $(here.available_list).appendChild(element.body.firstChild);
+
+                    alternate_row_color_list(here.available_list);
+                    Sortable.create('attribut_card', {tag: 'li', hoverclass: inner_box});
+                }
+            }
+        );
+    } catch (e) {
+        alert_box("CategoryCardDefinition.remove_attribut" + e.message);
+    }
+};

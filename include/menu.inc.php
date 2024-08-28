@@ -135,7 +135,7 @@ if ( $iselect->selected != '')
 $menu=new Menu_Ref_SQL($cn);
 $ret=$menu->seek($sql.$order);
 ?>
-<fieldset><legend><?php echo _('Recherche')?></legend>
+<fieldset>
 <form method="GET">
 	<?php echo $iselect->input()?>
 	<?php echo HtmlInput::submit("search", _("Recherche"))?>

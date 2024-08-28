@@ -46,7 +46,7 @@ class INum extends IText
         parent::__construct($name, $value, $id);
 
         $this->size=9;
-        $this->style='class="inum"';
+        $this->style='class="inum input_text"';
         $this->javascript='onchange="format_number(this,2);"';
     }
 

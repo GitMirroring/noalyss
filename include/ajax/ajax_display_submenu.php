@@ -21,7 +21,7 @@
 /** 
  * @file
  * @brief call from ajax : display submenu
- * Security : only user with the menu CFGPRO
+ * Security : only user with the menu C0PROFL
  * display the submenu of a menu or a module
  * It expects 2 parameters  = p_profile (profile.p_id) and the dep (menu_ref.me_code)
  */
@@ -29,7 +29,7 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 // Security 
-if ( $g_user->check_module('CFGPRO') == 0 ) die();
+if ( $g_user->check_module('C0PROFL') == 0 ) die();
 
 $http=new HttpInput();
 

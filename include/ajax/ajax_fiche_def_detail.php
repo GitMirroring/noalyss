@@ -28,19 +28,11 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $g_user;
 
-$g_user->can_request(FICCAT,0);
+if ( $g_user->check_action(FICCAT) == 0 && $g_user->check_module("CCARD") == 0 )
+    return;
+
 $http=new HttpInput();
 $id=$http->get("id","number");
 $fd=new Fiche_Def($cn,$id);
-if ( $id > 0 )
-{
-
-	echo $fd->input_detail();
-	echo HtmlInput::button("retour_b", _("Retour à la liste"), "onclick=\"$('detail_category_div').hide();$('list_cat_div').show()\"");
-}
-else
-{
-	$fd->input_new();
-
-}
+$fd->input_new();
 ?>

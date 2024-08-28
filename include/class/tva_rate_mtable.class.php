@@ -155,7 +155,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                         $text->set_attribute('jrn', 0);
                         $text->set_attribute('account', 'tva_purchase');
                         echo $text->input();
-                        $url="do.php?".http_build_query(array("gDossier"=>Dossier::id(),"ac"=>'CFGPCMN','p_start'=>4));
+                        $url="do.php?".http_build_query(array("gDossier"=>Dossier::id(),"ac"=>'C0PCMN','p_start'=>4));
                         echo HtmlInput::anchor(_("Configuration poste comptable"),$url,"",'target="_blank"');
                     }
                     elseif ($key=='tva_sale')

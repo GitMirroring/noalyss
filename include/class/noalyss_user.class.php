@@ -48,7 +48,14 @@ class Noalyss_User
     var $access_mode; //!< MOBILE or PC depending if when connecting $login contains @mobile 
     var $lang ; //!< user's language
     var $theme ; //!< user's  CSS Theme
-    
+
+    /**
+     * @brief Create an user , load an existing one or if p_id == -1 search for the connected user. To have an empty
+     * user, give a p_id smaller than -1 or zero.
+     *
+     * @param $p_cn DatabaseCore connection
+     * @param $p_id if -1 then load the current user, > 0 load the user , = 0 (or < -1 ) means an empty user
+     */
     function __construct($p_cn, $p_id=-1)
     {
         $this->db=$p_cn;
@@ -657,7 +664,7 @@ class Noalyss_User
     }
 
     /**
-     * synomym for isAdmin,
+     * @brief synomym for isAdmin,
      * @deprecated
      */
     function Admin():int
@@ -745,40 +752,9 @@ class Noalyss_User
         return $array['PERIODE'];
     }
 
-    /**
-     * 
-     * \brief return the mini rapport to display on the welcome page
-     * \return 0 if nothing if found or the report to display (form_definition.fr_id)
-     */
-    function get_mini_report()
-    {
-        $array=$this->get_preference();
-        $fr_id=(isset($array['MINIREPORT']))?$array['MINIREPORT']:0;
-        return $fr_id;
-    }
 
     /**
-     * \brief set the mini rapport to display on the welcome page
-     */
-    function set_mini_report($p_id)
-    {
-        $count=$this->db->get_value("select count(*) from user_local_pref where user_id=$1 and parameter_type=$2",
-                array($this->id, 'MINIREPORT'));
-        if ($count==1)
-        {
-            $sql="update user_local_pref set parameter_value=$1 where user_id=$2 and parameter_type='MINIREPORT'";
-            $Res=$this->db->exec_sql($sql, array($p_id, $this->id));
-        }
-        else
-        {
-            $sql="insert into user_local_pref (user_id,parameter_type,parameter_value)".
-                    "values($1,'MINIREPORT',$2)";
-            $Res=$this->db->exec_sql($sql, array($this->id, $p_id));
-        }
-    }
-
-    /**
-     * Save the preference , the scope is global, the settings are saved
+     * @brief Save the preference , the scope is global, the settings are saved
      * into account_repository
      * @param $key THEME,  LANG , PAGESIZE
      * @param $value value of the key
@@ -1021,7 +997,8 @@ class Noalyss_User
     }
 
 //end function
-    /*     * \brief Return the year of current Periode
+    /**
+     * \brief Return the year of current Periode
      *        it is the parm_periode.p_exercice col
      *        if an error occurs return 0
      */
@@ -1039,7 +1016,8 @@ class Noalyss_User
             return 0;
     }
 
-    /*     * \brief Check if the user can access
+    /**
+     * \brief Check if the user can access
      * otherwise warn and exit
      * \param $p_action requested action
      * \param $p_js = 1 javascript, or 0 just a text or 2 to log it silently
@@ -1089,7 +1067,8 @@ class Noalyss_User
         return $res;
     }
 
-    /*     * \brief Check if the user can print (in menu_ref p_type_display=p)
+    /**
+     * \brief Check if the user can print (in menu_ref p_type_display=p)
      * otherwise warn and exit
      * \param $p_action requested action
      * \return nothing the program exits automatically
@@ -1517,6 +1496,7 @@ class Noalyss_User
      */
     function can_add_action($p_profile)
     {
+
         $r=$this->db->get_value(' select count(*) 
                 from user_sec_action_profile
                 where p_granted=$2
@@ -1529,7 +1509,7 @@ class Noalyss_User
     }
 
     /**
-     * Check if the profile of the user can write for this profile
+     * @brief Check if the profile of the user can write for this profile
      * @param  $dtoc action_gestion.ag_id
      * @return true if he can write otherwise false
      */
@@ -1548,7 +1528,7 @@ class Noalyss_User
     }
 
     /**
-     * Check if the profile of the user can write AND delete for this profile
+     * @brief Check if the profile of the user can write AND delete for this profile
      * @param  $dtoc action_gestion.ag_id
      * @return true if he can write otherwise false
      */
@@ -1567,7 +1547,7 @@ class Noalyss_User
     }
 
     /**
-     * Check if the profile of the user can write for this profile
+     * @brief Check if the profile of the user can write for this profile
      * @param  $dtoc action_gestion.ag_id
      * @return true if he can write otherwise false
      */
@@ -1585,7 +1565,7 @@ class Noalyss_User
     }
 
     /**
-     * Check if the profile of the user can write for this repository
+     * @brief Check if the profile of the user can write for this repository
      * @param  $p_repo stock_repository.r_id
      * @return true if he can write otherwise false
      */
@@ -1606,7 +1586,7 @@ class Noalyss_User
     }
 
     /**
-     * Check if the profile of the user can read for this repository
+     * @brief Check if the profile of the user can read for this repository
      * @param  $p_repo stock_repository.r_id
      * @return true if he read write otherwise false
      */
@@ -1658,7 +1638,7 @@ class Noalyss_User
     }
 
     /**
-     * Save the password from PREFERENCE MODULE
+     * @brief Save the password from PREFERENCE MODULE
      * @param type $p_email
      */
     function save_email($p_email)
@@ -1669,7 +1649,7 @@ class Noalyss_User
     }
 
     /**
-     * Remove a user and all his privileges
+     *@brief  Remove a user and all his privileges
      * So it cannot connect anymore and all his privileges are removed from
      * the dossier
      * 
@@ -1695,7 +1675,7 @@ class Noalyss_User
     }
 
     /**
-     * Grant access to folder, grant administrator profile , all the ledgers and all the action
+     * @brief Grant access to folder, grant administrator profile , all the ledgers and all the action
      * 
      */
     static function grant_admin_access($p_login, $p_dossier)
@@ -1767,7 +1747,7 @@ class Noalyss_User
     }
 
     /**
-     * Check the security on ledger for the user , it returns 1 if the security 
+     * @brief Check the security on ledger for the user , it returns 1 if the security
      * on ledgers is enabled, otherwise 0 
      */
     function get_status_security_ledger()
@@ -1780,7 +1760,7 @@ class Noalyss_User
     }
 
     /**
-     * Set the flag in the table user_active_security
+     * @brief  Set the flag in the table user_active_security
      * @param int $p_value 1==enable  , 0 = disable
      * @exceptions invalid value
      */
