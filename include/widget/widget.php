@@ -180,7 +180,7 @@ where use_login=$1 order by uw.uw_order
         echo h2(_("Un instant, on charge :-)"),' class="title" ');
 
 
-        print '<div style="display:flex;justify-content: flex-start">';
+        print '<div style="display:flex;justify-content: center">';
         print '<div style="margin-top: 50px;margin-left: 20px;">';
         print '<div class="loading_msg"></div>';
         print '<div class="loading_msg"></div>';

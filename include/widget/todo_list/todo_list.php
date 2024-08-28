@@ -40,7 +40,7 @@ class Todo_List extends Widget
     {
         global $cn;
         echo '<div class="box widget-box" id="todo_list" >';
-        echo \HtmlInput::title_box(_('Pense-Bête'), "todo_listg_div", 'zoom', "zoom_todo()", 'n');
+        echo \HtmlInput::title_box(_('Pense-Bête'), "todo_listg_div", 'zoom', "zoom_todo()", 'n',raw:'&#x1F4DC;');
         echo \Dossier::hidden();
         $todo = new \Todo_List($cn);
         $array = $todo->load_all();
