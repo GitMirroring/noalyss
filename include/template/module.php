@@ -58,7 +58,7 @@ if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
 		where user_name=$1 and with_direct_form=true",array($_SESSION[SESSION_KEY.'g_user'])) ==1):
 ?>
 	<div id="direct">
-	<form method="get" onsubmit="if (document.getElementById('ac').value.trim() =='') {return false;} else {return true;}">
+	<form method="get" onsubmit="return document.getElementById('ac').value.trim()!='';">
 		<?php echo $http->request('ac',"string", '')?>
 		<?php echo Dossier::hidden()?>
 		<?php 

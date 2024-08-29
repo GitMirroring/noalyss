@@ -3327,25 +3327,25 @@ li.li-active {
      width: 1.5rem;
      height: 1.5rem;
      display: inline-block;
-     animation: turn-color 3.5s linear 0s infinite forwards;
+     animation: turn-color 6s linear 0s infinite forwards;
      position: relative;
      left: 0px;
      top: 10px;
      background: rgb(176, 173, 230);
      box-shadow: #a7a7b3 1px 1px 40px;
-     border-radius: 5px;
+    /* border-radius: 5px;*/
  }
  .loading_msg:nth-child(2) {
     background:blue;
-     animation: turn-color2 3.5s linear 0s infinite forwards;
+     animation: turn-color2 6s linear 0s infinite forwards;
  }
  .loading_msg:nth-child(3) {
      background:red;
-     animation: turn-color3 3.5s linear 0s infinite forwards;
+     animation: turn-color3 6s linear 0s infinite forwards;
  }
  .loading_msg:nth-child(4) {
      background:navy;
-     animation: turn-color2 3.5s linear 0s infinite forwards;
+     animation: turn-color2 6s linear 0s infinite forwards;
  }
 
  @keyframes turn-color{
@@ -3590,3 +3590,12 @@ div.widget-full_size {
  max-height: 100%;
  margin: 2px;
 }
+
+
+ @keyframes fill_up_loading {
+
+     30% {transform:rotateY(90deg);}
+     60% {transform:rotateY(-90deg);}
+
+
+ }

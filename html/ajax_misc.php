@@ -155,7 +155,7 @@ if ($op == 'widget') {
 
 $path = array(
     // search accounting , detail ...
-    "account"=>"ajax_poste",
+    "account"=>"ajax_account",
     // display card detail :possible to update or add
     "card"=>"ajax_card",
     "ledger"=>"ajax_ledger",

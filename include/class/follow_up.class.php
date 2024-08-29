@@ -420,6 +420,7 @@ class Follow_Up
         $iag_ref=new IText("ag_ref");
         $iag_ref->value=$this->ag_ref;
         $iag_ref->readOnly=false;
+        $iag_ref->css_size="100%";
         $str_ag_ref=$iag_ref->input();
         // Preparing the return string
         $r="";

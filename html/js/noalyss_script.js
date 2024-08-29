@@ -473,13 +473,23 @@ function success_misc(req) {
 }
 
 function loading() {
-    var str = '<div class="loading_msg"></div>';
-    str += '<div class="loading_msg"></div>';
-    str += '<div class="loading_msg"></div>';
-    str += '<div class="loading_msg"></div>';
-    str += '<div class="loading_msg"></div>';
 
-    return str;
+    var str ='<div style="animation-duration:6s;animation-name:fill_up_loading;animation-iteration-count: infinite;animation-timing-function: linear;align-items: center">';
+    str += '<div class="loading_msg"></div>';
+    str += '<div class="loading_msg"></div>';
+    str += '<div class="loading_msg"></div>';
+    str += '<div class="loading_msg"></div>';
+    str += '<div class="loading_msg"></div>';
+    str +='</div>';
+
+    var str2 = '<div style="animation-duration:6s;animation-name:fill_up_loading;animation-iteration-count: infinite;animation-timing-function: linear;position:relative;top:-50px;animation-delay: 0.7s;">';
+    str2 += '<div class="loading_msg"></div>';
+    str2 += '<div class="loading_msg"></div>';
+    str2 += '<div class="loading_msg"></div>';
+    str2 += '<div class="loading_msg"></div>';
+    str2 += '<div class="loading_msg"></div>';
+    str2 +='</div>';
+    return str+str2;
 }
 
 function ajax_misc_failure() {
@@ -3075,7 +3085,29 @@ function init_scroll() {
     }
 
 }
-
+function loading_page() {
+    var id_page = new Element('div', {
+        "class": "",
+        "style": "padding: 5px;\n" +
+            "  width: 300px;\n" +
+            "  height: 60px;\n" +
+            "  display: block;\n" +
+            "  position: fixed;\n" +
+            "  bottom: 50px;\n" +
+            "  left: 50px;\n" +
+            "  text-align: center;\n" +
+            "  animation-name: fill_up_loading;\n" +
+            "  animation-duration: 8s;\n" +
+            "  animation-iteration-count: infinite;"+
+            "opacity: 0.7;"+
+            "border-radius: 5px;"+
+            "font-size: 300%;"+
+        "animation-timing-function: linear;",
+        id: "loading_page_div"
+    });
+    id_page.update('<div class="loading_msg"></div><div class="loading_msg"></div><div class="loading_msg"></div><div class="loading_msg"></div><div class="loading_msg"></div>');
+    document.body.appendChild(id_page);
+}
 /**
  * Confirm a form thanks a modal dialog Box, it returns true if we agree otherwise
  * false
@@ -4635,4 +4667,11 @@ Widget.prototype.toggle_full_size=function (widget_domid) {
         $(widget_domid).style.zIndex=layer;
     }
 
-}
+};
+
+/**
+ * EXPERIMENTAL
+(function(){window.addEventListener("beforeunload", (event) => {waiting_box()});})();
+
+(function(){window.addEventListener("onload", (event) => {remove_waiting_box()});})();
+*/

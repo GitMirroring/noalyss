@@ -3,7 +3,6 @@
 //see licence.txt
 ?>
 <fieldset id="asearch" style="height:88%">
-   <legend><?php echo _('Résultats'); ?></legend>
 <div style="height:88%;overflow:auto;">
     <?php
     // compute the url, $sql_array is defined in ajax_card.php
