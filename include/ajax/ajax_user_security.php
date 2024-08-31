@@ -26,11 +26,11 @@ if (!defined('ALLOWED'))
 
 /**
  * @file
- * @brief Manage the security of a ledger , from CFGSEC module
+ * @brief Manage the security of a ledger , from C0SEC module
  * 
  */
  global $g_user;
-if ( $g_user->check_module("CFGSEC") == 0)        
+if ( $g_user->check_module("C0SEC") == 0)        
         throw new Exception(_("Non autorisé"));
     
 $n_dossier_id=Dossier::id();

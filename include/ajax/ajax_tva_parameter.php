@@ -28,7 +28,7 @@ if (!defined('ALLOWED'))
  * @param type $name Descriptionara
  */
 
-if ( $g_user->check_module('CFGTVA') ==0 )
+if ( $g_user->check_module('C0TVA') ==0 )
 {
     return;
 }

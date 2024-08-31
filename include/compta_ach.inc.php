@@ -151,8 +151,9 @@ if (isset($_POST['record']))
                         }
                         catch (Exception $e)
                         {
-                            echo '<p class="notice">'.
+                            echo '<p class="error">'.
                                     _('Opération non extournée').
+                                    " ".
                                 $e->getMessage().
                                 '</p>';
                         }

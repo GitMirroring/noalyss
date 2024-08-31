@@ -23,8 +23,8 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 
 global $g_user;
 
-if ( $g_user->check_module('CFGDOCST') == 0 ) {
-    record_log("forbidden : CFGDOCST ".__FILE__);
+if ( $g_user->check_module('C1DOC') == 0 ) {
+    record_log("forbidden : C1DOC ".__FILE__);
     exit();
 }
 

@@ -15,13 +15,14 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-/*!\file
- * \brief create the infobulle, the internalization is not yet implemented
- * \code
+/**
+ * @file
+ * create the infobulle, the internalization is not yet implemented
+ * @code
  // Example
   echo JS_INFOBULLE;
   echo Icon_Action::infobulle(x);
- \endcode
+ @endcode
  */
 
 var posX=0,posY=0,offsetX=10,offsetY=10;

@@ -29,6 +29,7 @@
  * @class PDFLand
  * @brief PDF in landscape mode
  */
+#[\AllowDynamicProperties]
 class PDFLand extends PDF
 {
 

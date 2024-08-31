@@ -1,7 +1,7 @@
 <?php 
-//@description:CFGPCMN
+//@description:C0PCMN
 $_GET=array (
-  'ac' => 'PARAM/CFGPCMN',
+  'ac' => 'PARAM/C0PCMN',
   'p_start' => '4',
   'gDossier' => '42',
 );

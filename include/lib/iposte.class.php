@@ -48,7 +48,7 @@ require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
  - echo js_include('controls.js');
  - echo js_include('dragdrop.js');
  - echo js_include('accounting_item.js');
- *\see ajax_poste.php
+ *\see ajax_accountajax_account.php
  *\code
 // must be done BEFORE any FORM
  echo js_include('prototype.js');

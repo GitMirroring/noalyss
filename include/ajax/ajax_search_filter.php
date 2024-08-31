@@ -61,7 +61,9 @@ if ($op=='save_filter')
         $new->setp("operation_filter", $http->post("operation_filter", 'string', NULL));
         $new->setp("filter_name", h($http->post("filter_name", 'string')));
         $new->setp("uf_currency_code", h($http->post("p_currency_code", 'number',-1)));
-        $new->setp("tva_id_search", h($http->post("tva_id_search", 'string',null)));
+        $acc_tva=Acc_Tva::build($cn, $http->post("tva_id_search", 'string',-1));
+        $tva_id=($acc_tva->tva_id===-1)?null:$acc_tva->tva_id;
+        $new->setp("tva_id_search",$tva_id);
         $tag=$http->post("tag","string",'');
         
         if (is_array($tag) ) 

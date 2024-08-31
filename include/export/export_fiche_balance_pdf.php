@@ -57,7 +57,7 @@ if ($histo == 4 || $histo==5)
     $fd=new Fiche_Def($cn,$http->request('cat'));
     if ($allcard==1 &&  $fd->hasAttribute(ATTR_DEF_ACCOUNT) == false )
     {
-        $pdf->write_cell(0,10, "Cette catégorie n'ayant pas de poste comptable n'a pas de balance");
+        $pdf->write_cell(0,10, _("Cette catégorie n'a pas de poste comptable"));
         //Save PDF to file
         $fDate=date('dmy-Hi');
         $pdf->Output("category-$fDate.pdf", 'D');
@@ -86,7 +86,7 @@ if ($histo == 4 || $histo==5)
 	$name=$cn->get_value('select fd_label from fiche_def where fd_id=$1',array($afiche[$e]['fd_id']));
 	$pdf->SetFont('DejaVu','BI',14);
 	$pdf->write_cell(0,8,$name,0,1,'C');
-
+    $pdf->line_new();
 	$pdf->SetFont('DejaVuCond','',7);
     $pdf->LongLine(30,7,'Quick Code',0,'L',0);
     $pdf->LongLine(80,7,'Libellé',0,'L',0);

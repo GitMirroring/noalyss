@@ -71,8 +71,48 @@ class ITva_Popup extends HtmlInput
         else
             $this->button = false;
     }
+    protected function make_datalist()
+    {
+        $cn=Dossier::connect();
+        $r="";
+        switch ($this->filter) {
+            case 'none':
+                $sql="select tva_code,tva_label
+                        from v_tva_rate 
+                          where
+                        tva_purchase <> '#' and tva_sale <> '#'
+                       order by tva_code ";
+                break;
+            case 'sale':
+                $sql="select tva_code,tva_label
+                        from v_tva_rate 
+                        where 
+                        tva_sale <> '#'
+                            order by tva_code ";
+                break;
+            case 'purchase':
+                $sql="select tva_code,tva_label
+                        from v_tva_rate 
+                        where 
+                        tva_purchase <> '#'
+                            order by tva_code ";
+                break;
+        }
+        $a_tva_code=$cn->get_array($sql);
+        if ( empty($a_tva_code)) return "";
+        $r.=sprintf('<datalist id="dl_tva_%s"">',$this->id);
+        foreach ($a_tva_code as $item) {
+            $r.=sprintf('<option value="%s">%s %s</option>'
+                ,$item['tva_code'],$item['tva_code']
+                ,htmlentities($item['tva_label']));
+        }
+        $r.='</datalist>';
+        return $r;
 
-    /*!\brief show the html  input of the widget*/
+    }
+    /*!
+    \brief show the html  input of the widget
+    */
     public function input($p_name = null, $p_value = null)
     {
         $this->name = ($p_name == null) ? $this->name : $p_name;
@@ -101,9 +141,11 @@ class ITva_Popup extends HtmlInput
         $strAttribut = $this->get_node_attribute();
 
 
-        $str = '<input type="TEXT"  class="input_text" name="%s" value="%s" id="%s" placeholder="%s" size="3" %s %s>';
-        $r = sprintf($str, $this->name, $this->value, $this->id, _("C.TVA"),$this->js, $strAttribut);
+        $str = '<input type="TEXT"  class="input_text" name="%s" value="%s" id="%s" placeholder="%s" size="6" %s %s 
+list="dl_tva_%s" autocomplete="off">';
+        $r = sprintf($str, $this->name, $this->value, $this->id, _("C.TVA"),$this->js, $strAttribut,$this->id);
         $r.=$code;
+
         if ($this->in_table)
             $table = '<table>' . '<tr>' . td($r);
 
@@ -114,12 +156,13 @@ class ITva_Popup extends HtmlInput
             $r = $table . td($this->dbutton()) . '</tr></table>';
 
         if ($this->table == 1) $r = td($r);
+        $r.=$this->make_datalist();
         return $r;
 
     }
 
     /**
-     * Set a filter to limit the choice of VAT ;
+     *@brief Set a filter to limit the choice of VAT ;
      * possible values are :
      *         - sale  if there is an accounting for sale
      *         - purchase  if there is an accounting for purchase
@@ -146,7 +189,8 @@ class ITva_Popup extends HtmlInput
         // button
         $bt = new ISmallButton('bt_' . $this->id);
         $bt->tabindex = "-1";
-        $bt->label = _(' TVA ');
+        $bt->label = ICON_SEARCH;
+
         $bt->set_attribute('gDossier', dossier::id());
         $bt->set_attribute('ctl', $this->id);
         $bt->set_attribute('popup', 'popup_tva');

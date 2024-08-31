@@ -217,11 +217,11 @@ $exercice=$http->get("exercice","number",$g_user->get_exercice());
 /*
  * Let you change the exercice
  */
-echo '<fieldset><legend>'._('Exercice').'</legend>';;
+echo '<fieldset>';;
 echo '<form method="GET" ';
 printf( ' onsubmit="waiting_box()">');
 
-echo 'Choisissez un autre exercice :';
+echo 'Choisissez un exercice :';
 $ex=new Exercice($cn);
 $wex=$ex->select('exercice',$exercice,
         sprintf(' onchange="updatePeriode(\'%s\',\'exercice\',\'from_periode\',\'to_periode\',1)"',Dossier::id(),$exercice));
@@ -322,10 +322,11 @@ function ShowReportResult($p_array)
     {
         $i++;
         $class= ( $i % 2 == 0 )?' class="odd"':' class="even"';
-
+        $style='style="text-align:right;"';
+        if ($op['montant']<0) { $style='style="color:red;text-align:right;"';}
         echo "<TR $class>".
         "<TD>".h($op['desc'])."</TD>".
-        "<TD align=\"right\">".nbm($op['montant'])."</TD>".
+        "<TD $style>".nbm($op['montant'])."</TD>".
         "</TR>";
     }
     echo "</table>";

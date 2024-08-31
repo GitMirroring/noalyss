@@ -1,10 +1,10 @@
-CREATE TABLE ac_dossier (
+CREATE TABLE public.ac_dossier (
     dos_id integer DEFAULT nextval(('dossier_id'::text)::regclass) NOT NULL,
     dos_name text NOT NULL,
     dos_description text,
-    dos_email integer DEFAULT (-1)
+    dos_email integer DEFAULT '-1'::integer
 );
-CREATE TABLE ac_users (
+CREATE TABLE public.ac_users (
     use_id integer DEFAULT nextval(('users_id'::text)::regclass) NOT NULL,
     use_first_name text,
     use_name text,
@@ -15,7 +15,7 @@ CREATE TABLE ac_users (
     use_email text,
     CONSTRAINT ac_users_use_active_check CHECK (((use_active = 0) OR (use_active = 1)))
 );
-CREATE TABLE audit_connect (
+CREATE TABLE public.audit_connect (
     ac_id integer NOT NULL,
     ac_user text,
     ac_date timestamp without time zone DEFAULT now(),
@@ -23,30 +23,30 @@ CREATE TABLE audit_connect (
     ac_state text,
     ac_module text,
     ac_url text,
-    CONSTRAINT valid_state CHECK ((((ac_state = 'FAIL'::text) OR (ac_state = 'SUCCESS'::text)) OR (ac_state = 'AUDIT'::text)))
+    CONSTRAINT valid_state CHECK (((ac_state = 'FAIL'::text) OR (ac_state = 'SUCCESS'::text) OR (ac_state = 'AUDIT'::text)))
 );
-CREATE TABLE dossier_sent_email (
+CREATE TABLE public.dossier_sent_email (
     id integer NOT NULL,
     de_date character varying(8) NOT NULL,
     de_sent_email integer NOT NULL,
     dos_id integer NOT NULL
 );
-CREATE TABLE jnt_use_dos (
+CREATE TABLE public.jnt_use_dos (
     jnt_id integer DEFAULT nextval(('seq_jnt_use_dos'::text)::regclass) NOT NULL,
     use_id integer NOT NULL,
     dos_id integer NOT NULL
 );
-CREATE TABLE modeledef (
+CREATE TABLE public.modeledef (
     mod_id integer DEFAULT nextval(('s_modid'::text)::regclass) NOT NULL,
     mod_name text NOT NULL,
     mod_desc text
 );
-CREATE TABLE progress (
+CREATE TABLE public.progress (
     p_id character varying(16) NOT NULL,
     p_value numeric(5,2) NOT NULL,
     p_created timestamp without time zone DEFAULT now()
 );
-CREATE TABLE recover_pass (
+CREATE TABLE public.recover_pass (
     use_id bigint NOT NULL,
     request text NOT NULL,
     password text NOT NULL,
@@ -55,16 +55,16 @@ CREATE TABLE recover_pass (
     recover_on timestamp with time zone,
     recover_by text
 );
-CREATE TABLE theme (
+CREATE TABLE public.theme (
     the_name text NOT NULL,
     the_filestyle text,
     the_filebutton text
 );
-CREATE TABLE user_global_pref (
+CREATE TABLE public.user_global_pref (
     user_id text NOT NULL,
     parameter_type text NOT NULL,
     parameter_value text
 );
-CREATE TABLE version (
+CREATE TABLE public.version (
     val integer NOT NULL
 );

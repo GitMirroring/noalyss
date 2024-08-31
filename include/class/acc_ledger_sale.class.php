@@ -45,7 +45,6 @@ class Acc_Ledger_Sale extends Acc_Ledger {
      * \return String
      * \throw Exception if an error occurs
      */
-
     public function verify_operation($p_array) {
         global $g_parameter, $g_user;
         
@@ -109,8 +108,14 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
         $fiche = new Fiche($this->db);
         $fiche->get_by_qcode($e_client);
+
+        if ($fiche->get_f_enable() == '0')
+            throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"),$e_client), 50);
+
         if ($fiche->empty_attribute(ATTR_DEF_ACCOUNT) == true)
             throw new Exception(_('La fiche ') . $e_client . _('n\'a pas de poste comptable'), 8);
+
+
 
         /* get the account and explode if necessary */
         $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
@@ -143,26 +148,30 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         for ($i = 0; $i < $nb_item; $i++) {
             if (! isset (${'e_march' . $i}) || noalyss_strlentrim(${'e_march' . $i}) == 0)
                 continue;
+            /* check if all card has a ATTR_DEF_ACCOUNT */
+            $fiche = new Fiche($this->db);
+            $fiche->get_by_qcode(${'e_march' . $i});
+            if ($fiche->get_f_enable() == '0')
+                throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"), ${'e_march' . $i}), 50);
+
+
             /* check if amount are numeric and */
             if (isNumber(${'e_march' . $i . '_price'}) == 0)
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('a un montant invalide [') . ${'e_march' . $i} . ']', 6);
             if (isNumber(${'e_quant' . $i}) == 0) 
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('a une quantité invalide [') . ${'e_quant' . $i} . ']', 7);
-            /* check if all card has a ATTR_DEF_ACCOUNT */
-            $fiche = new Fiche($this->db);
-            $fiche->get_by_qcode(${'e_march' . $i});
+
             if ($fiche->empty_attribute(ATTR_DEF_ACCOUNT) == true)
                 throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('n\'a pas de poste comptable'), 8);
 
             // Check if the given tva id is valid
             if ($g_parameter->MY_TVA_USE == 'Y') {
-                if (isNumber(${'e_march' . $i . '_tva_id'}) == 0)
-                    throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('a un code tva invalide') . ' [' . ${'e_march' . $i . '_tva_id'} . ']', 13);
-                $tva_rate = new Acc_Tva($this->db);
-                $tva_rate->set_parameter('id', ${'e_march' . $i . '_tva_id'});
-                if ($tva_rate->load() != 0)
+                $tva_rate =  Acc_Tva::build($this->db,${'e_march' . $i . '_tva_id'});
+                $tva_rate->load();
+                if ($tva_rate->tva_id === -1 )
                     throw new Exception(_('La fiche ') . ${'e_march' . $i} . _('a un code tva invalide') . ' [' . ${'e_march' . $i . '_tva_id'} . ']', 13);
 
+                $tva_rate->load();
                 /*
                  * check if the accounting for VAT are valid
                  */
@@ -171,7 +180,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 if (
                        
                         $this->db->get_value('select count(*) from tmp_pcmn where pcm_val=$1', array($a_poste[1])) == 0)
-                    throw new Exception(_(" La TVA " . $tva_rate->tva_label . " utilise des postes comptables inexistants"));
+                          throw new Exception(_(" La TVA " . $tva_rate->tva_label . " utilise des postes comptables inexistants"));
             }
             // if 2 accounts, take only the credit one
             /* The account exists */
@@ -357,15 +366,16 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
                 if ($g_parameter->MY_TVA_USE == 'Y') {
                     /* Compute sum vat */
-                    $oTva = new Acc_Tva($this->db);
-                    $idx_tva = trim(${'e_march' . $i . '_tva_id'});
-                    $tva_item_currency = ${'e_march' . $i . '_tva_amount'};
-                    $oTva->set_parameter("id", $idx_tva);
+                    $oTva =  Acc_Tva::build($this->db, trim(${'e_march' . $i . '_tva_id'}));
                     $oTva->load();
+                    $idx_tva =$oTva->get_parameter("id");
+
+                    $tva_item_currency = ${'e_march' . $i . '_tva_amount'};
+
                     /* if empty then we need to compute it */
                     if (trim($tva_item_currency) == '' || ${'e_march'.$i.'_tva_amount'} == 0) {
                         /* retrieve tva */
-                        $l = new Acc_Tva($this->db, $idx_tva);
+                        $l =  Acc_Tva::build($this->db, $idx_tva);
                         $l->load();
                         $tva_item_currency = bcmul($amount, $l->get_parameter('rate'));
 			$tva_item=round($tva_item_currency,2);
@@ -434,7 +444,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                         ${'e_quant' . $i}, /* 4 */
                         round($amount, 2), /* 5 */
                         $tva_item, /* 6 */
-                        $idx_tva, /* 7 */
+                        $oTva->get_parameter("id"), /* 7 */
                         $e_client, /* 8 */
                         $n_both, /* 9 */
                         $price_euro/* Price /unit */ 
@@ -548,8 +558,8 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                     var_dump($tva);
                 }
                 foreach ($tva as $i => $value) {
-                    $oTva = new Acc_Tva($this->db);
-                    $oTva->set_parameter('id', $i);
+                    $oTva =  Acc_Tva::build($this->db,$i);
+
                     $oTva->load();
 
                     $poste_vat = $oTva->get_side('c');
@@ -948,10 +958,8 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             else
                 $fiche_name = $fiche->strAttribut(ATTR_DEF_NAME);
             if ($g_parameter->MY_TVA_USE == 'Y') {
-                $oTva = new Acc_Tva($this->db);
                 $idx_tva = ${"e_march" . $i . "_tva_id"};
-
-                $oTva->set_parameter('id', $idx_tva);
+                $oTva =  Acc_Tva::build($this->db,$idx_tva);
                 $oTva->load();
             }
             $op = new Acc_Compute();
@@ -1067,9 +1075,9 @@ if ( $g_parameter->MY_TVA_USE=="Y")        {
         </td>
        </tr>
 EOF;
-      $sql_currency=new Currency_SQL($this->cn,$p_currency_code);
-      $iso_code=$sql_currency->getp("cr_code_iso");
         if ($p_currency_code !=0) {
+          $sql_currency=new Currency_SQL($this->cn,0);
+          $iso_code=$sql_currency->getp("cr_code_iso");
 
     $r.=<<<EOF
     <tr class="highlight">
@@ -1092,7 +1100,9 @@ EOF;
 
         } else {
     $sql_currency=new Currency_SQL($this->cn,$p_currency_code);
-    $iso_code=$sql_currency->getp("cr_code_iso");
+    $str_code=$sql_currency->getp("cr_code_iso");
+    $sql_currencydefault=new Currency_SQL($this->cn,0);
+    $iso_code=$sql_currencydefault->getp("cr_code_iso");
             // without VAT
             $r.=<<<EOF
     <tr class="highlight">
@@ -1107,7 +1117,7 @@ EOF;
 
         </td>
         <td class="num">
-            {$tot_str}
+            {$tot_str} {$str_code}
         </td>
             </tr>
     <tr class="highlight">
@@ -1144,7 +1154,7 @@ EOF;
             $r.='<tr><td>Total HTVA</td>';
             $r.=td(hb($tot_amount ),'class="num"');
             foreach ($tva as $i => $value) {
-                $oTva->set_parameter('id', $i);
+                $oTva=Acc_Tva::build($this->cn, $i);
                 $oTva->load();
 
                 $r.='<tr><td>  TVA ' . $oTva->get_parameter('label').'</td>';
@@ -1490,7 +1500,7 @@ EOF;
             $W1->label = "";
             $W1->name = "e_march" . $i;
             $W1->value = $march;
-            $W1->table = 1;
+            $W1->table = 0;
             $W1->set_attribute('typecard', 'cred');            
             $W1->set_dblclick("fill_ipopcard(this);");
             $W1->set_attribute('ipopup', 'ipopcard');

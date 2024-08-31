@@ -37,7 +37,7 @@ try {
     echo $e->getMessage();
     return;
 }
-if  ( $g_user->check_module("CFGPCMN") == 0) die();
+if  ( $g_user->check_module("C0PCMN") == 0) die();
 
 
 $obj=new Acc_Plan_SQL($cn);

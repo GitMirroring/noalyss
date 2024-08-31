@@ -40,8 +40,8 @@ class Icon_Action
     static function icon_magnifier($id, $p_javascript, $p_style="")
     {
         $r="";
-        $r.=sprintf('<span  id="%s" class=" smallbutton icon" style="%s" onclick="%s">&#xf50d;</span>',
-                $id, $p_style, $p_javascript);
+        $r.=sprintf('<span  id="%s" class=" smallbutton icon" style="%s" onclick="%s">%s</span>',
+                $id, $p_style, $p_javascript,ICON_SEARCH);
         return $r;
     }
     /**
@@ -54,8 +54,8 @@ class Icon_Action
     static function button_magnifier($id, $p_javascript, $p_style="")
     {
         $r="";
-        $r.=sprintf('<input type="button"  id="%s" class=" smallbutton icon" style="%s" onclick="%s" value="&#xf50d;">',
-                $id, $p_style, $p_javascript);
+        $r.=sprintf('<input type="button"  id="%s" class=" smallbutton icon" style="%s" onclick="%s" value="%s">',
+                $id, $p_style, $p_javascript,ICON_SEARCH);
         return $r;
     }
 
@@ -72,7 +72,19 @@ class Icon_Action
                 $p_javascript, $id, $p_style);
         return $r;
     }
-
+    /**
+     *
+     * @param type $id
+     * @param type $p_javascript
+     * @param type $p_style
+     * @return type
+     */
+    static function icon_remove($id, $p_javascript, $p_style="")
+    {
+        $r=sprintf('<input  class="smallbutton icon" onclick="%s" id="%s" type="button" %s value="&#xe828;">',
+            $p_javascript, $id, $p_style);
+        return $r;
+    }
     /**
      * 
      * @param string $id
@@ -82,8 +94,8 @@ class Icon_Action
      */
     static function clean_zone($id, $p_javascript, $p_style="")
     {
-        $r=sprintf('<input class="smallbutton " onclick="%s" id="%s" value="X" %s type="button" style="">',
-                $p_javascript, $id, $p_style
+        $r=sprintf('<input class="smallbutton " onclick="%s" id="%s" value="%s" %s type="button" style="">',
+                $p_javascript, $id, ICON_CLEAN,$p_style
         );
         return $r;
     }
@@ -497,4 +509,5 @@ class Icon_Action
             );
         return $r;
     }
+
 }

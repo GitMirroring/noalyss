@@ -153,16 +153,25 @@ class Noalyss_Appearance
     h2.title {
         background-color: {$inner_box_title} ;
     }
-    .nav-fill .nav-item {
-         background: {$menu1};
-        color: {$menu1_font};
+    .nav-fill  .nav-item {
+         background: {$menu1} !important;
+        color: {$menu1_font} !important;
     }
+     .nav-fill:hover {
+        color: {$menu1_font} !important;
+     }
     .nav-level2 {
         background-color: {$menu2};
         color:{$menu2_font};
     }
     .nav-pills .nav-link.active {
         background-color: {$menu1_selected}  !important;  
+    }
+     .nav-pills .nav-link {
+      color: {$menu1_font}  !important;  
+    }
+    .nav-link:hover {
+        background-color:{$menu1_selected};
     }
     table.sortable, table.table_large, table.result  ,table.resultfooter {
         color:{$font_table} !important;

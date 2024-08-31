@@ -104,7 +104,7 @@ $hidden=($this->has_quantity()==0)?'d-none':'';
 <h2><?php echo $f_legend_detail?></h2>
 <table id="sold_item" >
 <tr>
-<th style="width:auto"colspan="2">Code <?php echo Icon_Action::infobulle(0)?></th>
+<th style="width:auto"colspan="1">Code <?php echo Icon_Action::infobulle(0)?></th>
       <th class="visible_gt800 visible_gt1155"><?php echo _('Dénomination')?></th>
 <?php if ($flag_tva =='Y') : ?>
       <th  class="text-center" ><?php echo _('prix/unité htva')?><?php echo Icon_Action::infobulle(6)?></th>
@@ -124,10 +124,10 @@ $hidden=($this->has_quantity()==0)?'d-none':'';
 </tr>
 <?php foreach ($array as $item) {
 echo '<tr>';
-// echo "<td>";
+ echo "<td>";
 echo $item['quick_code'];
 // echo "</td>";
-echo '<td>'.$item['bt'].$item['card_add'].'</td>';
+echo $item['bt'].$item['card_add'].'</td>';
 ?>
 <td class="visible_gt800 visible_gt1155"><?php echo $item['denom'] ?></td>
 <?php 
@@ -151,8 +151,7 @@ echo '</tr>';
     </td>
     <td>   </td>
     <td class="visible_gt800 visible_gt1155"> </td>
-    <td> </td>
-    <td> </td>
+    <td class="col_quant <?=$hidden?> text-center"'> </td>
     <td style="text-align:center" class="visible_gt800">  <span id="htva">0.0</span></td>
  <?php if ( $flag_tva=='Y' )  : ?>    
     <td> </td>
@@ -166,13 +165,13 @@ echo '</tr>';
 
     </td>
         <td class="num visible_gt800"></td>
+        <td class="col_quant <?=$hidden?> text-center"'> </td>
 <?php if ($flag_tva=='Y')  {?>
         <td style="text-align:center" class="visible_gt800 visible_gt1155"></td>
         <td></td>
         <td class="visible_gt800"></td>
 <?php }         ?>
-        <td></td>
-        <td></td>
+
         <td></td>
         <td style="text-align:center">
             <span id="p_currency_euro"></span>

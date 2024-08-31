@@ -68,9 +68,13 @@ switch ($action)
             $answer['message']="";
             $js=sprintf("category_card.remove_attribut('%s','%s','%s',%d)",
                     Dossier::id(), $frd_id, $objname, $ad_id);
-            $answer['content']=$cn->get_value("select ad_text from attr_def where ad_id=$1",
-                            [$ad_id]).
-                            Icon_Action::trash(uniqid(), $js);
+            $label=$cn->get_value("select ad_text from attr_def where ad_id=$1",
+                [$ad_id]);
+            $content=sprintf('<li id="%s_elt%d" style="cursor:move;border:1px solid navy;padding : 0.5rem 0.2rem 0.5rem 0.2rem;margin-top:2px">%s', $objname
+                ,$ad_id,$label);
+            $content.=Icon_Action::trash(uniqid(), $js);
+            $content.='</li>';
+            $answer['content']=$content;
         }
         catch (Exception $exc)
         {

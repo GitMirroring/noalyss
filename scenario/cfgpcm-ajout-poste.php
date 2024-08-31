@@ -1,8 +1,8 @@
 <?php 
-//@description:CFGPCMN Ajout d'un poste comptable
+//@description:C0PCMN Ajout d'un poste comptable
 $_GET=array (
   'gDossier' => '42',
-  'ac' => 'PARAM/CFGPCMN',
+  'ac' => 'PARAM/C0PCMN',
 );
 $_POST=array (
   'p_action' => 'pcmn',

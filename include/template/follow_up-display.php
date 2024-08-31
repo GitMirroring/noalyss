@@ -15,7 +15,7 @@ $dossier_id=Dossier::id();
     <table>
         <tr class="highlight">
             <TD>
-	    <?php echo _('N° document')?>
+	    <?php echo _('Doc. n°')?>
             </TD>
             <TD >
               <?php echo $this->ag_id;?>
@@ -23,7 +23,7 @@ $dossier_id=Dossier::id();
           </TR>
 			 <tr>
             <TD>
-	    <?php echo _('Reference')?>
+	    <?php echo _('Référence')?>
             </TD>
             <TD>
               <?php echo $str_ag_ref;
@@ -104,16 +104,17 @@ if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id
               <td>
                   <?php echo _('Autres concernés')?>
               </td>
-              <td id="concerned_card_td">
-              <?php 
+              <td>
+                  <span id="concerned_card_td">
+
+              <?php
                     $followup_other_concerned=new Follow_Up_Other_Concerned($this->db,$this->ag_id);
                     echo $followup_other_concerned->display_linked_count();
                      if  ($p_view != 'READ' && $g_user->can_write_action($this->ag_id) == true ):
                         echo $followup_other_concerned->button_action_add_concerned_card();
                      endif;
                ?>
-              </td>
-              <td>
+                  </span>
                     <?php
                     $csv="export.php?".
                             http_build_query(["gDossier"=>Dossier::id(),
@@ -224,7 +225,9 @@ if ($this->ag_id > 0 && Document_Option::is_enable_contact_multiple($this->dt_id
 			if ( $p_view != 'READ')
 				{
                                         $js  = HtmlInput::button_action_remove_operation($operation[$o]['ago_id']);
-					echo '<li id="op'.$operation[$o]['ago_id'].'">'.$operation[$o]['str_date']." ".HtmlInput::detail_op($operation[$o]['jr_id'],$operation[$o]['jr_internal'])." ".h($operation[$o]['jr_comment'])." "
+					echo '<li id="op'.$operation[$o]['ago_id'].'">'.$operation[$o]['str_date']." "
+                        .HtmlInput::detail_op($operation[$o]['jr_id'],sprintf("%s (%s) ",$operation[$o]['jr_pj_number'],$operation[$o]['jr_internal']))
+                    ." ".h($operation[$o]['jr_comment'])." "
 						.$js.'</li>';
 				}
 				else

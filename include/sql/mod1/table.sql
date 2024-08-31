@@ -1,11 +1,23 @@
-CREATE DOMAIN account_type AS character varying(40);
-CREATE TABLE action (
+CREATE DOMAIN public.account_type AS character varying(40);
+CREATE TABLE public.acc_other_tax (
+    ac_id integer NOT NULL,
+    ac_label text NOT NULL,
+    ac_rate numeric(5,2) NOT NULL,
+    ajrn_def_id integer[],
+    ac_accounting public.account_type NOT NULL
+);
+CREATE TABLE public.action (
     ac_id integer NOT NULL,
     ac_description text NOT NULL,
     ac_module text,
     ac_code character varying(30)
 );
-CREATE TABLE action_detail (
+CREATE TABLE public.action_comment_document (
+    acd_id bigint NOT NULL,
+    document_id bigint,
+    action_gestion_comment_id bigint
+);
+CREATE TABLE public.action_detail (
     ad_id integer NOT NULL,
     f_id bigint,
     ad_text text,
@@ -16,8 +28,8 @@ CREATE TABLE action_detail (
     ad_total_amount numeric(20,4) DEFAULT 0,
     ag_id integer DEFAULT 0 NOT NULL
 );
-CREATE TABLE action_gestion (
-    ag_id integer DEFAULT nextval('action_gestion_ag_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.action_gestion (
+    ag_id integer DEFAULT nextval('public.action_gestion_ag_id_seq'::regclass) NOT NULL,
     ag_type integer,
     f_id_dest integer,
     ag_title text,
@@ -25,65 +37,80 @@ CREATE TABLE action_gestion (
     ag_ref text,
     ag_hour text,
     ag_priority integer DEFAULT 2,
-    ag_dest bigint DEFAULT (-1) NOT NULL,
+    ag_dest bigint DEFAULT '-1'::integer NOT NULL,
     ag_owner text,
     ag_contact bigint,
     ag_state integer,
     ag_remind_date date
 );
-CREATE TABLE action_gestion_comment (
+CREATE TABLE public.action_gestion_comment (
     agc_id bigint NOT NULL,
     ag_id bigint,
     agc_date timestamp with time zone DEFAULT now(),
     agc_comment text,
-    tech_user text
+    tech_user text,
+    agc_comment_raw text
 );
-CREATE TABLE action_gestion_operation (
+CREATE TABLE public.action_gestion_filter (
+    af_id bigint NOT NULL,
+    af_user text NOT NULL,
+    af_name text NOT NULL,
+    af_search text NOT NULL
+);
+CREATE TABLE public.action_gestion_operation (
     ago_id bigint NOT NULL,
     ag_id bigint,
     jr_id bigint
 );
-CREATE TABLE action_gestion_related (
+CREATE TABLE public.action_gestion_related (
     aga_id bigint NOT NULL,
     aga_least bigint NOT NULL,
     aga_greatest bigint NOT NULL,
     aga_type bigint
 );
-CREATE TABLE action_person (
+CREATE TABLE public.action_person (
     ap_id integer NOT NULL,
     ag_id integer NOT NULL,
     f_id integer NOT NULL
 );
-CREATE TABLE action_tags (
+CREATE TABLE public.action_person_option (
+    ap_id bigint NOT NULL,
+    ap_value character varying,
+    contact_option_ref_id bigint NOT NULL,
+    action_person_id bigint NOT NULL
+);
+CREATE TABLE public.action_tags (
     at_id integer NOT NULL,
     t_id integer,
     ag_id integer
 );
-CREATE TABLE attr_def (
+CREATE TABLE public.attr_def (
     ad_id integer DEFAULT nextval(('s_attr_def'::text)::regclass) NOT NULL,
     ad_text text,
     ad_type text,
     ad_size text NOT NULL,
-    ad_extra text
+    ad_extra text,
+    ad_search_followup integer DEFAULT 1,
+    ad_default_order integer
 );
-CREATE TABLE attr_min (
+CREATE TABLE public.attr_min (
     frd_id integer NOT NULL,
     ad_id integer NOT NULL
 );
-CREATE TABLE bilan (
-    b_id integer DEFAULT nextval('bilan_b_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.bilan (
+    b_id integer DEFAULT nextval('public.bilan_b_id_seq'::regclass) NOT NULL,
     b_name text NOT NULL,
     b_file_template text NOT NULL,
     b_file_form text,
     b_type text NOT NULL
 );
-CREATE TABLE bookmark (
+CREATE TABLE public.bookmark (
     b_id integer NOT NULL,
     b_order integer DEFAULT 1,
     b_action text,
     login text
 );
-CREATE TABLE centralized (
+CREATE TABLE public.centralized (
     c_id integer DEFAULT nextval(('s_centralized'::text)::regclass) NOT NULL,
     c_j_id integer,
     c_date date NOT NULL,
@@ -91,7 +118,7 @@ CREATE TABLE centralized (
     c_montant numeric(20,4) NOT NULL,
     c_debit boolean DEFAULT true,
     c_jrn_def integer NOT NULL,
-    c_poste account_type,
+    c_poste public.account_type,
     c_description text,
     c_grp integer NOT NULL,
     c_comment text,
@@ -99,12 +126,30 @@ CREATE TABLE centralized (
     c_periode integer,
     c_order integer
 );
-CREATE TABLE del_action (
+CREATE TABLE public.contact_option_ref (
+    cor_id bigint NOT NULL,
+    cor_label character varying NOT NULL,
+    cor_type integer DEFAULT 0 NOT NULL,
+    cor_value_select character varying
+);
+CREATE TABLE public.currency (
+    id integer NOT NULL,
+    cr_code_iso character varying(10),
+    cr_name character varying(80)
+);
+CREATE TABLE public.currency_history (
+    id integer NOT NULL,
+    ch_value numeric(20,8) NOT NULL,
+    ch_from date NOT NULL,
+    currency_id integer NOT NULL,
+    CONSTRAINT currency_history_check CHECK ((ch_value > (0)::numeric))
+);
+CREATE TABLE public.del_action (
     del_id integer NOT NULL,
     del_name text NOT NULL,
     del_time timestamp without time zone
 );
-CREATE TABLE del_jrn (
+CREATE TABLE public.del_jrn (
     jr_id integer NOT NULL,
     jr_def_id integer,
     jr_montant numeric(20,4),
@@ -127,11 +172,11 @@ CREATE TABLE del_jrn (
     jr_pj_number text,
     dj_id integer NOT NULL
 );
-CREATE TABLE del_jrnx (
+CREATE TABLE public.del_jrnx (
     j_id integer NOT NULL,
     j_date date,
     j_montant numeric(20,4),
-    j_poste account_type,
+    j_poste public.account_type,
     j_grpt integer,
     j_rapt text,
     j_jrn_def integer,
@@ -146,8 +191,8 @@ CREATE TABLE del_jrnx (
     djx_id integer NOT NULL,
     f_id bigint
 );
-CREATE TABLE document (
-    d_id integer DEFAULT nextval('document_d_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.document (
+    d_id integer DEFAULT nextval('public.document_d_id_seq'::regclass) NOT NULL,
     ag_id integer NOT NULL,
     d_lob oid,
     d_number bigint NOT NULL,
@@ -155,8 +200,13 @@ CREATE TABLE document (
     d_mimetype text,
     d_description text
 );
-CREATE TABLE document_modele (
-    md_id integer DEFAULT nextval('document_modele_md_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.document_component (
+    dc_id integer NOT NULL,
+    dc_code text NOT NULL,
+    dc_comment text NOT NULL
+);
+CREATE TABLE public.document_modele (
+    md_id integer DEFAULT nextval('public.document_modele_md_id_seq'::regclass) NOT NULL,
     md_name text NOT NULL,
     md_lob oid,
     md_type integer NOT NULL,
@@ -164,17 +214,24 @@ CREATE TABLE document_modele (
     md_mimetype text,
     md_affect character varying(3) NOT NULL
 );
-CREATE TABLE document_state (
-    s_id integer DEFAULT nextval('document_state_s_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.document_option (
+    do_id bigint NOT NULL,
+    do_code character varying(20) NOT NULL,
+    document_type_id bigint,
+    do_enable integer DEFAULT 1 NOT NULL,
+    do_option character varying
+);
+CREATE TABLE public.document_state (
+    s_id integer DEFAULT nextval('public.document_state_s_id_seq'::regclass) NOT NULL,
     s_value character varying(50) NOT NULL,
     s_status character(1)
 );
-CREATE TABLE document_type (
-    dt_id integer DEFAULT nextval('document_type_dt_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.document_type (
+    dt_id integer DEFAULT nextval('public.document_type_dt_id_seq'::regclass) NOT NULL,
     dt_value character varying(80),
     dt_prefix text
 );
-CREATE TABLE extension (
+CREATE TABLE public.extension (
     ex_id integer NOT NULL,
     ex_name character varying(30) NOT NULL,
     ex_code character varying(15) NOT NULL,
@@ -182,11 +239,13 @@ CREATE TABLE extension (
     ex_file character varying NOT NULL,
     ex_enable "char" DEFAULT 'Y'::"char" NOT NULL
 );
-CREATE TABLE fiche (
+CREATE TABLE public.fiche (
     f_id integer DEFAULT nextval(('s_fiche'::text)::regclass) NOT NULL,
-    fd_id integer
+    fd_id integer,
+    f_enable character(1) NOT NULL,
+    CONSTRAINT f_enable_ck CHECK ((f_enable = ANY (ARRAY['0'::bpchar, '1'::bpchar])))
 );
-CREATE TABLE fiche_def (
+CREATE TABLE public.fiche_def (
     fd_id integer DEFAULT nextval(('s_fdef'::text)::regclass) NOT NULL,
     fd_class_base text,
     fd_label text NOT NULL,
@@ -194,70 +253,81 @@ CREATE TABLE fiche_def (
     frd_id integer NOT NULL,
     fd_description text
 );
-CREATE TABLE fiche_def_ref (
+CREATE TABLE public.fiche_def_ref (
     frd_id integer DEFAULT nextval(('s_fiche_def_ref'::text)::regclass) NOT NULL,
     frd_text text,
-    frd_class_base account_type
+    frd_class_base public.account_type
 );
-CREATE TABLE fiche_detail (
+CREATE TABLE public.fiche_detail (
     jft_id integer DEFAULT nextval(('s_jnt_fic_att_value'::text)::regclass) NOT NULL,
     f_id integer,
     ad_id integer,
     ad_value text
 );
-CREATE TABLE forecast (
+CREATE TABLE public.forecast (
     f_id integer NOT NULL,
     f_name text NOT NULL,
     f_start_date bigint,
     f_end_date bigint
 );
-CREATE TABLE forecast_cat (
+CREATE TABLE public.forecast_category (
     fc_id integer NOT NULL,
     fc_desc text NOT NULL,
-    f_id bigint,
+    f_id bigint NOT NULL,
     fc_order integer DEFAULT 0 NOT NULL
 );
-CREATE TABLE forecast_item (
+CREATE TABLE public.forecast_item (
     fi_id integer NOT NULL,
     fi_text text,
     fi_account text,
-    fi_card integer,
     fi_order integer,
     fc_id integer,
     fi_amount numeric(20,4) DEFAULT 0,
-    fi_debit "char" DEFAULT 'd'::"char" NOT NULL,
-    fi_pid integer
+    fi_pid integer,
+    fi_amount_initial numeric(20,4) DEFAULT 0
 );
-CREATE TABLE form (
+CREATE TABLE public.form_definition (
+    fr_id integer DEFAULT nextval(('s_formdef'::text)::regclass) NOT NULL,
+    fr_label text
+);
+CREATE TABLE public.form_detail (
     fo_id integer DEFAULT nextval(('s_form'::text)::regclass) NOT NULL,
-    fo_fr_id integer,
+    fo_fr_id integer NOT NULL,
     fo_pos integer,
     fo_label text,
     fo_formula text
 );
-CREATE TABLE formdef (
-    fr_id integer DEFAULT nextval(('s_formdef'::text)::regclass) NOT NULL,
-    fr_label text
-);
-CREATE TABLE groupe_analytique (
+CREATE TABLE public.groupe_analytique (
     ga_id character varying(10) NOT NULL,
     pa_id integer,
     ga_description text
 );
-CREATE TABLE info_def (
+CREATE TABLE public.info_def (
     id_type text NOT NULL,
     id_description text
 );
-CREATE TABLE jnt_fic_attr (
+CREATE TABLE public.jnt_document_option_contact (
+    jdoc_id bigint NOT NULL,
+    jdoc_enable integer NOT NULL,
+    document_type_id bigint,
+    contact_option_ref_id bigint,
+    CONSTRAINT jnt_document_option_contact_check CHECK ((jdoc_enable = ANY (ARRAY[0, 1])))
+);
+CREATE TABLE public.jnt_fic_attr (
     fd_id integer,
     ad_id integer,
-    jnt_id bigint DEFAULT nextval('s_jnt_id'::regclass) NOT NULL,
+    jnt_id bigint DEFAULT nextval('public.s_jnt_id'::regclass) NOT NULL,
     jnt_order integer NOT NULL
 );
-CREATE TABLE jnt_letter (
+CREATE TABLE public.jnt_letter (
     jl_id integer NOT NULL
 );
-CREATE TABLE jrn (
+CREATE TABLE public.jnt_tag_group_tag (
+    tag_group_id bigint NOT NULL,
+    tag_id bigint NOT NULL,
+    jt_id integer NOT NULL
+);
+CREATE TABLE public.jrn (
     jr_id integer DEFAULT nextval(('s_jrn'::text)::regclass) NOT NULL,
     jr_def_id integer NOT NULL,
     jr_montant numeric(20,4) NOT NULL,
@@ -279,9 +349,12 @@ CREATE TABLE jrn (
     jr_pj_number text,
     jr_mt text,
     jr_date_paid date,
-    jr_optype character varying(3) DEFAULT 'NOR'::character varying
+    jr_optype character varying(3) DEFAULT 'NOR'::character varying,
+    currency_id bigint DEFAULT 0 NOT NULL,
+    currency_rate numeric(20,6) DEFAULT 1 NOT NULL,
+    currency_rate_ref numeric(20,6) DEFAULT 1 NOT NULL
 );
-CREATE TABLE jrn_def (
+CREATE TABLE public.jrn_def (
     jrn_def_id integer DEFAULT nextval(('s_jrn_def'::text)::regclass) NOT NULL,
     jrn_def_name text NOT NULL,
     jrn_def_class_deb text,
@@ -298,39 +371,50 @@ CREATE TABLE jrn_def (
     jrn_def_bank bigint,
     jrn_def_num_op integer,
     jrn_def_description text,
-    jrn_enable integer DEFAULT 1
+    jrn_enable integer DEFAULT 1,
+    currency_id integer DEFAULT 0 NOT NULL,
+    jrn_def_negative_amount character(1) DEFAULT '0'::bpchar NOT NULL,
+    jrn_def_negative_warning text,
+    jrn_def_quantity smallint DEFAULT 1 NOT NULL,
+    CONSTRAINT negative_amount_ck CHECK ((jrn_def_negative_amount = ANY (ARRAY['1'::bpchar, '0'::bpchar])))
 );
-CREATE TABLE jrn_info (
+CREATE TABLE public.jrn_info (
     ji_id integer NOT NULL,
     jr_id integer NOT NULL,
     id_type text NOT NULL,
     ji_value text
 );
-CREATE TABLE jrn_note (
+CREATE TABLE public.jrn_note (
     n_id integer NOT NULL,
     n_text text,
     jr_id bigint NOT NULL
 );
-CREATE TABLE jrn_periode (
+CREATE TABLE public.jrn_periode (
     jrn_def_id integer NOT NULL,
     p_id integer NOT NULL,
     status text,
-    id bigint DEFAULT nextval('jrn_periode_id_seq'::regclass) NOT NULL
+    id bigint DEFAULT nextval('public.jrn_periode_id_seq'::regclass) NOT NULL
 );
-CREATE TABLE jrn_rapt (
+CREATE TABLE public.jrn_rapt (
     jra_id integer DEFAULT nextval(('s_jrn_rapt'::text)::regclass) NOT NULL,
     jr_id integer NOT NULL,
     jra_concerned integer NOT NULL
 );
-CREATE TABLE jrn_type (
+CREATE TABLE public.jrn_tax (
+    jt_id integer NOT NULL,
+    j_id bigint NOT NULL,
+    pcm_val public.account_type NOT NULL,
+    ac_id integer NOT NULL
+);
+CREATE TABLE public.jrn_type (
     jrn_type_id character(3) NOT NULL,
     jrn_desc text
 );
-CREATE TABLE jrnx (
+CREATE TABLE public.jrnx (
     j_id integer DEFAULT nextval(('s_jrn_op'::text)::regclass) NOT NULL,
     j_date date DEFAULT now(),
     j_montant numeric(20,4) DEFAULT 0,
-    j_poste account_type NOT NULL,
+    j_poste public.account_type NOT NULL,
     j_grpt integer NOT NULL,
     j_rapt text,
     j_jrn_def integer NOT NULL,
@@ -344,48 +428,48 @@ CREATE TABLE jrnx (
     j_qcode text,
     f_id bigint
 );
-CREATE TABLE key_distribution (
+CREATE TABLE public.key_distribution (
     kd_id integer NOT NULL,
     kd_name text,
     kd_description text
 );
-CREATE TABLE key_distribution_activity (
+CREATE TABLE public.key_distribution_activity (
     ka_id integer NOT NULL,
     ke_id bigint NOT NULL,
     po_id bigint,
     pa_id bigint NOT NULL
 );
-CREATE TABLE key_distribution_detail (
+CREATE TABLE public.key_distribution_detail (
     ke_id integer NOT NULL,
     kd_id bigint NOT NULL,
     ke_row integer NOT NULL,
     ke_percent numeric(20,4) NOT NULL
 );
-CREATE TABLE key_distribution_ledger (
+CREATE TABLE public.key_distribution_ledger (
     kl_id integer NOT NULL,
     kd_id bigint NOT NULL,
     jrn_def_id bigint NOT NULL
 );
-CREATE TABLE letter_cred (
+CREATE TABLE public.letter_cred (
     lc_id integer NOT NULL,
     j_id bigint NOT NULL,
     jl_id bigint NOT NULL
 );
-CREATE TABLE letter_deb (
+CREATE TABLE public.letter_deb (
     ld_id integer NOT NULL,
     j_id bigint NOT NULL,
     jl_id bigint NOT NULL
 );
-CREATE TABLE link_action_type (
+CREATE TABLE public.link_action_type (
     l_id bigint NOT NULL,
     l_desc character varying
 );
-CREATE TABLE menu_default (
+CREATE TABLE public.menu_default (
     md_id integer NOT NULL,
     md_code text NOT NULL,
     me_code text NOT NULL
 );
-CREATE TABLE menu_ref (
+CREATE TABLE public.menu_ref (
     me_code text NOT NULL,
     me_menu text,
     me_file text,
@@ -396,7 +480,7 @@ CREATE TABLE menu_ref (
     me_type character varying(2),
     me_description_etendue text
 );
-CREATE TABLE mod_payment (
+CREATE TABLE public.payment_method (
     mp_id integer NOT NULL,
     mp_lib text NOT NULL,
     mp_jrn_def_id integer NOT NULL,
@@ -404,8 +488,8 @@ CREATE TABLE mod_payment (
     mp_qcode text,
     jrn_def_id bigint
 );
-CREATE TABLE op_predef (
-    od_id integer DEFAULT nextval('op_def_op_seq'::regclass) NOT NULL,
+CREATE TABLE public.op_predef (
+    od_id integer DEFAULT nextval('public.op_def_op_seq'::regclass) NOT NULL,
     jrn_def_id integer NOT NULL,
     od_name text NOT NULL,
     od_item integer NOT NULL,
@@ -413,26 +497,26 @@ CREATE TABLE op_predef (
     od_direct boolean NOT NULL,
     od_description text
 );
-CREATE TABLE op_predef_detail (
-    opd_id integer DEFAULT nextval('op_predef_detail_opd_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.op_predef_detail (
+    opd_id integer DEFAULT nextval('public.op_predef_detail_opd_id_seq'::regclass) NOT NULL,
     od_id integer NOT NULL,
     opd_poste text NOT NULL,
     opd_amount numeric(20,4),
-    opd_tva_id integer,
+    opd_tva_id text,
     opd_quantity numeric(20,4),
     opd_debit boolean NOT NULL,
     opd_tva_amount numeric(20,4),
     opd_comment text,
     opd_qc boolean
 );
-CREATE TABLE operation_analytique (
-    oa_id integer DEFAULT nextval('historique_analytique_ha_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.operation_analytique (
+    oa_id integer DEFAULT nextval('public.historique_analytique_ha_id_seq'::regclass) NOT NULL,
     po_id integer NOT NULL,
     oa_amount numeric(20,4) NOT NULL,
     oa_description text,
     oa_debit boolean DEFAULT true NOT NULL,
     j_id integer,
-    oa_group integer DEFAULT nextval('s_oa_group'::regclass) NOT NULL,
+    oa_group integer DEFAULT nextval('public.s_oa_group'::regclass) NOT NULL,
     oa_date date NOT NULL,
     oa_row integer,
     oa_jrnx_id_source bigint,
@@ -440,54 +524,101 @@ CREATE TABLE operation_analytique (
     f_id bigint,
     CONSTRAINT operation_analytique_oa_amount_check CHECK ((oa_amount >= (0)::numeric))
 );
-CREATE TABLE parameter (
+CREATE TABLE public.operation_currency (
+    id bigint NOT NULL,
+    oc_amount numeric(20,6) NOT NULL,
+    oc_vat_amount numeric(20,6) DEFAULT 0,
+    oc_price_unit numeric(20,6),
+    j_id bigint NOT NULL
+);
+CREATE TABLE public.operation_exercice (
+    oe_id bigint NOT NULL,
+    oe_date date,
+    oe_type text NOT NULL,
+    oe_text text,
+    oe_dossier_id integer NOT NULL,
+    oe_exercice integer NOT NULL,
+    jr_internal text,
+    oe_transfer_date timestamp without time zone,
+    tech_user text,
+    tech_date timestamp without time zone DEFAULT now(),
+    CONSTRAINT operation_exercice_oe_type_check CHECK (((oe_type = 'opening'::text) OR (oe_type = 'closing'::text)))
+);
+CREATE TABLE public.operation_exercice_detail (
+    oed_id bigint NOT NULL,
+    oe_id bigint NOT NULL,
+    oed_poste public.account_type,
+    oed_qcode text,
+    oed_label text,
+    oed_amount numeric(20,4),
+    oed_debit boolean
+);
+CREATE TABLE public.operation_tag (
+    opt_id bigint NOT NULL,
+    jrn_id bigint,
+    tag_id integer
+);
+CREATE TABLE public.parameter (
     pr_id text NOT NULL,
     pr_value text
 );
-CREATE TABLE parm_code (
+CREATE TABLE public.parameter_extra (
+    id integer NOT NULL,
+    pe_code text,
+    pe_label text,
+    pe_value text
+);
+CREATE TABLE public.parm_appearance (
+    a_code text NOT NULL,
+    a_value text NOT NULL
+);
+CREATE TABLE public.parm_code (
     p_code text NOT NULL,
     p_value text,
     p_comment text
 );
-CREATE TABLE parm_money (
+CREATE TABLE public.parm_money (
     pm_id integer DEFAULT nextval(('s_currency'::text)::regclass),
     pm_code character(3) NOT NULL,
     pm_rate numeric(20,4)
 );
-CREATE TABLE parm_periode (
+CREATE TABLE public.parm_periode (
     p_id integer DEFAULT nextval(('s_periode'::text)::regclass) NOT NULL,
     p_start date NOT NULL,
     p_end date NOT NULL,
     p_exercice text DEFAULT to_char(now(), 'YYYY'::text) NOT NULL,
     p_closed boolean DEFAULT false,
     p_central boolean DEFAULT false,
+    p_exercice_label text NOT NULL,
     CONSTRAINT parm_periode_check CHECK ((p_end >= p_start))
 );
-CREATE TABLE parm_poste (
-    p_value account_type NOT NULL,
+CREATE TABLE public.parm_poste (
+    p_value public.account_type NOT NULL,
     p_type text NOT NULL
 );
-CREATE TABLE plan_analytique (
-    pa_id integer DEFAULT nextval('plan_analytique_pa_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.plan_analytique (
+    pa_id integer DEFAULT nextval('public.plan_analytique_pa_id_seq'::regclass) NOT NULL,
     pa_name text DEFAULT 'Sans Nom'::text NOT NULL,
     pa_description text
 );
-CREATE TABLE poste_analytique (
-    po_id integer DEFAULT nextval('poste_analytique_po_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.poste_analytique (
+    po_id integer DEFAULT nextval('public.poste_analytique_po_id_seq'::regclass) NOT NULL,
     po_name text NOT NULL,
     pa_id integer NOT NULL,
     po_amount numeric(20,4) DEFAULT 0.0 NOT NULL,
     po_description text,
-    ga_id character varying(10)
+    ga_id character varying(10),
+    po_state integer DEFAULT 1 NOT NULL
 );
-CREATE TABLE profile (
+CREATE TABLE public.profile (
     p_name text NOT NULL,
     p_id integer NOT NULL,
     p_desc text,
     with_calc boolean DEFAULT true,
-    with_direct_form boolean DEFAULT true
+    with_direct_form boolean DEFAULT true,
+    with_search_card integer
 );
-CREATE TABLE profile_menu (
+CREATE TABLE public.profile_menu (
     pm_id integer NOT NULL,
     me_code text,
     me_code_dep text,
@@ -497,30 +628,38 @@ CREATE TABLE profile_menu (
     pm_default integer,
     pm_id_dep bigint
 );
-CREATE TABLE profile_menu_type (
+CREATE TABLE public.profile_menu_type (
     pm_type text NOT NULL,
     pm_desc text
 );
-CREATE TABLE profile_sec_repository (
+CREATE TABLE public.profile_mobile (
+    pmo_id integer NOT NULL,
+    me_code text NOT NULL,
+    pmo_order integer NOT NULL,
+    p_id integer NOT NULL,
+    pmo_default character(1) DEFAULT '1'::bpchar
+);
+CREATE TABLE public.profile_sec_repository (
     ur_id bigint NOT NULL,
     p_id bigint,
     r_id bigint,
     ur_right character(1),
     CONSTRAINT user_sec_profile_ur_right_check CHECK ((ur_right = ANY (ARRAY['R'::bpchar, 'W'::bpchar])))
 );
-CREATE TABLE profile_user (
+CREATE TABLE public.profile_user (
     user_name text NOT NULL,
     pu_id integer NOT NULL,
     p_id integer
 );
-CREATE TABLE quant_fin (
+CREATE TABLE public.quant_fin (
     qf_id bigint NOT NULL,
     qf_bank bigint,
     jr_id bigint,
     qf_other bigint,
-    qf_amount numeric(20,4) DEFAULT 0
+    qf_amount numeric(20,4) DEFAULT 0,
+    j_id bigint
 );
-CREATE TABLE quant_purchase (
+CREATE TABLE public.quant_purchase (
     qp_id integer DEFAULT nextval(('s_quantity'::text)::regclass) NOT NULL,
     qp_internal text,
     j_id integer NOT NULL,
@@ -538,7 +677,7 @@ CREATE TABLE quant_purchase (
     qp_vat_sided numeric(20,4) DEFAULT 0.0,
     qp_unit numeric(20,4) DEFAULT 0
 );
-CREATE TABLE quant_sold (
+CREATE TABLE public.quant_sold (
     qs_id integer DEFAULT nextval(('s_quantity'::text)::regclass) NOT NULL,
     qs_internal text,
     qs_fiche integer NOT NULL,
@@ -552,7 +691,7 @@ CREATE TABLE quant_sold (
     qs_vat_sided numeric(20,4) DEFAULT 0.0,
     qs_unit numeric(20,4) DEFAULT 0
 );
-CREATE TABLE stock_change (
+CREATE TABLE public.stock_change (
     c_id bigint NOT NULL,
     c_comment text,
     c_date date,
@@ -560,7 +699,7 @@ CREATE TABLE stock_change (
     r_id bigint,
     tech_date time without time zone DEFAULT now() NOT NULL
 );
-CREATE TABLE stock_goods (
+CREATE TABLE public.stock_goods (
     sg_id integer DEFAULT nextval(('s_stock_goods'::text)::regclass) NOT NULL,
     j_id integer,
     f_id integer,
@@ -576,7 +715,7 @@ CREATE TABLE stock_goods (
     c_id bigint,
     CONSTRAINT stock_goods_sg_type CHECK (((sg_type = 'c'::bpchar) OR (sg_type = 'd'::bpchar)))
 );
-CREATE TABLE stock_repository (
+CREATE TABLE public.stock_repository (
     r_id bigint NOT NULL,
     r_name text,
     r_adress text,
@@ -584,27 +723,32 @@ CREATE TABLE stock_repository (
     r_city text,
     r_phone text
 );
-CREATE TABLE tags (
+CREATE TABLE public.tag_group (
+    tg_id bigint NOT NULL,
+    tg_name character varying NOT NULL
+);
+CREATE TABLE public.tags (
     t_id integer NOT NULL,
     t_tag text NOT NULL,
     t_description text,
     t_actif character(1) DEFAULT 'Y'::bpchar,
+    t_color integer DEFAULT 1,
     CONSTRAINT tags_check CHECK ((t_actif = ANY (ARRAY['N'::bpchar, 'Y'::bpchar])))
 );
-CREATE TABLE tmp_pcmn (
-    pcm_val account_type NOT NULL,
+CREATE TABLE public.tmp_pcmn (
+    pcm_val public.account_type NOT NULL,
     pcm_lib text,
-    pcm_val_parent account_type DEFAULT 0,
+    pcm_val_parent public.account_type DEFAULT 0,
     pcm_type text,
-    id bigint DEFAULT nextval('tmp_pcmn_id_seq'::regclass) NOT NULL,
+    id bigint DEFAULT nextval('public.tmp_pcmn_id_seq'::regclass) NOT NULL,
     pcm_direct_use character varying(1) DEFAULT 'Y'::character varying NOT NULL,
-    CONSTRAINT pcm_direct_use_ck CHECK (((pcm_direct_use)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT pcm_direct_use_ck CHECK (((pcm_direct_use)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
-CREATE TABLE tmp_stockgood (
+CREATE TABLE public.tmp_stockgood (
     s_id bigint NOT NULL,
     s_date timestamp without time zone DEFAULT now()
 );
-CREATE TABLE tmp_stockgood_detail (
+CREATE TABLE public.tmp_stockgood_detail (
     d_id bigint NOT NULL,
     s_id bigint,
     sg_code text,
@@ -613,8 +757,8 @@ CREATE TABLE tmp_stockgood_detail (
     r_id bigint,
     f_id bigint
 );
-CREATE TABLE todo_list (
-    tl_id integer DEFAULT nextval('todo_list_tl_id_seq'::regclass) NOT NULL,
+CREATE TABLE public.todo_list (
+    tl_id integer DEFAULT nextval('public.todo_list_tl_id_seq'::regclass) NOT NULL,
     tl_date date NOT NULL,
     tl_title text NOT NULL,
     tl_desc text,
@@ -622,31 +766,37 @@ CREATE TABLE todo_list (
     is_public character(1) DEFAULT 'N'::bpchar NOT NULL,
     CONSTRAINT ck_is_public CHECK ((is_public = ANY (ARRAY['Y'::bpchar, 'N'::bpchar])))
 );
-CREATE TABLE todo_list_shared (
+CREATE TABLE public.todo_list_shared (
     id integer NOT NULL,
     todo_list_id integer NOT NULL,
     use_login text NOT NULL
 );
-CREATE TABLE tool_uos (
-    uos_value bigint DEFAULT nextval('uos_pk_seq'::regclass) NOT NULL
+CREATE TABLE public.tool_uos (
+    uos_value bigint DEFAULT nextval('public.uos_pk_seq'::regclass) NOT NULL
 );
-CREATE TABLE tva_rate (
-    tva_id integer DEFAULT nextval('s_tva'::regclass) NOT NULL,
+CREATE TABLE public.tva_rate (
+    tva_id integer DEFAULT nextval('public.s_tva'::regclass) NOT NULL,
     tva_label text NOT NULL,
     tva_rate numeric(8,4) DEFAULT 0.0 NOT NULL,
     tva_comment text,
     tva_poste text,
-    tva_both_side integer DEFAULT 0
+    tva_both_side integer DEFAULT 0,
+    tva_payment_sale character(1) DEFAULT 'O'::bpchar,
+    tva_payment_purchase character(1) DEFAULT 'O'::bpchar,
+    tva_code text NOT NULL,
+    CONSTRAINT tva_code_number_check CHECK ((tva_code !~ '^([0-9]+)$'::text)),
+    CONSTRAINT tva_rate_purchase_check CHECK ((tva_payment_purchase = ANY (ARRAY['O'::bpchar, 'P'::bpchar]))),
+    CONSTRAINT tva_rate_sale_check CHECK ((tva_payment_sale = ANY (ARRAY['O'::bpchar, 'P'::bpchar])))
 );
-CREATE TABLE user_active_security (
+CREATE TABLE public.user_active_security (
     id integer NOT NULL,
     us_login text NOT NULL,
     us_ledger character varying(1) NOT NULL,
     us_action character varying(1) NOT NULL,
-    CONSTRAINT user_active_security_action_check CHECK (((us_action)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))),
-    CONSTRAINT user_active_security_ledger_check CHECK (((us_ledger)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT user_active_security_action_check CHECK (((us_action)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text]))),
+    CONSTRAINT user_active_security_ledger_check CHECK (((us_ledger)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
-CREATE TABLE user_filter (
+CREATE TABLE public.user_filter (
     id bigint NOT NULL,
     login text,
     nb_jrn integer,
@@ -663,32 +813,36 @@ CREATE TABLE user_filter (
     ledger_type character varying(5),
     all_ledger integer,
     filter_name text NOT NULL,
-    unpaid character varying
+    operation_filter text NOT NULL,
+    uf_tag text,
+    uf_tag_option integer,
+    uf_currency_code integer,
+    tva_id_search integer
 );
-CREATE TABLE user_local_pref (
+CREATE TABLE public.user_local_pref (
     user_id text NOT NULL,
     parameter_type text NOT NULL,
     parameter_value text
 );
-CREATE TABLE user_sec_act (
+CREATE TABLE public.user_sec_act (
     ua_id integer DEFAULT nextval(('s_user_act'::text)::regclass) NOT NULL,
     ua_login text,
     ua_act_id integer
 );
-CREATE TABLE user_sec_action_profile (
+CREATE TABLE public.user_sec_action_profile (
     ua_id bigint NOT NULL,
     p_id bigint,
     p_granted bigint,
     ua_right character(1),
-    CONSTRAINT user_sec_action_profile_ua_right_check CHECK ((ua_right = ANY (ARRAY['R'::bpchar, 'W'::bpchar])))
+    CONSTRAINT user_sec_action_profile_ua_right_check CHECK ((ua_right = ANY (ARRAY['R'::bpchar, 'W'::bpchar, 'X'::bpchar, 'O'::bpchar])))
 );
-CREATE TABLE user_sec_jrn (
+CREATE TABLE public.user_sec_jrn (
     uj_id integer DEFAULT nextval(('s_user_jrn'::text)::regclass) NOT NULL,
     uj_login text,
     uj_jrn_id integer,
     uj_priv text
 );
-CREATE TABLE version (
+CREATE TABLE public.version (
     val integer NOT NULL,
     v_description text,
     v_date timestamp without time zone DEFAULT now()

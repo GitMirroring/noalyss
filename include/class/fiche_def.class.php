@@ -56,19 +56,7 @@ class Fiche_Def
     */
     function input ()
     {
-        $ref=$this->cn->get_array("select * from fiche_def_ref order by frd_text");
-        $iradio=new IRadio();
-        /* the accounting item */
-        $class_base=new IPoste('class_base');
-        $class_base->set_attribute('ipopup','ipop_account');
-        $class_base->set_attribute('account','class_base');
-        $class_base->set_attribute('label','acc_label');
-        $f_class_base=$class_base->input();
-        $fd_description=new ITextarea('fd_description');
-        $fd_description->width=80;
-        $fd_description->heigh=4;
-        $fd_description->style='class="itextarea" style="margin-left:0px;vertical-align:text-top"';
-        require_once  NOALYSS_TEMPLATE.'/fiche_def_input.php';
+
         return;
     }
 
@@ -131,7 +119,7 @@ class Fiche_Def
         $this->label=$row['fd_label'];
         $this->class_base=$row['fd_class_base'];
         $this->fiche_def=$row['frd_id'];
-        $this->create_account=$row['fd_create_account'];
+        $this->create_account=($row['fd_create_account']=='f')?false:true;
         $this->fd_description=$row['fd_description'];
     }
     /*!
@@ -196,7 +184,7 @@ frd_text , fd_description FROM fiche_def join fiche_def_ref on (fiche_def.frd_id
 $order
 ");
 
-		require_once NOALYSS_TEMPLATE.'/fiche_def_list.php';
+		require_once NOALYSS_TEMPLATE.'/fiche_def-display.php';
 	}
     /*!
      * \brief Add a fiche category thanks the element from the array
@@ -220,7 +208,7 @@ $order
         $http->set_array($array);
         $p_nom_mod = $http->extract('nom_mod',"string","");
         $p_fd_description = $http->extract('fd_description',"string", "");
-        $p_class_base=$http->extract('class_base',"string", "");
+
         $p_fiche_def= $http->extract('FICHE_REF',"string", "");
         $p_create= $http->extract('create',"string", "off");
         
@@ -253,13 +241,19 @@ $order
 			 alert (_('Catégorie existante'));
 			return 1;
 		}
+        $default_acc=$this->cn->get_value("select frd_class_base from fiche_def_ref where frd_id=$1",[$p_fiche_def]);
+
+        // if the account is empty, takes the account of the template from fiche_def_ref
+        $p_class_base=$http->extract('class_base',"string", "");
+        $p_class_base=(noalyss_trim($p_class_base)=='')?$default_acc:$p_class_base;
+
         // Set the value of fiche_def.fd_create_account
         // automatic creation for 'poste comptable'
         if ( $p_create == "on" && noalyss_strlentrim($p_class_base) != 0)
             $p_create='true';
         else
             $p_create='false';
-
+        $add_accounting=false;
         // Class is valid ?
         if ( sql_string($p_class_base) != null || ( $p_class_base !='' && strpos(',',$p_class_base) != 0 ))
         {
@@ -278,10 +272,11 @@ $order
 			// Get the fd_id
 			$fd_id=$this->cn->get_current_seq('s_fdef');
 
-			// update jnt_fic_attr
-			$sql=sprintf("insert into jnt_fic_attr(fd_id,ad_id,jnt_order)
-					 values (%d,%d,10)",$fd_id,ATTR_DEF_ACCOUNT);
-			$Res=$this->cn->exec_sql($sql);
+//			// update jnt_fic_attr
+//			$sql=sprintf("insert into jnt_fic_attr(fd_id,ad_id,jnt_order)
+//					 values (%d,%d,10)",$fd_id,ATTR_DEF_ACCOUNT);
+//			$Res=$this->cn->exec_sql($sql);
+            $add_accounting=true;
         }
         else
         {
@@ -301,23 +296,38 @@ $order
 
         //if defaut attr not null
         // build the sql insert for the table attr_def
+        $add_qcode=true;
         if (sizeof($def_attr) != 0 )
         {
             // insert all the mandatory fields into jnt_fiche_attr
             foreach ( $def_attr as $row)
             {
-				$order=$row['ad_default_order'];
-                if ( $row['ad_id'] == ATTR_DEF_NAME )
-                    $order=0;
+
 				$count=$this->cn->get_value("select count(*) from jnt_fic_attr where fd_id=$1 and ad_id=$2",array($fd_id,$row['ad_id']));
 				if ($count == 0)
 				{
 					$sql=sprintf("insert into jnt_fic_Attr(fd_id,ad_id,jnt_order)
                              values (%d,%s,%d)",
-                             $fd_id,$row['ad_id'],$order);
+                             $fd_id,$row['ad_id'],$row['ad_default_order']);
 					$this->cn->exec_sql($sql);
 				}
+                // if there is an accounting , then not needed to add one
+                if ( $row['ad_id']==ATTR_DEF_ACCOUNT) $add_accounting=FALSE;
+                if ( $row['ad_id']==ATTR_DEF_QUICKCODE) $add_qcode=FALSE;
             }
+        }
+        // if there is an base accounting, and the accounting is not in ATTR_MIN,
+        // then it is needed to add it
+        if ( $add_accounting) {
+            $sql=sprintf("insert into jnt_fic_attr(fd_id,ad_id,jnt_order)
+					 values (%d,%d,10)",$fd_id,ATTR_DEF_ACCOUNT);
+			$Res=$this->cn->exec_sql($sql);
+        }
+        // if there is no quick code in attr_min, it is added
+        if ( $add_qcode) {
+            $sql=sprintf("insert into jnt_fic_attr(fd_id,ad_id,jnt_order)
+					 values (%d,%d,10000)",$fd_id,ATTR_DEF_QUICKCODE);
+            $Res=$this->cn->exec_sql($sql);
         }
         $this->id=$fd_id;
         return 0;
@@ -457,41 +467,7 @@ $order
         echo $bar;
 
     }
-    /*!\brief show input for the basic attribute : label, class_base, create_account
-     * use only when we want to update
-     *
-     *\return HTML string with the form
-     */
-    function input_base()
-    {
-        $r="";
-        $r.=_('Label');
-        $label=new IText('label',$this->label);
-        $r.=$label->input();
-        $r.='<br>';
-        /* the accounting item */
-        $class_base=new IPoste('class_base',$this->class_base);
-        $class_base->set_attribute('ipopup','ipop_account');
-        $class_base->set_attribute('account','class_base');
-        $class_base->set_attribute('label','acc_label');
-        $fd_description=new ITextarea('fd_description',$this->fd_description);
-        $fd_description->width=80;
-        $fd_description->heigh=4;
-        $fd_description->style='class="itextarea" style="margin-left:0px;vertical-align:text-top"';
 
-        $r.=_('Poste Comptable de base').' : ';
-        $r.=$class_base->input();
-        $r.='<span id="acc_label"></span><br>';
-		$r.='<br/>';
-		$r.=" Description ".$fd_description->input();
-        /* auto Create */
-		$r.='<br/>';
-        $ck=new ICheckBox('create');
-        $ck->selected=($this->create_account=='f')?false:true;
-        $r.=_('Chaque fiche aura automatiquement son propre poste comptable : ');
-        $r.=$ck->input();
-        return $r;
-    }
     /*!\brief Display all the attribut of the fiche_def
      *\param $str give the action possible values are remove, empty
      */
@@ -606,6 +582,7 @@ $order
              "where                    fd_id=$2";
 
         $Res=$this->cn->exec_sql($sql,array($t,$this->id));
+
 
     }
     /*!\brief Save the class base
@@ -749,9 +726,10 @@ $order
     {
 
         // find the min attr for the fiche_def_ref
-        $Sql="select ad_id,ad_text ,ad_default_order 
-                from attr_min natural join attr_def
-             natural join fiche_def_ref
+        $Sql="select ad_id,ad_text ,attr_min.ad_default_order 
+             from attr_min 
+                join attr_def using(ad_id)
+              join fiche_def_ref using(frd_id)
              where
              frd_id= $1 order by ad_default_order";
         $Res=$this->cn->exec_sql($Sql,array($p_fiche_def_ref));
@@ -770,7 +748,8 @@ $order
         }
         return $array;
     }
-    /*!\brief count the number of fiche_def (category) which has the frd_id (type of category)
+    /*!
+     * \brief count the number of fiche_def (category) which has the frd_id (type of category)
      *\param $p_frd_id is the frd_id in constant.php the FICHE_TYPE_
      *\return the number of cat. of card of the given type
      *\see constant.php
@@ -780,6 +759,11 @@ $order
         $ret=$this->cn->count_sql("select fd_id from fiche_def where frd_id=$1",array($p_frd_id));
         return $ret;
     }
+
+    /**
+     * @brief ask for detail
+     * @return string
+     */
 	function input_detail()
 	{
 		$r = "";
@@ -790,16 +774,37 @@ $order
 		$r.= '<H2 class="info">' . $this->id . " " . h($this->label) . '</H2>';
 		$r.='<fieldset><legend>'._('Données générales').'</legend>';
 
-		/* show the values label class_base and create account */
-		$r.='<form method="post">';
-		$r.=dossier::hidden();
-		$r.=HtmlInput::hidden("fd_id", $this->id);
-		$r.=HtmlInput::hidden("p_action", "fiche");
-		$r.= $this->input_base();
-		$r.='<hr>';
-		$r.=HtmlInput::submit('change_name', _('Sauver'));
-		$r.='</form>';
+        $nom_mod=$this->label;
+        /* the accounting item */
+        $class_base=new IPoste('class_base');
+        $class_base->set_attribute('ipopup','ipop_account');
+        $class_base->set_attribute('account','class_base');
+        $class_base->set_attribute('label','acc_label');
+        $class_base->value=$this->class_base;
+        $f_class_base=$class_base->input();
+        $fd_description=new ITextarea('fd_description');
+        $fd_description->width=80;
+        $fd_description->heigh=4;
+        $fd_description->style='class="itextarea  form-control input_text" style="margin-left:0px;vertical-align:text-top"';
+        $fd_description->value=$this->fd_description;
+        $r.='<form method="post" style="display:inline">';
+        $r.=\HtmlInput::hidden('fd_id',$this->id);
+        ob_start();
+        require_once  NOALYSS_TEMPLATE.'/fiche_def_input.php';
+        $r.=ob_get_contents();
+        ob_clean();
+        $r.=HtmlInput::submit('change_name', _('Sauver'));
+        $r.='</form>';
+        $r.='<form method="post" style="display:inline" id="catcard_remove" onsubmit="return confirm_box(this,\'Effacer?\')">';
+        $r.=HtmlInput::hidden("action", "remove_cat");
+        $r.=HtmlInput::hidden('fd_id',$this->id);
+        $r.=HtmlInput::submit('remove_cat', _('Effacer'));
+        $r.='</form>';
+
+		require NOALYSS_TEMPLATE.'/fiche_def-input_detail.php';
+
 		$r.='</fieldset>';
+        $r.='<hr>';
 		/* attributes */
 		$r.='<fieldset><legend>'._('Détails').'</legend>';
 
@@ -807,33 +812,46 @@ $order
 		$r.=dossier::hidden();
 		$r.=HtmlInput::hidden("fd_id", $this->id);
 		$r.=HtmlInput::hidden("action", "");
-		$r.= $this->DisplayAttribut("remove");
-		$r.= HtmlInput::submit('add_line_bt', _('Ajoutez cet élément'),
-                        'onclick="$(\'action\').value=\'add_line\'"');
-		$r.= HtmlInput::submit("save_line_bt", _("Sauvez"),
-                        'onclick="$(\'action\').value=\'save_line\'"');
-                        
-		$r.=HtmlInput::submit('remove_cat_bt', _('Effacer cette catégorie'), 'onclick="$(\'action\').value=\'remove_cat\';return confirm_box(\'input_detail_frm\',\'' . _('Vous confirmez ?') . '\')"');
-		// if there is nothing to remove then hide the button
-		if (strpos($r, "chk_remove") != 0)
-		{
-                    $r.=HtmlInput::submit('remove_line_bt', _("Enleve les éléments cochés"), 
-                            'onclick="$(\'action\').value=\'remove_line\';return confirm_box(\'input_detail_frm\',\'' . _('Vous confirmez ?') . '\')"');
-		}
+		// $r.= $this->DisplayAttribut("remove");
+        ob_start();
+        require NOALYSS_TEMPLATE."/fiche_def-input_detail-2.php";
+        $r.=ob_get_contents();
+        ob_clean();
+
 		$r.= "</form>";
-		$r.=" <p class=\"notice\"> " . _("Attention : il n'y aura pas de demande de confirmation pour enlever les
-                                   attributs sélectionnés. Il ne sera pas possible de revenir en arrière") . "</p>";
+
 		$r.='</fieldset>';
 		return $r;
 	}
+
+
+    /**
+     * @brief input for creating a new category
+     * @return void
+     */
 	function input_new()
 	{
 		$single=new Single_Record("dup");
-		echo '<form method="post" style="display:inline">';
+		echo '<form method="post" style="display:inline" onsubmit="return check_new_category()">';
 		echo $single->hidden();
 		echo HtmlInput::hidden("p_action","fiche");
 		echo dossier::hidden();
-		echo $this->input(); //    CreateCategory($cn,$search);
+        $ref=$this->cn->get_array("select * from fiche_def_ref order by frd_text");
+        $iradio=new IRadio();
+        $nom_mod="";
+        /* the accounting item */
+        $class_base=new IPoste('class_base');
+        $class_base->set_attribute('ipopup','ipop_account');
+        $class_base->set_attribute('account','class_base');
+        $class_base->set_attribute('label','acc_label');
+        $f_class_base=$class_base->input();
+        $fd_description=new ITextarea('fd_description');
+        $fd_description->width=80;
+        $fd_description->heigh=4;
+        $fd_description->style='class="itextarea  form-control input_text" style="margin-left:0px;vertical-align:text-top"';
+        require_once  NOALYSS_TEMPLATE.'/fiche_def_input.php';
+        require_once  NOALYSS_TEMPLATE.'/fiche_def-input_new.php';
+
 		echo HtmlInput::submit("add_modele" ,_("Sauve"));
 		echo '</FORM>';
 	}
@@ -883,5 +901,26 @@ $order
 
     }
 
+    /**
+     * @brief display existing attribut
+     * @param $attribut_id int SQL attr_def.ad_id
+     * @param $attribut_text SQL attr_def.ad_text
+     * @return void
+     */
+    public static function print_existing_attribut($attribut_id,$attribut_text)
+    {
+       include NOALYSS_TEMPLATE.'/fiche_def-print_existing_attribut.php';
+    }
+
+    /**
+     * @brief display available attribut
+     * @param $attribut_id int SQL attr_def.ad_id
+     * @param $attribut_text SQL attr_def.ad_text
+     * @return void
+     */
+    public static function print_available_attribut($attribut_id,$attribut_text,$class)
+    {
+        include NOALYSS_TEMPLATE.'/fiche_def-print_available_attribut.php';
+    }
 }
 ?>

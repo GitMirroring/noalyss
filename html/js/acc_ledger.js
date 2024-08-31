@@ -19,9 +19,9 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!
- * \file
- * \brief javascript script for the ledger in accountancy,
+/**
+ * @file
+ * javascript script for the ledger in accountancy,
  * compute the sum, add a row at the table..
  *
  */
@@ -1731,7 +1731,56 @@ function duplicate_operation(p_dossier, p_jr_id) {
         }
     );
 }
+/**
+ * Go to detail of Tax for a specific period , ledger id and tva_id
+ */
 
+function tax_detail_view (dossier_id,date_from,date_to,nLedger_id,nTva_id)
+{
+	try
+		{
+	        var dgbox="detail_tax_box";
+	        waiting_box();
+	        removeDiv(dgbox);
+	        // For form , most of the parameters are in the FORM
+	        // method is then POST
+	         //var queryString=$(p_form_id).serialize(true);
+
+	       var queryString = {
+	                op: 'tax_detail',
+	                act: "tax_detail_view",
+	                gDossier: dossier_id,
+                    boxid: dgbox,
+	                date_from:date_from,
+                    date_to:date_to,
+                    ledger_id:nLedger_id,
+                    tva_id:nTva_id
+	            };
+	        var action = new Ajax.Request(
+					  "ajax_misc.php" ,
+					  {
+					      method:'GET',
+					      parameters:queryString,
+					      onFailure:ajax_misc_failure,
+					      onSuccess:function(req){
+							remove_waiting_box();
+	                        if (req.responseText == 'NOCONX') {
+	                            reconnect();
+	                            return;
+	                        }
+							var y=calcy(15);
+							var div_style="position:absolute;"+";top:"+y+"px";
+							add_div({id:dgbox,cssclass:'inner_box',html:loading(),style:div_style,drag:true});
+							$(dgbox).update(req.responseText);
+
+					      }
+					  }
+	              );
+		}catch( e)
+		{
+			alert_box(e.message);
+		}
+}
 /**
  * For operation_exercice let update periode when changing folder
  * @type {{update_periode: operation_exercice.update_periode}}
@@ -1959,7 +2008,7 @@ var operation_exercice = {
                             return;
                         }
                         var answer=req.responseJSON;
-console.debug(answer['content']);
+
                         $('operation_exercice_transfer_info').update(answer.content);
 
 

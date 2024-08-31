@@ -25,10 +25,10 @@
 
 global $version_noalyss;
 // version 
-define('NOALYSS_VERSION', 9206 );
+define('NOALYSS_VERSION', 9300 );
 
 // Database schema version 
-define("DBVERSION", 196);
+define("DBVERSION", 200);
 
 // version for MONO_DATABASE
 define("MONO_DATABASE", 25);
@@ -100,6 +100,8 @@ $g_failed = "<span style=\"font-size:18px;color:red\">&#x2716;</span>";
 $g_succeed = "<span style=\"font-size:18px;color:green\">&#x2713;</span>";
 define('SMALLX', '#xe816;');
 define('BUTTONADD', "&#10010;");
+define('ICON_SEARCH', '&#x1F50E;');
+define('ICON_CLEAN', '&#x2715;');
 
 // If noalyss_version is not defined it is likely directly taken from
 // git and so this variable is not set, this cause some issue
@@ -404,7 +406,8 @@ function noalyss_class_autoloader($class)
         "htmlinput" => "lib/html_input.class.php",
         'noalyss\dbg'=>"lib/dbg.php",
         'noalyss\file_cache'=>"lib/file_cache.class.php",
-        "pdfland"=>"class/pdf_land.class.php"
+        "pdfland"=>"class/pdf_land.class.php",
+        "noalyss\widget\widget"=>"widget/widget.php"
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];

@@ -44,6 +44,8 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
  * </ul>
  * The table document_type are the possible actions
  */
+
+#[AllowDynamicProperties]
 class Follow_Up
 {
 
@@ -51,6 +53,7 @@ class Follow_Up
     var $ag_timestamp;  /*!<   $ag_timestamp document date (ag_gestion.ag_timestamp) */
     var $dt_id;   /*!<   $dt_id type of the document (document_type.dt_id) */
     var $ag_state; /*!<   $ag_state stage of the document (printed, send to client...) */
+    var $ag_owner; /*!<   $ag_owner of the followup  */
     var $d_number;   /*!<   $d_number number of the document */
     var $d_filename; /*!<   $d_filename filename's document      */
     var $d_mimetype; /*!<   $d_mimetype document's filename      */
@@ -66,7 +69,9 @@ class Follow_Up
     var $ag_id; //!< Follow_Up.ag_id
     var $f_id_dest; /*!< followup action recipient */
     var $aAction_detail; //!< Array of action details
-
+    var $ag_type; //!< type of document
+    var $d_id; //!< Document
+    var $state; //!< State of the document
     /**
      * @var integer $ag_description_id if greater than 0 , it is the id in action_comment
      * of the description (1st comment)
@@ -229,7 +234,9 @@ class Follow_Up
         );
 
         // List opération liées
-        $operation=$this->db->get_array("select ago_id,j.jr_id,j.jr_internal,j.jr_comment,to_char(j.jr_date,'DD.MM.YY') as str_date
+        $operation=$this->db->get_array("select ago_id,j.jr_id,j.jr_internal,j.jr_comment
+                                                ,to_char(j.jr_date,'DD.MM.YY') as str_date
+                                                ,jr_pj_number
 			from jrn as j join action_gestion_operation as ago on (j.jr_id=ago.jr_id)
 			where ag_id=$1 order by jr_date", array($this->ag_id));
         $iconcerned=new IConcerned('operation');
@@ -413,6 +420,7 @@ class Follow_Up
         $iag_ref=new IText("ag_ref");
         $iag_ref->value=$this->ag_ref;
         $iag_ref->readOnly=false;
+        $iag_ref->css_size="100%";
         $str_ag_ref=$iag_ref->input();
         // Preparing the return string
         $r="";
@@ -691,6 +699,7 @@ class Follow_Up
     {
         // for the sort
         $arg=HtmlInput::get_to_string(array("closed_action", "remind_date_end", "remind_date", "sag_ref", "only_internal", "state", "qcode", "ag_dest_query", "action_query", "tdoc", "date_start", "date_end", "hsstate", "searchtag"),"");
+        $arg=($arg!="")?"&$arg":"";
         $url=$p_base.$arg;
 
         $table=new Sort_Table();
@@ -712,7 +721,7 @@ class Follow_Up
         //7
         $table->add(_('Etat'), $url, 'order by s_value asc', 'order by s_value desc', 'ea', 'ed');
         // 8
-        $table->add(_('Dernier comm.'), $url, 'order by last_comment_date nulls last', 'order by last_comment_date desc nulls last', 'dca', 'dcd');
+        $table->add(_('Dernier comm.'), $url, 'order by coalesce(last_comment_date, ag.ag_timestamp) asc', 'order by coalesce(last_comment_date, ag.ag_timestamp) desc', 'dca', 'dcd');
         // 9
         $table->add(_('Priorité'), $url, 'order by ag_priority ', 'order by ag_priority desc ', 'pra', 'prd');
         $http=new HttpInput();

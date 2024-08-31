@@ -37,8 +37,9 @@ $customer_now=$Ledger->get_customer_now();
 $customer_late=$Ledger->get_customer_late();
 
 $gDossier_id=Dossier::id();
+
 ?>
-  <?php echo HtmlInput::title_box(_("Situation"),"situation_div",'none','','n')?>
+  <?php echo HtmlInput::title_box(_("Résumé"),"situation_div",'none','','n')?>
     <table class='result'>
 		<tr>
 			<th>

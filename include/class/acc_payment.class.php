@@ -33,9 +33,10 @@ require_once NOALYSS_INCLUDE.'/constant.php';
   - mp_qcode ==> qcode (quick_code of the card)
  *
  */
+
+#[AllowDynamicProperties]
 class Acc_Payment
 {
-
     private static $variable=array("id"=>"mp_id",
                                    "lib"=>"mp_lib",
                                    "qcode"=>"mp_qcode",
@@ -43,13 +44,13 @@ class Acc_Payment
                                    "ledger_source"=>"jrn_def_id",
                                    "fiche_def"=>"mp_fd_id");
 
-
+    private $mp_id;
     private  $mp_lib;
     private  $mp_qcode;
     private  $mp_jrn_def_if;
     private  $jrn_def_id;
     private  $mp_fd_id;
-
+    private $cn; //!< Database connection
     function __construct ($p_cn,$p_init=0)
     {
         $this->cn=$p_cn;

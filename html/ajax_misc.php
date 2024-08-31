@@ -36,13 +36,19 @@
  *
  */
 if ( ! defined('ALLOWED')) define ('ALLOWED',1);
-
 require_once '../include/constant.php';
 
 require_once NOALYSS_INCLUDE."/lib/ac_common.php";
 
 global $http;
 $http=new HttpInput();
+try {
+    $op= $http->request("op");
+    if ($op =='check_vatnumber') session_write_close();
+
+} catch (\Exception $e) {
+    exit();
+}
 
 /* we ask a dg box for disconnecting */
 if ($http->request('op',"string","") == 'disconnect') {
@@ -60,24 +66,12 @@ if ( ! isset($_SESSION[SESSION_KEY."g_user"])) {
 
 mb_internal_encoding("UTF-8");
 
-$var = array( 'op');
-$cont = 0;
-/*  check if mandatory parameters are given */
-foreach ($var as $v)
-{
-	if (!isset($_REQUEST [$v]))
-	{
-		echo "$v is not set ";
-		$cont = 1;
-	}
-}
-
 // If not connected to a folder
 if ( ! isset($_REQUEST['gDossier'])) {
     $gDossier=0;
 }
 
-if ($cont != 0) 	exit();
+
 
 extract($_REQUEST, EXTR_SKIP );
 
@@ -133,7 +127,7 @@ $html = var_export($_REQUEST, true);
 set_language();
 if ( LOGINPUT)
     {
-        $file_loginput=fopen($_ENV['TMP'].'/scenario-'.$_SERVER['REQUEST_TIME'].'.php','a+');
+        $file_loginput=fopen($_ENV['TMP'].'/scenario-ajax-'.$_SERVER['REQUEST_TIME'].'.php','a+');
         fwrite ($file_loginput,"<?php \n");
         fwrite ($file_loginput,'//@description:'.$op."\n");
         fwrite($file_loginput, '$_GET='.var_export($_GET,true));
@@ -149,9 +143,19 @@ if ( LOGINPUT)
         fwrite($file_loginput,"include '".basename(__FILE__)."';\n");
         fclose($file_loginput);
     }
+
+/**
+ * for widget we call immediately a file outside the ajax folder
+ */
+if ($op == 'widget') {
+    session_write_close();
+    require_once NOALYSS_INCLUDE.'/widget/ajax.php';
+    return;
+}
+
 $path = array(
     // search accounting , detail ...
-    "account"=>"ajax_poste",
+    "account"=>"ajax_account",
     // display card detail :possible to update or add
     "card"=>"ajax_card",
     "ledger"=>"ajax_ledger",
@@ -165,9 +169,9 @@ $path = array(
     "user_sec_action"=>"ajax_user_security",
     // Update in once all the ledgers
     "ledger_access_all"=>"ajax_user_security",
-    // From the page CFGSEC,set the actions
+    // From the page C0SEC,set the actions
     "action_access"=>"ajax_user_security",
-    // From the page CFGSEC,set all the actions
+    // From the page C0SEC,set all the actions
     "action_access_all"=>"ajax_user_security",
     "todo_list"=>"ajax_todo_list",
     // Writing operation History for a card or an accounting
@@ -254,7 +258,7 @@ $path = array(
     "anc_accounting"=>"ajax_anc_accounting",
     // Update name and description
     "anc_updatedescription"=>"ajax_anc_plan",
-    // Update, insert or delete accounting frmo CFGPCMN
+    // Update, insert or delete accounting frmo C0PCMN
     "accounting"=>"ajax_accounting",
     // Show detail of an ANC operation
     "anc_detail_op"=>"ajax_anc_detail_operation",
@@ -352,7 +356,14 @@ $path = array(
     'list_filter_followup'=>"ajax_follow_up",
     //delete a filter for followup
     'delete_filter_followup'=>"ajax_follow_up",
-    "check_vatnumber"=>"ajax_check_vatnumber"
+    // Check VAT NUMBER with VIES European VAT
+    "check_vatnumber"=>"ajax_check_vatnumber",
+    // Tax Detail
+    "tax_detail"=>"ajax_tax_detail"
+    // card category definition : from CCARD
+    ,"category_card_definition"=>"ajax_category_card_definition"
+    // activate plugin for a profile
+    ,'activate_plugin'=>'ajax_activate_plugin'
 ) ;
 
 if (array_key_exists($op, $path)) {
@@ -567,6 +578,8 @@ EOF;
                 }else {
                     
                     $Res = $cn->exec_sql("select * from v_tva_rate 
+                                where
+                        tva_purchase <> '#' and tva_sale <> '#'
                             order by tva_rate desc");
                 }
 		$Max = Database::num_row($Res);
@@ -575,6 +588,7 @@ EOF;
 		$r.='<div >';
                 $r.=_('Cherche')." ".HtmlInput::filter_table("tva_select_table",'0,1,2,3' , 1);
 		$r.= '<TABLE class="sortable" style="width:100%" id="tva_select_table">';
+		$r.=th(_('id'));
 		$r.=th(_('code'));
 		$r.=th(_('Taux'),'class="sorttable_sorted_reverse"');
 		$r.=th(_('Symbole'));
@@ -609,6 +623,7 @@ EOF;
 			$class=($i%2 == 0)?' class="odd" ':' class="even" ';
 			$r.='<tr'.$class. $script.' style="cursor : pointer">';
 			$r.=td($row['tva_id']);
+			$r.=td($row['tva_code']);
 			$r.=td($row['tva_rate']);
 			$r.=td($row['tva_label']);
 			$r.=td($row['tva_comment']);
@@ -629,16 +644,15 @@ EOF;
 EOF;
 		break;
 	case 'label_tva':
+        $code=$http->request('code','string','x');
 		$cn =Dossier::connect();
-		if (isNumber($id) == 0)
+        $tva=Acc_Tva::build($cn, $id);
+
+        if ($tva->tva_id == -1 )
 			$value = _('tva inconnue');
 		else
 		{
-			$Res = $cn->get_array("select * from tva_rate where tva_id = $1", array($id));
-			if (count($Res) == 0)
-				$value = _('tva inconnue');
-			else
-				$value = $Res[0]['tva_label'];
+           $value=htmlentities($tva->tva_label);
 		}
 		header('Content-type: text/xml; charset=UTF-8');
 		echo <<<EOF

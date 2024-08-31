@@ -58,19 +58,20 @@ if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
 		where user_name=$1 and with_direct_form=true",array($_SESSION[SESSION_KEY.'g_user'])) ==1):
 ?>
 	<div id="direct">
-	<form method="get" onsubmit="if (document.getElementById('ac').value.trim() =='') {return false;} else {return true;}">
+	<form method="get" onsubmit="return document.getElementById('ac').value.trim()!='';">
 		<?php echo $http->request('ac',"string", '')?>
 		<?php echo Dossier::hidden()?>
 		<?php 
 
 			$direct=new IText('ac');
 			$direct->style='class="input_text"';
+            $direct->placeholder=_('Accès direct ou menu');
 			$direct->value='';
 			$direct->size=20;
 			echo $direct->input();
 			$gDossier=dossier::id();
 			?>
-		<div id="ac_choices" class="autocomplete" style="width:150"></div>
+		<div id="ac_choices" class="autocomplete" style="width:150px"></div>
 		<?php 
 			echo HtmlInput::submit('go',_('Aller'));
 			?>

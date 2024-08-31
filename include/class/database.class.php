@@ -64,6 +64,7 @@ class Database extends DatabaseCore
 
         parent::__construct($noalyss_user, $password, $l_dossier, $host, $port);
 
+        $this->exec_sql('set search_path to public,pg_catalog;');
         if ($this->exist_schema('comptaproc')) {
             $this->exec_sql('set search_path to public,comptaproc,pg_catalog;');
         }

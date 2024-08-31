@@ -33,6 +33,7 @@ define ('CODE_EXCP_DUPLICATE',901);
 class Single_Record
 {
     public $name;
+    public $id;
     /**
      * Constructor $p_name will be set to $this->name, it is also the name
      * of the tag hidden in a form

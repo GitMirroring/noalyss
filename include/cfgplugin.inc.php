@@ -26,7 +26,7 @@ if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
  */
 global $cn;
 global $http;
-
+$dossier_id=Dossier::id();
 /******************************************************************************
  * Scan the plugin folder and file in each subfolder a property file and
  * store them into an array a_plugin
@@ -44,6 +44,13 @@ for ($e=0;$e<$nb_dirscan;$e++) {
             for ($i=0;$i<count($extension);$i++)
             {
                 $a_plugin[]=clone $extension[$i];
+                try {
+                    $extension[$i]->save_plugin();
+
+                } catch (\Exception $e) {
+                    echo_warning($e->getMessage());
+                }
+
             }
             
         }
@@ -56,47 +63,7 @@ $nb_plugin=count($a_plugin);
  */
 $a_profile=$cn->get_array('select p_id,p_name from profile where p_id > 0 order by p_name');
 $nb_profile=count($a_profile);
-/******************************************************************************
- * save 
- ******************************************************************************/
-if ( isset ($_POST['save_plugin'])){
-    // retrieve array of plugin
-    $plugin=$http->post('plugin', "string",array());
-    // for each extension
-    for ($i=0;$i<$nb_plugin;$i++) {
-        
-        $code=$a_plugin[$i]->me_code;
-        // for each profile
-        for ($e=0;$e<$nb_profile;$e++)
-        {
-            $profile=$a_profile[$e]['p_id'];
-            if ( isset ($plugin[$code][$profile])) {
-                // insert or update into db
-                $count = $cn->get_value("select count(*) from menu_ref where me_code=$1", array($code));
-                if ( $count == 0 ) {
-                    $a_plugin[$i]->insert();
-                }
-                try
-                {
-                    $a_plugin[$i]->insert_profile_menu($profile);
-                }
-                catch (Exception $exc)
-                {
-                    record_log($exc->getMessage()." trace:".$exc->getTraceAsString());
-                    $profile_name=$cn->get_value('select profile.p_name from profile where p_id=$1'
-                            ,array($profile));
-                    echo '<p class="notice">';
-                    echo "code $code"," profile $profile_name ",$exc->getMessage();
-                    echo '</p>';
-                }
 
-            } else {
-                // delete
-                $a_plugin[$i]->remove_from_profile_menu ($profile);
-            }
-    }
-    }
-}
 /******************************************************************************
  * Display the Plugin and for each profile were it is installed or not
  ******************************************************************************/
@@ -105,7 +72,7 @@ if ( isset ($_POST['save_plugin'])){
 ?>
 <div class="content">
     <?php echo _('Nombre de plugins trouvés')." ".$nb_plugin; ?>
-    <form method="post">
+
     <?php echo _('Filtre');echo " ";echo HtmlInput::filter_table("plugin_install_tb", '0,1,2,3', 1);?>
     <table id="plugin_install_tb" class="result">
         <tr>
@@ -153,9 +120,18 @@ if ( isset ($_POST['save_plugin'])){
                     <span style="display:block">
                     
                     <?php
-                        $a=new ICheckBox('plugin['.$a_plugin[$e]->me_code.']['.$a_profile[$w]['p_id'].']');
-                        if ($a_profile[$w]['cnt']>0) $a->selected=true;
-                        echo $a->input();
+                        // $a=new ICheckBox('plugin['.$a_plugin[$e]->me_code.']['.$a_profile[$w]['p_id'].']');
+                        $name=uniqid($a_plugin[$e]->me_code);
+                        $ckpl=new ICheckBox($name);
+
+                        $ckpl->set_attribute("gDossier", $dossier_id);
+                        $ckpl->set_attribute("me_code", $a_plugin[$e]->me_code);
+                        $ckpl->set_attribute("pr_id", $a_profile[$w]['p_id']);
+                        $ckpl->set_attribute("dep", $a_plugin[$e]->depend);
+                        $ckpl->set_attribute("order", $a_plugin[$e]->order);
+                        $ckpl->javascript=' onchange="activate_plugin(this)"';
+                        if ($a_profile[$w]['cnt']>0) $ckpl->selected=true;
+                        echo $ckpl->input();
                         echo $a_profile[$w]['p_name'];
                  ?>
                     </span>
@@ -167,7 +143,6 @@ if ( isset ($_POST['save_plugin'])){
         
         <?php endfor; ?>
     </table>
-        <?php echo HtmlInput::submit('save_plugin', _('Valider')); ?>
-   </form>
+
 </div>
 

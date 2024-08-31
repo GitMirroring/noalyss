@@ -40,18 +40,19 @@ require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 MaintenanceMode("block.html");
 
-// Check if the needed field does exist
-extract ($_GET, EXTR_SKIP );
-foreach (array('t','c','p','q','n','gDossier') as $a)
-{
-    if ( ! isset (${$a}) )
-    {
-        echo "error $a is not set ";
-        exit();
-    }
 
-}
 $http=new HttpInput();
+// TVA id or TVA code
+$t=$http->get("t");
+// string  qcode card
+$c=$http->get("c");
+// Price
+$p=$http->get("p");
+// quantity
+$q=$http->get("q");
+// row number (from 0) used to identify the row
+$n=$http->get("n");
+
 $tax_ac_id=$http->request("other_tax_id","number",-1);
 // sometime number uses coma instead of dot for dec
 $p=noalyss_str_replace(",",".",$p);
@@ -63,10 +64,10 @@ $User->Check();
 $User->check_dossier(Dossier::id());
 
 // Retrieve the rate of vat, it $t == -1 it means no VAT
-if ( $t != -1 && isNumber($t) == 1 )
+if ( $t != -1  )
 {
-    $tva_rate=new Acc_Tva($cn);
-    $tva_rate->set_parameter('id',$t);
+    $tva_rate=Acc_Tva::build($cn, $t);
+
     /**
      *if the tva_rate->load failed we don't compute tva
      */
@@ -89,7 +90,7 @@ if ( $tax_ac_id !=-1) {
     $other_tax=new Acc_Other_Tax_SQL($cn,$tax_ac_id);
     $other_tax_amount=round(bcmul($amount,$other_tax->getp("ac_rate"),4)/100,2);
 }
-if ( $t != -1 && isNumber($t) == 1 )
+if ( $t != -1   )
 {
     $total->set_parameter('amount_vat_rate',$tva_rate->get_parameter('rate'));
     $total->compute_vat();

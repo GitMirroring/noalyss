@@ -384,8 +384,10 @@ switch ($action) {
                 }
                 $cn->exec_sql("update jrn set jr_comment=$1,jr_pj_number=$2,jr_date=to_date($4,'DD.MM.YYYY'),jr_optype=$5 where jr_id=$3",
                     array($http->post('lib'), $npj, $jr_id,$date, $http->post('jr_optype')));
-                $cn->exec_sql("update jrnx set j_date=to_date($1,'DD.MM.YYYY') where j_grpt in (select jr_grpt_id from jrn where jr_id=$2)",
-                    array($date, $jr_id));
+                $find_periode = $cn->get_value("select comptaproc.find_periode($1)",[$date]);
+
+                $cn->exec_sql("update jrnx set j_date=to_date($1,'DD.MM.YYYY'),j_tech_per=$3 where j_grpt in (select jr_grpt_id from jrn where jr_id=$2)",
+                    array($date, $jr_id,$find_periode));
                 $cn->exec_sql('update operation_analytique set oa_date=j_date from jrnx
 				where
 				operation_analytique.j_id=jrnx.j_id  and

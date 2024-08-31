@@ -16,6 +16,10 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 /* $Revision$ */
+/**
+ * @file
+ * manage accounting
+ */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 /**

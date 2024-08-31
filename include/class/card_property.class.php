@@ -631,7 +631,8 @@ class Card_Property
                     // Verify if the rate exists, if not then do not update
                     if (noalyss_strlentrim($value->av_text)!=0)
                     {
-                        if ($p_fiche->cn->get_value("select count(*) from tva_rate where tva_id=$1",[$value->av_text])==0)
+                        $acc_tva=Acc_Tva::build($p_fiche->cn,$value->av_text );
+                        if ($acc_tva->tva_id==-1)
                         {
                             continue;
                         }

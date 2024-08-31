@@ -51,27 +51,22 @@ Ensuite copier bootstrap.php.example vers bootstrap.php et modifier les variable
 
 Testing commande en ligne
 =========================
+Si vous utilisez Xdebug, il faut le désactiver avec ceci
 
+	export XDEBUG_MODE=off
+
+Dans une autre fenêtre, si vous testez la transformation avec libreOffice
+	
+	unoconv -l
+
+Et aussi, supprimer le fichier 
+	
+	/tmp/web.xml
+
+Dans le fichier noalyss/include/config.inc.php , donner 1 à  DEBUGNOALYSS 
+
+	define ('DEBUGNOALYSS',1);
+	
 test (depuis repertoire include)
  php <chemin>/phpunit.phar  --tap --colors --bootstrap ../bootstrap.php class_acc_accountTest.php
 
-Tous les fichiers
-  for i in *.php;do  php <chemin>/phpunit.phar  --tap --colors --bootstrap ../bootstrap.php $i;done
-
-
-Génération pour tous les fichiers
-=================================
-Permet de voir les lignes de code qui ont été testées
-php <chemin>/phpunit.phar --coverage-html html --bootstrap bootstrap.php include
-
-exemple depuis NETBEANS "/usr/bin/php" "/home/dany/Program/phpunit-skelgen.phar" "--ansi" "generate-test" "--bootstrap=/home/dany/developpement/phpcompta/noalyss/unit-test/bootstrap.php" "View_SQL" "/home/dany/developpement/phpcompta/noalyss/include/lib/view_sql.class.php" "View_SQLTest" "/home/dany/developpement/phpcompta/noalyss/unit-test/include/lib/view_sql.classTest.php"
-
-Note développeur
-================
-Pour avoir tous les fichiers à inclure
---------------------------------------
-Depuis ici, faites
-
-cd ../include 
-
-find class lib -type f | awk '{print "require_once NOALYSS_INCLUDE.--/"$1"--;";}'|sed -e 's/--/"/g' >> ../unit-test/bootstrap.php
