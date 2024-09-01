@@ -71,7 +71,7 @@ if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
 			echo $direct->input();
 			$gDossier=dossier::id();
 			?>
-		<div id="ac_choices" class="autocomplete" style="width:150px"></div>
+		<div id="ac_choices" class="autocomplete" style="width:150px;z-index:1"></div>
 		<?php 
 			echo HtmlInput::submit('go',_('Aller'));
 			?>
