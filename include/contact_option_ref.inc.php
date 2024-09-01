@@ -40,7 +40,7 @@ catch (Exception $ex)
 }
 $cn=Dossier::connect();
 echo    '<p class="info">'.
-        '<a href="https://wiki.noalyss.eu/doku.php?id=menu:cfgaction" target="_blank">'.
+        '<a href="https://wiki.noalyss.eu/doku.php?id=menu:c0act" target="_blank">'.
         _("Aide : voir C0ACT").
         '</a>'.
         '</p>';
