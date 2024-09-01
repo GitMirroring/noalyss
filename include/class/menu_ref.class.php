@@ -45,8 +45,10 @@ class Menu_Ref extends Menu_Ref_SQL
         {
              throw new Exception(_("le code ne peut être vide"));
         }
+
             $this->format_code();
-            if ( $this->cn->get_value("select count(*) from menu_ref where me_code=$1",array($this->me_code)) > 0)
+            if (isset ($_POST['create_menu'])
+                && $this->cn->get_value("select count(*) from menu_ref where me_code=$1",array($this->me_code)) > 0)
                     throw new Exception ('Doublon');
             if (trim($this->me_code)=='')
                     throw new Exception ('Ce menu existe déjà');

@@ -86,6 +86,7 @@ if ( isset($_POST['create_menu'])|| isset($_POST['modify_menu']))
 	{
 		if (isset($_POST['create_menu']))
 		{
+			if ($menu_ref->verify() == 0)
 			$menu_ref->insert();
 		}
 		elseif (isset($_POST['modify_menu']))
