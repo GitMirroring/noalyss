@@ -120,4 +120,5 @@ content[83]="<?php echo htmlspecialchars(_("Données invalides "),ENT_QUOTES)?>"
 content[84]="<?php echo htmlspecialchars(_("En Belgique, l'exercice commence par un report des comptes de 0 à 5, mais pas en France, ce solde est calculé depuis le tout premier exercice"),ENT_QUOTES)?>";
 content[85]="<?php echo htmlspecialchars(_("Solde créditeur au lieu de débiteur"),ENT_QUOTES)?>";
 content[86]="<?php echo htmlspecialchars(_("Solde débiteur au lieu de créditeur"),ENT_QUOTES)?>";
+content[87]="<?php echo htmlspecialchars(_("Uniquement pour les choix, séparer les valeurs possibles par un |"),ENT_QUOTES)?>";
 </script>
