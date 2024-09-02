@@ -41,15 +41,16 @@ $poste->extra="all";
 $poste->set_attribute('popup','ipopcard');
 $poste->set_attribute('typecard','all');
 $poste->set_callback('filter_card');
+$poste->set_attribute('label' ,'account_label');
 
 
 
-if (isset($_GET['acc'])) $poste->value=strtoupper(trim($http->get('acc')));
+if (isset($_GET['acc'])) $poste->value=strtoupper(noalyss_trim($http->get('acc')));
 $poste_span=new ISpan('account_label');
 $r= td(_('Lettrage pour la fiche ')).
-    td($poste->input().$poste->search()).
-    td($poste_span->input());
+    td($poste->input().$poste->search()) ;
 echo tr($r);
+echo tr(td(""). td($poste_span->input(),'colspan="2"'));
 // limit of the year
 $exercice=$g_user->get_exercice();
 $periode=new Periode($cn);
