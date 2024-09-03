@@ -59,6 +59,7 @@ class Jrn_def_SQL extends Table_Data_SQL
             , "jrn_def_negative_amount"=>"jrn_def_negative_amount"
             , "jrn_def_negative_warning"=>"jrn_def_negative_warning"
             , 'jrn_def_quantity'=>'jrn_def_quantity'
+            ,'jrn_def_pj_padding'=>'jrn_def_pj_padding'
         );
         /*
          * Type of columns
@@ -85,6 +86,7 @@ class Jrn_def_SQL extends Table_Data_SQL
             , "jrn_def_negative_amount"=>"text"
             ,"jrn_def_negative_warning"=>"text"
             ,'jrn_def_quantity'=>"numeric"
+            ,'jrn_def_pj_padding'=>'numeric'
             );
 
         $this->default=array(

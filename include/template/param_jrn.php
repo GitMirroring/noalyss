@@ -158,6 +158,15 @@ endif;
 <TD>
 <?php echo $pj_pref; ?>
 </TD>
+</TR>
+    <tr>
+    <td>
+        <?=_("Nombre de caractère du numéro de pièce, remplissage avec des 0 ")?>
+    </td>
+        <td>
+            <?=$padding->input()?>
+        </td>
+    </tr>
 
 </TR>
 <?php if ( $new == 0 ) : ?>
@@ -167,7 +176,8 @@ endif;
       <?php echo Icon_Action::infobulle(40);?>
     </TD>
     <TD>
-    <?php echo $last_seq?>
+
+    <?php echo str_pad($last_seq,$this->jrn_def_pj_padding??0,'0',STR_PAD_LEFT)?>
     </TD>
     </TR>
 
