@@ -423,7 +423,7 @@ function list_filter_followup(p_dossier,access_code)
             {
                 var posy=calcy(250)
                 var div = create_div({"id":"filter_followup_id",
-                             'cssclass': "inner_box", 'style': 'width:90%,right:5%;top:'+posy+"px"});
+                             'cssclass': "inner_box2", 'style': 'top:'+posy+"px"});
                 div.update(responseHtml.responseText);
                 div.show();
             }
