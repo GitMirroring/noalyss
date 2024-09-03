@@ -916,7 +916,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             if ( ! $this->jr_id=$acc_operation->insert_jrn() ) {
                 throw new Exception (_("Erreur de balance"));
             }
-            $this->pj=$acc_operation->set_pj();
+            $this->pj=$acc_operation->update_receipt();
 
             // Set Internal code
             $this->grpt_id=$seq;
@@ -1052,7 +1052,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 // add an automatic PJ if ODS
                 if ($acjrn->get_type()=="ODS") {
                     $acc_pay->pj=$acjrn->guess_pj();
-                    $acc_pay->set_pj();
+                    $acc_pay->update_receipt();
                 }
                 $r1=$this->get_id($internal);
                 $r2=$this->get_id($acinternal);

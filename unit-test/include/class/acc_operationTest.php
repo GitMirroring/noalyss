@@ -312,4 +312,53 @@ class Acc_OperationTest extends TestCase
             $result);
     }
 
+    function testUpdate_receipt() {
+        global $g_connection;
+
+        $receipt=$g_connection->get_value("select jr_pj_number from jrn where jr_id=250");
+        // $this->assertEquals('BP19-1',$receipt,'Receipt number incorrect');
+        $acc_operation=new Acc_Operation($g_connection);
+        $acc_operation->set_id(250);
+        $this->pj="";
+        $acc_operation->update_receipt();
+        $new_receipt=$g_connection->get_value("select jr_pj_number from jrn where jr_id=250");
+        $this->assertTrue($new_receipt== null,'receipt not set to null ');
+
+        $acc_operation->pj='BP-99';
+        $acc_operation->update_receipt();
+        $new_receipt=$g_connection->get_value("select jr_pj_number from jrn where jr_id=250");
+        $this->assertTrue($new_receipt != null,'receipt not compute');
+        $this->assertTrue($new_receipt =='BP-99',"[$new_receipt]".'receipt not set');
+
+        // padding 5
+        $ledger=new \Acc_Ledger($g_connection, 83);
+        $save_prop=$ledger->get_propertie();
+        $g_connection->exec_sql('update jrn_def set jrn_def_pj_padding = 5 where jrn_def_id=83');
+        $acc_operation->pj=$ledger->guess_pj();
+        $acc_operation->update_receipt();
+        $new_receipt=$g_connection->get_value("select jr_pj_number from jrn where jr_id=250");
+        $this->assertTrue($new_receipt =='BP19-00003',"[$new_receipt] receipt not set");
+
+        // padding 3
+        $g_connection->exec_sql('update jrn_def set jrn_def_pj_padding = 3 where jrn_def_id=83');
+        $acc_operation->pj=$ledger->guess_pj();
+        $acc_operation->update_receipt();
+        $new_receipt=$g_connection->get_value("select jr_pj_number from jrn where jr_id=250");
+        $this->assertTrue($new_receipt =='BP19-003',"[$new_receipt] receipt not set");
+
+        // default no padding
+        $g_connection->exec_sql('update jrn_def set jrn_def_pj_padding = 0 where jrn_def_id=83');
+        $acc_operation->pj=$ledger->guess_pj();
+        $acc_operation->update_receipt();
+        $new_receipt=$g_connection->get_value("select jr_pj_number from jrn where jr_id=250");
+        $this->assertTrue($new_receipt =='BP19-3',"[$new_receipt] receipt not set");
+
+        // reset to original value
+        $acc_operation->pj=$receipt;
+        $acc_operation->update_receipt();
+        $g_connection->exec_sql('update jrn_def set jrn_def_pj_padding = $1 where jrn_def_id=83',[$save_prop['jrn_def_pj_padding']        ]);
+
+
+    }
+
 }
