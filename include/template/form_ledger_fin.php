@@ -5,8 +5,7 @@
 	<div id="jrn_name_div">
 	<h1  id="jrn_name"> <?php echo $this->get_name()?></h1>
 </div>
-<legend><?php echo $f_legend ?> </legend>
-<?php 
+<?php
 	$wchdate=new ISelect('chdate');
 	$wchdate->value=array(
 			array('value'=>1,'label'=>_("Avec date d'extrait")),
@@ -72,13 +71,12 @@
 </fieldset>
 
 <fieldset>
-<legend><?php echo $f_legend_detail?></legend>
-   <fieldset><legend><?php echo _('Extrait de compte')?></legend>
+
    <?php echo _('Numéro extrait')?> <?php echo $f_extrait?>
    <?php echo _('Solde début') ?> <?php echo $wFirst->input();?>
 <?php echo _('Solde Fin')?> <?php echo $wLast->input();?>
 </fieldset>
-   <fieldset><legend><?php echo _('Opérations')?></legend>
+
 <table id="fin_item" width="100%" border="0">
 <tr>
 <th id="thdate" style="display:none;text-align: left"><?php echo _('Date')?><?php echo Icon_Action::infobulle(16)?></TH>
