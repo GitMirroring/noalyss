@@ -1345,7 +1345,7 @@ class Follow_Up
 
     /**
      * @brief display a form with the saved search
-     * @return voidµ
+     * @return void
      */
     public static function display_saved_search()
     {

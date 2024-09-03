@@ -979,7 +979,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                     $acc_operation->pj=$e_pj;
 
                 $jr_id=$acc_operation->insert_jrn();
-                // 	  $acc_operation->set_pj();
+                // 	  $acc_operation->update_receipt();
                 $this->db->exec_sql('update jrn set jr_pj_number=$1 where jr_id=$2', array($acc_operation->pj, $jr_id));
                 $internal=$this->compute_internal_code($seq);
 

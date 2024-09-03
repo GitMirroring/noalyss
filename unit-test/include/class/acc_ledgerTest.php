@@ -263,7 +263,7 @@ class Acc_LedgerTest extends TestCase
         $this->object->id=2;
         $array=$this->object->get_propertie();
         // there are 16 columns in jrn_def
-        $this->assertEquals(count($array),21);
+        $this->assertEquals(count($array),22);
         $this->object->id=0;
         $array=$this->object->get_propertie();
         $this->assertEquals(null,$array);
@@ -465,6 +465,7 @@ class Acc_LedgerTest extends TestCase
             "FIN_FICHE_DEF"=>[2,3,4],
             "defaultCurrency"=>0,
             "p_jrn_deb_max_line" => 10,
+            "p_jrn_padding" => 10
         ];
         // - update it
         $acc_ledger=new Acc_Ledger($g_connection,-1);
@@ -484,7 +485,8 @@ class Acc_LedgerTest extends TestCase
             "jrn_def_pj_seq" => 0,
             "jrn_enable" => 0,
             "FIN_FICHEDEB" =>array(2,3,4),
-            "defaultCurrency"=>0
+            "defaultCurrency"=>0,
+            "p_jrn_padding" => 10
         );
 
        $acc_ledger->update($update);
@@ -899,7 +901,7 @@ class Acc_LedgerTest extends TestCase
         ob_end_clean();
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger-input_new.html", $result);
         $size=filesize(__DIR__."/file/acc_ledger-input_new.html");
-        $this->assertTrue($size == 15664  ," output input_new is not what it is expected");
+        $this->assertTrue($size == 15948  ," output input_new is not what it is expected");
 
     }
 
@@ -919,6 +921,7 @@ class Acc_LedgerTest extends TestCase
                 'min_row'=>5,
                 'p_description'=>'LEDGER UNIT TEST',
                 'negative_amount'=>0,
+                "p_jrn_padding" => 10,
                 'negative_warning'=>'Warning'];
         
          // clean ledger if exists
@@ -952,6 +955,7 @@ class Acc_LedgerTest extends TestCase
                 'min_row'=>5,
                 'p_description'=>'LEDGER UNIT TEST',
                 'negative_amount'=>0,
+             "p_jrn_padding" => 10,
                 'negative_warning'=>'Warning'];
          
         $g_connection->exec_sql("delete from jrn_def where jrn_def_description=$1",['LEDGER UNIT TEST']);
@@ -980,6 +984,7 @@ class Acc_LedgerTest extends TestCase
                 'min_row'=>5,
                 'p_description'=>'LEDGER UNIT TEST',
                 'negative_amount'=>0,
+                 "p_jrn_padding" => 10,
                 'negative_warning'=>'Warning'];
         // clean ledger if exists
         $g_connection->exec_sql("delete from jrn_def where jrn_def_name=$1",[$array['p_jrn_name']]);

@@ -270,11 +270,11 @@ EOF;
      *\brief set the pj of a operation in jrn. the jr_id must be set
      *\note if the jr_id it fails
      */
-    function set_pj()
+    function update_receipt()
     {
         if ( noalyss_strlentrim($this->pj) == 0 )
         {
-            echo __LINE__."debug {$this->pj} est vide";
+           // echo __LINE__."debug {$this->pj} est vide";
             $sql="update jrn set jr_pj_number=$1 where jr_id=$2";
             $this->db->exec_sql($sql,array(null,$this->jr_id));
             return '';
@@ -307,9 +307,14 @@ EOF;
                     $flag=2;
                     break;
                 }
+                /* get padding */
+                $padding=$this->db->get_value("select jrn_def_pj_padding from jrn_def where jrn_def_id=$1",
+                    array($this->jrn));
 
                 $seq=$this->db->get_next_seq('s_jrn_pj'.$this->jrn);
-                $this->pj=$pref.$seq;
+
+                // see Acc_Ledger::guess_pj
+                $this->pj=$pref.str_pad($seq,$padding??0,'0',STR_PAD_LEFT);
 
                 /* check if the new pj numb exist */
                 $c=$this->db->count_sql("select jr_id from jrn where jr_pj_number=$1 and jr_def_id=$2

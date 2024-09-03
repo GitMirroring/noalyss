@@ -85,6 +85,13 @@ class Acc_Ledger  extends jrn_def_sql
             $this->currency_id=0;
         }
     }
+
+    /**
+     * @brief returns the sequence number of the receipt for the current ledger
+     * or create the sequence if it doesn't exist
+     * @return int
+     * @throws Exception if the ledger doesn't exist
+     */
     function get_last_pj()
     {
         if (isNumber($this->id)==0)
@@ -417,7 +424,7 @@ class Acc_Ledger  extends jrn_def_sql
                 $reverse_accOp->set_id($reverse_id);
                 $reverse_accOp->pj=$old_receipt['jr_pj_number'];
                 $reverse_accOp->jrn=$old_receipt['jr_def_id'];
-                $reverse_accOp->set_pj();
+                $reverse_accOp->update_receipt();
             // Check return code
             } catch (\Exception $e){
                 throw new \Exception('Echec extourne');
@@ -508,8 +515,10 @@ class Acc_Ledger  extends jrn_def_sql
     {
         $prop=$this->get_propertie();
         $pj_pref=$prop["jrn_def_pj_pref"];
+        $padding=$prop['jrn_def_pj_padding'];
         $pj_seq=$this->get_last_pj()+1;
-        return $pj_pref.$pj_seq;
+        return $pj_pref.str_pad($pj_seq,$padding??0,'0',STR_PAD_LEFT);
+
     }
 
     
@@ -1584,7 +1593,7 @@ class Acc_Ledger  extends jrn_def_sql
             if ($jr_id==false)
                 throw new Exception(_('Balance incorrecte'));
             $acc_end->pj=$e_pj;
-            $this->pj=$acc_end->set_pj();
+            $this->pj=$acc_end->update_receipt();
             /* if e_suggest != e_pj then do not increment sequence */
             if ($this->pj == $e_pj_suggest &&noalyss_strlentrim($e_pj)!=0)
             {
@@ -2689,6 +2698,8 @@ class Acc_Ledger  extends jrn_def_sql
         // use of quantity in ledger
         $quantity=new InputSwitch('p_jrn_quantity',$this->jrn_def_quantity);
 
+        // padding
+        $padding = new \INum ('p_jrn_padding',$this->jrn_def_pj_padding);
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
@@ -2839,6 +2850,7 @@ class Acc_Ledger  extends jrn_def_sql
                 _("Attention, ce journal doit utiliser des montants négatifs"));
         $this->jrn_def_quantity=$http->extract('p_jrn_quantity','string',1);
         $jrn_def_pj_seq=$http->extract("jrn_def_pj_seq");
+        $this->jrn_def_pj_padding=$http->extract('p_jrn_padding','number');
         switch ($this->jrn_def_type)
         {
             case 'ACH':
@@ -3016,7 +3028,7 @@ class Acc_Ledger  extends jrn_def_sql
         $negative_warning->size="55";
         // use of quantity in ledger
         $quantity=new InputSwitch('p_jrn_quantity',1);
-
+        $padding = new \INum ('p_jrn_padding',5);
         require_once NOALYSS_TEMPLATE.'/param_jrn.php';
     }
 
@@ -3079,7 +3091,7 @@ class Acc_Ledger  extends jrn_def_sql
         $this->jrn_def_negative_amount=$negative_amount;
         $this->jrn_def_negative_warning=$negative_warning;
         $this->jrn_enable=1;
-        
+        $this->jrn_def_pj_padding=$p_jrn_padding;
         switch ($this->jrn_def_type)
         {
             case 'ACH':
