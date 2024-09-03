@@ -3879,7 +3879,8 @@ function toggle_checkbox_onoff(icon_domid, p_value_domid) {
  * @returns {undefined}
  */
 function toggle_row_warning_enable(p_enable, p_row) {
-    if ($(p_enable).value == 1) {
+    var warning = document.getElementsByName('negative_amount')[0].value
+    if ( warning == 1) {
         $(p_row).show();
     } else {
         $(p_row).hide();
