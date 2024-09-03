@@ -1476,7 +1476,7 @@ function manage_search_filter(p_obj) {
             var y = calcy(200)
             create_div({
                 'id': 'boxfilter' + p_obj.div,
-                'cssclass': 'inner_box',
+                'cssclass': 'inner_box2',
                 'html': req.responseText,
                 'style': 'top:' + y + 'px;left:' + x + 'px;position:absolute;width:400px',
                 drag: 1
@@ -1685,7 +1685,7 @@ function display_list_filter(p_dossier,access_code,ledger_type)
             try {
                 var posy=calcy(250)
                 var div = create_div({"id":"display_list_filter_div",
-                    'cssclass': "inner_box", 'style': 'width:90%,right:5%;top:'+posy+"px"});
+                    'cssclass': "inner_box2", 'style': 'right:5%;top:'+posy+"px"});
                 div.update(responseHtml.responseText);
                 div.show();
             }catch (e) {
