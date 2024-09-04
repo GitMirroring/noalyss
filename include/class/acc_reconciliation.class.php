@@ -407,7 +407,8 @@ j1.j_poste as poste
                         $total_price=bcsub($total_price,$row['vat_sided']);
                         $total_price=bcadd($total_price,$row['nd_amount']);
                         $total_price=bcadd($total_price,$row['nd_tva_recup']);
-                    
+                        $total_price=bcadd($total_price,$row['nd_tva']);
+
                      }
                     $second_amount=bcadd($second_amount,$total_price);
                     
@@ -660,6 +661,8 @@ j1.j_poste as poste
                 $row=Database::fetch_array($retdb, $i);
                 $total_price=bcadd($row['price'],$row['vat_amount']);
                 $total_price=bcsub($total_price,$row['vat_sided']);
+                $total_price=bcadd($total_price,$row['nd_tva']);
+                $total_price=bcadd($total_price,$row['nd_tva_recup']);
                 $first_amount=bcadd($total_price,$first_amount);
             }
 
