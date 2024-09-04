@@ -51,11 +51,11 @@ class Bookmark extends Widget
                 $class=($p&1)?' odd ':'even';
                 $description=h($item['me_description']);
                 echo <<<EOF
-<div class="row {$class}">
+<div class="row {$class} hover">
     <div class="col-3">
         
         
-        <a class="mtitle" href="do.php?{$url}">{$code}  </a> 
+        <a class="line" href="do.php?{$url}">{$code}  </a> 
     </div>
     <div class="col-7">
         
