@@ -23,7 +23,8 @@ BODY {
     padding : 0px;
     margin:0px;
     color:darkblue !important;
-    background-color:#FCFDFD; 
+    background-color:#FCFDFD;
+    --hover : rgba(108, 130, 208, 0.9);
 }
 input{
     font-family: 'OpenSansRegular';
@@ -3634,6 +3635,6 @@ div.widget-full_size {
 
      30% {transform:rotateY(90deg);}
      60% {transform:rotateY(-90deg);}
-
-
  }
+
+ div.row.odd.hover:hover,div.row.even.hover:hover   {      background-color: var(--hover) !important;    }
