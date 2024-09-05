@@ -282,6 +282,7 @@ j1.j_poste as poste
 
         $array=$this->db->get_array("select distinct jr_id,jr_date from jrn where $filter_date and $sql_jrn and jr_id not in (select jr_id from jrn_rapt union select jra_concerned from jrn_rapt) order by jr_date");
         $ret=array();
+        \Noalyss\Dbg::echo_var(1, $this->db->sql);
         for ($i=0;$i<count($array);$i++)
         {
             $this->jr_id=$array[$i]['jr_id'];
@@ -463,7 +464,7 @@ j1.j_poste as poste
         }
     }
     /**
-     * Export to CSV
+     * @brief Export to CSV
      * @param type $p_choice 
      * 
      * @note must be set before calling
@@ -595,7 +596,7 @@ j1.j_poste as poste
     }
 
     /**
-     * 
+     * @brief retrieve data
      * @param type $p_choice
      *       - 0 : operation reconcilied
      *       - 1 : reconcilied with different amount
@@ -633,7 +634,7 @@ j1.j_poste as poste
         $seen=1;
     }
     /**
-     * Retrieve the amount VAT included and autoreversed VAT excluded thanks
+     * @brief Retrieve the amount VAT included and autoreversed VAT excluded thanks
      * the view v_quant_detail and return it.
      * If the operation is not a sale or a purchase , it doesn't exist in the
      * view then the function just returns the default amount
@@ -648,15 +649,19 @@ j1.j_poste as poste
             $this->prepare_query_detail_quant();
             $p=1;
         }
-        
+        bcscale(2);
         $retdb=$this->db->execute("detail_quant",array($p_jrn_id));
-        if ( Database::num_row($retdb) != 0)
+        $nb_record=Database::num_row($retdb);
+        if ( $nb_record > 0)
         {
+            $total_price=$first_amount=0;
+            for ($i=0;$i<$nb_record;$i++) {
             // then second_amount takes in account the vat_sided
-            $row=Database::fetch_array($retdb, 0);
-            $total_price=bcadd($row['price'],$row['vat_amount']);
-            $total_price=bcsub($total_price,$row['vat_sided']);
-            $first_amount=$total_price;
+                $row=Database::fetch_array($retdb, $i);
+                $total_price=bcadd($row['price'],$row['vat_amount']);
+                $total_price=bcsub($total_price,$row['vat_sided']);
+                $first_amount=bcadd($total_price,$first_amount);
+            }
 
         } else {
             // else take the amount from jrn

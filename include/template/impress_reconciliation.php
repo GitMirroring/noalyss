@@ -35,9 +35,9 @@ for ($i=0;$i<count($array);$i++) {
 	$r.=td($array[$i]['first']['jr_comment']);
 	$r.=td(nbm($tot),'style="text-align:right"');
 	echo tr($r);
-        // check if operation does exist in v_detail_quant
-        $ret=$acc_reconciliation->db->execute('detail_quant',array($array[$i]['first']['jr_id']));
-        $acc_reconciliation->show_detail($ret);
+    // check if operation does exist in v_detail_quant
+    $ret=$acc_reconciliation->db->execute('detail_quant',array($array[$i]['first']['jr_id']));
+    $acc_reconciliation->show_detail($ret);
 	if ( isset($array[$i]['depend']) )
 	{
             $tot2=0;
