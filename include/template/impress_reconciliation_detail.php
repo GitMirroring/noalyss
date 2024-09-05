@@ -88,7 +88,9 @@ for ($i=0;$i < $nb_record;$i++)    :
 <?php
           endfor;
 ?>
-    <tfoot>
+    <tfoot >
+    <tr class="highlight">
+
     <td>
         Totaux
     </td>
@@ -99,7 +101,7 @@ for ($i=0;$i < $nb_record;$i++)    :
         <?php echo nbm($tot_cum_nd); ?>
     </td>
     <td>
-        
+
     </td>
     <td class="num">
         <?php echo nbm($tot_cum_vat); ?>
@@ -111,8 +113,9 @@ for ($i=0;$i < $nb_record;$i++)    :
         <?php echo nbm($tot_autoliquidation); ?>
     </td>
     <td class="num">
-        <?php 
+        <?php
         echo nbm($tot_cum_tvac); ?>
     </td>
+    </tr>
     </tfoot>
-</table>        
+</table>
