@@ -23,9 +23,9 @@
  * \brief print the all the operation reconciled or not, with or without the same amount
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-require_once NOALYSS_INCLUDE.'/lib/function_javascript.php';
-global $g_user;
 
+global $g_user;
+$http=new HttpInput();
 /**
  *@file
  */
@@ -44,12 +44,21 @@ echo '<br/>';
 /*
  * Limit by date, default current exercice
  */
-list($start,$end)=$g_user->get_limit_current_exercice();
+$error=0;
 $dstart=new IDate('p_start');
-$dstart->value=(isset($_REQUEST['p_start']))?$_REQUEST['p_start']:$start;
-
 $dend=new IDate('p_end');
-$dend->value=(isset($_REQUEST['p_end']))?$_REQUEST['p_end']:$end;
+list($start,$end)=$g_user->get_limit_current_exercice();
+
+try {
+    $dstart->value=$http->request('p_start','date',$start);
+
+    $dend->value=$http->request('p_end','date',$end);
+
+} catch (\Exception $e) {
+    echo_warning('Date invalide');
+    $error=1;
+
+}
 
 echo "Opérations entre ".$dstart->input()." jusque ".$dend->input();
 echo '<ol style="list-style-type:none;">';
@@ -82,6 +91,7 @@ echo '</div>';
 echo '</div>';
 echo '<div class="content">';
 if ( ! isset($_GET['vis'])) return;
+if ($error == 1) return;
 $acc_reconciliation=new Acc_Reconciliation($cn);
 $acc_reconciliation->a_jrn=$r_jrn;
 $acc_reconciliation->start_day=$dstart->value;
