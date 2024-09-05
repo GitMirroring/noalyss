@@ -161,7 +161,7 @@ order by jr_date,j_debit
         $noalyss_csv=new Noalyss_Csv(sprintf("tax_detail-{$this->tva_code}-{$this->from}-{$this->to}"));
         $data=$this->get_data();
 
-        $header=["date",'piece',"fiche","poste","base","privé","code tva","taux","montant tva","non deductible","recup"];
+        $header=[_("date"),_('piece'),_("n° interne"),_("fiche"),_("poste"),_("base"),_("privé"),_("code tva"),_("taux"),_("montant tva"),_("non deductible"),_("recup")];
         $noalyss_csv->send_header();
         $noalyss_csv->write_header($header  );
         foreach ($data as $item) {
