@@ -600,36 +600,11 @@ if ($account == 0 ) {
   if ( DEBUGNOALYSS == 0 ) ob_start();
   $cn->exec_sql("create database ".domaine."account_repository encoding='utf8'");
   $repo=new Database();
-  $sql_trigger_activate="
- create or replace procedure public.trigger_activate(to_enable bool)
-language plpgsql
-as
-$$
-declare
-	rec1 record;
-    cmd text;
-begin
-for rec1 in (select relname,nspname
-		from pg_catalog.pg_class pc join pg_catalog.pg_namespace pn on (pn.oid=pc.relnamespace)
-		where pn.nspname in ('public','comptaproc') and relhastriggers is true) loop
-		if to_enable is false  then
-			cmd=format('alter table %s.%s disable trigger all',rec1.nspname,rec1.relname);
-		else
-			cmd=format('alter table %s.%s enable trigger all',rec1.nspname,rec1.relname);
-		end if;
-		execute cmd;
-		raise notice '%',cmd;
-		end loop;
-end
 
-$$;
- ";
-
-    $repo->exec_sql($sql_trigger_activate);
     $repo->start();
     $repo->execute_script(NOALYSS_INCLUDE."/sql/account_repository/schema.sql");
-    $repo->exec_sql("call public.trigger_activate(false) ");
     $repo->execute_script(NOALYSS_INCLUDE."/sql/account_repository/data.sql");
+    $repo->execute_script(NOALYSS_INCLUDE."/sql/account_repository/constraint.sql");
 
     $repo->commit($cn);
   /* update name administrator */
@@ -638,9 +613,6 @@ $$;
     $repo->exec_sql("update public.ac_users set use_login=$1,use_pass=md5($2),use_active=1 where use_id=1",
               array(strtolower($cadmin),$cpassword_admin));
 
-
-    $repo->exec_sql("call public.trigger_activate(true) ");
-    $repo->exec_sql("drop procedure public.trigger_activate ");
   if ( DEBUGNOALYSS ==  0 )
     {
         ob_end_clean();
@@ -654,15 +626,13 @@ $$;
     $cn->exec_sql("create database ".domaine."mod1 encoding='utf8'");
 
   $cn=new Database(1,'mod');
-    $cn->exec_sql($sql_trigger_activate);
+
   $cn->start();
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/schema.sql');
-    $cn->exec_sql("call public.trigger_activate(false) ");
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/data.sql');
+  $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
 
   $cn->commit();
-  $cn->exec_sql("call public.trigger_activate(true) ");
-  $cn->exec_sql("drop procedure public.trigger_activate");
   if ( DEBUGNOALYSS == 0 )
     {
         ob_end_clean();
@@ -671,18 +641,15 @@ $$;
   echo _("Creation of Modele 2");
   $cn->exec_sql("create database ".domaine."mod2 encoding='utf8'");
   $cn=new Database(2,'mod');
-  $cn->exec_sql($sql_trigger_activate);
 
   $cn->start();
   if ( DEBUGNOALYSS == 0 ) { ob_start();  }
 
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/schema.sql');
-    $cn->exec_sql("call public.trigger_activate(false) ");
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod2/data.sql');
+    $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
 
   $cn->commit();
-    $cn->exec_sql("call public.trigger_activate(true) ");
-    $cn->exec_sql("drop procedure public.trigger_activate");
  if ( DEBUGNOALYSS == 0 ) ob_end_clean();
 echo '<h1>'._('Important').'</h1>';
 echo '<p>'._('Utilisateur  administrateur'),' ',NOALYSS_ADMINISTRATOR,'</p>';

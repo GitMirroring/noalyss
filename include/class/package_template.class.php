@@ -61,41 +61,12 @@ class Package_Template extends Package_Noalyss
 
         $sql=sprintf(" create database %smod%d encoding='utf8'", domaine, $seq);
         $cn->exec_sql($sql);
-        
         $newdb=new Database($seq, 'mod');
-        $sql_trigger_activate="
- create or replace procedure public.trigger_activate(to_enable bool)
-language plpgsql
-as
-$$
-declare
-	rec1 record;
-    cmd text;
-begin
-for rec1 in (select relname,nspname
-		from pg_catalog.pg_class pc join pg_catalog.pg_namespace pn on (pn.oid=pc.relnamespace)
-		where pn.nspname in ('public','comptaproc') and relhastriggers is true) loop
-		if to_enable is false  then
-			cmd=format('alter table %s.%s disable trigger all',rec1.nspname,rec1.relname);
-		else
-			cmd=format('alter table %s.%s enable trigger all',rec1.nspname,rec1.relname);
-		end if;
-		execute cmd;
-		raise notice '%',cmd;
-		end loop;
-end
-
-$$;
- ";
-
-        $newdb->exec_sql($sql_trigger_activate);
-        // Execute SQL Script
+             // Execute SQL Script
         $newdb->execute_script($tmpdir.'/schema.sql');
-        $newdb->exec_sql("call public.trigger_activate(false) ");
+
         $newdb->execute_script($tmpdir.'/data.sql');
         $newdb->execute_script($tmpdir.'/constraint.sql');
-        $newdb->exec_sql("call public.trigger_activate(true) ");
-        $newdb->exec_sql("drop procedure public.trigger_activate ");
         // Register into account_repository, we add the seq number for avoiding duplicate
         $description = sprintf(_("Installé le %s"),date("d-m-Y h:i:s"));
         $cn->exec_sql(" insert into modeledef (mod_id,mod_name,mod_desc) values ($1,$2,$3)",

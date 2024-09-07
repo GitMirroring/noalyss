@@ -12,8 +12,8 @@ psql -X $TEMPLATE -c "delete from user_local_pref"
 pg_dump -O -U dany -s $TEMPLATE|grep -v "COMMENT ON SCHEMA public IS 'Standard public schema';" |sed "/^--/d" > schema.sql
 sed -i -e "/COMMENT ON EXTENSION/d" schema.sql
 sed -i -e "/CREATE EXTENSION/d" schema.sql
-
-echo "set search_path = public,comptaproc,pg_catalog ;" > data.sql
-pg_dump -O -U dany --data-only --column-inserts  -O ${TEMPLATE}|sed "/^--/d" | sed -e "/SET search_path/d" >> data.sql
+sed -ne '0,/ADD CONSTRAINT/p'  schema.sql > tmpSchema.sql
+sed -ne '/ADD CONSTRAINT/,$p'  schema.sql |sed -e '1d'  > constraint.sql
+cp tmpSchema.sql schema.sql
 
 
