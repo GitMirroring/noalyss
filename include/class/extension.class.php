@@ -450,7 +450,7 @@ class Extension extends Menu_Ref_sql
         $aExtension=\Extension::read_definition($xml_file);
         $extension=self::find_extension_code($aExtension, $plugin_code);
         if ( empty($plugin_code)) return -1;
-        return $extension->version;
+        return $extension->version??0;
     }
 
 
