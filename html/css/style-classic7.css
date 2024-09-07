@@ -855,7 +855,6 @@ input[disabled], textarea[disabled], option[disabled], optgroup[disabled], selec
 
 a#anchorbutton, .button, a.button,div.content a.button {
     color:#FFFFFF;
-    font-weight: bold;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
     background-image: url("../image/bg-submit2.gif");

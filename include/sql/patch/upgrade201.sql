@@ -1,6 +1,6 @@
 begin;
 
-drop VIEW public.v_quant_detail;
+drop VIEW if exists public.v_quant_detail;
 
 CREATE OR REPLACE VIEW public.v_quant_detail
 AS  WITH quant AS (
