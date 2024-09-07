@@ -1,6 +1,4 @@
 <?php 
-Timing is on.
-Autocommit is  OFF
 $menu[]=_('Historique');  $desc[]=_('Historique des imputations analytiques');$desc_long[]=_('Historique des imputations analytiques');
 $menu[]=_('Balance simple');  $desc[]=_('Balance simple des imputations analytiques');$desc_long[]=_('Balance simple des imputations analytiques');
 $menu[]=_('Tableau');  $desc[]=_('Tableau lié à la comptabilité');$desc_long[]=_('Tableau lié à la comptabilité');
@@ -156,11 +154,6 @@ $menu[]=_('Impression &#x1F4CA;');  $desc[]=_('Menu impression');$desc_long[]=_(
 $menu[]=_('Rapports avancés&#x1F4CA;');  $desc[]=_('Création de rapports avancés');$desc_long[]=_('Dany De Bontridder');
 $menu[]=_('Fiche &#x1F4C7;');  $desc[]=_('Liste,Balance,Historique par fiche');$desc_long[]=_('Permet d\'avoir la balance de toutes vos fiches, les résumés exportables en CSV, les historiques avec ou sans lettrages');
 $menu[]=_('Favori &#x2728;');  $desc[]=_('Raccourci vers vos menus préférés');$desc_long[]=_('Ce menu vous présente  un menu rapide de vos menus préférés');
-Time: 8,716 ms
-?>
-<?php 
-Timing is on.
-Autocommit is  OFF
 $attr_def[]=_('Nom');
 $attr_def[]=_('Prénom');
 $attr_def[]=_('Description');
@@ -197,11 +190,8 @@ $attr_def[]=_('Téléphone ');
 $attr_def[]=_('Pays ');
 $attr_def[]=_('Numéro TVA');
 $attr_def[]=_('TVA non déductible récupérable par l\'impôt');
-Time: 4,064 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $document_type[]=_('Document Interne');
 $document_type[]=_('Bons de commande client');
 $document_type[]=_('Bon de commande Fournisseur');
@@ -215,11 +205,8 @@ $document_type[]=_('Note de frais');
 $document_type[]=_('Réception commande Fournisseur');
 $document_type[]=_('Réception commande Client');
 $document_type[]=_('Réception magazine');
-Time: 2,383 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $action[]=_('Ajout de fiche');
 $action[]=_('Création, modification et effacement de fiche');
 $action[]=_('création, modification et effacement de catégorie de fiche');
@@ -234,21 +221,15 @@ $action[]=_('Effacer une note publique');
 $action[]=_('Ajout d\'étiquette');
 $action[]=_('Modifier le numéro de pièce');
 $action[]=_('Modifier la date d\'une operation');
-Time: 2,047 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $mdp[]=_('Caisse');
 $mdp[]=_('Par gérant ou administrateur');
 $mdp[]=_('Paiement électronique');
 $mdp[]=_('Caisse');
 $mdp[]=_('Caisse');
-Time: 1,448 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $jrn_def_name[]=_('Frais Divers');
 $jrn_def_name[]=_('Vente différée');
 $jrn_def_name[]=_('Vente');
@@ -257,11 +238,8 @@ $jrn_def_name[]=_('Opération Diverses');
 $jrn_def_name[]=_('Financier');
 $jrn_def_name[]=_('Achat');
 $jrn_def_name[]=_('Banque Privée');
-Time: 5,828 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $jrn_def_description[]=_('Contient des frais divers');
 
 $jrn_def_description[]=_('Concerne toutes les ventes, notes de crédit envoyées');
@@ -270,26 +248,13 @@ $jrn_def_description[]=_('Concerne toutes les opérations comme les amortissemen
 $jrn_def_description[]=_('Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)');
 $jrn_def_description[]=_('Concerne tous les achats, factures reçues, notes de crédit reçues et notes de frais');
 $jrn_def_description[]=_('Compte fermé');
-Time: 1,136 ms
 ?>
 <?php 
-Timing is on.
-Autocommit is  OFF
 $jrn_type[]=_('Financier');
 $jrn_type[]=_('Vente');
 $jrn_type[]=_('Achat');
 $jrn_type[]=_('Opérations Diverses');
-Time: 2,134 ms
 ?>
-Timing is on.
-Autocommit is  OFF
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-\jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
-Time: 2,267 ms
+<?php
+$jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
 ?>
