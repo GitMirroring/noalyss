@@ -129,8 +129,8 @@ $it_pass->value="";
 <div id="delete_user_div" class="inner_box" style="display: none">
 <?=HtmlInput::title_box(_("Effacer"),'delete_user_div','hide')?>
 <FORM  id="user_detail_frm" METHOD="POST">
-    <INPUT   type="hidden" NAME="lname" value="<?=_("$UserChange->name")?>">
-    <INPUT type="hidden" NAME="fname" value="<?=_("$UserChange->first_name")?>">
+    <INPUT   type="hidden" NAME="lname" value="<?="$UserChange->name"?>">
+    <INPUT type="hidden" NAME="fname" value="<?="$UserChange->first_name"?>">
     <?php echo HtmlInput::hidden('UID',$uid)?>
     <?php echo HtmlInput::hidden('use_id',$uid)?>
     <input type="hidden" name="sbaction" value="delete">

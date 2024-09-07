@@ -63,12 +63,13 @@ if ( isset ($_POST["ADD"]) )
     {
         $exist_user=$cn->get_value("select count(*) from ac_users where use_login=lower($1)",[$login]);
         if ( $exist_user == 0 ) {
+            $new_user->setPassword($pass5);
             $new_user->insert();
             $new_user->load();
              put_global(array(['key'=>'use_id',"value"=>$new_user->id]));
             Noalyss_user::audit_admin(sprintf('ADD USER %s %s',$new_user->id,$login));
         } else {
-     echo_warning(_("Utilisateur existant"));
+            echo_warning(_("Utilisateur existant"));
             $uid=$cn->get_value("select use_id from ac_users where use_login=lower($1)",[$login]);
             $new_user->setId($uid);
             put_global(array(['key'=>'use_id',"value"=>$new_user->id]));
@@ -147,7 +148,7 @@ else if ($sbaction == "delete")
         echo "code [$code] code control [$ctl_code]";
     }
     if ( $code != $ctl_code) {
-        echo _("Code invalide, effacement refusé");
+        echo_warning (_("Code invalide, effacement refusé"));
         return;
     }
     $cn = new Database();
