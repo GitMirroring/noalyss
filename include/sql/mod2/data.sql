@@ -120,10 +120,10 @@ INSERT INTO public.jrn_type (jrn_type_id, jrn_desc) VALUES ('FIN', 'Banque');
 
 
 
-INSERT INTO public.jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable, currency_id, jrn_def_negative_amount, jrn_def_negative_warning, jrn_def_quantity) VALUES (3, 'Achat', '', '', '5', '4', 10, 10, true, '''echeance''', 'ACH', 'A01', 'ACH', NULL, NULL, 'Concerne tous les achats, factures reçues, notes de crédit reçues et notes de frais', 1, 0, '0', 'Attention, ce journal doit utiliser des montants négatifs', 1);
-INSERT INTO public.jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable, currency_id, jrn_def_negative_amount, jrn_def_negative_warning, jrn_def_quantity) VALUES (1, 'Financier', '', '', '3,2,4,5', '3,2,4,5', 10, 10, true, '''echeance''', 'FIN', 'F01', 'FIN', NULL, NULL, 'Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)', 1, 0, '0', 'Attention, ce journal doit utiliser des montants négatifs', 1);
-INSERT INTO public.jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable, currency_id, jrn_def_negative_amount, jrn_def_negative_warning, jrn_def_quantity) VALUES (4, 'Opération Diverses', NULL, NULL, NULL, NULL, 5, 5, false, NULL, 'ODS', 'O01', 'ODS', NULL, NULL, 'Concerne toutes les opérations comme les amortissements, les comptes TVA, ...', 1, 0, '0', 'Attention, ce journal doit utiliser des montants négatifs', 1);
-INSERT INTO public.jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable, currency_id, jrn_def_negative_amount, jrn_def_negative_warning, jrn_def_quantity) VALUES (2, 'Vente', '', '', '2', '6', 10, 10, true, '''echeance''', 'VEN', 'V01', 'VEN', NULL, NULL, 'Concerne toutes les ventes, notes de crédit envoyées', 1, 0, '0', 'Attention, ce journal doit utiliser des montants négatifs', 1);
+INSERT INTO public.jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable, currency_id, jrn_def_negative_amount, jrn_def_negative_warning, jrn_def_quantity, jrn_def_pj_padding) VALUES (3, 'Achat', '', '', '5', '4', 10, 10, true, '''echeance''', 'ACH', 'A01', 'ACH', NULL, NULL, 'Concerne tous les achats, factures reçues, notes de crédit reçues et notes de frais', 1, 0, '0', 'Attention, ce journal doit utiliser des montants négatifs', 1, 0);
+INSERT INTO public.jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable, currency_id, jrn_def_negative_amount, jrn_def_negative_warning, jrn_def_quantity, jrn_def_pj_padding) VALUES (1, 'Financier', '', '', '3,2,4,5', '3,2,4,5', 10, 10, true, '''echeance''', 'FIN', 'F01', 'FIN', NULL, NULL, 'Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)', 1, 0, '0', 'Attention, ce journal doit utiliser des montants négatifs', 1, 0);
+INSERT INTO public.jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable, currency_id, jrn_def_negative_amount, jrn_def_negative_warning, jrn_def_quantity, jrn_def_pj_padding) VALUES (4, 'Opération Diverses', NULL, NULL, NULL, NULL, 5, 5, false, NULL, 'ODS', 'O01', 'ODS', NULL, NULL, 'Concerne toutes les opérations comme les amortissements, les comptes TVA, ...', 1, 0, '0', 'Attention, ce journal doit utiliser des montants négatifs', 1, 0);
+INSERT INTO public.jrn_def (jrn_def_id, jrn_def_name, jrn_def_class_deb, jrn_def_class_cred, jrn_def_fiche_deb, jrn_def_fiche_cred, jrn_deb_max_line, jrn_cred_max_line, jrn_def_ech, jrn_def_ech_lib, jrn_def_type, jrn_def_code, jrn_def_pj_pref, jrn_def_bank, jrn_def_num_op, jrn_def_description, jrn_enable, currency_id, jrn_def_negative_amount, jrn_def_negative_warning, jrn_def_quantity, jrn_def_pj_padding) VALUES (2, 'Vente', '', '', '2', '6', 10, 10, true, '''echeance''', 'VEN', 'V01', 'VEN', NULL, NULL, 'Concerne toutes les ventes, notes de crédit envoyées', 1, 0, '0', 'Attention, ce journal doit utiliser des montants négatifs', 1, 0);
 
 
 
@@ -163,14 +163,10 @@ INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_sear
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (30, 'Numero de client', 'text', '22', NULL, 1, 50);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (12, 'Personne de contact ', 'text', '22', NULL, 1, 60);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (25, 'Société', 'card', '22', '[sql] fd_id in (select fd_id from fiche_def where frd_id in (4,8,9,14))', 1, 70);
-INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (13, 'numéro de tva ', 'text', '22', NULL, 1, 80);
-INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (18, 'email ', 'text', '22', NULL, 1, 90);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (27, 'Tél. Portable', 'text', '22', NULL, 1, 100);
-INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (17, 'téléphone ', 'text', '22', NULL, 1, 110);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (26, 'Fax', 'text', '22', NULL, 1, 120);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (14, 'Adresse ', 'text', '22', NULL, 1, 130);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (15, 'code postal', 'text', '22', NULL, 1, 140);
-INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (16, 'pays ', 'text', '22', NULL, 1, 150);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (24, 'Ville', 'text', '22', NULL, 1, 160);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (4, 'Nom de la banque', 'text', '22', NULL, 1, 170);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (3, 'Compte bancaire', 'text', '22', NULL, 1, 180);
@@ -190,121 +186,125 @@ INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_sear
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (52, 'Contrepartie pour dépense à charge du gérant', 'poste', '17', NULL, 1, 340);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (31, 'Dépense  charge du grant (partie privé) ', 'numeric', '6', '4', 1, 350);
 INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (23, 'Quick Code', 'text', '22', NULL, 1, 9999);
+INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (18, 'Email ', 'text', '22', NULL, 1, 90);
+INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (17, 'Téléphone ', 'text', '22', NULL, 1, 110);
+INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (16, 'Pays ', 'text', '22', NULL, 1, 150);
+INSERT INTO public.attr_def (ad_id, ad_text, ad_type, ad_size, ad_extra, ad_search_followup, ad_default_order) VALUES (13, 'Numéro TVA', 'text', '22', NULL, 1, 80);
 
 
 
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (1, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (1, 2);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (2, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (2, 2);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (3, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (3, 2);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 3);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 12);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 13);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 14);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 15);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 16);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 17);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 18);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 12);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 13);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 14);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 15);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 16);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 17);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 18);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 12);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 13);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 14);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 16);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 17);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 18);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (1, 6);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (1, 7);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (2, 6);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (2, 7);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (3, 7);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (1, 19);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (2, 19);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (14, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (5, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (5, 4);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (5, 10);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (5, 12);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (6, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (6, 4);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (6, 10);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (6, 12);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (10, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (11, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (11, 12);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (12, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (13, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (13, 9);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (7, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (7, 8);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (7, 9);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (7, 10);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (5, 11);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (6, 11);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 15);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (15, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (15, 9);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (1, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (2, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (3, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (5, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (6, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (10, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (11, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (12, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (13, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (14, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (15, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (7, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 24);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 24);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (14, 24);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (16, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (16, 17);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (16, 18);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (16, 25);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (16, 26);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (16, 27);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (16, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (17, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (17, 9);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (18, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (18, 9);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (25, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (25, 4);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (25, 3);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (25, 5);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (25, 15);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (25, 16);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (25, 24);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (25, 23);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (26, 1);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (26, 9);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (16, 32);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (2, 5);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (3, 5);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (13, 5);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 5);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 5);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 26);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (1, 5);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (8, 34);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (9, 34);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (14, 34);
-INSERT INTO public.attr_min (frd_id, ad_id) VALUES (4, 34);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (1, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (1, 2, 220);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (2, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (2, 2, 220);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (3, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (3, 2, 220);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 3, 180);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 12, 60);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 13, 80);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 14, 130);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 15, 140);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 16, 150);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 17, 110);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 18, 90);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 12, 60);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 13, 80);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 14, 130);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 15, 140);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 16, 150);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 17, 110);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 18, 90);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 12, 60);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 13, 80);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 14, 130);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 16, 150);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 17, 110);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 18, 90);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (1, 6, 200);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (1, 7, 210);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (2, 6, 200);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (2, 7, 210);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (3, 7, 210);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (1, 19, 270);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (2, 19, 270);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (14, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (5, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (5, 4, 170);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (5, 10, 250);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (5, 12, 60);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (6, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (6, 4, 170);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (6, 10, 250);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (6, 12, 60);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (10, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (11, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (11, 12, 60);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (12, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (13, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (13, 9, 30);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (7, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (7, 8, 230);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (7, 9, 30);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (7, 10, 250);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (5, 11, 240);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (6, 11, 240);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 15, 140);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (15, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (15, 9, 30);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (1, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (2, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (3, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (5, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (6, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (10, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (11, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (12, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (13, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (14, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (15, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (7, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 24, 160);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 24, 160);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (14, 24, 160);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (16, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (16, 17, 110);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (16, 18, 90);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (16, 25, 70);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (16, 26, 120);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (16, 27, 100);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (16, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (17, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (17, 9, 30);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (18, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (18, 9, 30);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (25, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (25, 4, 170);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (25, 3, 180);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (25, 5, 190);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (25, 15, 140);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (25, 16, 150);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (25, 24, 160);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (25, 23, 9999);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (26, 1, 10);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (26, 9, 30);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (16, 32, 20);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (2, 5, 190);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (3, 5, 190);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (13, 5, 190);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 5, 190);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 5, 190);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 26, 120);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (1, 5, 190);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (8, 34, 40);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (9, 34, 40);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (14, 34, 40);
+INSERT INTO public.attr_min (frd_id, ad_id, ad_default_order) VALUES (4, 34, 40);
 
 
 
@@ -789,8 +789,6 @@ INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, 
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ANCTAB', 'Tableau', 'anc_acc_table.inc.php', NULL, 'Tableau lié à la comptabilité', NULL, NULL, 'ME', 'Tableau lié à la comptabilité');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ANCBCC', 'Balance Analytique/comptabilité', 'anc_acc_balance.inc.php', NULL, 'Lien entre comptabilité et Comptabilité analytique', NULL, NULL, 'ME', 'Lien entre comptabilité et Comptabilité analytique');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ANCGR', 'Groupe', 'anc_group_balance.inc.php', NULL, 'Balance par groupe', NULL, NULL, 'ME', 'Balance par groupe');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGTVA', 'TVA', 'tva.inc.php', NULL, 'Config. de la tva', NULL, NULL, 'ME', 'Permet d''ajouter des taux de TVA ou de les modifier ainsi que les postes comptables de ces TVA, ces TVA sont utilisables dans les menus de vente et d''achat');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGMENU', 'Config. Menu', 'menu.inc.php', NULL, 'Configuration des menus et plugins', NULL, NULL, 'ME', 'Ajout de menu ou de plugins');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('SUPPL', 'Fournisseur', 'supplier.inc.php', NULL, 'Suivi fournisseur', NULL, NULL, 'ME', 'Suivi des fournisseurs : devis, lettres, email....');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ANCODS', 'Opérations diverses', 'anc_od.inc.php', NULL, 'OD analytique', NULL, NULL, 'ME', 'Opérations diverses en Analytique');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('REPORT', 'Création de rapport', 'report.inc.php', NULL, 'Création de rapport', NULL, NULL, 'ME', 'Création de rapport sur mesure, comme les ratios, vous permet de créer des graphiques de vos données (vente, achat...)');
@@ -837,14 +835,13 @@ INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, 
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('JSSEARCH', 'Recherche', NULL, NULL, 'Recherche', NULL, 'search_reconcile()', 'ME', 'Historique de toutes vos opérations un menu de recherche dans une nouvelle fenêtre, vous permettra de retrouver rapidement l''opération qui vous intéresse');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('LETCARD', 'Lettrage par Fiche', 'lettering.card.inc.php', NULL, 'Lettrage par fiche', NULL, NULL, 'ME', 'Lettrage par fiche');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ACHISTO', 'Historique achat', 'history_operation.inc.php', NULL, 'Historique achat', 'ledger_type=ACH', NULL, 'ME', 'Historique de toutes vos opérations dans les journaux d''achats un menu de recherche, vous permettra de retrouver rapidement l''opération qui vous intéresse');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGACTION', 'Document Suivi', 'cfg_action.inc.php', NULL, 'Configuration des documents dans le suivi', NULL, NULL, 'ME', 'Vous permet d''ajouter de nouveaux type de documents pour le suivi (bordereau de livraison, devis..)');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('VEN', 'Nouvelle vente', 'compta_ven.inc.php', NULL, 'Nouvelle vente ou recette', NULL, NULL, 'ME', 'Encodage de tous vos revenus ou vente');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ODHISTO', 'Historique opérations diverses', 'history_operation.inc.php', NULL, 'Historique opérations diverses', 'ledger_type=ODS', NULL, 'ME', 'Historique de toutes vos opérations dans les journaux d''opérations diverses un menu de recherche, vous permettra de retrouver rapidement l''opération qui vous intéresse');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CMCARD', 'Modèle de fiches', 'fiche_def.inc.php', NULL, 'Gestion de modèle de fiches', NULL, NULL, 'ME', 'Permet de changer le poste comptable de base des modèles de fiches');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('P0PST', 'Poste', 'impress_poste.inc.php', NULL, 'Impression du détail d''un poste comptable', NULL, NULL, 'ME', 'Impression du détail d''un poste comptable');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C1MENU', 'Config. Menu', 'menu.inc.php', NULL, 'Configuration des menus et plugins', NULL, NULL, 'ME', 'Ajout de menu ou de plugins');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('MENUACH', 'Achat', NULL, NULL, 'Menu achat', NULL, NULL, 'ME', 'Regroupement pour les menus d''achats(nouvelle opération, historique...)');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('MOD', 'Menu et profil', NULL, NULL, 'Menu ', NULL, NULL, 'ME', 'Regroupement pour les menus et les profils');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PRINT', 'Impression', NULL, NULL, 'Menu impression', NULL, NULL, 'ME', 'Menu impression');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('BK', 'Banque', 'bank.inc.php', NULL, 'Information Banque', NULL, NULL, 'ME', 'Regroupement des menus des journaux de trésorerie');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ANCGL', 'Grand''Livre', 'anc_great_ledger.inc.php', NULL, 'Grand livre analytique', NULL, NULL, 'ME', 'Grand livre pour la comptabilité analytique');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('GESTION', 'Gestion', NULL, NULL, 'Module gestion', NULL, NULL, 'ME', 'Module gestion');
@@ -852,14 +849,9 @@ INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, 
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ACCESS', 'Accueil', NULL, 'user_login.php', 'Accueil', NULL, NULL, 'ME', 'Choix de votre dossier');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('COMPTA', 'Comptabilité', NULL, NULL, 'Module comptabilité', NULL, NULL, 'ME', 'Module comptabilité');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('DIVPARM', 'Divers', NULL, NULL, 'Paramètres divers', NULL, NULL, 'ME', 'Menu de différents paramètres');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGACC', 'Poste', 'poste.inc.php', NULL, 'Config. poste comptable de base', NULL, NULL, 'ME', 'Config. poste comptable de base');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CARD', 'Fiche', 'fiche.inc.php', NULL, 'Liste,Balance,Historique par fiche', NULL, NULL, 'ME', 'Permet d''avoir la balance de toutes vos fiches, les résumés exportables en CSV, les historiques avec ou sans lettrages');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PREFERENCE', 'Préférence', NULL, NULL, 'Préférence', NULL, 'set_preference(<DOSSIER>)', 'ME', 'Préférence de l''utilisateur, apparence de l''application pour l''utilisateur, période par défaut et mot de passe');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ANCBC2', 'Balance croisée double', 'anc_balance_double.inc.php', NULL, 'Balance double croisées des imputations analytiques', NULL, NULL, 'ME', 'Balance double croisées des imputations analytiques');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PERIODE', 'Période', 'periode.inc.php', NULL, 'Gestion des périodes', NULL, NULL, 'ME', 'Gestion des périodes : clôture, ajout de période, afin de créer des périodes vous pouvez aussi utiliser le plugin outil comptable');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('VERIFBIL', 'Vérification ', 'verif_bilan.inc.php', NULL, 'Vérification de la comptabilité', NULL, NULL, 'ME', 'Vérifie que votre comptabilité ne contient pas d''erreur de base, tels que l''équilibre entre le passif et l''actif, l''utilisation des postes comptables...');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGDOC', 'Document', 'document_modele.inc.php', NULL, 'Config. modèle de document', NULL, NULL, 'ME', 'Chargement de modèles de documents qui seront générés par NOALYSS, les formats utilisables sont libreoffice, html, text et rtf');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGSEC', 'Sécurité', 'param_sec.inc.php', NULL, 'configuration de la sécurité', NULL, NULL, 'ME', 'Configuration de la sécurité, vous permet de donner un profil à vos utilisateurs, cela leur permettra d''utiliser ce que vous souhaitez qu''ils puissent utiliser');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('STOCK_STATE', 'Etat des stock', 'stock_state.inc.php', NULL, 'Etat des stock', NULL, NULL, 'ME', 'Etat des stock de l''exercice indiqué');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('STOCK_INV', 'Modification Stocks', 'stock_inv.inc.php', NULL, 'Modification des stocks (inventaire)', NULL, NULL, 'ME', 'Modification des stocks, menu utilisé pour l''inventaire');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('STOCK_INVHISTO', 'Histo. Changement', 'stock_inv_histo.inc.php', NULL, 'Liste des changements manuels des stocks', NULL, NULL, 'ME', 'Liste des changements manuels des stocks, inventaire, transfert de marchandises entre dépôts...');
@@ -869,9 +861,6 @@ INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, 
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('LOGOUT', 'Sortie &#9094', NULL, 'logout.php', 'Sortie', NULL, NULL, 'ME', 'Déconnexion ');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('LETACC', 'Lettrage par Poste', 'lettering.account.inc.php', NULL, 'lettrage par poste comptable', NULL, NULL, 'ME', 'lettrage par poste comptable');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CARDBAL', 'Balance', 'balance_card.inc.php', NULL, 'Balance par catégorie de fiche', NULL, NULL, 'ME', 'Balance par catégorie de fiche ou pour toutes les fiches ayant un poste comptable');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGPCMN', 'Plan Comptable', 'param_pcmn.inc.php', NULL, 'Config. du plan comptable', NULL, NULL, 'ME', 'Modification de votre plan comptable, parfois il est plus rapide d''utiliser le plugin "Poste Comptable"');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGPRO', 'Profil', 'profile.inc.php', NULL, 'Configuration profil', NULL, NULL, 'ME', 'Configuration des profils des utilisateurs, permet de fixer les journaux, profils dans les documents et stock que  ce profil peut utiliser. Cela limite les utilisateurs puisque ceux-ci ont un profil');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CCARDAT', 'Attribut de fiche', 'card_attr.inc.php', NULL, 'Gestion des attributs de fiches ', NULL, NULL, 'ME', 'Permet d''ajouter de nouveaux attributs que vous pourrez par la suite ajouter à des catégories de fiches');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('VEHISTO', 'Historique vente', 'history_operation.inc.php', NULL, 'Historique des ventes', 'ledger_type=VEN', NULL, 'ME', 'Historique de toutes vos opérations dans les journaux de vente un menu de recherche, vous permettra de retrouver rapidement l''opération qui vous intéresse');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('FIHISTO', 'Historique financier', 'history_operation.inc.php', NULL, 'Historique financier', 'ledger_type=FIN', NULL, 'ME', 'Historique de toutes vos opérations dans les journaux de trésorerie un menu de recherche, vous permettra de retrouver rapidement l''opération qui vous intéresse');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('OTAX', 'Autre Taxe', 'acc_other_tax.inc.php', NULL, 'Autre Taxe pour les ventes et achats', NULL, NULL, 'ME', NULL);
@@ -881,8 +870,11 @@ INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, 
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('P0BAL', 'Balance', 'balance.inc.php', NULL, 'Impression des balances comptables', NULL, NULL, 'ME', 'Impression des balances comptables');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('P0RAP', 'Rapprochement', 'impress_rec.inc.php', NULL, 'Impression des rapprochements', NULL, NULL, 'ME', 'Impression des rapprochements : opérations non rapprochées ou avec des montants différents');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('P0RPO', 'Rapport', 'impress_rapport.inc.php', NULL, 'Impression de rapport', NULL, NULL, 'ME', 'Impression de rapport personnalisé, il est aussi possible d''exporter en CSV afin de faire des graphiques');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0PST', 'Poste', 'poste.inc.php', NULL, 'Config. poste comptable de base', NULL, NULL, 'ME', 'Config. poste comptable de base');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0DOC', 'Document', 'document_modele.inc.php', NULL, 'Config. modèle de document', NULL, NULL, 'ME', 'Chargement de modèles de documents qui seront générés par NOALYSS, les formats utilisables sont libreoffice, html, text et rtf');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0SEC', 'Sécurité', 'param_sec.inc.php', NULL, 'configuration de la sécurité', NULL, NULL, 'ME', 'Configuration de la sécurité, vous permet de donner un profil à vos utilisateurs, cela leur permettra d''utiliser ce que vous souhaitez qu''ils puissent utiliser');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0PCMN', 'Plan Comptable', 'param_pcmn.inc.php', NULL, 'Config. du plan comptable', NULL, NULL, 'ME', 'Modification de votre plan comptable, parfois il est plus rapide d''utiliser le plugin "Poste Comptable"');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('STOCK', 'Stock', NULL, NULL, 'Stock', NULL, NULL, 'ME', 'Permet d''ajouter de nouvelles catégorie de fiche, d''ajouter des attributs à ces catégories (numéro de téléphone, gsm, email...)');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGDOCST', 'Etat des documents', 'doc_state.inc.php', NULL, 'Etat des documents', NULL, NULL, 'ME', 'Permet d''ajouter des état pour les documents utilisés dans le suivi (à faire, à suivre...)');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('MENUODS', 'Opérations diverses', NULL, NULL, 'Menu opérations diverses', NULL, NULL, 'ME', 'Regroupement pour les menus d''opérations diverses (nouvelle opération, historique...)');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('VENMENU', 'Vente / Recette', NULL, NULL, 'Menu ventes et recettes', NULL, NULL, 'ME', 'Regroupement des menus ventes et recettes');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ANCIMP', 'Impression', NULL, NULL, 'Impression compta. analytique', NULL, NULL, 'ME', 'Impression compta. analytique');
@@ -894,31 +886,22 @@ INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, 
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('FORECAST', 'Prévision', 'forecast.inc.php', NULL, 'Prévision', NULL, NULL, 'ME', 'Prévision de vos achats, revenus, permet de suivre l''évolution de votre société. Vos prévisions sont des formules sur les postes comptables et vous permettent aussi vos marges brutes.');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CSV:Reconciliation', 'Export opérations rapprochées', 'export_rec_csv.php', NULL, 'Export opérations rapprochées en CSV', NULL, NULL, 'PR', '');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('MANAGER', 'Administrateur', 'manager.inc.php', NULL, 'Suivi des gérants, administrateurs et salariés', NULL, NULL, 'ME', 'Suivi de vos salariés, managers ainsi que des administrateurs, pour les documents et les opérations comptables');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGDEFMENU', 'Menu par défaut', 'default_menu.inc.php', NULL, 'Configuration des menus par défaut', NULL, NULL, 'ME', 'Configuration des menus par défaut, ces menus sont appelés par des actions dans d''autres menus');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PDF:AncReceipt', 'Export pièce PDF', 'export_anc_receipt_pdf.php', NULL, NULL, NULL, NULL, 'PR', NULL);
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ANCKEY', 'Clef de répartition', 'anc_key.inc.php', NULL, NULL, NULL, NULL, 'ME', 'Permet de gèrer les clefs de répartition en comptabilité analytique');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('BOOKMARK', 'Favori &#9733 ', NULL, NULL, 'Raccourci vers vos menus préférés', NULL, 'show_bookmark(<DOSSIER>)', 'ME', 'Ce menu vous présente  un menu rapide de vos menus préférés');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CSV:balance_age', 'Export Balance agée', 'export_balance_age_csv.php', NULL, 'Balance agée', NULL, NULL, 'PR', 'Balance agée pour les clients et fournisseurs');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('RAW:receipt', 'Exporte la pièce', 'export_receipt.php', NULL, 'export la pièce justificative d''une opération', NULL, NULL, 'PR', NULL);
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('RAW:document', 'Export le document', 'export_document.php', NULL, 'exporte le document d''un événement', NULL, NULL, 'PR', NULL);
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('RAW:document_template', 'Exporte le modèle de document', 'export_document_template.php', NULL, 'export le modèle de document utilisé dans le suivi', NULL, NULL, 'PR', NULL);
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGCURRENCY', 'Devises', 'acc_currency_cfg.inc.php', NULL, 'Configuration des devises', NULL, NULL, 'ME', 'Permet de configurer les devises');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CSV:Analytic_Axis', 'Export ANC', 'export_anc_axis_csv.php', NULL, 'Export ANC Liste comptes', NULL, NULL, 'PR', NULL);
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CSV:printtva', 'Export Résumé TVA', 'export_printtva_csv.php', NULL, NULL, NULL, NULL, 'PR', NULL);
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PDF:printtva', 'Export Résumé TVA', 'export_printtva_pdf.php', NULL, NULL, NULL, NULL, 'PR', NULL);
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PDF:operation_detail', NULL, 'export_operation_pdf.php', NULL, 'Export Operation', NULL, NULL, NULL, NULL);
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CSV:FollowUpContactOption', 'Export action suivi', 'export_follow_up_contact_csv.php', NULL, NULL, NULL, NULL, 'PR', NULL);
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGOPT1', 'Option Fiches', 'contact_option_ref.inc.php', NULL, 'configure les options pour les fiches dans le suivi', NULL, NULL, 'ME', NULL);
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ACH', 'Nouvel achat', 'compta_ach.inc.php', NULL, 'Nouvel achat ou dépense', NULL, NULL, 'ME', 'Vous permet d''encoder des achats, dépenses, des notes de frais ou des notes de crédits, vous pouvez spécifier un bénéficiaire ou un autre moyen de paiement');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGSTOCK', 'Dépôt', 'stock_cfg.inc.php', NULL, 'Configuration dépôts', NULL, NULL, 'ME', 'Configuration des entrepots de dépôts');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ODS', 'Nouvelle opération', 'compta_ods.inc.php', NULL, 'Nouvelle opérations diverses', NULL, NULL, 'ME', 'Opération diverses tels que les amortissements, les augmentations de capital, les salaires, ...');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PCUR01', 'Devise', 'print_currency01.inc.php', NULL, 'Résumé par devise', NULL, NULL, 'ME', 'Résumé par devise afin de 
 faire de calculer les écarts de conversion (différence de change) pour les actifs et passifs');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CSV:pcur01', 'Export Devise CSV', 'export_pcur01_csv.php', NULL, NULL, NULL, NULL, 'PR', NULL);
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PDF:pcur01', 'Export Devise PDF', 'export_pcur01_pdf.php', NULL, NULL, NULL, NULL, 'PR', NULL);
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGPLUGIN', 'Extension', 'cfgplugin.inc.php', NULL, NULL, NULL, NULL, 'ME', 'Permet d''installer et d''activer facilement des extensions');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGTAG', 'Etiquette', 'cfgtags.inc.php', NULL, 'Configuration des tags', NULL, NULL, 'ME', 'Configuration des tags ou dossiers, on l''appele tag ou dossier suivant la façon dont vous utilisez 
-cette fonctionnalité. Vous pouvez en ajouter, en supprimer ou les modifier');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('MCARD', 'Fiche', NULL, NULL, 'Paramètrage des fiches', NULL, NULL, 'E', 'Menu regroupant ce qui concerne les fiches');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('MDOC', 'Document', NULL, NULL, 'Paramètrage des documents', NULL, NULL, 'E', 'Meu regroupant ce qui concene les documents ');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('MACC', 'Comptabilité', NULL, NULL, 'Paramètrage comptabilité', NULL, NULL, 'E', 'Menu regroupant ce qui concerne la comptabilité');
@@ -926,10 +909,11 @@ INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, 
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('AGENDA', 'Agenda  &#x1f4c5', 'calendar.inc.php', NULL, 'Agenda', NULL, NULL, 'ME', 'Agenda, présentation du suivi sous forme d''agenda ');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('P0BIL', 'Bilan', 'impress_bilan.inc.php', NULL, 'Impression de bilan', NULL, NULL, 'ME', 'Impression de bilan, ce module est basique, il est plus intéressant d''utiliser le plugin "rapport avancés"');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('P0JRN', 'Impression Journaux', 'impress_jrn.inc.php', NULL, 'Impression des journaux', NULL, NULL, 'ME', 'Impression des journaux avec les détails pour les parties privés, la TVA et ce qui est non déductibles en ce qui concerne les journaux de vente et d''achat');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0ETS', 'Etat des actions', 'doc_state.inc.php', NULL, 'Etat des actions dans le suivi', NULL, NULL, 'ME', 'Permet d''ajouter des état pour les documents utilisés dans le suivi (à faire, à suivre...)');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0MENU', 'Menu par défaut', 'default_menu.inc.php', NULL, 'Configuration des menus par défaut', NULL, NULL, 'ME', 'Configuration des menus par défaut, ces menus sont appelés par des actions dans d''autres menus');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0DEV', 'Devises', 'acc_currency_cfg.inc.php', NULL, 'Configuration des devises', NULL, NULL, 'ME', 'Permet de configurer les devises');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('NCOL', 'Apparence', 'noalyss-color.inc.php', NULL, 'Couleur de NOALYSS', NULL, NULL, 'ME', 'Personnalisation des couleurs de NOYALYSS');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CCARD', 'Catégorie fiche', 'cfgfiche.inc.php', NULL, 'Configuration de catégorie de fiches', NULL, NULL, 'ME', 'Permet d''ajouter de nouvelles catégorie de fiche, d''ajouter des attributs à ces catégories (numéro de téléphone, gsm, email...)');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGLED', 'Journal', 'cfgledger.inc.php', NULL, 'Configuration des journaux', NULL, NULL, 'ME', 'Création et modification des journaux, préfixe des pièces justificatives, numérotation, catégories de fiches accessibles à ce journal');
-INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CFGPAY', 'Moyen de paiement', 'payment_method.inc.php', NULL, 'Config. des méthodes de paiement', NULL, NULL, 'ME', 'Configuration des moyens de paiements que vous voulez utiliser dans les journaux de type VEN ou ACH, les moyens de paiement permettent de générer l''opération de trésorerie en même temps que l''achat, la note de frais ou la vente');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('MENUFIN', 'Financier', NULL, NULL, 'Menu Financier', NULL, NULL, 'ME', 'Regroupement pour les menus de trésorerie (nouvelle opération, historique...)');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('OPCL', 'Ouvert./Fermeture', 'operation_exercice.inc.php', NULL, 'Opération de cloture ou d''ouverture d''exercice', NULL, NULL, 'ME', 'Ecriture d''ouverture ou de fermeture , , reporte les soldes des comptes de l''année passé du poste comptable 0xxx à 5xxxx sur l''année courante ou ferme les comptes de 6 à 7 de l''année ');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PDF:card', 'export Fiche détail PDF', 'export_card_pdf.php', NULL, NULL, NULL, NULL, 'PR', NULL);
@@ -939,6 +923,22 @@ INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, 
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('P0BLG', 'Balance agée', 'balance_age.inc.php', NULL, 'Balance agée', NULL, NULL, 'ME', 'Balance agée pour les clients et fournisseurs');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('P1TVA', 'Détail TVA', 'tax_detail.inc.php', NULL, 'Détail TVA  par journal', NULL, NULL, 'ME', 'Détail des TVA ');
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CSV:p1tva', 'Export Détail TVA', 'export_p1tva_csv.php', NULL, NULL, NULL, NULL, 'PR', NULL);
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0PROFL', 'Profil', 'profile.inc.php', NULL, 'Configuration profil', NULL, NULL, 'ME', 'Configuration des profils des utilisateurs, permet de fixer les journaux, profils dans les documents et stock que  ce profil peut utiliser. Cela limite les utilisateurs puisque ceux-ci ont un profil');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0JRN', 'Journal', 'cfgledger.inc.php', NULL, 'Configuration des journaux', NULL, NULL, 'ME', 'Création et modification des journaux, préfixe des pièces justificatives, numérotation, catégories de fiches accessibles à ce journal');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0PAY', 'Moyen de paiement', 'payment_method.inc.php', NULL, 'Config. des méthodes de paiement', NULL, NULL, 'ME', 'Configuration des moyens de paiements que vous voulez utiliser dans les journaux de type VEN ou ACH, les moyens de paiement permettent de générer l''opération de trésorerie en même temps que l''achat, la note de frais ou la vente');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0ACT', 'Document Suivi', 'cfg_action.inc.php', NULL, 'Configuration des documents dans le suivi', NULL, NULL, 'ME', 'Vous permet d''ajouter de nouveaux type de documents pour le suivi (bordereau de livraison, devis..)');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0OPT1', 'Option Fiches', 'contact_option_ref.inc.php', NULL, 'configure les options pour les fiches dans le suivi', NULL, NULL, 'ME', NULL);
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0STOCK', 'Dépôt', 'stock_cfg.inc.php', NULL, 'Configuration dépôts', NULL, NULL, 'ME', 'Configuration des entrepots de dépôts');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0TVA', 'TVA', 'tva.inc.php', NULL, 'Config. de la tva', NULL, NULL, 'ME', 'Permet d''ajouter des taux de TVA ou de les modifier ainsi que les postes comptables de ces TVA, ces TVA sont utilisables dans les menus de vente et d''achat');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0CARD', 'Attribut de fiche', 'card_attr.inc.php', NULL, 'Gestion des attributs de fiches ', NULL, NULL, 'ME', 'Permet d''ajouter de nouveaux attributs que vous pourrez par la suite ajouter à des catégories de fiches');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0PLG', 'Extension', 'cfgplugin.inc.php', NULL, 'Configuration des extensions', NULL, NULL, 'ME', 'Permet d''installer et d''activer facilement des extensions');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('ANCKEY', 'Clef de répartition', 'anc_key.inc.php', NULL, 'Clef de répartition pour la comptabilité analytique', NULL, NULL, 'ME', 'Permet de gèrer les clefs de répartition en comptabilité analytique');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('C0TAG', 'Etiquette', 'cfgtags.inc.php', NULL, 'Configuration des étiquettes', NULL, NULL, 'ME', 'Configuration des étiquettes(tags) ou dossiers, on l''appele tag ou dossier suivant la façon dont vous utilisez
+cette fonctionnalité. Vous pouvez en ajouter, en supprimer ou les modifier');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PREFERENCE', 'Preference &#128100', NULL, NULL, 'Préférence', NULL, 'set_preference(<DOSSIER>)', 'ME', 'Préférence de l''utilisateur, apparence de l''application pour l''utilisateur, période par défaut et mot de passe');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('PRINT', 'Impression &#x1F4CA', NULL, NULL, 'Menu impression', NULL, NULL, 'ME', 'Menu impression');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('CARD', 'Fiche &#x1F4C7', 'fiche.inc.php', NULL, 'Liste,Balance,Historique par fiche', NULL, NULL, 'ME', 'Permet d''avoir la balance de toutes vos fiches, les résumés exportables en CSV, les historiques avec ou sans lettrages');
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) VALUES ('BOOKMARK', 'Favori &#x2728', NULL, NULL, 'Raccourci vers vos menus préférés', NULL, 'show_bookmark(<DOSSIER>)', 'ME', 'Ce menu vous présente  un menu rapide de vos menus préférés');
 
 
 
@@ -1139,8 +1139,6 @@ INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_t
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (95, 'FREC', 'MENUFIN', 1, 40, 'E', 0, 92);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (94, 'FSALDO', 'MENUFIN', 1, 30, 'E', 0, 92);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (45, 'CFG', NULL, 1, 200, 'M', 0, NULL);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (68, 'CCARDAT', 'MCARD', 1, 90, 'E', 0, 874);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (71, 'CFGSEC', 'CFG', 1, 60, 'E', 0, 45);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (54, 'COMPANY', 'CFG', 1, 1, 'E', 1, 45);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (27, 'LETACC', 'LET', 1, 20, 'E', 0, 23);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (24, 'LETCARD', 'LET', 1, 10, 'E', 0, 23);
@@ -1156,6 +1154,8 @@ INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_t
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (133, 'PDF:report', NULL, 1, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (134, 'CSV:fiche', NULL, 1, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (526, 'P0GRL', 'PRINT', 1, 200, 'E', 0, 6);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (71, 'C0SEC', 'CFG', 1, 60, 'E', 0, 45);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (68, 'C0CARD', 'MCARD', 1, 90, 'E', 0, 874);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (136, 'CSV:glcompte', NULL, 1, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (137, 'PDF:glcompte', NULL, 1, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (138, 'PDF:sec', NULL, 1, NULL, 'P', 0, NULL);
@@ -1171,8 +1171,6 @@ INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_t
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (148, 'CSV:AncBalGroup', NULL, 1, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (149, 'OTH:Bilan', NULL, 1, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (1, 'DASHBOARD', NULL, 1, 100, 'M', 1, NULL);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (172, 'CFGPRO', 'MOD', 1, NULL, 'E', 0, 167);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (171, 'CFGMENU', 'MOD', 1, NULL, 'E', 0, 167);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (86, 'ACHISTO', 'MENUACH', 1, 20, 'E', 0, 3);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (91, 'VEHISTO', 'VENMENU', 1, 20, 'E', 0, 4);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (781, 'BK', 'GESTION', 1, 35, 'E', 0, 34);
@@ -1189,7 +1187,6 @@ INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_t
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (801, 'BOOKMARK', NULL, 1, 85, 'M', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (804, 'CSV:Reconciliation', NULL, 1, 0, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (806, 'MANAGER', 'GESTION', 1, 25, 'E', 0, 34);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (808, 'CFGDEFMENU', 'MOD', 1, 30, 'E', 0, 167);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (809, 'AGENDA', 'NULL', 1, 410, 'M', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (811, 'PDF:AncReceipt', NULL, 1, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (812, 'ANCKEY', 'ANC', 1, 15, 'E', 0, 2);
@@ -1257,7 +1254,6 @@ INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_t
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (756, 'PDF:glcompte', NULL, 2, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (757, 'PDF:sec', NULL, 2, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (167, 'MOD', 'CFG', 1, 10, 'E', 0, 45);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (784, 'CFGSTOCK', 'CFG', 1, 40, 'E', 0, 45);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (758, 'CSV:AncList', NULL, 2, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (759, 'CSV:AncBalSimple', NULL, 2, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (760, 'PDF:AncBalSimple', NULL, 2, NULL, 'P', 0, NULL);
@@ -1275,8 +1271,8 @@ INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_t
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (793, 'CSV:StockHisto', NULL, 2, NULL, 'P', NULL, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (794, 'CSV:StockResmList', NULL, 2, NULL, 'P', NULL, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (780, 'CSV:reportinit', NULL, 2, NULL, 'P', NULL, NULL);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (798, 'CFGDOCST', 'DIVPARM', 2, 9, 'E', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (708, 'OPCL', 'ADV', 2, 240, 'E', 0, 712);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (172, 'C0PROFL', 'MOD', 1, NULL, 'E', 0, 167);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (701, 'CARD', 'GESTION', 2, 60, 'E', 0, 723);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (710, 'CARD', 'COMPTA', 2, 70, 'E', 0, 669);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (743, 'FIHISTO', 'MENUFIN', 2, 20, 'E', 0, 742);
@@ -1312,26 +1308,13 @@ INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_t
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (871, 'PCUR01', 'PRINT', 1, 260, 'E', 0, 6);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (872, 'PCUR01', 'PRINT', 1, 260, 'E', 0, 35);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (873, 'PCUR01', 'PRINT', 2, 260, 'E', 0, 719);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (866, 'CFGOPT1', 'MCARD', 1, 85, 'E', 0, 874);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (73, 'CFGDOC', 'MDOC', 1, 80, 'E', 0, 875);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (797, 'CFGDOCST', 'MDOC', 1, 9, 'E', 0, 875);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (67, 'CFGACTION', 'MDOC', 1, 80, 'E', 0, 875);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (55, 'PERIODE', 'MACC', 1, 20, 'E', 0, 876);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (69, 'CFGPCMN', 'MACC', 1, 40, 'E', 0, 876);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (72, 'PREDOP', 'MACC', 1, 70, 'E', 0, 876);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (74, 'CFGLED', 'MACC', 1, 90, 'E', 0, 876);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (852, 'CFGCURRENCY', 'MACC', 1, 50, 'E', 0, 876);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (59, 'CFGPAY', 'MACC', 1, 40, 'E', 0, 876);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (61, 'CFGACC', 'MACC', 1, 60, 'E', 0, 876);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (60, 'CFGTVA', 'MACC', 1, 50, 'E', 0, 876);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (877, 'PDF:AncAccList', NULL, 1, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (878, 'PDF:AncAccList', NULL, 2, NULL, 'P', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (65, 'CMCARD', 'MCARD', 1, 70, 'E', 0, 874);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (525, 'CCARD', 'MCARD', 1, 400, 'E', 0, 874);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (879, 'OTAX', 'MACC', 1, 55, 'E', 0, 876);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (803, 'CFGTAG', 'CFG', 1, 390, 'E', 0, 45);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (814, 'CFGPLUGIN', 'CFG', 1, 15, 'E', 0, 45);
-INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (815, 'CFGPLUGIN', 'CFG', 2, 15, 'E', 0, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (874, 'MCARD', 'CFG', 1, 20, 'E', NULL, 45);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (875, 'MDOC', 'CFG', 1, 30, 'E', NULL, 45);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (876, 'MACC', 'CFG', 1, 50, 'E', NULL, 45);
@@ -1382,6 +1365,23 @@ INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_t
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (887, 'P1TVA', 'PRINT', 2, 250, 'E', 0, 716);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (888, 'CSV:p1tva', NULL, 1, NULL, 'P', NULL, NULL);
 INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (889, 'CSV:p1tva', NULL, 2, NULL, 'P', NULL, NULL);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (61, 'C0PST', 'MACC', 1, 60, 'E', 0, 876);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (73, 'C0DOC', 'MDOC', 1, 80, 'E', 0, 875);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (69, 'C0PCMN', 'MACC', 1, 40, 'E', 0, 876);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (74, 'C0JRN', 'MACC', 1, 90, 'E', 0, 876);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (798, 'C0ETS', 'DIVPARM', 2, 9, 'E', 0, NULL);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (797, 'C0ETS', 'MDOC', 1, 9, 'E', 0, 875);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (808, 'C0MENU', 'MOD', 1, 30, 'E', 0, 167);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (171, 'C1MENU', 'MOD', 1, NULL, 'E', 0, 167);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (59, 'C0PAY', 'MACC', 1, 40, 'E', 0, 876);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (852, 'C0DEV', 'MACC', 1, 50, 'E', 0, 876);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (67, 'C0ACT', 'MDOC', 1, 80, 'E', 0, 875);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (866, 'C0OPT1', 'MCARD', 1, 85, 'E', 0, 874);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (784, 'C0STOCK', 'CFG', 1, 40, 'E', 0, 45);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (814, 'C0PLG', 'CFG', 1, 15, 'E', 0, 45);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (815, 'C0PLG', 'CFG', 2, 15, 'E', 0, NULL);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (803, 'C0TAG', 'CFG', 1, 390, 'E', 0, 45);
+INSERT INTO public.profile_menu (pm_id, me_code, me_code_dep, p_id, p_order, p_type_display, pm_default, pm_id_dep) VALUES (60, 'C0TVA', 'MACC', 1, 50, 'E', 0, 876);
 
 
 
@@ -1488,6 +1488,12 @@ INSERT INTO public.user_sec_action_profile (ua_id, p_id, p_granted, ua_right) VA
 
 
 
+
+
+
+
+
+
 INSERT INTO public.version (val, v_description, v_date) VALUES (126, NULL, NULL);
 INSERT INTO public.version (val, v_description, v_date) VALUES (127, 'Add filter for search, inactive tag or ledger, type of operation, security', '2018-02-10 22:46:49.270348');
 INSERT INTO public.version (val, v_description, v_date) VALUES (128, 'Add a view to manage VAT', '2018-02-10 22:46:49.93138');
@@ -1562,6 +1568,9 @@ INSERT INTO public.version (val, v_description, v_date) VALUES (196, 'remove tri
 INSERT INTO public.version (val, v_description, v_date) VALUES (197, 'Adapt for VAT CODE', '2024-07-27 22:11:14.978379');
 INSERT INTO public.version (val, v_description, v_date) VALUES (198, 'Cosmetic and VAT', '2024-07-27 22:11:15.067253');
 INSERT INTO public.version (val, v_description, v_date) VALUES (199, 'Detail VAT', '2024-07-29 16:02:22.743803');
+INSERT INTO public.version (val, v_description, v_date) VALUES (200, 'Widget and improve menu', '2024-09-08 18:35:41.095728');
+INSERT INTO public.version (val, v_description, v_date) VALUES (201, 'receipt with padding ', '2024-09-08 18:35:41.235892');
+INSERT INTO public.version (val, v_description, v_date) VALUES (202, 'Bug with reconcile, improve view', '2024-09-08 18:35:41.247962');
 
 
 
@@ -2086,6 +2095,14 @@ SELECT pg_catalog.setval('public.user_filter_id_seq', 1, false);
 
 
 SELECT pg_catalog.setval('public.user_sec_action_profile_ua_id_seq', 6, true);
+
+
+
+SELECT pg_catalog.setval('public.user_widget_uw_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('public.widget_dashboard_wd_id_seq', 1, false);
 
 
 
