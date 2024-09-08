@@ -655,6 +655,11 @@ ALTER TABLE ONLY public.user_sec_jrn
 
 
 
+ALTER TABLE ONLY public.user_widget
+    ADD CONSTRAINT user_widget_pkey PRIMARY KEY (uw_id);
+
+
+
 ALTER TABLE ONLY public.action_gestion_related
     ADD CONSTRAINT ux_aga_least_aga_greatest UNIQUE (aga_least, aga_greatest);
 
@@ -667,6 +672,16 @@ ALTER TABLE ONLY public.jrn
 
 ALTER TABLE ONLY public.version
     ADD CONSTRAINT version_pkey PRIMARY KEY (val);
+
+
+
+ALTER TABLE ONLY public.widget_dashboard
+    ADD CONSTRAINT widget_dashboard_pkey PRIMARY KEY (wd_id);
+
+
+
+ALTER TABLE ONLY public.widget_dashboard
+    ADD CONSTRAINT widget_dashboard_unique UNIQUE (wd_code);
 
 
 
@@ -1557,6 +1572,11 @@ ALTER TABLE ONLY public.user_sec_action_profile
 
 ALTER TABLE ONLY public.user_sec_action_profile
     ADD CONSTRAINT user_sec_action_profile_p_id_fkey FOREIGN KEY (p_id) REFERENCES public.profile(p_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY public.user_widget
+    ADD CONSTRAINT user_widget_dashboard_widget_id_fkey FOREIGN KEY (dashboard_widget_id) REFERENCES public.widget_dashboard(wd_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
