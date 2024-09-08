@@ -40,13 +40,14 @@ class Acc_Tva
                                    "rate"=>"tva_rate",
                                    "comment"=>"tva_comment",
                                    "account"=>"tva_poste",
-                                    "both_side"=>'tva_both_side');
+                                    "both_side"=>'tva_both_side',
+                                    'tva_code');
     public $tva_id,
         $tva_label,
         $tva_rate,
         $tva_comment,
         $tva_poste,
-        $tva_both_side;
+        $tva_both_side,$tva_code;
     private $cn; //!< Database connection
 
     private Tva_Rate_SQL $tva_rate_sql;
