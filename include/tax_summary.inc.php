@@ -63,6 +63,7 @@ if ( $http->get("do","string","no") == "display")
             echo '<span class="warning">';
             echo $e->getMessage();
             echo '</span>';
+            throw $e;
 
         }
         echo '<ul class="aligned-block">';
