@@ -53,6 +53,7 @@ for ($i=0;$i<$nb_array;$i++):
         $a_param['search_opr_jrn']=explode(",",$user_filter->getp("r_jrn"));
     }
     $a_param    ["date_start"] =  $user_filter->getp("date_start");
+    $a_param    ["date_end"] =  $user_filter->getp("date_end");
     $a_param    ["date_paid_start"] =  $user_filter->getp("date_paid_start");
     $a_param    ["date_paid_end"] =  $user_filter->getp("date_paid_end");
     /*[search_opdate_start_hidden] => 01.01.2023
