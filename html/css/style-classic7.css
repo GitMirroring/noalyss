@@ -3647,10 +3647,10 @@ h2.h-section {
     font-style: normal;
     font-family: OpenSansRegular;
 }
-.super {
-    font-family: SansationLight;
-    vertical-align: super;
-    font-size: 80%;
-    font-variant-caps:  normal;
-
+ .super {
+     font-family: SansationLight;
+     vertical-align: super;
+     font-size: 80%;
+     font-variant-caps: normal;
+ }
 }
