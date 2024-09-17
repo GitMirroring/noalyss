@@ -76,7 +76,7 @@ for ($i=0;$i < $nb_array;$i++):
         // add a link to see the detail in ajax : ajax_ledger.php
         $js_detail = $this->build_link_detail($dossier_id, $this->date_start, $this->date_end,$array[$i]['jrn_def_id'], $array[$i]['qs_vat_code']);
         ?>
-        <a href="javascript:void(0)" onclick="<?=$js_detail?>">Détails</a>
+        <a href="javascript:void(0)" class="super" onclick="<?=$js_detail?>">Détails</a>
     </td>
     <td class="num">
         <?=$array[$i]['tva_rate']*100?>%
@@ -235,7 +235,7 @@ for ($i=0;$i < $nb_array;$i++):
             // add a link to see the detail in ajax : ajax_ledger.php
             $js_detail = $this->build_link_detail($dossier_id, $this->date_start, $this->date_end,$array[$i]['jrn_def_id'], $array[$i]['qp_vat_code']);
             ?>
-            <a href="javascript:void(0)" onclick="<?=$js_detail?>">Détails</a>
+            <a href="javascript:void(0)" onclick="<?=$js_detail?>" class="super">Détails</a>
         </td>
         <td>
             <?=$array[$i]['tva_rate']*100?>%
