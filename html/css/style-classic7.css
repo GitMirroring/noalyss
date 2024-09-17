@@ -3645,6 +3645,7 @@ h2.h-section {
     color: navy;
     border: 1px steelblue solid;
     font-style: normal;
+    font-family: OpenSansRegular;
 }
  .super {
      font-family: SansationLight;
