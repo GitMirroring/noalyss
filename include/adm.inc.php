@@ -65,7 +65,7 @@ if ( $low_action == "list" )
                            <div>
 	<form method="get" action="<?php echo $href; ?>">
 	<?php
-	echo '<h2>' . "Exercice " . $g_user->get_exercice() . '</h2>';
+	echo '<h2 class="h-section">' . "Exercice " . $g_user->get_exercice() . '</h2>';
 	echo dossier::hidden();
         $a=$http->get("query","string",""); 
         echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
