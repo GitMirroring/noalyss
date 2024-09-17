@@ -139,7 +139,7 @@ if ( isset($_POST['record']) )
         /* Show link for Invoice */
         if (isset ($Ledger->doc) )
         {
-            echo '<h2>'._('Document').' </h2>';
+            echo '<h2 class="h-section">'._('Document').' </h2>';
             echo $Ledger->doc;
         }
 

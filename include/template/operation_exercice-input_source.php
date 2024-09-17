@@ -42,7 +42,7 @@ global $g_parameter;
             <FORM method="POST">
 
                 <div class="" id="opening_div">
-                    <h2><?= _("Ouverture") ?></h2>
+                    <h2 class="h-section"><?= _("Ouverture") ?></h2>
                     <div class="text-muted">
                         <?= _("Ouverture des comptes pour l'exercice qui débute pour les comptes 0 à 5.") ?>
                         <?= ("Choisissez l'exercice clôturé (exercice N-1) du dossier à reporter pour les a-nouveaux (exercice N)") ?>
@@ -102,7 +102,7 @@ global $g_parameter;
 
             <FORM method="POST">
                 <div class="" id="closing_div" style="display:grid">
-                    <h2>Clôture</h2>
+                    <h2 class="h-section">Clôture</h2>
                     <div class="text-muted">Clôture de l'exercice pour les comptes 6 à 7</div>
 
                 </div>

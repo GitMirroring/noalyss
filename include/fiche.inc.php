@@ -399,7 +399,7 @@ if ($histo->selected  == 4 || $histo->selected  == 5)
 			} else
 				continue;
 		}
-		echo '<h2>' . $cn->get_value("select fd_label from fiche_def where fd_id=$1", array($afiche[$e]['fd_id'])) . '</h2>';
+		echo '<h2 class="h-section">' . $cn->get_value("select fd_label from fiche_def where fd_id=$1", array($afiche[$e]['fd_id'])) . '</h2>';
                 $id="table_".$afiche[$e]['fd_id']."_id";
                 echo _('Filtre rapide:').HtmlInput::filter_table($id, '0,1,2', '1'); 
 		echo '<table class="sortable" id="'.$id.'" class="result" >';
@@ -526,7 +526,7 @@ for ($e = 0; $e < count($afiche); $e++)
 			continue;
 		$detail_card = HtmlInput::card_detail($row->strAttribut(ATTR_DEF_QUICKCODE), $row->strAttribut(ATTR_DEF_NAME));
 
-		echo '<h2>' . $detail_card ;
+		echo '<h2 class="h-section">' . $detail_card ;
                 echo "poste "
                         . ":".HtmlInput::history_account($row->strAttribut(ATTR_DEF_ACCOUNT),$row->strAttribut(ATTR_DEF_ACCOUNT),'display:inline').Icon_Action::infobulle(27).'</h2>';
 

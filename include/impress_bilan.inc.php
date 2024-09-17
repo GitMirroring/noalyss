@@ -93,7 +93,7 @@ if ( isset($_GET['verif']))
         $date_from=$bilan->from;
         $date_to=$bilan->to;
     }
-    echo '<h2>'._('Etape 2 :Impression')."   ".$date_from.'-'.$date_to.'</h2>';
+    echo '<h2 class="h-section">'._('Etape 2 :Impression')."   ".$date_from.'-'.$date_to.'</h2>';
     
     $bilan->get_request_get();
     $bilan->verify();
