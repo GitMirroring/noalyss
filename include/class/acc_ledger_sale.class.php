@@ -914,7 +914,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $r.='<div style="float:none;clear:both">';
         $r.='</div>';
         
-        $r.='<h2>' . _('Détail articles vendus') . '</h2>';
+        $r.='<h2 class="h-section" class="h-section">' . _('Détail articles vendus') . '</h2>';
         $r.='<p class="decale">';
         $r.='<table class="result" >';
         $r.='<TR>';
@@ -1141,7 +1141,7 @@ EOF;
         if ($g_parameter->MY_ANALYTIC != 'nu' && ! $p_summary) // use of AA
             $r.='<input type="button" class="button" value="' . _('Vérifiez Imputation Analytique') . '" onClick="verify_ca(\'\');">';
         $r.='<div id="total_div_id" >';
-        $r.='<h2>Totaux</h2>';
+        $r.='<h2 class="h-section">Totaux</h2>';
         $other_tax_label="";
         $other_tax_amount="";
         if ( $this->has_other_tax() && isset($p_array['other_tax'])) {
@@ -1219,7 +1219,7 @@ EOF;
 
             $fname = new Fiche($this->db);
             $fname->get_by_qcode(${'e_mp_qcode_' . $e_mp});
-            $r.='<h2>' . "Payé par " . ${'e_mp_qcode_' . $e_mp} .
+            $r.='<h2 class="h-section">' . "Payé par " . ${'e_mp_qcode_' . $e_mp} .
                     " le ".${"mp_date"}.
                     " " . $fname->getName() . '</h2> ' . '<p class="decale">' . _('Déduction acompte ') . h($acompte) . '</p>' .
                     _('Libellé :') . h($e_comm_paiement) ;

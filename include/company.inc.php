@@ -148,7 +148,7 @@ $all->style=' class="input_text"';
 
 
         <div class="col">
-            <h2>Société</h2>
+            <h2 class="h-section">Société</h2>
             <div class="form-group">
                 <?php
                 $all=new IText();
@@ -233,7 +233,7 @@ $all->style=' class="input_text"';
 
             <div class="row">
                 <div class="col">
-                    <h2>Paramètre supplémentaire</h2>
+                    <h2 class="h-section">Paramètre supplémentaire</h2>
                     <?php
                         $object=Parameter_Extra_MTable::build();
                         $object->create_js_script();
@@ -255,7 +255,7 @@ $all->style=' class="input_text"';
         </div>
 
         <div class="col">
-            <h2>Fonctionnement</h2>
+            <h2 class="h-section">Fonctionnement</h2>
 
             <div class="form-group">
                 <label class="w-40" for="p_report">
