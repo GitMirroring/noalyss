@@ -11,6 +11,7 @@
  * Variables : $div = popup or box (det[0-9]
  * 
  */
+bcscale(2);
 \Noalyss\Dbg::echo_file(__FILE__);
 $select_box=new \Select_Box("sb_".$jr_id, _("Autre action"));
 $select_box->set_position("normal");

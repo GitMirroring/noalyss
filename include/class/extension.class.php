@@ -52,7 +52,15 @@ class Extension extends Menu_Ref_sql
                 'MODOP','RAPAV','SAV',
                 'TOOLPCMN','TOOLS','TRANSFORM',
                 'TVA');
-    
+
+    /**************************************************************************
+     * Variables from plugin.xml
+     *************************************************************************/
+    var $version; //<! version of the plugin in the XML
+    var $noalyss_version; //!< minimum version of NOALYSS for this plugin
+    var $order ; //!< $order in the menu (can be override by config menu)
+    var $depend; //!< default depending menu (can be override by config menu)
+
     public function verify()
     {
         // Verify that the elt we want to add is correct
@@ -436,6 +444,10 @@ class Extension extends Menu_Ref_sql
         $r .= "  me_javascript" . $this->me_javascript.PHP_EOL;
         $r .= "  me_type" . $this->me_type.PHP_EOL;
         $r .= "  me_descrition_etendue" . $this->me_description_etendue.PHP_EOL;
+        $r .= "  noalyss_version " . $this->noalyss_version.PHP_EOL;
+        $r .= "  version " . $this->version.PHP_EOL;
+        $r .= "  order " . $this->order.PHP_EOL;
+        $r .= "  depend " . $this->depend.PHP_EOL;
         return "Extension $r";
     }
 

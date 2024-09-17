@@ -1306,9 +1306,10 @@ div#wait_box
     left:30%;
     top:30%;
     border:1px solid #00008B;
-    width: 260px;
+    width:18%;
     opacity: 0.8;
     border-radius: 20px;
+    min-width:281px;
 }
 #wait_box h2
 {
@@ -3502,6 +3503,7 @@ li.li-active {
      padding: 0.5rem;
      color:navy !important;
      text-decoration: underline;
+     border-radius: 7px;
  }
 
  .hoverclass-drag {
@@ -3513,13 +3515,13 @@ li.li-active {
   * User's widget list
   *
   *********************************************************************************************************************/
+
  #widget_box_id {
-     #widget_box_id {
-         width: 100%;
-         margin-left: 0px;
-         margin-right: 0px;
-     }
+     width: 100%;
+     margin-left: 0px;
+     margin-right: 0px;
  }
+
 
  #contain_widget  li {
      padding : 0.75rem;
@@ -3637,15 +3639,9 @@ div.widget-full_size {
  }
 
  div.row.odd.hover:hover,div.row.even.hover:hover   {      background-color: var(--hover) !important;    }
-h2 {
 
+h2.legend {
+ background-color: #e4e9ee;
  color: navy;
- background-color: #b2d3d929 !important;
- border: solid 1px navy;
-}
-.super {
-    font-variant-caps: all-small-caps;
-    font-family: arial;
-    font-size: 80%;
-    vertical-align: super;
+ border: 1px steelblue solid;
 }
