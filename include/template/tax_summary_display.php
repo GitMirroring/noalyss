@@ -27,7 +27,7 @@
  *
  */?>
 <div class="content">
-<h2><?php echo _("Vente")?></h2>
+<h2 class="h-section"><?php echo _("Vente")?></h2>
 
 <?php
 bcscale(4);
@@ -182,7 +182,7 @@ $array =    $this->get_summary_sale();
 
 ?>
 <hr>
-<h2><?php echo _("Achat")?></h2>
+<h2 class="h-section"><?php echo _("Achat")?></h2>
 <?php
 $array=$this->get_row_purchase();
 $nb_array=count($array);

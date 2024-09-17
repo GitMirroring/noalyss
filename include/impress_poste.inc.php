@@ -164,7 +164,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
             $result=$Poste->HtmlTable(null,$_GET['ople']);
             $table=ob_get_clean();
             if ( $result == 0) {
-            echo '<h2 class="">'.$Poste->id." ".h($Poste->label).'</h2>';
+            echo '<h2 class="h-section">'.$Poste->id." ".h($Poste->label).'</h2>';
             echo $table;
             }
 	    echo '</div>';
@@ -182,7 +182,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
             $Poste->load();
 
             echo '<table class="result" >';
-            echo '<tr><td  class="mtitle" style="width:auto" colspan="6"><h2 class="info">'. $_GET['poste_id'].' '.h($Poste->label).'</h2></td></tr>';
+            echo '<tr><td  style="width:auto" colspan="6"><h2 class="h-section">'. $_GET['poste_id'].' '.h($Poste->label).'</h2></td></tr>';
             /* avoid duplicates */
             $old=array();
             foreach ($Poste->row as $detail)
@@ -210,7 +210,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
         if ( ! isset($_REQUEST['oper_detail']) )
         {
             echo '<div class="content">';
-            echo '<h2 class=""> ' .
+            echo '<h2 class="h-section" class=""> ' .
                 '(' . $fiche->id . ')' .
                 $fiche->getName() . ' ' .
                 ' [ ' . $fiche->get_quick_code() . ' ] ' .
@@ -224,11 +224,11 @@ if ( isset( $_REQUEST['bt_html'] ) )
         {
             // Detail //
             echo '<div class="content">';
-            echo '<h2 class=""> ' .
+            echo '<h2 class="h-section" class=""> ' .
                 '(' . $fiche->id . ')' .
                 $fiche->getName() . ' ' .
                 ' [ ' . $fiche->get_quick_code() . ' ] ' .
-                '<h2>';
+                '</h2>';
 
             $fiche->HtmlTableHeader();
             $fiche->HtmlTableDetail();
@@ -260,7 +260,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
                 $result=$Poste->HtmlTable(null,$_GET['ople']);
                 $table=ob_get_clean();
                 if ( $result == 0) {
-                echo '<h2 class="">'.$Poste->id." ".h($Poste->label).'</h2>';
+                echo '<h2 class="h-section" class="">'.$Poste->id." ".h($Poste->label).'</h2>';
                 echo $table;
                 }
                 
@@ -274,14 +274,14 @@ if ( isset( $_REQUEST['bt_html'] ) )
             // Detail
             //----------------------------------------------------------------------
             echo Acc_Account_Ledger::HtmlTableHeader();
-            echo '<table  style="width:100%;margin-left:0%">';
+            echo '<table  class="result">';
             foreach ($a_poste as $poste_id )
             {
                 $Poste=new Acc_Account_Ledger ($cn,$poste_id['pcm_val']);
                 $Poste->load();
                 $Poste->get_row_date( $_GET['from_periode'], $_GET['to_periode'],$_GET['ople']);
                 if ( empty($Poste->row)) continue;
-                echo '<tr><td  class="mtitle" style="width:auto" colspan="6"><h2 class="title">'. $poste_id['pcm_val'].' '.h($Poste->label).'</h2></td></tr>';
+                echo '<tr><td  style="width:auto" colspan="6"><h2 class="h-section">'. $poste_id['pcm_val'].' '.h($Poste->label).'</h2></td></tr>';
 
                 $detail=$Poste->row[0];
 
@@ -292,8 +292,8 @@ if ( isset( $_REQUEST['bt_html'] ) )
                     /* avoid duplicates */
                     if ( in_array($detail['jr_id'],$old) == TRUE ) continue;
                     $old[]=$detail['jr_id'];
-                    echo tr(td("Journal :".$detail['jrn_def_name'],''),'style="width:auto" colspan="6"');
-                    echo '<tr><td class="mtitle" style="width:auto;color:whitesmoke" colspan="6">'. $detail['j_date'].' '.$detail['jr_internal'].' '.hb($detail['description']).' '.hi($detail['jr_pj_number']).'</td></tr>';
+                   // echo tr(td("Journal :".$detail['jrn_def_name'],''),'style="width:auto" colspan="6"');
+                    echo '<tr><td style="text-align:center;background-color:lightgrey;width:auto;" colspan="6">'. $detail['jrn_def_name']."-".$detail['j_date'].' '.$detail['jr_internal'].' '.hb($detail['description']).' '.hi($detail['jr_pj_number']).'</td></tr>';
 
                     $op=new Acc_Operation($cn);
                     $op->poste=$poste_id['pcm_val'];

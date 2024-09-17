@@ -148,7 +148,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
 
         echo '<tr >
         <td colspan="8" style="width:auto">
-        <h2 class="">'. $accounting_id['pcm_val'].' '.h($accounting_id['pcm_lib']).'</h2>
+        <h2 class="h-section" >'. $accounting_id['pcm_val'].' '.h($accounting_id['pcm_lib']).'</h2>
         </td>
         </tr>';
 

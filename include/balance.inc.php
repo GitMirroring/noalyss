@@ -317,7 +317,7 @@ if ( isset($_GET['view'] ) )
     $periode=new Periode($cn);
     $a=$periode->get_date_limit($from_periode);
     $b=$periode->get_date_limit($to_periode);
-    echo '<h2>';
+    echo '<h2 class="h-section">';
     printf ( _("période du %s au %s"),$a['p_start'],$b['p_end']);
     echo '</h2>';
 	echo '<span style="display:block">';

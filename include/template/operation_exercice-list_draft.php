@@ -37,7 +37,7 @@ $aUrl = ["ac" => $http->request("ac"), "gDossier" => Dossier::id()];
 $checkbox=new ICheckBox("operation_list[]");
 $checkbox->set_range("operation_range");
 ?>
-<h2><?=_("Liste des opérations")?></h2>
+<h2 class="h-section"><?=_("Liste des opérations")?></h2>
 <form method="POST">
     <?php
     echo \HtmlInput::array_to_hidden(["gDossier", "sa"], $_REQUEST);

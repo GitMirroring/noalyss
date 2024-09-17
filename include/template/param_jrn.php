@@ -222,7 +222,7 @@ endif;
     if ( $new ==1 || $type=='ACH' ) : 
         ?>
     <div id='ACH_div' >
-    <h2 > Fiches </h2>
+    <h2 class="h-section" > Fiches </h2>
     <TABLE class="result" style="width:80%;margin-left:10%;">
         <tr>
             <th>
@@ -279,7 +279,7 @@ endif;
     if ( $new ==1  || $type=='VEN' ) : 
         ?>
     <div id='VEN_div' >
-    <h2> Fiches </h2>
+    <h2 class="h-section"> Fiches </h2>
     <TABLE class="result" style="width:80%;margin-left:10%;">
         
         <tr>
@@ -337,7 +337,7 @@ endif;
     if ( $new ==1 || $type=='ODS' ) : 
         ?>
     <div id='ODS_div' >
-    <h2> Fiches </h2>
+    <h2 class="h-section"> Fiches </h2>
    <TABLE class="result" style="width:60%;margin-left:20%;">
         <tr>
             <th>
@@ -383,7 +383,7 @@ endif;
     if ( $new ==1 || $type=='FIN' ) : 
         ?>
     <div id='FIN_div' >
-    <h2> Fiches </h2>
+    <h2 class="h-section"> Fiches </h2>
      <TABLE class="result" style="width:60%;margin-left:20%;">
         <tr>
             <th>

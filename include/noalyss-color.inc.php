@@ -36,7 +36,7 @@ $http = new HttpInput();
         <?= dossier::hidden(); ?>
         <div class="row">
             <div class="col">
-                <h2><?= _("Apparence") ?></h2>
+                <h2 class="h-section"><?= _("Apparence") ?></h2>
                 <?php
                 $noalyss_appearance = new Noalyss_Appearance();
                 $noalyss_appearance->load();
@@ -55,7 +55,7 @@ $http = new HttpInput();
 
             </div>
             <div class="col">
-                <h2><?= _("Ecran") ?></h2>
+                <h2  class="h-section"><?= _("Ecran") ?></h2>
                 <img src="image/default-screen.png" width="100%">
             </div>
         </div>

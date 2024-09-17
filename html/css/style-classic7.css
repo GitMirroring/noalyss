@@ -3640,8 +3640,9 @@ div.widget-full_size {
 
  div.row.odd.hover:hover,div.row.even.hover:hover   {      background-color: var(--hover) !important;    }
 
-h2.legend {
+h2.h-section {
  background-color: #e4e9ee;
  color: navy;
  border: 1px steelblue solid;
+ font-style: normal;
 }

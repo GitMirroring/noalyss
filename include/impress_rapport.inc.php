@@ -96,7 +96,7 @@ if ( isset( $_GET['bt_html'] ) )
     {
         
         $t=($from_periode==$to_periode)?"":" -> ".getPeriodeName($cn,$to_periode,'p_end');
-        echo '<h2 >'.$form_id
+        echo '<h2 class="h-section" >'.$form_id
                 ." ".$form_label
                 ." - ".getPeriodeName($cn,$from_periode,'p_start')
                 ." ".$t
@@ -104,7 +104,7 @@ if ( isset( $_GET['bt_html'] ) )
     }
     else
     {
-        echo '<h2 >'.$form_id." ".$form_label.
+        echo '<h2 class="h-section" >'.$form_id." ".$form_label.
         ' Date :'.
         $from_date.
         " au ".

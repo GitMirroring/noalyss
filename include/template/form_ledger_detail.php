@@ -101,7 +101,7 @@ Acc_Operation_Note::input($note)
 <?php
 $hidden=($this->has_quantity()==0)?'d-none':'';
 ?>
-<h2><?php echo $f_legend_detail?></h2>
+<h2 class="h-section"><?php echo $f_legend_detail?></h2>
 <table id="sold_item" >
 <tr>
 <th style="width:auto"colspan="1">Code <?php echo Icon_Action::infobulle(0)?></th>

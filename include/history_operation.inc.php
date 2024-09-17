@@ -91,13 +91,13 @@ if (!isset($p_array['date_start']))
 	list($date_start, $date_end) = $per->get_date_limit();
 	$p_array['date_start'] = $date_start;
 	$p_array['date_end'] = $date_end;
-	$msg='<h2 class="">'.sprintf(_("Période %s au %s "),$date_start,$date_end).'</h2>';
+	$msg='<h2 class="h-section" class="">'.sprintf(_("Période %s au %s "),$date_start,$date_end).'</h2>';
 }
 else
 {
     $date_start=$http->get("date_start","string","");
     $date_end=$http->get("date_end","string","");
-    $msg='<h2 class="">'.sprintf(_("Période %s au %s "),$date_start,$date_end) .'</h2>';
+    $msg='<h2 class="h-section" class="">'.sprintf(_("Période %s au %s "),$date_start,$date_end) .'</h2>';
 
 }
 /*  compute the sql stmt */
