@@ -548,7 +548,7 @@ catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>
 
 <?php if (($p_view != 'READ' && $str_select_doc != '' )|| ! empty ($aAttachedFile)) : ?>
 <div  id="div_action_attached_doc">
-  <h2>
+  <h2 class="h-section">
      <?php
      echo _('Pièces attachées');
      printf("(%s)",count($aAttachedFile));
