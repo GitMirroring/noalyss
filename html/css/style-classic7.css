@@ -190,6 +190,9 @@ td.tool a.mtitle:hover {
     width: 100%;
 }
 
+/***
+ * Style for module
+ */
 #module {
 /*    position:absolute;*/
     top:0px;
@@ -210,7 +213,72 @@ td.tool a.mtitle:hover {
     background-color: darkgray;
     display:block;
 }
+#module .nav-pills #module.nav-link {
+     color: navy !important;
+ }
+ #module .nav-pills a.nav-link {
+     border:1px solid blue;
+     margin:1px;
+     border-radius: 0px;
+     font-size: 75%;
+     color:navy !important;
 
+ }
+ #module .nav-pills a.nav-link:hover {
+         color:white !important;
+ }
+ #module .nav-item-active , #module .nav-item-active > a.nav-link{
+     background-color: #5d90cd ;
+     color:white !important;
+     border: 0px solid black;
+ }
+ /* animate module : sliding */
+ #module .nav-item-module {
+     position:relative;
+     background-color: white;
+     color:navy;
+ }
+ #module .nav-item-module.nav-item-slide::before {
+     content:'';
+     top:0;
+     left:0;
+     bottom:0;
+     right:0;
+     position:absolute;
+     background-color:#5d90cd;
+     z-index:-1;
+     transform:scaleX(0);
+     /*     transform-origin:left; */
+     transition:transform 300ms ease-in-out;
+ }
+ #module  .nav-item-module.nav-item-slide:hover::before,
+ #module  .nav-item-module.nav-item-slide:focus::before {
+     transform:scaleX(1);
+ }
+ #module .nav-item-slide {
+     z-index:0;
+     transition:color 300ms ease-in-out;
+ }
+
+
+
+
+ #module .nav-fill  #module .nav-item {
+     background: white !important;
+     color: blue !important;
+ }
+
+ #module .nav-link:hover {
+     /*background-color:white;*/
+     color:white;
+ }
+ #module  .nav-link:hover {
+     background-color: transparent;
+     color:white;
+ }
+/**
+    menu left (not used)
+ */
 div.lmenu {
     float:left;
     clear:left;
@@ -1308,7 +1376,7 @@ div#wait_box
     left:30%;
     top:30%;
     border:1px solid #00008B;
-    width:18%;
+    width: 260px;
     opacity: 0.8;
     border-radius: 20px;
     min-width:281px;
@@ -1475,7 +1543,7 @@ h2.title {
     padding-top: 9px;
     margin-top: 0px;
     padding-bottom: 2px;
-    background-color: #023575 !important;
+    background-color: #023575;
     font-size: 1.1rem;
     height: 40px;
     vertical-align: middle;
@@ -3225,7 +3293,7 @@ margin:1px;
      border-radius: 0px;
 } 
 .nav-pills .nav-link {
-    color:white !important;
+    color:white ;
    
 }
 li.li-active {
@@ -3264,32 +3332,7 @@ li.li-active {
 .nav-level2 .active {
     border-radius:0px !important;
 }
-/**
- * Module 
- */
-.nav-item-module {
-}
 
-#module .nav-pills a.nav-link {
-    background-color:white !important;
-    color:navy !important;
-    border:1px solid blue;
-    margin:1px;
-    border-radius: 0px;
-    font-size: 75%;
-}
-#module .nav-pills a.nav-link:hover {
-    background-color: navy !important;
-    color:white !important;
-    border-radius: 0px;
-    transition: all 300ms ease-in-out;
-
-}
-#module .nav-item-active , #module .nav-item-active > a.nav-link{
-    background-color: #5d90cd !important;
-    color:white !important;
-    border: 0px solid black;
-}
 /**
  * Module for smartphone menu
  */
@@ -3507,7 +3550,6 @@ li.li-active {
      padding: 0.5rem;
      color:navy !important;
      text-decoration: underline;
-     border-radius: 7px;
  }
 
  .hoverclass-drag {
@@ -3519,13 +3561,13 @@ li.li-active {
   * User's widget list
   *
   *********************************************************************************************************************/
-
  #widget_box_id {
-     width: 100%;
-     margin-left: 0px;
-     margin-right: 0px;
+     #widget_box_id {
+         width: 100%;
+         margin-left: 0px;
+         margin-right: 0px;
+     }
  }
-
 
  #contain_widget  li {
      padding : 0.75rem;
@@ -3674,7 +3716,7 @@ h2.h-section {
     right:0;
     position:absolute;
     height:var(--border-size);
-    background-color:orangered;
+    background-color:crimson;
     transform:scaleX(0);
     transition:transform 300ms ease-in-out;
 }
