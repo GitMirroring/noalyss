@@ -2071,6 +2071,9 @@ margin-left: 2px;
        li.tabs_selected {
             padding: 12px 15px 15px 15px;
        }
+    li.tabs-width11 {
+        min-width: 7rem;
+    }
 }
 
 .inner_box li.tabs {
@@ -2092,6 +2095,7 @@ ul.tabs a:hover {
     display:inline;
      background-color: lightblue;
 }
+
 /*
  * ????
  */

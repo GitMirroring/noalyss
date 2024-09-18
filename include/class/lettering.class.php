@@ -48,7 +48,8 @@ class Lettering
     var $start;
     var $end;
     var $sql_ledger;
-    
+    var $object_type;
+    var $content;
     /**
      * constructor
      * @param $p_init resource to database
@@ -483,7 +484,7 @@ class Lettering
  */
 class Lettering_Account extends Lettering
 {
-
+    var $account;
     function __construct($p_init, $p_account=null)
     {
         parent::__construct($p_init);
@@ -673,6 +674,7 @@ class Lettering_Card extends Lettering
      * @param $p_init db resource
      * @param $p_qcode quick_code of the jrnx.j_id
      */
+    public $quick_code;
     function __construct($p_init, $p_qcode=null)
     {
         parent::__construct($p_init);

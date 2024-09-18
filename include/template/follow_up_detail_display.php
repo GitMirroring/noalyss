@@ -42,7 +42,7 @@ $menu=new Default_Menu();
 ?>
 <div id="follow_up_detail">
     
-    <?php echo h2(_("Détail opération")) ?>
+    <?php echo h2(_("Détail opération"),'class="h-section"') ?>
     <?php echo HtmlInput::hidden("nb_item", $article_count); ?>
 
     <table style="width:100%"  id="sold_item">

@@ -47,6 +47,8 @@ class Fiche
     private $display_mode ; /*!< how the card is displaid */
     var $tot_cred;
     var $tot_deb;
+    var $ledger_name; ///!< this variable is a mistake, it shouldn't exist, need code rewrite
+    var $ledger_description; ///!< this variable is a mistake, it shouldn't exist, need code rewrite
 
     function __construct($p_cn,$p_id=0)
     {
