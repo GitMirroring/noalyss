@@ -104,7 +104,7 @@ endif;?>
 			echo '<ul class="nav nav-pills nav-fill  flex-row" >';
 			continue;
 		    }
-                    $style="nav-item-module";
+                    $style="nav-item-module nav-item-slide";
 		    if ($row['me_code']==$selected_module)
 		    {
 			$style='nav-item-active';
@@ -144,7 +144,7 @@ endif;?>
                             $js="";
                         $style="";
 
-                        $style="nav-item-module";
+                        $style="nav-item-module ";
                         if ( $row['me_code']=='new_line')
                         {
                        			continue;
