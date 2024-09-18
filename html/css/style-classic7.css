@@ -3715,7 +3715,7 @@ h2.h-section {
     right:0;
     position:absolute;
     height:var(--border-size);
-    background-color:lightgrey;
+    background-color:lightblue;
     transform:scaleX(0);
     transition:transform 300ms ease-in-out;
 }
