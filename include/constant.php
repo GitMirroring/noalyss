@@ -96,7 +96,7 @@ if (!defined('NOALYSS_CAPTCHA')) {
 }
 
 global $g_failed, $g_succeed;
-$g_failed = "<span style=\"font-size:18px;color:red\">&#x2716;</span>";
+$g_failed = "<span style=\"font-size:18px;color:red\">x</span>";
 $g_succeed = "<span style=\"font-size:18px;color:green\">&#x2713;</span>";
 define('SMALLX', '#xe816;');
 define('BUTTONADD', "&#10010;");
