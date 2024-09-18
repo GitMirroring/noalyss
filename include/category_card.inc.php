@@ -89,7 +89,7 @@ echo '<ul class="tabs noprint" style="padding-top:0px">';
 for ($i=0; $i<count($menu); $i++)
 {
     $style=($def==($i+1))?"tabs_selected":"tabs";
-    echo '<li class="'.$style.'">';
+    echo '<li class="tabs-width11 '.$style.'">';
     echo '<a href="'.$menu[$i]['href'].'" title="'.$menu[$i]['alt'].'">';
     echo h($menu[$i]['label']);
     echo '</a>';

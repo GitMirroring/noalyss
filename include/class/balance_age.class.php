@@ -34,7 +34,7 @@ class Balance_Age
 {
 
     private $cn;
-
+    public $afiche;
     function __construct($p_cn)
     {
         $this->cn=$p_cn;
