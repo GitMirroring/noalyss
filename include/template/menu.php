@@ -50,7 +50,7 @@
                         $a_request=explode('/', $access_code);
                         if ( isset($a_request [$level+1]) && $a_request[$level+1]==$amenu[$i]['me_code']) {
                                     $class_link="nav-link active";
-                                    $class_list_element="nav-item li-active";
+                                    $class_list_element="nav-item li-active nav-item-underline";
                         }
                         if ( $level == 0) {
                             $url=$a_request[0];
