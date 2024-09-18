@@ -3298,7 +3298,6 @@ margin:1px;
 }
 li.li-active {
     background-color: lightgray !important;
-    
 }
 .nav-level2 {
    background-color: hsl(240, 39%, 41.2%);
@@ -3716,7 +3715,7 @@ h2.h-section {
     right:0;
     position:absolute;
     height:var(--border-size);
-    background-color:crimson;
+    background-color:lightgrey;
     transform:scaleX(0);
     transition:transform 300ms ease-in-out;
 }
@@ -3727,3 +3726,7 @@ h2.h-section {
     transform:scaleX(1);
 }
 
+ .nav-item.li-active.nav-item-underline::before {
+    transform: scale(1);
+     background-color: darkred;
+ }
