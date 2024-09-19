@@ -824,11 +824,22 @@ function check()
         $ret=$this->table->seek($p_order, $p_array);
         return $ret;
     }
+
+    /**
+     * @brief echo the HTML to have a button add
+     * @return void
+     */
+    protected function create_button_add() {
+        echo HtmlInput::button_action(" "._("Ajout"),
+            sprintf("%s.input('-1','%s')",
+                $this->object_name,
+                $this->object_name), "xx", "smallbutton", BUTTONADD);
+    }
     /**
      * @brief display the data of the table
      * @param $p_order is the cond or order of the rows, 
      * if empty the primary key will be used
-     * @param $p_array array of the bind variables
+     * @param $p_array array of the bind variables of the SQL ($p_order)
      * @note the function create_js_script MUST be called before this function
      */
     function display_table($p_order="", $p_array=NULL)
@@ -837,10 +848,7 @@ function check()
         $nb=Database::num_row($ret);
         if ($this->can_append_row()==TRUE && $this->button_add_top == true)
         {
-            echo HtmlInput::button_action(" "._("Ajout"),
-                    sprintf("%s.input('-1','%s')", 
-                            $this->object_name,
-                            $this->object_name), "xx", "smallbutton", BUTTONADD);
+           echo $this->create_button_add();
         }
         $nb_order=count($this->a_order);
         $virg=""; $result="";
@@ -880,10 +888,7 @@ function check()
         echo "</table>";
         if ($this->can_append_row()==TRUE)
         {
-            echo HtmlInput::button_action(" "._("Ajout"),
-                    sprintf("%s.input('-1','%s')", 
-                            $this->object_name,
-                            $this->object_name), "xx", "smallbutton", BUTTONADD);
+            echo $this->create_button_add();
         }
         printf('<script> alternate_row_color("tb%s");</script>',
                 $this->object_name);
