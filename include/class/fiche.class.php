@@ -1339,11 +1339,6 @@ class Fiche
         // set a filter ?
         $search=$p_sql;
 
-        $exercice=$g_user->get_exercice();
-        $tPeriode=new Periode($this->cn);
-        list($max,$min)=$tPeriode->get_limit($exercice);
-
-
         if ( noalyss_trim($p_search) != "" )
         {
             $search.=" and f_id in
@@ -1380,7 +1375,9 @@ class Fiche
 
              /* Filter on the default year */
             if ( $g_parameter->MY_REPORT == 'N') {
-                $amount = $tiers->get_solde_detail();
+                list($l_from,$l_to)=(new Periode($this->cn))->get_limit($g_user->get_exercice());
+                $condition = sprintf ("  j_date <= to_date('%s','DD.MM.YYYY')  ",                                $l_to->last_day());
+                $amount = $tiers->get_solde_detail($condition);
             } else {
                 $amount=$tiers->get_solde_detail($filter_year);
             }
