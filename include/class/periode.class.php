@@ -318,28 +318,29 @@ EOF;
         return 0;
     }
 
-    /*!\brief return the max and the min periode of the exercice given
+    /*!
+     * \brief return the max (to periode) and the min periode (from periode) of the exercice given
      * in parameter
-     * \param $p_exercice is the exercice
+     * \param $p_exercice is the exercice (parm_periode.p_exercice)
      * \return an array of Periode object
      */
 
     function get_limit($p_exercice)
     {
 
-        $max=$this->cn->get_value("select p_id from parm_periode where p_exercice=$1 order by p_start asc limit 1",
+        $from_periode_id=$this->cn->get_value("select p_id from parm_periode where p_exercice=$1 order by p_start asc limit 1",
                 array($p_exercice));
-        $min=$this->cn->get_value("select p_id from parm_periode where p_exercice=$1 order by p_start desc limit 1",
+        $to_periode_id=$this->cn->get_value("select p_id from parm_periode where p_exercice=$1 order by p_start desc limit 1",
                 array($p_exercice));
-        $rMax=new Periode($this->cn);
-        $rMax->p_id=$max;
-        if ($rMax->load() == -1)
+        $periodeFrom=new Periode($this->cn);
+        $periodeFrom->p_id=$from_periode_id;
+        if ($periodeFrom->load() == -1)
             throw new Exception('Periode n\'existe pas');
-        $rMin=new Periode($this->cn);
-        $rMin->p_id=$min;
-        if ($rMin->load() == -1)
+        $periodeTo=new Periode($this->cn);
+        $periodeTo->p_id=$to_periode_id;
+        if ($periodeTo->load() == -1)
             throw new Exception('Periode n\'existe pas');
-        return array($rMax, $rMin);
+        return array($periodeFrom, $periodeTo);
     }
 
     /*!
