@@ -156,7 +156,7 @@ $it_pass->value="";
 if  ($UserChange->admin == 0 ) :
 ?>
         <!-- Show all database and rights -->
-        <H2 class="info"> Accès aux dossiers</H2>
+        <H2 class="h-section"> Accès aux dossiers</H2>
         <p class="notice">
             Les autres droits doivent être réglés dans les dossiers (paramètre->sécurité), le fait de changer un utilisateur d'administrateur à utilisateur
 			normal ne change pas le profil administrateur dans les dossiers.

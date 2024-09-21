@@ -251,7 +251,7 @@ $Res = $cn->exec_sql("select mod_id,mod_name,mod_desc from
 
 $count = Database::num_row($Res);
 echo '<div class="content">';
-echo "<H2>"._('Modèles')."</H2>";
+echo '<h2 class="">'._('Modèles')."</H2>";
 if ($sa == 'list')
 {
         echo '<p>';
@@ -262,7 +262,7 @@ if ($sa == 'list')
             " dans un autre dossier, vous pouvez en faire un modèle." .
             " Seules les fiches, la structure des journaux, les p&eacute;riodes,... seront reprises " .
             "et aucune donn&eacute;e du dossier sur lequel le dossier est bas&eacute;. Les données contenues dans les extensions ne sont pas effacées") . "</p>";
-        echo h2(_("Modèles locaux"));
+        echo h2(_("Modèles locaux"),'class="h-section"');
 	if ($count == 0)
 	{
 		echo _("Aucun modèle disponible");
@@ -319,7 +319,7 @@ if ($sa == 'list')
 		}// for
 		echo "</table>";
 	}// if count = 0
-        echo h2(_("Modèles disponibles dans le dépôt"));
+        echo h2(_("Modèles disponibles dans le dépôt"),' class="h-section"');
         
         require NOALYSS_INCLUDE . "/upgrade-template.php";
     
