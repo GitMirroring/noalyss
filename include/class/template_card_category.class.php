@@ -209,9 +209,9 @@ EOF;
     {
         $cn=Dossier::connect();
         $frd_id=$this->get_table()->getp("frd_id");
-        $cn->exec_sql("insert into attr_min (frd_id,ad_id,ad_default_order) values ($1,$2)",
-                [$frd_id, ATTR_DEF_NAME],1);
-        $cn->exec_sql("insert into attr_min (frd_id,ad_id) values ($1,$2)",
+        $cn->exec_sql("insert into attr_min (frd_id,ad_id,ad_default_order) values ($1,$2,$3)",
+                [$frd_id, ATTR_DEF_NAME,1]);
+        $cn->exec_sql("insert into attr_min (frd_id,ad_id,ad_default_order) values ($1,$2,$3)",
                 [$frd_id, ATTR_DEF_QUICKCODE,10000]);
     }
 
