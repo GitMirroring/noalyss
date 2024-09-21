@@ -5564,6 +5564,15 @@ CREATE SEQUENCE public.s_jrn_4
 
 
 
+CREATE SEQUENCE public.s_jrn_5
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
 CREATE SEQUENCE public.s_jrn_def
     START WITH 5
     INCREMENT BY 1
@@ -5610,6 +5619,15 @@ CREATE SEQUENCE public.s_jrn_pj3
 
 
 CREATE SEQUENCE public.s_jrn_pj4
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+CREATE SEQUENCE public.s_jrn_pj5
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6494,8 +6512,8 @@ CREATE VIEW public.v_contact AS
              JOIN public.fiche_def fd ON ((f.fd_id = fd.fd_id)))
           WHERE (fd.frd_id = 16)
         )
- SELECT f_id,
-    f_enable,
+ SELECT cd.f_id,
+    cd.f_enable,
     ( SELECT fiche_detail.ad_value
            FROM public.fiche_detail
           WHERE ((fiche_detail.ad_id = 32) AND (fiche_detail.f_id = cd.f_id))) AS contact_fname,
@@ -6520,7 +6538,7 @@ CREATE VIEW public.v_contact AS
     ( SELECT fiche_detail.ad_value
            FROM public.fiche_detail
           WHERE ((fiche_detail.ad_id = 26) AND (fiche_detail.f_id = cd.f_id))) AS contact_fax,
-    fd_id AS card_category
+    cd.fd_id AS card_category
    FROM contact_data cd;
 
 
@@ -6620,10 +6638,10 @@ COMMENT ON VIEW public.vw_fiche_attr IS 'Some attribute for all cards';
 
 
 CREATE VIEW public.vw_fiche_name AS
- SELECT f_id,
-    ad_value AS name
+ SELECT fiche_detail.f_id,
+    fiche_detail.ad_value AS name
    FROM public.fiche_detail
-  WHERE (ad_id = 1);
+  WHERE (fiche_detail.ad_id = 1);
 
 
 
@@ -7014,16 +7032,16 @@ CREATE VIEW public.v_quant_detail AS
 
 
 CREATE VIEW public.v_tva_rate AS
- SELECT tva_id,
-    tva_rate,
-    tva_code,
-    tva_label,
-    tva_comment,
-    split_part(tva_poste, ','::text, 1) AS tva_purchase,
-    split_part(tva_poste, ','::text, 2) AS tva_sale,
-    tva_both_side,
-    tva_payment_purchase,
-    tva_payment_sale
+ SELECT tva_rate.tva_id,
+    tva_rate.tva_rate,
+    tva_rate.tva_code,
+    tva_rate.tva_label,
+    tva_rate.tva_comment,
+    split_part(tva_rate.tva_poste, ','::text, 1) AS tva_purchase,
+    split_part(tva_rate.tva_poste, ','::text, 2) AS tva_sale,
+    tva_rate.tva_both_side,
+    tva_rate.tva_payment_purchase,
+    tva_rate.tva_payment_sale
    FROM public.tva_rate;
 
 
