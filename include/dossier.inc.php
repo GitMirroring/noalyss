@@ -218,7 +218,7 @@ if ( isset ($_POST["DATABASE"]) )
     } // if $l_id != 0
 } // $_POST[DATABASE]
 ?>
-<h2> <?php echo _('Dossier Management')?></h2>
+<h2 class="h-section"> <?php echo _('Dossier Management')?></h2>
 
 <?php
 //---------------------------------------------------------------------------
@@ -235,7 +235,7 @@ if ( $sa == 'list' )
 	$header->add(_("Description"),$url," order by dos_description asc"," order by dos_description  desc","da","dd");
         $repo=new Dossier(0);
 	$repocn=new Database();
-	$ord=(isset($_REQUEST['ord']))?$_REQUEST['ord']:'na';
+	$ord=$http->request('ord','string','na');
 	$sql_order=$header->get_sql_order($ord);
 	$Res=$repocn->get_array("select *  from ac_dossier $sql_order");
 
