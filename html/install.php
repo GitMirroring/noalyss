@@ -413,7 +413,7 @@ $module=get_loaded_extensions();
 
 $str_error_message=_('Vous devez installer ou activer l\'extension').'<span style="font-weight:bold"> %s </span>';
 
-$a_need_module=array("mbstring","pgsql","bcmath","gettext","zip","gd","dom","xml","SimpleXML","xmlwriter","xmlreader");
+$a_need_module=array("mbstring","pgsql","bcmath","gettext","zip","gd","dom","xml","SimpleXML","xmlwriter","xmlreader","curl");
 
 $nb_need_module=count($a_need_module);
 
