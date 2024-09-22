@@ -1690,42 +1690,6 @@ INSERT INTO public.version (val, v_description, v_date) VALUES (202, 'Bug with r
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 SELECT pg_catalog.setval('public.acc_other_tax_ac_id_seq', 1, false);
 
 
@@ -2263,50 +2227,6 @@ SELECT pg_catalog.setval('public.user_widget_uw_id_seq', 1, false);
 
 
 SELECT pg_catalog.setval('public.widget_dashboard_wd_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.assujetti_a_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.assujetti_chld_ac_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.declarant_d_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.declaration_amount_da_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.form_detail_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.form_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.intracomm_chld_ic_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.intracomm_i_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.parameter_chld_pi_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.representative_rp_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval('tva_belge.version_id_seq', 1, false);
 
 
 
