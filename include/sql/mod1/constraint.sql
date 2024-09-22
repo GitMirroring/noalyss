@@ -685,6 +685,66 @@ ALTER TABLE ONLY public.widget_dashboard
 
 
 
+ALTER TABLE ONLY tva_belge.assujetti_chld
+    ADD CONSTRAINT assujetti_chld_pk PRIMARY KEY (ac_id);
+
+
+
+ALTER TABLE ONLY tva_belge.assujetti
+    ADD CONSTRAINT assujetti_pk PRIMARY KEY (a_id);
+
+
+
+ALTER TABLE ONLY tva_belge.declarant
+    ADD CONSTRAINT declarant_pkey PRIMARY KEY (d_id);
+
+
+
+ALTER TABLE ONLY tva_belge.declaration_amount
+    ADD CONSTRAINT declaration_amount_pkey PRIMARY KEY (da_id);
+
+
+
+ALTER TABLE ONLY tva_belge.form_detail
+    ADD CONSTRAINT form_detail_pkey PRIMARY KEY (id);
+
+
+
+ALTER TABLE ONLY tva_belge.form
+    ADD CONSTRAINT form_pkey PRIMARY KEY (id);
+
+
+
+ALTER TABLE ONLY tva_belge.intracomm_chld
+    ADD CONSTRAINT intracom_chld_pk PRIMARY KEY (ic_id);
+
+
+
+ALTER TABLE ONLY tva_belge.intracomm
+    ADD CONSTRAINT intracom_pk PRIMARY KEY (i_id);
+
+
+
+ALTER TABLE ONLY tva_belge.parameter_chld
+    ADD CONSTRAINT parameter_chld_pkey PRIMARY KEY (pi_id);
+
+
+
+ALTER TABLE ONLY tva_belge.parameter
+    ADD CONSTRAINT parameter_pkey PRIMARY KEY (pcode);
+
+
+
+ALTER TABLE ONLY tva_belge.representative
+    ADD CONSTRAINT representative_pkey PRIMARY KEY (rp_id);
+
+
+
+ALTER TABLE ONLY tva_belge.version
+    ADD CONSTRAINT version_pkey PRIMARY KEY (id);
+
+
+
 CREATE UNIQUE INDEX fd_id_ad_id_x ON public.jnt_fic_attr USING btree (fd_id, ad_id);
 
 
@@ -1577,6 +1637,21 @@ ALTER TABLE ONLY public.user_sec_action_profile
 
 ALTER TABLE ONLY public.user_widget
     ADD CONSTRAINT user_widget_dashboard_widget_id_fkey FOREIGN KEY (dashboard_widget_id) REFERENCES public.widget_dashboard(wd_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY tva_belge.assujetti_chld
+    ADD CONSTRAINT assujetti_fk FOREIGN KEY (a_id) REFERENCES tva_belge.assujetti(a_id) ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY tva_belge.intracomm_chld
+    ADD CONSTRAINT intracom_fk FOREIGN KEY (i_id) REFERENCES tva_belge.intracomm(i_id) ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY tva_belge.parameter_chld
+    ADD CONSTRAINT parameter_chld_tva_id_fkey FOREIGN KEY (tva_id) REFERENCES public.tva_rate(tva_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 
