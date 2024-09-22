@@ -248,8 +248,8 @@ td.tool a.mtitle:hover {
      background-color:#5d90cd;
      z-index:-1;
      transform:scaleX(0);
-     /*     transform-origin:left; */
      transition:transform 300ms ease-in-out;
+     mix-blend-mode: darken;
  }
  #module  .nav-item-module.nav-item-slide:hover::before,
  #module  .nav-item-module.nav-item-slide:focus::before {
