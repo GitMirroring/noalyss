@@ -554,9 +554,11 @@ EOF;
 </data>
 EOF;
 		break;
-	
 
-	case 'dsp_tva':
+/**************************************************************************
+ * show dialog box to let the choice of a VAT to use
+ *************************************************************************/
+    case 'dsp_tva':
 		$cn = Dossier::connect();
             // Filter the VAT 
                 $filter=$http->get("filter","string","none");
@@ -565,7 +567,7 @@ EOF;
                         from v_tva_rate 
                         where 
                         tva_sale <> '#'
-                            order by tva_rate desc");
+                            order by tva_id asc");
                     
                 } elseif ($filter == "purchase") {
                     
@@ -574,13 +576,13 @@ EOF;
                         v_tva_rate 
                         where 
                         tva_purchase <> '#'
-                            order by tva_rate desc");
+                            order by tva_id asc");
                 }else {
                     
                     $Res = $cn->exec_sql("select * from v_tva_rate 
                                 where
                         tva_purchase <> '#' and tva_sale <> '#'
-                            order by tva_rate desc");
+                            order by tva_id asc");
                 }
 		$Max = Database::num_row($Res);
 		$r = "";
@@ -588,9 +590,9 @@ EOF;
 		$r.='<div >';
                 $r.=_('Cherche')." ".HtmlInput::filter_table("tva_select_table",'0,1,2,3' , 1);
 		$r.= '<TABLE class="sortable" style="width:100%" id="tva_select_table">';
-		$r.=th(_('id'));
+		$r.=th(_('id'),'class="sorttable_sorted"');
 		$r.=th(_('code'));
-		$r.=th(_('Taux'),'class="sorttable_sorted_reverse"');
+		$r.=th(_('Taux'));
 		$r.=th(_('Symbole'));
 		$r.=th(_('Explication'));
 
