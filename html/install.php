@@ -645,9 +645,9 @@ if ($account == 0 ) {
   $cn->start();
   if ( DEBUGNOALYSS == 0 ) { ob_start();  }
 
-  $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/schema.sql');
+  $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod2/schema.sql');
   $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod2/data.sql');
-    $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
+    $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod2/constraint.sql');
 
   $cn->commit();
  if ( DEBUGNOALYSS == 0 ) ob_end_clean();
