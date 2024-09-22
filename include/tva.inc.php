@@ -42,6 +42,14 @@ $manage_table->create_js_script();
 $manage_table->display_table();
 echo '</div>';
 ?>
+<div class="row">
+    <div class="col-3 offset-3" >
+        <p class="notice" style="padding: 1rem">
+            <span class="font-weight-bold">Attention :</span> ajouter les codes TVA nécessaires à votre déclaration TVA et adapter en fonction
+        les rapports avancés ou le module de TVA.
+        </p>
+    </div>
+</div>
 <script>
     <?=$manage_table->get_object_name()?>.afterSaveFct=function(p_param,p_xmltext) {
 
