@@ -2262,6 +2262,196 @@ INSERT INTO public.version (val, v_description, v_date) VALUES (202, 'Bug with r
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO tva_belge.form (id, f_name, f_language) VALUES (1, 'Déclaration TVA', 'FR');
+
+
+
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (1, 'T1 ', 'Cadre I : renseignements généraux', 'h1', '', 1, 1);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (2, 'T1.year', 'Année', 't', 'data.year', 1, 2);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (3, 'T1.Month', 'Mois / trimestre', 't', 'data.periodicity', 1, 3);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (4, 'T1.date_from', 'Date début', 't', 'data.date_from', 1, 4);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (5, 'T1.data_to', 'Date fin', 't', 'data.date_to', 1, 5);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (6, 'T1.vat_id ', ' N° de tva  ', 't', 'data.vat_id', 1, 6);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (7, 'T1.name ', ' Nom ', 't', 'data.name', 1, 7);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (8, 'T1.adress ', ' Adresse ', 't', 'data.address', 1, 8);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (9, 'T1.country ', ' Pays code postal et localite BE ', 't', 'data.country', 1, 9);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (10, 'T2 ', ' Cadre II : Opérations à la sortie', 'h1', '', 1, 10);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (11, 'T2.00 ', ' Opérations soumises à un régime particulier [00]  ', 'h2', 'd00', 1, 11);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (12, 'T2.B ', ' B. Opérations pour lesquelles la T.V.A. est due par le déclarant :', 't', '', 1, 12);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (13, 'T2.B.01 ', '|>-au taux de 6% [01]', 't', 'd01', 1, 13);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (14, 'T2.B.02 ', '|>- au taux de 12% [02]  ', 't', 'd02', 1, 14);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (15, 'T2.B.03 ', '|>- au taux de 21% [03]  ', 't', 'd03', 1, 15);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (16, 'T2.C ', 'C. Services pour lesquels la T.V.A. étrangère est due par le cocontractant [44]  ', 't', 'd44', 1, 16);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (17, 'T2.D ', 'D. Opérations pour lesquelles la T.V.A. est due par le cocontractant [45]  ', 't', 'd45', 1, 17);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (18, 'T2.E ', 'E. Livraisons intracommunautaires exemptées effectuées en Belgique et ventes ABC [46]  ', 't', 'd46', 1, 18);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (19, 'T2.F', 'F. Autres opérations exemptées et autres opérations effectuées à l''étranger [47]  ', 't', 'd47', 1, 19);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (20, 'T2.G', 'G. Montant des notes de crédit délivrées et des corrections négatives :', 't', '', 1, 20);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (21, 'T2.G.48', '|>- relatif aux opérations inscrites en grilles 44 et 46 [48]  ', 't', 'd48', 1, 21);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (22, 'T2.G.49', '|>- relatif aux autres opérations du cadre II [49]  ', 't', 'd49', 1, 22);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (23, 'T3 ', ' Cadre III : Opérations à l''entrée', 'h1', '', 1, 23);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (24, 'T3.A', 'A. Montant des opérations à l''entrée compte tenu des notes de crédit reçues et autres corrections :', 'h2', '', 1, 24);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (25, 'T3.81', '|>- marchandises, matières premières et matières auxiliaires [81]  ', 't', 'd81', 1, 25);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (26, 'T3.82', '|>- services et biens divers [82]  ', 't', 'd82', 1, 26);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (27, 'T3.83', '|>- biens d''investissement [83]  ', 't', 'd83', 1, 27);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (28, 'T3.B ', 'B. Montant des notes de crédit reçues et des corrections négatives :', 'h2', '', 1, 28);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (29, 'T3.B.84', '|> - relatif aux opérations inscrites en grilles 86 et 88 [84]  ', 't', 'd84', 1, 29);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (30, 'T3.B.85', '|> - relatif aux autres opérations du cadre III [85]  ', 't', 'd85', 1, 30);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (31, 'T3.C', 'C. Acquisitions intracommunautaires effectuées en Belgique et ventes ABC [86]  ', 't', 'd86', 1, 31);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (32, 'T3.D', 'D. Autres opérations à l''entrée pour lesquelles la T.V.A. est due par le déclarant [87]  ', 't', 'd87', 1, 32);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (33, 'T3.E', 'E. Services intracommunautaires avec report de perception [88]  ', 't', 'd88', 1, 33);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (34, 'T4', 'Cadre IV : Taxe due', 'h1', '', 1, 34);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (35, 'T4.A', 'A. T.V.A. relative aux opérations déclarées en :', 'h2', '', 1, 35);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (36, 'T4.A.54', '|>-grilles 01, 02 et 03 [54]  ', 't', 'd54', 1, 36);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (37, 'T4.A.55', '|>- grilles 86 et 88 [55]  ', 't', 'd55', 1, 37);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (38, 'T4.A.56', '|>- grille 87, à l''exception des importations avec report de perception [56]  ', 't', 'd56', 1, 38);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (39, 'T4.B.57', 'B. T.V.A. relative aux importations avec report de perception [57]  ', 't', 'd57', 1, 39);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (40, 'T4.C.61 ', 'C. Diverses régularisations T.V.A. en faveur de l''Etat [61] ', 't', 'd61', 1, 40);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (41, 'T4.D', 'D. T.V.A. à reverser mentionnée sur les notes de crédit reçues [63]  ', 't', 'd63', 1, 41);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (42, 'TXX', 'Total des grilles 54, 55, 56, 57, 61 et 63 [XX]  ', 'h2', 'dxx', 1, 42);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (43, 'T5', 'Cadre V : Taxes déductibles, solde et acompte', 'h1', '', 1, 43);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (44, 'T5.A.59', 'A.T.V.A. déductible [59]  ', 't', 'd59', 1, 44);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (45, 'T5.B.62', 'B.Diverses régularisations T.V.A. en faveur du déclarant [62]  ', 't', 'd62', 1, 45);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (46, 'T5.C.64', 'C.T.V.A. à récupérer mentionnée sur les notes de crédit délivrées [64]  ', 't', 'd64', 1, 46);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (47, 'T5.YY', 'Total des grilles 59, 62 et 64[yy]  ', 'h2', 'dyy', 1, 47);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (48, 'T6', 'Cadre VI : Solde*', 'h1', '', 1, 48);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (49, 'T6.71', 'Taxe due à l''Etat : grille xx - grille yy [71]  ', 't', 'd71', 1, 49);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (50, 'T6.7', 'Sommes dues par l''Etat : grille yy - grille xx [72]  ', 't', 'd72', 1, 50);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (51, 'T6.COMMENT', ' *Une seule des grilles 71 ou 72 peut être remplie', 't', '', 1, 51);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (52, 'T7', 'Cadre VII : Acompte*', 'h1', '', 1, 52);
+INSERT INTO tva_belge.form_detail (id, fd_code, fd_label, fd_type, fd_tva_code, form_id, fd_order) VALUES (53, 'T7.91', 'T.V.A. réellement due pour la période du 1er au 20 décembre[91]  ', 't', 'd91', 1, 53);
+
+
+
+
+
+
+
+
+
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL00');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL01');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL02');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL03');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL44');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL45');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL46');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL47');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL48');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL49');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL81');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL82');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL83');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL84');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL85');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL86');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL87');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL88');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL54');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL55');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL56');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL57');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL61');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL63');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL59');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL62');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('GRIL64');
+INSERT INTO tva_belge.parameter (pcode) VALUES ('ATVA');
+
+
+
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (3, 'GRIL81', 3, '60%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (4, 'GRIL81', 2, '60%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (5, 'GRIL81', 1, '60%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (6, 'GRIL82', 3, '61%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (7, 'GRIL82', 2, '61%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (8, 'GRIL82', 1, '61%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (9, 'GRIL83', 3, '25%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (10, 'GRIL83', 3, '24%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (11, 'GRIL83', 3, '23%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (12, 'GRIL83', 3, '22%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (13, 'GRIL83', 2, '25%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (14, 'GRIL83', 2, '24%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (15, 'GRIL83', 2, '23%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (16, 'GRIL83', 2, '22%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (17, 'GRIL83', 1, '25%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (18, 'GRIL83', 1, '24%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (19, 'GRIL83', 1, '23%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (20, 'GRIL83', 1, '22%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (22, 'GRIL84', 3, '6091');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (23, 'GRIL84', 2, '6091');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (24, 'GRIL84', 1, '6091');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (31, 'GRIL54', 3, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (32, 'GRIL54', 2, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (33, 'GRIL54', 1, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (34, 'GRIL59', 3, '25%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (35, 'GRIL59', 3, '24%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (36, 'GRIL59', 3, '23%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (37, 'GRIL59', 3, '22%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (38, 'GRIL59', 3, '6%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (39, 'GRIL59', 2, '25%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (40, 'GRIL59', 2, '24%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (41, 'GRIL59', 2, '23%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (42, 'GRIL59', 2, '22%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (43, 'GRIL59', 2, '6%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (44, 'GRIL59', 1, '25%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (45, 'GRIL59', 1, '24%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (46, 'GRIL59', 1, '23%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (47, 'GRIL59', 1, '22%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (48, 'GRIL59', 1, '6%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (49, 'ASSUJETTI', 1, NULL);
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (50, 'ASSUJETTI', 2, NULL);
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (51, 'ASSUJETTI', 3, NULL);
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (53, 'ATVA', NULL, '4117');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (62, 'GRIL02', 2, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (64, 'GRIL01', 3, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (65, 'GRIL03', 2, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (67, 'GRIL45', 51, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (68, 'GRIL46', 52, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (25, 'GRIL86', 50, '60%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (26, 'GRIL86', 50, '25%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (27, 'GRIL86', 50, '24%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (28, 'GRIL86', 50, '23%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (29, 'GRIL86', 50, '22%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (30, 'GRIL86', 50, '61%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (58, 'CLINTRA', 50, '700%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (59, 'CLINTRAGD', 50, '701%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (66, 'GRIL44', 50, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (21, 'GRIL84', 40, '6091');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (63, 'GRIL00', 40, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (52, 'ASSUJETTI', 41, NULL);
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (69, 'GRIL49', 60, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (70, 'GRIL48', 61, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (71, 'GRIL85', 60, '6%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (72, 'GRIL88', 61, '6%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (73, 'GRIL87', 61, '6%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (74, 'GRIL55', 50, '7%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (75, 'GRIL63', 60, '6%');
+INSERT INTO tva_belge.parameter_chld (pi_id, pcode, tva_id, pcm_val) VALUES (76, 'GRIL64', 60, '7%');
+
+
+
+
+
+
+INSERT INTO tva_belge.version (id, vdate, vdesc) VALUES (1, '2024-09-21 11:52:32.364526', 'Version 2 : amélioration plugin');
+INSERT INTO tva_belge.version (id, vdate, vdesc) VALUES (2, '2024-09-21 11:52:32.424646', 'export PDF et CSV');
+INSERT INTO tva_belge.version (id, vdate, vdesc) VALUES (3, '2024-09-21 11:52:32.470402', 'XML Declaration - rewriting');
+INSERT INTO tva_belge.version (id, vdate, vdesc) VALUES (4, '2024-09-21 11:52:32.491123', 'XML Declaration - add missing Listing Client + Restitution');
+
+
+
 SELECT pg_catalog.setval('public.acc_other_tax_ac_id_seq', 1, false);
 
 
@@ -2799,6 +2989,50 @@ SELECT pg_catalog.setval('public.user_widget_uw_id_seq', 1, false);
 
 
 SELECT pg_catalog.setval('public.widget_dashboard_wd_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tva_belge.assujetti_a_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tva_belge.assujetti_chld_ac_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tva_belge.declarant_d_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tva_belge.declaration_amount_da_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tva_belge.form_detail_id_seq', 53, true);
+
+
+
+SELECT pg_catalog.setval('tva_belge.form_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tva_belge.intracomm_chld_ic_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tva_belge.intracomm_i_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tva_belge.parameter_chld_pi_id_seq', 76, true);
+
+
+
+SELECT pg_catalog.setval('tva_belge.representative_rp_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tva_belge.version_id_seq', 2, true);
 
 
 
