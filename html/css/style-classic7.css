@@ -226,6 +226,7 @@ td.tool a.mtitle:hover {
  }
  #module .nav-pills a.nav-link:hover {
          color:white !important;
+        border:1px solid transparent;
  }
  #module .nav-item-active , #module .nav-item-active > a.nav-link{
      background-color: #5d90cd ;
