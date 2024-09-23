@@ -1268,7 +1268,7 @@ EOF;
         if ($this->db->count_sql("select md_id,md_name from document_modele where md_affect='VEN' ") > 0) {
 
 
-            $r.=_('ou générer une facture') . ' <input type="checkbox" name="gen_invoice" UNCHECKED>';
+            $r.=_('ou générer une facture') . ' <input type="checkbox" name="gen_invoice" CHECKED>';
             // We propose to generate  the invoice and some template
             $doc_gen = new ISelect();
             $doc_gen->name = "gen_doc";
