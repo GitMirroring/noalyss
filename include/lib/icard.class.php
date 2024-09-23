@@ -402,8 +402,7 @@ class ICard extends HtmlInput
         $this->callback=$p_name;
     }
 
-    /**
-     * \brief set the javascript callback function
+    /**\brief set the javascript callback function
      * by default it is update_value called AFTER an item has been selected
      * \param $p_name callback function name
      */

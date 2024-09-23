@@ -67,7 +67,7 @@ if ( $accvis == 1 ) :
 <?php endfor; ?>
 </table>
 <span style="font-style: italic;">
-    <?php printf ( _("Nombre d'enregistrements trouvés:%s"),$total_card); ?>
+    <?php echo _("Nombre d'enregistrements trouvé:$total_card"); ?>
 </span>
 <br>
 </div>
