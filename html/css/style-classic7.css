@@ -33,7 +33,7 @@ input{
     padding : 2px;
      margin:2px;
     border:1px solid #4b4b91; 
-    font-size:14px;
+
     color:#4b4b91;
     
 }
@@ -112,7 +112,7 @@ h2 {
     background-color:#9fbcd6;
     /*! margin:1px; */
     font-style: italic; 
-    font-size:15px;
+
     font-size:1.1rem !important;
     margin-top: 5px;
     font-size: 1.20rem;
@@ -301,7 +301,7 @@ div.content{
     width:99.7%;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'OpenSansRegular';
-    font-size:12px;
+    font-size:100%;
     font-size:1rem;
 
 }
@@ -471,7 +471,7 @@ tr.odd > td,tr.even > td {
 }
 .highlight {
     font-weight: bolder;
-    font-size:14px;
+    font-size:105%;
     font-size:1.05rem;
 }
 tr.highlight {
@@ -698,7 +698,7 @@ a.document:hover {
 h1.legend, legend {
     font-weight: bold;
     font-style: italic;
-    font-size: 19.2px;
+    font-size: 120%;
     font-size: 1.2rem;
     border: navy;
     border-width: 1px;
@@ -968,7 +968,7 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     font-weight: normal;
     text-decoration:none;
     font-family: arial,verdana,sans-serif,helvetica;
-    font-size:12px;
+    font-size:85%;
     font-size:0.85rem;
     font-family: SansationLight;
     border-style:  ridge ; 
@@ -1050,7 +1050,7 @@ td.toolselected a.mtitle {
     background-color:#FF0000;
 }
 div.topmenu {
-	font-size:13.6px;
+	font-size:100%;
 	font-size:1rem;
        
 }
@@ -1135,7 +1135,7 @@ div.inner_box  {
     border:1px solid #00008B;
     -moz-box-shadow: 10px 10px 5px #888;
     box-shadow: 15px 15px 15px #888;
-    font-size:14.4px;
+    font-size:90%;
     font-size:0.9rem;
     width: 100%;
     left:0px ;
@@ -1154,7 +1154,7 @@ div.inner_box  {
      border:1px solid #00008B;
      -moz-box-shadow: 10px 10px 5px #888;
      box-shadow: 15px 15px 15px #888;
-     font-size:14.4px;
+     font-size:90%;
      font-size:0.9rem;
      width: 50%;
      left:22% ;
@@ -1496,7 +1496,7 @@ div.content a.nav:hover img,a.nav:hover img {
     
 }
 div.foldercontent {
-    font-size:14px;
+    font-size:95%;
     font-size:0.95rem;
     width: 95%;
     margin-left: 2.5%;
@@ -1522,7 +1522,7 @@ div.foldercontent {
     
 }
 div.foldercontent {
-    font-size:14px;
+    font-size:95%;
     font-size:0.95rem;
     width: 95%;
     margin-left: 2.5%;
@@ -1603,7 +1603,7 @@ div.myfieldset
     border-style: groove;
 }
 div.menu2 a.mtitle{
-    font-size:13.6px;
+    font-size:100%;
     font-size:1rem;
     font-weight: normal;
     /*color: darkblue;*/
@@ -1629,7 +1629,7 @@ div.menu2 table {
     /*! border-spacing:1px; */
 }
 div.menu3 {
-	font-size:13.6px;
+	font-size:80%;
 	font-size:0.80rem;
     
 }
@@ -1912,7 +1912,7 @@ div.box  {
     font-family: 'openSansRegular';
     overflow:hidden;
     border:1px solid #00008B;
-    font-size:10px;
+    font-size:90%;
     font-size:0.90rem;
     border-radius:5px;
     width:97%;
@@ -1962,7 +1962,7 @@ div.even ,div.box tr.even {
     padding:2px;
 }
 #jrn_name_div h2{
-    font-size:38.4px;
+    font-size:240%;
     font-size: 2.4rem;
 }
 #search_account {
@@ -2187,7 +2187,7 @@ hr {
  ******************************************************************************/
 li.highlight,tr.highlight{
     font-weight: bolder;
-    font-size:14px;
+    font-size:90%;
     background-color: #8A8787;
     color:whitesmoke !important;
     border-width:  2px;
@@ -2256,7 +2256,7 @@ div.content a.tinybutton,a.tinybutton{
    /* background-image: url("font/bg-submit2.gif");
     background-repeat: repeat-x;
     background-position: left; */
-    font-size: 8px;
+    font-size: 70%;
     font-size: 0.7rem;
     padding-bottom: 0px;
     padding-top: 0px;
@@ -2279,7 +2279,7 @@ input[type="button"].tinybutton {
     font-weight: bold;
     text-decoration: none;
     font-family: arial,verdana,sans-serif,helvetica;
-    font-size: 8px;
+    font-size: 70%;
     font-size: 0.7rem;
     padding-bottom: 0px;
     padding-top: 0px;
@@ -2472,7 +2472,7 @@ width: 85%;
      /*! background-image: url("font/bg-submit2.gif"); */ 
     /*! background-repeat: repeat-x; */
     /*! background-position: left; */
-    font-size:12px;
+    font-size:85%;
     font-size:0.85rem;
     font-family: SansationLight;
     border-style:  ridge ; 
@@ -2508,7 +2508,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
   width: 75%;
   display: inline-block;
   background-color: white;
-  font-size: 16px;
+  font-size: 100%;
+  font-size: 1rem;
   padding: 8px;
 }
 
@@ -2758,7 +2759,7 @@ div.bxbutton .icon
     margin-left: 6px;
     margin-right:6px;
     /*! padding-top:10px; */
-    font-size:14px;
+    font-size:100%;
     font-size:1rem;
     cursor: pointer;
     border:0px;
