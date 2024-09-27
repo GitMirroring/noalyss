@@ -359,7 +359,7 @@ endif;
     for ($i=0;$i<$num;$i++) {
       $res=$cn->fetch($i);
       $CHECKED=" unchecked";
-     if (!empty($reb)) foreach ( $rdeb as $element) {
+     if (!empty($rdeb)) foreach ( $rdeb as $element) {
         if ( $element == $res['fd_id'] ) {
           $CHECKED="CHECKED";
           break;
