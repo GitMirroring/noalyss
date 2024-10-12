@@ -311,7 +311,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
         if ($g_parameter->MY_DATE_SUGGEST=='Y')
             $onchange.='get_last_date();';
         if ($g_parameter->MY_PJ_SUGGEST=='Y')
-            $onchange.='update_pj();';
+            $onchange.='update_receipt();';
 
         $add_js='onchange="'.$onchange.'"';
         $wLedger=$this->select_ledger('FIN', 2, FALSE);
