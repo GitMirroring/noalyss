@@ -896,7 +896,7 @@ class Acc_Ledger  extends jrn_def_sql
         $add_js="";
         if ($g_parameter->MY_PJ_SUGGEST !='N')
         {
-            $add_js="update_pj();";
+            $add_js="update_receipt();";
         }
         if ($g_parameter->MY_DATE_SUGGEST=='Y')
         {

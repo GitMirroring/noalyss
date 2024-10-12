@@ -302,7 +302,7 @@ echo '<div class="content">';
     /* if we suggest the pj n# the run the script */
     if ( $g_parameter->MY_PJ_SUGGEST=='Y')
     {
-		echo '<script> update_pj()</script>';
+		echo '<script> update_receipt()</script>';
     }
 $e_date=$http->request("e_date","string","");
 

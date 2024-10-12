@@ -1366,7 +1366,7 @@ EOF;
         /* if we suggest the next pj, then we need a javascript */
         $add_js = "";
         if ($g_parameter->MY_PJ_SUGGEST != 'N') {
-            $add_js = "update_pj();";
+            $add_js = "update_receipt();";
         }
         if ($g_parameter->MY_DATE_SUGGEST == 'Y') {
             $add_js.='get_last_date();';

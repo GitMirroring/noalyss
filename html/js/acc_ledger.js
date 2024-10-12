@@ -143,7 +143,7 @@ function error_get_predef(request, json) {
 /**
  *  update the list of available predefined operation when we change the ledger.
  */
-function update_pj() {
+function update_receipt() {
     var jrn = id$("p_jrn").value;
     var dossier = id$("gDossier").value;
     var querystring = 'gDossier=' + dossier + '&l=' + jrn + "&op=upd_receipt";

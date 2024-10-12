@@ -1225,7 +1225,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $add_js="";
         if ( $g_parameter->MY_PJ_SUGGEST !='N')
         {
-            $add_js="update_pj();";
+            $add_js="update_receipt();";
         }
         if ($g_parameter->MY_DATE_SUGGEST == 'Y')
         {
@@ -1518,7 +1518,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         /* if we suggest the pj n# the run the script */
         if ( $g_parameter->MY_PJ_SUGGEST !='N')
         {
-            $r.='<script> update_pj();</script>';
+            $r.='<script> update_receipt();</script>';
         }
 		// set focus on date
 		$r.= create_script("$('".$Date->id."').focus()");
