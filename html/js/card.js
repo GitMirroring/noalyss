@@ -360,6 +360,7 @@ function action_concerned_search_card(obj)
  *@param obj form
  *@note the same as search_card, except it answer to a FORM and not
  * to a click event
+ * @see ajax_card.php
  */
 function search_get_card(obj)
 {
@@ -613,7 +614,7 @@ function fill_ipopcard(obj)
     add_div(popup);
     var dossier=id$('gDossier').value;
     var qcode='';
-    if ( id$(obj).qcode != undefined )
+    if ( obj.qcode != undefined )
     {
         qcode=obj.qcode;
     }
