@@ -45,7 +45,7 @@ function CurrencyRateDelete(p_dossier, p_id)
                     if ( answer['status'] == 'NOK') {
                         smoke.alert(answer['content']);
                     } else {
-                        $('currency_rate_'+p_id).hide();
+                        id$('currency_rate_'+p_id).hide();
                         alternate_row_color("currency_rate_table");
                     }
                 }
@@ -64,11 +64,11 @@ function CurrencyUpdateValue(p_dossier,p_code,p_update)
     new Ajax.Request("ajax_misc.php",{
         method:"get",
         asynchronous:false,
-        parameters:{p_code:$(p_code).value,gDossier:p_dossier,op:'CurrencyRate'},
+        parameters:{p_code:id$(p_code).value,gDossier:p_dossier,op:'CurrencyRate'},
         onSuccess:function (req) {
             var answer=req.responseText.evalJSON();
             if ( answer.status == "OK") {
-                $(p_update).value=answer.content;
+                id$(p_update).value=answer.content;
             } else {
                 smoke.alert(answer.content);
             }
@@ -84,11 +84,11 @@ function CurrencyUpdateCode(p_dossier,p_code,p_update)
 {
        new Ajax.Request("ajax_misc.php",{
         method:"get",
-        parameters:{p_code:$(p_code).value,gDossier:p_dossier,op:'CurrencyCode'},
+        parameters:{p_code:id$(p_code).value,gDossier:p_dossier,op:'CurrencyCode'},
         onSuccess:function (req) {
             var answer=req.responseText.evalJSON();
             if ( answer.status == "OK") {
-                $(p_update).innerHTML=answer.content;
+                id$(p_update).innerHTML=answer.content;
             } else {
                 smoke.alert(answer.content);
             }
@@ -104,22 +104,22 @@ function CurrencyCompute(p_rate,p_update)
 {
     var tvac=1;
     
-    if ($('tvac')) {
-        tvac=$('tvac').innerHTML;
-    } else if ($("htva")) {
-        tvac=$('htva').innerHTML;
+    if (id$('tvac')) {
+        tvac=id$('tvac').innerHTML;
+    } else if (id$("htva")) {
+        tvac=id$('htva').innerHTML;
     }
    
    if (  isNaN(tvac)) {
        tvac=1;
    }
-   var rate=$(p_rate).value;
+   var rate=id$(p_rate).value;
    if (  isNaN(rate)) {
        rate=1;
    }
    var tot=tvac/rate;
    tot=Math.round(tot*100)/100;
-   $(p_update).innerHTML=tot;
+   id$(p_update).innerHTML=tot;
     
 }
 /**
@@ -131,8 +131,8 @@ function CurrencyCompute(p_rate,p_update)
  */
 function CurrencyComputeMisc(p_rate,p_update)
 {
-   var debAmount=$('totalDeb').innerHTML;
-   var credAmount=$('totalCred').innerHTML;
+   var debAmount=id$('totalDeb').innerHTML;
+   var credAmount=id$('totalCred').innerHTML;
    
    if (  isNaN(debAmount)) {
        debAmount=0;
@@ -140,17 +140,17 @@ function CurrencyComputeMisc(p_rate,p_update)
    if (  isNaN(credAmount)) {
        credAmount=0;
    }
-   var rate=$(p_rate).value;
+   var rate=id$(p_rate).value;
    if (  isNaN(rate) || parseFloat(rate) == 0) {
        rate=1;
    }
    var totDeb=debAmount/rate;
    totDeb=Math.round(totDeb*100)/100;
-   $('default_currency_deb').innerHTML=totDeb;
+   id$('default_currency_deb').innerHTML=totDeb;
    
    var totCred=credAmount/rate;
    totCred=Math.round(totCred*100)/100;
-   $('default_currency_cred').innerHTML=totCred;
+   id$('default_currency_cred').innerHTML=totCred;
     
 }
 
@@ -166,10 +166,10 @@ function CurrencyComputeMisc(p_rate,p_update)
 function LedgerCurrencyUpdate(p_dossier,p_code,p_update,p_rate,p_eur_amount)
 {
     // Hide or show the row of the table with the amount in EUR
-    if ($(p_code).value != 0) {
-        $('row_currency').show();
+    if (id$(p_code).value != 0) {
+        id$('row_currency').show();
     }else {
-        $('row_currency').hide();
+        id$('row_currency').hide();
     }
     CurrencyUpdateValue(p_dossier,p_code,p_rate);
     CurrencyUpdateCode(p_dossier,p_code,p_update);
@@ -189,10 +189,10 @@ function LedgerCurrencyUpdate(p_dossier,p_code,p_update,p_rate,p_eur_amount)
 function LedgerCurrencyUpdateMisc(p_dossier,p_code,p_update,p_rate,p_eur_amount)
 {
     // Hide or show the row of the table with the amount in EUR (= default currency)
-    if ($(p_code).value != -1) {
-        $('row_currency').show();
+    if (id$(p_code).value != -1) {
+        id$('row_currency').show();
     }else {
-        $('row_currency').hide();
+        id$('row_currency').hide();
     }
     CurrencyUpdateValue(p_dossier,p_code,p_rate);
     CurrencyUpdateCode(p_dossier,p_code,p_update);

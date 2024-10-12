@@ -32,10 +32,10 @@ var layer = 1;
  * \brief update the list of available predefined operation when we change the ledger.
  */
 function update_predef(p_type, p_direct, p_ac) {
-    var jrn = g("p_jrn").value;
-    var dossier = g("gDossier").value;
+    var jrn = id$("p_jrn").value;
+    var dossier = id$("gDossier").value;
     var querystring = 'gDossier=' + dossier + '&l=' + jrn + '&t=' + p_type + '&d=' + p_direct + "&op=up_predef&ac=" + p_ac;
-    g("p_jrn_predef").value = jrn;
+    id$("p_jrn_predef").value = jrn;
     var action = new Ajax.Request(
         "ajax_misc.php",
         {
@@ -44,7 +44,7 @@ function update_predef(p_type, p_direct, p_ac) {
             onFailure: error_get_predef,
             onSuccess: function (req) {
                 try {
-                    $('info_div').innerHTML = "ok";
+                    id$('info_div').innerHTML = "ok";
                     var answer = req.responseXML;
                     var a = answer.getElementsByTagName('code');
                     var html = answer.getElementsByTagName('value');
@@ -55,9 +55,9 @@ function update_predef(p_type, p_direct, p_ac) {
                     var code_html = getNodeText(html[0]);
                     code_html = unescape_xml(code_html);
                     // document.getElementsByName(name_ctl)[0].value = code_html;
-                    $('modele_op_div').innerHTML = code_html;
+                    id$('modele_op_div').innerHTML = code_html;
                 } catch (e) {
-                    $('info_div').innerHTML = e.message;
+                    id$('info_div').innerHTML = e.message;
                 }
             }
         }
@@ -69,8 +69,8 @@ function update_predef(p_type, p_direct, p_ac) {
  */
 function update_pay_method() {
     waiting_box();
-    var jrn = g("p_jrn").value;
-    var dossier = g("gDossier").value;
+    var jrn = id$("p_jrn").value;
+    var dossier = id$("gDossier").value;
     var querystring = 'gDossier=' + dossier + '&l=' + jrn + "&op=up_pay_method";
     var action = new Ajax.Request(
         "ajax_misc.php",
@@ -81,7 +81,7 @@ function update_pay_method() {
             onSuccess: function (req) {
                 remove_waiting_box();
                 var answer = req.responseText;
-                $('payment').innerHTML = answer;
+                id$('payment').innerHTML = answer;
             }
         }
     );
@@ -92,8 +92,8 @@ function update_pay_method() {
  */
 function update_other_tax() {
     waiting_box();
-    var jrn = g("p_jrn").value;
-    var dossier = g("gDossier").value;
+    var jrn = id$("p_jrn").value;
+    var dossier = id$("gDossier").value;
     var querystring = {gDossier: dossier, jrn_id: jrn, op: "up_other_tax"};
     var action = new Ajax.Request(
         "ajax_misc.php",
@@ -105,7 +105,7 @@ function update_other_tax() {
                 remove_waiting_box();
                 var answer = req.responseText;
                 answer.evalScripts();
-                $('additional_tax_div').innerHTML = answer;
+                id$('additional_tax_div').innerHTML = answer;
             }
         }
     );
@@ -115,8 +115,8 @@ function update_other_tax() {
  * update ctl id =jrn_name with the value of p_jrn
  */
 function update_name() {
-    var jrn_id = $('p_jrn').value;
-    var dossier = g("gDossier").value;
+    var jrn_id = id$('p_jrn').value;
+    var dossier = id$("gDossier").value;
     var querystring = 'gDossier=' + dossier + '&l=' + jrn_id + "&op=ledger_description";
     var action = new Ajax.Request(
         "ajax_misc.php",
@@ -125,7 +125,7 @@ function update_name() {
             parameters: querystring,
             onFailure: error_get_pj,
             onSuccess: function (req) {
-                $('jrn_name_div').innerHTML = req.responseText;
+                id$('jrn_name_div').innerHTML = req.responseText;
             }
         }
     );
@@ -144,8 +144,8 @@ function error_get_predef(request, json) {
  *  update the list of available predefined operation when we change the ledger.
  */
 function update_pj() {
-    var jrn = g("p_jrn").value;
-    var dossier = g("gDossier").value;
+    var jrn = id$("p_jrn").value;
+    var dossier = id$("gDossier").value;
     var querystring = 'gDossier=' + dossier + '&l=' + jrn + "&op=upd_receipt";
     var action = new Ajax.Request(
         "ajax_misc.php",
@@ -162,8 +162,8 @@ function update_pj() {
  * ask the name, quick_code of the bank for the ledger
  */
 function update_bank() {
-    var jrn = g('p_jrn').value;
-    var dossier = g('gDossier').value;
+    var jrn = id$('p_jrn').value;
+    var dossier = id$('gDossier').value;
     var qs = 'gDossier=' + dossier + '&op=bkname&p_jrn=' + jrn;
     var action = new Ajax.Request(
         "ajax_misc.php",
@@ -186,10 +186,10 @@ function update_row(ctl) {
         if (ctl === 'quick_item') {
             row_to_keep = 1;
         } /* for ODS , only 1 rows to keep */
-        var jrn = g('p_jrn').value;
-        var dossier = g('gDossier').value;
+        var jrn = id$('p_jrn').value;
+        var dossier = id$('gDossier').value;
         var qs = encodeURI('gDossier=' + dossier + '&op=minrow&j=' + jrn + '&ctl=' + ctl);
-        var current_row = parseFloat($('nb_item').value);
+        var current_row = parseFloat(id$('nb_item').value);
         var action = new Ajax.Request(
             "ajax_misc.php",
             {
@@ -201,11 +201,11 @@ function update_row(ctl) {
                         var answer = request.responseText.evalJSON(true);
                         var row = parseFloat(answer.row);
 
-                        var table_to_update = $(ctl);
+                        var table_to_update = id$(ctl);
                         if (current_row > row) {
                             // Too many row, we always must keep 2 rows for the sum
-                            var delta = $('nb_item').value - row;
-                            var idx = $('nb_item').value;
+                            var delta = id$('nb_item').value - row;
+                            var idx = id$('nb_item').value;
                             for (var i = 0; i < delta; i++) {
                                 var pos_row = table_to_update.rows.length;
                                 var cell0 = table_to_update.rows[pos_row - row_to_keep].cells[0];
@@ -239,7 +239,7 @@ function update_row(ctl) {
                                 }
 
                             }
-                            $('nb_item').value = table_to_update.rows.length - row_to_keep;
+                            id$('nb_item').value = table_to_update.rows.length - row_to_keep;
                         }
                         if (current_row < row) {
                             // We need to add rows
@@ -271,8 +271,8 @@ function update_row(ctl) {
  * @brief hide or show the column quantity
  */
 function update_visibility_quantity() {
-    var jrn = g("p_jrn").value;
-    var dossier = g("gDossier").value;
+    var jrn = id$("p_jrn").value;
+    var dossier = id$("gDossier").value;
     var querystring = 'gDossier=' + dossier + '&l=' + jrn + "&op=update_visibility_quantity";
     var action = new Ajax.Request(
         "ajax_misc.php",
@@ -321,7 +321,7 @@ function success_update_bank(req) {
         var name_ctl = a[0].firstChild.nodeValue;
         var code_html = getNodeText(html[0]);
         code_html = unescape_xml(code_html);
-        $(name_ctl).innerHTML = code_html;
+        id$(name_ctl).innerHTML = code_html;
     } catch (e) {
         alert_box("success_update_bank" + e.message);
     }
@@ -331,8 +331,8 @@ function success_update_bank(req) {
  *  call ajax, ask what is the last date for the current ledger
  */
 function get_last_date() {
-    var jrn = g('p_jrn').value;
-    var dossier = g('gDossier').value;
+    var jrn = id$('p_jrn').value;
+    var dossier = id$('gDossier').value;
     var qs = 'gDossier=' + dossier + '&op=lastdate&p_jrn=' + jrn;
     var action = new Ajax.Request(
         "ajax_misc.php",
@@ -372,12 +372,12 @@ function success_get_last_date(req) {
 function success_get_pj(request, json) {
 
     var answer = request.responseText.evalJSON(true);
-    var obj = g("e_pj");
+    var obj = id$("e_pj");
     obj.value = '';
     if (answer.length == 0)
         return;
     obj.value = answer.pj;
-    g("e_pj_suggest").value = answer.pj;
+    id$("e_pj_suggest").value = answer.pj;
 }
 
 /**
@@ -392,10 +392,10 @@ function error_get_pj(request, json) {
  */
 function ledger_fin_add_row() {
     var style = 'class="input_text"';
-    var mytable = g("fin_item").tBodies[0];
+    var mytable = id$("fin_item").tBodies[0];
     var line = mytable.rows.length;
     var row = mytable.insertRow(line);
-    var nb = g("nb_item");
+    var nb = id$("nb_item");
     var rowToCopy = mytable.rows[1];
     var nNumberCell = rowToCopy.cells.length;
     for (var e = 0; e < nNumberCell; e++) {
@@ -415,15 +415,15 @@ function ledger_fin_add_row() {
         newCell.className = rowToCopy.cells[e].className;
         new_tt.evalScripts();
     }
-    g("e_other" + nb.value).value = "";
-    g("e_other_name" + nb.value).value = "";
-    g("e_other" + nb.value + '_amount').value = "0";
-    g("e_other" + nb.value + '_comment').value = "";
-    g("e_concerned" + nb.value).value = "";
+    id$("e_other" + nb.value).value = "";
+    id$("e_other_name" + nb.value).value = "";
+    id$("e_other" + nb.value + '_amount').value = "0";
+    id$("e_other" + nb.value + '_comment').value = "";
+    id$("e_concerned" + nb.value).value = "";
 
-    var ch = $('chdate').options[$('chdate').selectedIndex].value;
+    var ch = id$('chdate').options[id$('chdate').selectedIndex].value;
     if (ch == 1) {
-        $('tdchdate' + nb.value).hide();
+        id$('tdchdate' + nb.value).hide();
     }
     nb.value++;
 }
@@ -433,11 +433,11 @@ function ledger_fin_add_row() {
  * @param string p_elid is the id of element  with the number of rows to add, and p_elid+"_ledger" is the type of ledger : M : Misc Operation O : Sales or purchase and F for financial
  */
 function ledger_add_multiple(p_elid) {
-    var nbrow = $(p_elid).value;
+    var nbrow = id$(p_elid).value;
     if (nbrow == NaN) {
         nbrow = 1;
     }
-    var type_ledger = $(p_elid + "_ledger").value;
+    var type_ledger = id$(p_elid + "_ledger").value;
     var i = 0;
     for (i = 0; i < nbrow; i++) {
         if (type_ledger == 'O') {
@@ -464,12 +464,12 @@ function ledger_add_multiple(p_elid) {
 function ledger_add_row() {
     try {
         style = 'class="input_text"';
-        var mytable = g("sold_item").tBodies[0];
+        var mytable = id$("sold_item").tBodies[0];
         var ofirstRow = mytable.rows[1];
         var line = mytable.rows.length;
         var nCell = mytable.rows[1].cells.length;
         var row = mytable.insertRow(line);
-        var nb = g("nb_item");
+        var nb = id$("nb_item");
         for (var e = 0; e < nCell; e++) {
             var newCell = row.insertCell(e);
             var tt = ofirstRow.cells[e].innerHTML;
@@ -483,13 +483,13 @@ function ledger_add_row() {
             new_tt.evalScripts();
         }
 
-        $("e_march" + nb.value + "_label").innerHTML = '';
-        $("e_march" + nb.value + "_label").value = '';
-        $("e_march" + nb.value + "_price").value = '0';
-        $("e_march" + nb.value).value = "";
-        $("e_quant" + nb.value).value = "1";
-        if ($("e_march" + nb.value + "_tva_amount"))
-            $("e_march" + nb.value + "_tva_amount").value = 0;
+        id$("e_march" + nb.value + "_label").innerHTML = '';
+        id$("e_march" + nb.value + "_label").value = '';
+        id$("e_march" + nb.value + "_price").value = '0';
+        id$("e_march" + nb.value).value = "";
+        id$("e_quant" + nb.value).value = "1";
+        if (id$("e_march" + nb.value + "_tva_amount"))
+            id$("e_march" + nb.value + "_tva_amount").value = 0;
 
         nb.value++;
 
@@ -505,17 +505,17 @@ function ledger_add_row() {
  * @param the number of the changed ctrl
  */
 function compute_ledger(p_ctl_nb) {
-    var dossier = g("gDossier").value;
+    var dossier = id$("gDossier").value;
     var a = -1;
     if (document.getElementById("e_march" + p_ctl_nb + '_tva_amount')) {
-        a = trim(g("e_march" + p_ctl_nb + '_tva_amount').value);
-        g("e_march" + p_ctl_nb + '_tva_amount').value = a;
+        a = trim(id$("e_march" + p_ctl_nb + '_tva_amount').value);
+        id$("e_march" + p_ctl_nb + '_tva_amount').value = a;
     }
     if (!document.getElementById("e_march" + p_ctl_nb)) {
         return;
     }
-    g("e_march" + p_ctl_nb).value = trim(g("e_march" + p_ctl_nb).value);
-    var qcode = g("e_march" + p_ctl_nb).value;
+    id$("e_march" + p_ctl_nb).value = trim(id$("e_march" + p_ctl_nb).value);
+    var qcode = id$("e_march" + p_ctl_nb).value;
 
     if (qcode.length == 0) {
         clean_ledger(p_ctl_nb);
@@ -526,19 +526,19 @@ function compute_ledger(p_ctl_nb) {
      * if tva_id is empty send a value of -1
      */
     var tva_id = -1;
-    if (g('e_march' + p_ctl_nb + '_tva_id')) {
-        tva_id = g('e_march' + p_ctl_nb + '_tva_id').value;
+    if (id$('e_march' + p_ctl_nb + '_tva_id')) {
+        tva_id = id$('e_march' + p_ctl_nb + '_tva_id').value;
         if (trim(tva_id) == '') {
             tva_id = -1;
         }
     }
 
-    g('e_march' + p_ctl_nb + '_price').value = trim(g('e_march' + p_ctl_nb + '_price').value);
-    var price = g('e_march' + p_ctl_nb + '_price').value;
+    id$('e_march' + p_ctl_nb + '_price').value = trim(id$('e_march' + p_ctl_nb + '_price').value);
+    var price = id$('e_march' + p_ctl_nb + '_price').value;
 
-    g('e_quant' + p_ctl_nb).value = trim(g('e_quant' + p_ctl_nb).value);
-    var quantity = g('e_quant' + p_ctl_nb).value;
-    let other_tax = g("other_tax");
+    id$('e_quant' + p_ctl_nb).value = trim(id$('e_quant' + p_ctl_nb).value);
+    var quantity = id$('e_quant' + p_ctl_nb).value;
+    let other_tax = id$("other_tax");
     let other_tax_id = (other_tax && other_tax.checked) ? other_tax.value : -1;
 
     var querystring = {
@@ -569,26 +569,26 @@ function refresh_ledger() {
     var htva = 0;
     var tvac = 0;
 
-    nb_item = g("nb_item").value;
+    nb_item = id$("nb_item").value;
     for (var i = 0; i < nb_item; i++) {
-        if (g('tva_march' + i))
-            tva += g('tva_march' + i).value * 1;
-        if (g('htva_march' + i))
-            htva += g('htva_march' + i).value * 1;
-        if (g('tvac_march' + i))
-            tvac += g('tvac_march' + i).value * 1;
+        if (id$('tva_march' + i))
+            tva += id$('tva_march' + i).value * 1;
+        if (id$('htva_march' + i))
+            htva += id$('htva_march' + i).value * 1;
+        if (id$('tvac_march' + i))
+            tvac += id$('tvac_march' + i).value * 1;
     }
-    id_tva = g("tva");
-    id_htva = g("htva");
-    id_tvac = g("tvac");
-    id_other_tax = g("other_tax_amount");
+    id_tva = id$("tva");
+    id_htva = id$("htva");
+    id_tvac = id$("tvac");
+    id_other_tax = id$("other_tax_amount");
     if (id_tva)
         id_tva.innerHTML = Math.round(tva * 100) / 100;
     if (id_htva)
         id_htva.innerHTML = Math.round(htva * 100) / 100;
     if (id_other_tax) {
         let total_operation = tvac + parseFloat(id_other_tax.value);
-        $('total_operation_other_tax').innerHTML = Math.round(total_operation * 100) / 100;
+        id$('total_operation_other_tax').innerHTML = Math.round(total_operation * 100) / 100;
     }
     if (id_tvac)
         id_tvac.innerHTML = Math.round(tvac * 100) / 100;
@@ -607,15 +607,15 @@ function success_compute_ledger(request, json) {
     var rtva = answer.tva;
     var rhtva = answer.htva;
     var rtvac = answer.tvac;
-    let other_tax = g("other_tax_amount")
+    let other_tax = id$("other_tax_amount")
     if (other_tax) {
         other_tax.value = answer.other_tax;
     }
     if (rtva == 'NA') {
         var rhtva = answer.htva * 1;
-        g('htva_march' + ctl).value = rhtva;
-        g('tvac_march' + ctl).value = rtvac;
-        g('sum').show();
+        id$('htva_march' + ctl).value = rhtva;
+        id$('tvac_march' + ctl).value = rtvac;
+        id$('sum').show();
         refresh_ledger();
         CurrencyCompute('p_currency_rate', 'p_currency_euro');
 
@@ -624,17 +624,17 @@ function success_compute_ledger(request, json) {
     rtva = answer.tva * 1;
 
 
-    g('sum').show();
-    if (g('e_march' + ctl + '_tva_amount').value == "" || g('e_march' + ctl + '_tva_amount').value == 0) {
-        g('tva_march' + ctl).value = rtva;
-        g('e_march' + ctl + '_tva_amount').value = rtva;
+    id$('sum').show();
+    if (id$('e_march' + ctl + '_tva_amount').value == "" || id$('e_march' + ctl + '_tva_amount').value == 0) {
+        id$('tva_march' + ctl).value = rtva;
+        id$('e_march' + ctl + '_tva_amount').value = rtva;
     } else {
-        g('tva_march' + ctl).value = g('e_march' + ctl + '_tva_amount').value;
+        id$('tva_march' + ctl).value = id$('e_march' + ctl + '_tva_amount').value;
     }
-    g('htva_march' + ctl).value = Math.round(parseFloat(rhtva) * 100) / 100;
-    var tmp1 = Math.round(parseFloat(g('htva_march' + ctl).value) * 100) / 100;
-    var tmp2 = Math.round(parseFloat(g('tva_march' + ctl).value) * 100) / 100;
-    g('tvac_march' + ctl).value = Math.round((tmp1 + tmp2) * 100) / 100;
+    id$('htva_march' + ctl).value = Math.round(parseFloat(rhtva) * 100) / 100;
+    var tmp1 = Math.round(parseFloat(id$('htva_march' + ctl).value) * 100) / 100;
+    var tmp2 = Math.round(parseFloat(id$('tva_march' + ctl).value) * 100) / 100;
+    id$('tvac_march' + ctl).value = Math.round((tmp1 + tmp2) * 100) / 100;
     refresh_ledger();
     CurrencyCompute('p_currency_rate', 'p_currency_euro');
 
@@ -649,7 +649,7 @@ function error_compute_ledger(request, json) {
 
 function compute_all_ledger() {
     var loop = 0;
-    let nb_item = g("nb_item").value;
+    let nb_item = id$("nb_item").value;
     for (loop = 0; loop < nb_item; loop++) {
         compute_ledger(loop);
     }
@@ -658,53 +658,53 @@ function compute_all_ledger() {
     var tvac = 0;
 
     for (var i = 0; i < nb_item; i++) {
-        if (g('tva_march'))
-            tva += g('tva_march' + i).value * 1;
-        if (g('htva_march' + i))
-            htva += g('htva_march' + i).value * 1;
-        if (g('tvac_march' + i))
-            tvac += g('tvac_march' + i).value * 1;
+        if (id$('tva_march'))
+            tva += id$('tva_march' + i).value * 1;
+        if (id$('htva_march' + i))
+            htva += id$('htva_march' + i).value * 1;
+        if (id$('tvac_march' + i))
+            tvac += id$('tvac_march' + i).value * 1;
     }
-    id_other_tax = g("other_tax_amount");
-    if (g('tva'))
-        g('tva').innerHTML = Math.round(tva * 100) / 100;
-    if (g('htva'))
-        g('htva').innerHTML = Math.round(htva * 100) / 100;
+    id_other_tax = id$("other_tax_amount");
+    if (id$('tva'))
+        id$('tva').innerHTML = Math.round(tva * 100) / 100;
+    if (id$('htva'))
+        id$('htva').innerHTML = Math.round(htva * 100) / 100;
     if (id_other_tax) {
         tvac += id_other_tax.value;
     }
-    if (g('tvac'))
-        g('tvac').innerHTML = Math.round(tvac * 100) / 100;
+    if (id$('tvac'))
+        id$('tvac').innerHTML = Math.round(tvac * 100) / 100;
 
 
 }
 
 function clean_tva(p_ctl) {
-    if (g('e_march' + p_ctl + '_tva_amount'))
-        g('e_march' + p_ctl + '_tva_amount').value = 0;
+    if (id$('e_march' + p_ctl + '_tva_amount'))
+        id$('e_march' + p_ctl + '_tva_amount').value = 0;
 }
 
 function clean_ledger(p_ctl_nb) {
-    if (g("e_march" + p_ctl_nb)) {
-        g("e_march" + p_ctl_nb).value = trim(g("e_march" + p_ctl_nb).value);
+    if (id$("e_march" + p_ctl_nb)) {
+        id$("e_march" + p_ctl_nb).value = trim(id$("e_march" + p_ctl_nb).value);
     }
-    if (g('e_march' + p_ctl_nb + '_price')) {
-        g('e_march' + p_ctl_nb + '_price').value = '';
+    if (id$('e_march' + p_ctl_nb + '_price')) {
+        id$('e_march' + p_ctl_nb + '_price').value = '';
     }
-    if (g('e_quant' + p_ctl_nb)) {
-        g('e_quant' + p_ctl_nb).value = '1';
+    if (id$('e_quant' + p_ctl_nb)) {
+        id$('e_quant' + p_ctl_nb).value = '1';
     }
-    if (g('tva_march' + p_ctl_nb + '_show')) {
-        g('tva_march' + p_ctl_nb + '_show').value = '0';
+    if (id$('tva_march' + p_ctl_nb + '_show')) {
+        id$('tva_march' + p_ctl_nb + '_show').value = '0';
     }
-    if (g('tva_march' + p_ctl_nb)) {
-        g('tva_march' + p_ctl_nb).value = 0;
+    if (id$('tva_march' + p_ctl_nb)) {
+        id$('tva_march' + p_ctl_nb).value = 0;
     }
-    if (g('htva_march' + p_ctl_nb)) {
-        g('htva_march' + p_ctl_nb).value = 0;
+    if (id$('htva_march' + p_ctl_nb)) {
+        id$('htva_march' + p_ctl_nb).value = 0;
     }
-    if (g('tvac_march' + p_ctl_nb)) {
-        g('tvac_march' + p_ctl_nb).value = 0;
+    if (id$('tvac_march' + p_ctl_nb)) {
+        id$('tvac_march' + p_ctl_nb).value = 0;
     }
 
 }
@@ -714,12 +714,12 @@ function clean_ledger(p_ctl_nb) {
  */
 function quick_writing_add_row() {
     style = 'class="input_text"';
-    var mytable = g("quick_item").tBodies[0];
+    var mytable = id$("quick_item").tBodies[0];
     var nNumberRow = mytable.rows.length;
     var oRow = mytable.insertRow(nNumberRow);
     var rowToCopy = mytable.rows[1];
     var nNumberCell = rowToCopy.cells.length;
-    var nb = g("nb_item");
+    var nb = id$("nb_item");
 
     var oNewRow = mytable.insertRow(nNumberRow);
     for (var e = 0; e < nNumberCell; e++) {
@@ -735,17 +735,17 @@ function quick_writing_add_row() {
         new_tt.evalScripts();
 
     }
-    var ck = $('ck' + nb.value);
+    var ck = id$('ck' + nb.value);
     ck.addEventListener('click', function (event) {
         display_range_dcside(event, ck);
         display_dcside(ck);
     });
 
 
-    $("qc_" + nb.value).value = "";
-    $("amount" + nb.value).value = "";
-    $("poste" + nb.value).value = "";
-    $("ld" + nb.value).value = "";
+    id$("qc_" + nb.value).value = "";
+    id$("amount" + nb.value).value = "";
+    id$("poste" + nb.value).value = "";
+    id$("ld" + nb.value).value = "";
 
 
     nb.value++;
@@ -805,7 +805,7 @@ function view_history_account(p_value, dossier, p_exercice) {
 
                 add_div(popup);
                 success_box(req, xml);
-                $(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
             }
         }
     );
@@ -845,8 +845,8 @@ function view_history_anc_account(p_value, dossier, p_exercice) {
                 if (req.responseText === 'NOCONX') { reconnect();return;}
 
                 add_div(popup);
-                $(idbox).innerHTML = req.responseText;
-                $(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                id$(idbox).innerHTML = req.responseText;
+                id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
             }
         }
     );
@@ -881,7 +881,7 @@ function update_history_account(obj) {
                     if (req.responseText === 'NOCONX') { reconnect();return;}
 
                     success_box(req, xml);
-                    g(obj.div).style.top = calcy(140 + (layer * 3)) + "px";
+                    id$(obj.div).style.top = calcy(140 + (layer * 3)) + "px";
                 }
             });
     } catch (e) {
@@ -925,7 +925,7 @@ function view_history_card(p_value, dossier, p_exercice) {
 
                 add_div(popup);
                 success_box(req, xml);
-                g(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
             }
         }
     );
@@ -962,8 +962,8 @@ function view_followup_card(p_value, dossier) {
                 if (req.responseText === 'NOCONX') { reconnect();return;}
 
                 add_div(popup);
-                $(idbox).update(req.responseText);
-                g(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                id$(idbox).update(req.responseText);
+                id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
             }
         }
     );
@@ -997,7 +997,7 @@ function update_history_card(obj) {
 
                     remove_waiting_box();
                     success_box(req, xml);
-                    g(obj.div).style.top = calcy(140 + (layer * 3)) + "px";
+                    id$(obj.div).style.top = calcy(140 + (layer * 3)) + "px";
                 }
             });
     } catch (e) {
@@ -1039,8 +1039,8 @@ function removeOperation(p_jr_id, dossier, div) {
  *@param pointer to the FORM
  */
 function reverseOperation(obj) {
-    var qs = $(obj).serialize() + "&op=ledger";
-    g('ext' + obj.divname).style.display = 'none';
+    var qs = id$(obj).serialize() + "&op=ledger";
+    id$('ext' + obj.divname).style.display = 'none';
     waiting_box();
     new Ajax.Request(
         "ajax_misc.php",
@@ -1112,8 +1112,8 @@ function modifyOperation(p_value, dossier) {
                 remove_waiting_box();
                 add_div(popup);
                 success_box(xml, txt);
-                $(id_div).style.position = "absolute";
-                $(id_div).style.top = calcy(100 + (layer * 3)) + "px";
+                id$(id_div).style.position = "absolute";
+                id$(id_div).style.top = calcy(100 + (layer * 3)) + "px";
             }
         }
     );
@@ -1154,9 +1154,9 @@ function dropLink(p_dossier, p_div, p_jr_id, p_jr_id2) {
  *@see ICard::input
  */
 function filter_card(obj, queryString) {
-    jrn = $('p_jrn').value;
+    jrn = id$('p_jrn').value;
     if (jrn == -1) {
-        type = $('ledger_type').value;
+        type = id$('ledger_type').value;
         queryString = queryString + '&type=' + type;
     } else {
         queryString = queryString + '&j=' + jrn;
@@ -1182,10 +1182,10 @@ function dsp_letter(obj) {
                 onSuccess: success_dsp_letter
             }
         );
-        g('search').style.display = 'none';
-        g('list').style.display = 'none';
-        $('detail').innerHTML = loading();
-        g('detail').style.display = 'block';
+        id$('search').style.display = 'none';
+        id$('list').style.display = 'none';
+        id$('detail').innerHTML = loading();
+        id$('detail').style.display = 'block';
     } catch (e) {
         alert_box('dsp_letter failed  ' + e.message);
     }
@@ -1203,7 +1203,7 @@ function success_dsp_letter(req) {
         var name_ctl = a[0].firstChild.nodeValue;
         var code_html = getNodeText(html[0]);
         code_html = unescape_xml(code_html);
-        $('detail').innerHTML = code_html;
+        id$('detail').innerHTML = code_html;
     } catch (e) {
         alert_box(e.message);
     }
@@ -1251,10 +1251,10 @@ function search_letter(obj) {
                 onSuccess: success_dsp_letter
             }
         );
-        $('list').hide();
-        $('search').hide();
-        $('detail').innerHTML = loading();
-        $('detail').show();
+        id$('list').hide();
+        id$('search').hide();
+        id$('detail').innerHTML = loading();
+        id$('detail').show();
     } catch (e) {
         alert_box('search_letter  ' + e.message);
     }
@@ -1268,10 +1268,10 @@ function search_letter(obj) {
  */
 function op_save(obj) {
     try {
-        var queryString = $(obj).serialize(true);
+        var queryString = id$(obj).serialize(true);
         queryString ["gDossier"] = obj.gDossier.value;
         var rapt2 = "rapt" + obj.whatdiv.value;
-        queryString ["rapt"] = g(rapt2).value;
+        queryString ["rapt"] = id$(rapt2).value;
         queryString  ["jr_id"] = obj.jr_id.value;
         var jr_id = obj.jr_id.value;
         queryString ["div"] = obj.whatdiv.value;
@@ -1283,7 +1283,7 @@ function op_save(obj) {
         /*
          * Operation detail is in a new window
          */
-        if (g('inpopup')) {
+        if (id$('inpopup')) {
             var action = new Ajax.Request('ajax_misc.php',
                 {
                     method: 'post',
@@ -1327,8 +1327,8 @@ function op_save(obj) {
                                 try {
                                     var answer = xml.responseXML;
                                     var html = answer.getElementsByTagName('code');
-                                    $(divid).innerHTML = unescape(getNodeText(html[0]));
-                                    $(divid).innerHTML.evalScripts();
+                                    id$(divid).innerHTML = unescape(getNodeText(html[0]));
+                                    id$(divid).innerHTML.evalScripts();
                                     remove_waiting_box();
                                 } catch (e) {
                                     console.error("D1. op_save")
@@ -1348,8 +1348,8 @@ function op_save(obj) {
 }
 
 function get_history_account(ctl, dossier) {
-    if ($(ctl).value != '') {
-        view_history_account($(ctl).value, dossier);
+    if (id$(ctl).value != '') {
+        view_history_account(id$(ctl).value, dossier);
     }
 }
 
@@ -1398,12 +1398,12 @@ function show_reconcile(p_div, p_let) {
 function gestion_add_row() {
     try {
         style = 'class="input_text"';
-        var mytable = g("art").tBodies[0];
+        var mytable = id$("art").tBodies[0];
         var ofirstRow = mytable.rows[1];
         var line = mytable.rows.length;
         var nCell = mytable.rows[1].cells.length;
         var row = mytable.insertRow(line);
-        var nb = g("nb_item");
+        var nb = id$("nb_item");
         for (var e = 0; e < nCell; e++) {
             var newCell = row.insertCell(e);
             var tt = ofirstRow.cells[e].innerHTML;
@@ -1421,14 +1421,14 @@ function gestion_add_row() {
             new_tt.evalScripts();
         }
 
-        g("e_march" + nb.value + "_label").innerHTML = '&nbsp;';
-        g("e_march" + nb.value + "_label").value = '';
-        g("e_march" + nb.value + "_price").value = '0';
-        g("e_march" + nb.value).value = "";
-        g("e_quant" + nb.value).value = "1";
-        g('tvac_march' + nb.value).value = "0";
-        if ($("e_march" + nb.value + "_tva_amount"))
-            g("e_march" + nb.value + "_tva_amount").value = 0;
+        id$("e_march" + nb.value + "_label").innerHTML = '&nbsp;';
+        id$("e_march" + nb.value + "_label").value = '';
+        id$("e_march" + nb.value + "_price").value = '0';
+        id$("e_march" + nb.value).value = "";
+        id$("e_quant" + nb.value).value = "1";
+        id$('tvac_march' + nb.value).value = "0";
+        if (id$("e_march" + nb.value + "_tva_amount"))
+            id$("e_march" + nb.value + "_tva_amount").value = 0;
 
         nb.value++;
 
@@ -1446,7 +1446,7 @@ function document_remove(p_dossier, p_div, p_jrid) {
                 {
                     parameters: {"op": "ledger", "gDossier": p_dossier, "div": p_div, "p_jrid": p_jrid, 'act': 'rmf'},
                     onSuccess: function (x) {
-                        $('receipt' + p_div).innerHTML = x.responseText;
+                        id$('receipt' + p_div).innerHTML = x.responseText;
                     }
                 })
         }
@@ -1481,7 +1481,7 @@ function manage_search_filter(p_obj) {
                 'style': 'top:' + y + 'px;left:' + x + 'px;position:absolute;width:400px',
                 drag: 1
             });
-            $('boxfilter' + p_obj.div).show();
+            id$('boxfilter' + p_obj.div).show();
         }
     });
 }
@@ -1503,11 +1503,11 @@ function save_filter(p_div, p_dossier) {
     eltValue['gDossier'] = p_dossier;
     eltValue['op'] = "save_filter";
     eltValue['div'] = p_div;
-    eltValue['filter_name'] = $(p_div + "filter_new").value;
+    eltValue['filter_name'] = id$(p_div + "filter_new").value;
     // Get all elt from the form
     for (var i = 0; i < elt.length; i++) {
         var idx = elt[i];
-        eltValue[idx] = $(p_div + elt[i]).value;
+        eltValue[idx] = id$(p_div + elt[i]).value;
 
     }
     if (eltValue['amount_min'] == "") eltValue["amount_min"] = 0;
@@ -1518,7 +1518,7 @@ function save_filter(p_div, p_dossier) {
         eltValue['r_jrn'] = [];
         for (i = 0; i < eltValue['nb_jrn']; i++) {
             var idx = p_div + 'r_jrn[' + i + ']';
-            eltValue['r_jrn' + i] = $(idx).value
+            eltValue['r_jrn' + i] = id$(idx).value
 
         }
     }
@@ -1539,8 +1539,8 @@ function save_filter(p_div, p_dossier) {
                     var new_item = document.createElement('li');
                     new_item.innerHTML = answer.filter_name;
                     new_item.setAttribute("id", "manageli" + p_div + "_" + answer.filter_id);
-                    $('manage' + p_div).appendChild(new_item);
-                    $(p_div + "filter_new").value = "";
+                    id$('manage' + p_div).appendChild(new_item);
+                    id$(p_div + "filter_new").value = "";
                 } else {
                     throw answer.message;
                 }
@@ -1570,10 +1570,10 @@ function load_filter(p_div, p_dossier, p_filter_id) {
                     , 'p_currency_code', 'tva_id_search'];
                 for (var i = 0; i < elt.length; i++) {
                     var idx = elt[i];
-                    $(p_div + idx).value = answer[elt[i]];
+                    id$(p_div + idx).value = answer[elt[i]];
                 }
                 // fillup the r_jrn array
-                var eltLedgerId = $("ledger_id" + p_div);
+                var eltLedgerId = id$("ledger_id" + p_div);
                 eltLedgerId.innerHTML = "";
                 var eltHidden = document.createElement("input");
                 eltHidden.setAttribute("name", p_div + "nb_jrn");
@@ -1599,7 +1599,7 @@ function load_filter(p_div, p_dossier, p_filter_id) {
                         uf_tag: answer.uf_tag
                     },
                     onSuccess: function (req) {
-                        $(p_div + 'tag_choose_td').update(req.responseText);
+                        id$(p_div + 'tag_choose_td').update(req.responseText);
                     }
                 })
 
@@ -1629,9 +1629,9 @@ function delete_filter(p_div, p_dossier, p_filter_id) {
             try {
                 var answer = req.evalJSON;
 
-                var child = $("manageli" + p_div + "_" + p_filter_id);
+                var child = id$("manageli" + p_div + "_" + p_filter_id);
                 if (child) {
-                    $("manage" + p_div).removeChild(child);
+                    id$("manage" + p_div).removeChild(child);
                 }
             } catch (e) {
                 console.log(e.message)
@@ -1651,16 +1651,16 @@ function reset_filter(p_div) {
     var elt = ['date_start', 'date_end', 'date_paid_start', 'date_paid_end', 'desc', 'amount_min', 'amount_max', 'qcode', 'accounting', 'tva_id_search'];
     for (var i = 0; i < elt.length; i++) {
         var idx = elt[i];
-        $(p_div + idx).value = "";
+        id$(p_div + idx).value = "";
     }
-    if ($(p_div + "date_start_hidden")) {
-        $(p_div + "date_start").value = $(p_div + "date_start_hidden").value;
+    if (id$(p_div + "date_start_hidden")) {
+        id$(p_div + "date_start").value = id$(p_div + "date_start_hidden").value;
     }
-    if ($(p_div + "date_end_hidden")) {
-        $(p_div + "date_end").value = $(p_div + "date_end_hidden").value;
+    if (id$(p_div + "date_end_hidden")) {
+        id$(p_div + "date_end").value = id$(p_div + "date_end_hidden").value;
     }
     // clean all the selected ledger
-    var eltLedgerId = $("ledger_id" + p_div);
+    var eltLedgerId = id$("ledger_id" + p_div);
     eltLedgerId.innerHTML = "";
     var eltHidden = document.createElement("input");
     eltHidden.setAttribute("name", p_div + "nb_jrn");
@@ -1670,7 +1670,7 @@ function reset_filter(p_div) {
     eltLedgerId.appendChild(eltHidden);
 
     // By default , unpaid is uncked
-    $(p_div + "operation_filter").value = "all";
+    id$(p_div + "operation_filter").value = "all";
 }
 function display_list_filter(p_dossier,access_code,ledger_type)
 {
@@ -1744,7 +1744,7 @@ function tax_detail_view (dossier_id,date_from,date_to,nLedger_id,nTva_id)
 	        removeDiv(dgbox);
 	        // For form , most of the parameters are in the FORM
 	        // method is then POST
-	         //var queryString=$(p_form_id).serialize(true);
+	         //var queryString=id$(p_form_id).serialize(true);
 
 	       var queryString = {
 	                op: 'tax_detail',
@@ -1771,7 +1771,7 @@ function tax_detail_view (dossier_id,date_from,date_to,nLedger_id,nTva_id)
 							var y=calcy(15);
 							var div_style="position:absolute;"+";top:"+y+"px";
 							add_div({id:dgbox,cssclass:'inner_box',html:loading(),style:div_style,drag:true});
-							$(dgbox).update(req.responseText);
+							id$(dgbox).update(req.responseText);
 
 					      }
 					  }
@@ -1791,7 +1791,7 @@ var operation_exercice = {
             waiting_box();
             var queryString = {
                 op: 'operation_exercice+update_periode',
-                folder: $('dos_id').value,
+                folder: id$('dos_id').value,
                 gDossier: dossier_id
             };
             var action = new Ajax.Request(
@@ -1807,7 +1807,7 @@ var operation_exercice = {
                             return;
                         }
 
-                        $("select_exercice_id").update(req.responseText);
+                        id$("select_exercice_id").update(req.responseText);
 
                     }
                 }
@@ -1823,13 +1823,13 @@ var operation_exercice = {
             removeDiv(dgbox);
             // For form , most of the parameters are in the FORM
             // method is then POST
-            //var queryString=$(p_form_id).serialize(true);
+            //var queryString=id$(p_form_id).serialize(true);
             console.debug(row_operation_exercice);
             var queryString = {
                 op: 'operation_exercice+modify_row',
                 oe_id: oe_id,
                 row_id: row_operation_exercice,
-                gDossier: $('gDossier').value
+                gDossier: id$('gDossier').value
             };
             var action = new Ajax.Request(
                 "ajax_misc.php",
@@ -1847,7 +1847,7 @@ var operation_exercice = {
                         var y = calcy(15);
                         var div_style = "position:absolute;" + ";top:" + y + "px";
                         add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: true});
-                        $(dgbox).update(req.responseText);
+                        id$(dgbox).update(req.responseText);
                     }
                 }
             );
@@ -1865,9 +1865,9 @@ var operation_exercice = {
 
             // For form , most of the parameters are in the FORM
             // method is then POST
-            //var queryString=$(p_form_id).serialize(true);
+            //var queryString=id$(p_form_id).serialize(true);
 
-            var queryString = $('operation_exercice_input_row_frm').serialize(true);
+            var queryString = id$('operation_exercice_input_row_frm').serialize(true);
 
             var action = new Ajax.Request(
                 "ajax_misc.php",
@@ -1890,24 +1890,24 @@ var operation_exercice = {
                                 row.setAttribute("oed_id", rowid);
                                 row.setAttribute("oe_id", req.responseJSON['oe_id']);
                                 row.update(req.responseJSON['content']);
-                                $("operation_exercice_tb").appendChild(row);
+                                id$("operation_exercice_tb").appendChild(row);
                                 row.addEventListener("click", function (event) {
                                     operation_exercice.click_modify_row(row)
                                 })
 
                             } else {
-                                $("oe_" + rowid).update(req.responseJSON['content']);
+                                id$("oe_" + rowid).update(req.responseJSON['content']);
                             }
                             new Effect.Highlight("oe_" + req.responseJSON['row_id'], {
                                 startcolor: '#FAD4D4',
                                 endcolor: '#F78082'
                             });
                             operation_exercice.display_total(rowid)
-                            $(dgbox).remove();
+                            id$(dgbox).remove();
                             return;
 
                         }
-                        $(dgbox).update(req.responseText);
+                        id$(dgbox).update(req.responseText);
 
                     }
                 }
@@ -1925,7 +1925,7 @@ var operation_exercice = {
             var queryString = {
                 op: 'operation_exercice+display_total',
                 row_id: row_id,
-                gDossier: $('gDossier').value
+                gDossier: id$('gDossier').value
             };
             var action = new Ajax.Request(
                 "ajax_misc.php",
@@ -1940,7 +1940,7 @@ var operation_exercice = {
                             return;
                         }
 
-                        $(dgbox).update(req.responseText);
+                        id$(dgbox).update(req.responseText);
 
                     }
                 }
@@ -1957,7 +1957,7 @@ var operation_exercice = {
             var queryString = {
                 op: 'operation_exercice+delete_row',
                 row_id: row_id,
-                gDossier: $('gDossier').value
+                gDossier: id$('gDossier').value
             };
             var action = new Ajax.Request(
                 "ajax_misc.php",
@@ -1974,8 +1974,8 @@ var operation_exercice = {
                         if (req.responseJSON["row_id"] != "") {
                             operation_exercice.display_total(req.responseJSON["row_id"])
                         }
-                        $('oe_' + queryString['row_id']).remove();
-                        $('operation_exercice_bx').remove();
+                        id$('oe_' + queryString['row_id']).remove();
+                        id$('operation_exercice_bx').remove();
                     }
                 }
             );
@@ -1994,7 +1994,7 @@ var operation_exercice = {
             var dgbox = "oe_transfer_div";
             waiting_box();
 
-            var queryString = $("operation_exercice_transfer_frm").serialize(true);
+            var queryString = id$("operation_exercice_transfer_frm").serialize(true);
             var action = new Ajax.Request(
                 "ajax_misc.php",
                 {
@@ -2009,7 +2009,7 @@ var operation_exercice = {
                         }
                         var answer=req.responseJSON;
 
-                        $('operation_exercice_transfer_info').update(answer.content);
+                        id$('operation_exercice_transfer_info').update(answer.content);
 
 
                     }
