@@ -28,7 +28,8 @@ var ask_reload = 0;
 // tag_choose Element  which contains all the selected tags 
 var tag_choose = '';
 var aDraggableElement = new Array();
-
+// Layer for z-index , see function get_next_layer , must be used in PHP and JS
+var layer=0;
 // document.viewport depends of prototype.js
 var viewport = document.viewport.getDimensions(); // Gets the viewport as an object literal
 var width = viewport.width; // Usable window width
@@ -123,8 +124,9 @@ function trim(s) {
  * @return the found object of undefined if not found
  */
 function id$(ID) {
+    if (ID instanceof Object ) return ID;
     if (document.getElementById) {
-        return this.document.getElementById(ID);
+            return (document.getElementById(ID)||console.error(`id$ not found ${ID}`))  ;
     } else if (document.all) {
         return document.all[ID];
     } else {
@@ -133,6 +135,19 @@ function id$(ID) {
     }
 }
 
+/**
+ * this function is deprecated and replaced by id$
+ * @deprecated
+ * @param ID
+ * @returns {*}
+ */
+function g(ID) {
+    console.warn(`g(${ID} is deprecated, use id$`);
+    return id$(ID);
+}
+function get_next_layer(){
+    return layer++;
+}
 /**
  * enable the type of periode
  */
@@ -764,11 +779,11 @@ function add_div(obj) {
 
 /**
  * remove a object created with add_div
- * @param elt id of the elt
+ * @param str_elt string id of the elt
  */
-function removeDiv(elt) {
-    if (id$(elt)) {
-        document.body.removeChild(id$(elt));
+function removeDiv(str_elt) {
+    if (document.getElementById(str_elt)) {
+        document.body.removeChild(id$(str_elt));
     }
     // if reloaded if asked the window will be reloaded when
     // the box is closed

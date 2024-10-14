@@ -431,6 +431,7 @@ function search_get_card(obj)
 }
 /**
  * show the answer of ajax request
+ * @see search_get_card
  *@param  answer in XML
  */
 function result_card_search(req)
