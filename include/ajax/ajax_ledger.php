@@ -397,7 +397,7 @@ switch ($action) {
 						', array($jr_id));
                 $cn->exec_sql("select comptaproc.jrn_add_note($1,$2)",
                     array($jr_id, $http->post('jrn_note')));
-                $rapt = $_POST['rapt'];
+                $rapt = $http->post('rapt');
 
                 if ($g_parameter->MY_UPDLAB == 'Y' && isset ($_POST['j_id'])) {
                     $a_rowid = $http->post("j_id");
@@ -486,7 +486,7 @@ switch ($action) {
     case 'ask_extdate':
         $date = new IDate('p_date');
         $html .= "<form id=\"form_" . $div . "\" onsubmit=\"return reverseOperation(this);\">";
-        $html .= HtmlInput::hidden('jr_id', $_REQUEST['jr_id']) .
+        $html .= HtmlInput::hidden('jr_id', $http->request('jr_id','number')) .
             HtmlInput::hidden('div', $div) .
             dossier::hidden() .
             HtmlInput::hidden('act', 'reverseop');

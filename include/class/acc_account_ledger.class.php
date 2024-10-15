@@ -634,6 +634,7 @@ class Acc_Account_Ledger
      */
     static function HtmlTableHeader($actiontarget="poste")
     {
+        $http=new \HttpInput();
       switch($actiontarget)
 	{
 	case 'poste':
@@ -651,13 +652,13 @@ class Acc_Account_Ledger
 
         echo "<table  >";
         echo '<TR>';
-        $str_ople=(isset($_REQUEST['ople']))?HtmlInput::hidden('ople',$_REQUEST['ople']):'';
+        $str_ople=(isset($_REQUEST['ople']))?HtmlInput::hidden('ople',$http->request('ople')):'';
 	if ($actiontarget=='poste')
 	  {
 	    echo '<TD><form method="GET" ACTION="export.php">'.
 	      dossier::hidden().
 	      HtmlInput::submit('bt_other',"Autre poste").
-	      $hid->input("type","poste").$hid->input('ac',$_REQUEST['ac'])."</form></TD>";
+	      $hid->input("type","poste").$hid->input('ac',$http->request('ac'))."</form></TD>";
 	  }
 
         $id=uniqid("pdf_");
@@ -668,21 +669,21 @@ class Acc_Account_Ledger
         HtmlInput::hidden('act',$action_pdf).
         $hid->input("type","poste").$str_ople.
         $hid->input('p_action','impress').
-        $hid->input("from_periode",$_REQUEST['from_periode']).
-        $hid->input("to_periode",$_REQUEST['to_periode'])
+        $hid->input("from_periode",$http->request('from_periode')).
+        $hid->input("to_periode",$http->request('to_periode'))
 	  ;
 
 	if ( isset($_REQUEST['letter'] )) echo HtmlInput::hidden('letter','2');
 	if ( isset($_REQUEST['solded'] )) echo HtmlInput::hidden('solded','1');
 
 	if (isset($_REQUEST['from_poste']))
-	  echo HtmlInput::hidden('from_poste',$_REQUEST['from_poste']);
+	  echo HtmlInput::hidden('from_poste',$http->request('from_poste'));
 
 	if (isset($_REQUEST['to_poste']))
-	  echo HtmlInput::hidden('to_poste',$_REQUEST['to_poste']);
+	  echo HtmlInput::hidden('to_poste',$http->request('to_poste'));
 
         if (isset($_REQUEST['poste_id']))
-	  echo HtmlInput::hidden("poste_id",$_REQUEST['poste_id']);
+	  echo HtmlInput::hidden("poste_id",$http->request('poste_id'));
 
         if (isset($_REQUEST['poste_fille']))
             echo $hid->input('poste_fille','on');
@@ -697,17 +698,17 @@ class Acc_Account_Ledger
 	HtmlInput::hidden('act',$action_csv).
         $hid->input("type","poste").$str_ople.
         $hid->input('p_action','impress').
-        $hid->input("from_periode",$_REQUEST['from_periode']).
-	  $hid->input("to_periode",$_REQUEST['to_periode']);
+        $hid->input("from_periode",$http->request('from_periode')).
+	  $hid->input("to_periode",$http->request('to_periode'));
 
 	if (isset($_REQUEST['from_poste']))
-	  echo HtmlInput::hidden('from_poste',$_REQUEST['from_poste']);
+	  echo HtmlInput::hidden('from_poste',$http->request('from_poste'));
 
 	if (isset($_REQUEST['to_poste']))
-	  echo HtmlInput::hidden('to_poste',$_REQUEST['to_poste']);
+	  echo HtmlInput::hidden('to_poste',$http->request('to_poste'));
 
         if (isset($_REQUEST['poste_id']))
-	  echo HtmlInput::hidden("poste_id",$_REQUEST['poste_id']);
+	  echo HtmlInput::hidden("poste_id",$http->request('poste_id'));
 
 	if ( isset($_REQUEST['letter'] )) echo HtmlInput::hidden('letter','2');
 	if ( isset($_REQUEST['solded'] )) echo HtmlInput::hidden('solded','1');
@@ -716,7 +717,7 @@ class Acc_Account_Ledger
             echo $hid->input('poste_fille','on');
         if (isset($_REQUEST['oper_detail']))
             echo $hid->input('oper_detail','on');
-        if (isset($_REQUEST['poste_id'])) echo $hid->input("poste_id",$_REQUEST['poste_id']);
+        if (isset($_REQUEST['poste_id'])) echo $hid->input("poste_id",$http->request('poste_id'));
 
         echo "</form></TD>";
 	echo '<td style="vertical-align:top">';

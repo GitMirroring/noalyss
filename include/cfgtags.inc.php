@@ -31,7 +31,7 @@ if (!defined('ALLOWED'))
  *
  * ***************************************************************************** */
 $tabs=new Html_Tab("tg", _("Etiquette"));
-
+$http=new \HttpInput();
 ob_start();
 $tag=new Tag($cn);
 $uos=new Single_Record('tag');
@@ -64,7 +64,7 @@ if (isset($_POST['save_tag_sb']))
     </p>
 <?php
 $tag->show_list();
-$js=sprintf("onclick=\"show_tag('%s','%s','%s','p')\"", Dossier::id(), $_REQUEST['ac'], '-1');
+$js=sprintf("onclick=\"show_tag('%s','%s','%s','p')\"", Dossier::id(), $http->request('ac'), '-1');
 echo HtmlInput::button("tag_add", "Création étiquette", $js);
 ?>
 </div>

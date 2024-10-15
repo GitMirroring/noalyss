@@ -1,7 +1,26 @@
 <?php
-//This file is part of NOALYSS and is under GPL 
-//see licence.txt
-
+/*
+ *   This file is part of NOALYSS.
+ *
+ *   NOALYSS is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   NOALYSS is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with NOALYSS; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+// Copyright(2004) Dany De Bontridder danydb@aevalys.eu
+/*! \file
+ * \brief lettering
+ * some variable are already defined ($cn, $g_user ...)
+ */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $g_user;
 echo '<div class="content">';
@@ -52,7 +71,7 @@ echo '<br>';
 echo HtmlInput::submit("seek",_('Recherche'));
 echo '</FORM>';
 echo '</div>';
-//if (! isset($_REQUEST['seek'])) exit;
+
 echo '<hr>';
 //--------------------------------------------------------------------------------
 // record the data
@@ -74,7 +93,7 @@ if ( isset($_GET['start']) && isset($_GET['end']))
       }
   }
 echo '<div id="list">';
-$fiche=new Fiche($cn,$_REQUEST['f_id']);
+$fiche=new Fiche($cn, $http->request('f_id',"number"));
 $quick_code=$fiche->get_quick_code();
 $letter=new Lettering_Card($cn);
 $letter->set_parameter('quick_code',$quick_code);

@@ -120,7 +120,7 @@ if ($sa=="pa_detail")
     $ret.=HtmlInput::submit('export_analytic_axis',_("Export CSV"));
     $ret.='</form>';
     $ret.=HtmlInput::button_anchor(_('Efface ce plan'), '', 'remove_analytic_plan',
-                    'onclick="return confirm_box(\'remove_analytic_plan\',\'Effacer ?\',function () {window.location=\'do.php?ac='.$_REQUEST['ac'].'&pa_id='.$_GET['pa_id'].'&sa=pa_delete&'.$str_dossier.'\';})"',
+                    'onclick="return confirm_box(\'remove_analytic_plan\',\'Effacer ?\',function () {window.location=\'do.php?ac='.$http->request('ac').'&pa_id='.$http->get('pa_id','number').'&sa=pa_delete&'.$str_dossier.'\';})"',
                     'smallbutton');
 
     $ret.='</div>';
