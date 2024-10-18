@@ -9,4 +9,8 @@ $_POST=array (
 $_POST['gDossier']=$gDossierLogInput;
 $_GET['gDossier']=$gDossierLogInput;
  $_REQUEST=array_merge($_GET,$_POST);
+
+html_page_start();
+
+
 include 'compta_ach.inc.php';
