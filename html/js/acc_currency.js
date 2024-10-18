@@ -104,9 +104,9 @@ function CurrencyCompute(p_rate,p_update)
 {
     var tvac=1;
     
-    if (id$('tvac')) {
+    if (document.getElementById('tvac')) {
         tvac=id$('tvac').innerHTML;
-    } else if (id$("htva")) {
+    } else if (document.getElementById("htva")) {
         tvac=id$('htva').innerHTML;
     }
    
@@ -166,7 +166,7 @@ function CurrencyComputeMisc(p_rate,p_update)
 function LedgerCurrencyUpdate(p_dossier,p_code,p_update,p_rate,p_eur_amount)
 {
     // Hide or show the row of the table with the amount in EUR
-    if (id$(p_code).value != 0) {
+    if (document.getElementById(p_code).value != 0) {
         id$('row_currency').show();
     }else {
         id$('row_currency').hide();
@@ -189,7 +189,7 @@ function LedgerCurrencyUpdate(p_dossier,p_code,p_update,p_rate,p_eur_amount)
 function LedgerCurrencyUpdateMisc(p_dossier,p_code,p_update,p_rate,p_eur_amount)
 {
     // Hide or show the row of the table with the amount in EUR (= default currency)
-    if (id$(p_code).value != -1) {
+    if (document.getElementById(p_code).value != -1) {
         id$('row_currency').show();
     }else {
         id$('row_currency').hide();

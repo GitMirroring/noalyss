@@ -35,19 +35,19 @@ function clean_Fid(p_ctl)
     nTvaAmount=p_ctl+"_tva_amount";
     nBuy=p_ctl+"_price";
     nTva_id=p_ctl+"_tva_id";
-    if ( id$(nSell) )
+    if ( document.getElementById(nSell) )
     {
         id$(nSell).value="";
     }
-    if ( id$(nBuy) )
+    if ( document.getElementById(nBuy) )
     {
         id$(nBuy).value="";
     }
-    if ( id$(nTva_id) )
+    if ( document.getElementById(nTva_id) )
     {
         id$(nTva_id).value="-1";
     }
-    if ( id$(nTvaAmount))
+    if ( document.getElementById(nTvaAmount))
     {
         id$(nTvaAmount).value=0;
     }
@@ -75,7 +75,7 @@ function ajaxFid(p_ctl)
     id$(p_ctl).value=id$(p_ctl).value.toUpperCase();
     if ( jrn == undefined )
     {
-        if (id$('p_jrn')!=undefined)
+        if (document.getElementById('p_jrn')!=undefined)
         {
             jrn=id$('p_jrn').value;
         }
@@ -84,10 +84,10 @@ function ajaxFid(p_ctl)
     {
         jrn=-1;
     }
-    if ( trim(id$(p_ctl).value)=="" )
+    if ( trim(document.getElementById(p_ctl).value)=="" )
     {
         nLabel=id$(p_ctl).label;
-        if (id$(nLabel) )
+        if (document.getElementById(nLabel) )
         {
             id$(nLabel).value="";
             id$(nLabel).innerHTML="&nbsp;";
@@ -96,23 +96,23 @@ function ajaxFid(p_ctl)
         }
     }
     var queryString="FID="+trim(id$(p_ctl).value);
-    if ( id$(p_ctl).label)
+    if ( document.getElementById(p_ctl).label)
     {
         queryString+='&l='+id$(p_ctl).label;
     }
-    if ( id$(p_ctl).tvaid)
+    if ( document.getElementById(p_ctl).tvaid)
     {
         queryString+='&t='+id$(p_ctl).tvaid;
     }
-    if ( id$(p_ctl).price)
+    if ( document.getElementById(p_ctl).price)
     {
         queryString+='&p='+id$(p_ctl).price;
     }
-    if ( id$(p_ctl).purchase)
+    if ( document.getElementById(p_ctl).purchase)
     {
         queryString+='&b='+id$(p_ctl).purchase;
     }
-    if ( id$(p_ctl).typecard)
+    if ( document.getElementById(p_ctl).typecard)
     {
         queryString+='&d='+id$(p_ctl).typecard;
     }

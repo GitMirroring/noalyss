@@ -152,7 +152,7 @@ function verify_ca(div)
         while (idx < 50)
         {
             var table = div + 't' + idx;
-            if (id$(table))
+            if (document.getElementById(table))
             {
                 var total_amount = 0;
                 // table is found compute the different val[]

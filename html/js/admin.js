@@ -33,7 +33,7 @@ function folder_display(p_user)
      * 
      */
     var p_filter = "";
-    if (id$('database_filter_input')) {
+    if (document.getElementById('database_filter_input')) {
         p_filter = id$('database_filter_input').value;
     }
     /*
@@ -46,7 +46,7 @@ function folder_display(p_user)
             // table id = database_list
             var folder = {};
             var create = false;
-            if (!id$('folder_list_div')) {
+            if (!document.getElementById('folder_list_div')) {
                 folder = create_div({'id': 'folder_list_div', 'cssclass': "inner_box", 'style': 'width:90%,right:5%;top:100px'});
                 create = true;
             }
@@ -157,7 +157,7 @@ function display_admin_answer(p_dossier,p_action)
             
             var folder;
             var create = false;
-            if (!id$(div_display)) {
+            if (!document.getElementById(div_display)) {
                 folder = create_div({'id': div_display, 'cssclass': "inner_box", style: 'width:90%;right:5%;top:100px'});
                 create = true;
             }

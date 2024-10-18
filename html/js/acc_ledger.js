@@ -488,7 +488,7 @@ function ledger_add_row() {
         id$("e_march" + nb.value + "_price").value = '0';
         id$("e_march" + nb.value).value = "";
         id$("e_quant" + nb.value).value = "1";
-        if (id$("e_march" + nb.value + "_tva_amount"))
+        if (document.getElementById("e_march" + nb.value + "_tva_amount"))
             id$("e_march" + nb.value + "_tva_amount").value = 0;
 
         nb.value++;
@@ -526,7 +526,7 @@ function compute_ledger(p_ctl_nb) {
      * if tva_id is empty send a value of -1
      */
     var tva_id = -1;
-    if (id$('e_march' + p_ctl_nb + '_tva_id')) {
+    if (document.getElementById('e_march' + p_ctl_nb + '_tva_id')) {
         tva_id = id$('e_march' + p_ctl_nb + '_tva_id').value;
         if (trim(tva_id) == '') {
             tva_id = -1;
@@ -571,11 +571,11 @@ function refresh_ledger() {
 
     nb_item = id$("nb_item").value;
     for (var i = 0; i < nb_item; i++) {
-        if (id$('tva_march' + i))
+        if (document.getElementById('tva_march' + i))
             tva += id$('tva_march' + i).value * 1;
-        if (id$('htva_march' + i))
+        if (document.getElementById('htva_march' + i))
             htva += id$('htva_march' + i).value * 1;
-        if (id$('tvac_march' + i))
+        if (document.getElementById('tvac_march' + i))
             tvac += id$('tvac_march' + i).value * 1;
     }
     id_tva = id$("tva");
@@ -625,7 +625,8 @@ function success_compute_ledger(request, json) {
 
 
     id$('sum').show();
-    if (id$('e_march' + ctl + '_tva_amount').value == "" || id$('e_march' + ctl + '_tva_amount').value == 0) {
+    if (document.getElementById('e_march' + ctl + '_tva_amount').value == "" ||
+        document.getElementById('e_march' + ctl + '_tva_amount').value == 0) {
         id$('tva_march' + ctl).value = rtva;
         id$('e_march' + ctl + '_tva_amount').value = rtva;
     } else {
@@ -658,52 +659,51 @@ function compute_all_ledger() {
     var tvac = 0;
 
     for (var i = 0; i < nb_item; i++) {
-        if (id$('tva_march'))
+        if (document.getElementById('tva_march'))
             tva += id$('tva_march' + i).value * 1;
-        if (id$('htva_march' + i))
+        if (document.getElementById('htva_march' + i))
             htva += id$('htva_march' + i).value * 1;
-        if (id$('tvac_march' + i))
+        if (document.getElementById('tvac_march' + i))
             tvac += id$('tvac_march' + i).value * 1;
     }
     id_other_tax = id$("other_tax_amount");
-    if (id$('tva'))
-        id$('tva').innerHTML = Math.round(tva * 100) / 100;
-    if (id$('htva'))
+    if (document.getElementById('tva'))        id$('tva').innerHTML = Math.round(tva * 100) / 100;
+    if (document.getElementById ('htva'))
         id$('htva').innerHTML = Math.round(htva * 100) / 100;
     if (id_other_tax) {
         tvac += id_other_tax.value;
     }
-    if (id$('tvac'))
+    if (document.getElementById('tvac'))
         id$('tvac').innerHTML = Math.round(tvac * 100) / 100;
 
 
 }
 
 function clean_tva(p_ctl) {
-    if (id$('e_march' + p_ctl + '_tva_amount'))
+    if (document.getElementById('e_march' + p_ctl + '_tva_amount'))
         id$('e_march' + p_ctl + '_tva_amount').value = 0;
 }
 
 function clean_ledger(p_ctl_nb) {
-    if (id$("e_march" + p_ctl_nb)) {
+    if (document.getElementById("e_march" + p_ctl_nb)) {
         id$("e_march" + p_ctl_nb).value = trim(id$("e_march" + p_ctl_nb).value);
     }
-    if (id$('e_march' + p_ctl_nb + '_price')) {
+    if (document.getElementById('e_march' + p_ctl_nb + '_price')) {
         id$('e_march' + p_ctl_nb + '_price').value = '';
     }
-    if (id$('e_quant' + p_ctl_nb)) {
+    if (document.getElementById('e_quant' + p_ctl_nb)) {
         id$('e_quant' + p_ctl_nb).value = '1';
     }
-    if (id$('tva_march' + p_ctl_nb + '_show')) {
+    if (document.getElementById('tva_march' + p_ctl_nb + '_show')) {
         id$('tva_march' + p_ctl_nb + '_show').value = '0';
     }
-    if (id$('tva_march' + p_ctl_nb)) {
+    if (document.getElementById('tva_march' + p_ctl_nb)) {
         id$('tva_march' + p_ctl_nb).value = 0;
     }
-    if (id$('htva_march' + p_ctl_nb)) {
+    if (document.getElementById('htva_march' + p_ctl_nb)) {
         id$('htva_march' + p_ctl_nb).value = 0;
     }
-    if (id$('tvac_march' + p_ctl_nb)) {
+    if (document.getElementById('tvac_march' + p_ctl_nb)) {
         id$('tvac_march' + p_ctl_nb).value = 0;
     }
 
@@ -1283,7 +1283,7 @@ function op_save(obj) {
         /*
          * Operation detail is in a new window
          */
-        if (id$('inpopup')) {
+        if (document.getElementById('inpopup')) {
             var action = new Ajax.Request('ajax_misc.php',
                 {
                     method: 'post',
@@ -1348,7 +1348,7 @@ function op_save(obj) {
 }
 
 function get_history_account(ctl, dossier) {
-    if (id$(ctl).value != '') {
+    if (document.getElementById(ctl).value != '') {
         view_history_account(id$(ctl).value, dossier);
     }
 }
@@ -1427,7 +1427,7 @@ function gestion_add_row() {
         id$("e_march" + nb.value).value = "";
         id$("e_quant" + nb.value).value = "1";
         id$('tvac_march' + nb.value).value = "0";
-        if (id$("e_march" + nb.value + "_tva_amount"))
+        if (document.getElementById("e_march" + nb.value + "_tva_amount"))
             id$("e_march" + nb.value + "_tva_amount").value = 0;
 
         nb.value++;
@@ -1653,10 +1653,10 @@ function reset_filter(p_div) {
         var idx = elt[i];
         id$(p_div + idx).value = "";
     }
-    if (id$(p_div + "date_start_hidden")) {
+    if (document.getElementById(p_div + "date_start_hidden")) {
         id$(p_div + "date_start").value = id$(p_div + "date_start_hidden").value;
     }
-    if (id$(p_div + "date_end_hidden")) {
+    if (document.getElementById(p_div + "date_end_hidden")) {
         id$(p_div + "date_end").value = id$(p_div + "date_end_hidden").value;
     }
     // clean all the selected ledger

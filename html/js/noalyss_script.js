@@ -152,7 +152,7 @@ function get_next_layer(){
  * enable the type of periode
  */
 function enable_type_periode() {
-    if (id$("type_periode").options[id$("type_periode").selectedIndex].value == 0) {
+    if (document.getElementById("type_periode").options[id$("type_periode").selectedIndex].value == 0) {
         id$('from_periode').enable();
         id$('to_periode').enable();
         id$('from_date').disable();
@@ -242,7 +242,7 @@ function set_inparent(p_ctl, p_value, p_add) {
  @param p_add if we don't replace the current value but we add something
  */
 function set_value(p_ctl, p_value, p_add) {
-    if (id$(p_ctl)) {
+    if (document.getElementById(p_ctl)) {
         var g_ctrl = id$(p_ctl);
         if (p_add != undefined && p_add === 1) {
             if (g_ctrl.value) {
@@ -583,7 +583,7 @@ function cat_doc_change(p_dt_id, p_dossier) {
  */
 function popup_select_tva(obj, p_function_callback) {
     try {
-        if (id$('tva_select')) {
+        if (document.getElementById('tva_select')) {
             removeDiv('tva_select');
         }
 
@@ -710,7 +710,7 @@ function create_div(obj) {
     try {
         var top = document;
         var elt = null;
-        if (!id$(obj.id)) {
+        if (!document.getElementById(obj.id)) {
             elt = top.createElement('div');
         } else {
             elt = id$(obj.id);
@@ -809,7 +809,7 @@ function waiting_box() {
     };
     var y = fixed_position(10, 250)
     obj.style = y + ";width:20%;margin-left:40%;";
-    if (id$('wait_box')) {
+    if (document.getElementById('wait_box')) {
         removeDiv('wait_box');
     }
     waiting_node();
@@ -969,7 +969,7 @@ function hide_ledger_choice(p_frm_search) {
     try {
         var nb = id$(p_frm_search).nb_jrn.value;
         var div = "";
-        if (id$(p_frm_search).div) {
+        if (document.getElementById(p_frm_search).div) {
             div = id$(p_frm_search).div.value;
         }
         var i = 0;
@@ -980,7 +980,7 @@ function hide_ledger_choice(p_frm_search) {
         for (i = 0; i < nb; i++) {
             n_name = div + "r_jrn[" + sel + "]";
             name = div + "r_jrn" + i;
-            if (id$(name).checked) {
+            if (document.getElementById(name).checked) {
                 str += '<input type="hidden" id="' + n_name + '" name="' + n_name + '" value="' + id$(name).value + '">';
                 sel++;
             }
@@ -1109,7 +1109,7 @@ function unselect_checkbox(form_id) {
  * show the calculator
  */
 function show_calc() {
-    if (id$('calc1')) {
+    if (document.getElementById('calc1')) {
         this.document.getElementById('inp').value = "";
         this.document.getElementById('inp').focus();
         return;
@@ -1142,7 +1142,7 @@ function display_periode(p_dossier, p_id) {
             'style': 'width:30em',
             'drag': true
         };
-        if (!id$('mod_periode')) {
+        if (!document.getElementById('mod_periode')) {
             add_div(popup);
         }
         var action = new Ajax.Request(
@@ -1313,7 +1313,7 @@ function save_predf_op(obj) {
 function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, p_tiers) {
     if (amount_id === undefined) {
         amount_id = 0;
-    } else if (id$(amount_id)) {
+    } else if (document.getElementById(amount_id)) {
         if (id$(amount_id).value) {
             amount_id = id$(amount_id).value;
         } else if
@@ -1376,7 +1376,7 @@ function search_operation(obj) {
         var dossier = id$('gDossier').value;
         waiting_box();
         var target = "search" + layer;
-        if (id$(obj)["target"]) {
+        if (document.getElementById(obj)["target"]) {
             target = id$(obj)["target"].value;
         }
         var qs = Form.serialize('search_form_ajx') + "&op=search_op";
@@ -1466,7 +1466,7 @@ function remove_waiting_node() {
 }
 
 function remove_waiting_box() {
-    if (id$('wait_box')) {
+    if (document.getElementById('wait_box')) {
         Effect.Fade('wait_box', {duration: 0.6});
     }
 
@@ -2003,7 +2003,7 @@ function show_fin_chdate(obj_id) {
         }
         var nb = id$('nb_item').value;
         for (i = 0; i < nb; i++) {
-            if (id$('tdchdate' + i)) {
+            if (document.getElementById('tdchdate' + i)) {
                 if (ch == 2) {
                     id$('tdchdate' + i).show();
                 }
@@ -2216,11 +2216,11 @@ function filter_table(phrase, _id, colnr, start_row) {
         id$('info_div').innerHTML = "";
     }
     if (tot_found == 0) {
-        if (id$('info_' + _id)) {
+        if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = content[69];
         }
     } else {
-        if (id$('info_' + _id)) {
+        if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = "  ";
         }
     }
@@ -2268,11 +2268,11 @@ function filter_list(phrase, _id) {
 
     }
     if (tot_found == 0) {
-        if (id$('info_' + _id)) {
+        if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = content[69];
         }
     } else {
-        if (id$('info_' + _id)) {
+        if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = "  ";
         }
     }
@@ -2309,11 +2309,11 @@ function filter_multiselect(phrase, _id) {
         id$('info_div').innerHTML = "";
     }
     if (tot_found == 0) {
-        if (id$('info_' + _id)) {
+        if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = content[69];
         }
     } else {
-        if (id$('info_' + _id)) {
+        if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = "  ";
         }
     }
@@ -4603,7 +4603,7 @@ Widget.prototype.add=function (widget_code) {
     		{
                 here=this;
                 var param = {};
-                if (id$(widget_code+"_param")) {
+                if (document.getElementById(widget_code+"_param")) {
                     param=id$(widget_code+"_param").serialize()
                 }
                 query = {

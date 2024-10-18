@@ -61,7 +61,7 @@ function search_accounting(obj)
         {
             queryString+="&j="+obj.jrn;
         }else {
-            if (id$("p_jrn")) {
+            if (document.getElementById("p_jrn")) {
                 queryString+="&j="+id$("p_jrn").value;
             }
         }
@@ -97,7 +97,7 @@ function search_accounting(obj)
             }
             else
             {
-                if (id$(obj).account)
+                if (document.getElementById(obj).account)
                 {
                     var e=id$(obj).account;
                     var str_account=id$(e).value;

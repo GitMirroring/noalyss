@@ -93,7 +93,7 @@ function search_card(obj)
         }
         if ( jrn==undefined)
         {
-            if ( id$('p_jrn'))   {
+            if ( document.getElementById('p_jrn'))   {
 		jrn=id$('p_jrn').value;
 	    }
             else 	    {
@@ -114,7 +114,7 @@ function search_card(obj)
                       'amount_from_type':amount_from_type,
                       'inactive_card':inactive_card
                              });
-	if (  id$('search_card') ) {
+	if (  document.getElementById('search_card') ) {
 	    removeDiv('search_card');
 	}
 
@@ -336,7 +336,7 @@ function action_concerned_search_card(obj)
                             sx = document.body.scrollTop + 60;
                         }
                         var div_style = "top:" + sx + "px;height:52rem";
-                        if ( ! id$('search_card')) { add_div({id: 'search_card', cssclass: 'inner_box', html: "", style: div_style, drag: true}); }
+                        if ( ! document.getElementById('search_card')) { add_div({id: 'search_card', cssclass: 'inner_box', html: "", style: div_style, drag: true}); }
                         id$('search_card').innerHTML = code_html;
                         id$('query').focus();
                         activate_checkbox_range('select_card_ck');
@@ -470,7 +470,7 @@ function result_card_search(req)
 
         id$('search_card').innerHTML=code_html;
 
-        if (id$('query')) { id$('query').focus();}
+        if (document.getElementById('query')) { id$('query').focus();}
     }
     catch (e)
     {
@@ -525,15 +525,15 @@ function clean_Fid(p_ctl)
     nSell=p_ctl+"_price";
     nBuy=p_ctl+"_price";
     nTva_id=p_ctl+"_tva_id";
-    if ( id$(nSell) )
+    if ( document.getElementById(nSell) )
     {
         id$(nSell).value="";
     }
-    if ( id$(nBuy) )
+    if ( document.getElementById(nBuy) )
     {
         id$(nBuy).value="";
     }
-    if ( id$(nTva_id) )
+    if ( document.getElementById(nTva_id) )
     {
         id$(nTva_id).value="-1";
     }
@@ -709,7 +709,7 @@ function select_card_type(obj)
         filter=-1;
     }
     var content="select_card_div";
-    if ( id$(content)){removeDiv(content);}
+    if ( document.getElementById(content)){removeDiv(content);}
     var sx=0;
     sx=calcy(160);
 
@@ -723,12 +723,12 @@ function select_card_type(obj)
     queryString+='&ctl='+content;
     queryString+='&op2=st'; 	// st for selecting type
     queryString+='&op=card'; 	// st for selecting type
-    if ( id$(obj).win_refresh!=undefined)
+    if ( document.getElementById(obj).win_refresh!=undefined)
     {
         queryString+='&ref';
     }
     /* if an element id must be updated after creating a new card */
-    if ( id$(obj).elementId) {
+    if ( document.getElementById(obj).elementId) {
         var elementId=id$(obj).elementId;
         queryString+="&eltid="+elementId;
     }
@@ -850,7 +850,7 @@ function form_blank_card(obj)
     var str_style="top:"+nTop+"px;left:"+nLeft+"px;width:60em;height:auto";
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
-    if ( id$(content)) {removeDiv(content);}
+    if ( document.getElementById(content)) {removeDiv(content);}
     add_div(popup);
 
 
@@ -986,7 +986,7 @@ function add_category(obj)
     // show ipopup
 	var div={id:obj.ipopup,
 			cssclass:"inner_box",drag:1,style:div_style};
-	if ( id$(div) ) {
+	if ( document.getElementById(div) ) {
 		removeDiv(div);
 	}
 	add_div(div);
@@ -1016,7 +1016,7 @@ function add_category(obj)
  */
 function save_card_category(obj)
 {
-    if ( ! id$(obj).ipopup)
+    if ( ! document.getElementById(obj).ipopup)
     {
         alert_box('Erreur pas d\' attribut ipopup '+obj.id);
         return;
