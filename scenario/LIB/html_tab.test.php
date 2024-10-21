@@ -26,8 +26,7 @@ if (!defined('ALLOWED'))
  * @file
  * @brief  Test of Html_Tab and Output_Html_Tab
  */
-require_once NOALYSS_INCLUDE.'/lib/html_tab.class.php';
-require_once NOALYSS_INCLUDE.'/lib/output_html_tab.class.php';
+
 
 $tab = new Html_Tab('tab1',_("Titre 1"));
 $tab->set_mode('link');

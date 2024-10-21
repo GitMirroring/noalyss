@@ -1,14 +1,13 @@
 <?php 
-//@description:ACH Utilisation opération prédéfinie
+//@description:ACHISTO History Purchase
 $_GET=array (
-  'p_jrn_predef' => '3',
-  'ac' => 'COMPTA/MENUACH/ACH',
   'gDossier' => '42',
-  'pre_def' => '1',
+  'ac' => 'COMPTA/MENUACH/ACHISTO',
 );
 $_POST=array (
 );
 $_POST['gDossier']=$gDossierLogInput;
 $_GET['gDossier']=$gDossierLogInput;
  $_REQUEST=array_merge($_GET,$_POST);
-include 'compta_ach.inc.php';
+html_page_start();
+include 'history_operation.inc.php';

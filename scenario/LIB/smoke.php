@@ -36,14 +36,17 @@
 
 <h1> smoke prompt</h1>
 <pre>
-	function func_callback_prompt(ev)
+
+    	function func_callback_prompt(ev)
 	{
 		if (ev) { alert ("accepted  "+ev);}
 		console.debug(ev);
 		return true;
 	}
-	
-smoke.prompt('Confirmez-vous',func_callback_prompt,{title:"Titre"});
+	function smoke_prompt()
+	{
+		smoke.prompt('Donnez un élement',func_callback_prompt,{title:"Titre"});
+	}
 </pre>
 
 <script>
@@ -60,3 +63,16 @@ smoke.prompt('Confirmez-vous',func_callback_prompt,{title:"Titre"});
 	
 </script>
 <button onclick="smoke_prompt()">smoke_prompt</button>
+<h1> smoke signal </h1>
+<button onclick="signal()">Signal de 0.5 sec </button>
+
+<script>
+function signal() { smoke.signal('Sauvé',function(e){},{duration:500}); }
+
+</script>
+<pre>
+
+        function signal() { smoke.signal('Sauvé',function(e){},{duration:500}); }
+
+
+</pre>

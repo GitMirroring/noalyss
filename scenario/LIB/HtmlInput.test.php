@@ -27,27 +27,6 @@
  * @brief Test the HtmlInput object it means the Inum, IText , ...
  */
 
-require_once NOALYSS_INCLUDE.'/lib/html_input.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iaction.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ibutton.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icard.class.php';
-require_once NOALYSS_INCLUDE.'/lib/icheckbox.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iconcerned.class.php';
-require_once NOALYSS_INCLUDE.'/lib/idate.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ifile.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ihidden.class.php';
-require_once NOALYSS_INCLUDE.'/lib/inum.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iperiod.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iposte.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iradio.class.php';
-require_once NOALYSS_INCLUDE.'/lib/irelated_action.class.php';
-require_once NOALYSS_INCLUDE.'/lib/iselect.class.php';
-require_once NOALYSS_INCLUDE.'/lib/ispan.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itext.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itextarea.class.php';
-require_once NOALYSS_INCLUDE.'/lib/itva_popup.class.php';
-require_once NOALYSS_INCLUDE.'/lib/input_switch.class.php';
-require_once NOALYSS_INCLUDE.'/lib/input_checkbox.class.php';
 
 $http=new HttpInput();
 ?>

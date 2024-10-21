@@ -31,16 +31,11 @@
 
 include_once("../include/constant.php");
 include_once("lib/ac_common.php");
-require_once('class/database.class.php');
-require_once ('class/dossier.class.php');
-require_once('lib/html_input.class.php');
-require_once('lib/icon_action.class.php');
-require_once ('lib/function_javascript.php');
-require_once 'class/noalyss_user.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+
+
 html_page_start();
 global $http;
-
+define ('TEST_UNIT',1);
 $http=new HttpInput();
 
 
@@ -67,8 +62,8 @@ define('ALLOWED', 1);
 load_all_script();
 // To enable assert , set "zend.assertions" in the php.ini file
 ini_set("assert.active",1);
-assert_options(ASSERT_ACTIVE, 1);
-assert_options(ASSERT_WARNING, 1);
+// assert_options(ASSERT_ACTIVE, 1);
+// assert_options(ASSERT_WARNING, 1);
 //removed in PHP8 assert_options(ASSERT_QUIET_EVAL, 1);
 function my_assert_handler($file, $line, $code)
 {
@@ -77,7 +72,6 @@ function my_assert_handler($file, $line, $code)
         Line '$line'<br />
         Code '$code'<br /><hr />";
 }
-assert_options(ASSERT_CALLBACK, 'my_assert_handler');
 /******************************************************************************************************************/
 /*  Utilities 
 /******************************************************************************************************************/
@@ -97,34 +91,43 @@ function get_card_with_activity() {
 }
 
 /*
- * Loading of all scenario
+ * Loading of all scenario HTML + XML
  */
-$scan=scandir('../scenario/');
-$maxscan=count($scan);
-$cnt_scenario=0;$scenario=array();
+function retrieve_files($directory) :array
+{
+    $scan=scandir($directory);
+    $maxscan=count($scan);
+    $cnt_scenario=0;$scenario=array();
 
-for ($e_scan=0; $e_scan<$maxscan; $e_scan++)
-    {
-        if (is_file('../scenario/'.$scan[$e_scan])&&strpos($scan[$e_scan], '.php')==true)
+    for ($e_scan=0; $e_scan<$maxscan; $e_scan++)
         {
-            $description="";
-            $a_description=file('../scenario/'.$scan[$e_scan]);
-            $max_description=count($a_description);
-            for ($w=0; $w<$max_description; $w++)
+            if (is_file("{$directory}/".$scan[$e_scan])&&strpos($scan[$e_scan], '.php')==true)
             {
-                if (strpos($a_description[$w], '@description:')==true)
+                $description="";
+                $a_description=file("{$directory}/".$scan[$e_scan]);
+                $max_description=count($a_description);
+                for ($w=0; $w<$max_description; $w++)
                 {
-                    $description=$a_description[$w];
-                    $description=noalyss_str_replace('//@description:', '', $description);
+                    if (strpos($a_description[$w], '@description:')==true)
+                    {
+                        $description=$a_description[$w];
+                        $description=noalyss_str_replace('//@description:', '', $description);
+                    }
                 }
+                $scenario[$cnt_scenario]['file']="{$directory}/".$scan[$e_scan];
+                $scenario[$cnt_scenario]['desc']=$description;
+                $cnt_scenario++;
+
+
             }
-            $scenario[$cnt_scenario]['file']=$scan[$e_scan];
-            $scenario[$cnt_scenario]['desc']=$description;
-            $cnt_scenario++;
-            
-            
         }
-    }
+    return $scenario;
+}
+
+$html_files=retrieve_files(NOALYSS_BASE.'/scenario/HTML');
+$xml_files=retrieve_files(NOALYSS_BASE.'/scenario/XML');
+$lib_files=retrieve_files(NOALYSS_BASE.'/scenario/LIB');
+
 $script=$http->request('script', "string",'');
 $min=$cn->get_value("select p_id from parm_periode order by p_start asc limit 1");
 $max=$cn->get_value("select p_id from parm_periode order by p_start desc limit 1");
@@ -137,7 +140,8 @@ if ($script=="")
      * cherche pour fichier a include, s'il y en a alors les affiche
      * avec une description
      */
-    
+
+    echo h1('HTML');
 
     echo '<table>';
     $get='test.php?'.http_build_query(array('script'=>"all", 'gDossier'=>$gDossierLogInput, 'description'=>"Tous les scripts"));
@@ -149,23 +153,70 @@ if ($script=="")
     echo '</td>';
     echo '<td>Tous les scripts</td>';
     echo '</tr>';
-
-    for ($e=0; $e<$cnt_scenario; $e++)
+    $nb_html=count($html_files);
+    for ($e=0; $e<$nb_html; $e++)
     {
 
-            $get='test.php?'.http_build_query(array('script'=>$scenario[$e]['file'], 'gDossier'=>$gDossierLogInput, 'description'=>$scenario[$e]['desc']));
+            $get='test.php?'.http_build_query(array('script'=>$html_files[$e]['file'], 'gDossier'=>$gDossierLogInput, 'description'=>$html_files[$e]['desc']));
             echo '<tr>';
             echo '<td>';
             echo $e;
             echo '</td>';
             echo '<td>';
             echo '<a href="'.$get.'" target="_blank">';
-            echo $scenario[$e]['file'];
+            echo basename($html_files[$e]['file']);
             echo '</a>';
             echo '</td>';
-            echo '<td>'.$scenario[$e]['desc'].'</td>';
+            echo '<td>'.$html_files[$e]['desc'].'</td>';
             echo '</tr>';
-        
+
+    }
+    echo '</table>';
+
+    echo h1('XML');
+    echo '<table>';
+
+    $nb_xml=count($xml_files);
+    for ($e=0; $e<$nb_xml; $e++)
+    {
+
+        $get='test.php?'.http_build_query(array('script'=>$xml_files[$e]['file'], 'gDossier'=>$gDossierLogInput, 'description'=>$xml_files[$e]['desc']));
+        echo '<tr>';
+        echo '<td>';
+        echo $e;
+        echo '</td>';
+        echo '<td>';
+        echo '<a href="'.$get.'" target="_blank">';
+        echo basename($xml_files[$e]['file']);
+        echo '</a>';
+        echo '</td>';
+        echo '<td>'.$xml_files[$e]['desc'].'</td>';
+        echo '</tr>';
+
+    }
+    echo '</table>';
+
+
+    echo h1('Libraries');
+    echo '<table>';
+
+    $nb_lib=count($lib_files);
+    for ($e=0; $e<$nb_lib; $e++)
+    {
+
+        $get='test.php?'.http_build_query(array('script'=>$lib_files[$e]['file'], 'gDossier'=>$gDossierLogInput, 'description'=>$lib_files[$e]['desc']));
+        echo '<tr>';
+        echo '<td>';
+        echo $e;
+        echo '</td>';
+        echo '<td>';
+        echo '<a href="'.$get.'" target="_blank">';
+        echo basename($lib_files[$e]['file']);
+        echo '</a>';
+        echo '</td>';
+        echo '<td>'.$lib_files[$e]['desc'].'</td>';
+        echo '</tr>';
+
     }
     echo '</table>';
 }
@@ -207,11 +258,10 @@ else
 {
     $start_mem=memory_get_usage();
     $start_time=microtime(true);
-    $script=noalyss_str_replace('../', '', $script);
     $description=$http->get("description","string", "aucune description");
     echo '<h1>'.$script."</h1>";
     echo '<p> description = '.$description.'<p>';
-    include '../scenario/'.$script;
+    include $script;
 
     $end_mem=memory_get_usage();
     $end_time=microtime(true);

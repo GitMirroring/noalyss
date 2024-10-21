@@ -1,12 +1,16 @@
 <?php 
-//@description:ACHISTO
+//@description:ACH new purchase
 $_GET=array (
   'gDossier' => '42',
-  'ac' => 'COMPTA/MENUACH/ACHISTO',
+  'ac' => 'COMPTA/MENUACH/ACH',
 );
 $_POST=array (
 );
 $_POST['gDossier']=$gDossierLogInput;
 $_GET['gDossier']=$gDossierLogInput;
  $_REQUEST=array_merge($_GET,$_POST);
-include 'history_operation.inc.php';
+
+html_page_start();
+
+
+include 'compta_ach.inc.php';

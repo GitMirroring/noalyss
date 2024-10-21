@@ -1,5 +1,5 @@
 <?php 
-//@description:ACH Confirmation avec opération prédéfinie
+//@description:ACH Enregistrer Opération achat avec op. prédéfinie
 $_GET=array (
   'p_jrn_predef' => '3',
   'ac' => 'COMPTA/MENUACH/ACH',
@@ -10,14 +10,13 @@ $_POST=array (
   'gDossier' => '42',
   'nb_item' => '10',
   'p_jrn' => '3',
-  'e_date' => '01.02.2016',
+  'e_date' => '01.01.2017',
   'e_ech' => '',
-  'e_client' => 'DIV',
+  'e_client' => 'FOURNI1',
   'e_pj' => 'ACH2',
   'e_pj_suggest' => 'ACH2',
   'e_comm' => 'Paiement loyer',
-  'e_march0' => 'FID15',
-  'e_march0_label' => 'TEST',
+  'e_march0' => 'LOYER',
   'e_march0_price' => '2560.0000',
   'e_quant0' => '1.0000',
   'htva_march0' => '2560',
@@ -98,10 +97,10 @@ $_POST=array (
   'tva_march9' => '0',
   'tvac_march9' => '0',
   'jrn_type' => 'ACH',
-  'p_action' => 'ach',
-  'sa' => 'p',
   'e_mp' => '0',
   'view_invoice' => 'Enregistrer',
+    'p_currency_rate'=>1 ,
+    'p_currency_code'=>'0'
 );
 $_POST['gDossier']=$gDossierLogInput;
 $_GET['gDossier']=$gDossierLogInput;

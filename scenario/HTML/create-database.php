@@ -18,11 +18,16 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright (2018) Author Dany De Bontridder <dany@alchimerys.be>
+//@description:create a database (domaine).dossier1 , check the SQL for creating MOD1 and MOD2
 
 $_POST['gDossier']=$gDossierLogInput;
 $_GET['gDossier']=$gDossierLogInput;
 $_REQUEST=array_merge($_GET,$_POST);
+?>
+<h1 class="">create a database </h1>
 
+Create dossier1 with sql/mod1/schema.sql , data.sql and constraint.sql
+<?php
 /**
  * @file
  * @brief 
@@ -30,9 +35,14 @@ $_REQUEST=array_merge($_GET,$_POST);
  */
 $cn=new Database();
 
+
 $cn->exec_sql("create database ".domaine."dossier1 encoding='utf8'");
 
 $cn=new Database(1, 'dos');
 $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/schema.sql');
 $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/data.sql');
 $cn->execute_script(NOALYSS_INCLUDE.'/sql/mod1/constraint.sql');
+
+echo Dossier::name(1);
+
+?>

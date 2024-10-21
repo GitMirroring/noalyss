@@ -94,8 +94,6 @@ if ($ledger == "") {
     $html = escape_xml($html);
     if (!headers_sent()) {
         header('Content-type: text/xml; charset=UTF-8');
-    } else {
-        echo "HTML" . unescape_xml($html);
     }
     echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -543,9 +541,8 @@ switch ($action) {
 $html = escape_xml($html);
 if (!headers_sent()) {
     header('Content-type: text/xml; charset=UTF-8');
-} else {
-    echo "HTML" . unescape_xml($html);
 }
+
 
 echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
