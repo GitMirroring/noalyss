@@ -38,7 +38,11 @@ global $http;
 define ('TEST_UNIT',1);
 $http=new HttpInput();
 
-
+if (  ini_get('zend.assertions') != 1 ) {
+ echo_warning(_('Attention zend.assertions devrait être activé'));
+ echo p('Il faut changer dans votre fichier .htaccess ou php.ini');
+ echo 'voir <a href="https://www.php.net/manual/fr/ini.core.php#ini.zend.assertions">https://www.php.net/manual/fr/ini.core.php#ini.zend.assertions</a>';    
+}
 $gDossier=$http->request('gDossier',"number", -1);
 if ($gDossier==-1)
 {
