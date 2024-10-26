@@ -321,7 +321,7 @@ echo Icon_Action::tips($anc_filter->title);
 
             <div class="form-group">
                 <label class="w-20" for="p_alphanum">
-<?= _('Utilisez des postes comptables alphanumérique') ?>
+<?= _('Utilisez des postes comptables alphanumériques') ?>
                 </label>
                     <?= $alpha_num->input('p_alphanum') ?>
             </div>
