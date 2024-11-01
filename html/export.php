@@ -53,6 +53,25 @@ if ( $action=='X'  || $g_user->check_print($action)==0 )
 // get file and execute it
 
  $prfile=$cn->get_value("select me_file from menu_ref where me_code=$1",array($action));
+
+if ( LOGINPUT)
+{
+    $file_loginput=fopen($_ENV['TMP'].'/export-'.$prfile.'-'.$_SERVER['REQUEST_TIME'].'.php','a+');
+    fwrite ($file_loginput,"<?php \n");
+    fwrite ($file_loginput,'//@description: export '.$prfile."\n");
+    fwrite($file_loginput, '$_GET='.var_export($_GET,true));
+    fwrite($file_loginput,";\n");
+    fwrite($file_loginput, '$_POST='.var_export($_POST,true));
+    fwrite($file_loginput,";\n");
+    fwrite($file_loginput, '$_POST[\'gDossier\']=$gDossierLogInput;');
+    fwrite($file_loginput,"\n");
+    fwrite($file_loginput, '$_GET[\'gDossier\']=$gDossierLogInput;');
+    fwrite($file_loginput,"\n");
+    fwrite($file_loginput,' $_REQUEST=array_merge($_GET,$_POST);');
+    fwrite($file_loginput,"\n");
+    fclose($file_loginput);
+}
+
  if ( $prfile == "" || !file_exists(NOALYSS_INCLUDE."/export/$prfile")) {
      print $action;
      die (_('Export impossible'));
