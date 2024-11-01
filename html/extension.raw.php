@@ -57,8 +57,25 @@ if ( $ext->search($http->request("plugin_code")) != -1 )
 		exit();
       }
     define ('ALLOWED',True);
+    if ( LOGINPUT)
+    {
+      $file_loginput=fopen($_ENV['TMP'].'/plugin-export-'.$ext->me_code.'-'.$_SERVER['REQUEST_TIME'].'.php','a+');
+      fwrite ($file_loginput,"<?php \n");
+      fwrite ($file_loginput,'//@description: export  '.$ext->me_code."\n");
+      fwrite($file_loginput, '$_GET='.var_export($_GET,true));
+      fwrite($file_loginput,";\n");
+      fwrite($file_loginput, '$_POST='.var_export($_POST,true));
+      fwrite($file_loginput,";\n");
+      fwrite($file_loginput, '$_POST[\'gDossier\']=$gDossierLogInput;');
+      fwrite($file_loginput,"\n");
+      fwrite($file_loginput, '$_GET[\'gDossier\']=$gDossierLogInput;');
+      fwrite($file_loginput,"\n");
+      fwrite($file_loginput,' $_REQUEST=array_merge($_GET,$_POST);');
+      fwrite($file_loginput,"\n");
+      fclose($file_loginput);
+    }
     /* call the ajax script */
-    require_once(NOALYSS_PLUGIN.DIRECTORY_SEPARATOR.dirname(trim($ext->getp('me_file'))).DIRECTORY_SEPARATOR.'raw.php');
+    require_once NOALYSS_PLUGIN.DIRECTORY_SEPARATOR.dirname(trim($ext->getp('me_file'))).DIRECTORY_SEPARATOR.'raw.php';
   }
 else
   {
