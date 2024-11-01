@@ -17,10 +17,13 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 // Copyright(2004) Dany De Bontridder danydb@aevalys.eu
-/*! \file
- * \brief lettering
+/*!
+ * \file
+ * \brief lettering : included from include/category_card.inc.php, which is part of manager.inc.php, customer.inc.php,...
+ *
  * some variable are already defined ($cn, $g_user ...)
  */
+Noalyss\Dbg::echo_file(__FILE__);
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $g_user;
 echo '<div class="content">';
@@ -41,13 +44,13 @@ $periode=new Periode($cn);
 list($first_per,$last_per)=$periode->get_limit($exercice);
 
 $start=new IDate('start');
-$start->value=(isset($_GET['start']))?$http->get('start'):$first_per->first_day();
+$start->value=(isset($_GET['start']))?$http->get('start','date'):$first_per->first_day();
 $r=td(_('Date début'));
 $r.=td($start->input());
 echo tr($r);
 
 $end=new IDate('end');
-$end->value=(isset($_GET['end']))?$_GET['end']:$last_per->last_day();
+$end->value=(isset($_GET['end']))?$http->get('end','date'):$last_per->last_day();
 $r=td(_('Date fin'));
 $r.=td($end->input());
 echo tr($r);

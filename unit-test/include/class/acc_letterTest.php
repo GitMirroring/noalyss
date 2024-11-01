@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
  */
 require DIRTEST.'/global.php';
 
-class Acc_Letter extends TestCase
+class Acc_LetterTest extends TestCase
 {
     /**
      * @var Fiche

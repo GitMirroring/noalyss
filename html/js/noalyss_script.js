@@ -3571,7 +3571,7 @@ var Periode = function (p_ledger) {
             }
         }
         if (count == 0) {
-            smoke.signal("Sélectionner au moins une période", function () {
+             smoke.signal("Sélectionner au moins une période", function () {
             }, {duration: 1500});
             return;
         }
