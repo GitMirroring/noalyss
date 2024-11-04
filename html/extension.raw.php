@@ -71,10 +71,13 @@ if ( $ext->search($http->request("plugin_code")) != -1 )
       fwrite($file_loginput,"\n");
       fwrite($file_loginput,' $_REQUEST=array_merge($_GET,$_POST);');
       fwrite($file_loginput,"\n");
+      $string='require_once "'.NOALYSS_PLUGIN.DIRECTORY_SEPARATOR.dirname(trim($ext->getp('me_file'))).DIRECTORY_SEPARATOR.'raw.php'.'";';
+      fwrite($file_loginput,sprintf("%s",$string));
+      fwrite($file_loginput,"\n");
       fclose($file_loginput);
     }
     /* call the ajax script */
-    require_once(NOALYSS_PLUGIN.DIRECTORY_SEPARATOR.dirname(trim($ext->getp('me_file'))).DIRECTORY_SEPARATOR.'raw.php');
+    require_once NOALYSS_PLUGIN.DIRECTORY_SEPARATOR.dirname(trim($ext->getp('me_file'))).DIRECTORY_SEPARATOR.'raw.php';
   }
 else
   {
