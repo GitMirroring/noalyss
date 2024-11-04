@@ -24,7 +24,8 @@ if (trim($result) != '') {
     echo p('result failed','class="notice"');
 }
 echo h1('Tous les journaux');
-csv2table($result);
+
+\Noalyss_Csv::csv2table($result);
 
 
 echo h1('Achat 01.01.2019 - 31.12.2019');

@@ -297,5 +297,32 @@ class Noalyss_Csv
         $this->size = $size;
         return $this;
     }
+    /**
+     * @brief  convert CSV strings (content of a file) into HTML table,
+     * @param $string CSV files
+     */
+    static function csv2table ($string)
+    {
+        $a_field=[';',','];
+        $sep_field=$a_field[$_SESSION[SESSION_KEY.'csv_fieldsep']];
+        $a_field=['.',','];
+        $sep_dec=$a_field[$_SESSION[SESSION_KEY.'csv_decimal']];
+        $encoding=$_SESSION[SESSION_KEY.'csv_encoding'];
 
+        $aRow=explode("\r\n", $string);
+
+        echo '<table class="result">';
+        foreach ($aRow as $row) {
+            echo '<tr>';
+            $aCol=explode($sep_field, $row);
+            foreach ($aCol as $col)  {
+                echo '<td>';
+                echo h($col);
+                echo '</td>';
+            }
+            echo '</tr>';
+
+        }
+        echo '</table>';
+    }
 }
