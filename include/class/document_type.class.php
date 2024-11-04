@@ -27,21 +27,24 @@
 /**
  * @class Document_Type
  *@brief class for the table document_type , a document_type is a kind of action in the follow up
- * 
- * < dt_id pk document_type
- * < dt_value value
  */
 class Document_Type
 {
-	/** document_type
-	 * \brief constructor
-	 * \param $p_cn database connx
-	 */
+    var $db;          //!< Database Connection
+    var $dt_id;       //!< primary key see SQL DOCUMENT_TYPE.DT_ID
+    var $dt_value;    //!< description of the document see SQL DOCUMENT_TYPE.DT_VALUE
+    var $dt_prefix;   //!< prefix for numbering see SQL DOCUMENT_TYPE.DT_PREFIX
 
-	function __construct($p_cn, $p_id = -1)
+	/**
+     * \brief
+	 * \brief constructor document_type
+	 * \param $p_cn database connx
+     * \param $dt_id primary key see SQL DOCUMENT_TYPE.DT_ID
+	 */
+	function __construct(\Database $p_cn, int $dt_id = -1)
 	{
 		$this->db = $p_cn;
-		$this->dt_id = $p_id;
+		$this->dt_id = $dt_id;
 	}
 
 	/**
@@ -51,9 +54,9 @@ class Document_Type
 	function get()
 	{
 		$sql = "select * from document_type where dt_id=$1";
-		$R = $this->db->exec_sql($sql, array($this->dt_id));
-		if ($this->db->count($R) == 0) return 1;
-		$r = Database::fetch_array($R, 0);
+		$r = $this->db->get_row($sql, array($this->dt_id));
+		if ( $r == null ) return 1;
+
 		$this->dt_id = $r['dt_id'];
 		$this->dt_value = $r['dt_value'];
 		$this->dt_prefix = $r['dt_prefix'];
@@ -72,6 +75,7 @@ class Document_Type
 		$array = array();
 		for ($i = 0; $i < count($r); $i++)
 		{
+            $tmp=array();
 			$tmp['dt_value'] = $r[$i]['dt_value'];
 			$tmp['dt_prefix'] = $r[$i]['dt_prefix'];
 
@@ -99,7 +103,7 @@ class Document_Type
          * Restart the increment of the document
          * @param type $p_int
          */
-	function set_number($p_int)
+	function set_number(int $p_int)
 	{
 		try
 		{
@@ -107,8 +111,74 @@ class Document_Type
 		}
 		catch (Exception $e)
 		{
-                      record_log($e);
 			alert("Erreur " . $e->getMessage());
 		}
 	}
+
+    function __toString(): string
+    {
+      return sprintf("dt_id : [%d] \n dt_value [%s] \n dt_prefix [%s]\n",$this->dt_id,$this->dt_value,$this->dt_prefix);
+    }
+
+    /**
+     * @brief unit test for Document_Type
+     * @return void
+     */
+    static function test_me()
+    {
+       // if (! defined('TEST_UNIT')) return;
+        $cn=Dossier::connect();
+        function prv_echo_error($msg,int $lineno) {
+            print '<p class="p-2 alert-danger">';
+            print "ERROR : $lineno";
+            print $msg;
+            print '</p>';
+        }
+        // prepare test
+        $old_value=[];
+        try {
+            $cn->start();
+            $old_value[0]=$cn->get_row('select * from document_type where dt_id=$1',[8]);
+            $old_value[1]=$cn->get_row('select * from document_type where dt_id=$1',[6]);
+
+            $cn->exec_sql("update document_type set dt_value='Email' where dt_id=$1",[6]);
+            $cn->exec_sql("update document_type set dt_prefix='PML' where dt_id=$1",[8]);
+            $document_type=new Document_Type($cn,8);
+            echo $document_type;
+
+            if ( $document_type->get() == 1 ) {
+            }
+
+            if ( $document_type->dt_prefix!='PML') {
+                prv_echo_error("PREFIX :". $document_type,__LINE__);
+            }
+
+            $document_type->set_number(6);
+            $document_type->get();
+
+            if ( $document_type->dt_value!='Email') {
+                prv_echo_error("VALUE :". $document_type,__LINE__);
+            }
+            $list=Document_Type::get_list($cn);
+
+            // list array > 1 and key =5
+            if (count ($list) == 0) {
+                prv_echo_error("GET_LIST :EMPTY",__LINE__);
+            } else {
+               foreach (['js_mod','dt_id','dt_value','dt_prefix','js_remove'] as $key) {
+                   if ( ! isset ($list[0][$key])) {
+                       prv_echo_error ('NOT SET '.$key,__LINE__);
+                   }   else {
+                       echo '<pre>';
+                       var_dump( $list[0][$key]);
+                       echo '</pre>';
+                   }
+               }
+            }
+        } catch (\Exception $e) {
+            prv_echo_error("EXCEPTION :". $document_type,__LINE__);
+            print_r($e->getTraceAsString());
+        }
+        $cn->rollback();
+    }
 }
