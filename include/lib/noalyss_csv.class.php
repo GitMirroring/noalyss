@@ -77,11 +77,16 @@ class Noalyss_Csv
     }
 
     /***
-     *@brief  Send an header for CSV , the filename is corrected
+     *@brief  Send an header for CSV , the filename is corrected. If TEST_UNIT is defined, the function is called
+     * from a test file (located in scenario , see manual )and no header are requested
      */
     function send_header()
     {
         $this->correct_name();
+        if ( defined('TEST_UNIT')) {
+
+            return;
+        }
         header('Pragma: public');
         header('Content-type: application/csv');
         header("Content-Disposition: attachment;filename=\"{$this->filename}\"",

@@ -47,6 +47,14 @@ Dans votre code, vous pouvez ajouter des portions de code ainsi
         // exécuté uniquement si appelé pour les tests unitaires
 
     }
+
+Les répertoires :
+----------------
+HTML  : vérification pour les fichiers inclus
+LIB   : concerne les libraries
+XML   : réponse de script ajax, réponse souvent en XML
+LOCAL : vos propres scripts, pour vos développements, ne seront pas dans GIT
+
 -----------------------
      ENGLISH
 -----------------------
@@ -72,3 +80,10 @@ In your code, you can do
         // executed only if calling script  is test.php,
 
     }
+
+FOLDERS
+----------------
+HTML  : test the files to include
+LIB   : concerns  libraries
+XML   : ajax script response often XML or JSON
+LOCAL : Your own scripts for developping , not included in GIT

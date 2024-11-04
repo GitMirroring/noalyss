@@ -218,7 +218,7 @@ class Manage_Table_SQL
      */
     function send_header()
     {
-        header('Content-type:text/xml;charset="UTF-8"');
+        @header('Content-type:text/xml;charset="UTF-8"');
     }
 
     /**

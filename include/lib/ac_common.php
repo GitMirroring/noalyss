@@ -36,9 +36,9 @@ function h($p_string)
 {
     return ( $p_string === null)?"":htmlspecialchars($p_string,ENT_QUOTES|ENT_HTML5,'UTF-8',true);
 }
-function p($p_string)
+function p($p_string, $p_extra='')
 {
-    return '<p>'.$p_string."</p>";
+    return '<p '.$p_extra.'>'.$p_string."</p.>";
 }
 function span($p_string, $p_extra='')
 {
@@ -1800,4 +1800,34 @@ function sanitize_filename($filename)
 
     $new_filename=strtolower($filename_no)."-".date("Ymd-Hi").$filename_suff;
     return $new_filename;
+}
+
+/**
+ * @brief  convert some  csv string (content of a file) into HTML table,
+ * @param $string CSV files
+ * @return void
+ */
+function csv2table ($string)
+{
+    $a_field=[';',','];
+    $sep_field=$a_field[$_SESSION[SESSION_KEY.'csv_fieldsep']];
+    $a_field=['.',','];
+    $sep_dec=$a_field[$_SESSION[SESSION_KEY.'csv_decimal']];
+    $encoding=$_SESSION[SESSION_KEY.'csv_encoding'];
+
+    $aRow=explode("\r\n", $string);
+
+    echo '<table class="result">';
+    foreach ($aRow as $row) {
+        echo '<tr>';
+        $aCol=explode($sep_field, $row);
+        foreach ($aCol as $col)  {
+            echo '<td>';
+            echo h($col);
+            echo '</td>';
+        }
+        echo '</tr>';
+
+    }
+    echo '</table>';
 }

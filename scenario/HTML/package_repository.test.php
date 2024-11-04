@@ -73,11 +73,16 @@ $core=$package_repository->make_object("core", "");
 $core->download();
 
 //download fake plugin
-echo h1("Plugin : download and install ");
-$plugin=$package_repository->make_object("plugin","COPRO");
-$plugin->download();
-echo h2("Install in noalyss/include/ext/copro-fake");
-$plugin->install();
+try {
+    echo h1("Plugin : download and install ");
+    $plugin=$package_repository->make_object("plugin","COPRO");
+    $plugin->download();
+    echo h2("Install in noalyss/include/ext/copro-fake");
+    $plugin->install();
+
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
 
 
 echo h1("Available template");

@@ -63,7 +63,10 @@ $http=new HttpInput();
     $input_switch->readOnly=TRUE;
     echo $input_switch->input();
     ?>
-    <h2>InputCheckBox (Check Box)</h2>
+    <h2>EXPERIMENTAL InputCheckBox (Check Box)</h2>
+    <?php
+    require_once NOALYSS_INCLUDE.'/lib/input_checkbox.class.php';
+    ?>
     <ul>
         
             
