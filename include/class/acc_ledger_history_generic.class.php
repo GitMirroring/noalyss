@@ -429,6 +429,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
              jrn.jr_def_id as jr_def_id,
              jrn.jr_montant as montant,
              substr(jrn.jr_comment,1,35) as comment,
+             jrn.jr_comment str_comment,
              to_char(jrn.jr_date,'DD-MM-YYYY') as date,
              to_char(jrn.jr_date_paid,'DD-MM-YYYY') as date_paid,
              jr_pj_number,

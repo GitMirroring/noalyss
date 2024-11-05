@@ -96,6 +96,7 @@ foreach ($a_accounting as $accounting_item)
     $solde_d = 0.0;
     $solde_c = 0.0;
     $current_exercice="";
+    $idx=0;
     foreach ($acc_account_ledger->row as $detail)
     {
 
@@ -146,7 +147,7 @@ foreach ($a_accounting as $accounting_item)
                 $solde_c = 0.0;
                 $pdf->line_new();
                 $pdf->SetFont('DejaVuCond','',6);
-
+                $idx=0;
             }
 
         if ($detail['cred_montant'] > 0)
@@ -161,25 +162,27 @@ foreach ($a_accounting as $accounting_item)
         }
 
         $i = 0;
+        $idx++;
+        $fill=$pdf->is_fill($idx);
 		$side=" ".$acc_account_ledger->get_amount_side($solde);
-        $pdf->write_multi($width[$i], 3, shrink_date($detail['j_date_fmt']), 0, $lor[$i]);
+        $pdf->write_multi($width[$i], 6, shrink_date($detail['j_date_fmt']), 0, $lor[$i],fill:$fill);
         $i++;
-        $pdf->write_multi($width[$i], 3, $detail['jr_internal'], 0, $lor[$i] );
+        $pdf->write_multi($width[$i], 6, $detail['jr_internal'], 0, $lor[$i] ,fill:$fill);
         $i++;
         /* limit set to 40 for the substring */
         //  $triple_point = (mb_strlen($detail['description']) > 40 ) ? '...':'';
         // $pdf->write_multi($width[$i], 6, mb_substr($detail['description'],0,40).$triple_point, 0,$lor[$i]);
-        $pdf->write_multi($width[$i], 3,$detail['description'].'['.$detail['jr_optype'].']', 0,$lor[$i]);
+        $pdf->write_multi($width[$i], 6,$detail['description'].'['.$detail['jr_optype'].']', 0,$lor[$i],fill:$fill);
         $i++;
-        $pdf->write_cell($width[$i], 6, $detail['jr_pj_number'], 0, 0, $lor[$i]);
+        $pdf->write_cell($width[$i], 6, $detail['jr_pj_number'], 0, 0, $lor[$i],fill:$fill);
         $i++;
-        $pdf->write_cell($width[$i], 6, ($detail['letter']!=-1)?$detail['letter']:'', 0, 0, $lor[$i]);
+        $pdf->write_cell($width[$i], 6, ($detail['letter']!=-1)?$detail['letter']:'', 0, 0, $lor[$i],fill:$fill);
         $i++;
-        $pdf->write_cell($width[$i], 6, ($detail['deb_montant']  > 0 ? nbm( $detail['deb_montant'])  : ''), 0, 0, $lor[$i]);
+        $pdf->write_cell($width[$i], 6, ($detail['deb_montant']  > 0 ? nbm( $detail['deb_montant'])  : ''), 0, 0, $lor[$i],fill:$fill);
         $i++;
-        $pdf->write_cell($width[$i], 6, ($detail['cred_montant'] > 0 ? nbm( $detail['cred_montant']) : ''), 0, 0, $lor[$i]);
+        $pdf->write_cell($width[$i], 6, ($detail['cred_montant'] > 0 ? nbm( $detail['cred_montant']) : ''), 0, 0, $lor[$i],fill:$fill);
         $i++;
-        $pdf->write_cell($width[$i], 6, nbm(abs( $solde)).$side, 0, 0, $lor[$i]);
+        $pdf->write_cell($width[$i], 6, nbm(abs( $solde)).$side, 0, 0, $lor[$i],fill:$fill);
         $i++;
         $pdf->line_new();
 

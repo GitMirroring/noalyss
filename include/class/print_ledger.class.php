@@ -28,12 +28,38 @@
  * @brief Strategie class for the print_ledger class
  * 
 */
+#[AllowDynamicProperties]
 class Print_Ledger extends PDF
 {
     protected  $filter_operation; // See Acc_Ledger_History::filter_operation
-    private $ledger ; //!< concerned Ledger 
-    private $from ; //! integer parm_periode.p_id , start periode;
-    private $to ; //! integer parm_periode.p_id , end periode;
+    private $ledger ;             //!< concerned Ledger
+    private $from ;               //<! integer parm_periode.p_id , start periode;
+    private $to ;                 //<! integer parm_periode.p_id , end periode;
+
+    /**************************************************************************
+     *internal variables for computing sum on PDF Listing
+     *************************************************************************/
+    protected $previous;             //<! previous amount
+    protected $rap_htva;             //<! reminder amount w/o vat
+    protected $rap_tva;              //<! reminder amount VAT
+    protected $rap_tvac;             //<! reminder amount VAT included
+    protected $rap_priv;             //<! reminder amount private
+    protected $rap_other_tax;       //<! reminder amount for other tax
+    protected $other_tax_previous;  //<! reminder amount for other tax
+        protected $a_Tva;           //<!  array of VAT
+        protected $jrn_type;        //<! type of ledger
+    protected $rap_nd;              //<! reminder not deductible
+    protected $rap_tva_np;          //<! reminder VAT not deductible
+    protected $flag_other_tax;      //<! flag for other taxe
+    protected $tp_htva;             //<! total page w/o VAT
+    protected $tp_tvac;             //<! total page VAT included
+    protected  $tp_priv;            //<! total page private part
+    protected $tp_nd ;              //<! total page amount Not Deductible
+    protected $tp_tva_np ;          //<! total page VAT Not Deductible
+    protected $tp_other_tax ;       //<! total page other tax
+    protected $tp_tva ;             //<! total VAT
+
+
     public function __construct(\Database $p_cn, 
                                 $orientation, 
                                 $unit, 

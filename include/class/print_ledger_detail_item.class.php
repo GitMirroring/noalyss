@@ -26,7 +26,9 @@
 
 class Print_Ledger_Detail_Item extends Print_Ledger
 {
-    private $show_col; //!< $show_col (bool) show columns
+
+    protected $show_col; //!< $show_col (bool) show columns
+
     public function __construct (Database $p_cn,Acc_Ledger $p_jrn,$p_from,$p_to,$p_filter_operation)
     {
 
@@ -111,8 +113,8 @@ class Print_Ledger_Detail_Item extends Print_Ledger
         $this->SetFont('DejaVu', '', 6);
         $internal="";
         $this->SetFillColor(220,221,255);
-        $high=4;
-        $high_lg=3;
+        $high=8;
+        $high_lg=8;
         for ( $i=0;$i< $nb ;$i++)
         {
             
