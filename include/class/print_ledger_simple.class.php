@@ -295,14 +295,14 @@ class Print_Ledger_Simple extends  \Print_Ledger
             }
             $row=$a_jrn[$i];
             $ret_reconcile=$ledger->db->execute('reconcile_date',array($row['jr_id']));
-            $this->LongLine(15,3,($row['jr_pj_number']),0);
+            $this->LongLine(15,5,($row['jr_pj_number']),0);
             $this->write_cell(10,5,$row['str_date_short'],0,0);
             $this->write_cell(13,5,$row['jr_internal'],0,0);
             list($qc,$name)=$this->get_tiers($row['jr_id'],$this->jrn_type);
-            $this->LongLine(40,3,"[".$qc."]".$name,0,'L');
+            $this->LongLine(40,5,"[".$qc."]".$name,0,'L');
 
             if ( !$flag_tva )    {        
-            $this->LongLine(65,3,mb_substr($row['jr_comment'],0,150),0,'L');
+            $this->LongLine(65,5,mb_substr($row['jr_comment'],0,150),0,'L');
             }
 
             /* get other amount (without vat, total vat included, private, ND */

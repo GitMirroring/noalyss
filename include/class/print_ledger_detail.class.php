@@ -92,10 +92,10 @@ class Print_Ledger_Detail extends Print_Ledger
             $this->SetFont('DejaVuCond','B',7);
             $row=$array[$i];
 
-            $this->LongLine(20,3,$row['pj']);
+            $this->LongLine(20,7,$row['pj']);
             $this->write_cell(15,7,$row['date_fmt']);
             $this->write_cell(20,7,$row['internal']);
-            $this->LongLine(170,3,$row['comment']);
+            $this->LongLine(170,7,$row['comment']);
             $this->write_cell(20,7,nbm($row['montant']),0,0,'R');
 
             $this->line_new();

@@ -192,7 +192,7 @@ class PDF_Operation extends PDF {
             $fiche=new Fiche($this->cn,$fiche_id);
             $this->pdf->write_cell($width[0],6,$i+1);
             $this->pdf->write_cell($width[1],6,$fiche->get_quick_code());
-            $this->pdf->LongLine($width[2],3,$row['j_text']);
+            $this->pdf->LongLine($width[2],6,$row['j_text']);
             $this->pdf->write_cell($width[3],6,nbm($row["qs_price"],2),"",0,"R");
             $str=$this->str_vat($row["qs_vat_code"]);
             $this->pdf->write_cell($width[4],6,$str);
@@ -243,7 +243,7 @@ class PDF_Operation extends PDF {
             $fiche=new Fiche($this->cn,$fiche_id);
             $this->pdf->write_cell($width[0],6,$i+1);
             $this->pdf->write_cell($width[1],6,$fiche->get_quick_code());
-            $this->pdf->LongLine($width[2],3,$row['j_text']);
+            $this->pdf->LongLine($width[2],6,$row['j_text']);
             $this->pdf->write_cell($width[3],6,nbm($row["qp_price"],2),"",0,"R");
             $str=$this->str_vat($row["qp_vat_code"]);
             $this->pdf->write_cell($width[4],6,$str);
