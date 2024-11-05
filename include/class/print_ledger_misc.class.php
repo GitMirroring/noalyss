@@ -83,13 +83,13 @@ class Print_Ledger_Misc extends Print_Ledger
             $row=$a_jrn[$i];
             
             $this->write_cell(10,5,  smaller_date($row['date']));
-            $this->write_multi(30,3,$row['jr_pj_number']);
+            $this->LongLine(30,3,$row['jr_pj_number']);
             $this->write_cell(20,5,$row['jr_internal']);
 	    $type=$this->cn->get_value("select jrn_def_type from jrn_def where jrn_def_id=$1",array($a_jrn[$i]['jr_def_id']));
 	    $other=mb_substr($ledger->get_tiers($type,$a_jrn[$i]['jr_id']),0,25);
-	    $this->write_multi(25,3,$other,0,'L');
+	    $this->LongLine(25,3,$other,0,'L');
             $positive=$row['montant'];
-            $this->write_multi(60,3,$row['comment'],0,'L');
+            $this->LongLine(60,3,$row['comment'],0,'L');
              if ( $type == 'FIN' ) {
 	       $positive = $this->cn->get_value("select qf_amount from quant_fin  ".
 					  " where jr_id=".$row['jr_id']);

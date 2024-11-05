@@ -88,8 +88,8 @@ if ($histo == 4 || $histo==5)
 	$pdf->write_cell(0,8,$name,0,1,'C');
     $pdf->line_new();
 	$pdf->SetFont('DejaVuCond','',7);
-    $pdf->write_multi(30,3,'Quick Code',0,'L',0);
-    $pdf->write_multi(80,3,'Libellé',0,'L',0);
+    $pdf->LongLine(30,3,'Quick Code',0,'L',0);
+    $pdf->LongLine(80,3,'Libellé',0,'L',0);
     $pdf->write_cell(20,7,'Débit',0,0,'R',0);
     $pdf->write_cell(20,7,'Crédit',0,0,'R',0);
     $pdf->write_cell(20,7,'Solde',0,0,'R',0);
@@ -121,7 +121,7 @@ if ($histo == 4 || $histo==5)
         $sum_solde=bcsub($sum_deb,$sum_cred);
 
         $pdf->write_cell(30,7,$oCard->strAttribut(ATTR_DEF_QUICKCODE),0,0,'L',$fill);
-        $pdf->write_multi(80,3,$oCard->strAttribut(ATTR_DEF_NAME)." (".$oCard->strAttribut(ATTR_DEF_ACCOUNT).")",0,'L',$fill);
+        $pdf->LongLine(80,3,$oCard->strAttribut(ATTR_DEF_NAME)." (".$oCard->strAttribut(ATTR_DEF_ACCOUNT).")",0,'L',$fill);
         $pdf->write_cell(20,7,nbm($solde['debit']),0,0,'R',$fill);
         $pdf->write_cell(20,7,nbm($solde['credit']),0,0,'R',$fill);
         $pdf->write_cell(20,7,nbm(abs($solde['solde'])),0,0,'R',$fill);
@@ -233,10 +233,10 @@ else
 				$row = $letter->content[$i];
 				$str_date = shrink_date($row['j_date_fmt']);
 
-				$pdf->write_multi($tab[0], 3, $str_date, 0, $align[0], $fill);
+				$pdf->LongLine($tab[0], 3, $str_date, 0, $align[0], $fill);
 				$pdf->write_cell($tab[1], 4, $row['jr_pj_number'], 0, 0, $align[1], $fill);
-				$pdf->write_multi($tab[2], 3, $row['jr_internal'], 0, $align[1], $fill);
-				$pdf->write_multi($tab[3], 3, $row['jr_comment'], 0,  $align[2], $fill);
+				$pdf->LongLine($tab[2], 3, $row['jr_internal'], 0, $align[1], $fill);
+				$pdf->LongLine($tab[3], 3, $row['jr_comment'], 0,  $align[2], $fill);
 				if ($row['j_debit'] == 't')
 				{
 					$prog=bcadd($prog,$row['j_montant']);

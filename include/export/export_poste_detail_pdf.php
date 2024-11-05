@@ -89,7 +89,7 @@ foreach ($a_poste as $poste)
     $l++;
     $pdf->write_cell($size[$l],6,_('Journal'),0,0,'C');
     $l++;
-    $pdf->write_multi($size[$l],3,_('Libellé'),0,'L');
+    $pdf->LongLine($size[$l],3,_('Libellé'),0,'L');
     $l++;
     $pdf->write_cell($size[$l],6,_('Let'),0,0,'R');
     $l++;
@@ -160,7 +160,7 @@ foreach ($a_poste as $poste)
         $l++;
         $tiers=$operation->find_tiers($row['jr_id'], $row['j_id'], $row['j_qcode']);
         $description=($tiers=="")?$row["description"]:"[".$tiers."]".$row['description'];
-        $pdf->write_multi($size[$l],3,  $description,0,$align[$l]);
+        $pdf->LongLine($size[$l],3,  $description,0,$align[$l]);
         $l++;
         $pdf->write_cell($size[$l],6,(($row['letter']!=-1)?$row['letter']:''),0,0,$align[$l]);
         $l++;
