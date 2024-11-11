@@ -35,10 +35,10 @@ class Acc_Ledger_Search
 
     protected $cn; //!< Database Connection
     private $type; //!< type of ledger : FIN,ODS,VEN,ACH
-    private $all; //!< Flag to indicate if all ledgers must searched (1 for yes)
-    private $div; //! prefix for id of DOM id
-    //! id of the ledger
-    var $id ;
+    private $all; //!< Flag to indicate if all ledgers must be searched (1 for yes)
+    private $div; //!< prefix for id of DOM id
+    var $id ;    //!< id of the ledger
+
     /**
      * @brief return a HTML string with the form for the search
      * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN: uppercase !
@@ -49,7 +49,7 @@ class Acc_Ledger_Search
      * @param  $div is the div (for reconciliation)
      * @param type $p_type
      * @param type $p_all
-     * @param type $p_div
+     * @param string $p_div name of the HTML DIV
      *
      * @todo the parameter $all_type_ledger is useless : ALL means all the ledgers, VEN all the ledger of sales...
      */
@@ -258,7 +258,7 @@ class Acc_Ledger_Search
     }
 
     /**
-     * Build the button for managing the filter for search
+     * @brief Build the button for managing the filter for search
      * @param type $p_div id prefix of the div, button, table ..
      * @param  $this->type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN
      * @param  $all_type_ledger

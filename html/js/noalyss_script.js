@@ -1302,8 +1302,8 @@ function save_predf_op(obj) {
 /**
  *ctl_concern is the widget to update
  *amount_id is either a html obj. or an amount and the field tiers if given
- * @param {type} dossier
- * @param {type} ctl_concern
+ * @param {int} dossier
+ * @param {string} ctl_concern DOM id that receive the number
  * @param {float or string} amount_id Amount or DOM Id of the element containing the amount
  * @param {float} ledger
  * @param {type} p_id_targetDom Element (div) where to display the search result
@@ -1369,15 +1369,16 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
 }
 
 /**
- * search in a popin obj if the object form
+ * search in a popin obj if the object form,
+ * @param obj DOM of the FORM
  */
 function search_operation(obj) {
     try {
         var dossier = id$('gDossier').value;
         waiting_box();
         var target = "search" + layer;
-        if (document.getElementById(obj)["target"]) {
-            target = id$(obj)["target"].value;
+        if (obj["target"]) {
+            target = obj["target"].value;
         }
         var qs = Form.serialize('search_form_ajx') + "&op=search_op";
         var action = new Ajax.Request('ajax_misc.php',
