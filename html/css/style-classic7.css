@@ -115,13 +115,13 @@ h2 {
     font-size:15px;
     font-size:1.1rem !important;
     margin-top: 5px;
-    font-size: 1.1rem;
-margin-bottom: 1rem;
-margin-top: 1rem;
-margin-right:1rem;
-margin-left:1rem;
-border-radius: 10px 0px;
-padding:1rem;
+    font-size: 1.20rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    margin-right:1rem;
+    margin-left:1rem;
+    border-radius: 10px;
+    padding:1rem;
 }
  @media only screen and (max-width: 1280px) {
      h2{
