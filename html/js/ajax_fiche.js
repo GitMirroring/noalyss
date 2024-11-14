@@ -71,20 +71,16 @@ function ajaxFid(p_ctl)
 	try
 	{
 	var gDossier=id$('gDossier').value;
-    var jrn=id$(p_ctl).jrn;
-    id$(p_ctl).value=id$(p_ctl).value.toUpperCase();
-    if ( jrn == undefined )
+    var jrn = (p_ctl.jrn) ? p_ctl.jrn.value:-1;
+    p_ctl.value=p_ctl.value.toUpperCase();
+
+    if ( jrn == undefined &&  document.getElementById('p_jrn')!=undefined)
     {
-        if (document.getElementById('p_jrn')!=undefined)
-        {
-            jrn=id$('p_jrn').value;
-        }
+        jrn=id$('p_jrn').value;
     }
-    if ( jrn == undefined )
-    {
-        jrn=-1;
-    }
-    if ( trim(document.getElementById(p_ctl).value)=="" )
+
+
+    if ( trim(p_ctl.value)=="" )
     {
         nLabel=id$(p_ctl).label;
         if (document.getElementById(nLabel) )
@@ -96,25 +92,25 @@ function ajaxFid(p_ctl)
         }
     }
     var queryString="FID="+trim(id$(p_ctl).value);
-    if ( document.getElementById(p_ctl).label)
+    if ( p_ctl.label)
     {
-        queryString+='&l='+id$(p_ctl).label;
+        queryString+='&l='+p_ctl.label;
     }
-    if ( document.getElementById(p_ctl).tvaid)
+    if ( p_ctl.tvaid)
     {
-        queryString+='&t='+id$(p_ctl).tvaid;
+        queryString+='&t='+p_ctl.tvaid;
     }
-    if ( document.getElementById(p_ctl).price)
+    if ( p_ctl.price)
     {
-        queryString+='&p='+id$(p_ctl).price;
+        queryString+='&p='+p_ctl.price;
     }
-    if ( document.getElementById(p_ctl).purchase)
+    if ( p_ctl.purchase)
     {
-        queryString+='&b='+id$(p_ctl).purchase;
+        queryString+='&b='+p_ctl.purchase;
     }
-    if ( document.getElementById(p_ctl).typecard)
+    if ( p_ctl.typecard)
     {
-        queryString+='&d='+id$(p_ctl).typecard;
+        queryString+='&d='+p_ctl.typecard;
     }
     queryString=queryString+"&j="+jrn+'&gDossier='+gDossier;
     queryString=queryString+'&ctl='+p_ctl.id;
