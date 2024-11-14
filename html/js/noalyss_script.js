@@ -1403,7 +1403,11 @@ function search_operation(obj) {
  * Update the field e_concerned, from class_iconcerned
  * Value is the field where to put the quick-code but only if one checkbox has been
  * selected
- * @param {type} obj
+ * @param {DOM Element} obj : DOM FORM ,
+ *      - element : ctlc : will contain the JRN.JR_ID ,
+ *      - tiers : the name of the counterparty
+ *      - target : DGBOX displaying the search result
+ *
  * @returns {undefined}
  */
 function set_reconcile(obj) {
