@@ -126,11 +126,11 @@ function trim(s) {
 function id$(ID) {
     if (ID instanceof Object ) return ID;
     if (document.getElementById(ID)) {
-            document.getElementById(ID);
+            return document.getElementById(ID);
     } else if (document.all) {
         return document.all[ID];
     } else {
-        console.error(`id$ ${ID}`)
+        document.debug_noalyss&&console.error(`id$ ${ID}`)
         return undefined;
     }
 }
@@ -142,7 +142,7 @@ function id$(ID) {
  * @returns {*}
  */
 function g(ID) {
-    console.warn(`g(${ID} is deprecated, use id$`);
+    document.debug_noalyss&& console.warn(`g(${ID} is deprecated, use id$`);
     return id$(ID);
 }
 function get_next_layer(){
@@ -3186,7 +3186,7 @@ function confirm_box(p_obj, p_message, p_callback_true, p_waiting) {
  * @returns void
  */
 function alert_box(p_message) {
-    smoke.alert(p_message, undefined, {ok: 'ok', classname: "inner_box"});
+    smoke.alert(p_message, undefined, {ok: 'ok', classname: "inner_box",title:'ATTENTION'});
 }
 
 
