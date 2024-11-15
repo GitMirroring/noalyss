@@ -538,7 +538,7 @@ function compute_ledger(p_ctl_nb) {
 
     id$('e_quant' + p_ctl_nb).value = trim(id$('e_quant' + p_ctl_nb).value);
     var quantity = id$('e_quant' + p_ctl_nb).value;
-    let other_tax = id$("other_tax");
+    let other_tax = document.getElementById("other_tax");
     let other_tax_id = (other_tax && other_tax.checked) ? other_tax.value : -1;
 
     var querystring = {
@@ -581,7 +581,7 @@ function refresh_ledger() {
     id_tva = id$("tva");
     id_htva = id$("htva");
     id_tvac = id$("tvac");
-    id_other_tax = id$("other_tax_amount");
+    id_other_tax = document.getElementById("other_tax_amount");
     if (id_tva)
         id_tva.innerHTML = Math.round(tva * 100) / 100;
     if (id_htva)
@@ -666,7 +666,7 @@ function compute_all_ledger() {
         if (document.getElementById('tvac_march' + i))
             tvac += id$('tvac_march' + i).value * 1;
     }
-    id_other_tax = id$("other_tax_amount");
+    id_other_tax = document.getElementById("other_tax_amount");
     if (document.getElementById('tva'))        id$('tva').innerHTML = Math.round(tva * 100) / 100;
     if (document.getElementById ('htva'))
         id$('htva').innerHTML = Math.round(htva * 100) / 100;

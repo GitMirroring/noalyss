@@ -27,29 +27,21 @@
 
 /**
  *  clean the row (the label, price and vat)
- * @param p_ctl the calling ctrl
+ * @param {string} p_ctl the calling ctrl
  */
 function clean_Fid(p_ctl)
 {
-    nSell=p_ctl+"_price";
-    nTvaAmount=p_ctl+"_tva_amount";
-    nBuy=p_ctl+"_price";
-    nTva_id=p_ctl+"_tva_id";
-    if ( document.getElementById(nSell) )
-    {
-        id$(nSell).value="";
+
+    document.getElementById(p_ctl).value='';
+    var aField=['_price','_tva_amount','_tva_id'];
+    for ( field of aField) {
+        let obj=document.getElementById(p_ctl+field);
+        if ( obj ) {obj.value='0'}
     }
-    if ( document.getElementById(nBuy) )
-    {
-        id$(nBuy).value="";
-    }
-    if ( document.getElementById(nTva_id) )
-    {
-        id$(nTva_id).value="-1";
-    }
-    if ( document.getElementById(nTvaAmount))
-    {
-        id$(nTvaAmount).value=0;
+    var aField=['_label'];
+    for ( field of aField) {
+        let obj=document.getElementById(p_ctl+field);
+        if ( obj ) {obj.value=''}
     }
 }
 function errorFid(request,json)
@@ -58,7 +50,7 @@ function errorFid(request,json)
 }
 /**
  *  this function fills the data from fid.php,
- * @param {object} p_ctl  : field of the input,
+ * @param {object or string} p_ctl  : field of the input, : object or string
  *  possible object member
  * - label field to update with the card's name
  * - price field to update with the card's price
@@ -68,11 +60,15 @@ function errorFid(request,json)
  */
 function ajaxFid(p_ctl)
 {
+    debugger
 	try
 	{
 	var gDossier=id$('gDossier').value;
-    var jrn = (p_ctl.jrn) ? p_ctl.jrn.value:-1;
-    p_ctl.value=p_ctl.value.toUpperCase();
+    // if p_ctl is a string that find the object
+    var dome =id$(p_ctl);
+
+    var jrn = (dome.jrn) ? dome.jrn.value:-1;
+    dome.value=dome.value.toUpperCase();
 
     if ( jrn == undefined &&  document.getElementById('p_jrn')!=undefined)
     {
@@ -80,40 +76,40 @@ function ajaxFid(p_ctl)
     }
 
 
-    if ( trim(p_ctl.value)=="" )
+    if ( trim(dome.value)=="" )
     {
-        nLabel=id$(p_ctl).label;
+        nLabel=id$(dome).label;
         if (document.getElementById(nLabel) )
         {
             id$(nLabel).value="";
             id$(nLabel).innerHTML="&nbsp;";
-            clean_Fid(p_ctl);
+            clean_Fid(dome.id);
             return;
         }
     }
-    var queryString="FID="+trim(id$(p_ctl).value);
-    if ( p_ctl.label)
+    var queryString="FID="+trim(dome.value);
+    if ( dome.label)
     {
-        queryString+='&l='+p_ctl.label;
+        queryString+='&l='+dome.label;
     }
-    if ( p_ctl.tvaid)
+    if ( dome.tvaid)
     {
-        queryString+='&t='+p_ctl.tvaid;
+        queryString+='&t='+dome.tvaid;
     }
-    if ( p_ctl.price)
+    if ( dome.price)
     {
-        queryString+='&p='+p_ctl.price;
+        queryString+='&p='+dome.price;
     }
-    if ( p_ctl.purchase)
+    if ( dome.purchase)
     {
-        queryString+='&b='+p_ctl.purchase;
+        queryString+='&b='+dome.purchase;
     }
-    if ( p_ctl.typecard)
+    if ( dome.typecard)
     {
-        queryString+='&d='+p_ctl.typecard;
+        queryString+='&d='+dome.typecard;
     }
     queryString=queryString+"&j="+jrn+'&gDossier='+gDossier;
-    queryString=queryString+'&ctl='+p_ctl.id;
+    queryString=queryString+'&ctl='+dome.id;
     queryString=encodeURI(queryString);
 
     var action=new Ajax.Request (

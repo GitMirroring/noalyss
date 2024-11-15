@@ -36,7 +36,7 @@ var width = viewport.width; // Usable window width
 var height = viewport.height;
 
 /**
- * return undefined if nothing is found , otherwise return the DOM elemnt
+ * return undefined if nothing is found , otherwise return the DOM elemnt, try to find an DOM Element inside p_element
  * @param {type} p_name_dom
  * @param {type} name_child
  * @returns {undefined}
@@ -125,8 +125,8 @@ function trim(s) {
  */
 function id$(ID) {
     if (ID instanceof Object ) return ID;
-    if (document.getElementById) {
-            return (document.getElementById(ID)||console.error(`id$ not found ${ID}`))  ;
+    if (document.getElementById(ID)) {
+            document.getElementById(ID);
     } else if (document.all) {
         return document.all[ID];
     } else {

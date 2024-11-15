@@ -516,29 +516,7 @@ function setCtrl(p_ctrl,p_quickcode,p_ctrlname,p_label)
 
 
 
-/**
- * clean the row (the label, price and vat)
- * @param p_ctl the calling ctrl
- */
-function clean_Fid(p_ctl)
-{
-    nSell=p_ctl+"_price";
-    nBuy=p_ctl+"_price";
-    nTva_id=p_ctl+"_tva_id";
-    if ( document.getElementById(nSell) )
-    {
-        id$(nSell).value="";
-    }
-    if ( document.getElementById(nBuy) )
-    {
-        id$(nBuy).value="";
-    }
-    if ( document.getElementById(nTva_id) )
-    {
-        id$(nTva_id).value="-1";
-    }
 
-}
 function errorFid(request,json)
 {
     alert_box(content[53]);
