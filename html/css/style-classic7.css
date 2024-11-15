@@ -25,7 +25,7 @@ BODY {
     color:darkblue !important;
     background-color:#FCFDFD;
     --hover : rgba(108, 130, 208, 0.9);
-        --border-size:4px;
+        --border-size:6px;
      --accent-color:lightblue;
 }
 input{
@@ -3765,7 +3765,7 @@ h2.h-section {
     height:var(--border-size);
     background-color:lightblue;
     transform:scaleX(0);
-    transition:transform 300ms ease-in-out;
+    transition:transform 150ms ease-in-out;
 }
 
 .nav-item.nav-item-underline:hover::before,
@@ -3776,7 +3776,7 @@ h2.h-section {
 
  .nav-item.li-active.nav-item-underline::before {
     transform: scale(1);
-     background-color: darkred;
+     background-color: #d03100;
  }
 
  /**
@@ -3790,7 +3790,7 @@ h2.h-section {
      left: 0;
      right: 0;
      background-color:darkorange;
-     height: 3px;
+     height: var(--border-size);
  }
 
  .nav-level3 .nav-link.active::after {
