@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PGCLUSTER=12/main
+export PGCLUSTER=17/main
 DOSSIER_TEST=rel91dossier25
 FILE_TEST=dossier25.sql
 
