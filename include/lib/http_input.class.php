@@ -172,7 +172,7 @@ class HttpInput
             }
             if (!array_key_exists($p_name,$this->array))
             {
-                throw new Exception(_('Paramètre invalide')."[$p_name]",
+                throw new Exception("C175."._('Paramètre invalide')."[$p_name]",
                 EXC_PARAM_VALUE);
             }
             $this->check_type($p_name, $p_type);
