@@ -65,6 +65,11 @@ class Acc_Ledger_PurchaseTest extends TestCase
 	    "p_currency_code"=>1
             
         );
+        // create accounting for reversed VAT
+        $g_connection->exec_sql("
+        INSERT INTO public.tmp_pcmn (pcm_val,pcm_lib,pcm_val_parent,pcm_type,pcm_direct_use) VALUES
+	 ('4119999','TVA Test UNIT','411','ACT','Y') on conflict  do nothing");
+
     }
 
     /**
@@ -458,6 +463,9 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $g_connection->exec_sql("delete from jrn where jr_mt=$1", [$p_internal]);
         $g_connection->exec_sql("delete from jrnx where j_grpt not in (select jr_grpt_id from jrn)");
         $g_connection->exec_sql("alter sequence  s_jrn_pj3 restart with 52");
+        // set TVA_RATE by default
+        $g_connection->exec_sql("update tva_rate set tva_poste='41142,45142' where tva_id=5");
+        $g_connection->exec_sql("update tva_rate set tva_reverse_account=null where tva_id=5");
 
     }
     /**
@@ -475,5 +483,169 @@ class Acc_Ledger_PurchaseTest extends TestCase
 
         $ret=$this->object->get_detail_purchase(92,103,'unpaid');
         $this->assertEquals(5,Database::num_row($ret),'only unpaid operations');
+    }
+
+    /**
+     * @testdox Reverse VAT1 : find out the accounting when there is 2 accountings
+     * and column tva_reverse_account is null
+     * @covers Acc_Ledger_Sale::insert
+     */
+    public function testInsertReverseVAT1()
+    {
+        global $g_connection;
+
+        $array=$this->array;
+        // item 0 uses the tva_id = 5
+        $array['e_march0_tva_id']=5;
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0, 1);
+        $array["amount_t0"]=24.2;
+        $array["hplan"]=array(array(-1), array(-1));
+        $array["val"]=array(array(24, 2), array(1212.5));
+        $array["mt"]="1572704002.1732";
+        $this->clean_operation();
+        $cnt=$g_connection->get_value("select count(*) from jrn where jr_mt=$1",[$array["mt"]]);
+        $this->assertEquals(0,$cnt);
+        $this->object->insert($array);
+
+        $cnt=$g_connection->get_value("select count(*) from jrn where jr_mt=$1",[$array["mt"]]);
+        $this->assertEquals(1,$cnt);
+        // check that the accounting for reverse VAT is 41142 and 45142
+        $sql="
+        select count(*)
+        from jrnx j1 join jrn j2 on (j1.j_grpt=j2.jr_grpt_id)
+        where 
+        j2.jr_mt ='1572704002.1732'
+        and j1.j_poste ='41142'
+        and j1.j_debit ='t'
+        ";
+        $this->assertEquals(1, $g_connection->get_value($sql),'fails : reversed account debit is wrong');
+
+        // check that the accounting for reverse VAT is 41142 and 45142
+        $sql="
+        select count(*)
+        from jrnx j1 join jrn j2 on (j1.j_grpt=j2.jr_grpt_id)
+        where 
+        j2.jr_mt ='1572704002.1732'
+        and j1.j_poste ='45142'
+        and j1.j_debit ='f'
+        ";
+        $this->assertEquals(1, $g_connection->get_value($sql),'fails : reversed account credit is wrong');
+
+        $this->clean_operation();
+
+
+    }
+    /**
+     * @testdox Reverse VAT2 : find out the accounting when there is only 1 accounting
+     * and column tva_reverse_account is null
+     * @covers Acc_Ledger_Sale::insert
+     */
+    public function testInsertReverseVAT2()
+    {
+        global $g_connection;
+
+        $array=$this->array;
+        // item 0 uses the tva_id = 5
+        $array['e_march0_tva_id']=5;
+
+
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0, 1);
+        $array["amount_t0"]=24.2;
+        $array["hplan"]=array(array(-1), array(-1));
+        $array["val"]=array(array(24, 2), array(1212.5));
+        $array["mt"]="1572704002.1732";
+        $this->clean_operation();
+        $cnt=$g_connection->get_value("select count(*) from jrn where jr_mt=$1",[$array["mt"]]);
+        $this->assertEquals(0,$cnt);
+
+        $g_connection->exec_sql("update tva_rate set tva_poste='41142,#' where tva_id=5");
+        $this->object->insert($array);
+
+        $cnt=$g_connection->get_value("select count(*) from jrn where jr_mt=$1",[$array["mt"]]);
+        $this->assertEquals(1,$cnt);
+
+
+        // check that the accounting for reverse VAT is only 41142
+        $sql="
+        select count(*)
+        from jrnx j1 join jrn j2 on (j1.j_grpt=j2.jr_grpt_id)
+        where 
+        j2.jr_mt ='1572704002.1732'
+        and j1.j_poste ='41142'
+        and j1.j_debit ='f'
+        ";
+        $this->assertEquals(1, $g_connection->get_value($sql),'fails : reversed account credit is wrong');
+
+        // check that the accounting for reverse VAT is only 45142
+        $sql="
+        select count(*)
+        from jrnx j1 join jrn j2 on (j1.j_grpt=j2.jr_grpt_id)
+        where 
+        j2.jr_mt ='1572704002.1732'
+        and j1.j_poste ='41142'
+        and j1.j_debit ='t'
+        ";
+        $this->assertEquals(1, $g_connection->get_value($sql),'fails : reversed account credit is wrong');
+
+        $this->clean_operation();
+
+
+    }
+    /**
+     * @testdox Reverse VAT3 : use value from column tva_reverse_account is null
+     * @covers Acc_Ledger_Purchase::insert
+     */
+    public function testInsertReverseVAT3()
+    {
+        global $g_connection;
+
+        $array=$this->array;
+        // item 0 uses the tva_id = 5
+        $array['e_march0_tva_id']=5;
+
+
+        $array["pa_id"]=array(2);
+        $array["op"]=array(0, 1);
+        $array["amount_t0"]=24.2;
+        $array["hplan"]=array(array(-1), array(-1));
+        $array["val"]=array(array(24, 2), array(1212.5));
+        $array["mt"]="1572704002.1732";
+        $this->clean_operation();
+        $cnt=$g_connection->get_value("select count(*) from jrn where jr_mt=$1",array($array["mt"]));
+        $this->assertEquals(0,$cnt);
+
+        $g_connection->exec_sql("update tva_rate set tva_reverse_account='4119999' where tva_id=5");
+        $this->object->insert($array);
+
+        $cnt=$g_connection->get_value("select count(*) from jrn where jr_mt=$1",array($array["mt"]));
+        $this->assertEquals(1,$cnt);
+
+
+        // check that the accounting for reverse VAT is only 45142
+        $sql="
+        select count(*)
+        from jrnx j1 join jrn j2 on (j1.j_grpt=j2.jr_grpt_id)
+        where 
+        j2.jr_mt ='1572704002.1732'
+        and j1.j_poste ='4119999'
+        and j1.j_debit ='f'
+        ";
+        $this->assertEquals(1, $g_connection->get_value($sql),'fails : reversed account credit is wrong');
+
+        // check that the accounting for reverse VAT is only 45142
+        $sql="
+        select count(*)
+        from jrnx j1 join jrn j2 on (j1.j_grpt=j2.jr_grpt_id)
+        where 
+        j2.jr_mt ='1572704002.1732'
+        and j1.j_poste ='41142'
+        and j1.j_debit ='t'
+        ";
+        $this->assertEquals(1, $g_connection->get_value($sql),'fails : reversed account credit is wrong');
+
+        $this->clean_operation();
+
     }
 }

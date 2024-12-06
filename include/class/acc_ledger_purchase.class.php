@@ -26,7 +26,9 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 
-/*!\brief Handle the ledger of purchase,
+/*!
+ * \class Acc_Ledger_Purchase
+ * \brief Handle the ledger of purchase,
  *
  *
  */
@@ -39,7 +41,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         parent::__construct($p_cn,$p_init);
         $this->payment_operation=-1;
     }
-    /*!\brief verify that the data are correct before inserting or confirming
+    /*!
+    * \brief verify that the data are correct before inserting or confirming
      *\param an array (usually $_POST)
      *\return String
      *\throw Exception if an error occurs
@@ -872,7 +875,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     
                     if ( $oTva->get_parameter("both_side")==1 )
                     {
-                        $poste_vat=$oTva->get_side('c');
+                        // $x temp variable is the tva_reverse_account and will be used to check $poste_vat
+                        $x=$oTva->get_parameter("tva_reverse_account");
+                        $poste_vat =(trim($x??"")=="")? $oTva->get_side('c'):$x;
                         if ( $poste_vat == '#')
                         {
                             $poste_vat=$oTva->get_side('d');
