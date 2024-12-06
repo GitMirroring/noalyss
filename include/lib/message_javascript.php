@@ -121,4 +121,6 @@ content[84]="<?php echo htmlspecialchars(_("En Belgique, l'exercice commence par
 content[85]="<?php echo htmlspecialchars(_("Solde créditeur au lieu de débiteur"),ENT_QUOTES)?>";
 content[86]="<?php echo htmlspecialchars(_("Solde débiteur au lieu de créditeur"),ENT_QUOTES)?>";
 content[87]="<?php echo htmlspecialchars(_("Uniquement pour les choix, séparer les valeurs possibles par un |"),ENT_QUOTES)?>";
+content[88]="<?php echo htmlspecialchars(_("Par défault, le poste d'autoliquidation est celui qui est au débit pour les ventes et au crédit pour les achats"),ENT_QUOTES)?>";
+
 </script>

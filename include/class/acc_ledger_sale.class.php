@@ -585,7 +585,11 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                     }
                     // if TVA is on both side, we deduce it immediately
                     if ($oTva->get_parameter("both_side") == 1) {
-                        $poste_vat = $oTva->get_side('d');
+                        // $x temp variable is the tva_reverse_account and will be used to check $poste_vat
+                        $x=$oTva->get_parameter("tva_reverse_account");
+
+                        $poste_vat =(trim($x??"")=="")? $oTva->get_side('d'):$x;
+                        if ($poste_vat == '#') $poste_vat=$oTva->get_side('c');
                         $cust_amount = bcadd($tot_amount, $tot_tva);
                         $acc_operation = new Acc_Operation($this->db);
                         $acc_operation->date = $e_date;
