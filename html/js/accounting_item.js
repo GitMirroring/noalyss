@@ -97,7 +97,7 @@ function search_accounting(obj)
             }
             else
             {
-                if (document.getElementById(obj).account)
+                if (id$(obj).account)
                 {
                     var e=id$(obj).account;
                     var str_account=id$(e).value;
