@@ -100,15 +100,21 @@ EOF;
     function is_closed()
     {
         if ($this->jrn_def_id!=0)
+        {
+
             $sql="select status from jrn_periode ".
-                    " where jrn_def_id=".$this->jrn_def_id.
-                    " and p_id =".$this->p_id;
+                    " where jrn_def_id=$2 ".
+                    " and p_id = $1";
+            $status=$this->cn->get_value($sql,[$this->p_id,$this->jrn_def_id]);
+        }
         else
+        {
             $sql="select p_closed as status from parm_periode ".
                     " where ".
-                    " p_id =".$this->p_id;
-        $res=$this->cn->exec_sql($sql);
-        $status=Database::fetch_result($res, 0, 0);
+                    " p_id = $1";
+            $status=$this->cn->get_value($sql,[$this->p_id]);
+
+        }
         if ($status=='CL'||$status=='t'||$status=='CE')
             return 1;
         return 0;
