@@ -136,26 +136,43 @@ class Tax_Summary
 			)
                   ";
         $cnt=$this->db->get_value($sql, [$this->date_start, $this->date_end]);
-        if ($cnt==0)
+        $cnt_ledger=$this->db->get_value("
+            select count(*) from jrnx 
+			    where 
+	                   jrnx.j_jrn_def in (select jrn_def_id from jrn_def where jrn_def_type = 'VEN')
+        	            and j_date >= to_date($1,'DD.MM.YYYY') 
+                	    and j_date <= to_date($2,'DD.MM.YYYY') 
+        ", [$this->date_start, $this->date_end]);
+        if ($cnt==0 && $cnt_ledger !=0)
         {
-            throw new Exception(_("Données manquantes"),100);
+            throw new Exception('TX148:'_("Données manquantes"),100);
         }
         /* -------------Purchase --------------------------------- */
+
         $sql="select count(*) 
              from 
                 quant_purchase
              where  
 		    j_id  in (select j_id from jrnx 
 			where 
-	                   jrnx.j_jrn_def in (select jrn_def_id from jrn_def where jrn_def_type = 'VEN')
+	                   jrnx.j_jrn_def in (select jrn_def_id from jrn_def where jrn_def_type = 'ACH')
         	            and j_date >= to_date($1,'DD.MM.YYYY') 
                 	    and j_date <= to_date($2,'DD.MM.YYYY') 
 			)
                              ";
         $cnt=$this->db->get_value($sql, [$this->date_start, $this->date_end]);
-        if ($cnt>0)
+
+        $cnt_ledger=$this->db->get_value("
+            select count(*) from jrnx 
+			    where 
+	                   jrnx.j_jrn_def in (select jrn_def_id from jrn_def where jrn_def_type = 'ACH')
+        	            and j_date >= to_date($1,'DD.MM.YYYY') 
+                	    and j_date <= to_date($2,'DD.MM.YYYY') 
+        ", [$this->date_start, $this->date_end]);
+
+        if ($cnt ==0 &&  $cnt_ledger !=0)
         {
-            throw new Exception(_("Données manquantes"),100);
+            throw new Exception('TX175'._("Données manquantes"),100);
         }
     }
     private function build_exigibility()
