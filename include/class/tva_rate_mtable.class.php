@@ -396,7 +396,10 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                 $this->set_error("tva_reverse_account", _("Poste comptable inexistant"));
             }
         }
-
+        // label cannot be empty
+        if ( trim($this->table->tva_label??"")=="") {
+            $this->set_error("tva_label", _('Le label ne peut être vide'));
+        }
         if ($this->count_error()!=0)
             return false;
         return true;
