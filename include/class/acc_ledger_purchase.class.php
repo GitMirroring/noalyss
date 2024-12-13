@@ -19,7 +19,8 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
  * \brief class for the purchase, herits from acc_ledger
  */
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
@@ -35,6 +36,7 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 class  Acc_Ledger_Purchase extends Acc_Ledger
 {
     private $payment_operation; /*<! id of the payment , set in insert */
+
     function __construct ($p_cn,$p_init)
     {
         $this->ledger_type='ACH';
@@ -475,7 +477,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         }
     }
 
-    /*!\brief insert into the database, it calls first the verify function
+    /*!
+     * \brief insert into the database, it calls first the verify function
      * change the value of this->jr_id and this->jr_internal.
      * It generates the document and save the middle of payment, if 'gen_invoice is set
      * and e_mp
