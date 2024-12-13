@@ -1,6 +1,10 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+
+/**
+ * @var $str_anc String HTML contains the detail of analytic
+ */
 $str_anc="";
 global $div,$g_parameter,$cn,$access,$jr_id,$obj;
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
