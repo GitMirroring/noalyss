@@ -1210,13 +1210,13 @@ function success_dsp_letter(req) {
     try {
         code_html.evalScripts();
     } catch (e) {
-        alert_box("DSPLETTER:" + content[48] + e.message);
+        alert_box("DSPLETTER1:" + content[48] + e.message);
     }
 
 }
 
 function error_dsp_letter(req) {
-    alert_box("DSPLETTER:" + content[48]);
+    alert_box("DSPLETTER2:" + content[48]);
 }
 
 function search_letter(obj) {

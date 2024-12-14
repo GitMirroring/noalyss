@@ -32,7 +32,13 @@
  * - "start"=>"start",	   => date of the first day
  * - "end"=>"end",		   => date of the last day
  * - "sql_ledger"=>"sql_ledger"  => the sql clause to filter on the available ledgers
+ *
+ * @see unit-test/include/class/acc_letterTest.php
  */
+
+
+
+
 class Lettering
 {
 
@@ -50,6 +56,7 @@ class Lettering
     var $sql_ledger;
     var $object_type;
     var $content;
+
     /**
      * constructor
      * @param $p_init resource to database
@@ -479,8 +486,12 @@ class Lettering
 }
 
 /**
- * only for operation retrieved thanks a account (jrnx.j_poste)
+ *@class
+ * @brief only for operation retrieved thanks a account (jrnx.j_poste)
  * manage the accounting entries for a given account
+ *
+ * @see unit-test/include/class/acc_letterTest.php
+ *
  */
 class Lettering_Account extends Lettering
 {

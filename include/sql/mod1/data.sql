@@ -4,6 +4,7 @@ set search_path = public,comptaproc,pg_catalog ;
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -14,31 +15,12 @@ SET row_security = off;
 
 
 SELECT pg_catalog.lo_create('2346174');
-
-
-
 SELECT pg_catalog.lo_create('2346176');
-
-
-
 SELECT pg_catalog.lo_create('2346177');
-
-
-
 SELECT pg_catalog.lo_create('2346178');
-
-
-
 SELECT pg_catalog.lo_create('2346179');
-
-
-
 SELECT pg_catalog.lo_create('2346181');
-
-
-
 SELECT pg_catalog.lo_create('2346476');
-
 
 
 

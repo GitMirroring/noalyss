@@ -1,0 +1,1 @@
+ALTER TABLE public.todo_list ALTER COLUMN tl_date drop NOT NULL;

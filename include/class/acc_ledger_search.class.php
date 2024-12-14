@@ -47,9 +47,9 @@ class Acc_Ledger_Search
      *         - 1 means all the ledger of this type
      *         - 0 No have the "Tous les journaux" availables
      * @param  $div is the div (for reconciliation)
-     * @param type $p_type
-     * @param type $p_all
-     * @param type $p_div
+     * @param string $p_type ACH, VEN , ODS or FIN
+     * @param int $p_all 1 means all the ledger
+     * @param string $p_div prefix of the DOM ID
      *
      * @todo the parameter $all_type_ledger is useless : ALL means all the ledgers, VEN all the ledger of sales...
      */
