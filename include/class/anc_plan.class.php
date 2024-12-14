@@ -185,7 +185,7 @@ class Anc_Plan
     function exist()
     {
         $a=$this->db->count_sql("select pa_id from plan_analytique where pa_id=$1",
-                                array($this->pa_id));
+                                array($this->id));
 
         return ($a==0)?false:true;
 
@@ -193,7 +193,7 @@ class Anc_Plan
     /**
     *@brief return an HTML string containing hidden input type to
     * hold the differant PA_ID
-    *@param $p_array contains a array, it is the result of the fct
+    *@param $p_array array contains a array, it is the result of the fct
     * Anc_Plan::get_list
     *@return html string
     *@see Anc_Plan::get_list

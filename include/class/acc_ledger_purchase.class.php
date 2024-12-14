@@ -1023,7 +1023,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $acc_pay->grpt=$acseq;
                 $acc_pay->jrn=$mp->get_parameter('ledger_target');
                 $acc_pay->periode=$tperiode;
-		$acc_pay->type=($famount>=0)?'d':'c';
+		        $acc_pay->type=($famount>=0)?'d':'c';
                 $let_other=$acc_pay->insert_jrnx();
                 
                 // insert into operation_currency
@@ -1065,11 +1065,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $r1=$this->get_id($internal);
                 $r2=$this->get_id($acinternal);
 
-		/*
-		 * add lettering
-		 */
-		$oletter=new Lettering($this->db);
-		$oletter->insert_couple($let_client,$let_other);
+                /*
+                 * add lettering
+                 */
+                $oletter=new Lettering($this->db);
+                $oletter->insert_couple($let_client,$let_other);
 
                 /* set the flag paid */
                 $Res=$this->db->exec_sql("update jrn set jr_rapt='paid' where jr_id=$1",array($r1));
