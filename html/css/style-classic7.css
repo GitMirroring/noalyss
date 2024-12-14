@@ -264,6 +264,45 @@ td.tool a.mtitle:hover {
  }
 
 
+ }
+ #module .nav-pills a.nav-link:hover {
+         color:white !important;
+        border:1px solid transparent;
+ }
+ #module .nav-item-active , #module .nav-item-active > a.nav-link{
+     background-color: #5d90cd ;
+     color:white !important;
+     border: 0px solid black;
+ }
+ /* animate module : sliding */
+ #module .nav-item-module {
+     position:relative;
+     background-color: white;
+     color:navy;
+ }
+ #module .nav-item-module.nav-item-slide::before {
+     content:'';
+     top:0;
+     left:0;
+     bottom:0;
+     right:0;
+     position:absolute;
+     background-color:#5d90cd;
+     z-index:-1;
+     transform:scaleX(0);
+     transition:transform 300ms ease-in-out;
+     mix-blend-mode: darken;
+ }
+ #module  .nav-item-module.nav-item-slide:hover::before,
+ #module  .nav-item-module.nav-item-slide:focus::before {
+     transform:scaleX(1);
+ }
+ #module .nav-item-slide {
+     z-index:0;
+     transition:color 300ms ease-in-out;
+ }
+
+
 
 
  #module .nav-fill  #module .nav-item {
@@ -3794,6 +3833,56 @@ h2.h-section {
      right: 0;
      background-color:darkorange;
      height: var(--border-size);
+ }
+
+ .nav-level3 .nav-link.active::after {
+     background-color:yellow;
+ }
+/***
+ * Animate menu
+ *
+ */
+
+.nav-item {
+    position:relative;
+
+}
+
+.nav-item.nav-item-underline::before {
+     content:'';
+    left:0;
+    bottom:0;
+    right:0;
+    position:absolute;
+    height:var(--border-size);
+    background-color:lightblue;
+    transform:scaleX(0);
+    transition:transform 300ms ease-in-out;
+}
+
+.nav-item.nav-item-underline:hover::before,
+.nav-item.nav-item-underline:focus::before
+{
+    transform:scaleX(1);
+}
+
+ .nav-item.li-active.nav-item-underline::before {
+    transform: scale(1);
+     background-color: darkred;
+ }
+
+ /**
+  * For level 2 and 3 no animation but border difference if active
+  */
+
+ .nav-level2 .nav-link.active::after, .nav-level3 .nav-link.active::after {
+     content: '';
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     background-color:darkorange;
+     height: 3px;
  }
 
  .nav-level3 .nav-link.active::after {

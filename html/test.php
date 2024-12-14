@@ -70,7 +70,7 @@ define('ALLOWED', 1);
 global $aAvaible_module;
 
 /*
- * Find all the folder
+ * Find all the folders
  */
 $directory=NOALYSS_BASE."/scenario";
 $folder=scandir($directory);
