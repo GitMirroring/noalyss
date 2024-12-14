@@ -4,6 +4,7 @@
 
 /**
  * @var $str_anc String HTML contains the detail of analytic
+ * @var $g_user Noalyss_User inherited , it is the connected user
  */
 $str_anc="";
 global $div,$g_parameter,$cn,$access,$jr_id,$obj;
