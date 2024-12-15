@@ -723,7 +723,7 @@ EOF;
      * @param $p_item int nb of the item of the form
      * @param $p_j_id int jrnx.j_id concerned writing
      * @param $p_nd float amount nd vat
-     * @see Anc_Operation::save_form_plan_vat_nd
+     * @see Anc_Operation::save_form_plan()
      */
     function save_form_plan_vat_nd($p_array,$p_item,$p_j_id,$p_nd):void
     {
@@ -733,18 +733,16 @@ EOF;
         
         if ( ! isset(${'amount_t'.$p_item}) )
             throw new Exception ('amount not set');
-        
-        $tot=0;
-        /* variable for in array
-           pa_id array of existing pa_id
-           hplan double array with the pa_id (column)
-           val double array by row with amount
-           op contains sequence
-           p_item is used to identify what op is concerned
+
+        /**
+         * variable for in array
+         * @var pa_id array of existing pa_id
+           @var hplan double array with the pa_id as key (column)
+           @var val double array by row with amount
+         * @var op contains sequence
+           @var p_item is used to identify what op is concerned
         */
-        /* echo "j_id = $j_id p_item = $p_item hplan=".var_export($hplan[$p_item],true)." val = ".var_export($val[$p_item],true).'<br>'; */
-        /* for each row */
-        //   for ($i=0;$i<count($val[$p_item]);$i++) {
+
         $idx_pa_id=0;
         $row=0;
         $a_Anc_Operation=array();
@@ -781,21 +779,12 @@ EOF;
             $idx_pa_id++;
         }
         $nb_op=count($a_Anc_Operation);
-        bcscale(4);
-        for ($i=0;$i<$nb_op;$i++)
-        {
-            $tot=bcadd($tot,$a_Anc_Operation[$i]->oa_amount);
-        }
-        // security : if  tot != nd so the amount is reduced by the difference between computed and max
-        if ( $tot != $p_nd && count($a_Anc_Operation) > 0 )
-        {
-            $diff=  bcsub($tot, $p_nd);
-            $a_Anc_Operation[0]->oa_amount=bcsub($a_Anc_Operation[0]->oa_amount,$diff);
-        }
+
         for ($i=0;$i<$nb_op;$i++)
         {
             $a_Anc_Operation[$i]->add();
         }
+
     }
     /*!\brief it called for each item, the data are taken from $p_array
      *  data and set before in this. Amount will be transformed thanks the $this->currency_rate;
