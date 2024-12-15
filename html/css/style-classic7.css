@@ -25,10 +25,10 @@ BODY {
     color:darkblue !important;
     background-color:#FCFDFD;
     --hover : rgba(108, 130, 208, 0.9);
-        --border-size:6px;
+        --border-size:8px;
      --accent-color:lightblue;
     --input-color:#4b4b91;
-
+    --color-red:Crimson;
 }
 input{
     font-family: 'OpenSansRegular';
@@ -263,8 +263,6 @@ td.tool a.mtitle:hover {
      transition:color 300ms ease-in-out;
  }
 
-
- }
  #module .nav-pills a.nav-link:hover {
          color:white !important;
         border:1px solid transparent;
@@ -3325,7 +3323,7 @@ margin:1px;
     margin: 1px;
     background: navy;
     color: white;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 .nav-fill .nav-item:hover {
    background-color:#6393c1;
@@ -3343,11 +3341,8 @@ margin:1px;
     color:white ;
    
 }
-li.li-active {
-    background-color: lightgray !important;
-}
  /****************************************/
- /* MENU LEVEL2 */
+ /* MENU LEVEL 0 */
  /****************************************/
 .nav-level0 {
 
@@ -3360,9 +3355,10 @@ li.li-active {
 
  /* MD */
  @media (min-width: 768px) {
-    .nav-level0 .nav-item  {
-        padding : 0.4%;
-    }
+     .nav-level0 > li >a  {
+         padding:6%;
+     }
+ 
  }
 
  /* LG */
@@ -3394,7 +3390,7 @@ li.li-active {
  /* MD */
  @media (min-width: 768px) {
      .nav-level2 .nav-item  {
-         padding : 0.1%;
+         padding : 0%;
      }
  }
 
@@ -3868,7 +3864,7 @@ h2.h-section {
 
  .nav-item.li-active.nav-item-underline::before {
     transform: scale(1);
-     background-color: darkred;
+     background-color: var(--color-red);
  }
 
  /**
@@ -3882,7 +3878,6 @@ h2.h-section {
      left: 0;
      right: 0;
      background-color:darkorange;
-     height: 3px;
  }
 
  .nav-level3 .nav-link.active::after {
