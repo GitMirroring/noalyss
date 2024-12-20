@@ -860,9 +860,12 @@ EOF;
         $cn=Dossier::connect();
         $g_user=new Noalyss_user($cn);
         $a=new Acc_Operation($cn);
-        $a->jr_id=1444;
+        $a->jr_id=993;
         $b=$a->get_quant();
+        echo h1('contain of get_quant() ');
         var_dump($b);
+        echo h1('contain of get_jrnx_detail()');
+        var_dump($a->get_jrnx_detail());
     }
     /**
      * Return a select object to choose the type of operation

@@ -74,8 +74,41 @@ class Acc_Ledger_SaleTest extends TestCase
         $g_connection->exec_sql("
         INSERT INTO public.tmp_pcmn (pcm_val,pcm_lib,pcm_val_parent,pcm_type,pcm_direct_use) VALUES
 	 ('4119999','TVA Test UNIT','411','ACT','Y') on conflict  do nothing");
-
-
+        // create accounting for reversed VAT with neg. amount
+     $this->array1=array(   'e_client' => 'CLIENT1',
+                          'nb_item' => '2',
+                          'p_jrn' => '2',
+                          'jrn_note_input' => '',
+                          'mt' => '1734720448.0036',
+                          'p_currency_rate' => '1',
+                          'p_currency_code' => '0',
+                          'e_comm' => '',
+                          'e_date' => '27.06.2020',
+                          'e_ech' => '',
+                          'e_pj' => 'VEN41',
+                          'e_pj_suggest' => 'VEN41',
+                          'e_mp' => '0',
+                          'jrn_type' => 'VEN',
+                          'e_march0' => 'DEPLAC',
+                          'e_march0_price' => '20',
+                          'e_march0_tva_id' => '5',
+                          'e_march0_tva_amount' => '0',
+                          'e_quant0' => '1',
+                          'e_march1' => 'DEPLAC',
+                          'e_march1_price' => '-5',
+                          'e_march1_tva_id' => '5',
+                          'e_march1_tva_amount' => '0',
+                          'e_quant1' => '1',
+                          'ac' => 'COMPTA/VENMENU/VEN',
+                          'bon_comm' => '',
+                          'other_info' => '',
+                          'opd_name' => '',
+                          'od_description' => '',
+                          'reverse_date' => '',
+                          'ext_label' => '',
+                          'jr_optype' => 'NOR',
+                          'action_gestion' => '',
+                          'record' => 'Enregistrement');
     }
 
     /**
@@ -502,6 +535,101 @@ class Acc_Ledger_SaleTest extends TestCase
 
         $ret=$this->object->get_detail_sale(92,103,'unpaid');
         $this->assertEquals(5,Database::num_row($ret),'only unpaid operations');
+    }
+    /**
+     * @testdox Reverse VAT4 :Use 2 different VAT Autoreverse mix negative and positive amounts
+     * @covers Acc_Ledger_Sale::insert
+     * @return void
+     */
+    function testInsertReverseVAT4() {
+        global $g_connection;
+        $array=$this->array1;
+        $old_autoreverse=$g_connection->get_value("select tva_both_side from tva_rate where tva_id=3 ");
+        // set autoreverse to 1
+        $g_connection->get_value("update   tva_rate set tva_both_side = 1 where tva_id=3 ");
+        $array['e_march1_tva_id']=3;
+        // clean
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
+        $this->object->insert($array);
+
+        $accounting=new \Acc_Operation($g_connection);
+        $accounting->jr_id=$this->object->jr_id;
+        $aResult=$accounting->get_jrnx_detail();
+
+        $this->assertTrue(count($aResult)==7, 'Number of rows is  '.count($aResult)."instead of 7");
+
+        foreach($aResult as $result) {
+            switch ($result['j_poste']) {
+                case '41142':
+                    if ( $result['debit']=='D')
+                        $this->assertEquals(4.20, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    else
+                        $this->assertEquals(1.05, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    break;
+                case '7000005':
+                    if ( $result['debit']=='D')
+                        $this->assertEquals(5, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    else
+                        $this->assertEquals(20, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    break;
+                case '4000005':
+                    $this->assertEquals(15, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    break;
+            }
+        }
+
+        // cancel change
+        $g_connection->get_value("update   tva_rate set tva_both_side = $1 where tva_id=3 ",[$old_autoreverse]);
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
+
+
+    }
+    /**
+     * @testdox Reverse VAT5 :Use 2 same VAT Autoreverse mix negative and positive amounts
+     * @covers Acc_Ledger_Sale::insert
+     * @return void
+     */
+    function testInsertReverseVAT5() {
+        global $g_connection;
+        $array=$this->array1;
+
+        $array['e_march1_tva_id']=5;
+
+        // clean
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
+        $this->object->insert($array);
+
+        $accounting=new \Acc_Operation($g_connection);
+        $accounting->jr_id=$this->object->jr_id;
+        $aResult=$accounting->get_jrnx_detail();
+
+        $this->assertTrue(count($aResult)==7, 'Number of rows is  '.count($aResult)."instead of 7");
+
+        foreach($aResult as $result) {
+            switch ($result['j_poste']) {
+                case '41142':
+                    if ( $result['debit']=='D')
+                        $this->assertEquals(4.20, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    else
+                        $this->assertEquals(1.05, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    break;
+                case '7000005':
+                    if ( $result['debit']=='D')
+                        $this->assertEquals(5, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    else
+                        $this->assertEquals(20, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    break;
+                case '4000005':
+                    $this->assertEquals(15, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    break;
+            }
+        }
+
+        // cancel change
+
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
+
+
     }
 
 }
