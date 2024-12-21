@@ -28,7 +28,7 @@
  * value , either 1 or 0 EXPERIMENTAL
  */
 /**
- * @class
+ * @class InputCheckBox
  * @brief modern checkbox, using a javascript to change the icon when clicked and a hidden field, there is always a
  * value , either 1 or 0 , EXPERIMENTAL
  */

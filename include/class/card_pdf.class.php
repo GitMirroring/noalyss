@@ -5,7 +5,7 @@
  *
  */
 /**
- * @class
+ * @class Card_PDF
  * @brief Class Card_PDF
  */
 class Card_PDF extends \PDF

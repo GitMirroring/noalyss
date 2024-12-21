@@ -35,7 +35,7 @@
     [from_poste] => 
     [to_poste] => 
 )
-@encode
+@endcode
  */
 
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');

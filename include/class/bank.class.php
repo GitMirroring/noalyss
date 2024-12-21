@@ -39,8 +39,7 @@ class Bank extends Fiche
     var $cp;          /*!< $cp Zip code */
     var $vat_number;  /*!< $vat_number vat number */
 
-    /*! \brief Constructor
-    /* only a db connection is needed */
+    /*! \brief Constructor     only a db connection is needed */
     function __construct($p_cn,$p_id=0)
     {
         $this->fiche_def_ref=FICHE_TYPE_FIN;

@@ -69,7 +69,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $g_connection->exec_sql("
         INSERT INTO public.tmp_pcmn (pcm_val,pcm_lib,pcm_val_parent,pcm_type,pcm_direct_use) VALUES
 	 ('4119999','TVA Test UNIT','411','ACT','Y') on conflict  do nothing");
-        /// @var $array1 = used for autoreverse with 2 VAT Codes
+        //  variable: $array1 = used for autoreverse with 2 VAT Codes
         $this->array1=array (
             'e_client' => 'FOURNI1',
             'nb_item' => '10',

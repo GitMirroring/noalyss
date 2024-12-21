@@ -25,7 +25,7 @@
 namespace Noalyss\Widget;
 
 /*!
- * \class
+ * \class Event
  * \brief show 10 next events , or 10 late
 */
 

@@ -300,28 +300,28 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
         bcscale(4);
         try {
-            /// @var  $tot_amount : total amount of the sales (credit)
+            // variable :   $tot_amount : total amount of the sales (credit)
             $tot_amount = 0;
-            /// @var $tot_tva : total amount of the VAT
+            // variable :  $tot_tva : total amount of the VAT
             $tot_tva = 0;
             // tot debit if item's amount < 0
             $tot_debit = 0;
-            /// @var $tot_amount_cur : total amount in currency
+            // variable :  $tot_amount_cur : total amount in currency
             $tot_amount_cur=0;
 
             $this->db->start();
-            /// @var $tva array that will contain all the VAT Amount
+            // variable :  $tva array that will contain all the VAT Amount
             $tva = array();
-            /// @var $tva_reverse array that contain all the VAT autoreverse AND negative
+            // variable :  $tva_reverse array that contain all the VAT autoreverse AND negative
             $tva_reverse = array();
 
              // find the currency from v_currency_last_value
-            /// @var $currency_rate_ref Acc_Currency , currency object for this operation
+            // variable :  $currency_rate_ref Acc_Currency , currency object for this operation
             $currency_rate_ref=new Acc_Currency($this->db, $p_currency_code);
 
             /* Save all the items without vat */
             for ($i = 0; $i < $nb_item; $i++) {
-                /// @var $n_both float auto-reverse amount
+                // variable :  $n_both float auto-reverse amount
                 $n_both = 0;
                 if ( empty(${'e_march'.$i}) || empty(${'e_quant'.$i}) ) continue;
 
@@ -374,7 +374,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                     /* Compute sum vat */
                     $oTva =  Acc_Tva::build($this->db, trim(${'e_march' . $i . '_tva_id'}));
                     $idx_tva =$oTva->get_parameter("id");
-                    /// @var  $auto_reverse = if the oTVA autoreverse, fetch it once for this item,
+                    // variable :   $auto_reverse = if the oTVA autoreverse, fetch it once for this item,
                     $auto_reverse=$oTva->get_parameter("both_side");
 
                     $tva_item_currency = ${'e_march' . $i . '_tva_amount'};

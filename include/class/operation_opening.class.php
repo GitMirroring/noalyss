@@ -23,7 +23,7 @@
  */
 
 /**
- * @class
+ * @class Operation_Opening
  * @brief Operation ouverture
  */
 class Operation_Opening extends Operation_Exercice

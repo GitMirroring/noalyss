@@ -25,7 +25,7 @@
  */
 
 /*!
- * \class
+ * \class Acc_Operation_Note
  * \brief Manage the note attached to an operation
  */
 
