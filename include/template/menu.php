@@ -7,7 +7,7 @@
 ?><div class="">
     <?php 
   if ($level == 0) {
-      echo '<ul  class="nav nav-pills nav-fill  flex-row noprint" >';
+      echo '<ul  class="nav nav-pills nav-fill  flex-row noprint nav-level0" >';
   }elseif ($level == 1) {
       echo '<ul class="nav nav-pills nav-level2 noprint">';
       

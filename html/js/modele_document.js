@@ -71,8 +71,8 @@ function modify_document_success_box(req,json)
         var code_html=getNodeText(html[0]);
 
         code_html=unescape_xml(code_html);
-        g(name_ctl).innerHTML=code_html;
-        g(name_ctl).style.height='auto';
+        id$(name_ctl).innerHTML=code_html;
+        id$(name_ctl).style.height='auto';
     }
     catch (e)
     {

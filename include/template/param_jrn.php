@@ -161,7 +161,7 @@ endif;
 </TR>
     <tr>
     <td>
-        <?=_("Nombre de caractère du numéro de pièce, remplissage avec des 0 ")?>
+        <?=_("Nombre de chiffres du numéro de pièce, remplissage avec des 0 ")?>
     </td>
         <td>
             <?=$padding->input()?>

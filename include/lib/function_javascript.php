@@ -2784,7 +2784,9 @@ EOF;
     echo js_include('acc_currency.js');
     echo js_include('taggroup.js');
     echo js_include('noalyss_checkbox.js');
- 
+     if (DEBUGNOALYSS > 1) {
+         echo js_include('noalyss_debug.js');
+     }
 
 }
 /**

@@ -25,7 +25,7 @@
  */
 
 /**
- * @class
+ * @class Noalyss_Appearance
  * @brief Contains some parameters to change appearance of noalyss, the colors are saved
  * into the table parm_appearance
  */
@@ -35,7 +35,7 @@ class Noalyss_Appearance
         'MENU1' => '#000074',
         'BODY' => '#ffffff',
         'MENU2' => '#3d3d87',
-        'MENU1-SELECTED' => '#7191ea',
+        'MENU1-SELECTED' => '#000074',
         'TR-ODD'=>'#DCE7F5',
         'TR-EVEN'=>'#ffffff',
         'INNER-BOX'=>'#DCE1EF',
@@ -170,9 +170,7 @@ class Noalyss_Appearance
      .nav-pills .nav-link {
       color: {$menu1_font}  !important;  
     }
-    .nav-link:hover {
-        background-color:{$menu1_selected};
-    }
+    
     table.sortable, table.table_large, table.result  ,table.resultfooter {
         color:{$font_table} !important;
     }

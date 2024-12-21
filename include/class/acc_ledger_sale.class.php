@@ -300,21 +300,28 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
         bcscale(4);
         try {
-            // total amount of the sales (credit)
+            // variable :   $tot_amount : total amount of the sales (credit)
             $tot_amount = 0;
-            // total amount of the VAT
+            // variable :  $tot_tva : total amount of the VAT
             $tot_tva = 0;
             // tot debit if item's amount < 0
             $tot_debit = 0;
-            // total amount in currency
+            // variable :  $tot_amount_cur : total amount in currency
             $tot_amount_cur=0;
 
             $this->db->start();
+            // variable :  $tva array that will contain all the VAT Amount
             $tva = array();
+            // variable :  $tva_reverse array that contain all the VAT autoreverse AND negative
+            $tva_reverse = array();
+
              // find the currency from v_currency_last_value
+            // variable :  $currency_rate_ref Acc_Currency , currency object for this operation
             $currency_rate_ref=new Acc_Currency($this->db, $p_currency_code);
+
             /* Save all the items without vat */
             for ($i = 0; $i < $nb_item; $i++) {
+                // variable :  $n_both float auto-reverse amount
                 $n_both = 0;
                 if ( empty(${'e_march'.$i}) || empty(${'e_quant'.$i}) ) continue;
 
@@ -328,7 +335,6 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 
                 $tot_amount = bcadd($tot_amount, $amount);
                 $tot_amount = round($tot_amount, 2);
-                if ( DEBUGNOALYSS > 1 ) { echo __LINE__." tot_amount $tot_amount<br>";}
                 $acc_operation = new Acc_Operation($this->db);
                 $acc_operation->date = $e_date;
                 $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
@@ -367,39 +373,44 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 if ($g_parameter->MY_TVA_USE == 'Y') {
                     /* Compute sum vat */
                     $oTva =  Acc_Tva::build($this->db, trim(${'e_march' . $i . '_tva_id'}));
-                    $oTva->load();
                     $idx_tva =$oTva->get_parameter("id");
+                    // variable :   $auto_reverse = if the oTVA autoreverse, fetch it once for this item,
+                    $auto_reverse=$oTva->get_parameter("both_side");
 
                     $tva_item_currency = ${'e_march' . $i . '_tva_amount'};
 
                     /* if empty then we need to compute it */
                     if (trim($tva_item_currency) == '' || ${'e_march'.$i.'_tva_amount'} == 0) {
-                        /* retrieve tva */
-                        $l =  Acc_Tva::build($this->db, $idx_tva);
-                        $l->load();
-                        $tva_item_currency = bcmul($amount, $l->get_parameter('rate'));
-			$tva_item=round($tva_item_currency,2);
+                        $tva_item_currency = bcmul($amount, $oTva->get_parameter('rate'));
+		            	$tva_item=round($tva_item_currency,2);
                     }
                     $tva_item=bcdiv($tva_item_currency,$p_currency_rate);
                     $tva_item=round($tva_item,2);
-                    if (isset($tva[$idx_tva]))
+
+                    $tva[$idx_tva]=(isset($tva[$idx_tva]))?$tva[$idx_tva]:0;
+
+                    if ( $auto_reverse == 0)
                     {
                         $tva[$idx_tva]=bcadd($tva_item,$tva[$idx_tva]);
                         $tva[$idx_tva]=round($tva[$idx_tva],2);
+                        $tot_tva = bcadd($tva_item, $tot_tva);
+                        $tot_tva = round($tot_tva, 2);
                     }
                     else
                     {
-                        $tva[$idx_tva]=$tva_item;
-                    }
-                    if ($oTva->get_parameter("both_side") == 0) {
-                        $tot_tva = bcadd($tva_item, $tot_tva);
-                        $tot_tva = round($tot_tva, 2);
-                    } else {
                         $n_both = $tva_item;
                          $tva_item_currency = 0;
                         if ($n_both<0)
                         {
                             $tot_debit=round(bcadd($tot_debit, abs($n_both)),2);
+                            $tva_reverse[$idx_tva]=(isset($tva_reverse[$idx_tva]))?$tva_reverse[$idx_tva]:0;
+                            $tva_reverse[$idx_tva]=bcadd($tva_item,$tva_reverse[$idx_tva]);
+                            $tva_reverse[$idx_tva]=round($tva_reverse[$idx_tva],2);
+
+                        } else {
+                            $tva[$idx_tva]=bcadd($tva_item,$tva[$idx_tva]);
+                            $tva[$idx_tva]=round($tva[$idx_tva],2);
+
                         }
                     }
                 }
@@ -548,20 +559,16 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             $operation_currency->j_id=$let_tiers ;
             $operation_currency->insert();
                 
-            
-            /** save all vat
+
+            /**************************************************************************************************
+             * save all vat
              * $i contains the tva_id and value contains the vat amount
              * if if ($g_parameter->MY_TVA_USE == 'Y' )
-             */
+             ************************************************************************************************** */
             if ($g_parameter->MY_TVA_USE == 'Y') {
-                if ( DEBUGNOALYSS > 1 ) {
-                    var_dump($tva);
-                }
+
                 foreach ($tva as $i => $value) {
                     $oTva =  Acc_Tva::build($this->db,$i);
-
-                    $oTva->load();
-
                     $poste_vat = $oTva->get_side('c');
 
                     $cust_amount = bcadd($tot_amount, $tot_tva);
@@ -578,14 +585,16 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                         $tot_debit=bcadd($tot_debit, abs($value));
                         $tot_debit=round($tot_debit, 2);
                     }
+                    if ( $oTva->get_parameter("both_side") == 1 && $value ==0 ) continue;
                     $acc_operation->insert_jrnx();
-                    if ( DEBUGNOALYSS > 1 ) { 
-                                    echo __LINE__." tot_tva $tot_tva<br>"; 
 
-                    }
                     // if TVA is on both side, we deduce it immediately
-                    if ($oTva->get_parameter("both_side") == 1) {
-                        $poste_vat = $oTva->get_side('d');
+                    if ($oTva->get_parameter("both_side") == 1   ) {
+                        // $x temp variable is the tva_reverse_account and will be used to check $poste_vat
+                        $x=$oTva->get_parameter("tva_reverse_account");
+
+                        $poste_vat =(trim($x??"")=="")? $oTva->get_side('d'):$x;
+                        if ($poste_vat == '#') $poste_vat=$oTva->get_side('c');
                         $cust_amount = bcadd($tot_amount, $tot_tva);
                         $acc_operation = new Acc_Operation($this->db);
                         $acc_operation->date = $e_date;
@@ -600,7 +609,52 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                         $tot_debit = round($tot_debit, 2);
                         $n_both = $value;
                     }
+
                 }
+                foreach ($tva_reverse as  $i => $value) {
+                    $oTva =  Acc_Tva::build($this->db,$i);
+                    $poste_vat = $oTva->get_side('c');
+                    if ( $poste_vat == '#')
+                    {
+                        $poste_vat=$oTva->get_side('d');
+                    }
+
+                    $acc_operation = new Acc_Operation($this->db);
+                    $acc_operation->date = $e_date;
+                    $acc_operation->poste = $poste_vat;
+                    $acc_operation->amount = $value;
+                    $acc_operation->grpt = $seq;
+                    $acc_operation->jrn = $p_jrn;
+                    $acc_operation->type = 'c';
+                    $acc_operation->periode = $tperiode;
+                    if ($value<0)
+                    {
+                        $tot_debit=bcadd($tot_debit, abs($value));
+                        $tot_debit=round($tot_debit, 2);
+                    }
+                    $acc_operation->insert_jrnx();
+
+                    // if TVA is on both side, we deduce it immediately
+                    $poste_vat = $oTva->get_side('d');
+                    if ( $poste_vat == '#')
+                    {
+                        $poste_vat=$oTva->get_side('c');
+                    }
+                    $acc_operation = new Acc_Operation($this->db);
+                    $acc_operation->date = $e_date;
+                    $acc_operation->poste = $poste_vat;
+                    $acc_operation->amount = $value;
+                    $acc_operation->grpt = $seq;
+                    $acc_operation->jrn = $p_jrn;
+                    $acc_operation->type = 'd';
+                    $acc_operation->periode = $tperiode;
+                    $acc_operation->insert_jrnx();
+                    $tot_debit = bcadd($tot_debit, $value);
+                    $tot_debit = round($tot_debit, 2);
+                    $n_both = $value;
+
+                }
+
             } // if ($g_parameter->MY_TVA_USE=='Y')
             /*
              * Balance the amount on D and C , the difference must be inserted as "difference due to a rounded value"
@@ -1366,7 +1420,7 @@ EOF;
         /* if we suggest the next pj, then we need a javascript */
         $add_js = "";
         if ($g_parameter->MY_PJ_SUGGEST != 'N') {
-            $add_js = "update_pj();";
+            $add_js = "update_receipt();";
         }
         if ($g_parameter->MY_DATE_SUGGEST == 'Y') {
             $add_js.='get_last_date();';

@@ -93,7 +93,7 @@ if ( $low_action == "list" )
 
     ?>
     <input type="submit" class="button" name="submit_query" value="<?php echo _('recherche')?>">
-                                           <input type="hidden" name="ac" value="<?php echo $_REQUEST['ac']?>">
+                                           <input type="hidden" name="ac" value="<?php echo $http->request('ac')?>">
                                                                      </form>
                                                                      </div>
                                                                      <?php

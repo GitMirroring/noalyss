@@ -41,13 +41,17 @@ class Acc_Tva
                                    "comment"=>"tva_comment",
                                    "account"=>"tva_poste",
                                     "both_side"=>'tva_both_side',
-                                    'tva_code');
+                                    'tva_reverse_account'=>'tva_reverse_account',
+                                    'tva_code'=>'tva_code');
     public $tva_id,
         $tva_label,
         $tva_rate,
         $tva_comment,
         $tva_poste,
-        $tva_both_side,$tva_code;
+        $tva_both_side,
+        $tva_code,
+        $tva_reverse_account;
+
     private $cn; //!< Database connection
 
     private Tva_Rate_SQL $tva_rate_sql;
@@ -63,6 +67,7 @@ class Acc_Tva
         $this->tva_poste=&$this->tva_rate_sql->tva_poste;
         $this->tva_both_side=&$this->tva_rate_sql->tva_both_side;
         $this->tva_code=&$this->tva_rate_sql->tva_code;
+        $this->tva_reverse_account=&$this->tva_rate_sql->tva_reverse_account;
 
     }
     /**
@@ -90,7 +95,7 @@ class Acc_Tva
             return $this->$idx;
         }
 
-        echo  (__FILE__.":".__LINE__.'Erreur attribut inexistant');
+        echo  (__FILE__.":".__LINE__."AT97:Erreur attribut inexistant [$p_string]");
     }
     public function set_parameter($p_string,$p_value)
     {

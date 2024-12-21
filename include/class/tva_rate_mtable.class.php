@@ -36,7 +36,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
 
     //!< previous tva_id, used to know if we update or insert,
     private $previous_id;
-
+    private $a_comment; //!< Supplemental explanation
 
     /**
      * 
@@ -52,15 +52,18 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $this->set_col_label("tva_rate", _("taux"));
         $this->set_col_label("tva_comment", _("Description"));
         $this->set_col_label("tva_both_side", _("Autoliquidation"));
+        $this->set_col_label("tva_reverse_account", _('Poste comptable autoliquidation'));
         $this->set_col_label("tva_sale", _("TVA Vente (C)"));
         $this->set_col_label("tva_purchase", _("TVA Achat (D)"));
 
+        $this->set_property_visible('tva_reverse_account', false);
 
         $this->set_col_type("tva_both_side", "select",
                 array(
             ["value"=>0, "label"=>_("Non")],
             ["value"=>1, "label"=>_("Oui")]
         ));
+        $this->set_col_type("tva_reverse_account", 'custom');
         $this->set_property_updatable("tva_id", true);
         $this->set_col_label("tva_payment_purchase",_("Exigible achat"));
         $this->set_col_type("tva_payment_purchase","select",
@@ -76,9 +79,18 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                     array("value"=>'P',"label"=>"Paiement")
                     )
                 );
-        $this->a_info=["tva_purchase"=>44,"tva_both_side"=>43,"tva_sale"=>45
-            ,"tva_payment_sale"=>74,"tva_payment_purchase"=>74];
+        $this->a_info=[
+            "tva_purchase"=>44,"tva_both_side"=>43,"tva_sale"=>45
+            ,"tva_payment_sale"=>74,"tva_payment_purchase"=>74,'tva_reverse_account'=>88];
         $this->previous_id=null;
+        $this->a_comment=array(
+            'tva_purchase'=>_("Ne donnez pas ce poste comptable si ce code n'est pas utilisé à l'achat"),
+            'tva_both_side'=>_("Autoliquidation : Utilisé en même temps au crédit et au débit"),
+            'tva_sale'=>_("Ne donnez pas ce poste comptable si ce code n'est pas utilisé  à la vente"),
+            'tva_payment_purchase'=>_('TVA due ou récupérable quand l\'opération est payée ou exécutée'),
+            'tva_payment_sale'=>_('TVA due ou récupérable quand l\'opération est payée ou exécutée'),
+            'tva_reverse_account'=>_("Forcer ce poste comptable pour autoliquidation : par défault, le poste d'autoliquidation est calculé : soit celui qui est en contrepartie, soit le même (voir manuel)")
+        );
     }
 
     /**
@@ -107,6 +119,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
     function input()
     {
         $nb_order=count($this->a_order);
+        $this->set_property_visible('tva_reverse_account', true);
         echo "<table>";
         for ($i=0; $i<$nb_order; $i++)
         {
@@ -181,6 +194,16 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                         echo $inum->input();
                         echo \HtmlInput::hidden("old_tva_id",$value);
 
+                    } elseif ($key=='tva_reverse_account')
+                    {
+                        $text=new IPoste("tva_reverse_account");
+                        $text->value=$value;
+                        $min_size=10;
+                        $text->set_attribute('gDossier', Dossier::id());
+                        $text->set_attribute('jrn', 0);
+                        $text->set_attribute('account', 'tva_reverse_account');
+                        $text->size=$min_size;
+                        echo $text->input();
                     }
                     echo "</td>";
                 }
@@ -190,10 +213,26 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                             HtmlInput::hidden($key, $value)
                     );
                 }
+                echo '<td class="text-muted">';
+                if (isset ($this->a_comment[$key])) {
+                    echo $this->a_comment[$key];
+                }
+                echo '</td>';
             }
             echo "</tr>";
         }
         echo "</table>";
+    }
+
+    /**
+     * @brief add the TVA_REVERSE_ACCOUNT
+     * @return void
+     */
+    function from_request()
+    {
+        parent::from_request();
+        $http=new \HttpInput();
+        $this->table->tva_reverse_account=$http->request('tva_reverse_account');
     }
 
     /**
@@ -230,6 +269,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $tva_rate->setp("tva_label", $this->table->tva_label);
         $tva_rate->setp("tva_comment", $this->table->tva_comment);
         $tva_rate->setp("tva_both_side", $this->table->tva_both_side);
+        $tva_rate->setp("tva_reverse_account", $this->table->tva_reverse_account);
 
         // TVA accounting must be joined and separated with a comma
         $tva_purchase=(trim($this->table->tva_purchase)=="")?"#":$this->table->tva_purchase;
@@ -249,7 +289,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
 
     }
     /**
-     * Check data are valid 
+     * @brief Check data are valid
      *   1. tva_rate between 0 & 1
      *   2. label is uniq
      *   3. accounting must exist
@@ -339,6 +379,26 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         }
         if (isNumber($this->table->tva_code) == 1){
             $this->set_error("tva_code", _("code tva : doit aussi contenir des lettres"));
+        }
+        /**
+         * auto reverse VAT : check that the accounting is used
+         */
+        if ( $this->table->tva_both_side==0 && trim($this->table->tva_reverse_account??"") != "")
+        {
+            $this->set_error("tva_reverse_account", _("Pas d'autoliquidation demandé"));
+        }
+        if ( $this->table->tva_both_side==1 && trim($this->table->tva_reverse_account??"") != "")
+        {
+            $count=$cn->get_value("select count(*) from tmp_pcmn where pcm_val = $1",
+                [$this->table->tva_reverse_account]);
+            if ($count==0)
+            {
+                $this->set_error("tva_reverse_account", _("Poste comptable inexistant"));
+            }
+        }
+        // label cannot be empty
+        if ( trim($this->table->tva_label??"")=="") {
+            $this->set_error("tva_label", _('Le label ne peut être vide'));
         }
         if ($this->count_error()!=0)
             return false;

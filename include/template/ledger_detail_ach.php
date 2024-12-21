@@ -1,6 +1,11 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+
+/**
+ * @var $str_anc String HTML contains the detail of analytic
+ * @var $g_user Noalyss_User inherited , it is the connected user
+ */
 $str_anc="";
 global $div,$g_parameter,$cn,$access,$jr_id,$obj;
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
@@ -270,7 +275,53 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                             $str_anc.=td($poste);
                             $str_anc.=td(nbm($htva)." {$side}");
                             $str_anc.=$anc_op->display_table(1, $htva, $div);
-                        } 
+
+                            $str_anc.='</tr>';
+                            /* check there is no other row for this one like TVA_ND */
+                            /**
+                             * @var $anl_extra array of rows from operation_analytique concerning the current record
+                             *
+                             */
+                            $anl_extra=$cn->get_array('select  distinct j1.f_id,
+                                        o1.j_id  j_id_anx,
+                                        j1.j_poste,
+                                        j1.j_debit,
+                                        j1.j_montant
+                                        from operation_analytique o1 
+                                        join jrnx j1 on (o1.j_id=j1.j_id)
+                                        where oa_jrnx_id_source = $1',
+                                [$q['j_id']]);
+                            if (count($anl_extra)   > 0)
+                            {
+                                foreach ($anl_extra as $item_anl_extra) {
+
+                                    $anc_op = new Anc_Operation($cn);
+                                    $anc_op->j_id =$item_anl_extra['j_id_anx'];
+                                    $anc_op->in_div=uniqid();
+                                    $side=($item_anl_extra['j_debit'] == 'f')?'C':'D';
+                                    $n="";
+                                    if ( $item_anl_extra['f_id'] != "") {
+                                        $n=$cn->get_value('select ad_value from fiche_detail 
+                                                        where
+                                                            f_id =$1
+                                                          and ad_id=$2'
+                                                ,[$item_anl_extra['f_id'],ATTR_DEF_QUICKCODE]);
+                                    }
+
+                                    /* compute total price */
+                                    bcscale(2);
+                                    $str_anc.='<tr>';
+                                    $str_anc.=td($n);
+                                    $str_anc.=td($item_anl_extra['j_poste']);
+
+                                    $str_anc.=td(nbm($item_anl_extra['j_montant'])." {$side}");
+                                    $str_anc.=$anc_op->display_table(0, $htva, $anc_op->in_div);
+
+                                    $str_anc.='</tr>';
+                                }
+
+                            }
+                        }
                     }
                      $class=($e%2==0)?' class="even"':'class="odd"';
                      /*

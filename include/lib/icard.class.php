@@ -476,7 +476,7 @@ class ICard extends HtmlInput
         }
         
         $input='<div class="d-none d-lg-inline">'.
-                Icon_Action::clean_zone(uniqid("remove"),"$('{$this->id}').value=''").
+                Icon_Action::clean_zone(uniqid("remove"),"clean_Fid('{$this->id}');compute_all_ledger();").
                 "</div>";
              
         $input.=sprintf('

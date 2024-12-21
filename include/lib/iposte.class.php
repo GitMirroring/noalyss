@@ -88,12 +88,12 @@ class IPoste extends HtmlInput
         $this->extra2="all";
         $this->extra="";
         $this->attribute=array();
-	$this->id=$p_id;
+	    $this->id=$p_id;
         $this->nb_row=1;
 
     }
 
-    static function ipopup($p_name)
+        static function ipopup($p_name)
     {
         $ip=new IPopup($p_name);
         $ip->title='Plan comptable';

@@ -49,6 +49,7 @@ class V_Tva_Rate_SQL extends Table_Data_SQL
             , "tva_purchase"=>"tva_purchase"
             , "tva_sale"=>"tva_sale"
             , "tva_both_side"=>"tva_both_side"
+            ,'tva_reverse_account'=>'tva_reverse_account'
             ,'tva_payment_purchase'=>'tva_payment_purchase'
             ,'tva_payment_sale'=>'tva_payment_sale'
 
@@ -65,6 +66,7 @@ class V_Tva_Rate_SQL extends Table_Data_SQL
             , "tva_purchase"=>"text"
             , "tva_sale"=>"text"
             , "tva_both_side"=>"numeric"
+            ,'tva_reverse_account'=>'text'
             , 'tva_payment_purchase'=>'text'
             , 'tva_payment_sale'=>'text'
         );

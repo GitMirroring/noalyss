@@ -1,10 +1,31 @@
 <?php
-//This file is part of NOALYSS and is under GPL 
+//This file is part of NOALYSS and is under GPL
 //see licence.txt
 
+/**
+ * Called from Acc_Ledger_Search
+ * @var $this Acc_Ledger_Search
+ * @var $f_ledger ICheckBox inherited Acc_Ledger_Search
+ * @var $hid_jrn html string : hidden r_jrn from previous request inherited
+ * @var $f_date_start IDate inherited
+ * @var $f_date_end IDate inherited
+ * @var $f_date_paid_start IDate inherited
+ * @var $f_date_paid_end IDate inherited
+ * @var $date_start_hidden IDate inherited
+ * @var $date_end_hidden IDate inherited
+ * @var $f_amount_min INum inherited
+ * @var $f_amount_max INum inherited
+ * @var $f_accounting IPoste inherited
+ * @var $g_parameter Noalyss_Parameter_Folder global variable
+ * @var $tva_id_search ITva_Popup inherited
+ * @var $f_paid ISelect inherited
+ * @var $sCurrency Acc_Currency  inherited
+ * @var $http HttpInput inherited
+ */
 ?>
+
 <table id="<?=$this->div?>table_search">
-    
+
 <tr>
 <td style="text-align:right;width:30em">
 <?php echo _('Dans le journal')?>
@@ -112,19 +133,19 @@ echo $f_accounting->input();  ?>
 </tr>
 
 <tr>
-    
+
 <td  style="text-align:right;width:30em">
-    
+
         <?php
          $iselect= new ISelect($this->div."tag_option");
                 $iselect->value=array(
                     array("value"=>0,"label"=>_("Toutes les étiquettes")),
                     array("value"=>1,"label"=>_("Au moins une étiquette"))
                     );
-                
+
                 $iselect->set_value($http->request($this->div."tag_option","number",0));
-                echo $iselect->input(); 
-               
+                echo $iselect->input();
+
         ?>
         <?php
         echo Tag_Operation::select_tag_search($this->div);
@@ -132,7 +153,7 @@ echo $f_accounting->input();  ?>
 </td>
     <td >
         <span id="<?=$this->div?>tag_choose_td">
-            <?php 
+            <?php
             $aTag= $http->request($this->div."tag","string",0);
                 if (is_array($aTag) ) {
                     $nb_tag=count($aTag);
@@ -142,9 +163,9 @@ echo $f_accounting->input();  ?>
                     }
                 }
             ?>
-        
+
         </span>
     </td>
 </tr>
-    
+
 </table>

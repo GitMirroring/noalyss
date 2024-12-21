@@ -19,27 +19,32 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
  * \brief class for the purchase, herits from acc_ledger
  */
 require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 
-/*!\brief Handle the ledger of purchase,
+/*!
+ * \class Acc_Ledger_Purchase
+ * \brief Handle the ledger of purchase,
  *
  *
  */
 class  Acc_Ledger_Purchase extends Acc_Ledger
 {
     private $payment_operation; /*<! id of the payment , set in insert */
+
     function __construct ($p_cn,$p_init)
     {
         $this->ledger_type='ACH';
         parent::__construct($p_cn,$p_init);
         $this->payment_operation=-1;
     }
-    /*!\brief verify that the data are correct before inserting or confirming
+    /*!
+    * \brief verify that the data are correct before inserting or confirming
      *\param an array (usually $_POST)
      *\return String
      *\throw Exception if an error occurs
@@ -472,7 +477,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         }
     }
 
-    /*!\brief insert into the database, it calls first the verify function
+    /*!
+     * \brief insert into the database, it calls first the verify function
      * change the value of this->jr_id and this->jr_internal.
      * It generates the document and save the middle of payment, if 'gen_invoice is set
      * and e_mp
@@ -548,19 +554,36 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         try
         {
             bcscale(4);
-            // total amount of the purchase
+            // variable :   $tot_amount  float : total amount of the purchase (debit)
             $tot_amount=0;
+            // variable :  $tot_tva float : total amount of the VAT
             $tot_tva=0;
+
             $tot_debit=0;
             $this->db->start();
+            // variable :  $tot_nd float total not Deductible
             $tot_nd=0;
+            // variable :  $tot_perso float total private amount
             $tot_perso=0;
+            // variable :  $tot_tva_nd float total vat not deductible
             $tot_tva_nd=0;
+
+            // variable :  $tot_tva_ndded float total vat not deductible - deductible via another tax
             $tot_tva_ndded=0;
-            $tot_tva_reversed=0;
+
+            $tot_tva_reversed=0; //@todo to remove
+
+            // variable :  $tva array that will contain all the VAT Amount
             $tva=array();
+
+            // variable :  $tva_reverse array that contain all the VAT autoreverse AND negative
+            $tva_reverse = array();
+
+            // variable :  $tot_amount_cur : total amount in currency
             $tot_amount_cur=0;
+
             // find the currency from v_currency_last_value
+            // variable :  $currency_rate_ref Acc_Currency , currency object for this operation
             $currency_rate_ref=new Acc_Currency($this->db, $p_currency_code);
             
             /* Save all the items without vat and no deductible vat and expense*/
@@ -571,7 +594,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 /* First we save all the items without vat */
                 $fiche=new Fiche($this->db);
                 $fiche->get_by_qcode(${"e_march".$i});
-		$tva_both=0;
+                // variable :   $tva_both integer  1 for autoreverse ,0 normal, fetch it once for this item,
+		        $tva_both=0;
                 /* tva */
                 if ($g_parameter->MY_TVA_USE=='Y')
                 {
@@ -676,13 +700,14 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 if ( $g_parameter->MY_TVA_USE=='Y')
                 {
                     $tva_item=$acc_amount->amount_vat;
-
-                    if (isset($tva[$idx_tva]))
-                    {
+                    $tva[$idx_tva]=(isset( $tva[$idx_tva]))? $tva[$idx_tva]:0;
+                    if ($tva_both == 0 || $tva_item >= 0){
                         $tva[$idx_tva]=bcadd($tva[$idx_tva], $tva_item);
+                    }else {
+                        // $tva_item  < 0 && $tva_both == 1
+                        $tva_reverse[$idx_tva]=(isset($tva_reverse[$idx_tva]))?$tva_reverse[$idx_tva]:0;
+                        $tva_reverse[$idx_tva]=bcadd($tva_item,$tva_reverse[$idx_tva]);
                     }
-                    else
-                        $tva[$idx_tva]=$tva_item;
                 }
                 /* Save the stock */
                 /* if the quantity is < 0 then the stock increase (return of
@@ -853,8 +878,6 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 foreach ($tva as $i => $value)
                 {
                     $oTva=Acc_Tva::build($this->db,$i);
-                    $oTva->load();
-
                     $poste_vat=$oTva->get_side('d');
 
                     $cust_amount=round(bcadd($tot_amount,$tot_tva),2);
@@ -867,12 +890,15 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     $acc_operation->type='d';
                     $acc_operation->periode=$tperiode;
                     if ( $value > 0 ) $tot_debit=bcadd($tot_debit,abs($value));
+                    if ( $oTva->get_parameter("both_side") == 1 && $value ==0 ) continue;
                     $acc_operation->insert_jrnx();
                     // if TVA is on both side, we deduce it immediately
                     
                     if ( $oTva->get_parameter("both_side")==1 )
                     {
-                        $poste_vat=$oTva->get_side('c');
+                        // $x temp variable is the tva_reverse_account and will be used to check $poste_vat
+                        $x=$oTva->get_parameter("tva_reverse_account");
+                        $poste_vat =(trim($x??"")=="")? $oTva->get_side('c'):$x;
                         if ( $poste_vat == '#')
                         {
                             $poste_vat=$oTva->get_side('d');
@@ -880,16 +906,54 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                         $acc_operation=new Acc_Operation($this->db);
                         $acc_operation->date=$e_date;
                         $acc_operation->poste=$poste_vat;
-                        $acc_operation->amount=$tot_tva_reversed;
+                        $acc_operation->amount=$value;
                         $acc_operation->grpt=$seq;
                         $acc_operation->jrn=$p_jrn;
                         $acc_operation->type='c';
                         $acc_operation->periode=$tperiode;
                         $acc_operation->insert_jrnx();
-                        if ( $value < 0 ) $tot_debit=bcadd($tot_debit,abs($value));
+                        //if ( $value < 0 ) $tot_debit=bcadd($tot_debit,abs($value));
                     }
 
-                }
+                } // LOOP : foreach $tva
+                foreach ($tva_reverse as  $i => $value) {
+                    $oTva =  Acc_Tva::build($this->db,$i);
+                    $poste_vat = $oTva->get_side('d');
+                    if ( $poste_vat == '#')
+                    {
+                        $poste_vat=$oTva->get_side('c');
+                    }
+
+                    $acc_operation = new Acc_Operation($this->db);
+                    $acc_operation->date = $e_date;
+                    $acc_operation->poste = $poste_vat;
+                    $acc_operation->amount = $value;
+                    $acc_operation->grpt = $seq;
+                    $acc_operation->jrn = $p_jrn;
+                    $acc_operation->type = 'd';
+                    $acc_operation->periode = $tperiode;
+
+                    $acc_operation->insert_jrnx();
+
+                    // if TVA is on both side, we deduce it immediately
+                    $poste_vat = $oTva->get_side('c');
+                    if ( $poste_vat == '#')
+                    {
+                        $poste_vat=$oTva->get_side('d');
+                    }
+                    $acc_operation = new Acc_Operation($this->db);
+                    $acc_operation->date = $e_date;
+                    $acc_operation->poste = $poste_vat;
+                    $acc_operation->amount = $value;
+                    $acc_operation->grpt = $seq;
+                    $acc_operation->jrn = $p_jrn;
+                    $acc_operation->type = 'c';
+                    $acc_operation->periode = $tperiode;
+                    $acc_operation->insert_jrnx();
+                    $tot_debit = bcadd($tot_debit, $value);
+                    $tot_debit = round($tot_debit, 2);
+                    $n_both = $value;
+                } //LOOP: foreach $tva_reverse
             }
 
             /* insert into jrn */
@@ -1015,7 +1079,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $acc_pay->grpt=$acseq;
                 $acc_pay->jrn=$mp->get_parameter('ledger_target');
                 $acc_pay->periode=$tperiode;
-		$acc_pay->type=($famount>=0)?'d':'c';
+		        $acc_pay->type=($famount>=0)?'d':'c';
                 $let_other=$acc_pay->insert_jrnx();
                 
                 // insert into operation_currency
@@ -1057,11 +1121,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $r1=$this->get_id($internal);
                 $r2=$this->get_id($acinternal);
 
-		/*
-		 * add lettering
-		 */
-		$oletter=new Lettering($this->db);
-		$oletter->insert_couple($let_client,$let_other);
+                /*
+                 * add lettering
+                 */
+                $oletter=new Lettering($this->db);
+                $oletter->insert_couple($let_client,$let_other);
 
                 /* set the flag paid */
                 $Res=$this->db->exec_sql("update jrn set jr_rapt='paid' where jr_id=$1",array($r1));
@@ -1225,7 +1289,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $add_js="";
         if ( $g_parameter->MY_PJ_SUGGEST !='N')
         {
-            $add_js="update_pj();";
+            $add_js="update_receipt();";
         }
         if ($g_parameter->MY_DATE_SUGGEST == 'Y')
         {
@@ -1518,7 +1582,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         /* if we suggest the pj n# the run the script */
         if ( $g_parameter->MY_PJ_SUGGEST !='N')
         {
-            $r.='<script> update_pj();</script>';
+            $r.='<script> update_receipt();</script>';
         }
 		// set focus on date
 		$r.= create_script("$('".$Date->id."').focus()");

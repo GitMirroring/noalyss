@@ -32,8 +32,6 @@
 class Acc_Ledger_History_Purchase extends Acc_Ledger_History
 {
 
-    private $data;//!< Contains rows from SQL
-
     /**
      * @param mixed $data
      */

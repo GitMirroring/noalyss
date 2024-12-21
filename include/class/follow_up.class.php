@@ -34,7 +34,7 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
  */
 
 /**
- * \class
+ * \class Follow_Up
  * \brief class_action for manipulating actions
  * action can be :
  * <ul>

@@ -27,29 +27,21 @@
 
 /**
  *  clean the row (the label, price and vat)
- * @param p_ctl the calling ctrl
+ * @param {string} p_ctl the calling ctrl
  */
 function clean_Fid(p_ctl)
 {
-    nSell=p_ctl+"_price";
-    nTvaAmount=p_ctl+"_tva_amount";
-    nBuy=p_ctl+"_price";
-    nTva_id=p_ctl+"_tva_id";
-    if ( $(nSell) )
-    {
-        $(nSell).value="";
+
+    document.getElementById(p_ctl).value='';
+    var aField=['_price','_tva_amount','_tva_id'];
+    for ( field of aField) {
+        let obj=document.getElementById(p_ctl+field);
+        if ( obj ) {obj.value='0'}
     }
-    if ( $(nBuy) )
-    {
-        $(nBuy).value="";
-    }
-    if ( $(nTva_id) )
-    {
-        $(nTva_id).value="-1";
-    }
-    if ( $(nTvaAmount))
-    {
-        $(nTvaAmount).value=0;
+    var aField=['_label'];
+    for ( field of aField) {
+        let obj=document.getElementById(p_ctl+field);
+        if ( obj ) {obj.value=''}
     }
 }
 function errorFid(request,json)
@@ -58,7 +50,7 @@ function errorFid(request,json)
 }
 /**
  *  this function fills the data from fid.php,
- * @param {object} p_ctl  : field of the input,
+ * @param {object or string} p_ctl  : field of the input, : object or string
  *  possible object member
  * - label field to update with the card's name
  * - price field to update with the card's price
@@ -68,56 +60,56 @@ function errorFid(request,json)
  */
 function ajaxFid(p_ctl)
 {
+    debugger
 	try
 	{
-	var gDossier=$('gDossier').value;
-    var jrn=$(p_ctl).jrn;
-    $(p_ctl).value=$(p_ctl).value.toUpperCase();
-    if ( jrn == undefined )
+	var gDossier=id$('gDossier').value;
+    // if p_ctl is a string that find the object
+    var dome =id$(p_ctl);
+
+    var jrn = (dome.jrn) ? dome.jrn.value:-1;
+    dome.value=dome.value.toUpperCase();
+
+    if ( jrn == undefined &&  document.getElementById('p_jrn')!=undefined)
     {
-        if ($('p_jrn')!=undefined)
-        {
-            jrn=$('p_jrn').value;
-        }
+        jrn=id$('p_jrn').value;
     }
-    if ( jrn == undefined )
+
+
+    if ( trim(dome.value)=="" )
     {
-        jrn=-1;
-    }
-    if ( trim($(p_ctl).value)=="" )
-    {
-        nLabel=$(p_ctl).label;
-        if ($(nLabel) )
+        nLabel=id$(dome).label;
+        if (document.getElementById(nLabel) )
         {
-            $(nLabel).value="";
-            $(nLabel).innerHTML="&nbsp;";
-            clean_Fid(p_ctl);
+            id$(nLabel).value="";
+            id$(nLabel).innerHTML="&nbsp;";
+            clean_Fid(dome.id);
             return;
         }
     }
-    var queryString="FID="+trim($(p_ctl).value);
-    if ( $(p_ctl).label)
+    var queryString="FID="+trim(dome.value);
+    if ( dome.label)
     {
-        queryString+='&l='+$(p_ctl).label;
+        queryString+='&l='+dome.label;
     }
-    if ( $(p_ctl).tvaid)
+    if ( dome.tvaid)
     {
-        queryString+='&t='+$(p_ctl).tvaid;
+        queryString+='&t='+dome.tvaid;
     }
-    if ( $(p_ctl).price)
+    if ( dome.price)
     {
-        queryString+='&p='+$(p_ctl).price;
+        queryString+='&p='+dome.price;
     }
-    if ( $(p_ctl).purchase)
+    if ( dome.purchase)
     {
-        queryString+='&b='+$(p_ctl).purchase;
+        queryString+='&b='+dome.purchase;
     }
-    if ( $(p_ctl).typecard)
+    if ( dome.typecard)
     {
-        queryString+='&d='+$(p_ctl).typecard;
+        queryString+='&d='+dome.typecard;
     }
     queryString=queryString+"&j="+jrn+'&gDossier='+gDossier;
-    queryString=queryString+'&ctl='+p_ctl.id;
+    queryString=queryString+'&ctl='+dome.id;
     queryString=encodeURI(queryString);
 
     var action=new Ajax.Request (
@@ -196,9 +188,9 @@ function ajax_error_saldo(request,json)
  */
 function ajax_saldo(p_ctl)
 {
-    var gDossier=$('gDossier').value;
-    var ctl_value=trim($(p_ctl).value);
-    var jrn=$('p_jrn').value;
+    var gDossier=id$('gDossier').value;
+    var ctl_value=trim(id$(p_ctl).value);
+    var jrn=id$('p_jrn').value;
     queryString="FID="+ctl_value+"&op=saldo";
     queryString=queryString+'&gDossier='+gDossier+'&j='+jrn;
     queryString=queryString+'&ctl='+ctl_value;
@@ -221,7 +213,7 @@ function ajax_saldo(p_ctl)
 function ajax_success_saldo(request,json)
 {
     var answer=request.responseText.evalJSON(true);
-    $('first_sold').value=answer.saldo;
+    id$('first_sold').value=answer.saldo;
 
 }
 
@@ -231,8 +223,8 @@ function ajax_success_saldo(request,json)
 function ajax_get_success(request,json)
 {
     var answer=request.responseText.evalJSON(false);
-    $(answer.ctl).show();
-    $(answer.ctl).innerHTML=answer.html;
+    id$(answer.ctl).show();
+    id$(answer.ctl).innerHTML=answer.html;
 }
 /*!\brief callback function for ajax_get when fails
 */
@@ -252,7 +244,7 @@ var category_card={};
  * @param string p_object_name , name of the prefix for id 
  */
 category_card.add_attribut=function (p_dossier,p_fiche_def_ref,p_object_name) {
-    var select=$("sel"+p_object_name);
+    var select=id$("sel"+p_object_name);
     var selected_attr=select.value;
     new Ajax.Request("ajax_misc.php",{
        method:"post",
@@ -268,7 +260,7 @@ category_card.add_attribut=function (p_dossier,p_fiche_def_ref,p_object_name) {
            if ( answer.status == 'OK') {
                var newli = document.createElement("li")
 
-               $(p_object_name + "_list").append(newli);
+               id$(p_object_name + "_list").append(newli);
                newli.replace(answer.content);
                document.getElementById('attribut_order').value = Sortable.serialize(p_object_name + "_list");
                select.remove(select.selectedIndex);
@@ -304,11 +296,11 @@ category_card.remove_attribut=function (p_dossier,p_fiche_def_ref,p_object_name,
        onSuccess:function(req) {
            var answer=req.responseText.evalJSON();
            if ( answer.status == 'OK') {
-               $(p_object_name+"_elt"+p_attribute_id).remove();
+               id$(p_object_name+"_elt"+p_attribute_id).remove();
                var option=document.createElement("option");
                option.text=answer['content'];
                option.value=p_attribute_id;
-               $('sel'+p_object_name).add(option);
+               id$('sel'+p_object_name).add(option);
            } else {
                smoke.alert(answer.message);
            }
@@ -328,11 +320,11 @@ category_card.check_vatnumber=function(p_domid) {
 
     	        // For form , most of the parameters are in the FORM
     	        // method is then POST
-    	         //var queryString=$(p_form_id).serialize(true);
+    	         //var queryString=id$(p_form_id).serialize(true);
 
     	       var queryString = {
     	                op: 'check_vatnumber',
-    	                vatnr:$(p_domid).value,
+    	                vatnr:id$(p_domid).value,
     	                boxid: dgbox,
                         p_domid:p_domid
     	            };
@@ -352,14 +344,14 @@ category_card.check_vatnumber=function(p_domid) {
 
                                 if ( answer.status == 'OK')
                                 {
-                                    $(dgbox).update(answer.html);
-                                    $(p_domid).value=answer.vat;
-                                    $(p_domid).removeClassName("notice")
-                                    $(p_domid).addClassName("valid")
+                                    id$(dgbox).update(answer.html);
+                                    id$(p_domid).value=answer.vat;
+                                    id$(p_domid).removeClassName("notice")
+                                    id$(p_domid).addClassName("valid")
                                 } else {
-                                    $(p_domid).addClassName("notice");
-                                    $(p_domid).removeClassName("valid");
-                                    $(dgbox).update(answer.html);
+                                    id$(p_domid).addClassName("notice");
+                                    id$(p_domid).removeClassName("valid");
+                                    id$(dgbox).update(answer.html);
                                 }
 
     					      }

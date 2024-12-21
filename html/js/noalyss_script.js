@@ -28,14 +28,15 @@ var ask_reload = 0;
 // tag_choose Element  which contains all the selected tags 
 var tag_choose = '';
 var aDraggableElement = new Array();
-
+// Layer for z-index , see function get_next_layer , must be used in PHP and JS
+var layer=0;
 // document.viewport depends of prototype.js
 var viewport = document.viewport.getDimensions(); // Gets the viewport as an object literal
 var width = viewport.width; // Usable window width
 var height = viewport.height;
 
 /**
- * return undefined if nothing is found , otherwise return the DOM elemnt
+ * return undefined if nothing is found , otherwise return the DOM elemnt, try to find an DOM Element inside p_element
  * @param {type} p_name_dom
  * @param {type} name_child
  * @returns {undefined}
@@ -73,7 +74,7 @@ function infodiv(req, json) {
         var code_html = getNodeText(html[0]);
 
         code_html = unescape_xml(code_html);
-        g(name_ctl + "info").innerHTML = code_html;
+        id$(name_ctl + "info").innerHTML = code_html;
     } catch (e) {
         alert_box("success_box" + e.message);
     }
@@ -95,7 +96,7 @@ function deleteRow(tb, obj) {
             var td = obj.parentNode;
             var tr = td.parentNode;
             var lidx = tr.rowIndex;
-            g(tb).deleteRow(lidx);
+            id$(tb).deleteRow(lidx);
 
         } else {
             return;
@@ -106,7 +107,7 @@ function deleteRow(tb, obj) {
 function deleteRowRec(tb, obj) {
     var tr = obj;
     var lidx = tr.rowIndex;
-    g(tb).deleteRow(lidx);
+    id$(tb).deleteRow(lidx);
 }
 
 /*!\brief remove trailing and heading space
@@ -122,32 +123,47 @@ function trim(s) {
  * @param ID is a string
  * @return the found object of undefined if not found
  */
-function g(ID) {
-    if (document.getElementById) {
-        return this.document.getElementById(ID);
+function id$(ID) {
+    if (ID instanceof Object ) return ID;
+    if (document.getElementById(ID)) {
+            return document.getElementById(ID);
     } else if (document.all) {
         return document.all[ID];
     } else {
+        document.debug_noalyss&&console.error(`id$ ${ID}`)
         return undefined;
     }
 }
 
 /**
+ * this function is deprecated and replaced by id$
+ * @deprecated
+ * @param ID
+ * @returns {*}
+ */
+function g(ID) {
+    document.debug_noalyss&& console.warn(`g(${ID} is deprecated, use id$`);
+    return id$(ID);
+}
+function get_next_layer(){
+    return layer++;
+}
+/**
  * enable the type of periode
  */
 function enable_type_periode() {
-    if ($("type_periode").options[$("type_periode").selectedIndex].value == 0) {
-        $('from_periode').enable();
-        $('to_periode').enable();
-        $('from_date').disable();
-        $('to_date').disable();
-        $('p_step').enable();
+    if (document.getElementById("type_periode").options[id$("type_periode").selectedIndex].value == 0) {
+        id$('from_periode').enable();
+        id$('to_periode').enable();
+        id$('from_date').disable();
+        id$('to_date').disable();
+        id$('p_step').enable();
     } else {
-        $('from_periode').disable();
-        $('to_periode').disable();
-        $('from_date').enable();
-        $('to_date').enable();
-        $('p_step').disable();
+        id$('from_periode').disable();
+        id$('to_periode').disable();
+        id$('from_date').enable();
+        id$('to_date').enable();
+        id$('p_step').disable();
     }
 }
 
@@ -188,11 +204,11 @@ function encodeJSON(obj) {
 }
 
 function hide(p_param) {
-    g(p_param).style.display = 'none';
+    id$(p_param).style.display = 'none';
 }
 
 function show(p_param) {
-    g(p_param).style.display = 'block';
+    id$(p_param).style.display = 'block';
 }
 
 /**
@@ -201,7 +217,7 @@ function show(p_param) {
  *@param selectIt : the value selected in case of Field is a object select, numeric
  */
 function SetFocus(Field, SelectIt) {
-    var elem = g(Field);
+    var elem = id$(Field);
     if (elem) {
         elem.focus();
     }
@@ -226,21 +242,21 @@ function set_inparent(p_ctl, p_value, p_add) {
  @param p_add if we don't replace the current value but we add something
  */
 function set_value(p_ctl, p_value, p_add) {
-    if (g(p_ctl)) {
-        var g_ctrl = g(p_ctl);
+    if (document.getElementById(p_ctl)) {
+        var g_ctrl = id$(p_ctl);
         if (p_add != undefined && p_add === 1) {
             if (g_ctrl.value) {
                 p_value = g_ctrl.value + ',' + p_value;
             }
         }
         if (g_ctrl.tagName === 'INPUT') {
-            g(p_ctl).value = p_value;
+            id$(p_ctl).value = p_value;
         }
         if (g_ctrl.tagName === 'SPAN') {
-            g(p_ctl).innerHTML = p_value;
+            id$(p_ctl).innerHTML = p_value;
         }
         if (g_ctrl.tagName === 'SELECT') {
-            g(p_ctl).value = p_value;
+            id$(p_ctl).value = p_value;
         }
     }
 }
@@ -302,7 +318,7 @@ function format_number(obj, p_prec) {
 
     value = Math.round(value * arrondi) / arrondi;
 
-    $(obj).value = value;
+    id$(obj).value = value;
 }
 
 /**
@@ -340,37 +356,37 @@ function format_date(p_object) {
  * @param rotate : if true with rotate the object of p_button otherwise
  */
 function toggleHideShow(p_obj, p_button, rotate) {
-    var div_obj = g(p_obj);
+    var div_obj = id$(p_obj);
     var stat = div_obj.style.display;
 
-    var str = (g(p_button)) ? g(p_button).value : "";
+    var str = (id$(p_button)) ? id$(p_button).value : "";
 
     if (stat === 'none') {
         // specific for the DIV id search_form
         if (div_obj.id == 'search_form') {
             show(p_obj);
         } else {
-            $(p_obj).show()
+            id$(p_obj).show()
         }
         str = str.replace(/Afficher/, content[62]);
-        g(p_button).value = str;
+        id$(p_button).value = str;
     } else {
         // specific for the DIV di search_form
         if (!div_obj.id == 'search_form') {
             hide(p_obj);
         } else {
-            $(p_obj).hide()
+            id$(p_obj).hide()
         }
         str = str.replace(/Cacher/, content[63]);
-        g(p_button).value = str;
+        id$(p_button).value = str;
     }
     if (!rotate) return;
     if (stat == "none") {
-        g(p_button).addClassName("icon-up-open-1")
-        g(p_button).removeClassName(" icon-down-open-2")
+        id$(p_button).addClassName("icon-up-open-1")
+        id$(p_button).removeClassName(" icon-down-open-2")
     } else {
-        g(p_button).removeClassName("icon-up-open-1")
-        g(p_button).addClassName(" icon-down-open-2")
+        id$(p_button).removeClassName("icon-up-open-1")
+        id$(p_button).addClassName(" icon-down-open-2")
 
     }
 
@@ -459,7 +475,7 @@ function success_misc(req) {
         var nodeXml = html[0];
         var code_html = getNodeText(nodeXml);
         code_html = unescape_xml(code_html);
-        $("user_cal").innerHTML = code_html;
+        id$("user_cal").innerHTML = code_html;
     } catch (e) {
         alert_box(e.message);
     }
@@ -523,9 +539,9 @@ function cat_doc_remove(p_dt_id, p_dossier) {
                         alert_box('erreur <br>' + message_text);
                         return;
                     }
-                    $('row' + row_id).style.textDecoration = "line-through";
-                    $('X' + row_id).style.display = 'none';
-                    $('M' + row_id).style.display = 'none';
+                    id$('row' + row_id).style.textDecoration = "line-through";
+                    id$('X' + row_id).style.display = 'none';
+                    id$('M' + row_id).style.display = 'none';
                 } catch (e) {
                     alert_box(e.message);
                 }
@@ -553,7 +569,7 @@ function cat_doc_change(p_dt_id, p_dossier) {
             onSuccess: function (req) {
                 remove_waiting_box();
                 add_div({id: 'change_doc_div', style: str_style, cssclass: 'inner_box', drag: "1"});
-                $('change_doc_div').innerHTML = req.responseText;
+                id$('change_doc_div').innerHTML = req.responseText;
 
             }
         }
@@ -567,7 +583,7 @@ function cat_doc_change(p_dt_id, p_dossier) {
  */
 function popup_select_tva(obj, p_function_callback) {
     try {
-        if ($('tva_select')) {
+        if (document.getElementById('tva_select')) {
             removeDiv('tva_select');
         }
 
@@ -612,8 +628,8 @@ function popup_select_tva(obj, p_function_callback) {
                             'drag': false
                         };
                         add_div(popup);
-                        $('lk_tva_select_table').focus();
-                        sorttable.makeSortable($('tva_select_table'));
+                        id$('lk_tva_select_table').focus();
+                        sorttable.makeSortable(id$('tva_select_table'));
                         if (p_function_callback) {
                             p_function_callback.call(null);
                         }
@@ -694,10 +710,10 @@ function create_div(obj) {
     try {
         var top = document;
         var elt = null;
-        if (!$(obj.id)) {
+        if (!document.getElementById(obj.id)) {
             elt = top.createElement('div');
         } else {
-            elt = $(obj.id);
+            elt = id$(obj.id);
         }
         if (obj.id) {
             elt.setAttribute('id', obj.id);
@@ -763,11 +779,11 @@ function add_div(obj) {
 
 /**
  * remove a object created with add_div
- * @param elt id of the elt
+ * @param str_elt string id of the elt
  */
-function removeDiv(elt) {
-    if (g(elt)) {
-        document.body.removeChild(g(elt));
+function removeDiv(str_elt) {
+    if (document.getElementById(str_elt)) {
+        document.body.removeChild(id$(str_elt));
     }
     // if reloaded if asked the window will be reloaded when
     // the box is closed
@@ -778,8 +794,8 @@ function removeDiv(elt) {
 }
 
 function waiting_node() {
-    $('info_div').innerHTML = 'Un instant';
-    $('info_div').style.display = "block";
+    id$('info_div').innerHTML = 'Un instant';
+    id$('info_div').style.display = "block";
 }
 
 /**
@@ -793,7 +809,7 @@ function waiting_box() {
     };
     var y = fixed_position(10, 250)
     obj.style = y + ";width:20%;margin-left:40%;";
-    if ($('wait_box')) {
+    if (document.getElementById('wait_box')) {
         removeDiv('wait_box');
     }
     waiting_node();
@@ -817,7 +833,7 @@ function waiting_box() {
 function show_box(obj) {
     add_div(obj);
     if (!obj.fixed) {
-        g(obj.id).style.top = calcy(40) + "px";
+        id$(obj.id).style.top = calcy(40) + "px";
         show(obj.id);
     } else {
         show(obj.id);
@@ -852,11 +868,11 @@ function success_box(req, json) {
         var code_html = getNodeText(html[0]);
 
         code_html = unescape_xml(code_html);
-        g(name_ctl).innerHTML = code_html;
-        g(name_ctl).style.height = 'auto';
+        id$(name_ctl).innerHTML = code_html;
+        id$(name_ctl).style.height = 'auto';
 
         if (name_ctl == 'popup')
-            g(name_ctl).style.width = 'auto';
+            id$(name_ctl).style.width = 'auto';
     } catch (e) {
         alert_box("success_box" + e.message);
     }
@@ -879,10 +895,10 @@ function show_ledger_choice(json_obj) {
         waiting_box();
         var i = 0;
         var query = "gDossier=" + json_obj.dossier + '&type=' + json_obj.type + '&div=' + json_obj.div + '&op=ledger_show';
-        query = query + '&nbjrn=' + $(json_obj.div + 'nb_jrn').value;
+        query = query + '&nbjrn=' + id$(json_obj.div + 'nb_jrn').value;
         query = query + '&all_type=' + json_obj.all_type;
-        for (i = 0; i < $(json_obj.div + 'nb_jrn').value; i++) {
-            query = query + "&r_jrn[]=" + $(json_obj.div + 'r_jrn[' + i + ']').value;
+        for (i = 0; i < id$(json_obj.div + 'nb_jrn').value; i++) {
+            query = query + "&r_jrn[]=" + id$(json_obj.div + 'r_jrn[' + i + ']').value;
         }
         query = encodeURI(query);
         var action = new Ajax.Request(
@@ -926,7 +942,7 @@ function show_ledger_choice(json_obj) {
 
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
-                        g(obj.id).innerHTML = code_html;
+                        id$(obj.id).innerHTML = code_html;
 
                     } catch (e) {
                         alert_box("show_ledger_callback" + e.message);
@@ -951,10 +967,10 @@ function show_ledger_choice(json_obj) {
  */
 function hide_ledger_choice(p_frm_search) {
     try {
-        var nb = $(p_frm_search).nb_jrn.value;
+        var nb = id$(p_frm_search).nb_jrn.value;
         var div = "";
-        if ($(p_frm_search).div) {
-            div = $(p_frm_search).div.value;
+        if (document.getElementById(p_frm_search).div) {
+            div = id$(p_frm_search).div.value;
         }
         var i = 0;
         var str = "";
@@ -964,13 +980,13 @@ function hide_ledger_choice(p_frm_search) {
         for (i = 0; i < nb; i++) {
             n_name = div + "r_jrn[" + sel + "]";
             name = div + "r_jrn" + i;
-            if ($(name).checked) {
-                str += '<input type="hidden" id="' + n_name + '" name="' + n_name + '" value="' + $(name).value + '">';
+            if (document.getElementById(name).checked) {
+                str += '<input type="hidden" id="' + n_name + '" name="' + n_name + '" value="' + id$(name).value + '">';
                 sel++;
             }
         }
         str += '<input type="hidden" name="' + div + 'nb_jrn" id="' + div + 'nb_jrn" value="' + sel + '">';
-        $('ledger_id' + div).innerHTML = str;
+        id$('ledger_id' + div).innerHTML = str;
         removeDiv(div + 'jrn_search');
         return false;
     } catch (e) {
@@ -984,14 +1000,14 @@ function hide_ledger_choice(p_frm_search) {
  * show the cat of ledger choice
  */
 function show_cat_choice() {
-    g('div_cat').style.visibility = 'visible';
+    id$('div_cat').style.visibility = 'visible';
 }
 
 /**
  * hide the cat of ledger choice
  */
 function hide_cat_choice() {
-    g('div_cat').style.visibility = 'hidden';
+    id$('div_cat').style.visibility = 'hidden';
 }
 
 /**
@@ -999,12 +1015,12 @@ function hide_cat_choice() {
  */
 function for_add_row(tableid) {
     style = 'class="input_text"';
-    var mytable = g(tableid).tBodies[0];
+    var mytable = id$(tableid).tBodies[0];
     var nNumberRow = mytable.rows.length;
     var oRow = mytable.insertRow(nNumberRow);
     var rowToCopy = mytable.rows[1];
     var nNumberCell = rowToCopy.cells.length;
-    var nb = g("nbrow");
+    var nb = id$("nbrow");
     var oNewRow = mytable.insertRow(nNumberRow);
     for (var e = 0; e < nNumberCell; e++) {
         var newCell = oRow.insertCell(e);
@@ -1019,10 +1035,10 @@ function for_add_row(tableid) {
         newCell.innerHTML = new_tt;
         new_tt.evalScripts();
     }
-    $("an_cat_acc" + nb.value).value = "";
-    $("an_qc" + nb.value).value = "";
-    $("an_label" + nb.value).value = "";
-    $("an_cat_amount" + nb.value).value = "0";
+    id$("an_cat_acc" + nb.value).value = "";
+    id$("an_qc" + nb.value).value = "";
+    id$("an_label" + nb.value).value = "";
+    id$("an_cat_amount" + nb.value).value = "0";
     nb.value++;
 }
 
@@ -1031,7 +1047,7 @@ function for_add_row(tableid) {
  * @param form_id id of the form
  */
 function toggle_checkbox(form_id) {
-    var form = g(form_id);
+    var form = id$(form_id);
     for (var i = 0; i < form.length; i++) {
         var e = form.elements[i];
         if (e.type === 'checkbox') {
@@ -1049,7 +1065,7 @@ function toggle_checkbox(form_id) {
  * @param form_id id of the form
  */
 function select_checkbox(form_id) {
-    var form = $(form_id);
+    var form = id$(form_id);
     for (var i = 0; i < form.length; i++) {
         var e = form.elements[i];
         if (e.type === 'checkbox') {
@@ -1066,7 +1082,7 @@ function select_checkbox(form_id) {
  * @param attribute value
  */
 function select_checkbox_attribute(form_id, p_attribute_name, p_attribute_value) {
-    var form = $(form_id);
+    var form = id$(form_id);
     for (var i = 0; i < form.length; i++) {
         var e = form.elements[i];
         if (e.type === 'checkbox' && e.getAttribute(p_attribute_name) == p_attribute_value) {
@@ -1080,7 +1096,7 @@ function select_checkbox_attribute(form_id, p_attribute_name, p_attribute_value)
  * @param form_id id of the form
  */
 function unselect_checkbox(form_id) {
-    var form = $(form_id);
+    var form = id$(form_id);
     for (var i = 0; i < form.length; i++) {
         var e = form.elements[i];
         if (e.type === 'checkbox') {
@@ -1093,7 +1109,7 @@ function unselect_checkbox(form_id) {
  * show the calculator
  */
 function show_calc() {
-    if (g('calc1')) {
+    if (document.getElementById('calc1')) {
         this.document.getElementById('inp').value = "";
         this.document.getElementById('inp').focus();
         return;
@@ -1126,7 +1142,7 @@ function display_periode(p_dossier, p_id) {
             'style': 'width:30em',
             'drag': true
         };
-        if (!$('mod_periode')) {
+        if (!document.getElementById('mod_periode')) {
             add_div(popup);
         }
         var action = new Ajax.Request(
@@ -1138,8 +1154,8 @@ function display_periode(p_dossier, p_id) {
                 onSuccess: success_display_periode
             }
         );
-        $('mod_periode').style.top = (posY - 70) + "px";
-        $('mod_periode').style.left = (posX - 70) + "px";
+        id$('mod_periode').style.top = (posY - 70) + "px";
+        id$('mod_periode').style.left = (posX - 70) + "px";
     } catch (e) {
         alert_box("display_periode " + e.message);
     }
@@ -1160,7 +1176,7 @@ function success_display_periode(req) {
         var code_html = getNodeText(html[0]);
         code_html = unescape_xml(code_html);
 
-        $('mod_periode').innerHTML = code_html;
+        id$('mod_periode').innerHTML = code_html;
     } catch (e) {
         alert_box("success_display_periode".e.message);
     }
@@ -1174,7 +1190,7 @@ function success_display_periode(req) {
 
 function save_periode(obj) {
     try {
-        var queryString = $(obj).serialize() + "&op=save_per";
+        var queryString = id$(obj).serialize() + "&op=save_per";
 
         var action = new Ajax.Request(
             "ajax_misc.php",
@@ -1219,7 +1235,7 @@ function fill_box(req) {
         var name_ctl = a[0].firstChild.nodeValue;
         var code_html = getNodeText(html[0]); // Firefox ne prend que les 4096 car.
         code_html = unescape_xml(code_html);
-        $(name_ctl).innerHTML = code_html;
+        id$(name_ctl).innerHTML = code_html;
     } catch (e) {
         alert_box(e.message);
         if (console) {
@@ -1269,7 +1285,7 @@ function mod_predf_op(dossier_id, od_id, p_ledger) {
 
 function save_predf_op(obj) {
     waiting_box();
-    var querystring = $(obj).serialize() + '&op=save_predf';
+    var querystring = id$(obj).serialize() + '&op=save_predf';
     // Create a ajax request to get all the person
     var action = new Ajax.Request('ajax_misc.php',
         {
@@ -1286,8 +1302,8 @@ function save_predf_op(obj) {
 /**
  *ctl_concern is the widget to update
  *amount_id is either a html obj. or an amount and the field tiers if given
- * @param {type} dossier
- * @param {type} ctl_concern
+ * @param {int} dossier
+ * @param {string} ctl_concern DOM id that receive the number
  * @param {float or string} amount_id Amount or DOM Id of the element containing the amount
  * @param {float} ledger
  * @param {type} p_id_targetDom Element (div) where to display the search result
@@ -1297,12 +1313,12 @@ function save_predf_op(obj) {
 function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, p_tiers) {
     if (amount_id === undefined) {
         amount_id = 0;
-    } else if ($(amount_id)) {
-        if ($(amount_id).value) {
-            amount_id = $(amount_id).value;
+    } else if (document.getElementById(amount_id)) {
+        if (id$(amount_id).value) {
+            amount_id = id$(amount_id).value;
         } else if
-        ($(amount_id).innerHTML) {
-            amount_id = $(amount_id).innerHTML;
+        (id$(amount_id).innerHTML) {
+            amount_id = id$(amount_id).innerHTML;
         }
     }
     var tiers = "";
@@ -1318,8 +1334,8 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
     var str_style = fixed_position(77, 99);
     str_style += ";width:92%;overflow:auto;";
     waiting_box();
-    var hide_operation = $(ctl_concern).getAttribute("hide_operation");
-    var single_operation = $(ctl_concern).getAttribute("single_operation");
+    var hide_operation = id$(ctl_concern).getAttribute("hide_operation");
+    var single_operation = id$(ctl_concern).getAttribute("single_operation");
 
     var param_send = {
         gDossier: dossier,
@@ -1345,7 +1361,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
                 remove_waiting_box();
                 var div = {id: target, cssclass: 'inner_box', style: str_style, drag: 0};
                 add_div(div);
-                $(target).innerHTML = req.responseText;
+                id$(target).innerHTML = req.responseText;
                 req.responseText.evalScripts();
             }
         }
@@ -1353,15 +1369,16 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
 }
 
 /**
- * search in a popin obj if the object form
+ * search in a popin obj if the object form,
+ * @param obj DOM of the FORM
  */
 function search_operation(obj) {
     try {
-        var dossier = g('gDossier').value;
+        var dossier = id$('gDossier').value;
         waiting_box();
         var target = "search" + layer;
-        if ($(obj)["target"]) {
-            target = $(obj)["target"].value;
+        if (obj["target"]) {
+            target = obj["target"].value;
         }
         var qs = Form.serialize('search_form_ajx') + "&op=search_op";
         var action = new Ajax.Request('ajax_misc.php',
@@ -1371,7 +1388,7 @@ function search_operation(obj) {
                 onFailure: null,
                 onSuccess: function (req) {
                     remove_waiting_box();
-                    $(target).innerHTML = req.responseText;
+                    id$(target).innerHTML = req.responseText;
                     req.responseText.evalScripts();
                 }
             }
@@ -1386,7 +1403,11 @@ function search_operation(obj) {
  * Update the field e_concerned, from class_iconcerned
  * Value is the field where to put the quick-code but only if one checkbox has been
  * selected
- * @param {type} obj
+ * @param {DOM Element} obj : DOM FORM ,
+ *      - element : ctlc : will contain the JRN.JR_ID ,
+ *      - tiers : the name of the counterparty
+ *      - target : DGBOX displaying the search result
+ *
  * @returns {undefined}
  */
 function set_reconcile(obj) {
@@ -1405,13 +1426,13 @@ function set_reconcile(obj) {
                 if (elmt.checked === true) {
                     var str_name = elmt.name;
                     var nValue = str_name.replace("jr_concerned", "");
-                    if ($(ctlc.value).value != '') {
-                        $(ctlc.value).value += ',';
+                    if (id$(ctlc.value).value != '') {
+                        id$(ctlc.value).value += ',';
 
                     } else {
 
                         if (tiers && tiers.value != "") {
-                            $(tiers.value).value = elmt.value;
+                            id$(tiers.value).value = elmt.value;
                             /* set the name */
                             new Ajax.Request("fid.php", {
                                 method: "get",
@@ -1423,15 +1444,15 @@ function set_reconcile(obj) {
                                     var num = tiers_card.replace("e_other", "");
                                     var tiers_name_id = "e_other" + "_name" + num;
                                     var answer = req.responseText.evalJSON();
-                                    $(tiers_name_id).value = answer["name"];
+                                    id$(tiers_name_id).value = answer["name"];
                                 }
                             });
                         }
                     }
                     if (single_operation == 0) {
-                        $(ctlc.value).value += nValue;
+                        id$(ctlc.value).value += nValue;
                     } else {
-                        $(ctlc.value).value = nValue;
+                        id$(ctlc.value).value = nValue;
 
                     }
                 }
@@ -1444,13 +1465,13 @@ function set_reconcile(obj) {
 }
 
 function remove_waiting_node() {
-    $('info_div').innerHTML = "";
-    $('info_div').style.display = "none";
+    id$('info_div').innerHTML = "";
+    id$('info_div').style.display = "none";
 
 }
 
 function remove_waiting_box() {
-    if ($('wait_box')) {
+    if (document.getElementById('wait_box')) {
         Effect.Fade('wait_box', {duration: 0.6});
     }
 
@@ -1474,10 +1495,10 @@ function get_profile_detail(gDossier, profile_id) {
             onFailure: null,
             onSuccess: function (req) {
                 remove_waiting_box();
-                $('list_profile').hide();
-                $('detail_profile').innerHTML = req.responseText;
+                id$('list_profile').hide();
+                id$('detail_profile').innerHTML = req.responseText;
                 req.responseText.evalScripts();
-                $('detail_profile').show();
+                id$('detail_profile').show();
                 if (profile_id != "-1")
                     profile_show('profile_gen_div');
             }
@@ -1539,7 +1560,7 @@ function mod_menu(gdossier, pm_id) {
                 try {
                     remove_waiting_box();
                     add_div({id: "divdm" + pm_id, drag: 1, cssclass: "inner_box", style: pos});
-                    $('divdm' + pm_id).innerHTML = req.responseText;
+                    id$('divdm' + pm_id).innerHTML = req.responseText;
                 } catch (e) {
                     alert_box(e.message);
                 }
@@ -1571,13 +1592,13 @@ function display_sub_menu(p_dossier, p_profile, p_dep, p_level) {
             onSuccess: function (req) {
                 try {
                     remove_waiting_box();
-                    if ($('menu_table').rows.length > p_level) {
-                        $('menu_table').rows[1].remove();
+                    if (id$('menu_table').rows.length > p_level) {
+                        id$('menu_table').rows[1].remove();
                     }
-                    $('sub' + p_dep).addClassName("selectedmenu");
+                    id$('sub' + p_dep).addClassName("selectedmenu");
                     var new_row = document.createElement('TR');
                     new_row.innerHTML = req.responseText;
-                    $('menu_table').appendChild(new_row);
+                    id$('menu_table').appendChild(new_row);
                 } catch (e) {
                     alert_box(e.message);
                 }
@@ -1605,9 +1626,9 @@ function remove_sub_menu(p_dossier, profile_menu_id) {
                     onSuccess: function (req) {
                         try {
                             remove_waiting_box();
-                            $('sub' + profile_menu_id).remove();
-                            if ($('menu_table').rows.length > 1) {
-                                $('menu_table').rows[1].remove();
+                            id$('sub' + profile_menu_id).remove();
+                            if (id$('menu_table').rows.length > 1) {
+                                id$('menu_table').rows[1].remove();
                             }
 
                         } catch (e) {
@@ -1655,7 +1676,7 @@ function add_menu(obj) {
                 try {
                     remove_waiting_box();
                     add_div({id: "divdm" + p_id, drag: 1, "cssclass": "inner_box", "style": pos});
-                    $('divdm' + p_id).innerHTML = req.responseText;
+                    id$('divdm' + p_id).innerHTML = req.responseText;
                 } catch (e) {
                     alert_box(e.message);
                 }
@@ -1685,7 +1706,7 @@ function add_plugin(p_dossier) {
                     remove_waiting_box();
                     var pos = fixed_position(250, 150) + ";width:30%";
                     add_div({id: "divplugin", drag: 1, cssclass: "inner_box", style: pos});
-                    $('divplugin').innerHTML = req.responseText;
+                    id$('divplugin').innerHTML = req.responseText;
                 } catch (e) {
                     alert_box(e.message);
                 }
@@ -1715,7 +1736,7 @@ function mod_plugin(p_dossier, me_code) {
                     remove_waiting_box();
                     var pos = fixed_position(250, 150) + ";width:30%";
                     add_div({id: "divplugin", drag: 1, cssclass: "inner_box", style: pos});
-                    $('divplugin').innerHTML = req.responseText;
+                    id$('divplugin').innerHTML = req.responseText;
 
                 } catch (e) {
                     alert_box(e.message);
@@ -1745,7 +1766,7 @@ function create_menu(p_dossier) {
                         cssclass: "inner_box",
                         style: pos
                     });
-                    $('divmenu').innerHTML = req.responseText;
+                    id$('divmenu').innerHTML = req.responseText;
                 } catch (e) {
                     alert_box(e.message);
                 }
@@ -1774,7 +1795,7 @@ function modify_menu(p_dossier, me_code) {
                         cssclass: "inner_box",
                         style: pos
                     });
-                    $('divmenu').innerHTML = req.responseText;
+                    id$('divmenu').innerHTML = req.responseText;
 
                 } catch (e) {
                     alert_box(e.message);
@@ -1799,7 +1820,7 @@ function get_properties(obj) {
  */
 function rapport_add_row(p_dossier) {
     style = 'style="border: 1px solid blue;"';
-    var table = $("rap1");
+    var table = id$("rap1");
     var line = table.rows.length;
 
     var row = table.insertRow(line);
@@ -1818,7 +1839,7 @@ function rapport_add_row(p_dossier) {
     cellbutton.innerHTML = but_html;
     but_html.evalScripts();
 
-    g('form' + line).value = '';
+    id$('form' + line).value = '';
 }
 
 /**
@@ -1827,7 +1848,7 @@ function rapport_add_row(p_dossier) {
 function search_action(dossier, ctl_concern) {
     try {
         waiting_box();
-        var dossier = g('gDossier').value;
+        var dossier = id$('gDossier').value;
 
         var target = "search_action_div";
         removeDiv(target);
@@ -1854,7 +1875,7 @@ function search_action(dossier, ctl_concern) {
                     try {
                         remove_waiting_box();
                         add_div(div);
-                        $('search_action_div').innerHTML = req.responseText;
+                        id$('search_action_div').innerHTML = req.responseText;
                         req.responseText.evalScripts();
                     } catch (e) {
                         alert_box(e.message);
@@ -1869,7 +1890,7 @@ function search_action(dossier, ctl_concern) {
 
 function result_search_action(obj) {
     try {
-        var queryString = $(obj).serialize() + "&op=search_action";
+        var queryString = id$(obj).serialize() + "&op=search_action";
         var action = new Ajax.Request(
             "ajax_misc.php",
             {
@@ -1879,7 +1900,7 @@ function result_search_action(obj) {
                 onSuccess: function (req) {
                     try {
                         remove_waiting_box();
-                        $('search_action_div').innerHTML = req.responseText;
+                        id$('search_action_div').innerHTML = req.responseText;
                         req.responseText.evalScripts();
                     } catch (e) {
                         alert_box(e.message);
@@ -1898,7 +1919,7 @@ function result_search_action(obj) {
 function set_action_related(p_obj) {
 
     try {
-        var obj = $(p_obj);
+        var obj = id$(p_obj);
         var ctlc = obj.elements['ctlc'];
 
         for (var e = 0; e < obj.elements.length; e++) {
@@ -1908,10 +1929,10 @@ function set_action_related(p_obj) {
                 if (elmt.checked === true) {
                     var str_name = elmt.name;
                     var nValue = elmt.value;
-                    if ($(ctlc.value).value != '') {
-                        $(ctlc.value).value += ',';
+                    if (id$(ctlc.value).value != '') {
+                        id$(ctlc.value).value += ',';
                     }
-                    $(ctlc.value).value += nValue;
+                    id$(ctlc.value).value += nValue;
                 }
             }
         }
@@ -1944,7 +1965,7 @@ function stock_repo_change(p_dossier, r_id) {
             onSuccess: function (req) {
                 remove_waiting_box();
                 add_div({id: 'change_stock_repo_div', style: str_style, cssclass: 'inner_box', drag: "1"});
-                $('change_stock_repo_div').innerHTML = req.responseText;
+                id$('change_stock_repo_div').innerHTML = req.responseText;
 
             }
         }
@@ -1967,7 +1988,7 @@ function stock_inv_detail(p_dossier, p_id) {
             onSuccess: function (req) {
                 remove_waiting_box();
                 add_div({id: 'view_mod_stock_div', style: str_style, cssclass: 'inner_box', drag: "1"});
-                $('view_mod_stock_div').innerHTML = req.responseText;
+                id$('view_mod_stock_div').innerHTML = req.responseText;
                 req.responseText.evalScripts();
             }
         }
@@ -1976,23 +1997,23 @@ function stock_inv_detail(p_dossier, p_id) {
 
 function show_fin_chdate(obj_id) {
     try {
-        var ch = $(obj_id).options[$(obj_id).selectedIndex].value;
+        var ch = id$(obj_id).options[id$(obj_id).selectedIndex].value;
         if (ch == 2) {
-            $('chdate_ext').hide();
-            $('thdate').show();
+            id$('chdate_ext').hide();
+            id$('thdate').show();
         }
         if (ch == 1) {
-            $('chdate_ext').show();
-            $('thdate').hide();
+            id$('chdate_ext').show();
+            id$('thdate').hide();
         }
-        var nb = $('nb_item').value;
+        var nb = id$('nb_item').value;
         for (i = 0; i < nb; i++) {
-            if ($('tdchdate' + i)) {
+            if (document.getElementById('tdchdate' + i)) {
                 if (ch == 2) {
-                    $('tdchdate' + i).show();
+                    id$('tdchdate' + i).show();
                 }
                 if (ch == 1) {
-                    $('tdchdate' + i).hide();
+                    id$('tdchdate' + i).hide();
 
                 }
             }
@@ -2009,18 +2030,18 @@ function profile_show(p_div) {
     try {
         var div = ['profile_gen_div', 'profile_menu_div', 'profile_print_div', 'profile_gestion_div', 'profile_repo_div', 'profile_menu_mobile_div'];
         for (var r = 0; r < div.length; r++) {
-            $(div[r]).hide();
+            id$(div[r]).hide();
         }
-        $(p_div).show();
+        id$(p_div).show();
     } catch (e) {
         alert_box(e.message);
     }
 }
 
 function detail_category_show(p_div, p_dossier, p_id) {
-    $(p_div).show();
+    id$(p_div).show();
     waiting_box();
-    $('detail_category_div').innerHTML = "";
+    id$('detail_category_div').innerHTML = "";
     var queryString = "gDossier=" + p_dossier + "&id=" + p_id + "&op=fddetail";
     var action = new Ajax.Request(
         "ajax_misc.php",
@@ -2029,9 +2050,9 @@ function detail_category_show(p_div, p_dossier, p_id) {
             onFailure: ajax_misc_failure,
             onSuccess: function (req) {
                 remove_waiting_box();
-                $('list_cat_div').hide();
-                $('detail_category_div').innerHTML = req.responseText;
-                $('detail_category_div').show();
+                id$('list_cat_div').hide();
+                id$('detail_category_div').innerHTML = req.responseText;
+                id$('detail_category_div').show();
                 req.responseText.evalScripts();
             }
         }
@@ -2043,7 +2064,7 @@ function detail_category_show(p_div, p_dossier, p_id) {
  */
 function check_new_category()
 {
-    if ( $('nom_mod_id').value.trim()=="") {
+    if ( id$('nom_mod_id').value.trim()=="") {
         new Effect.Highlight('nom_mod_id',{startcolor:"#ff0000"});
         smoke.alert('Nom catégorie obligatoire');
         return false;
@@ -2085,7 +2106,7 @@ function check_date(p_str_date) {
  * @see check_date
  */
 function check_date_id(p_id_date) {
-    var str_date = $(p_id_date).value;
+    var str_date = id$(p_id_date).value;
     return check_date(str_date);
 }
 
@@ -2133,7 +2154,7 @@ function view_action(ag_id, dossier, modify) {
                         cssclass: "inner_box",
                         style: pos
                     });
-                    $(id).innerHTML = code_html;
+                    id$(id).innerHTML = code_html;
                     if (ctl_txt == 'ok') {
                         // compute detail
                         var detail = in_child(id, "follow_up_detail");
@@ -2162,9 +2183,9 @@ function view_action(ag_id, dossier, modify) {
  * @see HtmlInput::filter_table
  */
 function filter_table(phrase, _id, colnr, start_row) {
-    $('info_div').innerHTML = content[65];
-    $('info_div').style.display = "block";
-    var words = $(phrase).value.toLowerCase();
+    id$('info_div').innerHTML = content[65];
+    id$('info_div').style.display = "block";
+    var words = id$(phrase).value.toLowerCase();
     var table = document.getElementById(_id);
 
     // if colnr contains a comma then check several columns
@@ -2196,20 +2217,20 @@ function filter_table(phrase, _id, colnr, start_row) {
         } else {
             table.rows[r].style.display = 'none';
         }
-        $('info_div').style.display = "none";
-        $('info_div').innerHTML = "";
+        id$('info_div').style.display = "none";
+        id$('info_div').innerHTML = "";
     }
     if (tot_found == 0) {
-        if ($('info_' + _id)) {
-            $('info_' + _id).innerHTML = content[69];
+        if (document.getElementById('info_' + _id)) {
+            id$('info_' + _id).innerHTML = content[69];
         }
     } else {
-        if ($('info_' + _id)) {
-            $('info_' + _id).innerHTML = "  ";
+        if (document.getElementById('info_' + _id)) {
+            id$('info_' + _id).innerHTML = "  ";
         }
     }
-    $('info_div').style.display = "none";
-    $('info_div').innerHTML = "";
+    id$('info_div').style.display = "none";
+    id$('info_div').innerHTML = "";
 }
 
 /**
@@ -2220,9 +2241,9 @@ function filter_table(phrase, _id, colnr, start_row) {
  * @see HtmlInput::filter_list
  */
 function filter_list(phrase, _id) {
-    $('info_div').innerHTML = content[65];
-    $('info_div').style.display = "block";
-    var words = $(phrase).value.toLowerCase();
+    id$('info_div').innerHTML = content[65];
+    id$('info_div').style.display = "block";
+    var words = id$(phrase).value.toLowerCase();
     var l_list = document.getElementById(_id);
 
 
@@ -2252,16 +2273,16 @@ function filter_list(phrase, _id) {
 
     }
     if (tot_found == 0) {
-        if ($('info_' + _id)) {
-            $('info_' + _id).innerHTML = content[69];
+        if (document.getElementById('info_' + _id)) {
+            id$('info_' + _id).innerHTML = content[69];
         }
     } else {
-        if ($('info_' + _id)) {
-            $('info_' + _id).innerHTML = "  ";
+        if (document.getElementById('info_' + _id)) {
+            id$('info_' + _id).innerHTML = "  ";
         }
     }
-    $('info_div').style.display = "none";
-    $('info_div').innerHTML = "";
+    id$('info_div').style.display = "none";
+    id$('info_div').innerHTML = "";
 }
 
 /**
@@ -2272,9 +2293,9 @@ function filter_list(phrase, _id) {
  * @see HtmlInput::filter_list
  */
 function filter_multiselect(phrase, _id) {
-    $('info_div').innerHTML = content[65];
-    $('info_div').style.display = "block";
-    var words = $(phrase).value.toLowerCase();
+    id$('info_div').innerHTML = content[65];
+    id$('info_div').style.display = "block";
+    var words = id$(phrase).value.toLowerCase();
     var l_list = document.getElementById(_id);
 
     var tot_found = 0;
@@ -2289,16 +2310,16 @@ function filter_multiselect(phrase, _id) {
         } else {
             l_list.options[r].style.display = 'none';
         }
-        $('info_div').style.display = "none";
-        $('info_div').innerHTML = "";
+        id$('info_div').style.display = "none";
+        id$('info_div').innerHTML = "";
     }
     if (tot_found == 0) {
-        if ($('info_' + _id)) {
-            $('info_' + _id).innerHTML = content[69];
+        if (document.getElementById('info_' + _id)) {
+            id$('info_' + _id).innerHTML = content[69];
         }
     } else {
-        if ($('info_' + _id)) {
-            $('info_' + _id).innerHTML = "  ";
+        if (document.getElementById('info_' + _id)) {
+            id$('info_' + _id).innerHTML = "  ";
         }
     }
 }
@@ -2309,10 +2330,10 @@ function filter_multiselect(phrase, _id) {
  */
 function display_task(p_id) {
 
-    $(p_id).style.top = posY + 'px';
-    $(p_id).style.left = "10%";
-    $(p_id).style.width = "80%";
-    $(p_id).style.display = 'block';
+    id$(p_id).style.top = posY + 'px';
+    id$(p_id).style.left = "10%";
+    id$(p_id).style.width = "80%";
+    id$(p_id).style.display = 'block';
 
 }
 
@@ -2321,15 +2342,15 @@ function display_task(p_id) {
  * Set a message in the info
  */
 function info_message(p_message) {
-    $('info_div').innerHTML = p_message;
-    $('info_div').style.display = "block";
+    id$('info_div').innerHTML = p_message;
+    id$('info_div').style.display = "block";
 }
 
 /**
  *  hide the info box
  */
 function info_hide() {
-    $('info_div').style.display = "none";
+    id$('info_div').style.display = "none";
 }
 
 /**
@@ -2349,10 +2370,10 @@ function ask_navigator(p_dossier) {
                 onSuccess: function (req) {
                     remove_waiting_box();
                     add_div({id: 'navi_div', style: 'top:2em;', cssclass: 'inner_box'});
-                    $('navi_div').innerHTML = req.responseText;
+                    id$('navi_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
-                        sorttable.makeSortable($("navi_tb"));
+                        sorttable.makeSortable(id$("navi_tb"));
                     } catch (e) {
                         alert_box("answer_box Impossible executer script de la reponse\n" + e.message);
                     }
@@ -2387,7 +2408,7 @@ function set_preference(p_dossier) {
                         return;
                     }
                     add_div({id: 'preference_div', drag: 1});
-                    $('preference_div').innerHTML = req.responseText;
+                    id$('preference_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
                     } catch (e) {
@@ -2422,7 +2443,7 @@ function show_bookmark(p_dossier) {
                 onSuccess: function (req) {
                     remove_waiting_box();
                     add_div({id: 'bookmark_div', cssclass: 'inner_box', drag: 1});
-                    $('bookmark_div').innerHTML = req.responseText;
+                    id$('bookmark_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
                     } catch (e) {
@@ -2444,7 +2465,7 @@ function show_bookmark(p_dossier) {
 function save_bookmark() {
     try {
         waiting_box();
-        var queryString = "op=bookmark&" + $("bookmark_frm").serialize();
+        var queryString = "op=bookmark&" + id$("bookmark_frm").serialize();
         var action = new Ajax.Request(
             "ajax_misc.php",
             {
@@ -2454,7 +2475,7 @@ function save_bookmark() {
                     remove_waiting_box();
                     // removeDiv('bookmark_div');
                     //
-                    $('bookmark_div').innerHTML = req.responseText;
+                    id$('bookmark_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
                     } catch (e) {
@@ -2476,7 +2497,7 @@ function save_bookmark() {
 function remove_bookmark() {
     try {
         waiting_box();
-        var queryString = "op=bookmark&" + $("bookmark_del_frm").serialize();
+        var queryString = "op=bookmark&" + id$("bookmark_del_frm").serialize();
         var action = new Ajax.Request(
             "ajax_misc.php",
             {
@@ -2484,7 +2505,7 @@ function remove_bookmark() {
                 onFailure: ajax_misc_failure,
                 onSuccess: function (req) {
                     remove_waiting_box();
-                    $('bookmark_div').innerHTML = req.responseText;
+                    id$('bookmark_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
                     } catch (e) {
@@ -2506,8 +2527,8 @@ function remove_bookmark() {
  *@note there is no protection
  */
 function error_message(message) {
-    $('error_content_div').innerHTML = message;
-    $('error_div').style.visibility = 'visible';
+    id$('error_content_div').innerHTML = message;
+    id$('error_div').style.visibility = 'visible';
 }
 
 /**
@@ -2534,7 +2555,7 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post) {
                     remove_waiting_box();
                     var posy = calcy(250);
                     add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0, style: "position:fixed;top:15%;"});
-                    $('tag_div').innerHTML = code_html;
+                    id$('tag_div').innerHTML = code_html;
                     try {
                         code_html.evalScripts();
                     } catch (e) {
@@ -2555,7 +2576,7 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post) {
 function save_tag() {
     try {
         waiting_box();
-        var queryString = "op=tag_save&" + $("tag_detail_frm").serialize();
+        var queryString = "op=tag_save&" + id$("tag_detail_frm").serialize();
         var action = new Ajax.Request(
             "ajax_misc.php",
             {
@@ -2604,7 +2625,7 @@ function action_tag_select(p_dossier, ag_id) {
                     add_div({id: 'tag_div', style: pos, cssclass: 'inner_box tag', drag: 0});
 
                     remove_waiting_box();
-                    $('tag_div').innerHTML = code_html;
+                    id$('tag_div').innerHTML = code_html;
                 }
             }
         );
@@ -2639,7 +2660,7 @@ function action_tag_add(p_dossier, ag_id, t_id, p_isgroup) {
                     var code_html = getNodeText(html[0]);
                     code_html = unescape_xml(code_html);
                     remove_waiting_box();
-                    $('action_tag_td').innerHTML = code_html;
+                    id$('action_tag_td').innerHTML = code_html;
                     removeDiv('tag_div');
                 }
             }
@@ -2675,7 +2696,7 @@ function action_tag_remove(p_dossier, ag_id, t_id) {
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
-                        $('action_tag_td').innerHTML = code_html;
+                        id$('action_tag_td').innerHTML = code_html;
 
                     }
                 }
@@ -2701,8 +2722,8 @@ function activate_tag(p_dossier, p_tag_id) {
                 remove_waiting_box();
                 var answer = req.responseText.evalJSON();
                 var tagId = "tag_onoff" + p_tag_id;
-                $(tagId).update(answer.code);
-                $(tagId).setStyle(answer.style);
+                id$(tagId).update(answer.code);
+                id$(tagId).setStyle(answer.style);
                 remove_waiting_box();
             }
         })
@@ -2737,10 +2758,10 @@ function search_display_tag(p_dossier, p_prefix, p_object) {
                     code_html = unescape_xml(code_html);
                     remove_waiting_box();
                     add_div({id: p_prefix + 'tag_div', style: 'left:10%;width:70%', cssclass: 'inner_box', drag: 1});
-                    $(p_prefix + 'tag_div').style.top = calcy(200) + "px"
-                    $(p_prefix + 'tag_div').style.left = 20 + "%";
+                    id$(p_prefix + 'tag_div').style.top = calcy(200) + "px"
+                    id$(p_prefix + 'tag_div').style.left = 20 + "%";
                     remove_waiting_box();
-                    $(p_prefix + 'tag_div').innerHTML = code_html;
+                    id$(p_prefix + 'tag_div').innerHTML = code_html;
                     code_html.evalScripts();
                 }
             }
@@ -2762,7 +2783,7 @@ function search_add_tag(p_dossier, p_tag_id, p_prefix, p_obj) {
     try {
         var clear_button = 0;
         if (tag_choose === '' && p_prefix === 'search') {
-            tag_choose = $(p_prefix + 'tag_choose_td').innerHTML;
+            tag_choose = id$(p_prefix + 'tag_choose_td').innerHTML;
             clear_button = 1;
         }
         waiting_box();
@@ -2782,7 +2803,7 @@ function search_add_tag(p_dossier, p_tag_id, p_prefix, p_obj) {
                     var code_html = getNodeText(html[0]);
                     code_html = unescape_xml(code_html);
                     remove_waiting_box();
-                    $(p_prefix + 'tag_choose_td').innerHTML = $(p_prefix + 'tag_choose_td').innerHTML + code_html;
+                    id$(p_prefix + 'tag_choose_td').innerHTML = id$(p_prefix + 'tag_choose_td').innerHTML + code_html;
                     removeDiv(p_prefix + 'tag_div');
                 }
             }
@@ -2798,7 +2819,7 @@ function search_add_tag(p_dossier, p_tag_id, p_prefix, p_obj) {
  */
 function search_clear_tag(p_dossier, p_prefix) {
     if (p_prefix != 'search') {
-        $(p_prefix + 'tag_choose_td').innerHTML = "";
+        id$(p_prefix + 'tag_choose_td').innerHTML = "";
         return;
     }
     try {
@@ -2817,7 +2838,7 @@ function search_clear_tag(p_dossier, p_prefix) {
                     }
                     var code_html = getNodeText(html[0]);
                     code_html = unescape_xml(code_html);
-                    $(p_prefix + 'tag_choose_td').innerHTML = code_html;
+                    id$(p_prefix + 'tag_choose_td').innerHTML = code_html;
                     tag_choose = "";
                 }
             }
@@ -2856,8 +2877,8 @@ function calendar_zoom(obj) {
         var per_periode = null;
         var notitle = 0;
         var from = 0;
-        if ($(obj.invalue)) {
-            per_periode = $(obj.invalue).value;
+        if (id$(obj.invalue)) {
+            per_periode = id$(obj.invalue).value;
         }
         if (obj.notitle && obj.notitle == 1) {
             notitle = 1;
@@ -2895,7 +2916,7 @@ function calendar_zoom(obj) {
                     if (obj.outdiv === undefined) {
                         obj.outdiv = 'calendar_zoom_div';
                     }
-                    if ($(obj.outdiv) == undefined) {
+                    if (id$(obj.outdiv) == undefined) {
                         var str_style = 'top:10%;min-height:60rem';
 //                            var str_style = fixed_position(0, 120);
                         add_div({
@@ -2906,8 +2927,8 @@ function calendar_zoom(obj) {
                         });
                     }
                     remove_waiting_box();
-                    $(obj.outdiv).innerHTML = code_html;
-                    $(obj.outdiv).show();
+                    id$(obj.outdiv).innerHTML = code_html;
+                    id$(obj.outdiv).show();
                 }
             }
         );
@@ -2924,12 +2945,12 @@ function calendar_zoom(obj) {
 function stock_add_row() {
     try {
         style = 'class="input_text"';
-        var mytable = g("stock_tb").tBodies[0];
+        var mytable = id$("stock_tb").tBodies[0];
         var ofirstRow = mytable.rows[1];
         var line = mytable.rows.length;
         var nCell = mytable.rows[1].cells.length;
         var row = mytable.insertRow(line);
-        var nb = g("row");
+        var nb = id$("row");
         for (var e = 0; e < nCell; e++) {
             var newCell = row.insertCell(e);
             if (mytable.rows[1].cells[e].hasClassName('num')) {
@@ -2944,10 +2965,10 @@ function stock_add_row() {
             new_tt.evalScripts();
         }
 
-        g("sg_code" + nb.value).innerHTML = '&nbsp;';
-        g("sg_code" + nb.value).value = '';
-        g("label" + nb.value).innerHTML = '';
-        g("sg_quantity" + nb.value).value = '0';
+        id$("sg_code" + nb.value).innerHTML = '&nbsp;';
+        id$("sg_code" + nb.value).value = '';
+        id$("label" + nb.value).innerHTML = '';
+        id$("sg_quantity" + nb.value).value = '0';
 
         nb.value++;
 
@@ -2959,8 +2980,8 @@ function stock_add_row() {
 }
 
 function show_description(p_id) {
-    $('print_desc' + p_id).hide();
-    $('input_desc' + p_id).show();
+    id$('print_desc' + p_id).hide();
+    id$('input_desc' + p_id).show();
 
 }
 
@@ -2996,9 +3017,9 @@ function show_tabs(a_tabs, p_display_tab) {
         }
         var i = 0;
         for (i = 0; i < a_tabs.length; i++) {
-            $(a_tabs[i]).hide();
+            id$(a_tabs[i]).hide();
         }
-        $(p_display_tab).show();
+        id$(p_display_tab).show();
     } catch (e) {
         alert_box(e.message);
     }
@@ -3050,8 +3071,8 @@ function create_anchor_up() {
     newElt.setAttribute('id', 'up_top');
     newElt.innerHTML = '<a id="up_top"></a>';
 
-    var parent = $('info_div').parentNode;
-    parent.insertBefore(newElt, $('info_div'));
+    var parent = id$('info_div').parentNode;
+    parent.insertBefore(newElt, id$('info_div'));
 
 }
 
@@ -3074,13 +3095,13 @@ function init_scroll() {
         }
         ;
         if (document.viewport.getScrollOffsets().top > 0) {
-            if ($('go_up').visible() == false) {
-                $('go_up').setOpacity(0.65);
-                $('go_up').show();
-                $('go_up').style.zIndex = 99;
+            if (id$('go_up').visible() == false) {
+                id$('go_up').setOpacity(0.65);
+                id$('go_up').show();
+                id$('go_up').style.zIndex = 99;
             }
         } else {
-            $('go_up').hide();
+            id$('go_up').hide();
         }
     }
 
@@ -3142,7 +3163,7 @@ function confirm_box(p_obj, p_message, p_callback_true, p_waiting) {
                     if (p_waiting) {
                         waiting_box();
                     }
-                    $(name).submit();
+                    id$(name).submit();
                 }
             });
         } else {
@@ -3165,7 +3186,7 @@ function confirm_box(p_obj, p_message, p_callback_true, p_waiting) {
  * @returns void
  */
 function alert_box(p_message) {
-    smoke.alert(p_message, undefined, {ok: 'ok', classname: "inner_box"});
+    smoke.alert(p_message, undefined, {ok: 'ok', classname: "inner_box",title:'ATTENTION'});
 }
 
 
@@ -3174,7 +3195,7 @@ function alert_box(p_message) {
  * @param string p_table id of the table
  */
 function alternate_row_color(p_table) {
-    var table_colored = $(p_table);
+    var table_colored = id$(p_table);
     if (!table_colored.tBodies[0]) return;
 
     var len = table_colored.tBodies[0].rows.length;
@@ -3197,7 +3218,7 @@ function alternate_row_color(p_table) {
  * @param p_list {string} DOM id of the list
  */
 function alternate_row_color_list(p_list) {
-    var list_colored = $(p_list);
+    var list_colored = id$(p_list);
     if ( list_colored.children.length==0 ) return;
 
     var len = list_colored.children.length;
@@ -3225,7 +3246,7 @@ function pin(object_id) {
     if (aDraggableElement[object_id]) {
         aDraggableElement[object_id].destroy();
         aDraggableElement[object_id] = undefined;
-        $('pin_' + object_id).innerHTML = "&#xf047;";
+        id$('pin_' + object_id).innerHTML = "&#xf047;";
     } else {
         aDraggableElement[object_id] = new Draggable(object_id, {
                 starteffect: function () {
@@ -3233,7 +3254,7 @@ function pin(object_id) {
                 }
             }
         );
-        $('pin_' + object_id).innerHTML = "&#xe809;";
+        id$('pin_' + object_id).innerHTML = "&#xe809;";
     }
 }
 
@@ -3245,10 +3266,10 @@ function pin(object_id) {
  * @param p_attribute_value the value of the attribute we want to show
  */
 function show_only_row(p_table_id, p_attribute_name, p_attribute_value) {
-    if (!$(p_table_id)) {
+    if (!id$(p_table_id)) {
         throw "Invalide table id"
     }
-    var mTable = $(p_table_id);
+    var mTable = id$(p_table_id);
     var ncount = mTable.rows.length
     for (var i = 0; i < ncount; i++) {
         var mRow = mTable.rows[i];
@@ -3265,10 +3286,10 @@ function show_only_row(p_table_id, p_attribute_name, p_attribute_value) {
  * @param p_table_id table id
  */
 function show_all_row(p_table_id) {
-    if (!$(p_table_id)) {
+    if (!id$(p_table_id)) {
         throw "Invalide table id"
     }
-    var mTable = $(p_table_id);
+    var mTable = id$(p_table_id);
     var ncount = mTable.rows.length
     for (var i = 0; i < ncount; i++) {
         var mRow = mTable.rows[i];
@@ -3349,7 +3370,7 @@ var Periode = function (p_ledger) {
                             var answer = req.responseText.evalJSON();
                             remove_waiting_box();
                             if (answer.status == "OK") {
-                                $("row_per_" + p_periode_id).remove();
+                                id$("row_per_" + p_periode_id).remove();
                                 alternate_row_color("periode_tbl");
                             } else {
                                 smoke.alert(answer.content);
@@ -3398,7 +3419,7 @@ var Periode = function (p_ledger) {
                         "cssclass": "inner_box",
                         'html': "wait"
                     });
-                    $('mod_periode').update(json.content);
+                    id$('mod_periode').update(json.content);
                 }
             });
     };
@@ -3452,7 +3473,7 @@ var Periode = function (p_ledger) {
                     remove_waiting_box();
                     var json = req.responseText.evalJSON();
                     if (json.status == 'OK') {
-                        $('row_per_' + p_periode_id).update(json.content);
+                        id$('row_per_' + p_periode_id).update(json.content);
                         new Effect.Highlight('row_per_' + p_periode_id, {startcolor: '#FAD4D4', endcolor: '#F78082'});
                     } else {
                         smoke.alert(json.content);
@@ -3492,7 +3513,7 @@ var Periode = function (p_ledger) {
                             remove_waiting_box();
                             var json = req.responseText.evalJSON();
                             if (json.status == 'OK') {
-                                $('row_per_' + p_periode_id).update(json.content);
+                                id$('row_per_' + p_periode_id).update(json.content);
                                 new Effect.Highlight('row_per_' + p_periode_id, {
                                     startcolor: '#FAD4D4',
                                     endcolor: '#F78082'
@@ -3511,7 +3532,7 @@ var Periode = function (p_ledger) {
      * @returns {Boolean}
      */
     this.save = function (p_frm) {
-        var js_param = $(p_frm).serialize(true);
+        var js_param = id$(p_frm).serialize(true);
         waiting_box();
         js_param["js_var"] = this.js_obj_name;
         js_param["act"] = "save";
@@ -3525,7 +3546,7 @@ var Periode = function (p_ledger) {
                 var answer = req.responseText.evalJSON();
                 remove_waiting_box();
                 if (answer.status == "OK") {
-                    $('row_per_' + js_param['periode_id']).update(answer.content);
+                    id$('row_per_' + js_param['periode_id']).update(answer.content);
                     removeDiv('mod_periode');
                     new Effect.Highlight('row_per_' + js_param['periode_id'], {
                         startcolor: '#FAD4D4',
@@ -3555,7 +3576,7 @@ var Periode = function (p_ledger) {
             }
         }
         if (count == 0) {
-            smoke.signal("Sélectionner au moins une période", function () {
+             smoke.signal("Sélectionner au moins une période", function () {
             }, {duration: 1500});
             return;
         }
@@ -3582,7 +3603,7 @@ var Periode = function (p_ledger) {
      */
     this.insert_periode = function () {
         var p_frm = 'insert_periode_frm';
-        var js_param = $(p_frm).serialize(true);
+        var js_param = id$(p_frm).serialize(true);
         waiting_box();
         js_param["js_var"] = this.js_obj_name;
         js_param["act"] = "insert_periode";
@@ -3598,11 +3619,11 @@ var Periode = function (p_ledger) {
                 remove_waiting_box();
                 if (answer.status == "OK") {
                     var new_row = document.createElement("tr");
-                    $('periode_tbl').append(new_row);
+                    id$('periode_tbl').append(new_row);
                     new_row.replace(answer.content);
 
                     // hide the form
-                    $('periode_add').hide();
+                    id$('periode_add').hide();
                     new Effect.Highlight('row_per_' + answer.p_id, {startcolor: '#FAD4D4', endcolor: '#F78082'});
                     alternate_row_color('periode_tbl');
                 } else {
@@ -3619,8 +3640,8 @@ var Periode = function (p_ledger) {
  * @param p_table_id DOM ID of the table
  */
 Periode.filter_exercice = function (p_table_id) {
-    var rows = $(p_table_id).rows;
-    var selected_value = $('p_exercice_sel').value;
+    var rows = id$(p_table_id).rows;
+    var selected_value = id$('p_exercice_sel').value;
     for (var i = 1; i < rows.length; i++) {
         var exercice = rows[i].getAttribute("per_exercice");
         if (selected_value == -1) {
@@ -3661,7 +3682,7 @@ function progress_bar_start(p_taskid, p_message) {
             cssclass: "inner_box",
             style: "z-index:1000;position:fixed;top:30%;width:40%;left:30%"
         });
-        $("message" + progressIdx).update('<h3>' + content[65] + '</h3>' + message);
+        id$("message" + progressIdx).update('<h3>' + content[65] + '</h3>' + message);
         // Create a div
         add_div({id: "progressDiv" + progressIdx, cssclass: "progressbar", html: '<span id="progressValue">0</span>'});
         // Check status every sec.
@@ -3685,7 +3706,7 @@ function progress_bar_check(p_idx, p_taskid) {
             onSuccess: function (req) {
                 try {
                     var answer = req.responseText.evalJSON();
-                    var progress_div = $("progressDiv" + progressIdx);
+                    var progress_div = id$("progressDiv" + progressIdx);
                     var a_child = progress_div.childNodes;
                     var i = 0;
                     for (i = 0; i < a_child.length; i++) {
@@ -3704,10 +3725,10 @@ function progress_bar_check(p_idx, p_taskid) {
                         clearInterval(progressBar[p_idx]);
                         progressValue.innerHTML = "Success";
                         Effect.BlindUp("progressDiv" + p_idx, {duration: 1.0, scaleContent: false})
-                        $("message" + p_idx).remove();
-                        $("blocking" + p_idx).remove();
+                        id$("message" + p_idx).remove();
+                        id$("blocking" + p_idx).remove();
                         setTimeout(function () {
-                            $("progressDiv" + progressIdx).remove
+                            id$("progressDiv" + progressIdx).remove
                         }, 1100);
                     }
                 } catch (e) {
@@ -3729,7 +3750,7 @@ function progress_bar_check(p_idx, p_taskid) {
  */
 function updatePeriodePreference(p_dossier) {
     waiting_box();
-    var exercice = $('exercice_setting').value;
+    var exercice = id$('exercice_setting').value;
     new Ajax.Updater('setting_period', "ajax_misc.php", {
         method: "get",
         parameters: {"op": "pref_exercice", "gDossier": p_dossier, "exercice": exercice}
@@ -3747,7 +3768,7 @@ function updatePeriodePreference(p_dossier) {
  */
 function updatePeriode(p_dossier, p_exercice, p_periode_from, p_periode_to, p_last) {
     waiting_box();
-    var exercice = $(p_exercice).value;
+    var exercice = id$(p_exercice).value;
     new Ajax.Updater(p_periode_from, "ajax_misc.php",
         {
             method: "get",
@@ -3798,9 +3819,9 @@ function toggle_lock(p_domid) {
  * @returns {undefined}
  */
 function show_ledger_fin_currency() {
-    var ledger = $('p_jrn').value;
-    var dossier = $('gDossier').value;
-    // $('ledger_currency').
+    var ledger = id$('p_jrn').value;
+    var dossier = id$('gDossier').value;
+    // id$('ledger_currency').
     var a = new Ajax.Updater("ledger_currency",
         "ajax_misc.php",
         {
@@ -3814,14 +3835,14 @@ function show_ledger_fin_currency() {
 function updatePreference() {
     try {
         waiting_box();
-        var param = $('preference_frm').serialize() + "&op=preference&action=save";
+        var param = id$('preference_frm').serialize() + "&op=preference&action=save";
 
         new Ajax.Request("ajax_misc.php", {
             method: "post",
             parameters: param,
             onSuccess: function (req) {
                 var answer = req.responseText.evalJSON();
-                // $('pagestyle').setAttribute('href', style.style);
+                // id$('pagestyle').setAttribute('href', style.style);
                 if (answer['psw'] == 'NOK') {
                     smoke.alert(answer['msg']);
                 } else {
@@ -3843,14 +3864,14 @@ function updatePreference() {
  * @see param_jrn.php
  */
 function toggle_onoff(icon_domid, p_value_domid) {
-    if ($(p_value_domid).value == 0) {
-        $(p_value_domid).value = 1;
-        $(icon_domid).innerHTML = '&#xf205;';
-        $(icon_domid).style = 'color:green';
+    if (id$(p_value_domid).value == 0) {
+        id$(p_value_domid).value = 1;
+        id$(icon_domid).innerHTML = '&#xf205;';
+        id$(icon_domid).style = 'color:green';
     } else {
-        $(p_value_domid).value = 0;
-        $(icon_domid).innerHTML = '&#xf204;';
-        $(icon_domid).style = 'color:red';
+        id$(p_value_domid).value = 0;
+        id$(icon_domid).innerHTML = '&#xf204;';
+        id$(icon_domid).style = 'color:red';
     }
 }
 
@@ -3862,12 +3883,12 @@ function toggle_onoff(icon_domid, p_value_domid) {
  */
 function toggle_checkbox_onoff(icon_domid, p_value_domid) {
 
-    if ($(p_value_domid).value == 0) {
-        $(p_value_domid).value = 1;
-        $(icon_domid).innerHTML = '&#xe741;';
+    if (id$(p_value_domid).value == 0) {
+        id$(p_value_domid).value = 1;
+        id$(icon_domid).innerHTML = '&#xe741;';
     } else {
-        $(p_value_domid).value = 0;
-        $(icon_domid).innerHTML = '&#xf096;';
+        id$(p_value_domid).value = 0;
+        id$(icon_domid).innerHTML = '&#xf096;';
     }
 }
 
@@ -3881,9 +3902,9 @@ function toggle_checkbox_onoff(icon_domid, p_value_domid) {
 function toggle_row_warning_enable(p_enable, p_row) {
     var warning = document.getElementsByName('negative_amount')[0].value
     if ( warning == 1) {
-        $(p_row).show();
+        id$(p_row).show();
     } else {
-        $(p_row).hide();
+        id$(p_row).hide();
     }
 }
 
@@ -3960,7 +3981,7 @@ var operation_tag = function (p_div) {
                         add_div({id: 'tag_div', style: pos, cssclass: 'inner_box tag', drag: 0});
 
                         remove_waiting_box();
-                        $('tag_div').innerHTML = code_html;
+                        id$('tag_div').innerHTML = code_html;
                     }
                 }
             );
@@ -3999,7 +4020,7 @@ var operation_tag = function (p_div) {
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
                         remove_waiting_box();
-                        $('operation_tag_td' + ctl).innerHTML = code_html;
+                        id$('operation_tag_td' + ctl).innerHTML = code_html;
                         removeDiv('tag_div');
                     }
                 }
@@ -4042,7 +4063,7 @@ var operation_tag = function (p_div) {
                             var code_html = getNodeText(html[0]);
                             code_html = unescape_xml(code_html);
                             remove_waiting_box();
-                            $('operation_tag_td' + ctl).innerHTML = code_html;
+                            id$('operation_tag_td' + ctl).innerHTML = code_html;
 
                         }
                     }
@@ -4111,10 +4132,10 @@ function full_size(p_div) {
     if (!div_dom) return;
     if (div_dom.hasClassName('fullsize')) {
         div_dom.removeClassName('fullsize');
-        $('size_' + p_div).innerHTML = '&#xe80a;';
+        id$('size_' + p_div).innerHTML = '&#xe80a;';
     } else {
         div_dom.addClassName('fullsize');
-        $('size_' + p_div).innerHTML = '&#xe83d;';
+        id$('size_' + p_div).innerHTML = '&#xe83d;';
     }
 
 }
@@ -4133,7 +4154,7 @@ function download_document(p_url) {
  */
 function download_document_form(p_form_id) {
     waiting_box();
-    var url = "export.php?" + $(p_form_id).serialize();
+    var url = "export.php?" + id$(p_form_id).serialize();
     document.location = url;
     remove_waiting_box();
     return false;
@@ -4223,7 +4244,7 @@ function event_display_detail(p_dossier, p_detail) {
 
                     }
 
-                    $(dgbox).update(req.responseText)
+                    id$(dgbox).update(req.responseText)
 
                 }
             }
@@ -4256,7 +4277,7 @@ function event_display_main(p_dossier) {
                         return;
                     }
 
-                    $(dgbox).update(req.responseText)
+                    id$(dgbox).update(req.responseText)
 
                 }
             }
@@ -4273,13 +4294,13 @@ function event_display_main(p_dossier) {
  */
 function check_password_strength(p_pass_domid, p_result_domid, details) {
     try {
-        if ($(p_pass_domid).value == "") {
-            $(p_result_domid).update("");
+        if (id$(p_pass_domid).value == "") {
+            id$(p_result_domid).update("");
             return;
         }
         var queryString = {
             'op': "password_chk"
-            , pass: $(p_pass_domid).value
+            , pass: id$(p_pass_domid).value
         };
         var action = new Ajax.Request(
             "ajax_misc.php",
@@ -4296,14 +4317,14 @@ function check_password_strength(p_pass_domid, p_result_domid, details) {
                     console.debug(answer);
                     if (answer['password'] == 'nok') {
 
-                        $(p_pass_domid).setStyle("background-color:red");
+                        id$(p_pass_domid).setStyle("background-color:red");
                         if (details) {
-                            $(p_result_domid).update(answer['msg'])
+                            id$(p_result_domid).update(answer['msg'])
                         }
                         return;
                     }
-                    $(p_pass_domid).setStyle("background-color: lightgreen");
-                    $(p_result_domid).update("")
+                    id$(p_pass_domid).setStyle("background-color: lightgreen");
+                    id$(p_result_domid).update("")
                 }
             }
         );
@@ -4393,7 +4414,7 @@ Widget.prototype.display = function (box,user_widget_id,widget_code) {
                         reconnect();
                         return;
                     }
-                    $(box).replace(req.responseText);
+                    id$(box).replace(req.responseText);
 
                 }
             }
@@ -4435,7 +4456,7 @@ Widget.prototype.manage = function () {
 
                     add_div({id: box, cssclass: 'inner_box', html: loading(), style: style,drag:false})
 
-                    $(box).update(req.responseText);
+                    id$(box).update(req.responseText);
                 }
             }
         );
@@ -4450,8 +4471,8 @@ Widget.prototype.manage = function () {
  */
 Widget.prototype.create_sortable=function() {
 
-    Sortable.create('contain_widget',{tag:'li',onUpdate:function(){ $('order_widget_hidden').value=Sortable.serialize('contain_widget')}})
-    $('order_widget_hidden').value=Sortable.serialize('contain_widget');
+    Sortable.create('contain_widget',{tag:'li',onUpdate:function(){ id$('order_widget_hidden').value=Sortable.serialize('contain_widget')}})
+    id$('order_widget_hidden').value=Sortable.serialize('contain_widget');
 }
 /**
  * Save the order of widget
@@ -4465,7 +4486,7 @@ Widget.prototype.save = function () {
 
     	        // For form , most of the parameters are in the FORM
     	        // method is then POST
-    	         //var queryString=$(p_form_id).serialize(true);
+    	         //var queryString=id$(p_form_id).serialize(true);
 
     	       var queryString = {
     	                op : 'widget',
@@ -4521,7 +4542,7 @@ Widget.prototype.refresh = function () {
                             return;
                         }
 
-                        $(dgbox).replace(req.responseText);
+                        id$(dgbox).replace(req.responseText);
 
                       }
                   }
@@ -4535,8 +4556,8 @@ Widget.prototype.refresh = function () {
  * @param user_widget_id {integer}
  */
 Widget.prototype.delete=function (user_widget_id) {
-    $('elt_'+user_widget_id).remove()
-    $('order_widget_hidden').value=Sortable.serialize('contain_widget');
+    id$('elt_'+user_widget_id).remove()
+    id$('order_widget_hidden').value=Sortable.serialize('contain_widget');
 }
 /**
  * display list widget we can add
@@ -4568,7 +4589,7 @@ Widget.prototype.input = function () {
 
                     add_div({id: box, cssclass: 'inner_box', html: loading(), style: style})
 
-                    $(box).update(req.responseText);
+                    id$(box).update(req.responseText);
 
 
                 }
@@ -4587,8 +4608,8 @@ Widget.prototype.add=function (widget_code) {
     		{
                 here=this;
                 var param = {};
-                if ($(widget_code+"_param")) {
-                    param=$(widget_code+"_param").serialize()
+                if (document.getElementById(widget_code+"_param")) {
+                    param=id$(widget_code+"_param").serialize()
                 }
                 query = {
                     op : 'widget',
@@ -4609,7 +4630,7 @@ Widget.prototype.add=function (widget_code) {
     	                            return;
     	                        }
                                 var new_element=new Element("li");
-                                $('contain_widget').appendChild(new_element);
+                                id$('contain_widget').appendChild(new_element);
                                 new_element.replace(req.responseText)
                                 removeDiv('widget_box_select_id')
                                 here.create_sortable()
@@ -4659,13 +4680,13 @@ Widget.prototype.remove_ident = function ()
  * @param widget_domid {string} dom id of the widget to toggle the size
  */
 Widget.prototype.toggle_full_size=function (widget_domid) {
-    if ( $(widget_domid).hasClassName('widget-full_size')) {
-        $(widget_domid).removeClassName('widget-full_size');
+    if ( id$(widget_domid).hasClassName('widget-full_size')) {
+        id$(widget_domid).removeClassName('widget-full_size');
     } else {
-        $(widget_domid).addClassName('widget-full_size');
+        id$(widget_domid).addClassName('widget-full_size');
 
         layer++;
-        $(widget_domid).style.zIndex=layer;
+        id$(widget_domid).style.zIndex=layer;
     }
 
 };

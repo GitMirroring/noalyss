@@ -79,7 +79,8 @@ class Todo_List
         }
         if ( strcmp ($p_idx, 'tl_date') == 0 )
         {
-            if ( noalyss_strlentrim($p_value) ==0 ||strlen($p_value) > 12 || isDate ($p_value) == false) return false;
+            if ( noalyss_strlentrim($p_value) ==0 ||strlen($p_value) > 12 || isDate ($p_value) == false)
+                { $p_value = null;return true;}
         }
         if ( strcmp ($p_idx, 'tl_title') == 0 )
         {
@@ -113,7 +114,7 @@ class Todo_List
     {
         if ( isDate($this->tl_date) == false )
         {
-			$this->tl_date=date('d.m.Y');
+			$this->tl_date=null;
         }
         return 0;
     }
@@ -129,7 +130,7 @@ class Todo_List
     {
         if ( $this->verify() != 0 ) return;
         if (trim($this->tl_title)=='')
-            $this->tl_title=mb_substr(trim($this->tl_desc),0,30);
+            $this->tl_title=mb_substr(trim($this->tl_desc??""),0,30);
 
         if (trim($this->tl_title)=='')
         {
@@ -142,6 +143,12 @@ class Todo_List
 
         $sql="insert into todo_list (tl_date,tl_title,tl_desc,use_login,is_public) ".
              " values (to_date($1,'DD.MM.YYYY'),$2,$3,$4,$5)  returning tl_id";
+
+        if ($this->tl_date == null) {
+            $sql="insert into todo_list (tl_date,tl_title,tl_desc,use_login,is_public) ".
+                " values ($1,$2,$3,$4,$5)  returning tl_id";
+
+        }
         $res=$this->cn->exec_sql(
                  $sql,
                  array($this->tl_date,
@@ -172,6 +179,11 @@ class Todo_List
 
         $sql="update todo_list set tl_title=$1,tl_date=to_date($2,'DD.MM.YYYY'),tl_desc=$3,is_public=$5 ".
              " where tl_id = $4";
+
+        if ($this->tl_date == null) {
+            $sql="update todo_list set tl_title=$1,tl_date=$2,tl_desc=$3,is_public=$5 ".
+                " where tl_id = $4";
+        }
         $res=$this->cn->exec_sql(
                  $sql,
                  array($this->tl_title,
@@ -296,7 +308,7 @@ class Todo_List
     }
 
     /**
-     * Display the note
+     * @brief Display the note
      * @return html string
      */
     function display()
