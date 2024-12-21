@@ -27,8 +27,8 @@
  */
 
 /**
- * @class
- * @brief  abstract of the table
+ * @class Operation_Exercice_Detail_SQL
+ * @brief  abstract of the table operation_exercice_detail
  */
 class Operation_Exercice_Detail_SQL extends Table_Data_SQL
 {

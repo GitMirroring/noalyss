@@ -554,36 +554,36 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         try
         {
             bcscale(4);
-            /// @var  $tot_amount  float : total amount of the purchase (debit)
+            // variable :   $tot_amount  float : total amount of the purchase (debit)
             $tot_amount=0;
-            /// @var $tot_tva float : total amount of the VAT
+            // variable :  $tot_tva float : total amount of the VAT
             $tot_tva=0;
 
             $tot_debit=0;
             $this->db->start();
-            /// @var $tot_nd float total not Deductible
+            // variable :  $tot_nd float total not Deductible
             $tot_nd=0;
-            /// @var $tot_perso float total private amount
+            // variable :  $tot_perso float total private amount
             $tot_perso=0;
-            /// @var $tot_tva_nd float total vat not deductible
+            // variable :  $tot_tva_nd float total vat not deductible
             $tot_tva_nd=0;
 
-            /// @var $tot_tva_ndded float total vat not deductible - deductible via another tax
+            // variable :  $tot_tva_ndded float total vat not deductible - deductible via another tax
             $tot_tva_ndded=0;
 
             $tot_tva_reversed=0; //@todo to remove
 
-            /// @var $tva array that will contain all the VAT Amount
+            // variable :  $tva array that will contain all the VAT Amount
             $tva=array();
 
-            /// @var $tva_reverse array that contain all the VAT autoreverse AND negative
+            // variable :  $tva_reverse array that contain all the VAT autoreverse AND negative
             $tva_reverse = array();
 
-            /// @var $tot_amount_cur : total amount in currency
+            // variable :  $tot_amount_cur : total amount in currency
             $tot_amount_cur=0;
 
             // find the currency from v_currency_last_value
-            /// @var $currency_rate_ref Acc_Currency , currency object for this operation
+            // variable :  $currency_rate_ref Acc_Currency , currency object for this operation
             $currency_rate_ref=new Acc_Currency($this->db, $p_currency_code);
             
             /* Save all the items without vat and no deductible vat and expense*/
@@ -594,7 +594,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 /* First we save all the items without vat */
                 $fiche=new Fiche($this->db);
                 $fiche->get_by_qcode(${"e_march".$i});
-                /// @var  $tva_both integer  1 for autoreverse ,0 normal, fetch it once for this item,
+                // variable :   $tva_both integer  1 for autoreverse ,0 normal, fetch it once for this item,
 		        $tva_both=0;
                 /* tva */
                 if ($g_parameter->MY_TVA_USE=='Y')

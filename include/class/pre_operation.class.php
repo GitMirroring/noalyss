@@ -518,7 +518,7 @@ class Pre_operation
 }
 
 /*!
-@class
+@class Pre_operation_detail
 @brief mother of the pre_op_XXX, it contains only one data : an
  * object Pre_Operation. The child class contains an array of
  * Pre_Operation object

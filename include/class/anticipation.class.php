@@ -25,7 +25,7 @@
  *
  */
 /**
- * @class
+ * @class Anticipation
  * @brief Manage the anticipation of expense, sales,...
  * @see Forecast Forecast_Cat Forecast_Item
  *

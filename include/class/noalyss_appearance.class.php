@@ -25,7 +25,7 @@
  */
 
 /**
- * @class
+ * @class Noalyss_Appearance
  * @brief Contains some parameters to change appearance of noalyss, the colors are saved
  * into the table parm_appearance
  */
