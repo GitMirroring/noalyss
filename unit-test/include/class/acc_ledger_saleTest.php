@@ -580,8 +580,8 @@ class Acc_Ledger_SaleTest extends TestCase
 
         // cancel change
         $g_connection->get_value("update   tva_rate set tva_both_side = $1 where tva_id=3 ",[$old_autoreverse]);
-        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
-
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[$array['mt']]);
+        $g_connection->exec_sql('delete from jrnx where jrnx.j_grpt  not in (select jr_grpt_id from jrn)');
 
     }
     /**
@@ -595,7 +595,7 @@ class Acc_Ledger_SaleTest extends TestCase
 
         $array['e_march1_tva_id']=5;
 
-        // clean
+        // clean0
         $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
         $this->object->insert($array);
 
@@ -627,8 +627,8 @@ class Acc_Ledger_SaleTest extends TestCase
 
         // cancel change
 
-        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
-
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[$array['mt']]);
+        $g_connection->exec_sql('delete from jrnx where jrnx.j_grpt  not in (select jr_grpt_id from jrn)');
 
     }
 

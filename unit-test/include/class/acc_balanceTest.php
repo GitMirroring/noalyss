@@ -64,9 +64,11 @@ class Acc_BalanceTest extends TestCase
         $this->object->filter_cat(array());
         $this->assertEquals($this->object->jrn,null);
         $this->object->filter_cat(array('2'=>'FIN'));
+        sort($this->object->jrn);
         $this->assertEquals([1,83,152],$this->object->jrn);
         $this->object->filter_cat(array('1'=>'ACH','2'=>'FIN'));
-        $this->assertEquals([35,3,1,83,152],$this->object->jrn);
+        sort($this->object->jrn);
+        $this->assertEquals([1,3,35,83,152],$this->object->jrn);
     }
     /**
      *@covers Acc_Balance::summary_add
