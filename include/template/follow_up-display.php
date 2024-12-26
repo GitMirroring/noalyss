@@ -4,6 +4,39 @@
 //see licence.txt
 $uniq=uniqid("tab",TRUE);
 $dossier_id=Dossier::id();
+/**
+ * @var $str_ag_ref string reference of Action inherited Follow_Up::display
+ * @var $str_doc_type string type of document (DOCUMENT_TYPE) inherited Follow_Up::display
+ * @var $w ICard  concerned tiers inherited Follow_Up::display
+ * @var $sp ISpan  concerned tiers' name inherited Follow_Up::display
+ * @var $g_user Noalyss_User  connected user : global variable
+ * @var $ag_contact ICard card of contacts inherited Follow_Up::display
+ * @var $spcontact ISpan  contact's name inherited Follow_Up::display
+ * @var $ag_id Number Follow_Up::ag_id inherited Follow_Up::display
+ * @var $p_view string mode : READ NEW UPD inherited Follow_Up::display
+ * @var $str_add_button string for adding event inherited Follow_Up::display
+ * @var $date IDate inherited Follow_Up::display
+ * @var $str_ag_hour string Hour inherited Follow_Up::display
+ * @var $remind_date IDate inherited Follow_Up::display
+ * @var $str_state string status event  inherited Follow_Up::display
+ * @var $str_ag_priority string priority event  inherited Follow_Up::display
+ * @var $str_ag_dest string group event  inherited Follow_Up::display
+ * @var $this Follow_Up   inherited Follow_Up::display
+ * @var $operation array table  ACTION_GESTION_OPERATION  inherited Follow_Up::display
+ * @var $iaction array IRelated_Action    inherited Follow_Up::display
+ * @var $p_base string  ac parameter    inherited Follow_Up::display
+ * @var $acomment array comment of event    inherited Follow_Up::display
+ * @var $iconcerned IConcerned concerned operation inherited Follow_Up::display
+ * @var $title string title action inherited Follow_Up::display
+ * @var $desc string description of action inherited Follow_Up::display
+ * @var $upload IFiles file to upkiad
+ * @var $str_select_doc
+ * @var $aAttachedFile
+ * @var $str_submit_generate
+ *
+ *
+ *
+ */
 ?>
 <div>
     <?php
@@ -306,6 +339,8 @@ function small(p_id_textarea){
    $has_description = false;
     //---------------------------------- Description -------------------------------------------------------------------
     // if there are comments then the first one is the description
+    // variable: $acomment[0]
+    //
     if ( count($acomment)> 0) {
             $has_description = true;
             $editable_description = Document_Option::is_enable_editable_description($this->dt_id);
@@ -352,8 +387,8 @@ function small(p_id_textarea){
         // link to files to download
         $aFile=$this->db->get_array('select d_id,d_filename,d_description,d_mimetype
                 from  action_comment_document 
-                join document  on (d_id=document_id) where action_gestion_comment_id=$1'
-            , array($this->ag_id));
+                join document  on (d_id=document_id) where ag_id=$1'
+            , array($acomment[0]['agc_id']));
         if ( ! empty ($aFile)) {
             echo '<div style="left:10%">';
             echo _("Fichiers :");
@@ -362,7 +397,7 @@ function small(p_id_textarea){
                 $url="export.php?".http_build_query(array("act"=>'RAW:document'
                     ,"gDossier"=>$dossier_id
                     ,"d_id"=>$file["d_id"]));
-                printf('<a class="print_line" href="%s">%s</a>',
+                printf('<a class="print_line" href="%s" download>%s</a>',
                     $url,h($file['d_filename']));
 
             }
