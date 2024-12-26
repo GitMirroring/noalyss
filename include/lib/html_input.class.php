@@ -1021,7 +1021,7 @@ class HtmlInput
         $r="
 			<span>
                         <span  class=\"icon\"  >&#xf50d;</span>
-			<input id=\"lk_".$p_table_id."\" name=\"$p_name\" value=\"$p_old_value\"autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\" placeholder=\""._("Recherche")."\">
+			<input id=\"lk_".$p_table_id."\" name=\"$p_name\" value=\"$p_old_value\"autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\" placeholder=\""._("Filtre rapide")."\">
 			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row );\" value=\"X\">
 			</span>
 			";
@@ -1041,7 +1041,7 @@ class HtmlInput
 			<span>
                         <span  class=\"icon\"  >&#xf50d;</span>
 
-			<input id=\"lk_".$p_table_id."\" autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\" placeholder=\""._("Recherche")."\">
+			<input id=\"lk_".$p_table_id."\" autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row )\" type=\"text\" placeholder=\""._("Filtre rapide")."\">
 			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row );\" value=\"X\">
 			</span>
 			";
