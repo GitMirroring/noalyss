@@ -103,9 +103,9 @@ $nb_profile=count($a_profile);
             </td>
             <td>
                 <?php echo h($a_plugin[$e]->me_description);?>
-                <span style="display:block">
+                <span style="display:block; font-style: italic">
                 <?php 
-                    printf(_("Installé par défaut dans %s"),$a_plugin[$e]->depend);
+                    printf(_("Installé par défaut dans le menu <span class=\" cell highlight\">AD: %s </span>"),$a_plugin[$e]->depend);
                 ?>
                 </span>
             </td>
