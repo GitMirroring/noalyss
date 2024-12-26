@@ -585,8 +585,10 @@ catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>
 <div  id="div_action_attached_doc">
   <h2 class="h-section">
      <?php
-     echo _('Pièces attachées');
-     printf("(%s)",count($aAttachedFile));
+     $a= _('Pièces attachées');
+     // variable: color if files
+     $class=( count($aAttachedFile)>0)?"cell highlight":"";
+     printf('%s  <span class="%s"> (%s)</span>',$a,$class,count($aAttachedFile));
      ?>
   </h2>
     <div class="noprint">

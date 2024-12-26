@@ -478,6 +478,16 @@ tr.highlight {
     font-weight: bold;
 }
 
+/* highlight a small element (span)
+ */
+ .cell.highlight {
+     color: darkred !important;
+     background-color: lightgoldenrodyellow;
+     color: antiquewhite !important;
+     background-color: lightskyblue;
+     padding: 2px 10px 2px 10px;
+ }
+
 td.odd{
     background-color:#DDE6FF;
 }
