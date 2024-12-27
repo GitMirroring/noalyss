@@ -448,10 +448,11 @@ class Acc_Ledger_PurchaseTest extends TestCase
     /**
      * @testdox Purchase not deductible : VAT , TAX , PRIVATE fee
      * @dataProvider data_no_deductible
-     * Parameters : $p_attribut if the no deductible attribute, the $p_value is the % not deductible, $p_amount
-     * is the corresponding column in quant_purchase and $p_accounting is the counterpart
-     * for this not deductible fee($p_counterpart) 
-     */
+     * @parameter $p_attribut int ATTR_DEF.AD_ID $p_attribut if the no deductible attribute,
+     * @parameter $p_value int is the % not deductible,
+     * @parameter $p_amount float the corresponding column in quant_purchase
+     * @parameter $p_accounting string is the accounting counterpart for this not deductible fee($p_counterpart)
+ */
     public function testInsertPurchase_No_Ded($p_attribut , $p_value,$p_column,$p_amount,$p_counterpart,$p_accounting)
     {
        global $g_connection;
@@ -497,7 +498,63 @@ class Acc_Ledger_PurchaseTest extends TestCase
        
         
     }
+    /**
+     * @testdox Purchase not deductible + autoreverse: VAT , TAX , PRIVATE fee with VAT autoreverse
+     * @dataProvider data_no_deductible
+     * @parameter $p_attribut int ATTR_DEF.AD_ID $p_attribut if the no deductible attribute,
+     * @parameter $p_value int is the % not deductible,
+     * @parameter $p_amount float the corresponding column in quant_purchase
+     * @parameter $p_accounting string is the accounting counterpart for this not deductible fee($p_counterpart)
+     */
+    public function testInsertPurchase_No_Ded_reverse($p_attribut , $p_value,$p_column,$p_amount,$p_counterpart,$p_accounting)
+    {
+        global $g_connection;
 
+        static $scenario=0;
+        $scenario++;
+
+        //-- modify card 29 : ELECTR
+        $fiche=new Fiche($g_connection,29);
+        $fiche->set_f_enable("1");
+        $fiche->setAttribut($p_attribut,$p_value);
+        $fiche->setAttribut($p_counterpart,$p_accounting);
+        $a_attribut=$fiche->to_array();
+        $this->assertEquals($a_attribut['av_text'.$p_attribut],$p_value,"Attribut $p_attribut not set to $p_value%");
+
+        $fiche->update($a_attribut);
+
+        $this->assertEquals($p_value,
+                            $g_connection->get_value("select ad_value 
+                                                            from fiche_detail 
+                                                            where f_id=$1 and ad_id=$2",[29,$p_attribut]),
+                                            "Attribut ad_id $p_attribut not inserted");
+
+        $array=$this->array;
+        $array['e_comm']="scenario [$scenario]";
+        $array['e_march0']='ELECTR';
+        $array['e_march0_tva_id']='5';
+        $array['tva_march0']=bcmul($array['e_march0_tva_amount'],0.21,2);
+        $array['tvac_march0']=bcmul ($array['htva_march0'],1.21,2);
+        $array['mt']='no-ded-33'.$scenario;
+        $this->clean_operation($array['mt']);
+
+        $this->object->insert($array);
+
+        $row_quant=$g_connection->get_row("select * from quant_purchase where qp_internal in 
+             ( select jr_internal from jrn where jr_mt=$1)",[$array["mt"]]);
+        $this->assertFalse(empty($row_quant)," row not inserted in quant_purchase");
+
+        // unit price not rounded
+        $this->assertEquals(603.8990,$row_quant['qp_unit']);
+
+        // rounded to 2 decimal
+        $this->assertEquals(603.9000,$row_quant['qp_price']);
+        $this->assertEquals($p_amount,$row_quant[$p_column]);
+
+        $this->clean_operation($array['mt']);
+
+
+    }
     /**
      * @covers Acc_Ledger_Purchase::input 
      */
@@ -706,22 +763,22 @@ class Acc_Ledger_PurchaseTest extends TestCase
         select count(*)
         from jrnx j1 join jrn j2 on (j1.j_grpt=j2.jr_grpt_id)
         where 
-        j2.jr_mt ='1572704002.1732'
+        j2.jr_mt = $1
         and j1.j_poste ='4119999'
         and j1.j_debit ='f'
         ";
-        $this->assertEquals(1, $g_connection->get_value($sql),'fails : reversed account credit is wrong');
+        $this->assertEquals(1, $g_connection->get_value($sql,[$array["mt"]]),'fails : reversed account credit is wrong');
 
         // check that the accounting for reverse VAT is only 45142
         $sql="
         select count(*)
         from jrnx j1 join jrn j2 on (j1.j_grpt=j2.jr_grpt_id)
         where 
-        j2.jr_mt ='1572704002.1732'
+        j2.jr_mt = $1
         and j1.j_poste ='41142'
         and j1.j_debit ='t'
         ";
-        $this->assertEquals(1, $g_connection->get_value($sql),'fails : reversed account credit is wrong');
+        $this->assertEquals(1, $g_connection->get_value($sql,[$array["mt"]]),'fails : reversed account credit is wrong');
 
         $this->clean_operation();
 
@@ -735,12 +792,13 @@ class Acc_Ledger_PurchaseTest extends TestCase
     function testInsertReverseVAT4() {
         global $g_connection;
         $array=$this->array1;
+        $array['mt']='testInsertReverseVAT4';
         $old_autoreverse=$g_connection->get_value("select tva_both_side from tva_rate where tva_id=3 ");
         // set autoreverse to 1
         $g_connection->get_value("update   tva_rate set tva_both_side = 1 where tva_id=3 ");
 
         // clean
-        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[ $array['mt'] ]);
         $this->object->insert($array);
 
         $accounting=new \Acc_Operation($g_connection);
@@ -768,7 +826,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
 
         // cancel change
         $g_connection->get_value("update   tva_rate set tva_both_side = $1 where tva_id=3 ",[$old_autoreverse]);
-        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[$array['mt']]);
 
 
     }
@@ -782,22 +840,23 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $array=$this->array1;
 
         $array['e_march1_tva_id']=5;
+        $array['mt']='testInsertReverseVAT5';
 
         // clean
-        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[ $array['mt'] ]);
         $this->object->insert($array);
 
         $accounting=new \Acc_Operation($g_connection);
         $accounting->jr_id=$this->object->jr_id;
         $aResult=$accounting->get_jrnx_detail();
 
-        $this->assertTrue(count($aResult)==7, 'Number of rows is  '.count($aResult)."instead of 7");
+        $this->assertTrue(count($aResult)==5, 'Number of rows is  '.count($aResult)."instead of 5");
 
         foreach($aResult as $result) {
             switch ($result['j_poste']) {
                 case '41142':
                     if ( $result['debit']=='D')
-                    $this->assertEquals(25.20, $result['j_montant'],"erreur account {$result['j_poste']}");
+                    $this->assertEquals(23.10, $result['j_montant'],"erreur account {$result['j_poste']}");
                     else
                         $this->assertEquals(2.1, $result['j_montant'],"erreur account {$result['j_poste']}");
                     break;
@@ -814,8 +873,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
         }
 
         // cancel change
-
-        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[1734717784.385]);
+        $g_connection->exec_sql("delete from jrn where jr_mt=$1",[ $array['mt'] ]);
 
 
     }

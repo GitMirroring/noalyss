@@ -189,7 +189,7 @@ class Acc_ComputeTest extends TestCase
        $result=ob_get_contents();
        ob_end_clean();
        $this->assertStringStartsWith("key amount Description amount value is 0<br>key amount_vat Description amount_vat value is 0<br>",$result);
-       $this->assertStringEndsWith("<br>key amount_vat_currency Description amount_vat_currency value is 0<br>key currency_rate Description currency_rate value is 0<br>",$result);
+       $this->assertStringEndsWith("<br>key amount_vat_currency Description amount_vat_currency value is 0<br>key currency_rate Description currency_rate value is 0<br>key autoreverse Description autoreverse value is 0<br>",$result);
     }
 
     public function testCompute()

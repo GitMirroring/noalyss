@@ -137,7 +137,7 @@ class FollowupTest extends TestCase
         $content=ob_get_contents();
         ob_end_clean();
         $this->assertStringContainsString("BONDEC3-1", $content);
-        $this->assertTrue(mb_strlen($content)==1613,"error result not valid $content size = ".mb_strlen($content));
+        $this->assertTrue(mb_strlen($content)==1620,"error result not valid $content size = ".mb_strlen($content));
 
 
     }

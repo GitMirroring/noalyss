@@ -48,6 +48,7 @@
 		  'nd_vat_rate'=>'nd_vat_rate',
 		  'amount_perso'=>'amount_perso',
 		  'amount_perso_rate'=>'amount_perso_rate'				  );
+ * 'autoreverse'=>'autoreverse'
 
  */
 
@@ -68,7 +69,8 @@ class Acc_Compute
                                     'amount_perso_rate'=>'amount_perso_rate',
                                     'amount_currency'=>'amount_currency',
                                     'amount_vat_currency'=>'amount_vat_currency',
-                                    'currency_rate'=>'currency_rate'
+                                    'currency_rate'=>'currency_rate',
+                                    'autoreverse'=>'autoreverse'
                                   );
 
     private  $order;			// check that the compute
@@ -196,7 +198,7 @@ class Acc_Compute
 
     }
 
-    /**!
+    /*!
      * \brief verify that all the amount are positive or null
      * otherwise throw a exception and the sum of amount + vat must
      * equal to the sum of all the amount of the current object
