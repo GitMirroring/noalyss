@@ -946,10 +946,6 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             // Total DEB
             $acc_operation->amount=$this->db->get_value("select sum(j_montant) from jrnx where j_grpt = $1 and j_debit='t'",
                     array($seq));
-            if ( DEBUGNOALYSS > 1 ) { 
-                echo __LINE__." amount ".$acc_operation->amount."<br>"; 
-            
-            }
             $acc_operation->desc=$e_comm;
             $acc_operation->grpt=$seq;
             $acc_operation->jrn=$p_jrn;
@@ -961,7 +957,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $acc_operation->currency_rate_ref=$currency_rate_ref->get_rate();
             
             if ( ! $this->jr_id=$acc_operation->insert_jrn() ) {
-                throw new Exception (_("Erreur de balance"));
+                throw new Exception (_("Erreur de balance"),EXC_BALANCE);
             }
             $this->pj=$acc_operation->update_receipt();
 
@@ -1145,14 +1141,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         }//end try
         catch (Exception $e)
         {
-              record_log($e);
-            echo '<span class="error">'.
-            'Erreur dans l\'enregistrement '.
-            __FILE__.':'.__LINE__.' '.
-            $e->getMessage().$e->getMessage();
-            record_log($e->getMessage());
+           record_log($e);
             $this->db->rollback();
-            throw  new Exception($e);
+            throw  $e;
         }
         $this->db->commit();
         return $internal;
