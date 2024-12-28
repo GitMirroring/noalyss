@@ -1359,6 +1359,15 @@ function record_log($p_message)
         error_log("noalyss GET [".json_encode($_GET,0,10)."]");
         error_log("_POST [".json_encode($_POST,0,10)."]",0);
     } else {
+        if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
+
+            error_log("noalyss exception ".$p_message->getMessage(),0);
+            error_log("noalyss exception".$p_message->getTraceAsString(),0);
+        } else {
+            error_log("noalyss".var_export($p_message,true),0);
+
+        }
+        
         $now=date('y-m-d H:i');
         fwrite ($handle_log,str_repeat("=", 80)."\n");
         fwrite ($handle_log,"ERROR: {$now}\n");
