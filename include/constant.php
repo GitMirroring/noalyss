@@ -113,9 +113,6 @@ if (!defined('LOGINPUT')) {
     define("LOGINPUT", false);
 }
 
-if (!defined('DEBUGNOALYSS')) {
-    define('DEBUGNOALYSS', 0);
-}
 $version_noalyss = NOALYSS_VERSION;
 
 // If you don't want to be notified of the update
@@ -158,6 +155,7 @@ if (DEBUGNOALYSS == 0) {
     ini_set("html_errors", 0);
     ini_set('log_errors', 1);
     ini_set('log_errors_max_len', 0);
+    if(function_exists('xdebug_disable')) { xdebug_disable(); }
 } elseif (DEBUGNOALYSS == 1) {
     /* DEVELOPPEMENT : display all errors warning notice deprecated ...*/
     error_reporting(2147483647);
@@ -347,6 +345,8 @@ define('EXC_PARAM_TYPE', 1006);
 define('EXC_DUPLICATE', 1200);
 define('EXC_INVALID', 1400);
 define('EXC_FORBIDDEN', 1500);
+// exception when balance is incorrect when saving an operation
+define('EXC_BALANCE', 1501);
 define("UNPINDG", "&#xf047;");
 define("PINDG", "&#xe809;");
 

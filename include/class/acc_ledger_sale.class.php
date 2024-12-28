@@ -678,7 +678,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             $acc_operation->currency_rate_ref=$currency_rate_ref->get_rate();
             
             if ( ! $this->jr_id=$acc_operation->insert_jrn() ) {
-                throw new Exception (_("Erreur de balance"));
+                throw new Exception (_("Erreur de balance"),EXC_BALANCE);
             }
 
             $this->pj = $acc_operation->update_receipt();
@@ -856,15 +856,9 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 $acc_operation_note->save();
             }
         } catch (Exception $e) {
-              record_log($e);
-            echo '<span class="error">' .
-            'Erreur dans l\'enregistrement ' .
-            __FILE__ . ':' . __LINE__ . ' ' .
-            $e->getMessage();
-            echo $e->getTraceAsString();
-
+            record_log($e);
             $this->db->rollback();
-            throw new Exception ($e);
+            throw  $e;
         }
         $this->db->commit();
 

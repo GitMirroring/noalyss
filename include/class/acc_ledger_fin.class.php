@@ -979,6 +979,9 @@ class Acc_Ledger_Fin extends Acc_Ledger
                     $acc_operation->pj=$e_pj;
 
                 $jr_id=$acc_operation->insert_jrn();
+                if ( $jr_id == false )
+                    throw new Exception (_("Erreur de balance"),EXC_BALANCE);
+
                 // 	  $acc_operation->update_receipt();
                 $this->db->exec_sql('update jrn set jr_pj_number=$1 where jr_id=$2', array($acc_operation->pj, $jr_id));
                 $internal=$this->compute_internal_code($seq);
@@ -1096,13 +1099,10 @@ class Acc_Ledger_Fin extends Acc_Ledger
         }
         catch (Exception $e)
         {
-            $r='<span class="error">'.
-                    'Erreur dans l\'enregistrement '.
-                    __FILE__.':'.__LINE__.' '.
-                    $e->getMessage();
+
             $this->db->rollback();
             record_log($e);
-            throw new Exception($r);
+            throw $e;
         }
         $this->db->commit();
         if ($acc_currency->get_id()==0)

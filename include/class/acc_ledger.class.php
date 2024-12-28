@@ -1644,11 +1644,9 @@ class Acc_Ledger  extends jrn_def_sql
         }
         catch (Exception $e)
         {
-              record_log($e);
+            record_log($e);
             $this->db->rollback();
-            echo _('OPERATION ANNULEE ');
-            echo '<hr>';
-            echo __FILE__.__LINE__.$e->getMessage();
+            echo_warning(_('OPERATION ANNULEE voir log'));
             exit();
         }
         $this->db->commit();
