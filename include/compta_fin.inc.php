@@ -116,7 +116,16 @@ if ( isset($_POST['confirm']))
 		echo '</div>';
 
 		echo '<div class="content">';
-		$a= $Ledger->insert($_POST);
+        try {
+		    $a= $Ledger->insert($_POST);
+
+        } catch (\Exception $e) {
+            if ( $e->getCode()==EXC_BALANCE)
+                echo_warning(_("enregistrement annulé: balance , voyer le fichier log"));
+            else
+                echo_warning($e->getMessage());
+            return;
+        }
 		echo '<h1>'._('Enregistrement').' </h1>';
 		echo '<div class="content">';
 		echo $a;

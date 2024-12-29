@@ -556,28 +556,27 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             bcscale(4);
             // variable :   $tot_amount  float : total amount of the purchase (debit)
             $tot_amount=0;
+
             // variable :  $tot_tva float : total amount of the VAT
             $tot_tva=0;
 
+            // variable: $tot_debit float : amount on debit side
             $tot_debit=0;
+
             $this->db->start();
-            // variable :  $tot_nd float total not Deductible
-            $tot_nd=0;
-            // variable :  $tot_perso float total private amount
-            $tot_perso=0;
-            // variable :  $tot_tva_nd float total vat not deductible
-            $tot_tva_nd=0;
 
-            // variable :  $tot_tva_ndded float total vat not deductible - deductible via another tax
-            $tot_tva_ndded=0;
 
-            $tot_tva_reversed=0; //@todo to remove
+            // variable: $tot_tva_reversed float total VAT autoreverse, to deduce from supplier's amount
+            $tot_tva_reversed=0;
 
             // variable :  $tva array that will contain all the VAT Amount
             $tva=array();
 
             // variable :  $tva_reverse array that contain all the VAT autoreverse AND negative
             $tva_reverse = array();
+
+            // variable :  $tva_reverse_credit array that contain all the VAT autoreverse for credit
+            $tva_reverse_credit = array();
 
             // variable :  $tot_amount_cur : total amount in currency
             $tot_amount_cur=0;
@@ -600,7 +599,6 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 if ($g_parameter->MY_TVA_USE=='Y')
                 {
                     $idx_tva=trim(${'e_march'.$i.'_tva_id'});
-                    \Noalyss\Dbg::echo_var(1," idx_tva [$idx_tva]",);
                     $oTva=Acc_Tva::build($this->db,$idx_tva);
 
                     $oTva->load();
@@ -650,13 +648,16 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
                
                 /* compute ND */
+                // variable: $save_amount_vat total float  amount of VAT before changing due to NOT DEDUCTIBLE
                 $save_amount_vat=$acc_amount->amount_vat;
                 $this->compute_no_deductible($acc_amount, $fiche);
                 $acc_amount->correct();
-                // TVA which avoid 
-                $acc_amount->amount_unpaid=($tva_both == 1 ) ? $save_amount_vat :0 ;
-                $tot_tva_reversed=bcadd($tot_tva_reversed,$acc_amount->amount_unpaid);
-                
+                // TVA which avoid
+                if ( $tva_both == 1 ) {
+                    $acc_amount->autoreverse=$save_amount_vat;
+                    $tot_tva_reversed=bcadd($tot_tva_reversed,$save_amount_vat);
+                }
+
 
               
                 $tot_amount=round(bcadd($tot_amount,$acc_amount->amount),2);
@@ -700,13 +701,16 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 if ( $g_parameter->MY_TVA_USE=='Y')
                 {
                     $tva_item=$acc_amount->amount_vat;
-                    $tva[$idx_tva]=(isset( $tva[$idx_tva]))? $tva[$idx_tva]:0;
-                    if ($tva_both == 0 || $tva_item >= 0){
+
+                    if ($tva_both == 0 ){
+                        $tva[$idx_tva]=(isset( $tva[$idx_tva]))? $tva[$idx_tva]:0;
                         $tva[$idx_tva]=bcadd($tva[$idx_tva], $tva_item);
                     }else {
                         // $tva_item  < 0 && $tva_both == 1
                         $tva_reverse[$idx_tva]=(isset($tva_reverse[$idx_tva]))?$tva_reverse[$idx_tva]:0;
                         $tva_reverse[$idx_tva]=bcadd($tva_item,$tva_reverse[$idx_tva]);
+                        $tva_reverse_credit[$idx_tva]=(isset($tva_reverse_credit[$idx_tva]))?$tva_reverse_credit[$idx_tva]:0;
+                        $tva_reverse_credit[$idx_tva]=bcadd($save_amount_vat,$tva_reverse_credit[$idx_tva]);
                     }
                 }
                 /* Save the stock */
@@ -760,7 +764,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                                 ,$acc_amount->nd_ded_vat    /* 10 */
                                 ,$acc_amount->amount_perso  /* 11 */ 
                                 ,$e_client  /* 12 */
-                                , $acc_amount->amount_unpaid /*13*/
+                                , $acc_amount->autoreverse /*13*/
                                 ,$price_euro /* 14 */
                            ));
                            
@@ -783,7 +787,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                                 ,$acc_amount->nd_ded_vat    /* 10 */
                                 ,$acc_amount->amount_perso  /* 11 */ 
                                 ,$e_client  /* 12 */
-                                , $acc_amount->amount_unpaid /*13*/
+                                , $acc_amount->autoreverse /*13*/
                                 ,$price_euro /* 14 */
                            ));
                 }
@@ -890,30 +894,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     $acc_operation->type='d';
                     $acc_operation->periode=$tperiode;
                     if ( $value > 0 ) $tot_debit=bcadd($tot_debit,abs($value));
-                    if ( $oTva->get_parameter("both_side") == 1 && $value ==0 ) continue;
                     $acc_operation->insert_jrnx();
-                    // if TVA is on both side, we deduce it immediately
-                    
-                    if ( $oTva->get_parameter("both_side")==1 )
-                    {
-                        // $x temp variable is the tva_reverse_account and will be used to check $poste_vat
-                        $x=$oTva->get_parameter("tva_reverse_account");
-                        $poste_vat =(trim($x??"")=="")? $oTva->get_side('c'):$x;
-                        if ( $poste_vat == '#')
-                        {
-                            $poste_vat=$oTva->get_side('d');
-                        }
-                        $acc_operation=new Acc_Operation($this->db);
-                        $acc_operation->date=$e_date;
-                        $acc_operation->poste=$poste_vat;
-                        $acc_operation->amount=$value;
-                        $acc_operation->grpt=$seq;
-                        $acc_operation->jrn=$p_jrn;
-                        $acc_operation->type='c';
-                        $acc_operation->periode=$tperiode;
-                        $acc_operation->insert_jrnx();
-                        //if ( $value < 0 ) $tot_debit=bcadd($tot_debit,abs($value));
-                    }
 
                 } // LOOP : foreach $tva
                 foreach ($tva_reverse as  $i => $value) {
@@ -936,7 +917,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     $acc_operation->insert_jrnx();
 
                     // if TVA is on both side, we deduce it immediately
-                    $poste_vat = $oTva->get_side('c');
+                    // $x temp variable is the tva_reverse_account and will be used to check $poste_vat
+                    $x=$oTva->get_parameter("tva_reverse_account");
+                    $poste_vat =(trim($x??"")=="")? $oTva->get_side('c'):$x;
+
                     if ( $poste_vat == '#')
                     {
                         $poste_vat=$oTva->get_side('d');
@@ -944,7 +928,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     $acc_operation = new Acc_Operation($this->db);
                     $acc_operation->date = $e_date;
                     $acc_operation->poste = $poste_vat;
-                    $acc_operation->amount = $value;
+                    $acc_operation->amount = $tva_reverse_credit[$i];
                     $acc_operation->grpt = $seq;
                     $acc_operation->jrn = $p_jrn;
                     $acc_operation->type = 'c';
@@ -952,7 +936,6 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                     $acc_operation->insert_jrnx();
                     $tot_debit = bcadd($tot_debit, $value);
                     $tot_debit = round($tot_debit, 2);
-                    $n_both = $value;
                 } //LOOP: foreach $tva_reverse
             }
 
@@ -963,10 +946,6 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             // Total DEB
             $acc_operation->amount=$this->db->get_value("select sum(j_montant) from jrnx where j_grpt = $1 and j_debit='t'",
                     array($seq));
-            if ( DEBUGNOALYSS > 1 ) { 
-                echo __LINE__." amount ".$acc_operation->amount."<br>"; 
-            
-            }
             $acc_operation->desc=$e_comm;
             $acc_operation->grpt=$seq;
             $acc_operation->jrn=$p_jrn;
@@ -978,7 +957,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $acc_operation->currency_rate_ref=$currency_rate_ref->get_rate();
             
             if ( ! $this->jr_id=$acc_operation->insert_jrn() ) {
-                throw new Exception (_("Erreur de balance"));
+                throw new Exception (_("Erreur de balance"),EXC_BALANCE);
             }
             $this->pj=$acc_operation->update_receipt();
 
@@ -1162,14 +1141,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         }//end try
         catch (Exception $e)
         {
-              record_log($e);
-            echo '<span class="error">'.
-            'Erreur dans l\'enregistrement '.
-            __FILE__.':'.__LINE__.' '.
-            $e->getMessage().$e->getMessage();
-            record_log($e->getMessage());
+           record_log($e);
             $this->db->rollback();
-            throw  new Exception($e);
+            throw  $e;
         }
         $this->db->commit();
         return $internal;

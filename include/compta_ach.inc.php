@@ -105,7 +105,16 @@ if (isset($_POST['record']))
 		echo '<div class="content">';
 
 		$Ledger = new Acc_Ledger_Purchase($cn, $post_jrn);
-		$internal = $Ledger->insert($_POST);
+
+        try {
+		    $internal = $Ledger->insert($_POST);
+        } catch (\Exception $e) {
+            if ( $e->getCode()==EXC_BALANCE)
+                echo_warning(_("enregistrement annulé: balance , voyer le fichier log"));
+            else
+                echo_warning($e->getMessage());
+            return;
+        }
 
 
 		/* Save the predefined operation */

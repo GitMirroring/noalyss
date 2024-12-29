@@ -1335,22 +1335,63 @@ function is_msie()
     return $is_msie;
 }
 /**
- *@brief  Record an error message into the log file of the server.
+ *@brief  Record an error message into the log file of the server or in the log folder of NOALYSS
  * Record also the GET and POST data
- * @param string $p_message
+ * @param  $p_message string message to display
  */
 function record_log($p_message)
 {
-    if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
+    $date=date('d.m.y');
+    // variable: $handle_log resource on log file ,
+    $handle_log=fopen(NOALYSS_BASE."/log/noalyss-{$date}.log","a+");
 
-        error_log("noalyss exception ".$p_message->getMessage(),0);
-        error_log("noalyss exception".$p_message->getTraceAsString(),0);
+    if ($handle_log == false )
+    {
+
+        if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
+
+            error_log("noalyss exception ".$p_message->getMessage(),0);
+            error_log("noalyss exception".$p_message->getTraceAsString(),0);
+        } else {
+            error_log("noalyss".var_export($p_message,true),0);
+
+        }
+        error_log("noalyss GET [".json_encode($_GET,0,10)."]");
+        error_log("_POST [".json_encode($_POST,0,10)."]",0);
     } else {
-        error_log("noalyss".var_export($p_message,true),0);
+        if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
+
+            error_log("noalyss exception ".$p_message->getMessage(),0);
+            error_log("noalyss exception".$p_message->getTraceAsString(),0);
+        } else {
+            error_log("noalyss".var_export($p_message,true),0);
+
+        }
+        
+        $now=date('y-m-d H:i');
+        fwrite ($handle_log,str_repeat("=", 80)."\n");
+        fwrite ($handle_log,"ERROR: {$now}\n");
+        fwrite($handle_log,"noalyss GET [".var_export($_GET,true)."]");
+        fwrite ($handle_log,"\n");
+        fwrite($handle_log,"_POST [".var_export($_POST,true)."]");
+        fwrite ($handle_log,"\n");
+        if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
+
+            fwrite($handle_log,"noalyss exception ".$p_message->getMessage());
+            fwrite ($handle_log,"\n");
+            fwrite($handle_log,"noalyss exception".$p_message->getTraceAsString());
+            fwrite ($handle_log,"\n");
+        } else {
+            fwrite($handle_log,"noalyss".var_export($p_message,true));
+            fwrite ($handle_log,"\n");
+
+        }
+
+        fwrite ($handle_log,str_repeat("=", 80)."\n");
+
 
     }
-    error_log("noalyss GET [".json_encode($_GET,0,10)."]");
-    error_log("_POST [".json_encode($_POST,0,10)."]",0);
+
 }
 if(!function_exists('tracedebug')) {
   function tracedebug($file,$var, $label = NULL) {
