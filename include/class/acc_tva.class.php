@@ -95,7 +95,7 @@ class Acc_Tva
             return $this->$idx;
         }
 
-        echo  (__FILE__.":".__LINE__."AT97:Erreur attribut inexistant [$p_string]");
+        throw new Exception("ACC98"."Attribut inexistant $p_string",EXC_INVALID);
     }
     public function set_parameter($p_string,$p_value)
     {
@@ -105,7 +105,7 @@ class Acc_Tva
             $this->$idx=$p_value;
         }
         else
-            throw new Exception("Attribut inexistant $p_string");
+            throw new Exception("ACC108"."Attribut inexistant $p_string",EXC_INVALID);
 
 
     }

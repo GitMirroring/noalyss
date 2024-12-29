@@ -212,6 +212,8 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                         $tva = new Acc_Tva($cn, $q['qp_vat_code']);
                         $tva->load();
                         $sym_tva = h($tva->get_parameter('label'));
+                        $x=($g_user->get_vat_code_preference()==1)?$tva->get_parameter('tva_code'):$tva->get_parameter('id');
+                        $sym_tva .= sprintf('[%s]',$x);
                     }
                     if ($owner->MY_UPDLAB == 'Y')
                     {
