@@ -53,6 +53,7 @@ class ITva_Popup extends HtmlInput
      * by default it is 'popup_select_tva(this)';
      */
     private $filter; //!< filter the VAT by ledger PURCHASE or SALE or NO FILTER, default=NO
+    static $vat_code=0; //<! 0 show the numeric ID or 1 for CODE
 
     public function __construct($p_name = null, $p_value = "", $p_id = "")
     {
@@ -129,9 +130,10 @@ class ITva_Popup extends HtmlInput
         // code is a span containing the label of the VAT (see add_label)
         if (isset($this->code)) {
             if ($this->cn != NULL) {
+                $cnx=Dossier::connect();
                 /* check if tva_id == integer */
                 if (trim($this->value) != '' && isNumber($this->value) == 1 && strpos($this->value, ',') === false)
-                    $this->code->value = $this->cn->get_value('select tva_label from tva_rate where tva_id=$1',
+                    $this->code->value = $cnx->get_value('select tva_label from tva_rate where tva_id=$1',
                         array($this->value));;
             }
             $this->set_attribute('jcode', $this->code->name);
@@ -139,7 +141,13 @@ class ITva_Popup extends HtmlInput
 
         }
         $strAttribut = $this->get_node_attribute();
-
+        // show tva code
+        if ( self::$vat_code == 1) {
+            if ( isNumber($this->value ) == 1) {
+                $cnx=Dossier::connect();
+                $this->value=$cnx->get_value('select tva_code from tva_rate where tva_id=$1',[$this->value]);
+            }
+        }
 
         $str = '<input type="TEXT"  class="input_text" name="%s" value="%s" id="%s" placeholder="%s" size="6" %s %s 
 list="dl_tva_%s" autocomplete="off">';
@@ -226,6 +234,19 @@ list="dl_tva_%s" autocomplete="off">';
         $this->code = new ISpan($p_code);
     }
 
+    /**
+     * @brief show the Numeric ID or the code
+     * @param int $vat_code 0 for numeric , 1 for Code
+     * @return void
+     * @throws Exception if $vat_code is
+     */
+    static function set_vat_code(int $vat_code)
+    {
+        if (isNumber($vat_code)==0){
+            throw new Exception("VAT_CODE [{$vat_code}]: invalide data",EXC_INVALID);
+        }
+        self::$vat_code= $vat_code;
+    }
     static public function test_me()
     {
 
@@ -240,4 +261,5 @@ list="dl_tva_%s" autocomplete="off">';
         echo $tva->dbutton();
 
     }
+
 }

@@ -1819,7 +1819,8 @@ class Noalyss_User
     }
 
     /**
-     *
+     *@brief first day in calendar
+     * @see IDate::set_firstDate(
      */
     function get_first_week_day()
     {
@@ -1848,6 +1849,24 @@ class Noalyss_User
                if(DEBUGNOALYSS>1) { echo "=> [$key] cleaned";}
             }
         }
+    }
+    /**
+     *@brief Get preference , either the user see the numeric id for VAT or its code, if the preference doesn't exist
+     * by default , 0 is saved in ACCOUNT_REPOSITORY
+     * @see ITva_Popup::set_vat_code()
+     * @see ITva_Popup
+     */
+    function get_vat_code_preference():int
+    {
+        $repocn=new Database();
+        $result=$repocn->get_value("select parameter_value from user_global_pref where parameter_type=$1 and user_id=$2 ",
+            array("vat_code", $this->login));
+        if ($repocn->count()==0)
+        {
+            $this->save_global_preference("vat_code", 0);
+            return 0;
+        }
+        return $result;
     }
 }
 
