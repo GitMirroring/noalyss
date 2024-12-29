@@ -192,6 +192,22 @@ if ( $action == 'display_form' )
 
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <?=_('Utilisation id TVA ou code')?>
+                </td>
+                <td>
+                    <?php
+                    $selVATCode=new ISelect('selVATCode');
+                    $selVATCode->value=array(
+                        ['label'=>'numérique','value'=>0],
+                        ['label'=>'Code','value'=>1]
+                    );
+                    $selVATCode->selected=$g_user->get_vat_code_preference();
+                    echo $selVATCode->input();
+                    ?>
+                </td>
+            </tr>
 	    </table>
 	</fieldset>
         <fieldset>
@@ -305,6 +321,7 @@ if ($action == 'save')
     $csv_decimal=$http->post("csv_decimal","number");
     $csv_encoding=$http->post("csv_encoding");
     $firstday=$http->post("selFirstDay","number");
+    $vatCode=$http->post("selVATCode","number");
     $password="OK";
     $msg ="";
     if (noalyss_strlentrim($pass_1) != 0 && noalyss_strlentrim($pass_2) != 0)
@@ -344,6 +361,7 @@ if ($action == 'save')
     $g_user->save_global_preference('csv_decimal', $csv_decimal);
     $g_user->save_global_preference('csv_encoding', $csv_encoding);
     $g_user->save_global_preference('first_week_day', $firstday);
+    $g_user->save_global_preference('vat_code', $vatCode);
     $g_user->save_email($p_email);
 
     $_SESSION[SESSION_KEY.'g_theme']=$style_user;
