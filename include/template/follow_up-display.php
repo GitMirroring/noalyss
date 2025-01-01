@@ -384,10 +384,13 @@ function small(p_id_textarea){
           echo $description->input();
           echo '</div>';
     }
+    $aFile=[];
+    if ( count($acomment) > 0 ) {
+
         // link to files to download
         $aFile=$this->db->get_array('select d_id,d_filename,d_description,d_mimetype
                 from  action_comment_document 
-                join document  on (d_id=document_id) where ag_id=$1'
+                join document  on (d_id=document_id) where action_gestion_comment_id=$1'
             , array($acomment[0]['agc_id']));
         if ( ! empty ($aFile)) {
             echo '<div style="left:10%">';
@@ -403,6 +406,7 @@ function small(p_id_textarea){
             }
             echo '</div>';
         }
+    }
 
         //---------------------------------- Comment -----------------------------------------------------------------------
    
