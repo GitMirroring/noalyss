@@ -25,14 +25,13 @@ if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
     $search_card->css_size='97%';
     $search_card_js=sprintf('onclick="boxsearch_card(\'%d\')"',dossier::id());
     echo Icon_Action::card( "$('box_search_card').show()");
-    echo '<div id="box_search_card" style="display:none;width:20rem" class="inner_box">';
-    echo HtmlInput::title_box(_("recherche"), "box_search_card","hide");
-    echo _('Recherche de fiche');
-    echo '<p class="info">';
+    echo '<div id="box_search_card" style="display:none;width:20rem;padding:0" class="inner_box">';
+    echo HtmlInput::title_box(_('Recherche de fiche'), "box_search_card","hide");
+    echo '<p class="info p-1" >';
    echo _("Donnez une partie du nom, prénom, de la description, du poste comptable, du n° de TVA,quick code ... "
            . " de la fiche" )    ;
     echo '</p>';
-    echo '<p class="ml-1">';
+    echo '<p class="p-1">';
     echo $search_card->input();
     echo '</p>';
     $create_card_js='onclick="select_card_type({});"';
