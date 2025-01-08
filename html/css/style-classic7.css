@@ -29,6 +29,7 @@ BODY {
      --accent-color:lightblue;
     --input-color:#4b4b91;
     --color-red:Crimson;
+    --color-blue2: cornflowerblue;
 }
 input{
     font-family: 'OpenSansRegular';
@@ -524,7 +525,7 @@ tr.highlight {
      color: darkred !important;
      background-color: lightgoldenrodyellow;
      color: antiquewhite !important;
-     background-color: lightskyblue;
+     background-color: var(--color-blue2);
      padding: 2px 10px 2px 10px;
  }
 
