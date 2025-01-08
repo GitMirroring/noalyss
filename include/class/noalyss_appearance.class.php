@@ -33,7 +33,7 @@ class Noalyss_Appearance
 {
     static private $aCSSColor = ['H2' => '#9fbcd6',
         'MENU1' => '#000074',
-        'BODY' => '#ffffff',
+        'BODY' => '#fafafa',
         'MENU2' => '#3d3d87',
         'MENU1-SELECTED' => '#000074',
         'TR-ODD'=>'#DCE7F5',
@@ -44,7 +44,7 @@ class Noalyss_Appearance
         'FONT-MENU2' => '#ffffff',
         'FONT-TABLE' => '#222bd0',
         'FONT-DEFAULT' => '#000074',
-        'FOLDER' => '#ffffff',
+        'FOLDER' => '#fafafa',
         'FONT-TABLE-HEADER' =>'#0C106D',
         'FONT-FOLDER' => '#000074'];
     static private $aCSSColorName = array();
