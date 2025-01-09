@@ -35,7 +35,7 @@ class Noalyss_Appearance
         'MENU1' => '#000074',
         'BODY' => '#fafafa',
         'MENU2' => '#3d3d87',
-        'MENU1-SELECTED' => '#000074',
+        'MENU1-SELECTED' => '#506cb8',
         'TR-ODD'=>'#DCE7F5',
         'TR-EVEN'=>'#ffffff',
         'INNER-BOX'=>'#DCE1EF',

@@ -3346,7 +3346,7 @@ margin:1px;
     color:white;
 }
 .nav-pills .nav-link.active {
-    background-color: hsl(224, 42%, 51.7%) !important;
+    background-color: #506cb8 !important;
      border-radius: 0px;
 } 
 .nav-pills .nav-link {
@@ -3368,7 +3368,7 @@ margin:1px;
  /* MD */
  @media (min-width: 768px) {
      .nav-level0 > li >a  {
-         padding:6%;
+          padding:1.1rem;
      }
  
  }
@@ -3402,7 +3402,7 @@ margin:1px;
  /* MD */
  @media (min-width: 768px) {
      .nav-level2 .nav-item  {
-         padding : 0%;
+         padding : 0;
      }
  }
 
