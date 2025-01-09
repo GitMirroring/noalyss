@@ -56,6 +56,7 @@ if ( $ext->search($http->request("plugin_code")) != -1 )
       {
 		exit();
       }
+    define ('ALLOWED',True);
     /* call the ajax script */
     require_once(NOALYSS_PLUGIN.DIRECTORY_SEPARATOR.dirname(trim($ext->getp('me_file'))).DIRECTORY_SEPARATOR.'raw.php');
   }
