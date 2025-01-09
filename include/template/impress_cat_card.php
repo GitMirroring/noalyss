@@ -21,5 +21,18 @@
 	<td><?php echo _('Pour toutes les catégories')?></td>
 	<td><?php echo $str_icall?></td>
 </tr>
+<tr id="inactive_card">
+        <td><?=_('Inclure les fiches inactives')?></td>
+        <td><?=$str_inactive?></td>
 </tr>
 </table>
+<script>
+    id$('histo').addEventListener('click',function(evt) {
+        let val = id$('histo').value;
+        if ( val == -1 || val == 3) {
+            id$('inactive_card').show();
+        } else {
+            id$('inactive_card').hide();
+        }
+    });
+</script>

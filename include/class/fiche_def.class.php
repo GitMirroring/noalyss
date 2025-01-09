@@ -337,16 +337,18 @@ $order
      * \brief Get all the card where the fiche_def.fd_id is given in parameter
      * \param $step = 0 we don't use the offset, page_size,...
      *        $step = 1 we use the jnr_bar_nav
-     *
+     * \param $inactive int possible values : 1  = inactive included, 0 = only active ones (default 1)
      * \return array ('f_id'=>..,'ad_value'=>..)
      *\see fiche
      */
-    function get_by_type($step=0)
+    function get_by_type($step=0,$inactive=1)
     {
+        // var $cond_active string SQL cond for filtering active or not
+        $cond_active=($inactive == 1)?"":" and f_enable='1' ";
         $sql="select f_id,ad_value
              from
              fiche join fiche_detail using(f_id)
-             where ad_id=1 and fd_id=$1 order by 2";
+             where ad_id=1 and fd_id=$1 $cond_active order by 2";
 
         // we use navigation_bar
         if ($step == 1  && $_SESSION[SESSION_KEY.'g_pagesize'] != -1   )
@@ -361,18 +363,24 @@ $order
         return $Ret;
     }
     /*!
-     * \brief Get all the card where the fiche_def.frd_id is given in parameter
-     * \return array of fiche or null is nothing is found
+     * \brief Get all the card where the fiche_def.frd_id is given in parameter, it is the template for category
+     *\param $inactive int possible values : 1  = inactive included, 0 = only active ones (default 1)
+     * \param $template_category int FICHE_DEF_REF.FRD_ID
+     * \return array of Fiche or null is nothing is found
+     *
      */
-    function get_by_category($p_cat)
+    function get_by_category($template_category,$inactive=1)
     {
+        // var $cond_active string SQL cond for filtering active or not
+        $cond_active=($inactive == 1)?"":" and f_enable='1' ";
         $sql="select f_id,ad_value
              from
              fiche join fiche_def  using(fd_id)
 	     join fiche_detail using(f_id)
-             where ad_id=1 and frd_id=$1 order by 2 ";
+             where ad_id=1 and frd_id=$1 $cond_active 
+             order by 2 ";
 
-        $Ret=$this->cn->exec_sql($sql,array($p_cat));
+        $Ret=$this->cn->exec_sql($sql,array($template_category));
         if ( ($Max=Database::num_row($Ret)) == 0 )
             return null;
         $all[0]=new Fiche($this->cn);

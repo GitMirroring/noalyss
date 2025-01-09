@@ -39,7 +39,7 @@ if  ( isset ($_GET['fd_id']))
 {
     $fiche_def=new Fiche_Def($cn,$http->get('fd_id',"number"));
     $fiche=new Fiche($cn);
-    $e=$fiche_def->get_by_type();
+    $e=$fiche_def->get_by_type(inactive: $http->request('inactive'));
     $o=0;
     //  Heading
     $fiche_def->GetAttribut();

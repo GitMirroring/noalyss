@@ -830,4 +830,23 @@ where
         $this->g_connection->exec_sql('delete from tmp_pcmn where pcm_val=$1',['600TESTALPHA']);
       
     }
+
+    /**
+     * @testdox test Fiche::get_fiche_def
+     * @covers Fiche::get_fiche_def
+     * @return void
+     */
+    public function testGetFicheDef()
+    {
+        $res=Fiche::get_fiche_def($this->g_connection, 5);
+        $this->assertEquals(7,count($res),"number of all cards incorrect ");
+        $this->g_connection->exec_sql ('update fiche set f_enable=$1 where f_id = $2 or f_id=$3',[0,34,35]);
+        $res=Fiche::get_fiche_def($this->g_connection, 5);
+        $this->assertEquals(7,count($res),"number of all cards incorrect ");
+        $res=Fiche::get_fiche_def($this->g_connection, 5,inactive:0);
+        $this->assertEquals(5,count($res),"number of all cards incorrect ");
+
+
+        $this->g_connection->exec_sql ('update fiche set f_enable=$1 where f_id = $2 or f_id=$3',[1,34,35]);
+    }
 }
