@@ -21,5 +21,8 @@
 	<td><?php echo _('Pour toutes les catégories')?></td>
 	<td><?php echo $str_icall?></td>
 </tr>
+    <tr>
+        <td><?=_('Inclure les fiches inactives')?></td>
+        <td><?=$str_inactive?></td>
 </tr>
 </table>

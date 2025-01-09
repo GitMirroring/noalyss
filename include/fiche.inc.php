@@ -33,30 +33,46 @@ global $g_user, $g_failed;
 /**
  * Show first the form
  */
-/* category */
+/* var categorie ISelect select card category */
 $categorie = new ISelect('cat');
 $categorie->value = $cn->make_array("select fd_id,fd_label||' ('||(select count(*) from fiche where fiche.fd_id=fiche_def.fd_id)::text||')' from fiche_def order by fd_label");
 $categorie->selected = $http->get('cat','number',0);
+
+// var $str_categorie  string
 $str_categorie = $categorie->input();
 $ac = $http->request('ac');
+
+// var $icall ICheckBox : all card or only the current category
 $icall = new ICheckBox("allcard", 1);
 $icall->selected = (isset($_GET['allcard'])) ? 1 : 0;
+// var $str_icall string
 $str_icall = $icall->input();
-/* periode */
+
+/* var $exercice string current exercice (depending of user's period preferences) */
 $exercice = $g_user->get_exercice();
 $iperiode = new Periode($cn);
 list ($first, $last) = $iperiode->get_limit($exercice);
 
+/*
+ * var $periode_start IDate start date
+ * var $periode_end IDate end date
+*/
 $periode_start = new IDate('start');
 $periode_end = new IDate('end');
 
 $periode_start->value =  $http->get('start',"date",$first->first_day());
 $periode_end->value =  $http->get('end','date', $last->last_day());
 
+/*
+ * var $str_start string date dd.mm.yyyy
+ * var $str_end string date dd.mm.yyyy
+ */
 $str_start = $periode_start->input();
 $str_end = $periode_end->input();
 
-/* histo ou summary */
+
+
+/* var $histo ISelect choice  */
 $histo = new ISelect('histo');
 $histo->value = array(
 	array('value' => -1, 'label' => _('Liste')),
@@ -76,6 +92,11 @@ $histo->javascript = 'onchange="if (this.value==3 || this.value==-1) {
 
 $histo->selected =  $http->get('histo',"number", -1);
 $str_histo = $histo->input();
+
+// $inactive checkbox include inactive cards
+$inactive = new ICheckbox ('inactive',1);
+$inactive->selected=$http->request('inactive','string',0);
+$str_inactive=$inactive->input();
 ?>
 <div class="content">
 
@@ -152,7 +173,7 @@ if ($histo->selected   == -1)
 			 */
 			if (isset($_POST['move'])&& $_POST['move'] == 1)
 			{
-                                $move_to=$http->post("move_to","number");
+                $move_to=$http->post("move_to","number");
 				for ($i = 0; $i < count($ack); $i++)
 				{
 					$fiche = new Fiche($cn, $ack[$i]);
@@ -188,15 +209,29 @@ if ($histo->selected   == -1)
 		}
 	}
 	$sql = "select f_id from fiche ";
-	if ($allcard == 1)
+
+    // build SQL : all cards or only the selected category , with inactive cards included or only active
+	if ($allcard == 1 && $inactive->selected == 1)
 	{
+        // all categories , including inactive cards
 		$cond = "";
-	}
-	else
+	}elseif ($allcard == 1 && $inactive->selected== 0)
+    {
+        // all categories and only active cards
+        $cond = " where f.f_enable = '1' ";
+    }
+	elseif ($allcard == 0 && $inactive->selected == 1)
 	{
+        // one categorie , including inactive cards
             $p_cat=$http->get("cat","number");
             $cond = " where f.fd_id = " . sql_string($p_cat);
-	}
+	}elseif ($allcard == 0 && $inactive->selected == 0) {
+        // one categorie , without inactive cards
+        $p_cat=$http->get("cat","number");
+        $cond = " where f.fd_id = " . sql_string($p_cat);
+        $cond .= " and f.f_enable='1'";
+    }
+
 	// Create nav bar
 	$max = $cn->get_value("select count(*) from fiche as f " . $cond);
 

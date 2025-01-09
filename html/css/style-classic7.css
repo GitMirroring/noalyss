@@ -25,8 +25,8 @@ BODY {
     color:darkblue !important;
     background-color:#FCFDFD;
     --hover : rgba(108, 130, 208, 0.9);
-        --border-size:8px;
-     --accent-color:lightblue;
+    --border-size:6px;
+    --accent-color:lightblue;
     --input-color:#4b4b91;
     --color-red:Crimson;
     --color-blue2: cornflowerblue;
