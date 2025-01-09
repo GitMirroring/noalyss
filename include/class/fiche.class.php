@@ -1560,26 +1560,40 @@ class Fiche
         else
             return 1;
     }
-    /*!\brief  get all the card from a categorie
+    /*!
+     * \brief  get all the card from a categorie
      *\param $p_cn database connx
-     *\param $pFd_id is the category id
+     *\param $card_category_id is the category id
      *\param $p_order for the sort, possible values is name_asc,name_desc or nothing
+     * \param $inactive int possible values : 1  = inactive included, 0 = only active ones (default 1)
      *\return an array of card, but only the fiche->id is set
      */
-    static function get_fiche_def($p_cn,$pFd_id,$p_order='')
+    static function get_fiche_def($p_cn,$card_category_id,$p_order='',$inactive=1)
     {
+        // var $cond_active string SQL cond for filtering active or not
+        $cond_active=($inactive == 1)?"":" and f_enable='1' ";
+
         switch ($p_order)
         {
         case 'name_asc':
-            $sql='select f_id,ad_value from fiche join fiche_detail using (f_id) where ad_id=1 and fd_id=$1 order by 2 asc';
+            $sql="select f_id,ad_value from fiche join fiche_detail using (f_id) 
+                     where 
+                         ad_id=1
+                       and fd_id=$1 
+                       $cond_active
+                     order by 2 asc";
             break;
         case 'name_desc':
-            $sql='select f_id,ad_value from fiche join fiche_detail using (f_id) where ad_id=1 and fd_id=$1 order by 2 desc';
+            $sql="select f_id,ad_value from fiche join fiche_detail using (f_id) 
+                     where ad_id=1 
+                       and fd_id=$1
+                     $cond_active 
+                     order by 2 desc";
             break;
         default:
-            $sql='select f_id from fiche  where fd_id=$1 ';
+            $sql="select f_id from fiche  where fd_id=$1 $cond_active ";
         }
-        $array=$p_cn->get_array($sql,array($pFd_id));
+        $array=$p_cn->get_array($sql,array($card_category_id));
 
 	return $array;
     }
