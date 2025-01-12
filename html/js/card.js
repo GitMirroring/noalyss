@@ -701,12 +701,12 @@ function select_card_type(obj)
     queryString+='&ctl='+content;
     queryString+='&op2=st'; 	// st for selecting type
     queryString+='&op=card'; 	// st for selecting type
-    if ( document.getElementById(obj).win_refresh!=undefined)
+    if ( id$(obj).win_refresh!=undefined)
     {
         queryString+='&ref';
     }
     /* if an element id must be updated after creating a new card */
-    if ( document.getElementById(obj).elementId) {
+    if (  id$(obj).elementId) {
         var elementId=id$(obj).elementId;
         queryString+="&eltid="+elementId;
     }
