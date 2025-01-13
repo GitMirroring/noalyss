@@ -1,6 +1,18 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+
+/**
+ * @var $p_type type of display inherited , long or short
+ */
+$cn=Dossier::connect();
+$p=new \Periode($cn);
+try {
+    $today_periode=$p->find_periode(date('d.m.Y'));
+    $today_hidden=\HtmlInput::hidden('today', $today_periode);
+} catch (\Exception $e) {
+    $today_hidden='';
+}
 ?>
 <div class="pc_calendar" id="user_cal" style="width:100%">
 <?php echo $month_year?>
@@ -9,8 +21,17 @@
             dossier::id(),'per_div','calendar_zoom_div','list',$notitle);
     echo HtmlInput::anchor(_('Liste'),''," onclick=\"{$js}\"")   ;
     echo HtmlInput::button_action_add();
+    echo $today_hidden;
  ?>
-    
+    <?php if ($today_hidden != '') :?>
+<script>$('today').gDossier="<?=Dossier::id()?>"
+    $('today').type_display="<?=$p_type?>";
+
+</script>
+   <button class="smallbutton" onclick="change_month($('today'))"> <?=_("Aujourd'hui")?></button>
+    <?php endif;?>
+
+
 <?php if ($zoom == 1 ): ?>    
 <table style="width:100%;height:70%">
     <?php else: ?>
