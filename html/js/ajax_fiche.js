@@ -60,7 +60,7 @@ function errorFid(request,json)
  */
 function ajaxFid(p_ctl)
 {
-    debugger
+
 	try
 	{
 	var gDossier=id$('gDossier').value;

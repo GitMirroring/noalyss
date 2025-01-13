@@ -39,13 +39,25 @@ class Agenda extends Widget
         global $g_user;
         /* others report */
         $cal=new \Calendar();
+
         $cal->default_periode=$g_user->get_periode();
+
+
+        $box= sprintf( '%s_%s',$this->get_widget_code(),$this->get_user_widget_id());
 
         $obj=sprintf("{gDossier:%d,invalue:'%s',outdiv:'%s','distype':'%s'}",
             \Dossier::id(),'per','calendar_zoom_div','cal');
 
        $this->open_div();
-        echo \HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"calendar_zoom($obj)",'n',raw:'&#x1F4C5;');
+       // var $refresh string javascript to refresh the widget
+       $refresh='';
+       if ( $this->get_var_name() !="") {
+            $refresh=Widget::build_refresh_js( $this->get_widget_code(),
+                $this->get_user_widget_id(),
+                $this->get_var_name());
+
+       }
+        echo \HtmlInput::title_box(_('Calendrier'),'cal_div','zoom',"calendar_zoom($obj)",'n',raw:'&#x1F4C5;',refresh: $refresh);
         echo $cal->display('short',0);
         $this->close_div();
     }

@@ -117,4 +117,7 @@ include_once NOALYSS_INCLUDE."/lib/icon_action.class.php";
     <div id="example_div" style="display:none">
     Ceci est caché
 </div>
-</div>
+</p>
+<p>
+    <?=\Icon_Action::refresh(uniqid(),'alert("1")')?>
+</p>

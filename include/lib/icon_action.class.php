@@ -509,5 +509,15 @@ class Icon_Action
             );
         return $r;
     }
+    static function refresh($p_id,$javascript)
+    {
+        $javascript=str_replace('"', '&quot;',$javascript);
+        //icon-arrows-cw
+        $r=sprintf('<i id="%s" onclick="%s" class="smallicon icon  icon-arrows-cw" style="margin-left:5px"></i>',
+            $p_id,$javascript
+        );
+
+        return $r;
+    }
 
 }

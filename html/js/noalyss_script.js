@@ -4390,10 +4390,11 @@ Widget = function(dossier_id) {
  * Display the widget in the elt box
  * @param box DOMID of the target
  * @param dossier_id
- * @param user_widget_id
- * @param widget_code
+ * @param user_widget_id int
+ * @param widget_code string
+ * @param var_name string name of the variable
  */
-Widget.prototype.display = function (box,user_widget_id,widget_code) {
+Widget.prototype.display = function (box,user_widget_id,widget_code,var_name) {
     try {
 
         var queryString = {
@@ -4401,6 +4402,7 @@ Widget.prototype.display = function (box,user_widget_id,widget_code) {
             'op': 'widget',
             'user_widget_id': user_widget_id,
             'widget_code': widget_code,
+            'var_name':var_name,
             'action': 'widget.display'
         }
         var action = new Ajax.Request(
