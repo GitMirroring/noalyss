@@ -39,7 +39,7 @@ class Agenda extends Widget
         global $g_user;
         /* others report */
         $cal=new \Calendar();
-        $cal->get_preference();
+        $cal->default_periode=$g_user->get_periode();
 
         $obj=sprintf("{gDossier:%d,invalue:'%s',outdiv:'%s','distype':'%s'}",
             \Dossier::id(),'per','calendar_zoom_div','cal');
