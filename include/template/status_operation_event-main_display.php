@@ -21,7 +21,7 @@
  * \file
  * \brief main display for situation
  */
-
+$http=new \HttpInput();
 $Operation=new Follow_Up($cn);
 $last_operation=$Operation->get_today();
 $late_operation=$Operation->get_late();
@@ -38,8 +38,10 @@ $customer_late=$Ledger->get_customer_late();
 
 $gDossier_id=Dossier::id();
 
+// var refresh : string javascript code to refresh this widget
+$refresh=sprintf("event_display_main('%s')",Dossier::id());
 ?>
-  <?php echo HtmlInput::title_box(_("Résumé"),"situation_div",'none','','n')?>
+  <?php echo HtmlInput::title_box(_("Résumé"),"situation_div",'none','','n','','',$refresh)?>
     <table class='result'>
 		<tr>
 			<th>

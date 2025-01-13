@@ -30,12 +30,34 @@ namespace Noalyss\Widget;
  */
 abstract class Widget
 {
+    //!< $var_name string name of the variable in javascript
+    protected $var_name;
+
+
 
     public function __construct(protected int $user_widget_id=0,protected string $widget_code="",protected  $db=null)
     {
         if ($db == null) {
             $this->db=\Dossier::connect();
         }
+        $this->var_name='';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_var_name()
+    {
+        return $this->var_name;
+    }
+
+    /**
+     * @param mixed $var_name
+     */
+    public function set_var_name($var_name):Widget
+    {
+        $this->var_name = $var_name;
+        return $this;
     }
 
     public function get_user_widget_id(): int
@@ -197,7 +219,7 @@ where use_login=$1 order by uw.uw_order
         echo <<<EOF
 <script>
 var {$widgetjs}= new Widget('{$dossier_id}') 
-{$widgetjs}.display('{$box}',{$widget->get_user_widget_id()},'{$widget->get_widget_code()}')
+{$widgetjs}.display('{$box}',{$widget->get_user_widget_id()},'{$widget->get_widget_code()}','{$widgetjs}')
 </script>
 
 
@@ -359,15 +381,43 @@ EOF;
         return $bt;
     }
     /**
-     * @brief display the title and the icon for zooming
+     * @brief display the title and the icon for zooming + refresh if possible
      * @param $title string title of the widget
      */
     function title( $title) {
+        // var $refresh string javascript to refresh the widget
+        $refresh='';
+        if ( $this->get_var_name() !="") {
+            $refresh=Widget::build_refresh_js( $this->get_widget_code(),
+                $this->get_user_widget_id(),
+                $this->get_var_name());
+
+        }
 
         $r='<div class="bxbutton">';
+        $r.=\Icon_Action::refresh(uniqid(), $refresh);
         $r.='<span  id="span_'.uniqid().'" style="float:right;margin-right:5px">'.$this->button_zoom()."</span>";
         $r.='</div>';
         $r.=sprintf('<h2 class="title">%s</h2>',$title);
         echo $r;
+    }
+    /**
+     * @brief build refresh javascript
+     * @param $widget_id int id from DB
+     * @param $widget_code string code of the widget
+     * @param $var_name string name of the js variable
+     */
+    static function build_refresh_js($widget_code,$widget_id,$var_name)
+    {
+        // var $box string DOM ID  of the DIV containing the widget
+        $box= sprintf( '%s_%s',$widget_code,$widget_id);
+        $refresh=sprintf("%s.display('%s','%s','%s','%s')",
+            $var_name,
+            $box,
+            $widget_id,
+            $widget_code,
+            $var_name
+        );
+        return $refresh;
     }
 }

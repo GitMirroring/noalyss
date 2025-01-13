@@ -40,8 +40,11 @@ class Last_Operation extends Widget
     {
         global $cn;
         $this->open_div();
-
-        echo \HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','popup_recherche('.\Dossier::id().')','n');
+        $refresh="";
+        if ( $this->get_var_name() != "") {
+            $refresh = Widget::build_refresh_js($this->widget_code, $this->user_widget_id,$this->var_name);
+        }
+        echo \HtmlInput::title_box(_('Dernières opérations'),"last_operation_box_div",'zoom','popup_recherche('.\Dossier::id().')','n','','',$refresh);
         require_once "last_operation-display.php";
         $this->close_div();
     }

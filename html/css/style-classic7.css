@@ -2795,6 +2795,7 @@ div.menu2 td.mtitle a{
 }
 .icon:hover {
     font-family: "fontello";
+    background-color: transparent;
 }
 *.icon {
     text-decoration: none;

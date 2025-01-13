@@ -44,20 +44,27 @@ try {
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
-
+/**************************************************************************
 // action = display,
+ *
+ *************************************************************************/
 if ($action == 'widget.display') {
     try {
         $widget=\Noalyss\Widget\Widget::build_user_widget($http->request('user_widget_id'),$http->request("widget_code"));
+        $widget?->set_var_name($http->request("var_name"),'string','');
         $widget?->display();
 
     } catch (\Exception $e) {
+        record_log($e);
         echo $e->getMessage();
     }
 
     return;
 }
+/**************************************************************************
 // call from a widget
+ *
+ *************************************************************************/
 if ( $w != "widget") {
     // security
     // widget exists ? Protect against attack when w is a relative path to something else
