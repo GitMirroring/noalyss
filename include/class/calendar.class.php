@@ -32,17 +32,17 @@ class Calendar
 {
     var $current_date;
     private static $nb_day=array(31,28,31,30,31,30,31,31,30,31,30,31);
-    var    $month;         // current month
-    var    $day  ;         // day
-    var    $year;          // year
-    var    $action_div;    // array of action
+    var    $month;         //!<  current month
+    var    $day  ;         //!<  day
+    var    $year;          //!<  year
+    var    $action_div;    //!<  array of action
 
     // following are completed by fill_from_action
-    var    $action;        // array of event - follow-up (T: action_gestion)
-    var    $str_name;      // array of tiers for event - follow-up (T: action_gestion)
-    var    $title;         // array of title for each event - follow-up (T: action_gestion)
-    var    $hour ;         // array of hour for each event - follow-up (T: action_gestion)
-    var $default_periode;   //default periode
+    var    $action;        //!< array of event - follow-up (T: action_gestion)
+    var    $str_name;      //!<  array of tiers for event - follow-up (T: action_gestion)
+    var    $title;         //!<  array of title for each event - follow-up (T: action_gestion)
+    var    $hour ;         //!< array of hour for each event - follow-up (T: action_gestion)
+    var $default_periode;   //!< int default periode (parm_periode.p_id)
 
     function __construct()
     {
