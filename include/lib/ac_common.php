@@ -1341,7 +1341,7 @@ function is_msie()
  */
 function record_log($p_message)
 {
-    $date=date('d.m.y');
+    $date=date('Y.m.d');
     // variable: $handle_log resource on log file ,
     $handle_log=fopen(NOALYSS_BASE."/log/noalyss-{$date}.log","a+");
 
