@@ -809,7 +809,7 @@ $order
         $r.=HtmlInput::submit('remove_cat', _('Effacer'));
         $r.='</form>';
 
-		require NOALYSS_TEMPLATE.'/fiche_def-input_detail.php';
+
 
 		$r.='</fieldset>';
         $r.='<hr>';
