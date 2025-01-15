@@ -51,11 +51,11 @@ function errorFid(request,json)
 /**
  *  this function fills the data from fid.php,
  * @param {object or string} p_ctl  : field of the input, : object or string
- *  possible object member
- * - label field to update with the card's name
- * - price field to update with the card's price
- * - tvaid field to update with the card's tva_id
- * - jrn field to force the ledger
+         possible object member
+          - label field to update with the card's name
+          - price field to update with the card's price
+          - tvaid field to update with the card's tva_id
+          - jrn field to force the ledger
   *@see successFid errorFid fid.php
  */
 function ajaxFid(p_ctl)
@@ -130,8 +130,8 @@ function ajaxFid(p_ctl)
 }
 /**
  callback function for ajax
- * @param request : object request
- * @param json : json answer
+ * @param request {object} object request
+ * @param json : {json} answer
 @verbatim
  {"answer":"ok",
  "flabel":"none",
@@ -183,7 +183,8 @@ function ajax_error_saldo(request,json)
 {
     alert_box('ERRSAL'+content[48]);
 }
-/*!\brief this function get the saldo
+/**
+ * this function get the saldo
  * \param p_ctl the ctrl where we take the quick_code
  */
 function ajax_saldo(p_ctl)
@@ -207,7 +208,7 @@ function ajax_saldo(p_ctl)
                );
 
 }
-/*!\brief callback function for ajax
+/** callback function for ajax
  * \param request : object request
  * \param json : json answer */
 function ajax_success_saldo(request,json)
@@ -226,7 +227,7 @@ function ajax_get_success(request,json)
     id$(answer.ctl).show();
     id$(answer.ctl).innerHTML=answer.html;
 }
-/*!\brief callback function for ajax_get when fails
+/** callback function for ajax_get when fails
 */
 function ajax_get_failure(request,json)
 {
@@ -234,14 +235,17 @@ function ajax_get_failure(request,json)
 
 }
 
+/**
+ * @class category_card
+ */
 var category_card={};
 
 /**
  * Add an attribute selected in "sel"+p_object_name into the list (id:p_object_name+"_list")
  * this attribut will have the ID:p_object_name+"_elt"+ad_id (ad_id = attr_def.ad_id)
- * @param int p_dossier dossier nb
- * @param int p_fiche_def_ref is the frd_id
- * @param string p_object_name , name of the prefix for id 
+ * @param {int} p_dossier dossier nb
+ * @param {int} p_fiche_def_ref is the frd_id
+ * @param {string} p_object_name , name of the prefix for id
  */
 category_card.add_attribut=function (p_dossier,p_fiche_def_ref,p_object_name) {
     var select=id$("sel"+p_object_name);
