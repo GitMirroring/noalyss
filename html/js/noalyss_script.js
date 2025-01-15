@@ -2423,12 +2423,20 @@ function set_preference(p_dossier) {
     }
 
 }
+////////////////////////////////////////////////////////
+/**
+ *@class Bookmark
+ */
 
+////////////////////////////////////////////////////////
+var Bookmark = function() {
+
+}
 /**
  *  Display user's bookmark
- *
+ * @param p_dossier {int} Dossier id
  */
-function show_bookmark(p_dossier) {
+ Bookmark.prototype.show = function (p_dossier) {
     try {
         waiting_box();
         removeDiv('bookmark_div');
@@ -2449,6 +2457,7 @@ function show_bookmark(p_dossier) {
                     } catch (e) {
                         alert_box(content[53] + "\n" + e.message);
                     }
+                    id$('lk_bookmark_tb').focus();
 
                 }
             }
@@ -2458,11 +2467,10 @@ function show_bookmark(p_dossier) {
     }
 
 }
-
 /**
  *  save the bookmark
  */
-function save_bookmark() {
+Bookmark.prototype.save = function () {
     try {
         waiting_box();
         var queryString = "op=bookmark&" + id$("bookmark_frm").serialize();
@@ -2494,7 +2502,7 @@ function save_bookmark() {
 /**
  *  remove selected bookmark
  */
-function remove_bookmark() {
+Bookmark.prototype.remove= function () {
     try {
         waiting_box();
         var queryString = "op=bookmark&" + id$("bookmark_del_frm").serialize();
@@ -3302,9 +3310,9 @@ function show_all_row(p_table_id) {
  * @class
  * Periode handling
  * Variables :
- *   - id of the row of the periode row_per_(p_periode_id) , attribute exercice =per_exercice,periode_id=p_id
- *   - (this.dialog)
- *   - id of the table with the rows : periode_tbl
+ * id of the row of the periode row_per_(p_periode_id) , attribute exercice =per_exercice,periode_id=p_id
+ *    # (this.dialog)
+ *    # id of the table with the rows : periode_tbl
  *
  * Members :
  *   - periode_id the concerned Periode , 0 none
@@ -4377,11 +4385,11 @@ function activate_plugin(elt)
     			alert_box(e.message);
     		}
 }
-/**********************************************************************************************************************/
+/**********************************************************************************************/
 /**
  * @class Widget
- */
-/**********************************************************************************************************************/
+ *
+*************************************************************************************************************/
 
 Widget = function(dossier_id) {
     this.dossier_id=dossier_id;
@@ -4699,3 +4707,5 @@ Widget.prototype.toggle_full_size=function (widget_domid) {
 
 (function(){window.addEventListener("onload", (event) => {remove_waiting_box()});})();
 */
+
+var bookmark=new Bookmark();
