@@ -164,6 +164,8 @@ if (DEBUGNOALYSS == 0) {
     ini_set("html_errors", 1);
     ini_set('log_errors', 1);
     ini_set('log_errors_max_len', 0);
+    ini_set('xdebug.show_exception_trace', false);
+
 } elseif (DEBUGNOALYSS == 2) {
     // like level 1 plus extra  info (filename, ...)
     error_reporting(2147483647);
@@ -172,7 +174,7 @@ if (DEBUGNOALYSS == 0) {
     ini_set("html_errors", 1);
     ini_set('log_errors', 1);
     ini_set('log_errors_max_len', 0);
-
+    ini_set('xdebug.show_exception_trace', true);
 
 }
 // Erreur
