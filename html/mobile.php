@@ -24,6 +24,8 @@
  * @brief only for mobile device
  */
 
+if ( !defined ("ALLOWED") ) { define ('ALLOWED',true); }
+
 require_once '../include/constant.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 MaintenanceMode("block.html");
@@ -33,7 +35,6 @@ global $g_user;
 $cn=new Database();
 $g_user=new \Noalyss_User($cn);
 $g_user->check();
-if ( !defined ("ALLOWED") ) { define ('ALLOWED',true); }
 
 //-----------------------------------------------------------------
 /// if $_REQUEST['gDossier'] is not set then select the folder
