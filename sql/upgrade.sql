@@ -5,3 +5,6 @@ update parm_appearance set a_value='#FAFAFA' where a_code='FOLDER' and lower(a_v
 update parm_appearance set a_value='#506cb8 ' where a_code='MENU1-SELECTED' and lower(a_value)='#000074 ';
 
 ALTER TABLE public.todo_list ALTER COLUMN tl_date drop NOT NULL;
+
+
+update menu_ref set me_javascript='bookmark.show(<DOSSIER>)' where me_code='BOOKMARK';
