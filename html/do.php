@@ -173,8 +173,10 @@ window.onload=function ()
 {
     create_anchor_up();
     init_scroll();
+
     sorttable.init
 }
+
 </script>
 <?php
 
@@ -287,7 +289,7 @@ if (isset($_REQUEST['ac']))
         }
         else {
             alert($e->getMessage());
-            record_log($e->getTraceAsString());
+            record_log($e);
             throw $e;
         }
     }
@@ -319,8 +321,7 @@ else
     {
         echo $exc->getMessage();
         record_log("No user profile ");
-        record_log($exc->getMessage());
-        record_log($exc->getTraceAsString());
+        record_log($exc);
         throw $exc;
     }
 
