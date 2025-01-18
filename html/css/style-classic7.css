@@ -3896,3 +3896,23 @@ h2.h-section {
  .nav-level3 .nav-link.active::after {
      background-color:yellow;
  }
+
+ /**
+  * Info after UpgradeCore
+  */
+ #info_admin {
+     font-size:140%;
+     text-align: center;
+     background-color: red;
+     display:block;
+     position:fixed;
+     top:15rem;
+     left:15%;
+     width: 70%;
+     padding:2.5em;
+     border-radius:0.5em;
+     scale:1.1;
+     color: ghostwhite;
+     opacity: 0.9;
+
+ }
