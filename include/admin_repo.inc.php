@@ -36,21 +36,30 @@ $rep=new Database();
 $User=new Noalyss_user($rep);
 $User->Check();
 
+$audit=true;
 
 if ($User->admin != 1)
 {
     $theme=(isset($User->theme))?$User->theme:"";
+    $User->audit('FAIL',"ADMIN : [$action]".var_export($_REQUEST,true));
     html_page_start($theme);
-    echo "<h2 class=\"warning\">";
+    echo '<div class=content" style="padding:5%">';
+    echo "<h1 class=\"title\">";
+    echo _("Accès interdit");
+    echo "</h1>";
+    echo '<span class="warning">';
     echo _("Vous n'êtes pas administateur");
-    echo "</h2>";
+    echo '</span>';
     $reconnect=http_build_query(array("reconnect"=>1,"backurl"=>"admin-noalyss.php?action=upgrade"));
-    echo '<a href="'.NOALYSS_URL.'/index.php?'.$reconnect.'">';
-    echo _("Connectez-vous comme administrateur");
+    echo '<a class="mtitle" style="text-decoration:underline" href="'.NOALYSS_URL.'/index.php?'.$reconnect.'">';
+
+    echo _("Cliquez ici pour vous connecter comme administrateur");
     echo '</a>';
     html_page_stop();
     return;
 }
+$User->audit('SUCCESS',"ADMIN : [$action] ".var_export($_REQUEST,true));
+
 // For a backup , we must avoid to send anything before the 
 // dump file
 if ( $action== 'backup') {
