@@ -27,15 +27,18 @@ if (!defined('ALLOWED'))
  * admin-noalyss.php
  * @see admin-noalyss.php ajax_misc.php admin.js
  */
-global $g_user;
+global $g_user,$audit;
+$audit=true;
 if ($g_user->isAdmin()==0)
 {
+    $g_user->audit('FAIL',"ADMIN : ".var_export($_REQUEST,true));
     die();
 }
 session_write_close();
 set_language();
 $http=new HttpInput();
 $op=$http->request("op");
+$g_user->audit('SUCCESS',"ADMIN : $op");
 // From admin, grant  the access to a folder to an
 // user
 if ($op=='folder_add') // operation
