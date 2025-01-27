@@ -44,7 +44,9 @@ class IText extends HtmlInput
         $this->require=false;
         $this->css_size="";
     }
-    /*!\brief show the html  input of the widget*/
+    /*!
+    \brief show the html  input of the widget
+    */
     public function input($p_name=null,$p_value=null)
     {
         $this->name=($p_name==null)?$this->name:$p_name;

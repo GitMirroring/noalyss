@@ -39,6 +39,7 @@ class Package_Repository
      */
     function __construct()
     {
+        if ( DEBUGNOALYSS > 1) self::$time_cache_second=1;
         // Check we can resolve the name
         $host=parse_url(NOALYSS_PACKAGE_REPOSITORY,PHP_URL_HOST);
         $file=$_ENV['TMP']."/web.xml";

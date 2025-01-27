@@ -52,8 +52,8 @@ $idateend->value = $http->get('to', 'date', $a_limit[1]);
             <?= $ivatnumber->input(); ?>
             <label for="p_jrn">Journal</label>
             <?php
-            $a_ledger_purchase=$g_user->get_ledger('ACH',3);
-            $a_ledger_sale=$g_user->get_ledger('VEN',3);
+            $a_ledger_purchase=$g_user->get_ledger('ACH',3,all:false);
+            $a_ledger_sale=$g_user->get_ledger('VEN',3,all:false);
             $a_ledger=array_merge($a_ledger_sale??[],$a_ledger_purchase??[]);
             if ( DEBUGNOALYSS > 1 ) echo \Noalyss\Dbg::hidden_info("a_ledger",$a_ledger);
             $select_value=array();

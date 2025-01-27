@@ -1240,22 +1240,21 @@ class Acc_Ledger_Search
         return array($count, $r);
     }
      /**
-     * return the html code to create an hidden div and a button
+     * @brief return the html code to create an hidden div and a button
      * to show this DIV. This contains all the available ledgers
      * for the user in READ or RW
      *@param $p_selected is an array of checkbox
-     *@param $p_div div suffix for the list of ledgers
+     *@param $p_div div suffix for the list of ledgers,  base for building the DOMID of elements from the DIV
      *@note the choosen ledger are stored in the array r_jrn (_GET)
      */
     function select_ledger($p_selected,$p_div)
     {
         global $g_user;
-	$r = '';
-	/* security : filter ledger on user */
-	$p_array = $g_user->get_ledger($this->type, 3,FALSE);
-        
+        $r = '';
+        /* security : filter ledger on user */
+        $p_array = $g_user->get_ledger($this->type, 3,false);
         ob_start();
-        
+
 
         /* create a hidden div for the ledger */
         echo '<div id="div_jrn'.$p_div.'" >';
@@ -1290,7 +1289,7 @@ class Acc_Ledger_Search
         for ($e=0;$e<$nb_array;$e++)
         {
             $row=$p_array[$e];
-//            if ( $row['jrn_enable']==0) continue;
+
             $r=new ICheckBox($p_div.'r_jrn'.$e,$row['jrn_def_id']);
             $r->set_attribute("ledger_type", $row['jrn_def_type']);
             $idx=$row['jrn_def_id'];
