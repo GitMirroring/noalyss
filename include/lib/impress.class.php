@@ -325,6 +325,7 @@ class Impress
 
         // Get the periode
         /* ! \note special value for the clause FROM=00.0000, we take the first day of the exercice of $p_end
+        for France (MY_REPORT==N), the first day of the folder
          */
         if ($p_from=='00.0000')
         {
@@ -339,6 +340,10 @@ class Impress
             // retrieve the first month of this periode
             if (empty($first_day))
                 throw new Exception('Pas de limite à cette période', 1);
+            global $g_parameter;
+
+            if ( $g_parameter->MY_REPORT == 'N') $first_day='01.01.1900';
+
             $cond=sql_filter_per($p_cn, $first_day, $last_day, 'date', 'j_tech_per');
         }
         else
