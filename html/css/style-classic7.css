@@ -3890,15 +3890,18 @@ h2.h-section {
      left: 0;
      right: 0;
      background-color:darkorange;
+
  }
 
  .nav-level3 .nav-link.active::after {
      background-color:yellow;
  }
+ 
+ .text-70 {
+     font-size:70% !important;
+     vertical-align: super;
+ }
 
- /**
-  * Info after UpgradeCore
-  */
  #info_admin {
      font-size:140%;
      text-align: center;

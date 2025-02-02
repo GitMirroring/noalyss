@@ -52,6 +52,7 @@ class Acc_Balance
      *     array of
      *         - $a['poste']
      *         - $a['label']
+     *         - $a['type'] string pcm_type actif, passif...
      *         - $a['sum_deb']
      *         - $a['sum_cred']
      *         - $a['solde_deb']
