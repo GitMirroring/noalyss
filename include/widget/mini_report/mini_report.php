@@ -64,10 +64,8 @@ class Mini_Report extends Widget
             if ($exercice == 0) {
                 alert(_('Aucune periode par defaut'));
             } else {
-                $periode = new Periode($cn);
-                $limit = $periode->limit_year($exercice);
-
-                $result = $rapport->get_row($limit['start'], $limit['end'], 'periode');
+                $a=$g_user->get_periode();
+                $result = $rapport->get_row($a, $a, 'periode');
                 $ix = 0;
                 if (!empty ($result) && count($result) > 0) {
                     echo '<table class="result">';
