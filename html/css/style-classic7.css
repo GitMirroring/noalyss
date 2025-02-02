@@ -3763,3 +3763,7 @@ h2.h-section {
  .nav-level3 .nav-link.active::after {
      background-color:yellow;
  }
+ .text-70 {
+     font-size:70% !important;
+     vertical-align: super;
+ }

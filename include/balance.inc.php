@@ -190,6 +190,14 @@ echo '</p>';
 echo '<p>';
 echo _("Avec la balance de l'année précédente")." ".$previous_exc->input();
 echo '</p>';
+echo '<p>';
+echo _('Indiquer le type de poste');
+echo '<span class="text-muted">',_("actif, passif,charge,..."),'</span>';
+// var $type_account int value 0 => no shown, 1=> show it
+$type_account=new ICheckBox('type_account',1);
+if ($http->request('type_account','string',0)==1) $type_account->selected=true;
+echo $type_account->input();
+echo '</p>';
 echo '</div>';
 ?>
 <div>
@@ -311,6 +319,7 @@ if ( isset($_GET['view'] ) )
     $previous=(isset($_GET['previous_exc']))?1:0;
     $from_periode=$http->get("from_periode","number");
     $to_periode=$http->get("to_periode","number");
+    // var $row array from Acc_Balance->get_row
     $row=$bal->get_row($from_periode,$to_periode,$previous);
     $previous= (isset ($row[0]['sum_cred_previous']))?1:0;
 
@@ -439,6 +448,9 @@ if ( isset($_GET['view'] ) )
         echo td($view_history);
         // label + warning if the saldo is incorrect
         $label=$r['label'];
+        if ( $type_account->selected )  {
+            $label .=  sprintf("<span class=\"text-70 text-muted\">(%s)</span>",$r['type']);
+        }
         if (isset ($r['type']) && in_array($r['type'],array('CHA','ACT','PASINV','PROINV')) && $r['sum_deb']<$r['sum_cred'])
         {
 
