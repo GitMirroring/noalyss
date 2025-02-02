@@ -1354,7 +1354,7 @@ div#jrn_name_div
    }
 }
 /* XL */
-@media (min-width: 1200px) {
+@media (min-width: 1300px) {
     div#jrn_name_div
    {
        float: right;

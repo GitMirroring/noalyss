@@ -450,9 +450,9 @@ function check()
      * @brief set the type of a column , it will change in the input db box , the
      * select must supply an array of possible values [val=> , label=>] with
      * the variable $this->key_name->a_value
-     * @param $p_key col name
-     * @param $p_type is "text", "numeric", "date", "select", "timestamp","custom"
-     * @param $p_array if type is  SELECT an array is expected
+     * @param $p_key string col name
+     * @param $p_type string is "text", "numeric", "date", "select", "timestamp","custom"
+     * @param $p_array array if type is  SELECT an array is expected
      * @note if $p_type is custom  then a function named input_custom($p_key,$p_value) must be implemented 
      * in the class
      * @see Manage_Table_SQL:input_custom
