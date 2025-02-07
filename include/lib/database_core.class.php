@@ -35,7 +35,7 @@ require_once NOALYSS_INCLUDE . '/lib/ac_common.php';
 class DatabaseCore
 {
 
-    private $db;
+    protected $db;
     /**< database connection */
     private $ret;
     /**< return value  */
