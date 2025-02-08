@@ -448,7 +448,7 @@ if ( isset($_GET['view'] ) )
         echo td($view_history);
         // label + warning if the saldo is incorrect
         $label=$r['label'];
-        if ( $type_account->selected )  {
+        if ( $type_account->selected && isset ($r['type']))  {
             $label .=  sprintf("<span class=\"text-70 text-muted\">(%s)</span>",$r['type']);
         }
         if (isset ($r['type']) && in_array($r['type'],array('CHA','ACT','PASINV','PROINV')) && $r['sum_deb']<$r['sum_cred'])
