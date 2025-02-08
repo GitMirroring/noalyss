@@ -1723,7 +1723,7 @@ function MaintenanceMode($p_file)
 }
 
 /**
- * @brief returns an double array with the error found and code , if the count is 0 then the password is very string, 5 means it is
+ * @brief returns an double array with the error found and code , if the count is 0 then the password is very strong, 5 means it is
  * empty ,4 weak, ... the array contains the errors, [msg]=>array message [code] => array of code
  * Codes are
  *        - 1 : too short

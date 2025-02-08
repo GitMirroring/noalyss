@@ -2,6 +2,25 @@
  /**
   * Use a font
   */
+ @font-face {
+     font-family: "roboto light";
+     font-style: normal;
+     font-weight: normal;
+     src:url('./font/Roboto-Light.ttf') format('truetype')
+ }
+ @font-face {
+     font-family: "roboto regular";
+     font-style: normal;
+     font-weight: normal;
+     src:url('./font/Roboto-Regular.ttf') format('truetype'),
+        url('./font/Roboto-Regular.woff2') format('woff2');
+ }
+ @font-face {
+     font-family: 'Montserrat Regular';
+     font-style: normal;
+     font-weight: normal;
+     src: local('Montserrat Regular'), url('./font/Montserrat-Regular.woff') format('woff');
+ }
 @font-face {
 	font-family: 'SansationLight';
 	src: url('./font/SansationLight/SansationLight.eot');
@@ -22,7 +41,7 @@ BODY {
     font-family: 'OpenSansRegular' ,Arial, Helvetica, "Liberation Sans"  , FreeSans, sans-serif !important;
     padding : 0px;
     margin:0px;
-    color:darkblue !important;
+    color:navy !important;
     background-color:#FCFDFD;
     --hover : rgba(108, 130, 208, 0.9);
     --border-size:6px;
@@ -30,6 +49,9 @@ BODY {
     --input-color:#4b4b91;
     --color-red:Crimson;
     --color-blue2: cornflowerblue;
+    --font-button:'roboto light';
+    --font-super:'roboto regular';
+    --font-title:'Montserrat Regular';
 }
 input{
     font-family: 'OpenSansRegular';
@@ -110,7 +132,8 @@ h2.title {
     margin: 0px;
 }
 h2 {
-    font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
+/*    font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;*/
+    font-family:var(--font-title) !important;
     color:white;
     background-color:#9fbcd6;
     /*! margin:1px; */
@@ -329,7 +352,7 @@ div.lmenu {
 div.recherche_form{
     width:700px;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
+    font-family: 'var(--font-button)';
     border-style:outset;
     border-width:1px;
 
@@ -379,7 +402,7 @@ table.document {
 table.document th{
     font-weight:bold;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
+    font-family: 'var(--font-button)';
     border-bottom:2px solid #0000FF;
     border-top:0px;
     color:#202267;
@@ -998,12 +1021,13 @@ background: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f
 background: linear-gradient(to bottom, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
     color: #746B6B;
-    font-family: SansationLight;
+    font-family: var(--font-button);
     font-size: 0.80rem;
 
     padding: 9px;
     color: navy;
     font-size: 0.85rem;
+    font-family: "roboto light";
 }
 a#anchorbutton:hover, .button:hover,a.button:hover,div.content a.button:hover  {
     cursor:pointer;
@@ -1020,7 +1044,7 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     font-family: arial,verdana,sans-serif,helvetica;
     font-size:85%;
     font-size:0.85rem;
-    font-family: SansationLight;
+    font-family: var(--font-button);
     border-style:  ridge ; 
     border-color: grey ;
     border-width:1px;
@@ -1034,7 +1058,7 @@ a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton {
     /*! border-radius: 1px; */
     /*! -moz-border-radius: 2px; */
     -webkit-border-radius: 5px;
-    font-family: SansationLight;
+    font-family: var(--font-button);
     background: lightgray;
     background: -moz-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%);
     background: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
@@ -1054,14 +1078,15 @@ background: -moz-linear-gradient(top, #f6f6f6 0%, #e1e1e1 50%, #f1f1f1 51%, #fff
 background: -webkit-linear-gradient(top, #f6f6f6 0%,#e1e1e1 50%,#f1f1f1 51%,#ffffff 100%);
 background: linear-gradient(to bottom, #f6f6f6 0%,#e1e1e1 50%,#f1f1f1 51%,#ffffff 100%);
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
-    font-family: SansationLight;
+    font-family: var(--font-button);
      /*border-style:  inset ;*/
     /*! border-color:  darkblue; */
     text-decoration:none;
     border-color: orange;
 }
 a#smallanchorbutton, .smallbutton, a.smallbutton,div.content a.smallbutton .button {
-    font-family: SansationLight;
+    font-family: var(--font-button);
+
 }
 td.tool {
     border: 1px grey solid ;
@@ -1175,7 +1200,7 @@ div.inner_box  {
     background-color: #DCE1EF;
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'OpenSansRegular';
-    /*! font-family: 'SansationLight'; */
+    /*! font-family: 'var(--font-button)'; */
     /*! padding:2px; */
     margin:0px;
     overflow:hidden;
@@ -1194,7 +1219,7 @@ div.inner_box  {
      background-color: #DCE1EF;
      font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
      font-family: 'OpenSansRegular';
-     /*! font-family: 'SansationLight'; */
+     /*! font-family: 'var(--font-button)'; */
      /*! padding:2px; */
      margin:0px;
      overflow:hidden;
@@ -1526,10 +1551,10 @@ div.content a.nav:hover img,a.nav:hover img {
     width:100%;
     top:0px;
     text-align: center;
-    font-variant:small-caps;
-    font-weight: bolder;
+
     position : absolute;
     z-index:-1;
+    font-family: "Montserrat Regular";
     }
 @media only screen and (min-width: 955px) {
 #dossier {
@@ -1740,7 +1765,8 @@ div#modele_op_div{
  div#preference_div {
      background-color:#e4e7ed;
      font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-     font-family: 'SansationLight';
+     font-family: 'openSansRegular';
+
      padding:0px;
      margin:0px;
      overflow:hidden;
@@ -1775,8 +1801,7 @@ div#modele_op_div{
 }
 div#preference_div {
     background-color:#e4e7ed;
-    font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'openSansRegular';
+
     padding:0px;
     margin:0px;
     overflow:hidden;
@@ -1805,8 +1830,7 @@ div#preference_div {
     div#modele_op_div{
     display: none;
     background-color:#e4e7ed;
-    font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
+
     padding:0px;
     margin:0px;
     overflow:hidden;
@@ -1819,8 +1843,6 @@ div#preference_div {
 }
 div#preference_div {
     background-color:#e4e7ed;
-    font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
     padding:0px;
     margin:0px;
     overflow:hidden;
@@ -1860,8 +1882,6 @@ div.inner_box tr.odd {
 }
 div#bookmark_div {
     background-color:#e4e7ed;
-    font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
-    font-family: 'SansationLight';
     padding:2px;
     margin:0px;
     overflow:hidden;
@@ -2059,13 +2079,13 @@ li.tabs_selected {
     background: linear-gradient(to bottom, #C2E3FC 0%,#6393c1 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#C2E3FC', endColorstr='#6393c1',GradientType=0 ); /* IE6-9 */
     color:whitesmoke;
-    margin-left: 2px;
     border-top-left-radius: 10px;
     border-bottom-right-radius: 10px;
     border:1px #879ed4 solid;
     font-weight: bold;
      float:left;
     padding:5px;
+    margin: 2px 3px 3px 3px;
     
 }
 li.tabs {
@@ -2277,7 +2297,6 @@ table.vert_mtitle td {
     border : 1px solid #99B1DF;
      background-color:#EDEDED;
      border-radius:20px 20px 0px 0px;
-     font-family: SansationLight;
 }
 table.vert_mtitle td a{
     padding : 20px;
@@ -2527,7 +2546,7 @@ width: 85%;
     /*! background-position: left; */
     font-size:85%;
     font-size:0.85rem;
-    font-family: SansationLight;
+    font-family: var(--font-button);
     border-style:  ridge ; 
     border-color: grey ;
     border-width:1px;
@@ -2538,7 +2557,7 @@ width: 85%;
     margin-top:3px;
     cursor:pointer;
     margin:1px 2px 1px 2px;
-    font-family: SansationLight;
+
   background: lightgray;
 background: -moz-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%);
 background: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
@@ -3351,6 +3370,7 @@ margin:1px;
 .nav-pills .nav-link.active {
     background-color: #506cb8 !important;
      border-radius: 0px;
+    font-family: "Montserrat";
 } 
 .nav-pills .nav-link {
     color:white ;
@@ -3722,7 +3742,7 @@ span.widget-name {
      margin-top:2vh;
      display: flex;
      flex-wrap: wrap;
-     align-items: center;
+     align-items: stretch;
      justify-content: center;
      row-gap: 20px;
      column-gap: 20px;
@@ -3791,10 +3811,10 @@ h2.h-section {
     color: navy;
     border: 1px steelblue solid;
     font-style: normal;
-    font-family: OpenSansRegular;
+    font-family: var(--font-title);
 }
  .super {
-     font-family: SansationLight;
+     font-family: var(--font-super);
      vertical-align: super;
      font-size: 80%;
      font-variant-caps: normal;
@@ -3900,11 +3920,6 @@ h2.h-section {
      background-color:yellow;
  }
  
- .text-70 {
-     font-size:70% !important;
-     vertical-align: super;
- }
-
  #info_admin {
      font-size:140%;
      text-align: center;
@@ -3920,4 +3935,8 @@ h2.h-section {
      color: ghostwhite;
      opacity: 0.9;
 
+ }
+ 
+ .nav-pills {
+     font-family:var(--font-title) !important;
  }
