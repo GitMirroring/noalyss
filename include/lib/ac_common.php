@@ -1349,9 +1349,15 @@ function record_log($p_message)
     {
 
         if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
-
-            error_log("noalyss exception ".$p_message->getMessage(),0);
-            error_log("noalyss exception".$p_message->getTraceAsString(),0);
+            $exc=$p_message;
+            do {
+                error_log("noalyss exception message [".$exc->getMessage()."]",0);
+                error_log("noalyss exception code [".$exc->getCode()."]",0);
+                error_log("noalyss exception trace ".$exc->getTraceAsString(),0);
+                error_log("------ ",0);
+                $exc=$exc->getPrevious();
+                if ($exc != null )fwrite ($handle_log,"*********************** Previous  *********************** \n");
+            } while ($exc != null);
         } else {
             error_log("noalyss".var_export($p_message,true),0);
 
@@ -1376,11 +1382,17 @@ function record_log($p_message)
         fwrite($handle_log,"_POST [".var_export($_POST,true)."]");
         fwrite ($handle_log,"\n");
         if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
-
-            fwrite($handle_log,"noalyss exception ".$p_message->getMessage());
-            fwrite ($handle_log,"\n");
-            fwrite($handle_log,"noalyss exception".$p_message->getTraceAsString());
-            fwrite ($handle_log,"\n");
+            $exc=$p_message;
+            do {
+                fwrite($handle_log,"noalyss exception message [".$exc->getMessage()."]");
+                fwrite ($handle_log,"\n");
+                fwrite($handle_log,"noalyss exception code [".$exc->getCode()."]");
+                fwrite ($handle_log,"\n");
+                fwrite($handle_log,"noalyss exception trace \n".$exc->getTraceAsString());
+                fwrite ($handle_log,"\n");
+                $exc=$exc->getPrevious();
+                if ($exc != null )fwrite ($handle_log,"*********************** Previous  *********************** \n");
+            } while ($exc != null);
         } else {
             fwrite($handle_log,"noalyss".var_export($p_message,true));
             fwrite ($handle_log,"\n");
@@ -1388,7 +1400,7 @@ function record_log($p_message)
         }
 
         fwrite ($handle_log,str_repeat("=", 80)."\n");
-
+        fclose($handle_log);
 
     }
 
