@@ -33,8 +33,9 @@ class Document_modele
     var $md_sequence;     /*!<  $md_sequence sequence name (autogenerate) */
     var $sequence;        /*!< $sequence sequence number used by the create sequence start with */
     var $md_affect;	/*!< $md_affect if you can use it in VEN for sale, ACH for purchase or GES for follow-up */
-    var $md_filename;   /*! < $md_filename is the filename of the template */
-    var $start;   /*! < $md_filename is the filename of the template */
+    var $md_filename;   /*!< $md_filename is the filename of the template */
+    var $start;   /*!< $md_filename is the filename of the template */
+    var $md_mimetype; /*!< $md_mimetype is the mimetype of the LOB*/
     //Constructor parameter = database connexion
     function __construct($p_cn,$p_id=-1)
     {
