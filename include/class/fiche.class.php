@@ -39,7 +39,7 @@ class Fiche
     var $cn;           /*! < $cn database connection */
     var $id;           /*! < $id fiche.f_id */
     var $fiche_def;    /*! < $fiche_def fd_id */
-    var $attribut;     /*! < $attribut array of attribut object */
+    var $attribut;     /*! < $attribut array of Card_Property objects */
     var $fiche_def_ref; /*!< $fiche_def_ref Type */
     var $row;           /*! < All the row from the ledgers */
     var $quick_code;		/*!< quick_code of the card */
@@ -457,15 +457,15 @@ class Fiche
      * \brief  insert a new record thanks an array , either as parameter or $_POST
      *
      * \param $p_fiche_def fiche_def.fd_id
-     * \param $p_array is the array containing the data
+     * \param $p_array is the array containing the data key = av_textX where X is AD_ID
      *\param $transation DEPRECATED : if we are in a transaction, we don't commit here , else if not, the
      * then a transaction is started and committed 
      * 
      av_textX where X is the ad_id
-     *\verb
+     *\verbatim
     example
     av_text1=>'name'
-    \endverb
+    \endverbatim
      */
     function insert($p_fiche_def, $p_array=null, $transaction=true)
     {
