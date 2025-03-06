@@ -2476,6 +2476,9 @@ td.box {
 @media (min-width: 1200px) {
 
 }
+/*
+ * Smoke CSS (see smoke.js) 
+ */ 
 .dialog-prompt {
   margin-top: 15px;
   text-align: center;

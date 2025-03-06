@@ -702,7 +702,7 @@ class Document
      *  - [DESCRIPTION]
      *  - [DOCUMENT_ID]
      *  - [DATE_PAID]
-     *  - [NOTE]
+     *  - [NOTE] Note from SALE or PURCHASE 
      *
      * \param $p_tag TAG
      * \param $p_array data from $_POST
