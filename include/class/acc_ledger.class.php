@@ -3249,7 +3249,16 @@ class Acc_Ledger  extends jrn_def_sql
         return $array;
     }
 
-    function convert_from_follow($p_ag_id)
+    /**
+     * @brief convert operations from FOLLOWUP into a SALE , FEENOTE
+     * or PURCHASE operation into a suitable array
+     * @param $p_ag_id int PK of ACTION_GESTION
+     * @param $copy_description int 0 the description of the followup  is not copied
+     * in the note , 1 is copied
+     * @return array|void|null
+     * @throws Exception
+     */
+    function convert_from_follow($p_ag_id,$copy_description=0)
     {
         global $g_user;
         if (isNumber($p_ag_id)==0)
@@ -3289,6 +3298,13 @@ class Acc_Ledger  extends jrn_def_sql
             $array['e_march'.$i.'_tva_id']=$a_item[$i]['ad_tva_id'];
             $array['e_march'.$i.'_tva_amount']=$a_item[$i]['ad_tva_amount'];
             $array['e_quant'.$i]=$a_item[$i]['ad_quant'];
+        }
+        if ( $copy_description == 1) {
+            $acomment=$this->db->get_array("SELECT agc_id, ag_id, to_char(agc_date,'DD.MM.YYYY HH24:MI') as str_agc_date, agc_comment, agc_comment_raw,tech_user
+				 FROM action_gestion_comment where ag_id=$1 order by agc_id", array($p_ag_id)
+            );
+            if (count ($acomment) > 0)
+                $array['jrn_note_input']=$acomment[0]['agc_comment'];
         }
         return $array;
     }

@@ -267,7 +267,8 @@ try
     else if (isset($_GET['create_invoice']))
     {
         $action_id=$http->get('ag_id',"number");
-        $array=$Ledger->convert_from_follow($action_id);
+        $cp=$http->get('cp','number',0);
+        $array=$Ledger->convert_from_follow($action_id,$cp);
         echo HtmlInput::hidden("ledger_type", "VEN");
         echo HtmlInput::hidden("ac", $http->get('ac'));
         echo HtmlInput::hidden("sa", "p");

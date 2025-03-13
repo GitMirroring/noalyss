@@ -200,8 +200,21 @@ $menu=new Default_Menu();
     if (Document_Option::is_enable_make_invoice($p_follow_up->dt_id)):
         ?>
         <div id="follow_up_detail_invoice" class="col m-3" style="position:static">
+            <div> <input type="checkbox" id="invoice_cp_note" value="0"> Cocher pour copier la description dans la <b>note de la vente</b></div>
+            <script>
+                (function () {
+                    $('invoice_cp_note').addEventListener("change", function () {
+                        let cp= $('btncreate_invoice').attributes['href'].nodeValue;
+                        if (  $('invoice_cp_note').checked) {
+                            $('btncreate_invoice').attributes['href'].nodeValue= cp.replace('cp=0','cp=1')
+                        } else {
+                            $('btncreate_invoice').attributes['href'].nodeValue= cp.replace('cp=1','cp=0')
+                       }
+                        });
+                })();
+            </script>
             <?php
-            $query=http_build_query(array('gDossier'=>Dossier::id(), 'ag_id'=>$p_follow_up->ag_id, 'create_invoice'=>1, 'ac'=>$menu->get('code_invoice')));
+            $query=http_build_query(array('gDossier'=>Dossier::id(), 'ag_id'=>$p_follow_up->ag_id, 'create_invoice'=>1,'cp'=>0, 'ac'=>$menu->get('code_invoice')));
             echo HtmlInput::button_anchor(_("Transformer en Facture de Vente"), "do.php?".$query, "create_invoice",
                     '  target="_blank" ', "button");
             ?>
@@ -214,8 +227,21 @@ $menu=new Default_Menu();
     if (Document_Option::is_enable_make_feenote($p_follow_up->dt_id)):
         ?>
         <div id="follow_up_detail_feenote" class="col m-3" style="position:static">
+            <div> <input type="checkbox" id="feenote_cp_note" value="0"> Cocher pour copier la description dans la <b>note de l'achat ou note de frais</b></div>
+            <script>
+                (function () {
+                    $('feenote_cp_note').addEventListener("change", function () {
+                        let cp= $('btncreate_feenote').attributes['href'].nodeValue;
+                        if (  $('feenote_cp_note').checked) {
+                            $('btncreate_feenote').attributes['href'].nodeValue= cp.replace('cp=0','cp=1')
+                        } else {
+                            $('btncreate_feenote').attributes['href'].nodeValue= cp.replace('cp=1','cp=0')
+                        }
+                    });
+                })();
+            </script>
             <?php
-            $query=http_build_query(array('gDossier'=>Dossier::id(), 'ag_id'=>$p_follow_up->ag_id, 'create_feenote'=>1, 'ac'=>$menu->get('code_feenote')));
+            $query=http_build_query(array('cp'=>0,'gDossier'=>Dossier::id(), 'ag_id'=>$p_follow_up->ag_id, 'create_feenote'=>1, 'ac'=>$menu->get('code_feenote')));
             echo HtmlInput::button_anchor(_("Transformer en Note de frais ou Facture Achat"), "do.php?".$query, "create_feenote",
                     '  target="_blank" ', "button");
             ?>
