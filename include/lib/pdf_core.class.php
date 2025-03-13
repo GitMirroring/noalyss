@@ -65,6 +65,7 @@ class PDF_Core extends TFPDF
 
 
     private $cells=array();
+    private $bigger;
 
     public function __construct ( $orientation = 'P', $unit = 'mm', $format = 'A4')
     {
