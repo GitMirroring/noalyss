@@ -248,8 +248,8 @@ class HtmlInput
     /*!\brief create a button with a ref
      * \param $p_label the text
      * \param $p_value the location of the window,
-     * \param $p_name the id of the span
-     * \param $p_javascript javascript for this button
+     * \param $p_name the id of the span (button will be "btn".$p_name
+     * \param $p_javascript javascript for this button, needed to add the event : onclick,...
      * \return string with htmlcode
      */
 
@@ -259,8 +259,8 @@ class HtmlInput
         $href="";
         if ($p_value!="")
             $href=sprintf('  href ="%s"  ', $p_value);
-        $r=sprintf('<span id="%s" > <A class="'.$p_class.'" style="display:inline-block;"  %s %s >%s</A></span>',
-                $p_name, $href, $p_javascript, $p_label);
+        $r=sprintf('<span id="%s" > <A class="'.$p_class.'" id="btn%s" style="display:inline-block;"  %s %s >%s</A></span>',
+                $p_name, $p_name,$href, $p_javascript, $p_label);
         return $r;
     }
     /**

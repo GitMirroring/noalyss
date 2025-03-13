@@ -1064,4 +1064,44 @@ class Acc_LedgerTest extends TestCase
         $this->assertEquals($this->object->is_enable(),1);
 
     }
+
+    /**
+     * @testdox convert from FollowUp : Description is asked
+     * @covers Acc_Ledger::convert_from_follow
+     * @return void
+     * @throws Exception
+     */
+    public function testConvert_from_follow_copy1()
+    {
+        $action_gestion_id=1;
+
+        $result=$this->object-> convert_from_follow($action_gestion_id,1);
+        $this->assertTrue($result['jrn_note_input']=='Test',print_r($result,true));
+    }
+    /**
+     * @testdox convert from FollowUp : Description is not asked
+     * @covers Acc_Ledger::convert_from_follow
+     * @return void
+     * @throws Exception
+     */
+    public function testConvert_from_follow_copy2()
+    {
+        $action_gestion_id=1;
+
+        $result=$this->object-> convert_from_follow($action_gestion_id,0);
+        $this->assertTrue(! isset ($result['jrn_note_input']),print_r($result,true));
+    }
+    /**
+     *  @testdox convert from FollowUp : Description is asked and there is no description available
+     * @covers Acc_Ledger::convert_from_follow
+     * @return void
+     * @throws Exception
+     */
+    public function testConvert_from_follow_copy3()
+    {
+        $action_gestion_id=15;
+
+        $result=$this->object-> convert_from_follow($action_gestion_id,1);
+        $this->assertTrue(! isset ($result['jrn_note_input']),print_r($result,true));
+    }
 }
