@@ -587,14 +587,24 @@ catch(exception) { alert('<?php echo j(_('Je ne peux pas ajouter de fichier'))?>
 
 <?php if (($p_view != 'READ' && $str_select_doc != '' )|| ! empty ($aAttachedFile)) : ?>
 <div  id="div_action_attached_doc">
-  <h2 class="h-section">
+  <h2 class="h-section" style="cursor:pointer" id="h2_action_attached<?=$uniq?>">
      <?php
      $a= _('Pièces attachées');
      // variable: color if files
      $class=( count($aAttachedFile)>0)?"cell highlight":"";
      printf('%s  <span class="%s"> (%s)</span>',$a,$class,count($aAttachedFile));
+
      ?>
   </h2>
+    <script>
+        (function() {
+            $("h2_action_attached<?=$uniq?>").addEventListener('click',function() {
+               $('all_attached_files_div<?=$uniq?>').show();
+            })
+        } )();
+
+    </script>
+
     <div class="noprint">
         <?php 
 /**********************************************************************************************************************
