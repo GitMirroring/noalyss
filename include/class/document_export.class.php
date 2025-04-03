@@ -26,6 +26,10 @@
  */
 class Document_Export
 {
+    var $feedback; /*!< contains feedback */
+    var $store_convert; /*!<  temporary folder for files*/
+    var $store_pdf; /*!< temporary folder for PDF  */
+    var $progress; /*!< contain value for progressbar*/
     /**
      *@brief create 2 temporary folders, store_pdf and store_convert, initialize
      * an array feedback containing messages
@@ -43,9 +47,9 @@ class Document_Export
         $this->progress=NULL;
         umask(0);
         if ( mkdir($this->store_convert) == FALSE )            
-            throw new Exception(sprintf("Create %s failed",$this->store_onvert));
+            throw new Exception(sprintf("ERR DE50-Create %s failed",$this->store_onvert));
         if ( mkdir($this->store_pdf)== FALSE )            
-            throw new Exception(sprintf("Create %s failed",$this->store_pdf));
+            throw new Exception(sprintf("ERR DE52 Create %s failed",$this->store_pdf));
     }
     /**
      * @brief concatenate all PDF into a single one and save it into the
@@ -66,7 +70,7 @@ class Document_Export
             {
                 $cnt_feedback=count($this->feedback);
                 $this->feedback[$cnt_feedback]['file']='result.pdf';
-                $this->feedback[$cnt_feedback]['message']=' cannot concatenate PDF';
+                $this->feedback[$cnt_feedback]['message']='DE73 cannot concatenate PDF';
                 $this->feedback[$cnt_feedback]['error']=$status;
             }
         }
@@ -88,14 +92,16 @@ class Document_Export
         $res=$zip->open("{$this->store_pdf}/result.zip",ZipArchive::CREATE);
         if ($res !== true) {
             error_log("ERR-DE89 cannot create zip file");
-            throw new Exception ( __FILE__.":".__LINE__."cannot recreate zip");
+            record_log($this);
+            throw new Exception ("ERR-DE89 cannot recreate zip");
         }
         chdir($this->store_pdf);
         // addGmpn
-        $res=$zip->add_file_pattern($this->store_pdf,"/.*.pdf/");
+        $res=$zip->add_file_pattern($this->store_pdf,"/.*pdf/");
         if ($res == 0) {
             error_log("ERR-DE96 aucun fichier trouvé");
-            throw new Exception ( __FILE__.":".__LINE__."cannot recreate zip");
+            record_log($this);
+            throw new Exception ( "ERR-DE96 cannot recreate zip");
         }
         $zip->close();
 
@@ -271,7 +277,9 @@ class Document_Export
         }
 
         $progress->set_value(93);
-
+        if (DEBUGNOALYSS>1) {
+            tracedebug(date('y-m-d')."-debug.log",$this->feedback,'feedback');
+        }
         if ($p_separate==1)
         {
             // concatenate all pdf into one
@@ -358,7 +366,7 @@ class Document_Export
             if ($status<>0)
             {
                 $this->feedback[$cnt_feedback]['file']=$filename;
-                $this->feedback[$cnt_feedback]['message']=' cannot convert to PDF';
+                $this->feedback[$cnt_feedback]['message']=' OFFICE cannot convert to PDF';
                 $this->feedback[$cnt_feedback]['error']=$status;
                 return null;
             }
@@ -368,13 +376,13 @@ class Document_Export
         $font=imagecolorallocatealpha($img, 100, 100, 100, 110);
         imagettftext($img, 40, 25, 500, 1000, $font,
                 NOALYSS_INCLUDE.'/tfpdf/font/unifont/DejaVuSans.ttf'
-                , _("Copie certifiée conforme à l'original"));
+                , _("Copie certifiee conforme a l'original"));
         imagettftext($img, 40, 25, 550, 1100, $font,
                 NOALYSS_INCLUDE.'/tfpdf/font/unifont/DejaVuSans.ttf'
                 , $file[0]['jr_pj_number']);
         imagettftext($img, 40, 25, 600, 1200, $font,
                 NOALYSS_INCLUDE.'/tfpdf/font/unifont/DejaVuSans.ttf'
-                , $file[0]['jr_pj_name']);
+                ,$filename);
         imagegif($img, $this->store_convert.'/'.'stamp.gif');
 
         // transform gif file to pdf with convert tool
@@ -384,7 +392,7 @@ class Document_Export
         if ($status<>0)
         {
             $this->feedback[$cnt_feedback]['file']='stamp.pdf';
-            $this->feedback[$cnt_feedback]['message']=' cannot convert to PDF';
+            $this->feedback[$cnt_feedback]['message']=' CONVERT_GIF_PDF cannot convert to PDF';
             $this->feedback[$cnt_feedback]['error']=$status;
             return null;
         }
@@ -444,7 +452,7 @@ class Document_Export
         {
 
             $this->feedback[$cnt_feedback]['file']=$file_pdf;
-            $this->feedback[$cnt_feedback]['message']=_(' ne peut pas convertir en PDF');
+            $this->feedback[$cnt_feedback]['message']=_('PDFTK ne peut pas convertir en PDF')." cmd =[$stmt] status [$status]";
             $this->feedback[$cnt_feedback]['error']=$status;
             return null;
         }

@@ -42,5 +42,10 @@ $reconcilied_document=$http->get("reconcilied_document","number",1);
 
 $task_id=$http->request("task_id");
 $progress=new Progress_Bar($task_id);
-$anc->export_all($ck,$progress,$type_pdf,$reconcilied_document);
+try {
+    $anc->export_all($ck,$progress,$type_pdf,$reconcilied_document);
+    
+} catch (Exception $ex) {
+    record_log($ex);
+}
 
