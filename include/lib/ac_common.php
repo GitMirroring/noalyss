@@ -1341,7 +1341,7 @@ function is_msie()
  */
 function record_log($p_message)
 {
-    $date=date('Y.m.d');
+    $date= date ('Y-m-d');
     // variable: $handle_log resource on log file ,
     $handle_log=fopen(NOALYSS_BASE."/log/noalyss-{$date}.log","a+");
 
@@ -1374,7 +1374,7 @@ function record_log($p_message)
 
         }
         
-        $now=date('y-m-d H:i');
+        $now=date ('Y-m-d H:i:s');
         fwrite ($handle_log,str_repeat("=", 80)."\n");
         fwrite ($handle_log,"ERROR: {$now}\n");
         fwrite($handle_log,"noalyss GET [".var_export($_GET,true)."]");
@@ -1409,7 +1409,8 @@ if(!function_exists('tracedebug')) {
   function tracedebug($file,$var, $label = NULL) {
 
     $tmp_file = sys_get_temp_dir().DIRECTORY_SEPARATOR.$file;
-    if ( ! is_writable($tmp_file)) return;
+    $file_loginput=fopen( $tmp_file,'a+');
+    if ( $file_loginput == false) { return;}
     $output = '';
     $output .= date('d-m-y H:i');
     if(!is_null($label)) {
@@ -1854,4 +1855,3 @@ function sanitize_filename($filename)
     $new_filename=strtolower($filename_no)."-".date("Ymd-Hi").$filename_suff;
     return $new_filename;
 }
-
