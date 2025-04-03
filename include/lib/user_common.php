@@ -216,7 +216,7 @@ function check_parameter($p_array,$p_needed)
         }
 }
 /**
- * sanitize the filename remove character which could be a problem, 
+ * @brief sanitize the filename remove character which could be a problem, 
  * @param string $p_filename the filename to clean
  * @return  string Filename without bad char.
  */
@@ -226,6 +226,14 @@ function clean_filename($p_filename)
     foreach (array('/','*','<','>',';',',','\\',':','(',')',' ','[',']') as $i) {
             $filename= noalyss_str_replace($i, "-",$filename);
     }
+    $filename=str_replace(search: ['é','è','ê','ë'],replace:['e'], subject: $filename);
+    $filename=str_replace(search: ['à','â','ä','æ'],replace:['a'], subject: $filename);
+    $filename=str_replace(search: ['ù','ü','û'],replace:['u'], subject: $filename);
+    $filename=str_replace(search: ['ù','ü','û'],replace:['a'], subject: $filename);
+    $filename=str_replace(search: ['ç'],replace:['c'], subject: $filename);
+    $filename=str_replace(search: ['ô','ö'],replace:['o'], subject: $filename);
+    $filename=str_replace(search: ['î','ï'],replace:['i'], subject: $filename);
+    $filename=iconv('utf-8','ascii//IGNORE',$filename);
     return $filename;
 
 }
