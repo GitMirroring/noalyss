@@ -85,7 +85,7 @@ class DatabaseCore
      * @return false|string
      */
     public function get_name () {
-        return pg_dbname($this->ret);
+        return pg_dbname($this->db);
     }
     
     public function verify()
