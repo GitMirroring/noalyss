@@ -35,8 +35,9 @@ class IHidden extends HtmlInput
         $this->name=($p_name==null)?$this->name:$p_name;
         $this->value=($p_value==null)?$this->value:$p_value;
         $this->id=($this->id=="")?$this->name:$this->id;
-
-        $r='<INPUT TYPE="HIDDEN" id="'.$this->id.'" name="'.$this->name.'" value="'.$this->value.'">';
+       $strAttribute=$this->get_node_attribute();
+        
+        $r='<INPUT TYPE="HIDDEN" id="'.$this->id.'" name="'.$this->name.'" value="'.$this->value.'" '.$strAttribute.' >';
         return $r;
 
     }

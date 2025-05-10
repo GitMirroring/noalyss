@@ -47,3 +47,4 @@ local/*
 .idea/*
 include/tfpdf/font/unifont/*
 html/ads.html
+/nbproject/private/

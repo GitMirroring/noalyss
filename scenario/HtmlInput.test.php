@@ -175,7 +175,92 @@ $http=new HttpInput();
     echo $icard->input();
     echo $icard->search();
 ?>
-    
 <div id="debug_box"></div>
+<h2>itext </h2>
+<h3>HTML Attribute</h3>
+<pre>
+    $itext=new IText("itext_name");
+    $itext->set_attribute("key1",1);
+    $itext->set_attribute("data1","-data-");
+    $itext->set_attribute("logx","data:logx");
+    echo $itext->input();
+     echo $itext->display();
+</pre>
+<?php
+    $itext=new IText("itext_name");
+   $itext->style=' class="input_text" ';
+    $itext->set_attribute("key1",1);
+    $itext->set_attribute("data1","-data-");
+    $itext->set_attribute("logx","data:logx");
+    echo $itext->input();
+     echo $itext->display();
+?>
+<pre>
+    <?= htmlspecialchars($itext->input());?>
+    <?= htmlspecialchars($itext->display());?>
+</pre>
+<h3>Maxlenght = 15</h3>
+<?php
+    $itext->maxlength=15;
+    $itext->style=' class="input_text" ';
 
+     echo $itext->input();
+     echo $itext->display();
+    ?>
+<pre>
+    <?= htmlspecialchars($itext->input());?>
+    <?= htmlspecialchars($itext->display());?>
+</pre>
+<h3>placeholder</h3>
+<?php
+     $itext->style=' class="input_text" ';
+    $itext->placeholder="Donnez une information";
+     echo $itext->input();
+     echo $itext->display();
+    ?>
+<pre>
+    $itext->placeholder="Donnez une information";
+    <?= htmlspecialchars($itext->input());?>
+    <?= htmlspecialchars($itext->display());?>
+</pre>
+<h3>require</h3>
+<?php
+     $itext->style=' class="input_text" ';
+     $itext->require=true;
+     echo $itext->input();
+     echo $itext->display();
+    ?>
+<pre>
+ $itext->require=true;
+    <?= htmlspecialchars($itext->input());?>
+    <?= htmlspecialchars($itext->display());?>
+</pre>
+
+<h3>pattern : uniquement des chiffres</h3>
+<form onsubmit="return false;">
     
+<?php
+    $itext->style=' class="input_text" ';
+    $itext->pattern="[0-9]+";
+    $itext->maxlength="4";
+    $itext->placeholder="9999";
+    $itext->title="code";
+     echo $itext->input();
+     echo $itext->display();
+     echo HtmlInput::submit("valider","valider");
+     ?>
+<pre>
+    $itext->pattern="[0-9]+";
+    <?= htmlspecialchars($itext->input());?>
+    <?= htmlspecialchars($itext->display());?>
+</pre>
+</form>
+<h2> IDATE</h2>
+<?php
+    $date=new IDate('date_1',date("d.m.Y"));
+    echo $date->input();
+    echo htmlspecialchars($date->input());
+    $date->id= uniqid();
+    $date->javascript=sprintf('onchange = "console.debug(\'change date\');%s"',"format_date(this);");
+    echo $date->input();
+    ?>

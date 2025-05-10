@@ -46,25 +46,9 @@ class IDate extends HtmlInput
         $this->extra="";
         $this->style=' class="input_text" ';
         $this->autofocus=false;
+        $this->javascript='onchange="format_date(this)"';
     }
-    /**
-     * @return string
-     */
-    public function get_placeholder()
-    {
-        return $this->placeholder;
-        return $this;
-    }
-
-    /**
-     * @param string $placeholder
-     */
-    public function set_placeholder($placeholder)
-    {
-        $this->placeholder = $placeholder;
-        return $this;
-    }
-
+  
     /**
      * @return string
      */
@@ -131,7 +115,8 @@ class IDate extends HtmlInput
             return $this->display();
         if ($this->id=="")             $this->id=self::generate_id($this->name);
         $autofocus=($this->autofocus)?" autofocus ":"";
-        $onchange='onchange="format_date(this)"';
+        $strAttribute=$this->get_node_attribute();
+        
         $r=sprintf('
             <input type="text" name="%s" id="%s" 
                  class="input_text" 
@@ -141,6 +126,7 @@ class IDate extends HtmlInput
                  title="%s"
                  pattern="[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}"
                  %s
+                 %s
                 />
                 <span  class="smallbutton icon"
                 style="color:cornflowerblue"
@@ -149,7 +135,8 @@ class IDate extends HtmlInput
                 &#xe811;
                 </span>
                 ',$this->name,$this->id,$this->value,$this->placeholder,$this->title,
-                $onchange,
+                $this->javascript,
+                $strAttribute,
                 $this->id
                 );
         // @see calendar-setup.js

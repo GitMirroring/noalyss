@@ -76,6 +76,7 @@ class HtmlInput
     var $id;
     var $style;
     var $css_size;
+    var $placeholder; /*< $placeholder string in the INPUT Text */
 
     function __construct($p_name="", $p_value="", $p_id="")
     {
@@ -100,9 +101,26 @@ class HtmlInput
     {
         $this->readOnly=$p_read;
     }
+    /**
+     * @return string HTML placeholder attribut
+     */
+    public function get_placeholder()
+    {
+        return $this->placeholder;
+    }
+
+    /**
+     * @brief set HTML placeholder attribut
+     * @param string $placeholder
+     */
+    public function set_placeholder($placeholder)
+    {
+        $this->placeholder = $placeholder;
+        return $this;
+    }
 
     /*!
-     * \brief set the extra javascript property for the INPUT field
+     * \brief add an HTML attribute for the INPUT field
      * \param $p_name name of the parameter
      * \param $p_value default value of this parameter
      */
