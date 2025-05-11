@@ -347,6 +347,7 @@ define('EXC_PARAM_TYPE', 1006);
 define('EXC_DUPLICATE', 1200);
 define('EXC_INVALID', 1400);
 define('EXC_FORBIDDEN', 1500);
+define('EXC_DATA_SQL', 2001);
 // exception when balance is incorrect when saving an operation
 define('EXC_BALANCE', 1501);
 define("UNPINDG", "&#xf047;");

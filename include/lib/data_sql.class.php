@@ -34,7 +34,8 @@
  * 
  *   - table = name of the view or empty
  *   - sql = sql statement
- *   - name = array of column name, match between logic and actual name
+ *   - name = array of column name, match between logic and actual name, or 
+ *            only an array of columns
  *   - type = array , match between column and type of data
  *   - default = array of column with a default value
  *   - date_format = format of the date
@@ -92,7 +93,7 @@
 @endcode
  * 
  */
-#[AllowDynamicProperties]
+
 abstract class Data_SQL
 {
    var $cn;         //! Database connection
@@ -133,7 +134,7 @@ abstract class Data_SQL
         foreach ($this->name as $key)
         {
             if ( in_array($key,['name','type','format_date','cn','date_format','default'] ) ) {
-                throw new Exception ('DATASQL-94 invalid column name'.$key);
+                throw new Exception ('DATASQL-94 invalid column name'.$key,94);
             }
             $this->$key=null;
         }
@@ -158,56 +159,81 @@ abstract class Data_SQL
      *@brief get the value thanks the colum name and not the alias (name). 
      *@see getp
      */
-    public function get($p_string)
+    public function get($cols)
     {
-        if (array_key_exists($p_string, $this->type)) {
-            return $this->$p_string;
+        if (array_key_exists($cols, $this->type)) {
+            return $this->$cols;
         }
         else
-            throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
+             throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
     }
 
     /**
      *@brief set the value thanks the colum name and not the alias (name)
      *@see setp
      */
-    public function set($p_string, $p_value)
+    public function set($cols, $p_value)
     {
-        if (array_key_exists($p_string, $this->type))    {
-            $this->$p_string=$p_value;
+        if (array_key_exists($cols, $this->type))    {
+            $this->$cols=$p_value;
             return $this;
         }        else
-            throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
+           throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
+            
     }
 
     /**
      *@brief set the value thanks the alias name instead of the colum name 
+     * if not       found try the column name 
      *@see get
      */
-    public function getp($p_string)
+    public function getp($cols)
     {
-        if (array_key_exists($p_string, $this->name)) {
-            $idx=$this->name[$p_string];
+        if (array_key_exists($cols, $this->name)) {
+            $idx=$this->name[$cols];
             return $this->$idx;
         }
-        else
-            throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
+        if (array_key_exists($cols, $this->type)) {
+            return $this->$cols;
+        }
+        
+        throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
     }
 
     /**
-     *@brief set the value thanks the alias name instead of the colum name 
+     *@brief set the value thanks the alias name instead of the colum name, 
+     * if not       found try the column name 
      *@see set
      */
-    public function setp($p_string, $p_value)
+    public function setp($cols, $p_value)
     {
-        if (array_key_exists($p_string, $this->name))    {
-            $idx=$this->name[$p_string];
+        if (array_key_exists($cols, $this->name))    {
+            $idx=$this->name[$cols];
             $this->$idx=$p_value;
             return $this;
-        }        else
-            throw new Exception(__FILE__.":".__LINE__.$p_string.'Erreur attribut inexistant '.$p_string);
+        }       
+        if (array_key_exists($cols, $this->type))    {
+            $this->$cols=$p_value;
+            return $this;
+        }
+        
+        throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
     }
 
+    public function __set($cols,$p_value) {
+        if (array_key_exists($cols, $this->type))    {
+            $this->$cols=$p_value;
+            return $this;
+        }        else
+           throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
+    }
+    public function __get($cols) {
+         if (array_key_exists($cols, $this->type)) {
+            return $this->$cols;
+        }
+        else
+           throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
+    }
     abstract function insert();
 
     abstract function delete();
