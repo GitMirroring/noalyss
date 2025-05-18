@@ -34,7 +34,7 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 class Acc_Ledger_Fin extends Acc_Ledger
 {
-
+    public $bank_id; //! bank_id (int) FICHE.F_ID for bank
     function __construct($p_cn, $p_init)
     {
         parent::__construct($p_cn, $p_init);

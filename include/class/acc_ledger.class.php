@@ -43,7 +43,7 @@ class Acc_Ledger  extends jrn_def_sql
     var $currency_id;
     /**!< is_loaded true the ledger definition is loaded or false, it is not */
     protected  $is_loaded ; 
-
+    var $ledger_name;
 
     /**
      * @brief construct

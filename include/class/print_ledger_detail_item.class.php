@@ -26,6 +26,7 @@
 
 class Print_Ledger_Detail_Item extends Print_Ledger
 {
+    private $show_col; //!< $show_col (bool) show columns
     public function __construct (Database $p_cn,Acc_Ledger $p_jrn,$p_from,$p_to,$p_filter_operation)
     {
 
