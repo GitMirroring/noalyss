@@ -49,7 +49,7 @@ class Fiche
     var $tot_deb;
     var $ledger_name; ///!< this variable is a mistake, it shouldn't exist, need code rewrite
     var $ledger_description; ///!< this variable is a mistake, it shouldn't exist, need code rewrite
-
+    
     function __construct($p_cn,$p_id=0)
     {
         $this->cn=$p_cn;
@@ -1461,10 +1461,10 @@ class Fiche
         $sql='select fd_id from fiche where f_id=$1';
         $R=$this->cn->get_value($sql, array($this->id));
         if ( $R == "" )
-            $this->fd_id=0;
+            $this->fiche_def=0;
         else
-            $this->fd_id=$R;
-        return $this->fd_id;
+            $this->fiche_def=$R;
+        return $this->fiche_def;
     }
     /*!
      ***************************************************

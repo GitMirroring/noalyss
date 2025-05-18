@@ -73,7 +73,7 @@ class Tva_Rate_SQL extends Table_Data_SQL
         $this->default=array(
             "tva_id"=>"auto"
         );
-
+        
         $this->date_format="DD.MM.YYYY";
         parent::__construct($p_cn, $p_id);
     }

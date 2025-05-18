@@ -1040,7 +1040,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                 }
 
                 // Set Internal code
-                $this->grpt_id=$seq;
+                $this->jr_grpt_id=$seq;
                 /**
                  * save also into quant_fin
                  */

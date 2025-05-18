@@ -49,6 +49,36 @@ class Acc_Account_LedgerTest extends TestCase
     }
 
     /**
+     * @return array : idx [ $accounting,$from_date,$to_date,$nb_row,$tot_deb,$tot_cred]
+     */
+    public function dataGet_row_date()
+    {
+        $array=array(
+             ['55000004','01.01.2019','31.12.2019',4,0,806.90]
+          ,['55000005','01.01.2019','31.12.2019',3,3750.78,250.25]
+          ,['4400005','01.01.2019','31.12.2019',17,806.90,1761.00]
+          ,['4400005','01.03.2019','02.05.2019',9,602.19,848.80]
+        );
+        return $array;
+    }
+    /**
+     * @brief test function Acc_Account_Ledger::get_row_date
+     * @covers Acc_Account_Ledger::get_row_date
+     * @dataProvider dataGet_row_date
+     */
+    public function testGetRowData($accounting,$from_date,$to_date,$nb_row,$tot_deb,$tot_cred)
+    {
+        global $g_connection;
+        $g_connection->clear_all_prepare();
+        $acc_account_ledger=new Acc_Account_Ledger( $g_connection, $accounting);
+        $acc_account_ledger->get_row_date($from_date,$to_date);
+        $nb_actual_row=count($acc_account_ledger->row);
+        $this->assertEquals($nb_row,$nb_actual_row,"error received $nb_row rows");
+        $this->assertEquals($tot_deb,$acc_account_ledger->tot_deb,"error amount incorrect received ".$acc_account_ledger->tot_deb);
+        $this->assertEquals($tot_cred,$acc_account_ledger->tot_cred,"error amount incorrect received ".$acc_account_ledger->tot_cred);
+
+    }
+    /**
      * @covers Acc_Account_Ledger::get_row_date
      */
     public function testGet_row_date()
@@ -479,6 +509,34 @@ class Acc_Account_LedgerTest extends TestCase
 
         $this->assertEquals($nb_accounting,count($a_result)
             ,"number of accounting incorrect for (\$from_date,\$to_date,\$from_accounting,\$to_accounting,\$nb_accounting : ($from_date,$to_date,$from_accounting,$to_accounting,$nb_accounting");
+
+    }
+        /**
+     * @return array : idx [ $accounting,$from_date,$to_date,$nb_row,$tot_deb,$tot_cred]
+     */
+    public function dataRowNotLettered()
+    {
+        $array=array(
+        ['4400005','01.01.2019','31.12.2019',9,0,954.10]
+        ,['4400005','01.03.2019','02.05.2019',3,0,246.61]
+        );
+        return $array;
+    }
+    /**
+     * @brief test function Acc_Account_Ledger::get_row_date only unlettered
+     * @covers Acc_Account_Ledger::get_row_date
+     * @dataProvider dataRowNotLettered
+     */
+    public function testGetRowDataNotLetted($accounting,$from_date,$to_date,$nb_row,$tot_deb,$tot_cred)
+    {
+        global $g_connection;
+        $g_connection->clear_all_prepare();
+        $acc_account_ledger=new Acc_Account_Ledger( $g_connection, $accounting);
+        $acc_account_ledger->get_row_date(p_from:$from_date,p_to:$to_date,let:2);
+        $nb_actual_row=count($acc_account_ledger->row);
+        $this->assertEquals($nb_row,$nb_actual_row,"error received $nb_row rows");
+        $this->assertEquals($tot_deb,$acc_account_ledger->tot_deb,"error amount incorrect received ".$acc_account_ledger->tot_deb);
+        $this->assertEquals($tot_cred,$acc_account_ledger->tot_cred,"error amount incorrect received ".$acc_account_ledger->tot_cred);
 
     }
 }

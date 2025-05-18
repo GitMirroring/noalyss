@@ -526,7 +526,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $this->id=$p_jrn;
 
         $internal=$this->compute_internal_code($seq);
-        $this->internal=$internal;
+        $this->jr_internal=$internal;
 
         $cust=new Fiche($this->db);
         $cust->get_by_qcode($e_client);
@@ -678,11 +678,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 }
                 if ($g_parameter->MY_UPDLAB=='Y')
                 {
-                    $acc_operation->desc=strip_tags(${"e_march".$i."_label"});
+                    $acc_operation->desc=strip_tags(${"e_march".$i."_label"}??"");
                 }
                 else
                 {
-                    $acc_operation->desc=null;
+                    $acc_operation->desc="";
                 }
                 $acc_operation->poste=$poste_val;
                 $acc_operation->amount=$acc_amount->amount;
@@ -962,7 +962,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $this->pj=$acc_operation->update_receipt();
 
             // Set Internal code
-            $this->grpt_id=$seq;
+            $this->jr_grpt_id=$seq;
             $this->update_internal_code($internal);
             /* update quant_purchase */
             $this->db->exec_sql('update quant_purchase set qp_internal = $1 where j_id in (select j_id from jrnx where j_grpt=$2)',
@@ -1090,7 +1090,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 // insert into the table JRN
                 $mp_jr_id=$acc_pay->insert_jrn();
                 $this->payment_operation=$mp_jr_id;
-                $acjrn->grpt_id=$acseq;
+                $acjrn->jr_grpt_id=$acseq;
                 $acjrn->update_internal_code($acinternal);
                 // add an automatic PJ if ODS
                 if ($acjrn->get_type()=="ODS") {
@@ -1606,14 +1606,14 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $r .= '<div id="summary_op1">';
         $r.='<TABLE>';
         if ( $p_summary ) {
-            $jr_id=$this->db->get_value('select jr_id from jrn where jr_internal=$1',array($this->internal));
+            $jr_id=$this->db->get_value('select jr_id from jrn where jr_internal=$1',array($this->jr_internal));
             $r.="<tr>";
             $r.='<td>';
             $r.=_('Détail opération ');
             $r.='</td>';
             $r.='<td>';
             $r.=sprintf ('<a class="line" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a>',
-                    $jr_id,dossier::id(),$this->internal);
+                    $jr_id,dossier::id(),$this->jr_internal);
             $r.='</td>';
             $r.="</tr>";
         }

@@ -275,7 +275,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $seq = $this->db->get_next_seq('s_grpt');
         $this->id = $p_jrn;
         $internal = $this->compute_internal_code($seq);
-        $this->internal = $internal;
+        $this->jr_internal = $internal;
 
         $oPeriode = new Periode($this->db);
         $check_periode = $this->check_periode();
@@ -805,7 +805,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 
                 /* insert into jrn */
                 $acc_pay->mt = $mt;
-                $acjrn->grpt_id = $acseq;
+                $acjrn->jr_grpt_id = $acseq;
                 $acc_pay->desc = (!isset($e_comm_paiement) || noalyss_strlentrim($e_comm_paiement) == 0) ? $e_comm : $e_comm_paiement;
                 $mp_jr_id = $acc_pay->insert_jrn();
                 $acjrn->update_internal_code($acinternal);
@@ -906,14 +906,14 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $r .= '<div id="summary_op1" >';
         $r.='<TABLE>';
         if ( $p_summary ) {
-            $jr_id=$this->db->get_value('select jr_id from jrn where jr_internal=$1',array($this->internal));
+            $jr_id=$this->db->get_value('select jr_id from jrn where jr_internal=$1',array($this->jr_internal));
             $r.="<tr>";
             $r.='<td>';
             $r.=_('Détail opération ');
             $r.='</td>';
             $r.='<td>';
             $r.=sprintf ('<a class="line" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a>',
-                    $jr_id,dossier::id(),$this->internal);
+                    $jr_id,dossier::id(),$this->jr_internal);
             $r.='</td>';
             $r.="</tr>";
         }

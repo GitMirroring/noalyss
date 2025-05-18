@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
  */
 require DIRTEST.'/global.php';
 
-class Currency_SQL extends \Table_Data_SQL
+class data_Currency_SQL extends \Table_Data_SQL
 {
 
     function __construct(Database $p_cn, $p_id=-1)
@@ -69,7 +69,7 @@ class Data_SQLTest extends TestCase
     function testBuildObject()
     {
         $cn=new \Database(DOSSIER);
-        $currency_sql = new Currency_SQL($cn,0);
+        $currency_sql = new data_Currency_SQL($cn,0);
         $this->assertEquals($currency_sql->cr_code_iso,'EUR','invalid ISO Code');
     }
     /**
@@ -79,17 +79,17 @@ class Data_SQLTest extends TestCase
     {
         /* insert */
         $cn=new \Database(DOSSIER);
-        $currency_sql = new Currency_SQL($cn);
+        $currency_sql = new data_Currency_SQL($cn);
         $currency_sql->cr_code_iso = 'XIU';
         $currency_sql->cr_name = 'Currency for UNIT TEST';
         $currency_sql->insert();
         $this->assertTrue($currency_sql->id > 0,' row not created');
          /* update */
-        $update_sql = new Currency_SQL($cn,$currency_sql->id);
+        $update_sql = new data_Currency_SQL($cn,$currency_sql->id);
         $this->assertTrue($update_sql->cr_code_iso=='XIU'," update can not find row");
         $update_sql->cr_name='xxxx';
         $update_sql->save();
-        $check_sql=new Currency_SQL($cn,$currency_sql->id);
+        $check_sql=new data_Currency_SQL($cn,$currency_sql->id);
         $this->assertEquals($check_sql->get('cr_name'),'xxxx','get row not updated');
         $this->assertEquals($check_sql->cr_name,'xxxx',' __get row not updated');
         $this->assertEquals($check_sql->getp('cr_name'),'xxxx',' getp row not updated');
@@ -107,7 +107,7 @@ class Data_SQLTest extends TestCase
     {
         try {
             $cn=new \Database(DOSSIER);
-            $currency_sql = new Currency_SQL($cn,0);
+            $currency_sql = new data_Currency_SQL($cn,0);
             $a=$currency_sql->dummy;
             $currency_sql->save();
             
@@ -122,7 +122,7 @@ class Data_SQLTest extends TestCase
     {
         try {
             $cn=new \Database(DOSSIER);
-            $currency_sql = new Currency_SQL($cn,0);
+            $currency_sql = new data_Currency_SQL($cn,0);
             $currency_sql->get("dummy");
             $currency_sql->save();
             
@@ -137,7 +137,7 @@ class Data_SQLTest extends TestCase
     {
         try {
             $cn=new \Database(DOSSIER);
-            $currency_sql = new Currency_SQL($cn,0);
+            $currency_sql = new data_Currency_SQL($cn,0);
             $currency_sql->getp("dummy");
             $currency_sql->save();
             
@@ -152,7 +152,7 @@ class Data_SQLTest extends TestCase
     {
         try {
             $cn=new \Database(DOSSIER);
-            $currency_sql = new Currency_SQL($cn,0);
+            $currency_sql = new data_Currency_SQL($cn,0);
             $currency_sql->dummy=1;
             $currency_sql->save();
             
@@ -167,7 +167,7 @@ class Data_SQLTest extends TestCase
     {
         try {
             $cn=new \Database(DOSSIER);
-            $currency_sql = new Currency_SQL($cn,0);
+            $currency_sql = new data_Currency_SQL($cn,0);
             $currency_sql->set("dummy",1);
             $currency_sql->save();
             
@@ -182,7 +182,7 @@ class Data_SQLTest extends TestCase
     {
         try {
             $cn=new \Database(DOSSIER);
-            $currency_sql = new Currency_SQL($cn,0);
+            $currency_sql = new data_Currency_SQL($cn,0);
             $currency_sql->setp("dummy",1);
             $currency_sql->save();
             

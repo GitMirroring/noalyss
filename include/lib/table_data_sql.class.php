@@ -195,7 +195,7 @@ abstract class Table_Data_SQL extends Data_SQL
         $pk=$this->primary_key;
         // primary cannot be null or empty
         if (trim($this->$pk??"")==="" || $this->$pk===null)  {
-            $this->pk=-1;
+            $this->$pk=-1;
             return false;
         }
        
