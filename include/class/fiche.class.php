@@ -998,14 +998,14 @@ class Fiche
         "<TH style=\"text-align:left\">"._('Poste')." </TH>".
         "<TH style=\"text-align:left\">"._('Interne')." </TH>".
         "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
-        "<TH style=\"text-align:left\">"._('Description')." </TH>".
-        "<TH style=\"text-align:left\">"._('Type')."</TH>".
-        "<TH style=\"text-align:left\">"._('ISO')."</TH>".
-        "<TH style=\"text-align:right\">"._('Dev.')."</TH>".
+        "<TH class=\"visible_gt800\" style=\"text-align:left\">"._('Description')." </TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:left\">"._('Type')."</TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:left\">"._('ISO')."</TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:right\">"._('Dev.')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."  </TH>".
         "<TH style=\"text-align:right\">"._('Crédit')." </TH>".
         th('Prog.','style="text-align:right"').
-        th('Let.','style="text-align:right"');
+        th('Let.','class="visible_gt800"  style="text-align:right"');
         "</TR>"
         ;
 	$old_exercice="";$sum_deb=0;$sum_cred=0;
@@ -1035,19 +1035,20 @@ class Fiche
 		    $progress=bcsub($sum_deb,$sum_cred);
 			$side="&nbsp;".$this->get_amount_side($progress);
 		    echo "<TR class=\"highlight\">".
-		       "<TD>$old_exercice</TD>".
-		     td('').
-		      td('').
-		      "<TD></TD>".td().
-		      "<TD>Totaux</TD>".
+                            td($op['p_exercice']).
+                            td("",' class="visible_gt800" ').
+                            td("",' class="visible_gt800" ').
+                            td("",' class="visible_gt800" ').
                             td().
-                            td().
-                            td().
-		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
-		      "<TD style=\"text-align:right\">".nbm($sum_cred)."</TD>".
-		      td(nbm(abs($progress)).$side,'style="text-align:right"').
-		      td('').
-		      "</TR>";
+                            td(_('Totaux')).
+                            td("",' class="visible_gt800" ').
+                            td("",' class="" ').
+                            "<TD></TD>".
+                            "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
+                            "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
+                            td(nbm(abs($progress)).$side,'style="text-align:right"').
+                           td("",' class="visible_gt800" ').
+                            "</TR>";
 		    $sum_cred=0;
 		    $sum_deb=0;
 		    $progress=0;
@@ -1067,23 +1068,23 @@ class Fiche
 	      td(h($op['jr_pj_number'])).
                td($op['j_poste']).
             "<TD>".$vw_operation."</TD>".
-            td($tiers).
-            "<TD>".h($op['description']).$op_analytic."</TD>".
+            td($tiers, ' class="visible_gt800" ').
+            "<TD  class=\"visible_gt800\" >".h($op['description']).$op_analytic."</TD>".
                     td($op['jr_optype']);
             
             /// If the currency is not the default one , then show the amount
             if ( $op['currency_id'] > 0 && $op['oc_amount'] != 0)
             {
-             echo   td($op['cr_code_iso']).
-                    td(nbm($op['oc_amount'],4),'style="text-align:right;padding-left:10px;"');
+             echo   td($op['cr_code_iso'], ' class="visible_gt800" ').
+                    td(nbm($op['oc_amount'],4),' class="visible_gt800"  style="text-align:right;padding-left:10px;"');
             } else {
-                echo td().td();
+                echo td("",' class="visible_gt800" ').td("",' class="visible_gt800" ');
             }
             
             echo "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
-            td($html_let, ' style="text-align:right"') .
+            td($html_let, ' style="text-align:right"  class="visible_gt800" ') .
 			"</TR>";
 	    $old_exercice=$op['p_exercice'];
 
@@ -1094,18 +1095,18 @@ class Fiche
         echo '<tfoot>';
        echo "<TR class=\"highlight\">".
                td($op['p_exercice']).
-               td().
-               td().
-               td().
+                td("",' class="visible_gt800" ').
+                td("",' class="visible_gt800" ').
+                td("",' class="visible_gt800" ').
                td().
         td(_('Totaux')).
-               td().
-               td().
+                td("",' class="visible_gt800" ').
+                td("",' class="" ').
         "<TD></TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
-	  "<TD style=\"text-align:right\">".nbm($diff)."</TD>".
-            td($solde_side).
+	  "<TD style=\"text-align:right\">".nbm($diff).$solde_side."</TD>".
+            td("",' class="visible_gt800" ').
         "</TR>";
         echo "<TR style=\"font-weight:bold\">".
         "<TD>$solde_type</TD>".
