@@ -69,9 +69,18 @@ class Database extends DatabaseCore
             $this->exec_sql('set search_path to public,comptaproc,pg_catalog;');
         }
         $this->exec_sql('set DateStyle to ISO, MDY;');
-
+        $this->ret=true;
+        $this->is_open=true;
     }
-
+    function __toString(): string {
+        return "DatabaseCore[db=" . var_export($this->db,true)
+            . ", ret=" .var_export( $this->ret,true)
+            . ", is_open=" . $this->is_open
+            . ", sql=" . $this->sql
+            . ", array=" . var_export($this->array,true)
+            . ",dbname = ".$this->get_dbname()
+            . "]";
+}
     /***
      * \brief Save a "piece justificative" , the name must be pj
      *

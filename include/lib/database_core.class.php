@@ -37,12 +37,17 @@ class DatabaseCore
 
     protected $db;
     /**< database connection */
-    private $ret;
+    protected $ret;
     /**< return value  */
-    private $is_open;                   /*!< true is connected */
+    protected $is_open;                   /*!< true is connected */
     public $sql;     //!< last SQL stmt executed
     public $array;
-    /*** Connect to a database return an connx to db or false if it fails
+    protected $dbname; ///!< $dbname (string) Database name
+    protected $dbport;///!< $dbport (int) Database port
+    protected $dbhost;///!< $dbhost(string) Database host
+    protected $dbuser;///!< $dbuser(string) Database user
+    /*** 
+     * @brief Connect to a database return an connx to db or false if it fails
      *
      * @param string $p_user Username
      * @param type $p_password User's password
@@ -74,13 +79,31 @@ class DatabaseCore
                 throw new Exception(_('Erreur Connexion'));
             }
         }
-
+        $this->dbport=$p_port;
+        $this->dbname=$p_dbname;
+        $this->dbhost=$p_host;
+        $this->dbuser=$p_user;
         $this->is_open = TRUE;
         $this->sql="";
 
     }
+    public function get_dbname() {
+        return $this->dbname;
+    }
 
-    /**
+    public function get_dbport() {
+        return $this->dbport;
+    }
+
+    public function get_dbhost() {
+        return $this->dbhost;
+    }
+
+    public function get_dbuser() {
+        return $this->dbuser;
+    }
+
+        /**
      * return the name of the current database
      * @return false|string
      */
