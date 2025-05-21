@@ -254,7 +254,7 @@ abstract class Data_SQL
             $this->$cols=$p_value;
             return $this;
         }        
-          if (array_key_exists($cols, $this->a_virtual_col))
+          if ( ! empty ($this->a_virtual_col) && array_key_exists($cols, $this->a_virtual_col))
         {
              $this->$cols=$p_value;
              return $this;
@@ -266,7 +266,7 @@ abstract class Data_SQL
          if (array_key_exists($cols, $this->type)) {
             return $this->$cols;
         }
-         if (array_key_exists($cols, $this->a_virtual_col))
+         if (! empty ($this->a_virtual_col) &&  array_key_exists($cols, $this->a_virtual_col))
         {
              return $this->$cols;
         }
