@@ -64,6 +64,7 @@ input{
 }
 input:focus {
     border:1px solid orange;
+    outline:1px solid orange;
     margin:1px;
     background-color:  lightyellow;
 }
@@ -767,6 +768,7 @@ a.document:hover {
    border:1px solid orange;
     margin:1px;
     background-color:  lightyellow;
+    outline:1px solid orange;
 }
 h1.legend, legend {
     font-weight: bold;
@@ -1554,7 +1556,7 @@ div.content a.nav:hover img,a.nav:hover img {
 
     position : absolute;
     z-index:-1;
-    font-family: "Montserrat Regular";
+    font-family: var(--font-tile);
     }
 @media only screen and (min-width: 955px) {
 #dossier {
@@ -3369,8 +3371,8 @@ margin:1px;
 }
 .nav-pills .nav-link.active {
     background-color: #506cb8 !important;
-     border-radius: 0px;
-    font-family: "Montserrat";
+    border-radius: 0px;
+    font-family:var(--font-title) !important;
 } 
 .nav-pills .nav-link {
     color:white ;
