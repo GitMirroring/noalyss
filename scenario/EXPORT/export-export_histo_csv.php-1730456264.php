@@ -66,6 +66,6 @@ if (trim($result) != '') {
 } else {
     echo p('result failed','class="notice"');
 }
-csv2table($result);
+\Noalyss_Csv::csv2table($result);
 
 
