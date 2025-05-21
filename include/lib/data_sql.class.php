@@ -104,10 +104,10 @@ abstract class Data_SQL
    var $date_format;    //! defaullt date format
    var $default;
    var $table;
-
+   protected $a_virtual_col;
     public function __toString(): string
     {
-        $ret="values ";
+        $ret=" members: ";
         foreach ($this->name as $name) {
             $ret.="[ $name => {$this->$name} ]";
         }
@@ -116,6 +116,7 @@ abstract class Data_SQL
         $ret.="| default ".print_r($this->default,true);
         $ret.="| primary key ".$this->primary_key;
         $ret.="| date_format ".$this->date_format;
+        $ret.="| a_virtual_col".var_export($this->a_virtual_col,true);
         return $ret;
     }
 
@@ -125,6 +126,7 @@ abstract class Data_SQL
         $this->cn=$p_cn;
         $pk=$this->primary_key;
         $this->$pk=$p_id;
+         $this->a_virtual_col=array();
 	// check that the definition is correct
 	if (count($this->name) != count($this->type) ){
 		throw new Exception (__FILE__." $this->table Cannot instantiate");
@@ -157,6 +159,25 @@ abstract class Data_SQL
             $this->update();
     }
     /**
+     * @brief return array of virtual cols (alias calculated, formatted cols)
+     * @return array
+     */
+    public function get_a_virtual_col() {
+        return $this->a_virtual_col;
+    }
+    /**
+     * @brief add a virtual column (formatted column, sum of 2 col, ...)
+     * @param $col_name (string) name of the column , will be use in get , getp
+     * @param $sql_expression (string) SQL Expression for the column 
+     * like "to_char(col1,'DD.MM.YY HH24:MI:SS')", col1+col2, ...
+     * @note sql expression and col_name must be valid , there is no futher 
+     * check
+     * @returns void
+     */
+    public function set_virtual_col($col_name,$sql_expression) {
+        $this->a_virtual_col[$col_name]=$sql_expression;
+    }
+    /**
      *@brief get the value thanks the colum name and not the alias (name). 
      *@see getp
      */
@@ -165,7 +186,10 @@ abstract class Data_SQL
         if (array_key_exists($cols, $this->type)) {
             return $this->$cols;
         }
-        else
+         if (array_key_exists($cols, $this->a_virtual_col))
+        {
+             return $this->$cols;
+        }
              throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
     }
 
@@ -197,7 +221,11 @@ abstract class Data_SQL
         if (array_key_exists($cols, $this->type)) {
             return $this->$cols;
         }
-        
+        if (array_key_exists($cols, $this->a_virtual_col))
+        {
+             return $this->$cols;
+        }
+
         throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
     }
 
@@ -225,15 +253,24 @@ abstract class Data_SQL
         if (array_key_exists($cols, $this->type))    {
             $this->$cols=$p_value;
             return $this;
-        }        else
+        }        
+          if (array_key_exists($cols, $this->a_virtual_col))
+        {
+             $this->$cols=$p_value;
+             return $this;
+        }
+        
            throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
     }
     public function __get($cols) {
          if (array_key_exists($cols, $this->type)) {
             return $this->$cols;
         }
-        else
-           throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
+         if (array_key_exists($cols, $this->a_virtual_col))
+        {
+             return $this->$cols;
+        }
+        throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
     }
     abstract function insert();
 
@@ -300,7 +337,7 @@ abstract class Data_SQL
     }
 
     /**
-     * Transform an array into object
+     * @brief Transform an array into object
      * @param type $p_array
      * @return object
      */
@@ -333,17 +370,34 @@ abstract class Data_SQL
             $nkey=$prefix.$key;
             $array[$key]=$this->$key;
         }
+        if ( ! empty ($this->a_virtual_col )) {
+            $a_column= array_keys($this->a_virtual_col);
+            foreach( $a_column as $column){
+                $array[$column]=$this->a_virtual_col[$column];
+            }
+        }
         return $array;
     }
 
     /**
-     * @brief turns a row fetched from the DB into a SQL object in updating all his attribute
-     * @param $p_array
+     * @brief update the data member of current object with the value from the array.
+     * includes the virtual column, usefull if need to update several columns in once
+     * @param $p_array (array) associative key = column_vale, value new value for this col.
      * @return void
      */
     public function to_row($p_array) {
         foreach ($this->name as $name) {
-            $this->$name=$p_array[$name];
+            if (isset ($p_array[$name])) {
+                $this->$name=$p_array[$name];
+            }
+        }
+         if ( ! empty ($this->a_virtual_col )) {
+                $a_column= array_keys($this->a_virtual_col);
+                foreach( $a_column as $column){
+                    if ( isset ($p_array[$column])) {
+                    $this->$column = $p_array[$column];
+                    }
+                }
         }
     }
     /**
@@ -357,8 +411,8 @@ abstract class Data_SQL
     abstract  function seek($cond='', $p_array=null);
 
     /**
-     * @brief get_seek return the next object, the return of the query must have all the column
-     * of the object
+     * @brief get_seek return the next object, the return of the query must have 
+     * all the column of the object including the virtual columns
      * @param $p_ret is the return value of an exec_sql
      * @param $idx is the index
      * @see seek
@@ -367,7 +421,18 @@ abstract class Data_SQL
     public function next($ret, $i)
     {
         $array=$this->cn->fetch_array($ret, $i);
-        return $this->from_array($array);
+        $this->from_array($array);
+        if ( ! empty ($this->a_virtual_col )) {
+                $a_column= array_keys($this->a_virtual_col);
+                foreach( $a_column as $column){
+                    if ( isset  ($array[$column] )) {
+                        $this->$column = $array[$column];
+                    } else {
+                        $this->$column =   null;
+                    }
+                }
+        }
+        return $this;
     }
 
     /**
@@ -397,7 +462,9 @@ abstract class Data_SQL
         $a_return=array();
         for ($i=0; $i<$max; $i++)
         {
-            $a_return[$i]=clone $this->next($ret, $i);
+            $x=clone $this->next($ret, $i);
+           
+            $a_return[$i]=$x;
         }
         return $a_return;
     }
