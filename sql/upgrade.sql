@@ -8,3 +8,5 @@ ALTER TABLE public.todo_list ALTER COLUMN tl_date drop NOT NULL;
 
 
 update menu_ref set me_javascript='bookmark.show(<DOSSIER>)' where me_code='BOOKMARK';
+
+alter table tool_uos add created_date timestamp default now();
