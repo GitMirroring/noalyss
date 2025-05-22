@@ -39,6 +39,9 @@ class Anc_Key
 {
 
     private $key; /*!  the distribution key */
+    protected $a_ledger;
+    protected $a_activity;
+    protected $a_row;
     /**
      *@brief  Return the number of keys available.
      *  Return the number of keys available for the ledger given in parameter

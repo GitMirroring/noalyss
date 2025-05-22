@@ -35,35 +35,35 @@ require_once NOALYSS_INCLUDE.'/database/operation_currency_sql.class.php';
 class Acc_Ledger  extends jrn_def_sql
 {
 
-    var $id;     /**!< jrn_def.jrn_def_id */
-    var $db;     /**!< database connextion */
-    var $row;    /**!< row of the ledger */
-    var $ledger_type;   /**!< type of the ledger ACH ODS FIN VEN or GL */
-    var $nb;     /**!< default number of rows by  default 10 */
-    var $currency_id;/**!<  $currency_id (int) SQL:CURRENCY.ID  default 0 */
-    /**!< is_loaded true the ledger definition is loaded or false, it is not */
+    var $id;     /*!< jrn_def.jrn_def_id */
+    var $db;     /*!< database connextion */
+    var $row;    /*!< row of the ledger */
+    var $ledger_type;   /*!< type of the ledger ACH ODS FIN VEN or GL */
+    var $nb;     /*!< default number of rows by  default 10 */
+    var $currency_id;/*!<  $currency_id (int) SQL:CURRENCY.ID  default 0 */
+    /*!< is_loaded true the ledger definition is loaded or false, it is not */
     protected  $is_loaded ; 
     var $ledger_name;
-    var $jr_internal ; /**!< $jr_internal (string) internal number for an operation */
-    var $jr_id; /**!< $jr_id (int) SQL : PK JRN.JR_ID */
-    var $jrn_def_max_line_deb ; /**!< $jr_id (int) PK.JRN */
-    var $jrn_def_id; /**!<  $jrn_def_id(INT) jrn_def.jrn_def_id */
-    var $jrn_def_name; /**!<  $jrn_def_name(string) ledger name  */
-    var $jrn_def_ech_lib; /**!< $jrn_def_ech_lib (string) text for limit date   */
-    var $jrn_def_type; /**!< $jrn_def_type(string)  type of the ledger ACH,VEN,ODS,FIN */
-    var $jrn_def_pj_pref; /**!< $jrn_def_pj_pref(string) prefix for receipt   */
-    var $jrn_deb_max_line;/**!< $jrn_deb_max_line(int) max rows to display*/
-    var $jrn_def_description; /**!< $jrn_def_description(string) ledger description   */
-    var $jrn_enable; /**!< $jrn_enable (0 or 1)0:ledger not available, 1:ledger available    */
-    var $jrn_def_negative_amount; /**!< $jrn_def_negative_amount (0-1) 0: ledger use positive or negative amount, 1: ledger should use negative amount  */
-    var $jrn_def_negative_warning; /**!<$jrn_def_negative_warning (string) string to display if the amount is not positive (see $jrn_def_negative_amount) */
-    var $jrn_def_quantity; /**!< $jrn_def_quantity  (0-1) 0 no quantity for operations
+    var $jr_internal ; /*!< $jr_internal (string) internal number for an operation */
+    var $jr_id; /*!< $jr_id (int) SQL : PK JRN.JR_ID */
+    var $jrn_def_max_line_deb ; /*!< $jr_id (int) PK.JRN */
+    var $jrn_def_id; /*!<  $jrn_def_id(INT) jrn_def.jrn_def_id */
+    var $jrn_def_name; /*!<  $jrn_def_name(string) ledger name  */
+    var $jrn_def_ech_lib; /*!< $jrn_def_ech_lib (string) text for limit date   */
+    var $jrn_def_type; /*!< $jrn_def_type(string)  type of the ledger ACH,VEN,ODS,FIN */
+    var $jrn_def_pj_pref; /*!< $jrn_def_pj_pref(string) prefix for receipt   */
+    var $jrn_deb_max_line;/*!< $jrn_deb_max_line(int) max rows to display*/
+    var $jrn_def_description; /*!< $jrn_def_description(string) ledger description   */
+    var $jrn_enable; /*!< $jrn_enable (0 or 1)0:ledger not available, 1:ledger available    */
+    var $jrn_def_negative_amount; /*!< $jrn_def_negative_amount (0-1) 0: ledger use positive or negative amount, 1: ledger should use negative amount  */
+    var $jrn_def_negative_warning; /*!<$jrn_def_negative_warning (string) string to display if the amount is not positive (see $jrn_def_negative_amount) */
+    var $jrn_def_quantity; /*!< $jrn_def_quantity  (0-1) 0 no quantity for operations
                             * 1 has quantity  */
-    var $with_concerned; /**!< $with_concerned(bool) : true is operation comes with 
+    var $with_concerned; /*!< $with_concerned(bool) : true is operation comes with 
                         another one,     */
     var $jr_grpt_id ; /**! $jr_grpt_id (int) SQL JRN.JR_GRP_ID group rows
                              of an operations     */
-    var $pj; /**!< $pj (string) nb receipt of the operation */
+    var $pj; /*!< $pj (string) nb receipt of the operation */
     /**
      * @brief construct
      * @param $p_cn database connexion
