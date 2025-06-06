@@ -359,32 +359,33 @@ div.recherche_form{
 
 }
 div.content{
-    padding-top:0.0030%;
-    margin-top:0.0030%;
-    margin-right: 0.15%;
-    width:99.7%;
+  
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'OpenSansRegular';
-    font-size:100%;
-    font-size:1rem;
-
+    font-size:0.95rem;
+     padding:0rem;
+    font-size:95%;
 }
-div.content {
-        font-size:90%;
-    }
 /* SM */
 @media (min-width: 576px) {
-    
+  
 }
 /* MD */
 @media (min-width: 768px) {
 div.content {
         font-size:100%;
+        padding-top:0.0030%;
+        margin-top:0.0030%;
+        margin-right: 0.15%;
+        padding:0.5rem;
     }
 }
 /* LG */
 @media (min-width: 992px) {
-
+    div.content {
+        padding:1.2rem;
+        
+    }
 }
 /* XL */
 @media (min-width: 1200px) {
@@ -1129,6 +1130,7 @@ td.toolselected a.mtitle {
 div.topmenu {
 	font-size:100%;
 	font-size:1rem;
+        margin-top:20px;
        
 }
 .topmenu table {
@@ -3319,6 +3321,10 @@ margin:1px;
         /* width: 20rem !important;*/
         width: 100% !important;
     }
+    .nav-fill .nav-item 
+    {
+        width:22%;
+    }
 }
  /* MD */
  @media (min-width: 768px) {
@@ -3327,6 +3333,10 @@ margin:1px;
         width: 100% !important;
     }
 
+    .nav-fill .nav-item 
+    {
+        width:auto;
+    }
  }
  /* LG */
  @media (min-width: 992px) {
