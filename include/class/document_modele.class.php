@@ -23,7 +23,7 @@
 /*!
  * \brief Class for the document template
  */
-class Document_modele
+class Document_Modele
 {
     var $cn;         	/*!< $cn  database connection */
     var $md_id;	        /*!< $md_id pk */
