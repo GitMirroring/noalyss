@@ -30,7 +30,7 @@ $js_add = sprintf("categoryCardDefinition.add_attribut('%s')",$attribut_id);
 
                 ?>
 
-                <span class="icon" onclick="<?= $js_add ?>">&#x1F808;</span>
+                <span class="icon" onclick="<?= $js_add ?>"><?=ARROWLEFT?></span>
             </span>
 
 

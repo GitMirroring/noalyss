@@ -349,7 +349,10 @@ define('EXC_FORBIDDEN', 1500);
 define('EXC_BALANCE', 1501);
 define("UNPINDG", "&#xf047;");
 define("PINDG", "&#xe809;");
-
+define("ARROWLEFT","&#8678;");
+define("ARROWRIGHT","&#8680;");
+define("ARROWDOWN","&#8681;");
+define("ARROWUP","&#8679;");
 // Url of NOALYSS (http://...) 
 // 
 if (!defined("NOALYSS_URL")) {
