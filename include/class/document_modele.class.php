@@ -93,8 +93,7 @@ class Document_Modele
 	      $c->name="dm_remove_".$row['md_id'];
 	      $r.=$c->input();
 	      $r.="</td>";
-	      $r.=td(HtmlInput::detail_modele_document($row['md_id'],_('Modifier')));
-
+              $r.=td(\Icon_Action::modify(uniqid(),sprintf("modifyModeleDocument('%s','%s')",$row['md_id'],$dosid) ));
 	      $r.="</tr>";
 	    }
 	  $r.="</table>";
