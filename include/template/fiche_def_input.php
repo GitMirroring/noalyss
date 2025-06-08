@@ -10,6 +10,7 @@
  */
 ?>
 <div class="content" style="margin-left: 2rem;">
+        <?php Noalyss\Dbg::echo_file(__FILE__);?>
     <div class="form-group">
         <label for="nom_mod"><?=_('Categorie de fiche')?></label>
         <input id="nom_mod_id" type="text" class="input_text form-control" style="width: 50rem" name="nom_mod" value="<?=$nom_mod?>">
