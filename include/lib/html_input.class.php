@@ -325,8 +325,9 @@ class HtmlInput
 
     /**
      * @brief return a string containing the html code for calling the modifyModeleDocument
+     * @deprecated since 9.3.0.6
      */
-    static function detail_modele_document($p_id, $p_mesg)
+    static function detail_modele_document_deprecated($p_id, $p_mesg)
     {
         return sprintf('<A class="detail" style="text-decoration:underline" HREF="javascript:modifyModeleDocument(%d,%d)">%s</A>',
                 $p_id, dossier::id(), $p_mesg);
