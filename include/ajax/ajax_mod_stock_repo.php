@@ -28,11 +28,11 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 require_once NOALYSS_INCLUDE.'/database/stock_sql.class.php';
 $cn=Dossier::connect();
-$st=new Stock_Sql($cn,$_GET['r_id']);
+$st=new Stock_Sql($cn,$http->get('r_id','number'));
 ?>
-<?php echo HtmlInput::title_box("Ajouter un dépôt","change_stock_repo_div","close")?>
+<?php echo HtmlInput::title_box("Modifier un dépôt","change_stock_repo_div","close")?>
 	<form method="post">
-		<?php echo HtmlInput::hidden("r_id",$_GET['r_id']);?>
+		<?php echo HtmlInput::hidden("r_id",$http->get('r_id','number'));?>
 		<table>
 			<tr>
 				<td>
