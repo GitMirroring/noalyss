@@ -1351,9 +1351,10 @@ function record_log($p_message)
         if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
             $exc=$p_message;
             do {
-                error_log("noalyss exception message [".$exc->getMessage()."]",0);
-                error_log("noalyss exception code [".$exc->getCode()."]",0);
-                error_log("noalyss exception trace ".$exc->getTraceAsString(),0);
+                error_log("noalyss exception File [".$exc->getFile().":".$exc->getLine()."]",0);
+                error_log("noalyss exception Message [".$exc->getMessage()."]",0);
+                error_log("noalyss exception Code [".$exc->getCode()."]",0);
+                error_log("noalyss exception Trace ".$exc->getTraceAsString(),0);
                 error_log("------ ",0);
                 $exc=$exc->getPrevious();
                 if ($exc != null )fwrite ($handle_log,"*********************** Previous  *********************** \n");
@@ -1384,11 +1385,13 @@ function record_log($p_message)
         if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
             $exc=$p_message;
             do {
-                fwrite($handle_log,"noalyss exception message [".$exc->getMessage()."]");
+                fwrite($handle_log,"noalyss exception File [".$exc->getFile().":".$exc->getLine()."]");
                 fwrite ($handle_log,"\n");
-                fwrite($handle_log,"noalyss exception code [".$exc->getCode()."]");
+                fwrite($handle_log,"noalyss exception Message [".$exc->getMessage()."]");
                 fwrite ($handle_log,"\n");
-                fwrite($handle_log,"noalyss exception trace \n".$exc->getTraceAsString());
+                fwrite($handle_log,"noalyss exception Code [".$exc->getCode()."]");
+                fwrite ($handle_log,"\n");
+                fwrite($handle_log,"noalyss exception Trace \n".$exc->getTraceAsString());
                 fwrite ($handle_log,"\n");
                 $exc=$exc->getPrevious();
                 if ($exc != null )fwrite ($handle_log,"*********************** Previous  *********************** \n");
