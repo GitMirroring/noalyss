@@ -77,7 +77,7 @@ class HttpInput
         /**
      *  \brief  Check the type of the value
      * @param $p_name name of the variable
-     * @param $p_type type of the variable (number,string,text,date,array)
+     * @param $p_type (string) type of the variable (number,string,text,date,array,raw)
      * @throws Exception if the variable doesn't exist or type incorrect
      * @todo Add regex:pattern
      */
