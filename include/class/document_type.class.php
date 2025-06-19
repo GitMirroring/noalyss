@@ -33,12 +33,16 @@
  */
 class Document_Type
 {
+    var $db; //!< Database conx
+    var $dt_id; //!< $dt_id (int) primary key of DOCUMENT_TYPE
+    var $dt_value; //!< $dt_value (text) description of document type
+    var $dt_prefix; //!< $dt_prefix (text) prefix to use for this
 	/** document_type
 	 * \brief constructor
 	 * \param $p_cn database connx
 	 */
 
-	function __construct($p_cn, $p_id = -1)
+	function __construct(Database $p_cn, $p_id = -1)
 	{
 		$this->db = $p_cn;
 		$this->dt_id = $p_id;

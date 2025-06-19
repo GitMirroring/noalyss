@@ -345,7 +345,7 @@ class Acc_Account_Ledger
 
     /*!
      * \brief  give the balance of an account
-     *
+     * \param $p_cond (text) a SQL Condition, 
      * \return
      *      balance of the account
      *
