@@ -711,7 +711,7 @@ class Document
 
     function replace($p_tag, $p_array)
     {
-        global $g_parameter;
+        global $g_parameter,$g_user;
         $p_tag=strtoupper($p_tag);
         $p_tag=noalyss_str_replace('=', '', $p_tag);
         $r="Tag inconnu";
@@ -798,8 +798,26 @@ class Document
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
                 $p=$tiers->strAttribut(ATTR_DEF_ACCOUNT,0);
-                $poste=new Acc_Account_Ledger($this->db, $p);
-                $r=$poste->get_solde(' true');
+                // if exercice is open with a report, 1 day is 1st exercice's day
+                if ( $g_parameter->MY_REPORT == 'Y') {
+                    // var $user_exercice (int) current user exercice (from his preference)
+                    $user_exercice=$g_user->get_exercice();
+                    // var $start_date (text) First day of this exercice
+                    $start_date=$this->db->get_value("
+                        select to_char(min(p_start),'YYYYMMDD') first_day 
+                        from parm_periode where p_exercice=$1"
+                            ,[$user_exercice]);
+                    // var $end_date (text) last day of this exercice
+                    $end_date =$this->db->get_value("
+                            select to_char(max(p_end),'YYYYMMDD') last_day
+                            from parm_periode where p_exercice=$1"
+                            ,[$user_exercice]);
+                    $a=$tiers->get_solde_detail(" to_char(jrnx.j_date,'YYYYMMDD')>='{$start_date}' and to_char(jrnx.j_date,'YYYYMMDD') <= '{$end_date}' ");
+                    $r = round($a['solde'],4);
+                }else {
+                    $a=$tiers->get_solde_detail();
+                    $r = round($a['solde'],4);
+                }
                 break;
             case 'CUST_NAME':
                 $tiers=new Fiche($this->db);
