@@ -335,5 +335,7 @@ class DocumentTest extends TestCase {
         
         $this->assertEquals($document->replace('SOLDE',$request),$balance_noreport,"{$quickcode} balance_noreport fails");
         
+       $g_parameter->MY_REPORT='Y';
+        
     }
 }
