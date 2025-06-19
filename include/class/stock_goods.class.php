@@ -150,7 +150,7 @@ class Stock_Goods extends Stock_Goods_Sql
 					/*
                                          * check if code stock does exist
                                          */
-                                        $count=$cn->get_value('select count(*) from fiche_detail where ad_id=$1 and ad_value=$2',
+                                        $count=$cn->get_value('select count(*) from fiche_detail where ad_id=$1 and upper(ad_value)=upper($2)',
                                                 array(ATTR_DEF_STOCK,$stock));
                                         if ( $count==0) {
                                             throw new Exception(_("Code stock inutilisé").h($stock));

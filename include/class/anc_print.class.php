@@ -38,7 +38,7 @@ class Anc_Print
     var $from_poste;				/*!< $from_poste from poste  */
     var $to_poste;				/*!< $to_poste to the poste */
     var $has_data;  /*!< array of data */
-    protected $pa_id;  /*!< axis for analytic : plan */
+    var $pa_id;  /*!< axis for analytic : plan */
     
     function __construct($p_cn)
     {
