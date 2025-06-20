@@ -162,27 +162,38 @@ class Stock extends Stock_Sql
 		global $cn,$g_user;
 		$profile=$g_user->get_profile();
 		$sql = "
-			select sg_id,
-				sg.f_id,
-				(select ad_value from fiche_Detail as fd1 where ad_id=1 and fd1.f_id=jx.f_id) as fname,
-				(select ad_value from fiche_Detail as fd1 where ad_id=23 and fd1.f_id=jx.f_id) as qcode,
-				sg_code,
-				coalesce(sg_comment,jr_comment) as ccomment,
-				sg_exercice,
-				r_name,
-				sg.r_id,
-				j_montant,
-				jr_date,
-				sg_quantity,
-				case when sg_type='c' then 'OUT' when sg_type='d' then 'IN' end as direction,
-				jr_internal,
-				jr_id,
-				coalesce(sg_date,jr_date) as real_date,
-				to_char(coalesce(sg_date,jr_date),'DD.MM.YY') as cdate
+			with tiers_id as (
+                            select qp_supplier as f_tiers, j_id
+                            from quant_purchase
+                            union all 
+                            select qs_client , j_id
+                            from quant_sold)
+                        select sg_id,
+                            sg.f_id,
+                            (select ad_value from fiche_Detail as fd1 where ad_id=1 and fd1.f_id=jx.f_id) as fname,
+                            (select ad_value from fiche_Detail as fd1 where ad_id=23 and fd1.f_id=jx.f_id) as qcode,
+                            (select ad_value from fiche_Detail as fd3 where fd3.ad_id=1 and fd3.f_id=tier1.f_tiers) as fname_tiers,
+                            (select ad_value from fiche_Detail as fd4 where fd4.ad_id=23 and fd4.f_id=tier1.f_tiers) as qcode_tiers,
+                            sg_code,
+                            coalesce(sg_comment,jr_comment) as ccomment,
+                            sg_exercice,
+                            r_name,
+                            sg.r_id,
+                            j_montant,
+                            jr_date,
+                            sg_quantity,
+                            case when sg_type='c' then 'OUT' when sg_type='d' then 'IN' end as direction,
+                            jr_internal,
+                            jr_id,
+                            coalesce(sg_date,jr_date) as real_date,
+                            to_char(coalesce(sg_date,jr_date),'DD.MM.YY') as cdate,
+                            tier1.f_tiers,
+                            j.jr_pj_number
 			from stock_goods as sg
 			join stock_repository as sr on (sg.r_id=sr.r_id)
 			left join jrnx as jx on (sg.j_id=jx.j_id)
 			left join jrn as j on (j.jr_grpt_id=jx.j_grpt)
+			left join tiers_id as tier1 on (tier1.j_id=sg.j_id)
 			where
 			sg.r_id in (select r_id from profile_sec_repository where p_id = $profile)";
 		$and = " and ";
