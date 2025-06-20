@@ -443,9 +443,11 @@ function html_min_page_start($p_theme="", $p_script="", $p_script2="")
     <script src=\"js/prototype.js\" type=\"text/javascript\"></script>
     <script src=\"js/noalyss_script.js\" type=\"text/javascript\"></script>
     <script src=\"js/acc_ledger.js\" type=\"text/javascript\"></script>
-    <script src=\"js/smoke.js\" type=\"text/javascript\"></script>";
+    <script src=\"js/smoke.js\" type=\"text/javascript\"></script>
+    <script src=\"export.php?loadjs=message\"  type=\"text/javascript\" charset=\"utf-8\"></script>";
+    
     echo "<LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/font/fontello/css/fontello.css\" media=\"screen\"/>";
-    include_once NOALYSS_INCLUDE.'/lib/message_javascript.php';
+    
     //  Retrieve colors for this folder
     if ( isset($_REQUEST['gDossier'])  ) {
         $noalyss_appearance=new Noalyss_Appearance();

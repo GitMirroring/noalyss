@@ -33,14 +33,23 @@ global $g_user,$cn,$g_parameter;
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-$gDossier=dossier::id();
+
+$g_user=new Noalyss_user(new Database());
+set_language();
+// load message for javascript
+if (isset ($_REQUEST['loadjs']) && $_REQUEST['loadjs']=='message')
+{
+    include_once NOALYSS_INCLUDE."/lib/message_javascript.php";
+    return;
+}
 $cn=Dossier::connect();
+$g_user=new Noalyss_user($cn);
+$gDossier=dossier::id();
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 mb_internal_encoding("UTF-8");
-$g_user=new Noalyss_user($cn);
 $g_user->Check();
 $action=$g_user->check_dossier($gDossier);
-set_language();
+
 $hi=new HttpInput();
 $action=$hi->get("act");
 
