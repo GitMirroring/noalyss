@@ -27,7 +27,7 @@
  * Avoid use of HTML Tag
  */
 ?>
-<script>
+
 var content=new Array();
 content[0]="<?php echo htmlspecialchars(_("Cherchez en saisissant le quickcode, le poste comptable ou une partie du nom de la fiche ou de l'adresse"),ENT_QUOTES)?>";
 content[1]="<?php echo htmlspecialchars(_("(optionnel) La description est un commentaire libre qui sert à identifier cette opération"),ENT_QUOTES)?>";
@@ -122,5 +122,3 @@ content[85]="<?php echo htmlspecialchars(_("Solde créditeur au lieu de débiteu
 content[86]="<?php echo htmlspecialchars(_("Solde débiteur au lieu de créditeur"),ENT_QUOTES)?>";
 content[87]="<?php echo htmlspecialchars(_("Uniquement pour les choix, séparer les valeurs possibles par un |"),ENT_QUOTES)?>";
 content[88]="<?php echo htmlspecialchars(_("Par défault, le poste d'autoliquidation est celui qui est au débit pour les ventes et au crédit pour les achats"),ENT_QUOTES)?>";
-
-</script>

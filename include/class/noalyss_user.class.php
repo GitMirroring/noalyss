@@ -549,7 +549,6 @@ class Noalyss_User
      * - R read only
      * - X no access
      *
-
      *
      */
     function get_ledger_access($p_ledger)

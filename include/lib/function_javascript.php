@@ -2757,7 +2757,7 @@ function load_all_script()
     if ( $already_call==1)return;
     $already_call=1;
     
-    include_once NOALYSS_INCLUDE."/lib/message_javascript.php";
+    
     echo JS_INFOBULLE;
     echo js_include("jquery-3.6.0.min.js");
     echo <<<EOF
@@ -2784,6 +2784,7 @@ EOF;
     echo js_include('acc_currency.js');
     echo js_include('taggroup.js');
     echo js_include('noalyss_checkbox.js');
+    echo '<script src="export.php?loadjs=message"  type="text/javascript" charset="utf-8"></script>';
  
 
 }
