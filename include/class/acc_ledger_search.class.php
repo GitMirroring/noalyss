@@ -985,6 +985,7 @@ class Acc_Ledger_Search
                 $w->selected=($row['jr_rapt']=='paid')?true:false;
                 // if p_paid == 2 then readonly
                 $w->readonly=( $p_paid==2)?true:false;
+                $w->javascript='onclick="operation_payment.check_item(this)"';
                 $h=new IHidden();
                 $h->name="set_jr_id".$row['jr_id'];
                 $r.='<TD>'.$w->input().$h->input().'</TD>';

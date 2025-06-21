@@ -365,6 +365,8 @@ $path = array(
     ,"category_card_definition"=>"ajax_category_card_definition"
     // activate plugin for a profile
     ,'activate_plugin'=>'ajax_activate_plugin'
+    // set the operation paid or unpaid
+    , 'payment_status'=>'ajax_payment_status'
 ) ;
 
 if (array_key_exists($op, $path)) {

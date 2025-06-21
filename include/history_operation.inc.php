@@ -22,11 +22,10 @@
 
 /**
  * \file
- *
- *
  * \brief display history of accountant , and let search into
  *
  */
+echo js_include("operation_payment.js");
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $g_user,$cn,$http;
 $p_array = $_GET;
@@ -72,16 +71,6 @@ if (isset($_REQUEST['p_jrn']) &&
 
 $Ledger->id = $p_jrn;
 
-//------------------------------
-// UPdate the payment
-//------------------------------
-if (isset($_GET ['paid']))
-{
-    $ledger_paid=new Acc_Ledger($cn,$p_jrn);
-    $ledger_paid->update_paid($_GET);
-}
-
-
 $msg="";
 /* by default we should use the default period */
 if (!isset($p_array['date_start']))
@@ -105,12 +94,15 @@ list($sql, $where) = $Ledger->build_search_sql($p_array);
 $max_line = $cn->count_sql($sql);
 
 $step = $_SESSION[SESSION_KEY.'g_pagesize'];
-$page = (isset($_GET['offset'])) ? $http->get('page') : 1;
-$offset = (isset($_GET['offset'])) ? $http->get('offset') : 0;
+try
+{
+    $page = $http->get('page','string',1); 
+    $offset =$http->get('offset','string',0); 
+} catch (\Exception $e)
+{
+    $page=1;$offset=0;
+}
 
-// check if number
-$page=(isNumber($page)==0)?1:$page;
-$offset=(isNumber($offset)==0)?0:$offset;
 
 $bar = navigation_bar($offset, $max_line, $step, $page);
 
@@ -162,11 +154,6 @@ if (isset($_GET['search_opr_jrn']))
 }
 echo $r;
 
-if ($ask_pay) {
-	echo '<p>' . HtmlInput::submit('paid', _('Mise à jour paiement')) . IButton::select_checkbox('fpaida') . IButton::unselect_checkbox('fpaida') . '</p>';
-        echo ICheckBox::javascript_set_range("paid_operation_ck");
-}
-
 echo '</form>';
 /*
  * Export to csv
@@ -205,5 +192,11 @@ echo HtmlInput::hidden('qcode',trim($qcode));
 echo '</form>';
 
 echo '</div>';
-return;
+if ( $ask_pay){
 ?>
+<script>
+    var operation_payment=new Operation_Payment("paid_operation_ck",'<?=Dossier::id()?>','<?=$http->request("ac")?>');
+    operation_payment.activate_checkbox_range()
+</script>
+<?php
+}

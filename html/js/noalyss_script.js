@@ -4670,6 +4670,7 @@ Widget.prototype.toggle_full_size=function (widget_domid) {
 
 };
 
+
 /**
  * EXPERIMENTAL
 (function(){window.addEventListener("beforeunload", (event) => {waiting_box()});})();
