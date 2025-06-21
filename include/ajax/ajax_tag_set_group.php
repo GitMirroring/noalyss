@@ -25,7 +25,7 @@ if (!defined('ALLOWED'))
 
 /**
  * @file
- * @brief 
+ * @brief for module C0TAG , add or remove a set of tags
  */
 global $g_user;
 $g_user->can_request('C0TAG');

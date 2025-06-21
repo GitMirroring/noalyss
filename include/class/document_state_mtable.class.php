@@ -20,7 +20,7 @@
  */
 
 
-/***
+/**
  * @file
  * @brief class Document_State_MTable
  * @see Manage_Table_SQL
@@ -28,6 +28,7 @@
  */
 require_once NOALYSS_INCLUDE.'/database/document_state_sql.class.php';
 /**
+ * @class Document_State_MTable
  * @brief this instance extends Manage_Table_SQL and aims to manage
  * the Table tmp_pcmn thanks a web interface (add , delete, display...)
  *

@@ -19,7 +19,15 @@
 
 // Copyright 2022 Author Dany De Bontridder dany@alchimerys.be
 
+/**
+ * @file
+ * @brief Class Additional_Tax : for additional class (France)
+ */
 
+/**
+ * @class Additional_Tax
+ * @brief Additional tax , Canada and France on sales
+ */
 class Additional_Tax
 {
     private $tax_amount;

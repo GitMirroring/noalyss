@@ -19,12 +19,13 @@
  */
 
 
-/***
+/**
  * @file 
  * @brief display or export operations in HTML , PDF or CSV 
  *
  */
 /**
+ * @class
  * @brief Display history of operation
  * @see acc_ledger_historyTest.php
  */

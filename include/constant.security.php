@@ -17,7 +17,10 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-
+/**
+ * @file
+ * @brief define constant related to the security
+ */
 define ('FICADD',800);	 /* Ajout de fiche */
 define ("FIC",805);  //Création, modification et effacement de fiche
 define ("FICCAT",910);  //création, modification et effacement de catégorie de fiche

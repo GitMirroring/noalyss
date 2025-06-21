@@ -24,8 +24,7 @@ if (!defined('ALLOWED'))
 
 /**
  * @file
- * @brief 
- * @param type $name Descriptionara
+ * @brief For the module C0TVA, save info 
  */
 
 if ( $g_user->check_module('C0TVA') ==0 )

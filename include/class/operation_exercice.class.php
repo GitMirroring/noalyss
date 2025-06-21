@@ -18,10 +18,14 @@
 */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu 6/01/24
 /*!
- * \file
- * \brief
+ * \file 
+ * \brief Special operations end or start of exercice
  */
 
+/**
+ * @class Operation_Exercice
+ * @brief Special operations end or start of exercice
+ */
 class Operation_Exercice
 {
     protected $operation_exercice_sql;
