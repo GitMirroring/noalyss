@@ -18,7 +18,10 @@
 */
 
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
-
+/**
+ * @file
+ * @brief FORECAST Edition
+ */
 if (!defined('ALLOWED')) die('Appel direct ne sont pas permis');
 
 require_once NOALYSS_INCLUDE . "/database/forecast_sql.class.php";

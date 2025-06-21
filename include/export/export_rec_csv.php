@@ -3,7 +3,8 @@
 //see licence.txt
 
 /**
- * Export to CSV the operations asked in impress_rec.inc.php
+ * @file
+ * @brief Export to CSV the operations asked in impress_rec.inc.php
  * variable set $g_user,$cn
  * @see impress_rec.inc.php
  */

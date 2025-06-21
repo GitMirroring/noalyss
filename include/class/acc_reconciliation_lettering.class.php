@@ -19,14 +19,14 @@
  */
 
 
-/***
+/**
  * @file 
  * @brief this class let you insert reconcilied operation  from Lettering::save without calling auto_letter
  *
  */
 
-/***
- * @class
+/**
+ * @class Acc_Reconciliation_Lettering
  * @brief this class let you insert reconcilied operation  from Lettering::save without calling auto_letter
  *
  */

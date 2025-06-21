@@ -19,7 +19,11 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu 6/01/24
 /*! 
  * \file
- * \brief 
+ * \brief  Closing operation
+ */
+/*!
+ * \class Operation_Closing
+ * \brief closing operation , end of exercice for French accountancy
  */
 class Operation_Closing extends Operation_Exercice
 {
