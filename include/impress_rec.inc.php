@@ -19,25 +19,24 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/*!
+ * \file
  * \brief print the all the operation reconciled or not, with or without the same amount
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 
 global $g_user;
 $http=new HttpInput();
-/**
- *@file
- */
+
 $aledger=$g_user->get_ledger('ALL',3);
 echo '<div class="noprint">';
 echo '<div class="content">';
 $rjrn='';
-$radio=new IRadio('choice');
-$choice=(isset($_GET['choice']))?$_GET['choice']:0;
-$r_jrn=(isset($_GET['r_jrn']))?$_GET['r_jrn']:'';
+
+$choice=$http->get("choice","string",0); 
+$r_jrn=$http->get("r_jrn","string","");
 echo '<form method="GET">';
-echo dossier::hidden().HtmlInput::hidden('ac',$_GET['ac']).HtmlInput::hidden('type','rec');
+echo dossier::hidden().HtmlInput::hidden('ac',$http->request('ac')).HtmlInput::hidden('type','rec');
 echo _('Filtre par journal');
 HtmlInput::button_choice_ledger(array('div'=>'','type'=>'ALL','all_type'=>1));
 echo '<br/>';
@@ -61,30 +60,20 @@ try {
 }
 
 echo "Opérations entre ".$dstart->input()." jusque ".$dend->input();
-echo '<ol style="list-style-type:none;">';
 
-$radio->selected=($choice==0)?true:false;
-$radio->value=0;
-echo '<li>'.$radio->input()._('Opérations rapprochées').'</li>';
-
-$radio->selected=($choice==1)?true:false;
-$radio->value=1;
-echo '<li>'.$radio->input()._('Opérations rapprochées avec des montants différents').'</li>';
-
-$radio->selected=($choice==2)?true:false;
-$radio->value=2;
-echo '<li>'.$radio->input()._('Opérations rapprochées avec des montants identiques').'</li>';
-
-$radio->selected=($choice==3)?true:false;
-$radio->value=3;
-echo '<li>'.$radio->input()._('Opérations non rapprochées').'</li>';
-
-echo '</ol>';
-
-
-
-
+$select=new ISelect("choice");
+$select->transform([
+        0=>_('Opérations rapprochées')
+        ,1=>_('Opérations rapprochées avec des montants différents')
+        ,2=>_('Opérations rapprochées avec des montants identiques')
+        ,3=>_('Opérations non rapprochées')
+    ]
+);
+$select->selected=$choice;
+echo $select->input();
+echo '<p>';
 echo HtmlInput::submit('vis',_('Visualisation'));
+echo '</p>';
 echo '</form>';
 echo '<hr>';
 echo '</div>';
@@ -96,7 +85,7 @@ $acc_reconciliation=new Acc_Reconciliation($cn);
 $acc_reconciliation->a_jrn=$r_jrn;
 $acc_reconciliation->start_day=$dstart->value;
 $acc_reconciliation->end_day=$dend->value;
-
+$acc_reconciliation->prepare_query_detail_quant();
 $array=$acc_reconciliation->get_data($choice);
 
 $gDossier=Dossier::id();
