@@ -159,7 +159,7 @@ class PDF_Operation extends PDF {
      * @return type
      */
     private function str_vat($p_tva_id) {
-        $tva=new Acc_Tva($this->cn, $p_tva_id);
+        $tva= Acc_Tva::build($this->cn, $p_tva_id);
         $tva->load();
         $auto="";
         if ( $tva->tva_both_side==1) {
