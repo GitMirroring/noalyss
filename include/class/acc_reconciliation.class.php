@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   This file is part of NOALYSS.
  *
@@ -15,50 +16,119 @@
  *   You should have received a copy of the GNU General Public License
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*!\file
+/**
+ * \file
  *   \brief class acc_reconciliation, this class is new and the code
  *   must use it
  *
  */
 
-/*! \brief new class for managing the reconciliation it must be used
+/** 
+ * \brief new class for managing the reconciliation it must be used
  * instead of the function InsertRapt, ...
  *
  */
-class Acc_Reconciliation
-{
-    var $db;			/*!< database connection */
-    var $jr_id;			/*!< jr_id */
-    var $a_jrn;
-    var $start_day;
-    var $end_day;
-    function   __construct($cn)
-    {
-        $this->db=$cn;
-        $this->jr_id=0;
-        $this->a_jrn=null;
+class Acc_Reconciliation {
+
+    var $db;   /*!< database connection */
+    var $jr_id;   /*!< jr_id */
+    var $a_jrn; /*!< $a_jrn array of  ledgers id (JRN_DEF.JRN_DEF_ID) */
+    var $start_day; /*!< $start_day  (text DD.MM.YYYY) first day */
+    var $end_day;/*!< $end_day  (text DD.MM.YYYY) last day */
+
+    /**
+     * query for building the temporary table TEMP_TOTAL_OPERATION
+     */
+    const SQL_ALL_OPERATION_RECONCILIED = "
+      with total_operation as (
+	select 
+		jn2.jr_id,coalesce(sum(qs_price+qs_vat-qs_vat_sided),0)+coalesce(sum(qp_price+qp_vat-qp_vat_sided+qp.qp_nd_tva + qp.qp_nd_tva_recup),0) sum_amount
+	from 
+		jrnx jx1 
+		join jrn jn2 on (jn2.jr_grpt_id =jx1.j_grpt )
+		left join quant_sold qs on (jx1.j_id=qs.j_id) 
+		left join quant_purchase qp on (qp.j_id =jx1.j_id)
+	group by jn2.jr_id
+), all_operation as (select jr_id,jra_concerned from jrn_rapt union select jra_concerned,jr_id from jrn_rapt)
+select distinct
+    jr1.jr_id jr1_jr_id
+    ,ra1.jra_concerned ra1_jra_concerned 
+    ,jr1.jr_date jr1_jr_date
+    ,to_char(jr1.jr_date,'DD.MM.YY') as str_jr1_jr_date
+    ,jr1.jr_comment jr1_jr_comment
+    ,jr1.jr_internal jr1_jr_internal
+    ,jr1.jr_montant jr1_jr_montant
+    ,case when to1.sum_amount=0 then jr1.jr_montant else to1.sum_amount end to1_sum_amount
+    ,jr1.jr_pj_number jr1_jr_pj_number
+    ,jr1.jr_def_id jr1_jr_def_id
+    ,jrn1.jrn_def_name jrn1_jrn_def_name
+    ,jrn1.jrn_def_type jrn1_jrn_def_type
+    ,jr2.jr_date jr2_jr_date
+    ,to_char(jr2.jr_date,'DD.MM.YY') as str_jr2_jr_date
+    ,jr2.jr_comment jr2_jr_comment
+    ,jr2.jr_internal jr2_jr_internal
+    ,jr2.jr_montant jr2_jr_montant
+    ,to2.sum_amount to2_sum_amount
+    ,jr2.jr_pj_number jr2_jr_pj_number
+    ,jr2.jr_def_id jr2_jr_def_id
+    ,jrn2.jrn_def_name jrn2_jrn_def_name
+    ,jrn2.jrn_def_type jrn2_jrn_def_type
+from jrn jr1
+join total_operation to1 on (to1.jr_id=jr1.jr_id)
+join jrn_def jrn1 on (jrn1.jrn_def_id=jr1.jr_def_id)
+join all_operation ra1 on (ra1.jra_concerned=jr1.jr_id or ra1.jr_id=jr1.jr_id)
+join jrn jr2 on (ra1.jra_concerned =jr2.jr_id)
+join total_operation to2 on (to2.jr_id=jr2.jr_id)
+join jrn_def jrn2 on (jrn2.jrn_def_id=jr2.jr_def_id)
+where 
+FILTER_DATE
+and LEDGER_FILTER1
+and LEDGER_FILTER2
+order by jr1.jr_date,jr1.jr_id  
+    ";
+    // Get the data to display
+    const SQL_QUERY = "
+with base_op as (select *
+    from temp_total_operation tm1
+    where tm1.jr1_jr_id = tm1.ra1_jra_concerned )
+, depend_op as (select jr1_jr_id
+    , sum(case when to2_sum_amount != 0 then to2_sum_amount else jr2_jr_montant end) depend_sum_amount
+    ,count(*) depend_count
+    from temp_total_operation tm1
+    where tm1.jr1_jr_id != tm1.ra1_jra_concerned
+    group by jr1_jr_id )
+select *
+from base_op bo1
+join depend_op bs1 on (bo1.jr1_jr_id = bs1.jr1_jr_id)
+";
+
+    function __construct($cn) {
+        $this->db = $cn;
+        $this->jr_id = 0;
+        $this->a_jrn = null;
     }
 
-    function set_jr_id($jr_id)
-    {
-        $this->jr_id=$jr_id;
+    function set_jr_id($jr_id) {
+        $this->jr_id = $jr_id;
     }
-    /*! \brief return a widget of type js_concerned
+
+    /** 
+     * \brief return a widget of type js_concerned
      */
-    function widget()
-    {
-        $wConcerned=new IConcerned();
-        $wConcerned->extra=0; // with 0 javascript search from e_amount... field (see javascript)
+
+    function widget() {
+        $wConcerned = new IConcerned();
+        $wConcerned->extra = 0; // with 0 javascript search from e_amount... field (see javascript)
 
         return $wConcerned;
-
     }
-    /*!
-     *\brief   Insert into jrn_rapt the concerned operations
+
+    /**
+     * \brief   Insert into jrn_rapt the concerned operations
      *
      * \param $jr_id2 (jrn.jr_id) => jrn_rapt.jra_concerned or a string
      * like "jr_id2,jr_id3,jr_id4..."
@@ -66,30 +136,25 @@ class Acc_Reconciliation
      * \return none
      *
      */
-    function insert($jr_id2)
-    {
-        if ( trim($jr_id2) == "" )
+
+    function insert($jr_id2) {
+        if (trim($jr_id2) == "")
             return;
-        if ( strpos($jr_id2,',') !== 0 )
-        {
-            $aRapt=explode(',',$jr_id2);
-            foreach ($aRapt as $rRapt)
-            {
-                if ( isNumber($rRapt) == 1 )
-                {
+        if (strpos($jr_id2, ',') !== 0) {
+            $aRapt = explode(',', $jr_id2);
+            foreach ($aRapt as $rRapt) {
+                if (isNumber($rRapt) == 1) {
                     $this->insert_rapt($rRapt);
                 }
             }
+        } else
+        if (isNumber($jr_id2) == 1) {
+            $this->insert_rapt($jr_id2);
         }
-        else
-            if ( isNumber($jr_id2) == 1 )
-            {
-                $this->insert_rapt($jr_id2);
-            }
     }
 
-    /*!
-     *\brief   Insert into jrn_rapt the concerned operations
+    /**
+     * \brief   Insert into jrn_rapt the concerned operations
      * should not  be called directly, use insert instead
      *
      * \param $jr_id2 (jrn.jr_id) => jrn_rapt.jra_concerned
@@ -97,373 +162,362 @@ class Acc_Reconciliation
      * \return none
      *
      */
-    function insert_rapt($jr_id2)
-    {
-        if ( isNumber($this->jr_id)  == 0 ||  isNumber($jr_id2) == 0 )
-        {
+
+    function insert_rapt($jr_id2) {
+        if (isNumber($this->jr_id) == 0 || isNumber($jr_id2) == 0) {
             return false;
         }
-        if ( $this->jr_id==$jr_id2)
+        if ($this->jr_id == $jr_id2)
             return true;
 
-		if ( $this->db->count_sql("select jr_id from jrn where jr_id=".$this->jr_id)==0 )
-				return false;
-		if ( $this->db->count_sql("select jr_id from jrn where jr_id=".$jr_id2)==0 )
-				return false;
+        if ($this->db->count_sql("select jr_id from jrn where jr_id=$1" ,[ $this->jr_id]) == 0)
+            return false;
+        if ($this->db->count_sql("select jr_id from jrn where jr_id=$1",[$jr_id2]) == 0)
+            return false;
 
         // verify if exists
-        if ( $this->db->count_sql(
-                    "select jra_id from jrn_rapt where jra_concerned=".$this->jr_id.
-                    " and jr_id=$jr_id2
+        if ($this->db->count_sql(
+                        "select jra_id from jrn_rapt where jra_concerned=$1
+                         and jr_id=$2
                     union
-                    select jra_id from jrn_rapt where jr_id=".$this->jr_id.
-                    " and jra_concerned=$jr_id2 ")
-                ==0)
-        {
+                    select jra_id from jrn_rapt where jr_id= $1
+                         and jra_concerned=$2 " ,[$this->jr_id,$jr_id2]) == 0) {
             // Ok we can insert
-            $Res=$this->db->exec_sql("insert into jrn_rapt(jr_id,jra_concerned) values ($1,$2)",
-                                        array($this->jr_id,$jr_id2)
-                                    );
+            $Res = $this->db->exec_sql("insert into jrn_rapt(jr_id,jra_concerned) values ($1,$2)",
+                    array($this->jr_id, $jr_id2)
+            );
             // try to letter automatically same account from both operation
             $this->auto_letter($jr_id2);
-            
+
             // update date of paiement -----------------------------------------------------------------------
-            $source_type=$this->db->get_value("select substr(jr_internal,1,1) from jrn where jr_id=$1",array($this->jr_id));
-            $dest_type=$this->db->get_value("select substr(jr_internal,1,1) from jrn where jr_id=$1",array($jr_id2));
-            if (($source_type =='A' || $source_type=='V') && ($dest_type != 'A' && $dest_type != 'V'))
-            {
+            $source_type = $this->db->get_value("select substr(jr_internal,1,1) from jrn where jr_id=$1", array($this->jr_id));
+            $dest_type = $this->db->get_value("select substr(jr_internal,1,1) from jrn where jr_id=$1", array($jr_id2));
+            if (($source_type == 'A' || $source_type == 'V') && ($dest_type != 'A' && $dest_type != 'V')) {
                 // set the date on source
-                $date=$this->db->get_value('select jr_date from jrn where jr_id=$1',array($jr_id2));
-                if ( trim ($date) == '') $date=null;
-                $this->db->exec_sql('update jrn set jr_date_paid=$1 where jr_id=$2 and jr_date_paid is null ',array($date,$this->jr_id));
+                $date = $this->db->get_value('select jr_date from jrn where jr_id=$1', array($jr_id2));
+                if (trim($date) == '')
+                    $date = null;
+                $this->db->exec_sql('update jrn set jr_date_paid=$1 where jr_id=$2 and jr_date_paid is null ', array($date, $this->jr_id));
             }
-            if (($source_type !='A' && $source_type !='V') && ($dest_type == 'A' || $dest_type == 'V'))
-            {
+            if (($source_type != 'A' && $source_type != 'V') && ($dest_type == 'A' || $dest_type == 'V')) {
                 // set the date on dest
-                $date=$this->db->get_value('select jr_date from jrn where jr_id=$1',array($this->jr_id));
-                if (trim($date) == '') $date=null;
-                $this->db->exec_sql('update jrn set jr_date_paid=$1 where jr_id=$2 and jr_date_paid is null ',array($date,$jr_id2));
+                $date = $this->db->get_value('select jr_date from jrn where jr_id=$1', array($this->jr_id));
+                if (trim($date) == '')
+                    $date = null;
+                $this->db->exec_sql('update jrn set jr_date_paid=$1 where jr_id=$2 and jr_date_paid is null ', array($date, $jr_id2));
             }
         }
         return true;
     }
-	/**
-	 * @brief try to letter same card between $p_jrid and $this->jr_id
-	 * @param jrn.jr_id $p_jrid  the operation to reconcile
-	 */
-	function auto_letter($p_jrid)
-	{
-		// Try to find same card from both operation
-		$sql="select j1.f_id as fiche ,coalesce(j1.j_id,-1) as jrnx_id1,coalesce(j2.j_id,-1) as jrnx_id2,
+
+    /**
+     * @brief try to letter same card between $p_jrid and $this->jr_id
+     * @param jrn.jr_id $p_jrid  the operation to reconcile
+     */
+    function auto_letter($p_jrid) {
+        // Try to find same card from both operation
+        $sql = "select j1.f_id as fiche ,coalesce(j1.j_id,-1) as jrnx_id1,coalesce(j2.j_id,-1) as jrnx_id2,
 j1.j_poste as poste
-				from jrnx as j1
-					join jrn as jr1 on (j1.j_grpt=jr1.jr_grpt_id)
-					join jrnx as j2 on (coalesce(j1.f_id,-1)=coalesce(j2.f_id,-1) and j1.j_poste=j2.j_poste)
-					join jrn as jr2 on (j2.j_grpt=jr2.jr_grpt_id)
-				where
-					jr1.jr_id=$1
-					and
-					jr2.jr_id= $2";
-		$result=$this->db->get_array($sql,array($this->jr_id,$p_jrid));
-		if ( count($result) == 0)
-		{
-			return;
-		}
-		for ($i=0;$i<count($result);$i++)
-		{
-			if ( $result[$i]['fiche'] != -1)
-			{
-				$letter = new Lettering_Card($this->db);
-				$letter->insert_couple($result[$i]['jrnx_id1'],$result[$i]['jrnx_id2']);
-			}
-			else
-			{
-				$letter = new Lettering_Account($this->db);
-				$letter->insert_couple($result[$i]['jrnx_id1'],$result[$i]['jrnx_id2']);
-			}
-		}
+            from jrnx as j1
+                    join jrn as jr1 on (j1.j_grpt=jr1.jr_grpt_id)
+                    join jrnx as j2 on (coalesce(j1.f_id,-1)=coalesce(j2.f_id,-1) and j1.j_poste=j2.j_poste)
+                    join jrn as jr2 on (j2.j_grpt=jr2.jr_grpt_id)
+            where
+                    jr1.jr_id=$1
+                    and
+                    jr2.jr_id= $2";
+        $result = $this->db->get_array($sql, array($this->jr_id, $p_jrid));
+        if (count($result) == 0) {
+            return;
+        }
+        for ($i = 0; $i < count($result); $i++) {
+            if ($result[$i]['fiche'] != -1) {
+                $letter = new Lettering_Card($this->db);
+                $letter->insert_couple($result[$i]['jrnx_id1'], $result[$i]['jrnx_id2']);
+            } else {
+                $letter = new Lettering_Account($this->db);
+                $letter->insert_couple($result[$i]['jrnx_id1'], $result[$i]['jrnx_id2']);
+            }
+        }
+    }
 
-	}
-
-	/*!
-     *\brief   Insert into jrn_rapt the concerned operations
+    /**
+     * \brief   Insert into jrn_rapt the concerned operations
      *
      * \param $this->jr_id (jrn.jr_id) => jrn_rapt.jr_id
      * \param $jr_id2 (jrn.jr_id) => jrn_rapt.jra_concerned
      *
      * \return none
      */
-    function remove($jr_id2)
-    {
-        if ( isNumber($this->jr_id)  == 0 or
-                isNumber($jr_id2) == 0 )
-        {
+
+    function remove($jr_id2) {
+        if (isNumber($this->jr_id) == 0 or
+                isNumber($jr_id2) == 0) {
             return;
         }
         // verify if exists
-        if ( $this->db->count_sql("select jra_id from jrn_rapt where ".
-                                  " jra_concerned=".$this->jr_id."  and jr_id=$jr_id2
-                                  union
-                                  select jra_id from jrn_rapt where jra_concerned=$jr_id2 ".
-                                  " and jr_id=".$this->jr_id) !=0)
-        {
-			/**
-			 * remove also lettering between both operation
-			 */
-			$sql = " delete from
-					jnt_letter
-					where jl_id in ( select jl_id from jnt_letter
-										join letter_cred as lc using(jl_id)
-										join letter_deb as ld using (jl_id)
-									where
-										lc.j_id in (select j_id
-													from jrnx join jrn on (j_grpt=jr_grpt_id)
-													where jr_id in ($1,$2))
-										or
-										ld.j_id in (select j_id
-													from jrnx join jrn on (j_grpt=jr_grpt_id)
-													where jr_id in ($1,$2))
+        if ($this->db->count_sql("select jra_id from jrn_rapt where " .
+            " jra_concerned=" . $this->jr_id . "  and jr_id=$jr_id2
+                      union
+                      select jra_id from jrn_rapt where jra_concerned=$jr_id2 " .
+            " and jr_id=" . $this->jr_id) != 0) {
+            /**
+             * remove also lettering between both operation
+             */
+            $sql = " 
+delete from
+    jnt_letter
+where jl_id in ( select jl_id from jnt_letter
+    join letter_cred as lc using(jl_id)
+    join letter_deb as ld using (jl_id)
+where
+    lc.j_id in (select j_id
+                            from jrnx join jrn on (j_grpt=jr_grpt_id)
+                            where jr_id in ($1,$2))
+    or
+    ld.j_id in (select j_id
+                            from jrnx join jrn on (j_grpt=jr_grpt_id)
+                            where jr_id in ($1,$2))
 
 
 
 							)";
-			$this->db->exec_sql($sql, array($jr_id2, $this->jr_id));
-			// Ok we can delete
-			$Res=$this->db->exec_sql("delete from jrn_rapt where ".
-                                     "(jra_concerned=$jr_id2 and jr_id=".$this->jr_id.") or
-                                     (jra_concerned=".$this->jr_id." and jr_id=$jr_id2) ");
+            $this->db->exec_sql($sql, array($jr_id2, $this->jr_id));
+            // Ok we can delete
+            $Res = $this->db->exec_sql("delete from jrn_rapt where 
+                (jra_concerned=$1 and jr_id= $2) or
+                (jra_concerned=$2 and jr_id=$1) ",
+                    [$jr_id2,$this->jr_id]);
         }
     }
 
-    /*!
-     *\brief   Return an array of the concerned operation
+    /**
+     * \brief   Return an array of the concerned operation
      *
      *
-     *\param database connection
+     * \param database connection
      * \return array if something is found or null
      */
-    function get ( )
-    {
-        $sql=" select jr_id as cn from jrn_rapt where jra_concerned=$1
+
+    function get() {
+        $sql = " select jr_id as cn from jrn_rapt where jra_concerned=$1
               union 
               select jra_concerned as cn from jrn_rapt where jr_id=$2";
-        $Res=$this->db->exec_sql($sql,array($this->jr_id,$this->jr_id));
+        $Res = $this->db->exec_sql($sql, array($this->jr_id, $this->jr_id));
 
         // If nothing is found return null
-        $n=Database::num_row($Res);
+        $n = Database::num_row($Res);
 
-        if ($n ==0 ) return [];
+        if ($n == 0)
+            return [];
 
         // put everything in an array
-        for ($i=0;$i<$n;$i++)
-        {
-            $l=Database::fetch_array($Res,$i);
-            $r[$i]=$l['cn'];
+        for ($i = 0; $i < $n; $i++) {
+            $l = Database::fetch_array($Res, $i);
+            $r[$i] = $l['cn'];
         }
         return $r;
     }
-    function fill_info()
-    {
-        $sql="select jr_id,jr_date,jr_comment,jr_internal,jr_montant,jr_pj_number,jr_def_id,jrn_def_name,jrn_def_type
+
+    /**
+     * @deprecated since version 9307
+     * @brief retrieve row from JRN
+     * @return type
+     */
+    function fill_info() {
+        $sql = "select jr_id,jr_date,jr_comment,jr_internal,jr_montant,jr_pj_number,jr_def_id,jrn_def_name,jrn_def_type
              from jrn join jrn_def on (jrn_def_id=jr_def_id)
              where jr_id=$1";
-        $a=$this->db->get_array($sql,array($this->jr_id));
+        $a = $this->db->get_array($sql, array($this->jr_id));
         return $a[0];
     }
-    /**
-     *@brief return array of not-reconciled operation
-    * Prepare and put in memory the SQL detail_quant
-    */
-    function get_not_reconciled()
-    {
-      $filter_date=$this->filter_date();
-      /* create ledger filter */
-      $sql_jrn=$this->ledger_filter();
 
-        $array=$this->db->get_array("select distinct jr_id,jr_date from jrn where $filter_date and $sql_jrn and jr_id not in (select jr_id from jrn_rapt union select jra_concerned from jrn_rapt) order by jr_date");
-        $ret=array();
-        \Noalyss\Dbg::echo_var(1, $this->db->sql);
-        for ($i=0;$i<count($array);$i++)
-        {
-            $this->jr_id=$array[$i]['jr_id'];
-            $ret[$i]['first']=$this->fill_info();
-        }
-        return $ret;
-    }
     /**
-     *Create a sql condition to filter by security and by asked ledger
-     * based on $this->a_jrn
-     *@return a valid sql stmt to include
-     *@see get_not_reconciled get_reconciled
+     * @brief return array of not-reconciled operation
+     * Prepare and put in memory the SQL detail_quant
      */
-    function ledger_filter ()
-    {
+    function get_not_reconciled() {
+       $this->build_temp_total_operation();
+       $filter_date = $this->filter_date();
+        /* create ledger filter */
+        $sql_jrn = $this->ledger_filter();
+
+        $array = $this->db->get_array("
+            select distinct
+    jr1.jr_id jr1_jr_id
+    ,null ra1_jra_concerned 
+    ,jr1.jr_date jr1_jr_date
+    ,to_char(jr1.jr_date,'DD.MM.YY') as str_jr1_jr_date
+    ,jr1.jr_comment jr1_jr_comment
+    ,jr1.jr_internal jr1_jr_internal
+    ,jr1.jr_montant jr1_jr_montant
+    ,jr1.jr_montant to1_sum_amount
+    ,jr1.jr_pj_number jr1_jr_pj_number
+    ,jr1.jr_def_id jr1_jr_def_id
+    ,jrn1.jrn_def_name jrn1_jrn_def_name
+    ,jrn1.jrn_def_type jrn1_jrn_def_type
+    ,null jr2_jr_date
+    ,null str_jr2_jr_date
+    ,null jr2_jr_comment
+    ,null jr2_jr_internal
+    ,null jr2_jr_montant
+    ,null to2_sum_amount
+    ,null jr2_jr_pj_number
+    ,null jr2_jr_def_id
+    ,null jrn2_jrn_def_name
+    ,null jrn2_jrn_def_type
+    ,0 depend_count
+from jrn jr1
+join jrn_def jrn1 on (jrn1.jrn_def_id=jr1.jr_def_id)
+where 
+    $filter_date 
+    and $sql_jrn 
+    and jr1.jr_id not in (select jr_id from jrn_rapt 
+                        union select jra_concerned from jrn_rapt) 
+    order by jr_date
+");
+
+
+       return $array;
+    }
+
+    /**
+     * @brief Create a sql condition to filter by security and by asked ledger
+     * based on $this->a_jrn
+     * @return a valid sql stmt to include
+     * @see get_not_reconciled get_reconciled
+     */
+    function ledger_filter() {
         global $g_user;
         /* get the available ledgers for current user */
-        $sql=$g_user->get_ledger_sql('ALL',3);
-        $sql=noalyss_str_replace('jrn_def_id','jr_def_id',$sql);
-        $r='';
+        $sql = $g_user->get_ledger_sql('ALL', 3);
+        $sql = noalyss_str_replace('jrn_def_id', 'jr_def_id', $sql);
+        $r = '';
         /* filter by this->r_jrn */
-        if ( ! empty ($this->a_jrn ) && is_array($this->a_jrn))
-        {
-            $sep='';
-            $r='and jr_def_id in (';
-            foreach( $this->a_jrn as $key=>$value)
-            {
-                $r.=$sep.$value;
-                $sep=',';
+        if (!empty($this->a_jrn) && is_array($this->a_jrn)) {
+            $sep = '';
+            $r = 'and jr_def_id in (';
+            foreach ($this->a_jrn as $key => $value) {
+                $r .= $sep . $value;
+                $sep = ',';
             }
-            $r.=')';
+            $r .= ')';
         }
-        return $sql.'  '.$r;
+        return $sql . '  ' . $r;
     }
+
     /**
-     *@brief return array of reconciled operation
-     * Prepare and put in memory the SQL detail_quant
-     *@return
-     *@note
-     *@see
-     @code
-
-     @endcode
-    */
-    function get_reconciled()
-    {
-      $filter_date=$this->filter_date();
-
-
-        /* create ledger filter */
-        $sql_jrn=$this->ledger_filter();
-
-        $array=$this->db->get_array("select distinct jr_id,jr_date from jrn where $filter_date and $sql_jrn and jr_id  in (select jr_id from jrn_rapt union select jra_concerned from jrn_rapt) order by jr_date");
-        $ret=array();
-        for ($i=0;$i<count($array);$i++)
-        {
-            $this->jr_id=$array[$i]['jr_id'];
-            $ret[$i]['first']=$this->fill_info();
-            $atmp=$this->get();
-            for ( $e=0;$e<count($atmp);$e++)
-            {
-                $this->jr_id=$atmp[$e];
-                $ret[$i]['depend'][$e]=$this->fill_info();
-            }
-        }
-        
-        return $ret;
-    }
-    /**
-     *@brief
-     * Prepare and put in memory the SQL detail_quant
-     *@param
-     *@return
-     *@note
-     *@see
-    @code
-
-    @endcode
+     * @brief build a temporary table with all operation + dependencies
+     * @return type
      */
-    function get_reconciled_amount($p_equal=false)
-    {
-        $array=$this->get_reconciled();
-        $ret=array();
-        bcscale(2);
-        $this->prepare_query_detail_quant();
-        for ($i=0;$i<count($array);$i++)
-        {
-            
-             $retdb=$this->db->execute("detail_quant",array($array[$i]['first']['jr_id']));
-            if ( Database::num_row($retdb) != 0)
-            {
-                  // then second_amount takes in account the vat_sided
-                $a_row=Database::fetch_all($retdb);
-                $total_price=0;
-                foreach ($a_row as $row) {
-                    $total_price=bcadd($total_price,$row['price']);
-                    $total_price=bcadd($total_price,$row['vat_amount']);
-                    $total_price=bcsub($total_price,$row['vat_sided']);
-                    $total_price=bcadd($total_price,$row['nd_amount']);
-                    $total_price=bcadd($total_price,$row['nd_tva_recup']);
-                    
-                }
-                $first_amount=$total_price;
-
-            } else {
-                // else take the amount from jrn
-                $first_amount=$array[$i]['first']['jr_montant'];
-            }
-            $second_amount=0;
-            for ($e=0;$e<count($array[$i]['depend']);$e++)
-            {
-                $retdb=$this->db->execute("detail_quant",array($array[$i]['depend'][$e]['jr_id']));
-                // if exist in v_quant_detail
-                if ( Database::num_row($retdb) != 0)
-                {
-                    // then second_amount takes in account the vat_sided
-                   $a_row=Database::fetch_all($retdb);
-                    $total_price=0;
-                    foreach ($a_row as $row) {
-                        $total_price=bcadd($total_price,$row['price']);
-                        $total_price=bcadd($total_price,$row['vat_amount']);
-                        $total_price=bcsub($total_price,$row['vat_sided']);
-                        $total_price=bcadd($total_price,$row['nd_amount']);
-                        $total_price=bcadd($total_price,$row['nd_tva_recup']);
-                        $total_price=bcadd($total_price,$row['nd_tva']);
-
-                     }
-                    $second_amount=bcadd($second_amount,$total_price);
-                    
-                } else {
-                // else take the amount from jrn
-                  $second_amount=bcadd($second_amount,$array[$i]['depend'][$e]['jr_montant']);
-                }
-            }
-            if ( $p_equal &&  $first_amount==$second_amount)
-            {
-                $ret[]=$array[$i];
-            }
-            if ( ! $p_equal &&  $first_amount != $second_amount)
-            {
-                $ret[]=$array[$i];
-            }
+    function build_temp_total_operation() {
+        static $done=false;
+        if ( $done  ) {
+            return;
         }
-        return $ret;
-    }
-  /**
-   *@brief create a string to filter thanks the date
-   *@return a sql string like jr_date > ... and jr_date < ....
-   *@note use the data member start_day and end_day
-   *@see get_reconciled get_not_reconciled
-   */
-    function filter_date()
-    {
-      global $g_user;
-      list($start,$end)=$g_user->get_limit_current_exercice();
+        global $g_user;
+        $filter_date = str_replace("jr_date", "jr1.jr_date", $this->filter_date());
 
-      if (isDate($this->start_day) ==null)
-	{
-	  $this->start_day=$start;
-	}
-      if ( isDate($this->end_day) == null)
-	{
-	  $this->end_day=$end;
-	}
-      $sql=" (jr_date >= to_date('".$this->start_day."','DD.MM.YYYY')
-		and jr_date <= to_date('".$this->end_day."','DD.MM.YYYY'))";
-      return $sql;
+        /* create ledger filters */
+        $sql_jrn = $this->ledger_filter();
+        $sql_jrn1 = str_replace("jr_def_id", "jr1.jr_def_id", $sql_jrn);
 
+        /* security on the ledger */
+        $sql = $g_user->get_ledger_sql('ALL', 3);
+        $sql_jrn2 = noalyss_str_replace('jrn_def_id', 'jr2.jr_def_id', $sql);
+
+        $sql_string = Acc_Reconciliation::SQL_ALL_OPERATION_RECONCILIED;
+        $sql_string = str_replace("FILTER_DATE", $filter_date, $sql_string);
+        $sql_string = str_replace("LEDGER_FILTER1", $sql_jrn1, $sql_string);
+        $sql_string = str_replace("LEDGER_FILTER2", $sql_jrn2, $sql_string);
+        try {
+            
+            $this->db->exec_sql(" create temporary table temp_total_operation as $sql_string");
+            $done=true;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+            return;
+        }
     }
-    function show_detail($p_ret)
-    {
-        if (Database::num_row($p_ret)> 0)
-        {
-            echo '<tr class="odd">';
+
+    /**
+     * @brief return array of reconciled operation
+     * Prepare and put in memory the SQL detail_quant
+     * @return
+     * @note
+     * @see
+      @code
+
+      @endcode
+     */
+    function get_reconciled() {
+        $this->build_temp_total_operation();
+        $sql_amount = Acc_Reconciliation::SQL_QUERY;
+
+        $a_row = $this->db->get_array("$sql_amount order by jr1_jr_date");
+        return $a_row;
+    }
+
+    /**
+     * @brief
+     * Prepare and put in memory the SQL detail_quant
+     * @param
+     * @return
+     * @note
+     * @see
+      @code
+
+      @endcode
+     */
+    function get_reconciled_amount($p_equal = false) {
+        // build temporary table temp_total_operation 
+        $this->build_temp_total_operation();
+        // SQL with different amount 
+        $sql_amount = Acc_Reconciliation::SQL_QUERY;
+        if ($p_equal) {
+            $sql_amount = $sql_amount . " where bs1.depend_sum_amount = to1_sum_amount ";
+        } else {
+            $sql_amount = $sql_amount . " where bs1.depend_sum_amount != to1_sum_amount";
+        }
+        $a_row = $this->db->get_array("$sql_amount order by jr1_jr_date");
+        return $a_row;
+    }
+
+    /**
+     * @brief create a string to filter thanks the date
+     * @return a sql string like jr_date > ... and jr_date < ....
+     * @note use the data member start_day and end_day
+     * @see get_reconciled get_not_reconciled
+     */
+    function filter_date() {
+        global $g_user;
+        $g_user->db=$this->db;
+        list($start, $end) = $g_user->get_limit_current_exercice();
+
+        if (isDate($this->start_day) == null) {
+            $this->start_day = $start;
+        }
+        if (isDate($this->end_day) == null) {
+            $this->end_day = $end;
+        }
+        $sql = " (jr_date >= to_date('" . $this->start_day . "','DD.MM.YYYY')
+		and jr_date <= to_date('" . $this->end_day . "','DD.MM.YYYY'))";
+        return $sql;
+    }
+    /**
+     * @deprecated since version 9307
+     */
+    function show_detail($p_ret) {
+        if (Database::num_row($p_ret) > 0) {
+            echo '<tr >';
             echo '<td></td>';
             echo '<td colspan="5" style="border:1px solid black;width:auto">';
-            include NOALYSS_TEMPLATE.'/impress_reconciliation_detail.php';
+            include NOALYSS_TEMPLATE . '/impress_reconciliation_detail.php';
             echo '</td>';
             echo '</tr>';
         }
     }
+
     /**
      * @brief Export to CSV
      * @param type $p_choice 
@@ -474,125 +528,66 @@ j1.j_poste as poste
      *    - $this->end_day end date
      * @see Acc_Reconciliation::get_data
      */
-    function export_csv($p_choice)
-    {
-        $export=new Noalyss_Csv(_('rapprochement'));
+    function export_csv($p_choice) {
+        $export = new Noalyss_Csv(_('rapprochement'));
         $export->send_header();
 
         $array = $this->get_data($p_choice);
-        for ($i = 0; $i < count($array); $i++)
-        {
-            // ---------------------------------------
-            // first index has 2 arrays : first & depend[]
-            // ---------------------------------------
-
-            $first = $array[$i]['first'];
-            $a_depend = array();
-            $title=array();
-            if (isset($array[$i]['depend']))
+        for ($i = 0; $i < count($array); $i++) {
+            if ( $i == 0)
             {
-                $a_depend = $array[$i]['depend'];
-                //----- HEADER ----
-                if ($i == 0)
-                {
-                    $title[]=_('n°');
-                    $title[]=_('Date');
-                    $title[]=_('internal');
-                    $title[]=_('libellé');
-                    $title[]=_('pièce');
-                    $title[]=_('journal');
-                    $title[]=_('type journal');
-                    $title[]=_('montant');
-                    $title[]=_('<->');
-                    $title[]=_('Date');
-                    $title[]=_('Interne');
-                    $title[]=_('libell');
-                    $title[]=_('pièce');
-                    $title[]=_('nom journal');
-                    $title[]=_('type journal');
-                    $title[]=_('montant');
-
-                }
+                $title[] = _('n°');
+                $title[] = _('Date');
+                $title[] = _('internal');
+                $title[] = _('libellé');
+                $title[] = _('pièce');
+                $title[] = _('journal');
+                $title[] = _('type journal');
+                $title[] = _('montant');
+                $export->write_header($title);
             }
-            else
-            {
-                //----- HEADER ----
-                if ($i == 0)
-                {
-                    $title[]=_('n°');
-                    $title[]=_('Date');
-                    $title[]=_('interne');
-                    $title[]=_('libellé');
-                    $title[]=_('pièce');
-                    $title[]=_('journal');
-                    $title[]=_('type journal');
-                    $title[]=_('montant');
-
-                }
-            }
-            $export->write_header($title);
-            //-----------------------------------------
-            //Retrieve amount without autoreversed VAT
-            //-----------------------------------------
-            $amount=$this->get_amount_noautovat($first['jr_id'],$first['jr_montant']);
+            $export->add($i, "number");
+            $export->add($array[$i]['str_jr1_jr_date']);
+            $export->add($array[$i]['jr1_jr_internal']);
+            $export->add($array[$i]['jr1_jr_pj_number']);
+            $export->add($array[$i]['jr1_jr_comment']);
+            $export->add($array[$i]['jrn1_jrn_def_name']);
+            $export->add($array[$i]['jrn1_jrn_def_type']);
+             $x=($array[$i]['to1_sum_amount']!=0)?$array[$i]['to1_sum_amount']:$array[$i]['jr1_jr_montant'];
+            $export->add($x, "number");
+            $export->write();
             
-            // --------------------------
-            // Print First
-            // --------------------------
-            $export->add($i,"number");
-            $export->add($first['jr_date']);
-            $export->add($first['jr_internal']);
-            $export->add($first['jr_comment']);
-            $export->add($first['jr_pj_number']);
-            $export->add($first['jrn_def_name']);
-            $export->add($first['jrn_def_type']);
-            $export->add($amount,"number");
-            if (count($a_depend) > 0)
-            {
-                // --------------------------------------
-                // Print first depending operation
-                // --------------------------------------
-                $depend = $a_depend[0];
-                $export->add("<->");
-                $amount_dep=$this->get_amount_noautovat($depend['jr_id'],$depend['jr_montant']);
-                $export->add($depend['jr_date']);
-                $export->add($depend['jr_internal']);
-                $export->add($depend['jr_comment']);
-                $export->add($depend['jr_pj_number']);
-                $export->add($depend['jrn_def_name']);
-                $export->add($depend['jrn_def_type']);
-                $export->add($amount_dep,"number");
-                $export->write();
-                // --------------------------------------
-                // print other depending operation if any
-                // --------------------------------------
-                for ($e = 1; $e < count($a_depend); $e++)
-                {
-                    $amount_dep=$this->get_amount_noautovat($depend['jr_id'],$depend['jr_montant']);
-                    $depend = $a_depend[$e];
-                    $export->add("");
-                    $export->add("");
-                    $export->add("");
-                    $export->add("");
-                    $export->add("");
-                    $export->add("");
-                    $export->add("");
-                    $export->add("");
-                    $export->add("<->");
-                    $export->add($depend['jr_date']);
-                    $export->add($depend['jr_internal']);
-                    $export->add($depend['jr_comment']);
-                    $export->add($depend['jr_pj_number']);
-                    $export->add($depend['jrn_def_name']);
-                    $export->add($depend['jrn_def_type']);
-                    $export->add($amount_dep,"number");
+             if ( $array[$i]['depend_count']>0) {
+                $depend=$this->db->get_array("select * 
+                        from temp_total_operation 
+                        where 
+                            jr1_jr_id=$1 and ra1_jra_concerned != jr1_jr_id"
+                            ,[$array[$i]['jr1_jr_id']]);
+                $nb_depend = count($depend);
+                $totdepend=0;$delta=$x;
+                for ($e = 0; $e < $nb_depend ; $e++) {
+                    $x=($depend[$e]['to2_sum_amount']!=0)?$depend[$e]['to2_sum_amount']:$depend[$e]['jr2_jr_montant'];
+                    $totdepend=bcadd($totdepend,$x,2);
+                    $delta=bcsub($delta,$x,2);
+                    $export->add($i, "number");
+                    $export->add($depend[$e]["str_jr2_jr_date"]);
+                    $export->add($depend[$e]["jr2_jr_internal"]);
+                    $export->add($depend[$e]["jr2_jr_pj_number"]);
+                    $export->add($depend[$e]["jr2_jr_comment"]);
+                    $export->add($depend[$e]['jrn2_jrn_def_name']);
+                    $export->add($depend[$e]['jrn2_jrn_def_type']);
+                    $export->add($x, "number");
                     $export->write();
                 }
-            }
-            else
-            {
+                $export->add("Total");
+                $export->add($totdepend,"number");
+                $export->add("Différence");
+                $export->add($delta,"number");
                 $export->write();
-            }
+                 
+             }
+            
+            
         }
     }
 
@@ -605,10 +600,8 @@ j1.j_poste as poste
      *       - 3 : not reconcilied 
      * @return $array
      */
-    function get_data($p_choice)
-    {
-        switch ($p_choice)
-        {
+    function get_data($p_choice) {
+        switch ($p_choice) {
             case 0:
                 $array = $this->get_reconciled();
                 break;
@@ -627,13 +620,16 @@ j1.j_poste as poste
         }
         return $array;
     }
-    function prepare_query_detail_quant()
-    {
-        static $seen=0;
-        if ( $seen == 1) return;
-        $this->db->prepare('detail_quant','select * from v_quant_detail where jr_id=$1');
-        $seen=1;
+
+    function prepare_query_detail_quant() {
+        static $seen = 0;
+        if ($seen == 1)
+            return;
+        $this->db->prepare('detail_quant', 'select * from v_quant_detail where jr_id=$1');
+        // $this->db->prepare('detail_depend',' ');
+        $seen = 1;
     }
+
     /**
      * @brief Retrieve the amount VAT included and autoreversed VAT excluded thanks
      * the view v_quant_detail and return it.
@@ -644,40 +640,39 @@ j1.j_poste as poste
      * v_quant_detail
      * @return number
      */
-    function get_amount_noautovat($p_jrn_id,$p_default_amount) {
-        static $p=0;
-        if ( $p==0) {
+    function get_amount_noautovat($p_jrn_id, $p_default_amount) {
+        static $p = 0;
+        if ($p == 0) {
             $this->prepare_query_detail_quant();
-            $p=1;
+            $p = 1;
         }
         bcscale(2);
-        $retdb=$this->db->execute("detail_quant",array($p_jrn_id));
-        $nb_record=Database::num_row($retdb);
-        if ( $nb_record > 0)
-        {
-            $total_price=$first_amount=0;
-            for ($i=0;$i<$nb_record;$i++) {
-            // then second_amount takes in account the vat_sided
-                $row=Database::fetch_array($retdb, $i);
-                $total_price=bcadd($row['price'],$row['vat_amount']);
-                $total_price=bcsub($total_price,$row['vat_sided']);
-                $total_price=bcadd($total_price,$row['nd_tva']);
-                $total_price=bcadd($total_price,$row['nd_tva_recup']);
-                $first_amount=bcadd($total_price,$first_amount);
+        $retdb = $this->db->execute("detail_quant", array($p_jrn_id));
+        $nb_record = Database::num_row($retdb);
+        if ($nb_record > 0) {
+            $total_price = $first_amount = 0;
+            for ($i = 0; $i < $nb_record; $i++) {
+                // then second_amount takes in account the vat_sided
+                $row = Database::fetch_array($retdb, $i);
+                $total_price = bcadd($row['price'], $row['vat_amount']);
+                $total_price = bcsub($total_price, $row['vat_sided']);
+                $total_price = bcadd($total_price, $row['nd_tva']);
+                $total_price = bcadd($total_price, $row['nd_tva_recup']);
+                $first_amount = bcadd($total_price, $first_amount);
             }
-
         } else {
             // else take the amount from jrn
-            $first_amount=$p_default_amount;
+            $first_amount = $p_default_amount;
         }
         return $first_amount;
-        
-    }
-    static function test_me()
-    {
-        $cn=Dossier::connect();
-        $rap=new Acc_Reconciliation($cn);
-        var_dump($rap->get_reconciled_amount('',false));
     }
 
+    static function test_me() {
+        $cn = Dossier::connect();
+        $rap = new Acc_Reconciliation($cn);
+        var_dump($rap->get_reconciled_amount(false));
+        $rap->build_temp_total_operation();
+        $rap->build_temp_total_operation();
+        $rap->build_temp_total_operation();
+    }
 }

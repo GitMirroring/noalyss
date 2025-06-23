@@ -3766,7 +3766,49 @@ h2.h-section {
  .nav-level3 .nav-link.active::after {
      background-color:yellow;
  }
+
  .text-70 {
      font-size:70% !important;
      vertical-align: super;
  }
+ 
+ /**
+  * Style for ACC_RECONCILIATION P0RAP
+  */
+  .rpm_main {
+     display:grid;
+     grid-template-columns:1fr ;
+     row-gap: 0.5rem;
+ }
+ .rpm_operation {
+     display:grid;
+     grid-template-columns:10rem 10rem 10rem 10rem 1fr 1fr ;
+     
+     
+ }
+ .rpm_title {
+    color:white;
+     background-color: navy;
+   }
+ 
+   .rpm_detail {
+       justify-self: stretch;
+        grid-column: 1 / span 6;
+   }
+   .rpm_detail > table {
+       width:90%;
+       margin-left:5%;
+   }
+   .rpm_detail > .highlight {
+    font-size: 130%;
+    font-stretch: extra-expanded;
+    color:blue;
+    margin-left:min(40rem,20%);
+    border: 1px navy dotted;
+    width: max(60%,40rem);
+    padding: 0.2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+}
+   
