@@ -216,7 +216,7 @@ list="dl_tva_%s" autocomplete="off">';
     public function display()
     {
         $cn = Dossier::connect();
-        $tva = new Acc_Tva($cn, $this->value);
+        $tva = Acc_Tva::build($cn, $this->value);
 
         $comment = ($tva->load() != "-1") ? $tva->tva_label : "";
         $res = sprintf('<input type="text" name="%s" size="6" class="input_text_ro" value="%s" id="%s" readonly="">%s', $this->name, $this->value, $this->name, $comment);
