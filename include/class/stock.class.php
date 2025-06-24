@@ -201,11 +201,21 @@ class Stock extends Stock_Sql
 		if (isset($p_array['wdate_start']) && $p_array['wdate_start'] != '')
 		{
 			$clause = $and." to_date('" . sql_string($p_array['wdate_start']) . "','DD.MM.YYYY')<=coalesce(sg_date,jr_date) ";
-		}
+		}else{
+                    $exercice=$g_user->get_exercice();
+                    $periode=new Periode($cn);
+                    $limit=$periode->get_limit($exercice);
+                    $clause = $and.sprintf(" to_date ('%s','DD.MM.YYYY') <=coalesce(sg_date,jr_date)",$limit[0]->first_day());
+                }
 		if (isset($p_array['wdate_end']) && $p_array['wdate_end'] != '')
 		{
 			$clause.=$and . " to_date('" . sql_string($p_array['wdate_end']) . "','DD.MM.YYYY')>=coalesce(sg_date,jr_date) ";
-		}
+		}else {
+                    $exercice=$g_user->get_exercice();
+                    $periode=new Periode($cn);
+                    $limit=$periode->get_limit($exercice);
+                    $clause .= $and.sprintf(" to_date ('%s','DD.MM.YYYY') >= coalesce(sg_date,jr_date)",$limit[1]->last_day());  
+                }
 		if (isset($p_array['wamount_start']) && $p_array['wamount_start'] != '' && isNumber($p_array['wamount_start']) == 1
 				 && $p_array['wamount_start'] != 0 )
 		{
