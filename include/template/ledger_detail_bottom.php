@@ -196,7 +196,7 @@ if ($aRap  != null ) {
     $amount=$array_jr[0]['jr_montant'];
     switch (substr($array_jr[0]['jr_internal'],0,1)) {
         case 'A':
-            $amount = $cn->get_value("select sum(qp_price+qp_vat-qp_vat_sided) from quant_purchase qp 
+            $amount = $cn->get_value("select sum(qp_price+qp_vat+qp_nd_tva+qp_nd_tva_recup-qp_vat_sided) from quant_purchase qp 
                                             where qp_internal=$1",
                 array($internal));
             // add additional tax if any
