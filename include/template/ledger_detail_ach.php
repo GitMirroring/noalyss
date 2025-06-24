@@ -209,7 +209,7 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                     if ($owner->MY_TVA_USE == 'Y' && $q['qp_vat_code'] != '')
                     {
                         /* retrieve TVA symbol */
-                        $tva = new Acc_Tva($cn, $q['qp_vat_code']);
+                        $tva = Acc_Tva::build($cn, $q['qp_vat_code']);
                         $tva->load();
                         $sym_tva = h($tva->get_parameter('label'));
                         $x=($g_user->get_vat_code_preference()==1)?$tva->get_parameter('tva_code'):$tva->get_parameter('id');
