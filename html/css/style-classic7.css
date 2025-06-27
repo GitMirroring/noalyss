@@ -3963,7 +3963,7 @@ h2.h-section {
  }
  .rpm_operation {
      display:grid;
-     grid-template-columns:10rem 10rem 10rem 10rem 1fr 1fr ;
+     grid-template-columns:10rem 10rem 10rem 10rem 10rem 1fr 10rem ;
      
      
  }

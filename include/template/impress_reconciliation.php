@@ -19,6 +19,9 @@
         <div>
             <?php echo _("N° pièce") ?>
         </div>
+        <div> 
+            <?=_("Tiers")?>
+        </div>
         <div>
             <?php echo _("Libellé") ?>
         </div>
@@ -32,6 +35,7 @@
             <div><?=$array[$i]['str_jr1_jr_date']?></div>
             <div><?= HtmlInput::detail_op($array[$i]['jr1_jr_id'], $array[$i]['jr1_jr_internal']) ?></div>
             <div><?= $array[$i]['jr1_jr_pj_number'] ?></div>
+            <div><?=HtmlInput::card_detail($array[$i]['tiers_qcode'])?></div>
             <div><?= $array[$i]['jr1_jr_comment'] ?></div>
             <?php
             $x=($array[$i]['to1_sum_amount']!=0)?$array[$i]['to1_sum_amount']:$array[$i]['jr1_jr_montant'];
@@ -70,6 +74,7 @@
                         <div><?=$depend[$e]["str_jr2_jr_date"] ?></div>
                         <div><?= HtmlInput::detail_op($depend[$e]["ra1_jra_concerned"],$depend[$e]["jr2_jr_internal"]) ?></div>
                         <div><?=$depend[$e]["jr2_jr_pj_number"] ?></div>
+                        <div><?=HtmlInput::card_detail($array[$i]['tiers_qcode_2'])?></div>
                         <div><?=$depend[$e]["jr2_jr_comment"] ?></div>
                         <div><?= nbm($y) ?></div>
                         

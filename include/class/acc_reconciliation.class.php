@@ -54,6 +54,13 @@ class Acc_Reconciliation {
 		left join quant_purchase qp on (qp.j_id =jx1.j_id)
 	group by jn2.jr_id
 ), all_operation as (select jr_id,jra_concerned from jrn_rapt union select jra_concerned,jr_id from jrn_rapt)
+,tiers as ( 
+	select j_id,qf_other tiers_id from quant_fin
+	union
+	select j_id,qs_client from quant_sold qs 
+	union
+	select j_id,qp_supplier from quant_purchase
+)
 select distinct
     jr1.jr_id jr1_jr_id
     ,ra1.jra_concerned ra1_jra_concerned 
@@ -77,6 +84,12 @@ select distinct
     ,jr2.jr_def_id jr2_jr_def_id
     ,jrn2.jrn_def_name jrn2_jrn_def_name
     ,jrn2.jrn_def_type jrn2_jrn_def_type
+    ,t3.tiers_id
+    ,(select fd1.ad_value from fiche_detail fd1 where fd1.ad_id=1 and fd1.f_id=t3.tiers_id) as tiers_name
+        ,(select fd1.ad_value from fiche_detail fd1 where fd1.ad_id=23 and fd1.f_id=t3.tiers_id) as tiers_qcode
+    ,t5.tiers_id tiers_id_2
+    ,(select fd1.ad_value from fiche_detail fd1 where fd1.ad_id=1 and fd1.f_id=t5.tiers_id) as tiers_name_2
+        ,(select fd1.ad_value from fiche_detail fd1 where fd1.ad_id=23 and fd1.f_id=t5.tiers_id) as tiers_qcode_2
 from jrn jr1
 join total_operation to1 on (to1.jr_id=jr1.jr_id)
 join jrn_def jrn1 on (jrn1.jrn_def_id=jr1.jr_def_id)
@@ -84,6 +97,8 @@ join all_operation ra1 on (ra1.jra_concerned=jr1.jr_id or ra1.jr_id=jr1.jr_id)
 join jrn jr2 on (ra1.jra_concerned =jr2.jr_id)
 join total_operation to2 on (to2.jr_id=jr2.jr_id)
 join jrn_def jrn2 on (jrn2.jrn_def_id=jr2.jr_def_id)
+left join (select t2.tiers_id,j2.j_grpt from tiers t2 join jrnx j2 on (t2.j_id=j2.j_id) ) as t3 on (t3.j_grpt=jr1.jr_grpt_id )
+left join (select t4.tiers_id,j2.j_grpt from tiers t4 join jrnx j2 on (t4.j_id=j2.j_id) ) as t5 on (t5.j_grpt=jr2.jr_grpt_id )
 where 
 FILTER_DATE
 and LEDGER_FILTER1
@@ -343,6 +358,22 @@ where
         $sql_jrn = $this->ledger_filter();
 
         $array = $this->db->get_array("
+                  with total_operation as (
+	select 
+		jn2.jr_id,coalesce(sum(qs_price+qs_vat-qs_vat_sided),0)+coalesce(sum(qp_price+qp_vat-qp_vat_sided+qp.qp_nd_tva + qp.qp_nd_tva_recup),0) sum_amount
+	from 
+		jrnx jx1 
+		join jrn jn2 on (jn2.jr_grpt_id =jx1.j_grpt )
+		left join quant_sold qs on (jx1.j_id=qs.j_id) 
+		left join quant_purchase qp on (qp.j_id =jx1.j_id)
+	group by jn2.jr_id)
+,tiers as ( 
+	select j_id,qf_other tiers_id from quant_fin
+	union
+	select j_id,qs_client from quant_sold qs 
+	union
+	select j_id,qp_supplier from quant_purchase
+)
             select distinct
     jr1.jr_id jr1_jr_id
     ,null ra1_jra_concerned 
@@ -351,7 +382,7 @@ where
     ,jr1.jr_comment jr1_jr_comment
     ,jr1.jr_internal jr1_jr_internal
     ,jr1.jr_montant jr1_jr_montant
-    ,jr1.jr_montant to1_sum_amount
+    ,case when to1.sum_amount=0 then jr1.jr_montant else to1.sum_amount end to1_sum_amount
     ,jr1.jr_pj_number jr1_jr_pj_number
     ,jr1.jr_def_id jr1_jr_def_id
     ,jrn1.jrn_def_name jrn1_jrn_def_name
@@ -367,8 +398,12 @@ where
     ,null jrn2_jrn_def_name
     ,null jrn2_jrn_def_type
     ,0 depend_count
+    ,(select fd1.ad_value from fiche_detail fd1 where fd1.ad_id=1 and fd1.f_id=t3.tiers_id) as tiers_name
+    ,(select fd1.ad_value from fiche_detail fd1 where fd1.ad_id=23 and fd1.f_id=t3.tiers_id) as tiers_qcode
 from jrn jr1
+join total_operation to1 on (to1.jr_id=jr1.jr_id)
 join jrn_def jrn1 on (jrn1.jrn_def_id=jr1.jr_def_id)
+left join (select t2.tiers_id,j2.j_grpt from tiers t2 join jrnx j2 on (t2.j_id=j2.j_id) ) as t3 on (t3.j_grpt=jr1.jr_grpt_id )
 where 
     $filter_date 
     and $sql_jrn 
@@ -538,9 +573,11 @@ where
             {
                 $title[] = _('n°');
                 $title[] = _('Date');
-                $title[] = _('internal');
-                $title[] = _('libellé');
                 $title[] = _('pièce');
+                $title[] = _('internal');
+                $title[] = _('Qcode');
+                $title[] = _('Nom');
+                $title[] = _('libellé');
                 $title[] = _('journal');
                 $title[] = _('type journal');
                 $title[] = _('montant');
@@ -548,8 +585,10 @@ where
             }
             $export->add($i, "number");
             $export->add($array[$i]['str_jr1_jr_date']);
-            $export->add($array[$i]['jr1_jr_internal']);
             $export->add($array[$i]['jr1_jr_pj_number']);
+            $export->add($array[$i]['jr1_jr_internal']);
+            $export->add($array[$i]['tiers_qcode']);
+            $export->add($array[$i]['tiers_name']);
             $export->add($array[$i]['jr1_jr_comment']);
             $export->add($array[$i]['jrn1_jrn_def_name']);
             $export->add($array[$i]['jrn1_jrn_def_type']);
@@ -572,6 +611,8 @@ where
                     $export->add($i, "number");
                     $export->add($depend[$e]["str_jr2_jr_date"]);
                     $export->add($depend[$e]["jr2_jr_internal"]);
+                    $export->add($array[$i]['tiers_name_2']);
+                    $export->add($array[$i]['tiers_qcode_2']);
                     $export->add($depend[$e]["jr2_jr_pj_number"]);
                     $export->add($depend[$e]["jr2_jr_comment"]);
                     $export->add($depend[$e]['jrn2_jrn_def_name']);
