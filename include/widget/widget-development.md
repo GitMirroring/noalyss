@@ -44,7 +44,7 @@ La classe s'appele toujours "nom-du-widget.php" , elle est dérivée de widget e
 
 * display  : affichage du widget
 * input : affichage de la description et permet son activation (visible dans la box )
-* input-parameter : si des paramètres doivent être sauvées, les paramètres sont par utilisateur et par widget activés,
+* input-parameter : si des paramètres doivent être sauvés, les paramètres sont par utilisateur et par widget activés,
 * display_parameter
 
 ### Paramètres
