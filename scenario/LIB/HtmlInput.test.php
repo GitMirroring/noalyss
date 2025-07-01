@@ -133,7 +133,7 @@ $http=new HttpInput();
         console.debug("afile");
         console.debug(aFile);
         var info=document.getElementById("file-info");
-        for (var i = 0;i < aFile.length;i) {
+        for (var i = 0;i < aFile.length;i++) {
         if ( aFile[i].getAttribute("type")==="file" ) {
             
                 console.debug("file"aFile[i].files[0].size);
