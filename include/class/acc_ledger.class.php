@@ -1441,7 +1441,7 @@ class Acc_Ledger  extends jrn_def_sql
             }
             else
             {
-                $oPeriode->id=$period;
+                $oPeriode->p_id=$period;
             }
 
             $count=0;
