@@ -20,11 +20,20 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 /*!
  * \file
- * \brief Html Input
+ * \brief Html Input Text
  */
 /*!
  * \class IText
- * \brief Html Input
+ * \brief Html Input Text
+ * member : 
+ *  - placeholder (string) placeholder
+ *  - title (string) title of the HTML ELT
+ *  - autofocus (bool) true to have an autofocus
+ *  - css_size (string) size in the specified unit ex: 20%
+ *  - pattern (string) pattern for HTML
+ *  - maxlength (int) max length of the fied
+ *  - size (int) size without unit 
+ *  - require (bool) is element require
  */
 class IText extends HtmlInput
 {
@@ -34,6 +43,7 @@ class IText extends HtmlInput
     var $css_size;
     var $pattern; /*!< $pattern HTML pattern */
     var $maxlength; /*!< HTML maxlength */
+    var $require ; /*!< $require (bool)*/
     function __construct($name='',$value='',$p_id="")
     {
         parent::__construct($name,$value,$p_id);
@@ -82,7 +92,7 @@ class IText extends HtmlInput
         {
             
             $r=  sprintf('<INPUT TYPE="TEXT" %s id="%s" name="%s" value="%s" placeholder="%s" title="%s"
-                      style="width:%s;"  %s %s  %s %s %s %s %s>
+                     size="%s"   %s %s  %s %s %s %s %s>
                     ',$this->style,
                     $this->id,
                     $this->name,
@@ -100,7 +110,7 @@ class IText extends HtmlInput
                     );
         } else {
             $r=  sprintf('<INPUT TYPE="TEXT" %s id="%s" name="%s" value="%s" placeholder="%s" title="%s"
-                     style="width:%s;"  %s %s  %s %s %s>
+                     style="width:%s ;"  %s %s  %s %s %s>
                     ',$this->style,
                     $this->id,
                     $this->name,
@@ -140,7 +150,7 @@ class IText extends HtmlInput
         $r='<INPUT '.$this->style.' TYPE="TEXT" id="'.
            $this->id.'"'.$t.
            'NAME="'.$this->name.'" VALUE="'.$this->value.'"  '.
-           'SIZE="'.$this->size.'" '.$this->javascript." $readonly $this->extra  $strAttribute>";
+           'SIZE="'.$this->size.'"  '.$this->javascript." $readonly $this->extra  $strAttribute>";
         } else {
                $r='<INPUT '.$this->style.' TYPE="TEXT" id="'.
            $this->id.'"'.$t.
