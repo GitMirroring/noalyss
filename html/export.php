@@ -55,7 +55,7 @@ $action=$hi->get("act");
 
 if ( $action=='X'  || $g_user->check_print($action)==0 )
   {
-    echo alert(_('Accès interdit'));
+    echo alert(_('Accès interdit'));    
     redirect("do.php?".dossier::get());
     exit();
   }

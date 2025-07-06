@@ -178,12 +178,30 @@ function CleanUrl()
     $url=http_build_query($_GET);
     return $url;
 }
-function redirect($p_string,$p_time=0)
+/**
+ * @brief redirect with javascript
+ * @param $p_string (string) URL
+ * @param $p_time (type ) time before redirecting
+ */
+function redirect( $p_string,$p_time=0) 
+{
+    if (strpos( $p_string,'?') == 0 ) {
+         $p_string = $p_string.'?v='.microtime(true);
+     }
+    echo '<HTML><head><META HTTP-EQUIV="REFRESH" content="'.$p_time.'; url='.$p_string.'"></head><body> Connecting... </body></html>';
+}
+/**
+ * @brief redirect with header, 
+ * @note if something has been already send to the browser, 
+ * the redirection will fails
+ * @param string $p_string
+ */
+function redirect_header($p_string)
 {
     if (strpos( $p_string,'?') == 0 ) {
         $p_string = $p_string.'?v='.microtime(true);
     }
-    echo '<HTML><head><META HTTP-EQUIV="REFRESH" content="'.$p_time.'; url='.$p_string.'"></head><body> Connecting... </body></html>';
+    header("Location: $p_string");
 }
 /*!
  * \brief remove the useless space, change comma by period and try to return
