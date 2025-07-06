@@ -156,10 +156,10 @@ if ( $_GET['lang'] == "en_US.utf8" || $_GET['lang']=='fr_FR.utf8')
 ?>
  <script type="text/javascript" charset="utf-8" language="javascript" src="js/infobulle.js">
 </script>
+<script>
   <?php
   include_once NOALYSS_INCLUDE.'/lib/message_javascript.php';
   ?>
-<script>
 
 content[200]="<?php echo _("Indiquez ici le répertoire où les documents temporaires peuvent être sauvés exemple c:/temp, /tmp")?>";
 content[201]="<?php echo _("Désactiver le changement de langue (requis pour MacOSX)")?>";
