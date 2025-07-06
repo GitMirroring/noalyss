@@ -41,7 +41,7 @@ mb_internal_encoding("UTF-8");
 // if gDossier is not set redirect to form to choose a folder
 if ( ! isset($_REQUEST['gDossier']))
 {
-    redirect('user_login.php');
+    redirect_header('user_login.php');
     exit();
 }
 if ( ! isset ($_SESSION[SESSION_KEY.'g_user']))

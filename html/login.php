@@ -21,7 +21,6 @@ require_once '../include/constant.php';
 
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 MaintenanceMode("block.html");
-
 /*! \file
  * \brief Login page
  */
@@ -47,7 +46,6 @@ if (  isset ($_POST["p_user"] ) )
     $User=new Noalyss_user($rep);
     $User->Check(false,'LOGIN');
 
-
     /*
      * Check repository version
      */
@@ -69,21 +67,25 @@ if (  isset ($_POST["p_user"] ) )
           if ( $valid == false )
           {
           echo alert(_('Code invalide'));
-          echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url=index.php\">";
+          
+          header("Location: ".NOALYSS_URL."/index.php");
           exit();
         }
       }
       if ($User->get_access_mode()=='PC')
       {
         // force the nocache
-        $backurl='user_login.php?v='.microtime(true);
+        $backurl=NOALYSS_URL.'/user_login.php?v='.microtime(true);
         if ( isset ($_POST['backurl'])) {
               $backurl=urldecode($_POST['backurl']);
+              // check that backurl is valid
+              $backurl=preg_replace('/^.*\?/','',$backurl);
+              $backurl=NOALYSS_URL."?$backurl";
           }
-        echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url={$backurl}\">";
+        header("Location: $backurl");
         exit();
       } else {
-           echo "<META HTTP-EQUIV=\"REFRESH\" content=\"0;url=mobile.php\">";
+           header("Location: ".NOALYSS_URL."/mobile.php");
            exit();
       }
 }
