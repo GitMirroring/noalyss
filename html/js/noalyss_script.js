@@ -2223,10 +2223,12 @@ function filter_table(phrase, _id, colnr, start_row) {
     if (tot_found == 0) {
         if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = content[69];
+            id$('info_' + _id).style.display = 'block';
         }
     } else {
         if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = "  ";
+            id$('info_' + _id).style.display = 'none';
         }
     }
     id$('info_div').style.display = "none";
@@ -4124,9 +4126,11 @@ function check_receipt_size(p_max_size, p_info) {
     if (f && f.files[0] && f.files[0].size > parseFloat(p_max_size)) {
         document.getElementById("receipt_info_id").innerHTML = content[78];
         document.getElementById(p_info).style.display = "none";
+        $('receipt_info_id').addClassName('error');
         return false;
     }
     document.getElementById("receipt_info_id").innerHTML = "";
+    $('receipt_info_id').removeClassName('error');
     document.getElementById("form_file").submit();
     return true;
 }

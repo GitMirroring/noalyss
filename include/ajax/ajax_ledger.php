@@ -216,7 +216,7 @@ switch ($action) {
                 echo HtmlInput::hidden('div', $div);
                 echo '<INPUT TYPE="FILE" id="receipt_id" name="pj" onchange="' . $check_receipt . '">';
 
-                echo '<p id="receipt_info_id" class="error"></p>';
+                echo '<p id="receipt_info_id" style="display:inline"></p>';
 
                 echo '</FORM>';
             } else {
@@ -257,7 +257,7 @@ switch ($action) {
             }
             echo HtmlInput::show_receipt_document($jr_id, h($filename));
             echo $x;
-            echo '<p id="receipt_info_id" class="error"></p>';
+            echo '<p id="receipt_info_id" style="display:inline" ></p>';
             echo '</div>';
             echo '</body></html>';
             exit();
@@ -317,7 +317,7 @@ switch ($action) {
             echo HtmlInput::hidden('div', $div);
 
             echo '<INPUT TYPE="FILE" id="receipt_id" name="pj" onchange="' . $check_receipt . '">';
-            echo '<p id="receipt_info_id" class="error"></p>';
+            echo '<p id="receipt_info_id" style="display:inline"></p>';
             echo '</FORM>';
             $ret = $cn->exec_sql("select jr_pj from jrn where jr_id=$1", array($jr_id));
             if (Database::num_row($ret) != 0) {

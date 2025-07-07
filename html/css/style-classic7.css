@@ -79,6 +79,19 @@ input:focus {
     opacity:85%;
     background-color: wheat;
 }
+
+h2.notice {
+    padding: 0.6ch 2ch;
+    width: min(90%,90ch);
+}
+p.notice,span.notice {
+    display:block;
+    padding:0.5ch;
+    width:min(90%,110ch);
+    margin-left: 5ch;
+    border:1px solid transparent;
+    border-radius: 5px;
+}
  .valid {
      color:green;
      background-color:transparent;
@@ -433,8 +446,18 @@ table.document th{
      animation-duration: 4s;
      animation-iteration-count: infinite;
  }
-@media (min-width: 576px) {
+ p.error,span.error {
+        padding:0.2ch;
+        border:1px solid transparent;
+        border-radius:5px;
+        display: block;
+        width: fit-content;
 
+    }
+@media (min-width: 576px) {
+    p.error,span.error {
+    
+    }
 }
 /* MeDium */
 @media (min-width: 768px) {
@@ -447,14 +470,25 @@ table.document th{
         background-color:#FF0000;
         font-weight: bolder;
     }
+    p.error,span.error {
+         padding:1ch;
+        border:1px solid transparent;
+        border-radius:5px;
+    }
 }
 /* LarGe */
 @media (min-width: 992px) {
+    p.error,span.error {
+        padding:3ch;
+        border:1px solid transparent;
+        border-radius:5px;
+    }
 }
 /* eXtraLarge */
 @media (min-width: 1200px) {
 
 }
+
 table.mtitle {
     border:0px;
     text-align:center;
