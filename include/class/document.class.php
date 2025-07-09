@@ -1140,8 +1140,7 @@ class Document
                 $march_id='e_march'.$this->counter.'_price';
                 if (!isset($p_array[$march_id]))
                     return '';
-                $tva=new Acc_Tva($this->db);
-                $tva->set_parameter("id", $p_array[$id]);
+                $tva= Acc_Tva::build($this->db,$p_array[$id]);
                 if ($tva->load()==-1)
                     return '';
                 return $tva->get_parameter("rate");
@@ -1209,7 +1208,7 @@ class Document
                 // check that something is sold
                 if ($p_array[$price]==0||$p_array[$qt]==0||noalyss_strlentrim($p_array[$price])==0||noalyss_strlentrim($p_array[$qt])==0)
                     return "";
-                $oTva=new Acc_Tva($this->db, $p_array[$tva]);
+                $oTva= Acc_Tva::build($this->db, $p_array[$tva]);
                 if ($oTva->load()==-1)
                     return "";
                 $r=noalyss_round($p_array[$price], 2)*$oTva->get_parameter('rate');
@@ -1228,7 +1227,7 @@ class Document
                     return "";
                 if (!isset($p_array['e_march'.$this->counter.'_tva_id']))
                     return '';
-                $tva=new Acc_Tva($this->db, $p_array['e_march'.$this->counter.'_tva_id']);
+                $tva=Acc_Tva::build($this->db, $p_array['e_march'.$this->counter.'_tva_id']);
                 if ($tva->load()==-1)
                 {
                     $r=noalyss_round($p_array[$price], 2);
