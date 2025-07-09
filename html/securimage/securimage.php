@@ -331,6 +331,7 @@ class Securimage {
 	 */
 	var $signature_color;
 
+        var $signature_font;
 	/**
 	 * Full path to the WAV files to use to make the audio files, include trailing /.<br />
 	 * Name Files  [A-Z0-9].wav
@@ -839,6 +840,8 @@ class Securimage {
 			for ($i = 0; $i < $n; ++$i) {
 				$x = $x0 + $i * $dx + $amp * $dy * sin($k * $i * $step + $phi);
 				$y = $y0 + $i * $dy - $amp * $dx * sin($k * $i * $step + $phi);
+                                $x=(int) $x;
+                                $y=(int) $y;
 				imagefilledrectangle($this->im, $x, $y, $x + $lwid, $y + $lwid, $this->gdlinecolor);
 			}
 		}
