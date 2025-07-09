@@ -658,7 +658,7 @@ class Acc_Ledger_Search
                     $fil_paid="";
                     break;
                 case "paid":
-                    $fil_paid=$and."(jr_rapt is not null or jr_rapt = 'paid') and jr_valid = true ";
+                    $fil_paid=$and."(coalesce(jr_rapt,'') != '' or jr_rapt = 'paid') and jr_valid = true ";
                     $and=" and ";
                     break;
                 default:
