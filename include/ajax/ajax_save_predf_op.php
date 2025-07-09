@@ -39,7 +39,13 @@ try {
     echo $e->getMessage();
     return;
 }
-if  ( $g_user->check_module("PREDOP") == 0) die();
+if  ( $g_user->check_module("PREDOP") == 0)
+{
+    header('Content-type: text/xml; charset=UTF-8');
+    echo Manage_Table_SQL::ajax_error(_('Accès non autorisé'),)->saveXML();
+    record_log("security PREDOP");
+    return;
+}
 
 $prd_op=new Op_Predef_SQL($cn);
 $prd_op->set_pk_value($p_id);

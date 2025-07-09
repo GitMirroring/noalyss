@@ -28,7 +28,7 @@ if (!defined('ALLOWED'))
  */
 global $g_user;
 
-if ($g_user->check_module("COMPANY")==0) die();
+
 
 
 $http=new HttpInput();
@@ -44,6 +44,14 @@ try {
 }
 $parameter_extra =Parameter_Extra_MTable::build($p_id);
 $parameter_extra->set_object_name($ctl_id);
+if ($g_user->check_module("COMPANY")==0) 
+{
+    header('Content-type: text/xml; charset=UTF-8');
+    echo Manage_Table_SQL::ajax_error(_('Accès non autorisé'))->saveXML();
+    record_log("COMPANY security ");
+    return;
+
+}
 if ($action=="input")
 {
     $parameter_extra->send_header();

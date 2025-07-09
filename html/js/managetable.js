@@ -384,7 +384,7 @@ var ManageTable = function (p_table_name)
                     $(obj.id).setStyle(here.mt_style);
                     remove_waiting_box();
                     $(obj.id).update(x['html']);
-                    Effect.SlideDown(obj.id,{duration:0.3,scaleX:false,scaleY:true,scaleContent:false});
+                    Effect.SlideDown(obj.id,{duration:0.1,scaleX:false,scaleY:true,scaleContent:false});
                 } catch (e) {
                     smoke.alert(content[48] + e.message);
                 }

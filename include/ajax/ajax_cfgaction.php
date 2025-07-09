@@ -21,16 +21,6 @@
 
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
-
-// check right
-if ($g_user->check_action(PARCATDOC)==0)
-{
-
-    record_log("cfgaction01 security ");
-    return;
-}
-
-
 $http=new HttpInput();
 
 
@@ -47,9 +37,13 @@ try
 }
 catch (Exception $ex)
 {
-    echo $e->getMessage();
+    record_log($e);
     return;
 }
+
+
+
+
 
 $doc_type=new Document_type_SQL($cn,$p_id);
 $action_document_type=new Action_Document_Type_MTable($doc_type);
@@ -57,7 +51,14 @@ $action_document_type=new Action_Document_Type_MTable($doc_type);
 $action_document_type->set_callback("ajax_misc.php");
 $action_document_type->add_json_param("op", "cfgaction");
 $action_document_type->set_object_name($ctl_id);
-
+// check right
+if ( $g_user->check_module("C0ACT")==0)
+{
+    header('Content-type: text/xml; charset=UTF-8');
+    echo $action_document_type->ajax_error(_('Accès non autorisé'))->saveXML();
+    record_log("cfgaction01 security ");
+    return;
+}
 
 
 if ($action=="input")
