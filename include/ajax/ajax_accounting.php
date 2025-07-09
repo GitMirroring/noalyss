@@ -37,7 +37,7 @@ try {
     echo $e->getMessage();
     return;
 }
-if  ( $g_user->check_module("C0PCMN") == 0) die();
+
 
 
 $obj=new Acc_Plan_SQL($cn);
@@ -48,6 +48,13 @@ $manage_table=new Acc_Plan_MTable($obj);
 $manage_table->add_json_param("op","accounting");
 $manage_table->set_object_name($ctl_id);
 $manage_table->set_callback("ajax_misc.php");
+if  ( $g_user->check_module("C0PCMN") == 0) 
+{
+    header('Content-type: text/xml; charset=UTF-8');
+    echo Manage_Table_SQL::ajax_error(_('Accès non autorisé'))->saveXML();
+    record_log("C0PCMN security ");
+    return;
+}
 if ($action=="input")
 {
     header('Content-type: text/xml; charset=UTF-8');

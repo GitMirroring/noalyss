@@ -26,7 +26,7 @@ if (!defined('ALLOWED'))     die('Appel direct ne sont pas permis');
 
 global $g_user;
 
-if ($g_user->check_module("FORECAST")==0) die();
+
 
 $http=new HttpInput();
 try {
@@ -41,6 +41,15 @@ try {
 }
 $forecast_category =  Forecast_Category_MTable::build($p_id);
 $forecast_category->set_object_name($ctl_id);
+
+if ($g_user->check_module("FORECAST")==0) 
+{
+    header('Content-type: text/xml; charset=UTF-8');
+    echo Manage_Table_SQL::ajax_error(_('Accès non autorisé'))->saveXML();
+    record_log("security FORECAST");
+    return;
+}
+
 if ($action=="input")
 {
     $forecast_category->send_header();
