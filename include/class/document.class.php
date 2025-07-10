@@ -1778,8 +1778,8 @@ class Document
 
         $this->db->exec_sql($sql, array($this->d_lob, $this->d_filename, $this->d_mimetype, $p_internal));
         // clean the table document
-        $sql='delete from document where d_id='.$this->d_id;
-        $this->db->exec_sql($sql);
+        $sql='delete from document where d_id=$1';
+        $this->db->exec_sql($sql,[$this->d_id]);
     }
 
     /**
