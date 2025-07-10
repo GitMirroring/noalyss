@@ -64,6 +64,8 @@ class Acc_Ledger  extends jrn_def_sql
     var $jr_grpt_id ; /**! $jr_grpt_id (int) SQL JRN.JR_GRP_ID group rows
                              of an operations     */
     var $pj; /*!< $pj (string) nb receipt of the operation */
+        
+    var $doc; /*!< $doc (string) HTML with an anchor to the doc. of operation*/
     /**
      * @brief construct
      * @param $p_cn database connexion
