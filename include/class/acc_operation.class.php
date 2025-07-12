@@ -394,7 +394,7 @@ EOF;
     {
         if ( ! isset($this->jr_id) )
             throw new Exception('jr_id is not set',1);
-        $Res=$this->db->exec_sql("select jr_internal from jrn where jr_id=".$this->jr_id);
+        $Res=$this->db->exec_sql("select jr_internal from jrn where jr_id=$1",[$this->jr_id]);
         if ( Database::num_row($Res) == 0 ) return null;
         $l_line=Database::fetch_array($Res);
         $this->jr_internal= $l_line['jr_internal'];
@@ -436,19 +436,25 @@ EOF;
         $all=Database::fetch_all($res);
         return $all;
     }
-    /*!\brief add a comment to the line (jrnx.j_text) */
+    /*!
+     * \brief add a comment to the line (jrnx.j_text) 
+     */
     function update_comment($p_text)
     {
         $sql="update jrnx set j_text=$1 where j_id=$2";
         $this->db->exec_sql($sql,array($p_text,$this->jrnx_id));
     }
-    /*!\brief add a comment to the operation (jrn.jr_text) */
+    /*!
+     * \brief add a comment to the operation (jrn.jr_text) 
+     */
     function operation_update_comment($p_text)
     {
         $sql="update jrn set jr_comment=$1 where jr_id=$2";
         $this->db->exec_sql($sql,array($p_text,$this->jr_id));
     }
-    /*!\brief add a limit of payment to the operation (jrn.jr_ech) */
+    /*!
+     * \brief add a limit of payment to the operation (jrn.jr_ech) 
+     */
     function operation_update_date_limit($p_text)
     {
         if ( isDate($p_text) == null )
@@ -458,7 +464,9 @@ EOF;
         $sql="update jrn set jr_ech=to_date($1,'DD.MM.YYYY') where jr_id=$2";
         $this->db->exec_sql($sql,array($p_text,$this->jr_id));
     }
-    /*!\brief return the jrn_def_id from jrn */
+    /*!
+     * \brief return the jrn_def_id from jrn 
+     */
     function get_ledger()
     {
         $sql="select jr_def_id from jrn where jr_id=$1";
