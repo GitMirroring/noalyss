@@ -80,7 +80,7 @@ if (  isset ($_POST["p_user"] ) )
               $backurl=urldecode($_POST['backurl']);
               // check that backurl is valid
               $backurl=preg_replace('/^.*\?/','',$backurl);
-              $backurl=NOALYSS_URL."?$backurl";
+              $backurl=NOALYSS_URL."/do.php?$backurl";
           }
         header("Location: $backurl");
         exit();
