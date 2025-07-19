@@ -1,6 +1,6 @@
     NOALYSS
 ==================
-NOALYSS est un programme éthique, c'est-à-dire qu'il est libre sous GNU/GPL2,
+NOALYSS est un programme éthique, c'est-à-dire qu'il est libre (GNU/GPL2),
 vous pouvez l'utiliser, l'étudier et contribuer au développement, 
 il n'y a aucune publicité ou traquage.
 
@@ -10,14 +10,17 @@ ou dans une machine virtuelle, elle peut héberger
 la comptabilité de centaines de sociétés et d'utilisateurs.
 
 Chaque dossier est séparé et n'est accessible qu'à ceux à qui l'accès a été 
-explicitement permis.
+explicitement donné.
 
-NOALYSS permet par dossier de gérer tous les événements d'une société:
+La partie comptabilité est particulièrement flexible et puissante.
+
+NOALYSS permet aussi par dossier de gérer tous les événements d'une société:
 de la gestion des fournisseurs aux déclarations fiscales, en passant par  
-la documentation. Elle permet aussi de faire des prévisions et de comparer
+la documentation et bien plus. 
+
+Elle permet aussi de faire des prévisions et de comparer
 avec la réalité, de gérer les stocks, de faire de la comptabilité analytique, 
 de sortir les FECS, ...
-
 
 Si vous avez besoin de support, vous pouvez en demander soit sur les forums de
 NOALYSS : https://forum.noalyss.eu soit par email dans les listes de diffusion:
@@ -30,4 +33,4 @@ La documentation est libre :
 - Tutoriel vidéo  (https://www.youtube.com/@noalyss11)
 
 
-
+Voyez aussi la démo : https://demo.noalyss.eu 
