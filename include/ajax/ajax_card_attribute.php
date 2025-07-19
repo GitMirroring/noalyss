@@ -23,9 +23,16 @@
  * @file
  * @brief answer to card_attr_inc.php
  */
+/*
+ * @var $g_user Noalyss_User
+ */
 global $g_user;
 // security
-$g_user->can_request("CCARDAT");
+if ( $g_user->check_module("C0CARD") == 0 ) {
+    
+    record_log(new \Exception("C0CARD1: not authorized"));
+    return;
+}
 
 $http=new HttpInput();
 
