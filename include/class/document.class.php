@@ -209,8 +209,7 @@ class Document
 
             return $ret;
         } catch (Exception $e) {
-            record_log($e->getMessage());
-            record_log($e->getTraceAsString());
+            record_log($e);
             return span(_("Génération du document a échoué"),'class="notice"');
         }
     }
