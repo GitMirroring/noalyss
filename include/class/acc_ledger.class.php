@@ -1334,7 +1334,7 @@ class Acc_Ledger  extends jrn_def_sql
                     throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"),${'qc_'.$i}), 50);
                 if ($f->belong_ledger($p_jrn) < 1 )
                     throw new Exception("La fiche quick_code = ".
-                    $f->quick_code." n'est pas dans ce journal", 4);
+                    $f->quick_code." n'est pas accessible depuis ce journal, à configurer dans C0JRN", 4);
                 if (noalyss_strlentrim(${'qc_'.$i})!=0&&isNumber(${'amount'.$i})==0)
                     throw new Exception(_('Montant invalide'), 3);
 
@@ -1355,7 +1355,7 @@ class Acc_Ledger  extends jrn_def_sql
                 $p=new Acc_Account_Ledger($this->db, ${'poste'.$i});
                 if ($p->belong_ledger($p_jrn)<0) {
                     throw new Exception(sprintf ( 
-                            _("Le poste %s n'est pas dans ce journal",$p->id)),
+                            _("Le poste %s n'est pas accessible dans ce journal, à configurer dans C0JRN",$p->id)),
                     5);
                 }
                 if (noalyss_strlentrim(${'poste'.$i})!=0&&isNumber(${'amount'.$i})==0)
