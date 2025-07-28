@@ -39,6 +39,7 @@ set_language();
 // load message for javascript
 if (isset ($_REQUEST['loadjs']) && $_REQUEST['loadjs']=='message')
 {
+    header('Content-Type: text/javascript');
     include_once NOALYSS_INCLUDE."/lib/message_javascript.php";
     return;
 }
