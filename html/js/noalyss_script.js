@@ -792,7 +792,7 @@ function waiting_box() {
         id: 'wait_box', html: loading() + '<p>' + content[65] + '</p>'
     };
     var y = fixed_position(10, 250)
-    obj.style = y + ";width:20%;margin-left:40%;";
+    obj.style = y + ";width:281px;margin-left:40%;";
     if ($('wait_box')) {
         removeDiv('wait_box');
     }

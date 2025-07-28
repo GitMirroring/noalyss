@@ -48,7 +48,7 @@ class Acc_Ledger  extends jrn_def_sql
     /**
      * @brief construct
      * @param $p_cn database connexion
-     * @param $p_id jrn.jrn_def_id
+     * @param $p_id (int) ledger idf jrn.jrn_def_id
      */
     function __construct($p_cn, $p_id)
     {
