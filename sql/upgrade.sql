@@ -223,3 +223,5 @@ insert into country_code_ref values ('AF',' Afghanistan'),
 ('YE',' Yemen'),
 ('ZM',' Zambia'),
 ('ZW',' Zimbabwe'); 
+
+insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order, ad_extra) values(57,'Code pays','select',20,1,15,'select cc_code,format(''%s %s'',cc_code,cc_name) from country_code_ref order by 1');
