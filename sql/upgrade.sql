@@ -14,3 +14,6 @@ update "parameter" set pr_id="MY_PHONE" where pr_id="MY_TEL";
 update "parameter" set pr_id="MY_CP" where pr_id="MY_POSTCODE";
 update "parameter" set pr_id="MY_COMMUNE" where pr_id="MY_CITY";
 update "parameter" set pr_id="MY_PAYS" where pr_id="MY_COUNTRY";
+
+insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(55,'SIREN','text',20,1,14);
+insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(56,'SIRET','text',20,1,15);
