@@ -10,3 +10,7 @@ ALTER TABLE public.todo_list ALTER COLUMN tl_date drop NOT NULL;
 update menu_ref set me_javascript='bookmark.show(<DOSSIER>)' where me_code='BOOKMARK';
 
 alter table tool_uos add created_date timestamp default now();
+update "parameter" set pr_id="MY_PHONE" where pr_id="MY_TEL";
+update "parameter" set pr_id="MY_CP" where pr_id="MY_POSTCODE";
+update "parameter" set pr_id="MY_COMMUNE" where pr_id="MY_CITY";
+update "parameter" set pr_id="MY_PAYS" where pr_id="MY_COUNTRY";
