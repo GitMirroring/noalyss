@@ -225,3 +225,15 @@ insert into country_code_ref values ('AF',' Afghanistan'),
 ('ZW',' Zimbabwe'); 
 
 insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order, ad_extra) values(57,'Code pays','select',20,1,15,'select cc_code,format(''%s %s'',cc_code,cc_name) from country_code_ref order by 1');
+
+insert into parameter_extra(pe_code,pe_label) values ('INVOICE_EMAIL_COMPANY','Email pour la facturation') on conflict do nothing;
+insert into parameter_extra(pe_code,pe_label) values ('INVOICE_CONTACT_NAME','Nom du service pour la facturation') on conflict do nothing;
+insert into parameter_extra(pe_code,pe_label) values ('COMPANY_LEGAL_REGISTRATION','Nom complet de la société') on conflict do nothing;
+insert into parameter_extra(pe_code,pe_label) values ('COMPANY_LEGAL_ENTITY','Forme légal de la société (SRL,ASBL,AISBL,...') on conflict do nothing;
+insert into parameter_extra(pe_code,pe_label) values ('COMPANY_BANK_IBAN','Compte en banque (IBAN)') on conflict do nothing;
+insert into parameter_extra(pe_code,pe_label) values ('COMPANY_BANK_BIC','BIC Bank Identification Code') on conflict do nothing;
+insert into parameter_extra(pe_code,pe_label) values ('COMPANY_UBL_ID','ID PEPPOL') on conflict do nothing;
+insert into parameter_extra(pe_code,pe_label) values ('SIREN','n° SIREN') on conflict do nothing;
+insert into parameter_extra(pe_code,pe_label) values ('SIRET','n° SIRET') on conflict do nothing;
+
+
