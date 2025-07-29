@@ -1335,7 +1335,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $fClient->get_by_qcode($e_client);
             $e_client_label=$fClient->strAttribut(ATTR_DEF_NAME).' '.
                             ' Adresse : '.$fClient->strAttribut(ATTR_DEF_ADRESS).' '.
-                            $fClient->strAttribut(ATTR_DEF_CP).' '.
+                            $fClient->strAttribut(ATTR_DEF_POSTCODE).' '.
                             $fClient->strAttribut(ATTR_DEF_CITY).' ';
 
 
@@ -1590,7 +1590,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
         $client_name=h($client->getName().
                        ' '.$client->strAttribut(ATTR_DEF_ADRESS).' '.
-                       $client->strAttribut(ATTR_DEF_CP).' '.
+                       $client->strAttribut(ATTR_DEF_POSTCODE).' '.
                        $client->strAttribut(ATTR_DEF_CITY));
         $lPeriode=new Periode($this->db);
         if ($this->check_periode() == true)

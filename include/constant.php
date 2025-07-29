@@ -223,8 +223,8 @@ define("ATTR_DEF_PRIX_VENTE", 6);
 define("ATTR_DEF_TVA", 2);
 define("ATTR_DEF_NUMTVA", 13);
 define("ATTR_DEF_ADRESS", 14);
-define("ATTR_DEF_CP", 15);
-define("ATTR_DEF_PAYS", 16);
+define("ATTR_DEF_POSTCODE", 15);
+define("ATTR_DEF_COUNTRY", 16);
 define("ATTR_DEF_STOCK", 19);
 define("ATTR_DEF_TEL", 17);
 define("ATTR_DEF_EMAIL", 18);
@@ -247,6 +247,7 @@ define('ATTR_DEF_ACCOUNT_ND', 53);
 define('ATTR_DEF_ACTIF', 54);
 define('ATTR_DEF_SIREN', 55);
 define('ATTR_DEF_SIRET', 56);
+define('ATTR_DEF_COUNTRY_CODE', 56);
 
 define("FICHE_TYPE_CLIENT", 9);
 define("FICHE_TYPE_VENTE", 1);

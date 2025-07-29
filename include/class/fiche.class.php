@@ -1414,8 +1414,8 @@ class Fiche
             $r.="<TD sorttable_customkey=\"text{$accounting}\"> $e".$accounting."</TD>";
             $r.="<TD>".h($tiers->strAttribut(ATTR_DEF_NAME))."</TD>";
             $r.="<TD>".h($tiers->strAttribut(ATTR_DEF_ADRESS,0).
-                         " ".$tiers->strAttribut(ATTR_DEF_CP,0).
-                         " ".$tiers->strAttribut(ATTR_DEF_PAYS,0)).
+                         " ".$tiers->strAttribut(ATTR_DEF_POSTCODE,0).
+                         " ".$tiers->strAttribut(ATTR_DEF_COUNTRY,0)).
                 "</TD>";
             $r.='<td>'.linkTo($tiers->strAttribut(ATTR_DEF_WEBSITE,0)).'</td>';
             $str_deb=(($amount['debit']==0)?0:nbm($amount['debit']));

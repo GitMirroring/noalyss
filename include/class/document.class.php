@@ -840,7 +840,7 @@ class Document
 
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_CP,0);
+                $r=$tiers->strAttribut(ATTR_DEF_POSTCODE,0);
 
                 break;
             case 'CUST_CITY':
@@ -857,7 +857,7 @@ class Document
 
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_PAYS,0);
+                $r=$tiers->strAttribut(ATTR_DEF_COUNTRY,0);
 
                 break;
             // Marchandise in $p_array['e_march*']
@@ -922,7 +922,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_CP,0);
+                $r=$tiers->strAttribut(ATTR_DEF_POSTCODE,0);
 
                 break;
             case 'BENEF_CITY':
@@ -949,7 +949,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_PAYS,0);
+                $r=$tiers->strAttribut(ATTR_DEF_COUNTRY,0);
 
                 break;
             // Marchandise in $p_array['e_march*']

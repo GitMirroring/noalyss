@@ -230,7 +230,7 @@ class Pre_op_ach extends Pre_operation_detail
            $fClient->get_by_qcode($e_client);
            $e_client_label=$fClient->strAttribut(ATTR_DEF_NAME).' '.
                ' Adresse : '.$fClient->strAttribut(ATTR_DEF_ADRESS).' '.
-               $fClient->strAttribut(ATTR_DEF_CP).' '.
+               $fClient->strAttribut(ATTR_DEF_POSTCODE).' '.
                $fClient->strAttribut(ATTR_DEF_CITY).' ';
 
 
