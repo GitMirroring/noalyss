@@ -52,6 +52,7 @@ class Tva_Rate_SQL extends Table_Data_SQL
             ,"tva_payment_sale"=>"tva_payment_sale"
             ,"tva_code"=>"tva_code"
             ,'tva_reverse_account'=>'tva_reverse_account'
+            ,'tva_peppol_code'=>'tva_peppol_code'
         );
         /*
          * Type of columns
@@ -67,6 +68,7 @@ class Tva_Rate_SQL extends Table_Data_SQL
             ,"tva_payment_sale"=>"text"
             ,"tva_code"=>"text"
             ,'tva_reverse_account'=>'text'
+            ,'tva_peppol_code'=>'text'
         );
 
 

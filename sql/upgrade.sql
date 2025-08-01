@@ -16,7 +16,7 @@ update "parameter" set pr_id='MY_POSTCODE' where pr_id='MY_CP';
 update "parameter" set pr_id='MY_CITY' where pr_id='MY_COMMUNE';
 update "parameter" set pr_id='MY_COUNTRY' where pr_id='MY_PAYS';
 
-insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(55,'SIREN','text',20,1,14);
+insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(55,'SIRENE','text',20,1,14);
 insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(56,'SIRET','text',20,1,15);
 
 insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(58,'PEPPOL ID','text',20,1,15);
@@ -233,7 +233,30 @@ insert into parameter_extra(pe_code,pe_label) values ('COMPANY_LEGAL_ENTITY','Fo
 insert into parameter_extra(pe_code,pe_label) values ('COMPANY_BANK_IBAN','Compte en banque (IBAN)') on conflict do nothing;
 insert into parameter_extra(pe_code,pe_label) values ('COMPANY_BANK_BIC','BIC Bank Identification Code') on conflict do nothing;
 insert into parameter_extra(pe_code,pe_label) values ('COMPANY_UBL_ID','ID PEPPOL') on conflict do nothing;
-insert into parameter_extra(pe_code,pe_label) values ('SIREN','n° SIREN') on conflict do nothing;
+insert into parameter_extra(pe_code,pe_label) values ('SIRENE','n° SIRENE') on conflict do nothing;
 insert into parameter_extra(pe_code,pe_label) values ('SIRET','n° SIRET') on conflict do nothing;
 
+
+-- for all customers and suppliers add new attribut : FICHE_DEF_REF.FRD_ID 8 and 9 ??
+-- TVA , PEPPOL ID , SIRENE , SIRET ??
+
+ALTER TABLE TVA_RATE ADD TVA_PEPPOL_CODE varchar(3);
+comment on column tva_rate.Tva_peppol_code is 'Code for Peppol : S standard,Z zéro, AE Autoliquidation ,K autoliquidation intra, G : exempté TVA pour export';
+
+drop VIEW public.v_tva_rate;
+
+CREATE OR REPLACE VIEW public.v_tva_rate
+AS SELECT tva_id,
+          tva_rate,
+          tva_code,
+          tva_label,
+          tva_comment,
+          tva_reverse_account,
+          split_part(tva_poste, ','::text, 1) AS tva_purchase,
+          split_part(tva_poste, ','::text, 2) AS tva_sale,
+          tva_both_side,
+          tva_payment_purchase,
+          tva_payment_sale,
+          tva_peppol_code
+FROM tva_rate;
 

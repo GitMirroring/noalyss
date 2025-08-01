@@ -46,6 +46,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
     function __construct(V_Tva_rate_SQL $p_table)
     {
         parent::__construct($p_table);
+        $this->icon_mod='left';
         $this->set_col_label("tva_id", _("id"));
         $this->set_col_label("tva_code", _("Code"));
         $this->set_col_label("tva_label", _("label"));
@@ -55,8 +56,10 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $this->set_col_label("tva_reverse_account", _('Poste comptable autoliquidation'));
         $this->set_col_label("tva_sale", _("TVA Vente (C)"));
         $this->set_col_label("tva_purchase", _("TVA Achat (D)"));
+        $this->set_col_label("tva_peppol_code", _("Code Facture électronique"));
 
         $this->set_property_visible('tva_reverse_account', false);
+        $this->set_property_visible('tva_peppol_code', false);
 
         $this->set_col_type("tva_both_side", "select",
                 array(
@@ -89,7 +92,8 @@ class Tva_Rate_MTable extends Manage_Table_SQL
             'tva_sale'=>_("Ne donnez pas ce poste comptable si ce code n'est pas utilisé  à la vente"),
             'tva_payment_purchase'=>_('TVA due ou récupérable quand l\'opération est payée ou exécutée'),
             'tva_payment_sale'=>_('TVA due ou récupérable quand l\'opération est payée ou exécutée'),
-            'tva_reverse_account'=>_("Forcer ce poste comptable pour autoliquidation : par défault, le poste d'autoliquidation est calculé : soit celui qui est en contrepartie, soit le même (voir manuel)")
+            'tva_reverse_account'=>_("Forcer ce poste comptable pour autoliquidation : par défault, le poste d'autoliquidation est calculé : soit celui qui est en contrepartie, soit le même (voir manuel)"),
+            'tva_peppol_code'=>_("Code TVA est utilisé pour les factures électroniques, plus d'information dans le manuel")
         );
     }
 
@@ -120,6 +124,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
     {
         $nb_order=count($this->a_order);
         $this->set_property_visible('tva_reverse_account', true);
+        $this->set_property_visible('tva_peppol_code', true);
         echo "<table>";
         for ($i=0; $i<$nb_order; $i++)
         {
@@ -181,15 +186,21 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                         $text->set_attribute('account', 'tva_sale');
                         $text->size=$min_size;
                         echo $text->input();
-                    }
-                    elseif ($this->a_type[$key]=="text")
-                    {
-                        $text=new IText($key);
-                        $text->value=$value;
-                        $min_size=(strlen($value??"")<30)?30:strlen($value)+5;
-                        $text->size=$min_size;
+                    }elseif ($key=='tva_peppol_code') {
+                        $text=new ISelect('tva_peppol_code');
+                        $text->selected=$value;
+                        $text->transform(array(
+                            null=>_('-')
+                            ,"S"=>_('Taux standard')
+                            ,'AE'=>_('Autoliquidate mais pas INTRACOMM.')
+                            ,'Z'=>_("TVA à 0%")
+                            ,'K'=>_('Autoliquidation INTRACOMM.')
+                            ,'G'=>_('TVA exempt pour export hors Europe')
+                            ,'O'=>_('TVA Hors périmètre application')
+                            ,'E'=>_('Exempté de TVA')
+                        ));
                         echo $text->input();
-                    } elseif ($key == "tva_id") {
+                    }elseif ($key == "tva_id") {
                         $inum=new INum($key,$value);
                         echo $inum->input();
                         echo \HtmlInput::hidden("old_tva_id",$value);
@@ -202,6 +213,13 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                         $text->set_attribute('gDossier', Dossier::id());
                         $text->set_attribute('jrn', 0);
                         $text->set_attribute('account', 'tva_reverse_account');
+                        $text->size=$min_size;
+                        echo $text->input();
+                    }elseif ($this->a_type[$key]=="text")
+                    {
+                        $text=new IText($key);
+                        $text->value=$value;
+                        $min_size=(strlen($value??"")<30)?30:strlen($value)+5;
                         $text->size=$min_size;
                         echo $text->input();
                     }
@@ -233,6 +251,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         parent::from_request();
         $http=new \HttpInput();
         $this->table->tva_reverse_account=$http->request('tva_reverse_account');
+        $this->table->tva_peppol_code=$http->request('tva_peppol_code');
     }
 
     /**
@@ -270,6 +289,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $tva_rate->setp("tva_comment", $this->table->tva_comment);
         $tva_rate->setp("tva_both_side", $this->table->tva_both_side);
         $tva_rate->setp("tva_reverse_account", $this->table->tva_reverse_account);
+        $tva_rate->setp("tva_peppol_code", $this->table->tva_peppol_code);
 
         // TVA accounting must be joined and separated with a comma
         $tva_purchase=(trim($this->table->tva_purchase)=="")?"#":$this->table->tva_purchase;
@@ -285,7 +305,9 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         if ( $this->previous_id != - 1 && $this->previous_id != $new_tva_id) {
             $cn->exec_sql("update tva_rate set tva_id = $1 where tva_id = $2",[$new_tva_id,$this->previous_id]);
             $this->table->setp("tva_id",$new_tva_id);
-        }else        $this->table->setp("tva_id",$tva_rate->getp("tva_id"));
+        }else     {
+            $this->table->setp("tva_id",$tva_rate->getp("tva_id"));
+        }
 
     }
     /**
