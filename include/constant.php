@@ -249,6 +249,7 @@ define('ATTR_DEF_SIREN', 55);
 define('ATTR_DEF_SIRET', 56);
 define('ATTR_DEF_COUNTRY_CODE', 57);
 define('ATTR_DEF_PEPPOLID', 58);
+define('ATTR_DEF_QUANTITY_TYPE', 59);
 
 define("FICHE_TYPE_CLIENT", 9);
 define("FICHE_TYPE_VENTE", 1);

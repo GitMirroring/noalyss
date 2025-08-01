@@ -201,6 +201,12 @@ class Card_Property
             $result['input']=new IVATNumber( "av_text" . $this->ad_id,$this->av_text);
             $result['label']=$this->ad_text;
             return $result;
+       }elseif ( $this->ad_id == ATTR_DEF_QUANTITY_TYPE){
+          $result['input']=new IText( "av_text" . $this->ad_id,$this->av_text);
+          $array=$this->cn->get_array("select qc_code,format('%s %s',qc_code,qc_label) label from quantity_code_ref order by qc_label",p_mode: PGSQL_NUM);
+          $result['input']->set_datalist($array);
+          $result['label']=$this->ad_text;
+          return $result;
        }
         elseif ($this->ad_id == ATTR_DEF_TVA) {
             $result['input'] = new ITva_Popup('popup_tva');

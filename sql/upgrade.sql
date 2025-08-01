@@ -20,6 +20,7 @@ insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_defaul
 insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(56,'SIRET','text',20,1,15);
 
 insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(58,'PEPPOL ID','text',20,1,15);
+insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(59,'Type de quantité','text',20,1,15);
 
 create table country_code_ref(
     cc_code char(2) primary key,
@@ -259,4 +260,33 @@ AS SELECT tva_id,
           tva_payment_sale,
           tva_peppol_code
 FROM tva_rate;
+
+create table quantity_code_ref(
+    qc_code text not null primary key,
+    qc_label text not null
+);
+insert into quantity_code_ref values 
+('EA','Each — unité pièce'),
+('C62','unité'),
+('ANN','Année'),
+('MON','Mois'),
+('DAY','Day — jour'),
+('HUR','Hour — heure'),
+('MIN','Minute — minute'),
+('SEC','Second — seconde'),
+('KG','Kilogram — kilogramme'),
+('G','Gram — gramme'),
+('LB    ','Pound (pound) — livre'),
+('LTR','Liter — litre'),
+('MTR','Meter — mètre'),
+('CM','Centimeter — centimètre'),
+('MM','Millimeter — millimètre'),
+('PK','Paket — paquet'),
+('BX','Box — boîte'),
+('PR','Pair — paire'),
+('PC','Piece (pièce)'),
+('LOT','Lot — lot'),
+('SET','Set — ensemble'),
+('ROLL','Roll — rouleau'),
+('COLL','Collection — collection');
 
