@@ -247,7 +247,8 @@ define('ATTR_DEF_ACCOUNT_ND', 53);
 define('ATTR_DEF_ACTIF', 54);
 define('ATTR_DEF_SIREN', 55);
 define('ATTR_DEF_SIRET', 56);
-define('ATTR_DEF_COUNTRY_CODE', 56);
+define('ATTR_DEF_COUNTRY_CODE', 57);
+define('ATTR_DEF_PEPPOLID', 58);
 
 define("FICHE_TYPE_CLIENT", 9);
 define("FICHE_TYPE_VENTE", 1);

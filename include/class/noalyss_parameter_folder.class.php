@@ -49,7 +49,7 @@ class Noalyss_Parameter_Folder
     var $MY_DEFAULT_ROUND_ERROR_CRED;
     var $MY_ANC_FILTER;
     var $MY_CURRENCY;
-    var $MY_COUNTRY;
+    var $MY_COUNTRY_CODE;
     var $MY_REPORT; //!< In Belgium , we need a report on the beginning of the exercice , not in France,
 
     
@@ -78,6 +78,7 @@ MY_NUMBER= [	{$this->MY_NUMBER }]
 MY_POSTCODE= [	{$this->MY_POSTCODE }]
 MY_PHONE= [	{$this->MY_PHONE }]
 MY_COUNTRY= [	{$this->MY_COUNTRY }]
+MY_COUNTRY_CODE= [	{$this->MY_COUNTRY_CODE }]
 MY_CITY= [	{$this->MY_CITY }]
 MY_FAX= [	{$this->MY_FAX }]
 MY_ANALYTIC= [	{$this->MY_ANALYTIC }]
@@ -191,6 +192,7 @@ EOF;
         $this->save('MY_POSTCODE');
         $this->save('MY_PHONE');
         $this->save('MY_COUNTRY');
+        $this->save('MY_COUNTRY_CODE');
         $this->save('MY_CITY');
         $this->save('MY_FAX');
         $this->save('MY_ANALYTIC');

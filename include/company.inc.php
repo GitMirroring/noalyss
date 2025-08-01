@@ -40,6 +40,7 @@ if (isset($_POST['record_company']))
     $m->MY_PHONE=$http->post("p_tel");
     $m->MY_FAX=$http->post("p_fax");
     $m->MY_COUNTRY=$http->post("p_pays");
+    $m->MY_COUNTRY_CODE=$http->post("p_country_code");
     $m->MY_CHECK_PERIODE=$http->post("p_check_periode");
     $m->MY_DATE_SUGGEST=$http->post("p_date_suggest");
     $m->MY_ANALYTIC=$http->post("p_compta");
@@ -209,7 +210,7 @@ $all->style=' class="input_text"';
                 $all->table=1;
                 $all->style=' class="input_text"';
                 ?>
-                <label class="w-20" for="p_commune"><?= _("Localité") ?></label>
+                <label class="w-20" for="p_commune"><?= _("Localité - Ville") ?></label>
                 <?= $all->input("p_commune", $my->MY_CITY) ?>
             </div>
             <div class="form-group">
@@ -220,6 +221,19 @@ $all->style=' class="input_text"';
                 ?>
                 <label class="w-20" for="p_pays"><?= _("Pays") ?></label>
                 <?= $all->input("p_pays", $my->MY_COUNTRY) ?>
+            </div>
+             <div class="form-group">
+                <?php
+                $country_code=new ISelect();
+                $x=$cn->get_array("select cc_code,format('%s %s',cc_code,cc_name) str_name from country_code_ref order by 2,1");
+                $code= array_column($x, "str_name","cc_code");
+                $country_code->transform($code);
+                $country_code->selected=$my->MY_COUNTRY_CODE;
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
+                <label class="w-20" for="p_country_code"><?= _("Code Pays") ?></label>
+                <?= $country_code->input("p_country_code" ) ?>
             </div>
             <div class="form-group">
                 <?php
