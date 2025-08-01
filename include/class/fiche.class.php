@@ -136,7 +136,7 @@ class Fiche
      */
     static function cmp_name(Fiche $o1,Fiche $o2)
     {
-        return strcmp($o1->strAttribut(ATTR_DEF_NAME),$o2->strAttribut(ATTR_DEF_NAME));
+        return strcmp($o1->get_attribute(ATTR_DEF_NAME),$o2->get_attribute(ATTR_DEF_NAME));
     }
 
   /**
@@ -159,7 +159,7 @@ class Fiche
             $t=new Fiche($this->cn,$avail[$i]['jrn_def_bank']);
             $t->ledger_name=$avail[$i]['jrn_def_name'];
             $t->ledger_description=$avail[$i]['jrn_def_description'];
-            $t->getAttribut();
+            $t->load_attribute();
             $all[$i]=$t;
 
         }
@@ -192,20 +192,20 @@ class Fiche
 
 
         if ( $p_all )
-            $this->getAttribut();
+            $this->load_attribute();
         return 0;
     }
     /**
      *@brief set an attribute by a value, if the attribut array is empty
-     * a call to getAttribut is performed
+     * a call to load_attribute is performed
      *@param int  AD_ID attr_def.ad_id
      *@param int value value of this attribute
      *@see constant.php table: attr_def
      */
-    function setAttribut($p_ad_id,$p_value)
+    function set_attribute($p_ad_id,$p_value)
     {
         if ( $this->fiche_def == 0) throw new Exception ("FICHE.179 Invalid category",EXC_INVALID);
-        if ( sizeof($this->attribut)==0 ) $this->getAttribut();
+        if ( sizeof($this->attribut)==0 ) $this->load_attribute();
         
         for ($e=0;$e <sizeof($this->attribut);$e++)
         {
@@ -220,7 +220,7 @@ class Fiche
      *\brief  get all the attribute of a card, add missing ones
      *         and sort the array ($this-\>attribut) by ad_id
      */
-    function getAttribut()
+    function load_attribute()
     {
         Card_Property::load($this);
     }
@@ -307,13 +307,13 @@ class Fiche
      * @return string
      * @note reread data from database and so it reset previous unsaved change
      */
-    function strAttribut($p_ad_id,$p_return=1)
+    function get_attribute($p_ad_id,$p_return=1)
     {
         $return=($p_return==1)?NOTFOUND:"";
         if ( empty ($this->attribut)  )
         {
 
-          $this->getAttribut();
+          $this->load_attribute();
         }
 
         foreach ($this->attribut as $e)
@@ -332,7 +332,7 @@ class Fiche
     {
         $a_return=[];
         if ( empty ($this->attribut)) {
-            $this->getAttribut();
+            $this->load_attribute();
         }
         foreach ($this->attribut as $attr)
         {
@@ -354,7 +354,7 @@ class Fiche
         // array = array of attribute object sorted on ad_id
         $fiche_def=new Fiche_Def($this->cn,$p_fiche_def);
         $fiche_def->get();
-        $array=$fiche_def->getAttribut();
+        $array=$fiche_def->load_attribute();
         $r="";
         $r.='<table style="width:98%;margin:1%">';
         foreach ($array as $attr)
@@ -396,7 +396,7 @@ class Fiche
      */
     function Display($p_readonly,$p_in="")
     {
-        $this->GetAttribut();
+        $this->load_attribute();
         $attr=$this->attribut;
         $ret="";
         $ret.='<span style="margin-right:5px;float:right;font-size:80%">'.
@@ -505,7 +505,7 @@ class Fiche
             // get the card properties for this card category
             $fiche_def=new Fiche_Def($this->cn, $p_fiche_def);
             
-            $this->attribut=$fiche_def->getAttribut();
+            $this->attribut=$fiche_def->load_attribute();
 
             if (empty($this->attribut))
             {
@@ -517,14 +517,14 @@ class Fiche
                 $key='av_text'.$property->ad_id;
                 if (isset($p_array[$key]))
                 {
-                    $this->setAttribut($property->ad_id, $p_array[$key]);
+                    $this->set_attribute($property->ad_id, $p_array[$key]);
                 }
             }
             // For accounting 
             
             Card_Property::update($this);
             // reread from database
-            $this->getAttribut();
+            $this->load_attribute();
         }
         catch (Exception $e)
         {
@@ -565,7 +565,7 @@ class Fiche
         
         
         // get the card properties for this card category
-        $this->getAttribut();
+        $this->load_attribute();
         
         if ( empty ($this->attribut) ) {
             throw new Exception("FICHE.UPDATE02"._("Aucun attribut ")."($this->fiche_def)",EXC_INVALID);
@@ -574,7 +574,7 @@ class Fiche
         foreach($this->attribut as $property) {
             $key='av_text'.$property->ad_id;
             if ( isset($p_array[$key])) {
-                $this->setAttribut($property->ad_id, $p_array[$key]);
+                $this->set_attribute($property->ad_id, $p_array[$key]);
             }
         }
         if ( isset($p_array['f_enable'])) {
@@ -584,7 +584,7 @@ class Fiche
         }
         // save all
         Card_Property::update($this);
-        $this->quick_code=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $this->quick_code=$this->get_attribute(ATTR_DEF_QUICKCODE);
     }
 
     /*!\brief  remove a card, check if not used first, must be synchro with is_used
@@ -634,17 +634,17 @@ class Fiche
         return $r[0]['ad_value'];
     }
 
-    /*!\brief Synonum of fiche::getAttribut
+    /*!\brief Synonum of fiche::load_attribute
      */
     function Get()
     {
-        $this->getAttribut();
+        $this->load_attribute();
     }
-    /*!\brief Synonum of fiche::getAttribut
+    /*!\brief Synonum of fiche::load_attribute
      */
     function load() :void
     {
-        $this->getAttribut();
+        $this->load_attribute();
     }
     /*!
      * \brief get all the card thanks the fiche_def_ref
@@ -692,7 +692,7 @@ class Fiche
         {
             $row=Database::fetch_array($Ret,$i);
             $t=new Fiche($this->cn,$row['f_id']);
-            $t->getAttribut();
+            $t->load_attribute();
             $all[$i]=clone $t;
 
         }
@@ -772,7 +772,7 @@ class Fiche
             break;
         }
 
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
         $this->row=$this->cn->get_array("
             with sqlletter as 
             (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
@@ -851,7 +851,7 @@ class Fiche
             echo_error("class_fiche",__LINE__,"id is 0");
             return;
         }
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
         $periode=sql_filter_per($this->cn,$p_from,$p_to,'p_id','jr_tech_per');
 
         $this->row=$this->cn->get_array("select j_date,
@@ -909,7 +909,7 @@ class Fiche
 
         if ( count($this->row ) == 0 )
             return;
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
 
         $rep="";
         $already_seen=array();
@@ -1204,7 +1204,7 @@ class Fiche
     function get_solde_detail($p_cond="")
     {
         if ( $this->id == 0 ) return array('credit'=>0,'debit'=>0,'solde'=>0);
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
 
         if ( $p_cond != "") $p_cond=" and ".$p_cond;
         $Res=$this->cn->exec_sql("select coalesce(sum(deb),0) as sum_deb,
@@ -1256,7 +1256,7 @@ class Fiche
     function get_bk_balance($p_cond="")
     {
         if ( $this->id == 0 ) throw  new Exception('fiche->id est nul');
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
 
         if ( $p_cond != "") $p_cond=" and ".$p_cond;
 	$sql="select sum(deb) as sum_deb, sum(cred) as sum_cred from
@@ -1388,7 +1388,7 @@ class Fiche
 
             $odd="";
              $odd  = ($i % 2 == 0 ) ? ' odd ': ' even ';
-             $accounting=$tiers->strAttribut(ATTR_DEF_ACCOUNT,0);
+             $accounting=$tiers->get_attribute(ATTR_DEF_ACCOUNT,0);
              if ( ! empty($accounting) && $p_action == 'bank'
                      && $amount['debit'] <  $amount['credit']
                      &&
@@ -1410,14 +1410,14 @@ class Fiche
             $e=sprintf('<A HREF="%s" title="Détail" class="line"> ',
                        $url_detail);
 
-            $r.="<TD> $e".$tiers->strAttribut(ATTR_DEF_QUICKCODE)."</A></TD>";
+            $r.="<TD> $e".$tiers->get_attribute(ATTR_DEF_QUICKCODE)."</A></TD>";
             $r.="<TD sorttable_customkey=\"text{$accounting}\"> $e".$accounting."</TD>";
-            $r.="<TD>".h($tiers->strAttribut(ATTR_DEF_NAME))."</TD>";
-            $r.="<TD>".h($tiers->strAttribut(ATTR_DEF_ADRESS,0).
-                         " ".$tiers->strAttribut(ATTR_DEF_POSTCODE,0).
-                         " ".$tiers->strAttribut(ATTR_DEF_COUNTRY,0)).
+            $r.="<TD>".h($tiers->get_attribute(ATTR_DEF_NAME))."</TD>";
+            $r.="<TD>".h($tiers->get_attribute(ATTR_DEF_ADRESS,0).
+                         " ".$tiers->get_attribute(ATTR_DEF_POSTCODE,0).
+                         " ".$tiers->get_attribute(ATTR_DEF_COUNTRY,0)).
                 "</TD>";
-            $r.='<td>'.linkTo($tiers->strAttribut(ATTR_DEF_WEBSITE,0)).'</td>';
+            $r.='<td>'.linkTo($tiers->get_attribute(ATTR_DEF_WEBSITE,0)).'</td>';
             $str_deb=(($amount['debit']==0)?0:nbm($amount['debit']));
             $str_cred=(($amount['credit']==0)?0:nbm($amount['credit']));
             $str_solde=nbm($amount['solde']);
@@ -1604,7 +1604,7 @@ class Fiche
     function is_used()
     {
         /* retrieve first the quickcode */
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
         $sql='select count(*) as c from jrnx where j_qcode=$1';
         $count=$this->cn->get_value($sql,array($qcode));
 	        if ( $count > 0 ) return TRUE;
@@ -1804,15 +1804,15 @@ class Fiche
 
         $fiche->set_fiche_def($fiche_def->id);
 
-        $fiche->setAttribut(ATTR_DEF_NAME,$name);
-        $fiche->setAttribut(ATTR_DEF_ACCOUNT,$fiche_def->class_base.$name);
+        $fiche->set_attribute(ATTR_DEF_NAME,$name);
+        $fiche->set_attribute(ATTR_DEF_ACCOUNT,$fiche_def->class_base.$name);
 
         echo p(print_r($fiche->to_array(),false));
         $fiche->insert(1,$fiche->to_array());
-        assert($name == $fiche->strAttribut(ATTR_DEF_NAME));
+        assert($name == $fiche->get_attribute(ATTR_DEF_NAME));
 
-        echo p("fiche ATTR_DEF_ACCOUNT after insert ",$fiche->strAttribut(ATTR_DEF_ACCOUNT));
-        $accounting=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+        echo p("fiche ATTR_DEF_ACCOUNT after insert ",$fiche->get_attribute(ATTR_DEF_ACCOUNT));
+        $accounting=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
         $acc_accounting=new Acc_Account($cn,$accounting);
 
         echo p("accounting id",$acc_accounting->get_parameter("id"));
@@ -1822,7 +1822,7 @@ class Fiche
 
 	function get_gestion_title()
 	{
-		$r = "<h2 id=\"gestion_title\">" . h($this->getName()) . " " . h($this->strAttribut(ATTR_DEF_FIRST_NAME,0)) . '[' . $this->get_quick_code() . ']</h2>';
+		$r = "<h2 id=\"gestion_title\">" . h($this->getName()) . " " . h($this->get_attribute(ATTR_DEF_FIRST_NAME,0)) . '[' . $this->get_quick_code() . ']</h2>';
 		return $r;
 	}
 	function get_all_account()
@@ -1908,7 +1908,7 @@ class Fiche
      */
     function display_row()
     {
-        $this->getAttribut();
+        $this->load_attribute();
         foreach($this->attribut as $attr) {
             $sort="";
 

@@ -17,7 +17,7 @@ class Card_PDF extends \PDF
         $this->card=new \Fiche ($cn,$p_card_id);
         $this->card->load();
         parent::__construct($cn, "P");
-        $this->setDossierInfo($this->card->strAttribut(ATTR_DEF_QUICKCODE));
+        $this->setDossierInfo($this->card->get_attribute(ATTR_DEF_QUICKCODE));
     }
 
     /**
@@ -46,8 +46,8 @@ class Card_PDF extends \PDF
         if ($nb_attribut == 0) {
             throw new \Exception(_("card_pdf.044 , card_inexistante"));
         }
-        $this->setTitle($this->card->get_quick_code()." ".strtoupper($this->card->strAttribut(1))
-            ." ".$this->card->strAttribut(32,0), true);
+        $this->setTitle($this->card->get_quick_code()." ".strtoupper($this->card->get_attribute(1))
+            ." ".$this->card->get_attribute(32,0), true);
         $this->SetAuthor('NOALYSS');
         $this->AliasNbPages();
         $this->AddPage();
@@ -63,7 +63,7 @@ class Card_PDF extends \PDF
         }
 
 
-        $filename=$this->card->strAttribut(1)."-".$this->card->strAttribut(23).".pdf";
+        $filename=$this->card->get_attribute(1)."-".$this->card->get_attribute(23).".pdf";
         $filename=sanitize_filename($filename);
         $this->Output($filename,"D");
     }

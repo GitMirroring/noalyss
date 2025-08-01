@@ -27,6 +27,9 @@ use PHPUnit\Framework\TestCase;
  */
 require DIRTEST . '/global.php';
 
+/**
+ * @backupGlobals disabled
+ */
 class DocumentTest extends TestCase {
 
     /**
@@ -198,6 +201,7 @@ class DocumentTest extends TestCase {
     /**
      * @testdox Generate Document::generate(), Document::parseDocument(),Document::replace(); require  unoconv -l in another session
      * @covers Document::generate(), Document::parseDocument(),Document::replace();
+     * @backupGlobals disabled
      */
     function testGenerate() {
         require_once 'global.php';
@@ -308,13 +312,13 @@ class DocumentTest extends TestCase {
     }
     /**
      * @testdox test balance
-     * @backupGlobals enabled
+
      * @dataProvider dataBalance
      */
     function testBalance($quickcode,$balance_report,$balance_noreport)
     {
-         require "global.php";
           require "global.php";
+          global $g_parameter;
         static $request = null;
         static $parameter = null;
         $document = $this->build_document();
@@ -324,18 +328,19 @@ class DocumentTest extends TestCase {
         if ( $parameter == null ){
             $parameter=new \Noalyss_Parameter_Folder($document->db);
         }
-        global $g_parameter;
         $g_parameter=$parameter;
         $g_parameter->MY_REPORT='Y';
-        
+        $g_parameter->save('MY_REPORT');
         $request['qcode_dest']=$quickcode;
         
         $this->assertEquals($document->replace('SOLDE',$request),$balance_report,"{$quickcode} balance_report fails");
         $g_parameter->MY_REPORT='N';
+        $g_parameter->save('MY_REPORT');
         
         $this->assertEquals($document->replace('SOLDE',$request),$balance_noreport,"{$quickcode} balance_noreport fails");
         
        $g_parameter->MY_REPORT='Y';
+        $g_parameter->save('MY_REPORT');
         
     }
 }

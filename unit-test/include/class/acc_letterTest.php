@@ -110,7 +110,7 @@ class Acc_LetterTest extends TestCase
         global $g_connection;
         $letter = new Lettering_Account($g_connection);
         $fiche=new Fiche($g_connection,$p_fiche_id);
-	$letter->set_parameter('account', $fiche->strAttribut(ATTR_DEF_ACCOUNT));
+	$letter->set_parameter('account', $fiche->get_attribute(ATTR_DEF_ACCOUNT));
 	$letter->set_parameter('start', '01.01.2010' );
 	$letter->set_parameter('end', '31.12.2019');
         
@@ -161,7 +161,7 @@ class Acc_LetterTest extends TestCase
         global $g_connection;
         $letter = new Lettering_Card($g_connection);
         $fiche=new Fiche($g_connection,$p_fiche_id);
-	$letter->set_parameter('quick_code', $fiche->strAttribut(ATTR_DEF_QUICKCODE));
+	$letter->set_parameter('quick_code', $fiche->get_attribute(ATTR_DEF_QUICKCODE));
 	$letter->set_parameter('start', '01.01.2010' );
 	$letter->set_parameter('end', '31.12.2019');
         

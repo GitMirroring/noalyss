@@ -802,10 +802,10 @@ class Acc_Ledger  extends jrn_def_sql
             {
                 $oqc=new Fiche($this->db);
                 $oqc->get_by_qcode(${'qc_'.$i}, false);
-                $strPoste=$oqc->strAttribut(ATTR_DEF_ACCOUNT);
+                $strPoste=$oqc->get_attribute(ATTR_DEF_ACCOUNT);
                 $ret.="<td>".
                         ${'qc_'.$i}.' - '.
-                        $oqc->strAttribut(ATTR_DEF_NAME).HtmlInput::hidden('qc_'.$i,
+                        $oqc->get_attribute(ATTR_DEF_NAME).HtmlInput::hidden('qc_'.$i,
                                 ${'qc_'.$i}).
                         '</td>';
             }
@@ -1119,7 +1119,7 @@ class Acc_Ledger  extends jrn_def_sql
             {
                 $Fiche=new Fiche($this->db);
                 $Fiche->get_by_qcode($quick_code->value);
-                $label=$Fiche->strAttribut(ATTR_DEF_NAME);
+                $label=$Fiche->get_attribute(ATTR_DEF_NAME);
             }
 
 
@@ -1338,7 +1338,7 @@ class Acc_Ledger  extends jrn_def_sql
                 if (noalyss_strlentrim(${'qc_'.$i})!=0&&isNumber(${'amount'.$i})==0)
                     throw new Exception(_('Montant invalide'), 3);
 
-                $strPoste=$f->strAttribut(ATTR_DEF_ACCOUNT);
+                $strPoste=$f->get_attribute(ATTR_DEF_ACCOUNT);
                 if ($strPoste=='')
                     throw new Exception(sprintf(_("La fiche %s n'a pas de poste comptable"),
                             ${"qc_".$i}));
@@ -1372,8 +1372,8 @@ class Acc_Ledger  extends jrn_def_sql
                     for ($x=0; $x<$max; $x++)
                     {
                         $card=new Fiche($this->db, $card_id[$x]['f_id']);
-                        $str_msg.=HtmlInput::card_detail($card->strAttribut(ATTR_DEF_QUICKCODE),
-                                        $card->strAttribut(ATTR_DEF_NAME),
+                        $str_msg.=HtmlInput::card_detail($card->get_attribute(ATTR_DEF_QUICKCODE),
+                                        $card->get_attribute(ATTR_DEF_NAME),
                                         'style="color:red;display:inline;text-decoration:underline"');
                         $str_msg.=" ";
                     }
@@ -1484,7 +1484,7 @@ class Acc_Ledger  extends jrn_def_sql
                 {
                     $qc=new Fiche($this->db);
                     $qc->get_by_qcode(${'qc_'.$i}, false);
-                    $sposte=$qc->strAttribut(ATTR_DEF_ACCOUNT);
+                    $sposte=$qc->get_attribute(ATTR_DEF_ACCOUNT);
                     /*  if there are 2 accounts take following the deb or cred */
                     if (strpos($sposte, ',')!=0)
                     {
@@ -2019,7 +2019,7 @@ class Acc_Ledger  extends jrn_def_sql
                 20);
             }
             /* get the account and explode if necessary */
-            $sposte=$empl->strAttribut(ATTR_DEF_ACCOUNT);
+            $sposte=$empl->get_attribute(ATTR_DEF_ACCOUNT);
             // if 2 accounts, take only the debit one for customer
             if (strpos($sposte, ',')!=0)
             {

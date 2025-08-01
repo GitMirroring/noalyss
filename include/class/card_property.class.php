@@ -304,7 +304,7 @@ class Card_Property
         if ($fiche->id==0 && $fiche->fiche_def !=0 )
         {
             $fiche_def=new Fiche_Def($fiche->cn,$fiche->fiche_def);
-            $aProperty=$fiche_def->getAttribut();
+            $aProperty=$fiche_def->load_attribute();
             $fiche->attribut=$aProperty;
             return;
         } elseif ($fiche->id==0 && $fiche->fiche_def ==0 )
@@ -339,7 +339,7 @@ class Card_Property
             $fiche->attribut[$i]=$t;
         }
         $e=new Fiche_Def($fiche->cn, $fiche->fiche_def);
-        $e->GetAttribut();
+        $e->load_attribute();
 
         if (sizeof($fiche->attribut)!=sizeof($e->attribut))
         {
@@ -475,7 +475,7 @@ class Card_Property
             $p_fiche->cn->exec_sql("update fiche set f_enable=$1 where f_id=$2",
                     array($p_fiche->get_f_enable(), $p_fiche->id));
 
-            $name = $p_fiche->strAttribut(ATTR_DEF_NAME);
+            $name = $p_fiche->get_attribute(ATTR_DEF_NAME);
 
             // parse the attribute
             foreach ($p_fiche->attribut as $value)

@@ -562,7 +562,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
                 $fiche=new Fiche($this->db);
                 if ($fiche->get_by_qcode($line['j_qcode'], false)==0)
                 {
-                    $line['description']=$fiche->strAttribut(ATTR_DEF_NAME);
+                    $line['description']=$fiche->get_attribute(ATTR_DEF_NAME);
                 }
             }
             if ($case!=$line['grp'])

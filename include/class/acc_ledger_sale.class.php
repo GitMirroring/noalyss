@@ -118,7 +118,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
 
         /* get the account and explode if necessary */
-        $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
+        $sposte = $fiche->get_attribute(ATTR_DEF_ACCOUNT);
         // if 2 accounts, take only the debit one for customer
         if (strpos($sposte, ',') != 0) {
             $array = explode(',', $sposte);
@@ -184,7 +184,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             }
             // if 2 accounts, take only the credit one
             /* The account exists */
-            $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
+            $sposte = $fiche->get_attribute(ATTR_DEF_ACCOUNT);
 
             if (strpos($sposte, ',') != 0) {
                 $array = explode(',', $sposte);
@@ -287,7 +287,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
         $cust = new Fiche($this->db);
         $cust->get_by_qcode($e_client);
-        $sposte = $cust->strAttribut(ATTR_DEF_ACCOUNT);
+        $sposte = $cust->get_attribute(ATTR_DEF_ACCOUNT);
 
         // if 2 accounts, take only the debit one for the customer
         //
@@ -337,7 +337,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 $tot_amount = round($tot_amount, 2);
                 $acc_operation = new Acc_Operation($this->db);
                 $acc_operation->date = $e_date;
-                $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
+                $sposte = $fiche->get_attribute(ATTR_DEF_ACCOUNT);
 
                 // if 2 accounts, take only the credit one
                 if (strpos($sposte, ',') != 0) {
@@ -734,7 +734,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 if ( $acjrn->get_type()=='FIN') {
                     $acjrn=new Acc_Ledger_Fin($this->db, $mp->get_parameter('ledger_target'));
                     $acfiche=new Fiche($this->db,$acjrn->get_bank());
-                    $fqcode=$acfiche->strAttribut(ATTR_DEF_QUICKCODE);
+                    $fqcode=$acfiche->get_attribute(ATTR_DEF_QUICKCODE);
                 } else {
                     $fqcode = ${'e_mp_qcode_' . $e_mp};
                     $acfiche = new Fiche($this->db);
@@ -745,7 +745,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 $acc_pay = new Acc_Operation($this->db);
                 $acc_pay->date = $pay_date;
                 /* get the account and explode if necessary */
-                $sposte = $acfiche->strAttribut(ATTR_DEF_ACCOUNT);
+                $sposte = $acfiche->get_attribute(ATTR_DEF_ACCOUNT);
                 // if 2 accounts, take only the debit one for customer
                 if (strpos($sposte, ',') != 0) {
                     $array = explode(',', $sposte);
@@ -892,9 +892,9 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $client->get_by_qcode($e_client, true);
 
         $client_name = $client->getName() .
-                ' ' . $client->strAttribut(ATTR_DEF_ADRESS) . ' ' .
-                $client->strAttribut(ATTR_DEF_POSTCODE) . ' ' .
-                $client->strAttribut(ATTR_DEF_CITY);
+                ' ' . $client->get_attribute(ATTR_DEF_ADRESS) . ' ' .
+                $client->get_attribute(ATTR_DEF_POSTCODE) . ' ' .
+                $client->get_attribute(ATTR_DEF_CITY);
         $lPeriode = new Periode($this->db);
         if ($this->check_periode() == true) {
             $lPeriode->p_id = $period;
@@ -1004,7 +1004,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             if ($g_parameter->MY_UPDLAB == 'Y')
                 $fiche_name = h(${"e_march" . $i . "_label"});
             else
-                $fiche_name = $fiche->strAttribut(ATTR_DEF_NAME);
+                $fiche_name = $fiche->get_attribute(ATTR_DEF_NAME);
             if ($g_parameter->MY_TVA_USE == 'Y') {
                 $idx_tva = ${"e_march" . $i . "_tva_id"};
                 $oTva =  Acc_Tva::build($this->db,$idx_tva);
@@ -1069,7 +1069,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             }
             // encode the pa
             if ($g_parameter->MY_ANALYTIC != 'nu' 
-                    && $g_parameter->match_analytic($fiche->strAttribut(ATTR_DEF_ACCOUNT))==TRUE) { // use of AA
+                    && $g_parameter->match_analytic($fiche->get_attribute(ATTR_DEF_ACCOUNT))==TRUE) { // use of AA
                 // show form
                 $anc_op = new Anc_Operation($this->db);
                 $null = ($g_parameter->MY_ANALYTIC == 'op') ? 1 : 0;
@@ -1478,10 +1478,10 @@ EOF;
         if (noalyss_strlentrim($e_client) != 0) {
             $fClient = new Fiche($this->db);
             $fClient->get_by_qcode($e_client);
-            $e_client_label = $fClient->strAttribut(ATTR_DEF_NAME) . ' ' .
-                    ' Adresse : ' . $fClient->strAttribut(ATTR_DEF_ADRESS) . ' ' .
-                    $fClient->strAttribut(ATTR_DEF_POSTCODE) . ' ' .
-                    $fClient->strAttribut(ATTR_DEF_CITY) . ' ';
+            $e_client_label = $fClient->get_attribute(ATTR_DEF_NAME) . ' ' .
+                    ' Adresse : ' . $fClient->get_attribute(ATTR_DEF_ADRESS) . ' ' .
+                    $fClient->get_attribute(ATTR_DEF_POSTCODE) . ' ' .
+                    $fClient->get_attribute(ATTR_DEF_CITY) . ' ';
         }
 
         $W1 = new ICard();
@@ -1536,10 +1536,10 @@ EOF;
             if (noalyss_strlentrim($march) != 0 && noalyss_strlentrim($march_label) == 0) {
                 $fMarch = new Fiche($this->db);
                 $fMarch->get_by_qcode($march);
-                $march_label = $fMarch->strAttribut(ATTR_DEF_NAME);
+                $march_label = $fMarch->get_attribute(ATTR_DEF_NAME);
                 if ($flag_tva == 'Y') {
                     if (!(isset(${"e_march$i" . "_tva_id"})))
-                        $march_tva_id = $fMarch->strAttribut(ATTR_DEF_TVA);
+                        $march_tva_id = $fMarch->get_attribute(ATTR_DEF_TVA);
                 }
             }
             // Show input

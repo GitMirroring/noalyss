@@ -194,7 +194,7 @@ if ($histo->selected   == -1)
 					$fiche = new Fiche($cn, $ack[$i]);
 					if ( $fiche->remove(true) == 1 )
 					{
-						$msg.="\n ".$fiche->strAttribut(ATTR_DEF_QUICKCODE);
+						$msg.="\n ".$fiche->get_attribute(ATTR_DEF_QUICKCODE);
 					}
 				}
 				if ($msg != "")
@@ -268,7 +268,7 @@ if ($histo->selected  == 3)
 
     $cat_card = new Fiche_Def($cn);
 	$cat_card->id =$http->get('cat','number');
-	$aHeading = $cat_card->getAttribut();
+	$aHeading = $cat_card->load_attribute();
     $str_add_card="";
     if ( $allcard == 0 ) {
         $h_add_card_b = new IButton('add_card');
@@ -476,9 +476,9 @@ if ($histo->selected  == 4 || $histo->selected  == 5)
                         $sum_deb=bcadd($sum_deb,$solde['debit']);
                         $sum_solde=bcsub($sum_deb,$sum_cred);
 			echo tr(
-					td(HtmlInput::history_card($oCard->id, $oCard->strAttribut(ATTR_DEF_QUICKCODE))) .
-					td($oCard->strAttribut(ATTR_DEF_NAME)) .
-					td(HtmlInput::history_account($oCard->strAttribut(ATTR_DEF_ACCOUNT),$oCard->strAttribut(ATTR_DEF_ACCOUNT))).
+					td(HtmlInput::history_card($oCard->id, $oCard->get_attribute(ATTR_DEF_QUICKCODE))) .
+					td($oCard->get_attribute(ATTR_DEF_NAME)) .
+					td(HtmlInput::history_account($oCard->get_attribute(ATTR_DEF_ACCOUNT),$oCard->get_attribute(ATTR_DEF_ACCOUNT))).
 					td(nbm($solde['debit']), 'class="sorttable_numeric" sorttable_customkey="'.$solde['debit'].'" style="text-align:right"') .
 					td(nbm($solde['credit']), 'class="sorttable_numeric" sorttable_customkey="'.$solde['debit'].'" style="text-align:right"') .
 					td(nbm(abs($solde['solde'])), 'class="sorttable_numeric" sorttable_customkey="'.$solde['solde'].'" style="text-align:right"') .
@@ -541,7 +541,7 @@ for ($e = 0; $e < count($afiche); $e++)
 	{
 		$row = new Fiche($cn, $card['f_id']);
 		$letter = new Lettering_Card($cn);
-		$letter->set_parameter('quick_code', $row->strAttribut(ATTR_DEF_QUICKCODE));
+		$letter->set_parameter('quick_code', $row->get_attribute(ATTR_DEF_QUICKCODE));
 		$letter->set_parameter('start', $periode_start->value );
 		$letter->set_parameter('end', $periode_end->value );
 		// all
@@ -567,11 +567,11 @@ for ($e = 0; $e < count($afiche); $e++)
 		/* skip if nothing to display */
 		if (count($letter->content) == 0)
 			continue;
-		$detail_card = HtmlInput::card_detail($row->strAttribut(ATTR_DEF_QUICKCODE), $row->strAttribut(ATTR_DEF_NAME));
+		$detail_card = HtmlInput::card_detail($row->get_attribute(ATTR_DEF_QUICKCODE), $row->get_attribute(ATTR_DEF_NAME));
 
 		echo '<h2 class="h-section">' . $detail_card ;
                 echo "poste "
-                        . ":".HtmlInput::history_account($row->strAttribut(ATTR_DEF_ACCOUNT),$row->strAttribut(ATTR_DEF_ACCOUNT),'display:inline').Icon_Action::infobulle(27).'</h2>';
+                        . ":".HtmlInput::history_account($row->get_attribute(ATTR_DEF_ACCOUNT),$row->get_attribute(ATTR_DEF_ACCOUNT),'display:inline').Icon_Action::infobulle(27).'</h2>';
 
 		echo '<table class="result">';
 		echo '<tr>';

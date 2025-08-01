@@ -96,7 +96,7 @@ class InvoiceUBL21 extends XMLInvoice {
             ];
         
         foreach ($a_needed as $item=>$value) {
-            if (\noalyss_trim($card->strAttribut($item))=="") {
+            if (\noalyss_trim($card->get_attribute($item))=="") {
                 printf (_("ATTENTION donnée manquante dans la fiche client [%s]"),$value);
             }
         }
@@ -414,7 +414,7 @@ class InvoiceUBL21 extends XMLInvoice {
                 ->setAttribute("currencyID","EUR");
         $item=$this->createElement("cac:Item");
         $card=new \Fiche($this->cn,$row['card_id']);
-        $item->appendChild($this->createElement("cbc:Name", $card->strAttribut(ATTR_DEF_NAME)));
+        $item->appendChild($this->createElement("cbc:Name", $card->get_attribute(ATTR_DEF_NAME)));
         $classifiedTaxCat=$this->createElement("cac:ClassifiedTaxCategory");
         ///@todo cbc:ID S  = standard rate et que se passe-t'il pour l'autoliquidation ???
         /// Il faut ajouter dans TVA_RATE , un code pour la TVA, 

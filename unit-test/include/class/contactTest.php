@@ -145,8 +145,8 @@ class ContactTest extends TestCase
             $fiche=new Fiche($this->connection);
             $fiche->fiche_def=$this->object->fiche_def->id;
             $fiche->load();
-            $fiche->setAttribut(ATTR_DEF_NAME, $param['name']);
-            $fiche->setAttribut(ATTR_DEF_COMPANY, $param['company']);
+            $fiche->set_attribute(ATTR_DEF_NAME, $param['name']);
+            $fiche->set_attribute(ATTR_DEF_COMPANY, $param['company']);
             $fiche->insert($fiche->fiche_def,$fiche->to_array());
             $this->object->card_to_clean[]=$fiche->id;
             printf("Card to clean %s ",$fiche->id);

@@ -120,7 +120,7 @@ endif;
                             // nom de la fiche
                                 $ff = new Fiche($cn);
                                 $ff->get_by_qcode($q[$e]['j_qcode']);
-                                $row.=td($ff->strAttribut(h(ATTR_DEF_NAME)));
+                                $row.=td($ff->get_attribute(h(ATTR_DEF_NAME)));
                             } else
                             {
                                 // libellé du compte

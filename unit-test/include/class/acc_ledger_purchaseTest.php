@@ -461,8 +461,8 @@ class Acc_Ledger_PurchaseTest extends TestCase
         //-- modify card 29 : ELECTR
         $fiche=new Fiche($g_connection,29);
         $fiche->set_f_enable("1");
-        $fiche->setAttribut($p_attribut,$p_value);
-        $fiche->setAttribut($p_counterpart,$p_accounting);
+        $fiche->set_attribute($p_attribut,$p_value);
+        $fiche->set_attribute($p_counterpart,$p_accounting);
         $a_attribut=$fiche->to_array();
         $this->assertEquals($a_attribut['av_text'.$p_attribut],$p_value,"Attribut $p_attribut not set to $p_value%");
         
@@ -516,8 +516,8 @@ class Acc_Ledger_PurchaseTest extends TestCase
         //-- modify card 29 : ELECTR
         $fiche=new Fiche($g_connection,29);
         $fiche->set_f_enable("1");
-        $fiche->setAttribut($p_attribut,$p_value);
-        $fiche->setAttribut($p_counterpart,$p_accounting);
+        $fiche->set_attribute($p_attribut,$p_value);
+        $fiche->set_attribute($p_counterpart,$p_accounting);
         $a_attribut=$fiche->to_array();
         $this->assertEquals($a_attribut['av_text'.$p_attribut],$p_value,"Attribut $p_attribut not set to $p_value%");
 

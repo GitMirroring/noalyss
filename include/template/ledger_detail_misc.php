@@ -161,7 +161,7 @@ $amount_idx=0; $sum_prod_currency=0;
       // nom de la fiche
       $ff=new Fiche($cn);
       $ff->get_by_qcode( $q[$e]['j_qcode']);
-      $l_lib=$ff->strAttribut(ATTR_DEF_NAME);
+      $l_lib=$ff->get_attribute(ATTR_DEF_NAME);
     } else {
       // libellé du compte
       $name=$cn->get_value('select pcm_lib from tmp_pcmn where pcm_val=$1',array($q[$e]['j_poste']));

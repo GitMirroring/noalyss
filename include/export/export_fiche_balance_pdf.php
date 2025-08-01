@@ -120,8 +120,8 @@ if ($histo == 4 || $histo==5)
         $sum_deb=bcadd($sum_deb,$solde['debit']);
         $sum_solde=bcsub($sum_deb,$sum_cred);
 
-        $pdf->write_cell(30,7,$oCard->strAttribut(ATTR_DEF_QUICKCODE),0,0,'L',$fill);
-        $pdf->LongLine(80,7,$oCard->strAttribut(ATTR_DEF_NAME)." (".$oCard->strAttribut(ATTR_DEF_ACCOUNT).")",0,'L',$fill);
+        $pdf->write_cell(30,7,$oCard->get_attribute(ATTR_DEF_QUICKCODE),0,0,'L',$fill);
+        $pdf->LongLine(80,7,$oCard->get_attribute(ATTR_DEF_NAME)." (".$oCard->get_attribute(ATTR_DEF_ACCOUNT).")",0,'L',$fill);
         $pdf->write_cell(20,7,nbm($solde['debit']),0,0,'R',$fill);
         $pdf->write_cell(20,7,nbm($solde['credit']),0,0,'R',$fill);
         $pdf->write_cell(20,7,nbm(abs($solde['solde'])),0,0,'R',$fill);
@@ -181,7 +181,7 @@ else
 		{
 			$fic = new Fiche($cn, $row_fiche['f_id']);
 			$letter = new Lettering_Card($cn);
-			$letter->set_parameter('quick_code', $fic->strAttribut(ATTR_DEF_QUICKCODE));
+			$letter->set_parameter('quick_code', $fic->get_attribute(ATTR_DEF_QUICKCODE));
 			$letter->set_parameter('start',$http->request('start'));
 			$letter->set_parameter('end',$http->request('end'));
 			// all
@@ -209,7 +209,7 @@ else
 				continue;
 			$pdf->SetFont('DejaVuCond', '', 10);
 			$fiche = new Fiche($cn, $row_fiche['f_id']);
-			$pdf->write_cell(0, 7, $fiche->strAttribut(ATTR_DEF_NAME)." [".$fiche->strAttribut(ATTR_DEF_QUICKCODE).":".$fiche->strAttribut(ATTR_DEF_ACCOUNT)."]", 1, 'C');
+			$pdf->write_cell(0, 7, $fiche->get_attribute(ATTR_DEF_NAME)." [".$fiche->get_attribute(ATTR_DEF_QUICKCODE).":".$fiche->get_attribute(ATTR_DEF_ACCOUNT)."]", 1, 'C');
 
 			$pdf->SetFont('DejaVuCond', '', 7);
 			$pdf->line_new();

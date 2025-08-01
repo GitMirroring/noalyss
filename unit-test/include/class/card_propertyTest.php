@@ -74,15 +74,15 @@ class Card_PropertyTest extends TestCase
         }
         $fiche=new Fiche($g_connection);
         $fiche->set_fiche_def($fiche_def->id);
-        $fiche->attribut=$fiche_def->getAttribut();
+        $fiche->attribut=$fiche_def->load_attribute();
         foreach ($fiche->attribut as $row)
         {
-            $fiche->setAttribut($row->ad_id, "av_text = {$row->ad_id}");
+            $fiche->set_attribute($row->ad_id, "av_text = {$row->ad_id}");
         }
 
-        $fiche->setAttribut(ATTR_DEF_QUICKCODE, self::FICHE_QCODE);
-        $fiche->setAttribut(ATTR_DEF_ACCOUNT, '600');
-        $fiche->setAttribut(ATTR_DEF_TVA, '');
+        $fiche->set_attribute(ATTR_DEF_QUICKCODE, self::FICHE_QCODE);
+        $fiche->set_attribute(ATTR_DEF_ACCOUNT, '600');
+        $fiche->set_attribute(ATTR_DEF_TVA, '');
         $fiche->insert($fiche_def->id, $fiche->to_array());
         $fiche->load();
     }
@@ -147,15 +147,15 @@ class Card_PropertyTest extends TestCase
         $fiche=$this->getFiche();
         $fiche->load();
         $name="test ".microtime();
-        $this->assertFalse($fiche->getAttribut(1)==$name, 'name not different');
-        $fiche->setAttribut(1, $name);
+        $this->assertFalse($fiche->load_attribute(1)==$name, 'name not different');
+        $fiche->set_attribute(1, $name);
         $aProperty=$fiche->to_array();
         $this->assertEquals($name, $aProperty['av_text1'], 'name not identical in array');
 
         Card_Property::update($fiche);
 
         Card_Property::load($fiche);
-        $this->assertEquals(trim($name), trim($fiche->strAttribut(1)), 'name identical in DB');
+        $this->assertEquals(trim($name), trim($fiche->get_attribute(1)), 'name identical in DB');
         $this->assertEquals(trim($name), trim($fiche->getName()), 'name identical in DB');
     }
 
@@ -174,13 +174,13 @@ class Card_PropertyTest extends TestCase
         echo "fiche_def->id",$fiche_def->id;
         $fiche->set_fiche_def($fiche_def->id);
 
-        $fiche->setAttribut(ATTR_DEF_NAME,$name);
-        $fiche->setAttribut(ATTR_DEF_ACCOUNT,$fiche_def->class_base.$name);
+        $fiche->set_attribute(ATTR_DEF_NAME,$name);
+        $fiche->set_attribute(ATTR_DEF_ACCOUNT,$fiche_def->class_base.$name);
 
         $fiche->insert($fiche_def->id,$fiche->to_array());
-        $this->assertEquals($name,$fiche->strAttribut(ATTR_DEF_NAME));
+        $this->assertEquals($name,$fiche->get_attribute(ATTR_DEF_NAME));
 
-        $accounting=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+        $accounting=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
         $acc_accounting=new Acc_Account($g_connection,$accounting);
 
         $this->assertEquals($acc_accounting->get_lib("pcm_lib"),$name,"Cannot create a new accouting with 
@@ -279,14 +279,14 @@ class Card_PropertyTest extends TestCase
         $g_connection->exec_sql("update fiche_def set fd_create_account=true where fd_id=25");
 
         $fiche=$this->getFiche();
-        $fiche->setAttribut(ATTR_DEF_ACCOUNT, null);
+        $fiche->set_attribute(ATTR_DEF_ACCOUNT, null);
         $aProperty=$fiche->to_array();
         Card_Property::update($fiche);
         $g_connection->commit();
 
         $fiche->load();
 
-        $this->assertTrue(!empty($fiche->strAttribut(ATTR_DEF_ACCOUNT)),' accounting not computed');
+        $this->assertTrue(!empty($fiche->get_attribute(ATTR_DEF_ACCOUNT)),' accounting not computed');
 
     }
 }

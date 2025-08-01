@@ -152,10 +152,10 @@ if ($obj->det->currency_id!=0)
    /* Analytic accountancy */
     if ( $owner->MY_ANALYTIC != "nu" /*&& $div == 'popup'*/)
       {
-	$poste=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+	$poste=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
 	if (  $g_parameter->match_analytic($q[$e]['j_poste']))
 	  {
-            $qcode=$fiche->strAttribut(ATTR_DEF_QUICKCODE);
+            $qcode=$fiche->get_attribute(ATTR_DEF_QUICKCODE);
 	    $anc_op=new Anc_Operation($cn);
 	    $anc_op->j_id=$q[$e]['j_id'];
 	    $anc_op->in_div=$div;

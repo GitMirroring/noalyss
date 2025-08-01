@@ -160,7 +160,7 @@ class Fiche_DefTest extends Testcase
     }
 
     /**
-     * @testdox getAttribut
+     * @testdox load_attribute
      */
     function testGetAttribut()
     {
@@ -168,7 +168,7 @@ class Fiche_DefTest extends Testcase
       $fiche_def=$this->getFicheDef();
 
       $aProperty=$g_connection->get_array("select ad_id from jnt_fic_attr where fd_id=$1", [$fiche_def->id]);
-      $this->assertEquals(count($fiche_def->getAttribut()),count($aProperty)," number of property different in db and function getAttribut");
+      $this->assertEquals(count($fiche_def->load_attribute()),count($aProperty)," number of property different in db and function load_attribute");
     }
     /**
      * @testdox if we insert a attribut ; all the cards from this category will have these attributes

@@ -51,8 +51,8 @@ class FacturX extends XMLInvoice
         
         
         $customer=new \Fiche($this->cn,$result['customer']['card_id']);
-        $result['customer']['siren']=$customer->strAttribut(ATTR_DEF_SIREN);
-        $result['customer']['siret']=$customer->strAttribut(ATTR_DEF_SIRET);
+        $result['customer']['siren']=$customer->get_attribute(ATTR_DEF_SIREN);
+        $result['customer']['siret']=$customer->get_attribute(ATTR_DEF_SIRET);
         return $result;
     }
      /**

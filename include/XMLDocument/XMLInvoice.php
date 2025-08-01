@@ -183,20 +183,20 @@ abstract class XMLInvoice extends \DOMDocument
         $customer=new \Fiche($this->cn,$operation->det->array[0]['qs_client']);
         $result['customer']=array();
         $result['customer']['card_id']=$operation->det->array[0]['qs_client'];
-        $result['customer']['name']=$customer->strAttribut(ATTR_DEF_NAME);
-        $result['customer']['street']=$customer->strAttribut(ATTR_DEF_ADRESS);
-        $result['customer']['postalzone']=$customer->strAttribut(ATTR_DEF_POSTCODE);
-        $result['customer']['city']=$customer->strAttribut(ATTR_DEF_CITY);
+        $result['customer']['name']=$customer->get_attribute(ATTR_DEF_NAME);
+        $result['customer']['street']=$customer->get_attribute(ATTR_DEF_ADRESS);
+        $result['customer']['postalzone']=$customer->get_attribute(ATTR_DEF_POSTCODE);
+        $result['customer']['city']=$customer->get_attribute(ATTR_DEF_CITY);
         
         // find country_code of this card
         
-        $result['customer']['country']=$customer->strAttribut(ATTR_DEF_COUNTRY);
+        $result['customer']['country']=$customer->get_attribute(ATTR_DEF_COUNTRY);
         
-        $result['customer']['customer_id']=str_replace([" ",".","-","/"],"" ,$customer->strAttribut(ATTR_DEF_NUMTVA));
+        $result['customer']['customer_id']=str_replace([" ",".","-","/"],"" ,$customer->get_attribute(ATTR_DEF_NUMTVA));
         // official name of the company 
-        $result['customer']['registration_name']=$customer->strAttribut(ATTR_DEF_NAME);
+        $result['customer']['registration_name']=$customer->get_attribute(ATTR_DEF_NAME);
         // official ID , like VAT
-        $result['customer']['customer_id']=$customer->strAttribut(ATTR_DEF_NUMTVA);
+        $result['customer']['customer_id']=$customer->get_attribute(ATTR_DEF_NUMTVA);
         // +++TODO+++ adapt for all currency
         // currency must be EURO !
         $result['currency']=$operation->det->currency_id;

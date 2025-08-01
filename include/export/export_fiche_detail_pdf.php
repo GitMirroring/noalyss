@@ -59,7 +59,7 @@ if ( count($array) == 0 )
 $size=array(13,25,20,60,12,20,20,20);
 $align=array('L','C','C','L','R','R','R','R');
 
-$Libelle=sprintf("(%s) %s %s [ %s ]",$Fiche->id,$Fiche->getName(),$Fiche->strAttribut(ATTR_DEF_FIRST_NAME,0),$Fiche->get_quick_code());
+$Libelle=sprintf("(%s) %s %s [ %s ]",$Fiche->id,$Fiche->getName(),$Fiche->get_attribute(ATTR_DEF_FIRST_NAME,0),$Fiche->get_quick_code());
 $pdf->SetFont('DejaVu','',10);
 $pdf->write_cell(0,8,$Libelle,1,0,'C');
 $pdf->line_new();

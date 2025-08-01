@@ -339,8 +339,8 @@ class Follow_Up
         {
             $tiers=new Fiche($this->db);
             $tiers->get_by_qcode($this->qcode_dest);
-            $qcode_dest_label=strtoupper($tiers->strAttribut(1));
-            $qcode_dest_label.=" ".$tiers->strAttribut(ATTR_DEF_FIRST_NAME,0);
+            $qcode_dest_label=strtoupper($tiers->get_attribute(1));
+            $qcode_dest_label.=" ".$tiers->get_attribute(ATTR_DEF_FIRST_NAME,0);
             $this->f_id_dest=$tiers->id;
         }
         else
@@ -411,8 +411,8 @@ class Follow_Up
 
         if ($fiche_contact->id!=0)
         {
-            $spcontact->value=strtoupper($fiche_contact->strAttribut(ATTR_DEF_NAME)??"");
-            $spcontact->value.=" ".$fiche_contact->strAttribut(ATTR_DEF_FIRST_NAME,0);
+            $spcontact->value=strtoupper($fiche_contact->get_attribute(ATTR_DEF_NAME)??"");
+            $spcontact->value.=" ".$fiche_contact->get_attribute(ATTR_DEF_FIRST_NAME,0);
         }
 
 
@@ -535,7 +535,7 @@ class Follow_Up
         }
         $this->dt_id=$this->ag_type;
         $aexp=new Fiche($this->db, $this->f_id_dest);
-        $this->qcode_dest=$aexp->strAttribut(ATTR_DEF_QUICKCODE);
+        $this->qcode_dest=$aexp->get_attribute(ATTR_DEF_QUICKCODE);
     }
 
     /**

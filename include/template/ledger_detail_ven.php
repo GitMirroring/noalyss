@@ -201,18 +201,18 @@ $str_anc = "";
             $row = '';
             $q = $obj->det->array[$e];
             $fiche = new Fiche($cn, $q['qs_fiche']);
-            $qcode = $fiche->strAttribut(ATTR_DEF_QUICKCODE);
+            $qcode = $fiche->get_attribute(ATTR_DEF_QUICKCODE);
             $view_card_detail = HtmlInput::card_detail($qcode, "", ' class="line" ');
             $row .= td($view_card_detail);
             if ($owner->MY_UPDLAB == 'Y') {
-                $l_lib = ($q['j_text'] == '') ? $fiche->strAttribut(ATTR_DEF_NAME) : $q['j_text'];
+                $l_lib = ($q['j_text'] == '') ? $fiche->get_attribute(ATTR_DEF_NAME) : $q['j_text'];
                 $hidden = HtmlInput::hidden("j_id[]", $q['j_id']);
                 $input = new IText("e_march" . $q['j_id'] . "_label", $l_lib);
                 $input->css_size = "100%";
             } else {
                 $input = new ISpan("e_march" . $q['j_id'] . "_label");
                 $hidden = HtmlInput::hidden("j_id[]", $q['j_id']);
-                $input->value = $fiche->strAttribut(ATTR_DEF_NAME);
+                $input->value = $fiche->get_attribute(ATTR_DEF_NAME);
             }
 
             $row .= td($input->input() . $hidden);
@@ -250,7 +250,7 @@ $str_anc = "";
             $total_htva = bcadd($total_htva, $htva);
             /* Analytic accountancy */
             if ($owner->MY_ANALYTIC != "nu" /*&& $div == 'popup' */) {
-                $poste = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
+                $poste = $fiche->get_attribute(ATTR_DEF_ACCOUNT);
                 if ($g_parameter->match_analytic($poste)) {
                     $anc_op = new Anc_Operation($cn);
                     $anc_op->in_div = $div;
