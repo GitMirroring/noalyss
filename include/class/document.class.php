@@ -670,8 +670,8 @@ class Document
      *  - [DATE_LIMIT_CALC]
      *  - [NUMBER]
      *  - [MY_NAME]
-     *  - [MY_CP]
-     *  - [MY_COMMUNE]
+     *  - [MY_POSTCODE] 
+     *  - [MY_CITY]
      *  - [MY_TVA]
      *  - [MY_STREET]
      *  - [MY_NUMBER]
@@ -760,11 +760,13 @@ class Document
             case 'MY_NAME':
                 $r=$g_parameter->MY_NAME;
                 break;
+            case 'MY_POSTCODE':
             case 'MY_CP':
-                $r=$g_parameter->MY_CP;
+                $r=$g_parameter->MY_POSTCODE;
                 break;
+            case 'MY_CITY':
             case 'MY_COMMUNE':
-                $r=$g_parameter->MY_COMMUNE;
+                $r=$g_parameter->MY_CITY;
                 break;
             case 'MY_TVA':
                 $r=$g_parameter->MY_TVA;
@@ -775,14 +777,16 @@ class Document
             case 'MY_NUMBER':
                 $r=$g_parameter->MY_NUMBER;
                 break;
+            case 'MY_PHONE':
             case 'MY_TEL':
-                $r=$g_parameter->MY_TEL;
+                $r=$g_parameter->MY_PHONE;
                 break;
             case 'MY_FAX':
                 $r=$g_parameter->MY_FAX;
                 break;
+            case 'MY_COUNTRY':
             case 'MY_PAYS':
-                $r=$g_parameter->MY_PAYS;
+                $r=$g_parameter->MY_COUNTRY;
                 break;
             
             

@@ -35,11 +35,11 @@ if (isset($_POST['record_company']))
     $m->MY_TVA=$http->post("p_tva");
     $m->MY_STREET=$http->post("p_street");
     $m->MY_NUMBER=$http->post("p_no");
-    $m->MY_CP=$http->post("p_cp");
-    $m->MY_COMMUNE=$http->post("p_commune");
-    $m->MY_TEL=$http->post("p_tel");
+    $m->MY_POSTCODE=$http->post("p_cp");
+    $m->MY_CITY=$http->post("p_commune");
+    $m->MY_PHONE=$http->post("p_tel");
     $m->MY_FAX=$http->post("p_fax");
-    $m->MY_PAYS=$http->post("p_pays");
+    $m->MY_COUNTRY=$http->post("p_pays");
     $m->MY_CHECK_PERIODE=$http->post("p_check_periode");
     $m->MY_DATE_SUGGEST=$http->post("p_date_suggest");
     $m->MY_ANALYTIC=$http->post("p_compta");
@@ -165,7 +165,7 @@ $all->style=' class="input_text"';
                 $all->style=' class="input_text"';
                 ?>
                 <label class="w-20" for="p_tel"><?= _("Téléphone") ?></label>
-                <?= $all->input("p_tel", $my->MY_TEL) ?>
+                <?= $all->input("p_tel", $my->MY_PHONE) ?>
             </div>
             <div class="form-group">
                 <?php
@@ -201,7 +201,7 @@ $all->style=' class="input_text"';
                 $all->style=' class="input_text"';
                 ?>
                 <label class="w-20" for="p_cp"><?= _("Code Postal") ?></label>
-                <?= $all->input("p_cp", $my->MY_CP) ?>
+                <?= $all->input("p_cp", $my->MY_POSTCODE) ?>
             </div>
             <div class="form-group">
                 <?php
@@ -210,7 +210,7 @@ $all->style=' class="input_text"';
                 $all->style=' class="input_text"';
                 ?>
                 <label class="w-20" for="p_commune"><?= _("Localité") ?></label>
-                <?= $all->input("p_commune", $my->MY_COMMUNE) ?>
+                <?= $all->input("p_commune", $my->MY_CITY) ?>
             </div>
             <div class="form-group">
                 <?php
@@ -219,7 +219,7 @@ $all->style=' class="input_text"';
                 $all->style=' class="input_text"';
                 ?>
                 <label class="w-20" for="p_pays"><?= _("Pays") ?></label>
-                <?= $all->input("p_pays", $my->MY_PAYS) ?>
+                <?= $all->input("p_pays", $my->MY_COUNTRY) ?>
             </div>
             <div class="form-group">
                 <?php

@@ -245,6 +245,8 @@ define('ATTR_DEF_ACCOUNT_ND_TVA_ND', 51);
 define('ATTR_DEF_ACCOUNT_ND_PERSO', 52);
 define('ATTR_DEF_ACCOUNT_ND', 53);
 define('ATTR_DEF_ACTIF', 54);
+define('ATTR_DEF_SIREN', 55);
+define('ATTR_DEF_SIRET', 56);
 
 define("FICHE_TYPE_CLIENT", 9);
 define("FICHE_TYPE_VENTE", 1);

@@ -31,10 +31,10 @@ class Noalyss_Parameter_Folder
     var $MY_TVA;
     var $MY_STREET;
     var $MY_NUMBER;
-    var $MY_CP;
-    var $MY_TEL;
-    var $MY_PAYS;
-    var $MY_COMMUNE;
+    var $MY_POSTCODE;
+    var $MY_PHONE;
+    var $MY_COUNTRY;
+    var $MY_CITY;
     var $MY_FAX;
     var $MY_ANALYTIC;
     var $MY_STRICT;
@@ -75,10 +75,10 @@ class Noalyss_Parameter_Folder
 MY_TVA = [	{$this->MY_TVA }]
 MY_STREET = [ 	{$this->MY_STREET }]
 MY_NUMBER= [	{$this->MY_NUMBER }]
-MY_CP= [	{$this->MY_CP }]
-MY_TEL= [	{$this->MY_TEL }]
-MY_PAYS= [	{$this->MY_PAYS }]
-MY_COMMUNE= [	{$this->MY_COMMUNE }]
+MY_POSTCODE= [	{$this->MY_POSTCODE }]
+MY_PHONE= [	{$this->MY_PHONE }]
+MY_COUNTRY= [	{$this->MY_COUNTRY }]
+MY_CITY= [	{$this->MY_CITY }]
 MY_FAX= [	{$this->MY_FAX }]
 MY_ANALYTIC= [	{$this->MY_ANALYTIC }]
 MY_STRICT= [	{$this->MY_STRICT }]
@@ -188,10 +188,10 @@ EOF;
         $this->save('MY_TVA');
         $this->save('MY_STREET');
         $this->save('MY_NUMBER');
-        $this->save('MY_CP');
-        $this->save('MY_TEL');
-        $this->save('MY_PAYS');
-        $this->save('MY_COMMUNE');
+        $this->save('MY_POSTCODE');
+        $this->save('MY_PHONE');
+        $this->save('MY_COUNTRY');
+        $this->save('MY_CITY');
         $this->save('MY_FAX');
         $this->save('MY_ANALYTIC');
         $this->save('MY_STRICT');

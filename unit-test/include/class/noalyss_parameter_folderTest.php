@@ -52,10 +52,10 @@ class Noalyss_Parameter_FolderTest extends TestCase
                                     "MY_TVA,".                     
                                     "MY_STREET,".                  
                                     "MY_NUMBER,".                  
-                                    "MY_CP,".                      
-                                    "MY_TEL,".                     
-                                    "MY_PAYS,".                    
-                                    "MY_COMMUNE,".                 
+                                    "MY_POSTCODE,".                      
+                                    "MY_PHONE,".                     
+                                    "MY_COUNTRY,".                    
+                                    "MY_CITY,".                 
                                     "MY_FAX,".                     
                                     "MY_ANALYTIC,".                
                                     "MY_STRICT,".                  
