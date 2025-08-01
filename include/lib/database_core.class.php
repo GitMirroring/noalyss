@@ -406,14 +406,15 @@ class DatabaseCore
 
     /**
      * @brief fetch the $p_indice array from the last query
+     * @param $p_mode is PGSQL_ASSOC,  PGSQL_BOTH or PGSQL_NUM  (default PGSQL_ASSOC)
      * @param $p_indice index
      *
      */
-    function fetch($p_indice)
+    function fetch($p_indice,$p_mode= PGSQL_ASSOC)
     {
         if ($this->ret == false)
             throw new Exception('this->ret is empty');
-        return pg_fetch_array($this->ret, $p_indice,PGSQL_ASSOC);
+        return pg_fetch_array($this->ret, $p_indice,$p_mode);
     }
 
     /**
@@ -489,16 +490,17 @@ class DatabaseCore
      * in a array
      * \param $p_sql sql query
      * \param $p_array if not null we use ExecSqlParam
+     * \param $p_mode is PGSQL_ASSOC,  PGSQL_BOTH or PGSQL_NUM  (default PGSQL_ASSOC) 
      * \return false if nothing is found
      */
 
-    function get_array($p_sql, $p_array = null)
+    function get_array($p_sql, $p_array = null,$p_mode=PGSQL_ASSOC)
     {
-        $r = $this->exec_sql($p_sql, $p_array);
+        $r = $this->exec_sql($p_sql, $p_array,$p_mode);
 
         if (pg_num_rows($r) == 0)
             return array();
-        $array = pg_fetch_all($r);
+        $array = pg_fetch_all($r,$p_mode);
         return $array;
     }
 
@@ -773,7 +775,7 @@ class DatabaseCore
      * \brief wrapper for the function pg_fetch_array
      * \param $ret is the result of a pg_exec
      * \param $p_indice is the index
-     * \param $p_indice is the index
+     * \param $p_mode is PGSQL_ASSOC,  PGSQL_BOTH or PGSQL_NUM  (default PGSQL_ASSOC)
      * \return $array of column
      */
 
@@ -785,12 +787,13 @@ class DatabaseCore
     /**
      * \brief wrapper for the function pg_fetch_all
      * \param $ret is the result of pg_exec (exec_sql)
+     * \param $p_mode is PGSQL_ASSOC,  PGSQL_BOTH or PGSQL_NUM  (default PGSQL_ASSOC)
      * \return double array (row x col ) or false
      */
 
-    static function fetch_all($ret)
+    static function fetch_all($ret,$p_mode= PGSQL_ASSOC)
     {
-        return pg_fetch_all($ret,PGSQL_ASSOC);
+        return pg_fetch_all($ret,$p_mode);
     }
 
     /**
