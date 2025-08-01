@@ -196,6 +196,13 @@ class Fiche
         return 0;
     }
     /**
+     * @brief replace by set_attribute
+     * @deprecated since version 9.3.0.12
+     */
+    function setAttribut($p_ad_id,$p_value) {
+        $this->set_attribute($p_ad_id, $p_value);
+    }
+    /**
      *@brief set an attribute by a value, if the attribut array is empty
      * a call to load_attribute is performed
      *@param int  AD_ID attr_def.ad_id
@@ -215,6 +222,14 @@ class Fiche
                 break;
             }
         }
+    }
+    /**
+     * @brief replace by load_attribute
+     * @deprecated since version 9.3.0.12
+     * @return type
+     */
+    function getAttribut() {
+        return  Card_Property::load($this);
     }
     /**
      *\brief  get all the attribute of a card, add missing ones
@@ -297,6 +312,16 @@ class Fiche
         $this->attribut_value."</TD>".
         "<TR> <TD>".
         $this->attribut_def."</TD></TR>";
+    }
+    /**
+     * @brief use get_attribute instead
+     * @deprecated since version 9.3.0.12
+     * @param int  $p_ad_id  AD_ID from attr_def.ad_id
+     * @param int $p_return 1 return NOTFOUND otherwise an empty string
+     */
+    function strAttribut($p_ad_id,$p_return=1)
+    {
+        return get_attribute($p_ad_id,$p_return);
     }
     /***
      * @brief  return the string of the given attribute

@@ -59,9 +59,16 @@ class Fiche_Def
 
         return;
     }
-
+    /**
+     * @brief replace by load_attribute
+     * @deprecated since version 9.3.0.12
+     * @return type
+     */
+    function getAttribut() {
+        return $this->load_attribute();
+    }
     /*!
-     *  \brief  Get attribut of a fiche_def
+     *  \brief  Get attribute of a fiche_def
      *
      * \return array of Card_Property 
      */
