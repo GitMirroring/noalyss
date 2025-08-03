@@ -149,7 +149,6 @@ define('MAX_ACTION_SHOW', 20);
 
 if (DEBUGNOALYSS == 0) {
     // PRODUCTION : nothing is displaid , report only errors and warning
-    // Rapporte les erreurs d'exécution de script
     error_reporting(E_ERROR | E_WARNING);
     ini_set("display_errors", 0);
     ini_set("html_errors", 0);
