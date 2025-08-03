@@ -264,3 +264,85 @@ $http=new HttpInput();
     $date->javascript=sprintf('onchange = "console.debug(\'change date\');%s"',"format_date(this);");
     echo $date->input();
     ?>
+<h2>ISELECT</h2>
+<h3> Normal</h3>
+<?php
+$select=new ISelect("animal");
+$select->value=array(
+    ["value"=>1,"label"=>"Deer"],
+    ["value"=>2,"label"=>"Dog"],
+    ["value"=>3,"label"=>"Cat"],
+    ["value"=>4,"label"=>"Shark"],
+    ["value"=>5,"label"=>"Goldenfish"],
+    ["value"=>6,"label"=>"Salmon"],
+    ["value"=>7,"label"=>"Chicken"],
+    ["value"=>8,"label"=>"Swallow"],
+    ["value"=>9,"label"=>"Eagle"]
+);
+
+$select->label="Animal";
+echo $select->input();
+?>
+<p>
+    8 (Swallow) is selected
+</p>
+input is 
+<?php
+$select->selected=8;
+
+echo $select->input();
+
+?>
+display is 
+
+<?php
+
+echo $select->display();
+
+?>
+
+
+<h3> OPTGROUP</h3>
+<?php
+$select=new ISelect("animal");
+$select->value=array(
+    ["value"=>0,"label"=>"Aucun choix"],
+    ["value"=>null,"label"=>"Mammal"],
+    ["value"=>1,"label"=>"Deer"],
+    ["value"=>2,"label"=>"Dog"],
+    ["value"=>3,"label"=>"Cat"],
+    ["value"=>null,"label"=>"END Mammal"],
+    ["value"=>null,"label"=>"Fish"],
+    ["value"=>4,"label"=>"Shark"],
+    ["value"=>5,"label"=>"Goldenfish"],
+    ["value"=>6,"label"=>"Salmon"],
+    ["value"=>null,"label"=>"END Fish"],
+    ["value"=>null,"label"=>"Bird"],
+    ["value"=>7,"label"=>"Chicken"],
+    ["value"=>8,"label"=>"Swallow"],
+    ["value"=>9,"label"=>"Eagle"],
+    ["value"=>null,"label"=>"END Bird"]
+);
+
+$select->label="Animal";
+echo $select->input();
+
+?>
+<p>
+    5 (Goldenfish) is selected
+</p>
+input is 
+<?php
+$select->selected=5;
+
+echo $select->input();
+
+?>
+display is 
+
+<?php
+
+echo $select->display();
+
+?>
+

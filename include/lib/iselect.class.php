@@ -54,7 +54,26 @@ class ISelect extends HtmlInput
                 $this->value=$p_value;
             }
     }
-    /*!\brief show the html  input of the widget*/
+    /*!
+     * \brief      show the html  input of the widget
+     * \note to use a OPTGROUP, the key "value" must be null , it is important
+     * to note that it is needed to use for opening and closing the element
+     * \code
+      $select->value=array( 
+        array ("value"=>null,"label"=>"Groupe 1"),
+        array ("value"=>1,"label"=>"Element 1"),
+        array ("value"=>2,"label"=>"Element 2"),
+        array ("value"=>null,"label"=>"END Groupe 1"), // not displaid
+        array ("value"=>null,"label"=>"Groupe 2"),
+        array ("value"=>1,"label"=>"Element 1"),
+        array ("value"=>2,"label"=>"Element 2"),
+        array ("value"=>null,"label"=>"END group Groupe 1")// not displaid
+      );
+     * 
+     * \endcode
+
+     * 
+     *      */
     public function input($p_name=null,$p_value=null)
     {
         $this->name=($p_name==null)?$this->name:$p_name;
@@ -70,9 +89,24 @@ class ISelect extends HtmlInput
 
         $a="<SELECT   id=\"$this->id\" NAME=\"$this->name\" $style $this->javascript $disabled $rowsize>";
         if (empty($this->value)) return '';
+        // var $start_group boolean , true the element OPTGROUP starts, false, it ends
+        $start_group=false;
         for ( $i=0;$i<sizeof($this->value);$i++)
         {
+            // open the element optgroup
+            if ($this->value[$i]['value']===null && !$start_group) {
+                $start_group=true;
+                $a.=sprintf('<optgroup label="%s">', htmlspecialchars($this->value[$i]['label']));
+                continue;
+            }
+            // close the element optgroup
+            if ($this->value[$i]['value']==null && $start_group) {
+                $start_group=false;
+                $a.='</optgroup >';
+                continue;
+            }
             $checked=($this->selected==$this->value[$i]['value'])?"SELECTED":"";
+            
             $a.='<OPTION VALUE="'.$this->value[$i]['value'].'" '.$checked.'>';
             $a.=strip_tags($this->value[$i]['label']);
         }
