@@ -36,6 +36,12 @@ $cn=Dossier::connect();
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 $g_user=new Noalyss_user($cn);
 $g_user->check(true);
+/**
+ * check if 2FA is completed
+ */
+if ( ! $g_user->is_double_identified()) {
+   exit();
+}
 IDate::set_firstDate($g_user->get_first_week_day());
 ITva_Popup::set_vat_code($g_user->get_vat_code_preference());
 

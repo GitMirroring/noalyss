@@ -117,6 +117,40 @@ $it_pass->value="";
                 ?>
             </td>
         </tr>
+                <tr>
+            <td>
+                <?php echo _('Double authentification');?>
+            </td>
+            <td>
+                <?php
+                $auth_method=new ISelect('auth_method');
+                $auth_method->value=array(
+                    array('value'=>0,'label'=>_('Aucune')),
+                    array('value'=>1,'label'=>_('email + OTP')),
+                    array('value'=>2,'label'=>_('OTP')),
+                );
+                $auth_method->selected=$UserChange->authent_method;
+                echo $auth_method->input();
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?=_("Action Double Authentification")?>
+            </td>
+                    <td>
+                        <span style="display:block">
+                            <input type="checkbox" name="generate_otp" value="1"><?=_("Renouveller clef secrète")?>
+                        </span>
+                        <span style="display:block">
+                            <input type="checkbox" name="email_otp" value="1"><?=_("envoyer email pour 2FA avec OTP ")?>
+                            <span class="text-muted"><?=_("Un email sera envoyé avec un lien pour initialiser 2FA avec OTP")?>>
+                        </span>
+                
+            </td>
+            
+        </tr>
+        
     </table>
 
     <input type="hidden" name="sbaction" id="sbaction" value="save">
@@ -136,7 +170,7 @@ $it_pass->value="";
     <input type="hidden" name="sbaction" value="delete">
     <p  class="info" id="codedel_div">
         <?php
-        echo _("Pour effacer , confirmez en retapant le code");
+        echo _("Pour effacer , confirmez en retapant le code, respectez les majuscules et minuscules");
         echo confirm_with_string('userdel','5');
         ?>
 
@@ -146,7 +180,7 @@ $it_pass->value="";
             <input type="Submit"  class="button" NAME="DELETE" VALUE="<?=_("Confirmer")?>">
         </li>
         <li>
-            <?=HtmlInput::button_hide('delete_user_div')?>
+            <?=HtmlInput::button_hide('delete_user_div','button')?>
         </li>
     </ul>
 </FORM>

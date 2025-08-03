@@ -387,14 +387,13 @@ define ("VATCHECK_URL","https://ec.europa.eu/taxation_customs/vies/rest-api/");
 function noalyss_class_autoloader($class)
 {
     $class = strtolower($class);
-
     foreach (array("class","lib","database") as $path) {
         if ( file_exists(NOALYSS_INCLUDE.'/'.$path.'/'.$class.'.class.php')) {
             require_once  NOALYSS_INCLUDE.'/'.$path.'/'.$class.'.class.php';
             return;
         }
-
     }
+    
     $aClass = array(
         "database" => "class/database.class.php",
         "acc_detail" => "class/acc_operation.class.php",
@@ -417,7 +416,8 @@ function noalyss_class_autoloader($class)
         'noalyss\dbg'=>"lib/dbg.php",
         'noalyss\file_cache'=>"lib/file_cache.class.php",
         "pdfland"=>"class/pdf_land.class.php",
-        "noalyss\widget\widget"=>"widget/widget.php"
+        "noalyss\widget\widget"=>"widget/widget.php",
+        "noalyss\otp"=>"lib/otp.class.php"
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];
@@ -426,3 +426,5 @@ function noalyss_class_autoloader($class)
 }
 
 spl_autoload_register('\noalyss_class_autoloader', true);
+
+require_once NOALYSS_BASE.'/vendor/autoload.php';

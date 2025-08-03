@@ -96,6 +96,13 @@ if ( DEBUGNOALYSS > 1 ) {
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 
 $g_user->Check();
+if ( ! $g_user->is_double_identified()) {
+     echo "<h2>"._('Vous  êtes déconnecté')."</h2>";
+    $backurl=$_SERVER['REQUEST_URI'];
+    $url="index.php?".http_build_query(array('reconnect'=>1,'backurl'=>urlencode($backurl)));
+    redirect($url);
+    exit();
+}
 $g_user->check_dossier(Dossier::id());
 load_all_script();
 /*  Check Browser version if < IE6 then unsupported */

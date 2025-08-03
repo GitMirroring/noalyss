@@ -1,5 +1,6 @@
 <?php
-
+use chillerlan\Authenticator\{Authenticator, AuthenticatorOptions};
+use chillerlan\Authenticator\Authenticators\AuthenticatorInterface;
 /*
  *   This file is part of NOALYSS.
  *
@@ -48,7 +49,8 @@ class Noalyss_User
     var $access_mode; //!< MOBILE or PC depending if when connecting $login contains @mobile 
     var $lang ; //!< user's language
     var $theme ; //!< user's  CSS Theme
-
+    var $authent_method; //!< authentication method use for this user
+    private $otp_secret; //!< string use as secret for OTP
     /**
      * @brief Create an user , load an existing one or if p_id == -1 search for the connected user. To have an empty
      * user, give a p_id smaller than -1 or zero.
@@ -377,7 +379,9 @@ class Noalyss_User
                             use_active,
                             use_admin,
                             use_pass,
-                            use_email
+                            use_email,
+                            use_auth_method,
+                            use_otp_secret
                         from ac_users ";
         $cn=new Database();
         $Res=$cn->exec_sql($sql.$sql_cond, $sql_array);
@@ -393,18 +397,32 @@ class Noalyss_User
         $this->admin=$row['use_admin'];
         $this->password=$row['use_pass'];
         $this->email=$row['use_email'];
+        $this->authent_method=$row['use_auth_method'];
+        $this->otp_secret=$row['use_otp_secret'];
         return $this->id;
     }
 
     function save()
     {
-
+        if ( $this->authent_method  != 0 && $this->otp_secret == null) {
+            $this->generate_otp();
+        }
         $Sql="update ac_users set use_first_name=$1, use_name=$2
-             ,use_active=$3,use_admin=$4,use_pass=$5 ,use_email = $7 where use_id=$6";
+             ,use_active=$3,use_admin=$4,use_pass=$5 ,use_email = $7 
+             , use_auth_method=$8,use_otp_secret=$9
+                where use_id=$6";
         $cn=new Database();
         $Res=$cn->exec_sql($Sql,
-                array($this->first_name, $this->last_name, $this->active, $this->admin, $this->password, 
-                    $this->id, $this->email));
+                array($this->first_name //1
+                , $this->last_name // 2
+                , $this->active //3 
+                , $this->admin //4 
+                , $this->password //5 
+                , $this->id //6 
+                , $this->email //7 
+                , $this->authent_method //8
+                , $this->otp_secret //9
+                ));
     }
 
     function insert()
@@ -1867,6 +1885,185 @@ class Noalyss_User
             return 0;
         }
         return $result;
+    }
+    /**
+     * @brief generate OTP 
+     */
+    function generate_otp()
+    {
+       $otp=new \Noalyss\OTP();
+       $this->otp_secret=$otp->build_secret();
+    }
+
+    public function get_authent_method() {
+        return $this->authent_method;
+    }
+
+    public function get_otp_secret() {
+        return $this->otp_secret;
+    }
+
+  
+    public function set_authent_method($authent_method) {
+        $this->authent_method = $authent_method;
+        return $this;
+    }
+
+    public function set_otp_secret($otp_secret) {
+        $this->otp_secret = $otp_secret;
+        return $this;
+    }
+    public function set_identified()
+    {
+         $_SESSION[SESSION_KEY."db_auth"]='ok';
+    }
+    /**
+     * @brief check is the double authentication has been successful
+     * @return bool
+     */
+    public function is_double_identified() {
+        
+        if ( $this->authent_method == 0 )
+        {
+            $_SESSION[SESSION_KEY."db_auth"]='ok';
+            return true;
+        }
+        if ( ! isset($_SESSION[SESSION_KEY."db_auth"])) {
+            return false;
+        }
+        if ($_SESSION[SESSION_KEY."db_auth"] == "ok") {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * @brief send a code to the user and save the expected code + UUID in
+     * a table OTP_SEND_SECRET
+     * @return bool false if fails true if succeeds
+     * @throws \Exception
+     */
+    public function send_code_otp()
+    {
+        if ( $this->authent_method !=1 ) { return false; }
+        $mail=new \Sendmail();
+        $mail->set_from(ADMIN_WEB);
+        $mail->mailto($this->getEmail());
+        $mail->set_subject(_("NOALYSS : votre code secret "));
+        $noalyss_url=NOALYSS_URL;
+        
+        
+        if ( strlen(trim($this->otp_secret??"")) == 0 )  {
+            throw new \Exception("noalyss_user.send_code_otp:secret empty",1945);
+        }
+        $otp=new \Noalyss\OTP();
+        $code=$otp->compute_code($this->otp_secret);
+       $message="Bonjour,
+           
+Voici votre code secret pour NOALYSS : $code
+    
+
+";
+        try {
+            $uuid= guidv4();
+            $repository=new \Database();
+            // remove old for this user 
+            $repository->exec_sql("delete from otp_send_secret where use_id=$1"
+                    ,[$this->id]);
+            // remove also old one 
+            $repository->exec_sql("delete from otp_send_secret where os_valid_time < now()");
+           $now=new \DateTime();
+           $valid=new \DateTime();
+           $valid->modify('+20 minutes');
+           
+           $otp_send_secret=new Otp_Send_Secret_SQL($repository);
+           $otp_send_secret->set("use_id",$this->id)
+                   ->set('os_request',$uuid)
+                   ->set("os_code",$code)
+                   ->set('os_valid_time',$valid->format('d.m.Y H:i:s'));
+           $otp_send_secret->save();
+            $mail->set_message($message);
+            $mail->compose();
+            $mail->send();
+            return $uuid;
+        } catch (Exception $ex) {
+            \record_log ($ex);
+            throw new \Exception("noalyss_user.send_code_otp",1963,$ex);
+        }
+    }
+     /**
+     * @brief send an email with link to the user
+     */
+    function send_link_otp() {
+        $mail = new \Sendmail();
+        $mail->set_from(ADMIN_WEB);
+        $mail->mailto($this->getEmail());
+        $mail->set_subject(_("NOALYSS : Double authentification lien pour 2FA: OTP"));
+        $noalyss_url = NOALYSS_URL;
+        $uuid = guidv4();
+        $id = $this->getId();
+        /**
+         * save in DB first
+         */
+        $message = "Bonjour,
+
+    Afin de pouvoir utiliser la double authentification avec 2FA: OTP, pourriez-vous
+    suivre ce lien et scanner le QRCode avec votre application android freeOTP ou Google Authenticator.
+               
+    Ce lien ne sera actif que 12 heures.
+   
+   
+   {$noalyss_url}/index.php?otp={$uuid}
+   
+   Merci d'utiliser NOALYSS
+   
+Bien cordialement,
+
+
+";
+        try {
+            $repository = new \Database();
+            // remove old for this user 
+            $repository->exec_sql("delete from otp_send_secret where use_id=$1"
+                    ,[$this->id]);
+            // remove also old one 
+            $repository->exec_sql("delete from otp_send_secret where os_valid_time < now()");
+            $valid_time=new \DateTime();
+            $valid_time->add(new \DateInterval('PT12H'));
+            $otp_send_secret_sql = new \Otp_Send_Secret_SQL($repository);
+            $otp_send_secret_sql->set('use_id', $id)
+                    ->set('os_valid_time',$valid_time->format('d-m-Y H:i'))
+                    ->set('os_request', $uuid);
+            
+            $otp_send_secret_sql->save();
+            $mail->set_message($message);
+            $mail->compose();
+            $mail->send();
+            return $uuid;
+        } catch (Exception $ex) {
+            \record_log($ex);
+            throw new \Exception("noalyss_user.send_link_otp",1998,$ex);
+        }
+    }
+    /**
+     * @brief FORM to enter the 6 digit enter by OTP
+     * @param $uuid (string UUID) UUID in the message, null if there is no message
+     */
+    function input_otp($uuid="",$url="")
+    {
+      require_once NOALYSS_TEMPLATE."/noalyss_user-input_otp.php" ;
+    }
+    /**
+     * @brief check that the OTP code is the one on smartphone
+     * returns false if the given does not match the OTP 
+     */
+    function check_otp($code)
+    {
+        $otp=new \Noalyss\OTP();
+        
+        if ( $otp->compute_code($this->otp_secret) == $code ) {
+            return true;
+        }
+        return false;
     }
 }
 

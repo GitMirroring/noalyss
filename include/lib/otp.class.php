@@ -38,66 +38,36 @@ use chillerlan\Authenticator\{
 use chillerlan\Authenticator\Authenticators\AuthenticatorInterface;
 
 class OTP {
-
+    
+    private $authenticator;
+    
+    function __construct() {
+        $options = new AuthenticatorOptions;
+        $options->secret_length = 32;
+        $options->algorithm = AuthenticatorInterface::ALGO_SHA512;
+        $options->digits=6;
+        $this->authenticator = new Authenticator($options);
+    }
     /**
      * @brief build a secret key and returns it
      * @return string random string of 32 
      */
     function build_secret() {
-        $options = new AuthenticatorOptions;
-        $options->secret_length = 32;
-        $options->algorithm = AuthenticatorInterface::ALGO_SHA512;
-        $options->digits=6;
-        $authenticator = new Authenticator($options);
-        // create a secret (stored somewhere in a *safe* place on the server. safe... hahaha jk)
-        $secret = $authenticator->createSecret();
+ 
+        $secret = $this->authenticator->createSecret();
         return $secret;
         
     }
+   
     /**
-     * @brief send an email with link to the user
-     * @param $user (\Noalyss_User )
+     * @brief compute a code for auth. for the user passed in parameter
+     * @param $user (\Noalyss_User) 
      */
-    function send_mail(\Noalyss_User $user) {
-        $mail=new \Sendmail();
-        $mail->set_from(ADMIN_WEB);
-        $mail->mailto($user->getEmail());
-        $mail->set_subject(_("NOALYSS : Double authentification lien pour freeOTP"));
-        $noalyss_url=NOALYSS_URL;
-        $uuid=guidv4();
-        $id=$user->getId();
-        /**
-         * save in DB first
-         */
-       $message="Bonjour,
-
-    Afin de pouvoir utiliser la double authentification avec freeOTP, pourriez-vous
-    suivre ce lien et scanner le QRCode avec votre application android freeOTP.
-               
-    Ce lien ne sera actif que 24 heures.
-   
-   
-   {$noalyss_url}/index.php?otp={$uuid}
-   
-   Merci d'utiliser NOALYSS
-   
-Cordialement,
-
-Noalyss team
-";
-        try {
-            $repository=new \Database();
-            $otp_send_secret_sql=new \Otp_Send_Secret_SQL($repository);
-            $otp_send_secret_sql->set('use_id',$id)
-                    ->set('os_request',$uuid);
-            $otp_send_secret_sql->save();
-            $mail->set_message($message);
-            $mail->compose();
-            $mail->send();
-            
-        } catch (Exception $ex) {
-
-        }
+    function compute_code($secret)
+    {
+      
+        $this->authenticator->setSecret($secret);
+        return $this->authenticator->code();
     }
     
 }

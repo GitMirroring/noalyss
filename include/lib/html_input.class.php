@@ -478,10 +478,11 @@ class HtmlInput
      * @param type $div_name
      * @return type
      */
-    static function button_hide($div_name)
+    static function button_hide($div_name,$class='smallbutton')
     {
         $a=new IButton('Fermer');
         $a->label=_("Fermer");
+        $a->class=$class;
         $a->javascript="$('".$div_name."').hide()";
         $html=$a->input();
 

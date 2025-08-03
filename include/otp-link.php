@@ -31,7 +31,97 @@ if (!file_exists($dirname . '/config.inc.php')) {
 }
 
 require_once __DIR__ . '/constant.php';
+?>
+<style>
 
+/***
+ * LOGO
+*************************************/
+#logo_id {
+    position:static;
+    top : 0px;
+    left:0px;
+    width:60px;
+     height:auto;
+     margin-left:10px;
+}
+/** small **/
+@media (min-width : 576px) {
+    #logo_id {
+     top : 10px;
+    left:20px;
+       width: 90px;
+     margin-left:20px;
+      
+
+    }
+}
+/** medium**/
+@media (min-width : 768px) {
+    #logo_id {
+    
+    }
+      
+}
+/** large**/
+@media (min-width : 992px) {
+    #logo_id {
+     
+    }      
+}
+/** XL **/
+@media (min-width : 1200px) {
+    #logo_id {
+      
+       
+    }
+} 
+div.content {
+  
+}
+@media (min-width: 576px) {
+    div.content {
+      margin-left: 16px;
+    }
+}
+/* MeDium */
+@media (min-width: 768px) {
+     div.content {
+      margin-left: 32px;
+    }
+}
+/* LarGe */
+@media (min-width: 992px) {
+     div.content {
+      margin-left: 64px;
+    }
+}
+/* eXtraLarge */
+@media (min-width: 1200px) {
+     div.content {
+      margin-left: 128px;
+    }
+
+}
+#vrf_code {
+    font-size:200%;
+    width:9rem;
+    padding:0.5rem;
+}
+
+input[type=submit]{
+    font-size:200%;
+    width:9rem;
+    padding:0.5rem;
+}
+form {
+    width:70%;
+    margin-left:15%;
+}
+</style>
+   <img id="logo_id" src="image/logo9000.png" >
+<div class="content">
+<?php
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
@@ -94,8 +184,20 @@ try {
     $result = $writer->write($qrCode);
     echo '<div style="margin:4rem">';
     // generate the QRCode
-    echo '<h1>',_("Scanner ceci avec freeOTP"),'</h1>';
-  
+    echo '<h1>',_("Scanner ceci avec votre application OTP"),'</h1>';
+    ?>
+    <ol>
+        <li>
+            <a href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp" target="_blank">FreeOTP (libre)</a>
+        </li>
+        <li>
+            <a href="https://play.google.com/store/apps/details?id=com.beemdevelopment.aegis" target="_blank">AEgis Authenticator (libre)</a>
+        </li>
+        <li>
+            <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Google Authenticator</a>
+        </li>
+    </ol>
+    <?php
     echo '<p>';
     echo _("Scanner ce QRCode avec votre application OTP afin de l'ajouter");
     
@@ -104,13 +206,12 @@ try {
     
     printf('<img src="data:image/png;base64,%s">', base64_encode($result->getString()));
     
-    echo '</div>';
 } catch (Exception $exc) {
     record_log($e);
     return;
 }
 ?>
 
-
+</div>
 
 

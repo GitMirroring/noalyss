@@ -49,6 +49,12 @@ $gDossier=dossier::id();
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 mb_internal_encoding("UTF-8");
 $g_user->Check();
+/**
+ * check if 2FA is completed
+ */
+if ( ! $g_user->is_double_identified()) {
+   exit();
+}
 $action=$g_user->check_dossier($gDossier);
 
 $hi=new HttpInput();
