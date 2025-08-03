@@ -3541,8 +3541,39 @@ li.li-active {
  */
  #info_passid {
      position:absolute;
-     background-color: rgba(246, 180, 157, 0.58);
-     color:red;
+     background-color: rgba(246, 180, 157, 0.80);
+     color:#b90707;
+     font-size:100%;
+     z-index:10;
+     top:200px;
+     left:326px;
+ }
+ @media (min-width: 576px) {
+      #info_passid {
+        top:305px;
+        left:326px;
+      }
+ }
+ /* MeDium */
+ @media (min-width: 768px) {
+      #info_passid {
+        top:305px;
+        left:326px;
+      }
+ }
+ /* LarGe */
+ @media (min-width: 992px) {
+      #info_passid {
+        top:305px;
+        left:326px;
+      }
+ }
+ /* eXtraLarge */
+ @media (min-width: 1200px) {
+      #info_passid {
+        top:305px;
+        left:30%;
+      }
 
  }
  /** followup : detail : list of concerned actions **/

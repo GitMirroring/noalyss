@@ -178,12 +178,12 @@ if ( isset($_REQUEST['det']) && $sbaction=="")
     return;
 }
 ?>
-
-<div id="create_user" style="display:none;width:30%;margin-right: 20%" class="inner_box">
+   <span  id="info_passid"></span>
+<div id="create_user" style="display:none;margin-right: 20%;position:float;" class="inner_box2">
 <?php echo HtmlInput::title_box(_('Ajout Utilisateur'),"create_user","hide");?>
     <form action="admin-noalyss.php?action=user_mgt" method="POST" onsubmit="return check_form()">
     <div style="text-align: center">
-        <span style="position:absolute;font-size:75%" id="info_passid"></span>
+     
 <TABLE class="result" >            
        <TR><TD style="text-align: right"> <?php echo _('login')?></TD><TD><INPUT id="input_login" class="input_text"  TYPE="TEXT" NAME="LOGIN"></TD></tr>
         <TR><TD style="text-align: right"> <?php echo _('Prénom')?></TD><TD><INPUT class="input_text" TYPE="TEXT" NAME="FNAME"></TD></tr>
