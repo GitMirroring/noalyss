@@ -61,6 +61,12 @@ $q=noalyss_str_replace(",",".",$q);
 $cn=Dossier::connect();
 $User=new Noalyss_user($cn);
 $User->Check();
+/**
+ * check if 2FA is completed
+ */
+if ( ! $User->is_double_identified()) {
+   exit();
+}
 $User->check_dossier(Dossier::id());
 
 // Retrieve the rate of vat, it $t == -1 it means no VAT

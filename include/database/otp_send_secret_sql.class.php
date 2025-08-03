@@ -40,9 +40,11 @@ class Otp_Send_Secret_SQL extends \Table_Data_SQL {
          */
         $this->name = array(
             "os_id" => "os_id"
-            , "use_email" => "use_email"
             , "os_timestamp" => "os_timestamp"
             , "os_request" => "os_request"
+            , "use_id" => "use_id"
+            , 'os_valid_time'=>'os_valid_time'
+            ,'os_code'=>'os_code'
         );
 
         /*
@@ -50,12 +52,14 @@ class Otp_Send_Secret_SQL extends \Table_Data_SQL {
          */
         $this->type = array(
             "os_id" => "numeric"
-            , "use_email" => "text"
             , "os_timestamp" => "date"
             , "os_request" => "text"
+            , "use_id" => "numeric"
+            , 'os_valid_time'=>'date'
+            ,'os_code'=>'text'
         );
 
-        $this->default = array("os_id" => "auto");
+        $this->default = array("os_id" => "auto", "os_timestamp" => "auto");
 
         $this->date_format = "DD.MM.YYYY HH24:MI:SS";
         parent::__construct($p_cn, $p_id);

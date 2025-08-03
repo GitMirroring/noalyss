@@ -37,6 +37,13 @@ require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 $User=new Noalyss_user($rep);
 
 $User->Check();
+/**
+ * check if 2FA is completed
+ */
+if ( ! $User->is_double_identified()) {
+   exit();
+}
+
 /*  Check Browser version if < IE6 then unsupported */
 $browser=$_SERVER['HTTP_USER_AGENT'];
 if ( strpos($browser,'MSIE 6')!=false ||

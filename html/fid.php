@@ -49,6 +49,12 @@ $cn=Dossier::connect();
 global $g_user;
 $g_user=new Noalyss_User($cn);
 $g_user->check();
+/**
+ * check if 2FA is completed
+ */
+if ( ! $g_user->is_double_identified()) {
+   exit();
+}
 $g_user->check_dossier(dossier::id());
 set_language();
 

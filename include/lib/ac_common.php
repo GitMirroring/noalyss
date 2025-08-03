@@ -1502,9 +1502,9 @@ function generate_random_string($p_length,$special=1)
  */
 function confirm_with_string($p_ctl_name,$p_car)
 {
-    $code=generate_random_string($p_car );
+    $code=generate_random_string($p_car ,0);
     $r =  HtmlInput::hidden("ctlcode",$code);
-    $r.='<span style="margin-left:1.2em;margin-right:1.2em;font-size:112%;font-weight:bold;border:navy solid 1px ; padding:0.5rem">'. $code.'</span>';
+    $r.='<span style="margin-left:1.2em;margin-right:1.2em;font-size:120%;font-weight:bold;border:navy solid 1px ; padding:0.5rem">'. $code.'</span>';
     $ctl=new IText($p_ctl_name);
     $r.=$ctl->input();
     return $r;
@@ -1859,4 +1859,22 @@ function sanitize_filename($filename)
 
     $new_filename=strtolower($filename_no)."-".date("Ymd-Hi").$filename_suff;
     return $new_filename;
+}
+/**
+ * @brief generate an UUID
+ * @param $data(string) if null use randow
+ * @return string
+ */
+function guidv4($data = null) {
+    // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
+    $data = $data ?? random_bytes(16);
+    
+
+    // Set version to 0100
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+    // Set bits 6-7 to 10
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+    // Output the 36 character UUID.
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 }

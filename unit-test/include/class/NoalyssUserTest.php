@@ -23,6 +23,7 @@ class NoalyssUserTest extends TestCase
      * @var User
      */
     protected $object;
+    private  $cn;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -239,4 +240,21 @@ class NoalyssUserTest extends TestCase
           $_SESSION[SESSION_KEY.'use_admin']=1;
             $user->admin=1;
     }
+    
+    /**
+     * @testdox Generate OTP : check key length and uniqueness
+     */
+    function testGenerateOTP()
+    {
+        $this->object->generate_otp();
+        $secret=$this->object->get_otp_secret();
+        $this->assertTrue(strlen($secret) == 52,"Fails to generate OTP 32 char ".$secret." len = ".strlen($secret));
+        
+        for ($i=0;$i<100;$i++){
+            $this->object->generate_otp();
+            $this->assertTrue($secret != $this->object->get_otp_secret(),"Generate twice the same secret");
+        }
+
+    }
+    
 }

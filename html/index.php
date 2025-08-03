@@ -211,10 +211,20 @@ if (strlen(domaine)>0)
 {
     $my_domain=sprintf(_("Domaine")." : %s", domaine);
 }
-
+/**
+ * if request to recover password
+ */
 if (defined("RECOVER")&&isset($_REQUEST['recover']))
 {
     require_once '../include/recover.php';
+}
+/*
+ * if request to see OTP qrcode
+ */
+if ( isset($_GET['otp'])){
+    
+    require_once '../include/otp-link.php';
+    return;
 }
 // reconnect , create a variable to reconnect properly in login.php
 $goto="";

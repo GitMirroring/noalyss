@@ -150,7 +150,8 @@ class Dossier
                 use_login,
                 use_active,
                 use_admin,
-                ag_dossier
+                ag_dossier,
+                use_auth_method
             from
             ac_users  as ac
             left join    
