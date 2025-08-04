@@ -230,7 +230,7 @@ echo HtmlInput::button_action(_("Fermer"), "$('create_user').style.display='none
 
     </script>
 </div>
-
+<div>
 <?php
 echo '<p>';
 echo HtmlInput::button_action(_("Ajout utilisateur"), "$('create_user').show();","cu");
