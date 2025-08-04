@@ -40,6 +40,7 @@ class Document
     var $f_id;       /*!< fiche.f_id */
     private $counter; /*!< counter for the items ( goods ) */
     var $d_name;    /*!< document name */
+    var $md_type ; /*!< Type of document */
     /*!
      * @brief Constructor
      * \param $p_cn Database connection

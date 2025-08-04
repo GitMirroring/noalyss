@@ -33,7 +33,7 @@ class Fiche_Def_Ref
     var $frd_class_base;   /*!< fiche_def_ref.frd_class_base */
     var $attribut;         /*!< array which containing list of attr */
     /* it is used with dynamic variables */
-
+    var $db; /*!< Database connx */
     function __construct($p_cn,$p_frd_id=-1)
     {
         $this->db=$p_cn;
