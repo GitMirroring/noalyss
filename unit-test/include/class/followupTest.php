@@ -213,5 +213,4 @@ class FollowupTest extends TestCase
         $this->assertTrue( ! empty($a_row->agc_comment_raw) , 'comment raw not saved');
 
         $cn->exec_sql("delete from action_gestion where ag_title like 'phpunit%'");
-    }
-}
+    }}
