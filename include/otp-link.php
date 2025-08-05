@@ -149,6 +149,7 @@ try {
             [$uuid]);
 // if UUID doesn't exist exit
     if ($repository->count() == 0) {
+        echo _("Expiré : vous devez redemander le renvoi de la clef");
         return;
     }
 
