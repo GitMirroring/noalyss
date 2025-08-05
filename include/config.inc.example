@@ -33,7 +33,8 @@ define ("DEBUGNOALYSS",0);
 // Uncomment if you want to activate the possibility to reinitialize
 // password by email
 // defined("RECOVER","1");
-// Uncomment and define if you want to Name of the sender of the email 
+
+// // Uncomment and define if you want to Name of the sender of the email 
 // if you activate the possibility to reinitialize password by email
 // define('ADMIN_WEB', 'www-data@localhost');
 

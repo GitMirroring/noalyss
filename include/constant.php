@@ -65,6 +65,11 @@ if (!defined('NOALYSS_ADMINISTRATOR')) {
 if (!defined("SESSION_KEY")) {
     define("SESSION_KEY", "RtYu0uu");
 }
+
+if ( !defined ('ADMIN_WEB')) {
+    $a=gethostname();
+    define('ADMIN_WEB',"noalyss-no-reply@$a");
+}
 require_once NOALYSS_INCLUDE . '/constant.security.php';
 
 if (strpos($inc_path, ";") != 0) {
