@@ -36,7 +36,10 @@ if (defined('MULTI') && MULTI == 0)
 		$version = $rep->get_value('select val from version');
 
 $http=new HttpInput();
-
+/**
+ * If p_user is set , it means that the user tries to connect, the $_SESSION 
+ * does not exist yet
+ */
 if (  isset ($_POST["p_user"] ) )
 {
     $http=new HttpInput();
@@ -116,6 +119,9 @@ if (  isset ($_POST["p_user"] ) )
 }
 else
 {
+    /**
+     * User has a session
+     */
     $rep=new Database();
 
     /*
@@ -160,6 +166,9 @@ else
                 }
 
                 $otp_send_secret = new Otp_Send_Secret_SQL($rep, $os_id);
+                /**
+                 * second code is valid, so delete it
+                 */
                 if (
                            $vrf_code == $otp_send_secret->get('os_code')
                         || $User->check_otp($vrf_code)
@@ -172,6 +181,7 @@ else
                      // check that backurl is valid
                      $backurl=preg_replace('/^.*\?/','',$backurl);
                      $backurl=NOALYSS_URL."/do.php?$backurl";
+                     $otp_send_secret->delete();
                    }
                      header("Location: $backurl");
                      return;

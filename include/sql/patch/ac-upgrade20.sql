@@ -17,8 +17,7 @@ CREATE TABLE public.otp_send_secret (
 	use_id int4 NOT NULL, -- FK to ac_users
 	os_code varchar(8) NULL,
 	os_valid_time timestamp NOT NULL,
-	CONSTRAINT otp_send_secret_pk PRIMARY KEY (os_id),
-	CONSTRAINT otp_send_secret_unique UNIQUE (use_id)
+	CONSTRAINT otp_send_secret_pk PRIMARY KEY (os_id)
 );
 COMMENT ON TABLE public.otp_send_secret IS 'sent to user for scanning a QRCODE for  FreeOTP
 or digit to connect, depends of ac_users use_auth_method.';

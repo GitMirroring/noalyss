@@ -142,7 +142,7 @@ try {
     $uuid = $http->get('otp');
     $repository = new \Database(0);
 // remove old request  (> 24 hours)
-    $repository->exec_sql("delete from otp_send_secret where os_timestamp < now()-interval '24 hours'");
+    $repository->exec_sql("delete from otp_send_secret where os_timestamp < now()-interval '12 hours'");
 
 // check if UUID exist
     $id = $repository->get_value("select os_id from otp_send_secret where os_request=$1",
@@ -159,13 +159,10 @@ try {
     $secret = $user->get_otp_secret();
 
     // OTP
-    $options = new AuthenticatorOptions;
-    $options->secret_length = 32;
-    $options->algorithm = AuthenticatorInterface::ALGO_SHA512;
-    $options->digits=6;
-    $authenticator = new Authenticator($options);
-    $authenticator->setSecret($secret);
-    $data= $authenticator->getUri(label:"noalyss:".$user->getEmail(),issuer:"noalyss.eu");
+
+    $authenticator = new \Noalyss\OTP();
+    $authenticator->get_authenticator()->setSecret($secret);
+    $data= $authenticator->get_authenticator()->getUri(label:"noalyss:".$user->getEmail(),issuer:"noalyss.eu");
 // load secret for this id
 //echo "use with php -S localhost:5000 puis ouvrir index.html ";
     $writer = new PngWriter();

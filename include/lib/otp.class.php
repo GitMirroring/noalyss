@@ -69,5 +69,14 @@ class OTP {
         $this->authenticator->setSecret($secret);
         return $this->authenticator->code();
     }
-    
+    public function get_authenticator() {
+        return $this->authenticator;
+    }
+
+    public function set_authenticator($authenticator) {
+        $this->authenticator = $authenticator;
+        return $this;
+    }
+
+
 }
