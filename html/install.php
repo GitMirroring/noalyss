@@ -382,10 +382,10 @@ if (!defined('PHP_VERSION_ID')) {
    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 ));
 }
 
-if ( PHP_VERSION_ID < 80000)  {
-    echo $g_failed. " ".phpversion()." ". _("Version PHP trop basse , minimum 8.0");
+if ( PHP_VERSION_ID < 82000)  {
+    echo $g_failed. " ".phpversion()." ". _("Version PHP trop basse , minimum 8.2");
     echo '<p style="color:grey;margin-left:20px">';
-    printf(_("Cette version nécessite au moins une version supérieure ou égale à 8.0"));
+    printf(_("Cette version nécessite au moins une version supérieure ou égale à 8.2"));
     echo '</p>';
     $fatal++;
 } else {

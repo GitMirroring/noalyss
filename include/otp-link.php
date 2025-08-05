@@ -204,6 +204,7 @@ try {
     if ( DEBUGNOALYSS > 1) { echo "code attendu",$authenticator->code();}
     echo '</p>';
     
+    
     printf('<img src="data:image/png;base64,%s">', base64_encode($result->getString()));
     
 } catch (Exception $exc) {
