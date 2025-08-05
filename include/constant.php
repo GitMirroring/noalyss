@@ -25,7 +25,7 @@
 
 global $version_noalyss;
 // version 
-define('NOALYSS_VERSION', 9300 );
+define('NOALYSS_VERSION', 9312 );
 
 // Database schema version 
 define("DBVERSION", 203);
@@ -34,7 +34,7 @@ define("DBVERSION", 203);
 define("MONO_DATABASE", 25);
 
 // Version schema of account_repository database
-define("DBVERSIONREPO", 20);
+define("DBVERSIONREPO", 21);
 /*
  * Include path
  */
