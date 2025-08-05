@@ -142,8 +142,8 @@ form {
         Rafraichissez la page pour recevoir un nouveau code.
     </p>
     <FORM method="post" action="login.php"  >
-        <input type="text" placeholder="999999" id="vrf_code" name="vrf_code" autocomplete="off">
-        <input type="hidden" name="auth" value="to_validate">
+        <input type="text" placeholder="999999" id="vrf_code" name="vrf_code" autocomplete="off" autofocus>
+        <input type="hidden" name="auth" value="to_validate" >
         <?=$str?>
         <input type="hidden" name="backurl" value="<?=$url?>">
         <p>

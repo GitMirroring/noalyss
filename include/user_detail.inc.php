@@ -126,8 +126,8 @@ $it_pass->value="";
                 $auth_method=new ISelect('auth_method');
                 $auth_method->value=array(
                     array('value'=>0,'label'=>_('Aucune')),
-                    array('value'=>1,'label'=>_('email + OTP')),
-                    array('value'=>2,'label'=>_('OTP')),
+                    array('value'=>1,'label'=>_('Mot de passe et code par courriel (ou TOTP) ')),
+                    array('value'=>2,'label'=>_('Mot de passe et TOTP')),
                 );
                 $auth_method->selected=$UserChange->authent_method;
                 echo $auth_method->input();
@@ -144,7 +144,7 @@ $it_pass->value="";
                         </span>
                         <span style="display:block">
                             <input type="checkbox" name="email_otp" value="1"><?=_("envoyer email pour 2FA avec OTP ")?>
-                            <span class="text-muted"><?=_("Un email sera envoyé avec un lien pour initialiser 2FA avec OTP")?>>
+                            <span class="text-muted"> <?=_("Un email sera envoyé avec un lien pour initialiser 2FA avec OTP")?>
                         </span>
                 
             </td>

@@ -172,6 +172,12 @@ else if ($sbaction == "delete")
     }
     if ( $code != $ctl_code) {
         echo_warning (_("Code invalide, effacement refusé"));
+        require_once NOALYSS_INCLUDE.'/user_detail.inc.php';
+        return;
+    }
+    if ($uid == 1) {
+        echo_warning(_("Administrateur ne peut pas être effacé"));
+         require_once NOALYSS_INCLUDE.'/user_detail.inc.php';
         return;
     }
     $cn = new Database();
@@ -301,7 +307,7 @@ if ( !empty ($a_user) )
     echo '<th>'.$header->get_header(2).'</th>';
     echo '<th>'.$header->get_header(4).'</th>';
 	echo "<th>"._('Type')."</th>";
-    echo '<th>'.$header->get_header(2).'</th>';
+    echo '<th>'.$header->get_header(3).'</th>';
     echo '</tr>';
     $a_auth=[0=>_("Mot de passe"),1=>'Email et OTP',2=>'OTP'];
     

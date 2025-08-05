@@ -1966,13 +1966,13 @@ Voici votre code secret pour NOALYSS : $code
             $uuid= guidv4();
             $repository=new \Database();
             // remove old for this user 
-            $repository->exec_sql("delete from otp_send_secret where use_id=$1"
+            $repository->exec_sql("delete from otp_send_secret where use_id=$1 and os_code is not null"
                     ,[$this->id]);
             // remove also old one 
             $repository->exec_sql("delete from otp_send_secret where os_valid_time < now()");
            $now=new \DateTime();
            $valid=new \DateTime();
-           $valid->modify('+20 minutes');
+           $valid->modify('+10 minutes');
            
            $otp_send_secret=new Otp_Send_Secret_SQL($repository);
            $otp_send_secret->set("use_id",$this->id)
@@ -2000,6 +2000,9 @@ Voici votre code secret pour NOALYSS : $code
         $noalyss_url = NOALYSS_URL;
         $uuid = guidv4();
         $id = $this->getId();
+        $valid_time=new \DateTime();
+        $valid_time->add(new \DateInterval('PT12H'));
+        $str_time=$valid_time->format('d-m-Y H:i');
         /**
          * save in DB first
          */
@@ -2008,7 +2011,7 @@ Voici votre code secret pour NOALYSS : $code
     Afin de pouvoir utiliser la double authentification avec 2FA: OTP, pourriez-vous
     suivre ce lien et scanner le QRCode avec votre application android freeOTP ou Google Authenticator.
                
-    Ce lien ne sera actif que 12 heures.
+    Ce lien ne sera actif que 12 heures et expirera le {$str_time}.
    
    
    {$noalyss_url}/index.php?otp={$uuid}
@@ -2022,12 +2025,11 @@ Bien cordialement,
         try {
             $repository = new \Database();
             // remove old for this user 
-            $repository->exec_sql("delete from otp_send_secret where use_id=$1"
+            $repository->exec_sql("delete from otp_send_secret where use_id=$1 and os_code is null"
                     ,[$this->id]);
             // remove also old one 
             $repository->exec_sql("delete from otp_send_secret where os_valid_time < now()");
-            $valid_time=new \DateTime();
-            $valid_time->add(new \DateInterval('PT12H'));
+           
             $otp_send_secret_sql = new \Otp_Send_Secret_SQL($repository);
             $otp_send_secret_sql->set('use_id', $id)
                     ->set('os_valid_time',$valid_time->format('d-m-Y H:i'))

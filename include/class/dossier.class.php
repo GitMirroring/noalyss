@@ -160,12 +160,10 @@ class Dossier
                   from ac_dossier as ds
                     join  jnt_use_dos as jt on (jt.dos_id=ds.dos_id)
                     group by jt.use_id) as dossier_name on (jt_use_id=ac.use_id)
-            where
-            use_login!=$1
             $sql
             ";
 
-        $res=$this->cn->get_array($sql, array(NOALYSS_ADMINISTRATOR));
+        $res=$this->cn->get_array($sql);
         return $res;
     }
 
