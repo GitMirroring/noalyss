@@ -50,7 +50,7 @@ class OTP {
     }
     /**
      * @brief build a secret key and returns it
-     * @return string random string of 32 
+     * @return string random string of 32 char
      */
     function build_secret() {
  
@@ -61,7 +61,7 @@ class OTP {
    
     /**
      * @brief compute a code for auth. for the user passed in parameter
-     * @param $user (\Noalyss_User) 
+     * @param $secret (string)  secret stored in AC_USER
      */
     function compute_code($secret)
     {
