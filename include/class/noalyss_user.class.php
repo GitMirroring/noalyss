@@ -1886,14 +1886,19 @@ class Noalyss_User
         return $result;
     }
     /**
-     * @brief generate OTP 
+     * @brief generate OTP secret to store in AC_USER.USE_OTP_SECRET
      */
     function generate_otp()
     {
        $otp=new \Noalyss\OTP();
        $this->otp_secret=$otp->build_secret();
     }
-
+    /**
+     * @brief retrieve authent_method
+     *   - 0 password
+     *   - 1 password + code by email
+     *   - 2 password + OTP from application
+     */
     public function get_authent_method() {
         return $this->authent_method;
     }
@@ -1999,7 +2004,6 @@ Voici votre code secret pour NOALYSS : $code
         $mail->set_subject(_("NOALYSS : Double authentification lien pour 2FA: OTP"));
         $noalyss_url = NOALYSS_URL;
         $uuid = guidv4();
-        $id = $this->getId();
         $valid_time=new \DateTime();
         $valid_time->add(new \DateInterval('PT12H'));
         $str_time=$valid_time->format('d-m-Y H:i');
@@ -2011,7 +2015,7 @@ Voici votre code secret pour NOALYSS : $code
     Afin de pouvoir utiliser la double authentification avec 2FA: OTP, pourriez-vous
     suivre ce lien et scanner le QRCode avec votre application android freeOTP ou Google Authenticator.
                
-    Ce lien ne sera actif que 12 heures et expirera le {$str_time}.
+    Ce lien expirera le {$str_time}.
    
    
    {$noalyss_url}/index.php?otp={$uuid}
@@ -2031,7 +2035,7 @@ Bien cordialement,
             $repository->exec_sql("delete from otp_send_secret where os_valid_time < now()");
            
             $otp_send_secret_sql = new \Otp_Send_Secret_SQL($repository);
-            $otp_send_secret_sql->set('use_id', $id)
+            $otp_send_secret_sql->set('use_id', $this->id)
                     ->set('os_valid_time',$valid_time->format('d-m-Y H:i'))
                     ->set('os_request', $uuid);
             
