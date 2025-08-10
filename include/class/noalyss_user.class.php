@@ -2063,13 +2063,15 @@ Voici votre code secret pour NOALYSS : $code
     }
      /**
      * @brief send an email with link to the user
+     * @param $base_url (string) http url to scan the QRCode, the url in the 
+     * mail will be {$base_url}/index.php?otp={$uuid}
      */
-    function send_link_otp() {
+    function send_link_otp($base_url=null) {
         $mail = new \Sendmail();
         $mail->set_from(ADMIN_WEB);
         $mail->mailto($this->getEmail());
         $mail->set_subject(_("NOALYSS : Double authentification lien pour 2FA: OTP"));
-        $noalyss_url = NOALYSS_URL;
+        $noalyss_url = $base_url??NOALYSS_URL;
         $uuid = guidv4();
         $valid_time=new \DateTime();
         $valid_time->add(new \DateInterval('PT12H'));

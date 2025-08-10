@@ -376,7 +376,7 @@ if (!defined("DEFAULT_SERVER_VIDEO_CONF")) {
 }
 
 define ("VATCHECK_URL","https://ec.europa.eu/taxation_customs/vies/rest-api/");
-
+    
 /**
  * @brief load automatically class
  *
