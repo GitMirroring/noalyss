@@ -39,7 +39,7 @@ class Noalyss_User
     var $db; //!< database connx to the folder NOT repository
     var $admin; //!< is or is not admin
     var $valid; //!< is or is not valid
-    var $first_name;
+    var $first_name; 
     var $last_name ; //!< user's last_name
     var $name;
     var $active; //!< 1 active , 0 disables
@@ -51,16 +51,25 @@ class Noalyss_User
     var $theme ; //!< user's  CSS Theme
     var $authent_method; //!< authentication method use for this user
     private $otp_secret; //!< string use as secret for OTP
+    private $repository; //!< account_repository (\Database )
     /**
      * @brief Create an user , load an existing one or if p_id == -1 search for the connected user. To have an empty
      * user, give a p_id smaller than -1 or zero.
      *
      * @param $p_cn DatabaseCore connection
      * @param $p_id if -1 then load the current user, > 0 load the user , = 0 (or < -1 ) means an empty user
+     * \param $repository ( \Database default null)  database 
+     * to repository, if null  is given the database will be defined in config.inc.php
      */
-    function __construct($p_cn, $p_id=-1)
+    function __construct($p_cn, $p_id=-1,$repository=null)
     {
         $this->db=$p_cn;
+        if ( $repository == null ) {
+            $this->repository=new Database(0);
+        } else {
+            $this->repository=$repository;
+        }
+        
         // if p_id is not set then check the connected user
         if ($p_id==-1)
         {
@@ -73,15 +82,32 @@ class Noalyss_User
             $this->load();
         }
     }
-
     /**
+     * @brief get the repository
+     * @return Database
+     */
+    public function get_repository():\Database {
+        return $this->repository;
+    }
+    /**
+     * @brief set the repository
+     * @return Database
+     */
+    public function set_repository(Database $repository) {
+        $this->repository = $repository;
+        return $this;
+    }
+
+        /**
      * @brief   put user_login into Postgres config (session), it can be used for tracking users activities
       * @return void
      */
     public function  set_session_var()
     {
         $this->db->exec_sql(sprintf("select set_config('noalyss.user_login','%s',false)",
-        Database::escape_string($_SESSION[SESSION_KEY.'g_user'])));
+            Database::escape_string($_SESSION[SESSION_KEY.'g_user'])));
+        $this->repository->exec_sql(sprintf("select set_config('noalyss.user_login','%s',false)",
+            Database::escape_string($_SESSION[SESSION_KEY.'g_user'])));
 
     }
     public function __toString(): string
@@ -93,8 +119,8 @@ class Noalyss_User
      */
     function can_connect()
     {
-       $cn=new \Database();
-       $can_connect=$cn->get_value("select count(*) from ac_users 
+       
+       $can_connect=$this->repository->get_value("select count(*) from ac_users 
 				   where use_active=1 and
 				   use_login=$1 and use_pass=$2",
                [$this->login,$this->password]);
@@ -144,19 +170,22 @@ class Noalyss_User
         $this->id=-1;
         $this->lang=(isset($_SESSION[SESSION_KEY.'g_lang']))?$_SESSION[SESSION_KEY.'g_lang']:'fr_FR.utf8';
         $this->access_mode=$_SESSION[SESSION_KEY."access_mode"];
-        $cn=new Database();
+        
 
         // share user login with the repository
-        $cn->exec_sql(sprintf("select set_config('noalyss.user_login','%s',false)",
+        $this->repository->exec_sql(sprintf("select set_config('noalyss.user_login','%s',false)",
             Database::escape_string($_SESSION[SESSION_KEY.'g_user'])));
         
         if ($this->can_connect() == 0 || $this->load()==-1  )
         {
            echo '<h2 class="error">'._('Utilisateur ou mot de passe incorrect').'</h2>';
            $sql="insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
-           $cn->exec_sql($sql,
-                        array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], "DISCON",
-                            $_SERVER['REQUEST_URI'], 'FAIL'));
+           $server_remote=$_SERVER['REMOTE_ADDR']?? "cmd-line";
+           $request_uri=$_SERVER['REQUEST_URI']??"REQUEST-URI";
+           
+           $this->repository->exec_sql($sql,
+                        array($_SESSION[SESSION_KEY.'g_user'],$server_remote, "DISCON",
+                          $request_uri  , 'FAIL'));
            $this->clean_session();
            redirect('logout.php', 1);
            exit();
@@ -383,8 +412,7 @@ class Noalyss_User
                             use_auth_method,
                             use_otp_secret
                         from ac_users ";
-        $cn=new Database();
-        $Res=$cn->exec_sql($sql.$sql_cond, $sql_array);
+        $Res=$this->repository->exec_sql($sql.$sql_cond, $sql_array);
         if (($Max=Database::num_row($Res))==0)
             return -1;
         $row=Database::fetch_array($Res, 0);
@@ -411,8 +439,7 @@ class Noalyss_User
              ,use_active=$3,use_admin=$4,use_pass=$5 ,use_email = $7 
              , use_auth_method=$8,use_otp_secret=$9
                 where use_id=$6";
-        $cn=new Database();
-        $Res=$cn->exec_sql($Sql,
+        $Res=$this->repository->exec_sql($Sql,
                 array($this->first_name //1
                 , $this->last_name // 2
                 , $this->active //3 
@@ -433,8 +460,7 @@ class Noalyss_User
                         use_admin, use_pass, use_email)
                             VALUES ($1, $2, $3, $4, $5, $6, $7) returning use_id";
 
-        $cn=new Database();
-        $this->id=$cn->get_value($Sql,
+        $this->id=$this->repository->get_value($Sql,
                 array($this->first_name, $this->last_name, $this->login, 1, $this->admin, 
                     $this->password, $this->email));
     }
@@ -452,14 +478,13 @@ class Noalyss_User
         $res=0;
         $pass5=$this->password;
 
-        $cn=new Database();
         $sql="select ac_users.use_login,ac_users.use_active, ac_users.use_pass,
              use_admin,use_first_name,use_name
              from ac_users
              where ac_users.use_id=$1 
              and ac_users.use_active=1
              and ac_users.use_pass=$2";
-        $ret=$cn->exec_sql($sql, array($this->id, $pass5));
+        $ret=$this->repository->exec_sql($sql, array($this->id, $pass5));
         $res=Database::num_row($ret);
         if ($res>0)
         {
@@ -478,7 +503,7 @@ class Noalyss_User
 
         if ($res==0 || $this->can_connect() == 0)
         {
-            $cn->exec_sql($sql,
+            $this->repository->exec_sql($sql,
                     array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"],
                         $from, $_SERVER['REQUEST_URI'], 'FAIL'));
             if (!$silent)
@@ -494,7 +519,7 @@ class Noalyss_User
         {
             if ($from=='LOGIN' || $from=='PORTAL') 
             {
-                $cn->exec_sql($sql,
+                $this->repository->exec_sql($sql,
                         array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], $from,
                             $_SERVER['REQUEST_URI'], 'SUCCESS'));
             }
@@ -520,13 +545,12 @@ class Noalyss_User
             $p_dossier=dossier::id();
         if ($this->admin==1)
             return 'R';
-        $cn=new Database();
 
         $sql="select 'R' from jnt_use_dos where use_id=$1 and dos_id=$2";
 
-        $res=$cn->get_value($sql, array($this->id, $p_dossier));
+        $res=$this->repository->get_value($sql, array($this->id, $p_dossier));
 
-        if ($cn->get_affected()==0)
+        if ($this->repository->get_affected()==0)
             return 'X';
         return $res;
     }
@@ -539,22 +563,21 @@ class Noalyss_User
     function set_folder_access($db_id, $priv)
     {
 
-        $cn=new Database();
         if ($priv)
         {
             // the access is granted
-            $jnt=$cn->get_value("select jnt_id from jnt_use_dos where dos_id=$1 and use_id=$2", array($db_id, $this->id));
+            $jnt=$this->repository->get_value("select jnt_id from jnt_use_dos where dos_id=$1 and use_id=$2", array($db_id, $this->id));
 
-            if ($cn->size()==0)
+            if ($this->repository->size()==0)
             {
 
-                $Res=$cn->exec_sql("insert into jnt_use_dos(dos_id,use_id) values($1,$2)", array($db_id, $this->id));
+                $Res=$this->repository->exec_sql("insert into jnt_use_dos(dos_id,use_id) values($1,$2)", array($db_id, $this->id));
             }
         }
         else
         {
             // Access is revoked
-            $cn->exec_sql('delete from jnt_use_dos where use_id  = $1 and dos_id = $2 ', array($this->id, $db_id));
+            $this->repository->exec_sql('delete from jnt_use_dos where use_id  = $1 and dos_id = $2 ', array($this->id, $db_id));
         }
     }
 
@@ -701,8 +724,7 @@ class Noalyss_User
         $sql="select count(*) from ac_users where use_login=$1
              and use_active=1 and use_admin=1 and use_pass=$2 ";
 
-        $cn=new Database();
-        $this->admin=$cn->get_value($sql, array($this->login,$pass5));
+        $this->admin=$this->repository->get_value($sql, array($this->login,$pass5));
         return $this->admin;
     }
 
@@ -778,20 +800,19 @@ class Noalyss_User
      */
     function save_global_preference($key, $value)
     {
-        $repo=new Database();
-        $count=$repo->get_value("select count(*)
+        $count=$this->repository->get_value("select count(*)
 	    from
 	    user_global_pref
 	    where
 	    parameter_type=$1 and user_id=$2", array($key, $this->login));
         if ($count==1)
         {
-            $repo->exec_sql("update user_global_pref set parameter_value=$1
+            $this->repository->exec_sql("update user_global_pref set parameter_value=$1
 		where parameter_type=$2 and user_id=$3", array($value, $key, $this->login));
         }
         elseif ($count==0)
         {
-            $repo->exec_sql("insert into user_global_pref(user_id,parameter_type,parameter_value)
+            $this->repository->exec_sql("insert into user_global_pref(user_id,parameter_type,parameter_value)
 		values($1,$2,$3)", array($this->login, $key, $value));
         }
     }
@@ -811,8 +832,7 @@ class Noalyss_User
             $type=$row['parameter_type'];
             $l_array[$type]=$row['parameter_value'];
         }
-        $repo=new Database();
-        $a_global_pref=$repo->get_array("select parameter_type,parameter_value from user_global_pref 
+        $a_global_pref=$this->repository->get_array("select parameter_type,parameter_value from user_global_pref 
 									where 
 									upper(user_id) = upper($1)", [$this->login]);
         $nb_global=count($a_global_pref);
@@ -878,9 +898,9 @@ class Noalyss_User
         {
             if (isset($audit)&&$audit==true)
             {
-                $cn=new Database();
+                
                 $sql="insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
-                $cn->exec_sql($sql,
+                $this->repository->exec_sql($sql,
                         array($_SESSION[SESSION_KEY.'g_user'], $_SERVER["REMOTE_ADDR"], $p_action_id, $_SERVER['REQUEST_URI'],
                             'FAIL'));
             }
@@ -901,9 +921,8 @@ class Noalyss_User
      */
     function load_global_pref()
     {
-        $cn=new Database();
         // Load everything in an array
-        $Res=$cn->exec_sql("select parameter_type,parameter_value from
+        $Res=$this->repository->exec_sql("select parameter_type,parameter_value from
                             user_global_pref
                             where user_id=$1", [$this->login]);
         $Max=Database::num_row($Res);
@@ -963,26 +982,25 @@ class Noalyss_User
             'csv_encoding'=>'utf8',
             'first_week_day'=>1
         );
-        $cn=new Database();
         $sql="insert into user_global_pref(user_id,parameter_type,parameter_value)
              values ($1,$2,$3)";
         if ($p_type=="")
         {
             foreach ($default_parameter as $name=> $value)
             {
-                $cn->exec_sql($sql, array($this->login, $name, $value));
+                $this->repository->exec_sql($sql, array($this->login, $name, $value));
             }
         }
         else
         {
             $value=($p_value=="")?$default_parameter[$p_type]:$p_value;
-            if ( $cn->get_value("select count(*) from user_global_pref where user_id=$1 and parameter_type=$2",
+            if ( $this->repository->get_value("select count(*) from user_global_pref where user_id=$1 and parameter_type=$2",
                 array($this->login,$p_type)) == 1)
             {
-                $cn->exec_sql("update user_global_pref set parameter_value=$1 where user_id=$2 and parameter_type=$3",
+                $this->repository->exec_sql("update user_global_pref set parameter_value=$1 where user_id=$2 and parameter_type=$3",
                         array($value,$this->login,$p_type));
             } else {
-                $cn->exec_sql($sql, array($this->login, $p_type, $value));
+                $this->repository->exec_sql($sql, array($this->login, $p_type, $value));
             }
         }
     }
@@ -1005,12 +1023,11 @@ class Noalyss_User
             'csv_encoding'=>'utf8',
             'first_week_day'=>1
         );
-        $cn=new Database();
         $Sql="update user_global_pref set parameter_value=$1
              where parameter_type=$2 and
              user_id=$3";
         $value=($p_value=="")?$default_parameter[$p_type]:$p_value;
-        $cn->exec_sql($Sql, array($value, $p_type, $this->login));
+        $this->repository->exec_sql($Sql, array($value, $p_type, $this->login));
     }
 
 //end function
@@ -1073,12 +1090,12 @@ class Noalyss_User
      */
     function check_print($p_action)
     {
-        global $audit, $cn;
+        global $audit;
         $this->audit('AUDIT', $p_action);
         if ($this->Admin()==1)
             return 1;
 
-        $res=$cn->get_value("select count(*) from profile_menu
+        $res=$this->db->get_value("select count(*) from profile_menu
 			join profile_user using (p_id)
 			where user_name=$1 and me_code=$2 ", array($this->login, $p_action));
         return $res;
@@ -1166,7 +1183,9 @@ class Noalyss_User
 
     /**
      * \brief return an array with all the active users who can access 
-     *  $p_dossier including the global admin. 
+     *  $p_dossier including the global admin. The list concerns the user
+     * in the repository of the "domain" defined in config.inc.php
+     * 
      *  The user must be activated
      *
      * \param $p_dossier dossier
@@ -1176,10 +1195,13 @@ class Noalyss_User
      *    - use_login (login of the user)
      *    - use_name
      *    - use_first_name
-     *
+     * \param $db_repository ( \Database default null)  database 
+     * to repository, if null  is given the database will be defined in config.inc.php
      * \exception throw an exception if nobody can access
      */
-    static function get_list($p_dossier)
+    static function get_list($p_dossier,
+            $db_repository = null
+            )
     {
         $sql="select distinct use_id,use_login,use_first_name,use_name from ac_users
              left outer join  jnt_use_dos using (use_id)
@@ -1187,10 +1209,17 @@ class Noalyss_User
               (dos_id=$1 and use_active=1) or (use_active=1 and use_admin=1)
               order by use_login,use_name";
 
-        $repo=new Database();
-        $array=$repo->get_array($sql, array($p_dossier));
+        // connect to the repository
+        if ( $db_repository == null ) {
+            $repo_cnx=new Database(0);
+        } else {
+            $repo_cnx=$db_repository;
+        }
+        $array=$repo_cnx->get_array($sql, array($p_dossier));
         if ($repo->size()==0)
-            throw new Exception('Error inaccessible folder');
+        {
+            throw new \Exception('noalyss_user.get_list error inaccessible folders',1186);
+        }
         return $array;
     }
 
@@ -1226,9 +1255,9 @@ class Noalyss_User
         $this->Admin();
         if ($this->admin==1||$this->is_local_admin($p_dossier_id)==1)
             return 'L';
-        $cn=new Database();
+        
 
-        $dossier=$cn->get_value("select 'R' from jnt_use_dos where dos_id=$1 and use_id=$2",
+        $dossier=$this->repository->get_value("select 'R' from jnt_use_dos where dos_id=$1 and use_id=$2",
                 array($p_dossier_id, $this->id));
         $dossier=($dossier=='')?'X':$dossier;
         if ($dossier=='X')
@@ -1337,13 +1366,13 @@ class Noalyss_User
      */
     function get_available_folder($p_filter="")
     {
-        $cn=new Database();
+        $cn=$this->repository;
         $filter="";
         if ($this->admin==0)
         {
             // show only available folders
             // if user is not an admin
-            $Res=$cn->exec_sql("select 
+            $Res=$this->repository->exec_sql("select 
     						distinct dos_id,dos_name,dos_description 
                             from ac_users
 								natural join jnt_use_dos
@@ -1356,7 +1385,7 @@ class Noalyss_User
         }
         else
         {
-            $Res=$cn->exec_sql("select 
+            $Res=$this->repository->exec_sql("select 
     			distinct dos_id,dos_name,dos_description from ac_dossier
              where   
                    dos_name  ilike '%' || $1|| '%' or dos_description ilike '%' || $1 || '%' 
@@ -1375,15 +1404,23 @@ class Noalyss_User
     }
 
     /**
-     * @brief Audit action from the administration menu
+     * @brief Audit action from the administration menu. 
+     * Connect to the repository of the domain defined in config.inc.php
      * @param $p_module description of the action
+     * @param $db_repository ( \Database default null)  database 
+     * to repository, if null  is given the database will be defined in config.inc.php
      */
-    static function audit_admin($p_module)
+    static function audit_admin($p_module,$db_repository=null)
     {
-        $cn=new Database();
+        // connect to the repository
+        if ( $db_repository == null ) {
+            $repo_cnx=new Database(0);
+        } else {
+            $repo_cnx=$db_repository;
+        }
         $sql="insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
 
-        $cn->exec_sql($sql,
+        $repo_cnx->exec_sql($sql,
                 array(
                     $_SESSION[SESSION_KEY.'g_user'],
                     $_SERVER["REMOTE_ADDR"],
@@ -1395,18 +1432,20 @@ class Noalyss_User
     function audit($action='AUDIT', $p_module="")
     {
         global $audit;
+        $http=new \HttpInput();
         if ($audit)
         {
             if ($p_module==""&&isset($_REQUEST['ac']))
             {
                 $p_module=$_REQUEST['ac'];
             }
-            $cn=new Database();
-            if (isset($_REQUEST['gDossier']))
-                $p_module.=" dossier : ".$_REQUEST['gDossier'];
+            $dossier=$http->request("gDossier","string",0);
+            if ( $dossier != 0)
+                $p_module.=" dossier : ".$dossier;
+            
             $sql="insert into audit_connect (ac_user,ac_ip,ac_module,ac_url,ac_state) values ($1,$2,$3,$4,$5)";
 
-            $cn->exec_sql($sql,
+            $this->repository->exec_sql($sql,
                     array(
                         $_SESSION[SESSION_KEY.'g_user'],
                         $_SERVER["REMOTE_ADDR"],
@@ -1640,10 +1679,10 @@ class Noalyss_User
     {
         if ($p_pass1==$p_pass2 && count(check_password_strength($p_pass1)['msg'])==0)
         {
-            $repo=new Database();
+            
             $l_pass=md5($p_pass1);
             $this->setPassword($l_pass);
-            $repo->exec_sql("update ac_users set use_pass=$1 where use_login=$2",
+            $this->repository->exec_sql("update ac_users set use_pass=$1 where use_login=$2",
                     array($l_pass, $this->login));
             return true;
         }
@@ -1660,21 +1699,28 @@ class Noalyss_User
      */
     function save_email($p_email)
     {
-        $repo=new Database();
-        $repo->exec_sql("update ac_users set use_email=$1 where use_login=$2",
+        $this->repository->exec_sql("update ac_users set use_email=$1 where use_login=$2",
                 array($p_email, $_SESSION[SESSION_KEY.'g_user']));
     }
 
     /**
      *@brief  Remove a user and all his privileges
      * So it cannot connect anymore and all his privileges are removed from
-     * the dossier
+     * the dossier.
+     * @param $p_login (String) login
+     * @param $p_dossier (int) dossier id
+     * @param $db_repository ( \Database default null)  database 
+     * to repository, if null  is given the database will be defined in config.inc.php
      * 
      */
-    static function revoke_access($p_login, $p_dossier)
+    static function revoke_access($p_login, $p_dossier,$db_repository=null)
     {
         // connect to the repository
-        $repo_cnx=new Database();
+        if ( $db_repository == null ) {
+            $repo_cnx=new Database(0);
+        } else {
+            $repo_cnx=$db_repository;
+        }
 
         // Retrieve the user
         $user=$repo_cnx->get_array('select use_id,use_login from ac_users where use_login=$1', array($p_login));
@@ -1693,11 +1739,19 @@ class Noalyss_User
 
     /**
      * @brief Grant access to folder, grant administrator profile , all the ledgers and all the action
-     * 
+      * @param $p_login (String) login
+     * @param $p_dossier (int) dossier id
+     * @param $db_repository ( \Database default null)  database 
+     * to repository, if null  is given the database will be defined in config.inc.php
      */
-    static function grant_admin_access($p_login, $p_dossier)
+    static function grant_admin_access($p_login, $p_dossier,$db_repository=null)
     {
-        $repo_cnx=new Database();
+       // connect to the repository
+        if ( $db_repository == null ) {
+            $repo_cnx=new Database(0);
+        } else {
+            $repo_cnx=$db_repository;
+        }
         $user=$repo_cnx->get_array("select use_id,use_login
                                 from ac_users
                                 where use_login=$1", array($p_login));
@@ -1729,18 +1783,29 @@ class Noalyss_User
         $cn_dossier->exec_sql("insert into user_sec_jrn(uj_login,uj_jrn_id,uj_priv)"
                 ." select $1,jrn_def_id,'W' from jrn_def", array($p_login));
     }
-
-    static function remove_inexistant_user($p_dossier)
+    /**
+     * @brief cleansing : remove inexistant user
+     * @param $p_dossier (int) dossier id
+     * @param $db_repository ( \Database default null)  database 
+     * to repository, if null  is given the database will be defined in config.inc.php
+     * @return bool : true if success , false if no change
+     */
+    static function remove_inexistant_user($p_dossier,$db_repository=null)
     {
-        $cnx_repo=new Database();
+        // connect to the repository
+        if ( $db_repository == null ) {
+            $cnx_repo=new Database(0);
+        } else {
+            $cnx_repo=$db_repository;
+        }
         $name=$cnx_repo->format_name($p_dossier, 'dos');
         if ($cnx_repo->exist_database($name)==0)
-            return;
+            return false;
         $cnx_dossier=new Database($p_dossier);
         if ($cnx_dossier->exist_table('profile_user'))
             $a_user=$cnx_dossier->get_array('select user_name from profile_user');
         else
-            return;
+            return false;
 
         if (!$a_user)
             return;
@@ -1761,6 +1826,7 @@ class Noalyss_User
                             array($a_user[$i]['user_name']));
             }
         }
+        return true;
     }
 
     /**
@@ -1841,10 +1907,10 @@ class Noalyss_User
      */
     function get_first_week_day()
     {
-        $repocn=new Database();
-        $result=$repocn->get_value("select parameter_value from user_global_pref where parameter_type=$1 and user_id=$2 ",
+        
+        $result=$this->repository->get_value("select parameter_value from user_global_pref where parameter_type=$1 and user_id=$2 ",
                 array("first_week_day", $this->login));
-        if ($repocn->count()==0)
+        if ($this->repository->count()==0)
         {
             $this->save_global_preference("first_week_day", 1);
             return 1;
@@ -1872,13 +1938,15 @@ class Noalyss_User
      * by default , 0 is saved in ACCOUNT_REPOSITORY
      * @see ITva_Popup::set_vat_code()
      * @see ITva_Popup
+     * 
      */
     function get_vat_code_preference():int
     {
-        $repocn=new Database();
-        $result=$repocn->get_value("select parameter_value from user_global_pref where parameter_type=$1 and user_id=$2 ",
+        
+        
+        $result=$this->repository->get_value("select parameter_value from user_global_pref where parameter_type=$1 and user_id=$2 ",
             array("vat_code", $this->login));
-        if ($repocn->count()==0)
+        if ($this->repository->count()==0)
         {
             $this->save_global_preference("vat_code", 0);
             return 0;
@@ -1969,17 +2037,16 @@ Voici votre code secret pour NOALYSS : $code
 ";
         try {
             $uuid= guidv4();
-            $repository=new \Database();
             // remove old for this user 
-            $repository->exec_sql("delete from otp_send_secret where use_id=$1 and os_code is not null"
+            $this->repository->exec_sql("delete from otp_send_secret where use_id=$1 and os_code is not null"
                     ,[$this->id]);
             // remove also old one 
-            $repository->exec_sql("delete from otp_send_secret where os_valid_time < now()");
+            $this->repository->exec_sql("delete from otp_send_secret where os_valid_time < now()");
            $now=new \DateTime();
            $valid=new \DateTime();
            $valid->modify('+10 minutes');
            
-           $otp_send_secret=new Otp_Send_Secret_SQL($repository);
+           $otp_send_secret=new Otp_Send_Secret_SQL($this->repository);
            $otp_send_secret->set("use_id",$this->id)
                    ->set('os_request',$uuid)
                    ->set("os_code",$code)
@@ -2027,14 +2094,14 @@ Bien cordialement,
 
 ";
         try {
-            $repository = new \Database();
+            
             // remove old for this user 
-            $repository->exec_sql("delete from otp_send_secret where use_id=$1 and os_code is null"
+            $this->repository->exec_sql("delete from otp_send_secret where use_id=$1 and os_code is null"
                     ,[$this->id]);
             // remove also old one 
-            $repository->exec_sql("delete from otp_send_secret where os_valid_time < now()");
+            $this->repository->exec_sql("delete from otp_send_secret where os_valid_time < now()");
            
-            $otp_send_secret_sql = new \Otp_Send_Secret_SQL($repository);
+            $otp_send_secret_sql = new \Otp_Send_Secret_SQL($this->repository);
             $otp_send_secret_sql->set('use_id', $this->id)
                     ->set('os_valid_time',$valid_time->format('d-m-Y H:i'))
                     ->set('os_request', $uuid);

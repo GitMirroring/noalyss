@@ -39,5 +39,7 @@ $_SESSION[SESSION_KEY.'csv_encoding']='utf8';
 $_SESSION[SESSION_KEY.'access_mode']='PC';
 $g_user=new Noalyss_user($g_connection);
 $_ENV['TMP']="/tmp/";
+$_SERVER["REMOTE_ADDR"]="cmd";
+$_SERVER['REQUEST_URI']="cmd";
 
 require_once __DIR__.'/facility.class.php';

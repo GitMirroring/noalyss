@@ -198,6 +198,7 @@ class DocumentTest extends TestCase {
     /**
      * @testdox Generate Document::generate(), Document::parseDocument(),Document::replace(); require  unoconv -l in another session
      * @covers Document::generate(), Document::parseDocument(),Document::replace();
+     * @backupGlobals disabled
      */
     function testGenerate() {
         require_once 'global.php';

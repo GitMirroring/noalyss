@@ -384,7 +384,7 @@ class Todo_List
     {
         global $g_user;
         // Get array of user
-        $p_array=Noalyss_user::get_list(Dossier::id());
+        $p_array=Noalyss_User::get_list(Dossier::id());
         $dossier=Dossier::id();
         include NOALYSS_TEMPLATE.'/todo_list_list_user.php';
         

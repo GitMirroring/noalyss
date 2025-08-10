@@ -28,7 +28,7 @@
  * var $this (Noalyss_User)
  */
 global $g_user;
-$repository = new \Database();
+$repository = $this->repository;
 
 // $uuid is set only when a message with the code
 $str="";
