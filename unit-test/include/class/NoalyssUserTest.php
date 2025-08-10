@@ -10,6 +10,20 @@ define('USE_PASS', md5('password+123P'));
 define('USE_ADMIN', 0);
 define('USE_EMAIL', 'none@dev.null.eu');
 
+class Repository extends \Database
+{
+    function __construct()
+    {
+        \DatabaseCore::__construct(
+                p_user : noalyss_user,
+                p_password: noalyss_password,
+                p_dbname: 'phpunit_account_repository',
+                p_host:'127.0.0.1',
+                p_port: noalyss_psql_port
+        
+        );
+    }
+}
 /**
  * @backupGlobals enabled
  * @coversDefaultClass \Noalyss_User
@@ -24,7 +38,63 @@ class NoalyssUserTest extends TestCase
      */
     protected $object;
     private  $cn;
+    
+    /**
+     * @testdox create a new repository
+     * @return void
+     */
+    public static function setUpBeforeClass(): void
+    {
+        $repo = new \Database(0);
+        if ($repo->exist_database('phpunit_account_repository') == 1) return;
+        $repo->exec_sql("create database phpunit_account_repository encoding='utf8'");
+        
+        $db=new \DatabaseCore(
+                p_user : noalyss_user,
+                p_password: noalyss_password,
+                p_dbname: 'phpunit_account_repository',
+                p_host:'127.0.0.1',
+                p_port: noalyss_psql_port
+        
+        );
+        
+        /**
+         * create repository
+         */
+        $db->start();
+        $db->execute_script(NOALYSS_INCLUDE."/sql/account_repository/schema.sql");
+        $db->execute_script(NOALYSS_INCLUDE."/sql/account_repository/data.sql");
+        $db->execute_script(NOALYSS_INCLUDE."/sql/account_repository/constraint.sql");
 
+        $db->commit($cn);            
+        $db->close();
+        $db=new \DatabaseCore(
+                p_user : noalyss_user,
+                p_password: noalyss_password,
+                p_dbname: 'phpunit_account_repository',
+                p_host:'127.0.0.1',
+                p_port: noalyss_psql_port
+        
+        );
+        $MaxVersion=DBVERSIONREPO-1;
+        for ($i=4;$i<= $MaxVersion;$i++)
+        {
+            if ( $db->get_value (' select val from version') <= $i ) {
+                $db->execute_script(NOALYSS_INCLUDE.'/sql/patch/ac-upgrade'.$i.'.sql');
+            }
+        }
+    }
+    /**
+     * @testdox drop the created repository
+     * @return void
+     */
+    public static function tearDownAfterClass(): void
+    {
+        
+       $repo = new \Database(0);
+     //   $repo->exec_sql("drop database phpunit_account_repository ");
+        
+    }
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -32,7 +102,7 @@ class NoalyssUserTest extends TestCase
     protected function setUp():void
     {
         // create database connx : 
-        $this->cn=new Database();
+        $this->cn=new \Database();
         // create a user 
         $this->cn->exec_sql('delete from jnt_use_dos where use_id=$1',
                 array(USE_ID));
@@ -256,5 +326,68 @@ class NoalyssUserTest extends TestCase
         }
 
     }
-    
+
+    /**
+     * @testdox noalyss_user use another repository
+     * @param type $param
+     * @covers \Noalyss_User->load()
+     */
+    public function testSecondRepository() {
+        $repo2=new Repository();
+        $repo2->exec_sql('insert into ac_users (use_id,use_first_name,use_name,use_login,use_active,use_pass,use_admin,use_email) values ($1,$2,$3,$4,$5,$6,$7,$8)
+                on conflict do nothing',
+                array(USE_ID, USE_FIRST_NAME, "REPO2".USE_NAME, USE_LOGIN, USE_ACTIVE, USE_PASS,
+            USE_ADMIN, USE_EMAIL));
+        $demo=new \Noalyss_User(new \Database(DOSSIER), USE_ID,$repo2);
+        $demo->load();
+        
+        
+        $this->object->load();
+        $demo_name= $demo->getName() ;
+        $name = $this->object->getName();
+        
+        $repository_name=$this->object->get_repository()->get_name();
+        $repository_name2=$demo->get_repository()->get_name();
+        $this->assertEquals('phpunit_account_repository',$repo2->get_name(),"repo2 not connected properly");
+
+        $this->assertEquals('phpunit_account_repository',$repository_name2,"user not connected to  $repository_name2 2nd repository");
+        
+        $this->assertTrue($demo_name  !=  $name  ,"ERROR: Connected to same repo $name $demo_name" );
+        $this->assertEquals($demo_name,"REPO2".USE_NAME,"user not created in REPO2");
+        
+        
+   }
+   /**
+    * @testdox check the can_connect from both repository 
+    * @covers \Noalyss_User->load(), \Noalyss_User::__construct,\Noalyss_User::can_connect(),\Noalyss_User->save()
+    */
+   public function testConnectSecond()
+   {
+       $repo=new Repository();
+       $demo=new \Noalyss_User(new Database(DOSSIER), USE_ID,$repo);
+       $demo->setActive(1);
+       
+       $demo->save();
+       
+       $this->assertEquals(1,$demo->can_connect(),' admin is  supposed to connect');
+       $demo->setActive(0);
+       $demo->save();
+       $this->assertEquals(0,$demo->can_connect(),' admin is not supposed to connect');
+       
+       $this->assertEquals(1,$this->object->can_connect(),'admin is supposed to connect from REPO1');
+       $demo->setActive(1);
+       $demo->save();
+       
+       
+   }
+   public function testFolder_Access()
+   {
+       $repo=new Repository();
+       
+       $demo=new \Noalyss_User(new Database(DOSSIER),USE_ID, repository:$repo);
+       $user=new \Noalyss_User(new Database(DOSSIER));
+       $this->assertEquals('X',$demo->get_folder_access(DOSSIER),"2nd repository : can access");
+       $this->assertEquals('R',$user->get_folder_access(DOSSIER),"1st repository : cannot access");
+       
+   }
 }
