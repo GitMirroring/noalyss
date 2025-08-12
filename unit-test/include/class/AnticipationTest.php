@@ -29,12 +29,12 @@
 use PHPUnit\Framework\TestCase;
 
 /**
- * @backupGlobals enabled
- * @coversDefaultClass \Forecast
+ * @backupGlobals disabled
+ * @coversDefaultClass \Anticipation
  */
 require DIRTEST.'/global.php';
 
-class ForecastTest extends TestCase
+class AnticipationTest extends TestCase
 {
 
     /**
@@ -68,7 +68,7 @@ class ForecastTest extends TestCase
     {
         include 'global.php';
         global $g_connection;
-        $g_connection->exec_sql('delete from forecast');
+        $g_connection->exec_sql("delete from forecast");
     }
 
     /**
@@ -87,17 +87,15 @@ class ForecastTest extends TestCase
      * @testdox insert into forecast
      * @covers ::insert ::delete ::load
      */
-    public function testSQL_Insert()
+    public function testSQL_Anticipation()
     {
         global $g_connection;
-        $obj=new Forecast($g_connection);
-        $obj->set_parameter("start_date", 111);
-        $obj->set_parameter("end_date", 116);
-        $obj->set_parameter("name","PhpUNIT 2014");
-        $obj->insert();
-        $this->assertTrue($obj->get_parameter("id")>0,"Cannot insert");
-        $obj->delete();
-        $this->assertFalse($obj->load(),"Cannot delete");
+        $forecast_sql=new Forecast_SQL($g_connection);
+        $forecast_sql->setp("f_name","phpunit");
+        $forecast_sql->setp("f_start_date",92);
+        $forecast_sql->setp("f_end_date",103);
+        $forecast_sql->save();
+        $this->assertEquals (1,$g_connection->get_value("select count(*) from forecast")," forecast not created");
     }
     
     /**
@@ -105,24 +103,20 @@ class ForecastTest extends TestCase
      * @testdox update into forecast
      * @covers ::insert ::delete ::load
      */
-    public function testSQL_Update()
+    public function testClone()
     {
-        global $g_connection;
-        $obj=new Forecast($g_connection);
-        $obj->set_parameter("start_date", 111);
-        $obj->set_parameter("end_date", 116);
-        $obj->set_parameter("name", "PhpUNIT 2014");
-        $obj->insert();
-        
-        $this->assertTrue($obj->get_parameter("id")>0,"Cannot insert");
-        $obj->set_parameter('name','TEST UPDATE');
-        $obj->save();
-        $reload=new Forecast($g_connection,$obj->get_parameter("id"));
-        $reload->load();
-        $this->assertTrue($reload->get_parameter("name") == $obj->get_parameter("name"),"cannot update");
-        $reload->delete();
-        $this->assertFalse($reload->load(),"Cannot delete");
+           global $g_connection;
+        $forecast_sql=new Forecast_SQL($g_connection);
+        $forecast_sql->setp("f_name","phpunit2");
+        $forecast_sql->setp("f_start_date",92);
+        $forecast_sql->setp("f_end_date",103);
+        $forecast_sql->save();
+        $id=$forecast_sql->getp('f_id');
+        $anticipation = new \Anticipation($g_connection,$id);
+        $clone_id = $anticipation->object_clone();
+        $this->assertTrue(isNumber($clone_id)==1 && $clone_id > $id,"clone not created id = {$id} clone_id = {$clone_id}");
         
     }
+    
     
 }
