@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass Acc_Ledger_Sale
  */
+#[\AllowDynamicProperties]
 class Acc_Ledger_SaleTest extends TestCase
 {
 

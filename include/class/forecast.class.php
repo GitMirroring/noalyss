@@ -25,6 +25,7 @@
 /*!
  * \brief manage the table forecast
  */
+#[\AllowDynamicProperties]
 class Forecast
 {
   private static $variable=array ("id"=>"f_id",

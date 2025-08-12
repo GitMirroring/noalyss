@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
  * @coversDefaultClass \Follow_Up_Detail
  */
 
-
+#[\AllowDynamicProperties]
 class Follow_Up_DetailTest extends TestCase
 {
 

@@ -32,7 +32,6 @@ class Print_Ledger_Financial extends Print_Ledger
 {
     private $rap_amount; /* amount from begining exercice */
     private $tp_amount; /* amount total page */
-    private $jrn_type; //!< $jrn_type (VEN,ACH,ODS,FIN) ledger type
     
     function __construct(Database $p_cn,  Acc_Ledger $p_jrn,$p_from,$p_to)
     {

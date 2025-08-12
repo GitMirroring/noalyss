@@ -137,6 +137,7 @@ class AccountRepositoryTest extends TestCase {
 
     /**
      * @testdox create a repository
+     * @backupGlobals disabled
      */
     function testCreate() {
         try {

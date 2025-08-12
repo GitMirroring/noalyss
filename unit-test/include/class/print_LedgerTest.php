@@ -26,6 +26,7 @@ use PHPUnit\Framework\TestCase;
  * @brief concerne print_LedgerTest
  * @coversDefaultClass Print_Ledger
  */
+#[\AllowDynamicProperties]
 class print_LedgerTest extends TestCase
 {
 

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
  * @covers Fiche
  * 
  */
+#[\AllowDynamicProperties]
 class Acc_Ledger_PurchaseTest extends TestCase
 {
 

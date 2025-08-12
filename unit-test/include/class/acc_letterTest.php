@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  */
 require DIRTEST.'/global.php';
-
+#[\AllowDynamicProperties]
 class Acc_LetterTest extends TestCase
 {
     /**

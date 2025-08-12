@@ -32,32 +32,34 @@
 class Print_Ledger extends PDF
 {
     protected  $filter_operation; // See Acc_Ledger_History::filter_operation
-    private $ledger ;             //!< concerned Ledger
-    private $from ;               //<! integer parm_periode.p_id , start periode;
-    private $to ;                 //<! integer parm_periode.p_id , end periode;
+    protected $ledger ;             //!< concerned Ledger
+    protected $from ;               //<! integer parm_periode.p_id , start periode;
+    protected $to ;                 //<! integer parm_periode.p_id , end periode;
 
     /**************************************************************************
      *internal variables for computing sum on PDF Listing
      *************************************************************************/
-    protected $previous;             //<! previous amount
-    protected $rap_htva;             //<! reminder amount w/o vat
-    protected $rap_tva;              //<! reminder amount VAT
-    protected $rap_tvac;             //<! reminder amount VAT included
-    protected $rap_priv;             //<! reminder amount private
-    protected $rap_other_tax;       //<! reminder amount for other tax
-    protected $other_tax_previous;  //<! reminder amount for other tax
-        protected $a_Tva;           //<!  array of VAT
-        protected $jrn_type;        //<! type of ledger
-    protected $rap_nd;              //<! reminder not deductible
-    protected $rap_tva_np;          //<! reminder VAT not deductible
-    protected $flag_other_tax;      //<! flag for other taxe
-    protected $tp_htva;             //<! total page w/o VAT
-    protected $tp_tvac;             //<! total page VAT included
-    protected  $tp_priv;            //<! total page private part
-    protected $tp_nd ;              //<! total page amount Not Deductible
-    protected $tp_tva_np ;          //<! total page VAT Not Deductible
-    protected $tp_other_tax ;       //<! total page other tax
-    protected $tp_tva ;             //<! total VAT
+    protected $previous;//! $previous (array) see Acc_Ledger->previous_amount
+    protected $rap_htva; //!< $rap_htva (float) previous price w/o VAT
+    protected $rap_tvac; //!< $rap_tvac (float) previous amount 
+                       //All Tax Include (full price)
+    protected $rap_tva; //!< $rap_tva array(tva_id,amount) 
+    protected $rap_priv; //!< $rap_priv (float) personal expense
+    protected $rap_other_tax;  //!< $rap_other_tav, amount to report for other tax than VAT
+    protected $other_tax_previous;//! $other_tax_previous (array) 
+                                //see Acc_Ledger->previous_other_tax
+    protected $a_Tva;           //!< $a_Tva array ( tva_id,tva_label,tva_poste ) of existing_vat 
+    protected $jrn_type;        //<! $jrn_type (string) 'VEN','ACH','ODS','FIN'
+    protected $rap_nd; //!< $rap_nd (float) $no-deductible tax
+    protected $rap_tva_np; //!< $rap_tva_np VAT not deductible
+
+    protected $flag_other_tax; //!< $flag_other_tax(bool) true if other tax exists
+    protected $tp_htva; //!< $tp_htva (float) total page price w/o VAT
+    protected $tp_tva; //!< $tp_tva (float) total page VAT
+    protected $tp_tvac; //!< $tp_tvac (float) total page full price All Tax Incl.
+    protected $tp_priv;//!< $tp_priv (float) total page personal expense
+    protected $tp_nd;//!< $tp_nd (float) total page price w/o VAT
+    protected $tp_tva_np;//!< $tp_tva_np (float) total page  not deductible
 
 
     public function __construct(\Database $p_cn, 

@@ -33,28 +33,7 @@
 class Print_Ledger_Simple extends  \Print_Ledger
 {
     
-    private $a_Tva; //!< $a_Tva array ( tva_id,tva_label,tva_poste ) of existing_vat 
-    private $rap_tva; //!< $rap_tva array(tva_id,amount) 
-    private $rap_other_tax;  //!< $rap_other_tav, amount to report for other tax than VAT
-    private $jrn_type;//! $jrn_type (string) 'VEN','ACH','ODS','FIN'
-    private $previous;//! $previous (array) see Acc_Ledger->previous_amount
-    private $other_tax_previous;//! $other_tax_previous (array) 
-                                //see Acc_Ledger->previous_other_tax
-    private $rap_htva; //!< $rap_htva (float) previous price w/o VAT
-    private $rap_tvac; //!< $rap_tvac (float) previous amount 
-                       //All Tax Include (full price)
-    private $rap_priv; //!< $rap_priv (float) personal expense
-    private $rap_nd; //!< $rap_nd (float) $no-deductible tax
-    private $rap_tva_np; //!< $rap_tva_np VAT not deductible
-    private $flag_other_tax; //!< $flag_other_tax(bool) true if other tax exists
-    private $tp_htva; //!< $tp_htva (float) total page price w/o VAT
-    private $tp_tva; //!< $tp_tva (float) total page VAT
-    private $tp_tvac; //!< $tp_tvac (float) total page full price All Tax Incl.
-    private $tp_priv;//!< $tp_priv (float) total page personal expense
-    private $tp_nd;//!< $tp_nd (float) total page price w/o VAT
-    private $tp_tva_np;//!< $tp_tva_np (float) total page  not deductible
-    private $tp_other_tax;//!< $tp_other_tax (float) other tax
-    
+  
     public function __construct ($p_cn,  Acc_Ledger $p_jrn,$p_from,$p_to,$p_filter_operation)
     {
 
