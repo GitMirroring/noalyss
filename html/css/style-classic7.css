@@ -3875,11 +3875,6 @@ div.widget-full_size {
 }
 
 
- @keyframes fill_up_loading {
-
-     30% {transform:rotateY(90deg);}
-     60% {transform:rotateY(-90deg);}
- }
 
  div.row.odd.hover:hover,div.row.even.hover:hover   {      background-color: var(--hover) !important;    }
 
@@ -3889,6 +3884,7 @@ h2.h-section {
     border: 1px steelblue solid;
     font-style: normal;
     font-family: var(--font-title);
+    margin: 8px;
 }
  .super {
      font-family: var(--font-super);
