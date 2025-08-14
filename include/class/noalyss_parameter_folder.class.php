@@ -51,8 +51,10 @@ class Noalyss_Parameter_Folder
     var $MY_CURRENCY;
     var $MY_COUNTRY_CODE;
     var $MY_REPORT; //!< In Belgium , we need a report on the beginning of the exercice , not in France,
-
+    var $MY_INVOICE_FORMAT; //!< Default invoice format : BASIC, UBL21BEL, FACTURXFR
     
+    
+    const VALID_INVOICE_FORMAT=['BASIC','UBL21BEL','FACTURXFR'];
     // constructor
     function __construct($p_cn)
     {
@@ -94,11 +96,16 @@ MY_DEFAULT_ROUND_ERROR_DEB= [	{$this->MY_DEFAULT_ROUND_ERROR_DEB }]
 MY_DEFAULT_ROUND_ERROR_CRED= [	{$this->MY_DEFAULT_ROUND_ERROR_CRED }]
 MY_ANC_FILTER= [	{$this->MY_ANC_FILTER }]
 MY_REPORT = [ {$this->MY_REPORT } ]
-
+MY_INVOICE_FORMAT = [ {$this->MY_INVOICE_FORMAT} ]
 EOF;
         return $r;
     }
-
+    /**
+     * @brief check that the filter for ANC operation is valid
+     * @param $p_value (string)  list of digit for accounting separated by comma
+     * @return void
+     * @throws  if value contains a no-digit value
+     */
     function check_anc_filter($p_value):void
     {
         $tmp_value=$p_value;
@@ -138,12 +145,17 @@ EOF;
                 }
 
                 break;
+            case 'MY_INVOICE_FORMAT':
+                if ( !in_array($this->MY_INVOICE_FORMAT, Noalyss_Parameter_Folder::VALID_INVOICE_FORMAT))
+                {
+                    throw new \Exception ('Format facture invalide');
+                }
             default :
                 $ret_value=htmlspecialchars($p_value);
         }
         return $ret_value;
     }
-
+    
     /*!
      **************************************************
      * \brief  save the parameter into the database by inserting or updating
@@ -208,6 +220,7 @@ EOF;
         $this->save('MY_DEFAULT_ROUND_ERROR_CRED');
         $this->save("MY_ANC_FILTER");
         $this->save("MY_REPORT");
+        $this->save("MY_INVOICE_FORMAT");
 
     }
     /**
@@ -226,5 +239,15 @@ EOF;
         }
         return FALSE;
     }
-
+    /**
+     * @brief build a SELECT html input
+     * @return \ISelect
+     */
+    function input_select_format() {
+        $select_format_invoice=new \ISelect('invoice_format');
+        $a_label=[_("Basic"),_("UBL21 Belgique"),_("FacturX France")];
+        $select_format_invoice->transform(array_combine(Noalyss_Parameter_Folder::VALID_INVOICE_FORMAT,$a_label));
+        $select_format_invoice->selected=$this->MY_INVOICE_FORMAT;
+        return $select_format_invoice;
+    }
 }

@@ -55,6 +55,7 @@ if (isset($_POST['record_company']))
     $m->MY_DEFAULT_ROUND_ERROR_CRED=$http->post("p_round_error_cred");
     $m->MY_ANC_FILTER=$http->post("p_anc_filter");
     $m->MY_REPORT=$http->post("p_report");
+    $m->MY_INVOICE_FORMAT=$http->post("invoice_format");
     try
     {
         $m->update();
@@ -137,6 +138,13 @@ $report->value = array(
     array('value'=>'Y', 'label'=>_('Oui'))
 );
 $report->selected=$my->MY_REPORT;
+
+// invoice format 
+$select_format_invoice=$my->input_select_format();
+
+
+
+
 
 // other parameters
 $all=new IText();
@@ -361,7 +369,12 @@ echo Icon_Action::tips($anc_filter->title);
                     <?= $default_error_cred->input() ?>
             </div>
 
-
+     <div class="form-group">
+                <label class="" for="invoice_format">
+                <?= _("Format de facture par défaut") ?>
+                </label>
+                    <?= $select_format_invoice->input() ?>
+            </div>
                 <div class="col-4"></div>
 
                 <div class="col-4">

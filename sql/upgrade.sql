@@ -290,3 +290,5 @@ insert into quantity_code_ref values
 ('ROLL','Roll — rouleau'),
 ('COLL','Collection — collection');
 
+
+insert into "parameter" values ('MY_INVOICE_FORMAT','BASIC');
