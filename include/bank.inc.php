@@ -15,135 +15,96 @@
  *   You should have received a copy of the GNU General Public License
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-/*!\brief include from supplier.inc.php and concerned only the supplier card and
+/* !\brief include from supplier.inc.php and concerned only the supplier card and
  * the supplier category
  */
-if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
-global $g_user  , $http;
+if (!defined('ALLOWED'))
+    die('Appel direct ne sont pas permis');
+global $g_user, $http;
 
-$low_action=$http->request('sb',"string",'list');
-/*! \file
+$low_action = $http->request('sb', "string", 'list');
+/* ! \file
  * \brief Called from the module 'Gestion' to manage the supplier
  */
-$href=basename($_SERVER['PHP_SELF']);
+$href=NOALYSS_URL."/do.php";
 
 // by default open liste
-if ( $low_action  == '' )
-    $low_action='list';
+if ($low_action == '')
+    $low_action = 'list';
 
 
-//-----------------------------------------------------
+//----------------------------------------new-------------
 // Remove a card
 //-----------------------------------------------------
-if ( isset($_POST['delete_card'] ) )
-{
-    if ( $g_user->check_action(FICADD) == 0 )
-    {
+if (isset($_POST['delete_card'])) {
+    if ($g_user->check_action(FICADD) == 0) {
         alert(_('Vous  ne pouvez pas enlever de fiche'));
         return;
     }
 
-    $f_id = $http->request('f_id','number');
+    $f_id = $http->request('f_id', 'number');
 
-    $fiche=new Bank($cn,$f_id);
+    $fiche = new Bank($cn, $f_id);
     $fiche->remove();
-    $low_action="list";
-
+    $low_action = "list";
 }
 
 //-----------------------------------------------------
 //    list of supplier
 //-----------------------------------------------------
-if ( $low_action == "list" )
-{
-
+if ($low_action == "list") {
     ?>
     <div class="content">
-	<div>
-				 <form method="get" action="<?php echo $href; ?>">
-	<?php
-	echo dossier::hidden();
-	echo '<h2 class="h-section">' ._( "Exercice")." " . $g_user->get_exercice() . '</h2>';
-    $a=$http->get("query","string","");
-    echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
-
-     $choice_cat=$http->request("choice_cat", "string",1);
-
-    if ( $choice_cat == 1 )
-    {
-        $sel_card=new ISelect('cat');
-        $sel_card->value=$cn->make_array('select fd_id, fd_label from fiche_def '.
-                                         ' where  frd_id=$1'.
-                                         ' order by fd_label ',1,array(FICHE_TYPE_FIN));
-        $sel_card->selected=$http->get("cat","number",-1);
-        $sel_card->javascript=' onchange="waiting_box();submit(this);"';
-        echo _('Catégorie :').$sel_card->input();
+        <div>
+<?php
+  Bank::form_search($href, FICHE_TYPE_FIN);
+?>
+        </div>
+    <?php
+    $supplier = new Bank($cn);
+    $search = $http->get("query", "string", "");
+    $sql = "";
+    if (isset($_GET['cat'])) {
+        $cat = $http->get("cat", "number");
+        if ($cat != -1)
+            $sql = sprintf(" and fd_id = %s", $cat);
     }
-    else
-    {
-        $cat=$http->request('cat',"string", '');
-        echo HtmlInput::hidden("cat", $cat);
-        echo HtmlInput::hidden('choice_cat', 0);
-    }
-    $nooperation=new ICheckBox('noop');
-    $nooperation->selected=(isset($_GET['noop']))?true:false;
-    echo _('Inclure les banques sans opération :').$nooperation->input();
-
-    ?>
-    <input type="submit" class="button" name="submit_query" value="<?php echo _('recherche')?>">
-                                           <input type="hidden" name="ac" value="<?php echo $http->request('ac')?>">
-                                                                     </form>
-                                                                     </div>
-                                                                     <?php
-                                                                     $supplier=new Bank($cn);
-    $search=$http->get("query","string","");
-    $sql="";
-    if ( isset($_GET['cat']))
-    {
-         $cat=$http->get("cat","number");
-        if ($cat!= -1 )     $sql = sprintf(" and fd_id = %s", $cat);
-    }
-    $noop=(isset($_GET['noop']))?false:true;
+    $noop = (isset($_GET['noop'])) ? false : true;
 
     echo '<div class="content">';
-    echo $supplier->Summary($search,'bank',$sql,$noop);
-
+    echo $supplier->Summary($search, 'bank', $sql, $noop);
 
     echo '<br>';
     echo '<br>';
     echo '<br>';
-	if  ($g_user->check_action(FICADD)==1)
-	{
-		/* Add button */
-		$f_add_button=new IButton('add_card');
-		$f_add_button->label=_('Créer une nouvelle fiche');
-		$f_add_button->set_attribute('win_refresh','yes');
+    if ($g_user->check_action(FICADD) == 1) {
+        /* Add button */
+        $f_add_button = new IButton('add_card');
+        $f_add_button->label = _('Créer une nouvelle fiche');
+        $f_add_button->set_attribute('win_refresh', 'yes');
 
-		$f_add_button->set_attribute('type_cat',FICHE_TYPE_FIN);
-		$f_add_button->javascript=" select_card_type(this);";
-		echo $f_add_button->input();
+        $f_add_button->set_attribute('type_cat', FICHE_TYPE_FIN);
+        $f_add_button->javascript = " select_card_type(this);";
+        echo $f_add_button->input();
 
-		$f_cat_button=new IButton('add_cat');
-		$f_cat_button->set_attribute('type_cat',FICHE_TYPE_FIN);
-                $f_cat_button->set_attribute('ipopup','ipop_cat');
-		$f_cat_button->label=_('Ajout d\'une catégorie');
-		$f_cat_button->javascript='add_category(this)';
-		echo $f_cat_button->input();
-	}
+        $f_cat_button = new IButton('add_cat');
+        $f_cat_button->set_attribute('type_cat', FICHE_TYPE_FIN);
+        $f_cat_button->set_attribute('ipopup', 'ipop_cat');
+        $f_cat_button->label = _("Ajout d'une catégorie");
+        $f_cat_button->javascript = 'add_category(this)';
+        echo $f_cat_button->input();
+    }
 
     echo '</div>';
     echo '</div>';
-
-
 }
-/*----------------------------------------------------------------------
+/* ----------------------------------------------------------------------
  * Detail for a card, Suivi, Contact, Operation,... *
  * cc stands for supplier card
- *----------------------------------------------------------------------*/
-if ( $low_action == 'detail')
-{
+ * ---------------------------------------------------------------------- */
+if ($low_action == 'detail') {
     /* Menu */
     require_once('category_card.inc.php');
     return;

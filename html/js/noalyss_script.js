@@ -2223,7 +2223,7 @@ function filter_table(phrase, _id, colnr, start_row) {
     if (tot_found == 0) {
         if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = content[69];
-            id$('info_' + _id).style.display = 'block';
+            id$('info_' + _id).style.display = 'inline-block';
         }
     } else {
         if (document.getElementById('info_' + _id)) {

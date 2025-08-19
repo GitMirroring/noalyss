@@ -994,7 +994,7 @@ function add_category(obj)
  */
 function save_card_category(obj)
 {
-    if ( ! document.getElementById(obj).ipopup)
+    if ( ! $(obj).ipopup)
     {
         alert_box('Erreur pas d\' attribut ipopup '+obj.id);
         return;
@@ -1009,15 +1009,29 @@ try {
     queryString+='&op=card'; 	// sc for save card
 
     var action=new Ajax.Request ( 'ajax_misc.php',
-                                  {
-                                  method:'get',
-                                  parameters:queryString,
-                                  onFailure:errorFid,
-                                  onSuccess:fill_box
-                                  }
+                            {
+                                method:'POST',
+                                parameters:queryString,
+                                onFailure:errorFid,
+                                onSuccess:function (req) 
+                                { 
+                                    fill_box(req);
+                                    // populate
+                                     var answer = req.responseXML;
+                                     var a = answer.getElementsByTagName('id');
+                                     var b = answer.getElementsByTagName('name');
+                                     if ( a.length == 1 && b.length == 1) {
+                                         let option=new Element('option');
+                                         option.value=getNodeText(a[0]);
+                                         option.text=getNodeText(b[0]);
+                                         id$('cat').add(option);
+                                     }
+                                }
+                              }
                                 );
 	} catch(e)
 	{
+            
 		alert_box(e.message);
 		return false;
 	}

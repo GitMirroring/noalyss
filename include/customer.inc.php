@@ -66,38 +66,11 @@ if ($low_action == "list")
     ?>
     <div class="content">
         <div>
-    	<form method="get" action="<?php echo $href;?>">
-            <?php
-            echo '<h2 class="h-section">' . "Exercice " . $g_user->get_exercice() . '</h2>';
-            $a=$http->get("query","string",""); 
-            echo _("Cherche ").HtmlInput::filter_table_form("tiers_tb", '0,1,2', 1,"query",$a);
-
-            $choice_cat=$http->request("choice_cat", "string",1);
-
-            if ( $choice_cat == 1 )
-            {
-                $sel_card=new ISelect('cat');
-                $sel_card->value=$cn->make_array('select fd_id, fd_label from fiche_def '.
-                                                 ' where  frd_id='.FICHE_TYPE_CLIENT.
-                                                 ' order by fd_label ',1);
-                $sel_card->selected=$http->get("cat","number",-1);
-                $sel_card->javascript=' onchange="waiting_box();submit(this);"';
-                echo _('Catégorie :').$sel_card->input();
-            } else 
-            {
-                $cat=$http->request('cat',"string", '');
-                echo HtmlInput::hidden("cat",$cat);
-                echo HtmlInput::hidden('choice_cat', 0);
-            }
-            $nooperation = new ICheckBox('noop');
-            $nooperation->selected = (isset($_GET['noop'])) ? true : false;
-            echo Dossier::hidden();
-
-            echo _('Inclure les clients sans opération :') . $nooperation->input();
-            ?>
-    	    <input type="submit" class="button" name="submit_query" value="<?php echo  _('recherche')?>">
-    	    <input type="hidden" name="ac" value="<?php echo  $http->request('ac')?>">
-    	</form>
+    	<?php
+        
+            Customer::form_search($href, FICHE_TYPE_CLIENT);
+        
+        ?>
         </div>
 	<?php
 	$client = new Customer($cn);

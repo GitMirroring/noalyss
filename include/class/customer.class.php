@@ -37,7 +37,7 @@ class Customer extends Fiche
     var $country;     /*!<  $country Country */
     var $cp;          /*!<  $cp Zip code */
     var $vat_number;  /*!<  $vat_number vat number */
-
+    use Trait_Card;
     /*! \brief Constructor
     * only a db connection is needed
     */

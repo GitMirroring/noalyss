@@ -634,9 +634,9 @@ case 'scc':
     {
         
         $html="";
-        $nom_mod=$http->get("nom_mod");
-        $class_base=$http->get("class_base");
-        $fd_description=$http->get("nom_mod");
+        $nom_mod=$http->post("nom_mod");
+        $class_base=$http->post("class_base");
+        $fd_description=$http->post("fd_description","string","");
         if ( noalyss_strlentrim($nom_mod) != 0 )
         {
             $array=array("FICHE_REF"=>$cat,
@@ -644,7 +644,7 @@ case 'scc':
                          "class_base"=>$class_base,
                           "fd_description"=>$fd_description);
             
-            if ( isset ($_POST['create'])) $array['create']=1;
+            if ( isset ($_POST['create'])) $array['create']="on";
             
             $catcard=new Fiche_Def($cn);
             
@@ -661,7 +661,15 @@ case 'scc':
             }
             else{
                 $script="alert_box('"._('Catégorie sauvée')."');removeDiv('$ctl')";
-            }
+                // add code to update the SELECT in include/template/category_of_card.php
+                $catcard->get();
+               
+                $extra = '<code2>'.
+                        '<id>'.$catcard->id.'</id>'.
+                        '<name>'. escape_xml($catcard->label).'</name>'.
+                        '</code2>';
+                
+            }   
                 
             $html.=create_script($script);
         }

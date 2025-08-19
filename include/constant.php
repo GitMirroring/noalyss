@@ -368,6 +368,7 @@ define("ARROWUP","&#8679;");
 // Url of NOALYSS (http://...) 
 // 
 if (!defined("NOALYSS_URL")) {
+    if ( isset ( $_SERVER)) {
     $protocol = "http";
     if (isset ($_SERVER['REQUEST_SCHEME'])) {
         $protocol = $_SERVER['REQUEST_SCHEME'];
@@ -377,6 +378,9 @@ if (!defined("NOALYSS_URL")) {
         ":" . $_SERVER['SERVER_PORT'] .
         dirname($_SERVER['PHP_SELF']);
     define("NOALYSS_URL", $base);
+    }else {
+        define("NOALYSS_URL","command-line");
+    }
 }
 if (!defined("DEFAULT_SERVER_VIDEO_CONF")) {
     define("DEFAULT_SERVER_VIDEO_CONF", "https://www.free-solutions.org/");
@@ -400,6 +404,7 @@ function noalyss_class_autoloader($class)
     }
     
     $aClass = array(
+        "trait_card"=>"class/trait_card.php",
         "database" => "class/database.class.php",
         "acc_detail" => "class/acc_operation.class.php",
         "acc_sold" => "class/acc_operation.class.php",

@@ -1066,7 +1066,6 @@ function find_default_module()
 
 /**
  * @brief show the module
- * @var $g_user
  * @param $module the $_REQUEST['ac'] exploded into an array
  * @param  $idx the index of the array : the AD code is splitted into an array thanks the slash
  */

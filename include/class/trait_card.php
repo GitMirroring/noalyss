@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   This file is part of NOALYSS.
  *
@@ -16,36 +17,30 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-// Copyright Author Dany De Bontridder danydb@aevalys.eu
-require_once NOALYSS_INCLUDE.'/constant.php';
+// Copyright Author Dany De Bontridder danydb@aevalys.eu 22/10/23
 
-require_once NOALYSS_INCLUDE.'/lib/user_common.php';
-/*! \file
- * \brief Derived from class fiche Administration are a specific kind of card
- *        concerned only by official (or not) administration
- */
-/*!
- * \brief  class  admin are a specific kind of card
+
+/**
+ * @file
+ * @brief Contains function used by object Customer , Supplier, Bank, ... that
+ * are derivated from Fiche
  */
 
-// Use the view vw_supplier
-//
-class Bank extends Fiche
-{
-
-
-    
-    use Trait_Card; 
-    
-    /*! \brief Constructor     only a db connection is needed */
-    function __construct($p_cn,$p_id=0)
+/**
+ * @class
+ * @brief Contains function used by object Customer , Supplier, Bank, ... that
+ * are derivated from Fiche
+ */
+trait Trait_Card {
+    /**
+     * @brief For the follow-up module for customer, supplier, ... display a 
+     * filter 
+     * @param $url (string URL) url with folder id, access code ,...
+     * @param $type_card (int) category of card see FICHE_TYPE_* in 
+     * include/constant.php
+     */
+    public static function form_search($url,$type_card)
     {
-        $this->fiche_def_ref=FICHE_TYPE_FIN;
-        parent::__construct($p_cn,$p_id) ;
+        require_once NOALYSS_TEMPLATE."/trait_card-form_search.php";
     }
-
-
-
 }
-
-?>

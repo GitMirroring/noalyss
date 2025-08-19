@@ -39,10 +39,10 @@ class Fiche_Def
     var $attribut;		//!< get from attr_xxx tables
     var $fd_description; //!< Description  of the Card Category
 
-    function __construct($p_cn,$p_id = 0)
+    function __construct($cn,$id = 0)
     {
-        $this->cn=$p_cn;
-        $this->id=$p_id;
+        $this->cn=$cn;
+        $this->id=$id;
         
         
     }
@@ -61,7 +61,7 @@ class Fiche_Def
     }
     /**
      * @brief replace by load_attribute
-     * @deprecated since version 9.3.0.12
+     * @deprecated since version 9.3.12
      * @return type
      */
     function getAttribut() {
