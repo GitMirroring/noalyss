@@ -1,4 +1,21 @@
  /* <style type="text/css"> */
+ /*
+ *   This file is part of NOALYSS.
+ *
+ *   NOALYSS is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   NOALYSS is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with NOALYSS; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
  /**
   * Use a font
   */
@@ -1400,6 +1417,9 @@ div#search_form
 
 }
 
+#search_form  > form {
+    padding:8px;
+}
 
 
 table.sortable td, table.table_large td, table.result td
@@ -3743,10 +3763,11 @@ margin:1px;
   * Help item in EXTENSION
   */
  #help {
-     background-color: yellow !important;;
+     background-color: yellow !important;
      padding: 0.5rem;
      color:navy !important;
      text-decoration: underline;
+     border-radius: 5px;
  }
 
  .hoverclass-drag {
@@ -3759,11 +3780,9 @@ margin:1px;
   *
   *********************************************************************************************************************/
  #widget_box_id {
-     #widget_box_id {
          width: 100%;
          margin-left: 0px;
          margin-right: 0px;
-     }
  }
 
  #contain_widget  li {
