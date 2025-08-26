@@ -1383,10 +1383,11 @@ class Fiche
             <TR >
             <TH>'._('Quick Code').Icon_Action::infobulle(17).'</TH>'.
             '<th>'._('Poste comptable').'</th>'.
-            '<th  class="sorttable_sorted">'._('Nom').'</span>'.'</th>
-            <th>'._('Adresse').'</th>
-            <th>'._('site web').'</th>
-            <th style="text-align:right">'._('Total débit').'</th>
+            '<th  class="sorttable_sorted">'._('Nom').'</span>'.'</th>'.
+            '<th>'._('Compte en banque').'</th>'.
+            '<th>'._('Adresse').'</th>'.
+            '<th>'._('site web').'</th>'.
+            '<th style="text-align:right">'._('Total débit').'</th>
             <th style="text-align:right">'._('Total crédit').'</th>
             <th style="text-align:right">'._('Solde').'</th>';
         $r.='</TR>';
@@ -1438,6 +1439,7 @@ class Fiche
             $r.="<TD> $e".$tiers->get_attribute(ATTR_DEF_QUICKCODE)."</A></TD>";
             $r.="<TD sorttable_customkey=\"text{$accounting}\"> $e".$accounting."</TD>";
             $r.="<TD>".h($tiers->get_attribute(ATTR_DEF_NAME))."</TD>";
+            $r.=td($tiers->get_attribute(ATTR_DEF_BQ_NO,0));
             $r.="<TD>".h($tiers->get_attribute(ATTR_DEF_ADRESS,0).
                          " ".$tiers->get_attribute(ATTR_DEF_POSTCODE,0).
                          " ".$tiers->get_attribute(ATTR_DEF_COUNTRY,0)).
