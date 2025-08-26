@@ -311,7 +311,7 @@ case 'st':
         $r.=_("Choisissez la catégorie de fiche à laquelle vous aimeriez ajouter une fiche").'</p>';
         if ( ! isset($eltid)) $eltid="";
         $msg=_('Choisissez une catégorie svp');
-        $r.='<span id="error_cat" class="notice"></span>';
+        $r.='<span id="error_cat" style="display:none" class="notice"></span>';
         $r.=dossier::hidden();
         $r.=(isset($ref))?HtmlInput::hidden('ref',1):'';
         $r.=_('Cherche').' '.HtmlInput::filter_table("cat_card_table", '0,1', 0);
