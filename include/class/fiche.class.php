@@ -1345,16 +1345,17 @@ class Fiche
         bcscale(4);
         $gDossier=dossier::id();
         $p_search=sql_string($p_search);
-        $script=$_SERVER['PHP_SELF'];
+        $script=$_SERVER['PHP_SELF']??"";
         // Creation of the nav bar
         // Get the max numberRow
         $filter_amount='';
-        global $g_user;
 
         $filter_year="  j_tech_per in (select p_id from parm_periode ".
                      "where p_exercice='".$g_user->get_exercice()."')";
 
-        if ( $p_amount) $filter_amount=' and f_id in (select f_id from jrnx where  '.$filter_year.')';
+        if ($p_amount) {
+            $filter_amount = ' and f_id in (select f_id from jrnx where  ' . $filter_year . ')';
+        }
 
         $all_tiers=$this->count_by_modele($this->fiche_def_ref,"",$p_sql.$filter_amount);
         // Get offset and page variable
@@ -1493,21 +1494,23 @@ class Fiche
         return $this->fiche_def;
     }
     /*!
-     ***************************************************
-     * \brief   Check if a fiche is used by a jrn
+     * \brief   Check if a card can be  used and then belong tp a specific ledger, it the card 
+     * 
      *  return 1 if the  fiche is in the range otherwise 0, the quick_code
      *  or the id  must be set
      *
      *
-     * \param   $p_jrn journal_id
-     * \param   $p_type : deb or cred default empty
+     * \param   $jrn_def_id journal_id (JRN.JRN_DEF_ID)
+     * \param   $side : deb or cred , default empty = both
      *
-     * \return 1 if the fiche is in the range otherwise < 1
-     *        -1 the card doesn't exist
-     *        -2 the ledger has no card to check
+     * \return 1 if the card belongs to the ledger, 
+     *         0 the card doesn't belong, 
+     *        -1 the card doesn't exist,
+     *        -2 the ledger has no card to check,
+     *        -3 there is no category of card for this ledger
      *
      */
-    function belong_ledger($p_jrn,$p_type="")
+    function belong_ledger($jrn_def_id,$side="")
     {
         // check if we have a quick_code or a f_id
         if (($this->quick_code==null || $this->quick_code == "" )
@@ -1517,41 +1520,38 @@ class Fiche
         }
 
         //retrieve the quick_code
-        if ( $this->quick_code=="")
-            $this->quick_code=$this->get_quick_code();
-
-
-        if ( $this->quick_code==null)
-            return -1;
-
-        if ( $this->id == 0 )
-            if ( $this->get_by_qcode(null,false) == 1)
-                return -1;
-
-        $get="";
-        if ( $p_type == 'deb' )
-        {
-            $get='jrn_def_fiche_deb';
-        }elseif ( $p_type == 'cred' )
-        {
-            $get='jrn_def_fiche_cred';
+        if ($this->quick_code == "") {
+            $this->quick_code = $this->get_quick_code();
         }
-        if ( $get != "" )
+
+
+        if ($this->quick_code == null) {
+            return -1;
+        }
+
+        if ($this->id == 0 && $this->get_by_qcode(null, false) == 1) {
+            return -1;
+        }
+
+        if ( $side == 'deb' )
         {
-            $Res=$this->cn->exec_sql("select $get as fiche from jrn_def where jrn_def_id=$p_jrn");
+            $Res=$this->cn->exec_sql("select jrn_def_fiche_deb as fiche from jrn_def where jrn_def_id=$1",[$jrn_def_id]);
+        }elseif ( $side == 'cred' )
+        {
+            $Res=$this->cn->exec_sql("select jrn_def_fiche_cred as fiche from jrn_def where jrn_def_id=$1",[$jrn_def_id]);
         }
         else
         {
             // Get all the fiche type (deb and cred)
             $Res=$this->cn->exec_sql(" select jrn_def_fiche_cred as fiche
-                                     from jrn_def where jrn_def_id=$p_jrn
+                                     from jrn_def where jrn_def_id=$1
                                      union
                                      select jrn_def_fiche_deb
-                                     from jrn_def where jrn_def_id=$p_jrn"
+                                     from jrn_def where jrn_def_id=$1",
+                                          [$jrn_def_id]
                                     );
         }
-        $Max=Database::num_row($Res);
-        if ( $Max==0)
+        if ( Database::num_row($Res)==0)
         {
             return -2;
         }
@@ -1580,11 +1580,11 @@ class Fiche
              fd_id in (".$str_list.") and f_id= ".$this->id;
 
         $Res=$this->cn->exec_sql($sql);
-        $Max=Database::num_row($Res);
-        if ($Max==0 )
+        if (Database::num_row($Res) == 0) {
             return 0;
-        else
-            return 1;
+        }
+        return 1;
+        
     }
     /*!
      * \brief  get all the card from a categorie
