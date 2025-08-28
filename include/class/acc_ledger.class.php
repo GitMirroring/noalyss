@@ -1973,31 +1973,17 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * @brief create the invoice and saved it as attachment to the
-     * operation,
+     * @brief alias for Acc_Document->create_document 
      * @param  $internal is the internal code
      * @param  $p_array is normally the $_POST
-     * @todo rewrite code : remove extract and +SQL value 
-     * \return a string
+       @see Acc_Document::create_document
+     * @return a string
      */
     function create_document($internal, $p_array)
     {
-        $doc=new Document($this->db);
-        $doc->f_id=$p_array['e_client'];
-        $doc->md_id=$p_array['gen_doc'];
-        $doc->ag_id=0;
-        $p_array['e_pj']=$this->pj;
-        $filename="";
-        $doc->Generate($p_array, $p_array['e_pj']);
-        // Move the document to the jrn
-        $doc->moveDocumentPj($internal);
-        // Update the comment with invoice number, if the comment is empty
-        if (!isset($p_array['e_comm'])||noalyss_strlentrim($p_array['e_comm'])==0)
-        {
-            $sql="update jrn set jr_comment=' document ".$doc->d_number."' where jr_internal=$1";
-            $this->db->exec_sql($sql,[$internal]);
-        }
-        return h($doc->d_name.' ('.$doc->d_filename.')');
+        $acc_document=new Acc_Document($this->db);
+        $acc_document->create_document($internal, $p_array);
+        return h($acc_document->d_name.' ('.$acc_document->d_filename.')');
     }
 
     /**

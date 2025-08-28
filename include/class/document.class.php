@@ -1769,14 +1769,11 @@ class Document
     }
 
     /*!
-     * \brief Move a document from the table document into the concerned row
+     * \brief Move a document from the table document into the concerned operation
      *        the document is not copied : it is only a link
-     *
      * \param $p_internal internal code
-     *
      */
-
-    function moveDocumentPj($p_internal)
+    function moveDocumentACC($p_internal)
     {
         $sql="update jrn set jr_pj=$1,jr_pj_name=$2,jr_pj_type=$3 where jr_internal=$4";
 
@@ -1916,6 +1913,7 @@ class Document
     }
     /**
      * @brief transform the current Document to a PDF, returns the full path of the PDF from the TMP folder
+     * @todo replace use of unoconv with a PHP lib to convert into PDF
      * @return string full path to the PDF file
      */
     function transform2pdf()
