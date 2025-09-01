@@ -227,7 +227,7 @@ Consectetur ut cow, non in ipsum brisket dolore short loin.  Burgdoggen deserunt
         $sendmail=new \Sendmail();
         $sendmail->mailto(EMAIL_RECIPIENT);
         $sendmail->set_from("dany@localhost");
-        $sendmail->set_subject("Test envoi HTML ".date('d.m.Y h:i'));
+        $sendmail->set_subject("Test envoi HTML ".date('d.m.Y H:i'));
         $sendmail->set_format('HTML');
         $sendmail->set_message("corps du message
    
@@ -260,7 +260,7 @@ Message en HTML et texte normal
         $sendmail=new \Sendmail();
         $sendmail->mailto(EMAIL_RECIPIENT);
         $sendmail->set_from("dany@localhost");
-        $sendmail->set_subject("Test envoi HTML no format ".date('d.m.Y h:i'));
+        $sendmail->set_subject("Test envoi HTML no format ".date('d.m.Y H:i'));
         $sendmail->set_format('HTML');
         $sendmail->set_message("
             Shouldéré pariaturà  turçhducken labore esse.  Pancetta burgdoggen ground round nulla commodo cillum rump occaecat leberkas pork loin dolore buffalo tempor.  Voluptate flank veniam deserunt chicken, buffalo kielbasa adipisicing short ribs venison non ullamco enim fatback.  Ham pariatur lorem turducken consequat.  Chicken burgdoggen doner ground round rump officia kielbasa eiusmod meatball, sed jerky mollit.  Ut kielbasa t-bone ipsum ex esse, andouille porchetta consectetur do quis ut.  Ea andouille sausage, ut lorem ball tip salami esse.
@@ -272,6 +272,42 @@ Consectetur ut cow, non in ipsum brisket dolore short loin.  Burgdoggen deserunt
 
 
 ");
+        $sendmail->compose();
+        $sendmail->send();
+        // if  not exception thrown , so it works
+        $this->assertTrue(true);
+
+    }
+    
+    /**
+    *@testdox send email in HTML and attach file 
+    */
+    function testEmailHTMLAttach()
+    {
+        
+        $sendmail=new \Sendmail();
+        $sendmail->mailto(EMAIL_RECIPIENT);
+        $sendmail->set_from("dany@localhost");
+        $sendmail->set_subject("Test envoi HTML + file ".date('d.m.Y H:i'));
+        $sendmail->set_format('HTML');
+        $sendmail->set_message("corps du message
+   
+Message en HTML et texte normal
+
+
+ <p>Ceci est un message en HTML</p>
+    <h2>GRAS</h2>
+    <p> Ceci est un message en HTML</p>
+    <h2>ITALIQUE</h2>
+    <p><i>Ceci est un message en HTML</i></p>
+    <h2>COULEUR <br>
+    </h2>
+    <p style=\"color:blue\">couleur bleue</p> 
+
+
+");
+        $file=new \FileToSend(__DIR__."/data/all_tags.odt");
+        $sendmail->add_file($file);
         $sendmail->compose();
         $sendmail->send();
         // if  not exception thrown , so it works
