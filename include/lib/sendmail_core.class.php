@@ -174,7 +174,7 @@ class Sendmail_Core
             $separator_second=md5(rand());
             $this->content .= "Content-Type: multipart/alternative; boundary=\"" . $separator_second . "\"".$eol  ;
             $this->content .= "Content-Type: text/plain; charset=UTF-8; format=flowed".$eol;
-            $this->content .= "Content-Transfer-Encoding: 7bit" . $eol.$eol ;
+            $this->content .= "Content-Transfer-Encoding: 8bit" . $eol.$eol ;
             $this->content .= strip_tags($this->message) . $eol ;
             $this->content.=$eol;
             $this->content.=$eol;
