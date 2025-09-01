@@ -45,12 +45,29 @@ class Sendmail_Core
     protected $from;
     protected $content;
     protected $header;
-
+    protected $format;
     function __construct()
     {
+        $this->format='PLAIN';
+    }
+    
+    public function get_format() {
+        return $this->format;
+    }
+    /**
+     * @brief format is either HTML or PLAIN
+     * @param type $format HTML or PLAIN
+     * @return Sendmail_Core
+     */
+    public function set_format($format) {
+        if ( in_array($this->format,['PLAIN','HTML'] ) == false) {
+            throw new \Exception('SC64 : unknow format ');
+        }
+        $this->format = $format;
+        return $this;
     }
 
-    /**
+        /**
      * set the from
      * @param $p_from has the form name <info@phpcompta.eu>
      */
@@ -141,13 +158,51 @@ class Sendmail_Core
         $this->header = "From: " . $this->from . $eol;
         $this->header .= "MIME-Version: 1.0" . $eol;
         $this->header .= $this->add_supplemental_header();
-        $this->header .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\""  ;
+        if ($this->format == 'PLAIN')
+        {
+            $this->header .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\""  ;
+            // message PLAIN
+            $this->content .= "--" . $separator . $eol;
+            $this->content .= "Content-Type: text/plain; charset=UTF-8" . $eol;
+            $this->content .= "Content-Transfer-Encoding: 8bit" . $eol.$eol ;
+            $this->content .= $this->message . $eol ;
+        } elseif ($this->format == 'HTML') {
+            
+            $this->header .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\"" .$eol ;
+             // message PLAIN
+            $this->content .= "--" . $separator . $eol;
+            $separator_second=md5(rand());
+            $this->content .= "Content-Type: multipart/alternative; boundary=\"" . $separator_second . "\"".$eol  ;
+            $this->content .= "Content-Type: text/plain; charset=UTF-8; format=flowed".$eol;
+            $this->content .= "Content-Transfer-Encoding: 7bit" . $eol.$eol ;
+            $this->content .= strip_tags($this->message) . $eol ;
+            $this->content.=$eol;
+            $this->content.=$eol;
+            $this->content.=$eol;
+            // message HTML
+            $this->content .= "--" . $separator_second.$eol;
+            $this->content .= "Content-Type: text/html; charset=UTF-8" . $eol;
+            $this->content .= "Content-Transfer-Encoding: 8bit" . $eol.$eol ;
+            $this->content .=<<<eof
+<!DOCTYPE html>{$eol}
+<html>{$eol}
+<head>{$eol}
 
-        // message
-        $this->content .= "--" . $separator . $eol;
-        $this->content .= "Content-Type: text/plain; charset=\"utf-8\"" . $eol;
-        $this->content .= "Content-Transfer-Encoding: 7bit" . $eol.$eol ;
-        $this->content .= $this->message . $eol ;
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">{$eol}
+</head>{$eol}
+<body>
+{$eol}
+{$eol}
+{$eol}
+eof;
+            $this->content .= $this->message. $eol ;
+            $this->content .="  </body> </html>".$eol;
+            $this->content .= "--" . $separator_second."--" . $eol;
+    
+        }else {
+            throw new \Exception('SC172 : unknow format ');            
+        }
+        
         if ( ! empty($this->afile ) )
         {
             // attachment
@@ -156,6 +211,7 @@ class Sendmail_Core
                 
                 $file = $this->afile[$i];
                 $file_size = filesize($file->full_name);
+                $mimetype= mime_content_type($file->full_name);
                 $handle = fopen($file->full_name, "r");
                 if ( $handle == false ){ 
                     \record_log("SC159 ".var_export($file,true));
@@ -165,7 +221,7 @@ class Sendmail_Core
                 fclose($handle);
                 $content = chunk_split(base64_encode($content));
                 $this->content .= "--" . $separator . $eol;
-                $this->content .= "Content-Type: " . $file->type . "; name=\"" . $file->filename . "\"" . $eol;
+                $this->content .= "Content-Type: " . $mimetype . "; name=\"" . $file->filename . "\"" . $eol;
                 $this->content .= "Content-Disposition: attachment; filename=\"" . $file->filename . "\"" . $eol;
                 $this->content .= "Content-Transfer-Encoding: base64" . $eol;
                 $this->content.=$eol;
