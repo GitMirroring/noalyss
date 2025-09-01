@@ -19,10 +19,14 @@
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/*! \file
+/*! 
+ * \file
  * \brief Class Document corresponds to the table document
  */
-/*! \brief Class Document corresponds to the table document
+/*! 
+ * \class
+ * \brief 
+ * Class Document corresponds to the table DOCUMENT
  */
 
 class Document
@@ -38,7 +42,7 @@ class Document
     var $d_number;    /*!< $d_number number of the document */
     var $md_id;       /*!< $md_id document's template */
     var $f_id;       /*!< fiche.f_id */
-    private $counter; /*!< counter for the items ( goods ) */
+    protected $counter; /*!< counter for the items ( goods ) */
     var $d_name;    /*!< document name */
     var $md_type ; /*!< Type of document */
     /*!
