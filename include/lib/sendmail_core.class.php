@@ -156,6 +156,7 @@ class Sendmail_Core
                 
                 $file = $this->afile[$i];
                 $file_size = filesize($file->full_name);
+                $mimetype= mime_content_type($file->full_name);
                 $handle = fopen($file->full_name, "r");
                 if ( $handle == false ){ 
                     \record_log("SC159 ".var_export($file,true));
@@ -165,7 +166,7 @@ class Sendmail_Core
                 fclose($handle);
                 $content = chunk_split(base64_encode($content));
                 $this->content .= "--" . $separator . $eol;
-                $this->content .= "Content-Type: " . $file->type . "; name=\"" . $file->filename . "\"" . $eol;
+                $this->content .= "Content-Type: " . $mimetype . "; name=\"" . $file->filename . "\"" . $eol;
                 $this->content .= "Content-Disposition: attachment; filename=\"" . $file->filename . "\"" . $eol;
                 $this->content .= "Content-Transfer-Encoding: base64" . $eol;
                 $this->content.=$eol;
