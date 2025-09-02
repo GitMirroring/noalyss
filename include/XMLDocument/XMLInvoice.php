@@ -100,7 +100,8 @@ use Noalyss\Utility;
 abstract class XMLInvoice extends \DOMDocument
 {
     protected $cn; //!< Database conx , current folder
-    protected $data; //! $data Array data retrieve from DB
+    protected $data; //! $data (Array) data retrieve from DB
+    protected $jr_id; //! $jr_id (int) is JRN.JR_ID
     function __construct(\Database $conx)
     {
         parent::__construct("1.0", "UTF-8");
@@ -154,6 +155,7 @@ abstract class XMLInvoice extends \DOMDocument
     function build_data($jr_id):array
     {
         global $g_parameter;
+        $this->jr_id=$jr_id;
         $operation = new \Acc_Sold($this->cn,$jr_id);
         
         $operation->get();
