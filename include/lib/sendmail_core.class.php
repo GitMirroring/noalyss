@@ -213,7 +213,7 @@ eof;
                 
                 $file = $this->afile[$i];
                 $file_size = filesize($file->full_name);
-                $mimetype= mime_content_type($file->full_name);
+                $mimetype=( $file->type=="")?mime_content_type($file->full_name):$file->type;
                 $handle = fopen($file->full_name, "r");
                 if ( $handle == false ){ 
                     \record_log("SC159 ".var_export($file,true));
