@@ -33,7 +33,6 @@
 class Acc_Ledger_History_Generic extends Acc_Ledger_History
 {
 
-    private $data; //!< array of rows
 
     /**
      * Constructor

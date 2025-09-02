@@ -19,6 +19,7 @@ class Acc_Ledger_SaleTest extends TestCase
      * @var type 
      */
     private $array;
+    private $array1;
 
     /**
      * Sets up the fixture, for example, opens a network connection.

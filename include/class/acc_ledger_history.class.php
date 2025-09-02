@@ -39,7 +39,7 @@ abstract class Acc_Ledger_History
     public $db; //!< database connx
     protected $ledger_type; //! type of ledger VEN , ACH , ODS, FIN
     protected $filter_operation; //!< to filter paid, unpaid or all operation
-
+    protected $data;//!< array of rows
     /**
      * 
      * @param Database $cn

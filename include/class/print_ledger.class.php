@@ -30,10 +30,23 @@
 */
 class Print_Ledger extends PDF
 {
-    protected  $filter_operation; // See Acc_Ledger_History::filter_operation
+    protected  $filter_operation; //!< See Acc_Ledger_History::filter_operation
     private $ledger ; //!< concerned Ledger 
     private $from ; //! integer parm_periode.p_id , start periode;
     private $to ; //! integer parm_periode.p_id , end periode;
+    protected $a_TVA; //!< array of VAT
+    protected $rap_tva; //!< VAT when page starts
+    protected $rap_other; //!< VAT when page starts
+    protected $jrn_type; //!< ledger type (VEN, ODS, FIN,ACH)
+    protected $previous; //!< previous amount
+    protected $other_tax_previous;
+    protected $rap_htva; //!< price without when page starts
+    protected $rap_tvac; //!< VAT+price when page starts
+    protected $rap_priv;//!< Private when page starts
+    protected $rap_nd;//!< ND VAT when page starts
+    protected $rap_tva_np;//!< NP VAT when page starts
+    protected $flag_other_tax; //! if other tax
+    protected $show_col;
     public function __construct(\Database $p_cn, 
                                 $orientation, 
                                 $unit, 

@@ -23,24 +23,25 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @file
- * @brief concerne print_ledger_misc.classTest
+ * @brief concerne print_ledger_detail
+ * @coversDefaultClass Print_Ledger_Detail
  */
-class Print_Ledger_MiscTest extends TestCase
+require DIRTEST.'/global.php';
+
+class Print_Ledger_DetailTest extends TestCase
 {
 
     /**
      * @var 
      */
     protected $object;
-
+    private $from,$to;
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
     protected function setUp():void
     {
-        include 'global.php';
-        // Exercice 2018
         $this->from=92;
         $this->to=103;
     }
@@ -52,38 +53,29 @@ class Print_Ledger_MiscTest extends TestCase
     protected function tearDown():void
     {
         
-    }
+        
 
+    }
     function test_export()
     {
-        global $g_connection;
+         global $g_connection;
         $p_from=$this->from;
         $p_to=$this->to;
-
-        // Check Misc
-        $ledger_misc=new Acc_Ledger($g_connection, 4);
-        $ledger=\Print_Ledger::factory($g_connection, "D", $ledger_misc, $p_from, $p_to, "all");
+        
+        // Financial
+        $ledger_fin=new Acc_Ledger($g_connection,4);
+        $ledger=\Print_Ledger::factory($g_connection,"D",  $ledger_fin, $p_from, $p_to, "paid");
         $this->assertTrue($ledger instanceof Print_Ledger_Detail
-                , "Misc. Detail returns Print_Ledger_Detail");
-
-        $ledger->setDossierInfo($ledger_misc->jrn_def_name);
+                ,"Misc. Detail returns Print_Ledger");
+       
+        $ledger->setDossierInfo($ledger_fin->jrn_def_name);
         $ledger->AliasNbPages();
         $ledger->AddPage();
         $ledger->SetAuthor('NOALYSS');
-        $ledger->setTitle(_("Journal Opérations diverses "), true);
+        $ledger->setTitle(_("Journal"), true);
         $ledger->export();
-        $ledger->Output(__DIR__."/file/print_ledger_detail_misc.pdf", "F");
-
-        $ledger=\Print_Ledger::factory($g_connection, "L", $ledger_misc, $p_from, $p_to, "all");
-        $this->assertTrue($ledger instanceof Print_Ledger_Misc
-                , "Misc. Listing returns Print_Ledger_Misc");
-        $ledger->setDossierInfo($ledger_misc->jrn_def_name);
-        $ledger->AliasNbPages();
-        $ledger->AddPage();
-        $ledger->SetAuthor('NOALYSS');
-        $ledger->setTitle(_("Journal Opérations diverses"), true);
-        $ledger->export();
-        $ledger->Output(__DIR__."/file/print_ledger_misc.pdf", "F");
+        $ledger->Output(__DIR__."/file/misc-detail.pdf","F");
+        $this->assertFileExists(__DIR__."/file/misc-detail.pdf");
     }
 
 }
