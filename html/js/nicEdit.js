@@ -1193,7 +1193,7 @@ var nicLinkButton = nicEditorAdvancedButton.extend({
 		this.ln = this.ne.selectedInstance.selElm().parentTag('A');
 		this.addForm({
 			'' : {type : 'title', txt : 'Add/Edit Link'},
-			'href' : {type : 'text', txt : 'URL', value : 'http://', style : {width: '150px'}},
+			'href' : {type : 'text', txt : 'URL', value : 'https://', style : {width: '150px'}},
 			'title' : {type : 'text', txt : 'Title'},
 			'target' : {type : 'select', txt : 'Open In', options : {'' : 'Current Window', '_blank' : 'New Window'},style : {width : '100px'}}
 		},this.ln);
@@ -1201,7 +1201,7 @@ var nicLinkButton = nicEditorAdvancedButton.extend({
 
 	submit: function(e) {
 		var url = this.inputs['href'].value;
-		if (url === "http://" || url === "") {
+		if (url === "https://" || url === "") {
 			alert("You must enter a URL to Create a Link");
 			return false;
 		}
@@ -1303,7 +1303,7 @@ var nicImageButton = nicEditorAdvancedButton.extend({
 		this.im = this.ne.selectedInstance.selElm().parentTag('IMG');
 		this.addForm({
 			'' : {type : 'title', txt : 'Add/Edit Image'},
-			'src' : {type : 'text', txt : 'URL', 'value' : 'http://', style : {width: '150px'}},
+			'src' : {type : 'text', txt : 'URL', 'value' : 'https://', style : {width: '150px'}},
 			'alt' : {type : 'text', txt : 'Alt Text', style : {width: '100px'}},
 			'align' : {type : 'select', txt : 'Align', options : {none : 'Default','left' : 'Left', 'right' : 'Right'}}
 		},this.im);
@@ -1311,7 +1311,7 @@ var nicImageButton = nicEditorAdvancedButton.extend({
 	
 	submit : function(e) {
 		var src = this.inputs['src'].value;
-		if(src == "" || src == "http://") {
+		if(src == "" || src == "https://") {
 			alert("You must enter a Image URL to insert");
 			return false;
 		}
