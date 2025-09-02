@@ -632,7 +632,7 @@ class Follow_Up
         if (noalyss_trim($this->ag_comment??"")!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
-                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], strip_tags($this->ag_description),$this->ag_comment));
+                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], strip_tags($this->ag_comment),$this->ag_comment));
         }
         if (noalyss_trim($this->ag_description)!='' && Document_Option::can_add_comment($this->ag_id))
         {
