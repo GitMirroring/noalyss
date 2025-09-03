@@ -315,13 +315,13 @@ class Fiche
     }
     /**
      * @brief use get_attribute instead
-     * @deprecated since version 9.3.0.12
+     * @deprecated since version 9.3.12
      * @param int  $p_ad_id  AD_ID from attr_def.ad_id
      * @param int $p_return 1 return NOTFOUND otherwise an empty string
      */
     function strAttribut($p_ad_id,$p_return=1)
     {
-        return get_attribute($p_ad_id,$p_return);
+        return $this->get_attribute($p_ad_id,$p_return);
     }
     /***
      * @brief  return the string of the given attribute
