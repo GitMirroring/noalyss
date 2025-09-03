@@ -194,6 +194,16 @@ class Acc_ComputeTest extends TestCase
 
     public function testCompute()
     {
+         print "**********************************************";
+        print PHP_EOL;
+        print "<h1> OUTPUT IN HTML , USE LYNX TO READ</h1>";
+        print PHP_EOL;
+        print " OR REDIRECT TO HTML";
+        print PHP_EOL;
+        print "**********************************************";
+        print PHP_EOL;
+        print "phpunit |lynx -stdin";
+        print PHP_EOL;
         $a=new Acc_Compute();
         // Compute some operation to see if the computed amount are
         // correct

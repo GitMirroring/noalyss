@@ -32,7 +32,7 @@ class Print_Ledger_MiscTest extends TestCase
      * @var 
      */
     protected $object;
-
+    private $from,$to;
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -73,6 +73,7 @@ class Print_Ledger_MiscTest extends TestCase
         $ledger->setTitle(_("Journal Opérations diverses "), true);
         $ledger->export();
         $ledger->Output(__DIR__."/file/print_ledger_detail_misc.pdf", "F");
+        print __DIR__."/file/print_ledger_detail_misc.pdf". PHP_EOL;
 
         $ledger=\Print_Ledger::factory($g_connection, "L", $ledger_misc, $p_from, $p_to, "all");
         $this->assertTrue($ledger instanceof Print_Ledger_Misc
@@ -84,6 +85,7 @@ class Print_Ledger_MiscTest extends TestCase
         $ledger->setTitle(_("Journal Opérations diverses"), true);
         $ledger->export();
         $ledger->Output(__DIR__."/file/print_ledger_misc.pdf", "F");
+        print __DIR__."/file/print_ledger_misc.pdf". PHP_EOL;
     }
 
 }

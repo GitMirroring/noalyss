@@ -33,7 +33,7 @@ class print_ledger_simpleTest extends TestCase
      * @var 
      */
     protected $object;
-
+ private $from,$to;
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -82,6 +82,8 @@ class print_ledger_simpleTest extends TestCase
         $ledger->setTitle(_("Journal Achat Payé"), true);
         $ledger->export();
         $ledger->Output(__DIR__."/file/print_ledger_simple_purchase_paid.pdf", "F");
+        $this->assertFileExists(__DIR__."/file/print_ledger_simple_purchase_paid.pdf");
+print __DIR__."/file/print_ledger_simple_purchase_paid.pdf".PHP_EOL;
 
         // Unpaid
         //------------
@@ -97,7 +99,7 @@ class print_ledger_simpleTest extends TestCase
         $ledger->export();
         $ledger->Output(__DIR__."/file/print_ledger_simple_purchase_unpaid.pdf", "F");
         $this->assertFileExists(__DIR__."/file/print_ledger_simple_purchase_unpaid.pdf");
-
+print __DIR__."/file/print_ledger_simple_purchase_unpaid.pdf".PHP_EOL;
         // All
         //------------
         $ledger=\Print_Ledger::factory($g_connection, "E", $ledger_purchase, $p_from, $p_to, "all");
@@ -112,7 +114,7 @@ class print_ledger_simpleTest extends TestCase
         $ledger->export();
         $ledger->Output(__DIR__."/file/print_ledger_simple_purchase_all.pdf", "F");
         $this->assertFileExists(__DIR__."/file/print_ledger_simple_purchase_all.pdf");
-
+print __DIR__."/file/print_ledger_simple_purchase_all.pdf".PHP_EOL;
         //-------------------------------------------------------------------------------------------------------------
         // Sale
         //-------------------------------------------------------------------------------------------------------------
@@ -131,6 +133,7 @@ class print_ledger_simpleTest extends TestCase
         $ledger->setTitle(_("Journal Vente Payé"), true);
         $ledger->export();
         $ledger->Output(__DIR__."/file/print_ledger_simple_sale_paid.pdf", "F");
+print __DIR__."/file/print_ledger_simple_sale_paid.pdf".PHP_EOL;
 
         // Unpaid
         //-----------------
@@ -146,6 +149,7 @@ class print_ledger_simpleTest extends TestCase
         $ledger->export();
         $ledger->Output(__DIR__."/file/print_ledger_simple_sale_unpaid.pdf", "F");
         $this->assertFileExists(__DIR__."/file/print_ledger_simple_sale_unpaid.pdf");
+print __DIR__."/file/print_ledger_simple_sale_unpaid.pdf".PHP_EOL;
 
         // All
         //-----------------
@@ -161,6 +165,8 @@ class print_ledger_simpleTest extends TestCase
         $ledger->export();
         $ledger->Output(__DIR__."/file/print_ledger_simple_sale_all.pdf", "F");
         $this->assertFileExists(__DIR__."/file/print_ledger_simple_sale_all.pdf");
+print __DIR__."/file/print_ledger_simple_sale_all.pdf".PHP_EOL;
+
     }
 
 }

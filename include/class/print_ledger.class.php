@@ -31,7 +31,7 @@
 #[AllowDynamicProperties]
 class Print_Ledger extends PDF
 {
-    protected  $filter_operation; // See Acc_Ledger_History::filter_operation
+    protected  $filter_operation; //!< See Acc_Ledger_History::filter_operation
     protected $ledger ;             //!< concerned Ledger
     protected $from ;               //<! integer parm_periode.p_id , start periode;
     protected $to ;                 //<! integer parm_periode.p_id , end periode;
@@ -60,7 +60,8 @@ class Print_Ledger extends PDF
     protected $tp_priv;//!< $tp_priv (float) total page personal expense
     protected $tp_nd;//!< $tp_nd (float) total page price w/o VAT
     protected $tp_tva_np;//!< $tp_tva_np (float) total page  not deductible
-
+    protected $show_col;
+    protected $rap_other; //!< VAT when page starts
 
     public function __construct(\Database $p_cn, 
                                 $orientation, 

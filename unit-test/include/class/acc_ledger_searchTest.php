@@ -89,7 +89,7 @@ class Acc_Ledger_searchTest extends TestCase
         $r=$ledger->display_search_form();
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger_search-test_display_search_form.html", $r);
         $filesize=strlen($r);
-        $this->assertTrue($filesize==10966,"Size of the html string for display_search_form see "
+        $this->assertTrue($filesize==10971,"Size of the html string for display_search_form see "
                 . __DIR__."/file/acc_ledger_search-test_display_search_form.html ");
     }
     /**

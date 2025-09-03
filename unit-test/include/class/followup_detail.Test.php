@@ -41,7 +41,7 @@ class Follow_Up_DetailTest extends TestCase
      * @var Fiche
      */
     protected $object;
-
+    private $g_connection;
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test method is executed.

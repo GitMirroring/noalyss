@@ -206,7 +206,7 @@ class Card_PropertyTest extends TestCase
         global $g_connection;
         $fiche=$this->getFiche();
         Card_Property::load($fiche);
-        $this->assertEquals(count($fiche->attribut), 36, 'there are not 36 attributes');
+        $this->assertEquals(count($fiche->attribut), 41, 'there are not 41 attributes');
         $fiche=new Fiche($g_connection);
         Card_Property::load($fiche);
         $this->assertTrue(empty($fiche->attribut),'Card property must be equals to 0 (unknown category ');

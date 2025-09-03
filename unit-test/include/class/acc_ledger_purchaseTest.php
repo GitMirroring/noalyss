@@ -16,7 +16,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
      * @var Acc_Ledger_Purchase
      */
     protected $object;
-
+    private $array1;
     /**
      * @var array transmitted by _POST
      */

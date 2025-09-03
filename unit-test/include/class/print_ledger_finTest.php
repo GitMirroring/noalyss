@@ -33,7 +33,7 @@ class Print_Ledger_FinTest extends TestCase
      * @var 
      */
     protected $object;
-
+ private $from,$to;
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -72,7 +72,7 @@ class Print_Ledger_FinTest extends TestCase
         $ledger->setTitle(_("Journal"), true);
         $ledger->export();
         $ledger->Output(__DIR__."/file/financial-detail.pdf","F");
-        
+        print "create ".__DIR__."/file/financial-detail.pdf". PHP_EOL;
         $ledger=\Print_Ledger::factory($g_connection,"L",  $ledger_fin, $p_from, $p_to, "paid");
         $this->assertTrue($ledger instanceof Print_Ledger_Financial
                 ,"Fin. Detail returns Print_Ledger_Financial");
@@ -83,7 +83,7 @@ class Print_Ledger_FinTest extends TestCase
         $ledger->setTitle(_("Journal"), true);
         $ledger->export();
         $ledger->Output(__DIR__."/file/financial-listing.pdf","F");
-
+print "create ".__DIR__."/file/financial-listing.pdf". PHP_EOL;
         
         $ledger=\Print_Ledger::factory($g_connection,"E",  $ledger_fin, $p_from, $p_to, "paid");
         $this->assertTrue($ledger instanceof Print_Ledger_Detail
@@ -95,6 +95,7 @@ class Print_Ledger_FinTest extends TestCase
         $ledger->setTitle(_("Journal"), true);
         $ledger->export();
         $ledger->Output(__DIR__."/file/financial-extended.pdf","F");
+print "create ".__DIR__."/file/financial-extended.pdf". PHP_EOL;
         
         $ledger=\Print_Ledger::factory($g_connection,"A",  $ledger_fin, $p_from, $p_to, "paid");
         $this->assertTrue($ledger instanceof Print_Ledger_Detail
@@ -106,6 +107,7 @@ class Print_Ledger_FinTest extends TestCase
         $ledger->setTitle(_("Journal"), true);
         $ledger->export();
         $ledger->Output(__DIR__."/file/financial-accounting.pdf","F");
+print "create ".__DIR__."/file/financial-accounting.pdf". PHP_EOL;
     }
 
 }

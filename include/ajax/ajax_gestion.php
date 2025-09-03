@@ -80,8 +80,11 @@ if ($op=='action_save')
     }
     catch (Exception $ex)
     {
-        record_log($ex->getTraceAsString());
-        header('Content-type: text/xml; charset=UTF-8');
+        record_log($ex);
+        if (! headers_sent())
+        {
+                header('Content-type: text/xml; charset=UTF-8');
+        }
         $dom=new DOMDocument('1.0', 'UTF-8');
         $xml_content=$dom->createElement('content', $ex->getMessage());
         $xml_status=$dom->createElement('status', "NOK");
@@ -114,11 +117,14 @@ if ($op=='action_save')
         $gestion->save_short();
     } catch (Exception $ex)
     {
-        record_log($ex->getTraceAsString());
+        record_log($ex);
         $content=$ex->getMessage();
         $status='NOK';
     }
-    header('Content-type: text/xml; charset=UTF-8');
+    if (! headers_sent())
+    {
+        header('Content-type: text/xml; charset=UTF-8');
+    }
     $dom=new DOMDocument('1.0', 'UTF-8');
     $xml_content=$dom->createElement('content', $content);
     $xml_status=$dom->createElement('status', $status);

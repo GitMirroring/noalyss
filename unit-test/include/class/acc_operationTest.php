@@ -320,7 +320,7 @@ class Acc_OperationTest extends TestCase
         // $this->assertEquals('BP19-1',$receipt,'Receipt number incorrect');
         $acc_operation=new Acc_Operation($g_connection);
         $acc_operation->set_id(250);
-        $this->pj="";
+        $acc_operation->pj="";
         $acc_operation->update_receipt();
         $new_receipt=$g_connection->get_value("select jr_pj_number from jrn where jr_id=250");
         $this->assertTrue($new_receipt== null,'receipt not set to null ');

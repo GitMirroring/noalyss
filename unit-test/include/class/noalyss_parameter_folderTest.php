@@ -67,7 +67,8 @@ class Noalyss_Parameter_FolderTest extends TestCase
                                     "MY_UPDLAB,".                  
                                     "MY_ANC_FILTER,".                  
                                     "MY_REPORT,".
-                                    "MY_STOCK");
+                                    "MY_STOCK,".
+                                    "MY_COUNTRY_CODE");
                 
     }
     public function testNew()

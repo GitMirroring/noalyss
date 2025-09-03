@@ -32,7 +32,6 @@
 
 class Print_Ledger_Simple_Without_Vat extends Print_Ledger
 {
-
     public function __construct ($p_cn,$p_jrn,$p_from,$p_to,$p_filter_operation)
     {
 

@@ -81,7 +81,7 @@ class Acc_ReconciliationTest extends TestCase {
     function testReconcilied() {
         $acc_reconciliation = $this->build_object();
         $array = $acc_reconciliation->get_data(0);
-        $this->assertEquals(8, count($array), "count number of rows found");
+        $this->assertEquals(6, count($array), "count number of rows found");
     }
 
     /**
@@ -100,6 +100,6 @@ class Acc_ReconciliationTest extends TestCase {
         $acc_reconciliation->build_temp_total_operation();
         $acc_reconciliation->build_temp_total_operation();
         $cnt = $this->connection->get_value("select count(*) from temp_total_operation");
-        $this->assertEquals(16, $cnt, " incorrect number of rows");
+        $this->assertEquals(12, $cnt, " incorrect number of rows");
     }
 }

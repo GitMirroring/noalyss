@@ -198,13 +198,14 @@ class DocumentTest extends TestCase {
         $this->assertTrue($document->replace('CUST_NAME', $array) == 'Client 1', 'CUST_NAME');
     }
 
+        
     /**
      * @testdox Generate Document::generate(), Document::parseDocument(),Document::replace(); require  unoconv -l in another session
      * @covers Document::generate(), Document::parseDocument(),Document::replace();
-     * @backupGlobals disabled
      */
     function testGenerate() {
-        require_once 'global.php';
+       require DIRTEST . '/global.php';
+        
         $cn = Dossier::connect();
         $md_id = $cn->get_value('select max(md_id) md_id from document_modele where md_name=$1', ['Balise']);
         $array['e_client'] = 'CLIENT';
