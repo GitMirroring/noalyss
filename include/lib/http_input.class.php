@@ -187,9 +187,9 @@ class HttpInput
 
     /**
      * @brief Retrieve from $_GET
-     * @param $p_name string of the variable
-     * @param $p_type string of the variable , opt. default string
-     * @param $p_default mixed default value is variable is not set
+     * @param $p_name name of the variable
+     * @param $p_type type of the variable , opt. default string
+     * @param $p_default default value is variable is not set
      * @throws Exception if invalid
      */
     function get($p_name, $p_type="string", $p_default="")
