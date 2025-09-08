@@ -23,12 +23,14 @@ namespace Noalyss\XMLDocument;
 
 /**
  * @file
- * @brief answer to an inplace object
+ * @brief UBL2.1 Belgique
+ *   -  $pdf_filename PDF file to insert into XML, it is the file on the filesystem
  */
 /**
  * @class
  * @brief UBL2.1 Belgique
- * @note Doit contenir le PDF
+ * @note Doit contenir le PDF.
+ *      -  $pdf_filename PDF file to insert into XML, it is the file on the filesystem
  @code
 <cac:Attachment>
   <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="facture.pdf" encodingCode="Base64">
@@ -53,12 +55,45 @@ class InvoiceUBL21 extends XMLInvoice {
         , 'MY_CITY'
         , 'MY_TVA'
         ];
-    protected $pdf_filename; //!< PDF file to insert into XML
+    protected $pdf_filename; //!< PDF file to insert into XML, it is the file on the filesystem
     public function get_pdf_filename() {
         return $this->pdf_filename;
     }
-
+    /**
+     * @brief returns the text of an error
+     */
+    function get_message_error($a_code)
+    {
+        
+    }
+    /**
+     * @brief check that all the data are correct
+     * @returns null : no errors,  string separated with comma of error code
+     * @see get_message_error
+     * @see InvoiceUBL21::get_message_error()
+     */
+    function verify() 
+    {
+        ///@var $a_error : array of error_code see check_company_error
+        $a_error=[];
+        // verify all VAT
+        $x=parent::verify();
+        // verify that all needed data in PARAMETER are valid
+        $this->check_company_data($a_error);
+        $this->check_customer_data($this->data['customer']['customer_id'], $a_error);
+        return $a_error;
+        
+    }
+    /**
+     * @brief set the PDF 
+     * @param $pdf_filename (string) full path to the PDF
+     * @return $this
+     * @throws \Exception if the filename doesn't exist
+     */
     public function set_pdf_filename($pdf_filename) {
+        if ( !file_exists($pdf_filename)) {
+            throw new \Exception("AD65 $pdf_filename doesn't not exist");
+        }
         $this->pdf_filename = $pdf_filename;
         return $this;
     }
@@ -87,17 +122,18 @@ class InvoiceUBL21 extends XMLInvoice {
      */
     function check_customer_data($customer_id,&$a_error){
        $card=new \Fiche($this->cn,$customer_id);
-        $a_needed=[ATTR_DEF_NAME=>_("Nom")
-                ,ATTR_DEF_ADRESS=>_("Adresse")
-                ,ATTR_DEF_POSTCODE=>_("Code postal")
-                ,ATTR_DEF_CITY=>_("Localité")
-                ,ATTR_DEF_COUNTRY_CODE=>_("Code pays")
-                ,ATTR_DEF_NUMTVA=>_("Numéro de TVA")
+        $a_needed=[ATTR_DEF_NAME=>'CUST_NAME'
+                ,ATTR_DEF_ADRESS=>'CUST_ADDR'
+                ,ATTR_DEF_POSTCODE=>'CUST_POSTCD'
+                ,ATTR_DEF_CITY=>'CUST_CITY'
+                ,ATTR_DEF_COUNTRY_CODE=>'CUST_CDCOUNTRY'
+                ,ATTR_DEF_NUMTVA=>'CUST_VAT'
+                ,ATTR_DEF_PEPPOLID=>'CUST_PEPPOLID'
             ];
         
         foreach ($a_needed as $item=>$value) {
             if (\noalyss_trim($card->get_attribute($item))=="") {
-                printf (_("ATTENTION donnée manquante dans la fiche client [%s]"),$value);
+               $a_error[]=$value;
             }
         }
         if (count($a_error)  == 0) {
@@ -140,8 +176,7 @@ class InvoiceUBL21 extends XMLInvoice {
             $acc_tva=\Acc_TVA::build($this->cn,$result['operation'][$i]['vat_id'] );
             $percent = bcmul($acc_tva->tva_rate,100);
             // subtotal for VAT
-            var_dump($VAT_SubTotal);
-            $n = \Noalyss\Invoicing\Utility::find_idx($VAT_SubTotal,'percent',$percent);
+            $n = find_idx($VAT_SubTotal,'percent',$percent);
             if ($n == -1 ) {
                 $n=$idx_subtotal;
                 $VAT_SubTotal[$idx_subtotal]=array();
@@ -417,7 +452,7 @@ class InvoiceUBL21 extends XMLInvoice {
         $item->appendChild($this->createElement("cbc:Name", $card->get_attribute(ATTR_DEF_NAME)));
         $classifiedTaxCat=$this->createElement("cac:ClassifiedTaxCategory");
         ///@todo cbc:ID S  = standard rate et que se passe-t'il pour l'autoliquidation ???
-        /// Il faut ajouter dans TVA_RATE , un code pour la TVA, 
+        /// Il faut ajouter dans TVA_RATE , un code pour la TVA, voir TVA_RATE.TVA_PEPPOL_CODE
         $classifiedTaxCat->appendChild($this->createElement("cbc:ID", "S"));
         $classifiedTaxCat->appendChild($this->createElement("cbc:Percent", $row['vat_percent']));
         $tax_scheme=$this->createElement('cac:TaxScheme');
@@ -465,15 +500,16 @@ class InvoiceUBL21 extends XMLInvoice {
     function build_Invoice():\DOMElement
     {
         if ( $this->pdf_filename == "") return null;
-        $result=$this->createElement("AdditionalDocumentReference");
       /**  $pdf_filename = 'chemin/vers/votre/fichier.pdf';*/
-
+        if ( $this->pdf_filename == null ) {
+            return null;
+        }
         // Lire le fichier PDF  
-       // $pdfContent = file_get_contents($pdfPath);
+        $pdfContent = file_get_contents( $this->pdf_filename   );
 
         // Encoder le PDF en base64
-      //  $base64Pdf = base64_encode($pdfContent);
-        
+          $base64Pdf = base64_encode($pdfContent);
+        $result=$this->createElement("AdditionalDocumentReference",$base64Pdf);
         return $result;
     }
      /**

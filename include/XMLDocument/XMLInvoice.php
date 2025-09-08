@@ -255,4 +255,31 @@ abstract class XMLInvoice extends \DOMDocument
      * @return string : XML or PDF format
      */
     abstract function create_invoice($operation_id) ;
+    
+    /**
+     * @brief thanks MY_INVOICE_FORMAT , create the corresponding object  
+     *      - UBL21BEL => InvoiceUBL21
+     *      - FacturX => FACTURXFR
+     * @returns null  MY_INVOICE_FORMAT is BASIC
+     */
+    static function build_xmlinvoice(\Database $conx) {
+        global $g_parameter;
+        if ($g_parameter->MY_INVOICE_FORMAT == 'UBL21BEL') {
+            return new \Noalyss\XMLDocument\InvoiceUBL21($conx);
+        }
+        if ($g_parameter->MY_INVOICE_FORMAT == 'FACTURXFR') {
+            return new \Noalyss\XMLDocument\FacturX($conx);
+        }
+        return null;
+    }
+    
+     /**
+     * @brief check that all the data are correct
+     * @returns int 0 : no errors,  int separated value
+     * @see InvoiceUBL21::get_message_error()
+     */
+    function verify() 
+    {
+        
+    }
 }

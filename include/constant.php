@@ -427,7 +427,10 @@ function noalyss_class_autoloader($class)
         'noalyss\file_cache'=>"lib/file_cache.class.php",
         "pdfland"=>"class/pdf_land.class.php",
         "noalyss\widget\widget"=>"widget/widget.php",
-        "noalyss\otp"=>"lib/otp.class.php"
+        "noalyss\otp"=>"lib/otp.class.php",
+        'noalyss\xmldocument\xmlinvoice'=>'XMLDocument/XMLInvoice.php',
+        'noalyss\xmldocument\facturx'=>'XMLDocument/FacturX.php',
+        'noalyss\xmldocument\invoiceubl21'=>'XMLDocument/InvoiceUBL21.php'
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];

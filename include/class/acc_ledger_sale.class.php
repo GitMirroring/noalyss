@@ -698,17 +698,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                     where j_id in (select j_id from jrnx where j_grpt=$2)'
                     , array($internal, $seq));
 
-            /* Save the attachment or generate doc */
-            if (isset($_FILES['pj'])) {
-                if (noalyss_strlentrim($_FILES['pj']['name']) != 0)
-                    $this->db->save_receipt($seq);
-                else
-                /* Generate an invoice and save it into the database */
-                if (isset($_POST['gen_invoice'])) {
-                    $file = $this->create_document($internal, $p_array);
-                    $this->doc=HtmlInput::show_receipt_document($this->jr_id,h($file));
-                }
-            }
+           
             //----------------------------------------
             // Save the payer
             //----------------------------------------

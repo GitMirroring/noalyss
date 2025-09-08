@@ -1363,4 +1363,5 @@ class Acc_Fin extends Acc_Detail
         return $array;
         
     }
+    
 }

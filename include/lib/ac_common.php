@@ -1877,3 +1877,20 @@ function guidv4($data = null) {
     // Output the 36 character UUID.
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 }
+/**
+ * @brief retrieve the index for the key percent, returns -1 if nothing found
+ * @param $array (array) SubTotal
+ * @param $key (string) name of the key 
+ * @param $value (string) value to look for
+ * @return int
+ */
+function find_idx($array,$key,$value) {
+    if ( count($array) == 0 ) { return -1; }
+    $nb_array=count($array);
+    for($i=0;$i <$nb_array;$i++) {
+        if ($array[$i][$key] == $value) { 
+            return $i; 
+        }
+    }
+    return -1;
+}

@@ -292,3 +292,7 @@ insert into quantity_code_ref values
 
 
 insert into "parameter" values ('MY_INVOICE_FORMAT','BASIC');
+
+alter table jrn add jr_document_xml oid;
+
+comment on column jrn.jr_document_xml is 'OID of the XML files (e-invoice)';

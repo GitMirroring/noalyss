@@ -124,7 +124,69 @@ if ( isset($_POST['record']) )
         $Ledger=new Acc_Ledger_Sale($cn,$_POST['p_jrn']);
         try {
             $internal=$Ledger->insert($_POST);
-
+            
+            // var $receipt (string) contains the name of the file name of 
+            //              the invoice (document created), if empty there
+            //              is no invoice
+            
+            $receipt='';
+             /* Save the attachment or generate doc */
+            if (isset($_FILES['pj'])) {
+                if (noalyss_strlentrim($_FILES['pj']['name']) != 0)
+                    $cn->save_receipt($seq);
+            
+                else
+                /* Generate an invoice and save it into the database */
+                if (isset($_POST['gen_invoice'])) 
+                {
+                    $file = $Ledger->create_document($internal, $_POST);
+                    $receipt= HtmlInput::show_receipt_document($Ledger->jr_id
+                            ,h($file));
+                    $acc_document=new Acc_Document($cn,$Ledger->jr_id);
+                    //-----------------------------------------------------------------
+                    // Generate a XLM invoice
+                    // if a document has been created create the XML file 
+                    //-----------------------------------------------------------------
+                    if ($g_parameter->MY_INVOICE_FORMAT != 'BASIC' && ! empty($acc_document->d_filename ))
+                    {
+                        
+                        $xmldocument= \Noalyss\XMLDocument\XMLInvoice::build_xmlinvoice($cn);
+                        $xmldocument->build_data($Ledger->jr_id);
+                        $code_error = $xmldocument->verify() ;
+                        if ( ! empty( $code_error )  ) {
+                            echo "Impossible de générer facture : code error  ";
+                            echo $xmldocument->get_message_error($code_error);
+                        }
+                        $pdf_filename=$acc_document->transform2pdf();
+                        
+                        // save PDF In db
+                        $acc_document->update($pdf_filename);
+                        
+                        // make the PDF 
+                        $xmldocument->set_pdf_filename($pdf_filename);
+                        
+                        // make the XML  + PDF 
+                        $xml=$xmldocument->make_xml($Ledger->jr_id);
+                        if (DEBUGNOALYSS > 1) {
+                            $uniq= tempnam($_ENV['TMP'], "e-invoice");
+                            file_put_contents($uniq, $xml);
+                            echo \Noalyss\Dbg::echo_file("file save $uniq");
+                        }
+                        // save XML string into the DB
+                        $oid=$cn->lo_write($xml);
+                        echo \Noalyss\Dbg::echo_var(1, "oid is $oid");
+                        if ($oid == false) {
+                            throw new Exception ('CV177 : cannot import e-invoice');
+                        }
+                        $acc_document->update_document_xml($oid);
+                        
+                        $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename);
+                        
+                    }
+                }
+            }
+                
+                
         }
         catch (\Exception $e) {
                 if ( $e->getCode()==EXC_BALANCE)
@@ -148,10 +210,10 @@ if ( isset($_POST['record']) )
 
         echo $Ledger->confirm($_POST,true);
         /* Show link for Invoice */
-        if (isset ($Ledger->doc) )
+        if ($receipt != "")
         {
             echo '<h2 class="h-section">'._('Document').' </h2>';
-            echo $Ledger->doc;
+            echo $receipt;
         }
 
 

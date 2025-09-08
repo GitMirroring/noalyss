@@ -29,10 +29,106 @@
 /**
  * @class
  * @brief Document used in accountancy : invoice , credit note, ... It is 
- * a specialization of Document used in Follow-UP
+ * a specialization of Document used in Follow-UP.
+ * property : 
+ *    - d_name name Receipt number
+      - d_description Comment of the operation 
+      - d_mimetype mimetype of the document
+      - d_filename filename
  */
 class Acc_Document extends Document {
 
+    ///@var $document_xml (oid) XML Document e-invoice
+    private $document_xml; 
+    
+    public function get_document_xml() {
+        return $this->document_xml;
+    }
+
+    public function set_document_xml($document_xml) {
+        $this->document_xml = $document_xml;
+        return $this;
+    }
+
+        /**
+     * @brief constructor
+     * @param $cn \Database
+     * @param $jr_id (int) JRN.JRID will be in d_id
+     */
+    function __construct($cn, $jr_id=0)
+    {
+        $this->db=$cn;
+        $this->set_id($jr_id);
+        // counter for MARCH_NEXT
+        $this->counter=0;
+
+    }
+    /**
+     * @brief set_id fill up d_filename, d_mimetype,d_lob,d_description,jr_pj_number
+     */
+    function set_id($jr_id) {
+        $this->d_id=$jr_id;
+        if ( $jr_id == 0 ){
+            return $this;
+        }
+        $row = $this->db->get_row("select jr_comment
+            ,jr_pj
+            ,jr_pj_name
+            ,jr_pj_type 
+            ,jr_pj_number
+            ,jr_document_xml
+            from jrn 
+           where
+            jr_id=$1", [$this->d_id]);
+        if ( empty ($row)) {
+            return $this;   
+        }
+        $this->d_name=$row['jr_pj_number'];
+        $this->d_description=$row['jr_comment'];
+        $this->d_mimetype=$row['jr_pj_type'];
+        $this->d_filename=$row['jr_pj_name'];
+        $this->d_lob=$row['jr_pj'];
+        $this->document_xml=$row['jr_document_xml'];
+        return $this;
+    }
+    /**
+     * @brief save the file into DB, will create a large object if there 
+     * is no document to replace. It will change the d_filename, d_mimetype 
+     *
+     * @param $d_filename (string) full path to the file to load into DB
+     * 
+     * @returns false if d_id = 0 or the file doesn't exist, true for success
+     */
+    function update($filename) {
+        if ($this->d_id == 0) return false;
+        if ( ! file_exists($filename)) return false;
+        $this->db->start();
+        $this->d_mimetype= mime_content_type($filename);
+        $this->d_filename= basename($filename);
+        if ( $this->d_lob == "") {
+            $this->db->lo_unlink($this->d_lob);
+        } 
+        
+        $this->d_lob=$this->db->lo_import($filename);
+        $this->db->exec_sql(
+                "update jrn set jr_pj=$1,jr_pj_name=$2,jr_pj_type=$3 
+                    where jr_id=$4",
+                [$this->d_lob,$this->d_filename,$this->d_mimetype,$this->d_id]
+                );
+        $this->db->commit();
+        return true;
+    }
+    /**
+     * @brief save the Large Object $oid in the column JRN.JR_DOCUMENT_XML
+     * @param $oid( OID) PostgreSQL Object ID
+     */
+    function update_document_xml($oid){
+        $this->db->exec_sql("update jrn set jr_document_xml=$1 where 
+            jr_id=$2",[
+                $oid,
+                $this->d_id
+            ]);
+    }
     /**
      * @brief create the invoice and saved it as attachment to the
      * operation,
@@ -87,9 +183,10 @@ class Acc_Document extends Document {
         $this->ag_id = 0;
         $p_array['e_pj'] = $this->db->get_value("select jr_pj_number from jrn where jr_internal=$1", [$internal]);
         $filename = "";
+        //  generate the document and set d_lob,d_mimetype,
         $this->generate($p_array, $p_array['e_pj']);
 
-        // Move the document to accountancy (table JRN)
+        // Move the document to accountancy (table JRN),
         $this->moveDocumentACC($internal);
 
         // Update the comment with invoice number, if the comment is empty
@@ -101,25 +198,16 @@ class Acc_Document extends Document {
 
     /**
      * @brief export the file to the file system and complet $this->d_mimetype, d_filename and 
-     * @param  $internal is the internal code JRN.JR_INTERNAL
-     * @param $destination_file string  path
-     * @return bool false for failure and true for success
+     * @return bool false for failure and string (the full path_name) for success
      */
-    function export_file($internal, $destination_file) {
-
-
-        $row = $this->db->get_row("select jr_pj,jr_pj_name,jr_pj_type 
-            from jrn 
-           where
-            jr_internal=$1", [$internal]);
-        if ($row == null) {
-            \record_log("ACD117. not row found for $internal");
+    function export_file($destination_file) {
+        
+        if (empty($this->d_filename)) {
             return false; 
         }
-        $row = Database::fetch_array($ret, 0);
-
+       
         $this->db->start();
-        if ($this->db->lo_export($row['jr_pj'], $tmp) == false) {
+        if ($this->db->lo_export($this->d_lob, $destination_file) == false) {
             record_log("ACD122. cannot export");
             $this->db->commit();
             return false;

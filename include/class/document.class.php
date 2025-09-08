@@ -1891,14 +1891,14 @@ class Document
     function export_file($p_destination_file)
     {
         if ($this->d_id==0) {
-            return;
+            return false;
         }
          $this->db->start();
         $ret=$this->db->exec_sql(
                 "select d_id,d_lob,d_filename,d_mimetype from document where d_id=$1", [$this->d_id]);
         if (Database::num_row($ret)==0)
         {
-            return;
+            return false;
         }
         $row=Database::fetch_array($ret, 0);
         //the document  is saved into file $tmp
