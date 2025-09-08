@@ -123,6 +123,94 @@ class DatabaseCoreTest extends TestCase
         $this->assertStringContainsString("Documentation", $p_content,"$filename invalid content");
 
     }
-    
+    /**
+     * @brief read / write large object
+     * @testDox read and write - unlink large object
+     * 
+     */
+    public function testWrite_Read_large_object()
+    {
+        $md5="965765540c1531370e5856ff81696107";
+        $file=__DIR__."/file/developpement-widget.pdf";
+        // step 1 : we create the large object
+        $binary_data= file_get_contents($file);
+        $this->assertEquals($md5,md5($binary_data)," error when reading  $file ");
+        $oid = $this->object->lo_write($binary_data);
+        $this->assertTrue ($oid != false , "writing in DB fails");
+        // step 2 = read object
+        $retrieve = $this->object->lo_read($oid);
+        $this->assertEquals($md5,md5($retrieve)," error when retrieving file from db");
+        
+        $target=$file."retrieve.pdf";
+        if ( file_exists($target) ) { unlink($target);}
+        
+        file_put_contents($target, $retrieve);
+        $this->assertTrue(file_exists($target));
+        
+        if ( file_exists($target) ) { unlink($target);}
 
+        $this->assertTrue( $this->object->lo_unlink($oid)," cannot unlink it");
+        
+        
+    }
+    /**
+     * @brief import  export large objects
+     * @testDox import and export large object
+     * 
+     */
+    public function testImport_export_large_object()
+    {
+        $md5="965765540c1531370e5856ff81696107";
+        $file=__DIR__."/file/developpement-widget.pdf";
+        $this->object->start();
+        $oid = $this->object->lo_import($file);
+        $this->object->commit();
+        $this->assertTrue(  $oid != false , "import of the file fails");
+        $target=$file."-tmp";
+        if ( file_exists($target) ) { unlink($target);}
+        $this->object->start();
+        $this->object->lo_export($oid , $file."-tmp");
+        $this->object->commit();
+        $this->assertTrue(file_exists($file."-tmp")," file not exported");
+        if ( file_exists($target) ) { unlink($target);}
+        $this->assertTrue( $this->object->lo_unlink($oid)," cannot unlink it");
+    }
+    
+    public function testReplace() {
+            $string=<<<EOF
+        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+
+Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+
+Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+
+Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+
+Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+                
+EOF;                
+        $md5=md5($string);
+        $this->object->start();
+        $oid=$this->object->lo_write($string);
+        $this->object->commit();
+
+        $this->object->start();
+        $stringDB = $this->object->lo_read($oid);
+        $this->object->commit();
+        
+        $this->assertEquals(md5($string),md5($stringDB)," error string from DB corrupted");
+        
+        $string = "second";
+        $this->object->start();
+        $this->object->lo_replace($string,$oid);
+        $this->object->commit();
+        
+        $this->object->start();
+        $stringDB = $this->object->lo_read($oid);
+        var_dump($stringDB);
+        $this->object->commit();
+        
+        $this->assertEquals(md5($string),md5($stringDB)," after lo_replace(), string from DB corrupted");
+    }
+            
 }

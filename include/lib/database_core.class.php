@@ -759,6 +759,80 @@ class DatabaseCore
         }
         return false;
     }
+    /**
+     * @brief large_object writee: create a Large object if oid is not given 
+     * with data content in a binaray
+     * @param $binary_data (raw data) binary
+     * @returns $oid of the LO, false if it fails
+     */
+    function lo_write($binary_data)
+    {
+        //var $a : 0 where in a transaction, 1 we are not in a transaction
+        $a=0;
+        if ( $this->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->start();
+        }
+
+        $oid= pg_lo_create($this->db);
+        
+        if ( ($handle=pg_lo_open($this->db,$oid,"w")) == false  ) { return false ;}
+        pg_lo_write($handle, $binary_data);
+        pg_lo_close($handle);
+        if ( $a==1) { $this->commit(); }
+        return $oid;
+        
+    }
+     /**
+     * @brief read a Large object with data content in a binary
+     * @param $oid (int8) oid of the large object
+     * @returns $binary_data (raw data) binary
+     */
+    function lo_read($oid)
+    {
+        //var $a : 0 where in a transaction, 1 we are not in a transaction
+        $a=0;
+        if ( $this->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->start();
+        }
+
+        $handle=pg_lo_open($this->db,$oid,"r");
+        if ( $handle == false ) { return false ;}
+        // set position end of the LO
+        pg_lo_seek($handle, 0, PGSQL_SEEK_END);
+        // get the size 
+        $size= pg_lo_tell($handle);
+        // set position to start
+        pg_lo_seek($handle, 0, PGSQL_SEEK_SET);
+        // read the comùplete LOB
+        $binary_data = pg_lo_read($handle,$size );
+        pg_lo_close($handle);
+        if ( $a==1) { $this->commit(); }
+        return $binary_data;
+    }
+     /**
+     * @brief replace  a Large object with data content in a binary
+     * @param $oid (int8) oid of the large object
+     * @param $binary_data (raw data) binary
+     * @returns $oid of the LO, false if it fails
+     */
+    function lo_replace($binary_data, $oid) {
+        $a = 0;
+        if ($this->status() !== PGSQL_TRANSACTION_INTRANS) {
+            $a = 1;
+            $this->start();
+        }
+        $handle = pg_lo_open($this->db, $oid, "w");
+        if ( $handle == false ) { return false ;}
+        pg_lo_truncate($handle, 0);
+        pg_lo_write($handle, $binary_data);
+        pg_lo_close($handle);
+        if ($a == 1) {
+            $this->commit();
+        }
+        return $oid;
+    }
 
     /**
      * \brief wrapper for the function pg_num_rows
@@ -823,7 +897,7 @@ class DatabaseCore
     /**
      * \brief wrapper for the function pg_lo_unlink
      * \param $p_oid is the of oid
-     * \return return the result of the operation
+     * \return return the result of the operation : false == fails
      */
 
     function lo_unlink($p_oid)
