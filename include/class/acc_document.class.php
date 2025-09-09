@@ -35,11 +35,13 @@
       - d_description Comment of the operation 
       - d_mimetype mimetype of the document
       - d_filename filename
+      - document_xml oid of the XML invoice (including PDF)
+ * 
  */
 class Acc_Document extends Document {
 
-    ///@var $document_xml (oid) XML Document e-invoice
-    private $document_xml; 
+    
+    private $document_xml; ///< $document_xml (oid) XML document e-invoice
     
     public function get_document_xml() {
         return $this->document_xml;

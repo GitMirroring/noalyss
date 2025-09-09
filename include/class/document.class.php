@@ -720,22 +720,22 @@ class Document
         $p_tag=noalyss_str_replace('=', '', $p_tag);
         $r="Tag inconnu";
         static $aComment=NULL;
-        static $counter_comment=1; /* <! counter for the comment , skip the first one which is the descrition */
+        static $counter_comment=1; /*<! counter for the comment , skip the first one which is the descrition */
 
         static $aRelatedAction=NULL;
-        static $counter_related_action=0; /* <! counter for the related action */
+        static $counter_related_action=0; /*<! counter for the related action */
 
         static $aRelatedOperation=NULL;
-        static $counter_related_operation=0; /* <! counter for the related operation */
+        static $counter_related_operation=0; /*<! counter for the related operation */
 
         static $aFileAttached=NULL;
-        static $counter_file=0; /* <! counter for the file */
+        static $counter_file=0; /*<! counter for the file */
 
         static $aOtherCard=NULL;
-        static $counter_other_card=0; /* <! counter for the other card */
+        static $counter_other_card=0; /*<! counter for the other card */
 
         static $aTag=NULL;
-        static $counter_tag=0; /* <! counter for the tags */
+        static $counter_tag=0; /*<! counter for the tags */
 
         static $aParameterExtra=NULL; // Extra parameter for the company
         switch ($p_tag)
@@ -1837,7 +1837,7 @@ class Document
     }
 
     /**
-     * replace a pattern with a value in the buffer , handle the change for OOo type file and amount
+     * @brief replace a pattern with a value in the buffer , handle the change for OOo type file and amount
      * 
      * @param string $p_buffer
      * @param string $_pattern
