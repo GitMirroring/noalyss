@@ -12,10 +12,30 @@ $tag=new Tag($cn);
 $http=new HttpInput();
 $data=$tag->get_data();
 $data->t_id=$http->get("tag","number");
-if ($data->t_id == -1 &&  $g_user->check_action(TAGADD) == 0 ) return;
-$data->load();
+if ($data->t_id == -1 &&  $g_user->check_action(TAGADD) == 0 ) {
+    header('Content-type: text/xml; charset=UTF-8');
+       $html=escape_xml(sprintf(
+'%s
+    <p class="error">
+%s                   
+</p>
+%s
+', HtmlInput::title_box(_("Etiquette"), "tag_div","close","","y")
+               ,_("Désolé, vous n'êtes pas autorisé à créer des étiquettes")
+               , HtmlInput::button_close("tag_div")
+            ));
+               
+        echo <<<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+<ctl></ctl>
+<code>$html</code>
+</data>
+EOF;
+    return;
+}
 echo HtmlInput::title_box(_("Etiquette"), "tag_div","close","","y");
-
+$data->load();
 ?>
 <?php
 // save via POST and reload page 
