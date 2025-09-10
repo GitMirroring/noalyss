@@ -38,8 +38,10 @@ require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
 // for loading javascripts or style-sheet, it is needed to know the user 
 // global preference, but the user is not yet connected
 // to a folder. So the Database is the repository
-$g_user=new Noalyss_user(new Database());
-set_language();
+if ( defined("noalyss_user") || defined("phpcompta_user")) {
+    $g_user=new Noalyss_user(new Database());
+    set_language();
+}
 // load message for javascript
 if (isset ($_REQUEST['loadjs']) && $_REQUEST['loadjs']=='message')
 {
