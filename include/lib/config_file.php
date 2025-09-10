@@ -299,7 +299,7 @@ function display_file_config($p_array, $from_setup = 1, $p_os = 1)
 // with NGINX it is needed to set the NOALYSS_URL , it is the default URL of $a
 // your installation, example with https://demo.noalyss.eu $a
 // define ("NOALYSS_URL","https://demo.noalyss.eu"); $a
-    EOF;
+EOF;
 }
 /*!
  * \brief create the config file
