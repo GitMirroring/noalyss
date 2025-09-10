@@ -78,7 +78,7 @@ for ($r=0;$r<count($a_repo);$r++) {
         $export->add($a);
         $export->add($a_stock[$s]['qin'],"number");
         $export->add($a_stock[$s]['qout'],"number");
-        $export->add(bcsub($a_stock[$s]['qin'],$a_stock[$s]['qout']),"number");
+        $export->add(bcsub($a_stock[$s]['qin'],$a_stock[$s]['qout'],4),"number");
         $export->write();
     }
  }

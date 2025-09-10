@@ -89,7 +89,7 @@
 									<?php echo _("DIFF")?>  :
 								</td>
 								<td class="num">
-									<?php echo nbm((bcsub($array[0]['s_qin']??0,$array[0]['s_qout']??0)))?>
+									<?php echo nbm((bcsub($array[0]['s_qin']??0,$array[0]['s_qout']??0,4)))?>
 								</td>
 							</tr>
 						</table>
