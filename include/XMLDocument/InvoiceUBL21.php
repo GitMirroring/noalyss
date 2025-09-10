@@ -361,16 +361,16 @@ class InvoiceUBL21 extends XMLInvoice {
     {
         $taxTotal=$this->createElement("cac:TaxTotal");
         $taxTotal->appendChild($this->createElement('cbc:TaxAmount',$this->data['TaxAmount']))
-                ->setAttribute("currencyID","EUR");
+                ->setAttribute("currencyID",$this->data['currency']);
         // for subTotal
         $subTotal=$this->data['subTotalVAT'];
         $nb_sub=count($subTotal);
         for ($i=0;$i<$nb_sub;$i++) {
             $subTotalXML=$this->createElement("cac:TaxSubtotal");
             $subTotalXML->appendChild($this->createElement('cbc:TaxableAmount',$subTotal[$i]['amount']))
-                    ->setAttribute("currencyID","EUR");
+                    ->setAttribute("currencyID",  $this->data['currency']);
             $subTotalXML->appendChild($this->createElement('cbc:TaxAmount',$subTotal[$i]['vat']))
-                    ->setAttribute("currencyID","EUR");
+                    ->setAttribute("currencyID",$this->data['currency']);
             $taxCategory=$this->createElement("cac:TaxCategory");
             $taxCategory->appendChild($this->createElement("cbc:ID","S"));
             $taxCategory->appendChild($this->createElement("cbc:Percent",$subTotal[$i]['percent']));
@@ -399,13 +399,13 @@ class InvoiceUBL21 extends XMLInvoice {
     {
         $result=$this->createElement('cac:LegalMonetaryTotal' );
         $result->appendChild($this->createElement("cbc:LineExtensionAmount",$this->data['LineExtensionAmount']))
-                ->setAttribute("currencyID","EUR");
+                ->setAttribute("currencyID",$this->data['currency']);
         $result->appendChild($this->createElement("cbc:TaxExclusiveAmount",$this->data['TaxExclusiveAmount']))
-                ->setAttribute("currencyID","EUR");
+                ->setAttribute("currencyID",$this->data['currency']);
         $result->appendChild($this->createElement("cbc:TaxInclusiveAmount",$this->data['TaxInclusiveAmount']))
-                ->setAttribute("currencyID","EUR");
+                ->setAttribute("currencyID", $this->data['currency'] );
         $result->appendChild($this->createElement("cbc:PayableAmount",$this->data['PayableAmount']))
-                ->setAttribute("currencyID","EUR");
+                ->setAttribute("currencyID", $this->data['currency'] );
         return $result;
         
     }
@@ -446,7 +446,7 @@ class InvoiceUBL21 extends XMLInvoice {
                 $this->createElement("cbc:InvoicedQuantity", $row['quantity']))
                 ->setAttribute("unitCode", "EA");
         $result->appendChild($this->createElement("cbc:LineExtensionAmount", $row['price']))
-                ->setAttribute("currencyID","EUR");
+                ->setAttribute("currencyID",$this->data['currency']);
         $item=$this->createElement("cac:Item");
         $card=new \Fiche($this->cn,$row['card_id']);
         $item->appendChild($this->createElement("cbc:Name", $card->get_attribute(ATTR_DEF_NAME)));
@@ -462,7 +462,7 @@ class InvoiceUBL21 extends XMLInvoice {
         $result->appendChild($item);
         $price=$result->appendChild($this->createElement("cac:Price"));
         $price->appendChild($this->createElement("cbc:PriceAmount", $row['price']))
-                ->setAttribute("currencyID","EUR");
+                ->setAttribute("currencyID",$this->data['currency']);
         $result->appendChild($price);
             
         return $result;
@@ -536,7 +536,7 @@ class InvoiceUBL21 extends XMLInvoice {
             $root->appendChild($this->createElement('cbc:DueDate',$this->data['due_date']));
         }
         $root->appendChild($this->createElement('cbc:InvoiceTypeCode',380));
-        $root->appendChild($this->createElement('cbc:DocumentCurrencyCode','EUR'));
+        $root->appendChild($this->createElement('cbc:DocumentCurrencyCode',$this->data['currency']));
         
         /**
          * insert PDF in the XML

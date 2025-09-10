@@ -199,20 +199,30 @@ abstract class XMLInvoice extends \DOMDocument
         $result['customer']['registration_name']=$customer->get_attribute(ATTR_DEF_NAME);
         // official ID , like VAT
         $result['customer']['customer_id']=$customer->get_attribute(ATTR_DEF_NUMTVA);
-        // +++TODO+++ adapt for all currency
-        // currency must be EURO !
-        $result['currency']=$operation->det->currency_id;
+        
+        // currency 
+        $result['currency']=$this->cn->get_value("select cr_code_iso from currency where id=$1"
+                ,array($operation->det->currency_id));
+        
         // goods and services
         $result['operation']=array();
         $nb_operation= count($operation->det->array);
         for ($i=0;$i < $nb_operation;$i++) {
             $result['operation'][$i]['card_id']=$operation->det->array[$i]['qs_fiche'];
             $result['operation'][$i]['quantity']=$operation->det->array[$i]['qs_quantite'];
-            $result['operation'][$i]['price']=$operation->det->array[$i]['qs_price'];
-            $result['operation'][$i]['vat']=$operation->det->array[$i]['qs_vat'];
+            // $operation->det->currency_id == 0  default currency of the folder
+            if ($operation->det->currency_id == 0 ) {
+                $result['operation'][$i]['price']=$operation->det->array[$i]['qs_price'];
+                $result['operation'][$i]['vat']=$operation->det->array[$i]['qs_vat'];
+            } else {
+                $result['operation'][$i]['price']=$operation->det->array[$i]['oc_amount'];
+                $result['operation'][$i]['vat']=$operation->det->array[$i]['oc_vat_amount'];
+                
+            }
             $result['operation'][$i]['vat_id']=$operation->det->array[$i]['qs_vat_code'];
             $result['operation'][$i]['vat_reversed']=$operation->det->array[$i]['qs_vat_sided'];
         }
+        // retrieve currency 
         return $result;
         
     }
