@@ -28,6 +28,8 @@
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 global $cn,$g_parameter,$g_user;
 
+$http=new HttpInput();
+
 // Show the form
 // Get by exercice
 // Get type = table or list
@@ -38,14 +40,14 @@ $per->load();
 $date_limit=$per->limit_year($per->p_exercice);
 $last_day=$per->last_day($date_limit['end']);
 $last_day=format_date($last_day,'DD.MM.YYYY','YYYY-MM-DD');
-$iexercice->selected=(isset($_GET['state_exercice']))?$_GET['state_exercice']:$last_day;
+$iexercice->selected=$http->get('state_exercice',"string",$last_day);
 
 $presentation=new ISelect("present");
 $presentation->value=array (
 		array("value"=>"T","label"=>"Tableau récapitulatif"),
 		array("value"=>"L","label"=>"Liste")
 );
-$presentation->selected=(isset($_GET['present']))?$_GET['present']:"T";
+$presentation->selected=$http->get("present","string","T");
 require_once NOALYSS_TEMPLATE.'/stock_state_search.php';
 
 $stock=new Stock($cn);

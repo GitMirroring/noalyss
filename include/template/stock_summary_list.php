@@ -95,7 +95,7 @@ $a_repo=$cn->get_array("select distinct t.r_id,r_name,r_adress,r_city,r_country,
 
 		</td>
 		<td class="num">
-			<?php echo nbm(bcsub($a_stock[$s]['qin'],$a_stock[$s]['qout']))?>
+			<?php echo nbm(bcsub($a_stock[$s]['qin'],$a_stock[$s]['qout'],4))?>
 		</td>
 	</tr>
 <?php endfor; ?>

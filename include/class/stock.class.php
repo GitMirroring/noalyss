@@ -252,7 +252,14 @@ class Stock extends Stock_Sql
 
 		return $sql . $clause;
 	}
-
+        /**
+         * @brief Display the status of the repository : nb of item IN / OUT and Difference
+         * @global $cn (Database) Db connexion
+         * @global $g_user (Noalyss_User) connected user
+         * @param  $p_array (array)   
+         *      - [state_exercice] => 2025-12-31 date 
+                - [present] => L type of presentation T table, L listing
+         */
 	function summary($p_array)
 	{
 		global $cn, $g_user;
