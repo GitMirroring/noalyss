@@ -31,16 +31,16 @@
  * @brief Document used in accountancy : invoice , credit note, ... It is 
  * a specialization of Document used in Follow-UP.
  * property : 
+ *    - d_id JRN.JR_ID
  *    - d_name name Receipt number
-      - d_description Comment of the operation 
-      - d_mimetype mimetype of the document
-      - d_filename filename
-      - document_xml oid of the XML invoice (including PDF)
+      - d_description Comment of the operation  
+      - d_mimetype mimetype of the document  JRN.JR_PJ_TYPE
+      - d_filename filename JRN.JR_PJ_NAME
+      - document_xml oid of the XML invoice (including PDF) JRN.JR_DOCUMENT_XML
+      - d_lob = JRN.JR_PJ
  * 
  */
 class Acc_Document extends Document {
-
-    
     private $document_xml; ///< $document_xml (oid) XML document e-invoice
     
     public function get_document_xml() {
@@ -130,19 +130,16 @@ class Acc_Document extends Document {
                 $oid,
                 $this->d_id
             ]);
+
     }
     /**
      * @brief create the invoice and saved it as attachment to the
      * operation,
-     * @param  $internal is the internal code JRN.JR_INTERNAL
      * @param  $p_array is normally the $_POST
       @verbatim
       Array
       (
       [ledger_type] => VEN
-      [ac] => COMPTA/VENMENU/VEN
-      [sa] => p
-      [action_gestion] =>
       [gDossier] => x
       [nb_item] => 1 (number of item used to numerate e_marchX, e_quantX ,...)
       [p_jrn] => 2
@@ -174,6 +171,7 @@ class Acc_Document extends Document {
       [e_mp_qcode_16] => Banque 1
       [e_mp_qcode_17] => Banque 2
       [view_invoice] => Enregistrer
+      [gen_doc] => int DOCUMENT_MODELE.MD_ID , document template to use
       )
      * @endverbatim
      * @todo rewrite code : remove extract and +SQL value 
@@ -181,9 +179,13 @@ class Acc_Document extends Document {
      */
     function create_document($internal, $p_array) {
         $this->f_id = $p_array['e_client'];
+        // var md_id (int) DOCUMENT_MODELE.MD_ID
         $this->md_id = $p_array['gen_doc'];
+        // var ag_id == 0 fake follow-up 
         $this->ag_id = 0;
-        $p_array['e_pj'] = $this->db->get_value("select jr_pj_number from jrn where jr_internal=$1", [$internal]);
+        // var e_pj (string) receipt nb
+        $p_array['e_pj'] = $this->db->get_value("select jr_pj_number from jrn where jr_id=$1"
+                , [$this->d_id]);
         $filename = "";
         //  generate the document and set d_lob,d_mimetype,
         $this->generate($p_array, $p_array['e_pj']);
@@ -207,7 +209,7 @@ class Acc_Document extends Document {
         if (empty($this->d_filename)) {
             return false; 
         }
-       
+
         $this->db->start();
         if ($this->db->lo_export($this->d_lob, $destination_file) == false) {
             record_log("ACD122. cannot export");
@@ -216,6 +218,7 @@ class Acc_Document extends Document {
         }
         $this->db->commit();
 
-        return true;
+        return $destination_file;
     }
+    
 }

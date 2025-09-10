@@ -213,7 +213,6 @@ abstract class XMLInvoice extends \DOMDocument
             $result['operation'][$i]['vat_id']=$operation->det->array[$i]['qs_vat_code'];
             $result['operation'][$i]['vat_reversed']=$operation->det->array[$i]['qs_vat_sided'];
         }
-        print_r($result);
         return $result;
         
     }

@@ -1981,8 +1981,13 @@ class Acc_Ledger  extends jrn_def_sql
      */
     function create_document($internal, $p_array)
     {
-        $acc_document=new Acc_Document($this->db);
-        $acc_document->create_document($internal, $p_array);
+        $id=$this->db->get_value('select jr_id from jrn where jr_internal=$1',
+                [$internal]);
+        if ( $id == "") {
+            return;
+        }
+        $acc_document=new Acc_Document($this->db,$id);
+        $acc_document->create_document($internal,$p_array);
         return h($acc_document->d_name.' ('.$acc_document->d_filename.')');
     }
 
