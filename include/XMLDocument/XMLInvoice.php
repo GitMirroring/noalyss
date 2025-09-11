@@ -67,6 +67,7 @@ use Noalyss\Utility;
                     [vat] => 2.1000
                     [vat_id] => 1
                     [vat_reversed] => 0.0000
+                    [code_quantity]=> EA
                 )
 
             [1] => Array
@@ -77,6 +78,7 @@ use Noalyss\Utility;
                     [vat] => 17.5200
                     [vat_id] => 1
                     [vat_reversed] => 0.0000
+                    [code_quantity]=> EA
                 )
 
             [2] => Array
@@ -87,6 +89,7 @@ use Noalyss\Utility;
                     [vat] => 15.1200
                     [vat_id] => 5
                     [vat_reversed] => 15.1200
+                    [code_quantity]=> EA
                 )
 
         )
@@ -210,6 +213,11 @@ abstract class XMLInvoice extends \DOMDocument
         for ($i=0;$i < $nb_operation;$i++) {
             $result['operation'][$i]['card_id']=$operation->det->array[$i]['qs_fiche'];
             $result['operation'][$i]['quantity']=$operation->det->array[$i]['qs_quantite'];
+            
+            // get the type of unity, if not found then it will be EA
+            $x= \Card_Property::get_attribute($this->cn,$operation->det->array[$i]['qs_fiche'], ATTR_DEF_QUANTITY_TYPE);
+            $result['operation'][$i]['code_quantity']=($x===false||$x=="")?"EA":$x;
+            
             // $operation->det->currency_id == 0  default currency of the folder
             if ($operation->det->currency_id == 0 ) {
                 $result['operation'][$i]['price']=$operation->det->array[$i]['qs_price'];

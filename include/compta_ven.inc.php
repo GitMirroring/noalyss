@@ -154,7 +154,7 @@ if ( isset($_POST['record']) )
                         $xmldocument->build_data($Ledger->jr_id);
                         $code_error = $xmldocument->verify() ;
                         if ( ! empty( $code_error )  ) {
-                            echo "Impossible de générer facture : code error  ";
+                            echo "Impossible de générer facture : code error $code_error ";
                             echo $xmldocument->get_message_error($code_error);
                         }
                         $pdf_filename=$acc_document->transform2pdf();

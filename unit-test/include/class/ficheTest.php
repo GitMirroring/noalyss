@@ -849,4 +849,6 @@ where
 
         $this->g_connection->exec_sql ('update fiche set f_enable=$1 where f_id = $2 or f_id=$3',[1,34,35]);
     }
+    
+
 }

@@ -444,7 +444,7 @@ class InvoiceUBL21 extends XMLInvoice {
         /// il faut adapter les fiches
         $result->appendChild(
                 $this->createElement("cbc:InvoicedQuantity", $row['quantity']))
-                ->setAttribute("unitCode", "EA");
+                ->setAttribute("unitCode", $row["code_quantity"]);
         $result->appendChild($this->createElement("cbc:LineExtensionAmount", $row['price']))
                 ->setAttribute("currencyID",$this->data['currency']);
         $item=$this->createElement("cac:Item");

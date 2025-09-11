@@ -289,4 +289,17 @@ class Card_PropertyTest extends TestCase
         $this->assertTrue(!empty($fiche->get_attribute(ATTR_DEF_ACCOUNT)),' accounting not computed');
 
     }
+    /**
+     * @testdox test the function  get_attribute
+     */
+    public function testGet_attribute()
+    {
+         $g_connection=Dossier::connect();
+        $fiche_goods = new \Fiche($g_connection);
+        $fiche_goods->get_by_qcode("MARCHA");
+        $id=$fiche_goods->id;
+        
+        $this->assertTrue(\Card_Property::get_attribute($g_connection, $id, ATTR_DEF_QUICKCODE)=="MARCHA","Quick code not retrieved");
+        $this->assertTrue(\Card_Property::get_attribute($g_connection, $id, -5)==false,"Inexistant property not detected");
+    }
 }
