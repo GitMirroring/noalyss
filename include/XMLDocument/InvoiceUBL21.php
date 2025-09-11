@@ -501,15 +501,32 @@ class InvoiceUBL21 extends XMLInvoice {
     {
         if ( $this->pdf_filename == "") return null;
       /**  $pdf_filename = 'chemin/vers/votre/fichier.pdf';*/
+        static $i=0;
+        $i++;
         if ( $this->pdf_filename == null ) {
             return null;
         }
         // Lire le fichier PDF  
         $pdfContent = file_get_contents( $this->pdf_filename   );
 
-        // Encoder le PDF en base64
-          $base64Pdf = base64_encode($pdfContent);
-        $result=$this->createElement("AdditionalDocumentReference",$base64Pdf);
+        $result=$this->createElement("cac:AdditionalDocumentReference");
+        $id=$this->createElement("cbc:ID",$i);
+        $documentType=$this->createElement("cbc:DocumentType",'application/pdf');
+        $document_description=$this->createElement("cbc:DocumentDescription",'INVOICE PDF');
+        
+        // PDF in base64
+        $base64Pdf = base64_encode($pdfContent);
+        $embeddedDocument=$this->createElement("cbc:EmbeddedDocumentBinaryObject",$base64Pdf);
+        $embeddedDocument->setAttribute("mimeCode", "application/pdf");
+        $embeddedDocument->setAttribute("filename", "facture.pdf");
+        $attachment=$this->createElement("cac:Attachment");
+        $attachment->appendChild($embeddedDocument);
+        
+        $result->appendChild($id);
+        $result->appendChild($documentType);
+        $result->appendChild($document_description);
+        $result->appendChild($attachment);
+        
         return $result;
     }
      /**

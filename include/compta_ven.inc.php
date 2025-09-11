@@ -168,8 +168,10 @@ if ( isset($_POST['record']) )
                         // make the XML  + PDF 
                         $xml=$xmldocument->make_xml($Ledger->jr_id);
                         if (DEBUGNOALYSS > 1) {
-                            $uniq= tempnam($_ENV['TMP'], "e-invoice");
+                            $mt=date ('ymd-Hi');
+                            $uniq= $_ENV['TMP']. DIRECTORY_SEPARATOR."$mt-e-invoice.xml";
                             file_put_contents($uniq, $xml);
+                            chmod ($uniq,774);
                             echo \Noalyss\Dbg::echo_file("file save $uniq");
                         }
                         // save XML string into the DB
