@@ -99,29 +99,46 @@ elseif ($action=="send_email") :
          */
         $mail=new Sendmail();
         $mail->set_from(ADMIN_WEB);
+        $mail->set_format("HTML");
         $mail->mailto($user_email);
         $mail->set_subject("NOALYSS : Réinitialisation de mot de passe");
         $noalyss_url=NOALYSS_URL;
         $message=<<<EOF
-     Bonjour,
-      
-Une demande de réinitialisation de votre mot de passe a été demandée par {$_SERVER['REMOTE_ADDR']}
-   
-Votre nom d'utilisateur est {$user_login}
-Votre mot de passe est {$user_password}
-
+     <p>Bonjour,
+      <br/>
+Une demande de réinitialisation de votre mot de passe a été demandée par <b>{$_SERVER['REMOTE_ADDR']}</b>
+<br/>
+<ul>
+    <li>
+Votre nom d'utilisateur est <b>{$user_login}</b>
+    </li>
+    <li>
+Votre mot de passe est <b>{$user_password}</b>
+    </li>
+</ul>
+</p>
+<p>
 Suivez ce lien pour activer le changement ou ignorer ce message si vous n'êtes pas l'auteur de cette demande.
+<br/>
 Ce lien ne sera actif que 12 heures.
    
-   
-   {$noalyss_url}/index.php?recover&id=req&req={$request_id}
-   
+   <a title="noalyss" href="{$noalyss_url}/index.php?recover&id=req&req={$request_id}">{$noalyss_url}/index.php?recover&id=req&req={$request_id}</a>
+</p>   
+   <p>
    Merci d'utiliser NOALYSS
+   <br/>
+   <br/>
+   <br/>
    
 Cordialement,
+   <br/>
+   <br/>
 
 Noalyss team
-      
+      </p>
+      <p>
+               <i> Si cet email est dans vos spams, ajoutez l'expéditeur dans votre carnet d'adresse</i>
+               </p>
 EOF;
         $mail->set_message($message);
         $mail->compose();
