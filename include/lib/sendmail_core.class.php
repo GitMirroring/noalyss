@@ -167,12 +167,13 @@ class Sendmail_Core
             $this->content .= "Content-Transfer-Encoding: 8bit" . $eol.$eol ;
             $this->content .= $this->message . $eol ;
         } elseif ($this->format == 'HTML') {
+            $separator_second=md5(rand());
             
             $this->header .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\"" .$eol ;
              // message PLAIN
             $this->content .= "--" . $separator . $eol;
-            $separator_second=md5(rand());
             $this->content .= "Content-Type: multipart/alternative; boundary=\"" . $separator_second . "\"".$eol  ;
+            $this->content.= "--$separator_second".$eol;
             $this->content .= "Content-Type: text/plain; charset=UTF-8; format=flowed".$eol;
             $this->content .= "Content-Transfer-Encoding: 8bit" . $eol.$eol ;
             $this->content .= strip_tags($this->message) . $eol ;
