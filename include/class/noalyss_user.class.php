@@ -2019,6 +2019,7 @@ class Noalyss_User
     {
         if ( $this->authent_method !=1 ) { return false; }
         $mail=new \Sendmail();
+        $mail->set_format("HTML");
         $mail->set_from(ADMIN_WEB);
         $mail->mailto($this->getEmail());
         $mail->set_subject(_("NOALYSS : votre code secret "));
@@ -2030,9 +2031,12 @@ class Noalyss_User
         }
         $otp=new \Noalyss\OTP();
         $code=$otp->compute_code($this->otp_secret);
-       $message="Bonjour,
-           
-Voici votre code secret pour NOALYSS : $code
+       $message="<p>Bonjour,
+           <br>
+           <br>
+           <p>Voici votre code secret pour NOALYSS : <b> $code</b>
+               </p>
+               
     
 
 ";
@@ -2069,6 +2073,7 @@ Voici votre code secret pour NOALYSS : $code
      */
     function send_link_otp($base_url=null) {
         $mail = new \Sendmail();
+        $mail->set_format("HTML");
         $mail->set_from(ADMIN_WEB);
         $mail->mailto($this->getEmail());
         $mail->set_subject(_("NOALYSS : Double authentification lien pour 2FA: OTP"));
@@ -2080,20 +2085,27 @@ Voici votre code secret pour NOALYSS : $code
         /**
          * save in DB first
          */
-        $message = "Bonjour,
-
+        $message = "<p>Bonjour,</p>
+<p>
     Afin de pouvoir utiliser la double authentification avec 2FA: OTP, pourriez-vous
     suivre ce lien et scanner le QRCode avec votre application android freeOTP ou Google Authenticator.
-               
-    Ce lien expirera le {$str_time}.
+  </p>             
+    <p>Ce lien expirera le <b>{$str_time}</b>.
+        <br>
+        <br>
+        <br>
+        
+   <a href=\"{$noalyss_url}/index.php?otp={$uuid}\">{$noalyss_url}/index.php?otp={$uuid}</a>
+        </p>
    
-   
-   {$noalyss_url}/index.php?otp={$uuid}
+   <p>
    
    Merci d'utiliser NOALYSS
+   </p>
    
+<p>
 Bien cordialement,
-
+</p>
 
 ";
         try {
