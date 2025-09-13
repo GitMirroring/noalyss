@@ -79,6 +79,32 @@ if ( isset ($_POST['view_invoice'] ) )
         echo '<form class="print" enctype="multipart/form-data" method="post">';
         echo dossier::hidden();
         echo $Ledger->confirm($_POST );
+//----------------------------------------------------------------------------
+//  Check that INVOICE can be generated 
+//  for e-invoice only 
+//----------------------------------------------------------------------------
+        if ($g_parameter->MY_INVOICE_FORMAT != 'BASIC')
+        {
+            $xmldocument= \Noalyss\XMLDocument\XMLInvoice::build_xmlinvoice($cn);
+            $array=[];
+            $array['supplier']=$xmldocument->fill_supplier();
+            echo "customer ",$http->post("e_client");
+            $customer=Fiche::from_qcode($cn,trim($http->post("e_client")));
+            
+            $array['customer']=$xmldocument->fill_customer($customer->id);
+            $array['operation']=$xmldocument->fill_operation_from_array($_POST);
+            $array['due_date']=$http->post("e_ech");
+            if (  $array['due_date'] == '') 
+            {
+                $array['due_date']=$http->post("e_date");
+            }
+            /////////////////////////////////////////////////
+            ///@todo ajouter date échéance 
+            /////////////////////////////////////////////////
+            $xmldocument->set_data($array);
+            $xmldocument->display_error();
+        }
+        
         echo HtmlInput::hidden('ac',$strac);
         $Ledger->input_extra_info();
         echo HtmlInput::submit("record", _("Enregistrement"), 'onClick="return verify_ca(\'\');"');
@@ -133,8 +159,8 @@ if ( isset($_POST['record']) )
              /* Save the attachment or generate doc */
             if (isset($_FILES['pj'])) {
                 if (noalyss_strlentrim($_FILES['pj']['name']) != 0)
-                    $cn->save_receipt($seq);
-            
+                {   $cn->save_receipt($seq);
+                }
                 else
                 /* Generate an invoice and save it into the database */
                 if (isset($_POST['gen_invoice'])) 
@@ -154,8 +180,10 @@ if ( isset($_POST['record']) )
                         $xmldocument->build_data($Ledger->jr_id);
                         $code_error = $xmldocument->verify() ;
                         if ( ! empty( $code_error )  ) {
-                            echo "Impossible de générer facture : code error $code_error ";
-                            echo $xmldocument->get_message_error($code_error);
+                            echo "Impossible de générer facture : code error  ";
+                            \Noalyss\Dbg::echo_var(1, '$code_error is ');
+                            \Noalyss\Dbg::echo_var(1, $code_error);
+                           // echo $xmldocument->get_message_error($code_error);
                         }
                         $pdf_filename=$acc_document->transform2pdf();
                         
@@ -187,7 +215,6 @@ if ( isset($_POST['record']) )
                     }
                 }
             }
-                
                 
         }
         catch (\Exception $e) {

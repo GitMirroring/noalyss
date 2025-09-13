@@ -1,7 +1,7 @@
 <?php
 namespace Noalyss\XMLDocument;
 
-use Noalyss\Utility;
+//use Noalyss\Utility;
 /*
  *   This file is part of NOALYSS.
  *
@@ -68,6 +68,7 @@ use Noalyss\Utility;
                     [vat_id] => 1
                     [vat_reversed] => 0.0000
                     [code_quantity]=> EA
+                    [vat_code]=> Code VAT for PEPPOL (S,K,...)
                 )
 
             [1] => Array
@@ -79,6 +80,7 @@ use Noalyss\Utility;
                     [vat_id] => 1
                     [vat_reversed] => 0.0000
                     [code_quantity]=> EA
+                    [vat_code]=> Code VAT for PEPPOL (S,K,...)
                 )
 
             [2] => Array
@@ -90,6 +92,7 @@ use Noalyss\Utility;
                     [vat_id] => 5
                     [vat_reversed] => 15.1200
                     [code_quantity]=> EA
+                    [vat_code]=> Code VAT for PEPPOL (S,K,...)
                 )
 
         )
@@ -165,43 +168,13 @@ abstract class XMLInvoice extends \DOMDocument
         $result=array();
         $result["id"]= $operation->det->jr_pj_number;
         $result["issue_date"]=$operation->det->jr_date;
-        $result["due_date"]=$operation->det->jr_ech;
+        $result["due_date"]=($operation->det->jr_ech=="")?$operation->det->jr_date:$operation->det->jr_ech;
         // supplier
-        $result['supplier']=array();
-        $result['supplier']['name']=$g_parameter->MY_NAME;
-        $result['supplier']['street']=$g_parameter->MY_STREET;
-        $result['supplier']['postalzone']=$g_parameter->MY_POSTCODE;
-        $result['supplier']['city']=$g_parameter->MY_CITY;
-        $result['supplier']['country']=$g_parameter->MY_COUNTRY;
-        $result['supplier']['supplier_id']=$g_parameter->MY_TVA;
-        // official name of the company 
-        $result['supplier']['registration_name']=$g_parameter->MY_NAME;
-        // official ID , like VAT
-        $result['supplier']['supplier_id']=str_replace([" ",".","-","/"],"" ,$g_parameter->MY_TVA);
-        //@todo 
-        //Autre parametre comme email dans Parameter_Extra_SQL
-        //
-        //
-        //  == $result['supplier']['supplier_email']=$g_parameter->;
-       //@todo TESTER S'IL Y A QQ'CHOSE DE VENDU !
+        $result['supplier']=$this->fill_supplier();
+       
+       
         //customer
-        $customer=new \Fiche($this->cn,$operation->det->array[0]['qs_client']);
-        $result['customer']=array();
-        $result['customer']['card_id']=$operation->det->array[0]['qs_client'];
-        $result['customer']['name']=$customer->get_attribute(ATTR_DEF_NAME);
-        $result['customer']['street']=$customer->get_attribute(ATTR_DEF_ADRESS);
-        $result['customer']['postalzone']=$customer->get_attribute(ATTR_DEF_POSTCODE);
-        $result['customer']['city']=$customer->get_attribute(ATTR_DEF_CITY);
-        
-        // find country_code of this card
-        
-        $result['customer']['country']=$customer->get_attribute(ATTR_DEF_COUNTRY);
-        
-        $result['customer']['customer_id']=str_replace([" ",".","-","/"],"" ,$customer->get_attribute(ATTR_DEF_NUMTVA));
-        // official name of the company 
-        $result['customer']['registration_name']=$customer->get_attribute(ATTR_DEF_NAME);
-        // official ID , like VAT
-        $result['customer']['customer_id']=$customer->get_attribute(ATTR_DEF_NUMTVA);
+        $result['customer']=$this->fill_customer($operation->det->array[0]['qs_client']);
         
         // currency 
         $result['currency']=$this->cn->get_value("select cr_code_iso from currency where id=$1"
@@ -228,6 +201,11 @@ abstract class XMLInvoice extends \DOMDocument
                 
             }
             $result['operation'][$i]['vat_id']=$operation->det->array[$i]['qs_vat_code'];
+//            // tva code for PEPPOL
+//            $x=$this->cn->get_value("select tva_peppol_code from tva_rate where tva_id=$1"
+//                    ,[ $result['operation'][$i]['vat_id']]);
+            $result['operation'][$i]['vat_code']=($x=="")?"S":$x;
+            
             $result['operation'][$i]['vat_reversed']=$operation->det->array[$i]['qs_vat_sided'];
         }
         // retrieve currency 
@@ -237,7 +215,7 @@ abstract class XMLInvoice extends \DOMDocument
     /**
      * @brief make an array of parameter_extra where pe_code as key and pe_value
      * as value
-     * @return array
+     * @return array keys : pe_code,pe_value
      */
     function load_noalyss_parameter()
     {
@@ -257,15 +235,13 @@ abstract class XMLInvoice extends \DOMDocument
     abstract function make_xml($jr_id);
     /**
      * @brief check that mandatory info are saved in the DB for company (seller)
-     * @param $a_error (array) array of errors, empty if nothing found
      */
-    abstract function check_company_data(&$a_error) ;
+    abstract function check_company_data() ;
     /**
      * @brief check that mandatory info are saved in the DB for customer
      * @param $customer_id (int) card of the customer  FICHE.F_ID
-     * @param $a_error (array) array of errors, empty if nothing found
      */
-    abstract function check_customer_data($customer_id,&$a_error) ;
+    abstract function check_customer_data($customer_id) ;
     /**
      * @brief create the invoice in the right format, with PDF if any
      * @param $operation_id (int) JRN.JR_ID
@@ -297,6 +273,118 @@ abstract class XMLInvoice extends \DOMDocument
      */
     function verify() 
     {
+        return array();
+    }
+    /**
+     * @brief  retrieve data from customer and return it into an array
+     * @param $card_id (int) FICHE.F_ID
+     * @return array keys : 
+     *      - name
+     *      - ,street
+     *      - ,postalzone
+     *      - ,city
+     *      - ,country
+     *      - ,customer_id => VAT Number
+     *      - , registration_name,
+     *      - card_id
+     */
+    function fill_customer($card_id):array
+    {
+        $customer =new \Fiche($this->cn,$card_id);
+        $result=array();
+        $result['card_id']=$card_id;
+        $result['name']=$customer->get_attribute(ATTR_DEF_NAME,0);
+        $result['street']=$customer->get_attribute(ATTR_DEF_ADRESS,0);
+        $result['postalzone']=$customer->get_attribute(ATTR_DEF_POSTCODE,0);
+        $result['city']=$customer->get_attribute(ATTR_DEF_CITY,0);
         
+        // find country_code of this card
+        $result['country']=$customer->get_attribute(ATTR_DEF_COUNTRY_CODE,0);
+        
+        // official ID , like VAT
+        $result['customer_id']=str_replace([" ",".","-","/"],"" ,$customer->get_attribute(ATTR_DEF_NUMTVA,0));
+        // official name of the company 
+        $result['registration_name']=$customer->get_attribute(ATTR_DEF_NAME,0);
+        $result['endpoint_id']=$customer->get_attribute(ATTR_DEF_PEPPOLID,0);
+        return $result;
+    }
+    /**
+     * @brief complete $this->data from $g_parameter (global variable) for 
+     * Noalyss_Folder_Parameter
+     * @return array keys : 
+     *      - name
+     *      - ,street
+     *      - ,postalzone
+     *      - ,city
+     *      - ,country
+     *      - supplier_id => VAT Number
+     *      - registration_name,
+     * 
+     */
+    function fill_supplier():array
+    {
+        $a_parameter=$this->load_noalyss_parameter();
+        $result=array();
+        $result['name']=$a_parameter['MY_NAME'];
+        $result['street']=$a_parameter['MY_STREET'];
+        $result['postalzone']=$a_parameter['MY_POSTCODE'];
+        $result['city']=$a_parameter['MY_CITY'];
+        $result['country']=$a_parameter['MY_COUNTRY'];
+        // official name of the company 
+        $result['registration_name']=$a_parameter['MY_NAME'];
+        // official ID , like VAT
+        $result['supplier_id']=str_replace([" ",".","-","/"],"" ,$a_parameter['MY_TVA']);
+        $result['COUNTRY_CODE']=$a_parameter['COUNTRY_CODE']??"";
+        $result['COMPANY_LEGAL_REGISTRATION']=$a_parameter['COMPANY_LEGAL_REGISTRATION']??"";
+        $result['COMPANY_LEGAL_ENTITY']=$a_parameter['COMPANY_LEGAL_ENTITY']??"";
+        $result['INVOICE_CONTACT_NAME']=$a_parameter['INVOICE_CONTACT_NAME']??"";
+        $result['INVOICE_EMAIL_COMPANY']=$a_parameter['INVOICE_EMAIL_COMPANY']??"";
+        $result['COMPANY_UBL_ID']=$a_parameter['COMPANY_UBL_ID']??"";
+        return $result;
+    }
+    /**
+     * @brief build operation from array 
+     * key : 
+     *      - [e_march0] =>  Quick code of the item
+            - [e_march0_label] => Label of item
+            - [e_march0_price] => Unit Price
+            - [e_quant0] => Quantity
+            - [htva_march0] => Price w/0 VAT
+            - [e_march0_tva_id] => Code VAT
+            - [e_march0_tva_amount] => Amount VAT 
+            - [tva_march0] => Amount VAT (duplicate -> to remove)
+            - [tvac_march0] => Total Amount Tax included
+     * @param type $a_array
+     * @return type
+     */
+    function fill_operation_from_array($a_array)
+    {
+        $result=array();
+        $http=new \HttpInput();
+        $http->set_array($a_array);
+        
+        $nb_item=$http->get_value("nb_item");
+        for ($i=0;$i<$nb_item;$i++)
+        {
+           if ( $http->get_value("e_march{$i}_tva_id") == "") 
+           {
+               continue;
+           }
+           $operation=array();
+           $card=\Fiche::from_qcode($this->cn,trim($http->get_value("e_march{$i}")));
+           $operation['card_id']=$card->id;
+           $operation['quantity']=$http->get_value("e_quant{$i}");
+           $operation['price']=$http->get_value("e_march{$i}_price");
+           $operation['vat']=$http->get_value("tvac_march{$i}");
+           $tva= \Acc_Tva::build($this->cn, $http->get_value("e_march{$i}_tva_id"));
+           $operation['vat_id']=$tva->tva_id;
+           $operation['vat_reversed']=($tva->tva_both_side==1)?$operation['vat']:0;
+           $operation['vat_code']=$tva->tva_peppol_code;
+           
+           $operation['code_quantity']=$card->get_attribute(ATTR_DEF_QUANTITY_TYPE,0);
+           $operation['code_quantity']=($operation['code_quantity']=="")?"EA":$operation['code_quantity'];
+           $result[$i]=$operation;
+        }
+        return $result;
     }
 }

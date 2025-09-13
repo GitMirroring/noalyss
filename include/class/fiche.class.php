@@ -329,7 +329,7 @@ class Fiche
      * @param int  $p_ad_id  AD_ID from attr_def.ad_id
      * @param int $p_return 1 return NOTFOUND otherwise an empty string
      * @see constant.php
-     * @return string
+     * @return string 
      * @note reread data from database and so it reset previous unsaved change
      */
     function get_attribute($p_ad_id,$p_return=1)
@@ -1966,12 +1966,12 @@ class Fiche
     }
     /**
      * @brief create a card from a qcode and returns a card
-     * @param string $p_qcode qcode of the card
+     * @param $cn Database cnx
+     * @param $p_qcode (string) qcode of the card
      */
-    static function from_qcode($p_qcode)
+    static function from_qcode(Database $cn,string $p_qcode)
     {
-        $cn=Dossier::connect();
-        $card=new Card($cn);
+        $card=new Fiche($cn);
         $card->get_by_qcode($p_qcode);
         return $card;
     }

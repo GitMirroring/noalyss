@@ -430,7 +430,8 @@ function noalyss_class_autoloader($class)
         "noalyss\otp"=>"lib/otp.class.php",
         'noalyss\xmldocument\xmlinvoice'=>'XMLDocument/XMLInvoice.php',
         'noalyss\xmldocument\facturx'=>'XMLDocument/FacturX.php',
-        'noalyss\xmldocument\invoiceubl21'=>'XMLDocument/InvoiceUBL21.php'
+        'noalyss\xmldocument\invoiceubl21'=>'XMLDocument/InvoiceUBL21.php',
+        'noalyss\xmldocument\error_message'=>'XMLDocument/Error_Message.php'
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];
