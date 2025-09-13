@@ -132,7 +132,7 @@ form {
 <div class="content">
     <h1>Double authentification</h1>
     <p>
-        Date et heure : 
+        Date  : 
         <?=$date->format('d/m/Y h:i')?>
     </p>
     <p>

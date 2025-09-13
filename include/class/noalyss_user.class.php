@@ -2033,11 +2033,25 @@ class Noalyss_User
        $message="<p>Bonjour,
            <br>
            <br>
-           <p>Voici votre code secret pour NOALYSS : <b> $code</b>
+           <p>Voici votre code secret utilisable pendant 10 minutes pour NOALYSS : <b> $code</b>  .
                </p>
                
-    
+             <p>
+   Merci d'utiliser NOALYSS
+   <br/>
+   <br/>
+   <br/>
+   
+Cordialement,
+   <br/>
+   <br/>
 
+Noalyss team
+      </p>
+
+    <p>
+    <i> Si cet email est dans vos spams, ajoutez l'expéditeur dans votre carnet d'adresse</i>
+    </p>
 ";
         try {
             $uuid= guidv4();
@@ -2105,7 +2119,9 @@ class Noalyss_User
 <p>
 Bien cordialement,
 </p>
-
+   <p>
+               <i> Si cet email est dans vos spams, ajoutez l'expéditeur dans votre carnet d'adresse</i>
+               </p>
 ";
         try {
             
