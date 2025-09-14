@@ -96,7 +96,7 @@ $menu[]=_('Avancé');  $desc[]=_('Menu avancé');$desc_long[]=_('Menu regroupant
 $menu[]=_('Liste Suivi');  $desc[]=_('Document de suivi sous forme de liste');$desc_long[]=_('Liste de vos suivis, en fait de tous les documents, réunions ... dont vous avez besoin afin de suivre vos clients, fournisseurs ou administrations. Il permet la génération de documents comme les devis, les bordereau de livraison...');
 $menu[]=_('Administration');  $desc[]=_('Suivi administration, banque');$desc_long[]=_('Suivi des administrations : courrrier, déclarations.');
 $menu[]=_('Prévision');  $desc[]=_('Prévision');$desc_long[]=_('Prévision de vos achats, revenus, permet de suivre l\'évolution de votre société. Vos prévisions sont des formules sur les postes comptables et vous permettent aussi vos marges brutes.');
-$menu[]=_('Export opérations rapprochées');  $desc[]=_('Export opérations rapprochées en CSV');$desc_long[]=_('');
+$menu[]=_('Export opérations rapprochées');  $desc[]=_('Export opérations rapprochées en CSV');$desc_long[]='';
 $menu[]=_('Administrateur');  $desc[]=_('Suivi des gérants, administrateurs et salariés');$desc_long[]=_('Suivi de vos salariés, managers ainsi que des administrateurs, pour les documents et les opérations comptables');
 $menu[]=_('Export pièce PDF');  
 $menu[]=_('Export Balance agée');  $desc[]=_('Balance agée');$desc_long[]=_('Balance agée pour les clients et fournisseurs');

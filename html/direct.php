@@ -48,7 +48,7 @@ for ($i = 0;$i< $nb;$i++)
 	$row=Database::fetch_array($res,$i);
 	echo "<li>";
 	echo $row['code'];
-	echo '<span class="informal"> '._($row['description']??"").'</span></li>';
+	echo '<span class="informal"> '._($row['description']??" ").'</span></li>';
 }
 	echo "</ul>";
 if ( $nb == 0 ) {
