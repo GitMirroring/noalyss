@@ -125,7 +125,7 @@ endif;?>
 		    }
 		    ?>
 		<li class="<?php echo $style?>">
-                    <a class="nav-link" href="<?php echo $url?>" title="<?php echo _($row['me_description']??''); ?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a>
+                    <a class="nav-link" href="<?php echo $url?>" title="<?php echo _($row['me_description']??' '); ?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a>
                 </li>
 		<?php 
 		    endforeach;
@@ -169,7 +169,7 @@ endif;?>
                         }
                         ?>
                     <li class="<?php echo $style?>">
-                        <a class="nav-link" href="<?php echo $url?>" title="<?php echo _($row['me_description']??"")?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a>
+                        <a class="nav-link" href="<?php echo $url?>" title="<?php echo _($row['me_description']??"-")?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a>
                     </li>
                     <?php 
                         endforeach;

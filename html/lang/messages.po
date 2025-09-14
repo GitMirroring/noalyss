@@ -3,15 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#: html/direct.php:45 include/database.item.php:99
-#: include/template/module.php:128 include/template/module.php:172
-#: include/template/profile_menu_display_module.php:72
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-04 16:52+0200\n"
+"POT-Creation-Date: 2025-09-14 14:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,6 +65,7 @@ msgstr ""
 #: include/ext/import-advanced/index.php:73 include/ext/listing/index.php:98
 #: include/ext/rapport_avance/index.php:79 include/ext/sav/index.php:49
 #: include/ext/import-advanced/index.php:71
+#: include/ext/import-advanced/index.php:70 include/ext/listing/index.php:95
 msgid "Historique"
 msgstr ""
 
@@ -274,7 +272,8 @@ msgstr ""
 #: include/lib/html_input.class.php:1044 include/lib/html_input.class.php:1071
 #: include/menu.inc.php:142 include/database.item.php:49
 #: include/database.item.php:131 include/lib/html_input.class.php:1090
-#: include/ajax/ajax_admin.php:147
+#: include/ajax/ajax_admin.php:147 html/recherche.php:95
+#: include/lib/html_input.class.php:1091
 #, php-format
 msgid "Recherche"
 msgstr ""
@@ -597,6 +596,8 @@ msgstr ""
 #: include/class/acc_ledger_search.class.php:881 include/database.item.php:119
 #: include/compta_ach.inc.php:143 include/compta_ven.inc.php:153
 #: include/database.item.php:117 include/ext/noalyss_document/index.php:141
+#: include/ext/noalyss_document/index.php:79
+#: include/class/document.class.php:213
 msgid "Document"
 msgstr ""
 
@@ -652,7 +653,7 @@ msgstr ""
 #: include/class/pdf_operation.class.php:181
 #: include/class/pdf_operation.class.php:232
 #: include/class/pdf_operation.class.php:311 html/ajax_misc.php:592
-#: html/ajax_misc.php:595 html/ajax_misc.php:597
+#: html/ajax_misc.php:595 html/ajax_misc.php:597 html/ajax_misc.php:602
 msgid "code"
 msgstr ""
 
@@ -691,6 +692,7 @@ msgstr ""
 #: include/template/tax_summary_display.php:218
 #: include/template/tax_summary_display.php:305 html/ajax_misc.php:596
 #: include/class/acc_operation.class.php:932 html/ajax_misc.php:598
+#: html/ajax_misc.php:603
 msgid "Taux"
 msgstr ""
 
@@ -700,7 +702,7 @@ msgstr ""
 #: html/ajax_misc.php:466 html/ajax_misc.php:468 html/ajax_misc.php:472
 #: html/ajax_misc.php:437 html/ajax_misc.php:445 html/ajax_misc.php:533
 #: html/ajax_misc.php:535 html/ajax_misc.php:594 html/ajax_misc.php:597
-#: html/ajax_misc.php:599
+#: html/ajax_misc.php:599 html/ajax_misc.php:604
 msgid "Symbole"
 msgstr ""
 
@@ -710,7 +712,7 @@ msgstr ""
 #: html/ajax_misc.php:467 html/ajax_misc.php:469 html/ajax_misc.php:473
 #: html/ajax_misc.php:438 html/ajax_misc.php:446 html/ajax_misc.php:534
 #: html/ajax_misc.php:536 html/ajax_misc.php:595 html/ajax_misc.php:598
-#: html/ajax_misc.php:600
+#: html/ajax_misc.php:600 html/ajax_misc.php:605
 msgid "Explication"
 msgstr ""
 
@@ -725,7 +727,7 @@ msgstr ""
 #: html/ajax_misc.php:496 html/ajax_misc.php:499 html/ajax_misc.php:504
 #: html/ajax_misc.php:587 html/ajax_misc.php:592 html/ajax_misc.php:589
 #: html/ajax_misc.php:594 html/ajax_misc.php:652 html/ajax_misc.php:655
-#: html/ajax_misc.php:657
+#: html/ajax_misc.php:657 html/ajax_misc.php:662
 msgid "tva inconnue"
 msgstr ""
 
@@ -781,7 +783,8 @@ msgstr ""
 #: include/ext/tva/ajax.php:40
 #: include/ext/invoicing/include/invoice_generate.inc.php:85
 #: html/user_login.php:81
-#: include/ext/invoicing/include/invoice_generate.inc.php:112
+#: include/ext/invoicing/include/invoice_generate.inc.php:112 html/do.php:291
+#: html/user_login.php:88
 msgid "Retour"
 msgstr ""
 
@@ -1010,7 +1013,7 @@ msgstr ""
 #: html/ajax.php:48 html/extension.raw.php:59 html/ajax.php:66
 #: html/extension.raw.php:57 html/ajax.php:67 html/ajax.php:68 html/ajax.php:69
 #: html/ajax.php:75 html/ajax.php:77 html/extension.raw.php:64 html/ajax.php:79
-#: html/extension.raw.php:82
+#: html/extension.raw.php:82 html/ajax.php:85 html/extension.raw.php:88
 msgid "Cette extension n'existe pas "
 msgstr ""
 
@@ -1057,7 +1060,7 @@ msgstr ""
 #: html/do.php:44 html/popup.php:38 html/popup.php:35 html/do.php:47
 #: html/do.php:48 html/popup.php:37 html/recherche.php:33
 #: html/do_BASE_342368.php:47 html/do_LOCAL_342368.php:47 html/do.php:49
-#: html/do_REMOTE_342368.php:47 html/recherche.php:35
+#: html/do_REMOTE_342368.php:47 html/recherche.php:35 html/do.php:100
 msgid "Vous  êtes déconnecté"
 msgstr ""
 
@@ -1068,6 +1071,7 @@ msgstr ""
 #: html/do.php:177 html/do.php:182 html/do_BASE_342368.php:182
 #: html/do_LOCAL_342368.php:121 html/user_login.php:81 html/do.php:127
 #: html/do_REMOTE_342368.php:121 html/do.php:129 html/user_login.php:80
+#: html/user_login.php:87
 msgid "Base de donnée invalide"
 msgstr ""
 
@@ -1076,7 +1080,7 @@ msgstr ""
 #: html/do.php:185 html/do.php:197 html/do.php:207 html/do.php:176
 #: html/do.php:188 html/do.php:193 html/do_BASE_342368.php:193
 #: html/do_LOCAL_342368.php:132 html/do.php:138 html/do_REMOTE_342368.php:132
-#: html/do.php:140
+#: html/do.php:140 html/do.php:147
 msgid ""
 "Attention: la version de base de donnée est supérieure à la version du "
 "programme, vous devriez mettre à jour"
@@ -1089,7 +1093,8 @@ msgstr ""
 #: html/do.php:213 html/do.php:182 html/do.php:194 html/do.php:199
 #: html/do_BASE_342368.php:199 html/do_LOCAL_342368.php:138
 #: html/user_login.php:96 html/do.php:144 html/do_REMOTE_342368.php:138
-#: html/do.php:146 html/user_login.php:95
+#: html/do.php:146 html/user_login.php:95 html/do.php:153
+#: html/user_login.php:102
 msgid "Votre base de données n'est pas à jour"
 msgstr ""
 
@@ -1100,7 +1105,8 @@ msgstr ""
 #: html/do.php:214 html/do.php:183 html/do.php:195 html/do.php:200
 #: html/do_BASE_342368.php:200 html/do_LOCAL_342368.php:139
 #: html/user_login.php:97 html/do.php:145 html/do_REMOTE_342368.php:139
-#: html/do.php:147 html/user_login.php:96
+#: html/do.php:147 html/user_login.php:96 html/do.php:154
+#: html/user_login.php:103
 msgid "cliquez ici pour appliquer le patch"
 msgstr ""
 
@@ -1116,17 +1122,21 @@ msgstr ""
 #: include/ext/rapport_avance/raw.php:151 include/export/export_receipt.php:77
 #: include/ext/listing/raw.php:61 include/ext/listing/raw.php:108
 #: include/ext/listing/raw.php:180 include/ext/listing/raw.php:221
-#: include/ext/rash/raw.php:51
+#: include/ext/rash/raw.php:51 include/ext/listing/raw.php:79
+#: include/ext/listing/raw.php:126 include/ext/listing/raw.php:198
+#: include/ext/listing/raw.php:239
 msgid "Fichier effacé"
 msgstr ""
 
 #: html/user_login.php:40 html/user_login.php:41 html/user_login.php:42
 #: html/user_login.php:43 html/user_login.php:46 html/user_login.php:45
+#: html/user_login.php:52
 msgid "Vous utilisez un navigateur dépassé depuis près de 8 ans!"
 msgstr ""
 
 #: html/user_login.php:41 html/user_login.php:42 html/user_login.php:43
 #: html/user_login.php:44 html/user_login.php:47 html/user_login.php:46
+#: html/user_login.php:53
 msgid ""
 "Pour une meilleure expérience web, prenez le temps de mettre votre "
 "navigateur à jour"
@@ -1146,7 +1156,7 @@ msgstr ""
 #: include/database.item.php:76 include/ajax/ajax_preference.php:62
 #: include/database.item.php:77 html/user_login.php:148
 #: include/database.item.php:154 include/database.item.php:152
-#: html/user_login.php:147
+#: html/user_login.php:147 html/user_login.php:154
 msgid "Préférence"
 msgstr ""
 
@@ -1154,7 +1164,7 @@ msgstr ""
 #: html/user_login.php:159 html/user_login.php:160 html/user_login.php:161
 #: html/user_login.php:162 html/user_login.php:165 html/user_login.php:171
 #: html/user_login.php:148 html/user_login.php:137 html/user_login.php:150
-#: html/user_login.php:149
+#: html/user_login.php:149 html/user_login.php:156
 msgid "Deconnexion"
 msgstr ""
 
@@ -1216,7 +1226,7 @@ msgstr ""
 #: include/class/acc_ledger_search.class.php:702 html/recherche.php:90
 #: include/cfgplugin.inc.php:76 include/ajax/ajax_search_filter.php:133
 #: include/modele.inc.php:274 include/lettering.card.inc.php:97
-#: include/menu.inc.php:145
+#: include/menu.inc.php:145 html/recherche.php:96
 msgid "Filtre"
 msgstr ""
 
@@ -1239,6 +1249,8 @@ msgstr ""
 #: include/class/noalyss_user.class.php:1090 include/lib/ac_common.php:485
 #: include/class/noalyss_user.class.php:1060
 #: include/class/noalyss_user.class.php:1107
+#: include/class/noalyss_user.class.php:1077
+#: include/class/noalyss_user.class.php:1124
 msgid "Cette action ne vous est pas autorisée Contactez votre responsable"
 msgstr ""
 
@@ -1677,7 +1689,8 @@ msgstr ""
 #: include/user.inc.php:264 include/class/acc_ledger_search.class.php:1282
 #: include/class/acc_reconciliation.class.php:579
 #: include/class/noalyss_user.class.php:1281 include/user.inc.php:209
-#: include/user.inc.php:275
+#: include/user.inc.php:275 include/user.inc.php:219 include/user.inc.php:285
+#: include/class/noalyss_user.class.php:1310
 msgid "Nom"
 msgstr ""
 
@@ -2003,6 +2016,7 @@ msgstr ""
 #: include/class/template_card_category.class.php:72
 #: include/class/forecast.class.php:72 include/ajax/ajax_card.php:661
 #: include/ajax/ajax_card.php:669
+#: include/class/forecast_deprecated.class.php:73
 msgid "Le nom ne peut pas être vide"
 msgstr ""
 
@@ -2681,6 +2695,7 @@ msgstr ""
 #: include/ext/rash/include/bn.inc.php:74
 #: include/class/acc_ledger.class.php:1237
 #: include/class/acc_ledger_purchase.class.php:66 html/export.php:59
+#: html/export.php:72 html/recherche.php:71 include/admin_repo.inc.php:53
 msgid "Accès interdit"
 msgstr ""
 
@@ -3673,6 +3688,7 @@ msgstr ""
 #: include/class/acc_ledger_search.class.php:1134
 #: include/class/acc_reconciliation.class.php:575
 #: include/class/operation_exercice.class.php:58
+#: include/class/acc_ledger_history_purchase.class.php:302
 #, php-format
 msgid "Date"
 msgstr ""
@@ -4586,6 +4602,7 @@ msgstr ""
 #: include/class/fiche.class.php:997
 #: include/class/acc_ledger_history_sale.class.php:290
 #: include/class/acc_ledger_search.class.php:1135
+#: include/class/acc_ledger_history_purchase.class.php:305
 msgid "Pièce"
 msgstr ""
 
@@ -5547,6 +5564,7 @@ msgstr ""
 #: include/class/acc_ledger_purchase.class.php:1515
 #: include/class/acc_ledger_purchase.class.php:1660
 #: include/class/acc_ledger_history_sale.class.php:291
+#: include/class/acc_ledger_history_purchase.class.php:306
 msgid "Fournisseur"
 msgstr ""
 
@@ -7399,6 +7417,7 @@ msgstr ""
 #: include/class/acc_ledger_search.class.php:1137
 #: include/class/acc_ledger_search.class.php:1283
 #: include/class/noalyss_user.class.php:1284
+#: include/class/noalyss_user.class.php:1313
 msgid "Description"
 msgstr ""
 
@@ -8652,7 +8671,8 @@ msgstr ""
 #: include/ext/amortis/include/template/material_detail.php:212
 #: include/lib/html_input.class.php:486 include/lib/html_input.class.php:502
 #: include/class/extension.class.php:316 html/user_login.php:118
-#: include/user.inc.php:220 include/user.inc.php:231
+#: include/user.inc.php:220 include/user.inc.php:231 html/recherche.php:100
+#: html/recherche.php:162 html/user_login.php:125 include/user.inc.php:241
 #, php-format
 msgid "Fermer"
 msgstr ""
@@ -8825,6 +8845,7 @@ msgstr ""
 #: include/class/user.class.php:82 include/class/user.class.php:93
 #: include/class/noalyss_user.class.php:119
 #: include/class/noalyss_user.class.php:121
+#: include/class/noalyss_user.class.php:147
 msgid "Session expirée<br>Utilisateur déconnecté"
 msgstr ""
 
@@ -8836,6 +8857,8 @@ msgstr ""
 #: include/class/noalyss_user.class.php:468
 #: include/class/noalyss_user.class.php:155
 #: include/class/noalyss_user.class.php:486
+#: include/class/noalyss_user.class.php:181
+#: include/class/noalyss_user.class.php:511
 msgid "Utilisateur ou mot de passe incorrect"
 msgstr ""
 
@@ -8845,6 +8868,7 @@ msgstr ""
 #: include/class/user.class.php:689 include/class/user.class.php:695
 #: include/class/noalyss_user.class.php:725
 #: include/class/noalyss_user.class.php:742
+#: include/class/noalyss_user.class.php:764
 msgid "Aucune période trouvéee !!!"
 msgstr ""
 
@@ -8855,6 +8879,7 @@ msgstr ""
 #: include/class/user.class.php:948 include/class/user.class.php:1207
 #: include/class/user.class.php:1220 include/class/noalyss_user.class.php:1222
 #: include/class/noalyss_user.class.php:1239
+#: include/class/noalyss_user.class.php:1268
 msgid "Dossier non accessible"
 msgstr ""
 
@@ -10832,7 +10857,8 @@ msgstr ""
 #: include/database.item.php:117 include/database.item.php:115
 #: html/user_login.php:145 include/database.item.php:99
 #: include/admin_repo.inc.php:72 include/database.item.php:97
-#: html/user_login.php:144
+#: html/user_login.php:144 html/user_login.php:151
+#: include/admin_repo.inc.php:77
 msgid "Administration"
 msgstr ""
 
@@ -10895,6 +10921,7 @@ msgstr ""
 #: include/user.inc.php:299 include/database.item.php:102
 #: include/database.item.php:100 include/user.inc.php:300
 #: html/user_login.php:127 include/user.inc.php:314 include/user.inc.php:325
+#: html/user_login.php:134 include/user.inc.php:339
 msgid "Administrateur"
 msgstr ""
 
@@ -11217,6 +11244,7 @@ msgstr ""
 #: include/user.inc.php:269 include/database.item.php:158
 #: include/user.inc.php:189 include/user.inc.php:270 include/user.inc.php:203
 #: include/user.inc.php:284 include/user.inc.php:208 include/user.inc.php:295
+#: include/user.inc.php:218 include/user.inc.php:305
 msgid "Prénom"
 msgstr ""
 
@@ -11405,6 +11433,7 @@ msgstr ""
 #: include/database.item.php:212 include/database.item.php:202
 #: include/user.inc.php:201 include/user.inc.php:254 include/user.inc.php:215
 #: include/user.inc.php:268 include/user.inc.php:222 include/user.inc.php:279
+#: include/user.inc.php:232 include/user.inc.php:290
 msgid "Email"
 msgstr ""
 
@@ -11743,7 +11772,7 @@ msgstr ""
 #: include/class/dossier.class.php:379 include/class/dossier.class.php:385
 #: include/dossier.inc.php:279 include/dossier.inc.php:274
 #: include/class/dossier.class.php:383 include/dossier.inc.php:283
-#: include/class/dossier.class.php:396
+#: include/class/dossier.class.php:396 include/class/dossier.class.php:395
 msgid "Dossier inexistant"
 msgstr ""
 
@@ -12105,7 +12134,7 @@ msgstr ""
 #: include/ext/listing/index.php:60 include/ext/listing/index.php:58
 #: include/fiche.inc.php:64 include/anc_od.inc.php:61 include/fiche.inc.php:61
 #: include/fiche.inc.php:62 include/template/calendar.php:22
-#: include/ext/listing/index.php:96
+#: include/ext/listing/index.php:96 include/ext/listing/index.php:93
 msgid "Liste"
 msgstr ""
 
@@ -12685,6 +12714,7 @@ msgstr ""
 #: include/class/follow_up.class.php:714 include/template/action_search.php:140
 #: include/database.item.php:152 include/database.item.php:150
 #: include/ext/tools/include/template/search_view.php:245
+#: include/ajax/ajax_tag_detail.php:23 include/ajax/ajax_tag_detail.php:37
 msgid "Etiquette"
 msgstr ""
 
@@ -12822,7 +12852,7 @@ msgstr ""
 #: include/impress_rapport.inc.php:251 include/template/dashboard.php:7
 #: include/lib/html_input.class.php:1044 include/ajax/ajax_calendar_zoom.php:30
 #: include/widget/agenda/agenda.php:48 include/lib/html_input.class.php:1091
-#: include/lib/html_input.class.php:1110
+#: include/lib/html_input.class.php:1110 include/lib/html_input.class.php:1111
 msgid "Calendrier"
 msgstr ""
 
@@ -12986,6 +13016,7 @@ msgstr ""
 #: include/ext/transform/include/template/listing_assujetti_representative.php:72
 #: include/class/fiche.class.php:1002 include/user.inc.php:287
 #: include/class/acc_ledger_search.class.php:1284 include/user.inc.php:298
+#: include/user.inc.php:309
 msgid "Type"
 msgstr ""
 
@@ -13863,6 +13894,7 @@ msgstr ""
 #: include/template/ledger_detail_ach.php:158
 #: include/template/ledger_detail_ach.php:163
 #: include/class/acc_ledger_history_sale.class.php:294
+#: include/class/acc_ledger_history_purchase.class.php:309
 msgid "HTVA"
 msgstr ""
 
@@ -14420,6 +14452,7 @@ msgstr ""
 #: include/ext/rapport_avance/index.php:42 include/ext/rash/index.php:91
 #: include/ext/sav/index.php:82 include/ext/skel/index.php:76
 #: include/ext/tva/index.php:93 include/ext/noalyss-portal-client/index.php:108
+#: include/ext/noalyss-webservice/nw_service.php:101
 msgid "L'extension est installée, pourriez-vous en vérifier le paramètrage ?"
 msgstr ""
 
@@ -14447,6 +14480,7 @@ msgstr ""
 #: include/ext/import-advanced/index.php:68 tmp/import-advanced/index.php:68
 #: include/ext/import-advanced/index.php:74
 #: include/ext/import-advanced/index.php:72
+#: include/ext/import-advanced/index.php:71
 msgid "Paramètrage"
 msgstr ""
 
@@ -14508,7 +14542,7 @@ msgstr ""
 #: tmp/import-advanced/class/impacc2_transfer.class.php:43
 #: include/class/acc_ledger.class.php:99 include/class/periode.class.php:256
 #: include/lib/http_input.class.php:175 include/class/acc_ledger.class.php:101
-#: include/class/periode.class.php:262
+#: include/class/periode.class.php:262 include/lib/http_input.class.php:182
 msgid "Paramètre invalide"
 msgstr ""
 
@@ -14583,6 +14617,7 @@ msgstr ""
 #: include/ext/rapport_avance/index.php:58
 #: include/ext/rapport_avance/index.php:60 include/ext/listing/index.php:60
 #: include/ext/listing/index.php:58 include/ext/listing/index.php:96
+#: include/ext/listing/index.php:93
 msgid "Création, modification, Paramètre de listes, mailing list"
 msgstr ""
 
@@ -14607,6 +14642,7 @@ msgstr ""
 #: include/ext/rapport_avance/index.php:62 include/ext/listing/index.php:61
 #: include/ext/listing/index.php:59 include/ext/rapport_avance/index.php:75
 #: include/ext/listing/index.php:97 include/ext/rapport_avance/index.php:78
+#: include/ext/listing/index.php:94
 msgid "Génération"
 msgstr ""
 
@@ -15202,7 +15238,7 @@ msgstr ""
 #: include/ext/amortis/include/class_am_card.php:245 html/fid_card.php:169
 #: html/fid_card.php:170 html/fid_card.php:175 html/fid_card.php:174
 #: html/fid_card.php:176 html/fid_card.php:186 html/fid_card.php:188
-#: html/fid_card.php:191
+#: html/fid_card.php:191 html/fid_card.php:197
 msgid "Non trouvé"
 msgstr ""
 
@@ -15378,7 +15414,7 @@ msgstr ""
 #: include/template/follow_up-display.php:156
 #: include/class/fiche.class.php:1177 include/class/fiche.class.php:1836
 #: include/class/tax_summary.class.php:462
-#: include/ajax/ajax_action_concerned_list.php:52
+#: include/ajax/ajax_action_concerned_list.php:52 html/popup.php:119
 msgid "Export CSV"
 msgstr ""
 
@@ -15669,6 +15705,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:61
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:65
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:63
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:69
 msgid "Désolé mais il faut donner l'email de celui qui envoie"
 msgstr ""
 
@@ -15676,6 +15713,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:65
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:69
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:67
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:73
 msgid "Le sujet est obligatoire"
 msgstr ""
 
@@ -15685,6 +15723,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:107
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:110
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:108
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:111
 msgid "Pas de conversion en PDF disponible"
 msgstr ""
 
@@ -15694,6 +15733,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:151
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:160
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:162
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:166
 msgid "Envoi facture "
 msgstr ""
 
@@ -15703,6 +15743,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:151
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:160
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:162
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:166
 msgid " destinataire "
 msgstr ""
 
@@ -15713,6 +15754,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:174
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:186
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:189
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:193
 msgid "Envoi echoué"
 msgstr ""
 
@@ -15723,6 +15765,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:178
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:264
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:268
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:272
 msgid "Aucune pièce à envoyer"
 msgstr ""
 
@@ -15733,6 +15776,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:181
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:267
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:271
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:275
 msgid "Aucune adresse email trouvée"
 msgstr ""
 
@@ -15770,6 +15814,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail_input.inc.php:65
 #: include/ext/invoicing/include/invoice_send_mail_input.inc.php:71
 #: include/ext/invoicing/include/invoice_send_mail_input.inc.php:70
+#: include/ext/invoicing/include/invoice_send_mail_input.inc.php:69
 msgid "Envoi uniquement à ceux ayant une adresse email et une facture"
 msgstr ""
 
@@ -16592,6 +16637,7 @@ msgstr ""
 #: include/ajax/ajax_ledger.php:213 include/ajax/ajax_ledger.php:313
 #: include/ext/noalyss_document/index.php:142
 #: include/ext/importbank/include/template/import_new_coda.php:43
+#: include/ext/noalyss_document/index.php:80
 msgid "Chargement"
 msgstr ""
 
@@ -16691,12 +16737,13 @@ msgstr ""
 #: html/login.php:53 html/login.php:85 html/login.php:52 html/login.php:88
 #: html/login.php:89 html/login.php:90 html/login.php:54 html/login.php:97
 #: html/login.php:57 html/login.php:100 html/login.php:60 html/login.php:103
-#: html/login.php:58 html/login.php:105 html/login.php:125
+#: html/login.php:58 html/login.php:105 html/login.php:125 html/login.php:61
+#: html/login.php:136
 msgid "Version de base de données incorrectes, vous devez mettre à jour"
 msgstr ""
 
 #: html/login.php:67 html/login.php:66 html/login.php:65 html/login.php:68
-#: html/login.php:71 html/login.php:69
+#: html/login.php:71 html/login.php:69 html/login.php:72
 msgid "Code invalide"
 msgstr ""
 
@@ -16741,7 +16788,7 @@ msgstr ""
 #: include/template/ledger_detail_bottom.php:367
 #: include/template/ledger_detail_bottom.php:368
 #: include/class/fiche.class.php:1159 include/class/fiche.class.php:1858
-#: include/class/tax_summary.class.php:480
+#: include/class/tax_summary.class.php:480 html/popup.php:120
 msgid "Export PDF"
 msgstr ""
 
@@ -16759,7 +16806,8 @@ msgstr ""
 #: include/template/operation_exercice-list_draft.php:58
 #: include/user.inc.php:299 include/admin_repo.inc.php:155
 #: include/user.inc.php:300 html/user_login.php:127 include/user.inc.php:314
-#: include/user.inc.php:325
+#: include/user.inc.php:325 html/user_login.php:134
+#: include/admin_repo.inc.php:160 include/user.inc.php:339
 msgid "Utilisateur"
 msgstr ""
 
@@ -17383,6 +17431,7 @@ msgstr ""
 #: include/class/tva_rate_mtable.class.php:49 include/class/fiche.class.php:401
 #: include/modele.inc.php:242 html/ajax_misc.php:594
 #: include/class/fiche.class.php:403 html/ajax_misc.php:596
+#: html/ajax_misc.php:601
 msgid "id"
 msgstr ""
 
@@ -17766,6 +17815,7 @@ msgstr ""
 #: include/template/acc_ledger_history_sale_detail.php:37
 #: include/template/acc_ledger_history_purchase_detail.php:35
 #: include/class/acc_ledger_history_sale.class.php:288
+#: include/class/acc_ledger_history_purchase.class.php:303
 msgid "Paiement"
 msgstr ""
 
@@ -18522,6 +18572,7 @@ msgstr ""
 #: include/class/acc_ledger_purchase.class.php:2162
 #: include/class/acc_ledger_sale.class.php:1744
 #: include/class/acc_ledger_history_sale.class.php:315
+#: include/class/acc_ledger_history_purchase.class.php:334
 msgid "Date paiement"
 msgstr ""
 
@@ -18594,6 +18645,7 @@ msgstr ""
 #: include/class/acc_ledger_purchase.class.php:1663
 #: include/class/acc_ledger_sale.class.php:960
 #: include/class/acc_ledger_history_sale.class.php:292
+#: include/class/acc_ledger_history_purchase.class.php:307
 msgid "Note"
 msgstr ""
 
@@ -18987,6 +19039,7 @@ msgstr ""
 #: include/class/acc_ledger_search.class.php:119
 #: include/class/acc_ledger_search.class.php:123
 #: include/lib/html_input.class.php:1117 include/lib/html_input.class.php:1136
+#: include/lib/html_input.class.php:1137
 msgid "choix des journaux"
 msgstr ""
 
@@ -19027,7 +19080,7 @@ msgid "Appel invalide"
 msgstr ""
 
 #: html/export.php:53 html/export.php:54 html/export.php:58 html/export.php:85
-#: html/export.php:87
+#: html/export.php:87 html/export.php:100
 msgid "Export impossible"
 msgstr ""
 
@@ -20070,6 +20123,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:157
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:166
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:168
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:172
 msgid "Envoi facture"
 msgstr ""
 
@@ -20077,6 +20131,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:157
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:167
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:169
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:173
 msgid " à "
 msgstr ""
 
@@ -20672,6 +20727,7 @@ msgstr ""
 #: include/lib/html_input.class.php:1100 include/lib/html_input.class.php:1133
 #: include/lib/html_input.class.php:1134 include/lib/html_input.class.php:1136
 #: include/lib/html_input.class.php:1183 include/lib/html_input.class.php:1202
+#: include/lib/html_input.class.php:1203
 #, php-format
 msgid "Voulez-vous effacer cette relation "
 msgstr ""
@@ -21178,6 +21234,7 @@ msgstr ""
 #: include/class/acc_ledger_history_purchase.class.php:314
 #: include/class/print_ledger_simple.class.php:137
 #: include/class/print_ledger_detail_item.class.php:161
+#: include/class/acc_ledger_history_purchase.class.php:313
 msgid "TVA NP"
 msgstr ""
 
@@ -21972,7 +22029,7 @@ msgstr ""
 #: include/class/fiche.class.php:399 include/user_detail.inc.php:90
 #: include/class/fiche.class.php:431 include/user.inc.php:252
 #: include/user.inc.php:253 include/class/fiche.class.php:433
-#: include/user.inc.php:267 include/user.inc.php:278
+#: include/user.inc.php:267 include/user.inc.php:278 include/user.inc.php:289
 msgid "Actif"
 msgstr ""
 
@@ -21989,12 +22046,14 @@ msgstr ""
 #: include/user.inc.php:73 include/user.inc.php:74 include/user.inc.php:76
 #: include/user.inc.php:78 include/user.inc.php:163 include/user.inc.php:182
 #: include/user.inc.php:183 include/user.inc.php:197 include/user.inc.php:202
+#: include/user.inc.php:212
 msgid "Ajout Utilisateur"
 msgstr ""
 
 #: include/user.inc.php:77 include/user.inc.php:78 include/user.inc.php:80
 #: include/user.inc.php:82 include/user.inc.php:167 include/user.inc.php:187
 #: include/user.inc.php:188 include/user.inc.php:202 include/user.inc.php:207
+#: include/user.inc.php:217
 msgid "login"
 msgstr ""
 
@@ -22008,18 +22067,21 @@ msgstr ""
 #: html/install.php:618 include/user.inc.php:170 html/install.php:292
 #: html/install.php:689 include/user.inc.php:191 html/install.php:656
 #: include/user.inc.php:192 include/user.inc.php:206 include/user.inc.php:211
+#: html/install.php:658 include/user.inc.php:221 include/user.inc.php:312
 msgid "Mot de passe"
 msgstr ""
 
 #: include/user.inc.php:93 include/user.inc.php:94 include/user.inc.php:96
 #: include/user.inc.php:98 include/user.inc.php:183 include/user.inc.php:213
 #: include/user.inc.php:214 include/user.inc.php:228 include/user.inc.php:239
+#: include/user.inc.php:249
 msgid "Le login ne peut être vide"
 msgstr ""
 
 #: include/user.inc.php:98 include/user.inc.php:99 include/user.inc.php:101
 #: include/user.inc.php:103 include/user.inc.php:188 include/user.inc.php:218
 #: include/user.inc.php:219 include/user.inc.php:233 include/user.inc.php:244
+#: include/user.inc.php:254
 msgid "Le mot de passe ne peut être vide"
 msgstr ""
 
@@ -22084,7 +22146,7 @@ msgstr ""
 #: include/user.inc.php:125 include/user.inc.php:127
 #: include/param_sec.inc.php:50 include/user.inc.php:212
 #: include/user.inc.php:248 include/user.inc.php:249 include/user.inc.php:263
-#: include/user.inc.php:274
+#: include/user.inc.php:274 include/user.inc.php:284
 msgid "Login"
 msgstr ""
 
@@ -22133,6 +22195,7 @@ msgstr ""
 #: include/ext/webservice/nw_service.php:77
 #: include/ext/noalyss-webservice/nw_service.php:84
 #: include/ext/skel/index.php:60
+#: include/ext/noalyss-webservice/nw_service.php:85
 msgid "Route 1"
 msgstr ""
 
@@ -22140,6 +22203,7 @@ msgstr ""
 #: include/ext/skel/index.php:52 include/ext/webservice/nw_service.php:77
 #: include/ext/noalyss-webservice/nw_service.php:84
 #: include/ext/skel/index.php:60
+#: include/ext/noalyss-webservice/nw_service.php:85
 msgid "Première route"
 msgstr ""
 
@@ -22148,6 +22212,7 @@ msgstr ""
 #: include/ext/webservice/nw_service.php:78
 #: include/ext/noalyss-webservice/nw_service.php:85
 #: include/ext/skel/index.php:61
+#: include/ext/noalyss-webservice/nw_service.php:86
 msgid "Route 2"
 msgstr ""
 
@@ -22156,6 +22221,7 @@ msgstr ""
 #: include/ext/webservice/nw_service.php:78
 #: include/ext/noalyss-webservice/nw_service.php:85
 #: include/ext/skel/index.php:61
+#: include/ext/noalyss-webservice/nw_service.php:86
 msgid "Seconde route"
 msgstr ""
 
@@ -22163,6 +22229,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:157
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:166
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:168
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:172
 msgid "date "
 msgstr ""
 
@@ -22170,6 +22237,7 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:157
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:167
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:170
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:174
 msgid "sujet"
 msgstr ""
 
@@ -22402,12 +22470,14 @@ msgstr ""
 #: include/user.inc.php:84 include/user.inc.php:85 include/user.inc.php:87
 #: include/user.inc.php:89 include/user.inc.php:174 include/user.inc.php:204
 #: include/user.inc.php:205 include/user.inc.php:219 include/user.inc.php:230
+#: include/user.inc.php:240
 msgid "Créer Utilisateur"
 msgstr ""
 
 #: include/user.inc.php:109 include/user.inc.php:110 include/user.inc.php:112
 #: include/user.inc.php:114 include/user.inc.php:199 include/user.inc.php:235
 #: include/user.inc.php:236 include/user.inc.php:250 include/user.inc.php:261
+#: include/user.inc.php:271
 msgid "Ajout utilisateur"
 msgstr ""
 
@@ -22416,7 +22486,7 @@ msgstr ""
 #: include/restore.inc.php:221 include/restore.inc.php:222
 #: include/user.inc.php:127 include/user.inc.php:129 include/user.inc.php:214
 #: include/user.inc.php:250 include/user.inc.php:251 include/user.inc.php:265
-#: include/user.inc.php:276
+#: include/user.inc.php:276 include/user.inc.php:287
 msgid "Dossier"
 msgstr ""
 
@@ -22670,7 +22740,7 @@ msgstr ""
 #: html/do.php:236 html/do.php:273 html/do.php:285 html/do.php:295
 #: html/do.php:264 html/do.php:266 html/do.php:288 html/do.php:293
 #: html/do_BASE_342368.php:293 html/do_LOCAL_342368.php:232 html/do.php:238
-#: html/do_REMOTE_342368.php:232 html/do.php:240
+#: html/do_REMOTE_342368.php:232 html/do.php:240 html/do.php:247
 msgid "Erreur menu"
 msgstr ""
 
@@ -22679,6 +22749,7 @@ msgstr ""
 #: html/do.php:310 html/do.php:279 html/do.php:281 html/do.php:330
 #: html/do.php:335 html/do_BASE_342368.php:335 html/do_LOCAL_342368.php:274
 #: html/do.php:280 html/do_REMOTE_342368.php:274 html/do.php:282
+#: html/do.php:289
 msgid "Accès menu impossible"
 msgstr ""
 
@@ -22687,7 +22758,7 @@ msgstr ""
 #: html/do.php:329 html/do.php:331 html/do.php:300 html/do.php:302
 #: html/do.php:351 html/do.php:356 html/do_BASE_342368.php:356
 #: html/do_LOCAL_342368.php:295 html/do.php:301 html/do_REMOTE_342368.php:295
-#: html/do.php:303
+#: html/do.php:303 html/do.php:310
 msgid "Aucun profil utilisateur"
 msgstr ""
 
@@ -22906,6 +22977,7 @@ msgstr ""
 #: include/lib/html_input.class.php:1147
 #: include/template/action_display_short.php:82
 #: include/lib/html_input.class.php:1194 include/lib/html_input.class.php:1213
+#: include/lib/html_input.class.php:1214
 msgid "Nouvel événement"
 msgstr ""
 
@@ -22918,6 +22990,8 @@ msgstr ""
 #: include/class/print_ledger.class.php:194
 #: include/class/print_ledger.class.php:142
 #: include/class/print_ledger.class.php:186
+#: include/class/print_ledger.class.php:155
+#: include/class/print_ledger.class.php:199
 msgid "Ce journal ne peut être imprimé en mode simple"
 msgstr ""
 
@@ -22928,6 +23002,7 @@ msgstr ""
 #: include/class/user.class.php:1246 include/class/user.class.php:1259
 #: include/class/noalyss_user.class.php:1261
 #: include/class/noalyss_user.class.php:1278
+#: include/class/noalyss_user.class.php:1307
 msgid "Id"
 msgstr ""
 
@@ -22939,6 +23014,7 @@ msgstr ""
 #: include/class/user.class.php:1272 html/mobile.php:50
 #: include/class/noalyss_user.class.php:1274
 #: include/class/noalyss_user.class.php:1291
+#: include/class/noalyss_user.class.php:1320
 msgid "Aucun dossier disponible"
 msgstr ""
 
@@ -22993,7 +23069,7 @@ msgstr ""
 #: include/class/follow_up.class.php:251 include/class/follow_up.class.php:738
 #: include/class/document.class.php:1644 include/class/follow_up.class.php:294
 #: include/class/follow_up.class.php:826 include/class/document.class.php:1662
-#: include/class/document.class.php:1661
+#: include/class/document.class.php:1661 include/class/document.class.php:1666
 msgid "Haute"
 msgstr ""
 
@@ -23019,6 +23095,7 @@ msgstr ""
 #: include/class/follow_up.class.php:744 include/class/document.class.php:1644
 #: include/class/follow_up.class.php:296 include/class/follow_up.class.php:832
 #: include/class/document.class.php:1662 include/class/document.class.php:1661
+#: include/class/document.class.php:1666
 msgid "Basse"
 msgstr ""
 
@@ -23151,7 +23228,7 @@ msgstr ""
 #: include/template/tag_search_select.php:19
 #: include/ext/importbank/include/import_bank.class.php:144
 #: include/user.inc.php:265 include/user.inc.php:304 include/user.inc.php:305
-#: include/user.inc.php:319 include/user.inc.php:330
+#: include/user.inc.php:319 include/user.inc.php:330 include/user.inc.php:344
 msgid "Tous"
 msgstr ""
 
@@ -23279,6 +23356,7 @@ msgid "Choisissez un modèle"
 msgstr ""
 
 #: html/direct.php:42 html/direct.php:43 html/direct.php:46 html/direct.php:49
+#: html/direct.php:55
 msgid "Aucune correspondance"
 msgstr ""
 
@@ -23338,6 +23416,7 @@ msgstr ""
 #: html/recherche.php:151 include/history_operation.inc.php:203
 #: include/history_operation.inc.php:199 html/recherche.php:153
 #: include/history_operation.inc.php:202 include/history_operation.inc.php:189
+#: html/recherche.php:159
 msgid "Export vers CSV"
 msgstr ""
 
@@ -23482,7 +23561,7 @@ msgstr ""
 #: html/ajax_misc.php:554 html/ajax_misc.php:556 html/ajax_misc.php:560
 #: html/ajax_misc.php:525 html/ajax_misc.php:533 html/ajax_misc.php:621
 #: html/ajax_misc.php:623 html/ajax_misc.php:682 html/ajax_misc.php:685
-#: html/ajax_misc.php:687
+#: html/ajax_misc.php:687 html/ajax_misc.php:692
 msgid "Ce plugin n'existe pas "
 msgstr ""
 
@@ -23491,7 +23570,7 @@ msgstr ""
 #: html/ajax_misc.php:555 html/ajax_misc.php:557 html/ajax_misc.php:561
 #: html/ajax_misc.php:526 html/ajax_misc.php:534 html/ajax_misc.php:622
 #: html/ajax_misc.php:624 html/ajax_misc.php:683 html/ajax_misc.php:686
-#: html/ajax_misc.php:688
+#: html/ajax_misc.php:688 html/ajax_misc.php:693
 msgid "Il y a une erreur, ce plugin n'existe pas"
 msgstr ""
 
@@ -23673,7 +23752,8 @@ msgstr ""
 #: html/install.php:403 html/install.php:412 html/install.php:421
 #: html/install.php:409 html/install.php:418 html/install.php:426
 #: html/install.php:435 html/install.php:439 html/install.php:448
-#: html/install.php:457
+#: html/install.php:457 html/install.php:441 html/install.php:450
+#: html/install.php:459
 msgid "Avertissement"
 msgstr ""
 
@@ -23682,6 +23762,7 @@ msgstr ""
 #: html/install.php:416 html/install.php:422 html/install.php:386
 #: html/install.php:353 html/install.php:356 html/install.php:405
 #: html/install.php:411 html/install.php:419 html/install.php:441
+#: html/install.php:443
 msgid "max_execution_time devrait être de 60 minimum"
 msgstr ""
 
@@ -23690,7 +23771,7 @@ msgstr ""
 #: html/install.php:536 html/install.php:528 html/install.php:534
 #: html/install.php:496 html/install.php:471 html/install.php:477
 #: html/install.php:480 html/install.php:529 html/install.php:535
-#: html/install.php:543 html/install.php:577
+#: html/install.php:543 html/install.php:577 html/install.php:579
 msgid "Commencer la mise à jour ou l'installation"
 msgstr ""
 
@@ -23699,7 +23780,7 @@ msgstr ""
 #: include/upgrade.inc.php:102 include/upgrade.inc.php:104
 #: include/upgrade.inc.php:105 include/class/dossier.class.php:404
 #: include/class/dossier.class.php:410 include/class/dossier.class.php:408
-#: include/class/dossier.class.php:421
+#: include/class/dossier.class.php:421 include/class/dossier.class.php:420
 msgid "Modèle inexistant"
 msgstr ""
 
@@ -23708,6 +23789,7 @@ msgstr ""
 #: html/install.php:348 html/install.php:354 html/install.php:318
 #: html/install.php:327 html/install.php:330 html/install.php:379
 #: html/install.php:385 html/install.php:393 html/install.php:414
+#: html/install.php:416
 msgid "Vous devez installer ou activer l'extension"
 msgstr ""
 
@@ -23786,7 +23868,7 @@ msgstr ""
 #: html/install.php:333 html/install.php:339 html/install.php:345
 #: html/install.php:309 html/install.php:316 html/install.php:319
 #: html/install.php:368 html/install.php:374 html/install.php:382
-#: html/install.php:401
+#: html/install.php:401 html/install.php:403
 msgid "a une mauvaise valeur"
 msgstr ""
 
@@ -23794,7 +23876,7 @@ msgstr ""
 #: html/install.php:418 html/install.php:424 html/install.php:430
 #: html/install.php:394 html/install.php:361 html/install.php:364
 #: html/install.php:413 html/install.php:419 html/install.php:427
-#: html/install.php:449
+#: html/install.php:449 html/install.php:451
 msgid "register_globals doit être à off"
 msgstr ""
 
@@ -23811,7 +23893,7 @@ msgstr ""
 #: html/install.php:460 html/install.php:424 html/install.php:399
 #: html/install.php:405 html/install.php:408 scenario/180209.php:18
 #: html/install.php:457 html/install.php:463 html/install.php:471
-#: html/install.php:497
+#: html/install.php:497 html/install.php:499
 msgid "Version base de données :"
 msgstr ""
 
@@ -23833,7 +23915,8 @@ msgstr ""
 #: include/admin_repo.inc.php:129 html/install.php:420 html/install.php:423
 #: html/install.php:472 html/install.php:478 html/install.php:486
 #: include/admin_repo.inc.php:126 html/install.php:512
-#: include/admin_repo.inc.php:136
+#: include/admin_repo.inc.php:136 html/install.php:514
+#: include/admin_repo.inc.php:141
 msgid "Paramètre base de données"
 msgstr ""
 
@@ -23842,6 +23925,7 @@ msgstr ""
 #: html/install.php:484 html/install.php:446 html/install.php:421
 #: html/install.php:427 html/install.php:430 html/install.php:479
 #: html/install.php:485 html/install.php:493 html/install.php:519
+#: html/install.php:521
 msgid ""
 "Vous devez installer le langage plpgsql pour permettre aux fonctions SQL de "
 "fonctionner."
@@ -23852,6 +23936,7 @@ msgstr ""
 #: html/install.php:485 html/install.php:447 html/install.php:422
 #: html/install.php:428 html/install.php:431 html/install.php:480
 #: html/install.php:486 html/install.php:494 html/install.php:520
+#: html/install.php:522
 msgid ""
 "Pour cela, sur la ligne de commande en tant qu\\'utilisateur postgres, "
 "faites createlang plpgsql template1"
@@ -23872,6 +23957,7 @@ msgstr ""
 #: html/install.php:527 html/install.php:489 html/install.php:464
 #: html/install.php:470 html/install.php:473 html/install.php:522
 #: html/install.php:528 html/install.php:536 html/install.php:563
+#: html/install.php:565
 #, php-format
 msgid "Il y a %s param&egrave;tre qui sont trop bas"
 msgstr ""
@@ -23881,6 +23967,7 @@ msgstr ""
 #: html/install.php:529 html/install.php:513 html/install.php:519
 #: html/install.php:522 html/install.php:572 html/install.php:578
 #: html/install.php:586 html/install.php:649 html/install.php:621
+#: html/install.php:623
 msgid "Creation of Modele 1"
 msgstr ""
 
@@ -23889,6 +23976,7 @@ msgstr ""
 #: html/install.php:542 html/install.php:532 html/install.php:538
 #: html/install.php:541 html/install.php:591 html/install.php:597
 #: html/install.php:605 html/install.php:671 html/install.php:641
+#: html/install.php:643
 msgid "Creation of Modele 2"
 msgstr ""
 
@@ -23913,7 +24001,7 @@ msgstr ""
 #: html/install.php:624 html/install.php:586 html/install.php:576
 #: html/install.php:582 html/install.php:585 html/install.php:635
 #: html/install.php:641 html/install.php:649 html/install.php:720
-#: html/install.php:687
+#: html/install.php:687 html/install.php:689
 msgid ""
 "soit noalyss/contrib/mono-dossier/mono-france.sql pour la comptabilité "
 "française"
@@ -23924,7 +24012,7 @@ msgstr ""
 #: html/install.php:625 html/install.php:587 html/install.php:577
 #: html/install.php:583 html/install.php:586 html/install.php:636
 #: html/install.php:642 html/install.php:650 html/install.php:721
-#: html/install.php:688
+#: html/install.php:688 html/install.php:690
 msgid ""
 "soit noalyss/contrib/mono-dossier/mono-belge.sql pour la comptabilité belge"
 msgstr ""
@@ -23934,7 +24022,7 @@ msgstr ""
 #: html/install.php:626 html/install.php:588 html/install.php:578
 #: html/install.php:584 html/install.php:587 html/install.php:637
 #: html/install.php:643 html/install.php:651 html/install.php:722
-#: html/install.php:689
+#: html/install.php:689 html/install.php:691
 msgid "soit y restaurer un backup ou un modèle"
 msgstr ""
 
@@ -23958,7 +24046,7 @@ msgstr ""
 #: html/install.php:682 html/install.php:617 html/install.php:644
 #: html/install.php:607 html/install.php:614 html/install.php:667
 #: html/install.php:673 html/install.php:684 html/install.php:755
-#: html/install.php:722
+#: html/install.php:722 html/install.php:724
 msgid "Connectez-vous à NOALYSS"
 msgstr ""
 
@@ -23978,7 +24066,8 @@ msgstr ""
 #: html/install.php:456 html/install.php:464 include/upgrade.inc.php:32
 #: include/class/dossier.class.php:371 include/class/dossier.class.php:399
 #: html/install.php:487 include/class/dossier.class.php:384
-#: include/class/dossier.class.php:412
+#: include/class/dossier.class.php:412 html/install.php:489
+#: include/class/dossier.class.php:383 include/class/dossier.class.php:411
 msgid "Base de données"
 msgstr ""
 
@@ -23987,7 +24076,7 @@ msgstr ""
 #: html/install.php:599 html/install.php:561 html/install.php:551
 #: html/install.php:557 html/install.php:560 html/install.php:610
 #: html/install.php:616 html/install.php:624 html/install.php:695
-#: html/install.php:662
+#: html/install.php:662 html/install.php:664
 msgid "Mise à jour du systeme"
 msgstr ""
 
@@ -23996,7 +24085,7 @@ msgstr ""
 #: html/install.php:600 html/install.php:562 html/install.php:552
 #: html/install.php:558 html/install.php:561 html/install.php:611
 #: html/install.php:617 html/install.php:625 html/install.php:696
-#: html/install.php:663
+#: html/install.php:663 html/install.php:665
 msgid "Mise  à jour dossier"
 msgstr ""
 
@@ -24005,6 +24094,7 @@ msgstr ""
 #: html/install.php:635 html/install.php:597 html/install.php:587
 #: html/install.php:594 html/install.php:647 html/install.php:653
 #: html/install.php:661 html/install.php:732 html/install.php:699
+#: html/install.php:701
 msgid "Mise à jour Repository"
 msgstr ""
 
@@ -24012,7 +24102,7 @@ msgstr ""
 #: html/install.php:434 html/install.php:440 html/install.php:432
 #: html/install.php:438 html/install.php:402 html/install.php:377
 #: html/install.php:380 html/install.php:429 html/install.php:435
-#: html/install.php:443 html/install.php:466
+#: html/install.php:443 html/install.php:466 html/install.php:468
 msgid "php.ini est bien configuré "
 msgstr ""
 
@@ -24020,7 +24110,7 @@ msgstr ""
 #: html/install.php:436 html/install.php:442 html/install.php:434
 #: html/install.php:440 html/install.php:404 html/install.php:379
 #: html/install.php:382 html/install.php:431 html/install.php:437
-#: html/install.php:445 html/install.php:468
+#: html/install.php:445 html/install.php:468 html/install.php:470
 msgid "php mal configuré "
 msgstr ""
 
@@ -24029,6 +24119,7 @@ msgstr ""
 #: html/install.php:507 html/install.php:469 html/install.php:444
 #: html/install.php:450 html/install.php:453 html/install.php:502
 #: html/install.php:508 html/install.php:516 html/install.php:543
+#: html/install.php:545
 #, php-format
 msgid "Attention le paramètre effective_cache_size est de %s au lieu de 1000"
 msgstr ""
@@ -24038,6 +24129,7 @@ msgstr ""
 #: html/install.php:524 html/install.php:486 html/install.php:461
 #: html/install.php:467 html/install.php:470 html/install.php:519
 #: html/install.php:525 html/install.php:533 html/install.php:560
+#: html/install.php:562
 msgid "La base de données est bien configurée "
 msgstr ""
 
@@ -24783,6 +24875,7 @@ msgstr ""
 #: include/class/acc_account_ledger.class.php:785
 #: include/class/acc_account_ledger.class.php:886
 #: include/lib/html_input.class.php:1043 include/lib/html_input.class.php:1063
+#: include/lib/html_input.class.php:1044 include/lib/html_input.class.php:1064
 msgid "Filtre rapide"
 msgstr ""
 
@@ -24896,7 +24989,7 @@ msgstr ""
 
 #: include/admin_repo.inc.php:43 include/admin_repo.inc.php:45
 #: include/admin_repo.inc.php:47 include/admin_repo.inc.php:44
-#: include/admin_repo.inc.php:51
+#: include/admin_repo.inc.php:51 include/admin_repo.inc.php:56
 msgid "Vous n'êtes pas administateur"
 msgstr ""
 
@@ -24908,27 +25001,28 @@ msgstr ""
 #: include/admin_repo.inc.php:106 include/admin_repo.inc.php:110
 #: include/admin_repo.inc.php:112 include/admin_repo.inc.php:114
 #: include/admin_repo.inc.php:111 include/admin_repo.inc.php:121
+#: include/admin_repo.inc.php:126
 msgid "Variables"
 msgstr ""
 
 #: include/admin_repo.inc.php:127 include/admin_repo.inc.php:134
 #: include/admin_repo.inc.php:138 include/admin_repo.inc.php:140
 #: include/admin_repo.inc.php:142 include/admin_repo.inc.php:139
-#: include/admin_repo.inc.php:149
+#: include/admin_repo.inc.php:149 include/admin_repo.inc.php:154
 msgid "Hôte"
 msgstr ""
 
 #: include/admin_repo.inc.php:130 include/admin_repo.inc.php:137
 #: include/admin_repo.inc.php:141 include/admin_repo.inc.php:143
 #: include/admin_repo.inc.php:145 include/admin_repo.inc.php:142
-#: include/admin_repo.inc.php:152
+#: include/admin_repo.inc.php:152 include/admin_repo.inc.php:157
 msgid "Port"
 msgstr ""
 
 #: include/admin_repo.inc.php:146 include/admin_repo.inc.php:153
 #: include/admin_repo.inc.php:157 include/admin_repo.inc.php:159
 #: include/admin_repo.inc.php:161 include/admin_repo.inc.php:158
-#: include/admin_repo.inc.php:168
+#: include/admin_repo.inc.php:168 include/admin_repo.inc.php:173
 msgid "Paramètre PHP"
 msgstr ""
 
@@ -25000,14 +25094,14 @@ msgstr ""
 #: include/upgrade.inc.php:50 include/upgrade.inc.php:45
 #: include/upgrade.inc.php:46 include/class/dossier.class.php:344
 #: include/class/dossier.class.php:350 include/class/dossier.class.php:348
-#: include/class/dossier.class.php:361
+#: include/class/dossier.class.php:361 include/class/dossier.class.php:360
 msgid "Mise à jour de la base de données principale"
 msgstr ""
 
 #: include/upgrade.inc.php:65 include/upgrade.inc.php:60
 #: include/upgrade.inc.php:61 include/class/dossier.class.php:360
 #: include/class/dossier.class.php:366 include/class/dossier.class.php:364
-#: include/class/dossier.class.php:377
+#: include/class/dossier.class.php:377 include/class/dossier.class.php:376
 msgid "Mise à jour dossiers"
 msgstr ""
 
@@ -25015,7 +25109,7 @@ msgstr ""
 #: include/upgrade.inc.php:87 include/upgrade.inc.php:88
 #: include/upgrade.inc.php:89 include/class/dossier.class.php:388
 #: include/class/dossier.class.php:394 include/class/dossier.class.php:392
-#: include/class/dossier.class.php:405
+#: include/class/dossier.class.php:405 include/class/dossier.class.php:404
 msgid "Mise à jour modèles"
 msgstr ""
 
@@ -25132,6 +25226,7 @@ msgstr ""
 #: include/ext/amortis/include/template/listing_histo.php:32
 #: include/ajax/ajax_boxcard_search.php:50 include/class/fiche.class.php:1868
 #: html/ajax_misc.php:594 include/user.inc.php:277 include/user.inc.php:288
+#: html/ajax_misc.php:599 html/user_login.php:179 include/user.inc.php:298
 #, php-format
 msgid "Cherche"
 msgstr ""
@@ -25864,7 +25959,7 @@ msgstr ""
 #: html/install.php:619 html/install.php:581 html/install.php:571
 #: html/install.php:577 html/install.php:580 html/install.php:630
 #: html/install.php:636 html/install.php:644 html/install.php:715
-#: html/install.php:682
+#: html/install.php:682 html/install.php:684
 #, php-format
 msgid ""
 "La base de donnée %s est vide, \n"
@@ -25973,6 +26068,7 @@ msgstr ""
 #: include/class/acc_ledger_history_generic.class.php:793
 #: include/class/acc_ledger_history_sale.class.php:277
 #: include/class/acc_reconciliation.class.php:581
+#: include/class/acc_ledger_history_purchase.class.php:293
 msgid "journal"
 msgstr ""
 
@@ -26011,6 +26107,7 @@ msgstr ""
 #: include/class/acc_ledger_history_generic.class.php:798
 #: include/export/export_ledger_csv.php:215
 #: include/class/acc_ledger_history_sale.class.php:289
+#: include/class/acc_ledger_history_purchase.class.php:304
 msgid "operation"
 msgstr ""
 
@@ -26102,6 +26199,7 @@ msgstr ""
 #: include/class/acc_ledger_history_purchase.class.php:309
 #: include/class/acc_reconciliation.class.php:524
 #: include/class/acc_ledger_history_sale.class.php:293
+#: include/class/acc_ledger_history_purchase.class.php:308
 msgid "interne"
 msgstr ""
 
@@ -26116,6 +26214,7 @@ msgstr ""
 #: include/class/acc_ledger_history_purchase.class.php:286
 #: include/class/acc_ledger_history_purchase.class.php:311
 #: include/class/tax_detail.class.php:164
+#: include/class/acc_ledger_history_purchase.class.php:310
 msgid "privé"
 msgstr ""
 
@@ -26129,6 +26228,7 @@ msgstr ""
 #: include/class/acc_ledger_history_purchase.class.php:273
 #: include/class/acc_ledger_history_purchase.class.php:287
 #: include/class/acc_ledger_history_purchase.class.php:312
+#: include/class/acc_ledger_history_purchase.class.php:311
 msgid "DNA"
 msgstr ""
 
@@ -26142,6 +26242,7 @@ msgstr ""
 #: include/class/acc_ledger_history_purchase.class.php:274
 #: include/class/acc_ledger_history_purchase.class.php:288
 #: include/class/acc_ledger_history_purchase.class.php:313
+#: include/class/acc_ledger_history_purchase.class.php:312
 msgid "tva non ded."
 msgstr ""
 
@@ -26365,7 +26466,8 @@ msgstr ""
 #: html/install.php:270 html/install.php:616 html/install.php:676
 #: html/install.php:705 html/install.php:286 html/install.php:687
 #: html/install.php:747 html/install.php:776 html/install.php:654
-#: html/install.php:714 html/install.php:743
+#: html/install.php:714 html/install.php:743 html/install.php:656
+#: html/install.php:716 html/install.php:745
 msgid "Important"
 msgstr ""
 
@@ -26379,7 +26481,7 @@ msgstr ""
 #: html/install.php:269 html/install.php:695 html/install.php:275
 #: html/install.php:677 html/install.php:706 html/install.php:291
 #: html/install.php:748 html/install.php:777 html/install.php:715
-#: html/install.php:744
+#: html/install.php:744 html/install.php:717 html/install.php:746
 msgid "Utilisateur administrateur"
 msgstr ""
 
@@ -26387,6 +26489,7 @@ msgstr ""
 #: html/install.php:554 html/install.php:544 html/install.php:550
 #: html/install.php:553 html/install.php:603 html/install.php:609
 #: html/install.php:617 html/install.php:688 html/install.php:655
+#: html/install.php:657
 msgid "Utilisateur  administrateur"
 msgstr ""
 
@@ -26783,12 +26886,12 @@ msgid ""
 msgstr ""
 
 #: include/ext/listing/index.php:61 include/ext/listing/index.php:59
-#: include/ext/listing/index.php:97
+#: include/ext/listing/index.php:97 include/ext/listing/index.php:94
 msgid "Génération listing"
 msgstr ""
 
 #: include/ext/listing/index.php:62 include/ext/listing/index.php:60
-#: include/ext/listing/index.php:98
+#: include/ext/listing/index.php:98 include/ext/listing/index.php:95
 msgid "Historique listing "
 msgstr ""
 
@@ -26872,6 +26975,7 @@ msgstr ""
 #: include/lib/sendmail.class.php:102 include/lib/sendmail_core.class.php:105
 #: include/lib/sendmail_core.class.php:106
 #: include/lib/sendmail_core.class.php:111
+#: include/lib/sendmail_core.class.php:128
 #, php-format
 msgid "%s est vide"
 msgstr ""
@@ -26903,6 +27007,7 @@ msgstr ""
 #: include/ext/import-advanced/index.php:67 tmp/import-advanced/index.php:67
 #: include/ext/import-advanced/index.php:73
 #: include/ext/import-advanced/index.php:71
+#: include/ext/import-advanced/index.php:70
 msgid "Historique importation"
 msgstr ""
 
@@ -27104,7 +27209,7 @@ msgstr ""
 
 #: include/admin_repo.inc.php:107 include/admin_repo.inc.php:109
 #: include/admin_repo.inc.php:111 include/admin_repo.inc.php:108
-#: include/admin_repo.inc.php:118
+#: include/admin_repo.inc.php:118 include/admin_repo.inc.php:123
 msgid "Version Noalyss"
 msgstr ""
 
@@ -27350,6 +27455,7 @@ msgstr ""
 #: include/ext/bilan_interne/index.php:110 include/lib/html_input.class.php:559
 #: include/lib/html_input.class.php:558 include/lib/html_input.class.php:593
 #: include/ext/bilan_interne/index.php:115 include/lib/html_input.class.php:612
+#: include/lib/html_input.class.php:613
 msgid "Imprimer"
 msgstr ""
 
@@ -28144,7 +28250,7 @@ msgstr ""
 #: html/ajax_misc.php:288 html/ajax_misc.php:290 html/ajax_misc.php:296
 #: html/ajax_misc.php:298 html/ajax_misc.php:313 html/ajax_misc.php:321
 #: html/ajax_misc.php:409 html/ajax_misc.php:411 html/ajax_misc.php:467
-#: html/ajax_misc.php:468 html/ajax_misc.php:470
+#: html/ajax_misc.php:468 html/ajax_misc.php:470 html/ajax_misc.php:475
 msgid "Invalide type"
 msgstr ""
 
@@ -28152,12 +28258,14 @@ msgstr ""
 #: html/ajax_misc.php:462 html/ajax_misc.php:466 html/ajax_misc.php:431
 #: html/ajax_misc.php:439 html/ajax_misc.php:527 html/ajax_misc.php:529
 #: html/ajax_misc.php:587 html/ajax_misc.php:590 html/ajax_misc.php:592
+#: html/ajax_misc.php:597
 msgid "Choisissez la TVA"
 msgstr ""
 
 #: html/do.php:193 html/do.php:203 html/do.php:172 html/do.php:184
 #: html/do.php:189 html/do_BASE_342368.php:189 html/do_LOCAL_342368.php:128
 #: html/do.php:134 html/do_REMOTE_342368.php:128 html/do.php:136
+#: html/do.php:143
 msgid "cliquez ici pour mettre à jour "
 msgstr ""
 
@@ -28170,6 +28278,7 @@ msgstr ""
 
 #: html/install.php:370 html/install.php:373 html/install.php:422
 #: html/install.php:428 html/install.php:436 html/install.php:458
+#: html/install.php:460
 msgid "open_basedir empêche certaines fonctions de Noalyss,mettez-le à vide "
 msgstr ""
 
@@ -28184,7 +28293,7 @@ msgstr ""
 
 #: html/install.php:629 html/install.php:636 html/install.php:639
 #: html/install.php:692 html/install.php:698 html/install.php:709
-#: html/install.php:780 html/install.php:747
+#: html/install.php:780 html/install.php:747 html/install.php:749
 #, php-format
 msgid "VOUS DEVEZ EFFACER CE FICHIER %s"
 msgstr ""
@@ -28194,17 +28303,18 @@ msgstr ""
 #: html/install.php:695 html/install.php:651 html/install.php:701
 #: html/install.php:659 html/install.php:712 html/install.php:730
 #: html/install.php:783 html/install.php:697 html/install.php:750
+#: html/install.php:699 html/install.php:752
 msgid "Tout est installé"
 msgstr ""
 
 #: html/install.php:636 html/install.php:643 html/install.php:646
 #: html/install.php:699 html/install.php:705 html/install.php:716
-#: html/install.php:787 html/install.php:754
+#: html/install.php:787 html/install.php:754 html/install.php:756
 msgid "Essai effacement install.php et se connecter à NOALYSS"
 msgstr ""
 
 #: html/user_login.php:97 html/user_login.php:103 html/user_login.php:116
-#: html/user_login.php:115
+#: html/user_login.php:115 html/user_login.php:122
 msgid "Cliquez ici pour mettre à jour"
 msgstr ""
 
@@ -28883,6 +28993,7 @@ msgstr ""
 #: include/class/acc_ledger_history_generic.class.php:672
 #: include/class/acc_ledger_history_generic.class.php:694
 #: include/class/acc_ledger_history_generic.class.php:693
+#: include/class/acc_ledger_history_generic.class.php:692
 msgid "solde débiteur:"
 msgstr ""
 
@@ -28892,6 +29003,7 @@ msgstr ""
 #: include/class/acc_ledger_history_generic.class.php:673
 #: include/class/acc_ledger_history_generic.class.php:695
 #: include/class/acc_ledger_history_generic.class.php:694
+#: include/class/acc_ledger_history_generic.class.php:693
 msgid "solde créditeur:"
 msgstr ""
 
@@ -28921,6 +29033,7 @@ msgstr ""
 #: include/class/acc_ledger_history_sale.class.php:308
 #: include/class/acc_ledger_history_purchase.class.php:329
 #: include/class/acc_ledger_history_sale.class.php:309
+#: include/class/acc_ledger_history_purchase.class.php:328
 msgid "TVAC/TTC"
 msgstr ""
 
@@ -29396,17 +29509,20 @@ msgstr ""
 #: include/class/tva_rate_mtable.class.php:357
 #: include/class/noalyss_user.class.php:1787
 #: include/class/noalyss_user.class.php:1823
+#: include/class/noalyss_user.class.php:1853
+#: include/class/noalyss_user.class.php:1889
 msgid "Valeur invalide"
 msgstr ""
 
 #: html/install.php:384 html/install.php:387 html/install.php:436
 #: html/install.php:442 html/install.php:450 html/install.php:473
+#: html/install.php:475
 msgid "Module php-pgsql n'est pas installé"
 msgstr ""
 
 #: html/install.php:586 html/install.php:589 html/install.php:639
 #: html/install.php:645 html/install.php:653 html/install.php:724
-#: html/install.php:691
+#: html/install.php:691 html/install.php:693
 msgid ""
 "Puis refaites la procédure d'installation pour mettre la base de données à "
 "jour"
@@ -29657,7 +29773,7 @@ msgstr ""
 #: include/class/document.class.php:1293 include/class/document.class.php:1576
 #: include/class/document.class.php:1782 include/class/document.class.php:1788
 #: include/class/document.class.php:1831 include/class/document.class.php:1849
-#: include/class/document.class.php:1848
+#: include/class/document.class.php:1848 include/class/document.class.php:1853
 #, php-format
 msgid "chaine à remplacer [%s] contient un caractère interdit"
 msgstr ""
@@ -29742,7 +29858,8 @@ msgstr ""
 #: include/lib/message_javascript.php:77 include/lib/message_javascript.php:79
 #: include/lib/message_javascript.php:80 html/login.php:53 html/login.php:96
 #: html/login.php:56 html/login.php:99 html/login.php:59 html/login.php:102
-#: html/login.php:57 html/login.php:104 html/login.php:124
+#: html/login.php:57 html/login.php:104 html/login.php:124 html/login.php:60
+#: html/login.php:135
 msgid "Un instant svp"
 msgstr ""
 
@@ -30018,6 +30135,7 @@ msgstr ""
 #: include/class/acc_ledger_history_purchase.class.php:338
 #: include/export/export_ledger_csv.php:135
 #: include/class/acc_ledger_history_sale.class.php:317
+#: include/class/acc_ledger_history_purchase.class.php:337
 msgid "Montant paiement"
 msgstr ""
 
@@ -30047,6 +30165,7 @@ msgstr ""
 #: include/class/acc_ledger_history_purchase.class.php:290
 #: include/class/acc_ledger_history_purchase.class.php:309
 #: include/class/acc_ledger_history_purchase.class.php:337
+#: include/class/acc_ledger_history_purchase.class.php:336
 msgid "Méthode paiement"
 msgstr ""
 
@@ -30061,6 +30180,7 @@ msgstr ""
 #: include/class/acc_ledger_history_purchase.class.php:339
 #: include/ext/importbank/include/template/show_list.php:117
 #: include/class/acc_ledger_history_sale.class.php:318
+#: include/class/acc_ledger_history_purchase.class.php:338
 msgid "n° opération"
 msgstr ""
 
@@ -30440,7 +30560,7 @@ msgid ""
 msgstr ""
 
 #: html/user_login.php:132 html/user_login.php:149 html/user_login.php:162
-#: html/user_login.php:161
+#: html/user_login.php:161 html/user_login.php:168
 msgid ""
 "Si la redirection ne fonctionne pas, vous devez changer la valeur de "
 "NOALYSS_URL "
@@ -30477,6 +30597,7 @@ msgstr ""
 #: include/class/document.class.php:1229 include/class/document.class.php:1406
 #: include/class/document.class.php:1412 include/class/document.class.php:1444
 #: include/class/document.class.php:1462 include/class/document.class.php:1461
+#: include/class/document.class.php:1466
 #, php-format
 msgid "le %s , %s écrit %s"
 msgstr ""
@@ -30488,7 +30609,7 @@ msgstr ""
 #: include/class/follow_up.class.php:252 include/class/follow_up.class.php:741
 #: include/class/document.class.php:1644 include/class/follow_up.class.php:295
 #: include/class/follow_up.class.php:829 include/class/document.class.php:1662
-#: include/class/document.class.php:1661
+#: include/class/document.class.php:1661 include/class/document.class.php:1666
 msgid "Normale"
 msgstr ""
 
@@ -30499,6 +30620,7 @@ msgstr ""
 #: include/class/acc_ledger_history_sale.class.php:315
 #: include/class/acc_ledger_history_purchase.class.php:336
 #: include/class/acc_ledger_history_sale.class.php:316
+#: include/class/acc_ledger_history_purchase.class.php:335
 msgid "Code paiement"
 msgstr ""
 
@@ -30677,6 +30799,7 @@ msgstr ""
 #: include/class/acc_ledger_purchase.class.php:2137
 #: include/class/acc_ledger_sale.class.php:1720
 #: include/class/acc_ledger_history.class.php:333
+#: include/class/print_ledger.class.php:336
 msgid "Filtre invalide"
 msgstr ""
 
@@ -30685,6 +30808,7 @@ msgstr ""
 #: include/class/acc_ledger_history.class.php:356
 #: include/class/pdf.class.php:155 include/class/print_ledger.class.php:101
 #: include/class/acc_ledger_history.class.php:357
+#: include/class/print_ledger.class.php:114
 msgid "Filter invalide "
 msgstr ""
 
@@ -30778,6 +30902,7 @@ msgstr ""
 #: include/class/user.class.php:764 include/class/user.class.php:1024
 #: include/class/user.class.php:1037 include/class/noalyss_user.class.php:1038
 #: include/class/noalyss_user.class.php:1055
+#: include/class/noalyss_user.class.php:1072
 msgid "Access invalid"
 msgstr ""
 
@@ -31127,13 +31252,13 @@ msgstr ""
 
 #: include/user_detail.inc.php:94 include/user_detail.inc.php:91
 #: include/user.inc.php:131 include/user.inc.php:150 include/user.inc.php:151
-#: include/user.inc.php:165 include/user.inc.php:170
+#: include/user.inc.php:165 include/user.inc.php:170 include/user.inc.php:174
 msgid "Code invalide, effacement refusé"
 msgstr ""
 
 #: include/user_detail.inc.php:113 include/user_detail.inc.php:110
 #: include/user.inc.php:150 include/user.inc.php:169 include/user.inc.php:170
-#: include/user.inc.php:184 include/user.inc.php:189
+#: include/user.inc.php:184 include/user.inc.php:189 include/user.inc.php:199
 #, php-format
 msgid "Utilisateur %s %s est effacé"
 msgstr ""
@@ -31207,6 +31332,7 @@ msgid ""
 msgstr ""
 
 #: html/fid_card.php:181 html/fid_card.php:183 html/fid_card.php:186
+#: html/fid_card.php:192
 #, php-format
 msgid "Résultat limité à %s"
 msgstr ""
@@ -31229,7 +31355,7 @@ msgstr ""
 
 #: html/login.php:52 html/login.php:95 html/login.php:55 html/login.php:98
 #: html/login.php:58 html/login.php:101 html/login.php:56 html/login.php:103
-#: html/login.php:123
+#: html/login.php:123 html/login.php:59 html/login.php:134
 msgid "Version base de donneés incorrecte"
 msgstr ""
 
@@ -31336,6 +31462,7 @@ msgstr ""
 #: include/class/acc_ledger_sale.class.php:1775
 #: include/class/acc_operation.class.php:931
 #: include/class/acc_ledger_history_sale.class.php:310
+#: include/class/acc_ledger_history_purchase.class.php:329
 msgid "Devise"
 msgstr ""
 
@@ -31590,6 +31717,7 @@ msgstr ""
 #: include/template/ledger_detail_ach.php:387
 #: include/template/ledger_detail_ven.php:330
 #: include/class/acc_ledger_history_sale.class.php:314
+#: include/class/acc_ledger_history_purchase.class.php:333
 msgid "Taux utilisé"
 msgstr ""
 
@@ -31747,36 +31875,42 @@ msgstr ""
 #: include/ext/import-advanced/index.php:64 tmp/import-advanced/index.php:64
 #: include/ext/import-advanced/index.php:70
 #: include/ext/import-advanced/index.php:68
+#: include/ext/import-advanced/index.php:67
 msgid "Import Compta"
 msgstr ""
 
 #: include/ext/import-advanced/index.php:64 tmp/import-advanced/index.php:64
 #: include/ext/import-advanced/index.php:70
 #: include/ext/import-advanced/index.php:68
+#: include/ext/import-advanced/index.php:67
 msgid "Importation d'opérations comptable"
 msgstr ""
 
 #: include/ext/import-advanced/index.php:65 tmp/import-advanced/index.php:65
 #: include/ext/import-advanced/index.php:71
 #: include/ext/import-advanced/index.php:69
+#: include/ext/import-advanced/index.php:68
 msgid "Import Analytique"
 msgstr ""
 
 #: include/ext/import-advanced/index.php:65 tmp/import-advanced/index.php:65
 #: include/ext/import-advanced/index.php:71
 #: include/ext/import-advanced/index.php:69
+#: include/ext/import-advanced/index.php:68
 msgid "Importation d'opérations analytique"
 msgstr ""
 
 #: include/ext/import-advanced/index.php:66 tmp/import-advanced/index.php:66
 #: include/ext/import-advanced/index.php:72
 #: include/ext/import-advanced/index.php:70
+#: include/ext/import-advanced/index.php:69
 msgid "Intégration"
 msgstr ""
 
 #: include/ext/import-advanced/index.php:66 tmp/import-advanced/index.php:66
 #: include/ext/import-advanced/index.php:72
 #: include/ext/import-advanced/index.php:70
+#: include/ext/import-advanced/index.php:69
 msgid "Préparation avant d'intégrer les opếrations"
 msgstr ""
 
@@ -31811,6 +31945,7 @@ msgstr ""
 #: include/ext/noalyss_xmlpayment/ajax.php:29 include/ext/rash/ajax.php:22
 #: include/ext/noalyss-timesheet/ajax.php:82
 #: include/class/noalyss_user.class.php:891
+#: include/class/noalyss_user.class.php:911
 msgid "Action invalide"
 msgstr ""
 
@@ -31972,12 +32107,14 @@ msgstr ""
 #: include/ext/invoicing/include/invoice_download_pdf.inc.php:79
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:134
 #: include/lib/utility.class.php:95
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:137
 #, php-format
 msgid " PDF pour %s non généré "
 msgstr ""
 
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:188
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:191
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:195
 msgid ""
 "Limite email que vous pouvez envoyer est atteinte, contactez votre "
 "administrateur"
@@ -31985,6 +32122,7 @@ msgstr ""
 
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:258
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:262
+#: include/ext/invoicing/include/invoice_send_mail.inc.php:266
 msgid "echec chargement fichier"
 msgstr ""
 
@@ -32487,6 +32625,7 @@ msgstr ""
 #: include/class/acc_ledger_history_sale.class.php:310
 #: include/class/acc_ledger_history_purchase.class.php:331
 #: include/class/acc_ledger_history_sale.class.php:311
+#: include/class/acc_ledger_history_purchase.class.php:330
 msgid "Devise HTVA"
 msgstr ""
 
@@ -32495,6 +32634,7 @@ msgstr ""
 #: include/class/acc_ledger_history_sale.class.php:311
 #: include/class/acc_ledger_history_purchase.class.php:332
 #: include/class/acc_ledger_history_sale.class.php:312
+#: include/class/acc_ledger_history_purchase.class.php:331
 msgid "Devise TVA"
 msgstr ""
 
@@ -32503,6 +32643,7 @@ msgstr ""
 #: include/class/acc_ledger_history_sale.class.php:312
 #: include/class/acc_ledger_history_purchase.class.php:333
 #: include/class/acc_ledger_history_sale.class.php:313
+#: include/class/acc_ledger_history_purchase.class.php:332
 msgid "Taux ref"
 msgstr ""
 
@@ -32635,29 +32776,29 @@ msgid "Nom trop long max=80"
 msgstr ""
 
 #: include/class/document.class.php:139 include/class/document.class.php:143
-#: include/class/document.class.php:145
+#: include/class/document.class.php:145 include/class/document.class.php:150
 #, php-format
 msgid "Export a échoué pour %s"
 msgstr ""
 
 #: include/class/document.class.php:157 include/class/document.class.php:161
-#: include/class/document.class.php:163
+#: include/class/document.class.php:163 include/class/document.class.php:168
 #, php-format
 msgid "Décompression a échoué %s"
 msgstr ""
 
 #: include/class/document.class.php:186 include/class/document.class.php:190
-#: include/class/document.class.php:192
+#: include/class/document.class.php:192 include/class/document.class.php:197
 msgid "Echec compression"
 msgstr ""
 
 #: include/class/document.class.php:208 include/class/document.class.php:212
-#: include/class/document.class.php:214
+#: include/class/document.class.php:214 include/class/document.class.php:219
 msgid "Génération du document a échoué"
 msgstr ""
 
 #: include/class/document.class.php:243 include/class/document.class.php:247
-#: include/class/document.class.php:250
+#: include/class/document.class.php:250 include/class/document.class.php:255
 #, php-format
 msgid "Ne peut pas créer le répertoire %s"
 msgstr ""
@@ -32665,12 +32806,13 @@ msgstr ""
 #: include/class/document.class.php:254 include/class/document.class.php:260
 #: include/class/document.class.php:258 include/class/document.class.php:264
 #: include/class/document.class.php:261 include/class/document.class.php:267
+#: include/class/document.class.php:266 include/class/document.class.php:272
 #, php-format
 msgid "Ne peut pas ouvrir [%s] [%s]"
 msgstr ""
 
 #: include/class/document.class.php:320 include/class/document.class.php:324
-#: include/class/document.class.php:327
+#: include/class/document.class.php:327 include/class/document.class.php:332
 #, php-format
 msgid "Ne peut pas sauver [%s] vers [%s] code erreur = [%s]"
 msgstr ""
@@ -32764,6 +32906,7 @@ msgstr ""
 #: include/class/user.class.php:556 include/class/user.class.php:562
 #: include/class/noalyss_user.class.php:592
 #: include/class/noalyss_user.class.php:609
+#: include/class/noalyss_user.class.php:632
 msgid "Type incorrecte"
 msgstr ""
 
@@ -32980,6 +33123,7 @@ msgstr ""
 #: include/class/acc_ledger_purchase.class.php:2193
 #: include/class/acc_ledger_sale.class.php:1196
 #: include/class/acc_ledger_sale.class.php:1772
+#: include/class/acc_ledger_history_purchase.class.php:326
 msgid "Autre taxe"
 msgstr ""
 
@@ -33198,6 +33342,7 @@ msgid "Ecran"
 msgstr ""
 
 #: include/lib/http_input.class.php:266 include/lib/http_input.class.php:273
+#: include/lib/http_input.class.php:286
 msgid "HTTP266:array not set"
 msgstr ""
 
@@ -33729,7 +33874,7 @@ msgstr ""
 msgid "Cette version nécessite au moins une version supérieure ou égale à 8.0"
 msgstr ""
 
-#: html/install.php:502
+#: html/install.php:502 html/install.php:504
 msgid ""
 " Vous devez  utiliser au minimum une version 12 de PostGresql, si votre "
 "distribution n'en\n"
@@ -33738,7 +33883,7 @@ msgid ""
 "vos bases de données"
 msgstr ""
 
-#: html/install.php:569
+#: html/install.php:569 html/install.php:571
 #, php-format
 msgid "Désolé, votre installation ne permet à NOALYSS de fonctionner"
 msgstr ""
@@ -33945,7 +34090,7 @@ msgstr ""
 msgid "Totaux delta  %s %s"
 msgstr ""
 
-#: include/class/dossier.class.php:180
+#: include/class/dossier.class.php:180 include/class/dossier.class.php:179
 msgid "Dossier max dépassé "
 msgstr ""
 
@@ -34140,7 +34285,7 @@ msgid "Mot de passe inchangé"
 msgstr ""
 
 #: include/user.inc.php:223 include/user.inc.php:224 include/user.inc.php:238
-#: include/user.inc.php:249
+#: include/user.inc.php:249 include/user.inc.php:259
 msgid "Le login doit avoir au moins 5 lettres"
 msgstr ""
 
@@ -34437,7 +34582,7 @@ msgstr ""
 msgid "Windows CP1252"
 msgstr ""
 
-#: include/admin_repo.inc.php:56
+#: include/admin_repo.inc.php:56 include/admin_repo.inc.php:61
 msgid "Cliquez ici pour vous connecter comme administrateur"
 msgstr ""
 
@@ -34527,15 +34672,17 @@ msgstr ""
 msgid " Il est conseillé d'effacer les fichiers d'origine qui sont fusionnés."
 msgstr ""
 
-#: include/ext/listing/index.php:64
+#: include/ext/listing/index.php:64 include/ext/listing/index.php:49
 msgid "Installez d'abord l'extension Rapport Avancé"
 msgstr ""
 
 #: include/ext/noalyss_document/index.php:141
+#: include/ext/noalyss_document/index.php:79
 msgid "Comptabilité, gestion et chargement des documents"
 msgstr ""
 
 #: include/ext/noalyss_document/index.php:142
+#: include/ext/noalyss_document/index.php:80
 msgid "Chargement documents"
 msgstr ""
 
@@ -35222,7 +35369,7 @@ msgstr ""
 msgid "Un email sera envoyé avec un lien pour initialiser freeOTP"
 msgstr ""
 
-#: include/user.inc.php:137 include/user.inc.php:138
+#: include/user.inc.php:137 include/user.inc.php:138 include/user.inc.php:139
 msgid "Email invalide"
 msgstr ""
 
@@ -35265,14 +35412,80 @@ msgstr ""
 msgid "Scanner ceci avec freeOTP"
 msgstr ""
 
-#: include/otp-link.php:100
+#: include/otp-link.php:100 include/otp-link.php:200
 msgid "Scanner ce QRCode avec votre application OTP afin de l'ajouter"
 msgstr ""
 
 #: include/class/noalyss_user.class.php:1950
+#: include/class/noalyss_user.class.php:2024
 msgid "NOALYSS : votre code secret "
 msgstr ""
 
 #: include/class/noalyss_user.class.php:1999
+#: include/class/noalyss_user.class.php:2092
 msgid "NOALYSS : Double authentification lien pour 2FA: OTP"
+msgstr ""
+
+#: html/install.php:388
+msgid "Version PHP trop basse , minimum 8.2"
+msgstr ""
+
+#: html/install.php:390
+#, php-format
+msgid "Cette version nécessite au moins une version supérieure ou égale à 8.2"
+msgstr ""
+
+#: include/otp-link.php:152
+msgid "Expiré : vous devez redemander le renvoi de la clef"
+msgstr ""
+
+#: include/otp-link.php:185
+msgid "Scanner ceci avec votre application OTP"
+msgstr ""
+
+#: include/user_detail.inc.php:129
+msgid "Mot de passe et code par courriel (ou TOTP) "
+msgstr ""
+
+#: include/user_detail.inc.php:130
+msgid "Mot de passe et TOTP"
+msgstr ""
+
+#: include/user_detail.inc.php:146
+msgid "envoyer email pour 2FA avec OTP "
+msgstr ""
+
+#: include/user_detail.inc.php:147
+msgid "Un email sera envoyé avec un lien pour initialiser 2FA avec OTP"
+msgstr ""
+
+#: include/user_detail.inc.php:173
+msgid ""
+"Pour effacer , confirmez en retapant le code, respectez les majuscules et "
+"minuscules"
+msgstr ""
+
+#: include/user.inc.php:179
+msgid "Administrateur ne peut pas être effacé"
+msgstr ""
+
+#: include/user.inc.php:286
+msgid "Authentification"
+msgstr ""
+
+#: include/ajax/ajax_tag_detail.php:24
+msgid "Désolé, vous n'êtes pas autorisé à créer des étiquettes"
+msgstr ""
+
+#: include/template/profile_menu_display_module.php:72
+msgid "."
+msgstr ""
+
+#: include/template/profile_menu_display_module.php:72 html/direct.php:51
+#: include/template/module.php:128
+msgid " "
+msgstr ""
+
+#: include/template/module.php:172
+msgid "-"
 msgstr ""
