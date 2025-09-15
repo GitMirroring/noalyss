@@ -27,14 +27,14 @@
  * @brief 
  */
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @backupGlobals enabled
  * @coversDefaultClass \Acc_Payment
  */
 require DIRTEST.'/global.php';
 
-class AccPaymentTest extends TestCase
+class Acc_PaymentTest extends TestCase
 {
 
     /**
@@ -51,7 +51,7 @@ class AccPaymentTest extends TestCase
         include 'global.php';
     }
 
-    public function dataLoad()
+    public static function dataLoad()
     {
         $a_json=array();
         $a_json[0]=['{
@@ -105,6 +105,7 @@ class AccPaymentTest extends TestCase
      * @param json $json
      * @covers ::load ::get_parameter
      */
+     #[DataProvider('dataLoad')]
     public function testLoad($json)
     {
         global $g_connection;
@@ -128,6 +129,7 @@ class AccPaymentTest extends TestCase
      * @param json $json
      * @covers ::from_array ::get_parameter
      */
+     #[DataProvider('dataLoad')]
     public function testFromArray($json)
     {
         global $g_connection;

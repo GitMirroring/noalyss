@@ -251,7 +251,7 @@ class Document
         {
             if (mkdir($temp_dir)==false)
             {
-                $msg=sprintf("D221."._("Ne peut pas créer le répertoire %s", $temp_dir));
+                $msg=sprintf("D221."._("Ne peut pas créer le répertoire %s"), $temp_dir);
                 record_log("D221".$msg);
                 throw new Exception($msg);
             }

@@ -27,7 +27,7 @@
  * @brief  Test Anc_Group
  */
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @backupGlobals enabled
  * @coversDefaultClass \Anc_Group
@@ -82,7 +82,7 @@ class Anc_GroupTest extends TestCase
         $g_connection->exec_sql("delete from plan_analytique where pa_id>1");
     }
 
-    public function datasqlStmt()
+    public static function datasqlStmt()
     {
         return array([1,"Group 1",1],
                 [2,"Group 2",1],
@@ -98,6 +98,7 @@ class Anc_GroupTest extends TestCase
      * @param type $p_param
      * @covers
      */
+     #[DataProvider('datasqlStmt')]
     public function test_sqlStmt($p_ga_id,$pga_description,$ppa_id)
     {
         global $g_connection;

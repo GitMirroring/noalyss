@@ -598,7 +598,7 @@ class Acc_LedgerTest extends TestCase
     {
         global $g_connection;
         $ledger=new Acc_Ledger($g_connection,4);
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $array=[
             "p_jrn"=>"15",
             "p_jrn_deb_max_line"=>5,

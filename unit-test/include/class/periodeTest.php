@@ -27,7 +27,7 @@
  * @brief 
  */
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @backupGlobals enabled
  */
@@ -77,7 +77,7 @@ class PeriodeTest extends TestCase
         //        include 'global.php';
     }
 
-    public function dataInsert()
+    public static function dataInsert()
     {
         return array(
             [ '01.01.2023' , '31.01.2023','2020','2020.2023','NOK'],
@@ -95,6 +95,7 @@ class PeriodeTest extends TestCase
      * @param type $p_param
      * @covers
      */
+     #[DataProvider('dataInsert')]
     public function testInsert($p_start,$p_end,$p_exercice,$p_exercice_label,$p_status)
     {
         global $g_connection;
@@ -126,7 +127,7 @@ class PeriodeTest extends TestCase
         }
         $g_connection->exec_sql("delete from parm_periode where p_id > 144");
     }
-    public function dataUpdate()
+    public static function dataUpdate()
     {
         return array(
             [ '01.01.2023' , '31.01.2023','2023','2020.2023','OK'],
@@ -141,6 +142,7 @@ class PeriodeTest extends TestCase
      * 
      * 
      */
+     #[DataProvider('dataUpdate')]
     public function testUpdate($p_start,$p_end,$p_exercice,$p_exercice_label,$p_status)
     {
         
@@ -183,7 +185,7 @@ class PeriodeTest extends TestCase
     }
 
 
-    public function dataUpdateException()
+    public static function dataUpdateException()
     {
         return array(
             [ '01.01.2023' , '31.01.2023','2020','2020.2023','NOK'],
@@ -199,6 +201,7 @@ class PeriodeTest extends TestCase
      *
      *
      */
+     #[DataProvider('dataUpdateException')]
     public function testUpdateException($p_start,$p_end,$p_exercice,$p_exercice_label,$p_status)
     {
 

@@ -164,7 +164,7 @@ class AccountRepositoryTest extends TestCase {
             $db->close();
             $this->assertEquals(11, $nb_table, " number of table incorrect $nb_table");
         } catch (\Exception $ex) {
-             $db->close();
+             
             echo $ex->getMessage();
             echo $ex->getTraceAsString();
             $this->assertTrue(false, __CLASS__ . " cannot create DB");

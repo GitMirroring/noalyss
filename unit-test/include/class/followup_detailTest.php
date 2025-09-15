@@ -34,7 +34,7 @@ use PHPUnit\Framework\TestCase;
  */
 
 #[\AllowDynamicProperties]
-class Follow_Up_DetailTest extends TestCase
+class FollowUp_DetailTest extends TestCase
 {
 
     /**

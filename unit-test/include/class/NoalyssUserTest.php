@@ -1,6 +1,6 @@
 <?php
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 define('USE_ID', 999999);
 define('USE_FIRST_NAME', 'Unit test');
 define('USE_NAME', 'UNIT');
@@ -187,7 +187,7 @@ class NoalyssUserTest extends TestCase
         // check his removal
         $this->assertEquals($cn->get_value('select count(*) from profile_user where user_name=$1',array('unknown/user')),0);
     }
-    public function dataPeriode()
+    public static function dataPeriode()
     {
         return array(
             [92],
@@ -204,6 +204,7 @@ class NoalyssUserTest extends TestCase
      * @param type $p_id periode id
      * @dataProvider dataPeriode
      */
+     #[DataProvider('dataPeriode')]
     public function testPeriode($p_id)
     {
         $this->object=new Noalyss_user(Dossier::connect(), USE_ID);
