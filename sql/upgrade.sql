@@ -276,7 +276,7 @@ insert into quantity_code_ref values
 ('SEC','Second — seconde'),
 ('KG','Kilogram — kilogramme'),
 ('G','Gram — gramme'),
-('LB    ','Pound (pound) — livre'),
+('LB','Pound (pound) — livre'),
 ('LTR','Liter — litre'),
 ('MTR','Meter — mètre'),
 ('CM','Centimeter — centimètre'),
