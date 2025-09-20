@@ -944,7 +944,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $r.='</tr>';
         
         $r.='<tr>';
-        $r.='<td> ' . _('Client') . '</td><td> ' . hb($e_client . ':' . $client_name) . '</td>';
+        $r.='<td> ' . _('Client') . '</td><td> ' . HtmlInput::card_detail($e_client).":".hb( $client_name) . '</td>';
         $r.='</tr>';
         $r.='</table>';
         $r.='<pre>'._('Note').' '.h($p_array['jrn_note_input']).'</pre>';

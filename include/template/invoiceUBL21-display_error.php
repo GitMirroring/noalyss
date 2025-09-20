@@ -25,75 +25,100 @@
  * @brief display errors for generating e-invoices, called from 
  * invoiceUBL21-display-error.php
  */
-//var @a_error (array) contains error
+///@var $a_vat_error (array) contains error for VAT
+$a_vat_error=$this->check_VAT();
 
-if ( count($a_error)  == 0) return;
+///@var $total_error (int) total of errors found in e-invoice
+$total_error=count ($a_error['general'])
+                + count($a_error['operation']) 
+                + count($a_error['customer'])
+                + count($a_error['company']) 
+                +count($a_vat_error);
 
+if ( $total_error == 0 ) :
+        return;
+endif;
 $error_message=new \Noalyss\XMLDocument\Error_Message($a_error);
-var_dump($a_error);
 ?>
-<div  class="notice"  >
-    <h3><?=_("Société")?></h3>
-    <p class="text-muted">
-        <?=_("A corriger dans COMPANY")?>
-    </p>
+<button onclick="$('invoice_error_popover').show();return false" class="button bt-error "><i class="icon-attention"></i> <?=_("Erreurs Facture électronique {$total_error}")?></button>
+<div  style="display:none" id="invoice_error_popover">
     <?php
+    echo HtmlInput::title_box(_("Erreurs"), "invoice_error_popover","hide");
 //----------------------------------------------------------------------------
 // company
 //----------------------------------------------------------------------------
         $nb_error=count($a_error['company']);
         for ($i=0;$i<$nb_error;$i++):
     ?>
-    <div class="notice-item">
+    
+    <?php if ($i == 0 ):?>
+    <h3><?=_("Société")?></h3>
+    <p class="text-muted">
+        <?=_("A corriger dans COMPANY")?>
+    </p>
+    <ol>
+    <?php endif;?>
+    <li class="notice-item">
         <?=$error_message->get_message_error(code:$a_error['company'][$i],type:'company')?>
-    </div>
+    </li>
     
     <?php
     endfor;
+     if ( $nb_error!=0) print '</ol>';
     ?>
-     <h3><?=_("Client")?></h3>
-    <p class="text-muted">
-        <?=_("A corriger dans la fiche")?>
-    </p>
-    <?php
+      <?php
 //----------------------------------------------------------------------------
 // Customer
 //----------------------------------------------------------------------------
         $nb_error=count($a_error['customer']);
         for ($i=0;$i<$nb_error;$i++):
     ?>
-    <div class="notice-item">
+    <?php  if ($i == 0) :?>
+     <h3><?=_("Client")?></h3>
+    <p class="text-muted">
+        <?=_("A corriger dans la fiche")?>
+    </p>
+    <p>
+        <?php 
+        $card=new \Fiche ($this->cn,$this->data['customer']['card_id']);
+        echo \HtmlInput::card_detail($card->get_attribute(ATTR_DEF_QUICKCODE)
+                ,$card->get_attribute(ATTR_DEF_NAME));
+        ?>
+    </p>
+    <ol>
+    <?php endif;?>
+    
+    <li class="notice-item">
         <?=$error_message->get_message_error(code:$a_error['customer'][$i],type:'customer')?>
-    </div>
+    </li>
     
     <?php
     endfor;
+    if ( $nb_error!=0) print '</ol>';
     ?>
-      <h3><?=_("Opération")?></h3>
-    <p class="text-muted">
-        <?=_("A corriger dans l'opération")?>
-    </p>
     <?php
-     if ( ! isset($this->data['due_date']) || $this->data['due_date']==""):
-    ?>
-    <div class="notice-item">
-        <?=_("Date échéance nécessaire")?>
-    </div>
-    <?php
-         
-     endif;
-//----------------------------------------------------------------------------
+   //----------------------------------------------------------------------------
 // Item VAT
 //----------------------------------------------------------------------------
         $a_vat_error=$this->check_VAT();
         $nb_error=count($a_vat_error);
         for ($i=0;$i<$nb_error;$i++):
     ?>
-    <div class="notice-item">
+    <?php  if ($i == 0) :?>
+      <h3><?=_("TVA")?></h3>
+    <p class="text-muted">
+        <?=_("A corriger dans la configuration TVA (C0TVA)")?>
+    </p>
+    <ol>
+    <?php endif;?>
+    <li class="notice-item">
         <?=$a_vat_error[$i]?>
-    </div>
+    </li>
     
     <?php
     endfor;
+     if ( $nb_error!=0) print '</ol>';
     ?>
+    <button onclick="$('invoice_error_popover').hide();return false" class="button"><?=_("Fermer")?></button>
+
 </div>

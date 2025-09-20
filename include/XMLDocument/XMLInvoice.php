@@ -57,6 +57,9 @@ namespace Noalyss\XMLDocument;
         )
 
     [currency] => 0
+    [info] => Array 
+           [order] = order reference
+           [comment] = comment added to the invoice
     [operation] => Array
         (
             [0] => Array
@@ -208,7 +211,24 @@ abstract class XMLInvoice extends \DOMDocument
             
             $result['operation'][$i]['vat_reversed']=$operation->det->array[$i]['qs_vat_sided'];
         }
-        // retrieve currency 
+        //------------------------------------------------
+        // retrieve order and comment
+        //------------------------------------------------
+        $a_row=$this->cn->get_array("select id_type,ji_value from jrn_info where jr_id=$1"
+                ,[$jr_id]);
+        $nb_row = count($a_row);
+        $result['info']=[];
+        for($i=0;$i<$nb_row;$i++) {
+            switch ($a_row[$i]['id_type']) {
+                case 'BON_COMMANDE':
+                    $result['info']['order']=$a_row[$i]['ji_value'];
+                    break;
+                case 'OTHER':
+                    $result['info']['comment']=$a_row[$i]['ji_value'];
+                    break;
+                        
+            }
+        }
         return $result;
         
     }

@@ -88,7 +88,6 @@ if ( isset ($_POST['view_invoice'] ) )
             $xmldocument= \Noalyss\XMLDocument\XMLInvoice::build_xmlinvoice($cn);
             $array=[];
             $array['supplier']=$xmldocument->fill_supplier();
-            echo "customer ",$http->post("e_client");
             $customer=Fiche::from_qcode($cn,trim($http->post("e_client")));
             
             $array['customer']=$xmldocument->fill_customer($customer->id);
@@ -169,22 +168,32 @@ if ( isset($_POST['record']) )
                     $receipt= HtmlInput::show_receipt_document($Ledger->jr_id
                             ,h($file));
                     $acc_document=new Acc_Document($cn,$Ledger->jr_id);
-                    //-----------------------------------------------------------------
+                    //-------------------------------------------------------
                     // Generate a XLM invoice
                     // if a document has been created create the XML file 
-                    //-----------------------------------------------------------------
+                    //-------------------------------------------------------
+                    ///@var $flag_invoice (int) error for invoice generating. 
+                    ///                     0 = nothing
+                    ///                     1 = cannot create e-invoice
+                    ///                     2 = create e-invoice requested
+                    
+                    $flag_invoice=0;
                     if ($g_parameter->MY_INVOICE_FORMAT != 'BASIC' && ! empty($acc_document->d_filename ))
                     {
-                        
+                        $flag_invoice=2;
                         $xmldocument= \Noalyss\XMLDocument\XMLInvoice::build_xmlinvoice($cn);
                         $xmldocument->build_data($Ledger->jr_id);
                         $code_error = $xmldocument->verify() ;
                         if ( ! empty( $code_error )  ) {
-                            echo "Impossible de générer facture : code error  ";
-                            \Noalyss\Dbg::echo_var(1, '$code_error is ');
-                            \Noalyss\Dbg::echo_var(1, $code_error);
-                           // echo $xmldocument->get_message_error($code_error);
+                            $xmldocument->display_error();
+                            $flag_invoice=1;
                         }
+                    }
+                    //----------------------7--------------------------
+                    // flag_invoice == 2 , generate an e-invoice
+                    //------------------------------------------------
+                    if ( $flag_invoice == 2 ) 
+                    {    
                         $pdf_filename=$acc_document->transform2pdf();
                         
                         // save PDF In db
@@ -213,6 +222,7 @@ if ( isset($_POST['record']) )
                         $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename);
                         
                     }
+                        
                 }
             }
                 
@@ -235,8 +245,11 @@ if ( isset($_POST['record']) )
         }
 
         /* Show button  */
-        echo '<h1> Enregistrement </h1>';
-
+        echo '<h1>'._("Enregistré").'</h1>';
+        if ($flag_invoice == 1) {
+            echo_warning(_("Impossible de générer facture électronique") );
+            $xmldocument->display_error();
+        }
         echo $Ledger->confirm($_POST,true);
         /* Show link for Invoice */
         if ($receipt != "")

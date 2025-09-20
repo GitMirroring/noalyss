@@ -517,7 +517,6 @@ class InvoiceUBL21 extends XMLInvoice {
 @code      
  <cac:AdditionalDocumentReference>
     <cbc:ID>P01</cbc:ID>
-    <cbc:DocumentType>InvoicePDF</cbc:DocumentType>
     <cbc:DocumentDescription>Facture PDF</cbc:DocumentDescription>
     <cac:Attachment>
       <cbc:EmbeddedDocumentBinaryObject
@@ -528,7 +527,6 @@ class InvoiceUBL21 extends XMLInvoice {
      <!--     OU -->
       <cac:AdditionalDocumentReference>
     <cbc:ID>REF_ODT_001</cbc:ID>
-    <cbc:DocumentType>OpenDocument</cbc:DocumentType>
     <cbc:DocumentDescription>Fichier OpenDocument</cbc:DocumentDescription>
     <cac:Attachment>
         <cbc:EmbeddedDocumentBinaryObject
@@ -566,9 +564,6 @@ class InvoiceUBL21 extends XMLInvoice {
         $attachment->appendChild($embeddedDocument);
         
         $result->appendChild($id);
-        // ERROR FOR BELGIUM !
-       // $documentType=$this->createElement("cbc:DocumentType",'application/pdf');
-       // $result->appendChild($documentType);
         $result->appendChild($document_description);
         $result->appendChild($attachment);
         
@@ -594,9 +589,11 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $root->appendChild($this->createElement('cbc:ID',$this->data['id']));
         $root->appendChild($this->createElement('cbc:IssueDate',$this->data['issue_date']));
-        if ($this->data ['due_date'] != '') {
-            $root->appendChild($this->createElement('cbc:DueDate',$this->data['due_date']));
+        if ($this->data ['due_date'] == '') 
+        {
+            $this->data ['due_date']=$this->data['issue_date'];
         }
+        $root->appendChild($this->createElement('cbc:DueDate',$this->data['due_date']));
         $root->appendChild($this->createElement('cbc:InvoiceTypeCode',380));
         $root->appendChild($this->createElement('cbc:DocumentCurrencyCode',$this->data['currency']));
         $root->appendChild($this->createElement('cbc:BuyerReference',"NOALYSS"));

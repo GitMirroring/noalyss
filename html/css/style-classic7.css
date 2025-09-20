@@ -69,6 +69,7 @@ BODY {
     --font-button:'roboto light';
     --font-super:'roboto regular';
     --font-title:'Montserrat Regular';
+    --bg-inner-box:#DCE1EF;
 }
 input{
     font-family: 'OpenSansRegular';
@@ -1252,7 +1253,7 @@ box-shadow: 10px 10px 5px #888;
  *******************************************************************************/
 
 div.inner_box  {
-    background-color: #DCE1EF;
+    background-color: var(--bg-inner-box);
     font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
     font-family: 'OpenSansRegular';
     /*! font-family: 'var(--font-button)'; */
@@ -1271,7 +1272,7 @@ div.inner_box  {
     left:0px ;
 }
  div.inner_box2 {
-     background-color: #DCE1EF;
+     background-color: var(--bg-inner-box);
      font-family: Arial, Helvetica, "Liberation Sans", FreeSans, sans-serif;
      font-family: 'OpenSansRegular';
      /*! font-family: 'var(--font-button)'; */
@@ -2349,7 +2350,7 @@ table.vert_mtitle {
     
 }
 table.vert_mtitle td.first {
-    background-color: #DCE1EF;
+   background-color: var(--bg-inner-box);
 }
 table.vert_mtitle td {
     border : 1px solid #99B1DF;
@@ -2567,7 +2568,7 @@ td.box {
 
 .smoke {
   text-align: center;
-    background-color: #DCE1EF;
+   background-color: var(--bg-inner-box);
     margin:0px;
     overflow:hidden;
     z-index:3;
@@ -4072,4 +4073,20 @@ h2.h-section {
     margin-bottom: 0.5rem;
     border-radius: 5px;
 }
-   
+ /**
+ electronc invoice errors in SALE
+  */
+#invoice_error_popover {
+  background-color: var(--bg-inner-box);
+  position: absolute;
+  z-index: 1;
+  padding: 1rem;
+  left: 10%;
+  border:1px solid navy;
+}
+/**
+ * Button error 
+ */
+.bt-error {
+    color:var(--color-red);
+}
