@@ -599,7 +599,7 @@ class Acc_Account_Ledger
 	  "<TD style=\"text-align:right\">".nbm(abs($diff)).$side."</TD>".
                 td("",' class="visible_gt800" ').
         "</TR>";
-	echo   "<tr><TD>$solde_type</TD><td></td>".
+	echo   "<tr style=\"font-weight:bold\"><TD>$solde_type</TD><td></td>".
 	  "<TD style=\"text-align:right\">".nbm(abs($diff))."</TD>".
         "</TR>";
         // take saldo from 1st day until last

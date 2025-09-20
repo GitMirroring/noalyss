@@ -25,9 +25,9 @@
    */
 if ( ! defined('ALLOWED')) die (_('Accès interdit'));
 
+$http=new HttpInput();
 $div=$http->request('div');
 mb_internal_encoding("UTF-8");
-$http=new HttpInput();
 /**
  *if $_SESSION[SESSION_KEY.'g_user'] is not set : echo a warning
  */
@@ -93,9 +93,9 @@ if ( isset($_GET['f_id']))
 		$is=$exercice->select('ex',$default,'onchange = "submit(this)"');
 		$old.=_("Autre exercice")." ".$is->input();
 		$old.=HtmlInput::hidden('div','popup');
-		$old.=HtmlInput::hidden('act',$_GET['act']);
-		$old.=HtmlInput::hidden('f_id',$_GET['f_id']);
-		$old.=HtmlInput::hidden('ajax',$_GET['ajax']);
+		$old.=HtmlInput::hidden('act',$http->get('act'));
+		$old.=HtmlInput::hidden('f_id',$http->get('f_id'));
+                $old.=HtmlInput::hidden('ajax',$http->get('ajax'));
 		$old.=HtmlInput::hidden('exercice',$year);
 		$old.=dossier::hidden();
                 $old.=HtmlInput::hidden('op','history');
@@ -119,6 +119,7 @@ if ( isset($_GET['f_id']))
           echo HtmlInput::button_close($div);
           } else {
             echo $fiche->filter_history("tb".$div);
+            echo $old;
             echo $table;
             echo HtmlInput::button_close($div);
             echo $fiche->button_csv($array['from_periode'],$array['to_periode']);
@@ -185,9 +186,9 @@ if ( isset($_REQUEST['pcm_val']))
 		$is=$exercice->select('ex',$default,'onchange = "submit(this)"');
 		$old.=_("Autre exercice")." ".$is->input();
 		$old.=HtmlInput::hidden('div','popup');
-		$old.=HtmlInput::hidden('act',$_GET['act']);
-		$old.=HtmlInput::hidden('pcm_val',$_GET['pcm_val']);
-		$old.=HtmlInput::hidden('ajax',$_GET['ajax']);
+		$old.=HtmlInput::hidden('act',$http->get('act'));
+		$old.=HtmlInput::hidden('pcm_val',$http->get('pcm_val'));
+		$old.=HtmlInput::hidden('ajax',$http->get('ajax'));
 		$old.=dossier::hidden();
                 $old.=HtmlInput::hidden('op','history');
 		$old.='</form>';
@@ -211,6 +212,7 @@ if ( isset($_REQUEST['pcm_val']))
             echo HtmlInput::button_close($div);
 	  } else {
                 echo $poste->filter_history('tb'.$div);
+                echo $old;
                 echo $table;
                 echo HtmlInput::button_close($div);
                 echo $poste->button_csv($array['from_periode'],$array['to_periode']);
