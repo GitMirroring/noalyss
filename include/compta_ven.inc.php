@@ -158,12 +158,14 @@ if ( isset($_POST['record']) )
              /* Save the attachment or generate doc */
             if (isset($_FILES['pj'])) {
                 if (noalyss_strlentrim($_FILES['pj']['name']) != 0)
-                {   $cn->save_receipt($seq);
+                {   
+                    $cn->save_receipt($seq);
                 }
                 else
                 /* Generate an invoice and save it into the database */
                 if (isset($_POST['gen_invoice'])) 
                 {
+                    // generate an invoice
                     $file = $Ledger->create_document($internal, $_POST);
                     $receipt= HtmlInput::show_receipt_document($Ledger->jr_id
                             ,h($file));
@@ -178,6 +180,9 @@ if ( isset($_POST['record']) )
                     ///                     2 = create e-invoice requested
                     
                     $flag_invoice=0;
+                    /**
+                     * @todo si Client non belge ou pas de n° de tva alors pas de e-facture 
+                     */
                     if ($g_parameter->MY_INVOICE_FORMAT != 'BASIC' && ! empty($acc_document->d_filename ))
                     {
                         $flag_invoice=2;
@@ -189,7 +194,7 @@ if ( isset($_POST['record']) )
                             $flag_invoice=1;
                         }
                     }
-                    //----------------------7--------------------------
+                    //------------------------------------------------
                     // flag_invoice == 2 , generate an e-invoice
                     //------------------------------------------------
                     if ( $flag_invoice == 2 ) 

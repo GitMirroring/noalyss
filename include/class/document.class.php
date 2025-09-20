@@ -1917,16 +1917,14 @@ class Document
     }
     /**
      * @brief transform the current Document to a PDF, returns the full path of the PDF from the TMP folder
+     * if the file IS a pdf , then export it and return the path to the file.
+     * 
      * @todo replace use of unoconv with a PHP lib to convert into PDF
      * @return string full path to the PDF file
      */
     function transform2pdf()
     {
-        if (GENERATE_PDF == 'NO' ) {
-            \record_log(__FILE__."D1857 PDF not available");
-            throw new \Exception("Cannot not transform to PDF",5000);
-        }
-            // Extract from public.document
+        // Extract from public.document
         $dirname=tempnam($_ENV['TMP'],"document");
         
         if ( $dirname == false ) {
@@ -1936,6 +1934,16 @@ class Document
         umask(0);
         if ( mkdir($dirname) == false ) {
             throw new Exception("D1868.cannot create tmp directory",5000);
+        }
+        if ( $this->d_mimetype == "application/pdf") {
+            $destination_file=$dirname."/".$this->d_filename;
+            $this->export_file($destination_file);
+            return $dirname."/".$destination_file;
+            return;
+        }
+        if (GENERATE_PDF == 'NO' ) {
+            \record_log(__FILE__."D1857 PDF not available");
+            throw new \Exception("Cannot not transform to PDF",5000);
         }
         
         $destination_file=$dirname."/".$this->d_filename;

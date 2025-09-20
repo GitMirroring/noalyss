@@ -296,16 +296,16 @@ class InvoiceUBL21 extends XMLInvoice {
      */
     function build_paymentInfo()
     {
+      $company = $this->load_noalyss_parameter();
       $payment=$this->createElement("cac:PaymentMeans");
       $payment->appendChild($this->createElement('cbc:PaymentMeansCode',30));
       ///@note cbc:PaymentID est la communication lors du paiement
-      $payment->appendChild($this->createElement('cbc:PaymentID',$this->data["id"]));
+      $payment->appendChild($this->createElement('cbc:PaymentID',$this->data["info"]['communication']));
       $f=$this->createElement ('cac:PayeeFinancialAccount');
         ///@todo customer = IBAN doit être dans les paramètres (voir upgrade.sql)
-      $f->appendChild($this->createElement("cbc:ID", "ERROR:IBAN"));
+      $f->appendChild($this->createElement("cbc:ID",$company['COMPANY_BANK_IBAN']));
       $g=$this->createElement("cac:FinancialInstitutionBranch");
-         ///@todo customer = BIC doit être dans les paramètres (voir upgrade.sql)
-      $g->appendChild($this->createElement("cbc:ID", "ERROR:BIC"));
+      $g->appendChild($this->createElement("cbc:ID", $company['COMPANY_BANK_BIC']));
       $f->appendChild($g);
       
       $payment->appendChild($f);
@@ -596,7 +596,7 @@ class InvoiceUBL21 extends XMLInvoice {
         $root->appendChild($this->createElement('cbc:DueDate',$this->data['due_date']));
         $root->appendChild($this->createElement('cbc:InvoiceTypeCode',380));
         $root->appendChild($this->createElement('cbc:DocumentCurrencyCode',$this->data['currency']));
-        $root->appendChild($this->createElement('cbc:BuyerReference',"NOALYSS"));
+        $root->appendChild($this->createElement('cbc:BuyerReference',$this->data['info']['order']));
         /**
          * insert PDF in the XML
          */

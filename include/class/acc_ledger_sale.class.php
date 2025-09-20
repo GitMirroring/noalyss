@@ -1286,7 +1286,8 @@ EOF;
         return $r;
     }
 
-    /*!\brief the function extra info allows to
+    /*!
+     * \brief the function extra info allows to
      * - add a attachment
      * - generate an invoice
      * - insert extra info
@@ -1294,7 +1295,7 @@ EOF;
      */
 
     public function extra_info() {
-        $r = '<div id="facturation_div_id" style="height:185px;height:10rem">';
+        $r = '<div id="facturation_div_id" style="display:flex;height:185px;height:10rem">';
         // check for upload piece
         $file = new IFile();
         $file->table = 0;
@@ -1317,8 +1318,8 @@ EOF;
         }
         $r.='<br>';
         $obj = new IText();
-        $r.=_('Numero de bon de commande : ') . $obj->input('bon_comm') . '<br>';
-        $r.=_('Communication ou autre information  : ') . $obj->input('other_info') . '<br>';
+        $r.=_('Numero de bon de commande') . $obj->input('bon_comm') . '<br>';
+        $r.=_('Communication') . $obj->input('other_info') . '<br>';
         $r.='</p>';
         $r.='</div>';
         return $r;

@@ -59,7 +59,7 @@ namespace Noalyss\XMLDocument;
     [currency] => 0
     [info] => Array 
            [order] = order reference
-           [comment] = comment added to the invoice
+           [communication] = communication added to the invoice
     [operation] => Array
         (
             [0] => Array
@@ -218,17 +218,20 @@ abstract class XMLInvoice extends \DOMDocument
                 ,[$jr_id]);
         $nb_row = count($a_row);
         $result['info']=[];
+        $result['info']['order']='NA';
+        $result['info']['communication']='';
         for($i=0;$i<$nb_row;$i++) {
             switch ($a_row[$i]['id_type']) {
                 case 'BON_COMMANDE':
                     $result['info']['order']=$a_row[$i]['ji_value'];
                     break;
                 case 'OTHER':
-                    $result['info']['comment']=$a_row[$i]['ji_value'];
+                    $result['info']['communication']=$a_row[$i]['ji_value'];
                     break;
                         
             }
         }
+        $result['info']['communication']=($result['info']['communication']=="")?$result['id']:"";
         return $result;
         
     }
