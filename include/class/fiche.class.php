@@ -1088,7 +1088,7 @@ class Fiche
 	    $old_exercice=$op['p_exercice'];
 
         }
-        $solde_type=_("Année ").($sum_deb>$sum_cred)?_("solde débiteur"):_("solde créditeur");
+        $solde_type=($sum_deb>$sum_cred)?_("solde débiteur"):_("solde créditeur");
         $solde_side=($sum_deb>$sum_cred)?"D":"C";
         $diff=abs(bcsub($sum_deb,$sum_cred));
         echo '<tfoot>';
