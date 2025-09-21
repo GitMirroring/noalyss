@@ -88,6 +88,7 @@ class InvoiceUBL21 extends XMLInvoice {
         // verify that all needed data in PARAMETER are valid
         $a_error['company'] = $this->check_company_data();
         $a_error['customer'] = $this->check_customer_data($this->data['customer']['card_id']);
+        
         return $a_error;
     }
     /**
@@ -469,22 +470,15 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $result=$this->createElement('cac:InvoiceLine');
         $row=$this->data["operation"][$i];
-        $amount=sprintf("%.2f",abs($row['price']));
+        $amount=sprintf("%.2f",$row['price']);
 
         $result->appendChild($this->createElement("cbc:ID", $i));
-        $amount=sprintf("%.2f",abs($row['price']));
+        $amount=sprintf("%.2f",$row['price']);
         $result->appendChild(
                 $this->createElement("cbc:InvoicedQuantity", sprintf("%.2f",$row['quantity'])))
                 ->setAttribute("unitCode", $row["code_quantity"]);
         $result->appendChild($this->createElement("cbc:LineExtensionAmount", $amount))
                 ->setAttribute("currencyID",$this->data['currency']);
-         // @IMPORTANT@ Impossible de connaitre la remise par article, non prévu dans NOALYSS ALLOWANCE
-        if ( $row['price'] < 0 ) {
-            $allowanceCharge=$this->createElement("cac:AllowanceCharge");
-            $allowanceCharge->appendChild($this->createElement("cbc:ChargeIndicator","false"));
-            $allowanceCharge->appendChild($this->createElement("cbc:Amount",sprintf("%.2f",$amount)));
-            $result->appendChild($allowanceCharge);
-        }
         
         // ITEM
         $item=$this->createElement("cac:Item");
@@ -504,7 +498,7 @@ class InvoiceUBL21 extends XMLInvoice {
         $item->appendChild($classifiedTaxCat);
         $result->appendChild($item);
         $price=$result->appendChild($this->createElement("cac:Price"));
-        $price->appendChild($this->createElement("cbc:PriceAmount",sprintf("%.2f",$amount)))
+        $price->appendChild($this->createElement("cbc:PriceAmount",sprintf("%.2f",abs($amount))))
                 ->setAttribute("currencyID",$this->data['currency']);
         $result->appendChild($price);
             
@@ -553,7 +547,8 @@ class InvoiceUBL21 extends XMLInvoice {
 
         $result=$this->createElement("cac:AdditionalDocumentReference");
         $id=$this->createElement("cbc:ID",$i);
-        $document_description=$this->createElement("cbc:DocumentDescription",'INVOICE PDF');
+        $document_description=$this->createElement("cbc:DocumentDescription"
+                , $this->data['description']);
         
         // PDF in base64
         $base64Pdf = base64_encode($pdfContent);

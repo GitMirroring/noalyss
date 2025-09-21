@@ -183,8 +183,12 @@ abstract class XMLInvoice extends \DOMDocument
         $result['currency']=$this->cn->get_value("select cr_code_iso from currency where id=$1"
                 ,array($operation->det->currency_id));
         
+        // document description
+        $result['description']=$operation->det->jr_comment;
+        
         // goods and services
         $result['operation']=array();
+        
         $nb_operation= count($operation->det->array);
         for ($i=0;$i < $nb_operation;$i++) {
             $result['operation'][$i]['card_id']=$operation->det->array[$i]['qs_fiche'];

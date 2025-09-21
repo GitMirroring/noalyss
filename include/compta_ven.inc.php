@@ -97,9 +97,6 @@ if ( isset ($_POST['view_invoice'] ) )
             {
                 $array['due_date']=$http->post("e_date");
             }
-            /////////////////////////////////////////////////
-            ///@todo ajouter date échéance 
-            /////////////////////////////////////////////////
             $xmldocument->set_data($array);
             $xmldocument->display_error();
         }
@@ -189,7 +186,9 @@ if ( isset($_POST['record']) )
                         $xmldocument= \Noalyss\XMLDocument\XMLInvoice::build_xmlinvoice($cn);
                         $xmldocument->build_data($Ledger->jr_id);
                         $code_error = $xmldocument->verify() ;
-                        if ( ! empty( $code_error )  ) {
+                        // check that all the sub arrays are empty
+                        if ( ! empty( array_filter($code_error,function($a){ if (!empty($a)) return true; })))  
+                        {
                             $xmldocument->display_error();
                             $flag_invoice=1;
                         }
@@ -210,11 +209,12 @@ if ( isset($_POST['record']) )
                         // make the XML  + PDF 
                         $xml=$xmldocument->make_xml($Ledger->jr_id);
                         if (DEBUGNOALYSS > 1) {
-                            $mt=date ('ymd-Hi');
+                            $mt=date ('ymd-Hi').'+'.$Ledger->jr_id;
                             $uniq= $_ENV['TMP']. DIRECTORY_SEPARATOR."$mt-e-invoice.xml";
                             file_put_contents($uniq, $xml);
                             chmod ($uniq,774);
                             echo \Noalyss\Dbg::echo_file("file save $uniq");
+                            
                         }
                         // save XML string into the DB
                         $oid=$cn->lo_write($xml);

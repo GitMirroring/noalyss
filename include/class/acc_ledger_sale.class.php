@@ -922,6 +922,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 $r.='<td>' . _('Numéro Pièce') .$span.'</td><td>'. hb($this->pj) . '</td>';
             }
         }
+        $e_comm=($e_comm == "")?_('Facture')." $e_pj":$e_comm;
         $r.='</tr>';
         $r.='<tr>';
         $r.='<td> ' . _('Date') . '</td><td> ' . hb($e_date) . '</td>';
