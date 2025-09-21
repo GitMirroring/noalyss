@@ -25,8 +25,9 @@ global $cn,$g_failed,$g_succeed;
 $a_default=new Default_Menu();
 
 if ( isset($_POST['save_menu_default']) ) {
-    $a_default->set('code_follow',$_POST['code_follow']);
-    $a_default->set('code_invoice',$_POST['code_invoice']);
+    $http=new \HttpInput();
+    $a_default->set('code_follow',$http->post('code_follow'));
+    $a_default->set('code_invoice',$http->post('code_invoice'));
     try
     {
         $a_default->save();
