@@ -191,13 +191,13 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                         $text->selected=$value;
                         $text->transform(array(
                             null=>_('-')
-                            ,"S"=>_('Taux standard')
-                            ,'AE'=>_('Autoliquidate mais pas INTRACOMM.')
-                            ,'Z'=>_("TVA à 0%")
-                            ,'K'=>_('Autoliquidation INTRACOMM.')
-                            ,'G'=>_('TVA exempt pour export hors Europe')
-                            ,'O'=>_('TVA Hors périmètre application')
-                            ,'E'=>_('Exempté de TVA')
+                            ,"S"=>_('S Taux standard')
+                            ,'AE'=>_('AE Autoliquidate mais pas INTRACOMM.')
+                            ,'Z'=>_("Z TVA à 0%")
+                            ,'K'=>_('K Autoliquidation INTRACOMM.')
+                            ,'G'=>_('G TVA exempt pour export hors Europe')
+                            ,'O'=>_('O TVA Hors périmètre application')
+                            ,'E'=>_('E Exempté de TVA')
                         ));
                         echo $text->input();
                     }elseif ($key == "tva_id") {

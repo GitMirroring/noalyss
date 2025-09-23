@@ -209,8 +209,8 @@ abstract class XMLInvoice extends \DOMDocument
             }
             $result['operation'][$i]['vat_id']=$operation->det->array[$i]['qs_vat_code'];
 //            // tva code for PEPPOL
-//            $x=$this->cn->get_value("select tva_peppol_code from tva_rate where tva_id=$1"
-//                    ,[ $result['operation'][$i]['vat_id']]);
+            $x=$this->cn->get_value("select tva_peppol_code from tva_rate where tva_id=$1"
+                    ,[ $result['operation'][$i]['vat_id']]);
             $result['operation'][$i]['vat_code']=($x=="")?"S":$x;
             
             $result['operation'][$i]['vat_reversed']=$operation->det->array[$i]['qs_vat_sided'];
