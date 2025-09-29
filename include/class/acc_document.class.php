@@ -202,6 +202,7 @@ class Acc_Document extends Document {
 
     /**
      * @brief export the file to the file system and complet $this->d_mimetype, d_filename and 
+     * @param $destination_file (string) full path to document
      * @return bool false for failure and string (the full path_name) for success
      */
     function export_file($destination_file) {

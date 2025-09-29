@@ -224,8 +224,8 @@ define("ATTR_DEF_BQ_NO", 3);
 define("ATTR_DEF_BQ_NAME", 4);
 define("ATTR_DEF_PRIX_ACHAT", 7);
 define("ATTR_DEF_PRIX_VENTE", 6);
-define("ATTR_DEF_TVA", 2);
-define("ATTR_DEF_NUMTVA", 13);
+define("ATTR_DEF_TVA", 2); // usable VAT for goods and services
+define("ATTR_DEF_NUMTVA", 13); // number of VAT 
 define("ATTR_DEF_ADRESS", 14);
 define("ATTR_DEF_POSTCODE", 15);
 define("ATTR_DEF_COUNTRY", 16);
@@ -431,7 +431,8 @@ function noalyss_class_autoloader($class)
         'noalyss\xmldocument\xmlinvoice'=>'XMLDocument/XMLInvoice.php',
         'noalyss\xmldocument\facturx'=>'XMLDocument/FacturX.php',
         'noalyss\xmldocument\invoiceubl21'=>'XMLDocument/InvoiceUBL21.php',
-        'noalyss\xmldocument\error_message'=>'XMLDocument/Error_Message.php'
+        'noalyss\xmldocument\error_message'=>'XMLDocument/Error_Message.php',
+        "noalyss\invoice_pdf"=>"class/invoice_pdf.class.php"
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];

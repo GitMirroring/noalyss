@@ -79,10 +79,10 @@ if ( isset ($_POST['view_invoice'] ) )
         echo '<form class="print" enctype="multipart/form-data" method="post">';
         echo dossier::hidden();
         echo $Ledger->confirm($_POST );
-//----------------------------------------------------------------------------
-//  Check that INVOICE can be generated 
-//  for e-invoice only 
-//----------------------------------------------------------------------------
+        //----------------------------------------------------
+        //  Check that INVOICE can be generated 
+        //  for e-invoice only 
+        //----------------------------------------------------
         if ($g_parameter->MY_INVOICE_FORMAT != 'BASIC')
         {
             $xmldocument= \Noalyss\XMLDocument\XMLInvoice::build_xmlinvoice($cn);
@@ -152,84 +152,92 @@ if ( isset($_POST['record']) )
             //              is no invoice
             
             $receipt='';
+            //-------------------------------------------------------
+            // Generate a XLM invoice
+            // if a document has been created create the XML file 
+            //-------------------------------------------------------
+            ///@var $flag_invoice (int) error for invoice generating. 
+            ///                     0 = nothing no invoice created
+            ///                     1 = cannot create e-invoice
+            ///                     2 = create e-invoice requested
+
+            $flag_invoice=0;
              /* Save the attachment or generate doc */
-            if (isset($_FILES['pj'])) {
-                if (noalyss_strlentrim($_FILES['pj']['name']) != 0)
-                {   
-                    $cn->save_receipt($seq);
-                }
-                else
+            if (isset($_FILES['pj']) && noalyss_strlentrim($_FILES['pj']['name']) != 0)
+            {
+                $cn->save_receipt($seq);
+            }
+            else
                 /* Generate an invoice and save it into the database */
-                if (isset($_POST['gen_invoice'])) 
+            if (isset($_POST['gen_invoice'])) 
+            {
+                //@var $invoice_template (int) get the invoice number DOCUMENT_MODELE.MD_ID
+                $invoice_template=$http->post("gen_doc","number");
+                // generate an invoice
+                $file = $Ledger->create_document($internal, $_POST);
+                $receipt= HtmlInput::show_receipt_document($Ledger->jr_id
+                        ,h($file));
+                $acc_document=new Acc_Document($cn,$Ledger->jr_id);
+
+                /**
+                 * @todo si Client non belge ou pas de n° de tva alors pas de e-facture 
+                 */
+                if ($g_parameter->MY_INVOICE_FORMAT != 'BASIC' && ! empty($acc_document->d_filename ))
                 {
-                    // generate an invoice
-                    $file = $Ledger->create_document($internal, $_POST);
-                    $receipt= HtmlInput::show_receipt_document($Ledger->jr_id
-                            ,h($file));
-                    $acc_document=new Acc_Document($cn,$Ledger->jr_id);
-                    //-------------------------------------------------------
-                    // Generate a XLM invoice
-                    // if a document has been created create the XML file 
-                    //-------------------------------------------------------
-                    ///@var $flag_invoice (int) error for invoice generating. 
-                    ///                     0 = nothing
-                    ///                     1 = cannot create e-invoice
-                    ///                     2 = create e-invoice requested
-                    
-                    $flag_invoice=0;
-                    /**
-                     * @todo si Client non belge ou pas de n° de tva alors pas de e-facture 
-                     */
-                    if ($g_parameter->MY_INVOICE_FORMAT != 'BASIC' && ! empty($acc_document->d_filename ))
+                    $flag_invoice=2;
+                    $xmldocument= \Noalyss\XMLDocument\XMLInvoice::build_xmlinvoice($cn);
+                    $xmldocument->build_data($Ledger->jr_id);
+                    $code_error = $xmldocument->verify() ;
+                    // check that all the sub arrays are empty
+                    if ( ! empty( array_filter($code_error,function($a){ if (!empty($a)) return true; })))  
                     {
-                        $flag_invoice=2;
-                        $xmldocument= \Noalyss\XMLDocument\XMLInvoice::build_xmlinvoice($cn);
-                        $xmldocument->build_data($Ledger->jr_id);
-                        $code_error = $xmldocument->verify() ;
-                        // check that all the sub arrays are empty
-                        if ( ! empty( array_filter($code_error,function($a){ if (!empty($a)) return true; })))  
-                        {
-                            $xmldocument->display_error();
-                            $flag_invoice=1;
-                        }
+                        $xmldocument->display_error();
+                        $flag_invoice=1;
                     }
-                    //------------------------------------------------
-                    // flag_invoice == 2 , generate an e-invoice
-                    //------------------------------------------------
-                    if ( $flag_invoice == 2 ) 
-                    {    
+                }
+                //------------------------------------------------
+                // flag_invoice == 2 , generate an e-invoice
+                //------------------------------------------------
+                if ( $flag_invoice == 2 ) 
+                {    
+                    $pdf_filename=$acc_document->d_filename;
+                    if ( $acc_document->d_mimetype != 'application/pdf')
+                    {
                         $pdf_filename=$acc_document->transform2pdf();
-                        
+                   
                         // save PDF In db
                         $acc_document->update($pdf_filename);
-                        
-                        // make the PDF 
-                        $xmldocument->set_pdf_filename($pdf_filename);
-                        
-                        // make the XML  + PDF 
-                        $xml=$xmldocument->make_xml($Ledger->jr_id);
-                        if (DEBUGNOALYSS > 1) {
-                            $mt=date ('ymd-Hi').'+'.$Ledger->jr_id;
-                            $uniq= $_ENV['TMP']. DIRECTORY_SEPARATOR."$mt-e-invoice.xml";
-                            file_put_contents($uniq, $xml);
-                            chmod ($uniq,774);
-                            echo \Noalyss\Dbg::echo_file("file save $uniq");
-                            
-                        }
-                        // save XML string into the DB
-                        $oid=$cn->lo_write($xml);
-                        echo \Noalyss\Dbg::echo_var(1, "oid is $oid");
-                        if ($oid == false) {
-                            throw new Exception ('CV177 : cannot import e-invoice');
-                        }
-                        $acc_document->update_document_xml($oid);
-                        
-                        $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename);
-                        
+                    }else{
+                        $pdf_filename=$_ENV['TMP']."/".$pdf_filename;
+                        $acc_document->export_file($pdf_filename);
                     }
+                    // make the PDF 
+                    $xmldocument->set_pdf_filename($pdf_filename);
                         
+                    // make the XML  + PDF 
+                    $xml=$xmldocument->make_xml($Ledger->jr_id);
+                    if (DEBUGNOALYSS > 1) {
+                        $mt=date ('ymd-Hi').'+'.$Ledger->jr_id;
+                        $uniq= $_ENV['TMP']. DIRECTORY_SEPARATOR."$mt-e-invoice.xml";
+                        file_put_contents($uniq, $xml);
+                        chmod ($uniq,774);
+                        echo \Noalyss\Dbg::echo_file("file save $uniq");
+
+                    }
+                    // save XML string into the DB
+                    $oid=$cn->lo_write($xml);
+                    echo \Noalyss\Dbg::echo_var(1, "oid is $oid");
+                    if ($oid == false) {
+                        throw new Exception ('CV177 : cannot import e-invoice');
+                    }
+                    $acc_document->update_document_xml($oid);
+
+                    $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename);
+
                 }
+
             }
+            
                 
         }
         catch (\Exception $e) {

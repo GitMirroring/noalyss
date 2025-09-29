@@ -109,16 +109,20 @@ class Document
     /*!
      * \brief Generate the document, Call $this-\>replace to replace
      *        tag by value
-     * @param p_array contains the data normally it is the $_POST
-     * @param $p_filename contains the new filename
+     * @param p_array contains the data normally it is the $_POST (see Acc_Ledger_Sale or 
+     * Acc_Ledger_Purchase)
+     * @see Acc_Ledger_Sale
+     * @see Acc_Ledger_Purchase
+     * @param $p_filename contains the new filename, if not given the filename will be generated
      * \return an string : the url where the generated doc can be found, the name
      * of the file and his mimetype
      */
 
     function generate($p_array, $p_filename="")
     {
+
         try {
-            // create a temp directory in /tmp to unpack file and to parse it
+            ///@var $dirname (string) temp directory in /tmp to unpack file and to parse it
             $dirname=tempnam($_ENV['TMP'], 'doc_');
             if  ($dirname == false) {
                 throw new Exception ('DC117 cannot create tmp file',5000);
@@ -128,6 +132,31 @@ class Document
             if (  mkdir($dirname) == false ) {
                 throw new Exception ("DC121 cannot create $dirname directory",5000);
             }
+           /**
+            * md_id == -2 is the standard PDF invoice, you don't parse or compute 
+            * it
+            */
+           if ( $this->md_id == -2)
+           {
+                $file_to_parse=str_replace(
+                           array('/', '*', '<', '>', ';', ',', '\\', '.', ':', '(', ')', ' ', '[', ']')
+                           , "-"
+                           , "inv-std-".$p_array['e_pj'].".pdf");
+               
+               $this->d_number=$this->db->get_next_seq("seq_doc_type_stdinv");
+               $this->d_filename=$file_to_parse;
+               $this->d_mimetype="application/pdf";
+               $this->d_name=$file_to_parse;
+               $standard_invoice=new \Noalyss\Invoice_PDF($this->db,$dirname,$file_to_parse);
+               $standard_invoice->set_data($p_array);
+               $standard_invoice->export();
+               $this->saveGenerated($dirname.DIRECTORY_SEPARATOR.$file_to_parse);
+                // Invoice
+                $href=http_build_query(array('gDossier'=>Dossier::id(), "d_id"=>$this->d_id, 'act'=>'RAW:document'));
+                $ret='<A class="mtitle" HREF="export.php?'.$href.'">'._('Document').'</A>';
+                return $ret;
+           }
+            
             // Retrieve the lob and save it into $dirname
             $this->db->start();
             $dm_info="select md_name,md_type,md_lob,md_filename,md_mimetype
@@ -149,7 +178,8 @@ class Document
                 record_log(sprintf('DOCUMENT.GENERATE.D1 ,  export failed %s %s',$dirname, $filename));
                 throw new Exception(sprintf(_("Export a échoué pour %s"), $filename));
             }
-
+            // $type (letter) type of document : OOo for openoffice otherwise n , with OOo the file
+            //              is a ZIP XML
             $type="n";
             // if the doc is a OOo, we need to unzip it first
             // and the name of the file to change is always content.xml
@@ -336,10 +366,9 @@ class Document
     }
 
     /*!
-     * \brief Save the generated Document
+     * \brief insert the generated Document into the database, update the $this->d_id
+     * that is the PK of document. and load the PDF into the database.
      * \param $p_file is the generated file
-     *
-     *
      * \return 0 if no error otherwise 1
      */
 
