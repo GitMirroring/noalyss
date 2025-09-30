@@ -295,8 +295,14 @@ insert into "parameter" values ('MY_INVOICE_FORMAT','BASIC');
 
 alter table jrn add jr_document_xml oid;
 
-comment on column jrn.jr_document_xml is 'OID of the XML files (e-invoice)';
+comment on column jrn.jr_document_xml is 'OID of the XML files (e-invoice) used only for XML';
 
 
  create sequence seq_doc_type_stdinv;
 comment on sequence seq_doc_type_stdinv is 'Sequence for standard invoice';
+
+
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) 
+VALUES('RAW:xml-invoice', 'Exporte la facture XML', 'export_xml-invoice.php', NULL, 'export la facture électronique en XML', NULL, NULL, 'PR', NULL);
+
+insert into profile_menu (me_code,p_id, p_type_display) select 'RAW:xml-invoice',p_id,'P' from profile;

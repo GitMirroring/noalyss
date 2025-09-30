@@ -1109,6 +1109,7 @@ class Acc_Detail extends Acc_Operation
              ,currency_id
              ,currency_rate
              ,currency_rate_ref
+             ,jr_document_xml
              FROM jrn where jr_id=$1";
         $array=$this->db->get_array($sql,array($this->jr_id));
         if ( count($array) == 0 ) throw new Exception('Aucune ligne trouvée');
