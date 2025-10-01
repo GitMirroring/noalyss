@@ -760,6 +760,7 @@ class DatabaseCore
                     $this->rollback();
                     return false;
                 }
+                if ( $a == 1 ) { $this->commit(); }
                 return $oid;
             } else {
                 \record_log("DC754: move_uploaded fails".var_export($_FILES, true));
@@ -769,7 +770,7 @@ class DatabaseCore
         }
 
         \record_log("DC576: Files error names empty".var_export($_FILES, true));
-        if ( $a==1) { $this->commit(); }
+        if ( $a == 1) { $this->commit(); }
         return false;
     }
     /**

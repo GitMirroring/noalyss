@@ -1610,6 +1610,7 @@ class Acc_Ledger  extends jrn_def_sql
             $acc_end->currency_rate=$currency_rate;
             $acc_end->currency_rate_ref=$currency_rate_ref->get_rate();
             
+            // @var $jr_id (int) JRN.JR_ID
             $jr_id=$acc_end->insert_jrn();
             
             $this->jr_id=$jr_id;
@@ -1651,7 +1652,8 @@ class Acc_Ledger  extends jrn_def_sql
              */
             if (isset($_FILES["pj"]))
             {
-                $this->db->save_receipt($seq);
+                $acc_document=new Acc_Document($this->db, $jr_id);
+                $acc_document->save_receipt();
             }
             /*----------------------------------------------
              * Save the note

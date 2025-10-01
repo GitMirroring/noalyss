@@ -33,7 +33,8 @@ $http=new HttpInput();
 $strac=$http->request('ac');
 $ac="ac=".$strac;
 $p_msg="";
-$post_jrn=$http->post("p_jrn", "string","");
+//@var $post_jrn (int) Ledger id JRN_DEF.JRN_DEF_ID
+$post_jrn=$http->post("p_jrn", "number","");
 //----------------------------------------------------------------------
 // Encode a new invoice
 // empty form for encoding
@@ -143,7 +144,7 @@ if ( isset($_POST['record']) )
          else
             echo '<div class="content">';
 
-        $Ledger=new Acc_Ledger_Sale($cn,$_POST['p_jrn']);
+        $Ledger=new Acc_Ledger_Sale($cn,$post_jrn);
         try {
             $internal=$Ledger->insert($_POST);
             
@@ -164,8 +165,11 @@ if ( isset($_POST['record']) )
             $flag_invoice=0;
              /* Save the attachment or generate doc */
             if (isset($_FILES['pj']) && noalyss_strlentrim($_FILES['pj']['name']) != 0)
-            {
-                $cn->save_receipt($seq);
+            { 
+                $acc_document=new Acc_Document($cn,$Ledger->jr_id);
+                $acc_document->save_receipt();
+                $receipt= HtmlInput::show_receipt_document($Ledger->jr_id
+                        ,h($_FILES['pj']['name']));
             }
             else
                 /* Generate an invoice and save it into the database */
@@ -232,8 +236,8 @@ if ( isset($_POST['record']) )
                     }
                     $acc_document->update_document_xml($oid);
 
-                    $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename);
-
+                    $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename)
+                        . $acc_document->link_download_xml();
                 }
 
             }

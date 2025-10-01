@@ -221,5 +221,79 @@ class Acc_Document extends Document {
 
         return $destination_file;
     }
+    /**
+     * \brief Save a "piece justificative" , the name must be a receipt. If it 
+     * is a XML document, split it into 2 parts : PDF and XML 
+     *  the PDF be stored in JR_PJ and the XML into JR_DOCUMENT_XML
+     * 
+     * 
+     * \return $oid of the lob file if success null if a error occurs
+     *
+     */
+    function save_receipt()
+    {
+        $this->db->start();
+        /**
+         * pj is the $_FILES key
+         */
+        $oid = $this->db->upload('pj');
+        if ($oid == false) {
+            return false;
+        }
+        // Remove old document if any
+        $old_oid = $this->db->get_value("select jr_pj from jrn where jr_id=$1"
+                ,[$this->d_id]);
+        
+        if ( $old_oid != "")
+        {
+            $this->lo_unlink( $old_oid);
+        }
+        // save new document
+        $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
+                                jr_pj_type=$3  where jr_id=$4",
+                                array(
+                                        $oid
+                                    ,   $_FILES['pj']['name']
+                                    ,   $_FILES['pj']['type']
+                                    ,   $this->d_id 
+                                    )
+                                );
+       $this->db->commit();
+        // if there is a e-invoice in XML
+//        if (   $_FILES['pj']['type'] == 'text/xml' 
+//            || $_FILES['pj']['type'] == 'application/xml' 
+//            ) 
+//        {
+//           $xmlreader= Noalyss\XMLDocument\XMLInvoice_Reader::build_from_file($_FILES['pj']['tmp_name']);
+//     //      $xmlreader->save_xml
+//        }
+        $this->d_name=$_FILES['pj']['name'];
+        $this->d_description=$_FILES['pj']['name'];
+        $this->d_lob=$oid;
+        $this->d_mimetype=$_FILES['pj']['type'];
+        return $oid;
+    }
+    /**
+     * @brief return a string with a link download XML or an empty string
+     * if there is no XML to download
+     */
+    function link_download_xml():string
+    {
+        $xml_oid=$this->db->get_value("select jr_document_xml from jrn where jr_id=$1",
+                [$this->d_id]);
+        if ($xml_oid == "") { return "";}
+         $url= "export.php?".http_build_query(
+                        [
+                            "gDossier"=>\Dossier::id(),
+                            "jr_id"=>$this->d_id,
+                            "act"=>'RAW:xml-invoice'
+                        ]);
+        $r = sprintf('<a class="mtitle line" href="%s">',$url);
+        $r .=  _("XML")
+                .'<i class="icon-download">'
+                .'</i>'
+                .'</a>';
+        return $r;
+    }
     
 }

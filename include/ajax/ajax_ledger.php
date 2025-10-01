@@ -256,6 +256,11 @@ switch ($action) {
                 $filename = mb_substr($obj->det->jr_pj_name, 0, 60);
             }
             echo HtmlInput::show_receipt_document($jr_id, h($filename));
+            // if using the XML Belgian format, add a tab for showing it
+            $acc_document=new Acc_Document($cn,$jr_id);
+            echo '<span style="margin-left:5rem">'.
+                 $acc_document->link_download_xml()
+                .'</span>';
             echo $x;
             echo '<p id="receipt_info_id" style="display:inline" ></p>';
             echo '</div>';
@@ -268,9 +273,8 @@ switch ($action) {
     case 'loadfile':
         if ($access == 'W' && isset ($_FILES)) {
             $cn->start();
-            // remove the file
-            $grpt = $cn->get_value('select jr_grpt_id from jrn where jr_id=$1', array($jr_id));
-            $cn->save_receipt($grpt);
+            $acc_document=new \Acc_Document($cn,$jr_id);
+            $acc_document->save_receipt();
             $cn->commit();
             // Show a link to the new file
             $op->get();

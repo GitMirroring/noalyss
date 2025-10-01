@@ -1055,7 +1055,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             if ( isset ($_FILES))
             {
                 if ( sizeof($_FILES) != 0 )
-                    $this->db->save_receipt($seq);
+                    $acc_document=new \Acc_Document($this->db, $this->jr_id);
+                    $acc_document->save_receipt();
+                    $this->doc=HtmlInput::show_receipt_document($this->jr_id,h($_FILES['pj']['name']));
             }
             $str_file="";
             /* Generate an document  and save it into the database (Note de frais only)

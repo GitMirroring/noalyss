@@ -432,7 +432,8 @@ function noalyss_class_autoloader($class)
         'noalyss\xmldocument\facturx'=>'XMLDocument/FacturX.php',
         'noalyss\xmldocument\invoiceubl21'=>'XMLDocument/InvoiceUBL21.php',
         'noalyss\xmldocument\error_message'=>'XMLDocument/Error_Message.php',
-        "noalyss\invoice_pdf"=>"class/invoice_pdf.class.php"
+        "noalyss\invoice_pdf"=>"class/invoice_pdf.class.php",
+        'noalyss\xmldocument\xmlinvoice_reader'=>'XMLDocument/xmlinvoice_reader.class.php'
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];

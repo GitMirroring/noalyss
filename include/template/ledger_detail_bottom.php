@@ -46,17 +46,7 @@ $a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Act
 $a_tab['analytic_div']=array('id'=>'analytic_div'.$div,'label'=>_('Comptabilité Analytique'),'display'=>'none');
 //var $g_parameter \Noalyss_Parameter_Folder
 global $g_parameter;
-// if using the XML Belgian format, add a tab for showing it
-if ($obj->det->jr_document_xml != "") 
-{
-    $a_tab['xml_document_div']=
-            [
-              "id"=>"xml_document_div".$div
-            , "label"=>_("XML - UBL21")
-            , "display"=>'none'
-            ];
-    
-}
+
 
  
 // show tabs
@@ -333,29 +323,6 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_file.php';
 <?php endif;?>
 </div>
 <?php
-//------------------------------------------------
-// TAB XML 
-//------------------------------------------------
-if ($obj->det->jr_document_xml != "") {
-    printf ('<div id="xml_document_div%s"
-            class="myfieldset" style="display:%s;"        
-            >',$div,$a_tab['xml_document_div']['display']);
-    $url= "export.php?".http_build_query(
-                        [
-                            "gDossier"=>$gDossier,
-                            "jr_id"=>$jr_id,
-                            "act"=>'RAW:xml-invoice'
-                        ]);
-    printf('<a href="%s">',$url);
-    print '<i class="icon-download">'
-            ._("XML")
-            .'</i>';
-    print '</a>';
-    
-    echo '</div>';
-}?>
-<hr>
-<?php 
       echo '<p style="text-align:center">';
 
 if ( $div != 'popup' ) {

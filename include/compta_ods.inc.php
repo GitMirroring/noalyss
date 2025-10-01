@@ -92,7 +92,7 @@ if (!isset($_POST['summary']) && !isset($_POST['save'])) {
         echo _("Détail opération");
         echo " ";
         printf('<a class="detail" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a><hr>',
-            $jr_id, dossier::id(), $ledger->internal);
+            $jr_id, dossier::id(), $ledger->jr_internal); 
         echo '</div>';
 
         // show feedback
