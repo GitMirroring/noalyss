@@ -718,7 +718,7 @@ class DatabaseCore
     }
 
     /***
-     * \brief Save a document into the database , it just puts the file in the database
+     * \brief Save one or several documents into the database , it just puts the file in the database
      * and returns the corresponding OID , the mimetype , size ... of the document
      * must be set in the calling function.
      *
@@ -730,15 +730,25 @@ class DatabaseCore
 
     function upload($p_name)
     {
+       
+          //var $a : 0 we're in a transaction, 1 we are not in a transaction
+        $a=0;
+        if ( $this->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->start();
+        }
+            
         /* there is          no file to          upload */
         if ($_FILES[$p_name]["error"] == UPLOAD_ERR_NO_FILE) {
+            \record_log("DC759: error upload file".var_export($_FILES, true));
+            if ( $a==1) { $this->rollback(); }
             return false;
         }
 
         $new_name = tempnam($_ENV['TMP'], $p_name);
         if ($_FILES[$p_name]["error"] > 0) {
-            print_r($_FILES);
-            echo_error(__FILE__ . ":" . __LINE__ . "Error: " . $_FILES[$p_name]["error"]);
+            \record_log("DC740: error upload file".var_export($_FILES, true));
+            if ( $a==1) { $this->rollback(); }
             return false;
         }
         if (strlen($_FILES[$p_name]['tmp_name']) != 0) {
@@ -746,17 +756,20 @@ class DatabaseCore
                 // echo "Image saved";
                 $oid = pg_lo_import($this->db, $new_name);
                 if ($oid == false) {
-                    echo_error(__FILE__, __LINE__, "cannot upload document");
+                    \record_log("DC747: error upload file".var_export($_FILES, true). "SQL MESSAGE". pg_last_error($this->db));
                     $this->rollback();
                     return false;
                 }
                 return $oid;
             } else {
-                echo "<H1>Error</H1>";
+                \record_log("DC754: move_uploaded fails".var_export($_FILES, true));
                 $this->rollback();
                 return false;
             }
         }
+
+        \record_log("DC576: Files error names empty".var_export($_FILES, true));
+        if ( $a==1) { $this->commit(); }
         return false;
     }
     /**

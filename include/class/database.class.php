@@ -82,7 +82,7 @@ class Database extends DatabaseCore
             . "]";
 }
     /***
-     * \brief Save a "piece justificative" , the name must be pj
+     * \brief Save a "piece justificative" , the name must be a receipt
      *
      * \param $seq jr_grpt_id
      * \return $oid of the lob file if success
@@ -91,12 +91,16 @@ class Database extends DatabaseCore
      */
     function save_receipt($seq)
     {
+        /**
+         * pj is the $_FILES key
+         */
         $oid = $this->upload('pj');
         if ($oid == false) {
             return false;
         }
         // Remove old document
-        $ret = $this->exec_sql("select jr_pj from jrn where jr_grpt_id=$seq");
+        $ret = $this->exec_sql("select jr_pj from jrn where jr_grpt_id=$1"
+                ,[$seq]);
         if (pg_num_rows($ret) != 0) {
             $r = pg_fetch_array($ret, 0);
             $old_oid = $r['jr_pj'];
@@ -107,6 +111,12 @@ class Database extends DatabaseCore
         $this->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
                                 jr_pj_type=$3  where jr_grpt_id=$4",
             array($oid, $_FILES['pj']['name'], $_FILES['pj']['type'], $seq));
+        if (   $_FILES['pj']['type'] == 'text/xml' 
+            || $_FILES['pj']['type'] == 'application/xml' 
+            ) 
+            {
+                
+            }
         return $oid;
     }
 
