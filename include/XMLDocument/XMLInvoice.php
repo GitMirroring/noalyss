@@ -201,9 +201,14 @@ abstract class XMLInvoice extends \DOMDocument
             // $operation->det->currency_id == 0  default currency of the folder
             if ($operation->det->currency_id == 0 ) {
                 $result['operation'][$i]['price']=$operation->det->array[$i]['qs_price'];
+                $result['operation'][$i]['price_unit']=$operation->det->array[$i]['qs_unit'];
                 $result['operation'][$i]['vat']=$operation->det->array[$i]['qs_vat'];
             } else {
                 $result['operation'][$i]['price']=$operation->det->array[$i]['oc_amount'];
+                $result['operation'][$i]['price_unit']=bcdiv(
+                        $operation->det->array[$i]['oc_amount'],
+                        $operation->det->array[$i]['qs_quantite'],
+                        2);
                 $result['operation'][$i]['vat']=$operation->det->array[$i]['oc_vat_amount'];
                 
             }

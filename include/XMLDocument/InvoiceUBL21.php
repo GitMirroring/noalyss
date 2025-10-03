@@ -498,7 +498,7 @@ class InvoiceUBL21 extends XMLInvoice {
         $item->appendChild($classifiedTaxCat);
         $result->appendChild($item);
         $price=$result->appendChild($this->createElement("cac:Price"));
-        $price->appendChild($this->createElement("cbc:PriceAmount",sprintf("%.2f",abs($amount))))
+        $price->appendChild($this->createElement("cbc:PriceAmount",sprintf("%.2f",abs($row['price_unit']))))
                 ->setAttribute("currencyID",$this->data['currency']);
         $result->appendChild($price);
             
