@@ -723,12 +723,14 @@ class DatabaseCore
      * must be set in the calling function.
      *
      * \param name of the variable in $_FILES
+     * \param $only_oid (bool) (default :true) false : return filename and oid in an array , true only OID, 
      * \return $oid of the lob file if success
      *         false if a error occurs or if there is no file to upload
+     *         array(oid, filename) if $only_oid is true
      *
      */
 
-    function upload($p_name)
+    function upload($p_name,$only_oid = false)
     {
        
           //var $a : 0 we're in a transaction, 1 we are not in a transaction
@@ -761,7 +763,11 @@ class DatabaseCore
                     return false;
                 }
                 if ( $a == 1 ) { $this->commit(); }
-                return $oid;
+                if ($only_oid ){
+                    return $oid;
+                }else {
+                    return ["oid"=>$oid,'filename'=>$new_name];
+                }
             } else {
                 \record_log("DC754: move_uploaded fails".var_export($_FILES, true));
                 $this->rollback();

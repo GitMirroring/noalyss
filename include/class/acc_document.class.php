@@ -18,7 +18,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu 28/08/25
-
+use Noalyss\XMLDocument\XMLInvoice_Reader;
 
 /**
  * @file
@@ -52,7 +52,7 @@ class Acc_Document extends Document {
         return $this;
     }
 
-        /**
+     /**
      * @brief constructor
      * @param $cn \Database
      * @param $jr_id (int) JRN.JRID will be in d_id
@@ -236,10 +236,11 @@ class Acc_Document extends Document {
         /**
          * pj is the $_FILES key
          */
-        $oid = $this->db->upload('pj');
-        if ($oid == false) {
+        $a_file= $this->db->upload('pj',only_oid:false);
+        if ($a_file == false) {
             return false;
         }
+        $oid=$a_file['oid'];
         // Remove old document if any
         $old_oid = $this->db->get_value("select jr_pj from jrn where jr_id=$1"
                 ,[$this->d_id]);
@@ -248,8 +249,69 @@ class Acc_Document extends Document {
         {
             $this->lo_unlink( $old_oid);
         }
-        // save new document
-        $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
+        
+        // if there is a e-invoice in XML
+        if (   $_FILES['pj']['type'] == 'text/xml' 
+            || $_FILES['pj']['type'] == 'application/xml' 
+            ) 
+        {
+            // save the XML 
+            $this->db->exec_sql("update jrn set jr_document_xml = $1 
+                where 
+                jr_id=$2",
+                    [$oid,$this->d_id]);
+            
+           $xmlreader= XMLInvoice_Reader::build_from_file($a_file['filename']);
+
+           //@var $embedded_file (array) keys = filecontent: binary data
+           //,mimecode mimetype and filename (string)
+           try 
+           {
+                $embedded_file=$xmlreader->get_embedded_document();
+                if ($embedded_file == false) 
+                {
+                    //@todo create a PDF with standard information
+
+                    $this->commit();
+                    return false;
+                }
+           } catch (\Exception $e ) {
+               \record_log($e);
+               // if exception is not too many document or document corrupted 
+               // then rethrow the exception
+                if ( !in_array(e->getCode(),[110,116])  )
+                {
+                    throw new \Exception("X281 ",281,$e);
+                }
+           }
+           
+           //@var $file_oid OID of the large object saved in DB
+           $file_oid=$this->db->lo_write($embedded_file['filecontent']);
+           if ( $file_oid == false ) 
+           {
+               // create a PDF with standard information
+               $xmlreader->to_pdf($this->db);
+               $this->commit();
+               return $oid;
+           }
+
+            $this->d_name=$embedded_file['filename'];
+            $this->d_description=$embedded_file['filename'];
+            $this->d_lob=$file_oid;
+            $this->d_mimetype=$embedded_file['mimecode'];
+            // save extracted document into DB
+            $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
+                                    jr_pj_type=$3  where jr_id=$4",
+                                array(
+                                        $this->d_lob
+                                    ,   $this->d_name
+                                    ,   $this->d_description
+                                    ,   $this->d_id 
+                                )
+                            );
+        } else{
+            // save new document
+            $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
                                 jr_pj_type=$3  where jr_id=$4",
                                 array(
                                         $oid
@@ -258,19 +320,13 @@ class Acc_Document extends Document {
                                     ,   $this->d_id 
                                     )
                                 );
-       $this->db->commit();
-        // if there is a e-invoice in XML
-//        if (   $_FILES['pj']['type'] == 'text/xml' 
-//            || $_FILES['pj']['type'] == 'application/xml' 
-//            ) 
-//        {
-//           $xmlreader= Noalyss\XMLDocument\XMLInvoice_Reader::build_from_file($_FILES['pj']['tmp_name']);
-//     //      $xmlreader->save_xml
-//        }
-        $this->d_name=$_FILES['pj']['name'];
-        $this->d_description=$_FILES['pj']['name'];
-        $this->d_lob=$oid;
-        $this->d_mimetype=$_FILES['pj']['type'];
+            $this->d_name=$_FILES['pj']['name'];
+            $this->d_description=$_FILES['pj']['name'];
+            $this->d_lob=$oid;
+            $this->d_mimetype=$_FILES['pj']['type'];
+        }
+        $this->db->commit();
+
         return $oid;
     }
     /**
