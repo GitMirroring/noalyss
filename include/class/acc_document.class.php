@@ -247,7 +247,7 @@ class Acc_Document extends Document {
         
         if ( $old_oid != "")
         {
-            $this->lo_unlink( $old_oid);
+            $this->db->lo_unlink( $old_oid);
         }
         
         // if there is a e-invoice in XML
@@ -270,11 +270,41 @@ class Acc_Document extends Document {
                 $embedded_file=$xmlreader->get_embedded_document();
                 if ($embedded_file == false) 
                 {
-                    //@todo create a PDF with standard information
-
-                    $this->commit();
-                    return false;
+                    $embedded_file=array();
+                    // create a PDF with standard information
+                    $pdf=$xmlreader->to_pdf($this->db);
+                    $file_oid=$this->db->lo_write($pdf->Output("S"));
+                    $embedded_file['filename']="invoice.pdf";
+                    $embedded_file['mimecode']="application/pdf";
                 }
+                else 
+                {
+                    $file_oid=$this->db->lo_write($embedded_file['filecontent']);
+                    if ( $file_oid == false ) 
+                    {
+                        // create a PDF with standard information
+                        $pdf=$xmlreader->to_pdf($this->db);
+                        $file_oid=$this->db->lo_write($pdf->Output("S"));
+                    }
+                }
+                //@var $file_oid OID of the large object saved in DB
+
+
+                 $this->d_name=$embedded_file['filename'];
+                 $this->d_description=$embedded_file['filename'];
+                 $this->d_lob=$file_oid;
+                 $this->d_mimetype=$embedded_file['mimecode'];
+                 // save extracted document into DB
+                 $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
+                                         jr_pj_type=$3  where jr_id=$4",
+                                     array(
+                                             $this->d_lob
+                                         ,   $this->d_name
+                                         ,   $this->d_description
+                                         ,   $this->d_id 
+                                     )
+                                 );
+                return $file_oid;
            } catch (\Exception $e ) {
                \record_log($e);
                // if exception is not too many document or document corrupted 
@@ -285,46 +315,22 @@ class Acc_Document extends Document {
                 }
            }
            
-           //@var $file_oid OID of the large object saved in DB
-           $file_oid=$this->db->lo_write($embedded_file['filecontent']);
-           if ( $file_oid == false ) 
-           {
-               // create a PDF with standard information
-               $xmlreader->to_pdf($this->db);
-               $this->commit();
-               return $oid;
-           }
-
-            $this->d_name=$embedded_file['filename'];
-            $this->d_description=$embedded_file['filename'];
-            $this->d_lob=$file_oid;
-            $this->d_mimetype=$embedded_file['mimecode'];
-            // save extracted document into DB
-            $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
-                                    jr_pj_type=$3  where jr_id=$4",
-                                array(
-                                        $this->d_lob
-                                    ,   $this->d_name
-                                    ,   $this->d_description
-                                    ,   $this->d_id 
+        } 
+        
+        // save new document
+        $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
+                            jr_pj_type=$3  where jr_id=$4",
+                            array(
+                                    $oid
+                                ,   $_FILES['pj']['name']
+                                ,   $_FILES['pj']['type']
+                                ,   $this->d_id 
                                 )
                             );
-        } else{
-            // save new document
-            $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
-                                jr_pj_type=$3  where jr_id=$4",
-                                array(
-                                        $oid
-                                    ,   $_FILES['pj']['name']
-                                    ,   $_FILES['pj']['type']
-                                    ,   $this->d_id 
-                                    )
-                                );
-            $this->d_name=$_FILES['pj']['name'];
-            $this->d_description=$_FILES['pj']['name'];
-            $this->d_lob=$oid;
-            $this->d_mimetype=$_FILES['pj']['type'];
-        }
+        $this->d_name=$_FILES['pj']['name'];
+        $this->d_description=$_FILES['pj']['name'];
+        $this->d_lob=$oid;
+        $this->d_mimetype=$_FILES['pj']['type'];
         $this->db->commit();
 
         return $oid;
