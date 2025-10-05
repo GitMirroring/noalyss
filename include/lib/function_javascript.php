@@ -1780,7 +1780,7 @@ function encodeURIbycharacter($char)
 function decodeURI($string)
 {
     $result = "";
-    for ($i = 0; $i < strlen($string); $i++)
+    for ($i = 0; $i < strlen($string)-8; $i++)
     {
         $decstr = "";
         for ($p = 0; $p <= 8; $p++)
