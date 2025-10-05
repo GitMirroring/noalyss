@@ -10,10 +10,7 @@ class ComposerStaticInit1a0e4ea3fb1d108a445b9e95a7c251ad
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '383eaff206634a77a1be54e64e6459c7' => __DIR__ . '/..' . '/sabre/uri/lib/functions.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
-        '3569eecfeed3bcf0bad3c998a494ecb8' => __DIR__ . '/..' . '/sabre/xml/lib/Deserializer/functions.php',
-        '93aa591bc4ca510c520999e34229ee79' => __DIR__ . '/..' . '/sabre/xml/lib/Serializer/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -42,18 +39,11 @@ class ComposerStaticInit1a0e4ea3fb1d108a445b9e95a7c251ad
             'Symfony\\Component\\Validator\\' => 28,
             'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\Finder\\' => 25,
-            'Sabre\\Xml\\' => 10,
-            'Sabre\\Uri\\' => 10,
         ),
         'P' => 
         array (
             'ParagonIE\\ConstantTime\\' => 23,
             'PHPStan\\PhpDocParser\\' => 21,
-        ),
-        'N' => 
-        array (
-            'NumNum\\UBL\\Tests\\' => 17,
-            'NumNum\\UBL\\' => 11,
         ),
         'M' => 
         array (
@@ -84,6 +74,10 @@ class ComposerStaticInit1a0e4ea3fb1d108a445b9e95a7c251ad
         'B' => 
         array (
             'BaconQrCode\\' => 12,
+        ),
+        'A' => 
+        array (
+            'Atgp\\FacturX\\' => 13,
         ),
     );
 
@@ -144,14 +138,6 @@ class ComposerStaticInit1a0e4ea3fb1d108a445b9e95a7c251ad
         array (
             0 => __DIR__ . '/..' . '/symfony/finder',
         ),
-        'Sabre\\Xml\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/sabre/xml/lib',
-        ),
-        'Sabre\\Uri\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/sabre/uri/lib',
-        ),
         'ParagonIE\\ConstantTime\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
@@ -159,14 +145,6 @@ class ComposerStaticInit1a0e4ea3fb1d108a445b9e95a7c251ad
         'PHPStan\\PhpDocParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
-        ),
-        'NumNum\\UBL\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/num-num/ubl-invoice/tests',
-        ),
-        'NumNum\\UBL\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/num-num/ubl-invoice/src',
         ),
         'Metadata\\' => 
         array (
@@ -203,6 +181,10 @@ class ComposerStaticInit1a0e4ea3fb1d108a445b9e95a7c251ad
         'BaconQrCode\\' => 
         array (
             0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
+        ),
+        'Atgp\\FacturX\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/atgp/factur-x/src',
         ),
     );
 

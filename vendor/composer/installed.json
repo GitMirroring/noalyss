@@ -1,6 +1,69 @@
 {
     "packages": [
         {
+            "name": "atgp/factur-x",
+            "version": "v2.4.0",
+            "version_normalized": "2.4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/atgp/factur-x.git",
+                "reference": "0edbe1e935c3f81dcf3e306b2ce5876bf715bea1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/atgp/factur-x/zipball/0edbe1e935c3f81dcf3e306b2ce5876bf715bea1",
+                "reference": "0edbe1e935c3f81dcf3e306b2ce5876bf715bea1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-fileinfo": "*",
+                "ext-libxml": "*",
+                "ext-simplexml": "*",
+                "ext-zlib": "*",
+                "php": ">=7.4",
+                "setasign/fpdf": "^1.8",
+                "setasign/fpdi": "^2.0",
+                "smalot/pdfparser": "^0.19.0|~1.0|~2.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~3.1",
+                "phpstan/phpstan": "^2.0"
+            },
+            "time": "2025-09-24T13:02:08+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Atgp\\FacturX\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "@GP",
+                    "homepage": "https://www.atgp.net/"
+                }
+            ],
+            "description": "PHP library to manage your Factur-X / ZUGFeRD 2.0 PDF invoices files",
+            "keywords": [
+                "ZUGFeRD",
+                "factur-x",
+                "invoice",
+                "pdf",
+                "php",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/atgp/factur-x/issues",
+                "source": "https://github.com/atgp/factur-x/tree/v2.4.0"
+            },
+            "install-path": "../atgp/factur-x"
+        },
+        {
             "name": "bacon/bacon-qr-code",
             "version": "v3.0.1",
             "version_normalized": "3.0.1.0",
@@ -921,81 +984,6 @@
             "install-path": "../jms/serializer"
         },
         {
-            "name": "num-num/ubl-invoice",
-            "version": "v1.21.2",
-            "version_normalized": "1.21.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/num-num/ubl-invoice.git",
-                "reference": "195712b3071e23c5aaa6fe95cb9e2de55c3d1348"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/num-num/ubl-invoice/zipball/195712b3071e23c5aaa6fe95cb9e2de55c3d1348",
-                "reference": "195712b3071e23c5aaa6fe95cb9e2de55c3d1348",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3 || ^8.0",
-                "sabre/xml": "^4.0"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^9.0",
-                "squizlabs/php_codesniffer": "^3.7"
-            },
-            "time": "2025-07-01T11:58:25+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "NumNum\\UBL\\": [
-                        "src"
-                    ],
-                    "NumNum\\UBL\\Tests\\": [
-                        "tests"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bert Devriese",
-                    "email": "bert@numnum.be",
-                    "homepage": "https://www.numnum.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A modern object-oriented PHP library to create valid UBL and Peppol BIS 3.0 files",
-            "homepage": "https://github.com/num-num/ubl-invoice",
-            "keywords": [
-                "E-Invoice",
-                "digital invoice",
-                "efff",
-                "einvoice",
-                "electronic invoice",
-                "euinvoice",
-                "invoice",
-                "peppol",
-                "peppol bis",
-                "peppol invoice",
-                "peppolbis",
-                "ubl",
-                "ubl invoice",
-                "ublinvoice",
-                "xml",
-                "xml invoice"
-            ],
-            "support": {
-                "issues": "https://github.com/num-num/ubl-invoice/issues",
-                "source": "https://github.com/num-num/ubl-invoice/tree/v1.21.2"
-            },
-            "install-path": "../num-num/ubl-invoice"
-        },
-        {
             "name": "paragonie/constant_time_encoding",
             "version": "v3.0.0",
             "version_normalized": "3.0.0.0",
@@ -1199,141 +1187,6 @@
             "install-path": "../phpstan/phpdoc-parser"
         },
         {
-            "name": "sabre/uri",
-            "version": "3.0.2",
-            "version_normalized": "3.0.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sabre-io/uri.git",
-                "reference": "38eeab6ed9eec435a2188db489d4649c56272c51"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sabre-io/uri/zipball/38eeab6ed9eec435a2188db489d4649c56272c51",
-                "reference": "38eeab6ed9eec435a2188db489d4649c56272c51",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.4 || ^8.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.64",
-                "phpstan/extension-installer": "^1.4",
-                "phpstan/phpstan": "^1.12",
-                "phpstan/phpstan-phpunit": "^1.4",
-                "phpstan/phpstan-strict-rules": "^1.6",
-                "phpunit/phpunit": "^9.6"
-            },
-            "time": "2024-09-04T15:30:08+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "files": [
-                    "lib/functions.php"
-                ],
-                "psr-4": {
-                    "Sabre\\Uri\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Evert Pot",
-                    "email": "me@evertpot.com",
-                    "homepage": "http://evertpot.com/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Functions for making sense out of URIs.",
-            "homepage": "http://sabre.io/uri/",
-            "keywords": [
-                "rfc3986",
-                "uri",
-                "url"
-            ],
-            "support": {
-                "forum": "https://groups.google.com/group/sabredav-discuss",
-                "issues": "https://github.com/sabre-io/uri/issues",
-                "source": "https://github.com/fruux/sabre-uri"
-            },
-            "install-path": "../sabre/uri"
-        },
-        {
-            "name": "sabre/xml",
-            "version": "4.0.6",
-            "version_normalized": "4.0.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sabre-io/xml.git",
-                "reference": "a89257fd188ce30e456b841b6915f27905dfdbe3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sabre-io/xml/zipball/a89257fd188ce30e456b841b6915f27905dfdbe3",
-                "reference": "a89257fd188ce30e456b841b6915f27905dfdbe3",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-xmlreader": "*",
-                "ext-xmlwriter": "*",
-                "lib-libxml": ">=2.6.20",
-                "php": "^7.4 || ^8.0",
-                "sabre/uri": ">=2.0,<4.0.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.64",
-                "phpstan/phpstan": "^1.12",
-                "phpunit/phpunit": "^9.6"
-            },
-            "time": "2024-09-06T08:00:55+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "files": [
-                    "lib/Deserializer/functions.php",
-                    "lib/Serializer/functions.php"
-                ],
-                "psr-4": {
-                    "Sabre\\Xml\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Evert Pot",
-                    "email": "me@evertpot.com",
-                    "homepage": "http://evertpot.com/",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Markus Staab",
-                    "email": "markus.staab@redaxo.de",
-                    "role": "Developer"
-                }
-            ],
-            "description": "sabre/xml is an XML library that you may not hate.",
-            "homepage": "https://sabre.io/xml/",
-            "keywords": [
-                "XMLReader",
-                "XMLWriter",
-                "dom",
-                "xml"
-            ],
-            "support": {
-                "forum": "https://groups.google.com/group/sabredav-discuss",
-                "issues": "https://github.com/sabre-io/xml/issues",
-                "source": "https://github.com/fruux/sabre-xml"
-            },
-            "install-path": "../sabre/xml"
-        },
-        {
             "name": "setasign/fpdf",
             "version": "1.8.6",
             "version_normalized": "1.8.6.0",
@@ -1459,17 +1312,17 @@
         },
         {
             "name": "smalot/pdfparser",
-            "version": "v2.12.0",
-            "version_normalized": "2.12.0.0",
+            "version": "v2.12.1",
+            "version_normalized": "2.12.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smalot/pdfparser.git",
-                "reference": "8440edbf58c8596074e78ada38dcb0bd041a5948"
+                "reference": "98d31ba34ef5b5a98897ef4b6c3925d502ea53b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/8440edbf58c8596074e78ada38dcb0bd041a5948",
-                "reference": "8440edbf58c8596074e78ada38dcb0bd041a5948",
+                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/98d31ba34ef5b5a98897ef4b6c3925d502ea53b1",
+                "reference": "98d31ba34ef5b5a98897ef4b6c3925d502ea53b1",
                 "shasum": ""
             },
             "require": {
@@ -1478,7 +1331,7 @@
                 "php": ">=7.1",
                 "symfony/polyfill-mbstring": "^1.18"
             },
-            "time": "2025-03-31T13:16:09+00:00",
+            "time": "2025-07-31T06:19:56+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1507,7 +1360,7 @@
             ],
             "support": {
                 "issues": "https://github.com/smalot/pdfparser/issues",
-                "source": "https://github.com/smalot/pdfparser/tree/v2.12.0"
+                "source": "https://github.com/smalot/pdfparser/tree/v2.12.1"
             },
             "install-path": "../smalot/pdfparser"
         },

@@ -20,12 +20,8 @@ return array(
     'Symfony\\Component\\Validator\\' => array($vendorDir . '/symfony/validator'),
     'Symfony\\Component\\Process\\' => array($vendorDir . '/symfony/process'),
     'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
-    'Sabre\\Xml\\' => array($vendorDir . '/sabre/xml/lib'),
-    'Sabre\\Uri\\' => array($vendorDir . '/sabre/uri/lib'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
-    'NumNum\\UBL\\Tests\\' => array($vendorDir . '/num-num/ubl-invoice/tests'),
-    'NumNum\\UBL\\' => array($vendorDir . '/num-num/ubl-invoice/src'),
     'Metadata\\' => array($vendorDir . '/jms/metadata/src'),
     'JMS\\Serializer\\' => array($vendorDir . '/jms/serializer/src'),
     'GoetasWebservices\\Xsd\\XsdToPhpRuntime\\' => array($vendorDir . '/goetas-webservices/xsd2php-runtime/src'),
@@ -35,4 +31,5 @@ return array(
     'DASPRiD\\Enum\\' => array($vendorDir . '/dasprid/enum/src'),
     'Curl\\' => array($vendorDir . '/php-curl-class/php-curl-class/src/Curl'),
     'BaconQrCode\\' => array($vendorDir . '/bacon/bacon-qr-code/src'),
+    'Atgp\\FacturX\\' => array($vendorDir . '/atgp/factur-x/src'),
 );
