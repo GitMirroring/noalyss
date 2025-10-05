@@ -121,6 +121,32 @@ class Acc_Document extends Document {
         return true;
     }
     /**
+     * @brief for FACTURX we replace the PDF save in DB by this one, always 
+     * a PDF (since it is a FACTURX document)
+     */
+    function replace_receipt($new_oid)
+    {
+        if ($this->d_lob != "") 
+        {
+            $this->db->lo_unlink($this->d_lob);
+        }
+        $this->d_lob=$new_oid;
+        $this->db->exec_sql("
+                            update jrn
+                            set
+                              jr_pj = $1
+                              ,jr_pj_name =$2
+                              ,jr_pj_type =$3
+                              where jr_id=$4
+                              ",
+                                  [$this->d_lob
+                                  ,$this->d_filename
+                                  ,$this->d_mimetype
+                                   ,$this->d_id]
+                                );
+        
+    }
+    /**
      * @brief save the Large Object $oid in the column JRN.JR_DOCUMENT_XML
      * @param $oid( OID) PostgreSQL Object ID
      */
@@ -357,5 +383,5 @@ class Acc_Document extends Document {
                 .'</a>';
         return $r;
     }
-    
+   
 }

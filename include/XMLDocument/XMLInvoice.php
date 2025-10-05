@@ -193,9 +193,12 @@ abstract class XMLInvoice extends \DOMDocument
         for ($i=0;$i < $nb_operation;$i++) {
             $result['operation'][$i]['card_id']=$operation->det->array[$i]['qs_fiche'];
             $result['operation'][$i]['quantity']=$operation->det->array[$i]['qs_quantite'];
-            
+            $card=new \Fiche($this->cn,$operation->det->array[$i]['qs_fiche']);
+            $result['operation'][$i]['qcode']=$card->get_attribute(ATTR_DEF_QUICKCODE);
+            $result['operation'][$i]['name']=$card->get_attribute(ATTR_DEF_NAME);
+            $result['operation'][$i]['description']=$card->get_attribute(9);
             // get the type of unity, if not found then it will be EA
-            $x= \Card_Property::get_attribute($this->cn,$operation->det->array[$i]['qs_fiche'], ATTR_DEF_QUANTITY_TYPE);
+            $x= $card->get_attribute(ATTR_DEF_QUANTITY_TYPE,0);
             $result['operation'][$i]['code_quantity']=($x===false||$x=="")?"EA":$x;
             
             // $operation->det->currency_id == 0  default currency of the folder
@@ -214,9 +217,10 @@ abstract class XMLInvoice extends \DOMDocument
             }
             $result['operation'][$i]['vat_id']=$operation->det->array[$i]['qs_vat_code'];
 //            // tva code for PEPPOL
-            $x=$this->cn->get_value("select tva_peppol_code from tva_rate where tva_id=$1"
+            $x=$this->cn->get_row("select tva_peppol_code,tva_rate from tva_rate where tva_id=$1"
                     ,[ $result['operation'][$i]['vat_id']]);
-            $result['operation'][$i]['vat_code']=($x=="")?"S":$x;
+            $result['operation'][$i]['vat_code']=($x['tva_peppol_code']=="")?"S":$x['tva_peppol_code'];
+            $result['operation'][$i]['vat_rate']=$x['tva_rate'];
             
             $result['operation'][$i]['vat_reversed']=$operation->det->array[$i]['qs_vat_sided'];
         }
@@ -241,9 +245,64 @@ abstract class XMLInvoice extends \DOMDocument
             }
         }
         $result['info']['communication']=($result['info']['communication']=="")?$result['id']:"";
+         /**
+         * Compute totals VAT and AMOUNT
+         */
+        $nb_operation = count($result['operation']);
+        
+        /// block cac:LegalMonetaryTotal
+        $result['LineExtensionAmount']=0;
+        $result['TaxExclusiveAmount']=0;
+        $result['TaxInclusiveAmount']=0;
+        $result['PayableAmount']=0;
+        
+        // block cac:TaxTotal
+        $result['TaxableAmount']=0;
+        $result['TaxAmount']=0;
+        
+        // array for TaxSubtotal
+        $VAT_SubTotal=array();
+        $idx_subtotal=0;
+        bcscale(2);
+        // for each operation 
+        $VAT_SubTotal=array();
+        for ($i=0;$i < $nb_operation;$i++) {
+            $acc_tva=\Acc_TVA::build($this->cn,$result['operation'][$i]['vat_id'] );
+            $percent = bcmul($acc_tva->tva_rate,100,2);
+            $idx=sprintf("%s - %s",$percent,$result['operation'][$i]['vat_code'] );
+            // subtotal for VAT
+            $n = find_idx($VAT_SubTotal,'idx',$idx);
+            if ($n == -1 ) {
+                $n=$idx_subtotal;
+                $VAT_SubTotal[$idx_subtotal]=array();
+                $VAT_SubTotal[$idx_subtotal]['idx']=$idx;
+                $VAT_SubTotal[$idx_subtotal]['vat_code']=$result['operation'][$i]['vat_code'] ;
+                $VAT_SubTotal[$idx_subtotal]['percent']=$percent;
+                $VAT_SubTotal[$idx_subtotal]['amount']=$VAT_SubTotal[$idx_subtotal]['vat']=0;
+                $idx_subtotal++;
+            }
+            /**
+             * @todo Pour les intracomm , quel taux utilisé ? 0 ou 21%
+             */
+            $VAT_SubTotal[$n]['amount']=bcadd($VAT_SubTotal[$n]['amount'],$result['operation'][$i]['price']);
+            $VAT_SubTotal[$n]['vat']=bcadd($VAT_SubTotal[$n]['vat'],$result['operation'][$i]['vat']);
+            $VAT_SubTotal[$n]['vat']=bcsub($VAT_SubTotal[$n]['vat'],$result['operation'][$i]['vat_reversed']);
+            $result['TaxableAmount']=bcadd( $result['TaxableAmount'],$result['operation'][$i]['price']);
+            $result['TaxAmount']=bcadd( $result['TaxAmount'],$result['operation'][$i]['vat']);
+            $result['TaxAmount']=bcsub( $result['TaxAmount'],$result['operation'][$i]['vat_reversed']);
+            $result['operation'][$i]['vat_percent']=$percent;
+        }
+        $result['subTotalVAT']=$VAT_SubTotal;
+        $result['LineExtensionAmount']= $result['TaxableAmount'];
+        $result['TaxExclusiveAmount']= $result['TaxableAmount'];
+        $result['TaxInclusiveAmount']=bcadd( $result['TaxableAmount'],$result['TaxAmount']);
+        $result['PayableAmount']=bcadd( $result['TaxableAmount'],$result['TaxAmount']);
+        
         return $result;
         
     }
+    
+
     /**
      * @brief make an array of parameter_extra where pe_code as key and pe_value
      * as value
@@ -282,6 +341,42 @@ abstract class XMLInvoice extends \DOMDocument
     abstract function create_invoice($operation_id) ;
     
     /**
+     * @brief display_error display a warning with all error
+     */
+    public function display_error()
+    {
+        $a_error=$this->verify();
+        include NOALYSS_TEMPLATE."/xmlinvoice-display_error.php";
+        
+    }
+    
+    /**
+     * @brief check that the VAT is using a PEPPOL Code
+     */
+    function check_VAT()
+    {
+        $a_error=array();
+        $nb_operation=count($this->data['operation']);
+        for ($i=0;$i <$nb_operation;$i++) 
+        {
+            if ( $this->data['operation'][$i]['vat_code'] == "" ) {
+                $card=new \Fiche(
+                        $this->cn
+                        ,$this->data['operation'][$i]['card_id']
+                        );
+                $tva= \Acc_Tva::build($this->cn, $this->data['operation'][$i]['vat_id']);
+                $a_error[]=sprintf(_("%s : %s code TVA pour PEPPOL non configuré code TVA [ %s %s ]")
+                        ,   $i
+                        , $card->get_quick_code()
+                        ,$tva->tva_id
+                        ,$tva->tva_code 
+                        );
+            }
+        }
+        return $a_error;
+    }
+
+    /**
      * @brief thanks MY_INVOICE_FORMAT , create the corresponding object  
      *      - UBL21BEL => InvoiceUBL21
      *      - FacturX => FACTURXFR
@@ -298,15 +393,26 @@ abstract class XMLInvoice extends \DOMDocument
         return null;
     }
     
-     /**
+    /**
      * @brief check that all the data are correct
-     * @returns int 0 : no errors,  int separated value
-     * @see InvoiceUBL21::get_message_error()
+     * @returns null : no errors,  string separated with comma of error code
+     * @see get_message_error
      */
-    function verify() 
+    public function verify()
     {
-        return array();
-    }
+                // verify all VAT
+        ///@var $a_error : array of error_code see check_company_error
+        $a_error = array();
+        $a_error['general'] =  [];
+        $a_error['operation']=[];
+       
+        // verify that all needed data in PARAMETER are valid
+        $a_error['company'] = $this->check_company_data();
+        $a_error['customer'] = $this->check_customer_data($this->data['customer']['card_id']);
+        
+        return $a_error;
+    } 
+     
     /**
      * @brief  retrieve data from customer and return it into an array
      * @param $card_id (int) FICHE.F_ID
@@ -419,4 +525,19 @@ abstract class XMLInvoice extends \DOMDocument
         }
         return $result;
     }
+    
+    /**
+     * @brief set the PDF 
+     * @param $pdf_filename (string) full path to the PDF
+     * @return $this
+     * @throws \Exception if the filename doesn't exist
+     */
+    public function set_pdf_filename($pdf_filename) {
+        if ( !file_exists($pdf_filename)) {
+            throw new \Exception("AD65 $pdf_filename doesn't not exist");
+        }
+        $this->pdf_filename = $pdf_filename;
+        return $this;
+    }
+
 }

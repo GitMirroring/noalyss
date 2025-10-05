@@ -85,7 +85,8 @@ class Error_Message
             , 'MY_STREET' => _("Adresse de la société")
             , 'MY_CITY' => _("Ville")
             , 'MY_TVA' => _("Numéro de TVA")
-
+       //     , 'SIREN'=> 'SIREN'
+       //     , 'SIRET'=> 'SIRET'
         );
         $this->a_message_customer = array(
             'name' => _("Nom")

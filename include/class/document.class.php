@@ -58,6 +58,24 @@ class Document
         // counter for MARCH_NEXT
         $this->counter=0;
     }
+    
+    function __toString(): string
+    {
+        return "Document[db=" . $this->db
+                . ", d_id=" . $this->d_id
+                . ", ag_id=" . $this->ag_id
+                . ", d_mimetype=" . $this->d_mimetype
+                . ", d_filename=" . $this->d_filename
+                . ", d_lob=" . $this->d_lob
+                . ", d_description=" . $this->d_description
+                . ", d_number=" . $this->d_number
+                . ", md_id=" . $this->md_id
+                . ", f_id=" . $this->f_id
+                . ", counter=" . $this->counter
+                . ", d_name=" . $this->d_name
+                . ", md_type=" . $this->md_type
+                . "]";
+    }
 
     /**
      * @brief insert a minimal document and set the d_id

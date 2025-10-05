@@ -66,6 +66,9 @@ if ( isset ($_POST['view_invoice'] ) )
         $p_msg=$e->getMessage();
         $correct=1;
     }
+    //------------------------------------------------
+    // Confirm before saving
+    //------------------------------------------------
     // if correct is not set it means it is correct
     if ( ! isset($correct))
     {
@@ -219,7 +222,7 @@ if ( isset($_POST['record']) )
                     $xmldocument->set_pdf_filename($pdf_filename);
                         
                     // make the XML  + PDF 
-                    $xml=$xmldocument->make_xml($Ledger->jr_id);
+                    $xml=$xmldocument->create_invoice($Ledger->jr_id);
                     if (DEBUGNOALYSS > 1) {
                         $mt=date ('ymd-Hi').'+'.$Ledger->jr_id;
                         $uniq= $_ENV['TMP']. DIRECTORY_SEPARATOR."$mt-e-invoice.xml";
@@ -228,16 +231,24 @@ if ( isset($_POST['record']) )
                         echo \Noalyss\Dbg::echo_file("file save $uniq");
 
                     }
+                    // FOR BELGIUM : XML and PDF will be store separately
                     // save XML string into the DB
                     $oid=$cn->lo_write($xml);
                     echo \Noalyss\Dbg::echo_var(1, "oid is $oid");
                     if ($oid == false) {
                         throw new Exception ('CV177 : cannot import e-invoice');
                     }
-                    $acc_document->update_document_xml($oid);
+                    if ( $g_parameter->MY_INVOICE_FORMAT == 'UBL21BEL')
+                    {
+                        $acc_document->update_document_xml($oid);
+                        $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename)
+                            . $acc_document->link_download_xml();
+                    }elseif ($g_parameter->MY_INVOICE_FORMAT=='FACTURXFR')
+                    {
+                        $acc_document->replace_receipt($oid);
+                        $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename);
+                    }
 
-                    $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename)
-                        . $acc_document->link_download_xml();
                 }
 
             }

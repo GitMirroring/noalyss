@@ -19,15 +19,25 @@ namespace Noalyss\XMLDocument;
 */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu 22/10/23
 
-use \Kinulab\Facturx\CrossIndustryInvoice as KINU_FX1;
-use \Atgp\FacturX as FX_ATGP;
+use horstoeko\zugferd\codelists\ZugferdCountryCodes;
+use horstoeko\zugferd\codelists\ZugferdCurrencyCodes;
+use horstoeko\zugferd\codelists\ZugferdElectronicAddressScheme;
+use horstoeko\zugferd\codelists\ZugferdInvoiceType;
+use horstoeko\zugferd\codelists\ZugferdReferenceCodeQualifiers;
+use horstoeko\zugferd\codelists\ZugferdUnitCodes;
+use horstoeko\zugferd\codelists\ZugferdVatCategoryCodes;
+use horstoeko\zugferd\codelists\ZugferdVatTypeCodes;
+use horstoeko\zugferd\ZugferdDocumentBuilder;
+use horstoeko\zugferd\ZugferdProfiles;
+
 /**
  * @file
  * @brief answer to an inplace object
  */
 class FacturX extends XMLInvoice
 {
-     const EXTRA_PARAMETER = ["INVOICE_EMAIL_COMPANY"
+     const EXTRA_PARAMETER = [
+         "INVOICE_EMAIL_COMPANY"
         , 'INVOICE_CONTACT_NAME'
         , 'COMPANY_LEGAL_ENTITY'
         , 'COMPANY_LEGAL_REGISTRATION'
@@ -40,38 +50,54 @@ class FacturX extends XMLInvoice
         , 'MY_CITY'
         , 'MY_COUNTRY_CODE'
         , 'MY_TVA'
-        ,'SIREN'
-        ,'SIRET'
+     //   ,'SIREN'
+     //   ,'SIRET'
         ];
 
     protected $pdf_filename;
     
     function build_data($jr_id): array {
-        $result = parent::build_data($jr_id);
-        
-        
-        $customer=new \Fiche($this->cn,$result['customer']['card_id']);
-        $result['customer']['siren']=$customer->get_attribute(ATTR_DEF_SIREN);
-        $result['customer']['siret']=$customer->get_attribute(ATTR_DEF_SIRET);
-        return $result;
+        $this->data=parent::build_data($jr_id);
+        return $this->data;
     }
      /**
      * @brief check that mandatory info are saved in the DB
      * @param $a_error (array) array of errors, empty if nothing found
      */
-    function check_company_data(&$a_error) {
-        echo "not implemented";
-        return true;
+    function check_company_data() 
+    {
+        $a_error=array();
+        $company = $this->load_noalyss_parameter();
+        foreach (FacturX::EXTRA_PARAMETER as $item) {
+            if (!isset($company[$item]) || trim($company[$item]) == '') {
+                $a_error[]=$item;
+            }
+        }
+        return $a_error;
     }
      /**
      * @brief check that mandatory info are saved in the DB for customer
      * @param $customer_id (int) card of the customer  FICHE.F_ID
      * @param $a_error (array) array of errors, empty if nothing found
      */
-    function check_customer_data($customer_id,&$a_error){
-        echo "not implemented";
-        return true;
+    function check_customer_data($customer_id){
+        $a_error=array();
+        $a_needed=[ATTR_DEF_NAME=>'name'
+                ,ATTR_DEF_ADRESS=>'street'
+                ,ATTR_DEF_POSTCODE=>'postalzone'
+                ,ATTR_DEF_CITY=>'city'
+                ,ATTR_DEF_COUNTRY_CODE=>'country'
+                ,ATTR_DEF_NUMTVA=>'customer_id'
+                ,ATTR_DEF_PEPPOLID=>'endpoint_id'
+            ];
         
+        foreach ($a_needed as $item=>$value) {
+             if ( $this->data['customer'][$value]=="") {
+                 $a_error[]=$value;
+             }
+        }
+      
+        return $a_error;
     }
   
      /**
@@ -83,53 +109,81 @@ class FacturX extends XMLInvoice
     function make_xml($jr_id)
     {
         $this->data = $this->build_data($jr_id);
-        $invoice= new KINU_FX1\CrossIndustryInvoice(KINU_FX1\CrossIndustryInvoice::PROFILE_BASIC_WL);
-        $invoice->setInvoiceNumber($this->data['id']);
-        $invoice->setInvoiceType(KINU_FX1\CrossIndustryInvoice::INVOICE_TYPE_COMMERCIAL_INVOICE);
-        $invoice->setIssueDate(\DateTime::createFromFormat( 'Y-m-d',$this->data['issue_date']));
-       
-        if ( $this->data['due_date'] !="") {
-            $invoice->setDueDate(\DateTime::createFromFormat( 'Y-m-d',$this->data['due_date']));
-        }else {
-            $due_date=\DateTime::createFromFormat( 'Y-m-d',$this->data['issue_date']);
-            $due_date->modify('+ 30 days');
-            $invoice->setDueDate($due_date);
-            
-        }
-        $supplier=new KINU_FX1\LegalEntity();
         $company = $this->load_noalyss_parameter();
-        $supplier->setName($company['MY_NAME']);
-        $supplier->setSiren($company['SIREN']);
-         $supplier->setSiret($company['SIRET']);
-        //$supplier->setSiren('999999');
-        $supplier->setVatIdentifier($company['MY_TVA']);
-        $supplier_addres=new KINU_FX1\Address();
-        $supplier_addres->setCityName($company['MY_CITY'])
-            ->setCountryId($company['MY_COUNTRY_CODE'])
-            ->setCityName($company['MY_CITY'])
-            ->setLines($company['MY_STREET']);
-        $supplier->setAddress($supplier_addres);
-        $invoice->setPaymentInstruction(null);
-        $invoice->setPaymentMeansCode(0);
-        $invoice->setSeller($supplier);
-        $invoice->setBuyer(new KINU_FX1\LegalEntity);
-        $buyer=$invoice->getBuyer();
-        $buyer->setName($this->data['customer']['name']);
-        $buyer->setSiren($this->data['customer']['siren']);
-        $buyer->setSiret($this->data['customer']['siret']);
-        $buyer->setVatIdentifier($this->data['customer']['customer_id']);
-        $buyer->setAddress(new KINU_FX1\Address());
-        $address=$buyer->getAddress();
-        $address->setLines($this->data['customer']['street'])
-                ->setCityName($this->data['customer']['city'])
-                ->setZipCode($this->data['customer']['postalzone'])
-                ->setCountryId($this->data['customer']['country']);
+      //  var_dump($this->data);
+        $documentBuilder = ZugferdDocumentBuilder::createNew(ZugferdProfiles::PROFILE_XRECHNUNG_3);
+        $documentBuilder->setDocumentInformation(
+                $this->data['id']
+                ,"380"
+                ,\DateTime::createFromFormat( 'Y-m-d',$this->data["issue_date"])
+                , $this->data['currency']
+                );
         
-        $invoice->setCurrencyCode('EUR');
+        $documentBuilder->addDocumentPaymentTerm(
+            sprintf("IBAN %s",$company['COMPANY_BANK_IBAN'])
+            ,\DateTime::createFromFormat( 'Y-m-d',$this->data["due_date"])
+            , $this->data['info']['communication']
+        );
+        //------------------------------------------------
+        // SELLER
+        //------------------------------------------------
+        $documentBuilder->setDocumentSeller($company['MY_NAME'], );
+        $documentBuilder->addDocumentSellerGlobalId($company['SIREN'], '0009');
+        $documentBuilder->addDocumentSellerTaxNumber($company['MY_TVA']);
+        $documentBuilder->addDocumentSellerVATRegistrationNumber($company['MY_TVA']);
+        $documentBuilder->setDocumentSellerAddress(
+                $company['MY_STREET']
+                , '', ''
+                , $company['MY_POSTCODE']
+                , $company['MY_CITY']
+                ,$company['MY_COUNTRY_CODE']);
+        
+        $documentBuilder->setDocumentSellerCommunication(ZugferdElectronicAddressScheme::UNECE3155_EM
+                   , $company["INVOICE_EMAIL_COMPANY"]);
+        
+        //------------------------------------------------
+        // BUYER
+        //------------------------------------------------
+        
+        $documentBuilder->setDocumentBuyer($this->data['customer']['name'], $this->data['customer']['customer_id']);
+        $documentBuilder->setDocumentBuyerAddress(
+                                                    $this->data['customer']['street']
+                                                    , ''
+                                                    , ''
+                                                    , $this->data['customer']['postalzone']
+                                                    , $this->data['customer']['city']
+                                                    , $this->data['customer']['country']
+                                                    );
+//        $documentBuilder->setDocumentBuyerContact('H. Meier', 'Einkauf', '+49-333-4444444', '+49-333-5555555', 'hm@kunde.de');
+//        $documentBuilder->setDocumentBuyerCommunication(ZugferdElectronicAddressScheme::UNECE3155_EM, 'purchase@kunde.de');
+        
+        $documentBuilder->setDocumentBuyerOrderReferencedDocument($this->data['info']['order']);
+        
+        //------------------------------------------------
+        // Item & total
+        //------------------------------------------------
+       
         $base=0;$vat=0;
         $nb=count($this->data['operation']);
-        ///@note : Pour l'autoliquidation le total TVA  = 0
+
         for ($i=0;$i < $nb;$i++) {
+            $documentBuilder->addNewPosition($i+1);
+            $documentBuilder->setDocumentPositionProductDetails($this->data['operation'][$i]['qcode']
+                        ,$this->data['operation'][$i]['name']
+                        ,$this->data['operation'][$i]['description']
+                    );
+            $documentBuilder->setDocumentPositionNetPrice($this->data['operation'][$i]['price']);
+            $documentBuilder->setDocumentPositionQuantity($this->data['operation'][$i]['quantity']
+                    ,$this->data['operation'][$i]['code_quantity']
+                    );
+            $documentBuilder->addDocumentPositionTax(
+                    $this->data['operation'][$i]['vat_code']
+                    , ZugferdVatTypeCodes::VALUE_ADDED_TAX
+                    , bcmul($this->data['operation'][$i]['vat_rate'],100,2)
+                    );
+            $documentBuilder->setDocumentPositionLineSummation($this->data['operation'][$i]['price']);
+            
+            
             $base=bcadd($base,$this->data['operation'][$i]['price'],2);
             $vat=bcadd($vat,$this->data['operation'][$i]['vat'],2);
             $vat=bcsub($vat,$this->data['operation'][$i]['vat_reversed'],2);
@@ -140,12 +194,40 @@ class FacturX extends XMLInvoice
          * il faut alors un "reste" à payer.
          * Pas de détail par articles ?
          */
-        $invoice->setTaxBasisTotalAmount($base);
-        $invoice->setTaxTotalAmount($vat);
-        $invoice->setGrandTotalAmount($tt);
-        $invoice->setDuePayableAmount($tt);
-        $xml = KINU_FX1\XmlWriter::write($invoice);
-        return $xml;
+        ///@TODO DNY : ajouter les TVA par types  ( addDocumentTax) 
+        /// ainsi que la Somme des totaux (setDocumentSummation)
+        $subTotal=$this->data['subTotalVAT'];
+        $nb_sub=count($subTotal);
+        for ($i=0;$i<$nb_sub;$i++) 
+        {
+            $documentBuilder->addDocumentTax(
+                   $subTotal[$i]["vat_code"]
+                 , ZugferdVatTypeCodes::VALUE_ADDED_TAX
+                 ,sprintf("%.2f",$subTotal[$i]['amount'])
+                 , sprintf("%.2f",$subTotal[$i]['vat'])
+                 , sprintf("%.2f",$subTotal[$i]['percent'])
+                 );
+        }
+         
+        $documentBuilder->setDocumentSummation(
+                  sprintf("%.2f",$this->data['TaxInclusiveAmount'])
+                , sprintf("%.2f",$this->data['PayableAmount'])
+                , sprintf("%.2f",$this->data['TaxExclusiveAmount'])
+                , 0.0
+                , 0.0
+                , sprintf("%.2f",$this->data['LineExtensionAmount'])
+                , sprintf("%.2f",(bcsub($this->data['TaxInclusiveAmount'],
+                                        $this->data['TaxExclusiveAmount'],
+                                        2)
+                                )
+                        )
+                , 0
+                );
+ 
+         
+         return $documentBuilder;
+
+         
     }
     /**
      * @brief create the invoice in the right format
@@ -153,10 +235,14 @@ class FacturX extends XMLInvoice
      * @return string PDF Invoice including the XML
      */
     function create_invoice($operation_id) {
-        $xml = $this->make_xml($operation_id);
-        $facturx = new FX_ATGP\Facturx();
-        $invoice=$facturx->generateFacturxFromFiles($this->pdf_filename, $xml);
-        return $invoice;
+        $documentBuilder= $this->make_xml($operation_id);
+        
+        $invoice =  \horstoeko\zugferd\ZugferdDocumentPdfBuilder::fromPdfFile($documentBuilder, $this->pdf_filename);
+        $invoice->generateDocument();
+        $invoice->saveDocument($this->pdf_filename."-new.pdf");
+        return $invoice->downloadString();
     }
+
+
 
 }
