@@ -82,12 +82,13 @@ class PeriodeTest extends TestCase
         return array(
             [ '01.01.2023' , '31.01.2023','2020','2020.2023','NOK'],
             [ '01.01.2023' , '31.01.2023','2023','2020.2023','OK'],
-            [ '01.02.2023' , '28.02.2023','2020','2020.2023','NOK'],
             [ '01.02.2023' , '28.02.2023','2023','2020.2023','OK'],
+            [ '01.02.2023' , '28.02.2023','2020','2020.2023','NOK'],
             [ '01.02.2023' , '28.01.2023','2023','2020.2023','NOK']
             );
     }
 
+   
     /**
      * @brief test the trigger comptaproc.check_periode()
      * @testdox insert - comptaproc.check_periode
@@ -99,7 +100,6 @@ class PeriodeTest extends TestCase
     public function testInsert($p_start,$p_end,$p_exercice,$p_exercice_label,$p_status)
     {
         global $g_connection;
-
         $g_connection->exec_sql("delete from parm_periode where p_id > 144");
         $obj=new Parm_periode_SQL($g_connection);
         $obj->set('p_start',$p_start);

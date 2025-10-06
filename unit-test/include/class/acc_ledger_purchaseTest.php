@@ -168,6 +168,10 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $fiche_def=new Fiche_Def($g_connection,5);
         // prepare test , clean 
         $fiche_def->RemoveAttribut([20,21,22,50,51,52,53,31]);
+        $g_connection->exec_sql("delete from jrnx where j_poste=$1",
+                ['4119999']);
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val=$1",
+                ['4119999']);
     }
     /**
      * @covers Acc_Ledger_Purchase::verify

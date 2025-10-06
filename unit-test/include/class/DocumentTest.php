@@ -222,7 +222,7 @@ class DocumentTest extends TestCase {
         $document->md_id = $md_id;
         $cnt_before = $cn->get_value("select count(*) from document");
         $tEnv = $_ENV['TMP'];
-        $_ENV['TMP'] = '/not.exist';
+        $_ENV['TMP'] = '/tmp/not.exist';
         $this->assertStringContainsString('échoué', $document->generate($array));
         $_ENV['TMP'] = $tEnv;
     }
