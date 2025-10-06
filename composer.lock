@@ -4,68 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68f9e79352fa7a801c4e3e4382827005",
+    "content-hash": "89a55a63c3e347be01bb2f496200aa81",
     "packages": [
-        {
-            "name": "atgp/factur-x",
-            "version": "v2.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/atgp/factur-x.git",
-                "reference": "0edbe1e935c3f81dcf3e306b2ce5876bf715bea1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/atgp/factur-x/zipball/0edbe1e935c3f81dcf3e306b2ce5876bf715bea1",
-                "reference": "0edbe1e935c3f81dcf3e306b2ce5876bf715bea1",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-fileinfo": "*",
-                "ext-libxml": "*",
-                "ext-simplexml": "*",
-                "ext-zlib": "*",
-                "php": ">=7.4",
-                "setasign/fpdf": "^1.8",
-                "setasign/fpdi": "^2.0",
-                "smalot/pdfparser": "^0.19.0|~1.0|~2.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "~3.1",
-                "phpstan/phpstan": "^2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Atgp\\FacturX\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "@GP",
-                    "homepage": "https://www.atgp.net/"
-                }
-            ],
-            "description": "PHP library to manage your Factur-X / ZUGFeRD 2.0 PDF invoices files",
-            "keywords": [
-                "ZUGFeRD",
-                "factur-x",
-                "invoice",
-                "pdf",
-                "php",
-                "xml"
-            ],
-            "support": {
-                "issues": "https://github.com/atgp/factur-x/issues",
-                "source": "https://github.com/atgp/factur-x/tree/v2.4.0"
-            },
-            "time": "2025-09-24T13:02:08+00:00"
-        },
         {
             "name": "bacon/bacon-qr-code",
             "version": "v3.0.1",

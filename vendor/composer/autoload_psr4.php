@@ -31,5 +31,4 @@ return array(
     'DASPRiD\\Enum\\' => array($vendorDir . '/dasprid/enum/src'),
     'Curl\\' => array($vendorDir . '/php-curl-class/php-curl-class/src/Curl'),
     'BaconQrCode\\' => array($vendorDir . '/bacon/bacon-qr-code/src'),
-    'Atgp\\FacturX\\' => array($vendorDir . '/atgp/factur-x/src'),
 );
