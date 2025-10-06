@@ -219,12 +219,13 @@ class Invoice_PDF extends \PDF
         $this->write_multi(50, 20, "");
         $this->write_multi(50, 20, _("Détails"));
         $this->line_new();
-        $this->SetFont("DejaVuCond", "", 7);
+        $this->SetFont("DejaVu", "B", 7);
         $currency = new \Acc_Currency($this->cn, $this->data['p_currency_code']);
-        $this->write_multi(60, 4, sprintf(_("Les montants sont en %s taux %s")
+        $this->write_multi(100, 4, sprintf(_("Les montants sont en %s taux %s")
                         , $currency->get_code()
                         , $this->data['p_currency_rate']));
         $this->line_new(4);
+        $this->SetFont("DejaVuCond", "", 7);
         if ($this->data["bon_comm"] != "")
         {
             $this->write_multi(120, 4, sprintf(_("Bon de commande / référence %s")
@@ -235,9 +236,9 @@ class Invoice_PDF extends \PDF
         $this->SetFont("DejaVu", "", 7);
         $this->write_multi($col['quick_code'], 4, _("Article"), 1);
         $this->write_multi($col['label'], 4, _("Description"), 1);
-        $this->write_multi($col['quantity'], 4, _("Quantité"), 1);
-        $this->write_multi($col['price'], 4, _("Prix"), 1);
-        $this->write_multi($col['vat_code'], 4, _("TVA"), 1);
+        $this->write_multi($col['quantity'], 4, _("Quantité"), 1, align: 'C');
+        $this->write_multi($col['price'], 4, _("Prix"), 1, align: 'C');
+        $this->write_multi($col['vat_code'], 4, _("TVA"), 1, align: 'C');
         $this->line_new();
         ///@var $tot_amount (float) total amount without VAT
         ///@var $tot_vat (float) total VAT
@@ -293,7 +294,7 @@ class Invoice_PDF extends \PDF
                     . " / " . $tva->tva_rate * 100
             );
 
-            $this->write_multi(50, 4, $tva_amount);
+            $this->write_multi(50, 4, $tva_amount,align:'R');
             $this->line_new();
         }
         $this->ln(20);
