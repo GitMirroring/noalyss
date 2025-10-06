@@ -43,6 +43,7 @@ namespace Noalyss\XMLDocument;
         - ATTR_DEF_COUNTRY_CODE=>'CUST_CDCOUNTRY'
         - ATTR_DEF_NUMTVA=>'CUST_VAT'
         - ATTR_DEF_PEPPOLID=>'CUST_PEPPOLID'
+        
   - company,
         - "INVOICE_EMAIL_COMPANY" company's email
         - 'INVOICE_CONTACT_NAME' contact name
@@ -56,6 +57,7 @@ namespace Noalyss\XMLDocument;
         - 'MY_STREET'         address
         - 'MY_CITY'           address
         - 'MY_TVA'            VAT number
+ *      -  'SIREN'
  * 
  */
 class Error_Message
@@ -85,7 +87,7 @@ class Error_Message
             , 'MY_STREET' => _("Adresse de la société")
             , 'MY_CITY' => _("Ville")
             , 'MY_TVA' => _("Numéro de TVA")
-       //     , 'SIREN'=> 'SIREN'
+            , 'SIREN'=> 'SIREN'
        //     , 'SIRET'=> 'SIRET'
         );
         $this->a_message_customer = array(
