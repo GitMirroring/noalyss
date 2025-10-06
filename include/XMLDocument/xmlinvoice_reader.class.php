@@ -242,7 +242,6 @@ class XMLInvoice_Reader
         {
             $row = [];
             $xml = simplexml_import_dom($node->item($e));
-            //var_dump($xml->asXML());
             $row ['quantity'] = $this->get_node_value("//cbc:InvoicedQuantity", $e);
             $row ['amount'] = $this->get_node_value("//cbc:LineExtensionAmount", $e);
             $row ['description'] = $this->get_node_value("//cac:Item/cbc:Description", $e);

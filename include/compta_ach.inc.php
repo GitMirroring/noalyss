@@ -110,9 +110,14 @@ if (isset($_POST['record']))
 		    $internal = $Ledger->insert($_POST);
         } catch (\Exception $e) {
             if ( $e->getCode()==EXC_BALANCE)
+            {
+                \record_log($e);
                 echo_warning(_("enregistrement annulé: balance , voyer le fichier log"));
+            }
             else
+            {
                 echo_warning($e->getMessage());
+            }
             return;
         }
 

@@ -1152,7 +1152,7 @@ class HtmlInput
      */
     static function show_receipt_document($p_jr_id, $p_name="")
     {
-        global $cn;
+        $cn=\Dossier::connect();
         $image=$p_name;
 
         // Check the jr_id has a receipt document

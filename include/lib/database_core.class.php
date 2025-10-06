@@ -239,7 +239,7 @@ class DatabaseCore
             record_log($p_array);
             $this->rollback();
 
-            throw ($a);
+            throw new \Exception("exec_sql fails",242,$a);
         }
 
         return $this->ret;
@@ -732,7 +732,7 @@ class DatabaseCore
 
     function upload($p_name,$only_oid = false)
     {
-       
+
           //var $a : 0 we're in a transaction, 1 we are not in a transaction
         $a=0;
         if ( $this->status() !== PGSQL_TRANSACTION_INTRANS ) {
