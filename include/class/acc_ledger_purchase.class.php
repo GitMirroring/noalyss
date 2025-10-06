@@ -1052,9 +1052,8 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             }
 
             /* Save the attachment */
-            if ( isset ($_FILES))
+            if ( isset ($_FILES) &&  sizeof($_FILES) != 0 && $_FILES["pj"]["name"] != 0 )
             {
-                if ( sizeof($_FILES) != 0 )
                     $acc_document=new \Acc_Document($this->db, $this->jr_id);
                     $acc_document->save_receipt();
                     $this->doc=HtmlInput::show_receipt_document($this->jr_id,h($_FILES['pj']['name']));

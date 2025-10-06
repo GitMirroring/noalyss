@@ -262,6 +262,9 @@ class Acc_Document extends Document {
         /**
          * pj is the $_FILES key
          */
+        if ( $_FILES['pj']['name']=="") {
+            return false;
+        }
         $a_file= $this->db->upload('pj',only_oid:false);
         if ($a_file == false) {
             return false;
