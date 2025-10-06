@@ -428,10 +428,10 @@ function noalyss_class_autoloader($class)
         "pdfland"=>"class/pdf_land.class.php",
         "noalyss\widget\widget"=>"widget/widget.php",
         "noalyss\otp"=>"lib/otp.class.php",
-        'noalyss\xmldocument\xmlinvoice'=>'XMLDocument/XMLInvoice.php',
-        'noalyss\xmldocument\facturx'=>'XMLDocument/FacturX.php',
-        'noalyss\xmldocument\invoiceubl21'=>'XMLDocument/InvoiceUBL21.php',
-        'noalyss\xmldocument\error_message'=>'XMLDocument/Error_Message.php',
+        'noalyss\xmldocument\xmlinvoice'=>'XMLDocument/xmlinvoice.class.php',
+        'noalyss\xmldocument\facturx'=>'XMLDocument/facturx.class.php',
+        'noalyss\xmldocument\invoiceubl21'=>'XMLDocument/invoiceubl21.class.php',
+        'noalyss\xmldocument\error_message'=>'XMLDocument/error_message.class.php',
         "noalyss\invoice_pdf"=>"class/invoice_pdf.class.php",
         'noalyss\xmldocument\xmlinvoice_reader'=>'XMLDocument/xmlinvoice_reader.class.php'
     );
