@@ -1,4 +1,5 @@
 <?php
+
 /*
  *   This file is part of NOALYSS.
  *
@@ -16,14 +17,15 @@
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-// Copyright Author Dany De Bontridder danydb@aevalys.eu
-// Verify parameters
-/*!\file
- * \brief show an attach of an operation
+// Copyright Author Dany De Bontridder danydb@aevalys.eu 22/10/23
+
+
+/**
+ * @file
+ * @brief export the XML invoice from JRN.JR_DOCUMENT_XML
  */
 if ( ! defined ('ALLOWED')) die (_('Non autorisé'));
 
-include_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 $http=new HttpInput();
 
 try
@@ -35,6 +37,7 @@ catch (Exception $exc)
     record_log($exc);
     return;
 }
+
 $cn=Dossier::connect();
 
 $r=$cn->exec_sql("select jr_def_id from jrn where jr_id=$1",array($jr_id));
@@ -54,8 +57,7 @@ if ($g_user->check_jrn($jrn) == 'X' )
     exit -1;
 }
 
-$cn->start();
-$ret=$cn->exec_sql("select jr_pj,jr_pj_name,jr_pj_type,jr_pj_number from jrn where jr_id=$1",
+$ret=$cn->exec_sql("select jr_pj_name,jr_pj_number ,jr_document_xml from jrn where jr_id=$1",
         array($jr_id));
 
 if ( Database::num_row ($ret) == 0 )
@@ -63,7 +65,7 @@ if ( Database::num_row ($ret) == 0 )
 
 $row=Database::fetch_array($ret,0);
 
-if ( $row['jr_pj']==null )
+if ( $row['jr_document_xml']==null )
 {
     ini_set('zlib.output_compression','Off');
     header("Pragma: public");
@@ -87,17 +89,30 @@ if ( ! empty($receipt_number) && strpos($new_name,$receipt_number) === false ) {
 
     $new_name=$receipt_number.'-'.$new_name;
 }
+// replace extension by xml (normally a PDF)
+//@var $pos_ext (int) where is the last dot
+$pos_ext=strrpos($new_name,'.');
+if ( $pos_ext == 0) 
+{ 
+    // there is no extension
+    $new_name.='.xml';
+}else {
+     $new_name=substr_replace($new_name,'.xml',$pos_ext);
+}
+$cn->start();
 
-$cn->lo_export($row['jr_pj'],$tmp);
+$cn->lo_export($row['jr_document_xml'],$tmp);
+$cn->commit();
 
 ini_set('zlib.output_compression','Off');
 header("Pragma: public");
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: must-revalidate");
-header('Content-type: '.$row['jr_pj_type']);
+header('Content-type: application/xml');
 header('Content-Disposition: attachment;filename="'.$new_name.'"',FALSE);
 header("Accept-Ranges: bytes");
+
 $file=fopen($tmp,'r');
 while ( !feof ($file) )
     echo fread($file,8192);
@@ -105,5 +120,3 @@ while ( !feof ($file) )
 fclose($file);
 
 unlink ($tmp);
-
-$cn->commit();

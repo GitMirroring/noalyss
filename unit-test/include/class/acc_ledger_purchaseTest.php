@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @backupGlobals enabled
  * @coversDefaultClass Acc_Ledger_Purchase
@@ -431,7 +431,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
               // check that all card has these attributes
        
     }
-    public function data_no_deductible()
+    public static function data_no_deductible()
     {
         $aValue=array(
             [ ATTR_DEF_DEPENSE_NON_DEDUCTIBLE, 33.33 ,'qp_nd_amount',201.28,ATTR_DEF_ACCOUNT_ND_PERSO,'4890'],
@@ -454,6 +454,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
      * @parameter $p_amount float the corresponding column in quant_purchase
      * @parameter $p_accounting string is the accounting counterpart for this not deductible fee($p_counterpart)
  */
+     #[DataProvider('data_no_deductible')]
     public function testInsertPurchase_No_Ded($p_attribut , $p_value,$p_column,$p_amount,$p_counterpart,$p_accounting)
     {
        global $g_connection;
@@ -507,6 +508,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
      * @parameter $p_amount float the corresponding column in quant_purchase
      * @parameter $p_accounting string is the accounting counterpart for this not deductible fee($p_counterpart)
      */
+     #[DataProvider('data_no_deductible')]
     public function testInsertPurchase_No_Ded_reverse($p_attribut , $p_value,$p_column,$p_amount,$p_counterpart,$p_accounting)
     {
         global $g_connection;

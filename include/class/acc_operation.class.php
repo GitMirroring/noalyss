@@ -91,9 +91,9 @@ class Acc_Operation
         jr_id {$this->jr_id}
         jr_optype {$this->jr_optype}
         amount  {$this->amount}
-        currency_rate {$this->amount}
-        currency_rate_ref {$this->amount}
-        currency_id {$this->amount}
+        currency_rate {$this->currency_rate}
+        currency_rate_ref {$this->currency_rate_ref}
+        currency_id {$this->currency_id}
     ]
 EOF;
         return $r;
@@ -1031,11 +1031,43 @@ EOF;
 /**
  * @class Acc_Detail
  * @brief Contains the detail of an operation Acc_Operation
+ * propery :
+ *      - $det 
+            - jr_id PKfrom table JRN
+            -  jr_def_id id of the ledger (FK to - _DEF- _DEF_ID)from table JRN
+            -  jr_montant AMOUNT of the operationfrom table JRN
+            -  jr_comment COMMENT from table JRN
+            -  jr_date    DATEfrom table JRN
+            -  jr_grpt_id CODE to group - X rowsfrom table JRN
+            -  jr_internal    INTERNAL CODEfrom table JRN
+            -  jr_tech_date   DATE OF CHANGEfrom table JRN
+            -  jr_tech_per    FK TO PARAM_PERIODEP_IDfrom table JRN
+            -  jrn_ech    from table JRN
+            -  jr_ech DATE LIMIT OF PAYMENTfrom table JRN
+            -  jr_rapt    from table JRN
+            - jr_echfrom table JRN
+            -  jr_validfrom table JRN
+            -  jr_opid    from table JRN
+            -  jr_c_opidfrom table JRN
+            -  jr_pj      OID OF THE DOCUMENTfrom table JRN
+            -  jr_pj_name NAME OF THE DOCUMENTfrom table JRN
+            -  jr_pj_typefrom table JRN
+            -  jr_pj_number RECEIPT NBfrom table JRN
+            -  jr_mt INTERNAL CODEfrom table JRN
+            - jr_raptfrom table JRN
+            - jr_date_paid   DATE OF PAYMENTfrom table JRN
+            - jr_optype TYPE OF OPERATION NOR = NORMAL OPE=OPENING EXT=EXTOURNEfrom table JRN
+            - currency_id FK TO CURRENCYIDfrom table JRN
+            - currency_rate  amountfrom table JRN
+            - currency_rate_ref  amount in CURRENT_HISTORYCH_VALUEfrom table JRN
+ *          - note from table JRN_NOTE
+        - $jr_id JRN.JR_ID
+        - $info
  */
 class Acc_Detail extends Acc_Operation
 {
-    public $det;
-    public $jr_id;
+    public $det;//!< Object with columns from JRN
+    public $jr_id;//! $jr_id (int) JRN.JR_ID
     public $info;
 
     function __construct($p_cn,$p_jrid=0)
@@ -1050,10 +1082,34 @@ class Acc_Detail extends Acc_Operation
      */
     function get()
     {
-        $sql="SELECT jr_id, jr_def_id, jr_montant, jr_comment, jr_date, jr_grpt_id,
-             jr_internal, jr_tech_date, jr_tech_per, jrn_ech, jr_ech, jr_rapt,jr_ech,
-             jr_valid, jr_opid, jr_c_opid, jr_pj, jr_pj_name, jr_pj_type,
-             jr_pj_number, jr_mt,jr_rapt,jr_date_paid,jr_optype,currency_id,currency_rate,currency_rate_ref
+        $sql="SELECT jr_id
+            , jr_def_id
+            , jr_montant
+            , jr_comment
+            , jr_date
+            , jr_grpt_id
+            , jr_internal
+            , jr_tech_date
+            , jr_tech_per
+            , jrn_ech
+            , jr_ech
+            , jr_rapt
+            ,jr_ech
+            , jr_valid
+            , jr_opid
+            , jr_c_opid
+            , jr_pj
+            , jr_pj_name
+            , jr_pj_type,
+             jr_pj_number
+             , jr_mt
+             ,jr_rapt
+             ,jr_date_paid
+             ,jr_optype
+             ,currency_id
+             ,currency_rate
+             ,currency_rate_ref
+             ,jr_document_xml
              FROM jrn where jr_id=$1";
         $array=$this->db->get_array($sql,array($this->jr_id));
         if ( count($array) == 0 ) throw new Exception('Aucune ligne trouvée');
@@ -1363,4 +1419,5 @@ class Acc_Fin extends Acc_Detail
         return $array;
         
     }
+    
 }

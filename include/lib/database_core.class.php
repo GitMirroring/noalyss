@@ -718,27 +718,39 @@ class DatabaseCore
     }
 
     /***
-     * \brief Save a document into the database , it just puts the file in the database
+     * \brief Save one or several documents into the database , it just puts the file in the database
      * and returns the corresponding OID , the mimetype , size ... of the document
      * must be set in the calling function.
      *
      * \param name of the variable in $_FILES
+     * \param $only_oid (bool) (default :true) false : return filename and oid in an array , true only OID, 
      * \return $oid of the lob file if success
      *         false if a error occurs or if there is no file to upload
+     *         array(oid, filename) if $only_oid is true
      *
      */
 
-    function upload($p_name)
+    function upload($p_name,$only_oid = false)
     {
+       
+          //var $a : 0 we're in a transaction, 1 we are not in a transaction
+        $a=0;
+        if ( $this->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->start();
+        }
+            
         /* there is          no file to          upload */
         if ($_FILES[$p_name]["error"] == UPLOAD_ERR_NO_FILE) {
+            \record_log("DC759: error upload file".var_export($_FILES, true));
+            if ( $a==1) { $this->rollback(); }
             return false;
         }
 
         $new_name = tempnam($_ENV['TMP'], $p_name);
         if ($_FILES[$p_name]["error"] > 0) {
-            print_r($_FILES);
-            echo_error(__FILE__ . ":" . __LINE__ . "Error: " . $_FILES[$p_name]["error"]);
+            \record_log("DC740: error upload file".var_export($_FILES, true));
+            if ( $a==1) { $this->rollback(); }
             return false;
         }
         if (strlen($_FILES[$p_name]['tmp_name']) != 0) {
@@ -746,18 +758,100 @@ class DatabaseCore
                 // echo "Image saved";
                 $oid = pg_lo_import($this->db, $new_name);
                 if ($oid == false) {
-                    echo_error(__FILE__, __LINE__, "cannot upload document");
+                    \record_log("DC747: error upload file".var_export($_FILES, true). "SQL MESSAGE". pg_last_error($this->db));
                     $this->rollback();
                     return false;
                 }
-                return $oid;
+                if ( $a == 1 ) { $this->commit(); }
+                if ($only_oid ){
+                    return $oid;
+                }else {
+                    return ["oid"=>$oid,'filename'=>$new_name];
+                }
             } else {
-                echo "<H1>Error</H1>";
+                \record_log("DC754: move_uploaded fails".var_export($_FILES, true));
                 $this->rollback();
                 return false;
             }
         }
+
+        \record_log("DC576: Files error names empty".var_export($_FILES, true));
+        if ( $a == 1) { $this->commit(); }
         return false;
+    }
+    /**
+     * @brief large_object writee: create a Large object if oid is not given 
+     * with data content in a binaray
+     * @param $binary_data (raw data) binary
+     * @returns $oid of the LO, false if it fails
+     */
+    function lo_write($binary_data)
+    {
+        //var $a : 0 where in a transaction, 1 we are not in a transaction
+        $a=0;
+        if ( $this->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->start();
+        }
+
+        $oid= pg_lo_create($this->db);
+        
+        if ( ($handle=pg_lo_open($this->db,$oid,"w")) == false  ) { return false ;}
+        pg_lo_write($handle, $binary_data);
+        pg_lo_close($handle);
+        if ( $a==1) { $this->commit(); }
+        return $oid;
+        
+    }
+     /**
+     * @brief read a Large object with data content in a binary
+     * @param $oid (int8) oid of the large object
+     * @returns $binary_data (raw data) binary
+     */
+    function lo_read($oid)
+    {
+        //var $a : 0 where in a transaction, 1 we are not in a transaction
+        $a=0;
+        if ( $this->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->start();
+        }
+
+        $handle=pg_lo_open($this->db,$oid,"r");
+        if ( $handle == false ) { return false ;}
+        // set position end of the LO
+        pg_lo_seek($handle, 0, PGSQL_SEEK_END);
+        // get the size 
+        $size= pg_lo_tell($handle);
+        // set position to start
+        pg_lo_seek($handle, 0, PGSQL_SEEK_SET);
+        // read the comùplete LOB
+        $binary_data = pg_lo_read($handle,$size );
+        pg_lo_close($handle);
+        if ( $a==1) { $this->commit(); }
+        return $binary_data;
+    }
+     /**
+     * @brief replace  a Large object with data content in a binary
+     * @param $oid (int8) oid of the large object
+     * @param $binary_data (raw data) binary
+     * @returns $oid of the LO, false if it fails
+     */
+    function lo_replace($binary_data, $oid) {
+        $a = 0;
+        if ($this->status() !== PGSQL_TRANSACTION_INTRANS) {
+            $a = 1;
+            $this->start();
+        }
+        $handle = pg_lo_open($this->db, $oid, "w");
+        if ( $handle == false ) { return false ;}
+        pg_lo_truncate($handle, 0);
+        pg_lo_write($handle, $binary_data);
+        pg_lo_close($handle);
+        if ($a == 1) {
+            $this->commit();
+        }
+        return $oid;
     }
 
     /**
@@ -823,7 +917,7 @@ class DatabaseCore
     /**
      * \brief wrapper for the function pg_lo_unlink
      * \param $p_oid is the of oid
-     * \return return the result of the operation
+     * \return return the result of the operation : false == fails
      */
 
     function lo_unlink($p_oid)

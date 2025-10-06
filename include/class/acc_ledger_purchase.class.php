@@ -29,9 +29,86 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 /*!
  * \class Acc_Ledger_Purchase
- * \brief Handle the ledger of purchase,
- *
- *
+ ** @brief : input, confirm and save new operations in edger of purchase
+ the $_POST data is an array with these keys
+ @code
+ Array
+(
+    
+// =====================
+// ANALYTIC  PART
+// =====================
+    [pa_id] => Array 
+        (
+            [0] => 1
+        )
+
+    [op] => Array
+        (
+            [0] => 0
+        )
+
+    [amount_t0] => 10
+    [hplan] => Array
+        (
+            [0] => Array
+                (
+                    [0] => -1
+                )
+
+        )
+
+    [val] => Array
+        (
+            [0] => Array
+                (
+                    [0] => 10
+                )
+
+        )
+// =====================
+// SALES DATA
+// =====================
+
+    [e_client] => QuickCode supplier
+    [nb_item] => number of items (lines of invoice)
+    [p_jrn] => JRN_DEF.JRN_DEF_ID id of the ledger
+    [jrn_note_input] =>  Note JRN_NOTE.N_TEXT
+    [mt] => 1759130008.8134
+    [p_currency_rate] => Currency Rate
+    [p_currency_code] => Currency Code
+    [e_comm] => Description of invoice
+    [e_date] => date invoice
+    [e_ech] =>  limit date
+    [e_pj] => Receipt number
+    [e_pj_suggest] => suggested receipt number
+    [e_mp] => payment means (
+    [jrn_type] => Type of ledger (always ACH)
+ //---------------------------------------------
+ // For each invoice line 
+ //---------------------------------------------
+    [e_march0] => QuickCode of the item
+    [e_march0_label] => label
+    [e_march0_price] => unit price
+    [e_march0_tva_id] => VAT ID
+    [e_march0_tva_amount] => amount of VAT
+    [e_quant0] => quantity of item
+//======================== 
+// MISC
+//========================
+    [repo] => 1 (repository)
+    [gen_invoice] => on (it is asked to generate an invoice
+    [gen_doc] => Document template id
+    [bon_comm] => JRN_INFO.
+    [other_info] = JRN_INFO.> 
+    [opd_name] =>  Name of operation template
+    [od_description] => Description of operation template 
+    [reverse_date] =>  if reverse is asked
+    [ext_label] =>  Label for revese operation
+    [jr_optype] => Type of operation NOR:Normal,, EXT; reverse, ..
+)
+ @endcode   
+ 
  */
 class  Acc_Ledger_Purchase extends Acc_Ledger
 {
@@ -978,7 +1055,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             if ( isset ($_FILES))
             {
                 if ( sizeof($_FILES) != 0 )
-                    $this->db->save_receipt($seq);
+                    $acc_document=new \Acc_Document($this->db, $this->jr_id);
+                    $acc_document->save_receipt();
+                    $this->doc=HtmlInput::show_receipt_document($this->jr_id,h($_FILES['pj']['name']));
             }
             $str_file="";
             /* Generate an document  and save it into the database (Note de frais only)

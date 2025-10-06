@@ -23,7 +23,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @backupGlobals enabled
  * @coversDefaultClass \Acc_Payment
@@ -84,7 +84,7 @@ class Acc_TVATest extends TestCase
         }
     }
 
-    function dataCheck()  {
+    static function dataCheck()  {
          return array(
              ['abc',true]
              ,['13A',true]
@@ -100,6 +100,7 @@ class Acc_TVATest extends TestCase
      * @dataProvider dataCheck
      * @return void
      */
+     #[DataProvider('dataCheck')]
     function testCheck($tva_code,$result)
     {
         $cn=\Dossier::connect();
@@ -117,7 +118,7 @@ class Acc_TVATest extends TestCase
         $this->assertTrue($result==$check," erreur pour $tva_code ");
         $this->display_error($tva_rate_mtable);
     }
-    function dataBuild()  {
+    static function dataBuild()  {
         return array(
             ['0A',4]
             ,['0B',6]
@@ -133,6 +134,7 @@ class Acc_TVATest extends TestCase
      * @dataProvider dataBuild
      * @return void
      */
+     #[DataProvider('dataBuild')]
     function testBuild($tva_code,$result)
     {
         $cn=\Dossier::connect();

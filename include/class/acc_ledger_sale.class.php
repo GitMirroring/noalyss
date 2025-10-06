@@ -28,9 +28,87 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 /*!
- * \brief Handle the ledger of sold,
- *
- * @exception throw an exception is something is wrong
+ * @class Acc_Ledger_Sale
+ * @brief : input, confirm and save new operations in edger of sales
+ the $_POST data is an array with these keys
+ @code
+ Array
+(
+    
+// =====================
+// ANALYTIC  PART
+// =====================
+    [pa_id] => Array 
+        (
+            [0] => 1
+        )
+
+    [op] => Array
+        (
+            [0] => 0
+        )
+
+    [amount_t0] => 10
+    [hplan] => Array
+        (
+            [0] => Array
+                (
+                    [0] => -1
+                )
+
+        )
+
+    [val] => Array
+        (
+            [0] => Array
+                (
+                    [0] => 10
+                )
+
+        )
+// =====================
+// SALES DATA
+// =====================
+
+    [e_client] => QuickCode customer
+    [nb_item] => number of items (lines of invoice)
+    [p_jrn] => JRN_DEF.JRN_DEF_ID id of the ledger
+    [jrn_note_input] =>  Note JRN_NOTE.N_TEXT
+    [mt] => 1759130008.8134
+    [p_currency_rate] => Currency Rate
+    [p_currency_code] => Currency Code
+    [e_comm] => Description of invoice
+    [e_date] => date invoice
+    [e_ech] =>  limit date
+    [e_pj] => Receipt number
+    [e_pj_suggest] => suggested receipt number
+    [e_mp] => payment means (
+    [jrn_type] => Type of ledger (always VEN)
+ //---------------------------------------------
+ // For each invoice line 
+ //---------------------------------------------
+    [e_march0] => QuickCode of the item
+    [e_march0_label] => label
+    [e_march0_price] => unit price
+    [e_march0_tva_id] => VAT ID
+    [e_march0_tva_amount] => amount of VAT
+    [e_quant0] => quantity of item
+//======================== 
+// MISC
+//========================
+    [repo] => 1 (repository)
+    [gen_invoice] => on (it is asked to generate an invoice
+    [gen_doc] => Document template id
+    [bon_comm] => JRN_INFO.
+    [other_info] = JRN_INFO.> 
+    [opd_name] =>  Name of operation template
+    [od_description] => Description of operation template 
+    [reverse_date] =>  if reverse is asked
+    [ext_label] =>  Label for revese operation
+    [jr_optype] => Type of operation NOR:Normal,, EXT; reverse, ..
+)
+ @endcode   
+ 
  */
 
 class Acc_Ledger_Sale extends Acc_Ledger {
@@ -698,17 +776,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                     where j_id in (select j_id from jrnx where j_grpt=$2)'
                     , array($internal, $seq));
 
-            /* Save the attachment or generate doc */
-            if (isset($_FILES['pj'])) {
-                if (noalyss_strlentrim($_FILES['pj']['name']) != 0)
-                    $this->db->save_receipt($seq);
-                else
-                /* Generate an invoice and save it into the database */
-                if (isset($_POST['gen_invoice'])) {
-                    $file = $this->create_document($internal, $p_array);
-                    $this->doc=HtmlInput::show_receipt_document($this->jr_id,h($file));
-                }
-            }
+           
             //----------------------------------------
             // Save the payer
             //----------------------------------------
@@ -932,6 +1000,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 $r.='<td>' . _('Numéro Pièce') .$span.'</td><td>'. hb($this->pj) . '</td>';
             }
         }
+        $e_comm=($e_comm == "")?_('Facture')." $e_pj":$e_comm;
         $r.='</tr>';
         $r.='<tr>';
         $r.='<td> ' . _('Date') . '</td><td> ' . hb($e_date) . '</td>';
@@ -954,7 +1023,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $r.='</tr>';
         
         $r.='<tr>';
-        $r.='<td> ' . _('Client') . '</td><td> ' . hb($e_client . ':' . $client_name) . '</td>';
+        $r.='<td> ' . _('Client') . '</td><td> ' . HtmlInput::card_detail($e_client).":".hb( $client_name) . '</td>';
         $r.='</tr>';
         $r.='</table>';
         $r.='<pre>'._('Note').' '.h($p_array['jrn_note_input']).'</pre>';
@@ -1296,7 +1365,8 @@ EOF;
         return $r;
     }
 
-    /*!\brief the function extra info allows to
+    /*!
+     * \brief the function extra info allows to
      * - add a attachment
      * - generate an invoice
      * - insert extra info
@@ -1304,31 +1374,35 @@ EOF;
      */
 
     public function extra_info() {
-        $r = '<div id="facturation_div_id" style="height:185px;height:10rem">';
+        $r = '<div id="facturation_div_id" style="display:flex;height:185px;height:10rem">';
         // check for upload piece
         $file = new IFile();
         $file->table = 0;
         $file->setAlertOnSize(true);
         $r.='<p class="decale">';
+        
+        // add a receipt
         $r.=_("Ajoutez une pièce justificative ");
         $r.=$file->input("pj", "");
-
-        if ($this->db->count_sql("select md_id,md_name from document_modele where md_affect='VEN' ") > 0) {
-
-
-            $r.=_('ou générer une facture') . ' <input type="checkbox" name="gen_invoice" CHECKED>';
-            // We propose to generate  the invoice and some template
-            $doc_gen = new ISelect();
-            $doc_gen->name = "gen_doc";
-            $doc_gen->value = $this->db->make_array(
-                    "select md_id,md_name " .
-                    " from document_modele where md_affect='VEN' order by 2");
-            $r.=$doc_gen->input() . '<br>';
-        }
+        
+        //------------------------------------------------
+        // Propose to generate an invoice
+        //------------------------------------------------
+        $r.=_('ou générer une facture') . ' <input type="checkbox" name="gen_invoice" CHECKED>';
+        // We propose to generate  the invoice and some template
+        $doc_gen = new ISelect();
+        $doc_gen->name = "gen_doc";
+        $doc_gen->value = $this->db->make_array(
+                "select md_id,md_name " .
+                " from document_modele where md_affect='VEN' ".
+                " union select -2,'"._("0 - Facture PDF Standard")."' ".
+                " order by 2");
+        $r.=$doc_gen->input() . '<br>';
+        
         $r.='<br>';
         $obj = new IText();
-        $r.=_('Numero de bon de commande : ') . $obj->input('bon_comm') . '<br>';
-        $r.=_('Communication ou autre information  : ') . $obj->input('other_info') . '<br>';
+        $r.=_('Numero de bon de commande') . $obj->input('bon_comm') . '<br>';
+        $r.=_('Communication') . $obj->input('other_info') . '<br>';
         $r.='</p>';
         $r.='</div>';
         return $r;

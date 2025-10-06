@@ -27,11 +27,13 @@
  * @brief 
  */
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @backupGlobals enabled
  */
 require DIRTEST.'/global.php';
+
+#[\AllowDynamicProperties]
 class Acc_LetterTest extends TestCase
 {
     /**
@@ -47,34 +49,27 @@ class Acc_LetterTest extends TestCase
     {
         include 'global.php';
         $this->a_column=array(
-            "j_id",
-           "j_date",
-           "j_date_fmt",
-           "jr_pj_number",
-           "j_montant",
-           "j_debit",
-           "jr_comment",
-           "jr_internal",
-           "jr_id",
-           "jr_def_id",
-           "letter",
-           "letter_diff",
-           "currency_amount",
-           "currency_id",
-           "currency_rate",
-           "currency_rate_ref",
-           "cr_code_iso"
-    );
+                "j_id",
+               "j_date",
+               "j_date_fmt",
+               "jr_pj_number",
+               "j_montant",
+               "j_debit",
+               "jr_comment",
+               "jr_internal",
+               "jr_id",
+               "jr_def_id",
+               "letter",
+               "letter_diff",
+               "currency_amount",
+               "currency_id",
+               "currency_rate",
+               "currency_rate_ref",
+               "cr_code_iso"
+            );
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test method is executed.
-     */
-    protected function tearDown():void
-    {
-        
-    }
+    
 
     /**
      * the setUpBeforeClass():void template methods is called before the first test of the test case
@@ -86,15 +81,8 @@ class Acc_LetterTest extends TestCase
         
     }
 
-    /**
-     *  tearDownAfterClass():void template methods is calleafter the last test of the test case class is run,
-     *
-     */
-    static function tearDownAfterClass():void
-    {
-        //        include 'global.php';
-    }
-    public function dataget_Letter()
+ 
+    public  static function dataget_Letter()
     {
                return array([22,577],[26,343]);
     }
@@ -104,6 +92,7 @@ class Acc_LetterTest extends TestCase
      * @covers Lettering_Card::get_letter
     *  @dataProvider dataget_Letter
      */
+    #[DataProvider('dataget_Letter')]    
     public function testget_letterAccount($p_fiche_id,$p_jrnx_id)
     {
         global $g_connection;
@@ -155,6 +144,7 @@ class Acc_LetterTest extends TestCase
      * @covers Lettering_Card::get_letter
     *  @dataProvider dataget_Letter
      */
+     #[DataProvider('dataget_Letter')]
     public function testget_letterCard($p_fiche_id,$p_jrnx_id)
     {
         global $g_connection;
@@ -196,7 +186,7 @@ class Acc_LetterTest extends TestCase
         $g_connection->exec_sql("update jrnx set j_montant =$2 where j_id=$1 ",[$p_jrnx_id,$restore]);
 
     }
-    public function dataDateLimit()
+    public static function dataDateLimit()
     {
         return array(
             [100,'01.01.2018','31.12.2018'],
@@ -210,6 +200,7 @@ class Acc_LetterTest extends TestCase
      * @param type $p_id
      * @dataProvider dataDateLimit
      */
+     #[DataProvider('dataDateLimit')]
     public function testDateLimitComputed($p_periode_id,$p_first_day,$p_last_day)
     {
         global $g_connection;
@@ -238,6 +229,7 @@ class Acc_LetterTest extends TestCase
      * @param type $p_id
      * @dataProvider dataDateLimit
      */
+     #[DataProvider('dataDateLimit')]
     public function testDateLimitGiven($p_periode_id,$p_first_day,$p_last_day)
     {
         global $g_connection;

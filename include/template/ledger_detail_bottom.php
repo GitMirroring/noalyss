@@ -9,7 +9,7 @@
  * @brief show the common parts of operation details 
  * 
  * Variables : $div = popup or box (det[0-9]
- * 
+ *@var $obj = Acc_Operation 
  */
 bcscale(2);
 \Noalyss\Dbg::echo_file(__FILE__);
@@ -44,13 +44,18 @@ $a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>
 $a_tab['document_operation_div']=array('id'=>'document_operation_div'.$div,'label'=>_('Document').'('.$nb_document.')','display'=>'block');
 $a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Actions Gestion').'('.count($a_followup).')','display'=>'none');
 $a_tab['analytic_div']=array('id'=>'analytic_div'.$div,'label'=>_('Comptabilité Analytique'),'display'=>'none');
+//var $g_parameter \Noalyss_Parameter_Folder
+global $g_parameter;
 
 
  
 // show tabs
 if ( $div != "popup") :
  $a_tab['document_operation_div']['display']='block';
+ $tabs=array_column($a_tab,"id");
+
 ?>
+<input type="hidden" id="<?=$div?>tab" value="<?=join(",",$tabs)?>">
 <ul  class="tabs">
     <?php foreach ($a_tab as $idx=>$a_value): ?>
     <?php 
@@ -58,7 +63,7 @@ if ( $div != "popup") :
     ?>
     <li class="<?php echo $class?>">
         <?php $div_tab_id=$a_value['id'];?>
-        <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);var tab=Array('writing_div<?php echo $div?>','info_operation_div<?php echo $div?>','linked_operation_div<?php echo $div?>','document_operation_div<?php echo $div?>','linked_action_div<?php echo $div?>','analytic_div<?php echo $div?>');this.parentNode.className='tabs_selected' ;show_tabs(tab,'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
+        <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected' ;show_tabs($F('<?=$div?>tab').split(','),'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
     </li>
     <?php    endforeach; ?>
 </ul>
@@ -317,9 +322,7 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_file.php';
     </span>
 <?php endif;?>
 </div>
-
-<hr>
-<?php 
+<?php
       echo '<p style="text-align:center">';
 
 if ( $div != 'popup' ) {
@@ -408,4 +411,4 @@ echo '</form>';
 }else {
     echo '</p>';
 }
-?>
+

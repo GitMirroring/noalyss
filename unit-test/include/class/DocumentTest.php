@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
  */
 require DIRTEST . '/global.php';
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * @backupGlobals disabled
  */
@@ -150,21 +152,7 @@ class DocumentTest extends TestCase {
         $cn->commit();
     }
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp(): void {
-        
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown(): void {
-        
-    }
+ 
 
     function testBlank() {
         $cn = Dossier::connect();
@@ -266,10 +254,10 @@ class DocumentTest extends TestCase {
             $document->d_id = $d_id;
             $document->get();
         }
-        return $document;
+        return $document; 
     }
 
-    function dataReplace() {
+    static function dataReplace() {
         return array(
             ["CUST_NAME", "Client 2"],
             ["SOLDE", 27.29],
@@ -285,6 +273,7 @@ class DocumentTest extends TestCase {
      * @backupGlobals enabled
      * @dataProvider dataReplace
      */
+     #[DataProvider('dataReplace')]
     function testReplace2($tag_name, $value) {
         require "global.php";
         static $request = null;
@@ -303,7 +292,7 @@ class DocumentTest extends TestCase {
         $this->assertEquals($name, $value, $tag_name." fails");
     }
     
-    function dataBalance()
+    static function dataBalance()
     {
         return array(
             ['CLIENT1',27.29, 4204.14],
@@ -316,6 +305,7 @@ class DocumentTest extends TestCase {
 
      * @dataProvider dataBalance
      */
+     #[DataProvider('dataBalance')]
     function testBalance($quickcode,$balance_report,$balance_noreport)
     {
           require "global.php";

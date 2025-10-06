@@ -983,6 +983,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                     throw new Exception (_("Erreur de balance"),EXC_BALANCE);
 
                 // 	  $acc_operation->update_receipt();
+                $this->jr_id=&$jr_id;
                 $this->db->exec_sql('update jrn set jr_pj_number=$1 where jr_id=$2', array($acc_operation->pj, $jr_id));
                 $internal=$this->compute_internal_code($seq);
 
@@ -1073,21 +1074,18 @@ class Acc_Ledger_Fin extends Acc_Ledger
                 $class=($i%2==0)?' class="even" ':' class="odd" ';
                 $ret.=tr($row, $class);
 
-                if ($i==0)
+                if ($i==0 && isset($_FILES['pj']) )
                 {
                     // first record we upload the files and
                     // keep variable to update other row of jrn
-                    if (isset($_FILES['pj']))
-                        $oid=$this->db->save_receipt($seq);
+                        $acc_document=new Acc_Document($this->db,$jr_id);
+                        $oid=$acc_document->save_receipt();
                 }
-                else
+                elseif ($oid != 0 )
                 {
-                    if ($oid!=0)
-                    {
-                        $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
-                                            jr_pj_type=$3  where jr_grpt_id=$4",
-                                array($oid, $_FILES['pj']['name'], $_FILES['pj']['type'], $seq));
-                    }
+                    $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
+                                        jr_pj_type=$3  where jr_grpt_id=$4",
+                            array($oid, $_FILES['pj']['name'], $_FILES['pj']['type'], $seq));
                 }
             } // for nbitem
             // increment pj

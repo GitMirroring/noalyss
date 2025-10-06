@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 /*
  *   This file is part of NOALYSS.
  *
@@ -43,31 +43,22 @@ class ImpressTest extends TestCase
     {
         include 'global.php';
     }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown():void
+    public static function setUpBeforeClass(): void
     {
-        
-    }
-    private function setData()
-    {
+        include 'global.php';
         global $g_connection;
         $g_connection->exec_sql("delete from operation_analytique where oa_id > 48 and oa_id < 57");
-       $sql="INSERT INTO operation_analytique 
+        $sql="INSERT INTO operation_analytique 
            (oa_id,po_id,oa_amount,oa_description,oa_debit,j_id,oa_date,oa_row,oa_jrnx_id_source,oa_positive,f_id) 
          VALUES
-	 (49,3,90.0000,'',true,18,'2018-02-24',0,NULL,'Y',NULL),
-	 (50,4,93.0000,'',true,18,'2018-02-24',1,NULL,'Y',NULL),
-	 (51,3,10.0000,'Déplacement',false,4,'2018-02-24',0,NULL,'Y',NULL),
-	 (52,1,30.0000,'Déplacement',false,4,'2018-02-24',1,NULL,'Y',NULL),
-	 (53,3,25.0000,'Vente de marchandises',false,7,'2018-02-24',0,NULL,'Y',NULL),
-	 (54,3,91.0000,'Eau',true,371,'2018-04-24',0,NULL,'Y',NULL),
-	 (55,3,80.0000,'Eau',true,371,'2018-04-24',1,NULL,'Y',NULL)";
+         (49,3,90.0000,'',true,18,'2018-02-24',0,NULL,'Y',NULL),
+         (50,4,93.0000,'',true,18,'2018-02-24',1,NULL,'Y',NULL),
+         (51,3,10.0000,'Déplacement',false,4,'2018-02-24',0,NULL,'Y',NULL),
+         (52,1,30.0000,'Déplacement',false,4,'2018-02-24',1,NULL,'Y',NULL),
+         (53,3,25.0000,'Vente de marchandises',false,7,'2018-02-24',0,NULL,'Y',NULL),
+         (54,3,91.0000,'Eau',true,371,'2018-04-24',0,NULL,'Y',NULL),
+         (55,3,80.0000,'Eau',true,371,'2018-04-24',1,NULL,'Y',NULL)";
         $g_connection->exec_sql($sql);
-       
     }
     /**
      * 
@@ -154,6 +145,7 @@ class ImpressTest extends TestCase
      * @covers Impress::parse_formula
      * @dataProvider getData_compute_amount
      */
+     #[DataProvider('getData_compute_amount')]
     function test_compute_amount($p_accounting,$p_amount)
     {
         global $g_connection;
@@ -224,7 +216,6 @@ class ImpressTest extends TestCase
     function test_parse_formula()
     {
         global $g_connection,$g_user;
-        $this->setData();
         $a_formula=array(
             0=>array("sum 70% (credit is negative)", "[70%-s]",-456.80),
             1=>array("sum 70% (debit is negative)", "0-round([70%-s],2)",456.80),

@@ -23,12 +23,14 @@ namespace Noalyss\XMLDocument;
 
 /**
  * @file
- * @brief answer to an inplace object
+ * @brief UBL2.1 Belgique
+ *   -  $pdf_filename PDF file to insert into XML, it is the file on the filesystem
  */
 /**
  * @class
  * @brief UBL2.1 Belgique
- * @note Doit contenir le PDF
+ * @note Doit contenir le PDF.
+ *      -  $pdf_filename PDF file to insert into XML, it is the file on the filesystem
  @code
 <cac:Attachment>
   <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="facture.pdf" encodingCode="Base64">
@@ -52,32 +54,37 @@ class InvoiceUBL21 extends XMLInvoice {
         , 'MY_STREET'
         , 'MY_CITY'
         , 'MY_TVA'
+        , 'INVOICE_EMAIL_COMPANY'
         ];
-    protected $pdf_filename; //!< PDF file to insert into XML
+    protected $pdf_filename; //!< PDF file to insert into XML,
+                             //       it is the file on the filesystem
     public function get_pdf_filename() {
         return $this->pdf_filename;
     }
-
-    public function set_pdf_filename($pdf_filename) {
-        $this->pdf_filename = $pdf_filename;
-        return $this;
+    /**
+     * @brief display_error display a warning with all error
+     */
+    function display_error()
+    {
+        $a_error=$this->verify();
+        include NOALYSS_TEMPLATE."/invoiceUBL21-display_error.php";
     }
+  
 
     /**
      * @brief check that mandatory info are saved in the DB for company (seller)
      * @param $a_error (array) array of errors, empty if nothing found
      */
-    function check_company_data(&$a_error) {
+    function check_company_data() {
+        // var $a_error (array) contains the errors for the company
+        $a_error=array();
         $company = $this->load_noalyss_parameter();
         foreach (InvoiceUBL21::EXTRA_PARAMETER as $item) {
-            if (!isset($company[$item]) || $company[$item] == '') {
+            if (!isset($company[$item]) || trim($company[$item]) == '') {
                 $a_error[]=$item;
             }
         }
-        if (count($a_error)  == 0) {
-            return true;
-        }
-        return false;
+        return $a_error;
     }
      /**
      * @brief check that mandatory info are saved in the DB for customer
@@ -85,26 +92,26 @@ class InvoiceUBL21 extends XMLInvoice {
      * @param $a_error (array) array of errors, empty if nothing found
      * @todo : country code au lieu de country !! 
      */
-    function check_customer_data($customer_id,&$a_error){
-       $card=new \Fiche($this->cn,$customer_id);
-        $a_needed=[ATTR_DEF_NAME=>_("Nom")
-                ,ATTR_DEF_ADRESS=>_("Adresse")
-                ,ATTR_DEF_POSTCODE=>_("Code postal")
-                ,ATTR_DEF_CITY=>_("Localité")
-                ,ATTR_DEF_COUNTRY_CODE=>_("Code pays")
-                ,ATTR_DEF_NUMTVA=>_("Numéro de TVA")
+    function check_customer_data($customer_id){
+        $a_error=array();
+        $a_needed=[ATTR_DEF_NAME=>'name'
+                ,ATTR_DEF_ADRESS=>'street'
+                ,ATTR_DEF_POSTCODE=>'postalzone'
+                ,ATTR_DEF_CITY=>'city'
+                ,ATTR_DEF_COUNTRY_CODE=>'country'
+                ,ATTR_DEF_NUMTVA=>'customer_id'
+                ,ATTR_DEF_PEPPOLID=>'endpoint_id'
             ];
         
         foreach ($a_needed as $item=>$value) {
-            if (\noalyss_trim($card->get_attribute($item))=="") {
-                printf (_("ATTENTION donnée manquante dans la fiche client [%s]"),$value);
-            }
+             if ( $this->data['customer'][$value]=="") {
+                 $a_error[]=$value;
+             }
         }
-        if (count($a_error)  == 0) {
-            return true;
-        }
-        return false;
+      
+        return $a_error;
     }
+
     /**
      * @brief transform an operation ($jr_id) into an array, which contains
      * needed information for making an e-invoice
@@ -113,61 +120,11 @@ class InvoiceUBL21 extends XMLInvoice {
      * @param type $jr_id
      * @see XMLInvoice::build_data
      */
-    function build_data($jr_id): array {
-        $result = parent::build_data($jr_id);
-        /**
-         * Compute totals VAT and AMOUNT
-         */
-        $nb_operation = count($result['operation']);
+    function build_data($jr_id): array 
+    {
         
-        /// block cac:LegalMonetaryTotal
-        $result['LineExtensionAmount']=0;
-        $result['TaxExclusiveAmount']=0;
-        $result['TaxInclusiveAmount']=0;
-        $result['PayableAmount']=0;
-        
-        // block cac:TaxTotal
-        $result['TaxableAmount']=0;
-        $result['TaxAmount']=0;
-        
-        // array for TaxSubtotal
-        $VAT_SubTotal=array();
-        $idx_subtotal=0;
-        bcscale(2);
-        // for each operation 
-        $VAT_SubTotal=array();
-        for ($i=0;$i < $nb_operation;$i++) {
-            $acc_tva=\Acc_TVA::build($this->cn,$result['operation'][$i]['vat_id'] );
-            $percent = bcmul($acc_tva->tva_rate,100);
-            // subtotal for VAT
-            var_dump($VAT_SubTotal);
-            $n = \Noalyss\Invoicing\Utility::find_idx($VAT_SubTotal,'percent',$percent);
-            if ($n == -1 ) {
-                $n=$idx_subtotal;
-                $VAT_SubTotal[$idx_subtotal]=array();
-                $VAT_SubTotal[$idx_subtotal]['percent']=$percent;
-                $VAT_SubTotal[$idx_subtotal]['amount']=$VAT_SubTotal[$idx_subtotal]['vat']=0;
-                $idx_subtotal++;
-            }
-            /**
-             * @todo Pour les intracomm , quel taux utilisé ? 0 ou 21%
-             */
-            $VAT_SubTotal[$n]['amount']=bcadd($VAT_SubTotal[$n]['amount'],$result['operation'][$i]['price']);
-            $VAT_SubTotal[$n]['vat']=bcadd($VAT_SubTotal[$n]['vat'],$result['operation'][$i]['vat']);
-            $VAT_SubTotal[$n]['vat']=bcsub($VAT_SubTotal[$n]['vat'],$result['operation'][$i]['vat_reversed']);
-            $result['TaxableAmount']=bcadd( $result['TaxableAmount'],$result['operation'][$i]['price']);
-            $result['TaxAmount']=bcadd( $result['TaxAmount'],$result['operation'][$i]['vat']);
-            $result['TaxAmount']=bcsub( $result['TaxAmount'],$result['operation'][$i]['vat_reversed']);
-            $result['operation'][$i]['vat_percent']=$percent;
-        }
-        $result['subTotalVAT']=$VAT_SubTotal;
-        $result['LineExtensionAmount']= $result['TaxableAmount'];
-        $result['TaxExclusiveAmount']= $result['TaxableAmount'];
-        $result['TaxInclusiveAmount']=bcadd( $result['TaxableAmount'],$result['TaxAmount']);
-        $result['PayableAmount']=bcadd( $result['TaxableAmount'],$result['TaxAmount']);;
-        
-        $this->data=$result;
-        return $result;
+        $this->data=parent::build_data($jr_id);
+        return  $this->data;
     }
     /**
      * @brief Information customer
@@ -178,7 +135,8 @@ class InvoiceUBL21 extends XMLInvoice {
         $customer=$this->createElement('cac:AccountingCustomerParty');
         $customer_party=$customer->appendChild($this->createElement('cac:Party'));
         ///@todo EndPointID doit être dans les paramètres (voir upgrade.sql)
-        $customer_party->appendChild($this->createElement('cbc:EndpointID',"ERROR"))->setAttribute('schemeID', 9956);
+        $customer_party->appendChild($this->createElement('cbc:EndpointID',$this->data['customer']['endpoint_id']))
+                ->setAttribute('schemeID', 9925);
         $party_name=$this->createElement('cac:PartyName');
         $party_name->appendChild($this->createElement("cbc:Name", $this->data['customer']['name']));
         $customer_party->appendChild($party_name);
@@ -187,9 +145,10 @@ class InvoiceUBL21 extends XMLInvoice {
         $postal_address->appendChild($this->createElement("cbc:CityName", $this->data['customer']['city']));
         $postal_address->appendChild($this->createElement("cbc:PostalZone", $this->data['customer']['postalzone']));
         ///@todo customer = countryCode doit être dans les paramètres (voir upgrade.sql)
-        $country_code ="ERROR";
+        $country_code =$this->data['customer']['country'];
         $country=$postal_address->appendChild($this->createElement("cac:Country"));
-        $country->appendChild($this->createElement('cbc:IdentificationCode',$country_code??"ERROR:COUNTRY_CODE"));
+        
+        $country->appendChild($this->createElement('cbc:IdentificationCode',$country_code));
         $postal_address->appendChild($country);
         
         // Tax Schem
@@ -231,16 +190,16 @@ class InvoiceUBL21 extends XMLInvoice {
      */
     function build_paymentInfo()
     {
+      $company = $this->load_noalyss_parameter();
       $payment=$this->createElement("cac:PaymentMeans");
       $payment->appendChild($this->createElement('cbc:PaymentMeansCode',30));
       ///@note cbc:PaymentID est la communication lors du paiement
-      $payment->appendChild($this->createElement('cbc:PaymentID',$this->data["id"]));
+      $payment->appendChild($this->createElement('cbc:PaymentID',$this->data["info"]['communication']));
       $f=$this->createElement ('cac:PayeeFinancialAccount');
         ///@todo customer = IBAN doit être dans les paramètres (voir upgrade.sql)
-      $f->appendChild($this->createElement("cbc:ID", "ERROR:IBAN"));
+      $f->appendChild($this->createElement("cbc:ID",$company['COMPANY_BANK_IBAN']));
       $g=$this->createElement("cac:FinancialInstitutionBranch");
-         ///@todo customer = BIC doit être dans les paramètres (voir upgrade.sql)
-      $g->appendChild($this->createElement("cbc:ID", "ERROR:BIC"));
+      $g->appendChild($this->createElement("cbc:ID", $company['COMPANY_BANK_BIC']));
       $f->appendChild($g);
       
       $payment->appendChild($f);
@@ -255,7 +214,7 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $supplier=$this->createElement('cac:AccountingSupplierParty');
         $supplier_party=$supplier->appendChild($this->createElement('cac:Party'));
-        $supplier_party->appendChild($this->createElement('cbc:EndpointID',$company['COMPANY_UBL_ID']??"ERROR"))->setAttribute('schemeID', 9956);
+        $supplier_party->appendChild($this->createElement('cbc:EndpointID',$company['COMPANY_UBL_ID']))->setAttribute('schemeID', 9925);
         $party_name=$this->createElement('cac:PartyName');
         $party_name->appendChild($this->createElement('cbc:Name', $this->data['supplier']['name']));
         $supplier_party->appendChild($party_name);
@@ -325,20 +284,24 @@ class InvoiceUBL21 extends XMLInvoice {
     function build_taxTotal()
     {
         $taxTotal=$this->createElement("cac:TaxTotal");
-        $taxTotal->appendChild($this->createElement('cbc:TaxAmount',$this->data['TaxAmount']))
-                ->setAttribute("currencyID","EUR");
+        $taxTotal->appendChild($this->createElement('cbc:TaxAmount',sprintf("%.2f",$this->data['TaxAmount'])))
+                ->setAttribute("currencyID",$this->data['currency']);
         // for subTotal
         $subTotal=$this->data['subTotalVAT'];
         $nb_sub=count($subTotal);
         for ($i=0;$i<$nb_sub;$i++) {
             $subTotalXML=$this->createElement("cac:TaxSubtotal");
-            $subTotalXML->appendChild($this->createElement('cbc:TaxableAmount',$subTotal[$i]['amount']))
-                    ->setAttribute("currencyID","EUR");
-            $subTotalXML->appendChild($this->createElement('cbc:TaxAmount',$subTotal[$i]['vat']))
-                    ->setAttribute("currencyID","EUR");
+            $subTotalXML->appendChild($this->createElement('cbc:TaxableAmount',sprintf("%.2f",$subTotal[$i]['amount'])))
+                    ->setAttribute("currencyID",  $this->data['currency']);
+            $subTotalXML->appendChild($this->createElement('cbc:TaxAmount',sprintf("%.2f",$subTotal[$i]['vat'])))
+                    ->setAttribute("currencyID",$this->data['currency']);
             $taxCategory=$this->createElement("cac:TaxCategory");
-            $taxCategory->appendChild($this->createElement("cbc:ID","S"));
-            $taxCategory->appendChild($this->createElement("cbc:Percent",$subTotal[$i]['percent']));
+            /**
+             * @TODO DNY
+             * Pas toujours S !?
+             */
+            //$taxCategory->appendChild($this->createElement("cbc:ID",$subTotal[$i]['vat_code']));
+            $taxCategory->appendChild($this->createElement("cbc:Percent",sprintf("%.2f",$subTotal[$i]['percent'])));
             $taxScheme=$this->createElement("cac:TaxScheme");
             $taxScheme->appendChild($this->createElement("cbc:ID", "VAT"));
             $taxCategory->appendChild($taxScheme);
@@ -363,14 +326,14 @@ class InvoiceUBL21 extends XMLInvoice {
     function build_legalMonetaryTotal()
     {
         $result=$this->createElement('cac:LegalMonetaryTotal' );
-        $result->appendChild($this->createElement("cbc:LineExtensionAmount",$this->data['LineExtensionAmount']))
-                ->setAttribute("currencyID","EUR");
-        $result->appendChild($this->createElement("cbc:TaxExclusiveAmount",$this->data['TaxExclusiveAmount']))
-                ->setAttribute("currencyID","EUR");
-        $result->appendChild($this->createElement("cbc:TaxInclusiveAmount",$this->data['TaxInclusiveAmount']))
-                ->setAttribute("currencyID","EUR");
-        $result->appendChild($this->createElement("cbc:PayableAmount",$this->data['PayableAmount']))
-                ->setAttribute("currencyID","EUR");
+        $result->appendChild($this->createElement("cbc:LineExtensionAmount",sprintf("%.2f",$this->data['LineExtensionAmount'])))
+                ->setAttribute("currencyID",$this->data['currency']);
+        $result->appendChild($this->createElement("cbc:TaxExclusiveAmount",sprintf("%.2f",$this->data['TaxExclusiveAmount'])))
+                ->setAttribute("currencyID",$this->data['currency']);
+        $result->appendChild($this->createElement("cbc:TaxInclusiveAmount",sprintf("%.2f",$this->data['TaxInclusiveAmount'])))
+                ->setAttribute("currencyID", $this->data['currency'] );
+        $result->appendChild($this->createElement("cbc:PayableAmount",sprintf("%.2f",$this->data['PayableAmount'])))
+                ->setAttribute("currencyID", $this->data['currency'] );
         return $result;
         
     }
@@ -404,30 +367,35 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $result=$this->createElement('cac:InvoiceLine');
         $row=$this->data["operation"][$i];
+        $amount=sprintf("%.2f",$row['price']);
+
         $result->appendChild($this->createElement("cbc:ID", $i));
-        ///@todo , les unités de quantités devraient être ajoutés à NOALYSS
-        /// il faut adapter les fiches
+        $amount=sprintf("%.2f",$row['price']);
         $result->appendChild(
-                $this->createElement("cbc:InvoicedQuantity", $row['quantity']))
-                ->setAttribute("unitCode", "EA");
-        $result->appendChild($this->createElement("cbc:LineExtensionAmount", $row['price']))
-                ->setAttribute("currencyID","EUR");
+                $this->createElement("cbc:InvoicedQuantity", sprintf("%.2f",$row['quantity'])))
+                ->setAttribute("unitCode", $row["code_quantity"]);
+        $result->appendChild($this->createElement("cbc:LineExtensionAmount", $amount))
+                ->setAttribute("currencyID",$this->data['currency']);
+        
+        // ITEM
         $item=$this->createElement("cac:Item");
-        $card=new \Fiche($this->cn,$row['card_id']);
-        $item->appendChild($this->createElement("cbc:Name", $card->get_attribute(ATTR_DEF_NAME)));
+        $item->appendChild($this->createElement("cbc:Description",$row['name']));
+        $item->appendChild($this->createElement("cbc:Name", $row['qcode']));
         $classifiedTaxCat=$this->createElement("cac:ClassifiedTaxCategory");
-        ///@todo cbc:ID S  = standard rate et que se passe-t'il pour l'autoliquidation ???
-        /// Il faut ajouter dans TVA_RATE , un code pour la TVA, 
-        $classifiedTaxCat->appendChild($this->createElement("cbc:ID", "S"));
-        $classifiedTaxCat->appendChild($this->createElement("cbc:Percent", $row['vat_percent']));
+        
+        //cbc:ID S  = standard rate 
+        /// see TVA_RATE.TVA_PEPPOL_CODE & C0TVA
+        $classifiedTaxCat->appendChild($this->createElement("cbc:ID", $row['vat_code']));
+        $classifiedTaxCat->appendChild($this->createElement("cbc:Percent", sprintf("%.2f",$row['vat_percent'])));
+
         $tax_scheme=$this->createElement('cac:TaxScheme');
         $tax_scheme->appendChild($this->createElement("cbc:ID", "VAT"));
         $classifiedTaxCat->appendChild($tax_scheme);
         $item->appendChild($classifiedTaxCat);
         $result->appendChild($item);
         $price=$result->appendChild($this->createElement("cac:Price"));
-        $price->appendChild($this->createElement("cbc:PriceAmount", $row['price']))
-                ->setAttribute("currencyID","EUR");
+        $price->appendChild($this->createElement("cbc:PriceAmount",sprintf("%.2f",abs($row['price_unit']))))
+                ->setAttribute("currencyID",$this->data['currency']);
         $result->appendChild($price);
             
         return $result;
@@ -435,10 +403,10 @@ class InvoiceUBL21 extends XMLInvoice {
     }
     /**
      * @brief Insert a PDF in the XML
+     * the document type is not due for BELGIUM
 @code      
  <cac:AdditionalDocumentReference>
     <cbc:ID>P01</cbc:ID>
-    <cbc:DocumentType>InvoicePDF</cbc:DocumentType>
     <cbc:DocumentDescription>Facture PDF</cbc:DocumentDescription>
     <cac:Attachment>
       <cbc:EmbeddedDocumentBinaryObject
@@ -449,7 +417,6 @@ class InvoiceUBL21 extends XMLInvoice {
      <!--     OU -->
       <cac:AdditionalDocumentReference>
     <cbc:ID>REF_ODT_001</cbc:ID>
-    <cbc:DocumentType>OpenDocument</cbc:DocumentType>
     <cbc:DocumentDescription>Fichier OpenDocument</cbc:DocumentDescription>
     <cac:Attachment>
         <cbc:EmbeddedDocumentBinaryObject
@@ -465,14 +432,31 @@ class InvoiceUBL21 extends XMLInvoice {
     function build_Invoice():\DOMElement
     {
         if ( $this->pdf_filename == "") return null;
-        $result=$this->createElement("AdditionalDocumentReference");
       /**  $pdf_filename = 'chemin/vers/votre/fichier.pdf';*/
-
+        static $i=0;
+        $i++;
+        if ( $this->pdf_filename == null ) {
+            return null;
+        }
         // Lire le fichier PDF  
-       // $pdfContent = file_get_contents($pdfPath);
+        $pdfContent = file_get_contents( $this->pdf_filename   );
 
-        // Encoder le PDF en base64
-      //  $base64Pdf = base64_encode($pdfContent);
+        $result=$this->createElement("cac:AdditionalDocumentReference");
+        $id=$this->createElement("cbc:ID",$i);
+        $document_description=$this->createElement("cbc:DocumentDescription"
+                , $this->data['description']);
+        
+        // PDF in base64
+        $base64Pdf = base64_encode($pdfContent);
+        $embeddedDocument=$this->createElement("cbc:EmbeddedDocumentBinaryObject",$base64Pdf);
+        $embeddedDocument->setAttribute("mimeCode", "application/pdf");
+        $embeddedDocument->setAttribute("filename", "facture.pdf");
+        $attachment=$this->createElement("cac:Attachment");
+        $attachment->appendChild($embeddedDocument);
+        
+        $result->appendChild($id);
+        $result->appendChild($document_description);
+        $result->appendChild($attachment);
         
         return $result;
     }
@@ -496,12 +480,14 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $root->appendChild($this->createElement('cbc:ID',$this->data['id']));
         $root->appendChild($this->createElement('cbc:IssueDate',$this->data['issue_date']));
-        if ($this->data ['due_date'] != '') {
-            $root->appendChild($this->createElement('cbc:DueDate',$this->data['due_date']));
+        if ($this->data ['due_date'] == '') 
+        {
+            $this->data ['due_date']=$this->data['issue_date'];
         }
+        $root->appendChild($this->createElement('cbc:DueDate',$this->data['due_date']));
         $root->appendChild($this->createElement('cbc:InvoiceTypeCode',380));
-        $root->appendChild($this->createElement('cbc:DocumentCurrencyCode','EUR'));
-        
+        $root->appendChild($this->createElement('cbc:DocumentCurrencyCode',$this->data['currency']));
+        $root->appendChild($this->createElement('cbc:BuyerReference',$this->data['info']['order']));
         /**
          * insert PDF in the XML
          */

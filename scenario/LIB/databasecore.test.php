@@ -34,13 +34,34 @@ $cn=Dossier::connect();
 echo h2(" Status IDLE");
 echo $cn->status();
 
-echo h2(" Status in begin ");
+echo h2(" Status start "); //echo PGSQL_TRANSACTION_INTRANS;    
 echo $cn->start();
 echo $cn->status ();
 echo "<br>";
 $cn->get_value("select count(*) from jrnx");
+echo "<br>";
 echo $cn->status ();
-    echo PGSQL_TRANSACTION_INTRANS;    
+    
+echo "<br>";
 echo h2(" Status after rollback ");
 echo $cn->commit();
+echo "<br>";
 echo $cn->status ();
+echo h1("Upload");
+echo h2("One file");
+if ( isset($_POST['submit_one'])) {
+    var_dump($_FILES);
+   // $cn->start();
+    if ( $cn->upload("validate_one") != false){
+        echo "success : loaded ".var_export($_FILES['validate_one'],true);
+    }
+ //   $cn->commit();
+}else{
+    echo <<<FORM
+<FORM METHOD="POST" enctype="multipart/form-data">
+    <input type="FILE"  name="validate_one">
+    <input type="SUBMIT" name="submit_one">
+</FORM>
+FORM;
+
+}

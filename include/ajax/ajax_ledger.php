@@ -256,6 +256,11 @@ switch ($action) {
                 $filename = mb_substr($obj->det->jr_pj_name, 0, 60);
             }
             echo HtmlInput::show_receipt_document($jr_id, h($filename));
+            // if using the XML Belgian format, add a tab for showing it
+            $acc_document=new Acc_Document($cn,$jr_id);
+            echo '<span style="margin-left:5rem">'.
+                 $acc_document->link_download_xml()
+                .'</span>';
             echo $x;
             echo '<p id="receipt_info_id" style="display:inline" ></p>';
             echo '</div>';
@@ -268,9 +273,8 @@ switch ($action) {
     case 'loadfile':
         if ($access == 'W' && isset ($_FILES)) {
             $cn->start();
-            // remove the file
-            $grpt = $cn->get_value('select jr_grpt_id from jrn where jr_id=$1', array($jr_id));
-            $cn->save_receipt($grpt);
+            $acc_document=new \Acc_Document($cn,$jr_id);
+            $acc_document->save_receipt();
             $cn->commit();
             // Show a link to the new file
             $op->get();
@@ -290,7 +294,13 @@ switch ($action) {
             $filename = $obj->det->jr_pj_name;
             echo HtmlInput::show_receipt_document($jr_id, h($filename));
             echo $x;
-
+            // if using the XML Belgian format, add a tab for showing it
+            $acc_document=new Acc_Document($cn,$jr_id);
+            echo '<span style="margin-left:5rem">'.
+                 $acc_document->link_download_xml()
+                .'</span>';
+            echo '<p id="receipt_info_id" style="display:inline" ></p>';
+            echo '</div>';
             echo '</div>';
             echo '</body></html>';
         }
@@ -325,12 +335,21 @@ switch ($action) {
                 $old_oid = $r['jr_pj'];
                 if (strlen($old_oid) != 0) {
                     // check if this pj is used somewhere else
-                    $c = $cn->count_sql("select * from jrn where jr_pj=" . $old_oid);
+                    $c = $cn->get_value("select count(*) from jrn where jr_pj=$1",
+                            [$old_oid]);
+                    
                     if ($c == 1)
                         $cn->lo_unlink($old_oid);
                 }
+                
                 $cn->exec_sql("update jrn set jr_pj=null, jr_pj_name=null, " .
                     "jr_pj_type=null  where jr_id=$1", array($jr_id));
+                
+                if ( ($oid_xml = $cn->get_value("select jr_document_xml from jrn where jr_id = $1",[$jr_id])) != "") 
+                {
+                    $cn->exec_sql("update jrn set jr_document_xml=null   where jr_id=$1", array($jr_id));
+                    $cn->lo_unlink($oid_xml);
+                }
             }
         }
         echo '</div>';

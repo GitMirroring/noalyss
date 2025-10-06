@@ -699,4 +699,18 @@ class Card_Property
         }
         return null;
     }
+    /**
+     * @brief returns the property value of a card without creating a card
+     * @param \Database $conx
+     * @param $card_id (int) FICHE.F_ID
+     * @param $property_id (int) ad_value
+     * @return string or false if nothing was found
+     */
+    static function get_attribute(\Database $conx, $card_id,$property_id)
+    {
+        $r=$conx->get_value("select ad_value from fiche_detail where
+            ad_id = $1 and f_id=$2",[$property_id,$card_id]);
+        if ( $conx->count() == 0) { return false;}
+        return $r;
+    }
 }
