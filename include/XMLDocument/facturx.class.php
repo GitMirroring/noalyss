@@ -50,7 +50,7 @@ class FacturX extends XMLInvoice
         , 'MY_CITY'
         , 'MY_COUNTRY_CODE'
         , 'MY_TVA'
-     //   ,'SIREN'
+        ,'SIREN'
      //   ,'SIRET'
         ];
 
@@ -111,7 +111,7 @@ class FacturX extends XMLInvoice
         $this->data = $this->build_data($jr_id);
         $company = $this->load_noalyss_parameter();
       //  var_dump($this->data);
-        $documentBuilder = ZugferdDocumentBuilder::createNew(ZugferdProfiles::PROFILE_XRECHNUNG_3);
+        $documentBuilder = ZugferdDocumentBuilder::createNew(ZugferdProfiles::PROFILE_XRECHNUNG_2_3);
         $documentBuilder->setDocumentInformation(
                 $this->data['id']
                 ,"380"
@@ -189,13 +189,9 @@ class FacturX extends XMLInvoice
             $vat=bcsub($vat,$this->data['operation'][$i]['vat_reversed'],2);
         }
         $tt  = bcadd($base,$vat,2);
-        /**
-         * @note : Le total de la facture n'est pas toujours le total du.
-         * il faut alors un "reste" à payer.
-         * Pas de détail par articles ?
-         */
-        ///@TODO DNY : ajouter les TVA par types  ( addDocumentTax) 
-        /// ainsi que la Somme des totaux (setDocumentSummation)
+        //------------------------------------------------
+        // VAT Detail
+        //------------------------------------------------
         $subTotal=$this->data['subTotalVAT'];
         $nb_sub=count($subTotal);
         for ($i=0;$i<$nb_sub;$i++) 
@@ -208,7 +204,9 @@ class FacturX extends XMLInvoice
                  , sprintf("%.2f",$subTotal[$i]['percent'])
                  );
         }
-         
+        //------------------------------------------------
+        // Total summary
+        //------------------------------------------------
         $documentBuilder->setDocumentSummation(
                   sprintf("%.2f",$this->data['TaxInclusiveAmount'])
                 , sprintf("%.2f",$this->data['PayableAmount'])
