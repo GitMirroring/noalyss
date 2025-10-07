@@ -60,7 +60,7 @@ class Sendmail_Core
      * @return Sendmail_Core
      */
     public function set_format($format) {
-        if ( in_array($this->format,['PLAIN','HTML'] ) == false) {
+        if ( in_array($format,['PLAIN','HTML'] ) == false) {
             throw new \Exception('SC64 : unknow format ');
         }
         $this->format = $format;
