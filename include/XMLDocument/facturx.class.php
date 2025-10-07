@@ -32,7 +32,12 @@ use horstoeko\zugferd\ZugferdProfiles;
 
 /**
  * @file
- * @brief answer to an inplace object
+ * @brief FacturX French / German Standard  for invoicing
+ */
+
+/**
+ * @class FacturX
+ * @brief FacturX French / German Standard for invoicing
  */
 class FacturX extends XMLInvoice
 {

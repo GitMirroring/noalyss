@@ -359,7 +359,7 @@ class InvoiceUBL21 extends XMLInvoice {
 		</cac:Price>
 	</cac:InvoiceLine>     
      * @endcode
-     * @parameter $i (int) idx f $this->data->operation[$i]
+     * @param $i (int) idx f $this->data->operation[$i]
      *      
      */
     function build_invoiceLine($i)
@@ -403,7 +403,10 @@ class InvoiceUBL21 extends XMLInvoice {
     }
     /**
      * @brief Insert a PDF in the XML
-     * the document type is not due for BELGIUM
+     * the document type is not needed for BELGIUM
+     */
+    /**
+     * 
 @code      
  <cac:AdditionalDocumentReference>
     <cbc:ID>P01</cbc:ID>
