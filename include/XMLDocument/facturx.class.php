@@ -82,10 +82,8 @@ class FacturX extends XMLInvoice
     }
      /**
      * @brief check that mandatory info are saved in the DB for customer
-     * @param $customer_id (int) card of the customer  FICHE.F_ID
-     * @param $a_error (array) array of errors, empty if nothing found
      */
-    function check_customer_data($customer_id){
+    function check_customer_data(){
         $a_error=array();
         $a_needed=[ATTR_DEF_NAME=>'name'
                 ,ATTR_DEF_ADRESS=>'street'

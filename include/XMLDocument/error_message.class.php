@@ -1,5 +1,4 @@
 <?php
-
 namespace Noalyss\XMLDocument;
 
 /*
@@ -51,7 +50,7 @@ namespace Noalyss\XMLDocument;
         - 'COMPANY_LEGAL_REGISTRATION' full name
         - 'COMPANY_BANK_IBAN' IBAN bank account
         - 'COMPANY_BANK_BIC'  BIC bank account
-        - 'COMPANY_UBL_ID'    PEPPOL id
+        - 'COMPANY_UBL_ID'    PEPPOL id ==> normalement c'est BE0999999999
         - 'MY_COUNTRY_CODE'   country code (normally BE)
         - 'MY_NAME'           short company name
         - 'MY_STREET'         address
@@ -97,7 +96,7 @@ class Error_Message
             , 'city' => _("Ville")
             , 'country'=>_("Code pays")
             , 'customer_id' => _("Numéro de TVA")
-            , 'endpoint_id' => _('Identifiant PEPPOL')
+            , 'endpoint_id' => _('Identifiant PEPPOL') // here 9925:BE....
             
         );
         

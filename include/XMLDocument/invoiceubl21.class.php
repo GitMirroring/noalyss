@@ -48,7 +48,6 @@ class InvoiceUBL21 extends XMLInvoice {
         , 'COMPANY_LEGAL_REGISTRATION'
         , 'COMPANY_BANK_IBAN'
         , 'COMPANY_BANK_BIC'
-        , 'COMPANY_UBL_ID'
         , 'MY_COUNTRY_CODE'
         , 'MY_NAME'
         , 'MY_STREET'
@@ -67,7 +66,7 @@ class InvoiceUBL21 extends XMLInvoice {
     function display_error()
     {
         $a_error=$this->verify();
-        include NOALYSS_TEMPLATE."/invoiceUBL21-display_error.php";
+        include NOALYSS_TEMPLATE."/xmlinvoice-display_error.php";
     }
   
 
@@ -88,18 +87,15 @@ class InvoiceUBL21 extends XMLInvoice {
     }
      /**
      * @brief check that mandatory info are saved in the DB for customer
-     * @param $customer_id (int) card of the customer  FICHE.F_ID
-     * @param $a_error (array) array of errors, empty if nothing found
-     * @todo : country code au lieu de country !! 
      */
-    function check_customer_data($customer_id){
+    function check_customer_data(){
         $a_error=array();
         $a_needed=[ATTR_DEF_NAME=>'name'
                 ,ATTR_DEF_ADRESS=>'street'
                 ,ATTR_DEF_POSTCODE=>'postalzone'
                 ,ATTR_DEF_CITY=>'city'
                 ,ATTR_DEF_COUNTRY_CODE=>'country'
-                ,ATTR_DEF_NUMTVA=>'customer_id'
+                ,ATTR_DEF_NUMTVA=>'customer_vat_id'
                 ,ATTR_DEF_PEPPOLID=>'endpoint_id'
             ];
         
@@ -155,7 +151,7 @@ class InvoiceUBL21 extends XMLInvoice {
         
         
         $tax=$this->createElement('cac:PartyTaxScheme');
-        $tax->appendChild($this->createElement('cbc:CompanyID',$this->data["customer"]['customer_id']));
+        $tax->appendChild($this->createElement('cbc:CompanyID',$this->data["customer"]['customer_vat_id']));
         
         $tax_scheme=$this->createElement('cac:TaxScheme');
         $tax_scheme->appendChild($this->createElement('cbc:ID',"VAT"));
@@ -164,8 +160,8 @@ class InvoiceUBL21 extends XMLInvoice {
         $ple=$this->createElement('cac:PartyLegalEntity');
            ///@todo customer = name doit être fiche
         $ple->appendChild($this->createElement("cbc:RegistrationName", $this->data['customer']['name']??"ERROR"));
-           ///@todo customer_id = numéro de TVA doit être dans fiche
-        $ple->appendChild($this->createElement("cbc:CompanyID", $this->data['customer']['customer_id']??"ERROR"));
+           ///@todo customer_vat_id = numéro de TVA doit être dans fiche
+        $ple->appendChild($this->createElement("cbc:CompanyID", $this->data['customer']['customer_vat_id']??"ERROR"));
         
         // assemble supplier
         $customer_party->appendChild($tax);
@@ -214,7 +210,7 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $supplier=$this->createElement('cac:AccountingSupplierParty');
         $supplier_party=$supplier->appendChild($this->createElement('cac:Party'));
-        $supplier_party->appendChild($this->createElement('cbc:EndpointID',$company['COMPANY_UBL_ID']))->setAttribute('schemeID', 9925);
+        $supplier_party->appendChild($this->createElement('cbc:EndpointID',$this->data["supplier"]['supplier_vat_id']))->setAttribute('schemeID', 9925);
         $party_name=$this->createElement('cac:PartyName');
         $party_name->appendChild($this->createElement('cbc:Name', $this->data['supplier']['name']));
         $supplier_party->appendChild($party_name);
@@ -229,14 +225,14 @@ class InvoiceUBL21 extends XMLInvoice {
         
         // Tax Schem
         $tax=$this->createElement('cac:PartyTaxScheme');
-        $tax->appendChild($this->createElement('cbc:CompanyID',$this->data["supplier"]['supplier_id']));
+        $tax->appendChild($this->createElement('cbc:CompanyID',$this->data["supplier"]['supplier_vat_id']));
         $tax_scheme=$this->createElement('cac:TaxScheme');
         $tax_scheme->appendChild($this->createElement('cbc:ID',"VAT"));
         $tax->appendChild($tax_scheme);
         // LegalEntity
         $ple=$this->createElement('cac:PartyLegalEntity');
         $ple->appendChild($this->createElement("cbc:RegistrationName", $company['COMPANY_LEGAL_REGISTRATION']??"ERROR"));
-        $ple->appendChild($this->createElement("cbc:CompanyID", $this->data['supplier']['supplier_id']??"ERROR"));
+        $ple->appendChild($this->createElement("cbc:CompanyID", $this->data['supplier']['supplier_vat_id']??"ERROR"));
         $ple->appendChild($this->createElement("cbc:CompanyLegalForm", $company['COMPANY_LEGAL_ENTITY']??"ERROR"));
         $contact=$this->createElement('cac:Contact');
         $contact->appendChild($this->createElement("cbc:Name",$company['INVOICE_CONTACT_NAME']??"ERROR"));
@@ -300,7 +296,7 @@ class InvoiceUBL21 extends XMLInvoice {
              * @TODO DNY
              * Pas toujours S !?
              */
-            //$taxCategory->appendChild($this->createElement("cbc:ID",$subTotal[$i]['vat_code']));
+            $taxCategory->appendChild($this->createElement("cbc:ID",$subTotal[$i]['vat_code']));
             $taxCategory->appendChild($this->createElement("cbc:Percent",sprintf("%.2f",$subTotal[$i]['percent'])));
             $taxScheme=$this->createElement("cac:TaxScheme");
             $taxScheme->appendChild($this->createElement("cbc:ID", "VAT"));
