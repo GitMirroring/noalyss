@@ -130,7 +130,7 @@ function id$(ID) {
     } else if (document.all) {
         return document.all[ID];
     } else {
-        document.debug_noalyss&&console.error(`id$ ${ID}`)
+        document.debug_noalyss&&console.error(`id$ ${ID} not found`)
         return undefined;
     }
 }
@@ -4713,4 +4713,66 @@ Widget.prototype.toggle_full_size=function (widget_domid) {
 (function(){window.addEventListener("onload", (event) => {remove_waiting_box()});})();
 */
 
-var bookmark=new Bookmark();
+//var bookmark=new Bookmark();
+
+Noalyss = function () {
+    
+}
+/**
+ * Activate TinyMCE 
+ * @param {string} domid  id of the dom element
+ * @param {string} mode min for minimum   or full , gives an error if the mode doesn't exist
+ * @returns {undefined}
+ */
+Noalyss.prototype.activate_tinymce=function (domid,mode) {
+        tinymce.remove('#'+domid);
+        if ( mode == 'min' || ! mode )
+        {
+        tinymce.init({
+          selector: 'textarea#'+domid,
+          height: 500,
+         menubar: false,
+          toolbar: 'undo redo |  ' +
+          'bold italic underline forecolor backcolor |fontsize styles  ' +
+          ' | bullist numlist | ' +
+          'removeformat | help',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+          promotion: false,
+          license_key:'gpl',
+          statusbar: false,
+             branding: false
+        });
+    } else if ( mode == "full")
+    {
+      /**
+           toolbar: 'undo redo ' +
+                    'bold italic underline strikethrough | hr quickimage | forecolor backcolor|emoticons |fontsize styles  ' +
+                    '  table tabledelete |' +
+                    ' | link unlink bullist numlist  | ' +
+                    'removeformat | help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+       */  
+        tinymce.init({
+          selector: 'textarea#'+domid,
+          height: 500,
+         menubar: false,
+          plugins:'link lists emoticons quickbars pagebreak table',
+             toolbar: 'undo redo ' +
+                    'bold italic underline strikethrough | hr quickimage | forecolor backcolor|emoticons |fontsize styles  ' +
+                    '  table tabledelete |' +
+                    ' | link unlink bullist numlist  | ' +
+                    'removeformat | help',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+          promotion: false,
+          license_key:'gpl',
+          statusbar: false,
+             branding: false
+        });
+      
+    }else {
+        console.error(`Noalyss.activate_tinymce unknow mode`);
+    }
+
+}
+
+noalyss=new Noalyss();
