@@ -49,11 +49,11 @@ class ITextarea extends HtmlInput
     /**
      * @brief set enrichText  to plain or enrich , enrich for WYSIWYG function, plain, plain textarea and choose
      * to display a button to switch to a WYSIWYG
-     * @param mixed $enrich
+     * @param mixed $enrich plain , enrich (full option) , min (minimum options)
      */
     public function set_enrichText($enrich)
     {
-        if ( ! in_array($enrich,['plain','enrich'])) {
+        if ( ! in_array($enrich,['plain','enrich',"min"])) {
             throw new \Exception("IT57.Invalid option");
         }
         $this->enrichText = $enrich;
@@ -83,12 +83,18 @@ class ITextarea extends HtmlInput
             <textarea name="{$this->name}" id="{$this->id}" {$this->style}>{$this->value}</textarea>
 <script type="text/javascript">
                 (function() {
-                    new nicEditor({
-                        buttonList : ['fontSize','fontFamily','fontFormat','bold','italic','underline',
-                        'strikethrough','subscript','superscript','link','unlink','bgcolor','forecolor','indent','outdent','ol',
-                        'ul','left','center','right','justify','hr','removeformat'],
-                        'iconsPath': 'image/nicEditorIcons.gif'
-                    }).panelInstance('{$this->id}');
+                   noalyss.activate_tinymce('{$this->name}','full');
+                })();
+            </script>
+EOF;
+        }elseif ($this->enrichText=='min') {
+            if ( empty($this->id)) $this->id=$this->name;
+
+            $r=<<<EOF
+            <textarea name="{$this->name}" id="{$this->id}" {$this->style}>{$this->value}</textarea>
+<script type="text/javascript">
+                (function() {
+                   noalyss.activate_tinymce('{$this->name}','min');
                 })();
             </script>
 EOF;
