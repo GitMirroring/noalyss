@@ -9,6 +9,7 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
  $periode_id=new Periode($cn,$obj->det->jr_tech_per);
  $exercice=$periode_id->get_exercice();
 $owner = new Noalyss_Parameter_Folder($cn);
+//* @var $div (string) current DIV 
 ?>
 <?php 
 ?>

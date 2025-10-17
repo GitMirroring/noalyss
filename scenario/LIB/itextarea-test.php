@@ -59,7 +59,7 @@ echo $itext->input();
     <?php
     $itext=new \ITextarea("enrich3");
     $itext->value= $http->post("enrich3","raw","");
-
+    $itext->heigh=130;
     $itext->set_enrichText("no-toolbar");
     echo $itext->input();
     ?>
@@ -69,7 +69,7 @@ echo $itext->input();
     
 <h1>Plain Area</h1>
     <?php
-    $itext=new \ITextarea("enrich2");
+    $itext=new \ITextarea("enrich4");
     $itext->value= strip_tags($http->post("enrich2","raw",""));
 
     $itext->set_enrichText("plain");

@@ -4724,15 +4724,15 @@ Noalyss = function () {
  * @param {string} mode min for minimum   or full , gives an error if the mode doesn't exist
  * @returns {undefined}
  */
-Noalyss.prototype.activate_tinymce=function (domid,mode) {
+Noalyss.prototype.activate_tinymce=function (domid,mode,p_height) {
         tinymce.remove('#'+domid);
-        
+        if (! p_height) p_height=500;
         if ( mode == 'minimal' || ! mode )
         {
         tinymce.init({
           selector: 'textarea#'+domid,
            plugins:'link quickbars ',
-          height: 500,
+          height: p_height,
          menubar: false,
           toolbar: 'undo redo |  ' +
           'bold italic underline forecolor backcolor |fontsize   ' +
@@ -4759,7 +4759,7 @@ Noalyss.prototype.activate_tinymce=function (domid,mode) {
        */  
         tinymce.init({
           selector: 'textarea#'+domid,
-          height: 500,
+          height: p_height,
          menubar: false,
           plugins:'link lists emoticons quickbars pagebreak table',
              toolbar: 'undo redo ' +
@@ -4778,10 +4778,10 @@ Noalyss.prototype.activate_tinymce=function (domid,mode) {
       
     }else if ( mode == 'no-toolbar'  )
         {
-            
+            console.debug(`no toolbar ${domid} height ${p_height}`)
         tinymce.init({
           selector: 'textarea#'+domid,
-          height: 500,
+          height: p_height,
           plugins:' quickbars',
           menubar:false,
           toolbar: false,

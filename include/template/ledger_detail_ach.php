@@ -5,6 +5,7 @@
 /**
  * @var $str_anc String HTML contains the detail of analytic
  * @var $g_user Noalyss_User inherited , it is the connected user
+ * @var $div (string) current DIV ID 
  */
 $str_anc="";
 global $div,$g_parameter,$cn,$access,$jr_id,$obj;
@@ -107,6 +108,7 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                             <td style="text-align:center;vertical-align: top">
                                 <?php
                                 $inote = new ITextarea('jrn_note');
+                                $inote->id="jrn_note";
                                 $inote->style=' class="itextarea" style="width:90%;height:100%;"';
                                 $inote->value = strip_tags($obj->det->note);
                                 echo $inote->input();

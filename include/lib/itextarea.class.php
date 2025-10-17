@@ -35,6 +35,7 @@ class ITextarea extends HtmlInput
         parent::__construct($p_name, $p_value, $p_id);
         $this->style=' class="itextarea" ';
         $this->enrichText="plain";
+        $this->heigh=500;
     }
 
     /**
@@ -84,7 +85,7 @@ class ITextarea extends HtmlInput
             <textarea name="{$this->name}" id="{$this->id}" {$this->style}>{$this->value}</textarea>
 <script type="text/javascript">
                 (function() {
-                   noalyss.activate_tinymce('{$this->name}','{$this->enrichText}');
+                   noalyss.activate_tinymce('{$this->name}','{$this->enrichText}','{$this->heigh}');
                 })();
             </script>
 EOF;
