@@ -38,12 +38,35 @@ echo '</div>';
 $itext=new \ITextarea("enrich");
 $itext->value= $http->post("enrich","raw","");
 
-$itext->set_enrichText("enrich");
+$itext->set_enrichText("full");
 echo $itext->input();
 ?>
 
 
 <hr>
+<h1>Minimum Area</h1>
+    <?php
+    $itext=new \ITextarea("enrich2");
+    $itext->value= $http->post("enrich2","raw","");
+
+    $itext->set_enrichText("minimal");
+    echo $itext->input();
+    ?>
+
+
+<p>
+    <h1>No Toolbar</h1>
+    <?php
+    $itext=new \ITextarea("enrich3");
+    $itext->value= $http->post("enrich3","raw","");
+
+    $itext->set_enrichText("no-toolbar");
+    echo $itext->input();
+    ?>
+
+
+<p>
+    
 <h1>Plain Area</h1>
     <?php
     $itext=new \ITextarea("enrich2");

@@ -2265,7 +2265,7 @@ function filter_list(phrase, _id) {
             ele += la_content[e].innerText;
         }
 
-        console.debug(`ele = ${ele}`);
+        
         if (ele.toLowerCase().indexOf(words) >= 0) {
             tot_found++;
             l_list.childNodes[r].style.display = 'block';
@@ -4326,7 +4326,7 @@ function check_password_strength(p_pass_domid, p_result_domid, details) {
                         return;
                     }
                     var answer = req.responseJSON;
-                    console.debug(answer);
+                    
                     if (answer['password'] == 'nok') {
 
                         id$(p_pass_domid).setStyle("background-color:red");
@@ -4726,18 +4726,23 @@ Noalyss = function () {
  */
 Noalyss.prototype.activate_tinymce=function (domid,mode) {
         tinymce.remove('#'+domid);
-        if ( mode == 'min' || ! mode )
+        
+        if ( mode == 'minimal' || ! mode )
         {
         tinymce.init({
           selector: 'textarea#'+domid,
+           plugins:'link quickbars ',
           height: 500,
          menubar: false,
           toolbar: 'undo redo |  ' +
-          'bold italic underline forecolor backcolor |fontsize styles  ' +
+          'bold italic underline forecolor backcolor |fontsize   ' +
           ' | bullist numlist | ' +
           'removeformat | help',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+          quickbars_insert_toolbar:false,
           promotion: false,
+        quickbars_selection_toolbar:' bold italic underline forecolor backcolor ',
+
           license_key:'gpl',
           statusbar: false,
              branding: false
@@ -4758,18 +4763,38 @@ Noalyss.prototype.activate_tinymce=function (domid,mode) {
          menubar: false,
           plugins:'link lists emoticons quickbars pagebreak table',
              toolbar: 'undo redo ' +
-                    'bold italic underline strikethrough | hr quickimage | forecolor backcolor|emoticons |fontsize styles  ' +
+                    'bold italic underline strikethrough | hr quickimage | forecolor backcolor|emoticons |fontsize styles fontfamily ' +
                     '  table tabledelete |' +
                     ' | link unlink bullist numlist  | ' +
                     'removeformat | help',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+         quickbars_insert_toolbar:false,
           promotion: false,
+          quickbars_selection_toolbar:' bold italic underline forecolor backcolor ',
           license_key:'gpl',
-          statusbar: false,
+          statusbar: true,
              branding: false
         });
       
-    }else {
+    }else if ( mode == 'no-toolbar'  )
+        {
+            
+        tinymce.init({
+          selector: 'textarea#'+domid,
+          height: 500,
+          plugins:' quickbars',
+          menubar:false,
+          toolbar: false,
+          quickbars_selection_toolbar:' bold italic underline forecolor backcolor hide',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+          promotion: false,
+          license_key:'gpl',
+          statusbar: false,
+          toolbar_mode: 'hide',
+           quickbars_insert_toolbar:false,
+          branding: false
+        });
+    } else {
         console.error(`Noalyss.activate_tinymce unknow mode`);
     }
 
