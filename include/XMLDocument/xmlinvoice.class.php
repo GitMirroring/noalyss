@@ -41,7 +41,7 @@ namespace Noalyss\XMLDocument;
             [postalzone] => 1080
             [city] => Molenbeek Saint Jean
             [country] => BE
-            [supplier_id] => BE012345678
+            [supplier_vat_id] => BE012345678
             [registration_name] => My Company sprl
         )
 
@@ -52,7 +52,7 @@ namespace Noalyss\XMLDocument;
             [postalzone] => 
             [city] => 
             [country] => 
-            [customer_id] => 
+            [customer_vat_id] => numéro TVA
             [registration_name] => This asbl
         )
 
@@ -330,9 +330,8 @@ abstract class XMLInvoice extends \DOMDocument
     abstract function check_company_data() ;
     /**
      * @brief check that mandatory info are saved in the DB for customer
-     * @param $customer_id (int) card of the customer  FICHE.F_ID
      */
-    abstract function check_customer_data($customer_id) ;
+    abstract function check_customer_data() ;
     /**
      * @brief create the invoice in the right format, with PDF if any
      * @param $operation_id (int) JRN.JR_ID
@@ -395,7 +394,7 @@ abstract class XMLInvoice extends \DOMDocument
     
     /**
      * @brief check that all the data are correct
-     * @returns null : no errors,  string separated with comma of error code
+     * @returns empty arry : no errors,  array with error code
      * @see get_message_error
      */
     public function verify()
@@ -408,7 +407,7 @@ abstract class XMLInvoice extends \DOMDocument
        
         // verify that all needed data in PARAMETER are valid
         $a_error['company'] = $this->check_company_data();
-        $a_error['customer'] = $this->check_customer_data($this->data['customer']['card_id']);
+        $a_error['customer'] = $this->check_customer_data();
         
         return $a_error;
     } 
@@ -422,9 +421,15 @@ abstract class XMLInvoice extends \DOMDocument
      *      - ,postalzone
      *      - ,city
      *      - ,country
-     *      - ,customer_id => VAT Number
+     *      - ,customer_vat_id => VAT Number
      *      - , registration_name,
      *      - card_id
+     *      - endpoint_id
+     * @note :        
+     * endpoint_id: 
+          normally it this the VAT number (BE included) and scheme 9925
+          or the scheme 00208 VAT number without BE (enterprise number)
+
      */
     function fill_customer($card_id):array
     {
@@ -440,10 +445,11 @@ abstract class XMLInvoice extends \DOMDocument
         $result['country']=$customer->get_attribute(ATTR_DEF_COUNTRY_CODE,0);
         
         // official ID , like VAT
-        $result['customer_id']=str_replace([" ",".","-","/"],"" ,$customer->get_attribute(ATTR_DEF_NUMTVA,0));
+        $result['customer_vat_id']=str_replace([" ",".","-","/"],"" ,$customer->get_attribute(ATTR_DEF_NUMTVA,0));
         // official name of the company 
         $result['registration_name']=$customer->get_attribute(ATTR_DEF_NAME,0);
-        $result['endpoint_id']=$customer->get_attribute(ATTR_DEF_PEPPOLID,0);
+        // $result['endpoint_id']=$customer->get_attribute(ATTR_DEF_PEPPOLID,0);
+        $result['endpoint_id']= $result['customer_vat_id'];
         return $result;
     }
     /**
@@ -455,7 +461,7 @@ abstract class XMLInvoice extends \DOMDocument
      *      - ,postalzone
      *      - ,city
      *      - ,country
-     *      - supplier_id => VAT Number
+     *      - supplier_vat_id => VAT Number avec BE !
      *      - registration_name,
      * 
      */
@@ -471,13 +477,18 @@ abstract class XMLInvoice extends \DOMDocument
         // official name of the company 
         $result['registration_name']=$a_parameter['MY_NAME'];
         // official ID , like VAT
-        $result['supplier_id']=str_replace([" ",".","-","/"],"" ,$a_parameter['MY_TVA']);
+        $result['supplier_vat_id']=str_replace([" ",".","-","/"],"" ,$a_parameter['MY_TVA']);
+        /**
+         * @TODO vérifier qu'il contient bien BE
+         */
+        
         $result['COUNTRY_CODE']=$a_parameter['COUNTRY_CODE']??"";
         $result['COMPANY_LEGAL_REGISTRATION']=$a_parameter['COMPANY_LEGAL_REGISTRATION']??"";
         $result['COMPANY_LEGAL_ENTITY']=$a_parameter['COMPANY_LEGAL_ENTITY']??"";
         $result['INVOICE_CONTACT_NAME']=$a_parameter['INVOICE_CONTACT_NAME']??"";
         $result['INVOICE_EMAIL_COMPANY']=$a_parameter['INVOICE_EMAIL_COMPANY']??"";
-        $result['COMPANY_UBL_ID']=$a_parameter['COMPANY_UBL_ID']??"";
+        //$result['COMPANY_UBL_ID']=$a_parameter['COMPANY_UBL_ID']??"";
+        $result['COMPANY_UBL_ID']="9925:".$result['supplier_vat_id'];
         return $result;
     }
     /**

@@ -34,6 +34,17 @@ namespace Noalyss\XMLDocument;
  * Exception code : 
  *    - 55 : XML Invalid
  *    - 62 : filename don't exist
+ * Namespace standard (from XSD)
+ * 
+ * Array
+(
+    [xml] => http://www.w3.org/XML/1998/namespace
+    [cbc] => urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2
+    [cac] => urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2
+    [xmlns] => urn:oasis:names:specification:ubl:schema:xsd:Invoice-2
+)
+
+ * 
  */
 class XMLInvoice_Reader
 {
