@@ -35,6 +35,7 @@ class ITextarea extends HtmlInput
         parent::__construct($p_name, $p_value, $p_id);
         $this->style=' class="itextarea" ';
         $this->enrichText="plain";
+        $this->heigh=500;
     }
 
     /**
@@ -53,9 +54,10 @@ class ITextarea extends HtmlInput
      */
     public function set_enrichText($enrich)
     {
-        if ( ! in_array($enrich,['plain','enrich',"min"])) {
-            throw new \Exception("IT57.Invalid option");
+        if ( ! in_array($enrich,['enrich','plain','full',"minimal","no-toolbar"])) {
+            throw new \Exception("IT57.Invalid option [$enrich]");
         }
+        if ( $enrich == 'enrich') $enrich='full';
         $this->enrichText = $enrich;
         return $this;
     }
@@ -69,36 +71,26 @@ class ITextarea extends HtmlInput
         $this->value=($p_value==null)?$this->value:$p_value;
         $this->id=($this->id=="")?$this->name:$this->id;
         if ( $this->readOnly==true) return $this->display();
-
+        if ( empty($this->id)) $this->id=$this->name;
+        
         if ( $this->enrichText == "plain" ) {
             $r="";
             $r.='<TEXTAREA '.$this->style.'  name="'.$this->name.'" id="'.$this->id.'"';
             $r.='>';
             $r.=$this->value;
             $r.="</TEXTAREA>";
-        } elseif ($this->enrichText=='enrich') {
-            if ( empty($this->id)) $this->id=$this->name;
+        } else {
 
             $r=<<<EOF
             <textarea name="{$this->name}" id="{$this->id}" {$this->style}>{$this->value}</textarea>
 <script type="text/javascript">
                 (function() {
-                   noalyss.activate_tinymce('{$this->name}','full');
-                })();
-            </script>
-EOF;
-        }elseif ($this->enrichText=='min') {
-            if ( empty($this->id)) $this->id=$this->name;
-
-            $r=<<<EOF
-            <textarea name="{$this->name}" id="{$this->id}" {$this->style}>{$this->value}</textarea>
-<script type="text/javascript">
-                (function() {
-                   noalyss.activate_tinymce('{$this->name}','min');
+                   noalyss.activate_tinymce('{$this->name}','{$this->enrichText}','{$this->heigh}');
                 })();
             </script>
 EOF;
         }
+   
         return $r;
     }
 

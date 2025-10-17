@@ -334,7 +334,7 @@ function small(p_id_textarea){
    $style_enl='style="display:inline"';$style_small='style="display:none"';
    // description
    $description = new ITextarea("ag_description");
-   $description->set_enrichText("enrich");
+   $description->set_enrichText("full");
    $description->id="ag_description";
    $has_description = false;
     //---------------------------------- Description -------------------------------------------------------------------

@@ -225,7 +225,7 @@ class Follow_Up
 
         // Description
         $desc=new ITextArea();
-        $desc->set_enrichText("enrich");
+        $desc->set_enrichText("full");
         $desc->style=' class="itextarea" style="width:80%;margin-left:5%;"';
         $desc->name="ag_comment";
         $desc->readOnly=$readonly;

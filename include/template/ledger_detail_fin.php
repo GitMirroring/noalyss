@@ -3,6 +3,8 @@
 //see licence.txt
 $str_anc="";
 global $g_parameter,$g_user;
+
+//* @var $div (string) current DIV ID 
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
 <div class="content" style="padding:0;">
 <?php

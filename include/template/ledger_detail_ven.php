@@ -1,6 +1,8 @@
 <?php
 //This file is part of NOALYSS and is under GPL 
 //see licence.txt
+
+//* @var $div (string) current DIV 
 global $div, $g_parameter, $cn, $access, $jr_id, $obj,$g_user;
 ?>
 

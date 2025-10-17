@@ -2779,7 +2779,6 @@ EOF;
     echo js_include('todo_list.js');
     echo js_include('anc_script.js');
     echo js_include('sorttable.js');
-    echo js_include('nicEdit.js');
     echo js_include('managetable.js');
     echo js_include('acc_currency.js');
     echo js_include('taggroup.js');
