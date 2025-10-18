@@ -62,8 +62,7 @@ $http=new HttpInput();
 IDate::set_firstDate($g_user->get_first_week_day());
 ITva_Popup::set_vat_code($g_user->get_vat_code_preference());
 
-// check that the current user is saved into PostgreSQL setting in order to use it in PLPGSQL
-\Noalyss\Dbg::echo_var(1,sprintf("current user is [%s]",$cn->get_value("select current_setting('noalyss.user_login')")));
+
 
 /*
  * check that the database is not empty
@@ -85,6 +84,10 @@ if ($g_user->get_access_mode()=='MOBILE') { require NOALYSS_HOME."/mobile.php"; 
 $style_user=$http->post("style_user","string",$_SESSION[SESSION_KEY.'g_theme']);
 
 html_page_start($style_user);
+
+// check that the current user is saved into PostgreSQL setting in order to use it in PLPGSQL
+\Noalyss\Dbg::echo_var(1,sprintf("current user is [%s]",$cn->get_value("select current_setting('noalyss.user_login')")));
+
 if ( DEBUGNOALYSS > 1 ) {
     /**
      * Debug Design

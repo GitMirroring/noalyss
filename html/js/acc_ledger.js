@@ -1278,7 +1278,7 @@ function op_save(obj) {
         var divid = obj.whatdiv.value;
         queryString ["act"] = "save";
         queryString ["op"] = "ledger";
-
+        
         waiting_box();
         /*
          * Operation detail is in a new window
@@ -1343,7 +1343,9 @@ function op_save(obj) {
         return false;
     } catch (e) {
         console.error("F1. op_save")
-        alert_box(e.message);
+        console.error(e.message)
+        alert_box("op_save "+e.message);
+        return false;
     }
 }
 
@@ -1824,7 +1826,6 @@ var operation_exercice = {
             // For form , most of the parameters are in the FORM
             // method is then POST
             //var queryString=id$(p_form_id).serialize(true);
-            console.debug(row_operation_exercice);
             var queryString = {
                 op: 'operation_exercice+modify_row',
                 oe_id: oe_id,
@@ -1843,7 +1844,6 @@ var operation_exercice = {
                             reconnect();
                             return;
                         }
-                        console.debug(req.responseText)
                         var y = calcy(15);
                         var div_style = "position:absolute;" + ";top:" + y + "px";
                         add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: true});

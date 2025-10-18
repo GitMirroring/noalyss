@@ -314,7 +314,7 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     
     if ($is_msie == 0 ) 
     {
-        echo '<!doctype html>';
+        echo '<!DOCTYPE html>';
         printf("\n");
  
     }
