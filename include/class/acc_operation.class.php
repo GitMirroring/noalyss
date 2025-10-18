@@ -1117,9 +1117,15 @@ class Acc_Detail extends Acc_Operation
         {
             $this->det->$key=$val;
         }
-	$sql="select n_text from jrn_note where jr_id=$1";
-	$this->det->note=$this->db->get_value($sql,array($this->jr_id));
-	$this->det->note=strip_tags($this->det->note);
+	$sql="select n_text,n_html from jrn_note where jr_id=$1";
+        $a=$this->db->get_row($sql,array($this->jr_id));
+	if ( empty($a)) {
+            $this->det->note="";
+            $this->det->note_html=null;
+        } else {
+            $this->det->note=strip_tags($a['n_text']);
+            $this->det->note_html=($a['n_html'] == "")?$a['n_text']:$a['n_html'];
+        }
     }
     /**
      * 

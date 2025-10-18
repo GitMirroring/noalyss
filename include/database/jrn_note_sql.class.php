@@ -44,6 +44,7 @@ class Jrn_Note_SQL extends Table_Data_SQL
             "n_id"=>"n_id"
         , "jr_id"=>"jr_id"
             ,"n_text"=>"n_text"
+            ,"n_html"=>"n_html"
         );
         /*
          * Type of columns
@@ -52,6 +53,7 @@ class Jrn_Note_SQL extends Table_Data_SQL
              "n_id"=>"number"
             , "jr_id"=>"number"
             ,"n_text"=>"text"
+            ,"n_html"=>"text"
         );
 
 

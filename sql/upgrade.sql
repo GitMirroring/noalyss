@@ -306,3 +306,38 @@ INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, 
 VALUES('RAW:xml-invoice', 'Exporte la facture XML', 'export_xml-invoice.php', NULL, 'export la facture électronique en XML', NULL, NULL, 'PR', NULL);
 
 insert into profile_menu (me_code,p_id, p_type_display) select 'RAW:xml-invoice',p_id,'P' from profile;
+
+alter table jrn_note add column n_html text;
+comment on columnt table.jrn_note is ' contains  the HTML version from n_text';
+update jrn_note set n_html=n_text;
+
+-- replace jrn_add_note
+DROP FUNCTION comptaproc.jrn_add_note(int8, text);
+
+CREATE OR REPLACE FUNCTION comptaproc.jrn_add_note(p_jrid bigint, p_note text,p_note_html text)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+declare
+	tmp bigint;
+begin
+	if length(trim(p_note)) = 0 then
+	   delete from jrn_note where jr_id= p_jrid;
+	   return;
+	end if;
+	
+
+	select n_id into tmp from jrn_note where jr_id = p_jrid;
+	p_note_html := regexp_replace (p_note_html,'<script','<-script','ig');
+
+	if FOUND then
+	   update jrn_note set n_text=trim(p_note),n_note_html=p_note_html where jr_id = p_jrid;
+	else 
+	   insert into jrn_note (jr_id,n_text,n_html) values ( p_jrid, p_note,p_note_html);
+
+	end if;
+	
+	return;
+end;
+$function$
+;

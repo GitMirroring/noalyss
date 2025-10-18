@@ -21,7 +21,8 @@
 
 /**
  *
- * javascript script, always added to every page
+ * javascript script, always added to every page, it is the first script and 
+ * should contain all the global variables
  *
  */
 var ask_reload = 0;
@@ -34,6 +35,16 @@ var layer=0;
 var viewport = document.viewport.getDimensions(); // Gets the viewport as an object literal
 var width = viewport.width; // Usable window width
 var height = viewport.height;
+var g_enable_tinymce=true;
+/**
+ * if browser < 2021, function window.crypto.randomUUID is not implemented
+ * so we tinyMCE cannot work
+*/
+if ( ! window.crypto.randomUUID) {
+    console.info("too old browser: implement function randomUUID")
+   g_enable_tinymce=false;
+}
+
 
 /**
  * return undefined if nothing is found , otherwise return the DOM elemnt, try to find an DOM Element inside p_element
@@ -4726,6 +4737,7 @@ Noalyss = function () {
  */
 
 Noalyss.prototype.activate_tinymce=function (domid,mode,p_height) {
+    if ( ! g_enable_tinymce ) return;
         tinymce.remove('#'+domid);
         if (! p_height) p_height=500;
         if ( mode == 'minimal' || ! mode )
@@ -4800,5 +4812,130 @@ Noalyss.prototype.activate_tinymce=function (domid,mode,p_height) {
     }
 
 }
+/**
+ * Input NOTE on operation from Detail Operation
+ * @param {int} dossier_id
+ * @param {int} jrn_id
+ * @param {string} div_prefix
+ * @returns {undefined}
+ */
+Noalyss.prototype.input_note=function (dossier_id,jrn_id,div_prefix)
+{
+    
+    try
+    {
+        var dgbox = "box_input_note"+div_prefix;
+        waiting_box();
+        removeDiv(dgbox);
+        var queryString = {
+            op:'ledger'
+            ,act:'note_input'
+            ,jr_id:jrn_id
+            ,div:div_prefix
+            ,gDossier:dossier_id
+            ,tinymce:g_enable_tinymce
+        };
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'get',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        var y = calcy(15);
+                        var div_style = "position:absolute;" + ";top:" + y + "px";
+                        add_div({id: dgbox, cssclass: 'inner_box2', html: loading(), style: div_style, drag: true});
+                        let response=req.responseXML;
+                        let html=getNodeText(response.getElementsByTagName("code")[0])
+                        let ctl=getNodeText(response.getElementsByTagName("ctl")[0]);
+                        $(dgbox).update(html);
+                        
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
 
+}
+/**
+ * Save note, call from ajax_ledger.php act = note_input
+ * @param {DOMObjet} dom_form
+ * @returns {undefined}
+ */
+Noalyss.prototype.save_note=function (dom_form) 
+{
+    try
+    {
+        waiting_box();
+        let queryString=dom_form.serialize(true);
+        console.debug(queryString)
+        if ( g_enable_tinymce ) {
+            queryString['note_html'] = tinymce.get(queryString['input_html']).getContent();
+        }else{
+            queryString['note_html'] =$F($F('input_html'))
+        }
+        queryString['op'] = 'ledger';
+        var x=this;
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'POST',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        let response=req.responseXML;
+                        let html=getNodeText(response.getElementsByTagName("code")[0])
+                        let ctl=getNodeText(response.getElementsByTagName("ctl")[0]);
+                        console.debug(response);
+                        $('note_html'+ctl).update(html);
+                        x.refresh_note(queryString['jr_id'],queryString['gDossier']);
+                        removeDiv('box_input_note'+queryString['div']);
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
+}
+Noalyss.prototype.refresh_note=function(jrn_id,dossier_id)
+{
+    if ( document.getElementById("als_note"+jrn_id)) {
+        new Ajax.Updater('als_note'+jrn_id,'ajax_misc.php',{
+            method:'get',
+            parameters:{
+                op:'ledger'
+                ,'act':'note_refresh'
+                ,jr_id:jrn_id
+                ,gDossier:dossier_id
+                ,div:'not-set'
+            }
+    })
+    } else if ( document.getElementById("jrn_note_td")) {
+        new Ajax.Updater('jrn_note_td','ajax_misc.php',{
+            method:'get',
+            parameters:{
+                op:'ledger'
+                ,'act':'note_refresh'
+                ,jr_id:jrn_id
+                ,gDossier:dossier_id
+                ,div:'not-set'
+            }
+    })
+    }
+    
+}
 noalyss=new Noalyss();

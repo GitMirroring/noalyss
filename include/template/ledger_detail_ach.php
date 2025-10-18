@@ -5,10 +5,17 @@
 /**
  * @var $str_anc String HTML contains the detail of analytic
  * @var $g_user Noalyss_User inherited , it is the connected user
- * @var $div (string) current DIV ID 
+ * @var $div (string) current DIV ID  prefix (det<x> where <x> is a number
  */
 $str_anc="";
 global $div,$g_parameter,$cn,$access,$jr_id,$obj;
+
+//@var $dossier_id (int) folder id 
+$dossier_id=Dossier::id();
+
+//@var $jr_id (int) jrn.jr_id
+//@var $obj (Acc_Operation) current operation detail 
+
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
 <div class="content" style="padding:0;">
     <?php
@@ -102,18 +109,14 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                     <table style="width:99%;height:8rem;vertical-align:top;">
                         <tr style="height: 5%">
                             <td style="text-align:center;vertical-align: top">
-                                Note
+                               <button onclick="noalyss.input_note('<?=$dossier_id?>','<?=$jr_id?>','<?=$div?>');return false;" class="smallbutton">
+                                    <?=_("Note")?>
+                                </button>
                             </td></tr>
                         <tr>
-                            <td style="text-align:center;vertical-align: top">
-                                <?php
-                                $inote = new ITextarea('jrn_note');
-                                $inote->id="jrn_note";
-                                $inote->style=' class="itextarea" style="width:90%;height:100%;"';
-                                $inote->value = strip_tags($obj->det->note);
-                                echo $inote->input();
-                                ?>
-
+                            <td id="note_html<?=$div?>" style="text-align:center;vertical-align: top">
+                                <?=$obj->det->note_html?>
+                               
                             </td>
                         </tr>
                         <tr>

@@ -10,6 +10,12 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
  $exercice=$periode_id->get_exercice();
 $owner = new Noalyss_Parameter_Folder($cn);
 //* @var $div (string) current DIV 
+//@var $dossier_id (int) folder id 
+$dossier_id=Dossier::id();
+
+//@var $jr_id (int) jrn.jr_id
+//@var $obj (Acc_Operation) current operation detail 
+
 ?>
 <?php 
 ?>
@@ -72,17 +78,13 @@ $owner = new Noalyss_Parameter_Folder($cn);
                     <table style="width:99%;height:8rem;vertical-align:top;">
                         <tr style="height: 5%">
                             <td style="text-align:center;vertical-align: top">
-                                Note
+                                  <button onclick="noalyss.input_note('<?=$dossier_id?>','<?=$jr_id?>','<?=$div?>');return false;" class="smallbutton">
+                                    <?=_("Note")?>
+                                </button>
                             </td></tr>
                         <tr>
-                            <td style="text-align:center;vertical-align: top">
-                                <?php
-                                $inote = new ITextarea('jrn_note');
-                                $inote->style=' class="itextarea" style="width:90%;height:100%;"';
-                                $inote->value = strip_tags($obj->det->note);
-                                echo $inote->input();
-                                ?>
-
+                            <td id="note_html<?=$div?>" style="text-align:center;vertical-align: top">
+                                <?=$obj->det->note_html?>
                             </td>
                         </tr>
                         <tr>

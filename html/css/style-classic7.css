@@ -4090,3 +4090,15 @@ h2.h-section {
 .bt-error {
     color:var(--color-red);
 }
+
+
+
+
+#jrn_note_td {
+ 
+  background-color: lightyellow;
+}
+
+.font-small {
+      font-size: 0.90rem;
+}

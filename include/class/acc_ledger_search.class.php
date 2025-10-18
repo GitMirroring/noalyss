@@ -343,6 +343,7 @@ class Acc_Ledger_Search
              p_closed,
              jr_pj_number,
              n_text,
+             n_html,
              (select string_agg(a,' ')
                 from (select '<span style=\"font-size:80%\" class=\"tagcell tagcell-color'||t.t_color::text||'\">'||t_tag||'</span>' a 
                         from operation_tag ot join tags t on(ot.tag_id=t.t_id)
@@ -943,7 +944,14 @@ class Acc_Ledger_Search
             if ( $row['analytic_op'] != "")
                 $r.=sprintf('<span style="float:right;background:black;color:white;">&ni;</span>');
             $r.="</TD>";
-            $r.=td(h($row['n_text']), ' style="font-size:0.87em%"');
+            // Note
+            $r.='<td>';
+            $r.='<span id="als_note'.$row['jr_id'].'" class="font-small">';
+            $r.= $row['n_text'];
+            $r.='<span>';
+            $r.='</span>';
+            $r.='</td>';
+            
             // Amount
             // If the ledger is financial :
             // the credit must be negative and written in red

@@ -71,12 +71,14 @@ $default_currency=new Acc_Currency(Dossier::connect(),0);
         </td>
     </tr>
     <tr>
-        <td>
-            <?=_("Note")?>
+        <td style="width:100%" colspan="2">
+    
             <?php echo Icon_Action::show_note('jrn_note_div') ?>
-        </td>
-        <td >
-            <pre id="jrn_note_td"></pre>
+            <div id="jrn_note_td"><?php
+                if (!empty($p_array)&& isset ($p_array['jrn_note_input']))
+                { echo $p_array['jrn_note_input'];}
+                
+                ?></div>
         </td>
     </tr>
 

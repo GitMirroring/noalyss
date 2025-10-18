@@ -85,7 +85,7 @@ class ITextarea extends HtmlInput
             <textarea name="{$this->name}" id="{$this->id}" {$this->style}>{$this->value}</textarea>
 <script type="text/javascript">
                 (function() {
-                   noalyss.activate_tinymce('{$this->name}','{$this->enrichText}','{$this->heigh}');
+                   noalyss.activate_tinymce('{$this->id}','{$this->enrichText}',{$this->heigh});
                 })();
             </script>
 EOF;
