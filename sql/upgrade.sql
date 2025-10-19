@@ -308,7 +308,7 @@ VALUES('RAW:xml-invoice', 'Exporte la facture XML', 'export_xml-invoice.php', NU
 insert into profile_menu (me_code,p_id, p_type_display) select 'RAW:xml-invoice',p_id,'P' from profile;
 
 alter table jrn_note add column n_html text;
-comment on columnt table.jrn_note is ' contains  the HTML version from n_text';
+comment on column jrn_note.n_html is ' contains  the HTML version from n_text';
 update jrn_note set n_html=n_text;
 
 -- replace jrn_add_note

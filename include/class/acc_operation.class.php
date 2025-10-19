@@ -64,14 +64,14 @@ class Acc_Operation
      * \brief constructor set automatically the attributes user and periode
      * \param $p_cn the databse connection
      */
-    function __construct($p_cn)
+    function __construct($p_cn,$p_jrid=0)
     {
         global $g_user;
         $this->db=$p_cn;
         $this->qcode="";
         $this->user=$_SESSION[SESSION_KEY.'g_user'];
         $this->periode=$g_user->get_periode();
-        $this->jr_id=0;
+        $this->jr_id=$p_jrid;
         $this->jr_optype="NOR";
         $this->amount=0;
         $this->currency_rate=1;
@@ -84,7 +84,7 @@ class Acc_Operation
         $r=<<<EOF
    Acc_Operation Object 
      [   
-        db {$this->db} 
+       
         qcode {$this->qcode}
         user {$this->user}
         periode {$this->periode}
@@ -1125,7 +1125,7 @@ class Acc_Detail extends Acc_Operation
         } else {
             $this->det->note=strip_tags($a['n_text']);
             $this->det->note_html=($a['n_html'] == "")?$a['n_text']:$a['n_html'];
-        }
+    }
     }
     /**
      * 
@@ -1139,6 +1139,15 @@ class Acc_Detail extends Acc_Operation
         $array['p_jrn']=$this->det->jr_def_id;
         return $array;
 
+    }
+        function __toString(): string
+    {
+         $r= __CLASS__;
+         $r.="this->signature ".$this->signature."\n";
+         $r.="this->det ".print_r($this->det,true);
+        
+        return $r;
+        
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -1211,6 +1220,15 @@ SELECT jx1.j_id
         return $array;
         
     }
+        function __toString(): string
+    {
+         $r= __CLASS__;
+         $r.="this->signature ".$this->signature."\n";
+         $r.="this->det ".print_r($this->det,true);
+        
+        return $r;
+        
+    }
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
@@ -1225,33 +1243,33 @@ class Acc_Sold extends Acc_Detail
     {
         parent::__construct($p_cn,$p_jrid);
         $this->signature='VEN';
-        $this->det=new stdClass();
+        $this->det->array=new stdClass();
     }
     function get()
     {
         parent::get();
         $sql="
         select qs_id, qs_internal
-, jx1.j_id
-, qs1.qs_fiche
-, qs1.qs_quantite
-, qs1.qs_price
-, qs1.qs_vat
-, qs1.qs_vat_code
-, qs1.qs_client
-, qs1.qs_valid
-, jx1.j_text
-, qs_vat_sided
-, qs_unit 
-, jx1.j_debit
-,oc1.oc_amount
-,oc1.oc_vat_amount 
-,oc1.oc_price_unit 
-from quant_sold qs1
-join jrnx jx1	using(j_id)
-left join operation_currency oc1 using(j_id)
-where jx1.j_grpt = $1
-order by jx1.j_id;
+                , jx1.j_id
+                , qs1.qs_fiche
+                , qs1.qs_quantite
+                , qs1.qs_price
+                , qs1.qs_vat
+                , qs1.qs_vat_code
+                , qs1.qs_client
+                , qs1.qs_valid
+                , jx1.j_text
+                , qs_vat_sided
+                , qs_unit 
+                , jx1.j_debit
+                ,oc1.oc_amount
+                ,oc1.oc_vat_amount 
+                ,oc1.oc_price_unit 
+                from quant_sold qs1
+                join jrnx jx1	using(j_id)
+                left join operation_currency oc1 using(j_id)
+                where jx1.j_grpt = $1
+                order by jx1.j_id;
         ";
         $this->det->array=$this->db->get_array($sql,array($this->det->jr_grpt_id));
     }
@@ -1284,7 +1302,15 @@ order by jx1.j_id;
         return $array;
         
     }
-    
+    function __toString(): string
+    {
+        $r="";
+         $r.="this->signature ".$this->signature."\n";
+         $r.="this->det ".print_r($this->det,true);
+        
+        return $r;
+        
+    }
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
@@ -1367,7 +1393,15 @@ order by jx1.j_id
          return $array;
         
     }
-    
+        function __toString(): string
+    {
+         $r= __CLASS__;
+         $r.="this->signature ".$this->signature."\n";
+         $r.="this->det ".print_r($this->det,true);
+        
+        return $r;
+        
+    }
 
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -1425,5 +1459,13 @@ class Acc_Fin extends Acc_Detail
         return $array;
         
     }
-    
+        function __toString(): string
+    {
+         $r= __CLASS__;
+         $r.="this->signature ".$this->signature."\n";
+         $r.="this->det ".print_r($this->det,true);
+        
+        return $r;
+        
+    }
 }

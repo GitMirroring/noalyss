@@ -222,6 +222,7 @@ if ( isset($_POST['record']) )
                     $xmldocument->set_pdf_filename($pdf_filename);
                         
                     // make the XML  + PDF 
+                    //@var $xml(XML String)
                     $xml=$xmldocument->create_invoice($Ledger->jr_id);
                     if (DEBUGNOALYSS > 1) {
                         $mt=date ('ymd-Hi').'+'.$Ledger->jr_id;
@@ -231,7 +232,7 @@ if ( isset($_POST['record']) )
                         echo \Noalyss\Dbg::echo_file("file save $uniq");
 
                     }
-                    // FOR BELGIUM : XML and PDF will be store separately
+                    // FOR BELGIUM : XML and PDF will be stored separately
                     // save XML string into the DB
                     $oid=$cn->lo_write($xml);
                     echo \Noalyss\Dbg::echo_var(1, "oid is $oid");
