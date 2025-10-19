@@ -35,7 +35,7 @@
  *   - type = array , match between column and type of data
  *   - default = array of column with a default value
  *   - date_format = format of the date
- * 
+ *   - virtual_col
  * After you call the parent constructor
  * @note the view or the table must include an unique key, otherwise the load 
  * doesn't work.
@@ -83,7 +83,12 @@
 
   }
  * @endcode
- *
+ *  it is also possible to use set_virtual_col to format data directly in the
+ *  SQL
+ * @see Data_SQL
+ @code
+ $jrn->set_virtual_col("str_date", " to_char(jr_tech_date,'DD/MM/YY HH24:MI')");
+ @endcode
  */
 #[AllowDynamicProperties]
 abstract class Table_Data_SQL extends Data_SQL
