@@ -947,7 +947,7 @@ class Acc_Ledger_Search
             // Note
             $r.='<td>';
             $r.='<span id="als_note'.$row['jr_id'].'" class="font-small">';
-            $r.= $row['n_text'];
+            $r.= substr($row['n_text']??"",0,120);
             $r.='<span>';
             $r.='</span>';
             $r.='</td>';

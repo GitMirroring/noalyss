@@ -612,7 +612,7 @@ switch ($action) {
         break;
     case 'note_refresh':
         $acc_operation_note= Acc_Operation_Note::build_jrn_id($jr_id);
-        echo $acc_operation_note->getNote();
+        echo substr($acc_operation_note->getNote(),0,120);
         
         return;
 }
