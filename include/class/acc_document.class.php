@@ -51,7 +51,32 @@ class Acc_Document extends Document {
         $this->document_xml = $document_xml;
         return $this;
     }
+    /*!
+     * \brief insert the generated Document into the database, update the $this->d_id
+     * that is the PK of document. and load the PDF into the database.
+     * \param $p_file is the generated file (full path)
+     * \return 0 if no error otherwise 1
+     */
+    protected function saveGenerated($p_file)
+    {
 
+        $this->db->start();
+        $this->d_filename= basename($p_file);
+        $this->d_mimetype= mime_content_type($p_file);
+        $this->d_lob=$this->db->lo_import($p_file);
+        if ($this->d_lob==false)
+        {
+            echo "ne peut pas importer [$p_file]";
+            return 1;
+        }
+        $sql="update jrn set jr_pj=$1,jr_pj_name=$2,jr_pj_type=$3 where jr_id=$4 returning jr_id";
+        $id=$this->db->get_value($sql, array($this->d_lob, $this->d_filename, $this->d_mimetype, $this->d_id));
+        $this->db->commit();
+        if ( $id == "") {
+            throw new Exception("AD99 FILE NOT SAVED INTO DB",99);
+        }
+        
+    }
      /**
      * @brief constructor
      * @param $cn \Database
@@ -208,16 +233,15 @@ class Acc_Document extends Document {
         // var md_id (int) DOCUMENT_MODELE.MD_ID
         $this->md_id = $p_array['gen_doc'];
         // var ag_id == 0 fake follow-up 
-        $this->ag_id = 0;
+         $this->ag_id = 0;
         // var e_pj (string) receipt nb
         $p_array['e_pj'] = $this->db->get_value("select jr_pj_number from jrn where jr_id=$1"
                 , [$this->d_id]);
         $filename = "";
+        
         //  generate the document and set d_lob,d_mimetype,
+        // this function will call saveGenerated and save in DB
         $this->generate($p_array, $p_array['e_pj']);
-
-        // Move the document to accountancy (table JRN),
-        $this->moveDocumentACC($internal);
 
         // Update the comment with invoice number, if the comment is empty
         if (!isset($p_array['e_comm']) || noalyss_strlentrim($p_array['e_comm']) == 0) {

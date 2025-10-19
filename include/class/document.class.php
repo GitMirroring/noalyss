@@ -389,8 +389,7 @@ class Document
      * \param $p_file is the generated file
      * \return 0 if no error otherwise 1
      */
-
-    function saveGenerated($p_file)
+    protected function saveGenerated($p_file)
     {
         // We save the generated file
         $doc=new Document($this->db);
@@ -1817,21 +1816,6 @@ class Document
         $this->db->exec_sql($sql);
         if ($d_lob!=0)
             $this->db->lo_unlink($d_lob);
-    }
-
-    /*!
-     * \brief Move a document from the table document into the concerned operation
-     *        the document is not copied : it is only a link
-     * \param $p_internal internal code
-     */
-    function moveDocumentACC($p_internal)
-    {
-        $sql="update jrn set jr_pj=$1,jr_pj_name=$2,jr_pj_type=$3 where jr_internal=$4";
-
-        $this->db->exec_sql($sql, array($this->d_lob, $this->d_filename, $this->d_mimetype, $p_internal));
-        // clean the table document
-        $sql='delete from document where d_id=$1';
-        $this->db->exec_sql($sql,[$this->d_id]);
     }
 
     /**
