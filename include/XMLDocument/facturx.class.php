@@ -90,7 +90,7 @@ class FacturX extends XMLInvoice
                 ,ATTR_DEF_POSTCODE=>'postalzone'
                 ,ATTR_DEF_CITY=>'city'
                 ,ATTR_DEF_COUNTRY_CODE=>'country'
-                ,ATTR_DEF_NUMTVA=>'customer_id'
+                ,ATTR_DEF_NUMTVA=>'customer_vat_id'
                 ,ATTR_DEF_PEPPOLID=>'endpoint_id'
             ];
         
@@ -148,7 +148,7 @@ class FacturX extends XMLInvoice
         // BUYER
         //------------------------------------------------
         
-        $documentBuilder->setDocumentBuyer($this->data['customer']['name'], $this->data['customer']['customer_id']);
+        $documentBuilder->setDocumentBuyer($this->data['customer']['name'], $this->data['customer']['customer_vat_id']);
         $documentBuilder->setDocumentBuyerAddress(
                                                     $this->data['customer']['street']
                                                     , ''

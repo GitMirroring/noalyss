@@ -218,7 +218,7 @@ class InvoiceUBL21 extends XMLInvoice {
         $postal_address->appendChild($this->createElement("cbc:StreetName", $this->data['supplier']['street']));
         $postal_address->appendChild($this->createElement("cbc:CityName", $this->data['supplier']['city']));
         $postal_address->appendChild($this->createElement("cbc:PostalZone", $this->data['supplier']['postalzone']));
-        $country_code = $company['COUNTRY_CODE'];
+        $country_code = $company['MY_COUNTRY_CODE'];
         $country=$postal_address->appendChild($this->createElement("cac:Country"));
         $country->appendChild($this->createElement('cbc:IdentificationCode',$country_code??"ERROR"));
         $postal_address->appendChild($country);

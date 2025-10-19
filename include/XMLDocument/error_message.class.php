@@ -95,7 +95,7 @@ class Error_Message
             , 'postalzone' => _("Code postal")
             , 'city' => _("Ville")
             , 'country'=>_("Code pays")
-            , 'customer_id' => _("Numéro de TVA")
+            , 'customer_vat_id' => _("Numéro de TVA")
             , 'endpoint_id' => _('Identifiant PEPPOL') // here 9925:BE....
             
         );

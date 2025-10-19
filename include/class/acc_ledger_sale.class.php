@@ -1852,7 +1852,59 @@ EOF;
         return $array;
     }
     
-    
+    /**
+     * @brief convert an Acc_Sold to an array usable by 
+     * Acc_Document::create_document
+     * @parameters $sold (Acc_Sold) convert to convert
+     */
+    static function convert_to_array(Acc_Sold $sold)
+    {
+        //print $sold;
+        $item=count($sold->det->array);
+        if ( $item ==0)
+        {
+            throw new \Exception('No Data in Quant_sold');
+        }
+        $array=array();
+        
+        $array['e_ech']=format_date($sold->det->jr_ech);
+        $array['e_comm']=$sold->det->jr_comment;
+        $array['p_jrn']=$sold->det->jr_def_id;
+        $array['nb_item']=$item;
+        $array['ledger_type']=$sold->signature;
+        $array['e_date']=  format_date($sold->det->jr_date);
+        $array['e_pj']=  $sold->det->jr_pj_number;
+        $array['jr_date_paid']=$sold->det->jr_date_paid;
+        
+        //$this->pj=$array['e_pj'];
+        $array['internal']=$sold->det->jr_internal;
+                
+        $client=new \Fiche($sold->db,$sold->det->array[0]['qs_client']);
+        $array['e_client']=$client->get_quick_code();
+        bcscale(2);
+        for ($i=0;$i < $item ; $i++)
+        {
+            $idx='e_march';
+            $serv=new \Fiche($sold->db,$sold->det->array[$i]['qs_fiche']);
+            $array[$idx.$i]=$serv->get_quick_code();
+            $array[$idx.$i.'_label']=$sold->det->array[$i]['j_text'];
+            $array[$idx.$i.'_price']=bcdiv($sold->det->array[$i]['qs_price'],$sold->det->array[$i]['qs_quantite']);
+            $array[$idx.$i.'_tva_id']=$sold->det->array[$i]['qs_vat_code'];
+            $array[$idx.$i.'_tva_amount']=bcsub($sold->det->array[$i]['qs_vat'],$sold->det->array[$i]['qs_vat_sided']);
+            $array['e_quant'.$i]=$sold->det->array[$i]['qs_quantite'];
+        }
+        // Get OTHER_INFO and BON_COMM
+        $cn=\Dossier::connect();
+        $array['bon_comm']=$cn->get_value("select ji_value from jrn_info where jr_id=$1 and id_type = 'BON_COMMANDE' ",[$sold->det->jr_id]);
+        $array['other_info']=$cn->get_value("select ji_value from jrn_info where jr_id=$1 and id_type = 'OTHER' ",[$sold->det->jr_id]);
+        $array['jrn_note_input']=$cn->get_value("select n_text from 
+                  jrn_note where jr_id=$1 ",[$sold->det->jr_id]);
+        $array['p_currency_code']=$sold->det->currency_id;
+        $array['p_currency_rate']=$sold->det->currency_rate;
+        return $array;
+       
+        
+    }    
     
 }
 
