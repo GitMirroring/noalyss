@@ -22,6 +22,7 @@ return array(
     'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
+    'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Metadata\\' => array($vendorDir . '/jms/metadata/src'),
     'JMS\\Serializer\\' => array($vendorDir . '/jms/serializer/src'),
     'GoetasWebservices\\Xsd\\XsdToPhpRuntime\\' => array($vendorDir . '/goetas-webservices/xsd2php-runtime/src'),

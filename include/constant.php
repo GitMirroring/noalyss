@@ -387,7 +387,11 @@ if (!defined("DEFAULT_SERVER_VIDEO_CONF")) {
 }
 
 define ("VATCHECK_URL","https://ec.europa.eu/taxation_customs/vies/rest-api/");
-    
+
+
+// define email setting name for NOALYSS
+define ("MAIL_SETTING_NOALYSS","noalyss");
+
 /**
  * @brief load automatically class
  *
@@ -433,7 +437,9 @@ function noalyss_class_autoloader($class)
         'noalyss\xmldocument\invoiceubl21'=>'XMLDocument/invoiceubl21.class.php',
         'noalyss\xmldocument\error_message'=>'XMLDocument/error_message.class.php',
         "noalyss\invoice_pdf"=>"class/invoice_pdf.class.php",
-        'noalyss\xmldocument\xmlinvoice_reader'=>'XMLDocument/xmlinvoice_reader.class.php'
+        'noalyss\xmldocument\xmlinvoice_reader'=>'XMLDocument/xmlinvoice_reader.class.php',
+        'noalyss\mail_parameter'=>'lib/mail_parameter.class.php',
+        'noalyss\smtpmail'=>'lib/smtpmail.class.php'
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];
@@ -444,3 +450,4 @@ function noalyss_class_autoloader($class)
 spl_autoload_register('\noalyss_class_autoloader', true);
 
 require_once NOALYSS_BASE.'/vendor/autoload.php';
+

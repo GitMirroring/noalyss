@@ -372,6 +372,8 @@ $path = array(
     ,'activate_plugin'=>'ajax_activate_plugin'
     // set the operation paid or unpaid
     , 'payment_status'=>'ajax_payment_status'
+    // email setting
+    , 'email_setting'=>'ajax_email_setting'
 ) ;
 
 if (array_key_exists($op, $path)) {

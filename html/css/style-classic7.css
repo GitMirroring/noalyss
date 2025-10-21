@@ -4102,3 +4102,11 @@ h2.h-section {
 .font-small {
       font-size: 0.90rem;
 }
+
+#form_email_setting_div {
+    align-content: baseline;
+    justify-content: center;
+    align-items: baseline;
+    gap: 5rem;
+    display:flex;flex-direction: row;
+}

@@ -4938,4 +4938,94 @@ Noalyss.prototype.refresh_note=function(jrn_id,dossier_id)
     }
     
 }
+
+
+
+/**
+ * save parameter for SMPT , menu C0ML
+ * 
+ */
+Noalyss.prototype.save_config_smtp = function ()
+{
+    try
+    {
+        waiting_box();
+        var queryString = $("form_config_smtp").serialize(true);
+        console.debug(queryString)
+        queryString['op'] = "email_setting";
+        queryString['op2'] = "save_config_smtp";
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'POST',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        let json = req.evalJSON();
+
+
+                    }
+                }
+        );
+
+    } catch (e) {
+        console.error(e.message);
+    }
+    return false;
+};
+Noalyss.prototype.parameter_display_smtp = function ()
+{
+    if ($F("smtp_type") == 'smtp') {
+        $("smtp_config_div").style.display = "grid";
+        $('btn_save1').hide();
+    } else {
+        $("smtp_config_div").hide();
+        $('btn_save1').show();
+
+    }
+};
+Noalyss.prototype.parameter_test_smtp = function ()
+{
+    try
+    {
+        var parameter = $('form_config_smtp').serialize(true);
+        parameter['op'] = "email_setting";
+        parameter['op2'] = "parameter_test_smtp";
+        var email = {email_test: $F('email_test_input')};
+        if ($F('email_test_input') == '') {
+            smoke.alert("Aucun email")
+            return false;
+        }
+        waiting_box();
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: Object.assign(parameter, email),
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        $('result_test_div').update(req.responseText);
+
+                    }
+                }
+        );
+
+    } catch (e)
+    {
+        remove_waiting_box();
+        console.error("parameter_test_smtp" + e.message);
+    }
+
+}
+
+
 noalyss=new Noalyss();

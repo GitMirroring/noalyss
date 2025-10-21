@@ -341,3 +341,31 @@ begin
 end;
 $function$
 ;
+
+CREATE TABLE public.parm_mail_server (
+	pe_id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL, -- pk
+	pe_name varchar NULL, -- Config. name
+	pe_parameter text NOT NULL, -- key for json
+	pe_value text NULL, -- value of the key
+	CONSTRAINT param_email_pk PRIMARY KEY (pe_id),
+	CONSTRAINT parm_email_unique UNIQUE (pe_name, pe_parameter)
+);
+COMMENT ON TABLE public.parm_mail_server IS 'Parameters for email server';
+
+-- Column comments
+
+COMMENT ON COLUMN public.parm_mail_server.pe_id IS 'pk';
+COMMENT ON COLUMN public.parm_mail_server.pe_name IS 'Config. name';
+COMMENT ON COLUMN public.parm_mail_server.pe_parameter IS 'key for json';
+COMMENT ON COLUMN public.parm_mail_server.pe_value IS 'value of the key';
+
+-- install menu 
+
+insert into menu_ref (me_code,me_menu,me_file,me_description,me_type,me_description_etendue)
+values('C0ML','Email','email_setting.inc.php','Configuration email','ME','Configuration de l''envoi d''emails ');
+
+insert into profile_menu 
+(me_code,me_code_dep,p_id,p_order,p_type_display,pm_default,pm_id_dep)
+select me_code,'CFG',1,2,'E',0,(select distinct m2.pm_id from profile_menu m2 where m2.me_code='CFG' limit 1) from menu_ref where me_code='C0ML';
+
+
