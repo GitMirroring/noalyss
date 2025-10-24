@@ -49,8 +49,8 @@ try {
     $to_poste = $http->request("to_poste");
     $p_filter = $http->request("p_filter", "string");
 } catch (Exception $exc) {
-    error_log("Missing parameters");
-    error_log($exc->getTraceAsString());
+    record_log("Missing parameters");
+    record_log($exc);
     return;
 }
 

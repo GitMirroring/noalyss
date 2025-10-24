@@ -44,7 +44,7 @@ try
 catch (Exception $exc)
 {
     echo $exc->getMessage();
-    error_log($exc->getTraceAsString());
+    record_log($exc);
     throw $exc;
 }
 $l_type = "JRN";

@@ -310,7 +310,7 @@ class Lettering
         catch (Exception $exc)
         {
             echo $exc->getMessage();
-            error_log($exc->getTraceAsString());
+            record_log($exc);
             $this->db->rollback();
             return;
         }

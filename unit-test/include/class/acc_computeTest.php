@@ -224,7 +224,7 @@ class Acc_ComputeTest extends TestCase
         catch (Exception $exc)
         {
             echo $exc->getMessage();
-            error_log($exc->getTraceAsString());
+            record_log($exc->getTraceAsString());
             $this->assertTrue(FALSE);
         }
 

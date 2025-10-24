@@ -170,7 +170,7 @@ function echo_error($p_log, $p_line="", $p_message="")
 {
     $msg="ERREUR :" . $p_log . " " . $p_line . " " . $p_message;
     echo $msg;
-    syslog(LOG_ERR,$msg);
+    record_log($msg);
 
 }
 

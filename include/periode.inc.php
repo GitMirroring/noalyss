@@ -80,7 +80,7 @@ if ( isset($_POST['mod_exercice_label_bt'])) {
         catch (Exception $exc)
         {
             echo_warning( $exc->getMessage());
-            error_log($exc->getTraceAsString());
+            record_log($exc);
             $cn->rollback();
         }
 
@@ -109,6 +109,7 @@ if (isset($_POST['add_exercice']))
     catch (Exception $ex)
     {
         echo_warning($ex->getMessage());
+        record_log($exc);
     }
 }
 //-------------------------------------------------------------------

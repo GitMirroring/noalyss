@@ -68,7 +68,7 @@ if ($op=='folder_add') // operation
     }
     catch (Exception $exc)
     {
-        error_log($exc->getTraceAsString());
+        record_log($exc);
         $content=_('Erreur paramètre');
         $status="NOK";
         return;
@@ -104,7 +104,7 @@ if ($op=='folder_remove') // operation
     }
     catch (Exception $exc)
     {
-        error_log($exc->getTraceAsString());
+        record_log($exc);
         $content=_('Erreur paramètre');
         $status="NOK";
     }
@@ -166,7 +166,7 @@ if ($op=='folder_display') // operation
     }
     catch (Exception $exc)
     {
-        error_log($exc->getTraceAsString());
+        record_log($exc);
         $content=_('Erreur paramètre');
         $status="NOK";
     }
@@ -200,7 +200,7 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
     }
     catch (Exception $exc)
     {
-        error_log($exc->getTraceAsString());
+        record_log($exc);
         $content=_('Erreur paramètre');
         $status="NOK";
         //----------------------------------------------------------------
