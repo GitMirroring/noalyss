@@ -441,13 +441,17 @@ abstract class XMLInvoice extends \DOMDocument
         $result['postalzone']=$customer->get_attribute(ATTR_DEF_POSTCODE,0);
         $result['city']=$customer->get_attribute(ATTR_DEF_CITY,0);
         
-        // find country_code of this card
-        $result['country']=$customer->get_attribute(ATTR_DEF_COUNTRY_CODE,0);
         
         // official ID , like VAT
         $result['customer_vat_id']=str_replace([" ",".","-","/"],"" ,$customer->get_attribute(ATTR_DEF_NUMTVA,0));
         // official name of the company 
         $result['registration_name']=$customer->get_attribute(ATTR_DEF_NAME,0);
+        // find country_code of this card
+        $result['country']=$customer->get_attribute(ATTR_DEF_COUNTRY_CODE,0);
+        if ( $result['country'] == "")
+        {
+           $result['country']=substr($result['customer_vat_id'],0,2);
+        }
         // $result['endpoint_id']=$customer->get_attribute(ATTR_DEF_PEPPOLID,0);
         $result['endpoint_id']= $result['customer_vat_id'];
         return $result;
@@ -482,7 +486,7 @@ abstract class XMLInvoice extends \DOMDocument
          * @TODO vérifier qu'il contient bien BE
          */
         
-        $result['COUNTRY_CODE']=$a_parameter['COUNTRY_CODE']??"";
+        $result['COUNTRY_CODE']=$a_parameter['COUNTRY_CODE']?? substr($result['supplier_vat_id'], 0, 2);
         $result['COMPANY_LEGAL_REGISTRATION']=$a_parameter['COMPANY_LEGAL_REGISTRATION']??"";
         $result['COMPANY_LEGAL_ENTITY']=$a_parameter['COMPANY_LEGAL_ENTITY']??"";
         $result['INVOICE_CONTACT_NAME']=$a_parameter['INVOICE_CONTACT_NAME']??"";
