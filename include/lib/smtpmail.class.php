@@ -68,7 +68,10 @@ class SMTPMail
     {
         return $this->phpmailer;
     }
-
+    public function set_from($from)
+    {
+        $this->phpmailer->setFrom($from);
+    }
     public function setPhpmailer($phpmailer): PHPMailer
     {
         $this->phpmailer = $phpmailer;
