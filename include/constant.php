@@ -25,7 +25,7 @@
 
 global $version_noalyss;
 // version 
-define('NOALYSS_VERSION', 9312 );
+define('NOALYSS_VERSION', 9400 );
 
 // Database schema version 
 define("DBVERSION", 203);
@@ -208,6 +208,7 @@ define("OPEN", 1);
 define("CLOSED", 0);
 define("NOTCENTRALIZED", 3);
 define("ALL", 4);
+define("INVOICE_STD", -2);
 
 // Pour les ShowMenuComptaLeft
 define("MENU_FACT", 1);

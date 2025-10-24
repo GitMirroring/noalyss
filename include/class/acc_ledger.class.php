@@ -1979,7 +1979,7 @@ class Acc_Ledger  extends jrn_def_sql
      * @param  $internal is the internal code
      * @param  $p_array is normally the $_POST
        @see Acc_Document::create_document
-     * @return a string
+     * @return html string
      */
     function create_document($internal, $p_array)
     {

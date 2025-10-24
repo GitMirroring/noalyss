@@ -151,15 +151,15 @@ class Document
                 throw new Exception ("DC121 cannot create $dirname directory",5000);
             }
            /**
-            * md_id == -2 is the standard PDF invoice, you don't parse or compute 
+            * md_id == -2 : INVOICE_STD is the standard PDF invoice, you don't parse or compute 
             * it
             */
-           if ( $this->md_id == -2)
+           if ( $this->md_id == INVOICE_STD)
            {
                 $file_to_parse=str_replace(
                            array('/', '*', '<', '>', ';', ',', '\\', '.', ':', '(', ')', ' ', '[', ']')
                            , "-"
-                           , "inv-std-".$p_array['e_pj'].".pdf");
+                           , "inv-std-".$p_array['e_pj']).".pdf";
                
                $this->d_number=$this->db->get_next_seq("seq_doc_type_stdinv");
                $this->d_filename=$file_to_parse;

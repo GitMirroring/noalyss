@@ -176,10 +176,8 @@ if ( isset($_POST['record']) )
             }
             else
                 /* Generate an invoice and save it into the database */
-            if (isset($_POST['gen_invoice'])) 
+           if (isset($_POST['gen_invoice'])) 
             {
-                //@var $invoice_template (int) get the invoice number DOCUMENT_MODELE.MD_ID
-                $invoice_template=$http->post("gen_doc","number");
                 // generate an invoice
                 $file = $Ledger->create_document($internal, $_POST);
                 $receipt= HtmlInput::show_receipt_document($Ledger->jr_id
@@ -228,7 +226,7 @@ if ( isset($_POST['record']) )
                         $mt=date ('ymd-Hi').'+'.$Ledger->jr_id;
                         $uniq= $_ENV['TMP']. DIRECTORY_SEPARATOR."$mt-e-invoice.xml";
                         file_put_contents($uniq, $xml);
-                        chmod ($uniq,774);
+                        chmod ($uniq,"0774");
                         echo \Noalyss\Dbg::echo_file("file save $uniq");
 
                     }
