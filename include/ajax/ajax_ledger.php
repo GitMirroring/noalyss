@@ -564,61 +564,6 @@ switch ($action) {
 
 
         break;
-////------------------------------------------------
-//// Display note
-////------------------------------------------------
-//    case 'note_input':
-//        $acc_operation_note= Acc_Operation_Note::build_jrn_id($jr_id);
-//        try {
-//            $ctl="box_input_note".$div;
-//            $html=HtmlInput::title_box(_("Note"), $ctl);
-//            $textarea= Acc_Operation_Note::build_textarea($div);
-//            if ( $http->get('tinymce')=='true')
-//                $textarea->value=$acc_operation_note->getJrnNoteSql()->get("n_html");
-//            else {
-//                $textarea->set_enrichText('plain');
-//                $textarea->value=$acc_operation_note->getJrnNoteSql()->get("n_text");
-//            }
-//
-//            // start FORM
-//            $html.=sprintf('<form id="form_input_note%s" onsubmit="noalyss.save_note(this);return false;">',
-//                    $div);
-//            
-//            $html.=$textarea->input();
-//            
-//            $html.=HtmlInput::hidden('gDossier', $gDossier);
-//            $html.=HtmlInput::hidden('div', $div);
-//            $html.=HtmlInput::hidden('jr_id', $jr_id);
-//            $html.=HtmlInput::hidden('act', 'note_save');
-//            $html.=HtmlInput::submit("save", _("Sauve"));
-//            $html.=HtmlInput::hidden("input_html", $textarea->id);
-//            $html.=HtmlInput::button_close($ctl);
-//            // end form
-//            $html.="</form>";
-//        } catch (Exception $exc) {
-//            echo $exc->getTraceAsString();
-//}
-//        
-//        break;
-//    case 'note_save':
-////------------------------------------------------
-//// save note
-////------------------------------------------------
-//
-//        /**
-//         * received parameters 
-//         *      - gDossier
-//         *      - div
-//         *      - jr_id
-//         *      - note_html
-//         */
-//         $ctl="box_input_note".$div;
-//         $acc_operation_note= Acc_Operation_Note::build_jrn_id($jr_id);
-//         $acc_operation_note->setOperation_id($jr_id);
-//         $acc_operation_note->setNote($http->post("note_html",'raw'));
-//         $acc_operation_note->save();
-//         $html=$http->post("note_html","raw");
-        break;
     case 'note_refresh':
         $acc_operation_note= Acc_Operation_Note::build_jrn_id($jr_id);
         echo substr($acc_operation_note->getNote(),0,120);

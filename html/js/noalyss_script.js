@@ -4875,53 +4875,6 @@ Noalyss.prototype.input_note=function (dossier_id,jrn_id,div_prefix)
     }
 
 }
-/**
- * Save note, call from ajax_ledger.php act = note_input
- * @param {DOMObjet} dom_form
- * @returns {undefined}
- */
-Noalyss.prototype.save_note=function (dom_form) 
-{
-    try
-    {
-        waiting_box();
-        let queryString=dom_form.serialize(true);
-        console.debug(queryString)
-        if ( g_enable_tinymce ) {
-            queryString['note_html'] = tinymce.get(queryString['input_html']).getContent();
-        }else{
-            queryString['note_html'] =$F($F('input_html'))
-        }
-        queryString['op'] = 'ledger';
-        var x=this;
-        var action = new Ajax.Request(
-                "ajax_misc.php",
-                {
-                    method: 'POST',
-                    parameters: queryString,
-                    onFailure: ajax_misc_failure,
-                    onSuccess: function (req) {
-                        remove_waiting_box();
-                        if (req.responseText == 'NOCONX') {
-                            reconnect();
-                            return;
-                        }
-                        let response=req.responseXML;
-                        let html=getNodeText(response.getElementsByTagName("code")[0])
-                        let ctl=getNodeText(response.getElementsByTagName("ctl")[0]);
-                        console.debug(response);
-                        $('note_html'+ctl).update(html);
-                        x.refresh_note(queryString['jr_id'],queryString['gDossier']);
-                        removeDiv('box_input_note'+queryString['div']);
-                    }
-                }
-        );
-    } catch (e)
-    {
-        alert_box(e.message);
-    }
-
-}
 Noalyss.prototype.refresh_note=function(jrn_id,dossier_id)
 {
     if ( document.getElementById("als_note"+jrn_id)) {
@@ -5037,6 +4990,19 @@ Noalyss.prototype.parameter_test_smtp = function ()
     }
 
 }
-
+/**
+ * Display a dialog box to search 
+ */
+Noalyss.prototype.display_search_peppol(p_domid)
+{
+    try 
+    {
+        
+    }catch(e)
+    {
+        console.error(e)
+    }
+    
+}
 
 noalyss=new Noalyss();
