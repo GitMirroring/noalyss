@@ -42,7 +42,18 @@ var g_enable_tinymce=true;
 */
 if ( ! window.crypto.randomUUID) {
     console.info("too old browser: implement function randomUUID")
-   g_enable_tinymce=false;
+   window.crypto.randomUUID=function()
+   {
+       let myArray = new Uint32Array(4);
+       crypto.getRandomValues(myArray);
+       let result="";let and="";
+       for(a of myArray)
+       {
+           result+=and.a;
+           and="-";
+       }
+       return result;
+   }
 }
 
 

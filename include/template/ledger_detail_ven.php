@@ -105,6 +105,7 @@ $str_anc = "";
                             $ipaid = new ICheckBox("ipaid", 'paid');
                             $ipaid->selected = ($obj->det->jr_rapt == 'paid');
                             echo $ipaid->input();
+                             if ( DEBUGNOALYSS > 0) echo \Noalyss\Dbg::hidden_info("obj", $obj);
                             ?>
                         </td>
                     </tr>
@@ -113,17 +114,21 @@ $str_anc = "";
             </td>
             <td style="width:50%;height:100%;vertical-align:top;text-align: center">
                 <table style="width:99%;height:8rem;vertical-align:top;">
-                    <tr style="height: 5%">
+                    <tr style="height: 5rem">
                         <td style="text-align:center;vertical-align: top">
-                           <button onclick="noalyss.input_note('<?=$dossier_id?>','<?=$jr_id?>','<?=$div?>');return false;" class="smallbutton">
-                                    <?=_("Note")?>
-                                </button>
+                              <?php
+                                $inote = new ITextarea('jrn_note');
+                                $inote->set_enrichText("minimal");
+                                $inote->id="jrn_note{$div}";
+                                $inote->style=' class="itextarea" style="width:90%;height:100%;"';
+                                $inote->value = $obj->det->note_html;
+                                $inote->heigh=200;
+                                echo $inote->input();
+                               
+                                ?>
+
                         </td>
-                    </tr>
-                    <tr>
-                        <td id="note_html<?=$div?>" style="text-align:center;vertical-align: top">
-                                <?=$obj->det->note_html?>
-                        </td>
+                    
                     </tr>
                     <tr>
                         <td>

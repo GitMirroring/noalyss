@@ -1278,7 +1278,7 @@ function op_save(obj) {
         var divid = obj.whatdiv.value;
         queryString ["act"] = "save";
         queryString ["op"] = "ledger";
-        
+        queryString ["jr_note"]=encodeURI(tinyMCE.get("jrn_note"+divid).getContent());
         waiting_box();
         /*
          * Operation detail is in a new window
@@ -1330,6 +1330,7 @@ function op_save(obj) {
                                     id$(divid).innerHTML = unescape(getNodeText(html[0]));
                                     id$(divid).innerHTML.evalScripts();
                                     remove_waiting_box();
+                                    noalyss.refresh_note(jr_id,obj.gDossier.value);
                                 } catch (e) {
                                     console.error("D1. op_save")
                                     alert_box("1038" + e.message)
