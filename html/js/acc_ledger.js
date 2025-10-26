@@ -778,7 +778,7 @@ function go_next_concerned() {
  * @returns {undefined}
  */
 function view_history_account(p_value, dossier, p_exercice) {
-    layer++;
+    var layer=get_next_layer();
     var idbox = 'det' + layer;
     var popup = {'id': idbox, 'cssclass': 'inner_box', 'html': loading(), 'drag': false};
 
@@ -806,6 +806,8 @@ function view_history_account(p_value, dossier, p_exercice) {
                 add_div(popup);
                 success_box(req, xml);
                 id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                $id$(idbox).setStyle({top:calcy(140 + (layer * 3)) + "px"
+                ,"z-index":layer})
             }
         }
     );
@@ -819,7 +821,7 @@ function view_history_account(p_value, dossier, p_exercice) {
  * @returns {undefined}
  */
 function view_history_anc_account(p_value, dossier, p_exercice) {
-    layer++;
+    var layer=get_next_layer();
     var idbox = 'det' + layer;
     var popup = {'id': idbox, 'cssclass': 'inner_box', 'html': loading(), 'drag': false};
 
@@ -845,8 +847,12 @@ function view_history_anc_account(p_value, dossier, p_exercice) {
                 if (req.responseText === 'NOCONX') { reconnect();return;}
 
                 add_div(popup);
-                id$(idbox).innerHTML = req.responseText;
-                id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                  id$(idbox).setStyle(
+                            {
+                                top:calcy(140 + (layer * 3)) + "px"
+                                ,"z-index":get_next_layer()
+                            }
+                    )
             }
         }
     );
@@ -881,7 +887,12 @@ function update_history_account(obj) {
                     if (req.responseText === 'NOCONX') { reconnect();return;}
 
                     success_box(req, xml);
-                    id$(obj.div).style.top = calcy(140 + (layer * 3)) + "px";
+                    id$(obj.div).setStyle(
+                            {
+                                top:calcy(140 + (layer * 3)) + "px"
+                                ,"z-index":get_next_layer()
+                            }
+                    )
                 }
             });
     } catch (e) {
@@ -895,7 +906,7 @@ function update_history_account(obj) {
  * \param p_value f_id of the card
  */
 function view_history_card(p_value, dossier, p_exercice) {
-    layer++;
+    var layer=get_next_layer();
     var idbox = 'det' + layer;
     var popup = {
         'id': idbox,
@@ -925,7 +936,12 @@ function view_history_card(p_value, dossier, p_exercice) {
 
                 add_div(popup);
                 success_box(req, xml);
-                id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                id$(idbox).setStyle(
+                            {
+                                top:calcy(140 + (layer * 3)) + "px"
+                                ,"z-index":get_next_layer()
+                            }
+                    )
             }
         }
     );
@@ -935,7 +951,7 @@ function view_history_card(p_value, dossier, p_exercice) {
  * \param p_value int fiche.f_id of the card
  */
 function view_followup_card(p_value, dossier) {
-    layer++;
+    var layer=get_next_layer();
     var idbox = 'detfu' + layer;
     var popup = {
         'id': idbox,
@@ -963,7 +979,12 @@ function view_followup_card(p_value, dossier) {
 
                 add_div(popup);
                 id$(idbox).update(req.responseText);
-                id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                  id$(idbox).setStyle(
+                            {
+                                top:calcy(140 + (layer * 3)) + "px"
+                                ,"z-index":get_next_layer()
+                            }
+                    )
             }
         }
     );
@@ -997,7 +1018,12 @@ function update_history_card(obj) {
 
                     remove_waiting_box();
                     success_box(req, xml);
-                    id$(obj.div).style.top = calcy(140 + (layer * 3)) + "px";
+                      id$(obj.div).setStyle(
+                            {
+                                top:calcy(140 + (layer * 3)) + "px"
+                                ,"z-index":get_next_layer()
+                            }
+                    )
                 }
             });
     } catch (e) {
@@ -1084,7 +1110,7 @@ function reverseOperation(obj) {
  * \param dossier dossier id
  */
 function modifyOperation(p_value, dossier) {
-    layer++;
+    var layer=get_next_layer();
     var id_div = 'det' + layer;
     waiting_box();
     var querystring = {
@@ -1112,9 +1138,12 @@ function modifyOperation(p_value, dossier) {
                 remove_waiting_box();
                 add_div(popup);
                 success_box(xml, txt);
-                id$(id_div).style.position = "absolute";
-                id$(id_div).style.top = calcy(100 + (layer * 3)) + "px";
-            }
+                id$(id_div).setStyle({
+                    top:calcy(100 + (layer * 3)) + "px"
+                    ,"z-index":layer
+                    ,position:"absolute"
+                });
+                }              
         }
     );
 }
@@ -1723,7 +1752,7 @@ function duplicate_operation(p_dossier, p_jr_id) {
                 add_div(duplicate_div);
 
                 duplicate_div.setStyle({
-                    "position": "fixed", "top": "15%", "z-index": "999",
+                    "position": "fixed", "top": "15%", "z-index": get_next_layer(),
                     "min-width": "30rem",
                     "left": "30%",
                     "width": "40%"
@@ -1772,7 +1801,7 @@ function tax_detail_view (dossier_id,date_from,date_to,nLedger_id,nTva_id)
 	                            return;
 	                        }
 							var y=calcy(15);
-							var div_style="position:absolute;"+";top:"+y+"px";
+							var div_style="position:absolute;"+";top:"+y+"px"+";z-index:"+get_next_layer();
 							add_div({id:dgbox,cssclass:'inner_box',html:loading(),style:div_style,drag:true});
 							id$(dgbox).update(req.responseText);
 
@@ -1846,7 +1875,7 @@ var operation_exercice = {
                             return;
                         }
                         var y = calcy(15);
-                        var div_style = "position:absolute;" + ";top:" + y + "px";
+                        var div_style = "position:absolute;" + ";top:" + y + "px"+";z-index:"+get_next_layer();
                         add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: true});
                         id$(dgbox).update(req.responseText);
                     }

@@ -24,7 +24,6 @@
  * javascript for searching a card
  */
 
-var card_layer=1;
 /**
  * search a card an display the result into a inner box
  */
@@ -577,7 +576,7 @@ function fill_fin_data(text,li)
 function fill_ipopcard(obj)
 {
 
-    card_layer++;
+    var card_layer=get_next_layer();
 
     var content='card_'+card_layer;
     var nTop=170+card_layer;
@@ -586,7 +585,7 @@ function fill_ipopcard(obj)
     }
     var str_top="top:"+calcy(nTop)+"px";
 
-    var str_style=str_top+";height:auto;position:absolute";
+    var str_style=str_top+";height:auto;position:absolute;z-index:"+get_next_layer();
     waiting_box();
     var popup={'id':  content,'cssclass':'inner_box2','style':str_style,'html':"",'drag':false};
 
@@ -1208,7 +1207,7 @@ function delete_card(obj) {
 function modify_card(p_fiche_id)
 {
     /* window with result */
-    card_layer++;
+     var card_layer=get_next_layer();
 
     var content = 'card_' + card_layer;
     var nTop = 170 + card_layer;

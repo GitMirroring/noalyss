@@ -21,7 +21,7 @@
  */
 function modifyModeleDocument(p_value,dossier)
 {
-    layer++;
+    var layer=get_next_layer();
     id='det'+layer;
     var pos_y=posY+offsetY-20;
     var pos_x=posX+offsetX+40;

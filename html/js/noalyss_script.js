@@ -30,7 +30,7 @@ var ask_reload = 0;
 var tag_choose = '';
 var aDraggableElement = new Array();
 // Layer for z-index , see function get_next_layer , must be used in PHP and JS
-var layer=0;
+var global_layer=10;
 // document.viewport depends of prototype.js
 var viewport = document.viewport.getDimensions(); // Gets the viewport as an object literal
 var width = viewport.width; // Usable window width
@@ -168,7 +168,8 @@ function g(ID) {
     return id$(ID);
 }
 function get_next_layer(){
-    return layer++;
+    console.debug(`layer is ${global_layer}`);
+    return global_layer++;
 }
 /**
  * enable the type of periode
@@ -938,7 +939,7 @@ function show_ledger_choice(json_obj) {
                         var obj = {
                             id: json_obj.div + 'jrn_search',
                             cssclass: 'inner_box',
-                            style: ';position:absolute;width:auto;z-index:20;margin-left:20%',
+                            style: ';position:absolute;width:auto;z-index:'+get_next_layer()+';margin-left:20%',
                             drag: 1
                         };
                         //var y=calcy(posY);
@@ -1147,7 +1148,7 @@ function show_calc() {
 
     var obj = {
         id: sid, html: shtml,
-        drag: false, style: 'z-index:98'
+        drag: false, style: 'z-index:'+get_next_layer()
     };
     add_div(obj);
     this.document.getElementById('inp').focus();
@@ -2140,7 +2141,7 @@ function check_date_id(p_id_date) {
  */
 function view_action(ag_id, dossier, modify) {
     waiting_box();
-    layer++;
+    var layer=get_next_layer();
     id = 'action' + layer;
 
     querystring = 'gDossier=' + dossier + '&op=vw_action&ag_id=' + ag_id + '&div=' + id + '&mod=' + modify;
@@ -2170,7 +2171,7 @@ function view_action(ag_id, dossier, modify) {
                     }
                     var code_html = getNodeText(html[0]);
                     code_html = unescape_xml(code_html);
-                    var pos = fixed_position(0, 50) + ";width:90%;left:5%;z-index:"+layer;
+                    var pos = fixed_position(0, 50) + ";width:90%;left:5%;z-index:"+layer+";";
                     add_div({
                         id: id,
                         cssclass: "inner_box",
@@ -3712,7 +3713,7 @@ function progress_bar_start(p_taskid, p_message) {
         add_div({
             id: "message" + progressIdx,
             cssclass: "inner_box",
-            style: "z-index:1000;position:fixed;top:30%;width:40%;left:30%"
+            style: "z-index:"+get_next_layer()+";position:fixed;top:30%;width:40%;left:30%"
         });
         id$("message" + progressIdx).update('<h3>' + content[65] + '</h3>' + message);
         // Create a div
@@ -4721,7 +4722,7 @@ Widget.prototype.toggle_full_size=function (widget_domid) {
     } else {
         id$(widget_domid).addClassName('widget-full_size');
 
-        layer++;
+        var layer=get_next_layer();
         id$(widget_domid).style.zIndex=layer;
     }
 
@@ -4991,18 +4992,45 @@ Noalyss.prototype.parameter_test_smtp = function ()
 
 }
 /**
- * Display a dialog box to search 
+ * Display a dialog box to search the PEPPOL  ID of someone
  */
-Noalyss.prototype.display_search_peppol(p_domid)
+Noalyss.prototype.display_search_peppol=function (p_domid)
 {
-    try 
+    try
     {
-        
-    }catch(e)
+        var dgbox = "peppol_id_search_div";
+        waiting_box();
+        removeDiv(dgbox);
+        var queryString = {
+
+        }
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        var y = calcy(15);
+                        var div_style = "position:absolute;" + ";top:" + y + "px"+"z-index:"+get_next_layer();
+                        add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: true});
+                        $(dgbox).innerHTML = req.responseText;
+
+                    }
+                }
+        );
+    } catch (e)
     {
-        console.error(e)
+        alert_box(e.message);
     }
+
     
+
 }
 
 noalyss=new Noalyss();

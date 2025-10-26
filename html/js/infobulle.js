@@ -101,7 +101,7 @@ function displaySelectBox(p_name) {
         newDiv.style.top=locPosY+"px";
 
         newDiv.style.left=document.getElementById(p_name+"_bt").offsetLeft+"px";
-        card_layer++;
+        var card_layer=get_next_layer();
         newDiv.setStyle({display:"block",position:"absolute","z-index":card_layer});
 
         if ( id$("search_"+p_name+"_list") ) {
