@@ -215,79 +215,84 @@ class Card_Property
           $result['label']=$this->ad_text;
           return $result;
        }
+       if ( $this->ad_id == ATTR_DEF_PEPPOLID)
+       {
+           
+       }
        
        if ($this->ad_id == ATTR_DEF_TVA) {
             $result['input'] = new ITva_Popup('popup_tva');
             $result['input']->table = 0;
             $result['input']->value = $this->av_text;
             $result['label']=$this->ad_text;
-        } else {
-            switch ($this->ad_type) {
-                case 'text':
-                    $result['input'] = new IText();
-                    $result['input']->css_size = "100%";
-                    $result['input']->value = $this->av_text;
-                    break;
-                case 'numeric':
-                    $result['input'] = new INum();
-                    $result['input']->prec = ($this->ad_extra == "") ? 2 : $this->ad_extra;
-                    $result['input']->size = $this->ad_size;
-                    $result['input']->value = $this->av_text;
-                    break;
-                case 'date':
-                    $result['input'] = new IDate();
-                    $result['input']->value = $this->av_text;
-                    break;
-                case 'zone':
-                    $result['input'] = new ITextArea();
-                    $result['input']->style = ' class="itextarea" style="margin:0px;width:100%"';
-                    $result['input']->value = $this->av_text;
-                    break;
-                case 'poste':
-                    $result['input'] = new IPoste("av_text" . $this->ad_id);
-                    $result['input']->set_attribute('ipopup', 'ipop_account');
-                    $result['input']->set_attribute('account', "av_text" . $this->ad_id);
-                    $result['input']->table = 1;
-                    $bulle = Icon_Action::infobulle(14);
-                    $result['input']->value = $this->av_text;
-                    break;
-                case 'check':
-                    $result['input'] = new InputSwitch("av_text" . $this->ad_id);
-                    $result['input']->value = (empty($this->av_text) ) ? 0 : 1;
-                    break;
-                case 'select':
-                    $result['input'] = new ISelect("av_text" . $this->ad_id);
-                    $result['input']->value = $this->cn->make_array($this->ad_extra);
-                    $result['input']->style = 'style="width:100%"';
-                    $result['input']->selected = $this->av_text;
-                    break;
-                case 'card':
-                    $result['input'] = new ICard("av_text" . $this->ad_id);
-                    // filter on frd_id
-                    $result['input']->extra = $this->ad_extra;
-                    $result['input']->extra2 = 0;
-                    $result['input']->id = uniqid();
-                    $result['label'] = new ISpan();
-                    $filter = $this->ad_extra;
-                    $result['input']->width = $this->ad_size;
-                    $result['input']->extra = $filter;
-                    $result['input']->extra2 = 0;
-                    $result['input']->limit = 6;
-                    $result['label']->name = "av_text" . $this->ad_id . $result['input']->id . "_label";
-                    $result['input']->set_attribute('ipopup', 'ipopcard');
-                    $result['input']->set_attribute('typecard', $this->ad_extra);
-                    $result['input']->set_attribute('inp', $result['input']->id);
-                    $result['input']->set_attribute('label', "av_text" . $this->ad_id . $result['input']->id . "_label");
-                    $result['input']->autocomplete = 1;
-                    $result['input']->dblclick = "fill_ipopcard(this);";
-                    $result['msg'] = $result['input']->search();
-                    $result['msg'] .= $result['label']->input();
-                    $result['input']->value = $this->av_text;
-                    break;
-            }
-            $result['input']->table = 0;
-            $result['label']=$this->ad_text;
+            return $result;
+        } 
+        switch ($this->ad_type) {
+            case 'text':
+                $result['input'] = new IText();
+                $result['input']->css_size = "100%";
+                $result['input']->value = $this->av_text;
+                break;
+            case 'numeric':
+                $result['input'] = new INum();
+                $result['input']->prec = ($this->ad_extra == "") ? 2 : $this->ad_extra;
+                $result['input']->size = $this->ad_size;
+                $result['input']->value = $this->av_text;
+                break;
+            case 'date':
+                $result['input'] = new IDate();
+                $result['input']->value = $this->av_text;
+                break;
+            case 'zone':
+                $result['input'] = new ITextArea();
+                $result['input']->style = ' class="itextarea" style="margin:0px;width:100%"';
+                $result['input']->value = $this->av_text;
+                break;
+            case 'poste':
+                $result['input'] = new IPoste("av_text" . $this->ad_id);
+                $result['input']->set_attribute('ipopup', 'ipop_account');
+                $result['input']->set_attribute('account', "av_text" . $this->ad_id);
+                $result['input']->table = 1;
+                $bulle = Icon_Action::infobulle(14);
+                $result['input']->value = $this->av_text;
+                break;
+            case 'check':
+                $result['input'] = new InputSwitch("av_text" . $this->ad_id);
+                $result['input']->value = (empty($this->av_text) ) ? 0 : 1;
+                break;
+            case 'select':
+                $result['input'] = new ISelect("av_text" . $this->ad_id);
+                $result['input']->value = $this->cn->make_array($this->ad_extra);
+                $result['input']->style = 'style="width:100%"';
+                $result['input']->selected = $this->av_text;
+                break;
+            case 'card':
+                $result['input'] = new ICard("av_text" . $this->ad_id);
+                // filter on frd_id
+                $result['input']->extra = $this->ad_extra;
+                $result['input']->extra2 = 0;
+                $result['input']->id = uniqid();
+                $result['label'] = new ISpan();
+                $filter = $this->ad_extra;
+                $result['input']->width = $this->ad_size;
+                $result['input']->extra = $filter;
+                $result['input']->extra2 = 0;
+                $result['input']->limit = 6;
+                $result['label']->name = "av_text" . $this->ad_id . $result['input']->id . "_label";
+                $result['input']->set_attribute('ipopup', 'ipopcard');
+                $result['input']->set_attribute('typecard', $this->ad_extra);
+                $result['input']->set_attribute('inp', $result['input']->id);
+                $result['input']->set_attribute('label', "av_text" . $this->ad_id . $result['input']->id . "_label");
+                $result['input']->autocomplete = 1;
+                $result['input']->dblclick = "fill_ipopcard(this);";
+                $result['msg'] = $result['input']->search();
+                $result['msg'] .= $result['label']->input();
+                $result['input']->value = $this->av_text;
+                break;
         }
+        $result['input']->table = 0;
+        $result['label']=$this->ad_text;
+        
 
         $result['input']->label = $this->ad_text;
         $result['input']->name = "av_text" . $this->ad_id;
