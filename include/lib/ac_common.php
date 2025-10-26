@@ -1894,3 +1894,68 @@ function find_idx($array,$key,$value) {
     }
     return -1;
 }
+
+function compute_letter_value()
+    {
+        global $aLetter,$aLetterValue;
+
+        static $make_string=null;
+        if ( $make_string == null ) {
+            for ($i=65;$i!=91;$i++) {
+                $make_string[chr($i)]=$i-55;
+            }
+            $aLetter=array_keys($make_string);
+            $aLetterValue=array_values($make_string);
+        }
+    }
+/**
+ * @brief check that an IBAN is valid
+ * @param $iban string, this parameter will change:remove of space, comma,...
+ * @return bool false the IBAN is invalid, true IBAN is VALID
+ */
+function check_iban(&$iban): bool
+{
+    global $aLetter, $aLetterValue;
+    if (trim($iban ?? "") == "")
+        return false;
+
+    //------------------------------------------------
+    // Make the letter
+    //------------------------------------------------
+    static $make_string,$aLetter, $aLetterValue=null;
+    
+    if ( $make_string == null ) 
+    {
+        for ($i=65;$i!=91;$i++) 
+        {
+            $make_string[chr($i)]=$i-55;
+        }
+        $aLetter=array_keys($make_string);
+        $aLetterValue=array_values($make_string);
+    }
+
+    $iban = strtoupper($iban);
+    $iban=str_replace([" ", ",", ".", "-"], '', $iban);
+
+    $first = substr($iban, 0, 4);
+    $chain = substr($iban, 4) . $first;
+
+    $replaced = str_replace($aLetter, $aLetterValue, $chain);
+
+    // computed by slice of 10: mod function is limited
+    $start = 0;
+    $slice = 10;
+    $result = "";
+    $length = strlen($replaced);
+    while ($start < $length)
+    {
+        $slice_string = $result . substr($replaced, $start, $slice);
+        $result = $slice_string % 97;
+        $start += $slice;
+    }
+
+    if ($result == 1)
+        return true;
+
+    return false;
+}

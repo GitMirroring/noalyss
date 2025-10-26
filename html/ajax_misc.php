@@ -374,6 +374,8 @@ $path = array(
     , 'payment_status'=>'ajax_payment_status'
     // email setting
     , 'email_setting'=>'ajax_email_setting'
+    // check iban  number
+    , 'check_ibannumber'=>'ajax_check_ibannumber'
 ) ;
 
 if (array_key_exists($op, $path)) {

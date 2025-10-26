@@ -474,5 +474,37 @@ EOF;
                 ,"error cannot generate strong password get $pass");
         }
     }
-
+       public static  function dataCheck_Iban()
+       {
+                return array(
+                        ['FR2617569000405121911339Y14', true]
+                      , ['FR8917569000504392936779O14', true]
+                      , ['FR7214508000702383844671J92', true]
+                      , ['FR26169000405121911339Y14', false]
+                      , ['FR89569000504392936779O14', false]
+                      , ['FR72508000702383844671J92', false]
+                      , ['NL13ABNA2859176594', true]
+                      , ['NL51RABO8584700412', true]
+                      , ['NL03ABNA4880983179', true]
+                      , ['NL13ABNA285917694', false]
+                      , ['NL51RABO858470012', false]
+                      , ['N03ABNA488098379L', false]
+                      , ['BE59561771574126', true]
+                      , ['BE02631697478740', true]
+                      , ['BE92519646539923', true]
+                      , ['BE92519646539923', true]
+                      , ['111459561771574126', false]
+                      , ['1114026316974787401114', false]
+                      , ['1114925196465399231114', false]
+             );
+     }
+  /**
+     * @testDoc test the iban_check function
+     * @dataProvider dataCheck_Iban()
+     */
+     #[DataProvider('dataCheck_Iban')]
+     function testCheck_Iban($iban,$result)
+     {
+        $this->assertTrue(check_iban($iban) == $result," fails for {$iban} receives {$result}");
+     }
 }

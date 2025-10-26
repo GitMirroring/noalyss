@@ -316,56 +316,109 @@ category_card.remove_attribut=function (p_dossier,p_fiche_def_ref,p_object_name,
  * @param p_domid  string domid of the IText
  * @see ivatnumber.class.php
  */
-category_card.check_vatnumber=function(p_domid) {
-    	try
-    		{
-    	        var dgbox="info"+p_domid;
-    	        waiting_box();
+category_card.check_vatnumber = function (p_domid) {
+    try
+    {
+        var dgbox = "info" + p_domid;
+        waiting_box();
 
-    	        // For form , most of the parameters are in the FORM
-    	        // method is then POST
-    	         //var queryString=id$(p_form_id).serialize(true);
+        // For form , most of the parameters are in the FORM
+        // method is then POST
+        //var queryString=id$(p_form_id).serialize(true);
 
-    	       var queryString = {
-    	                op: 'check_vatnumber',
-    	                vatnr:id$(p_domid).value,
-    	                boxid: dgbox,
-                        p_domid:p_domid
-    	            };
-    	        var action = new Ajax.Request(
-    					  "ajax_misc.php" ,
-    					  {
-    					      method:'GET',
-    					      parameters:queryString,
-    					      onFailure:ajax_misc_failure,
-    					      onSuccess:function(req){
-    							remove_waiting_box();
-    	                        if (req.responseText == 'NOCONX') {
-    	                            reconnect();
-    	                            return;
-    	                        }
-                                var answer=req.responseJSON;
+        var queryString = {
+            op: 'check_vatnumber',
+            vatnr: id$(p_domid).value,
+            boxid: dgbox,
+            p_domid: p_domid
+        };
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        var answer = req.responseJSON;
 
-                                if ( answer.status == 'OK')
-                                {
-                                    id$(dgbox).update(answer.html);
-                                    id$(p_domid).value=answer.vat;
-                                    id$(p_domid).removeClassName("notice")
-                                    id$(p_domid).addClassName("valid")
-                                } else {
-                                    id$(p_domid).addClassName("notice");
-                                    id$(p_domid).removeClassName("valid");
-                                    id$(dgbox).update(answer.html);
-                                }
+                        if (answer.status == 'OK')
+                        {
+                            id$(dgbox).update(answer.html);
+                            id$(p_domid).value = answer.vat;
+                            id$(p_domid).removeClassName("notice")
+                            id$(p_domid).addClassName("valid")
+                        } else {
+                            id$(p_domid).addClassName("notice");
+                            id$(p_domid).removeClassName("valid");
+                            id$(dgbox).update(answer.html);
+                        }
 
-    					      }
-    					  }
-    	              );
-    		}catch( e)
-    		{
-                remove_waiting_box();
-    			console.error(e.message);
-    		}
+                    }
+                }
+        );
+    } catch (e)
+    {
+        remove_waiting_box();
+        console.error(e.message);
+    }
+}
+category_card.check_ibannumber = function (p_domid) {
+    try
+    {
+        var dgbox = "info" + p_domid;
+        waiting_box();
+
+        // For form , most of the parameters are in the FORM
+        // method is then POST
+        //var queryString=id$(p_form_id).serialize(true);
+
+        var queryString = {
+            op: 'check_ibannumber',
+            iban: id$(p_domid).value,
+            boxid: dgbox,
+            p_domid: p_domid
+        };
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        var answer = req.responseJSON;
+
+                        if (answer.status == 'OK')
+                        {
+                           id$(p_domid).value = answer.data;
+                            id$(p_domid).removeClassName("notice");
+                            id$(p_domid).addClassName("valid");
+                            
+                        } else {
+                            id$(p_domid).addClassName("notice");
+                            id$(p_domid).removeClassName("valid");
+                        }
+
+                    }
+                }
+        );
+    } catch (e)
+    {
+        remove_waiting_box();
+        console.error(e.message);
+    }
+}
+category_card.search_peppol_participant=function(p_domid) {
+    
 }
 //-->
 

@@ -440,7 +440,8 @@ function noalyss_class_autoloader($class)
         "noalyss\invoice_pdf"=>"class/invoice_pdf.class.php",
         'noalyss\xmldocument\xmlinvoice_reader'=>'XMLDocument/xmlinvoice_reader.class.php',
         'noalyss\mail_parameter'=>'lib/mail_parameter.class.php',
-        'noalyss\smtpmail'=>'lib/smtpmail.class.php'
+        'noalyss\smtpmail'=>'lib/smtpmail.class.php',
+        'noalyss\iban_number'=>'lib/iban_number.class.php'
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];

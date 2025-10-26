@@ -32,6 +32,7 @@ try {
     $p_domid = $http->get("p_domid");
 } catch (\Exception $e) {
     echo $e->getMessage();
+    record_log($e);
     return;
 }
 $vatnr = strtoupper($vatnr);
