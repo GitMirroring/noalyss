@@ -419,8 +419,6 @@ switch ($action) {
                 $acc_operation_note->setOperation_id($jr_id);
                 $acc_operation_note->setNote(decodeURI($http->post("jr_note",'raw')??""));
                 $acc_operation_note->save();
-                $cn->commit();
-               break;
                 $rapt = $http->post('rapt');
                 
 
@@ -566,7 +564,7 @@ switch ($action) {
         break;
     case 'note_refresh':
         $acc_operation_note= Acc_Operation_Note::build_jrn_id($jr_id);
-        echo substr($acc_operation_note->getNote(),0,120);
+        echo substr($acc_operation_note->getNote()??"",0,120);
         
         return;
 }
