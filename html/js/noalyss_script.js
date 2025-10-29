@@ -830,11 +830,11 @@ function waiting_box() {
     var obj = {
         id: 'wait_box', html: loading() + '<p>' + content[65] + '</p>'
     };
-    var y = fixed_position(10, 250)
-    obj.style = y + ";width:281px;margin-left:40%;";
     if (document.getElementById('wait_box')) {
         removeDiv('wait_box');
     }
+    var y = fixed_position(10, 250)
+    obj.style = y + ";width:281px;margin-left:40%;z-index:"+get_next_layer();
     waiting_node();
     add_div(obj);
 
@@ -4989,47 +4989,6 @@ Noalyss.prototype.parameter_test_smtp = function ()
         remove_waiting_box();
         console.error("parameter_test_smtp" + e.message);
     }
-
-}
-/**
- * Display a dialog box to search the PEPPOL  ID of someone
- */
-Noalyss.prototype.display_search_peppol=function (p_domid)
-{
-    try
-    {
-        var dgbox = "peppol_id_search_div";
-        waiting_box();
-        removeDiv(dgbox);
-        var queryString = {
-
-        }
-        var action = new Ajax.Request(
-                "ajax_misc.php",
-                {
-                    method: 'GET',
-                    parameters: queryString,
-                    onFailure: ajax_misc_failure,
-                    onSuccess: function (req) {
-                        remove_waiting_box();
-                        if (req.responseText == 'NOCONX') {
-                            reconnect();
-                            return;
-                        }
-                        var y = calcy(15);
-                        var div_style = "position:absolute;" + ";top:" + y + "px"+"z-index:"+get_next_layer();
-                        add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: true});
-                        $(dgbox).innerHTML = req.responseText;
-
-                    }
-                }
-        );
-    } catch (e)
-    {
-        alert_box(e.message);
-    }
-
-    
 
 }
 

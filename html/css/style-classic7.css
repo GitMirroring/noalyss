@@ -1727,7 +1727,7 @@ div.myfieldset
     display:none;
     background-color: #FCFFCC;
     color:#000000;
-    z-index: 15;
+    z-index: 900;
     top:0px;
     left:45%;
     position:fixed;
