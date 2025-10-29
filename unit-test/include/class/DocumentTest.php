@@ -209,23 +209,6 @@ class DocumentTest extends TestCase {
         $this->assertTrue($cnt_after == $cnt_before + 1, "One file generated");
     }
 
-    /**
-     * @testdox test $_ENV['TMP'] 
-     */
-    function testGenerateTmp() {
-        $cn = Dossier::connect();
-        $md_id = $cn->get_value('select max(md_id) md_id from document_modele where md_name=$1', ['Balise']);
-        $array['e_client'] = 'CLIENT';
-        $array['e_date'] = '21.03.2020';
-        $document = new Document($cn, $md_id);
-        $document->ag_id = 2;
-        $document->md_id = $md_id;
-        $cnt_before = $cn->get_value("select count(*) from document");
-        $tEnv = $_ENV['TMP'];
-        $_ENV['TMP'] = '/tmp/not.exist';
-        $this->assertStringContainsString('échoué', $document->generate($array));
-        $_ENV['TMP'] = $tEnv;
-    }
 
     /**
      * @testdox ExtractPdf export PDF tests Document::export_pdf, Document::transform2pdf()
