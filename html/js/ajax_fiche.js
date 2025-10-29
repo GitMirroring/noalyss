@@ -417,8 +417,52 @@ category_card.check_ibannumber = function (p_domid) {
         console.error(e.message);
     }
 }
-category_card.search_peppol_participant=function(p_domid) {
-    
+
+/**
+ * Display a dialog box to search the PEPPOL  ID of someone
+ *  @parameter p_domid (string) ID of the DOM Element to update
+ */
+category_card.display_search_peppol = function (p_domid)
+{
+    try
+    {
+        var dgbox = "peppol_id_search_div";
+        waiting_box();
+        var queryString = {
+                op:'search_peppol'
+                ,ctl:p_domid
+        }
+        if (id$("peppol_id_search_div_frm")) {
+            queryString['query']=$F("query");
+            queryString['filter']=$F("filter");
+        }
+       
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        var y = calcy(15);
+                        var div_style = "position:absolute;" + ";top:" + y + "px" + ";z-index:" + get_next_layer();
+                        add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: false});
+                        $(dgbox).update( req.responseText);
+                        
+
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
 }
+
 //-->
 

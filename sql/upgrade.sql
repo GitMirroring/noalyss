@@ -16,7 +16,7 @@ update "parameter" set pr_id='MY_POSTCODE' where pr_id='MY_CP';
 update "parameter" set pr_id='MY_CITY' where pr_id='MY_COMMUNE';
 update "parameter" set pr_id='MY_COUNTRY' where pr_id='MY_PAYS';
 
-insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(55,'SIRENE','text',20,1,14);
+insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(55,'SIREN','text',20,1,14);
 insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(56,'SIRET','text',20,1,15);
 
 insert into attr_def (ad_id,ad_text,ad_type,ad_size,ad_search_followup,ad_default_order) values(58,'PEPPOL ID','text',20,1,15);
@@ -369,3 +369,106 @@ insert into profile_menu
 select me_code,'CFG',1,2,'E',0,(select distinct m2.pm_id from profile_menu m2 where m2.me_code='CFG' limit 1) from menu_ref where me_code='C0ML';
 
 
+create table parameter_internal (pi_id text not null primary key, pi_value text);
+comment on table parameter_internal  is 'Internal parameter, used by the application , it can''t not be changed by the interface';
+
+create or replace function comptaproc.fill_internal_parameter()
+returns text
+as
+$$
+declare
+	str_country text;
+	n_found int;
+begin
+	select lower(pr_value) into str_country  from "parameter" where pr_id = 'MY_COUNTRY';
+	if str_country = 'belgique' or str_country  = 'be' then
+		insert into parameter_internal values ('COUNTRY_CODE','BE') on conflict do nothing;
+		return 'BE';
+	end if ;
+	if str_country  = 'france' or str_country  = 'fr' then
+		insert into parameter_internal values ('COUNTRY_CODE','FR') on conflict do nothing;
+		return 'FR';
+	end if ;
+	
+	select 1 into n_found from bilan where b_file_template='document/fr_fr/fr_plan_abrege_perso_cr1000.form';
+
+	if n_found is NULL then 
+		insert into parameter_internal values ('COUNTRY_CODE','BE') on conflict do nothing;
+		return 'BE';
+	end if;
+	insert into parameter_internal values ('COUNTRY_CODE','FR') on conflict do nothing;
+		return 'FR';
+end;
+$$
+language plpgsql;
+
+select comptaproc.fill_internal_parameter();
+-- insert new attributes for PEPPOL, SIREN and QUANTYTI
+insert into jnt_fic_attr (fd_id,ad_id,jnt_order) 
+	select f1.fd_id , 58,15
+	from fiche_def f1 
+	join fiche_def f2 on (f1.fd_id=f2.fd_id) 
+	where f2.frd_id in (8,9)
+	on conflict do nothing;
+
+insert into jnt_fic_attr (fd_id,ad_id,jnt_order) 
+	select f1.fd_id , 57,16
+	from fiche_def f1 
+	join fiche_def f2 on (f1.fd_id=f2.fd_id) 
+	where f2.frd_id in (8,9)
+	on conflict do nothing;
+
+insert into jnt_fic_attr (fd_id,ad_id,jnt_order) 
+	select f1.fd_id , 55,16
+	from fiche_def f1 
+	join fiche_def f2 on (f1.fd_id=f2.fd_id) 
+	where f2.frd_id in (8,9)
+	on conflict do nothing;
+
+insert into jnt_fic_attr (fd_id,ad_id,jnt_order) 
+	select f1.fd_id , 59,90
+	from fiche_def f1 
+	join fiche_def f2 on (f1.fd_id=f2.fd_id) 
+	where f2.frd_id in (1,2)
+	on conflict do nothing;
+
+-- Add a attribute PEPPOL ID for customer and supplier in Belgium only
+-- for the card category 
+-- Plus, compute a default value
+--
+CREATE OR REPLACE FUNCTION comptaproc.update_peppol ()
+  RETURNS int2
+  /*- SETOF menu_tree : (TABLE FUNCTION) menu_tree is a type of a rowtype    create type menu_tree as (code text,description text);
+    - int2, text,varchar...
+    - trigger : if called from a trigger
+    - void : nothing
+    - boolean
+  */ AS
+$BODY$
+declare
+/*
+ * Section for variables
+ */
+n_card_id int;
+vat_number text;
+record_card RECORD;
+result_fct int;
+begin
+
+result_fct := 0;
+
+for record_card in select *   from fiche_detail where ad_id=13 and LOWER (ad_value ) like 'be%'
+loop	
+	vat_number := regexp_replace(record_card.ad_value,'\D','','g');
+	if length(vat_number) = 10 then
+		update fiche_detail set ad_value = '0208:'||vat_number where f_id=record_card.f_id and ad_id=58;
+		RESULT_fct := result_fct + 1;
+	end if;
+end loop;
+
+return result_fct;
+end;
+$BODY$
+LANGUAGE plpgsql;
+
+select comptaproc.update_peppol();

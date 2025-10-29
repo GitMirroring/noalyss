@@ -217,7 +217,10 @@ class Card_Property
        }
        if ( $this->ad_id == ATTR_DEF_PEPPOLID)
        {
-           
+           /// Propose a button to check VAT
+            $result['input']=new IPEPPOL_ID( "av_text" . $this->ad_id,$this->av_text);
+            $result['label']=$this->ad_text;
+            return $result;
        }
        
        if ($this->ad_id == ATTR_DEF_TVA) {

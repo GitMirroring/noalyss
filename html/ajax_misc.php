@@ -45,6 +45,7 @@ $http=new HttpInput();
 try {
     $op= $http->request("op");
     if ($op =='check_vatnumber') session_write_close();
+    if ($op =='search_peppol') session_write_close();
 
 } catch (\Exception $e) {
     exit();
@@ -376,6 +377,8 @@ $path = array(
     , 'email_setting'=>'ajax_email_setting'
     // check iban  number
     , 'check_ibannumber'=>'ajax_check_ibannumber'
+    // related to peppol : search 
+    ,'search_peppol'=>'ajax_search_peppol'
 ) ;
 
 if (array_key_exists($op, $path)) {
