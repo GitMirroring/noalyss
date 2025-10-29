@@ -496,7 +496,7 @@ $majeur=explode(".",$version);
 if ( $majeur[0] < 12  )
   {
 ?>
-  <p><?php echo $failed . _(" Vous devez  utiliser au minimum une version 12 de PostGresql, si votre distribution n'en
+  <p><?php echo $failed . _(" Vous devez  utiliser au minimum une version 12 de PostgreSQL, si votre distribution n'en
 offre pas, installez-en une en la compilant. Lisez attentivement la notice sur postgresql.org pour migrer
 vos bases de données")?>
 </p>

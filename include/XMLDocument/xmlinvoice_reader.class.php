@@ -92,7 +92,7 @@ class XMLInvoice_Reader
             return new XMLInvoice_Reader($dm);
         } else
         {
-            throw new \Exception("XR55: not a valid XML");
+            throw new \Exception("XR55: not a valid XML",55);
         }
     }
 

@@ -1123,7 +1123,7 @@ class Acc_Detail extends Acc_Operation
             $this->det->note="";
             $this->det->note_html=null;
         } else {
-            $this->det->note=strip_tags($a['n_text']);
+            $this->det->note=strip_tags($a['n_text']??"");
             $this->det->note_html=($a['n_html'] == "")?$a['n_text']:$a['n_html'];
     }
     }
