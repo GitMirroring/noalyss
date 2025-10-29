@@ -453,11 +453,18 @@ n_card_id int;
 vat_number text;
 record_card RECORD;
 result_fct int;
+country_code text;
 begin
+select pi_value into country_code from parameter_internal where pi_id ='COUNTRY_CODE';
 
 result_fct := 0;
 
-for record_card in select *   from fiche_detail where ad_id=13 and LOWER (ad_value ) like 'be%'
+for record_card in select ad_value,f1.f_id   
+	from fiche_detail f1
+	join fiche f2 using(f_id)
+	join fiche_def f3 using (fd_id)
+	where ad_id=13 and LOWER (ad_value ) like 'be%'
+	and f3.frd_id  = 9
 loop	
 	vat_number := regexp_replace(record_card.ad_value,'\D','','g');
 	if length(vat_number) = 10 then
