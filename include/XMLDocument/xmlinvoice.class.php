@@ -452,8 +452,9 @@ abstract class XMLInvoice extends \DOMDocument
         {
            $result['country']=substr($result['customer_vat_id'],0,2);
         }
-        // $result['endpoint_id']=$customer->get_attribute(ATTR_DEF_PEPPOLID,0);
-        $result['endpoint_id']= $result['customer_vat_id'];
+        $result['endpoint_id']=$customer->get_attribute(ATTR_DEF_PEPPOLID,0);
+        
+        
         return $result;
     }
     /**

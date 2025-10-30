@@ -78,7 +78,11 @@ echo \HtmlInput::title_box(_("Recherche PEPPOL Directory"), 'peppol_id_search_di
 
     $input_query = new IText("query", $query);
     $select_filter = new ISelect("filter");
-    $select_filter->transform(["vatid" => _("Numéro de TVA"), "entid" => _("Numéro entreprise"), "name" => _("Nom")]);
+    $select_filter->transform(["vatid" => _("Numéro de TVA")
+                             , "entid" => _("Numéro entreprise")
+                             , "peppolid" => _("Endpoint (PEPPOL ID)")
+                             , "name" => _("Nom")
+                            ]);
     $select_filter->selected = $filter
     ?>
 <?= $select_filter->input() ?>
@@ -97,7 +101,7 @@ echo \HtmlInput::title_box(_("Recherche PEPPOL Directory"), 'peppol_id_search_di
     </ul>
 </form>
 <?php
-if (trim($query) == '')
+if (trim($query) == '' || $filter=='')
 {
     echo '</div>'; // div class content
     return;
@@ -126,6 +130,9 @@ switch ($filter)
             break;
         }
         $search = http_build_query(["participant" => 'iso6523-actorid-upis::0208:' . $query]);
+        break;
+    case 'peppolid':
+        $search = http_build_query(["participant" => 'iso6523-actorid-upis::' . $query]);
         break;
     default:
     throw new \Exception("ASP129 unknown filter",129);
