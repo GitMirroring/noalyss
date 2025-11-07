@@ -320,70 +320,55 @@ class Acc_Document extends Document {
            //,mimecode mimetype and filename (string)
            try 
            {
-                $embedded_file=$xmlreader->get_embedded_document();
-                if ($embedded_file == false) 
-                {
-                    $embedded_file=array();
-                    // create a PDF with standard information
-                    $pdf=$xmlreader->to_pdf($this->db);
-                    $file_oid=$this->db->lo_write($pdf->Output("S"));
-                    $embedded_file['filename']="invoice.pdf";
-                    $embedded_file['mimecode']="application/pdf";
-                }
-                else 
-                {
-                    $file_oid=$this->db->lo_write($embedded_file['filecontent']);
-                    if ( $file_oid == false ) 
-                    {
-                        // create a PDF with standard information
-                        $pdf=$xmlreader->to_pdf($this->db);
-                        $file_oid=$this->db->lo_write($pdf->Output("S"));
-                    }
-                }
+                
+                // create a PDF with standard information
+                $pdf=$xmlreader->to_pdf($this->db);
+                $file_oid=$this->db->lo_write($pdf->Output("S"));
+
                 //@var $file_oid OID of the large object saved in DB
+                $this->d_name="invoice.pdf";
+                $this->d_description="Auto generated invoice";
+                $this->d_lob=$file_oid;
+                $this->d_mimetype="application/pdf";
 
+                // save extracted document into DB
+                $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
+                                        jr_pj_type=$3  where jr_id=$4",
+                                    array(
+                                            $this->d_lob
+                                        ,   $this->d_name
+                                        ,   $this->d_description
+                                        ,   $this->d_id 
+                                    )
+                                );
+                // save all the documents into the DB
+                // @var embedded_file (array of Noalyss\XML\Document_Reference)
+                $embedded_file=$xmlreader->get_embedded_document();
+                $nb_file = count($embedded_file);
+                for ($i=0;$i <$nb_file ; $i++)
+                {
+                    // other documents save in jrn_sup_document
+                    // @var $file (Binary File from XML)
+                    $binary=$embedded_file[$i]->getBinary_object();
+                    
+                    //@var $sup_oid : oid of the supplemental
+                    $sup_oid=$this->db->lo_write($binary->filecontent);
 
-                 $this->d_name=$embedded_file['filename'];
-                 $this->d_description=$embedded_file['filename'];
-                 $this->d_lob=$file_oid;
-                 $this->d_mimetype=$embedded_file['mimecode'];
-                 // save extracted document into DB
-                 $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
-                                         jr_pj_type=$3  where jr_id=$4",
-                                     array(
-                                             $this->d_lob
-                                         ,   $this->d_name
-                                         ,   $this->d_description
-                                         ,   $this->d_id 
-                                     )
-                                 );
-                return $file_oid;
+                    $jrn_sup_document=new Jrn_Sup_Document_SQL($this->db);
+                    $jrn_sup_document->jr_id=$this->d_id;
+                    $jrn_sup_document->js_mimetype=$binary->mimecode;
+                    $jrn_sup_document->js_filename=$binary->filename;
+                    $jrn_sup_document->js_lob=$sup_oid;
+                    $jrn_sup_document->js_description=$embedded_file[$i]->getDescription();
+                    $jrn_sup_document->js_cbc_id=$embedded_file[$i]->getId();
+                    $jrn_sup_document->save();
+                }
+
            } catch (\Exception $e ) {
                \record_log($e);
-               // if exception is not too many document or document corrupted 
-               // then rethrow the exception
-                if ( !in_array(e->getCode(),[110,116])  )
-                {
-                    throw new \Exception("X281 ",281,$e);
-                }
+               throw new \Exception("X281 ",281,$e);
            }
-           
         } 
-        
-        // save new document
-        $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
-                            jr_pj_type=$3  where jr_id=$4",
-                            array(
-                                    $oid
-                                ,   $_FILES['pj']['name']
-                                ,   $_FILES['pj']['type']
-                                ,   $this->d_id 
-                                )
-                            );
-        $this->d_name=$_FILES['pj']['name'];
-        $this->d_description=$_FILES['pj']['name'];
-        $this->d_lob=$oid;
-        $this->d_mimetype=$_FILES['pj']['type'];
         $this->db->commit();
 
         return $oid;

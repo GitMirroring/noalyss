@@ -56,6 +56,9 @@ class XMLInvoice_Reader
     {
         $this->domDocument = $domDocument;
         $this->xpath = new \DOMXPath($this->domDocument);
+        $this->xpath->registerNamespace("ns4", 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2');
+        $this->xpath->registerNamespace("cac", 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2');
+        $this->xpath->registerNamespace("cbc", 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2');
     }
 
     /**
@@ -136,35 +139,53 @@ class XMLInvoice_Reader
     /**
      * @brief returns the embedded document in an array (keys : filecontent (BYTES),mimecode , filename)
      * or false if there is no document
-     * @return bool|array keys : filecontent (BYTES),mimecode , filename)
-     * or false if there is no document
+     * @return bool|array of array : filecontent (BYTES),mimecode , filename)
      * @throws \Exception if there are several documents
      * 
      */
     public function get_embedded_document()
     {
-        if (($node = $this->get_node("//cac:AdditionalDocumentReference")) == false)
-        {
-            return false;
-        }
-        if ($node->length > 1)
-        {
-            throw new \Exception("XR110 Too many documents found", 110);
-        }
-        ///@var DOMNodeList $data //cac:AdditionalDocumentReference[1]/cac:Attachment[1]/cbc:EmbeddedDocumentBinaryObject[1]
-        if (
-                ($data = $this->get_node("//cac:AdditionalDocumentReference[1]/cac:Attachment[1]/cbc:EmbeddedDocumentBinaryObject[1]")) == null
+        $a_document_reference=array();
+        foreach (array(
+            "AdditionalDocumentReference",
+            "ReceiptDocumentReference",
+            "StatementDocumentReference",
+            "OriginatorDocumentReference",
+            "ContractDocumentReference"
         )
+                as $document)
         {
+            $document=$this->domDocument->getElementsByTagName($document);
+            if ( $document->length == 0 ) {
+                continue;
+            }
+            for ($e=0;$e < $document->count();$e++)
+            {
+                $item=$document->item($e);
+                
+                if ( $item->nodeType == XML_ELEMENT_NODE ) 
+                {
+                     $id=$item->getElementsByTagName("ID")[0]?->nodeValue;
+                     $description=$item->getElementsByTagName("DocumentDescription")[0]?->nodeValue;
+                     $embedded_document=$item->getElementsByTagName("EmbeddedDocumentBinaryObject");
+                     if ( $embedded_document->length == 0) 
+                     {
+                         continue;
+                     }
+                     $binary_object=new Binary_Object;
+                     $binary_object->filecontent=base64_decode($embedded_document[0]->nodeValue);
+                     $binary_object->mimecode=$embedded_document[0]->getAttribute("mimeCode");
+                     $binary_object->filename=$embedded_document[0]->getAttribute("filename");
+                     $document_reference=new Document_Reference();
+                     $document_reference->setId($id)
+                             ->setDescription($description)
+                             ->setBinary_object($binary_object);
+                     $a_document_reference[]=clone $document_reference;
+                }
+            }
 
-            throw new \Exception("X116 Document corrupted", 116);
         }
-        $filecontent = base64_decode($data->item(0)->nodeValue);
-        $mimecode = $data->item(0)->getAttribute("mimeCode");
-        $filename = $data->item(0)->getAttribute("filename");
-        return array("filecontent" => $filecontent,
-            "mimecode" => $mimecode,
-            "filename" => $filename);
+        return $a_document_reference;
     }
 
     /**
@@ -192,6 +213,7 @@ class XMLInvoice_Reader
         $result['postcode'] = $this->get_node_value('//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:PostalZone[1]');
         $result['country_code'] = $this->get_node_value("//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PostalAddress[1]/cac:Country[1]/cbc:IdentificationCode[1]");
         $result['company_id'] = $this->get_node_value("//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PartyTaxScheme[1]/cbc:CompanyID[1]");
+        $result['scheme']=$this->get_node("//cac:AccountingCustomerParty[1]/cac:Party[1]/cbc:EndpointID[1]")[0]->getAttribute("schemeID");
         return $result;
     }
 
@@ -209,6 +231,7 @@ class XMLInvoice_Reader
         $result['postcode'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:PostalZone[1]");
         $result['country_code'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PostalAddress[1]/cac:Country[1]/cbc:IdentificationCode[1]");
         $result['company_id'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PartyTaxScheme[1]/cbc:CompanyID[1]");
+        $result['scheme']=$this->get_node("//cac:AccountingSupplierParty[1]/cac:Party[1]/cbc:EndpointID[1]")[0]->getAttribute("schemeID");
         return $result;
     }
 

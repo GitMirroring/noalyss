@@ -86,6 +86,14 @@ class InvoiceUBL21 extends XMLInvoice {
         /**
          * check that PEPPOL ID is valid
          */
+        if ( isset($company['COMPANY_UBL_ID'])) 
+        {
+            if ( strpos($company['COMPANY_UBL_ID'],':') == 0 )
+            {
+                $a_error[]="COMPANY_UBL_ID";
+            }
+            
+        }
         return $a_error;
     }
      /**
@@ -107,7 +115,7 @@ class InvoiceUBL21 extends XMLInvoice {
                  $a_error[]=$value;
              }
         }
-        if ( $this->data['customer'][ATTR_DEF_PEPPOLID] != "")
+        if ( $this->data['customer']["endpoint_id"] != "")
         {
             // check if peppol id has the form 9999:9999...
             list($scheme_id,$peppol)=explode(":", $this->data['customer'][$value]);
