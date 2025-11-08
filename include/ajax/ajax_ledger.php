@@ -567,6 +567,93 @@ switch ($action) {
         echo substr($acc_operation_note->getNote()??"",0,120);
         
         return;
+    case "rmsup":
+    //------------------------------------------------
+    // Remove a document from JRN_SUP_DOCUMENT
+    //------------------------------------------------
+        $js_id=$http->post("js_id","number");
+        $jrn_sup= new Jrn_Sup_Document_SQL($cn,$js_id);
+        $jrn_sup->delete();
+        // no answer, we stop here
+        return;
+    case 'input_file':
+    //------------------------------------------------
+    // Display form for adding file , directly HTML
+    // 
+    //------------------------------------------------
+        require_once NOALYSS_TEMPLATE."/ajax_ledger+input_file.php";
+        return;
+    case 'save_file':
+    //------------------------------------------------
+    // Add a document to the operation
+    //------------------------------------------------
+        if (sizeof($_FILES)==0) {
+            return;
+        }
+        $nb=count($_FILES['document_supplemental']["name"]);
+        $cn->start();
+        for ($i=0;$i<$nb;$i++)
+        {
+            $file= tempnam($_ENV["TMP"], "sup_file");
+            if ( move_uploaded_file($_FILES['document_supplemental']['tmp_name'][$i],$file))
+            {
+                if ( ($oid=$cn->lo_import($file)) != false )
+                {
+                    $jrn_sup=new Jrn_Sup_Document_SQL($cn);
+                    $jrn_sup->jr_id=$jr_id;
+                    $jrn_sup->js_lob=$oid;
+                    $jrn_sup->js_mimetype=$_FILES['document_supplemental']['type'][$i];
+                    $jrn_sup->js_filename=$_FILES['document_supplemental']['name'][$i];
+                    $jrn_sup->insert();
+                    $rowid=sprintf("row_js_%s_%s",$div,$jrn_sup->js_id);
+                    // @var $download (url) to send file
+                    $download="export.php?". http_build_query(
+                            [
+                                "act"=>"RAW:suppl-document"
+                                ,"js_id"=>$jrn_sup->js_id
+                                ,"gDossier"=>$gDossier
+                            ]);
+                    
+                    
+                    $script_remove="Supplement_Document.delete_document('$gDossier','$div','{$jrn_sup->js_id}','$jr_id')";
+                    $icon_remove=\Icon_Action::trash(uniqid("sdd"),$script_remove);
+                    echo <<<EOF
+<div class="row" id="{$rowid}">
+    <div class="col">
+        <a href="{$download}" download>   
+        {$jrn_sup->js_filename}
+        </a>
+    </div>
+    <div class="col">
+        {$jrn_sup->js_description}
+    </div>
+    <div class="col">
+        {$icon_remove}
+    </div>
+</div>
+EOF;
+                }
+                else 
+                {
+                    // failed
+                    print '<div class="row">';
+                    echo_warning(_("1 Echec ").$_FILES["name"]);
+                    print '</div>';
+                }
+
+            }
+            else
+            {
+                //failed
+                // failed
+                print '<div class="row">';
+                echo_warning(_("2 Echec ").$_FILES["name"]);
+                print '</div>';
+            }
+        }
+        
+        $cn->commit();
+        return;
 }
 $html = escape_xml($html);
 if (!headers_sent()) {

@@ -44,6 +44,7 @@ $a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>
 $a_tab['document_operation_div']=array('id'=>'document_operation_div'.$div,'label'=>_('Document').'('.$nb_document.')','display'=>'block');
 $a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Actions Gestion').'('.count($a_followup).')','display'=>'none');
 $a_tab['analytic_div']=array('id'=>'analytic_div'.$div,'label'=>_('Comptabilité Analytique'),'display'=>'none');
+$a_tab['supplemental_doc_div']=array('id'=>'supplemental_doc_div'.$div,'label'=>_('Documents supplémentaires'),'display'=>'none');
 //var $g_parameter \Noalyss_Parameter_Folder
 global $g_parameter;
 
@@ -293,8 +294,16 @@ echo '</div>';
 ?>
 
 <?php 
-
+//------------------------------------------------
+// Receipt
+//------------------------------------------------
 require_once NOALYSS_TEMPLATE.'/ledger_detail_file.php';
+?>
+<?php
+//------------------------------------------------
+// Receipt
+//------------------------------------------------
+require_once NOALYSS_TEMPLATE."/ledger_detail_sup_files.php";
 ?>
 
 

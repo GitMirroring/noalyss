@@ -303,7 +303,7 @@ comment on sequence seq_doc_type_stdinv is 'Sequence for standard invoice';
 
 
 INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) 
-VALUES('RAW:xml-invoice', 'Exporte la facture XML', 'export_xml-invoice.php', NULL, 'export la facture électronique en XML', NULL, NULL, 'PR', NULL);
+VALUES('RAW:xml-invoice', 'Exporte la facture XML', 'export_xml-invoice.php', NULL, 'exporte la facture électronique en XML', NULL, NULL, 'PR', NULL);
 
 insert into profile_menu (me_code,p_id, p_type_display) select 'RAW:xml-invoice',p_id,'P' from profile;
 
@@ -492,3 +492,10 @@ COMMENT ON COLUMN public.jrn_sup_document.js_lob IS 'OID';
 COMMENT ON COLUMN public.jrn_sup_document.jr_id IS 'FK to jrn';
 COMMENT ON COLUMN public.jrn_sup_document.js_description IS 'Description of document';
 COMMENT ON COLUMN public.jrn_sup_document.js_cbc_id IS 'ID in XML';
+
+
+
+INSERT INTO public.menu_ref (me_code, me_menu, me_file, me_url, me_description, me_parameter, me_javascript, me_type, me_description_etendue) 
+VALUES('RAW:suppl-document', 'Exporte Document supplementaire', 'export_suppl-document.php', NULL, 'télécharge le document supp', NULL, NULL, 'PR', NULL);
+
+insert into profile_menu (me_code,p_id, p_type_display) select 'RAW:suppl-document',p_id,'P' from profile;

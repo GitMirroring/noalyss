@@ -29,7 +29,7 @@ namespace Noalyss\XMLDocument;
  */
 
 /**
- * @file
+ * @class
  * @brief Get information from an XML
  * Exception code : 
  *    - 55 : XML Invalid
@@ -139,7 +139,7 @@ class XMLInvoice_Reader
     /**
      * @brief returns the embedded document in an array (keys : filecontent (BYTES),mimecode , filename)
      * or false if there is no document
-     * @return bool|array of array : filecontent (BYTES),mimecode , filename)
+     * @return bool|array of Document_Reference
      * @throws \Exception if there are several documents
      * 
      */

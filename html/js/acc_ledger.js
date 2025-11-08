@@ -2050,3 +2050,171 @@ var operation_exercice = {
         }
     }
 }
+
+
+var Supplement_Document={
+    
+};
+/**
+ * see  ledger_detail_sup_files.php
+ * $rowid=sprintf("row_js_%s_%s",$div,$item->js_id);
+ * @param {int} nDossier
+ * @param {string} sDiv
+ * @param {int} nJS_ID
+ * @returns {void}
+ */
+Supplement_Document.delete_document=function (nDossier,sDiv,nJS_ID,nJR_ID)
+{
+    confirm_box(null
+                ,content[47]
+                ,function (){
+                    try
+                    {
+                        var queryString = {
+                            gDossier:nDossier,
+                            div:sDiv,
+                            jr_id:nJR_ID,
+                            js_id:nJS_ID,
+                            op:"ledger",
+                            act:"rmsup"
+                        };
+                        var action = new Ajax.Request(
+                            "ajax_misc.php",
+                            {
+                                method: 'POST',
+                                parameters: queryString,
+                                onSuccess: function (req) {
+                                    remove_waiting_box();
+                                    if (req.responseText == 'NOCONX') {
+                                        reconnect();
+                                        return;
+                                    }
+                                    id$("row_js_"+sDiv+"_"+nJS_ID).remove();
+
+                                }
+                            }
+                        );
+                    } catch (e)
+                    {
+                        alert_box(e.message);
+                    }
+                }
+    );
+
+}
+Supplement_Document.input_file=function(nDossier,sDiv,nJR_ID)
+{
+    try
+    {
+        var dgbox = "sup_doc_input_file"+sDiv;
+        waiting_box();
+        removeDiv(dgbox);
+        var queryString = {
+            gDossier:nDossier,
+            div:sDiv,
+            jr_id:nJR_ID,
+            op:"ledger",
+            act:"input_file",
+            dgbox:dgbox
+        };
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        var y = calcy(15);
+                        var div_style = "position:absolute;" + ";top:" + y + "px"+";z-index:"+get_next_layer();
+                        add_div({id: dgbox, cssclass: 'inner_box2', html: loading(), style: div_style, drag: true});
+                        $(dgbox).innerHTML = req.responseText;
+                        
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
+}
+/**
+ * 
+ * @param {string} FORM ID
+ * @returns {Boolean}
+ */
+Supplement_Document.save_file=function(form_dom_id)
+{
+    try 
+    {
+        waiting_box();
+        var form_data=$(form_dom_id).serialize();
+        var xhr = new XMLHttpRequest();
+        var div=id$(form_dom_id).elements["div"].value;
+        // check size
+        var total_size=0;
+        var file_to_upload=id$("doc_sup");
+        var max_size=id$(form_dom_id).elements["MAX_FILE_SIZE"].value;
+        var post_max_size=id$(form_dom_id).elements["post_max_size"].value;
+        var feedback_div=id$('feedback'+div);
+        
+        for (var e=0;e<file_to_upload.files.length;e++) {
+
+            // check the size
+            if (file_to_upload.files[e].size > max_size) {
+                // if size > accepted size , push filename with error in an array feedback,
+                feedback_div.innerHTML += '<p class="notice">' + file_to_upload.files[e].name 
+                                        +content[78]+ "</p>";
+                remove_waiting_box();
+                return false;
+            } else if ( total_size+file_to_upload.files[e].size >= post_max_size )
+            {
+                 feedback_div.innerHTML += '<p > limite '+content[78]+" </p>";
+                 remove_waiting_box();
+                 return false;
+            }
+            else {
+                total_size+=file_to_upload.files[e].size;
+            }
+        }
+        feedback_div.innerHTML="loading....";
+        document.getElementById("progress_upload1b").setAttribute("value", 0);
+
+        xhr.upload.onprogress = function (e) {
+            document.getElementById("progress_upload1b").setAttribute("max", e.total) + "<br/>";
+            document.getElementById("progress_upload1b").setAttribute("value", e.loaded) + "<br/>";
+
+        }
+
+        xhr.onreadystatechange = function (event) {
+            if (this.readyState == XMLHttpRequest.DONE)
+            {
+                remove_waiting_box();
+
+                if (this.status === 200) {
+                        document.getElementById("supplement_div_list"+div).innerHTML += this.responseText ;
+                        let dgbox=id$(form_dom_id).elements["dgbox"].value;
+                        removeDiv(dgbox);
+                        
+                    } else {
+                        document.getElementById("supplement_div_list"+div).innerHTML += "status" + this.statusText + "<br/>";
+                    }
+                }
+            }
+        
+        xhr.open("POST", "ajax_misc.php?"+form_data, true);
+     // works xhr.send(new FormData(input.parentElement));
+        var formData = new FormData(document.getElementById(form_dom_id));
+        xhr.send(formData);
+    }catch(e)
+    {
+        console.error("Supplement_Document.save_file "+e.message)
+    }
+    remove_waiting_box();
+    return false;
+}
