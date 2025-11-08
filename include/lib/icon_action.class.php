@@ -272,7 +272,7 @@ class Icon_Action
      */
     static function trash($p_id,$p_javascript) 
     {
-        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="smallicon icon">&#xe80f;</span>';
+        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="bt-error  smallicon icon">&#xe80f;</span>';
         return $r;
     }
     /**

@@ -1959,3 +1959,24 @@ function check_iban(&$iban): bool
 
     return false;
 }
+
+/**
+* @brief convert a value in Mbytes, kb ... in byte 
+* @param (string) $p_value containing K , M, G
+* @return int in bytes
+*/
+function convert_ini_unit($p_value)
+{
+    if ($p_value=="") return 0;
+   $a_convert=["k"=>1024,"m"=>1024**2,"g"=>1024**3];
+
+   $p_value=trim($p_value);
+   $last=strtolower($p_value[strlen($p_value)-1]);
+   $p_value=substr($p_value,0,strlen($p_value)-1);
+   if ( isset($a_convert[$last])) {
+       $p_value=$p_value*$a_convert[$last];
+   }
+
+   return $p_value;
+}
+    
