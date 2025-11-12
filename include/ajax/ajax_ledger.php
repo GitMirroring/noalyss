@@ -654,6 +654,13 @@ EOF;
         
         $cn->commit();
         return;
+        case 'refresh_file':
+        //------------------------------------------------
+        // refresh list of suppemental files
+        //------------------------------------------------
+        Acc_Document::display_supplementary_doc($cn, $http->get("div"), $http->get("jr_id"));
+          
+        return;
 }
 $html = escape_xml($html);
 if (!headers_sent()) {

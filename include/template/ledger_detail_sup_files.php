@@ -34,14 +34,12 @@
 /**
  * show existing supplemental files for this operation
  */
-
+Acc_Document::display_supplementary_doc($cn,$div,$jr_id);
+/*
 
 $q=new Jrn_Sup_Document_SQL($cn);
 $a_row=$q->collect_objects(" where jr_id=$1 order by js_cbc_id", [$jr_id]);
-$javascript=sprintf("Supplement_Document.input_file('%s','%s','%s')",
-        $gDossier,
-        $div,
-        $jr_id);
+
 if ( count($a_row) > 0)
 {
     foreach ($a_row as $item) {
@@ -79,6 +77,20 @@ if ( count($a_row) > 0)
                                 ,'operation_id'=>$jr_id
                             ]);
 
+ * 
+ */
+$javascript=sprintf("Supplement_Document.input_file('%s','%s','%s')",
+        $gDossier,
+        $div,
+        $jr_id);
+
+ $download="export.php?". http_build_query(
+                                        [
+                                            "act"=>"RAW:suppl-document"
+                                            ,"js_id"=>0
+                                            ,"gDossier"=>$gDossier
+                                            ,'operation_id'=>$jr_id
+                                        ]);
 ?>
     <a href="<?=$download?>" download=""><?=_("Télécharger tous les documents")?>
     </a>

@@ -314,7 +314,7 @@ class Acc_Document extends Document {
                 jr_id=$2",
                     [$oid,$this->d_id]);
             
-           $xmlreader= XMLInvoice_Reader::build_from_file($a_file['filename']);
+           $xmlreader= \Noalyss\XMLDocument\XML_Reader::build_from_file($a_file['filename']);
 
            //@var $embedded_file (array) keys = filecontent: binary data
            //,mimecode mimetype and filename (string)
@@ -395,5 +395,42 @@ class Acc_Document extends Document {
                 .'</a>';
         return $r;
     }
-   
+    static function display_supplementary_doc($cn,$div,$jr_id)
+    {
+        $gDossier=\Dossier::id();
+          $q=new Jrn_Sup_Document_SQL($cn);
+            $a_row=$q->collect_objects(" where jr_id=$1 order by js_cbc_id", [$jr_id]);
+          
+            if ( count($a_row) > 0)
+            {
+                foreach ($a_row as $item) {
+                    $export="export.php?";
+                    $script="Supplement_Document.delete_document('$gDossier','$div','{$item->js_id}','$jr_id')";
+                    $rowid=sprintf("row_js_%s_%s",$div,$item->js_id);
+                    // @var $download (url) to send file
+                    $download="export.php?". http_build_query(
+                                        [
+                                            "act"=>"RAW:suppl-document"
+                                            ,"js_id"=>$item->js_id
+                                            ,"gDossier"=>$gDossier
+                                        ]);
+                ?>
+                <div class="row" id="<?=$rowid?>">
+                    <div class="col">
+                        <a href="<?=$download?>" download>      <?=$item->js_filename?></a>
+                    </div>O
+                    <div class="col">
+                        <?=$item->js_description?>
+                    </div>
+                    <div class="col">
+                        <?=\Icon_Action::trash(uniqid("sdd"),$script)?>
+                    </div>
+                </div>
+                <?php
+                }// end foreach $a_row
+            }// end if count
+            //download ALL files from this operation
+            
+
+    }
 }

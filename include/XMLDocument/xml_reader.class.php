@@ -94,7 +94,27 @@ abstract class XML_Reader
      * @return \Noalyss\XMLDocument\XMLInvoice_Reader
      * @throws \Exception if xml not valid
      */
-    abstract static function build_from_file($filename);
+    static function build_from_file($filename)
+    {
+         if (!file_exists($filename))
+        {
+            throw new \Exception("XR101: file not found $filename", 101);
+        }
+        $dm = new \DOMDocument();
+        if ($dm->load($filename) == false)
+        {
+             throw new \Exception("XR106: cannot load file", 106);
+        }
+        if ( $dm->getElementsByTagName("CreditNote")->length == 1)
+        {
+            return new XMLCreditNote_Reader($dm);
+        }
+        if ( $dm->getElementsByTagName("Invoice")->length == 1)
+        {
+            return new XMLInvoice_Reader($dm);
+        }
+          throw new \Exception("XR116: unknown XML", 116);
+    }
 
     /**
      * @brief Build an XMLInvoice_Reader object from an XML string
@@ -102,7 +122,23 @@ abstract class XML_Reader
      * @return \Noalyss\XMLDocument\XMLInvoice_Reader
      * @throws \Exception if xml not valid
      */
-    abstract static  function build_from_string($string);
+     static  function build_from_string($string) 
+     {
+        $dm = new \DOMDocument();
+        if ($dm->loadXML($string) == false)
+        {
+            throw new \Exception("XR130: cannot load XML", 130);
+        }
+        if ( $dm->getElementsByTagName("CreditNote")->length == 1)
+        {
+            return new XMLCreditNote_Reader($dm);
+        }
+        if ( $dm->getElementsByTagName("Invoice")->length == 1)
+        {
+            return new XMLInvoice_Reader($dm);
+        }
+          throw new \Exception("XR120: unknown XML", 120);
+     }
 
 
 

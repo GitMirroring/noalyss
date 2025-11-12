@@ -134,7 +134,7 @@ class XMLCreditNote_Reader extends XML_Reader
     function get_invoiceLine(): array
     {
         $result = [];
-        $node = $this->get_node("//ns3:CreditNoteLine");
+        $node = $this->get_node("//cac:CreditNoteLine");
         for ($e = 0; $e < $node->length; $e++)
         {
             $row = [];
@@ -189,7 +189,6 @@ class XMLCreditNote_Reader extends XML_Reader
         {
             $row = [];
             $xml = simplexml_import_dom($node->item($e));
-            \Noalyss\Dbg::echo_var(0, htmlspecialchars($xml->asXML()));
             // /Invoice/cac:TaxTotal[1]/cac:TaxSubtotal[1]/cbc:TaxableAmount[1]
             $this->registerNS($xml);
 
@@ -197,7 +196,10 @@ class XMLCreditNote_Reader extends XML_Reader
             $row ['tax'] = $xml->xpath("//cbc:TaxAmount")[$e] . "";
             $row ['tax_id'] = $xml->xpath("//cac:TaxCategory/cbc:ID")[$e] . "";
             $row ['tax_percent'] = $xml->xpath("//cac:TaxCategory/cbc:Percent")[$e] . "";
-            $row ['name'] =$xml->xpath("//cac:CreditNoteLine/cac:Item/cbc:Name")[$e]."";
+            if (isset($xml->xpath("//cac:CreditNoteLine/cac:Item/cbc:Name")[$e]))
+                $row ['name'] =$xml->xpath("//cac:CreditNoteLine/cac:Item/cbc:Name")[$e]."";
+            else
+                $row['name']="";
             /**
              * @TODODNY
              * Implémenter les allowances

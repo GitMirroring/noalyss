@@ -2218,3 +2218,31 @@ Supplement_Document.save_file=function(form_dom_id)
     remove_waiting_box();
     return false;
 }
+Supplement_Document.refresh_list=function (nDossier,sDiv,nJR_id)
+{
+    try
+    {
+     var queryString = {
+            gDossier:nDossier,
+            div:sDiv,
+            jr_id:nJR_id,
+            op:"ledger",
+            act:"refresh_file"
+        };
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onSuccess: function (req) {
+                       $("supplement_div_list"+sDiv).update(req.responseText);
+                        
+                    }
+                }
+        );
+    } catch (e)
+    {
+        console.error(e.message);
+    }
+
+}

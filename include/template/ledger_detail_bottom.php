@@ -64,7 +64,11 @@ if ( $div != "popup") :
     ?>
     <li class="<?php echo $class?>">
         <?php $div_tab_id=$a_value['id'];?>
-        <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected' ;show_tabs($F('<?=$div?>tab').split(','),'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
+        <?php if ( $div_tab_id == "supplemental_doc_div".$div):?>
+            <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected' ;Supplement_Document.refresh_list('<?=\Dossier::id()?>','<?=$div?>','<?=$obj->jr_id?>');show_tabs($F('<?=$div?>tab').split(','),'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
+        <?php else: ?>
+            <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected' ;show_tabs($F('<?=$div?>tab').split(','),'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
+        <?php endif; ?>
     </li>
     <?php    endforeach; ?>
 </ul>
@@ -301,7 +305,7 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_file.php';
 ?>
 <?php
 //------------------------------------------------
-// Receipt
+// Receipt supplemental_doc_div
 //------------------------------------------------
 require_once NOALYSS_TEMPLATE."/ledger_detail_sup_files.php";
 ?>

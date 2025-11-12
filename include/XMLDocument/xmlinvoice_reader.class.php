@@ -153,15 +153,19 @@ class XMLInvoice_Reader extends XML_Reader
         {
             $row = [];
             $xml = simplexml_import_dom($node->item($e));
-            \Noalyss\Dbg::echo_var(0, htmlspecialchars($xml->asXML()));
             // /Invoice/cac:TaxTotal[1]/cac:TaxSubtotal[1]/cbc:TaxableAmount[1]
             $this->registerNS($xml);
-
+            
             $row ['taxable_amount'] = $xml->xpath("//cbc:TaxableAmount")[$e] . "";
             $row ['tax'] = $xml->xpath("//cbc:TaxAmount")[$e] . "";
             $row ['tax_id'] = $xml->xpath("//cac:TaxCategory/cbc:ID")[$e] . "";
             $row ['tax_percent'] = $xml->xpath("//cac:TaxCategory/cbc:Percent")[$e] . "";
-            $row ['name'] =$xml->xpath("//cac:InvoiceLine/cac:Item/cbc:Name")[$e]."";
+            if (isset($xml->xpath("//cac:InvoiceLine/cac:Item/cbc:Name")[$e]))
+            {
+                $row ['name'] =$xml->xpath("//cac:InvoiceLine/cac:Item/cbc:Name")[$e]."";   
+            }else {
+                $row ['name'] ="";
+            }
             /**
              * @TODODNY
              * Implémenter les allowances
