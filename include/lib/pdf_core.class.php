@@ -64,7 +64,7 @@ class PDF_Core extends TFPDF
 
 
 
-    private $cells=array();
+    protected $cells=array();
     protected $bigger;
 
     public function __construct ( $orientation = 'P', $unit = 'mm', $format = 'A4')
@@ -119,7 +119,7 @@ class PDF_Core extends TFPDF
      * @param $p_text String
      * @param $p_colSize size of the column in User Unit
      */
-    private function count_nb_row($p_text,$p_colSize) 
+    protected function count_nb_row($p_text,$p_colSize) 
     {
         // If colSize is bigger than the size of the string then it takes 1 line
         if ( $this->GetStringWidth($p_text) <= $p_colSize) return 1;
@@ -153,7 +153,7 @@ class PDF_Core extends TFPDF
      * Check if a page must be added due a MultiCell 
      * @return boolean
      */
-    private function check_page_add()
+    protected function check_page_add()
     {
         // break on page
         $size=count($this->cells);
@@ -260,7 +260,7 @@ class PDF_Core extends TFPDF
         }
         $this->cells=array();
     }
-    private function add_cell(Cellule $Ce)
+    protected function add_cell(Cellule $Ce)
     {
         $size=count($this->cells);
         $this->cells[$size]=$Ce;

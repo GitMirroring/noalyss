@@ -105,7 +105,7 @@ $str_anc = "";
                             $ipaid = new ICheckBox("ipaid", 'paid');
                             $ipaid->selected = ($obj->det->jr_rapt == 'paid');
                             echo $ipaid->input();
-                             if ( DEBUGNOALYSS > 0) echo \Noalyss\Dbg::hidden_info("obj", $obj);
+                             
                             ?>
                         </td>
                     </tr>
