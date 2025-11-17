@@ -50,7 +50,7 @@ echo '
 //----------------------------------------------------------------------
 // show the  menu
 //----------------------------------------------------------------------
-echo ShowItem(array(
+echo show_menu_extension(array(
        array( 
            "?".http_build_query(["ac"=>$http->request("ac"),"new"=>1,"gDossier"=>$dossier_id]),
            _("Nouveau"),
@@ -61,7 +61,7 @@ echo ShowItem(array(
             _("Liste"),
            _("Liste opérations")
            )
-), "H", "nav-item", "nav-link", "", "nav nav-pills nav-level3");
+));
 
 
 //----------------------------------------------------------------------

@@ -36,7 +36,7 @@
                     $js="";
                     $class_list_element="nav-item nav-item-underline";
                     $class_link="nav-link";
-
+                    $url="";
                     if ( $amenu[$i]['me_url']!='')
                     {
                             $url=$amenu[$i]['me_url'];
@@ -86,6 +86,7 @@
 	?>
 	<?php 
 	    endfor;
+
     	?>
 
 

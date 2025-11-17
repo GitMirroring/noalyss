@@ -281,7 +281,8 @@ if (isset($_REQUEST['ac']))
         // Show module and highligt selected one
         show_module($module_id);
         
-        
+        global $level;
+        $level = 0;
         show_menu( $amenu_id[0]['pm_id_v3']);
 
         show_menu( $amenu_id[0]['pm_id_v2']);

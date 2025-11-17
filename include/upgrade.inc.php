@@ -36,7 +36,7 @@ $menu=array(
 );
 $sb=$http->request("sb", "string", "application");
 echo '<div class="">';
-echo ShowItem($menu, "H", "nav-item", "nav-link", $sb,"nav nav-pills nav-level2");
+echo show_menu_extension($menu, $sb);
 echo '</div>';
 
 $sc=$http->get("sc", "string", "none");

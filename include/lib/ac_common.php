@@ -519,7 +519,57 @@ function sql_string($p_string)
     $p_string = noalyss_str_replace('\\', '\\\\', $p_string);
     return $p_string;
 }
+/**
+ * @brief Same menu for all extensions, with the right level, it calls 
+ * ShowItem with the right parameters
+ * @global $level (int) global variable of the menu level
+ * @param $p_array (array)
+ * @param $default (string) selected item
+ * @param $p_extra (string) extra code for the table tag (CSS or javascript)
+ * @see ShowItem
+ */
+function show_menu_extension($p_array,$default="",$p_extra="")
+{
+    global $level;
+    
+   
+   $level++;
+    switch ($level) {
+        case 3:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra="noprint nav nav-pills nav-level3";
+            $class_div="menu3";
+            break;
+         case 2:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra="noprint nav nav-pills nav-level2";
+            $class_div="menu2";
+            break;
+        case 1:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra='noprint nav nav-pills nav-fill flex-row ';
+            $class_div="top_menu";
+            break;
+        default:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra="noprint nav nav-level4";
+            $class_div="menu3";
+            break;
+    }
+   return "<div class=\"$class_div\">"
+           . ShowItem($p_array,$p_dir,$class,$class_ref,$default,$p_extra)
+           ."</div>";
+           
 
+}
 /**
 * \brief store the string which print
  *           the content of p_array in a table
@@ -536,6 +586,7 @@ function sql_string($p_string)
 
 function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link", $default="", $p_extra="nav nav-pills nav-fill")
 {
+      
     $ret = '';
     // for comptability with old application  mtitle for anchor is replace by nav-link
     
@@ -543,9 +594,9 @@ function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link"
     // direction Vertical
     if ($p_dir == 'V')
     { 
-        $ret .= "<ul class=\"$p_extra noprint \"  flex-row>";
+        $ret .= "<ul class=\"$p_extra  \"  flex-row>";
     } else {
-        $ret .= "<ul class=\"$p_extra noprint \" >";
+        $ret .= "<ul class=\"$p_extra \" >";
        
     }
     
@@ -565,11 +616,11 @@ function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link"
 
         if ($set==$default)
         {
-            $ret.='<li class="nav-item"><A class="'.$class_ref.' active'.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
+            $ret.='<li class="'.$class.'"><A class="'.$class_ref.' active'.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
         }
         else
         {
-            $ret.='<li class="nav-item"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
+            $ret.='<li class="'.$class.'"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
         }
         
     }
@@ -1072,8 +1123,7 @@ function find_default_module()
 function show_menu($module)
 {
     if ($module == 0)return;
-    static $level=0;
-    global $g_user;
+    global $level, $g_user;
     $http=new HttpInput();
     $access_code=$http->request("ac");
     $cn = Dossier::connect();
@@ -1100,7 +1150,7 @@ function show_menu($module)
     if (!empty($amenu) && count($amenu) > 1)
     {
         $a_style_menu=array('topmenu','menu2','menu3');
-        if ( $level > count($a_style_menu))
+        if ( $level >= count($a_style_menu))
             $style_menu='menu3';
         else {
             $style_menu=$a_style_menu[$level];
