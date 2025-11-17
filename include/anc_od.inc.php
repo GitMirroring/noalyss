@@ -41,12 +41,9 @@ if ( ! $m )
 }
 
 $dossier_id=Dossier::id();
-
-
-echo '
-<div class="menu2">
-';
-
+$see=$http->request("see","string","0");
+$new=$http->request("new","string","0");
+$selected=($see==0)?"new":"see";
 //----------------------------------------------------------------------
 // show the  menu
 //----------------------------------------------------------------------
@@ -55,13 +52,17 @@ echo show_menu_extension(array(
            "?".http_build_query(["ac"=>$http->request("ac"),"new"=>1,"gDossier"=>$dossier_id]),
            _("Nouveau"),
            _("Nouvelle opération")
+           ,"new"
            ),
        array (
             "?".http_build_query(["ac"=>$http->request("ac"),"see"=>1,"gDossier"=>$dossier_id]),
             _("Liste"),
-           _("Liste opérations")
+           _("Liste opérations"),
+           "see"
            )
-));
+    )
+    ,$selected
+);
 
 
 //----------------------------------------------------------------------

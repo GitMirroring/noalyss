@@ -38,7 +38,9 @@ class Anc_Balance_Double extends Anc_Print
      *
      * \return string
      */
-
+    public $from_poste2;
+    public $to_poste2;
+    public $pa_id2;
     function display_html ()
     {
         if ($this->pa_id == $this->pa_id2) throw new Exception(_("Pas de croisement avec un seul plan"),1000);
