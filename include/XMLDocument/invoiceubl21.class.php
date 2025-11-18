@@ -297,6 +297,7 @@ class InvoiceUBL21 extends XMLInvoice {
 			<cac:TaxCategory>
 				<cbc:ID>S</cbc:ID>
 				<cbc:Percent>6</cbc:Percent>
+                               if ID !=Z and ID != S  <cbc:TaxExemptionReasonCode
 				<cac:TaxScheme>
 					<cbc:ID>VAT</cbc:ID>
 				</cac:TaxScheme>
@@ -320,12 +321,14 @@ class InvoiceUBL21 extends XMLInvoice {
             $subTotalXML->appendChild($this->createElement('cbc:TaxAmount',sprintf("%.2f",$subTotal[$i]['vat'])))
                     ->setAttribute("currencyID",$this->data['currency']);
             $taxCategory=$this->createElement("cac:TaxCategory");
-            /**
-             * @TODO DNY
-             * Pas toujours S !?
-             */
             $taxCategory->appendChild($this->createElement("cbc:ID",$subTotal[$i]['vat_code']));
             $taxCategory->appendChild($this->createElement("cbc:Percent",sprintf("%.2f",$subTotal[$i]['percent'])));
+            if ($subTotal[$i]['vat_code'] != "S"
+                    && $subTotal[$i]['vat_code'] != "Z")
+            {
+                // if cbc:ID not S and not Z then exemption VAT code is needed
+                 $taxCategory->appendChild($this->createElement("cbc:TaxExemptionReasonCode",$subTotal[$i]['vatex']));
+            }
             $taxScheme=$this->createElement("cac:TaxScheme");
             $taxScheme->appendChild($this->createElement("cbc:ID", "VAT"));
             $taxCategory->appendChild($taxScheme);

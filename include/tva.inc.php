@@ -67,4 +67,5 @@ echo '</div>';
         console.error(e.message);
     }
 }
+var vat_code = new VAT_Code('<?=\Dossier::id()?>')
 </script>

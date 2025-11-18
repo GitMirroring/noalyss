@@ -56,7 +56,8 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $this->set_col_label("tva_reverse_account", _('Poste comptable autoliquidation'));
         $this->set_col_label("tva_sale", _("TVA Vente (C)"));
         $this->set_col_label("tva_purchase", _("TVA Achat (D)"));
-        $this->set_col_label("tva_peppol_code", _("Code Facture électronique"));
+        $this->set_col_label("tva_peppol_code", _("Code Facture électronique UBL"));
+        $this->set_col_label("vx_code", _("Code Exemption TVA (vatex)"));
 
         $this->set_property_visible('tva_reverse_account', false);
         $this->set_property_visible('tva_peppol_code', false);
@@ -93,7 +94,8 @@ class Tva_Rate_MTable extends Manage_Table_SQL
             'tva_payment_purchase'=>_('TVA due ou récupérable quand l\'opération est payée ou exécutée'),
             'tva_payment_sale'=>_('TVA due ou récupérable quand l\'opération est payée ou exécutée'),
             'tva_reverse_account'=>_("Forcer ce poste comptable pour autoliquidation : par défault, le poste d'autoliquidation est calculé : soit celui qui est en contrepartie, soit le même (voir manuel)"),
-            'tva_peppol_code'=>_("Code TVA est utilisé pour les factures électroniques, plus d'information dans le manuel")
+            'tva_peppol_code'=>_("Code TVA est utilisé pour les factures électroniques, plus d'information dans le manuel"),
+            'vx_code'=>_("Code exemption pour facture PEPPOL (ubl)")
         );
     }
 
@@ -200,7 +202,16 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                             ,'E'=>_('E Exempté de TVA')
                         ));
                         echo $text->input();
-                    }elseif ($key == "tva_id") {
+                    } elseif ($key == 'vx_code')
+                    {
+                        $text=\HtmlInput::hidden("vx_code",$value);
+                        echo $text;
+                        echo span($value,'id="vx_value"');
+                        $js=sprintf("vat_code.list_vatex()");
+                        echo \Icon_Action::icon_magnifier(uniqid(),$js );
+                        
+                    }
+                    elseif ($key == "tva_id") {
                         $inum=new INum($key,$value);
                         echo $inum->input();
                         echo \HtmlInput::hidden("old_tva_id",$value);
@@ -231,9 +242,21 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                             HtmlInput::hidden($key, $value)
                     );
                 }
-                echo '<td class="text-muted">';
+                echo '<td >';
                 if (isset ($this->a_comment[$key])) {
+                    print '<p class="text-muted">';
                     echo $this->a_comment[$key];
+                    print '</p>';
+                }
+                if( $key == 'vx_code') {
+                    echo '<span id="vx_code_description">';
+                       $row=$this->table->cn->get_row("select vx_code,vx_code_name,vx_description,vx_remark  from vatex_code  where vx_code=$1",
+                           [$value]);
+                       if ( ! empty ($row)) {
+                            echo $row['vx_description'].span($row['vx_remark'],' class="text-muted" ');
+                           
+                       }
+                    echo '</span>';
                 }
                 echo '</td>';
             }
@@ -252,6 +275,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $http=new \HttpInput();
         $this->table->tva_reverse_account=$http->request('tva_reverse_account');
         $this->table->tva_peppol_code=$http->request('tva_peppol_code');
+        $this->table->vx_code=$http->request('vx_code');
     }
 
     /**
@@ -290,6 +314,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         $tva_rate->setp("tva_both_side", $this->table->tva_both_side);
         $tva_rate->setp("tva_reverse_account", $this->table->tva_reverse_account);
         $tva_rate->setp("tva_peppol_code", $this->table->tva_peppol_code);
+        $tva_rate->setp("vx_code", $this->table->vx_code);
 
         // TVA accounting must be joined and separated with a comma
         $tva_purchase=(trim($this->table->tva_purchase)=="")?"#":$this->table->tva_purchase;
@@ -421,6 +446,23 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         // label cannot be empty
         if ( trim($this->table->tva_label??"")=="") {
             $this->set_error("tva_label", _('Le label ne peut être vide'));
+        }
+        
+        // if vatex is set then code invoice must be different from S and Z
+        if ( trim($this->table->vx_code) != "" && in_array($this->table->tva_peppol_code,['S','Z'] ))
+        {
+            $this->set_error("vx_code",_("Le code d'exemption TVA ne peut être utilisé avec ce  code Facture électronique UBL "));
+        }
+        // if vatex is set then code invoice must be different from S and Z
+        if ( trim($this->table->vx_code) != "" && $this->table->tva_peppol_code=="")
+        {
+            $this->set_error("vx_code",_("Le code d'exemption TVA n' pas de sens sans code Facture électronique"));
+        }
+        // if tva_peppol_code is not S or Z then a VATEX code must be supplied
+        if ( ! in_array($this->table->tva_peppol_code,["Z","S"]) && trim($this->table->vx_code ) =="")
+        {
+            $this->set_error("vx_code",_("Un code d'exemption de TVA doit être fourni, voyez le manuel"));
+            
         }
         if ($this->count_error()!=0)
             return false;

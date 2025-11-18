@@ -4992,4 +4992,88 @@ Noalyss.prototype.parameter_test_smtp = function ()
 
 }
 
+VAT_Code = function (dossier_id) {
+    this.dossier_id=dossier_id;
+}
+
+VAT_Code.prototype.list_vatex=function () 
+{
+    try
+    {
+        var dgbox = "search_vatex_div";
+        waiting_box();
+        removeDiv(dgbox);
+        var queryString = {
+            op:'search_vatex',
+            gDossier:this.dossier_id,
+            dgbox:dgbox
+        }
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                           var y = calcy(15);
+                        var div_style = "position:absolute;" + ";top:" + y + "px"+";z-index:"+get_next_layer();
+                        add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: false});
+                        $(dgbox).update(req.responseText);
+                        
+                     
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
+}
+
+VAT_Code.prototype.select_value=function(vx_code)
+{
+    try
+    {
+        var dgbox = "search_vatex_div";
+        waiting_box();
+        var queryString = {
+            op:'search_vatex',
+            gDossier:this.dossier_id,
+            select_code:vx_code,
+            dgbox:dgbox
+
+        }
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        removeDiv(dgbox);
+                        var answer=req.responseJSON
+                        $("vx_code").value=answer.vx_code;
+                        $("vx_value").update(answer.vx_value);
+                        $('vx_code_description').update(answer.vx_description)
+                     
+                        
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
+}
 noalyss=new Noalyss();
+

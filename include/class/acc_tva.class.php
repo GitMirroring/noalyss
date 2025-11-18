@@ -32,6 +32,7 @@
 		 "comment"=>"tva_comment",
 		 "account"=>"tva_poste"
                   tva_peppol_code
+                 'vx_code' 
  * );
 
 */
@@ -45,7 +46,9 @@ class Acc_Tva
                                     "both_side"=>'tva_both_side',
                                     'tva_reverse_account'=>'tva_reverse_account',
                                     'tva_code'=>'tva_code',
-                                    "tva_peppol_code"=>"tva_peppol_code"
+                                    "tva_peppol_code"=>"tva_peppol_code",
+                                    'vx_code'=>'vx_code'
+        
                                 );
     public $tva_id,
         $tva_label,
@@ -55,7 +58,8 @@ class Acc_Tva
         $tva_both_side,
         $tva_code,
         $tva_reverse_account,
-        $tva_peppol_code
+        $tva_peppol_code,
+        $vx_code
             ;
 
     private $cn; //!< Database connection
@@ -75,6 +79,7 @@ class Acc_Tva
         $this->tva_code=&$this->tva_rate_sql->tva_code;
         $this->tva_reverse_account=&$this->tva_rate_sql->tva_reverse_account;
         $this->tva_peppol_code=&$this->tva_rate_sql->tva_peppol_code;
+        $this->vx_code=&$this->tva_rate_sql->vx_code;
 
     }
     /**
@@ -110,7 +115,7 @@ class Acc_Tva
         {
             $idx=self::$variable[$p_string];
             $this->$idx=$p_value;
-        }
+            }
         else
             throw new Exception("ACC108"."Attribut inexistant $p_string",EXC_INVALID);
 
