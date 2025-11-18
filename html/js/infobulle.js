@@ -94,9 +94,13 @@ function displaySelectBox(p_name) {
         }
         newDiv.innerHTML=id$("select_box"+p_name).innerHTML;
         var viewport = document.viewport.getDimensions();
+        let div_height=newDiv.getHeight();
+        if ( div_height > window.innerHeight) {
+            div_height =  window.innerHeight / 2;
+        }
         var locPosY=posY;
-        if ( posY+offsetY+ newDiv.getHeight() > window.innerHeight -3) {
-        locPosY-=newDiv.getHeight()+20
+        if ( posY+offsetY+ div_height > window.innerHeight -3) {
+            locPosY-=div_height+20
         }
         newDiv.style.top=locPosY+"px";
 
@@ -112,7 +116,7 @@ function displaySelectBox(p_name) {
             id$("search_"+p_name+"_t_list").focus();
         }
     } catch(e) {
-        alert(e.message);
+        console.error(e.message);
     }
 
 }

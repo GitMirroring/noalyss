@@ -156,17 +156,17 @@ class Select_Box
         {
             if ($this->item[$i]['type']=="url")
             {
-                printf('<li><a href="%s">%s</a></li>', $this->item[$i]['url'], $this->item[$i]['label']);
+                printf('<li><a href="%s"><span class="search-content">%s</span></a></li>', $this->item[$i]['url'], $this->item[$i]['label']);
             }
             else // For javascript
             if ($this->item[$i]['type']=="javascript")
             {
-                printf('<li><a href="javascript:void(0)" onclick="%s">%s</a></li>', $this->item[$i]['javascript'],
+                printf('<li><a href="javascript:void(0)" onclick="%s"><span class="search-content">%s</span></a></li>', $this->item[$i]['javascript'],
                         $this->item[$i]['label']);
             }
             else if ($this->item[$i]['type']=="value")
             {
-                printf('<li><a href="javascript:void(0)" onclick="%s">%s</a></li>', $this->item[$i]['javascript'],
+                printf('<li><a href="javascript:void(0)" onclick="%s"><span class="search-content">%s</span></a></li>', $this->item[$i]['javascript'],
                         $this->item[$i]['label']);
             }
             else if ($this->item[$i]['type']=="input")
