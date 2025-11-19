@@ -319,7 +319,7 @@ class Anc_Key
     {
         global $cn;
         /* number is the index of the plan, he's computed from p_target */
-        $number=preg_replace('/det[0-9]/', '', $p_target);
+        $number=preg_replace('/det[0-9]*/', '', $p_target);
         $number=noalyss_str_replace('t', '', $number);
         $number=noalyss_str_replace('popup', '', $number);
         
