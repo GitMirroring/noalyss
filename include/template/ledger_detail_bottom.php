@@ -9,7 +9,8 @@
  * @brief show the common parts of operation details 
  * 
  * Variables : $div = popup or box (det[0-9]
- * 
+ *@var $obj = Acc_Operation 
+ *@var $str_anc = HTML for analytic
  */
 bcscale(2);
 \Noalyss\Dbg::echo_file(__FILE__);
