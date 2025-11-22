@@ -1690,6 +1690,7 @@ EOF;
                 // vat label
                 //--
                 $Tva = new ITva_Popup($this->db);
+                $Tva->id="e_march$i"."_tva_id";
                 $Tva->in_table = true;
                 $Tva->set_attribute('compute', $i);
                 $Tva->set_filter("sale");

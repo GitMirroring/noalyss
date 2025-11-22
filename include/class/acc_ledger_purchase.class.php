@@ -1564,6 +1564,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 // vat label
                 //--
                 $Tva=new ITva_Popup($this->db);
+                $Tva->id="e_march$i"."_tva_id";
                 $Tva->js="onblur=\"clean_tva($i);compute_ledger($i)\"";
                 $Tva->in_table=true;
                 $Tva->set_attribute('compute',$i);

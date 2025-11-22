@@ -379,7 +379,7 @@ class Pre_op_ach extends Pre_operation_detail
                $Tva=new ITva_Popup($ledger->db);
                $Tva->in_table=true;
                $Tva->set_attribute('compute',$i);
-
+               $Tva->id="e_march$i"."_tva_id";
                $Tva->js='onblur="format_number(this);clean_tva('.$i.');compute_ledger('.$i.')"';
                $Tva->value=$march_tva_id;
                $array[$i]['tva']=$Tva->input("e_march$i"."_tva_id");
