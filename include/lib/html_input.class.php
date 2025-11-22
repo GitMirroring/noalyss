@@ -1017,6 +1017,30 @@ class HtmlInput
      * @param string $p_col , column to search example 0,1,2
      * @param int $start_row row to always keep (header)
      * @param string $p_name name of the input field
+     * @param string $domid domid containing the second filter, it could be an HIDDEN, TEXT, SELECT field
+     * @return string HTML
+     */
+    static function filter_table_DOM($p_table_id, $p_col, $start_row, $p_name
+            ,$domid)
+    {
+        
+        $r="
+			<span>
+                        <span  class=\"icon\"  >&#xf50d;</span>
+			<input id=\"lk_".$p_table_id."\" name=\"$p_name\" autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row ,'$domid')\" type=\"text\" placeholder=\""._("Filtre rapide")."\">
+			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row,'$domid' );\" value=\"X\">
+			</span>
+			";
+        $r.=' <span class="notice" style="display:none" id="info_'.$p_table_id.'"></span>';
+        return $r;
+    }
+    
+    /**
+     * @brief  filter the rows in a table and keep the colored row in alternance
+     * @param dom_id $p_table_id table
+     * @param string $p_col , column to search example 0,1,2
+     * @param int $start_row row to always keep (header)
+     * @param string $p_name name of the input field
      * @param string $p_old_value search value sent by $_GET (or $_REQUEST)
      * @return string HTML
      */

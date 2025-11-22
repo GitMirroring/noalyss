@@ -26,8 +26,21 @@
 echo \HtmlInput::title_box(_("Choix VATEX"), $dgbox);
 $a_vatex_code = $cn->get_array("select vx_code,vx_code_name,vx_description,vx_remark , vx_country from vatex_code order by 1");
 $nb_vatex_code = count($a_vatex_code);
-print HtmlInput::filter_table('code_vatex_tb', '0,1,2,3', 1);
+
+
+//@var $os_country (ISELECT) filter table by country
+$os_country=new \ISelect("filter_country");
+$os_country->transform(array( 
+                        "countryeu"=>"Europe",
+                        ""=>_("Tous"),
+                        "countryfr"=>"France"
+                        )
+                        );
+$os_country->javascript=' onchange="vat_code.filter_country()" ';
 ?>
+<div class="content">
+<?=$os_country->input()?>
+<?=HtmlInput::filter_table_DOM('code_vatex_tb', '0,1,2,3', 1,'search_vatex','filter_country')?>
 <table class="result" id="code_vatex_tb">
     <thead>
     <td>
@@ -44,24 +57,12 @@ print HtmlInput::filter_table('code_vatex_tb', '0,1,2,3', 1);
     </td>
 </thead>
 <tbody>
-    <tr>
-        <td>
-            <a class="notice" href="javascript:void(0)" onclick="vat_code.select_value('xx')" class="mtitle line">
-                <?= _("Aucun code") ?>
-            </a>
-        </td>
-        <td>
 
-        </td>
-        <td class="notice">
-            <a class="notice" href="javascript:void(0)" onclick="vat_code.select_value('xx')" class="mtitle line">
-                <?= _("Effacer le code VATEX") ?>
-            </a> 
-        </td>
-    </tr>
     <?php
     for ($i = 0; $i < $nb_vatex_code; $i++):
-        $class = ($i % 2 == 0) ? " odd " : " even ";
+        $odd= ($i % 2 == 0) ? " odd " : " even ";
+        $cnt=sprintf(" country%s",$a_vatex_code[$i]['vx_country']);
+        $class=" $odd $cnt ";
         ?>
         <tr class="<?= $class ?>">
             <td>
@@ -93,3 +94,4 @@ print HtmlInput::filter_table('code_vatex_tb', '0,1,2,3', 1);
         <?= \HtmlInput::button_close($dgbox) ?>
     </li>
 </ul>
+</div>

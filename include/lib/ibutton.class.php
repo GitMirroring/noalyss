@@ -105,15 +105,15 @@ class ISmallButton extends IButton
         $extra= ( isset($this->extra))?$this->extra:"";
         $this->id=($this->id=="")?$this->name:$this->id;
 		$tab=(isset($this->tabindex))?' tabindex="'.$this->tabindex.'"':"";
+        $attr=$this->get_node_attribute();
+        
         $r='<input type="BUTTON" name="'.$this->name.'"'.
            ' class="smallbutton" '.
                 $this->extra.
 				$tab.
            ' id="'.$this->id.'"'.
            ' value="'.$this->label.'"'.
-           ' onClick="'.$this->javascript.'"'.$extra.'>';
-        $attr=$this->get_js_attr();
-        $r.=$attr;
+           ' onClick="'.$this->javascript.'"'.$extra." $attr ".'>';
         return $r;
 
     }

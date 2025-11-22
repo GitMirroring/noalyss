@@ -5075,5 +5075,30 @@ VAT_Code.prototype.select_value=function(vx_code)
     }
 
 }
+VAT_Code.prototype.filter_country=function()
+{
+    try {
+        var to_show="country"+id$("filter_country").value;
+           console.debug(`show ${to_show}`)
+        let a_row=id$("code_vatex_tb").rows;
+        // show all rows, then hide
+       for (let i=1;i< a_row.length;i++) {
+           
+           if (id$("filter_country").value == 0 || a_row[i].hasClassName(to_show)){
+            a_row[i].show()
+           console.debug(`show row ${i}`)
+               
+           }else {
+            a_row[i].hide()
+           console.debug(`hide row ${i}`)
+            }
+       }
+       
+    }catch (e)
+    {
+        console.error(e.message);
+        return false;
+    }
+}
 noalyss=new Noalyss();
 

@@ -37,8 +37,6 @@ if ($select_code == "")
 {
    
     require_once NOALYSS_TEMPLATE."/ajax-search_vatex.php";
-    
-    
     return;
 }
 
@@ -53,7 +51,7 @@ if ($select_code != "")
     if ( ! empty ($row))
     {
     $answer['vx_code']=$row['vx_code'];
-    $answer['vx_value']=$row['vx_code'];
+    $answer['vx_value']=Icon_Action::trash(uniqid(),"vat_code.select_value('xx')").$row['vx_code'];
     $answer['vx_description']=$row['vx_description'].span($row['vx_remark'],' class="text-muted" ');
     }else {
         $answer['vx_code']=$answer['vx_value']=$answer['vx_description']="";
