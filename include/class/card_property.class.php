@@ -224,7 +224,7 @@ class Card_Property
        }
        
        if ($this->ad_id == ATTR_DEF_TVA) {
-            $result['input'] = new ITva_Popup('popup_tva');
+            $result['input'] = new ITva_Popup( "av_text" . $this->ad_id);
             $result['input']->table = 0;
             $result['input']->value = $this->av_text;
             $result['label']=$this->ad_text;

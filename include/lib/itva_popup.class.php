@@ -61,6 +61,7 @@ class ITva_Popup extends HtmlInput
         $this->button = true;
         $this->in_table = false;
         $this->value = $p_value;
+        if ($p_id =="") $p_id= uniqid ("vat");
         $this->id = $p_id;
         $this->filter = 'none';
     }

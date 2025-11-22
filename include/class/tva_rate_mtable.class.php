@@ -206,6 +206,9 @@ class Tva_Rate_MTable extends Manage_Table_SQL
                     {
                         $text=\HtmlInput::hidden("vx_code",$value);
                         echo $text;
+                        if ( $value !="") {
+                            $value= \Icon_Action::trash(uniqid(),"vat_code.select_value('xx')").$value;
+                        }
                         echo span($value,'id="vx_value"');
                         $js=sprintf("vat_code.list_vatex()");
                         echo \Icon_Action::icon_magnifier(uniqid(),$js );

@@ -50,7 +50,10 @@ switch ($op2)
      *
      ----------------------------------------------------------------------*/
 case "sf":
-        $ipopup=$ctl;
+    if ( ! isset($ctl)) {
+        $ctl= uniqid();
+    }
+    $ipopup=$ctl;
     $attr=sprintf('this.ctl=\'%s\';',$ipopup);
     $ctl.='_content';
     $it=new IText('acc_query');

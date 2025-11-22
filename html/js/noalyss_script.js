@@ -609,8 +609,8 @@ function popup_select_tva(obj, p_function_callback) {
         if (document.getElementById('tva_select')) {
             removeDiv('tva_select');
         }
-
-        var queryString = "gDossier=" + obj.gDossier + "&op=dsp_tva" + "&ctl=" + obj.ctl + '&popup=' + 'tva_select';
+        
+        var queryString = "gDossier=" + obj.getAttribute("gdossier") + "&op=dsp_tva" + "&ctl=" + obj.getAttribute("ctl") + '&popup=' + 'tva_select';
         if (obj.jcode)
             queryString += '&code=' + obj.jcode;
         if (obj.compute)
@@ -641,7 +641,7 @@ function popup_select_tva(obj, p_function_callback) {
 
                         var nTop = posY - 200;
                         var nLeft = "15%";
-                        var str_style = "top:" + nTop + "px;left:" + nLeft + ";right:" + nLeft + ";width:55em;height:auto";
+                        var str_style = "top:" + nTop + "px;left:" + nLeft + ";right:" + nLeft + ";width:55em;height:auto;z-index:"+get_next_layer()+';';
 
                         var popup = {
                             'id': 'tva_select',
@@ -2202,10 +2202,11 @@ function view_action(ag_id, dossier, modify) {
  * @param  _id : id of the table
  * @param  colnr : string containing the column number where you're searching separated by a comma
  * @param start_row : first row (1 if you have table header)
+ * @param class 2nd filter on the CSS CLASS of the row (TR), domid of the TAG containing the classname (TagName: SELECT, HIDDEN, TEXT )
  * @returns nothing
  * @see HtmlInput::filter_table
  */
-function filter_table(phrase, _id, colnr, start_row) {
+function filter_table(phrase, _id, colnr, start_row,classname) {
     id$('info_div').innerHTML = content[65];
     id$('info_div').style.display = "block";
     var words = id$(phrase).value.toLowerCase();
@@ -2220,8 +2221,17 @@ function filter_table(phrase, _id, colnr, start_row) {
     }
     var ele;
     var tot_found = 0;
-
-    for (var r = start_row; r < table.rows.length; r++) {
+    console.debug(`filter is ${classname}`)
+    var row_class="";
+    if ( classname )     row_class=id$(classname).value;
+    
+    for (var r = start_row; r < table.rows.length; r++) 
+    {
+        if ( row_class != "" && ! table.rows[r].hasClassName(row_class)) {
+            console.debug(`no check ${r} ${classname}`)
+            continue;
+        }
+        console.debug(`checked ${r} ${classname}`)
         var found = 0;
         for (var col = 0; col < aCol.length; col++) {
             var idx = aCol[col];
@@ -5000,6 +5010,7 @@ VAT_Code.prototype.list_vatex=function ()
 {
     try
     {
+        var here=this;
         var dgbox = "search_vatex_div";
         waiting_box();
         removeDiv(dgbox);
@@ -5023,7 +5034,7 @@ VAT_Code.prototype.list_vatex=function ()
                         var div_style = "position:absolute;" + ";top:" + y + "px"+";z-index:"+get_next_layer();
                         add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: false});
                         $(dgbox).update(req.responseText);
-                        
+                        here.filter_country();
                      
                     }
                 }
@@ -5078,7 +5089,7 @@ VAT_Code.prototype.select_value=function(vx_code)
 VAT_Code.prototype.filter_country=function()
 {
     try {
-        var to_show="country"+id$("filter_country").value;
+        var to_show=id$("filter_country").value;
            console.debug(`show ${to_show}`)
         let a_row=id$("code_vatex_tb").rows;
         // show all rows, then hide
@@ -5093,7 +5104,7 @@ VAT_Code.prototype.filter_country=function()
            console.debug(`hide row ${i}`)
             }
        }
-       
+       $('lk_code_vatex_tb').value="";
     }catch (e)
     {
         console.error(e.message);
