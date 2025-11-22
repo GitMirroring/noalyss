@@ -1113,7 +1113,6 @@ class Acc_Ledger  extends jrn_def_sql
 
             $quick_code->value=(isset(${'qc_'.$i}))?${'qc_'.$i}:"";
             $quick_code->readonly=$p_readonly;
-
             $label='';
             if ($quick_code->value!='')
             {

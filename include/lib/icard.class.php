@@ -158,6 +158,7 @@ class ICard extends HtmlInput
     //!< $autocomplete_file , ajax file used for autocompletion (see Ajax.Autocompleter)
     private $autocomplete_file;
     
+    protected $after_clean; //!< javascript to call after cleaning the INPUT TEXT
     function __construct($name="", $value="", $p_id="")
     {
         parent::__construct($name, $value);
@@ -176,8 +177,20 @@ class ICard extends HtmlInput
         $this->amount_from_type=''; //!< in the follow up ,when a card is selected you take Prix Vente or Prix Achat 
         $this->typecard='all';
         $this->autocomplete_file="fid_card.php";
+        $this->after_clean="";
     }
-    /**
+    public function getAfter_clean()
+    {
+        return $this->after_clean;
+    }
+
+    public function setAfter_clean($after_clean)
+    {
+        $this->after_clean = $after_clean;
+        return $this;
+    }
+
+        /**
      * Function javascript by default it is update_value called BEFORE the querystring is send in ajax
      * @return type
      */
@@ -475,8 +488,8 @@ class ICard extends HtmlInput
             $this->dblclick=$e;
         }
         
-        $input='<div class="d-none d-lg-inline">'.
-                Icon_Action::clean_zone(uniqid("remove"),"clean_Fid('{$this->id}');compute_all_ledger();").
+            $input='<div class="d-none d-lg-inline">'.
+                Icon_Action::clean_zone(uniqid("remove"),"clean_Fid('{$this->id}');{$this->after_clean}").
                 "</div>";
              
         $input.=sprintf('

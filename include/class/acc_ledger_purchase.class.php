@@ -1492,6 +1492,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $W1->name="e_march".$i;
             $W1->value=$march;
             $W1->table=0;
+            $W1->setAfter_clean("compute_all_ledger()");
             $W1->set_dblclick("fill_ipopcard(this);");
             $W1->set_attribute('ipopup','ipopcard');
 
